@@ -4027,6 +4027,7 @@
 #include "ModularLobotomy\anomaly_items\anomaly_tools.dm"
 #include "ModularLobotomy\anomaly_items\anomaly_weapons.dm"
 #include "ModularLobotomy\associations\!overwrites.dm"
+#include "ModularLobotomy\associations\augment_ui.dm"
 #include "ModularLobotomy\associations\association_beacon.dm"
 #include "ModularLobotomy\associations\cityspawners.dm"
 #include "ModularLobotomy\associations\fixer.dm"
