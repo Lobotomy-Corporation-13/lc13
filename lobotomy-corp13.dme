@@ -4200,6 +4200,7 @@
 #include "ModularLobotomy\fishing\code\fish\freshwater_fish.dm"
 #include "ModularLobotomy\fishing\code\fish\misc_fish.dm"
 #include "ModularLobotomy\fishing\code\fish\saltwater_fish.dm"
+#include "ModularLobotomy\fishing\code\fish\abnofishes\abnofish.dm"
 #include "ModularLobotomy\fishing\code\fish\LC13_fish\freshwater_fish.dm"
 #include "ModularLobotomy\fishing\code\fish\LC13_fish\saltwater_fish.dm"
 #include "ModularLobotomy\fishing\code\fishcooking\fishfood.dm"
@@ -4427,6 +4428,7 @@
 #include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\chem_cargo.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\generic.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\syrups.dm"
+#include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\neo_abnochem\fishchems.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\neo_abnochem\neo_recipes.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_chemistry\abnochem\neo_abnochem\sins.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_cloning\brain_item.dm"
@@ -4514,4 +4516,3 @@
 #include "ModularLobotomy\workshop\templates\scythe.dm"
 #include "ModularLobotomy\workshop\templates\fishing\fishingweapons.dm"
 #include "ModularLobotomy\zTegu_overwrite\tegu_overwrite_vars.dm"
-// END_INCLUDE
