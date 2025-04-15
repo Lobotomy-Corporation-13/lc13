@@ -1464,8 +1464,9 @@
 		src.apply_status_effect(/datum/status_effect/stacking/protection/fragile, stacks)
 		return
 
-	if(F.stacks)
-		F.add_stacks(stacks)
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/protection/fragile, stacks)
 		return
 
 //Damage Type Fragile Varients
@@ -1488,8 +1489,9 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/fragile, stacks)
 		return
 
-	if(F.stacks)
-		F.add_stacks(stacks)
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/fragile, stacks)
 		return
 
 /datum/status_effect/stacking/damtype_protection/white/fragile
@@ -1511,8 +1513,9 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile, stacks)
 		return
 
-	if(F.stacks)
-		F.add_stacks(stacks)
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile, stacks)
 		return
 
 /datum/status_effect/stacking/damtype_protection/black/fragile
@@ -1534,8 +1537,9 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile, stacks)
 		return
 
-	if(F.stacks)
-		F.add_stacks(stacks)
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile, stacks)
 		return
 
 /datum/status_effect/stacking/damtype_protection/pale/fragile
@@ -1557,11 +1561,12 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile, stacks)
 		return
 
-	if(F.stacks)
-		F.add_stacks(stacks)
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile, stacks)
 		return
 
-//Global Damage Up
+//Global Damage Down
 /datum/status_effect/stacking/damage_up/down
 	id = "damage_down"
 	alert_type = /atom/movable/screen/alert/status_effect/damage_up/down
@@ -1572,6 +1577,18 @@
 	desc = "You are weakend! Your melee damage is decreased by "
 	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
 	icon_state = "red_protection"
+
+//Mob Proc
+/mob/living/proc/apply_lc_feeble(stacks)
+	var/datum/status_effect/stacking/damage_up/down/F = src.has_status_effect(/datum/status_effect/stacking/damage_up/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damage_up/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damage_up/down, stacks)
+		return
 
 //Specific Damage Down
 /datum/status_effect/stacking/damtype_damage_up/down
@@ -1585,6 +1602,17 @@
 	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
 	icon_state = "red_protection"
 
+/mob/living/proc/apply_lc_red_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/down, stacks)
+		return
+
 /datum/status_effect/stacking/damtype_damage_up/white/down
 	id = "white_damage_down"
 	alert_type = /atom/movable/screen/alert/status_effect/white_damage_up/down
@@ -1595,6 +1623,17 @@
 	desc = "You are weakend! Your WHITE melee damage is reduced by "
 	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
 	icon_state = "red_protection"
+
+/mob/living/proc/apply_lc_white_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/white/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/white/down, stacks)
+		return
 
 /datum/status_effect/stacking/damtype_damage_up/black/down
 	id = "black_damage_down"
@@ -1607,6 +1646,17 @@
 	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
 	icon_state = "red_protection"
 
+/mob/living/proc/apply_lc_black_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/black/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/black/down, stacks)
+		return
+
 /datum/status_effect/stacking/damtype_damage_up/pale/down
 	id = "pale_damage_down"
 	alert_type = /atom/movable/screen/alert/status_effect/pale_damage_up/down
@@ -1617,3 +1667,14 @@
 	desc = "You are weakend! Your PALE melee damage is reduced by "
 	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
 	icon_state = "red_protection"
+
+/mob/living/proc/apply_lc_pale_feeble(stacks)
+	var/datum/status_effect/stacking/damtype_damage_up/pale/down/F = src.has_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down, stacks)
+		return
+
+	if(F.stacks < stacks)
+		qdel(F)
+		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down, stacks)
+		return
