@@ -1106,3 +1106,6 @@
 
 #define COMSIG_PARCEL_DELIVERED "parcel_delivered"
 #define COMSIG_ITEM_DELIVERED "item_delivered"
+
+//Status signals
+#define COMSIG_STATUS_BLEED_DAMAGE "bleed_damage"
