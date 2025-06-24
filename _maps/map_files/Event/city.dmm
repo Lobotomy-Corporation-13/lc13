@@ -2738,11 +2738,6 @@
 	},
 /turf/open/floor/vault,
 /area/space)
-"uc" = (
-/obj/structure/rack,
-/obj/item/augment_remover,
-/turf/open/indestructible/white,
-/area/city)
 "ud" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plating/ashplanet/rocky{
@@ -3604,11 +3599,6 @@
 /obj/structure/flora/tree/jungle/small,
 /turf/open/floor/plating/grass,
 /area/city)
-"Al" = (
-/obj/structure/rack,
-/obj/item/augment_tester,
-/turf/open/indestructible/white,
-/area/city/house)
 "Am" = (
 /obj/structure/closet/cabinet,
 /obj/item/reagent_containers/glass/bowl,
@@ -3631,6 +3621,11 @@
 "Av" = (
 /turf/open/floor/facility/white,
 /area/city/house)
+"Ax" = (
+/obj/structure/rack,
+/obj/item/augment_remover,
+/turf/open/indestructible/white,
+/area/city)
 "Ay" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/machinery/light,
@@ -3944,10 +3939,6 @@
 	},
 /turf/open/floor/facility/dark,
 /area/space)
-"CQ" = (
-/obj/machinery/augment_fabricator,
-/turf/open/floor/plasteel/white,
-/area/city)
 "CU" = (
 /obj/machinery/light{
 	dir = 1
@@ -4025,6 +4016,10 @@
 	},
 /turf/open/indestructible/white,
 /area/city/house)
+"Dt" = (
+/obj/machinery/augment_fabricator,
+/turf/open/floor/plasteel/white,
+/area/city)
 "Dv" = (
 /obj/structure/bed/maint,
 /obj/effect/decal/cleanable/dirt,
@@ -4424,6 +4419,11 @@
 /obj/item/restraints/handcuffs,
 /obj/machinery/light,
 /turf/open/floor/facility/white,
+/area/city/house)
+"GC" = (
+/obj/structure/rack,
+/obj/item/augment_tester,
+/turf/open/indestructible/white,
 /area/city/house)
 "GE" = (
 /obj/machinery/door/airlock/medical{
@@ -31792,7 +31792,7 @@ lV
 lV
 lV
 OD
-uc
+Ax
 lf
 Pf
 KP
@@ -32051,7 +32051,7 @@ lV
 OD
 Ry
 lf
-CQ
+Dt
 OD
 xC
 Pf
@@ -47778,7 +47778,7 @@ lT
 lT
 lT
 HC
-Al
+GC
 my
 ZY
 IL
@@ -49076,7 +49076,7 @@ lT
 lT
 lT
 OD
-lV
+OD
 lV
 lV
 lV
