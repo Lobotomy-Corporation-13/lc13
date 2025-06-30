@@ -82,6 +82,10 @@
 	var/stupid = FALSE
 	var/work_damage_amount_dummy = 0
 	var/work_damage_type_dummy = 0
+	
+	///Variables that should only be switched on and off from events or other uncommon effects.
+	///The abnormality will give 75% less stats and 75% more PE
+	var/docile = FALSE
 
 /datum/abnormality/New(obj/effect/landmark/abnormality_spawn/new_landmark, mob/living/simple_animal/hostile/abnormality/new_type = null)
 	if(!istype(new_landmark))
@@ -248,6 +252,8 @@
 		if(user_attribute) //To avoid runtime if it's a custom work type like "Release".
 			var/user_attribute_level = max(1, user_attribute.level)
 			attribute_given = clamp(((maximum_attribute_level / (user_attribute_level * 0.25)) * (0.25 + (pe / max_boxes))), 0, 16)
+			if(docile)
+				attribute_given *= clamp(0.25, 0, 16)
 			if((user_attribute_level + attribute_given + 1) >= maximum_attribute_level) // Already/Will/Should be at maximum.
 				attribute_given = max(0, maximum_attribute_level - user_attribute_level)
 				//This player trait gives you a +1 to each work
@@ -279,7 +285,10 @@
 			UpdateUnderstanding(10, pe)
 		else
 			UpdateUnderstanding(5, pe)
-	stored_boxes += round(pe * SSlobotomy_corp.box_work_multiplier)
+	var/additional_boxes = round(pe * SSlobotomy_corp.box_work_multiplier)
+	if(docile)
+		additional_boxes = round(additional_boxes * 1.75)
+	stored_boxes += additional_boxes
 	overload_chance[user.ckey] = max(overload_chance[user.ckey] + overload_chance_amount, overload_chance_limit)
 
 /datum/abnormality/proc/UpdateUnderstanding(percent, pe)
