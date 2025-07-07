@@ -116,6 +116,7 @@
 		/obj/effect/proc_holder/spell/aimed/fairy,
 		/obj/effect/proc_holder/spell/aimed/pillar,
 		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
+		/obj/effect/proc_holder/spell/pointed/lock,
 		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
@@ -150,6 +151,13 @@
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/pillar))
 			var/obj/effect/proc_holder/spell/aimed/fairy/pillarspell = thespell
 			pillarspell.damage_type = damage_type
+		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/fairy/thin_line))
+			var/obj/effect/proc_holder/spell/aimed/fairy/thin_line/linespell = thespell
+			linespell.damage_type = damage_type
+		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/thick_line))
+			var/obj/effect/proc_holder/spell/aimed/thick_line/thicklinespell = thespell
+			thicklinespell.damage_type = damage_type
+
 	if(!filter)
 		filter = TRUE
 		usr.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=rgb(128, 128, 128))
@@ -171,3 +179,17 @@
 	icon_state = "target_field_blue"
 	color = COLOR_YELLOW
 	duration = 4 SECONDS
+
+// Different version of the Complete Arbiter that probably should only show up in adminbus.
+// Replaces Fairy with Thin Line, Pillar with Thick Line. Also gets Birdcage.
+/datum/antagonist/wizard/arbiter/complete/line_variant
+	name = "Arbiter (Line Singularity)"
+	spell_types = list(
+		/obj/effect/proc_holder/spell/aimed/fairy/thin_line,
+		/obj/effect/proc_holder/spell/aimed/thick_line,
+		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
+		/obj/effect/proc_holder/spell/pointed/lock,
+		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
+		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
+		/obj/effect/proc_holder/spell/aoe_turf/singularity,
+	)

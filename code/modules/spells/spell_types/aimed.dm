@@ -261,3 +261,75 @@
 		addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), fire_delay)
 		fired_projs += P
 	return fired_projs
+
+/// It's just Fairy, with a different icon and slight stat differences. You get less Thin Lines, they do more damage, they recharge faster.
+/obj/effect/proc_holder/spell/aimed/fairy/thin_line
+	name = "Thin Line"
+	desc = "Fire a thin line of damaging essence, dealing the damage type corresponding to your active singularity."
+	projectile_amount = 4
+	charge_max = 80
+
+/// Replaces Pillar. Loses meltdown capability, in exchange it can be used more often. Rather than firing a projectile, it's an extremely long and piercing line AOE.
+/// You need to stand still for line_telegraph_duration in order to fire. Moving or being interrupted will refund the spell though.
+/obj/effect/proc_holder/spell/aimed/thick_line
+	name = "Thick Line"
+	desc = "Manifest a powerful, damaging line of energy after a brief windup. Pierces enemies and walls. Deals damage according to your active singularity."
+	school = SCHOOL_EVOCATION
+	charge_max = 120
+	clothes_req = FALSE
+	invocation_type = "none"
+	base_icon_state = "immrod"
+	action_icon_state = "immrod"
+	sound = 'sound/magic/arbiter/storm_create.ogg'
+	active_msg = "You prepare a powerful Thick Line."
+	deactive_msg = "You abort the Thick Line generation process."
+	projectile_type = null
+	/// Important for Singularity Swap spell. Determines the damage type dealt by the spell, this var gets edited by Singularity Swap.
+	var/damage_type = BLACK_DAMAGE
+	/// Base damage for being hit by Thick Line.
+	var/line_damage = 350
+	/// How much PALE damage should be reduced by. If line_damage is 350 and pale_damage_coefficient is 0.5, then PALE Thick Line deals 175 PALE (survivable with PALE V).
+	var/pale_damage_coefficient = 0.5
+	/// Delay before casting Thick Line. Also counts as the amount of time the telegraphing lasts for it.
+	var/line_telegraph_duration = 1.2 SECONDS
+	/// Just leaving this here in case someone wants to be funny.
+	var/hurts_structures = FALSE
+
+/obj/effect/proc_holder/spell/aimed/thick_line/fire_projectile(mob/living/user, atom/target)
+	current_amount--
+	var/datum/reusable_visual_pool/RVP = new(500)
+	var/list/been_hit = list()
+	var/turf/user_turf = get_turf(user)
+	var/turf/end_turf = get_ranged_target_turf_direct(user, target, 50)
+	var/list/main_line_turfs = getline(user_turf, end_turf)
+	main_line_turfs -= user_turf
+	var/list/affected_turfs = list()
+	// Initially we have a 1 tile thick line from origin to target. We make every turf in the line add its surrounding turfs to the affected turfs.
+	// This gives us a line with 3 tiles of thickness. Is there a better way to do this? Maybe. I just went off of U-Turn's implementation for this.
+	for(var/turf/main_line_turf in main_line_turfs)
+		for(var/turf/surrounding_line_turf in view(main_line_turf, 1))
+			affected_turfs |= surrounding_line_turf
+
+	for(var/turf/T in affected_turfs)
+		RVP.NewCultSparks(T, line_telegraph_duration)
+	// We have a windup during which we telegraph the spell. If the do_after is not interrupted, we fire the spell.
+	if(do_after(user, line_telegraph_duration, interaction_key = "thick_line", max_interact_count = 1))
+		playsound(user, 'sound/magic/arbiter/storm_fire.ogg', 50)
+		for(var/turf/T2 in affected_turfs)
+			ThickLineHit(user, T2, been_hit)
+	// If the do_after is interrupted, we refund most of the spell charge. The reason why we have to only partially refund the spell is so Arbiters don't spam their telegraph,
+	// which I imagine could lag the server.
+	else
+		// Why is this a timer? Because the proc that calls fire_projectile sets charge_counter = 0 afterwards, so we have to do it after because I don't want to override it.
+		addtimer(CALLBACK(src, PROC_REF(CancelCastRefund), user), 0.5 SECONDS)
+	return list()
+
+// We hurt absolutely everything that isn't both Head faction and hostile faction. Also you can't hide in disposals or whatever.
+/obj/effect/proc_holder/spell/aimed/thick_line/proc/ThickLineHit(mob/living/user, turf/hit_turf, list/hit_list)
+	user.HurtInTurf(hit_turf, hit_list, (damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : line_damage), damage_type, null, TRUE, TRUE, TRUE, hurt_hidden = TRUE, hurt_structure = hurts_structures)
+
+/obj/effect/proc_holder/spell/aimed/thick_line/proc/CancelCastRefund(mob/living/user)
+	if(user)
+		to_chat(user, span_notice("Your Singularity collects the dissipated energy from your cancelled Thick Line."))
+		charge_counter = charge_max * 0.8
+		start_recharge()
