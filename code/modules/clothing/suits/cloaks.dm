@@ -185,3 +185,9 @@
 	name = "arbiter's cloak"
 	desc = "A fancy cloak worn by the Arbiters of the Head."
 	icon_state = "arbitercloak"
+
+/obj/item/clothing/neck/cloak/arbiter/zena
+	icon_state = "arbitercloak_zena_leaf"
+
+/obj/item/clothing/neck/cloak/arbiter/zena/noleaf
+	icon_state = "arbitercloak_zena_noleaf"

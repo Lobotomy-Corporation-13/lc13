@@ -38,7 +38,7 @@
 	// If we target a human:
 	if(istype(owner, /mob/living/carbon/human))
 		var/mob/living/carbon/human/unfortunate = owner
-		// If they're insane, the sanity controller is controlling them, and so Immobilize and some other methods of binding them don't work. We use the Incapacitated trait.
+		// If they're insane, the sanity controller is moving them, and so Immobilize and some other methods of binding them don't work. We use the Incapacitated trait.
 		// This has the side effect of preventing them from attacking, too.
 		if(unfortunate.sanity_lost)
 			ADD_TRAIT(unfortunate, TRAIT_INCAPACITATED, "Singularity J")

@@ -184,6 +184,7 @@
 // Replaces Fairy with Thin Line, Pillar with Thick Line. Also gets Birdcage.
 /datum/antagonist/wizard/arbiter/complete/line_variant
 	name = "Arbiter (Line Singularity)"
+	outfit_type = /datum/outfit/arbiter/line
 	spell_types = list(
 		/obj/effect/proc_holder/spell/aimed/fairy/thin_line,
 		/obj/effect/proc_holder/spell/aimed/thick_line,
@@ -193,3 +194,7 @@
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
 	)
+
+/datum/outfit/arbiter/line
+	name = "Arbiter (Line Singularity)"
+	neck = /obj/item/clothing/neck/cloak/arbiter/zena/noleaf
