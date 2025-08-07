@@ -158,7 +158,7 @@
 	ranged = 1
 	rapid = 3
 	rapid_fire_delay = 2
-	ranged_cooldown_time = 15
+	ranged_cooldown_time = 7
 	check_friendly_fire = TRUE
 	projectiletype = /obj/projectile/xcorp_bone
 	damage_coeff = list(RED_DAMAGE = 0.9, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1)

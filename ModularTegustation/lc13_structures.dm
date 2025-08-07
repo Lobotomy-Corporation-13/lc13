@@ -162,10 +162,10 @@
 		/mob/living/simple_animal/hostile/xcorp/dps = 2,
 		/mob/living/simple_animal/hostile/xcorp/tank = 3,
 	)
-	generate_new_mob_time = 20 SECONDS
+	generate_new_mob_time = 15 SECONDS
 
 /obj/structure/den/rce/raider
-	max_mobs = 20
+	max_mobs = 40
 	moblist = list(
 		/mob/living/simple_animal/hostile/xcorp = 2,
 		/mob/living/simple_animal/hostile/xcorp/scout = 1,
@@ -174,7 +174,7 @@
 		/mob/living/simple_animal/hostile/xcorp/dps = 1,
 	)
 	assault_type = SEND_TILL_MAX
-	generate_new_mob_time = 45 SECONDS
+	generate_new_mob_time = 30 SECONDS
 	raider = TRUE
 
 /obj/structure/den/rce/Initialize(mapload)
