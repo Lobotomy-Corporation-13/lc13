@@ -40,6 +40,7 @@ SUBSYSTEM_DEF(gamedirector)
 		if(world.time > timestamp_end && gamestage < PHASE_ENDROUND)
 			to_chat(world, span_userdanger("R-Corp HQ has ordered immediate retreat!"))
 			gamestage = PHASE_ENDROUND
+			SSticker.force_ending = 1
 		else if(world.time > timestamp_finalwave && gamestage < PHASE_LASTWAVE_PASSED)
 			to_chat(world, span_userdanger("A huge wave of zombies is approaching!"))
 			gamestage = PHASE_LASTWAVE_PASSED
