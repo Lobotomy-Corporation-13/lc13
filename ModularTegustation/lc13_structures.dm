@@ -202,7 +202,7 @@
 	var/announce = FALSE
 	var/id
 	var/assault_type = SEND_TILL_MAX
-	var/max_mobs = 11
+	var/max_mobs = 30
 	var/generate_new_mob_time = NONE
 	var/raider = FALSE
 
