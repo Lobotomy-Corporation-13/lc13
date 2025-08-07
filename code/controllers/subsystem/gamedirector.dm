@@ -76,6 +76,9 @@ SUBSYSTEM_DEF(gamedirector)
 /datum/controller/subsystem/gamedirector/proc/StartLastWave()
 	var/datum/component/monwave_spawner/spawner
 	for(spawner in spawners)
+		spawner.is_raider = FALSE
+		spawner.generate_wave_cooldown_time = 5 SECONDS
+		spawner.assault_pace = 2
 		spawner.SwitchTarget(pick(rce_fob))
 		spawner.StartAssault(pick(rce_fob))
 
