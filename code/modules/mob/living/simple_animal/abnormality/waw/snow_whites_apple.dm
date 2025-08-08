@@ -199,7 +199,7 @@
 		var/blind_direction
 		//If no one had fired the bullet, like mech bullets, get a turf in their direction
 		if(!hunter)
-			blind_direction = angle2dir_cardinal(P.Angle - 180)
+			blind_direction = angle2dir_cardinal(P.angle - 180)
 			reaction_area = get_ranged_target_turf(src, blind_direction, 3)
 		//General faction check thing. Honestly may remove the check since this is a "reaction"
 		if(isliving(hunter))

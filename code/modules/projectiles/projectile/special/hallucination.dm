@@ -7,6 +7,7 @@
 	ricochets_max = 0
 	ricochet_chance = 0
 	damage = 0
+
 	nodamage = TRUE
 	projectile_type = /obj/projectile/hallucination
 	log_override = TRUE

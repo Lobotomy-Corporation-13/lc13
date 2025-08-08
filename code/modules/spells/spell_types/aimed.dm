@@ -72,7 +72,7 @@
 		on_deactivation(user)
 	return TRUE
 
-/obj/effect/proc_holder/spell/aimed/proc/fire_projectile(mob/living/user, atom/target)
+/obj/effect/proc_holder/spell/aimed/fire_projectile(mob/living/user, atom/target)
 	current_amount--
 	var/list/fired_projs = list()
 	for(var/i in 1 to projectiles_per_fire)

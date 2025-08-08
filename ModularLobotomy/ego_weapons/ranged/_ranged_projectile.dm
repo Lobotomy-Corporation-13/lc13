@@ -95,6 +95,6 @@
 		if(target) //if the target is right on our location we'll skip the travelling code in the proj's fire()
 			direct_target = target
 	if(!direct_target)
-		projectile.preparePixelProjectile(target, user, params, spread)
+		projectile.preparePixelProjectile(target, user, params2list(params), spread)
 	projectile.fire(null, direct_target)
 	return TRUE

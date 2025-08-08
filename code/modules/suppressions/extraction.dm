@@ -241,7 +241,7 @@
 		P.yo = target_loc.y - start_loc.y
 		P.xo = target_loc.x - start_loc.x
 		P.original = target
-		P.preparePixelProjectile(target_loc, src, spread = rand(0, 7))
+		P.preparePixelProjectile(target_loc, src, deviation = rand(0, 7))
 		P.fire()
 
 	SLEEP_CHECK_DEATH(1 SECONDS)

@@ -215,7 +215,7 @@
 /mob/living/simple_animal/hostile/abnormality/black_swan/bullet_act(obj/projectile/P) //umbrella shield code
 	if(umbrella_open)
 		if(is_A_facing_B(src,P.firer))
-			if(P.reflectable != NONE)
+			if(P.reflectable)
 				visible_message(span_userdanger("[src] deflects [P] with their umbrella!"))
 				ReflectProjectile(P)
 				return BULLET_ACT_FORCE_PIERCE
@@ -342,11 +342,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/black_swan/proc/ReflectProjectile(obj/projectile/P) //reflection code from human_defense.dm
 	if(P.starting)
-		var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-		var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-		// redirect the projectile
-		P.firer = src
-		P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), z), src)
+		P.reflect(src)
 
 #undef SWAN_UMBRELLA_COOLDOWN
 #undef SWAN_UMBRELLA_DURATION

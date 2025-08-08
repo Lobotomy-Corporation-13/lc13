@@ -1056,7 +1056,7 @@
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/abnormalities/kqe/load3.ogg', 100, TRUE)
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.preparePixelProjectile(target, user, params2list(clickparams))
 		G.fire()
 		gun_cooldown = world.time + gun_cooldown_time
 
@@ -1850,7 +1850,7 @@
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/effects/fish_splash.ogg', 100, TRUE) //yes im reusing a sound bite me
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.preparePixelProjectile(target, user, params2list(clickparams))
 		G.color = "#622F22"
 		G.fire()
 		G.damage*=force_multiplier
@@ -1921,7 +1921,7 @@
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/abnormalities/orangetree/ding.ogg', 100, TRUE) //yes im reusing a sound bite me
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.preparePixelProjectile(target, user, params2list(clickparams))
 		G.fire()
 		G.damage*=force_multiplier
 		firing_cooldown = firing_cooldown_time + world.time

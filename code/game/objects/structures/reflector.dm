@@ -57,7 +57,7 @@
 
 /obj/structure/reflector/bullet_act(obj/projectile/P)
 	var/pdir = P.dir
-	var/pangle = P.Angle
+	var/pangle = P.angle
 	var/ploc = get_turf(P)
 	if(!finished || !allowed_projectile_typecache[P.type] || !(P.dir in GLOB.cardinals))
 		return ..()
@@ -67,8 +67,8 @@
 
 /obj/structure/reflector/proc/auto_reflect(obj/projectile/P, pdir, turf/ploc, pangle)
 	P.ignore_source_check = TRUE
-	P.range = P.decayedRange
-	P.decayedRange = max(P.decayedRange--, 0)
+	P.range = P.maximum_range
+	P.maximum_range = max(P.maximum_range--, 0)
 	return BULLET_ACT_FORCE_PIERCE
 
 /obj/structure/reflector/attackby(obj/item/W, mob/user, params)
@@ -191,7 +191,7 @@
 	anchored = TRUE
 
 /obj/structure/reflector/single/auto_reflect(obj/projectile/P, pdir, turf/ploc, pangle)
-	var/incidence = GET_ANGLE_OF_INCIDENCE(rotation_angle, (P.Angle + 180))
+	var/incidence = GET_ANGLE_OF_INCIDENCE(rotation_angle, (P.angle + 180))
 	if(abs(incidence) > 90 && abs(incidence) < 270)
 		return FALSE
 	var/new_angle = SIMPLIFY_DEGREES(rotation_angle + incidence)
@@ -217,7 +217,7 @@
 	anchored = TRUE
 
 /obj/structure/reflector/double/auto_reflect(obj/projectile/P, pdir, turf/ploc, pangle)
-	var/incidence = GET_ANGLE_OF_INCIDENCE(rotation_angle, (P.Angle + 180))
+	var/incidence = GET_ANGLE_OF_INCIDENCE(rotation_angle, (P.angle + 180))
 	var/new_angle = SIMPLIFY_DEGREES(rotation_angle + incidence)
 	P.set_angle_centered(new_angle)
 	return ..()

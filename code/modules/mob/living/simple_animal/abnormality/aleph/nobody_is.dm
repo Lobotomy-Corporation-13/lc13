@@ -471,7 +471,7 @@
 		P.yo = target_loc.y - start_loc.y
 		P.xo = target_loc.x - start_loc.x
 		P.original = target
-		P.preparePixelProjectile(target_loc, src, spread = rand(0, 10))
+		P.preparePixelProjectile(target_loc, src, deviation = rand(0, 10))
 		P.damage = whip_damage
 		P.fire()
 	for(var/turf/T in turfs_to_hit)

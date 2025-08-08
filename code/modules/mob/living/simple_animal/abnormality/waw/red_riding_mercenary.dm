@@ -323,7 +323,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	P.starting = startloc
 	P.firer = src
 	P.fired_from = src
-	P.Angle = angle_to_target
+	P.angle = angle_to_target
 	P.original = target
 	P.preparePixelProjectile(target, src)
 	P.damage = bullet_damage

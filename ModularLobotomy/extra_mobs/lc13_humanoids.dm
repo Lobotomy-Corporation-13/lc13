@@ -594,6 +594,17 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/counter_duration = 4 SECONDS
 	var/got_hit = FALSE
 
+	//Cooldown for Vulnerability to Own Projectiles
+	var/vulnerable_cooldown = 0
+	var/vulnerable_delay = 75
+	var/vulnerable = FALSE
+
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/Life()
+	. = ..()
+	if(!.)
+		return
+	if(vulnerable && vulnerable_cooldown <= world.time)
+		RemoveVulnerability()
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/TripleDash()
 	// if dash is off cooldown stun until the end of dashes and say quote
@@ -728,7 +739,22 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	attacker.deal_damage(damage * 2, attack_type, source = src, attack_type = (ATTACK_TYPE_COUNTER))
 	attacker.deal_damage(damage, STAMINA, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_COUNTER))
 
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/ApplyVulnerability()
+	EndCounter()
+	got_hit = TRUE
+	can_act = FALSE
+	say("Derealization...")
+	var/mutable_appearance/colored_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
+	add_overlay(colored_overlay)
+	ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2.6))
+	vulnerable = TRUE
+	vulnerable_cooldown = world.time + vulnerable_delay
 
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/RemoveVulnerability()
+	ChangeResistances(list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.3))
+	cut_overlays()
+	can_act = TRUE
+	vulnerable = FALSE
 
 /obj/projectile/flame_fixer
 	name ="flame bolt"
@@ -744,7 +770,6 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	ricochet_incidence_leeway = 0
 	homing = TRUE
 	homing_turn_speed = 10		//Angle per tick.
-	var/stun_duration = 75
 	var/burn_stacks = 20
 
 
@@ -759,17 +784,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		L.apply_lc_burn(burn_stacks)
 	if(firer==target)
 		var/mob/living/simple_animal/hostile/humanoid/fixer/flame/F = target
-		F.EndCounter()
-		F.got_hit = TRUE
+		F.ApplyVulnerability()
 		qdel(src)
-		F.can_act = FALSE
-		F.say("Derealization...")
-		var/mutable_appearance/colored_overlay = mutable_appearance(F.icon, "small_stagger", F.layer + 0.1)
-		F.add_overlay(colored_overlay)
-		F.ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2.6))
-		sleep(stun_duration)
-		F.ChangeResistances(list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.3))
-		F.cut_overlays()
-		F.can_act = TRUE
 		return BULLET_ACT_BLOCK
 	. = ..()

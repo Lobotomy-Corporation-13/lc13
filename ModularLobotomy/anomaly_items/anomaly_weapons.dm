@@ -71,7 +71,6 @@
 	impact_effect_type = /obj/effect/projectile/impact/wormhole
 	light_color = LIGHT_COLOR_PURPLE
 	damage = 55
-	irradiate = 100
 	range = 11
 	projectile_piercing = PASSMOB
 	projectile_phasing = (ALL & (~PASSMOB))
