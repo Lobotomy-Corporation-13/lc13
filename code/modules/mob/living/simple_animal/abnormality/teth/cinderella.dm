@@ -160,6 +160,27 @@
 					var/mob/living/carbon/human/C = M
 					if(C.sanity_lost)
 						QDEL_NULL(C.ai_controller)
-						C.ai_controller = /datum/ai_controller/insane/wander/penitence //Yeah, we're just copying penitent girl's panic. I'm sure no one will notice.
+						C.ai_controller = /datum/ai_controller/insane/wander/cinderella // Yeah, we're just copying penitent girl's panic. I'm sure no one will notice.	RE: I noticed.
 						C.InitializeAIController()
-						C.apply_status_effect(/datum/status_effect/panicked_type/wander/penitence)
+						C.apply_status_effect(/datum/status_effect/panicked_type/wander/cinderella)
+
+// Copying and renaming old penitence insanity because I am reworking her and I dont wanna touch Cinderella (And things broke down).
+/datum/ai_controller/insane/wander/cinderella
+	lines_type = /datum/ai_behavior/say_line/cinderella
+
+/datum/status_effect/panicked_type/wander/cinderella
+	icon = "penitence"
+
+/datum/status_effect/panicked_type/wander/cinderella/tick()
+	. = ..()
+	var/mob/living/carbon/human/status_holder = owner
+	status_holder.emote("spin")
+
+/datum/ai_behavior/say_line/cinderella
+	lines = list(
+		"Care to join me?",
+		"Why do I want to dance? Why do you want to live?",
+		"Check out these moves!",
+		"Hahaha...",
+		"I feel so alive!"
+	)

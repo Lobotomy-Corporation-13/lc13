@@ -1001,6 +1001,35 @@
 	user.adjustSanityLoss(5)
 	..()
 
+/obj/item/ego_weapon/wield/supressed // Basically discount BLACK damage Flower Waltz mixed with Totalitarianism. Hits like a truck, a VERY slow-moving truck.
+	name = "supressed desire"
+	desc = "HERE'S JOHNNY!!"
+	icon_state = "supressed"
+	special = "This weapon has a very slow attack speed and stuns you for a moderate period of time after attacking, but it deals devastating damage."
+	swingstyle = WEAPONSWING_LARGESWEEP
+	force = 5 // How did you even..?
+	attack_speed = 1
+	damtype = BLACK_DAMAGE
+	wielded_attack_speed = 4 // Ends up having sub-par DPS (20)
+	wielded_force = 80 // This weapon deals devastating damage, but is EXTREMELY slow (Even slower than attacking with shields.)
+	stuntime = 10	// It also stuns you.
+	two_hands_required = TRUE
+	should_slow = TRUE // Also slows you.
+	wielded_slow_down = 1.2 // 20% slowdown, slightly less than Zwei Riot armor.
+	attack_verb_continuous = list("hacks", "slashes", "attacks")
+	attack_verb_simple = list("hack", "slash", "attack")
+	hitsound = 'sound/abnormalities/redshoes/RedShoes_Attack.ogg'
+	// No requirements because who knows who will use it, Penitent edition.
+
+/obj/item/ego_weapon/wield/supressed/attack(mob/living/target, mob/living/carbon/human/user)
+	if(!CanUseEgo(user))
+		return
+	stuntime = initial(stuntime)
+	if(user.sanity_lost)
+		user.visible_message(span_info("[user] stumbles while swinging!"))
+		stuntime = 40 // Even MORE stun if you are insane, because an insane with this weapon goes, hehe, insane
+	..()
+
 /obj/item/ego_weapon/replica
 	name = "replica"
 	desc = "A mechanical yet sinewy claw ribbed with circuitry. It reminds you of toy claw machines."
