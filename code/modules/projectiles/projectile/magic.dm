@@ -470,7 +470,7 @@
 		if(L.anti_magic_check())
 			L.visible_message("<span class='warning'>[src] vanishes on contact with [target]!</span>")
 			return BULLET_ACT_BLOCK
-		var/atom/throw_target = get_edge_target_turf(L, angle2dir(Angle))
+		var/atom/throw_target = get_edge_target_turf(L, angle2dir(angle))
 		L.throw_at(throw_target, 200, 4)
 
 /obj/projectile/magic/bounty

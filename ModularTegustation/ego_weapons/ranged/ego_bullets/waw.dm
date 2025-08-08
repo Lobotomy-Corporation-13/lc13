@@ -402,7 +402,7 @@
 
 /obj/projectile/ego_bullet/special_fellbullet/proc/MagicBulletEffect(angle, atom/direct_target)
 	var/obj/effect/fellcircle/circle = new(get_turf(src))
-	circle.FireBullets(Angle, damage)
+	circle.FireBullets(angle, damage)
 
 /obj/effect/fellcircle//thing that shoots
 	name = "magic circle"

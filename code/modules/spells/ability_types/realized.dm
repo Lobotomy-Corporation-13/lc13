@@ -1434,7 +1434,7 @@
 	var/obj/effect/temp_visual/rip_space/Y = new(end_point)
 
 	var/obj/projectile/ripper_dash_effect/DE = new(start_point)
-	DE.preparePixelProjectile(Y, X)
+	DE.AimProjectile(Y, X)
 	DE.name = user.name
 	DE.fire()
 	user.orbit(DE, 0, 0, 0, 0, 0)

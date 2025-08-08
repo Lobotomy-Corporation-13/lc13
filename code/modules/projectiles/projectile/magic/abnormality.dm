@@ -12,7 +12,7 @@
 	hitsound = "sound/weapons/ego/rapier[pick(1,2)].ogg"
 	animate(src, alpha = 255, time = 3)
 
-/obj/projectile/despair_rapier/process_hit(turf/T, atom/target, atom/bumped, hit_something = FALSE)
+/obj/projectile/despair_rapier/Impact(turf/T, atom/target, atom/bumped, hit_something = FALSE)
 	if(!ishuman(target))
 		return ..()
 	var/mob/living/carbon/human/H = target

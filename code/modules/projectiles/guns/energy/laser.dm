@@ -105,7 +105,7 @@
 	range = 255
 	damage = 6
 
-/obj/projectile/beam/laser/accelerator/reduce_range()
+/obj/projectile/beam/laser/accelerator/Range()
 	..()
 	damage += 7
 

@@ -173,7 +173,7 @@ Difficulty: Extremely Hard
 		if(!endloc)
 			break
 		var/obj/projectile/frost_orb/P = new(startloc)
-		P.preparePixelProjectile(endloc, startloc)
+		P.AimProjectile(endloc, startloc)
 		P.firer = src
 		if(target)
 			P.original = target
@@ -193,7 +193,7 @@ Difficulty: Extremely Hard
 			break
 		var/obj/projectile/ice_blast/P = new(startloc)
 		P.speed *= projectile_speed_multiplier
-		P.preparePixelProjectile(endloc, startloc, null, angle + rand(-10, 10))
+		P.AimProjectile(endloc, startloc, null, angle + rand(-10, 10))
 		P.firer = firer
 		if(original)
 			P.original = original
@@ -209,7 +209,7 @@ Difficulty: Extremely Hard
 			break
 		var/obj/projectile/P = new /obj/projectile/snowball(startloc)
 		P.speed *= projectile_speed_multiplier
-		P.preparePixelProjectile(endloc, startloc, null, rand(-spread, spread))
+		P.AimProjectile(endloc, startloc, null, rand(-spread, spread))
 		P.firer = src
 		if(target)
 			P.original = target
@@ -228,7 +228,7 @@ Difficulty: Extremely Hard
 				break
 			var/obj/projectile/P = new /obj/projectile/ice_blast(startloc)
 			P.speed *= projectile_speed_multiplier
-			P.preparePixelProjectile(endloc, startloc, null, spread)
+			P.AimProjectile(endloc, startloc, null, spread)
 			P.firer = src
 			if(target)
 				P.original = target

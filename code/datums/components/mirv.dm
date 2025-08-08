@@ -37,7 +37,7 @@
 		P.range = radius+1
 		if(override_projectile_range)
 			P.range = override_projectile_range
-		P.preparePixelProjectile(shootat_turf, target)
+		P.AimProjectile(shootat_turf, target)
 		P.firer = firer // don't hit ourself that would be really annoying
 		P.impacted = list(target = TRUE) // don't hit the target we hit already with the flak
 		P.fire()

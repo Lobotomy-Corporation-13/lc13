@@ -1024,7 +1024,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		if(AIStatus != AI_ON)//Don't want mindless mobs to have their movement screwed up firing in space
 			newtonian_move(get_dir(targeted_atom, targets_from))
 		P.original = targeted_atom
-		P.preparePixelProjectile(targeted_atom, src)
+		P.AimProjectile(targeted_atom, src)
 		P.fire()
 		return P
 

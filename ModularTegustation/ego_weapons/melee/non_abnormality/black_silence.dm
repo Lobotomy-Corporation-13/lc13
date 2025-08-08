@@ -612,7 +612,7 @@
 		var/obj/projectile/ego_bullet/atelier_logic/G = new bullet_type(proj_turf)
 		G.fired_from = src //for signal check
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.AimProjectile(target, user, clickparams)
 		G.fire()
 		playsound(user, 'sound/weapons/black_silence/revolver.ogg', 60, 1)
 		gun_cooldown = world.time + gun_cooldown_time

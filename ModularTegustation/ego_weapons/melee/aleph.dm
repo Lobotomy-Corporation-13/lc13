@@ -506,7 +506,7 @@
 			G.fired_from = src //for signal check
 			playsound(user, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.AimProjectile(target, user, clickparams)
 		G.fire()
 		G.damage *= force_multiplier
 		gun_cooldown = world.time + gun_cooldown_time
@@ -1267,7 +1267,7 @@
 				G.icon_state = "red_laser"
 				playsound(user, 'sound/weapons/ionrifle.ogg', 100, TRUE)
 				G.firer = user
-				G.preparePixelProjectile(target, user, clickparams)
+				G.AimProjectile(target, user, clickparams)
 				G.fire()
 				G.damage *= force_multiplier
 				gun_cooldown = world.time + gun_cooldown_time
@@ -1404,7 +1404,7 @@
 			playsound(user, 'sound/weapons/ego/gasharpoon_fire.ogg', 100, TRUE)
 			G.firer = user
 			var/spread = rand(-25,25)
-			G.preparePixelProjectile(target, user, clickparams, spread)
+			G.AimProjectile(target, user, clickparams, spread)
 			G.fire()
 			sleep(0.1 SECONDS)
 		return

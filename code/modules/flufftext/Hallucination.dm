@@ -1652,6 +1652,6 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	var/obj/projectile/hallucination/H = new proj_type(start)
 	target.playsound_local(start, H.hal_fire_sound, 60, 1)
 	H.hal_target = target
-	H.preparePixelProjectile(target, start)
+	H.AimProjectile(target, start)
 	H.fire()
 	qdel(src)

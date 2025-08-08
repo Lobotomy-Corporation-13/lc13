@@ -125,7 +125,7 @@
 		RP.yo = target_turf.y - T.y
 		RP.xo = target_turf.x - T.x
 		RP.original = target_turf
-		RP.preparePixelProjectile(target_turf, T)
+		RP.AimProjectile(target_turf, T)
 		addtimer(CALLBACK (RP, TYPE_PROC_REF(/obj/projectile, fire)), 3)
 	sleep(3)
 	playsound(target_turf, 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)

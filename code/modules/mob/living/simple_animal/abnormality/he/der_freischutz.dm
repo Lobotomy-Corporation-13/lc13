@@ -288,7 +288,7 @@
 	B.yo = end_turf.y - start_turf.y
 	B.xo = end_turf.x - start_turf.x
 	B.original = end_turf
-	B.preparePixelProjectile(end_turf, start_turf)
+	B.AimProjectile(end_turf, start_turf)
 	B.range = bullet_max_range
 	B.damage = bullet_damage
 	B.fire()
@@ -490,7 +490,7 @@
 	B.yo = end_turf.y - start_turf.y
 	B.xo = end_turf.x - start_turf.x
 	B.original = end_turf
-	B.preparePixelProjectile(end_turf, start_turf)
+	B.AimProjectile(end_turf, start_turf)
 	B.range = bullet_max_range
 	B.damage = bullet_damage
 	B.fire()

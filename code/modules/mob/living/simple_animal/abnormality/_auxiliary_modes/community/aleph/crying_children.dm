@@ -345,7 +345,7 @@
 		var/obj/projectile/beam/sorrow_beam/P = new(get_turf(src))
 		P.firer = src
 		P.fired_from = src
-		P.preparePixelProjectile(targets, src)
+		P.AimProjectile(targets, src)
 		P.fire()
 	playsound(src, 'sound/abnormalities/crying_children/sorrow_shot.ogg', 50, FALSE)
 	icon_state = "[icon_phase]_idle"

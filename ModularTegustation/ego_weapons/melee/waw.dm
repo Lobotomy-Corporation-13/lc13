@@ -846,7 +846,7 @@
 	S.fired_from = src //for signal check
 	playsound(user, 'sound/weapons/resonator_blast.ogg', 30, TRUE)
 	S.firer = user
-	S.preparePixelProjectile(target, user)
+	S.AimProjectile(target, user)
 	S.fire()
 	S.damage *= force_multiplier
 	return
