@@ -11,3 +11,12 @@
 	var/turf/source = get_turf(user)
 	var/turf/target = get_turf(A)
 	return ISINRANGE(target.x, source.x - view_range[1], source.x + view_range[1]) && ISINRANGE(target.y, source.y - view_range[1], source.y + view_range[1])
+
+/// Takes a string or num view, and converts it to pixel width/height in a list(pixel_width, pixel_height)
+/proc/view_to_pixels(view)
+	if(!view)
+		return list(0, 0)
+	var/list/view_info = getviewsize(view)
+	view_info[1] *= ICON_SIZE_X
+	view_info[2] *= ICON_SIZE_Y
+	return view_info

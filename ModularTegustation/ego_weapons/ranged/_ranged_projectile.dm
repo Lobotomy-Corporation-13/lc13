@@ -5,7 +5,7 @@
 	var/click_cooldown_override = 0 //Override this to make your gun have a faster fire rate, in tenths of a second. 4 is the default gun cooldown.
 	var/firing_effect_type = null //the visual effect appearing when the ammo is fired.
 
-/obj/item/ego_weapon/ranged/proc/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
+/obj/item/ego_weapon/ranged/fire_projectile(atom/target, mob/living/user, params, distro, quiet, zone_override, spread, atom/fired_from, temporary_damage_multiplier)
 	var/obj/projectile/projectile = new projectile_path(src, src)
 	projectile.original = target
 	projectile.firer = user
@@ -73,6 +73,6 @@
 		if(target) //if the target is right on our location we'll skip the travelling code in the proj's fire()
 			direct_target = target
 	if(!direct_target)
-		projectile.preparePixelProjectile(target, user, params, spread)
+		projectile.AimProjectile(target, user, params2list(params), spread)
 	projectile.fire(null, direct_target)
 	return TRUE

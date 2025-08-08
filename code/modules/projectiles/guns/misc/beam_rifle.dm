@@ -201,7 +201,7 @@
 		if(!istype(curloc))
 			return
 		targloc = get_turf_in_angle(lastangle, curloc, 10)
-	P.preparePixelProjectile(targloc, current_user, current_user.client.mouseParams, 0)
+	P.AimProjectile(targloc, current_user, params2list(current_user.client.mouseParams), 0)
 	P.fire(lastangle)
 
 /obj/item/gun/energy/beam_rifle/process()
@@ -394,7 +394,7 @@
 		firing_dir = BB.firer.dir
 	if(!BB.suppressed && firing_effect_type)
 		new firing_effect_type(get_turf(src), firing_dir)
-	BB.preparePixelProjectile(target, user, params, spread)
+	BB.AimProjectile(target, user, params2list(params), spread)
 	BB.fire(gun? gun.lastangle : null, null)
 	BB = null
 	return TRUE
@@ -504,11 +504,6 @@
 		highlander = constant_tracer
 	if(highlander && istype(gun))
 		QDEL_LIST(gun.current_tracers)
-		for(var/datum/point/p in beam_segments)
-			gun.current_tracers += generate_tracer_between_points(p, beam_segments[p], tracer_type, color, 0, hitscan_light_range, hitscan_light_color_override, hitscan_light_intensity)
-	else
-		for(var/datum/point/p in beam_segments)
-			generate_tracer_between_points(p, beam_segments[p], tracer_type, color, duration, hitscan_light_range, hitscan_light_color_override, hitscan_light_intensity)
 	if(cleanup)
 		QDEL_LIST(beam_segments)
 		beam_segments = null

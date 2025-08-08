@@ -1231,7 +1231,7 @@ Traitors and the like can also be revived with the previous role mostly intact.
 	divine_wrath.original = target
 	divine_wrath.def_zone = body_zone
 	divine_wrath.spread = 0
-	divine_wrath.preparePixelProjectile(target, source_turf)
+	divine_wrath.AimProjectile(target, source_turf)
 	divine_wrath.fire()
 
 /client/proc/punish_log(whom, punishment)

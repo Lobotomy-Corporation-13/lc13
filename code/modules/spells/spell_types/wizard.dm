@@ -18,7 +18,6 @@
 	name = "magic missile"
 	icon_state = "magicm"
 	range = 20
-	speed = 5
 	trigger_range = 0
 	linger = TRUE
 	nodamage = FALSE

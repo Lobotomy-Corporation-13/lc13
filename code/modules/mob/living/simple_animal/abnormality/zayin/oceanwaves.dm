@@ -149,7 +149,7 @@
 	P.yo = the_target.y - proj_turf.y
 	P.xo = the_target.x - proj_turf.x
 	P.original = the_target
-	P.preparePixelProjectile(the_target, src)
+	P.AimProjectile(the_target, src)
 	P.fire()
 	visible_message(span_notice("[src] fires a can of soda!"))
 	count -= 1

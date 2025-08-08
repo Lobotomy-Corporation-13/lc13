@@ -356,15 +356,13 @@
 
 ///Called when attacking a target. Shoots a projectile at the turf underneath the target.
 /obj/structure/legionturret/proc/fire(atom/target)
-	var/turf/T = get_turf(target)
-	var/turf/T1 = get_turf(src)
-	if(!T || !T1)
+	var/turf/target_turf = get_turf(target)
+	var/turf/our_turf = get_turf(src)
+	if(!target_turf || !our_turf)
 		return
 	//Now we generate the tracer.
-	var/angle = Get_Angle(T1, T)
-	var/datum/point/vector/V = new(T1.x, T1.y, T1.z, 0, 0, angle)
-	generate_tracer_between_points(V, V.return_vector_after_increments(6), /obj/effect/projectile/tracer/legion/tracer, 0, shot_delay, 0, 0, 0, null)
-	playsound(src, 'sound/machines/airlockopen.ogg', 100, TRUE)
+	var/angle = get_angle(our_turf, target_turf)
+	our_turf.Beam(target_turf, 'icons/effects/beam.dmi', "blood_light", time = shot_delay)
 	addtimer(CALLBACK(src, PROC_REF(fire_beam), angle), shot_delay)
 
 ///Called shot_delay after the turret shot the tracer. Shoots a projectile into the same direction.

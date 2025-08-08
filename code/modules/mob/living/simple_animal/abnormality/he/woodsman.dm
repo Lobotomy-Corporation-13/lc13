@@ -145,7 +145,7 @@
 
 	var/obj/projectile/chainedaxe/P = new(get_turf(user))
 	P.firer = user
-	P.preparePixelProjectile(target, user)
+	P.AimProjectile(target, user)
 	P.fire()
 
 /obj/projectile/chainedaxe

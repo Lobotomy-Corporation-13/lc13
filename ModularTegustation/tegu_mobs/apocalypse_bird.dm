@@ -371,7 +371,7 @@
 		P.yo = PT.y - T.y
 		P.xo = PT.x - T.x
 		P.original = PT
-		P.preparePixelProjectile(PT, T)
+		P.AimProjectile(PT, T)
 		addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), 6.5 SECONDS)
 
 	SLEEP_CHECK_DEATH(6.5 SECONDS)

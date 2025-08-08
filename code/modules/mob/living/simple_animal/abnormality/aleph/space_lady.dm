@@ -177,7 +177,7 @@
 		P.yo = target.y - startloc.y
 		P.xo = target.x - startloc.x
 		P.original = target
-		P.preparePixelProjectile(target, src)
+		P.AimProjectile(target, src)
 		P.fire()
 
 	SLEEP_CHECK_DEATH(10)
@@ -207,7 +207,7 @@
 		P.yo = target.y - startloc.y
 		P.xo = target.x - startloc.x
 		P.original = target
-		P.preparePixelProjectile(target, src)
+		P.AimProjectile(target, src)
 		P.fire()
 
 	SLEEP_CHECK_DEATH(10)
@@ -299,7 +299,7 @@
 	icon_state = "whitelaser"
 	desc = "A beam of white light."
 	hitsound = "sound/effects/footstep/slime1.ogg"
-	speed = 5		//very slow bullets
+	speed = 0.5		//very slow bullets
 	damage = 40		//She fires a lot of them
 	damage_type = WHITE_DAMAGE
 	spread = 360	//Fires in a 360 Degree radius

@@ -30,7 +30,7 @@
 	ricochet_chance = 70
 	shrapnel_type = /obj/item/shrapnel
 	ricochet_incidence_leeway = 60
-	hit_stunned_targets = TRUE
+	hit_prone_targets = TRUE
 	sharpness = SHARP_EDGED
 	wound_bonus = 30
 	embedding = list(embed_chance=70, ignore_throwspeed_threshold=TRUE, fall_chance=1)
@@ -65,7 +65,7 @@
 	ricochet_chance = 110
 
 /obj/projectile/bullet/pellet/stingball/on_ricochet(atom/A)
-	hit_stunned_targets = TRUE // ducking will save you from the first wave, but not the rebounds
+	hit_prone_targets = TRUE // ducking will save you from the first wave, but not the rebounds
 
 
 

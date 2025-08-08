@@ -133,7 +133,7 @@
 	damage = 18
 	damage_type = WHITE_DAMAGE
 	projectile_piercing = PASSMOB
-	speed = 0.45
+	speed = 0.85
 	range = 14
 	hit_nondense_targets = TRUE
 

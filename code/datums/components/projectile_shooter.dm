@@ -48,7 +48,7 @@
 	shot.firer = parent_atom // don't hit ourself that would be really annoying
 	shot.impacted = list(possible_owner = TRUE) // just to make sure we don't hit the wearer
 	shot.def_zone = pick(BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
-	shot.preparePixelProjectile(target, possible_owner)
+	shot.AimProjectile(target, possible_owner)
 	if(!shot.suppressed)
 		if(isliving(possible_owner))
 			possible_owner.visible_message("<span class='danger'>[possible_owner]'s [parent_atom.name] fires \a [shot]!</span>", "", blind_message = "<span class='hear'>You hear a gunshot!</span>", vision_distance=COMBAT_MESSAGE_RANGE)

@@ -14,7 +14,7 @@
 	light_color = COLOR_SOFT_RED
 	ricochets_max = 50	//Honk!
 	ricochet_chance = 80
-	reflectable = REFLECT_NORMAL
+	reflectable = TRUE
 	wound_bonus = -20
 	bare_wound_bonus = -10
 
@@ -61,7 +61,7 @@
 	name = "hellfire laser"
 	wound_bonus = 0
 	damage = 25
-	speed = 0.6 // higher power = faster, that's how light works right
+	speed = 1.6 // higher power = faster, that's how light works right
 
 /obj/projectile/beam/laser/hellfire/Initialize()
 	. = ..()
@@ -118,7 +118,6 @@
 	name = "\improper X-ray beam"
 	icon_state = "xray"
 	damage = 15
-	irradiate = 300
 	range = 15
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE | PASSCLOSEDTURF | PASSMACHINE | PASSSTRUCTURE
 
@@ -289,7 +288,7 @@
 	icon_state = "fairy"
 	damage = 50
 	damage_type = BLACK_DAMAGE
-	hit_stunned_targets = TRUE
+	hit_prone_targets = TRUE
 	white_healing = FALSE
 	projectile_piercing = PASSMOB
 	projectile_phasing = (ALL & (~PASSMOB) & (~PASSCLOSEDTURF))
@@ -314,7 +313,7 @@
 	hitsound = 'sound/weapons/slash.ogg'
 	hitsound_wall = 'sound/weapons/slash.ogg'
 	damage_type = BLACK_DAMAGE
-	hit_stunned_targets = TRUE
+	hit_prone_targets = TRUE
 	white_healing = FALSE
 	projectile_piercing = PASSMOB
 	projectile_phasing = (ALL & (~PASSMOB) & (~PASSCLOSEDTURF))
@@ -338,7 +337,7 @@
 	hitsound = 'sound/weapons/slash.ogg'
 	hitsound_wall = 'sound/weapons/slash.ogg'
 	damage_type = BLACK_DAMAGE
-	hit_stunned_targets = TRUE
+	hit_prone_targets = TRUE
 	white_healing = FALSE
 	projectile_piercing = PASSMOB
 	projectile_phasing = (ALL & (~PASSMOB) & (~PASSCLOSEDTURF))
@@ -360,7 +359,7 @@
 	hitsound = 'sound/weapons/slash.ogg'
 	hitsound_wall = 'sound/weapons/slash.ogg'
 	damage_type = BLACK_DAMAGE
-	hit_stunned_targets = TRUE
+	hit_prone_targets = TRUE
 	white_healing = FALSE
 	hitscan = TRUE
 	tracer_type = /obj/effect/projectile/tracer/laser/nobody

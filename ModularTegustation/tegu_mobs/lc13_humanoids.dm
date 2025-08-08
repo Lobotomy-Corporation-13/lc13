@@ -442,7 +442,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		return
 	var/turf/startloc = get_turf(src)
 	var/obj/projectile/P = new /obj/projectile/metal_fixer(startloc)
-	P.preparePixelProjectile(marker, startloc)
+	P.AimProjectile(marker, startloc)
 	P.firer = src
 	if(target)
 		P.original = target
@@ -734,7 +734,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	name ="flame bolt"
 	icon_state= "helios_fire"
 	damage = 15
-	speed = 8
+	speed = 4
 	damage_type = RED_DAMAGE
 	//projectile_piercing = PASSMOB
 	ricochets_max = 20

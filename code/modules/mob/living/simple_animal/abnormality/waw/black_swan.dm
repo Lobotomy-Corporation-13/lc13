@@ -346,7 +346,7 @@
 		var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
 		// redirect the projectile
 		P.firer = src
-		P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), z), src)
+		P.AimProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), z), src)
 
 #undef SWAN_UMBRELLA_COOLDOWN
 #undef SWAN_UMBRELLA_DURATION

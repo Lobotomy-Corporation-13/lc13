@@ -70,5 +70,5 @@
 	P.fired_from = weapon
 	P.firer = user // don't hit ourself that would be really annoying
 	P.impacted = list(user = TRUE) // don't hit the target we hit already with the flak
-	P.preparePixelProjectile(target_turf, weapon)
+	P.AimProjectile(target_turf, weapon)
 	P.fire()

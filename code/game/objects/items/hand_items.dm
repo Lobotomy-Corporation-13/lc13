@@ -456,7 +456,7 @@
 	blown_kiss.fired_from = user
 	blown_kiss.firer = user // don't hit ourself that would be really annoying
 	blown_kiss.impacted = list(user = TRUE) // just to make sure we don't hit the wearer
-	blown_kiss.preparePixelProjectile(target, user)
+	blown_kiss.AimProjectile(target, user)
 	blown_kiss.fire()
 	qdel(src)
 
@@ -482,7 +482,7 @@
 	blown_kiss.fired_from = offerer
 	blown_kiss.firer = offerer // don't hit ourself that would be really annoying
 	blown_kiss.impacted = list(offerer = TRUE) // just to make sure we don't hit the wearer
-	blown_kiss.preparePixelProjectile(taker, offerer)
+	blown_kiss.AimProjectile(taker, offerer)
 	blown_kiss.suppressed = SUPPRESSED_VERY // this also means it's a direct offer
 	blown_kiss.fire()
 	qdel(src)
@@ -501,7 +501,6 @@
 	hitsound = 'sound/effects/kiss.ogg'
 	hitsound_wall = 'sound/effects/kiss.ogg'
 	pass_flags = PASSTABLE | PASSGLASS | PASSGRILLE
-	speed = 1.6
 	damage_type = BRUTE
 	damage = 0
 	nodamage = TRUE // love can't actually hurt you

@@ -2,7 +2,6 @@
 
 /obj/projectile/magic/spell
 	name = "custom spell projectile"
-	var/list/ignored_factions //Do not hit these
 	var/check_holy = FALSE
 	var/check_antimagic = FALSE
 	var/trigger_range = 0 //How far we do we need to be to hit
@@ -20,25 +19,6 @@
 			if(can_hit_target(L, ignore_loc = TRUE))
 				return Bump(L)
 	. = ..()
-
-/obj/projectile/magic/spell/Moved(atom/OldLoc, Dir)
-	. = ..()
-	if(trail)
-		create_trail()
-
-/obj/projectile/magic/spell/proc/create_trail()
-	if(!trajectory)
-		return
-	var/datum/point/vector/previous = trajectory.return_vector_after_increments(1,-1)
-	var/obj/effect/overlay/trail = new /obj/effect/overlay(previous.return_turf())
-	trail.pixel_x = previous.return_px()
-	trail.pixel_y = previous.return_py()
-	trail.icon = trail_icon
-	trail.icon_state = trail_icon_state
-	//might be changed to temp overlay
-	trail.density = FALSE
-	trail.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	QDEL_IN(trail, trail_lifespan)
 
 /obj/projectile/magic/spell/can_hit_target(atom/target, list/passthrough, direct_target = FALSE, ignore_loc = FALSE)
 	. = ..()
@@ -82,7 +62,7 @@
 	var/check_antimagic = TRUE
 	var/check_holy = FALSE
 
-/obj/effect/proc_holder/spell/targeted/projectile/proc/fire_projectile(atom/target, mob/user)
+/obj/effect/proc_holder/spell/targeted/projectile/fire_projectile(atom/target, mob/user)
 	var/obj/projectile/magic/spell/projectile = new proj_type()
 
 	if(update_projectile)
@@ -106,7 +86,7 @@
 		projectile.trail_icon = proj_trail_icon
 		projectile.trail_icon_state = proj_trail_icon_state
 
-	projectile.preparePixelProjectile(target,user)
+	projectile.AimProjectile(target,user)
 	if(projectile.homing)
 		projectile.set_homing_target(target)
 	projectile.fire()

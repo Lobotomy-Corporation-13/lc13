@@ -365,7 +365,7 @@
 
 	ooze.visible_message("<span class='nicegreen>[ooze] launches a mending globule!</span>", "<span class='notice'>You launch a mending globule.</span>")
 	var/obj/projectile/globule/globule = new (ooze.loc)
-	globule.preparePixelProjectile(target, ooze, params)
+	globule.AimProjectile(target, ooze, params2list(params))
 	globule.def_zone = ooze.zone_selected
 	globule.fire()
 	ooze.adjust_ooze_nutrition(-5)

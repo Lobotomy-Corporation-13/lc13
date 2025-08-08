@@ -38,7 +38,7 @@
 
 		var/obj/projectile/A = new projectile(get_turf(src))
 		A.firer = chassis;
-		A.preparePixelProjectile(target, source, params, spread)
+		A.AimProjectile(target, source, params2list(params), spread)
 
 		A.fire()
 		if(!A.suppressed && firing_effect_type)

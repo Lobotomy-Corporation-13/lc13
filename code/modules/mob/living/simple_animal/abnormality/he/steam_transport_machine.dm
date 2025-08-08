@@ -244,5 +244,5 @@
 	icon_state = "smoke"
 	hitsound = 'sound/machines/clockcult/steam_whoosh.ogg'
 	damage = 4
-	speed = 0.4
+	speed = 0.8
 	damage_type = RED_DAMAGE

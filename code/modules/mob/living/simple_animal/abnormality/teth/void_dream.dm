@@ -170,7 +170,7 @@
 	icon_state = "antimagic"
 	color = "#FCF344"
 	damage = 0
-	speed = 3
+	speed = 1.5
 	homing = TRUE
 	homing_turn_speed = 25 //Angle per tick.
 	var/homing_range = 9

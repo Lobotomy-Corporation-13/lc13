@@ -302,7 +302,7 @@
 				P.yo = target.y - T.y
 				P.xo = target.x - T.x
 				P.original = target
-				P.preparePixelProjectile(target, T)
+				P.AimProjectile(target, T)
 				addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), 30)
 				var/list/hit_line = getline(T, get_turf(target)) //targetting line
 				for(var/turf/TF in hit_line)

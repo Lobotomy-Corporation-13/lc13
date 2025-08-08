@@ -161,7 +161,7 @@
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/weapons/whip.ogg', 100, TRUE)
 		G.firer = user
-		G.preparePixelProjectile(target, user, clickparams)
+		G.AimProjectile(target, user, params2list(clickparams))
 		G.fire()
 		gun_cooldown = world.time + gun_cooldown_time
 		return

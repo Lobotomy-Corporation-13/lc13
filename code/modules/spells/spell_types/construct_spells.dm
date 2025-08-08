@@ -322,7 +322,7 @@
 	check_holy = TRUE
 	ignored_factions = list("cult")
 	range = 15
-	speed = 7
+	speed = 0.3
 
 /obj/projectile/magic/spell/juggernaut/on_hit(atom/target, blocked)
 	. = ..()

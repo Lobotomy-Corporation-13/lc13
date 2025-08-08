@@ -340,7 +340,7 @@
 	P.yo = L.y - T.y
 	P.xo = L.x - T.x
 	P.original = L
-	P.preparePixelProjectile(L, T)
+	P.AimProjectile(L, T)
 	addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), projectile_telegraph_delay)
 
 		/*--------\

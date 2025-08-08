@@ -2,7 +2,7 @@
 
 /obj/projectile/bullet/p50
 	name =".50 bullet"
-	speed = 0.4
+	speed = 1.4
 	damage = 70
 	paralyze = 100
 	dismemberment = 50
@@ -42,5 +42,5 @@
 /obj/projectile/bullet/p50/penetrator/shuttle //Nukeop Shuttle Variety
 	icon_state = "gaussstrong"
 	damage = 25
-	speed = 0.3
+	speed = 1.3
 	range = 16

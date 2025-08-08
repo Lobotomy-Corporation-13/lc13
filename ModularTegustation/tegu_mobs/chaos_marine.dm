@@ -380,7 +380,7 @@
 		return
 	var/turf/startloc = get_turf(src)
 	var/obj/projectile/P = new /obj/projectile/bullet/chaos_bomb/blood(startloc)
-	P.preparePixelProjectile(marker, startloc)
+	P.AimProjectile(marker, startloc)
 	P.firer = src
 	if(target)
 		P.original = target
