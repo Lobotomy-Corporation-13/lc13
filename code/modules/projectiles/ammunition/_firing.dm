@@ -60,7 +60,7 @@
 		if(target) //if the target is right on our location we'll skip the travelling code in the proj's fire()
 			direct_target = target
 	if(!direct_target)
-		BB.AimProjectile(target, user, params, spread)
+		BB.AimProjectile(target, user, params2list(params), spread)
 	BB.fire(null, direct_target)
 	BB = null
 	return TRUE

@@ -397,7 +397,7 @@
 	G.fired_from = src //for signal check
 	playsound(user, 'sound/weapons/fixer/generic/dodge.ogg', 100, TRUE)
 	G.firer = user
-	G.AimProjectile(target, user, clickparams)
+	G.AimProjectile(target, user, params2list(clickparams))
 	G.fire()
 	G.damage*=force_multiplier
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))

@@ -517,7 +517,7 @@
 		G.fired_from = src //for signal check
 		playsound(user, 'sound/abnormalities/pagoda/throw.ogg', 100, TRUE) //yes im reusing a sound bite me
 		G.firer = user
-		G.AimProjectile(target, user, clickparams)
+		G.AimProjectile(target, user, params2list(clickparams))
 		G.fire()
 		G.damage*=force_multiplier
 		gun_cooldown = world.time + gun_cooldown_time
