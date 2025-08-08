@@ -27,7 +27,6 @@ GLOBAL_LIST_INIT(unspawned_sales, list(
 	icon = 'icons/effects/landmarks_static.dmi'
 	icon_state = "x4"
 
-/// This was EDITED FOR TESTING remember to remove the rigged stuff before merging
 /obj/effect/landmark/salesspawn/Initialize()
 	..()
 	if(!LAZYLEN(GLOB.unspawned_sales)) // You shouldn't ever need this but I mean go on I guess

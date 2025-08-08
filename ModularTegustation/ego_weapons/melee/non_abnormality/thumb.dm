@@ -903,10 +903,10 @@
 	inhand_icon_state = "thumb_east_tiantuistarblade"
 	force = 92
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 120,
-							PRUDENCE_ATTRIBUTE = 120,
-							TEMPERANCE_ATTRIBUTE = 120,
-							JUSTICE_ATTRIBUTE = 120
+							FORTITUDE_ATTRIBUTE = 130,
+							PRUDENCE_ATTRIBUTE = 130,
+							TEMPERANCE_ATTRIBUTE = 130,
+							JUSTICE_ATTRIBUTE = 130
 							)
 	max_ammo = 12
 	lunge_cooldown_duration = 7 SECONDS
@@ -919,6 +919,201 @@
 		/obj/item/stack/thumb_east_ammo/tigermark/facility,
 		/obj/item/stack/thumb_east_ammo/tigermark/savage,
 	)
+	actions_types = list(/datum/action/item_action/chachihu)
+	var/special_ability_targeting = FALSE
+	var/special_ability_simplemob_oldAI
+
+// Following code corresponds to a silly ability for the admin-only weapon and can be ignored for all normal gameplay purposes. It should never show up in a normal round.
+// It is basically like Furioso: long cutscene that is purely aesthetic, and then the damage is applied at the end.
+/datum/action/item_action/chachihu
+	name = "Savage Tigerslayer's Perfected Flurry of Blades"
+	desc = "Click on a non-adjacent target after using this action to ultrakill them. Requires 10 heat and 6 live rounds. Does not include anti-chasm/lava insurance."
+	icon_icon = 'icons/obj/food/burgerbread.dmi'
+	button_icon_state = "bongbread"
+
+/datum/action/item_action/chachihu/Trigger()
+	// Don't call ..() here or we will accidentally attack_self the weapon, which is supposed to do something else (enable/disable combos)
+	var/obj/item/ego_weapon/city/thumb_east/podao/tiantui/sword = owner.get_active_held_item()
+	if(istype(sword))
+		if(sword.special_ability_targeting)
+			sword.special_ability_targeting = FALSE
+			to_chat(owner, span_danger("You decide to have some mercy."))
+		else
+			sword.special_ability_targeting = TRUE
+			to_chat(owner, span_danger("You will use your perfected technique on your next target."))
+
+/// This override checks to see if we've activated our flurry. If we have, and we click someone at range, we activate the flurry.
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	if(special_ability_targeting && CanUseEgo(user) && isliving(target))
+		special_ability_targeting = FALSE
+		INVOKE_ASYNC(src, PROC_REF(PrepareFlurry), target, user)
+		return TRUE
+	. = ..()
+
+/// This proc checks to see if you can even use the flurry. You need a certain amount of ammo and heat.
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/PrepareFlurry(mob/living/target, mob/living/user)
+	if(length(current_ammo) >= 6 && overheat >= 10)
+		overheat -= 10
+		FlurryClash(target, user)
+	else
+		to_chat(user, span_danger("You don't have enough resources to use your flurry of blades! You need 6 rounds and 10 heat."))
+
+/// Proc handles dashing to or through a target, it's used a lot in FlurryCombo(). It forcemoves our user, which is dubious but should be fine in most cases.
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryDash(mob/living/user, mob/living/target, dash_through = FALSE)
+	var/turf/origin = get_turf(user)
+	var/turf/destination = get_ranged_target_turf_direct(user, target, dash_through ? get_dist(user, target) + 2 : get_dist(user, target) - 1)
+	new /obj/effect/temp_visual/thumb_east_aoe_impact(origin)
+	user.forceMove(destination)
+	var/datum/beam/trail = origin.Beam(user, "1-full", time=2)
+	if(trail)
+		trail.visuals.color = "#9e1638"
+
+/// This proc initiates the flurry of blades. We dash through our target and stun them (and ourselves) for the length of the combo.
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryClash(mob/living/target, mob/living/carbon/human/user)
+	var/cutscene_duration = 8 SECONDS // I'm genuinely just putting it here as a proc var so it's easier to edit in-code.
+	user.Immobilize(cutscene_duration)
+	user.changeNext_move(cutscene_duration)
+	FlurryDash(user, target, TRUE)
+	playsound(src, 'sound/weapons/ego/thumb_east_podao_clash.ogg', 80, FALSE, 10)
+
+	// For simplemobs: we disable their AI and promise to turn it back on later. This is because can_act and can_move aren't merged yet, sorry, this is the best I've got
+	if(istype(target, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/unfortunate_victim = target
+		special_ability_simplemob_oldAI = unfortunate_victim.AIStatus
+		unfortunate_victim.AIStatus = AI_OFF
+		unfortunate_victim.Goto(get_turf(unfortunate_victim))
+		unfortunate_victim.patrol_reset()
+		addtimer(CALLBACK(src, PROC_REF(ReactivateTargetSimplemob), unfortunate_victim), cutscene_duration)
+	// Humans just get immobilized though.
+	else if(ishuman(target))
+		var/mob/living/carbon/human/unfortunate_human = target
+		unfortunate_human.Immobilize(cutscene_duration)
+
+	// I do wanna make it obvious that they're stunned.
+	target.emote("flip")
+	to_chat(target, span_userdanger("[user] breaks your guard with a powerful strike!"))
+	new /obj/effect/temp_visual/weapon_stun(get_turf(target))
+	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+
+	sleep(0.5 SECONDS)
+	FlurryCombo(target, user)
+
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryCombo(mob/living/target, mob/living/carbon/human/user)
+	// Beginning.
+	sleep(0.5 SECONDS)
+	user.face_atom(target)
+	user.say("Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!")
+	playsound(src, 'sound/weapons/ego/thumb_east_podao_leap_prep.ogg', 80, FALSE, 10)
+	sleep(1.2 SECONDS)
+
+	// First hit - dash through the target.
+	playsound(src, detonation_sound, 80, FALSE, 10)
+	SpendAmmo(user)
+	sleep(0.2 SECONDS)
+	FlurryDash(user, target, TRUE)
+	FlurryHit(target, user, hitsound)
+	ApplyStatusEffects(target, COMBO_LUNGE)
+	sleep(0.7 SECONDS)
+
+	// Second hit - dash to the target and sweep.
+	user.face_atom(target)
+	SpendAmmo(user)
+	playsound(src, detonation_sound, 80, FALSE, 10)
+	sleep(0.2 SECONDS)
+	FlurryDash(user, target, FALSE)
+	FlurryHit(target, user, hitsound)
+	ApplyStatusEffects(target, COMBO_ATTACK2)
+	RadiusAOE(target, user, COMBO_FINISHER)
+	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	sleep(0.8 SECONDS)
+
+	// Third hit - dash through the target.
+	playsound(src, detonation_sound, 80, FALSE, 10)
+	SpendAmmo(user)
+	sleep(0.2 SECONDS)
+	FlurryDash(user, target, TRUE)
+	FlurryHit(target, user, hitsound)
+	ApplyStatusEffects(target, COMBO_LUNGE)
+	sleep(0.7 SECONDS)
+
+	// Fourth hit - dash to the target and slam.
+	user.face_atom(target)
+	SpendAmmo(user)
+	playsound(src, detonation_sound, 80, FALSE, 10)
+	FlurryDash(user, target, FALSE)
+	sleep(0.2 SECONDS)
+	FlurryHit(target, user, hitsound)
+	ApplyStatusEffects(target, COMBO_ATTACK2)
+	RadiusAOE(target, user, COMBO_FINISHER)
+	sleep(0.7 SECONDS)
+
+	// Fifth hit - slash them away, knocking them back into position for the final hit.
+	user.face_atom(target)
+	SpendAmmo(user)
+	FlurryHit(target, user, sweep_sound)
+	ApplyStatusEffects(target, COMBO_ATTACK2)
+	RadiusAOE(target, user, COMBO_FINISHER)
+	target.throw_at(get_ranged_target_turf_direct(user, target, 3), 3, 4, user, TRUE)
+	sleep(0.8 SECONDS)
+
+	// Final hit - a leap.
+	user.face_atom(target)
+	playsound(src, 'sound/weapons/ego/thumb_east_podao_leap_prep.ogg', 80, FALSE, 10)
+	sleep(1.1 SECONDS)
+	playsound(src, detonation_sound, 80, FALSE, 10)
+	SpendAmmo(user)
+
+	// Below code is the same as in Leap(). I can refactor this to make them both use a smaller, modular code but it would then involve using async stuff in Leap()...
+	// I genuinely think this is a simpler approach but if a maintainer disagrees I will change it.
+	var/horizontal_difference = target.x - user.x
+	var/x_to_offset = 0
+	// We figure out in which horizontal direction we should animate the leap.
+	switch(horizontal_difference)
+		if(0)
+			x_to_offset = 0
+		if(1 to INFINITY)
+			x_to_offset = 32
+		if(-INFINITY to -1)
+			x_to_offset = -32
+	user.face_atom(target)
+	animate(user, 0.4 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y + 16, pixel_x = user.base_pixel_x + x_to_offset, alpha = 0)
+	sleep(0.4 SECONDS)
+	// It's okay if we're on top of the target or next to them, get_ranged_target_turf_direct will just return our own turf anyways.
+	var/turf/landing_zone = get_ranged_target_turf_direct(user, target, get_dist(user, target) - 1)
+	// Janky way to leap at someone? Yes, I guess it is. It can always be made into a "dash" like the lunge is, but I think this is better.
+	landing_zone.is_blocked_turf(TRUE) ? user.forceMove(get_turf(target)) : user.forceMove(landing_zone)
+	// Make us appear as though we're coming in really fast from the direction of our starting point.
+	user.pixel_x *= 2.5
+	user.pixel_x *= -1
+	user.pixel_y += 16
+	animate(user, 0.2 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y, pixel_x = user.base_pixel_x, alpha = 255)
+	sleep(0.2 SECONDS)
+
+	FlurryHit(target, user, finisher_sound)
+	// Damage dealt: (Force + Round Flat Force Bonus) * (Number of Hits) * (Arbitrary Motion Value) * (Justice Coeff)
+	// No point in trying to balance this. If a staffer used this on someone they might have as well qdel'd them.
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	if(ishuman(target))
+		justicemod = 1
+	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE)
+	ApplyStatusEffects(target, COMBO_FINISHER)
+	RadiusAOE(target, user, COMBO_FINISHER)
+
+	sleep(0.2 SECONDS)
+	ReturnToNormal(user)
+	for(var/turf/T in range(finisher_aoe_base_size + 3, src))
+		for(var/mob/living/L in T)
+			shake_camera(L, 3, 5)
+
+/// This proc merely plays the "hitting something" animation and plays the sound we ask it to.
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryHit(mob/living/target, mob/living/carbon/human/user, sound)
+	playsound(src, sound, 80, TRUE, 10)
+	user.do_attack_animation(target)
+
+/// This proc reactivates a simplemob's AI if we disabled it at the beginning of a flurry. We do this with addtimer().
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/ReactivateTargetSimplemob(mob/living/simple_animal/hostile/target)
+	target.AIStatus = special_ability_simplemob_oldAI
 
 ////////////////////////////////////////////////////////////
 // AMMUNITION SECTION.
