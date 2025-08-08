@@ -5,6 +5,8 @@
 #define VEHICLE_CONTROL_KIDNAPPED 4 //Can't leave vehicle voluntarily, has to resist.
 
 //Ridden vehicle flags
+///using equipment/weapons on the vehicle
+#define VEHICLE_CONTROL_EQUIPMENT (1<<3)
 
 /// Does our vehicle require arms to operate? Also used for piggybacking on humans to reserve arms on the rider
 #define RIDER_NEEDS_ARMS   (1<<0)

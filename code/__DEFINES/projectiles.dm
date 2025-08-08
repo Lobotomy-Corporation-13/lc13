@@ -27,6 +27,8 @@
 #define CALIBER_45			".45"
 /// The caliber used by sniper rifles and the desert eagle.
 #define CALIBER_50			".50"
+
+
 /// The caliber used by the gyrojet pistol.
 #define CALIBER_75			".75"
 /// The caliber used by [one revolver variant][/obj/item/gun/ballistic/revolver/nagant].
@@ -51,7 +53,48 @@
 #define CALIBER_ARROW		"arrow"
 /// The caliber used by the harpoon gun.
 #define CALIBER_HARPOON		"harpoon"
+
+
 /// The caliber used by the meat hook.
 #define CALIBER_HOOK		"hook"
 /// The caliber used by the changeling tentacle mutation.
 #define CALIBER_TENTACLE	"tentacle"
+
+/// For gunpoints, how many tiles around the target the shooter can roam without losing their shot
+#define GUNPOINT_SHOOTER_STRAY_RANGE 2
+
+/// A spark will be generated for each THIS amount of damage dealt to a robotic limb by a projectile.
+#define PROJECTILE_DAMAGE_PER_ROBOTIC_SPARK 20
+
+//Designed for things that need precision trajectories like projectiles.
+//Don't use this for anything that you don't absolutely have to use this with (like projectiles!) because it isn't worth using a datum unless you need accuracy down to decimal places in pixels.
+
+//You might see places where it does - 16 - 1. This is intentionally 17 instead of 16, because of how byond's tiles work and how not doing it will result in rounding errors like things getting put on the wrong turf.
+
+#define RETURN_PRECISE_POSITION(A) new /datum/position(A)
+#define RETURN_PRECISE_POINT(A) new /datum/point(A)
+
+///The self charging rate of energy guns that magically recharge themselves, in watts.
+#define STANDARD_ENERGY_GUN_SELF_CHARGE_RATE (0.05 * STANDARD_CELL_CHARGE)
+
+/// Macro to turn a number of laser shots into an energy cost, based on the above define
+/// e.g. LASER_SHOTS(12, STANDARD_CELL_CHARGE) means 12 shots
+#define LASER_SHOTS(X, MAX_CHARGE) (((100 * MAX_CHARGE) - ((100 * MAX_CHARGE) % X)) / (100 * X)) // I wish I could just use round, but it can't be used in datum members
+
+/// How far do the projectile hits the prone mob
+#define MAX_RANGE_HIT_PRONE_TARGETS 10
+
+/// Queued for impact deletion (simple qdel)
+#define PROJECTILE_IMPACT_DELETE "impact_delete"
+/// Queued for range deletion (on_range call)
+#define PROJECTILE_RANGE_DELETE "range_delete"
+
+/// Projectile either hasn't impacted anything, or pierced through the target
+#define PROJECTILE_IMPACT_PASSED "impact_passed"
+/// Projectile has been "deleted" before bullet_act call has occured
+#define PROJECTILE_IMPACT_INTERRUPTED "impact_interrupted"
+/// Projectile has successfully impacted something and is scheduled for deletion
+#define PROJECTILE_IMPACT_SUCCESSFUL "impact_successful"
+
+/// For how long projectile tracers linger
+#define PROJECTILE_TRACER_DURATION 0.3 SECONDS

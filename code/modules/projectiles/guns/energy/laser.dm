@@ -105,10 +105,9 @@
 	range = 255
 	damage = 6
 
-/obj/projectile/beam/laser/accelerator/Range()
+/obj/projectile/beam/laser/accelerator/reduce_range()
 	..()
 	damage += 7
-	transform *= 1 + ((damage/7) * 0.2)//20% larger per tile
 
 ///X-ray gun
 
