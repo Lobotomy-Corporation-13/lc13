@@ -589,9 +589,10 @@
 		deltimer(combo_reset_timer)
 		// You get a tiny bit of extra time to land your finisher. This is mostly because leaping is a channeled action.
 		// Why are we checking for COMBO_ATTACK2? Because that'll be when the last timer started before we attempt to do our finisher.
+		var/time_to_combo = combo_reset_timer_duration
 		if(combo_stage == COMBO_ATTACK2)
-			combo_reset_timer_duration += 2 SECONDS
-		combo_reset_timer = addtimer(CALLBACK(src, PROC_REF(ReturnToNormal), user), combo_reset_timer_duration, TIMER_STOPPABLE)
+			time_to_combo += 2 SECONDS
+		combo_reset_timer = addtimer(CALLBACK(src, PROC_REF(ReturnToNormal), user), time_to_combo, TIMER_STOPPABLE)
 		qdel(round)
 
 /// Creates a spent cartridge, then ejects it if the weapon is SPENT_INSTANTEJECT or stores it if the weapon is SPENT_RELOADEJECT.
