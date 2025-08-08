@@ -10,7 +10,7 @@
 	damage_type = FIRE
 	damage = 10
 	paralyze = 20
-	speed = 2
+	speed = 1
 	range = 16
 	var/datum/beam/arm
 	var/handedness = 0

@@ -503,7 +503,6 @@
 	ammo_type = /obj/item/food/chewable/gumball/cyborg
 	nodamage = TRUE
 	damage = 0
-	speed = 0.5
 
 /obj/projectile/bullet/reusable/gumball/harmful
 	ammo_type = /obj/item/food/chewable/gumball/cyborg
@@ -534,7 +533,6 @@
 	ammo_type = /obj/item/food/chewable/lollipop/cyborg
 	nodamage = TRUE
 	damage = 0
-	speed = 0.5
 	var/color2 = rgb(0, 0, 0)
 
 /obj/projectile/bullet/reusable/lollipop/harmful

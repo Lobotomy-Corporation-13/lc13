@@ -48,7 +48,7 @@
 	name = "magic bullet"
 	icon_state = "magic_bullet"
 	damage = 80
-	speed = 0.1
+	speed = 1.1
 	damage_type = BLACK_DAMAGE
 	projectile_piercing = PASSMOB
 	range = 18 // Don't want people shooting it through the entire facility
@@ -72,14 +72,14 @@
 	name = "solemn lament"
 	icon_state = "whitefly"
 	damage = 35
-	speed = 0.35
+	speed = 1.35
 	damage_type = WHITE_DAMAGE
 
 /obj/projectile/ego_bullet/ego_solemnvow
 	name = "solemn vow"
 	icon_state = "blackfly"
 	damage = 35
-	speed = 0.35
+	speed = 1.35
 	damage_type = BLACK_DAMAGE
 
 //Smartgun
@@ -87,7 +87,7 @@
 	name = "loyalty"
 	icon_state = "loyalty"
 	damage = 4
-	speed = 0.2
+	speed = 1.2
 	damage_type = RED_DAMAGE
 
 /obj/projectile/ego_bullet/ego_loyalty/iff
@@ -171,7 +171,7 @@
 	name = "magic pistol"
 	icon_state = "magic_bullet"
 	damage = 40
-	speed = 0.1
+	speed = 1.1
 	damage_type = BLACK_DAMAGE
 	projectile_piercing = PASSMOB
 
@@ -179,7 +179,7 @@
 /obj/projectile/ego_bullet/ego_intention
 	name = "good intentions"
 	damage = 5
-	speed = 0.2
+	speed = 1.2
 	damage_type = RED_DAMAGE
 
 //laststop
@@ -235,7 +235,7 @@
 	damage = 40
 	damage_type = WHITE_DAMAGE
 	homing = TRUE
-	speed = 1.5
+	speed = 2.5
 
 //Exuviae
 /obj/projectile/ego_bullet/ego_exuviae
@@ -356,7 +356,7 @@
 	name = "fell bullet"
 	icon_state = "fell_bullet"
 	damage = 40
-	speed = 0.1
+	speed = 1.1
 	damage_type = RED_DAMAGE
 	projectile_piercing = PASSMOB
 	range = 36
@@ -379,7 +379,7 @@
 	name = "fell bullet"
 	icon_state = "fell_bullet"
 	damage = 80
-	speed = 0.1
+	speed = 1.1
 	damage_type = RED_DAMAGE
 	projectile_piercing = PASSMOB
 	range = 18

@@ -614,7 +614,7 @@
 	damage = 15
 	damage_type = FIRE
 	nodamage = FALSE
-	speed = 0.3
+	speed = 3.5
 
 	var/zap_power = 20000
 	var/zap_range = 15
@@ -680,7 +680,7 @@
 	damage = 350
 	damage_type = BLACK_DAMAGE
 	armour_penetration = 0
-	speed = 1.5 // Slow
+	speed = 0.3 // Slow
 	damage_falloff_tile = -5 // Loses a bit of damage so you don't get jumpscared out of nowhere
 	white_healing = FALSE
 	nodamage = FALSE

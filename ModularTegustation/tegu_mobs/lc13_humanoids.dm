@@ -734,7 +734,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	name ="flame bolt"
 	icon_state= "helios_fire"
 	damage = 15
-	speed = 8
+	speed = 4
 	damage_type = RED_DAMAGE
 	//projectile_piercing = PASSMOB
 	ricochets_max = 20

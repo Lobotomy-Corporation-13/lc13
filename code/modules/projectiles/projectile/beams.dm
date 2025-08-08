@@ -14,7 +14,7 @@
 	light_color = COLOR_SOFT_RED
 	ricochets_max = 50	//Honk!
 	ricochet_chance = 80
-	reflectable = REFLECT_NORMAL
+	reflectable = TRUE
 	wound_bonus = -20
 	bare_wound_bonus = -10
 
@@ -61,7 +61,7 @@
 	name = "hellfire laser"
 	wound_bonus = 0
 	damage = 25
-	speed = 0.6 // higher power = faster, that's how light works right
+	speed = 1.6 // higher power = faster, that's how light works right
 
 /obj/projectile/beam/laser/hellfire/Initialize()
 	. = ..()

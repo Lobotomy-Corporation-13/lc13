@@ -640,7 +640,7 @@
 /obj/projectile/ego_bullet/atelier_logic
 	name = "atelier logic"
 	damage = 80
-	speed = 0.3
+	speed = 1.3
 	icon_state = "logic"
 	damage_type = BLACK_DAMAGE
 

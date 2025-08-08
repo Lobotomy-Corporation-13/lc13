@@ -440,7 +440,7 @@
 	desc = "A mini black hole."
 	nodamage = TRUE
 	hitsound = "sound/effects/footstep/slime1.ogg"
-	speed = 0
+	speed = 0.6
 	damage = 30
 	damage_type = BLACK_DAMAGE
 

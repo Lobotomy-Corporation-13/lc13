@@ -30,7 +30,7 @@
 	ricochet_incidence_leeway = 0
 	suppressed = SUPPRESSED_VERY
 	damage_type = BOMB
-	speed = 1.2
+	speed = 0.8
 	wound_bonus = 30
 	bare_wound_bonus = 30
 	wound_falloff_tile = -4

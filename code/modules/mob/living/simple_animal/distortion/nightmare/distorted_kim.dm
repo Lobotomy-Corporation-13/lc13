@@ -333,7 +333,7 @@
 	playsound(src, charge_sound)
 
 /obj/projectile/ripper_dash_effect
-	speed = 0.32
+	speed = 1.32
 	icon = 'ModularTegustation/Teguicons/32x32.dmi'
 	icon_state = "ripper_dash"
 	projectile_piercing = ALL

@@ -318,7 +318,7 @@
 	desc = "A bullet fired from a red-cloaked mercenary's ruthless weapon."
 	icon_state = "loyalty"
 	range = 15
-	speed = 0.6
+	speed = 1.6
 	spread = 10
 	pixel_y = 30
 
@@ -356,7 +356,7 @@
 	spread = 60
 	slur = 3
 	eyeblur = 3
-	speed = 1.5 //VERY SLOW, to make it easier to dodge
+	speed = 0.5 //VERY SLOW, to make it easier to dodge
 	var/random_sprite_list = list(
 	"fishbone",
 	"bone"
@@ -421,7 +421,7 @@
 	name = "bone sniper round"
 	icon_state = "bonebullet_long"
 	damage = 100
-	speed = 0.4
+	speed = 1.6
 
 /obj/projectile/frost_splinter
 	name = "frost splinter"
@@ -429,7 +429,7 @@
 	icon_state = "ice_2"
 	damage_type = RED_DAMAGE
 	damage = 40
-	speed = 3
+	speed = 2
 	alpha = 0
 	spread = 20
 
