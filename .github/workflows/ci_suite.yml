@@ -32,9 +32,7 @@ jobs:
           key: ${{ runner.os }}-yarn
       - name: Install Tools
         run: |
-          pip3 install setuptools
           bash tools/ci/install_spaceman_dmm.sh dreamchecker
-          tools/bootstrap/python -c ''
       - name: Run Linters
         run: |
           bash tools/ci/check_filedirs.sh lobotomy-corp13.dme
