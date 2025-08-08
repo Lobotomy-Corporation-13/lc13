@@ -190,15 +190,6 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	attribute_requirements = list(
 							TEMPERANCE_ATTRIBUTE = 80)
 
-/obj/item/clothing/suit/armor/ego_gear/waw/throne
-	name = "false throne"
-	desc = "And here I sit upon a throne of lies."
-	icon_state = "throne"
-	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 0, BLACK_DAMAGE = 40, PALE_DAMAGE = 70)
-	attribute_requirements = list(
-							PRUDENCE_ATTRIBUTE = 60,
-							JUSTICE_ATTRIBUTE = 60)
-
 /obj/item/clothing/suit/armor/ego_gear/waw/intentions
 	name = "good intentions"
 	desc = "All aboard!"
@@ -465,8 +456,8 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 /obj/item/clothing/suit/armor/ego_gear/waw/holiday
 	name = "holiday"
 	desc = "A snazzy outfit for bringing Christmas cheer to all the boys and girls."
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/joke/!icons/ego_armor.dmi'  //Just stealing the ultimate christmas sprites
-	worn_icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/joke/!icons/ego_worn.dmi'
+	icon = 'ModularTegustation/Teguicons/joke_abnos/joke_armor.dmi'
+	worn_icon = 'ModularTegustation/Teguicons/joke_abnos/joke_worn.dmi'
 	icon_state = "ultimate_christmas"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 50, BLACK_DAMAGE = 10, PALE_DAMAGE = 20) // 140
 	attribute_requirements = list(
@@ -501,3 +492,10 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	attribute_requirements = list(
 							JUSTICE_ATTRIBUTE = 80
 							)
+
+/obj/item/clothing/suit/armor/ego_gear/waw/heaven
+	name = "heaven"
+	desc = "That's what a gaze is. Attention. An invisible string that connects us."
+	icon_state = "heaven"
+	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 10) // 140. LobCorp original stats: 1.2, 0.8, 0.6, 1.2.
+	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80) //Requires Fortitude Level 3 in LobCorp.

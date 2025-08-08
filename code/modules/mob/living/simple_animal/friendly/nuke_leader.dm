@@ -434,13 +434,33 @@
 			"text" = "I have sent out some scouts to make gas masks to traverse, you should be able to find them in the old butcher's restaurant.",
 			"actions" = list(
 				"..." = list(
-					"text" = "Thanks for giving directions.",
-					"default_scene" = "main_screen"
+					"text" = "...",
+					"default_scene" = "breifcase_11"
 				)
 			)
 		),
 
 		"breifcase_11" = list(
+			"text" = "Oh, one more thing of note. After some careful observations of those clowns, they appear to share some sort of connection with their 'Grandfather'.",
+			"actions" = list(
+				"..." = list(
+					"text" = "...",
+					"default_scene" = "breifcase_12"
+				)
+			)
+		),
+
+		"breifcase_12" = list(
+			"text" = "So, if you wish attempt to hunt down the 'Grandfather', I would recommend killing every single clown before hand. You would not want to be jumped by all of them.",
+			"actions" = list(
+				"..." = list(
+					"text" = "Thanks for the warning.",
+					"default_scene" = "breifcase_main"
+				)
+			)
+		),
+
+		"breifcase_main" = list(
 			"text" = "Hm... Got any updates on that?",
 			"actions" = list(
 				"..." = list(
@@ -481,7 +501,7 @@
 			"actions" = list(
 				"..." = list(
 					"text" = "...",
-					"default_scene" = "breifcase_11"
+					"default_scene" = "breifcase_main"
 				)
 			)
 		),
@@ -525,5 +545,10 @@
 				qdel(heart)
 				new /obj/item/keycard/stockroom (get_turf(L))
 				playsound(get_turf(src), 'sound/effects/cashregister.ogg', 35, 3, 3)
+				
+				// Award achievement for completing the quest
+				if(L.client)
+					L.client.give_award(/datum/award/achievement/lc13/city/rat_leader_quest, L)
+				
 				return TRUE
 	return FALSE

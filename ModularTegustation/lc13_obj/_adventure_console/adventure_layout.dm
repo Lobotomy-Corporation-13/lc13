@@ -1,5 +1,5 @@
 /**
- * ADVENTURE CONSOLE V2.1
+ * ADVENTURE CONSOLE V2.3
  * TEXT BASED ADVENTURES
  * Adventures that are mostly predefined paths.
  * This was difficult to finalize since i havent made a text based adventure before.
@@ -115,7 +115,6 @@
 		new /datum/data/extraction_cargo("TOY SWORD",	/obj/item/toy/waterballoon,			10) = 1,
 		new /datum/data/extraction_cargo("CAT TOY",	/obj/item/toy/cattoy,					15) = 1,
 		new /datum/data/extraction_cargo("PLUSH OF A FRIEND",/obj/item/toy/plush/binah,		15) = 1,
-		new /datum/data/extraction_cargo("UNMARKED CRATE",/obj/structure/lootcrate,			20) = 1,
 		new /datum/data/extraction_cargo("HOURGLASS",	/obj/item/hourglass,				25) = 1,
 		new /datum/data/extraction_cargo("CAT",	/mob/living/simple_animal/pet/cat,			50) = 1,
 		new /datum/data/extraction_cargo("CAK",	/mob/living/simple_animal/pet/cat/cak,		100) = 1,
@@ -126,7 +125,7 @@
 		new /datum/data/extraction_cargo("A GRENADE",				/obj/effect/spawner/lootdrop/grenade,	3) = 1,
 		new /datum/data/extraction_cargo("SOME AHN",				/obj/item/stack/spacecash/c500,			5) = 1,
 		new /datum/data/extraction_cargo("POSITIVE ENKEPHALIN",		/obj/item/rawpe,						10) = 1,
-		new /datum/data/extraction_cargo("EXPERIENCE",				/obj/item/attribute_increase/small,		15) = 1,
+		new /datum/data/extraction_cargo("UNMARKED CRATE",			/obj/structure/lootcrate,				15) = 1,
 	)
 
 	var/list/exchange_upgrade_list = list(
@@ -600,7 +599,6 @@
 	enemy_key = null
 	currently_scanned = FALSE
 
-	max_block_heal = 0
 	AdjustProgress(10)
 	AdjustStats(increased_stat, 2)
 
@@ -836,7 +834,7 @@
 		if(newhealth == 0)
 			return
 	//To make stat checkup only restore to 50 change the 100's to 50.
-	var/hp_overload_check = (virtual_integrity + newhealth)-100
+	var/hp_overload_check = (virtual_integrity + newhealth)-max_integrity
 	if(hp_overload_check > 0)
 		//Remove overflow from the health we are adding
 		newhealth -= hp_overload_check

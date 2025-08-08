@@ -136,6 +136,12 @@
 	// rcorp stuff
 	var/rcorp_team
 
+/mob/living/simple_animal/hostile/abnormality/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	manual_emote("awakens...")
+
 /mob/living/simple_animal/hostile/abnormality/Initialize(mapload)
 	SHOULD_CALL_PARENT(TRUE)
 	. = ..()
@@ -370,17 +376,18 @@
 	datum_reference.connected_structures[A] = list(x_offset, y_offset)
 	return A
 
-// transfers a var to the datum to be used later
-/mob/living/simple_animal/hostile/abnormality/proc/TransferVar(index, value)
+/* Transfers a var to the datum to be used later
+The variable's key needs to be non-numerical.*/
+/mob/living/simple_animal/hostile/abnormality/proc/TransferVar(key, value)
 	if(isnull(datum_reference))
 		return
-	LAZYSET(datum_reference.transferable_var, value, index)
+	LAZYSET(datum_reference.transferable_var, key, value)
 
 // Access an item in the "transferable_var" list of the abnormality's datum
-/mob/living/simple_animal/hostile/abnormality/proc/RememberVar(index)
+/mob/living/simple_animal/hostile/abnormality/proc/RememberVar(key)
 	if(isnull(datum_reference))
 		return
-	return LAZYACCESS(datum_reference.transferable_var, index)
+	return LAZYACCESS(datum_reference.transferable_var, key)
 
 // Modifiers for work chance
 /mob/living/simple_animal/hostile/abnormality/proc/WorkChance(mob/living/carbon/human/user, chance, work_type)
@@ -467,6 +474,9 @@
 	else // its a list, we gotta pick one
 		var/list/damage_types = work_damage_type
 		damage.icon_state = pick(damage_types)
+	var/damage_type = damage.icon_state
+	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
+		damage.icon_state = GLOB.damage_type_shuffler.mapping_offense[damage_type]
 
 // Dictates whereas this type of work can be performed at the moment or not
 /mob/living/simple_animal/hostile/abnormality/proc/AttemptWork(mob/living/carbon/human/user, work_type)

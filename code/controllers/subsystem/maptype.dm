@@ -23,7 +23,9 @@ SUBSYSTEM_DEF(maptype)
 						FACILITY_TRAIT_MOBA_AGENTS = 10, 		//Agents pick a MOBA class
 						FACILITY_TRAIT_CRITICAL_HITS = 10,		//EGO can Critical hit.
 						FACILITY_TRAIT_DEPARTMENTAL_BUFFS = 10,	//Departmental Agent Buffs
+						FACILITY_TRAIT_XP_MOD = 7,				//XP works differently on HP/SP
 						FACILITY_TRAIT_ABNO_BLITZ = 3,			//The game is significantly Faster, starts after noon.
+						FACILITY_TRAIT_DAMAGE_TYPE_SHUFFLE = 2, //Shuffles all lob corp color damage types randomly. Attack and armor damage types shuffled separately.
 
 						//Joke stuff is below, should all be low
 						FACILITY_TRAIT_WORKING_CLERKS = 2,		//For the joke
@@ -75,6 +77,8 @@ SUBSYSTEM_DEF(maptype)
 			if(FACILITY_TRAIT_VISIBLE_GHOSTS)
 				var/msg = span_warning("You suddenly feel extremely obvious...")
 				set_observer_default_invisibility(0, msg)
+			if(FACILITY_TRAIT_DAMAGE_TYPE_SHUFFLE)
+				GLOB.damage_type_shuffler.is_enabled = TRUE
 
 			if(FACILITY_TRAIT_PLAYABLES)
 				if(!SSlobotomy_corp.enable_possession)
