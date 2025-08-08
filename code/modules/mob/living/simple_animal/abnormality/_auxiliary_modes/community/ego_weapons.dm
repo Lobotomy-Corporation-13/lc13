@@ -18,8 +18,8 @@
 	for(var/mob/living/carbon/human/L in livinginview(8, user))
 		if((!ishuman(L)) || L.stat == DEAD || L == user)
 			continue
-		to_chat(L, span_warning("[user] shields you from WHITE damage!"))
-		L.apply_status_effect(/datum/status_effect/interventionshield/white)
+		to_chat(L, span_warning("[user] casts BARKSKIN!"))
+		L.apply_status_effect(/datum/status_effect/interventionshield/perfect)
 
 // TETH
 
@@ -153,7 +153,7 @@
 		playsound(T, 'sound/weapons/fixer/generic/fire3.ogg', 30, TRUE, 3)
 		new /obj/effect/temp_visual/smash_effect(T)
 		new /obj/effect/temp_visual/fire/fast(T)
-		been_hit = user.HurtInTurf(T, been_hit, aoe_damage, BURN, check_faction = TRUE)
+		been_hit = user.HurtInTurf(T, been_hit, aoe_damage, FIRE, check_faction = TRUE)
 
 /obj/item/ego_weapon/sunspit/get_clamped_volume()
 	return 40

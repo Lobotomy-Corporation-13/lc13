@@ -126,6 +126,10 @@ GLOBAL_LIST_EMPTY(lcorp_upgrades)
 /datum/data/lc13research/clerkbuff/ResearchEffect(obj/structure/representative_console/requester)
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H?.mind?.assigned_role in GLOB.service_positions)
+			if(SSmaptype.chosen_trait == FACILITY_TRAIT_ABNO_BLITZ)
+				H.set_attribute_limit(60)
+				H.adjust_all_attribute_levels(60)
+				return
 			H.set_attribute_limit(40)
 			H.adjust_all_attribute_levels(40)
 
@@ -156,7 +160,7 @@ GLOBAL_LIST_EMPTY(lcorp_upgrades)
 /datum/data/lc13research/plushie_extractor/ResearchEffect(obj/structure/representative_console/requester)
 	if(repeat_cooldown > world.time)
 		return
-	new /obj/item/device/Plushie_Extractor(get_turf(requester))
+	new /obj/item/device/plushie_extractor(get_turf(requester))
 	requester.visible_message(span_notice("The [requester] lights up as it teleports in the Extractor."))
 	repeat_cooldown = world.time + (10 SECONDS)
 

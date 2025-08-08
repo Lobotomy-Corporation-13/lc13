@@ -204,16 +204,19 @@
 	desc = "Report this to a dev"
 	icon_state = "mountain"
 	damage_type = RED_DAMAGE
-
 	damage = 45
 
 /obj/projectile/season_projectile/Moved(atom/OldLoc, Dir)
 	. = ..()
+	if(!istype(firer, /mob/living/simple_animal/hostile/abnormality/seasons))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/seasons/source = firer
 	if(!isturf(loc) || isspaceturf(loc))
 		return
-	if(locate(/obj/effect/season_turf/temporary) in get_turf(src))
+	if(locate(/obj/effect/season_turf) in get_turf(src))
 		return
-	new /obj/effect/season_turf/temporary(get_turf(src))
+	var/obj/effect/season_turf/newturf = new(get_turf(src))
+	source.spawned_turfs += newturf
 
 /obj/projectile/season_projectile/spring
 	name = "burr"
@@ -434,3 +437,25 @@
 	. = ..()
 	hitsound = "sound/weapons/ego/rapier[pick(1,2)].ogg"
 	animate(src, alpha = 255, time = 3)
+
+/obj/projectile/nosferatu_bat
+	name = "bat"
+	icon_state = "bat"
+	damage = 25
+	hitsound = 'sound/abnormalities/nosferatu/bat_attack.ogg'
+	var/mob/living/simple_animal/hostile/abnormality/nosferatu/owner = null
+
+/obj/projectile/nosferatu_bat/on_hit(atom/target, blocked = FALSE)
+	. = ..()
+	var/guaranteed_spawn = FALSE
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(H.stat == DEAD)
+			return
+		var/obj/effect/decal/cleanable/blood/B = new(get_turf(src))
+		B.bloodiness = 200 // 200 Blood for nosferatu or its minions to collect
+		guaranteed_spawn = TRUE
+	if(owner)
+		if(!guaranteed_spawn && prob(75))
+			return
+		owner.BatSpawn(target)
