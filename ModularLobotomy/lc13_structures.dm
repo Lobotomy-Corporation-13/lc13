@@ -77,6 +77,40 @@
 	base_pixel_y = -8
 	anchored = TRUE
 
+/obj/structure/fluff/containment_tank
+	name = "fluid chamber"
+	desc = "A person sized jar of fluid."
+	icon = 'icons/obj/cryogenics.dmi'
+	icon_state = "cell-on"
+	density = TRUE
+	anchored = TRUE
+	light_color = COLOR_GREEN
+	light_range = 2
+	light_power = 3
+
+/obj/structure/fluff/containment_tank/full
+	name = "fluid chamber"
+	desc = "A person sized jar of fluid. Something floats within."
+	icon_state = "cell-occupied"
+
+/obj/structure/fluff/containment_tank/open
+	name = "open fluid chamber"
+	desc = "A person sized jar. Its broken."
+	icon_state = "cell-open"
+	light_color = null
+	light_range = null
+	light_power = null
+
+/obj/structure/fluff/dirthole
+	name = "large hole"
+	desc = "A large hole in ground."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures_64x48.dmi'
+	icon_state = "hole"
+	anchored = TRUE
+	deconstructible = FALSE
+	pixel_x = -16
+	base_pixel_x = -16
+
 /*
 * Wave Spawners. Uses the monwave_spawners component.
 */
