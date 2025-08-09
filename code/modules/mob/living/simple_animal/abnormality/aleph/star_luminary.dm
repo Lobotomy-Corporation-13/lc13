@@ -94,7 +94,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/proc/Pulse()
 	var/cultist_amount = length(cult)
-	pulse_cooldown = world.time + (pulse_cooldown_time - (floor(cultist_amount/5) SECONDS))
+	pulse_cooldown = world.time + (pulse_cooldown_time - (floor(cultist_amount/3) SECONDS))
 	playsound(src, 'sound/abnormalities/bluestar/pulse.ogg', 100, FALSE, 40, falloff_distance = 10)
 	var/matrix/init_transform = transform
 	animate(src, transform = transform*1.5, time = 3, easing = BACK_EASING|EASE_OUT)
@@ -114,6 +114,8 @@
 		if(!H.sanity_lost)
 			H.deal_damage((pulse_damage + (cultist_amount * 10) - get_dist(src, L)), BLACK_DAMAGE)
 			continue // Remember to Change this.
+		else if(!H.has_status_effect(/datum/status_effect/starcultist))
+			H.apply_status_effect(STATUS_EFFECT_STARCULTIST, src, datum_reference.qliphoth_meter)
 	SLEEP_CHECK_DEATH(3)
 	animate(src, transform = init_transform, time = 5)
 	SLEEP_CHECK_DEATH(4)
@@ -184,6 +186,7 @@
 	var/mob/living/simple_animal/hostile/abnormality/star_luminary/luminary
 	var/cult_level
 	var/cache
+	var/praying = FALSE
 
 /datum/status_effect/starcultist/on_creation(mob/living/new_owner, parent, luminaryqli)
 	luminary = parent
@@ -212,6 +215,9 @@
 	. = ..()
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.adjustSanityLoss(1.5 + (0.5 * cult_level))
+	if(!praying && status_holder.sanity_lost)
+		StartInsanity()
+		return
 
 /datum/status_effect/starcultist/proc/update()
 	var/mob/living/carbon/human/status_holder = owner
@@ -232,6 +238,7 @@
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/cultist = owner
 	UnregisterSignal(cultist, COMSIG_HUMAN_INSANE)
+	praying = TRUE
 	addtimer(CALLBACK(src, PROC_REF(CultistInsane)), 1) // Sanity signal gets send before the whole SanityLoss proc is completed, so we need to give it time.
 
 /datum/status_effect/starcultist/proc/CultistInsane()
@@ -260,10 +267,12 @@
 	var/mob/living/carbon/human/cultist = pawn
 	if(DT_PROB(25, delta_time))
 		current_behaviors += GET_AI_BEHAVIOR(lines_type)
+		if(!luminary)
+			return
 		for(var/mob/living/carbon/human/H in oview(9, cultist))
 			if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 				continue
-			if(prob(33) && luminary)
+			if(prob(33) || H.sanity_lost)
 				H.apply_status_effect(STATUS_EFFECT_STARCULTIST, luminary, luminary.datum_reference.qliphoth_meter)
 		cultist.jitteriness += 10
 		cultist.do_jitter_animation(cultist.jitteriness)
