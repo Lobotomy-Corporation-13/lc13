@@ -32,15 +32,10 @@
 	wander = FALSE
 	light_color = COLOR_BLUE
 	light_range = 36
-	light_power = 3
+	light_power = 5
 
 	del_on_death = FALSE
 
-	// ego_list = list(
-	// 	/datum/ego_datum/weapon/star_sound,
-	// 	/datum/ego_datum/armor/star_sound,
-	// )
-	// gift_type =  /datum/ego_gifts/star
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	observation_prompt = "Stars glow blue in the dark. <br>\
@@ -52,7 +47,6 @@
 		"Agree that they are stars." = list(FALSE, "\"Right, but...\" <br>\"I know. That I can't go back to it anymore.\"<br>\
 		\"Their multiple arms shiver in unison. <br>\"That I'm just waving my arms and emitting the blue glow to become a star myself.\" <br>Will we truly meet again as stars, someday?"),
 	)
-
 
 	var/list/cult = list()
 	var/meltdown_tick = 180 SECONDS
@@ -90,12 +84,10 @@
 		if(meltdown_timer < world.time && !datum_reference?.working)
 			if(datum_reference.qliphoth_meter)
 				meltdown_timer = world.time + meltdown_tick
-				datum_reference.qliphoth_change(-1)
+				HandleQli(-1)
+		return
 	if((pulse_cooldown < world.time))
 		Pulse()
-
-/mob/living/simple_animal/hostile/abnormality/express_train/Life()
-	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/CanAttack(atom/the_target)
 	return FALSE
@@ -271,7 +263,7 @@
 		for(var/mob/living/carbon/human/H in oview(9, cultist))
 			if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 				continue
-			if(prob(33))
+			if(prob(33) && luminary)
 				H.apply_status_effect(STATUS_EFFECT_STARCULTIST, luminary, luminary.datum_reference.qliphoth_meter)
 		cultist.jitteriness += 10
 		cultist.do_jitter_animation(cultist.jitteriness)
