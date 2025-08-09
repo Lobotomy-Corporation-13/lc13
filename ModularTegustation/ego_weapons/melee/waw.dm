@@ -2438,6 +2438,8 @@
 
 /// This override handles generating Gaze stacks on hit. We won't generate them if we spent Gaze recently.
 /obj/item/ego_weapon/contempt/attack(mob/living/M, mob/living/user)
+	if(!CanUseEgo(user))
+		return FALSE
 	. = ..()
 	if(gaze_gain_cooldown_period < world.time)
 		var/mob/living/carbon/human/john_contempt = user
@@ -2454,9 +2456,12 @@
 
 /// This override handles the spending of gaze stacks on throwing hit.
 /obj/item/ego_weapon/contempt/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
-	if(spending_gaze && isliving(hit_atom))
-		var/mob/living/carbon/human/john_gaze = throwingdatum.thrower
-		if(istype(john_gaze))
+	throwforce = initial(throwforce)
+	var/mob/living/carbon/human/john_gaze = throwingdatum.thrower
+	if(istype(john_gaze))
+		if(!CanUseEgo(john_gaze))
+			throwforce = 5
+		if(spending_gaze && isliving(hit_atom))
 			var/datum/status_effect/stacking/contempt_weapon_gaze/gaze_stacks = john_gaze.has_status_effect(STATUS_EFFECT_GAZE)
 			if(gaze_stacks)
 				// If we got here, the thrower is a human and has at least 1 gaze stack. We remove them all, go on cooldown, turbo-buff the throwing damage.
@@ -2474,8 +2479,9 @@
 				if(spent_stacks == 6)
 					INVOKE_ASYNC(src, PROC_REF(ThrownHitTeleport), hit_atom, john_gaze)
 				return
+		. = ..()
+		return
 	. = ..()
-
 /// This override allows users to choose when they want to spend their gaze stacks on throw.
 /obj/item/ego_weapon/contempt/attack_self(mob/user)
 	if(!CanUseEgo(user))
