@@ -303,6 +303,9 @@
 "gf" = (
 /obj/effect/turf_decal/delivery,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/item/stack/conveyor_filter_advanced{
+	amount = 10
+	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "gk" = (
