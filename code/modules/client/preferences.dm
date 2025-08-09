@@ -82,7 +82,24 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/skin_tone = "caucasian1"		//Skin color
 	var/eye_color = "000"				//Eye color
 	var/datum/species/pref_species = new /datum/species/human()	//Mutant race
-	var/list/features = list("mcolor" = "FFF", "ethcolor" = "9c3030", "tail_lizard" = "Smooth", "tail_human" = "None", "snout" = "Round", "horns" = "None", "ears" = "None", "wings" = "None", "frills" = "None", "spines" = "None", "body_markings" = "None", "legs" = "Normal Legs", "moth_wings" = "Plain", "moth_antennae" = "Plain", "moth_markings" = "None")
+	var/list/features = list(
+		"mcolor" = "FFF",
+		"ethcolor" = "9c3030",
+		"tail_lizard" = "Smooth",
+		"tail_human" = "None",
+		"snout" = "Round",
+		"horns" = "None",
+		"ears" = "None",
+		"wings" = "None",
+		"frills" = "None",
+		"spines" = "None",
+		"body_markings" = "None",
+		"legs" = "Normal Legs",
+		"moth_wings" = "Plain",
+		"moth_antennae" = "Plain",
+		"moth_markings" = "None",
+		"flavor_text" = "",
+		)
 	var/list/randomise = list(RANDOM_UNDERWEAR = TRUE, RANDOM_UNDERWEAR_COLOR = TRUE, RANDOM_UNDERSHIRT = TRUE, RANDOM_SOCKS = TRUE, RANDOM_BACKPACK = TRUE, RANDOM_JUMPSUIT_STYLE = TRUE, RANDOM_HAIRSTYLE = TRUE, RANDOM_HAIR_COLOR = TRUE, RANDOM_FACIAL_HAIRSTYLE = TRUE, RANDOM_FACIAL_HAIR_COLOR = TRUE, RANDOM_SKIN_TONE = TRUE, RANDOM_EYE_COLOR = TRUE)
 	var/phobia = "spiders"
 
@@ -269,6 +286,15 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			if(randomise[RANDOM_BODY] || randomise[RANDOM_BODY_ANTAG]) //doesn't work unless random body
 				dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_AGE]'>Always Random Age: [(randomise[RANDOM_AGE]) ? "Yes" : "No"]</A>"
 				dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_AGE_ANTAG]'>When Antagonist: [(randomise[RANDOM_AGE_ANTAG]) ? "Yes" : "No"]</A>"
+
+			dat += "<br><a href='?_src_=prefs;preference=flavor_text;task=input'><b>Set Flavor Text</b></a>"
+			if(length(features["flavor_text"]) <= 40)
+				if(!length(features["flavor_text"]))
+					dat += "\[...\]"
+				else
+					dat += "[features["flavor_text"]]"
+			else
+				dat += "[copytext_char(features["flavor_text"], 1, 37)]...<BR>"
 
 			dat += "<br><br><b>Special Names:</b><BR>"
 			var/old_group
@@ -1357,7 +1383,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					var/new_age = input(user, "Choose your character's age:\n([AGE_MIN]-[AGE_MAX])", "Character Preference") as num|null
 					if(new_age)
 						age = max(min( round(text2num(new_age)), AGE_MAX),AGE_MIN)
-
+				if("flavor_text")
+					var/msg = stripped_multiline_input(user, "A snippet of text shown when others examine you, describing what you may look like. This can also be used for OOC notes.", "Flavor Text", html_decode(features["flavor_text"]), MAX_FLAVOR_LEN, TRUE)
+					if(msg) //WS edit - "Cancel" does not clear flavor text
+						features["flavor_text"] = msg
 				if("hair_color")
 					var/new_hair = input(user, "Choose your character's hair colour:", "Character Preference","#" + hair_color) as color|null
 					if(new_hair)
@@ -2068,6 +2097,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 	character.jumpsuit_style = jumpsuit_style
 
+	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
+
 	var/datum/species/chosen_species
 	chosen_species = pref_species.type
 	if(roundstart_checks && !(pref_species.id in GLOB.roundstart_races) && !(pref_species.id in (CONFIG_GET(keyed_list/roundstart_no_hard_check))))
@@ -2135,3 +2166,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			return
 		else
 			custom_names[name_id] = sanitized_name
+
+/datum/preferences/proc/set_flavortext(result)
+	if(result && result != features["flavor_text"])
+		features["flavor_text"] = result

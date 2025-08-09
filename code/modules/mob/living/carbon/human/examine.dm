@@ -434,6 +434,15 @@
 		. += "<span class='info'><b>Traits:</b> [get_quirk_string(FALSE, CAT_QUIRK_ALL)]</span>"
 	. += "*---------*</span>"
 
+	//No flavor text unless the face can be seen. Prevents certain metagaming with impersonation.
+	var/invisible_man = skipface || get_visible_name() == "Unknown"
+	if(invisible_man)
+		. += "...?"
+	else
+		var/flavor = print_flavor_text()
+		if(flavor)
+			. += flavor
+
 	SEND_SIGNAL(src, COMSIG_PARENT_EXAMINE, user, .)
 
 /mob/living/proc/status_effect_examines(pronoun_replacement) //You can include this in any mob's examine() to show the examine texts of status effects!

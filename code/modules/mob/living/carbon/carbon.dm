@@ -1262,6 +1262,12 @@
 /mob/living/carbon/proc/get_biological_state()
 	return BIO_FLESH_BONE
 
+/mob/living/carbon/proc/update_flavor_text_feature(new_text)
+	if(!dna)
+		return FALSE
+	dna.features["flavor_text"] = "[new_text]"
+	return "[new_text]"
+
 /// Returns whether or not the carbon should be able to be shocked
 /mob/living/carbon/proc/should_electrocute(power_source)
 	if (ismecha(loc))

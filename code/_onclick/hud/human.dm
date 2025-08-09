@@ -451,3 +451,12 @@
 	else
 		client.screen -= hud_used.hotkeybuttons
 		hud_used.hotkey_ui_hidden = TRUE
+
+/mob/living/carbon/human/verb/change_flavor_text()
+	set category = "IC"
+	set name = "Change Flavor Text"
+	set desc = "Changes flavor text that appears on your character."
+	if(dna)
+		var/msg = stripped_multiline_input(src, "A snippet of text shown when others examine you, describing what you may look like. This can also be used for OOC notes.", "Flavor Text", null, MAX_FLAVOR_LEN, TRUE)
+		if(msg)
+			flavor_text = update_flavor_text_feature(msg)
