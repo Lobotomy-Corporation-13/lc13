@@ -22,7 +22,7 @@
 		ABNORMALITY_WORK_INSTINCT = -100,
 		ABNORMALITY_WORK_INSIGHT = list(0, 0, 0, 10, 15),
 		ABNORMALITY_WORK_ATTACHMENT = list(0, 0, 0, 15, 25),
-		ABNORMALITY_WORK_REPRESSION = list(0, 0, 0, 30, 40),
+		ABNORMALITY_WORK_REPRESSION = list(0, 0, 0, 25, 35),
 	)
 	work_damage_amount = 16
 	work_damage_type = BLACK_DAMAGE
@@ -56,7 +56,7 @@
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
 	var/pulse_damage = 120 // Scales with distance.
-	var/cult_workchance_boost = 40
+	var/cult_workchance_boost = 30
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/Initialize()
 	. = ..()
@@ -124,18 +124,18 @@
 		if(work_type != ABNORMALITY_WORK_REPRESSION)
 			return work_chance + cult_workchance_boost
 		else
-			return work_chance + (cult_workchance_boost/2)
+			return work_chance + (cult_workchance_boost/3)
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/AttemptWork(mob/living/carbon/human/user, work_type)
 	meltdown_timer = world.time + meltdown_tick
 	meltdown_tick = floor(180 SECONDS / (1 + (length(cult)/10)))
-	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 80)
-		datum_reference.qliphoth_change(-1)
-		playsound(src, 'sound/abnormalities/bluestar/pulse.ogg', 25, FALSE, 28)
-		user.death()
-		animate(user, transform = user.transform*0.01, time = 5)
-		QDEL_IN(user, 5)
-		return FALSE
+	// if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 80)
+	// 	datum_reference.qliphoth_change(-1)
+	// 	playsound(src, 'sound/abnormalities/bluestar/pulse.ogg', 25, FALSE, 28)
+	// 	user.death()
+	// 	animate(user, transform = user.transform*0.01, time = 5)
+	// 	QDEL_IN(user, 5)
+	// 	return FALSE
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
