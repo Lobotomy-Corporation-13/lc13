@@ -416,17 +416,6 @@
 	subcategory = CAT_UNUSUAL
 
 
-/datum/crafting_recipe/food/donut/chaos
-	name = "Chaos donut"
-	reqs = list(
-		/datum/reagent/consumable/frostoil = 5,
-		/datum/reagent/consumable/capsaicin = 5,
-		/obj/item/food/pastrybase = 1
-	)
-	result = /obj/item/food/donut/chaos
-	subcategory = CAT_UNUSUAL
-
-
 /datum/crafting_recipe/food/donkpocket/gondola
 	time = 15
 	name = "Gondola-pocket"
