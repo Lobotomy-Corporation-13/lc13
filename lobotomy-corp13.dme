@@ -3539,6 +3539,7 @@
 #include "code\modules\reagents\reagent_containers\syringes.dm"
 #include "code\modules\recycling\conveyor2.dm"
 #include "code\modules\recycling\conveyor_filter.dm"
+#include "code\modules\recycling\conveyor_filter_advanced.dm"
 #include "code\modules\recycling\conveyor_splitter.dm"
 #include "code\modules\recycling\sortingmachinery.dm"
 #include "code\modules\recycling\disposal\bin.dm"
