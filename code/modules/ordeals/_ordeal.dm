@@ -57,6 +57,9 @@
 	priority_announce("The Ordeal has ended. Facility has been rewarded with [reward_percent*100]% PE.", name, sound='sound/vox_fem/..ogg')
 	SSlobotomy_corp.AdjustAvailableBoxes(total_reward)
 	SSlobotomy_corp.current_ordeals -= src
+	var/akward_record_formatting = "[name]|[color]"
+	SSlobotomy_corp.completed_challenges += akward_record_formatting
+	SSlobotomy_corp.completed_challenges[akward_record_formatting] = level
 
 	if(SSmaptype.chosen_trait != FACILITY_TRAIT_ABNO_BLITZ)
 		SSlobotomy_corp.ordeal_stats += 5
