@@ -2989,6 +2989,7 @@
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\fairy_festival.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\fallen_amurdad.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\hammer_light.dm"
+#include "code\modules\mob\living\simple_animal\abnormality\zayin\message.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\oceanwaves.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\one_sin.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\zayin\oracle.dm"
