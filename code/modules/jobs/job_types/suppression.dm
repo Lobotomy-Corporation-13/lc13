@@ -12,8 +12,8 @@
 	outfit = /datum/outfit/job/suppression
 	display_order = JOB_DISPLAY_ORDER_SUPPRESSION
 
-	access = list() // LC13:To-Do
-	minimal_access = list()
+	access = list(ACCESS_SECURITY) // LC13:To-Do
+	minimal_access = list(ACCESS_SECURITY)
 
 	//You need DOs to spawn ERAs. All the mapexclude stuff is below.
 	allow_bureaucratic_error = FALSE
