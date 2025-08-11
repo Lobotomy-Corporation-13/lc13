@@ -295,7 +295,7 @@
 	mode.set_round_result()
 
 	send2adminchat("Server", "Round just ended.")
-	send2chat("Round Complete! Facility Rank:[SSticker.rating_achieved]!"
+	send2chat("Round Complete! Facility Rank:[SSticker.rating_achieved]!")
 
 	if(length(CONFIG_GET(keyed_list/cross_server)))
 		send_news_report()
