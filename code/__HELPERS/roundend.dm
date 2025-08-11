@@ -191,6 +191,8 @@
 		var/datum/mind/M = human_mob.mind
 		if(M.get_skill_level(/datum/skill/fishing) >= 6)
 			player_client.give_award(/datum/award/achievement/lc13/scorpworld, human_mob)
+		if(istype(human_mob.ego_gift_list["Right Back Slot"], /datum/ego_gifts/twilight))
+			player_client.give_award(/datum/award/achievement/lc13/twilight, human_mob)
 		//If you join not from roundstart you do not apply for these achivements.
 		if(M.late_joiner)
 			return FALSE
@@ -209,8 +211,6 @@
 				)
 			if(M.assigned_role in valid_roles)
 				player_client.give_award(/datum/award/achievement/lc13/lcorpworld, human_mob)
-			if(istype(human_mob.ego_gift_list["Right Back Slot"], /datum/ego_gifts/twilight))
-				player_client.give_award(/datum/award/achievement/lc13/twilight, human_mob)
 
 ///Handles random hardcore point rewarding if it applies.
 /datum/controller/subsystem/ticker/proc/HandleRandomHardcoreScore(client/player_client)
@@ -376,6 +376,8 @@
 	//PE Quota
 	if(SSmaptype.maptype == "standard")
 		parts += pe_report()
+		//LC13 Completed Ordeals & Cores
+		parts += ChallengeReport()
 	//Enkephalin Rush
 	if(SSmaptype.maptype == "enkephalin_rush")
 		parts += mining_report()
@@ -665,6 +667,78 @@
 	else
 		parts += "Somehow, nobody made any money this shift! This'll result in some budget cuts...</div>"
 	return parts
+
+/*
+* To make your own challenge report just make sure
+* there is a source of data from what they were doing
+* and just make a proc similar to Adventure_Console UI
+* events.
+*/
+/datum/controller/subsystem/ticker/proc/ChallengeReport()
+	. = list()
+	. += "<span class='header'>Challenges Survived</span>"
+	. += "<div class='panel stationborder'>"
+	if(LAZYLEN(SSlobotomy_corp.completed_challenges))
+		var/list/challenges = SSlobotomy_corp.completed_challenges
+		. += "Ordeals Endured!<br>"
+		/*
+		* Tallying the ordeals before formatting them.
+		* Only has the default normal ordeals prelisted.
+		* Later a coder who knows how to make lists in
+		* lists without them breaking can improve this.
+		* -IP
+		*/
+		var/list/dawn = list()
+		var/list/noon = list()
+		var/list/dusk = list()
+		var/list/midnight = list()
+		var/list/cores = list()
+		for(var/ord in challenges)
+			//Ordeals and Cores are deleted after they are completed so we instead have a text string.
+			var/list/target_list
+			switch(challenges[ord])
+				if(1)
+					target_list = dawn
+				if(2)
+					target_list = noon
+				if(3)
+					target_list = dusk
+				if("core")
+					target_list = cores
+				else
+					target_list = midnight
+
+			if(!(ord in target_list))
+				target_list += ord
+				target_list[ord] = 1
+				continue
+			target_list[ord] += 1
+
+		//Sort them from dawn to midnight.
+		. += FormatOrdeals(dawn)
+		. += FormatOrdeals(noon)
+		. += FormatOrdeals(dusk)
+		. += FormatOrdeals(midnight)
+		. += "----------<br>"
+
+		. += "Cores Completed!<br>"
+		for(var/supp in cores)
+			. += "<b>[supp]</b>:COMPLETED!<br>"
+	. += "</div>"
+
+//Ineffecient but best i could do at the time -IP
+/datum/controller/subsystem/ticker/proc/FormatOrdeals(list/ordeal_list)
+	. = list()
+	if(!LAZYLEN(ordeal_list))
+		return null
+	for(var/i in ordeal_list)
+		if(!i)
+			continue
+		//We saved the name and color as a text string so seperate the text string by its silly symbol
+		var/list/prep_list = splittext(i, "|")
+		var/ordeal_name = prep_list[1]
+		var/ordeal_color = prep_list[2]
+		. += "<b><span style='color: [ordeal_color]'>[ordeal_name]</span></b> x[ordeal_list[i]]<br>"
 
 /datum/controller/subsystem/ticker/proc/pe_report()
 	. = list()
