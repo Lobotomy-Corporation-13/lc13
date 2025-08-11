@@ -42,6 +42,8 @@
 	SSlobotomy_corp.core_suppression = null
 	SSlobotomy_corp.core_suppression_state = max(SSlobotomy_corp.core_suppression_state, 2) // Finished core suppression
 	SSlobotomy_corp.active_core_suppressions -= src
+	SSlobotomy_corp.completed_challenges += "[name]"
+	SSlobotomy_corp.completed_challenges[name] = "core"
 	SSticker.news_report = max(SSticker.news_report, CORE_SUPPRESSED)
 	if(legitimate)
 		SSpersistence.UpdateClearedCores(src)

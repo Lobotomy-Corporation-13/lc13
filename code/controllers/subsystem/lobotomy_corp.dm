@@ -59,6 +59,8 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	var/list/active_core_suppressions = list()
 	// List of available core suppressions for manager to choose
 	var/list/available_core_suppressions = list()
+	// Completed Cores and Ordeals
+	var/list/completed_challenges = list()
 	// State of the core suppression
 	var/core_suppression_state = 0
 	// Work logs from all abnormalities
