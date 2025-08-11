@@ -220,9 +220,6 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 			parsed_favs += path
 	favorite_outfits = uniqueList(parsed_favs)
 
-	//Flavor Text
-	S["feature_flavor_text"]		>> features["flavor_text"]
-
 	//try to fix any outdated data if necessary
 	if(needs_update >= 0)
 		var/bacpath = "[path].updatebac" //todo: if the savefile version is higher then the server, check the backup, and give the player a prompt to load the backup
@@ -414,6 +411,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["feature_moth_wings"], features["moth_wings"])
 	READ_FILE(S["feature_moth_antennae"], features["moth_antennae"])
 	READ_FILE(S["feature_moth_markings"], features["moth_markings"])
+	READ_FILE(S["feature_flavor_text"], features["flavor_text"])
 	READ_FILE(S["persistent_scars"] , persistent_scars)
 	READ_FILE(S["alt_titles_preferences"], alt_titles_preferences)// Tegu edit - Alt job titles
 	if(!CONFIG_GET(flag/join_with_mutant_humans))
@@ -523,7 +521,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	features["moth_wings"] 	= sanitize_inlist(features["moth_wings"], GLOB.moth_wings_list, "Plain")
 	features["moth_antennae"] 	= sanitize_inlist(features["moth_antennae"], GLOB.moth_antennae_list, "Plain")
 	features["moth_markings"] 	= sanitize_inlist(features["moth_markings"], GLOB.moth_markings_list, "None")
-	features["flavor_text"]				= sanitize_text(features["flavor_text"], initial(features["flavor_text"]))
+	features["flavor_text"]		= sanitize_text(features["flavor_text"], initial(features["flavor_text"]))
 
 	persistent_scars = sanitize_integer(persistent_scars)
 
@@ -590,9 +588,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["feature_moth_wings"]			, features["moth_wings"])
 	WRITE_FILE(S["feature_moth_antennae"]			, features["moth_antennae"])
 	WRITE_FILE(S["feature_moth_markings"]		, features["moth_markings"])
-	WRITE_FILE(S["persistent_scars"]			, persistent_scars)
-	//Flavor text
 	WRITE_FILE(S["feature_flavor_text"]			, features["flavor_text"])
+	WRITE_FILE(S["persistent_scars"]			, persistent_scars)
 
 	//Custom names
 	for(var/custom_name_id in GLOB.preferences_custom_names)

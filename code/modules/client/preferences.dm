@@ -2166,7 +2166,3 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			return
 		else
 			custom_names[name_id] = sanitized_name
-
-/datum/preferences/proc/set_flavortext(result)
-	if(result && result != features["flavor_text"])
-		features["flavor_text"] = result
