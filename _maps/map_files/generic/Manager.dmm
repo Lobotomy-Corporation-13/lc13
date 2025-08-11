@@ -1484,7 +1484,7 @@
 /area/facility_hallway/manager)
 "uC" = (
 /obj/machinery/door/poddoor{
-	id = s;
+	id = "disc_blast";
 	name = "external blast door"
 	},
 /turf/open/floor/plasteel/dark,
