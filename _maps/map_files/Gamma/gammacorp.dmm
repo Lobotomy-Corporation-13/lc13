@@ -92,6 +92,15 @@
 /obj/machinery/chem_master,
 /turf/open/floor/facility/white,
 /area/department_main/safety)
+"aS" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/department_main/safety)
 "aT" = (
 /obj/structure/disposaloutlet{
 	dir = 1
@@ -114,6 +123,15 @@
 	},
 /turf/open/floor/facility/white,
 /area/facility_hallway/architecture)
+"aW" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/west)
 "aZ" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/disposalpipe/segment,
@@ -206,6 +224,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/department_main/training)
+"bD" = (
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/welfare)
 "bE" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel,
@@ -759,7 +783,7 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/south)
 "fs" = (
-/turf/open/space/basic,
+/turf/closed/indestructible/rock,
 /area/department_main/information)
 "fx" = (
 /obj/structure/closet/crate,
@@ -1613,6 +1637,16 @@
 /obj/effect/landmark/latejoin,
 /turf/open/floor/wood,
 /area/facility_hallway/south)
+"ln" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/north)
 "lo" = (
 /obj/effect/turf_decal/plaque{
 	alpha = 230;
@@ -4797,6 +4831,16 @@
 /obj/machinery/light,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
+"Eh" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/west)
 "El" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 10
@@ -6866,6 +6910,15 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/control)
+"QW" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/west)
 "QZ" = (
 /obj/effect/turf_decal/siding/green/corner{
 	dir = 8
@@ -7493,6 +7546,9 @@
 "Uv" = (
 /obj/machinery/light{
 	dir = 4
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
 	},
 /turf/open/floor/carpet,
 /area/department_main/control)
@@ -25146,7 +25202,7 @@ LD
 LD
 LD
 GW
-pW
+QW
 JW
 qV
 GW
@@ -26166,7 +26222,7 @@ LD
 LD
 LD
 GW
-pW
+QW
 BZ
 rK
 hb
@@ -26685,8 +26741,8 @@ Mb
 Qv
 sI
 sI
-sI
-sI
+aW
+Eh
 sI
 sI
 sI
@@ -29253,7 +29309,7 @@ GI
 uI
 wP
 QH
-VM
+aS
 jn
 aT
 Oq
@@ -31297,7 +31353,7 @@ Dx
 Dx
 Dx
 Sm
-og
+om
 Ju
 yC
 Sm
@@ -32837,7 +32893,7 @@ Jg
 qW
 qW
 qW
-qW
+ln
 qW
 qW
 qW
@@ -53404,7 +53460,7 @@ PD
 PD
 PD
 gX
-ZV
+bD
 ZV
 EP
 pz

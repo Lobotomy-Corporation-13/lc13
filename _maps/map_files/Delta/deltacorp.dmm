@@ -17,7 +17,6 @@
 	alpha = 230;
 	icon_state = "LC21"
 	},
-/obj/machinery/holopad,
 /turf/open/floor/facility/white,
 /area/department_main/command)
 "al" = (
@@ -889,6 +888,15 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "ph" = (
+/obj/structure/table/reinforced,
+/obj/machinery/recharger{
+	pixel_x = -6;
+	pixel_y = 5
+	},
+/obj/machinery/recharger{
+	pixel_x = 6;
+	pixel_y = 5
+	},
 /obj/machinery/light,
 /turf/open/floor/carpet/red,
 /area/department_main/control)
@@ -1187,6 +1195,15 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/east)
+"uu" = (
+/obj/machinery/computer/operating{
+	dir = 8
+	},
+/obj/structure/sign/painting/library{
+	pixel_y = -32
+	},
+/turf/open/floor/carpet/royalblue,
+/area/department_main/command)
 "uw" = (
 /obj/machinery/fat_sucker,
 /obj/machinery/light{
@@ -1454,6 +1471,11 @@
 /obj/effect/spawner/structure/window/plasma/reinforced/plastitanium,
 /turf/open/floor/plating,
 /area/department_main/control)
+"zw" = (
+/obj/structure/table/optable,
+/obj/item/storage/backpack/duffelbag/med/upgradedsurgery,
+/turf/open/floor/carpet/royalblue,
+/area/department_main/command)
 "zy" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -2318,6 +2340,16 @@
 /obj/item/storage/box/papersack,
 /turf/open/floor/plasteel/white,
 /area/department_main/training)
+"TM" = (
+/obj/structure/table/glass,
+/obj/item/screwdriver,
+/obj/item/crowbar/large,
+/obj/item/weldingtool/experimental,
+/obj/item/wirecutters,
+/obj/item/wrench,
+/obj/item/stack/cable_coil,
+/turf/open/floor/carpet/royalblue,
+/area/department_main/command)
 "Uk" = (
 /turf/open/floor/facility/white,
 /area/department_main/command)
@@ -20354,9 +20386,9 @@ oH
 oH
 oH
 oH
-oH
-oH
-xU
+TM
+zw
+uu
 No
 lF
 lF

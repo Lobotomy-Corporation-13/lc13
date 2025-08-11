@@ -100,7 +100,8 @@
 	display_order = JOB_DISPLAY_ORDER_COMMAND
 	normal_attribute_level = 20
 
-	access = list(ACCESS_COMMAND)
+	access = list(ACCESS_COMMAND, ACCESS_SECURITY)
+	minimal_access = list(ACCESS_COMMAND, ACCESS_SECURITY)
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_SECURITY
 	exp_requirements = 6000
 	exp_type = EXP_TYPE_CREW
