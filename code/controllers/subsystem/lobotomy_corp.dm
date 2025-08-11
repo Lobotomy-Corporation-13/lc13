@@ -246,6 +246,10 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		AddLobPoints(4, "Quota Reward")
 		available_box -= box_goal - goal_boxes // Leftover is drained
 		goal_reached = TRUE
+
+		//You get a C rating if your rating is a D.
+		if(SSticker.rating_achieved == "D")
+			SSticker.rating_achieved = "C"
 		priority_announce("The energy production goal has been reached.", "Energy Production", sound='sound/misc/notice2.ogg')
 		var/pizzatype_list = subtypesof(/obj/item/food/pizza)
 		pizzatype_list -= /obj/item/food/pizza/arnold // No murder pizza

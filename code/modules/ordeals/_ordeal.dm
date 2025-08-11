@@ -86,6 +86,13 @@
 		if(!H.client || !H.ckey)
 			continue
 		SSpersistence.agent_rep_change[H.ckey] += level
+
+	//You get a better rating if you beat midnight
+	if(SSticker.rating_achieved != "A" && level == 4)
+		SSticker.rating_achieved == "B"
+	if(level == 9)	//You get an A rating if you beat white ordeals
+		SSticker.rating_achieved == "A"
+
 	/// If it was a midnight and we got to it before time limit
 	if(level == 4 && start_time <= (CONFIG_GET(number/suppression_time_limit) + (GetFacilityUpgradeValue(UPGRADE_MELTDOWN_INCREASE) * 20 MINUTES)))
 		// Extra cores, and announced!
