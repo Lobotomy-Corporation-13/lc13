@@ -114,6 +114,8 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 	// Tile conversion system (removed old circular conversion)
 	var/list/converted_tiles = list() // Stores original tile types for restoration
 
+	var/destroying_terrain = TRUE
+
 /mob/living/simple_animal/hostile/distortion/pianist/Initialize()
 	. = ..()
 	current_aoe_pattern = shuffle(current_aoe_pattern)
@@ -176,29 +178,29 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 
 		if(PIANIST_PHASE_PERFORMANCE)
 			// Regular combat with reduced environmental attacks
+			if(destroying_terrain)
+				// Summon music notes (normal frequency)
+				if(note_summon_cooldown < world.time)
+					SummonMusicNotes()
 
-			// Summon music notes (normal frequency)
-			if(note_summon_cooldown < world.time)
-				SummonMusicNotes()
+				// AoE attacks
+				if(aoe_attack_cooldown < world.time)
+					PerformAoEAttack()
 
-			// AoE attacks
-			if(aoe_attack_cooldown < world.time)
-				PerformAoEAttack()
+				// Column attacks
+				if(column_attack_cooldown < world.time && length(recent_attackers))
+					PerformColumnAttack()
 
-			// Column attacks
-			if(column_attack_cooldown < world.time && length(recent_attackers))
-				PerformColumnAttack()
+				// Occasional falling notes (reduced frequency)
+				if(falling_note_cooldown < world.time)
+					SpawnFallingNotes()
 
-			// Occasional falling notes (reduced frequency)
-			if(falling_note_cooldown < world.time)
-				SpawnFallingNotes()
-
-			// Rare resonance line
-			if(resonance_line_cooldown < world.time && resonance_line_charges > 0)
-				if(prob(60))
-					AttemptResonanceLine()
-				else
-					AttemptCrossMapResonance()
+				// Rare resonance line
+				if(resonance_line_cooldown < world.time && resonance_line_charges > 0)
+					if(prob(60))
+						AttemptResonanceLine()
+					else
+						AttemptCrossMapResonance()
 
 /mob/living/simple_animal/hostile/distortion/pianist/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
@@ -1177,6 +1179,8 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 	name = "The Pianist - Finale"
 	desc = "The performance has already begun. There is no overture, only the crescendo."
 	phase = PIANIST_PHASE_PERFORMANCE // Start in Phase 2
+	resonance_line_charges = 0
+	destroying_terrain = FALSE
 
 /mob/living/simple_animal/hostile/distortion/pianist/combat/Initialize()
 	. = ..()
