@@ -20,7 +20,7 @@
 	SSlobotomy_corp.core_suppression_state = max(SSlobotomy_corp.core_suppression_state, 3)
 	SSticker.news_report = max(SSticker.news_report, CORE_SUPPRESSED_ARBITER_DEAD)
 	//You get an A rating for this one as well.
-	SSticker.rating_achieved == "A"
+	SSticker.rating_achieved = "A"
 
 /datum/suppression/extraction/proc/OnArbiterDeath(datum/source)
 	SIGNAL_HANDLER
