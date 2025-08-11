@@ -3126,6 +3126,15 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/control)
+"tR" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 1
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/department_main/safety)
 "tS" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 1
@@ -5188,6 +5197,12 @@
 /obj/effect/spawner/abnormality_room,
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/safety)
+"GN" = (
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/department_main/welfare)
 "GR" = (
 /obj/machinery/vending/snack,
 /turf/open/floor/carpet/stellar,
@@ -5195,6 +5210,15 @@
 "GS" = (
 /turf/open/floor/plating,
 /area/facility_hallway/information)
+"GT" = (
+/obj/effect/turf_decal/siding/green{
+	dir = 4
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/west)
 "GU" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
@@ -7493,6 +7517,9 @@
 "Uv" = (
 /obj/machinery/light{
 	dir = 4
+	},
+/obj/machinery/facility_holomap{
+	dir = 8
 	},
 /turf/open/floor/carpet,
 /area/department_main/control)
@@ -26685,7 +26712,7 @@ Mb
 Qv
 sI
 sI
-sI
+GT
 sI
 sI
 sI
@@ -29253,7 +29280,7 @@ GI
 uI
 wP
 QH
-VM
+tR
 jn
 aT
 Oq
@@ -53404,7 +53431,7 @@ PD
 PD
 PD
 gX
-ZV
+GN
 ZV
 EP
 pz
