@@ -50,12 +50,6 @@
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plasteel/elevatorshaft,
 /area/department_main/training)
-"bz" = (
-/obj/machinery/camera/autoname{
-	dir = 10
-	},
-/turf/open/floor/wood,
-/area/facility_hallway/command)
 "bK" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
@@ -63,9 +57,6 @@
 /obj/effect/turf_decal/tile/brown,
 /obj/structure/fishcooker/fishfrier,
 /obj/structure/table/reinforced,
-/obj/machinery/camera/autoname{
-	dir = 4
-	},
 /turf/open/floor/plasteel/white,
 /area/department_main/training)
 "bO" = (
@@ -81,9 +72,6 @@
 /area/facility_hallway/records)
 "bS" = (
 /obj/machinery/text_adventure_console,
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
 /turf/open/floor/carpet/royalblack,
 /area/facility_hallway/extraction)
 "bT" = (
@@ -146,12 +134,6 @@
 /obj/item/stack/cable_coil,
 /turf/open/floor/plasteel,
 /area/department_main/information)
-"dm" = (
-/obj/machinery/camera/autoname{
-	dir = 1
-	},
-/turf/open/floor/carpet/orange,
-/area/department_main/training)
 "do" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Records Office Secure Area";
@@ -183,12 +165,6 @@
 /obj/structure/chair/wood,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
-"ea" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/command)
 "er" = (
 /turf/open/floor/plasteel,
 /area/facility_hallway/training)
@@ -248,6 +224,7 @@
 "fJ" = (
 /obj/effect/turf_decal/box/white,
 /obj/machinery/vending/lobotomyuniform,
+/obj/machinery/camera/autoname,
 /turf/open/floor/plasteel,
 /area/department_main/information)
 "gB" = (
@@ -346,15 +323,6 @@
 /obj/item/encryptionkey/headset_control,
 /turf/open/floor/plasteel,
 /area/department_main/control)
-"jv" = (
-/obj/machinery/computer/cryopod{
-	pixel_y = 32
-	},
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/wood,
-/area/facility_hallway/command)
 "jy" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
@@ -392,12 +360,6 @@
 /obj/machinery/sleeper/syndie,
 /turf/open/floor/plasteel/white,
 /area/department_main/safety)
-"kh" = (
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/west)
 "kj" = (
 /obj/machinery/jukebox{
 	req_access = list()
@@ -524,12 +486,6 @@
 "mu" = (
 /turf/open/floor/plating,
 /area/facility_hallway/information)
-"mx" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/training)
 "mA" = (
 /obj/effect/landmark/abnormality_spawn/training_rabbit,
 /turf/open/floor/facility/dark,
@@ -671,12 +627,6 @@
 "pP" = (
 /turf/open/floor/plasteel,
 /area/facility_hallway/safety)
-"pU" = (
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/command)
 "pX" = (
 /obj/machinery/light{
 	dir = 8
@@ -757,9 +707,6 @@
 /area/department_main/command)
 "sG" = (
 /obj/structure/extraction_belt,
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
 /turf/open/floor/wood,
 /area/department_main/command)
 "sH" = (
@@ -804,10 +751,6 @@
 "td" = (
 /turf/closed/indestructible/fakeglass,
 /area/facility_hallway/west)
-"ti" = (
-/obj/machinery/camera/autoname,
-/turf/open/floor/plasteel,
-/area/facility_hallway/information)
 "tm" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/carpet/orange,
@@ -859,10 +802,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/department_main/training)
-"uS" = (
-/obj/machinery/camera/autoname,
-/turf/open/floor/carpet,
-/area/department_main/control)
 "uZ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/caution/stand_clear,
@@ -928,22 +867,10 @@
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/command)
-"wC" = (
-/obj/machinery/camera/autoname{
-	dir = 10
-	},
-/turf/open/floor/carpet/royalblue,
-/area/department_main/command)
 "wF" = (
 /obj/effect/turf_decal/trimline/yellow/filled/warning,
 /turf/open/floor/plasteel,
 /area/department_main/command)
-"wS" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/east)
 "wW" = (
 /obj/machinery/door/poddoor/preopen{
 	id = "managerlockdown";
@@ -1018,10 +945,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating,
 /area/space)
-"yR" = (
-/obj/machinery/camera/autoname,
-/turf/open/floor/plasteel,
-/area/facility_hallway/control)
 "yZ" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/wood,
@@ -1183,12 +1106,6 @@
 /obj/structure/table,
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
-"DB" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/carpet/orange,
-/area/department_main/training)
 "DG" = (
 /obj/structure/table/glass,
 /obj/item/storage/box/pillbottles,
@@ -1247,12 +1164,6 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/west)
-"Ev" = (
-/obj/machinery/camera/autoname{
-	dir = 4
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/command)
 "Ex" = (
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
@@ -1373,17 +1284,8 @@
 /obj/structure/filingcabinet/heinfo{
 	pixel_x = 10
 	},
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/records)
-"GA" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/carpet/green,
-/area/department_main/safety)
 "GH" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/conveyor_switch/oneway{
@@ -1428,7 +1330,6 @@
 /area/department_main/training)
 "GN" = (
 /obj/machinery/vending/lobotomyuniform,
-/obj/machinery/camera/autoname,
 /turf/open/floor/plasteel,
 /area/department_main/control)
 "GT" = (
@@ -1444,9 +1345,6 @@
 "He" = (
 /obj/machinery/light{
 	dir = 1
-	},
-/obj/machinery/camera/autoname{
-	dir = 6
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/safety)
@@ -1472,9 +1370,6 @@
 	},
 /obj/effect/turf_decal/siding/white{
 	dir = 5
-	},
-/obj/machinery/camera/autoname{
-	dir = 6
 	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/records)
@@ -1529,10 +1424,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/safety)
-"IO" = (
-/obj/machinery/camera/autoname,
-/turf/open/floor/plasteel,
-/area/facility_hallway/west)
 "Jj" = (
 /obj/structure/table/reinforced,
 /obj/item/folder/red{
@@ -1566,9 +1457,6 @@
 "JP" = (
 /obj/effect/turf_decal/box/white,
 /obj/machinery/vending/lobotomyheadset,
-/obj/machinery/camera/autoname{
-	dir = 10
-	},
 /turf/open/floor/plasteel,
 /area/department_main/information)
 "JQ" = (
@@ -1642,9 +1530,6 @@
 /obj/item/reagent_containers/spray/cleaner{
 	pixel_x = 5;
 	pixel_y = -1
-	},
-/obj/machinery/camera/autoname{
-	dir = 6
 	},
 /turf/open/floor/plasteel/dark,
 /area/space)
@@ -1745,12 +1630,6 @@
 /obj/machinery/ntnet_relay,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/space)
-"Nn" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/carpet/purple,
-/area/department_main/information)
 "Nv" = (
 /obj/machinery/accounting,
 /obj/structure/table/reinforced,
@@ -1860,12 +1739,6 @@
 /obj/machinery/camera/autoname,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/records)
-"PT" = (
-/obj/machinery/camera/autoname{
-	dir = 10
-	},
-/turf/open/floor/carpet/green,
-/area/department_main/safety)
 "PU" = (
 /turf/open/water/deep/freshwater,
 /area/facility_hallway/control)
@@ -1938,12 +1811,6 @@
 /obj/machinery/navbeacon/wayfinding/architecturedepartment,
 /turf/open/floor/plasteel,
 /area/department_main/control)
-"QL" = (
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/west)
 "QT" = (
 /obj/structure/railing{
 	dir = 4
@@ -1986,15 +1853,6 @@
 	},
 /turf/open/floor/carpet/black,
 /area/facility_hallway/records)
-"Ro" = (
-/obj/machinery/light{
-	dir = 1
-	},
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/command)
 "RE" = (
 /obj/machinery/cryopod{
 	dir = 1
@@ -2127,10 +1985,6 @@
 "Ub" = (
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/east)
-"Ue" = (
-/obj/machinery/camera/autoname,
-/turf/open/floor/carpet/red,
-/area/department_main/discipline)
 "Uh" = (
 /obj/effect/spawner/abnormality_room,
 /turf/closed/indestructible/reinforced,
@@ -2243,9 +2097,6 @@
 /area/space)
 "Wy" = (
 /obj/structure/fish_refinery,
-/obj/machinery/camera/autoname{
-	dir = 6
-	},
 /turf/open/floor/plasteel,
 /area/department_main/command)
 "WB" = (
@@ -2429,12 +2280,6 @@
 /obj/structure/table/glass,
 /turf/open/floor/plasteel/showroomfloor,
 /area/facility_hallway/command)
-"ZW" = (
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
-/turf/open/floor/plasteel,
-/area/facility_hallway/east)
 
 (1,1,1) = {"
 Xt
@@ -21799,7 +21644,7 @@ nu
 nu
 nu
 HE
-yR
+iX
 EO
 iX
 nu
@@ -22353,7 +22198,7 @@ ln
 kJ
 UH
 ln
-jv
+Qz
 ry
 ry
 ln
@@ -24107,7 +23952,7 @@ Xt
 Xt
 Xt
 hE
-Ue
+ks
 ks
 ks
 ks
@@ -24152,7 +23997,7 @@ ln
 ln
 ln
 GT
-ea
+jE
 jE
 jE
 ln
@@ -24626,7 +24471,7 @@ Mu
 Vn
 eR
 Mu
-uS
+gV
 Bs
 gV
 lw
@@ -24915,7 +24760,7 @@ Gh
 Gh
 Gh
 ln
-Ro
+TS
 FA
 VV
 ln
@@ -25927,11 +25772,11 @@ zc
 zc
 zc
 px
-QL
+gX
 gX
 gX
 Eq
-GA
+PY
 PY
 PY
 PY
@@ -26451,10 +26296,10 @@ PY
 PY
 PY
 PY
-PT
+PY
 Eq
 TS
-pU
+jE
 jE
 jE
 jE
@@ -26463,7 +26308,7 @@ jE
 jE
 jE
 JZ
-pU
+jE
 jE
 jE
 jE
@@ -26939,7 +26784,7 @@ Mj
 Mj
 Mj
 zc
-IO
+gX
 gX
 gX
 zc
@@ -27204,7 +27049,7 @@ Mj
 Mj
 Mj
 zc
-IO
+gX
 gX
 gX
 zc
@@ -27485,7 +27330,7 @@ Gh
 Gh
 Gh
 ln
-Ro
+TS
 jE
 VV
 ln
@@ -28228,7 +28073,6 @@ gX
 gX
 gX
 gX
-kh
 gX
 gX
 gX
@@ -28239,7 +28083,8 @@ gX
 gX
 gX
 gX
-kh
+gX
+gX
 gX
 gX
 gX
@@ -28521,7 +28366,7 @@ ln
 kJ
 UH
 ln
-jv
+Qz
 ry
 ry
 ln
@@ -30576,7 +30421,7 @@ sW
 sW
 Wi
 Wi
-wC
+Wi
 ms
 Xt
 Xt
@@ -33149,7 +32994,7 @@ UH
 ln
 Qz
 ry
-bz
+ry
 ln
 Xt
 Xt
@@ -33884,7 +33729,7 @@ hm
 hm
 hm
 kQ
-ZW
+hm
 hm
 hm
 hm
@@ -33892,7 +33737,7 @@ hm
 hm
 hm
 kQ
-ZW
+hm
 hm
 hm
 hm
@@ -33910,7 +33755,7 @@ Gh
 Gh
 Gh
 ln
-ea
+jE
 jE
 jE
 ln
@@ -34135,7 +33980,7 @@ Ub
 Ub
 Ub
 BV
-wS
+hm
 hm
 hm
 Ub
@@ -34175,7 +34020,7 @@ Gh
 Gh
 Gh
 ln
-Ro
+TS
 jE
 VV
 ln
@@ -34657,7 +34502,7 @@ Pw
 Pw
 Pw
 Ub
-wS
+hm
 hm
 hm
 Ub
@@ -35192,7 +35037,7 @@ vX
 vX
 Ke
 TS
-Ev
+jE
 jE
 jE
 jE
@@ -35693,11 +35538,11 @@ Ub
 Ub
 Ub
 BV
-wS
+hm
 hm
 hm
 Ke
-DB
+vX
 vX
 vX
 vX
@@ -35960,7 +35805,7 @@ oZ
 oZ
 vX
 vX
-dm
+vX
 Ke
 ln
 ln
@@ -36480,7 +36325,7 @@ Gh
 Gh
 Gh
 ln
-ea
+jE
 jE
 jE
 ln
@@ -37216,7 +37061,7 @@ Ds
 do
 Ds
 Ds
-Nn
+Ex
 Ex
 Ex
 Ex
@@ -37516,7 +37361,7 @@ ln
 ln
 ln
 GT
-ea
+jE
 jE
 jE
 ln
@@ -38271,7 +38116,7 @@ iD
 iD
 iD
 MB
-mx
+er
 er
 er
 iD
@@ -39789,7 +39634,7 @@ jV
 jV
 jV
 Uh
-ti
+to
 ns
 to
 jV
