@@ -737,3 +737,14 @@
 	combo += 1
 	force = initial(force)
 	hitsound = initial(hitsound)
+
+/obj/item/ego_weapon/mini/patch
+	name = "patch"
+	desc = ""
+	icon_state = "patch"
+	force = 20
+	damtype = BLACK_DAMAGE
+	attack_verb_continuous = list("smacks", "strikes", "beats")
+	attack_verb_simple = list("smack", "strike", "beat")
+	hitsound = 'sound/weapons/fixer/generic/club3.ogg'
+

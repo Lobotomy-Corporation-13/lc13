@@ -467,3 +467,14 @@
 	attack_verb_continuous = list("slices", "slashes", "stabs")
 	attack_verb_simple = list("slice", "slash", "stab")
 	hitsound = 'sound/weapons/fixer/generic/wcorp4.ogg'
+
+/obj/item/ego_weapon/mini/tidings
+	name = "tidings"
+	desc = ""
+	icon_state = "tidings"
+	force = 14
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("slices", "slashes", "stabs")
+	attack_verb_simple = list("slice", "slash", "stab")
+	hitsound = 'sound/weapons/bladeslice.ogg'
+
