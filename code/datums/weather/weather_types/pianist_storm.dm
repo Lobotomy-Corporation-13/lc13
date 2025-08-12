@@ -15,8 +15,8 @@
 	// Main weather stage
 	weather_message = span_userdanger("<i>Thunder crashes as the storm breaks! The Pianist's performance reaches its crescendo!</i>")
 	weather_overlay = "rain_storm" // Heavy rain effect
-	weather_duration_lower = 9999999 // Lasts until Pianist dies
-	weather_duration_upper = 9999999
+	weather_duration_lower = INFINITY // Lasts until Pianist dies
+	weather_duration_upper = INFINITY
 	weather_sound = 'sound/ambience/acidrain_mid.ogg' // Rain ambience
 
 	// End stage

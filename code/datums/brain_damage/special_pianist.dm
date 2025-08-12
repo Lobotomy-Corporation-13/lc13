@@ -12,6 +12,7 @@
 	var/decay_interval = 30 SECONDS
 	var/butcher_time = 5 SECONDS
 	var/is_butchering = FALSE
+	var/current_prudence_malus = 0
 
 /datum/brain_trauma/special/musical_corruption/on_gain()
 	. = ..()
@@ -22,7 +23,11 @@
 /datum/brain_trauma/special/musical_corruption/on_lose(silent)
 	STOP_PROCESSING(SSobj, src)
 	UnregisterSignal(owner, COMSIG_PARENT_EXAMINE)
-	owner.clear_fullscreen("corruption")
+	// Remove any remaining prudence debuff
+	if(current_prudence_malus && ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, current_prudence_malus)
+		current_prudence_malus = 0
 	return ..()
 
 /datum/brain_trauma/special/musical_corruption/on_life()
@@ -44,19 +49,25 @@
 	var/points_lost = 100 - corruption_points
 	if(points_lost >= 20 && ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		var/prudence_malus = round(points_lost / 20) * 10
-		H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -prudence_malus, "musical_corruption")
+		var/new_prudence_malus = round(points_lost / 20) * 10
+		// Calculate the difference and apply it
+		var/malus_diff = new_prudence_malus - current_prudence_malus
+		if(malus_diff != 0)
+			H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -malus_diff)
+			current_prudence_malus = new_prudence_malus
+	else if(current_prudence_malus && ishuman(owner))
+		// Remove debuff if corruption is back to normal
+		var/mob/living/carbon/human/H = owner
+		H.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, current_prudence_malus)
+		current_prudence_malus = 0
 
 	// Red vision and SP damage at low points
 	if(corruption_points <= 20)
-		owner.overlay_fullscreen("corruption", /atom/movable/screen/fullscreen/brute, 1)
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
 			H.adjustSanityLoss(1)
 		if(prob(5))
 			to_chat(owner, span_warning("The melody grows faint... you need more!"))
-	else
-		owner.clear_fullscreen("corruption")
 
 /datum/brain_trauma/special/musical_corruption/proc/adjust_points(amount)
 	corruption_points = clamp(corruption_points + amount, 0, 100)
@@ -73,9 +84,6 @@
 	var/mob/living/carbon/human/source = owner
 
 	// Check if target is valid for butchering
-	if(!istype(target))
-		return
-
 	if(target.stat != DEAD)
 		return
 
@@ -129,17 +137,8 @@
 	target.gib()
 	playsound(target, 'sound/effects/splat.ogg', 70, TRUE)
 
-	// Damage viewer sanity
-	for(var/mob/living/L in viewers)
-		if(!L.client)
-			continue
-		if(ishuman(L))
-			var/mob/living/carbon/human/H = L
-			H.adjustSanityLoss(viewer_sp_damage)
-			to_chat(H, span_userdanger("The scene burns itself into your mind!"))
-
 	// Feedback
-	to_chat(butcher, span_greentext("The melody grows stronger! (+[point_reward] points)"))
+	to_chat(butcher, span_greentext("The melody grows stronger!"))
 	butcher.visible_message(span_danger("[butcher] finishes their grisly performance!"))
 
 /datum/brain_trauma/special/musical_corruption/proc/on_examine(mob/living/carbon/human/source, mob/user, list/examine_list)
