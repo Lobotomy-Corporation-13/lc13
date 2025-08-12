@@ -101,13 +101,6 @@
 
 	// Use a single do_after with callback for SP damage
 	if(do_after(source, butcher_time, target))
-		// Deal viewer SP damage
-		for(var/mob/living/L in viewers)
-			if(!L.client || !(L in viewers(7, source)))
-				continue
-			if(ishuman(L))
-				var/mob/living/carbon/human/H = L
-				H.adjustSanityLoss(5 * (butcher_time / 10)) // Total SP damage over duration
 		complete_butchering(source, target, viewers)
 	else
 		is_butchering = FALSE
@@ -136,6 +129,15 @@
 	// Gib the target
 	target.gib()
 	playsound(target, 'sound/effects/splat.ogg', 70, TRUE)
+
+	// Damage viewer sanity
+	for(var/mob/living/L in viewers)
+		if(!L.client)
+			continue
+		if(ishuman(L))
+			var/mob/living/carbon/human/H = L
+			H.adjustSanityLoss(viewer_sp_damage)
+			to_chat(H, span_userdanger("The scene burns itself into your mind!"))
 
 	// Feedback
 	to_chat(butcher, span_greentext("The melody grows stronger!"))
