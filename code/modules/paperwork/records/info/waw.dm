@@ -582,3 +582,12 @@
 		"The forms obtained by T-06-206 are manifested into this abnormality’s strength whenever it breaches.",
 		)
 
+
+//Burrowing Heaven
+/obj/item/paper/fluff/info/waw/heaven
+	abno_type = /mob/living/simple_animal/hostile/abnormality/burrowing_heaven
+	abno_code = "O-04-72"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered with a low probability.",
+		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
+		"Work on O-04-72 must be done with a second person in the room looking at it, otherwise the Employee will take extra damage.")
