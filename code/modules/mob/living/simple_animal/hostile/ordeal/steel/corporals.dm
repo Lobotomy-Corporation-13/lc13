@@ -169,3 +169,4 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/stalker/attacked_by(obj/item/I, mob/living/user)
 	alpha = 255
 	density = TRUE
+	..()
