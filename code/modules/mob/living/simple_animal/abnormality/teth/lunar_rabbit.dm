@@ -38,7 +38,7 @@
 	work_damage_type = BLACK_DAMAGE
 
 	ego_list = list(
-		//datum/ego_datum/weapon/acupuncture,
+		/datum/ego_datum/weapon/patch,
 		//datum/ego_datum/armor/acupuncture,
 	)
 	//gift_type =  /datum/ego_gifts/acupuncture
