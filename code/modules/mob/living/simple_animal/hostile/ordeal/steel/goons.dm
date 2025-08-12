@@ -30,6 +30,8 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/Initialize()
 	. = ..()
 	attack_sound = "sound/effects/ordeals/steel/gcorp_attack[pick(1,2,3)].ogg"
+	if(icon_state == "gcorp_beetle")
+		return
 	if(!istype(src, /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon)) //due to being a root of noon
 		icon_living = "gcorp[pick(1,2,3,4)]"
 		icon_state = icon_living
