@@ -55,7 +55,7 @@
 	grunt_player_multiplicator = 0
 
 
-/datum/ordeal/simplecommander/steel_dusk
+/datum/ordeal/simplecommander/steel_midnight
 	name = "The Midnight of Steel"
 	flavor_name = "Over the Top"
 	announce_text = "Our men are expendable, and spend them we shall."
