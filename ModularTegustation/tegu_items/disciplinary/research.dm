@@ -66,4 +66,5 @@ GLOBAL_LIST_EMPTY(geresearched_abnos)
 /obj/item/disc_researcher/proc/BreachBerry(mob/living/simple_animal/hostile/abnormality/breacher, lob_amount)
 	breacher.datum_reference.qliphoth_change(-99)
 	SSlobotomy_corp.lob_points += lob_amount
-
+	var/turf/T = pick(GLOB.xeno_spawn)
+	breacher.forceMove(T)
