@@ -53,3 +53,21 @@
 	//Fourth Group appears if there is 23 players.
 	boss_player_multiplicator = 0.045
 	grunt_player_multiplicator = 0
+
+
+/datum/ordeal/simplecommander/steel_dusk
+	name = "The Midnight of Steel"
+	flavor_name = "Over the Top"
+	announce_text = "Our men are expendable, and spend them we shall."
+	end_announce_text = "And when the chips are down, we lost it all."
+	announce_sound = 'sound/effects/ordeals/steel_start.ogg'
+	end_sound = 'sound/effects/ordeals/steel_end.ogg'
+	level = 4
+	reward_percent = 0.25
+	color = "#71797E"
+	boss_type = list(/mob/living/simple_animal/hostile/ordeal/steel_dusk, /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon, /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying, /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/stalker)
+	grunt_type = list(/mob/living/simple_animal/hostile/ordeal/steel_dawn/beefy)
+	boss_amount = 3
+	grunt_amount = 3	//One less because you get the stalker
+	boss_player_multiplicator = 0.045
+	grunt_player_multiplicator = 0
