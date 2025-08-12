@@ -39,7 +39,7 @@
 
 	ego_list = list(
 		/datum/ego_datum/weapon/patch,
-		//datum/ego_datum/armor/acupuncture,
+		/datum/ego_datum/armor/patch
 	)
 	//gift_type =  /datum/ego_gifts/acupuncture
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL

@@ -740,7 +740,7 @@
 
 /obj/item/ego_weapon/mini/patch
 	name = "patch"
-	desc = ""
+	desc = "A little first aid kit."
 	icon_state = "patch"
 	force = 20
 	damtype = BLACK_DAMAGE

@@ -386,8 +386,13 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/white_gossypium
 	cost = 20
 
+// Lunar Physician - Patch
 /datum/ego_datum/weapon/patch
 	item_path = /obj/item/ego_weapon/mini/patch
+	cost = 20
+
+/datum/ego_datum/armor/patch
+	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/patch
 	cost = 20
 
 
