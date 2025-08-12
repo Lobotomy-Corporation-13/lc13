@@ -80,6 +80,13 @@
 	/// This causes the weather to only end if forced to
 	var/perpetual = FALSE
 
+	//If instead of using area icons, use the reusable visual pool.
+	var/use_visual_pool = FALSE
+	//Reusable visuals for visual_effects.
+	var/datum/reusable_visual_pool/RVP = new(500)
+	//Used visuals
+	var/list/used_visuals = list()
+
 /datum/weather/New(z_levels)
 	..()
 	impacted_z_levels = z_levels
@@ -95,6 +102,15 @@
 	if(stage == STARTUP_STAGE)
 		return
 	stage = STARTUP_STAGE
+	if(LAZYLEN(SSweather.processing))
+		var/not_area_visual = FALSE
+		//If someone is already using the area icon then resort to RVP.
+		for(var/datum/weather/weath in SSweather.processing)
+			if(!weath.use_visual_pool)
+				not_area_visual = TRUE
+				break
+		use_visual_pool = not_area_visual
+
 	var/list/affectareas = list()
 	for(var/V in get_areas(area_type))
 		affectareas += V
@@ -201,6 +217,11 @@
  *
  */
 /datum/weather/proc/update_areas()
+	//If we are already using visuals or are premarked as to use the RVP.
+	if(LAZYLEN(used_visuals) || use_visual_pool)
+		StackingEffectProc()
+		return
+
 	for(var/V in impacted_areas)
 		var/area/N = V
 		N.layer = overlay_layer
@@ -221,3 +242,54 @@
 				N.layer = initial(N.layer)
 				N.plane = initial(N.plane)
 				N.set_opacity(FALSE)
+
+/**
+ * Instead of changing the icon of the area this
+ * proc places effects for the visuals.
+ */
+/datum/weather/proc/StackingEffectProc()
+	var/area_effect_icon
+
+	if(stage == STARTUP_STAGE)
+		PlaceInAreas()
+		return
+	if(stage == MAIN_STAGE)
+		area_effect_icon = weather_overlay
+	if(stage == WIND_DOWN_STAGE)
+		area_effect_icon = end_overlay
+
+	if(!area_effect_icon)
+		ClearWeatherEffect()
+		return
+	for(var/obj/effect/reusable_visual/R in used_visuals)
+		rewriteWeatherEffect(R, area_effect_icon)
+
+// Places visual effects on area tiles.
+/datum/weather/proc/PlaceInAreas()
+	for(var/V in impacted_areas)
+		var/area/N = V
+		var/tiles_per_decisecond = 0
+		for(var/turf/open/T in N)
+			var/obj/effect/reusable_visual/RV = RVP.TakePoolElement()
+			RV.name = ""
+			RV.icon = 'icons/effects/weather_effects.dmi'
+			RV.icon_state = telegraph_overlay
+			RV.plane = overlay_plane
+			RV.layer = overlay_layer
+			RV.loc = T
+			used_visuals += RV
+			tiles_per_decisecond++
+			if(tiles_per_decisecond > 50)
+				sleep(rand(1,3))
+				tiles_per_decisecond = 0
+
+/// A delayed effect for applying weather effects to every tile.
+/datum/weather/proc/rewriteWeatherEffect(obj/effect/reusable_visual/visual, new_overlay)
+	visual.icon_state = new_overlay
+
+//RETURN ALL THE EFFECTS TO THE POOL!!!
+/datum/weather/proc/ClearWeatherEffect()
+	for(var/obj/effect/reusable_visual/R in used_visuals)
+		RVP.DelayedReturn(R,rand(1,3))
+	used_visuals.Cut()
+	use_visual_pool = FALSE
