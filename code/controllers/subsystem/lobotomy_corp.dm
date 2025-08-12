@@ -117,8 +117,9 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	return ..()
 
 /datum/controller/subsystem/lobotomy_corp/proc/SetGoal()
-	var/player_mod = length(GLOB.player_list) * 0.2
-	box_goal = clamp(round(7500 * player_mod), 3000, 36000)
+	var/player_mod = length(GLOB.client_list) * 100	//100 For every client
+	var/agent_mod = AvailableAgentCount() * 1000	//1000 more for each Agent.
+	box_goal = clamp(player_mod+agent_mod, 2500, 36000)
 
 	if(SSmaptype.maptype in SSmaptype.lc_maps)
 		//Here's the anouncement for the trait.
@@ -250,7 +251,6 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		//You get a C rating if your rating is a D.
 		if(SSticker.rating_achieved == "D")
 			SSticker.rating_achieved = "C"
-		priority_announce("The energy production goal has been reached.", "Energy Production", sound='sound/misc/notice2.ogg')
 		var/pizzatype_list = subtypesof(/obj/item/food/pizza)
 		pizzatype_list -= /obj/item/food/pizza/arnold // No murder pizza
 		pizzatype_list -= /obj/item/food/pizza/margherita/robo // No robo pizza
