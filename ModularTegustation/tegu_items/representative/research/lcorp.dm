@@ -181,42 +181,42 @@ GLOBAL_LIST_EMPTY(lcorp_upgrades)
 //Refinery Upgrades
 /datum/data/lc13research/refineryspeed/lvl3
 	research_name = "Refinement Process Efficiency Upgrade III"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 30%."
 	cost = LOW_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl2
 
 /datum/data/lc13research/refineryspeed/lvl4
 	research_name = "Refinement Process Efficiency Upgrade IV"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 40%."
 	cost = LOW_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl3
 
 /datum/data/lc13research/refineryspeed/lvl5
 	research_name = "Refinement Process Efficiency Upgrade V"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 50%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl4
 
 /datum/data/lc13research/refineryspeed/lvl6
 	research_name = "Refinement Process Efficiency Upgrade VI"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 60%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl5
 
 /datum/data/lc13research/refineryspeed/lvl7
 	research_name = "Refinement Process Efficiency Upgrade VII"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 70%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl6
 
 /datum/data/lc13research/refineryspeed/lvl8
 	research_name = "Refinement Process Efficiency Upgrade VIII"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 80%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/refineryspeed/lvl7
@@ -224,42 +224,42 @@ GLOBAL_LIST_EMPTY(lcorp_upgrades)
 //Sales Upgrades
 /datum/data/lc13research/salesspeed/lvl3
 	research_name = "Sales Process Efficiency Upgrade III"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 30%."
 	cost = LOW_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl2
 
 /datum/data/lc13research/salesspeed/lvl4
 	research_name = "Sales Process Efficiency Upgrade IV"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 40%."
 	cost = LOW_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl3
 
 /datum/data/lc13research/salesspeed/lvl5
 	research_name = "Sales Process Efficiency Upgrade V"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 50%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl4
 
 /datum/data/lc13research/salesspeed/lvl6
 	research_name = "Sales Process Efficiency Upgrade VI"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 60%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl5
 
 /datum/data/lc13research/salesspeed/lvl7
 	research_name = "Sales Process Efficiency Upgrade VII"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 70%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl6
 
 /datum/data/lc13research/salesspeed/lvl8
 	research_name = "Sales Process Efficiency Upgrade VIII"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 80%."
 	cost = AVERAGE_RESEARCH_PRICE
 	corp = L_CORP_REP
 	required_research = /datum/data/lc13research/salesspeed/lvl7

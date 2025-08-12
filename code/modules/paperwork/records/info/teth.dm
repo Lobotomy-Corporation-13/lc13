@@ -344,10 +344,12 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/skin_prophet
 	abno_code = "T-03-189"
 	abno_info = list(
-		"On work failure, a candle was snuffed, and work damage was increased.",
+		"On work failure, a candle was snuffed, work damage was increased, and the Qliphoth Counter decreased.",
 		"When Attachment or Repression was completed, if the employee had no buffs in the respective stat, they were turned to ash.",
 		"When Attachment or Repression work was done, the work rates were equal to the total stat buffs of the employee.",
-		"When Attachment or Repression work was completed with a good work result, the employee's respective buff was reduced to 0, and their stat maximum was increased by the same amount.",)
+		"When Attachment or Repression work was completed with a good work result, the employee's respective buff was reduced to 0, and their stat maximum was increased by the same amount.",
+		"When the Qliphoth Counter reached 0, T-03-189 breached and teleported to a main department, spreading prophetic flames.",
+		"During breach, T-03-189 spawned 7 prophetic candles throughout the facility that must be destroyed to neutralize it.",)
 
 //Faelantern
 /obj/item/paper/fluff/info/teth/faelantern
@@ -449,4 +451,10 @@
 		"When the work result was Neutral, the Qliphoth Counter lowered by 1 with a high probability",
 		"When the work result was Bad, the Qliphoth Counter lowered by 1."
 	)
-
+//Brazen Bull
+/obj/item/paper/fluff/info/teth/Brazen_Bull
+	abno_type = /mob/living/simple_animal/hostile/abnormality/brazen_bull
+	abno_code = "M-01-194"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
+		"When the work result was Bad, the Qliphoth Counter lowered.")

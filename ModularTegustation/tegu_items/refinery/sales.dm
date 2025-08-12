@@ -7,12 +7,13 @@
 	density = FALSE
 	resistance_flags = INDESTRUCTIBLE
 	var/crate = /obj/structure/lootcrate
-	var/ahn_amount = 200 	//gives you a random amount of ahn between this number and 1/4th this number
-	var/power_timer = 120 	//How long does the box last for? You get 1 point every second
-	var/crate_timer = 180	//How much time until a crate?
+	var/ahn_amount = 200 	//gives you a random amount of ahn between this number and 1/4th this numbe
+	var/power_timer = 120 	//How long does the box last for? You get 1 point every second. Change this value if you want to speed things up
+	var/power_left			//Time left on power, this copies the value of power timer
+	var/crate_timer = 180	//How much time until a crate? Change this value if you want to speed things up
+	var/crate_left			//Time left on crates, this copies the value of crate timer
 	var/crates_per_box		//Just used to calculate examine text
 	var/our_corporation		// Whatever Representative we may be linked to
-	var/boosted = FALSE
 
 	var/generating
 	var/icon_full = "machinelcb_full"
@@ -21,6 +22,8 @@
 	. = ..()
 	crates_per_box = crate_timer/power_timer
 	GLOB.lobotomy_devices += src
+	power_left = power_timer
+	crate_left = crate_timer
 
 /obj/structure/pe_sales/Destroy()
 	GLOB.lobotomy_devices -= src
@@ -38,11 +41,10 @@
 		generating = TRUE
 		to_chat(user, span_notice("You load PE into the machine."))
 		qdel(I)
-		if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
-			power_timer = round(power_timer * 0.5)
-			if(!boosted)//prevents wierd jank and desycing
-				boosted = TRUE
-				crate_timer = round(crate_timer * 0.5)
+		if(power_left > power_timer)
+			power_left = power_timer/2
+		if(crate_left > crate_timer)
+			crate_left = crate_timer/2
 		counter()
 
 		add_overlay("full")
@@ -50,12 +52,14 @@
 		to_chat(user, span_notice("This is already sending power!"))
 
 /obj/structure/pe_sales/proc/counter()
-	power_timer--
-	crate_timer--
+	power_left--
+	crate_left--
 
 	//Box is done
-	if(power_timer <= 0)
-		power_timer = initial(power_timer)
+	if(power_left <= 0)
+		power_left = power_timer
+		if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
+			power_left = power_timer/2
 		generating = FALSE
 		visible_message(span_notice("Payment has arrived from [src]"))
 		cut_overlays()
@@ -74,10 +78,10 @@
 			SSlobotomy_corp.AdjustAvailableBoxes(25)
 
 	//gacha time
-	if(crate_timer  <= 0)
-		crate_timer = initial(crate_timer)
+	if(crate_left  <= 0)
+		crate_left = crate_timer
 		if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
-			crate_timer = round(crate_timer * 0.5)
+			crate_left = crate_timer/2
 		new crate(get_turf(src))
 
 	if(generating == TRUE)

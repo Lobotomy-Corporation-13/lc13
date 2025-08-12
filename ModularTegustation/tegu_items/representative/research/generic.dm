@@ -15,7 +15,7 @@
 
 /datum/data/lc13research/refineryspeed
 	research_name = "Refinement Process Efficiency Upgrade I"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 10%."
 	cost = LOW_RESEARCH_PRICE
 	corp = ALL_REP_RESEARCH
 
@@ -26,14 +26,14 @@
 
 /datum/data/lc13research/refineryspeed/lvl2
 	research_name = "Refinement Process Efficiency Upgrade II"
-	research_desc = "Contribute some energy to improve the Refinery's processing speed."
+	research_desc = "Contribute some energy to improve the Refinery's processing speed by 20%."
 	cost = LOW_RESEARCH_PRICE
 	corp = ALL_REP_RESEARCH
 	required_research = /datum/data/lc13research/refineryspeed
 
 /datum/data/lc13research/salesspeed
 	research_name = "Sales Process Efficiency Upgrade I"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 10%."
 	cost = LOW_RESEARCH_PRICE
 	corp = ALL_REP_RESEARCH
 
@@ -45,7 +45,7 @@
 
 /datum/data/lc13research/salesspeed/lvl2
 	research_name = "Sales Process Efficiency Upgrade II"
-	research_desc = "Contribute some energy to improve the sales machines' transfer speed."
+	research_desc = "Contribute some energy to improve the sales machines' transfer speed by 20%."
 	cost = LOW_RESEARCH_PRICE
 	corp = ALL_REP_RESEARCH
 	required_research = /datum/data/lc13research/salesspeed
