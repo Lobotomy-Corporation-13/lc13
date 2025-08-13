@@ -562,3 +562,7 @@ VOTE_AUTOTRANSFER_INTERVAL 12000
 ## Time limit (in deciseconds) for core suppression availability
 ## If midnight has started before it has been reached - they will be available
 SUPPRESSION_TIME_LIMIT 36000
+
+## Do you want Station Traits enabled? 
+## Disabled for testing, should be enabled on the live server
+#ENABLETRAITS

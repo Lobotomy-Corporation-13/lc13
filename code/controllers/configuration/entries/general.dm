@@ -534,3 +534,5 @@
 /datum/config_entry/number/suppression_time_limit
 	config_entry_value = 60 MINUTES
 	min_val = 0
+
+/datum/config_entry/flag/enabletraits

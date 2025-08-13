@@ -70,6 +70,9 @@ SUBSYSTEM_DEF(maptype)
 /datum/controller/subsystem/maptype/Initialize()
 	..()
 	if(SSmaptype.maptype in SSmaptype.lc_maps)
+		if(!CONFIG_GET(flag/enabletraits))
+			message_admins("Notice! Station Traits are disabled!")
+			return
 		if(prob(40))	//40% chance to not run a station trait
 			return
 		chosen_trait = pickweight(lc_trait)
