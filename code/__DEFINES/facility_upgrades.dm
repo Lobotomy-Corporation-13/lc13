@@ -26,6 +26,7 @@
 #define UPGRADE_ABNO_QUEUE_COUNT "Abnormality Extraction Amount"
 #define UPGRADE_ABNO_MELT_TIME "Abnormality Meltdown Bonus Duration"
 #define UPGRADE_ABNO_ARRIVAL "Instant Abnormality Arrival"
+#define UPGRADE_ORDEAL_SPEED "Ordeal Fast-Track"
 
 // Higher-Up Specialization upgrades
 #define UPGRADE_DISCIPLINARY_1 "Disciplinary Specialization  Level 1"

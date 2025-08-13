@@ -227,6 +227,21 @@
 	SSabnormality_queue.SpawnAbno()
 	. = ..()
 
+//Move to just before the next Ordeal
+/datum/facility_upgrade/ordeal_speed
+	name = UPGRADE_ORDEAL_SPEED
+	category = "Facility"
+	value = 1
+	max_value = 2
+	info = " - This upgrade causes the meltdown counter to move just before the next <b>Ordeal</b>.."
+
+/datum/facility_upgrade/ordeal_speed/Upgrade()
+	SSlobotomy_corp.qliphoth_state = SSlobotomy_corp.next_ordeal_time - 2
+	SSlobotomy_corp.QliphothEvent()
+	message_admins("The Manager has caused the meltdown counter to move before the next ordeal.")
+	to_chat(world, span_danger("<b>The manager has requested that this be the last meltdown before the ordeal!</b>"))
+	. = ..()
+
 /datum/facility_upgrade/regnenerator_healing
 	name = UPGRADE_REGENERATOR_HEALING
 	category = "Facility"
