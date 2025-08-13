@@ -451,6 +451,7 @@
 		"When the work result was Neutral, the Qliphoth Counter lowered by 1 with a high probability",
 		"When the work result was Bad, the Qliphoth Counter lowered by 1."
 	)
+
 //Brazen Bull
 /obj/item/paper/fluff/info/teth/Brazen_Bull
 	abno_type = /mob/living/simple_animal/hostile/abnormality/brazen_bull
@@ -458,3 +459,18 @@
 	abno_info = list(
 		"When the work result was Normal, the Qliphoth Counter lowered with a normal probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")
+
+
+// Lunar Physician
+/obj/item/paper/fluff/info/teth/lunar_rabbit
+	abno_type = /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
+	abno_code = "M-02-207"
+	abno_info = list(
+		"After each work, M-02-207 would inject the employee with a drug.",
+		"The effects of this drug varied from mildly toxic to beneficial.",
+		"L-Corp currently has no information on how this abnormality breaches, but it does seem to breach somewhat rarely.",
+		"Addendum: L-Corp has a few theories on how M-02-207 breaches.",
+		"One senior researcher believes that M-02-207 breaches possibly off the phases of the Moon. It is unknown how it assess this.",
+		"A second researcher believes that M-02-207 breaches based off the alignment of the planets.",
+		"A third researcher believes that M-02-207 can only breach when Mercury is in retrograde.",
+	)
