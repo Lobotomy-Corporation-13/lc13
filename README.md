@@ -1,5 +1,6 @@
 ### [![Lobotomy Corporation 13](.github/assets/LC13Banner.png)](#)
 ### Welcome to the code repository for **Lobotomy Corporation 13**, a fork of [TeguStation](https://github.com/vlggms/tegustation).
+### This repository diverged from [vlggms/lobotomy-corp13](https://github.com/vlggms/lobotomy-corp13) at 2025-08-07T19:02:37Z/1754586157.
 
 [![forthebadge](https://forthebadge.com/images/badges/built-with-resentment.svg)](#) [![forthebadge](https://forthebadge.com/images/badges/contains-tasty-spaghetti-code.svg)](#) [![forinfinityandbyond](https://user-images.githubusercontent.com/5211576/29499758-4efff304-85e6-11e7-8267-62919c3688a9.gif)](https://www.reddit.com/r/SS13/comments/5oplxp/what_is_the_main_problem_with_byond_as_an_engine/dclbu1a)
 
