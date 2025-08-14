@@ -45,8 +45,10 @@
 	. = ..()
 	var/list/units_to_add = list(
 		/mob/living/simple_animal/hostile/ordeal/steel_dawn = 6,
+		/mob/living/simple_animal/hostile/ordeal/steel_dawn/beefy = 6,
 		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon = 2,
-		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying = 2
+		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying = 2,
+		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/stalker = 2
 		)
 	AddComponent(/datum/component/ai_leadership, units_to_add, 8, TRUE, TRUE)
 
