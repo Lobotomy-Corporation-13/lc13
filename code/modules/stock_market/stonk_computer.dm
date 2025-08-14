@@ -130,10 +130,12 @@
 	if (href_list["reclaimAhn"])
 		var/credits = input(usr, "WITHDRAWL AMOUNT", "WITHDRAW AHN") as null|num
 		if(credits)
-			RefundMonies(credits)
-			playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
-			updateUsrDialog()
-			return TRUE
+			var/formatted_credits = clamp(credits, 0, trader_program.budget)
+			if(formatted_credits > 0)
+				RefundMonies(formatted_credits)
+				playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+				updateUsrDialog()
+				return TRUE
 
 	if (href_list["buyshares"])
 		var/datum/stonk_company/S = locate(href_list["buyshares"]) in trader_program.public_companies
