@@ -98,7 +98,11 @@
 		for(var/stat in atr.affected_stats)
 			.["stats"] += stat
 			.[stat + "name"] = stat
-			.[stat + "base"] = atr.get_printed_level_bonus() + atr.get_level_buff()
+			//If not max health or max sanity do not add level buff
+			if(stat == "Max Health" || stat == "Max Sanity")
+				.[stat + "base"] = atr.get_printed_level_bonus()
+			else
+				.[stat + "base"] = atr.get_printed_level_bonus() + atr.get_level_buff()
 			.[stat + "bonus"] = round(atr.get_stat_bonus())
 
 /mob/living/carbon/human/ui_interact(mob/user, datum/tgui/ui)

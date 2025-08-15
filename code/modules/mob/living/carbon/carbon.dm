@@ -1351,3 +1351,11 @@
 	if (species)
 		return species.attack_type
 	return ..()
+
+//Max Health that is not effected by attributes.
+/mob/living/carbon/proc/getRawMaxHealth()
+	//If no attributes dont even worry about it.
+	return initial(maxHealth)
+
+/mob/living/carbon/proc/getRawMaxSanity()
+	return initial(maxSanity)

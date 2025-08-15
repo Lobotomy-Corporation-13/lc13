@@ -253,3 +253,14 @@
 	destination.undershirt = undershirt
 	destination.socks = socks
 	destination.jumpsuit_style = jumpsuit_style
+
+//Max Health that is not effected by attributes.
+/mob/living/carbon/human/getRawMaxHealth()
+	if(LAZYLEN(attributes))
+		return SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD ? 40 : DEFAULT_HUMAN_MAX_HEALTH
+	return ..()
+
+/mob/living/carbon/human/getRawMaxSanity()
+	if(LAZYLEN(attributes))
+		return SSmaptype.chosen_trait == FACILITY_TRAIT_XP_MOD ? 40 : DEFAULT_HUMAN_MAX_SANITY
+	return ..()

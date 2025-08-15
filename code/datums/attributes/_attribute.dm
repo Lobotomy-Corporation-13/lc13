@@ -43,7 +43,7 @@ GLOBAL_LIST_INIT(attribute_types, list(
 // Used in show_attributes() human proc
 // Returns current level + initial_stat_value, placed next to information such as modifiers
 // Mainly used by fortitude & prudence
-/datum/attribute/proc/get_printed_level_bonus()
+/datum/attribute/proc/get_printed_level_bonus(mob/living/carbon/refrence_user)
 	return round(level) + initial_stat_value
 
 /datum/attribute/proc/on_update(mob/living/carbon/user)
