@@ -18,7 +18,7 @@
 	var/bar_material = METAL
 
 /obj/structure/barricade/deconstruct(disassembled = TRUE)
-	if(!(flags_1 & NODECONSTRUCT_1))
+	if(!(flags_1 & NODECONSTRUCT_1) && disassembled)
 		make_debris()
 	qdel(src)
 
@@ -81,7 +81,7 @@
 
 /obj/structure/barricade/sandbags
 	name = "sandbags"
-	desc = "Bags of sand. Self explanatory."
+	desc = "Bags of sand. Self explanatory. Use a crowbar to deconstruct the pile."
 	icon = 'icons/obj/smooth_structures/sandbags.dmi'
 	icon_state = "sandbags-0"
 	base_icon_state = "sandbags"
@@ -96,6 +96,39 @@
 /obj/structure/barricade/sandbags/Initialize()
 	. = ..()
 	AddElement(/datum/element/climbable)
+
+/obj/structure/barricade/sandbags/attackby(obj/item/I, mob/user, params)
+	if(I.tool_behaviour == TOOL_CROWBAR && user.a_intent != INTENT_HARM)
+		if(!I.tool_start_check(user, amount=0))
+			return
+
+		to_chat(user, span_notice("You begin deconstructing [src]..."))
+		if(I.use_tool(src, user, 40, volume=40))
+			deconstruct(disassembled = TRUE)
+		return
+	return ..()
+
+/obj/structure/barricade/sandbags/take_damage(damage_amount, damage_type = BRUTE, sound_effect = TRUE, attack_dir, armour_penetration = 0)
+	update_icon()
+	return ..()
+
+/obj/structure/barricade/sandbags/make_debris()
+	new /obj/item/stack/sheet/mineral/sandbags(get_turf(src), 1)
+
+/obj/structure/barricade/sandbags/update_overlays()
+	. = ..()
+	if(obj_integrity < max_integrity)
+		var/fill_percent = round((obj_integrity / max_integrity) * 100)
+		var/fill_text
+		switch(fill_percent)
+			if(-INFINITY to 30)
+				fill_text = 25
+			if(31 to 70)
+				fill_text = 50
+			if(71 to 90)
+				fill_text = 75
+		if(fill_text)
+			. += mutable_appearance('ModularTegustation/Teguicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
 
 /obj/structure/barricade/security
 	name = "security barrier"
