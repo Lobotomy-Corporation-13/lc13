@@ -90,7 +90,7 @@
 
 //Struggling Strength
 /datum/component/augment/struggling_strength
-	var/damage_buff = 5
+	var/damage_buff = 2.5
 	var/damage_buff_mult = 0
 	var/total_damage_buff = 0
 
@@ -486,7 +486,7 @@
 
 //Struggling Defense
 /datum/component/augment/resisting_augment/struggling_defense
-	var/damage_resist = 0.05
+	var/damage_resist = 0.025
 
 /datum/component/augment/resisting_augment/struggling_defense/take_damage_effect(datum/source, damage, damagetype, def_zone)
 	. = ..()
@@ -821,7 +821,7 @@
 //Regenerative Warmth
 /datum/component/augment/regenerative_warmth/take_damage_effect(datum/source, damage, damagetype, def_zone)
 	. = ..()
-	if(damagetype != BURN)
+	if(damagetype != FIRE)
 		return FALSE
 	human_parent.adjustBruteLoss(-damage/2)
 	human_parent.adjustFireLoss(-damage/2)
@@ -1155,7 +1155,7 @@
 /datum/component/augment/fireproof/take_damage_effect(datum/source, damage, damagetype, def_zone)
 	. = ..()
 	var/missing_hp = ((human_parent.health - damage)/human_parent.maxHealth)
-	if(human_parent.stat != DEAD && missing_hp <= 0.15 && damagetype == BURN)
+	if(human_parent.stat != DEAD && missing_hp <= 0.15 && damagetype == FIRE)
 		human_parent.physiology.burn_mod -= 1
 		proofing_fire = TRUE
 		to_chat(human_parent, span_nicegreen("You ignore the BURN damage, due to being under or equal 15% health! Due to Fireproof"))

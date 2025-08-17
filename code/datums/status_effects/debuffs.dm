@@ -1222,9 +1222,9 @@
 	to_chat(owner, "<span class='warning'>The heat consumes you!!</span>")
 	owner.playsound_local(owner, 'sound/effects/burn.ogg', 50, TRUE)
 	if(ishuman(owner))
-		owner.apply_damage(stacks, BURN, null, owner.run_armor_check(null, BURN))
+		owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
 	else
-		owner.apply_damage(stacks*4, BURN, null, owner.run_armor_check(null, BURN)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
+		owner.apply_damage(stacks*4, FIRE, null, owner.run_armor_check(null, FIRE)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)

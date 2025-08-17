@@ -63,7 +63,7 @@
 			"name" = "Struggling Defense",
 			"ahn_cost" = 25,
 			"ep_cost" = 2, // Positive EP cost
-			"desc" = "For every 12.5% of HP lost, take 5%*X less damage.",
+			"desc" = "Each 12.5% of HP lost grants 2.5%*X damage reduction (max 17.5%*X at 87.5% HP lost).",
 			"repeatable" = 3, // Max 3 times
 			"component" = /datum/component/augment/resisting_augment/struggling_defense
 		),
@@ -158,7 +158,7 @@
 			"ahn_cost" = 25,
 			"ep_cost" = 2,
 			"repeatable" = 3,
-			"desc" = "For every 12.5% of HP lost, deal 5%*X more damage.",
+			"desc" = "Each 12.5% of HP lost grants 2.5%*X damage increase (max 17.5%*X at 87.5% HP lost).",
 			"component" = /datum/component/augment/struggling_strength
 		),
 		list(
