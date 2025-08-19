@@ -70,18 +70,6 @@
 			return
 		neckwear.Destroy()
 
-/obj/item/clothing/suit/armor/ego_gear/pickup(mob/user)
-	. = ..()
-	if(!user.has_movespeed_modifier(/datum/movespeed_modifier/too_many_armors) && ishuman(user))
-		var/obj/item/clothing/suit/armor/ego_gear/equipped_armor = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-		if(istype(equipped_armor))
-			if((SSmaptype.maptype in SSmaptype.citymaps) || (SSmaptype.maptype in SSmaptype.combatmaps))
-				return
-			else
-				var/list/slowdown_free_roles = list("Clerk", "Agent Support Clerk", "Facility Support Clerk", "Extraction Officer")
-				if(!(user.mind.assigned_role in slowdown_free_roles))
-					user.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/too_many_armors)
-
 /obj/item/clothing/suit/armor/ego_gear/dropped(mob/user)
 	. = ..()
 	if(hat)
