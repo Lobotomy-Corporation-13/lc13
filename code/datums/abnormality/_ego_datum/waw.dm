@@ -537,3 +537,13 @@
 /datum/ego_datum/armor/tiara
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/tiara
 	cost = 50
+
+// Flesh That Takes
+/datum/ego_datum/armor/encompassing
+	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/encompassing
+	cost = 50
+
+/datum/ego_datum/weapon/encompassing
+	item_path = /obj/item/ego_weapon/encompassing
+	cost = 50
+

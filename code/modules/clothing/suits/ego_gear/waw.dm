@@ -499,3 +499,15 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	icon_state = "heaven"
 	armor = list(RED_DAMAGE = 10, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 10) // 140. LobCorp original stats: 1.2, 0.8, 0.6, 1.2.
 	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80) //Requires Fortitude Level 3 in LobCorp.
+
+
+/obj/item/clothing/suit/armor/ego_gear/waw/encompassing
+	name = "Encompassing"
+	desc = "A sticky, possessive suit of black ichor and pale flesh."
+	icon_state = "encompassing"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 50, PALE_DAMAGE = 30) // 140
+	attribute_requirements = list(
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
+							)
+
