@@ -2462,3 +2462,26 @@
 
 /obj/item/ego_weapon/contempt/get_clamped_volume()
 	return 25
+
+/obj/item/ego_weapon/encompassing
+	name = "Encompassing"
+	desc = "It feels like it wants to be everything."
+	icon_state = "encompassing"
+	special = "This weapon hits harder after tasting the foe."
+	force = 30
+	damtype = BLACK_DAMAGE
+	hitsound = 'sound/weapons/bladeslice.ogg'
+
+/obj/item/ego_weapon/encompassing/attack(mob/living/target, mob/living/user)
+	if(!CanUseEgo(user))
+		return
+	..()
+	if(do_after(user, 7, src))
+		force = initial(force)
+		force += 35
+	else
+		to_chat(user, "<span class= 'spider'><b>Your attack was unstrengthened!</b></span>")
+		force = initial(force)
+		return
+
+
