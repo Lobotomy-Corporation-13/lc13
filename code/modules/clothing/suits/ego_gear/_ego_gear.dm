@@ -11,7 +11,7 @@
 	w_class = WEIGHT_CLASS_BULKY								//No more stupid 10 egos in bag
 	allowed = list(/obj/item/gun, /obj/item/ego_weapon, /obj/item/melee)
 	drag_slowdown = 1
-	var/equip_slowdown = 3 SECONDS
+	var/equip_slowdown = 7 SECONDS
 
 	var/obj/item/clothing/head/ego_hat/hat = null // Hat type, see clothing/head/_ego_head.dm
 	var/obj/item/clothing/neck/ego_neck/neck = null // Neckwear, see clothing/neck/_neck.dm
@@ -38,6 +38,14 @@
 	if(slot_flags & slot) // Equipped to right slot, not just in hands
 		if(!CanUseEgo(H))
 			return FALSE
+		for(var/obj/machinery/computer/ego_purchase/A in range(6, equipper))
+			return ..()
+
+		for(var/obj/machinery/smartfridge/extraction_storage/ego_armor/A in range(6, equipper))
+			return ..()
+
+
+
 		if(equip_slowdown > 0 && (M == equipper || !equipper))
 			if(!do_after(H, equip_slowdown, target = H))
 				return FALSE
