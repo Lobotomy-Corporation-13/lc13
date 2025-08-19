@@ -291,7 +291,7 @@
 /mob/living/simple_animal/hostile/ordeal/violet_midnight/red
 	damage_coeff = list(RED_DAMAGE = -1, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1)
 
-	var/attack_damage = 220 // Dealt once if hit
+	var/attack_damage = 270 // Dealt once if hit
 	var/list/been_hit = list()
 	RVP = new(1865)
 
@@ -458,7 +458,7 @@
 	icon_dead = "violet_midnightb_dead"
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1, BLACK_DAMAGE = -1, PALE_DAMAGE = 0.7)
 
-	var/attack_damage = 220
+	var/attack_damage = 250
 	var/list/been_hit = list()
 	RVP = new(1000)
 
@@ -550,7 +550,7 @@
 	var/obj/effect/pale_eye/eye = null
 	var/pulsating = FALSE
 	/// Amount of PALE damage dealt across a range on cooldown defined in variables below
-	var/pulse_damage = 40
+	var/pulse_damage = 30
 	/// The range of eye's attack
 	var/pulse_range = 5
 	/// How often it deals damage at the eye's location
