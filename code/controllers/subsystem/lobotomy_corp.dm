@@ -251,6 +251,9 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		//You get a C rating if your rating is a D.
 		if(SSticker.rating_achieved == "D")
 			SSticker.rating_achieved = "C"
+
+		priority_announce("The energy production goal has been reached, and this shift is considered a success. \
+				Overtime is approved for finishing any incomplete ordeals.", "Energy Production", sound='sound/misc/notice2.ogg')
 		var/pizzatype_list = subtypesof(/obj/item/food/pizza)
 		pizzatype_list -= /obj/item/food/pizza/arnold // No murder pizza
 		pizzatype_list -= /obj/item/food/pizza/margherita/robo // No robo pizza
