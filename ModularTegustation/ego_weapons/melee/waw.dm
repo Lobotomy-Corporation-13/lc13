@@ -2515,7 +2515,6 @@
 /obj/item/ego_weapon/contempt/get_clamped_volume()
 	return 25
 
-<<<<<<< HEAD
 /// Gaze stacking status effect: does nothing, the weapon is the one that applies the bonuses. You start with 1 stack, and go up to 6. If you go to 7? Turns into Contempt.
 /datum/status_effect/stacking/contempt_weapon_gaze
 	id = "contempt_weapon_gaze"
@@ -2579,7 +2578,7 @@
 
 #undef STATUS_EFFECT_GAZE
 #undef STATUS_EFFECT_CONTEMPT
-=======
+
 /obj/item/ego_weapon/encompassing
 	name = "Encompassing"
 	desc = "It feels like it wants to be everything."
@@ -2601,5 +2600,3 @@
 		force = initial(force)
 		return
 
-
->>>>>>> 1a23384db8 (ports ollieoxenfree from branch 12, with new sprites)
