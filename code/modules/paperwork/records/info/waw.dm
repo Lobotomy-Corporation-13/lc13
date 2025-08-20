@@ -569,15 +569,16 @@
 	abno_breach_damage_type = "Pale"
 	abno_breach_damage_count = "Very High"
 
+//flesh that Takes
 /obj/item/paper/fluff/info/flesh_that_takes
-    abno_type = /mob/living/simple_animal/hostile/abnormality/flesh_that_takes
-    abno_code = "T-06-206"
-    abno_info = list(
-        "When the work result was good and the work type was NOT Attachment the counter lowered by 1 at a low rate.",
-        "When the work result was neutral and the work type was Attachment the counter lowered by 1.",
-        "When the work result was bad the counter lowered by 1.",
-        "T-06-206 prefers attachment work over all other types of work. Any other Neutral work besides attachment will lower the counter by 1.",
-        "When an employee performed attachment work, T-06-206 created a new form.",
-        "The forms obtained by T-06-206 are manifested into this abnormality’s strength whenever it breaches.",
-    )
+	abno_type = /mob/living/simple_animal/hostile/abnormality/flesh_that_takes
+	abno_code = "T-06-206"
+	abno_info = list(
+		"When the work result was good and the work type was NOT Attachment the counter lowered by 1 at a low rate.",
+		"When the work result was neutral and the work type was Attachment the counter lowered by 1.",
+		"When the work result was bad the counter lowered by 1.",
+		"T-06-206 prefers attachment work over all other types of work. Any other Neutral work besides attachment will lower the counter by 1.",
+		"When an employee performed attachment work, T-06-206 created a new form.",
+		"The forms obtained by T-06-206 are manifested into this abnormality’s strength whenever it breaches.",
+		)
 
