@@ -117,7 +117,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	return ..()
 
 /datum/controller/subsystem/lobotomy_corp/proc/SetGoal()
-	var/player_mod = length(GLOB.player_list) * 100	//100 For every client
+	var/player_mod = length(GLOB.player_list) * 200	//200 For every client
 	var/agent_mod = AvailableAgentCount() * 1000	//1000 more for each Agent.
 	box_goal = clamp(player_mod+agent_mod, 2500, 36000)
 
