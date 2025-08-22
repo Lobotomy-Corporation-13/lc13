@@ -2879,7 +2879,6 @@
 	threat_level = 3;
 	name = "???'s abnormality core";
 	desc = "A abnormality core for an unkown monster...";
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
 	},
 /turf/open/floor/facility/dark,
 /area/awaymission/enkr)
@@ -7432,7 +7431,6 @@
 	threat_level = 5;
 	name = "Til the Last Shot core";
 	desc = "The core of Til the Last Shot";
-	icon = 'ModularTegustation/Teguicons/abno_cores/aleph.dmi';
 	icon_state = "last_shot";
 	contained_abno = /mob/living/simple_animal/hostile/abnormality/last_shot
 	},
