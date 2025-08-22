@@ -4,9 +4,9 @@
 	desc = "A staff built from stained wood tipped with a strange, twisted skull. It reminds you of the the tall tales a father would tell."
 	special = "Use this weapon in your hand when wearing matching armor to shield nearby humans from 50 white damage."
 	icon_state = "dragon_staff"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
-	lefthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_lefthand.dmi'
-	righthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_righthand.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_lefthand.dmi'
+	righthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_righthand.dmi'
 	force = 16
 	damtype = WHITE_DAMAGE
 	attack_verb_continuous = list("bashes", "whacks", "smacks")
@@ -28,9 +28,9 @@
 	name = "security"
 	desc = "Those who would give up essential liberty, to purchase a little temporary safety, deserve neither liberty nor safety."
 	icon_state = "security"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
-	lefthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_lefthand.dmi'
-	righthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_righthand.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_lefthand.dmi'
+	righthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_righthand.dmi'
 	force = 25
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("bashes", "jabs", "smacks")
@@ -60,7 +60,7 @@
 	desc = "Goodness gracious, great mauls of fire!"
 	special = "Use in hand to prepare a powerful area attack. This attack requires charge to use, but deals armor-piercing burn damage."
 	icon_state = "sunspit"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	inhand_x_dimension = 64
@@ -162,9 +162,9 @@
 	name = "furrows"
 	desc = "A rusty pick-mattock caked in mud. Its texture is heavily decayed, as if it had been buried for a long time."
 	icon_state = "furrows"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
-	lefthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_lefthand.dmi'
-	righthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_righthand.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_lefthand.dmi'
+	righthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_righthand.dmi'
 	force = 40
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("bashes", "jabs", "picks", "impales", "spikes")
@@ -186,7 +186,7 @@
 			Using this E.G.O will eventually reduce you to ashes."
 	special = "Activate again during block to perform Blazing Strike. This weapon becomes stronger the more burn stacks you have."
 	icon_state = "combust"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
 	worn_icon = 'icons/obj/clothing/belt_overlays.dmi'
 	worn_icon_state = "combust"
 	force = 80 // Quite high with passive buffs, but deals pure damage to yourself
@@ -344,7 +344,7 @@
 	desc = "Everyone says its a myth until one day something happens that brings it back to life."
 	special = "This weapon can fire a damaging projectile that scales with justice when held with both hands."
 	icon_state = "ochre"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	inhand_x_dimension = 64
@@ -422,7 +422,7 @@
 	Either the monsters would have gotten us or we would have killed each other off with greed and jealousy and anger."
 	special = "This lance randomly spews out caustic venom when charging."
 	icon_state = "miasma"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
 	inhand_x_dimension = 96
@@ -545,9 +545,9 @@
 	special = "This weapon has a combo system. To turn off this combo system, use in hand. \
 			This weapon has a fast attack speed, is capable of closing short gaps when attacking, and heals a small amount on a combo finsiher."
 	icon_state = "limos"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
-	lefthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_lefthand.dmi'
-	righthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_righthand.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_lefthand.dmi'
+	righthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_righthand.dmi'
 	force = 14 // VERY fast attacks potentially
 	damtype = BLACK_DAMAGE
 	swingstyle = WEAPONSWING_THRUST
@@ -646,9 +646,9 @@
 	name = "lucid nightmares"
 	desc = "The beast was a fabrication of the mind. When I worked the courage to visit the cabin myself, nothing remained but overgrown rubble."
 	icon_state = "nightmares"
-	icon = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_weapons.dmi'
-	lefthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_lefthand.dmi'
-	righthand_file = 'code/modules/mob/living/simple_animal/abnormality/_auxiliary_modes/community/!icons/ego_righthand.dmi'
+	icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_lefthand.dmi'
+	righthand_file = 'ModularLobotomy/!extra_abnos/community/!icons/community_righthand.dmi'
 	force = 70
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("bashes", "jabs", "smacks")
