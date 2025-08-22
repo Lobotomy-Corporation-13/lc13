@@ -4448,7 +4448,6 @@
 #include "ModularLobotomy\tegu_legacy\tegu_jobs\void_technician\voidtechClothing.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_medical_code\tegu_medical.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_ruins\lavaland_ruins.dm"
-#include "ModularLobotomy\tegu_legacy\tegu_ruins\tegu_asteroid.dmm"
 #include "ModularLobotomy\tegu_legacy\tegu_security_code\body_cameras.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_security_code\detective_glasses.dm"
 #include "ModularLobotomy\tegu_legacy\tegu_security_code\detective_scanner.dm"
