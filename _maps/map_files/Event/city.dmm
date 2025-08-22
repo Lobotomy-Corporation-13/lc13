@@ -740,7 +740,10 @@
 	},
 /area/city)
 "eM" = (
-/obj/structure/fence/door,
+/obj/machinery/door/airlock/wood{
+	name = "Hana Office Cells";
+	req_access_txt = "20"
+	},
 /turf/open/floor/plating,
 /area/city/house)
 "eN" = (
@@ -1799,11 +1802,9 @@
 /turf/open/floor/oldshuttle,
 /area/city/house)
 "np" = (
-/obj/structure/fence{
-	dir = 4
-	},
-/turf/open/floor/plating,
-/area/city/house)
+/obj/structure/chair/pew/left,
+/turf/open/floor/plating/grass,
+/area/city)
 "nq" = (
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 10
@@ -1868,6 +1869,12 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood,
 /area/city/house)
+"nQ" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/shop)
 "nS" = (
 /turf/open/floor/facility/dark,
 /area/city/fixers)
@@ -2607,6 +2614,7 @@
 /obj/item/restraints/handcuffs,
 /obj/item/restraints/handcuffs,
 /obj/item/restraints/handcuffs,
+/obj/item/storage/bag/trash,
 /turf/open/floor/facility/white,
 /area/city/house)
 "tu" = (
@@ -3251,6 +3259,10 @@
 	req_access_txt = "9"
 	},
 /turf/open/floor/plasteel/white,
+/area/city)
+"xE" = (
+/obj/structure/chair/pew/right,
+/turf/open/floor/plating/grass,
 /area/city)
 "xO" = (
 /turf/closed/indestructible/reinforced,
@@ -4188,6 +4200,10 @@
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
+"Fa" = (
+/obj/item/storage/bag/trash,
+/turf/open/floor/facility/white,
+/area/city/house)
 "Ff" = (
 /obj/structure/table/reinforced,
 /turf/open/indestructible/hoteltile,
@@ -5165,7 +5181,7 @@
 /turf/open/floor/wood,
 /area/city/shop)
 "LO" = (
-/obj/structure/fence,
+/obj/structure/window/reinforced/fulltile,
 /turf/open/floor/plating,
 /area/city/house)
 "LS" = (
@@ -43379,7 +43395,7 @@ lT
 HC
 LO
 LO
-np
+LO
 of
 Av
 HC
@@ -43893,7 +43909,7 @@ lT
 HC
 LO
 LO
-np
+LO
 of
 Av
 pj
@@ -44152,7 +44168,7 @@ jy
 mZ
 eM
 Av
-Av
+Fa
 HC
 Av
 GB
@@ -46693,7 +46709,7 @@ hR
 lT
 OD
 ww
-ly
+np
 lT
 ly
 ly
@@ -46950,7 +46966,7 @@ hR
 lT
 OD
 ly
-ly
+xE
 lT
 wg
 DC
@@ -47181,7 +47197,7 @@ lV
 lV
 lV
 lV
-lV
+dt
 dt
 dt
 dt
@@ -47438,7 +47454,6 @@ lV
 lV
 lV
 lV
-lV
 dt
 tW
 eO
@@ -47447,6 +47462,7 @@ dt
 kk
 GW
 XE
+eO
 sA
 lT
 lT
@@ -47695,7 +47711,6 @@ lV
 lV
 lV
 lV
-lV
 dt
 lH
 eO
@@ -47703,6 +47718,7 @@ eO
 SE
 eO
 gZ
+eO
 eO
 sA
 lT
@@ -47952,7 +47968,6 @@ lV
 lV
 lV
 lV
-lV
 dt
 Sf
 eO
@@ -47960,6 +47975,7 @@ do
 dt
 kk
 GW
+eO
 eO
 XD
 lT
@@ -48209,7 +48225,6 @@ lV
 lV
 lV
 lV
-lV
 dt
 bD
 eO
@@ -48218,6 +48233,7 @@ dt
 eO
 GW
 XE
+eO
 CG
 lT
 lT
@@ -48465,7 +48481,6 @@ lV
 lV
 lV
 lV
-lV
 dt
 dt
 dt
@@ -48475,6 +48490,7 @@ dt
 eO
 GW
 XE
+eO
 sA
 lT
 wl
@@ -48722,16 +48738,16 @@ lV
 lV
 lV
 lV
-lV
 dt
 zt
-GW
+cw
 eO
 eO
 fy
 eO
 GW
 eO
+nQ
 sA
 lT
 lT
@@ -48979,16 +48995,16 @@ lV
 lV
 lV
 lV
-lV
 dt
 Lq
 eO
 eO
-GW
+eO
 dt
 qD
 GW
 eO
+GW
 sA
 lT
 lT
@@ -49236,16 +49252,16 @@ lV
 lV
 lV
 lV
-lV
 dt
 IU
 eO
 eO
-cw
-dt
-kI
-kI
 eO
+fy
+eO
+eO
+eO
+kI
 dt
 FN
 ax
@@ -49496,8 +49512,8 @@ lV
 lV
 dt
 dt
-dt
 vF
+dt
 dt
 dt
 dt
