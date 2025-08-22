@@ -303,17 +303,7 @@
 	dir = 1;
 	color = "#694720"
 	},
-/obj/structure/fluff{
-	name = "Cherry Blossoms Tree";
-	desc = "A beautiful cherry tree.";
-	icon = 'ModularTegustation/Teguicons/128x128.dmi';
-	icon_state = "graveofcherryblossoms_1";
-	pixel_x = -48;
-	pixel_y = 13;
-	layer = 3.9;
-	max_integrity = 500;
-	alpha = 230
-	},
+/obj/structure/flora/tree/jungle/small,
 /turf/open/floor/plating/beach/sand,
 /area/city/backstreets_room)
 "sF" = (
