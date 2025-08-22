@@ -55,8 +55,8 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_LOBOTOMY
 
 	grouped_abnos = list(
-		/mob/living/simple_animal/hostile/abnormality/big_bird = 3,
-		/mob/living/simple_animal/hostile/abnormality/judgement_bird = 3,
+		/mob/living/simple_animal/hostile/abnormality/big_bird = 1.5,
+		/mob/living/simple_animal/hostile/abnormality/judgement_bird = 1.5,
 	)
 
 	observation_prompt = "A bird stares at you. What is the name of this bird?"
