@@ -4,7 +4,7 @@
 	pixel_y = 64
 	base_pixel_y = 64
 	density = FALSE
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "someones_portrait"
 	icon_living = "someones_portrait"
 	portrait = "someonesportrait"

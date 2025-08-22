@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid
 	name = "Piscine Mermaid"
 	desc = "A limbless abnormality ressembling a mermaid. Their heart shaped eyes look at you with both love and jealousy."
-	icon = 'ModularTegustation/Teguicons/48x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 	icon_state = "pmermaid_standing"
 	icon_living = "pmermaid_standing"
 	icon_dead = "pmermaid_laying" //she shouldn't die while contained so this is more of a placeholder death icon
@@ -85,7 +85,7 @@
 /datum/action/innate/change_icon_merm/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/48x32.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 		owner.icon_state = "pmermaid_standing"
 		owner.pixel_x = -12
 		owner.base_pixel_x = -12
@@ -96,7 +96,7 @@
 /datum/action/innate/change_icon_merm/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/64x64.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		owner.icon_state = "pmermaid_breach"
 		owner.pixel_x = 0
 		owner.base_pixel_x = 0
@@ -142,7 +142,7 @@
 //dying by oxydeath actually takes a while, but it puts them on a clear timer to actually get shit done instead of just hoping someone else takes care of it.
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/BreachEffect()
 	. = ..()
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_living = "pmermaid_breach"
 	icon_dead = "pmermaid_slain"
 	icon_state = icon_living
@@ -353,7 +353,7 @@
 /obj/effect/mermaid_water
 	name = "Lovely water"
 	desc = "This water is as desperate for love as the one that resides in it"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "mermaid_water"
 	layer = BELOW_OBJ_LAYER
 	anchored = TRUE

@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/rose_sign
 	name = "Sign Of Roses"
 	desc = "An armless humanoid shape strapped onto a signboard with rose vines."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "rose_sign"
 	icon_living = "rose_sign"
 	icon_dead = "rosesign_egg"
@@ -86,7 +86,7 @@
 /mob/living/simple_animal/hostile/abnormality/rose_sign/death()
 	for(var/mob/living/R in summoned_roses)
 		R.death()
-	icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
@@ -312,7 +312,7 @@
 
 /obj/effect/temp_visual/rose_vine
 	name = "garden of infinity"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "rose_vines"
 	pixel_x = -32
 	base_pixel_x = -32
@@ -342,7 +342,7 @@
 /obj/effect/roseRoot
 	name = "root"
 	desc = "A target warning you of incoming pain"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "vines"
 	move_force = INFINITY
 	pull_force = INFINITY
@@ -389,7 +389,7 @@
 	gender = NEUTER
 	name = "Blank rose"
 	desc = "You shouldn't see this"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "rose_red"
 	maxHealth = 500
 	health = 500
@@ -472,7 +472,7 @@
 	gender = NEUTER
 	name = "Blank rose"
 	desc = "You shouldn't see this"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "rose_red"
 	anchored = TRUE
 	density = FALSE
@@ -546,7 +546,7 @@
 /atom/movable/screen/alert/status_effect/crownthorns
 	name = "Crown of Thorns"
 	desc = "You are bound to an abnormal entity."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "rose_sign"
 
 /datum/status_effect/stacking/crownthorns/on_apply()
@@ -600,7 +600,7 @@
 /obj/structure/rose_crucifix
 	name = "thorny crucifix"
 	desc = "A terrifying yet beautiful covering of roses."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "crucify"
 	max_integrity = 60
 	buckle_lying = 0
@@ -612,9 +612,9 @@
 /obj/structure/rose_crucifix/Initialize()
 	. = ..()
 	if(prob(25))//TODO: make this from a white rose
-		add_overlay(mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "crucify_white", -ABOVE_MOB_LAYER))
+		add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "crucify_white", -ABOVE_MOB_LAYER))
 	else
-		var/mutable_appearance/roses = mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "crucify_rose", -ABOVE_MOB_LAYER)
+		var/mutable_appearance/roses = mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "crucify_rose", -ABOVE_MOB_LAYER)
 		roses.color = pick("#CC0C0C", "#571278", "#5E7D84")//TODO: make it correspond to the rose, not really necessary though
 		add_overlay(roses)
 

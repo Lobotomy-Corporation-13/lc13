@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/melting_love
 	name = "Melting Love"
 	desc = "A pink slime creature, resembling a female humanoid."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "melting_love"
 	icon_living = "melting_love"
 	portrait = "melting_love"
@@ -177,7 +177,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/melting_love/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_living = "melting_breach"
 	icon_state = icon_living
 	icon_dead = "melting_breach_dead"
@@ -259,7 +259,7 @@
 /mob/living/simple_animal/hostile/slime
 	name = "slime pawn"
 	desc = "The skeletal remains of a former employee is floating in it..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "little_slime"
 	icon_living = "little_slime"
 	speak_emote = list("gurgle")
@@ -359,7 +359,7 @@
 /mob/living/simple_animal/hostile/slime/big
 	name = "big slime"
 	desc = "The skeletal remains of the former gifted employee is floating in it..."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "big_slime"
 	icon_living = "big_slime"
 	pixel_x = -8
@@ -436,7 +436,7 @@
 /obj/effect/decal/cleanable/melty_slime
 	name = "Slime"
 	desc = "It looks corrosive."
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "melty_slime3"
 	random_icon_states = list("melty_slime3")
 	mergeable_decal = TRUE
@@ -529,7 +529,7 @@
 /atom/movable/screen/alert/status_effect/melty_slimed
 	name = "Acidic Goo"
 	desc = "Slime is stuck to your skin, slowing you down and dealing BLACK damage!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "slimed"
 
 /datum/status_effect/melty_slimed/tick()

@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/voiddream
 	name = "Void Dream"
 	desc = "A very fluffy floating sheep.."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "void_dream"
 	icon_living = "void_dream"
 	portrait = "void_dream"
@@ -86,7 +86,7 @@
 		return
 	if(IsCombatMap())
 		return
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	punched = TRUE
 	ChangeMoveToDelayBy(-2)
 	ability_cooldown_time = 8 SECONDS

@@ -599,13 +599,13 @@ The variable's key needs to be non-numerical.*/
 		if(1)
 			return
 		if(2)
-			C.icon = 'ModularTegustation/Teguicons/abno_cores/teth.dmi'
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/teth.dmi'
 		if(3)
-			C.icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 		if(4)
-			C.icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 		if(5)
-			C.icon = 'ModularTegustation/Teguicons/abno_cores/aleph.dmi'
+			C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/aleph.dmi'
 
 /mob/living/simple_animal/hostile/abnormality/spawn_gibs()
 	if(blood_volume <= 0)

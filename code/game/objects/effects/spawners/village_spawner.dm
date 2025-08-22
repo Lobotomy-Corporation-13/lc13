@@ -2,7 +2,7 @@
 	name = "village spawner"
 	room_width = 29
 	room_height = 22
-	icon = 'ModularTegustation/Teguicons/room_spawners/29x22.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/room_spawners/29x22.dmi'
 	icon_state = ""
 	room_type = "village"
 	spawn_delay_min = 8200

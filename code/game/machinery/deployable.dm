@@ -128,7 +128,7 @@
 			if(71 to 90)
 				fill_text = 75
 		if(fill_text)
-			. += mutable_appearance('ModularTegustation/Teguicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
+			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
 
 /obj/structure/barricade/security
 	name = "security barrier"

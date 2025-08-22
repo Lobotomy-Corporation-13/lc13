@@ -1,7 +1,7 @@
 /obj/structure/abno_core
 	name = "blank abnormality core"
 	desc = "You shouldn't be seeing this. Please let someone know!"
-	icon = 'ModularTegustation/Teguicons/abno_cores/zayin.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/zayin.dmi'
 	icon_state = ""//blank icon states exist for each risk level.
 	anchored = FALSE
 	density = FALSE
@@ -74,7 +74,7 @@
 	anchored = TRUE
 	icon_state = ""
 	animate(src, alpha = 1,pixel_x = -16, pixel_z = 32, time = 3 SECONDS)
-	playsound(src,'ModularTegustation/Tegusounds/abno_extract.ogg', 50, 5)
+	playsound(src,'ModularLobotomy/_Lobotomysounds/abno_extract.ogg', 50, 5)
 	sleep(3 SECONDS)
 	//FIXME: Causes a runtime for abnormalities with spawn disabled
 	SSabnormality_queue.queued_abnormality = contained_abno
@@ -91,7 +91,7 @@
 /obj/machinery/abno_core_extractor
 	name = "abnormality core containment unit"
 	desc = "A device used to transfer abnormalities into containment cells."
-	icon = 'ModularTegustation/Teguicons/lc13_structures_64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures_64x64.dmi'
 	icon_state = "extraction"
 	pixel_x = -16
 	base_pixel_x = -16

@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/distortion/timeripper
 	name = "The Time Ripper"
 	desc = "A full-body prosthetic looking guy, he feels eerie."
-	icon = 'ModularTegustation/Teguicons/ripper32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/ripper32x64.dmi'
 	icon_state = "ripper1"
 	icon_living = "ripper1"
 	icon_dead = "ripper1"
@@ -55,7 +55,7 @@
 	var/frozen_time = 60 SECONDS
 
 /mob/living/simple_animal/hostile/distortion/timeripper/proc/StageTransition()
-	icon = 'ModularTegustation/Teguicons/ripper64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/ripper64x64.dmi'
 	icon_living = "ripper2"
 	pixel_x = -20
 	if(!countering && can_act)
@@ -130,7 +130,7 @@
 		return
 
 	finishing = TRUE
-	icon = 'ModularTegustation/Teguicons/ripper64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/ripper64x64.dmi'
 	icon_state = "ripper2"
 	playsound(get_turf(src), 'sound/hallucinations/wail.ogg', 50, 1)
 	SLEEP_CHECK_DEATH(5)
@@ -151,7 +151,7 @@
 		playsound(get_turf(src), 'sound/weapons/bladeslice.ogg', 250, TRUE)
 		finishing = FALSE
 		if(current_stage == 1)
-			icon = 'ModularTegustation/Teguicons/ripper32x64.dmi'
+			icon = 'ModularLobotomy/_Lobotomyicons/ripper32x64.dmi'
 		icon_state = "ripper[current_stage]"
 		return
 	. = ..()

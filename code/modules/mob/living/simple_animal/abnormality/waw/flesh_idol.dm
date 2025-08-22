@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/flesh_idol
 	name = "Flesh Idol"
 	desc = "A cross with flesh stapled in the middle."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "flesh_idol"
 	portrait = "flesh_idol"
 	maxHealth = 600

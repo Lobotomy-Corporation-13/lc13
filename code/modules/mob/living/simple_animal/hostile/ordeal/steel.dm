@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dawn
 	name = "gene corp remnant"
 	desc = "A insect augmented employee of the fallen Gene corp. Word on the street says that they banded into common backstreet gangs after the Smoke War."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "gcorp1"
 	icon_living = "gcorp1"
 	icon_dead = "gcorp_corpse"
@@ -203,7 +203,7 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dusk
 	name = "gene corp manager"
 	desc = "A bug headed manager of the fallen Gene corp. Gene corp hoped that the enhanced sonic abilities of their managers would embolden their own while shattering the minds of their enemies."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "gcorp1"
 	icon_living = "gcorp1"
 	icon_dead = "gcorp_corpse"

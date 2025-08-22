@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/smile
 	name = "Gone with a Simple Smile"
 	desc = "An abnormality seeming to make up a floating cat face."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "smile"
 	icon_living = "smile"
 	portrait = "simple_smile"

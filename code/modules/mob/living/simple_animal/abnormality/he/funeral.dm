@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/funeral
 	name = "Funeral of the Dead Butterflies"
 	desc = "An towering abnormality possessing a white butterfly for a head and a coffin on its back."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi' //HOW DO I TURN A PNG INTO THE DMI SPRITES AAAAAAAAAAAAAAA
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi' //HOW DO I TURN A PNG INTO THE DMI SPRITES AAAAAAAAAAAAAAA
 	icon_state = "funeral"
 	icon_living = "funeral"
 	icon_dead = "funeral_dead"
@@ -262,7 +262,7 @@
 	sleep(10)
 	animate(killed, pixel_y = pixel_y_before, time = 10, , easing = CUBIC_EASING | EASE_OUT, flags = ANIMATION_END_NOW)
 	var/obj/funeral_overlay = new
-	funeral_overlay.icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	funeral_overlay.icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	funeral_overlay.icon_state = "funeral_kill"
 	funeral_overlay.layer = -BODY_FRONT_LAYER
 	funeral_overlay.plane = FLOAT_PLANE
@@ -314,15 +314,15 @@
 
 /datum/status_effect/spirit_gun_target/on_apply()
 	. = ..()
-	owner.add_overlay(mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
+	owner.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
 
 /datum/status_effect/spirit_gun_target/on_remove()
 	. = ..()
-	owner.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
+	owner.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "funeral_swarm", -MUTATIONS_LAYER))
 
 /obj/effect/temp_visual/funeral_swarm
 	name = "funeral swarm"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "funeral_swarm"
 	layer = BELOW_MOB_LAYER
 	duration = 10 SECONDS

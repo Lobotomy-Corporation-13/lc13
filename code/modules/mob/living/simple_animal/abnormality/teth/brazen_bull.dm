@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/brazen_bull
 	name = "Brazen Bull"
 	desc = "A bull made of a copper and zinc alloy. There's someone trapped inside it."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "brz_bull"
 	portrait = "brazen_bull"
 	pixel_x = -15

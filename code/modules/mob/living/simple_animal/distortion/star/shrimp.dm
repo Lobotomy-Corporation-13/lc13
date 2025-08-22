@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/distortion/shrimp_rambo
 	name = "Shrimp Rambo"
 	desc = "A Shrimp Corp taboo hunter. Will a star of the city fall tonight?"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_rambo"
 	maxHealth = 9001 //you asked for a star of the city
 	health = 9001

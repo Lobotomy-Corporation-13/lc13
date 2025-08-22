@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/happyteddybear
 	name = "Happy Teddy Bear"
 	desc = "A worn-out teddy bear. It's missing an eye and spilling stuffing out of various tears."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "teddy"
 	icon_living = "teddy"
 	portrait = "happy_teddy_bear"

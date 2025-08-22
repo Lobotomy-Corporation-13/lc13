@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/black_sun
 	name = "Waxing of the Black Sun"
 	desc = "A sundial. Inscribed on the side is the phrase ''Memento Mori''."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "sundial"
 	maxHealth = 1000
 	health = 1000
@@ -145,7 +145,7 @@
 /mob/living/simple_animal/hostile/sun_pillar
 	name = "pillar of the black sun"
 	desc = "A glowing pillar."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "sun_pillar"
 	icon_living = "sun_pillar"
 	health = 2500
@@ -200,7 +200,7 @@
 //Laser attack
 /obj/effect/temp_visual/blacksun_laser
 	name = "black sun laser"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "pillar_strike"
 	duration = 15
 

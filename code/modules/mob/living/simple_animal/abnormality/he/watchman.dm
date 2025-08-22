@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/watchman
 	name = "The Watchman"
 	desc = "A man holding a large lantern. The lantern, despite having a visible flame, gives off no light."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "watchman"
 	icon_living = "watchman"
 	portrait = "watchman"

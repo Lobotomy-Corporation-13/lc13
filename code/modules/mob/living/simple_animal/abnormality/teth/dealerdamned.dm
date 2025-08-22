@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/dealerdamned
 	name = "Dealer of the Damned"
 	desc = "A towering figure with a revolver for a head. It's seated in front of a poker table."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "dealerdamned"
 	maxHealth = 400
 	health = 400

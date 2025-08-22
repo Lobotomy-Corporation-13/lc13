@@ -87,7 +87,7 @@
 /atom/movable/screen/alert/status_effect/hyde
 	name = "Mr.Hyde"
 	desc = "A mysterious force is guiding your actions."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "hyde"
 
 /datum/status_effect/display/hyde/on_apply()
@@ -129,7 +129,7 @@
 
 //Action
 /datum/action/cooldown/dr_jekyll
-	icon_icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi'
 	button_icon_state = "dr_jekyll"
 	name = "Switch"
 	cooldown_time = 300

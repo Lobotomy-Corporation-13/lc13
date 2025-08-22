@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/thunder_bird
 	name = "Thunderbird Altar"
 	desc = "An ominous totem built from the corpses of unusual creatures, crowned with the visage of its namesake in wood."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "thunderbird"
 	icon_living = "thunderbird"
 	icon_dead = "thunderbird_dead"
@@ -140,7 +140,7 @@
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/death()
 	if(health > 0)
 		return
-	icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	density = FALSE
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 100, 1)
 	animate(src, alpha = 0, time = 10 SECONDS)
@@ -344,7 +344,7 @@
 /mob/living/simple_animal/hostile/thunder_zombie
 	name = "Thunderbird Worshipper"
 	desc = "An pitiable remnant of what was once human. Scalped, charred, and screaming incoherently..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "thunder_zombie"
 	icon_living = "thunder_zombie"
 	icon_dead = "thunder_zombie_dead"
@@ -442,7 +442,7 @@
 /obj/structure/tbird_perch
 	name = "thunderbird altar"
 	desc = "An idol bloodied by the creature who stood upon it.."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "thunderbird_altar"
 	pixel_x = -16
 	base_pixel_x = -16

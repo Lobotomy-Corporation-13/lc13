@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/rubber_duck
 	name = "Interdimensional Rubber Duck"
 	desc = "A small yellow duck."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "duckcontained"
 	icon_living = "duckcontained"
 	portrait = "rubber_duck"

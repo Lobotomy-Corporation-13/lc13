@@ -104,6 +104,6 @@
 /obj/effect/decal/cleanable/robot_debris/general_scrap
 	name = "scrap metal"
 	desc = "Twisted and beaten metal."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "scrap1"
 	random_icon_states = list("scrap1", "scrap2")

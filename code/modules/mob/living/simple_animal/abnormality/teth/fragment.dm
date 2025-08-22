@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/fragment
 	name = "Fragment of the Universe"
 	desc = "An abnormality taking form of a black ball covered by 'hearts' of different colors."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "fragment"
 	icon_living = "fragment"
 	portrait = "fragment"
@@ -189,7 +189,7 @@
 /obj/effect/fragment_legs
 	name = "Fragment of the Universe"
 	desc = "An abnormality taking form of a black ball covered by 'hearts' of different colors."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "fragment_song_legs"
 	move_force = INFINITY
 	pull_force = INFINITY

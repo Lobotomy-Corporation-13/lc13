@@ -116,7 +116,7 @@
 
 	//This is the code that UpdateStatusDisplay calls for each display status effect every time a display status effect is added. -IP
 /datum/status_effect/display/proc/AddDisplayIcon(position)
-	icon_overlay = mutable_appearance('ModularTegustation/Teguicons/tegu_effects10x10.dmi', display_name, -MUTATIONS_LAYER)
+	icon_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', display_name, -MUTATIONS_LAYER)
 	TweakDisplayIcon(position)
 	owner.add_overlay(icon_overlay)
 

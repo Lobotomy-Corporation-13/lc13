@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/onesin
 	name = "One Sin and Hundreds of Good Deeds"
 	desc = "A giant skull that is attached to a cross, it wears a crown of thorns."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "onesin_halo_normal"
 	icon_living = "onesin_halo_normal"
 	portrait = "one_sin"

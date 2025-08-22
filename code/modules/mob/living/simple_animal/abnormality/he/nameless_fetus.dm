@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/fetus
 	name = "Nameless Fetus"
 	desc = "A giant, pus-filled baby."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "fetus"
 	portrait = "nameless_fetus"
 	maxHealth = 400

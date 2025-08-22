@@ -5,7 +5,7 @@
 	name = "Dream of Black Swan"
 	gender = FEMALE
 	desc = null
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "hiding"
 	icon_living = "hiding"
 	icon_dead = "blackswan_dream"

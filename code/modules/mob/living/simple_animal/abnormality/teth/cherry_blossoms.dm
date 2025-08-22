@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/cherry_blossoms
 	name = "Grave of Cherry Blossoms"
 	desc = "A beautiful cherry tree."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "graveofcherryblossoms_3"
 	portrait = "cherry_blossoms"
 	pixel_x = -48
@@ -98,7 +98,7 @@
 /atom/movable/screen/alert/status_effect/marked
 	name = "Marked For Death"
 	desc = "You are marked for death. You will die when struck."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "marked_for_death"
 
 /datum/status_effect/markedfordeath/on_apply()

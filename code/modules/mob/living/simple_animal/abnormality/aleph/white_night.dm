@@ -5,7 +5,7 @@ GLOBAL_LIST_EMPTY(apostles)
 	desc = "The heavens' wrath. Say your prayers, heretic, the day has come."
 	health = 15000
 	maxHealth = 15000
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "white_night"
 	icon_living = "white_night"
 	portrait = "white_night"
@@ -261,7 +261,7 @@ GLOBAL_LIST_EMPTY(apostles)
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/abnormalities/whitenight/scythe.ogg'
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "apostle_scythe"
 	icon_living = "apostle_scythe"
 	icon_dead = "apostle_dead"

@@ -1,6 +1,6 @@
 //Small visuals used for indicating damage or healing or similar
 /obj/effect/temp_visual/healing
-	icon = 'ModularTegustation/Teguicons/lc13_coloreffect.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi'
 	icon_state = "healing"
 	layer = ABOVE_ALL_MOB_LAYER
 	//duration based on the frames in the sprites.
@@ -18,7 +18,7 @@
 	icon_state = "charge"
 
 /obj/effect/temp_visual/damage_effect
-	icon = 'ModularTegustation/Teguicons/lc13_coloreffect.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi'
 	layer = ABOVE_ALL_MOB_LAYER
 	//Icon state is actually the base icon for intilization
 
@@ -60,7 +60,7 @@
 
 //Stuntime visual for when you're stunned by your weapon, so you know what happened.
 /obj/effect/temp_visual/weapon_stun
-	icon = 'ModularTegustation/Teguicons/lc13_coloreffect.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi'
 	icon_state = "stun"
 	layer = ABOVE_ALL_MOB_LAYER
 	duration = 9
@@ -71,7 +71,7 @@
 /obj/effect/temp_visual/area_heal
 	name = "large healing aura"
 	desc = "A large area of restorative energy."
-	icon = 'ModularTegustation/Teguicons/lc13_effects64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
 	icon_state = "healarea_fade"
 	duration = 15
 	pixel_x = -16

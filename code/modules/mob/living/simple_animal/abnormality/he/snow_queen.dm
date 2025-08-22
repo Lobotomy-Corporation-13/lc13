@@ -12,7 +12,7 @@
 	name = "Snow Queen"
 	desc = "A tall construct of ice resembling royalty. Their robe seems to leave a \
 	faint trail of snow flakes in their wake. They move with a cold elegance."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "snowqueen"
 	icon_living = "snowqueen"
 	icon_dead = "snowqueen_dead"
@@ -221,7 +221,7 @@
 	if(slash_cooldown < world.time && (prob(50) || arena_attacks))
 		if(arena_attacks)
 			can_act = FALSE
-			playsound(get_turf(src), 'ModularTegustation/Tegusounds/weapons/unsheathed_blade.ogg', 55, 0, 5)
+			playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/weapons/unsheathed_blade.ogg', 55, 0, 5)
 			if(!do_after(src, 7, target = src))
 				can_act = TRUE
 				return
@@ -709,11 +709,11 @@
 	var/obj/effect/reusable_visual/RV = TakePoolElement()
 	if(telegraph)
 		RV.name = "cracked floor"
-		RV.icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+		RV.icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 		RV.icon_state = "cracks_dark"
 	else
 		RV.name = "ice spike"
-		RV.icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		RV.icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 		RV.icon_state = pick("ice_spike1", "ice_spike2", "ice_spike3")
 	RV.layer = ABOVE_MOB_LAYER
 	RV.loc = location
@@ -828,7 +828,7 @@
 /obj/structure/chair/snowqueen
 	name = "Snow Queen's Throne"
 	desc = "An icey throne."
-	icon = 'ModularTegustation/Teguicons/160x160.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/160x160.dmi'
 	icon_state = "snowqueen_throne"
 	dir = 2
 	resistance_flags = INDESTRUCTIBLE
@@ -894,9 +894,9 @@
 	name = "old sword"
 	desc = "This blade is almost encased in frost yet it eminates a soothing warmth."
 	special = "Use in hand to deflect attacks and prevent damage."
-	icon = 'ModularTegustation/Teguicons/lc13_weapons.dmi'
-	lefthand_file = 'ModularTegustation/Teguicons/lc13_left.dmi'
-	righthand_file = 'ModularTegustation/Teguicons/lc13_right.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'
 	icon_state = "philip"
 	force = 30
 	damtype = RED_DAMAGE

@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/nihil
 	name = "The Jester of Nihil"
 	desc = "What the heck is this... A clown?"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "nihil"
 	icon_living = "nihil"
 	portrait = "nihil"
@@ -254,7 +254,7 @@
 	TeleportIn()
 	SLEEP_CHECK_DEATH(4)
 	if((text2path(icon) == text2path(icon_inverted))) //revert back
-		icon = 'ModularTegustation/Teguicons/64x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	if(!busy_attacking)
 		can_act = TRUE
 	teleport_cooldown = world.time + teleport_cooldown_time
@@ -677,7 +677,7 @@
 /atom/movable/screen/alert/status_effect/void
 	name = "Void"
 	desc = "You are empty inside."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "nihil"
 
 /datum/status_effect/stacking/void/on_apply()
@@ -711,7 +711,7 @@
 
 //Items - Loot
 /obj/item/nihil
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	desc = "A playing card that seems to resonate with certain E.G.O."
 	var/special
 

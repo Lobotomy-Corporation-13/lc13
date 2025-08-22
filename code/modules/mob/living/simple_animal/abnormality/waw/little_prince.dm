@@ -2,7 +2,7 @@
 	name = "\proper The Little Prince"
 	desc = "An abnormality taking the form of a tall mushroom-like entity of dark blue and purple colors. \
 	Dark blue hands hangs by its branches on a string"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "little_prince"
 	portrait = "little_prince"
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.3, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2)
@@ -51,7 +51,7 @@
 	for(var/mob/living/carbon/human/user in hypnotized)
 		if ((user.stat == DEAD) || !(user.sanity_lost))
 			QDEL_NULL(user.ai_controller)
-			user.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
+			user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
 			hypnotized -= user
 	if(LAZYLEN(hypnotized))
 		icon_state = "little_princea"
@@ -69,7 +69,7 @@
 			to_chat(user, span_userdanger("You see mushrooms growing all over your body, and you tear them off!"))
 			return
 	to_chat(user, span_userdanger("You see mushrooms growing all over your body!"))
-	user.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
+	user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
 	QDEL_NULL(user.ai_controller)
 	user.ai_controller = /datum/ai_controller/insane/hypno
 	user.InitializeAIController()
@@ -99,7 +99,7 @@
 	once -= user
 	twice -= user
 	hypnotized -= user
-	user.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
+	user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi', "spore_hypno", -HALO_LAYER))
 	var/turf/T = get_turf(user)
 	user.visible_message(span_danger("Mushrooms rapidly grow all over [user]'s body, forming a giant mass!"))
 	user.emote("scream")
@@ -187,7 +187,7 @@
 /mob/living/simple_animal/hostile/little_prince_1
 	name = "Little Prince-1"
 	desc = "A shambling giant mushroom chunk."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "little_princeminion"
 	icon_living = "little_princeminion"
 	icon_dead = "little_princeminion"

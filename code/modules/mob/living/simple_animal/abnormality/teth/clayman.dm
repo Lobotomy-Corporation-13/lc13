@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/clayman
 	name = "Generic Brand Modelling Clay"
 	desc = "A small, rough humanoid figure made of clay."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bluro"
 	icon_living = "bluro"
 	icon_dead = "bluro"

@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/yin
 	name = "Yin"
 	desc = "A floating black fish that seems to hurt everyone near it."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "yin"
 	icon_living = "yin"
 	var/icon_breach = "yin_breach"
@@ -366,7 +366,7 @@
 /obj/effect/yinyang_dragon
 	name = "Avatar of Harmony"
 	desc = "All that isn't shall become all that is."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "dragon_body"
 
 /obj/effect/yinyang_dragon/Initialize(mapload)

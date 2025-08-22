@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/ppodae
 	name = "Ppodae"
 	desc = "The Goodest Boy in the World"
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "ppodae"
 	icon_living = "ppodae"
 	portrait = "ppodae"

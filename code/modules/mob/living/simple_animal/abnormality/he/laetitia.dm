@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/laetitia
 	name = "Laetitia"
 	desc = "A wee witch."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "laetitia"
 	portrait = "laetitia"
 	maxHealth = 1500
@@ -50,7 +50,7 @@
 
 /datum/action/cooldown/laetitia_summon
 	name = "Call for Friends"
-	icon_icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	button_icon_state = "prank_gift"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
@@ -89,7 +89,7 @@
 
 /datum/action/cooldown/laetitia_gift
 	name = "Gift"
-	icon_icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	button_icon_state = "prank_gift"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
@@ -119,7 +119,7 @@
 
 /obj/item/laetitia_gift
 	name = "laetitia's gift"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "prank_gift"
 	var/opening = FALSE
 	var/oneuse = TRUE
@@ -196,7 +196,7 @@
 /mob/living/simple_animal/hostile/gift
 	name = "Little Witch's Friend"
 	desc = "It's a horrifying amalgamation of flesh and eyes."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "witchfriend"
 	icon_living = "witchfriend"
 	icon_dead = "witchfriend_dead"
@@ -259,7 +259,7 @@
 	var/mob/living/carbon/human/status_holder = owner
 	//i swear this is all necessary
 	prank_overlay = new
-	prank_overlay.icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	prank_overlay.icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	prank_overlay.icon_state = "prank_gift"
 	prank_overlay.layer = -BODY_FRONT_LAYER
 	prank_overlay.plane = FLOAT_PLANE

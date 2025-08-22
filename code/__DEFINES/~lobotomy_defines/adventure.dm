@@ -1,4 +1,4 @@
-// defines used in ModularTegustation/_adventure_console
+// defines used in ModularLobotomy/_adventure_console
 
 #define DEBUG_TEXT_DISPLAY 1
 #define NORMAL_TEXT_DISPLAY 2

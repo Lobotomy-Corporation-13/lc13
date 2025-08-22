@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_sloth
 	name = "Peccatulum Acediae"
 	desc = "It resembles a rock."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "slothsin"
 	icon_living = "slothsin"
 	icon_dead = "slothsin_dead"
@@ -98,7 +98,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_gluttony
 	name = "Peccatulum Gulae"
 	desc = "These \"plants\" have gnashing and gnawing mouths, resembling a rabid beast."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "gluttonysin"
 	icon_living = "gluttonysin"
 	icon_dead = "gluttonysin_dead"
@@ -158,7 +158,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_gloom
 	name = "Peccatulum Morositatis"
 	desc = "An insect-like entity with a transparant body."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	pixel_x = -8
 	base_pixel_x = -8
 	icon_state = "gloomsin"
@@ -237,7 +237,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_pride
 	name = "Peccatulum Superbiae"
 	desc = "Those spikes look sharp!"
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	pixel_x = -8
 	base_pixel_x = -8
 	icon_state = "pridesin"
@@ -365,7 +365,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_lust //Tank that is resistant to bullets
 	name = "Peccatulum Luxuriae"
 	desc = "A creature made of lumps of flesh. It looks eagar to devour human flesh."
-	icon = 'ModularTegustation/Teguicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
 	icon_state = "lustsin"
 	icon_living = "lustsin"
 	icon_dead = "lustsin_dead"
@@ -471,7 +471,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_wrath
 	name = "Peccatulum Irae"
 	desc = "Looks like some sort of dried tentacle with glowing red liquid inside."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "wrathsin"
 	icon_living = "wrathsin"
 	icon_dead = "wrathsin_dead"

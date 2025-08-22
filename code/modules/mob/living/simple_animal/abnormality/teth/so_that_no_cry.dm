@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/so_that_no_cry
 	name = "So That No One Will Cry"
 	desc = "An abnormality taking the form of a wooden doll, various strange paper talismans are attached to it's body."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "so_that_no_cry"
 	icon_living = "so_that_no_cry"
 	portrait = "so_that_no_cry"
@@ -292,7 +292,7 @@
 /atom/movable/screen/alert/status_effect/talisman
 	name = "Talisman"
 	desc = "These feel oddly soothing, as if they gave you strength."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "talisman"
 
 //CURSE TALISMAN
@@ -330,7 +330,7 @@
 /atom/movable/screen/alert/status_effect/curse_talisman
 	name = "Curse Talisman"
 	desc = "You feel your strength being sapped away..."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "curse_talisman"
 
 #undef STATUS_EFFECT_TALISMAN

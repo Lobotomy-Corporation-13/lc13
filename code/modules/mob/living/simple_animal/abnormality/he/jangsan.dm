@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/jangsan
 	name = "Jangsan Tiger"
 	desc = "A monster that eats children. Reforms its face for a friendly image"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "jangsan_idle"
 	icon_living = "jangsan_idle"
 	var/icon_aggro = "jangsan"
@@ -351,7 +351,7 @@
 /obj/effect/halo
 	name = "halo"
 	desc = "Poor guy."
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "jangsan_kill"
 	move_force = INFINITY
 	pull_force = INFINITY

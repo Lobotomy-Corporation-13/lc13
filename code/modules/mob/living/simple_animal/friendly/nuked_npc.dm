@@ -8,7 +8,7 @@
 	talking = sound('sound/creatures/lc13/mailman.ogg', repeat = TRUE)
 	portrait = "rat_guide.PNG"
 	start_scene_id = "intro"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "rat_pipe"
 	icon_living = "rat_pipe"
 	icon_dead = "rat_pipe_dead"

@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/road_home
 	name = "The Road Home"
 	desc = "An abnormality ressembling a small girl."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "road_home"
 	icon_living = "road_home"
 	portrait = "road_home"
@@ -301,7 +301,7 @@
 /obj/road_house
 	name = "Home"
 	desc = "So let's go home! Together!"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "House"
 	layer = ABOVE_MOB_LAYER
 	density = FALSE //So the road home can get inside the house.
@@ -403,7 +403,7 @@
 /atom/movable/screen/alert/status_effect/stay_home
 	name = "stay home"
 	desc = "Everyone must go home eventually, you are no different."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "home"
 
 /datum/status_effect/stay_home/on_apply()

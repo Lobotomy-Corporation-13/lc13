@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/clown
 	name = "Clown Smiling at Me"
 	desc = "An unnerving clown."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "clown_smiling"
 	icon_living = "clown_smiling"
 	var/icon_aggro = "clown_breach"
@@ -220,7 +220,7 @@
 /obj/structure/clown_picture
 	name = "clown picture"
 	desc = "A picture of a clown, torn at the seams."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "clown_picture"
 	anchored = TRUE
 	density = FALSE

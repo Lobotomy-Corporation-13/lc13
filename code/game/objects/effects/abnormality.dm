@@ -1,7 +1,7 @@
 /obj/effect/silent_orchestra_singer
 	name = "silent orchestra performer"
 	desc = "A white figure singing a song nobody can hear, but everyone can listen to."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "silent_1"
 	density = FALSE
 	anchored = TRUE
@@ -120,7 +120,7 @@
 
 /obj/effect/scaredy_stun
 	name = "Together"
-	icon = 'ModularTegustation/Teguicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
 	icon_state = "scaredy_stun"
 	layer = ABOVE_MOB_LAYER
 	pixel_x = -10
@@ -136,7 +136,7 @@
 /obj/effect/expresstrain
 	name = "Express Train to Hell"
 	desc = "Oh no."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "expressengine_2"
 	move_force = INFINITY
 	pull_force = INFINITY
@@ -167,7 +167,7 @@
 /obj/effect/cinderella
 	name = "Cinderella's Pumpkin Carriage"
 	desc = "So pretty."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "cinderella_1"
 	move_force = INFINITY
 	pull_force = INFINITY
@@ -194,7 +194,7 @@
 
 /obj/effect/pale_case
 	name = "pale suitcase"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "pale_case"
 	density = FALSE
 	anchored = TRUE
@@ -206,7 +206,7 @@
 /obj/effect/greenmidnight_shell
 	name = "protective shell"
 	desc = "A protective shell of an enormous machine."
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	icon_state = "greenmidnight_casel"
 	density = FALSE
 	anchored = TRUE
@@ -221,7 +221,7 @@
 /obj/effect/greenmidnight_laser
 	name = "laser"
 	desc = "A giant laser gun."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "greenmidnight_laser"
 	density = FALSE
 	anchored = TRUE
@@ -238,7 +238,7 @@
 /obj/effect/golden_bough
 	name = "Golden Bough"
 	desc = "A shining golden bough, the light it emits feels soothing."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "bough_bough"
 	move_force = INFINITY
 	pull_force = INFINITY
@@ -246,7 +246,7 @@
 /obj/effect/sled
 	name = "sleigh"
 	desc = "The sleigh with presents!"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "sled"
 	density = FALSE
 	anchored = TRUE
@@ -261,7 +261,7 @@
 /obj/effect/titania_aura
 	name = "titania"
 	desc = "A gargantuan fairy."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "titania_oberon"
 	pixel_x = -16
 	base_pixel_x = -16

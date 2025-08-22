@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/centipede_corrosion
 	name = "High-Voltage Centipede"
 	desc = "An agent of the information team, corrupted by an abnormality. But how?"
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	icon_state = "centipede"
@@ -148,7 +148,7 @@
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion
 	name = "Thunder Warrior"
 	desc = "An agent of the disciplinary team, corrupted by an abnormality. But how?"
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "thunder_warrior"
 	icon_living = "thunder_warrior"
 	icon_dead = "thunder_warrior_dead"
@@ -266,7 +266,7 @@
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion
 	name = "680 Ham Actor"
 	desc = "An agent of the control team, corrupted by an abnormality. But how?"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "680_ham_actor"
 	icon_living = "680_ham_actor"
 	icon_dead = "ham_actor_dead"
@@ -388,7 +388,7 @@
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion_boss
 	name = "Thunder Chieftain"
 	desc = "A disciplinary officer, heavily corrupted by an abnormality."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "thunder_warrior"
 	icon_living = "thunder_warrior"
 	icon_dead = "thunder_warrior_dead"

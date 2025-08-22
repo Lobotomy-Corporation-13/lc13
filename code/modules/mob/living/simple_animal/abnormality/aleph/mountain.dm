@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/mountain
 	name = "Mountain Of Smiling Bodies"
 	desc = "The Mountain of Smiling Bodies is searching for the smell of a body, carrying the smiles of many."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "mosb"
 	icon_living = "mosb"
 	icon_dead = "mosb_dead"
@@ -230,7 +230,7 @@
 				maxHealth += 1000
 				phase += 1
 				belly = 0
-			icon = 'ModularTegustation/Teguicons/96x96.dmi'
+			icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 			pixel_x = -32
 			base_pixel_x = -32
 			if(phase == 3)
@@ -252,13 +252,13 @@
 	phase -= 1
 	icon_living = "mosb_breach"
 	if(phase == 1)
-		icon = 'ModularTegustation/Teguicons/64x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		pixel_x = -16
 		base_pixel_x = -16
 		ChangeMoveToDelay(2)
 		patrol_cooldown_time = 10 SECONDS
 	if(phase == 2)
-		icon = 'ModularTegustation/Teguicons/96x96.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 		pixel_x = -32
 		base_pixel_x = -32
 		ChangeMoveToDelay(4)

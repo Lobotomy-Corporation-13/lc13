@@ -1,7 +1,7 @@
 /mob/living/simple_animal/projectile_blocker_dummy
 	name = "projectile blocker dummy"
 	desc = "lets projectiles impact multitile mobs"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "training_rabbit"
 	status_flags = GODMODE
 	invisibility = INVISIBILITY_ABSTRACT

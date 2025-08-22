@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/my_form_empties
 	name = "My Form Empties"
 	desc = "A statue created as an idol for worship. It appears to float in the air at all times, showing no particular movement outside of gesturing with one hand."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "myform_empties"
 	icon_living = "myform_empties"
 	icon_dead = "myform_egg"
@@ -96,7 +96,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/death(gibbed)
 	RemoveKarma()
-	icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	QDEL_NULL(soundloop)
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
@@ -307,7 +307,7 @@
 /atom/movable/screen/alert/status_effect/karma
 	name = "Karma"
 	desc = "You are being judged by a divine being. Damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "karma"
 
 /datum/status_effect/stacking/karma/threshold_cross_effect()
@@ -395,7 +395,7 @@
 /obj/effect/myform_staff//the staff
 	name = "khakkhara"
 	desc = "A staff holding spiritual significance. It floats in a similar manner to the abnormality, and appears to be sentient."
-	icon = 'ModularTegustation/Teguicons/32x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x96.dmi'
 	icon_state = "myform_staff"
 
 /obj/effect/myform_staff/Initialize()
@@ -404,7 +404,7 @@
 
 /obj/effect/karma_halo
 	name = "karma"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "karma_nobg"
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	pixel_y = 16

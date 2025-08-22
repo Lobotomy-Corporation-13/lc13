@@ -2,7 +2,7 @@
 	name = "Today's Shy Look"
 	desc = "A humanoid abnormality that's hiding behind what appears to be human skin that's etched with 5 different expressions.  \
 	You have a strange urge to look behind the net of skin. But getting a bad feeling, you decide to stop."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "todayshylook_neutral"
 	icon_living = "todayshylook_neutral"
 	portrait = "shy_look"
@@ -124,7 +124,7 @@
 			expression = "sad"
 		if(5)
 			expression = "angry"
-	icon_overlay = mutable_appearance('ModularTegustation/Teguicons/tegu_effects10x10.dmi', expression, -MUTATIONS_LAYER)
+	icon_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', expression, -MUTATIONS_LAYER)
 	icon_overlay.pixel_x = -2
 	icon_overlay.pixel_y = 30
 	add_overlay(icon_overlay)
@@ -141,7 +141,7 @@
 /mob/living/simple_animal/hostile/abnormality/shy_look/BreachEffect(mob/living/carbon/human/user, breach_type)
 	if(breach_type == BREACH_MINING)
 		special_breach = TRUE
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bill"
 	base_pixel_x = 0
 	pixel_x = 0

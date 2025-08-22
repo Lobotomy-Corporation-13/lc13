@@ -4,7 +4,7 @@
 	desc = "A pair of elegant red women's shoes. The design is antique, but there is no telling where and how they were made."
 	health = 800
 	maxHealth = 800
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "redshoes"
 	icon_living = "redshoes"
 	icon_dead = "redshoes_breach"//dels on death if it's possessing someone. Egg goes here
@@ -252,7 +252,7 @@
 /atom/movable/screen/alert/status_effect/red_possess
 	name = "Allure"
 	desc = "Red Shoes is trying to possess you!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "allure"
 
 /datum/status_effect/red_possess/on_apply()
@@ -375,7 +375,7 @@
 	desc = "Teeth and leg bones jut out of this ragged shoe, as if the wearer's will was made manifest."
 	health = 800
 	maxHealth = 800
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "redshoes_breach2"
 	icon_living = "redshoes_breach2"
 	icon_dead = "redshoes_breach2"//dels on death
@@ -415,7 +415,7 @@
 /obj/structure/redshoes_cushion
 	name = "red pedestal"
 	desc = "The shoes must be in high regard.."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "redshoes_cushion"
 	anchored = TRUE
 	density = FALSE

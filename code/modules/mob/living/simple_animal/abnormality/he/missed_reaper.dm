@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/missed_reaper
 	name = "Missed Reaper"
 	desc = "Appears to be a little girl standing next to a looming shadow. Your instincts tell you to avoid her at all costs."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "reaper"
 	portrait = "missed_reaper"
 	maxHealth = 400
@@ -139,7 +139,7 @@
 /obj/structure/looming_shadow
 	name = "looming shadow"
 	desc = "Looks like some sort of ghost or spirit."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "looming_shadow"
 	anchored = TRUE
 	density = FALSE
@@ -170,7 +170,7 @@
 /obj/effect/malicious_shadow
 	name = "malicious shadow"
 	desc = "A tall, ominous figure"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "looming_shadow"
 	anchored = TRUE
 	density = FALSE

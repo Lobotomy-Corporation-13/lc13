@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dawn
 	name = "unknown scout"
 	desc = "A tall humanoid with a walking cane. It's wearing indigo armor."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "indigo_dawn"
 	icon_living = "indigo_dawn"
 	icon_dead = "indigo_dawn_dead"

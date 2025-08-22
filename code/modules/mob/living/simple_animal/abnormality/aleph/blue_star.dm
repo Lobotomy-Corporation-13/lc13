@@ -10,7 +10,7 @@
 	offsets_pixel_x = list("south" = -32, "north" = -32, "west" = -32, "east" = -32)
 	offsets_pixel_y = list("south" = -16, "north" = -16, "west" = -16, "east" = -16)
 	occupied_tiles_up = 1
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "blue_star"
 	icon_living = "blue_star"
 	icon_dead = "blue_star_dead"

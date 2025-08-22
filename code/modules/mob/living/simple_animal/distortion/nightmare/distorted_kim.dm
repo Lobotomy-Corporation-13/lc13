@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/distortion/kim
 	name = "Kaukritya-Aniyata"
 	desc = "A humanoid shrouded in darkness full of intent to kill."
-	icon = 'ModularTegustation/Teguicons/distorted_kim.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/distorted_kim.dmi'
 	icon_state = "Kim"
 	icon_living = "Kim"
 	icon_dead = "Kim"
@@ -87,7 +87,7 @@
 
 /datum/action/cooldown/counter
 	name = "Yield my Flesh"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "hollowpoint_ability"
 	desc = "Prepare to counter an attack to deliver a devastating move."
 	cooldown_time = 100
@@ -334,7 +334,7 @@
 
 /obj/projectile/ripper_dash_effect
 	speed = 0.32
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "ripper_dash"
 	projectile_piercing = ALL
 

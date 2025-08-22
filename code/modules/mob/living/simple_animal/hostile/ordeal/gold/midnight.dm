@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/tso_corrosion
 	name = "Da Capo Al Fine"
 	desc = "Improper use of E.G.O. can have serious consequences."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "al_fine"
 	icon_living = "al_fine"
 	icon_dead = "al_fine_dead"

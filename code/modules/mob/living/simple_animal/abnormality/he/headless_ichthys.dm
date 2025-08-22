@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/headless_ichthys
 	name = "Headless Ichthys"
 	desc = "A giant, headless sea creature."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "headless_ichthys"
 	icon_living = "headless_ichthys"
 	icon_dead = "headless_ichthys"
@@ -75,14 +75,14 @@
 // Player-Controlled code
 /datum/action/innate/abnormality_attack/IchthysJump
 	name = "Pressing Sac"
-	icon_icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	button_icon_state = "_HE"
 	chosen_message = span_colossus("You will now jump with your next attack.")
 	chosen_attack_num = 1
 
 /datum/action/innate/abnormality_attack/BloodCannon
 	name = "Blood Cannon"
-	icon_icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi'
 	button_icon_state = "heart"
 	chosen_message = span_colossus("You will now fire a blood cannon.")
 	chosen_attack_num = 2
@@ -276,7 +276,7 @@
 	playsound(src, 'sound/effects/limbus_death.ogg', 60, 1)
 	animate(src, transform = matrix()*0.6,time = 0)
 	icon_state = "headless_ichthys"
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	QDEL_NULL(current_beam)
 	update_icon_state()
 	density = FALSE

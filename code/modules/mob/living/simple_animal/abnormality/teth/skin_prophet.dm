@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/skin_prophet
 	name = "Skin Prophet"
 	desc = "A little fleshy being reading a tiny book."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "skin_prophet"
 	core_icon = "prophet_egg"
 	portrait = "skin_prophet"

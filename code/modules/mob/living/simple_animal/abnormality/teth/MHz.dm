@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/mhz
 	name = "1.76 MHz"
 	desc = "You can't see anything but static."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "mhz"
 	icon_living = "mhz"
 	portrait = "MHz"

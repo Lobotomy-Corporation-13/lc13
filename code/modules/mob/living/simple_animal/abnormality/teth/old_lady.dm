@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/old_lady
 	name = "Old Lady"
 	desc = "An old, decrepit lady sitting in a worn-out rocking chair"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "old_lady"
 	portrait = "old_lady"
 	maxHealth = 400

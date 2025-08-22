@@ -6,7 +6,7 @@
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd
 	name = "Blue Smocked Shepherd"
 	desc = "A strange humanoid in blue robes."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "blueshep"
 	icon_living = "blueshep"
 	icon_dead = "blueshep_dead"
@@ -145,7 +145,7 @@
 
 /datum/action/cooldown/evade
 	name = "Dodge"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "ruina_evade"
 	desc = "Gain a short speed boost evade your foes!"
 	cooldown_time = 30
@@ -201,7 +201,7 @@
 
 /datum/action/cooldown/parry
 	name = "Counter"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "hollowpoint_ability"
 	desc = "Predict an attack, to deal damage to your foes!"
 	cooldown_time = 100

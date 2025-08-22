@@ -37,7 +37,7 @@
 	icon_state = "arbiter"
 	icon_living = "arbiter"
 	icon_dead = "arbiter"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	faction = list("hostile", "silicon", "apostle", "slime", "warden", "blueshep", "Head") // Cannot be attacked by any abnormality
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	light_color = "#AAAAAA"

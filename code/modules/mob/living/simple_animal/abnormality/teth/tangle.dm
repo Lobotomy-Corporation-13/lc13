@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/tangle
 	name = "Tangle"
 	desc = "What seems to be a severed head laying in a tangle of hair."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "tangle"
 	icon_living = "tangle"
 	portrait = "tangle"
@@ -76,7 +76,7 @@
 /mob/living/simple_animal/hostile/abnormality/tangle/BreachEffect()
 	..()
 	icon_state = "tangle"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	new /obj/structure/spreading/tangle_hair (src)
 
 

@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/siren
 	name = "Siren"
 	desc = "The siren that sings the past."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	icon_state = "siren"

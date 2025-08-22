@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/steam
 	name = "Steam Transport Machine"
 	desc = "A bipedal, steam-powered automaton made of a brown, wood-like material with brass edges."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "steam"
 	icon_living = "steam"
 	icon_dead = "steammachine_egg"
@@ -233,7 +233,7 @@
 		deltimer(guntimer)
 	if(updatetimer)
 		deltimer(updatetimer)
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	pixel_x = -16
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)

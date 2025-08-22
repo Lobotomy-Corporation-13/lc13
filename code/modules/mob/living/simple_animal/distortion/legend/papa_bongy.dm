@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/distortion/papa_bongy
 	name = "Papa Bongy"
 	desc = "A human with the head of a chicken and deformed arms. It appears to be carrying a sack of raw chickens."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "papa_bongy"
 	maxHealth = 2500
 	health = 2500
@@ -207,7 +207,7 @@
 /mob/living/simple_animal/hostile/bongy_hostile
 	name = "bongy"
 	desc = "It looks like a raw chicken. A furious raw chicken!"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "bongy"
 	icon_living = "bongy"
 	icon_dead = "bongy_dead"

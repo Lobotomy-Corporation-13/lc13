@@ -3,7 +3,7 @@
 	name = "Knight of Despair"
 	desc = "A tall humanoid abnormality in a blue dress. \
 	Half of her head is black with sharp horn segments protruding out of it."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "despair"
 	icon_living = "despair"
 	icon_dead = "despair_dead"
@@ -122,7 +122,7 @@
 			blessed.physiology.white_mod *= 0.5
 			blessed.physiology.black_mod *= 0.5
 			blessed.physiology.pale_mod *= 2
-			blessed.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
+			blessed.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 			playsound(get_turf(blessed), 'sound/abnormalities/despairknight/gift.ogg', 50, 0, 2)
 			blessed.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -100)
 		return
@@ -130,11 +130,11 @@
 /mob/living/simple_animal/hostile/abnormality/despair_knight/ZeroQliphoth(mob/living/carbon/human/user)
 	switch(swords)
 		if(0)
-			add_overlay(mutable_appearance('ModularTegustation/Teguicons/48x48.dmi', "despair_sword1", -ABOVE_MOB_LAYER))
+			add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/48x48.dmi', "despair_sword1", -ABOVE_MOB_LAYER))
 			playsound(get_turf(src), 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)
 			datum_reference.qliphoth_change(1)
 		if(1)
-			add_overlay(mutable_appearance('ModularTegustation/Teguicons/48x48.dmi', "despair_sword2", -ABOVE_MOB_LAYER))
+			add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/48x48.dmi', "despair_sword2", -ABOVE_MOB_LAYER))
 			playsound(get_turf(src), 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)
 			datum_reference.qliphoth_change(1)
 		else
@@ -194,7 +194,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/despair_knight/proc/BlessedDeath(datum/source, gibbed)
 	SIGNAL_HANDLER
-	blessed_human.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
+	blessed_human.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 	UnregisterSignal(blessed_human, COMSIG_LIVING_DEATH)
 	UnregisterSignal(blessed_human, COMSIG_HUMAN_INSANE)
 	blessed_human.physiology.red_mod /= 0.5
@@ -252,7 +252,7 @@
 		user.physiology.white_mod *= 0.5
 		user.physiology.black_mod *= 0.5
 		user.physiology.pale_mod *= 2
-		user.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
+		user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 		playsound(get_turf(user), 'sound/abnormalities/despairknight/gift.ogg', 50, 0, 2)
 		user.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -50)
 	return
@@ -293,7 +293,7 @@
 /mob/living/simple_animal/hostile/abnormality/despair_knight/proc/NihilIconUpdate()
 	name = "Magical Girl of Justice"
 	desc = "A real magical girl!"
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "despair_friendly"
 	pixel_x = -8
 	base_pixel_x = -8

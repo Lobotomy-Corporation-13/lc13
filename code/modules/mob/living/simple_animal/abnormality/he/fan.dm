@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/fan
 	name = "F.A.N."
 	desc = "It appears to be an office fan."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "fan"
 	portrait = "fan"
 	maxHealth = 400
@@ -169,7 +169,7 @@
 /atom/movable/screen/alert/status_effect/fanhot
 	name = "Hot"
 	desc = "Someone turn on the AC!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "hot"
 
 /datum/status_effect/stacking/fanhot/on_apply()

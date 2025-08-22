@@ -8,7 +8,7 @@
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/weapons/slash.ogg'
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "nothing"
 	icon_living = "nothing"
 	icon_dead = "nothing_dead"
@@ -313,7 +313,7 @@
 			attack_verb_continuous = "strikes"
 			attack_verb_simple = "strike"
 			attack_sound = 'sound/abnormalities/nothingthere/attack.ogg'
-			icon = 'ModularTegustation/Teguicons/64x96.dmi'
+			icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 			icon_state = icon_living
 			pixel_x = -16
 			base_pixel_x = -16

@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/violet_fruit
 	name = "fruit of understanding"
 	desc = "A round purple creature. It is constantly leaking mind-damaging gas."
-	icon = 'ModularTegustation/Teguicons/48x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 	icon_state = "violet_fruit"
 	icon_living = "violet_fruit"
 	icon_dead = "violet_fruit_dead"
@@ -100,7 +100,7 @@
 /mob/living/simple_animal/hostile/ordeal/violet_monolith
 	name = "grant us love"
 	desc = "A dark monolith structure with incomprehensible writing on it."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "violet_noon"
 	icon_living = "violet_noon"
 	icon_dead = "violet_noon_dead"
@@ -187,7 +187,7 @@
 /mob/living/simple_animal/hostile/ordeal/violet_midnight
 	name = "god delusion"
 	desc = "A shrine dedicated to unknown god from another dimension."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "violet_midnightr"
 	icon_living = "violet_midnightr"
 	icon_dead = "violet_midnightr_dead"
@@ -254,7 +254,7 @@
 
 /obj/effect/violet_portal
 	name = "violet midnight portal"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi' // TEMPORARY
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi' // TEMPORARY
 	layer = BYOND_LIGHTING_LAYER
 	plane = BYOND_LIGHTING_PLANE
 	anchored = TRUE
@@ -534,7 +534,7 @@
 
 /obj/effect/black_portal
 	name = "black portal"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi' // TEMPORARY
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi' // TEMPORARY
 	icon_state = "black_shield" // TEMPORARY
 	layer = ABOVE_LIGHTING_LAYER
 	plane = ABOVE_LIGHTING_PLANE
@@ -642,7 +642,7 @@
 
 /obj/effect/pale_eye
 	name = "pale eye"
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "pale_eye"
 	pixel_x = -48
 	base_pixel_x = -48

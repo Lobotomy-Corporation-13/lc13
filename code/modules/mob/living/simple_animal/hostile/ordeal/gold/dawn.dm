@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/fallen_amurdad_corrosion
 	name = "Fallen Nepenthes"
 	desc = "A level 1 agent of Lobotomy Corporation that has somehow been corrupted by an abnormality."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "amurdad_corrosion"
 	icon_living = "amurdad_corrosion"
 	icon_dead = "amurdad_corrosion_dead"
@@ -38,7 +38,7 @@
 /mob/living/simple_animal/hostile/ordeal/beanstalk_corrosion
 	name = "Beanstalk Searching for Jack"
 	desc = "A Lobotomy Corporation clerk that has been corrupted by an abnormality."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "beanstalk"
 	icon_living = "beanstalk"
 	icon_dead = "beanstalk_dead"

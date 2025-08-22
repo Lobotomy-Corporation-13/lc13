@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/book
 	name = "Book Without Pictures or Dialogue"
 	desc = "An old, dusty tome. There is a pen within the folded pages."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "book_0"
 	portrait = "book"
 	maxHealth = 600

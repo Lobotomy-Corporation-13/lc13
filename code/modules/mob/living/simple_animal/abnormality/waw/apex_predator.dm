@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/apex_predator
 	name = "Apex Predator"
 	desc = "An abnormality resembling a beaten up crash dummy."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "apex"
 	icon_living = "apex"
 	core_icon = "apex_egg"

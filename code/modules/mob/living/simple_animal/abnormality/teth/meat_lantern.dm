@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/meat_lantern
 	name = "Meat Lantern"
 	desc = "All you can see is a small white mound with two eyes and a glowing flower."
-	icon = 'ModularTegustation/Teguicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
 	icon_state = "lantern"
 	icon_living = "lantern"
 	portrait = "meat_lantern"
@@ -92,12 +92,12 @@
 /mob/living/simple_animal/hostile/abnormality/meat_lantern/proc/BigChop()
 	can_act = FALSE
 	new /obj/effect/temp_visual/yellowsmoke(get_turf(src))
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	flick("lantern_bite_open",src)
 	pixel_x = base_pixel_x - 88
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/midnight_out.ogg', 40)
 	SLEEP_CHECK_DEATH(7)
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	flick("lantern_bite_closed", src)
 	pixel_x = base_pixel_x - 40
 	for(var/mob/living/L in oview(1, src))

@@ -310,8 +310,8 @@ GLOBAL_VAR_INIT(execution_enabled, FALSE)
 		else
 			to_chat(owner, span_warning("ERROR: BULLET INITIALIZATION FAILURE."))
 			return FALSE
-	playsound(get_turf(src), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
-	playsound(get_turf(H), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+	playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+	playsound(get_turf(H), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
 	return TRUE
 
 /obj/machinery/computer/camera_advanced/manager/proc/Execute(mob/living/owner, mob/living/carbon/human/H)
@@ -332,8 +332,8 @@ GLOBAL_VAR_INIT(execution_enabled, FALSE)
 	switch(tgui_alert(owner,"Really kill [H]? Admins will be notified of this action and you will be responsible for the consequences.","Execution bullet ready to fire",list("Yes", "No"), 3 SECONDS))
 		if("Yes")
 			log_admin("[key_name(owner)] has fired an execution bullet at player [key_name(H)] who was playing as [H].")
-			playsound(get_turf(src), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
-			playsound(get_turf(H), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+			playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+			playsound(get_turf(H), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
 			H.unequip_everything()
 			new /obj/effect/temp_visual/execute_bullet(get_turf(H))
 			QDEL_IN(H, 1)
@@ -356,8 +356,8 @@ GLOBAL_VAR_INIT(execution_enabled, FALSE)
 		H.apply_status_effect(/datum/status_effect/qliphothoverload)
 		if (GetFacilityUpgradeValue(UPGRADE_YELLOW_BULLET))
 			H.apply_status_effect(/datum/status_effect/qliphothshred)
-		playsound(get_turf(src), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
-		playsound(get_turf(H), 'ModularTegustation/Tegusounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
+		playsound(get_turf(H), 'ModularLobotomy/_Lobotomysounds/weapons/guns/manager_bullet_fire.ogg', 10, 0, 3)
 		return TRUE
 
 	to_chat(owner, span_warning("ERROR: BULLET INITIALIZATION FAILURE."))
@@ -562,7 +562,7 @@ GLOBAL_VAR_INIT(execution_enabled, FALSE)
 /datum/action/innate/cyclecommand
 	name = "Cycle Command"
 	desc = "Welfare apologizes for any complications with the technology."
-	icon_icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	button_icon_state = "Move_here_wagie"
 	var/button_icon1 = "Move_here_wagie"
 	var/button_icon2 = "Watch_out_wagie"
@@ -657,32 +657,32 @@ GLOBAL_VAR_INIT(execution_enabled, FALSE)
 // Temp Effects
 
 /obj/effect/temp_visual/commandMove
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Move_here_wagie"
 	duration = 150 		//15 Seconds
 
 /obj/effect/temp_visual/commandWarn
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Watch_out_wagie"
 	duration = 150
 
 /obj/effect/temp_visual/commandGaurd
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Guard_this_wagie"
 	duration = 150
 
 /obj/effect/temp_visual/commandHeal
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Heal_this_wagie"
 	duration = 150
 
 /obj/effect/temp_visual/commandFightA
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Fight_this_wagie1"
 	duration = 150
 
 /obj/effect/temp_visual/commandFightB
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "Fight_this_wagie2"
 	duration = 150
 

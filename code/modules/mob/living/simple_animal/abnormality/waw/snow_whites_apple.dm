@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/snow_whites_apple
 	name = "Snow White’s Apple"
 	desc = "An abnormality taking the form of a tall humanoid with an apple for a head."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "snowwhitesapple_inert"
 	icon_living = "snowwhitesapple_inert"
 	icon_dead = "snowwhitesapple_dead"
@@ -294,7 +294,7 @@
 
 //VINESPIKE EFFECT
 /obj/effect/temp_visual/vinespike
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "vinespike"
 	duration = 10
 
@@ -303,7 +303,7 @@
 	gender = PLURAL
 	name = "branch barrier"
 	desc = "A twisted assortment of branches and roots."
-	icon = 'ModularTegustation/Teguicons/teguobjects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguobjects.dmi'
 	icon_state = "vinehedge"
 	anchored = TRUE
 	density = TRUE
@@ -514,7 +514,7 @@
 				var/obj/item/organ/eyes/B = H.getorganslot(ORGAN_SLOT_BRAIN)
 				if(B)
 					new /obj/effect/temp_visual/vinespike(get_turf(H))
-					H.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "f0442_victem"))
+					H.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "f0442_victem"))
 					B.Remove(H)
 	else
 		new /obj/effect/temp_visual/vinespike(get_turf(hit_thing))

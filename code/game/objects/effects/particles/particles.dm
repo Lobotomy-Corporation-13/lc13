@@ -100,7 +100,7 @@
 	drift = generator("vector", list(-0.1, -0.1), list(0.1, 0.1))
 
 /particles/fragment_note
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "fragment_note"
 	width = 96
 	height = 96
@@ -112,7 +112,7 @@
 	friction = 0.25
 
 /particles/fragment_song
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = list("fragment_song_small","fragment_song_medium","fragment_song_large")
 	width = 128
 	height = 128

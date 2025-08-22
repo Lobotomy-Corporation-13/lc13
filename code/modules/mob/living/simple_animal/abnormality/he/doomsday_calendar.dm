@@ -3,7 +3,7 @@
 	desc = "Likely a tool for predicting a date of some kind, judging from the many letters carved on the bricks."
 	health = 2012
 	maxHealth = 2012
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "doomsday_inert"
 	icon_living = "doomsday_inert"
 	icon_dead = "doomsday_egg"
@@ -99,7 +99,7 @@
 /mob/living/simple_animal/hostile/abnormality/doomsday_calendar/death()
 	density = FALSE
 	playsound(src, 'sound/abnormalities/doomsdaycalendar/Doomsday_Dead.ogg', 100, 1)
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	for(var/mob/living/simple_animal/hostile/doomsday_doll/D in spawned_dolls) //delete the dolls when suppressed
 		D.death()
 		QDEL_IN(D, rand(1,5) SECONDS)
@@ -326,7 +326,7 @@
 /mob/living/simple_animal/hostile/doomsday_doll
 	name = "doomsday clay doll"
 	desc = "A vaguely humanoid figure bearing a heavy clay helmet."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "doomsday_doll"
 	icon_living = "doomsday_doll"
 	icon_dead = "doomsday_doll_dead"

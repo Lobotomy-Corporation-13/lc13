@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/sphinx
 	name = "Sphinx"
 	desc = "A gigantic stone feline."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "sphinx"
 	icon_living = "sphinx"
 	var/icon_aggro = "sphinx_eye"
@@ -42,7 +42,7 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_ARTBOOK
 
 	secret_chance = TRUE // Why do we live, just to suffer?
-	secret_icon_file = 'ModularTegustation/Teguicons/64x64.dmi'
+	secret_icon_file = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	secret_icon_state = "sphonx"
 
 	observation_prompt = "I found myself in an antique land <br>\
@@ -349,7 +349,7 @@
 	name = "golden needle"
 	desc = "A pair of golden needles, can treat total petrification or grant immunity to stuns for a short time. \
 	It could be helpful even if you aren't petrified..."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "gold_needles"
 
 /obj/item/golden_needle/pre_attack(atom/A, mob/living/user, params)
@@ -374,7 +374,7 @@
 	name = "canopic jar"
 	desc = "An ominous and foul-smelling jar, the contents can supposedly be consumed to replace missing organs. \
 	An extra heart could be useful, too..."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "canopic_jar"
 
 /obj/item/canopic_jar/attack_self(mob/user)

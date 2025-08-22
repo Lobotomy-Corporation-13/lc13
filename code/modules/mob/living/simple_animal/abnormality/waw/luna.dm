@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/luna
 	name = "\proper Il Pianto della Luna"
 	desc = "A piano, with a woman sitting on the stool next to it"
-	icon = 'ModularTegustation/Teguicons/96x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 	icon_state = "dellaluna"
 	portrait = "luna"
 	maxHealth = 4000
@@ -150,7 +150,7 @@
 /mob/living/simple_animal/hostile/luna
 	name = "La Luna"
 	desc = "A tall, cloaked figure."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "luna"
 	base_pixel_x = -8
 	pixel_x = -8
@@ -214,7 +214,7 @@
 /atom/movable/screen/alert/status_effect/lunar
 	name = "Lunar Blessing"
 	desc = "Your temperance is buffed for a short period of time."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lunar"
 
 /datum/status_effect/lunar/on_apply()

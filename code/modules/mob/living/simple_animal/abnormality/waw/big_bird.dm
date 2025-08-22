@@ -4,7 +4,7 @@
 	name = "Big Bird"
 	desc = "A large, many-eyed bird that patrols the dark forest with an everlasting lamp. \
 	Unlike regular birds, it lacks wings and instead has long arms with which it can pick things up."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "big_bird"
 	icon_living = "big_bird"
 	core_icon = "bigbird_egg"
@@ -166,7 +166,7 @@
 			C.blur_eyes(5)
 			addtimer(CALLBACK (C, TYPE_PROC_REF(/mob, blind_eyes), 2), 2 SECONDS)
 			addtimer(CALLBACK (C, TYPE_PROC_REF(/mob/living, Stun), 2 SECONDS), 2 SECONDS)
-			var/new_overlay = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "enchanted", -HALO_LAYER)
+			var/new_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "enchanted", -HALO_LAYER)
 			C.add_overlay(new_overlay)
 			addtimer(CALLBACK (C, TYPE_PROC_REF(/atom, cut_overlay), new_overlay), 4 SECONDS)
 

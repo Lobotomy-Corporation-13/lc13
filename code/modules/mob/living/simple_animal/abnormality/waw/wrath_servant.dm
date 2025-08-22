@@ -5,7 +5,7 @@
 	name = "\proper Servant of Wrath"
 	desc = "A small girl in a puffy green magical girl outfit. \
 		She seems lonely."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wrath"
 	icon_living = "wrath"
 	portrait = "wrath_servant"
@@ -391,7 +391,7 @@
 	instability = 0
 	REMOVE_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
 	src.faction = list("wrath")
-	src.icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	src.icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "wrath"
 	pixel_x = -32
 	base_pixel_x = -32
@@ -614,7 +614,7 @@
 /mob/living/simple_animal/hostile/abnormality/wrath_servant/proc/NihilIconUpdate()
 	name = "Magical Girl of Courage"
 	desc = "A real magical girl!"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wrath"
 	pixel_x = 0
 	base_pixel_x = 0
@@ -625,7 +625,7 @@
 	if(!isturf(loc))
 		MoveStatue()
 	AIStatus = AI_OFF
-	src.icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	src.icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "wrath"
 	pixel_x = -32
 	base_pixel_x = -32
@@ -661,7 +661,7 @@
 /mob/living/simple_animal/hostile/azure_hermit
 	name = "Hermit of the Azure Forest"
 	desc = "Please make way, I am here to meet a dear friend."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "hermit"
 	icon_living = "hermit"
 	icon_dead = "hermit_dead"
@@ -848,7 +848,7 @@
 /mob/living/simple_animal/hostile/azure_stave
 	name = "Hermit's Staff"
 	desc = "This wood's blueish hue almost resembles a person..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "stave"
 	icon_living = "stave"
 	maxHealth = 250
@@ -875,7 +875,7 @@
 /obj/effect/decal/cleanable/wrath_acid/
 	name = "Not-so Acidic Goo"
 	desc = "Ah, that kinda stings..."
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "wrath_acid"
 	random_icon_states = list("wrath_acid")
 	mergeable_decal = FALSE
@@ -960,7 +960,7 @@
 /atom/movable/screen/alert/status_effect/wrath_burning
 	name = "Acidic Goo"
 	desc = "The goo has stuck to you and burns your flesh and mind!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "acid_goo"
 
 /datum/status_effect/wrath_burning/tick()

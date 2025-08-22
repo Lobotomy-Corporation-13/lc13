@@ -1,7 +1,7 @@
 /obj/machinery/monolith
 	name = "monolith"
 	desc = "A large, cubical black box."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "monolith"
 	anchored = TRUE
 	density = TRUE

@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/dingledangle
 	name = "Dingle-Dangle"
 	desc = "A cone that goes up to the ceiling with a ribbon tied around it. Bodies are strung up around it, seeming to be tied to the ceiling."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "dangle"
 	portrait = "dingle_dangle"
 	maxHealth = 600
@@ -73,7 +73,7 @@
 /atom/movable/screen/alert/status_effect/dangle
 	name = "That Woozy Feeling"
 	desc = "Your combat senses have sharpened even as you feel your mind dangling."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "rest"
 
 //A simple 5 minute stat bonus increase

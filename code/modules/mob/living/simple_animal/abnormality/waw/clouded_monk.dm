@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/clouded_monk
 	name = "Clouded Monk"
 	desc = "An abnormality in the form of a tall Buddhist monk wearing a kasa hat."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "cloudedmonk"
 	icon_living = "cloudedmonk"
 	var/icon_aggro = "pretamonk"
@@ -85,14 +85,14 @@
 /datum/action/innate/change_icon_monk/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 		owner.icon_state = "cloudedmonk"
 		active = 1
 
 /datum/action/innate/change_icon_monk/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 		owner.icon_state = "pretamonk"
 		active = 0
 

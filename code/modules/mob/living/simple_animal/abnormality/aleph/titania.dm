@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/titania
 	name = "Titania"
 	desc = "A gargantuan fairy."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "titania"
 	icon_living = "titania"
 	portrait = "titania"
@@ -275,7 +275,7 @@
 /mob/living/simple_animal/hostile/fairyswarm
 	name = "fairy"
 	desc = "A tiny, extremely hungry fairy."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairyswarm"
 	icon_living = "fairyswarm"
 	pass_flags = PASSTABLE | PASSMOB

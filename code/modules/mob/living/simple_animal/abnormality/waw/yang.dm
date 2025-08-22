@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/yang
 	name = "Yang"
 	desc = "A floating white fish that seems to help everyone near it."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "yang"
 	icon_living = "yang"
 	var/icon_breach = "yang_breach"

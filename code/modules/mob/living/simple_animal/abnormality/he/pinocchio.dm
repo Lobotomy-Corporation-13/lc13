@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/pinocchio
 	name = "Pinocchio"
 	desc = "A wooden humanoid puppet, it hums to itself with childlike delight."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "pinocchio"
 	icon_living = "pinocchio"
 	portrait = "pinocchio"
@@ -225,7 +225,7 @@
 
 //Effects
 /obj/effect/temp_visual/pinocchio
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "curiosity"
 	duration = 15
 
@@ -294,7 +294,7 @@
 	C.icon_state = ""//core icon goes here
 	C.contained_abno = /mob/living/simple_animal/hostile/abnormality/pinocchio//release()ing or extract()ing this core will spawn the abnormality, making it a valid core.
 	C.threat_level = 3
-	C.icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	C.icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	C.ego_list = list(
 		/datum/ego_datum/weapon/marionette,
 		/datum/ego_datum/armor/marionette,

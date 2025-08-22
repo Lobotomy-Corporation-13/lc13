@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/fairy_festival
 	name = "Fairy Festival"
 	desc = "The abnormality is similar to a fairy, having two pairs of wings and a small body. The small fairies around it act as a cluster."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy"
 	icon_living = "fairy"
 	portrait = "fairy_festival"
@@ -86,7 +86,7 @@
 		RegisterSignal(user, COMSIG_WORK_COMPLETED, PROC_REF(FairyRestart))
 		to_chat(user, span_nicegreen("You feel at peace under the fairies' care."))
 		playsound(get_turf(user), 'sound/abnormalities/fairyfestival/fairylaugh.ogg', 50, 0, 2)
-		user.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
+		user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
 		addtimer(CALLBACK(src, PROC_REF(FairyEnd), user), heal_duration)
 	return
 
@@ -105,7 +105,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/fairy_festival/proc/FairyEnd(mob/living/carbon/human/user)
 	protected_people.Remove(user)
-	user.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
+	user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_heal", -MUTATIONS_LAYER))
 	to_chat(user, span_notice("The fairies giggle before returning to their queen."))
 	UnregisterSignal(user, COMSIG_WORK_STARTED)
 	UnregisterSignal(user, COMSIG_WORK_COMPLETED)
@@ -145,7 +145,7 @@
 		summon_group_size = 1
 		summon_maximum = 4
 		SummonGuys(summon_type)
-		icon = 'ModularTegustation/Teguicons/96x48.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 		icon_state = "fairy_queen"
 		pixel_x = -16
 		maxHealth = 500
@@ -223,7 +223,7 @@
 /mob/living/simple_animal/hostile/mini_fairy
 	name = "\improper Lost Fairy"
 	desc = "They wander in search of food."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_bastard"
 	icon_living = "fairy_bastard"
 	maxHealth = 83
@@ -276,7 +276,7 @@
 /mob/living/simple_animal/hostile/fairy_mass
 	name = "\improper Fairy Mass"
 	desc = "They wander in search of food."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fairy_mass"
 	icon_living = "fairy_mass"
 	icon_dead = "fairy_mass_dead"

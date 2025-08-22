@@ -6,7 +6,7 @@
 	attack_verb_continuous = "whips"
 	attack_verb_simple = "whip"
 	attack_sound = 'sound/abnormalities/kqe/hitsound1.ogg'
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "kqe"
 	icon_living = "kqe"
 	icon_dead = "kqe_egg"
@@ -131,7 +131,7 @@
 	if(!heart)
 		return Life()//PRANKED!
 	can_act = FALSE
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	icon_state = icon_dead
 	pixel_x = -16
 	base_pixel_x = -16
@@ -317,7 +317,7 @@
 
 /obj/effect/temp_visual/approaching_claw
 	name = "grabbing claw"
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "kqe_claw"
 	pixel_x = -16
 	base_pixel_x = -16
@@ -328,7 +328,7 @@
 /mob/living/simple_animal/hostile/kqe_heart
 	name = "Heart of The Townsfolk"
 	desc = "A massive protrusion of wires shaped like a human heart. Arcs of electricity pulse on its surface.."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	icon_state = "kqe_heart"

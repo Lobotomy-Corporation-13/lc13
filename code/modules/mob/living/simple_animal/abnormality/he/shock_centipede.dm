@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/shock_centipede
 	name = "Shock Centipede"
 	desc = "An enormous blue centipede with electricity sparking around it."
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "shock_centipede"
 	icon_living = "shock_centipede"
 	portrait = "shock_centipede"

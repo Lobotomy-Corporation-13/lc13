@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/green_midnight
 	name = "helix of the end"
 	desc = "A colossal metallic structure with a large amount of laser weaponry beneath its shell."
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	icon_state = "greenmidnight"
 	icon_living = "greenmidnight"
 	icon_dead = "greenmidnight_dead"
@@ -274,7 +274,7 @@
 //They are mainly a nuisance that causes people stacking in tight spots to move and shuffle and get eachother killed. Encourages not dumping BLACK armour for the ordeal
 /obj/effect/temp_visual/helix_minilaser
 	name = "helix of the end mini-laser"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "pillar_strike"
 	duration = 15
 	color = "#7ac21f"

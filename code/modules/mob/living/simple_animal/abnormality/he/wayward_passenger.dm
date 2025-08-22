@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/wayward
 	name = "Wayward Passenger"
 	desc = "A large humanoid with its torso caved open and lined with teeth. Thread-like projections cover its open wounds."
-	icon = 'ModularTegustation/Teguicons/48x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 	icon_state = "wayward"
 	icon_living = "wayward_breach"
 	icon_dead = "waywardpass_egg"
@@ -104,7 +104,7 @@
 //*** Simple mob procs ***
 /mob/living/simple_animal/hostile/abnormality/wayward/death(gibbed)
 	playsound(src, 'sound/effects/limbus_death.ogg', 100, 1)
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	pixel_x = -16
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
@@ -293,7 +293,7 @@
 /obj/effect/portal/abno_warp
 	name = "dimensional rift"
 	desc = "A glowing, pulsating rift through space and time."
-	icon = 'ModularTegustation/Teguicons/48x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 	icon_state = "rift_big"
 	base_pixel_x = -8
 	pixel_x = -8

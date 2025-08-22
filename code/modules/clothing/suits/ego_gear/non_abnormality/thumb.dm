@@ -44,8 +44,8 @@
 /obj/item/clothing/suit/armor/ego_gear/city/thumb_east
 	name = "thumb east soldato armor"
 	desc = "Armor worn by thumb grunts in eastern parts of the City."
-	icon = 'ModularTegustation/Teguicons/thumb_east_obj.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/thumb_east_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	/// East Soldato armour sprites by Deadkung
 	icon_state = "thumb_east_soldato"
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = 40, PALE_DAMAGE = 30) // 140 points.
@@ -75,8 +75,8 @@
 	name = "thumb east soldato hat"
 	desc = "Looking snazzy is part of your duties as a Soldato."
 	// Sprites by Deadkung
-	icon = 'ModularTegustation/Teguicons/thumb_east_obj.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/thumb_east_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat"
 
 // Most of everything below this point is modified code copied from /obj/item/clothing/suit/armor/ego_gear/adjustable.
@@ -121,7 +121,7 @@
 	name = "thumb east capo hat"
 	desc = "Procuring these hats takes up a substantial part of your budget, since they seem to keep mysteriously melting off during combat. At least it looks nice."
 	// Sprites by Deadkung
-	icon = 'ModularTegustation/Teguicons/thumb_east_obj.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/thumb_east_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat_capo"
 	alternative_styles = list("thumb_east_hat_capo_shadowed")

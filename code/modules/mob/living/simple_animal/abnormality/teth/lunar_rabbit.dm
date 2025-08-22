@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	name = "Lunar Physician"
 	desc = "A little rabbit girl in a nurse outfit."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "lunar_rabbit"
 	icon_living = "lunar_rabbit"
 	pixel_x = -8

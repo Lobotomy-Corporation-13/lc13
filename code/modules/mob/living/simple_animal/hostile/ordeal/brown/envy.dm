@@ -7,7 +7,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_envy
 	name = "Peccatulum Invidiae"
 	desc = "A strange, pulsating mass of flesh with an eye in the middle."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "envysin"
 	icon_living = "envysin"
 	icon_dead = "envysin_dead"

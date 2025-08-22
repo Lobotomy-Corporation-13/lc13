@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/mailpile
 	name = "Letters on Standby"
 	desc = "A pile of stamped letters, none reaching their intended receiver."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "mailbox"
 	portrait = "pile_of_mail"
 	maxHealth = 600
@@ -181,7 +181,7 @@
 /obj/effect/letters_flow
 	name = "storm of letters"
 	desc = "The storm rages on."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "letters"
 	layer = ABOVE_MOB_LAYER
 

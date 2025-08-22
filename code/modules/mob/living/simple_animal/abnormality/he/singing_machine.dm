@@ -6,7 +6,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 /mob/living/simple_animal/hostile/abnormality/singing_machine
 	name = "Singing Machine"
 	desc = "A shiny metallic device with a large hinge. You feel a sense of dread about what might be inside..."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "singingmachine_closed_clean"
 	icon_living = "singingmachine_closed_clean"
 	portrait = "singing_machine"
@@ -223,7 +223,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 /atom/movable/screen/alert/status_effect/singing_machine
 	name = "Musical Addiction"
 	desc = "Your experience with that machine has etched its music into your body and your mind..."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "musical_addiction"
 
 /datum/status_effect/display/singing_machine/on_apply()

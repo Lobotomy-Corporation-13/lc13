@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/bald
 	name = "You’re Bald..."
 	desc = "A helpful sphere, you think."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "bald1"
 	icon_living = "bald1"
 	portrait = "bald"
@@ -95,9 +95,9 @@
 		victim.hairstyle = "Bald"
 		victim.update_hair()
 		victim.playsound_local(victim, 'sound/abnormalities/bald/bald_special.ogg', 50, FALSE)
-		victim.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast"))
+		victim.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast"))
 		addtimer(CALLBACK(victim, TYPE_PROC_REF(/atom, cut_overlay), \
-								icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast")), 20)
+								icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast")), 20)
 		to_chat(victim, span_notice("You feel awesome!"))
 		return TRUE
 	return FALSE
@@ -170,7 +170,7 @@
 /atom/movable/screen/alert/status_effect/bald_heal
 	name = "Bald is Awesome!"
 	desc = "The power of baldness is renerating HP and SP. Having more bald people around helps!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "bald"
 
 /datum/status_effect/bald_heal/tick()

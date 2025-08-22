@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/distortion/lantern
 	name = "Misguiding Light"
 	desc = "A figure holding a lantern, his light is blinding."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "lantern"
 	maxHealth = 2000 //low health, has AOE blindness
 	health = 2000
@@ -56,7 +56,7 @@
 			continue
 		C.blur_eyes(5)
 		addtimer(CALLBACK (C, TYPE_PROC_REF(/mob, blind_eyes), 2), 2 SECONDS)
-		var/new_overlay = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "enchanted", -HALO_LAYER)
+		var/new_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "enchanted", -HALO_LAYER)
 		C.add_overlay(new_overlay)
 		addtimer(CALLBACK (C, TYPE_PROC_REF(/atom, cut_overlay), new_overlay), 4 SECONDS)
 

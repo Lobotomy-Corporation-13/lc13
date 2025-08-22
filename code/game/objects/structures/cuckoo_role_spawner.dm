@@ -37,7 +37,7 @@
 /obj/structure/bird_statue
 	name = "old bird statue"
 	desc = "A statue of great worship, it appears to have sinister aura around it... If you understood what it means, you could offer stuff to it..."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "thunderbird_altar"
 	pixel_x = -16
 	base_pixel_x = -16

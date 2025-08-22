@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/big_wolf
 	name = "Big and Will be Bad Wolf"
 	desc = "An abnormality taking the form of a large wolf."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "big_wolf"
 	icon_living = "big_wolf"
 	icon_dead = "big_wolf_slain"
@@ -154,7 +154,7 @@
 		base_pixel_x = initial(base_pixel_x)
 		icon_state = initial(icon_state)
 	else
-		icon = 'ModularTegustation/Teguicons/96x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 		pixel_x = -32
 		base_pixel_x = -32
 		if(stat == DEAD)

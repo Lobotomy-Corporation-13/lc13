@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/porccubus
 	name = "Porccubus"
 	desc = "A long flowerlike creature covered in thorns"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "porrcubus_inert"
 	portrait = "porccubus"
 	maxHealth = 1500
@@ -269,7 +269,7 @@
 /obj/item/porccubus_drug
 	name = "Porccubus stinger"
 	desc = "A stinger extracted from Porccubus or those affected by it."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "porrcubus_drug"
 
 //taking this drug as your first hit instead of porccubus will lead to an instant increased tolerance so using it at the last moment is less rewarded

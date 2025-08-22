@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/drifting_fox
 	name = "Drifting Fox"
 	desc = "A large shaggy fox with gleaming yellow eyes; And torn umbrellas lodged into its back."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "drifting_fox"
 	icon_living = "drifting_fox"
 	icon_dead = "fox_egg"
@@ -129,7 +129,7 @@
 	pixel_y = -6
 
 /mob/living/simple_animal/hostile/abnormality/drifting_fox/death(gibbed)
-	icon = 'ModularTegustation/Teguicons/abno_cores/he.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/he.dmi'
 	pixel_x = -16
 	pixel_y = 0
 	density = FALSE
@@ -175,7 +175,7 @@
 /mob/living/simple_animal/hostile/umbrella
 	name = "Umbrella"
 	desc = "A tattered and worn umbrella; The fox seems to have many to spare."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "foxbrella"
 	icon_living = "foxbrella"
 	faction = list("hostile")
@@ -258,7 +258,7 @@
 /atom/movable/screen/alert/status_effect/false_kindness
 	name = "False Kindness"
 	desc = "You feel the weight of your mistakes."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "false_kindness" //Bit of a placeholder sprite, it works-ish so
 
 /datum/status_effect/false_kindness/on_apply() //" Borrowed " from Ptear blade, courtesy of gong.

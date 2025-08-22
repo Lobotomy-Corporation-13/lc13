@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/sunset_traveller
 	name = "Sunset Traveller"
 	desc = "A yellow creature with orange butterflies floating around it."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "sunset"
 	portrait = "sunset_traveller"
 	maxHealth = 400
@@ -138,7 +138,7 @@
 /mob/living/simple_animal/hostile/scarlet_moths
 	name = "Scarlet Moths"
 	desc = "A set of floating moths."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fireflies"
 	icon_living = "fireflies"
 	maxHealth = 8

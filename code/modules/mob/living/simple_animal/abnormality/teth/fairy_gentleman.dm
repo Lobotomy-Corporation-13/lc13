@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/fairy_gentleman
 	name = "Fairy Gentleman"
 	desc = "A very wide humanoid with long arms made of green, dripping slime."
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "fairy_gentleman"
 	core_icon = "fairygentleman_egg"
 	portrait = "fairy_gentleman"

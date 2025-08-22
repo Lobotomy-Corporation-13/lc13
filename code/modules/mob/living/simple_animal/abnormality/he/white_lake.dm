@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/whitelake
 	name = "White Lake"
 	desc = "A ballet dancer, absorbed in her work."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "white_lake"
 	icon_living = "white_lake"
 	portrait = "white_lake"
@@ -176,7 +176,7 @@
 /atom/movable/screen/alert/status_effect/champion
 	name = "The Champion"
 	desc = "You are White Lake's champion, and she has empowered you temporarily."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "champion"
 
 /datum/status_effect/champion/on_apply()

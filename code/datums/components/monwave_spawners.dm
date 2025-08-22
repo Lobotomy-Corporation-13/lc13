@@ -146,7 +146,7 @@
 /obj/effect/wave_commander
 	name = "wave commander"
 	desc = "A incorporial force that leads a group of monsters."
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "target_field"
 	invisibility = 40
 	movement_type = PHASING | FLYING

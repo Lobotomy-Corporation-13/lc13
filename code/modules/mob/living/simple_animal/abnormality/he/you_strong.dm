@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/you_strong
 	name = "You Must Become Strong"
 	desc = "A multicolored factory that smells distinctly of iron... is this thing made of plastic!?"
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "you_strong_pause"
 	icon_living = "you_strong_pause"
 	portrait = "grown_strong"
@@ -254,7 +254,7 @@
 	desc = "A humanoid figure reeking of blood and made out of... plastic?"
 	icon_state = "grown_strong"
 	icon_living = "grown_strong"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	maxHealth = 500
 	health = 500
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0)

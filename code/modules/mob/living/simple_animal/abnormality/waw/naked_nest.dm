@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/naked_nest
 	name = "Naked Nest"
 	desc = "A pulsating round object covered with glistening scales. Tan sludge drips from numerous holes, and something appears to be moving beneath the surface."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "nakednest_inert"
 	icon_living = "nakednest_inert"
 	portrait = "naked_nest"
@@ -158,7 +158,7 @@
 /mob/living/simple_animal/hostile/naked_nest_serpent
 	name = "naked serpent"
 	desc = "A sickly looking green-colored worm."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "nakednest_serpent"
 	icon_living = "nakednest_serpent"
 	a_intent = "harm"
@@ -263,7 +263,7 @@
 /mob/living/simple_animal/hostile/naked_nested
 	name = "naked nested"
 	desc = "A humanoid form covered in slimy scales. It looks like it is protected by the host’s armor."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "nakednest_minion"
 	icon_living = "nakednest_minion"
 	icon_dead = "nakednest_miniondead"

@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/hammer_light
 	name = "Hammer of Light"
 	desc = "A white hammer engraved with yellow runic writing."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "hammer_pedestal"
 	icon_living = "hammer_pedestal"
 	portrait = "hammer_light"
@@ -396,7 +396,7 @@
 	ADD_TRAIT(status_holder, TRAIT_WORK_FORBIDDEN, "Abnormality")
 	ADD_TRAIT(status_holder, TRAIT_IGNOREDAMAGESLOWDOWN, "Abnormality")
 	ADD_TRAIT(status_holder, TRAIT_NODROP, "Abnormality")
-	status_holder.add_overlay(mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "hammer_overlay", -ABOVE_MOB_LAYER))
+	status_holder.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "hammer_overlay", -ABOVE_MOB_LAYER))
 	status_holder.physiology.red_mod *= 0.3
 	status_holder.physiology.white_mod *= 0.3
 	status_holder.physiology.black_mod *= 0.3
@@ -429,7 +429,7 @@
 	var/mob/living/carbon/human/status_holder = owner
 	playsound(get_turf(owner), 'sound/effects/burn.ogg', 75, FALSE)
 	to_chat(status_holder, span_userdanger("The light leaves your body, taking far more than what it gave. You feel extremely weak."))
-	status_holder.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/32x32.dmi', "hammer_overlay", -ABOVE_MOB_LAYER))
+	status_holder.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/32x32.dmi', "hammer_overlay", -ABOVE_MOB_LAYER))
 	status_holder.physiology.red_mod /= 0.3
 	status_holder.physiology.white_mod /= 0.3
 	status_holder.physiology.black_mod /= 0.3
@@ -462,7 +462,7 @@
 /atom/movable/screen/alert/status_effect/heroism
 	name = "Heroism"
 	desc = "You are quickly recovering HP and SP due to the effects of hammer of light."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "rest"
 
 /datum/status_effect/heroism/tick()
@@ -478,7 +478,7 @@
 /mob/living/simple_animal/hostile/lighthammer
 	name = "Light Being"
 	desc = "What appears to be human, only made entirely out of light."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "light_hammer"
 	icon_living = "light_hammer"
 	icon_dead = "light_hammer"

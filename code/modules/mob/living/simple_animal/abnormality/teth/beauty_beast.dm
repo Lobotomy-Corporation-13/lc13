@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/beauty
 	name = "Beauty and the Beast"
 	desc = "A quadruped monster covered in brown fur. The amount of the eyes it has is impossible to count."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "beauty"
 	icon_living = "beauty"
 	icon_dead = "beauty_dead"

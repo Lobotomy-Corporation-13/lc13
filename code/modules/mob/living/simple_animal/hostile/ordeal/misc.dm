@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/pink_midnight
 	name = "A Party Everlasting"
 	desc = "An overturned teacup, a party everlasting."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "party"
 	icon_living = "party"
 	faction = list("pink_midnight")

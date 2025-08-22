@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/my_sweet_home
 	name = "My Sweet Home"
 	desc = "This cozy little house is a safe nest built only for you. Everything is here for you..."
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "sweet_home"
 	icon_living = "sweet_home"
 	icon_dead = "sweet_home_death"

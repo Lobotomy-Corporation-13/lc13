@@ -3,7 +3,7 @@
 	name = "you must be happy"
 	desc = "An abnormality in the form of a big capsule-like machine."
 	icon_state = "YMBH"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -16
 	base_pixel_x = -8
 	can_buckle = TRUE

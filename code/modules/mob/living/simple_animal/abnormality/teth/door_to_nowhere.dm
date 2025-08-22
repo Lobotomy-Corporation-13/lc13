@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere
 	name = "Door to Nowhere"
 	desc = "A door wrapped in chains, floating ominously in the air. Behind it lies memories best left forgotten, regrets that should remain sealed."
-	icon = 'ModularTegustation/Teguicons/chain_door.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/chain_door.dmi'
 	icon_state = "chained_door"
 	icon_living = "chained_door"
 	icon_dead = "chained_door"
@@ -292,7 +292,7 @@
 /obj/structure/regret_door
 	name = "chained door"
 	desc = "A door bound in rusted chains, keeping memories sealed away."
-	icon = 'ModularTegustation/Teguicons/chain_door.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/chain_door.dmi'
 	icon_state = "regret_door"
 	anchored = TRUE
 	opacity = FALSE

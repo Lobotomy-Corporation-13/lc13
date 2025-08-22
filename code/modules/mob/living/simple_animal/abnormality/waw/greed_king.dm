@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/greed_king
 	name = "King of Greed"
 	desc = "A girl trapped in a magical crystal."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "kog"
 	icon_living = "kog"
 	portrait = "greed_king"
@@ -130,7 +130,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	//Center it on a hallway
 	offsets_pixel_x = list("south" = -16, "north" = -16, "west" = -16, "east" = -16)
 	offsets_pixel_y = list("south" = -8, "north" = -8, "west" = -8, "east" = -8)
@@ -303,7 +303,7 @@
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/NihilIconUpdate()
 	name = "Magical Girl of Happiness"
 	desc = "A real magical girl!"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "kog"
 	pixel_x = -8
 	base_pixel_x = -8
@@ -319,7 +319,7 @@
 	if(!isturf(loc))
 		MoveStatue()
 	AIStatus = AI_OFF
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "kog_statue"
 	pixel_x = -16
 	base_pixel_x = -16
@@ -369,5 +369,5 @@
 /obj/structure/blissfragment
 	name = "brilliant bliss"
 	desc = "It looks like a large gemstone. Break it for a special buff."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bliss"

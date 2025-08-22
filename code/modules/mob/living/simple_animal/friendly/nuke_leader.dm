@@ -8,7 +8,7 @@
 	talking = sound('sound/creatures/lc13/mailman.ogg', repeat = TRUE)
 	portrait = "rat_leader.PNG"
 	start_scene_id = "intro"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "rat_knife"
 	icon_living = "rat_knife"
 	icon_dead = "rat_knife_dead"
@@ -545,10 +545,10 @@
 				qdel(heart)
 				new /obj/item/keycard/stockroom (get_turf(L))
 				playsound(get_turf(src), 'sound/effects/cashregister.ogg', 35, 3, 3)
-				
+
 				// Award achievement for completing the quest
 				if(L.client)
 					L.client.give_award(/datum/award/achievement/lc13/city/rat_leader_quest, L)
-				
+
 				return TRUE
 	return FALSE

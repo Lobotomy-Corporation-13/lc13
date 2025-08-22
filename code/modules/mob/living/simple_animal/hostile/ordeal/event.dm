@@ -29,7 +29,7 @@
 	///A cap for mobs. Mobs count towards the item cap. Same purpose as above.
 	var/mob_storage_capacity = 10
 	var/attempt_open = FALSE
-	var/icon/mouth_overlay = icon('ModularTegustation/Teguicons/tegumobs.dmi', icon_state = "mimic_mouth")
+	var/icon/mouth_overlay = icon('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', icon_state = "mimic_mouth")
 
 // Pickup loot
 /mob/living/simple_animal/hostile/ordeal/present/Initialize(mapload)

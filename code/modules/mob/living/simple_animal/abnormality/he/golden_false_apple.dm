@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/golden_apple
 	name = "Golden Apple"
 	desc = "A huge, grotesque apple with limbs."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "gold_inert"
 	icon_living = "gold_inert"
 	icon_dead = "gold_cracked"
@@ -98,7 +98,7 @@
 
 /datum/action/cooldown/gapple_pulse
 	name = "Golden sheen"
-	icon_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "golden_sheen_noBG"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
@@ -106,14 +106,14 @@
 
 /datum/action/innate/abnormality_attack/maggot_spread
 	name = "Slam"
-	icon_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "maggots_noBG"
 	chosen_message = span_colossus("You will now spread maggots within a wide vicinity.")
 	chosen_attack_num = 1
 
 /datum/action/innate/abnormality_attack/maggot_spread2
 	name = "Lunge"
-	icon_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "maggots_noBG"
 	chosen_message = span_colossus("You will now spread maggots within a narrow vicinity.")
 	chosen_attack_num = 2
@@ -271,7 +271,7 @@
 	HandleAbiltyButtons()
 	revive(full_heal = TRUE, admin_revive = FALSE)
 	playsound(src, 'sound/abnormalities/goldenapple/Gold_Falsify.ogg', 50, 1)//it's very loud
-	icon = 'ModularTegustation/Teguicons/96x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 	icon_state = "false_apple"
 	icon_living = "false_apple"
 	icon_dead = "false_dead"
@@ -451,7 +451,7 @@
 /atom/movable/screen/alert/status_effect/golden_sheen
 	name = "Golden Sheen"
 	desc = "Your body radiates the very same glow as the Golden Apple."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "golden_sheen"
 
 /datum/status_effect/stacking/golden_sheen/on_apply()
@@ -497,7 +497,7 @@
 /atom/movable/screen/alert/status_effect/maggots
 	name = "Maggots"
 	desc = "Eugh! Get them off!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "maggots"
 
 /datum/status_effect/stacking/maggots/on_apply()

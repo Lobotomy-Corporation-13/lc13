@@ -686,7 +686,7 @@
 
 /obj/effect/temp_visual/green_noon_reload
 	name = "recharging field"
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "green_bot_reload_effect"
 	layer = BELOW_MOB_LAYER
 	pixel_x = -8
@@ -714,7 +714,7 @@
 
 /obj/effect/temp_visual/hatred
 	name = "hatred"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "hatred"
 	duration = 3 SECONDS
 
@@ -743,7 +743,7 @@
 
 /obj/effect/temp_visual/black_fixer_ability
 	name = "pulse"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "black_fixer"
 	pixel_y = 30
 	base_pixel_y = 30
@@ -755,7 +755,7 @@
 	animate(src, alpha = 0, transform = transform*4, time = 4)
 
 /obj/effect/temp_visual/censored
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "censored_kill"
 	layer = ABOVE_ALL_MOB_LAYER
 	duration = 20
@@ -784,7 +784,7 @@
 	color = COLOR_RED
 
 /obj/effect/temp_visual/apocaspiral
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	name = "apocaspiral"
 	icon_state = "apocalypse_enchant_effect"
 	layer = ABOVE_ALL_MOB_LAYER
@@ -813,7 +813,7 @@
 
 /obj/effect/temp_visual/mermaid_drowning
 	name = "lovely drowning"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "mermaid_drowning"
 	duration = 0.5 SECONDS
 
@@ -828,7 +828,7 @@
 
 /obj/effect/temp_visual/alriune_curtain
 	name = "flower curtain"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "alriune_curtain"
 	duration = 2 SECONDS
 
@@ -842,7 +842,7 @@
 
 /obj/effect/temp_visual/tbirdlightning
 	name = "emp pulse"
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "lightning"
 	duration = 8
 	randomdir = 0
@@ -951,13 +951,13 @@
 
 /obj/effect/temp_visual/rip_space
 	name = "dimensional rift"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "rift"
 	duration = 2
 
 /obj/effect/temp_visual/ripped_space
 	name = "ripped space"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "ripped_space"
 	duration = 3
 
@@ -983,7 +983,7 @@
 
 /obj/effect/temp_visual/house
 	name = "home"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "House"
 	duration = 4 SECONDS
 	pixel_x = -34
@@ -998,7 +998,7 @@
 
 /obj/effect/temp_visual/v_noon
 	name = "violet noon"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "violet_noon_ability"
 	pixel_x = -8
 
@@ -1046,7 +1046,7 @@
 	duration = 5
 
 /obj/effect/temp_visual/holo_command
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	light_range = 1.5
 	light_power = 0.2
 	light_system = MOVABLE_LIGHT

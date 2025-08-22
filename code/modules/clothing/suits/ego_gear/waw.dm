@@ -456,8 +456,8 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 /obj/item/clothing/suit/armor/ego_gear/waw/holiday
 	name = "holiday"
 	desc = "A snazzy outfit for bringing Christmas cheer to all the boys and girls."
-	icon = 'ModularTegustation/Teguicons/joke_abnos/joke_armor.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/joke_abnos/joke_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_armor.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/joke_abnos/joke_worn.dmi'
 	icon_state = "ultimate_christmas"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 50, BLACK_DAMAGE = 10, PALE_DAMAGE = 20) // 140
 	attribute_requirements = list(

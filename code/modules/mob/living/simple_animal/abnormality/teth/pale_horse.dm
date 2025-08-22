@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/pale_horse
 	name = "Pale Horse"
 	desc = "The riderless pale horse of the apocalypse."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "palehorse"
 	icon_living = "palehorse"
 	icon_dead = "palehorse"
@@ -288,7 +288,7 @@
 /atom/movable/screen/alert/status_effect/mortis
 	name = "Fated to die"
 	desc = "The pale horse saw your end and wept."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "mortis"
 
 /datum/status_effect/mortis/tick()

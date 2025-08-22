@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/ardor_moth
 	name = "Ardor Blossom Moth"
 	desc = "A moth seemingly made of fire."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	pixel_x = -8
 	base_pixel_x = -8
 	icon_state = "blossom_moth"

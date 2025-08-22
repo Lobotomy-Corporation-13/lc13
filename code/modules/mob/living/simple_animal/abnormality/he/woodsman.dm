@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/woodsman
 	name = "Warm-Hearted Woodsman"
 	desc = "A mossy old robot that reeks of iron..."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "woodsman"
 	icon_living = "woodsman_breach"
 	portrait = "woodsman"
@@ -292,7 +292,7 @@
 /atom/movable/screen/alert/status_effect/chained
 	name = "Chained"
 	desc = "You've been caught by the woodsman's chain!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "locked"
 
 // Movement restriction for chained targets

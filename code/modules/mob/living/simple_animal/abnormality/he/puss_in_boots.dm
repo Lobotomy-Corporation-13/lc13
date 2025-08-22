@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots
 	name = "Puss in Boots"
 	desc = "A scraggly looking black cat, it seems like the boots are missing."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "cat_contained"
 	var/icon_aggro = "cat_breached"
 	var/icon_friendly = "cat_breached_friendly"
@@ -343,7 +343,7 @@
 		return
 	var/mob/living/carbon/human/user = owner
 	to_chat(user, span_nicegreen("You feel protected."))
-	user.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "inheritance", -MUTATIONS_LAYER))
+	user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inheritance", -MUTATIONS_LAYER))
 	StatUpdate(user)
 	user.physiology.red_mod *= 0.8
 	user.physiology.white_mod *= 0.8
@@ -356,7 +356,7 @@
 	if(!ishuman(owner))
 		return
 	var/mob/living/carbon/human/user = owner
-	user.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "inheritance", -MUTATIONS_LAYER))
+	user.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inheritance", -MUTATIONS_LAYER))
 	user.physiology.red_mod /= 0.8
 	user.physiology.white_mod /= 0.8
 	user.physiology.black_mod /= 0.8

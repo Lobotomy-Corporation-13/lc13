@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/distortion/another_day_work
 	name = "Another Day at Work"
 	desc = "A man covered in... ties?"
-	icon = 'ModularTegustation/Teguicons/48x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 	icon_state = "work"
 	maxHealth = 900
 	health = 900

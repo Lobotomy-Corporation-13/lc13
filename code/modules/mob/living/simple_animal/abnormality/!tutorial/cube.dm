@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/cube
 	name = "THE CUBE"
 	desc = "A strange floating cube."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "cube"
 	icon_living = "cube"
 	portrait = "cube"

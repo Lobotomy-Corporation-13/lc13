@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec
 	name = "Shrimp Association Executive"
 	desc = "A shrimp in a snazzy suit."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "executive"
 	icon_living = "executive"
 	core_icon = "shrimpexec_egg"
@@ -177,7 +177,7 @@
 /mob/living/simple_animal/hostile/shrimp
 	name = "wellcheers corp liquidation intern"
 	desc = "A shrimp that is extremely hostile to you."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers"
 	icon_living = "wellcheers"
 	icon_dead = "wellcheers_dead"
@@ -208,7 +208,7 @@
 /mob/living/simple_animal/hostile/shrimp_soldier
 	name = "wellcheers corp hired liquidation officer"
 	desc = "A shrimp that is there to guard an area."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_bad"
 	icon_living = "wellcheers_bad"
 	icon_dead = "wellcheers_bad_dead"

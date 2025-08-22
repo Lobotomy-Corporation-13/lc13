@@ -563,7 +563,7 @@
 	name = "Justice and Balance"
 	desc = "The power to preserve balance is in your hands. \
 		Your Justice is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "JAB"
 
 /datum/status_effect/stacking/justice_and_balance/process()
@@ -620,7 +620,7 @@
 /atom/movable/screen/alert/status_effect/punishment
 	name = "Ready to punish"
 	desc = "You're ready to punish."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "punishment"
 
 /datum/status_effect/punishment/on_apply()
@@ -655,7 +655,7 @@
 	name = "Punishment"
 	desc = "Their wrong doing brings you rage. \
 		Your Justice is increased by 10."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "punishment"
 
 /datum/status_effect/pbird/on_apply()
@@ -708,7 +708,7 @@
 /atom/movable/screen/alert/status_effect/bloomdebuff
 	name = "Blooming Sakura"
 	desc = "You Take 1.5x Damage."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "marked_for_death"
 
 /datum/status_effect/bloomdebuff/on_apply()
@@ -745,7 +745,7 @@
 	desc = "The growing results of your research."
 	health = 60
 	maxHealth = 60
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "farmwatch_tree"
 	icon_living = "farmwatch_tree"
 	icon_dead = "farmwatch_tree"
@@ -773,7 +773,7 @@
 	desc = "The reason you bloomed, sowing seeds of nostalgia, was to set your heart upon our new beginning."
 	health = 1
 	maxHealth = 1
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "spicebush_tree"
 	icon_living = "spicebush_tree"
 	icon_dead = "spicebush_tree"
@@ -838,7 +838,7 @@
 /atom/movable/screen/alert/status_effect/overheat
 	name = "Overheating"
 	desc = "You have full burn stacks in exchange for justice."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "mortis"
 
 /datum/status_effect/overheat/on_apply()
@@ -906,7 +906,7 @@
 	name = "Duality of harmony"
 	desc = "Decreases white and pale damage taken by 25%. \
 		All your stats are increased by 10."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "duality"
 
 /datum/status_effect/duality_yang/on_apply()
@@ -981,7 +981,7 @@
 /atom/movable/screen/alert/status_effect/galaxy_gift
 	name = "Parting Gift"
 	desc = "You recover SP and HP over time temporarliy."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "friendship"
 
 /datum/status_effect/galaxy_gift/tick()
@@ -1043,7 +1043,7 @@
 /atom/movable/screen/alert/status_effect/dreaming
 	name = "Dreams of comfort"
 	desc = "Decreases damage taken from conventional damage types by 99%"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "comatose"
 
 /datum/status_effect/dreaming/on_apply()
@@ -1216,7 +1216,7 @@
 /atom/movable/screen/alert/status_effect/flesh1
 	name = "A prayer to god"
 	desc = "You take random damage while praying."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "flesh"
 
 /datum/status_effect/flesh1/on_apply()
@@ -1245,7 +1245,7 @@
 /atom/movable/screen/alert/status_effect/flesh2
 	name = "An answer from god"
 	desc = "Increases justice by 20."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "flesh"
 
 /datum/status_effect/flesh2/on_apply()
@@ -1291,7 +1291,7 @@
 /atom/movable/screen/alert/status_effect/infestation
 	name = "Infestation"
 	desc = "Your weakness to red damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "infest"
 
 /datum/status_effect/stacking/infestation/on_apply()
@@ -1317,7 +1317,7 @@
 /mob/living/simple_animal/hostile/naked_nest_serpent_friend
 	name = "friendly naked serpent"
 	desc = "A sickly looking green-colored worm but looks friendly."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "nakednest_serpent"
 	icon_living = "nakednest_serpent"
 	a_intent = "harm"
@@ -1449,7 +1449,7 @@
 
 /obj/projectile/ripper_dash_effect
 	speed = 0.32
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "ripper_dash"
 	projectile_piercing = ALL
 

@@ -6,7 +6,7 @@
 /mob/living/simple_animal/hostile/abnormality/quiet_day
 	name = "A Quiet Day"
 	desc = "An old weather damaged bench, it feels oddly nostalgic to you. Like a spring day at the side of a lake."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "quiet_day"
 	core_icon = "quiet_day"
 	maxHealth = 451
@@ -268,7 +268,7 @@
 /atom/movable/screen/alert/status_effect/quiet
 	name = "A Quiet Day"
 	desc = "You listened to the old man's story."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "quiet"
 
 //A Quiet day

@@ -2,7 +2,7 @@
 	name = "cuckoo spawner"
 	room_width = 17
 	room_height = 12
-	icon = 'ModularTegustation/Teguicons/room_spawners/17x12.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/room_spawners/17x12.dmi'
 	icon_state = ""
 	room_type = "cuckoo"
 	spawn_delay_min = 18000

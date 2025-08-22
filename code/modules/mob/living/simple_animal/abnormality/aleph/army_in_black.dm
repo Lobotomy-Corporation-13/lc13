@@ -3,7 +3,7 @@ GLOBAL_LIST_EMPTY(army)
 /mob/living/simple_animal/hostile/abnormality/army
 	name = "Army in Black"
 	desc = "The color of the human heart is pink, and by wearing the same color, we can blend in with people's minds."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "armyinpink"
 	icon_living = "armyinpink"
 	icon_dead = "armyinpink_heart"
@@ -197,7 +197,7 @@ GLOBAL_LIST_EMPTY(army)
 /mob/living/simple_animal/hostile/army_enemy
 	name = "Army In Black"
 	desc = "Yes.. we, the Army in Black.. blend into the human heart.. and drive away good thoughts.."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "armyinblack"
 	icon_living = "armyinblack"
 	icon_dead = "armyinblack_heart"
@@ -377,7 +377,7 @@ GLOBAL_LIST_EMPTY(army)
 	status_holder.physiology.white_mod *= 0.8
 	status_holder.physiology.black_mod *= 0.8
 	status_holder.physiology.pale_mod *= 0.8
-	status_holder.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects10x10.dmi', "pink", -MUTATIONS_LAYER))
+	status_holder.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', "pink", -MUTATIONS_LAYER))
 	status_holder.vis_contents += army_bud
 
 /datum/status_effect/protection/on_remove()
@@ -395,7 +395,7 @@ GLOBAL_LIST_EMPTY(army)
 	status_holder.physiology.white_mod /= 0.8
 	status_holder.physiology.black_mod /= 0.8
 	status_holder.physiology.pale_mod /= 0.8
-	status_holder.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects10x10.dmi', "pink", -MUTATIONS_LAYER))
+	status_holder.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', "pink", -MUTATIONS_LAYER))
 	status_holder.vis_contents -= army_bud
 	to_chat(status_holder, span_notice("The pink soldier assigned to you returns to its containment cell."))
 
@@ -411,7 +411,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/pink_beacon
 	name = "pink beacon"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "armyinblack_heart"
 	alpha = 0
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
@@ -430,7 +430,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/temp_visual/pink_explosion
 	name = "pink explosion"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "black_explosion"
 	duration = 3 SECONDS
 	color = COLOR_PINK
@@ -443,7 +443,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/temp_visual/black_explosion
 	name = "black explosion"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "black_explosion"
 	duration = 6 SECONDS
 	pixel_x = -32
@@ -455,7 +455,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/temp_visual/army_hearts
 	name = "black haze"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "army_hearts"
 	duration = 10
 
@@ -465,7 +465,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/temp_visual/friend_hearts
 	name = "warmth"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "friend_hearts"
 	duration = 10
 
@@ -475,7 +475,7 @@ GLOBAL_LIST_EMPTY(army)
 
 /obj/effect/army_friend
 	name = "Army in Pink"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "armyinpink"
 	mouse_opacity = 0
 	pixel_x = -16

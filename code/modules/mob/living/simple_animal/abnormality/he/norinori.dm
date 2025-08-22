@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/norinori //Not li'l helper
 	name = "Norinori"
 	desc = "It has the appearance of a cartoon fox, but upon closer inspection, it is actually a cat."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "norinori"
 	icon_living = "norinori"
 	var/icon_aggro = "norinori_breach"
@@ -78,7 +78,7 @@
 
 /datum/action/cooldown/norisplit
 	name = "Split"
-	icon_icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	button_icon_state = "norinori"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
@@ -189,7 +189,7 @@
 /mob/living/simple_animal/hostile/abnormality/norinori/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	icon_state = icon_aggro
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	pixel_x = -8
 	base_pixel_x = -8
 

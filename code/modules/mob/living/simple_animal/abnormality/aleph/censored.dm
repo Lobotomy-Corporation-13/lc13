@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/censored
 	name = "CENSORED"
 	desc = "What is this... It's too disgusting to even look at..."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "censored"
 	icon_living = "censored"
 	portrait = "censored"
@@ -256,7 +256,7 @@
 /mob/living/simple_animal/hostile/mini_censored
 	name = "???"
 	desc = "What the hell is this? It shouldn't exist..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "censored_mini"
 	icon_living = "censored_mini"
 	speak_emote = list("screeches")
@@ -345,7 +345,7 @@
 /atom/movable/screen/alert/status_effect/overwhelming_fear
 	name = "Overwhelming Fear"
 	desc = "You find it difficult to recollect yourself. Your sanity will be slowly lowering to 20%."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "overwhelming_fear"
 
 /datum/status_effect/overwhelming_fear/on_apply()

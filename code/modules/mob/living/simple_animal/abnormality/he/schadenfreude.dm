@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/schadenfreude
 	name = "Schadenfreude"
 	desc = "A box with a keyhole. You don't want to know what's inside."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "schadenfreude"
 	icon_living = "schadenfreude"
 	portrait = "schadenfreude"

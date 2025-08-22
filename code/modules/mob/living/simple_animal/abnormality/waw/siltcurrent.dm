@@ -5,7 +5,7 @@
 	name = "\proper Dream-Devouring Siltcurrent"
 	desc = "An abnormality resembling a giant black and teal fish. \
 	There's teal light tubes embedded in its body,"
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "siltcurrent"
 	icon_living = "siltcurrent"
 	icon_dead = "siltcurrent_egg"
@@ -96,7 +96,7 @@
 // Player-Controlled code
 /datum/action/innate/abnormality_attack/toggle/SiltcurrentDive
 	name = "Toggle Blind Obsession"
-	icon_icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	button_icon_state = "_WAW"
 	chosen_attack_num = 2
 	chosen_message = span_colossus("You won't dive anymore.")
@@ -257,7 +257,7 @@
 		H.adjustOxyLoss(4, updating_health=TRUE, forced=TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/siltcurrent/death()
-	icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	density = FALSE
@@ -279,7 +279,7 @@
 /obj/structure/flotsam
 	name = "Flotsam"
 	desc = "A pile of teal light tubes embedded into the floor."
-	icon = 'ModularTegustation/Teguicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	icon_state = "flotsam"

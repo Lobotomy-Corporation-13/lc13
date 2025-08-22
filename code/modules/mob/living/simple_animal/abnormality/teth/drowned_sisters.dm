@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/drownedsisters
 	name = "Drowned Sisters"
 	desc = "A pair of girls with masks covering their faces."
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "sisters"
 	portrait = "drowned_sisters"
 	maxHealth = 400

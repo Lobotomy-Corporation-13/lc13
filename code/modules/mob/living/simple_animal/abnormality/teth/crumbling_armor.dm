@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/crumbling_armor
 	name = "Crumbling Armor"
 	desc = "A thoroughly aged suit of samurai style armor with a V shaped crest on the helmet. It appears desuetude."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "crumbling"
 	portrait = "crumbling_armor"
 	maxHealth = 600
@@ -36,7 +36,7 @@
 		"Dont't put it on" = list(FALSE, "The armor waits for another reckless one."),
 	)
 
-	var/buff_icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	var/buff_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	var/user_armored
 	var/numbermarked
 	var/meltdown_cooldown //no spamming the meltdown effect
@@ -204,7 +204,7 @@
 /atom/movable/screen/alert/status_effect/cowardice
 	name = "Cowardice"
 	desc = "Show me that you can stand your ground!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "crumbling"
 
 /datum/status_effect/cowardice/on_apply()

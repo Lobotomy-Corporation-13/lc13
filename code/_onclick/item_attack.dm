@@ -371,7 +371,7 @@
 	return 1
 
 /obj/effect/temp_visual/swipe
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	duration = 4
 	randomdir = FALSE
 	alpha = 200
@@ -384,7 +384,7 @@
 	flick(args[4], src) // if this isn't used, it synchronizes all swipe animations.
 
 /obj/effect/temp_visual/thrust
-	icon = 'ModularTegustation/Teguicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
 	duration = 4
 	randomdir = FALSE
 	pixel_x = -16

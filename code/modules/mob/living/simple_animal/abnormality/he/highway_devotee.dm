@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/highway_devotee
 	name = "Highway Devotee"
 	desc = "A giant form holding a 'road closed' sign."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "highway_devotee"
 	icon_living = "highway_devotee"
 	portrait = "highway_devotee"

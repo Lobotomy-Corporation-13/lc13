@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/penitentgirl
 	name = "Penitent Girl"
 	desc = "A girl with hair flowing over her eyes."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "penitent"
 	portrait = "penitent"
 	maxHealth = 400

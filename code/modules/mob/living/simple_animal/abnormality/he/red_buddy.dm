@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/red_buddy
 	name = "Reddened Buddy"
 	desc = "A small whimpering dog like creature."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "redbuddy"
 	icon_living = "redbuddy"
 	icon_dead = "redbuddy_dead"

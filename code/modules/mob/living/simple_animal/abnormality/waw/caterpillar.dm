@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/caterpillar
 	name = "Hookah Caterpillar"
 	desc = "A pathetic bug sitting on a leaf."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "caterpillar"
 	icon_living = "caterpillar"
 	portrait = "caterpillar"
@@ -46,7 +46,7 @@
 
 //Set a smoker timer for 15 seconds
 /mob/living/simple_animal/hostile/abnormality/caterpillar/BreachEffect()
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	addtimer(CALLBACK(src, PROC_REF(Smoke_Timer)), 15 SECONDS)
 	..()
 

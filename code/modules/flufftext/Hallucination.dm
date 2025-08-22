@@ -644,35 +644,35 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 				A = image('icons/mob/mob.dmi',H,"daemon")
 				A.name = "Demon"
 			if("slime")
-				A = image('ModularTegustation/Teguicons/32x32.dmi', H, "little_slime")
+				A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', H, "little_slime")
 				A.name = "Slime Pawn"
 				A.desc = "The skeletal remains of a former employee is floating in it..."
 			if("nakednest")
-				A = image('ModularTegustation/Teguicons/tegumobs.dmi', H, "nakednest_minion")
+				A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', H, "nakednest_minion")
 				A.name = "Naked Nest"
 				A.desc = "A humanoid form covered in scales with numerous holes. It looks like it has reinforced itself with its hosts armor."
 			if("bigbee")
-				A = image('ModularTegustation/Teguicons/48x96.dmi', H, "artillerysergeant")
+				A = image('ModularLobotomy/_Lobotomyicons/48x96.dmi', H, "artillerysergeant")
 				A.name = "Artillery Bee"
 				A.desc = "A disfigured creature with nasty fangs, and an oversized thorax."
 			if("witchfriend")
-				A = image('ModularTegustation/Teguicons/64x48.dmi', H, "witchfriend")
+				A = image('ModularLobotomy/_Lobotomyicons/64x48.dmi', H, "witchfriend")
 				A.name = "Little Witch's Friend"
 				A.desc = "It's a horrifying amalgamation of flesh and eyes."
 			if("witch")
-				A = image('ModularTegustation/Teguicons/tegumobs.dmi', H, "laetitia")
+				A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', H, "laetitia")
 				A.name = "Laetitia"
 				A.desc = "A wee witch."
 			if("censored")
-				A = image('ModularTegustation/Teguicons/32x32.dmi', H, "censored_mini")
+				A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', H, "censored_mini")
 				A.name = H.name
 				A.desc = "What the hell is this? It shouldn't exist..."
 			if("fairy")
-				A = image('ModularTegustation/Teguicons/tegumobs.dmi', H, "fairyswarm")
+				A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', H, "fairyswarm")
 				A.name = "Fairy"
 				A.desc = "A tiny, extremely hungry fairy."
 			if("thunderbird")
-				A = image('ModularTegustation/Teguicons/32x32.dmi', H, "human_thunderbolt")
+				A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', H, "human_thunderbolt")
 				A.name = H.name
 				A.desc = "What appears to be human, only charred and screaming incoherently..."
 			if("custom")
@@ -717,25 +717,25 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 			A = image('icons/mob/robots.dmi',target,"robot")
 			target.playsound_local(target,'sound/voice/liveagain.ogg', 75, 1)
 		if("slime")
-			A = image('ModularTegustation/Teguicons/32x32.dmi', target, "little_slime")
+			A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', target, "little_slime")
 			target.playsound_local(target,'sound/creatures/legion_death_far.ogg', 65, 1)
 		if("nakednest")
-			A = image('ModularTegustation/Teguicons/tegumobs.dmi', target, "nakednest_minion")
+			A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', target, "nakednest_minion")
 			target.playsound_local(target,'sound/misc/moist_impact.ogg', 60, 1)
 		if("bigbee")
-			A = image('ModularTegustation/Teguicons/48x96.dmi', target, "artillerysergeant")
+			A = image('ModularLobotomy/_Lobotomyicons/48x96.dmi', target, "artillerysergeant")
 		if("witchfriend")
-			A = image('ModularTegustation/Teguicons/64x48.dmi', target, "witchfriend")
+			A = image('ModularLobotomy/_Lobotomyicons/64x48.dmi', target, "witchfriend")
 			target.playsound_local(target,'sound/abnormalities/laetitia/spider_born.ogg', 50, 1)
 		if("witch")
-			A = image('ModularTegustation/Teguicons/tegumobs.dmi', target, "laetitia")
+			A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', target, "laetitia")
 		if("censored")
-			A = image('ModularTegustation/Teguicons/32x32.dmi', target, "censored_mini")
+			A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', target, "censored_mini")
 			target.playsound_local(target, 'sound/abnormalities/censored/mini_born.ogg', 50, 1, 4)
 		if("fairy")
-			A = image('ModularTegustation/Teguicons/tegumobs.dmi', target, "fairyswarm")
+			A = image('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', target, "fairyswarm")
 		if("thunderbird")
-			A = image('ModularTegustation/Teguicons/32x32.dmi', target, "human_thunderbolt")
+			A = image('ModularLobotomy/_Lobotomyicons/32x32.dmi', target, "human_thunderbolt")
 		if("custom")
 			A = image(custom_icon_file, target, custom_icon)
 	A.override = 1
@@ -1425,7 +1425,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 		list("justitia", 'icons/obj/ego_weapons.dmi', "justitia", OBJ_LAYER, 5, 0, 0),
 		list("bee shell", 'icons/effects/effects.dmi', "beetillery", POINT_LAYER, 0, 0, 0),
 		list("blood", 'icons/effects/blood.dmi', "floor1", ABOVE_NORMAL_TURF_LAYER, 0, 0, 0),
-		list("Meat Lantern", 'ModularTegustation/Teguicons/64x32.dmi', "lantern_breach", LARGE_MOB_LAYER, 20, -16, 0)
+		list("Meat Lantern", 'ModularLobotomy/_Lobotomyicons/64x32.dmi', "lantern_breach", LARGE_MOB_LAYER, 20, -16, 0)
 		)
 	var/damage = 0
 

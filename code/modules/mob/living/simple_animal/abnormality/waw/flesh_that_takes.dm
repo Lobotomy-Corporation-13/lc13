@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/flesh_that_takes
 	name = "Flesh That Takes"
 	desc = "A shifting mass of flesh, suggesting a myriad forms."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "olli"
 	icon_living = "olli"
 	del_on_death = TRUE

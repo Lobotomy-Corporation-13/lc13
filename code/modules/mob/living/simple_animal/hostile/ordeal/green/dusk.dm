@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/green_dusk
 	name = "where we must reach"
 	desc = "A factory-like structure, constantly producing ancient robots."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "green_dusk_1"
 	icon_living = "green_dusk_1"
 	icon_dead = "green_dusk_dead"
@@ -65,7 +65,7 @@
 	if(producing || stat == DEAD)
 		return
 	producing = TRUE
-	icon = 'ModularTegustation/Teguicons/96x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 	icon_state = "green_dusk_create"
 	SLEEP_CHECK_DEATH(6)
 	visible_message(span_danger("\The [src] produces a new set of robots!"))

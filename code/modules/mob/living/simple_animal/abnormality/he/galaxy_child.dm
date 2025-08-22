@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/galaxy_child
 	name = "Child of the Galaxy"
 	desc = "A young, lost child."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "galaxy"
 	portrait = "galaxy_child"
 	maxHealth = 650
@@ -175,7 +175,7 @@
 
 /datum/action/cooldown/friend_gift
 	name = "Gift Pebble"
-	icon_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "friendship"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
@@ -272,11 +272,11 @@
 /atom/movable/screen/alert/status_effect/friendship
 	name = "Token of Friendship"
 	desc = "With a sparking pebble in your possession, you recover HP and SP over time."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "friendship"
 
 /obj/effect/temp_visual/pebblecrack
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "pebble_crack"
 	alpha = 180
 	duration = 3 SECONDS

@@ -5,7 +5,7 @@
 /// This is the base template for a dusk. Never spawn these.
 /// Base shared type by all Indigo Dusks.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_dead = "sweeper_dead"
 	faction = list("indigo_ordeal")
 	maxHealth = 1500

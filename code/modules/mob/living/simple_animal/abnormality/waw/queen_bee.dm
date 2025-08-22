@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/queen_bee
 	name = "Queen Bee"
 	desc = "A disfigured creature resembling a bee queen."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "queen_bee"
 	icon_living = "queen_bee"
 	portrait = "queen_bee"
@@ -99,7 +99,7 @@
 /mob/living/simple_animal/hostile/worker_bee
 	name = "worker bee"
 	desc = "A disfigured creature with nasty fangs."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "worker_bee"
 	icon_living = "worker_bee"
 	base_pixel_x = -8

@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy
 	name = "Hurting Teddy Bear"
 	desc = "A large worn out teddy bear that has been impaled with nails. Its faded grey fur is coated in grime."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_living = "hurting_teddy"
 	icon_state = "hurting_teddy"
 	icon_dead = "hurting_core"
@@ -112,7 +112,7 @@
 	GiveTarget(user)
 
 /mob/living/simple_animal/hostile/abnormality/hurting_teddy/death(gibbed)
-	icon = 'ModularTegustation/Teguicons/abno_cores/teth.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/teth.dmi'
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
@@ -208,7 +208,7 @@
 /atom/movable/screen/alert/status_effect/hex
 	name = "Hex"
 	desc = "You take more RED and BLACK damage"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "schismatic" //placeholder. Yell at spriters if you want this fixed.
 
 /datum/status_effect/hex/on_apply()
@@ -240,7 +240,7 @@
 /atom/movable/screen/alert/status_effect/nails
 	name = "Nails"
 	desc = "The nails stuck inside you bear a heavy curse. You gain bleed whenever you receive damage."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "sacrifice" //placeholder. Yell at spriters if you want this fixed.
 
 /datum/status_effect/nails/on_apply()

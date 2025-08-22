@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/we_can_change_anything
 	name = "We Can Change Anything"
 	desc = "A human sized container with spikes inside it. You shouldn't enter it"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "wecanchange"
 	portrait = "we_can_change_anything"
 	maxHealth = 1000
@@ -217,7 +217,7 @@
 		base_pixel_x = initial(base_pixel_x)
 		density = initial(density)
 		return
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "change_opening"
 	pixel_x = -8
 	base_pixel_x = -8
@@ -232,7 +232,7 @@
 /atom/movable/screen/alert/status_effect/we_can_change_anything
 	name = "The desire to change"
 	desc = "Your painful experience has made you more resilient to RED damage."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "change"
 
 /datum/status_effect/we_can_change_anything/on_apply()

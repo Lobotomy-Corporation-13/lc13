@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/sirocco
 	name = "Sirocco"
 	desc = "A sentient dust storm. You can see the silhouette of a child-like figure inside."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "sirocco_chill"
 	icon_living = "sirocco_chill"
 	icon_dead = "sirocco_dead"

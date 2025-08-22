@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon
 	name = "sweeper"
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "sweeper_1"
 	icon_living = "sweeper_1"
 	icon_dead = "sweeper_dead"
@@ -87,7 +87,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky
 	health = 300
 	maxHealth = 300
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "sweeper_limbus"
 	icon_living = "sweeper_limbus"
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands.\nThis one seems to move with far more agility than its peers."
@@ -318,7 +318,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky
 	health = 750
 	maxHealth = 750
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "sweeper_limbus"
 	icon_living = "sweeper_limbus"
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands.\nThis one has more bulk than its peers - it won't go down easy."

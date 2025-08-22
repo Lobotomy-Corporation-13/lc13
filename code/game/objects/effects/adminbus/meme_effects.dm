@@ -16,9 +16,9 @@
 			M.hairstyle = "Bald"
 			M.update_hair()
 			if(prob(visual_effect_chance))
-				M.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast"))
+				M.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast"))
 				addtimer(CALLBACK(M, TYPE_PROC_REF(/atom, cut_overlay), \
-								icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast")), 20)
+								icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast")), 20)
 
 	return INITIALIZE_HINT_QDEL
 
@@ -36,8 +36,8 @@
 		ADD_TRAIT(M, TRAIT_BALD, "BALDING_BLAST")
 		M.hairstyle = "Bald"
 		M.update_hair()
-		M.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast"))
+		M.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast"))
 		addtimer(CALLBACK(M, TYPE_PROC_REF(/atom, cut_overlay), \
-						icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast")), 20)
+						icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast")), 20)
 
 	return INITIALIZE_HINT_QDEL

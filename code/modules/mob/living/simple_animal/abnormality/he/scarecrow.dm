@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/scarecrow
 	name = "Scarecrow Searching for Wisdom"
 	desc = "An abnormality taking form of a scarecrow with metal rake in place of its hand."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "scarecrow"
 	icon_living = "scarecrow"
 	icon_dead = "scarecrow_dead"

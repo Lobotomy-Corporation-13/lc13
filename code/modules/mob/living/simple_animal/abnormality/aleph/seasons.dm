@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/seasons
 	name = "God of the Seasons"
 	desc = "By jove, what is that?!?"
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "" //probably better to start off invisible than the wrong state for a decisecond or i'll get a stream of "bug reports"
 	icon_living = ""
 	pixel_x = -16
@@ -265,7 +265,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/seasons/proc/Downgrade()
 	downgraded = TRUE
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	Transform()
 	can_breach = FALSE
 	fear_level = WAW_LEVEL
@@ -279,7 +279,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/seasons/proc/Upgrade()
 	downgraded = FALSE
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	Transform()
 	can_breach = TRUE
 	fear_level = ALEPH_LEVEL
@@ -678,7 +678,7 @@
 /atom/movable/screen/alert/status_effect/freezing
 	name = "Freezing"
 	desc = "It's so cold!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "freezing"
 
 /datum/status_effect/fogbound
@@ -698,7 +698,7 @@
 /atom/movable/screen/alert/status_effect/fogbound
 	name = "Fogbound"
 	desc = "You can hardly see anything!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "foggy"
 
 #undef STATUS_EFFECT_FREEZING
@@ -908,7 +908,7 @@
 	icon_state = "winter_attack"
 
 /obj/effect/season_effect/spring
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "vinespike"
 
 /obj/effect/season_effect/breath //subtype of season_effect that spawns turf way less often, for "breath" attacks that cover a lot of ground. also looks different.

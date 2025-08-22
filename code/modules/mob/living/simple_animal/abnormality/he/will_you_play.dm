@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/willyouplay
 	name = "Will You Play?"
 	desc = "A small girl holding a teddy bear."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "willyouplay"
 	portrait = "will_you_play"
 	maxHealth = 600

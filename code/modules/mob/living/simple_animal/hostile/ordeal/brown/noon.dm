@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_sloth/noon
 	name = "Peccatulum Acediae?"
 	desc = "Now the rock has more rocks."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -24
 	base_pixel_x = -24
 	maxHealth = 750
@@ -26,7 +26,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon
 	name = "Peccatulum Gulae?"
 	desc = "Giant, hungry looking flowers. Is that blood?"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -24
 	base_pixel_x = -24
 	maxHealth = 600
@@ -131,7 +131,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_gloom/noon
 	name = "Peccatulum Morositatis?"
 	desc = "A large, translucent monster full of organs. It that throws around its weight like a hammer."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -24
 	base_pixel_x = -24
 	maxHealth = 750
@@ -189,7 +189,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_pride/noon
 	name = "Peccatulum Superbiae?"
 	desc = "A spiky wheel with hands resembling claws."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -24
 	base_pixel_x = -24
 	icon_dead = "pridesin_dead"
@@ -211,7 +211,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_lust/noon
 	name = "Peccatulum Luxuriae?"
 	desc = "A creature that holds up its face like a shield. Its flesh is disgustingly soft, like rotten fruit."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -24
 	base_pixel_x = -24
 	maxHealth = 900
@@ -232,7 +232,7 @@
 /mob/living/simple_animal/hostile/ordeal/sin_wrath/noon
 	name = "Peccatulum Irae?"
 	desc = "A much bigger version of that tentacle peccatula, now it has a tail."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	maxHealth = 600

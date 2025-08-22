@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/wall_gazer
 	name = "Lady Facing the Wall"
 	desc = "An abnormality that is a pale, naked woman with long, black hair that completely obscures her face"
-	icon = 'ModularTegustation/Teguicons/96x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 	icon_state = "ladyfacingthewall"
 	portrait = "lady_facing_the_wall"
 	maxHealth = 400

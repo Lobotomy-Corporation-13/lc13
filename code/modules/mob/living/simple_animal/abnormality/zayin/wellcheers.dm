@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/wellcheers
 	name = "Wellcheers Vending Machine"
 	desc = "A vending machine selling cans of \"Wellcheers\"."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "wellcheers_vendor"
 	icon_living = "wellcheers_vendor"
 	portrait = "wellcheers"
@@ -298,7 +298,7 @@
 /obj/structure/wellcheers_side_shrimp
 	name = "wellcheers shrimp"
 	desc = "A peppy shrimp accompanying the soda machine, it seems friendly."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_sideshrimp"
 	anchored = TRUE
 	density = TRUE

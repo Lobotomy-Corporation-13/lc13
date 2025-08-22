@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/beanstalk
 	name = "Beanstalk without Jack"
 	desc = "A gigantic stem that reaches higher than the eye can see."
-	icon = 'ModularTegustation/Teguicons/64x98.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x98.dmi'
 	icon_state = "beanstalk"
 	portrait = "beanstalk"
 	maxHealth = 500

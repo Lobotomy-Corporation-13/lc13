@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/training_rabbit
 	name = "Standard Training-Dummy Rabbit"
 	desc = "A rabbit-like training dummy. Should be completely harmless."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "training_rabbit"
 	icon_living = "training_rabbit"
 	portrait = "training_rabbit"
@@ -29,7 +29,7 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_LOBOTOMY
 
 	secret_chance = TRUE // people NEEDED a bunny girl waifu
-	secret_icon_file = 'ModularTegustation/Teguicons/64x64.dmi'
+	secret_icon_file = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	secret_icon_state = "Bungal"
 	secret_horizontal_offset = -16
 	secret_gift = /datum/ego_gifts/bunny
@@ -52,7 +52,7 @@
 	if(!client)
 		addtimer(CALLBACK(src, PROC_REF(kill_dummy)), 30 SECONDS)
 	if(icon_state == "Bungal")
-		icon = 'ModularTegustation/Teguicons/64x96.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 		icon_state = "Bungal_breach"
 		pixel_x = -16
 

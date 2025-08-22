@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/cinderella
 	name = "Cinderella's Pumpkin Carriage"
 	desc = "A beautiful pumpkin carriage adorned with golden trimmings."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "cinderella_1"
 	icon_living = "cinderella_1"
 	portrait = "cinderella"

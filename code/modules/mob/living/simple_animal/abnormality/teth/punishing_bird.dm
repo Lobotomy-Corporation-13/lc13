@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/punishing_bird
 	name = "Punishing Bird"
 	desc = "A white bird with tiny beak. Looks harmless."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "pbird_breach"
 	icon_living = "pbird_breach"
 	icon_dead = "pbird_dead"
@@ -353,7 +353,7 @@
 /obj/structure/pbird_perch
 	name = "dark tree perch"
 	desc = "A thin tree with wood dark as charcoal that only one bird makes a habit of perching on. Towards the base of the tree hangs a shark toothed necklace. Something prevents you from removing the necklace from the tree."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "pbird_perch"
 	pixel_x = -16
 	base_pixel_x = -16

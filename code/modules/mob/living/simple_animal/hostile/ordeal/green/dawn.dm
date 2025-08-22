@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot
 	name = "doubt alpha"
 	desc = "A slim robot with a spear in place of its hand."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "green_bot"
 	icon_living = "green_bot"
 	icon_dead = "green_bot_dead"

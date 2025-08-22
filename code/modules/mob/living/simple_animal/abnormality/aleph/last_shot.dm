@@ -3,7 +3,7 @@ GLOBAL_LIST_EMPTY(meat_list)
 /mob/living/simple_animal/hostile/abnormality/last_shot
 	name = "Til the Last Shot"
 	desc = "A large ball of flesh, pulsating slowly."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "last_shot"
 	core_icon = "last_shot"
 	portrait = "last_shot"
@@ -183,7 +183,7 @@ GLOBAL_LIST_EMPTY(meat_list)
 	gender = PLURAL
 	name = "bloodied flesh"
 	desc = "some seemingly rotten meat."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "meatvine"
 	anchored = TRUE
 	density = FALSE
@@ -265,7 +265,7 @@ GLOBAL_LIST_EMPTY(meat_list)
 /mob/living/simple_animal/hostile/meatblob
 	name = "flesh ball"
 	desc = "A writhing ball of flesh, vaguely humanoid in shape. This one seems unarmed."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "meatboi"
 	icon_living = "meatboi"
 	faction = list("hostile")
@@ -296,7 +296,7 @@ GLOBAL_LIST_EMPTY(meat_list)
 /mob/living/simple_animal/hostile/meatblob/gunner
 	name = "suppressing flesh ball"
 	desc = "A writhing ball of flesh, vaguely humanoid in shape. This one has a rifle."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "meatboi_rifle"
 	icon_living = "meatboi_rifle"
 	health = 400

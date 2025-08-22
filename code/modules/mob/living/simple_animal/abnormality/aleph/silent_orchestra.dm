@@ -3,7 +3,7 @@
 	desc = "From break and ruin, the most beautiful performance begins."
 	health = 4000
 	maxHealth = 4000
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "silent"
 	icon_living = "silent"
 	portrait = "silent_orchestra"

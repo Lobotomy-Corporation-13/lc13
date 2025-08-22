@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/scaredy_cat
 	name = "Scaredy Cat"
 	desc = "An abnormality ressembling a small defenseless kitten."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "scaredy_cat"
 	icon_living = "scaredy_cat"
 	icon_dead = "scaredy_dead"
@@ -202,7 +202,7 @@
 		melee_damage_lower = 15
 		melee_damage_upper = 20
 		ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0.5))
-		icon = 'ModularTegustation/Teguicons/48x48.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 		icon_living = "cat_courage"
 		icon_dead = "dead_courage"
 	else
@@ -214,7 +214,7 @@
 		melee_damage_upper = initial(melee_damage_upper) //it shouldn't attack in that form in the first place but...
 		ChangeResistances(list(RED_DAMAGE = 4, WHITE_DAMAGE = 4, BLACK_DAMAGE = 4, PALE_DAMAGE = 4))
 		playsound(src, 'sound/abnormalities/scaredycat/catchange.ogg', 75, FALSE, 4)
-		icon = 'ModularTegustation/Teguicons/32x32.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 		icon_living = "scaredy_cat"
 		icon_dead = "scaredy_dead"
 		if(stunned_effect)

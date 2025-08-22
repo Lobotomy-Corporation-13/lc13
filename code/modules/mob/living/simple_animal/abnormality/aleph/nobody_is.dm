@@ -7,7 +7,7 @@
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/weapons/slash.ogg'
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "nobody"
 	icon_living = "nobody"
 	icon_dead = "nobody_dead"
@@ -270,7 +270,7 @@
 	switch(current_stage)
 		if(1)
 			icon_state = "nobody_shell"
-			icon = 'ModularTegustation/Teguicons/64x96.dmi'
+			icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 			ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0, PALE_DAMAGE = 1.2))
 			can_act = FALSE
 			pixel_x = -16

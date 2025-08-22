@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/amber_bug
 	name = "complete food"
 	desc = "A tiny worm-like creature with tough chitin and a pair of sharp claws."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "amber_bug"
 	icon_living = "amber_bug"
 	icon_dead = "amber_bug_dead"
@@ -370,7 +370,7 @@
 /mob/living/simple_animal/hostile/ordeal/amber_dusk
 	name = "food chain"
 	desc = "A big worm-like creature with jagged teeth at its front."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "amber_dusk"
 	icon_living = "amber_dusk"
 	icon_dead = "amber_dusk_dead"
@@ -585,7 +585,7 @@
 	health = 15000
 	maxHealth = 15000
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 0.8)
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	icon_state = "ambermidnight"
 	icon_living = "ambermidnight"
 	icon_dead = "ambermidnight_dead"
@@ -744,7 +744,7 @@
 
 /obj/effect/temp_visual/ambermidnight_hole
 	name = "hole"
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	icon_state = "ambermidnight_hole"
 	duration = 10 SECONDS
 	pixel_x = -96

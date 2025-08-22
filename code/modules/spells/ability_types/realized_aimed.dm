@@ -531,7 +531,7 @@
 	name = "Yin Boost"
 	desc = "Anarchy reigns supreme. \
 		Your Justice is increased by 20."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "yinbuff"
 
 /datum/status_effect/yinboost/on_apply()
@@ -554,7 +554,7 @@
 	name = "Harmony of duality"
 	desc = "Decreases red and black damage taken by 25%. \
 		All your stats are increased by 10."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "duality"
 
 /datum/status_effect/duality_yin/on_apply()
@@ -623,7 +623,7 @@
 /atom/movable/screen/alert/status_effect/home_buff
 	name = "A Road Walked Together"
 	desc = "The sight of a home so familiar encourages you to hang on!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "home"
 
 /datum/status_effect/home_buff/on_apply()

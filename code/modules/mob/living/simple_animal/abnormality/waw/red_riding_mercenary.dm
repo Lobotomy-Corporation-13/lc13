@@ -8,7 +8,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 /mob/living/simple_animal/hostile/abnormality/red_hood
 	name = "Little Red Riding Hooded Mercenary"
 	desc = "A tall humanoid in ragged red robes."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "red_hood"
 	icon_living = "red_hood"
 	portrait = "little_red"
@@ -169,7 +169,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 
 /datum/action/innate/abnormality_attack/find_target // AI-controlled Red technically doesn't use this one.
 	name = "Locate target"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "red_target"
 	chosen_message = span_danger("You try to suss out where your target is...")
 	chosen_attack_num = 1
@@ -183,7 +183,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 
 /datum/action/innate/abnormality_attack/catch_breath // AI-controlled Red technically doesn't use this one EITHER.
 	name = "Evade"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "ruina_evade"
 	chosen_message = span_danger("You prepare to avoid an incoming attack.")
 	chosen_attack_num = 2
@@ -291,7 +291,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 
 /datum/action/innate/abnormality_attack/hollowpoint_shell
 	name = "Hollowpoint Shell"
-	icon_icon = 'ModularTegustation/Teguicons/teguicons.dmi'
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "hollowpoint_ability"
 	chosen_message = span_danger("You will now fire at whatever you next click on.")
 	chosen_attack_num = 3
@@ -305,7 +305,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 	gun_timer = world.time + gun_cooldown
 	addtimer(CALLBACK(src, PROC_REF(SpecialReset)), 10 + bullet_additional * gun_multishot_pause)
 	manual_emote("raises her gun.")
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "redhood_shoot"
 	icon_living = "redhood_shoot"
 	pixel_x = -32

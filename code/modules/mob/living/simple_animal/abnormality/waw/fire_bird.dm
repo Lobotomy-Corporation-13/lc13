@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/fire_bird
 	name = "The Firebird"
 	desc = "A large bird covered in ashes, pray its feathers do not re-ignite."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "burntbird"
 	icon_living = "firebird_active"
 	portrait = "fire_bird"
@@ -229,7 +229,7 @@
 /obj/structure/firetree
 	name = "Fire Bird's tree"
 	desc = "A burnt tree that is the Fire Bird's favored perching spot. There should probably be a bird here." //uhoh
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "burnttree"
 	anchored = TRUE
 	resistance_flags = INDESTRUCTIBLE //should make this indestructible
@@ -250,7 +250,7 @@
 /atom/movable/screen/alert/status_effect/FireRegen
 	name = "Blazing"
 	desc = "The Firebird's flames are healing your wounds"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "bg_template"
 
 /datum/status_effect/blazing/tick()
@@ -273,7 +273,7 @@
 /atom/movable/screen/alert/status_effect/OwMyEyes
 	name = "Burnt Eyes"
 	desc = "The Firebird has burnt your eyes and made it harder to work!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "bg_template"
 
 /datum/status_effect/blinded/on_apply()

@@ -526,7 +526,7 @@
 	if(!isanimal(owner))
 		qdel(src)
 		return
-	visual = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "manager_shield")
+	visual = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "manager_shield")
 	var/mob/living/simple_animal/M = owner
 	M.add_overlay(visual)
 	M.AddModifier(/datum/dc_change/maroon_buff)

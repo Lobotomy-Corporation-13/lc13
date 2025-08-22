@@ -588,7 +588,7 @@
 /obj/machinery/smartfridge/bottlerack
 	name = "bottle rack"
 	desc = "The organised way of mass storing your brews."
-	icon = 'ModularTegustation/Teguicons/farming_structures.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/farming_structures.dmi'
 	icon_state = "rack"
 	layer = BELOW_OBJ_LAYER
 	density = TRUE
@@ -675,7 +675,7 @@
 /obj/machinery/smartfridge/bottlerack/gardentool
 	name = "garden toolrack"
 	desc = "The farmers organisational tool storage."
-	icon = 'ModularTegustation/Teguicons/farming_structures.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/farming_structures.dmi'
 	icon_state = "gardentool"
 	resistance_flags = INDESTRUCTIBLE
 	max_n_of_items = 30
@@ -698,7 +698,7 @@
 /obj/machinery/smartfridge/bottlerack/seedbin
 	name = "seed bin"
 	desc = "Organised dumping ground for the starters of life."
-	icon = 'ModularTegustation/Teguicons/farming_structures.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/farming_structures.dmi'
 	icon_state = "seedbin"
 	density = FALSE
 	max_n_of_items = 400
@@ -733,7 +733,7 @@
 /obj/machinery/smartfridge/bottlerack/grownbin
 	name = "Harvest bin"
 	desc = "A large box, to contain the harvest that the Earth has blessed upon you."
-	icon = 'ModularTegustation/Teguicons/farming_structures.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/farming_structures.dmi'
 	icon_state = "grownbin"
 	density = FALSE
 	max_n_of_items = 1000

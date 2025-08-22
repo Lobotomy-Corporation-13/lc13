@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/general_b
 	name = "General Bee"
 	desc = "A bee humanoid creature."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "generalbee"
 	icon_living = "generalbee"
 	core_icon = "gbee_egg"
@@ -84,14 +84,14 @@
 /datum/action/innate/change_icon_gbee/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/48x48.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 		owner.icon_state = "generalbee"
 		active = 1
 
 /datum/action/innate/change_icon_gbee/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/48x96.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 		owner.icon_state = "general_breach"
 		active = 0
 
@@ -157,7 +157,7 @@
 		icon_state = icon_dead
 		return
 	else
-		icon = 'ModularTegustation/Teguicons/48x96.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 		icon_living = "general_breach"
 	icon_state = icon_living
 
@@ -189,7 +189,7 @@
 	if(breach_type != BREACH_PINK)
 		if(!combat_map)
 			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, "My queen? I hear your cries...", 25))
-		icon = 'ModularTegustation/Teguicons/48x96.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 		flick("generalbee_", src)
 		SLEEP_CHECK_DEATH(80)
 	else
@@ -260,7 +260,7 @@
 /mob/living/simple_animal/hostile/soldier_bee
 	name = "soldier bee"
 	desc = "A disfigured creature with nasty fangs, and a snazzy cap"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "soldier_bee"
 	icon_living = "soldier_bee"
 	base_pixel_x = -8
@@ -286,7 +286,7 @@
 /mob/living/simple_animal/hostile/artillery_bee
 	name = "artillery bee"
 	desc = "A disfigured creature with nasty fangs, and an oversized thorax"
-	icon = 'ModularTegustation/Teguicons/48x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x96.dmi'
 	icon_state = "artillerysergeant"
 	icon_living = "artillerysergeant"
 	friendly_verb_continuous = "scorns"

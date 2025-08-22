@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/dimensional_refraction
 	name = "Dimensional Refraction Variant"
 	desc = "A barely visible haze"
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "dmr_abnormality"
 	icon_living = "dmr_abnormality"
 	portrait = "dimension_refraction"

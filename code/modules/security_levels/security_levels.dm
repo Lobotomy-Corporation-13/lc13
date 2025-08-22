@@ -146,7 +146,7 @@ GLOBAL_VAR_INIT(security_level, SEC_LEVEL_GREEN)
 	var/temperance = 0
 
 /atom/movable/screen/alert/status_effect/seclevel
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	name = "Security Alert"
 	desc = "Something's wrong; Justice is increased and Temperance is reduced."
 

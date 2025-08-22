@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/spider
 	name = "Spider Bud"
 	desc = "An abnormality that resembles a massive spider. Tread carefully"
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "spider_closed"
 	portrait = "spider_bud"
 	maxHealth = 1500
@@ -140,7 +140,7 @@
 /mob/living/simple_animal/hostile/bud_spider
 	name = "Spiderling"
 	desc = "The offspring of spider bud."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "spider_minion"
 	icon_living = "spider_minion"
 	base_pixel_x = -8

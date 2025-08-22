@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/judgement_bird
 	name = "Judgement Bird"
 	desc = "A bird that used to judge the living in the dark forest, carrying around an unbalanced scale."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "judgement_bird"
 	icon_living = "judgement_bird"
 	icon_dead = "judgement_bird_dead"
@@ -189,7 +189,7 @@
 /mob/living/simple_animal/hostile/runawaybird
 	name = "runaway crow"
 	desc = "A crow that has a menacing appearance.."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "runaway_bird"
 	icon_living = "runaway_bird"
 	pass_flags = PASSTABLE
@@ -248,7 +248,7 @@
 /obj/structure/jbird_noose
 	name = "feathery noose"
 	desc = "A structure found in the black forest."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "noose"
 	pixel_x = -8
 	base_pixel_x = -8

@@ -7,7 +7,7 @@
 		Piled on the floor around the gate is birthday cards, old envelopes, \
 		and worn photographs. The inside of the gate is a dark void with a \
 		distant pink light."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "better_memories"
 	core_icon = "memories_egg"
 	portrait = "better_memories"
@@ -108,7 +108,7 @@
 /mob/living/simple_animal/hostile/better_memories_minion
 	name = "Memories from a Better Time"
 	desc = "A human with a old styled camera for a head and 8 slender spider legs."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "better_memories_a"
 	base_pixel_x = -16
 	pixel_x = -16

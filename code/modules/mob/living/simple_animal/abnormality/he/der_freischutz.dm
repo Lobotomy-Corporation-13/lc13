@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/der_freischutz
 	name = "Der Freischutz"
 	desc = "A tall man adorned in grey, gold, and regal blue. His aim is impeccable."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "derfreischutz"
 	icon_living = "derfreischutz"
 	icon_dead = "derfreischutz"
@@ -261,16 +261,16 @@
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/IconChange(firing)
 	if(firing)
-		if(icon == 'ModularTegustation/Teguicons/96x64.dmi')
+		if(icon == 'ModularLobotomy/_Lobotomyicons/96x64.dmi')
 			return
 		pixel_x -= 32
-		icon = 'ModularTegustation/Teguicons/96x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 		update_icon()
 		return
-	if(icon == 'ModularTegustation/Teguicons/32x64.dmi')
+	if(icon == 'ModularLobotomy/_Lobotomyicons/32x64.dmi')
 		return
 	pixel_x += 32
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	update_icon()
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/PrepareFireBullet(atom/target)

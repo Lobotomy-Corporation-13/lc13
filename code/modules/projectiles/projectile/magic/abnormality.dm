@@ -20,7 +20,7 @@
 	. = ..()
 	if(.) // Hit passed and damage applied
 		if((old_stat < DEAD) && (H.stat >= DEAD))
-			H.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "despair_kill"))
+			H.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair_kill"))
 
 /obj/projectile/despair_rapier/justice
 	desc = "A magic rapier, enchanted with the power of justice."

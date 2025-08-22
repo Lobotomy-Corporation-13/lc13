@@ -1,7 +1,7 @@
 /obj/item/mecha_parts/mecha_equipment/hammer
 	name = "Rhino Hammer (Red)"
 	desc = "Equipment for smashing and bashing. Does Red Damage"
-	icon = 'ModularTegustation/Teguicons/workshop.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/workshop.dmi'
 	icon_state = "hammertemplate"
 	color = "#db2121"
 	equip_cooldown = 15
@@ -16,7 +16,7 @@
 /obj/item/mecha_parts/mecha_equipment/hammer/rhinoblade
 	name = "Rhino Hammer (Black)"
 	desc = "Equipment for cutting and slicing. Does Black damage"
-	icon = 'ModularTegustation/Teguicons/workshop.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/workshop.dmi'
 	icon_state = "hammertemplate"
 	color = "#210f3d"
 	equip_cooldown = 15
@@ -30,7 +30,7 @@
 /obj/item/mecha_parts/mecha_equipment/hammer/rhinospear
 	name = "Rhino Spear (White)"
 	desc = "Equipment for stabbing and thrusting. Does White damage"
-	icon = 'ModularTegustation/Teguicons/workshop.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/workshop.dmi'
 	icon_state = "hammertemplate"
 	color = "#ffffff"
 	equip_cooldown = 15

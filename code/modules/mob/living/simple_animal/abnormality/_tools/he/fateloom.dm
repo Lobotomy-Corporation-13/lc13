@@ -35,7 +35,7 @@
 	stacks = 4 //was 3, until I figured out that 0 stacks causes stacking status effects to forcibly qdel
 	max_stacks = 4
 	consumed_on_threshold = FALSE
-	overlay_file = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	overlay_file = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	overlay_state = "fateloom"
 
 /datum/status_effect/stacking/red_string/on_apply()

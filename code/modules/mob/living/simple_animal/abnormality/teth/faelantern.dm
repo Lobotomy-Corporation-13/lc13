@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/faelantern
 	name = "Faelantern"
 	desc = "A small fairy with a green glow sits atop a delicate tree branch."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "faelantern"
 	icon_living = "faelantern_fairy"
 	icon_dead = "faelantern_egg"
@@ -86,7 +86,7 @@
 		EndEnchant(H)
 	icon_state = icon_dead
 	playsound(src, 'sound/effects/limbus_death.ogg', 100, 1)
-	icon = 'ModularTegustation/Teguicons/abno_cores/teth.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/teth.dmi'
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 
@@ -202,7 +202,7 @@
 		lured_list += victim
 		victim.ai_controller = /datum/ai_controller/insane/faelantern
 		victim.InitializeAIController()
-		victim.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+		victim.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
 		addtimer(CALLBACK(src, PROC_REF(EndEnchant), victim), 20 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 	SLEEP_CHECK_DEATH(2 SECONDS)
 	can_act = TRUE
@@ -221,7 +221,7 @@
 /mob/living/simple_animal/hostile/abnormality/faelantern/proc/EndEnchant(mob/living/carbon/human/victim, stunned = FALSE)//cannibalized apocalypse bird handling
 	if(victim in lured_list)
 		lured_list -= victim
-		victim.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+		victim.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
 		if(istype(victim.ai_controller,/datum/ai_controller/insane/faelantern))
 			if(!stunned)
 				to_chat(victim, span_boldwarning("You snap out of your trance!"))
@@ -229,7 +229,7 @@
 
 	//Effects
 /obj/effect/temp_visual/faespike
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "faelantern_spike"
 	duration = 10
 	base_pixel_x = -16
@@ -238,7 +238,7 @@
 /obj/effect/root/faelantern
 	name = "root"
 	desc = "A target warning you of incoming pain"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "vines"
 	move_force = INFINITY
 	pull_force = INFINITY
@@ -376,7 +376,7 @@
 /atom/movable/screen/alert/status_effect/fairy_lure
 	name = "Fairy Lure"
 	desc = "Your guard is lowered."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "fairy_lure"
 
 /datum/status_effect/fairy_lure/on_apply()

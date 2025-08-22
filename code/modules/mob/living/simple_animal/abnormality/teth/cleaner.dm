@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/cleaner
 	name = "All-Around Cleaner"
 	desc = "A tiny robot with helpful intentions."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "cleaner"
 	icon_living = "cleaner"
 	portrait = "cleaner"
@@ -111,7 +111,7 @@
 		pixel_y = initial(pixel_y)
 		base_pixel_y = initial(base_pixel_y)
 	else
-		icon = 'ModularTegustation/Teguicons/48x48.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 		pixel_x = -8
 		base_pixel_x = -8
 		pixel_y = -8

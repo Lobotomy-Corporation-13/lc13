@@ -1,7 +1,7 @@
 /obj/structure/toolabnormality/realization
 	name = "realization engine"
 	desc = "An artifact used to find true potential within certains items."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "bough_pedestal"
 	var/static/realized_users = list()
 	/// Assoc list 'input = output'

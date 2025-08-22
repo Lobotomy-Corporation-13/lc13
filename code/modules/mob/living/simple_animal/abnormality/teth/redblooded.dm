@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/redblooded
 	name = "Red Blooded American"
 	desc = "A bright red demon with oversized arms and greasy black hair. It is keeping its eyes focused on you."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "american_idle"
 	icon_living = "american_idle"
 	core_icon = "american"

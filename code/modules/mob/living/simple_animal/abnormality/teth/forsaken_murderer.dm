@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/forsaken_murderer
 	name = "Forsaken Murderer"
 	desc = "A unhealthy looking human bound in a full body straightjacket."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "forsakenmurdererinert"
 	icon_living = "forsakenmurdererinert"
 	icon_dead = "forsakenmurdererdead"
@@ -124,14 +124,14 @@
 /datum/action/innate/change_icon_forsaken/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 		owner.icon_state = "forsakenmurdererinert"
 		active = 1
 
 /datum/action/innate/change_icon_forsaken/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 		owner.icon_state = "forsakenmurdererbreach"
 		active = 0
 

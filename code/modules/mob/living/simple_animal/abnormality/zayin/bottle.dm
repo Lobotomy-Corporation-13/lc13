@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/bottle
 	name = "Bottle of Tears"
 	desc = "A bottle filled with water with a cake on top"
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "bottle1"
 	icon_living = "bottle1"
 	portrait = "bottle"
@@ -267,7 +267,7 @@
 /atom/movable/screen/alert/status_effect/tears
 	name = "Tearful"
 	desc = "Your attributes are weakened for a short period of time."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "tearful"
 
 /datum/status_effect/stacking/tears/refresh()

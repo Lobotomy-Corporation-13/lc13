@@ -494,7 +494,7 @@
 /obj/item/chair/icequeen
 	name = "Snow Queen's Throne"
 	desc = "An icey throne."
-	icon = 'ModularTegustation/Teguicons/160x160.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/160x160.dmi'
 	icon_state = "snowqueen_throne"
 	dir = 2
 	layer = HIGH_OBJ_LAYER

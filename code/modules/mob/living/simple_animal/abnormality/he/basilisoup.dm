@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/basilisoup
 	name = "Basilisoup"
 	desc = "A giant bird or lizard, with a pot for a head and soup seeping out of its skin."
-	icon = 'ModularTegustation/Teguicons/96x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x48.dmi'
 	icon_state = "basilisoup"
 	icon_living = "basilisoup"
 	portrait = "basilisoup"

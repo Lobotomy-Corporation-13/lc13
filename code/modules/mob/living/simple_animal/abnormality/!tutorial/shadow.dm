@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/shadow
 	name = "Shadow Man"
 	desc = "A humanoid that reflects no light."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "shadow"
 	icon_living = "shadow"
 	portrait = "shadow"

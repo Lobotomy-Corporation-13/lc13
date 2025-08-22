@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/helper
 	name = "All-Around Helper"
 	desc = "A tiny robot with helpful intentions."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "helper"
 	icon_living = "helper"
 	portrait = "helper"

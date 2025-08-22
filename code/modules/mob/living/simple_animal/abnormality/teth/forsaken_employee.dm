@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/forsaken_employee
 	name = "Forsaken Employee"
 	desc = "A person who seems to be wearing an L Corp Uniform and is covered in chains, as well as wearing a box with what looks like Enkephalin in it on their head."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "forsaken_employee"
 	portrait = "forsaken_employee"
 

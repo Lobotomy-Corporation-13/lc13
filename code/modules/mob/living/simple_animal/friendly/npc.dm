@@ -1,10 +1,10 @@
 /mob/living/simple_animal/npc
 	name = "npc"
 	desc = "You should not be able to see this!"
-	icon = 'ModularTegustation/Teguicons/teaser_mobs2.dmi'
-	//'ModularTegustation/Teguicons/teaser_mobs.dmi'
-	//'ModularTegustation/Teguicons/teaser_mobs2.dmi'
-	//'ModularTegustation/Teguicons/resurgence_64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs2.dmi'
+	//'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
+	//'ModularLobotomy/_Lobotomyicons/teaser_mobs2.dmi'
+	//'ModularLobotomy/_Lobotomyicons/resurgence_64x96.dmi'
 	icon_state = "priest_wings_closed"
 	icon_living = "priest_wings_closed"
 	icon_dead = "none"
@@ -64,7 +64,7 @@
 /mob/living/simple_animal/npc/priest
 	name = "Redeemed Star"
 	desc = "Too young to be called a man, but too mature to be called a boy. He had white hair and white skin. His eyes are calm and he had stubborn lips."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "priest"
 	icon_living = "priest"
 	icon_dead = "none"
@@ -73,7 +73,7 @@
 
 /mob/living/simple_animal/npc/priest/Leave()
 	manual_emote("wings grow out of their back")
-	icon = 'ModularTegustation/Teguicons/teaser_mobs2.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs2.dmi'
 	pixel_x = -7
 	icon_state = "priest_wings_closed"
 	SLEEP_CHECK_DEATH(20)
@@ -95,7 +95,7 @@
 /mob/living/simple_animal/npc/electic
 	name = "Amber Knight"
 	desc = "Feminine guy, dressed in mainly black with neon accents, with bright amber eyes."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "electic"
 	icon_living = "electic"
 	icon_dead = "none"
@@ -125,7 +125,7 @@
 /mob/living/simple_animal/npc/tinkerer
 	name = "'Tinkerer'"
 	desc = "A machine which is hanging from the ceiling, You can feel it's red eye gaze upon you..."
-	icon = 'ModularTegustation/Teguicons/resurgence_64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_64x96.dmi'
 	icon_state = "none"
 	icon_living = "none"
 	icon_dead = "none"
@@ -158,7 +158,7 @@
 /mob/living/simple_animal/npc/tinkerer_speech
 	name = "'Tinkerer'"
 	desc = "A machine which is hanging from the ceiling, You can feel it's red eye gaze upon you..."
-	icon = 'ModularTegustation/Teguicons/resurgence_64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_64x96.dmi'
 	icon_state = "none"
 	icon_living = "none"
 	icon_dead = "none"
@@ -196,7 +196,7 @@
 /mob/living/simple_animal/npc/archsage
 	name = "Arch Sage"
 	desc = "A strange figure wearing a white dress..."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "archsage"
 	icon_living = "archsage"
 	icon_dead = "archsage"
@@ -215,7 +215,7 @@
 /mob/living/simple_animal/npc/joey
 	name = "Misguiding Light"
 	desc = "A figure holding a lantern, his light is blinding."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "lantern"
 	icon_living = "lantern"
 	icon_dead = "lantern"

@@ -1136,7 +1136,7 @@
 /atom/movable/screen/alert/status_effect/lc_burn
 	name = "Burning"
 	desc = "You're on fire!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_burn"
 
 /datum/status_effect/stacking/lc_burn/can_have_status()
@@ -1207,7 +1207,7 @@
 /atom/movable/screen/alert/status_effect/lc_bleed
 	name = "Bleeding"
 	desc = "You're currently bleeding!!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_bleed"
 
 //Bleed Damage Stuff
@@ -1305,7 +1305,7 @@
 /atom/movable/screen/alert/status_effect/pallid_noise
 	name = "Pallid Noise"
 	desc = "Hideous noises reverberate through your own head, all speaking a language you don't understand, yet do."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pallid_noise"
 
 /datum/status_effect/stacking/pallid_noise/tick()//TODO:change this to golden apple's life tick for less lag
@@ -1346,7 +1346,7 @@
 /atom/movable/screen/alert/status_effect/lc_tremor
 	name = "Tremor"
 	desc = "You're unsteady on your feet, and move a bit slower."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "tremor"
 
 //Slowdown on stack, prepares tremor burst
@@ -1411,7 +1411,7 @@
 /atom/movable/screen/alert/status_effect/dark_flame
 	name = "Dark Flame"
 	desc = "Dark flames are scorching your body and mind."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "dark_flame"
 
 /datum/status_effect/stacking/lc_burn/dark_flame/DealDamage()

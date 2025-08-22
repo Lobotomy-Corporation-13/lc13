@@ -8,7 +8,7 @@ Defeating the murderer also surpresses the abnormality.
 /mob/living/simple_animal/hostile/abnormality/screenwriter
 	name = "Poor Screenwriter's Note"
 	desc = "A notebook containing a script used in a play. It is titled \"Peccatum Proprium\"."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "screenwriter"
 	portrait = "screenwriter"
 	maxHealth = 4000
@@ -265,7 +265,7 @@ Defeating the murderer also surpresses the abnormality.
 	name = "The actor A"
 	desc = "A man wearing a creepy mask. They have a sleek pistol in one hand \
 			and a knife in the other."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "actor"
 	icon_living = "actor"
 	icon_dead = "actor_dead"

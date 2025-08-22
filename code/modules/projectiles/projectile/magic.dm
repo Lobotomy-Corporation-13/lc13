@@ -673,7 +673,7 @@
 
 /obj/projectile/magic/aoe/pillar
 	name = "pillar"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "pillar"
 	alpha = 0
 

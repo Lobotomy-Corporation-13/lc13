@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/ebony_queen
 	name = "Ebony Queen’s Apple"
 	desc = "An Abnormality taking the form of a tall humanoid with a rotted apple for a head, wearing a regal robe."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "ebonyqueen"
 	icon_living = "ebonyqueen"
 	icon_dead = "ebonyqueen_dead"
@@ -167,7 +167,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/ebony_queen/death(gibbed)
-	icon = 'ModularTegustation/Teguicons/abno_cores/waw.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/waw.dmi'
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
@@ -254,7 +254,7 @@
 
 	//Effects
 /obj/effect/temp_visual/thornspike
-	icon = 'ModularTegustation/Teguicons/tegu_effects32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects32x48.dmi'
 	icon_state = "thornspike"
 	duration = 8
 	randomdir = TRUE //random spike appearance
@@ -263,7 +263,7 @@
 /obj/effect/temp_visual/root
 	name = "pale stem"
 	desc = "A target warning you of incoming pain"
-	icon = 'ModularTegustation/Teguicons/tegu_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "vines"
 	duration = 6
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.

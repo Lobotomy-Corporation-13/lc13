@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/white_lake_corrosion
 	name = "Lady of the Lake"
 	desc = "An agent captain of the central command team, corrupted by an abnormality. But how?"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "lake_corrosion"
 	icon_living = "lake_corrosion"
 	icon_dead = "lake_corrosion_dead"
@@ -251,7 +251,7 @@
 /mob/living/simple_animal/hostile/ordeal/silentgirl_corrosion
 	name = "Silent Handmaiden"
 	desc = "A level 2 agent of Lobotomy Corporation that has somehow been corrupted by an abnormality."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "silent_girl_corrosion"
 	icon_living = "silent_girl_corrosion"
 	icon_dead = "silent_girl_corrosion_dead"
@@ -389,7 +389,7 @@
 	desc = "A heavy weight lays upon you. What have you done?\nAdditional white damage will be taken whenever damage is taken."
 
 /datum/status_effect/gold_guilty/on_creation(mob/living/new_owner, ...)
-	guilt_icon = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
+	guilt_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
 	. = ..()
 	return
 

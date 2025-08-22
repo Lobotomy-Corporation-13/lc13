@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/fairy_longlegs
 	name = "Fairy-Long-Legs"
 	desc = "An tall fairy-like abnormality with an arm resembling a paddle, it never stops holding a clover as if it was an umbrella. The leaves seem damp."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "fairy_longlegs"
 	icon_living = "fairy_longlegs"
 	icon_dead = "fairy_longlegs_dead"
@@ -71,7 +71,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/fairy_longlegs/death(gibbed)
-	icon = 'ModularTegustation/Teguicons/abno_cores/teth.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/teth.dmi'
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)

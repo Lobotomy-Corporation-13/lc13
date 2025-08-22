@@ -2,7 +2,7 @@
 	name = "Scorched Girl"
 	desc = "An abnormality resembling a girl burnt to ashes. \
 	Even though there's nothing left to burn, the fire still doesn't extinguish."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "scorched"
 	icon_living = "scorched"
 	core_icon = "scorch_egg"
@@ -68,14 +68,14 @@
 /datum/action/innate/change_icon_scorch/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 		owner.icon_state = "scorched"
 		active = 1
 
 /datum/action/innate/change_icon_scorch/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 		owner.icon_state = "scorched_breach"
 		active = 0
 

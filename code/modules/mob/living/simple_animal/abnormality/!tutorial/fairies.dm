@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/fairy_swarm
 	name = "Fairy Swarm"
 	desc = "A swarm of chittering fairies."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "fairies"
 	icon_living = "fairies"
 	portrait = "fairies"

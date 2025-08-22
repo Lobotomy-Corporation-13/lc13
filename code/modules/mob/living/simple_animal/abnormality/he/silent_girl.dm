@@ -10,7 +10,7 @@
 /mob/living/simple_animal/hostile/abnormality/silent_girl
 	name = "Silent Girl"
 	desc = "A purple haired girl in a sundress. You see a metalic glint from behind her back..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "silent_girl"
 	portrait = "silent_girl"
 	maxHealth = 650
@@ -112,7 +112,7 @@
 	datum_reference = args[2]
 	if(!isnull(args[3]))
 		works_required = args[3]
-	guilt_icon = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
+	guilt_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
 	. = ..()
 	linked_alert.desc = initial(linked_alert.desc)+" Complete [works_required] more Attachment works to attone."
 	return

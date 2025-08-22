@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/space_lady
 	name = "Lady out of Space"
 	desc = "A humanoid abnormality. It looks extremely pale."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "space"
 	icon_living = "space"
 	portrait = "space"

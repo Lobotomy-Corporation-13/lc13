@@ -7,7 +7,7 @@
 /mob/living/simple_animal/hostile/abnormality/parasite_tree
 	name = "Parasite Tree"
 	desc = "A green barked tree with a calm face nested in the center of its trunk. It exudes an aura of tranquility."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = "parasitetreeshine"
 	icon_living = "parasitetreeshine"
 	portrait = "parasite_tree"
@@ -163,7 +163,7 @@
 /mob/living/simple_animal/hostile/parasite_tree_sapling
 	name = "toxic sapling"
 	desc = "A humanoid tree, it spews thick noxious gas from its agonized face."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "sapling"
 	icon_living = "sapling"
 	maxHealth = 800
@@ -390,7 +390,7 @@
 	gender = PLURAL
 	name = "strange tree leaf"
 	desc = "A leaf from a large tree. Touching it will heal your wounds."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "liars_leaf"
 	anchored = TRUE
 	density = FALSE

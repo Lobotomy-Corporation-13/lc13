@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/sleeping
 	name = "Sleeping Beauty"
 	desc = "A cushion with a tag that says \"F-04-36\"."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	density = FALSE
 	icon_state = "sleeping_idle"
 	icon_living = "sleeping_idle"
@@ -141,7 +141,7 @@
 /atom/movable/screen/alert/status_effect/rested
 	name = "Well Rested"
 	desc = "You are slowly recovering HP and SP. More effective when resting or sleeping."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "rest"
 
 /datum/status_effect/rested/tick()

@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/ordeal/crimson_clown
 	name = "cheers for the start"
 	desc = "A tiny humanoid creature in jester's attire."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "crimson_clown"
 	icon_living = "crimson_clown"
 	icon_dead = "crimson_clown_dead"
@@ -98,7 +98,7 @@
 /mob/living/simple_animal/hostile/ordeal/crimson_noon
 	name = "harmony of skin"
 	desc = "A large clown-like creature with 3 heads full of red tumors."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "crimson_noon"
 	icon_living = "crimson_noon"
 	icon_dead = "crimson_noon_dead"
@@ -165,7 +165,7 @@
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_dusk
 	name = "struggle of the peak"
 	desc = "A round clown amalgamation holding a hammer and an axe."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "crimson_dusk"
 	icon_living = "crimson_dusk"
 	icon_dead = "crimson_dusk_dead"
@@ -304,7 +304,7 @@
 /mob/living/simple_animal/hostile/ordeal/crimson_tent
 	name = "chorus of saliva"
 	desc = "A circus tent stitched together with sinew. It has a giant, gaping maw."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "crimson_midnight"
 	icon_dead = "crimson_midnight"
 	faction = list("crimson_ordeal")
@@ -495,7 +495,7 @@
 /mob/living/simple_animal/hostile/ordeal/crimson_noon/crimson_midnight //oh god why
 	name = "pinnacle of thew"
 	desc = "A gargantuan clown with gigantic muscles."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "crimson_midnight"
 	icon_living = "crimson_midnight"
 	icon_dead = "crimson_midnight"

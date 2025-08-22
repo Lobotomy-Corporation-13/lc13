@@ -2,7 +2,7 @@
 	name = "Alriune"
 	desc = "A tall, pink abnormality that looks similar to a horse. It has 6 pointed legs, an armless human-like upper \
 	body covered in bright teal leaves, and a head with empty, flower-filled eye sockets and pink flowers coming out of her mouth."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "alriune"
 	icon_living = "alriune"
 	portrait = "alriune"
@@ -99,7 +99,7 @@
 					if(H.sanity_lost)
 						new /obj/effect/temp_visual/alriune_curtain(get_turf(H))
 						addtimer(CALLBACK(H, TYPE_PROC_REF(/atom, add_overlay), \
-							icon('ModularTegustation/Teguicons/tegu_effects.dmi', "alriune_kill")), 5)
+							icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "alriune_kill")), 5)
 						playsound(H, 'sound/abnormalities/alriune/kill.ogg', 75, TRUE)
 						H.death()
 			petals_next = world.time + (petals_next_time * 2)

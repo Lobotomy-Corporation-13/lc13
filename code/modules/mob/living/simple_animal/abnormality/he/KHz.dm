@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/khz
 	name = "680 KHz"
 	desc = "A ham radio resting on a table."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "radio"
 	portrait = "khz"
 	maxHealth = 400

@@ -6,7 +6,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform
 	name = "Distorted Form"
 	desc = "A manmade horror beyond description."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	maxHealth = 20000
 	health = 20000
 	attack_verb_continuous = "attacks"
@@ -338,7 +338,7 @@
 		ChangeForm()
 	can_act = FALSE
 	icon_state = icon_dead
-	icon = 'ModularTegustation/Teguicons/abno_cores/aleph.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/abno_cores/aleph.dmi'
 	desc = "A gross, pathetic looking thing that was once a terrible monster."
 	pixel_x = -16
 	base_pixel_x = -16
@@ -512,7 +512,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/TurnNormal(newicon) //We'll use the variable to see if this is just an icon update or an actual transformation
 	name = "Distorted Form"
 	desc = "A manmade horror beyond description."
-	icon = 'ModularTegustation/Teguicons/128x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/128x128.dmi'
 	icon_state = null // We can change this into a between-frame for transformation when I have one
 	pixel_x = initial(pixel_x)
 	base_pixel_x = initial(base_pixel_x)
@@ -598,7 +598,7 @@
 		for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), 150, WHITE_DAMAGE, null, null, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE))
 			if(H.health <= 0)
 				H.gib()
-	playsound(get_turf(src), 'ModularTegustation/Tegusounds/claw/prepare.ogg', 50, 0, 5)
+	playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/claw/prepare.ogg', 50, 0, 5)
 	visible_message(span_danger("[src] releases a strange mist!"))
 	// Shake effect
 	for(var/mob/living/M in livinginrange(20, get_turf(src)))
@@ -781,7 +781,7 @@
 	transform_cooldown = transform_cooldown_time_long + world.time
 	name = "Nothing There"
 	desc = "A wicked creature that consists of various human body parts and organs."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "nothing"
 	pixel_x = -16
 	base_pixel_x = -16
@@ -854,7 +854,7 @@
 	transform_cooldown = transform_cooldown_time_long + world.time
 	name = "Puss in Boots"
 	desc = "A scraggly looking black cat, it seems like the boots are missing."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "cat_breached"
 	pixel_x = 0
 	base_pixel_x = 0
@@ -949,7 +949,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Crumbling Armor"
 	desc = "A thoroughly aged suit of samurai style armor with a V shaped crest on the helmet. It appears desuetude."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "crumbling"
 	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.2))
 	pixel_x = 0
@@ -982,7 +982,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Hammer of Light"
 	desc = "A white specter carrying a white hammer engraved with yellow runic writing."
-	icon = 'ModularTegustation/Teguicons/64x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "hammer_distorted"
 	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0))
 	pixel_x = -16
@@ -1058,7 +1058,7 @@
 	attack_verb_simple = "slash"
 	attack_sound = 'sound/abnormalities/whitenight/scythe.ogg'
 	icon_state = "apostle_halberd"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	ChangeResistances(list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.4))
 	melee_damage_type = PALE_DAMAGE
 	melee_damage_lower = 25
@@ -1150,7 +1150,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/ChangeQueen()
 	name = "Red Queen"
 	desc = "A noble red abnormality sitting in her chair."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "redqueen"
 	pixel_x = -8
 	base_pixel_x = -8
@@ -1208,7 +1208,7 @@
 	transform_cooldown = transform_cooldown_time_long + world.time
 	name = "Blubbering Toad"
 	desc = "A giant toad, wailing with tears in its eyes. The tears are thick, like a blue resin. This one seems to be missing an eye."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "blubbering_red"
 	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 0.8))
 	melee_damage_type = BLACK_DAMAGE
@@ -1291,7 +1291,7 @@
 	transform_cooldown = transform_cooldown_time_long + world.time
 	name = "Bloodbath"
 	desc = "A large humanoid made of blood"
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "bloodbath_DF"
 	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.3, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.8))
 	melee_damage_lower = 65
@@ -1405,7 +1405,7 @@
 	transform_cooldown = transform_cooldown_time + world.time
 	name = "The Price of Silence"
 	desc = "A scythe with a clock attached, quietly ticking."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "silence"
 	ChangeResistances(list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0))
 	pixel_x = 0
@@ -1465,7 +1465,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "You’re Bald..."
 	desc = "A helpful sphere, you think."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "bald1"
 	pixel_x = 0
 	base_pixel_x = 0
@@ -1509,9 +1509,9 @@
 		victim.hairstyle = "Bald"
 		victim.update_hair()
 		victim.playsound_local(victim, 'sound/abnormalities/bald/bald_special.ogg', 50, FALSE)
-		victim.add_overlay(icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast"))
+		victim.add_overlay(icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast"))
 		addtimer(CALLBACK(victim, TYPE_PROC_REF(/atom, cut_overlay), \
-								icon('ModularTegustation/Teguicons/tegu_effects.dmi', "bald_blast")), 20)
+								icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "bald_blast")), 20)
 		to_chat(victim, span_notice("You feel awesome!"))
 		return TRUE
 	return FALSE
@@ -1525,7 +1525,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Doomsday Calendar"
 	desc = "Likely a tool for predicting a date of some kind, judging from the many letters carved on the bricks."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "doomsday_charging"
 	base_pixel_x = -16
 	pixel_x = -16
@@ -1566,7 +1566,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Blue Star"
 	desc = "Floating heart-shaped object. It's alive, and soon you will become one with it."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "blue_star"
 	pixel_x = -32
 	base_pixel_x = -32
@@ -1603,14 +1603,14 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Der Freischutz"
 	desc = "A tall man adorned in grey, gold, and regal blue. His aim is impeccable."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "derfreischutz"
 	addtimer(CALLBACK(src, PROC_REF(DerAttack)), 5)
 	pixel_x = 0
 	base_pixel_x = 0
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/DerAttack(freidir = pick(EAST,WEST))
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	var/list/targets = list()
 	for(var/mob/M in GLOB.mob_living_list)
 		if((faction_check_mob(M)) || (src.z != M.z) || (M.stat == DEAD) || (M.status_flags & GODMODE))
@@ -1666,7 +1666,7 @@
 			playsound(get_turf(src), 'sound/abnormalities/freischutz/shoot.ogg', 100, FALSE, 20)
 			B.dir = freidir
 			addtimer(CALLBACK(B, TYPE_PROC_REF(/obj/effect/magic_bullet, moveBullet)), 0.1)
-			src.icon = 'ModularTegustation/Teguicons/32x64.dmi'
+			src.icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 			src.update_icon()
 			for(var/obj/effect/frei_magic/Port in portals)
 				Port.fade_out()
@@ -1676,7 +1676,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Siren"
 	desc = "The siren that sings the past."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	pixel_x = -16
 	base_pixel_x = -16
 	icon_state = "siren_breach"
@@ -1699,7 +1699,7 @@
 	name = "Apocalypse bird"
 	desc = "A terrifying giant beast that lives in the black forest. It's constantly looking for a monster \
 	that terrorizes the forest, without realizing that it is looking for itself."
-	icon = 'ModularTegustation/Teguicons/224x128.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/224x128.dmi'
 	icon_state = "apocalypse"
 	pixel_x = -96
 	base_pixel_x = -96
@@ -1810,7 +1810,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/LightJump(turf/target_turf)
 	name = "Fridge?"
 	desc = "It refridgerates."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "freezer_fake"
 	pixel_x = 0
 	base_pixel_x = 0
@@ -1830,7 +1830,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/MediumJump(turf/target_turf)
 	name = "grant us love"
 	desc = "A dark monolith structure with incomprehensible writing on it."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "violet_noon"
 	base_pixel_x = -8
 	pixel_x = -8
@@ -1850,7 +1850,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/HeavyJump(turf/target_turf)
 	name = "Baba Yaga"
 	desc = "A giant house stomping around on an equally large chicken leg."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "babayaga_breach"
 	pixel_x = -16
 	base_pixel_x = -16
@@ -1885,7 +1885,7 @@
 	transform_cooldown = transform_cooldown_time_short + world.time
 	name = "Distorted Form"
 	desc = "That doesn't look right."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	pixel_x = 0
 	base_pixel_x = 0
 	can_move = FALSE
@@ -1965,7 +1965,7 @@
 /obj/effect/temp_visual/remnant_of_time
 	name = "remnant of time"
 	desc = "A ghost with a scythe"
-	icon = 'ModularTegustation/Teguicons/48x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x32.dmi'
 	icon_state = "remnant_of_time"
 	duration = 40
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.

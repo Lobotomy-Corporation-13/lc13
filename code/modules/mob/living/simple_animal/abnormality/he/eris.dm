@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/eris
 	name = "Eris"
 	desc = "A towering, intimidating woman without a mouth."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "eris"
 	icon_living = "eris"
 	core_icon = "eris_egg"

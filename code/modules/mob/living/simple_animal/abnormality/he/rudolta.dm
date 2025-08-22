@@ -3,7 +3,7 @@
 	name = "Rudolta of the Sleigh"
 	desc = "An abnormality consisting of three parts: A hornless, disfigured reindeer, \"Santa\" and a sleigh. \
 	Rudolta is a fair creature that will give gifts equally to everyone, whether you like them or not."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "rudolta"
 	icon_living = "rudolta"
 	icon_dead = "rudolta_dead"

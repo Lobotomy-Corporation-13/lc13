@@ -55,7 +55,7 @@
 /obj/item/stat_equalizer
 	name = "training stat equalizer"
 	desc = "A localized source of stats, only usable by the Training Officers to equalize the stats of them and any interns."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "records_stats"
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS

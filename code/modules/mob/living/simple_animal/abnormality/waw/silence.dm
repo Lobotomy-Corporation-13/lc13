@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/silence
 	name = "The Price of Silence"
 	desc = "A scythe with a clock attached, quietly ticking."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "silence"
 	portrait = "silence"
 	threat_level = WAW_LEVEL

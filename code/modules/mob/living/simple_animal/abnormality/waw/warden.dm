@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/warden
 	name = "The Warden"
 	desc = "An abnormality that takes the form of a fleshy stick wearing a dress and eyes. You don't want to know what's under that dress."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "warden"
 	icon_living = "warden"
 	icon_dead = "warden_dead"

@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/bill
 	name = "Bill"
 	desc = "That's Bill from accounting. He agreed to do this job for us. He gets paid extra for it."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "bill"
 	icon_living = "bill"
 	portrait = "bill"

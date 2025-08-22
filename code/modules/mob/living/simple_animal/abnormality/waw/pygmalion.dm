@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/pygmalion
 	name = "Pygmalion"
 	desc = "A tall statue of a humanoid abnormality in a pink dress holding a bouquet of light blue flowers."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "pygmalion"
 	icon_living = "pygmalion"
 	portrait = "pygmalion"
@@ -225,7 +225,7 @@
 /atom/movable/screen/alert/status_effect/sculptor
 	name = "Sculptor"
 	desc = "You feel attached to Pygmalion, Does it feel the same way towards me?"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "sculptor"
 
 #undef STATUS_EFFECT_SCULPTOR

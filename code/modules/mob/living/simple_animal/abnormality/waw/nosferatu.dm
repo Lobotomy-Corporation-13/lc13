@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/nosferatu
 	name = "Nosferatu"
 	desc = "A vampire, huh. Think I heard of it somewhere."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "nosferatu"
 	icon_living = "nosferatu"
 	var/icon_aggro = "nosferatu_breach"
@@ -102,14 +102,14 @@
 /datum/action/innate/change_icon_nosf/Activate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 		owner.icon_state = "nosferatu"
 		active = 1
 
 /datum/action/innate/change_icon_nosf/Deactivate()
 	. = ..()
 	if(SSmaptype.maptype == "limbus_labs")
-		owner.icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		owner.icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 		owner.icon_state = "nosferatu_breach"
 		active = 0
 
@@ -256,7 +256,7 @@
 
 	icon_state = icon_aggro
 	if(berzerk || mist_form) // Big angry bat form
-		icon = 'ModularTegustation/Teguicons/64x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 		pixel_x = -16
 		base_pixel_x = -16
 		if(mist_form)
@@ -264,7 +264,7 @@
 	else
 		pixel_x = 0
 		base_pixel_x = 0
-		icon = 'ModularTegustation/Teguicons/32x48.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_living = icon_state
 
 
@@ -504,7 +504,7 @@
 /mob/living/simple_animal/hostile/nosferatu_mob
 	name = "\improper Sanguine bat"
 	desc = "It looks like a bat."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "nosferatu_mob"
 	icon_living = "nosferatu_mob"
 	icon_dead = "nosferatu_mob"

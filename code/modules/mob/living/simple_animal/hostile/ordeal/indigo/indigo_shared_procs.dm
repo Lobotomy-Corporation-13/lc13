@@ -72,7 +72,7 @@ Every time it activates, it loses a stack, but it can also time out over a long 
 		return
 	var/icon/sweepericon = icon(owner.icon, owner.icon_state, owner.dir)
 	var/icon_height = sweepericon.Height()
-	overlay = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "sweeper_persistence", -MUTATIONS_LAYER)
+	overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "sweeper_persistence", -MUTATIONS_LAYER)
 	overlay.pixel_x = 4
 	overlay.pixel_y = icon_height - 28
 	if(icon_height == 32)

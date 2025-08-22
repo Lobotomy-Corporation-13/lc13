@@ -3,7 +3,7 @@
 	name = "Queen of Hatred"
 	desc = "An abnormality resembling pale-skinned girl in a rather bizzare outfit. \
 	Right behind her is what you presume to be a magic wand."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "hatred"
 	icon_living = "hatred"
 	var/icon_crazy = "hatred_psycho"
@@ -137,7 +137,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/hatred_queen/proc/hysteria_change()
 	if(hysteric_ability == 0)
-		icon = 'ModularTegustation/Teguicons/32x32.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 		icon_state = "hatred_psycho"
 		threat_level = TETH_LEVEL
 		faction = "netrual"
@@ -151,7 +151,7 @@
 	if(hysteric_ability == 1)
 		var/hysteria_choice = alert(src, "Do you want to change into your friendly or hostile form?", "Choose Form", "Friendly", "Hostile")
 		if(hysteria_choice == "Friendly")
-			icon = 'ModularTegustation/Teguicons/32x32.dmi'
+			icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 			icon_state = "hatred"
 			friendly = TRUE
 			threat_level = TETH_LEVEL
@@ -191,7 +191,7 @@
 	. = ..()
 	beamloop = new(list(src), FALSE)
 	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death))
-	var/icon/I = icon('ModularTegustation/Teguicons/96x64.dmi',icon_living) //create inverted colors icon
+	var/icon/I = icon('ModularLobotomy/_Lobotomyicons/96x64.dmi',icon_living) //create inverted colors icon
 	I.MapColors(-1,0,0, 0,-1,0, 0,0,-1, 1,1,1)
 	icon_inverted = I
 	var/turf/wand_turf = get_ranged_target_turf(src, WEST, 1)
@@ -596,7 +596,7 @@
 		wand.forceMove(get_step(src, src.dir))
 	SLEEP_CHECK_DEATH(4)
 	if(!friendly && (text2path(icon) == text2path(icon_inverted))) //revert back
-		icon = 'ModularTegustation/Teguicons/96x64.dmi'
+		icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	can_act = TRUE
 	teleport_cooldown = world.time + teleport_cooldown_time
 
@@ -680,7 +680,7 @@
 	adjustBruteLoss(-maxHealth, forced = TRUE)
 	friendly = FALSE
 	can_act = TRUE
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = icon_living
 	base_pixel_x = -32
 	pixel_x = -32
@@ -750,7 +750,7 @@
 /mob/living/simple_animal/hostile/abnormality/hatred_queen/proc/NihilIconUpdate()
 	name = "Magical Girl of Love"
 	desc = "A real magical girl!"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "hatred"
 	pixel_x = 0
 	base_pixel_x = 0
@@ -764,7 +764,7 @@
 	if(!isturf(loc))
 		MoveStatue()
 	AIStatus = AI_OFF
-	icon = 'ModularTegustation/Teguicons/96x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x64.dmi'
 	icon_state = "hatred"
 	pixel_x = -24
 	base_pixel_x = -24
@@ -809,7 +809,7 @@
 /obj/effect/qoh_wand
 	name = "Magical Wand"
 	desc = "A magical wand that is flying in the air from it's wings. It doesn't seem to leave the side of the Queen of Hatred."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "qoh_wand"
 
 //LCL stuff

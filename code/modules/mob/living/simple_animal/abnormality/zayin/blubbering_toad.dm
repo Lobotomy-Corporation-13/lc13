@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad
 	name = "Blubbering Toad"
 	desc = "A giant toad, wailing with tears in its eyes. The tears are thick, like a blue resin."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "blubbering"
 	icon_living = "blubbering"
 	icon_dead = "blubbering_egg"
@@ -315,7 +315,7 @@
 /atom/movable/screen/alert/status_effect/blue_resin
 	name = "Blue Resin"
 	desc = "The gushing gloom has made you more resilient to BLACK damage."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "blueresin"
 
 /datum/status_effect/blue_resin/on_apply()

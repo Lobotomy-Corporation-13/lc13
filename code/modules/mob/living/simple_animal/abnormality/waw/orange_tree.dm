@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/orange_tree
 	name = "My Sweet Orange Tree"
 	desc = "A formless being of yellow, light blue and green particles. They are floating around, lazily."
-	icon = 'ModularTegustation/Teguicons/48x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x64.dmi'
 	icon_state = "orange_tree"
 	icon_living = "orange_tree"
 	portrait = "orange_tree"

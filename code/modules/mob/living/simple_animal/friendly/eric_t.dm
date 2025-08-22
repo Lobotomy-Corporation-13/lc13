@@ -6,7 +6,7 @@
 	typing_interval = 30
 	portrait = "erik_bloodfiend_zoom.PNG"
 	start_scene_id = "intro"
-	icon = 'ModularTegustation/Teguicons/blood_fiends_32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "b_boss"
 	icon_living = "b_boss"
 	icon_dead = "b_boss_dead"

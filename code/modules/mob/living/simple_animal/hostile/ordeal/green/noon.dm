@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/ordeal/green_bot_big
 	name = "process of understanding"
 	desc = "A big robot with a saw and a machine gun in place of its hands."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "green_bot"
 	icon_living = "green_bot"
 	icon_dead = "green_bot_dead"

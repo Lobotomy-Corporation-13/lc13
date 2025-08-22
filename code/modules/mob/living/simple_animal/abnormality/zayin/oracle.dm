@@ -3,7 +3,7 @@
 	desc = "An ancient cryopod with the name 'Maria' etched into the side. \
 		You look inside expecting to see the body of the person named, \
 		but all you see is a gooey substance at the bottom."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "oracle"
 	icon_living = "oracle"
 	portrait = "oracle"

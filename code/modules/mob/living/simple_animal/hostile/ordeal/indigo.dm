@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight
 	name = "Matriarch"
 	desc = "A humanoid creature wearing metallic armor. The Queen of sweepers."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "matriarch"
 	icon_living = "matriarch"
 	icon_dead = "matriarch_dead"
@@ -295,7 +295,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_spawn
 	name = "sweeper scout"
 	desc = "A tall humanoid with a walking cane. It's wearing indigo armor."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "indigo_dawn"
 	icon_living = "indigo_dawn"
 	icon_dead = "indigo_dawn_dead"

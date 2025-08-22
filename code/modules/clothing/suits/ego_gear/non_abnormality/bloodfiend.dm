@@ -4,8 +4,8 @@
 	icon_state = "masqcloak"
 	var/normal_state = "masqcloak"
 	var/hardblood_state = null
-	icon = 'ModularTegustation/Teguicons/blood_fiend_gear.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/blood_fiend_gear_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear_worn.dmi'
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 20, BLACK_DAMAGE = 40, PALE_DAMAGE = 20)
 	hat = /obj/item/clothing/head/ego_hat/blood_fiend/bird_mask
 	neck = /obj/item/clothing/ego_neck/blood_fiend/coagulated_blood
@@ -35,7 +35,7 @@
 /obj/effect/proc_holder/ability/bloodfeast
 	name = "Bloodfeast"
 	desc = "An ability that lets the user drain nearby blood to increase the armor's bloodfeast."
-	action_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	action_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	action_icon_state = "lc_bleed"
 	base_icon_state = "lc_bleed"
 	cooldown_time = 5 SECONDS
@@ -59,7 +59,7 @@
 /obj/effect/proc_holder/ability/bloodart
 	name = "Blood Art"
 	desc = "An ability that lets the user spend the armor's bloodfeast to heal."
-	action_icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	action_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	action_icon_state = "lc_bleed"
 	base_icon_state = "lc_bleed"
 	cooldown_time = 20 SECONDS
@@ -93,16 +93,16 @@
 	attribute_requirements = list()
 
 /obj/item/clothing/ego_neck/blood_fiend
-	icon = 'ModularTegustation/Teguicons/blood_fiend_gear.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/blood_fiend_gear_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear_worn.dmi'
 
 /obj/item/clothing/neck/blood_fiend
-	icon = 'ModularTegustation/Teguicons/blood_fiend_gear.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/blood_fiend_gear_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear_worn.dmi'
 
 /obj/item/clothing/head/ego_hat/blood_fiend
-	icon = 'ModularTegustation/Teguicons/blood_fiend_gear.dmi'
-	worn_icon = 'ModularTegustation/Teguicons/blood_fiend_gear_worn.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/blood_fiend_gear_worn.dmi'
 
 /obj/item/clothing/neck/blood_fiend/masquerade_tie
 	name = "masquerade tie"

@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/abnormality/staining_rose
 	name = "Staining Rose"
 	desc = "A tiny, wilting rose."
-	icon = 'ModularTegustation/Teguicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
 	icon_state = "rose"
 	portrait = "staining_rose"
 	maxHealth = 10
@@ -183,7 +183,7 @@
 /atom/movable/screen/alert/status_effect/schismatic
 	name = "Schismatic"
 	desc = "You have ruined the sanctity between the rose and its chosen and have been punished."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "schismatic"
 
 /datum/status_effect/schismatic/on_apply()
@@ -218,7 +218,7 @@
 /atom/movable/screen/alert/status_effect/sacrifice
 	name = "Sacrifice"
 	desc = "You have sacrificed a bit of yourself to the rose."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "sacrifice"
 
 /datum/status_effect/sacrifice/on_apply()

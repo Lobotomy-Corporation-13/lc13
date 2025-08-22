@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/babayaga
 	name = "Baba Yaga"
 	desc = "Looks like a palace, the doors are shut tightly.."
-	icon = 'ModularTegustation/Teguicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
 	icon_state = "babayaga"
 	icon_living = "babayaga"
 	portrait = "baba_yaga"
@@ -185,7 +185,7 @@
 /mob/living/simple_animal/hostile/yagaslave
 	name = "frozen slave"
 	desc = "A humanoid figure encased in ice, the pickaxe they're holding looks sharp."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "yagaslave"
 	icon_living = "yagaslave"
 	faction = list("hostile", "babayaga")
@@ -271,7 +271,7 @@
 /atom/movable/screen/alert/status_effect/babayaga
 	name = "Baba Yaga is coming!"
 	desc = "If you do not escape in time, you will be crushed, dying instantly."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "babayaga"
 
 #undef STATUS_EFFECT_BABAYAGA

@@ -4,7 +4,7 @@
 /mob/living/simple_animal/hostile/abnormality/contract
 	name = "A Contract, Signed"
 	desc = "A man with a flaming head sitting behind a desk."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "firstfold"
 	portrait = "contract"
 	threat_level = WAW_LEVEL

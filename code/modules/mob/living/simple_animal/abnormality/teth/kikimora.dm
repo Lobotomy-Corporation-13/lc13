@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/kikimora
 	name = "Kikimora"
 	desc = "A beaked woman with one leg idly sweeping the floor with a broom."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "kikimora"
 	icon_living = "kikimora"
 	icon_dead = "kikimora"

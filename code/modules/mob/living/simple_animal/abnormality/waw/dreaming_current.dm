@@ -2,7 +2,7 @@
 	name = "\proper The Dreaming Current"
 	desc = "An abnormality resembling a cobalt blue shark with legs. \
 	There's a syringe embedded in a side of its body, and there are multiple injection holes on its lower body."
-	icon = 'ModularTegustation/Teguicons/64x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x48.dmi'
 	icon_state = "current"
 	icon_living = "current"
 	portrait = "dreaming_current"

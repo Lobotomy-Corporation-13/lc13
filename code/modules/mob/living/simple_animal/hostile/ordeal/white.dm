@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/ordeal/black_fixer
 	name = "Black Fixer"
 	desc = "A humanoid creature wrapped in bandages."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "fixer_b"
 	icon_living = "fixer_b"
 	faction = list("hostile", "Head")
@@ -136,7 +136,7 @@
 /mob/living/simple_animal/hostile/ordeal/white_fixer
 	name = "White Fixer"
 	desc = "An angelic creature wearing white and golden armor with a cannon-like weapon."
-	icon = 'ModularTegustation/Teguicons/32x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi'
 	icon_state = "fixer_w"
 	icon_living = "fixer_w"
 	icon_dead = "fixer_w_dead"
@@ -360,7 +360,7 @@
 /mob/living/simple_animal/hostile/ordeal/red_fixer
 	name = "Red Fixer"
 	desc = "A humanoid creature  resembling a robot or a cyborg."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fixer_r"
 	icon_living = "fixer_r"
 	faction = list("hostile", "Head")
@@ -497,7 +497,7 @@
 	name = "Pale Fixer"
 	desc = "A humanoid creature in a business attire and a fedora. They have a sleek pistol in one hand \
 			and a suitcase in the other."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "fixer_p"
 	icon_living = "fixer_p"
 	faction = list("hostile", "Head")

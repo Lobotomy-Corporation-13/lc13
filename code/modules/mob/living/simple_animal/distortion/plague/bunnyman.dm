@@ -5,7 +5,7 @@
 /mob/living/simple_animal/hostile/distortion/bunnyman
 	name = "The Bunnyman"
 	desc = "Looks like a carnival mascot."
-	icon = 'ModularTegustation/Teguicons/48x48.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
 	icon_state = "bunnyman"
 	maxHealth = 2000 //low health, high damage
 	health = 2000

@@ -774,7 +774,7 @@
 
 /atom/movable/screen/vile_skull
 	name = "skull_mod"
-	icon = 'ModularTegustation/Teguicons/lc13icons.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13icons.dmi'
 	icon_state = "no_corruption"
 	screen_loc = ui_mood
 

@@ -88,7 +88,7 @@
 /atom/movable/screen/alert/status_effect/welfare_damage_resist
 	name = "Qliphoth Deterrence Malfunction"
 	desc = "Damage resistances remotely modified."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "welfare_suppression"
 
 /atom/movable/screen/alert/status_effect/welfare_damage_resist/update_overlays()

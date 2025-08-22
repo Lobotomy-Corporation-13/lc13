@@ -86,7 +86,7 @@
 /obj/effect/temp_visual/theonite_clone
 	name = "???"
 	desc = "A shadowy figure"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "alriune_unused"
 	duration = 40
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.

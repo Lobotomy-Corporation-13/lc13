@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/shrimp_rifleman
 	name = "wellcheers corp Rifleman"
 	desc = "Best shot this side of the fishing net."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_bad"
 	icon_living = "wellcheers_bad"
 	icon_dead = "wellcheers_bad_dead"
@@ -45,7 +45,7 @@
 /mob/living/simple_animal/hostile/senior_shrimp
 	name = "wellcheers corp senior officer"
 	desc = "An unnaturally jacked shrimp."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_ripped"
 	icon_living = "wellcheers_ripped"
 	icon_dead = "wellcheers_ripped_dead"
@@ -80,7 +80,7 @@
 /mob/living/simple_animal/hostile/ordeal/shrimp
 	name = "wellcheers corp liquidation intern"
 	desc = "A shrimp that is extremely hostile to you."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers"
 	icon_living = "wellcheers"
 	icon_dead = "wellcheers_dead"
@@ -110,7 +110,7 @@
 /mob/living/simple_animal/hostile/ordeal/shrimp_soldier
 	name = "wellcheers corp hired liquidation officer"
 	desc = "A shrimp that is there to guard an area."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_bad"
 	icon_living = "wellcheers_bad"
 	icon_dead = "wellcheers_bad_dead"
@@ -145,7 +145,7 @@
 /mob/living/simple_animal/hostile/ordeal/shrimp_rifleman
 	name = "wellcheers corp Rifleman"
 	desc = "He is here on ofishal business."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_bad"
 	icon_living = "wellcheers_bad"
 	icon_dead = "wellcheers_bad_dead"
@@ -177,7 +177,7 @@
 		del_on_death = FALSE
 
 /mob/living/simple_animal/hostile/ordeal/salmon_dusk
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	faction = list("shrimp")
 	health = 1000
 	maxHealth = 1000
@@ -345,7 +345,7 @@
 /mob/living/simple_animal/hostile/ordeal/salmon_midnight
 	name = "shrimp rambo"
 	desc = "A Shrimp Corp taboo hunter. Will a star of the city fall tonight?"
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "wellcheers_rambo"
 	maxHealth = 4000
 	health = 4000

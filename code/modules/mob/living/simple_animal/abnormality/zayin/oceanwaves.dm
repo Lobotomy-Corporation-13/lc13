@@ -1,7 +1,7 @@
 /mob/living/simple_animal/hostile/abnormality/oceanicwaves
 	name = "Vending Machine and Oceanic Waves"
 	desc = "An orange vending machine. Somehow reminds you of the sea."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "oceanicwaves"
 	portrait = "oceanicwaves"
 	maxHealth = 600
