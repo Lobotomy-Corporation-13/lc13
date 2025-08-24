@@ -295,7 +295,7 @@
 	mode.set_round_result()
 
 	send2adminchat("Server", "Round just ended.")
-	if((SSlobotomy_corp.goal_boxes < 100) && (SSticker.rating_achieved == "D"))	// If you have less than 100 boxes and a D rating don't say it in chat.
+	if((SSlobotomy_corp.goal_boxes > 100) || (SSticker.rating_achieved != "D"))	// If you have less than 100 boxes and a D rating don't say it in chat.
 		send2chat("Round Complete! Facility Rank: [SSticker.rating_achieved]!", CONFIG_GET(string/chat_announce_new_game))
 
 	if(length(CONFIG_GET(keyed_list/cross_server)))
