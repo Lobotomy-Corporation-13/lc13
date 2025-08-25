@@ -20,7 +20,7 @@
 	var/attack_friend = FALSE //If they can hit their friends with unarmed attacks.
 	var/list/friend_list = list() //Similar to a faction list, but handpicked by the player abno itself.
 	var/list/attack_action_types = list()
-	var/kickstart_timer = 3 MINUTES //How long it will take before an abno's desire and hunger bar will start dropping due to their cooldown after the player logs in.
+	var/kickstart_timer = 3.5 MINUTES //How long it will take before an abno's desire and hunger bar will start dropping due to their cooldown after the player logs in.
 
 	//Counter stuff
 	var/max_counter = 0 //If set to 0, they have no counter.
@@ -110,6 +110,8 @@
 	//There's probably a way to grant actions that takes less words but whatever it works.
 	var/datum/action/small_sprite/abnormality/small_action = new /datum/action/small_sprite/abnormality()
 	var/datum/action/cooldown/limbus_abno_action/ego_refinement/ego_maker = new /datum/action/cooldown/limbus_abno_action/ego_refinement()
+	var/datum/action/cooldown/limbus_abno_action/emergency_satisfaction/instant_satisf = new /datum/action/cooldown/limbus_abno_action/emergency_satisfaction
+	instant_satisf.Grant(src)
 	ego_maker.Grant(src)
 	small_action.Grant(src)
 	for(var/action_type in attack_action_types)
@@ -486,6 +488,24 @@
 		var/obj/item/clothing/suit/armor/ego_gear/armor = ego_item
 		armor.attribute_requirements = list()
 	abno_user.ego_desire_accumulation -= abno_user.required_ego_desire
+	StartCooldown()
+
+/datum/action/cooldown/limbus_abno_action/emergency_satisfaction
+	name = "Emergency Satisfaction."
+	desc = "Instantly put your desire, hunger and counter at their maximum possible value. Really high cooldown. Using this in a breached state will not unbreach you."
+	icon_icon = 'icons/hud/screen_gen.dmi'
+	button_icon_state = "mood_happiness_good"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 8 MINUTES
+
+/datum/action/cooldown/limbus_abno_action/emergency_satisfaction/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	abno_user.AdjustDesire(abno_user.max_desire)
+	abno_user.AdjustHunger(abno_user.max_hunger)
+	if(abno_user.max_counter > 0)
+		abno_user.AdjustCounter(abno_user.max_counter)
 	StartCooldown()
 
 ///Abno heal spot

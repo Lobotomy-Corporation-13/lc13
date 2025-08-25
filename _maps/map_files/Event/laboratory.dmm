@@ -3574,10 +3574,6 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/blue,
 /area/centcom)
-"or" = (
-/obj/effect/landmark/limbus_abnospawn/highsec,
-/turf/closed/indestructible/rock,
-/area/space)
 "os" = (
 /obj/effect/turf_decal/arrows/white{
 	color = "#5269e9";
@@ -5809,7 +5805,7 @@
 "xR" = (
 /obj/structure/lattice/catwalk,
 /obj/machinery/camera/autoname,
-/obj/effect/landmark/limbus_abnospawn/lowsec,
+/obj/effect/landmark/start/limbus_abnospawn/lowsec,
 /turf/open/floor/plating,
 /area/centcom)
 "xS" = (
@@ -8594,7 +8590,7 @@
 	short_range = 13;
 	view_range = 13
 	},
-/obj/effect/landmark/limbus_abnospawn/highsec,
+/obj/effect/landmark/start/limbus_abnospawn/highsec,
 /turf/open/floor/plating,
 /area/centcom)
 "Jm" = (
@@ -51537,7 +51533,7 @@ Cs
 Cs
 Cs
 Cs
-or
+Cs
 Cs
 Cs
 Cs

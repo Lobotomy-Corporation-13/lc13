@@ -9,7 +9,9 @@
 	But wait about ten minutes before the big surprise, a prank's no fun without some setup!"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/laetitia
 	diet_list = list(/obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar, /obj/item/food/candy)
-	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/laetitia_surprise, /datum/action/cooldown/limbus_abno_action/laetitia_gifting, /datum/action/cooldown/limbus_abno_action/special_delivery)
+	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/laetitia_surprise,
+	/datum/action/cooldown/limbus_abno_action/laetitia_gifting,
+	/datum/action/cooldown/limbus_abno_action/special_delivery)
 	diet_value = 20
 	desire_cooldown_time = 30 SECONDS
 	desire_loss = 5

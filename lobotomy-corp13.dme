@@ -4289,6 +4289,7 @@
 #include "ModularLobotomy\limbus_labs\spawners.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_mountain.dm"
+#include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\queen_bee.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_lowsec\lcl_laetitia.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_lowsec\lcl_pisc_mermaid.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_lowsec\lcl_scorched.dm"

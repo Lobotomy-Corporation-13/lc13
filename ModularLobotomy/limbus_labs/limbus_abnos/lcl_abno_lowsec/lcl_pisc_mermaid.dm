@@ -196,7 +196,7 @@
 	name = "Talk to them"
 	desc = "Distance is no excuse for neglect. Can only be used if you have a lover. Regains a little bit of desire when used."
 	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
-	button_icon_state = "hivemind_channel" //Replace this fuckass icon later too.
+	button_icon_state = "hivemind_channel"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 5 SECONDS
 
