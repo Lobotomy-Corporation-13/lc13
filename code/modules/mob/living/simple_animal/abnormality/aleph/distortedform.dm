@@ -337,7 +337,7 @@
 	// Award achievement for killing Distorted Form
 	for(var/mob/living/carbon/human/H in view(7, src))
 		if(H.stat != DEAD)
-			H.client?.give_award(/datum/award/achievement/lc13/kill_distorted, H)
+			H.client?.give_award(/datum/award/achievement/abno/kill_distorted, H)
 	if(changed)
 		ChangeForm()
 	can_act = FALSE

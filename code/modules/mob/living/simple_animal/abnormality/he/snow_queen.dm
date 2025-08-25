@@ -268,7 +268,7 @@
 	if(istype(user_ego, /obj/item/clothing/suit/armor/ego_gear/waw/feather))
 		to_chat(H, span_userdanger("Snow Queen reacts to your ego and freezes you."))
 		// Award achievement for triggering freeze due to Feather of Honour
-		H.client?.give_award(/datum/award/achievement/lc13/snow_queen_frozen, H)
+		H.client?.give_award(/datum/award/achievement/abno/snow_queen_frozen, H)
 		return TRUE
 
 		/*-------------------\
@@ -525,10 +525,10 @@
 	to_chat(rewardee, "The roses blossom and the Snow Palace falls. Not a single soul remembered the woman sleeping there.")
 	if(ishuman(rewardee))
 		// Award achievement for being rescued from Snow Queen
-		rewardee.client?.give_award(/datum/award/achievement/lc13/snow_queen_rescue, rewardee)
+		rewardee.client?.give_award(/datum/award/achievement/abno/snow_queen_rescue, rewardee)
 		// Also award achievement to the hero who saved them
 		if(storybook_hero && storybook_hero != rewardee)
-			storybook_hero.client?.give_award(/datum/award/achievement/lc13/snow_queen_rescue, storybook_hero)
+			storybook_hero.client?.give_award(/datum/award/achievement/abno/snow_queen_rescue, storybook_hero)
 		var/datum/ego_gifts/frostsplinter/S = new
 		S.datum_reference = datum_reference
 		rewardee.Apply_Gift(S)

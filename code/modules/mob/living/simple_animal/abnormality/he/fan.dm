@@ -71,7 +71,7 @@
 	if(user.mind)
 		user.mind.fan_triggers++
 		if(user.mind.fan_triggers >= 5)
-			user.client?.give_award(/datum/award/achievement/lc13/fan_trigger, user)
+			user.client?.give_award(/datum/award/achievement/abno/fan_trigger, user)
 
 	if(user in danger)
 		if(safework)

@@ -401,7 +401,7 @@
 	worker = null
 	// Award achievement for surviving non-instinct/attachment work
 	if(work_type != ABNORMALITY_WORK_INSTINCT && work_type != ABNORMALITY_WORK_ATTACHMENT && user.stat != DEAD)
-		user.client?.give_award(/datum/award/achievement/lc13/nothing_survivor, user)
+		user.client?.give_award(/datum/award/achievement/abno/nothing_survivor, user)
 	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) < 80)
 		if(!shelled) // Not work failure
 			datum_reference.qliphoth_change(-1)

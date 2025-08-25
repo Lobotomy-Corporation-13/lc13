@@ -110,7 +110,7 @@ GLOBAL_LIST_EMPTY(apostles)
 	for(var/mob/living/carbon/human/H in view(7, src))
 		if(H.stat != DEAD)
 			for(var/obj/item/ego_weapon/hammer_light/hammer in H.held_items)
-				H.client?.give_award(/datum/award/achievement/lc13/hammer_kill_wn, H)
+				H.client?.give_award(/datum/award/achievement/abno/hammer_kill_wn, H)
 				break
 	// Check if Pink Midnight is active
 	for(var/datum/ordeal/boss/pink_midnight/PM in SSlobotomy_corp.current_ordeals)
@@ -118,7 +118,7 @@ GLOBAL_LIST_EMPTY(apostles)
 			// Award achievement to all living players for killing WhiteNight during Pink Midnight
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				if(H.stat != DEAD && H.client && H.z == z)
-					H.client.give_award(/datum/award/achievement/lc13/kill_wn_pink_midnight, H)
+					H.client.give_award(/datum/award/achievement/abno/kill_wn_pink_midnight, H)
 	for(var/mob/living/carbon/human/heretic in heretics)
 		if(heretic.stat == DEAD || !heretic.ckey)
 			continue
@@ -262,7 +262,7 @@ GLOBAL_LIST_EMPTY(apostles)
 		for(var/mob/living/L in view(7,src))
 			if(L.stat || !L.client)
 				continue
-			L.client.give_award(/datum/award/achievement/lc13/white_night, L)
+			L.client.give_award(/datum/award/achievement/abno/white_night, L)
 
 /* Apostles */
 

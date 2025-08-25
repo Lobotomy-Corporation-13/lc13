@@ -297,7 +297,7 @@
 			// Award achievement for escaping Nobody Is' chokehold
 			if(ishuman(grab_victim))
 				var/mob/living/carbon/human/H = grab_victim
-				H.client?.give_award(/datum/award/achievement/lc13/nobody_escape, H)
+				H.client?.give_award(/datum/award/achievement/abno/nobody_escape, H)
 			ReleaseGrab()
 	if(!oberon_mode)
 		last_heal_time = world.time + 10 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.

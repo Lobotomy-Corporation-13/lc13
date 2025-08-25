@@ -172,7 +172,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/express_train/proc/CheckTrainSurvival(mob/living/carbon/human/H)
 	if(H && H.stat != DEAD)
-		H.client?.give_award(/datum/award/achievement/lc13/train_survivor, H)
+		H.client?.give_award(/datum/award/achievement/abno/train_survivor, H)
 
 /mob/living/simple_animal/hostile/abnormality/express_train/proc/damageTiles()
 	for(var/obj/effect/expresstrain/seg in segments)

@@ -110,7 +110,7 @@
 		new /obj/effect/temp_visual/water_waves(T)
 
 
-	user.client?.give_award(/datum/award/achievement/lc13/scorpworld, user)
+	user.client?.give_award(/datum/award/achievement/abno/scorpworld, user)
 	// Actual effects
 	playsound(get_turf(src), 'sound/abnormalities/wellcheers/ability.ogg', 75, 0)
 	to_chat(user, span_userdanger("You feel sleepy..."))

@@ -448,7 +448,7 @@
 		// Award achievement for curing Naked Nest infection with cure
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
-			H.client?.give_award(/datum/award/achievement/lc13/naked_nest_cure_with, H)
+			H.client?.give_award(/datum/award/achievement/abno/naked_nest_cure_with, H)
 		C.Remove(target)
 
 #undef NAKED_NESTED

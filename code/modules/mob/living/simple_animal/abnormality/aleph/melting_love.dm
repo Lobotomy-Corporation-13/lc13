@@ -234,7 +234,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/CheckSurvivalAchievement(mob/living/carbon/human/user)
 	if(user && user.stat != DEAD && user.client)
-		user.client.give_award(/datum/award/achievement/lc13/melting_love_blessing_repress, user)
+		user.client.give_award(/datum/award/achievement/abno/melting_love_blessing_repress, user)
 
 /* Checking if bigslime is dead or not and apply a damage buff if yes */
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/SlimeDeath(datum/source, gibbed)

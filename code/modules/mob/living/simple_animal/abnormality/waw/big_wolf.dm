@@ -152,12 +152,12 @@
 	for(var/mob/living/carbon/human/saved in saved_humans)
 		if(nearby_red)
 			// Award achievement for being saved by Red Hood
-			saved.client?.give_award(/datum/award/achievement/lc13/red_hood_saved, saved)
+			saved.client?.give_award(/datum/award/achievement/abno/red_hood_saved, saved)
 
 		// Award achievement to nearby humans who helped kill the wolf
 		for(var/mob/living/carbon/human/potential_savior in view(5, src))
 			if(potential_savior != saved && potential_savior.stat != DEAD && potential_savior.client)
-				potential_savior.client?.give_award(/datum/award/achievement/lc13/wolf_savior, potential_savior)
+				potential_savior.client?.give_award(/datum/award/achievement/abno/wolf_savior, potential_savior)
 
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
