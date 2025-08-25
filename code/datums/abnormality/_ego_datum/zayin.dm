@@ -138,6 +138,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/cord
 	cost = 12
 
+//Message of the Future - Tidings
 /datum/ego_datum/weapon/tidings
 	item_path = /obj/item/ego_weapon/mini/tidings
 	cost = 12

@@ -19,7 +19,7 @@
 	max_boxes = 10
 
 	ego_list = list(
-		//datum/ego_datum/weapon/placeholder,
+		/datum/ego_datum/weapon/tidings,
 		//datum/ego_datum/armor/placeholder,
 	)
 	//gift_type =  /datum/ego_gifts/signal

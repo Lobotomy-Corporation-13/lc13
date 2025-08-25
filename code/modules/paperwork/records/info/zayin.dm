@@ -141,12 +141,12 @@
 		"While asleep after Insight work, EMPLOYEE heard many strange things, seeming to divine the future.",
 		"However, O-06-200 had a strong influence on any and all sleeping personnel in the facility. They seemed to get information they would otherwise not get.")
 
-// Saga of Man
+// Message Of the Future
 /obj/item/paper/fluff/info/zayin/message
 	abno_type = /mob/living/simple_animal/hostile/abnormality/report
 	abno_code = "M-05-207"
 	abno_info = list(
-		"M-05-201 is inert until worked upon.",
+		"M-05-207 is inert until worked upon.",
 		"When worked, M-05-207 would tell tidings of things to come.",
 		"If the current tidings is of health, all employees healed HP very slowly.",
 		"If the current tidings is of love, all employees healed SP very slowly.",
