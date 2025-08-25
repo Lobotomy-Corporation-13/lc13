@@ -227,7 +227,9 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/training)
 "eq" = (
-/obj/machinery/photocopier,
+/obj/machinery/computer/extraction_cargo/records{
+	dir = 4
+	},
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "ew" = (
@@ -1246,13 +1248,10 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/command)
 "uV" = (
-/obj/machinery/computer/secure_data{
-	dir = 1;
-	req_one_access = "0"
-	},
 /obj/structure/sign/ordealmonitor{
 	pixel_y = -32
 	},
+/obj/machinery/photocopier,
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "uZ" = (
