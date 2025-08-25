@@ -96,6 +96,8 @@
 	return chance
 
 /mob/living/simple_animal/hostile/abnormality/express_train/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
+	if(datum_reference.qliphoth_meter == 0)
+		user.client?.give_award(/datum/award/achievement/abno/train_time, user)
 	datum_reference.qliphoth_change(4)
 	meltdown_timer = world.time + meltdown_tick
 	lightscount = 0

@@ -88,6 +88,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/smile/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(lucky_counter > 3)
+		user.client?.give_award(/datum/award/achievement/abno/cheshire, user)
 		datum_reference.qliphoth_change(-1)
 	return
 

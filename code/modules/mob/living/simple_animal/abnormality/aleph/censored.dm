@@ -234,6 +234,8 @@
 			user.AdjustStun(-999) //run for your life
 		datum_reference.working = FALSE
 		return null
+	if(work_type == ABNORMALITY_WORK_INSIGHT && (get_attribute_level(user, PRUDENCE_ATTRIBUTE)<40))
+		user.client?.give_award(/datum/award/achievement/abno/censored, user)
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/censored/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)

@@ -276,15 +276,15 @@
 
 //Express Train from Hell
 /datum/award/achievement/abno/train_survivor
-	name = "Not my stop"
-	title = "Loving Trains"
+	name = "Crazy Train"
+	title = "All Aboard!!!"
 	desc = "Get hit by hell train and survive."
 	database_id = MEDAL_TRAIN_SURVIVOR
 	difficulty = ACHIEVEMENT_HARD
 
 /datum/award/achievement/abno/train_time
-	name = "Crazy Train"
-	title = "All Aboard!!!"
+	name = "Not my stop"
+	title = "Loving Trains"
 	desc = "Stop the train at the last moment."
 	database_id = MEDAL_TRAIN_LAST
 	difficulty = ACHIEVEMENT_NORMAL
