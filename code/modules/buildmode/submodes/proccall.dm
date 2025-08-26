@@ -6,9 +6,12 @@
 	var/list/proc_args
 
 /datum/buildmode_mode/proccall/show_help(client/user)
-	to_chat(user, custom_boxed_message("purple_box",\
-		"[span_bold("Choose procedure and arguments")] -> Right Mouse Button on buildmode button\n\
-		[span_bold("Apply procedure on object")] -> Left Mouse Button on machinery"))
+	to_chat(user, "<span class='notice'>***********************************************************\n\
+		Choose procedure and arguments -> Right Mouse Button on buildmode button\n\
+		Apply procedure on object -> Left Mouse Button on machinery\n\
+		***********************************************************</span>")
+
+
 
 /datum/buildmode_mode/proccall/change_settings(client/user)
 	if(!check_rights_for(user, R_DEBUG))
@@ -38,7 +41,6 @@
 	log_admin(msg)
 	message_admins(msg)
 	admin_ticket_log(object, msg)
-	BLACKBOX_LOG_ADMIN_VERB("Atom ProcCall")
 
 	var/returnval = user.get_callproc_returnval(WrapAdminProcCall(object, proc_name, proc_args), proc_name)
 	if(returnval)
