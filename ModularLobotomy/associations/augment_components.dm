@@ -854,7 +854,7 @@
 /mob/living/simple_animal/hostile/stoneward_statue
 	name = "Stoneward Statue"
 	desc = "A statue created by an Augment User."
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "memory_statute"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.5, WHITE_DAMAGE = 0, BLACK_DAMAGE = 2, PALE_DAMAGE = 2)
 	health = 100

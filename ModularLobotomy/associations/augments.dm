@@ -1076,7 +1076,7 @@
 /obj/item/augment_tester
 	name = "Augment Tester"
 	desc = "A device that can check what types of augments the target can use."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "records_stats"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
@@ -1118,7 +1118,7 @@
 /obj/item/ncorp_augment_tester
 	name = "N-Corp Augment Tester"
 	desc = "A device that can check if a target has an augment."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "disc_stats"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
@@ -1145,7 +1145,7 @@
 /obj/item/augment_remover
 	name = "Augment Remover"
 	desc = "A device that can remove augments."
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "gadget1"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL

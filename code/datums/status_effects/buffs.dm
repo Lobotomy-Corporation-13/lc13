@@ -599,7 +599,7 @@
 /atom/movable/screen/alert/status_effect/protection
 	name = "Protection"
 	desc = "You are protected! All damage taken will be decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "protection"
 
 /datum/status_effect/stacking/protection/on_apply()
@@ -695,7 +695,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection
 	name = "Red Protection"
 	desc = "You are protected! Red damage taken will be decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "red_protection"
 
 /datum/status_effect/stacking/damtype_protection/on_apply()
@@ -799,7 +799,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/white
 	name = "White Protection"
 	desc = "You are protected! White damage taken will be decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "white_protection"
 
 //Mob Proc
@@ -823,7 +823,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/black
 	name = "Black Protection"
 	desc = "You are protected! Black damage taken will be decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "black_protection"
 
 //Mob Proc
@@ -847,7 +847,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/pale
 	name = "Pale Protection"
 	desc = "You are protected! Pale damage taken will be decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pale_protection"
 
 //Mob Proc
@@ -877,7 +877,7 @@
 /atom/movable/screen/alert/status_effect/damage_up
 	name = "Damage Up"
 	desc = "You are empowered! Your melee damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "strength"
 
 /datum/status_effect/stacking/damage_up/on_apply()
@@ -940,7 +940,7 @@
 /atom/movable/screen/alert/status_effect/red_damage_up
 	name = "Red Damage Up"
 	desc = "You are empowered! Your RED melee damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "red_strength"
 
 /datum/status_effect/stacking/damtype_damage_up/on_apply()
@@ -1023,7 +1023,7 @@
 /atom/movable/screen/alert/status_effect/white_damage_up
 	name = "White Damage Up"
 	desc = "You are empowered! Your WHITE melee damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "white_strength"
 
 //Mob Proc
@@ -1046,7 +1046,7 @@
 /atom/movable/screen/alert/status_effect/black_damage_up
 	name = "Black Damage Up"
 	desc = "You are empowered! Your BLACK melee damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "black_strength"
 
 //Mob Proc
@@ -1069,7 +1069,7 @@
 /atom/movable/screen/alert/status_effect/pale_damage_up
 	name = "Pale Damage Up"
 	desc = "You are empowered! Your PALE melee damage is increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pale_strength"
 
 //Mob Proc

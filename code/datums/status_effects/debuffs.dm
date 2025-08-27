@@ -1205,7 +1205,7 @@
 /atom/movable/screen/alert/status_effect/overheat
 	name = "Overheated"
 	desc = "You're burning up from your augment!!"
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_burn"
 
 /datum/status_effect/stacking/lc_overheat/can_have_status()
@@ -1506,7 +1506,7 @@
 /atom/movable/screen/alert/status_effect/fragile
 	name = "Fragility"
 	desc = "You are Fragile! All damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "fragile"
 
 //Mob Proc
@@ -1531,7 +1531,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/fragile
 	name = "Red Fragility"
 	desc = "You are fragile! Red damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "red_fragile"
 
 //Mob Proc
@@ -1555,7 +1555,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/white/fragile
 	name = "White Fragility"
 	desc = "You are fragile! White damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "white_fragile"
 
 //Mob Proc
@@ -1579,7 +1579,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/black/fragile
 	name = "Black Fragility"
 	desc = "You are fragile! Black damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "black_fragile"
 
 //Mob Proc
@@ -1603,7 +1603,7 @@
 /atom/movable/screen/alert/status_effect/damtype_protection/pale/fragile
 	name = "Pale Fragility"
 	desc = "You are fragile! Pale damage taken will be increased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pale_fragile"
 
 //Mob Proc
@@ -1627,7 +1627,7 @@
 /atom/movable/screen/alert/status_effect/damage_up/down
 	name = "Damage Down"
 	desc = "You are weakend! Your melee damage is decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "feeble"
 
 //Mob Proc
@@ -1651,7 +1651,7 @@
 /atom/movable/screen/alert/status_effect/red_damage_up/down
 	name = "Red Damage Down"
 	desc = "You are weakend! Your RED melee damage is decreased by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "red_feeble"
 
 /mob/living/proc/apply_lc_red_feeble(stacks)
@@ -1673,7 +1673,7 @@
 /atom/movable/screen/alert/status_effect/white_damage_up/down
 	name = "White Damage Down"
 	desc = "You are weakend! Your WHITE melee damage is reduced by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "white_feeble"
 
 /mob/living/proc/apply_lc_white_feeble(stacks)
@@ -1695,7 +1695,7 @@
 /atom/movable/screen/alert/status_effect/black_damage_up/down
 	name = "Black Damage Down"
 	desc = "You are weakend! Your BLACK melee damage is reduced by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "black_feeble"
 
 /mob/living/proc/apply_lc_black_feeble(stacks)
@@ -1717,7 +1717,7 @@
 /atom/movable/screen/alert/status_effect/pale_damage_up/down
 	name = "Pale Damage Down"
 	desc = "You are weakend! Your PALE melee damage is reduced by "
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "pale_feeble"
 
 /mob/living/proc/apply_lc_pale_feeble(stacks)
