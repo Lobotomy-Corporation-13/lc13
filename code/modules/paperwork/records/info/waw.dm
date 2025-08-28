@@ -581,4 +581,6 @@
 		"When an employee performed attachment work, T-06-206 created a new form.",
 		"The forms obtained by T-06-206 are manifested into this abnormality’s strength whenever it breaches.",
 		)
+	abno_breach_damage_type = "Black"
+	abno_breach_damage_count = "High"
 
