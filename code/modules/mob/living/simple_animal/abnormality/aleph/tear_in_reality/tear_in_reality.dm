@@ -50,7 +50,7 @@
 		return
 	producing = TRUE
 	SLEEP_CHECK_DEATH(6)
-	visible_message(span_danger("\Something rises from the static..."))
+	visible_message(span_danger("Something rises from the static..."))
 	for(var/i = 5 to 10)
 		var/turf/T = get_step(get_turf(src), pick(0, EAST))
 		var/picked_mob = /mob/living/simple_animal/abnormality/static
