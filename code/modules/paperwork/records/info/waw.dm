@@ -570,7 +570,7 @@
 	abno_breach_damage_count = "Very High"
 
 //flesh that Takes
-/obj/item/paper/fluff/info/flesh_that_takes
+/obj/item/paper/fluff/info/waw/flesh_that_takes
 	abno_type = /mob/living/simple_animal/hostile/abnormality/flesh_that_takes
 	abno_code = "T-06-206"
 	abno_info = list(

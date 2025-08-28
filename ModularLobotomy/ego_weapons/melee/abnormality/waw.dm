@@ -2588,6 +2588,10 @@
 	force = 30
 	damtype = BLACK_DAMAGE
 	hitsound = 'sound/weapons/bladeslice.ogg'
+	attribute_requirements = list(
+		TEMPERANCE_ATTRIBUTE = 60,
+		JUSTICE_ATTRIBUTE = 60
+		)
 
 /obj/item/ego_weapon/encompassing/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
