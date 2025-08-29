@@ -1603,3 +1603,22 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+
+//Tear in Reality
+/obj/item/ego_weapon/TiR_static
+	name = "Claws of Reality"
+	desc = "A much weaker form of the Claws that tore open reality."
+	icon_state = ""
+	worn_icon_state = ""
+	force = 30 //Extremely lowered due to fast attack speed and being pale damage.
+	attack_speed = 0.5
+	damtype = PALE_DAMAGE
+	attack_verb_continuous = list("Tears through [A] in all Realities", "Tears through [A]'s Existence)
+	hitsound = 'sound/weapons/ego/censored1.ogg'
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 80,
+		PRUDENCE_ATTRIBUTE = 100,
+		TEMPERANCE_ATTRIBUTE = 60,
+		JUSTICE_ATTRIBUTE = 100,
+	)
+

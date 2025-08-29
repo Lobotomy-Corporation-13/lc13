@@ -32,11 +32,10 @@
 	work_damage_amount = 20
 	work_damage_type =  WHITE_DAMAGE
 
-	//ego_list = list(
-		//datum/ego_datum/weapon/branch12/darkness, ///Need to change
-		//datum/ego_datum/armor/branch12/darkness, ///Need to change
-	//)
-	//gift_type =  /datum/ego_gifts/departure ///Need to change/remove
+	ego_list = list(
+		datum/ego_datum/weapon/TiR_static,
+		datum/ego_datum/armor/TiR_static,
+	)
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
 ///////////////EVERYTHING HERE FROM GREEN DUSK////////////////////////////
