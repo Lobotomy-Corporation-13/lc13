@@ -213,7 +213,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/throne
 	cost = 100
 
-//Tear in Reality (Named TiR_static to avoid potential error with Headless Portrait)
+//Tear in Reality (Named TiR_static to avoid potential error with Someone's Portrait)
 /datum/ego_datum/weapon/TiR_static
 	item_path = /obj/item/ego_weapon/TiR_static
 	cost = 100
