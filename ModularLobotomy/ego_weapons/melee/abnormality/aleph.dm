@@ -1612,7 +1612,7 @@
 	force = 30 //Extremely lowered due to fast attack speed and being pale damage.
 	attack_speed = 0.5
 	damtype = PALE_DAMAGE
-	attack_verb_continuous = list("tears through", "rips through)
+	attack_verb_continuous = list("tears through all versions of", "rips through the concept of")
 	hitsound = 'sound/weapons/ego/censored1.ogg'
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 80,
