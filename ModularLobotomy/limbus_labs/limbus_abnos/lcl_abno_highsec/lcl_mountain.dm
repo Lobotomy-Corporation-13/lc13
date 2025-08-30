@@ -19,10 +19,10 @@
 	Seeing blood in your cell makes you even hungrier. Eating humanoid corpses can sate you for longer, but it won't last. \
 	If left starving, you'll breach, growing bigger with each corpse consumed, but you'll need even more food than usual. Only overwhelming force will calm you down once you're in this state."
 	max_counter = 3
-	kickstart_timer = 5 MINUTES //More generous timer due to it being a handful once it starts going off.
+	kickstart_timer = 10 MINUTES //More generous timer due to it being a handful once it starts going off.
 	//Gets hungry REALLY fast, but will eat nearly anything edible, even if it doesn't give a lot of hunger.
 	hunger_cooldown_time =  20 SECONDS
-	hunger_bar = 10 //Set really low so they get used to eating as it'll be their primary gameplay loop.
+	hunger_bar = 80
 	diet_value = 10
 	diet_list = list(/obj/item/organ, /obj/item/food, /obj/item/bodypart)
 	desire_on_eat = 5

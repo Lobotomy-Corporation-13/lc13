@@ -1,5 +1,6 @@
 /mob/living/simple_animal/hostile/limbus_abno/laetitia
 	maxHealth = 1500
+	health = 1500
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	melee_damage_type = WHITE_DAMAGE
@@ -12,7 +13,7 @@
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/laetitia_surprise,
 	/datum/action/cooldown/limbus_abno_action/laetitia_gifting,
 	/datum/action/cooldown/limbus_abno_action/special_delivery)
-	diet_value = 20
+	diet_value = 60
 	desire_cooldown_time = 30 SECONDS
 	desire_loss = 5
 	desire_on_pet = 40

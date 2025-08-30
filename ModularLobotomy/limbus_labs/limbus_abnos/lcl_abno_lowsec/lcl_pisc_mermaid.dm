@@ -9,15 +9,16 @@
 	base_pixel_x = -12
 	pet_bonus_emote = "smiles!"
 	max_counter = 3
-	abno_additional_instructions = "You like attachment and repression. You need love. You're willing to give so much for it. \
+	abno_additional_instructions = "You like attachment and repression. You need love. You're willing to give so much for it.\
 	You want to be hugged, or they can beat you up, you do not care, as long as they come back to you. \
 	If you breach, the only thing that can bring you back to your senses is the immediate threat of death. Otherwise, your lover will sink into the depths with you. "
 	original_abno = /mob/living/simple_animal/hostile/abnormality/pisc_mermaid
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/mermaid_chokehold, /datum/action/cooldown/limbus_abno_action/mermaid_telepathy, /datum/action/cooldown/limbus_abno_action/dive_dash)
 	diet_list = list(/obj/item/food/freshfish, /obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar) //Sweets and fish.
 	hunger_cooldown_time =  2 MINUTES
-	diet_value = 30
-	desire_cooldown_time = 30 SECONDS //Despite being lowsec, she's *extremely* needy and high maintenance. her mood dropping to 0 after only 5 minutes
+	diet_value = 50
+	kickstart_timer = 10 MINUTES //Same reason as mountain, she drops too fast early on and needs some time to get to know people.
+	desire_cooldown_time = 1 MINUTES //Despite being lowsec, she's *extremely* needy and high maintenance. her mood dropping to 0 after only 10 minutes
 	desire_on_eat = 3 //Way less efficient than petting, but you can theoretically keep her happy with cake spam.
 	desire_on_pet = 5 //It's easy to do, but you need to pet her a ton before she's happy.
 	rep_desire_gain = 0.2
@@ -26,7 +27,7 @@
 	rep_min_damage = 10
 	insight_cooldown_time = 2 MINUTES
 	liked_objects_list = list(/obj/effect/decal/cleanable/food/salt)
-	liked_objects_value = 1
+	liked_objects_value = 10
 	ego_list = list(
 		/datum/ego_datum/weapon/unrequited,
 		/datum/ego_datum/armor/unrequited,
@@ -233,8 +234,6 @@
 	to_chat(mermaid, span_notice("Talking to [love_target] soothes you."))
 	StartCooldown()
 
-
-
 ///Teleports to the chosen tile, making a mess of things and shoving people out of the way.
 /datum/action/cooldown/limbus_abno_action/dive_dash
 	name = "Dive and Dash"
@@ -249,11 +248,27 @@
 	if(!.)
 		return
 	var/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/mermaid = abno_user
+	if(mermaid.ranged) //We assume she somehow has no valid tile to dive into.
+		if(!mermaid.breached)
+			mermaid.icon_living = "pmermaid_standing"
+			mermaid.icon_state = "pmermaid_standing"
+		mermaid.manual_emote("rises from the water.")
+		return FALSE
+
 	mermaid.ranged = TRUE
 	mermaid.manual_emote("is lowering herself deeper into the water.")
+	ADD_TRAIT(mermaid, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_dive"))
+	if(!mermaid.breached)
+		mermaid.icon_living = "pmermaid_laying"
+		mermaid.icon_state = "pmermaid_laying"
 	StartCooldown()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/DiveDash(turf/T)
+	REMOVE_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_dive"))
+	if(!breached)
+		icon_living = "pmermaid_standing"
+		icon_state = "pmermaid_standing"
+
 	dashing = TRUE
 	forceMove(T)
 	dashing = FALSE
@@ -261,9 +276,11 @@
 	new_water.alpha = 0
 	new_water.belongs_to_mermaid = TRUE
 	animate(new_water, alpha = 255, time = 0.25 SECONDS)
+	var/list/turfs = list()
+	for(var/turf/turf in range(1, src))
+		turfs.Add(turf)
 	var/obj/effect/proc_holder/spell/aoe_turf/repulse/R = new(null) //I could make a new subtype but why bother.
-	R.cast(T, src, 10)
-	ranged = FALSE
+	R.cast(turfs, src, 10)
 	playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/OpenFire(atom/A)
@@ -273,6 +290,7 @@
 		if(line_turf.is_blocked_turf_ignore_climbable() && line_turf.is_blocked_turf(TRUE))
 			available_turf = FALSE
 	if(available_turf)
+		ranged = FALSE
 		DiveDash(get_turf(A))
 
 ///If a love target exist, instantly teleport to them, create water under them, and Immobilize (not stun) them for 15 seconds.
@@ -385,4 +403,3 @@
 		mermaid.AdjustCounter(-mermaid.max_counter)
 		mermaid.AdjustDesire(-mermaid.max_desire)
 		qdel(src)
-

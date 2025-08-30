@@ -11,6 +11,8 @@
 	severity = DISEASE_SEVERITY_HARMFUL
 	var/affected_mob_type = /mob/living/carbon/human
 	var/spawned_bee_type = /mob/living/simple_animal/hostile/worker_bee
+	var/control_bee_on_death = FALSE
+	var/spore_damage = 2
 
 /datum/disease/bee_spawn/after_add()
 	affected_mob.playsound_local(get_turf(affected_mob), 'sound/abnormalities/bee/infect.ogg', 25, 0)
@@ -24,14 +26,16 @@
 		return
 
 	var/mob/living/carbon/C = affected_mob
-	C.apply_damage(stage*2, RED_DAMAGE, null, C.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+	C.apply_damage(stage*spore_damage, RED_DAMAGE, null, C.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
 
 	if(C.health <= 0)
 		var/turf/T = get_turf(C)
 		C.visible_message("<span class='danger'>[C] explodes in a shower of gore, as a giant bee appears out of [C.p_them()]!</span>")
 		C.emote("scream")
+		var/mob/living/simple_animal/hostile/worker_bee/bee = new spawned_bee_type(T)
+		if(control_bee_on_death && C.mind)
+			C.mind.transfer_to(bee)
 		C.gib()
-		new spawned_bee_type(T)
 		return
 
 	if((stage >= max_stages) && (C.health >= (C.maxHealth * 0.75)) && prob(C.health * 0.25))
@@ -40,3 +44,5 @@
 /datum/disease/bee_spawn/limbus_bee_spawn
 	affected_mob_type = /mob/living/carbon
 	spawned_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
+	control_bee_on_death = TRUE
+	spore_damage = 0.2 //10% of the original damage.

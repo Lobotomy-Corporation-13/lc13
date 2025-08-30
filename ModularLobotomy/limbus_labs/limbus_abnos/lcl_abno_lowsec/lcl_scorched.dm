@@ -6,12 +6,12 @@
 	original_abno = /mob/living/simple_animal/hostile/abnormality/scorched_girl
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/scorched_boom, /datum/action/cooldown/limbus_abno_action/scorched_burn)
 	diet_list = list(/obj/item/lighter, /obj/item/match, /obj/item/food/badrecipe, /obj/item/food/bearsteak, /obj/item/food/burger/fivealarm)
-	abno_additional_instructions = "You like being hurt, and feeding the flame that hurts you, which means your mood will improve on eating and being beat up. \
+	abno_additional_instructions = "You like being hurt, and feeding the flame that hurts you, which means your mood will improve on eating and being beat up. You like bonfires, you relate to them. \
 	If you starve for too long, you will suddenly explode, leaving you with only a sliver of your health."
-	hunger_cooldown_time =  30 SECONDS
+	hunger_cooldown_time =  1 MINUTES
 	hunger_bar = 50
 	diet_value = 40 //Easy to feed.
-	desire_on_eat = 10
+	desire_on_eat = 30
 	desire_on_eat_threshold = 50
 	desire_on_pet = -20
 	rep_desire_gain = 0.2

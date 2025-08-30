@@ -8,18 +8,17 @@
 	death_sound = 'sound/abnormalities/bee/death.ogg'
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/bee_egg,
 	/datum/action/cooldown/limbus_abno_action/emit_spores,
-	/datum/action/cooldown/bee_speech)
-
+	/datum/action/cooldown/bee_speech,
+	/datum/action/cooldown/bee_swap)
 	original_abno = /mob/living/simple_animal/hostile/abnormality/queen_bee
 	abno_additional_instructions = "You like instinct, insight and attachment. You want the hive to expand, that requires food, and a lot of it. \
 	Your mood improves the more meat there is in your surroundings, as your reign lives and dies on food. You can create workers from an egg and enough food, but that process is inefficient. \
 	If your mood is low enough, you may forcefully try to get new soldiers by emitting infectious spores that will use their host to feed themselves."
 
-	hunger_cooldown_time = 30 SECONDS
 	hunger_loss = 10
 	kickstart_timer = 5 MINUTES
-	hunger_bar = 25
-	diet_list = (/obj/item/food/meat) //A surprisingly simple diet for a WAW.
+	hunger_bar = 100
+	diet_list = list(/obj/item/food/meat) //A surprisingly simple diet for a WAW.
 	diet_value  = 30
 	desire_on_eat = 10
 	desire_on_pet = 5
@@ -28,6 +27,17 @@
 	insight_cooldown_time = 3 MINUTES
 	liked_objects_list = list(/obj/item/food/meat)
 	liked_objects_value = 5
+
+
+	ego_list = list(
+		/datum/ego_datum/weapon/hornet,
+		/datum/ego_datum/weapon/tattered_kingdom,
+		/datum/ego_datum/armor/hornet,
+	)
+
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("queen_bee_root"))
 
 ///More or less the same spores as the original queen bee, with the main difference that it creates the special controllable bees.
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/proc/EmitSpores(forced = FALSE)
@@ -50,6 +60,15 @@
 	..()
 	if(desire_bar <= 0)
 		EmitSpores(TRUE)
+
+/mob/living/simple_animal/hostile/limbus_abno/queen_bee/UnarmedAttack(atom/A, proximity)
+	. = ..()
+	if(!iscarbon(A))
+		return
+	var/mob/living/carbon/C = A
+	var/datum/disease/bee_spawn/limbus_bee_spawn/D = new()
+	D.spore_damage = 2
+	C.ForceContractDisease(D, FALSE, TRUE)
 
 /mob/living/simple_animal/hostile/limbus_abno/queen_bee/AdjustHunger(hunger_amount)
 	..()
@@ -85,7 +104,7 @@
 	. = ..()
 	if(!.)
 		return FALSE
-	if(abno_user.hunger_bar < 90)
+	if(abno_user.hunger_bar < 70)
 		return FALSE
 	return TRUE
 
@@ -97,7 +116,7 @@
 	new /obj/item/food/bee_egg(T)
 	playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
 	StartCooldown()
-	abno_user.AdjustHunger(-90) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
+	abno_user.AdjustHunger(-70) //Creating eggs like this is supposed to be very inefficient, living hosts are better.
 	abno_user.AdjustDesire(70)
 
 //We don't make this an egg subtype because it runs into some problems with the throwable code. Will make a controllable bee after some time.
@@ -121,6 +140,7 @@
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	faction = list("neutral", "hostile") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
 	created_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
+	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee/Initialize()
 	. = ..()
@@ -130,6 +150,11 @@
 	beech.Grant(src)
 	var/datum/action/cooldown/bee_scavenge/beenge = new() //I'm kinda pushing it with that one.
 	beenge.Grant(src)
+
+/mob/living/simple_animal/hostile/worker_bee/lcl_bee/death()
+	if(queen)
+		mind.transfer_to(queen)
+	..()
 
 /datum/action/cooldown/bee_scavenge
 	name = "Scavenge for meat."
@@ -148,6 +173,35 @@
 		new /obj/item/food/meat/slab(T)
 	playsound(T, 'sound/effects/splat.ogg', 50, TRUE)
 	StartCooldown()
+
+/datum/action/cooldown/bee_swap
+	name = "Worker Possession"
+	desc = "Lets you take direct control of a worker bee as long as they are not already aware. If used as a worker bee, puts you back into your queen body."
+	icon_icon = 'icons/mob/actions/actions_animal.dmi'
+	button_icon_state = "expand"
+	cooldown_time = 1 MINUTES
+
+/datum/action/cooldown/bee_swap/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/user_bee
+	if(istype(owner, /mob/living/simple_animal/hostile/worker_bee/lcl_bee))
+		user_bee = owner
+		if(user_bee.queen)
+			user_bee.queen.ckey = user_bee.ckey
+			user_bee.mind = null
+			user_bee.queen = null
+			qdel(src)
+			return
+
+	for(var/mob/living/simple_animal/hostile/worker_bee/lcl_bee/bee in GLOB.alive_mob_list)
+		if(!bee.mind && !bee.ckey)
+			bee.ckey = owner.ckey //We don't use transfer_to because it creates possession issues.
+			var/datum/action/cooldown/bee_swap/bs = new /datum/action/cooldown/bee_swap()
+			bs.Grant(bee)
+			bee.queen = owner
+			StartCooldown()
 
 /datum/action/cooldown/bee_speech
 	name = "Hivemind Speech"

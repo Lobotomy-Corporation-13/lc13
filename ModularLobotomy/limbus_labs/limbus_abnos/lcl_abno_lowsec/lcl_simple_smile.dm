@@ -15,10 +15,11 @@
 	You CANNOT eat things or knockdown people by default, and instead need to rely on your abilities to do so. So try to plan your mischief ahead if you can.\
 	You produce ego much faster than other abnormalities, use this as a bargaining chip if they ever get tired of your antics."
 	diet_list = list(/obj/item)
-	hunger_cooldown_time = 30 SECONDS
-	desire_cooldown_time = 15 SECONDS
+	hunger_cooldown_time = 15 SECONDS
+	desire_cooldown_time = 30 SECONDS
 	desire_loss = 5
 	desire_on_eat = 30
+	diet_value = 20
 	delete_food = FALSE
 	ego_list = list(
 		/datum/ego_datum/weapon/trick,
@@ -47,10 +48,12 @@
 	if(id_bump)
 		var/obj/item/card/id/id_card = victim.get_idcard()
 		if(id_card)
+			AdjustDesire(30)
 			id_card.forceMove(get_turf(victim))
 			id_bump = FALSE
 
 	if(knockdown_count < max_knockdown)
+		AdjustDesire(30)
 		victim.Knockdown(20)
 		var/obj/item/held = victim.get_active_held_item()
 		victim.dropItemToGround(held) //The classic.
@@ -91,7 +94,7 @@
 	icon_icon = 'icons/mob/actions/actions_animal.dmi'
 	button_icon_state = "coffer"
 	transparent_when_unavailable = TRUE
-	cooldown_time = 3 MINUTES
+	cooldown_time = 30 SECONDS
 	desire_req = 80
 
 /datum/action/cooldown/limbus_abno_action/smile_gobble/Trigger()

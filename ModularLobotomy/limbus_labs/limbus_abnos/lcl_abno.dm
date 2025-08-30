@@ -10,6 +10,7 @@
 	melee_damage_upper = 2
 	attack_sound = 'sound/abnormalities/fragment/attack.ogg'
 	pet_bonus = TRUE //Don't forget to not call the parent proc if you don't want the heart effect when pet.
+	pet_bonus_emote = "shudders."
 	can_be_renamed = TRUE
 	var/abno_additional_instructions = "" //Unique additional info to the abnormality.
 	var/true_name = "Limbus specimen" //The true name of the abnormality if it can get revealed after enough study.
@@ -29,7 +30,7 @@
 	//Hunger stuff
 	var/hunger_active = FALSE
 	var/max_hunger = 100
-	var/hunger_bar = 10
+	var/hunger_bar = 80
 	var/hunger_loss = 10 //How much hunger is substracted per hunger cooldown.
 	var/hunger_cooldown_time = 1 MINUTES
 	var/hunger_cooldown
@@ -41,7 +42,7 @@
 	//Desire stuff.
 	var/desire_active = FALSE
 	var/max_desire = 100
-	var/desire_bar = 10
+	var/desire_bar = 80
 	var/desire_loss = 10 //How much desire is substracted per desire cooldown.
 	var/desire_cooldown_time = 2 MINUTES //Takes off 10 desire per that amount of time.
 	var/desire_cooldown
@@ -110,12 +111,12 @@
 	//There's probably a way to grant actions that takes less words but whatever it works.
 	var/datum/action/small_sprite/abnormality/small_action = new /datum/action/small_sprite/abnormality()
 	var/datum/action/cooldown/limbus_abno_action/ego_refinement/ego_maker = new /datum/action/cooldown/limbus_abno_action/ego_refinement()
-	var/datum/action/cooldown/limbus_abno_action/emergency_satisfaction/instant_satisf = new /datum/action/cooldown/limbus_abno_action/emergency_satisfaction
+	var/datum/action/cooldown/limbus_abno_action/emergency_satisfaction/instant_satisf = new /datum/action/cooldown/limbus_abno_action/emergency_satisfaction()
 	instant_satisf.Grant(src)
 	ego_maker.Grant(src)
 	small_action.Grant(src)
 	for(var/action_type in attack_action_types)
-		var/datum/action/cooldown/limbus_abno_action/abno_action = new action_type()
+		var/datum/action/cooldown/abno_action = new action_type()
 		abno_action.Grant(src)
 
 ///A bunch of mechanics only start happening during login. This is to avoid hunger and desire being at 0 on posession because the player showed up later.
@@ -125,6 +126,8 @@
 		return FALSE
 
 	manual_emote("awakens...")
+	if(awakened)
+		return //We don't want to flood them with notes if they get repossessed multiple times.
 	RegisterSignal(src, COMSIG_MOB_CTRLSHIFTCLICKON, PROC_REF(OnCtrlShiftClick), TRUE)
 	awakened = TRUE
 	addtimer(CALLBACK(src, PROC_REF(ActivateBarCooldowns)), kickstart_timer)
