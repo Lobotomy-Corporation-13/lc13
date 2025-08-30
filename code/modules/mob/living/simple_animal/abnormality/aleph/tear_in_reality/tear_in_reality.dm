@@ -52,7 +52,7 @@
 	visible_message(span_danger("Something rises from the static..."))
 	for(var/i = 5 to 10)
 		var/turf/T = get_step(get_turf(src), pick(0, EAST))
-		var/picked_mob = /mob/living/simple_animal/hostile/abnormality/tir_static
+		var/picked_mob = /mob/living/simple_animal/hostile/tir_static
 		new picked_mob(T)
 
 	//	if(prob(75)) ///Spawns Interdimensional Static 25% of the time, can lower to smth like 10% if needed

@@ -6,7 +6,7 @@
 //////////////////////ONCE ENEMY IS FINISHED, PUT IN LIST AT LINE 61
 //////////////////////(picked_mob = pick())
 
-/mob/living/simple_animal/hostile/abnormality/tir_static
+/mob/living/simple_animal/hostile/tir_static
 	name = "Interdimensional Static"
 	desc = "Whatever it was, looks like it got lost."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
