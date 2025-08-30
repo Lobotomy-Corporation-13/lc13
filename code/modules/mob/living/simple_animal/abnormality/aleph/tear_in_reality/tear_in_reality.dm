@@ -33,8 +33,8 @@
 	work_damage_type =  WHITE_DAMAGE
 
 	ego_list = list(
-		datum/ego_datum/weapon/TiR_static,
-		datum/ego_datum/armor/TiR_static,
+		/datum/ego_datum/weapon/tir_static,
+		/datum/ego_datum/armor/tir_static,
 	)
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
@@ -52,7 +52,7 @@
 	visible_message(span_danger("Something rises from the static..."))
 	for(var/i = 5 to 10)
 		var/turf/T = get_step(get_turf(src), pick(0, EAST))
-		var/picked_mob = /mob/living/simple_animal/abnormality/static
+		var/picked_mob = /mob/living/simple_animal/hostile/abnormality/tir_static
 
 	//	if(prob(75)) ///Spawns Interdimensional Static 25% of the time, can lower to smth like 10% if needed
 	//		picked_mob = pick() ///PUT YOUR ENEMIES HERE
