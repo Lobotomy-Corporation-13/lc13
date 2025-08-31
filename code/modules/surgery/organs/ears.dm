@@ -121,3 +121,9 @@
 	if(. & EMP_PROTECT_SELF)
 		return
 	damage += 40/severity
+
+/obj/item/organ/ears/cybernetic/upgraded/bangproof
+	name = "damping cybernetic ears"
+	desc = "One of the more advanced prosthetic models in the market, offering full protection from audio related threats"
+	damage_multiplier = 0.1
+	bang_protect = 1

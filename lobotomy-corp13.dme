@@ -4325,6 +4325,7 @@
 #include "ModularLobotomy\moba_skills\skirmisher\blitz.dm"
 #include "ModularLobotomy\moba_skills\skirmisher\dash.dm"
 #include "ModularLobotomy\primitive_farming\farming_structures.dm"
+#include "ModularLobotomy\prosthetics\carnival.dm"
 #include "ModularLobotomy\prosthetics\chainsword.dm"
 #include "ModularLobotomy\prosthetics\explosivearm.dm"
 #include "ModularLobotomy\prosthetics\extra_arm_implant.dm"

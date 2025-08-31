@@ -240,6 +240,7 @@
 		/obj/item/organ/liver/cybernetic/tier2 = 100,
 		/obj/item/organ/eyes/robotic/glow = 100,
 		/obj/item/organ/ears/cybernetic = 100,
+		/obj/item/organ/tongue/robot = 100,
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 	)
@@ -256,9 +257,13 @@
 		/obj/item/organ/cyberimp/arm/briefcase = 100,
 		/obj/item/organ/cyberimp/arm/surgery = 100,
 		/obj/item/organ/cyberimp/arm/overdrive = 100,
+		/obj/item/organ/stomach/cybernetic/tier3 = 100,
+		/obj/item/organ/heart/cybernetic/tier3 = 100,
+		/obj/item/organ/lungs/cybernetic/tier3 = 100,
+		/obj/item/organ/liver/cybernetic/tier3 = 100,
 		/obj/item/organ/eyes/robotic/nightvision = 100,
 		/obj/item/organ/eyes/robotic/infofixer = 100,
-		/obj/item/organ/ears/bronze = 100,
+		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 	)
