@@ -25,6 +25,7 @@
 	modifies_speech = TRUE
 	blocks_surgery = FALSE
 
+/* Ill find a way around this later
 /obj/item/clothing/mask/carnival_mask/real/Initialize()
 	. = ..()
 	ADD_TRAIT(src, TRAIT_NODROP, "carnival")
