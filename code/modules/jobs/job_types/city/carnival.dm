@@ -45,12 +45,10 @@
 	suit = null
 	l_pocket = null
 	ears = /obj/item/radio/headset/wcorp/safety
-	glasses = /obj/item/clothing/glasses/hud/health/night
-	mask = /obj/item/clothing/mask/carnival_mask
+	mask = /obj/item/clothing/mask/carnival_mask/real
 	gloves = /obj/item/clothing/gloves/color/black
 
 	backpack_contents = list(
-		/obj/item/silkknife = 1,
 		/obj/item/pda/roboticist = 1,
 		/obj/item/book/granter/crafting_recipe/carnival/weaving_armor = 1,
 		/obj/item/stack/sheet/silk/indigo_simple = 4,
@@ -58,3 +56,10 @@
 		/obj/item/stack/sheet/silk/amber_simple = 4,
 		/obj/item/stack/sheet/silk/steel_simple = 4,
 		/obj/item/stack/sheet/silk/human_simple = 1)
+
+	implants = list(
+		/obj/item/organ/cyberimp/eyes/hud/medical,	//replaces their med nvg
+		/obj/item/organ/eyes/robotic/nightvision,	//replaces their med nvg
+		/obj/item/organ/ears/cybernetic/upgraded,	//t2 ears dont do much
+		/obj/item/organ/heart/cybernetic,			//Wouldve given a t2 but the t2 heart gives epi
+		/obj/item/organ/liver/cybernetic/tier3,) 	//They eat living beings
