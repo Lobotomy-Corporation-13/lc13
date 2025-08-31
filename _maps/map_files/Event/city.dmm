@@ -7185,7 +7185,7 @@
 /area/space)
 "ZD" = (
 /obj/machinery/button/door{
-	id = "outside";
+	id = "southclinic";
 	name = "prosthetics clinic shutters";
 	pixel_y = 26;
 	req_access_txt = "9"
