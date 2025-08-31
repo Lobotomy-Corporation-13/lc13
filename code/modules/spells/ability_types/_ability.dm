@@ -169,8 +169,8 @@
 /obj/effect/proc_holder/ability/mask_ability
 	name = "Toggle Mask"
 	desc = "Toggle your current armors mask."
-	action_icon_state = "neck0"
-	base_icon_state = "neck"
+	action_icon_state = "mask0"
+	base_icon_state = "mask"
 	var/obj/item/clothing/mask/ego_mask/mask = null
 
 /obj/effect/proc_holder/ability/mask_ability/New(loc, obj/item/clothing/mask/ego_mask/ego_mask, ...)

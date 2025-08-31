@@ -78,7 +78,7 @@
 	icon_deny = null
 	products = list(
 		/obj/item/book/granter/crafting_recipe/carnival/weaving_armor = 10,
-		/obj/item/clothing/mask/carnival_mask = 25,
+		//obj/item/clothing/mask/carnival_mask = 25, //This item is pointless now that Carnival armor gives them masks
 		/obj/item/silkknife = 10,
 		/obj/item/storage/bag/silk = 10,
 	)

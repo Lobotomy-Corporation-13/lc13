@@ -45,7 +45,7 @@
 	suit = null
 	l_pocket = null
 	ears = /obj/item/radio/headset/wcorp/safety
-	mask = /obj/item/clothing/mask/carnival_mask/real
+	mask = /obj/item/clothing/mask/ego_mask/carnival_mask/real
 	gloves = /obj/item/clothing/gloves/color/black
 
 	backpack_contents = list(
@@ -62,4 +62,4 @@
 		/obj/item/organ/eyes/robotic/nightvision,	//replaces their med nvg
 		/obj/item/organ/ears/cybernetic/upgraded,	//t2 ears dont do much
 		/obj/item/organ/heart/cybernetic,			//Wouldve given a t2 but the t2 heart gives epi
-		/obj/item/organ/liver/cybernetic/tier3,) 	//They eat living beings
+		/obj/item/organ/liver/cybernetic/tier3) 	//They eat living beings
