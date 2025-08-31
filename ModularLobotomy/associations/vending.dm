@@ -229,7 +229,7 @@
 
 		//Regular shit
 		/obj/item/bodypart/head/robot = 100,
-		//obj/item/bodypart/chest/robot = 100,	//currently broken
+		/obj/item/bodypart/chest/robot = 100,	//testing shows that robot limbs do not make you damage immune, they just redistribute your damage to other limbs, so I'll reenable them
 		/obj/item/bodypart/l_arm/robot = 100,
 		/obj/item/bodypart/r_arm/robot = 100,
 		/obj/item/bodypart/l_leg/robot = 100,
@@ -256,7 +256,9 @@
 		/obj/item/organ/cyberimp/arm/briefcase = 100,
 		/obj/item/organ/cyberimp/arm/surgery = 100,
 		/obj/item/organ/cyberimp/arm/overdrive = 100,
+		/obj/item/organ/eyes/robotic/nightvision = 100,
 		/obj/item/organ/eyes/robotic/infofixer = 100,
+		/obj/item/organ/ears/bronze = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 	)
