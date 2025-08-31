@@ -82,26 +82,3 @@
 	if(user)
 		user.wear_mask_update(src, toggle_off = mask_adjusted)
 		user.update_action_buttons_icon() //when mask is adjusted out, we update all buttons icon so the user's potential internal tank correctly shows as off.
-
-//EGO mask
-/obj/item/clothing/mask/ego_mask
-	name = "ego mask"
-	desc = "an ego mask that you shouldn't be seeing!"
-	icon = 'icons/obj/clothing/ego_gear/masks.dmi'
-	worn_icon = 'icons/mob/clothing/ego_gear/mask.dmi'
-	icon_state = ""
-	var/perma = FALSE
-
-/obj/item/clothing/mask/ego_mask/Destroy()
-	if(perma)
-		return ..()
-	dropped()
-	return ..()
-
-/obj/item/clothing/mask/ego_mask/equipped(mob/user, slot)
-	if(perma)
-		return ..()
-	if(slot != ITEM_SLOT_MASK)
-		Destroy()
-		return
-	. = ..()
