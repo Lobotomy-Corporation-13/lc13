@@ -2761,9 +2761,6 @@
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8
 	},
-/obj/item/ego_weapon/city/carnival_spear{
-	pixel_y = 17
-	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
 "un" = (
@@ -4543,7 +4540,6 @@
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8
 	},
-/obj/item/ego_weapon/city/carnival_spear,
 /obj/item/paper/fluff/silk_guide,
 /obj/item/paper/fluff/silk_guide,
 /turf/open/floor/facility/dark,
@@ -6620,10 +6616,6 @@
 	},
 /obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
 /obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
-/obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
-/obj/item/clothing/mask/carnival_mask,
-/obj/item/clothing/mask/carnival_mask,
-/obj/item/clothing/mask/carnival_mask,
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
 "Vx" = (
