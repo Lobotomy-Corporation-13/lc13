@@ -212,6 +212,9 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 	"Fixer",
 	"Rat", // most fitting, somehow
 
+	"Axe Gang Member",
+	"Axe Gang Leader",
+
 	"Office Fixer",
 ))
 
