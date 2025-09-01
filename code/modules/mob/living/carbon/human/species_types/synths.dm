@@ -43,7 +43,6 @@
 	mutantliver = /obj/item/organ/liver/cybernetic/tier3 //tier3 liver as they eat living beings
 	mutantstomach = /obj/item/organ/lungs/cybernetic/tier3 //same logic as above
 	mutantears = /obj/item/organ/ears/cybernetic
-	mutantappendix = null //shadowbuff :)
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | ERT_SPAWN
 
 /datum/species/synth/on_species_gain(mob/living/carbon/human/H, datum/species/old_species)
