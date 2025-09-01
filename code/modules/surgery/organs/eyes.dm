@@ -183,7 +183,7 @@
 	eye_color = "F00"
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
 	see_in_dark = 8
-	custom_premium_price = 1400
+	custom_premium_price = 1000
 
 /obj/item/organ/eyes/robotic/infofixer
 	name = "high-information eyes"
