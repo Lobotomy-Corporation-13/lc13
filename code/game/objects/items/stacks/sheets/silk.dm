@@ -81,7 +81,7 @@
 
 /obj/item/silkknife
 	name = "silkweaver"
-	desc = "Makes silk by butchering foes, Can't be used on humans with a soul."
+	desc = "Makes silk by carefully processing material within it's holder through the process of butchering."
 	icon_state = "silkweaver"
 	inhand_icon_state = "carnival_silkweaver"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_BACK

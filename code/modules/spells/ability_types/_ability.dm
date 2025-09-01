@@ -191,7 +191,7 @@
 			if(HAS_TRAIT(maskwear, TRAIT_NODROP))
 				to_chat(H, "<span class='warning'>[maskwear] cannot be dropped!</span>")
 				return
-			H.dropItemToGround(maskwear )
+			H.dropItemToGround(maskwear)
 		H.equip_to_slot(new mask, ITEM_SLOT_MASK)
 		return
 	maskwear.Destroy()

@@ -240,6 +240,9 @@
 				else if(ispath(implant_type, /obj/item/organ))
 					var/obj/item/organ/O = new implant_type(H)
 					O.Insert(H, TRUE, FALSE)
+					for(var/X in O.actions)
+						var/datum/action/A = X
+						A.Grant(H) //Why wasnt this a thing before with the amount of stuff with abilities
 
 		// Insert the skillchips associated with this outfit into the target.
 		if(skillchips)
@@ -254,7 +257,6 @@
 				var/activate_msg = skillchip_instance.try_activate_skillchip(TRUE, TRUE)
 				if(activate_msg)
 					CRASH("Failed to activate [H]'s [skillchip_instance], on job [src]. Failure message: [activate_msg]")
-
 
 	H.update_body()
 	return TRUE

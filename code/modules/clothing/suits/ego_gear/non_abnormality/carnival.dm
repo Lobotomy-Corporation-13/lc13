@@ -3,7 +3,8 @@
 	desc = "One of the Robes that the Carnival wear."
 	icon_state = "carnival_robe"
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 0)
-	mask = /obj/item/clothing/mask/ego_mask/carnival_mask/real
+	mask = /obj/item/clothing/mask/ego_mask/carnival_mask
+	blocks_surgery = FALSE
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
 							PRUDENCE_ATTRIBUTE = 80,
@@ -18,21 +19,23 @@
 	icon_state = "carnival_mask"
 	flags_inv = HIDEFACE|HIDEEYES|HIDEFACIALHAIR|HIDESNOUT
 
-//This mask is a true variant only the Carnival gets
-/obj/item/clothing/mask/ego_mask/carnival_mask/real
+//This mask is a true variant only the Carnival gets, do not make this a ego mask or the armor will delete it
+/obj/item/clothing/mask/carnival_mask
 	name = "carnival mask"
 	desc = "A woven face mask that enables the carnival to do their work, the back of the mask is filled with circuitry that would make it difficult to remove from someone's face."
+	icon_state = "carnival_mask"
 	modifies_speech = TRUE
 	blocks_surgery = FALSE
 
-// Ill find a way around this later
-/obj/item/clothing/mask/carnival_mask/real/Initialize()
+//This is fine as the mask specifically has a var so it wont block surgeries
+/obj/item/clothing/mask/carnival_mask/equipped(mob/user, slot)
 	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, "carnival")
+	if(slot == ITEM_SLOT_MASK)
+		ADD_TRAIT(src, TRAIT_NODROP, "carnival")
 
-/obj/item/clothing/mask/carnival_mask/real/can_speak_language(language)
+/obj/item/clothing/mask/carnival_mask/can_speak_language(language)
 	return TRUE //Same exact benefits as a robotic tongue
 
 //Remind me to force the mask to make you talk like LoR Carnival later on
-/obj/item/clothing/mask/carnival_mask/real/handle_speech(datum/source, list/speech_args)
+/obj/item/clothing/mask/carnival_mask/handle_speech(datum/source, list/speech_args)
 	speech_args[SPEECH_SPANS] |= SPAN_ROBOT

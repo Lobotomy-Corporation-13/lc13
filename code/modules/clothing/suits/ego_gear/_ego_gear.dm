@@ -30,7 +30,7 @@
 		var/datum/action/spell_action/ability/item/N = NA.action
 		N.SetItem(src)
 	if(mask)
-		var/obj/effect/proc_holder/ability/mask_ability/MA = new(null, neck)
+		var/obj/effect/proc_holder/ability/mask_ability/MA = new(null, mask)
 		var/datum/action/spell_action/ability/item/M = MA.action
 		M.SetItem(src)
 	if(SSmaptype.chosen_trait == FACILITY_TRAIT_CALLBACK)
@@ -74,6 +74,11 @@
 		if(!istype(neckwear, neck))
 			return
 		neckwear.Destroy()
+	if(mask)
+		var/obj/item/clothing/mask/maskwear = user.get_item_by_slot(ITEM_SLOT_MASK)
+		if(!istype(maskwear, mask))
+			return
+		maskwear.Destroy()
 
 /obj/item/clothing/suit/armor/ego_gear/dropped(mob/user)
 	. = ..()
@@ -87,6 +92,11 @@
 		if(!istype(neckwear, neck))
 			return
 		neckwear.Destroy()
+	if(mask)
+		var/obj/item/clothing/mask/maskwear = user.get_item_by_slot(ITEM_SLOT_MASK)
+		if(!istype(maskwear, mask))
+			return
+		maskwear.Destroy()
 	if(user.has_movespeed_modifier(/datum/movespeed_modifier/too_many_armors))
 		user.remove_movespeed_modifier(/datum/movespeed_modifier/too_many_armors)
 

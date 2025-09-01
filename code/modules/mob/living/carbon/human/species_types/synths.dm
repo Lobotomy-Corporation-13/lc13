@@ -31,6 +31,21 @@
 	disguise_fail_health = 50
 	changesource_flags = MIRROR_BADMIN | WABBAJACK
 
+//A lot can be done if Carnies are their own proper species, wont do it now however
+/datum/species/synth/carnival
+	name = "Carnival Prosthetic"
+	id = "carnival_prosthetic"
+	disguise_fail_health = 231 //This will never matter
+	mutanteyes = /obj/item/organ/eyes/robotic/nightvision //replaces their med nvg
+	mutanttongue = /obj/item/organ/tongue/robot //It fits the bill
+	mutantheart = /obj/item/organ/heart/cybernetic //Cant use a t2 heart as it gives epinephrine on crit
+	mutantlungs = /obj/item/organ/lungs/cybernetic //Theyre no_breath, this doesnt matter
+	mutantliver = /obj/item/organ/liver/cybernetic/tier3 //tier3 liver as they eat living beings
+	mutantstomach = /obj/item/organ/lungs/cybernetic/tier3 //same logic as above
+	mutantears = /obj/item/organ/ears/cybernetic
+	mutantappendix = null //shadowbuff :)
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | ERT_SPAWN
+
 /datum/species/synth/on_species_gain(mob/living/carbon/human/H, datum/species/old_species)
 	..()
 	assume_disguise(old_species, H)

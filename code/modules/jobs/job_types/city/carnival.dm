@@ -30,7 +30,7 @@
 /datum/job/carnival/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
-	H.set_species(/datum/species/synth)
+	H.set_species(/datum/species/synth/carnival)
 	job_important = "You are allowed to enter the ruins to hunt for silk. However, DO NOT LOOT THE WEAPONS, CASH OR ARMOR FROM THE BACKSTREETS! \
 			Your primary goal is to kill monsters in the ruins and/or humans to weave silk so you can then sell it to the humans. \
 			You have a base on the left side of the nest. \
@@ -41,15 +41,14 @@
 	name = "Carnival"
 	jobtype = /datum/job/carnival
 	uniform = /obj/item/clothing/under/suit/black
-	belt = /obj/item/ego_weapon/city/carnival_spear	//So they can catch prey
+	belt = /obj/item/pda/roboticist
 	suit = null
 	l_pocket = null
 	ears = /obj/item/radio/headset/wcorp/safety
-	mask = /obj/item/clothing/mask/ego_mask/carnival_mask/real
+	mask = /obj/item/clothing/mask/carnival_mask
 	gloves = /obj/item/clothing/gloves/color/black
 
 	backpack_contents = list(
-		/obj/item/pda/roboticist = 1,
 		/obj/item/book/granter/crafting_recipe/carnival/weaving_armor = 1,
 		/obj/item/stack/sheet/silk/indigo_simple = 4,
 		/obj/item/stack/sheet/silk/green_simple = 4,
@@ -58,8 +57,5 @@
 		/obj/item/stack/sheet/silk/human_simple = 1)
 
 	implants = list(
-		/obj/item/organ/cyberimp/eyes/hud/medical,	//replaces their med nvg
-		/obj/item/organ/eyes/robotic/nightvision,	//replaces their med nvg
-		/obj/item/organ/ears/cybernetic/upgraded,	//t2 ears dont do much
-		/obj/item/organ/heart/cybernetic,			//Wouldve given a t2 but the t2 heart gives epi
-		/obj/item/organ/liver/cybernetic/tier3) 	//They eat living beings
+		/obj/item/organ/cyberimp/arm/carnival,		//theyre full body prosthetics, the blades are inside them
+		/obj/item/organ/cyberimp/eyes/hud/medical,)	//replaces their med nvg
