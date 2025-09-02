@@ -1,7 +1,7 @@
 /obj/item/organ/cyberimp/arm/carnival
 	name = "carnival tools implants"
 	desc = "Countless sharp blades packed into a small compartment, manipulating the blades inside this implant seems less exhausting compared to others."
-	contents = newlist(/obj/item/silkknife, /obj/item/ego_weapon/city/carnival_spear/arm)
+	contents = newlist(/obj/item/storage/bag/silk, /obj/item/silkknife, /obj/item/ego_weapon/city/carnival_spear/arm)
 
 /obj/item/organ/cyberimp/arm/carnival/Extend(/obj/item/item)
 	..()
