@@ -105,11 +105,20 @@
 /obj/item/ego_weapon/justitia/get_clamped_volume()
 	return 40
 
+/// This scythe attacks quickly for a good amount of WHITE damage with a 3-hit combo.
+/// It has a special ability that summons three musical notes around you - landing the combo finisher in one will deal a lot of damage in an AoE,
+/// and buff the weapon by increasing its "Movement", from the first movement to the fourth.
+// The intended gameplay loop with this weapon is to "space out" the music note detonations to prolong Movement for as long as possible. That is to say,
+// you should perform some normal combos on an enemy rather than spending all the finishers on musical notes.
 /obj/item/ego_weapon/da_capo
 	name = "da capo"
 	desc = "A scythe that swings silently and with discipline like a conductor's gestures and baton. \
 	If there were a score for this song, it would be one that sings of the apocalypse."
-	special = "This weapon has a combo system, but only on a single enemy."
+	special = "This weapon has a 3-hit combo. <b>Use it in-hand</b> to spawn 3 musical notes around yourself.\
+	\nLanding your combo's finisher on one of these musical notes will <b>detonate it</b>, dealing 1.2x of the resulting damage in an AoE.\
+	\nDetonating a musical note will also advance your <b>Movement</b>. You begin at the First Movement, and can reach up to the Fourth. \
+	Each Movement increases your weapon's damage further.\
+	\n<Your Movement will <b>expire after 7 seconds</b> if it is not replaced by the next. You will begin anew from the First Movement if you progress past the Fourth."
 	icon_state = "da_capo"
 	force = 40 // It attacks very fast
 	attack_speed = 0.5
@@ -124,23 +133,44 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	crit_multiplier = 0	//No crits for you, you have the combo system.
+	crit_multiplier = 0	// No crits for you, you have the combo system.
 
 	var/combo = 0 // I am copy-pasting justitia "combo" system and nobody can stop me
 	var/combo_time
-	var/combo_wait = 14
-	var/waltz_partner
-	//I'm making Da Capo a waltzing weapon, It should play like a rhythm game. - Kirie.
+	var/combo_timeout_duration = 16
+
+	var/current_movement = 1
+	var/list/movement_force_values = list(36, 40, 44, 48)
+	var/movement_timer
+	var/movement_timer_duration = 7 SECONDS
+
+	var/music_notes_list = list()
+	var/obj/effect/temp_visual/da_capo_ring/music_notes_ring
+	var/music_notes_ready = TRUE
+	var/music_notes_summon_timer
+	var/music_notes_summon_timer_duration = 30 SECONDS
+	var/music_notes_summon_amount = 3
+	var/music_notes_detonation_range = 6
+	var/music_notes_damage_coeff = 1.2
+	var/music_notes_aesthetic_rotation_time = 4 SECONDS
 
 /obj/item/ego_weapon/da_capo/attack(mob/living/M, mob/living/user)
+	var/finished_combo = FALSE // This var just exists to add some recovery time after a finisher
+
+	force = movement_force_values[current_movement] // Pick the correct force value to use depending on what Movement we're on.
+
+	// If the mob we hit was a note, save it in the following var. Otherwise keep it as null
+	var/mob/living/da_capo_musicnote/hit_note
+	if(istype(M, /mob/living/da_capo_musicnote))
+		hit_note = M
+
 	if(!CanUseEgo(user))
 		return
+
+	// Your combo cancels if you took too long to hit the enemy.
 	if(world.time > combo_time)
 		combo = 0
-	if(!waltz_partner || waltz_partner != M)
-		waltz_partner = M
-		combo = 0
-	combo_time = world.time + combo_wait
+	combo_time = world.time + combo_timeout_duration
 	switch(combo)
 		if(1)
 			hitsound = 'sound/weapons/ego/da_capo2.ogg'
@@ -148,14 +178,169 @@
 			hitsound = 'sound/weapons/ego/da_capo3.ogg'
 			force *= 1.5
 			combo = -1
+			finished_combo = TRUE
+			if(hit_note)
+				NoteDetonation(hit_note, user)
+				NextMovement(user)
 		else
 			hitsound = 'sound/weapons/ego/da_capo1.ogg'
 	..()
+	if(finished_combo)
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.4)
+	if(hit_note)
+		qdel(hit_note)
 	combo += 1
 	force = initial(force)
 
+/// Use in-hand to summon the Musical Notes. Has a cooldown.
+/obj/item/ego_weapon/da_capo/attack_self(mob/living/user)
+	. = ..()
+	if(music_notes_ready)
+		music_notes_ready = FALSE
+		INVOKE_ASYNC(src, PROC_REF(SummonNotes), user)
+		addtimer(CALLBACK(src, PROC_REF(ReadyNotes), user), music_notes_summon_timer_duration)
+
+/// Proc that is called by a timer after the cooldown for summoning notes ends. It readies the weapon to summon them again, and alerts the player.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotes(mob/living/user)
+	music_notes_ready = TRUE
+	SEND_SOUND(user, sound(('sound/abnormalities/armyinblack/black_heartbeat.ogg')))
+	to_chat(user, span_nicegreen("You are ready to begin the performance anew - [src] is ready to manifest more notes."))
+
+/// Summons musical notes around the player.
+/obj/item/ego_weapon/da_capo/proc/SummonNotes(mob/living/subject)
+	if(music_notes_summon_amount <= 0)
+		return FALSE
+
+	RingCleanup(music_notes_ring)
+	music_notes_ring = new(get_turf(subject))
+	music_notes_ring.orbit(subject, 0, TRUE, 0, 0, pre_rotation = FALSE)
+
+	for(var/i in 1 to music_notes_summon_amount)
+		var/mob/living/da_capo_musicnote/new_note = new(get_turf(subject))
+		music_notes_list += new_note
+		new_note.BindTo(subject, music_notes_list)
+		RegisterSignal(new_note, COMSIG_PARENT_QDELETING, PROC_REF(NoteDestructionCleanup))
+		new_note.orbit(subject, 4, TRUE, music_notes_aesthetic_rotation_time, pre_rotation = FALSE)
+		sleep((music_notes_aesthetic_rotation_time / music_notes_summon_amount))
+
+/obj/item/ego_weapon/da_capo/proc/NoteDestructionCleanup(mob/living/da_capo_musicnote/obliterated)
+	SIGNAL_HANDLER
+	music_notes_list -= obliterated
+	if(length(music_notes_list) <= 0)
+		INVOKE_ASYNC(src, PROC_REF(RingCleanup), music_notes_ring)
+
+/obj/item/ego_weapon/da_capo/proc/RingCleanup(garbage)
+	if(garbage)
+		QDEL_IN(garbage, 2.5 SECONDS)
+		animate(garbage, 2 SECONDS, alpha = 0)
+
+/// AoE damage from hitting a Note.
+/obj/item/ego_weapon/da_capo/proc/NoteDetonation(mob/living/da_capo_musicnote/hit_note, mob/living/carbon/human/user)
+	playsound(loc, 'sound/effects/screech.ogg', 60, TRUE)
+	new /obj/effect/temp_visual/screech(get_turf(hit_note))
+
+	var/final_damage = force
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	final_damage*=justicemod
+	final_damage*=force_multiplier
+	final_damage*=music_notes_damage_coeff
+
+	for(var/mob/living/L in view(music_notes_detonation_range, hit_note))
+		if(!user.faction_check_mob(L, TRUE))
+			L.deal_damage(final_damage, damtype)
+			new /obj/effect/temp_visual/sparkles(get_turf(L))
+
+/// Advance to the next Movement, increasing weapon damage and giving it some visual flair in your inventory.
+/obj/item/ego_weapon/da_capo/proc/NextMovement(mob/living/carbon/human/user)
+	filters = null
+	var/rgb_color_values = 135
+	var/movement_progress_chat_alert_string = "Da capo - you begin anew at the First Movement."
+	if(current_movement >= 4)
+		current_movement = 1
+		deltimer(movement_timer)
+	else
+		current_movement++
+		StartMovementTimeoutCountdown(user)
+		switch(current_movement)
+			if(2)
+				movement_progress_chat_alert_string = "Sostenuto - you advance to the Second Movement."
+			if(3)
+				movement_progress_chat_alert_string = "Accelerando e Crescendo - you advance to the Third Movement."
+			if(4)
+				movement_progress_chat_alert_string = "Stringendo - you advance to the Fourth Movement."
+		rgb_color_values += current_movement * 30
+		filters += filter(type="drop_shadow", x=0, y=0, size=current_movement - 1, offset = 1, color=rgb(rgb_color_values, rgb_color_values, rgb_color_values))
+	to_chat(user, span_nicegreen(movement_progress_chat_alert_string))
+
+/// Sets a timer for your Movement to expire if you don't refresh it in time. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/StartMovementTimeoutCountdown(mob/living/carbon/human/user)
+	deltimer(movement_timer)
+	movement_timer = addtimer(CALLBACK(src, PROC_REF(MovementTimeout), user), movement_timer_duration, TIMER_STOPPABLE)
+
+/// Returns the weapon to 1st Movement and removes ongoing timers and visuals. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/MovementTimeout(mob/living/carbon/human/user)
+	filters = null
+	current_movement = 1
+	to_chat(user, span_danger("The power accumulated in [src] wanes, and its influence recedes. You must begin anew from the First Movement."))
+	deltimer(movement_timer)
+
 /obj/item/ego_weapon/da_capo/get_clamped_volume()
 	return 40
+
+/// VFX - a ring that encircles the player, in the music notes spin around.
+/// We delete this manually when the weapon runs out of notes.
+/obj/effect/temp_visual/da_capo_ring
+	name = "unending performance"
+	desc = "And again!"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = "da_capo_ring"
+	layer = BELOW_MOB_LAYER
+	duration = 30 SECONDS
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+
+/// This is a dummy mob for Da Capo's ability. It doesn't actually contain any of the behaviour or values necessary for its use.
+// This is because it's a lot easier to adjust values and stuff on the main weapon, rather than having to check two different places when rebalancing it.
+/mob/living/da_capo_musicnote
+	name = "musical note"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = "da_capo_note"
+	density = FALSE
+	throwforce = 0
+	move_resist = INFINITY
+	status_flags = GODMODE
+	var/mob/living/bound_to
+	var/duration = 27 SECONDS
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+
+/mob/living/da_capo_musicnote/Initialize(mapload)
+	. = ..()
+	QDEL_IN(src, duration)
+
+/mob/living/da_capo_musicnote/Destroy(force)
+	if(bound_to)
+		Cleanup(FALSE)
+	return ..()
+
+/mob/living/da_capo_musicnote/proc/BindTo(mob/living/subject, list/list_of_notes)
+	bound_to = subject
+	RegisterSignal(bound_to, COMSIG_PARENT_QDELETING, PROC_REF(Cleanup))
+	RegisterSignal(bound_to, COMSIG_LIVING_DEATH, PROC_REF(Cleanup))
+
+/mob/living/da_capo_musicnote/proc/Cleanup(parent_destroyed = TRUE)
+	SIGNAL_HANDLER
+
+	UnregisterSignal(bound_to, COMSIG_PARENT_QDELETING)
+	UnregisterSignal(bound_to, COMSIG_LIVING_DEATH)
+	bound_to = null
+	if(parent_destroyed)
+		qdel(src)
 
 /obj/item/ego_weapon/mimicry
 	name = "mimicry"
