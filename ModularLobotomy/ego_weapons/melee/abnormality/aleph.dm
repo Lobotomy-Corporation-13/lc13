@@ -178,13 +178,17 @@
 	/// How long it takes for each music note to complete 1 revolution around the user.
 	var/music_notes_aesthetic_rotation_time = 4 SECONDS
 
+	/// Any organic mob killed by a Soundwave() which has a maximum health higher than this value will be headbombed, which is purely aesthetic.
+	// The reason for this is because I don't want to headbomb swarms of weak enemies like Amber Dawns.
+	var/headbomb_hp_requirement = 150
+
 /obj/item/ego_weapon/da_capo/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
 
 	// If the mob we hit was a note, save it in the following var. Otherwise keep it as null
-	var/mob/living/da_capo_musicnote/hit_note
-	if(istype(M, /mob/living/da_capo_musicnote))
+	var/mob/da_capo_musicnote/hit_note
+	if(istype(M, /mob/da_capo_musicnote))
 		hit_note = M
 
 	var/finished_combo = FALSE // This var will be set to TRUE if we land a hit with the final hit of the 3hit combo or 6hit combo.
@@ -234,6 +238,7 @@
 					music_notes_ring.Finale()
 				// SFX
 				playsound(src, 'sound/weapons/ego/da_capo_finale.ogg', 75, FALSE, 5)
+				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/weapons/ego/da_capo_finale_claps.ogg', 80, FALSE, 5), 1 SECONDS)
 				// We're done here
 				combo = -1
 				finished_combo = TRUE
@@ -244,8 +249,8 @@
 	if(hit_note)
 		playsound(src, hitsound, get_clamped_volume(), TRUE) // We aren't hitting anything, but I'd like to have the hitsound anyway, you know? Feedback and stuff
 		if(finished_combo) // Finisher: detonate the note, and progress to the next movement.
-			NoteDetonation(hit_note, user)
 			user.visible_message(span_danger("[user] confidently swings [src] at thin air, causing a melodic blast!"), span_danger("You expertly slice through a musical note with [src], causing a melodic blast!"))
+			NoteDetonation(hit_note, user)
 			NextMovement(user)
 
 		else // You hit a note, but not with a finisher. The note is destroyed with no extra effect. Yikes.
@@ -268,7 +273,7 @@
 /// Cleanup in case this weapon gets destroyed. Will get rid of the ring and any notes.
 /obj/item/ego_weapon/da_capo/Destroy(force)
 	RingCleanup()
-	for(var/mob/living/da_capo_musicnote/note in music_notes_list)
+	for(var/mob/da_capo_musicnote/note in music_notes_list)
 		qdel(note)
 	return ..()
 
@@ -302,7 +307,7 @@
 
 	// Spawn the notes!
 	for(var/i in 1 to music_notes_summon_amount)
-		var/mob/living/da_capo_musicnote/new_note = new(get_turf(subject))
+		var/mob/da_capo_musicnote/new_note = new(get_turf(subject))
 		music_notes_list += new_note
 		new_note.BindTo(subject, music_notes_list) // Important: this is what makes them actually visible to the user
 		RegisterSignal(new_note, COMSIG_PARENT_QDELETING, PROC_REF(NoteDestructionCleanup))
@@ -311,7 +316,7 @@
 		sleep((music_notes_aesthetic_rotation_time / music_notes_summon_amount)) // This makes them look spread out in a circle.
 
 /// Called when a note is destroyed, we remove the note reference from our list and if there are none left, we also call RingCleanup().
-/obj/item/ego_weapon/da_capo/proc/NoteDestructionCleanup(mob/living/da_capo_musicnote/obliterated)
+/obj/item/ego_weapon/da_capo/proc/NoteDestructionCleanup(mob/da_capo_musicnote/obliterated)
 	SIGNAL_HANDLER
 	music_notes_list -= obliterated
 	if(length(music_notes_list) <= 0)
@@ -330,13 +335,13 @@
 
 /// Blows up a note. Will also call NoteDetonationSpecial(), for whoever wants to implement the Al Coda we've discussed.
 // (context: we've talked about Al Coda buffing this weapon to have new types of notes with special effects and/or buffs)
-/obj/item/ego_weapon/da_capo/proc/NoteDetonation(mob/living/da_capo_musicnote/hit_note, mob/living/carbon/human/user)
+/obj/item/ego_weapon/da_capo/proc/NoteDetonation(mob/da_capo_musicnote/hit_note, mob/living/carbon/human/user)
 	playsound(loc, 'sound/weapons/ego/da_capo_note_detonation.ogg', (65 + (current_movement * 3)), TRUE, frequency = 1 + (current_movement * 0.1))
 	new /obj/effect/temp_visual/screech(get_turf(user))
 	Soundwave(music_notes_damage_coeff, music_notes_detonation_range, user)
 
 	INVOKE_ASYNC(src, PROC_REF(NoteDetonationSpecial), hit_note.special_type, user) // Special effects for Al Coda. Unimplemented as of 2025/09/02
-	INVOKE_ASYNC(hit_note, TYPE_PROC_REF(/mob/living/da_capo_musicnote, Consume)) // Plays an animation and deletes the note
+	INVOKE_ASYNC(hit_note, TYPE_PROC_REF(/mob/da_capo_musicnote, Consume)) // Plays an animation and deletes the note
 
 /// Called when detonating a note, to apply effects depending on what the note's special type was. (Al Coda stuff).
 /// Shouldn't rely on the note anymore, it could be deleted by now.
@@ -353,10 +358,24 @@
 	final_damage*=damage_coeff
 
 	for(var/mob/living/L in view(wave_range, user))
-		if(!(user.faction_check_mob(L, TRUE)) && !(target && target == L)) // Second conditional is to not deal damage to the main target, if we want
+		// First conditional for this check: faction check. Second conditional: to exclude our main target, if we receive one. Third: don't hit dead things.
+		if(!(user.faction_check_mob(L, TRUE)) && !(target && target == L) && (L.stat < DEAD))
+			// I have to save these four vars in case our attack qdels the enemy
+			var/turf/hit_turf = get_turf(L)
+			var/victim_name = L.name
+			var/victim_maxhp = L.maxHealth
+			var/victim_biotypes = L.mob_biotypes
+
 			to_chat(L, span_userdanger("The music of the apocalypse pierces through you!"))
 			L.deal_damage(final_damage, damtype)
-			new /obj/effect/temp_visual/sparkles(get_turf(L))
+			// If we're hitting a target with enough max hp, who is an organic mob, and was either deleted or killed by the attack, we headbomb them.
+			// This is purely aesthetic.
+			if((victim_maxhp >= headbomb_hp_requirement) && (victim_biotypes & MOB_ORGANIC) && (!L || L.stat >= DEAD))
+				hit_turf.visible_message(span_danger("\The [victim_name]'s head explodes!"))
+				playsound(hit_turf, 'sound/weapons/ego/da_capo_headbomb.ogg', 75, TRUE)
+				new /obj/effect/gibspawner/generic/trash_disposal(hit_turf) // This type spawns less gibs than usual.
+
+			new /obj/effect/temp_visual/sparkles(hit_turf)
 
 /// Advance to the next Movement, increasing weapon damage and giving it some visual flair.
 /obj/item/ego_weapon/da_capo/proc/NextMovement(mob/living/carbon/human/user)
@@ -451,7 +470,7 @@
 
 /// This is a dummy mob for Da Capo's ability. It isn't an actual AI controlled thing.
 // Uses some code to be only visible to the user, stolen right out of Star Luminary.
-/mob/living/da_capo_musicnote
+/mob/da_capo_musicnote
 	name = "musical note"
 	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
 	icon_state = ""
@@ -473,7 +492,7 @@
 	/// This var holds a string that tells the weapon what to do when this note is detonated. Behaviour for each type should be implemented in the weapon.
 	var/special_type = DA_CAPO_MUSICNOTE_DEFAULT
 
-/mob/living/da_capo_musicnote/Initialize(mapload)
+/mob/da_capo_musicnote/Initialize(mapload)
 	. = ..()
 	// This part makes it actually visible, but only by the person who used the ability
 	visible_image = image(icon, src, visible_icon_state, layer)
@@ -481,35 +500,37 @@
 
 	QDEL_IN(src, duration) // It's a temporary thing.
 
-/mob/living/da_capo_musicnote/Destroy(force)
+/mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
+	if(..())
+		return TRUE
+	if(istype(W, /obj/item/ego_weapon/da_capo))
+		return W.attack(src, user)
+
+/mob/da_capo_musicnote/Destroy(force)
 	Cleanup(TRUE) // We call this with TRUE so it doesn't try to qdel itself again, we're already destroying it
 	return ..()
 
-/// Simplemobs can't attack this.
-/mob/living/da_capo_musicnote/CanBeAttacked()
-	return FALSE
-
 /// We call this proc when a note is hit by Da Capo.
-/mob/living/da_capo_musicnote/proc/Consume()
+/mob/da_capo_musicnote/proc/Consume()
 	if(visible_image)
 		visible_image.icon_state = "da_capo_note_destroyed" // Death animation
 	QDEL_IN(src, 1.5 SECONDS)
 
 // The following two procs are for the "only the user can see this" stuff. Taken from Star Luminary, slightly modified (user's client is stored as a type var)
-/mob/living/da_capo_musicnote/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
+/mob/da_capo_musicnote/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
 	if(!user.client)
 		return
 	user_client = user.client
 	if(user_client)
 		user_client.images |= visible_image
 
-/mob/living/da_capo_musicnote/proc/BecomeInvisibleToUser()
+/mob/da_capo_musicnote/proc/BecomeInvisibleToUser()
 	if(!user_client)
 		return
 	user_client.images -= visible_image
 
 /// Proc called by Da Capo on each note once it is created. Importantly, it will let the user see the notes which are normally invisible.
-/mob/living/da_capo_musicnote/proc/BindTo(mob/living/carbon/human/subject)
+/mob/da_capo_musicnote/proc/BindTo(mob/living/carbon/human/subject)
 	if(subject)
 		bound_to = subject
 		BecomeVisibleToUser(bound_to)
@@ -518,7 +539,7 @@
 
 /// Cleans up the mob, removing references and unregistering signals.
 /// Called when destroyed, with TRUE as a parameter, or called by the signals set in BindTo() without any parameters (so called_by_destroy = FALSE)
-/mob/living/da_capo_musicnote/proc/Cleanup(called_by_destroy = FALSE)
+/mob/da_capo_musicnote/proc/Cleanup(called_by_destroy = FALSE)
 	SIGNAL_HANDLER
 	BecomeInvisibleToUser()
 	QDEL_NULL(visible_image)
