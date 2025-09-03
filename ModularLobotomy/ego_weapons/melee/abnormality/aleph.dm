@@ -457,6 +457,7 @@
 	icon_state = ""
 	var/visible_icon_state = "da_capo_note"
 	var/image/visible_image
+	layer = ABOVE_ALL_MOB_LAYER
 	density = FALSE
 	throwforce = 0
 	move_resist = INFINITY
