@@ -490,7 +490,8 @@
 
 /// We call this proc when a note is hit by Da Capo.
 /mob/living/da_capo_musicnote/proc/Consume()
-	visible_image.icon_state = "da_capo_note_destroyed" // Death animation
+	if(visible_image)
+		visible_image.icon_state = "da_capo_note_destroyed" // Death animation
 	QDEL_IN(src, 1.5 SECONDS)
 
 // The following two procs are for the "only the user can see this" stuff. Taken from Star Luminary, slightly modified (user's client is stored as a type var)
