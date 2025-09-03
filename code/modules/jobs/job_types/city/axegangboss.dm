@@ -10,7 +10,7 @@ Axe Gang Leader
 	selection_color = "#555555"
 	access = list(ACCESS_LAWYER)
 	minimal_access = list(ACCESS_LAWYER)
-	departments = DEPARTMENT_FIXERS // Even closer than rats
+	departments = DEPARTMENT_CITY_ANTAGONIST
 	outfit = /datum/outfit/job/axegangleader
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	exp_requirements = 300
@@ -47,8 +47,8 @@ Axe Gang Leader
 	H.equip_to_slot_or_del(new weapon(H),ITEM_SLOT_HANDS)
 
 /datum/outfit/job/axegangleader
-	name = "Civilan"
-	jobtype = /datum/job/civilian
+	name = "Axe Gang Leader"
+	jobtype = /datum/job/axegangleader
 	uniform = /obj/item/clothing/under/suit/charcoal
 	belt = null
 	ears = null

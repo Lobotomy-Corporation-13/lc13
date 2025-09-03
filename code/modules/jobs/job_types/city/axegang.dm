@@ -10,12 +10,13 @@ Axe Gang Member
 	selection_color = "#555555"
 	access = list(ACCESS_LAWYER)
 	minimal_access = list(ACCESS_LAWYER)
-	departments = DEPARTMENT_FIXERS // Even closer than rats
+	departments = DEPARTMENT_CITY_ANTAGONIST
 	outfit = /datum/outfit/job/axegang
 	display_order = JOB_DISPLAY_ORDER_ANTAG
 	exp_requirements = 300
 	job_important = "Make deals, follow your Leader's orders and perform contracts. You are not allowed to target members of your own gang. \
 		You are encouraged to make deals with both fixers and other syndicates to maximize profits, even if it means double crossing the contractor."
+	//That notif doesn't show up for some reason, hence why the to_chat was coded in below
 
 	allow_bureaucratic_error = FALSE
 	maptype = "city"
@@ -42,8 +43,8 @@ Axe Gang Member
 	H.equip_to_slot_or_del(new weapon(H),ITEM_SLOT_HANDS)
 
 /datum/outfit/job/axegang
-	name = "Civilan"
-	jobtype = /datum/job/civilian
+	name = "Axe Gang Member"
+	jobtype = /datum/job/axegang
 	uniform = /obj/item/clothing/under/suit/charcoal
 	belt = null
 	ears = null
