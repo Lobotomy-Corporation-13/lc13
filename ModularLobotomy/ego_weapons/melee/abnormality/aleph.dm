@@ -168,7 +168,7 @@
 	/// Holds a timer datum for refreshing our ability to summon notes.
 	var/music_notes_summon_timer
 	/// How long is the cooldown on summoning notes?
-	var/music_notes_summon_timer_duration = 30 SECONDS
+	var/music_notes_summon_timer_duration = 40 SECONDS
 	/// How many notes should be summoned on each use? This should probably always be 3. I mean, that's how I balanced it, at least.
 	var/music_notes_summon_amount = 3
 	/// Range for the AoE when a music note is blown up.
@@ -324,7 +324,7 @@
 	SIGNAL_HANDLER
 	if(garbage)
 		UnregisterSignal(garbage, COMSIG_PARENT_QDELETING)
-		if(!garbage.has_notes_remaining && current_movement != 4)
+		if((!(garbage.has_notes_remaining)) && (current_movement != 4))
 			QDEL_IN(garbage, 2.5 SECONDS)
 			animate(garbage, 2 SECONDS, alpha = 0)
 
@@ -391,6 +391,8 @@
 	current_movement = 1
 	to_chat(user, span_nicegreen("Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")) // Why nicegreen? All the other Movement messages use it, so it's easier to track in chat.
 	deltimer(movement_timer)
+	if(music_notes_ring && !(music_notes_ring.has_notes_remaining))
+		RingCleanup(music_notes_ring)
 
 /// This proc controls the actual volume for the weapon's hitsound.
 // for the longest time i thought it had something to do with like, physical volume, as in, size
