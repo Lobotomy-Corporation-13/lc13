@@ -237,7 +237,7 @@
 				// We're done here
 				combo = -1
 				finished_combo = TRUE
-				NextMovement() // This should throw us back to 1st Movement
+				NextMovement(user) // This should throw us back to 1st Movement
 			else
 				hitsound = 'sound/weapons/ego/da_capo1.ogg'
 
