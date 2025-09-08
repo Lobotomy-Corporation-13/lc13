@@ -554,7 +554,7 @@
 	desc = "It hails from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes."
 	special = "Use this weapon in hand to dash. Attack after a dash for an AOE."
 	icon_state = "space"
-	force = 50	//Half white, half black.
+	force = 35	//Half white, half black.
 	damtype = WHITE_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("cuts", "attacks", "slashes")
@@ -568,6 +568,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	var/canaoe
+	var/dash_stamina_drain = 40
 
 /obj/item/ego_weapon/space/Initialize()
 	. = ..()
@@ -593,7 +594,7 @@
 	icon_state = "space_aoe"
 	update_icon_state()
 	user.density = FALSE
-	user.adjustStaminaLoss(15, TRUE, TRUE)
+	user.adjustStaminaLoss(dash_stamina_drain, TRUE, TRUE)
 	user.throw_at(dodgelanding, 3, 2, spin = FALSE) // This still collides with people, by the way.
 	canaoe = TRUE
 	sleep(3)
