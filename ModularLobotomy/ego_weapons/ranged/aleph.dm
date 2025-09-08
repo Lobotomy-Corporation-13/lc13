@@ -328,3 +328,19 @@
 							JUSTICE_ATTRIBUTE = 100
 	)
 	shotsleft = 200
+
+/obj/item/ego_weapon/ranged/willing
+	name = "flesh is willing"
+	desc = "And really nothing will stop it."
+	icon = 'icons/obj/guns/projectile.dmi'
+	icon_state = "l6_cyborg"
+	damtype = RED_DAMAGE
+	force = 60
+	attack_speed = 1.5
+	hitsound = 'sound/weapons/fast_slam.ogg'
+
+	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
+	fire_sound_volume = 20
+	projectile_path = /obj/projectile/ego_bullet/willing
+	autofire = 0.27 SECONDS
+	spread = 6

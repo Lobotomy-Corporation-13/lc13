@@ -127,3 +127,10 @@
 	damage_type = PALE_DAMAGE
 	speed = 2
 	range = 6
+
+/obj/projectile/ego_bullet/willing
+	name = "bone round"
+	icon_state = "bonebullet"
+	speed = 0.6
+	damage = 35
+	damage_type = RED_DAMAGE
