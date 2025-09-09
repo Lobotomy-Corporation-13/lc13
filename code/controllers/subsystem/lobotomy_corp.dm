@@ -113,6 +113,13 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	// The disabled gamespeeds will have to be filtered out in the vote subsystem.
 	var/list/available_gamespeeds = list()
 
+	/// Amount of time before we check to see if there is a Manager, and if there isn't one, we allow any of our crew to start a Core.
+	// ticker.dm uses this value to set a timer on roundstart
+	var/core_selection_restriction_lift_timer = 15 MINUTES
+	/// If this variable is TRUE, then non-managers are allowed to begin Core Suppressions.
+	// Should start as FALSE, then after the amount of time specified in the above var, set to TRUE if there's no Manager, then after a Manager spawns, set to FALSE again.
+	var/core_selection_restriction_lifted = FALSE
+
 /datum/controller/subsystem/lobotomy_corp/Initialize(timeofday)
 	if(SSmaptype.maptype in SSmaptype.combatmaps) // sleep
 		flags |= SS_NO_FIRE
@@ -506,3 +513,20 @@ SUBSYSTEM_DEF(lobotomy_corp)
 
 	// Abno arrival speed
 	SSabnormality_queue.next_abno_spawn_time *= (1 / gamespeed.speed_coefficient)
+
+/// Proc that checks to see if there's a Manager in the round. If there isn't, allows any crewmember to start a Core Suppression.
+// Important: This is called by ticker.dm with a timer set on roundstart
+// Somewhat important: This will also get called after unlocking Extra Cores (post-midnight within time limit)
+// Also important: When a Manager joins, core_selection_restriction_lifted gets set to FALSE
+/datum/controller/subsystem/lobotomy_corp/proc/LiftCoreSelectionRestriction()
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(H.stat == DEAD)
+			continue
+		if((H.mind.assigned_role == "Manager"))
+			return FALSE
+
+	core_selection_restriction_lifted = TRUE
+	priority_announce("Personnel must be advised: As there is no Manager currently active for this shift, Architecture has authorized the lifting of the restrictions pertaining to selection of Core Suppressions. \
+						This means any of our employees may begin a Suppression. The restrictions will remain lifted until a Manager for this shift awakens. Our employees are encouraged to Face the Fear, and Build the Future.",\
+						"Core Selection Override", 'sound/machines/dun_don_alert.ogg')
+	return TRUE

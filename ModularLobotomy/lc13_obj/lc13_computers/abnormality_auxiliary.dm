@@ -138,7 +138,7 @@
 				to_chat(usr, span_warning("A core suppression is already in the progress!"))
 				selected_core_type = null
 				return FALSE
-			if(usr.mind.assigned_role != "Manager")
+			if(usr.mind.assigned_role != "Manager" && !SSlobotomy_corp.core_selection_restriction_lifted)
 				to_chat(usr, span_warning("Only the Manager can start a Core Suppression!"))
 				playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 				return FALSE
@@ -416,7 +416,7 @@
 				return
 			if(istype(SSlobotomy_corp.core_suppression))
 				CRASH("[src] has attempted to activate a core suppression via TGUI whilst its not possible!")
-			if(usr.mind.assigned_role != "Manager")
+			if(usr.mind.assigned_role != "Manager" && !SSlobotomy_corp.core_selection_restriction_lifted)
 				to_chat(usr, span_warning("Only the Manager can start a Core Suppression!"))
 				playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 				return

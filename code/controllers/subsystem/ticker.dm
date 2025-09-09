@@ -368,9 +368,10 @@ SUBSYSTEM_DEF(ticker)
 			iter_human.hardcore_survival_score *= 2 //Double for antags
 		to_chat(iter_human, "<span class='notice'>You will gain [round(iter_human.hardcore_survival_score)] hardcore random points if you survive this round!</span>")
 
-	// Gamespeed vote for LobCorp gamemodes.
+	// Gamespeed vote and no-Manager Core Suppression selection override for LobCorp gamemodes.
 	if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
 		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), 10 SECONDS)
+		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), SSlobotomy_corp.core_selection_restriction_lift_timer)
 
 //These callbacks will fire after roundstart key transfer
 /datum/controller/subsystem/ticker/proc/OnRoundstart(datum/callback/cb)
