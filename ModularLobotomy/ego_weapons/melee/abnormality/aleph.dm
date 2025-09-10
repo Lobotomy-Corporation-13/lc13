@@ -216,6 +216,7 @@
 				combo = -1
 				finished_combo = TRUE
 			else
+				combo = 0 // Trust me. This is due to how the 6hit combo can be at like, hit 4, then wear off mid-combo. This works just fine. Trust me.
 				hitsound = 'sound/weapons/ego/da_capo1.ogg'
 	else
 		// The code for the 6-hit combo: on the Fourth Movement.
