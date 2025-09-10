@@ -350,15 +350,15 @@
 	shotsleft = 100
 	reloadtime = 3 SECONDS
 	autofire = 1.5
-	spread = 22
+	spread = 24
 
 	var/entrenchment_upgrade_timer
 
 	var/datum/component/automatic_fire/autofire_component
 
-	var/list/entrenchment_spread_values = list(22, 10, 4)
-	var/list/entrenchment_autofire_values = list(1.5, 2.3, 2.9)
-	var/list/entrenchment_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
+	var/list/entrenchment_stage_spread_values = list(24, 11, 4)
+	var/list/entrenchment_stage_firerate_values = list(1.5, 2.3, 2.9)
+	var/list/entrenchment_stage_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
 	var/list/entrenchment_stage_firesound = list('sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg')
 	var/list/entrenchment_stage_volume = list(18, 35, 55)
 
@@ -367,15 +367,25 @@
 	autofire_component = GetComponent(/datum/component/automatic_fire)
 	ChangeStats(1)
 
-/obj/item/ego_weapon/ranged/willing/AltClick(mob/user)
+/obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
 	if((CheckIfUserEntrenched(user)) || (!ishuman(user)))
 		return
 	playsound(src, usesound, 80, FALSE)
-	if(do_after(user, 2.5 SECONDS))
+
+	if(do_after(user, 2.5 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
+		user.adjustBruteLoss(20)
+		for(var/i in 1 to 3)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
+
 		var/mob/living/carbon/human/entrencher = user
 		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
 		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), 6 SECONDS, TIMER_STOPPABLE)
 		return
+
+/obj/item/ego_weapon/ranged/willing/AltClick(mob/user)
+	if(reloadtime && !is_reloading)
+		INVOKE_ASYNC(src, PROC_REF(reload_ego), user)
+	return ..()
 
 /obj/item/ego_weapon/ranged/willing/proc/UpgradeEntrench(mob/user)
 	if(ishuman(user))
@@ -391,9 +401,9 @@
 	else
 		reloadtime = 0
 
-	projectile_path = entrenchment_projectile_types[stage]
-	spread = entrenchment_spread_values[stage]
-	autofire_component.autofire_shot_delay = entrenchment_autofire_values[stage]
+	projectile_path = entrenchment_stage_projectile_types[stage]
+	spread = entrenchment_stage_spread_values[stage]
+	autofire_component.autofire_shot_delay = entrenchment_stage_firerate_values[stage]
 
 	fire_sound = entrenchment_stage_firesound[stage]
 	fire_sound_volume = entrenchment_stage_volume[stage]
