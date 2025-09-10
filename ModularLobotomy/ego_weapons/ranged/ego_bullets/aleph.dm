@@ -131,6 +131,6 @@
 /obj/projectile/ego_bullet/willing
 	name = "bone round"
 	icon_state = "bonebullet"
-	speed = 0.6
-	damage = 35
+	speed = 0.4
+	damage = 30
 	damage_type = RED_DAMAGE

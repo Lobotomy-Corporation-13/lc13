@@ -329,6 +329,9 @@
 	)
 	shotsleft = 200
 
+#define STATUS_EFFECT_ENTRENCHED_INITIAL /datum/status_effect/willing_weapon_entrenched
+#define STATUS_EFFECT_ENTRENCHED_FINAL /datum/status_effect/willing_weapon_entrenched/final_stage
+
 /obj/item/ego_weapon/ranged/willing
 	name = "flesh is willing"
 	desc = "And really nothing will stop it."
@@ -337,10 +340,118 @@
 	damtype = RED_DAMAGE
 	force = 60
 	attack_speed = 1.5
+	weapon_weight = WEAPON_HEAVY
 	hitsound = 'sound/weapons/fast_slam.ogg'
+	usesound = 'sound/machines/click.ogg'
 
 	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
 	fire_sound_volume = 20
 	projectile_path = /obj/projectile/ego_bullet/willing
-	autofire = 0.27 SECONDS
-	spread = 6
+	autofire = 2.7
+	spread = 28
+
+	var/entrenchment_stage = 1
+	var/entrenchment_upgrade_timer
+
+	var/list/entrenchment_spread_values = list(28, 15, 6)
+	var/list/entrenchment_autofire_values = list(2.7, 1.6, 0.9)
+
+/obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
+	playsound(src, usesound, 80, FALSE)
+	if(ishuman(user) && do_after(user, 2.5 SECONDS))
+		var/mob/living/carbon/human/entrencher = user
+		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), 5 SECONDS, TIMER_STOPPABLE)
+
+/obj/item/ego_weapon/ranged/willing/proc/UpgradeEntrench(mob/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/entrencher = user
+		var/datum/status_effect/willing_weapon_entrenched/buff = entrencher.has_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		if(buff)
+			entrencher.remove_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+			entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
+
+/datum/status_effect/willing_weapon_entrenched
+	id = "willing_weapon_entrenched"
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
+	duration = 60 SECONDS
+	var/physiology_multiplier = 0.8
+	var/should_immobilize = TRUE
+	var/stage = 2
+	var/obj/item/ego_weapon/ranged/willing/linked_gun
+	var/datum/component/automatic_fire/autofire_component
+
+/datum/status_effect/willing_weapon_entrenched/final_stage
+	physiology_multiplier = 0.6
+	duration = 8 SECONDS
+	stage = 3
+	should_immobilize = FALSE
+
+/datum/status_effect/willing_weapon_entrenched/on_apply()
+	. = ..()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+		to_chat(john_willing, span_info("Applying [src]."))
+		var/obj/item/ego_weapon/ranged/willing/entrenching_gun = john_willing.get_active_held_item()
+		if(istype(entrenching_gun))
+			linked_gun = entrenching_gun
+			autofire_component = linked_gun.GetComponent(/datum/component/automatic_fire)
+			linked_gun.spread = linked_gun.entrenchment_spread_values[stage]
+			autofire_component.autofire_shot_delay = linked_gun.entrenchment_autofire_values[stage]
+
+			to_chat(john_willing, span_info("Gun spread and autofire buffed to stage [stage]."))
+			john_willing.physiology.red_mod *= physiology_multiplier
+			john_willing.physiology.white_mod *= physiology_multiplier
+			john_willing.physiology.black_mod *= physiology_multiplier
+			john_willing.physiology.pale_mod *= physiology_multiplier
+			to_chat(john_willing, span_info("Physiology buffed, coeff [physiology_multiplier]."))
+			if(should_immobilize)
+				RegisterSignal(john_willing, COMSIG_MOVABLE_MOVED, PROC_REF(Revert))
+				to_chat(john_willing, span_info("Registered signal for revert on move."))
+			else
+				john_willing.add_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+				to_chat(john_willing, span_info("Added slowdown."))
+
+/datum/status_effect/willing_weapon_entrenched/on_remove()
+	. = ..()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+		to_chat(john_willing, span_info("Removing [src]."))
+
+		linked_gun.spread = linked_gun.entrenchment_spread_values[1]
+		autofire_component.autofire_shot_delay = linked_gun.entrenchment_autofire_values[1]
+		autofire_component = null
+		deltimer(linked_gun.entrenchment_upgrade_timer)
+		linked_gun = null
+		to_chat(john_willing, span_info("Gun spread and autofire reverted to stage 1."))
+
+		john_willing.physiology.red_mod /= physiology_multiplier
+		john_willing.physiology.white_mod /= physiology_multiplier
+		john_willing.physiology.black_mod /= physiology_multiplier
+		john_willing.physiology.pale_mod /= physiology_multiplier
+		to_chat(john_willing, span_info("Physiology reverted from coeff [physiology_multiplier]."))
+
+		if(should_immobilize)
+			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
+			to_chat(john_willing, span_info("Unregistered signal for revert on move."))
+		else
+			john_willing.remove_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+			to_chat(john_willing, span_info("Removed slowdown."))
+
+/datum/status_effect/willing_weapon_entrenched/proc/Revert()
+	if(ishuman(owner))
+		var/mob/living/carbon/human/john_willing = owner
+		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
+		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
+
+/datum/movespeed_modifier/entrenched
+	multiplicative_slowdown = 2.5
+
+/atom/movable/screen/alert/status_effect/willing_weapon_entrenched
+	name = "Entrenched"
+	icon_state = "entrenched"
+	desc = "You must keep fighting, come what may."
+#undef STATUS_EFFECT_ENTRENCHED_INITIAL
+#undef STATUS_EFFECT_ENTRENCHED_FINAL
+
