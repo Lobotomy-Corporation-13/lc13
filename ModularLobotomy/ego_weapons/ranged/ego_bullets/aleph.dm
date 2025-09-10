@@ -129,8 +129,35 @@
 	range = 6
 
 /obj/projectile/ego_bullet/willing
-	name = "bone round"
+	name = "fleshy round"
 	icon_state = "bonebullet"
-	speed = 0.4
-	damage = 30
+	color = COLOR_MOSTLY_PURE_RED
+	speed = 0.5
+	damage = 20
 	damage_type = RED_DAMAGE
+
+/obj/projectile/ego_bullet/willing/heavy
+	name = "bone round"
+	color = null
+	speed = 0.4
+	damage = 45
+
+/obj/projectile/ego_bullet/willing/heavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+
+/obj/projectile/ego_bullet/willing/superheavy
+	name = "heavy bone round"
+	color = null
+	speed = 0.3
+	damage = 70
+	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/willing/superheavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		for(var/i in 1 to 2)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+	if(pierces >= 2)
+		qdel(src)
