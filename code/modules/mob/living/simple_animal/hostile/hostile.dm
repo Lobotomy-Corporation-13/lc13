@@ -1325,7 +1325,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	patrol_cooldown = world.time + patrol_cooldown_time
 
 /mob/living/simple_animal/hostile/proc/patrol_move(dest)
-	if(client || target || status_flags & GODMODE)
+	if(client || target || status_flags & GODMODE || AIStatus == AI_OFF)
 		patrol_reset()
 		return FALSE
 	if(!dest || !patrol_path || !patrol_path.len) //A-star failed or a path/destination was not set.
