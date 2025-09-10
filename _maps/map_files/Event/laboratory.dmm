@@ -1953,6 +1953,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #4"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "iz" = (
@@ -2219,6 +2220,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #5"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "jM" = (
@@ -2896,6 +2898,7 @@
 	},
 /obj/item/clipboard,
 /obj/item/clipboard,
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/white{
 	color = "#791500"
 	},
@@ -4548,6 +4551,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #1"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "sy" = (
@@ -9562,6 +9566,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #3"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "MK" = (
@@ -10779,6 +10784,7 @@
 	},
 /obj/item/clipboard,
 /obj/item/clipboard,
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/white{
 	color = "#791500"
 	},
@@ -11007,6 +11013,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #2"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "SA" = (
@@ -12780,6 +12787,7 @@
 /obj/machinery/button/door/indestructible{
 	id = "LSZ Containment Door #6"
 	},
+/obj/item/lcl_pacifiers,
 /turf/open/floor/mineral/titanium/blue,
 /area/centcom)
 "ZP" = (

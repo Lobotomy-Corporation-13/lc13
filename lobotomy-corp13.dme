@@ -4287,6 +4287,7 @@
 #include "ModularLobotomy\lc13_obj\lc13_computers\abnormality_work.dm"
 #include "ModularLobotomy\limbus_labs\!other_overwrites.dm"
 #include "ModularLobotomy\limbus_labs\spawners.dm"
+#include "ModularLobotomy\limbus_labs\lcl_tools\lcl_abno_pacifiers.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_mountain.dm"
 #include "ModularLobotomy\limbus_labs\limbus_abnos\lcl_abno_highsec\lcl_queen_bee.dm"

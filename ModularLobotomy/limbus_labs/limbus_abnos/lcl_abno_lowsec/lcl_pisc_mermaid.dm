@@ -173,6 +173,7 @@
 	melee_damage_lower = 25
 	melee_damage_upper = 30
 	melee_damage_type = BLACK_DAMAGE
+	unstable = TRUE
 	AddBreachEffect()
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/proc/Unbreach()
@@ -187,6 +188,7 @@
 	melee_damage_lower = 5
 	melee_damage_upper = 10
 	melee_damage_type = WHITE_DAMAGE
+	unstable = FALSE
 	AdjustDesire(max_desire)
 	AdjustCounter(max_counter)
 	AdjustHunger(max_hunger)

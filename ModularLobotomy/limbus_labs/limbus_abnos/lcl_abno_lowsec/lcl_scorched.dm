@@ -92,6 +92,7 @@
 	if(blowing_up)
 		return FALSE
 	blowing_up = TRUE
+	unstable = TRUE
 	playsound(get_turf(src), 'sound/abnormalities/scorchedgirl/pre_ability.ogg', 50, 0, 2)
 	if(!forced)
 		if(!do_after(src, 1.5 SECONDS, target = src))
@@ -128,6 +129,7 @@
 	blowing_up = FALSE
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "scorched"
+	unstable = FALSE
 	RemoveBreachEffect()
 	return TRUE
 

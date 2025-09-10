@@ -81,6 +81,7 @@
 	var/breach_overlay_scale = 1.5
 
 	var/special_desc = "" //The description used when 'examine more' is done.
+	var/unstable = FALSE //Can't be affected by pacifiers and some other tools.
 
 /mob/living/simple_animal/hostile/limbus_abno/Initialize(mapload)
 	. = ..()
@@ -499,7 +500,7 @@
 	icon_icon = 'icons/hud/screen_gen.dmi'
 	button_icon_state = "mood_happiness_good"
 	transparent_when_unavailable = TRUE
-	cooldown_time = 8 MINUTES
+	cooldown_time = 20 MINUTES //Severely elongated due to abno pacifiers.
 
 /datum/action/cooldown/limbus_abno_action/emergency_satisfaction/Trigger()
 	. = ..()

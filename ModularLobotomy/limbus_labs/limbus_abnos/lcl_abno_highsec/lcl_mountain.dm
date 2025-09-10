@@ -197,6 +197,7 @@
 	max_starving_patience = max_starving_patience * 6 //Severely increase the patience so they don't spam scream every five second.
 	breached = TRUE
 	satiated = FALSE
+	unstable = TRUE
 	AddBreachEffect()
 
 /mob/living/simple_animal/hostile/limbus_abno/mountain/proc/Unbreach()
@@ -204,6 +205,7 @@
 	melee_damage_upper = 10
 	breached = FALSE
 	max_starving_patience = initial(max_starving_patience)
+	unstable = FALSE
 	icon_state = icon_living
 	AdjustCounter(max_counter)
 	AdjustDesire(max_desire)
