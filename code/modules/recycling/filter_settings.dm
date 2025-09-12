@@ -3,15 +3,20 @@
 	var/name = "default setting"
 	var/list/filter_typepath = list() // lets us set multi item filters if needs be, ie all grenades
 	var/list/category = null
+	var/overlay_scale = 0.34 
 	// might be neat to shift these to a factory setting datum
 
-/datum/filter_setting/proc/get_icon_path()
-	var/obj/o = pick(filter_typepath)
+/datum/filter_setting/proc/get_icon_path(var/index)
+	var/obj/o = filter_typepath[index]
 	return o.icon
 
-/datum/filter_setting/proc/get_icon_state()
-	var/obj/o = pick(filter_typepath)
+/datum/filter_setting/proc/get_icon_state(var/index)
+	var/obj/o = filter_typepath[index]
 	return o.icon_state
+
+/datum/filter_setting/proc/get_icon(var/index)
+	var/obj/o = filter_typepath[index]
+	return icon(o.icon, o.icon_state)
 
 /*
 ################### Materials
@@ -19,7 +24,19 @@
 
 /datum/filter_setting/material/
 	category = "Materials"
+	overlay_scale = 0.5
 
+
+/datum/filter_setting/material/all
+	name = "All Materials"
+	filter_typepath = list(
+		/obj/item/factoryitem/green,
+		/obj/item/factoryitem/red,
+		/obj/item/factoryitem/blue,
+		/obj/item/factoryitem/purple,
+		/obj/item/factoryitem/orange,
+		/obj/item/factoryitem/silver
+		)
 
 /datum/filter_setting/material/green
 	name = "Green Materials"
@@ -56,6 +73,7 @@
 
 /datum/filter_setting/low/flare
 	name = "Flares"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/flashlight/flare)
 
 /datum/filter_setting/low/pcorp_bread
@@ -82,6 +100,7 @@
 
 /datum/filter_setting/low/medipen
 	name = "Medipens"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/reagent_containers/hypospray/medipen/dual)
 
 /datum/filter_setting/low/First_aid_l1
@@ -245,6 +264,7 @@
 
 /datum/filter_setting/medium/all_grenades
 	name = "All Grenades"
+	overlay_scale = 0.5
 	filter_typepath = list(
 		/obj/item/grenade/r_corp,
 		/obj/item/grenade/r_corp/white,
@@ -254,18 +274,22 @@
 
 /datum/filter_setting/medium/grenade
 	name = "Grenade (Red)"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/grenade/r_corp)
 
 /datum/filter_setting/medium/grenade_white
 	name = "Grenade (White)"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/grenade/r_corp/white)
 
 /datum/filter_setting/medium/grenade_black
 	name = "Grenade (Black)"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/grenade/r_corp/black)
 
 /datum/filter_setting/medium/grenade_pale
 	name = "Grenade (Pale)"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/grenade/r_corp/pale)
 
 /datum/filter_setting/medium/rabbit_blade
@@ -308,6 +332,7 @@
 
 /datum/filter_setting/medium/stimpack
 	name = "Stimulants"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/reagent_containers/hypospray/medipen/stimpack)
 
 /*
@@ -320,11 +345,13 @@
 
 /datum/filter_setting/high/thermal
 	name = "Thermals"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/clothing/glasses/thermal)
 
 
 /datum/filter_setting/high/night
 	name = "NVG factory"
+	overlay_scale = 0.5
 	filter_typepath = list(/obj/item/clothing/glasses/night)
 
 

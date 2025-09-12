@@ -1,6 +1,6 @@
 /obj/machinery/conveyor/filter
 	icon = 'icons/obj/recycling.dmi'
-	icon_state = "filter_generic_off" // todo: sprite or something ah
+	icon_state = "filter0"
 	name = "conveyor filter"
 	desc = "A filter that checks for specific items."
 	var/datum/filter_setting/selected_filter = null
@@ -13,13 +13,45 @@
 	. = ..()
 	
 /obj/machinery/conveyor/filter/update_icon_state()
+	icon_state = "filter[abs(operating)]" 
 	cut_overlays()
-	add_overlay(icon('icons/obj/conveyor_filters.dmi', "filter_[filter_output_dir]"))
-	add_overlay(icon('icons/obj/conveyor_filters.dmi', "unfiltered_[unfiltered_output_dir]"))
-	if(selected_filter)
-		var/image/I = image(icon(selected_filter.get_icon_path(), selected_filter.get_icon_state()))
-		I.transform *= 0.5
-		add_overlay(I)
+	add_overlay(icon('icons/obj/recycling.dmi', "filtered_[filter_output_dir]"))
+	add_overlay(icon('icons/obj/recycling.dmi', "unfiltered_[unfiltered_output_dir]"))
+	if(selected_filter && selected_filter.filter_typepath.len > 0)
+		var/image/I
+		switch(selected_filter.filter_typepath.len)
+			if(1)
+				I = image(selected_filter.get_icon(1))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE)
+				add_overlay(I)
+			if(2)
+				I = image(selected_filter.get_icon(1))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE) * matrix(-2,0, MATRIX_TRANSLATE)
+				add_overlay(I - 5)
+				I = image(selected_filter.get_icon(2))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE) * matrix(2,0, MATRIX_TRANSLATE)
+				add_overlay(I + 5)
+			if(3)
+				I = image(selected_filter.get_icon(1))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE) * matrix(-4,0, MATRIX_TRANSLATE)
+				I.transform *= selected_filter.overlay_scale
+				add_overlay(I - 7)
+				I = image(selected_filter.get_icon(2))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE)
+				add_overlay(I)
+				I = image(selected_filter.get_icon(3))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE) * matrix(4,0, MATRIX_TRANSLATE)
+				I.transform *= selected_filter.overlay_scale
+				add_overlay(I + 7)
+			else
+				I = image(selected_filter.get_icon(1))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE) * matrix(-4,0, MATRIX_TRANSLATE)
+				add_overlay(I)
+				I = image(selected_filter.get_icon(2))
+				I.transform = matrix(selected_filter.overlay_scale, MATRIX_SCALE)
+				add_overlay(I)
+				I = image(icon('icons/obj/recycling.dmi', "filter_overflow"))
+				add_overlay(I)
 
 
 /obj/machinery/conveyor/filter/proc/update_desc()

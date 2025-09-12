@@ -422,6 +422,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	singular_name = "conveyor belt"
 	w_class = WEIGHT_CLASS_BULKY
 	merge_type = /obj/item/stack/conveyor
+	bypassmode = 1 // needed to allow making filters and splitters
 	///id for linking
 	var/id = ""
 
@@ -457,5 +458,14 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 /obj/item/paper/guides/conveyor
 	name = "paper- 'Nano-it-up U-build series, #9: Build your very own conveyor belt, in SPACE'"
 	info = "<h1>Congratulations!</h1><p>You are now the proud owner of the best conveyor set available for space mail order! We at Nano-it-up know you love to prepare your own structures without wasting time, so we have devised a special streamlined assembly procedure that puts all other mail-order products to shame!</p><p>Firstly, you need to link the conveyor switch assembly to each of the conveyor belt assemblies. After doing so, you simply need to install the belt assemblies onto the floor, et voila, belt built. Our special Nano-it-up smart switch will detected any linked assemblies as far as the eye can see! This convenience, you can only have it when you Nano-it-up. Stay nano!</p>"
+
+GLOBAL_LIST_INIT(conveyor_recipes, list (
+	new/datum/stack_recipe("conveyor filter", /obj/item/stack/conveyor_filter, 30), \
+	new/datum/stack_recipe("conveyor splitter", /obj/item/stack/conveyor_splitter, 30), \
+	))
+
+/obj/item/stack/conveyor/get_main_recipes()
+	. = ..()
+	. += GLOB.conveyor_recipes
 
 #undef MAX_CONVEYOR_ITEMS_MOVE
