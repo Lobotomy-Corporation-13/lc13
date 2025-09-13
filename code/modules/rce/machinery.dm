@@ -554,6 +554,7 @@
 	output_delay = 10
 	//Storage type for the regen is actually fuel
 	storage_type = /obj/item/factoryitem/red
+	dropped_item = /obj/item/structureconstruction/regen
 
 /obj/machinery/factory_machine/fed_effect/regen/PowerEffect()
 	. = ..()
@@ -581,10 +582,11 @@
 	storage_type = /obj/item/factoryitem/green
 	skin = "floodlight"
 	storage_max = 180
-	fuel_value = 10
-	light_range = 6
+	fuel_value = 20
+	light_range = 8
 	light_power = 3
 	light_system = MOVABLE_LIGHT_DIRECTIONAL
+	dropped_item = /obj/item/structureconstruction/floodlight
 	//I couldnt tell if using machine.stat would cause issues here.
 	var/on = FALSE
 
