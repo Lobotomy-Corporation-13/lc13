@@ -422,20 +422,21 @@
  *
  * Automatic logging and uses pollCandidatesForMob, how convenient
  */
-/proc/offer_control(mob/M)
+/proc/offer_control(mob/M, set_role = null)
 	to_chat(M, "Control of your mob has been offered to dead players.")
 	if(usr)
 		log_admin("[key_name(usr)] has offered control of ([key_name(M)]) to ghosts.")
 		message_admins("[key_name_admin(usr)] has offered control of ([ADMIN_LOOKUPFLW(M)]) to ghosts")
 	var/poll_message = "Do you want to play as [M.real_name]?"
-	if(M.mind && M.mind.assigned_role)
-		poll_message = "[poll_message] Job:[M.mind.assigned_role]."
-	if(M.mind && M.mind.special_role)
-		poll_message = "[poll_message] Status:[M.mind.special_role]."
-	else if(M.mind)
-		var/datum/antagonist/A = M.mind.has_antag_datum(/datum/antagonist/)
-		if(A)
-			poll_message = "[poll_message] Status:[A.name]."
+	if(M.mind)
+		if(M.mind.assigned_role)
+			poll_message = "[poll_message] Job:[M.mind.assigned_role]."
+		if(M.mind.special_role)
+			poll_message = "[poll_message] Status:[M.mind.special_role]."
+		else
+			var/datum/antagonist/A = M.mind.has_antag_datum(/datum/antagonist/)
+			if(A)
+				poll_message = "[poll_message] Status:[A.name]."
 	var/list/mob/dead/observer/candidates = pollCandidatesForMob(poll_message, ROLE_PAI, null, FALSE, 100, M)
 
 	if(LAZYLEN(candidates))
@@ -445,6 +446,9 @@
 		M.ghostize(0)
 		M.key = C.key
 		M.client?.init_verbs()
+		if(set_role)
+			if(M.mind)
+				M.mind.assigned_role = set_role
 		return TRUE
 	else
 		to_chat(M, "There were no ghosts willing to take control.")

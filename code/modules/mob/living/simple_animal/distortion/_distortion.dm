@@ -188,26 +188,15 @@
 			equippable_gear.equip_slowdown = 3
 		else
 			egoist.put_in_hands(new gear(egoist))
-
 	PostUnmanifest(egoist)
-	PollGhosts(egoist)
+	if(key && (!new_egoist || mind)) //A player unmanifested somehow
+		egoist.key = key
+		mind.transfer_to(egoist)
+	else
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(offer_control), egoist, "Civilian")
 	egoist.forceMove(get_turf(src))
 	qdel(src)
 	return
-
-/mob/living/simple_animal/hostile/distortion/proc/PollGhosts(mob/living/carbon/human/egoist)
-	if(!new_egoist || mind) //A player unmanifested somehow
-		egoist.key = key
-		mind.transfer_to(egoist)
-		return
-	var/list/mob/dead/observer/candidates = pollCandidatesForMob("Do you want to play as [egoist.real_name]?", ROLE_PAI, null, FALSE, 100, egoist)
-	if(LAZYLEN(candidates))
-		var/mob/dead/observer/C = pick(candidates)
-		egoist.key = C.key
-		if(C.mind)
-			C.mind.transfer_to(egoist)
-			egoist.mind.assigned_role = "Civilian"
-			return
 
 /mob/living/simple_animal/hostile/distortion/proc/PostUnmanifest(mob/living/carbon/human/egoist)
 	return
