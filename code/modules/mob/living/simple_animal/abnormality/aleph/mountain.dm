@@ -315,7 +315,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/mountain/CanStartPatrol()
 	if(phase <= 1) // Still phase one, we need corpses and can't really fight
-		return !(status_flags & GODMODE)
+		return (AIStatus != AI_OFF && !(status_flags & GODMODE))
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mountain/patrol_reset()
