@@ -265,7 +265,7 @@
 			else
 				datum_reference.current.WorktickFailure(user)
 			total_boxes++
-			datum_reference.current.Worktick(user)
+			datum_reference.current.Worktick(user, work_type = work_type)
 		else
 			if(!CheckStatus(user)) // No punishment if the thing is already breached or any other issue is prevelant.
 				break

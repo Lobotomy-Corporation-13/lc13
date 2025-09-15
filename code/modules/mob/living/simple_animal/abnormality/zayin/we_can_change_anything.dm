@@ -100,7 +100,7 @@
 	sacrifice = TRUE
 	return TRUE
 
-/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type)
 	if(!sacrifice)
 		user.deal_damage(5, RED_DAMAGE) // say goodbye to your kneecaps chucklenuts!
 	else
@@ -113,6 +113,7 @@
 				ramping_speed -= 0.5
 		user.deal_damage(8, RED_DAMAGE) // say goodbye to a bit more than your kneecaps... (total damage is 800 RED).
 		total_damage += 8
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/we_can_change_anything/SpeedWorktickOverride(mob/living/carbon/human/user, work_speed, init_work_speed, work_type)
 	if(!sacrifice)
