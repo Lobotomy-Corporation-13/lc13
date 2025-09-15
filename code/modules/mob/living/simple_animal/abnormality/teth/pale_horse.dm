@@ -65,7 +65,7 @@
 	datum_reference.qliphoth_change(1)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type)
+/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(user.health >= (user.maxHealth * 0.5))
 		user.deal_damage(4, PALE_DAMAGE)
 	return ..()

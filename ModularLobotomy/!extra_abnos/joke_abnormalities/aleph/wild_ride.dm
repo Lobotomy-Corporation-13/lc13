@@ -56,7 +56,7 @@
 /mob/living/simple_animal/hostile/abnormality/wild_ride/SpeedWorktickOverride(mob/living/carbon/human/user, work_speed, init_work_speed, work_type) //THE RIDE NEVER ENDS
 	return 20 + (3 * works_in_a_row)//I. WANT. OFF. THIS. WILD. RIDE!!!!!
 
-/mob/living/simple_animal/hostile/abnormality/wild_ride/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type) //THE RIDE NEVER ENDS
+/mob/living/simple_animal/hostile/abnormality/wild_ride/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type) //THE RIDE NEVER ENDS
 	user.SetImmobilized(21 + (3 * works_in_a_row), ignore_canstun = TRUE)  //I want off this wild ride! (You can't get off!)
 	return ..()
 

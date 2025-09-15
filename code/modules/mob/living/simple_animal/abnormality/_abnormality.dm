@@ -469,14 +469,14 @@ The variable's key needs to be non-numerical.*/
 	return TRUE
 
 // Additional effect on each work tick, whether successful or not
-/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type)
+/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	SHOULD_CALL_PARENT(TRUE)
 	if(!user || !datum_reference)
 		return
 	if(!datum_reference.console)
 		stack_trace("[src] tried to work without a console? user = [user]")
 		return
-	if(ABNO_BUBBLE_OFF & bubble_type)
+	if(ABNO_BALLOON_OFF & bubble_type)
 		return
 	if(prob(20))
 		var/list/output_string_list = GetBubbleText(get_user_level(user), bubble_type, work_type)
@@ -493,14 +493,14 @@ The variable's key needs to be non-numerical.*/
  * Made as a proc for overwrites.
  *
  * user_level - the level of the working user, for /list/generic_bubbles
- * bubble_type - bitflags of available bubble types. If ABNO_BUBBLE_OFF is passed this proc should not be reached.
+ * bubble_type - bitflags of available bubble types. If ABNO_BALLOON_OFF is passed this proc should not be reached.
  * work_type - ABNORMALITY_X_WORK, and is used for pulling from /list/work_bubbles
  */
 /mob/living/simple_animal/hostile/abnormality/proc/GetBubbleText(user_level, bubble_type, work_type)
 	var/list/potential_output = list()
-	if(ABNO_BUBBLE_WORK & bubble_type && !isnull(work_type))
+	if(ABNO_BALLOON_WORK & bubble_type && !isnull(work_type))
 		potential_output += work_bubbles[work_type]
-	if(ABNO_BUBBLE_GENERIC & bubble_type)
+	if(ABNO_BALLOON_GENERIC & bubble_type)
 		potential_output += generic_bubbles[user_level]
 	. = potential_output
 

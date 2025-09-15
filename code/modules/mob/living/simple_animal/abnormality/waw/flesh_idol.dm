@@ -76,7 +76,7 @@
 	heal_amount = initial(heal_amount)
 
 
-/mob/living/simple_animal/hostile/abnormality/flesh_idol/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type)
+/mob/living/simple_animal/hostile/abnormality/flesh_idol/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	var/list/damtypes = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/damage = pick(damtypes)
 	work_damage_type = damage

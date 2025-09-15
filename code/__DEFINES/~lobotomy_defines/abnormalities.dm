@@ -67,7 +67,7 @@
 #define PE_LEFTOVER		"leftover_pe"
 
 // Abnormality Bubble Defines
-#define ABNO_BUBBLE_OFF 		(1<<0)
-#define ABNO_BUBBLE_SPECIFIC 	(1<<1)
-#define ABNO_BUBBLE_WORK		(1<<2)
-#define ABNO_BUBBLE_GENERIC 	(1<<3)
+#define ABNO_BALLOON_OFF 		(1<<0)
+#define ABNO_BALLOON_SPECIFIC 	(1<<1)
+#define ABNO_BALLOON_WORK		(1<<2)
+#define ABNO_BALLOON_GENERIC 	(1<<3)

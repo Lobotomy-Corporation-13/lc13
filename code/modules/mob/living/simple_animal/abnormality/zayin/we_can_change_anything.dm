@@ -100,7 +100,7 @@
 	sacrifice = TRUE
 	return TRUE
 
-/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BUBBLE_GENERIC | ABNO_BUBBLE_SPECIFIC, work_type)
+/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(!sacrifice)
 		user.deal_damage(5, RED_DAMAGE) // say goodbye to your kneecaps chucklenuts!
 	else
