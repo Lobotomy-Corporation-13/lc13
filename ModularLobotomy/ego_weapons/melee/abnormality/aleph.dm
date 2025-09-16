@@ -498,7 +498,7 @@
 	// This part makes it actually visible, but only by the person who used the ability
 	visible_image = image(icon, src, visible_icon_state, layer)
 	visible_image.override = TRUE
-
+	visible_image.filters += filter(type="drop_shadow", x=0, y=0, size = 1, offset = 1, color=rgb(240, 240, 240)) // Players were struggling to find them over darker enemies
 	QDEL_IN(src, duration) // It's a temporary thing.
 
 /mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
@@ -514,6 +514,7 @@
 /// We call this proc when a note is hit by Da Capo.
 /mob/da_capo_musicnote/proc/Consume()
 	if(visible_image)
+		visible_image.filters = null
 		visible_image.icon_state = "da_capo_note_destroyed" // Death animation
 	QDEL_IN(src, 1.5 SECONDS)
 
@@ -543,6 +544,7 @@
 /mob/da_capo_musicnote/proc/Cleanup(called_by_destroy = FALSE)
 	SIGNAL_HANDLER
 	BecomeInvisibleToUser()
+	visible_image.filters = null
 	QDEL_NULL(visible_image)
 	if(bound_to)
 		UnregisterSignal(bound_to, COMSIG_PARENT_QDELETING)
