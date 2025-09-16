@@ -133,14 +133,14 @@
 	icon_state = "bonebullet"
 	color = COLOR_MOSTLY_PURE_RED
 	speed = 0.5
-	damage = 20
+	damage = 22
 	damage_type = RED_DAMAGE
 
 /obj/projectile/ego_bullet/willing/heavy
 	name = "bone round"
 	color = null
 	speed = 0.4
-	damage = 45
+	damage = 50
 
 /obj/projectile/ego_bullet/willing/heavy/on_hit(atom/target, blocked, pierce_hit)
 	. = ..()
@@ -151,7 +151,7 @@
 	name = "heavy bone round"
 	color = null
 	speed = 0.3
-	damage = 70
+	damage = 75
 	projectile_piercing = PASSMOB
 
 /obj/projectile/ego_bullet/willing/superheavy/on_hit(atom/target, blocked, pierce_hit)

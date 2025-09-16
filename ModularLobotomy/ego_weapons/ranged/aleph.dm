@@ -371,13 +371,13 @@
 	if((CheckIfUserEntrenched(user)) || (!ishuman(user)))
 		return
 	playsound(src, usesound, 80, FALSE)
+	var/mob/living/carbon/human/entrencher = user
 
 	if(do_after(user, 2.5 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
-		user.adjustBruteLoss(20)
+		entrencher.adjustBruteLoss(20)
 		for(var/i in 1 to 3)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
 
-		var/mob/living/carbon/human/entrencher = user
 		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
 		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), 6 SECONDS, TIMER_STOPPABLE)
 		return
@@ -446,6 +446,10 @@
 			john_willing.physiology.white_mod *= physiology_multiplier
 			john_willing.physiology.black_mod *= physiology_multiplier
 			john_willing.physiology.pale_mod *= physiology_multiplier
+
+			john_willing.move_resist = MOVE_FORCE_VERY_STRONG
+			john_willing.move_force = MOVE_FORCE_STRONG
+
 			if(should_immobilize)
 				john_willing.Immobilize(1.5 SECONDS, TRUE)
 				RegisterSignal(john_willing, COMSIG_MOVABLE_MOVED, PROC_REF(Revert))
@@ -472,6 +476,9 @@
 		john_willing.physiology.black_mod /= physiology_multiplier
 		john_willing.physiology.pale_mod /= physiology_multiplier
 
+		john_willing.move_resist = MOVE_FORCE_DEFAULT
+		john_willing.move_force = MOVE_FORCE_DEFAULT
+
 		if(should_immobilize)
 			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
 		else
@@ -486,7 +493,7 @@
 		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
 
 /datum/movespeed_modifier/entrenched
-	multiplicative_slowdown = 2
+	multiplicative_slowdown = 2.2
 
 /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
 	name = "Inexorable"
@@ -496,7 +503,7 @@
 /atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
 	name = "Entrenched"
 	icon_state = "entrenched"
-	desc = "Despite the pain and suffering, your flesh must continue the fight."
+	desc = "Despite the pain and suffering, despite being torn to fleshy ribbons, you'll continue the fight."
 
 #undef STATUS_EFFECT_ENTRENCHED_INITIAL
 #undef STATUS_EFFECT_ENTRENCHED_FINAL
