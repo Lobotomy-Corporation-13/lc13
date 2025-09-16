@@ -94,6 +94,10 @@
 	light_on = FALSE
 	update_light()
 
+/mob/living/simple_animal/hostile/abnormality/ardor_moth/Destroy(force)
+	deltimer(stoke_timer)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/Move()
 	..()
 	for(var/turf/open/T in range(1, src))
