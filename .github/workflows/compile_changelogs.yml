@@ -32,8 +32,6 @@ jobs:
           unix2dos html/changelogs/.all_changelog.yml
       - name: Commit
         run: |
-          git config user.name "Cupax3Bot"
-          git config user.email "85813370+Cupax3Bot@users.noreply.github.com"
           git pull origin master
           git add html/changelogs
           git commit -m "Automatic changelog compile [ci skip]" -a || true
@@ -50,4 +48,4 @@ jobs:
       - name: "Push"
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ steps.app-token-generation.outputs.token || secrets.BOT_TOKEN }}
+          github_token: ${{ steps.app-token-generation.outputs.token }}

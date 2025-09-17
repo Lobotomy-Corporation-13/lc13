@@ -23,7 +23,7 @@ export function changelogToYml(changelog, login) {
 export async function processAutoChangelog({ github, context }) {
 	let changelog, userlogin, commitnumber, commitstring
 	switch (context.eventName) {
-		case "pull_request":
+		case "pull_request_target":
 			changelog = parseChangelog(context.payload.pull_request.body)
 			userlogin = context.payload.pull_request.user.login
 			commitnumber = `pr-${context.payload.pull_request.number}`
@@ -36,7 +36,7 @@ export async function processAutoChangelog({ github, context }) {
 			commitstring = `Commit SHA${context.sha}`
 			break;
 		default:
-			console.log("unsupported event type")
+			console.log("unsupported event type: " + context.eventName)
 			return;
 	}
 
