@@ -159,8 +159,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/mountain/death()
 	//Make sure we didn't get cheesed
-	if(health > 0)
-		return
 	if(StageChange(FALSE)) // We go down by one stage
 		return
 	animate(src, alpha = 0, time = 10 SECONDS)
@@ -317,7 +315,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/mountain/CanStartPatrol()
 	if(phase <= 1) // Still phase one, we need corpses and can't really fight
-		return !(status_flags & GODMODE)
+		return (AIStatus != AI_OFF && !(status_flags & GODMODE))
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/mountain/patrol_reset()

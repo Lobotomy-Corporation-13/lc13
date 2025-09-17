@@ -444,7 +444,7 @@
 	icon_state = "wishwell";
 	name = "well";
 	density = 1;
-	icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
 	pixel_y = -3
 	},
 /turf/open/floor/plating/dirt/jungle/wasteland,
@@ -681,7 +681,7 @@
 	icon_state = "wishwell";
 	name = "well";
 	density = 1;
-	icon = 'ModularTegustation/Teguicons/toolabnormalities.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
 	pixel_y = -3
 	},
 /turf/open/floor/plating/ironsand,

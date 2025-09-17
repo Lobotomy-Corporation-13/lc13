@@ -529,6 +529,13 @@
 	min_val = 0.0
 	max_val = 1.0
 
+/datum/config_entry/number/high_pop_ping_threshold
+	config_entry_value = 7
+	integer = TRUE
+
+/datum/config_entry/string/high_pop_ping_roleid
+	config_entry_value = null
+
 // If midnight has started by this time - upon finishing it, the core suppression will be available
 // In 1/10 of a second
 /datum/config_entry/number/suppression_time_limit

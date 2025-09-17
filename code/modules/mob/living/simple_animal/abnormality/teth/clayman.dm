@@ -26,10 +26,10 @@
 	threat_level = TETH_LEVEL
 	start_qliphoth = 1
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = list(50, 50, 50, 50, 50),
-		ABNORMALITY_WORK_INSIGHT = list(50, 50, 50, 50, 50),
-		ABNORMALITY_WORK_ATTACHMENT = list(50, 50, 50, 50, 50),
-		ABNORMALITY_WORK_REPRESSION = list(50, 50, 50, 50, 50),
+		ABNORMALITY_WORK_INSTINCT = 50,
+		ABNORMALITY_WORK_INSIGHT = 50,
+		ABNORMALITY_WORK_ATTACHMENT = 50,
+		ABNORMALITY_WORK_REPRESSION = 50
 	)
 	work_damage_amount = 0
 	work_damage_type = RED_DAMAGE
@@ -40,6 +40,7 @@
 		/datum/ego_datum/armor/clayman,
 	)
 	var/dashready = TRUE
+	var/reforming = FALSE
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
 /mob/living/simple_animal/hostile/abnormality/clayman/WorktickFailure(mob/living/carbon/human/user)
@@ -49,13 +50,41 @@
 	user.deal_damage(6, damage)
 	WorkDamageEffect()
 
+/mob/living/simple_animal/hostile/abnormality/clayman/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
+	var/og_reforming = reforming
+	for(var/work in work_chances)
+		if(work_chances[work] >= 100)
+			reforming = TRUE
+			work_chances[work] = 20 //For some reason setting it like this doesn't bug the work rate but setting the entire list at once does.
+			continue
+		else if(work_chances[work] >= 50)
+			reforming = FALSE
+
+		if(work != work_type)
+			work_chances[work] -= 5
+		else
+			work_chances[work] += 10
+
+	if(reforming != og_reforming)
+		if(reforming)
+			manual_emote("looks like a mess!")
+		else
+			manual_emote("is taking form once more.")
+
+/mob/living/simple_animal/hostile/abnormality/clayman/examine(mob/user)
+	. = ..()
+	for(var/work in work_chances)
+		if(work_chances[work] >= 90)
+			. += "<span class='warning'>It's about to fall apart, you should avoid doing more [work] work on it.</span>"
+
 /mob/living/simple_animal/hostile/abnormality/clayman/CanAttack(atom/the_target)
 	melee_damage_type = pick(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/clayman/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	datum_reference.qliphoth_change(-1)
+	if(!reforming)
+		datum_reference.qliphoth_change(-1)
 
 /mob/living/simple_animal/hostile/abnormality/clayman/proc/Skitter()
 	visible_message(span_warning("[src] Skitters faster!"), span_notice("you hear the patter of hundreds of clay feet"))

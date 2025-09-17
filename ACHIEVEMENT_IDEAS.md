@@ -4,7 +4,7 @@
 - ✅ **IMPLEMENTED** - Obtain silk from mobs 120 times
     - `code\game\objects\items\stacks\sheets\silk.dm`, make the silkweaver track the number of times it has been used.
 - ✅ **IMPLEMENTED** - Forge 50 weapons as a workshop attendant on City of Light
-    - `ModularTegustation\tegu_items\workshop\forging.dm`
+    - `ModularLobotomy/workshop/forging.dm`
 - ✅ **IMPLEMENTED** - Feed a plushie to Basilisoup
     - `code/modules/mob/living/simple_animal/abnormality/he/basilisoup.dm`
 - Collect the golden bough in ER
@@ -14,7 +14,7 @@
 
 ## City of Light Specific
 - ✅ **IMPLEMENTED** - Max out a workshop weapon in City of Light
-    - `ModularTegustation/tegu_items/workshop/_templates.dm`
+    - `ModularLobotomy/workshop/_templates.dm`
 - Trip on a landmine in one of the COL starter rooms
     - *Needs investigation for landmine/trap files*
 
@@ -33,7 +33,7 @@
     - `code/modules/mob/living/simple_animal/abnormality/waw/big_wolf.dm`
     - `code/modules/mob/living/simple_animal/abnormality/waw/red_riding_mercenary.dm`
 - ✅ **IMPLEMENTED** - Use Fell Bullet's shotgun interaction
-    - `ModularTegustation\ego_weapons\ranged\waw.dm`
+    - `ModularLobotomy/ego_weapons/ranged/waw.dm`
 - ✅ **IMPLEMENTED** - Experience the special interaction between SWA and a person with her EGO gift
     - `code\modules\mob\living\simple_animal\abnormality\waw\snow_whites_apple.dm`
 - ✅ **IMPLEMENTED** - Breach Golden Apple with a Yuri plushie
@@ -61,7 +61,7 @@
 - Re-sane 8 agents in the same round
     - *Needs investigation for how to track re-sanes*
 - ❌ **TOO COMPLEX** - Have 5 abno kills as records officer
-    - `ModularTegustation\ego_weapons\_ego_weapon.dm`, just check the mind of the user, and give them a counter.
+    - `ModularLobotomy/ego_weapons/_ego_weapon.dm`, just check the mind of the user, and give them a counter.
 - Beat midnight on B12
     - *Needs investigation for specific midnight files*
 - Beat Abno Blitz (Purple Rare achievement)
@@ -95,11 +95,11 @@
 - Have at least 2 tool abno ego weapons and 1 tool abno ego armour
     - `code/modules/mob/living/simple_animal/abnormality/_tools/`
 - Get a Level 5, 10, 15 and 20 fishing hat respectively
-    - `ModularTegustation\fishing\code\fishing_items\fishing_hat.dm`
+    - `ModularLobotomy/fishing/code/fishing_items/fishing_hat.dm`
 - "Dumbass" - Hit yourself with boomerang weapon.
     - *Needs investigation for boomerang weapon files*
 - ❌ **TOO COMPLEX** - "This is my fixer OC, donut steel." - Have all color fixer weapons on you + Twilight suit.
-    - `ModularTegustation/ego_weapons/melee/non_abnormality/color_fixer.dm`, just check if the player is holding "/obj/item/ego_weapon/city/pt/slash, /obj/item/ego_weapon/black_silence_gloves, /obj/item/ego_weapon/mimicry/kali, /obj/item/ego_weapon/city/reverberation"
+    - `ModularLobotomy/ego_weapons/melee/city/color_fixer.dm`, just check if the player is holding "/obj/item/ego_weapon/city/pt/slash, /obj/item/ego_weapon/black_silence_gloves, /obj/item/ego_weapon/mimicry/kali, /obj/item/ego_weapon/city/reverberation"
 
 ## Special/Easter Eggs
 - ✅ **IMPLEMENTED** - Say "uwu" on the radio achievement
@@ -137,7 +137,7 @@
 
 ## Resource Management
 - ✅ **IMPLEMENTED** - Refine 100 PE boxes (now player-specific)
-    - `ModularTegustation\tegu_items\refinery\refinery.dm`
+    - `ModularLobotomy/refinery/refinery.dm`
 
 ## Death Achievements
 - ✅ **IMPLEMENTED** - Get killed by friendly breach Queen of Hatred
@@ -176,7 +176,7 @@
 
 ## Combat Challenges
 - ✅ **IMPLEMENTED** - Kill Claw (already exists as WhiteMidnight achievement)
-    - `ModularTegustation/tegu_mobs/the_claw.dm`
+    - `ModularLobotomy/extra_mobs/the_claw.dm`
 - ✅ **IMPLEMENTED** - Damage PBird
     - `code/modules/mob/living/simple_animal/abnormality/teth/punishing_bird.dm`
 - ✅ **IMPLEMENTED** - Kill PBird (separate achievement)
@@ -190,7 +190,7 @@
 
 ## Role-Specific
 - ✅ **IMPLEMENTED** - As a clerk role, use a weapon that isn't ZAYIN or TETH
-    - `ModularTegustation\ego_weapons\_ego_weapon.dm`, just check if the weapon has requirments, and if the mind is of a clerk
+    - `ModularLobotomy/ego_weapons/_ego_weapon.dm`, just check if the weapon has requirments, and if the mind is of a clerk
 
 ---
 *Note: More achievement ideas to be added. Files marked with "Needs investigation" require further searching to locate the appropriate implementation files.*

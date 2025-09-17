@@ -45,6 +45,9 @@
 	secsensor.add_hud_to(outfit_owner)
 	medsensor.add_hud_to(outfit_owner)
 
+	// foolish Agent, only I MAY SET THE CORE SUPPRESSIONS...!!!!
+	SSlobotomy_corp.core_selection_restriction_lifted = FALSE
+
 /datum/outfit/job/manager
 	name = "Manager"
 	jobtype = /datum/job/manager
