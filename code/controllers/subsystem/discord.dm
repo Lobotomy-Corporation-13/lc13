@@ -52,6 +52,9 @@ SUBSYSTEM_DEF(discord)
 	/// Is TGS enabled (If not we won't fire because otherwise this is useless)
 	var/enabled = FALSE
 
+	/// Did we give a high-pop ping yet?
+	var/high_pop_pinged = FALSE
+
 /datum/controller/subsystem/discord/Initialize(start_timeofday)
 	common_words = world.file2list("strings/1000_most_common.txt")
 	reverify_cache = list()
@@ -78,6 +81,13 @@ SUBSYSTEM_DEF(discord)
 		return // Dont do shit if its disabled
 	if(notify_members == notify_members_cache)
 		return // Dont re-write the file
+	// If we need to ping people for high pop
+	if(!high_pop_pinged)
+		if(CONFIG_GET(string/high_pop_ping_roleid) != null)
+			var/player_count = get_active_player_count(alive_check=TRUE, afk_check=TRUE)
+			if(player_count >= CONFIG_GET(number/high_pop_ping_threshold))
+				send2chat("<@[CONFIG_GET(string/high_pop_ping_roleid)]> - We have reached [player_count] players, come join!", CONFIG_GET(string/chat_announce_new_game))
+				high_pop_pinged = TRUE
 	// If we are all clear
 	write_notify_file()
 
