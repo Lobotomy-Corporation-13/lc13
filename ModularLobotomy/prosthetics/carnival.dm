@@ -3,6 +3,14 @@
 	desc = "Countless sharp blades packed into a small compartment, manipulating the blades inside this implant seems less exhausting compared to others."
 	contents = newlist(/obj/item/storage/bag/silk/arm, /obj/item/silkknife/arm, /obj/item/ego_weapon/city/carnival_spear/arm)
 
+/obj/item/organ/cyberimp/arm/carnival
+	name = "long carnival claw"
+	desc = "One of the many claws the carnival hide beneath their robes for their hunts"
+
+/obj/item/silkknife/arm
+	name = "silk weaver"
+	desc = "A small set of claws and tendrils which tear apart their victims to produce silk"
+
 /obj/item/organ/cyberimp/arm/carnival/Extend(/obj/item/item)
 	..()
 	//low stam loss due to the fact that you will use this for butchering and combat however stam loss nonetheless
