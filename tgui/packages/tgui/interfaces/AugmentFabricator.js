@@ -237,8 +237,8 @@ const TemplatePage = (props, context) => {
                 {!isValidHex(primaryColor)
                   && primaryColor
                   && primaryColor.length > 0 && (
-                    <Box inline ml={1} color="bad">Invalid Hex</Box>
-                  )}
+                  <Box inline ml={1} color="bad">Invalid Hex</Box>
+                )}
               </LabeledList.Item>
               <LabeledList.Item label="Secondary Color">
                 <Input
@@ -270,8 +270,8 @@ const TemplatePage = (props, context) => {
                 {!isValidHex(secondaryColor)
                   && secondaryColor
                   && secondaryColor.length > 0 && (
-                    <Box inline ml={1} color="bad">Invalid Hex</Box>
-                  )}
+                  <Box inline ml={1} color="bad">Invalid Hex</Box>
+                )}
               </LabeledList.Item>
             </LabeledList>
           </Flex.Item>
@@ -467,8 +467,8 @@ const EffectsPage = (props, context) => {
             {/* Optional: Show base cost if different */}
             {totalCost !== (baseCost
               + selectedEffectsData.reduce((sum, effect) =>
-                  sum + (effect?.ahn_cost || 0), 0)) && (
-              <Box inline ml={1} color="label" fontSize="small">
+                sum + (effect?.ahn_cost || 0), 0)) && (
+                <Box inline ml={1} color="label" fontSize="small">
                 (Base: {baseCost
                   + selectedEffectsData.reduce(
                     (sum, effect) => sum + (effect?.ahn_cost || 0), 0
