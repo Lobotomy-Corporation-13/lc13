@@ -48,16 +48,22 @@ const TemplatePage = (props, context) => {
 
   // State Hooks
   const [selectedFormId, setSelectedFormId] = useSharedState(
-    context, 'formId', null
+    context,
+    'formId',
+    null
   );
   const [selectedRank, setSelectedRank] = useSharedState(context, 'rank', 1);
   const [augName, setAugName] = useSharedState(context, 'augName', '');
   const [augDesc, setAugDesc] = useSharedState(context, 'augDesc', '');
   const [primaryColor, setPrimaryColor] = useSharedState(
-    context, 'primaryColor', '#FFFFFF'
+    context,
+    'primaryColor',
+    '#FFFFFF'
   );
   const [secondaryColor, setSecondaryColor] = useSharedState(
-    context, 'secondaryColor', '#CCCCCC'
+    context,
+    'secondaryColor',
+    '#CCCCCC'
   );
 
   // Destructure data
@@ -228,9 +234,9 @@ const TemplatePage = (props, context) => {
                     verticalAlign: 'middle',
                   }} />
                 {/* Invalid Hex Message */}
-                {!isValidHex(primaryColor) &&
-                  primaryColor &&
-                  primaryColor.length > 0 && (
+                {!isValidHex(primaryColor)
+                  && primaryColor
+                  && primaryColor.length > 0 && (
                     <Box inline ml={1} color="bad">Invalid Hex</Box>
                   )}
               </LabeledList.Item>
@@ -261,9 +267,9 @@ const TemplatePage = (props, context) => {
                     verticalAlign: 'middle',
                   }} />
                 {/* Invalid Hex Message */}
-                {!isValidHex(secondaryColor) &&
-                  secondaryColor &&
-                  secondaryColor.length > 0 && (
+                {!isValidHex(secondaryColor)
+                  && secondaryColor
+                  && secondaryColor.length > 0 && (
                     <Box inline ml={1} color="bad">Invalid Hex</Box>
                   )}
               </LabeledList.Item>
@@ -322,8 +328,8 @@ const TemplatePage = (props, context) => {
             {/* Preview Text (remains the same) */}
             <Box mt={1} fontSize="small">
               {selectedForm
-                ? `${augName || selectedForm.name ||
-                    'Unnamed'} (R${currentRank})`
+                ? `${augName || selectedForm.name
+                    || 'Unnamed'} (R${currentRank})`
                 : 'Select Form'}
             </Box>
           </Flex.Item>
@@ -417,8 +423,8 @@ const EffectsPage = (props, context) => {
     if (!selectedFormId || remainingEp < 0) {
       // Add user-friendly feedback if possible
       alert(
-        'Please ensure a Form is selected and you have ' +
-        'non-negative remaining EP.'
+        'Please ensure a Form is selected and you have '
+        + 'non-negative remaining EP.'
       );
       return;
     }
@@ -430,8 +436,8 @@ const EffectsPage = (props, context) => {
     // Check colors are valid before sending
     if (!isValidHex(primaryColor) || !isValidHex(secondaryColor)) {
       alert(
-        'Please ensure Primary and Secondary colors are ' +
-        'valid hex codes (e.g., #FFFFFF).'
+        'Please ensure Primary and Secondary colors are '
+        + 'valid hex codes (e.g., #FFFFFF).'
       );
       return;
     }
@@ -439,8 +445,8 @@ const EffectsPage = (props, context) => {
     const config = {
       form: selectedFormId, // --- SEND ID ---
       rank: selectedRank,
-      name: augName.trim() || selectedForm?.name ||
-        'Unnamed Augment', // Form name fallback
+      name: augName.trim() || selectedForm?.name
+        || 'Unnamed Augment', // Form name fallback
       description: augDesc.trim(),
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
@@ -459,12 +465,12 @@ const EffectsPage = (props, context) => {
           <Box>
             Total Cost: <AnimatedNumber value={totalCost} /> {currencySymbol}
             {/* Optional: Show base cost if different */}
-            {totalCost !== (baseCost +
-              selectedEffectsData.reduce((sum, effect) =>
-              sum + (effect?.ahn_cost || 0), 0)) && (
+            {totalCost !== (baseCost
+              + selectedEffectsData.reduce((sum, effect) =>
+                  sum + (effect?.ahn_cost || 0), 0)) && (
               <Box inline ml={1} color="label" fontSize="small">
-                (Base: {baseCost +
-                  selectedEffectsData.reduce(
+                (Base: {baseCost
+                  + selectedEffectsData.reduce(
                     (sum, effect) => sum + (effect?.ahn_cost || 0), 0
                   )})
               </Box>
@@ -518,26 +524,26 @@ const EffectsPage = (props, context) => {
                   const currentCount = selectedCounts[effect.id] || 0;
                   const remainingRepeats = maxRepeats - currentCount;
 
-                  const canAfford =
-                    (effect.ep_cost > 0 && effect.ep_cost <= remainingEp)
-                    || (effect.ep_cost < 0 &&
-                      -effect.ep_cost <= remainingNegEp);
+                  const canAfford
+                    = (effect.ep_cost > 0 && effect.ep_cost <= remainingEp)
+                    || (effect.ep_cost < 0
+                      && -effect.ep_cost <= remainingNegEp);
                   const maxReached = isRepeatable && remainingRepeats <= 0;
-                  const alreadyAddedNonRepeatable =
-                    !isRepeatable && currentCount > 0;
+                  const alreadyAddedNonRepeatable
+                    = !isRepeatable && currentCount > 0;
 
                   // Check form restrictions (e.g., negative_immune)
-                  const formRestricted =
-                    selectedForm?.negative_immune && isNegative;
+                  const formRestricted
+                    = selectedForm?.negative_immune && isNegative;
 
-                  const isDisabled = !canAfford || maxReached ||
-                    alreadyAddedNonRepeatable || formRestricted;
+                  const isDisabled = !canAfford || maxReached
+                    || alreadyAddedNonRepeatable || formRestricted;
 
                   let buttonTitle = 'Add Effect';
                   if (isDisabled) {
                     if (formRestricted) {
-                      buttonTitle = `Form '${selectedForm?.name}' ` +
-                        `cannot take negative effects`;
+                      buttonTitle = `Form '${selectedForm?.name}' `
+                        + `cannot take negative effects`;
                     }
                     else if (!canAfford) buttonTitle = 'Not enough EP';
                     else if (maxReached) {
@@ -550,8 +556,8 @@ const EffectsPage = (props, context) => {
 
                   // --- Market Display Logic ---
                   const baseCost = effect.ahn_cost ?? 0;
-                  const currentCost =
-                    effect.current_ahn_cost ?? baseCost; // Fallback to base
+                  const currentCost
+                    = effect.current_ahn_cost ?? baseCost; // Fallback to base
                   const isOnSale = effect.sale_percent > 0;
                   const isMarkedUp = effect.markup_percent > 0;
                   // --- End Market Display Logic ---
@@ -627,8 +633,8 @@ const EffectsPage = (props, context) => {
                           {currentCost} {currencySymbol}
                         </Box>
                         {/* Show original price if different */}
-                        {(isOnSale || isMarkedUp) &&
-                          baseCost !== currentCost && (
+                        {(isOnSale || isMarkedUp)
+                          && baseCost !== currentCost && (
                           <Box
                             color="label"
                             fontSize="tiny"
@@ -750,8 +756,8 @@ const EffectsPage = (props, context) => {
           color="good"
           // --- UPDATED: Disable check ---
           disabled={
-            remainingEp < 0 || !selectedFormId ||
-            !isValidHex(primaryColor) || !isValidHex(secondaryColor)
+            remainingEp < 0 || !selectedFormId
+            || !isValidHex(primaryColor) || !isValidHex(secondaryColor)
           }
           onClick={handleFabricate} />
       </Box>
