@@ -10,8 +10,8 @@
 	name = "Interdimensional Static"
 	desc = "Whatever it was, looks like it got lost."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = 'lost_clown' //Remake this sprite once I fix the errors
-	icon_living = 'lost_clown' //Potential inspirations: SJSM's Ghost Cow/Mad Cow, or The Thing
+	icon_state = 'lost_clown' //Potential for redesign?
+	icon_living = 'lost_clown'
 	icon_dead = 'lost_clown_dead'
 	faction = list("hostile") //Will not attack other abnos, only players and ordeals.
 	maxHealth = 250 //Tbh, I don't know the difference between maxHealth and health
