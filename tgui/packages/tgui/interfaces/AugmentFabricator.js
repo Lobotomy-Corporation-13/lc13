@@ -30,8 +30,10 @@ export const AugmentFabricator = (props, context) => {
         {!hasLoaded ? (<NoticeBox>Loading configuration...</NoticeBox>) : (
           <>
             {page === 'template' && <TemplatePage setPage={setPage} /> }
-            {/* Pass context to EffectsPage if it uses useBackend/useSharedState */}
-            {page === 'effects' && <EffectsPage setPage={setPage} context={context} />}
+            {/* Pass context to EffectsPage */}
+            {page === 'effects' && (
+              <EffectsPage setPage={setPage} context={context} />
+            )}
           </>
         )}
       </Window.Content>
@@ -45,12 +47,18 @@ const TemplatePage = (props, context) => {
   const { act, data } = useBackend(context);
 
   // State Hooks
-  const [selectedFormId, setSelectedFormId] = useSharedState(context, 'formId', null);
+  const [selectedFormId, setSelectedFormId] = useSharedState(
+    context, 'formId', null
+  );
   const [selectedRank, setSelectedRank] = useSharedState(context, 'rank', 1);
   const [augName, setAugName] = useSharedState(context, 'augName', '');
   const [augDesc, setAugDesc] = useSharedState(context, 'augDesc', '');
-  const [primaryColor, setPrimaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor, setSecondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
+  const [primaryColor, setPrimaryColor] = useSharedState(
+    context, 'primaryColor', '#FFFFFF'
+  );
+  const [secondaryColor, setSecondaryColor] = useSharedState(
+    context, 'secondaryColor', '#CCCCCC'
+  );
 
   // Destructure data
   const {
@@ -63,7 +71,8 @@ const TemplatePage = (props, context) => {
   const currentRank = selectedRank || 1;
 
   // Calculations
-  const baseCost = selectedForm ? (selectedForm.base_cost || 0) * currentRank : 0;
+  const baseCost = selectedForm
+    ? (selectedForm.base_cost || 0) * currentRank : 0;
   const baseEp = selectedForm ? (selectedForm.base_ep || 0) * currentRank : 0;
   const rankReq = (rankAttributeReqs?.length > currentRank - 1)
     ? (rankAttributeReqs[currentRank - 1] || 0) : 0;
@@ -78,7 +87,7 @@ const TemplatePage = (props, context) => {
         secondaryColor: sColor,
       });
     }
-    // If inputs are invalid, the backend should handle returning null preview data
+    // Invalid inputs - backend handles null preview data
   };
 
   // Form Button Handler
@@ -96,14 +105,16 @@ const TemplatePage = (props, context) => {
   // Color Input Handlers
   const handlePrimaryColorChange = (e, value) => {
     // Allow empty input for deletion, but prefix with # if needed
-    const newColor = value && value.length > 0 && !value.startsWith('#') ? '#' + value : value;
+    const newColor = value && value.length > 0 && !value.startsWith('#')
+      ? '#' + value : value;
     setPrimaryColor(newColor);
-    // Pass the potentially invalid color for validation check inside requestPreviewUpdate
+    // Pass color for validation in requestPreviewUpdate
     requestPreviewUpdate(selectedFormId, newColor, secondaryColor);
   };
 
   const handleSecondaryColorChange = (e, value) => {
-    const newColor = value && value.length > 0 && !value.startsWith('#') ? '#' + value : value;
+    const newColor = value && value.length > 0 && !value.startsWith('#')
+      ? '#' + value : value;
     setSecondaryColor(newColor);
     requestPreviewUpdate(selectedFormId, primaryColor, newColor);
   };
@@ -121,7 +132,9 @@ const TemplatePage = (props, context) => {
               if (!f || !f.id) return null;
               const formName = f.name || 'Unnamed Form';
               const formDesc = f.desc || formName;
-              const formStats = `(${(f.base_cost || 0)} ${currencySymbol}, ${(f.base_ep || 0)} EP)`;
+              const baseCost = f.base_cost || 0;
+              const baseEP = f.base_ep || 0;
+              const formStats = `(${baseCost} ${currencySymbol}, ${baseEP} EP)`;
               return (
                 <Button
                   key={f.id}
@@ -149,11 +162,18 @@ const TemplatePage = (props, context) => {
         {/* Conditional render for Cost/EP details */}
         {selectedForm && (
           <Box mt={1}>
-            <Box borderBottom={1} borderColor="rgba(255, 255, 255, 0.1)" my={1} />
+            <Box
+              borderBottom={1}
+              borderColor="rgba(255, 255, 255, 0.1)"
+              my={1} />
             {/* Render direct values - ensure baseCost/baseEp are numbers */}
-            <Box mt={1}>Base Cost: {Number(baseCost) || 0} {currencySymbol}</Box>
+            <Box mt={1}>
+              Base Cost: {Number(baseCost) || 0} {currencySymbol}
+            </Box>
             <Box>Base EP: {Number(baseEp) || 0}</Box>
-            <Box color="label" fontSize="small">{selectedForm.desc || 'No description.'}</Box>
+            <Box color="label" fontSize="small">
+              {selectedForm.desc || 'No description.'}
+            </Box>
           </Box>
         )}
       </Section>
@@ -167,7 +187,7 @@ const TemplatePage = (props, context) => {
               <LabeledList.Item label="Augment Name">
                 <Input
                   value={augName}
-                  onInput={(e, value) => setAugName(value)} // Direct state update
+                  onInput={(e, value) => setAugName(value)}
                   width="100%"
                   maxLength={64} // Restore attributes
                   placeholder="E.g., 'My Awesome Arm'" />
@@ -175,7 +195,7 @@ const TemplatePage = (props, context) => {
               <LabeledList.Item label="Description">
                 <TextArea
                   value={augDesc}
-                  onInput={(e, value) => setAugDesc(value)} // Direct state update
+                  onInput={(e, value) => setAugDesc(value)}
                   width="100%"
                   height="60px" // Restore attributes
                   maxLength={256}
@@ -189,11 +209,30 @@ const TemplatePage = (props, context) => {
                   placeholder="#RRGGBB"
                   maxLength={7}
                   // Style for validation feedback
-                  style={{ borderLeft: `5px solid ${isValidHex(primaryColor) ? primaryColor : 'red'}` }} />
+                  style={{
+                    borderLeft:
+                      `5px solid ${isValidHex(primaryColor)
+                        ? primaryColor : 'red'}`,
+                  }} />
                 {/* Color Swatch */}
-                <Box inline width="20px" height="20px" ml={1} backgroundColor={isValidHex(primaryColor) ? primaryColor : 'transparent'} style={{ border: '1px solid grey', verticalAlign: 'middle' }} />
+                <Box
+                  inline
+                  width="20px"
+                  height="20px"
+                  ml={1}
+                  backgroundColor={
+                    isValidHex(primaryColor) ? primaryColor : 'transparent'
+                  }
+                  style={{
+                    border: '1px solid grey',
+                    verticalAlign: 'middle',
+                  }} />
                 {/* Invalid Hex Message */}
-                {!isValidHex(primaryColor) && primaryColor && primaryColor.length > 0 && <Box inline ml={1} color="bad">Invalid Hex</Box>}
+                {!isValidHex(primaryColor) &&
+                  primaryColor &&
+                  primaryColor.length > 0 && (
+                    <Box inline ml={1} color="bad">Invalid Hex</Box>
+                  )}
               </LabeledList.Item>
               <LabeledList.Item label="Secondary Color">
                 <Input
@@ -203,11 +242,30 @@ const TemplatePage = (props, context) => {
                   placeholder="#RRGGBB"
                   maxLength={7}
                   // Style for validation feedback
-                  style={{ borderLeft: `5px solid ${isValidHex(secondaryColor) ? secondaryColor : 'red'}` }} />
+                  style={{
+                    borderLeft:
+                      `5px solid ${isValidHex(secondaryColor)
+                        ? secondaryColor : 'red'}`,
+                  }} />
                 {/* Color Swatch */}
-                <Box inline width="20px" height="20px" ml={1} backgroundColor={isValidHex(secondaryColor) ? secondaryColor : 'transparent'} style={{ border: '1px solid grey', verticalAlign: 'middle' }} />
+                <Box
+                  inline
+                  width="20px"
+                  height="20px"
+                  ml={1}
+                  backgroundColor={
+                    isValidHex(secondaryColor) ? secondaryColor : 'transparent'
+                  }
+                  style={{
+                    border: '1px solid grey',
+                    verticalAlign: 'middle',
+                  }} />
                 {/* Invalid Hex Message */}
-                {!isValidHex(secondaryColor) && secondaryColor && secondaryColor.length > 0 && <Box inline ml={1} color="bad">Invalid Hex</Box>}
+                {!isValidHex(secondaryColor) &&
+                  secondaryColor &&
+                  secondaryColor.length > 0 && (
+                    <Box inline ml={1} color="bad">Invalid Hex</Box>
+                  )}
               </LabeledList.Item>
             </LabeledList>
           </Flex.Item>
@@ -231,7 +289,7 @@ const TemplatePage = (props, context) => {
                 // imageRendering: 'pixelated', // Apply to inner img if needed
                 overflow: 'hidden', // Clip anything overflowing
               }}>
-              {/* Conditionally render the image using Box as="img" OR the placeholder */}
+              {/* Render image OR placeholder */}
               {(previewIconBase64 && typeof previewIconBase64 === 'string') ? (
                 <Box
                   key={previewIconBase64.substring(0, 20)}
@@ -249,10 +307,10 @@ const TemplatePage = (props, context) => {
                     imageRendering: 'pixelated',
                     '-ms-interpolation-mode': 'nearest-neighbor',
 
-                    display: 'block', // Good practice for images filling space
+                    display: 'block', // Good for images filling space
                   }} />
               ) : (
-              // Placeholder Box - needs centering if flex is removed from parent
+              // Placeholder Box - needs centering
                 <Box
                   width="100%" height="100%" display="flex"
                   alignItems="center" justifyContent="center"
@@ -263,14 +321,22 @@ const TemplatePage = (props, context) => {
             </Box>
             {/* Preview Text (remains the same) */}
             <Box mt={1} fontSize="small">
-              {selectedForm ? `${augName || selectedForm.name || 'Unnamed'} (R${currentRank})` : 'Select Form'}
+              {selectedForm
+                ? `${augName || selectedForm.name ||
+                    'Unnamed'} (R${currentRank})`
+                : 'Select Form'}
             </Box>
           </Flex.Item>
         </Flex>
       </Section>
 
       {/* Navigation Button */}
-      <Box borderTop={1} borderColor="rgba(255, 255, 255, 0.1)" mt={2} pt={1} textAlign="right">
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={2}
+        pt={1}
+        textAlign="right">
         <Button
           icon="arrow-right"
           content="Select Effects"
@@ -293,8 +359,12 @@ const EffectsPage = (props, context) => {
   const [augName] = useSharedState(context, 'augName', '');
   const [augDesc] = useSharedState(context, 'augDesc', '');
   const [primaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
-  const [secondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
-  const [selectedEffects, setSelectedEffects] = useSharedState(context, 'selectedEffects', []); // Array of effect IDs
+  const [secondaryColor] = useSharedState(
+    context, 'secondaryColor', '#CCCCCC'
+  );
+  const [selectedEffects, setSelectedEffects] = useSharedState(
+    context, 'selectedEffects', []
+  ); // Array of effect IDs
 
   const {
     forms = [],
@@ -305,7 +375,8 @@ const EffectsPage = (props, context) => {
   // --- UPDATED: Find form by ID ---
   const selectedForm = forms.find(f => f.id === selectedFormId) || null;
   const baseCost = selectedForm ? selectedForm.base_cost * selectedRank : 0;
-  const baseEp = selectedForm ? selectedForm.base_ep + (selectedRank - 1) * 2 : 0;
+  const baseEp = selectedForm
+    ? selectedForm.base_ep + (selectedRank - 1) * 2 : 0;
 
   // Calculations remain the same (selectedCounts, currentEpCost, etc.)
   const selectedCounts = selectedEffects.reduce((counts, effectId) => {
@@ -335,14 +406,20 @@ const EffectsPage = (props, context) => {
     }
   };
   const handleRemoveEffect = indexToRemove => {
-    setSelectedEffects(selectedEffects.filter((_, index) => index !== indexToRemove));
+    const newEffects = selectedEffects.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setSelectedEffects(newEffects);
   };
 
   const handleFabricate = () => {
     // --- UPDATED: Check form ID ---
     if (!selectedFormId || remainingEp < 0) {
-      // Add more user-friendly feedback if possible (e.g., NoticeBox or dedicated message area)
-      alert('Please ensure a Form is selected and you have non-negative remaining EP.');
+      // Add user-friendly feedback if possible
+      alert(
+        'Please ensure a Form is selected and you have ' +
+        'non-negative remaining EP.'
+      );
       return;
     }
     // Optional: Check if name is required, depends on game design
@@ -352,14 +429,18 @@ const EffectsPage = (props, context) => {
     }
     // Check colors are valid before sending
     if (!isValidHex(primaryColor) || !isValidHex(secondaryColor)) {
-      alert('Please ensure Primary and Secondary colors are valid hex codes (e.g., #FFFFFF).');
+      alert(
+        'Please ensure Primary and Secondary colors are ' +
+        'valid hex codes (e.g., #FFFFFF).'
+      );
       return;
     }
 
     const config = {
       form: selectedFormId, // --- SEND ID ---
       rank: selectedRank,
-      name: augName.trim() || selectedForm?.name || 'Unnamed Augment', // Use form name as fallback if blank
+      name: augName.trim() || selectedForm?.name ||
+        'Unnamed Augment', // Form name fallback
       description: augDesc.trim(),
       primaryColor: primaryColor,
       secondaryColor: secondaryColor,
@@ -378,16 +459,20 @@ const EffectsPage = (props, context) => {
           <Box>
             Total Cost: <AnimatedNumber value={totalCost} /> {currencySymbol}
             {/* Optional: Show base cost if different */}
-            {totalCost !== (baseCost + selectedEffectsData.reduce((sum, effect) =>
+            {totalCost !== (baseCost +
+              selectedEffectsData.reduce((sum, effect) =>
               sum + (effect?.ahn_cost || 0), 0)) && (
               <Box inline ml={1} color="label" fontSize="small">
-                (Base: {baseCost + selectedEffectsData.reduce((sum, effect) => sum + (effect?.ahn_cost || 0), 0)})
+                (Base: {baseCost +
+                  selectedEffectsData.reduce(
+                    (sum, effect) => sum + (effect?.ahn_cost || 0), 0
+                  )})
               </Box>
             )}
           </Box>
           <Box textAlign="right">
             <Box color={remainingEp < 0 ? 'bad' : 'good'}>
-              EP: <AnimatedNumber value={remainingEp} /> / {baseEp} {/* Show static base EP */}
+              EP: <AnimatedNumber value={remainingEp} /> / {baseEp}
             </Box>
           </Box>
         </Box>
@@ -396,10 +481,12 @@ const EffectsPage = (props, context) => {
 
       {/* Main Content Area */}
       {/* Flex container for columns */}
-      <Box display="flex" height="calc(100% - 120px)"> {/* Adjust height based on surrounding elements */}
+      <Box display="flex" height="calc(100% - 120px)">
+        {/* Adjust height based on surrounding elements */}
 
         {/* Available Effects Column */}
-        <Box flexBasis="50%" pr={1} overflowY="auto" mr={1}> {/* Added margin right */}
+        <Box flexBasis="50%" pr={1} overflowY="auto" mr={1}>
+          {/* Added margin right */}
           <Section title="Available Effects">
             <Table>
               {/* Header Row */}
@@ -412,12 +499,16 @@ const EffectsPage = (props, context) => {
               </Table.Row>
               {/* Effects Rows */}
               {!effects || effects.length === 0 ? (
-                <Table.Row><Table.Cell colSpan={5}>No effects available.</Table.Cell></Table.Row>
+                <Table.Row>
+                  <Table.Cell colSpan={5}>No effects available.</Table.Cell>
+                </Table.Row>
               ) : (
                 effects.map(effect => {
                   // Safety check for effect data
                   if (!effect || !effect.id || !effect.name) {
-                    console.error('Skipping invalid effect object:', effect);
+                    console.error(
+                      'Skipping invalid effect object:', effect
+                    );
                     return null;
                   }
 
@@ -427,39 +518,78 @@ const EffectsPage = (props, context) => {
                   const currentCount = selectedCounts[effect.id] || 0;
                   const remainingRepeats = maxRepeats - currentCount;
 
-                  const canAfford = (effect.ep_cost > 0 && effect.ep_cost <= remainingEp)
-                    || (effect.ep_cost < 0 && -effect.ep_cost <= remainingNegEp);
+                  const canAfford =
+                    (effect.ep_cost > 0 && effect.ep_cost <= remainingEp)
+                    || (effect.ep_cost < 0 &&
+                      -effect.ep_cost <= remainingNegEp);
                   const maxReached = isRepeatable && remainingRepeats <= 0;
-                  const alreadyAddedNonRepeatable = !isRepeatable && currentCount > 0;
+                  const alreadyAddedNonRepeatable =
+                    !isRepeatable && currentCount > 0;
 
                   // Check form restrictions (e.g., negative_immune)
-                  const formRestricted = (selectedForm?.negative_immune && isNegative);
+                  const formRestricted =
+                    selectedForm?.negative_immune && isNegative;
 
-                  const isDisabled = !canAfford || maxReached || alreadyAddedNonRepeatable || formRestricted;
+                  const isDisabled = !canAfford || maxReached ||
+                    alreadyAddedNonRepeatable || formRestricted;
 
                   let buttonTitle = 'Add Effect';
                   if (isDisabled) {
-                    if (formRestricted) buttonTitle = `Form '${selectedForm?.name}' cannot take negative effects`;
+                    if (formRestricted) {
+                      buttonTitle = `Form '${selectedForm?.name}' ` +
+                        `cannot take negative effects`;
+                    }
                     else if (!canAfford) buttonTitle = 'Not enough EP';
-                    else if (maxReached) buttonTitle = `Max repetitions (${maxRepeats}) reached`;
-                    else if (alreadyAddedNonRepeatable) buttonTitle = 'Cannot add again';
+                    else if (maxReached) {
+                      buttonTitle = `Max repetitions (${maxRepeats}) reached`;
+                    }
+                    else if (alreadyAddedNonRepeatable) {
+                      buttonTitle = 'Cannot add again';
+                    }
                   }
 
                   // --- Market Display Logic ---
                   const baseCost = effect.ahn_cost ?? 0;
-                  const currentCost = effect.current_ahn_cost ?? baseCost; // Fallback to base if missing
+                  const currentCost =
+                    effect.current_ahn_cost ?? baseCost; // Fallback to base
                   const isOnSale = effect.sale_percent > 0;
                   const isMarkedUp = effect.markup_percent > 0;
                   // --- End Market Display Logic ---
 
                   return (
-                    <Table.Row key={effect.id} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                    <Table.Row
+                      key={effect.id}
+                      style={{
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                      }}>
                       <Table.Cell py={1}>
                         <Box fontSize="medium" title={effect.desc || ''}>
                           {effect.name}
                           {/* Optional: Sale/Markup Badges */}
-                          {isOnSale && <Box inline ml={1} px={0.5} backgroundColor="green" color="white" fontSize="tiny" style={{ borderRadius: '3px' }}>SALE</Box>}
-                          {isMarkedUp && <Box inline ml={1} px={0.5} backgroundColor="red" color="white" fontSize="tiny" style={{ borderRadius: '3px' }}>UP</Box>}
+                          {isOnSale && (
+                            <Box
+                              inline
+                              ml={1}
+                              px={0.5}
+                              backgroundColor="green"
+                              color="white"
+                              fontSize="tiny"
+                              style={{ borderRadius: '3px' }}>
+                              SALE
+                            </Box>
+                          )}
+                          {isMarkedUp && (
+                            <Box
+                              inline
+                              ml={1}
+                              px={0.5}
+                              backgroundColor="red"
+                              color="white"
+                              fontSize="tiny"
+                              style={{ borderRadius: '3px' }}>
+                              UP
+                            </Box>
+                          )}
                         </Box>
                         <Box color="label" fontSize="small" mt={0.5}>
                           {effect.desc || 'No description.'}
@@ -467,12 +597,20 @@ const EffectsPage = (props, context) => {
                       </Table.Cell>
                       <Table.Cell collapsing>
                         {isRepeatable && (
-                          <Box color="good" title={`Can be applied up to ${maxRepeats} times.`}>
+                          <Box
+                            color="good"
+                            title={`Can be applied up to ${maxRepeats} times.`}>
                             Repeatable ({remainingRepeats} left)
                           </Box>
                         )}
                         {isNegative && (
-                          <Box color={formRestricted ? 'grey' : 'bad'} title={formRestricted ? `Blocked by form '${selectedForm?.name}'` : 'Grants EP but may have downsides.'}>
+                          <Box
+                            color={formRestricted ? 'grey' : 'bad'}
+                            title={
+                              formRestricted
+                                ? `Blocked by form '${selectedForm?.name}'`
+                                : 'Grants EP but may have downsides.'
+                            }>
                             Negative
                           </Box>
                         )}
@@ -482,21 +620,44 @@ const EffectsPage = (props, context) => {
                       </Table.Cell>
                       {/* Cost Cell (UPDATED) */}
                       <Table.Cell collapsing textAlign="right">
-                        <Box color={isOnSale ? 'good' : (isMarkedUp ? 'bad' : 'label')}>
+                        <Box
+                          color={
+                            isOnSale ? 'good' : (isMarkedUp ? 'bad' : 'label')
+                          }>
                           {currentCost} {currencySymbol}
                         </Box>
                         {/* Show original price if different */}
-                        {(isOnSale || isMarkedUp) && baseCost !== currentCost && (
-                          <Box color="label" fontSize="tiny" style={{ textDecoration: 'line-through' }}>
+                        {(isOnSale || isMarkedUp) &&
+                          baseCost !== currentCost && (
+                          <Box
+                            color="label"
+                            fontSize="tiny"
+                            style={{ textDecoration: 'line-through' }}>
                             ({baseCost})
                           </Box>
                         )}
                         {/* Show percentage */}
-                        {isOnSale && <Box color="good" fontSize="tiny">({effect.sale_percent}% off)</Box>}
-                        {isMarkedUp && <Box color="bad" fontSize="tiny">(+{effect.markup_percent}%)</Box>}
+                        {isOnSale && (
+                          <Box color="good" fontSize="tiny">
+                            ({effect.sale_percent}% off)
+                          </Box>
+                        )}
+                        {isMarkedUp && (
+                          <Box color="bad" fontSize="tiny">
+                            (+{effect.markup_percent}%)
+                          </Box>
+                        )}
                       </Table.Cell>
-                      <Table.Cell collapsing textAlign="right" color={effect.ep_cost > 0 ? 'bad' : (isNegative ? 'good' : 'label')}>
-                        {effect.ep_cost > 0 ? `-${effect.ep_cost}` : (isNegative ? `+${Math.abs(effect.ep_cost)}` : '0')}
+                      <Table.Cell
+                        collapsing
+                        textAlign="right"
+                        color={
+                          effect.ep_cost > 0
+                            ? 'bad' : (isNegative ? 'good' : 'label')
+                        }>
+                        {effect.ep_cost > 0
+                          ? `-${effect.ep_cost}`
+                          : (isNegative ? `+${Math.abs(effect.ep_cost)}` : '0')}
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <Button
@@ -514,10 +675,13 @@ const EffectsPage = (props, context) => {
         </Box>
 
         {/* Selected Effects Column */}
-        <Box flexBasis="50%" pl={1} overflowY="auto" ml={1}> {/* Added margin left */}
+        <Box flexBasis="50%" pl={1} overflowY="auto" ml={1}>
+          {/* Added margin left */}
           <Section title="Selected Effects">
             {selectedEffects.length === 0 ? (
-              <Box color="label" textAlign="center" mt={2}>No effects added yet.</Box>
+              <Box color="label" textAlign="center" mt={2}>
+                No effects added yet.
+              </Box>
             ) : (
               <Table>
                 <Table.Row header>
@@ -530,7 +694,9 @@ const EffectsPage = (props, context) => {
                   if (!effect) {
                     return (
                       <Table.Row key={`missing-${index}-${effectId}`}>
-                        <Table.Cell colSpan={3} color="bad">Error: Effect data missing for ID {effectId}</Table.Cell>
+                        <Table.Cell colSpan={3} color="bad">
+                          Error: Effect data missing for ID {effectId}
+                        </Table.Cell>
                       </Table.Row>
                     );
                   }
@@ -538,8 +704,16 @@ const EffectsPage = (props, context) => {
                   return (
                     <Table.Row key={`${effectId}-${index}`}>
                       <Table.Cell>{effect.name}</Table.Cell>
-                      <Table.Cell collapsing textAlign="right" color={effect.ep_cost > 0 ? 'bad' : (isNegative ? 'good' : 'label')}>
-                        {effect.ep_cost > 0 ? `-${effect.ep_cost}` : (isNegative ? `+${Math.abs(effect.ep_cost)}` : '0')}
+                      <Table.Cell
+                        collapsing
+                        textAlign="right"
+                        color={
+                          effect.ep_cost > 0
+                            ? 'bad' : (isNegative ? 'good' : 'label')
+                        }>
+                        {effect.ep_cost > 0
+                          ? `-${effect.ep_cost}`
+                          : (isNegative ? `+${Math.abs(effect.ep_cost)}` : '0')}
                       </Table.Cell>
                       <Table.Cell collapsing>
                         <Button
@@ -559,7 +733,13 @@ const EffectsPage = (props, context) => {
       </Box> {/* End Flex container for columns */}
 
       {/* Bottom Buttons */}
-      <Box borderTop={1} borderColor="rgba(255, 255, 255, 0.1)" mt={1} pt={1} display="flex" justifyContent="space-between">
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={1}
+        pt={1}
+        display="flex"
+        justifyContent="space-between">
         <Button
           icon="arrow-left"
           content="Back to Template"
@@ -569,7 +749,10 @@ const EffectsPage = (props, context) => {
           content="Fabricate"
           color="good"
           // --- UPDATED: Disable check ---
-          disabled={remainingEp < 0 || !selectedFormId || !isValidHex(primaryColor) || !isValidHex(secondaryColor)}
+          disabled={
+            remainingEp < 0 || !selectedFormId ||
+            !isValidHex(primaryColor) || !isValidHex(secondaryColor)
+          }
           onClick={handleFabricate} />
       </Box>
     </Box>
