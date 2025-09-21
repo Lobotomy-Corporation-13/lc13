@@ -289,8 +289,17 @@
 /// Proc that is called by a timer after the cooldown for summoning notes ends. It readies the weapon to summon them again, and alerts the player.
 /obj/item/ego_weapon/da_capo/proc/ReadyNotes(mob/living/user)
 	music_notes_ready = TRUE
-	SEND_SOUND(user, sound(('sound/abnormalities/armyinblack/black_heartbeat.ogg')))
+	var/sound/sfx = sound('sound/abnormalities/armyinblack/black_heartbeat.ogg')
+	var/sfx_delay = 0.8 SECONDS
+	ReadyNotesWarning(user, sfx)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay * 2)
 	to_chat(user, span_nicegreen("You are ready to begin the performance anew - [src] is ready to manifest more notes."))
+
+/// This proc sends a specified sound to the user, directly, and flashes their screen with a colour.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotesWarning(mob/living/user, sound/sfx)
+	SEND_SOUND(user, sfx)
+	flash_color(user, flash_color = COLOR_PALE_BLUE_GRAY, flash_time = 1 SECONDS)
 
 /// Summons musical notes around the player.
 /obj/item/ego_weapon/da_capo/proc/SummonNotes(mob/living/carbon/human/subject)
