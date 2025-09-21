@@ -467,14 +467,14 @@ const EffectsPage = (props, context) => {
             {/* Optional: Show base cost if different */}
             {totalCost !== (baseCost
               + selectedEffectsData.reduce((sum, effect) =>
-                sum + (effect?.ahn_cost || 0), 0)) && (
+                sum + (effect?.ahn_cost || 0), 0)) &&
               <Box inline ml={1} color="label" fontSize="small">
-                  (Base: {baseCost
-                    + selectedEffectsData.reduce(
-                      (sum, effect) => sum + (effect?.ahn_cost || 0), 0
-                    )})
+                (Base: {baseCost
+                  + selectedEffectsData.reduce(
+                    (sum, effect) => sum + (effect?.ahn_cost || 0), 0
+                  )})
               </Box>
-            )}
+            }
           </Box>
           <Box textAlign="right">
             <Box color={remainingEp < 0 ? 'bad' : 'good'}>
