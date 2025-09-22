@@ -116,6 +116,8 @@
 	if(work_type == "Fall Asleep")
 		user.drowsyness += 30
 		user.Sleeping(30 SECONDS) // Won't get any info, but you can listen for any breaches for 30 seconds
+		var/chosen_dream = pick(subtypesof(/datum/oracle_dream))
+		SpecialDreams(chosen_dream, user)
 		return FALSE
 	return TRUE
 
@@ -131,7 +133,7 @@
 	for(var/mob/living/carbon/human/H in GLOB.clients)
 		if(H.IsSleeping())
 			continue //You need to be sleeping to get notified
-		to_chat(H, "<span class='notice'>Oh.... [abno]... It has breached containment...</span>")
+		to_chat(H, span_notice("Oh.... [abno]... It has breached containment..."))
 
 //ER stuff
 /mob/living/simple_animal/hostile/abnormality/oracle/BreachEffect(mob/living/carbon/human/user, breach_type)//finish this shit
@@ -158,3 +160,85 @@
 		to_chat(L, span_userdanger("Visions of a horrible future flash before your eyes!"))
 		L.deal_damage((150 - get_dist(src, L)), WHITE_DAMAGE)
 	qdel(src)
+
+/mob/living/simple_animal/hostile/abnormality/oracle/proc/SpecialDreams(datum/oracle_dream/dreamt_set, mob/living/carbon/human/dreamer)
+	if(!dreamt_set.dreamt_abnos)
+		return
+	if(!dreamer.IsSleeping())
+		return
+	var/forced_abno = FALSE
+	for(var/mob/living/simple_animal/hostile/abnormality/foresighted_abno in dreamt_set.dreamt_abnos)
+		var/dream_weight = dreamt_set.dreamt_abnos[foresighted_abno]
+		var/index = foresighted_abno.threat_level
+		if(index == ZAYIN_LEVEL && !forced_abno) // Teehee
+			forced_abno = TRUE
+			for(var/obj/machinery/computer/abnormality_queue/Q in GLOB.lobotomy_devices)
+				Q.UpdateAnomaly(foresighted_abno, "dreamed with oracle to change", FALSE)
+				SSabnormality_queue.AnnounceLock()
+				SSabnormality_queue.ClearChoices()
+				minor_announce("Unknown anomalies have caused all extraction attempts to yield the same ZAYIN abnormality, which has been sent to your facility. \
+				Extraction Headquarters is currently searching for a solution, and it apologizes for the inconvenience.", "Extraction Alert:", TRUE)
+		SSabnormality_queue.possible_abnormalities[index][foresighted_abno] *= dream_weight
+	to_chat(dreamer, span_notice(dreamt_set.desc))
+
+#define ABNO_GET(X) /mob/living/simple_animal/hostile/abnormality/##X // This will make our life SO much easier.
+// Base datum type for oracle set dreams.
+/datum/oracle_dream
+	var/name = "Dream of...nothing?"
+	var/desc = "A dream of absolute nothingness. (Contact a developer.)"
+	var/dreamlines = "If you see this, something has gone terribly wrong. (Contact a developer pretty please.)"
+	var/list/dreamt_abnos
+
+// Dreamlines not added, only descriptions. Therefore descriptions are used to notify players which dream was chosen.
+// Obviously, TODO: Dreamlines but dont hold your breath, I am no writer.
+/datum/oracle_dream/black_forest
+	name = "Dream of a Black Forest"
+	desc = "a dream of a forest covered by the deepest dark and the good-intentioned beast at the heart of it."
+	dreamt_abnos = list(ABNO_GET(judgement_bird) = 2, ABNO_GET(big_bird) = 2, ABNO_GET(punishing_bird) = 2)
+
+/datum/oracle_dream/magical_girls
+	name = "Dream of the Magical Defenders"
+	desc = "a dream of a magical team of four, doomed from the very start."
+	dreamt_abnos = list(ABNO_GET(hatred_queen) = 1.5, ABNO_GET(despair_knight) = 1.5, ABNO_GET(greed_king) = 1.5, ABNO_GET(wrath_servant) = 1.5)
+
+/datum/oracle_dream/fairy_feast
+	name = "Dream of a Fairy Feast"
+	desc = "a dream of deceiving beasts and a brutal feast, all orchestrated by their heartbroken queen."
+	dreamt_abnos = list(ABNO_GET(fairy_festival) = 3, ABNO_GET(fairy_gentleman) = 3, ABNO_GET(fairy_longlegs) = 3, ABNO_GET(titania) = 3, ABNO_GET(nobody_is) = 1.5)
+
+/datum/oracle_dream/emerald_path
+	name = "Dream of an Emerald Path"
+	desc = "a dream of a hopeful group of rejects and their journey to make their dreams come true."
+	dreamt_abnos = list(ABNO_GET(woodsman) = 1.5, ABNO_GET(scarecrow) = 1.5, ABNO_GET(scaredy_cat) = 1.5, ABNO_GET(road_home) = 1.5)
+
+/datum/oracle_dream/endless_hunt
+	name = "Dream of the Endless Hunt"
+	desc = "a dream of endless hunts and cyclical hatred. A dog stands besides its master, and a wolf bares its fangs against the hunter."
+	dreamt_abnos = list(ABNO_GET(red_hood) = 1.5, ABNO_GET(big_wolf) = 1.5, ABNO_GET(blue_shepherd) = 1.5, ABNO_GET(red_buddy) = 1.5)
+
+/datum/oracle_dream/human_form
+	name = "Dream of the Human Form"
+	desc = "a dream of human faces and human limbs, human skin and human bones, human organs and human blood, human laughter and human sadness. Everything that makes you human, and makes them not."
+	dreamt_abnos = list(ABNO_GET(nothing_there) = 1.5, ABNO_GET(nobody_is) = 1.5, ABNO_GET(kqe) = 1.5, ABNO_GET(pinocchio) = 1.5)
+
+/datum/oracle_dream/suffocating_abyss
+	name = "Dream of a Suffocating Abyss"
+	desc = "a dream of the abyssal depths where countless eyes gaze upon you with intentions unknown."
+	dreamt_abnos = list(ABNO_GET(dreaming_current) = 2, ABNO_GET(pisc_mermaid) = 2, ABNO_GET(siltcurrent) = 2)
+
+/datum/oracle_dream/forgotten_memorial
+	name = "Dream of a Forgotten Memorial"
+	desc = "a dream of a wasteland left behind by the winds of war, and the lonely memorial that watches over those who, even now, cannot escape the battlefield."
+	dreamt_abnos = list(ABNO_GET(quiet_day) = 2, ABNO_GET(mhz) = 2, ABNO_GET(khz) = 2, ABNO_GET(army) = 2)
+
+/datum/oracle_dream/shrimp_boat
+	name = "Dream of the Shrimpiest Boat"
+	desc = "a dream of your shrimp friends in your shrimp boat, fishing shrimps in the shrimpy sea for the shrimp corporation. Life is shrimply awesome."
+	dreamt_abnos = list(ABNO_GET(shrimp_exec) = 10, ABNO_GET(wellcheers) = 10)
+
+/datum/oracle_dream/forgotten_orchard
+	name = "Dream of an Forgotten Orchard"
+	desc = "a dream of a forgotten apple orchard, littered with rotting fruit and buried tales. Nevertheless, the decaying apples and the maggots within refuse to decay into non-existence."
+	dreamt_abnos = list(ABNO_GET(golden_apple) = 2, ABNO_GET(snow_whites_apple) = 2, ABNO_GET(ebony_queen) = 2)
+
+// Bees, XX Inc, Ying and Yang, One Sin and the Bears
