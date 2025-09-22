@@ -478,13 +478,13 @@ The variable's key needs to be non-numerical.*/
 		return
 	if(ABNO_BALLOON_OFF & bubble_type)
 		return
-	if(prob(20))
+	if(prob(20-(3*(threat_level-1))))
 		var/list/output_string_list = GetBubbleText(get_user_level(user), bubble_type, work_type)
 		if(!LAZYLEN(output_string_list))
 			stack_trace("[src] tried to pick a work text-bubble but had nothing to pick from. user = [user] | work type = [work_type]")
 			return
 		var/output_string = AbnoMessageProcess(pick(output_string_list), user.first_name())
-		for(var/mob/potential_viewer in GLOB.mob_living_list)
+		for(var/mob/potential_viewer in GLOB.player_list)
 			datum_reference.console.balloon_alert(potential_viewer, output_string)
 	return
 

@@ -6,6 +6,7 @@
 
 /// Creates text that will float from the atom upwards to the viewer.
 /atom/proc/balloon_alert(mob/viewer, text)
+	set waitfor = FALSE
 	var/client/viewer_client = viewer.client
 	if (isnull(viewer_client))
 		return
