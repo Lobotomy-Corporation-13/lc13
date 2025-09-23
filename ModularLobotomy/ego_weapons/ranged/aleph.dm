@@ -349,37 +349,65 @@
 	projectile_path = /obj/projectile/ego_bullet/willing
 	shotsleft = 100
 	reloadtime = 3 SECONDS
-	autofire = 1.5
-	spread = 24
+	autofire = 1.3
+	spread = 25
 
+	special = "Reload this weapon by <b>alt-clicking</b> it.\n\
+	You can <b>use this weapon in-hand</b> to spend health to enter the <b>Inexorable</b> state after a brief wind-up, \
+	during which you will gain a slight slowdown, damage resistance, stun immunity, resistance to being pushed, and an unlimited amount of higher caliber bullets.\n\
+	After 7 seconds of being in the Inexorable state, you will enter the <b>Entrenched</b> state, which increases damage resistance further \
+	and empowers the bullets to deal more damage and pierce through a single target.\n\
+	<b>If you move while Entrenched, you will exit the state</b>. \n\
+	You can also cancel the process of activating Inexorable by swapping hands, or dropping or storing the weapon. \
+	Once you've entered Inexorable or Entrenched, you cannot drop or store the weapon."
+
+	// These two vars are for the timer that upgrades Inexorable to Entrenched. It starts running when you use the weapon's ability, and deletes the initial buff and replaces it with the final version.
 	var/entrenchment_upgrade_timer
+	var/entrenchment_upgrade_timer_duration = 7 SECONDS
 
+	/// Holds this weapon's attached Autofire component. We will be modifying it often.
 	var/datum/component/automatic_fire/autofire_component
 
-	var/list/entrenchment_stage_spread_values = list(24, 11, 4)
-	var/list/entrenchment_stage_firerate_values = list(1.5, 2.3, 2.9)
+	// These vars are all associated lists, wherein each index corresponds to a state of the weapon. 1 for base, 2 for inexorable (initial buff) and 3 for entrenched (final buff).
+	/// The spread of the weapon's bullets. Lower is more precise.
+	var/list/entrenchment_stage_spread_values = list(25, 11, 4)
+	/// The fire rate for the weapon. Higher is slower. The reason why it gets slower as your buff progresses, is because you get drastically more powerful ammo.
+	var/list/entrenchment_stage_firerate_values = list(1.3, 2.35, 3.1)
+	// These three lists are self explanatory. Projectile type, fire sound and volume used in each stage.
 	var/list/entrenchment_stage_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
 	var/list/entrenchment_stage_firesound = list('sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg')
 	var/list/entrenchment_stage_volume = list(18, 35, 55)
 
+	/// Lets you store this gun normally into your belt/suit storage/whatever. We disable this when the special ability is active.
+	var/storeable = TRUE
+
 /obj/item/ego_weapon/ranged/willing/Initialize(mapload)
 	. = ..()
+	// We're going to be using this component a few times so might as well pull it
 	autofire_component = GetComponent(/datum/component/automatic_fire)
+	// Keeps stats consistent to the entrenchment_stage_X_values variables. This is in case someone goes to buff/nerf this weapon but does it improperly, so the weapon remains consistent.
 	ChangeStats(1)
 
+/obj/item/ego_weapon/ranged/willing/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning, bypass_equip_delay_self)
+	if(!storeable)
+		return FALSE
+	return ..()
+
+/// When using the weapon in-hand, we activate the special ability. Reload is on altclick instead. Sorry.
 /obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
 	if((CheckIfUserEntrenched(user)) || (!ishuman(user)))
 		return
 	playsound(src, usesound, 80, FALSE)
 	var/mob/living/carbon/human/entrencher = user
 
-	if(do_after(user, 2.5 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
+	// There's a delay, but this happens on the move. You can still cancel obtaining the buff by swapping hands or dropping or storing the weapon.
+	if(do_after(user, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
 		entrencher.adjustBruteLoss(20)
 		for(var/i in 1 to 3)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
 
 		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
-		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), 6 SECONDS, TIMER_STOPPABLE)
+		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), entrenchment_upgrade_timer_duration, TIMER_STOPPABLE)
 		return
 
 /obj/item/ego_weapon/ranged/willing/AltClick(mob/user)
@@ -396,11 +424,17 @@
 			entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
 
 /obj/item/ego_weapon/ranged/willing/proc/ChangeStats(stage)
+	// If someone tries to give this proc a funny number that would cause an out of bounds error, early return.
+	if(!(stage in 1 to 3))
+		return FALSE
+
+	// Unlimited ammo if not in base state.
 	if(stage == 1)
 		reloadtime = initial(reloadtime)
 	else
 		reloadtime = 0
 
+	// Adjust weapon stats and aesthetic elements to match the stage.
 	projectile_path = entrenchment_stage_projectile_types[stage]
 	spread = entrenchment_stage_spread_values[stage]
 	autofire_component.autofire_shot_delay = entrenchment_stage_firerate_values[stage]
@@ -408,6 +442,7 @@
 	fire_sound = entrenchment_stage_firesound[stage]
 	fire_sound_volume = entrenchment_stage_volume[stage]
 
+/// Proc that checks if the user has either of the status effects (inexorable, entrenched)
 /obj/item/ego_weapon/ranged/willing/proc/CheckIfUserEntrenched(mob/living/carbon/human/user)
 	if(istype(user))
 		var/datum/status_effect/willing_weapon_entrenched/buff = user.has_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
@@ -415,17 +450,27 @@
 			return TRUE
 	return FALSE
 
+// Following code corresponds to the status effects granted by the Flesh is Willing weapon.
 /datum/status_effect/willing_weapon_entrenched
 	id = "willing_weapon_entrenched"
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
-	duration = 60 SECONDS
+	duration = 60 SECONDS // This status effect will be manually removed when upgraded to the next.
+
+	/// Multiplier applied to subject's physiology resistances, so 0.5 means you take half damage. Should always be lower (stronger) for the final_stage version,
+	/// and should NEVER be 0.
 	var/physiology_multiplier = 0.8
+	/// Whether this stage of the status effect roots you in place. If it does, you are very briefly immobilized when applied, then further movement breaks the status.
+	/// If it doesn't, you get slowed down.
 	var/should_immobilize = FALSE
+	/// The stage of the weapon this status corresponds to, which controls the stats applied to the weapon according to its own a-lists.
 	var/stage = 2
+	/// The gun that we'll be modifying. This isn't necessarily (but should be in 99.99999% of cases) the gun that applied the effect.
 	var/obj/item/ego_weapon/ranged/willing/linked_gun
+	/// Visuals applied onto the user by the effect.
 	var/mutable_appearance/visual_overlay
 
+/// This is the final stage of the buff, where you get "immobilized" (you can move but it breaks the status) and get stronger buffs.
 /datum/status_effect/willing_weapon_entrenched/final_stage
 	physiology_multiplier = 0.6
 	duration = 15 SECONDS
@@ -437,10 +482,12 @@
 	. = ..()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/john_willing = owner
-		var/obj/item/ego_weapon/ranged/willing/entrenching_gun = john_willing.get_active_held_item()
-		if(istype(entrenching_gun))
+		var/obj/item/ego_weapon/ranged/willing/entrenching_gun = john_willing.is_holding_item_of_type(/obj/item/ego_weapon/ranged/willing)
+		if(istype(entrenching_gun)) // We found the gun in our active hand or offhand(s)
 			linked_gun = entrenching_gun
-			linked_gun.ChangeStats(stage)
+			linked_gun.ChangeStats(stage) // Change the gun's stats (spread, fire rate, ammo type, etc)
+			linked_gun.storeable = FALSE
+			ADD_TRAIT(linked_gun, TRAIT_NODROP, "willing") // You can no longer drop or throw the gun.
 
 			john_willing.physiology.red_mod *= physiology_multiplier
 			john_willing.physiology.white_mod *= physiology_multiplier
@@ -448,7 +495,7 @@
 			john_willing.physiology.pale_mod *= physiology_multiplier
 
 			john_willing.move_resist = MOVE_FORCE_VERY_STRONG
-			john_willing.move_force = MOVE_FORCE_STRONG
+			ADD_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
 
 			if(should_immobilize)
 				john_willing.Immobilize(1.5 SECONDS, TRUE)
@@ -460,6 +507,8 @@
 				john_willing.add_overlay(visual_overlay)
 			else
 				john_willing.add_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+		else
+			Revert()
 
 /datum/status_effect/willing_weapon_entrenched/on_remove()
 	. = ..()
@@ -468,6 +517,8 @@
 
 		if(linked_gun)
 			linked_gun.ChangeStats(1)
+			linked_gun.storeable = TRUE
+			REMOVE_TRAIT(linked_gun, TRAIT_NODROP, "willing")
 			deltimer(linked_gun.entrenchment_upgrade_timer)
 			linked_gun = null
 
@@ -477,7 +528,7 @@
 		john_willing.physiology.pale_mod /= physiology_multiplier
 
 		john_willing.move_resist = MOVE_FORCE_DEFAULT
-		john_willing.move_force = MOVE_FORCE_DEFAULT
+		REMOVE_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
 
 		if(should_immobilize)
 			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
@@ -503,7 +554,7 @@
 /atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
 	name = "Entrenched"
 	icon_state = "entrenched"
-	desc = "Despite the pain and suffering, despite being torn to fleshy ribbons, you'll continue the fight."
+	desc = "Despite the pain and suffering, even if torn to fleshy ribbons, you'll continue the fight."
 
 #undef STATUS_EFFECT_ENTRENCHED_INITIAL
 #undef STATUS_EFFECT_ENTRENCHED_FINAL
