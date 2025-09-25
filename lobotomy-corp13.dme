@@ -1633,6 +1633,8 @@
 #include "code\modules\admin\smites\lightning.dm"
 #include "code\modules\admin\smites\nugget.dm"
 #include "code\modules\admin\smites\puzzle.dm"
+#include "code\modules\admin\smites\ragdoll_spin.dm"
+#include "code\modules\admin\smites\repentance_banish.dm"
 #include "code\modules\admin\smites\rod.dm"
 #include "code\modules\admin\smites\scarify.dm"
 #include "code\modules\admin\smites\smite.dm"

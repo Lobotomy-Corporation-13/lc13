@@ -1,3 +1,192 @@
+
+// realm of sealed regrets SYSTEM
+// A standalone system for trapping players in an alternate dimension of regret and repentance
+// Can be used by any game mechanic without requiring specific abnormalities
+
+GLOBAL_LIST_EMPTY(repentance_trapped_players)         // List of all trapped players
+GLOBAL_LIST_EMPTY(repentance_return_locations)        // Original locations to return players to
+GLOBAL_LIST_EMPTY(repentance_status_effects)          // Status effects applied to trapped players
+GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations in the dimension
+
+/// Initializes repentance dimension spawn locations from landmarks
+/proc/InitializeRepentanceLocations()
+	GLOB.repentance_spawn_points = list()
+	for(var/obj/effect/landmark/repentance_spawn/L in GLOB.landmarks_list)
+		GLOB.repentance_spawn_points += get_turf(L)
+
+	// Fallback if no landmarks exist - use z-level 1,1,1
+	if(!LAZYLEN(GLOB.repentance_spawn_points))
+		var/turf/T = locate(1, 1, 1)
+		if(T)
+			GLOB.repentance_spawn_points += T
+
+/// Sends a player to the realm of sealed regrets
+/// H - The human to send
+/// send_message - Optional custom message to display (null = use default)
+/// spin_effect - Whether to apply violent spinning effect
+/// Returns TRUE if successful
+/proc/SendToRepentanceDimension(mob/living/carbon/human/H, send_message = null, spin_effect = TRUE)
+	if(!H || QDELETED(H))
+		return FALSE
+
+	// Already trapped check
+	if(H in GLOB.repentance_trapped_players)
+		return FALSE
+
+	// Initialize spawn points if needed
+	if(!LAZYLEN(GLOB.repentance_spawn_points))
+		InitializeRepentanceLocations()
+
+	// Add to global tracking
+	GLOB.repentance_trapped_players += H
+	GLOB.repentance_return_locations[H] = get_turf(H)
+
+	// Display message
+	if(send_message)
+		to_chat(H, span_userdanger(send_message))
+	else
+		to_chat(H, span_userdanger("You are pulled into a strange dimension!"))
+
+	// Apply spinning effect if requested
+	if(spin_effect)
+		playsound(get_turf(H), 'sound/abnormalities/dinner_chair/ragdoll_effect.ogg', 75, TRUE)
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RepentanceViolentSpin), H)
+		// Wait for spinning to finish before teleporting
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(RepentanceFinishTeleport), H), 12 SECONDS)
+	else
+		RepentanceFinishTeleport(H)
+
+	return TRUE
+
+/// Violent spinning effect for dimension transport
+/proc/RepentanceViolentSpin(mob/living/M)
+	if(!M || QDELETED(M))
+		return
+
+	var/matrix/initial_matrix = matrix(M.transform)
+	for(var/i in 1 to 120) // 12 seconds at 0.1 second intervals
+		if(!M || QDELETED(M))
+			return
+
+		// Violent rotation
+		initial_matrix = matrix(M.transform)
+		initial_matrix.Turn(rand(45, 180))
+
+		// Extreme position changes
+		var/x_shift = rand(-10, 10)
+		var/y_shift = rand(-10, 10)
+		initial_matrix.Translate(x_shift, y_shift)
+
+		animate(M, transform = initial_matrix, time = 1, loop = 0, easing = pick(LINEAR_EASING, SINE_EASING, CIRCULAR_EASING))
+
+		// Rapid direction changes
+		M.setDir(pick(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
+
+		sleep(1)
+
+	// Reset transformation
+	animate(M, transform = null, time = 5, loop = 0)
+
+/// Completes the teleportation to realm of sealed regrets
+/proc/RepentanceFinishTeleport(mob/living/carbon/human/H)
+	if(!H || QDELETED(H) || !(H in GLOB.repentance_trapped_players))
+		return
+
+	to_chat(H, span_warning("You find yourself in the realm of sealed regrets."))
+	to_chat(H, span_warning("The air is heavy with regret and the weight of unspoken apologies."))
+
+	playsound(get_turf(H), 'sound/effects/podwoosh.ogg', 50, TRUE)
+
+	// Pick a random repentance dimension location
+	var/turf/destination
+	if(LAZYLEN(GLOB.repentance_spawn_points))
+		destination = pick(GLOB.repentance_spawn_points)
+	else
+		destination = locate(1, 1, 1) // Emergency fallback
+
+	if(destination)
+		H.forceMove(destination)
+
+	H.Stun(30)
+	H.adjustSanityLoss(20)
+
+	// Spawn an empty tape recorder for them to record their regrets
+	var/obj/item/taperecorder/empty/recorder = new /obj/item/taperecorder/empty(destination)
+	to_chat(H, span_notice("A tape recorder materializes before you, as if the dimension itself wants to hear your confession..."))
+
+	// Try to put it in their hand if possible
+	if(!H.put_in_hands(recorder))
+		// If hands are full, place it next to them
+		recorder.forceMove(get_step(destination, pick(NORTH, SOUTH, EAST, WEST)))
+
+	// Apply repentance dimension status effect
+	var/datum/status_effect/repentance_ambience/B = H.apply_status_effect(/datum/status_effect/repentance_ambience)
+	if(B)
+		GLOB.repentance_status_effects[H] = B
+
+/// Rescues a player from the realm of sealed regrets
+/// H - The human to rescue
+/// return_turf - Optional specific return location (null = use saved location)
+/// rescue_message - Optional custom message (null = use default)
+/// Returns TRUE if successful
+/proc/RescueFromRepentanceDimension(mob/living/carbon/human/H, turf/return_turf = null, rescue_message = null)
+	if(!H || QDELETED(H))
+		return FALSE
+
+	// Not trapped check
+	if(!(H in GLOB.repentance_trapped_players))
+		return FALSE
+
+	// Remove from global tracking
+	GLOB.repentance_trapped_players -= H
+
+	// Determine return location
+	if(!return_turf)
+		return_turf = GLOB.repentance_return_locations[H]
+	if(!return_turf)
+		// Find a safe station turf as fallback
+		for(var/turf/T in GLOB.station_turfs)
+			if(!T.density)
+				return_turf = T
+				break
+	if(!return_turf)
+		return_turf = locate(1, 1, 1) // Ultimate fallback
+
+	GLOB.repentance_return_locations -= H
+
+	// Remove status effect
+	if(GLOB.repentance_status_effects[H])
+		H.remove_status_effect(/datum/status_effect/repentance_ambience)
+		GLOB.repentance_status_effects -= H
+
+	// Display message
+	if(rescue_message)
+		to_chat(H, span_nicegreen(rescue_message))
+	else
+		to_chat(H, span_nicegreen("You feel a pull back to reality!"))
+
+	playsound(get_turf(H), 'sound/magic/teleport_app.ogg', 50, TRUE)
+
+	// Teleport back
+	H.forceMove(return_turf)
+
+	return TRUE
+
+/// Checks if a player is trapped in the realm of sealed regrets
+/proc/IsTrappedInRepentance(mob/living/carbon/human/H)
+	if(!H)
+		return FALSE
+	return (H in GLOB.repentance_trapped_players)
+
+/// Returns a list of all trapped players
+/proc/GetRepentanceTrappedList()
+	return GLOB.repentance_trapped_players.Copy()
+
+/// Rescues all trapped players (for emergency use)
+/proc/RescueAllFromRepentance(rescue_message = "The dimension collapses, ejecting everyone!")
+	for(var/mob/living/carbon/human/H in GLOB.repentance_trapped_players.Copy())
+		RescueFromRepentanceDimension(H, null, rescue_message)
+
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere
 	name = "Door to Nowhere"
 	desc = "A door wrapped in chains, floating ominously in the air. Behind it lies memories best left forgotten, regrets that should remain sealed."
@@ -48,13 +237,13 @@
 		"It's just a locked door" = list(FALSE, "You turn away from the door. Some things are meant to stay locked."),
 	)
 
-	var/list/trapped_employees = list()
-	var/list/original_locations = list()
-	var/list/backrooms_locations = list()
-	var/list/backrooms_effects = list() // Track status effects
+	// Use global repentance dimension system - no local tracking needed
 
 	// Spirit projection ability variable
 	var/projecting_spirit = FALSE
+
+	// Track who has received their first tape recorder
+	var/list/workers_with_recorders = list()
 
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/Initialize()
 	. = ..()
@@ -65,17 +254,24 @@
 	var/datum/action/innate/door_possession/possess_ability = new
 	possess_ability.Grant(src)
 
-	// Find all backrooms landmarks
-	for(var/obj/effect/landmark/backrooms_spawn/L in GLOB.landmarks_list)
-		backrooms_locations += get_turf(L)
+	// Initialize global repentance dimension locations
+	InitializeRepentanceLocations()
 
-	// Fallback if no landmarks exist
-	if(!LAZYLEN(backrooms_locations))
-		var/turf/T = locate(1, 1, z)
-		if(T)
-			backrooms_locations += T
-		else
-			backrooms_locations += get_turf(src)
+	// Register for insanity events
+	RegisterSignal(SSdcs, COMSIG_GLOB_HUMAN_INSANE, PROC_REF(on_human_insane))
+
+// Handle human insanity - decrease Qliphoth counter
+/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/proc/on_human_insane(datum/source, mob/living/carbon/human/H, turf/T)
+	SIGNAL_HANDLER
+
+	// Only react to insanity on our Z-level
+	if(!H || H.z != z)
+		return
+
+	// Decrease Qliphoth counter
+	if(datum_reference)
+		datum_reference.qliphoth_change(-1)
+		visible_message(span_warning("[src]'s chains rattle ominously as madness spreads..."))
 
 // Override say to use ethereal whispers instead
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
@@ -100,14 +296,96 @@
 	// Don't call parent - we don't want normal speech
 	return
 
+// Allow willing entry into the dimension
+/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/attack_hand(mob/living/carbon/human/M)
+	. = ..()
+	if(!ishuman(M))
+		return
+
+	// Only allow non-harmful intent
+	if(M.a_intent == INTENT_HARM)
+		to_chat(M, span_warning("You strike at the door, but the chains hold it firmly shut."))
+		return
+
+	// Check if already trapped
+	if(IsTrappedInRepentance(M))
+		to_chat(M, span_warning("You are already within the dimension..."))
+		return
+
+	// Confirm the action
+	if(alert(M, "Do you wish to step through the Door to Nowhere and enter the realm of sealed regrets?", "Enter the Door", "Yes", "No") != "Yes")
+		return
+
+	to_chat(M, span_notice("You place your hand on the door. The chains begin to loosen as it recognizes your willing surrender..."))
+
+	// Long channel time - 5 seconds
+	if(do_after(M, 50, target = src))
+		// Double-check they haven't been trapped in the meantime
+		if(IsTrappedInRepentance(M))
+			return
+
+		to_chat(M, span_userdanger("You step through the door willingly, accepting whatever fate awaits within..."))
+		visible_message(span_warning("[M] steps through [src], vanishing into the realm beyond!"))
+
+		// Send them to the dimension without spinning
+		var/message = "You willingly entered the realm of sealed regrets. The door closes gently behind you."
+		SendToRepentanceDimension(M, message, FALSE)
+
+		// Increase Qliphoth counter as reward for willing sacrifice
+		if(datum_reference)
+			datum_reference.qliphoth_change(1)
+			visible_message(span_notice("The door seems satisfied with the willing offering, its chains tightening."))
+	else
+		to_chat(M, span_notice("You pull your hand back from the door."))
+
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	. = ..()
+
+	// 5% chance to drop a tape from the Mirror Worlds
+	if(prob(5))
+		var/turf/drop_location = get_turf(user)
+		var/obj/item/tape/mirror_tape = new /obj/item/tape(drop_location)
+
+		// Configure the tape
+		mirror_tape.name = "mirror shattered tape"
+		mirror_tape.desc = "A tape that seems to have fallen through the cracks of reality. It flickers with otherworldly static."
+		mirror_tape.filters += filter(type = "blur", size = 1.5)
+
+		// If available, copy content from persistence archive
+		if(LAZYLEN(SSpersistence.door_to_nowhere_tapes))
+			var/list/tape_data = pick(SSpersistence.door_to_nowhere_tapes)
+			var/list/stored_info = tape_data["storedinfo"]
+			var/list/stored_timestamp = tape_data["timestamp"]
+			if(stored_info)
+				mirror_tape.storedinfo = stored_info.Copy()
+			if(stored_timestamp)
+				mirror_tape.timestamp = stored_timestamp.Copy()
+				mirror_tape.used_capacity = stored_timestamp[stored_timestamp.len]
+
+		// Visual and audio feedback
+		visible_message(span_warning("A tape materializes from the door's chains and falls to the floor!"))
+		playsound(src, 'sound/effects/ghost2.ogg', 50, TRUE)
+
+		// Check if this worker needs a tape recorder
+		var/user_ckey = user.ckey
+		if(user_ckey && !(user_ckey in workers_with_recorders))
+			workers_with_recorders += user_ckey
+
+			var/obj/item/taperecorder/empty/recorder = new /obj/item/taperecorder/empty(drop_location)
+			to_chat(user, span_notice("A tape recorder materializes alongside the tape, as if the door wants you to listen..."))
+
+			// Try to put recorder in their hand
+			if(!user.put_in_hands(recorder))
+				// If hands full, drop it nearby
+				recorder.forceMove(get_step(drop_location, pick(NORTH, SOUTH, EAST, WEST)))
+
 	// Handle Repression work - rescue trapped employees
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
-		if(LAZYLEN(trapped_employees))
-			var/mob/living/carbon/human/rescued = pick(trapped_employees)
-			RescueFromBackrooms(rescued)
-			to_chat(user, span_notice("You manage to pull [rescued] back from that strange place!"))
+		var/list/trapped = GetRepentanceTrappedList()
+		if(LAZYLEN(trapped))
+			var/mob/living/carbon/human/rescued = pick(trapped)
+			RescueFromRepentanceDimension(rescued, get_turf(src), "You manage to pull them back from that strange place!")
+			to_chat(user, span_notice("You successfully rescued [rescued]!"))
 		else
 			to_chat(user, span_notice("There's no one to rescue."))
 		return
@@ -123,105 +401,39 @@
 
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	// 70% chance to send to backrooms on bad work (except Repression)
+	// 70% chance to send to repentance dimension on bad work (except Repression)
 	if(work_type != ABNORMALITY_WORK_REPRESSION && prob(70))
-		SendToBackrooms(user)
-
-/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/proc/SendToBackrooms(mob/living/carbon/human/H)
-	if(!H || (H in trapped_employees))
-		return
-
-	trapped_employees += H
-	original_locations[H] = get_turf(H)
-
-	to_chat(H, span_userdanger("The door's chains rattle violently as it pulls you into a realm of sealed memories!"))
-	playsound(get_turf(H), 'sound/abnormalities/dinner_chair/ragdoll_effect.ogg', 75, TRUE)
-
-	// Apply violent spinning effect
-	INVOKE_ASYNC(src, PROC_REF(ViolentSpin), H)
-
-	// Wait for the spinning to finish before teleporting
-	addtimer(CALLBACK(src, PROC_REF(FinishTeleport), H), 12 SECONDS)
-
-/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/proc/ViolentSpin(mob/living/M)
-	if(!M)
-		return
-
-	var/matrix/initial_matrix = matrix(M.transform)
-	// 10x more extreme than disco dance
-	for(var/i in 1 to 120) // 12 seconds worth at 0.1 second intervals
-		if(!M || QDELETED(M))
-			return
-
-		// Violent rotation
-		initial_matrix = matrix(M.transform)
-		initial_matrix.Turn(rand(45, 180)) // Random violent turns
-
-		// Extreme position changes
-		var/x_shift = rand(-10, 10)
-		var/y_shift = rand(-10, 10)
-		initial_matrix.Translate(x_shift, y_shift)
-
-		animate(M, transform = initial_matrix, time = 1, loop = 0, easing = pick(LINEAR_EASING, SINE_EASING, CIRCULAR_EASING))
-
-		// Rapid direction changes
-		M.setDir(pick(NORTH, SOUTH, EAST, WEST, NORTHEAST, NORTHWEST, SOUTHEAST, SOUTHWEST))
-
-		sleep(1)
-
-	// Reset transformation
-	animate(M, transform = null, time = 5, loop = 0)
-
-/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/proc/FinishTeleport(mob/living/carbon/human/H)
-	if(!H || !(H in trapped_employees))
-		return
-
-	to_chat(H, span_warning("You find yourself in a liminal space of forgotten memories. The walls echo with regrets that were never voiced, sealed away behind countless doors."))
-	to_chat(H, span_warning("Each door you see is chained shut, hiding moments that someone desperately wanted to forget."))
-
-	playsound(get_turf(H), 'sound/effects/podwoosh.ogg', 50, TRUE)
-
-	// Pick a random backrooms location
-	var/turf/destination = pick(backrooms_locations)
-	H.forceMove(destination)
-
-	H.Stun(30)
-	H.adjustSanityLoss(20)
-
-	// Apply backrooms status effect
-	var/datum/status_effect/backrooms_ambience/B = H.apply_status_effect(/datum/status_effect/backrooms_ambience)
-	if(B)
-		backrooms_effects[H] = B
-
-/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/proc/RescueFromBackrooms(mob/living/carbon/human/H)
-	if(!H || !(H in trapped_employees))
-		return
-
-	trapped_employees -= H
-	var/turf/return_turf = original_locations[H]
-	if(!return_turf)
-		return_turf = get_turf(src)
-
-	original_locations -= H
-
-	// Remove status effect
-	if(backrooms_effects[H])
-		H.remove_status_effect(/datum/status_effect/backrooms_ambience)
-		backrooms_effects -= H
-
-	to_chat(H, span_nicegreen("You feel a pull back to reality!"))
-	playsound(get_turf(H), 'sound/magic/teleport_app.ogg', 50, TRUE)
-
-	H.forceMove(return_turf)
+		var/message = "The door's chains rattle violently as it pulls you into the realm of sealed regrets!"
+		SendToRepentanceDimension(user, message, TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/ZeroQliphoth(mob/living/carbon/human/user)
+	// Count active agents to determine victim count
+	var/agent_count = 0
+	var/list/agent_roles = list(
+		"Agent Captain",
+		"Agent",
+		"Agent Intern"
+	)
+
+	for(var/mob/player in GLOB.player_list)
+		if(!player.mind || !player.mind.assigned_role)
+			continue
+		if(player.stat == DEAD)
+			continue
+		if(player.mind.assigned_role in agent_roles)
+			agent_count++
+
+	// Calculate victims: 1 per 4 agents, minimum 1
+	var/victims_to_send = max(1, round(agent_count / 4))
+
+	// Build list of potential victims
 	var/list/potential_victims = list()
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H.z != z)
 			continue
 		if(H.stat == DEAD)
 			continue
-		if(H in trapped_employees)
+		if(IsTrappedInRepentance(H))
 			continue
 		if(!H.mind)
 			continue
@@ -230,57 +442,70 @@
 	if(!LAZYLEN(potential_victims))
 		return
 
-	var/victims_count = min(rand(1, 3), LAZYLEN(potential_victims))
+	// Send victims up to calculated amount or available victims
+	var/victims_count = min(victims_to_send, LAZYLEN(potential_victims))
 
 	for(var/i in 1 to victims_count)
 		if(!LAZYLEN(potential_victims))
 			break
 		var/mob/living/carbon/human/victim = pick_n_take(potential_victims)
-		SendToBackrooms(victim)
-		to_chat(victim, span_userdanger("The door has dragged you behind its threshold, into the realm of sealed regrets!"))
+		var/message = "The door has dragged you into the realm of sealed regrets!"
+		SendToRepentanceDimension(victim, message, TRUE)
+		to_chat(victim, span_userdanger("The door has dragged you into the realm of sealed regrets!"))
 
 	visible_message(span_danger("[src]'s chains burst open momentarily, releasing waves of forgotten regrets before sealing shut once more."))
+
+	// Announce the breach scale
+	if(victims_count == 1)
+		visible_message(span_warning("The door claims a single soul..."))
+	else
+		visible_message(span_warning("The door claims [victims_count] souls in its hunger for repentance!"))
+
 	datum_reference.qliphoth_change(3)
 
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/Destroy()
-	for(var/mob/living/carbon/human/H in trapped_employees)
-		RescueFromBackrooms(H)
+	// Unregister signal
+	UnregisterSignal(SSdcs, COMSIG_GLOB_HUMAN_INSANE)
+	// Rescue all trapped players when destroyed
+	for(var/mob/living/carbon/human/H in GetRepentanceTrappedList())
+		RescueFromRepentanceDimension(H, get_turf(src))
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/door_to_nowhere/death(gibbed)
-	for(var/mob/living/carbon/human/H in trapped_employees)
-		RescueFromBackrooms(H)
-		to_chat(H, span_notice("With the door shattered, the sealed memories dissipate and you are freed from that forsaken realm."))
+	// Rescue all trapped players when killed
+	for(var/mob/living/carbon/human/H in GetRepentanceTrappedList())
+		var/message = "With the door shattered, the sealed memories dissipate and you are freed from that forsaken realm."
+		RescueFromRepentanceDimension(H, get_turf(src), message)
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)
 	..()
 
-// Backrooms landmark for mapping
-/obj/effect/landmark/backrooms_spawn
-	name = "backrooms spawn"
+// Repentance dimension landmark for mapping
+/obj/effect/landmark/repentance_spawn
+	name = "repentance dimension spawn"
 	icon_state = "x2"
 
-/area/fishboat/backrooms
-	name = "???"
+/area/fishboat/repentance
+	name = "realm of sealed regrets"
 
-// Status effect for ambient backrooms audio
-/datum/status_effect/backrooms_ambience
-	id = "backrooms_ambience"
+// Status effect for ambient repentance dimension audio
+/datum/status_effect/repentance_ambience
+	id = "repentance_ambience"
 	duration = -1 // Permanent until removed
 	alert_type = null
 	var/next_sound_time = 0
 
-/datum/status_effect/backrooms_ambience/tick()
+/datum/status_effect/repentance_ambience/tick()
 	if(world.time >= next_sound_time)
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
 			H.playsound_local(get_turf(H), 'sound/ambience/VoidsEmbrace.ogg', 50, FALSE, pressure_affected = FALSE)
-			to_chat(H, span_warning("You hear whispers of regrets... memories trying to claw their way back into existence."))
+			to_chat(H, span_warning("You hear whispers of repentance... souls seeking forgiveness for their regrets."))
 		// Next sound in 5-10 minutes (converted to deciseconds)
 		next_sound_time = world.time + rand(3000, 6000) // 300-600 seconds = 5-10 minutes
 
-/datum/status_effect/backrooms_ambience/on_apply()
+/datum/status_effect/repentance_ambience/on_apply()
 	. = ..()
 	// Play the sound immediately when first applied
 	if(ishuman(owner))
@@ -298,6 +523,7 @@
 	opacity = FALSE
 	resistance_flags = INDESTRUCTIBLE
 	density = FALSE
+	var/custom_name = FALSE
 	var/door_name = ""
 	var/door_desc = ""
 	var/spirit_name = ""
@@ -306,8 +532,9 @@
 
 /obj/structure/regret_door/Initialize()
 	. = ..()
-	generate_regret_identity()
-	spawn_associated_spirit()
+	if(!custom_name)
+		generate_regret_identity()
+		spawn_associated_spirit()
 
 /obj/structure/regret_door/proc/generate_regret_identity()
 	// Lists of regret themes
@@ -402,10 +629,10 @@
 	desc = door_desc
 
 /obj/structure/regret_door/proc/spawn_associated_spirit()
-	// Find all valid turfs in the backrooms area
+	// Find all valid turfs in the repentance dimension area
 	var/list/valid_turfs = list()
 	for(var/turf/T in range(10, src))
-		if(istype(T.loc, /area/fishboat/backrooms) && !T.density)
+		if(istype(T.loc, /area/fishboat/repentance) && !T.density)
 			var/blocked = FALSE
 			for(var/atom/A in T)
 				if(A.density)
@@ -433,10 +660,57 @@
 			var/mob/living/carbon/human/H = user
 			H.adjustSanityLoss(5)
 
+// Allow entering the door from outside the dimension
+/obj/structure/regret_door/attack_hand(mob/living/carbon/human/M)
+	. = ..()
+	if(!ishuman(M))
+		return
+
+	// Check if already in the repentance dimension
+	if(istype(M.loc.loc, /area/fishboat/repentance))
+		to_chat(M, span_warning("You are already within the realm of sealed regrets. This door leads nowhere from here."))
+		return
+
+	// Check if already trapped (shouldn't happen but safety check)
+	if(IsTrappedInRepentance(M))
+		to_chat(M, span_warning("You are already bound to this dimension..."))
+		return
+
+	// Confirm the action
+	if(alert(M, "Do you wish to open this door and step into the realm it guards? The name reads: '[name]'", "Open Regret Door", "Yes", "No") != "Yes")
+		return
+
+	to_chat(M, span_notice("You grasp the handle of [name]. The chains rattle as they slowly unwrap..."))
+	to_chat(M, span_warning("You feel the weight of [pick("regret", "sorrow", "loss", "remorse")] pulling you forward..."))
+
+	// Long channel time - 5 seconds
+	if(do_after(M, 50, target = src))
+		// Double-check they haven't been trapped in the meantime
+		if(IsTrappedInRepentance(M))
+			return
+
+		to_chat(M, span_userdanger("You push open [name] and step through into the realm of repentance!"))
+		visible_message(span_warning("[M] opens [name] and steps through, disappearing into the darkness beyond!"))
+
+		// Custom message based on the door type
+		var/entry_message = "You stepped through [name]. [door_desc]"
+		SendToRepentanceDimension(M, entry_message, FALSE)
+
+		// Visual effect
+		playsound(src, 'sound/effects/ghost2.ogg', 50, TRUE)
+
+		// The door closes behind them
+		visible_message(span_notice("[name] swings shut with a heavy thud, the chains wrapping back around it."))
+	else
+		to_chat(M, span_notice("You release the handle, deciding against entering."))
+
 /obj/structure/regret_door/Destroy()
 	if(associated_spirit)
 		qdel(associated_spirit)
 	return ..()
+
+/obj/structure/regret_door/custom
+	custom_name = TRUE
 
 // Regret Spirit Mob
 /mob/living/simple_animal/hostile/regret_spirit
@@ -454,8 +728,8 @@
 	friendly_verb_continuous = "mourns at"
 	friendly_verb_simple = "mourn at"
 	speed = 2
-	maxHealth = 100
-	health = 100
+	maxHealth = 200
+	health = 200
 	faction = list("neutral")
 	harm_intent_damage = 0
 	melee_damage_lower = 0
@@ -599,9 +873,6 @@
 	P.source_door = src
 	P.faction = faction.Copy()
 
-	// Store original body reference
-	var/mob/living/original_body = src
-
 	// Transfer mind
 	var/datum/mind/door_mind = mind
 	if(door_mind)
@@ -620,8 +891,8 @@
 	visible_message(span_warning("[src] shudders as a ghostly form emerges from within! The door becomes completely still..."))
 	playsound(src, 'sound/effects/ghost2.ogg', 50, TRUE)
 
-	// Set timer to return
-	addtimer(CALLBACK(src, PROC_REF(recall_spirit), P, original_body), 30 SECONDS)
+	// Set timer to return (using src as the original body)
+	addtimer(CALLBACK(src, PROC_REF(recall_spirit), P, src), 30 SECONDS)
 
 	return TRUE
 
@@ -828,7 +1099,8 @@
 
 	// Check for teleportation
 	if(stacks >= 5 && source_door && !QDELETED(source_door))
-		source_door.SendToBackrooms(owner)
+		var/message = "The weight of accumulated regret pulls you into the realm of sealed regrets!"
+		SendToRepentanceDimension(owner, message, TRUE)
 		qdel(src)
 		return
 
@@ -864,8 +1136,8 @@
 /mob/living/simple_animal/hostile/regret_spirit/projection
 	name = "projected spirit"
 	desc = "A temporary manifestation of regret and sorrow."
-	health = 50  // Fragile
-	maxHealth = 50
+	health = 250  // Fragile
+	maxHealth = 250
 	var/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/source_door
 	del_on_death = TRUE
 
@@ -1025,7 +1297,13 @@
 		world.log << "Tape spawner: Found [LAZYLEN(SSpersistence.door_to_nowhere_tapes)] tapes in archive"
 		var/list/tape_data = pick(SSpersistence.door_to_nowhere_tapes)
 		new_tape = new /obj/item/tape(T)
-		new_tape.name = tape_data["name"]
+
+		// Check if the name is just "tape" and rename it
+		if(tape_data["name"] == "tape")
+			new_tape.name = "mirror shattered tape"
+		else
+			new_tape.name = tape_data["name"]
+
 		new_tape.desc = tape_data["desc"]
 		new_tape.icon_state = tape_data["icon_state"]
 		var/list/stored_info = tape_data["storedinfo"]
@@ -1043,6 +1321,9 @@
 			new_tape.timestamp = list()
 			new_tape.used_capacity = 0
 			world.log << "Tape spawner: Warning - stored_timestamp was null!"
+
+		// Add blur effect to the tape
+		new_tape.filters += filter(type = "blur", size = 1.5)
 
 	qdel(src)
 
@@ -1333,9 +1614,9 @@ GLOBAL_LIST_EMPTY(regret_shrines)
 			INVOKE_ASYNC(src, PROC_REF(drop), thing)
 
 /datum/component/door_dimension_void/proc/droppable(atom/movable/AM)
-	// Prevent infinite loops
-	if(falling_atoms[AM] && falling_atoms[AM] > 30)
-		return FALSE
+	// Prevent infinite loops and re-triggering
+	if(falling_atoms[AM])
+		return FALSE // Already falling, don't process again
 	if(!isliving(AM) && !isobj(AM))
 		return FALSE
 	if(is_type_in_typecache(AM, forbidden_types) || AM.throwing || (AM.movement_type & (FLOATING|FLYING)))
@@ -1363,23 +1644,31 @@ GLOBAL_LIST_EMPTY(regret_shrines)
 	if(!AM || QDELETED(AM))
 		return
 
-	falling_atoms[AM] = (falling_atoms[AM] || 0) + 1
+	// Mark as falling
+	falling_atoms[AM] = TRUE
 
-	// Visual feedback
-	AM.visible_message(span_boldwarning("[AM] falls into the reality void!"), span_userdanger("You feel yourself being pulled back to your own dimension!"))
+	// Visual feedback - only show generic message if not trapped in repentance
+	var/is_trapped = FALSE
+	if(ishuman(AM))
+		var/mob/living/carbon/human/H = AM
+		is_trapped = IsTrappedInRepentance(H)
+
+	if(!is_trapped)
+		AM.visible_message(span_boldwarning("[AM] falls into the reality void!"), span_userdanger("You feel yourself being pulled back to your own dimension!"))
+	else
+		AM.visible_message(span_boldwarning("[AM] falls into the reality void!"))
 
 	// Animate the fall
 	if(isliving(AM))
 		var/mob/living/L = AM
 		L.notransform = TRUE
-		L.Paralyze(40) // 4 seconds
+		L.Stun(20) // 2 seconds - match the animation duration
 
-	// Falling animation
-	var/oldtransform = AM.transform
+	// Falling animation - removed transform manipulation to fix reset bug
 	var/oldcolor = AM.color
 	var/oldalpha = AM.alpha
 	var/oldpixel_y = AM.pixel_y
-	animate(AM, transform = matrix() - matrix(), alpha = 0, color = rgb(85, 26, 139), time = 10) // Purple fade
+	animate(AM, alpha = 0, color = rgb(85, 26, 139), pixel_y = AM.pixel_y - 10, time = 10) // Purple fade with downward movement
 
 	for(var/i in 1 to 5)
 		if(!AM || QDELETED(AM))
@@ -1387,20 +1676,22 @@ GLOBAL_LIST_EMPTY(regret_shrines)
 			if(AM)
 				AM.alpha = oldalpha
 				AM.color = oldcolor
-				AM.transform = oldtransform
 				AM.pixel_y = oldpixel_y
+				if(isliving(AM))
+					var/mob/living/L = AM
+					L.notransform = FALSE
+			falling_atoms -= AM
 			return
-		AM.pixel_y--
 		sleep(2)
 
 	// Make sure still exists
 	if(!AM || QDELETED(AM))
+		falling_atoms -= AM
 		return
 
 	// Always reset appearance before processing
 	AM.alpha = oldalpha
 	AM.color = oldcolor
-	AM.transform = oldtransform
 	AM.pixel_y = oldpixel_y
 
 	// Teleport out instead of killing
@@ -1408,58 +1699,30 @@ GLOBAL_LIST_EMPTY(regret_shrines)
 		var/mob/living/L = AM
 		L.notransform = FALSE
 
-		// Find ANY Door to Nowhere abnormality (even without datum_reference)
-		var/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/door = null
-		for(var/mob/living/simple_animal/hostile/abnormality/door_to_nowhere/D in GLOB.abnormality_mob_list)
-			door = D
-			if(D.datum_reference) // Prefer one with datum
-				break
+		// Use global repentance dimension rescue system
+		if(ishuman(L))
+			var/mob/living/carbon/human/H = L
+			if(IsTrappedInRepentance(H))
+				RescueFromRepentanceDimension(H, null, "The void expels you back to reality!")
+				// Return early - rescue is complete
+				falling_atoms -= AM
+				return
 
-		// If they're trapped and there's a door, use the rescue proc
-		if(door && ishuman(L) && (L in door.trapped_employees))
-			door.RescueFromBackrooms(L)
-			to_chat(L, span_warning("The void expels you back to reality!"))
-			// RescueFromBackrooms handles the teleport and effects
+		// Not trapped or not human - just teleport them somewhere safe
+		var/turf/destination
+		var/list/possible_turfs = list()
+		for(var/turf/T in GLOB.station_turfs)
+			if(T.density)
+				continue
+			possible_turfs += T
+		if(length(possible_turfs))
+			destination = pick(possible_turfs)
 		else
-			// Not trapped - need to manually clean up and teleport
-			var/turf/destination
+			destination = get_turf(parent)
 
-			// Check if they have backrooms status effect and remove it
-			if(ishuman(L))
-				var/mob/living/carbon/human/H = L
-				if(H.has_status_effect(/datum/status_effect/backrooms_ambience))
-					H.remove_status_effect(/datum/status_effect/backrooms_ambience)
-
-				// Clean up from any door's tracking lists
-				if(door)
-					if(H in door.trapped_employees)
-						door.trapped_employees -= H
-					if(H in door.original_locations)
-						door.original_locations -= H
-					if(H in door.backrooms_effects)
-						door.backrooms_effects -= H
-
-			// Find destination
-			if(door && door.datum_reference && door.datum_reference.landmark)
-				destination = get_turf(door.datum_reference.landmark)
-			else
-				// Fallback to random teleport
-				var/list/possible_turfs = list()
-				for(var/turf/T in GLOB.station_turfs)
-					if(T.density)
-						continue
-					possible_turfs += T
-				if(length(possible_turfs))
-					destination = pick(possible_turfs)
-
-			if(destination)
-				to_chat(L, span_warning("You are expelled from the door's dimension!"))
-				L.forceMove(destination)
-				playsound(destination, 'sound/effects/phasein.ogg', 50, TRUE)
-			else
-				// Emergency fallback - just move them up if we can't find anywhere
-				L.forceMove(get_turf(parent))
-				to_chat(L, span_warning("The void rejects you, spitting you back out!"))
+		to_chat(L, span_warning("The void rejects you, spitting you back out!"))
+		L.forceMove(destination)
+		playsound(destination, 'sound/effects/phasein.ogg', 50, TRUE)
 	else if(isobj(AM))
 		// Objects just get destroyed
 		qdel(AM)

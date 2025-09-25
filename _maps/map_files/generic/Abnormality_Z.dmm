@@ -2,7 +2,7 @@
 "ao" = (
 /obj/structure/regret_shrine/unspoken,
 /turf/open/indestructible/paper,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "aC" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 5
@@ -33,21 +33,21 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/indestructible/white,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "aR" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/comfy/black{
 	dir = 8
 	},
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "aS" = (
 /obj/structure/chair/comfy/brown{
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "bd" = (
 /obj/structure/flora/icestalactite{
 	pixel_x = -18;
@@ -88,7 +88,7 @@
 /obj/item/raw_anomaly_core/bluespace,
 /obj/item/clothing/suit/armor/riot/knight/greyscale,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "bv" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 5
@@ -122,16 +122,16 @@
 "bW" = (
 /obj/item/ammo_casing/caseless/ego_kcorp,
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "bZ" = (
 /obj/structure/fluff/paper,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cb" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ci" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
@@ -170,7 +170,7 @@
 "cp" = (
 /obj/structure/mineral_door/wood,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cq" = (
 /mob/living/simple_animal/pet/penguin/baby,
 /turf/open/floor/holofloor/snow,
@@ -178,33 +178,33 @@
 "cH" = (
 /obj/machinery/tape_archive,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cK" = (
 /obj/machinery/door/airlock/hatch,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cL" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/painting/library{
 	pixel_y = 32
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cN" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "cT" = (
 /obj/structure/regret_door{
 	pixel_x = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dm" = (
 /obj/structure/flora/icestalactite/small,
 /obj/effect/areaflavor_snow,
@@ -231,29 +231,29 @@
 /area/snowqueen)
 "dv" = (
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dw" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dz" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/structure/regret_door{
 	pixel_y = -32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dH" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/table/reinforced,
 /obj/structure/bedsheetbin,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dJ" = (
 /obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "dL" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 1
@@ -281,16 +281,16 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "em" = (
 /obj/structure/table/wood,
 /obj/item/mailpaper/junk,
 /turf/open/indestructible/paper,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ep" = (
 /obj/structure/bookcase/random/nonfiction,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eq" = (
 /obj/structure/chair/snowqueen,
 /obj/effect/areaflavor_snow,
@@ -313,23 +313,23 @@
 /obj/structure/barricade/wooden/crude,
 /obj/structure/barricade/wooden/crude,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eA" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eC" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eE" = (
 /obj/effect/decal/cleanable/oil,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eG" = (
 /obj/machinery/light/small{
 	dir = 4
@@ -350,10 +350,10 @@
 	dir = 4
 	},
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eV" = (
 /turf/open/floor/carpet/blue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "eY" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 9
@@ -362,7 +362,7 @@
 /area/fishboat)
 "eZ" = (
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fa" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -372,7 +372,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fd" = (
 /obj/structure/flora/icegrave{
 	pixel_x = 22;
@@ -399,15 +399,15 @@
 	color = "#E1E17D"
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fl" = (
 /obj/structure/table/reinforced,
 /obj/item/reagent_containers/borghypo/borgshaker,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fy" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -419,13 +419,13 @@
 	pixel_x = 32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fz" = (
 /obj/structure/table,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/food/drinks/bottle/vodka,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fJ" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 8
@@ -449,7 +449,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "fR" = (
 /turf/closed/mineral/snowmountain/cavern{
 	layer = 3.3
@@ -459,12 +459,12 @@
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "gp" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/stack/sheet/silk/azure_simple,
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "gw" = (
 /obj/item/reagent_containers/glass/bucket/wooden,
 /turf/open/floor/wood,
@@ -472,13 +472,13 @@
 "gB" = (
 /obj/structure/bookcase/random/fiction,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "gO" = (
 /obj/effect/turf_decal/trimline/yellow/filled/warning{
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "gW" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
@@ -487,12 +487,12 @@
 /obj/structure/table/wood/fancy/royalblue,
 /obj/item/camera,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "hh" = (
 /obj/item/trash/plate,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "hn" = (
 /obj/structure/sign/painting/library{
 	pixel_y = 32
@@ -500,13 +500,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "hp" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/closed/indestructible/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "hs" = (
 /turf/closed/indestructible/rock,
 /area/shelter)
@@ -516,12 +516,12 @@
 /obj/item/tape/door_regret/lost_humanity,
 /obj/item/taperecorder/empty,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "hX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iu" = (
 /obj/effect/turf_decal/siding/wood/corner{
 	dir = 5
@@ -533,24 +533,24 @@
 	dir = 4
 	},
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iC" = (
 /obj/structure/mineral_door/wood,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iF" = (
 /obj/structure/fluff/paper/stack{
 	dir = 4
 	},
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iL" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iO" = (
 /obj/structure/flora/icestalagmite,
 /obj/effect/areaflavor_snow,
@@ -563,7 +563,7 @@
 	},
 /area/snowqueen)
 "iT" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -575,7 +575,7 @@
 	pixel_y = -32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "iV" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -596,7 +596,7 @@
 /obj/structure/table/wood/fancy/red,
 /obj/item/toy/plush/gebura,
 /turf/open/floor/carpet/red,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "jf" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -605,7 +605,7 @@
 	dir = 1
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "jh" = (
 /obj/structure/aquarium,
 /turf/open/floor/wood,
@@ -632,13 +632,13 @@
 /obj/structure/window/reinforced/spawner/north,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "jQ" = (
 /obj/structure/table/wood/fancy/orange,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/taperecorder/empty,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "jS" = (
 /obj/structure/railing{
 	dir = 9;
@@ -658,7 +658,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ki" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -669,7 +669,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kj" = (
 /obj/structure/flora/icestalactite{
 	pixel_x = 2;
@@ -680,24 +680,24 @@
 "kq" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible/white,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ky" = (
 /obj/structure/chair/comfy/teal{
 	dir = 8
 	},
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kC" = (
 /obj/structure/regret_door{
 	pixel_x = -32
 	},
 /obj/structure/stone_tile/surrounding/cracked,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kG" = (
 /obj/structure/flora/rock/pile/largejungle,
 /turf/open/water/jungle,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kJ" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -707,21 +707,21 @@
 	light_color = "#E1E17D"
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kK" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/chasm/door_dimension,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kM" = (
 /obj/structure/stone_tile/surrounding/cracked,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "kX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "lf" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 1
@@ -737,12 +737,12 @@
 /area/snowqueen)
 "ll" = (
 /turf/closed/indestructible/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ly" = (
 /obj/effect/turf_decal,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "lG" = (
 /obj/structure/regret_door{
 	pixel_y = -32
@@ -750,17 +750,17 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "lN" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/table/wood/fancy/black,
 /obj/item/ego_weapon/ranged/pistol/nightshade,
 /obj/item/clothing/suit/armor/ego_gear/zayin/nightshade,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "lV" = (
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "lW" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 1
@@ -782,7 +782,7 @@
 	desc = "A box of ammo. It appears to have anti-healing properties..."
 	},
 /turf/open/floor/mineral/titanium/yellow,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "mf" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -793,12 +793,12 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ms" = (
 /obj/structure/table/bronze,
 /obj/structure/statue/bronze/marx,
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "mt" = (
 /obj/structure/flora/iceshards{
 	pixel_x = 16;
@@ -817,7 +817,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/toy/figure/qm,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "mQ" = (
 /obj/structure/flora/icegrave/alt{
 	pixel_x = 12;
@@ -843,9 +843,9 @@
 "no" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "np" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -857,7 +857,7 @@
 	pixel_y = 32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "nz" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
@@ -879,7 +879,7 @@
 	pixel_y = 32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "nM" = (
 /obj/structure/closet/crate,
 /obj/item/tape,
@@ -891,14 +891,14 @@
 /obj/item/tape,
 /obj/item/tape,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "nO" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/gibspawner/scrap_metal,
 /obj/item/raw_anomaly_core/bluespace,
 /obj/item/clothing/suit/armor/riot/knight/greyscale,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "nZ" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 4
@@ -933,35 +933,35 @@
 	pixel_y = -32
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "oV" = (
 /obj/structure/mineral_door/paperframe,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pc" = (
 /obj/structure/table/wood/fancy/green,
 /obj/item/gun/ballistic/automatic/pistol,
 /obj/item/tape/door_regret/failed_guardian,
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pk" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/blue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pm" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/item/paper_bin,
 /obj/item/pen,
 /obj/item/pen/fourcolor,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pv" = (
 /obj/machinery/door/airlock/glass_large,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pz" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
@@ -969,14 +969,14 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pA" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pJ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/trash/can{
@@ -989,21 +989,21 @@
 	},
 /obj/item/stack/sheet/silk/azure_simple,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pK" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pM" = (
 /obj/structure/fluff/paper/stack{
 	dir = 1
 	},
 /obj/structure/fluff/paper,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pS" = (
 /obj/structure/fluff/paper/stack{
 	dir = 4
@@ -1012,12 +1012,12 @@
 	dir = 1
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "pX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qd" = (
 /obj/structure/flora/icestalactite{
 	pixel_y = -34
@@ -1049,16 +1049,16 @@
 /obj/item/bedsheet/k_corporation,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qo" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/oil/streak,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qq" = (
 /obj/machinery/vending/boozeomat,
 /turf/closed/indestructible/reinforced,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qw" = (
 /obj/machinery/light/small,
 /obj/effect/shelter_forcefield,
@@ -1070,10 +1070,10 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qC" = (
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qF" = (
 /obj/structure/flora/iceslab{
 	pixel_x = -12;
@@ -1091,18 +1091,18 @@
 "qK" = (
 /obj/structure/chess/blackknight,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qQ" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "qW" = (
 /obj/structure/table/bronze,
 /obj/item/toy/clockwork_watch,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ra" = (
 /obj/structure/flora/icestalagmite,
 /turf/open/floor/holofloor/snow,
@@ -1110,14 +1110,14 @@
 "rh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "rj" = (
 /obj/structure/fluff/paper/stack{
 	dir = 4
 	},
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "rl" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 10
@@ -1146,12 +1146,12 @@
 /obj/item/tape/door_regret/final_realization,
 /obj/item/clothing/suit/hooded/cloak/goliath,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "rs" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/item/toy/plush/binah,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "rA" = (
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1160,7 +1160,7 @@
 	},
 /obj/item/reagent_containers/food/drinks/bottle/gin,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "rL" = (
 /obj/structure/flora/icestalactite{
 	pixel_x = 9;
@@ -1176,16 +1176,16 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/flora/ausbushes/brflowers,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sc" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/closet/crate/wooden/toy,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sg" = (
 /obj/structure/flora/rock,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sx" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 6
@@ -1206,7 +1206,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood/tracks,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sJ" = (
 /obj/structure/flora/iceshards{
 	pixel_x = -3;
@@ -1227,14 +1227,14 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sM" = (
 /obj/structure/regret_door{
 	pixel_y = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sO" = (
 /obj/structure/flora/iceshards{
 	pixel_x = -3;
@@ -1253,7 +1253,7 @@
 /obj/structure/chair/stool/bar,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sS" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 8
@@ -1272,7 +1272,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "sZ" = (
 /turf/open/floor/holofloor/snow,
 /area/shelter)
@@ -1295,7 +1295,7 @@
 /obj/structure/table/wood/fancy/purple,
 /obj/item/tape/door_regret/hidden_truth,
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "to" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1306,12 +1306,12 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ts" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "tV" = (
 /obj/structure/flora/icestalagmite/small{
 	pixel_x = -8;
@@ -1330,18 +1330,18 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/gibspawner/human/bodypartless,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "uk" = (
 /turf/closed/indestructible/reinforced,
 /area/shelter)
 "ul" = (
 /obj/item/ammo_casing/caseless/ego_kcorp,
 /turf/open/floor/mineral/titanium/yellow,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "uw" = (
 /obj/structure/fluff/clockwork/blind_eye,
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "uU" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1352,7 +1352,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "uX" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -1360,7 +1360,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/bed/maint,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "vf" = (
 /obj/effect/landmark/snowqueen_teleport,
 /obj/effect/areaflavor_snow,
@@ -1415,38 +1415,38 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "vS" = (
 /obj/structure/mineral_door/wood,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "vT" = (
 /turf/open/floor/vault,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wa" = (
 /obj/machinery/door/airlock/hatch,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wb" = (
 /obj/machinery/libraryscanner,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wd" = (
 /obj/structure/sign/departments/training,
 /turf/closed/indestructible/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wh" = (
 /obj/structure/regret_shrine/abandoned,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wq" = (
 /obj/structure/regret_door{
 	pixel_y = 32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "wy" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 9
@@ -1496,25 +1496,25 @@
 /obj/structure/table/wood/fancy/black,
 /obj/item/bouquet/sunflower,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "xv" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/toy/figure/scientist,
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "xw" = (
 /obj/structure/table/wood/fancy/orange,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/kitchen/knife,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "xy" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fence,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "xD" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1524,7 +1524,7 @@
 /turf/closed/indestructible/iron{
 	opacity = 1
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "xG" = (
 /obj/structure/flora/icestalagmite{
 	layer = 3;
@@ -1547,13 +1547,13 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ye" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/red,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "yg" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1578,12 +1578,12 @@
 	desc = "A box of ammo. It appears to have anti-healing properties..."
 	},
 /turf/open/floor/mineral/titanium/yellow,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "yn" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "yp" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 5
@@ -1608,7 +1608,7 @@
 	pixel_x = 32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "yu" = (
 /obj/structure/flora/icestalagmite/small{
 	pixel_x = -3;
@@ -1621,18 +1621,18 @@
 /obj/structure/table/wood/fancy/black,
 /obj/item/paper/fluff/joey/letter,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "yV" = (
 /obj/structure/bookcase/random/religion,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "zo" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fence/door{
 	dir = 4
 	},
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "zz" = (
 /obj/structure/flora/iceshards{
 	pixel_y = 15
@@ -1652,10 +1652,10 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "zI" = (
 /turf/closed/indestructible/reinforced/old,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "zS" = (
 /obj/structure/flora/icestalagmite{
 	pixel_x = -9;
@@ -1676,7 +1676,7 @@
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "zV" = (
 /obj/structure/flora/icegrave/alt,
 /obj/structure/flora/iceslab/alt{
@@ -1702,7 +1702,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Aq" = (
 /obj/structure/flora/icestalagmite{
 	pixel_x = 8;
@@ -1723,7 +1723,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Au" = (
 /obj/structure/flora/iceshards{
 	pixel_x = -11;
@@ -1741,13 +1741,13 @@
 "Az" = (
 /obj/structure/barricade/wooden/crude/snow,
 /turf/closed/indestructible/fakeglass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "AE" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper,
 /obj/structure/filingcabinet/employment,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "AK" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
@@ -1756,10 +1756,10 @@
 /obj/structure/table/wood/fancy/royalblue,
 /obj/item/tape/door_regret/false_hope,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "AO" = (
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "AP" = (
 /obj/structure/flora/icestalagmite/small{
 	pixel_x = -13;
@@ -1803,11 +1803,11 @@
 /obj/item/reagent_containers/blood/random,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "BB" = (
 /obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "BD" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -1815,7 +1815,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "BZ" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1828,26 +1828,26 @@
 	pixel_y = -32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Cf" = (
 /obj/structure/flora/rock/jungle,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Cq" = (
 /obj/effect/shelter_forcefield,
 /turf/open/floor/shelter,
 /area/shelter)
 "Cv" = (
 /turf/open/chasm/door_dimension,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "CD" = (
 /obj/structure/mineral_door/wood,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "CE" = (
 /turf/closed/indestructible/reinforced,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "CI" = (
 /obj/effect/turf_decal/weather/snow/corner,
 /obj/effect/areaflavor_snow,
@@ -1863,7 +1863,7 @@
 /obj/item/trash/plate,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "CP" = (
 /obj/structure/railing/corner{
 	dir = 1
@@ -1874,17 +1874,17 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Dv" = (
 /turf/open/indestructible/paper,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Dw" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "DD" = (
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "DF" = (
 /obj/structure/flora/icegrave/alt{
 	pixel_x = 11;
@@ -1909,14 +1909,14 @@
 	desc = "A core used to power machines of the outskirts... and something powerful..."
 	},
 /turf/open/floor/plating/rust,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "DU" = (
 /obj/structure/regret_door{
 	pixel_y = 32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "En" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 10
@@ -1940,7 +1940,7 @@
 	},
 /obj/structure/stone_tile/slab/cracked,
 /turf/open/floor/plating/rust,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ev" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 5
@@ -1961,17 +1961,17 @@
 "Ey" = (
 /obj/structure/regret_shrine/lost_time,
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EC" = (
 /obj/structure/grille/broken,
 /obj/structure/barricade/wooden,
 /obj/structure/barricade/wooden,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EG" = (
 /obj/structure/rack,
 /turf/open/floor/vault,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EL" = (
 /obj/item/reagent_containers/food/drinks/waterbottle/large,
 /obj/item/reagent_containers/food/drinks/waterbottle/large,
@@ -1989,7 +1989,7 @@
 /area/shelter)
 "EM" = (
 /turf/closed/indestructible/rock,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EV" = (
 /obj/structure/closet/crate/bin,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1998,25 +1998,25 @@
 /obj/item/trash/pistachios,
 /obj/item/trash/pistachios,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EY" = (
 /obj/structure/table/reinforced,
 /obj/item/storage/box/drinkingglasses,
 /obj/item/storage/box/drinkingglasses,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "EZ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Fv" = (
 /obj/structure/regret_door{
 	pixel_y = 32
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "FC" = (
 /obj/structure/flora/icestalagmite/small{
 	pixel_x = -13;
@@ -2027,27 +2027,27 @@
 "FF" = (
 /obj/structure/bookcase/random,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "FG" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/trash/can,
 /obj/item/stack/sheet/silk/azure_simple,
 /obj/item/stack/sheet/silk/azure_simple,
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "FJ" = (
 /turf/open/floor/carpet/red,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "FV" = (
 /obj/structure/mineral_door/iron,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Gc" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/flora/ausbushes/ywflowers,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Gd" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 10
@@ -2072,28 +2072,28 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Go" = (
 /obj/item/tape/door_regret/coward_friend,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Gr" = (
 /obj/structure/table/wood/fancy/green,
 /obj/item/ego_weapon/city/rats/knife,
 /obj/item/taperecorder/empty,
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Gx" = (
 /obj/structure/table/reinforced,
 /obj/machinery/chem_dispenser/drinks,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Gz" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/toy/figure/wizard,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "GC" = (
 /obj/structure/flora/icestalagmite/small,
 /turf/open/floor/holofloor/snow,
@@ -2103,7 +2103,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/tape/door_regret/protective_prison,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "GO" = (
 /obj/structure/flora/icechunk/alt{
 	pixel_x = 5;
@@ -2123,20 +2123,20 @@
 	},
 /area/snowqueen)
 "GP" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/structure/regret_door{
 	pixel_y = 32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "GT" = (
 /obj/structure/stone_tile/slab/cracked,
 /turf/open/floor/plating/rust,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "GU" = (
 /turf/closed/wall/mineral/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ha" = (
 /obj/structure/flora/icechunk{
 	pixel_x = -8
@@ -2170,7 +2170,7 @@
 	pixel_y = -32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Hk" = (
 /obj/structure/table/reinforced,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -2178,19 +2178,19 @@
 /obj/item/clothing/head/ego_hat/wcorp,
 /obj/item/clothing/suit/armor/ego_gear/wcorp,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "HH" = (
 /obj/structure/sign/painting/library{
 	pixel_y = 32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "HK" = (
 /obj/item/tape/door_regret/vengeance_incomplete,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "HS" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 6
@@ -2202,7 +2202,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken6"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "HZ" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -2218,7 +2218,7 @@
 	},
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ib" = (
 /obj/structure/sign/painting/library{
 	pixel_y = 32
@@ -2226,7 +2226,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ic" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /obj/effect/overlay/light_cone{
@@ -2234,11 +2234,11 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "It" = (
 /obj/machinery/bookbinder,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "IC" = (
 /obj/structure/flora/iceshards{
 	pixel_x = -15;
@@ -2260,23 +2260,23 @@
 	},
 /obj/item/storage/book/bible,
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "IR" = (
 /obj/structure/regret_door{
 	pixel_y = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "IX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "IY" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/blackbox_recorder,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ja" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -2284,7 +2284,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Jk" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
@@ -2293,7 +2293,7 @@
 /obj/structure/bed/maint,
 /obj/effect/gibspawner/human/bodypartless,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Jm" = (
 /obj/structure/fence,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -2301,7 +2301,7 @@
 	color = "#E1E17D"
 	},
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "JI" = (
 /obj/machinery/door/airlock/snowqueen{
 	pixel_y = -7
@@ -2312,19 +2312,19 @@
 /obj/structure/mineral_door/wood,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "JX" = (
 /obj/structure/table/wood/fancy/royalblack,
 /obj/item/taperecorder/empty,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "JZ" = (
 /obj/structure/chair{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Kd" = (
 /obj/structure/flora/rock/pile/icy{
 	pixel_x = -13
@@ -2348,7 +2348,7 @@
 	dir = 1
 	},
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Kr" = (
 /turf/closed/indestructible/rock/snow/ice/ore,
 /area/shelter)
@@ -2400,26 +2400,26 @@
 	},
 /obj/item/stack/sheet/silk/azure_simple,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "KU" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "KZ" = (
 /obj/structure/stone_tile/surrounding/cracked{
 	dir = 4
 	},
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Lb" = (
 /obj/structure/fluff/paper/stack,
 /obj/structure/fluff/paper,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Lm" = (
 /obj/structure/window/paperframe,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Lr" = (
 /obj/structure/flora/iceslab{
 	pixel_x = 49;
@@ -2436,13 +2436,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/food/drinks/bottle/rum,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "LZ" = (
 /obj/item/toy/figure/mime,
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "MA" = (
 /obj/structure/flora/icechunk{
 	pixel_y = -7
@@ -2530,7 +2530,7 @@
 /obj/structure/window/reinforced/spawner,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Nj" = (
 /obj/structure/flora/icechunk{
 	pixel_x = 12;
@@ -2564,25 +2564,25 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/statue/uranium/nuke,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "NB" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "NE" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/gibspawner/scrap_metal,
 /obj/item/raw_anomaly_core/bluespace,
 /obj/item/clothing/suit/chaplainsuit/nun,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "NH" = (
 /obj/effect/decal/cleanable/oil,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "NP" = (
 /obj/structure/flora/icestalactite/small{
 	pixel_x = -18;
@@ -2601,24 +2601,24 @@
 /obj/item/taperecorder/empty,
 /obj/item/taperecorder/empty,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "OT" = (
 /obj/machinery/door/airlock/regret_archive,
 /turf/open/floor/vault,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Pc" = (
 /turf/open/floor/wood{
 	icon_state = "wood-broken6"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Pg" = (
 /obj/structure/table/bronze,
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Pj" = (
 /obj/item/toy/figure/warden,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Pn" = (
 /obj/item/storage/box/pcorp,
 /obj/item/storage/box/pcorp,
@@ -2653,36 +2653,36 @@
 /obj/item/food/cake/birthday,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "PT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/table/wood/fancy/royalblue,
 /obj/item/taperecorder/empty,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "PW" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Qe" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/indestructible/white,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ql" = (
 /obj/structure/table/bronze,
 /obj/item/toy/clockwork_watch,
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Qq" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/mineral/plastitanium/red/brig,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Qt" = (
 /obj/structure/railing{
 	name = "invincible railing";
@@ -2706,7 +2706,7 @@
 	name = "hemorrhage office"
 	},
 /turf/open/floor/mineral/titanium/yellow,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "QY" = (
 /obj/structure/flora/iceshards{
 	pixel_x = -4;
@@ -2725,19 +2725,19 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Rh" = (
 /obj/structure/fluff/paper/stack{
 	dir = 4
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Rv" = (
 /obj/effect/overlay/light_cone{
 	color = "#E1E17D"
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "RB" = (
 /obj/machinery/light/small{
 	dir = 1
@@ -2756,7 +2756,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/tape/door_regret/failed_promise,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "RK" = (
 /mob/living/simple_animal/pet/penguin/emperor/shamebrero,
 /turf/open/floor/holofloor/snow,
@@ -2773,19 +2773,19 @@
 	dir = 8
 	},
 /turf/open/floor/carpet/green,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "RW" = (
 /obj/structure/chair/comfy/black{
 	dir = 1
 	},
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Sb" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/indestructible/white,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Sd" = (
 /obj/structure/railing{
 	name = "invincible railing";
@@ -2801,24 +2801,24 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Sf" = (
 /obj/machinery/door/airlock/vault,
 /turf/open/floor/vault,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Si" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "St" = (
 /obj/effect/decal/cleanable/oil/streak,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Sz" = (
 /obj/machinery/computer/bookmanagement,
 /obj/structure/table/wood/fancy/royalblack,
 /turf/open/floor/carpet/black,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "SH" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -2847,7 +2847,7 @@
 	pixel_y = -32
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "SZ" = (
 /obj/effect/gibspawner/human,
 /obj/effect/decal/cleanable/crayon{
@@ -2855,23 +2855,23 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ta" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/tape/door_regret/traded_life,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Tc" = (
 /obj/structure/table/bronze,
 /obj/item/toy/clockwork_watch,
 /turf/open/floor/bronze,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ti" = (
 /obj/structure/regret_door{
 	pixel_y = 32
 	},
 /turf/open/floor/plating/ironsand,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Tl" = (
 /obj/effect/turf_decal/siding/wood/corner{
 	dir = 4
@@ -2884,7 +2884,7 @@
 	dir = 4
 	},
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Tz" = (
 /obj/structure/flora/icestalagmite{
 	pixel_x = -12;
@@ -2905,13 +2905,13 @@
 /obj/item/silkknife,
 /obj/item/stack/sheet/silk/azure_masterpiece,
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "TQ" = (
 /obj/item/toy/talking/owl,
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "TR" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 5
@@ -2925,7 +2925,7 @@
 /obj/item/clothing/suit/chaplainsuit/whiterobe,
 /obj/item/storage/book/bible,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Uh" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 10
@@ -2937,14 +2937,14 @@
 	pixel_x = -32
 	},
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Uu" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/filingcabinet/lore,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UA" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -2957,7 +2957,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UF" = (
 /obj/structure/frozensword,
 /obj/effect/areaflavor_snow,
@@ -2974,9 +2974,9 @@
 /obj/item/mailpaper/junk,
 /obj/item/mailpaper/junk,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UM" = (
-/obj/effect/landmark/backrooms_spawn,
+/obj/effect/landmark/repentance_spawn,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -2988,7 +2988,7 @@
 	pixel_y = -32
 	},
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UO" = (
 /obj/effect/areaflavor_snow,
 /turf/open/floor/plasteel/dark{
@@ -3004,7 +3004,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/tape/door_regret/child_weapon,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/trash/can{
@@ -3014,17 +3014,17 @@
 /obj/item/trash/can,
 /obj/item/stack/sheet/silk/azure_simple,
 /turf/open/floor/mineral/titanium/tiled/purple,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "UY" = (
 /obj/structure/fence/door/opened,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Vb" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Vh" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -3045,7 +3045,7 @@
 /obj/structure/fence/corner,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Vs" = (
 /obj/structure/fluff/paper/stack{
 	dir = 4
@@ -3054,7 +3054,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Vv" = (
 /obj/structure/railing{
 	dir = 4;
@@ -3067,7 +3067,7 @@
 /turf/closed/indestructible/iron{
 	opacity = 1
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "VJ" = (
 /obj/structure/flora/icegrave,
 /obj/effect/areaflavor_snow,
@@ -3084,7 +3084,7 @@
 /turf/closed/indestructible/iron{
 	opacity = 1
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "VZ" = (
 /obj/structure/railing{
 	dir = 6;
@@ -3114,7 +3114,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "WU" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 8
@@ -3124,7 +3124,7 @@
 "Xa" = (
 /obj/structure/mineral_door/wood,
 /turf/open/floor/holofloor/grass,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Xh" = (
 /obj/structure/regret_door{
 	pixel_x = -32
@@ -3132,7 +3132,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/bed/maint,
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Xt" = (
 /turf/open/floor/wood,
 /area/fishboat)
@@ -3144,7 +3144,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "XF" = (
 /obj/structure/sign/painting/library{
 	pixel_y = -32
@@ -3152,7 +3152,7 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/carpet/royalblue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "XK" = (
 /obj/structure/railing{
 	dir = 1
@@ -3179,7 +3179,7 @@
 	color = "#E1E17D"
 	},
 /turf/open/floor/stone,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Yh" = (
 /obj/machinery/light/small{
 	dir = 8
@@ -3197,7 +3197,7 @@
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Yl" = (
 /obj/structure/railing{
 	dir = 10;
@@ -3210,12 +3210,12 @@
 /obj/structure/table/wood/fancy/orange,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/orange,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Yv" = (
 /obj/structure/table,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Yw" = (
 /obj/structure/flora/icestalagmite/small,
 /obj/effect/areaflavor_snow,
@@ -3243,7 +3243,7 @@
 /area/snowqueen)
 "Yz" = (
 /turf/open/floor/mineral/titanium/yellow,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "YA" = (
 /obj/item/fish_feed,
 /turf/open/floor/wood,
@@ -3255,12 +3255,12 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "YH" = (
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "YI" = (
 /obj/structure/toolabnormality/shelter/exit,
 /obj/effect/shelter_forcefield,
@@ -3284,7 +3284,7 @@
 /obj/effect/landmark/tape_spawner/door_to_nowhere,
 /obj/structure/table/wood/fancy/royalblack,
 /turf/open/floor/carpet/royalblack,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "Ze" = (
 /obj/structure/flora/icestalagmite{
 	layer = 3;
@@ -3312,7 +3312,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/holofloor/wood,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ZI" = (
 /obj/effect/areaflavor_snow,
 /turf/open/floor/plasteel/dark{
@@ -3334,7 +3334,7 @@
 /obj/item/toy/plush/chesed,
 /obj/structure/table/wood/fancy/blue,
 /turf/open/floor/carpet/blue,
-/area/fishboat/backrooms)
+/area/fishboat/repentance)
 "ZU" = (
 /turf/closed/mineral/snowmountain/cavern,
 /area/snowqueen)
