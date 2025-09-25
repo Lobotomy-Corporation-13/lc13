@@ -547,11 +547,19 @@ DEFAULT_VIEW_SQUARE 15x15
 
 #### OTHER DISCORD STUFF ####
 
+## Uncomment to enable high pop pings
+#HIGH_POP_PING_ENABLED
+
 ## Add the role ID of the role you wish to ping for high pop, leave commented out to disable high pop role pings
 #HIGH_POP_PING_ROLEID 000000000000000000
 
 ## Uncomment to change the number of active players needed for a Discord ping to be sent
 #HIGH_POP_PING_THRESHOLD 7
+
+## Uncomment & change this number to modify the weight Discord queued people have
+## This is what the queue count gets multiplied with and added to the in-game count
+## 2 = double weight, 1 = full weight, 0 = no weight
+#HIGH_POP_QUEUE_WEIGHT 1
 
 ##Amount of time required for senior job titles in minutes
 SENIOR_TIMELOCK 600
