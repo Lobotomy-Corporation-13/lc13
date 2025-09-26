@@ -335,21 +335,21 @@
 /obj/item/ego_weapon/ranged/willing
 	name = "flesh is willing"
 	desc = "And really nothing will stop it."
-	icon = 'icons/obj/guns/projectile.dmi'
-	icon_state = "l6_cyborg"
+	icon_state = "willing"
+	inhand_icon_state = "willing"
 	damtype = RED_DAMAGE
 	force = 60
 	attack_speed = 1.5
 	weapon_weight = WEAPON_HEAVY
 	hitsound = 'sound/weapons/fast_slam.ogg'
-	usesound = 'sound/machines/click.ogg'
+	usesound = 'sound/effects/ordeals/amber/dusk_dead.ogg'
 
 	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
 	fire_sound_volume = 18
 	projectile_path = /obj/projectile/ego_bullet/willing
 	shotsleft = 100
 	reloadtime = 3 SECONDS
-	autofire = 1.3
+	autofire = 1.4
 	spread = 25
 
 	special = "Reload this weapon by <b>alt-clicking</b> it.\n\
@@ -365,6 +365,9 @@
 	var/entrenchment_upgrade_timer
 	var/entrenchment_upgrade_timer_duration = 7 SECONDS
 
+	/// This cooldown is just so people don't spam the hell out of the sound.
+	COOLDOWN_DECLARE(ability)
+
 	/// Holds this weapon's attached Autofire component. We will be modifying it often.
 	var/datum/component/automatic_fire/autofire_component
 
@@ -372,11 +375,11 @@
 	/// The spread of the weapon's bullets. Lower is more precise.
 	var/list/entrenchment_stage_spread_values = list(25, 11, 4)
 	/// The fire rate for the weapon. Higher is slower. The reason why it gets slower as your buff progresses, is because you get drastically more powerful ammo.
-	var/list/entrenchment_stage_firerate_values = list(1.3, 2.35, 3.1)
+	var/list/entrenchment_stage_firerate_values = list(1.4, 2.35, 3.1)
 	// These three lists are self explanatory. Projectile type, fire sound and volume used in each stage.
 	var/list/entrenchment_stage_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
-	var/list/entrenchment_stage_firesound = list('sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg')
-	var/list/entrenchment_stage_volume = list(18, 35, 55)
+	var/list/entrenchment_stage_firesound = list('sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/sniper/shot.ogg')
+	var/list/entrenchment_stage_volume = list(20, 35, 55)
 
 	/// Lets you store this gun normally into your belt/suit storage/whatever. We disable this when the special ability is active.
 	var/storeable = TRUE
@@ -395,17 +398,16 @@
 
 /// When using the weapon in-hand, we activate the special ability. Reload is on altclick instead. Sorry.
 /obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
-	if((CheckIfUserEntrenched(user)) || (!ishuman(user)))
+	if((CheckIfUserEntrenched(user)) || (!ishuman(user)) || !COOLDOWN_FINISHED(src, ability))
 		return
+	COOLDOWN_START(src, ability, 2 SECONDS)
+
 	playsound(src, usesound, 80, FALSE)
 	var/mob/living/carbon/human/entrencher = user
 
 	// There's a delay, but this happens on the move. You can still cancel obtaining the buff by swapping hands or dropping or storing the weapon.
 	if(do_after(user, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
 		entrencher.adjustBruteLoss(20)
-		for(var/i in 1 to 3)
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
-
 		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
 		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), entrenchment_upgrade_timer_duration, TIMER_STOPPABLE)
 		return
@@ -463,7 +465,7 @@
 	/// Whether this stage of the status effect roots you in place. If it does, you are very briefly immobilized when applied, then further movement breaks the status.
 	/// If it doesn't, you get slowed down.
 	var/should_immobilize = FALSE
-	/// The stage of the weapon this status corresponds to, which controls the stats applied to the weapon according to its own a-lists.
+	/// The stage of the weapon this status corresponds to, which controls the stats applied to the weapon according to its own a-lists. It is used as an index, basically.
 	var/stage = 2
 	/// The gun that we'll be modifying. This isn't necessarily (but should be in 99.99999% of cases) the gun that applied the effect.
 	var/obj/item/ego_weapon/ranged/willing/linked_gun
@@ -494,9 +496,16 @@
 			john_willing.physiology.black_mod *= physiology_multiplier
 			john_willing.physiology.pale_mod *= physiology_multiplier
 
+			// I was tempted to add move force, but sadly the amount of force required to push Abnormalities aside will also forcibly move anchored objects like glass windows or machines
 			john_willing.move_resist = MOVE_FORCE_VERY_STRONG
 			ADD_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
 
+			var/turf/user_turf = get_turf(john_willing)
+			// Aesthetics.
+			AestheticBloodsplatters(user_turf)
+
+			// If this stage of the buff should immobilize us, we VERY BRIEFLY immobilize the user, and register a signal that breaks the buff if they move manually.
+			// The reason for this is that being immobilized in combat is EXTREMELY deadly, especially at ALEPH tier. This weapon would be borderline unusable if it truly rooted you.
 			if(should_immobilize)
 				john_willing.Immobilize(1.5 SECONDS, TRUE)
 				RegisterSignal(john_willing, COMSIG_MOVABLE_MOVED, PROC_REF(Revert))
@@ -505,11 +514,16 @@
 				visual_overlay.pixel_x -= 10
 				visual_overlay.pixel_y -= 16
 				john_willing.add_overlay(visual_overlay)
+				john_willing.visible_message(span_danger("A fleshy barricade envelops [john_willing], protecting \him!"), span_nicegreen("Flesh envelops your body, protecting you."))
+			// Otherwise we apply a slowdown.
 			else
 				john_willing.add_movespeed_modifier(/datum/movespeed_modifier/entrenched)
+				visual_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inexorable", ABOVE_MOB_LAYER)
+				john_willing.visible_message(span_danger("Tendrils of flesh begin creeping up [john_willing], acting as armour for \him!"), span_nicegreen("Tendrils of flesh begin to creep up your body, acting as armour for you."))
 		else
 			Revert()
 
+// Clean up the unholy mess we stapled onto the gun and its user
 /datum/status_effect/willing_weapon_entrenched/on_remove()
 	. = ..()
 	if(ishuman(owner))
@@ -532,6 +546,8 @@
 
 		if(should_immobilize)
 			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
+			var/turf/user_turf = get_turf(john_willing)
+			AestheticBloodsplatters(user_turf)
 		else
 			john_willing.remove_movespeed_modifier(/datum/movespeed_modifier/entrenched)
 
@@ -543,12 +559,19 @@
 		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
 		john_willing.remove_status_effect(STATUS_EFFECT_ENTRENCHED_FINAL)
 
+/// Purely aesthetic effect used when the effect upgrades/is removed at last stage
+/datum/status_effect/willing_weapon_entrenched/proc/AestheticBloodsplatters(turf/user_turf)
+	for(var/i in 1 to 3)
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(user_turf, pick(GLOB.alldirs))
+	new /obj/effect/decal/cleanable/blood(user_turf)
+	playsound(user_turf, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 25, FALSE)
+
 /datum/movespeed_modifier/entrenched
 	multiplicative_slowdown = 2.2
 
 /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
 	name = "Inexorable"
-	icon_state = "entrenched"
+	icon_state = "inexorable"
 	desc = "Forward! Until the last bullet is spent!"
 
 /atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
