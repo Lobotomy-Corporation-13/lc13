@@ -473,7 +473,7 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 /obj/item/clothing/suit/armor/ego_gear/aleph/tir_static
 	name = "Static"
 	desc = "A coat-shaped Tear in Reality. When you reach for it, it swarms your face and forms a mask, consciously protecting you from dangers."
-	icon_state = 'tir_static'
+	icon_state = 'tir_mask'
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 100, BLACK_DAMAGE = 70, PALE_DAMAGE = -20) // 200 - Will eventually have a final obs. armor with an ally summoning ability
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,

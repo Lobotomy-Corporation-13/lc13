@@ -5,7 +5,6 @@
 	desc = "Something is staring back, strangely, you feel like you recognize it."
 	icon = 'ModularLobotomy/_Lobotomyicons/64x98.dmi'
 	icon_state = 'reality_tear'
-	icon_living = 'reality_tear'
 	pixel_x = -32
 	base_pixel_x = -32
 	pixel_y = -32
@@ -52,7 +51,7 @@
 	visible_message(span_danger("Something rises from the static..."))
 	for(var/i = 5 to 10)
 		var/turf/T = get_step(get_turf(src), pick(0, EAST))
-		var/picked_mob = /mob/living/simple_animal/hostile/tir_static
+		var/picked_mob = /mob/living/simple_animal/hostile/tir_cheers
 		new picked_mob(T)
 
 	//	if(prob(75)) ///Spawns Interdimensional Static 25% of the time, can lower to smth like 10% if needed

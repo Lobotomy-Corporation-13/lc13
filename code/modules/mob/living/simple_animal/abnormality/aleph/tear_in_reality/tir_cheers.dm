@@ -10,9 +10,8 @@
 	name = "Interdimensional Static"
 	desc = "Whatever it was, looks like it got lost."
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = 'lost_clown' //Potential for redesign?
-	icon_living = 'lost_clown'
-	icon_dead = 'lost_clown_dead'
+	icon_state = 'tir_cheers' //Will be redesigned in Part 2
+	icon_dead = 'tir_cheers_dead'
 	faction = list("hostile") //Will not attack other abnos, only players and ordeals.
 	maxHealth = 250 //Tbh, I don't know the difference between maxHealth and health
 	health = 250
