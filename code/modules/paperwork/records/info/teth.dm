@@ -159,8 +159,8 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/smile
 	abno_code = "F-02-128"
 	abno_info = list(
-		"The work success rate was reduced for every stat of the employee at or above Level 3.",
-		"When all stats of the employee were at or above Level 3, the Qliphoth Counter lowered.",
+		"The work success rate was reduced for every stat of the employee at or above Level 2.",
+		"When all stats of the employee were at or above Level 2, the Qliphoth Counter lowered.",
 		"When the work result was Bad, the Qliphoth Counter lowered.")
 
 //Penitent Girl

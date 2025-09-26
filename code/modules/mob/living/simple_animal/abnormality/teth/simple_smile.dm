@@ -113,10 +113,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/smile/WorkChance(mob/living/carbon/human/user, chance)
 	var/chance_modifier = 1
-	lucky_counter = 0	//Counts how many stats are above 60
+	lucky_counter = 0	//Counts how many stats are above 40
 
 	for(var/attribute in stats)
-		if(get_attribute_level(user, attribute)>= 60)
+		if(get_attribute_level(user, attribute)>= 40)
 			chance_modifier *= 0.8
 			lucky_counter += 1
 

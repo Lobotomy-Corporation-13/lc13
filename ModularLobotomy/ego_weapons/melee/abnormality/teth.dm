@@ -145,6 +145,8 @@
 /obj/item/ego_weapon/mini/trick
 	name = "hat trick"
 	desc = "Imagination is the only weapon in the war with reality."
+	special = "Upon throwing, this weapon returns to the user. each time it's thrown, it's damage is increased by 7 until your next melee attack. \
+			Use in hand to dodgeroll."
 	icon_state = "trick"
 	force = 17
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -156,6 +158,35 @@
 	attack_verb_continuous = list("jabs")
 	attack_verb_simple = list("jabs")
 	hitsound = 'sound/weapons/slashmiss.ogg'
+
+/obj/item/ego_weapon/mini/trick/attack(mob/living/target, mob/living/user)
+	. = ..()
+	force = intial(force)
+
+/obj/item/ego_weapon/mini/trick/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
+	if(thrownby && !caught)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom/movable, throw_at), thrownby, throw_range+2, throw_speed, null, TRUE), 1)
+		if(force<=100)
+			force+= 7
+	if(caught)
+		return
+	else
+		return ..()
+
+	var/dodgelanding
+
+/obj/item/ego_weapon/mini/trick/attack_self(mob/living/carbon/user)
+	if(user.dir == 1)
+		dodgelanding = locate(user.x, user.y + 5, user.z)
+	if(user.dir == 2)
+		dodgelanding = locate(user.x, user.y - 5, user.z)
+	if(user.dir == 4)
+		dodgelanding = locate(user.x + 5, user.y, user.z)
+	if(user.dir == 8)
+		dodgelanding = locate(user.x - 5, user.y, user.z)
+	user.adjustStaminaLoss(25, TRUE, TRUE)
+	user.throw_at(dodgelanding, 3, 2, spin = TRUE)
 
 /obj/item/ego_weapon/sorrow
 	name = "sorrow"
