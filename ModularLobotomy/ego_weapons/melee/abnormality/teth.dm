@@ -175,8 +175,6 @@
 	else
 		return ..()
 
-	var/dodgelanding
-
 /obj/item/ego_weapon/mini/trick/attack_self(mob/living/carbon/user)
 	if(user.dir == 1)
 		dodgelanding = locate(user.x, user.y + 5, user.z)
