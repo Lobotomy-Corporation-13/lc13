@@ -54,6 +54,21 @@
 			Then, it disappears with a smile."),
 	)
 
+generic_bubbles = list(
+		1 = list("%ABNO purrs gently."),
+		2 = list("%ABNO rubs up against %PERSON's hand"),
+		3 = list("%ABNO hisses at %PERSON."),
+		4 = list("%ABNO hisses at %PERSON, as a warning to keep away"),
+		5 = list("%ABNO runs and hides from %PERSON, as if they are scared."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON gives %ABNO a little cup of tea, which it laps up. %ABNO starts to purr gently.",
+				"%PERSON gives %ABNO a little bit of cat food."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON  %ABNO."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON scritches %ABNO under the chin.", "%PERSON mimicks a pet at %ABNO, their hand passing through the ethereal body"),
+		ABNORMALITY_WORK_REPRESSION = list("%ABNO bites %PERSON, who gives it a light whap on the head.", "%PERSON pats %ABNO on the belly, causing it to freak out."),
+	)
+
 	var/list/stats = list(
 		FORTITUDE_ATTRIBUTE,
 		PRUDENCE_ATTRIBUTE,
@@ -98,10 +113,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/smile/WorkChance(mob/living/carbon/human/user, chance)
 	var/chance_modifier = 1
-	lucky_counter = 0	//Counts how many stats are above 40
+	lucky_counter = 0	//Counts how many stats are above 60
 
 	for(var/attribute in stats)
-		if(get_attribute_level(user, attribute)>= 40)
+		if(get_attribute_level(user, attribute)>= 60)
 			chance_modifier *= 0.8
 			lucky_counter += 1
 
