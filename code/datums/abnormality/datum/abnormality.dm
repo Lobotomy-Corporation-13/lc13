@@ -76,6 +76,11 @@
 	//Check for Neutral abnormalities
 	var/good_hater = FALSE
 
+	// True if this is a stupid abnormality (aka a regular simplemob)
+	var/stupid = FALSE
+	var/work_damage_amount_dummy = 0
+	var/work_damage_type_dummy = 0
+
 /datum/abnormality/New(obj/effect/landmark/abnormality_spawn/new_landmark, mob/living/simple_animal/hostile/abnormality/new_type = null)
 	if(!istype(new_landmark))
 		CRASH("Abnormality datum was created without reference to landmark.")
@@ -85,9 +90,12 @@
 	abno_path = new_type
 	name = initial(abno_path.name)
 	desc = initial(abno_path.desc)
+	stupid = SSabnormality_queue.queued_abnormality_stupid
 	RespawnAbno()
 	FillEgoList()
 	ModifyOdds()
+	if(stupid)
+		RegisterSignal(current, COMSIG_LIVING_DEATH, PROC_REF(StupidRespawnWrapper))
 
 /datum/abnormality/Destroy()
 	SSlobotomy_corp.all_abnormality_datums -= src
@@ -104,6 +112,11 @@
 	connected_structures = null
 	return ..()
 
+/datum/abnormality/proc/StupidRespawnWrapper()
+	SIGNAL_HANDLER
+
+	addtimer(CALLBACK(src, PROC_REF(RespawnAbno)), 30 SECONDS)
+
 /datum/abnormality/proc/RespawnAbno()
 	if(!ispath(abno_path))
 		CRASH("Abnormality tried to respawn a mob, but abnormality path wasn't valid.")
@@ -113,28 +126,52 @@
 		return
 	var/turf/T = get_turf(landmark)
 	current = new abno_path(T)
-	current.datum_reference = src
+	if(!stupid)
+		current.datum_reference = src
 	current.toggle_ai(AI_OFF)
 	current.status_flags |= GODMODE
 	current.setDir(EAST)
-	threat_level = current.threat_level
-	qliphoth_meter_max = current.start_qliphoth
-	qliphoth_meter = qliphoth_meter_max
+	if(!stupid)
+		threat_level = current.threat_level
+		qliphoth_meter_max = current.start_qliphoth
+		qliphoth_meter = qliphoth_meter_max
+	else
+		threat_level = rand(1, 5)
+		qliphoth_meter_max = rand(1, threat_level)
+		qliphoth_meter = qliphoth_meter_max
+		work_damage_amount_dummy = rand(1, 10)
+		work_damage_type_dummy = pick(RED_DAMAGE, BLACK_DAMAGE, WHITE_DAMAGE)
+		current.del_on_death = TRUE
+		current.move_force = MOVE_FORCE_STRONG
+		current.move_resist = MOVE_FORCE_STRONG
+		current.pull_force = MOVE_FORCE_STRONG
+		current.mob_size = MOB_SIZE_HUGE
 	maximum_attribute_level = THREAT_TO_ATTRIBUTE_LIMIT[threat_level]
-	if(!current.max_boxes)
-		max_boxes = threat_level * 6
+	if(!stupid)
+		if(!current.max_boxes)
+			max_boxes = threat_level * 6
+		else
+			max_boxes = current.max_boxes
+		if(!current.success_boxes)
+			success_boxes = round(max_boxes * 0.7)
+		else
+			success_boxes = current.success_boxes
+		if(!current.neutral_boxes)
+			neutral_boxes = round(max_boxes * 0.4)
+		else
+			neutral_boxes = current.neutral_boxes
+		good_hater = current.good_hater
+		available_work = current.work_chances
 	else
-		max_boxes = current.max_boxes
-	if(!current.success_boxes)
+		max_boxes = rand(1,10) + rand(1,10) + rand(1,10)
 		success_boxes = round(max_boxes * 0.7)
-	else
-		success_boxes = current.success_boxes
-	if(!current.neutral_boxes)
 		neutral_boxes = round(max_boxes * 0.4)
-	else
-		neutral_boxes = current.neutral_boxes
-	good_hater = current.good_hater
-	available_work = current.work_chances
+		available_work = list(
+			ABNORMALITY_WORK_INSTINCT = list(rand(0,100), rand(0,100), rand(0,100), rand(0,100), rand(0,100)),
+			ABNORMALITY_WORK_INSIGHT = list(rand(0,100), rand(0,100), rand(0,100), rand(0,100), rand(0,100)),
+			ABNORMALITY_WORK_ATTACHMENT = list(rand(0,100), rand(0,100), rand(0,100), rand(0,100), rand(0,100)),
+			ABNORMALITY_WORK_REPRESSION = list(rand(0,100), rand(0,100), rand(0,100), rand(0,100), rand(0,100)),
+		)
 	switch(threat_level)
 		if(ZAYIN_LEVEL)
 			max_understanding = 10
@@ -148,14 +185,24 @@
 		if(ALEPH_LEVEL)
 			overload_chance_amount = -6
 			max_understanding = 6
-	if(understanding == max_understanding && max_understanding > 0)
+	if(understanding == max_understanding && max_understanding > 0 && !stupid)
 		current.gift_chance *= 1.5
 	overload_chance_limit = overload_chance_amount * 10
-	if(abno_radio)
-		current.AbnoRadio()
-	current.PostSpawn()
+	if(!stupid)
+		if(abno_radio)
+			current.AbnoRadio()
+		current.PostSpawn()
+	else
+		max_understanding = 100
 
 /datum/abnormality/proc/FillEgoList()
+	if(stupid)
+		for(var/i = 0, i<2, i++)
+			var/datum/ego_datum/ED = pick(subtypesof(/datum/ego_datum))
+			var/datum/ego_datum/ED2 = new ED(src)
+			ego_datums += ED2
+			GLOB.ego_datums["[ED2.name][ED2.item_category]"] = ED2
+		return TRUE
 	if(!current || !current.ego_list)
 		return FALSE
 	for(var/thing in current.ego_list)
@@ -165,6 +212,8 @@
 	return TRUE
 
 /datum/abnormality/proc/ModifyOdds()
+	if(stupid)
+		return
 	var/turf/spawn_turf = locate(1, 1, 1)
 	var/mob/living/simple_animal/hostile/abnormality/abno = new abno_path(spawn_turf)
 	abno.core_enabled = FALSE
@@ -175,13 +224,24 @@
 	QDEL_NULL(abno)
 
 /datum/abnormality/proc/work_complete(mob/living/carbon/human/user, work_type, pe, work_time, was_melting, canceled)
-	current.WorkComplete(user, work_type, pe, work_time, canceled) // Cross-referencing gone wrong
+	if(!stupid)
+		current.WorkComplete(user, work_type, pe, work_time, canceled) // Cross-referencing gone wrong
+	else
+		if(pe >= success_boxes)
+			// noop
+		else if(pe >= neutral_boxes)
+			// noop
+		else
+			qliphoth_change(-1, user)
 	if(!console?.recorded && !console?.tutorial) //only training rabbit should not train stats
 		return
 	var/attribute_type = "N/A"
 	var/attribute_given = 0
 	if(pe > 0) // Work did not fail
-		attribute_type = current.work_attribute_types[work_type]
+		if(!stupid)
+			attribute_type = current.work_attribute_types[work_type]
+		else
+			attribute_type = WORK_TO_ATTRIBUTE[work_type]
 		var/datum/attribute/user_attribute = user.attributes[attribute_type]
 		if(user_attribute) //To avoid runtime if it's a custom work type like "Release".
 			var/user_attribute_level = max(1, user_attribute.level)
@@ -253,7 +313,13 @@
 	var/pre_qlip = qliphoth_meter
 	qliphoth_meter = clamp(qliphoth_meter + amount, 0, qliphoth_meter_max)
 	if((qliphoth_meter_max > 0) && (qliphoth_meter <= 0) && (pre_qlip > 0))
-		current?.ZeroQliphoth(user)
+		if(!stupid)
+			current?.ZeroQliphoth(user)
+		else
+			current.toggle_ai(AI_ON) // Run.
+			current.status_flags &= ~GODMODE
+			SEND_GLOBAL_SIGNAL(COMSIG_GLOB_ABNORMALITY_BREACH, src)
+			deadchat_broadcast(" has breached containment.", "<b>[current.name]</b>", current, get_turf(current))
 		current?.visible_message(span_danger("Warning! Qliphoth level reduced to 0!"))
 		playsound(get_turf(current), 'sound/effects/alertbeep.ogg', 50, FALSE)
 		work_logs += "\[[worldtime2text()]\]: Qliphoth counter reduced to 0!"
@@ -267,7 +333,8 @@
 		else
 			current?.visible_message(span_warning("Qliphoth level decreased by [pre_qlip-qliphoth_meter]!"))
 			playsound(get_turf(current), 'sound/machines/synth_no.ogg', 50, FALSE)
-		current?.OnQliphothChange(user, amount, pre_qlip)
+		if(!stupid)
+			current?.OnQliphothChange(user, amount, pre_qlip)
 	if(console?.recorded)
 		work_logs += "\[[worldtime2text()]\]: Qliphoth counter [pre_qlip < qliphoth_meter ? "increased" : "reduced"] to [qliphoth_meter]!"
 		SSlobotomy_corp.work_logs += "\[[worldtime2text()]\] [name]: Qliphoth counter [pre_qlip < qliphoth_meter ? "increased" : "reduced"] to [qliphoth_meter]!"
@@ -279,7 +346,7 @@
 	if(islist(acquired_chance))
 		var/work_level = clamp(round(get_attribute_level(user, WORK_TO_ATTRIBUTE[workType])/20), 1, 5)
 		acquired_chance = acquired_chance[work_level]
-	if(current)
+	if(current && !stupid)
 		acquired_chance = current.WorkChance(user, acquired_chance, workType)
 	switch(workType)
 		if(ABNORMALITY_WORK_INSTINCT)
@@ -345,17 +412,17 @@
 		SSlobotomy_corp.work_stats[user_name]["gain"][attribute_type] += attribute_given
 
 /datum/abnormality/proc/GetName()
-	if(current)
+	if(current && !stupid)
 		return current.GetName()
 	return name
 
 /datum/abnormality/proc/GetRiskLevel()
-	if(current)
+	if(current && !stupid)
 		return current.GetRiskLevel()
 	return threat_level
 
 /datum/abnormality/proc/GetPortrait()
-	if(current)
+	if(current && !stupid)
 		return current.GetPortrait()
 	return portrait
 

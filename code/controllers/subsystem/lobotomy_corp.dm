@@ -354,7 +354,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 			continue
 		if(!cmp.datum_reference || !cmp.datum_reference.current)
 			continue
-		if(!cmp.datum_reference.current.IsContained()) // Does what the old check did, but allows it to be redefined by abnormalities that do so.
+		if(!cmp.datum_reference.current.IsContained() && !cmp.datum_reference.stupid) // Does what the old check did, but allows it to be redefined by abnormalities that do so.
 			continue
 		if(!(cmp.datum_reference.threat_level in qliphoth_meltdown_affected) && !forced)
 			continue
