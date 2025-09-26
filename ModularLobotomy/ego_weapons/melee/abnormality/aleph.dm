@@ -1608,7 +1608,7 @@
 /obj/item/ego_weapon/tir_static
 	name = "Claws of Reality"
 	desc = "A much weaker form of the Claws that tore open reality."
-	icon_state = 'tir_claws'
+	icon_state = "tir_claws"
 	force = 30 //Extremely lowered due to fast attack speed and being pale damage.
 	attack_speed = 0.5
 	damtype = PALE_DAMAGE
