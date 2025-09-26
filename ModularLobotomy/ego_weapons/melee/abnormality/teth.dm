@@ -158,10 +158,11 @@
 	attack_verb_continuous = list("jabs")
 	attack_verb_simple = list("jabs")
 	hitsound = 'sound/weapons/slashmiss.ogg'
+	var/dodgelanding
 
 /obj/item/ego_weapon/mini/trick/attack(mob/living/target, mob/living/user)
 	. = ..()
-	force = intial(force)
+	force = initial(force)
 
 /obj/item/ego_weapon/mini/trick/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
 	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
