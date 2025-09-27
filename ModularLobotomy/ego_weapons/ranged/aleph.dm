@@ -430,6 +430,7 @@
 	if(!(stage in 1 to 3))
 		return FALSE
 
+	shotsleft = initial(shotsleft)
 	// Unlimited ammo if not in base state.
 	if(stage == 1)
 		reloadtime = initial(reloadtime)
@@ -519,6 +520,7 @@
 			else
 				john_willing.add_movespeed_modifier(/datum/movespeed_modifier/entrenched)
 				visual_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inexorable", ABOVE_MOB_LAYER)
+				john_willing.add_overlay(visual_overlay)
 				john_willing.visible_message(span_danger("Tendrils of flesh begin creeping up [john_willing], acting as armour for \him!"), span_nicegreen("Tendrils of flesh begin to creep up your body, acting as armour for you."))
 		else
 			Revert()
