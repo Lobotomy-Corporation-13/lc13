@@ -352,6 +352,12 @@
 	autofire = 1.4
 	spread = 25
 
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
 	special = "Reload this weapon by <b>alt-clicking</b> it.\n\
 	You can <b>use this weapon in-hand</b> to spend health to enter the <b>Inexorable</b> state after a brief wind-up, \
 	during which you will gain a slight slowdown, damage resistance, stun immunity, resistance to being pushed, and an unlimited amount of higher caliber bullets.\n\
@@ -398,7 +404,7 @@
 
 /// When using the weapon in-hand, we activate the special ability. Reload is on altclick instead. Sorry.
 /obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
-	if((CheckIfUserEntrenched(user)) || (!ishuman(user)) || !COOLDOWN_FINISHED(src, ability))
+	if((!CanUseEgo(user)) || (CheckIfUserEntrenched(user)) || (!ishuman(user)) || !COOLDOWN_FINISHED(src, ability))
 		return
 	var/mob/living/carbon/human/entrencher = user
 	if(entrencher.is_working)
