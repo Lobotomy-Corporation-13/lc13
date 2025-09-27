@@ -116,7 +116,11 @@
 	if(work_type == "Fall Asleep")
 		user.drowsyness += 30
 		user.Sleeping(30 SECONDS) // Won't get any info, but you can listen for any breaches for 30 seconds
-		var/chosen_dream = pick(subtypesof(/datum/oracle_dream))
+		var/dream_list
+		for(var/datum/oracle_dream/possible_dream as anything in subtypesof(/datum/oracle_dream))
+			LAZYADDASSOC(dream_list, possible_dream, possible_dream.weight)
+		var/chosen_dream = pickweight(dream_list)
+		log_game("[dream_list]")
 		SpecialDreams(chosen_dream, user)
 		return FALSE
 	return TRUE
@@ -179,15 +183,19 @@
 				minor_announce("Unknown anomalies have caused all extraction attempts to yield the same ZAYIN abnormality, which has been sent to your facility. \
 				Extraction Headquarters is currently searching for a solution, and it apologizes for the inconvenience.", "Extraction Alert:", TRUE)
 		SSabnormality_queue.possible_abnormalities[index][foresighted_abno] *= dream_weight
-	to_chat(dreamer, span_notice(dreamt_set.desc))
+	to_chat(dreamer, span_notice("The oracle shows you [dreamt_set.desc]"))
 
 #define ABNO_GET(X) /mob/living/simple_animal/hostile/abnormality/##X // This will make our life SO much easier.
+#define LOW_DREAM_WEIGHT 0.25
+#define MEDIUM_DREAM_WEIGHT 0.5
+
 // Base datum type for oracle set dreams.
 /datum/oracle_dream
 	var/name = "Dream of...nothing?"
-	var/desc = "A dream of absolute nothingness. (Contact a developer.)"
+	var/desc = "a dream of absolute nothingness. (Contact a developer.)"
 	var/dreamlines = "If you see this, something has gone terribly wrong. (Contact a developer pretty please.)"
 	var/list/dreamt_abnos
+	var/weight = 1
 
 // Dreamlines not added, only descriptions. Therefore descriptions are used to notify players which dream was chosen.
 // Obviously, TODO: Dreamlines but dont hold your breath, I am no writer.
@@ -195,11 +203,13 @@
 	name = "Dream of a Black Forest"
 	desc = "a dream of a forest covered by the deepest dark and the good-intentioned beast at the heart of it."
 	dreamt_abnos = list(ABNO_GET(judgement_bird) = 2, ABNO_GET(big_bird) = 2, ABNO_GET(punishing_bird) = 2)
+	weight = LOW_DREAM_WEIGHT
 
 /datum/oracle_dream/magical_girls
 	name = "Dream of the Magical Defenders"
 	desc = "a dream of a magical team of four, doomed from the very start."
 	dreamt_abnos = list(ABNO_GET(hatred_queen) = 1.5, ABNO_GET(despair_knight) = 1.5, ABNO_GET(greed_king) = 1.5, ABNO_GET(wrath_servant) = 1.5)
+	weight = MEDIUM_DREAM_WEIGHT
 
 /datum/oracle_dream/fairy_feast
 	name = "Dream of a Fairy Feast"
@@ -215,15 +225,16 @@
 	name = "Dream of the Endless Hunt"
 	desc = "a dream of endless hunts and cyclical hatred. A dog stands besides its master, and a wolf bares its fangs against the hunter."
 	dreamt_abnos = list(ABNO_GET(red_hood) = 1.5, ABNO_GET(big_wolf) = 1.5, ABNO_GET(blue_shepherd) = 1.5, ABNO_GET(red_buddy) = 1.5)
+	weight = LOW_DREAM_WEIGHT
 
 /datum/oracle_dream/human_form
 	name = "Dream of the Human Form"
 	desc = "a dream of human faces and human limbs, human skin and human bones, human organs and human blood, human laughter and human sadness. Everything that makes you human, and makes them not."
 	dreamt_abnos = list(ABNO_GET(nothing_there) = 1.5, ABNO_GET(nobody_is) = 1.5, ABNO_GET(kqe) = 1.5, ABNO_GET(pinocchio) = 1.5)
 
-/datum/oracle_dream/suffocating_abyss
-	name = "Dream of a Suffocating Abyss"
-	desc = "a dream of the abyssal depths where countless eyes gaze upon you with intentions unknown."
+/datum/oracle_dream/suffocating_obsession
+	name = "Dream of Suffocating Obsession"
+	desc = "a dream of the abyssal depths where countless eyes gaze upon you intently, following your every move." // Honestly out of ideas.
 	dreamt_abnos = list(ABNO_GET(dreaming_current) = 2, ABNO_GET(pisc_mermaid) = 2, ABNO_GET(siltcurrent) = 2)
 
 /datum/oracle_dream/forgotten_memorial
@@ -236,9 +247,47 @@
 	desc = "a dream of your shrimp friends in your shrimp boat, fishing shrimps in the shrimpy sea for the shrimp corporation. Life is shrimply awesome."
 	dreamt_abnos = list(ABNO_GET(shrimp_exec) = 10, ABNO_GET(wellcheers) = 10)
 
-/datum/oracle_dream/forgotten_orchard
-	name = "Dream of an Forgotten Orchard"
+/datum/oracle_dream/lost_orchard
+	name = "Dream of an Lost Orchard"
 	desc = "a dream of a forgotten apple orchard, littered with rotting fruit and buried tales. Nevertheless, the decaying apples and the maggots within refuse to decay into non-existence."
 	dreamt_abnos = list(ABNO_GET(golden_apple) = 2, ABNO_GET(snow_whites_apple) = 2, ABNO_GET(ebony_queen) = 2)
 
-// Bees, XX Inc, Ying and Yang, One Sin and the Bears
+/datum/oracle_dream/bustling_hive
+	name = "Dream of a Bustling Hive"
+	desc = "a dream of labyrinthine passages inside a titanic beehive, where workers toil endlessly and soldiers stand in everlasting vigil. All for the Queen."
+	dreamt_abnos = list(ABNO_GET(queen_bee) = 5, ABNO_GET(general_b) = 5)
+
+/datum/oracle_dream/new_purpose
+	name = "Dream of a New Purpose"
+	desc = "a dream of a massive queue of purposeless people waiting in front of a colossal construct of machinery and flesh. On the other side, a conveyor belt transports a neverending procession of smiling automata."
+	dreamt_abnos = list(ABNO_GET(we_can_change_anything) = 2, ABNO_GET(cleaner) = 2, ABNO_GET(helper) = 2, ABNO_GET(you_strong) = 2, ABNO_GET(steam) = 2, ABNO_GET(kqe) = 2, ABNO_GET(singing_machine) = 2)
+
+/datum/oracle_dream/fated_harmony
+	name = "Dream of Fated Harmony"
+	desc = "a dream of the festering proliferation of all that is and the desolate silence of all that isn't, lacking in the harmony that can only be restored when the angel and the demon reunite once more."
+	dreamt_abnos = list(ABNO_GET(yin) = 5, ABNO_GET(yang) = 5)
+
+/datum/oracle_dream/one_sin // yes, its just the name of the abno. One Sin is dapper like that.
+	name = "Dream of the One Sin"
+	desc = "a dream of yourself facing a floating skull, while overwhelming light surrounds you on all sides. A booming voice announces its presence, but it's just you and the skull, awaiting your sins. The voice demands your worship, but it's just you and the skull, listening to your confession. The voice declares you a heretic, but it's just you and the skull, judging yet forgiving. As the voice finally grows silent, the skull gently asks: \"Have you found the answers you were looking for?\""
+	dreamt_abnos = list(ABNO_GET(onesin) = 5, ABNO_GET(white_night) = 5)
+
+/datum/oracle_dream/soft_hugs
+	name = "Dream of Soft Hugs"
+	desc = "a dream of factories and production lines churning out soft hugs and shining smiles. The affection that powers these machines will run out someday but for now this place is where happiness is born."
+	dreamt_abnos = list(ABNO_GET(hurting_teddy) = 5, ABNO_GET(happyteddybear) = 5)
+
+/datum/oracle_dream/scalding_jealousy // Do you think agents will celebrate when getting this dream?
+	name = "Dream of Scalding Jealousy"
+	desc = "a dream of a treacherous swamp filled with wraiths of all forms and sizes. A hermit traverses the area, yet for each mile they cross more and more wraiths attach themselves to their essence, starving for attention. The wraith's many boons protect the hermit from the dangers of predators and sickness, yet one forgotten ritual is all that it takes for all wraiths to pounce on them. Nothing remained afterwards but a deafening silence."
+	dreamt_abnos = list(ABNO_GET(hurting_teddy) = 1.5, ABNO_GET(whitelake) = 1.5, ABNO_GET(pisc_mermaid) = 1.5, ABNO_GET(galaxy_child) = 1.5, ABNO_GET(despair_knight) = 1.5, ABNO_GET(wrath_servant) = 1.5, ABNO_GET(pygmalion) = 1.5, ABNO_GET(titania) = 1.5, ABNO_GET(melting_love) = 1.5, ABNO_GET(staining_rose) = 1.5)
+	weight = LOW_DREAM_WEIGHT
+
+/datum/oracle_dream/melting_clocls // Do you think agents will despair when getting this dream?
+	name = "Dream of Melting Clocks"
+	desc = "a dream of a field of clockwork pieces, melting under a searing sun. Time drips down slowly like a drop of tar, yearning to be one with the soil, yet it is always scooped up and put back into the clock to begin the cycle anew."
+	dreamt_abnos = list(ABNO_GET(sirocco) = 3, ABNO_GET(siren) = 3, ABNO_GET(express_train) = 3, ABNO_GET(silence) = 3, ABNO_GET(nosferatu) = 3, ABNO_GET(seasons) = 3, ABNO_GET(black_sun) = 3, ABNO_GET(star_luminary) = 3, ABNO_GET(staining_rose) = 3)
+
+#undef LOW_DREAM_WEIGHT
+#undef MEDIUM_DREAM_WEIGHT
+#undef ABNO_GET // Do we want this for general use? Who knows but better safe than sorry.
