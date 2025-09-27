@@ -400,17 +400,22 @@
 /obj/item/ego_weapon/ranged/willing/attack_self(mob/user)
 	if((CheckIfUserEntrenched(user)) || (!ishuman(user)) || !COOLDOWN_FINISHED(src, ability))
 		return
-	COOLDOWN_START(src, ability, 2 SECONDS)
-
-	playsound(src, usesound, 80, FALSE)
 	var/mob/living/carbon/human/entrencher = user
+	if(entrencher.is_working)
+		to_chat(user, span_danger("You can't call upon the power of [src] - it'd cloud your mind too much for you to be able to carry out the work."))
+		return
+
+	COOLDOWN_START(src, ability, 2 SECONDS)
+	playsound(src, usesound, 80, FALSE)
 
 	// There's a delay, but this happens on the move. You can still cancel obtaining the buff by swapping hands or dropping or storing the weapon.
-	if(do_after(user, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1))
+	if((do_after(user, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "willing_entrench", max_interact_count = 1)) && (!entrencher.is_working))
 		entrencher.adjustBruteLoss(20)
 		entrencher.apply_status_effect(STATUS_EFFECT_ENTRENCHED_INITIAL)
 		entrenchment_upgrade_timer = addtimer(CALLBACK(src, PROC_REF(UpgradeEntrench), user), entrenchment_upgrade_timer_duration, TIMER_STOPPABLE)
 		return
+	else
+		to_chat(entrencher, span_danger("You decide not to call upon the power of [src]."))
 
 /obj/item/ego_weapon/ranged/willing/AltClick(mob/user)
 	if(reloadtime && !is_reloading)
@@ -487,11 +492,14 @@
 		var/mob/living/carbon/human/john_willing = owner
 		var/obj/item/ego_weapon/ranged/willing/entrenching_gun = john_willing.is_holding_item_of_type(/obj/item/ego_weapon/ranged/willing)
 		if(istype(entrenching_gun)) // We found the gun in our active hand or offhand(s)
+			// Changes to gun
 			linked_gun = entrenching_gun
 			linked_gun.ChangeStats(stage) // Change the gun's stats (spread, fire rate, ammo type, etc)
 			linked_gun.storeable = FALSE
 			ADD_TRAIT(linked_gun, TRAIT_NODROP, "willing") // You can no longer drop or throw the gun.
 
+			// Changes to user
+			RegisterSignal(john_willing, COMSIG_WORK_STARTED, PROC_REF(Revert)) // If you try to start a work with this buff it falls off, because come on
 			john_willing.physiology.red_mod *= physiology_multiplier
 			john_willing.physiology.white_mod *= physiology_multiplier
 			john_willing.physiology.black_mod *= physiology_multiplier
@@ -532,12 +540,15 @@
 		var/mob/living/carbon/human/john_willing = owner
 
 		if(linked_gun)
+			// Changes to gun
 			linked_gun.ChangeStats(1)
 			linked_gun.storeable = TRUE
 			REMOVE_TRAIT(linked_gun, TRAIT_NODROP, "willing")
 			deltimer(linked_gun.entrenchment_upgrade_timer)
 			linked_gun = null
 
+		// Changes to user
+		UnregisterSignal(john_willing, COMSIG_WORK_STARTED)
 		john_willing.physiology.red_mod /= physiology_multiplier
 		john_willing.physiology.white_mod /= physiology_multiplier
 		john_willing.physiology.black_mod /= physiology_multiplier
