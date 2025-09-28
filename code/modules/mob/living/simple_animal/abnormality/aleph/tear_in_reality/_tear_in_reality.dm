@@ -3,7 +3,7 @@
 /mob/living/simple_animal/hostile/abnormality/reality_tear
 	name = "Tear in Reality"
 	desc = "Something is staring back, strangely, you feel like you recognize it."
-	icon = 'ModularLobotomy/_Lobotomyicons/64x98.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi' //Outline this eventually
 	icon_state = "reality_tear"
 	pixel_x = -32
 	base_pixel_x = -32
