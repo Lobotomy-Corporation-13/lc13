@@ -469,7 +469,7 @@
 	id = "willing_weapon_entrenched"
 	status_type = STATUS_EFFECT_REPLACE
 	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched
-	duration = 60 SECONDS // This status effect will be manually removed when upgraded to the next.
+	duration = 10 SECONDS // This status effect will be manually removed when upgraded to the next.
 
 	/// Multiplier applied to subject's physiology resistances, so 0.5 means you take half damage. Should always be lower (stronger) for the final_stage version,
 	/// and should NEVER be 0.
@@ -492,6 +492,11 @@
 	should_immobilize = TRUE
 	alert_type = /atom/movable/screen/alert/status_effect/willing_weapon_entrenched/final_stage
 
+/// Needed because throws seemingly don't care about your move resistance.
+/datum/status_effect/willing_weapon_entrenched/proc/HaltThrows()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
 /datum/status_effect/willing_weapon_entrenched/on_apply()
 	. = ..()
 	if(ishuman(owner))
@@ -506,15 +511,16 @@
 
 			// Changes to user
 			RegisterSignal(john_willing, COMSIG_WORK_STARTED, PROC_REF(Revert)) // If you try to start a work with this buff it falls off, because come on
+			RegisterSignal(john_willing, COMSIG_MOVABLE_PRE_THROW, PROC_REF(HaltThrows)) // Necessary to stop being thrown by stuff like Ebony or LOOS
 			john_willing.physiology.red_mod *= physiology_multiplier
 			john_willing.physiology.white_mod *= physiology_multiplier
 			john_willing.physiology.black_mod *= physiology_multiplier
 			john_willing.physiology.pale_mod *= physiology_multiplier
 
 			// I was tempted to add move force, but sadly the amount of force required to push Abnormalities aside will also forcibly move anchored objects like glass windows or machines
-			john_willing.move_resist = MOVE_FORCE_VERY_STRONG
+			john_willing.move_resist = MOVE_FORCE_OVERPOWERING
 			ADD_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
-
+			ADD_TRAIT(john_willing, TRAIT_PUSHIMMUNE, "willing")
 			var/turf/user_turf = get_turf(john_willing)
 			// Aesthetics.
 			AestheticBloodsplatters(user_turf)
@@ -536,8 +542,9 @@
 				visual_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "inexorable", ABOVE_MOB_LAYER)
 				john_willing.add_overlay(visual_overlay)
 				john_willing.visible_message(span_danger("Tendrils of flesh begin creeping up [john_willing], acting as armour for \him!"), span_nicegreen("Tendrils of flesh begin to creep up your body, acting as armour for you."))
-		else
-			Revert()
+			return TRUE
+
+	return FALSE
 
 // Clean up the unholy mess we stapled onto the gun and its user
 /datum/status_effect/willing_weapon_entrenched/on_remove()
@@ -555,6 +562,7 @@
 
 		// Changes to user
 		UnregisterSignal(john_willing, COMSIG_WORK_STARTED)
+		UnregisterSignal(john_willing, COMSIG_MOVABLE_PRE_THROW)
 		john_willing.physiology.red_mod /= physiology_multiplier
 		john_willing.physiology.white_mod /= physiology_multiplier
 		john_willing.physiology.black_mod /= physiology_multiplier
@@ -562,6 +570,7 @@
 
 		john_willing.move_resist = MOVE_FORCE_DEFAULT
 		REMOVE_TRAIT(john_willing, TRAIT_STUNIMMUNE, "willing")
+		REMOVE_TRAIT(john_willing, TRAIT_PUSHIMMUNE, "willing")
 
 		if(should_immobilize)
 			UnregisterSignal(john_willing, COMSIG_MOVABLE_MOVED)
