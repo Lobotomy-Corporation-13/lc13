@@ -368,10 +368,17 @@ SUBSYSTEM_DEF(ticker)
 			iter_human.hardcore_survival_score *= 2 //Double for antags
 		to_chat(iter_human, "<span class='notice'>You will gain [round(iter_human.hardcore_survival_score)] hardcore random points if you survive this round!</span>")
 
+	// Roundstart changes for certain map types.
+
 	// Gamespeed vote and no-Manager Core Suppression selection override for LobCorp gamemodes.
 	if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini")
 		addtimer(CALLBACK(src, PROC_REF(DoGamespeedVote)), 10 SECONDS)
 		addtimer(CALLBACK(SSlobotomy_corp, TYPE_PROC_REF(/datum/controller/subsystem/lobotomy_corp, LiftCoreSelectionRestriction)), SSlobotomy_corp.core_selection_restriction_lift_timer)
+	else if((SSmaptype.maptype == "city")) // On City of Light specifically (not City Fixers or etc), add 2 Roamer slots at roundstart
+		for(var/datum/job/processing in SSjob.occupations)
+			if((istype(processing, /datum/job/associateroaming)))
+				processing.total_positions += 2
+				break
 
 //These callbacks will fire after roundstart key transfer
 /datum/controller/subsystem/ticker/proc/OnRoundstart(datum/callback/cb)
