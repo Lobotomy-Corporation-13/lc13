@@ -144,6 +144,9 @@
 			user.gain_trauma_type(BRAIN_TRAUMA_SEVERE, TRAUMA_RESILIENCE_LOBOTOMY)
 			playsound(user, 'sound/effects/wounds/crack1.ogg', 75, FALSE, -1)
 			return
+	else
+		to_chat(user, span_notice("You probably shouldn't try to climb this."))
+		return
 
 /mob/living/simple_animal/hostile/abnormality/beanstalk/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 	var/user_fort = get_attribute_level(user, FORTITUDE_ATTRIBUTE)
@@ -203,7 +206,7 @@
 				QDEL_IN(user, 1)
 				return
 			else //item time
-				to_chat(user, span_userdanger("You snap out your stupor!"))
+				to_chat(user, span_userdanger("You snap out of your stupor!"))
 				sleep(3 SECONDS)
 				to_chat(user, span_userdanger("You notice a variety of items and previous climbers all hanging from branches of the beanstalk!"))
 				user.Stun(15 SECONDS)
@@ -237,6 +240,9 @@
 			user.gain_trauma_type(BRAIN_TRAUMA_SEVERE, TRAUMA_RESILIENCE_LOBOTOMY)
 			playsound(user, 'sound/effects/wounds/crack1.ogg', 75, FALSE, -1)
 			return
+	else
+		to_chat(user, span_userdanger("You overcome the urge to climb, knowing that you're too weak to climb it."))
+		return
 
 /datum/ego_gifts/giant
 	name = "Giant"
