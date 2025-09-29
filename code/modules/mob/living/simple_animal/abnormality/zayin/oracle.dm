@@ -20,6 +20,7 @@
 	)
 	work_damage_amount = 5
 	work_damage_type = WHITE_DAMAGE
+	max_boxes = 8
 	chem_type = /datum/reagent/abnormality/sin/wrath
 
 	ego_list = list(
@@ -88,6 +89,14 @@
 	if(work_type == ABNORMALITY_WORK_INSIGHT)
 		user.drowsyness += 30
 		user.Sleeping(30 SECONDS) //Sleep with her, so that you can get some information
+		if(pe == max_boxes && !(RememberVar("SpecialDreamDone")))
+			var/list/dream_list
+			for(var/datum/oracle_dream/possible_dream as anything in subtypesof(/datum/oracle_dream))
+				LAZYADDASSOC(dream_list, possible_dream, possible_dream.weight)
+			var/chosen_dream = pickweight(dream_list)
+			TransferVar("SpecialDreamDone", TRUE)
+			SpecialDreams(chosen_dream, user)
+			return
 		for(var/line in sleeplines)
 			to_chat(user, span_notice(line))
 			SLEEP_CHECK_DEATH(40)
@@ -116,12 +125,6 @@
 	if(work_type == "Fall Asleep")
 		user.drowsyness += 30
 		user.Sleeping(30 SECONDS) // Won't get any info, but you can listen for any breaches for 30 seconds
-		var/dream_list
-		for(var/datum/oracle_dream/possible_dream as anything in subtypesof(/datum/oracle_dream))
-			LAZYADDASSOC(dream_list, possible_dream, possible_dream.weight)
-		var/chosen_dream = pickweight(dream_list)
-		log_game("[dream_list]")
-		SpecialDreams(chosen_dream, user)
 		return FALSE
 	return TRUE
 
@@ -165,51 +168,55 @@
 		L.deal_damage((150 - get_dist(src, L)), WHITE_DAMAGE)
 	qdel(src)
 
-/mob/living/simple_animal/hostile/abnormality/oracle/proc/SpecialDreams(datum/oracle_dream/dreamt_set, mob/living/carbon/human/dreamer)
-	if(!dreamt_set.dreamt_abnos)
+/mob/living/simple_animal/hostile/abnormality/oracle/proc/SpecialDreams(datum/oracle_dream/chosen_dream, mob/living/carbon/human/dreamer)
+	if(!chosen_dream.dreamt_abnos)
 		return
 	if(!dreamer.IsSleeping())
 		return
-	var/forced_abno = FALSE
-	for(var/mob/living/simple_animal/hostile/abnormality/foresighted_abno in dreamt_set.dreamt_abnos)
-		var/dream_weight = dreamt_set.dreamt_abnos[foresighted_abno]
-		var/index = foresighted_abno.threat_level
-		if(index == ZAYIN_LEVEL && !forced_abno) // Teehee
-			forced_abno = TRUE
-			for(var/obj/machinery/computer/abnormality_queue/Q in GLOB.lobotomy_devices)
-				Q.UpdateAnomaly(foresighted_abno, "dreamed with oracle to change", FALSE)
-				SSabnormality_queue.AnnounceLock()
-				SSabnormality_queue.ClearChoices()
-				minor_announce("Unknown anomalies have caused all extraction attempts to yield the same ZAYIN abnormality, which has been sent to your facility. \
-				Extraction Headquarters is currently searching for a solution, and it apologizes for the inconvenience.", "Extraction Alert:", TRUE)
-		SSabnormality_queue.possible_abnormalities[index][foresighted_abno] *= dream_weight
-	to_chat(dreamer, span_notice("The oracle shows you [dreamt_set.desc]"))
+	var/datum/oracle_dream/dream = new chosen_dream
+	to_chat(dreamer, span_notice("The oracle shows you [dream.desc]"))
 
 #define ABNO_GET(X) /mob/living/simple_animal/hostile/abnormality/##X // This will make our life SO much easier.
-#define LOW_DREAM_WEIGHT 0.25
-#define MEDIUM_DREAM_WEIGHT 0.5
+#define VERY_LOW_DREAM_WEIGHT 0.25
+#define LOW_DREAM_WEIGHT 0.5
 
 // Base datum type for oracle set dreams.
 /datum/oracle_dream
 	var/name = "Dream of...nothing?"
 	var/desc = "a dream of absolute nothingness. (Contact a developer.)"
 	var/dreamlines = "If you see this, something has gone terribly wrong. (Contact a developer pretty please.)"
-	var/list/dreamt_abnos
+	var/dreamt_abnos = list()
 	var/weight = 1
+
+/datum/oracle_dream/New()
+	var/forced_abno = FALSE
+	for(var/mob/living/simple_animal/hostile/abnormality/foresighted_abno as anything in dreamt_abnos)
+		var/dream_weight = dreamt_abnos[foresighted_abno]
+		var/index = foresighted_abno.threat_level
+		if(index == ZAYIN_LEVEL && !forced_abno) // Teehee
+			forced_abno = TRUE
+			log_game("[usr] has locked the queued abnormality to [initial(foresighted_abno.name)] due to the influence of Oracle.")
+			SSabnormality_queue.queued_abnormality = foresighted_abno
+			SSabnormality_queue.AnnounceLock()
+			SSabnormality_queue.ClearChoices()
+			minor_announce("Unknown anomalies have caused all extraction attempts to yield the same ZAYIN abnormality. \
+			Extraction Headquarters is currently searching for a solution, and it apologizes for the inconvenience.", "Extraction Alert:", TRUE)
+		SSabnormality_queue.possible_abnormalities[index][foresighted_abno] *= dream_weight
+	qdel(src)
 
 // Dreamlines not added, only descriptions. Therefore descriptions are used to notify players which dream was chosen.
 // Obviously, TODO: Dreamlines but dont hold your breath, I am no writer.
 /datum/oracle_dream/black_forest
 	name = "Dream of a Black Forest"
-	desc = "a dream of a forest covered by the deepest dark and the good-intentioned beast at the heart of it."
+	desc = "a dream of the forest covered by an eternal darkness and the Beast at the heart of it, wandering endlessly in search of itself."
 	dreamt_abnos = list(ABNO_GET(judgement_bird) = 2, ABNO_GET(big_bird) = 2, ABNO_GET(punishing_bird) = 2)
-	weight = LOW_DREAM_WEIGHT
+	weight = VERY_LOW_DREAM_WEIGHT
 
 /datum/oracle_dream/magical_girls
 	name = "Dream of the Magical Defenders"
-	desc = "a dream of a magical team of four, doomed from the very start."
+	desc = "a dream of the four protectors of realms now long dead, doomed from the very start by the same drives that pushed them into their roles."
 	dreamt_abnos = list(ABNO_GET(hatred_queen) = 1.5, ABNO_GET(despair_knight) = 1.5, ABNO_GET(greed_king) = 1.5, ABNO_GET(wrath_servant) = 1.5)
-	weight = MEDIUM_DREAM_WEIGHT
+	weight = LOW_DREAM_WEIGHT
 
 /datum/oracle_dream/fairy_feast
 	name = "Dream of a Fairy Feast"
@@ -218,14 +225,14 @@
 
 /datum/oracle_dream/emerald_path
 	name = "Dream of an Emerald Path"
-	desc = "a dream of a hopeful group of rejects and their journey to make their dreams come true."
-	dreamt_abnos = list(ABNO_GET(woodsman) = 1.5, ABNO_GET(scarecrow) = 1.5, ABNO_GET(scaredy_cat) = 1.5, ABNO_GET(road_home) = 1.5)
+	desc = "a dream of a hopeful group of rejects and their journey to make their dreams come true, a girl sings a tune from distant lands as she walks through a verdant path made of lies."
+	dreamt_abnos = list(ABNO_GET(woodsman) = 2, ABNO_GET(scarecrow) = 2, ABNO_GET(scaredy_cat) = 2, ABNO_GET(road_home) = 2)
 
 /datum/oracle_dream/endless_hunt
 	name = "Dream of the Endless Hunt"
 	desc = "a dream of endless hunts and cyclical hatred. A dog stands besides its master, and a wolf bares its fangs against the hunter."
 	dreamt_abnos = list(ABNO_GET(red_hood) = 1.5, ABNO_GET(big_wolf) = 1.5, ABNO_GET(blue_shepherd) = 1.5, ABNO_GET(red_buddy) = 1.5)
-	weight = LOW_DREAM_WEIGHT
+	weight = VERY_LOW_DREAM_WEIGHT
 
 /datum/oracle_dream/human_form
 	name = "Dream of the Human Form"
@@ -239,7 +246,7 @@
 
 /datum/oracle_dream/forgotten_memorial
 	name = "Dream of a Forgotten Memorial"
-	desc = "a dream of a wasteland left behind by the winds of war, and the lonely memorial that watches over those who, even now, cannot escape the battlefield."
+	desc = "a dream of all the wastelands left behind by the winds of war, and the lonely memorial that watches over those who, even now, cannot escape the battlefield."
 	dreamt_abnos = list(ABNO_GET(quiet_day) = 2, ABNO_GET(mhz) = 2, ABNO_GET(khz) = 2, ABNO_GET(army) = 2)
 
 /datum/oracle_dream/shrimp_boat
@@ -250,7 +257,7 @@
 /datum/oracle_dream/lost_orchard
 	name = "Dream of an Lost Orchard"
 	desc = "a dream of a forgotten apple orchard, littered with rotting fruit and buried tales. Nevertheless, the decaying apples and the maggots within refuse to decay into non-existence."
-	dreamt_abnos = list(ABNO_GET(golden_apple) = 2, ABNO_GET(snow_whites_apple) = 2, ABNO_GET(ebony_queen) = 2)
+	dreamt_abnos = list(ABNO_GET(golden_apple) = 5, ABNO_GET(snow_whites_apple) = 5, ABNO_GET(ebony_queen) = 5)
 
 /datum/oracle_dream/bustling_hive
 	name = "Dream of a Bustling Hive"
@@ -274,20 +281,25 @@
 
 /datum/oracle_dream/soft_hugs
 	name = "Dream of Soft Hugs"
-	desc = "a dream of factories and production lines churning out soft hugs and shining smiles. The affection that powers these machines will run out someday but for now this place is where happiness is born."
+	desc = "a dream of factories and production lines churning out soft hugs and shining smiles. The affection that powers these machines will run out someday but, for now, this place is where happiness is born."
 	dreamt_abnos = list(ABNO_GET(hurting_teddy) = 5, ABNO_GET(happyteddybear) = 5)
 
-/datum/oracle_dream/scalding_jealousy // Do you think agents will celebrate when getting this dream?
-	name = "Dream of Scalding Jealousy"
-	desc = "a dream of a treacherous swamp filled with wraiths of all forms and sizes. A hermit traverses the area, yet for each mile they cross more and more wraiths attach themselves to their essence, starving for attention. The wraith's many boons protect the hermit from the dangers of predators and sickness, yet one forgotten ritual is all that it takes for all wraiths to pounce on them. Nothing remained afterwards but a deafening silence."
+/datum/oracle_dream/possesive_chains // Do you think agents will celebrate when getting this dream?
+	name = "Dream of Possesive Chains"
+	desc = "a dream of a treacherous swamp filled with wraiths of all forms and sizes. A hermit traverses the area, yet for each mile they cross more and more wraiths chain themselves to their body, starving for attention. The wraith's many boons protect the hermit from the dangers of predators and sickness, yet one forgotten ritual is all that it takes for all wraiths to turn on them. Nothing remained afterwards but a deafening silence."
 	dreamt_abnos = list(ABNO_GET(hurting_teddy) = 1.5, ABNO_GET(whitelake) = 1.5, ABNO_GET(pisc_mermaid) = 1.5, ABNO_GET(galaxy_child) = 1.5, ABNO_GET(despair_knight) = 1.5, ABNO_GET(wrath_servant) = 1.5, ABNO_GET(pygmalion) = 1.5, ABNO_GET(titania) = 1.5, ABNO_GET(melting_love) = 1.5, ABNO_GET(staining_rose) = 1.5)
-	weight = LOW_DREAM_WEIGHT
+	weight = VERY_LOW_DREAM_WEIGHT
 
-/datum/oracle_dream/melting_clocls // Do you think agents will despair when getting this dream?
+/datum/oracle_dream/melting_clocks // Do you think agents will despair when getting this dream?
 	name = "Dream of Melting Clocks"
-	desc = "a dream of a field of clockwork pieces, melting under a searing sun. Time drips down slowly like a drop of tar, yearning to be one with the soil, yet it is always scooped up and put back into the clock to begin the cycle anew."
+	desc = "a dream of a field of clockwork pieces, melting under a searing sun. Time drips down slowly from the melting contraptions, like a drop of tar yearning to be one with the soil, yet it is always scooped up and put back into the clocks to begin the cycle anew."
 	dreamt_abnos = list(ABNO_GET(sirocco) = 3, ABNO_GET(siren) = 3, ABNO_GET(express_train) = 3, ABNO_GET(silence) = 3, ABNO_GET(nosferatu) = 3, ABNO_GET(seasons) = 3, ABNO_GET(black_sun) = 3, ABNO_GET(star_luminary) = 3, ABNO_GET(staining_rose) = 3)
 
+/datum/oracle_dream/overgrown_forest
+	name = "Dream of an Overgrown Forest"
+	desc = "a dream of an endlessly growing forest, consuming anything in its path. The ground is wet and mushy with the remains of plants long dead, fertilizing the soil to let their brethren thrive."
+	dreamt_abnos = list(ABNO_GET(fallen_amurdad) = 2, ABNO_GET(cherry_blossoms) = 2, ABNO_GET(golden_apple) = 2, ABNO_GET(snow_whites_apple) = 2, ABNO_GET(ebony_queen) = 2, ABNO_GET(alriune) = 2, ABNO_GET(rose_sign) = 2, ABNO_GET(parasite_tree) = 2, ABNO_GET(orange_tree) = 2, ABNO_GET(staining_rose) = 2)
+
+#undef VERY_LOW_DREAM_WEIGHT
 #undef LOW_DREAM_WEIGHT
-#undef MEDIUM_DREAM_WEIGHT
 #undef ABNO_GET // Do we want this for general use? Who knows but better safe than sorry.
