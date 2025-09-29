@@ -41,7 +41,15 @@
 	var/list/beanstalkloot= list( //unsure what to put in the loot table here
 		/obj/item/coin/gold,
 		/obj/item/coin/silver,
-		/obj/item/coin/diamond
+		/obj/item/coin/diamond,
+		/obj/structure/lootcrate/limbus,
+		/obj/structure/lootcrate/backstreets,
+		/obj/item/fireaxe,
+		/obj/item/hatchet,
+		/obj/structure/lootcrate/jcorp,
+		/obj/item/clothing/suit/armor/ego_gear/teth/bean,
+		/obj/item/ego_weapon/mini/bean,
+		/obj/item/storage/box/fireworks
 	)
 
 /mob/living/simple_animal/hostile/abnormality/beanstalk/Move()
@@ -96,17 +104,21 @@
 	var/user_temp = get_attribute_level(user, TEMPERANCE_ATTRIBUTE)
 	if(user_fort >= 40) //check if can climb
 		climbinganimation(user)
+		to_chat(user, span_userdanger("You begin to climb!"))
 		sleep(7 SECONDS)
 		if(user_prud < 40) //deathcheck
+			to_chat(user, span_userdanger("You climb, and climb, and climb but the top never seems to appear."))
 			QDEL_IN(user, 1)
 			return
 		else //item time
 			sleep(3 SECONDS)
 			user.Stun(15 SECONDS)
+			to_chat(user, span_userdanger("You notice a variety of items and previous climbers all hanging from branches of the beanstalk!"))
 			sleep(5 SECONDS)
 			var/turf/get_tile = get_step(src, SOUTHEAST)
 			var/beanstalklootget = pick(beanstalkloot)
 			var/obj/spawned_item = new beanstalklootget(get_tile)
+			to_chat(user, span_userdanger("You toss the [spawned_item] down and begin to climb back down."))
 			spawned_item.pixel_z = 128
 			spawned_item.alpha = 1
 			animate(spawned_item, alpha = 255,pixel_x = 0, pixel_z = 0, time = 3 SECONDS)
@@ -118,7 +130,9 @@
 			return
 	else if(user_temp < 40)
 		climbinganimation(user)
+		to_chat(user, span_userdanger("You begin to climb!"))
 		sleep(5 SECONDS)
+		to_chat(user, span_userdanger("You slip and fall, and watch the beanstalk grow further away from you."))
 		if(prob(50)) //death
 			fallinganimation(user)
 			sleep(3 SECONDS)
@@ -182,12 +196,16 @@
 	if(user_fort >= 40) //check if can climb
 		if(user_temp < 60) //hypnotized or not
 			climbinganimation(user)
+			to_chat(user, span_userdanger("Greed overwhelms you, you stride towards the beanstalk and start climbing."))
 			sleep(7 SECONDS)
 			if(user_prud < 40) //deathcheck
+				to_chat(user, span_userdanger("You climb, and climb, and climb but the top never seems to appear."))
 				QDEL_IN(user, 1)
 				return
 			else //item time
+				to_chat(user, span_userdanger("You snap out your stupor!"))
 				sleep(3 SECONDS)
+				to_chat(user, span_userdanger("You notice a variety of items and previous climbers all hanging from branches of the beanstalk!"))
 				user.Stun(15 SECONDS)
 				sleep(5 SECONDS)
 				var/turf/get_tile = get_step(src, SOUTHEAST)
@@ -195,6 +213,7 @@
 				var/obj/spawned_item = new beanstalklootget(get_tile)
 				spawned_item.pixel_z = 128
 				spawned_item.alpha = 1
+				to_chat(user, span_userdanger("You toss the [spawned_item] down and begin to climb back down."))
 				animate(spawned_item, alpha = 255,pixel_x = 0, pixel_z = 0, time = 3 SECONDS)
 				playsound(spawned_item, 'sound/abnormalities/roadhome/Cartoon_Falling_Sound_Effect.ogg', 75, FALSE, -1)
 				sleep(3 SECONDS)
@@ -204,7 +223,9 @@
 				return
 	else if(user_temp < 40)
 		climbinganimation(user)
+		to_chat(user, span_userdanger("Greed overwhelms you, you stride towards the beanstalk and start climbing."))
 		sleep(5 SECONDS)
+		to_chat(user, span_userdanger("You slip and fall, and watch the beanstalk grow further away from you."))
 		if(prob(50)) //death
 			fallinganimation(user)
 			sleep(3 SECONDS)
