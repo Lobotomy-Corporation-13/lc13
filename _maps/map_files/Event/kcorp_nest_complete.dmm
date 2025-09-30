@@ -6848,6 +6848,11 @@
 /obj/item/hand_labeler,
 /obj/item/toy/crayon/spraycan/infinite,
 /obj/item/storage/bag/trash/bluespace,
+/obj/item/toner/extreme,
+/obj/item/toner/extreme,
+/obj/item/toner/extreme,
+/obj/item/toner/extreme,
+/obj/item/toner/extreme,
 /turf/open/floor/wood,
 /area/city/fixers)
 "QR" = (
