@@ -724,6 +724,10 @@
 /obj/item/reagent_containers/glass/bottle/nutrient,
 /turf/open/floor/wood,
 /area/city/house)
+"eI" = (
+/obj/machinery/augment_fabricator,
+/turf/open/floor/plasteel/white,
+/area/city/house)
 "eK" = (
 /obj/structure/closet,
 /turf/open/indestructible/white,
@@ -791,6 +795,8 @@
 /obj/effect/landmark/cityloot,
 /turf/open/floor/plating/beach/sand,
 /area/city)
+"fj" = (
+)
 "fl" = (
 /turf/open/floor/carpet,
 /area/city)
@@ -40649,7 +40655,7 @@ Gz
 wX
 zA
 It
-Ur
+fj
 Hz
 Hz
 lV
@@ -48027,7 +48033,7 @@ lT
 HC
 Oo
 my
-Dt
+eI
 HC
 ZD
 ZY
