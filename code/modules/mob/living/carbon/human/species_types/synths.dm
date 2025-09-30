@@ -149,7 +149,7 @@
 	disguise_user = FALSE
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | ERT_SPAWN
 
-	inherent_biotypes = MOB_ROBOTIC
+	inherent_biotypes = MOB_ROBOTIC|MOB_HUMANOID
 
 /datum/species/synth/carnival/on_species_gain(mob/living/carbon/human/H)
 	..()
