@@ -152,8 +152,12 @@
 			H.deal_damage(damage_override, BLACK_DAMAGE)
 			continue
 		if(H.has_status_effect(STATUS_EFFECT_STARCULTIST))
-			var/stars_in_range = LAZYLEN((range(3, get_turf(H)))&(stars))
-			if(stars_in_range)
+			var/star_in_range = FALSE
+			for(var/marble as anything in stars)
+				if(get_dist(marble, H) <= 3)
+					star_in_range = TRUE
+					break
+			if(star_in_range)
 				continue
 			H.deal_damage(damage_to_deal/2, WHITE_DAMAGE)
 		if(!H.sanity_lost)
@@ -224,7 +228,7 @@
 	if(breach_type != BREACH_MINING)
 		forceMove(T)
 	Pulse(damage_override = first_pulse_damage)
-	return
+	return TRUE
 
 /datum/status_effect/starcultist
 	id = "starcultist"
@@ -465,7 +469,8 @@
 	if(cult_puller)
 		if(prob(20))
 			to_chat(cult_puller, span_userdanger("The Stars are waiting for you."))
-		cult_puller.adjustSanityLoss((cult_puller.maxSanity * 0.2)) // VERY punishing, get a non-cultist to do it.
+		if(AvailableAgentCount(FALSE) > 1)
+			cult_puller.adjustSanityLoss((cult_puller.maxSanity * 0.2)) // VERY punishing, get a non-cultist to do it.
 	tick_timer = addtimer(CALLBACK(src, PROC_REF(Tick)), 3 SECONDS, TIMER_STOPPABLE)
 
 /obj/structure/starbound_pebble/proc/NewHand()
