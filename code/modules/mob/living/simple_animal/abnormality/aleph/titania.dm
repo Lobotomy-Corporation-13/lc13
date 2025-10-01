@@ -221,12 +221,15 @@
 
 	if(currentlaw == "ranged")
 		Punishment(Proj.firer)
+		H.apply_lc_feeble(5)
 
 	if(currentlaw == "armor" && Proj.damage_type == RED_DAMAGE)
 		Punishment(Proj.firer)
 
 	if(currentlaw == "nemesis" && H != nemesis)
 		Punishment(Proj.firer)
+		H.apply_lc_fragile(5)
+		H.apply_lc_feeble(5)
 
 	if(currentlaw == "ranged fairy")
 		SpawnFairies(1)
@@ -240,12 +243,15 @@
 
 	if(currentlaw == "melee")
 		Punishment(user)
+		user.apply_lc_feeble(5)
 
 	if(currentlaw == "armor" && I.damtype == RED_DAMAGE && I.force >= 10)
 		Punishment(user)
 
 	if(currentlaw == "nemesis" && user != nemesis)
 		Punishment(user)
+		user.apply_lc_fragile(5)
+		user.apply_lc_feeble(5)
 
 
 
