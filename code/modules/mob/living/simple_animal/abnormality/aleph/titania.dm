@@ -46,7 +46,7 @@
 
 	var/fairy_spawn_number = 2
 	var/fairy_spawn_time = 5 SECONDS
-	var/fairy_spawn_limit = 70 // Oh boy, what can go wrong?
+	var/fairy_spawn_limit = 30 // Oh boy, what can go wrong?
 	//Fairy spawn limit only matters for the spawn loop, players she kills and spawned via the law don't count
 	var/list/spawned_mobs = list()
 	var/list/worked = list()
@@ -284,8 +284,8 @@
 	a_intent = INTENT_HARM
 	health = 80
 	maxHealth = 80
-	melee_damage_lower = 12
-	melee_damage_upper = 15
+	melee_damage_lower = 3
+	melee_damage_upper = 5	//They apply fragile
 	melee_damage_type = RED_DAMAGE
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -306,3 +306,10 @@
 		mommy.spawned_mobs -= src
 		mommy = null
 	return ..()
+
+/mob/living/simple_animal/hostile/fairyswarm/AttackingTarget(atom/attacked_target)
+	..()
+	if(ishuman(attacked_target))
+		var/mob/living/carbon/human/H = attacked_target
+		H.apply_lc_fragile(5)
+
