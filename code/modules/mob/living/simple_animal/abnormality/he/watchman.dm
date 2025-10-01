@@ -110,12 +110,14 @@
 /// ======================SPEECH CODE======================
 /mob/living/simple_animal/hostile/abnormality/watchman/attacked_by(obj/item/I, mob/living/user)
 	. = ..()
+	user.apply_lc_fragile(3)
 	if(speak_chance)
 		if(prob(speak_chance*2))
 			say(pick(speak_attacked_human))
 
 /mob/living/simple_animal/hostile/abnormality/watchman/attack_hand(mob/living/carbon/human/M)
 	. = ..()
+	M.apply_lc_fragile(3)
 	if(speak_chance)
 		if(prob(speak_chance*2))
 			say(pick(speak_attacked_human))
