@@ -64,7 +64,7 @@
 	work_bubbles = list(
 		ABNORMALITY_WORK_INSTINCT = list("%PERSON gives %ABNO a little cup of tea, which it laps up. %ABNO starts to purr gently.",
 				"%PERSON gives %ABNO a little bit of cat food."),
-		ABNORMALITY_WORK_INSIGHT = list("%PERSON  %ABNO."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans all the cat hair from the containment cell."),
 		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON scritches %ABNO under the chin.", "%PERSON mimicks a pet at %ABNO, their hand passing through the ethereal body"),
 		ABNORMALITY_WORK_REPRESSION = list("%ABNO bites %PERSON, who gives it a light whap on the head.", "%PERSON pats %ABNO on the belly, causing it to freak out."),
 	)
