@@ -51,7 +51,7 @@
 	)
 
 	generic_bubbles = list(
-		1 = list("%ABNO stares at %PERSON with soulless glowing eyes."),
+		1 = list("%ABNO stares at %PERSON with souless glowing eyes."),
 		2 = list("%PERSON can hear the jingling of keys coming from %ABNO."),
 		3 = list("%ABNO looks wearily at %PERSON."),
 		4 = list("%ABNO's lantern increases in it's intensity.", "The flickering flames eminating from %ABNO snuff out, for just a moment"),
