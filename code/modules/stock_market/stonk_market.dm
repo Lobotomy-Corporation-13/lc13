@@ -59,6 +59,12 @@
 		new /datum/stonk_company("Rival Favilla", "Weapons & Armor",company_desc = "\
 			\"Rats are reduced to embers with Favilla!\"<br>\
 			Rival weapon store to Pams Arsenal.") = 0,
+		new /datum/stonk_company("Fairy Supply Depot", "Illegal Fumos",company_desc = "\
+			\"Selling the lowest quality fumos in the city!\"<br>\
+			Made taboo by 12 wings. Trading this stock is ill-advised.") = 0,
+		new /datum/stonk_company("Shrimpcoin", "Cryptocurrency",company_desc = "\
+			\"To the Moon!\"<br>\
+			Likely a scam company. Sells \"cryptocurrency\", whatever that is.") = 0,
 		)
 
 	/*---------------\
