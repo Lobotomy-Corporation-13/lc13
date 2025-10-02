@@ -4,12 +4,22 @@
 #define RARITY_MASTERPIECE "Masterpiece"
 
 /datum/component/butchering/silkbutchering
+	var/mob/living/harvester = null
 
 /datum/component/butchering/silkbutchering/checkButchering(obj/item/source, mob/living/M, mob/living/user)
+	harvester = user
 	return M.silk_results || ishuman(M)
 
 /datum/component/butchering/silkbutchering/ButcherEffects(mob/living/meat)
 	var/turf/T = meat.drop_location()
+
+	// Track silk harvesting for achievement
+	if(ishuman(harvester) && harvester.mind)
+		var/mob/living/carbon/human/H = harvester
+		H.mind.silk_harvested++
+		if(H.mind.silk_harvested >= 120)
+			H.client?.give_award(/datum/award/achievement/lc13/silk_collector, H)
+
 	if(ishuman(meat))
 		// if(meat.client)
 		// 	meat.visible_message(span_notice("[meat]'s soul resists the silkweaver!"))
@@ -71,7 +81,7 @@
 
 /obj/item/silkknife
 	name = "silkweaver"
-	desc = "Makes silk by butchering foes, Can't be used on humans with a soul."
+	desc = "Makes silk by carefully processing material within it's holder through the process of butchering."
 	icon_state = "silkweaver"
 	inhand_icon_state = "carnival_silkweaver"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_BACK

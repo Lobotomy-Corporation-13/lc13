@@ -64,6 +64,7 @@
 	if (user != chosen)		//Your body starts to wilt.
 		user.visible_message(span_warning("Staining Rose already has a Chosen named [chosen]!"))
 		user.apply_status_effect(STATUS_EFFECT_SCHISMATIC)
+		user.client?.give_award(/datum/award/achievement/abno/schismatic, user)
 		if(!(user in heretics))
 			heretics += user
 		pissed()

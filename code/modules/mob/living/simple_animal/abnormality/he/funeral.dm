@@ -72,6 +72,7 @@
 	var/swarm_width = 3
 	var/list/swarm_killed = list()
 	var/can_act = TRUE
+	var/gives_achievement = FALSE
 
 	//PLAYABLES ATTACKS
 	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/funeral_butterfly_toggle)
@@ -290,6 +291,11 @@
 	pixel_x -= 16
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
+	//You need to kill him in 8 seconds
+	if(gives_achievement)
+		for(var/mob/living/carbon/human/H in range(5, src))
+			H.client?.give_award(/datum/award/achievement/abno/solemn, H)
+
 	..()
 //he die
 
@@ -326,3 +332,12 @@
 	icon_state = "funeral_swarm"
 	layer = BELOW_MOB_LAYER
 	duration = 10 SECONDS
+
+//Achievement stuff
+/mob/living/simple_animal/hostile/abnormality/funeral/BreachEffect()
+	..()
+	addtimer(CALLBACK(src, PROC_REF(AchievementOff)), 8 SECONDS)
+	gives_achievement = TRUE
+
+/mob/living/simple_animal/hostile/abnormality/funeral/proc/AchievementOff()
+	gives_achievement = FALSE

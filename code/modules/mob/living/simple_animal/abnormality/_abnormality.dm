@@ -136,6 +136,23 @@
 	// rcorp stuff
 	var/rcorp_team
 
+	/// Bubbles and their speech
+	// Generic bubbles by agent level.
+	var/list/generic_bubbles = list(
+		1 = list("%PERSON looks nervously at %ABNO...", "%PERSON tries to stay focused."),
+		2 = list("%PERSON focuses on the task at hand.", "%PERSON follows the directions as trained."),
+		3 = list("%PERSON keeps an eye on %ABNO.", "%PERSON considers what they'll eat next."),
+		4 = list("%PERSON performs their work as if its second nature.", "%PERSON off-handedly mumbles excerpts from %ABNO's documentation."),
+		5 = list("%PERSON non-chalantly operates the work console.", "%PERSON says 'check this out' and closes their eyes while they work.", "%PERSON laughs at %ABNO."),
+	)
+	// Work Type Bubbles - Assoc List is planned, for the time being random list instead.
+	var/list/work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON feeds %ABNO some food."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans up some unknown fluid from %ABNO'sS containment."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON talks to %ABNO for a while."),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON holds what %ABNO desires, just out of reach..."),
+	)
+
 /mob/living/simple_animal/hostile/abnormality/Login()
 	. = ..()
 	if(!. || !client)
@@ -274,14 +291,14 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/proc/HarvestChem(obj/item/reagent_containers/C, mob/user)
-	visible_message(HarvestMessageProcess(harvest_phrase_third, user, C), HarvestMessageProcess(harvest_phrase, user, C))
+	visible_message(AbnoMessageProcess(harvest_phrase_third, user, C), AbnoMessageProcess(harvest_phrase, user, C))
 	if(chem_type)
 		C.reagents.add_reagent(chem_type, chem_yield)
 	else
 		C.reagents.add_reagent(pick(dummy_chems), chem_yield)
 	chem_cooldown_timer = world.time + chem_cooldown
 
-/mob/living/simple_animal/hostile/abnormality/proc/HarvestMessageProcess(str, user, vessel) // Jacked from announcement_system.dm
+/mob/living/simple_animal/hostile/abnormality/proc/AbnoMessageProcess(str, user, vessel) // Jacked from announcement_system.dm
 	str = replacetext(str, "%PERSON", "[user]")
 	str = replacetext(str, "%VESSEL", "[vessel]")
 	str = replacetext(str, "%ABNO", "[src]")
@@ -452,8 +469,40 @@ The variable's key needs to be non-numerical.*/
 	return TRUE
 
 // Additional effect on each work tick, whether successful or not
-/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/proc/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	SHOULD_CALL_PARENT(TRUE)
+	if(!user || !datum_reference)
+		return
+	if(!datum_reference.console)
+		stack_trace("[src] tried to work without a console? user = [user]")
+		return
+	if(ABNO_BALLOON_OFF & bubble_type)
+		return
+	if(prob(20-(3*(threat_level-1))))
+		var/list/output_string_list = GetBubbleText(get_user_level(user), bubble_type, work_type)
+		if(!LAZYLEN(output_string_list))
+			stack_trace("[src] tried to pick a work text-bubble but had nothing to pick from. user = [user] | work type = [work_type]")
+			return
+		var/output_string = AbnoMessageProcess(pick(output_string_list), user.first_name())
+		for(var/mob/potential_viewer in GLOB.player_list)
+			datum_reference.console.balloon_alert(potential_viewer, output_string)
 	return
+
+/**
+ * Returns a list of potential bubble-text outputs
+ * Made as a proc for overwrites.
+ *
+ * user_level - the level of the working user, for /list/generic_bubbles
+ * bubble_type - bitflags of available bubble types. If ABNO_BALLOON_OFF is passed this proc should not be reached.
+ * work_type - ABNORMALITY_X_WORK, and is used for pulling from /list/work_bubbles
+ */
+/mob/living/simple_animal/hostile/abnormality/proc/GetBubbleText(user_level, bubble_type, work_type)
+	var/list/potential_output = list()
+	if(ABNO_BALLOON_WORK & bubble_type && !isnull(work_type))
+		potential_output += work_bubbles[work_type]
+	if(ABNO_BALLOON_GENERIC & bubble_type)
+		potential_output += generic_bubbles[user_level]
+	. = potential_output
 
 // Additional effect on each individual work tick success
 /mob/living/simple_animal/hostile/abnormality/proc/WorktickSuccess(mob/living/carbon/human/user)

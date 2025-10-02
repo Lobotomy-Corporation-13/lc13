@@ -10,7 +10,7 @@ Something for a future refactor?
 /mob/living/simple_animal/hostile/ordeal/proc/SweeperDevour(mob/living/L)
 	if(!L)
 		return FALSE
-	if(SSmaptype.maptype in SSmaptype.citymaps)
+	if(ishuman(L) && (SSmaptype.maptype in SSmaptype.citymaps))
 		return FALSE
 	visible_message(
 		span_danger("[src] devours [L]!"),

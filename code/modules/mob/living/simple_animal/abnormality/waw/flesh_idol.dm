@@ -76,12 +76,13 @@
 	heal_amount = initial(heal_amount)
 
 
-/mob/living/simple_animal/hostile/abnormality/flesh_idol/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/flesh_idol/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	var/list/damtypes = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/damage = pick(damtypes)
 	work_damage_type = damage
 	user.deal_damage(damage_amount, damage) // take 5 random damage each time
 	WorkDamageEffect()
+	return ..()
 
 //Prevents red work damage effecs from appearing
 /mob/living/simple_animal/hostile/abnormality/flesh_idol/WorktickFailure(mob/living/carbon/human/user)

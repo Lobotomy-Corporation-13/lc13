@@ -120,6 +120,9 @@
 		update_icon_state() //cake looks eaten
 		return
 
+	//Fine you get an achievement
+	user.client?.give_award(/datum/award/achievement/abno/bottle_cake, user)
+
 	//Drowns you like Wellcheers does, so I mean the code checks out
 	for(var/turf/open/T in view(7, src))
 		new /obj/effect/temp_visual/water_waves(T)

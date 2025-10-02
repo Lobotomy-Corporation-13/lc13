@@ -323,9 +323,9 @@
 	projectile_path = /obj/projectile/ego_bullet/ardor_star
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
-	fire_delay = 10
+	fire_delay = 15
 	shotsleft = 4
-	reloadtime = 2.1 SECONDS
+	reloadtime = 3.5 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)

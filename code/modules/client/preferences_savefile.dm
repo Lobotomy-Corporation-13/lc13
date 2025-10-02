@@ -413,6 +413,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["feature_moth_markings"], features["moth_markings"])
 	READ_FILE(S["feature_flavor_text"], features["flavor_text"])
 	READ_FILE(S["persistent_scars"] , persistent_scars)
+	READ_FILE(S["chosen_achievement"], chosen_achievement)
 	READ_FILE(S["alt_titles_preferences"], alt_titles_preferences)// Tegu edit - Alt job titles
 	if(!CONFIG_GET(flag/join_with_mutant_humans))
 		features["tail_human"] = "none"
@@ -590,6 +591,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["feature_moth_markings"]		, features["moth_markings"])
 	WRITE_FILE(S["feature_flavor_text"]			, features["flavor_text"])
 	WRITE_FILE(S["persistent_scars"]			, persistent_scars)
+	WRITE_FILE(S["chosen_achievement"]		, chosen_achievement)
 
 	//Custom names
 	for(var/custom_name_id in GLOB.preferences_custom_names)

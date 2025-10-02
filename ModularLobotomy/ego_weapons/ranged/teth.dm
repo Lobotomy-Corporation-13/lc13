@@ -62,7 +62,7 @@
 	variance = 20
 	fire_delay = 10
 	shotsleft = 8
-	reloadtime = 1.6 SECONDS
+	reloadtime = 2.1 SECONDS
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 
 /obj/item/ego_weapon/ranged/pistol/solitude
@@ -73,9 +73,9 @@
 	force = 8
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_solitude
-	fire_delay = 10
+	fire_delay = 14
 	shotsleft = 5
-	reloadtime = 2 SECONDS
+	reloadtime = 2.7 SECONDS
 	fire_sound = 'sound/weapons/gun/revolver/shot_light.ogg'
 	vary_fire_sound = FALSE
 	fire_sound_volume = 70

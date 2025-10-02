@@ -172,6 +172,10 @@
 			air.react(src)
 			qdel(hotspot)
 
+	var/obj/effect/turf_fire/t_fire = (locate(/obj/effect/turf_fire) in exposed_turf)
+	if(t_fire)
+		t_fire.WaterReact()
+
 /*
  *	Water reaction to an object
  */

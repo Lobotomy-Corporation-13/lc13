@@ -65,3 +65,9 @@
 #define PE_GOAL_REACHED	"goal_reached"
 #define PE_GOAL_SPENT	"goal_spent"
 #define PE_LEFTOVER		"leftover_pe"
+
+// Abnormality Balloon Defines
+#define ABNO_BALLOON_OFF 		(1<<0)
+#define ABNO_BALLOON_SPECIFIC 	(1<<1)
+#define ABNO_BALLOON_WORK		(1<<2)
+#define ABNO_BALLOON_GENERIC 	(1<<3)

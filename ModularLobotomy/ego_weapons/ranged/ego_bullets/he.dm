@@ -161,7 +161,7 @@
 	name = "ardor blossom star"
 	icon_state = "gaussstrong"
 	damage_type = RED_DAMAGE
-	damage = 85
+	damage = 70
 	projectile_piercing = PASSMOB
 
 /obj/projectile/ego_bullet/ego_squeak

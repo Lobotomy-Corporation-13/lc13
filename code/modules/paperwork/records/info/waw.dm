@@ -570,7 +570,7 @@
 	abno_breach_damage_count = "Very High"
 
 //flesh that Takes
-/obj/item/paper/fluff/info/flesh_that_takes
+/obj/item/paper/fluff/info/waw/flesh_that_takes
 	abno_type = /mob/living/simple_animal/hostile/abnormality/flesh_that_takes
 	abno_code = "T-06-206"
 	abno_info = list(
@@ -581,4 +581,6 @@
 		"When an employee performed attachment work, T-06-206 created a new form.",
 		"The forms obtained by T-06-206 are manifested into this abnormality’s strength whenever it breaches.",
 		)
+	abno_breach_damage_type = "Black"
+	abno_breach_damage_count = "High"
 

@@ -303,7 +303,7 @@
 
 /mob/living/simple_animal/hostile/better_memories_minion/CanStartPatrol()
 	if(!fleeing_now)
-		return !(status_flags & GODMODE)
+		return (AIStatus != AI_OFF && !(status_flags & GODMODE))
 	return ..()
 
 //Prevents accumulation of hate when actively fleeing.

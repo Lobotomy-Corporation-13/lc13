@@ -98,4 +98,5 @@
 	backpack_contents = list(
 		/obj/item/portacopier,
 		/obj/item/portablepredict,
+		/obj/item/agent_preservation_tool,
 	)

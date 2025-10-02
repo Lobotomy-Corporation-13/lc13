@@ -294,7 +294,7 @@
 			"..." = list(
 				"text" = "...",
 				"var_updates" = list(
-					"player.collected_parcels" = "{player.collected_parcels++}",
+					"player.collected_parcels" = "{player.collected_parcels + 1}",
 				),
 				"proc_callbacks" = list(CALLBACK(src, PROC_REF(check_parcel_achievement))),
 				"default_scene" = "job"
@@ -823,12 +823,9 @@
 	say("Anyone else wants to bother me?")
 
 /mob/living/simple_animal/hostile/ui_npc/eric_t/proc/check_parcel_achievement()
-	if(!usr || !usr.client)
-		return
-
-	var/parcels = scene_manager.get_var(usr, "player.collected_parcels")
-	if(parcels >= 10)
-		usr.client.give_award(/datum/award/achievement/lc13/city/parcel_delivery, usr)
+	// This proc is no longer needed as tracking is done in delivery_doors.dm
+	// Kept for compatibility with existing dialogue system
+	return
 
 // The briefcase item remains the same
 /obj/item/eric_briefcase

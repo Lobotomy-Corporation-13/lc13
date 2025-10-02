@@ -52,6 +52,12 @@ SUBSYSTEM_DEF(discord)
 	/// Is TGS enabled (If not we won't fire because otherwise this is useless)
 	var/enabled = FALSE
 
+	/// Did we give a high-pop ping yet?
+	var/high_pop_pinged = FALSE
+
+	/// People to ping on high pop threshold reached
+	var/list/highpopqueue_members = list()
+
 /datum/controller/subsystem/discord/Initialize(start_timeofday)
 	common_words = world.file2list("strings/1000_most_common.txt")
 	reverify_cache = list()
@@ -76,6 +82,9 @@ SUBSYSTEM_DEF(discord)
 /datum/controller/subsystem/discord/fire()
 	if(!enabled)
 		return // Dont do shit if its disabled
+	if(!high_pop_pinged)
+		// We double-check in case the proc is invoked from another source, like those codermins...
+		check_highpop()
 	if(notify_members == notify_members_cache)
 		return // Dont re-write the file
 	// If we are all clear
@@ -83,6 +92,23 @@ SUBSYSTEM_DEF(discord)
 
 /datum/controller/subsystem/discord/Shutdown()
 	write_notify_file() // Guaranteed force-write on server close
+
+/datum/controller/subsystem/discord/proc/check_highpop()
+	if(!CONFIG_GET(flag/high_pop_ping_enabled))
+		return
+	if(high_pop_pinged)
+		// We already pinged, no need to do so again
+		return
+	var/player_count = get_active_player_count(alive_check=TRUE, afk_check=TRUE)
+	var/queue_count = length(highpopqueue_members)
+	var/total_count = player_count + (queue_count * CONFIG_GET(number/high_pop_queue_weight))
+	// If our new total count meets or exceeds the ping threshold... we ping
+	if(total_count >= CONFIG_GET(number/high_pop_ping_threshold))
+		var/ping_message = jointext(highpopqueue_members, ", ")
+		ping_message += " - <@&[CONFIG_GET(string/high_pop_ping_roleid)]> We have reached [player_count] players with [queue_count] queued individuals, come join!"
+		send2chat(ping_message, CONFIG_GET(string/chat_announce_new_game))
+		message_admins("QUEUE PING SENT: " + ping_message)
+		high_pop_pinged = TRUE
 
 /datum/controller/subsystem/discord/proc/write_notify_file()
 	if(!enabled) // Dont do shit if its disabled

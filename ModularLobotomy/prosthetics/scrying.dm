@@ -12,7 +12,7 @@
 /obj/item/organ/cyberimp/arm/observation/Extend(obj/item/item)
 	..()
 	//little bit of stam loss
-	owner.adjustStaminaLoss(owner.maxHealth*0.5, TRUE, TRUE)
+	owner.adjustStaminaLoss(owner.maxHealth*0.3, TRUE, TRUE)
 
 
 /obj/item/scrying/observation

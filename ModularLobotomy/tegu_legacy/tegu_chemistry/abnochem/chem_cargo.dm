@@ -12,6 +12,7 @@
 	order_list = list(
 		//Gadgets - Technical Equipment, active, that helps the chemist do their job
 		new /datum/data/extraction_cargo("Chemical Extraction Upgrade ",	/obj/item/work_console_upgrade/chemical_extraction_attachment,		120, CAT_GADGET) = 1,	//Cheaper here.
+		new /datum/data/extraction_cargo("Dosage Estimator",	/obj/item/dosage_est,		250, CAT_GADGET) = 1,
 
 		//Equipment - Syringe Gun and such.
 		new /datum/data/extraction_cargo("Spare Syringe",					/obj/item/reagent_containers/syringe,								3, CAT_EQUIP) = 1,

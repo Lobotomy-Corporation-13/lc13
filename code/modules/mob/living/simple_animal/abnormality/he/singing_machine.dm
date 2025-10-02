@@ -98,7 +98,7 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 	chance -= statChecked * 15 // Perish.
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/singing_machine/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/singing_machine/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(bonusRed) // If you have bonus red damage to apply...
 		user.deal_damage(bonusRed, RED_DAMAGE)
 		if(bonusRed < 6 && playStatus == 0)	// Should only happen when the machine isn't dealing damage.

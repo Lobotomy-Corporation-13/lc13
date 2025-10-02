@@ -986,7 +986,7 @@
 	if(!CanUseEgo(user))
 		return
 	if(siphoning)
-		to_chat(user,span_warning("You cease siphoning with the [src] sword."))
+		to_chat(user,span_warning("You cease siphoning with [src] sword."))
 		siphoning = FALSE
 		filters = null
 		user.playsound_local(user, 'sound/effects/bleed.ogg', 25, TRUE)
@@ -994,7 +994,7 @@
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	siphoning = TRUE
 	user.playsound_local(user, 'sound/effects/bleed_apply.ogg', 25, TRUE)
-	to_chat(user,span_warning("You begin siphoning with the [src] sword."))
+	to_chat(user,span_warning("You begin siphoning with [src] sword."))
 	if(bloodfeast.blood_amount < 100)
 		to_chat(user,span_warning("The sword drains your blood to fuel itself!"))
 		user.adjustBruteLoss(20)
@@ -1004,15 +1004,16 @@
 	addtimer(CALLBACK(src, PROC_REF(SiphonDrain), user), siphon_time)
 
 /obj/item/ego_weapon/dipsia/proc/SiphonDrain(mob/user)
-	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
-	AdjustThirst(-10)
-	if(bloodfeast.blood_amount < 1)
-		siphoning = FALSE
-		filters = null
-		if(user)
-			to_chat(user,span_warning("Your [src] sword shuts off due to a lack of blood!"))
-			return
-	addtimer(CALLBACK(src, PROC_REF(SiphonDrain), user), siphon_time)
+	if(siphoning)
+		var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+		AdjustThirst(-10)
+		if(bloodfeast.blood_amount < 1)
+			siphoning = FALSE
+			filters = null
+			if(user)
+				to_chat(user,span_warning("Your [src.name] sword shuts off due to a lack of blood!"))
+				return
+		addtimer(CALLBACK(src, PROC_REF(SiphonDrain), user), siphon_time)
 
 /obj/item/ego_weapon/dipsia/attack(mob/living/target, mob/living/carbon/human/user)
 	if(!CanUseEgo(user))
@@ -2587,6 +2588,10 @@
 	force = 30
 	damtype = BLACK_DAMAGE
 	hitsound = 'sound/weapons/bladeslice.ogg'
+	attribute_requirements = list(
+		TEMPERANCE_ATTRIBUTE = 60,
+		JUSTICE_ATTRIBUTE = 60
+		)
 
 /obj/item/ego_weapon/encompassing/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))

@@ -224,6 +224,7 @@
 
 /mob/living/carbon/human/get_status_tab_items()
 	. = ..()
+	. += ""
 	. += "Intent: [a_intent]"
 	. += "Move Mode: [m_intent]"
 	if (internal)
@@ -1571,6 +1572,9 @@
 
 /mob/living/carbon/human/species/synth/military
 	race = /datum/species/synth/military
+
+/mob/living/carbon/human/species/synth/carnival
+	race = /datum/species/synth/carnival
 
 /mob/living/carbon/human/species/vampire
 	race = /datum/species/vampire

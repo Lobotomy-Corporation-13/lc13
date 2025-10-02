@@ -21,6 +21,15 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/star
 	cost = 100
 
+// Star Luminary - Starbound Faith
+/datum/ego_datum/weapon/faith
+	item_path = /obj/item/ego_weapon/faith
+	cost = 100
+
+/datum/ego_datum/armor/faith
+	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/faith
+	cost = 100
+
 // Silent orchestra - Da capo
 /datum/ego_datum/weapon/da_capo
 	item_path = /obj/item/ego_weapon/da_capo

@@ -76,6 +76,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
 	..()
+	user.client?.give_award(/datum/award/achievement/abno/drugging, user)
 	user.adjustBruteLoss(-40)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/FailureEffect(mob/living/carbon/human/user, work_type, pe)

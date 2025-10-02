@@ -100,7 +100,7 @@
 	sacrifice = TRUE
 	return TRUE
 
-/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(!sacrifice)
 		user.deal_damage(5, RED_DAMAGE) // say goodbye to your kneecaps chucklenuts!
 	else
@@ -113,6 +113,7 @@
 				ramping_speed -= 0.5
 		user.deal_damage(8, RED_DAMAGE) // say goodbye to a bit more than your kneecaps... (total damage is 800 RED).
 		total_damage += 8
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/we_can_change_anything/SpeedWorktickOverride(mob/living/carbon/human/user, work_speed, init_work_speed, work_type)
 	if(!sacrifice)
@@ -132,6 +133,7 @@
 			energy_generated += total_damage/8 //adds the normal work PE boxes, since those are normally lost on death
 		else
 			ReleaseWorker()
+			user.client?.give_award(/datum/award/achievement/abno/we_can_change, user)
 		datum_reference.stored_boxes += energy_generated // adds PE to the console, only half actually counts towards the goal for balance reasons.
 		SSlobotomy_corp.AdjustGoalBoxes(floor(energy_generated * 0.5))
 		total_energy += energy_generated

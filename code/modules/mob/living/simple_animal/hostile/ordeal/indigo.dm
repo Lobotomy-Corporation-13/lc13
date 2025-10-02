@@ -97,7 +97,7 @@
 
 //Stolen MOSB patrol code
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/CanStartPatrol()
-	return !(status_flags & GODMODE) && !target
+	return (AIStatus != AI_OFF && !(status_flags & GODMODE)) && !target
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/patrol_reset()
 	. = ..()

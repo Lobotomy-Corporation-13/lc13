@@ -16,7 +16,6 @@
 
 	attack_verb_continuous = "nuzzles"
 	attack_verb_simple = "nuzzles"
-	faction = list("neutral", "hostile")
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
 	start_qliphoth = 2
@@ -111,8 +110,6 @@
 /mob/living/simple_animal/hostile/abnormality/voiddream/proc/SleepyDart()
 	var/list/possibletargets = list()
 	for(var/mob/living/carbon/human/H in view(10, src))
-		if(faction_check(src.faction, H.faction))
-			continue
 		if(H.IsSleeping())
 			continue
 		if(H.stat >= SOFT_CRIT)

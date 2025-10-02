@@ -166,7 +166,7 @@
 		playsound(src, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 40, 0, 1)
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/doomsday_calendar/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/doomsday_calendar/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(bonusRed) // If you have bonus red damage to apply...
 		user.deal_damage(bonusRed, RED_DAMAGE)
 	return ..()

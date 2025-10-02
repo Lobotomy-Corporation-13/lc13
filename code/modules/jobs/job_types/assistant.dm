@@ -139,5 +139,5 @@ GLOBAL_LIST_EMPTY(spawned_clerks)
 	alt_titles = list("Safety Department Clerk", "Information Department Clerk",
 			"Training Department Clerk",)
 	senior_title = "Extraction Department Clerk"
-	ultra_senior_title = "Architecture Department Clerk"
+	ultra_senior_title = "Assistinator"
 	clerk_belts = /obj/item/storage/belt/clerk/facility

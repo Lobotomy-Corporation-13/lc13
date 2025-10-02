@@ -84,7 +84,8 @@ GLOBAL_PROTECT(admin_verbs_admin)
 	/client/proc/SpawnAbno,
 	/client/proc/ClearAbno,
 	/client/proc/FullUnderstandAbno,
-	/client/proc/BreachAbno
+	/client/proc/BreachAbno,
+	/client/proc/ChangeGameSpeed,
 	)
 GLOBAL_LIST_INIT(admin_verbs_ban, list(/client/proc/unban_panel, /client/proc/ban_panel, /client/proc/stickybanpanel))
 GLOBAL_PROTECT(admin_verbs_ban)
@@ -865,6 +866,19 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 
 	log_admin("[key_name(usr)] has breached [abno_type].")
 	message_admins("[key_name(usr)] has breached [abno_type].")
+
+/client/proc/ChangeGameSpeed()
+	set category = "Admin.Game"
+	set name = "Change Game Speed"
+	if(!check_rights(R_ADMIN))
+		return
+	var/list/datum/gamespeed_setting/settings_found = SSlobotomy_corp.available_gamespeeds
+	var/datum/gamespeed_setting/chosen_gamespeed = input("Choose the new game speed.", "Gamespeed Change") as null|anything in settings_found
+	if(!chosen_gamespeed)
+		return
+	SSlobotomy_corp.AdjustGamespeed(chosen_gamespeed)
+	log_admin("[key_name(usr)] has set game speed to [chosen_gamespeed.player_facing_name]. This affects abnormality arrival times, meltdowns per ordeal and ordeal timelocks.")
+	message_admins("[key_name(usr)] has set game speed to [chosen_gamespeed.player_facing_name]. This affects abnormality arrival times, meltdowns per ordeal and ordeal timelocks.")
 
 /client/proc/debugstatpanel()
 	set name = "Debug Stat Panel"

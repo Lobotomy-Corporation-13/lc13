@@ -5,7 +5,7 @@
 All phases have been successfully implemented and the code compiles without errors!
 
 ### Files Created/Modified:
-- ✅ Created: `/ModularTegustation/ego_weapons/melee/non_abnormality/cinqwest_selfiestick.dm`
+- ✅ Created: `/ModularLobotomy/ego_weapons/melee/city/cinqwest_selfiestick.dm`
 - ✅ Modified: `/code/game/objects/items/devices/PDA/PDA.dm`
 
 ## Overview
@@ -33,7 +33,7 @@ Add a new weapon `/obj/item/ego_weapon/city/cinqwest_selfiestick` that allows PD
 
 ## File Modifications Required
 
-### 1. ModularTegustation/ego_weapons/melee/non_abnormality/cinqwest_selfiestick.dm ✅ CREATED
+### 1. ModularLobotomy/ego_weapons/melee/city/cinqwest_selfiestick.dm ✅ CREATED
 
 Created the complete selfie stick weapon with streaming and chat features:
 

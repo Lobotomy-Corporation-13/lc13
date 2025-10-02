@@ -85,7 +85,7 @@
 
 	owner.face_atom(sucker)
 	if(owner.client)
-		owner.client.give_award(/datum/award/achievement/misc/gottem, owner) // then everybody clapped
+		owner.client.give_award(/datum/award/achievement/ss13/gottem, owner) // then everybody clapped
 
 	playsound(get_turf(owner), 'sound/effects/hit_punch.ogg', 50, TRUE, -1)
 	owner.do_attack_animation(sucker)

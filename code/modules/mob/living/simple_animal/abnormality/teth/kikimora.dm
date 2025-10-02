@@ -68,6 +68,7 @@
 
 /datum/status_effect/kikimora/on_apply()
 	. = ..()
+	owner.client?.give_award(/datum/award/achievement/abno/kikimora, owner)
 	RegisterSignal(owner, COMSIG_MOB_SAY, PROC_REF(CorruptWords))
 	RegisterSignal(owner, COMSIG_LIVING_STATUS_SLEEP, PROC_REF(Bedtime))
 

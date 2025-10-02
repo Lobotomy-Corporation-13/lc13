@@ -165,3 +165,34 @@
 		return
 	neckwear.Destroy()
 	return
+
+/obj/effect/proc_holder/ability/mask_ability
+	name = "Toggle Mask"
+	desc = "Toggle your current armors mask."
+	action_icon_state = "mask0"
+	base_icon_state = "mask"
+	var/obj/item/clothing/mask/ego_mask/mask = null
+
+/obj/effect/proc_holder/ability/mask_ability/New(loc, obj/item/clothing/mask/ego_mask/ego_mask, ...)
+	. = ..()
+	mask = ego_mask
+
+/obj/effect/proc_holder/ability/mask_ability/Perform(target, user) // Works just like the neck ability from above
+	. = ..()
+	if(!ishuman(user))
+		return
+	if(isnull(mask))
+		Destroy()
+		return
+	var/mob/living/carbon/human/H = user
+	var/obj/item/clothing/mask/maskwear = H.get_item_by_slot(ITEM_SLOT_MASK)
+	if(!istype(maskwear, mask))
+		if(!isnull(maskwear))
+			if(HAS_TRAIT(maskwear, TRAIT_NODROP))
+				to_chat(H, "<span class='warning'>[maskwear] cannot be dropped!</span>")
+				return
+			H.dropItemToGround(maskwear)
+		H.equip_to_slot(new mask, ITEM_SLOT_MASK)
+		return
+	maskwear.Destroy()
+	return

@@ -255,6 +255,7 @@
 		user.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "despair", -MUTATIONS_LAYER))
 		playsound(get_turf(user), 'sound/abnormalities/despairknight/gift.ogg', 50, 0, 2)
 		user.adjust_attribute_bonus(TEMPERANCE_ATTRIBUTE, -50)
+		user.client?.give_award(/datum/award/achievement/abno/knight_blessed, user)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/despair_knight/BreachEffect(mob/living/carbon/human/user, breach_type)

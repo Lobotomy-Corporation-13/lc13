@@ -97,7 +97,7 @@
 
 /obj/item/ego_weapon/regret
 	name = "regret"
-	desc = "Before swinging this weapon, expressing one’s condolences for the demise of the inmate who couldn't even have a funeral would be nice."
+	desc = "Before swinging this weapon, expressing oneâ€™s condolences for the demise of the inmate who couldn't even have a funeral would be nice."
 	icon_state = "regret"
 	force = 38				//Lots of damage, way less DPS
 	damtype = RED_DAMAGE
@@ -768,8 +768,25 @@
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
+	special = "Activate in hand to heal every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
+	Has a cooldown of 8 seconds."
 	force = 20
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("smacks", "strikes", "beats")
 	attack_verb_simple = list("smack", "strike", "beat")
 	hitsound = 'sound/weapons/fixer/generic/club3.ogg'
+	var/cooldown = 0
+	var/cooldown_duration = 30
+	var/heal_brute = 15
+	var/dam_tox = 2
+//Should heal everyone in a 4 tile radius an amount of brute equal to heal_brute which should be 15, if not varedited, it also will deal 2 toxin damage to the user..
+//It has a cooldown of about 8 seconds.
+/obj/item/ego_weapon/mini/patch/attack_self(mob/user)
+	if(world.time >= cooldown)
+		if(do_after(user, 30, user))
+			for(var/mob/living/carbon/human in view(4, get_turf(src)))
+				if(human == user)
+					human.adjustToxLoss(dam_tox)
+					continue
+				human.adjustBruteLoss(-heal_brute)
+		cooldown = world.time + cooldown_duration
