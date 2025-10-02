@@ -157,7 +157,7 @@
 		"[product] sales are down, heavily.",
 		"A defect was discovered with [product]. They are being recalled",
 		"Employees at [name] had an incident that requires sensitivity training",
-		"A gang that identifies themselves as [pick("The Green Grinners", "The Gang Gang", "The Toe")] have stolen a large amount of [product]"
+		"A gang that identifies themselves as [pick("The Green Grinners", "The Gang Gang", "The Toe")] have stolen a large amount of [product]",
 		)
 
 	var/neutral_news = list("[name] has released a new advertising campaign",
