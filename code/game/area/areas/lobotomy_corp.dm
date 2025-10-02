@@ -417,3 +417,28 @@
 	has_gravity = STANDARD_GRAVITY
 	sound_environment = SOUND_ENVIRONMENT_CAVE
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
+
+/area/tinkerer_factory
+	name = "Tinkerer's Factory"
+	icon_state = "mechbay"
+	requires_power = FALSE
+	has_gravity = STANDARD_GRAVITY
+	sound_environment = SOUND_AREA_LARGE_ENCLOSED
+	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
+
+/area/tinkerer_factory/Entered(atom/movable/M)
+	. = ..()
+	// Only apply to human mobs with mental corrosion
+	if(!ishuman(M))
+		return
+
+	var/mob/living/carbon/human/H = M
+
+	// Check if they have mental corrosion (they should if water brought them here)
+	var/datum/component/augment/mental_corrosion/MC = H.GetComponent(/datum/component/augment/mental_corrosion)
+	if(!MC)
+		return
+
+	// Apply the conversion locked status effect if they don't already have it
+	if(!H.has_status_effect(/datum/status_effect/conversion_locked))
+		H.apply_status_effect(/datum/status_effect/conversion_locked)

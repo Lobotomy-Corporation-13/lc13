@@ -40,6 +40,10 @@
 	name = "Middle Capsule"
 	template_id = "middle_base"
 
+/obj/item/structurecapsule/syndicate/insurgence
+	name = "insurgence base capsule"
+	desc = "Contains equipment for establishing an Insurgence Clan outpost."
+	template_id = "insurgence_base"
 //Office templates
 /datum/map_template/shelter/index
 	name = "Index Base"
@@ -82,3 +86,9 @@
 	shelter_id = "middle_base"
 	description = "A place for the middle's u-corp branch."
 	mappath = "_maps/templates/syndicate_office/middle.dmm"
+
+/datum/map_template/shelter/insurgence
+	name = "Insurgence Base"
+	shelter_id = "insurgence_base"
+	description = "A place for the Insurgence Clan."
+	mappath = "_maps/templates/syndicate_office/insurgence_clan.dmm"

@@ -24,6 +24,8 @@
 	var/list/sale_percentages = list(25, 33, 40, 66)
 	var/list/markup_percentages = list(25, 33, 40)
 	var/max_66_sales = 2
+	var/on_sale_pct = 0.2
+	var/markup_pct = 0.1
 
 	// --- Data (Same as before) ---
 	var/list/available_forms = list(
@@ -687,8 +689,8 @@
 
 	// 3. Calculate number of sales and markups
 	var/total_effects = effect_indices.len
-	var/num_on_sale = round(total_effects * 0.20)
-	var/num_marked_up = round(total_effects * 0.10)
+	var/num_on_sale = round(total_effects * on_sale_pct)
+	var/num_marked_up = round(total_effects * markup_pct)
 
 	// Ensure we don't try to select more than available
 	num_on_sale = min(num_on_sale, total_effects)
@@ -795,6 +797,8 @@
 			return TRUE
 	return FALSE
 
+/obj/machinery/augment_fabricator/proc/make_new_augment()
+	return new /obj/item/augment
 
 /// Handles the actual creation of the augment item. Called by the UI handler.
 /obj/machinery/augment_fabricator/proc/perform_fabrication(mob/user, datum/augment_design/design, creator_name, creator_desc, primary_color, secondary_color)
@@ -815,7 +819,8 @@
 	sleep(7)
 	icon_state = temp_icon_state
 
-	var/obj/item/augment/new_augment = new(get_turf(src)) // Create item at machine's location
+	var/obj/item/augment/new_augment = make_new_augment() // Create item at machine's location
+	new_augment.loc = get_turf(src)
 	if(new_augment)
 		new_augment.name = creator_name ? "[creator_name] ([design.form_data["name"]])" : "[design.form_data["name"]] Augment (Rank [design.rank])"
 		new_augment.desc = creator_desc ? creator_desc : "A custom-fabricated augment using the '[design.form_data["name"]]' template at Rank [design.rank]."
@@ -1099,6 +1104,27 @@
 				A = i
 		if(A)
 			to_chat(user, span_notice("The target current has the [A.name] augment."))
+			// List the augment effects
+			if(A.design_details && A.design_details.selected_effects_data && length(A.design_details.selected_effects_data))
+				to_chat(user, span_notice("Augment Effects:"))
+				var/list/effect_counts = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					effect_counts[effect_id] = (effect_counts[effect_id] || 0) + 1
+
+				var/list/shown_effects = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					if(effect_id in shown_effects)
+						continue
+					shown_effects += effect_id
+					var/count = effect_counts[effect_id]
+					var/effect_name = effect["name"]
+					var/effect_desc = effect["desc"]
+					if(count > 1)
+						to_chat(user, span_notice("• [effect_name] (x[count]): [effect_desc]"))
+					else
+						to_chat(user, span_notice("• [effect_name]: [effect_desc]"))
 
 		var/stattotal
 		for(var/attribute in stats)
