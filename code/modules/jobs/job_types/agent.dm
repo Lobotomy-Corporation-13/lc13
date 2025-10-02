@@ -185,7 +185,6 @@
 	shoes = /obj/item/clothing/shoes/laceup
 	gloves = /obj/item/clothing/gloves/color/black
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/security)
-	l_hand = /obj/item/class_chooser
 
 	backpack_contents = list(
 		/obj/item/melee/classic_baton,
