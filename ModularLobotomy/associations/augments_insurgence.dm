@@ -941,3 +941,67 @@
 		return // Insurgence members cannot become bonds
 
 	bonds += H
+
+/obj/item/insurgence_augment_tester
+	name = "Insurgence Augment Tester"
+	desc = "A device that can check what types of augments the target can use."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "records_stats"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_SMALL
+	var/list/stats = list(
+		FORTITUDE_ATTRIBUTE,
+		PRUDENCE_ATTRIBUTE,
+		TEMPERANCE_ATTRIBUTE,
+		JUSTICE_ATTRIBUTE,
+	)
+
+/obj/item/insurgence_augment_tester/afterattack(atom/target, mob/user, proximity_flag)
+	. = ..()
+	if(ishuman(target))
+		playsound(get_turf(src), 'sound/machines/cryo_warning.ogg', 50, TRUE, -1)
+		var/mob/living/carbon/human/H = target
+
+		var/obj/item/augment/A = null
+		for(var/atom/movable/i in H.contents)
+			if (istype(i, /obj/item/augment))
+				A = i
+		if(A)
+			to_chat(user, span_notice("The target current has the [A.name] augment."))
+			// List the augment effects
+			if(A.design_details && A.design_details.selected_effects_data && length(A.design_details.selected_effects_data))
+				to_chat(user, span_notice("Augment Effects:"))
+				var/list/effect_counts = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					effect_counts[effect_id] = (effect_counts[effect_id] || 0) + 1
+
+				var/list/shown_effects = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					if(effect_id in shown_effects)
+						continue
+					shown_effects += effect_id
+					var/count = effect_counts[effect_id]
+					var/effect_name = effect["name"]
+					var/effect_desc = effect["desc"]
+					if(count > 1)
+						to_chat(user, span_notice("• [effect_name] (x[count]): [effect_desc]"))
+					else
+						to_chat(user, span_notice("• [effect_name]: [effect_desc]"))
+
+		var/stattotal
+		for(var/attribute in stats)
+			stattotal+=get_attribute_level(H, attribute)
+		stattotal /= 4	//Potential is an average of stats
+		var/best_augment = round(stattotal/20)
+		best_augment++
+		if(best_augment > 5)
+			best_augment = 5
+		if(best_augment < 1)
+			to_chat(user, span_notice("The target is unable to use any augments."))
+			return
+		to_chat(user, span_notice("The target is able to use rank [best_augment] or lower augments."))
+		return
+
+	to_chat(user, span_notice("No human identified."))
