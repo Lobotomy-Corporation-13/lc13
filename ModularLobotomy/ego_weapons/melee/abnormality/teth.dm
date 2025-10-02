@@ -789,5 +789,5 @@
 					human.adjustToxLoss(dam_tox)
 					continue
 				human.adjustBruteLoss(-heal_brute)
-				human.apply_lc_protection(3)
+				human.apply_lc_protection(2)
 		cooldown = world.time + cooldown_duration
