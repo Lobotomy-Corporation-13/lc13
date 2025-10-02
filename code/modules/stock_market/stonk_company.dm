@@ -166,7 +166,7 @@
 		"[name] has announced a new member of the board",
 		"A popular burger chain has created a new burger named after [name]",
 		"[name] has sacrificed a middle manager for an unknown reason",
-		"[name] had a senior manager shot and killed. Luckily they have life insurance"
+		"[name] had a senior manager shot and killed. Luckily they have life insurance",
 		"Prices for [product] are down across the board",
 		"[name] had hired a few fixers to assist the company",
 		"New reports say that [name] had hired a Shi fixer for an unknown purpose",
