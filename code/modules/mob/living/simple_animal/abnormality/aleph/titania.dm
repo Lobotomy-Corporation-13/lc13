@@ -44,6 +44,20 @@
 		"Stay silent" = list(FALSE, "Ah... <br>A mere human, human, human. <br>Cease your fear, I shall rid you of your pains. <br>Be reborn as a flower."),
 	)
 
+	generic_bubbles = list(
+		1 = list("%PERSON looks in horror at %ABNO.", "%ABNO seems ready to pull %PERSON limb from limb"),
+		2 = list("The wingbeats of %ABNO create whirlwinds throughout the containment cell."),
+		3 = list("%PERSON is struck in awe at %ABNO."),
+		4 = list("The glow of fairy lights can be seen floating through the room"),
+		5 = list("As work continues, fairies are seen swarming around %PERSON."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("Spare meat is given to %ABNO, and they eat it up."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON puts some flowers near %ABNO."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON talks to %ABNO about their greatest desires."),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON, Attempts to differentiate the libido of %ABNO."),
+	)
+
 	var/fairy_spawn_number = 2
 	var/fairy_spawn_time = 5 SECONDS
 	var/fairy_spawn_limit = 30 // Oh boy, what can go wrong?
