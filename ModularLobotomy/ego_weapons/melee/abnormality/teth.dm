@@ -768,7 +768,7 @@
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
-	special = "Activate in hand to heal every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
+	special = "Activate in hand to heal and apply protection to every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
 	Has a cooldown of 8 seconds."
 	force = 20
 	damtype = BLACK_DAMAGE
@@ -789,4 +789,5 @@
 					human.adjustToxLoss(dam_tox)
 					continue
 				human.adjustBruteLoss(-heal_brute)
+				human.apply_lc_protection(3)
 		cooldown = world.time + cooldown_duration

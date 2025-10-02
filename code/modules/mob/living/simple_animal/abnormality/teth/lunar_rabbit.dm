@@ -5,8 +5,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "lunar_rabbit"
 	icon_living = "lunar_rabbit"
-	pixel_x = -8
-	base_pixel_x = -8
 	del_on_death = TRUE
 	maxHealth = 300	//She's a fast motherfucker.
 	health = 300
@@ -62,6 +60,7 @@
 		L.set_drugginess(15)
 		if(prob(20))
 			L.emote(pick("twitch","drool","moan","giggle"))
+		L.apply_lc_fragile(2)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()
