@@ -77,7 +77,7 @@
 	return
 
 //Work stuff
-/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/Worktick(mob/living/carbon/human/user, work_type)
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/Worktick(mob/living/carbon/human/user)
 	. = ..()
 	if(!seen) //You need two people to work this abno without taking damage.
 		to_chat(user, span_warning("You are injured by [src]!")) // Keeping it clear that the bad work is from being seen and not just luck.
