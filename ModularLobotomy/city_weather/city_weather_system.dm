@@ -33,9 +33,7 @@ GLOBAL_DATUM(city_weather_controller, /datum/city_weather_controller)
 	var/duration = rand(min_storm_duration, max_storm_duration)
 
 	// Start the weather
-	current_weather = new /datum/weather/city_freezing_storm(list(z_level))
-	SSweather.processing |= current_weather
-	current_weather.telegraph()
+	SSweather.run_weather(/datum/weather/city_freezing_storm)
 
 	// Schedule storm end
 	addtimer(CALLBACK(src, PROC_REF(EndStorm)), duration)
@@ -45,9 +43,7 @@ GLOBAL_DATUM(city_weather_controller, /datum/city_weather_controller)
 		return
 
 	storm_active = FALSE
-	if(current_weather)
-		current_weather.wind_down()
-		current_weather = null
+	SSweather.end_weather(/datum/weather/city_freezing_storm)
 
 	ScheduleNextStorm()
 

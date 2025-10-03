@@ -3568,7 +3568,7 @@
 /area/city)
 "wu" = (
 /obj/structure/railing{
-	dir = 5
+	dir = 1
 	},
 /turf/open/floor/plating,
 /area/city)

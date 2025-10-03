@@ -12,8 +12,7 @@
 
 	weather_message = span_userdanger("<i>The freezing storm has arrived! Seek shelter!</i>")
 	weather_overlay = "snowfall_blizzard"
-	weather_duration_lower = 4 MINUTES
-	weather_duration_upper = 6 MINUTES
+	perpetual = TRUE //should make it last forever
 	// weather_sound = 'sound/weather/wind/wind_2_2.ogg'
 
 	end_message = span_boldannounce("The freezing storm begins to subside.")

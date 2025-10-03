@@ -268,13 +268,16 @@
 	has_gravity = STANDARD_GRAVITY
 	sound_environment = SOUND_AREA_STANDARD_STATION
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
+	outdoors = TRUE
 	var/in_city = TRUE
 
 /area/city/house
 	name = "Employee Housing"
+	outdoors = FALSE
 
 /area/city/shop
 	name = "Employee Services"
+	outdoors = FALSE
 
 /area/city/outskirts
 	name = "Outskirts"
@@ -286,7 +289,7 @@
 
 /area/city/fixers
 	name = "Fixer Office"
-
+	outdoors = FALSE
 
 //Areas for ruins
 
@@ -301,6 +304,7 @@
 /area/city/backstreets_room
 	name = "Ruins Room"
 	icon_state = "hallA"
+	outdoors = FALSE
 	in_city = FALSE
 
 /area/city/backstreets_room/resurgence_village
