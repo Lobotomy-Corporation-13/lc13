@@ -206,7 +206,7 @@
 	if(aoe)
 		SpawnAOE(aoe)
 
-/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/SpawnAOE()
+/mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/SpawnAOE(aoe)
 	for(var/mob/living/L in GLOB.alive_mob_list)	//hit everything on the Z level
 		if(L.z != z)
 			continue
