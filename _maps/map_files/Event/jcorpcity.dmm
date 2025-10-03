@@ -828,7 +828,7 @@
 "hm" = (
 /obj/structure/lattice,
 /turf/closed/indestructible/reinforced{
-	color = ffffff
+	color = "ffffff"
 	},
 /area/city/house)
 "hn" = (
@@ -4186,7 +4186,7 @@
 /area/city/house)
 "Ks" = (
 /turf/closed/indestructible/reinforced{
-	color = ffffff
+	color = "ffffff"
 	},
 /area/city/house)
 "Kt" = (
