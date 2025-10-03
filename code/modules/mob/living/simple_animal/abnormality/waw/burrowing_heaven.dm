@@ -199,10 +199,9 @@
 
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/CheckAOE()
 	for(var/mob/living/simple_animal/A in spawn_list)
-		if(A && A.stat != DEAD)	//If any of them are alive, fuck them
-			qdel(A)
+		if(A && A.stat != DEAD)	//If any of them are alive, fuck them. This fires one for each
 			SpawnAOE()
-			return
+			qdel(A)
 
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/proc/SpawnAOE()
 	for(var/mob/living/L in GLOB.mob_list)	//hit everything on the Z level
@@ -210,7 +209,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(spawn_list.len*40, BLACK_DAMAGE)
+		L.deal_damage(40, BLACK_DAMAGE)
 
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport)), 5 SECONDS)
 
