@@ -828,7 +828,7 @@
 "hm" = (
 /obj/structure/lattice,
 /turf/closed/indestructible/reinforced{
-	color = "ffffff"
+	color = "#ffffff"
 	},
 /area/city/house)
 "hn" = (
@@ -1011,7 +1011,7 @@
 "iV" = (
 /obj/structure/rack{
 	desc = "DANGEROUS Expired Medicine.";
-	color = FFAAAA
+	color = "#ffaaaa"
 	},
 /obj/item/ammo_casing/shotgun/buckshot,
 /obj/item/ammo_casing/shotgun/buckshot,
@@ -1830,7 +1830,7 @@
 /area/city)
 "qX" = (
 /obj/structure/riser/wood{
-	color = CCCCCC
+	color = "#cccccc"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -2379,7 +2379,7 @@
 "vE" = (
 /obj/structure/rack{
 	desc = "SAFE Expired Medicine.";
-	color = AAFAAA
+	color = "#aafaaa"
 	},
 /obj/item/reagent_containers/pill/epinephrine{
 	desc = "You shouldn't eat this.";
@@ -4063,7 +4063,7 @@
 "Jv" = (
 /obj/structure/rack{
 	desc = "SAFE Expired Medicine.";
-	color = AAFAAA
+	color = "#aafaaa"
 	},
 /obj/item/ammo_casing/shotgun/beanbag,
 /obj/item/ammo_casing/shotgun/beanbag,
@@ -4186,7 +4186,7 @@
 /area/city/house)
 "Ks" = (
 /turf/closed/indestructible/reinforced{
-	color = "ffffff"
+	color = "#ffffff"
 	},
 /area/city/house)
 "Kt" = (
@@ -4353,7 +4353,7 @@
 /area/city/house)
 "Lw" = (
 /obj/structure/riser/wood{
-	color = CCCCCC
+	color = "#cccccc"
 	},
 /obj/machinery/computer/slot_machine,
 /turf/open/floor/wood{
@@ -5188,7 +5188,7 @@
 "Us" = (
 /obj/structure/rack{
 	desc = "DANGEROUS Expired Medicine.";
-	color = FFAAAA
+	color = "#ffaaaa"
 	},
 /obj/item/reagent_containers/pill/cyanide{
 	name = "expired pill";
