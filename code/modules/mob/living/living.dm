@@ -1690,6 +1690,7 @@
 		if(DEAD)
 			remove_from_dead_mob_list()
 			add_to_alive_mob_list()
+			restore_area_presence()
 	switch(stat) //Current stat.
 		if(CONSCIOUS)
 			if(. >= UNCONSCIOUS)
