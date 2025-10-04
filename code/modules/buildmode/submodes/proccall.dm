@@ -25,7 +25,7 @@
 
 /datum/buildmode_mode/proccall/handle_click(client/user, params, datum/object)
 	if(!proc_name || !proc_args)
-		tgui_alert(user, "Undefined ProcCall or arguments.")
+		alert(user, "Undefined ProcCall or arguments. Right click the ProcCall mode button to set a proc to call.")
 		return
 
 	if(!hascall(object, proc_name))
