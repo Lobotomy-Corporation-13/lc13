@@ -689,7 +689,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
  *
  * The comparison inside the iteration is performed using binary operations, keep this in mind when getting mobs across multiple sublists.
  */
-/area/proc/get_mobs(var/keys)
+/area/proc/get_mobs(keys)
 	. = list()
 	for(var/key, value in area_living)
 		if(key & keys)
