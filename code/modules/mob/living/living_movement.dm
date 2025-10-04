@@ -67,7 +67,7 @@
 		LAZYREMOVEASSOC((exited_area.area_living), area_index, self)
 		return
 
- /// Called when a mob dies or gets destroyed to delete it from the list of living mobs in the area they are in and prevent them from being present in any other moblists while dead.
+/// Called when a mob dies or gets destroyed to delete it from the list of living mobs in the area they are in and prevent them from being present in any other moblists while dead.
 /mob/living/proc/cleanup_area_presence()
 	SHOULD_NOT_OVERRIDE(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
@@ -78,7 +78,7 @@
 		var/area/our_area = get_area(src)
 		LAZYREMOVEASSOC((our_area.area_living), area_index_toclean, src) // We clean what we gotta clean.
 
- /// Called when a mob status changes from DEAD to anything else, restoring its present and future presence in the areas moblists.
+/// Called when a mob status changes from DEAD to anything else, restoring its present and future presence in the areas moblists.
 /mob/living/proc/restore_area_presence()
 	SHOULD_NOT_OVERRIDE(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
