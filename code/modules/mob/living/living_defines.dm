@@ -191,3 +191,6 @@
 	var/extra_damage_white = 0
 	var/extra_damage_black = 0
 	var/extra_damage_pale = 0
+
+	/// Index used to interact with the moblist of the area they are currently in.
+	var/area_index = MOB_LIVING_INDEX
