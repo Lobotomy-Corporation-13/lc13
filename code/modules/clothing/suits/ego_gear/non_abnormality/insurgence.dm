@@ -48,8 +48,8 @@
 		name = original_name
 		desc = original_desc
 		icon_state = original_icon_state
-		icon = 'icons/obj/clothing/ego_gear/suits.dmi'
-		worn_icon = 'icons/mob/clothing/ego_gear/suit.dmi'
+		icon = 'icons/obj/clothing/ego_gear/lc13_armor.dmi'
+		worn_icon = 'icons/mob/clothing/ego_gear/lc13_armor.dmi'
 		to_chat(user, span_notice("You deactivate your armor's disguise system."))
 
 	update_slot_icon()
@@ -129,8 +129,8 @@
 		name = original_name
 		desc = original_desc
 		icon_state = original_icon_state
-		icon = 'icons/obj/clothing/ego_gear/suits.dmi'
-		worn_icon = 'icons/mob/clothing/ego_gear/suit.dmi'
+		icon = 'icons/obj/clothing/ego_gear/lc13_armor.dmi'
+		worn_icon = 'icons/mob/clothing/ego_gear/lc13_armor.dmi'
 		to_chat(user, span_notice("You deactivate your armor's disguise system."))
 
 	update_slot_icon()
