@@ -69,6 +69,7 @@
 		L.physiology.white_mod /= defense_buff_others
 		L.physiology.black_mod /= defense_buff_others
 		L.physiology.pale_mod /= defense_buff_others
+		buffed_people -= L
 		to_chat(L, span_notice("Your defense buff has expired!"))
 
 	addtimer(CALLBACK(src, PROC_REF(Cooldown), user), 15 SECONDS)
