@@ -24,7 +24,9 @@
 				/mob/living/simple_animal/hostile/abnormality/white_night,
 				/mob/living/simple_animal/hostile/abnormality/nihil,
 				/mob/living/simple_animal/hostile/abnormality/hatred_queen,
-				/mob/living/simple_animal/hostile/abnormality/wrath_servant)
+				/mob/living/simple_animal/hostile/abnormality/wrath_servant,
+				/mob/living/simple_animal/hostile/abnormality/highway_devotee,
+				)
 
 
 /mob/living/simple_animal/hostile/ordeal/pink_midnight/Initialize()
