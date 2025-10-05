@@ -42,8 +42,6 @@
 	user.physiology.pale_mod *= defense_buff_self
 	to_chat(user, span_userdanger("HOLD THE LINE!"))
 
-	buffed_people = list()
-
 	for(var/mob/living/carbon/human/L in orange(5, get_turf(user)))
 		L.physiology.red_mod *= defense_buff_others
 		L.physiology.white_mod *= defense_buff_others
@@ -69,8 +67,8 @@
 		L.physiology.white_mod /= defense_buff_others
 		L.physiology.black_mod /= defense_buff_others
 		L.physiology.pale_mod /= defense_buff_others
-		buffed_people -= L
 		to_chat(L, span_notice("Your defense buff has expired!"))
+	buffed_people = list()
 
 	addtimer(CALLBACK(src, PROC_REF(Cooldown), user), 15 SECONDS)
 
