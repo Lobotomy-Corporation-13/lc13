@@ -29,6 +29,19 @@
 		return
 
 	var/mob/living/carbon/human/H = L
+
+	// Check for cold protection from worn clothing
+	var/has_cold_protection = FALSE
+
+	// Check outer clothing (suits, coats, armor)
+	var/obj/item/clothing/suit/worn_suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(worn_suit && worn_suit.cold_protection)
+		has_cold_protection = TRUE
+
+	// If wearing cold protection, don't apply the effect
+	if(has_cold_protection)
+		return
+
 	var/datum/status_effect/stacking/cold_exposure/cold = H.has_status_effect(STATUS_EFFECT_COLD_EXPOSURE)
 
 	if(!cold)
