@@ -751,6 +751,9 @@
 		return FALSE
 	if(inflict_cooldown > world.time)
 		return FALSE
+	var/turf/T = get_turf(target)
+	if(T.density)
+		return FALSE
 	inflict_cooldown = world.time + inflict_cooldown_time
 	new /obj/effect/temp_visual/dir_setting/cult/phase/out (get_turf(human_parent))
 	human_parent.forceMove(get_turf(target))

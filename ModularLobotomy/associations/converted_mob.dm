@@ -148,6 +148,10 @@
 	to_chat(src, span_notice("- Use various machine abilities (check your action buttons)"))
 	to_chat(src, span_notice("- Commune with other converted beings"))
 
+	// Add antagonist datum if they have a mind
+	if(mind && !mind.has_antag_datum(/datum/antagonist/tinkerer_corrosion))
+		mind.add_antag_datum(/datum/antagonist/tinkerer_corrosion)
+
 // Component to give player-controlled converts some basic interaction abilities
 /datum/component/player_tool_component
 	var/mob/living/owner

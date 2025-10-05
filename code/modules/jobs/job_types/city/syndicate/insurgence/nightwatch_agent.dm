@@ -47,7 +47,8 @@
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/syndicatecity
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	mask = /obj/item/clothing/mask/gas/syndicate
+	mask = /obj/item/clothing/mask/chameleon
+	id = /obj/item/card/id/insurgence_forge
 	glasses = /obj/item/clothing/glasses/hud/health/night
 	shoes = /obj/item/clothing/shoes/laceup
 	backpack_contents = list(

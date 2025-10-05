@@ -291,7 +291,7 @@
 	var/mob/living/carbon/human/human_target = target
 
 	// Create the new mob (player variant)
-	var/mob/living/simple_animal/hostile/corroded_human/player/new_mob = new(get_turf(target))
+	var/mob/living/simple_animal/hostile/corroded_cassowary/player/new_mob = new(get_turf(target))
 	new_mob.name = "'Cured' " + original_name
 	new_mob.desc = "A former human, now cured by the Elder One's power."
 
@@ -317,7 +317,7 @@
 	// Use qdel instead of gib to avoid potential crashes
 	qdel(old_body)
 
-/mob/living/simple_animal/hostile/ui_npc/tinkerer/proc/return_to_city(mob/living/simple_animal/hostile/corroded_human/player/converted)
+/mob/living/simple_animal/hostile/ui_npc/tinkerer/proc/return_to_city(mob/living/simple_animal/hostile/corroded_cassowary/player/converted)
 	if(!converted)
 		return
 

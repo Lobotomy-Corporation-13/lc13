@@ -4168,6 +4168,8 @@
 #include "ModularLobotomy\associations\augments.dm"
 #include "ModularLobotomy\associations\cityspawners.dm"
 #include "ModularLobotomy\associations\converted_mob.dm"
+#include "ModularLobotomy\associations\corroded_cassowary.dm"
+#include "ModularLobotomy\associations\tinkerer_corrosion_antag.dm"
 #include "ModularLobotomy\associations\fixer.dm"
 #include "ModularLobotomy\associations\fixeroffice.dm"
 #include "ModularLobotomy\associations\head_trophies.dm"
