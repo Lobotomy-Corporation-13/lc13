@@ -344,8 +344,8 @@
 	hitsound = 'sound/weapons/fast_slam.ogg'
 	usesound = 'sound/effects/ordeals/amber/dusk_dead.ogg'
 
-	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
-	fire_sound_volume = 18
+	fire_sound = 'sound/weapons/ego/willing_fire1.ogg'
+	fire_sound_volume = 40
 	projectile_path = /obj/projectile/ego_bullet/willing
 	shotsleft = 100
 	reloadtime = 3 SECONDS
@@ -379,13 +379,13 @@
 
 	// These vars are all associated lists, wherein each index corresponds to a state of the weapon. 1 for base, 2 for inexorable (initial buff) and 3 for entrenched (final buff).
 	/// The spread of the weapon's bullets. Lower is more precise.
-	var/list/entrenchment_stage_spread_values = list(25, 11, 4)
+	var/list/entrenchment_stage_spread_values = list(27, 13, 4)
 	/// The fire rate for the weapon. Higher is slower. The reason why it gets slower as your buff progresses, is because you get drastically more powerful ammo.
 	var/list/entrenchment_stage_firerate_values = list(1.4, 2.35, 3.1)
 	// These three lists are self explanatory. Projectile type, fire sound and volume used in each stage.
 	var/list/entrenchment_stage_projectile_types = list(/obj/projectile/ego_bullet/willing, /obj/projectile/ego_bullet/willing/heavy, /obj/projectile/ego_bullet/willing/superheavy)
-	var/list/entrenchment_stage_firesound = list('sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/sniper/shot.ogg')
-	var/list/entrenchment_stage_volume = list(20, 35, 55)
+	var/list/entrenchment_stage_firesound = list('sound/weapons/ego/willing_fire1.ogg', 'sound/weapons/gun/rifle/shot_alt.ogg', 'sound/weapons/gun/sniper/shot.ogg')
+	var/list/entrenchment_stage_volume = list(40, 35, 43)
 
 	/// Lets you store this gun normally into your belt/suit storage/whatever. We disable this when the special ability is active.
 	var/storeable = TRUE
