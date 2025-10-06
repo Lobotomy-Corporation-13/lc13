@@ -175,6 +175,21 @@
 		if(isitem(target))
 			ChangeStorage(target.type)
 			. = TRUE
+	//If has reagent, do not store.
+	if(istype(target, /obj/item/reagent_containers))
+		var/obj/item/reagent_containers/RC = target
+		//If is a medipen its fine for it to have reagents.
+		if(istype(RC, /obj/item/reagent_containers/hypospray/medipen))
+			var/obj/item/reagent_containers/hypospray/medipen/mpen = RC
+			if(mpen.volume != mpen.reagents.maximum_volume)
+				return FALSE
+		else
+			return FALSE
+
+	//If a box that could potentially have contents respawned upon creation, do not store.
+	if(istype(target, /obj/item/storage))
+		return FALSE
+
 	//If still false do not keep running.
 	if(!.)
 		return FALSE
