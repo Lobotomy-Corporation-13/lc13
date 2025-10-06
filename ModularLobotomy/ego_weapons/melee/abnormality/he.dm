@@ -2614,3 +2614,45 @@
 	playsound(src, 'sound/weapons/fixer/generic/dodge.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
 	balloon_alert(user, "You dash to [A]!")
+
+
+/obj/item/ego_weapon/splatter
+	name = "splatter"
+	desc = "It's probably covered in paint."
+	special = "Use this weapon in hand to lower sanity, and prepare a projectile."
+	icon_state = "splatter"
+	force = 19
+	damtype = WHITE_DAMAGE
+	swingstyle = WEAPONSWING_LARGESWEEP
+
+	attack_speed = 0.8
+	attack_verb_continuous = list("cuts", "slices")
+	attack_verb_simple = list("cuts", "slices")
+
+	var/active
+	var/gun_cooldown
+	var/gun_cooldown_time = 1.2 SECONDS
+
+/obj/item/ego_weapon/splatter/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
+	if(!CanUseEgo(user))
+		return
+	if(!active)
+		return
+	if(!proximity_flag && gun_cooldown <= world.time)
+		var/turf/proj_turf = user.loc
+		if(!isturf(proj_turf))
+			return
+		var/obj/projectile/ego_bullet/nobody/G = new /obj/projectile/ego_bullet/nobody(proj_turf)
+		G.fired_from = src //for signal check
+		playsound(user, 'sound/effects/meatslap.ogg', 100, TRUE)
+		G.firer = user
+		G.preparePixelProjectile(target, user, clickparams)
+		G.fire()
+		gun_cooldown = world.time + gun_cooldown_time
+		active = FALSE
+		return
+
+
+/obj/item/ego_weapon/splatter/attack_self(mob/living/carbon/user)
+	user.adjustSanityLoss(20)
+
