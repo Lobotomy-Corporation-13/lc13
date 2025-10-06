@@ -77,7 +77,7 @@
 	var/crit_stabilizing_reagent = /datum/reagent/medicine/epinephrine
 
 
-/obj/item/organ/lungs/proc/check_breath(datum/gas_mixture/breath, mob/living/carbon/human/H)
+/* /obj/item/organ/lungs/proc/check_breath(datum/gas_mixture/breath, mob/living/carbon/human/H)
 	if(H.status_flags & GODMODE)
 		H.failed_last_breath = FALSE //clear oxy issues
 		H.clear_alert("not_enough_oxy")
@@ -467,7 +467,7 @@
 
 	// The air you breathe out should match your body temperature
 	breath.temperature = H.bodytemperature
-
+*/
 /obj/item/organ/lungs/on_life()
 	. = ..()
 	if(failed && !(organ_flags & ORGAN_FAILING))
@@ -499,11 +499,13 @@
 
 	safe_toxins_max = 0 //We breathe this to gain POWER.
 
+/* 
 /obj/item/organ/lungs/slime/check_breath(datum/gas_mixture/breath, mob/living/carbon/human/H)
 	. = ..()
 	if (breath?.gases[/datum/gas/plasma])
 		var/plasma_pp = breath.get_breath_partial_pressure(breath.gases[/datum/gas/plasma][MOLES])
-		owner.blood_volume += (0.2 * plasma_pp) // 10/s when breathing literally nothing but plasma, which will suffocate you.
+		owner.blood_volume += (0.2 * plasma_pp) // 10/s when breathing literally nothing but plasma, which will suffocate you. 
+*/
 
 /obj/item/organ/lungs/cybernetic
 	name = "basic cybernetic lungs"

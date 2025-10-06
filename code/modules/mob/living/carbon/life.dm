@@ -53,6 +53,12 @@
 
 //Start of a breath chain, calls breathe()
 /mob/living/carbon/handle_breathing(times_fired)
+	if(status_flags & GODMODE || HAS_TRAIT(src, TRAIT_NOBREATH))
+		if(oxyloss)
+			to_chat(src, span_nicegreen("Every cell of your body is filled to the brim with yummy oxygen!"))
+			setOxyLoss(0, TRUE, TRUE)
+			clear_alert("not_enough_oxy")
+		return FALSE
 	var/next_breath = 4
 	var/obj/item/organ/lungs/L = getorganslot(ORGAN_SLOT_LUNGS)
 	var/obj/item/organ/heart/H = getorganslot(ORGAN_SLOT_HEART)
@@ -63,43 +69,54 @@
 		if(H.damage > H.high_threshold)
 			next_breath--
 
-	if((times_fired % next_breath) == 0 || failed_last_breath)
-		breathe() //Breathe per 4 ticks if healthy, down to 2 if our lungs or heart are damaged, unless suffocating
-	else
+	if((times_fired % next_breath) == 0)
+		breathe(L) //Breathe once every 4 ticks if healthy, down to once every 2 ticks if our lungs or heart are damaged (will makes us suffocate faster if anything bad happens)
+/* 	else
 		if(istype(loc, /obj/))
 			var/obj/location_as_object = loc
-			location_as_object.handle_internal_lifeform(src,0)
+			location_as_object.handle_internal_lifeform(src,0) */
 
 //Second link in a breath chain, calls check_breath()
-/mob/living/carbon/proc/breathe()
-	var/obj/item/organ/lungs = getorganslot(ORGAN_SLOT_LUNGS)
+/mob/living/carbon/proc/breathe(obj/item/organ/breathler_lungs) // THE BREATHLEEEER
 	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
 		return
-	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
+	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell)) // Istypes are inherently fast, but we really have to think if we want to remove TGStation bloat.
 		return
 
-	var/datum/gas_mixture/environment
+	// if(!getorganslot(ORGAN_SLOT_BREATHING_TUBE))
+	if(stat == HARD_CRIT || (!breathler_lungs || (breathler_lungs?.organ_flags & ORGAN_FAILING)) || (pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE)) // We assume all chokes are 100% effective.
+		losebreath += HUMAN_MAX_OXYLOSS  //You can't breath at all, so you take quite a bit of oxy damage per breathing attempt
+
+	else if(health <= crit_threshold)
+		if(!(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE))) // Epinephrine completely stops soft-crit degradation. It only slows hardcrit though.
+			losebreath++  //You're having trouble breathing, so you take a single oxy damage point per breathing attempt
+
+	// Breathe!
+	if(!losebreath)
+		if(oxyloss)
+			clear_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
+			adjustOxyLoss(-15) // Arbitrary number.
+		return TRUE
+
+	// Suffocate!
+	throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy) // I hate this, this should not be called every single breath-tick someone suffocates, but I am not in the mood to figure something else out.
+	adjustOxyLoss(losebreath)
+	losebreath = 0
+	if(prob(50))
+		emote("gasp")
+	return FALSE
+
+/*
+ 	var/datum/gas_mixture/environment
 	if(loc)
 		environment = loc.return_air()
 
 	var/datum/gas_mixture/breath
 
-	if(!getorganslot(ORGAN_SLOT_BREATHING_TUBE))
-		if(health <= HEALTH_THRESHOLD_FULLCRIT || (pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE) || (lungs && lungs.organ_flags & ORGAN_FAILING))
-			losebreath++  //You can't breath at all when in critical or when being choked, so you're going to miss a breath
-
-		else if(health <= crit_threshold)
-			losebreath += 0.25 //You're having trouble breathing in soft crit, so you'll miss a breath one in four times
-
-	//Suffocate
-	if(losebreath >= 1) //You've missed a breath, take oxy damage
-		losebreath--
-		if(prob(10))
-			emote("gasp")
-		if(istype(loc, /obj/))
-			var/obj/loc_as_obj = loc
-			loc_as_obj.handle_internal_lifeform(src,0)
-	else
+	if(istype(loc, /obj/))
+		var/obj/loc_as_obj = loc
+		loc_as_obj.handle_internal_lifeform(src,0)
+ 	else
 		//Breathe from internal
 		breath = get_breath_from_internal(BREATH_VOLUME)
 
@@ -119,20 +136,19 @@
 			if(istype(loc, /obj/))
 				var/obj/loc_as_obj = loc
 				loc_as_obj.handle_internal_lifeform(src,0)
-
-	check_breath(breath)
-
+	check_breath(breath)	
 	if(breath)
 		loc.assume_air(breath)
 		air_update_turf(FALSE, FALSE)
+*/
 
 /mob/living/carbon/proc/has_smoke_protection()
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
 		return TRUE
 	return FALSE
 
-
 //Third link in a breath chain, calls handle_breath_temperature()
+/*	
 /mob/living/carbon/proc/check_breath(datum/gas_mixture/breath)
 	if(status_flags & GODMODE)
 		failed_last_breath = FALSE
@@ -154,7 +170,15 @@
 		failed_last_breath = TRUE
 		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
 		return FALSE
-
+	if(stat == HARD_CRIT || !breathler_lungs)
+		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && breathler_lungs)
+			return FALSE
+		adjustOxyLoss(2)
+		failed_last_breath = TRUE
+		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
+		return FALSE
+	else if(health > crit_threshold)
+		adjustOxyLoss(-5)
 	var/safe_oxy_min = 16
 	var/safe_co2_max = 10
 	var/safe_tox_max = 0.05
@@ -282,16 +306,7 @@
 					to_chat(src, span_warning("The stench of rotting carcasses is unbearable!"))
 					vomit()
 
-	breath.garbage_collect()
-
-	//BREATH TEMPERATURE
-	handle_breath_temperature(breath)
-
-	return TRUE
-
-//Fourth and final link in a breath chain
-/mob/living/carbon/proc/handle_breath_temperature(datum/gas_mixture/breath)
-	return
+	breath.garbage_collect() 
 
 /mob/living/carbon/proc/get_breath_from_internal(volume_needed)
 	if(internal)
@@ -306,6 +321,7 @@
 			. = internal.remove_air_volume(volume_needed)
 			if(!.)
 				return FALSE //to differentiate between no internals and active, but empty internals
+*/
 
 /mob/living/carbon/proc/handle_blood()
 	return
@@ -594,14 +610,15 @@ All effects don't start immediately, but rather get worse over time; the rate is
 				adjustToxLoss(2) //Let's be honest you shouldn't be alive by now
 
 /// Base carbon environment handler, adds natural stabilization
-/mob/living/carbon/handle_environment(datum/gas_mixture/environment)
+/*
+/mob/living/carbon/handle_environment()
 	var/areatemp = get_temperature(environment)
 
 	if(stat != DEAD) // If you are dead your body does not stabilize naturally
 		natural_bodytemperature_stabilization(environment)
 
 	if(!on_fire || areatemp > bodytemperature) // If we are not on fire or the area is hotter
-		adjust_bodytemperature((areatemp - bodytemperature), use_insulation=TRUE, use_steps=TRUE)
+		adjust_bodytemperature((areatemp - bodytemperature), use_insulation=TRUE, use_steps=TRUE) */
 
 /**
  * Used to stabilize the body temperature back to normal on living mobs
@@ -609,6 +626,7 @@ All effects don't start immediately, but rather get worse over time; the rate is
  * vars:
  * * environment The environment gas mix
  */
+// AtmosGuttingToCheck
 /mob/living/carbon/proc/natural_bodytemperature_stabilization(datum/gas_mixture/environment)
 	var/areatemp = get_temperature(environment)
 	var/body_temperature_difference = get_body_temp_normal() - bodytemperature

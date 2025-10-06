@@ -54,9 +54,9 @@
 			handle_random_events()
 
 		//Handle temperature/pressure differences between body and environment
-		var/datum/gas_mixture/environment = loc.return_air()
+/* 		var/datum/gas_mixture/environment = loc.return_air()
 		if(environment)
-			handle_environment(environment)
+			handle_environment(environment) */
 
 		handle_gravity()
 
@@ -89,14 +89,16 @@
 	return
 
 // Base mob environment handler for body temperature
+
 /mob/living/proc/handle_environment(datum/gas_mixture/environment)
+/*
 	var/loc_temp = get_temperature(environment)
 
 	if(loc_temp < bodytemperature) // it is cold here
 		if(!on_fire) // do not reduce body temp when on fire
 			adjust_bodytemperature(max((loc_temp - bodytemperature) / BODYTEMP_DIVISOR, BODYTEMP_COOLING_MAX))
 	else // this is a hot place
-		adjust_bodytemperature(min((loc_temp - bodytemperature) / BODYTEMP_DIVISOR, BODYTEMP_HEATING_MAX))
+		adjust_bodytemperature(min((loc_temp - bodytemperature) / BODYTEMP_DIVISOR, BODYTEMP_HEATING_MAX)) */
 
 /mob/living/proc/handle_fire()
 	if(fire_stacks < 0) //If we've doused ourselves in water to avoid fire, dry off slowly

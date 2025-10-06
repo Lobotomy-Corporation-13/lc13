@@ -1,7 +1,7 @@
 /mob/living/carbon/alien/Life()
 	findQueen()
 	return..()
-
+/* 
 /mob/living/carbon/alien/check_breath(datum/gas_mixture/breath)
 	if(status_flags & GODMODE)
 		return
@@ -34,10 +34,9 @@
 	breath_gases[/datum/gas/oxygen][MOLES] += toxins_used
 
 	breath.garbage_collect()
-
 	//BREATH TEMPERATURE
 	handle_breath_temperature(breath)
-
+ */
 /mob/living/carbon/alien/handle_status_effects()
 	..()
 	//natural reduction of movement delay due to stun.

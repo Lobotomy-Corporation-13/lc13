@@ -78,8 +78,7 @@
 /// Maximum sanity of a human mob, without prudence
 #define DEFAULT_HUMAN_MAX_SANITY_XP 40
 
-#define HUMAN_MAX_OXYLOSS 3
-#define HUMAN_CRIT_MAX_OXYLOSS (SSmobs.wait/30)
+#define HUMAN_MAX_OXYLOSS 12
 
 #define STAMINA_REGEN_BLOCK_TIME (10 SECONDS)
 

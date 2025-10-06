@@ -66,7 +66,7 @@
 /mob/living/carbon/human/handle_mutations_and_radiation()
 	if(!dna || !dna.species.handle_mutations_and_radiation(src))
 		return ..()
-
+/* 
 /mob/living/carbon/human/breathe()
 	if(!dna.species.breathe(src))
 		return ..()
@@ -99,14 +99,14 @@
 		if(istype(L, /obj/item/organ/lungs))
 			var/obj/item/organ/lungs/lun = L
 			lun.check_breath(breath,src)
-
+ */
 /// Environment handlers for species
-/mob/living/carbon/human/handle_environment(datum/gas_mixture/environment)
+/* /mob/living/carbon/human/handle_environment(datum/gas_mixture/environment)
 	// If we are in a cryo bed do not process life functions
 	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
 		return
 
-	dna.species.handle_environment(environment, src)
+	dna.species.handle_environment(environment, src) */
 
 /**
  * Adjust the core temperature of a mob

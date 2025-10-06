@@ -1010,15 +1010,13 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(BODY_FRONT_LAYER)
 			return "FRONT"
 
-
 /datum/species/proc/spec_life(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
+/* 	if(HAS_TRAIT(H, TRAIT_NOBREATH))
 		H.setOxyLoss(0)
 		H.losebreath = 0
-
-		var/takes_crit_damage = (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
-		if((H.health < H.crit_threshold) && takes_crit_damage)
-			H.adjustBruteLoss(1)
+ */
+	if((H.health < H.crit_threshold) && (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE)))
+		H.adjustBruteLoss(1)
 	if(flying_species)
 		HandleFlight(H)
 
@@ -1683,11 +1681,11 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 /////////////
 //BREATHING//
 /////////////
-
+/* 
 /datum/species/proc/breathe(mob/living/carbon/human/H)
 	if(HAS_TRAIT(H, TRAIT_NOBREATH))
 		return TRUE
-
+*/
 //////////////////////////
 // ENVIRONMENT HANDLERS //
 //////////////////////////
@@ -1699,8 +1697,8 @@ GLOBAL_LIST_EMPTY(roundstart_races)
  * * environment (required) The environment gas mix
  * * humi (required)(type: /mob/living/carbon/human) The mob we will target
  */
-/datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/humi)
-	handle_environment_pressure(environment, humi)
+/* /datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/humi)
+	handle_environment_pressure(environment, humi) */
 
 /**
  * Body temperature handler for species
@@ -1936,7 +1934,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	humi.apply_damage(burn_damage, FIRE, bodypart)
 
 /// Handle the air pressure of the environment
-/datum/species/proc/handle_environment_pressure(datum/gas_mixture/environment, mob/living/carbon/human/H)
+/* /datum/species/proc/handle_environment_pressure(datum/gas_mixture/environment, mob/living/carbon/human/H)
 	var/pressure = environment.return_pressure()
 	var/adjusted_pressure = H.calculate_affecting_pressure(pressure)
 
@@ -1975,7 +1973,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 				H.clear_alert("pressure")
 			else
 				H.adjustBruteLoss(LOW_PRESSURE_DAMAGE * H.physiology.pressure_mod)
-				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 2)
+				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 2) */
 
 
 //////////

@@ -515,7 +515,7 @@
 	var/areatemp = get_temperature(environment)
 	if((areatemp < minbodytemp) || (areatemp > maxbodytemp))
 		. = FALSE
-
+//AtmosGuttingToCheck
 /mob/living/simple_animal/handle_environment(datum/gas_mixture/environment)
 	var/atom/A = loc
 	if(isturf(A))
