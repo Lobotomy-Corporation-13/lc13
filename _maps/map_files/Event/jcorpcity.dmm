@@ -380,12 +380,23 @@
 /obj/structure/table/wood,
 /turf/open/floor/wood,
 /area/city/fixers)
+"dq" = (
+/obj/machinery/button/door{
+	id = "outside";
+	name = "prosthetics clinic shutters";
+	pixel_y = 26;
+	req_access_txt = "9"
+	},
+/turf/open/floor/plating/dirt/jungle/dark{
+	slowdown = 0
+	},
+/area/city)
 "dx" = (
 /obj/machinery/door/airlock/public{
 	name = "prosthetic surgery clinic"
 	},
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "southclinic"
+	id = "outside"
 	},
 /turf/open/indestructible/white,
 /area/city/house)
@@ -2911,13 +2922,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/facility/white,
 /area/city/house)
-"zm" = (
-/obj/machinery/door/airlock/grunge{
-	name = "association director's overnight office";
-	req_access_txt = "69"
-	},
-/turf/open/floor/wood,
-/area/city/house)
 "zp" = (
 /obj/machinery/stasis,
 /obj/machinery/light{
@@ -3085,7 +3089,7 @@
 /area/city/house)
 "AI" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "southclinic"
+	id = "outside"
 	},
 /turf/closed/indestructible/fakeglass,
 /area/city/house)
@@ -4727,12 +4731,6 @@
 /obj/structure/bed/maint,
 /turf/open/floor/plating,
 /area/city/fixers)
-"Pe" = (
-/obj/machinery/door/airlock/grunge{
-	name = "association office"
-	},
-/turf/closed/indestructible/reinforced,
-/area/city/house)
 "Pl" = (
 /turf/open/indestructible/hoteltile,
 /area/city/house)
@@ -34842,7 +34840,7 @@ ZZ
 ID
 ZZ
 qn
-Na
+dq
 Na
 Na
 Na
@@ -42020,7 +42018,7 @@ im
 im
 qn
 qn
-zm
+qn
 qn
 qn
 qn
@@ -42030,7 +42028,7 @@ qn
 qn
 qn
 ej
-Pe
+CI
 bk
 qn
 Op

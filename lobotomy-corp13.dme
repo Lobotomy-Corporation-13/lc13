@@ -4061,6 +4061,8 @@
 #include "ModularLobotomy\city_weather\freezing_storm.dm"
 #include "ModularLobotomy\city_weather\weather_landmark.dm"
 #include "ModularLobotomy\city_weather\weather_machine.dm"
+#include "ModularLobotomy\city_weather\ycorp_items.dm"
+#include "ModularLobotomy\city_weather\ycorp_vending.dm"
 #include "ModularLobotomy\disciplinary\discipline_cargo.dm"
 #include "ModularLobotomy\disciplinary\egoshards.dm"
 #include "ModularLobotomy\disciplinary\research.dm"

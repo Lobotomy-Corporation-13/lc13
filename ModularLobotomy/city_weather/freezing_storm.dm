@@ -1,5 +1,16 @@
 #define STATUS_EFFECT_COLD_EXPOSURE /datum/status_effect/stacking/cold_exposure
 
+// Snow effect object
+/obj/effect/weather_snow
+	name = "snow"
+	desc = "A thin layer of snow."
+	icon = 'icons/turf/snow.dmi'
+	icon_state = "snow"
+	alpha = 100
+	layer = TURF_LAYER + 0.1
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	anchored = TRUE
+
 /datum/weather/city_freezing_storm
 	name = "freezing storm"
 	desc = "A bitter cold storm sweeps through the city streets."
@@ -24,23 +35,77 @@
 	protect_indoors = TRUE
 	target_trait = ZTRAIT_STATION
 
+	// List to track all snow effects
+	var/list/snow_effects = list()
+
+/datum/weather/city_freezing_storm/start()
+	. = ..()
+	// Create snow effects on all affected turfs
+	for(var/area/affected_area in impacted_areas)
+		for(var/turf/T in affected_area)
+			// Skip holofloor/snow turfs
+			if(istype(T, /turf/open/floor/holofloor/snow))
+				continue
+			// Only add snow to open turfs
+			if(!istype(T, /turf/open))
+				continue
+			// Check if snow already exists on this turf
+			var/obj/effect/weather_snow/existing_snow = locate(/obj/effect/weather_snow) in T
+			if(!existing_snow)
+				var/obj/effect/weather_snow/S = new(T)
+				snow_effects += S
+
+/datum/weather/city_freezing_storm/end()
+	. = ..()
+	// Start a timer to remove snow effects after 4-6 minutes
+	addtimer(CALLBACK(src, PROC_REF(remove_snow_effects)), rand(4 MINUTES, 6 MINUTES))
+
+	// Clean all turfs immediately
+	for(var/area/affected_area in impacted_areas)
+		for(var/turf/T in affected_area)
+			if(istype(T, /turf/open))
+				T.wash(CLEAN_SCRUB)
+
+/datum/weather/city_freezing_storm/proc/remove_snow_effects()
+	// Remove all snow effects with random timing for organic look
+	for(var/obj/effect/weather_snow/snow in snow_effects)
+		if(!QDELETED(snow))
+			var/del_time = rand(4, 10)
+			animate(snow, alpha = 0, time = del_time SECONDS)
+			QDEL_IN(snow, del_time SECONDS)
+	snow_effects.Cut()
+
 /datum/weather/city_freezing_storm/weather_act(mob/living/L)
 	if(!ishuman(L))
 		return
 
 	var/mob/living/carbon/human/H = L
 
+	// Check if they have warmth effect - full immunity
+	if(H.has_status_effect(/datum/status_effect/warmth))
+		return
+
 	// Check for cold protection from worn clothing
-	var/has_cold_protection = FALSE
+	var/protection_count = 0
 
 	// Check outer clothing (suits, coats, armor)
 	var/obj/item/clothing/suit/worn_suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	if(worn_suit && worn_suit.cold_protection)
-		has_cold_protection = TRUE
+		protection_count++
 
-	// If wearing cold protection, don't apply the effect
-	if(has_cold_protection)
+	// Check head protection
+	var/obj/item/clothing/head/worn_head = H.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(worn_head && worn_head.cold_protection)
+		protection_count++
+
+	// Full protection if both head and suit have cold protection
+	if(protection_count >= 2)
 		return
+
+	// Partial protection (25% chance) if only one item has cold protection
+	if(protection_count == 1)
+		if(prob(75))
+			return
 
 	var/datum/status_effect/stacking/cold_exposure/cold = H.has_status_effect(STATUS_EFFECT_COLD_EXPOSURE)
 
