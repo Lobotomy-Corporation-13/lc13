@@ -162,7 +162,7 @@
 		onrush_hit |= target
 	var/turf/thrownat = get_ranged_target_turf_direct(src, target, 15, rand(-30, 30))
 	target.throw_at(thrownat, 8, 2, src, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = FALSE)
-	target.deal_damage(onrush_damage, RED_DAMAGE)
+	target.deal_damage(onrush_damage, RED_DAMAGE, src)
 	new /obj/effect/temp_visual/smash_effect(get_turf(target))
 	shake_camera(target, 2, 5)
 

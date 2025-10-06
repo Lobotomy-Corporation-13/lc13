@@ -111,7 +111,7 @@
 			if(L.stat == DEAD)
 				continue
 			new /obj/effect/temp_visual/judgement(get_turf(L))
-			L.deal_damage(judgement_damage, PALE_DAMAGE)
+			L.deal_damage(judgement_damage, PALE_DAMAGE, src)
 
 	else
 		for(var/mob/living/L in urange(judgement_range, src))
@@ -120,7 +120,7 @@
 			if(L.stat == DEAD)
 				continue
 			new /obj/effect/temp_visual/judgement(get_turf(L))
-			L.deal_damage(judgement_damage, PALE_DAMAGE)
+			L.deal_damage(judgement_damage, PALE_DAMAGE, src)
 
 			if(L.stat == DEAD)	//Gotta fucking check again in case it kills you. Real moment
 				if(!IsCombatMap())
@@ -144,7 +144,7 @@
 			if(occupant.stat == DEAD)
 				continue
 			new /obj/effect/temp_visual/judgement(get_turf(V))
-			occupant.deal_damage(judgement_damage, PALE_DAMAGE)
+			occupant.deal_damage(judgement_damage, PALE_DAMAGE, src)
 
 	icon_state = icon_living
 	judging = FALSE

@@ -213,7 +213,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/pygmalion/proc/CounterAttack(mob/living/attacker)
 	if (attacker == sculptor)
-		attacker.deal_damage(retaliation, PALE_DAMAGE)
+		attacker.deal_damage(retaliation, PALE_DAMAGE, src, forced = TRUE)
 		to_chat(attacker, span_userdanger("You feel your heart break!"))
 
 /datum/status_effect/sculptor

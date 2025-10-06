@@ -230,7 +230,7 @@
 				playsound(L, attack_sound, 75, 1)
 				new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
 				if(ishuman(L))
-					L.deal_damage(charge_damage, RED_DAMAGE)
+					L.deal_damage(charge_damage, RED_DAMAGE, src)
 				else
 					L.adjustRedLoss(80)
 				if(L.stat >= HARD_CRIT)

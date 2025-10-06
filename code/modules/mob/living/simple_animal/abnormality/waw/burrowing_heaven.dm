@@ -212,7 +212,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(40*aoe, BLACK_DAMAGE)
+		L.deal_damage(40*aoe, BLACK_DAMAGE, src, forced = TRUE, trackable = FALSE)
 
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport)), 5 SECONDS)
 

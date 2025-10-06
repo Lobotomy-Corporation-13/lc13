@@ -1108,7 +1108,7 @@
 	var/justicemod = 1 + userjust/100
 	if(ishuman(target))
 		justicemod = 1
-	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE)
+	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE, user)
 	ApplyStatusEffects(target, COMBO_FINISHER)
 	RadiusAOE(target, user, COMBO_FINISHER)
 

@@ -212,7 +212,7 @@
 			playsound(L, attack_sound, 75, 1)
 			var/turf/LT = get_turf(L)
 			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.deal_damage(100, BLACK_DAMAGE)
+			L.deal_damage(100, BLACK_DAMAGE, src)
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.electrocute_act(1, src, flags = SHOCK_NOSTUN)
@@ -234,7 +234,7 @@
 	. = ..()
 	if(user.health > (user.maxHealth*0.8))
 		datum_reference.qliphoth_change(1)
-		user.deal_damage(45, BLACK_DAMAGE)
+		user.deal_damage(45, BLACK_DAMAGE, forced = TRUE)
 		playsound(src, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, TRUE)
 		say(pick(thunder_bird_lines))
 		user.electrocute_act(1, src, flags = SHOCK_NOSTUN)

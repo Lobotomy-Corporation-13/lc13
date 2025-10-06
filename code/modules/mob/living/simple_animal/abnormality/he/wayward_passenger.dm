@@ -277,7 +277,7 @@
 			playsound(L, attack_sound, 75, 1)
 			var/turf/LT = get_turf(L)
 			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.deal_damage(60, RED_DAMAGE)
+			L.deal_damage(60, RED_DAMAGE, src)
 			been_hit += L
 	for(var/obj/vehicle/sealed/mecha/V in turfs_to_hit)
 		if(V in been_hit)

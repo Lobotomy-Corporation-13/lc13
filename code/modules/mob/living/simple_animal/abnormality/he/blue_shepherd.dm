@@ -449,7 +449,7 @@
 				current_red.WatchIt()
 			all_turfs -= T
 			continue // Red doesn't get hit.
-		L.deal_damage(slash_damage, BLACK_DAMAGE)
+		L.deal_damage(slash_damage, BLACK_DAMAGE, src)
 		all_turfs -= T
 	if(slash_count >= range)
 		buddy_hit = FALSE

@@ -111,7 +111,7 @@
 	var/turf/user_turf = get_turf(attacker)
 	for(var/obj/effect/golden_road/GR in user_turf.contents)
 		retaliation = 3
-	attacker.deal_damage(retaliation, BLACK_DAMAGE)
+	attacker.deal_damage(retaliation, BLACK_DAMAGE, src, forced = TRUE)
 	to_chat(attacker, span_userdanger("[src] counter attacks!"))
 	if(attacker.has_status_effect(/datum/status_effect/stay_home) || !ishuman(attacker) || stat == DEAD)
 		return

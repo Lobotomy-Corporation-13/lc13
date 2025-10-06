@@ -162,9 +162,9 @@
 		ReleaseHug()
 		return
 	do_attack_animation(get_step(src, dir), no_effect = TRUE)
-	hug_victim.deal_damage(hug_damage, BLACK_DAMAGE)
+	hug_victim.deal_damage(hug_damage, BLACK_DAMAGE, src, forced = TRUE)
 	new /obj/effect/temp_visual/smash1(get_turf(src))
-	hug_victim.deal_damage(crush_damage, BRUTE)
+	hug_victim.deal_damage(crush_damage, BRUTE, src, forced = TRUE)
 	hug_victim.Immobilize(10)
 	playsound(get_turf(src), 'sound/abnormalities/sweethome/smash.ogg', 50, 1)
 	switch(count)
@@ -174,10 +174,10 @@
 		if(4)  //apply more damage
 			playsound(get_turf(src), 'sound/effects/wounds/crackandbleed.ogg', 200, 0, 7)
 			to_chat(hug_victim, span_userdanger("It hurts so much!"))
-			hug_victim.deal_damage(crush_damage, BRUTE)
+			hug_victim.deal_damage(crush_damage, BRUTE, src, forced = TRUE)
 		else      //Apply ramping damage
 			playsound(get_turf(src), 'sound/effects/wounds/crackandbleed.ogg', 200, 0, 7)
-			hug_victim.deal_damage(crush_damage + count, BRUTE)
+			hug_victim.deal_damage(crush_damage + count, BRUTE, src, forced = TRUE)
 	count += 1
 	if(hug_victim.sanity_lost)
 		hug_victim.Stun(10)

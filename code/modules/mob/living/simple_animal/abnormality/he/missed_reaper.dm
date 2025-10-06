@@ -93,7 +93,7 @@
 	if(QDELETED(user))
 		return
 	to_chat(user, span_userdanger("[src] stabs you!"))
-	user.deal_damage(3000, PALE_DAMAGE)
+	user.deal_damage(3000, PALE_DAMAGE, src, forced = TRUE)
 	playsound(user, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
 	return
 

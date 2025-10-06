@@ -299,7 +299,7 @@
 		M.ejectall()
 	for(var/mob/living/carbon/human/H in view(1, src))
 		grabbed = TRUE
-		H.deal_damage(boom_damage, BLACK_DAMAGE)
+		H.deal_damage(boom_damage, BLACK_DAMAGE, src, forced = TRUE)
 		H.forceMove(get_turf(src))//pulls them all to the target
 		GrabStun(H)
 	if(grabbed)

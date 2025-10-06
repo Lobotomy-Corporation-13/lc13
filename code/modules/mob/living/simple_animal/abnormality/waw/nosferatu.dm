@@ -425,7 +425,7 @@
 				AdjustThirst(H.blood_volume) // gain up to 2000 blood by draining a corpse
 				H.Drain()
 		else
-			L.deal_damage(banquet_damage * 0.5, BLACK_DAMAGE) // deal extra damage instead of bleed to nonhumans
+			L.deal_damage(banquet_damage * 0.5, BLACK_DAMAGE, src) // deal extra damage instead of bleed to nonhumans
 
 /mob/living/simple_animal/hostile/abnormality/nosferatu/proc/MistForm()
 	if(!can_act)

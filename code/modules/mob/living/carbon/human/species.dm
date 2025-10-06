@@ -1906,7 +1906,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			return
 
 		if(thermal_protection <= TRUE || no_protection)
-			H.deal_damage(4, FIRE)
+			H.deal_damage(4, FIRE, forced = TRUE)
 
 /datum/species/proc/CanIgniteMob(mob/living/carbon/human/H)
 	if(HAS_TRAIT(H, TRAIT_NOFIRE))

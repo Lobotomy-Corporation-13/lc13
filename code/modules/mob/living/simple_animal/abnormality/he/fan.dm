@@ -190,7 +190,7 @@
 		return
 	if(stacks <= 10)
 		return
-	owner.deal_damage((stacks / 8), FIRE)
+	owner.deal_damage((stacks / 8), FIRE, forced = TRUE)
 	owner.playsound_local(owner, 'sound/effects/burn.ogg', 25, TRUE)
 
 /datum/status_effect/stacking/fanhot/on_remove()

@@ -120,7 +120,7 @@
 			if(faction_check_mob(L))
 				continue
 			L.apply_lc_bleed(leap_bleed_stacks)
-			L.deal_damage(leap_damage, RED_DAMAGE)
+			L.deal_damage(leap_damage, RED_DAMAGE, src)
 		for(var/obj/vehicle/sealed/mecha/V in T)
 			V.take_damage(leap_damage, RED_DAMAGE)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)

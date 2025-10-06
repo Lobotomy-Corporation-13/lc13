@@ -2442,7 +2442,7 @@
 	. = ..()
 	for(var/mob/living/victim in orange(2, src))
 		if(faction_check(victim.faction, owner.faction))
-			victim.deal_damage(10, WHITE_DAMAGE)
+			victim.deal_damage(10, WHITE_DAMAGE, forced = TRUE)
 	if(prob(40))
 		playsound(owner, 'sound/abnormalities/ambling pearl/goo effect.ogg', 40)
 

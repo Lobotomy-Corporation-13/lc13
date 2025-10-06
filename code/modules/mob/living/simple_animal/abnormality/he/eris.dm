@@ -147,7 +147,7 @@
 
 	//Lose sanity
 	for(var/mob/living/carbon/human/H in view(10, get_turf(src)))
-		H.deal_damage(girlboss_level*10, WHITE_DAMAGE)
+		H.deal_damage(girlboss_level*10, WHITE_DAMAGE, src, forced = TRUE)
 
 	SLEEP_CHECK_DEATH(10)
 	manual_emote("wipes her mouth with a hankerchief")
@@ -208,14 +208,14 @@
 	if(!ishuman(Proj.firer))
 		return
 	var/mob/living/carbon/human/H = Proj.firer
-	H.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE)
+	H.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE, src, forced = TRUE)
 
 
 /mob/living/simple_animal/hostile/abnormality/eris/attacked_by(obj/item/I, mob/living/user)
 	..()
 	if(!user)
 		return
-	user.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE)
+	user.deal_damage(40*(TOUGHER_TIMES(girlboss_level)), WHITE_DAMAGE, src, forced = TRUE)
 
 
 //Okay, but here's the work effects

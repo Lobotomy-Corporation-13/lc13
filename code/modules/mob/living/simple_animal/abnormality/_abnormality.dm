@@ -508,7 +508,7 @@ The variable's key needs to be non-numerical.*/
 
 // Additional effect on each individual work tick failure
 /mob/living/simple_animal/hostile/abnormality/proc/WorktickFailure(mob/living/carbon/human/user)
-	user.deal_damage(work_damage_amount, work_damage_type)
+	user.deal_damage(work_damage_amount, work_damage_type, forced = TRUE)
 	WorkDamageEffect()
 	return
 

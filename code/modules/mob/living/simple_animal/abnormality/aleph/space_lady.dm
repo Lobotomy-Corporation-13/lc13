@@ -114,12 +114,12 @@
 			continue
 		new /obj/effect/temp_visual/revenant(T)
 		for(var/mob/living/carbon/human/L in T)
-			L.deal_damage(explosion_damage, BLACK_DAMAGE)
+			L.deal_damage(explosion_damage, BLACK_DAMAGE, src)
 	SLEEP_CHECK_DEATH(10)	//I kinda want it to be a bit of a delay but not too much
 
 	//White Hole effect
 	for(var/mob/living/carbon/human/L in view(14, src))
-		L.deal_damage(explosion_damage, WHITE_DAMAGE)
+		L.deal_damage(explosion_damage, WHITE_DAMAGE, src)
 	goonchem_vortex(get_turf(src), 1, 13)
 	can_act = TRUE
 	Teleport()

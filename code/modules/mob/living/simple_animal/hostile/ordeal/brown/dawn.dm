@@ -80,7 +80,7 @@
 			for(var/mob/living/L in T)
 				if(faction_check_mob(L))
 					continue
-				L.deal_damage(jump_damage, RED_DAMAGE)
+				L.deal_damage(jump_damage, RED_DAMAGE, src)
 				if(L.health < 0)
 					L.gib()
 					continue
@@ -129,7 +129,7 @@
 				devour(L)
 				return
 			new /obj/effect/temp_visual/damage_effect/rupture(get_turf(L))
-			L.deal_damage(rupture_damage, BRUTE)
+			L.deal_damage(rupture_damage, BRUTE, src)
 		else
 			devour(L)
 
@@ -218,13 +218,13 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(damage_dealt, melee_damage_type)
+			L.deal_damage(damage_dealt, melee_damage_type, src)
 			new /obj/effect/temp_visual/damage_effect/sinking(get_turf(L))
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.adjustSanityLoss(sinking_damage)
 			else
-				L.deal_damage(sinking_damage, WHITE_DAMAGE)
+				L.deal_damage(sinking_damage, WHITE_DAMAGE, src)
 		for(var/obj/vehicle/sealed/mecha/V in T)
 			V.take_damage(damage_dealt, melee_damage_type)
 	SLEEP_CHECK_DEATH(8)
@@ -580,7 +580,7 @@
 				if(ishuman(L))
 					var/mob/living/carbon/human/H = L
 					H.apply_lc_burn(burn_stacks)
-				L.deal_damage(charge_damage, RED_DAMAGE)
+				L.deal_damage(charge_damage, RED_DAMAGE, src)
 				if(L.health < 0)
 					L.gib()
 					playsound(src, 'sound/effects/ordeals/brown/tentacle_explode.ogg', 75, 1)

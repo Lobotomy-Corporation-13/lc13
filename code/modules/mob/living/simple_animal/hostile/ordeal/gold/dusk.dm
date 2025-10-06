@@ -339,10 +339,10 @@
 				found_radio = TRUE
 		if(!faction_check_mob(L))
 			if(found_radio) //You can take off your radio to reduce the damage
-				L.deal_damage(8, WHITE_DAMAGE)
+				L.deal_damage(8, WHITE_DAMAGE, src, forced = TRUE)
 				L.playsound_local(get_turf(L), "[radio_sound]",100)
 				to_chat(L,span_danger("You hear unsettling sounds come out of your radio!"))
-			L.deal_damage(4, WHITE_DAMAGE)
+			L.deal_damage(4, WHITE_DAMAGE, src, forced = TRUE)
 
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion/proc/Screech()
 	if(screech_cooldown > world.time)

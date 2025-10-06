@@ -321,7 +321,7 @@
 				SLEEP_CHECK_DEATH(3)
 				TH.attack_animal(src)
 				for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
-					H.deal_damage(15, WHITE_DAMAGE)
+					H.deal_damage(15, WHITE_DAMAGE, src, forced = TRUE)
 			if(!targets_from.Adjacent(TH) || QDELETED(TH) || TH.health > 0)
 				finishing = FALSE
 				return
@@ -420,4 +420,4 @@
 	if(damagetype == WHITE_DAMAGE)
 		return
 	var/damage_amt = H.maxSanity * (damage/100) //Deals white the same way pale is dealt
-	H.deal_damage(damage_amt, WHITE_DAMAGE)
+	H.deal_damage(damage_amt, WHITE_DAMAGE, forced = TRUE)

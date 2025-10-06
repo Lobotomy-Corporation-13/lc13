@@ -468,3 +468,18 @@
 // A proc used in CanAttack of simple mobs
 /mob/living/proc/CanBeAttacked()
 	return TRUE
+
+/// Called by the deal_damage() wrapper when its 'forced' argument == FALSE. Return TRUE to receive the damage, return FALSE to prevent damage from being taken.
+// Consider: deal_damage() is usually only called by "special abilities", status effects and things like working Abnormalities.
+// This is primarily meant to be used to react to attacks by mobs that aren't firing a projectile or melee attacking, and give you the opportunity to "reject" the damage.
+// "Forced" damage will not call this, and thus you won't be able to stop it from happening.
+// Consider that 'source' argument might be null and handle accordingly. This is often the case for status effects and mobs that qdel themselves after dealing their damage. I didn't want to handle it for all possible implementations, that would be restrictive.
+/mob/living/proc/PreDamageReaction(damage_amount, damage_type, mob/source)
+	SHOULD_NOT_SLEEP(TRUE)
+	return TRUE
+
+/// Called always after deal_damage() goes through. Irrelevant return value. /simple_animal/hostile overrides this to also aggro the source.
+// If deal_damage's 'trackable' argument == FALSE (it is TRUE by default), then source will be null.
+/mob/living/proc/PostDamageReaction(damage_amount, damage_type, mob/source)
+	return
+

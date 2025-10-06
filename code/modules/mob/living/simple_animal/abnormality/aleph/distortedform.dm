@@ -557,7 +557,7 @@
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(5, WHITE_DAMAGE)
+			L.deal_damage(5, WHITE_DAMAGE, src, forced = TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/DFAttack()
 	if(!can_act)
@@ -702,7 +702,7 @@
 			continue
 		if(faction_check_mob(L, FALSE))
 			continue
-		L.deal_damage(20, BLACK_DAMAGE)
+		L.deal_damage(20, BLACK_DAMAGE, src)
 		if(target == L)
 			continue
 		target_list += L
@@ -710,7 +710,7 @@
 	if(LAZYLEN(target_list))
 		target_list += target
 		for(var/mob/living/L in target_list)
-			L.deal_damage(300, BLACK_DAMAGE) //You - you are probably going to die!
+			L.deal_damage(300, BLACK_DAMAGE, src) //You - you are probably going to die!
 			if(L.health < 0)
 				L.gib() //maybe someday we'll have a cool acid melting animation for this
 
@@ -766,7 +766,7 @@
 		var/total_damage = 30 //There will very rarely be over 2 people in the stack
 		var/new_damage = total_damage / (target_list.len)
 		for(var/mob/living/L in target_list)
-			L.deal_damage(new_damage, PALE_DAMAGE)
+			L.deal_damage(new_damage, PALE_DAMAGE, src)
 			if(L.health < 0)
 				if(ishuman(L))
 					var/mob/living/carbon/human/H = L
@@ -774,7 +774,7 @@
 				else
 					L.gib()
 	else
-		target.deal_damage(250, PALE_DAMAGE) //You - you are probably going to die!
+		target.deal_damage(250, PALE_DAMAGE, src) //You - you are probably going to die!
 		if(target.health < 0)
 			target.dust()
 	can_act = TRUE
@@ -938,9 +938,9 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/Finisher(mob/living/target)
 	to_chat(target, span_danger("[src] is trying to cut you in half!"))
 	if(!ishuman(target))
-		target.deal_damage(150, PALE_DAMAGE) //bit more than usual DPS in pale damage
+		target.deal_damage(150, PALE_DAMAGE, src) //bit more than usual DPS in pale damage
 		return
-	target.deal_damage(500, RED_DAMAGE) //You are probably going to die!
+	target.deal_damage(500, RED_DAMAGE, src) //You are probably going to die!
 	if(target.health > 0)
 		return
 	var/mob/living/carbon/human/H = target
@@ -970,7 +970,7 @@
 			continue
 		if(!ishuman(L))
 			playsound(get_turf(L), 'sound/abnormalities/crumbling/attack.ogg', 50, FALSE)
-			L.deal_damage(50, PALE_DAMAGE)
+			L.deal_damage(50, PALE_DAMAGE, src)
 			new /obj/effect/temp_visual/slice(get_turf(L))
 		else
 			var/mob/living/carbon/human/H = L
@@ -1009,7 +1009,7 @@
 			++targetAmount
 			if(!ishuman(L))
 				new /obj/effect/temp_visual/beam_in(get_turf(L))
-				L.deal_damage(60, PALE_DAMAGE)
+				L.deal_damage(60, PALE_DAMAGE, src)
 				if(L.health < 0)
 					L.gib()
 			else
@@ -1089,7 +1089,7 @@
 				continue
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(150, PALE_DAMAGE)
+			L.deal_damage(150, PALE_DAMAGE, src)
 			if(L.stat == DEAD)
 				for(var/i = 1 to 5) // Eventually turn this into a horizontal bisect. That would be cool.
 					new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
@@ -1253,7 +1253,7 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(50, BLACK_DAMAGE)
+			L.deal_damage(50, BLACK_DAMAGE, src)
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				if(H.sanity_lost)
@@ -1278,7 +1278,7 @@
 				continue
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(30, BLACK_DAMAGE)
+			L.deal_damage(30, BLACK_DAMAGE, src)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			if(!L.anchored)
 				var/whack_speed = (prob(60) ? 1 : 4)
@@ -1377,7 +1377,7 @@
 					continue
 				already_hit += L
 				var/truedamage = ishuman(L) ? 25 : 20 //less damage dealt to nonhumans
-				L.deal_damage(truedamage, BLACK_DAMAGE)
+				L.deal_damage(truedamage, BLACK_DAMAGE, src)
 		SLEEP_CHECK_DEATH(1.71)
 	QDEL_NULL(current_beam)
 	SLEEP_CHECK_DEATH(1 SECONDS) //Rest after laser beam
@@ -1560,7 +1560,7 @@
 	if(!(faction_check in L.faction))
 		playsound(L.loc, 'sound/effects/burn.ogg', 50 - attack_range, TRUE, -1)
 		var/dealt_damage = max(5, 75 - (attack_range))
-		L.deal_damage(dealt_damage, RED_DAMAGE)
+		L.deal_damage(dealt_damage, RED_DAMAGE, src)
 		if(ishuman(L) && dealt_damage > 25)
 			L.emote("scream")
 		to_chat(L, span_userdanger("IT BURNS!!"))
@@ -1590,7 +1590,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((75 - get_dist(src, L)), WHITE_DAMAGE)
+		L.deal_damage((75 - get_dist(src, L)), WHITE_DAMAGE, src)
 		flash_color(L, flash_color = COLOR_BLUE_LIGHT, flash_time = 70)
 		if(!ishuman(L))
 			continue
@@ -1742,7 +1742,7 @@
 	for(var/mob/living/L in livinginview(8, src))
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((300 - (16 * get_dist(src, L))), BLACK_DAMAGE)
+		L.deal_damage((300 - (16 * get_dist(src, L))), BLACK_DAMAGE, src)
 	SLEEP_CHECK_DEATH(2 SECONDS)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/ApocJudge()
@@ -1762,7 +1762,7 @@
 		if(L.stat == DEAD)
 			continue
 		new /obj/effect/temp_visual/judgement(get_turf(L))
-		L.deal_damage(max(5, 60 - get_dist(src, L)), PALE_DAMAGE)
+		L.deal_damage(max(5, 60 - get_dist(src, L)), PALE_DAMAGE, src)
 	SLEEP_CHECK_DEATH(1 SECONDS)
 	icon_state = "apocalypse"
 	SLEEP_CHECK_DEATH(1 SECONDS)
@@ -1877,9 +1877,9 @@
 			continue
 		var/dist = get_dist(src, L)
 		if(ishuman(L)) //Different damage formulae for humans vs mobs
-			L.deal_damage(clamp((15 * (2 ** (8 - dist))), 15, 4000), RED_DAMAGE) //15-3840 damage scaling exponentially with distance
+			L.deal_damage(clamp((15 * (2 ** (8 - dist))), 15, 4000), RED_DAMAGE, src) //15-3840 damage scaling exponentially with distance
 		else
-			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), RED_DAMAGE) //0-600 damage scaling on distance, we don't want it oneshotting mobs
+			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), RED_DAMAGE, src) //0-600 damage scaling on distance, we don't want it oneshotting mobs
 		if(L.health < 0)
 			L.gib()
 

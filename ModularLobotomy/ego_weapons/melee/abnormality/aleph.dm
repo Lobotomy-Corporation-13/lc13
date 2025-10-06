@@ -381,7 +381,7 @@
 
 			to_chat(L, span_userdanger("The music of the apocalypse pierces through you!"))
 			balloon_alert(L, "The music of the apocalypse pierces through you!")
-			L.deal_damage(final_damage, damtype)
+			L.deal_damage(final_damage, damtype, user)
 			// If we're hitting a target with enough max hp, who is an organic mob, and was either deleted or killed by the attack, we headbomb them.
 			// This is purely aesthetic.
 			if((victim_maxhp >= headbomb_hp_requirement) && (victim_biotypes & MOB_ORGANIC) && (!L || L.stat >= DEAD))

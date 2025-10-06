@@ -216,7 +216,7 @@
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/DissolveGifted(mob/living/carbon/C)
 	to_chat(C, span_userdanger("You feel like you are about to burst!"))
 	C.emote("scream")
-	C.deal_damage(800, BLACK_DAMAGE)
+	C.deal_damage(800, BLACK_DAMAGE, src)
 	C.remove_status_effect(STATUS_EFFECT_MELTYLOVE)
 
 /mob/living/simple_animal/hostile/abnormality/melting_love/proc/UnregisterGiftedSignals(mob/living/carbon/human/user)
@@ -316,7 +316,7 @@
 
 /mob/living/simple_animal/hostile/slime/proc/decay()
 	to_chat(src, span_userdanger("You feel yourself falling apart..."))
-	src.deal_damage(decay_damage, BLACK_DAMAGE)
+	src.deal_damage(decay_damage, BLACK_DAMAGE, forced = TRUE)
 	if (stat != DEAD)
 		addtimer(CALLBACK(src, PROC_REF(decay)), decay_timer SECONDS, TIMER_STOPPABLE)
 
@@ -543,7 +543,7 @@
 	if(!isliving(owner))
 		return
 	var/mob/living/L = owner
-	L.deal_damage(10, BLACK_DAMAGE)
+	L.deal_damage(10, BLACK_DAMAGE, forced = TRUE)
 	owner.playsound_local(owner, 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
 	if(!ishuman(L))
 		return

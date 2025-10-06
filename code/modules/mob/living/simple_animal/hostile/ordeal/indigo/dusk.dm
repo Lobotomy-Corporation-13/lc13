@@ -293,7 +293,7 @@
 			user.do_attack_animation(victim)
 			playsound(user, attack_sound, 100, TRUE)
 			new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
-			victim.deal_damage(special_ability_damage, melee_damage_type)
+			victim.deal_damage(special_ability_damage, melee_damage_type, src, forced = TRUE)
 			SweeperHealing(special_ability_damage)
 			user.visible_message(span_danger("[user] rips into [victim] and refuels themselves with their blood!"))
 			// Ramp up the speed and damage on each hit.
@@ -503,7 +503,7 @@
 	src.do_attack_animation(victim)
 	playsound(src, 'sound/abnormalities/crumbling/attack.ogg', 75, FALSE)
 	new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
-	victim.deal_damage(special_ability_damage, melee_damage_type)
+	victim.deal_damage(special_ability_damage, melee_damage_type, src, forced = TRUE)
 	visible_message(span_userdanger("[src] deflects [victim]'s attack and performs a counter!"))
 	SweeperHealing(100)
 

@@ -88,9 +88,9 @@
 		ReleaseGrab()
 		return
 	do_attack_animation(get_step(src, dir), no_effect = TRUE)
-	grab_victim.deal_damage(melee_damage_upper, RED_DAMAGE)
+	grab_victim.deal_damage(melee_damage_upper, RED_DAMAGE, src, forced = TRUE)
 	new /obj/effect/temp_visual/damage_effect/rupture(get_turf(src))
-	grab_victim.deal_damage(rupture_damage, BRUTE)
+	grab_victim.deal_damage(rupture_damage, BRUTE, src, forced = TRUE)
 	grab_victim.Immobilize(10)
 	playsound(get_turf(src), 'sound/effects/ordeals/brown/flower_attack.ogg', 50, 0, 7)
 	playsound(get_turf(src), 'sound/effects/ordeals/brown/flower_kill.ogg', 50, 0, 7)
@@ -101,10 +101,10 @@
 		if(4)	//Apply double damage
 			playsound(get_turf(src), 'sound/effects/wounds/crackandbleed.ogg', 200, 0, 7)
 			to_chat(grab_victim, span_userdanger("It hurts so much!"))
-			grab_victim.deal_damage(rupture_damage, BRUTE)
+			grab_victim.deal_damage(rupture_damage, BRUTE, src, forced = TRUE)
 		else	//Apply ramping damage
 			playsound(get_turf(src), 'sound/effects/wounds/crackandbleed.ogg', 200, 0, 7)
-			grab_victim.deal_damage((rupture_damage * (3 - count)), BRUTE)
+			grab_victim.deal_damage((rupture_damage * (3 - count)), BRUTE, src, forced = TRUE)
 	count += 1
 	if(grab_victim.sanity_lost) //This should prevent weird things like panics running away halfway through
 		grab_victim.Stun(10) //Immobilize does not stop AI controllers from moving, for some reason.
@@ -174,13 +174,13 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(damage_dealt, melee_damage_type)
+			L.deal_damage(damage_dealt, melee_damage_type, src)
 			new /obj/effect/temp_visual/damage_effect/sinking(get_turf(L))
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.adjustSanityLoss(sinking_damage)
 			else
-				L.deal_damage(sinking_damage, WHITE_DAMAGE)
+				L.deal_damage(sinking_damage, WHITE_DAMAGE, src)
 		for(var/obj/vehicle/sealed/mecha/V in T)
 			V.take_damage(damage_dealt, melee_damage_type)
 	SLEEP_CHECK_DEATH(8)

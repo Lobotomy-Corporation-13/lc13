@@ -206,7 +206,7 @@
 	target.apply_damage(10, PALE_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE) //10% of your health in red damage
 	to_chat(target, span_danger("[src] is trying to cut you in half!"))
 	if(!ishuman(target))
-		target.deal_damage(100, PALE_DAMAGE) //bit more than usual DPS in pale damage
+		target.deal_damage(100, PALE_DAMAGE, src) //bit more than usual DPS in pale damage
 		return
 	if(target.health > 0)
 		return

@@ -87,6 +87,6 @@
 	for(var/mob/living/L in livinginview(8, src))
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(pulse_damage, WHITE_DAMAGE)
+		L.deal_damage(pulse_damage, WHITE_DAMAGE, src, forced = TRUE)
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 

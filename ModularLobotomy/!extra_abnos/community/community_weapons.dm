@@ -526,7 +526,7 @@
 	if(!isliving(AM))
 		return FALSE
 	var/mob/living/L = AM
-	L.deal_damage(damage_dealt, BLACK_DAMAGE)
+	L.deal_damage(damage_dealt, BLACK_DAMAGE, forced = TRUE)
 	new /obj/effect/temp_visual/damage_effect/black(get_turf(L))
 
 /obj/effect/gibspawner/generic/silent/liquid_miasma

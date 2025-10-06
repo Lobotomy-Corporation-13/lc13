@@ -136,7 +136,7 @@
 		var/mob/living/carbon/human/H = attacker
 		var/justice_mod = 1 + (get_attribute_level(H, JUSTICE_ATTRIBUTE)/100)
 		damage *= justice_mod
-	attacker.deal_damage(damage, WHITE_DAMAGE)
+	attacker.deal_damage(damage, WHITE_DAMAGE, src, forced = TRUE)
 	return
 
 /mob/living/simple_animal/hostile/abnormality/yang/death()

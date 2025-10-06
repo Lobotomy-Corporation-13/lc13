@@ -20,7 +20,7 @@
 		if(sinner.god_aligned == FISHGOD_NONE) //Deal a fuckload of damage to athiests
 			damage *= 2
 
-		sinner.deal_damage(damage, WHITE_DAMAGE) //KILL
+		sinner.deal_damage(damage, WHITE_DAMAGE, src) //KILL
 		if(ishuman(user))
 			to_chat(sinner, span_userdanger("[user.god_aligned] has punished you for your sins using [user] as a conduit!"))
 		else

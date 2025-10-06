@@ -103,7 +103,7 @@
 	for(var/mob/living/L in oview(1, src))
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(chop_damage, RED_DAMAGE)
+		L.deal_damage(chop_damage, RED_DAMAGE, src)
 		if(L.health < 0)
 			L.gib(FALSE,FALSE,TRUE)
 	SLEEP_CHECK_DEATH(2.5)

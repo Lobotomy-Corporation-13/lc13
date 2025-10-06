@@ -113,7 +113,7 @@
 
 	C.smoke_delay++
 	addtimer(CALLBACK(src, PROC_REF(remove_smoke_delay), C), 10)
-	C.deal_damage(27, PALE_DAMAGE)
+	C.deal_damage(27, PALE_DAMAGE, forced = TRUE)
 	to_chat(C, span_danger("IT BURNS!"))
 	C.emote("scream")
 	return TRUE

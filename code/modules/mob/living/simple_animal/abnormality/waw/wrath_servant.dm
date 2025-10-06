@@ -167,7 +167,7 @@
 				continue
 			if(istype(L, /mob/living/simple_animal/hostile/azure_hermit) || istype(L, /mob/living/simple_animal/hostile/azure_stave))
 				continue
-			L.deal_damage(30, WHITE_DAMAGE)
+			L.deal_damage(30, WHITE_DAMAGE, src, forced = TRUE)
 			var/obj/effect/temp_visual/eldritch_smoke/ES = new(get_turf(L))
 			ES.color = COLOR_GREEN
 			to_chat(L, span_warning("The Azure hermit's magic being channeled through [src] racks your mind!"))
@@ -266,7 +266,7 @@
 	if(!isliving(attacked_target) || (get_dist(attacked_target, src) > 1))
 		return
 	var/mob/living/L = attacked_target
-	L.deal_damage(rand(10, 15), BLACK_DAMAGE)
+	L.deal_damage(rand(10, 15), BLACK_DAMAGE, src)
 	if(!istype(attacked_target, /mob/living/simple_animal/hostile/azure_hermit))
 		return
 	var/mob/living/simple_animal/hostile/azure_hermit/AZ = attacked_target
@@ -734,7 +734,7 @@
 			return
 		if(SW.health > 400)
 			playsound(SW, 'sound/abnormalities/wrath_servant/hermit_attack_hard.ogg', 75, FALSE, 15, falloff_distance = 5)
-			SW.deal_damage(100, WHITE_DAMAGE) // We win these
+			SW.deal_damage(100, WHITE_DAMAGE, src) // We win these
 			var/list/show_area = list()
 			show_area |= view(3, src)
 			for(var/turf/sT in show_area)
@@ -810,7 +810,7 @@
 	for(var/mob/living/L in livinginview(4, src))
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(60, WHITE_DAMAGE)
+		L.deal_damage(60, WHITE_DAMAGE, src)
 	can_act = TRUE
 	return
 
@@ -968,7 +968,7 @@
 	if(!isliving(owner))
 		return
 	var/mob/living/status_holder = owner
-	status_holder.deal_damage(5, BLACK_DAMAGE)
+	status_holder.deal_damage(5, BLACK_DAMAGE, forced = TRUE)
 	if(!ishuman(status_holder))
 		return
 	if((status_holder.sanityhealth <= 0) || (status_holder.health <= 0))

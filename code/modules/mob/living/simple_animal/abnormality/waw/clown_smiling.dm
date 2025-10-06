@@ -142,7 +142,7 @@
 					return
 				TH.attack_animal(src)
 				for(var/mob/living/carbon/human/H in ohearers(7, get_turf(src)))
-					H.deal_damage(finishing_small_damage, WHITE_DAMAGE)
+					H.deal_damage(finishing_small_damage, WHITE_DAMAGE, src, forced = TRUE)
 				SLEEP_CHECK_DEATH(2)
 			if(!targets_from.Adjacent(TH) || QDELETED(TH))
 				finishing = FALSE
@@ -150,7 +150,7 @@
 			playsound(get_turf(src), 'sound/abnormalities/clownsmiling/final_stab.ogg', 50, 1)
 			TH.gib()
 			for(var/mob/living/carbon/human/H in ohearers(7, get_turf(src)))
-				H.deal_damage(finishing_big_damage, WHITE_DAMAGE)
+				H.deal_damage(finishing_big_damage, WHITE_DAMAGE, src, forced = TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/clown/MoveToTarget(list/possible_targets)
 	if(ranged_cooldown <= world.time)
@@ -204,7 +204,7 @@
 	playsound(get_turf(src), 'sound/abnormalities/clownsmiling/announcedead.ogg', 75, 1)
 	for(var/mob/living/L in view(5, src))
 		if(!faction_check_mob(L))
-			L.deal_damage(25, RED_DAMAGE)
+			L.deal_damage(25, RED_DAMAGE, forced = TRUE)
 			if(IsCombatMap())
 				L.apply_lc_bleed(30)
 	new /obj/effect/particle_effect/foam(get_turf(src))

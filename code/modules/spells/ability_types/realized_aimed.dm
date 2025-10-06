@@ -263,7 +263,7 @@
 						if(LH.sanity_lost)
 							LH.adjustSanityLoss(-12*justice) // Pretty fast resaning, but this only applies to insanes
 					continue
-				L.apply_damage(beam_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+				L.deal_damage(beam_damage, BLACK_DAMAGE, user)
 				accumulated_beam_damage += beam_damage
 		if(!Channel(H, 8))
 			break

@@ -328,6 +328,14 @@ GLOBAL_LIST_EMPTY(marked_players)
 		if(target == M)
 			GainPatience()
 
+/mob/living/simple_animal/hostile/PostDamageReaction(damage_amount, damage_type, mob/source)
+	if(stat >= DEAD) // We really shouldn't do anything if we're dead. Add "post-death" reactions elsewhere.
+		return
+	if(source && !faction_check_mob(source)) // If a mob is responsible for the damage we took... (Mind, we will receive source = null for attacks that are not intended to be "trackable")
+		RegisterAggroValue(source, damage_amount, damage_type) // Regardless of whether we have a target or not, add their damage dealt to our target memory.
+		if(!target)
+			Goto(get_turf(source), move_to_delay, 2)
+
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc))
 		return dodge(newloc,dir)

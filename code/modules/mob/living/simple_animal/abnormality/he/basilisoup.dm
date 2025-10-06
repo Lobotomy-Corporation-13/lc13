@@ -261,7 +261,7 @@
 			L.visible_message(span_boldwarning("[src] slams into [L]!"), span_userdanger("[src] rends you with its teeth and claws!"))
 			playsound(L, 'sound/weapons/genhit2.ogg', 75, 1)
 			new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-			L.deal_damage(charge_damage, BLACK_DAMAGE)
+			L.deal_damage(charge_damage, BLACK_DAMAGE, src)
 			L.throw_at(throw_target, 3, 2)
 			for(var/obj/vehicle/V in new_hits)
 				V.take_damage(charge_damage, BLACK_DAMAGE, attack_sound)
