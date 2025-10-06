@@ -53,7 +53,7 @@
 	if(stat != DEAD)
 		return TRUE
 
-
+// Here in case we restore a pseudo-atmos system.
 /mob/living/carbon/human/calculate_affecting_pressure(pressure)
 	if (wear_suit && head && istype(wear_suit, /obj/item/clothing) && istype(head, /obj/item/clothing))
 		var/obj/item/clothing/CS = wear_suit
@@ -66,47 +66,6 @@
 /mob/living/carbon/human/handle_mutations_and_radiation()
 	if(!dna || !dna.species.handle_mutations_and_radiation(src))
 		return ..()
-/* 
-/mob/living/carbon/human/breathe()
-	if(!dna.species.breathe(src))
-		return ..()
-
-/mob/living/carbon/human/check_breath(datum/gas_mixture/breath)
-
-	var/L = getorganslot(ORGAN_SLOT_LUNGS)
-
-	if(!L)
-		if(health >= crit_threshold)
-			adjustOxyLoss(HUMAN_MAX_OXYLOSS + 1)
-		else if(!HAS_TRAIT(src, TRAIT_NOCRITDAMAGE))
-			adjustOxyLoss(HUMAN_CRIT_MAX_OXYLOSS)
-
-		failed_last_breath = TRUE
-
-		var/datum/species/S = dna.species
-
-		if(S.breathid == "o2")
-			throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-		else if(S.breathid == "tox")
-			throw_alert("not_enough_tox", /atom/movable/screen/alert/not_enough_tox)
-		else if(S.breathid == "co2")
-			throw_alert("not_enough_co2", /atom/movable/screen/alert/not_enough_co2)
-		else if(S.breathid == "n2")
-			throw_alert("not_enough_nitro", /atom/movable/screen/alert/not_enough_nitro)
-
-		return FALSE
-	else
-		if(istype(L, /obj/item/organ/lungs))
-			var/obj/item/organ/lungs/lun = L
-			lun.check_breath(breath,src)
- */
-/// Environment handlers for species
-/* /mob/living/carbon/human/handle_environment(datum/gas_mixture/environment)
-	// If we are in a cryo bed do not process life functions
-	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
-		return
-
-	dna.species.handle_environment(environment, src) */
 
 /**
  * Adjust the core temperature of a mob

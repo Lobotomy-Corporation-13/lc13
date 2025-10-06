@@ -443,20 +443,10 @@
 	name = "quadro-cybernetic lungs"
 	desc = "Advanced set of cybernetic lungs capable of filtering high amounts of toxins, cold and heat in the air. This one is capable of working with as low as 6KPa of oxygen. Supplies the body with salbutamol, should the user enter critical condition."
 	icon_state = "lungs-c-u2"
-	safe_toxins_max = 50
-	safe_co2_max = 50
-	safe_oxygen_min = 6
 	maxHealth = 3 * STANDARD_ORGAN_THRESHOLD
 	emp_vulnerability = 5
 
 	var/dose_available = TRUE
-
-	cold_level_1_threshold = 140
-	cold_level_2_threshold = 80
-	cold_level_3_threshold = 30
-	heat_level_1_threshold = 800
-	heat_level_2_threshold = 1600
-	heat_level_3_threshold = 2400
 
 /obj/item/organ/lungs/cybernetic/tier4/on_life()
 	. = ..()

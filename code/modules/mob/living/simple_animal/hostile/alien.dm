@@ -22,11 +22,8 @@
 	bubble_icon = "alien"
 	a_intent = INTENT_HARM
 	attack_sound = 'sound/weapons/bladeslice.ogg'
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list(ROLE_ALIEN)
 	status_flags = CANPUSH
-	minbodytemp = 0
-	unsuitable_heat_damage = 20
 	see_in_dark = 8
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
 	unique_name = 1

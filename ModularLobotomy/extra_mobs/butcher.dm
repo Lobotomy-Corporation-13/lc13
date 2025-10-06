@@ -22,8 +22,6 @@
 	a_intent = INTENT_HARM
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	loot = list(/obj/effect/mob_spawn/human/corpse/butcher, /obj/item/kitchen/knife/butcher/deadly)
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	unsuitable_atmos_damage = 0
 	faction = list("hostile")
 	check_friendly_fire = 1
 	status_flags = CANPUSH

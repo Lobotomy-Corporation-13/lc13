@@ -22,9 +22,6 @@
 	stop_automated_movement = TRUE
 	status_flags = CANPUSH
 	attack_sound = 'sound/magic/demon_attack1.ogg'
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 250 //Weak to cold
-	maxbodytemp = INFINITY
 	faction = list("hell")
 	attack_verb_continuous = "wildly tears into"
 	attack_verb_simple = "wildly tear into"
@@ -68,7 +65,6 @@
 	emote_hear = list("wails","screeches")
 	icon_state = "daemon"
 	icon_living = "daemon"
-	minbodytemp = 0
 	obj_damage = 50
 	melee_damage_lower = 15 // reduced from 30 to 15 with wounds since they get big buffs to slicing wounds
 	melee_damage_upper = 15

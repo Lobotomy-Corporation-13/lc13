@@ -48,9 +48,6 @@
 	possible_a_intents = list(INTENT_HELP, INTENT_HARM)
 	health = 30
 	maxHealth = 30
-	unsuitable_atmos_damage = 0
-	minbodytemp = 0
-	maxbodytemp = 0
 	wander = 0
 	speed = 0
 	ventcrawler = VENTCRAWLER_ALWAYS

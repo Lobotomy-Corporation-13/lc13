@@ -1059,18 +1059,6 @@
 	animate(src, pixel_x = pixel_x_diff, pixel_y = pixel_y_diff , time = 2, loop = 6, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
 	animate(pixel_x = -pixel_x_diff , pixel_y = -pixel_y_diff , time = 2, flags = ANIMATION_RELATIVE)
 
-/mob/living/proc/get_temperature(datum/gas_mixture/environment)
-	var/loc_temp = environment ? environment.temperature : T0C
-	if(isobj(loc))
-		var/obj/oloc = loc
-		var/obj_temp = oloc.return_temperature()
-		if(obj_temp != null)
-			loc_temp = obj_temp
-	else if(isspaceturf(get_turf(src)))
-		var/turf/heat_turf = get_turf(src)
-		loc_temp = heat_turf.temperature
-	return loc_temp
-
 /mob/living/cancel_camera()
 	..()
 	cameraFollow = null

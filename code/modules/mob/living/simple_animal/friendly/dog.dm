@@ -619,9 +619,6 @@
 	icon_living = "void_puppy"
 	icon_dead = "void_puppy_dead"
 	nofur = TRUE
-	unsuitable_atmos_damage = 0
-	minbodytemp = TCMB
-	maxbodytemp = T0C + 40
 	held_state = "void_puppy"
 
 /mob/living/simple_animal/pet/dog/corgi/puppy/void/Process_Spacemove(movement_dir = 0)
