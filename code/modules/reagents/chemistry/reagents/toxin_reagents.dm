@@ -147,10 +147,8 @@
 		. = FALSE
 
 	if(.)
-		C.adjustOxyLoss(5, 0)
-		C.losebreath += 2
-		if(prob(20))
-			C.emote("gasp")
+		// Complete shutdown of the respiratory system, can be treated with epinephrine.
+		C.losebreath += (HUMAN_MAX_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 
 /datum/reagent/toxin/slimejelly
@@ -570,7 +568,7 @@
 
 /datum/reagent/toxin/cyanide/on_mob_life(mob/living/carbon/M)
 	if(prob(5))
-		M.losebreath += 1
+		M.losebreath += (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 	if(prob(8))
 		to_chat(M, "<span class='danger'>You feel horrendously weak!</span>")
 		M.Stun(40)
@@ -632,8 +630,7 @@
 				C.Paralyze(60)
 				. = TRUE
 			if(2)
-				C.losebreath += 10
-				C.adjustOxyLoss(rand(5,25), 0)
+				C.losebreath += (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 				. = TRUE
 			if(3)
 				if(!C.undergoing_cardiac_arrest() && C.can_heartattack())
@@ -641,8 +638,7 @@
 					if(C.stat == CONSCIOUS)
 						C.visible_message("<span class='userdanger'>[C] clutches at [C.p_their()] chest as if [C.p_their()] heart stopped!</span>")
 				else
-					C.losebreath += 10
-					C.adjustOxyLoss(rand(5,25), 0)
+					C.losebreath += (HUMAN_MAX_OXYLOSS_RATE/TICKS_PER_BREATH)
 					. = TRUE
 	return ..() || .
 
@@ -660,8 +656,8 @@
 	if(current_cycle >= 10)
 		M.Stun(40)
 		. = TRUE
-	if(prob(20))
-		M.losebreath += 4
+	// Same as being choked, its basically a chokehold in chemical form.
+	M.losebreath += (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 
 /datum/reagent/toxin/sodium_thiopental
@@ -743,7 +739,7 @@
 	toxpwr = 1.75
 
 /datum/reagent/toxin/coniine/on_mob_life(mob/living/carbon/M)
-	M.losebreath += 5
+	M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 	return ..()
 
 /datum/reagent/toxin/spewium

@@ -70,11 +70,9 @@
 	return 1
 
 /datum/species/moth/space_move(mob/living/carbon/human/H)
+	if(H.dna.features["moth_wings"] != "Burnt Off")
+		return FALSE
 	. = ..()
-	if(H.loc && !isspaceturf(H.loc) && H.dna.features["moth_wings"] != "Burnt Off" && !flying_species) //"flying_species" is exclusive to the potion of flight, which has its flying mechanics. If they want to fly they can use that instead
-		var/datum/gas_mixture/current = H.loc.return_air()
-		if(current && (current.return_pressure() >= ONE_ATMOSPHERE*0.85)) //as long as there's reasonable pressure and no gravity, flight is possible
-			return TRUE
 
 
 /datum/species/moth/spec_fully_heal(mob/living/carbon/human/H)

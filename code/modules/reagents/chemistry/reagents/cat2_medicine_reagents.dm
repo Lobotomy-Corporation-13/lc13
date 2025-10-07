@@ -227,8 +227,8 @@
 		oxycalc = min(oxycalc,M.getOxyLoss()+0.5) //if NOT overdosing, we lower our toxdamage to only the damage we actually healed with a minimum of 0.1*current_cycle. IE if we only heal 10 oxygen damage but we COULD have healed 20, we will only take toxdamage for the 10. We would take the toxdamage for the extra 10 if we were overdosing.
 	M.adjustOxyLoss(-oxycalc, 0)
 	M.adjustToxLoss(oxycalc/CONVERMOL_RATIO, 0)
-	if(prob(current_cycle) && M.losebreath)
-		M.losebreath--
+	if(prob(current_cycle))
+		M.losebreath -= (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 	return TRUE
 
@@ -473,7 +473,7 @@
 		H.adjustFireLoss(-2 * REM, 0)
 		H.adjustOxyLoss(-6 * REM, 0)
 
-		H.losebreath = 0
+		H.losebreath -= (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 
 		H.adjustOrganLoss(ORGAN_SLOT_HEART,max(1,volume/10)) // your heart is barely keeping up!
 

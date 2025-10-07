@@ -59,46 +59,48 @@
 			setOxyLoss(0, TRUE, TRUE)
 			clear_alert("not_enough_oxy")
 		return FALSE
-	var/next_breath = 4
-	var/obj/item/organ/lungs/L = getorganslot(ORGAN_SLOT_LUNGS)
-	var/obj/item/organ/heart/H = getorganslot(ORGAN_SLOT_HEART)
-	if(L)
-		if(L.damage > L.high_threshold)
-			next_breath--
-	if(H)
-		if(H.damage > H.high_threshold)
-			next_breath--
+	if((times_fired % TICKS_PER_BREATH) == 0)
+		breathe() //Breathe once every TICKS_PER_BREATH (4, as of now) ticks.
 
-	if((times_fired % next_breath) == 0)
-		breathe(L) //Breathe once every 4 ticks if healthy, down to once every 2 ticks if our lungs or heart are damaged (will makes us suffocate faster if anything bad happens)
-
-/mob/living/carbon/proc/breathe(obj/item/organ/breathler_lungs) // THE BREATHLEEEER
-	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
-		return
+/mob/living/carbon/proc/breathe()
 	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell)) // Istypes are inherently fast, but we really have to think if we want to remove TGStation bloat.
 		return
 
-	// if(!getorganslot(ORGAN_SLOT_BREATHING_TUBE))
-	if(stat == HARD_CRIT || (!breathler_lungs || (breathler_lungs?.organ_flags & ORGAN_FAILING)) || (pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE)) // We assume all chokes are 100% effective.
-		losebreath += HUMAN_MAX_OXYLOSS  //You can't breath at all, so you take quite a bit of oxy damage per breathing attempt
+	var/obj/item/organ/lungs/breathler_lungs = getorganslot(ORGAN_SLOT_LUNGS) // THE BREATHLEEEER
+	var/non_breathler = FALSE // Bro is not breathing.
+	if((!breathler_lungs || (breathler_lungs?.organ_flags & ORGAN_FAILING)))
+		non_breathler = TRUE
+		losebreath += HUMAN_MAX_OXYLOSS_RATE  //You can't breathe at all as you have no fucking lungs or they are failing on you.
+
+	else if((pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE))
+		non_breathler = TRUE
+		losebreath += HUMAN_HIGH_OXYLOSS_RATE  //You can baaaaarely breathe
 
 	else if(health <= crit_threshold)
-		if(!(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE))) // Epinephrine completely stops soft-crit degradation. It only slows hardcrit though.
-			losebreath += 2  //You're having trouble breathing, so you take two points of oxy damage point per breathing attempt
+		non_breathler = TRUE
+		if(!(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE))) // Epinephrine completely stops crit inherent degradation.
+			switch(stat)
+				if(HARD_CRIT)
+					losebreath += HUMAN_MEDIUM_OXYLOSS_RATE  // You are struggling a lot to breathe
+				if(SOFT_CRIT)
+					losebreath += HUMAN_LOW_OXYLOSS_RATE  // You are struggling a bit to breathe
+		else if(!(HAS_TRAIT(src, TRAIT_NOCRITDAMAGE)))
+			adjustBruteLoss(TICKS_PER_BREATH)
 
 	// Breathe!
-	if(!losebreath)
-		if(oxyloss)
+	if(losebreath <= 0)
+		if(oxyloss && !non_breathler) // If any of the conditions above is true, we cannot breathe on our own, even if we are not actively suffocating, so we will not recover oxyloss naturally.
 			clear_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-			adjustOxyLoss(-15) // Arbitrary number.
+			adjustOxyLoss(-(HUMAN_HIGH_OXYLOSS_RATE))
+		losebreath = 0
 		return TRUE
 
 	// Suffocate!
 	throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy) // I hate this, this should not be called every single breath-tick someone suffocates, but I am not in the mood to figure something else out.
 	adjustOxyLoss(losebreath)
-	losebreath = 0
 	if(prob(50))
 		emote("gasp")
+	losebreath = 0
 	return FALSE
 
 /mob/living/carbon/proc/has_smoke_protection()

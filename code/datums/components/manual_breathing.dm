@@ -62,7 +62,7 @@
 			warn_dying = TRUE
 
 		L.applyOrganDamage(damage_rate)
-		C.losebreath += 0.8
+		C.losebreath += (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 	else if(world.time > (last_breath + check_every))
 		if(!warn_grace)
 			to_chat(C, span_danger("You feel a need to [next_text]!"))
@@ -100,4 +100,4 @@
 		last_breath = world.time
 
 		var/mob/living/carbon/C = parent
-		C.losebreath = max(0, C.losebreath - 0.4)
+		C.losebreath -= (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)

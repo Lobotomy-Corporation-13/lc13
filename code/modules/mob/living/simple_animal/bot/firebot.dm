@@ -1,5 +1,5 @@
-//Firebot
-
+//Firebot. LOBOTOMY CORPORATION 13: USELESS TO US SINCE WE DO NOT USE ATMOS BASED FIRES. MURKED.
+/*
 #define SPEECH_INTERVAL 300  // Time between idle speeches
 #define DETECTED_VOICE_INTERVAL 300  // Time between fire detected callouts
 #define FOAM_INTERVAL 50  // Time between deployment of fire fighting foam
@@ -332,3 +332,4 @@
 #undef DETECTED_VOICE_INTERVAL
 #undef FOAM_INTERVAL
 
+ */

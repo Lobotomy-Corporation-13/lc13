@@ -77,8 +77,14 @@
 #define DEFAULT_HUMAN_MAX_HEALTH_XP 40
 /// Maximum sanity of a human mob, without prudence
 #define DEFAULT_HUMAN_MAX_SANITY_XP 40
+/// Absolute MAXIMUM oxyloss that can be dealt by any individual source for each breath-tick. They can stack, but this number is the guideline for all others (as it represents missing your lungs entirely.)
+#define HUMAN_MAX_OXYLOSS_RATE		(5 * TICKS_PER_BREATH)
+#define HUMAN_HIGH_OXYLOSS_RATE		(4 * TICKS_PER_BREATH)
+#define HUMAN_MEDIUM_OXYLOSS_RATE	(2 * TICKS_PER_BREATH)
+#define HUMAN_LOW_OXYLOSS_RATE		(1 * TICKS_PER_BREATH)
 
-#define HUMAN_MAX_OXYLOSS 12
+/// Breathing handling for carbons is only done every TICKS_PER_BREATH ticks.
+#define TICKS_PER_BREATH 4
 
 #define STAMINA_REGEN_BLOCK_TIME (10 SECONDS)
 

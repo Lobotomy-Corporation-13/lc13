@@ -156,8 +156,6 @@
 	. = ..()
 	if(!istype(exposed_turf))
 		return
-
-	var/cool_temp = cooling_temperature
 	if(reac_volume >= 5)
 		exposed_turf.MakeSlippery(TURF_WET_WATER, 10 SECONDS, min(reac_volume*1.5 SECONDS, 60 SECONDS))
 
@@ -165,12 +163,8 @@
 		exposed_slime.apply_water()
 
 	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in exposed_turf)
-	if(hotspot && !isspaceturf(exposed_turf))
-		if(exposed_turf.air)
-			var/datum/gas_mixture/air = exposed_turf.air
-			air.temperature = max(min(air.temperature-(cool_temp*1000), air.temperature/cool_temp),TCMB)
-			air.react(src)
-			qdel(hotspot)
+	if(hotspot)
+		qdel(hotspot)
 
 	var/obj/effect/turf_fire/t_fire = (locate(/obj/effect/turf_fire) in exposed_turf)
 	if(t_fire)
@@ -1291,7 +1285,7 @@
 		var/mob/living/carbon/human/H = M
 		H.blood_volume = max(H.blood_volume - 10, 0)
 	if(prob(20))
-		M.losebreath += 2
+		M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 		M.set_confusion(min(M.get_confusion() + 2, 5))
 	..()
 

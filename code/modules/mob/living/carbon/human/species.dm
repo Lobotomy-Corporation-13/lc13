@@ -151,9 +151,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/sound/attack_sound = 'sound/weapons/punch1.ogg'
 	var/sound/miss_sound = 'sound/weapons/punchmiss.ogg'
 
-	///What gas does this species breathe? Used by suffocation screen alerts, most of actual gas breathing is handled by mutantlungs. See [life.dm][code/modules/mob/living/carbon/human/life.dm]
-	var/breathid = "o2"
-
 	///What anim to use for dusting
 	var/dust_anim = "dust-h"
 	///What anim to use for gibbing
@@ -1011,12 +1008,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			return "FRONT"
 
 /datum/species/proc/spec_life(mob/living/carbon/human/H)
-/* 	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		H.setOxyLoss(0)
-		H.losebreath = 0
- */
-	if((H.health < H.crit_threshold) && (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE)))
-		H.adjustBruteLoss(1)
 	if(flying_species)
 		HandleFlight(H)
 
@@ -1677,28 +1668,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 /datum/species/proc/bullet_act(obj/projectile/P, mob/living/carbon/human/H)
 	// called before a projectile hit
 	return 0
-
-/////////////
-//BREATHING//
-/////////////
-/*
-/datum/species/proc/breathe(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		return TRUE
-*/
-//////////////////////////
-// ENVIRONMENT HANDLERS //
-//////////////////////////
-
-/**
- * Environment handler for species
- *
- * vars:
- * * environment (required) The environment gas mix
- * * humi (required)(type: /mob/living/carbon/human) The mob we will target
- */
-/* /datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/humi)
-	handle_environment_pressure(environment, humi) */
 
 /**
  * Body temperature handler for species

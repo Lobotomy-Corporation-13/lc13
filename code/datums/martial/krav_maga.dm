@@ -102,9 +102,7 @@
 					span_userdanger("Your chest is slammed by [A]! You can't breathe!"), span_hear("You hear a sickening sound of flesh hitting flesh!"), COMBAT_MESSAGE_RANGE, A)
 	to_chat(A, span_danger("You pound [D] on the chest!"))
 	playsound(get_turf(A), 'sound/effects/hit_punch.ogg', 50, TRUE, -1)
-	if(D.losebreath <= 10)
-		D.losebreath = clamp(D.losebreath + 5, 0, 10)
-	D.adjustOxyLoss(10)
+	D.losebreath += HUMAN_HIGH_OXYLOSS_RATE
 	log_combat(A, D, "quickchoked")
 	return TRUE
 

@@ -155,7 +155,7 @@
 		return
 	if(prob(60/severity))
 		to_chat(owner, "<span class='warning'>Your breathing tube suddenly closes!</span>")
-		owner.losebreath += 2
+		owner.losebreath += HUMAN_MAX_OXYLOSS_RATE
 
 //BOX O' IMPLANTS
 
