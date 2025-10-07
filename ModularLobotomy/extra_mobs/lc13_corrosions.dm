@@ -45,7 +45,7 @@
 	playsound(src, 'sound/weapons/ego/sword1.ogg', min(15 + damage, 100), TRUE, 4)
 	attacker.visible_message(span_danger("[src] counters [attacker] with a massive blade!"), span_userdanger("[src] counters your attack!"))
 	do_attack_animation(attacker)
-	attacker.apply_damage(damage, attack_type, null, attacker.getarmor(null, attack_type))
+	attacker.deal_damage(damage, attack_type, src, forced = TRUE)
 	new /obj/effect/temp_visual/revenant(get_turf(attacker))
 
 /mob/living/simple_animal/hostile/ordeal/NT_corrosion/death(gibbed)
@@ -229,7 +229,7 @@
 		for(var/mob/living/H in T)
 			if(faction_check_mob(H))
 				continue
-			H.apply_damage(poison_damage, BLACK_DAMAGE, null, H.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			H.deal_damage(poison_damage, BLACK_DAMAGE, src, forced = TRUE)
 			H.apply_venom(2)
 
 /mob/living/simple_animal/hostile/ordeal/snake_corrosion/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
@@ -489,7 +489,7 @@
 		to_chat(L, span_userdanger("[src] takes a bite out of you!"))
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.apply_damage(dash_damage,RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(dash_damage, RED_DAMAGE, src)
 		been_hit += L
 		playsound(L, 'sound/effects/ordeals/brown/cromer_stab.ogg', 75, 1)
 		if(!ishuman(L))

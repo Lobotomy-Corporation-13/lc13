@@ -305,7 +305,7 @@
 		var/obj/effect/temp_visual/cleavesprite =  new(T)
 		cleavesprite.color = "#df1919"
 		for(var/mob/living/L in T)
-			L.apply_damage(500, PALE_DAMAGE, null, spread_damage = TRUE)
+			L.deal_damage(500, PALE_DAMAGE)
 			if(ishuman(L) && L.health < 0)
 				var/mob/living/carbon/human/H = L
 				new /obj/effect/temp_visual/human_horizontal_bisect(get_turf(H))

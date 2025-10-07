@@ -276,7 +276,7 @@
 	var/mob/living/L = target
 	var/turf/F = get_turf(L)
 	new /obj/effect/temp_visual/smash_effect(F)
-	L.apply_damage(80, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+	L.deal_damage(80, BLACK_DAMAGE, user)
 	exchange_cooldown -= 20
 	switch(dash_count)
 		if(0)
@@ -759,12 +759,12 @@
 	dash(user, target_turf)
 	playsound(user, 'sound/weapons/black_silence/duelsword.ogg', 50, 1)
 	if(dash_count < 1)
-		L.apply_damage(60, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+		L.deal_damage(60, BLACK_DAMAGE, user)
 		addtimer(CALLBACK(src, PROC_REF(dash_attack), user, target), 5)
 		new /obj/effect/temp_visual/smash_effect(F)
 		dash_count += 1
 	else
-		L.apply_damage(100, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+		L.deal_damage(100, BLACK_DAMAGE, user)
 		new /obj/effect/temp_visual/smash_effect(F)
 		exchange_cooldown -= 30
 		dash_count = 0
@@ -1043,7 +1043,7 @@
 	new /obj/effect/temp_visual/smash_effect(T)
 	if(!target.anchored)
 		target.Move(target_turf)
-	L.apply_damage(1500, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE)) //this went on for 5 sec, so 300 DPS as the final attack
+	L.deal_damage(1500, BLACK_DAMAGE, user) //this went on for 5 sec, so 300 DPS as the final attack
 	sleep(10)
 
 	furioso_end(user, target)

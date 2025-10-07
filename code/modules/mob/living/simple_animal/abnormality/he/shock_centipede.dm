@@ -302,7 +302,7 @@
 	for(var/mob/living/L in view(4, src))
 		if(faction_check_mob(L))
 			continue
-		L.apply_damage(coil_discharge_aoe_damage, coil_discharge_aoe_damagetype, null, L.run_armor_check(null, coil_discharge_aoe_damagetype), spread_damage = TRUE)
+		L.deal_damage(coil_discharge_aoe_damage, coil_discharge_aoe_damagetype, src)
 		L.Stun(coil_discharge_aoe_stun_duration)
 		count ++
 	playsound(get_turf(src), 'sound/abnormalities/kqe/hitsound2.ogg', 100, 0, 8)

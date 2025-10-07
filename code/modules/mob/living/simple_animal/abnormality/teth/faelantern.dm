@@ -193,7 +193,7 @@
 	lure_cooldown = world.time + lure_cooldown_time
 	playsound(src, 'sound/abnormalities/faelantern/faelantern_giggle.ogg', 100, 0)
 	for(var/mob/living/carbon/human/victim in view(8, src))
-		victim.apply_damage(lure_damage, WHITE_DAMAGE)
+		victim.deal_damage(lure_damage, WHITE_DAMAGE, src)
 		if(victim in lured_list || victim.stat >= SOFT_CRIT)
 			continue
 		if(get_attribute_level(victim, TEMPERANCE_ATTRIBUTE) >= 40)

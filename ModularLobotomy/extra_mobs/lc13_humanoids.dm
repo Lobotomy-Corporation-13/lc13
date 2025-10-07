@@ -644,7 +644,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 				new /obj/effect/temp_visual/mech_fire(T)
 				for(var/mob/living/L in T)
 					if(!faction_check_mob(L, FALSE) && !(locate(L) in hit_mob))
-						L.apply_damage(dash_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+						L.deal_damage(dash_damage, RED_DAMAGE, src)
 						LAZYADD(hit_mob, L)
 
 
@@ -725,7 +725,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	playsound(src, 'sound/weapons/ego/burn_guard.ogg', min(15 + damage, 75), TRUE, 4)
 	attacker.visible_message(span_danger("[src] hits [attacker] with a counterattack!"), span_userdanger("[src] counters your attack!"))
 	do_attack_animation(attacker)
-	attacker.apply_damage(damage * 2, attack_type, null, attacker.getarmor(null, attack_type))
+	attacker.deal_damage(damage * 2, attack_type, src, forced = TRUE)
 	attacker.apply_damage(damage, STAMINA, null, null)
 
 

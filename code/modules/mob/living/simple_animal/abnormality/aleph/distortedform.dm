@@ -1498,7 +1498,7 @@
 				H.Paralyze(20)
 				H.adjust_blindness(16)
 				to_chat(L, span_userdanger("MY EYES!!!"))
-				H.apply_damage(100, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				H.deal_damage(100, WHITE_DAMAGE, src)
 				if(H.sanity_lost) // They can't deal with being bald
 					H.dust()
 	if(!attack_chain)

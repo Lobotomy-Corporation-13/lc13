@@ -685,7 +685,7 @@
 			new /obj/effect/temp_visual/explosion(get_turf(target))
 			playsound(get_turf(target), 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 			for(var/mob/living/simple_animal/hostile/H in view(3, target))
-				H.apply_damage((TT.stacks * 6), RED_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE))
+				H.deal_damage((TT.stacks * 6), RED_DAMAGE, user)
 
 //Tremor Break
 /datum/component/augment/tremor_break

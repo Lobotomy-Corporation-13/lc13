@@ -689,7 +689,7 @@
 		if(ishuman(target))
 			goldrush_damage = 50
 
-		target.apply_damage(goldrush_damage, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)		//MASSIVE fuckoff punch
+		target.deal_damage(goldrush_damage, RED_DAMAGE, user)		//MASSIVE fuckoff punch
 
 		playsound(src, 'sound/weapons/fixer/generic/gen2.ogg', 50, TRUE)
 		goldrush_damage = initial(goldrush_damage)
@@ -856,7 +856,7 @@
 						continue
 				else
 					continue
-			L.apply_damage(modified_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(modified_damage, BLACK_DAMAGE, user)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
 /obj/item/ego_weapon/censored/get_clamped_volume()
@@ -1029,7 +1029,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
 	var/damage = force * justicemod * force_multiplier
-	target.apply_damage(damage, BLACK_DAMAGE, null, target.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+	target.deal_damage(damage, BLACK_DAMAGE, user)
 
 	if(!canaoe)
 		return
@@ -1044,8 +1044,8 @@
 			aoe*=force_multiplier
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
-			L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user)
+			L.deal_damage(aoe, WHITE_DAMAGE, user)
 	icon_state = "space"
 	update_icon_state()
 	canaoe = FALSE
@@ -1381,7 +1381,7 @@
 		for(var/turf/open/T in range(target_turf, 1))
 			new /obj/effect/temp_visual/spicebloom(T)
 			for(var/mob/living/L in T.contents)
-				L.apply_damage(modified_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(modified_damage, WHITE_DAMAGE, user)
 				if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 					damage_dealt += modified_damage
 
@@ -1478,7 +1478,7 @@
 		aoe*=justicemod
 		if(user.faction_check_mob(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user)
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/mockery/get_clamped_volume()
@@ -1619,7 +1619,7 @@
 		if("sword")
 			var/red = force
 			red*=justicemod
-			target.apply_damage(red * force_multiplier, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			target.deal_damage(red * force_multiplier, RED_DAMAGE, user)
 
 		if("whip")
 			var/multihit = force
@@ -1638,7 +1638,7 @@
 				aoe*=justicemod
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(aoe * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe * force_multiplier, BLACK_DAMAGE, user)
 				new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 				if(!ishuman(L))
 					if(!L.has_status_effect(/datum/status_effect/rend_black))
@@ -1678,7 +1678,7 @@
 			for(var/mob/living/L in T)
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(smash_damage * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(smash_damage * force_multiplier, BLACK_DAMAGE, user)
 		playsound(user, 'sound/abnormalities/fairy_longlegs/attack.ogg', 75, 0, 3)
 		sleep(0.5 SECONDS)
 	smashing = FALSE
@@ -1818,7 +1818,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user)
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/shield/gasharpoon/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
@@ -1881,7 +1881,7 @@
 	for(var/mob/living/L in view(1, user))
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user)
 		var/datum/status_effect/stacking/pallid_noise/P = L.has_status_effect(/datum/status_effect/stacking/pallid_noise)
 		if(!P)
 			L.apply_status_effect(STATUS_EFFECT_PALLIDNOISE)

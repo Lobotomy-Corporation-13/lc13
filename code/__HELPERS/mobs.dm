@@ -719,7 +719,7 @@ GLOBAL_LIST_EMPTY(species_list)
 						if(faction_check_mob(L, exact_faction_match))
 							continue
 					if(damage)
-						L.apply_damage(damage, damage_type, def_zone, L.run_armor_check(def_zone, damage_type), FALSE, TRUE)
+						L.deal_damage(damage, damage_type, src, forced, trackable)
 					. += L
 			if(hurt_structure && (isstructure(O) || ismachinery(O)))
 				if(O.resistance_flags & INDESTRUCTIBLE)

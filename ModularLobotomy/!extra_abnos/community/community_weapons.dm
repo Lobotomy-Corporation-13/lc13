@@ -275,7 +275,7 @@
 				continue
 			if(special_checks_faction && source.faction_check_mob(L))
 				continue
-			L.apply_damage(20, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(20, RED_DAMAGE, source, forced = TRUE)
 			L.apply_lc_burn(2)
 	..()
 
@@ -331,7 +331,7 @@
 				if(L in been_hit || L == user)
 					continue
 				user.visible_message(span_boldwarning("[user] blazes through [L]!"))
-				L.apply_damage((special_damage + extra_damage), RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+				L.deal_damage((special_damage + extra_damage), RED_DAMAGE, user)
 				been_hit += L
 
 	// Remove burn if it's safety is on

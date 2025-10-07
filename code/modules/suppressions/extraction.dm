@@ -531,7 +531,7 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		L.apply_damage(damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(damage, BLACK_DAMAGE)
 		L.visible_message("<span class='danger'>[L] has been hit by [name]!</span>",
 						"<span class='userdanger'>You've been hit by [name]!</span>")
 	sleep(6)

@@ -95,7 +95,7 @@
 		if(ishuman(thrown_item.thrownby))
 			var/mob/living/carbon/human/H = thrown_item.thrownby
 			justice_mod += get_modified_attribute_level(H, JUSTICE_ATTRIBUTE)/100
-		apply_damage(thrown_item.throwforce * justice_mod, thrown_item.damtype, zone, armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND))
+		deal_damage(thrown_item.throwforce * justice_mod, thrown_item.damtype, thrown_item.thrownby, overrides = list(def_zone = zone, blocked = armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND), white_healable = TRUE))
 		if(QDELETED(src)) //Damage can delete the mob.
 			return
 		return ..()
@@ -474,12 +474,12 @@
 // This is primarily meant to be used to react to attacks by mobs that aren't firing a projectile or melee attacking, and give you the opportunity to "reject" the damage.
 // "Forced" damage will not call this, and thus you won't be able to stop it from happening.
 // Consider that 'source' argument might be null and handle accordingly. This is often the case for status effects and mobs that qdel themselves after dealing their damage. I didn't want to handle it for all possible implementations, that would be restrictive.
-/mob/living/proc/PreDamageReaction(damage_amount, damage_type, mob/source)
+/mob/living/proc/PreDamageReaction(damage_amount, damage_type, source)
 	SHOULD_NOT_SLEEP(TRUE)
 	return TRUE
 
 /// Called always after deal_damage() goes through. Irrelevant return value. /simple_animal/hostile overrides this to also aggro the source.
 // If deal_damage's 'trackable' argument == FALSE (it is TRUE by default), then source will be null.
-/mob/living/proc/PostDamageReaction(damage_amount, damage_type, mob/source)
+/mob/living/proc/PostDamageReaction(damage_amount, damage_type, source)
 	return
 

@@ -87,7 +87,7 @@
 			if(faction_check_mob(L))
 				continue
 			new /obj/effect/temp_visual/revenant(get_turf(L))
-			L.apply_damage(pulse_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(pulse_damage, BLACK_DAMAGE, src, forced = TRUE)
 		SLEEP_CHECK_DEATH(5.6) // In total we wait for 2.8 seconds
 	playsound(src, 'sound/effects/ordeals/white/black_ability_end.ogg', 100, FALSE, 30)
 	for(var/obj/machinery/computer/abnormality/A in urange(current_pulse_range, src))
@@ -318,7 +318,7 @@
 	for(var/turf/T in RANGE_TURFS(1, src))
 		RVP.NewSparkles(T)
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', min(15 + damage, 100), TRUE, 4)
-	attacker.apply_damage(damage, attack_type, null, attacker.getarmor(null, attack_type))
+	attacker.deal_damage(damage, attack_type, src, forced = TRUE)
 	RVP.NewSparkles(get_turf(attacker), color = COLOR_VIOLET)
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/attack_hand(mob/living/carbon/human/M)
@@ -483,7 +483,7 @@
 			if(faction_check_mob(L))
 				continue
 			to_chat(L, span_userdanger("A red laser passes right through you!"))
-			L.apply_damage(beam_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(beam_damage, RED_DAMAGE, src)
 			been_hit |= L
 			new /obj/effect/temp_visual/cult/sparks(get_turf(L))
 	playsound(src, 'sound/effects/ordeals/white/red_beam_fire.ogg', 100, FALSE, 32)

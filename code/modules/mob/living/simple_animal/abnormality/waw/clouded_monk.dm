@@ -263,7 +263,7 @@
 			to_chat(L, span_userdanger("[src] slams you!"))
 			var/turf/LT = get_turf(L)
 			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.apply_damage(slam_damage,RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(slam_damage, RED_DAMAGE, src)
 			playsound(L, 'sound/creatures/lc13/lovetown/slam.ogg', 75, 1)
 
 /mob/living/simple_animal/hostile/abnormality/clouded_monk/proc/ResetCharge()

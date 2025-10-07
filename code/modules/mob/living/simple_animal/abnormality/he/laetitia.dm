@@ -136,7 +136,7 @@
 		playsound(get_turf(src), 'sound/abnormalities/laetitia/spider_born.ogg', 50, 1)
 		if (istype(user, /mob/living))
 			var/mob/living/L = user
-			L.apply_damage((basepower*strength), RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), FALSE, TRUE)
+			L.deal_damage((basepower*strength), RED_DAMAGE, forced = TRUE)
 		for(var/turf/T in range(2, user))
 			new /obj/effect/temp_visual/smash_effect(T)
 			user.HurtInTurf(T, list(), (basepower*strength), RED_DAMAGE, check_faction = FALSE, hurt_mechs = TRUE)

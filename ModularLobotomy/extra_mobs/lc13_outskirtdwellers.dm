@@ -362,7 +362,7 @@
 	visible_message(span_danger("[src] suddenly explodes!"))
 	for(var/mob/living/L in view(5, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(35, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(35, RED_DAMAGE)
 	gib()
 
 // bigBirdEye
@@ -579,7 +579,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		SLEEP_CHECK_DEATH(6)
 	for(var/mob/living/L in view(3, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(5, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(5, WHITE_DAMAGE, src, forced = TRUE)
 	can_act = TRUE
 
 //Love Town Slasher - TETH goons, not much of a threat
@@ -678,7 +678,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		SLEEP_CHECK_DEATH(6)
 	for(var/mob/living/L in view(4, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(33, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(33, WHITE_DAMAGE, src)
 	can_act = TRUE
 
 // Love Town Slumberer - HE threat,, quite damaging and can grab you, stuns you for some time.
@@ -1015,7 +1015,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 			can_act = TRUE
 			return
 		for(var/mob/living/carbon/human/H in view(7, get_turf(src)))
-			H.apply_damage(50, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			H.deal_damage(50, WHITE_DAMAGE, src, forced = TRUE)
 		new /obj/effect/temp_visual/lovetown_shapes(get_turf(TH))
 		TH.gib()
 //		animate(TH, pixel_y = pixel_y_before, time = 10, , easing = BACK_EASING | EASE_OUT, flags = ANIMATION_END_NOW) //animate the shape back when you add it Mel

@@ -29,7 +29,7 @@
 		aoe *= force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user)
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 
@@ -206,7 +206,7 @@
 	if(mode)
 		if(M in targets)
 			playsound(M, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
-			M.apply_damage(ranged_damage, WHITE_DAMAGE, null, M.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			M.deal_damage(ranged_damage, WHITE_DAMAGE, user)
 			new /obj/effect/temp_visual/remorse(get_turf(M))
 			targets -= M
 	..()
@@ -335,7 +335,7 @@
 				continue
 			to_chat(L, span_userdanger("You are hit by [src]!"))
 			balloon_alert(L, "You are hit by [src]!")
-			L.apply_damage(dealing_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(dealing_damage, RED_DAMAGE, user)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
@@ -438,7 +438,7 @@
 				if(user.faction_check_mob(C) && !vine_damage_bonus)
 					continue
 				new /obj/effect/temp_visual/vinespike(get_turf(C))
-				C.apply_damage(vine_damage + vine_damage_bonus, BLACK_DAMAGE, null, C.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				C.deal_damage(vine_damage + vine_damage_bonus, BLACK_DAMAGE, user, forced = TRUE)
 				affected_mobs += 1
 			playsound(loc, 'sound/creatures/venus_trap_hurt.ogg', min(75, affected_mobs * 15), TRUE, round( affected_mobs * 0.5))
 		AlterMoveResist(user, 0.4)
@@ -608,7 +608,7 @@
 			var/mob/living/carbon/human/H = L
 			if(!H.sanity_lost)
 				continue
-		L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, WHITE_DAMAGE, user)
 		L.visible_message(span_danger("[user] slices [L]!"))
 
 /obj/item/ego_weapon/wings/proc/Leap(mob/living/user, dir = SOUTH, times_ran = 3)
@@ -637,7 +637,7 @@
 					var/mob/living/carbon/human/H = L
 					if(!H.sanity_lost)
 						continue
-				L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe, WHITE_DAMAGE, user)
 				L.visible_message(span_danger("[user] evicerates [L]!"))
 		return
 	for(var/turf/T in orange(1, user))
@@ -1278,7 +1278,7 @@
 	QDEL_IN(src, 1 SECONDS)
 
 /obj/item/ego_weapon/mini/infinity/proc/cast(mob/living/target, mob/living/user, damage_color)
-	target.apply_damage(mark_damage, damage_color, null, target.run_armor_check(null, damage_color), spread_damage = TRUE)		//MASSIVE fuckoff punch
+	target.deal_damage(mark_damage, damage_color, user)		//MASSIVE fuckoff punch
 	playsound(loc, 'sound/weapons/fixer/generic/energyfinisher3.ogg', 15, TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
 	mark_damage = force
@@ -1340,7 +1340,7 @@
 		for(var/mob/living/L in range(2, user)) //knocks enemies away from you
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, RED_DAMAGE, user)
 			if(firsthit)
 				aoe = (aoe / 2)
 				firsthit = FALSE
@@ -1508,7 +1508,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, RED_DAMAGE, user)
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(get_turf(L))
 		FX.color = "#a2d2df"
 
@@ -1814,7 +1814,7 @@
 		aoe*=justicemod
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user)
 		new /obj/effect/temp_visual/tbirdlightning(get_turf(L))
 	icon_state = initial(icon_state)
 	hitsound = initial(hitsound)
@@ -1873,19 +1873,19 @@
 	force = 42
 	switch(chosen_style)
 		if("red")
-			user.apply_damage(50, RED_DAMAGE, null, user.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, RED_DAMAGE, forced = TRUE)
 			damtype = RED_DAMAGE
 			to_chat(user, span_notice("Your bones are painfully sculpted to fit a muscular claw."))
 			balloon_alert(user, "Your bones are painfully scuplted to fit a muscular claw.")
 			hitsound = 'sound/weapons/bladeslice.ogg'
 		if("white")
-			user.apply_damage(50, WHITE_DAMAGE, null, user.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, WHITE_DAMAGE, forced = TRUE)
 			damtype = WHITE_DAMAGE
 			to_chat(user, span_notice("Your angst is plastered onto your arm."))
 			balloon_alert(user, "Your angst is plastered onto your arm.")
 			hitsound = 'sound/effects/hit_kick.ogg'
 		if("black")
-			user.apply_damage(50, BLACK_DAMAGE, null, user.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, BLACK_DAMAGE, forced = TRUE)
 			damtype = BLACK_DAMAGE
 			to_chat(user, span_notice("Bristles are painfully ejected from your arm, filled with hate."))
 			balloon_alert(user, "Bristiles are painfully ejected from your arm, filled with hate.")
@@ -2219,7 +2219,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user)
 
 /obj/item/ego_weapon/abyssal_route/proc/DiveReset()
 	can_attack = TRUE
@@ -2353,7 +2353,7 @@
 				for(var/mob/living/L in T)
 					if(L == user || ishuman(L))
 						continue
-					L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+					L.deal_damage(aoe, WHITE_DAMAGE, user)
 			sleep(1.5)
 
 /obj/item/ego_weapon/sunyata/proc/spin_reset()

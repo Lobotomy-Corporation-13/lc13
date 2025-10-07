@@ -264,5 +264,5 @@
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			H.apply_lc_burn(floor(burn_stacks * 0.5))
-		L.apply_damage(charge_damage * 0.40,RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(charge_damage * 0.40, RED_DAMAGE, src)
 		playsound(L, 'sound/effects/ordeals/brown/cromer_slam.ogg', 75, 1)

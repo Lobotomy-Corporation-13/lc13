@@ -76,7 +76,7 @@
 	SLEEP_CHECK_DEATH(6)
 	for(var/mob/living/L in view(7, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(scream_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(scream_damage, WHITE_DAMAGE, src)
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/mutant_clown/proc/Slam()
@@ -297,4 +297,4 @@
 		min_next_adrenaline = world.time + rand(10, 20)
 		to_chat(joyful, "<span class='userdanger'>This pain... Brings us such joy...</span>")
 		joyful.heal_overall_damage(regen_amount*regen_mult, regen_amount*regen_mult, regen_amount*regen_mult, BODYPART_ORGANIC)
-		joyful.apply_damage(regen_amount, WHITE_DAMAGE)
+		joyful.deal_damage(regen_amount, WHITE_DAMAGE, forced = TRUE)

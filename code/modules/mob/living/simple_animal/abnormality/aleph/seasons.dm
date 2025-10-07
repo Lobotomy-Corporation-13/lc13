@@ -818,7 +818,7 @@
 				H.apply_lc_burn(3)
 				dealt_damage = TRUE
 			else if(current_season == "spring")
-				H.apply_damage(10, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = FALSE)
+				H.deal_damage(10, WHITE_DAMAGE, forced = TRUE)
 	if(!dealt_damage)
 		damaging = FALSE
 		return

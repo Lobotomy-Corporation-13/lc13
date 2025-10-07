@@ -78,7 +78,7 @@
 			aoe*=justicemod
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user)
 
 
 /obj/item/ego_weapon/fury
@@ -150,7 +150,7 @@
 		aoe*=justicemod
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, RED_DAMAGE, user, overrides = list(blocked = L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE))
 
 
 
@@ -907,7 +907,7 @@
 			aoe*=force_multiplier
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user)
 			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 		icon_state = "impending_day_extended"
 		sacrifice = TRUE
@@ -995,7 +995,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user)
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(get_turf(L))
 		FX.color = "#b52e19"
 
@@ -1447,7 +1447,7 @@
 /obj/item/ego_weapon/aedd/proc/power_attack(mob/living/target, mob/living/user)
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
-	target.apply_damage((force * justicemod), BLACK_DAMAGE, null, target.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+	target.deal_damage((force * justicemod), BLACK_DAMAGE, user)
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
 	var/turf/T = get_turf(target)
 	new /obj/effect/temp_visual/justitia_effect(T)
@@ -1717,7 +1717,7 @@
 	return ..()
 
 /datum/status_effect/fairybite/tick()
-	owner.apply_damage(damage_amount, RED_DAMAGE, null, owner.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+	owner.deal_damage(damage_amount, RED_DAMAGE, forced = TRUE)
 	playsound(owner, 'sound/abnormalities/mountain/bite.ogg', 70, TRUE) //yes im reusing a sound bite me
 	new /obj/effect/temp_visual/beakbite(get_turf(owner))
 
@@ -2171,7 +2171,7 @@
 					var/mob/living/carbon/human/H = L
 					if(!H.sanity_lost)
 						continue
-				L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe, BLACK_DAMAGE, user)
 				L.visible_message(span_danger("[user] sears [L] with the [src]!"))
 		return
 	addtimer(CALLBACK(src, PROC_REF(Leap), user, dir, leap_range), 0.1)

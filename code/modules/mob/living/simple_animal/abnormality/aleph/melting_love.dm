@@ -328,7 +328,7 @@
 			new /obj/effect/decal/cleanable/melty_slime(R)
 		for(var/mob/living/L in view(death_slime_range, src))
 			if(L.stat != DEAD && !istype(L, /mob/living/simple_animal/hostile/slime))
-				L.apply_damage(death_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+				L.deal_damage(death_damage, BLACK_DAMAGE)
 	return ..()
 
 /mob/living/simple_animal/hostile/slime/CanAttack(atom/the_target)

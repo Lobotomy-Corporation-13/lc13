@@ -851,7 +851,7 @@
 				continue
 			if(L == target)
 				continue
-			L.apply_damage((ishuman(L) ? aoe_no_justice : aoe), damtype, null, L.run_armor_check(null, damtype), spread_damage = TRUE)
+			L.deal_damage((ishuman(L) ? aoe_no_justice : aoe), damtype, user)
 			if(hit_type == COMBO_ATTACK2)
 				ApplyStatusEffects(L, COMBO_ATTACK2_AOE)
 				L.visible_message(span_danger("[user] cuts through [L] with a wide, explosive sweep!"))

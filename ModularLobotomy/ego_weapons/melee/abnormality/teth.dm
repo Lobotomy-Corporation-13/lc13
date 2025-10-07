@@ -772,7 +772,7 @@
 		new /obj/effect/temp_visual/explosion(get_turf(src))
 		playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 		for(var/mob/living/L in ohearers(3, src))
-			L.apply_damage(30, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(30, RED_DAMAGE, user)
 		qdel(src)
 
 /obj/item/ego_weapon/mini/patch

@@ -351,7 +351,7 @@
 		L.visible_message(span_warning("[src] shreds [L] as it passes by!"), span_boldwarning("[src] shreds you!"))
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.apply_damage(dash_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(dash_damage, BLACK_DAMAGE, src)
 		been_hit += L
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
