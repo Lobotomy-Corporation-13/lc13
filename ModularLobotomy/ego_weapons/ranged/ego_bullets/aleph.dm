@@ -23,7 +23,7 @@
 	if(!isbot(H) && isliving(H) && !QDELETED(H))
 		H.visible_message("<span class='warning'>[target] is hit by [src], they seem to wither away!</span>")
 		for(var/i = 1 to 14)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, forced = TRUE), 2 SECONDS * i)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, firer, TRUE), 2 SECONDS * i)
 
 /obj/projectile/ego_bullet/adoration/aoe
 	color = "#6666BB"

@@ -148,7 +148,7 @@
 	playsound(src, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE, 2)
 	for(var/turf/T in range(2, src))
 		new /obj/effect/temp_visual/smash_effect(T)
-		been_hit = HurtInTurf(T, been_hit, counter_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15)
+		been_hit = HurtInTurf(T, been_hit, counter_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15, forced = TRUE)
 		for(var/mob/living/carbon/human/H in T)
 			H.Knockdown(20)
 	countering = FALSE

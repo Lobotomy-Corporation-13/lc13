@@ -662,6 +662,7 @@ GLOBAL_LIST_EMPTY(species_list)
  * * attack_direction (optional) Is the direction of the attack relative to the mecha that gets hit by this attack, for directional armor.
  * * forced (optional) If this is TRUE, will not call PreDamageReaction as a part of deal_damage. If PreDamageReaction returns FALSE in that proc, it will block damage from being dealt.
  * * trackable (optional) If this is TRUE, we will "hide" any source provided by deal_damage by setting it to null before calling PostDamageReaction, but PreDamageReaction still has access to it. This is most important for registering aggro values to hostile simpleanimals. If trackable = FALSE, they won't gain aggro from the damage.
+ *
  * returns:
  * * hit_list - A list containing all things hit by this proc.
  */

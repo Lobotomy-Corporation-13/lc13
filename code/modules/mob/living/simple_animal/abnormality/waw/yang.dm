@@ -185,7 +185,7 @@
 			if(get_dist(src, T) > i)
 				continue
 			new /obj/effect/temp_visual/dir_setting/speedbike_trail(T)
-			HurtInTurf(T, list(), explosion_damage, WHITE_DAMAGE, hurt_mechs = TRUE)
+			HurtInTurf(T, list(), explosion_damage, WHITE_DAMAGE, hurt_mechs = TRUE, forced = TRUE, trackable = FALSE)
 			all_turfs -= T
 		SLEEP_CHECK_DEATH(1)
 

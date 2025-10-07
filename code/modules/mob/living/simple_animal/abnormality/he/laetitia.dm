@@ -139,7 +139,7 @@
 			L.deal_damage((basepower*strength), RED_DAMAGE, forced = TRUE)
 		for(var/turf/T in range(2, user))
 			new /obj/effect/temp_visual/smash_effect(T)
-			user.HurtInTurf(T, list(), (basepower*strength), RED_DAMAGE, check_faction = FALSE, hurt_mechs = TRUE)
+			user.HurtInTurf(T, list(), (basepower*strength), RED_DAMAGE, check_faction = FALSE, hurt_mechs = TRUE, forced = TRUE, trackable = FALSE)
 		to_chat(user, "You opened the gift!")
 		qdel(src)
 	opening = FALSE

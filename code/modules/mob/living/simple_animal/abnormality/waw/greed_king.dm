@@ -222,7 +222,7 @@
 	//Hiteffect stuff
 
 	for(var/turf/U in range(1, T))
-		var/list/new_hits = HurtInTurf(U, been_hit, 0, RED_DAMAGE, hurt_mechs = TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(U, been_hit, 0, RED_DAMAGE, hurt_mechs = TRUE, forced = TRUE, trackable = FALSE) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			if(!nihil_present)
