@@ -50,6 +50,7 @@
 		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying = 2,
 		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/stalker = 2,
 		/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight = 1,
+		/mob/living/simple_animal/hostile/ordeal/steel_dawn/medic = 1,
 		)
 	AddComponent(/datum/component/ai_leadership, units_to_add, 8, TRUE, TRUE)
 
