@@ -5,6 +5,10 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"ac" = (
+/obj/machinery/vending/hydronutrients,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "ad" = (
 /obj/structure/filingcabinet/chestdrawer,
 /turf/open/floor/plasteel/dark,
@@ -13,6 +17,13 @@
 /obj/effect/turf_decal/stripes/line,
 /obj/structure/sign/departments/evac{
 	pixel_x = 32
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"aq" = (
+/obj/machinery/door/airlock/grunge{
+	name = "storage";
+	req_access_txt = "28"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
@@ -75,6 +86,10 @@
 	layer = 1.98
 	},
 /area/city)
+"bP" = (
+/obj/machinery/hydroponics,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "bU" = (
 /obj/structure/fluff/street_light{
 	layer = 3
@@ -83,6 +98,10 @@
 	dir = 8
 	},
 /turf/open/floor/stone,
+/area/city)
+"cm" = (
+/obj/machinery/processor,
+/turf/open/floor/plasteel/dark,
 /area/city)
 "cv" = (
 /obj/structure/table/wood,
@@ -95,6 +114,10 @@
 "cZ" = (
 /obj/machinery/vending/fixer,
 /turf/open/floor/plasteel/grimy,
+/area/city)
+"dp" = (
+/obj/machinery/computer/slot_machine,
+/turf/open/floor/eighties,
 /area/city)
 "dJ" = (
 /obj/structure/table/wood,
@@ -116,6 +139,13 @@
 /obj/item/storage/box/ids/fixer,
 /turf/open/floor/plasteel/dark,
 /area/city)
+"ee" = (
+/obj/structure/fluff/street_light{
+	layer = 3
+	},
+/obj/effect/turf_decal/siding/thinplating,
+/turf/open/floor/stone,
+/area/city)
 "er" = (
 /obj/machinery/hydroponics,
 /turf/open/floor/wood,
@@ -123,6 +153,22 @@
 "ex" = (
 /obj/structure/itemselling,
 /turf/open/floor/plasteel/grimy,
+/area/city)
+"eH" = (
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city)
+"eK" = (
+/obj/machinery/griddle,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
 /area/city)
 "fb" = (
 /obj/structure/moneymachine{
@@ -145,6 +191,27 @@
 /obj/machinery/microwave,
 /turf/open/indestructible/hoteltile,
 /area/city)
+"fD" = (
+/obj/machinery/roulette,
+/turf/open/floor/eighties,
+/area/city)
+"fI" = (
+/obj/machinery/vending/custom/unbreakable,
+/turf/open/floor/wood,
+/area/city)
+"fJ" = (
+/obj/structure/chair/stool/bar{
+	desc = "It has some questionable stains on it...";
+	name = "arcade stool"
+	},
+/turf/open/floor/wood,
+/area/city)
+"gc" = (
+/obj/machinery/door/airlock/wood{
+	name = "chapel"
+	},
+/turf/open/floor/plasteel/grimy,
+/area/city)
 "gp" = (
 /obj/structure/fluff/street_light{
 	layer = 3
@@ -156,6 +223,10 @@
 /area/city)
 "gJ" = (
 /turf/open/floor/wood,
+/area/city)
+"gN" = (
+/obj/machinery/computer/arcade/battle,
+/turf/open/floor/eighties,
 /area/city)
 "ha" = (
 /obj/machinery/computer/card{
@@ -175,6 +246,33 @@
 /obj/structure/mineral_door/wood,
 /turf/open/floor/carpet/black,
 /area/city)
+"hM" = (
+/obj/structure/rack{
+	pixel_x = -1
+	},
+/obj/item/cultivator,
+/obj/item/cultivator,
+/obj/item/cultivator,
+/obj/item/shovel/spade,
+/obj/item/shovel/spade,
+/obj/item/shovel/spade,
+/obj/item/hatchet,
+/obj/item/hatchet,
+/obj/item/hatchet,
+/obj/item/storage/bag/plants,
+/obj/item/storage/bag/plants,
+/obj/item/storage/bag/plants,
+/obj/item/plant_analyzer,
+/obj/item/plant_analyzer,
+/obj/item/plant_analyzer,
+/obj/item/clothing/gloves/botanic_leather,
+/obj/item/clothing/suit/apron,
+/obj/item/clothing/gloves/botanic_leather,
+/obj/item/clothing/gloves/botanic_leather,
+/obj/item/clothing/suit/apron,
+/obj/item/clothing/suit/apron,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "hQ" = (
 /obj/structure/fluff/street_light{
 	layer = 3
@@ -184,7 +282,28 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"ic" = (
+/obj/structure/table,
+/obj/item/kitchen/knife,
+/obj/item/price_tagger,
+/turf/open/floor/plasteel/dark,
+/area/city)
+"ip" = (
+/obj/machinery/vending/city,
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"iu" = (
+/obj/machinery/vending/city_clothing,
+/turf/open/floor/plasteel/grimy,
+/area/city)
 "ix" = (
+/turf/open/floor/stone,
+/area/city)
+"iH" = (
+/obj/effect/turf_decal/siding/thinplating/corner,
+/obj/structure/fluff/street_light{
+	layer = 3
+	},
 /turf/open/floor/stone,
 /area/city)
 "jf" = (
@@ -202,6 +321,11 @@
 /obj/item/flashlight/lamp,
 /turf/open/floor/carpet/black,
 /area/city)
+"ke" = (
+/obj/machinery/computer/slot_machine,
+/obj/machinery/light/small,
+/turf/open/floor/eighties,
+/area/city)
 "kt" = (
 /obj/structure/fluff/hedge,
 /turf/open/floor/plating/dirt/jungle,
@@ -216,8 +340,28 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"kK" = (
+/obj/structure/chair/sofa{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
+"kM" = (
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"kQ" = (
+/obj/item/price_tagger,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "kY" = (
 /obj/machinery/vending/hana,
+/turf/open/floor/plasteel/dark,
+/area/city)
+"lh" = (
+/obj/machinery/biogenerator,
 /turf/open/floor/plasteel/dark,
 /area/city)
 "lz" = (
@@ -225,6 +369,10 @@
 	dir = 10
 	},
 /turf/open/floor/stone,
+/area/city)
+"lF" = (
+/obj/structure/chair/stool,
+/turf/open/floor/eighties,
 /area/city)
 "lP" = (
 /obj/docking_port/stationary{
@@ -237,6 +385,37 @@
 	width = 8
 	},
 /turf/open/floor/plating,
+/area/city)
+"lZ" = (
+/obj/structure/sign/poster/lobotomycorp/hhpp,
+/turf/closed/indestructible/brick,
+/area/city)
+"md" = (
+/obj/structure/table,
+/obj/machinery/microwave,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"mu" = (
+/obj/machinery/door/airlock/wood{
+	name = "fixer office"
+	},
+/turf/open/floor/wood,
+/area/city)
+"mE" = (
+/obj/effect/turf_decal/box,
+/obj/effect/landmark/fixerbase,
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"mI" = (
+/obj/structure/table/wood,
+/obj/machinery/light/small,
+/turf/open/floor/eighties,
 /area/city)
 "mK" = (
 /obj/structure/table/wood,
@@ -255,6 +434,27 @@
 "nD" = (
 /obj/structure/mineral_door/wood,
 /turf/open/indestructible/hoteltile,
+/area/city)
+"nF" = (
+/obj/machinery/vending/cola,
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"nM" = (
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/item/reagent_containers/food/condiment/flour,
+/obj/structure/closet/crate,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/reagent_containers/spray/chemsprayer/janitor,
+/turf/open/floor/plasteel,
 /area/city)
 "og" = (
 /obj/effect/turf_decal/siding/wood{
@@ -301,6 +501,10 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"pr" = (
+/obj/structure/curtain/cloth,
+/turf/closed/indestructible/fakeglass,
+/area/city)
 "px" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
 /obj/item/clothing/under/pants/blackjeans,
@@ -312,6 +516,14 @@
 	name = "director's bedsheet"
 	},
 /turf/open/floor/carpet/black,
+/area/city)
+"pz" = (
+/obj/machinery/vending/boozeomat,
+/turf/open/floor/wood,
+/area/city)
+"qa" = (
+/obj/machinery/door/airlock/glass_large,
+/turf/open/floor/wood,
 /area/city)
 "qd" = (
 /turf/open/floor/plasteel/dark,
@@ -329,6 +541,20 @@
 /obj/machinery/vending/coffee,
 /turf/open/floor/plasteel/dark,
 /area/city)
+"re" = (
+/obj/machinery/vending/dinnerware,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/red,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "rf" = (
 /obj/structure/table/wood,
 /obj/item/paper_bin,
@@ -342,6 +568,17 @@
 /obj/structure/sign/departments/evac{
 	pixel_x = -32
 	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"rE" = (
+/obj/machinery/door/airlock/wood{
+	name = "general store"
+	},
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"rV" = (
+/obj/effect/turf_decal/trimline/yellow/line,
+/obj/machinery/light,
 /turf/open/floor/plasteel/dark,
 /area/city)
 "tp" = (
@@ -377,6 +614,18 @@
 "tY" = (
 /turf/open/floor/plasteel/grimy,
 /area/city)
+"ub" = (
+/obj/structure/sink{
+	dir = 8;
+	pixel_x = 14;
+	pixel_y = 2
+	},
+/obj/effect/turf_decal/tile/red,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "ue" = (
 /obj/effect/turf_decal/siding/wood{
 	dir = 6
@@ -389,6 +638,27 @@
 	dir = 4
 	},
 /turf/open/floor/stone,
+/area/city)
+"uh" = (
+/obj/machinery/computer/slot_machine,
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/eighties,
+/area/city)
+"uo" = (
+/obj/structure/table,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/obj/machinery/reagentgrinder{
+	pixel_x = -1;
+	pixel_y = 7
+	},
+/turf/open/floor/plasteel/dark,
 /area/city)
 "uO" = (
 /obj/machinery/door/airlock/wood{
@@ -411,10 +681,34 @@
 /obj/item/pen,
 /turf/open/floor/plasteel/grimy,
 /area/city)
+"vg" = (
+/obj/structure/closet/secure_closet/freezer/meat/open,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/obj/item/food/meat/slab,
+/turf/open/floor/plasteel,
+/area/city)
 "vs" = (
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp/green,
 /turf/open/floor/carpet/black,
+/area/city)
+"vx" = (
+/obj/structure/delivery_door{
+	density = 1;
+	icon = 'icons/obj/votebox.dmi';
+	icon_state = "votebox_maint";
+	name = "mail box";
+	desc = "A mailbox for this house."
+	},
+/turf/closed/indestructible/brick,
 /area/city)
 "vJ" = (
 /turf/open/floor/plating/dirt/jungle,
@@ -439,9 +733,35 @@
 /obj/structure/toilet,
 /turf/open/floor/plating,
 /area/city)
+"vV" = (
+/obj/effect/turf_decal/trimline/yellow/line,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "wb" = (
 /obj/structure/potential,
 /turf/open/floor/plasteel/grimy,
+/area/city)
+"wn" = (
+/obj/effect/turf_decal/tile/red{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"wF" = (
+/obj/structure/chair{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city)
+"xh" = (
+/obj/structure/closet/secure_closet/freezer/fridge/open,
+/turf/open/floor/plasteel,
+/area/city)
+"xl" = (
+/turf/open/floor/eighties,
 /area/city)
 "xr" = (
 /obj/structure/fluff/street_light{
@@ -453,7 +773,7 @@
 /turf/open/floor/stone,
 /area/city)
 "xw" = (
-/turf/closed/indestructible/reinforced,
+/turf/open/floor/plasteel,
 /area/city)
 "xB" = (
 /obj/structure/table/reinforced,
@@ -465,6 +785,31 @@
 /obj/item/pen,
 /obj/item/stamp,
 /obj/item/stamp/denied,
+/turf/open/floor/plasteel/dark,
+/area/city)
+"xT" = (
+/obj/structure/table,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/item/storage/box/papersack,
+/obj/effect/turf_decal/tile/red{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/plasteel/dark,
 /area/city)
 "yz" = (
@@ -480,9 +825,23 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"yD" = (
+/obj/effect/turf_decal/trimline/yellow/line,
+/obj/effect/turf_decal/tile/red,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "yE" = (
 /obj/structure/flora/tree/pine,
 /turf/open/floor/holofloor/snow,
+/area/city)
+"yI" = (
+/obj/structure/chair{
+	dir = 4
+	},
+/turf/open/floor/wood,
 /area/city)
 "yL" = (
 /obj/structure/table/wood,
@@ -521,16 +880,67 @@
 "zQ" = (
 /turf/open/floor/holofloor/snow,
 /area/space)
+"Ah" = (
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
+"Ar" = (
+/obj/machinery/door/airlock/grunge{
+	name = "hydroponics";
+	req_access_txt = "28"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "AB" = (
 /obj/item/storage/bag/trash,
 /turf/open/floor/plasteel/dark,
+/area/city)
+"Be" = (
+/obj/structure/chair,
+/turf/open/floor/wood,
 /area/city)
 "BA" = (
 /obj/structure/fluff/arc,
 /turf/open/floor/plating/dirt/jungle,
 /area/city)
+"BC" = (
+/obj/structure/fence{
+	dir = 4;
+	resistance_flags = 64
+	},
+/turf/open/floor/stone,
+/area/city)
+"BF" = (
+/obj/machinery/vending/hydroseeds,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "BV" = (
 /turf/open/floor/holofloor/snow,
+/area/city)
+"Ca" = (
+/obj/structure/closet/crate,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/obj/item/choice_beacon/ingredient,
+/turf/open/floor/plasteel,
+/area/city)
+"Ch" = (
+/obj/effect/turf_decal/arrows{
+	dir = 1
+	},
+/turf/open/floor/wood,
 /area/city)
 "Cx" = (
 /obj/structure/chair/plastic,
@@ -560,6 +970,16 @@
 /obj/machinery/light,
 /turf/open/floor/plasteel/grimy,
 /area/city)
+"Eh" = (
+/obj/effect/turf_decal/tile/red,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "Es" = (
 /obj/effect/landmark/latejoin,
 /turf/open/floor/plating/ashplanet/rocky{
@@ -568,6 +988,10 @@
 /area/city)
 "EK" = (
 /turf/open/indestructible/hoteltile,
+/area/city)
+"EN" = (
+/obj/structure/table/wood,
+/turf/open/floor/eighties,
 /area/city)
 "EV" = (
 /obj/machinery/photocopier,
@@ -595,6 +1019,17 @@
 "FV" = (
 /turf/open/floor/carpet/black,
 /area/city)
+"Gr" = (
+/obj/structure/chair/sofa/left,
+/turf/open/floor/wood,
+/area/city)
+"GE" = (
+/obj/machinery/door/airlock/grunge{
+	name = "employee access";
+	req_access_txt = "28"
+	},
+/turf/open/floor/wood,
+/area/city)
 "GS" = (
 /turf/closed/indestructible/rock,
 /area/space)
@@ -608,6 +1043,36 @@
 "HR" = (
 /obj/structure/chair/wood,
 /turf/open/floor/wood,
+/area/city)
+"HY" = (
+/obj/machinery/light/small,
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"Io" = (
+/obj/structure/sink/kitchen{
+	pixel_y = 14
+	},
+/obj/item/reagent_containers/glass/bucket,
+/turf/open/floor/plasteel/dark,
+/area/city)
+"Iq" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"IO" = (
+/obj/machinery/pdapainter,
+/turf/open/floor/plasteel/grimy,
 /area/city)
 "IR" = (
 /obj/machinery/door/airlock/wood{
@@ -648,6 +1113,10 @@
 "KA" = (
 /turf/open/floor/plating,
 /area/city)
+"KH" = (
+/obj/structure/table/wood/bar,
+/turf/open/floor/wood,
+/area/city)
 "KU" = (
 /obj/effect/turf_decal/siding/thinplating{
 	dir = 5
@@ -673,6 +1142,19 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"LQ" = (
+/obj/structure/chair/sofa/right{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
+"Mh" = (
+/obj/structure/table/wood/bar,
+/obj/machinery/chem_dispenser/drinks/beer{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city)
 "Mo" = (
 /obj/effect/turf_decal/weather/snow/corner,
 /obj/effect/turf_decal/siding/thinplating{
@@ -686,12 +1168,26 @@
 	},
 /turf/open/floor/holofloor/snow,
 /area/city)
+"MD" = (
+/obj/structure/table,
+/obj/item/kitchen/rollingpin,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "MK" = (
 /obj/structure/fence{
 	dir = 4;
 	resistance_flags = 64
 	},
 /turf/open/floor/holofloor/snow,
+/area/city)
+"Ni" = (
+/obj/structure/fence/door/opened,
+/turf/open/floor/stone,
+/area/city)
+"Nm" = (
+/obj/structure/table/wood/bar,
+/obj/item/reagent_containers/borghypo/borgshaker,
+/turf/open/floor/wood,
 /area/city)
 "Nt" = (
 /obj/structure/railing{
@@ -704,6 +1200,11 @@
 /obj/structure/grille,
 /turf/open/floor/plating,
 /area/city)
+"NJ" = (
+/obj/structure/table,
+/obj/item/reagent_containers/food/condiment/enzyme,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "Oz" = (
 /obj/structure/table/wood,
 /obj/item/storage/box/ids/fixerdirector{
@@ -714,10 +1215,26 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
+"OL" = (
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/plasteel/grimy,
+/area/city)
+"Pi" = (
+/obj/machinery/seed_extractor,
+/turf/open/floor/plasteel/dark,
+/area/city)
 "Pm" = (
 /obj/structure/table/wood,
 /obj/item/potential_tester,
 /turf/open/floor/plasteel/dark,
+/area/city)
+"Qp" = (
+/obj/effect/turf_decal/arrows{
+	pixel_y = 13
+	},
+/turf/open/floor/wood,
 /area/city)
 "Qs" = (
 /obj/structure/fluff/street_light{
@@ -740,6 +1257,15 @@
 	},
 /obj/structure/curtain,
 /turf/open/floor/noslip,
+/area/city)
+"QT" = (
+/obj/structure/chair/sofa/corner{
+	dir = 4
+	},
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/wood,
 /area/city)
 "QX" = (
 /turf/closed/indestructible/brick,
@@ -772,6 +1298,18 @@
 /obj/item/bedsheet/dorms,
 /obj/structure/bed,
 /turf/open/floor/carpet/black,
+/area/city)
+"Sy" = (
+/obj/structure/table/wood/bar,
+/obj/machinery/chem_dispenser/drinks,
+/turf/open/floor/wood,
+/area/city)
+"SB" = (
+/obj/effect/turf_decal/tile/red,
+/obj/effect/turf_decal/tile/red{
+	dir = 4
+	},
+/turf/open/floor/plasteel/dark,
 /area/city)
 "Tq" = (
 /obj/structure/table,
@@ -819,6 +1357,16 @@
 /obj/item/restraints/handcuffs,
 /turf/open/floor/plasteel/dark,
 /area/city)
+"VA" = (
+/obj/effect/turf_decal/trimline/yellow/line,
+/obj/effect/turf_decal/tile/red{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/red{
+	dir = 1
+	},
+/turf/open/floor/plasteel/dark,
+/area/city)
 "VH" = (
 /obj/structure/flora/grass/both,
 /turf/open/floor/holofloor/snow,
@@ -841,6 +1389,13 @@
 	},
 /turf/open/indestructible/hoteltile,
 /area/city)
+"VY" = (
+/obj/machinery/computer/arcade/amputation,
+/obj/machinery/light/small{
+	dir = 1
+	},
+/turf/open/floor/eighties,
+/area/city)
 "We" = (
 /obj/structure/noticeboard,
 /turf/closed/indestructible/brick,
@@ -848,6 +1403,10 @@
 "Wj" = (
 /obj/structure/bed/maint,
 /turf/open/floor/plating,
+/area/city)
+"WF" = (
+/obj/machinery/vending/cigarette,
+/turf/open/floor/plasteel/grimy,
 /area/city)
 "WP" = (
 /obj/effect/turf_decal/weather/snow/corner{
@@ -877,6 +1436,10 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
+"XE" = (
+/obj/effect/spawner/randomsnackvend,
+/turf/open/floor/plasteel/grimy,
+/area/city)
 "XM" = (
 /obj/structure/table/wood,
 /obj/item/toner/large{
@@ -902,6 +1465,10 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
+"XO" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/wood,
+/area/city)
 "XY" = (
 /obj/machinery/hydroponics,
 /obj/machinery/light{
@@ -914,6 +1481,10 @@
 	name = "Hana Office Private"
 	},
 /turf/open/floor/plasteel/dark,
+/area/city)
+"Yu" = (
+/obj/machinery/door/airlock/public,
+/turf/open/floor/eighties,
 /area/city)
 "YI" = (
 /obj/structure/sink{
@@ -931,8 +1502,17 @@
 	},
 /turf/open/floor/stone,
 /area/city)
+"Zl" = (
+/obj/structure/table,
+/turf/open/floor/wood,
+/area/city)
 "Zm" = (
 /obj/effect/turf_decal/stripes/line,
+/turf/open/floor/plasteel/dark,
+/area/city)
+"ZK" = (
+/obj/machinery/hydroponics,
+/obj/machinery/light,
 /turf/open/floor/plasteel/dark,
 /area/city)
 
@@ -31229,10 +31809,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -31486,10 +32066,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -31743,10 +32323,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -32000,10 +32580,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -32257,10 +32837,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -32514,10 +33094,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -32771,10 +33351,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -33028,10 +33608,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -33285,10 +33865,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -33542,10 +34122,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -33799,10 +34379,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -34056,10 +34636,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -34313,10 +34893,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -34570,10 +35150,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -34827,10 +35407,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -35084,10 +35664,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -35341,10 +35921,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -35598,10 +36178,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -35855,10 +36435,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -36112,10 +36692,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -36369,10 +36949,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -36626,10 +37206,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -36883,10 +37463,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -37140,10 +37720,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -37397,10 +37977,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -37654,10 +38234,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -37911,10 +38491,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -38168,10 +38748,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -38425,10 +39005,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -38682,10 +39262,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -38939,10 +39519,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -39196,10 +39776,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -39453,10 +40033,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -39710,10 +40290,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -39967,10 +40547,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -40224,10 +40804,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -40481,10 +41061,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -40738,10 +41318,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -40995,10 +41575,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -41252,10 +41832,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -41509,10 +42089,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -41766,10 +42346,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -42023,10 +42603,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -42280,10 +42860,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -42537,10 +43117,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -42794,10 +43374,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -43051,10 +43631,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -43308,10 +43888,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -43565,10 +44145,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -43822,10 +44402,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -44079,10 +44659,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -44336,10 +44916,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -44593,10 +45173,10 @@ Lu
 Lu
 Lu
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -44824,10 +45404,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 qW
 zi
 zi
@@ -44849,11 +45429,11 @@ zi
 zi
 zi
 zi
-yY
-Lu
-Lu
-Lu
-Lu
+ee
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -45081,10 +45661,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 QX
@@ -45107,10 +45687,10 @@ QX
 QX
 QX
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -45338,10 +45918,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 VO
@@ -45362,12 +45942,12 @@ ix
 ix
 ix
 ix
-ix
+Ni
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -45595,10 +46175,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 YI
@@ -45619,12 +46199,12 @@ ix
 ix
 ix
 ix
-ix
+BC
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -45852,10 +46432,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 QB
@@ -45878,10 +46458,10 @@ QX
 QX
 QX
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -46109,10 +46689,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 QX
@@ -46135,10 +46715,10 @@ HR
 yL
 tS
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -46366,10 +46946,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 ty
@@ -46392,10 +46972,10 @@ gJ
 gJ
 tS
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -46623,10 +47203,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 jT
@@ -46649,10 +47229,10 @@ gJ
 gJ
 Qx
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -46880,10 +47460,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 QX
@@ -46906,10 +47486,10 @@ gJ
 as
 zK
 Ue
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 Mo
 MK
 BV
@@ -47137,12 +47717,12 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
-ix
+Ni
 ix
 ix
 ix
@@ -47394,12 +47974,12 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
-ix
+BC
 ix
 ix
 ix
@@ -47651,10 +48231,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 bA
 QX
 QX
@@ -47908,10 +48488,10 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
 tp
 aa
 aa
@@ -48159,19 +48739,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -48416,19 +48996,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -48673,19 +49253,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -48930,19 +49510,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -49187,23 +49767,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+qW
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+yY
 bO
 bO
 bO
@@ -49444,23 +50024,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+Ny
+Ny
+Ny
+QX
+Ue
 bO
 bO
 bO
@@ -49701,23 +50281,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+xT
+wn
+wn
+wn
+VA
+XO
+Qp
+yI
+yI
+zK
+Ue
 bO
 bO
 bO
@@ -49958,23 +50538,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+eK
+qd
+MD
+qd
+vV
+XO
+Qp
+Zl
+Zl
+tS
+Ue
 bO
 bO
 bO
@@ -50215,23 +50795,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+uo
+qd
+NJ
+cm
+rV
+QX
+eH
+wF
+wF
+lZ
+hQ
 bO
 bO
 bO
@@ -50472,22 +51052,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+QX
+md
+qd
+ic
+qd
+vV
+XO
+Ch
+gJ
+gJ
+qa
 bO
 bO
 bO
@@ -50729,22 +51309,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+QX
+re
+SB
+ub
+kM
+vV
+XO
+Ch
+gJ
+gJ
+gJ
 bO
 bO
 bO
@@ -50986,23 +51566,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+QX
+QX
+QX
+Ah
+vV
+XO
+Ch
+gJ
+yI
+lZ
+yY
 bO
 bO
 bO
@@ -51243,23 +51823,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+Ca
+xw
+QX
+Ah
+vV
+XO
+Ch
+Be
+Zl
+Ny
+Ue
 bO
 bO
 bO
@@ -51295,18 +51875,18 @@ BV
 BV
 BV
 BV
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
 "}
 (197,1,1) = {"
 GS
@@ -51500,23 +52080,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+xh
+xw
+aq
+Ah
+vV
+fI
+Qp
+Be
+Zl
+Ny
+Ue
 bO
 bO
 bO
@@ -51552,9 +52132,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -51563,7 +52143,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (198,1,1) = {"
 GS
@@ -51757,23 +52337,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+vg
+xw
+QX
+Ah
+rV
+QX
+eH
+Be
+Zl
+Ny
+Ue
 bO
 bO
 bO
@@ -51809,9 +52389,9 @@ BV
 BV
 kD
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -51820,7 +52400,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (199,1,1) = {"
 GS
@@ -52014,23 +52594,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+nM
+xw
+QX
+Eh
+yD
+GE
+gJ
+gJ
+wF
+Ny
+Ue
 bO
 bO
 bO
@@ -52066,9 +52646,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -52077,7 +52657,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (200,1,1) = {"
 GS
@@ -52271,23 +52851,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+QX
+QX
+QX
+Ar
+QX
+QX
+fJ
+fJ
+fJ
+QX
+Ue
 bO
 bO
 bO
@@ -52323,9 +52903,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -52334,7 +52914,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (201,1,1) = {"
 GS
@@ -52528,23 +53108,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+bP
+qd
+qd
+qd
+bP
+QX
+Nm
+KH
+KH
+QX
+hQ
 bO
 bO
 bO
@@ -52580,9 +53160,9 @@ BV
 MB
 aW
 aW
-xw
-xw
-xw
+QX
+QX
+QX
 KA
 KA
 KA
@@ -52591,7 +53171,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (202,1,1) = {"
 GS
@@ -52785,22 +53365,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+tS
+bP
+qd
+bP
+qd
+qd
+GE
+gJ
+gJ
+gJ
+GE
 bO
 bO
 bO
@@ -52838,8 +53418,8 @@ jf
 tQ
 ax
 oZ
-xw
-xw
+QX
+QX
 KA
 KA
 KA
@@ -52848,7 +53428,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (203,1,1) = {"
 GS
@@ -53042,22 +53622,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+tS
+bP
+qd
+bP
+qd
+bP
+QX
+Sy
+gJ
+Mh
+QX
 bO
 bO
 bO
@@ -53105,7 +53685,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (204,1,1) = {"
 GS
@@ -53299,22 +53879,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+tS
+bP
+qd
+bP
+qd
+ZK
+QX
+pz
+KH
+KH
+QX
 bO
 bO
 bO
@@ -53362,7 +53942,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (205,1,1) = {"
 GS
@@ -53556,22 +54136,22 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
+bO
+bA
+tS
+bP
+qd
+kQ
+qd
+bP
+QX
+gJ
+gJ
+gJ
+mu
 bO
 bO
 bO
@@ -53619,7 +54199,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (206,1,1) = {"
 GS
@@ -53813,23 +54393,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+tS
+Io
+qd
+qd
+qd
+qd
+QX
+QT
+kK
+LQ
+pr
+yY
 bO
 bO
 bO
@@ -53876,7 +54456,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (207,1,1) = {"
 GS
@@ -54070,23 +54650,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+Pi
+hM
+lh
+ac
+BF
+QX
+Gr
+KH
+KH
+pr
+Ue
 bO
 bO
 bO
@@ -54133,7 +54713,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (208,1,1) = {"
 GS
@@ -54327,23 +54907,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+bA
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+Ue
 bO
 bO
 bO
@@ -54390,7 +54970,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (209,1,1) = {"
 GS
@@ -54584,23 +55164,23 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
+tp
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+hQ
 bO
 bO
 bO
@@ -54647,7 +55227,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (210,1,1) = {"
 GS
@@ -54841,19 +55421,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -54904,7 +55484,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (211,1,1) = {"
 GS
@@ -55098,19 +55678,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -55161,7 +55741,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (212,1,1) = {"
 GS
@@ -55355,19 +55935,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -55418,7 +55998,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (213,1,1) = {"
 GS
@@ -55612,24 +56192,24 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
 bO
 bO
 bO
 bO
 bO
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+zi
+lz
 bO
 bO
 bA
@@ -55675,7 +56255,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (214,1,1) = {"
 GS
@@ -55869,24 +56449,24 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
-bO
-bO
-bO
-bO
+QX
+tS
+tS
+Yu
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+Ue
 bO
 bO
 tp
@@ -55922,8 +56502,8 @@ MB
 TZ
 VN
 hk
-xw
-xw
+QX
+QX
 KA
 KA
 KA
@@ -55932,7 +56512,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (215,1,1) = {"
 GS
@@ -56126,24 +56706,24 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
-bO
-bO
-bO
-bO
+QX
+uh
+lF
+xl
+ke
+QX
+iH
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+aa
+kF
 bO
 bO
 bO
@@ -56178,9 +56758,9 @@ BV
 jf
 aW
 aW
-xw
-xw
-xw
+QX
+QX
+QX
 KA
 KA
 KA
@@ -56189,7 +56769,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (216,1,1) = {"
 GS
@@ -56383,19 +56963,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+QX
+dp
+lF
+xl
+dp
+QX
+Ue
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -56435,9 +57015,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -56446,7 +57026,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (217,1,1) = {"
 GS
@@ -56640,19 +57220,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+QX
+EN
+xl
+xl
+fD
+QX
+Ue
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -56692,9 +57272,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -56703,7 +57283,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (218,1,1) = {"
 GS
@@ -56897,19 +57477,19 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
+QX
+gN
+lF
+xl
+EN
+QX
+Ue
+bO
+bO
+bO
+bO
+bO
+bO
 bO
 bO
 bO
@@ -56949,9 +57529,9 @@ BV
 kD
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -56960,7 +57540,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (219,1,1) = {"
 GS
@@ -57154,13 +57734,13 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+VY
+lF
+xl
+mI
+QX
+Ue
 bO
 bO
 bO
@@ -57206,9 +57786,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -57217,7 +57797,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (220,1,1) = {"
 GS
@@ -57411,13 +57991,13 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+QX
+QX
+QX
+QX
+QX
+Ue
 bO
 bO
 bO
@@ -57463,9 +58043,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -57474,7 +58054,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (221,1,1) = {"
 GS
@@ -57668,18 +58248,18 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+WF
+ip
+cZ
+IO
+Ny
+Ue
 bO
 bO
 bO
 bA
-ix
+Ni
 ix
 ix
 ix
@@ -57720,9 +58300,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -57731,7 +58311,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (222,1,1) = {"
 GS
@@ -57925,18 +58505,18 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+Iq
+tY
+tY
+tY
+rE
+Ue
 bO
 bO
 bO
 bA
-ix
+BC
 ix
 ix
 ix
@@ -57977,9 +58557,9 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
+QX
 KA
 KA
 KA
@@ -57988,7 +58568,7 @@ KA
 KA
 KA
 KA
-xw
+QX
 "}
 (223,1,1) = {"
 GS
@@ -58182,13 +58762,13 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+ex
+XE
+nF
+iu
+Ny
+Ue
 bO
 bO
 bO
@@ -58234,18 +58814,18 @@ BV
 BV
 BV
 BV
-xw
+QX
 Lu
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
-xw
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+QX
 "}
 (224,1,1) = {"
 GS
@@ -58438,14 +59018,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+QX
+QX
+QX
+QX
+QX
+vx
+Ue
 bO
 bO
 bO
@@ -58695,14 +59275,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+OL
+tY
+tY
+tY
+HY
+pr
+Ue
 bO
 bO
 bO
@@ -58952,14 +59532,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+tY
+tY
+tY
+tY
+tY
+pr
+Ue
 bO
 bO
 bO
@@ -59209,14 +59789,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+tY
+tY
+mE
+tY
+tY
+gc
+Ue
 bO
 bO
 bO
@@ -59466,14 +60046,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+tY
+tY
+tY
+tY
+tY
+pr
+Ue
 bO
 bO
 bO
@@ -59497,7 +60077,7 @@ ix
 ix
 ix
 ix
-ix
+Ni
 Ue
 bO
 bO
@@ -59723,14 +60303,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+OL
+tY
+tY
+tY
+HY
+pr
+Ue
 bO
 bO
 bO
@@ -59754,7 +60334,7 @@ ix
 ix
 ix
 ix
-ix
+BC
 Ue
 bO
 bO
@@ -59980,14 +60560,14 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+QX
+QX
+QX
+QX
+QX
+QX
+QX
+Ue
 bO
 bO
 bO
@@ -60239,12 +60819,12 @@ Lu
 Lu
 Lu
 Lu
-Lu
-Lu
-Lu
-Lu
-Lu
-bO
+aa
+aa
+aa
+aa
+aa
+hQ
 bO
 bO
 bO

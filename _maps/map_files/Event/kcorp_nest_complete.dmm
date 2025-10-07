@@ -928,11 +928,6 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/wateryrock,
 /area/city)
-"fB" = (
-/obj/effect/decal/cleanable/garbage,
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plating/ashplanet/rocky,
-/area/city/fixers)
 "fC" = (
 /obj/effect/turf_decal/siding/blue{
 	dir = 4
@@ -47322,7 +47317,7 @@ jC
 jC
 jC
 jC
-fB
+jC
 jC
 EN
 bw
