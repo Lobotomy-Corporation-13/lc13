@@ -112,7 +112,8 @@
 	if(!cold)
 		H.apply_status_effect(STATUS_EFFECT_COLD_EXPOSURE)
 	else
-		cold.add_stacks(1)
+		if(prob(25))
+			cold.add_stacks(1)
 
 /datum/status_effect/stacking/cold_exposure
 	id = "cold_exposure"
