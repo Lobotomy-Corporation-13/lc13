@@ -1,4 +1,4 @@
-#define SIPHONING	0
+/* #define SIPHONING	0
 #define SCRUBBING	1
 
 /obj/machinery/atmospherics/components/unary/vent_scrubber
@@ -331,3 +331,4 @@
 
 #undef SIPHONING
 #undef SCRUBBING
+ */

@@ -1,4 +1,4 @@
-/atom/var/CanAtmosPass = ATMOS_PASS_YES
+/* /atom/var/CanAtmosPass = ATMOS_PASS_YES
 /atom/var/CanAtmosPassVertical = ATMOS_PASS_YES
 
 /atom/proc/CanAtmosPass(turf/T)
@@ -142,3 +142,4 @@
 	air.merge(G)
 	archive()
 	SSair.add_to_active(src)
+ */

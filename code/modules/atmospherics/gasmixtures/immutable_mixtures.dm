@@ -1,4 +1,4 @@
-//"immutable" gas mixture used for immutable calculations
+/* //"immutable" gas mixture used for immutable calculations
 //it can be changed, but any changes will ultimately be undone before they can have any effect
 
 /datum/gas_mixture/immutable
@@ -92,3 +92,4 @@
 		ADD_GAS(id, gases)
 		gases[id][MOLES] = mix[id][MOLES]
 		gases[id][ARCHIVE] = mix[id][MOLES]
+ */

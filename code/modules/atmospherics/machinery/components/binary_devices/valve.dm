@@ -1,4 +1,4 @@
-/*
+/* /*
 It's like a regular ol' straight pipe, but you can turn it on and off.
 */
 
@@ -111,3 +111,4 @@ It's like a regular ol' straight pipe, but you can turn it on and off.
 /obj/machinery/atmospherics/components/binary/valve/digital/on/layer4
 	piping_layer = 4
 	icon_state = "dvalve_map-4"
+ */

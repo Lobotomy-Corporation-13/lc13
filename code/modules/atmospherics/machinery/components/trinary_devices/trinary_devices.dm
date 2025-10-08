@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/trinary
+/* /obj/machinery/atmospherics/components/trinary
 	icon = 'icons/obj/atmospherics/components/trinary_devices.dmi'
 	dir = SOUTH
 	initialize_directions = SOUTH|NORTH|WEST
@@ -55,3 +55,4 @@ Housekeeping and pipe network stuff
 			return 5
 		else
 			return 0
+ */

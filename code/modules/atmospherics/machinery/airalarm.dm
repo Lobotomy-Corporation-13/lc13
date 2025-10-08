@@ -1,4 +1,4 @@
-/datum/tlv
+/* /datum/tlv
 	var/min2
 	var/min1
 	var/max1
@@ -878,3 +878,4 @@
 #undef AALARM_MODE_CONTAMINATED
 #undef AALARM_MODE_REFILL
 #undef AALARM_REPORT_TIMEOUT
+ */
