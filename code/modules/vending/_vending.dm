@@ -1030,6 +1030,10 @@ GLOBAL_LIST_EMPTY(vending_products)
 	var/max_loaded_items = 1000 //incresed from 20 to 1000. let people store E.G.O. dammit
 	/// Base64 cache of custom icons.
 	var/list/base64_cache = list()
+	/// If the item data is being processed.
+	var/loading_prices = FALSE
+	/// How much in %  of the sold item goes to the item seller. Mostly used by the general custom vendor.
+	var/tax_cut = 1
 
 /obj/machinery/vending/custom/compartmentLoadAccessCheck(mob/user)
 	. = FALSE
@@ -1053,6 +1057,7 @@ GLOBAL_LIST_EMPTY(vending_products)
 
 /obj/machinery/vending/custom/ui_data(mob/user)
 	. = ..()
+	loading_prices = TRUE
 	.["access"] = compartmentLoadAccessCheck(user)
 	.["vending_machine_input"] = list()
 	for (var/O in vending_machine_input)
@@ -1077,6 +1082,7 @@ GLOBAL_LIST_EMPTY(vending_products)
 				colorable = FALSE
 			)
 			.["vending_machine_input"] += list(data)
+	loading_prices = FALSE
 
 /obj/machinery/vending/custom/ui_act(action, params)
 	. = ..()
@@ -1119,26 +1125,35 @@ GLOBAL_LIST_EMPTY(vending_products)
 					updateUsrDialog()
 					return
 				if(account.has_money(S.custom_price))
-					account.adjust_money(-S.custom_price)
-					var/datum/bank_account/owner = private_a
-					if(owner)
-						owner.adjust_money(S.custom_price)
-						SSblackbox.record_feedback("amount", "vending_spent", S.custom_price)
-						log_econ("[S.custom_price] ahn were spent on [src] buying a [S] by [owner.account_holder], owned by [private_a.account_holder].")
-					vending_machine_input[N] = max(vending_machine_input[N] - 1, 0)
-					S.forceMove(drop_location())
-					loaded_items--
-					use_power(5)
-					if(last_shopper != usr || purchase_message_cooldown < world.time)
-						say("Thank you for buying local and purchasing [S]!")
-						purchase_message_cooldown = world.time + 5 SECONDS
-						last_shopper = usr
-					vend_ready = TRUE
-					updateUsrDialog()
+					sell_item(account, S, N)
 					return
 				else
 					say("You do not possess the funds to purchase this.")
 			vend_ready = TRUE
+
+/obj/machinery/vending/custom/proc/sell_item(datum/bank_account/account, obj/item/S, params)
+	account.adjust_money(-S.custom_price)
+	var/datum/bank_account/vendor_owner = private_a
+	var/datum/bank_account/item_owner = get_item_account(S)
+	if(item_owner)
+		var/seller_cut = round(S.custom_price * tax_cut)
+		item_owner.adjust_money(seller_cut)
+		vendor_owner.adjust_money(S.custom_price - seller_cut)
+		SSblackbox.record_feedback("amount", "vending_spent", S.custom_price)
+		log_econ("[S.custom_price] ahn were spent on [src] buying a [S] by [item_owner.account_holder], the vendor owned by [vendor_owner.account_holder].")
+	vending_machine_input[params] = max(vending_machine_input[params] - 1, 0)
+	S.forceMove(drop_location())
+	loaded_items--
+	use_power(5)
+	if(last_shopper != usr || purchase_message_cooldown < world.time)
+		say("Thank you for buying local and purchasing [S]!")
+		purchase_message_cooldown = world.time + 5 SECONDS
+		last_shopper = usr
+	vend_ready = TRUE
+	updateUsrDialog()
+
+/obj/machinery/vending/custom/proc/get_item_account(/obj/item/I)
+	return private_a
 
 /obj/machinery/vending/custom/attackby(obj/item/I, mob/user, params)
 	if(!private_a && isliving(user))
@@ -1147,6 +1162,7 @@ GLOBAL_LIST_EMPTY(vending_products)
 		if(C?.registered_account)
 			private_a = C.registered_account
 			say("\The [src] has been linked to [C].")
+			return
 
 	if(compartmentLoadAccessCheck(user))
 		if(istype(I, /obj/item/pen))
@@ -1226,3 +1242,48 @@ GLOBAL_LIST_EMPTY(vending_products)
 	slogan_list = list("[GLOB.deity] says: It's your divine right to buy!")
 	add_filter("vending_outline", 9, list("type" = "outline", "color" = "#FFFFFF"))
 	add_filter("vending_rays", 10, list("type" = "rays", "size" = 35))
+
+///Vendor that anyone can sell and buy from. Different from the usual custom vendor in ease of use.
+///TODO: make it related to a job, maybe something that can also set their own rates.
+/obj/machinery/vending/custom/general
+	name = "Public Vendor"
+	desc = "You can put anything at any price in there, and if it sells, most of the profit will go directly into your account. Anyone can use this. \
+	The owner of the vendor takes a 5% cut of all sales."
+	resistance_flags = INDESTRUCTIBLE
+	tax_cut = 0.95
+	//This list has the product list along with the bank account connected to them.
+	var/list/item_id_accounts = list()
+
+/obj/machinery/vending/custom/general/attackby(obj/item/I, mob/user, params)
+	if(private_a)
+		var/input = max(1, round(input(user,"set price","price") as num|null, 1))
+		input = clamp(input, 20, 50000) //To make the taxcut more effective, we set the min price to 20.
+		I.custom_price = input
+	..()
+
+/obj/machinery/vending/custom/general/loadingAttempt(obj/item/I, mob/user)
+	var/mob/living/L
+	if(!isliving(user))
+		return
+	L = user
+	var/obj/item/card/id/id_card = L.get_idcard()
+	if(!id_card.registered_account)
+		return
+	..()
+	LAZYSET(item_id_accounts, I, id_card.registered_account)
+
+/obj/machinery/vending/custom/general/get_item_account(obj/item/I)
+	return LAZYACCESS(item_id_accounts, I)
+
+/obj/machinery/vending/custom/general/compartmentLoadAccessCheck(mob/user)
+	. = FALSE
+	if(!isliving(user) || !vend_ready || loading_prices)
+		return FALSE
+	var/mob/living/L = user
+	var/obj/item/card/id/C = L.get_idcard(FALSE)
+	if(C?.registered_account)
+		return TRUE
+
+/obj/machinery/vending/custom/general/sell_item(datum/bank_account/account, obj/item/S, params)
+	..()
+	LAZYREMOVE(item_id_accounts, S)
