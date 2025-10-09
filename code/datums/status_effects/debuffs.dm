@@ -1204,6 +1204,41 @@
 	else
 		B.add_stacks(stacks)
 
+/* Vengeance Mark - Stacking debuff applied by Middle weapons
+	Stacks up to 20, decays after 2.5 minutes if no new stacks are added
+	Middle weapons deal bonus damage based on stack count */
+#define STATUS_EFFECT_VENGEANCEMARK /datum/status_effect/stacking/vengeance_mark
+/datum/status_effect/stacking/vengeance_mark
+	id = "vengeance_mark"
+	alert_type = /atom/movable/screen/alert/status_effect/vengeance_mark
+	max_stacks = 20
+	tick_interval = 150 SECONDS // 2.5 minutes
+	consumed_on_threshold = FALSE
+	var/new_stack = FALSE
+
+/atom/movable/screen/alert/status_effect/vengeance_mark
+	name = "Vengeance Mark"
+	desc = "You've been marked for vengeance by the Middle. Their attacks deal increased damage to you."
+	icon_state = "wounded_soldier"
+
+/datum/status_effect/stacking/vengeance_mark/can_have_status()
+	return (owner.stat != DEAD)
+
+/datum/status_effect/stacking/vengeance_mark/add_stacks(stacks_added)
+	..()
+	new_stack = TRUE
+
+/datum/status_effect/stacking/vengeance_mark/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+
+	// Remove effect if no new stacks were added since last tick
+	if(new_stack)
+		new_stack = FALSE
+	else
+		qdel(src)
+
 #define STATUS_EFFECT_LCOVERHEAT /datum/status_effect/stacking/lc_overheat // Deals true damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_overheat
 	id = "lc_overheat"
@@ -1331,6 +1366,13 @@
 		src.apply_status_effect(/datum/status_effect/stacking/lc_bleed, stacks)
 	else
 		B.add_stacks(stacks)
+
+/mob/living/proc/apply_vengeance_mark(stacks)
+	var/datum/status_effect/stacking/vengeance_mark/VM = src.has_status_effect(/datum/status_effect/stacking/vengeance_mark)
+	if(!VM)
+		src.apply_status_effect(/datum/status_effect/stacking/vengeance_mark, stacks)
+	else
+		VM.add_stacks(stacks)
 
 /datum/status_effect/display/dyscrasone_withdrawl
 	id = "dyscrasone_withdrawl"

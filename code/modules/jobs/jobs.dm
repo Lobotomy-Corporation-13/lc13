@@ -22,6 +22,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Thumb Sottocapo",
 	"Kurokumo Kashira",
 	"Thumb East Capo",
+	"Big Brother",
 
 	// R-corp Fourth Pack
 	"Ground Commander",
@@ -247,6 +248,10 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Thumb East Capo",
 	"Thumb East Soldato",
+
+	"Big Brother",
+	"Younger Brother",
+	"Little Brother",
 ))
 
 
