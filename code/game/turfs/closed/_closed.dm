@@ -379,5 +379,5 @@
 	icon_state = "brick_wall-0"
 	base_icon_state = "brick_wall"
 	smoothing_flags = SMOOTH_BITMASK
-	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS, SMOOTH_GROUP_WOOD_WALLS)
+	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS, SMOOTH_GROUP_BRICK_WALL)
 	canSmoothWith = list(SMOOTH_GROUP_BRICK_WALL)
