@@ -479,3 +479,30 @@
 		for(var/mob/living/M in rangers)
 			if(prob(5+(allowed(M)*4)) && (M.mobility_flags & MOBILITY_MOVE))
 				dance(M)
+
+//Middle Jukebox - Unbreakable, not anchored, plays only Middle theme
+/obj/machinery/jukebox/middle
+	name = "Middle jukebox"
+	desc = "A jukebox used by the Middle. Plays their theme on repeat."
+	anchored = FALSE
+	req_access = null
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	flags_1 = NODECONSTRUCT_1
+	custom_price = 10000
+
+/obj/machinery/jukebox/middle/Initialize()
+	. = ..()
+	// Clear any songs loaded from file system
+	songs = list()
+	// Add the single Middle track
+	var/datum/track/T = new("Middle Finger Theme", 'sound/effects/lc13_environment/middle_finger_toujou.ogg', 420, 5)
+	songs += T
+	selection = T
+
+/obj/machinery/jukebox/middle/ui_status(mob/user)
+	// Skip anchor check since this jukebox doesn't need to be anchored
+	if(!songs.len && !isobserver(user))
+		to_chat(user, span_warning("Error: No music tracks available."))
+		user.playsound_local(src, 'sound/misc/compiler-failure.ogg', 25, TRUE)
+		return UI_CLOSE
+	return UI_UPDATE

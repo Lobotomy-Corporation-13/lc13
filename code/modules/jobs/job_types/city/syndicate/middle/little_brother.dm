@@ -14,8 +14,12 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
-	job_important = "You are a soldier in the Middle. You are to stay quiet and follow orders from Younger Brother and Big Brother. Not doing either will result in death."
-	job_notice = "Avoid killing other players without a reason."
+	job_important = "The little brother of this Middle section. Your goal is to follow the orders of your younger and big brothers. \
+		The Middle values family above all else, so if anyone harms or disrespect your family make sure they will suffer for it. \
+		You also have a delivery radio at your base. It will allow you earn money by delivering U-Corp goods. \
+		Your base is hidden in the alleyway in the east behind the NO ENTRY Door."
+	job_notice = "You may harm other players for any disrespect to the middle; avoid killing players for too minor infractions."
+
 
 	roundstart_attributes = list(
 								FORTITUDE_ATTRIBUTE = 60,

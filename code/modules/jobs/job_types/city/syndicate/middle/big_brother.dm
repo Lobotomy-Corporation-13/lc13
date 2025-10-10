@@ -15,17 +15,17 @@
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 700
 	maptype = list("city")
-	job_important = "This is a roleplay role. You are the leader of this Middle branch. Your goal is to make money and riches, and exert the Middle's will. \
-		You are not to tolerate anyone talking down to you, and none of the Middle may use disguises. \
-		You may order the death of any other player aside from Hana association and Association Director that does not give you the respect you deserve. \
-		You may order the death of any of your Younger Brothers or Little Brothers for so much as questioning you. \
-		You yourself probably does not need to fight, and can guide from your office if needed. \
+	job_important = "This is a roleplay role. You are the leader of this Middle section. Your goal is to make money, make sure everyone respects the middle, and have a great time. \
+		The Middle values family above all else, so if anyone harms or disrespect your family make sure they will suffer for it. \
+		You may write down rules in your book of Vengeance, and if someone breaks one of your rules, give them a fitting punishment of their crime (Such as breaking an arm for stealing hair coupons.). \
+		Your Younger Brothers or Little Brothers are your family, protect them and have a great time with them. If someone breaks one of your rules, feel free to send your Brothers against them. \
+		You also have a delivery radio at your base. It will allow you earn money by delivering U-Corp goods. \
 		Your base is hidden in the alleyway in the east behind the NO ENTRY Door."
-	job_notice = "You may kill other players for any major disrespect; avoid killing players for minor infractions."
+	job_notice = "You may harm other players for any disrespect to the middle; avoid killing players for too minor infractions."
 
 	roundstart_attributes = list(
-								FORTITUDE_ATTRIBUTE = 100,
-								PRUDENCE_ATTRIBUTE = 100,
+								FORTITUDE_ATTRIBUTE = 200,
+								PRUDENCE_ATTRIBUTE = 200,
 								TEMPERANCE_ATTRIBUTE = 100,
 								JUSTICE_ATTRIBUTE = 100
 								)
@@ -51,5 +51,5 @@
 	ears = /obj/item/radio/headset/syndicatecity/heads
 	uniform = /obj/item/clothing/under/suit/lobotomy/plain
 	glasses = /obj/item/clothing/glasses/middle_sunglasses
-	backpack_contents = list(/obj/item/structurecapsule/syndicate/thumb, /obj/item/choice_beacon/middle/big)
+	backpack_contents = list(/obj/item/structurecapsule/syndicate/middle, /obj/item/choice_beacon/middle/big)
 	shoes = /obj/item/clothing/shoes/laceup
