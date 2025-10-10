@@ -2849,7 +2849,7 @@
 #include "code\modules\mob\living\simple_animal\abnormality\aleph\titania.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\aleph\white_night.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\aleph\tear_in_reality\_tear_in_reality.dm"
-#include "code\modules\mob\living\simple_animal\abnormality\aleph\tear_in_reality\tir_cheers.dm"
+#include "code\modules\mob\living\simple_animal\abnormality\aleph\tear_in_reality\_tir_cheers.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\he\ardor_blossom_moth.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\he\basilisoup.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\he\better_memories.dm"

@@ -1605,7 +1605,7 @@
 	to_chat(user, "<span class='warning'>You dash to [A]!")
 
 //Tear in Reality
-/obj/item/ego_weapon/tir_static
+/obj/item/ego_weapon/tir_claws
 	name = "Claws of Reality"
 	desc = "A much weaker form of the Claws that tore open reality."
 	icon_state = "tir_claws"

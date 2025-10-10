@@ -470,7 +470,7 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 							)
 
 // Tear in Reality
-/obj/item/clothing/suit/armor/ego_gear/aleph/tir_static
+/obj/item/clothing/suit/armor/ego_gear/aleph/tir_mask
 	name = "Static"
 	desc = "A coat-shaped Tear in Reality. When you reach for it, it swarms your face and forms a mask, consciously protecting you from dangers."
 	icon_state = "tir_mask"
