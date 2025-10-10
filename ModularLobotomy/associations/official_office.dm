@@ -80,7 +80,7 @@
 					continue
 
 			//max stats can't gain stats
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)>=130)
+			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)>=60)
 				to_chat(H, span_danger("You feel like you won't gain anything."))
 				continue
 
@@ -88,21 +88,6 @@
 			//Guarantee one
 			H.adjust_all_attribute_levels(amount)
 			to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
-
-			//Adjust by an extra attribute under level 2
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=40)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
-
-			//And one more under level 3
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=60)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
-
-			//And one last one before L4
-			if(get_attribute_level(H, TEMPERANCE_ATTRIBUTE)<=80)
-				H.adjust_all_attribute_levels(amount)
-				to_chat(H, "<span class='nicegreen'>You gain 1 potential!</span>")
 	. = ..()
 
 /obj/machinery/scanner_gate/officescanner
