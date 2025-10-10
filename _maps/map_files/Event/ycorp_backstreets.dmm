@@ -3967,7 +3967,7 @@
 /area/city/shop)
 "IT" = (
 /obj/machinery/city_weather_monitor,
-/obj/effect/landmark/city_weather_enabler/delayed,
+/obj/effect/landmark/city_weather_enabler_delayed,
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
 "IU" = (
