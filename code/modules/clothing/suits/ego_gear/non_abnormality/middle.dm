@@ -63,6 +63,32 @@
 		TEMPERANCE_ATTRIBUTE = 100,
 		JUSTICE_ATTRIBUTE = 100
 	)
+	var/obj/effect/proc_holder/ability/great_leap/great_leap_ability = null
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_big/Initialize()
+	. = ..()
+	// Create the ability but don't grant it yet
+	great_leap_ability = new /obj/effect/proc_holder/ability/great_leap
+	var/datum/action/spell_action/ability/item/A = great_leap_ability.action
+	A.SetItem(src)
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_big/equipped(mob/living/carbon/human/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
+		// Check if user is Big Brother
+		if(user.mind && user.mind.assigned_role == "Big Brother")
+			// Grant the ability action to the user
+			if(great_leap_ability)
+				var/datum/action/spell_action/ability/item/A = great_leap_ability.action
+				A.Grant(user)
+				to_chat(user, span_boldnotice("The Big Brother Gear grants you the power of the Great Leap!"))
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_big/dropped(mob/living/carbon/human/user)
+	. = ..()
+	// Remove the ability action from the user
+	if(great_leap_ability)
+		var/datum/action/spell_action/ability/item/A = great_leap_ability.action
+		A.Remove(user)
 
 //Big Sister Gear
 /obj/item/clothing/suit/armor/ego_gear/city/middle_big/big_sister

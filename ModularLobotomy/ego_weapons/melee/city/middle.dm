@@ -163,6 +163,7 @@
 	icon_state = "big_chain"
 	force = 63
 	attack_speed = 1.4
+	hitsound = 'sound/weapons/fixer/generic/middle_big_attack.ogg'
 	reductions = list(60, 60, 60, 60) // 240
 	vengeance_damage_bonus = 0.08 // 8% per stack for Big Brother
 	attribute_requirements = list(
