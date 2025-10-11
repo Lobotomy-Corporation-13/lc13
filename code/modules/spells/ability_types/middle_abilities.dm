@@ -130,8 +130,6 @@
 	for(var/mob/living/L in view(5, leaper))
 		if(L == leaper)
 			continue
-		if(leaper.faction_check_mob(L))
-			continue
 
 		// Check if target has a middle book equipped (immunity)
 		var/has_middle_book = FALSE

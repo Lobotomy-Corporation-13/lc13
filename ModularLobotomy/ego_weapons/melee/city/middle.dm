@@ -81,9 +81,8 @@
 	// Perform counter-attack if we have a valid attacker
 	if(last_attacker && !QDELETED(last_attacker))
 		// Apply counter-attack damage bonus (40% more damage)
-		var/original_force = force
-		// DISABLED: Counter damage multiplier causing unlimited damage
-		// force = round(force * counter_damage_multiplier)
+		var/original_force = initial(force)
+		force = round(force * counter_damage_multiplier)
 
 		// Perform counter-attack
 		source.do_attack_animation(last_attacker)
@@ -128,12 +127,11 @@
 
 	// Check for Vengeance Mark and calculate bonus damage
 	var/datum/status_effect/stacking/vengeance_mark/VM = target.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
-	var/original_force = force
-	// DISABLED: Vengeance mark damage bonus causing unlimited damage
-	// if(VM && VM.stacks > 0)
-	// 	var/bonus_multiplier = 1 + (VM.stacks * vengeance_damage_bonus)
-	// 	force = round(force * bonus_multiplier)
-	// 	to_chat(user, span_danger("Your chains strike with vengeful fury! ([VM.stacks] marks)"))
+	var/original_force = initial(force)
+	if(VM && VM.stacks > 0)
+		var/bonus_multiplier = 1 + (VM.stacks * vengeance_damage_bonus)
+		force = round(force * bonus_multiplier)
+		to_chat(user, span_danger("Your chains strike with vengeful fury! ([VM.stacks] marks)"))
 
 	// Perform attack
 	. = ..()
@@ -196,9 +194,9 @@
 					owner.visible_message(span_warning("[owner] chains suddenly lash out, pulling them toward [firer]!"))
 
 					// Perform counter-attack on the firer
-					var/original_force = force
+					var/original_force = initial(force)
 					// DISABLED: Counter damage multiplier causing unlimited damage
-					// force = round(force * counter_damage_multiplier)
+					force = round(force * counter_damage_multiplier)
 					owner.do_attack_animation(firer)
 					firer.attacked_by(src, owner)
 
