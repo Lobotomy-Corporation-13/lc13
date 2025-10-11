@@ -121,10 +121,10 @@
 	ReleaseGrab()
 	return ..()
 
-/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(grab_victim)
-		release_damage = clamp(release_damage + damage, 0, release_threshold)
+		release_damage = clamp(release_damage + ., 0, release_threshold)
 		if(release_damage >= release_threshold)
 			ReleaseGrab()
 

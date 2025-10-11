@@ -102,10 +102,8 @@
 		QDEL_NULL(B)
 	return ..()
 
-/mob/living/simple_animal/hostile/ordeal/green_midnight/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/ordeal/green_midnight/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(stat == DEAD)
-		return
 	if(health <= next_health_mark)
 		next_health_mark -= maxHealth * 0.1
 		max_lasers += 2

@@ -666,7 +666,7 @@ GLOBAL_LIST_EMPTY(species_list)
  * returns:
  * * hit_list - A list containing all things hit by this proc.
  */
-/mob/proc/HurtInTurf(turf/target, list/hit_list = list(), damage = 0, damage_type = RED_DAMAGE, def_zone = null, check_faction = FALSE, exact_faction_match = FALSE, hurt_mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, forced = FALSE, trackable = TRUE)
+/mob/proc/HurtInTurf(turf/target, list/hit_list = list(), damage = 0, damage_type = RED_DAMAGE, def_zone = null, check_faction = FALSE, exact_faction_match = FALSE, hurt_mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, flags = null, attack_type = null)
 	// Types that should never be hit by HurtInTurf
 	var/static/list/exclude = typecacheof(list(/obj/machinery/navbeacon/wayfinding, /obj/structure/disposalpipe, /obj/structure/lattice, /obj/machinery/cryopod, /obj/structure/sign, /obj/machinery/button, /obj/machinery/light, /obj/structure/extinguisher_cabinet, /obj/machinery/containment_panel, /obj/machinery/computer/security/telescreen, /obj/machinery/facility_holomap, /obj/structure/fans/tiny, /obj/machinery/requests_console))
 	var/static/list/hiding_places = typecacheof(list(/obj/structure/closet, /obj/structure/bodycontainer, /obj/machinery/disposal, /obj/machinery/cryopod, /obj/machinery/sleeper, /obj/machinery/fat_sucker))
@@ -686,7 +686,7 @@ GLOBAL_LIST_EMPTY(species_list)
 			if(faction_check_mob(L, exact_faction_match))
 				continue
 		if(damage)
-			L.deal_damage(damage, damage_type, src, forced, trackable)
+			L.deal_damage(damage, damage_type, source = src, flags = flags, attack_type = attack_type)
 		. += L
 	if(hurt_mechs || hurt_hidden || hurt_structure)
 		for(var/obj/O in target)
@@ -720,7 +720,7 @@ GLOBAL_LIST_EMPTY(species_list)
 						if(faction_check_mob(L, exact_faction_match))
 							continue
 					if(damage)
-						L.deal_damage(damage, damage_type, src, forced, trackable)
+						L.deal_damage(damage, damage_type, source = src, flags = flags, attack_type = attack_type)
 					. += L
 			if(hurt_structure && (isstructure(O) || ismachinery(O)))
 				if(O.resistance_flags & INDESTRUCTIBLE)

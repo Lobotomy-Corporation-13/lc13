@@ -145,7 +145,7 @@
 		return FALSE
 
 	if(actuallydamage)
-		apply_damage(damage, damagetype, null, getarmor(null, damagetype))
+		deal_damage(damage, damagetype, flags = (DAMAGE_FORCED))
 	return TRUE
 
 /mob/living/simple_animal/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
@@ -153,7 +153,7 @@
 		for(var/i in projectile_blockers)
 			Proj.impacted[i] = TRUE
 		Proj.impacted[src] = TRUE
-	apply_damage(Proj.damage, Proj.damage_type)
+	deal_damage(Proj.damage, Proj.damage_type, source = Proj.firer, attack_type = (ATTACK_TYPE_RANGED))
 	Proj.on_hit(src, 0, piercing_hit)
 	return BULLET_ACT_HIT
 

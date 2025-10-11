@@ -113,7 +113,7 @@
 		return FALSE
 	..()
 
-/mob/living/simple_animal/hostile/ordeal/centipede_corrosion/apply_damage(damage = 0,damagetype = RED_DAMAGE, def_zone = null, blocked = FALSE, forced = FALSE, spread_damage = FALSE, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE, white_healable = FALSE)
+/mob/living/simple_animal/hostile/ordeal/centipede_corrosion/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	if(!can_act) //Prevents killing during recharge
 		return FALSE
 	..()

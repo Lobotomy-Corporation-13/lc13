@@ -120,7 +120,7 @@
 		return
 	if((ishuman(hit_atom)))
 		var/mob/living/carbon/M = hit_atom
-		M.apply_damage(10, STAMINA)
+		M.deal_damage(10, STAMINA, source = throwingdatum.thrower, attack_type = (ATTACK_TYPE_THROWING))
 		if(prob(75))
 			M.Paralyze(60)
 			visible_message(span_danger("[M] barely manages to contain the power of the [src]!"))

@@ -232,7 +232,7 @@
 			H.deal_damage(poison_damage, BLACK_DAMAGE, src, forced = TRUE)
 			H.apply_venom(2)
 
-/mob/living/simple_animal/hostile/ordeal/snake_corrosion/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/ordeal/snake_corrosion/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(poison_releasing)
 		return

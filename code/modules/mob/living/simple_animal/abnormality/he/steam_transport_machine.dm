@@ -189,7 +189,7 @@
 			H.deal_damage(steam_damage, RED_DAMAGE, src, forced = TRUE)
 	adjustBruteLoss(10) //Take some damage every time steam is vented
 
-/mob/living/simple_animal/hostile/abnormality/steam/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/steam/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	. = ..()
 	if(steam_venting)
 		return

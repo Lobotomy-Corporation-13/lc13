@@ -109,7 +109,7 @@
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/yang/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
-	apply_damage(P.damage, P.damage_type)
+	deal_damage(P.damage, P.damage_type, source = P.firer, attack_type = (ATTACK_TYPE_RANGED))
 	P.on_hit(src, 0, piercing_hit)
 	if(!P.firer)
 		return BULLET_ACT_HIT
@@ -136,7 +136,7 @@
 		var/mob/living/carbon/human/H = attacker
 		var/justice_mod = 1 + (get_attribute_level(H, JUSTICE_ATTRIBUTE)/100)
 		damage *= justice_mod
-	attacker.deal_damage(damage, WHITE_DAMAGE, src, forced = TRUE)
+	attacker.deal_damage(damage, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_COUNTER | ATTACK_TYPE_SPECIAL))
 	return
 
 /mob/living/simple_animal/hostile/abnormality/yang/death()

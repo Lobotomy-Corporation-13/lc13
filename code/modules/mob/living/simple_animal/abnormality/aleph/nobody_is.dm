@@ -287,12 +287,12 @@
 			ChangeMoveToDelayBy(1.5)
 	current_stage = clamp(current_stage + 1, 1, 3)
 
-/mob/living/simple_animal/hostile/abnormality/nobody_is/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/nobody_is/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	. = ..()
-	if(damagetype == BLACK_DAMAGE || damage < 10)
+	if(damage_type == BLACK_DAMAGE || . < 10)
 		return
 	if(grab_victim)
-		release_damage = clamp(release_damage + damage, 0, release_threshold)
+		release_damage = clamp(release_damage + ., 0, release_threshold)
 		if(release_damage >= release_threshold)
 			// Award achievement for escaping Nobody Is' chokehold
 			if(ishuman(grab_victim))

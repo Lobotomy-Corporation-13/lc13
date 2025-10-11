@@ -259,9 +259,9 @@
 			heard_words[speaker] += raw_message
 	listen_chance = initial(listen_chance)
 
-/mob/living/simple_animal/hostile/abnormality/nothing_there/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/nothing_there/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	. = ..()
-	if(damagetype == RED_DAMAGE || damage < 10)
+	if(damage_type == RED_DAMAGE || . < 10)
 		return
 	last_heal_time = world.time + 10 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.
 

@@ -226,7 +226,7 @@
 	FireLaser(target)
 
 /mob/living/simple_animal/hostile/abnormality/yin/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
-	apply_damage(P.damage, P.damage_type)
+	deal_damage(P.damage, P.damage_type, source = P.firer, attack_type = (ATTACK_TYPE_RANGED))
 	P.on_hit(src, 0, piercing_hit)
 	. = BULLET_ACT_HIT
 	if(!P.firer)

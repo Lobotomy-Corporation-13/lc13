@@ -158,13 +158,11 @@
 		guaranteed_butcher_results += list(/obj/item/head_trophy/indigo_head = 1)
 		empowered_hit_regen -= 10
 
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	// Add damage taken during trash disposal to the right var so we know when to interrupt it.
 	if(trash_disposal_active)
-		var/damage_coefficient = src.damage_coeff.getCoeff(damagetype)
-		var/damage_taken = damage * damage_coefficient
-		trash_disposal_damagetaken += damage_taken
+		trash_disposal_damagetaken += damage_amount
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red/Move(atom/newloc, dir, step_x, step_y)
 	if(!can_move)
@@ -293,7 +291,7 @@
 			user.do_attack_animation(victim)
 			playsound(user, attack_sound, 100, TRUE)
 			new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
-			victim.deal_damage(special_ability_damage, melee_damage_type, src, forced = TRUE)
+			victim.deal_damage(special_ability_damage, melee_damage_type, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			SweeperHealing(special_ability_damage)
 			user.visible_message(span_danger("[user] rips into [victim] and refuels themselves with their blood!"))
 			// Ramp up the speed and damage on each hit.
@@ -412,42 +410,10 @@
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		guaranteed_butcher_results += list(/obj/item/head_trophy/indigo_head/pale = 1)
 
-/// Activates parrying behaviour when hit by a simple_animal.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/attack_animal(mob/living/simple_animal/M, damage)
-	// If we're hit in melee by a living mob, while parrying, and are still alive, we retaliate. The attack on us gets cancelled.
-	if(parrying && health > 0 && istype(M))
-		ParryCounter(M)
-		return FALSE
-	. = ..()
-	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
-	if(health > 0 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(UseSpecialAbility), M, src) // It's ASYNC because there's a sleep in it
-
-/// Activates parrying behaviour when hit by a human with an object.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/attacked_by(obj/item/I, mob/living/user)
-	// If we're hit in melee by a living mob, while parrying, and are still alive, we retaliate. The attack on us gets cancelled.
-	if(parrying && health > 0 && istype(user))
-		ParryCounter(user)
-		return FALSE
-	. = ..()
-	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
-	if(health > 0 && I.force >= 10 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(UseSpecialAbility), user, src) // It's ASYNC because there's a sleep in it
-
-/// This override has the exact same purpose as the above one, it's just for ranged attacks instead of melee.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/bullet_act(obj/projectile/P)
-	if(parrying && health > 0 && isliving(P.firer))
-		ParryCounter(P.firer)
-		return FALSE
-	. = ..()
-	// This won't activate on low caliber projectiles like Havana.
-	if(P.damage >= 20 && health > 0 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(UseSpecialAbility)) // It's ASYNC because there's a sleep in it
-
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PreDamageReaction(damage_amount, damage_type, source)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(source)
-		if(parrying && health > 0 && isliving(source))
+		if(parrying && health > 0 && isliving(source) && !(attack_type & ATTACK_TYPE_COUNTER))
 			INVOKE_ASYNC(src, PROC_REF(ParryCounter), source)
 			return FALSE
 		if(damage_amount >= 30 && health > 0 && prob(75))
@@ -512,7 +478,7 @@
 	src.do_attack_animation(victim)
 	playsound(src, 'sound/abnormalities/crumbling/attack.ogg', 75, FALSE)
 	new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
-	victim.deal_damage(special_ability_damage, melee_damage_type, src, forced = TRUE)
+	victim.deal_damage(special_ability_damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_COUNTER))
 	visible_message(span_userdanger("[src] deflects [victim]'s attack and performs a counter!"))
 	SweeperHealing(100)
 

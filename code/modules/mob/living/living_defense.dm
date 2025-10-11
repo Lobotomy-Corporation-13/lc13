@@ -52,7 +52,7 @@
 	var/armor = run_armor_check(def_zone, P.damage_type, "","",P.armour_penetration)
 	var/on_hit_state = P.on_hit(src, armor, piercing_hit)
 	if(!P.nodamage && on_hit_state != BULLET_ACT_BLOCK)
-		apply_damage(P.damage, P.damage_type, def_zone, armor, wound_bonus=P.wound_bonus, bare_wound_bonus=P.bare_wound_bonus, sharpness = P.sharpness, white_healable = P.white_healing)
+		deal_damage(P.damage, P.damage_type, source = P.firer, flags = P.white_healing ? (DAMAGE_WHITE_HEALABLE) : null, attack_type = (ATTACK_TYPE_RANGED), def_zone = def_zone, wound_bonus=P.wound_bonus, bare_wound_bonus=P.bare_wound_bonus, sharpness = P.sharpness)
 		apply_effects(P.stun, P.knockdown, P.unconscious, P.irradiate, P.slur, P.stutter, P.eyeblur, P.drowsy, armor, P.stamina, P.jitter, P.paralyze, P.immobilize)
 		if(P.dismemberment)
 			check_projectile_dismemberment(P, def_zone)
@@ -90,12 +90,11 @@
 						span_userdanger("You're hit by [thrown_item]!"))
 		if(!thrown_item.throwforce)
 			return
-		var/armor = run_armor_check(zone, thrown_item.damtype, "Your armor has protected your [parse_zone(zone)].", "Your armor has softened hit to your [parse_zone(zone)].", thrown_item.armour_penetration)
 		var/justice_mod = 1
 		if(ishuman(thrown_item.thrownby))
 			var/mob/living/carbon/human/H = thrown_item.thrownby
 			justice_mod += get_modified_attribute_level(H, JUSTICE_ATTRIBUTE)/100
-		deal_damage(thrown_item.throwforce * justice_mod, thrown_item.damtype, thrown_item.thrownby, overrides = list(def_zone = zone, blocked = armor, sharpness = thrown_item.get_sharpness(), wound_bonus = (nosell_hit * CANT_WOUND), white_healable = TRUE))
+		deal_damage(thrown_item.throwforce * justice_mod, thrown_item.damtype, source = thrown_item.thrownby, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_THROWING), def_zone = zone, wound_bonus = (nosell_hit * CANT_WOUND))
 		if(QDELETED(src)) //Damage can delete the mob.
 			return
 		return ..()
@@ -470,16 +469,15 @@
 	return TRUE
 
 /// Called by the deal_damage() wrapper when its 'forced' argument == FALSE. Return TRUE to receive the damage, return FALSE to prevent damage from being taken.
-// Consider: deal_damage() is usually only called by "special abilities", status effects and things like working Abnormalities.
-// This is primarily meant to be used to react to attacks by mobs that aren't firing a projectile or melee attacking, and give you the opportunity to "reject" the damage.
 // "Forced" damage will not call this, and thus you won't be able to stop it from happening.
 // Consider that 'source' argument might be null and handle accordingly. This is often the case for status effects and mobs that qdel themselves after dealing their damage. I didn't want to handle it for all possible implementations, that would be restrictive.
-/mob/living/proc/PreDamageReaction(damage_amount, damage_type, source)
+/mob/living/proc/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	SHOULD_NOT_SLEEP(TRUE)
 	return TRUE
 
-/// Called always after deal_damage() goes through. Irrelevant return value. /simple_animal/hostile overrides this to also aggro the source.
-// If deal_damage's 'trackable' argument == FALSE (it is TRUE by default), then source will be null.
-/mob/living/proc/PostDamageReaction(damage_amount, damage_type, source)
+/// Called always after deal_damage() goes through, if the mob's alive. Irrelevant return value.
+// /simple_animal's override will return damage post-shuffler-defense mapping, so you can factor it in for whatever you may want.
+// /simple_animal/hostile also overrides this to aggro the source.
+/mob/living/proc/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	return
 

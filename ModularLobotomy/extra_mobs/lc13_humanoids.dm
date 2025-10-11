@@ -725,8 +725,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	playsound(src, 'sound/weapons/ego/burn_guard.ogg', min(15 + damage, 75), TRUE, 4)
 	attacker.visible_message(span_danger("[src] hits [attacker] with a counterattack!"), span_userdanger("[src] counters your attack!"))
 	do_attack_animation(attacker)
-	attacker.deal_damage(damage * 2, attack_type, src, forced = TRUE)
-	attacker.apply_damage(damage, STAMINA, null, null)
+	attacker.deal_damage(damage * 2, attack_type, source = src, attack_type = (ATTACK_TYPE_COUNTER))
+	attacker.deal_damage(damage, STAMINA, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_COUNTER))
 
 
 

@@ -189,10 +189,10 @@
 		hug_victim = null
 		can_act = TRUE
 
-/mob/living/simple_animal/hostile/abnormality/hurting_teddy/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/hurting_teddy/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	. = ..()
 	if(hug_victim)
-		release_damage = clamp (release_damage + damage, 0, release_threshold)
+		release_damage = clamp (release_damage + ., 0, release_threshold)
 	if(release_damage >= release_threshold)
 		ReleaseHug()
 

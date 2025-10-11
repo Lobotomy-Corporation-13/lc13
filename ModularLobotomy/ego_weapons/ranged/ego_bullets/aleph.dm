@@ -32,7 +32,7 @@
 	. = ..()
 	for(var/mob/living/L in view(2, target))
 		new /obj/effect/temp_visual/revenant/cracks(get_turf(L))
-		L.deal_damage(50, BLACK_DAMAGE, firer, overrides = list(blocked = L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE))
+		L.deal_damage(50, BLACK_DAMAGE, firer)
 	return BULLET_ACT_HIT
 
 /obj/projectile/ego_bullet/nihil
