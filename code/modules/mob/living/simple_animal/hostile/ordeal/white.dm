@@ -87,7 +87,7 @@
 			if(faction_check_mob(L))
 				continue
 			new /obj/effect/temp_visual/revenant(get_turf(L))
-			L.deal_damage(pulse_damage, BLACK_DAMAGE, src, forced = TRUE)
+			L.deal_damage(pulse_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		SLEEP_CHECK_DEATH(5.6) // In total we wait for 2.8 seconds
 	playsound(src, 'sound/effects/ordeals/white/black_ability_end.ogg', 100, FALSE, 30)
 	for(var/obj/machinery/computer/abnormality/A in urange(current_pulse_range, src))
@@ -120,7 +120,7 @@
 			break
 		for(var/turf/open/TT in RANGE_TURFS(1, T))
 			new /obj/effect/temp_visual/small_smoke/halfsecond(TT)
-			been_hit = HurtInTurf(TT, been_hit, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE)
+			been_hit = HurtInTurf(TT, been_hit, hammer_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		sleep(1)
 	SLEEP_CHECK_DEATH(4)
 	busy = FALSE
@@ -255,7 +255,7 @@
 		affected_turfs += TT
 		var/obj/effect/reusable_visual/RV = RVP.NewSmoke(TT, 5 SECONDS)
 		RV.name = "mental smoke"
-		been_hit = HurtInTurf(TT, been_hit, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, forced = TRUE)
+		been_hit = HurtInTurf(TT, been_hit, beam_direct_damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 
 	for(var/turf/TT in affected_turfs) // Remaining damage effect
 		BeamTurfEffect(TT, beam_overtime_damage)
@@ -263,7 +263,7 @@
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/BeamTurfEffect(turf/T, damage = 10)
 	set waitfor = FALSE
 	for(var/i = 1 to 5)
-		HurtInTurf(T, list(), damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, forced = TRUE)
+		HurtInTurf(T, list(), damage, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 		sleep(5)
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/CircleBeam()
@@ -318,7 +318,7 @@
 	for(var/turf/T in RANGE_TURFS(1, src))
 		RVP.NewSparkles(T)
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', min(15 + damage, 100), TRUE, 4)
-	attacker.deal_damage(damage, attack_type, src, forced = TRUE)
+	attacker.deal_damage(damage, attack_type, src, attack_type = (ATTACK_TYPE_COUNTER))
 	RVP.NewSparkles(get_turf(attacker), color = COLOR_VIOLET)
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/attack_hand(mob/living/carbon/human/M)
@@ -443,7 +443,7 @@
 	SLEEP_CHECK_DEATH(4)
 	forceMove(slash_end)
 	for(var/turf/T in hitline)
-		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(L, span_userdanger("[src] slashes you at a high speed!"))
 	var/datum/beam/B1 = slash_start.Beam(slash_end, "volt_ray", time=3)
 	B1.visuals.color = COLOR_YELLOW
@@ -451,7 +451,7 @@
 	SLEEP_CHECK_DEATH(3)
 	forceMove(slash_start)
 	for(var/turf/T in hitline)
-		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(L, span_userdanger("[src] slashes you at a high speed!"))
 	var/datum/beam/B2 = slash_start.Beam(slash_end, "volt_ray", time=6)
 	B2.visuals.color = COLOR_RED
@@ -483,7 +483,7 @@
 			if(faction_check_mob(L))
 				continue
 			to_chat(L, span_userdanger("A red laser passes right through you!"))
-			L.deal_damage(beam_damage, RED_DAMAGE, src)
+			L.deal_damage(beam_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			been_hit |= L
 			new /obj/effect/temp_visual/cult/sparks(get_turf(L))
 	playsound(src, 'sound/effects/ordeals/white/red_beam_fire.ogg', 100, FALSE, 32)
@@ -616,7 +616,7 @@
 			S.pixel_x = rand(-8, 8)
 			S.pixel_y = rand(-8, 8)
 			animate(S, alpha = 0, time = 1.5)
-			for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+			for(var/mob/living/L in HurtInTurf(T, list(), multislash_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 				to_chat(L, span_userdanger("[src] stabs you!"))
 				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), dir_to_target)
 		playsound(src, attack_sound, 50, TRUE, 3)
@@ -663,7 +663,7 @@
 	B.visuals.transform = M
 	var/list/been_hit = list()
 	for(var/turf/T in hitline)
-		var/list/new_hits = HurtInTurf(T, been_hit, tentacle_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(T, been_hit, tentacle_damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			to_chat(L, span_userdanger("A pale beam passes right through you!"))

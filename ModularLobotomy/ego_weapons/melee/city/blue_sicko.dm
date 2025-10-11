@@ -219,7 +219,7 @@
 				damage *= 1.5
 		if(isanimal(L))
 			damage *= 1.5
-		L.deal_damage(damage, PALE_DAMAGE, user)
+		L.deal_damage(damage, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 		to_chat(L, span_userdanger("[user] eviscerates you!"), MESSAGE_TYPE_COMBAT)
 		to_chat(user, span_warning("You eviscerate [L]!"), MESSAGE_TYPE_COMBAT)
 	active = FALSE

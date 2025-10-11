@@ -351,7 +351,7 @@
 	. = ..()
 	if(iscarbon(target))
 		var/mob/living/carbon/M = target
-		M.deal_damage(15, RED_DAMAGE, firer)
+		M.deal_damage(15, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 
 /obj/projectile/beam/nobody_friendly
 	name = "whip"

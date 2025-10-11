@@ -127,5 +127,5 @@
 			var/mob/living/carbon/human/H = L
 			if(!H.sanity_lost)
 				continue
-		L.deal_damage(30, WHITE_DAMAGE, user)
+		L.deal_damage(30, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 

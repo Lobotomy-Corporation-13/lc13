@@ -81,6 +81,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	..()
-	user.deal_damage(45, BLACK_DAMAGE, forced = TRUE)
+	user.deal_damage(45, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
 
 

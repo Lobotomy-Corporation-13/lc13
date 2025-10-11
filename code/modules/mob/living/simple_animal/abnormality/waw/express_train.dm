@@ -193,7 +193,7 @@
 					else
 						playsound(get_turf(seg), 'sound/abnormalities/expresstrain/express_whistle.ogg', 100, 0, 40)
 					seg.noise = 1
-				M.deal_damage(400, BLACK_DAMAGE)
+				M.deal_damage(400, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 				// Award achievement for getting hit by hell train and surviving
 				if(ishuman(M) && M.stat != DEAD)
 					var/mob/living/carbon/human/H = M

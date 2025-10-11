@@ -83,8 +83,8 @@
 
 /obj/effect/turf_fire/liu/DoDamage(mob/living/fuel)
 	if(!ishuman(fuel))
-		fuel.deal_damage(10, FIRE, forced = TRUE)
-	fuel.deal_damage(10, FIRE, forced = TRUE)
+		fuel.deal_damage(10, FIRE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
+	fuel.deal_damage(10, FIRE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 	fuel.adjust_fire_stacks(2)
 	fuel.IgniteMob()
 	return TRUE

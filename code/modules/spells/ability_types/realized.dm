@@ -88,7 +88,7 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		L.deal_damage(damage_amount, WHITE_DAMAGE, user, forced = TRUE)
+		L.deal_damage(damage_amount, WHITE_DAMAGE, user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/revenant(get_turf(L))
 		if(ishostile(L))
 			var/mob/living/simple_animal/hostile/H = L
@@ -195,7 +195,7 @@
 			if(L.stat == DEAD)
 				continue
 			H.adjustBruteLoss(-10)
-			L.deal_damage(damage_amount, RED_DAMAGE, user)
+			L.deal_damage(damage_amount, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(L.health < 0)
 				L.gib()
 	playsound(get_turf(user), 'sound/abnormalities/nothingthere/goodbye_attack.ogg', 75, 0, 7)
@@ -226,7 +226,7 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		L.deal_damage(ishuman(L) ? damage_amount*0.5 : damage_amount, BLACK_DAMAGE, user)
+		L.deal_damage(ishuman(L) ? damage_amount*0.5 : damage_amount, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_status_effect(/datum/status_effect/mosb_black_debuff)
 	return ..()
 
@@ -286,7 +286,7 @@
 		if(L.stat == DEAD)
 			continue
 		new /obj/effect/temp_visual/judgement(get_turf(L))
-		L.deal_damage(ishuman(L) ? damage_amount*0.5 : damage_amount, PALE_DAMAGE, user)
+		L.deal_damage(ishuman(L) ? damage_amount*0.5 : damage_amount, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_status_effect(/datum/status_effect/judgement_pale_debuff)
 	return ..()
 
@@ -357,7 +357,7 @@
 				if(L.stat == DEAD)
 					continue
 				playsound(get_turf(L), 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
-				L.deal_damage(ishuman(L) ? explosion_damage*0.5 : explosion_damage, RED_DAMAGE)
+				L.deal_damage(ishuman(L) ? explosion_damage*0.5 : explosion_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 		sleep(1)
 
 /* King of Greed - Gold Experience */
@@ -539,7 +539,7 @@
 				targets_hit[L] += 1
 			else
 				targets_hit[L] = 1
-			L.deal_damage(temp_dam, BLACK_DAMAGE, user)
+			L.deal_damage(temp_dam, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
@@ -641,7 +641,7 @@
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(500, RED_DAMAGE, H, forced = TRUE)
+			L.deal_damage(500, RED_DAMAGE, H, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
 			if(L.health < 0)
 				L.gib()
 
@@ -880,7 +880,7 @@
 			if(get_dist(user, T) > i)
 				continue
 			new /obj/effect/temp_visual/dir_setting/speedbike_trail(T)
-			user.HurtInTurf(damage_amount, list(), WHITE_DAMAGE)
+			user.HurtInTurf(damage_amount, list(), WHITE_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 			for(var/mob/living/carbon/human/L in T)
 				if(!user.faction_check_mob(L, FALSE))
 					continue
@@ -1010,7 +1010,7 @@
 /datum/status_effect/galaxy_gift/proc/Pop()
 	var/damage_mult = LAZYLEN(gifted)
 	for(var/mob/living/carbon/human/H in gifted)
-		H.deal_damage(base_dmg_amt*damage_mult, BLACK_DAMAGE, forced = TRUE)
+		H.deal_damage(base_dmg_amt*damage_mult, BLACK_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		H.remove_status_effect(/datum/status_effect/galaxy_gift)
 		new /obj/effect/temp_visual/pebblecrack(get_turf(H))
 		playsound(get_turf(H), "shatter", 50, TRUE)
@@ -1229,7 +1229,7 @@
 	var/mob/living/carbon/human/H = owner
 	var/list/damtypes = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/damage = pick(damtypes)
-	H.deal_damage(7, damage, forced = TRUE)
+	H.deal_damage(7, damage, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 
 /datum/status_effect/flesh1/on_remove()
 	. = ..()
@@ -1440,7 +1440,7 @@
 	user.orbit(DE, 0, 0, 0, 0, 0)
 
 	sleep(1)
-	target.deal_damage(100, RED_DAMAGE, user)
+	target.deal_damage(100, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	new /obj/effect/temp_visual/rip_space_slash(get_turf(target))
 	new /obj/effect/temp_visual/ripped_space(get_turf(target))
 	playsound(user, 'sound/abnormalities/wayward_passenger/ripspace_hit.ogg', 75, 0)

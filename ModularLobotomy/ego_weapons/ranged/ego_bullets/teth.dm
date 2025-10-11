@@ -8,7 +8,7 @@
 	..()
 	for(var/mob/living/L in view(1, target))
 		new /obj/effect/temp_visual/fire/fast(get_turf(L))
-		L.deal_damage(25, RED_DAMAGE, firer)
+		L.deal_damage(25, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
 
 /obj/projectile/ego_bullet/ego_beak

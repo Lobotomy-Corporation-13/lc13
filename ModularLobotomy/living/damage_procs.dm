@@ -18,7 +18,7 @@ sharpness - Irrelevant in most cases.
 /mob/living/proc/deal_damage(damage_amount, damage_type = BRUTE, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
 	if(!damage_amount) // There are some extremely rare instances of 0 damage pre-armour reduction, for example King of Greed does a 0 damage HurtInTurf to fill up a hitlist to attack later.
 		return FALSE
-	say("deal_damage: original damage is [damage_amount] of [damage_type]")
+
 	// Damage shuffler station trait.
 	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
 		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
@@ -74,22 +74,21 @@ sharpness - Irrelevant in most cases.
 
 	return final_damage
 
+/// This proc uses the same arguments as deal_damage but expects damage_type to be a list of damage types, and it will deal (damage_amount / length(damage_type)) of each damage_type in the list to the target.
+// Important: If you pass this proc a "blocked" argument, it will use that same value for all the damages dealt. If you don't, it'll run the corresponding armour check for each damage type sent.
+// That is to say, if you're dealing RED, WHITE and BLACK damage, and send "blocked = run_armor_check(null, PALE_DAMAGE)", all the damage you deal will be judged by PALE armour.
+/mob/living/proc/deal_split_damage(damage_amount, damage_type = BRUTE, source = null, flags = null, attack_type = null, blocked = null, def_zone = null, wound_bonus = 0, bare_wound_bonus = 0, sharpness = SHARP_NONE)
+	if(!islist(damage_type)) // You're using deal_split_damage to deal a single type of damage. This is the same as just calling deal_damage. Abnormalities do this in WorktickFailure to accomodate for multi-work damage abnos (LooS, DF)
+		deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+		return
 
-	/*if(!islist(damage_type)) // they just want to apply a single damage type
-		if(islist(overrides))
-			var/list/arguments_to_send = list(damage = damage_amount, damagetype = damage_type)
-			arguments_to_send.Add(overrides)
-			apply_damage(arglist(arguments_to_send))
-		else
-			apply_damage(damage_amount, damage_type, blocked = (damage_type != BRUTE ? run_armor_check(null, damage_type) : null), spread_damage = TRUE)
-	else
-		var/list/damage_types = damage_type
-		damage_amount = damage_amount / length(damage_types) // make sure the damage amount is still correct by dividing it
-		for(var/damage as anything in damage_types)
-			if(islist(overrides))
-				var/list/arguments_to_send = list(damage = damage_amount, damagetype = damage).Add(overrides)
-				apply_damage(arglist(arguments_to_send))
-			else
-				apply_damage(damage_amount, damage, blocked = (damage_type != BRUTE ? run_armor_check(null, damage) : null), spread_damage = TRUE)
-	*/
+	var/list/damage_types = damage_type
+	var/amount_of_types = length(damage_types)
+	if(amount_of_types <= 0) // Gulp
+		return
+
+	damage_amount /= amount_of_types
+	for(var/split_type as anything in damage_types)
+		deal_damage(damage_amount, split_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+
 

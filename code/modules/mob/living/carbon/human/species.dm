@@ -1578,18 +1578,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!damage_amount) // There are some extremely rare instances of 0 damage pre-armour reduction, for example King of Greed does a 0 damage HurtInTurf to fill up a hitlist to attack later.
 		return FALSE
 
-	// Damage shuffler station trait.
-	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
-		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
-		var/new_damage_type = shuffler.mapping_offense[damage_type]
-
-		// Reduce incoming damage if it's been shuffled into PALE, increase it if it was formerly PALE but is no longer.
-		if(new_damage_type == PALE_DAMAGE && damage_type != PALE_DAMAGE)
-			damage_amount *= shuffler.pale_debuff
-		else if(new_damage_type != PALE_DAMAGE && damage_type == PALE_DAMAGE)
-			damage_amount /= shuffler.pale_debuff
-
-		damage_type = new_damage_type
+	// We have already run the shuffler in the mob/living/carbon deal_damage that called this proc. Any incoming damage has already been shuffled (if it is enabled, anyhow).
 
 	// Automatically run an armour check for the provided damage type if we weren't already provided with a blocked value, and if we aren't taking BRUTE damage.
 	if((isnull(blocked)) && (damage_type != BRUTE))
@@ -1804,7 +1793,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 			humi.emote("scream")
 
 		// Apply the damage to all body parts
-		humi.deal_damage(burn_damage, FIRE, flags = (DAMAGE_FORCED))
+		humi.deal_damage(burn_damage, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 	// Apply some burn / brute damage to the body (Dependent if the person is hulk or not)
 	var/is_hulk = HAS_TRAIT(humi, TRAIT_HULK)

@@ -531,7 +531,7 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		L.deal_damage(damage, BLACK_DAMAGE)
+		L.deal_damage(damage, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 		L.visible_message("<span class='danger'>[L] has been hit by [name]!</span>",
 						"<span class='userdanger'>You've been hit by [name]!</span>")
 	sleep(6)

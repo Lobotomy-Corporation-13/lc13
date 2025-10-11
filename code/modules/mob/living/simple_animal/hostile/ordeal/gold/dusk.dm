@@ -79,7 +79,7 @@
 
 /mob/living/simple_animal/hostile/ordeal/centipede_corrosion/proc/PulseHit(turf/T)
 	new /obj/effect/temp_visual/smash_effect(T)
-	HurtInTurf(T, list(), 5, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+	HurtInTurf(T, list(), 5, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/TB in T)
 		if(TB.charge_level >= TB.charge_level_cap)
 			continue
@@ -339,10 +339,10 @@
 				found_radio = TRUE
 		if(!faction_check_mob(L))
 			if(found_radio) //You can take off your radio to reduce the damage
-				L.deal_damage(8, WHITE_DAMAGE, src, forced = TRUE)
+				L.deal_damage(8, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 				L.playsound_local(get_turf(L), "[radio_sound]",100)
 				to_chat(L,span_danger("You hear unsettling sounds come out of your radio!"))
-			L.deal_damage(4, WHITE_DAMAGE, src, forced = TRUE)
+			L.deal_damage(4, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/ordeal/KHz_corrosion/proc/Screech()
 	if(screech_cooldown > world.time)
@@ -363,7 +363,7 @@
 		return
 	var/list/been_hit = list()
 	for(var/turf/T in view(7, src))
-		HurtInTurf(T, been_hit, 25, WHITE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE)
+		HurtInTurf(T, been_hit, 25, WHITE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_hidden = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	sleep(3)
 	if(QDELETED(src) || stat == DEAD)
 		if(!QDELETED(src))

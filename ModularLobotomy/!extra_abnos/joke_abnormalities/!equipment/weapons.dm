@@ -131,7 +131,7 @@
 		playsound(src, 'sound/abnormalities/crying_children/sorrow_shot.ogg', 45, FALSE, 5)
 		for(var/mob/living/L in view(1, src))
 			var/aoe = 50
-			L.deal_damage(aoe, RED_DAMAGE, throwingdatum.thrower)
+			L.deal_damage(aoe, RED_DAMAGE, throwingdatum.thrower, attack_type = (ATTACK_TYPE_THROWING))
 			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 	activated = FALSE
 
@@ -234,7 +234,7 @@
 		aoe_damage *= force_multiplier
 		if(L == user) //This WILL friendly fire there is no escape
 			continue
-		L.deal_damage(aoe_damage, RED_DAMAGE, user)
+		L.deal_damage(aoe_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		to_chat(L, span_userdanger("You are crushed by a monolith!"))
 		if(L.health < 0)
 			L.gib()
@@ -301,7 +301,7 @@
 	playsound(target_turf, 'sound/abnormalities/fastcleave.ogg', 50, TRUE)
 	for(var/turf/open/T in range(target_turf, 0))
 		new /obj/effect/temp_visual/nt_goodbye(T)
-		user.HurtInTurf(T, list(), force, PALE_DAMAGE)
+		user.HurtInTurf(T, list(), force, PALE_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /obj/item/ego_weapon/sukuna/attack_self(mob/living/carbon/user)
 	to_chat(user,"<span class='notice'>Domain Expansion: Malevolent Shrine.</span>")
@@ -340,7 +340,7 @@
 	for(var/turf/T in view(range, target_turf))
 		var/obj/effect/temp_visual/cleavesprite =  new(T)
 		cleavesprite.color = "#df1919"
-		creator.HurtInTurf(T, list(), damage = 500, damage_type = PALE_DAMAGE, def_zone = null, check_faction = TRUE, exact_faction_match = FALSE, hurt_mechs = TRUE, mech_damage = 1000, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null)
+		creator.HurtInTurf(T, list(), damage = 500, damage_type = PALE_DAMAGE, def_zone = null, check_faction = TRUE, exact_faction_match = FALSE, hurt_mechs = TRUE, mech_damage = 1000, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, attack_type = (ATTACK_TYPE_SPECIAL))
 	explode_times -= 1
 	if(explode_times <= 0)
 		qdel(src)

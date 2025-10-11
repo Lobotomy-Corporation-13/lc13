@@ -268,7 +268,7 @@
 	var/damage_dealt = 0
 	for(var/turf/open/T in range(target_turf, 0))
 		new /obj/effect/temp_visual/smash1(T)
-		for(var/mob/living/L in user.HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE))
+		for(var/mob/living/L in user.HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
 			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 				damage_dealt += ranged_damage
 
@@ -385,7 +385,7 @@
 	playsound(T, 'sound/effects/ordeals/amber/midnight_out.ogg', 40,TRUE)
 	for(var/turf/open/T2 in RANGE_TURFS(range, src))
 		new /obj/effect/temp_visual/yellowsmoke(T2)
-		for(var/mob/living/L in creator.HurtInTurf(T2, list(), resonance_damage * damage_multiplier, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, trackable = FALSE))
+		for(var/mob/living/L in creator.HurtInTurf(T2, list(), resonance_damage * damage_multiplier, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT)))
 			to_chat(L, span_userdanger("[src] bites you!"))
 			balloon_alert(L, "[src] bites you!")
 			if(creator)
@@ -772,7 +772,7 @@
 		new /obj/effect/temp_visual/explosion(get_turf(src))
 		playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 		for(var/mob/living/L in ohearers(3, src))
-			L.deal_damage(30, RED_DAMAGE, user)
+			L.deal_damage(30, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
 		qdel(src)
 
 /obj/item/ego_weapon/mini/patch

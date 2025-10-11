@@ -59,7 +59,7 @@
 	if(do_after(H, 12, src))
 		to_chat(H,"<span class='warning'>You cover yourself in flames!</span>")
 		H.playsound_local(get_turf(H), 'sound/effects/burn.ogg', 100, 0)
-		H.deal_damage(10, RED_DAMAGE, forced = TRUE)
+		H.deal_damage(10, RED_DAMAGE, flags = (DAMAGE_FORCED))
 		H.adjust_fire_stacks(1)
 		H.IgniteMob()
 
@@ -133,7 +133,7 @@
 		for(var/mob/living/L in range(2, stepturf)) //knocks enemies away from you
 			if(L == user || ishuman(L))
 				continue
-			L.deal_damage(aoe, BLACK_DAMAGE, user)
+			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(firsthit)
 				aoe = (aoe / 2)
 				firsthit = FALSE

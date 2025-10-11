@@ -39,7 +39,7 @@
 			return getStaminaLoss()
 
 /// applies multiple damages at once via [/mob/living/proc/deal_damage]
-// I recommend not using this, also literally only 1 thing (flashbangs) in the codebase use this as of now
+// I recommend not using this, also literally only 1 thing (flashbangs) in the codebase uses this as of now
 /mob/living/proc/deal_multiple_damages(brute = 0, burn = 0, tox = 0, oxy = 0, clone = 0, def_zone = null, blocked = FALSE, stamina = 0, brain = 0)
 	if(blocked >= 100)
 		return 0

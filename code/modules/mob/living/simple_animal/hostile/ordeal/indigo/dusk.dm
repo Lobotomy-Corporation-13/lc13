@@ -413,10 +413,16 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(source)
-		if(parrying && health > 0 && isliving(source) && !(attack_type & ATTACK_TYPE_COUNTER))
+		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
+		if(parrying && health > 0 && isliving(source) && should_retaliate)
 			INVOKE_ASYNC(src, PROC_REF(ParryCounter), source)
 			return FALSE
-		if(damage_amount >= 30 && health > 0 && prob(75))
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
+	if(source)
+		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
+		if(should_retaliate && damage_amount >= 30 && health > 0 && prob(75))
 			INVOKE_ASYNC(src, PROC_REF(UseSpecialAbility))
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/Move(atom/newloc, dir, step_x, step_y)

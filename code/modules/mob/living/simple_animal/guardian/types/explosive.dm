@@ -34,7 +34,7 @@
 				if(hasmatchingsummoner(L)) //if the summoner matches don't hurt them
 					continue
 				if(L != src && L != summoner)
-					L.deal_damage(15, BRUTE, src)
+					L.deal_damage(15, BRUTE, src, attack_type = (ATTACK_TYPE_MELEE))
 			new /obj/effect/temp_visual/explosion(get_turf(M))
 
 /mob/living/simple_animal/hostile/guardian/bomb/AltClickOn(atom/movable/A)

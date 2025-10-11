@@ -23,7 +23,7 @@
 	if(!isbot(H) && isliving(H) && !QDELETED(H))
 		H.visible_message("<span class='warning'>[target] is hit by [src], they seem to wither away!</span>")
 		for(var/i = 1 to 14)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, firer, TRUE), 2 SECONDS * i)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, firer, null, (ATTACK_TYPE_STATUS)), 2 SECONDS * i)
 
 /obj/projectile/ego_bullet/adoration/aoe
 	color = "#6666BB"
@@ -32,7 +32,7 @@
 	. = ..()
 	for(var/mob/living/L in view(2, target))
 		new /obj/effect/temp_visual/revenant/cracks(get_turf(L))
-		L.deal_damage(50, BLACK_DAMAGE, firer)
+		L.deal_damage(50, BLACK_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
 
 /obj/projectile/ego_bullet/nihil

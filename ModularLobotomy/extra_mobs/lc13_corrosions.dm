@@ -45,7 +45,7 @@
 	playsound(src, 'sound/weapons/ego/sword1.ogg', min(15 + damage, 100), TRUE, 4)
 	attacker.visible_message(span_danger("[src] counters [attacker] with a massive blade!"), span_userdanger("[src] counters your attack!"))
 	do_attack_animation(attacker)
-	attacker.deal_damage(damage, attack_type, src, forced = TRUE)
+	attacker.deal_damage(damage, attack_type, src, attack_type = (ATTACK_TYPE_COUNTER | ATTACK_TYPE_MELEE))
 	new /obj/effect/temp_visual/revenant(get_turf(attacker))
 
 /mob/living/simple_animal/hostile/ordeal/NT_corrosion/death(gibbed)
@@ -148,7 +148,7 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/smash_effect(TF)
-			been_hit = HurtInTurf(TF, been_hit, hello_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE)
+			been_hit = HurtInTurf(TF, been_hit, hello_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/L in been_hit)
 		if(L.health < 0)
 			L.gib()
@@ -229,7 +229,7 @@
 		for(var/mob/living/H in T)
 			if(faction_check_mob(H))
 				continue
-			H.deal_damage(poison_damage, BLACK_DAMAGE, src, forced = TRUE)
+			H.deal_damage(poison_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_SPECIAL))
 			H.apply_venom(2)
 
 /mob/living/simple_animal/hostile/ordeal/snake_corrosion/PostDamageReaction(damage_amount, damage_type, source, attack_type)
@@ -489,7 +489,7 @@
 		to_chat(L, span_userdanger("[src] takes a bite out of you!"))
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.deal_damage(dash_damage, RED_DAMAGE, src)
+		L.deal_damage(dash_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		been_hit += L
 		playsound(L, 'sound/effects/ordeals/brown/cromer_stab.ogg', 75, 1)
 		if(!ishuman(L))

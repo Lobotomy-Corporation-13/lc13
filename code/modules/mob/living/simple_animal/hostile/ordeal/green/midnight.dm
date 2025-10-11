@@ -233,7 +233,7 @@
 				if(faction_check_mob(L))
 					continue
 				already_hit += L
-				L.deal_damage(laser_damage, BLACK_DAMAGE, src, forced = TRUE)
+				L.deal_damage(laser_damage, BLACK_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		SLEEP_CHECK_DEATH(0.25 SECONDS)
 	StopLaser()
 
@@ -285,7 +285,7 @@
 	playsound(src, 'sound/weapons/fixer/generic/rcorp4.ogg', 15, FALSE, 4)
 	for(var/mob/living/H in src.loc)
 		if(!faction_check(H.faction, list("green_ordeal")))
-			H.deal_damage(55, BLACK_DAMAGE)
+			H.deal_damage(55, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 			to_chat(H, span_userdanger("You're hit by [src.name]!"))
 
 /// This laser hits in a 3 tile radius (the epicenter and its adjacent tiles).
@@ -315,7 +315,7 @@
 		var/distance = get_dist(src, H)
 		if(distance < 2)
 			if(!faction_check(H.faction, list("green_ordeal")))
-				H.deal_damage(50, BLACK_DAMAGE)
+				H.deal_damage(50, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 				to_chat(H, span_userdanger("You're hit by [src.name]!"))
 			shake_camera(H, 6, 1.5)
 

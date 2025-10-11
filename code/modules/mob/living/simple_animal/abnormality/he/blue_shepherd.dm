@@ -241,7 +241,7 @@
 	playsound(src, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE, 2)
 	for(var/turf/T in range(2, src))
 		new /obj/effect/temp_visual/smash_effect(T)
-		been_hit = HurtInTurf(T, been_hit, counter_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15, forced = TRUE)
+		been_hit = HurtInTurf(T, been_hit, counter_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_COUNTER))
 		for(var/mob/living/carbon/human/H in T)
 			H.Knockdown(20)
 	countering = FALSE
@@ -437,7 +437,7 @@
 	if(stat == DEAD)
 		return
 	new /obj/effect/temp_visual/smash_effect(T)
-	for(var/mob/living/L in HurtInTurf(T, list(), slash_damage, BLACK_DAMAGE, check_faction = combat_map, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE))
+	for(var/mob/living/L in HurtInTurf(T, list(), slash_damage, BLACK_DAMAGE, check_faction = combat_map, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 		if(L == awakened_buddy && !buddy_hit)
 			buddy_hit = TRUE //sometimes buddy get hit twice so we check if it got hit in this slash
 			awakened_buddy.adjustHealth(700) //it would take approximatively 9 slashes to take buddy down
@@ -449,7 +449,7 @@
 				current_red.WatchIt()
 			all_turfs -= T
 			continue // Red doesn't get hit.
-		L.deal_damage(slash_damage, BLACK_DAMAGE, src)
+		L.deal_damage(slash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		all_turfs -= T
 	if(slash_count >= range)
 		buddy_hit = FALSE

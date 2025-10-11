@@ -226,7 +226,7 @@ It has now been over four months. Now we get her for real. -Coxswain
 		return FALSE
 	return TRUE
 
-/mob/living/simple_animal/hostile/abnormality/red_hood/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+/mob/living/simple_animal/hostile/abnormality/red_hood/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(health > (maxHealth * 0.8) || !priority_target)
 		return
