@@ -41,6 +41,7 @@
 	var/vengeance_mark_stacks_per_hit = 4
 	var/vengeance_damage_bonus = 0.03 // 3% per stack for Little Brother
 	var/counter_damage_multiplier = 1.4 // 40% bonus damage on counter-attacks
+	var/countering = FALSE
 
 /obj/item/ego_weapon/shield/middle_chain/attack_self(mob/user)//FIXME: Find a better way to use this override!
 	if(block == 0) //Extra check because shields returns nothing on 1
@@ -57,6 +58,7 @@
 			RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(CaptureAttacker), override = TRUE)
 			RegisterSignal(user, COMSIG_PARENT_ATTACKBY, PROC_REF(CaptureAttacker), override = TRUE)
 			RegisterSignal(user, COMSIG_ATOM_ATTACK_ANIMAL, PROC_REF(CaptureAttacker), override = TRUE)
+			countering = TRUE
 			return TRUE
 		else
 			return FALSE
@@ -115,6 +117,7 @@
 	// Clear attacker reference
 	last_attacker = null
 	// Call parent DisableBlock
+	countering = FALSE
 	..()
 
 //Override attack to apply Vengeance Mark bonus damage (but not apply stacks - only counter-attacks apply stacks)
@@ -171,7 +174,7 @@
 
 // Override hit_reaction to teleport to projectile firer
 /obj/item/ego_weapon/shield/middle_chain/big/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	if(attack_type == PROJECTILE_ATTACK && attacking)
+	if(attack_type == PROJECTILE_ATTACK && countering)
 		// Get the projectile's firer
 		var/obj/projectile/P = hitby
 		if(istype(P) && P.firer && !QDELETED(P.firer))
