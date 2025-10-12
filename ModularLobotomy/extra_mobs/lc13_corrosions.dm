@@ -58,43 +58,19 @@
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/attack_hand(mob/living/carbon/human/M)
-	..()
-	if(!.)
-		return
-	if(damage_reflection && M.a_intent == INTENT_HARM)
-		ReflectDamage(M, M?.dna?.species?.attack_type, M?.dna?.species?.punchdamagehigh)
-
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/attack_paw(mob/living/carbon/human/M)
-	..()
-	if(damage_reflection && M.a_intent != INTENT_HELP)
-		ReflectDamage(M, M?.dna?.species?.attack_type, 5)
-
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/attack_animal(mob/living/simple_animal/M)
+/mob/living/simple_animal/hostile/ordeal/NT_corrosion/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(!damage_reflection)
+	if(!damage_reflection || !isliving(source)) // Only execute the rest of the code if we're reflecting damage and we were provided with a source for it
 		return
-	if(.)
-		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
-		if(damage > 0)
-			ReflectDamage(M, M.melee_damage_type, damage)
+	if((attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))) // Don't counter these types of attacks, but prevent the damage on them anyway.
+		return FALSE
+	if((attack_type & (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL)) && get_dist(src, source) >= 5) // Counter these types of attacks only if within 5 tiles (as it used to work)
+		return FALSE
 
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
-	..()
-	if(damage_reflection && Proj.firer)
-		if(get_dist(Proj.firer, src) < 5)
-			ReflectDamage(Proj.firer, Proj.damage_type, Proj.damage)
+	ReflectDamage(source, damage_type, damage_amount)
+	return FALSE // Damage is prevented on us yippee
 
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/attackby(obj/item/I, mob/living/user, params)
-	..()
-	if(!damage_reflection)
-		return
-	var/damage = I.force
-	if(ishuman(user))
-		damage *= 1 + (get_attribute_level(user, JUSTICE_ATTRIBUTE)/100)
-	ReflectDamage(user, I.damtype, damage)
-
-/mob/living/simple_animal/hostile/ordeal/NT_corrosion/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
+/mob/living/simple_animal/hostile/ordeal/NT_corrosion/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(. > 0)
 		damage_taken += .
@@ -104,7 +80,7 @@
 	if(!can_act)
 		return
 	if(damage_taken > 400 && !damage_reflection)
-		StartReflecting()
+		INVOKE_ASYNC(src, PROC_REF(StartReflecting))
 
 /mob/living/simple_animal/hostile/ordeal/NT_corrosion/proc/StartReflecting()
 	can_act = FALSE
@@ -113,12 +89,10 @@
 	playsound(get_turf(src), 'sound/abnormalities/nothingthere/breach.ogg', 25, 0, 5)
 	visible_message(span_warning("[src] assumes a stance!"))
 	icon_state = "everything_there_guard"
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 	sleep(2 SECONDS)
 	if(QDELETED(src) || stat == DEAD)
 		return
 	icon_state = icon_living
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3))
 	damage_reflection = FALSE
 	can_act = TRUE
 

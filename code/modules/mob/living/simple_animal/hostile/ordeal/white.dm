@@ -211,13 +211,6 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
-	. = ..()
-	if(. > 0)
-		damage_taken += .
-	if(damage_taken >= 480 && !damage_reflection)
-		StartReflecting()
-
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/LongBeam(target)
 	if(beam_cooldown > world.time)
 		return
@@ -294,21 +287,21 @@
 		can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/white_fixer/proc/StartReflecting()
-	can_act = FALSE
 	damage_reflection = TRUE
+	can_act = FALSE
 	damage_taken = 0
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', 50, TRUE, 7)
 	visible_message("<span class='warning>[src] starts praying!</span>")
 	icon_state = "fixer_w_pray"
-	ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
+	RegisterSignal(src, COMSIG_MOB_APPLY_DAMGE, PROC_REF(DenyDamage))
 	SLEEP_CHECK_DEATH(10 SECONDS)
 	icon_state = icon_living
-	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1))
+	UnregisterSignal(src, COMSIG_MOB_APPLY_DAMGE)
 	damage_reflection = FALSE
 	can_act = TRUE
 
 // All damage reflection stuff is down here
-/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/ReflectDamage(mob/living/attacker, attack_type = RED_DAMAGE, damage)
+/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/ReflectDamage(mob/living/attacker, damage_type = RED_DAMAGE, damage)
 	if(QDELETED(src) || stat == DEAD)
 		return
 	if(damage < 1)
@@ -318,43 +311,28 @@
 	for(var/turf/T in RANGE_TURFS(1, src))
 		RVP.NewSparkles(T)
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', min(15 + damage, 100), TRUE, 4)
-	attacker.deal_damage(damage, attack_type, src, attack_type = (ATTACK_TYPE_COUNTER))
+	attacker.deal_damage(damage, damage_type, src, attack_type = (ATTACK_TYPE_COUNTER))
 	RVP.NewSparkles(get_turf(attacker), color = COLOR_VIOLET)
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_hand(mob/living/carbon/human/M)
+/mob/living/simple_animal/hostile/ordeal/white_fixer/proc/DenyDamage()
+	SIGNAL_HANDLER
+	return COMPONENT_MOB_DENY_DAMAGE
+
+/// Reflects damage when reflection is active and we're given a living source. There is no need to return FALSE to prevent the damage here, because we already are using the DenyDamage() signal handler for that.
+/mob/living/simple_animal/hostile/ordeal/white_fixer/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if(!.)
+	if(damage_reflection && isliving(source) && !(attack_type & ATTACK_TYPE_STATUS)) // However, we will have mercy on people who applied long status effects like Adoration DoT
+		ReflectDamage(source, damage_type, damage_amount)
+
+/mob/living/simple_animal/hostile/ordeal/white_fixer/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
+	if(. > 0)
+		damage_taken += .
+	if(damage_taken >= 480 && !damage_reflection)
+		damage_reflection = TRUE
+		INVOKE_ASYNC(src, PROC_REF(StartReflecting))
 		return
-	if(damage_reflection && M.a_intent == INTENT_HARM)
-		ReflectDamage(M, M?.dna?.species?.attack_type, M?.dna?.species?.punchdamagehigh)
 
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_paw(mob/living/carbon/human/M)
-	. = ..()
-	if(damage_reflection && M.a_intent != INTENT_HELP)
-		ReflectDamage(M, M?.dna?.species?.attack_type, 5)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attack_animal(mob/living/simple_animal/M)
-	. = ..()
-	if(!damage_reflection)
-		return
-	if(.)
-		var/damage = rand(M.melee_damage_lower, M.melee_damage_upper)
-		if(damage > 0)
-			ReflectDamage(M, M.melee_damage_type, damage)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
-	. = ..()
-	if(damage_reflection && Proj.firer)
-		ReflectDamage(Proj.firer, Proj.damage_type, Proj.damage)
-
-/mob/living/simple_animal/hostile/ordeal/white_fixer/attackby(obj/item/I, mob/living/user, params)
-	. = ..()
-	if(!damage_reflection)
-		return
-	var/damage = I.force
-	if(ishuman(user))
-		damage *= 1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) / 100)
-	ReflectDamage(user, I.damtype, damage)
 
 // Black Fixer
 /mob/living/simple_animal/hostile/ordeal/red_fixer

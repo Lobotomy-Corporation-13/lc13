@@ -123,6 +123,8 @@
 	var/no_counter = FALSE
 	var/sidesteping = FALSE
 	var/countering = FALSE
+	/// This one keeps track of whether we've already counterattacked during our parry. This is so we can block multiple instances of damage during our parry, but only riposte once.
+	var/riposted = FALSE
 	var/counter_damage = 20
 	//PLAYABLES ATTACKS
 	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/sheperd_spin_toggle, /datum/action/cooldown/evade, /datum/action/cooldown/parry)
@@ -213,27 +215,26 @@
 	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
 		var/mob/living/simple_animal/hostile/abnormality/blue_shepherd/H = owner
 		if(H.no_counter)
-			to_chat(H, "You are curretnly dodging!")
+			to_chat(H, "You are currently dodging!")
 			return FALSE
 		else
-			H.ChangeResistances(list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0))
 			H.countering = TRUE
 			H.slashing = TRUE
+			H.riposted = FALSE
 			H.manual_emote("raises their blade...")
 			H.color = "#26a2d4"
 			playsound(H, 'sound/items/unsheath.ogg', 75, FALSE, 4)
 			addtimer(CALLBACK(src, PROC_REF(endcounter)), counter_duration)
 			StartCooldown()
 
-/mob/living/simple_animal/hostile/abnormality/blue_shepherd/attacked_by(obj/item/I, mob/living/user)
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	if (countering)
-		counter()
-
-/mob/living/simple_animal/hostile/abnormality/blue_shepherd/bullet_act(obj/projectile/P, def_zone, piercing_hit = FALSE)
-	. = ..()
-	if (countering)
-		counter()
+	if((!countering) || (attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))) // We don't parry these types of attacks.
+		return
+	if(!riposted)
+		riposted = TRUE
+		INVOKE_ASYNC(src, PROC_REF(counter))
+	return FALSE // Damage of the types not checked in the first conditional is prevented on us for as long as 'countering' is true.
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/counter()
 	var/list/been_hit = list()
@@ -244,7 +245,6 @@
 		been_hit = HurtInTurf(T, been_hit, counter_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, mech_damage = 15, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_COUNTER))
 		for(var/mob/living/carbon/human/H in T)
 			H.Knockdown(20)
-	countering = FALSE
 
 /datum/action/cooldown/parry/proc/endcounter()
 	if (istype(owner, /mob/living/simple_animal/hostile/abnormality/blue_shepherd))
@@ -252,7 +252,6 @@
 		H.countering = FALSE
 		H.slashing = FALSE
 		H.color = null
-		H.ChangeResistances(list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5))
 
 /datum/action/innate/abnormality_attack/toggle/sheperd_spin_toggle
 	name = "Toggle Spinning Slash"

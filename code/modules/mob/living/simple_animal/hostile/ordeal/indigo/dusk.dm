@@ -402,7 +402,10 @@
 	special_ability_cooldown_duration = 12 SECONDS
 	special_ability_damage = 40
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/sweeper = 1)
+	/// When TRUE, we will deflect almost all types of damage taken, and if we haven't already, counterattack.
 	var/parrying = FALSE
+	/// We'll only use our counterattack once per parry.
+	var/counter_used = FALSE
 	var/parry_stop_timer = null
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/Initialize(mapload)
@@ -415,14 +418,14 @@
 	if(source)
 		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
 		if(parrying && health > 0 && isliving(source) && should_retaliate)
-			INVOKE_ASYNC(src, PROC_REF(ParryCounter), source)
+			INVOKE_ASYNC(src, PROC_REF(Parry), source)
 			return FALSE
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(source)
 		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
-		if(should_retaliate && damage_amount >= 30 && health > 0 && prob(75))
+		if(should_retaliate && . >= 30 && health > 0 && prob(75))
 			INVOKE_ASYNC(src, PROC_REF(UseSpecialAbility))
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/Move(atom/newloc, dir, step_x, step_y)
@@ -439,6 +442,8 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/UseSpecialAbility(mob/living/target, mob/living/user)
 	if(..())
 		special_ability_activated = TRUE // This doesn't mean we're parrying just yet.
+		counter_used = FALSE // Means we haven't used our riposte yet.
+
 		// Telegraph that we're beginning a parry to give players time to stop attacking. We're not actively parrying at this point.
 		say("676 3246!!")
 		visible_message(span_userdanger("[src] enters a parrying stance!"))
@@ -459,18 +464,20 @@
 		visible_message(span_danger("[src] lowers their defensive stance."))
 	animate(src, 0.5 SECONDS, color = initial(color))
 
-/// This gets called if someone hits us in our parrying stance. Retaliate by teleporting through them and attacking. We'll heal a bit too.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/proc/ParryCounter(mob/living/victim)
-	// Clean up our parrying stuff...
-	StopParrying(TRUE)
-	deltimer(parry_stop_timer)
-	parry_stop_timer = null
-
+/// This gets called if someone hits us in our parrying stance. This proc just does visual and audio feedback that the attack was parried - the actual hit happens in ParryCounter only if they're in LoS and in range.
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/proc/Parry(mob/living/victim)
 	// Indicate that we landed a parry.
+	face_atom(victim)
 	var/datum/effect_system/spark_spread/parry_sparks = new /datum/effect_system/spark_spread
 	parry_sparks.set_up(4, 0, loc)
 	parry_sparks.start()
 	playsound(src, 'sound/weapons/parry.ogg', 100, FALSE, 5)
+
+	if(!counter_used && can_see(src, victim, 12))
+		counter_used = TRUE
+		ParryCounter(victim)
+
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/proc/ParryCounter(mob/living/victim)
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 
 	// Teleport to the target and add a visual demonstrating it.

@@ -305,11 +305,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 // This proc will register the aggro value for damage taken by deal_damage. It is called by /hostile/deal_damage() which is an override of mob/living/proc/deal_damage().
 /mob/living/simple_animal/hostile/proc/RegisterAttackAggro(damage_amount, damage_type, source)
-	if(!damage_amount || stat >= DEAD)
+	if(!damage_amount || stat >= DEAD || client)
 		return
 	if(isliving(source) && !faction_check_mob(source)) // If a mob is responsible for the damage we took... (Mind, we will receive source = null for attacks that are not intended to be "trackable")
 		RegisterAggroValue(source, damage_amount, damage_type) // Regardless of whether we have an active target or not, add the damage taken to our target memory.
-		if(!target && !client) // If we don't have a target right now, move to investigate the source of the damage.
+		if(!target) // If we don't have a target right now, move to investigate the source of the damage.
 			Goto(get_turf(source), move_to_delay, 2)
 
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)

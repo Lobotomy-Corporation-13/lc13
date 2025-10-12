@@ -124,11 +124,15 @@
 		return
 	return ..()
 
+// This proc is significantly more important than it may seem. All melee attacks done by simple_animals on other simple_animals use this.
+// Sadly the damage shuffler has to be accounted for here. We do this using temporary vars, but we won't actually change the vars that we'd send to deal_damage if actuallydamage is true
+// We REALLY need to look into refactoring this.
 /mob/living/simple_animal/proc/attack_threshold_check(damage, damagetype = BRUTE, actuallydamage = TRUE, source = null, attack_type = null)
 	var/temp_damage = damage
+	var/temp_damage_type = damagetype
 	var/should_shuffle = GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damagetype)
 	if(should_shuffle)
-		damagetype = GLOB.damage_type_shuffler.mapping_offense[damagetype] // Calls to this proc will be made with the ORIGINAL damage type. We have to do the offensive shuffling here.
+		temp_damage_type = GLOB.damage_type_shuffler.mapping_offense[damagetype] // Calls to this proc will be made with the ORIGINAL damage type. We have to do the offensive shuffling here.
 
 	if(islist(damage_coeff))
 		ChangeResistances(damage_coeff)
@@ -142,9 +146,9 @@
 		UpdateResistances()
 
 	// Defensive shuffling. If the shuffler is enabled, make sure we're responding to the incoming damage with the correct defense mapping.
-	var/coeff_to_use = damage_coeff.getCoeff(damagetype)
+	var/coeff_to_use = damage_coeff.getCoeff(temp_damage_type)
 	if(should_shuffle)
-		var/defensive_damage_type = GLOB.damage_type_shuffler.mapping_defense[damagetype]
+		var/defensive_damage_type = GLOB.damage_type_shuffler.mapping_defense[temp_damage_type]
 		coeff_to_use = damage_coeff.getCoeff(defensive_damage_type)
 	temp_damage *= coeff_to_use
 
@@ -153,6 +157,8 @@
 		DamageEffect(0, damagetype)
 		return FALSE
 
+	// This proc isn't just used to "check if you can deal damage". Several instances of its use in the codebase are used to ACTUALLY DEAL DAMAGE.
+	// Since deal_damage will account for the damage shuffler itself, we need to send the ORIGINAL damage and damage types to it, not the temporary ones we were working with here to see if the hit was nullified.
 	if(actuallydamage)
 		deal_damage(damage, damagetype, source = source, attack_type = attack_type)
 	return TRUE
