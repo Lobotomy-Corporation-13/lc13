@@ -34,7 +34,7 @@
 	var/datum/skill_augment_design/current_design
 
 	// Role restrictions
-	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer")
+	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer", "Workshop Attendant")
 
 	// Available templates based on rank
 	var/list/available_templates = list(
@@ -80,6 +80,57 @@
 			"material_cost" = list(
 				/obj/item/tresmetal/puremetal = 2,
 				/obj/item/tresmetal/pinksteel = 2
+			)
+		),
+
+		// Injectable Templates (50% reduced charge)
+		"Injectable Rank 1 - Basic" = list(
+			"rank" = 1,
+			"slots" = 4,
+			"charge" = 30,
+			"injectable" = TRUE,
+			"material_cost" = list(
+				/obj/item/tresmetal = 3
+			)
+		),
+		"Injectable Rank 2 - Enhanced" = list(
+			"rank" = 2,
+			"slots" = 6,
+			"charge" = 50,
+			"injectable" = TRUE,
+			"material_cost" = list(
+				/obj/item/tresmetal = 3,
+				/obj/item/tresmetal/steel = 2
+			)
+		),
+		"Injectable Rank 3 - Advanced" = list(
+			"rank" = 3,
+			"slots" = 6,
+			"charge" = 80,
+			"injectable" = TRUE,
+			"material_cost" = list(
+				/obj/item/tresmetal/goldsteel = 3,
+				/obj/item/tresmetal/silversteel = 2
+			)
+		),
+		"Injectable Rank 4 - Superior" = list(
+			"rank" = 4,
+			"slots" = 8,
+			"charge" = 125,
+			"injectable" = TRUE,
+			"material_cost" = list(
+				/obj/item/tresmetal/silversteel = 3,
+				/obj/item/tresmetal/puremetal = 2
+			)
+		),
+		"Injectable Rank 5 - Masterwork" = list(
+			"rank" = 5,
+			"slots" = 9,
+			"charge" = 175,
+			"injectable" = TRUE,
+			"material_cost" = list(
+				/obj/item/tresmetal/puremetal = 3,
+				/obj/item/tresmetal/pinksteel = 3
 			)
 		)
 	)
@@ -480,9 +531,6 @@
 
 /obj/machinery/skill_augment_fabricator/attack_hand(mob/user)
 	. = ..()
-	if(.)
-		return
-
 	if(!can_use_machine(user))
 		to_chat(user, span_warning("You don't have the expertise to use this machine!"))
 		return
@@ -677,22 +725,43 @@
 /obj/machinery/skill_augment_fabricator/proc/finish_fabrication(mob/user)
 	busy = FALSE
 
-	var/obj/item/organ/cyberimp/chest/skill_augment/SA = new(get_turf(src))
-	SA.rank = current_design.rank
-	SA.max_slots = current_design.max_slots
-	SA.max_charge = current_design.max_charge
-	SA.current_charge = SA.max_charge
-	SA.attached_skills = current_design.selected_skills.Copy()
-	SA.name = "skill augment (Rank [SA.rank])"
-	SA.desc = "A cybernetic augmentation containing [length(SA.attached_skills)] programmed skills."
+	// Check if this is an injectable template
+	if(available_templates[current_design.name] && available_templates[current_design.name]["injectable"])
+		// Create injectable skill augment item
+		var/obj/item/skill_augment_injectable/SA = new(get_turf(src))
+		SA.rank = current_design.rank
+		SA.max_slots = current_design.max_slots
+		SA.max_charge = current_design.max_charge
+		SA.current_charge = SA.max_charge
+		SA.attached_skills = current_design.selected_skills.Copy()
+		SA.name = "injectable skill augment (Rank [SA.rank])"
+		SA.desc = "An injectable skill augmentation containing [length(SA.attached_skills)] programmed skills. Can be administered by hitting a target."
 
-	// Store skill charge costs for BLACK damage penalty
-	for(var/skill_type in SA.attached_skills)
-		var/list/skill_info = skill_data[skill_type]
-		SA.skill_charge_costs[skill_type] = skill_info["charge_cost"]
+		// Store skill charge costs
+		for(var/skill_type in SA.attached_skills)
+			var/list/skill_info = skill_data[skill_type]
+			SA.skill_charge_costs[skill_type] = skill_info["charge_cost"]
 
-	playsound(src, 'sound/machines/ping.ogg', 50, FALSE)
-	visible_message(span_notice("[src] finishes fabrication."))
+		playsound(src, 'sound/machines/ping.ogg', 50, FALSE)
+		visible_message(span_notice("[src] finishes fabrication of an injectable augment."))
+	else
+		// Create regular implantable organ
+		var/obj/item/organ/cyberimp/chest/skill_augment/SA = new(get_turf(src))
+		SA.rank = current_design.rank
+		SA.max_slots = current_design.max_slots
+		SA.max_charge = current_design.max_charge
+		SA.current_charge = SA.max_charge
+		SA.attached_skills = current_design.selected_skills.Copy()
+		SA.name = "skill augment (Rank [SA.rank])"
+		SA.desc = "A cybernetic augmentation containing [length(SA.attached_skills)] programmed skills."
+
+		// Store skill charge costs for BLACK damage penalty
+		for(var/skill_type in SA.attached_skills)
+			var/list/skill_info = skill_data[skill_type]
+			SA.skill_charge_costs[skill_type] = skill_info["charge_cost"]
+
+		playsound(src, 'sound/machines/ping.ogg', 50, FALSE)
+		visible_message(span_notice("[src] finishes fabrication."))
 
 	// Reset design
 	current_design = new /datum/skill_augment_design()
@@ -971,3 +1040,243 @@
 	custom_price = 800
 	charge_amount = 300
 	tier = 4
+
+//--------------------------------------
+// Injectable Skill Augment Items
+//--------------------------------------
+
+/obj/item/skill_augment_injectable
+	name = "injectable skill augment"
+	desc = "An injectable skill augmentation that can be administered by hitting a target."
+	icon = 'icons/obj/syringe.dmi'
+	icon_state = "maintenance"
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+
+	var/rank = 1
+	var/max_slots = 1
+	var/max_charge = 40
+	var/current_charge = 40
+	var/list/attached_skills = list()
+	var/list/skill_charge_costs = list()
+	var/used = FALSE
+
+	// Stat requirements
+	var/list/rankAttributeReqs = list(20, 40, 60, 80, 100)
+	var/list/stats = list(
+		FORTITUDE_ATTRIBUTE,
+		PRUDENCE_ATTRIBUTE,
+		TEMPERANCE_ATTRIBUTE,
+		JUSTICE_ATTRIBUTE
+	)
+	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer")
+
+/obj/item/skill_augment_injectable/examine(mob/user)
+	. = ..()
+	if(used)
+		. += span_warning("This augment has already been used.")
+		return
+	. += span_notice("Rank: [rank]")
+	. += span_notice("Slots: [max_slots]")
+	. += span_notice("Max Charge: [max_charge]")
+	. += span_notice("Attached Skills: [length(attached_skills)]")
+	for(var/skill_type in attached_skills)
+		var/datum/action/A = skill_type
+		. += span_notice("- [initial(A.name)]")
+	. += span_notice("Use on a human to inject this skill augment.")
+
+/obj/item/skill_augment_injectable/attack(mob/target, mob/user)
+	. = ..()
+	if(used)
+		to_chat(user, span_warning("[src] has already been used!"))
+		return
+
+	if(!can_use_injector(user))
+		to_chat(user, span_warning("You don't have the expertise to use this injector!"))
+		return
+
+	if(!ishuman(target))
+		to_chat(user, span_warning("You can only use this on humans!"))
+		return
+
+	var/mob/living/carbon/human/H = target
+
+	// Check if target already has a skill augment
+	var/obj/item/organ/cyberimp/chest/skill_augment/existing_SA = H.getorganslot(ORGAN_SLOT_HEART_AID)
+	var/obj/item/skill_augment_injectable/existing_inj = null
+
+	// Check for existing injectable augments in inventory
+	for(var/obj/item/skill_augment_injectable/inj in H.contents)
+		if(inj.used)
+			existing_inj = inj
+			break
+
+	if(existing_SA && istype(existing_SA, /obj/item/organ/cyberimp/chest/skill_augment))
+		to_chat(user, span_warning("[H] already has a skill augment installed!"))
+		return
+
+	if(existing_inj)
+		to_chat(user, span_warning("[H] already has an injectable skill augment!"))
+		return
+
+	// Check stat requirements
+	var/stattotal = 0
+	for(var/attribute in stats)
+		stattotal += get_attribute_level(H, attribute)
+	stattotal /= 4 // Average of stats
+
+	if(stattotal < rankAttributeReqs[rank])
+		to_chat(user, span_warning("[H]'s stats are too low for this Rank [rank] augment! (Required: [rankAttributeReqs[rank]], Current: [stattotal])"))
+		return
+
+	to_chat(user, span_notice("You begin injecting [src] into [H]..."))
+
+	if(!do_after(user, 3 SECONDS, target = H))
+		to_chat(user, span_warning("You stop the injection process."))
+		return
+
+	// Move the augment into the target and mark as used
+	forceMove(H)
+	used = TRUE
+
+	// Grant all attached skills
+	for(var/skill_type in attached_skills)
+		var/datum/action/A = new skill_type()
+		A.Grant(H)
+
+		// Hook into the action's Trigger to consume charge
+		if(istype(A, /datum/action/cooldown))
+			var/datum/action/cooldown/CA = A
+			RegisterSignal(CA, COMSIG_ACTION_TRIGGER, PROC_REF(on_skill_used))
+
+	to_chat(user, span_notice("You successfully inject [src] into [H]!"))
+	to_chat(H, span_notice("You feel new abilities coursing through your body!"))
+	playsound(get_turf(H), 'sound/items/syringeproj.ogg', 50, FALSE)
+
+/obj/item/skill_augment_injectable/proc/can_use_injector(mob/user)
+	if(!user?.mind?.assigned_role)
+		return FALSE
+	return (user.mind.assigned_role in allowed_roles)
+
+/obj/item/skill_augment_injectable/proc/on_skill_used(datum/action/source)
+	SIGNAL_HANDLER
+
+	// Get charge cost
+	var/cost = skill_charge_costs[source.type] || 10
+
+	// Check charge - if insufficient, deal BURN damage instead of blocking
+	if(current_charge < cost)
+		var/shortfall = cost - current_charge
+		var/burn_damage = shortfall * 2 // 2 BURN damage per missing charge point
+
+		if(ishuman(loc))
+			var/mob/living/carbon/human/H = loc
+			H.deal_damage(burn_damage, FIRE)
+			to_chat(H, span_boldwarning("CRITICAL AUGMENT OVERLOAD! Your skill augment tears at your skin!"))
+
+			// Dramatic visual effect
+			playsound(get_turf(H), 'sound/weapons/ego/devyat_overclock.ogg', 25, 0, 4)
+
+		// Still consume what charge we have
+		current_charge = 0
+		if(ishuman(loc))
+			to_chat(loc, span_danger("Augment charge: [current_charge]/[max_charge] - DEPLETED!"))
+		return
+
+	// Normal operation - consume charge
+	current_charge -= cost
+	if(ishuman(loc))
+		to_chat(loc, span_notice("Augment charge: [current_charge]/[max_charge]"))
+
+		// Low charge warning
+		if(current_charge < max_charge * 0.2)
+			to_chat(loc, span_warning("Augment charge critical!"))
+
+//--------------------------------------
+// Skill Augment Remover Tool
+//--------------------------------------
+
+/obj/item/skill_augment_remover
+	name = "Skill Augment Remover"
+	desc = "A specialized tool that can remove skill augments from targets."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "gadget1"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_SMALL
+	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer")
+
+/obj/item/skill_augment_remover/examine(mob/user)
+	. = ..()
+	. += span_notice("Use on a human to remove skill augments.")
+	. += span_notice("Can remove both implanted and injectable skill augments.")
+
+/obj/item/skill_augment_remover/attack(mob/target, mob/user)
+	. = ..()
+	if(!can_use_remover(user))
+		to_chat(user, span_warning("You don't have the expertise to use this tool!"))
+		return
+
+	if(!ishuman(target))
+		to_chat(user, span_warning("You can only use this on humans!"))
+		return
+
+	var/mob/living/carbon/human/H = target
+
+	// Check for implanted skill augment
+	var/obj/item/organ/cyberimp/chest/skill_augment/SA = H.getorganslot(ORGAN_SLOT_HEART_AID)
+	if(SA && istype(SA, /obj/item/organ/cyberimp/chest/skill_augment))
+		to_chat(user, span_notice("You begin removing the implanted skill augment from [H]..."))
+
+		if(!do_after(user, 5 SECONDS, target = H))
+			to_chat(user, span_warning("You stop the removal process."))
+			return
+
+		// Remove all granted skills
+		for(var/datum/action/A in SA.granted_actions)
+			UnregisterSignal(A, COMSIG_ACTION_TRIGGER)
+			A.Remove(H)
+			qdel(A)
+		SA.granted_actions.Cut()
+
+		// Remove the organ and place it on the ground
+		SA.Remove(H)
+		SA.forceMove(get_turf(H))
+
+		to_chat(user, span_notice("You successfully remove the implanted skill augment from [H]!"))
+		to_chat(H, span_warning("You feel your augmented abilities fading away."))
+		playsound(get_turf(H), 'sound/items/deconstruct.ogg', 50, FALSE)
+		return
+
+	// Check for injectable skill augment
+	for(var/obj/item/skill_augment_injectable/inj in H.contents)
+		if(inj.used)
+			to_chat(user, span_notice("You begin removing the injectable skill augment from [H]..."))
+
+			if(!do_after(user, 3 SECONDS, target = H))
+				to_chat(user, span_warning("You stop the removal process."))
+				return
+
+			// Remove all skills granted by this injectable
+			for(var/skill_type in inj.attached_skills)
+				for(var/datum/action/A in H.actions)
+					if(A.type == skill_type)
+						UnregisterSignal(A, COMSIG_ACTION_TRIGGER)
+						A.Remove(H)
+						qdel(A)
+						break
+
+			// Remove the injectable and place it on the ground
+			inj.forceMove(get_turf(H))
+			inj.used = FALSE
+
+			to_chat(user, span_notice("You successfully remove the injectable skill augment from [H]!"))
+			to_chat(H, span_warning("You feel your augmented abilities fading away."))
+			playsound(get_turf(H), 'sound/items/syringeproj.ogg', 50, FALSE)
+			return
+
+	to_chat(user, span_warning("[H] doesn't have any skill augments to remove!"))
+
+/obj/item/skill_augment_remover/proc/can_use_remover(mob/user)
+	if(!user?.mind?.assigned_role)
+		return FALSE
+	return (user.mind.assigned_role in allowed_roles)

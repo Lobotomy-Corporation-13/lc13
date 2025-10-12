@@ -280,6 +280,10 @@
 		/obj/item/skill_augment_battery/tier2 = 100,
 		/obj/item/skill_augment_battery/tier3 = 100,
 		/obj/item/skill_augment_battery/tier4 = 100,
+
+		//Skill augment tools
+		/obj/item/skill_augment_tester = 100,
+		/obj/item/skill_augment_remover = 100,
 	)
 
 	premium = list(
