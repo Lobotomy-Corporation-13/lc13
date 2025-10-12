@@ -76,7 +76,7 @@ const TemplateSelection = (props, context) => {
   return (
     <Section title="Select Augment Template" fill scrollable>
       <Stack vertical>
-        {templates.map((template) => (
+        {templates.map(template => (
           <Stack.Item key={template.name}>
             <Collapsible
               title={`${template.name} (Rank ${template.rank})`}
@@ -102,9 +102,9 @@ const TemplateSelection = (props, context) => {
                   fluid
                   content="Select Template"
                   disabled={!template.can_afford}
-                  onClick={() =>
-                    act('select_template', { template: template.name })
-                  }
+                  onClick={() => act('select_template', {
+                    template: template.name,
+                  })}
                 />
               </Box>
             </Collapsible>
@@ -168,7 +168,7 @@ const SkillConfiguration = (props, context) => {
                       <Table.Cell textAlign="center" width="10%">Charge</Table.Cell>
                       <Table.Cell textAlign="center" width="15%">Action</Table.Cell>
                     </Table.Row>
-                    {available_skills.map((skill) => (
+                    {available_skills.map(skill => (
                       <Table.Row key={skill.type_path}>
                         <Table.Cell>
                           <Box
@@ -187,11 +187,9 @@ const SkillConfiguration = (props, context) => {
                             color="good"
                             fluid
                             disabled={!skill.can_add}
-                            onClick={() =>
-                              act('add_skill', {
-                                skill_type: skill.type_path,
-                              })
-                            }
+                            onClick={() => act('add_skill', {
+                              skill_type: skill.type_path,
+                            })}
                           />
                         </Table.Cell>
                       </Table.Row>
@@ -208,14 +206,15 @@ const SkillConfiguration = (props, context) => {
                   </Box>
                 ) : (
                   <Stack vertical>
-                    {selected_skills.map((skill) => (
+                    {selected_skills.map(skill => (
                       <Stack.Item key={skill.type_path}>
                         <Flex align="center" p={1}>
                           <Flex.Item grow>
                             <Box fontSize="0.9em">
                               <Box bold>{skill.name}</Box>
                               <Box color="gray">
-                                {skill.slot_cost} slots, {skill.charge_cost} charge
+                                {skill.slot_cost} slots,{' '}
+                                {skill.charge_cost} charge
                               </Box>
                             </Box>
                           </Flex.Item>
@@ -225,11 +224,9 @@ const SkillConfiguration = (props, context) => {
                               icon="times"
                               color="bad"
                               size={0.8}
-                              onClick={() =>
-                                act('remove_skill', {
-                                  skill_type: skill.type_path,
-                                })
-                              }
+                              onClick={() => act('remove_skill', {
+                                skill_type: skill.type_path,
+                              })}
                             />
                           </Flex.Item>
                         </Flex>
@@ -256,8 +253,8 @@ const FabricationTab = (props, context) => {
     busy,
   } = data;
 
-  const canFabricate =
-    current_rank > 0 && selected_skills.length > 0 && !busy;
+  const canFabricate
+    = current_rank > 0 && selected_skills.length > 0 && !busy;
 
   return (
     <Section title="Fabrication" fill>
@@ -289,7 +286,7 @@ const FabricationTab = (props, context) => {
                   <Table.Cell>Slot Cost</Table.Cell>
                   <Table.Cell>Charge Cost</Table.Cell>
                 </Table.Row>
-                {selected_skills.map((skill) => (
+                {selected_skills.map(skill => (
                   <Table.Row key={skill.type_path}>
                     <Table.Cell>{skill.name}</Table.Cell>
                     <Table.Cell>{skill.slot_cost}</Table.Cell>
@@ -338,7 +335,7 @@ const MaterialsDisplay = (props, context) => {
         <Box color="gray">No materials stored</Box>
       ) : (
         <LabeledList>
-          {stored_materials.map((material) => (
+          {stored_materials.map(material => (
             <LabeledList.Item key={material.name} label={material.name}>
               {material.amount}
             </LabeledList.Item>
@@ -381,7 +378,7 @@ const CurrentDesign = (props, context) => {
               <Box color="gray">No skills</Box>
             ) : (
               <Stack vertical>
-                {selected_skills.map((skill) => (
+                {selected_skills.map(skill => (
                   <Stack.Item key={skill.type_path}>
                     <Box fontSize="0.9em">
                       • {skill.name} ({skill.slot_cost}s/{skill.charge_cost}c)
