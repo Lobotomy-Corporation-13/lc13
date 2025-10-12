@@ -247,3 +247,16 @@
 		"As time goes on, this abnormality boosts your stats significantly.",
 		"Working on the abnormality will cause it to set once more, and cause all of it's boosts to subside.",
 		)
+
+// Tear in Reality
+
+/obj/item/paper/fluff/info/aleph/tir
+	abno_type = /mob/living/simple_animal/hostile/abnormality/reality_tear
+	abno_code = "O-06-207"
+	abno_info = list(
+		"When the work result was bad, the Qliphoth Counter decresed.",
+		"When Instinct work was performed, the Qliphoth Counter decresed.",
+		"When the abnormality breached containment, another world would align with it, and the path would open.",
+		"Over time, more worlds would be torn into, and able to align with this reality.",
+		"WARNING: This Abnormality has been found to be highly unstable, and is likely to change in some way.", //This abno will have a second PR for other things.
+		)
