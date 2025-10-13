@@ -28,7 +28,7 @@
 	name = "K corp scientist uniform"
 	desc = "A white labcoat with Kcorp's signature green. Appears to be specifically designed to not protect the wearer."
 	icon_state = "kcorp_sci"
-	equip_slowdown = 0
+	equip_delay_self = 0
 
 /obj/item/clothing/head/ego_hat/helmet/kcorp
 	name = "k-corp L1 helmet"

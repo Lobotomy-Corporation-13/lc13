@@ -113,7 +113,7 @@ It's not great though.
 	desc = "An armored jacket used by the disciplinary officer."
 	icon_state = "disc_officer"
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 20, BLACK_DAMAGE = 20, PALE_DAMAGE = 20)
-	equip_slowdown = 0
+	equip_delay_self = 0
 
 //This is tutorial armor
 /obj/item/clothing/suit/armor/ego_gear/rookie

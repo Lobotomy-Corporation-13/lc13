@@ -127,6 +127,7 @@
 	if(!istype(new_friend))
 		return
 
+	new_friend.client?.give_award(/datum/award/achievement/abno/pebble, new_friend)
 	new_friend.apply_status_effect(STATUS_EFFECT_FRIENDSHIP)
 	galaxy_friends |= new_friend
 	healing_per_second += heal_mod
@@ -143,6 +144,9 @@
 		new /obj/effect/temp_visual/pebblecrack(get_turf(friend))
 		playsound(get_turf(friend), "shatter", 50, TRUE)
 		to_chat(friend, span_userdanger("Your pebble violently shatters as Child of the Galaxy begins to weep!"))
+
+		if(friend.stat != DEAD)
+			friend.client?.give_award(/datum/award/achievement/abno/pebble_break, friend)
 
 	healing_per_second = 0 // We reset our current bonuses
 	damage_amount = 0

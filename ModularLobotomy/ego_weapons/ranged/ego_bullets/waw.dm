@@ -308,10 +308,29 @@
 
 /obj/projectile/ego_bullet/ego_banquet
 	name = "banquet"
-	icon_state = "pulse0"
+	icon_state = "banquet"
 	damage = 120
 	damage_type = BLACK_DAMAGE
 
+/obj/projectile/ego_bullet/ego_banquet/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	// When impacting a living target, play a sound and create some fake bloodsplatters for extra impact.
+	// Kinda tempting to make it spawn real blood so you can go pick it up for Bloodfeast?
+	if(isliving(target))
+		playsound(target, 'sound/weapons/fixer/generic/nail1.ogg', 75, TRUE)
+		for(var/i in 1 to 3)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+		// Bonus: if the projectile was shot by a human from the Banquet staff, any spawned bat minions will forcefully target whatever this projectile just hit.
+		if(ishuman(firer))
+			var/mob/living/carbon/human/owner = firer
+			var/obj/item/ego_weapon/ranged/banquet/staff = owner.get_active_held_item()
+			if(istype(staff))
+				for(var/mob/living/simple_animal/hostile/banquet_bat/goon in staff.bound_bats)
+					goon.GiveTarget(target)
+					// Tiny little overlay to make it clear the bats swapped targets.
+					var/mutable_appearance/warning = mutable_appearance('icons/effects/32x64.dmi', "nervous", -ABOVE_MOB_LAYER)
+					goon.add_overlay(warning)
+					addtimer(CALLBACK(goon, TYPE_PROC_REF(/atom, cut_overlay), warning), 1 SECONDS)
 
 /obj/projectile/ego_bullet/ego_blind_rage
 	name = "blind rage"

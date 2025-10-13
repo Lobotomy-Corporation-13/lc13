@@ -294,6 +294,10 @@
 	if(grab_victim)
 		release_damage = clamp(release_damage + damage, 0, release_threshold)
 		if(release_damage >= release_threshold)
+			// Award achievement for escaping Nobody Is' chokehold
+			if(ishuman(grab_victim))
+				var/mob/living/carbon/human/H = grab_victim
+				H.client?.give_award(/datum/award/achievement/lc13/nobody_escape, H)
 			ReleaseGrab()
 	if(!oberon_mode)
 		last_heal_time = world.time + 10 SECONDS // Heal delayed when taking damage; Doubled because it was a little too quick.
@@ -854,7 +858,7 @@
 			for(var/obj/item/slotitem in human_target.get_all_slots())
 				if(istype(slotitem, /obj/item/clothing/suit/armor/ego_gear))
 					var/obj/item/clothing/suit/armor/ego_gear/equippable_gear = new slotitem.type(get_turf(copycat))
-					equippable_gear.equip_slowdown = 0
+					equippable_gear.equip_delay_self = 0
 					equippable_gear.attribute_requirements = list()
 					copycat.equip_to_appropriate_slot(equippable_gear, TRUE)
 				else

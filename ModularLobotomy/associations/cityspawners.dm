@@ -92,9 +92,12 @@ GLOBAL_VAR_INIT(city_east_enemies, FALSE)
 				spawning = /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon
 
 		if("sweeper")
-			spawning = /mob/living/simple_animal/hostile/ordeal/indigo_noon
-			if(prob(30))
-				spawning = /mob/living/simple_animal/hostile/ordeal/indigo_dawn
+			spawning = pickweight(list(
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon = 54,
+				/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 30,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 8,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 8,
+			))
 
 		if("bots")
 			spawning = /mob/living/simple_animal/hostile/ordeal/green_bot
@@ -133,9 +136,12 @@ GLOBAL_VAR_INIT(city_east_enemies, FALSE)
 				spawning = /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon
 
 		if("sweeper")
-			spawning = /mob/living/simple_animal/hostile/ordeal/indigo_noon
-			if(prob(30))
-				spawning = /mob/living/simple_animal/hostile/ordeal/indigo_dawn
+			spawning = pickweight(list(
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon = 54,
+				/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 30,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 8,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 8,
+			))
 
 		if("bots")
 			spawning = /mob/living/simple_animal/hostile/ordeal/green_bot
@@ -174,9 +180,12 @@ GLOBAL_VAR_INIT(city_east_enemies, FALSE)
 				spawning = /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon
 
 		if("sweeper")
-			spawning = /mob/living/simple_animal/hostile/ordeal/indigo_noon
-			if(prob(30))
-				spawning = /mob/living/simple_animal/hostile/ordeal/indigo_dawn
+			spawning = pickweight(list(
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon = 54,
+				/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 30,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 8,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 8,
+			))
 
 		if("bots")
 			spawning = /mob/living/simple_animal/hostile/ordeal/green_bot

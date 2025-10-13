@@ -197,6 +197,7 @@
 	TalkEnd(user)
 
 /mob/living/simple_animal/hostile/abnormality/quiet_day/proc/TalkEnd(mob/living/carbon/human/user)
+	user.client?.give_award(/datum/award/achievement/abno/quiet_rambling, user)
 	ResetIcon()
 	var/given_status_effect = STATUS_EFFECT_DEMENTIA_RAMBLINGS
 	var/list/affected_list = list()

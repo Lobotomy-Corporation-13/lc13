@@ -33,6 +33,7 @@
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon = 1,
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 1,
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 1, // This should be impossible, right? Well, they spawn on CoL at the same time.
 		)
 	AddComponent(/datum/component/ai_leadership, units_to_add)
 

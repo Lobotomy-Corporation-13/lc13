@@ -129,6 +129,7 @@
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == liked || !liked)
 		happy = TRUE
+		user.client?.give_award(/datum/award/achievement/abno/shrimp_assistant, user)
 	else
 		happy = FALSE
 	return TRUE

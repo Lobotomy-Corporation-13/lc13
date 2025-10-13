@@ -8,7 +8,9 @@
 
 /datum/action/cooldown/autoloader/Trigger()
 	. = ..()
-	if (owner.stat == DEAD)
+	if(!.)
+		return FALSE
+	if(owner.stat == DEAD)
 		return FALSE
 
 	if(ishuman(owner))

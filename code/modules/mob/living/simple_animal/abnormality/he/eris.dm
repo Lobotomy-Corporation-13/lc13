@@ -161,6 +161,9 @@
 	if(!(status_flags & GODMODE))
 		return
 
+	// :(
+	current_petter.client?.give_award(/datum/award/achievement/abno/eris, current_petter)
+
 	emote("giggles")
 	current_petter.Stun(30 SECONDS)
 	SLEEP_CHECK_DEATH(20)

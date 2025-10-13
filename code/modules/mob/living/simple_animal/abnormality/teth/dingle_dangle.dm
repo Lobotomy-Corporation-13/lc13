@@ -58,6 +58,7 @@
 
 	//I mean it does this in wonderlabs
 	//But here's the twist: You get a better ego.
+	user.client?.give_award(/datum/award/achievement/abno/lutemis, user)
 	if(user && !canceled)
 		var/location = get_turf(user)
 		new /obj/item/clothing/suit/armor/ego_gear/he/lutemis(location)

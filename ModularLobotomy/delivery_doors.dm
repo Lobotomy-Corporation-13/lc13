@@ -61,6 +61,12 @@
 	to_chat(user, span_notice("The parcel is taken and payment is quickly tossed into your hand before the door locks again."))
 	qdel(delivery)
 	playsound(get_turf(src), 'sound/effects/bin_close.ogg', 35, 3, 3)
+	
+	// Track parcel deliveries for achievement
+	if(istype(delivery, /obj/item/delivery_parcel) && user.mind)
+		user.mind.parcels_delivered++
+		if(user.mind.parcels_delivered >= 10 && user.client)
+			user.client.give_award(/datum/award/achievement/lc13/city/parcel_delivery, user)
 
 // Delivery Object
 /obj/item/delivery_parcel

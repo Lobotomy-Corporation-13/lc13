@@ -87,6 +87,19 @@ SUBSYSTEM_DEF(vote)
 				if(choices["Continue Playing"] >= greatest_votes)
 					greatest_votes = choices["Continue Playing"]
 
+			// Non voters will automatically count as votes for default gamespeed.
+			else if(mode == "gamespeed")
+				var/datum/gamespeed_setting/default
+				for(var/datum/gamespeed_setting/g_speed in SSlobotomy_corp.available_gamespeeds)
+					if(g_speed.player_facing_name == "Default Speed (1x)")
+						default = g_speed
+						break
+				if(default)
+					choices[default.player_facing_name] += length(non_voters)
+					if(choices[default.player_facing_name] >= greatest_votes)
+						greatest_votes = choices[default.player_facing_name]
+				
+
 	. = list()
 	if(greatest_votes)
 		for(var/option in choices)
@@ -152,6 +165,18 @@ SUBSYSTEM_DEF(vote)
 					var/obj/machinery/computer/communications/C = locate() in GLOB.machines
 					if(C)
 						C.post_status("shuttle")
+
+			if("gamespeed")
+				// Pull every gamespeed datum from lobcorp subsystem.
+				// This does pull the disabled ones too, but those can't possibly have won the vote because they aren't added as choices to it
+				for(var/datum/gamespeed_setting/setting in SSlobotomy_corp.available_gamespeeds)
+					// If the vote result matches the gamespeed setting we're currently iterating on's name, and that name isn't the same as the currently active gamespeed.
+					if((. == setting.player_facing_name) && (SSlobotomy_corp.gamespeed.player_facing_name != .))
+						// Adjust the gamespeed to the new one and announce it.
+						SSlobotomy_corp.AdjustGamespeed(setting)
+						priority_announce("Personnel must be advised: As a result of changes in internal Enkephalin filtering procedures, Ordeal events for this shift will occur within fewer meltdowns than is the norm. \
+						To compensate for this, Extraction has agreed to speed up Abnormality delivery accordingly.",\
+						"Ordeal Frequency Notice", 'sound/machines/dun_don_alert.ogg')
 	if(restart)
 		var/active_admins = FALSE
 		for(var/client/C in GLOB.admins + GLOB.deadmins)
@@ -245,6 +270,14 @@ SUBSYSTEM_DEF(vote)
 				if(SSshuttle.emergency.mode in ignore_vote)
 					return FALSE
 				choices.Add("Initiate Crew Transfer", "Continue Playing")
+
+			if("gamespeed")
+				question = "Change Game Speed?"
+				// Pull the available gamespeeds from the lobcorp subsystem, but only add the enabled ones to the vote.
+				for(var/datum/gamespeed_setting/speed_setting in SSlobotomy_corp.available_gamespeeds)
+					if(speed_setting.available_setting)
+						choices.Add(speed_setting.player_facing_name)
+
 			if("custom")
 				question = stripped_input(usr,"What is the vote for?")
 				if(!question)

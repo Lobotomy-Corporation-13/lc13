@@ -108,7 +108,7 @@
 /mob/living/simple_animal/hostile/abnormality/luna/Worktick(mob/living/carbon/human/user, work_type)
 	if(performance)
 		user.deal_damage(work_damage_amount*0.60, BLACK_DAMAGE)	//take work damage
-
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/luna/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == "Performance")
@@ -136,6 +136,7 @@
 	if(breached && killspawn)
 		BreachEnd()
 
+	user.client?.give_award(/datum/award/achievement/abno/moonlight_sonata, user)
 	killspawn = FALSE
 	performance = FALSE
 	to_chat(user, span_nicegreen("The performance is completed."))

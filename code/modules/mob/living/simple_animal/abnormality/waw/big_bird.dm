@@ -129,6 +129,9 @@
 			return FALSE
 	return ..()
 
+/mob/living/simple_animal/hostile/abnormality/big_bird/MovedTryAttack() //To prevent BB from practically having 2 range
+	return FALSE
+
 /mob/living/simple_animal/hostile/abnormality/big_bird/AttackingTarget(atom/attacked_target)
 	if(ishuman(attacked_target))
 		if(bite_cooldown > world.time)
@@ -141,6 +144,7 @@
 		QDEL_NULL(head)
 		H.regenerate_icons()
 		visible_message(span_danger("\The [src] bites [H]'s head off!"))
+		H.client?.give_award(/datum/award/achievement/abno/headless, H)
 		new /obj/effect/gibspawner/generic/silent(get_turf(H))
 		playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
 		flick("big_bird_chomp", src)

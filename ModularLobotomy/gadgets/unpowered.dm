@@ -166,6 +166,47 @@
 	printed_paper.update_icon()
 	user.put_in_inactive_hand(printed_paper)
 
+// Record Workrate Scanner
+/obj/item/workratescanner
+	name = "portable workrate scanner"
+	desc = "A portable scanner for returning the workrate chance per level\
+	 for the abnormality it is used on."
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	icon_state = "gadget3"
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+
+/obj/item/workratescanner/afterattack(atom/target, mob/user, proximity_flag)
+	. = ..()
+	// Adjacent thing.
+	if(proximity_flag == 1)
+		var/mob/living/carbon/human/H = user
+		if(ishuman(H))
+			if(isabnormalitymob(target))
+				CalculateChance(target, user)
+
+/obj/item/workratescanner/proc/CalculateChance(mob/living/simple_animal/hostile/abnormality/A,mob/living/carbon/human/user)
+	if(QDELETED(A))
+		return
+	var/list/abnormality_workrates = GLOB.cached_abno_work_rates[A.type]
+	if(!abnormality_workrates)
+		to_chat(user, span_notice("Entity Not Found in Containment Manifest."))
+		return
+	var/to_user_txt = "Abnormality:[A.name]"
+	to_user_txt += "<br>Instinct:---[returnWorkRates(abnormality_workrates[ABNORMALITY_WORK_INSTINCT])]"
+	to_user_txt += "<br>Insight:----[returnWorkRates(abnormality_workrates[ABNORMALITY_WORK_INSIGHT])]"
+	to_user_txt += "<br>Attachment:-[returnWorkRates(abnormality_workrates[ABNORMALITY_WORK_ATTACHMENT])]"
+	to_user_txt += "<br>Repression:-[returnWorkRates(abnormality_workrates[ABNORMALITY_WORK_REPRESSION])]"
+	to_chat(user,span_notice("[to_user_txt]"))
+
+/obj/item/workratescanner/proc/returnWorkRates(workrate)
+	. = ""
+	if(!islist(workrate))
+		return "[SimpleSuccessRateToText(workrate)]"
+	var/list/workrate_list = workrate
+	for(var/i in workrate_list)
+		. += "[SimpleSuccessRateToText(i)]|"
+
 	//Dosage Estimator
 /obj/item/dosage_est
 	name = "Dosage Estimator"
@@ -775,6 +816,8 @@
 
         // TETH
 	/mob/living/simple_animal/hostile/abnormality/scorched_girl = /obj/item/toy/plush/scorched,
+	/mob/living/simple_animal/hostile/abnormality/punishing_bird = /obj/item/toy/plush/pbird,
+	/mob/living/simple_animal/hostile/abnormality/voiddream = /obj/item/toy/plush/voiddream,
 
 		// HE
 	/mob/living/simple_animal/hostile/abnormality/pinocchio = /obj/item/toy/plush/pinocchio,
@@ -786,11 +829,13 @@
 	/mob/living/simple_animal/hostile/abnormality/despair_knight = /obj/item/toy/plush/kod,
 	/mob/living/simple_animal/hostile/abnormality/big_wolf = /obj/item/toy/plush/big_bad_wolf,
 	/mob/living/simple_animal/hostile/abnormality/hatred_queen = /obj/item/toy/plush/qoh,
+	/mob/living/simple_animal/hostile/abnormality/judgement_bird = /obj/item/toy/plush/jbird,
 
 		// ALEPH
 	/mob/living/simple_animal/hostile/abnormality/melting_love = /obj/item/toy/plush/melt,
 	/mob/living/simple_animal/hostile/abnormality/mountain = /obj/item/toy/plush/mosb,
 	/mob/living/simple_animal/hostile/abnormality/nihil = /obj/item/toy/plush/nihil,
+	/mob/living/simple_animal/hostile/megafauna/apocalypse_bird = /obj/item/toy/plush/apocbird,
 
     )
 

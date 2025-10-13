@@ -549,20 +549,27 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	return TRUE
 
 /**
- *the mob M is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
- *if this is being done by a mob other than M, it will include the mob equipper, who is trying to equip the item to mob M. equipper will be null otherwise.
+ *the mob receiver is attempting to equip this item into the slot passed through as 'slot'. Return 1 if it can do this and 0 if it can't.
+ *if this is being done by a mob other than receiver, it will include the mob handler, who is trying to equip the item to mob receiver. handler will be null otherwise.
  *If you are making custom procs but would like to retain partial or complete functionality of this one, include a 'return ..()' to where you want this to happen.
  * Arguments:
  * * disable_warning to TRUE if you wish it to not give you text outputs.
  * * slot is the slot we are trying to equip to
- * * equipper is the mob trying to equip the item
+ * * handler is the mob trying to equip the item
  * * bypass_equip_delay_self for whether we want to bypass the equip delay
  */
-/obj/item/proc/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if(!M)
+/obj/item/proc/mob_can_equip(mob/living/receiver, mob/living/handler, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if(!receiver)
 		return FALSE
-
-	return M.can_equip(src, slot, disable_warning, bypass_equip_delay_self)
+	. = receiver.can_equip(src, slot, disable_warning)
+	if(!. || (handler && receiver != handler))
+		return
+	if(!bypass_equip_delay_self && equip_delay_self > 0 && (flags_1 & INITIALIZED_1))
+		// We're not skipping, we have a timer at all, and we're Initialized, so we're not trying to sleep in something we shouldn't.
+		receiver.visible_message(span_notice("[receiver] start putting on [src]..."), span_notice("You start putting on [src]..."))
+		if(!do_after(receiver, equip_delay_self))
+			return FALSE
+	return
 
 /obj/item/verb/verb_pickup()
 	set src in oview(1)
@@ -977,7 +984,10 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	return !HAS_TRAIT(src, TRAIT_NODROP)
 
 /obj/item/proc/doStrip(mob/stripper, mob/owner)
-	return owner.dropItemToGround(src)
+	. = owner.dropItemToGround(src)
+	if(.)
+		stripper.put_in_hands(src)
+	return
 
 ///Does the current embedding var meet the criteria for being harmless? Namely, does it have a pain multiplier and jostle pain mult of 0? If so, return true.
 /obj/item/proc/isEmbedHarmless()

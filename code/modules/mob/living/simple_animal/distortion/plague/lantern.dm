@@ -19,13 +19,19 @@
 	attack_verb_continuous = "bashes"
 	attack_verb_simple = "bash"
 
+	var/can_act = TRUE
+
 //Variables important for distortions
 	//The EGO worn by the egoist
 	ego_list = list(
 		/obj/item/ego_weapon/lamp,
 		/obj/item/clothing/suit/armor/ego_gear/waw/lamp
 		)
+	//The mob's gender, which will be inherited by the egoist. Can be left unspecified for a random pick.
+	gender = MALE
+	//The Egoist's outfit, which should usually be civilian unless you want them to be a fixer or something.
 	egoist_outfit = /datum/outfit/job/civilian
+	//The Egoist's starting stats, all across the board. MUST BE AT LEAST THE MINIMUM TO EQUIP THE EGO_GEAR IF ANY
 	egoist_attributes = 80
 	loot = list(/obj/item/documents/ncorporation, /obj/item/documents/ncorporation) //Placeholder, we need more loot items
 	/// Prolonged exposure to a monolith will convert the distortion into an abnormality. Need to confirm one with the lantern office people
@@ -45,6 +51,15 @@
 		B.bloodiness = 100
 	return
 
+//Unmanifesting is not linked to any proc by default, if you want it to happen during gameplay, it must be called manually.
+/mob/living/simple_animal/hostile/distortion/lantern/attacked_by(obj/item/I, mob/living/user)
+	. = ..()
+	if(istype(I, /obj/item/flashlight))
+		qdel(I)
+		say("I lost the way in favour of my own light...") //i think they would like that. asking them rn
+		can_act = FALSE
+		addtimer(CALLBACK(src, PROC_REF(Unmanifest)),3 SECONDS)
+
 /mob/living/simple_animal/hostile/distortion/lantern/AttackingTarget()
 	..()
 	if(prob(70))
@@ -60,5 +75,14 @@
 		C.add_overlay(new_overlay)
 		addtimer(CALLBACK (C, TYPE_PROC_REF(/atom, cut_overlay), new_overlay), 4 SECONDS)
 
+/mob/living/simple_animal/hostile/distortion/lantern/Move()
+	if(!can_act)
+		return FALSE
+	..()
+
+/mob/living/simple_animal/hostile/distortion/lantern/AttackingTarget()
+	if(!can_act)
+		return FALSE
+	..()
 
 

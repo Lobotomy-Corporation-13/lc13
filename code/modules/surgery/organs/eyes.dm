@@ -177,6 +177,14 @@
 	flash_protect = FLASH_PROTECTION_SENSITIVE
 	see_in_dark = 8
 
+/obj/item/organ/eyes/robotic/nightvision
+	name = "nocturnal eyes"
+	desc = "These cybernetic eye implants will give you night vision without the risks of eye damage, often used by cybernetic enthusiasts."
+	eye_color = "F00"
+	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
+	see_in_dark = 8
+	custom_premium_price = 1000
+
 /obj/item/organ/eyes/robotic/infofixer
 	name = "high-information eyes"
 	desc = "Many fixers who work in dangerous locations swear by these cybernetic eyes' ability to detect threats ahead of time."

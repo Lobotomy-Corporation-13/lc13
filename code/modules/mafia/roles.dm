@@ -44,7 +44,7 @@
 	game_status = MAFIA_DEAD
 	body.death()
 	if(lynch)
-		reveal_role(game, verbose = TRUE)
+		INVOKE_ASYNC(src, PROC_REF(reveal_role), game, TRUE)
 	if(!(player_key in game.spectators)) //people who played will want to see the end of the game more often than not
 		game.spectators += player_key
 	return TRUE
@@ -211,7 +211,7 @@
 	if(current_target)
 		add_note("N[game.turn] - [current_target.body.real_name] - Revealed true identity")
 		to_chat(body,"<span class='warning'>You have revealed the true nature of the [current_target]!</span>")
-		current_target.reveal_role(game, verbose = TRUE)
+		INVOKE_ASYNC(current_target, TYPE_PROC_REF(/datum/mafia_role, reveal_role), game, TRUE)
 		current_target = null
 		can_use = FALSE
 
@@ -713,7 +713,7 @@
 	if(lynch)
 		game.send_message("<span class='big comradio'>!! OBSESSED VICTORY !!</span>")
 		game.award_role(winner_award, src)
-		reveal_role(game, FALSE)
+		INVOKE_ASYNC(src, PROC_REF(reveal_role), game, FALSE)
 	else
 		to_chat(body, "<span class='userdanger'>You have failed your objective to lynch [obsession.body]!</span>")
 

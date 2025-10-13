@@ -176,12 +176,12 @@
 		new /obj/effect/temp_visual/blood_shield(src.loc)
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/death(gibbed)
-	. = ..()
 	// Award achievement to all nearby players
 	for(var/mob/living/L in view(7, src))
 		if(L.stat || !L.client)
 			continue
 		L.client.give_award(/datum/award/achievement/lc13/city/mutant_clown_boss, L)
+	. = ..()
 
 /mob/living/simple_animal/hostile/mutant_clown/boss/Destroy()
 	. = ..()

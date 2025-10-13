@@ -92,6 +92,10 @@
 	icon_living = "sweeper_limbus"
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands.\nThis one seems to move with far more agility than its peers."
 	move_to_delay = 2.7
+	/// The default movement speed this Sweeper should have. I have to store it here because initial() won't work for my purposes,
+	/// since it gets the compiletime value.
+	// I am aware this looks bad, forgive me.
+	var/movespeed = 2.7
 	rapid_melee = 2
 	melee_damage_lower = 11
 	melee_damage_upper = 13
@@ -120,10 +124,27 @@
 	var/dash_speed = 0.4
 	/// The windup duration for the dash.
 	var/dash_windup = 0.7 SECONDS
+	/// Duration of Evasive Mode after dashing.
+	var/dash_evasivemode_duration = 3 SECONDS
+	/// The buffed movement speed this Sweeper has during Evasive Mode, if it has no client.
+	var/dash_evasivemode_noclient_speed = 2.2
+	/// The buffed movement speed this Sweeper has during Evasive Mode if it has a client.
+	var/dash_evasivemode_client_speed = 2.4
 	/// We need this to not hit multiple people due to the implementation I used for the dash. Stores every mob hit by the dash, cleared on each dash.
 	var/list/dash_hitlist = list()
 	/// This one is so we can hit all the turfs with the dash at once, to avoid people dodging it by moving inside of it.
 	var/list/dash_hitlist_turfs = list()
+
+	// CoL Adjustments: Change these to nerf/buff this variant on City maps, on Initialize.
+	// At the moment I've left them all at 0, because I do not think I need to nerf them on CoL.
+	/// ADDS TO move_to_delay on CoL. If this is positive, we make them slower, if it is negative, we make them faster.
+	var/COL_movespeed_adjustment = 0
+	/// ADDS TO dash_cooldown_time on CoL. If this is positive, dash has a longer cooldown, if it is negative, it is shortened.
+	var/COL_dash_cooldown_adjustment = 0
+	/// ADDS TO dash_evasivemode_duration on CoL. If this is positive, Evasive Mode lasts longer, if it is negative, it is shortened.
+	var/COL_dash_evasivemode_duration_adjustment = 0
+	/// ADDS TO dash_evasivemode_client_speed and dash_evasivemode_noclient_speed on CoL. If this is positive, it is less of a speed boost, negative is viceversa.
+	var/COL_dash_evasivemode_speed_adjustment = 0
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/Initialize()
 	. = ..()
@@ -132,6 +153,15 @@
 	icon_living = "sweeper_limbus"
 	icon_state = icon_living
 	attack_sound = 'sound/effects/ordeals/indigo/stab_2.ogg'
+
+	/// COL Rebalancing
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		move_to_delay += COL_movespeed_adjustment
+		movespeed = move_to_delay
+		dash_cooldown_time += COL_dash_cooldown_adjustment
+		dash_evasivemode_duration += COL_dash_evasivemode_duration_adjustment
+		dash_evasivemode_client_speed += COL_dash_evasivemode_speed_adjustment
+		dash_evasivemode_noclient_speed += COL_dash_evasivemode_speed_adjustment
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/Destroy()
 	/// To avoid a hard delete.
@@ -290,22 +320,22 @@
 
 /// Sweeper will sometimes enter Evasive Mode after a dash. Just a big mobility steroid and makes unpossessed sweepers move erratically - kind of like GWSS.
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/EvasiveMode()
-	addtimer(CALLBACK(src, PROC_REF(DisableEvasiveMode)), 3 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(DisableEvasiveMode)), dash_evasivemode_duration)
 	if(!client)
 		dodging = TRUE
 		minimum_distance = 1
 		retreat_distance = 2
 		sidestep_per_cycle = 2
-		move_to_delay = 2.2
+		move_to_delay = dash_evasivemode_noclient_speed
 	/// Possessed sweepers get a smaller movement speed buff.
 	else
-		move_to_delay = 2.4
+		move_to_delay = dash_evasivemode_client_speed
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/DisableEvasiveMode()
 	dodging = initial(dodging)
 	minimum_distance = initial(minimum_distance)
 	retreat_distance = initial(retreat_distance)
-	move_to_delay = initial(move_to_delay)
+	move_to_delay = movespeed // We do not use initial() here because it gets compiletime value, and we are going to apply nerfs on City modes on Initialize.
 	sidestep_per_cycle = initial(sidestep_per_cycle)
 
 /// I just want to make the telegraphing match properly, so we need a different duration for these than the normal 10 deciseconds
@@ -342,6 +372,19 @@
 	var/extract_fuel_ongoing_timer
 	/// If we've already used 333... 1973 before, we don't want to use it ever again
 	var/used_last_stand = FALSE
+	/// Amount of Persistence stacks gained when using 333... 1973.
+	var/last_stand_stack_gain = 3
+
+	// CoL balance adjustments. These will be applied on Initialize to rebalance this variant on City modes.
+	// At the moment there are no changes, however there may be the need to nerf or buff them on City in the future.
+	/// ADDS TO health and maxHealth. Positive values buff HP, negative values nerf it.
+	var/COL_health_adjustment = 0
+	/// ADDS TO Extract Fuel's cooldown time. Positive values make it take longer to recharge, negative ones shorten the recharge.
+	var/COL_extractfuel_cooldown_adjustment = 0 SECONDS
+	/// ADDS TO Extract Fuel's extra damage. Positive values make it hit harder, negative ones nerf it.
+	var/COL_extractfuel_damage_adjustment = 0
+	/// ADDS TO Last Stand's stack gain. Positive values makes it give more stacks, negative ones makes it give less.
+	var/COL_laststand_stacks_adjustment = 0
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/Initialize()
 	. = ..()
@@ -350,6 +393,14 @@
 	icon_living = "sweeper_limbus"
 	icon_state = icon_living
 	attack_sound = 'sound/effects/ordeals/indigo/stab_1.ogg'
+
+	/// COL Rebalancing
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		maxHealth += COL_health_adjustment
+		health += COL_health_adjustment
+		extract_fuel_cooldown_time += COL_extractfuel_cooldown_adjustment
+		extract_fuel_extra_damage += COL_extractfuel_damage_adjustment
+		last_stand_stack_gain += COL_laststand_stacks_adjustment
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/attacked_by(obj/item/I, mob/living/user)
 	. = ..()
@@ -374,7 +425,7 @@
 		return FALSE
 	used_last_stand = TRUE
 	say("+333... 1973.+")
-	GainPersistence(3)
+	GainPersistence(last_stand_stack_gain)
 
 /// The following few code chunks are dedicated to the Extract Fuel mechanic specific to this sweeper type. Basically, it's a lifesteal hit they can use every once in a bit.
 /// When the sweeper takes a hit, if it's off cooldown, it'll buff itself for its next hit and warn the player, giving them a brief grace period to disengage or prepare.

@@ -1454,6 +1454,14 @@
 	justice_bonus = 10
 	slot = EYE
 
+/datum/ego_gifts/faith
+	name = "Star-bound Faith"
+	icon_state = "bunny"
+	temperance_bonus = 15
+	prudence_bonus = -10
+	repression_mod = 4
+	slot = HAND_2
+
 /datum/ego_gifts/christmas/buff
 	name = "Ultimate Christmas"
 	fortitude_bonus = 25

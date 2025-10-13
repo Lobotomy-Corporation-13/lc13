@@ -78,7 +78,7 @@
 	icon_deny = null
 	products = list(
 		/obj/item/book/granter/crafting_recipe/carnival/weaving_armor = 10,
-		/obj/item/clothing/mask/carnival_mask = 25,
+		//obj/item/clothing/mask/carnival_mask = 25, //If you wear the mask its stuck to your face, best not let players run around with this
 		/obj/item/silkknife = 10,
 		/obj/item/storage/bag/silk = 10,
 	)
@@ -229,7 +229,7 @@
 
 		//Regular shit
 		/obj/item/bodypart/head/robot = 100,
-		//obj/item/bodypart/chest/robot = 100,	//currently broken
+		/obj/item/bodypart/chest/robot = 100,	//testing shows that robot limbs do not make you damage immune, they just redistribute your damage to other limbs, so I'll reenable them
 		/obj/item/bodypart/l_arm/robot = 100,
 		/obj/item/bodypart/r_arm/robot = 100,
 		/obj/item/bodypart/l_leg/robot = 100,
@@ -240,6 +240,7 @@
 		/obj/item/organ/liver/cybernetic/tier2 = 100,
 		/obj/item/organ/eyes/robotic/glow = 100,
 		/obj/item/organ/ears/cybernetic = 100,
+		/obj/item/organ/tongue/robot = 100,
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 	)
@@ -256,7 +257,13 @@
 		/obj/item/organ/cyberimp/arm/briefcase = 100,
 		/obj/item/organ/cyberimp/arm/surgery = 100,
 		/obj/item/organ/cyberimp/arm/overdrive = 100,
+		/obj/item/organ/stomach/cybernetic/tier3 = 100,
+		/obj/item/organ/heart/cybernetic/tier3 = 100,
+		/obj/item/organ/lungs/cybernetic/tier3 = 100,
+		/obj/item/organ/liver/cybernetic/tier3 = 100,
+		/obj/item/organ/eyes/robotic/nightvision = 100,
 		/obj/item/organ/eyes/robotic/infofixer = 100,
+		/obj/item/organ/ears/cybernetic/upgraded/bangproof = 100,
 		/obj/item/extra_arm = 100,
 		/obj/item/extra_arm/double = 100,
 	)

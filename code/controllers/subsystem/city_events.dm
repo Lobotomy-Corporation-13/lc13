@@ -82,7 +82,10 @@ SUBSYSTEM_DEF(cityevents)
 	switch (chosen_event)
 		//Ordeal events
 		if("sweepers")
-			spawnatlandmark(/mob/living/simple_animal/hostile/ordeal/indigo_noon, 20)
+			spawnatlandmark(list(
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon = 75,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 25,
+				), 20)
 		if("scouts")
 			spawnatlandmark(/mob/living/simple_animal/hostile/ordeal/indigo_dawn, 40)
 		if("bots")
@@ -100,11 +103,11 @@ SUBSYSTEM_DEF(cityevents)
 		if("drones")
 			spawnatlandmark(/mob/living/simple_animal/hostile/kcorp/drone, -10)//extremely low chance
 		if("lovetowneasy")
-			spawnatlandmark(pick(/mob/living/simple_animal/hostile/lovetown/slasher,
-			/mob/living/simple_animal/hostile/lovetown/stabber), 25)
+			spawnatlandmark(list(/mob/living/simple_animal/hostile/lovetown/slasher = 1,
+			/mob/living/simple_animal/hostile/lovetown/stabber = 1), 25)
 		if("lovetownhard")
-			spawnatlandmark(pick(/mob/living/simple_animal/hostile/lovetown/shambler,
-			/mob/living/simple_animal/hostile/lovetown/slumberer), 5)
+			spawnatlandmark(list(/mob/living/simple_animal/hostile/lovetown/shambler = 1,
+			/mob/living/simple_animal/hostile/lovetown/slumberer = 1), 5)
 
 		//Good events
 		if("chickens")
@@ -134,7 +137,13 @@ SUBSYSTEM_DEF(cityevents)
 		JobAddition()
 
 //Spawning Mobs, can spawn up to 3
-/datum/controller/subsystem/cityevents/proc/spawnatlandmark(mob/living/L, chance)
+/datum/controller/subsystem/cityevents/proc/spawnatlandmark(thing_to_spawn, chance)
+	// We will be picking the types to spawn with pickweight(available_mobs). The thing_to_spawn we received will either be a typepath to a single mob,
+	// or a weighted list with the mobs. If we received a list, we'll just use that list, if we received only one type, we will make a list with that type.
+	var/list/available_mobs = list(thing_to_spawn)
+	if(islist(thing_to_spawn))
+		available_mobs = thing_to_spawn
+
 	chance += wavetime*2
 	if(chance > 90)
 		chance = 90
@@ -144,22 +153,24 @@ SUBSYSTEM_DEF(cityevents)
 		new /obj/effect/bloodpool(get_turf(J))
 		sleep(10)
 		//This is less intensive than a loop
-
-		var/mob/living/mob1 = new L (get_turf(J))
+		var/type1 = pickweight(available_mobs)
+		var/mob/living/mob1 = new type1(get_turf(J))
 		if(ishostile(mob1))
 			var/mob/living/simple_animal/hostile/hostilemob1 = mob1
 			hostilemob1.guaranteed_butcher_results[/obj/item/stack/spacecash/c100] = 2
 			active_raiders += hostilemob1
 
 		if(prob(75))
-			var/mob/living/mob2 = new L (get_turf(J))
+			var/type2 = pickweight(available_mobs)
+			var/mob/living/mob2 = new type2(get_turf(J))
 			if(ishostile(mob2))
 				var/mob/living/simple_animal/hostile/hostilemob2 = mob2
 				hostilemob2.guaranteed_butcher_results[/obj/item/stack/spacecash/c100] = 2
 				active_raiders += hostilemob2
 
 		if(prob(50))
-			var/mob/living/mob3 = new L (get_turf(J))
+			var/type3 = pickweight(available_mobs)
+			var/mob/living/mob3 = new type3(get_turf(J))
 			if(ishostile(mob3))
 				var/mob/living/simple_animal/hostile/hostilemob3 = mob3
 				hostilemob3.guaranteed_butcher_results[/obj/item/stack/spacecash/c100] = 2

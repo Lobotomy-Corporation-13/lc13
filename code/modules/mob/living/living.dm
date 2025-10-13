@@ -1011,6 +1011,8 @@
 			final_where = where
 
 		if(!what.mob_can_equip(who, src, final_where, TRUE, TRUE))
+			if(istype(what, /obj/item/clothing/suit/armor/ego_gear))
+				return // Text already handled by the armor
 			to_chat(src, "<span class='warning'>\The [what.name] doesn't fit in that place!</span>")
 			return
 		if(istype(what,/obj/item/clothing))
@@ -1025,11 +1027,7 @@
 		who.log_message("[key_name(who)] is having [what] put on them by [key_name(src)]", LOG_ATTACK, color="red")
 		log_message("[key_name(who)] is having [what] put on them by [key_name(src)]", LOG_ATTACK, color="red", log_globally=FALSE)
 
-		var/equip_delay = what.equip_delay_other
-		if(istype(what,/obj/item/clothing/suit/armor/ego_gear))
-			var/obj/item/clothing/suit/armor/ego_gear/EGO = what
-			equip_delay = max(EGO.equip_delay_other, EGO.equip_slowdown) //Preventing 0 delay on some ego suits
-		if(do_mob(src, who, equip_delay))
+		if(do_mob(src, who, what.equip_delay_other))
 			if(what && Adjacent(who) && what.mob_can_equip(who, src, final_where, TRUE, TRUE))
 				if(temporarilyRemoveItemFromInventory(what))
 					if(where_list)

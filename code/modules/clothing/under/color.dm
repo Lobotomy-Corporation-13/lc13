@@ -14,26 +14,34 @@
 
 /obj/item/clothing/under/color/random/Initialize()
 	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/item/clothing/under/color/random/LateInitialize()
+	. = ..()
 	var/obj/item/clothing/under/color/C = pick(subtypesof(/obj/item/clothing/under/color) - typesof(/obj/item/clothing/under/color/jumpskirt) - /obj/item/clothing/under/color/random - /obj/item/clothing/under/color/grey/ancient - /obj/item/clothing/under/color/black/ghost)
 	if(ishuman(loc))
 		var/mob/living/carbon/human/H = loc
 		H.equip_to_slot_or_del(new C(H), ITEM_SLOT_ICLOTHING, initial=TRUE) //or else you end up with naked assistants running around everywhere...
 	else
 		new C(loc)
-	return INITIALIZE_HINT_QDEL
+	qdel(src)
 
 /obj/item/clothing/under/color/jumpskirt/random
 	icon_state = "random_jumpsuit"		//Skirt variant needed
 
 /obj/item/clothing/under/color/jumpskirt/random/Initialize()
 	..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/item/clothing/under/color/jumpskirt/random/LateInitialize()
+	. = ..()
 	var/obj/item/clothing/under/color/jumpskirt/C = pick(subtypesof(/obj/item/clothing/under/color/jumpskirt) - /obj/item/clothing/under/color/jumpskirt/random)
 	if(ishuman(loc))
 		var/mob/living/carbon/human/H = loc
-		H.equip_to_slot_or_del(new C(H), ITEM_SLOT_ICLOTHING, initial=TRUE)
+		H.equip_to_slot_or_del(new C(H), ITEM_SLOT_ICLOTHING, initial=TRUE) //or else you end up with naked assistants running around everywhere...
 	else
 		new C(loc)
-	return INITIALIZE_HINT_QDEL
+	qdel(src)
 
 /obj/item/clothing/under/color/black
 	name = "black jumpsuit"

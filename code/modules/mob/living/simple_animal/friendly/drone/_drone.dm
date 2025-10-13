@@ -131,19 +131,23 @@
 	var/datum/job/captain/C = new /datum/job/captain
 	access_card.access = C.get_access()
 
-	if(default_storage)
-		var/obj/item/I = new default_storage(src)
-		equip_to_slot_or_del(I, ITEM_SLOT_DEX_STORAGE)
-	if(default_hatmask)
-		var/obj/item/I = new default_hatmask(src)
-		equip_to_slot_or_del(I, ITEM_SLOT_HEAD)
-
 	ADD_TRAIT(access_card, TRAIT_NODROP, ABSTRACT_ITEM_TRAIT)
 
 	alert_drones(DRONE_NET_CONNECT)
 
 	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
 		diag_hud.add_to_hud(src)
+	return INITIALIZE_HINT_LATELOAD
+
+/mob/living/simple_animal/drone/LateInitialize()
+	. = ..()
+	if(default_storage)
+		var/obj/item/I = new default_storage(src)
+		equip_to_slot_or_del(I, ITEM_SLOT_DEX_STORAGE)
+	if(default_hatmask)
+		var/obj/item/I = new default_hatmask(src)
+		equip_to_slot_or_del(I, ITEM_SLOT_HEAD)
+	return
 
 /mob/living/simple_animal/drone/med_hud_set_health()
 	var/image/holder = hud_list[DIAG_HUD]

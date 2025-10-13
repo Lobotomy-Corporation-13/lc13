@@ -366,8 +366,12 @@
 	if(health < (maxHealth / 2)) //50% health or lower
 		already_fled = TRUE
 		animate(src, alpha = 0, time = 0.5 SECONDS)
-		playsound(src, 'sound/abnormalities/freischutz/portal.ogg', 60, 0, 1)
+		playsound(src, 'sound/abnormalities/freischutz/portal.ogg', 75, 0, 5)
+		var/obj/effect/temp_visual/guardian/phase/escape_vfx = new /obj/effect/temp_visual/guardian/phase(get_turf(src))
+		escape_vfx.color = COLOR_ASSEMBLY_BLUE
+		escape_vfx.transform *= 1.5
 		SLEEP_CHECK_DEATH(0.5 SECONDS)
+		visible_message(span_warning("[src] steps through a portal made of dark flame, fleeing the battle!"))
 		TeleportDepartmentCenter()
 		animate(src, alpha = 255, time = 0.5 SECONDS)
 
@@ -385,6 +389,9 @@
 			T = pick(GLOB.department_centers)
 	can_move = FALSE
 	if(T)
+		var/obj/effect/temp_visual/guardian/phase/entry_vfx = new /obj/effect/temp_visual/guardian/phase(T)
+		entry_vfx.color = COLOR_ASSEMBLY_BLUE
+		entry_vfx.transform *= 1.5
 		forceMove(T)
 
 /mob/living/simple_animal/hostile/abnormality/der_freischutz/proc/PortalAssault(mob/living/TargetOverride = null, extended = TRUE)

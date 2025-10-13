@@ -97,7 +97,7 @@
 
 /obj/item/ego_weapon/regret
 	name = "regret"
-	desc = "Before swinging this weapon, expressing one’s condolences for the demise of the inmate who couldn't even have a funeral would be nice."
+	desc = "Before swinging this weapon, expressing oneâ€™s condolences for the demise of the inmate who couldn't even have a funeral would be nice."
 	icon_state = "regret"
 	force = 38				//Lots of damage, way less DPS
 	damtype = RED_DAMAGE
@@ -173,6 +173,7 @@
 	var/area/turf_area = get_area(get_turf(user))
 	if(istype(turf_area, /area/fishboat))
 		to_chat(user, span_warning("[src] will not work here!."))
+		balloon_alert(user, "[src] will not work here!.")
 		return
 	if(do_after(user, 50, src))	//Five seconds of not doing anything, then teleport.
 		new /obj/effect/temp_visual/dir_setting/ninja/phase/out (get_turf(user))
@@ -298,9 +299,11 @@
 /obj/item/ego_weapon/lantern/attack_self(mob/user)
 	if(mode == LANTERN_MODE_REMOTE)
 		to_chat(user, span_info("You adjust any newly-placed traps to be set off by motion."))
+		balloon_alert(user, "You adjust any newly-placed traps to be set off by motion.")
 		mode = LANTERN_MODE_AUTO
 	else
 		to_chat(user, span_info("You can now remotely trigger any placed traps."))
+		balloon_alert(user, "You can now remotely trigger any placed traps.")
 		mode = LANTERN_MODE_REMOTE
 
 /obj/item/ego_weapon/lantern/proc/CreateTrap(target, mob/user, proximity_flag)
@@ -316,6 +319,7 @@
 			burst_cooldown = world.time + burst_cooldown_time
 		else
 			to_chat(user, "<span class='warning'>You bursted a mine too recently!")
+			balloon_alert(user, "You bursted a mine too recently!")
 		return
 	if(proximity_flag && (LAZYLEN(traps) < traplimit))
 		var/obj/effect/temp_visual/lanterntrap/trap = new(T, user, src, mode)
@@ -383,6 +387,7 @@
 		new /obj/effect/temp_visual/yellowsmoke(T2)
 		for(var/mob/living/L in creator.HurtInTurf(T2, list(), resonance_damage * damage_multiplier, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE))
 			to_chat(L, span_userdanger("[src] bites you!"))
+			balloon_alert(L, "[src] bites you!")
 			if(creator)
 				creator.visible_message(span_danger("[creator] activates [src] on [L]!"),span_danger("You activate [src] on [L]!"), null, COMBAT_MESSAGE_RANGE, L)
 	if(mine_mode == LANTERN_MODE_REMOTE)//So that you can't just place one automatic mine and 5 manual ones around it
@@ -429,6 +434,7 @@
 			if(!ishuman(M) && !M.has_status_effect(/datum/status_effect/rend_black))
 				playsound(src, 'sound/abnormalities/so_that_no_cry/curse_talisman.ogg', 100, 1)
 				to_chat(user, "A talisman from [src] sticks onto [target]!")
+				balloon_alert(user, "A talisman from [src] sticks onto [target]!")
 				new /obj/effect/temp_visual/talisman(get_turf(M))
 				M.apply_status_effect(/datum/status_effect/rend_black)
 				hit_count = 0
@@ -483,6 +489,7 @@
 	if(prob(poise*2))
 		force*=3
 		to_chat(user, span_userdanger("Critical!"))
+		balloon_alert(user, "Critical!")
 		poise = 0
 	..()
 	force = initial(force)
@@ -634,6 +641,7 @@
 		target.apply_status_effect(/datum/status_effect/qliphothoverload)
 	else
 		to_chat(user, "<span class= 'spider'><b>Your attack was interrupted!</b></span>")
+		balloon_alert(user, "Your attack was interrupted!")
 		return
 
 
@@ -699,11 +707,13 @@
 	..()
 	if(combo_on)
 		to_chat(user,span_warning("You swap your grip, and will no longer perform a finisher."))
+		balloon_alert(user, "You swap your grip, and will no longer perform a finisher.")
 		combo_on = FALSE
 		return
 	if(!combo_on)
 		to_chat(user,span_warning("You swap your grip, and will now perform a finisher."))
-		combo_on =TRUE
+		balloon_alert(user, "You swap your grip, and will now perform a finisher.")
+		combo_on = TRUE
 		return
 
 /obj/item/ego_weapon/luminosity/attack(mob/living/M, mob/living/user)
@@ -718,6 +728,7 @@
 		user.changeNext_move(CLICK_CD_MELEE * 2)
 		force *= 5	// Should actually keep up with normal damage.
 		to_chat(user,span_warning("You are offbalance, you take a moment to reset your stance."))
+		balloon_alert(user, "You are offbalance, you take a moment to reset your stance.")
 		if(!(M.status_flags & GODMODE) && M.stat != DEAD)
 			var/turf/target_turf = get_turf(M)
 			for(var/mob/living/L in hearers(2, target_turf))
@@ -768,8 +779,25 @@
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
+	special = "Activate in hand to heal every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
+	Has a cooldown of 8 seconds."
 	force = 20
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("smacks", "strikes", "beats")
 	attack_verb_simple = list("smack", "strike", "beat")
 	hitsound = 'sound/weapons/fixer/generic/club3.ogg'
+	var/cooldown = 0
+	var/cooldown_duration = 30
+	var/heal_brute = 15
+	var/dam_tox = 2
+//Should heal everyone in a 4 tile radius an amount of brute equal to heal_brute which should be 15, if not varedited, it also will deal 2 toxin damage to the user..
+//It has a cooldown of about 8 seconds.
+/obj/item/ego_weapon/mini/patch/attack_self(mob/user)
+	if(world.time >= cooldown)
+		if(do_after(user, 30, user))
+			for(var/mob/living/carbon/human in view(4, get_turf(src)))
+				if(human == user)
+					human.adjustToxLoss(dam_tox)
+					continue
+				human.adjustBruteLoss(-heal_brute)
+		cooldown = world.time + cooldown_duration

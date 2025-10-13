@@ -1,5 +1,5 @@
 /datum/award/achievement/misc
-	category = "Misc"
+	category = "Legacy"
 	icon = "basemisc"
 
 /datum/award/achievement/misc/meteor_examine
@@ -7,12 +7,6 @@
 	desc = "Take a close look at hurtling space debris"
 	database_id = MEDAL_METEOR
 	icon = "meteors"
-
-/datum/award/achievement/misc/pulse
-	name = "Jackpot"
-	desc = "Win a pulse rifle from an arcade machine"
-	database_id = MEDAL_PULSE
-	icon = "jackpot"
 
 /datum/award/achievement/misc/time_waste
 	name = "Time waster"
@@ -59,20 +53,10 @@
 	desc = "You may be under the impression that violent video games are a harmless pastime, but the security and medical personnel swarming your location with batons and knockout gas look like they disagree."
 	database_id = MEDAL_GAMER
 
-/datum/award/achievement/misc/vendor_squish
-	name = "I Was a Teenage Anarchist"
-	desc = "You were doing a great job sticking it to the system until that vending machine decided to fight back."
-	database_id = MEDAL_VENDORSQUISH
-
 /datum/award/achievement/misc/swirlie
 	name = "A Bowl-d New World"
 	desc = "There's a lot of grisly ways to kick it on the Spinward Periphery, but drowning to death in a toilet probably wasn't what you had in mind. Probably."
 	database_id = MEDAL_SWIRLIE
-
-/datum/award/achievement/misc/selfouch
-	name = "How Do I Switch Hands???"
-	desc = "If you saw someone casually club themselves upside the head with a toolbox anywhere in the galaxy but here, you'd probably be pretty concerned for them."
-	database_id = MEDAL_SELFOUCH
 
 /datum/award/achievement/misc/sandman
 	name = "Mister Sandman"
@@ -90,27 +74,12 @@
 	database_id = MEDAL_RULE8
 	icon = "rule8"
 
-/datum/award/achievement/misc/speed_round
-	name = "Long shift"
-	desc = "Well, that didn't take long."
-	database_id = MEDAL_LONGSHIFT
-	icon = "longshift"
 
 /datum/award/achievement/misc/snail
 	name = "KKKiiilll mmmeee"
 	desc = "You were a little too ambitious, but hey, I guess you're still alive?"
 	database_id = MEDAL_SNAIL
 	icon = "snail"
-
-/datum/award/achievement/misc/lookoutsir
-	name = "Look Out, Sir!"
-	desc = "Either awarded for making the ultimate sacrifice for your comrades, or a really dumb attempt at grenade jumping."
-	database_id = MEDAL_LOOKOUTSIR
-
-/datum/award/achievement/misc/gottem
-	name = "HA, GOTTEM"
-	desc = "Made you look!"
-	database_id = MEDAL_GOTTEM
 
 /datum/award/achievement/misc/ascension
 	name = "Ascension"

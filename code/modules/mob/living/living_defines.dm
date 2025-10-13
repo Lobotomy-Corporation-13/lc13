@@ -186,3 +186,10 @@
 
 	///Can this mob be renamed when a pen is used on them?
 	var/can_be_renamed = FALSE
+	///How much extra damage will they do with thier weapons/attacks? (1% more damage per extra damage)
+	///(Specific damage ups will only work if the attacker is using that specific damage type.)
+	var/extra_damage = 0
+	var/extra_damage_red = 0
+	var/extra_damage_white = 0
+	var/extra_damage_black = 0
+	var/extra_damage_pale = 0

@@ -20,8 +20,12 @@ SUBSYSTEM_DEF(statpanels)
 			"Server Time: [time2text(world.timeofday, "YYYY-MM-DD hh:mm:ss")]",
 			"Round Time: [round_time > MIDNIGHT_ROLLOVER ? "[round(round_time/MIDNIGHT_ROLLOVER)]:[gameTimestamp("hh:mm:ss", round_time)]" : gameTimestamp("hh:mm:ss", round_time)]",
 			"Station Time: [station_time_timestamp()]",
-			"Time Dilation: [round(SStime_track.time_dilation_current,1)]% AVG:([round(SStime_track.time_dilation_avg_fast,1)]%, [round(SStime_track.time_dilation_avg,1)]%, [round(SStime_track.time_dilation_avg_slow,1)]%)"
+			"Time Dilation: [round(SStime_track.time_dilation_current,1)]% AVG:([round(SStime_track.time_dilation_avg_fast,1)]%, [round(SStime_track.time_dilation_avg,1)]%, [round(SStime_track.time_dilation_avg_slow,1)]%)",
 		)
+		if((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini") // Display Station Trait and Gamespeed on Facility Modes
+			global_data += "" // This is here to space out Station Trait and Gamespeed from the other entries
+			global_data += "Game Speed: [SSlobotomy_corp.gamespeed ? SSlobotomy_corp.gamespeed.player_facing_name : "ERROR: NO GAMESPEED DATUM"]"
+			global_data += "Station Trait: [SSmaptype.chosen_trait]"
 
 		if(SSshuttle.emergency)
 			var/ETA = SSshuttle.emergency.getModeStr()

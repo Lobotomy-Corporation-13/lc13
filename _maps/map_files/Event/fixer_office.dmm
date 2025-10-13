@@ -6602,7 +6602,7 @@
 /obj/structure/fluff/arc{
 	desc = "A humanoid creature wearing metallic armor. It has bloodied hooks in its hands.";
 	dir = 8;
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "sweeper_1";
 	name = "sweeper statue";
 	pixel_x = -3
@@ -8567,7 +8567,7 @@
 /obj/effect/turf_decal/box,
 /obj/structure/fluff/arc{
 	desc = "A slim robot with a spear in place of its hand.";
-	icon = 'ModularTegustation/Teguicons/32x48.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/32x48.dmi';
 	icon_state = "green_bot";
 	name = "spear bot statue";
 	dir = 8
@@ -9173,7 +9173,7 @@
 /obj/effect/turf_decal/box,
 /obj/structure/fluff/arc{
 	desc = "A insect augmented employee of the fallen Gene corp. Word on the street says that they banded into common backstreet gangs after the Smoke War.";
-	icon = 'ModularTegustation/Teguicons/32x32.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi';
 	icon_state = "gcorp1";
 	name = "gene corp remnant statue";
 	dir = 8
@@ -10170,7 +10170,7 @@
 /obj/structure/fluff/arc{
 	desc = "A tiny worm-like creature with tough chitin and a pair of sharp claws.";
 	dir = 8;
-	icon = 'ModularTegustation/Teguicons/tegumobs.dmi';
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi';
 	icon_state = "amber_bug";
 	name = "worm statue"
 	},

@@ -14,6 +14,7 @@
 	var/datum/species/fake_species //a species to do most of our work for us, unless we're damaged
 	var/list/initial_species_traits //for getting these values back for assume_disguise()
 	var/list/initial_inherent_traits
+	var/disguise_user = TRUE
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC
 	species_language_holder = /datum/language_holder/synthetic
 
@@ -51,7 +52,7 @@
 
 
 /datum/species/synth/proc/assume_disguise(datum/species/S, mob/living/carbon/human/H)
-	if(S && !istype(S, type))
+	if(S && !istype(S, type) && disguise_user)
 		name = S.name
 		say_mod = S.say_mod
 		sexes = S.sexes
@@ -88,7 +89,7 @@
 		qdel(fake_species)
 		fake_species = null
 		meat = initial(meat)
-		limbs_id = "synth"
+		limbs_id = initial(limbs_id)
 		use_skintones = 0
 		sexes = 0
 		fixed_mut_color = ""
@@ -130,3 +131,28 @@
 			switch(fake_species.type)
 				if (/datum/species/golem/bananium)
 					speech_args[SPEECH_SPANS] |= SPAN_CLOWN
+
+//A lot can be done if Carnies are their own proper species, wont do it now however
+/datum/species/synth/carnival
+	name = "Carnival Prosthetic"
+	id = "carnival_prosthetic"
+	limbs_id = "carnie" //For now these are just undisguised synth limbs as placeholders until someone decides to make carnie sprites
+	species_traits = list(NOTRANSSTING, NOEYESPRITES) //Eyes dont work with current or future sprites
+	disguise_fail_health = 231 //This will never matter
+	mutanteyes = /obj/item/organ/eyes/robotic/nightvision //replaces their med nvg
+	mutanttongue = /obj/item/organ/tongue/robot //It fits the bill
+	mutantheart = /obj/item/organ/heart/cybernetic //Cant use a t2 heart as it gives epinephrine on crit
+	mutantlungs = /obj/item/organ/lungs/cybernetic //Theyre no_breath, this doesnt matter
+	mutantliver = /obj/item/organ/liver/cybernetic/tier3 //tier3 liver as they eat living beings
+	mutantstomach = /obj/item/organ/lungs/cybernetic/tier3 //same logic as above
+	mutantears = /obj/item/organ/ears/cybernetic
+	disguise_user = FALSE
+	changesource_flags = MIRROR_BADMIN | WABBAJACK | ERT_SPAWN
+
+	inherent_biotypes = MOB_ROBOTIC|MOB_HUMANOID
+
+/datum/species/synth/carnival/on_species_gain(mob/living/carbon/human/H)
+	..()
+	assume_disguise()
+	RegisterSignal(H, COMSIG_MOB_SAY, PROC_REF(handle_speech))
+	H.set_safe_hunger_level()
