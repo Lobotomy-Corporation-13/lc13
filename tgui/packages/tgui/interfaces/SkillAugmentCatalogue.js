@@ -15,7 +15,7 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export const SkillAugmentFabricator = (props, context) => {
+export const SkillAugmentCatalogue = (props, context) => {
   const { act, data } = useBackend(context);
   const [tabIndex, setTabIndex] = useLocalState(context, 'tabIndex', 0);
 
@@ -43,21 +43,28 @@ export const SkillAugmentFabricator = (props, context) => {
                     selected={tabIndex === 2}
                     onClick={() => setTabIndex(2)}
                   >
-                    Fabrication
+                    Create Order
+                  </Tabs.Tab>
+                  <Tabs.Tab
+                    selected={tabIndex === 3}
+                    onClick={() => setTabIndex(3)}
+                  >
+                    Services
                   </Tabs.Tab>
                 </Tabs>
               </Stack.Item>
               <Stack.Item grow>
                 {tabIndex === 0 && <TemplateSelection />}
                 {tabIndex === 1 && <SkillConfiguration />}
-                {tabIndex === 2 && <FabricationTab />}
+                {tabIndex === 2 && <CreateOrderTab />}
+                {tabIndex === 3 && <ServicesTab />}
               </Stack.Item>
             </Stack>
           </Stack.Item>
           <Stack.Item basis="300px">
             <Stack vertical fill>
               <Stack.Item>
-                <MaterialsDisplay />
+                <CatalogueInfo />
               </Stack.Item>
               <Stack.Item grow>
                 <CurrentDesign />
@@ -81,7 +88,7 @@ const TemplateSelection = (props, context) => {
           <Stack.Item key={template.name}>
             <Collapsible
               title={`${template.name} (Rank ${template.rank})`}
-              color={template.can_afford ? 'good' : 'bad'}
+              color="good"
             >
               <Box p={1}>
                 <LabeledList>
@@ -94,7 +101,7 @@ const TemplateSelection = (props, context) => {
                   <LabeledList.Item label="Max Charge">
                     {template.charge}
                   </LabeledList.Item>
-                  <LabeledList.Item label="Materials Required">
+                  <LabeledList.Item label="Material Cost">
                     {template.materials_needed}
                   </LabeledList.Item>
                 </LabeledList>
@@ -102,7 +109,6 @@ const TemplateSelection = (props, context) => {
                   mt={1}
                   fluid
                   content="Select Template"
-                  disabled={!template.can_afford}
                   onClick={() => act('select_template', {
                     template: template.name,
                   })}
@@ -178,16 +184,16 @@ const SkillConfiguration = (props, context) => {
                         {searchText ? 'No skills match your search' : 'No skills available for this rank'}
                       </Box>
                     ) : (
-                      <Table compact>
-                        <Table.Row header>
-                          <Table.Cell>Skill</Table.Cell>
-                          <Table.Cell>Description</Table.Cell>
-                          <Table.Cell textAlign="center" width="8%">Level</Table.Cell>
-                          <Table.Cell textAlign="center" width="8%">Slots</Table.Cell>
-                          <Table.Cell textAlign="center" width="8%">Charge</Table.Cell>
-                          <Table.Cell textAlign="center" width="10%">Action</Table.Cell>
-                        </Table.Row>
-                        {filteredSkills.map(skill => (
+                  <Table compact>
+                    <Table.Row header>
+                      <Table.Cell>Skill</Table.Cell>
+                      <Table.Cell>Description</Table.Cell>
+                      <Table.Cell textAlign="center" width="8%">Level</Table.Cell>
+                      <Table.Cell textAlign="center" width="8%">Slots</Table.Cell>
+                      <Table.Cell textAlign="center" width="8%">Charge</Table.Cell>
+                      <Table.Cell textAlign="center" width="10%">Action</Table.Cell>
+                    </Table.Row>
+                    {filteredSkills.map(skill => (
                       <Table.Row key={skill.type_path}>
                         <Table.Cell>
                           <Box
@@ -272,33 +278,45 @@ const SkillConfiguration = (props, context) => {
   );
 };
 
-const FabricationTab = (props, context) => {
+const CreateOrderTab = (props, context) => {
   const { act, data } = useBackend(context);
   const {
     current_rank,
     current_slots,
     current_charge,
     selected_skills = [],
+    material_cost,
     busy,
   } = data;
 
-  const canFabricate
+  const canCreateTicket
     = current_rank > 0 && selected_skills.length > 0 && !busy;
 
   return (
-    <Section title="Fabrication" fill>
+    <Section title="Create Order Ticket" fill>
       <Stack vertical fill>
         <Stack.Item>
-          <Section title="Design Summary">
+          <NoticeBox color="blue">
+            This machine creates order tickets that can be processed by
+            authorized staff at the Body Modification Fabricator.
+          </NoticeBox>
+        </Stack.Item>
+        <Stack.Item>
+          <Section title="Order Summary">
             <LabeledList>
-              <LabeledList.Item label="Rank">{current_rank}</LabeledList.Item>
+              <LabeledList.Item label="Template">
+                {current_rank > 0 ? `Rank ${current_rank}` : 'None selected'}
+              </LabeledList.Item>
               <LabeledList.Item label="Total Slots">
                 {current_slots}
               </LabeledList.Item>
               <LabeledList.Item label="Max Charge">
                 {current_charge}
               </LabeledList.Item>
-              <LabeledList.Item label="Attached Skills">
+              <LabeledList.Item label="Material Cost">
+                {material_cost || 0}
+              </LabeledList.Item>
+              <LabeledList.Item label="Selected Skills">
                 {selected_skills.length}
               </LabeledList.Item>
             </LabeledList>
@@ -341,10 +359,10 @@ const FabricationTab = (props, context) => {
             <Stack.Item grow>
               <Button
                 fluid
-                content={busy ? 'Fabricating...' : 'Fabricate Body Modification'}
+                content={busy ? 'Creating Ticket...' : 'Create Order Ticket'}
                 color="good"
-                disabled={!canFabricate}
-                onClick={() => act('fabricate')}
+                disabled={!canCreateTicket}
+                onClick={() => act('create_ticket')}
               />
             </Stack.Item>
           </Stack>
@@ -354,21 +372,26 @@ const FabricationTab = (props, context) => {
   );
 };
 
-const MaterialsDisplay = (props, context) => {
+const CatalogueInfo = (props, context) => {
   const { act, data } = useBackend(context);
-  const { total_materials = 0 } = data;
 
   return (
-    <Section title="Stored Materials">
-      <LabeledList>
-        <LabeledList.Item label="Total Material">
-          <Box bold fontSize="1.2em" color={total_materials > 0 ? 'good' : 'gray'}>
-            {total_materials}
+    <Section title="Catalogue Information">
+      <Box fontSize="0.9em">
+        <Box mb={1}>
+          <Box bold color="blue">Free Design Tool</Box>
+          <Box>
+            Design modifications without materials. Created tickets can be
+            processed by authorized staff.
           </Box>
-        </LabeledList.Item>
-      </LabeledList>
-      <Box mt={1} fontSize="0.9em" color="label">
-        Insert any tresmetal to add materials
+        </Box>
+        <Box mb={1}>
+          <Box bold color="green">Authorized Staff:</Box>
+          <Box fontSize="0.8em">
+            Prosthetics Surgeon, Office Director, Office Fixer,
+            Doctor, Fixer, Workshop Attendant
+          </Box>
+        </Box>
       </Box>
     </Section>
   );
@@ -382,6 +405,7 @@ const CurrentDesign = (props, context) => {
     current_charge,
     total_slot_cost,
     selected_skills = [],
+    material_cost,
   } = data;
 
   return (
@@ -397,6 +421,9 @@ const CurrentDesign = (props, context) => {
             </LabeledList.Item>
             <LabeledList.Item label="Max Charge">
               {current_charge}
+            </LabeledList.Item>
+            <LabeledList.Item label="Cost">
+              {material_cost || 0} material
             </LabeledList.Item>
           </LabeledList>
         </Stack.Item>
@@ -422,3 +449,65 @@ const CurrentDesign = (props, context) => {
   );
 };
 
+const ServicesTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const { scan_cost, removal_cost, busy } = data;
+
+  return (
+    <Section title="Body Modification Services" fill>
+      <Stack vertical>
+        <Stack.Item>
+          <Section title="Scanning Service">
+            <Stack>
+              <Stack.Item grow>
+                <Box>
+                  Scan your current body modifications and stat compatibility.
+                  Shows your maximum compatible rank and installed skills.
+                </Box>
+              </Stack.Item>
+              <Stack.Item>
+                <Button
+                  icon="search"
+                  content={`Scan (${scan_cost} Ahn)`}
+                  disabled={busy}
+                  onClick={() => act('scan_user')}
+                />
+              </Stack.Item>
+            </Stack>
+          </Section>
+        </Stack.Item>
+
+        <Stack.Item>
+          <Section title="Removal Service">
+            <Stack>
+              <Stack.Item grow>
+                <Box>
+                  Safely remove your current body modification.
+                  This process is irreversible and will destroy the modification.
+                </Box>
+              </Stack.Item>
+              <Stack.Item>
+                <Button
+                  icon="trash"
+                  content={`Remove (${removal_cost} Ahn)`}
+                  disabled={busy}
+                  onClick={() => act('remove_modification')}
+                  color="bad"
+                />
+              </Stack.Item>
+            </Stack>
+          </Section>
+        </Stack.Item>
+
+        <Stack.Item>
+          <NoticeBox>
+            <Box>
+              <b>Note:</b> Both services require sufficient Ahn in your bank account.
+              Payment is automatically deducted upon service completion.
+            </Box>
+          </NoticeBox>
+        </Stack.Item>
+      </Stack>
+    </Section>
+  );
+};

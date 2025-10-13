@@ -145,7 +145,7 @@
 	extra_price = 1000
 	input_display_header = "Fixer Equipment"
 
-//This is just incase something breaks with the augments, we can give the people their books back.
+//This is just incase something breaks with the modifications, we can give the people their books back.
 /obj/machinery/vending/old_fixer
 	name = "\improper OLd Fixer Equipment vending"
 	desc = "A machine used by fixers to get equipment"
@@ -275,15 +275,15 @@
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
 
-		//Skill augment batteries
-		/obj/item/skill_augment_battery = 100,
-		/obj/item/skill_augment_battery/tier2 = 100,
-		/obj/item/skill_augment_battery/tier3 = 100,
-		/obj/item/skill_augment_battery/tier4 = 100,
+		//Body modification batteries
+		/obj/item/body_modification_battery = 100,
+		/obj/item/body_modification_battery/tier2 = 100,
+		/obj/item/body_modification_battery/tier3 = 100,
+		/obj/item/body_modification_battery/tier4 = 100,
 
-		//Skill augment tools
-		/obj/item/skill_augment_tester = 100,
-		/obj/item/skill_augment_remover = 100,
+		//Body modification tools
+		/obj/item/body_modification_tester = 100,
+		/obj/item/body_modification_remover = 100,
 	)
 
 	premium = list(
