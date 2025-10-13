@@ -2,8 +2,8 @@
 	title = "LC Specimen"
 	faction = "Station"
 	selection_color = "#BB9999"
-	total_positions = 7
-	spawn_positions = 7 //Only put as many positions as there exists LCL abnos and spawn points, even if the special_check_latejoin should stop any issse.
+	total_positions = 8
+	spawn_positions = 8 //Only put as many positions as there exists LCL abnos and spawn points, even if the special_check_latejoin should stop any issse.
 	departments = DEPARTMENT_SECURITY
 	maptype = "limbus_labs"
 	job_abbreviation = "LCS"

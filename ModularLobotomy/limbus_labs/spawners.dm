@@ -3,7 +3,8 @@ GLOBAL_LIST_INIT(low_security, list(
 	/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid,
 	/mob/living/simple_animal/hostile/limbus_abno/laetitia,
 	/mob/living/simple_animal/hostile/limbus_abno/simple_smile,
-	/mob/living/simple_animal/hostile/limbus_abno/helper
+	/mob/living/simple_animal/hostile/limbus_abno/helper,
+	/mob/living/simple_animal/hostile/limbus_abno/pbird
 ))
 
 GLOBAL_LIST_INIT(high_security, list(

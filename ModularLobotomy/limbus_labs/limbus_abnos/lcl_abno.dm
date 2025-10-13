@@ -12,6 +12,9 @@
 	pet_bonus = TRUE //Don't forget to not call the parent proc if you don't want the heart effect when pet.
 	pet_bonus_emote = "shudders."
 	can_be_renamed = TRUE
+	a_intent = INTENT_HARM
+	move_resist = MOVE_FORCE_STRONG
+	pull_force = MOVE_FORCE_STRONG
 	var/abno_additional_instructions = "" //Unique additional info to the abnormality.
 	var/true_name = "Limbus specimen" //The true name of the abnormality if it can get revealed after enough study.
 	var/mob/living/simple_animal/hostile/abnormality/original_abno = null//The original abno type this is based on. If defined, it'll automatically add the name, description and sprite of that abno.
