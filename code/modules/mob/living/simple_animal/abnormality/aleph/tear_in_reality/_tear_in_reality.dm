@@ -96,6 +96,10 @@ var/list/worked = list()
 	datum_reference.qliphoth_change(-1)
 	return
 
+if(work_type == ABNORMALITY_WORK_INSTINCT)
+	span_danger "As you reach out for the tear, something lunges at you!"
+	datum_reference.qliphoth_change(-2) //Insta breaches & special message on Instinct
+
 ////////////////////////////////////////////////////////OPEN SOURCE FLUFF PAPER//////////////////////////////////
 /obj/item/paper/fluff/plea
 	name = "Strange Note"
