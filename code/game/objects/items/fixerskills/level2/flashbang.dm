@@ -74,7 +74,7 @@
 			// Blind humans
 			M.adjust_blindness(5)
 			to_chat(M, span_userdanger("The flashing lights explode in a blinding burst!"))
-		else if(issimple(M))
+		else if(isanimal(M))
 			// Deal 3x more WHITE damage to simple animals (additional 60 damage)
 			M.adjustWhiteLoss(60)
 			to_chat(M, span_userdanger("The bright explosion overwhelms you!"))

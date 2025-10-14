@@ -503,7 +503,8 @@ const ServicesTab = (props, context) => {
         <Stack.Item>
           <NoticeBox>
             <Box>
-              <b>Note:</b> Both services require sufficient Ahn in your bank account.
+              <b>Note:</b> Both services require sufficient Ahn in your bank
+              account.
               Payment is automatically deducted upon service
               completion.
             </Box>

@@ -52,7 +52,7 @@
 		M.apply_lc_feeble(4)
 
 		// Handle simple animals
-		if(issimple(M))
+		if(isanimal(M))
 			M.adjustWhiteLoss(100)
 			to_chat(M, span_userdanger("The confusing gaze overwhelms your mind!"))
 			playsound(get_turf(M), 'sound/effects/magic.ogg', 30, TRUE)

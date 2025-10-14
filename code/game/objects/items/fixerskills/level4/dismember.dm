@@ -50,7 +50,7 @@
 				to_chat(owner, span_boldnotice("You execute [C] by dismembering their arm!"))
 
 		//Handle simple animals
-		else if(issimple(M))
+		else if(isanimal(M))
 			var/mob/living/simple_animal/S = M
 
 			//Skip if they have godmode

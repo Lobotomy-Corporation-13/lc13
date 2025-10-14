@@ -28,7 +28,9 @@
 	owner.alpha = 35
 
 	//apply pacify for duration + 2 seconds
-	owner.apply_status_effect(/datum/status_effect/pacify, duration + 2 SECONDS)
+	var/mob/living/L = owner
+	if(L)
+		L.apply_status_effect(/datum/status_effect/pacify, duration + 2 SECONDS)
 
 	addtimer(CALLBACK(src, PROC_REF(Recall),), duration, TIMER_UNIQUE | TIMER_OVERRIDE)
 	StartCooldown()
