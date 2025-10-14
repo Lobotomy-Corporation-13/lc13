@@ -41,31 +41,31 @@
 		"Rank 1 - Basic" = list(
 			"rank" = 1,
 			"slots" = 4,
-			"charge" = 90,
+			"charge" = 180,
 			"material_cost" = 50
 		),
 		"Rank 2 - Enhanced" = list(
 			"rank" = 2,
 			"slots" = 6,
-			"charge" = 150,
+			"charge" = 300,
 			"material_cost" = 100
 		),
 		"Rank 3 - Advanced" = list(
 			"rank" = 3,
 			"slots" = 6,
-			"charge" = 240,
+			"charge" = 480,
 			"material_cost" = 200
 		),
 		"Rank 4 - Superior" = list(
 			"rank" = 4,
 			"slots" = 8,
-			"charge" = 375,
+			"charge" = 750,
 			"material_cost" = 400
 		),
 		"Rank 5 - Masterwork" = list(
 			"rank" = 5,
 			"slots" = 9,
-			"charge" = 525,
+			"charge" = 1050,
 			"material_cost" = 800
 		),
 
@@ -73,35 +73,35 @@
 		"Injectable Rank 1 - Basic" = list(
 			"rank" = 1,
 			"slots" = 4,
-			"charge" = 45,
+			"charge" = 90,
 			"injectable" = TRUE,
 			"material_cost" = 25
 		),
 		"Injectable Rank 2 - Enhanced" = list(
 			"rank" = 2,
 			"slots" = 6,
-			"charge" = 75,
+			"charge" = 150,
 			"injectable" = TRUE,
 			"material_cost" = 50
 		),
 		"Injectable Rank 3 - Advanced" = list(
 			"rank" = 3,
 			"slots" = 6,
-			"charge" = 120,
+			"charge" = 240,
 			"injectable" = TRUE,
 			"material_cost" = 100
 		),
 		"Injectable Rank 4 - Superior" = list(
 			"rank" = 4,
 			"slots" = 8,
-			"charge" = 190,
+			"charge" = 380,
 			"injectable" = TRUE,
 			"material_cost" = 200
 		),
 		"Injectable Rank 5 - Masterwork" = list(
 			"rank" = 5,
 			"slots" = 9,
-			"charge" = 265,
+			"charge" = 530,
 			"injectable" = TRUE,
 			"material_cost" = 400
 		)
@@ -215,14 +215,14 @@
 			"slot_cost" = 2,
 			"charge_cost" = 35,
 			"skill_level" = 2,
-			"desc" = "Applies blindness to all humans in a 7 tile radius for 2 seconds"
+			"desc" = "Creates 4 flashing light zones that explode after 2 seconds, dealing WHITE damage and blinding humans"
 		),
 		/datum/action/cooldown/confusion = list(
 			"name" = "Confusion",
 			"slot_cost" = 2,
 			"charge_cost" = 35,
 			"skill_level" = 2,
-			"desc" = "Applies a variety of debuffs to all humans in a 7 tile radius"
+			"desc" = "After 1 second green glow, affects targets looking at you: confuses humans, damages simple mobs, reduces damage by 40%"
 		),
 		/datum/action/cooldown/lockpick = list(
 			"name" = "Lockpick",
@@ -243,7 +243,7 @@
 			"slot_cost" = 2,
 			"charge_cost" = 25,
 			"skill_level" = 2,
-			"desc" = "Temporary stealth"
+			"desc" = "Become invisible for 10 seconds, but you are pacified for 12 seconds"
 		),
 		/datum/action/cooldown/autoloader = list(
 			"name" = "Autoloader",
@@ -292,11 +292,11 @@
 			"desc" = "Stop time in a range of 2 tiles, for 2 seconds."
 		),
 		/datum/action/cooldown/dismember = list(
-			"name" = "Dismember",
+			"name" = "Execute",
 			"slot_cost" = 4,
 			"charge_cost" = 80,
 			"skill_level" = 4,
-			"desc" = "Dismember a random arm from every human in a 1 tile range"
+			"desc" = "Execute adjacent targets below 10% HP. Dismembers arms from humans, gibs simple animals"
 		),
 		/datum/action/cooldown/shockwave = list(
 			"name" = "Shockwave",

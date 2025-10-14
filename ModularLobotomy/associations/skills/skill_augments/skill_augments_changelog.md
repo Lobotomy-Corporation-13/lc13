@@ -481,6 +481,157 @@ Only these roles can access the Body Modification Fabricator:
 
 ---
 
+## Hotfix 3.7.3 - Major Charge System Improvements
+**Date**: 2025-10-13
+
+### Changed
+- **Doubled all template charge capacities**
+  - Regular templates now have 180-1050 charge (was 90-525)
+  - Injectable templates now have 90-530 charge (was 45-265)
+  - Addresses rapid charge consumption during active skill usage
+  - Provides more sustainable combat performance
+
+- **Reduced all battery prices by 50%**
+  - Body Modification Battery: 100 Ahn (was 200 Ahn)
+  - Body Modification Battery MK-II: 200 Ahn (was 400 Ahn)
+  - Body Modification Battery MK-III: 300 Ahn (was 600 Ahn)
+  - Body Modification Battery MK-IV: 400 Ahn (was 800 Ahn)
+  - Makes charge restoration more affordable
+
+### Updated Template Values
+- **Basic**: 180 charge (was 90) | Injectable: 90 charge (was 45)
+- **Enhanced**: 300 charge (was 150) | Injectable: 150 charge (was 75)
+- **Advanced**: 480 charge (was 240) | Injectable: 240 charge (was 120)
+- **Superior**: 750 charge (was 375) | Injectable: 380 charge (was 190)
+- **Masterwork**: 1050 charge (was 525) | Injectable: 530 charge (was 265)
+
+### Benefits
+- **Extended Combat**: Players can use skills more frequently without running out of charge
+- **Reduced BURN Damage**: Less risk of overcharge penalties from insufficient charge
+- **Better Viability**: Body modifications now more practical for sustained engagements
+- **Improved Balance**: Makes charge management less punishing while maintaining strategic resource planning
+- **Affordable Recharging**: Batteries are now more accessible for regular use
+
+---
+
+## Version 3.8.0 - Skulk Skill Rework
+**Date**: 2025-10-13
+
+### Changed
+- **Skulk Skill Complete Rework**
+  - Now makes the user completely invisible (invisibility = INVISIBILITY_MAXIMUM) instead of partial transparency
+  - User is now pacified for 12 seconds (10 second invisibility duration + 2 seconds)
+  - Prevents offensive actions while maintaining stealth capability
+  - Better balance between escape/repositioning utility and combat limitations
+
+### Technical Changes
+- Added `owner.invisibility = INVISIBILITY_MAXIMUM`
+- Added `owner.apply_status_effect(/datum/status_effect/pacify, duration + 2 SECONDS)`
+- Updated skill description to reflect new mechanics
+
+### Rationale
+- **Improved Stealth**: Complete invisibility provides better escape and repositioning options
+- **Combat Balance**: Pacification prevents abuse of invisibility for offensive actions
+- **Strategic Trade-off**: Players must choose between stealth and combat capability
+- **Extended Vulnerability**: 2-second pacification after invisibility ends creates risk/reward dynamics
+
+---
+
+## Version 3.9.0 - Dismember Skill Rework to Execute
+**Date**: 2025-10-13
+
+### Changed
+- **Dismember Skill Renamed to Execute**
+  - Now functions as an execution ability for low-health targets
+  - Only affects targets below 10% of their maximum HP
+  - **For Humans/Carbon Mobs**: Dismembers a random arm (if not immune to dismemberment)
+  - **For Simple Animals**: Gibs them instantly (unless they have godmode)
+  - No cooldown consumed if no valid targets are found
+
+### Technical Changes
+- Added HP threshold check: `M.health > M.maxHealth * 0.1`
+- Added godmode check for simple animals: `S.status_flags & GODMODE`
+- Improved feedback with execution messages
+- Only triggers cooldown when successfully executing a target
+
+### Gameplay Impact
+- **Finishing Move**: Functions as a proper execution ability rather than crowd control
+- **Strategic Timing**: Requires targets to be weakened first
+- **Target Selection**: Works on all living entities but only when critically wounded
+- **Resource Efficient**: Doesn't waste cooldown on healthy targets
+
+### Balance Rationale
+- **More Strategic**: Requires setup and teamwork to weaken enemies first
+- **Less Oppressive**: Can't instantly disable healthy opponents
+- **Thematically Appropriate**: Functions as a true finishing move
+- **Clear Counterplay**: Stay above 10% HP to avoid execution
+
+---
+
+## Version 3.10.0 - Solar Flare Skill Rework
+**Date**: 2025-10-13
+
+### Changed
+- **Solar Flare Complete Rework to Area Denial**
+  - Creates 4 flashing light zones instead of instant blindness
+  - Always places one zone under the caster, plus 3 random zones within 3 tiles
+  - Each zone shows yellow sparkle effects for 2 seconds before detonating
+  - **Humans**: Take 20 WHITE damage and get blinded for 5 seconds
+  - **Simple Animals**: Take 80 WHITE damage total (20 + 60 bonus)
+
+### New Mechanics
+- **Delayed Explosion**: 2-second warning period with visual indicators
+- **Area Denial**: Forces enemies to reposition or take damage
+- **Tactical Positioning**: Caster can use their guaranteed zone strategically
+- **Counterplay**: Enemies can move away from visible danger zones
+
+### Technical Implementation
+- Added new `/obj/effect/flashing_lights` subtype
+- Uses yellow sparkle effects (`icon_state = "sparkles"`)
+- Implements `adjustWhiteLoss()` for WHITE damage type
+- Added explosion effects and flashbang sound on detonation
+
+### Gameplay Impact
+- **Strategic Depth**: Requires positioning and timing rather than instant effect
+- **Area Control**: Can block chokepoints or force enemy movement
+- **Risk vs Reward**: Caster must position themselves carefully since they're always targeted
+- **Enhanced Counterplay**: Enemies get clear visual warning and time to react
+
+---
+
+## Version 3.11.0 - Confusion Skill Line-of-Sight Rework
+**Date**: 2025-10-13
+
+### Changed
+- **Confusion Skill Gaze Mechanic**
+  - Now requires line-of-sight - only affects targets that are facing the caster
+  - 1-second warning period with green glow effect
+  - Visual indicators appear on all nearby tiles before activation
+  - **All Targets**: Applies 4 stacks of LC feeble (40% damage reduction)
+  - **Humans/Carbon Mobs**: Confusion, dizziness, blurriness, and silence effects
+  - **Simple Animals**: 100 WHITE damage instead of confusion effects
+
+### New Mechanics
+- **Line-of-Sight Check**: Uses `is_A_facing_B()` to determine if targets are looking at caster
+- **Green Glow Warning**: Caster emits green light for 1 second before effect
+- **Visual Indicators**: Green shimmer effects on nearby tiles during warning period
+- **Counterplay**: Turn away during the warning period to avoid effects
+
+### Technical Implementation
+- Added `INVOKE_ASYNC` for non-blocking skill execution
+- Implemented `PerformGaze()` proc for delayed effect
+- Uses `owner.set_light(3, 5, "#00FF00", TRUE)` for green glow
+- Added `/obj/effect/temp_visual/confusion_gaze` for visual indicators
+
+### Gameplay Impact
+- **Strategic Positioning**: Must face targets to affect them
+- **Enhanced Counterplay**: Clear warning and avoidance mechanic
+- **Risk Management**: Caster is vulnerable during 1-second channel
+- **Target Discrimination**: Different effects for humans vs simple mobs
+- **Damage Reduction**: Affected targets deal 40% less damage due to feeble stacks
+
+---
+
 ## Template for Future Updates
 
 When making changes, add entries in this format:

@@ -171,7 +171,7 @@
 	icon_state = "cell"
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
-	custom_price = 200
+	custom_price = 100
 	var/charge_amount = 50
 	var/tier = 1
 
@@ -215,7 +215,7 @@
 	name = "body modification battery MK-II"
 	desc = "An improved energy cell with higher capacity for skill modifications."
 	icon_state = "hcell"
-	custom_price = 400
+	custom_price = 200
 	charge_amount = 100
 	tier = 2
 
@@ -223,7 +223,7 @@
 	name = "body modification battery MK-III"
 	desc = "An advanced energy cell with substantial charging capacity."
 	icon_state = "icell"
-	custom_price = 600
+	custom_price = 300
 	charge_amount = 200
 	tier = 3
 
@@ -231,6 +231,6 @@
 	name = "body modification battery MK-IV"
 	desc = "A top-tier energy cell capable of major charge restoration."
 	icon_state = "bscell"
-	custom_price = 800
+	custom_price = 400
 	charge_amount = 300
 	tier = 4

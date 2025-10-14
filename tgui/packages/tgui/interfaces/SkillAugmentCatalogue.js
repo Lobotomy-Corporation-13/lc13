@@ -147,8 +147,8 @@ const SkillConfiguration = (props, context) => {
 
   // Filter skills based on search text
   const filteredSkills = available_skills.filter(skill =>
-    skill.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    skill.desc.toLowerCase().includes(searchText.toLowerCase())
+    skill.name.toLowerCase().includes(searchText.toLowerCase())
+    || skill.desc.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
@@ -184,51 +184,51 @@ const SkillConfiguration = (props, context) => {
                         {searchText ? 'No skills match your search' : 'No skills available for this rank'}
                       </Box>
                     ) : (
-                  <Table compact>
-                    <Table.Row header>
-                      <Table.Cell>Skill</Table.Cell>
-                      <Table.Cell>Description</Table.Cell>
-                      <Table.Cell textAlign="center" width="8%">Level</Table.Cell>
-                      <Table.Cell textAlign="center" width="8%">Slots</Table.Cell>
-                      <Table.Cell textAlign="center" width="8%">Charge</Table.Cell>
-                      <Table.Cell textAlign="center" width="10%">Action</Table.Cell>
-                    </Table.Row>
-                    {filteredSkills.map(skill => (
-                      <Table.Row key={skill.type_path}>
-                        <Table.Cell>
-                          <Box
-                            bold
-                            color={skill.can_add ? 'white' : 'gray'}
-                          >
-                            {skill.name}
-                          </Box>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Box
-                            fontSize="0.9em"
-                            color={skill.can_add ? 'label' : 'gray'}
-                          >
-                            {skill.desc}
-                          </Box>
-                        </Table.Cell>
-                        <Table.Cell textAlign="center">{skill.skill_level}</Table.Cell>
-                        <Table.Cell textAlign="center">{skill.slot_cost}</Table.Cell>
-                        <Table.Cell textAlign="center">{skill.charge_cost}</Table.Cell>
-                        <Table.Cell textAlign="center">
-                          <Button
-                            content="Add"
-                            color="good"
-                            fluid
-                            disabled={!skill.can_add}
-                            onClick={() => act('add_skill', {
-                              skill_type: skill.type_path,
-                            })}
-                          />
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table>
-                )}
+                      <Table compact>
+                        <Table.Row header>
+                          <Table.Cell>Skill</Table.Cell>
+                          <Table.Cell>Description</Table.Cell>
+                          <Table.Cell textAlign="center" width="8%">Level</Table.Cell>
+                          <Table.Cell textAlign="center" width="8%">Slots</Table.Cell>
+                          <Table.Cell textAlign="center" width="8%">Charge</Table.Cell>
+                          <Table.Cell textAlign="center" width="10%">Action</Table.Cell>
+                        </Table.Row>
+                        {filteredSkills.map(skill => (
+                          <Table.Row key={skill.type_path}>
+                            <Table.Cell>
+                              <Box
+                                bold
+                                color={skill.can_add ? 'white' : 'gray'}
+                              >
+                                {skill.name}
+                              </Box>
+                            </Table.Cell>
+                            <Table.Cell>
+                              <Box
+                                fontSize="0.9em"
+                                color={skill.can_add ? 'label' : 'gray'}
+                              >
+                                {skill.desc}
+                              </Box>
+                            </Table.Cell>
+                            <Table.Cell textAlign="center">{skill.skill_level}</Table.Cell>
+                            <Table.Cell textAlign="center">{skill.slot_cost}</Table.Cell>
+                            <Table.Cell textAlign="center">{skill.charge_cost}</Table.Cell>
+                            <Table.Cell textAlign="center">
+                              <Button
+                                content="Add"
+                                color="good"
+                                fluid
+                                disabled={!skill.can_add}
+                                onClick={() => act('add_skill', {
+                                  skill_type: skill.type_path,
+                                })}
+                              />
+                            </Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table>
+                    )}
                   </Stack.Item>
                 </Stack>
               </Section>
@@ -483,7 +483,8 @@ const ServicesTab = (props, context) => {
               <Stack.Item grow>
                 <Box>
                   Safely remove your current body modification.
-                  This process is irreversible and will destroy the modification.
+                  This process is irreversible and will destroy the
+                  modification.
                 </Box>
               </Stack.Item>
               <Stack.Item>
@@ -503,7 +504,8 @@ const ServicesTab = (props, context) => {
           <NoticeBox>
             <Box>
               <b>Note:</b> Both services require sufficient Ahn in your bank account.
-              Payment is automatically deducted upon service completion.
+              Payment is automatically deducted upon service
+              completion.
             </Box>
           </NoticeBox>
         </Stack.Item>
