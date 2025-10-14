@@ -64,7 +64,8 @@ const TemplatePage = (props, context) => {
   const currentRank = selectedRank || 1;
 
   // Calculate costs
-  const baseCost = selectedForm ? (selectedForm.base_cost || 0) * currentRank : 0;
+  const baseCost = selectedForm
+    ? (selectedForm.base_cost || 0) * currentRank : 0;
   const baseEp = selectedForm
     ? (selectedForm.base_ep || 0) + (currentRank - 1) * 2 : 0;
   const rankReq = (rankAttributeReqs?.length > currentRank - 1)
@@ -103,7 +104,8 @@ const TemplatePage = (props, context) => {
     <Box>
       {/* Info Banner */}
       <NoticeBox info>
-        Design your augment here. The ticket can be fabricated by authorized personnel.
+        Design your augment here. The ticket can be fabricated by
+        authorized personnel.
       </NoticeBox>
 
       {/* Template Selection Section */}
@@ -289,7 +291,8 @@ const EffectsPage = (props, context) => {
 
   // Find selected form
   const selectedForm = forms.find(f => f.id === selectedFormId) || null;
-  const baseCost = selectedForm ? (selectedForm.base_cost || 0) * selectedRank : 0;
+  const baseCost = selectedForm
+    ? (selectedForm.base_cost || 0) * selectedRank : 0;
   const baseEp = selectedForm
     ? (selectedForm.base_ep || 0) + (selectedRank - 1) * 2 : 0;
 
