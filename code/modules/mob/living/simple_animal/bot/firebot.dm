@@ -1,8 +1,8 @@
-//Firebot. LOBOTOMY CORPORATION 13: USELESS TO US SINCE WE DO NOT USE ATMOS BASED FIRES. MURKED.
-/*
-#define SPEECH_INTERVAL 300  // Time between idle speeches
-#define DETECTED_VOICE_INTERVAL 300  // Time between fire detected callouts
-#define FOAM_INTERVAL 50  // Time between deployment of fire fighting foam
+//Firebot. LOBOTOMY CORPORATION 13: UNMURKED, but its just a pretty face for now.
+
+// #define SPEECH_INTERVAL 300  // Time between idle speeches
+// #define DETECTED_VOICE_INTERVAL 300  // Time between fire detected callouts
+// #define FOAM_INTERVAL 50  // Time between deployment of fire fighting foam
 
 /mob/living/simple_animal/bot/firebot
 	name = "\improper Firebot"
@@ -22,7 +22,7 @@
 	window_id = "autoextinguisher"
 	window_name = "Mobile Fire Extinguisher v1.0"
 	path_image_color = "#FFA500"
-
+/*
 	var/atom/target_fire
 	var/atom/old_target_fire
 
@@ -168,7 +168,7 @@
 
 	else if(isturf(target))
 		var/turf/open/T = target
-		if(T.active_hotspot)
+		if(locate(/obj/effect/turf_fire) in T)
 			return TRUE
 
 	return FALSE
@@ -324,10 +324,10 @@
 
 	do_sparks(3, TRUE, src)
 	..()
-
+*/
 /obj/machinery/bot_core/firebot
 	req_one_access = list(ACCESS_CONSTRUCTION, ACCESS_ROBOTICS)
-
+/*
 #undef SPEECH_INTERVAL
 #undef DETECTED_VOICE_INTERVAL
 #undef FOAM_INTERVAL
