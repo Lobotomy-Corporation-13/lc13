@@ -547,7 +547,7 @@
 /turf/open/floor/plasteel/dark,
 /area/centcom/hub)
 "fx" = (
-// /obj/machinery/igniter/on,
+/obj/machinery/igniter,
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plasteel,
 /area/tdome/arena_source)
@@ -3263,7 +3263,7 @@
 /turf/open/floor/plasteel,
 /area/syndicate_mothership/control)
 "uM" = (
-// /obj/machinery/igniter/on,
+/obj/machinery/igniter,
 /obj/effect/turf_decal/delivery,
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/engine,
@@ -5587,7 +5587,7 @@
 /turf/open/floor/plasteel,
 /area/centcom/supply)
 "Is" = (
-// /obj/machinery/igniter/on,
+/obj/machinery/igniter,
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/engine,
 /area/tdome/arena)
