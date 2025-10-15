@@ -24,13 +24,16 @@ export const AugmentCatalogue = (props, context) => {
   return (
     <Window
       title="Augment Catalogue"
-      width={700}
-      height={650}>
+      width={800}
+      height={700}>
       <Window.Content scrollable>
         {!hasLoaded ? (<NoticeBox>Loading configuration...</NoticeBox>) : (
           <>
             {page === 'template' && <TemplatePage setPage={setPage} context={context} />}
             {page === 'effects' && <EffectsPage setPage={setPage} context={context} />}
+            {page === 'services' && <ServicesPage setPage={setPage} context={context} />}
+            {page === 'upload' && <UploadPage setPage={setPage} context={context} />}
+            {page === 'library' && <LibraryPage setPage={setPage} context={context} />}
           </>
         )}
       </Window.Content>
@@ -251,17 +254,31 @@ const TemplatePage = (props, context) => {
         </LabeledList>
       </Section>
 
-      {/* Navigation Button */}
+      {/* Navigation Buttons */}
       <Box
         borderTop={1}
         borderColor="rgba(255, 255, 255, 0.1)"
         mt={2}
-        pt={1}
-        textAlign="right">
-        <Button
-          icon="arrow-right"
-          content="Select Effects"
-          onClick={() => setPage('effects')} />
+        pt={1}>
+        <Flex direction="row" justify="space-between" mb={1}>
+          <Flex.Item>
+            <Button
+              icon="wrench"
+              content="Services"
+              onClick={() => setPage('services')} />
+          </Flex.Item>
+          <Flex.Item>
+            <Button
+              icon="book"
+              content="Library"
+              onClick={() => setPage('library')}
+              mr={1} />
+            <Button
+              icon="arrow-right"
+              content="Select Effects"
+              onClick={() => setPage('effects')} />
+          </Flex.Item>
+        </Flex>
       </Box>
     </Box>
   );
@@ -629,14 +646,460 @@ const EffectsPage = (props, context) => {
           icon="arrow-left"
           content="Back to Template"
           onClick={() => setPage('template')} />
+        <Flex>
+          <Flex.Item mr={1}>
+            <Button
+              icon="upload"
+              content="Upload to Library"
+              color="blue"
+              disabled={busy || remainingEp < 0 || !selectedFormId
+                || !isValidHex(primaryColor) || !isValidHex(secondaryColor)
+                || selectedEffects.length === 0}
+              onClick={() => setPage('upload')} />
+          </Flex.Item>
+          <Flex.Item>
+            <Button
+              icon="ticket-alt"
+              content="Create Ticket"
+              color="good"
+              disabled={busy || remainingEp < 0 || !selectedFormId
+                || !isValidHex(primaryColor) || !isValidHex(secondaryColor)
+                || selectedEffects.length === 0}
+              onClick={handleCreateTicket} />
+          </Flex.Item>
+        </Flex>
+      </Box>
+    </Box>
+  );
+};
+
+// Page 3: Services (Scan & Remove)
+const ServicesPage = (props, context) => {
+  const { setPage } = props;
+  const { act, data } = useBackend(context);
+
+  const {
+    scanCost = 20,
+    removeCost = 100,
+    currencySymbol = 'ahn',
+    busy = false,
+  } = data;
+
+  const handleScan = () => {
+    act('scan_augment');
+  };
+
+  const handleRemove = () => {
+    act('remove_augment');
+  };
+
+  return (
+    <Box>
+      {/* Info Banner */}
+      <NoticeBox info>
+        Use these services to scan augment compatibility or remove your current augment.
+      </NoticeBox>
+
+      {/* Scan Service */}
+      <Section title="Augment Scanner">
+        <Box mb={1}>
+          Scan your body to check augment compatibility and view current augment details.
+        </Box>
+        <Box mb={1} color="label">
+          Cost: {scanCost} {currencySymbol}
+        </Box>
         <Button
-          icon="ticket-alt"
-          content="Create Ticket"
+          icon="search"
+          content="Scan Augment"
+          disabled={busy}
+          onClick={handleScan}
           color="good"
-          disabled={busy || remainingEp < 0 || !selectedFormId
-            || !isValidHex(primaryColor) || !isValidHex(secondaryColor)
-            || selectedEffects.length === 0}
-          onClick={handleCreateTicket} />
+          fluid />
+      </Section>
+
+      {/* Remove Service */}
+      <Section title="Augment Removal">
+        <Box mb={1}>
+          Remove your current augment. The augment will be extracted and dropped nearby.
+        </Box>
+        <Box mb={1} color="label">
+          Cost: {removeCost} {currencySymbol}
+        </Box>
+        <Button
+          icon="times"
+          content="Remove Augment"
+          disabled={busy}
+          onClick={handleRemove}
+          color="bad"
+          fluid />
+      </Section>
+
+      {/* Navigation Button */}
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={2}
+        pt={1}
+        textAlign="left">
+        <Button
+          icon="arrow-left"
+          content="Back to Template"
+          onClick={() => setPage('template')} />
+      </Box>
+    </Box>
+  );
+};
+
+// Page 4: Upload Design
+const UploadPage = (props, context) => {
+  const { setPage } = props;
+  const { act, data } = useBackend(context);
+
+  // Read shared state for design info
+  const [selectedFormId] = useSharedState(context, 'selectedFormId', null);
+  const [selectedRank] = useSharedState(context, 'selectedRank', 1);
+  const [augName] = useSharedState(context, 'augName', '');
+  const [augDesc] = useSharedState(context, 'augDesc', '');
+  const [primaryColor] = useSharedState(context, 'primaryColor', '#FFFFFF');
+  const [secondaryColor] = useSharedState(context, 'secondaryColor', '#CCCCCC');
+  const [selectedEffects] = useSharedState(context, 'selectedEffects', []);
+  const [explanation, setExplanation] = useSharedState(context, 'explanation', '');
+
+  const {
+    forms = [],
+    effects = [],
+    currencySymbol = 'ahn',
+    busy = false,
+  } = data;
+
+  // Find selected form
+  const selectedForm = forms.find(f => f.id === selectedFormId) || null;
+  const baseCost = selectedForm
+    ? (selectedForm.base_cost || 0) * selectedRank : 0;
+
+  // Calculate costs
+  const selectedEffectsData = selectedEffects.map(effectId => {
+    return effects.find(e => e.id === effectId);
+  }).filter(e => e);
+
+  const currentEffectsCost = selectedEffectsData.reduce((sum, effect) =>
+    sum + (effect?.current_ahn_cost || 0), 0);
+  const totalCost = baseCost + currentEffectsCost;
+
+  const handleUpload = () => {
+    if (!selectedFormId || selectedEffects.length === 0) {
+      alert('Please complete your design first.');
+      return;
+    }
+    if (!augName || augName.trim() === '') {
+      alert('Please give your augment a name.');
+      return;
+    }
+    act('upload_design', { explanation: explanation });
+    setExplanation(''); // Clear explanation after upload
+    setPage('effects'); // Go back to effects page
+  };
+
+  return (
+    <Box>
+      {/* Info Banner */}
+      <NoticeBox info>
+        Upload your augment design to the shared library for all players to use.
+      </NoticeBox>
+
+      {/* Design Summary */}
+      <Section title="Design Summary">
+        <LabeledList>
+          <LabeledList.Item label="Augment Name">
+            {augName || <Box color="bad">Not set</Box>}
+          </LabeledList.Item>
+          <LabeledList.Item label="Form">
+            {selectedForm?.name || <Box color="bad">Not selected</Box>}
+          </LabeledList.Item>
+          <LabeledList.Item label="Rank">
+            {selectedRank}
+          </LabeledList.Item>
+          <LabeledList.Item label="Total Cost">
+            {totalCost} {currencySymbol}
+          </LabeledList.Item>
+          <LabeledList.Item label="Effects">
+            {selectedEffects.length} selected
+          </LabeledList.Item>
+        </LabeledList>
+      </Section>
+
+      {/* Explanation Input */}
+      <Section title="Design Explanation">
+        <Box mb={1} color="label">
+          Provide a brief explanation of your augment design, its purpose,
+          and recommended usage (optional, but helpful for other players).
+        </Box>
+        <TextArea
+          value={explanation}
+          onInput={(e, value) => setExplanation(value)}
+          width="100%"
+          height="120px"
+          maxLength={500}
+          placeholder="Describe your augment design, its strengths, and recommended use cases..." />
+        <Box mt={1} color="label" fontSize="small">
+          {explanation.length} / 500 characters
+        </Box>
+      </Section>
+
+      {/* Navigation Buttons */}
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={2}
+        pt={1}
+        display="flex"
+        justifyContent="space-between">
+        <Button
+          icon="arrow-left"
+          content="Back to Effects"
+          onClick={() => setPage('effects')} />
+        <Button
+          icon="upload"
+          content="Upload to Library"
+          color="good"
+          disabled={busy || !selectedFormId || !augName || selectedEffects.length === 0}
+          onClick={handleUpload} />
+      </Box>
+    </Box>
+  );
+};
+
+// Page 5: Library Browser
+const LibraryPage = (props, context) => {
+  const { setPage } = props;
+  const { act, data } = useBackend(context);
+
+  const {
+    augmentLibrary = [],
+    currencySymbol = 'ahn',
+    effects = [],
+    userCkey = '',
+    isAdmin = false,
+    busy = false,
+  } = data;
+
+  const [searchQuery, setSearchQuery] = useSharedState(context, 'librarySearch', '');
+  const [selectedLibraryId, setSelectedLibraryId] = useSharedState(context, 'selectedLibraryId', null);
+
+  // Filter library entries based on search
+  const filteredLibrary = augmentLibrary.filter(entry => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    const name = (entry?.augment_name || '').toLowerCase();
+    const author = (entry?.author || '').toLowerCase();
+    const desc = (entry?.augment_desc || '').toLowerCase();
+    const explanation = (entry?.explanation || '').toLowerCase();
+    return name.includes(query) || author.includes(query)
+      || desc.includes(query) || explanation.includes(query);
+  });
+
+  const selectedEntry = filteredLibrary.find(e => e.id === selectedLibraryId) || null;
+
+  const handleLoadDesign = (entry) => {
+    act('load_from_library', { libraryId: entry.id });
+    setPage('template'); // Go to template page to view loaded design
+  };
+
+  const handleCreateTicket = (entry) => {
+    act('create_ticket_from_library', { libraryId: entry.id });
+  };
+
+  const handleDeleteEntry = (entry) => {
+    if (confirm(`Delete "${entry.augment_name}" by ${entry.author}? This cannot be undone.`)) {
+      act('delete_library_entry', { libraryId: entry.id });
+      setSelectedLibraryId(null); // Clear selection after delete
+    }
+  };
+
+  // Check if current user can delete this entry
+  const canDelete = (entry) => {
+    if (!entry) return false;
+    const isOwner = userCkey && entry.author_ckey === userCkey;
+    return isOwner || isAdmin;
+  };
+
+  return (
+    <Box>
+      {/* Info Banner */}
+      <NoticeBox info>
+        Browse augment designs uploaded by other players. Load designs to customize them or create tickets directly.
+      </NoticeBox>
+
+      {/* Search Bar */}
+      <Section>
+        <Input
+          fluid
+          icon="search"
+          placeholder="Search by name, author, or description..."
+          value={searchQuery}
+          onInput={(e, value) => setSearchQuery(value)}
+        />
+        {searchQuery && (
+          <Box mt={0.5} color="label" fontSize="small">
+            Showing {filteredLibrary.length} of {augmentLibrary.length} designs
+          </Box>
+        )}
+      </Section>
+
+      {/* Library List */}
+      <Box display="flex" height="calc(100% - 180px)">
+        {/* Library Entries Column */}
+        <Box flexBasis="50%" pr={1} overflowY="auto" mr={1}>
+          <Section title={`Library (${filteredLibrary.length} designs)`}>
+            {!augmentLibrary || augmentLibrary.length === 0 ? (
+              <Box color="label" textAlign="center" mt={2}>
+                No augments in library yet.
+              </Box>
+            ) : filteredLibrary.length === 0 ? (
+              <Box color="label" textAlign="center" mt={2}>
+                No designs match your search.
+              </Box>
+            ) : (
+              filteredLibrary.map(entry => {
+                const isSelected = selectedLibraryId === entry.id;
+                return (
+                  <Box
+                    key={entry.id}
+                    mb={1}
+                    p={1}
+                    backgroundColor={isSelected ? 'rgba(255, 255, 255, 0.1)' : 'transparent'}
+                    style={{
+                      border: isSelected ? '1px solid rgba(255, 255, 255, 0.3)' : '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => setSelectedLibraryId(entry.id)}>
+                    <Box fontSize="medium" bold>
+                      {entry.augment_name}
+                    </Box>
+                    <Box color="label" fontSize="small">
+                      by {entry.author} • Rank {entry.rank} {entry.form_name} • {entry.total_cost} {currencySymbol}
+                    </Box>
+                    {entry.augment_desc && (
+                      <Box mt={0.5} fontSize="small" italic>
+                        {entry.augment_desc.length > 80
+                          ? entry.augment_desc.substring(0, 80) + '...'
+                          : entry.augment_desc}
+                      </Box>
+                    )}
+                  </Box>
+                );
+              })
+            )}
+          </Section>
+        </Box>
+
+        {/* Detail View Column */}
+        <Box flexBasis="50%" pl={1} overflowY="auto" ml={1}>
+          <Section title="Design Details">
+            {!selectedEntry ? (
+              <Box color="label" textAlign="center" mt={2}>
+                Select a design to view details.
+              </Box>
+            ) : (
+              <>
+                <LabeledList>
+                  <LabeledList.Item label="Name">
+                    {selectedEntry.augment_name}
+                  </LabeledList.Item>
+                  <LabeledList.Item label="Author">
+                    {selectedEntry.author}
+                    {isAdmin && selectedEntry.author_ckey && (
+                      <Box inline ml={1} color="label" fontSize="small">
+                        ({selectedEntry.author_ckey})
+                      </Box>
+                    )}
+                  </LabeledList.Item>
+                  <LabeledList.Item label="Form">
+                    {selectedEntry.form_name}
+                  </LabeledList.Item>
+                  <LabeledList.Item label="Rank">
+                    {selectedEntry.rank}
+                  </LabeledList.Item>
+                  <LabeledList.Item label="Total Cost">
+                    {selectedEntry.total_cost} {currencySymbol}
+                  </LabeledList.Item>
+                </LabeledList>
+
+                {selectedEntry.augment_desc && (
+                  <Box mt={1}>
+                    <Box bold mb={0.5}>Description:</Box>
+                    <Box color="label">{selectedEntry.augment_desc}</Box>
+                  </Box>
+                )}
+
+                {selectedEntry.explanation && (
+                  <Box mt={1}>
+                    <Box bold mb={0.5}>Author's Notes:</Box>
+                    <Box color="label">{selectedEntry.explanation}</Box>
+                  </Box>
+                )}
+
+                <Box mt={1}>
+                  <Box bold mb={0.5}>Effects ({selectedEntry.effect_details?.length || 0}):</Box>
+                  {selectedEntry.effect_details && selectedEntry.effect_details.length > 0 ? (
+                    selectedEntry.effect_details.map((effect, index) => (
+                      <Box key={index} mb={0.5}>
+                        <Box color="good">• {effect.name}</Box>
+                        <Box color="label" fontSize="small" ml={2}>
+                          {effect.desc}
+                        </Box>
+                      </Box>
+                    ))
+                  ) : (
+                    <Box color="label">No effects listed.</Box>
+                  )}
+                </Box>
+
+                <Box mt={2}>
+                  <Button
+                    icon="download"
+                    content="Load This Design"
+                    color="good"
+                    disabled={busy}
+                    fluid
+                    mb={1}
+                    onClick={() => handleLoadDesign(selectedEntry)} />
+                  <Button
+                    icon="ticket-alt"
+                    content="Create Ticket"
+                    color="blue"
+                    disabled={busy}
+                    fluid
+                    mb={1}
+                    onClick={() => handleCreateTicket(selectedEntry)} />
+                  {canDelete(selectedEntry) && (
+                    <Button
+                      icon="trash"
+                      content={isAdmin ? "Delete (Admin)" : "Delete My Design"}
+                      color="bad"
+                      disabled={busy}
+                      fluid
+                      onClick={() => handleDeleteEntry(selectedEntry)} />
+                  )}
+                </Box>
+              </>
+            )}
+          </Section>
+        </Box>
+      </Box>
+
+      {/* Navigation Button */}
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={1}
+        pt={1}
+        textAlign="left">
+        <Button
+          icon="arrow-left"
+          content="Back to Template"
+          onClick={() => setPage('template')} />
       </Box>
     </Box>
   );
