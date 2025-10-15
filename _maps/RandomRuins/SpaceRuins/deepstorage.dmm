@@ -1508,7 +1508,6 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/deepstorage)
 "eE" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/machinery/light/small{
 	dir = 4
 	},
@@ -1643,7 +1642,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/dorm)
 "eR" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/deepstorage)
@@ -1716,7 +1714,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/dorm)
 "ff" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/effect/turf_decal/delivery,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/deepstorage)
@@ -1761,7 +1758,6 @@
 /turf/closed/wall/mineral/iron,
 /area/ruin/space/has_grav/deepstorage/power)
 "fq" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/machinery/light/small{
 	dir = 4
 	},
@@ -1797,7 +1793,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/airlock)
 "fw" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/item/wrench,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,

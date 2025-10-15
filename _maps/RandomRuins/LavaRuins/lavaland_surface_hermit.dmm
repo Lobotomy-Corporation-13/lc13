@@ -173,7 +173,6 @@
 /turf/open/floor/plating,
 /area/ruin/powered)
 "M" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered)
 "P" = (

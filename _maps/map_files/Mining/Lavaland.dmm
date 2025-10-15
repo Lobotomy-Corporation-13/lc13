@@ -885,7 +885,6 @@
 /turf/open/floor/plating,
 /area/mine/living_quarters)
 "cU" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/mine/living_quarters)
@@ -1050,7 +1049,6 @@
 /turf/open/floor/plating,
 /area/mine/living_quarters)
 "dp" = (
-/obj/machinery/meter,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/mine/living_quarters)
@@ -3736,7 +3734,6 @@
 /turf/open/floor/plasteel,
 /area/mine/production)
 "AH" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,
 /area/mine/laborcamp)

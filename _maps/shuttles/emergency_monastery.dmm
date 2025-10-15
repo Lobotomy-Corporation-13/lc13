@@ -1050,7 +1050,6 @@
 /turf/open/floor/grass,
 /area/shuttle/escape)
 "nd" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/shuttle/escape)
@@ -3683,7 +3682,6 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/shuttle/escape)
 "TK" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/shuttle/escape)
 "TR" = (

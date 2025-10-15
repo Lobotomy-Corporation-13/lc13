@@ -58,7 +58,6 @@
 	pixel_x = -32;
 	pixel_y = 32
 	},
-/obj/machinery/meter,
 /obj/machinery/firealarm{
 	dir = 8;
 	pixel_x = 26
@@ -403,7 +402,6 @@
 /area/shuttle/abandoned/engine)
 "aM" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -601,7 +599,6 @@
 /area/shuttle/abandoned/engine)
 "bh" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/meter,
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
 /turf/open/floor/plating,

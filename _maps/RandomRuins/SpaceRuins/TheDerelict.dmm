@@ -901,7 +901,6 @@
 /area/ruin/space/derelict/bridge)
 "ee" = (
 /obj/structure/window/reinforced,
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plasteel/airless{
 	icon_state = "damaged3"
 	},
@@ -2557,7 +2556,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "ks" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "kw" = (
@@ -2578,7 +2576,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/arrival)
 "kC" = (
-/obj/machinery/portable_atmospherics/pump,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "kD" = (
@@ -2796,7 +2793,6 @@
 /turf/closed/wall/r_wall,
 /area/ruin/space/derelict/atmospherics)
 "lw" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
 	},
 /area/ruin/space/derelict/atmospherics)
@@ -3038,7 +3034,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "mx" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "my" = (
@@ -3128,7 +3123,6 @@
 /turf/template_noop,
 /area/ruin/space/derelict/hallway/primary/port)
 "mP" = (
-/obj/machinery/portable_atmospherics/pump,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "mQ" = (

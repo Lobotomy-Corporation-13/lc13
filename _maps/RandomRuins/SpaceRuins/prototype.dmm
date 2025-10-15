@@ -1648,7 +1648,6 @@
 /area/ruin/has_grav/prototype/arrivals)
 "fo" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fp" = (
@@ -1800,7 +1799,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "fS" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/engine/o2,
 /area/ruin/has_grav/prototype/engineering)
 "fT" = (
@@ -1814,11 +1812,9 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fU" = (
-/obj/machinery/portable_atmospherics/canister/nitrogen,
 /turf/open/floor/engine/n2,
 /area/ruin/has_grav/prototype/engineering)
 "fV" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/engine/air,
 /area/ruin/has_grav/prototype/engineering)
 "fW" = (

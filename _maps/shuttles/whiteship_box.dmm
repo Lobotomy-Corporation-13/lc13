@@ -339,7 +339,6 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
@@ -553,7 +552,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
 "aW" = (
-/obj/machinery/meter,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
@@ -1104,12 +1102,10 @@
 "ch" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plasteel/white/side,
 /area/shuttle/abandoned/medbay)
 "ci" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plasteel/white/side,
 /area/shuttle/abandoned/medbay)
 "cj" = (

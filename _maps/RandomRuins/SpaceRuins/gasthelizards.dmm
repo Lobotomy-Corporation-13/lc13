@@ -156,7 +156,6 @@
 /turf/open/floor/plasteel/airless/dark,
 /area/ruin/space/has_grav/gasthelizard)
 "s" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/gasthelizard)
 "t" = (
@@ -196,7 +195,6 @@
 /turf/open/floor/plasteel/airless/dark,
 /area/ruin/space/has_grav/gasthelizard)
 "z" = (
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/gasthelizard)
 "A" = (
@@ -217,7 +215,6 @@
 /turf/open/floor/plasteel/airless/dark,
 /area/ruin/space/has_grav/gasthelizard)
 "E" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/gasthelizard)
 "F" = (
@@ -284,7 +281,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/gasthelizard)
 "O" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/gasthelizard)

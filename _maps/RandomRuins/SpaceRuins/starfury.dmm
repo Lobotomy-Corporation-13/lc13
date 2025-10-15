@@ -31,9 +31,7 @@
 	dir = 8
 	},
 /obj/machinery/computer/crew/syndie,
-/turf/open/floor/plasteel/dark{ "n2=100;TEMP=80";
-	temperature = 80
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/sbc/starfury)
 "ag" = (
 /obj/machinery/door/window/brigdoor/security{
@@ -79,7 +77,6 @@
 /turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/starfury)
 "ao" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel/white,
 /area/shuttle/sbc/med)
@@ -1585,7 +1582,6 @@
 /turf/open/floor/mineral/plastitanium/red,
 /area/shuttle/sbc/bay)
 "ef" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
@@ -1650,7 +1646,6 @@
 /turf/open/floor/plating,
 /area/shuttle/sbc/starfury)
 "eo" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -1994,13 +1989,11 @@
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/crew)
 "ff" = (
-/obj/machinery/portable_atmospherics/canister/nitrogen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/engi)
 "fg" = (
 /obj/structure/cable,
-/obj/machinery/portable_atmospherics/canister/nitrogen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/engi)
@@ -2049,12 +2042,10 @@
 /area/shuttle/sbc/engi)
 "fl" = (
 /obj/structure/cable,
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/engi)
 "fm" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/engi)
@@ -2078,7 +2069,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -2844,7 +2834,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/nitrogen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -2985,9 +2974,7 @@
 	icon_state = "computer";
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{ "n2=100;TEMP=80";
-	temperature = 80
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/sbc/starfury)
 "hz" = (
 /obj/effect/turf_decal/tile/yellow{
@@ -3225,7 +3212,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -3234,7 +3220,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/toxins,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -3314,7 +3299,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/air,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
@@ -4154,7 +4138,6 @@
 	dir = 1;
 	pixel_y = 1
 	},
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/effect/turf_decal/bot,
 /obj/machinery/camera/xray{
 	icon_state = "xraycamera";
@@ -4284,7 +4267,6 @@
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/med)
 "kA" = (
-/obj/machinery/portable_atmospherics/canister/carbon_dioxide,
 /obj/effect/turf_decal/bot,
 /obj/structure/window/reinforced{
 	icon_state = "rwindow";
@@ -4293,7 +4275,6 @@
 /turf/open/floor/plasteel,
 /area/shuttle/sbc/engi)
 "kB" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /obj/structure/window/reinforced{
 	icon_state = "rwindow";
@@ -4469,7 +4450,6 @@
 /area/shuttle/sbc/engi)
 "kX" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plating,
 /area/shuttle/sbc/engi)
 "kY" = (

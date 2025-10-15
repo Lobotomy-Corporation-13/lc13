@@ -1270,9 +1270,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/dorm)
 "ed" = (
 /obj/structure/cable,
@@ -1531,9 +1529,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/dorm)
 "eR" = (
 /obj/structure/cable,
@@ -1743,9 +1739,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/dorm)
 "fu" = (
 /obj/structure/cable,
@@ -1995,15 +1989,11 @@
 /turf/open/floor/wood,
 /area/awaymission/snowdin/outside)
 "gc" = (
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "gd" = (
 /obj/effect/spawner/lootdrop/crate_spawner,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "ge" = (
 /turf/closed/mineral/iron/ice,
@@ -2011,9 +2001,7 @@
 "gf" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonheavy,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "gg" = (
 /obj/structure/bed,
@@ -2275,15 +2263,11 @@
 /area/awaymission/snowdin/cave)
 "gU" = (
 /obj/effect/decal/remains/human,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "gV" = (
 /obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "gW" = (
 /turf/closed/mineral/diamond/ice,
@@ -2495,9 +2479,7 @@
 /area/awaymission/snowdin/post/garage)
 "hF" = (
 /obj/structure/destructible/cult/pylon,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "hG" = (
 /obj/structure/closet/cabinet,
@@ -2529,9 +2511,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/dorm)
 "hL" = (
 /obj/structure/cable,
@@ -2673,27 +2653,21 @@
 "il" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonmid,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "im" = (
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/spawner/nether{
 	max_mobs = 5
 	},
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "in" = (
 /mob/living/simple_animal/hostile/netherworld/blankbody{
 	desc = "It's Caleb Reed, but their flesh has an ashy texture, and their face is featureless save an eerie smile.";
 	name = "Caleb Reed"
 	},
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "io" = (
 /obj/structure/cable,
@@ -3043,9 +3017,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "jo" = (
 /turf/open/floor/plating{
@@ -3200,9 +3172,7 @@
 	desc = "It's Jacob Ullman, but their flesh has an ashy texture, and their face is featureless save an eerie smile.";
 	name = "Jacob Ullman"
 	},
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "jP" = (
 /obj/machinery/door/airlock{
@@ -3233,9 +3203,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "jU" = (
 /obj/effect/decal/cleanable/dirt,
@@ -3462,9 +3430,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "kG" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -3671,9 +3637,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "lo" = (
 /obj/effect/turf_decal/snowdin_station_sign/up,
@@ -3838,9 +3802,7 @@
 "lT" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonlite,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "lU" = (
 /obj/machinery/shower{
@@ -3902,9 +3864,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "me" = (
 /obj/structure/cable,
@@ -4983,9 +4943,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post)
 "pq" = (
 /obj/effect/decal/cleanable/dirt,
@@ -5181,7 +5139,6 @@
 	},
 /area/awaymission/snowdin/post/engineering)
 "pZ" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/engineering)
@@ -5189,12 +5146,10 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/machinery/portable_atmospherics/pump,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/awaymission/snowdin/post/engineering)
 "qb" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,
@@ -5221,9 +5176,7 @@
 /area/awaymission/snowdin/post/engineering)
 "qg" = (
 /obj/structure/flora/rock/pile/icy,
-/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
-	temperature = 120
-	},
+/turf/open/floor/engine/cult
 /area/awaymission/snowdin/cave/cavern)
 "qh" = (
 /obj/structure/fence,
@@ -6572,9 +6525,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/cavern1)
 "uy" = (
 /obj/machinery/airalarm{
@@ -6625,9 +6576,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/cavern1)
 "uF" = (
 /turf/open/floor/plating{
@@ -6766,9 +6715,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/cavern1)
 "vd" = (
 /obj/effect/turf_decal/tile/neutral,
@@ -7616,7 +7563,6 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xF" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xG" = (
@@ -7686,7 +7632,6 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xM" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xN" = (
@@ -7726,9 +7671,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_dock)
 "xR" = (
 /obj/effect/light_emitter{
@@ -7878,7 +7821,6 @@
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yo" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yp" = (
@@ -7979,9 +7921,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_dock)
 "yE" = (
 /obj/effect/turf_decal/stripes/corner{
@@ -8014,18 +7954,15 @@
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yJ" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yK" = (
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "yL" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "yM" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/machinery/light/small{
 	dir = 4
 	},
@@ -8359,7 +8296,6 @@
 /turf/open/floor/plating,
 /area/awaymission/snowdin/post/minipost)
 "zM" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/machinery/light/small{
 	brightness = 3;
 	dir = 8
@@ -8617,9 +8553,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/minipost)
 "Ax" = (
 /obj/structure/chair/office{
@@ -8637,7 +8571,6 @@
 /area/awaymission/snowdin/post/minipost)
 "Az" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/cave)
 "AA" = (
@@ -8987,11 +8920,9 @@
 /turf/open/floor/plasteel/white,
 /area/awaymission/snowdin/post/minipost)
 "Bv" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "Bw" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /obj/machinery/light/small{
 	dir = 4
 	},
@@ -9144,7 +9075,6 @@
 /turf/open/floor/plating/snowed/cavern,
 /area/awaymission/snowdin/cave/cavern)
 "BU" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /obj/machinery/light/small{
 	brightness = 3;
 	dir = 8
@@ -10553,18 +10483,15 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "Fn" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "Fo" = (
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "Fp" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "Fq" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /obj/machinery/light/small{
 	dir = 1
 	},
@@ -10754,9 +10681,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_dock)
 "FV" = (
 /obj/machinery/airalarm{
@@ -10825,9 +10750,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_dock)
 "Gi" = (
 /obj/effect/decal/cleanable/dirt,
@@ -11159,7 +11082,6 @@
 /area/awaymission/snowdin/outside)
 "Hq" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plating/snowed/smoothed,
 /area/awaymission/snowdin/outside)
 "Hr" = (
@@ -11253,9 +11175,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_main)
 "HF" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -11264,9 +11184,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_main)
 "HG" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -11280,7 +11198,6 @@
 /area/awaymission/snowdin/post/mining_main)
 "HI" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/light_emitter{
 	name = "outdoor light";
 	set_cap = 3;
@@ -11421,9 +11338,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_dock)
 "Ie" = (
 /obj/structure/barricade/sandbags,
@@ -11522,9 +11437,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_main)
 "Iv" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -11657,9 +11570,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/mining_main)
 "IU" = (
 /obj/machinery/light,
@@ -12685,9 +12596,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel
 /area/awaymission/snowdin/post/cavern1)
 "Xu" = (
 /obj/effect/turf_decal/stripes/corner{

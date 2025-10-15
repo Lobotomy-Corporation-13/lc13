@@ -719,7 +719,6 @@
 /turf/open/floor/plasteel/freezer,
 /area/awaymission/cabin)
 "cm" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "co" = (

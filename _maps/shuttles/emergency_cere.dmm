@@ -1015,7 +1015,6 @@
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cj" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},

@@ -116,7 +116,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "az" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/engine/atmos)
 "aA" = (
@@ -188,7 +187,6 @@
 /turf/open/floor/plasteel,
 /area/bridge)
 "aN" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/engine/atmos)
@@ -247,7 +245,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bb" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/engine/atmos)
@@ -312,7 +309,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bl" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bm" = (

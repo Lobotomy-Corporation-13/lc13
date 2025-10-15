@@ -115,7 +115,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "az" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/engine/atmos)
 "aD" = (
@@ -157,7 +156,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "aN" = (
-/obj/machinery/portable_atmospherics/canister/nitrous_oxide,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/engine/atmos)
@@ -209,7 +207,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bb" = (
-/obj/machinery/portable_atmospherics/canister,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/engine/atmos)
@@ -271,7 +268,6 @@
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bl" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/engine/atmos)
 "bm" = (
@@ -1040,7 +1036,6 @@
 /turf/open/openspace,
 /area/engine/storage)
 "gK" = (
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plating,
 /area/construction)
 "gW" = (
@@ -1548,7 +1543,6 @@
 /turf/open/floor/plasteel,
 /area/engine/storage)
 "JH" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/engine/storage)
 "Kd" = (
@@ -1578,7 +1572,6 @@
 /turf/open/floor/plating,
 /area/hallway/secondary/service)
 "LE" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/hallway/secondary/service)
 "LW" = (
@@ -1682,7 +1675,6 @@
 /turf/open/floor/plasteel,
 /area/engine/storage)
 "VB" = (
-/obj/machinery/meter,
 /turf/open/floor/plating,
 /area/construction)
 "WN" = (

@@ -301,7 +301,6 @@
 /turf/open/floor/plasteel/white,
 /area/ruin/powered/beach)
 "et" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/plating,
 /area/ruin/powered/beach)
 "eE" = (
