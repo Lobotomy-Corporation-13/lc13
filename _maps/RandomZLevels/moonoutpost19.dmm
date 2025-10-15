@@ -1885,9 +1885,6 @@
 	},
 /area/awaymission/moonoutpost19/research)
 "eg" = (
-/obj/machinery/atmospherics/components/unary/portables_connector{
-	dir = 4
-	},
 /obj/machinery/portable_atmospherics/canister,
 /obj/structure/alien/weeds,
 /turf/open/floor/plasteel{
@@ -1895,18 +1892,12 @@
 	},
 /area/awaymission/moonoutpost19/research)
 "eh" = (
-/obj/machinery/atmospherics/components/binary/pump{
-	dir = 4
-	},
 /turf/open/floor/plasteel/white/side{
 	dir = 4;
 	heat_capacity = 1e+006
 	},
 /area/awaymission/moonoutpost19/research)
 "ei" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 10
-	},
 /obj/structure/alien/weeds,
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
@@ -1990,9 +1981,6 @@
 	},
 /area/awaymission/moonoutpost19/research)
 "ex" = (
-/obj/machinery/atmospherics/pipe/manifold{
-	dir = 4
-	},
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
 /area/awaymission/moonoutpost19/research)
@@ -2074,7 +2062,6 @@
 	},
 /area/awaymission/moonoutpost19/research)
 "eN" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible,
 /obj/structure/chair/office/light{
 	dir = 4
 	},
@@ -2298,7 +2285,6 @@
 /turf/open/floor/plasteel/white,
 /area/awaymission/moonoutpost19/research)
 "fl" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible,
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
 /area/awaymission/moonoutpost19/research)
@@ -2395,18 +2381,10 @@
 /turf/open/floor/plasteel/white,
 /area/awaymission/moonoutpost19/research)
 "fC" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 5
-	},
 /obj/structure/cable,
 /turf/open/floor/plasteel/white,
 /area/awaymission/moonoutpost19/research)
 "fD" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	desc = "A one meter section of pipe. This one has been applied with an acid-proof coating.";
-	dir = 4;
-	name = "Acid-Proof Pipe"
-	},
 /obj/item/stack/rods,
 /obj/item/stack/cable_coil{
 	amount = 5
@@ -2427,11 +2405,6 @@
 	id = "Awaylab";
 	name = "Acid-Proof containment chamber blast door"
 	},
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	desc = "A one meter section of pipe. This one has been applied with an acid-proof coating.";
-	dir = 4;
-	name = "Acid-Proof Pipe"
-	},
 /obj/item/stack/rods,
 /obj/item/stack/cable_coil{
 	amount = 5
@@ -2443,40 +2416,20 @@
 /turf/open/floor/engine,
 /area/awaymission/moonoutpost19/research)
 "fF" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	desc = "A one meter section of pipe. This one has been applied with an acid-proof coating.";
-	dir = 4;
-	name = "Acid-Proof Pipe"
-	},
 /obj/structure/alien/weeds,
 /turf/open/floor/engine,
 /area/awaymission/moonoutpost19/research)
 "fG" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	desc = "A one meter section of pipe. This one has been applied with an acid-proof coating.";
-	dir = 4;
-	name = "Acid-Proof Pipe"
-	},
 /obj/structure/alien/weeds,
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/engine,
 /area/awaymission/moonoutpost19/research)
 "fH" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	desc = "A one meter section of pipe. This one has been applied with an acid-proof coating.";
-	dir = 4;
-	name = "Acid-Proof Pipe"
-	},
 /obj/structure/alien/weeds,
 /obj/structure/alien/resin/wall,
 /turf/open/floor/engine,
 /area/awaymission/moonoutpost19/research)
 "fJ" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/on{
-	desc = "Has a valve and pump attached to it. This one has been applied with an acid-proof coating.";
-	dir = 8;
-	name = "Acid-Proof Air Injector"
-	},
 /obj/structure/alien/weeds,
 /turf/open/floor/engine,
 /area/awaymission/moonoutpost19/research)

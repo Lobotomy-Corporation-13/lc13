@@ -73,7 +73,6 @@
 /turf/closed/wall,
 /area/ruin/has_grav/prototype/hallway)
 "as" = (
-/obj/machinery/atmospherics/components/unary/vent_pump,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/medsci)
@@ -253,7 +252,6 @@
 /turf/open/floor/mineral/plastitanium/airless,
 /area/ruin/has_grav/prototype/brig)
 "aR" = (
-/obj/machinery/atmospherics/components/unary/vent_pump,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/plastitanium/airless,
 /area/ruin/has_grav/prototype/brig)
@@ -315,7 +313,6 @@
 /area/ruin/has_grav/prototype/Captain)
 "aZ" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/components/unary/vent_pump,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood/airless,
 /area/ruin/has_grav/prototype/Captain)
@@ -386,22 +383,12 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "bm" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 6;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/medsci)
 "bn" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 6;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/mineral/plastitanium/airless,
 /area/ruin/has_grav/prototype/brig)
 "bo" = (
@@ -464,12 +451,7 @@
 /area/ruin/space/has_grav/powered)
 "bv" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 10;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/wood/airless,
 /area/ruin/has_grav/prototype/Captain)
 "bw" = (
@@ -485,8 +467,6 @@
 	name = "MedSci Department"
 	},
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/medsci)
 "bz" = (
@@ -538,13 +518,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "bF" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/siphon/on{
-	dir = 8;
-	frequency = 1442;
-	id_tag = "syndie_lavaland_n2_out";
-	internal_pressure_bound = 5066;
-	name = "Air Out"
-	},
 /turf/open/floor/engine/air,
 /area/ruin/has_grav/prototype/engineering)
 "bG" = (
@@ -559,10 +532,6 @@
 /area/template_noop)
 "bJ" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 8;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/medsci)
 "bK" = (
@@ -570,22 +539,14 @@
 /obj/machinery/door/airlock/highsecurity{
 	name = "Brig"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/brig)
 "bL" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/cyan/visible{
-	dir = 4
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "bM" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/on{
-	dir = 8
-	},
 /turf/open/floor/engine/air,
 /area/ruin/has_grav/prototype/engineering)
 "bN" = (
@@ -594,9 +555,7 @@
 	name = "Captain's Office";
 	req_access_txt = "20"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/mapping_helpers/airlock/locked,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/wood/airless,
 /area/ruin/has_grav/prototype/Captain)
 "bO" = (
@@ -645,10 +604,8 @@
 "bV" = (
 /obj/structure/cable,
 /obj/machinery/door/airlock/public/glass,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "bW" = (
@@ -668,13 +625,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "bY" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/siphon/on{
-	dir = 8;
-	frequency = 1442;
-	id_tag = "syndie_lavaland_o2_out";
-	internal_pressure_bound = 5066;
-	name = "Oxygen Out"
-	},
 /turf/open/floor/engine/o2,
 /area/ruin/has_grav/prototype/engineering)
 "bZ" = (
@@ -691,7 +641,6 @@
 	},
 /area/ruin/has_grav/prototype/hallway)
 "cb" = (
-/obj/machinery/atmospherics/components/unary/vent_pump,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
@@ -702,7 +651,6 @@
 /area/ruin/has_grav/prototype/hallway)
 "cd" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/effect/decal/cleanable/dirt,
 /obj/item/ammo_casing/spent{
@@ -717,39 +665,23 @@
 	pixel_x = -6;
 	pixel_y = 4
 	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "ce" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "manifold-2"
-	},
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 8
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cf" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cg" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 4
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ch" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/on{
-	dir = 8
-	},
 /turf/open/floor/engine/o2,
 /area/ruin/has_grav/prototype/engineering)
 "ci" = (
@@ -758,17 +690,12 @@
 /area/ruin/has_grav/prototype/botany)
 "cj" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/supply/visible{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ck" = (
 /obj/machinery/door/window/northright{
 	name = "Terrarium"
 	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plating/airless{
 	icon_state = "platingdmg3"
 	},
@@ -795,7 +722,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cp" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
@@ -826,20 +752,9 @@
 /area/ruin/has_grav/prototype/hallway)
 "cv" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/green/visible{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "cw" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/siphon/on{
-	dir = 8;
-	frequency = 1442;
-	id_tag = "syndie_lavaland_n2_out";
-	internal_pressure_bound = 5066;
-	name = "Nitrogen Out"
-	},
 /turf/open/floor/engine/n2,
 /area/ruin/has_grav/prototype/engineering)
 "cx" = (
@@ -847,13 +762,6 @@
 /area/ruin/has_grav/prototype/engineering)
 "cy" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cz" = (
@@ -873,27 +781,18 @@
 /area/ruin/has_grav/prototype/arrivals)
 "cB" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/effect/decal/cleanable/blood/footprints{
 	dir = 8;
 	icon_state = "blood1"
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cC" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/on{
-	dir = 8
-	},
 /turf/open/floor/engine/n2,
 /area/ruin/has_grav/prototype/engineering)
 "cD" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cE" = (
@@ -901,7 +800,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "cF" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,
 /obj/effect/spawner/structure/window/reinforced,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -924,9 +822,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "cJ" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/on{
-	dir = 1
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "cK" = (
@@ -943,25 +838,16 @@
 /area/ruin/has_grav/prototype/arrivals)
 "cM" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/footprints{
 	dir = 8;
 	icon_state = "blood1"
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
 	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "cN" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "cO" = (
@@ -1059,18 +945,11 @@
 /area/ruin/has_grav/prototype/botany)
 "dg" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/footprints{
 	dir = 8;
 	icon_state = "blood1"
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "dh" = (
@@ -1160,41 +1039,19 @@
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 5;
-	icon_state = "pipe11-3"
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 5;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "dt" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/drip{
 	icon_state = "u_guilty_l"
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "du" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 10;
-	icon_state = "pipe11-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 10
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "dv" = (
@@ -1237,14 +1094,7 @@
 /area/ruin/has_grav/prototype/botany)
 "dC" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "dD" = (
@@ -1292,9 +1142,6 @@
 	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 6
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "dJ" = (
@@ -1302,9 +1149,6 @@
 	anchored = 1
 	},
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sign/poster/official/build{
 	pixel_y = 32
@@ -1321,9 +1165,6 @@
 /turf/open/floor/plasteel/dark,
 /area/ruin/has_grav/prototype/brig)
 "dL" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light{
 	dir = 1
@@ -1331,10 +1172,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "dM" = (
-/obj/machinery/atmospherics/components/binary/pump/on{
-	dir = 8;
-	name = "Air to Distro"
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1349,32 +1186,15 @@
 "dO" = (
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 5;
-	icon_state = "pipe11-2"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 5;
-	icon_state = "pipe11-3"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "dP" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "dQ" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 6
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 10;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "dR" = (
@@ -1404,10 +1224,6 @@
 	icon_state = "blood1"
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 8;
-	icon_state = "pipe11-3"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "dV" = (
@@ -1424,9 +1240,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "dX" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/item/stack/sheet/mineral/plasma{
 	amount = 50
@@ -1444,9 +1257,7 @@
 /area/ruin/has_grav/prototype/dorms)
 "dZ" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "ea" = (
@@ -1454,16 +1265,11 @@
 	name = "Botany"
 	},
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "eb" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 8
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "ec" = (
@@ -1485,7 +1291,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ef" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1518,16 +1323,9 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "em" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/visible{
-	dir = 4;
-	icon_state = "manifoldlayer"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "en" = (
-/obj/machinery/atmospherics/pipe/simple/cyan/visible{
-	dir = 6
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1535,20 +1333,12 @@
 /obj/structure/sign/warning/nosmoking{
 	pixel_y = 32
 	},
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 1;
-	icon_state = "manifold-3"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ep" = (
-/obj/machinery/atmospherics/components/unary/vent_pump,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/dorms)
 "eq" = (
-/obj/machinery/atmospherics/pipe/simple/cyan/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1574,7 +1364,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "eu" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ev" = (
@@ -1582,26 +1371,12 @@
 /obj/machinery/door/airlock/public/glass{
 	name = "Dormitories"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "ew" = (
 /obj/structure/chair,
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "ex" = (
@@ -1635,14 +1410,7 @@
 /area/ruin/has_grav/prototype/botany)
 "eB" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/dorms)
 "eC" = (
@@ -1652,26 +1420,13 @@
 /area/ruin/has_grav/prototype/botany)
 "eD" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 1
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden/layer2{
-	dir = 1
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "eE" = (
 /obj/structure/cable,
 /obj/machinery/door/airlock/public/glass{
 	name = "Botany"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
 	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/dorms)
@@ -1694,7 +1449,6 @@
 /turf/template_noop,
 /area/ruin/has_grav/prototype/medsci)
 "eI" = (
-/obj/machinery/atmospherics/pipe/simple/cyan/visible,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1712,28 +1466,14 @@
 /area/ruin/space/has_grav/powered)
 "eM" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "eN" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/green/visible{
-	dir = 5;
-	icon_state = "pipe11-3"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "eO" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "eP" = (
@@ -1757,14 +1497,7 @@
 /obj/item/shard{
 	icon_state = "medium"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "eS" = (
@@ -1772,14 +1505,7 @@
 /obj/machinery/door/airlock/engineering{
 	name = "Engineering"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "eT" = (
@@ -1827,30 +1553,18 @@
 /area/ruin/has_grav/prototype/engineering)
 "eV" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/manifold4w/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/manifold4w/scrubbers/hidden/layer2,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "eW" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/trinary/filter/flipped{
-	dir = 1;
-	icon_state = "filter_off-0_f"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "eX" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 10
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "eY" = (
-/obj/machinery/atmospherics/pipe/simple/green/visible{
-	dir = 6
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1860,32 +1574,17 @@
 /area/ruin/has_grav/prototype/arrivals)
 "fa" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fb" = (
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
-	},
-/obj/machinery/atmospherics/pipe/manifold/scrubbers/hidden/layer2,
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fc" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/light{
 	dir = 1
-	},
-/obj/machinery/atmospherics/components/unary/vent_pump{
-	dir = 4;
-	icon_state = "vent_map-3"
 	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
@@ -1899,26 +1598,14 @@
 /obj/structure/sign/departments/engineering{
 	pixel_y = -32
 	},
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 8;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ff" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 8;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "fg" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 8;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/mineral/plastitanium/airless,
 /area/ruin/has_grav/prototype/brig)
 "fh" = (
@@ -1926,36 +1613,18 @@
 /obj/item/stack/sheet/plasteel{
 	amount = 2
 	},
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 4;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/wood/airless,
 /area/ruin/has_grav/prototype/Captain)
 "fi" = (
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 4;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "fj" = (
-/obj/machinery/atmospherics/pipe/simple/cyan/visible,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fk" = (
-/obj/machinery/atmospherics/components/binary/pump/on{
-	name = "Oxygen to Airmix"
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -1968,10 +1637,6 @@
 /area/ruin/has_grav/prototype/arrivals)
 "fm" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/components/unary/vent_scrubber/layer2{
-	dir = 4;
-	icon_state = "scrub_map-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/botany)
 "fn" = (
@@ -1997,37 +1662,22 @@
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/hallway)
 "fq" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fr" = (
-/obj/machinery/atmospherics/components/unary/vent_pump{
-	dir = 1;
-	icon_state = "vent_map-3"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fs" = (
-/obj/machinery/atmospherics/components/trinary/mixer/airmix{
-	dir = 1
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "ft" = (
-/obj/machinery/atmospherics/pipe/simple/green/visible{
-	dir = 9
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
 "fu" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 1;
-	icon_state = "pipe11-3"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "fv" = (
@@ -2083,20 +1733,9 @@
 /area/ruin/has_grav/prototype/engineering)
 "fB" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
-	},
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/hallway)
 "fC" = (
-/obj/machinery/atmospherics/components/binary/pump/on{
-	dir = 8;
-	name = "Nitrogen to Airmix"
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -2114,10 +1753,6 @@
 /area/ruin/has_grav/prototype/arrivals)
 "fG" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "fH" = (
@@ -2126,16 +1761,9 @@
 /area/ruin/has_grav/prototype/hallway)
 "fI" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 8;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "fJ" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/engineering)
@@ -2146,10 +1774,6 @@
 /area/ruin/has_grav/prototype/dorms)
 "fL" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 9;
-	icon_state = "pipe11-2"
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/prototype/arrivals)
 "fO" = (
@@ -2306,9 +1930,6 @@
 /turf/open/floor/pod/dark,
 /area/ruin/space/has_grav/powered)
 "gs" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/reagent_dispensers/fueltank,
 /turf/open/floor/plasteel/airless,
