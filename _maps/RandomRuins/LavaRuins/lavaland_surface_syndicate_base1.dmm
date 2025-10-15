@@ -2712,7 +2712,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/ruin/unpowered/syndicate_lava_base/dormitories)
 "iU" = (
 /obj/effect/decal/cleanable/dirt,
@@ -2741,7 +2741,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/ruin/unpowered/syndicate_lava_base/dormitories)
 "iY" = (
 /obj/structure/table,
@@ -4044,9 +4044,6 @@
 /obj/machinery/cell_charger,
 /obj/item/stock_parts/cell/high/plus,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/pipe_dispenser{
-	pixel_y = 12
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,
 /area/ruin/unpowered/syndicate_lava_base/engineering)

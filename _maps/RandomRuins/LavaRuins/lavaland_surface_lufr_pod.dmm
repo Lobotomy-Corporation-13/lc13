@@ -33,7 +33,7 @@
 /obj/structure/rack,
 /obj/item/spear/bonespear,
 /obj/item/mining_voucher,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "e" = (
 /obj/effect/turf_decal/tile/red{
@@ -54,7 +54,7 @@
 	pixel_x = 8;
 	pixel_y = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "f" = (
 /obj/effect/turf_decal/tile/red{
@@ -72,7 +72,7 @@
 	pixel_x = -3;
 	pixel_y = -2
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "g" = (
 /obj/effect/turf_decal/tile/purple{
@@ -83,7 +83,7 @@
 	dir = 1;
 	icon_state = "tile_corner"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "h" = (
 /obj/structure/bed/pod,
@@ -104,7 +104,7 @@
 	dir = 4;
 	icon_state = "tube"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "i" = (
 /obj/effect/turf_decal/tile/red{
@@ -113,10 +113,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "j" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "k" = (
 /obj/effect/turf_decal/tile/purple,
@@ -124,7 +124,7 @@
 	dir = 4;
 	icon_state = "tile_corner"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "l" = (
 /obj/structure/chair/wood,
@@ -133,7 +133,7 @@
 	dir = 4;
 	icon_state = "tile_corner"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "m" = (
 /obj/effect/turf_decal/tile/brown{
@@ -142,15 +142,15 @@
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "n" = (
 /obj/machinery/smartfridge/drying_rack,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "o" = (
 /obj/effect/turf_decal/tile/brown,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "p" = (
 /obj/structure/extinguisher_cabinet{
@@ -161,7 +161,7 @@
 	dir = 8;
 	icon_state = "tile_corner"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "q" = (
 /obj/structure/table/wood,
@@ -171,7 +171,7 @@
 	icon_state = "tile_corner"
 	},
 /obj/item/shovel/serrated,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "r" = (
 /obj/structure/table/wood,
@@ -191,7 +191,7 @@
 /obj/item/stack/sheet/silk{
 	amount = 5
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "s" = (
 /obj/structure/window/reinforced/spawner/north,
@@ -200,7 +200,7 @@
 /obj/effect/spawner/lootdrop/maintenance/seven,
 /obj/effect/spawner/lootdrop/space/syndiecosmetic,
 /obj/item/storage/firstaid/regular,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "t" = (
 /obj/machinery/door/window/brigdoor/northright,
@@ -208,7 +208,7 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/brown,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "u" = (
 /turf/closed/wall/mineral/plastitanium/nodiagonal,
@@ -225,7 +225,7 @@
 	dir = 8;
 	icon_state = "tube"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "w" = (
 /obj/structure/window/reinforced/spawner/west,
@@ -245,7 +245,7 @@
 	pixel_x = -3;
 	pixel_y = -4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "x" = (
 /obj/structure/closet/crate,
@@ -260,14 +260,14 @@
 /obj/effect/spawner/lootdrop/space/material,
 /obj/effect/spawner/lootdrop/space/languagebook,
 /obj/item/storage/firstaid/fire,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/ruin/powered)
 "y" = (
 /obj/machinery/door/airlock/grunge{
 	name = "dark airlock";
 	req_access_txt = "150"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/ruin/powered)
 "I" = (
 /obj/structure/water_source/puddle,

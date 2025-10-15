@@ -6159,8 +6159,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/crate,
-/obj/item/pipe_dispenser,
-/obj/item/pipe_dispenser,
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/ancientstation/deltacorridor)
 "DF" = (

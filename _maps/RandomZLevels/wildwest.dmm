@@ -51,7 +51,7 @@
 /turf/open/floor/circuit/off,
 /area/awaymission/wildwest/vault)
 "an" = (
-/turf/open/floor/plasteel/cult
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "ao" = (
 /turf/open/floor/circuit/green/off,
@@ -128,7 +128,7 @@
 /area/awaymission/wildwest/vault)
 "aL" = (
 /obj/item/paper/fluff/awaymissions/wildwest/grinder,
-/turf/open/floor/plasteel/cult
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "aM" = (
 /turf/closed/mineral/silver,
@@ -138,7 +138,7 @@
 /area/awaymission/wildwest/mines)
 "aO" = (
 /obj/effect/mob_spawn/human/corpse/syndicatecommando,
-/turf/open/floor/plasteel/cult
+/turf/open/floor/plasteel/cult,
 /area/awaymission/wildwest/vault)
 "aP" = (
 /obj/effect/decal/cleanable/blood/splatter,

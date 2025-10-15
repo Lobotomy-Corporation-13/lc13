@@ -277,7 +277,7 @@
 	dir = 1
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/pod/dark
+/turf/open/floor/pod/dark,
 /area/ruin/powered/snow_biodome)
 "qt" = (
 /obj/machinery/door/airlock/silver,

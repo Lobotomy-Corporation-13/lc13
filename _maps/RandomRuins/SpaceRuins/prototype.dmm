@@ -580,7 +580,7 @@
 /obj/structure/window/reinforced/fulltile,
 /obj/structure/flora/ausbushes/grassybush,
 /obj/structure/flora/ausbushes/ppflowers,
-/turf/open/floor/grass
+/turf/open/floor/grass,
 /area/ruin/has_grav/prototype/arrivals)
 "bS" = (
 /obj/effect/decal/cleanable/blood/gibs/limb,
@@ -1528,7 +1528,6 @@
 /obj/item/stack/sheet/rglass{
 	amount = 50
 	},
-/obj/item/pipe_dispenser,
 /obj/item/construction/rcd/loaded,
 /obj/item/stack/cable_coil,
 /obj/item/stack/cable_coil,

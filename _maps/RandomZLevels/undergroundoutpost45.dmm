@@ -26,7 +26,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "ah" = (
 /obj/effect/turf_decal/sand/plating,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/caves)
 "aj" = (
 /obj/effect/decal/cleanable/dirt,
@@ -57,7 +57,7 @@
 /turf/closed/wall/r_wall/rust,
 /area/awaymission/undergroundoutpost45/central)
 "ao" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "ap" = (
 /obj/machinery/light/small/broken{
@@ -106,29 +106,29 @@
 	id = "UO45_Elevator"
 	},
 /obj/effect/turf_decal/delivery,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "at" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "au" = (
 /obj/structure/closet/emcloset,
 /obj/item/clothing/mask/breath,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "ax" = (
 /obj/effect/landmark/awaystart,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ay" = (
 /obj/structure/chair/comfy/beige{
 	dir = 4
 	},
 /obj/effect/landmark/awaystart,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "az" = (
 /obj/structure/sign/warning/vacuum{
@@ -142,7 +142,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aB" = (
 /obj/effect/landmark/awaystart,
@@ -150,7 +150,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aC" = (
 /turf/closed/wall,
@@ -160,7 +160,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "aF" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aG" = (
 /obj/machinery/button/door{
@@ -177,22 +177,22 @@
 	pixel_x = 6;
 	pixel_y = 24
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aH" = (
 /obj/structure/sign/poster/official/nanotrasen_logo{
 	pixel_y = 32
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aI" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aJ" = (
 /obj/machinery/vending/cigarette,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "aK" = (
 /obj/structure/closet/emcloset,
@@ -200,48 +200,48 @@
 /obj/structure/sign/poster/official/safety_internals{
 	pixel_x = -32
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "aM" = (
 /obj/machinery/vending/cola,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "aN" = (
 /obj/machinery/light{
 	dir = 8
 	},
 /obj/machinery/door/firedoor,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aO" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/neutral,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aP" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "aQ" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aR" = (
 /obj/machinery/light{
 	dir = 4
 	},
 /obj/machinery/door/firedoor,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aS" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aT" = (
 /obj/effect/landmark/awaystart,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "aU" = (
 /obj/structure/closet/secure_closet/personal/cabinet{
@@ -249,24 +249,24 @@
 	req_access_txt = "201"
 	},
 /obj/item/clothing/under/misc/pj/blue,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "aV" = (
 /obj/structure/table/wood,
 /obj/item/newspaper,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "aW" = (
 /obj/structure/table/wood,
 /obj/item/reagent_containers/food/drinks/soda_cans/cola,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "aX" = (
 /obj/structure/chair/comfy/beige{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "aY" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -275,7 +275,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "aZ" = (
 /obj/structure/closet/secure_closet/personal/cabinet{
@@ -283,22 +283,22 @@
 	req_access_txt = "201"
 	},
 /obj/item/clothing/under/suit/black/skirt,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "ba" = (
 /obj/structure/table/wood,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bb" = (
 /obj/structure/table/wood,
 /obj/item/book/manual/ripley_build_and_repair,
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bc" = (
 /obj/structure/chair/comfy/beige{
 	dir = 8
 	},
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bd" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -325,7 +325,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "bf" = (
 /obj/item/storage/belt/security,
@@ -345,10 +345,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bg" = (
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bh" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -357,40 +357,40 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bi" = (
 /obj/structure/sink{
 	pixel_y = 25
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bj" = (
 /obj/structure/sink{
 	pixel_y = 25
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bk" = (
 /obj/structure/extinguisher_cabinet{
 	pixel_x = -25
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bl" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bm" = (
 /obj/structure/chair/comfy/beige{
 	dir = 1
 	},
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bn" = (
 /obj/structure/table/wood,
@@ -398,7 +398,7 @@
 	pixel_x = 1;
 	pixel_y = 5
 	},
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bo" = (
 /obj/structure/table/wood,
@@ -409,7 +409,7 @@
 	pixel_x = 4;
 	pixel_y = 2
 	},
-/turf/open/floor/plasteel/grimy
+/turf/open/floor/plasteel/grimy,
 /area/awaymission/undergroundoutpost45/central)
 "bp" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -418,18 +418,18 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bq" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "br" = (
 /obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "bs" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bt" = (
 /obj/machinery/light/small,
@@ -437,16 +437,16 @@
 	dir = 1;
 	pixel_y = -23
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bu" = (
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bv" = (
 /obj/machinery/door/airlock{
 	name = "Unisex Restrooms"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bw" = (
 /obj/machinery/camera{
@@ -458,38 +458,38 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bx" = (
 /obj/machinery/firealarm{
 	dir = 4;
 	pixel_x = 24
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "by" = (
 /obj/machinery/door/airlock{
 	name = "Unit 2"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bz" = (
 /obj/machinery/door/airlock{
 	name = "Unit 1"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bA" = (
 /obj/machinery/light{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bB" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bC" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -498,7 +498,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bD" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -507,7 +507,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bE" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -516,7 +516,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bF" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -525,19 +525,19 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bG" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bH" = (
 /obj/machinery/light{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bI" = (
 /obj/structure/toilet{
@@ -546,7 +546,7 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bJ" = (
 /obj/structure/toilet{
@@ -556,26 +556,26 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/central)
 "bK" = (
 /obj/structure/sign/poster/official/nanotrasen_logo{
 	pixel_y = -32
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bL" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bM" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bN" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/sign/poster/official/nanotrasen_logo{
 	pixel_y = -32
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bO" = (
 /turf/closed/wall,
@@ -590,10 +590,10 @@
 /turf/closed/wall,
 /area/awaymission/undergroundoutpost45/central)
 "bS" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bT" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "bU" = (
 /turf/closed/wall/rust,
@@ -614,7 +614,7 @@
 /area/awaymission/undergroundoutpost45/caves)
 "bY" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "bZ" = (
 /turf/open/floor/plating{
@@ -622,17 +622,17 @@
 	},
 /area/awaymission/undergroundoutpost45/central)
 "ca" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cb" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cc" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cd" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ce" = (
 /turf/open/floor/plating{
@@ -640,20 +640,20 @@
 	},
 /area/awaymission/undergroundoutpost45/central)
 "cf" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cg" = (
 /obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ch" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ci" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "cj" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ck" = (
 /turf/open/floor/plating{
@@ -667,7 +667,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "cm" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cn" = (
 /obj/effect/decal/cleanable/dirt,
@@ -683,7 +683,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "cq" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cr" = (
 /turf/closed/wall/rust,
@@ -692,25 +692,25 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ct" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cu" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cv" = (
 /obj/structure/closet,
 /obj/item/storage/box/lights/mixed,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cw" = (
 /obj/structure/table/wood,
 /obj/machinery/newscaster{
 	pixel_x = -30
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cx" = (
 /obj/machinery/light/small{
@@ -719,7 +719,7 @@
 /obj/machinery/airalarm/all_access{
 	pixel_y = 23
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cy" = (
 /obj/structure/closet/secure_closet{
@@ -742,7 +742,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "cz" = (
 /obj/machinery/airalarm/all_access{
@@ -760,7 +760,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "cA" = (
 /obj/machinery/light/small{
@@ -772,14 +772,14 @@
 /obj/structure/chair/wood{
 	dir = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cB" = (
 /obj/structure/table/wood,
 /obj/machinery/newscaster{
 	pixel_x = 30
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cC" = (
 /turf/open/floor/plating{
@@ -789,11 +789,11 @@
 "cD" = (
 /obj/structure/closet/emcloset,
 /obj/item/clothing/mask/breath,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cE" = (
 /obj/structure/reagent_dispensers/watertank,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cF" = (
 /obj/structure/grille,
@@ -817,20 +817,20 @@
 	pixel_y = -25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cI" = (
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cJ" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cK" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cL" = (
 /obj/machinery/button/door{
@@ -840,13 +840,13 @@
 	pixel_y = -25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "cM" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cN" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cO" = (
 /turf/open/floor/plating{
@@ -855,10 +855,10 @@
 /area/awaymission/undergroundoutpost45/central)
 "cP" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cQ" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cR" = (
 /turf/open/floor/plating{
@@ -869,58 +869,58 @@
 /obj/structure/window{
 	dir = 8
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cT" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cU" = (
 /obj/structure/reagent_dispensers/fueltank,
 /obj/structure/window{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cV" = (
 /turf/closed/wall/rust,
 /area/awaymission/undergroundoutpost45/central)
 "cW" = (
 /obj/structure/grille,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cX" = (
 /obj/item/stack/rods,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cY" = (
 /obj/structure/grille,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "cZ" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm2";
 	name = "Dorm 2"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "da" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Central Access"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "db" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm1";
 	name = "Dorm 1"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dc" = (
 /obj/structure/closet,
 /obj/item/poster/random_contraband,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "dd" = (
 /turf/open/floor/plating{
@@ -935,10 +935,10 @@
 /area/awaymission/undergroundoutpost45/central)
 "dg" = (
 /obj/item/stack/rods,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "dh" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "di" = (
 /turf/open/floor/plating{
@@ -951,23 +951,23 @@
 	},
 /area/awaymission/undergroundoutpost45/central)
 "dk" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "dl" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dm" = (
 /obj/machinery/firealarm{
 	pixel_y = 24
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dn" = (
 /obj/machinery/light{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "do" = (
 /obj/item/kirbyplants{
@@ -975,7 +975,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/green,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dp" = (
 /turf/closed/wall,
@@ -992,7 +992,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "dr" = (
 /obj/machinery/vending/hydroseeds{
@@ -1008,7 +1008,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "ds" = (
 /obj/machinery/disposal/bin,
@@ -1028,7 +1028,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "dt" = (
 /obj/machinery/seed_extractor,
@@ -1043,7 +1043,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "du" = (
 /obj/machinery/biogenerator,
@@ -1057,7 +1057,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "dv" = (
 /turf/closed/wall/r_wall,
@@ -1077,23 +1077,23 @@
 /area/awaymission/undergroundoutpost45/central)
 "dx" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dy" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dz" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dA" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dB" = (
 /obj/effect/turf_decal/tile/green,
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dC" = (
 /obj/structure/disposalpipe/segment{
@@ -1107,7 +1107,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dD" = (
 /obj/structure/disposalpipe/segment{
@@ -1122,7 +1122,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dE" = (
 /obj/machinery/airalarm/all_access{
@@ -1140,7 +1140,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dF" = (
 /obj/structure/disposalpipe/segment{
@@ -1153,7 +1153,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dG" = (
 /obj/structure/disposalpipe/segment{
@@ -1165,7 +1165,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dH" = (
 /obj/structure/disposalpipe/junction/flip{
@@ -1177,7 +1177,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dI" = (
 /obj/structure/disposalpipe/segment{
@@ -1191,7 +1191,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dJ" = (
 /obj/machinery/light{
@@ -1209,7 +1209,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dK" = (
 /obj/structure/disposalpipe/segment{
@@ -1224,7 +1224,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dL" = (
 /obj/effect/turf_decal/tile/green{
@@ -1234,7 +1234,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dM" = (
 /obj/item/food/meat/slab/monkey,
@@ -1246,7 +1246,7 @@
 	name = "meat fridge";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "dN" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1280,7 +1280,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dQ" = (
 /obj/effect/turf_decal/tile/red{
@@ -1290,25 +1290,25 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dR" = (
 /obj/machinery/door/airlock/security{
 	name = "Security Checkpoint";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dS" = (
 /obj/effect/turf_decal/tile/neutral,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dT" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dU" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1316,19 +1316,19 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dV" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dW" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dX" = (
 /obj/structure/disposalpipe/segment{
@@ -1338,7 +1338,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dY" = (
 /obj/machinery/door/firedoor,
@@ -1349,29 +1349,29 @@
 	name = "Hydroponics";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "dZ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ea" = (
 /obj/structure/disposalpipe/segment{
 	dir = 9
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eb" = (
 /obj/machinery/hydroponics/constructable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "ec" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ed" = (
 /obj/machinery/door/firedoor,
@@ -1380,17 +1380,17 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "ee" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ef" = (
 /obj/machinery/door/airlock/maintenance{
 	name = "Security Checkpoint Maintenance";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eg" = (
 /obj/effect/turf_decal/tile/red{
@@ -1399,35 +1399,35 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eh" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ei" = (
 /obj/effect/turf_decal/tile/red,
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ej" = (
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ek" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "el" = (
 /obj/effect/spawner/structure/window,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "em" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1437,11 +1437,11 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "en" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eo" = (
 /obj/machinery/door/firedoor,
@@ -1449,14 +1449,14 @@
 	name = "Hydroponics";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ep" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eq" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "er" = (
 /obj/structure/table,
@@ -1471,7 +1471,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "es" = (
 /turf/closed/wall,
@@ -1487,7 +1487,7 @@
 	req_access_txt = "201"
 	},
 /obj/item/clothing/under/misc/pj/red,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ew" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1495,7 +1495,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ex" = (
 /obj/structure/table/reinforced,
@@ -1512,7 +1512,7 @@
 	name = "Security Checkpoint";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ey" = (
 /obj/effect/turf_decal/tile/red{
@@ -1521,7 +1521,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ez" = (
 /obj/structure/chair{
@@ -1531,15 +1531,15 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eA" = (
 /obj/structure/flora/ausbushes/ppflowers,
-/turf/open/floor/grass
+/turf/open/floor/grass,
 /area/awaymission/undergroundoutpost45/central)
 "eB" = (
 /obj/structure/flora/ausbushes/brflowers,
-/turf/open/floor/grass
+/turf/open/floor/grass,
 /area/awaymission/undergroundoutpost45/central)
 "eC" = (
 /obj/structure/chair{
@@ -1551,12 +1551,12 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eD" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eE" = (
 /obj/structure/table,
@@ -1573,21 +1573,21 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "eF" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eG" = (
 /obj/machinery/door/airlock/external,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eH" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eI" = (
 /obj/machinery/door/airlock/external,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eJ" = (
 /turf/open/floor/plating/asteroid{
@@ -1609,7 +1609,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eL" = (
 /obj/structure/chair/office{
@@ -1619,7 +1619,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eM" = (
 /obj/structure/table/reinforced,
@@ -1630,7 +1630,7 @@
 	name = "Security Checkpoint";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eN" = (
 /obj/structure/chair{
@@ -1641,17 +1641,17 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eO" = (
 /obj/structure/flora/ausbushes/ywflowers,
-/turf/open/floor/grass
+/turf/open/floor/grass,
 /area/awaymission/undergroundoutpost45/central)
 "eP" = (
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eQ" = (
 /obj/structure/table/reinforced,
@@ -1661,16 +1661,16 @@
 	name = "Hydroponics Desk";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eR" = (
 /obj/structure/chair/stool,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eS" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/item/reagent_containers/glass/bucket,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eT" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1678,7 +1678,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eU" = (
 /obj/structure/table,
@@ -1704,7 +1704,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "eV" = (
 /obj/structure/closet/emcloset,
@@ -1712,7 +1712,7 @@
 /obj/structure/sign/warning/vacuum/external{
 	pixel_y = -32
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "eW" = (
 /obj/structure/table,
@@ -1724,7 +1724,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eX" = (
 /obj/structure/table,
@@ -1739,7 +1739,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eY" = (
 /obj/machinery/computer/security{
@@ -1753,13 +1753,13 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "eZ" = (
 /obj/effect/turf_decal/tile/red{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fa" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1767,11 +1767,11 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fb" = (
 /obj/effect/turf_decal/tile/green,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fc" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1782,7 +1782,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fd" = (
 /obj/structure/table/reinforced,
@@ -1794,7 +1794,7 @@
 	name = "Hydroponics Desk";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fe" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1802,14 +1802,14 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ff" = (
 /obj/effect/turf_decal/tile/green,
 /obj/effect/turf_decal/tile/green{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fg" = (
 /obj/machinery/camera{
@@ -1828,7 +1828,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fh" = (
 /obj/structure/extinguisher_cabinet{
@@ -1839,7 +1839,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fi" = (
 /obj/effect/decal/cleanable/dirt,
@@ -1848,7 +1848,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fj" = (
 /obj/effect/turf_decal/tile/green,
@@ -1856,7 +1856,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fk" = (
 /obj/structure/disposalpipe/segment,
@@ -1865,7 +1865,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fl" = (
 /obj/effect/turf_decal/tile/green,
@@ -1876,7 +1876,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fm" = (
 /turf/closed/wall/r_wall/rust,
@@ -1896,7 +1896,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fq" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -1905,13 +1905,13 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fr" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fs" = (
 /obj/machinery/light{
@@ -1925,7 +1925,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "ft" = (
 /obj/structure/closet/crate/hydroponics,
@@ -1933,11 +1933,11 @@
 /obj/item/wrench,
 /obj/item/screwdriver,
 /obj/item/reagent_containers/glass/bucket,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fu" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fv" = (
 /obj/structure/disposalpipe/segment{
@@ -1953,14 +1953,14 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fw" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fx" = (
 /obj/structure/disposalpipe/segment{
@@ -1971,14 +1971,14 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "fy" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "fz" = (
 /obj/structure/disposalpipe/segment{
@@ -1992,10 +1992,10 @@
 /area/awaymission/undergroundoutpost45/central)
 "fA" = (
 /obj/structure/chair/wood,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fB" = (
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fC" = (
 /obj/machinery/button/door{
@@ -2005,29 +2005,29 @@
 	pixel_y = 25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fD" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm3";
 	name = "Dorm 3"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fE" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fF" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fG" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fH" = (
 /obj/structure/disposalpipe/segment{
 	dir = 5
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fI" = (
 /obj/structure/disposalpipe/segment{
@@ -2040,7 +2040,7 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fJ" = (
 /obj/machinery/light/small{
@@ -2065,7 +2065,7 @@
 	name = "Hydroponics Desk";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "fN" = (
 /turf/closed/wall/rust,
@@ -2085,7 +2085,7 @@
 /obj/machinery/newscaster{
 	pixel_y = -28
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fR" = (
 /obj/machinery/light/small,
@@ -2094,12 +2094,12 @@
 	pixel_y = -23
 	},
 /obj/structure/dresser,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fS" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/central)
 "fT" = (
 /obj/item/kirbyplants{
@@ -2107,7 +2107,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fU" = (
 /obj/machinery/firealarm{
@@ -2119,22 +2119,22 @@
 	dir = 1;
 	network = list("uo45")
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fV" = (
 /obj/structure/extinguisher_cabinet{
 	pixel_y = -28
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "fW" = (
 /obj/machinery/vending/snack,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fX" = (
 /obj/machinery/vending/coffee,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fY" = (
 /obj/machinery/disposal/bin,
@@ -2146,21 +2146,21 @@
 	name = "\improper DISPOSAL: LEADS TO EXTERIOR";
 	pixel_y = -32
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/central)
 "fZ" = (
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ga" = (
 /obj/structure/sink/kitchen{
 	pixel_y = 28
 	},
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gb" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "gc" = (
 /turf/closed/wall/r_wall,
@@ -2173,7 +2173,7 @@
 /obj/machinery/door/airlock/public/glass{
 	name = "Central Access"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/central)
 "gf" = (
 /obj/structure/glowshroom/single,
@@ -2188,22 +2188,22 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gi" = (
 /obj/machinery/door/airlock/maintenance{
 	name = "Kitchen Maintenance";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gj" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "gl" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gm" = (
 /obj/structure/closet/crate{
@@ -2213,19 +2213,19 @@
 /obj/item/storage/box/mousetraps,
 /obj/item/clothing/under/suit/waiter,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gn" = (
 /obj/item/tank/internals/oxygen,
 /obj/item/clothing/mask/gas,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/closet/emcloset,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "go" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/item/stack/rods,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "gp" = (
 /obj/structure/disposalpipe/segment{
@@ -2241,24 +2241,24 @@
 	dir = 10
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "gr" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gs" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gt" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gu" = (
 /obj/machinery/door/airlock{
 	name = "Kitchen Cold Room";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/showroomfloor
+/turf/open/floor/plasteel/showroomfloor,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gv" = (
 /turf/closed/wall/r_wall,
@@ -2277,7 +2277,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "gA" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "gB" = (
 /obj/machinery/light/small,
@@ -2330,14 +2330,14 @@
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "gI" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "gJ" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "gK" = (
 /turf/closed/wall,
@@ -2355,12 +2355,12 @@
 /obj/item/stack/sheet/metal{
 	amount = 23
 	},
-/turf/open/floor/plasteel/white/side
+/turf/open/floor/plasteel/white/side,
 /area/awaymission/undergroundoutpost45/research)
 "gN" = (
 /obj/structure/table,
 /obj/item/storage/toolbox/mechanical,
-/turf/open/floor/plasteel/white/side
+/turf/open/floor/plasteel/white/side,
 /area/awaymission/undergroundoutpost45/research)
 "gO" = (
 /turf/open/floor/plasteel/cafeteria{
@@ -2395,16 +2395,16 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "gU" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "gV" = (
 /obj/structure/table,
 /obj/item/folder/white,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "gW" = (
 /obj/structure/table,
@@ -2413,11 +2413,11 @@
 	pixel_y = 9
 	},
 /obj/item/pen,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "gX" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "gY" = (
 /obj/machinery/airalarm/all_access{
@@ -2430,16 +2430,16 @@
 	c_tag = "Research Lab";
 	network = list("uo45","uo45r")
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "gZ" = (
 /obj/machinery/firealarm{
 	pixel_y = 24
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ha" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "hb" = (
 /obj/machinery/light/small{
@@ -2486,14 +2486,14 @@
 	dir = 8;
 	pixel_x = -24
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hg" = (
 /obj/machinery/airalarm/all_access{
 	dir = 8;
 	pixel_x = 23
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hh" = (
 /obj/machinery/light/small{
@@ -2509,7 +2509,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hj" = (
 /obj/machinery/vending/snack,
@@ -2518,7 +2518,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hk" = (
 /obj/machinery/vending/cola,
@@ -2526,7 +2526,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hl" = (
 /obj/structure/table/reinforced,
@@ -2534,7 +2534,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hm" = (
 /obj/machinery/disposal/bin,
@@ -2543,7 +2543,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hn" = (
 /obj/structure/table,
@@ -2553,7 +2553,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ho" = (
 /obj/machinery/vending/boozeomat,
@@ -2561,7 +2561,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hp" = (
 /obj/structure/extinguisher_cabinet{
@@ -2612,20 +2612,20 @@
 	calibrated = 0
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "hw" = (
 /obj/structure/chair{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "hx" = (
 /obj/structure/chair{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "hy" = (
 /turf/open/floor/plating{
@@ -2638,41 +2638,41 @@
 	dir = 1
 	},
 /obj/item/storage/box/lights/mixed,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "hA" = (
 /obj/structure/closet/firecloset,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "hB" = (
 /obj/machinery/rnd/destructive_analyzer,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "hC" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "hD" = (
 /obj/machinery/rnd/production/protolathe,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "hE" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "hF" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "hG" = (
 /obj/structure/table/glass,
@@ -2689,7 +2689,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "hH" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "hI" = (
 /obj/structure/table,
@@ -2701,7 +2701,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hJ" = (
 /obj/structure/chair{
@@ -2711,14 +2711,14 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hK" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hL" = (
 /obj/structure/chair/stool,
@@ -2726,7 +2726,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hM" = (
 /obj/structure/table/reinforced,
@@ -2735,7 +2735,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hN" = (
 /obj/effect/decal/cleanable/dirt,
@@ -2746,7 +2746,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hO" = (
 /obj/structure/disposalpipe/segment{
@@ -2756,7 +2756,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hP" = (
 /obj/machinery/door/firedoor,
@@ -2771,7 +2771,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hQ" = (
 /obj/structure/disposalpipe/segment{
@@ -2814,16 +2814,16 @@
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hV" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "hW" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "hX" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "hZ" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -2837,13 +2837,13 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "ib" = (
 /obj/structure/chair{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "ic" = (
 /obj/machinery/airalarm/all_access{
@@ -2853,35 +2853,35 @@
 /obj/structure/chair{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "id" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "ie" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "if" = (
 /obj/structure/closet/emcloset,
 /obj/item/clothing/mask/breath,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "ig" = (
 /obj/machinery/computer/rdconsole{
 	dir = 4;
 	req_access = null
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "ih" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "ii" = (
 /obj/machinery/rnd/production/circuit_imprinter,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "ij" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ik" = (
 /obj/structure/table/glass,
@@ -2901,7 +2901,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "im" = (
 /obj/structure/chair{
@@ -2912,7 +2912,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "in" = (
 /obj/structure/chair/stool,
@@ -2921,7 +2921,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "io" = (
 /obj/structure/table,
@@ -2931,7 +2931,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ip" = (
 /obj/machinery/firealarm{
@@ -2964,11 +2964,11 @@
 	dir = 8
 	},
 /obj/structure/window/reinforced,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "it" = (
 /obj/structure/window/reinforced,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "iu" = (
 /obj/machinery/door/window{
@@ -2976,12 +2976,12 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "iv" = (
 /obj/structure/window/reinforced,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "iw" = (
 /obj/structure/chair{
@@ -2991,13 +2991,13 @@
 /obj/structure/sign/warning/nosmoking{
 	pixel_x = 32
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "ix" = (
 /obj/machinery/door/airlock{
 	name = "Emergency Supplies"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "iy" = (
 /obj/structure/table,
@@ -3017,7 +3017,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iz" = (
 /obj/structure/disposalpipe/segment{
@@ -3026,7 +3026,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iA" = (
 /obj/structure/disposalpipe/segment{
@@ -3035,7 +3035,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iB" = (
 /obj/structure/disposalpipe/segment{
@@ -3044,13 +3044,13 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iC" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iD" = (
 /obj/machinery/disposal/bin,
@@ -3062,7 +3062,7 @@
 	},
 /area/awaymission/undergroundoutpost45/research)
 "iE" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "iF" = (
 /obj/structure/table,
@@ -3071,7 +3071,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "iG" = (
 /obj/structure/table/reinforced,
@@ -3080,7 +3080,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "iH" = (
 /obj/effect/decal/cleanable/dirt,
@@ -3088,7 +3088,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "iI" = (
 /obj/machinery/door/firedoor,
@@ -3097,7 +3097,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "iJ" = (
 /obj/structure/disposalpipe/segment{
@@ -3121,7 +3121,7 @@
 	},
 /obj/item/clothing/gloves/color/latex,
 /obj/structure/closet/emcloset,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "iM" = (
 /obj/structure/disposalpipe/segment,
@@ -3137,7 +3137,7 @@
 	pixel_x = -32
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "iO" = (
 /obj/structure/table,
@@ -3150,44 +3150,44 @@
 /area/awaymission/undergroundoutpost45/gateway)
 "iP" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "iQ" = (
 /obj/structure/table,
 /obj/machinery/recharger,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "iR" = (
 /obj/structure/table,
 /obj/item/paper/pamphlet/gateway,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "iS" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "iT" = (
 /obj/structure/chair{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "iU" = (
 /obj/structure/chair{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "iV" = (
 /turf/closed/wall,
 /area/awaymission/undergroundoutpost45/gateway)
 "iW" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "iX" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "iY" = (
 /obj/structure/table,
@@ -3203,14 +3203,14 @@
 /obj/machinery/light/small{
 	dir = 8
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "iZ" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ja" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jb" = (
 /obj/machinery/light/small{
@@ -3224,7 +3224,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jc" = (
 /obj/machinery/light{
@@ -3237,7 +3237,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jd" = (
 /obj/machinery/disposal/bin,
@@ -3284,74 +3284,74 @@
 	network = list("uo45","uo45r")
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jh" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "ji" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jj" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jk" = (
 /obj/structure/chair/stool,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jl" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/gateway)
 "jm" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "jn" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "jo" = (
 /obj/machinery/door/airlock/research{
 	name = "Gateway Observation";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "jp" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "jq" = (
 /obj/machinery/light/small{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "jr" = (
 /obj/structure/table,
 /obj/item/folder/white,
 /obj/item/disk/tech_disk,
 /obj/item/disk/design_disk,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "js" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "jt" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Central Access"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ju" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Central Access"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jv" = (
 /obj/machinery/firealarm{
@@ -3362,7 +3362,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jw" = (
 /obj/structure/chair,
@@ -3370,7 +3370,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jx" = (
 /obj/structure/table/reinforced,
@@ -3379,7 +3379,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jy" = (
 /obj/machinery/door/window/southright{
@@ -3391,7 +3391,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jz" = (
 /obj/machinery/camera{
@@ -3404,7 +3404,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jA" = (
 /obj/machinery/door/firedoor,
@@ -3417,7 +3417,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jB" = (
 /turf/closed/wall,
@@ -3440,28 +3440,28 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jG" = (
 /obj/structure/closet/l3closet/scientist,
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jI" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "jJ" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "jK" = (
 /obj/machinery/airalarm/all_access{
 	dir = 8;
 	pixel_x = 23
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "jL" = (
 /obj/machinery/light/small,
@@ -3471,7 +3471,7 @@
 /area/awaymission/undergroundoutpost45/gateway)
 "jM" = (
 /obj/effect/spawner/structure/window,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "jN" = (
 /obj/machinery/door/firedoor,
@@ -3480,11 +3480,11 @@
 	name = "Research Lab";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "jO" = (
 /obj/effect/spawner/structure/window,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "jP" = (
 /obj/machinery/light/small,
@@ -3511,7 +3511,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jT" = (
 /obj/structure/table,
@@ -3520,14 +3520,14 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jU" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jV" = (
 /obj/machinery/power/apc/highcap/fifteen_k{
@@ -3542,7 +3542,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jW" = (
 /obj/machinery/light/small{
@@ -3554,7 +3554,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jX" = (
 /obj/structure/disposalpipe/junction/flip{
@@ -3565,7 +3565,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jY" = (
 /obj/structure/disposalpipe/segment{
@@ -3573,14 +3573,14 @@
 	},
 /obj/machinery/door/airlock/maintenance,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "jZ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ka" = (
 /obj/structure/disposalpipe/segment{
@@ -3588,7 +3588,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "kb" = (
 /obj/structure/disposalpipe/segment{
@@ -3605,7 +3605,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "kd" = (
 /obj/item/storage/backpack/satchel/tox,
@@ -3633,26 +3633,26 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "kf" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kg" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kh" = (
 /obj/item/kirbyplants{
 	layer = 5
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ki" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kj" = (
 /obj/structure/disposalpipe/segment,
@@ -3662,14 +3662,14 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kk" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kl" = (
 /obj/machinery/door/firedoor,
@@ -3678,7 +3678,7 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "km" = (
 /obj/item/clothing/under/suit/navy,
@@ -3686,55 +3686,55 @@
 	locked = 0;
 	req_access_txt = "201"
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kn" = (
 /obj/machinery/light{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ko" = (
 /obj/machinery/airalarm/all_access{
 	pixel_y = 23
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kp" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Diner"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kq" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kr" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ks" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kt" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ku" = (
 /obj/structure/disposalpipe/segment,
@@ -3748,7 +3748,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "kv" = (
 /obj/structure/closet/emcloset,
@@ -3759,7 +3759,7 @@
 /area/awaymission/undergroundoutpost45/central)
 "kw" = (
 /obj/structure/closet/l3closet,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "kx" = (
 /obj/structure/closet/crate,
@@ -3769,7 +3769,7 @@
 	pixel_y = -1
 	},
 /obj/item/multitool,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/central)
 "ky" = (
 /obj/structure/table,
@@ -3783,14 +3783,14 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "kz" = (
 /obj/structure/sign/warning/securearea{
 	pixel_y = 32
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "kA" = (
 /obj/structure/tank_dispenser/oxygen,
@@ -3798,13 +3798,13 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "kB" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "kC" = (
 /obj/machinery/light/small{
@@ -3813,7 +3813,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "kD" = (
 /obj/machinery/light/small{
@@ -3822,10 +3822,10 @@
 /obj/structure/sign/warning/securearea{
 	pixel_x = -32
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kE" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kF" = (
 /obj/machinery/door/firedoor,
@@ -3833,26 +3833,26 @@
 	name = "Research Division Access";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kG" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kH" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kI" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kJ" = (
 /obj/machinery/airalarm/all_access{
@@ -3864,13 +3864,13 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kK" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kL" = (
 /obj/machinery/door/firedoor,
@@ -3881,39 +3881,39 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "kM" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kN" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kO" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kP" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kQ" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kR" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kS" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kT" = (
 /obj/machinery/airalarm/all_access{
@@ -3925,21 +3925,21 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kU" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kV" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kW" = (
 /obj/structure/extinguisher_cabinet{
@@ -3948,14 +3948,14 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kX" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "kY" = (
 /obj/machinery/door/firedoor,
@@ -3964,7 +3964,7 @@
 	name = "biohazard containment door"
 	},
 /obj/effect/turf_decal/delivery,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "kZ" = (
 /obj/structure/sink{
@@ -3977,7 +3977,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/space/nearstation)
 "la" = (
 /obj/machinery/shower{
@@ -3986,7 +3986,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lb" = (
 /obj/structure/sink{
@@ -3995,7 +3995,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lc" = (
 /obj/structure/sign/departments/science{
@@ -4004,24 +4004,24 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ld" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "le" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lf" = (
 /obj/machinery/firealarm{
 	dir = 1;
 	pixel_y = -24
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lg" = (
 /obj/machinery/light/small,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lh" = (
 /obj/machinery/newscaster{
@@ -4031,14 +4031,14 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "li" = (
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lj" = (
 /obj/structure/disposalpipe/segment{
@@ -4049,7 +4049,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lk" = (
 /obj/structure/disposalpipe/segment{
@@ -4063,7 +4063,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ll" = (
 /obj/structure/disposalpipe/segment{
@@ -4073,7 +4073,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lm" = (
 /obj/structure/disposalpipe/junction,
@@ -4082,7 +4082,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ln" = (
 /turf/closed/wall/r_wall,
@@ -4103,11 +4103,11 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "lq" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "lr" = (
 /obj/machinery/airalarm/all_access{
@@ -4118,12 +4118,12 @@
 	network = list("uo45","uo45r")
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "lt" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "lu" = (
 /obj/item/restraints/handcuffs,
@@ -4141,15 +4141,15 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "lv" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lw" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lx" = (
 /obj/machinery/door/firedoor,
@@ -4158,17 +4158,17 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "ly" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lz" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lA" = (
 /obj/machinery/firealarm{
@@ -4182,18 +4182,18 @@
 	},
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lB" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lC" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lD" = (
 /obj/machinery/door/firedoor,
@@ -4203,12 +4203,12 @@
 	},
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "lE" = (
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lF" = (
 /obj/structure/disposalpipe/segment{
@@ -4217,7 +4217,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lG" = (
 /obj/machinery/light,
@@ -4230,7 +4230,7 @@
 	},
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lH" = (
 /obj/machinery/power/apc/highcap/fifteen_k{
@@ -4244,7 +4244,7 @@
 	},
 /obj/effect/turf_decal/tile/purple,
 /obj/structure/cable,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lI" = (
 /obj/machinery/door/firedoor,
@@ -4252,25 +4252,25 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/purple,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lJ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 10
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lK" = (
 /obj/effect/turf_decal/tile/purple,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lL" = (
 /obj/effect/turf_decal/tile/purple,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lM" = (
 /obj/effect/turf_decal/tile/purple,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lN" = (
 /obj/machinery/firealarm{
@@ -4283,14 +4283,14 @@
 	network = list("uo45","uo45r")
 	},
 /obj/effect/turf_decal/tile/purple,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lO" = (
 /obj/machinery/door/airlock/research{
 	name = "Research Division Access";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "lP" = (
 /obj/effect/turf_decal/tile/purple{
@@ -4299,17 +4299,17 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lQ" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lR" = (
 /obj/structure/chair{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lS" = (
 /obj/structure/chair{
@@ -4320,7 +4320,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lT" = (
 /obj/structure/table,
@@ -4334,7 +4334,7 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lU" = (
 /obj/machinery/disposal/bin,
@@ -4350,14 +4350,14 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lV" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Diner"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lW" = (
 /obj/machinery/door/firedoor,
@@ -4366,7 +4366,7 @@
 	name = "Diner"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "lX" = (
 /obj/structure/closet/crate,
@@ -4382,7 +4382,7 @@
 	maxcharge = 15000
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "lY" = (
 /obj/machinery/light/small{
@@ -4392,14 +4392,14 @@
 	c_tag = "Engineering Secure Storage";
 	network = list("uo45")
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "lZ" = (
 /obj/machinery/suit_storage_unit/engine,
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "ma" = (
 /obj/structure/table,
@@ -4415,10 +4415,10 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mb" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/gateway)
 "mc" = (
 /turf/open/floor/plasteel{
@@ -4427,23 +4427,23 @@
 	},
 /area/awaymission/undergroundoutpost45/gateway)
 "md" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "me" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/gateway)
 "mf" = (
 /obj/structure/window{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "mg" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "mh" = (
 /obj/structure/disposalpipe/segment,
@@ -4461,7 +4461,7 @@
 	id = "UO45_rdprivacy";
 	name = "privacy shutters"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "mj" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -4469,20 +4469,20 @@
 	id = "UO45_rdprivacy";
 	name = "privacy shutters"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "mk" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ml" = (
 /obj/structure/closet/firecloset,
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "mm" = (
 /obj/structure/closet/firecloset,
@@ -4492,14 +4492,14 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "mn" = (
 /obj/structure/closet/emcloset,
 /obj/effect/turf_decal/stripes/line{
 	dir = 6
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "mo" = (
 /obj/structure/sign/warning/securearea{
@@ -4508,14 +4508,14 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mp" = (
 /obj/structure/chair{
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mq" = (
 /obj/structure/table,
@@ -4524,14 +4524,14 @@
 	pixel_x = 30
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mr" = (
 /obj/structure/table/wood,
 /obj/machinery/newscaster{
 	pixel_y = 32
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ms" = (
 /obj/machinery/light/small{
@@ -4540,19 +4540,19 @@
 /obj/machinery/airalarm/all_access{
 	pixel_y = 23
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mt" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mu" = (
 /obj/structure/table/wood,
 /obj/machinery/newscaster{
 	pixel_x = -30
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mv" = (
 /obj/machinery/light/small{
@@ -4564,7 +4564,7 @@
 /obj/structure/chair/wood{
 	dir = 8
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mw" = (
 /obj/structure/window/reinforced{
@@ -4584,30 +4584,30 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "mx" = (
 /obj/machinery/light/small{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "my" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mz" = (
 /obj/structure/closet/crate,
 /obj/item/stack/sheet/metal/fifty,
 /obj/item/stack/sheet/glass/fifty,
 /obj/item/stack/rods/fifty,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "mA" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "mB" = (
 /obj/structure/table,
@@ -4618,13 +4618,13 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mC" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mD" = (
 /obj/structure/extinguisher_cabinet{
@@ -4635,7 +4635,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mE" = (
 /obj/machinery/power/apc/highcap/fifteen_k{
@@ -4651,7 +4651,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mF" = (
 /obj/machinery/firealarm{
@@ -4663,21 +4663,21 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mG" = (
 /obj/structure/reagent_dispensers/watertank,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mH" = (
 /obj/structure/reagent_dispensers/fueltank,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/gateway)
 "mI" = (
 /obj/machinery/light/small{
@@ -4697,11 +4697,11 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "mL" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "mM" = (
 /obj/structure/disposalpipe/segment{
@@ -4757,7 +4757,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "mS" = (
 /obj/structure/table,
@@ -4768,7 +4768,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "mT" = (
 /obj/structure/table,
@@ -4782,13 +4782,13 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "mU" = (
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "mV" = (
 /obj/machinery/door/firedoor,
@@ -4796,14 +4796,14 @@
 	name = "Dormitories"
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mW" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Dormitories"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mX" = (
 /obj/machinery/button/door{
@@ -4816,19 +4816,19 @@
 /obj/structure/chair/wood{
 	dir = 1
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mY" = (
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "mZ" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "na" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nb" = (
 /obj/machinery/button/door{
@@ -4838,7 +4838,7 @@
 	pixel_y = -25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nc" = (
 /obj/machinery/vending/cola,
@@ -4852,7 +4852,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nd" = (
 /obj/structure/chair/comfy/black{
@@ -4864,7 +4864,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ne" = (
 /obj/structure/table/wood,
@@ -4874,7 +4874,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nf" = (
 /obj/structure/chair/comfy/black{
@@ -4888,18 +4888,18 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ng" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nh" = (
 /obj/machinery/door/poddoor{
 	id = "UO45_Secure Storage";
 	name = "secure storage"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "ni" = (
 /turf/closed/wall/r_wall/rust,
@@ -4908,7 +4908,7 @@
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "nk" = (
 /obj/structure/table,
@@ -4950,13 +4950,13 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "np" = (
 /obj/structure/chair/office{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "nq" = (
 /obj/structure/table,
@@ -4971,7 +4971,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "nr" = (
 /obj/machinery/light/small{
@@ -4980,14 +4980,14 @@
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "ns" = (
 /obj/structure/disposalpipe/segment{
 	dir = 6
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "nt" = (
 /obj/structure/disposalpipe/segment{
@@ -5003,7 +5003,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "nv" = (
 /obj/structure/disposalpipe/segment{
@@ -5011,7 +5011,7 @@
 	},
 /obj/machinery/door/airlock/maintenance,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "nw" = (
 /obj/structure/disposalpipe/segment{
@@ -5027,7 +5027,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nx" = (
 /obj/structure/disposalpipe/segment{
@@ -5042,18 +5042,18 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ny" = (
 /obj/machinery/vending/coffee,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nz" = (
 /obj/machinery/vending/cigarette,
 /obj/structure/sign/poster/contraband/smoke{
 	pixel_y = 32
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nA" = (
 /turf/closed/wall,
@@ -5063,14 +5063,14 @@
 	id_tag = "awaydorm5";
 	name = "Dorm 5"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nC" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm7";
 	name = "Dorm 7"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nD" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -5079,49 +5079,49 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nE" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nF" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nG" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/public/glass{
 	name = "Dormitories"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nH" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nI" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "nJ" = (
 /obj/effect/turf_decal/stripes/corner,
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "nK" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "nL" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "nM" = (
 /turf/closed/wall/r_wall,
@@ -5129,7 +5129,7 @@
 "nN" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "nO" = (
 /obj/machinery/airalarm/all_access{
@@ -5224,17 +5224,17 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "nU" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "nV" = (
 /obj/effect/turf_decal/tile/red,
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "nW" = (
 /turf/closed/wall/r_wall,
@@ -5259,7 +5259,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oa" = (
 /obj/structure/disposalpipe/segment{
@@ -5269,7 +5269,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ob" = (
 /obj/structure/disposalpipe/segment{
@@ -5283,7 +5283,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oc" = (
 /obj/structure/disposalpipe/segment{
@@ -5296,7 +5296,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "od" = (
 /obj/machinery/door/firedoor,
@@ -5310,7 +5310,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oe" = (
 /obj/structure/disposalpipe/segment{
@@ -5324,14 +5324,14 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "of" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "og" = (
 /obj/machinery/light/small{
@@ -5345,7 +5345,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oh" = (
 /obj/machinery/airalarm/all_access{
@@ -5362,7 +5362,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oi" = (
 /obj/structure/disposalpipe/segment{
@@ -5372,7 +5372,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oj" = (
 /obj/structure/disposalpipe/segment{
@@ -5383,7 +5383,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ok" = (
 /obj/structure/disposalpipe/segment{
@@ -5399,7 +5399,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ol" = (
 /obj/structure/disposalpipe/segment{
@@ -5409,7 +5409,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "om" = (
 /obj/structure/disposalpipe/segment{
@@ -5417,14 +5417,14 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "on" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oo" = (
 /obj/structure/disposalpipe/junction/yjunction{
@@ -5435,7 +5435,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "op" = (
 /obj/machinery/door/firedoor,
@@ -5446,14 +5446,14 @@
 	name = "Dormitories"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oq" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "or" = (
 /obj/structure/disposalpipe/junction/yjunction{
@@ -5461,14 +5461,14 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "os" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "ot" = (
 /obj/machinery/power/smes{
@@ -5478,7 +5478,7 @@
 	output_level = 7000
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "ou" = (
 /obj/machinery/power/smes{
@@ -5488,14 +5488,14 @@
 	output_level = 7000
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "ov" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "ow" = (
 /obj/structure/disposalpipe/segment,
@@ -5567,17 +5567,17 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "oD" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "oE" = (
 /obj/machinery/door/airlock/security/glass{
 	name = "Security Office";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "oF" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -5586,26 +5586,26 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oG" = (
 /obj/effect/turf_decal/tile/neutral,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oH" = (
 /obj/machinery/door/firedoor,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oI" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oJ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/neutral,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oK" = (
 /obj/structure/extinguisher_cabinet{
@@ -5615,7 +5615,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oL" = (
 /obj/machinery/firealarm{
@@ -5625,28 +5625,28 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oM" = (
 /obj/effect/turf_decal/tile/neutral,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oN" = (
 /obj/effect/turf_decal/tile/neutral,
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oO" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oP" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oQ" = (
 /obj/machinery/light/small,
@@ -5654,7 +5654,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oR" = (
 /obj/structure/disposalpipe/segment,
@@ -5665,7 +5665,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oS" = (
 /obj/effect/decal/cleanable/dirt,
@@ -5681,7 +5681,7 @@
 	},
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oU" = (
 /obj/machinery/light/small{
@@ -5692,7 +5692,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "oV" = (
 /obj/machinery/power/terminal{
@@ -5701,7 +5701,7 @@
 /obj/machinery/power/port_gen/pacman{
 	name = "P.A.C.M.A.N.-type portable generator"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "oW" = (
 /obj/machinery/power/terminal{
@@ -5711,7 +5711,7 @@
 	name = "S.U.P.E.R.P.A.C.M.A.N.-type portable generator"
 	},
 /obj/item/wrench,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "oY" = (
 /obj/machinery/light/small{
@@ -5721,7 +5721,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "oZ" = (
 /turf/open/floor/engine/air,
@@ -5737,7 +5737,7 @@
 	dir = 6
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "pc" = (
 /obj/structure/disposalpipe/segment{
@@ -5795,7 +5795,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "pi" = (
 /obj/machinery/button/door{
@@ -5810,10 +5810,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/research)
 "pj" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "pk" = (
 /obj/structure/disposalpipe/segment,
@@ -5835,13 +5835,13 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pm" = (
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pn" = (
 /obj/machinery/light/small{
@@ -5855,14 +5855,14 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "po" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm4";
 	name = "Dorm 4"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pp" = (
 /turf/closed/wall/rust,
@@ -5872,18 +5872,18 @@
 	id_tag = "awaydorm6";
 	name = "Dorm 6"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pr" = (
 /obj/machinery/door/airlock{
 	name = "Unisex Restrooms"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ps" = (
 /obj/structure/disposalpipe/segment,
 /obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pt" = (
 /obj/machinery/firealarm{
@@ -5891,7 +5891,7 @@
 	pixel_x = -24
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pu" = (
 /turf/open/floor/plating/asteroid{
@@ -5921,35 +5921,35 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "pA" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "pB" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "pC" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "pD" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "pE" = (
 /turf/open/floor/engine/air,
@@ -5961,7 +5961,7 @@
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "pH" = (
 /turf/closed/wall/r_wall,
@@ -5971,13 +5971,13 @@
 	name = "Server Room";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "pJ" = (
 /obj/machinery/door/airlock{
 	name = "Private Restroom"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/research)
 "pK" = (
 /turf/closed/wall,
@@ -5990,7 +5990,7 @@
 	name = "Research Storage";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "pN" = (
 /obj/structure/chair/comfy/black,
@@ -6002,7 +6002,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pO" = (
 /obj/structure/chair/comfy/black,
@@ -6011,7 +6011,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pP" = (
 /obj/structure/chair/comfy/black,
@@ -6022,7 +6022,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pQ" = (
 /obj/machinery/button/door{
@@ -6032,10 +6032,10 @@
 	pixel_x = -25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pR" = (
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pS" = (
 /turf/closed/wall,
@@ -6043,7 +6043,7 @@
 "pT" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pU" = (
 /obj/machinery/button/door{
@@ -6053,7 +6053,7 @@
 	pixel_x = 25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pV" = (
 /obj/machinery/light/small{
@@ -6063,16 +6063,16 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pW" = (
 /obj/machinery/door/airlock{
 	name = "Unit 1"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pX" = (
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pY" = (
 /obj/structure/mirror{
@@ -6083,7 +6083,7 @@
 	pixel_x = 11
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "pZ" = (
 /obj/structure/disposalpipe/segment,
@@ -6099,7 +6099,7 @@
 /area/awaymission/undergroundoutpost45/caves)
 "qb" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "qc" = (
 /obj/machinery/door/airlock/engineering/glass{
@@ -6107,15 +6107,15 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "qd" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "qe" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "qf" = (
 /obj/structure/disposalpipe/segment,
@@ -6140,14 +6140,14 @@
 	name = "SERVER ROOM";
 	pixel_y = 32
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "qk" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "ql" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "qm" = (
 /obj/machinery/light/small,
@@ -6158,21 +6158,21 @@
 /obj/structure/mirror{
 	pixel_x = -28
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/research)
 "qn" = (
 /obj/structure/toilet{
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/research)
 "qo" = (
 /obj/structure/table,
 /obj/item/reagent_containers/spray/cleaner,
 /obj/item/clothing/glasses/hud/health,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white/corner
+/turf/open/floor/plasteel/white/corner,
 /area/awaymission/undergroundoutpost45/research)
 "qp" = (
 /obj/structure/table,
@@ -6181,7 +6181,7 @@
 	},
 /obj/item/hand_labeler,
 /obj/item/clothing/neck/stethoscope,
-/turf/open/floor/plasteel/white/side
+/turf/open/floor/plasteel/white/side,
 /area/awaymission/undergroundoutpost45/research)
 "qq" = (
 /obj/machinery/vending/medical{
@@ -6199,7 +6199,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "qs" = (
 /obj/structure/chair/wood,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qt" = (
 /obj/machinery/light/small{
@@ -6209,21 +6209,21 @@
 	dir = 8;
 	pixel_x = 23
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qu" = (
 /obj/machinery/light/small{
 	dir = 8
 	},
 /obj/structure/dresser,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qv" = (
 /obj/machinery/airalarm/all_access{
 	dir = 8;
 	pixel_x = 23
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qw" = (
 /obj/machinery/light/small{
@@ -6233,7 +6233,7 @@
 	dir = 4;
 	pixel_x = -23
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qx" = (
 /obj/structure/sink{
@@ -6241,12 +6241,12 @@
 	pixel_x = 11
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qy" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qz" = (
 /turf/open/floor/plating/asteroid{
@@ -6265,11 +6265,11 @@
 /area/awaymission/undergroundoutpost45/caves)
 "qC" = (
 /obj/machinery/vending/cola,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "qD" = (
 /obj/structure/chair,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/engineering)
 "qE" = (
 /obj/machinery/computer/monitor/secret{
@@ -6285,7 +6285,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qF" = (
 /obj/effect/decal/cleanable/dirt,
@@ -6296,16 +6296,16 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qG" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qH" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qI" = (
 /obj/structure/window/reinforced{
@@ -6323,7 +6323,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qJ" = (
 /obj/machinery/light{
@@ -6345,7 +6345,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qK" = (
 /obj/machinery/computer/atmos_control/tank{
@@ -6368,20 +6368,20 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/cafeteria
+/turf/open/floor/plasteel/cafeteria,
 /area/awaymission/undergroundoutpost45/engineering)
 "qM" = (
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qN" = (
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "qO" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "qP" = (
 /obj/machinery/light/small{
@@ -6404,10 +6404,10 @@
 	name = "Server Room";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "qS" = (
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "qT" = (
 /obj/machinery/light/small{
@@ -6415,7 +6415,7 @@
 	},
 /obj/structure/chair/office/light,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "qU" = (
 /obj/machinery/light/small{
@@ -6428,7 +6428,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "qV" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "qW" = (
 /obj/machinery/light/small{
@@ -6452,13 +6452,13 @@
 	pixel_y = -28
 	},
 /obj/item/pen,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "qZ" = (
 /obj/structure/chair/wood{
 	dir = 8
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ra" = (
 /obj/machinery/light/small{
@@ -6467,14 +6467,14 @@
 /obj/structure/toilet{
 	dir = 4
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rb" = (
 /obj/machinery/door/airlock{
 	name = "Unit 2"
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rc" = (
 /obj/structure/mirror{
@@ -6484,17 +6484,17 @@
 	dir = 8;
 	pixel_x = 11
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rd" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "re" = (
 /obj/structure/extinguisher_cabinet{
 	pixel_x = -25
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rf" = (
 /obj/machinery/light/small{
@@ -6503,11 +6503,11 @@
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rg" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rh" = (
 /obj/machinery/light/small{
@@ -6525,10 +6525,10 @@
 "ri" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rj" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rk" = (
 /obj/item/kirbyplants{
@@ -6541,7 +6541,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rl" = (
 /obj/machinery/firealarm{
@@ -6559,7 +6559,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rm" = (
 /obj/machinery/light/small{
@@ -6588,7 +6588,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rn" = (
 /obj/structure/table,
@@ -6604,7 +6604,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ro" = (
 /turf/closed/wall/r_wall,
@@ -6618,10 +6618,10 @@
 	start_charge = 100
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rq" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rr" = (
 /obj/machinery/button/door{
@@ -6646,7 +6646,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rs" = (
 /obj/structure/closet/secure_closet/personal/cabinet{
@@ -6654,25 +6654,25 @@
 	req_access_txt = "201"
 	},
 /obj/item/clothing/under/misc/pj/blue,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "rt" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ru" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rv" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rw" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rx" = (
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ry" = (
 /obj/structure/disposalpipe/segment,
@@ -6691,19 +6691,19 @@
 	name = "SERVER ROOM";
 	pixel_y = -32
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "rB" = (
 /obj/structure/table,
 /obj/item/folder/white,
 /obj/item/pen,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "rC" = (
 /obj/machinery/computer/rdservercontrol{
 	dir = 1
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/awaymission/undergroundoutpost45/research)
 "rD" = (
 /obj/structure/closet/crate,
@@ -6718,7 +6718,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 6
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "rF" = (
 /obj/structure/disposalpipe/segment{
@@ -6728,7 +6728,7 @@
 	name = "Research Maintenance";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "rG" = (
 /obj/structure/disposalpipe/segment{
@@ -6739,11 +6739,11 @@
 	},
 /area/awaymission/undergroundoutpost45/research)
 "rH" = (
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "rI" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/white
+/turf/open/floor/plasteel/white,
 /area/awaymission/undergroundoutpost45/research)
 "rJ" = (
 /obj/structure/table,
@@ -6764,7 +6764,7 @@
 /obj/machinery/door/airlock{
 	name = "Unisex Showers"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rM" = (
 /obj/structure/disposalpipe/segment,
@@ -6778,14 +6778,14 @@
 	dir = 4;
 	network = list("uo45")
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rO" = (
 /obj/structure/disposalpipe/segment{
 	dir = 5
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rP" = (
 /obj/structure/disposalpipe/segment{
@@ -6793,7 +6793,7 @@
 	},
 /obj/machinery/door/firedoor,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rQ" = (
 /obj/structure/disposalpipe/segment{
@@ -6803,7 +6803,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rR" = (
 /obj/structure/disposalpipe/segment{
@@ -6813,7 +6813,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rS" = (
 /obj/structure/disposalpipe/segment{
@@ -6824,7 +6824,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rT" = (
 /obj/machinery/airalarm/all_access{
@@ -6837,7 +6837,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rU" = (
 /obj/structure/disposalpipe/segment{
@@ -6847,7 +6847,7 @@
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rV" = (
 /obj/structure/disposalpipe/segment{
@@ -6860,7 +6860,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rW" = (
 /obj/structure/disposalpipe/segment{
@@ -6874,7 +6874,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "rX" = (
 /obj/machinery/door/firedoor,
@@ -6886,28 +6886,28 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rY" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "rZ" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sa" = (
 /obj/structure/disposalpipe/segment{
 	dir = 10
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sb" = (
 /obj/effect/decal/cleanable/dirt,
@@ -6915,7 +6915,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sc" = (
 /obj/structure/table/reinforced,
@@ -6934,7 +6934,7 @@
 	pixel_y = 9
 	},
 /obj/item/pen,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sd" = (
 /obj/effect/turf_decal/tile/red{
@@ -6943,10 +6943,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "se" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sf" = (
 /obj/structure/table,
@@ -6958,7 +6958,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sg" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -6966,19 +6966,19 @@
 	id = "UO45_Engineering";
 	name = "engineering security door"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "sh" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "si" = (
 /obj/structure/closet/secure_closet/personal/cabinet{
 	locked = 0;
 	req_access_txt = "201"
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "sj" = (
 /obj/machinery/power/apc/highcap/fifteen_k{
@@ -6999,22 +6999,22 @@
 /obj/item/clothing/gloves/fingerless,
 /obj/effect/turf_decal/tile/brown,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "sk" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sl" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sm" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sn" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "so" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sp" = (
 /obj/effect/decal/cleanable/dirt,
@@ -7025,11 +7025,11 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sq" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "sr" = (
 /turf/open/floor/engine/vacuum,
@@ -7042,12 +7042,12 @@
 /area/awaymission/undergroundoutpost45/engineering)
 "st" = (
 /obj/structure/reagent_dispensers/fueltank,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "su" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "sv" = (
 /obj/machinery/disposal/bin,
@@ -7106,40 +7106,40 @@
 	dir = 4
 	},
 /obj/item/soap/ncorporation,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sB" = (
 /obj/machinery/light/small{
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sC" = (
 /obj/machinery/shower{
 	dir = 8
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sD" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sE" = (
 /obj/machinery/door/firedoor,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sF" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sG" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sH" = (
 /obj/machinery/light/small,
@@ -7150,20 +7150,20 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sI" = (
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sJ" = (
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sK" = (
 /obj/effect/decal/cleanable/dirt,
@@ -7174,29 +7174,29 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "sL" = (
 /obj/machinery/door/firedoor,
 /obj/machinery/door/airlock/engineering/glass{
 	name = "Engineering Reception"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sM" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sN" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sO" = (
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sP" = (
 /obj/structure/table/reinforced,
@@ -7213,7 +7213,7 @@
 	req_access_txt = "201"
 	},
 /obj/item/folder/red,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sQ" = (
 /obj/structure/chair/office{
@@ -7226,10 +7226,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sR" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sS" = (
 /obj/structure/table,
@@ -7238,7 +7238,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sT" = (
 /obj/effect/spawner/structure/window/reinforced,
@@ -7246,33 +7246,33 @@
 	id = "UO45_Engineering";
 	name = "engineering security door"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "sU" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sV" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sW" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sX" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sY" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "sZ" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ta" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tb" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tc" = (
 /obj/machinery/computer/atmos_control/tank{
@@ -7290,11 +7290,11 @@
 /obj/effect/turf_decal/tile/green{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "td" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "te" = (
 /turf/open/floor/engine/vacuum,
@@ -7310,14 +7310,14 @@
 	dir = 5
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "th" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "ti" = (
 /obj/structure/disposalpipe/segment{
@@ -7334,10 +7334,10 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tk" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tl" = (
 /turf/open/floor/plating{
@@ -7346,7 +7346,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "tm" = (
 /obj/structure/disposalpipe/segment,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tn" = (
 /turf/closed/wall/r_wall,
@@ -7363,23 +7363,23 @@
 "tr" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "ts" = (
 /obj/machinery/shower{
 	dir = 4
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "tt" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "tu" = (
 /obj/machinery/light/small{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "tv" = (
 /obj/effect/turf_decal/tile/blue{
@@ -7409,7 +7409,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ty" = (
 /obj/structure/sign/warning/securearea{
@@ -7422,7 +7422,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tz" = (
 /obj/machinery/computer/security{
@@ -7443,10 +7443,10 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tA" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tB" = (
 /obj/item/screwdriver{
@@ -7457,38 +7457,38 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tC" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tD" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tE" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tF" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tG" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tH" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tI" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tJ" = (
 /obj/structure/sign/warning/nosmoking{
 	pixel_x = 32
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "tK" = (
 /turf/closed/wall/rust,
@@ -7498,7 +7498,7 @@
 	name = "Engineering Maintenance";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tM" = (
 /turf/closed/wall,
@@ -7511,14 +7511,14 @@
 	dir = 5
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tP" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tQ" = (
 /obj/structure/disposalpipe/junction/flip{
@@ -7536,7 +7536,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tS" = (
 /obj/structure/disposalpipe/segment{
@@ -7562,7 +7562,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tV" = (
 /obj/structure/disposalpipe/segment{
@@ -7570,7 +7570,7 @@
 	},
 /obj/item/stack/rods,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "tW" = (
 /turf/closed/wall/r_wall,
@@ -7579,28 +7579,28 @@
 /obj/machinery/shower{
 	dir = 1
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "tY" = (
 /obj/machinery/shower{
 	dir = 1
 	},
 /obj/item/bikehorn/rubberducky,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "tZ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ua" = (
 /obj/effect/turf_decal/tile/brown{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "ub" = (
 /obj/machinery/light/small{
@@ -7624,7 +7624,7 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uf" = (
 /obj/structure/filingcabinet,
@@ -7636,25 +7636,25 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ug" = (
 /obj/effect/turf_decal/tile/red,
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ui" = (
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uj" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uk" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ul" = (
 /obj/machinery/light,
@@ -7663,7 +7663,7 @@
 	pixel_y = -23
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "um" = (
 /obj/effect/turf_decal/tile/red{
@@ -7673,7 +7673,7 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "un" = (
 /obj/machinery/computer/atmos_control/tank{
@@ -7690,14 +7690,14 @@
 /obj/effect/turf_decal/tile/red{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uo" = (
 /obj/structure/extinguisher_cabinet{
 	pixel_y = -30
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "up" = (
 /obj/effect/turf_decal/tile/blue{
@@ -7707,7 +7707,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uq" = (
 /obj/machinery/computer/atmos_control/tank{
@@ -7724,7 +7724,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "ur" = (
 /turf/open/floor/plasteel{
@@ -7737,13 +7737,13 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "ut" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uu" = (
 /obj/structure/table/reinforced,
@@ -7751,14 +7751,14 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uv" = (
 /turf/closed/mineral/random/labormineral,
 /area/awaymission/undergroundoutpost45/research)
 "uw" = (
 /obj/machinery/door/airlock/external,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "ux" = (
 /turf/closed/wall,
@@ -7772,7 +7772,7 @@
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "uz" = (
 /obj/machinery/door/airlock/maintenance,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "uA" = (
 /obj/machinery/computer/atmos_control{
@@ -7791,17 +7791,17 @@
 	},
 /area/awaymission/undergroundoutpost45/engineering)
 "uB" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uC" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uD" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uE" = (
 /turf/closed/wall,
@@ -7811,7 +7811,7 @@
 	name = "Security Office";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uG" = (
 /obj/machinery/door/airlock/engineering{
@@ -7819,18 +7819,18 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uH" = (
 /turf/closed/wall/r_wall,
 /area/awaymission/undergroundoutpost45/engineering)
 "uI" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "uJ" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "uK" = (
 /obj/machinery/light/small{
@@ -7840,16 +7840,16 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uL" = (
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uM" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uN" = (
 /obj/structure/closet/emcloset,
@@ -7869,7 +7869,7 @@
 /area/awaymission/undergroundoutpost45/research)
 "uP" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "uQ" = (
 /obj/structure/chair{
@@ -7881,7 +7881,7 @@
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "uR" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "uS" = (
 /obj/structure/disposalpipe/segment,
@@ -7893,7 +7893,7 @@
 /obj/effect/turf_decal/tile/brown{
 	dir = 1
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "uU" = (
 /obj/machinery/computer/atmos_control{
@@ -7912,13 +7912,13 @@
 /obj/structure/chair/office{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uW" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uX" = (
 /obj/machinery/light{
@@ -7928,7 +7928,7 @@
 	pixel_y = 23
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uY" = (
 /obj/structure/sign/warning/securearea{
@@ -7942,7 +7942,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "uZ" = (
 /turf/closed/wall,
@@ -7954,7 +7954,7 @@
 	name = "engineering security door"
 	},
 /obj/effect/turf_decal/delivery,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vb" = (
 /obj/machinery/door/firedoor,
@@ -7964,7 +7964,7 @@
 	},
 /obj/effect/turf_decal/delivery,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vc" = (
 /obj/machinery/door/firedoor,
@@ -7976,7 +7976,7 @@
 	name = "engineering security door"
 	},
 /obj/effect/turf_decal/delivery,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vd" = (
 /turf/open/floor/engine/n2,
@@ -7994,21 +7994,21 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "vi" = (
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "vj" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 6
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "vk" = (
 /obj/machinery/door/airlock/external,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/research)
 "vl" = (
 /obj/structure/disposaloutlet{
@@ -8026,14 +8026,14 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "vn" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/item/stack/rods,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "vo" = (
 /obj/structure/disposalpipe/segment{
@@ -8047,7 +8047,7 @@
 /obj/structure/disposalpipe/segment{
 	dir = 9
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "vq" = (
 /obj/effect/turf_decal/tile/brown{
@@ -8057,7 +8057,7 @@
 /obj/effect/turf_decal/tile/brown{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "vr" = (
 /obj/effect/turf_decal/tile/brown,
@@ -8068,7 +8068,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "vs" = (
 /obj/machinery/computer/atmos_alert{
@@ -8086,30 +8086,30 @@
 	dir = 5
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vu" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vv" = (
 /obj/structure/disposalpipe/segment{
 	dir = 10
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vw" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vx" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vy" = (
 /obj/effect/turf_decal/tile/yellow,
@@ -8117,7 +8117,7 @@
 	dir = 4
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vz" = (
 /obj/machinery/door/airlock/engineering{
@@ -8125,14 +8125,14 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vC" = (
 /obj/machinery/light/small{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vD" = (
 /obj/machinery/air_sensor{
@@ -8179,7 +8179,7 @@
 	name = "Mining Maintenance";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "vN" = (
 /obj/machinery/door/firedoor,
@@ -8187,7 +8187,7 @@
 	name = "Mining Foyer";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "vO" = (
 /obj/machinery/door/firedoor,
@@ -8196,7 +8196,7 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "vP" = (
 /obj/machinery/computer/station_alert{
@@ -8205,7 +8205,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel/checker
+/turf/open/floor/plasteel/checker,
 /area/awaymission/undergroundoutpost45/engineering)
 "vQ" = (
 /obj/structure/noticeboard{
@@ -8213,20 +8213,20 @@
 	pixel_y = -27
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vR" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vS" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vT" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vU" = (
 /obj/structure/sign/warning/electricshock{
@@ -8239,7 +8239,7 @@
 	network = list("uo45")
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vV" = (
 /obj/machinery/vending/tool,
@@ -8265,7 +8265,7 @@
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vX" = (
 /turf/closed/wall,
@@ -8274,21 +8274,21 @@
 /obj/structure/closet/emcloset,
 /obj/item/clothing/mask/breath,
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "vZ" = (
 /obj/structure/closet/firecloset,
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wa" = (
 /obj/structure/closet/firecloset,
 /obj/effect/turf_decal/bot,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wb" = (
 /obj/structure/table/wood,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wc" = (
 /obj/machinery/light/small{
@@ -8297,12 +8297,12 @@
 /obj/structure/chair/wood{
 	dir = 8
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wd" = (
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "we" = (
 /turf/closed/wall,
@@ -8322,15 +8322,15 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wh" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wi" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wj" = (
 /obj/machinery/light/small{
@@ -8343,12 +8343,12 @@
 "wk" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "wl" = (
 /obj/effect/spawner/structure/window/reinforced,
 /obj/structure/cable,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/engineering)
 "wm" = (
 /obj/structure/disposalpipe/segment,
@@ -8367,13 +8367,13 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wn" = (
 /turf/closed/wall/rust,
 /area/awaymission/undergroundoutpost45/engineering)
 "wp" = (
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wq" = (
 /obj/machinery/button/door{
@@ -8383,32 +8383,32 @@
 	pixel_y = -25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wr" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm8";
 	name = "Mining Dorm 1"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "ws" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wt" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wu" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wv" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "ww" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "wx" = (
 /obj/machinery/disposal/bin,
@@ -8431,7 +8431,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wy" = (
 /obj/structure/disposalpipe/segment{
@@ -8448,7 +8448,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wz" = (
 /obj/structure/disposalpipe/segment{
@@ -8464,7 +8464,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wA" = (
 /obj/structure/disposalpipe/segment{
@@ -8481,14 +8481,14 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wB" = (
 /obj/structure/toilet{
 	pixel_y = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/engineering)
 "wC" = (
 /obj/machinery/airalarm/all_access{
@@ -8496,21 +8496,21 @@
 	pixel_x = -23
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wD" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wE" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wF" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wG" = (
 /obj/structure/filingcabinet/chestdrawer,
@@ -8524,7 +8524,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wH" = (
 /obj/structure/chair,
@@ -8539,7 +8539,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wI" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -8552,7 +8552,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wJ" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -8566,13 +8566,13 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wK" = (
 /obj/machinery/door/airlock{
 	name = "Private Restroom"
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/engineering)
 "wL" = (
 /obj/structure/sink{
@@ -8583,11 +8583,11 @@
 /obj/structure/mirror{
 	pixel_x = 28
 	},
-/turf/open/floor/plasteel/freezer
+/turf/open/floor/plasteel/freezer,
 /area/awaymission/undergroundoutpost45/engineering)
 "wM" = (
 /obj/structure/chair/wood,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wN" = (
 /obj/machinery/button/door{
@@ -8597,18 +8597,18 @@
 	pixel_y = 25;
 	specialfunctions = 4
 	},
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wO" = (
 /obj/machinery/door/airlock{
 	id_tag = "awaydorm9";
 	name = "Mining Dorm 2"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wP" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wR" = (
 /obj/structure/table/reinforced,
@@ -8627,7 +8627,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wS" = (
 /obj/structure/table/reinforced,
@@ -8642,7 +8642,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wT" = (
 /obj/structure/table/reinforced,
@@ -8662,7 +8662,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wU" = (
 /obj/machinery/light/small{
@@ -8683,13 +8683,13 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "wV" = (
 /obj/machinery/light/small,
 /obj/structure/bed,
 /obj/item/bedsheet,
-/turf/open/floor/carpet
+/turf/open/floor/carpet,
 /area/awaymission/undergroundoutpost45/mining)
 "wX" = (
 /obj/machinery/firealarm{
@@ -8701,14 +8701,14 @@
 	req_access_txt = "201"
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "wZ" = (
 /obj/effect/turf_decal/tile/brown,
 /obj/effect/turf_decal/tile/brown{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xa" = (
 /obj/effect/decal/cleanable/dirt,
@@ -8717,7 +8717,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xb" = (
 /obj/structure/table/reinforced,
@@ -8737,7 +8737,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xc" = (
 /obj/structure/chair/office/light{
@@ -8754,7 +8754,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xd" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -8768,7 +8768,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xe" = (
 /obj/machinery/newscaster{
@@ -8786,7 +8786,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xf" = (
 /obj/structure/bookcase/manuals/engineering,
@@ -8800,7 +8800,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xg" = (
 /obj/machinery/door/firedoor,
@@ -8808,7 +8808,7 @@
 	name = "Processing Area";
 	req_access_txt = "201"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xh" = (
 /obj/machinery/door/firedoor,
@@ -8818,7 +8818,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xi" = (
 /obj/machinery/computer/station_alert{
@@ -8834,7 +8834,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xj" = (
 /obj/machinery/light/small,
@@ -8867,7 +8867,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xk" = (
 /obj/machinery/computer/monitor/secret{
@@ -8885,7 +8885,7 @@
 	dir = 8
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/engineering)
 "xl" = (
 /obj/machinery/conveyor{
@@ -8894,7 +8894,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xm" = (
 /obj/machinery/mineral/unloading_machine{
@@ -8906,16 +8906,16 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xn" = (
 /obj/effect/turf_decal/loading_area{
 	dir = 8
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xo" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xp" = (
 /obj/machinery/airalarm/all_access{
@@ -8924,7 +8924,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xq" = (
 /obj/machinery/conveyor{
@@ -8936,30 +8936,30 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xr" = (
 /obj/effect/spawner/structure/window,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xs" = (
 /obj/machinery/conveyor_switch/oneway{
 	id = "UO45_mining";
 	name = "mining conveyor"
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xu" = (
 /obj/machinery/suit_storage_unit/mining,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xv" = (
 /obj/structure/table,
 /obj/item/pickaxe,
 /obj/item/radio/off,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xw" = (
 /obj/machinery/mineral/processing_unit{
@@ -8968,7 +8968,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xx" = (
 /obj/machinery/mineral/processing_unit_console{
@@ -8986,23 +8986,23 @@
 	network = list("uo45")
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xz" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xA" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xB" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xC" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xD" = (
 /obj/machinery/light/small{
@@ -9028,18 +9028,18 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xF" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xG" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xH" = (
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xI" = (
 /obj/machinery/door/airlock/mining/glass{
@@ -9047,20 +9047,20 @@
 	req_access_txt = "201"
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xJ" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xK" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xL" = (
 /obj/structure/tank_dispenser/oxygen,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xM" = (
 /obj/machinery/mineral/stacking_unit_console{
@@ -9069,7 +9069,7 @@
 /turf/closed/wall,
 /area/awaymission/undergroundoutpost45/mining)
 "xN" = (
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xP" = (
 /obj/structure/closet/crate,
@@ -9080,14 +9080,14 @@
 	amount = 19
 	},
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xQ" = (
 /obj/machinery/computer/mech_bay_power_console{
 	dir = 1
 	},
 /obj/structure/cable,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xR" = (
 /obj/structure/cable,
@@ -9109,17 +9109,17 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xU" = (
 /obj/effect/turf_decal/loading_area{
 	dir = 4
 	},
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xV" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xW" = (
 /obj/machinery/firealarm{
@@ -9142,11 +9142,11 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "xY" = (
 /obj/effect/spawner/structure/window/reinforced,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/mining)
 "xZ" = (
 /obj/machinery/airalarm/all_access{
@@ -9155,11 +9155,11 @@
 	},
 /obj/structure/closet/emcloset,
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "ya" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "yb" = (
 /turf/open/floor/plasteel{
@@ -9170,12 +9170,12 @@
 "yc" = (
 /obj/structure/ore_box,
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "yd" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "ye" = (
 /obj/machinery/light/small{
@@ -9186,7 +9186,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/mining)
 "yf" = (
 /obj/machinery/door/airlock/external{
@@ -9346,7 +9346,7 @@
 /obj/effect/turf_decal/stripes/asteroid/line{
 	dir = 6
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/caves)
 "KE" = (
 /turf/open/floor/circuit/telecomms/server,
@@ -9354,14 +9354,14 @@
 "OF" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/effect/turf_decal/stripes/asteroid/line,
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/caves)
 "UM" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/effect/turf_decal/stripes/asteroid/line{
 	dir = 10
 	},
-/turf/open/floor/plating
+/turf/open/floor/plating,
 /area/awaymission/undergroundoutpost45/caves)
 
 (1,1,1) = {"

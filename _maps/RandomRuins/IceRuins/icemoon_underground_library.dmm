@@ -15,19 +15,19 @@
 /turf/closed/mineral/random/snow,
 /area/icemoon/underground/unexplored)
 "ae" = (
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "af" = (
 /obj/item/stack/sheet/mineral/wood,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "ag" = (
 /obj/item/feather,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "ah" = (
 /obj/structure/bookcase/random,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "ai" = (
 /obj/structure/table/wood/fancy/black,
@@ -55,12 +55,12 @@
 /area/ruin/unpowered/buried_library)
 "ao" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "ap" = (
 /obj/item/stack/sheet/mineral/wood,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aq" = (
 /obj/structure/fluff/paper/stack,
@@ -73,7 +73,7 @@
 /area/ruin/unpowered/buried_library)
 "at" = (
 /obj/structure/fluff/paper,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "au" = (
 /obj/structure/fluff/paper/stack,
@@ -92,7 +92,7 @@
 /area/ruin/unpowered/buried_library)
 "az" = (
 /obj/item/paper/crumpled/fluff/stations/lavaland/library/diary,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aA" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -108,22 +108,22 @@
 /turf/open/floor/plating/asteroid/snow/icemoon,
 /area/ruin/unpowered/buried_library)
 "aD" = (
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "aE" = (
 /obj/item/stack/sheet/mineral/wood,
 /obj/item/book/manual/random,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aG" = (
 /obj/structure/table/bronze,
 /obj/item/stack/ore/slag,
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "aH" = (
 /obj/structure/table/bronze,
 /obj/item/statuebust/hippocratic,
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "aI" = (
 /obj/effect/mob_spawn/human/skeleton,
@@ -142,7 +142,7 @@
 "aL" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aM" = (
 /obj/item/stack/sheet/mineral/wood,
@@ -151,11 +151,11 @@
 /area/ruin/unpowered/buried_library)
 "aN" = (
 /obj/structure/statue/sandstone/venus,
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "aO" = (
 /mob/living/simple_animal/pet/fox,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aP" = (
 /obj/item/keycard/library,
@@ -164,11 +164,11 @@
 "aQ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/paper/fluff/awaymissions/moonoutpost19/research/larva_autopsy,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aR" = (
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aS" = (
 /obj/structure/table/wood/fancy/black,
@@ -182,7 +182,7 @@
 "aT" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aU" = (
 /obj/item/stack/sheet/mineral/wood,
@@ -191,7 +191,7 @@
 "aV" = (
 /obj/item/stack/sheet/mineral/wood,
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "aW" = (
 /obj/structure/fluff/paper/stack,
@@ -209,7 +209,7 @@
 "aZ" = (
 /obj/structure/fluff/paper/stack,
 /obj/structure/fluff/paper,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "ba" = (
 /obj/structure/barricade/wooden/snowed,
@@ -225,7 +225,7 @@
 /obj/structure/fluff/paper{
 	dir = 1
 	},
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "bd" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -240,14 +240,14 @@
 /obj/structure/fluff/paper{
 	dir = 5
 	},
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "bf" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper{
 	dir = 4
 	},
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "bg" = (
 /obj/item/paper/fluff/ruins/oldstation/protogun,
@@ -256,7 +256,7 @@
 "bh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /mob/living/simple_animal/pet/fox,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "bi" = (
 /obj/structure/fluff/paper,
@@ -292,7 +292,7 @@
 "bq" = (
 /obj/structure/mineral_door/wood,
 /obj/structure/barricade/wooden/crude/snow,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "br" = (
 /obj/structure/girder,
@@ -329,7 +329,7 @@
 /area/ruin/unpowered/buried_library)
 "by" = (
 /obj/structure/statue/bronze/marx,
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "bz" = (
 /obj/item/flashlight/lantern/jade{
@@ -343,7 +343,7 @@
 /area/ruin/unpowered/buried_library)
 "bB" = (
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/carpet/black
+/turf/open/floor/carpet/black,
 /area/ruin/unpowered/buried_library)
 "bC" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -351,7 +351,7 @@
 	dir = 1
 	},
 /mob/living/simple_animal/pet/fox,
-/turf/open/floor/wood
+/turf/open/floor/wood,
 /area/ruin/unpowered/buried_library)
 "bD" = (
 /turf/open/floor/wood{

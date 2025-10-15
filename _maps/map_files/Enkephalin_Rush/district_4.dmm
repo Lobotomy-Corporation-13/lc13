@@ -9877,11 +9877,6 @@
 "JY" = (
 /obj/structure/rack,
 /obj/machinery/light,
-/obj/item/pipe_dispenser,
-/obj/item/pipe_dispenser,
-/obj/item/pipe_dispenser,
-/obj/item/pipe_dispenser,
-/obj/item/pipe_dispenser,
 /turf/open/floor/pod,
 /area/city/shop)
 "Ka" = (

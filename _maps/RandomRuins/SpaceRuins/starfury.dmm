@@ -31,7 +31,7 @@
 	dir = 8
 	},
 /obj/machinery/computer/crew/syndie,
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/starfury)
 "ag" = (
 /obj/machinery/door/window/brigdoor/security{
@@ -2172,7 +2172,6 @@
 /obj/structure/table/reinforced,
 /obj/item/storage/toolbox/syndicate,
 /obj/item/flashlight,
-/obj/item/pipe_dispenser,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 1
 	},
@@ -2974,7 +2973,7 @@
 	icon_state = "computer";
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark
+/turf/open/floor/plasteel/dark,
 /area/shuttle/sbc/starfury)
 "hz" = (
 /obj/effect/turf_decal/tile/yellow{
