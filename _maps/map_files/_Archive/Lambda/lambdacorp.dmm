@@ -10516,8 +10516,6 @@
 /area/department_main/command)
 "XV" = (
 /turf/open/floor/plating/ironsand{
-	// CanAtmosPass = 0;
-	// CanAtmosPassVertical = 0;
 	density = 1;
 	name = "Outskirt"
 	},
@@ -10722,8 +10720,6 @@
 /area/department_main/training)
 "Zo" = (
 /turf/open/floor/fakespace{
-	// CanAtmosPass = 0;
-	// CanAtmosPassVertical = 0;
 	density = 1;
 	desc = "it is impossible to cross now, this land is no more.";
 	name = "broken reality"

@@ -6967,9 +6967,7 @@
 /turf/open/floor/plasteel/dark,
 /area/centcom/hub)
 "NT" = (
-/obj/structure/window/paperframe{
-	// CanAtmosPass = 0
-	},
+/obj/structure/window/paperframe,
 /turf/open/floor/wood,
 /area/centcom/holding)
 "NZ" = (
