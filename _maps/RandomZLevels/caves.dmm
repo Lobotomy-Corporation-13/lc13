@@ -10,7 +10,7 @@
 /area/awaymission/caves/bmp_asteroid/level_three)
 "ad" = (
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid/level_four)
@@ -27,7 +27,7 @@
 /area/awaymission/caves/bmp_asteroid/level_three)
 "ah" = (
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid/level_three)
@@ -233,7 +233,7 @@
 "aV" = (
 /obj/effect/forcefield/cult,
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid/level_four)
@@ -400,7 +400,7 @@
 /area/awaymission/caves/bmp_asteroid)
 "bM" = (
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid)
@@ -409,7 +409,7 @@
 /area/awaymission/caves/bmp_asteroid/level_two)
 "bO" = (
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid/level_two)
@@ -1770,7 +1770,7 @@
 "gY" = (
 /obj/effect/baseturf_helper/lava,
 /turf/open/lava/smooth{
-	desc = "Looks hot."; "n2=23;o2=14;TEMP=2.7";
+	desc = "Looks hot.";
 	luminosity = 5
 	},
 /area/awaymission/caves/bmp_asteroid/level_four)

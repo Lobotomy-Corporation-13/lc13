@@ -3462,7 +3462,7 @@
 	set_luminosity = 24
 	},
 /obj/structure/transit_tube/horizontal,
-/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)
@@ -5944,7 +5944,7 @@
 	mouse_opacity = 0;
 	resistance_flags = 115
 	},
-/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)
@@ -6087,7 +6087,7 @@
 	dir = 1
 	},
 /obj/structure/transit_tube/horizontal,
-/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)

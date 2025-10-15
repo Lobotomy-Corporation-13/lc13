@@ -1537,7 +1537,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/obj/item/tank/internals/plasma/full,
+/obj/item/tank/internals/plasma,
 /turf/open/floor/plating,
 /area/shuttle/sbc/supermatter)
 "eb" = (
@@ -2731,7 +2731,7 @@
 	icon_state = "warningline";
 	dir = 8
 	},
-/obj/item/tank/internals/plasma/full,
+/obj/item/tank/internals/plasma,
 /turf/open/floor/plating,
 /area/shuttle/sbc/supermatter)
 "gV" = (
@@ -3203,7 +3203,7 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 4
 	},
-/obj/item/tank/internals/plasma/full,
+/obj/item/tank/internals/plasma,
 /turf/open/floor/plating,
 /area/shuttle/sbc/supermatter)
 "ia" = (

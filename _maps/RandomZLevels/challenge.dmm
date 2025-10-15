@@ -472,7 +472,7 @@
 /area/awaymission/challenge/main)
 "bH" = (
 /turf/open/floor/plasteel/white/corner{
-	dir = 8; "TEMP=2.7"
+	dir = 8
 	},
 /area/awaymission/challenge/main)
 "bI" = (

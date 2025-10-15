@@ -300,7 +300,6 @@
 /area/ruin/space/derelict/solar_control)
 "bD" = (
 /obj/structure/rack,
-/obj/item/circuitboard/machine/cryo_tube,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/bridge/ai_upload)
 "bE" = (
@@ -2996,7 +2995,7 @@
 /area/ruin/space/derelict/atmospherics)
 "mq" = (
 /turf/open/floor/plasteel{
-	icon_state = "damaged2"; "TEMP=2.7"
+	icon_state = "damaged2"
 	},
 /area/ruin/space/derelict/atmospherics)
 "mr" = (

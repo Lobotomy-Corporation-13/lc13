@@ -13,16 +13,16 @@
 	resistance_flags = FIRE_PROOF
 	var/id = null
 	var/on = FALSE
-
+*/
 /obj/machinery/igniter/incinerator_toxmix
-	id = INCINERATOR_TOXMIX_IGNITER
+	// id = INCINERATOR_TOXMIX_IGNITER
 
 /obj/machinery/igniter/incinerator_atmos
-	id = INCINERATOR_ATMOS_IGNITER
+	// id = INCINERATOR_ATMOS_IGNITER
 
 /obj/machinery/igniter/incinerator_syndicatelava
-	id = INCINERATOR_SYNDICATELAVA_IGNITER
-
+	// id = INCINERATOR_SYNDICATELAVA_IGNITER
+/*
 /obj/machinery/igniter/on
 	on = TRUE
 	icon_state = "igniter1"
