@@ -2101,7 +2101,7 @@
 /turf/open/floor/plasteel,
 /area/quartermaster/miningoffice)
 "ut" = (
-/obj/structure/closet/secure_closet/atmospherics
+/obj/structure/closet/secure_closet/atmospherics,
 /obj/machinery/light{
 	dir = 1
 	},
