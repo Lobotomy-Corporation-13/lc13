@@ -3462,8 +3462,7 @@
 	set_luminosity = 24
 	},
 /obj/structure/transit_tube/horizontal,
-/turf/open/floor/plating/ironsand{
-	initial_gas_mix = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)
@@ -5945,8 +5944,7 @@
 	mouse_opacity = 0;
 	resistance_flags = 115
 	},
-/turf/open/floor/plating/ironsand{
-	initial_gas_mix = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)
@@ -6089,8 +6087,7 @@
 	dir = 1
 	},
 /obj/structure/transit_tube/horizontal,
-/turf/open/floor/plating/ironsand{
-	initial_gas_mix = "TEMP=2.7";
+/turf/open/floor/plating/ironsand{ = "TEMP=2.7";
 	name = "Iron sand"
 	},
 /area/facility_hallway/north)
@@ -10519,8 +10516,8 @@
 /area/department_main/command)
 "XV" = (
 /turf/open/floor/plating/ironsand{
-	CanAtmosPass = 0;
-	CanAtmosPassVertical = 0;
+	// CanAtmosPass = 0;
+	// CanAtmosPassVertical = 0;
 	density = 1;
 	name = "Outskirt"
 	},
@@ -10725,8 +10722,8 @@
 /area/department_main/training)
 "Zo" = (
 /turf/open/floor/fakespace{
-	CanAtmosPass = 0;
-	CanAtmosPassVertical = 0;
+	// CanAtmosPass = 0;
+	// CanAtmosPassVertical = 0;
 	density = 1;
 	desc = "it is impossible to cross now, this land is no more.";
 	name = "broken reality"

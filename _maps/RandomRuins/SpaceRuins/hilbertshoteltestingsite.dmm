@@ -222,8 +222,7 @@
 /turf/closed/mineral/random,
 /area/ruin/unpowered/no_grav)
 "K" = (
-/turf/open/floor/plasteel/stairs/right{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/stairs/right{ "TEMP=2.7"
 	},
 /area/ruin/unpowered/no_grav)
 "Q" = (
@@ -236,13 +235,11 @@
 	},
 /area/ruin/space/has_grav/hilbertresearchfacility)
 "U" = (
-/turf/open/floor/plasteel/stairs/medium{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/stairs/medium{ "TEMP=2.7"
 	},
 /area/ruin/unpowered/no_grav)
 "X" = (
-/turf/open/floor/plasteel/stairs/left{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/stairs/left{ "TEMP=2.7"
 	},
 /area/ruin/unpowered/no_grav)
 

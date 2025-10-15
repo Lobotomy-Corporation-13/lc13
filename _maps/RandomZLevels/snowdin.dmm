@@ -2582,15 +2582,13 @@
 /turf/open/floor/wood,
 /area/awaymission/snowdin/outside)
 "gc" = (
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
 "gd" = (
 /obj/effect/spawner/lootdrop/crate_spawner,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -2600,8 +2598,7 @@
 "gf" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonheavy,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -2932,15 +2929,13 @@
 /area/awaymission/snowdin/cave)
 "gU" = (
 /obj/effect/decal/remains/human,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
 "gV" = (
 /obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -3219,8 +3214,7 @@
 /area/awaymission/snowdin/post/garage)
 "hF" = (
 /obj/structure/destructible/cult/pylon,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -3472,8 +3466,7 @@
 "il" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonmid,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -3482,8 +3475,7 @@
 /obj/structure/spawner/nether{
 	max_mobs = 5
 	},
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -3492,8 +3484,7 @@
 	desc = "It's Caleb Reed, but their flesh has an ashy texture, and their face is featureless save an eerie smile.";
 	name = "Caleb Reed"
 	},
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -4266,8 +4257,7 @@
 	desc = "It's Jacob Ullman, but their flesh has an ashy texture, and their face is featureless save an eerie smile.";
 	name = "Jacob Ullman"
 	},
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -5313,8 +5303,7 @@
 "lT" = (
 /obj/structure/closet/crate/wooden,
 /obj/effect/spawner/lootdrop/snowdin/dungeonlite,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -7092,8 +7081,7 @@
 /area/awaymission/snowdin/post/engineering)
 "qg" = (
 /obj/structure/flora/rock/pile/icy,
-/turf/open/floor/engine/cult{
-	initial_gas_mix = "n2=82;plasma=24;TEMP=120";
+/turf/open/floor/engine/cult{ "n2=82;plasma=24;TEMP=120";
 	temperature = 120
 	},
 /area/awaymission/snowdin/cave/cavern)
@@ -9487,8 +9475,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xl" = (
-/turf/open/floor/plasteel/elevatorshaft{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180"
+/turf/open/floor/plasteel/elevatorshaft{ "o2=22;n2=82;TEMP=180"
 	},
 /area/awaymission/snowdin/cave)
 "xp" = (
@@ -9678,8 +9665,7 @@
 	roundstart_template = /datum/map_template/shuttle/snowdin/excavation;
 	width = 6
 	},
-/turf/open/floor/plasteel/elevatorshaft{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180"
+/turf/open/floor/plasteel/elevatorshaft{ "o2=22;n2=82;TEMP=180"
 	},
 /area/awaymission/snowdin/cave)
 "xL" = (
@@ -10739,8 +10725,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "AD" = (
-/turf/open/floor/plating{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180"
+/turf/open/floor/plating{ "o2=22;n2=82;TEMP=180"
 	},
 /area/awaymission/snowdin/outside)
 "AE" = (
@@ -12398,11 +12383,7 @@
 /obj/machinery/suit_storage_unit{
 	state_open = 1
 	},
-/turf/open/floor/mineral/plastitanium{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180";
-	planetary_atmos = 1;
-	temperature = 180
-	},
+/turf/open/floor/mineral/plastitanium{},
 /area/awaymission/snowdin/cave)
 "EF" = (
 /obj/effect/turf_decal/stripes/line{
@@ -12410,11 +12391,7 @@
 	},
 /obj/effect/turf_decal/weather/snow,
 /obj/machinery/suit_storage_unit/syndicate,
-/turf/open/floor/mineral/plastitanium{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180";
-	planetary_atmos = 1;
-	temperature = 180
-	},
+/turf/open/floor/mineral/plastitanium{},
 /area/awaymission/snowdin/cave)
 "EG" = (
 /obj/effect/turf_decal/stripes/line{
@@ -12424,11 +12401,7 @@
 /obj/machinery/suit_storage_unit{
 	state_open = 1
 	},
-/turf/open/floor/mineral/plastitanium{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180";
-	planetary_atmos = 1;
-	temperature = 180
-	},
+/turf/open/floor/mineral/plastitanium{},
 /area/awaymission/snowdin/cave)
 "EH" = (
 /turf/open/floor/plasteel/dark,

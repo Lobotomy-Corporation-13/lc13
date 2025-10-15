@@ -119,8 +119,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "aD" = (
@@ -139,8 +138,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "aI" = (
@@ -155,15 +153,13 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "aM" = (
 /obj/effect/decal/cleanable/blood,
 /obj/effect/turf_decal/tile/blue,
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "aN" = (
@@ -200,8 +196,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "aR" = (
@@ -508,8 +503,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "gY" = (
@@ -535,8 +529,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "hm" = (
@@ -637,8 +630,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "hB" = (
@@ -848,8 +840,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter2)
 "ix" = (
@@ -918,8 +909,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel/dark{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter3)
 "iT" = (
@@ -961,8 +951,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{
-	initial_gas_mix = "TEMP=2.7"
+/turf/open/floor/plasteel{ "TEMP=2.7"
 	},
 /area/shuttle/caravan/freighter2)
 "ja" = (

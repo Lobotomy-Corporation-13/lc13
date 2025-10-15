@@ -12,7 +12,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -25,7 +24,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -64,7 +62,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -101,7 +98,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -115,7 +111,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -157,7 +152,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -212,7 +206,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -225,7 +218,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -271,7 +263,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -298,7 +289,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -387,7 +377,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -435,7 +424,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -558,7 +546,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -617,7 +604,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -731,7 +717,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -771,7 +756,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -809,7 +793,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -836,7 +819,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1040,7 +1022,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1084,7 +1065,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1133,7 +1113,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1198,7 +1177,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1217,7 +1195,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1245,7 +1222,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1264,7 +1240,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1286,7 +1261,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1322,7 +1296,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1368,7 +1341,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1382,7 +1354,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1460,7 +1431,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1474,7 +1444,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1487,7 +1456,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1536,7 +1504,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1566,7 +1533,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1599,7 +1565,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1642,7 +1607,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1666,7 +1630,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1692,7 +1655,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1713,7 +1675,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1734,7 +1695,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1774,7 +1734,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1795,7 +1754,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1855,7 +1813,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -1930,7 +1887,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -1954,7 +1910,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2061,7 +2016,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2118,7 +2072,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2150,7 +2103,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2334,7 +2286,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2361,7 +2312,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2381,7 +2331,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2452,7 +2401,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2471,7 +2419,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2486,7 +2433,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2510,7 +2456,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2556,7 +2501,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2717,7 +2661,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2895,7 +2838,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -2965,7 +2907,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -2995,7 +2936,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -3037,7 +2977,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -3075,7 +3014,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -3223,7 +3161,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -3237,7 +3174,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -3276,7 +3212,6 @@
 	base_icon_state = "snow-ice";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow-ice";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "ice"
 	},
 /area/snowqueen)
@@ -3296,7 +3231,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)
@@ -3319,7 +3253,6 @@
 	base_icon_state = "snow";
 	icon = 'icons/turf/snow.dmi';
 	icon_state = "snow";
-	initial_gas_mix = "o2=22;n2=82;TEMP=270.15";
 	name = "snow"
 	},
 /area/snowqueen)

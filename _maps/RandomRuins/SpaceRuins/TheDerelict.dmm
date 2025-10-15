@@ -2801,8 +2801,7 @@
 /area/ruin/space/derelict/atmospherics)
 "lw" = (
 /obj/machinery/portable_atmospherics/canister/air,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
+/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
 	},
 /area/ruin/space/derelict/atmospherics)
 "lx" = (
@@ -2875,14 +2874,12 @@
 /area/ruin/space/derelict/atmospherics)
 "lN" = (
 /obj/machinery/atmospherics/components/unary/vent_scrubber,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
+/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
 	},
 /area/ruin/space/derelict/atmospherics)
 "lO" = (
 /obj/machinery/atmospherics/components/unary/outlet_injector/atmos/engine_waste,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
+/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
 	},
 /area/ruin/space/derelict/atmospherics)
 "lP" = (
@@ -3030,8 +3027,7 @@
 /area/ruin/space/derelict/atmospherics)
 "mq" = (
 /turf/open/floor/plasteel{
-	icon_state = "damaged2";
-	initial_gas_mix = "TEMP=2.7"
+	icon_state = "damaged2"; "TEMP=2.7"
 	},
 /area/ruin/space/derelict/atmospherics)
 "mr" = (
@@ -3572,8 +3568,7 @@
 /area/ruin/space/derelict/bridge)
 "pZ" = (
 /obj/machinery/air_sensor/atmos/air_tank,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
+/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
 	},
 /area/ruin/space/derelict/atmospherics)
 "rC" = (
