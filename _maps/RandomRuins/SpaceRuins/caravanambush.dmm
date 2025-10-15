@@ -119,8 +119,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "aD" = (
 /obj/item/stack/rods,
@@ -138,8 +137,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "aI" = (
 /obj/effect/decal/cleanable/dirt,
@@ -153,14 +151,12 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "aM" = (
 /obj/effect/decal/cleanable/blood,
 /obj/effect/turf_decal/tile/blue,
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "aN" = (
 /obj/effect/decal/cleanable/dirt,
@@ -191,8 +187,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "aR" = (
 /obj/effect/decal/cleanable/dirt,
@@ -474,8 +469,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel
 /area/shuttle/caravan/freighter3)
 "gY" = (
 /obj/effect/decal/cleanable/dirt,
@@ -497,8 +491,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "hm" = (
 /turf/closed/wall/mineral/titanium,
@@ -596,8 +589,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel
 /area/shuttle/caravan/freighter3)
 "hB" = (
 /turf/open/floor/plasteel/airless{
@@ -795,8 +787,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel
 /area/shuttle/caravan/freighter2)
 "ix" = (
 /turf/open/floor/plasteel/airless{
@@ -852,8 +843,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/turf/open/floor/plasteel/dark{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/dark
 /area/shuttle/caravan/freighter3)
 "iT" = (
 /obj/machinery/space_heater,
@@ -893,8 +883,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 4
 	},
-/turf/open/floor/plasteel{ "TEMP=2.7"
-	},
+/turf/open/floor/plasteel
 /area/shuttle/caravan/freighter2)
 "ja" = (
 /obj/effect/turf_decal/bot_white,

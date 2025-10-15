@@ -2793,8 +2793,7 @@
 /turf/closed/wall/r_wall,
 /area/ruin/space/derelict/atmospherics)
 "lw" = (
-/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air
 /area/ruin/space/derelict/atmospherics)
 "lx" = (
 /turf/closed/wall,
@@ -2856,12 +2855,10 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lN" = (
-/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air
 /area/ruin/space/derelict/atmospherics)
 "lO" = (
-/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air
 /area/ruin/space/derelict/atmospherics)
 "lP" = (
 /obj/machinery/door/airlock/maintenance{
@@ -3538,8 +3535,7 @@
 /area/ruin/space/derelict/bridge)
 "pZ" = (
 /obj/machinery/air_sensor/atmos/air_tank,
-/turf/open/floor/engine/air{ "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air
 /area/ruin/space/derelict/atmospherics)
 "rC" = (
 /obj/structure/closet/crate,

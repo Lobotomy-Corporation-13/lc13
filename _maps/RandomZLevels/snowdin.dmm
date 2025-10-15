@@ -7442,8 +7442,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/cave)
 "xl" = (
-/turf/open/floor/plasteel/elevatorshaft{ "o2=22;n2=82;TEMP=180"
-	},
+/turf/open/floor/plasteel/elevatorshaft
 /area/awaymission/snowdin/cave)
 "xp" = (
 /obj/effect/turf_decal/stripes/white/line{
@@ -7625,8 +7624,7 @@
 	roundstart_template = /datum/map_template/shuttle/snowdin/excavation;
 	width = 6
 	},
-/turf/open/floor/plasteel/elevatorshaft{ "o2=22;n2=82;TEMP=180"
-	},
+/turf/open/floor/plasteel/elevatorshaft
 /area/awaymission/snowdin/cave)
 "xL" = (
 /turf/open/floor/plating/snowed,
@@ -8595,8 +8593,7 @@
 /turf/open/floor/plating/snowed,
 /area/awaymission/snowdin/outside)
 "AD" = (
-/turf/open/floor/plating{ "o2=22;n2=82;TEMP=180"
-	},
+/turf/open/floor/plating
 /area/awaymission/snowdin/outside)
 "AE" = (
 /obj/item/pen,

@@ -163,34 +163,34 @@
 		/datum/gas/antinoblium		= new/datum/tlv/dangerous,
 		/datum/gas/halon			= new/datum/tlv/dangerous
 	)
-
+*/
 /obj/machinery/airalarm/unlocked
-	locked = FALSE
+	// locked = FALSE
 
 /obj/machinery/airalarm/engine
 	name = "engine air alarm"
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_ENGINE)
+	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_ENGINE) */
 
 /obj/machinery/airalarm/mixingchamber
 	name = "chamber air alarm"
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_TOXINS)
+	req_one_access = list(ACCESS_ATMOSPHERICS, ACCESS_TOXINS) */
 
 /obj/machinery/airalarm/all_access
 	name = "all-access air alarm"
 	desc = "This particular atmos control unit appears to have no access restrictions."
-	locked = FALSE
+/* 	locked = FALSE
 	req_access = null
-	req_one_access = null
+	req_one_access = null */
 
 /obj/machinery/airalarm/syndicate //general syndicate access
-	req_access = list(ACCESS_SYNDICATE)
+	// req_access = list(ACCESS_SYNDICATE)
 
 /obj/machinery/airalarm/away //general away mission access
-	req_access = list(ACCESS_AWAY_GENERAL)
+	// req_access = list(ACCESS_AWAY_GENERAL)
 
 /obj/machinery/airalarm/directional/north //Pixel offsets get overwritten on New()
 	dir = SOUTH
@@ -207,7 +207,7 @@
 /obj/machinery/airalarm/directional/west
 	dir = EAST
 	pixel_x = -24
-
+/*
 //all air alarms in area are connected via magic
 /area
 	var/list/air_vent_info = list()
