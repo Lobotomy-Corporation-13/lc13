@@ -40,7 +40,6 @@
 /area/engine/gravity_generator)
 "al" = (
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/structure/closet/secure_closet/atmospherics,
@@ -60,7 +59,6 @@
 /area/space/nearstation)
 "ap" = (
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/structure/closet/secure_closet/engineering_electrical,
@@ -80,7 +78,6 @@
 	charge = 5e+006
 	},
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/effect/turf_decal/stripes/line{
@@ -340,7 +337,6 @@
 	pixel_x = -25
 	},
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/structure/closet/jcloset,
@@ -363,7 +359,6 @@
 /area/hallway/primary/central)
 "bG" = (
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/machinery/power/apc{
@@ -425,7 +420,6 @@
 /area/hallway/primary/central)
 "bU" = (
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/machinery/power/apc{
@@ -657,7 +651,6 @@
 /area/construction)
 "da" = (
 /obj/machinery/airalarm{
-	locked = 0;
 	pixel_y = 23
 	},
 /obj/machinery/power/apc{

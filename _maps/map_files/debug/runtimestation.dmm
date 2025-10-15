@@ -2101,9 +2101,7 @@
 /turf/open/floor/plasteel,
 /area/quartermaster/miningoffice)
 "ut" = (
-/obj/structure/closet/secure_closet/atmospherics{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/atmospherics
 /obj/machinery/light{
 	dir = 1
 	},
@@ -2191,9 +2189,7 @@
 /turf/open/floor/plasteel,
 /area/science)
 "BD" = (
-/obj/structure/closet/secure_closet/chief_medical{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/chief_medical
 /obj/effect/turf_decal/tile/blue,
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
@@ -2271,9 +2267,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/obj/structure/closet/secure_closet/captains{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/captains
 /turf/open/floor/plasteel,
 /area/bridge)
 "ES" = (
@@ -2296,9 +2290,7 @@
 /turf/open/floor/plating,
 /area/science/nanite)
 "Iy" = (
-/obj/structure/closet/secure_closet/research_director{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/research_director
 /obj/effect/turf_decal/tile/blue,
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
@@ -2410,9 +2402,7 @@
 /obj/effect/turf_decal/tile/blue{
 	dir = 8
 	},
-/obj/structure/closet/secure_closet/hop{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/hop
 /turf/open/floor/plasteel,
 /area/bridge)
 "Sj" = (
@@ -2444,9 +2434,7 @@
 /turf/open/floor/plasteel,
 /area/construction)
 "Ut" = (
-/obj/structure/closet/secure_closet/medical3{
-	locked = 0
-	},
+/obj/structure/closet/secure_closet/medical3
 /obj/item/healthanalyzer/advanced,
 /turf/open/floor/plasteel,
 /area/medical/medbay)

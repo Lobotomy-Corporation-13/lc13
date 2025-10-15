@@ -324,9 +324,7 @@
 /area/awaymission/moonoutpost19/syndicate)
 "bo" = (
 /obj/machinery/airalarm{
-	pixel_y = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_y = 23
 	},
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -486,9 +484,7 @@
 	},
 /obj/machinery/airalarm{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_x = 23
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel
@@ -620,9 +616,7 @@
 /area/awaymission/moonoutpost19/syndicate)
 "bU" = (
 /obj/machinery/airalarm{
-	pixel_y = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_y = 23
 	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -694,9 +688,7 @@
 /area/awaymission/moonoutpost19/syndicate)
 "cd" = (
 /obj/machinery/airalarm/unlocked{
-	pixel_y = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_y = 23
 	},
 /turf/open/floor/plasteel{
 	dir = 8;
@@ -1022,9 +1014,7 @@
 "cS" = (
 /obj/machinery/airalarm{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_x = 23
 	},
 /obj/machinery/light/broken{
 	dir = 4
@@ -1160,9 +1150,7 @@
 /obj/structure/chair/wood,
 /obj/machinery/airalarm{
 	dir = 4;
-	pixel_x = -23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_x = -23
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood
@@ -1182,9 +1170,7 @@
 "dk" = (
 /obj/machinery/airalarm{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null;
-	req_access_txt = "150"
+	pixel_x = 23
 	},
 /turf/open/floor/wood
 /area/awaymission/moonoutpost19/syndicate)
@@ -1713,7 +1699,6 @@
 	},
 /obj/machinery/airalarm/unlocked{
 	pixel_y = 23;
-	req_access = null
 	},
 /obj/structure/cable,
 /turf/open/floor/plating
@@ -1800,7 +1785,6 @@
 	},
 /obj/machinery/airalarm/unlocked{
 	pixel_y = 23;
-	req_access = null
 	},
 /obj/structure/alien/weeds,
 /turf/open/floor/plasteel
@@ -2034,7 +2018,6 @@
 	},
 /obj/machinery/airalarm/unlocked{
 	pixel_y = 23;
-	req_access = null
 	},
 /obj/effect/turf_decal/tile/red{
 	dir = 1
@@ -2475,7 +2458,6 @@
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
 	pixel_x = 23;
-	req_access = null
 	},
 /obj/effect/turf_decal/tile/purple,
 /turf/open/floor/plasteel/white
@@ -2690,8 +2672,7 @@
 	dir = 1
 	},
 /obj/machinery/airalarm/unlocked{
-	pixel_y = 23;
-	req_access = null
+	pixel_y = 23
 	},
 /obj/item/paper/fluff/awaymissions/moonoutpost19/log/gerald,
 /turf/open/floor/plasteel/cafeteria{
@@ -2828,8 +2809,7 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null
+	pixel_x = 23
 	},
 /turf/open/floor/plasteel/white/side{
 	dir = 8
@@ -3055,8 +3035,7 @@
 "ij" = (
 /obj/machinery/airalarm/unlocked{
 	dir = 4;
-	pixel_x = -23;
-	req_access = null
+	pixel_x = -23
 	},
 /obj/machinery/light/small{
 	dir = 8
@@ -3642,8 +3621,7 @@
 /area/awaymission/moonoutpost19/arrivals)
 "jI" = (
 /obj/machinery/airalarm/unlocked{
-	pixel_y = 23;
-	req_access = null
+	pixel_y = 23
 	},
 /turf/open/floor/plasteel
 /area/awaymission/moonoutpost19/arrivals)
@@ -3746,8 +3724,7 @@
 	dir = 1
 	},
 /obj/machinery/airalarm/unlocked{
-	pixel_y = 23;
-	req_access = null
+	pixel_y = 23
 	},
 /obj/effect/turf_decal/tile/purple{
 	dir = 4
@@ -3893,8 +3870,7 @@
 /obj/machinery/processor,
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null
+	pixel_x = 23
 	},
 /turf/open/floor/plasteel/cafeteria{
 	dir = 5
@@ -4244,8 +4220,7 @@
 /obj/structure/chair/wood,
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null
+	pixel_x = 23
 	},
 /turf/open/floor/carpet
 /area/awaymission/moonoutpost19/arrivals)
@@ -4262,8 +4237,7 @@
 /obj/item/storage/box,
 /obj/machinery/airalarm/unlocked{
 	dir = 4;
-	pixel_x = -23;
-	req_access = null
+	pixel_x = -23
 	},
 /obj/effect/turf_decal/tile/bar,
 /obj/effect/turf_decal/tile/bar{
@@ -4816,7 +4790,6 @@
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
 	pixel_x = 23;
-	req_access = null
 	},
 /turf/open/floor/carpet
 /area/awaymission/moonoutpost19/arrivals)
@@ -5009,8 +4982,7 @@
 "ny" = (
 /obj/machinery/airalarm/unlocked{
 	dir = 8;
-	pixel_x = 23;
-	req_access = null
+	pixel_x = 23
 	},
 /obj/effect/turf_decal/tile/neutral,
 /turf/open/floor/plasteel
