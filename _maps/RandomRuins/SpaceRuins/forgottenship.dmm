@@ -500,8 +500,8 @@
 /area/ruin/space/has_grav/syndicate_forgotten_ship)
 "bs" = (
 /turf/closed/mineral/strong{
-	baseturfs = /turf/open/floor/plating/asteroid/airless; "AIRLESS_ATMOS";
-	turf_type = /turf/open/floor/plating/asteroid/airless,
+	baseturfs = /turf/open/floor/plating/asteroid/airless;
+	turf_type = /turf/open/floor/plating/asteroid/airless
 	},
 /area/ruin/unpowered/no_grav)
 "bt" = (

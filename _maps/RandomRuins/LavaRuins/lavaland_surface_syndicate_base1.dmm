@@ -2369,7 +2369,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "ih" = (
@@ -2378,7 +2378,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "ii" = (
@@ -2506,14 +2506,14 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "iv" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "iw" = (
@@ -2666,7 +2666,7 @@
 	dir = 4
 	},
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/ruin/unpowered/syndicate_lava_base/arrivals)
 "iN" = (
@@ -2834,7 +2834,7 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "jf" = (
@@ -2877,7 +2877,7 @@
 "jk" = (
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "jl" = (
@@ -3611,7 +3611,7 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/ruin/unpowered/syndicate_lava_base/arrivals)
 "lf" = (
@@ -3764,14 +3764,14 @@
 	},
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "lw" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/mapping_helpers/no_lava,
 /turf/open/floor/plating{
-	baseturfs = /turf/open/lava/smooth/lava_land_surface; "LAVALAND_ATMOS"
+	baseturfs = /turf/open/lava/smooth/lava_land_surface
 	},
 /area/lavaland/surface/outdoors)
 "lx" = (
