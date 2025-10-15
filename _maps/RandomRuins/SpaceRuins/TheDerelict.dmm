@@ -3533,7 +3533,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/bridge)
 "pZ" = (
-/obj/machinery/air_sensor/atmos/air_tank,
 /turf/open/floor/engine/air,
 /area/ruin/space/derelict/atmospherics)
 "rC" = (

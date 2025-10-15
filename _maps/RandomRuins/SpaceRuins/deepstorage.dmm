@@ -1866,13 +1866,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/power)
 "fJ" = (
-/obj/machinery/computer/atmos_control/tank{
-	dir = 8;
-	input_tag = "o2_in_bunker";
-	name = "Oxygen Supply Control";
-	output_tag = "o2_out_bunker";
-	sensors = list("o2_sensor_bunker" = "Tank")
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/power)
@@ -1882,9 +1875,6 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/deepstorage/power)
 "fL" = (
-/obj/machinery/air_sensor{
-	id_tag = "o2_sensor_bunker"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/deepstorage/power)
 "fM" = (
@@ -2124,20 +2114,10 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/power)
 "gC" = (
-/obj/machinery/computer/atmos_control/tank{
-	dir = 8;
-	input_tag = "n2_in_bunker";
-	name = "Nitrogen Supply Control";
-	output_tag = "n2_out_bunker";
-	sensors = list("n2_sensor_bunker" = "Tank")
-	},
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plasteel,
 /area/ruin/space/has_grav/deepstorage/power)
 "gD" = (
-/obj/machinery/air_sensor{
-	id_tag = "n2_sensor_bunker"
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/has_grav/deepstorage/power)
 "gE" = (

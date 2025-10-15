@@ -5445,13 +5445,6 @@
 /turf/open/floor/plasteel,
 /area/awaymission/snowdin/post/engineering)
 "qX" = (
-/obj/machinery/computer/atmos_control/tank{
-	dir = 1;
-	frequency = 1442;
-	name = "Toxins Supply Control";
-	output_tag = "snowdin_toxins_out";
-	sensors = list("snowdin_toxins" = "Tank")
-	},
 /turf/open/floor/plating{
 	icon_state = "platingdmg1"
 	},
@@ -5471,13 +5464,6 @@
 /turf/open/floor/plasteel,
 /area/awaymission/snowdin/post/engineering)
 "ra" = (
-/obj/machinery/computer/atmos_control/tank{
-	dir = 1;
-	frequency = 1442;
-	name = "Oxygen Supply Control";
-	output_tag = "snowdin_oxygen_out";
-	sensors = list("snowdin_oxygen" = "Tank")
-	},
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
@@ -5485,13 +5471,6 @@
 /turf/open/floor/plasteel,
 /area/awaymission/snowdin/post/engineering)
 "rb" = (
-/obj/machinery/computer/atmos_control/tank{
-	dir = 1;
-	frequency = 1442;
-	name = "Nitrogen Supply Control";
-	output_tag = "snowdin_nitrogen_out";
-	sensors = list("snowdin_nitrogen" = "Tank")
-	},
 /obj/effect/turf_decal/tile/yellow,
 /obj/effect/turf_decal/tile/yellow{
 	dir = 8
@@ -5726,33 +5705,18 @@
 /turf/open/floor/engine/plasma,
 /area/awaymission/snowdin/post/engineering)
 "rN" = (
-/obj/machinery/air_sensor{
-	frequency = 1442;
-	id_tag = "snowdin_toxins";
-	name = "gas sensor (toxins)"
-	},
 /turf/open/floor/engine/plasma,
 /area/awaymission/snowdin/post/engineering)
 "rO" = (
 /turf/open/floor/engine/o2,
 /area/awaymission/snowdin/post/engineering)
 "rP" = (
-/obj/machinery/air_sensor{
-	frequency = 1442;
-	id_tag = "snowdin_oxygen";
-	name = "gas sensor (oxygen)"
-	},
 /turf/open/floor/engine/o2,
 /area/awaymission/snowdin/post/engineering)
 "rQ" = (
 /turf/open/floor/engine/n2,
 /area/awaymission/snowdin/post/engineering)
 "rR" = (
-/obj/machinery/air_sensor{
-	frequency = 1442;
-	id_tag = "snowdin_nitrogen";
-	name = "gas sensor (nitrogen)"
-	},
 /turf/open/floor/engine/n2,
 /area/awaymission/snowdin/post/engineering)
 "rS" = (
