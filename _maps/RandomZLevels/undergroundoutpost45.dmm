@@ -5669,7 +5669,7 @@
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oS" = (
 /obj/effect/decal/cleanable/dirt,
-/turf/open/floor/plasteel
+/turf/open/floor/plasteel,
 /area/awaymission/undergroundoutpost45/crew_quarters)
 "oT" = (
 /obj/machinery/airalarm/all_access{
