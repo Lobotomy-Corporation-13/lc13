@@ -6,12 +6,11 @@
 	name = "Abnormality Pacifier."
 	desc = "After reverse engineering some of the Qlipthoth Detterence technology,\
 	Limbus Company was able to create tools capable of instantly satisfying the specific needs of an abnormality, but it has limited uses. Use inhand to change modes."
-	///Placeholder sprites cause I'm lazy.
-	icon = 'ModularLobotomy/_Lobotomyicons/lcorp_weapons.dmi'
-	icon_state = "baton"
+	///codersprites, should probably get changed by an actual spriter.
+	icon = 'ModularLobotomy/_Lobotomyicons/lcl_tools.dmi'
+	icon_state = "lcl_pacifier"
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lcorp_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lcorp_right.dmi'
-	color = "#f3410b"
 	force = 0
 	hitsound = 'sound/weapons/ego/justitia2.ogg'
 	var/uses = 3
