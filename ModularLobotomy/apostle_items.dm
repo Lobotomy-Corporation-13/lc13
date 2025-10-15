@@ -45,7 +45,7 @@
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 200, BLACK_DAMAGE = 70, PALE_DAMAGE = 60, BOMB = 100, BIO = 100, RAD = 100, FIRE = 100, ACID = 95, WOUND = 50)
 	transparent_protection = HIDEGLOVES|HIDESUITSTORAGE|HIDEJUMPSUIT|HIDESHOES
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | LAVA_PROOF
 	slowdown = 0.4
 
@@ -63,7 +63,7 @@
 	visor_flags_inv = HIDEFACIALHAIR
 	visor_flags_cover = MASKCOVERSMOUTH
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 200, BLACK_DAMAGE = 70, PALE_DAMAGE = 60, BOMB = 100, BIO = 100, RAD = 100, FIRE = 100, ACID = 95, WOUND = 200)
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	heat_protection = HEAD
 	body_parts_covered = HEAD
 	resistance_flags = FIRE_PROOF | LAVA_PROOF

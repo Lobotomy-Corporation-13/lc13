@@ -112,7 +112,7 @@
 
 /mob/living/simple_animal/hostile/cuckoospawn/proc/executed_claw()
 	var/turf/origin = get_turf(src)
-	var/list/all_turfs = origin.GetAtmosAdjacentTurfs(1)
+	var/list/all_turfs = origin.reachableAdjacentTurfs()
 	for(var/turf/T in all_turfs)
 		if(T == origin)
 			continue

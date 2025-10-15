@@ -267,7 +267,7 @@
 /datum/reagent/medicine/c2/seiver //a bit of a gray joke
 	name = "Seiver"
 	description = "A medicine that shifts functionality based on temperature. Colder temperatures incurs radiation removal while hotter temperatures promote antitoxicity. Damages the heart." //CHEM HOLDER TEMPS, NOT AIR TEMPS
-	var/radbonustemp = (T0C - 100) //being below this number gives you 10% off rads.
+	var/radbonustemp = (273.15 - 100) //being below this number gives you 10% off rads.
 
 /datum/reagent/medicine/c2/seiver/on_mob_metabolize(mob/living/M)
 	. = ..()
@@ -285,7 +285,7 @@
 		healypoints += toxcalc
 
 	//and you're cold
-	var/radcalc = round((T0C-chemtemp)/6,0.1) //max ~45 rad loss unless you've hit below 0K. if so, wow.
+	var/radcalc = round((273.15-chemtemp)/6,0.1) //max ~45 rad loss unless you've hit below 0K. if so, wow.
 	if(radcalc > 0)
 		//no cost percent healing if you are SUPER cold (on top of cost healing)
 		if(chemtemp < radbonustemp*0.1) //if you're super chilly, it takes off 25% of your current rads

@@ -101,13 +101,13 @@
 	unit_name = "security barrier"
 	export_types = list(/obj/item/grenade/barrier, /obj/structure/barricade/security)
 
-/datum/export/large/gas_canister
+/* /datum/export/large/gas_canister
 	cost = CARGO_CRATE_VALUE * 0.05 //Base cost of canister. You get more for nice gases inside.
 	unit_name = "Gas Canister"
 	export_types = list(/obj/machinery/portable_atmospherics/canister)
-	k_elasticity = 0.00033
+	k_elasticity = 0.00033 */
 
-/datum/export/large/gas_canister/get_cost(obj/O)
+/* /datum/export/large/gas_canister/get_cost(obj/O)
 	var/obj/machinery/portable_atmospherics/canister/C = O
 	var/worth = 10
 	var/canister_mix = C.air_contents.gases
@@ -149,4 +149,4 @@
 			worth += round((gas_prices[gasID]/k_elasticity) * (1 - NUM_E**(-1 * k_elasticity * canister_mix[gasID][MOLES])))
 
 	C.air_contents.garbage_collect()
-	return worth
+	return worth */

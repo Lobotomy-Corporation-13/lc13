@@ -1,7 +1,7 @@
 /mob/living/carbon
 	blood_volume = BLOOD_VOLUME_NORMAL
 	gender = MALE
-	pressure_resistance = 15
+	// pressure_resistance = 15
 	possible_a_intents = list(INTENT_HELP, INTENT_HARM)
 	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,GLAND_HUD,NANITE_HUD,DIAG_NANITE_FULL_HUD)
 	has_limbs = 1
@@ -52,7 +52,7 @@
 	var/failed_last_breath = FALSE
 
 	var/co2overloadtime = null
-	var/temperature_resistance = T0C+75
+	var/temperature_resistance = 273.15 + 75
 	var/obj/item/food/meat/slab/type_of_meat = /obj/item/food/meat/slab
 
 	var/gib_type = /obj/effect/decal/cleanable/blood/gibs

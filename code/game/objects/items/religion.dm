@@ -348,9 +348,9 @@
 	desc = "They're like gloves, but made of metal."
 	siemens_coefficient = 0
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 
 /obj/item/clothing/gloves/plate/red
 	icon_state = "crusader-red"
@@ -366,9 +366,9 @@
 	armor = list(MELEE = 50, BULLET = 50, LASER = 50, ENERGY = 50, BOMB = 60, BIO = 0, RAD = 0, FIRE = 60, ACID = 60) //does this even do anything on boots?
 	clothing_flags = NOSLIP
 	cold_protection = FEET
-	min_cold_protection_temperature = SHOES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = FEET
-	max_heat_protection_temperature = SHOES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 
 
 /obj/item/clothing/shoes/plate/red

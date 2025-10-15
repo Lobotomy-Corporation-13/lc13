@@ -156,7 +156,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /datum/hallucination/fake_flood
-	//Plasma starts flooding from the nearby vent
+	//Plasma starts flooding from a nearby random place.
 	var/turf/center
 	var/list/flood_images = list()
 	var/list/flood_image_holders = list()
@@ -168,14 +168,15 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /datum/hallucination/fake_flood/New(mob/living/carbon/C, forced = TRUE)
 	..()
-	for(var/obj/machinery/atmospherics/components/unary/vent_pump/U in orange(7,target))
-		if(!U.welded)
-			center = get_turf(U)
-			break
+	var/list/cache = list()
+	for(var/turf/spawnpoint in view(7,target))
+		cache += spawnpoint
+	center = pick(cache)
+	cache = null
 	if(!center)
 		qdel(src)
 		return
-	feedback_details += "Vent Coords: [center.x],[center.y],[center.z]"
+	feedback_details += "Flood Coords: [center.x],[center.y],[center.z]"
 	var/obj/effect/plasma_image_holder/pih = new(center)
 	var/image/plasma_image = image(image_icon, pih, image_state, FLY_LAYER)
 	plasma_image.alpha = 50
@@ -205,7 +206,7 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	for(var/turf/FT in flood_turfs)
 		for(var/dir in GLOB.cardinals)
 			var/turf/T = get_step(FT, dir)
-			if((T in flood_turfs) || !TURFS_CAN_SHARE(T, FT) || isspaceturf(T)) //If we've gottem already, or if they're not alright to spread with.
+			if((T in flood_turfs) || !get_adjacent_open_turfs(T, FT) || isspaceturf(T)) //If we've gottem already, or if they're not alright to spread with.
 				continue
 			var/obj/effect/plasma_image_holder/pih = new(T)
 			var/image/new_plasma = image(image_icon, pih, image_state, FLY_LAYER)
@@ -258,17 +259,17 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 
 /datum/hallucination/xeno_attack/New(mob/living/carbon/C, forced = TRUE)
 	..()
-	for(var/obj/machinery/atmospherics/components/unary/vent_pump/U in orange(7,target))
-		if(!U.welded)
-			pump_location = get_turf(U)
-			break
-
-	if(pump_location)
-		feedback_details += "Vent Coords: [pump_location.x],[pump_location.y],[pump_location.z]"
-		xeno = new(pump_location, target)
-		START_PROCESSING(SSfastprocess, src)
-	else
+	var/list/cache = list()
+	for(var/turf/spawnpoint in view(7,target))
+		cache += spawnpoint
+	pump_location = pick(cache)
+	cache = null
+	if(!pump_location)
 		qdel(src)
+		return
+	feedback_details += "Xeno Coords: [pump_location.x],[pump_location.y],[pump_location.z]"
+	xeno = new(pump_location, target)
+	START_PROCESSING(SSfastprocess, src)
 
 /datum/hallucination/xeno_attack/process(delta_time)
 	time_processing += delta_time
@@ -276,10 +277,10 @@ GLOBAL_LIST_INIT(hallucination_list, list(
 	if (time_processing >= stage)
 		switch (time_processing)
 			if (XENO_ATTACK_STAGE_FINISH to INFINITY)
-				to_chat(target, "<span class='notice'>[xeno.name] scrambles into the ventilation ducts!</span>")
+				to_chat(target, span_notice("[xeno.name] crawls between the floor tiles and disappears from sight!"))
 				qdel(src)
 			if (XENO_ATTACK_STAGE_CLIMB to XENO_ATTACK_STAGE_FINISH)
-				to_chat(target, "<span class='notice'>[xeno.name] begins climbing into the ventilation system...</span>")
+				to_chat(target, span_notice("[xeno.name] begins clawing at the floor..."))
 				stage = XENO_ATTACK_STAGE_FINISH
 			if (XENO_ATTACK_STAGE_LEAP_AT_PUMP to XENO_ATTACK_STAGE_CLIMB)
 				xeno.update_icon("alienh_leap",'icons/mob/alienleap.dmi', -32, -32)

@@ -51,7 +51,7 @@ Bonus
 		to_chat(M, "<span class='warning'>[pick("You feel cold.", "You shiver.")]</span>")
 	else
 		to_chat(M, "<span class='userdanger'>[pick("You feel your blood run cold.", "You feel ice in your veins.", "You feel like you can't heat up.", "You shiver violently." )]</span>")
-	set_body_temp(A.affected_mob, A)
+	// set_body_temp(A.affected_mob, A)
 
 /**
  * set_body_temp Sets the body temp change

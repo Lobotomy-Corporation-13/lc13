@@ -15,8 +15,10 @@
 /obj/item/organ/heart/gland/plasma/proc/vomit_plasma()
 	if(!owner)
 		return
-	owner.visible_message(span_danger("[owner] vomits a cloud of plasma!"))
-	var/turf/open/T = get_turf(owner)
-	if(istype(T))
-		T.atmos_spawn_air("plasma=50;TEMP=[T20C]")
-	owner.vomit()
+	//Burn everything around
+	for(var/turf/open/T in view(3, get_turf(src)))
+		if(locate(/obj/effect/turf_fire/liu) in T)
+			for(var/obj/effect/turf_fire/liu/fire in T)
+				qdel(fire)
+		new /obj/effect/turf_fire/liu(T)
+	owner.visible_message(span_warning("[owner] unleashes a wave of flames!"))

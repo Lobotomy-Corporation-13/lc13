@@ -58,7 +58,7 @@
 	icon_state = "engineering"
 	build_path = /obj/machinery/computer/atmos_alert
 
-/obj/item/circuitboard/computer/atmos_control
+/* /obj/item/circuitboard/computer/atmos_control
 	name = "Atmospheric Monitor (Computer Board)"
 	icon_state = "engineering"
 	build_path = /obj/machinery/computer/atmos_control
@@ -165,7 +165,7 @@
 
 /obj/item/circuitboard/computer/atmos_control/tank/antinoblium_tank
 	name = "Antinoblium Supply Control (Computer Board)"
-	build_path = /obj/machinery/computer/atmos_control/tank/antinoblium_tank
+	build_path = /obj/machinery/computer/atmos_control/tank/antinoblium_tank */
 
 /obj/item/circuitboard/computer/auxiliary_base
 	name = "Auxiliary Base Management Console (Computer Board)"

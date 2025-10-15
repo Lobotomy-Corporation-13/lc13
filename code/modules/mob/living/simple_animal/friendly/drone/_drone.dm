@@ -313,8 +313,8 @@
 /mob/living/simple_animal/drone/mob_has_gravity()
 	return ..() || mob_negates_gravity()
 
-/mob/living/simple_animal/drone/experience_pressure_difference(pressure_difference, direction)
-	return
+/* /mob/living/simple_animal/drone/experience_pressure_difference(pressure_difference, direction)
+	return */
 
 /mob/living/simple_animal/drone/bee_friendly()
 	// Why would bees pay attention to drones?

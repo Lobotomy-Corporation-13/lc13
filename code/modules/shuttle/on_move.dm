@@ -58,13 +58,13 @@ All ShuttleMove procs go here
 	var/depth = baseturfs.len - shuttle_boundary + 1
 	newT.CopyOnTop(src, 1, depth, TRUE)
 	//Air stuff
-	newT.blocks_air = TRUE
+/* 	newT.blocks_air = TRUE
 	newT.air_update_turf(TRUE, FALSE)
 	blocks_air = TRUE
 	air_update_turf(TRUE, TRUE)
 	if(isopenturf(newT))
 		var/turf/open/new_open = newT
-		new_open.copy_air_with_tile(src)
+		new_open.copy_air_with_tile(src) */
 
 	return TRUE
 
@@ -83,11 +83,11 @@ All ShuttleMove procs go here
 
 	return TRUE
 
-/turf/proc/lateShuttleMove(turf/oldT)
+/* /turf/proc/lateShuttleMove(turf/oldT)
 	blocks_air = initial(blocks_air)
 	air_update_turf(TRUE, blocks_air)
 	oldT.blocks_air = initial(oldT.blocks_air)
-	oldT.air_update_turf(TRUE, oldT.blocks_air)
+	oldT.air_update_turf(TRUE, oldT.blocks_air) */
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -212,10 +212,10 @@ All ShuttleMove procs go here
 	. = ..()
 	recharging_turf = get_step(loc, dir)
 
-/obj/machinery/atmospherics/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
+/* /obj/machinery/atmospherics/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
 	. = ..()
 	if(pipe_vision_img)
-		pipe_vision_img.loc = loc
+		pipe_vision_img.loc = loc */
 
 /obj/machinery/computer/auxiliary_base/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
 	. = ..()
@@ -233,7 +233,7 @@ All ShuttleMove procs go here
 		on = TRUE
 	update_list()
 
-/obj/machinery/atmospherics/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
+/* /obj/machinery/atmospherics/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
 	. = ..()
 	var/missing_nodes = FALSE
 	for(var/i in 1 to device_type)
@@ -260,7 +260,7 @@ All ShuttleMove procs go here
 		SSair.add_to_rebuild_queue(src)
 	else
 		// atmosinit() calls update_icon(), so we don't need to call it
-		update_icon()
+		update_icon() */
 
 /obj/machinery/navbeacon/beforeShuttleMove(turf/newT, rotation, move_mode, obj/docking_port/mobile/moving_dock)
 	. = ..()

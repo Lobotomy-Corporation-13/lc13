@@ -89,7 +89,7 @@
 	visible_message(span_danger("[src] catches fire!"))
 	var/turf/T = get_turf(src)
 	qdel(src)
-	new /obj/effect/hotspot(T)
+	new /obj/effect/turf_fire(T)
 
 /obj/effect/decal/cleanable/oil/streak
 	icon_state = "streak1"

@@ -177,7 +177,7 @@
 /obj/item/weldingtool/proc/handle_fuel_and_temps(used = 0, mob/living/user)
 	use(used)
 	var/turf/location = get_turf(user)
-	location.hotspot_expose(700, 50, 1)
+	explosion(location, 0, 0, 2, 4, flame_range = 1)
 
 // Returns the amount of fuel in the welder
 /obj/item/weldingtool/proc/get_fuel()

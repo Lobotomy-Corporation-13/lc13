@@ -45,7 +45,7 @@
 	. = ..()
 	add_cell_sample()
 
-/mob/living/simple_animal/hostile/tree/Life()
+/* /mob/living/simple_animal/hostile/tree/Life()
 	..()
 	if(is_tree && isopenturf(loc))
 		var/turf/open/T = src.loc
@@ -55,7 +55,7 @@
 				if(prob(25))
 					var/amt = min(co2, 9)
 					T.air.gases[/datum/gas/carbon_dioxide][MOLES] -= amt
-					T.atmos_spawn_air("o2=[amt]")
+					T.atmos_spawn_air("o2=[amt]") */
 
 /mob/living/simple_animal/hostile/tree/AttackingTarget()
 	. = ..()

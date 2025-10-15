@@ -277,9 +277,9 @@
 	flags_cover = HEADCOVERSEYES
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 40)
 	cold_protection = HEAD
-	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 
 /obj/item/clothing/suit/hooded/cultrobes
 	name = "ancient cultist robes"
@@ -291,9 +291,9 @@
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 40)
 	flags_inv = HIDEJUMPSUIT
 	cold_protection = CHEST|GROIN|LEGS|ARMS
-	min_cold_protection_temperature = ARMOR_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|ARMS
-	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie
 
 

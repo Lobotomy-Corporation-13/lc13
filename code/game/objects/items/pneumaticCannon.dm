@@ -18,7 +18,7 @@
 	var/maxWeightClass = 20 //The max weight of items that can fit into the cannon
 	var/loadedWeightClass = 0 //The weight of items currently in the cannon
 	var/obj/item/tank/internals/tank = null //The gas tank that is drawn from to fire things
-	var/gasPerThrow = 3 //How much gas is drawn from a tank's pressure to fire
+	// var/gasPerThrow = 3 //How much gas is drawn from a tank's pressure to fire
 	var/list/loadedItems = list() //The items loaded into the cannon that will be fired out
 	var/pressureSetting = 1 //How powerful the cannon is - higher pressure = more gas but more powerful throws
 	var/checktank = TRUE
@@ -156,9 +156,9 @@
 	if(HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, "<span class='warning'>You can't bring yourself to fire \the [src]! You don't want to risk harming anyone...</span>" )
 		return
-	if(tank && !tank.air_contents.remove(gasPerThrow * pressureSetting))
+/* 	if(tank && !tank.air_contents.remove(gasPerThrow * pressureSetting))
 		to_chat(user, "<span class='warning'>\The [src] lets out a weak hiss and doesn't react!</span>")
-		return
+		return */
 	if(HAS_TRAIT(user, TRAIT_CLUMSY) && prob(75) && clumsyCheck && iscarbon(user))
 		var/mob/living/carbon/C = user
 		C.visible_message("<span class='warning'>[C] loses [C.p_their()] grip on [src], causing it to go off!</span>", "<span class='userdanger'>[src] slips out of your hands and goes off!</span>")
@@ -238,7 +238,7 @@
 	desc = "A gas-powered, object-firing cannon made out of common parts."
 	force = 5
 	maxWeightClass = 10
-	gasPerThrow = 5
+	// gasPerThrow = 5
 
 /obj/item/pneumatic_cannon/proc/updateTank(obj/item/tank/internals/thetank, removing = 0, mob/living/carbon/human/user)
 	if(removing)
@@ -281,7 +281,7 @@
 	desc = "Load cream pie for optimal results."
 	force = 10
 	icon_state = "piecannon"
-	gasPerThrow = 0
+	// gasPerThrow = 0
 	checktank = FALSE
 	range_multiplier = 3
 	fire_mode = PCANNON_FIFO

@@ -440,7 +440,7 @@
 		to_chat(L, "<span class='userdanger'>\The [src] sears you!</span>")
 	for(var/turf/T in range(aoe_fire_range, epicenter))		//handle aoe fire
 		if(prob(aoe_fire_chance))
-			new /obj/effect/hotspot(T)
+			new /obj/effect/turf_fire(T)
 	for(var/obj/O in range(aoe_structure_range, epicenter))
 		if(!isitem(O))
 			O.take_damage(aoe_structure_damage * get_damage_coeff(O), LASER, FALSE)

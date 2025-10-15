@@ -83,6 +83,7 @@
 		SSradio.remove_object(src,frequency)
 	return ..()
 
+/*
 /obj/machinery/airlock_sensor
 	icon = 'icons/obj/airlock_machines.dmi'
 	icon_state = "airlock_sensor_off"
@@ -132,7 +133,7 @@
 	radio_connection.post_signal(src, signal, range = AIRLOCK_CONTROL_RANGE, filter = RADIO_AIRLOCK)
 	flick("airlock_sensor_cycle", src)
 
-/obj/machinery/airlock_sensor/process()
+	 /obj/machinery/airlock_sensor/process()
 	if(on)
 		var/datum/gas_mixture/air_sample = return_air()
 		var/pressure = round(air_sample.return_pressure(),0.1)
@@ -160,3 +161,4 @@
 /obj/machinery/airlock_sensor/Destroy()
 	SSradio.remove_object(src,frequency)
 	return ..()
+*/

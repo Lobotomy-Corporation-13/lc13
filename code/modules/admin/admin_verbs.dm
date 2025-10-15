@@ -19,7 +19,7 @@ GLOBAL_PROTECT(admin_verbs_default)
 	/client/proc/stop_sounds,
 	/client/proc/mark_datum_mapview,
 	/client/proc/debugstatpanel,
-	/client/proc/fix_air				/*resets air in designated radius to its default atmos composition*/
+	// /client/proc/fix_air				/*resets air in designated radius to its default atmos composition*/
 	)
 GLOBAL_LIST_INIT(admin_verbs_admin, world.AVerbsAdmin())
 GLOBAL_PROTECT(admin_verbs_admin)
@@ -184,7 +184,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/cmd_display_overlay_log,
 	/client/proc/reload_configuration,
 	/client/proc/spawn_abnormality_boss,
-	/client/proc/atmos_control,
+	// /client/proc/atmos_control,
 	/client/proc/reload_cards,
 	/client/proc/validate_cards,
 	/client/proc/test_cardpack_distribution,
@@ -577,12 +577,12 @@ GLOBAL_PROTECT(admin_verbs_hideable)
 	log_admin("[key_name(usr)] has modified Dynamic Explosion Scale: [ex_scale]")
 	message_admins("[key_name_admin(usr)] has  modified Dynamic Explosion Scale: [ex_scale]")
 
-/client/proc/atmos_control()
+/* /client/proc/atmos_control()
 	set name = "Atmos Control Panel"
 	set category = "Debug"
 	if(!check_rights(R_DEBUG))
 		return
-	SSair.ui_interact(mob)
+	SSair.ui_interact(mob) */
 
 /client/proc/reload_cards()
 	set name = "Reload Cards"

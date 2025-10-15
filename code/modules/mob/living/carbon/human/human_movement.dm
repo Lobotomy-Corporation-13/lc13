@@ -25,7 +25,7 @@
 			if (CS.clothing_flags & NOSLIP_ICE)
 				return FALSE
 	return ..()
-
+/*
 /mob/living/carbon/human/experience_pressure_difference()
 	playsound(src, 'sound/effects/space_wind.ogg', 50, TRUE)
 	if(shoes && istype(shoes, /obj/item/clothing))
@@ -33,7 +33,7 @@
 		if (S.clothing_flags & NOSLIP)
 			return 0
 	return ..()
-
+ */
 /mob/living/carbon/human/mob_has_gravity()
 	. = ..()
 	if(!.)

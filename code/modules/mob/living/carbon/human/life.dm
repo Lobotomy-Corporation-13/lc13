@@ -53,14 +53,13 @@
 	if(stat != DEAD)
 		return TRUE
 
-// Here in case we restore a pseudo-atmos system.
-/mob/living/carbon/human/calculate_affecting_pressure(pressure)
+/* /mob/living/carbon/human/calculate_affecting_pressure(pressure)
 	if (wear_suit && head && istype(wear_suit, /obj/item/clothing) && istype(head, /obj/item/clothing))
 		var/obj/item/clothing/CS = wear_suit
 		var/obj/item/clothing/CH = head
 		if (CS.clothing_flags & CH.clothing_flags & STOPSPRESSUREDAMAGE)
 			return ONE_ATMOSPHERE
-	return pressure
+	return pressure */
 
 
 /mob/living/carbon/human/handle_mutations_and_radiation()
@@ -111,10 +110,10 @@
 /mob/living/carbon/human/proc/get_thermal_protection()
 	var/thermal_protection = 0 //Simple check to estimate how protected we are against multiple temperatures
 	if(wear_suit)
-		if(wear_suit.max_heat_protection_temperature >= FIRE_SUIT_MAX_TEMP_PROTECT)
+		if(wear_suit.max_heat_protection_temperature >= TRUE)
 			thermal_protection += (wear_suit.max_heat_protection_temperature*0.7)
 	if(head)
-		if(head.max_heat_protection_temperature >= FIRE_HELM_MAX_TEMP_PROTECT)
+		if(head.max_heat_protection_temperature >= TRUE)
 			thermal_protection += (head.max_heat_protection_temperature*THERMAL_PROTECTION_HEAD)
 	thermal_protection = round(thermal_protection)
 	return thermal_protection

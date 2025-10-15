@@ -23,7 +23,7 @@
 	damage_coeff = list(BRUTE = 1, FIRE = 1, TOX = 0, CLONE = 0, STAMINA = 0, OXY = 0)
 	healable = 0
 	movement_type = GROUND
-	pressure_resistance = 100
+	// pressure_resistance = 100
 	del_on_death = TRUE
 	death_message = "implodes into itself"
 	faction = list("heretics")

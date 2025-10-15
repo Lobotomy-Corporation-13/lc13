@@ -60,7 +60,7 @@
 	if(chems.has_reagent(type, 1))
 		mytray.adjustToxic(3) //It is still toxic, mind you, but not to the same degree.
 
-#define	LIQUID_PLASMA_BP (50+T0C)
+#define	LIQUID_PLASMA_BP (50+273.15)
 
 /datum/reagent/toxin/plasma
 	name = "Plasma"
@@ -94,17 +94,19 @@
 		return
 	if(!holder.my_atom)
 		return
-
-	var/atom/A = holder.my_atom
-	A.atmos_spawn_air("plasma=[volume];TEMP=[holder.chem_temp]")
+	var/turf/here = get_turf(holder)
+	if(here)
+		new /obj/effect/turf_fire(here)
+/* 	var/atom/A = holder.my_atom
+	A.atmos_spawn_air("plasma=[volume];TEMP=[holder.chem_temp]") */
 	holder.del_reagent(type)
 
 /datum/reagent/toxin/plasma/expose_turf(turf/open/exposed_turf, reac_volume)
 	if(!istype(exposed_turf))
 		return
-	var/temp = holder ? holder.chem_temp : T20C
+	var/temp = holder ? holder.chem_temp : 293.15
 	if(temp >= LIQUID_PLASMA_BP)
-		exposed_turf.atmos_spawn_air("plasma=[reac_volume];TEMP=[temp]")
+		new /obj/effect/turf_fire(exposed_turf)
 	return ..()
 
 /datum/reagent/toxin/plasma/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)//Splashing people with plasma is stronger than fuel!
@@ -121,7 +123,7 @@
 	taste_description = "thick and smokey"
 	specific_heat = SPECIFIC_HEAT_PLASMA
 	toxpwr = 3
-	material = /datum/material/hot_ice
+	// material = /datum/material/hot_ice
 
 /datum/reagent/toxin/hot_ice/on_mob_life(mob/living/carbon/M)
 	if(holder.has_reagent(/datum/reagent/medicine/epinephrine))

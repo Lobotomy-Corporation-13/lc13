@@ -259,7 +259,7 @@
 	petter.Stun(41 SECONDS)
 	petter.move_resist = MOVE_FORCE_VERY_STRONG
 	petter.pull_force = MOVE_FORCE_VERY_STRONG
-	for(var/times_strangled = 1, times_strangled == 10, times_strangled++)
+	for(var/times_strangled in 1 to 10)
 		if(petter.stat == DEAD)
 			break
 		petter.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE * times_strangled) // 440 oxydamage total.

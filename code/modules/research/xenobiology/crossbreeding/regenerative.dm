@@ -44,8 +44,8 @@ Regenerative extracts:
 /obj/item/slimecross/regenerative/orange/core_effect_before(mob/living/target, mob/user)
 	target.visible_message("<span class='warning'>The [src] boils over!</span>")
 	for(var/turf/turf in range(1,target))
-		if(!locate(/obj/effect/hotspot) in turf)
-			new /obj/effect/hotspot(turf)
+		if(!locate(/obj/effect/turf_fire) in turf)
+			new /obj/effect/turf_fire(turf)
 
 /obj/item/slimecross/regenerative/purple
 	colour = "purple"
@@ -126,7 +126,7 @@ Regenerative extracts:
 	C.name = "fireproofed [C.name]"
 	C.remove_atom_colour(WASHABLE_COLOUR_PRIORITY)
 	C.add_atom_colour("#000080", FIXED_COLOUR_PRIORITY)
-	C.max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	C.max_heat_protection_temperature = TRUE
 	C.heat_protection = C.body_parts_covered
 	C.resistance_flags |= FIRE_PROOF
 

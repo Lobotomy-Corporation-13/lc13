@@ -189,7 +189,8 @@ GLOBAL_LIST_INIT(plasma_recipes, list ( \
 		return ..()
 
 /obj/item/stack/sheet/mineral/plasma/fire_act(exposed_temperature, exposed_volume)
-	atmos_spawn_air("plasma=[amount*10];TEMP=[exposed_temperature]")
+	var/turf/here = get_turf(src)
+	explosion(here, 0, 0, 5, 8, flame_range = 2)
 	qdel(src)
 
 /*
@@ -466,7 +467,8 @@ GLOBAL_LIST_INIT(abductor_recipes, list ( \
 		return ..()
 
 /obj/item/stack/sheet/mineral/coal/fire_act(exposed_temperature, exposed_volume)
-	atmos_spawn_air("co2=[amount*10];TEMP=[exposed_temperature]")
+	var/turf/here = get_turf(src)
+	explosion(here, 0, 0, 5, 8, flame_range = 1)
 	qdel(src)
 
 /obj/item/stack/sheet/mineral/coal/five

@@ -228,13 +228,13 @@
 	. += "Intent: [a_intent]"
 	. += "Move Mode: [m_intent]"
 	if (internal)
-		if (!internal.air_contents)
-			qdel(internal)
-		else
+		// if (!internal.air_contents)
+		qdel(internal)
+/* 		else
 			. += ""
 			. += "Internal Atmosphere Info: [internal.name]"
 			. += "Tank Pressure: [internal.air_contents.return_pressure()]"
-			. += "Distribution Pressure: [internal.distribute_pressure]"
+			. += "Distribution Pressure: [internal.distribute_pressure]" */
 	if(istype(wear_suit, /obj/item/clothing/suit/space))
 		var/obj/item/clothing/suit/space/S = wear_suit
 		. += "Thermal Regulator: [S.thermal_on ? "on" : "off"]"

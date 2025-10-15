@@ -32,7 +32,7 @@
 	min1 = -1
 	max1 = 0.2
 	max2 = 0.5
-
+*/
 /obj/item/electronics/airalarm
 	name = "air alarm electronics"
 	icon_state = "airalarm_electronics"
@@ -43,7 +43,7 @@
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarm_bitem"
 	result_path = /obj/machinery/airalarm
-
+/*
 #define AALARM_MODE_SCRUBBING 1
 #define AALARM_MODE_VENTING 2 //makes draught
 #define AALARM_MODE_PANIC 3 //like siphon, but stronger (enables widenet)
@@ -55,12 +55,13 @@
 #define AALARM_MODE_REFILL 9 //just like normal, but with triple the air output
 
 #define AALARM_REPORT_TIMEOUT 100
-
+*/
 /obj/machinery/airalarm
 	name = "air alarm"
 	desc = "A machine that monitors atmosphere levels. Goes off if the area is dangerous."
 	icon = 'icons/obj/monitors.dmi'
 	icon_state = "alarm0"
+/*
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 4
 	active_power_usage = 8

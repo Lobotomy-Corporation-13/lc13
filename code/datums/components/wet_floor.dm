@@ -111,10 +111,11 @@
 		. = max(., time_left_list[i])
 
 /datum/component/wet_floor/process()
-	var/turf/open/T = parent
-	var/diff = world.time - last_process
+	// var/turf/open/T = parent
+	// var/diff = world.time - last_process
 	var/decrease = 0
-	var/t = T.GetTemperature()
+	// Atmos Purge: Removed due to Atmos handling of temperature.
+/* 	var/t = T.GetTemperature()
 	switch(t)
 		if(-INFINITY to T0C)
 			add_wet(TURF_WET_ICE, max_time_left())			//Water freezes into ice!
@@ -128,7 +129,7 @@
 			if(O.obj_flags & FROZEN)
 				O.make_unfrozen()
 		add_wet(TURF_WET_WATER, max_time_left())
-		dry(null, TURF_WET_ICE)
+		dry(null, TURF_WET_ICE) */
 	dry(null, ALL, FALSE, decrease)
 	check()
 	last_process = world.time

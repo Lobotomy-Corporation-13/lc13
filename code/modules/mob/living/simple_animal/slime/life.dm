@@ -524,12 +524,12 @@
 				phrases += "Purr..."
 			if (attacked)
 				phrases += "Grrr..."
-			if (bodytemperature < T0C)
+			if (bodytemperature < 273.15)
 				phrases += "Cold..."
-			if (bodytemperature < T0C - 30)
+			if (bodytemperature < 273.15 - 30)
 				phrases += "So... cold..."
 				phrases += "Very... cold..."
-			if (bodytemperature < T0C - 50)
+			if (bodytemperature < 273.15 - 50)
 				phrases += "..."
 				phrases += "C... c..."
 			if (buckled)

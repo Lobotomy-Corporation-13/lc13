@@ -1678,9 +1678,9 @@ GLOBAL_LIST_EMPTY(roundstart_races)
  * * humi (required)(type: /mob/living/carbon/human) The mob we will target
  */
 /datum/species/proc/handle_body_temperature(mob/living/carbon/human/humi)
-	//when in a cryo unit we suspend all natural body regulation
+/* 	//when in a cryo unit we suspend all natural body regulation
 	if(istype(humi.loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
-		return
+		return */
 
 	//Only stabilise core temp when alive and not in statis
 	if(humi.stat < DEAD && !IS_IN_STASIS(humi))
@@ -1902,10 +1902,10 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 */
 		var/thermal_protection = H.get_thermal_protection()
 
-		if(thermal_protection >= FIRE_IMMUNITY_MAX_TEMP_PROTECT && !no_protection)
+		if(thermal_protection >= TRUE && !no_protection)
 			return
 
-		if(thermal_protection <= FIRE_SUIT_MAX_TEMP_PROTECT || no_protection)
+		if(thermal_protection <= TRUE || no_protection)
 			H.deal_damage(4, FIRE)
 
 /datum/species/proc/CanIgniteMob(mob/living/carbon/human/H)

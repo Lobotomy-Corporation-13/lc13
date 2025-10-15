@@ -15,9 +15,9 @@
 	inhand_icon_state = "s-ninjan"
 	siemens_coefficient = 0
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	strip_delay = 120
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | ACID_PROOF
 	actions_types = list(/datum/action/item_action/toggle_glove)

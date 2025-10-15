@@ -90,7 +90,7 @@
 	icon = 'icons/hud/screen_midnight.dmi'
 	icon_state = "craft"
 	screen_loc = ui_crafting
-
+/*
 /atom/movable/screen/area_creator
 	name = "create new area"
 	icon = 'icons/hud/screen_midnight.dmi'
@@ -105,7 +105,7 @@
 		to_chat(usr, span_warning("There is already a defined structure here."))
 		return TRUE
 	create_area(usr)
-
+ */
 /atom/movable/screen/language_menu
 	name = "language menu"
 	icon = 'icons/hud/screen_midnight.dmi'

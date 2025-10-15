@@ -1,4 +1,4 @@
-/datum/bounty/item/engineering/gas
+/* /datum/bounty/item/engineering/gas
 	name = "Full Tank of Pluoxium"
 	description = "CentCom RnD is researching extra compact internals. Ship us a tank full of Pluoxium and you'll be compensated."
 	reward = CARGO_CRATE_VALUE * 15
@@ -38,7 +38,7 @@
 	name = "Full Tank of Zauker"
 	description = "The main planet of \[REDACTED] has been chosen as testing grounds for the new weapon that uses Zauker gas. Ship us a tank full of it. (20 Moles)"
 	reward = CARGO_CRATE_VALUE * 20
-	gas_type = /datum/gas/zauker
+	gas_type = /datum/gas/zauker */
 
 /datum/bounty/item/engineering/emitter
 	name = "Emitter"

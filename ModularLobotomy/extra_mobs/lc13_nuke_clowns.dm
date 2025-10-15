@@ -29,7 +29,7 @@
 	retreat_distance = 10
 	minimum_distance = 10
 	loot = list(/obj/effect/mob_spawn/human/clown/corpse)
-	pressure_resistance = 200
+	// pressure_resistance = 200
 
 	var/can_act = TRUE
 	var/scream_cooldown
@@ -195,7 +195,7 @@
 	maxHealth = 500
 	health = 500
 	del_on_death = TRUE
-	pressure_resistance = 200
+	// pressure_resistance = 200
 	var/connected_mob
 	var/current_connection
 

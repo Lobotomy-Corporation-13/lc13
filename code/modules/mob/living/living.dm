@@ -838,7 +838,7 @@
 	else
 		return pick("trails_1", "trails_2")
 
-/mob/living/experience_pressure_difference(pressure_difference, direction, pressure_resistance_prob_delta = 0)
+/* /mob/living/experience_pressure_difference(pressure_difference, direction, pressure_resistance_prob_delta = 0)
 	if(buckled)
 		return
 	if(client && client.move_delay >= world.time + world.tick_lag*2)
@@ -865,7 +865,7 @@
 					pressure_resistance_prob_delta -= 20
 					break
 	if(!force_moving)
-		..(pressure_difference, direction, pressure_resistance_prob_delta)
+		..(pressure_difference, direction, pressure_resistance_prob_delta) */
 
 /mob/living/can_resist()
 	return !((next_move > world.time) || incapacitated(ignore_restraints = TRUE, ignore_stasis = TRUE))
@@ -1394,7 +1394,7 @@
 			AT.get_remote_view_fullscreens(src)
 		else
 			clear_fullscreen("remote_view", 0)
-		update_pipe_vision()
+		// update_pipe_vision()
 
 /mob/living/update_mouse_pointer()
 	..()

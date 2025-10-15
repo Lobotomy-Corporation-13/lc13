@@ -1,4 +1,4 @@
-SUBSYSTEM_DEF(air)
+/* SUBSYSTEM_DEF(air)
 	name = "Atmospherics"
 	init_order = INIT_ORDER_AIR
 	priority = FIRE_PRIORITY_AIR
@@ -743,3 +743,4 @@ GLOBAL_LIST_EMPTY(colored_images)
 					ui.user.client.images -= GLOB.colored_images
 				plane.alpha = 0
 			return TRUE
+ */

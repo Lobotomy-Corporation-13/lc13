@@ -63,8 +63,8 @@
 		breathe() //Breathe once every TICKS_PER_BREATH (4, as of now) ticks.
 
 /mob/living/carbon/proc/breathe()
-	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell)) // Istypes are inherently fast, but we really have to think if we want to remove TGStation bloat.
-		return
+/* 	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
+		return */
 
 	var/obj/item/organ/lungs/breathler_lungs = getorganslot(ORGAN_SLOT_LUNGS) // THE BREATHLEEEER
 	var/non_breathler = FALSE // Bro is not breathing.
