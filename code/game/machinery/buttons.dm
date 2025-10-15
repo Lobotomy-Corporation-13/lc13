@@ -261,14 +261,14 @@
 	name = "combustion chamber ignition switch"
 	desc = "A remote control switch for the combustion chamber's igniter."
 
-/* /obj/machinery/button/ignition/incinerator/toxmix
-	id = INCINERATOR_TOXMIX_IGNITER
+/obj/machinery/button/ignition/incinerator/toxmix
+	// id = INCINERATOR_TOXMIX_IGNITER
 
 /obj/machinery/button/ignition/incinerator/atmos
-	id = INCINERATOR_ATMOS_IGNITER
+	// id = INCINERATOR_ATMOS_IGNITER
 
 /obj/machinery/button/ignition/incinerator/syndicatelava
-	id = INCINERATOR_SYNDICATELAVA_IGNITER */
+	// id = INCINERATOR_SYNDICATELAVA_IGNITER
 
 /obj/machinery/button/flasher
 	name = "flasher button"
