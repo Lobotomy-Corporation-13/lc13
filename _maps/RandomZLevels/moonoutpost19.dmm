@@ -1528,7 +1528,6 @@
 "ep" = (
 /obj/machinery/sparker{
 	desc = "A wall-mounted ignition device. This one has been applied with an acid-proof coating.";
-	id = "awayxenobio";
 	name = "Acid-Proof mounted igniter";
 	pixel_y = 25
 	},
@@ -2544,7 +2543,6 @@
 "hc" = (
 /obj/machinery/sparker{
 	desc = "A wall-mounted ignition device. This one has been applied with an acid-proof coating.";
-	id = "awayxenobio";
 	name = "Acid-Proof mounted igniter";
 	pixel_y = -25
 	},
