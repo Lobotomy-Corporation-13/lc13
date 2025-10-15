@@ -410,7 +410,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/has_grav/teg/storage)
 "Zj" = (
-/obj/item/circuitboard/machine/circulator,
 /obj/structure/closet/crate/engineering{
 	icon_state = "engi_crateopen";
 	opened = 1

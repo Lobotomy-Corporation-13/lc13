@@ -5939,9 +5939,7 @@
 /turf/open/floor/engine/vacuum,
 /area/awaymission/snowdin/post/engineering)
 "sB" = (
-/obj/machinery/igniter{
-	id = "snowdin_turbine_ignitor"
-	},
+/obj/machinery/igniter,
 /obj/structure/cable,
 /turf/open/floor/engine/vacuum,
 /area/awaymission/snowdin/post/engineering)

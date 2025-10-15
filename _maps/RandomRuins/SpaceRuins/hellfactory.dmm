@@ -191,7 +191,7 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/hellfactory)
 "aT" = (
-/obj/effect/mine/gas/water_vapor,
+/obj/effect/mine/stun,
 /obj/machinery/door/window,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
@@ -199,7 +199,7 @@
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aV" = (
-/obj/effect/mine/gas/water_vapor,
+/obj/effect/mine/stun,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aW" = (
