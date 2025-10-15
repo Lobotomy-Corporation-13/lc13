@@ -218,7 +218,7 @@
 	if(!istype(loc, /obj/item/clothing/suit/space/hardsuit) || !ishuman(loc.loc) || loc.loc != user)
 		return
 /*	var/mob/living/carbon/human/H = user
- 	tank = H.s_store
+	tank = H.s_store
 	air_contents = tank.air_contents */
 	START_PROCESSING(SSobj, src)
 	cur_user = user

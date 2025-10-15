@@ -125,7 +125,7 @@
 /obj/item/tank/deconstruct(disassembled = TRUE)
 /* 	if(!disassembled)
 		var/turf/T = get_turf(src)
- 		if(T)
+		if(T)
 			T.assume_air(air_contents)
 			air_update_turf(FALSE, FALSE)  */
 	playsound(src.loc, 'sound/effects/spray.ogg', 10, TRUE, -3)
