@@ -109,8 +109,8 @@
 
 	if(prob(pull_chance))
 		for(var/obj/O in T.contents)
-			if(istype(O,/obj/machinery/atmospherics)) // Please don't kill atmos, thanks.
-				continue
+			// if(istype(O,/obj/machinery/atmospherics)) // Please don't kill atmos, thanks.
+			// 	continue
 			if(O.anchored)
 				switch(ex_act_force)
 					if(EXPLODE_DEVASTATE)

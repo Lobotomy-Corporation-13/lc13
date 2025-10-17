@@ -11,8 +11,8 @@
 /obj/effect/take_damage(damage_amount, damage_type = BRUTE, sound_effect = 1, attack_dir)
 	return
 
-/obj/effect/fire_act(exposed_temperature, exposed_volume)
-	return
+// /obj/effect/fire_act(exposed_temperature, exposed_volume)
+// 	return
 
 /obj/effect/acid_act()
 	return FALSE
@@ -23,8 +23,8 @@
 /obj/effect/attack_hulk(mob/living/carbon/human/user)
 	return FALSE
 
-/obj/effect/experience_pressure_difference()
-	return
+// /obj/effect/experience_pressure_difference()
+// 	return
 
 /obj/effect/ex_act(severity, target)
 	return

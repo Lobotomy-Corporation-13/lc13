@@ -96,7 +96,7 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 	for (var/turf/T in turfs_trg)
 		refined_trg["[T.x - trg_min_x].[T.y - trg_min_y]"] = T
 
-	var/list/toupdate = new/list()
+	// var/list/toupdate = new/list()
 
 	var/copiedobjs = list()
 
@@ -131,7 +131,7 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 			var/mob/SM = DuplicateObject(M , perfectcopy=TRUE, newloc = B, holoitem=TRUE)
 			copiedobjs += SM.GetAllContents()
 
-		for(var/V in T.vars - GLOB.duplicate_forbidden_vars)
+/* 		for(var/V in T.vars - GLOB.duplicate_forbidden_vars)
 			if(V == "air")
 				var/turf/open/O1 = B
 				var/turf/open/O2 = T
@@ -142,6 +142,6 @@ GLOBAL_LIST_INIT(duplicate_forbidden_vars,list(
 
 	if(toupdate.len)
 		for(var/turf/T1 in toupdate)
-			CALCULATE_ADJACENT_TURFS(T1, KILL_EXCITED)
+			CALCULATE_ADJACENT_TURFS(T1, KILL_EXCITED) */
 
 	return copiedobjs

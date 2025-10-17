@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary
+/* /obj/machinery/atmospherics/components/unary
 	icon = 'icons/obj/atmospherics/components/unary_devices.dmi'
 	dir = SOUTH
 	initialize_directions = SOUTH
@@ -18,3 +18,4 @@
 /obj/machinery/atmospherics/components/unary/proc/assign_uid_vents()
 	uid = num2text(gl_uid++)
 	return uid
+ */

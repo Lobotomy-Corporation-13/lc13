@@ -20,7 +20,7 @@
 	new /obj/item/assembly/flash/handheld(src)
 	new /obj/item/clothing/glasses/meson/engine(src)
 	new /obj/item/door_remote/chief_engineer(src)
-	new /obj/item/pipe_dispenser(src)
+	// new /obj/item/pipe_dispenser(src)
 	new /obj/item/circuitboard/machine/techfab/department/engineering(src)
 	new /obj/item/extinguisher/advanced(src)
 	new /obj/item/storage/photo_album/ce(src)
@@ -78,7 +78,7 @@
 
 /obj/structure/closet/secure_closet/atmospherics/PopulateContents()
 	..()
-	new /obj/item/pipe_dispenser(src)
+	// new /obj/item/pipe_dispenser(src)
 	new /obj/item/storage/toolbox/mechanical(src)
 	new /obj/item/tank/internals/emergency_oxygen/engi(src)
 	new /obj/item/holosign_creator/atmos(src)

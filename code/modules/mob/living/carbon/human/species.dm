@@ -151,9 +151,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/sound/attack_sound = 'sound/weapons/punch1.ogg'
 	var/sound/miss_sound = 'sound/weapons/punchmiss.ogg'
 
-	///What gas does this species breathe? Used by suffocation screen alerts, most of actual gas breathing is handled by mutantlungs. See [life.dm][code/modules/mob/living/carbon/human/life.dm]
-	var/breathid = "o2"
-
 	///What anim to use for dusting
 	var/dust_anim = "dust-h"
 	///What anim to use for gibbing
@@ -1010,15 +1007,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 		if(BODY_FRONT_LAYER)
 			return "FRONT"
 
-
 /datum/species/proc/spec_life(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		H.setOxyLoss(0)
-		H.losebreath = 0
-
-		var/takes_crit_damage = (!HAS_TRAIT(H, TRAIT_NOCRITDAMAGE))
-		if((H.health < H.crit_threshold) && takes_crit_damage)
-			H.adjustBruteLoss(1)
 	if(flying_species)
 		HandleFlight(H)
 
@@ -1680,28 +1669,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	// called before a projectile hit
 	return 0
 
-/////////////
-//BREATHING//
-/////////////
-
-/datum/species/proc/breathe(mob/living/carbon/human/H)
-	if(HAS_TRAIT(H, TRAIT_NOBREATH))
-		return TRUE
-
-//////////////////////////
-// ENVIRONMENT HANDLERS //
-//////////////////////////
-
-/**
- * Environment handler for species
- *
- * vars:
- * * environment (required) The environment gas mix
- * * humi (required)(type: /mob/living/carbon/human) The mob we will target
- */
-/datum/species/proc/handle_environment(datum/gas_mixture/environment, mob/living/carbon/human/humi)
-	handle_environment_pressure(environment, humi)
-
 /**
  * Body temperature handler for species
  *
@@ -1711,16 +1678,15 @@ GLOBAL_LIST_EMPTY(roundstart_races)
  * * humi (required)(type: /mob/living/carbon/human) The mob we will target
  */
 /datum/species/proc/handle_body_temperature(mob/living/carbon/human/humi)
-	//when in a cryo unit we suspend all natural body regulation
+/* 	//when in a cryo unit we suspend all natural body regulation
 	if(istype(humi.loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
-		return
+		return */
 
 	//Only stabilise core temp when alive and not in statis
 	if(humi.stat < DEAD && !IS_IN_STASIS(humi))
 		body_temperature_core(humi)
 
 	//These do run in statis
-	body_temperature_skin(humi)
 	body_temperature_alerts(humi)
 
 	//Do not cause more damage in statis
@@ -1737,68 +1703,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 /datum/species/proc/body_temperature_core(mob/living/carbon/human/humi)
 	var/natural_change = get_temp_change_amount(humi.get_body_temp_normal() - humi.coretemperature, 0.12)
 	humi.adjust_coretemperature(humi.metabolism_efficiency * natural_change)
-
-/**
- * Used to normalize the skin temperature on living mobs
- *
- * The core temp effects the skin, then the enviroment effects the skin, then we refect that back to the core.
- * This happens even when dead so bodies revert to room temp over time.
- * vars:
- * * humi (required) The mob we will targeting
- */
-/datum/species/proc/body_temperature_skin(mob/living/carbon/human/humi)
-
-	// change the core based on the skin temp
-	var/skin_core_diff = humi.bodytemperature - humi.coretemperature
-	// change rate of 0.08 to be slightly below area to skin change rate and still have a solid curve
-	var/skin_core_change = get_temp_change_amount(skin_core_diff, 0.08)
-
-	humi.adjust_coretemperature(skin_core_change)
-
-	// get the enviroment details of where the mob is standing
-	var/datum/gas_mixture/environment = humi.loc.return_air()
-	if(!environment) // if there is no environment (nullspace) drop out here.
-		return
-
-	// Get the temperature of the environment for area
-	var/area_temp = humi.get_temperature(environment)
-
-	// Get the insulation value based on the area's temp
-	var/thermal_protection = humi.get_insulation_protection(area_temp)
-
-	// Changes to the skin temperature based on the area
-	var/area_skin_diff = area_temp - humi.bodytemperature
-	if(!humi.on_fire || area_skin_diff > 0)
-		// change rate of 0.1 as area temp has large impact on the surface
-		var/area_skin_change = get_temp_change_amount(area_skin_diff, 0.1)
-
-		// We need to apply the thermal protection of the clothing when applying area to surface change
-		// If the core bodytemp goes over the normal body temp you are overheating and becom sweaty
-		// This will cause the insulation value of any clothing to reduced in effect (70% normal rating)
-		// we add 10 degree over normal body temp before triggering as thick insulation raises body temp
-		if(humi.get_body_temp_normal(apply_change=FALSE) + 10 < humi.coretemperature)
-			// we are overheating and sweaty insulation is not as good reducing thermal protection
-			area_skin_change = (1 - (thermal_protection * 0.7)) * area_skin_change
-		else
-			area_skin_change = (1 - thermal_protection) * area_skin_change
-
-		humi.adjust_bodytemperature(area_skin_change)
-
-	// Core to skin temp transfer, when not on fire
-	if(!humi.on_fire)
-		// Get the changes to the skin from the core temp
-		var/core_skin_diff = humi.coretemperature - humi.bodytemperature
-		// change rate of 0.09 to reflect temp back to the skin at the slight higher rate then core to skin
-		var/core_skin_change = (1 + thermal_protection) * get_temp_change_amount(core_skin_diff, 0.09)
-
-		// We do not want to over shoot after using protection
-		if(core_skin_diff > 0)
-			core_skin_change = min(core_skin_change, core_skin_diff)
-		else
-			core_skin_change = max(core_skin_change, core_skin_diff)
-
-		humi.adjust_bodytemperature(core_skin_change)
-
 
 /**
  * Used to set alerts and debuffs based on body temperature
@@ -1935,49 +1839,6 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 
 	humi.apply_damage(burn_damage, FIRE, bodypart)
 
-/// Handle the air pressure of the environment
-/datum/species/proc/handle_environment_pressure(datum/gas_mixture/environment, mob/living/carbon/human/H)
-	var/pressure = environment.return_pressure()
-	var/adjusted_pressure = H.calculate_affecting_pressure(pressure)
-
-	// Set alerts and apply damage based on the amount of pressure
-	switch(adjusted_pressure)
-
-		// Very high pressure, show an alert and take damage
-		if(HAZARD_HIGH_PRESSURE to INFINITY)
-			if(!HAS_TRAIT(H, TRAIT_RESISTHIGHPRESSURE))
-				H.adjustBruteLoss(min(((adjusted_pressure / HAZARD_HIGH_PRESSURE) -1 ) * \
-					PRESSURE_DAMAGE_COEFFICIENT, MAX_HIGH_PRESSURE_DAMAGE) * H.physiology.pressure_mod)
-				H.throw_alert("pressure", /atom/movable/screen/alert/highpressure, 2)
-			else
-				H.clear_alert("pressure")
-
-		// High pressure, show an alert
-		if(WARNING_HIGH_PRESSURE to HAZARD_HIGH_PRESSURE)
-			H.throw_alert("pressure", /atom/movable/screen/alert/highpressure, 1)
-
-		// No pressure issues here clear pressure alerts
-		if(WARNING_LOW_PRESSURE to WARNING_HIGH_PRESSURE)
-			H.clear_alert("pressure")
-
-		// Low pressure here, show an alert
-		if(HAZARD_LOW_PRESSURE to WARNING_LOW_PRESSURE)
-			// We have low pressure resit trait, clear alerts
-			if(HAS_TRAIT(H, TRAIT_RESISTLOWPRESSURE))
-				H.clear_alert("pressure")
-			else
-				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 1)
-
-		// Very low pressure, show an alert and take damage
-		else
-			// We have low pressure resit trait, clear alerts
-			if(HAS_TRAIT(H, TRAIT_RESISTLOWPRESSURE))
-				H.clear_alert("pressure")
-			else
-				H.adjustBruteLoss(LOW_PRESSURE_DAMAGE * H.physiology.pressure_mod)
-				H.throw_alert("pressure", /atom/movable/screen/alert/lowpressure, 2)
-
-
 //////////
 // FIRE //
 //////////
@@ -2041,10 +1902,10 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 */
 		var/thermal_protection = H.get_thermal_protection()
 
-		if(thermal_protection >= FIRE_IMMUNITY_MAX_TEMP_PROTECT && !no_protection)
+		if(thermal_protection >= TRUE && !no_protection)
 			return
 
-		if(thermal_protection <= FIRE_SUIT_MAX_TEMP_PROTECT || no_protection)
+		if(thermal_protection <= TRUE || no_protection)
 			H.deal_damage(4, FIRE)
 
 /datum/species/proc/CanIgniteMob(mob/living/carbon/human/H)
@@ -2129,12 +1990,14 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!T)
 		return FALSE
 
+/* For now, flying beings can fly in vacuum. Enjoy it.
+
 	var/datum/gas_mixture/environment = T.return_air()
 	if(environment && !(environment.return_pressure() > 30))
 		to_chat(H, span_warning("The atmosphere is too thin for you to fly!"))
 		return FALSE
-	else
-		return TRUE
+*/
+	return TRUE
 
 /datum/species/proc/flyslip(mob/living/carbon/human/H)
 	var/obj/buckled_obj

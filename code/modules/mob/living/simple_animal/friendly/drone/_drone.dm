@@ -48,9 +48,6 @@
 	possible_a_intents = list(INTENT_HELP, INTENT_HARM)
 	health = 30
 	maxHealth = 30
-	unsuitable_atmos_damage = 0
-	minbodytemp = 0
-	maxbodytemp = 0
 	wander = 0
 	speed = 0
 	ventcrawler = VENTCRAWLER_ALWAYS
@@ -316,8 +313,8 @@
 /mob/living/simple_animal/drone/mob_has_gravity()
 	return ..() || mob_negates_gravity()
 
-/mob/living/simple_animal/drone/experience_pressure_difference(pressure_difference, direction)
-	return
+/* /mob/living/simple_animal/drone/experience_pressure_difference(pressure_difference, direction)
+	return */
 
 /mob/living/simple_animal/drone/bee_friendly()
 	// Why would bees pay attention to drones?

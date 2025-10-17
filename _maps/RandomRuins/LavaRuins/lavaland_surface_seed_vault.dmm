@@ -240,7 +240,6 @@
 /area/ruin/powered/seedvault)
 "aH" = (
 /obj/machinery/door/airlock/vault,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "aI" = (
@@ -376,9 +375,6 @@
 /area/ruin/powered/seedvault)
 "aY" = (
 /obj/effect/decal/cleanable/food/plant_smudge,
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /turf/open/floor/vault,
 /area/ruin/powered/seedvault)
 "aZ" = (
@@ -651,43 +647,29 @@
 /turf/closed/wall/r_wall,
 /area/lavaland/surface/outdoors)
 "ca" = (
-/obj/machinery/atmospherics/components/unary/tank/air{
-	dir = 4
-	},
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "oR" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 10
-	},
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "pW" = (
-/obj/machinery/atmospherics/pipe/manifold4w/supply/hidden,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "qQ" = (
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "sv" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/vault,
 /area/ruin/powered/seedvault)
 "Bb" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "DA" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/mineral/titanium/blue,
 /area/ruin/powered/seedvault)
 "Eu" = (
 /obj/machinery/light,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "GN" = (
@@ -706,23 +688,15 @@
 /area/ruin/powered/seedvault)
 "KF" = (
 /obj/machinery/door/airlock/titanium,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/vault,
 /area/ruin/powered/seedvault)
 "PH" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 "Uz" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /turf/open/floor/mineral/titanium/blue,
 /area/ruin/powered/seedvault)
 "Vn" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /turf/open/floor/plasteel/freezer,
 /area/ruin/powered/seedvault)
 

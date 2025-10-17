@@ -1,3 +1,4 @@
+/*
 //This element facilitates reaction to atmos changes when a tile is inactive.
 //It adds the object to a list on SSair to be processed for so long as the object wants to be processed
 //And removes it as soon as the object is no longer interested
@@ -77,3 +78,4 @@
 ///What to do when our requirements are no longer met. Null inputs are possible
 /atom/proc/atmos_end(datum/gas_mixture/air, exposed_temperature)
 	return
+ */

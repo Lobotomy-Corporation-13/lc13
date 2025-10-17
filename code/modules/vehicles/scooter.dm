@@ -134,7 +134,7 @@
 		if(prob (25))
 			var/turf/location = get_turf(loc)
 			if(location)
-				location.hotspot_expose(1000,1000)
+				new /obj/effect/turf_fire(location)
 			sparks.start() //the most radical way to start plasma fires
 		addtimer(CALLBACK(src, PROC_REF(grind)), 1)
 

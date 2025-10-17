@@ -48,7 +48,7 @@
 			for(var/turf/T in turflist)
 				if(accessible[T])
 					continue
-				for(var/thing in T.GetAtmosAdjacentTurfs(alldir = TRUE))
+				for(var/thing in T.reachableAdjacentTurfs())
 					var/turf/NT = thing
 					if(!(NT in accessible))
 						continue
@@ -63,7 +63,7 @@
 					continue
 				reactable |= A
 			if(extra_heat >= 300)
-				T.hotspot_expose(extra_heat*2, 5)
+				new /obj/effect/turf_fire(T)
 		if(!reactable.len) //Nothing to react with. Probably means we're in nullspace.
 			return
 		for(var/thing in reactable)

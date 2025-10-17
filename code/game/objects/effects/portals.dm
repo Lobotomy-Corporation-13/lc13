@@ -94,10 +94,10 @@
 
 /obj/effect/portal/proc/link_portal(obj/effect/portal/newlink)
 	linked = newlink
-	if(atmos_link)
-		link_atmos()
+	// if(atmos_link)
+	// 	link_atmos()
 
-//This proc breaks as soon as atmos turfs are reacalculated, someone fix it
+/* //This proc breaks as soon as atmos turfs are reacalculated, someone fix it
 /obj/effect/portal/proc/link_atmos()
 	if(atmos_source || atmos_destination)
 		unlink_atmos()
@@ -134,11 +134,11 @@
 		if(istype(atmos_source))
 			LAZYREMOVE(atmos_destination.atmos_adjacent_turfs, atmos_source)
 			atmos_destination.ImmediateCalculateAdjacentTurfs()
-		atmos_destination = null
+		atmos_destination = null */
 
 /obj/effect/portal/Destroy()
 	GLOB.portals -= src
-	unlink_atmos()
+	// unlink_atmos()
 	if(hardlinked && !QDELETED(linked))
 		QDEL_NULL(linked)
 	else

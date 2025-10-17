@@ -192,9 +192,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel,
 /area/shuttle/escape)
 "ao" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -1316,9 +1314,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel,
 /area/shuttle/escape)
 "cB" = (
 /obj/structure/chair/comfy/shuttle{

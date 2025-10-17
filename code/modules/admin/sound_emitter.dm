@@ -141,7 +141,7 @@
 			hearing_mobs = GLOB.player_list.Copy()
 	for(var/mob/M in hearing_mobs)
 		if(M.client.prefs.toggles & SOUND_MIDI)
-			M.playsound_local(M, sound_file, sound_volume, FALSE, channel = CHANNEL_ADMIN, pressure_affected = FALSE)
+			M.playsound_local(M, sound_file, sound_volume, FALSE, channel = CHANNEL_ADMIN)
 	if(user)
 		log_admin("[ADMIN_LOOKUPFLW(user)] activated a sound emitter with file \"[sound_file]\" at [AREACOORD(src)]")
 	flick("shield1", src)

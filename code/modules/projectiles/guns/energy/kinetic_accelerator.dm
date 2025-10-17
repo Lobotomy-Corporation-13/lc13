@@ -177,8 +177,8 @@
 	range = 3
 	log_override = TRUE
 
-	var/pressure_decrease_active = FALSE
-	var/pressure_decrease = 0.25
+	// var/pressure_decrease_active = FALSE
+	// var/pressure_decrease = 0.25
 	var/obj/item/gun/energy/kinetic_accelerator/kinetic_gun
 
 /obj/projectile/kinetic/Destroy()
@@ -193,10 +193,10 @@
 		var/list/mods = kinetic_gun.modkits
 		for(var/obj/item/borg/upgrade/modkit/modkit in mods)
 			modkit.projectile_prehit(src, target, kinetic_gun)
-	if(!pressure_decrease_active && !lavaland_equipment_pressure_check(get_turf(target)))
+/* 	if(!pressure_decrease_active && !lavaland_equipment_pressure_check(get_turf(target)))
 		name = "weakened [name]"
 		damage = damage * pressure_decrease
-		pressure_decrease_active = TRUE
+		pressure_decrease_active = TRUE */
 
 /obj/projectile/kinetic/on_range()
 	strike_thing()
@@ -503,8 +503,8 @@
 		var/mob/living/L = target
 		if(bounties_reaped[L.type])
 			var/kill_modifier = 1
-			if(K.pressure_decrease_active)
-				kill_modifier *= K.pressure_decrease
+/* 			if(K.pressure_decrease_active)
+				kill_modifier *= K.pressure_decrease */
 			var/armor = L.run_armor_check(K.def_zone, K.damage_type, "", "", K.armour_penetration)
 			L.apply_damage(bounties_reaped[L.type]*kill_modifier, K.damage_type, K.def_zone, armor)
 
@@ -527,7 +527,7 @@
 	cost = 35
 
 /obj/item/borg/upgrade/modkit/indoors/modify_projectile(obj/projectile/kinetic/K)
-	K.pressure_decrease *= modifier
+	K.damage *= modifier
 
 
 //Trigger Guard

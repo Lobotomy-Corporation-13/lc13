@@ -99,13 +99,13 @@
 	if(in_range(user, src) || isobserver(user))
 		. += "<span class='notice'>The status display reads: Malfunction probability reduced by <b>[badThingCoeff]%</b>.<br>Cooldown interval between experiments at <b>[resetTime*0.1]</b> seconds.</span>"
 
-/obj/machinery/rnd/experimentor/proc/checkCircumstances(obj/item/O)
+/* /obj/machinery/rnd/experimentor/proc/checkCircumstances(obj/item/O)
 	//snowflake check to only take "made" bombs
 	if(istype(O, /obj/item/transfer_valve))
 		var/obj/item/transfer_valve/T = O
 		if(!T.tank_one || !T.tank_two || !T.attached_device)
 			return FALSE
-	return TRUE
+	return TRUE */
 
 /obj/machinery/rnd/experimentor/Insert_Item(obj/item/O, mob/user)
 	if(user.a_intent != INTENT_HARM)
@@ -364,7 +364,7 @@
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))
 			visible_message("<span class='warning'>[src] malfunctions, melting [exp_on] and leaking hot air!</span>")
-			var/datum/gas_mixture/env = loc.return_air()
+/* 			var/datum/gas_mixture/env = loc.return_air()
 			var/transfer_moles = 0.25 * env.total_moles()
 			var/datum/gas_mixture/removed = env.remove(transfer_moles)
 			if(removed)
@@ -373,7 +373,10 @@
 					heat_capacity = 1
 				removed.temperature = min((removed.temperature*heat_capacity + 100000)/heat_capacity, 1000)
 			env.merge(removed)
-			air_update_turf(FALSE, FALSE)
+			air_update_turf(FALSE, FALSE) */
+			for(var/turf/turf in range(5,get_turf(src)))
+				if(!locate(/obj/effect/turf_fire) in turf)
+					new /obj/effect/turf_fire(turf)
 			investigate_log("Experimentor has released hot air.", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))
@@ -410,7 +413,7 @@
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_LOW-badThingCoeff))
 			visible_message("<span class='warning'>[src] malfunctions, shattering [exp_on] and leaking cold air!</span>")
-			var/datum/gas_mixture/env = loc.return_air()
+/* 			var/datum/gas_mixture/env = loc.return_air()
 			var/transfer_moles = 0.25 * env.total_moles()
 			var/datum/gas_mixture/removed = env.remove(transfer_moles)
 			if(removed)
@@ -419,7 +422,10 @@
 					heat_capacity = 1
 				removed.temperature = (removed.temperature*heat_capacity - 75000)/heat_capacity
 			env.merge(removed)
-			air_update_turf(FALSE, FALSE)
+			air_update_turf(FALSE, FALSE) */
+			var/turf/T = get_turf(src)
+			for(var/turf/antiflames in range(2, T))
+				new /obj/effect/particle_effect/foam/firefighting(antiflames)
 			investigate_log("Experimentor has released cold air.", INVESTIGATE_EXPERIMENTOR)
 			ejectItem(TRUE)
 		else if(prob(EFFECT_PROB_MEDIUM-badThingCoeff))

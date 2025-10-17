@@ -1,4 +1,4 @@
-//Acts like a normal vent, but has an input AND output.
+/* //Acts like a normal vent, but has an input AND output.
 
 #define EXT_BOUND	1
 #define INPUT_MIN	2
@@ -240,3 +240,4 @@
 #undef EXT_BOUND
 #undef INPUT_MIN
 #undef OUTPUT_MAX
+ */

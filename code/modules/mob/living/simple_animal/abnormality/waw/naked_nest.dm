@@ -179,7 +179,6 @@
 	mouse_opacity = MOUSE_OPACITY_OPAQUE //Clicking anywhere on the turf is good enough
 	del_on_death = 1
 	vision_range = 18 //two screens away
-	minbodytemp = INHOSPITABLE_FOR_NESTING
 	var/panic_timer = 0
 	var/mob/living/simple_animal/hostile/abnormality/naked_nest/origin_nest
 
@@ -276,7 +275,6 @@
 	stat_attack = CONSCIOUS //When you are put into crit the nested will continue to transform into a nest. I thought about having the nested infest you if your in crit but that seemed a bit too cruel.
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5)
 	mob_size = MOB_SIZE_HUMAN
-	minbodytemp = INHOSPITABLE_FOR_NESTING
 	guaranteed_butcher_results = list(/obj/item/food/meatball/human = 1) //considered having it spawn a single worm on butcher but that seemed cruel.
 	var/nesting_time = 40 SECONDS
 	var/nestingtimer

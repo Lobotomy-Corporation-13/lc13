@@ -164,9 +164,7 @@
 /area/ruin/powered)
 "J" = (
 /obj/effect/spawner/structure/window/shuttle,
-/turf/open/floor/plating{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/plating,
 /area/ruin/powered)
 "L" = (
 /obj/machinery/hydroponics/soil,
@@ -174,7 +172,6 @@
 /turf/open/floor/plating,
 /area/ruin/powered)
 "M" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plating/asteroid/basalt,
 /area/ruin/powered)
 "P" = (

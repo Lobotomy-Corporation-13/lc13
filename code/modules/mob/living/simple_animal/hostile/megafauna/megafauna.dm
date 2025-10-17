@@ -15,10 +15,7 @@
 	robust_searching = TRUE
 	ranged_ignores_vision = TRUE
 	stat_attack = DEAD
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1, PALE_DAMAGE = 0.2)
-	minbodytemp = 0
-	maxbodytemp = INFINITY
 	vision_range = 5
 	aggro_vision_range = 18
 	move_force = MOVE_FORCE_OVERPOWERING

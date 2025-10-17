@@ -16,11 +16,11 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	// This shouldn't be modified directly, use the helper procs.
 	var/list/baseturfs = /turf/baseturf_bottom
 
-	var/temperature = T20C
+	// var/temperature = T20C
 	var/to_be_destroyed = 0 //Used for fire, if a melting temperature was reached, it will be destroyed
 	var/max_fire_temperature_sustained = 0 //The max temperature of the fire which it was subjected to
 
-	var/blocks_air = FALSE
+	// var/blocks_air = FALSE
 
 	var/list/image/blueprint_data //for the station blueprints, images of objects eg: pipes
 
@@ -28,7 +28,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	var/explosion_id = 0
 	var/list/explosion_throw_details
 
-	var/requires_activation	//add to air processing after initialize?
+	// var/requires_activation	//add to air processing after initialize?
 	var/changing_turf = FALSE
 
 	var/bullet_bounce_sound = 'sound/weapons/gun/general/mag_bullet_remove.ogg' //sound played when a shell casing is ejected ontop of the turf.
@@ -105,8 +105,8 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	if(!IS_DYNAMIC_LIGHTING(src) && IS_DYNAMIC_LIGHTING(A))
 		add_overlay(/obj/effect/fullbright)
 
-	if(requires_activation)
-		CALCULATE_ADJACENT_TURFS(src, KILL_EXCITED)
+/* 	if(requires_activation)
+		CALCULATE_ADJACENT_TURFS(src, KILL_EXCITED) */
 
 	if (light_power && light_range)
 		update_light()
@@ -129,8 +129,8 @@ GLOBAL_LIST_EMPTY(station_turfs)
 
 	return INITIALIZE_HINT_NORMAL
 
-/turf/proc/Initalize_Atmos(times_fired)
-	CALCULATE_ADJACENT_TURFS(src, NORMAL_TURF)
+/* /turf/proc/Initalize_Atmos(times_fired)
+	CALCULATE_ADJACENT_TURFS(src, NORMAL_TURF) */
 
 /turf/Destroy(force)
 	. = QDEL_HINT_IWILLGC
@@ -153,7 +153,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 	visibilityChanged()
 	QDEL_LIST(blueprint_data)
 	flags_1 &= ~INITIALIZED_1
-	requires_activation = FALSE
+	// requires_activation = FALSE
 	..()
 
 /turf/attack_hand(mob/user)
@@ -348,7 +348,7 @@ GLOBAL_LIST_EMPTY(station_turfs)
 /turf/open/Entered(atom/movable/AM)
 	..()
 	//melting
-	if(isobj(AM) && air && air.temperature > T0C)
+	if(isobj(AM))
 		var/obj/O = AM
 		if(O.obj_flags & FROZEN)
 			O.make_unfrozen()

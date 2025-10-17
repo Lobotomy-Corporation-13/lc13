@@ -391,7 +391,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 	log_mapping("[src] at [x],[y] could not find an airlock on current turf, cannot place paper note.")
 	qdel(src)
 
-/obj/effect/mapping_helpers/simple_pipes
+/* /obj/effect/mapping_helpers/simple_pipes
 	name = "Simple Pipes"
 	late = TRUE
 	icon_state = "pipe-3"
@@ -451,15 +451,15 @@ INITIALIZE_IMMEDIATE(/obj/effect/mapping_helpers/no_lava)
 		if(4)
 			spawn_pipe(dir2text(NORTH),/obj/machinery/atmospherics/pipe/manifold4w)
 
-	qdel(src)
+	qdel(src) */
 
 //spawn pipe
-/obj/effect/mapping_helpers/simple_pipes/proc/spawn_pipe(direction,type )
+/* /obj/effect/mapping_helpers/simple_pipes/proc/spawn_pipe(direction,type )
 	var/obj/machinery/atmospherics/pipe/pipe = new type(get_turf(src),TRUE,text2dir(direction))
 	pipe.hide = hide
 	pipe.piping_layer = piping_layer
 	pipe.update_layer()
-	pipe.paint(pipe_color)
+	pipe.paint(pipe_color) */
 
 
 //This helper applies traits to things on the map directly.

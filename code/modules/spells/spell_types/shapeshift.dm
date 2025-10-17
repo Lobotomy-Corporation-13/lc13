@@ -54,7 +54,7 @@
 			M = Restore(M)
 		else
 			M = Shapeshift(M)
-		if(M.movement_type & (VENTCRAWLING))
+/* 		if(M.movement_type & (VENTCRAWLING))
 			if(!M.ventcrawler) //you're shapeshifting into something that can't fit into a vent
 				var/obj/machinery/atmospherics/pipeyoudiein = M.loc
 				var/datum/pipeline/ourpipeline
@@ -75,7 +75,7 @@
 				priority_announce("We detected a pipe blockage around [get_area(get_turf(M))], please dispatch someone to investigate.", "Central Command")
 				M.death()
 				qdel(M)
-				return
+				return */
 
 /**
  * check_menu: Checks if we are allowed to interact with a radial menu

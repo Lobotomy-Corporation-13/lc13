@@ -35,7 +35,7 @@ Burning extracts:
 	var/mob/living/simple_animal/slime/S = new(get_turf(user),"grey")
 	S.visible_message("<span class='danger'>A baby slime emerges from [src], and it nuzzles [user] before burbling hungrily!</span>")
 	S.Friends[user] = 20 //Gas, gas, gas
-	S.bodytemperature = T0C + 400 //We gonna step on the gas.
+	S.bodytemperature = 273.15 + 400 //We gonna step on the gas.
 	S.set_nutrition(S.get_hunger_nutrition()) //Tonight, we fight!
 	..()
 
@@ -106,12 +106,13 @@ Burning extracts:
 
 /obj/item/slimecross/burning/darkpurple
 	colour = "dark purple"
-	effect_desc = "Creates a cloud of plasma."
+	effect_desc = "Creates a fiery inferno around you."
 
 /obj/item/slimecross/burning/darkpurple/do_effect(mob/user)
 	user.visible_message("<span class='danger'>[src] sublimates into a cloud of plasma!</span>")
 	var/turf/T = get_turf(user)
-	T.atmos_spawn_air("plasma=60")
+	for(var/turf/flames in range(2, T))
+		new /obj/effect/turf_fire(flames)
 	..()
 
 /obj/item/slimecross/burning/darkblue

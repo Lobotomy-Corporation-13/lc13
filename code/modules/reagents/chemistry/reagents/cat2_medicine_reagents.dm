@@ -227,8 +227,8 @@
 		oxycalc = min(oxycalc,M.getOxyLoss()+0.5) //if NOT overdosing, we lower our toxdamage to only the damage we actually healed with a minimum of 0.1*current_cycle. IE if we only heal 10 oxygen damage but we COULD have healed 20, we will only take toxdamage for the 10. We would take the toxdamage for the extra 10 if we were overdosing.
 	M.adjustOxyLoss(-oxycalc, 0)
 	M.adjustToxLoss(oxycalc/CONVERMOL_RATIO, 0)
-	if(prob(current_cycle) && M.losebreath)
-		M.losebreath--
+	if(prob(current_cycle))
+		M.losebreath -= (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 	..()
 	return TRUE
 
@@ -267,7 +267,7 @@
 /datum/reagent/medicine/c2/seiver //a bit of a gray joke
 	name = "Seiver"
 	description = "A medicine that shifts functionality based on temperature. Colder temperatures incurs radiation removal while hotter temperatures promote antitoxicity. Damages the heart." //CHEM HOLDER TEMPS, NOT AIR TEMPS
-	var/radbonustemp = (T0C - 100) //being below this number gives you 10% off rads.
+	var/radbonustemp = (273.15 - 100) //being below this number gives you 10% off rads.
 
 /datum/reagent/medicine/c2/seiver/on_mob_metabolize(mob/living/M)
 	. = ..()
@@ -285,7 +285,7 @@
 		healypoints += toxcalc
 
 	//and you're cold
-	var/radcalc = round((T0C-chemtemp)/6,0.1) //max ~45 rad loss unless you've hit below 0K. if so, wow.
+	var/radcalc = round((273.15-chemtemp)/6,0.1) //max ~45 rad loss unless you've hit below 0K. if so, wow.
 	if(radcalc > 0)
 		//no cost percent healing if you are SUPER cold (on top of cost healing)
 		if(chemtemp < radbonustemp*0.1) //if you're super chilly, it takes off 25% of your current rads
@@ -473,7 +473,7 @@
 		H.adjustFireLoss(-2 * REM, 0)
 		H.adjustOxyLoss(-6 * REM, 0)
 
-		H.losebreath = 0
+		H.losebreath -= (HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH)
 
 		H.adjustOrganLoss(ORGAN_SLOT_HEART,max(1,volume/10)) // your heart is barely keeping up!
 

@@ -75,15 +75,15 @@
 
 	///////////ATMOS
 	///Whether we are currrently drawing from the internal tank
-	var/use_internal_tank = FALSE
+	// var/use_internal_tank = FALSE
 	///The setting of the valve on the internal tank
-	var/internal_tank_valve = ONE_ATMOSPHERE
+	// var/internal_tank_valve = ONE_ATMOSPHERE
 	///The internal air tank obj of the mech
-	var/obj/machinery/portable_atmospherics/canister/internal_tank
+	// var/obj/machinery/portable_atmospherics/canister/internal_tank
 	///Internal air mix datum
-	var/datum/gas_mixture/cabin_air
+	// var/datum/gas_mixture/cabin_air
 	///The connected air port, if we have one
-	var/obj/machinery/atmospherics/components/unary/portables_connector/connected_port
+	// var/obj/machinery/atmospherics/components/unary/portables_connector/connected_port
 
 	///Special version of the radio, which is unsellable
 	var/obj/item/radio/mech/radio
@@ -176,10 +176,10 @@
 /obj/vehicle/sealed/mecha/Initialize()
 	. = ..()
 	add_radio()
-	add_cabin()
+/* 	add_cabin()
 	if(enclosed)
 		add_airtank()
-		RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE , PROC_REF(disconnect_air))
+		RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE , PROC_REF(disconnect_air)) */
 	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(play_stepsound))
 	spark_system.set_up(2, 0, src)
 	spark_system.attach(src)
@@ -200,9 +200,9 @@
 	diag_hud_set_mechstat()
 	update_icon()
 
-/obj/mecha/ComponentInitialize()
+/* /obj/mecha/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/vehicle/sealed/mecha/Destroy()
 	for(var/M in occupants)
@@ -220,15 +220,15 @@
 	QDEL_NULL(cell)
 	QDEL_NULL(scanmod)
 	QDEL_NULL(capacitor)
-	QDEL_NULL(internal_tank)
+	// QDEL_NULL(internal_tank)
 	STOP_PROCESSING(SSobj, src)
 	LAZYCLEARLIST(equipment)
-	if(loc)
+/* 	if(loc)
 		loc.assume_air(cabin_air)
 		air_update_turf(FALSE, FALSE)
 	else
 		qdel(cabin_air)
-	cabin_air = null
+	cabin_air = null */
 	QDEL_NULL(spark_system)
 	QDEL_NULL(smoke_system)
 
@@ -282,9 +282,9 @@
 ////// Helpers /////////
 ////////////////////////
 
-/obj/vehicle/sealed/mecha/proc/add_airtank()
+/* /obj/vehicle/sealed/mecha/proc/add_airtank()
 	internal_tank = new /obj/machinery/portable_atmospherics/canister/air(src)
-	return internal_tank
+	return internal_tank */
 
 ///Adds a cell, for use in Map-spawned mechs, Nuke Ops mechs, and admin-spawned mechs. Mechs built by hand will replace this.
 /obj/vehicle/sealed/mecha/proc/add_cell(obj/item/stock_parts/cell/C=null)
@@ -313,14 +313,14 @@
 	else
 		capacitor = new /obj/item/stock_parts/capacitor(src)
 
-/obj/vehicle/sealed/mecha/proc/add_cabin()
+/* /obj/vehicle/sealed/mecha/proc/add_cabin()
 	cabin_air = new
 	cabin_air.temperature = T20C
 	cabin_air.volume = 200
 	cabin_air.add_gases(/datum/gas/oxygen, /datum/gas/nitrogen)
 	cabin_air.gases[/datum/gas/oxygen][MOLES] = O2STANDARD*cabin_air.volume/(R_IDEAL_GAS_EQUATION*cabin_air.temperature)
 	cabin_air.gases[/datum/gas/nitrogen][MOLES] = N2STANDARD*cabin_air.volume/(R_IDEAL_GAS_EQUATION*cabin_air.temperature)
-	return cabin_air
+	return cabin_air */
 
 /obj/vehicle/sealed/mecha/proc/add_radio()
 	radio = new(src)
@@ -375,9 +375,10 @@
 
 //processing internal damage, temperature, air regulation, alert updates, lights power use.
 /obj/vehicle/sealed/mecha/process(delta_time)
-	var/internal_temp_regulation = 1
+//	var/internal_temp_regulation = 1
 
 	if(internal_damage)
+/*
 		if(internal_damage & MECHA_INT_FIRE)
 			if(!(internal_damage & MECHA_INT_TEMP_CONTROL) && DT_PROB(2.5, delta_time))
 				clearInternalDamage(MECHA_INT_FIRE)
@@ -386,9 +387,9 @@
 				if(int_tank_air.return_pressure() > internal_tank.maximum_pressure && !(internal_damage & MECHA_INT_TANK_BREACH))
 					setInternalDamage(MECHA_INT_TANK_BREACH)
 				if(int_tank_air && int_tank_air.return_volume() > 0) //heat the air_contents
-					int_tank_air.temperature = min(6000+T0C, int_tank_air.temperature+rand(5,7.5)*delta_time)
+					int_tank_air.temperature = min(6000+273.15, int_tank_air.temperature+rand(5,7.5)*delta_time)
 			if(cabin_air && cabin_air.return_volume()>0)
-				cabin_air.temperature = min(6000+T0C, cabin_air.return_temperature()+rand(5,7.5)*delta_time)
+				cabin_air.temperature = min(6000+273.15, cabin_air.return_temperature()+rand(5,7.5)*delta_time)
 				if(cabin_air.return_temperature() > max_temperature/2)
 					take_damage(delta_time*2/round(max_temperature/cabin_air.return_temperature(),0.1), FIRE, 0)
 
@@ -404,13 +405,13 @@
 					air_update_turf(FALSE, FALSE)
 				else
 					qdel(leaked_gas)
-
+*/
 		if(internal_damage & MECHA_INT_SHORT_CIRCUIT)
 			if(get_charge())
 				spark_system.start()
 				cell.charge -= min(10 * delta_time, cell.charge)
 				cell.maxcharge -= min(10 * delta_time, cell.maxcharge)
-
+/*
 	if(internal_temp_regulation)
 		if(cabin_air && cabin_air.return_volume() > 0)
 			var/delta = cabin_air.temperature - T20C
@@ -439,7 +440,7 @@
 				if(t_air)
 					t_air.merge(removed)
 				else //just delete the cabin gas, we're in space or some shit
-					qdel(removed)
+					qdel(removed) */
 
 	if(LAZYLEN(occupants))
 		for(var/i in occupants)
@@ -587,11 +588,11 @@
 		return
 	playsound(src, stepsound, 40, TRUE)
 
-/obj/vehicle/sealed/mecha/proc/disconnect_air()
+/* /obj/vehicle/sealed/mecha/proc/disconnect_air()
 	SIGNAL_HANDLER
 	if(internal_tank.disconnect()) // Something moved us and broke connection
 		to_chat(occupants, "[icon2html(src, occupants)]<span class='warning'>Air port connection has been severed!</span>")
-		log_message("Lost connection to gas port.", LOG_MECHA)
+		log_message("Lost connection to gas port.", LOG_MECHA) */
 
 /obj/vehicle/sealed/mecha/Process_Spacemove(movement_dir = 0)
 	. = ..()
@@ -625,11 +626,11 @@
 		return FALSE
 	if(!direction)
 		return FALSE
-	if(internal_tank?.connected_port)
+/* 	if(internal_tank?.connected_port)
 		if(!TIMER_COOLDOWN_CHECK(src, COOLDOWN_MECHA_MESSAGE))
 			to_chat(occupants, "[icon2html(src, occupants)]<span class='warning'>Unable to move while connected to the air system port!</span>")
 			TIMER_COOLDOWN_START(src, COOLDOWN_MECHA_MESSAGE, 2 SECONDS)
-		return FALSE
+		return FALSE */
 	if(construction_state)
 		if(!TIMER_COOLDOWN_CHECK(src, COOLDOWN_MECHA_MESSAGE))
 			to_chat(occupants, "[icon2html(src, occupants)]<span class='danger'>Maintenance protocols in effect.</span>")
@@ -907,7 +908,7 @@
 ////////  Atmospheric stuff  ////////
 /////////////////////////////////////
 
-/obj/vehicle/sealed/mecha/remove_air(amount)
+/* /obj/vehicle/sealed/mecha/remove_air(amount)
 	if(use_internal_tank)
 		return cabin_air.remove(amount)
 	return ..()
@@ -928,7 +929,7 @@
 /obj/vehicle/sealed/mecha/return_temperature()
 	var/datum/gas_mixture/t_air = return_air()
 	if(t_air)
-		return t_air.return_temperature()
+		return t_air.return_temperature() */
 
 /obj/vehicle/sealed/mecha/mob_try_enter(mob/M)
 	if(!ishuman(M)) // no silicons or drones in mechas.
@@ -976,7 +977,7 @@
 
 /obj/vehicle/sealed/mecha/generate_actions()
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_eject)
-	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_internals)
+	// initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_internals)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_cycle_equip)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_toggle_lights)
 	initialize_passenger_action_type(/datum/action/vehicle/sealed/mecha/mech_view_stats)

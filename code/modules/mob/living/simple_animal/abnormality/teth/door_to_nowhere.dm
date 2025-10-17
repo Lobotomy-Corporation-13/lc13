@@ -500,7 +500,7 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	if(world.time >= next_sound_time)
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
-			H.playsound_local(get_turf(H), 'sound/ambience/VoidsEmbrace.ogg', 50, FALSE, pressure_affected = FALSE)
+			H.playsound_local(get_turf(H), 'sound/ambience/VoidsEmbrace.ogg', 50, FALSE)
 			to_chat(H, span_warning("You hear whispers of repentance... souls seeking forgiveness for their regrets."))
 		// Next sound in 5-10 minutes (converted to deciseconds)
 		next_sound_time = world.time + rand(3000, 6000) // 300-600 seconds = 5-10 minutes
@@ -510,7 +510,7 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 	// Play the sound immediately when first applied
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.playsound_local(get_turf(H), 'sound/ambience/VoidsEmbrace.ogg', 50, FALSE, pressure_affected = FALSE)
+		H.playsound_local(get_turf(H), 'sound/ambience/VoidsEmbrace.ogg', 50, FALSE)
 	next_sound_time = world.time + rand(3000, 6000)
 
 // Regret Door Structure
@@ -744,11 +744,8 @@ GLOBAL_LIST_EMPTY(repentance_spawn_points)            // Valid spawn locations i
 		"trembles with grief",
 		"clutches at their ethereal chest"
 	)
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
-	maxbodytemp = 1500
 	is_flying_animal = TRUE
-	pressure_resistance = 300
+	// pressure_resistance = 300
 	light_system = MOVABLE_LIGHT
 	light_range = 1
 	light_power = 1
@@ -1566,7 +1563,7 @@ GLOBAL_LIST_EMPTY(regret_shrines)
 		/obj/effect/projectile,
 		/obj/effect/portal,
 		/obj/effect/abstract,
-		/obj/effect/hotspot,
+		// /obj/effect/hotspot,
 		/obj/effect/landmark,
 		/obj/effect/temp_visual,
 		/obj/effect/light_emitter/tendril,

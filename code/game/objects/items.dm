@@ -81,7 +81,7 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	///This is used to determine on which slots an item can fit.
 	var/slot_flags = 0
 	pass_flags = PASSTABLE
-	pressure_resistance = 4
+	// pressure_resistance = 4
 	var/obj/item/master = null
 
 	///flags which determine which body parts are protected from heat. [See here][HEAD]
@@ -771,8 +771,10 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	else
 		. = "desecration"
 
+// Does not do anything after the atmos purge.
 /obj/item/proc/open_flame(flame_heat=700)
-	var/turf/location = loc
+	return
+/*	var/turf/location = loc
 	if(ismob(location))
 		var/mob/M = location
 		var/success = FALSE
@@ -781,7 +783,7 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 		if(success)
 			location = get_turf(M)
 	if(isturf(location))
-		location.hotspot_expose(flame_heat, 5)
+		location.hotspot_expose(flame_heat, 5) */
 
 /obj/item/proc/ignition_effect(atom/A, mob/user)
 	if(get_temperature())
@@ -1081,10 +1083,10 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 							"<span class='boldwarning'>OH GOD! Was that a crunch? That didn't feel good at all!!</span>")
 
 		victim.apply_damage(max(15, force), BRUTE, BODY_ZONE_HEAD, wound_bonus = 10, sharpness = TRUE)
-		victim.losebreath += 2
+		victim.losebreath += HUMAN_LOW_OXYLOSS_RATE
 		if(tryEmbed(victim.get_bodypart(BODY_ZONE_CHEST), TRUE, TRUE)) //and if it embeds successfully in their chest, cause a lot of pain
 			victim.apply_damage(max(25, force*1.5), BRUTE, BODY_ZONE_CHEST, wound_bonus = 7, sharpness = TRUE)
-			victim.losebreath += 6
+			victim.losebreath += HUMAN_HIGH_OXYLOSS_RATE
 			discover_after = FALSE
 		if(QDELETED(src)) // in case trying to embed it caused its deletion (say, if it's DROPDEL)
 			return
@@ -1133,7 +1135,7 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 			to_chat(victim, "<span class='warning'>You vomit up a [name]! [source_item? "Was that in \the [source_item]?" : ""]</span>")
 		else
 			victim.transferItemToLoc(src, victim, TRUE)
-			victim.losebreath += 2
+			victim.losebreath += HUMAN_HIGH_OXYLOSS_RATE
 			victim_cavity.cavity_item = src
 			to_chat(victim, "<span class='warning'>You swallow hard. [source_item? "Something small was in \the [source_item]..." : ""]</span>")
 		discover_after = FALSE

@@ -5,9 +5,9 @@
 	inhand_icon_state = "helmet"
 	armor = list(MELEE = 35, BULLET = 30, LASER = 30,ENERGY = 40, BOMB = 25, BIO = 0, RAD = 0, FIRE = 50, ACID = 50, WOUND = 10)
 	cold_protection = HEAD
-	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	strip_delay = 60
 	clothing_flags = SNUG_FIT
 	flags_cover = HEADCOVERSEYES
@@ -185,9 +185,9 @@
 	inhand_icon_state = "swatsyndie"
 	armor = list(MELEE = 40, BULLET = 30, LASER = 30,ENERGY = 40, BOMB = 50, BIO = 90, RAD = 20, FIRE = 100, ACID = 100, WOUND = 15)
 	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = SPACE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	clothing_flags = STOPSPRESSUREDAMAGE
 	strip_delay = 80
 	resistance_flags = FIRE_PROOF | ACID_PROOF
@@ -224,9 +224,9 @@
 	inhand_icon_state = "thunderdome"
 	armor = list(MELEE = 80, BULLET = 80, LASER = 50, ENERGY = 50, BOMB = 100, BIO = 100, RAD = 100, FIRE = 90, ACID = 90)
 	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = SPACE_HELM_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	strip_delay = 80
 	dog_fashion = null
 
@@ -356,7 +356,7 @@
 	inhand_icon_state = "rus_ushanka"
 	body_parts_covered = HEAD
 	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	armor = list(MELEE = 25, BULLET = 20, LASER = 20, ENERGY = 30, BOMB = 20, BIO = 50, RAD = 20, FIRE = -10, ACID = 50, WOUND = 5)
 
 /obj/item/clothing/head/helmet/infiltrator

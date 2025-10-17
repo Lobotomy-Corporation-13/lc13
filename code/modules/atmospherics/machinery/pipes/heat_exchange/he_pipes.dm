@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/pipe/heat_exchanging
+/* /obj/machinery/atmospherics/pipe/heat_exchanging
 	var/minimum_temperature_difference = 20
 	var/thermal_conductivity = WINDOW_HEAT_TRANSFER_COEFFICIENT
 	color = "#404040"
@@ -78,3 +78,4 @@
 			for(var/m in buckled_mobs)
 				var/mob/living/buckled_mob = m
 				buckled_mob.apply_damage(delta_time * 2 * log(pipe_air.temperature - heat_limit), FIRE, BODY_ZONE_CHEST)
+ */

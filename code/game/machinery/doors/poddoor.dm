@@ -1,3 +1,11 @@
+#define INCINERATOR_TOXMIX_VENT					"toxmix_vent"
+#define INCINERATOR_ATMOS_MAINVENT				"atmos_incinerator_mainvent"
+#define INCINERATOR_ATMOS_AUXVENT				"atmos_incinerator_auxvent"
+#define TEST_ROOM_ATMOS_MAINVENT_1				"atmos_test_room_mainvent_1"
+#define TEST_ROOM_ATMOS_MAINVENT_2				"atmos_test_room_mainvent_2"
+#define INCINERATOR_SYNDICATELAVA_MAINVENT		"syndicatelava_mainvent"
+#define INCINERATOR_SYNDICATELAVA_AUXVENT		"syndicatelava_auxvent"
+
 /obj/machinery/door/poddoor
 	name = "blast door"
 	desc = "A heavy duty blast door that opens mechanically."
@@ -37,7 +45,7 @@
 			var/change_id = input("Set the shutters/blast door/blast door controllers ID. It must be a number between 1 and 100.", "ID", id) as num|null
 			if(change_id)
 				id = clamp(round(change_id, 1), 1, 100)
-				to_chat(user, "<span class='notice'>You change the ID to [id].</span>")	
+				to_chat(user, "<span class='notice'>You change the ID to [id].</span>")
 
 		if(W.tool_behaviour == TOOL_CROWBAR && deconstruction == INTACT)
 			to_chat(user, "<span class='notice'>You start to remove the airlock electronics.</span>")

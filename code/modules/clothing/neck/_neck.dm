@@ -73,7 +73,7 @@
 						heart_strength = "a healthy"
 				if(lungs && istype(lungs))
 					lung_strength = "<span class='danger'>strained</span>"
-					if(!(M.failed_last_breath || M.losebreath))
+					if(!(M.oxyloss))
 						lung_strength = "healthy"
 
 			var/diagnosis = (body_part == BODY_ZONE_CHEST ? "You hear [heart_strength] pulse and [lung_strength] respiration." : "You faintly hear [heart_strength] pulse.")

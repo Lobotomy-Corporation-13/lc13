@@ -660,9 +660,9 @@
 	strip_delay = 40
 	equip_delay_other = 20
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = LAVA_PROOF | FIRE_PROOF //they are from lavaland after all
 	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 100, BIO = 0, RAD = 0, FIRE = 100, ACID = 30) //mostly bone bracer armor
 

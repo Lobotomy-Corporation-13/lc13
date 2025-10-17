@@ -11,7 +11,7 @@
 	power_channel = AREA_USAGE_ENVIRON
 	max_integrity = 350
 	armor = list(MELEE = 30, BULLET = 30, LASER = 20, ENERGY = 20, BOMB = 10, BIO = 100, RAD = 100, FIRE = 80, ACID = 70)
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = PREVENT_CLICK_UNDER_1
 	receive_ricochet_chance_mod = 0.8
 	damage_deflection = 10
@@ -63,7 +63,7 @@
 	. = ..()
 	set_init_door_layer()
 	update_freelook_sight()
-	air_update_turf(TRUE, TRUE)
+	// air_update_turf(TRUE, TRUE)
 	GLOB.airlocks += src
 	spark_system = new /datum/effect_system/spark_spread
 	spark_system.set_up(2, 1, src)
@@ -88,7 +88,7 @@
 	if(spark_system)
 		qdel(spark_system)
 		spark_system = null
-	air_update_turf(TRUE, FALSE)
+	// air_update_turf(TRUE, FALSE)
 	return ..()
 
 /obj/machinery/door/proc/try_safety_unlock(mob/user)
@@ -141,11 +141,11 @@
 			do_animate("deny")
 		return
 
-/obj/machinery/door/Move()
+/* /obj/machinery/door/Move()
 	var/turf/T = loc
 	. = ..()
 	if(density) //Gotta be closed my friend
-		move_update_air(T)
+		move_update_air(T) */
 
 /obj/machinery/door/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
@@ -306,7 +306,7 @@
 	update_icon()
 	set_opacity(0)
 	operating = FALSE
-	air_update_turf(TRUE, FALSE)
+	// air_update_turf(TRUE, FALSE)
 	update_freelook_sight()
 	if(autoclose)
 		autoclose_in(DOOR_CLOSE_WAIT)
@@ -336,7 +336,7 @@
 	if(visible && !glass)
 		set_opacity(1)
 	operating = FALSE
-	air_update_turf(TRUE, TRUE)
+	// air_update_turf(TRUE, TRUE)
 	update_freelook_sight()
 
 	if(!can_crush)
@@ -391,10 +391,10 @@
 	if(!glass && GLOB.cameranet)
 		GLOB.cameranet.updateVisibility(src, 0)
 
-/obj/machinery/door/BlockSuperconductivity() // All non-glass airlocks block heat, this is intended.
+/* /obj/machinery/door/BlockSuperconductivity() // All non-glass airlocks block heat, this is intended.
 	if(opacity || heat_proof)
 		return 1
-	return 0
+	return 0 */
 
 /obj/machinery/door/morgue
 	icon = 'icons/obj/doors/doormorgue.dmi'

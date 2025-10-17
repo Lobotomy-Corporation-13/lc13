@@ -45,7 +45,7 @@ Chilling extracts:
 	user.visible_message(span_danger("[src] shatters, and lets out a jet of heat!"))
 	for(var/turf/T in orange(get_turf(user),2))
 		if(get_dist(get_turf(user), T) > 1)
-			new /obj/effect/hotspot(T)
+			new /obj/effect/turf_fire(T)
 	..()
 
 /obj/item/slimecross/chilling/purple
@@ -96,10 +96,10 @@ Chilling extracts:
 
 /obj/item/slimecross/chilling/darkpurple
 	colour = "dark purple"
-	effect_desc = "Removes all plasma gas in the area."
+	effect_desc = "Removes all plasma gas in the area. But what is plasma?"
 
 /obj/item/slimecross/chilling/darkpurple/do_effect(mob/user)
-	var/area/A = get_area(get_turf(user))
+/* 	var/area/A = get_area(get_turf(user))
 	if(A.outdoors)
 		to_chat(user, span_warning("[src] can't affect such a large area."))
 		return
@@ -114,8 +114,8 @@ Chilling extracts:
 			T.air_update_turf(FALSE, FALSE)
 	if(filtered)
 		user.visible_message(span_notice("Cracks spread throughout [src], and some air is sucked in!"))
-	else
-		user.visible_message(span_notice("[src] cracks, but nothing happens."))
+	else */
+	user.visible_message(span_notice("[src] cracks, but nothing happens."))
 	..()
 
 /obj/item/slimecross/chilling/darkblue

@@ -1,4 +1,4 @@
-/obj/machinery/meter
+/* /obj/machinery/meter
 	name = "gas flow meter"
 	desc = "It measures something."
 	icon = 'icons/obj/atmospherics/pipes/meter.dmi'
@@ -149,3 +149,4 @@
 
 /obj/machinery/meter/turf/reattach_to_layer()
 	target = loc
+ */

@@ -1,10 +1,10 @@
 /obj/machinery/power/generator
 	name = "thermoelectric generator"
-	desc = "It's a high efficiency thermoelectric generator."
+	desc = "It's a high efficiency thermoelectric generator. Non-operational"
 	icon_state = "teg"
 	density = TRUE
 	use_power = NO_POWER_USE
-
+/*
 	circuit = /obj/item/circuitboard/machine/generator
 
 	var/obj/machinery/atmospherics/components/binary/circulator/cold_circ
@@ -227,3 +227,4 @@
 	if(cold_circ)
 		cold_circ.generator = null
 		cold_circ = null
+ */

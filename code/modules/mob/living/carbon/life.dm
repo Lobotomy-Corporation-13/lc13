@@ -53,259 +53,60 @@
 
 //Start of a breath chain, calls breathe()
 /mob/living/carbon/handle_breathing(times_fired)
-	var/next_breath = 4
-	var/obj/item/organ/lungs/L = getorganslot(ORGAN_SLOT_LUNGS)
-	var/obj/item/organ/heart/H = getorganslot(ORGAN_SLOT_HEART)
-	if(L)
-		if(L.damage > L.high_threshold)
-			next_breath--
-	if(H)
-		if(H.damage > H.high_threshold)
-			next_breath--
+	if(status_flags & GODMODE || HAS_TRAIT(src, TRAIT_NOBREATH))
+		if(oxyloss)
+			to_chat(src, span_nicegreen("Every cell of your body is filled to the brim with yummy oxygen!"))
+			setOxyLoss(0, TRUE, TRUE)
+			clear_alert("not_enough_oxy")
+		return FALSE
+	if((times_fired % TICKS_PER_BREATH) == 0)
+		breathe() //Breathe once every TICKS_PER_BREATH (4, as of now) ticks.
 
-	if((times_fired % next_breath) == 0 || failed_last_breath)
-		breathe() //Breathe per 4 ticks if healthy, down to 2 if our lungs or heart are damaged, unless suffocating
-	else
-		if(istype(loc, /obj/))
-			var/obj/location_as_object = loc
-			location_as_object.handle_internal_lifeform(src,0)
-
-//Second link in a breath chain, calls check_breath()
 /mob/living/carbon/proc/breathe()
-	var/obj/item/organ/lungs = getorganslot(ORGAN_SLOT_LUNGS)
-	if(reagents.has_reagent(/datum/reagent/toxin/lexorin, needs_metabolizing = TRUE))
-		return
-	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
-		return
+/* 	if(istype(loc, /obj/machinery/atmospherics/components/unary/cryo_cell))
+		return */
 
-	var/datum/gas_mixture/environment
-	if(loc)
-		environment = loc.return_air()
+	var/obj/item/organ/lungs/breathler_lungs = getorganslot(ORGAN_SLOT_LUNGS) // THE BREATHLEEEER
+	var/non_breathler = FALSE // Bro is not breathing.
+	if((!breathler_lungs || (breathler_lungs?.organ_flags & ORGAN_FAILING)))
+		non_breathler = TRUE
+		losebreath += HUMAN_MAX_OXYLOSS_RATE  //You can't breathe at all as you have no fucking lungs or they are failing on you.
 
-	var/datum/gas_mixture/breath
+	else if((pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE))
+		non_breathler = TRUE
+		losebreath += HUMAN_HIGH_OXYLOSS_RATE  //You can baaaaarely breathe
 
-	if(!getorganslot(ORGAN_SLOT_BREATHING_TUBE))
-		if(health <= HEALTH_THRESHOLD_FULLCRIT || (pulledby && pulledby.grab_state >= GRAB_KILL) || HAS_TRAIT(src, TRAIT_MAGIC_CHOKE) || (lungs && lungs.organ_flags & ORGAN_FAILING))
-			losebreath++  //You can't breath at all when in critical or when being choked, so you're going to miss a breath
+	else if(health <= crit_threshold)
+		non_breathler = TRUE
+		if(!(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE))) // Epinephrine completely stops crit inherent degradation.
+			switch(stat)
+				if(HARD_CRIT)
+					losebreath += HUMAN_MEDIUM_OXYLOSS_RATE  // You are struggling a lot to breathe
+				if(SOFT_CRIT)
+					losebreath += HUMAN_LOW_OXYLOSS_RATE  // You are struggling a bit to breathe
+		else if(!(HAS_TRAIT(src, TRAIT_NOCRITDAMAGE)))
+			adjustBruteLoss(TICKS_PER_BREATH)
 
-		else if(health <= crit_threshold)
-			losebreath += 0.25 //You're having trouble breathing in soft crit, so you'll miss a breath one in four times
+	// Breathe!
+	if(losebreath <= 0)
+		if(oxyloss && !non_breathler) // If any of the conditions above is true, we cannot breathe on our own, even if we are not actively suffocating, so we will not recover oxyloss naturally.
+			clear_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
+			adjustOxyLoss(-(HUMAN_HIGH_OXYLOSS_RATE))
+		losebreath = 0
+		return TRUE
 
-	//Suffocate
-	if(losebreath >= 1) //You've missed a breath, take oxy damage
-		losebreath--
-		if(prob(10))
-			emote("gasp")
-		if(istype(loc, /obj/))
-			var/obj/loc_as_obj = loc
-			loc_as_obj.handle_internal_lifeform(src,0)
-	else
-		//Breathe from internal
-		breath = get_breath_from_internal(BREATH_VOLUME)
-
-		if(isnull(breath)) //in case of 0 pressure internals
-
-			if(isobj(loc)) //Breathe from loc as object
-				var/obj/loc_as_obj = loc
-				breath = loc_as_obj.handle_internal_lifeform(src, BREATH_VOLUME)
-
-			else if(isturf(loc)) //Breathe from loc as turf
-				var/breath_moles = 0
-				if(environment)
-					breath_moles = environment.total_moles()*BREATH_PERCENTAGE
-
-				breath = loc.remove_air(breath_moles)
-		else //Breathe from loc as obj again
-			if(istype(loc, /obj/))
-				var/obj/loc_as_obj = loc
-				loc_as_obj.handle_internal_lifeform(src,0)
-
-	check_breath(breath)
-
-	if(breath)
-		loc.assume_air(breath)
-		air_update_turf(FALSE, FALSE)
+	// Suffocate!
+	throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy) // I hate this, this should not be called every single breath-tick someone suffocates, but I am not in the mood to figure something else out.
+	adjustOxyLoss(losebreath)
+	if(prob(50))
+		emote("gasp")
+	losebreath = 0
+	return FALSE
 
 /mob/living/carbon/proc/has_smoke_protection()
 	if(HAS_TRAIT(src, TRAIT_NOBREATH))
 		return TRUE
 	return FALSE
-
-
-//Third link in a breath chain, calls handle_breath_temperature()
-/mob/living/carbon/proc/check_breath(datum/gas_mixture/breath)
-	if(status_flags & GODMODE)
-		failed_last_breath = FALSE
-		clear_alert("not_enough_oxy")
-		return FALSE
-	if(HAS_TRAIT(src, TRAIT_NOBREATH))
-		return FALSE
-
-	var/obj/item/organ/lungs = getorganslot(ORGAN_SLOT_LUNGS)
-	if(!lungs)
-		adjustOxyLoss(2)
-
-	//CRIT
-	if(!breath || (breath.total_moles() == 0) || !lungs)
-		if(reagents.has_reagent(/datum/reagent/medicine/epinephrine, needs_metabolizing = TRUE) && lungs)
-			return FALSE
-		adjustOxyLoss(1)
-
-		failed_last_breath = TRUE
-		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-		return FALSE
-
-	var/safe_oxy_min = 16
-	var/safe_co2_max = 10
-	var/safe_tox_max = 0.05
-	var/SA_para_min = 1
-	var/SA_sleep_min = 5
-	//var/oxygen_used = 0
-	var/breath_pressure = (breath.total_moles()*R_IDEAL_GAS_EQUATION*breath.temperature)/BREATH_VOLUME
-
-	var/list/breath_gases = breath.gases
-	breath.assert_gases(/datum/gas/oxygen, /datum/gas/plasma, /datum/gas/carbon_dioxide, /datum/gas/nitrous_oxide, /datum/gas/bz)
-	var/O2_partialpressure = (breath_gases[/datum/gas/oxygen][MOLES]/breath.total_moles())*breath_pressure
-	var/Toxins_partialpressure = (breath_gases[/datum/gas/plasma][MOLES]/breath.total_moles())*breath_pressure
-	var/CO2_partialpressure = (breath_gases[/datum/gas/carbon_dioxide][MOLES]/breath.total_moles())*breath_pressure
-
-
-	//OXYGEN
-	if(O2_partialpressure < safe_oxy_min) //Not enough oxygen
-		if(prob(20))
-			emote("gasp")
-		if(O2_partialpressure > 0)
-			var/ratio = 1 - O2_partialpressure/safe_oxy_min
-			adjustOxyLoss(min(5*ratio, 3))
-			failed_last_breath = TRUE
-		else
-			adjustOxyLoss(3)
-			failed_last_breath = TRUE
-		throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-
-	else //Enough oxygen
-		failed_last_breath = FALSE
-		if(health >= crit_threshold)
-			adjustOxyLoss(-5)
-		clear_alert("not_enough_oxy")
-
-	//CARBON DIOXIDE
-	if(CO2_partialpressure > safe_co2_max)
-		if(!co2overloadtime)
-			co2overloadtime = world.time
-		else if(world.time - co2overloadtime > 120)
-			Unconscious(60)
-			adjustOxyLoss(3)
-			if(world.time - co2overloadtime > 300)
-				adjustOxyLoss(8)
-		if(prob(20))
-			emote("cough")
-
-	else
-		co2overloadtime = 0
-
-	//TOXINS/PLASMA
-	if(Toxins_partialpressure > safe_tox_max)
-		var/ratio = (breath_gases[/datum/gas/plasma][MOLES]/safe_tox_max) * 10
-		adjustToxLoss(clamp(ratio, MIN_TOXIC_GAS_DAMAGE, MAX_TOXIC_GAS_DAMAGE))
-		throw_alert("too_much_tox", /atom/movable/screen/alert/too_much_tox)
-	else
-		clear_alert("too_much_tox")
-
-	//NITROUS OXIDE
-	if(breath_gases[/datum/gas/nitrous_oxide])
-		var/SA_partialpressure = (breath_gases[/datum/gas/nitrous_oxide][MOLES]/breath.total_moles())*breath_pressure
-		if(SA_partialpressure > SA_para_min)
-			Unconscious(60)
-			if(SA_partialpressure > SA_sleep_min)
-				Sleeping(max(AmountSleeping() + 40, 200))
-		else if(SA_partialpressure > 0.01)
-			if(prob(20))
-				emote(pick("giggle","laugh"))
-		if(SA_partialpressure > safe_tox_max*3)
-			var/ratio = (breath_gases[/datum/gas/nitrous_oxide][MOLES]/safe_tox_max)
-			adjustToxLoss(clamp(ratio, MIN_TOXIC_GAS_DAMAGE, MAX_TOXIC_GAS_DAMAGE))
-			throw_alert("too_much_tox", /atom/movable/screen/alert/too_much_tox)
-		else
-			clear_alert("too_much_tox")
-
-	//BZ (Facepunch port of their Agent B)
-	if(breath_gases[/datum/gas/bz])
-		var/bz_partialpressure = (breath_gases[/datum/gas/bz][MOLES]/breath.total_moles())*breath_pressure
-		if(bz_partialpressure > 1)
-			hallucination += 10
-		else if(bz_partialpressure > 0.01)
-			hallucination += 5
-
-	//TRITIUM
-	if(breath_gases[/datum/gas/tritium])
-		var/tritium_partialpressure = (breath_gases[/datum/gas/tritium][MOLES]/breath.total_moles())*breath_pressure
-		radiation += tritium_partialpressure/10
-
-	//NITRYL
-	if(breath_gases[/datum/gas/nitryl])
-		var/nitryl_partialpressure = (breath_gases[/datum/gas/nitryl][MOLES]/breath.total_moles())*breath_pressure
-		adjustFireLoss(nitryl_partialpressure/4)
-
-	//FREON
-	if(breath_gases[/datum/gas/freon])
-		var/freon_partialpressure = (breath_gases[/datum/gas/freon][MOLES]/breath.total_moles())*breath_pressure
-		adjustFireLoss(freon_partialpressure * 0.25)
-
-	//MIASMA
-	if(breath_gases[/datum/gas/miasma])
-		var/miasma_partialpressure = (breath_gases[/datum/gas/miasma][MOLES]/breath.total_moles())*breath_pressure
-
-		if(prob(1 * miasma_partialpressure))
-			var/datum/disease/advance/miasma_disease = new /datum/disease/advance/random(2,3)
-			miasma_disease.name = "Unknown"
-			ForceContractDisease(miasma_disease, TRUE, TRUE)
-
-		//Miasma side effects
-		switch(miasma_partialpressure)
-			if(0.25 to 5)
-				// At lower pp, give out a little warning
-				if(prob(5))
-					to_chat(src, span_notice("There is an unpleasant smell in the air."))
-			if(5 to 20)
-				//At somewhat higher pp, warning becomes more obvious
-				if(prob(15))
-					to_chat(src, span_warning("You smell something horribly decayed inside this room."))
-			if(15 to 30)
-				//Small chance to vomit. By now, people have internals on anyway
-				if(prob(5))
-					to_chat(src, span_warning("The stench of rotting carcasses is unbearable!"))
-					vomit()
-			if(30 to INFINITY)
-				//Higher chance to vomit. Let the horror start
-				if(prob(25))
-					to_chat(src, span_warning("The stench of rotting carcasses is unbearable!"))
-					vomit()
-
-	breath.garbage_collect()
-
-	//BREATH TEMPERATURE
-	handle_breath_temperature(breath)
-
-	return TRUE
-
-//Fourth and final link in a breath chain
-/mob/living/carbon/proc/handle_breath_temperature(datum/gas_mixture/breath)
-	return
-
-/mob/living/carbon/proc/get_breath_from_internal(volume_needed)
-	if(internal)
-		if(internal.loc != src)
-			internal = null
-			update_internals_hud_icon(0)
-		else if ((!wear_mask || !(wear_mask.clothing_flags & MASKINTERNALS)) && !getorganslot(ORGAN_SLOT_BREATHING_TUBE))
-			internal = null
-			update_internals_hud_icon(0)
-		else
-			update_internals_hud_icon(1)
-			. = internal.remove_air_volume(volume_needed)
-			if(!.)
-				return FALSE //to differentiate between no internals and active, but empty internals
 
 /mob/living/carbon/proc/handle_blood()
 	return
@@ -593,24 +394,14 @@ All effects don't start immediately, but rather get worse over time; the rate is
 			if(drunkenness >= 101)
 				adjustToxLoss(2) //Let's be honest you shouldn't be alive by now
 
-/// Base carbon environment handler, adds natural stabilization
-/mob/living/carbon/handle_environment(datum/gas_mixture/environment)
-	var/areatemp = get_temperature(environment)
-
-	if(stat != DEAD) // If you are dead your body does not stabilize naturally
-		natural_bodytemperature_stabilization(environment)
-
-	if(!on_fire || areatemp > bodytemperature) // If we are not on fire or the area is hotter
-		adjust_bodytemperature((areatemp - bodytemperature), use_insulation=TRUE, use_steps=TRUE)
-
 /**
  * Used to stabilize the body temperature back to normal on living mobs
  *
  * vars:
  * * environment The environment gas mix
  */
-/mob/living/carbon/proc/natural_bodytemperature_stabilization(datum/gas_mixture/environment)
-	var/areatemp = get_temperature(environment)
+
+/mob/living/carbon/proc/natural_bodytemperature_stabilization() // I really want to gut ALL of this, but I am restraining myself to the parts involved with the atmos system
 	var/body_temperature_difference = get_body_temp_normal() - bodytemperature
 	var/natural_change = 0
 
@@ -632,28 +423,6 @@ All effects don't start immediately, but rather get worse over time; the rate is
 	// We are very hot, reduce the body temperature
 	else if(bodytemperature >= BODYTEMP_HEAT_DAMAGE_LIMIT)
 		natural_change = min((body_temperature_difference / BODYTEMP_AUTORECOVERY_DIVISOR), -BODYTEMP_AUTORECOVERY_MINIMUM)
-
-	var/thermal_protection = 1 - get_insulation_protection(areatemp) // invert the protection
-	if(areatemp > bodytemperature) // It is hot here
-		if(bodytemperature < get_body_temp_normal())
-			// Our bodytemp is below normal we are cold, insulation helps us retain body heat
-			// and will reduce the heat we lose to the environment
-			natural_change = (thermal_protection + 1) * natural_change
-		else
-			// Our bodytemp is above normal and sweating, insulation hinders out ability to reduce heat
-			// but will reduce the amount of heat we get from the environment
-			natural_change = (1 / (thermal_protection + 1)) * natural_change
-	else // It is cold here
-		if(!on_fire) // If on fire ignore ignore local temperature in cold areas
-			if(bodytemperature < get_body_temp_normal())
-				// Our bodytemp is below normal, insulation helps us retain body heat
-				// and will reduce the heat we lose to the environment
-				natural_change = (thermal_protection + 1) * natural_change
-			else
-				// Our bodytemp is above normal and sweating, insulation hinders out ability to reduce heat
-				// but will reduce the amount of heat we get from the environment
-				natural_change = (1 / (thermal_protection + 1)) * natural_change
-
 	// Apply the natural stabilization changes
 	adjust_bodytemperature(natural_change)
 

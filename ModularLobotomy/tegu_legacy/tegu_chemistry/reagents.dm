@@ -87,6 +87,6 @@
 	if(istype(M, /mob/living/carbon/human))
 		var/mob/living/carbon/human/H = M
 		if(prob(10))
-			H.losebreath += 0.5 //Can cause the lungs to retract
+			H.losebreath += floor(HUMAN_HIGH_OXYLOSS_RATE/TICKS_PER_BREATH) // Can cause the lungs to retract.
 		H.hallucination += 2
 

@@ -76,18 +76,5 @@ SUBSYSTEM_DEF(time_track)
 			time_dilation_avg_slow,
 			world.map_cpu,
 			length(SStimer.timer_id_dict),
-			SSair.cost_turfs,
-			SSair.cost_groups,
-			SSair.cost_highpressure,
-			SSair.cost_hotspots,
-			SSair.cost_superconductivity,
-			SSair.cost_pipenets,
-			SSair.cost_rebuilds,
-			length(SSair.active_turfs),
-			length(SSair.excited_groups),
-			length(SSair.hotspots),
-			length(SSair.networks),
-			length(SSair.high_pressure_delta),
-			length(SSair.active_super_conductivity)
 		)
 	)

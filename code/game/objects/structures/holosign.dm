@@ -90,12 +90,12 @@
 	icon_state = "holo_firelock"
 	density = FALSE
 	anchored = TRUE
-	CanAtmosPass = ATMOS_PASS_NO
+	// CanAtmosPass = ATMOS_PASS_NO
 	alpha = 150
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_LIGHT_INSULATION
 
-/obj/structure/holosign/barrier/atmos/Initialize()
+/* /obj/structure/holosign/barrier/atmos/Initialize()
 	. = ..()
 	air_update_turf(TRUE, TRUE)
 
@@ -104,7 +104,7 @@
 
 /obj/structure/holosign/barrier/atmos/Destroy()
 	. = ..()
-	air_update_turf(TRUE, FALSE)
+	air_update_turf(TRUE, FALSE) */
 
 /obj/structure/holosign/barrier/cyborg
 	name = "Energy Field"

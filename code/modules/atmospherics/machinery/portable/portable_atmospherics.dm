@@ -1,4 +1,4 @@
-/obj/machinery/portable_atmospherics
+/* /obj/machinery/portable_atmospherics
 	name = "portable_atmospherics"
 	icon = 'icons/obj/atmos.dmi'
 	use_power = NO_POWER_USE
@@ -205,3 +205,4 @@
 
 	if(gas_change)
 		air_contents.garbage_collect()
+ */

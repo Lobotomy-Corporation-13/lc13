@@ -11,16 +11,10 @@
 "ad" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 6
-	},
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/cargo)
 "ae" = (
 /obj/effect/turf_decal/delivery,
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/door/airlock/external{
 	name = "NTMS-037 Port Airlock"
@@ -45,9 +39,6 @@
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/cargo)
 "af" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 4
-	},
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
@@ -66,10 +57,6 @@
 /obj/structure/sign/warning/vacuum{
 	pixel_x = -32;
 	pixel_y = 32
-	},
-/obj/machinery/meter,
-/obj/machinery/atmospherics/pipe/manifold/general/visible{
-	dir = 4
 	},
 /obj/machinery/firealarm{
 	dir = 8;
@@ -101,7 +88,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "aj" = (
-/obj/machinery/atmospherics/components/binary/valve,
 /obj/machinery/light/small{
 	dir = 4
 	},
@@ -119,7 +105,6 @@
 /area/shuttle/abandoned/cargo)
 "al" = (
 /obj/effect/turf_decal/delivery,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/decal/cleanable/dirt,
 /obj/machinery/door/airlock/external{
 	name = "NTMS-037 Port Airlock"
@@ -158,7 +143,6 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/machinery/power/apc{
 	dir = 8;
 	name = "Salvage Ship Cargo APC";
@@ -276,18 +260,12 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "az" = (
 /obj/effect/turf_decal/delivery,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 10
-	},
 /obj/machinery/door/airlock/external{
 	name = "NTMS-037 Mining Airlock"
 	},
@@ -303,7 +281,6 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/mineral/titanium/yellow,
@@ -319,7 +296,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/abandoned/cargo)
 "aD" = (
@@ -367,9 +343,6 @@
 	pixel_x = -24;
 	pixel_y = 24
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 6
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /turf/open/floor/plating,
@@ -377,9 +350,6 @@
 "aG" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
 	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
@@ -389,9 +359,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /turf/open/floor/plating,
@@ -399,9 +366,6 @@
 "aI" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 10
 	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
@@ -438,8 +402,6 @@
 /area/shuttle/abandoned/engine)
 "aM" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/atmospherics/components/unary/portables_connector/visible,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
@@ -451,7 +413,6 @@
 "aN" = (
 /obj/machinery/light/small/built,
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/atmospherics/components/unary/tank/air,
 /obj/effect/turf_decal/bot,
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -514,16 +475,12 @@
 /area/shuttle/abandoned/cargo)
 "aS" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "aT" = (
 /obj/effect/turf_decal/delivery,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/machinery/door/airlock/external{
 	name = "NTMS-037 Mining Airlock"
 	},
@@ -538,15 +495,11 @@
 	dir = 8
 	},
 /obj/effect/turf_decal/stripes/corner,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/structure/cable,
 /turf/open/floor/mineral/titanium/yellow,
 /area/shuttle/abandoned/cargo)
 "aV" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/greenglow,
@@ -554,7 +507,6 @@
 /area/shuttle/abandoned/cargo)
 "aW" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/dirt,
 /mob/living/simple_animal/hostile/netherworld/migo{
@@ -564,9 +516,6 @@
 /area/shuttle/abandoned/cargo)
 "aX" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/mineral/titanium/yellow,
@@ -575,9 +524,6 @@
 /obj/effect/turf_decal/delivery,
 /obj/machinery/door/airlock/shuttle{
 	name = "NTMS-037 Cargo Bay"
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
 	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/blood/old,
@@ -589,18 +535,12 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 8
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "ba" = (
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
@@ -628,18 +568,12 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "bd" = (
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 8
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "be" = (
 /obj/effect/turf_decal/stripes/line{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
 	dir = 4
 	},
 /obj/effect/decal/cleanable/blood/old,
@@ -651,16 +585,10 @@
 /obj/machinery/door/airlock/shuttle{
 	name = "NTMS-037 Engine Room"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/structure/cable,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/engine)
 "bg" = (
-/obj/machinery/atmospherics/components/binary/valve{
-	dir = 8
-	},
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
@@ -671,16 +599,11 @@
 /area/shuttle/abandoned/engine)
 "bh" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/meter,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
 "bi" = (
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/oil,
 /mob/living/simple_animal/hostile/netherworld/blankbody{
@@ -801,9 +724,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "bt" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
@@ -821,9 +741,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "bv" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 6
-	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/structure/cable,
@@ -834,9 +751,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/cargo)
 "bw" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
@@ -911,9 +825,6 @@
 /turf/open/floor/plating,
 /area/shuttle/abandoned/engine)
 "bA" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/turf_decal/stripes/line,
@@ -978,9 +889,6 @@
 /area/shuttle/abandoned/cargo)
 "bI" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 6
-	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
 /turf/open/floor/plating,
@@ -988,9 +896,6 @@
 "bJ" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
@@ -1082,7 +987,6 @@
 /turf/closed/wall/mineral/titanium/nodiagonal,
 /area/shuttle/abandoned/bar)
 "bW" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/effect/turf_decal/delivery,
 /obj/structure/cable,
 /obj/machinery/door/airlock/shuttle{
@@ -1100,7 +1004,6 @@
 /obj/machinery/light/small{
 	dir = 1
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /obj/item/bedsheet/brown,
 /turf/open/floor/wood,
 /area/shuttle/abandoned/crew)
@@ -1118,7 +1021,6 @@
 /obj/machinery/light/small{
 	dir = 1
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /obj/item/bedsheet/brown,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/wood,
@@ -1201,7 +1103,6 @@
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/structure/cable,
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /mob/living/simple_animal/hostile/netherworld/blankbody{
 	environment_smash = 0
 	},
@@ -1263,7 +1164,6 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/blood/old,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /obj/structure/cable,
 /turf/open/floor/plasteel/showroomfloor,
 /area/shuttle/abandoned/bar)
@@ -1294,7 +1194,6 @@
 /obj/machinery/door/airlock/shuttle{
 	name = "Bunk A"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/crew)
 "cp" = (
@@ -1302,7 +1201,6 @@
 /obj/machinery/door/airlock/shuttle{
 	name = "Bunk B"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/crew)
 "cq" = (
@@ -1373,9 +1271,6 @@
 	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 5
-	},
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/abandoned/bridge)
 "cy" = (
@@ -1384,9 +1279,6 @@
 	},
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/abandoned/bridge)
@@ -1396,9 +1288,6 @@
 	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 10
-	},
 /obj/machinery/turretid{
 	icon_state = "control_kill";
 	lethal = 1;
@@ -1422,7 +1311,6 @@
 /obj/effect/turf_decal/stripes/corner{
 	dir = 8
 	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /turf/open/floor/wood{
 	icon_state = "wood-broken6"
 	},
@@ -1442,9 +1330,6 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/blood/gibs/old,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 8
-	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plasteel/showroomfloor,
@@ -1459,16 +1344,10 @@
 	},
 /obj/effect/decal/cleanable/blood/old,
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/structure/cable,
 /turf/open/floor/plasteel/showroomfloor,
 /area/shuttle/abandoned/bar)
 "cE" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/turf_decal/delivery,
 /obj/structure/cable,
 /obj/machinery/door/airlock/shuttle{
@@ -1480,7 +1359,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 9
 	},
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plasteel/showroomfloor,
@@ -1497,9 +1375,6 @@
 	name = "NTMS-037 Crew Quarters APC";
 	pixel_y = 23
 	},
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 1
-	},
 /obj/structure/cable,
 /obj/effect/decal/cleanable/blood/old,
 /mob/living/simple_animal/hostile/netherworld/migo{
@@ -1511,7 +1386,6 @@
 /obj/effect/turf_decal/stripes/line{
 	dir = 5
 	},
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/effect/decal/cleanable/blood/old,
 /turf/open/floor/plasteel/showroomfloor,
 /area/shuttle/abandoned/crew)
@@ -1520,16 +1394,10 @@
 /obj/machinery/door/airlock/shuttle{
 	name = "NTMS-037 Captain's Quarters"
 	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/effect/mapping_helpers/airlock/locked,
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/crew)
 "cJ" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 8
-	},
 /turf/open/floor/wood,
 /area/shuttle/abandoned/crew)
 "cK" = (
@@ -1588,9 +1456,6 @@
 	},
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 5
-	},
 /turf/open/floor/mineral/titanium/blue,
 /area/shuttle/abandoned/bridge)
 "cQ" = (
@@ -1599,9 +1464,6 @@
 	name = "NTMS-037 Ship Control"
 	},
 /obj/structure/cable,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /turf/open/floor/mineral/plastitanium,
 /area/shuttle/abandoned/bridge)
 "cR" = (
@@ -1613,7 +1475,6 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/dirt,
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden,
 /obj/structure/cable,
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/plasteel/showroomfloor,
@@ -1624,9 +1485,6 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/blood/old,
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 4
-	},
 /obj/structure/cable,
 /turf/open/floor/plasteel/showroomfloor,
 /area/shuttle/abandoned/bar)
@@ -1639,9 +1497,6 @@
 /obj/machinery/status_display/evac{
 	pixel_x = 32;
 	pixel_y = -32
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
 	},
 /obj/structure/cable,
 /mob/living/simple_animal/hostile/netherworld{
@@ -1691,9 +1546,6 @@
 /obj/machinery/airalarm/all_access{
 	dir = 1;
 	pixel_y = -24
-	},
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
 	},
 /obj/effect/decal/cleanable/greenglow,
 /turf/open/floor/mineral/plastitanium,

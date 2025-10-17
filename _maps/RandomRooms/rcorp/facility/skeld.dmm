@@ -24,7 +24,6 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "bc" = (
-/obj/machinery/atmospherics/components/binary/dp_vent_pump/on/layer2,
 /turf/open/floor/carpet/green,
 /area/city/outskirts)
 "bz" = (
@@ -67,13 +66,9 @@
 /turf/closed/indestructible/reinforced,
 /area/city/outskirts)
 "cc" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "ce" = (
-/obj/machinery/atmospherics/components/binary/dp_vent_pump/on,
 /turf/open/floor/carpet/stellar,
 /area/city/outskirts)
 "cl" = (
@@ -281,9 +276,6 @@
 /turf/open/floor/plasteel/dark,
 /area/city/outskirts)
 "ib" = (
-/obj/machinery/atmospherics/components/binary/circulator/cold{
-	dir = 4
-	},
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "ie" = (
@@ -423,9 +415,6 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/city/outskirts)
 "lJ" = (
-/obj/machinery/atmospherics/components/binary/circulator/cold{
-	dir = 8
-	},
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "lT" = (
@@ -477,7 +466,6 @@
 /turf/open/floor/carpet,
 /area/city/outskirts)
 "ob" = (
-/obj/machinery/atmospherics/components/unary/thermomachine,
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "od" = (
@@ -703,7 +691,6 @@
 /turf/open/floor/carpet/black,
 /area/city/outskirts)
 "rU" = (
-/obj/machinery/atmospherics/components/binary/dp_vent_pump/on,
 /turf/open/floor/plasteel,
 /area/city/outskirts)
 "se" = (
@@ -912,7 +899,6 @@
 /obj/structure/cable,
 /obj/structure/cable/layer1,
 /obj/structure/cable/layer3,
-/obj/machinery/atmospherics/components/binary/dp_vent_pump/on/layer2,
 /turf/open/floor/plating,
 /area/city/outskirts)
 "wO" = (
@@ -938,7 +924,6 @@
 /turf/open/floor/facility/white,
 /area/city/outskirts)
 "xz" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /turf/open/floor/facility/dark,
 /area/city/outskirts)
 "xA" = (
@@ -1568,9 +1553,6 @@
 /turf/open/floor/plasteel,
 /area/city/outskirts)
 "Lj" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on{
-	dir = 1
-	},
 /obj/machinery/camera/autoname{
 	dir = 1
 	},
@@ -1800,7 +1782,6 @@
 /turf/open/floor/wood,
 /area/city/outskirts)
 "Rr" = (
-/obj/machinery/atmospherics/components/binary/dp_vent_pump/on,
 /turf/open/floor/carpet,
 /area/city/outskirts)
 "So" = (
