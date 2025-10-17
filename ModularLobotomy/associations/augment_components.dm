@@ -313,6 +313,39 @@
 	target.apply_lc_overheat(3)
 	to_chat(human_parent, span_nicegreen("You inflict 3 burn to [target]! Due to Scorching Mind"))
 
+//Stigmatize
+/datum/component/augment/stigmatize
+	var/inflict_cooldown
+	var/inflict_cooldown_time = 40
+
+/datum/component/augment/stigmatize/Initialize(_repeat = 1)
+	. = ..()
+	// Cooldown: 4s at repeat 1, 2s at repeat 2, 1s at repeat 3
+	inflict_cooldown_time = 40 / _repeat
+
+/datum/component/augment/stigmatize/attack_effect(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	. = ..()
+	if(inflict_cooldown > world.time)
+		return FALSE
+	if(item.force <= 0 || target.stat == DEAD)
+		return FALSE
+
+	inflict_cooldown = world.time + inflict_cooldown_time
+
+	// Calculate missing SP percentage
+	var/missing_sp_percent = (human_parent.maxSanity - human_parent.sanityhealth) / human_parent.maxSanity
+
+	// Calculate OVERHEAT stacks: 1 per 25% missing SP
+	var/overheat_stacks = round(missing_sp_percent / 0.25)
+
+	// Double if WHITE damage
+	if(item.damtype == WHITE_DAMAGE)
+		overheat_stacks *= 2
+
+	if(overheat_stacks > 0)
+		target.apply_lc_overheat(overheat_stacks)
+		to_chat(human_parent, span_nicegreen("You inflict [overheat_stacks] OVERHEAT to [target]! Due to Stigmatize"))
+
 //Brandish the Flame
 /datum/component/augment/brandish_the_flame
 	var/inflict_cooldown
@@ -650,6 +683,79 @@
 	human_parent.apply_lc_white_protection(8)
 	to_chat(human_parent, span_nicegreen("Emergency WHITE Shields, Activated!"))
 
+//Alert
+/datum/component/augment/resisting_augment/alert
+	var/alert_cooldown
+	var/alert_cooldown_time = 600 // 60 seconds
+
+/datum/component/augment/resisting_augment/alert/get_total_damage_resist(datum/source, damage, damagetype, def_zone)
+	// Check cooldown
+	if(alert_cooldown > world.time)
+		return 0
+
+	// Set cooldown
+	alert_cooldown = world.time + alert_cooldown_time
+
+	// Return 80% damage reduction
+	return 0.8
+
+/datum/component/augment/resisting_augment/alert/take_damage_effect(datum/source, damage, damagetype, def_zone)
+	. = ..()
+	// If we successfully reduced damage (meaning alert triggered)
+	if(total_damage_resist > 0)
+		// Trigger teleport immediately
+		TeleportOnDamage()
+
+/datum/component/augment/resisting_augment/alert/proc/TeleportOnDamage()
+	if(!human_parent || human_parent.stat == DEAD)
+		return FALSE
+
+	var/turf/open/T = null
+	var/list/turf_list = list()
+	var/teleport_min_distance = 3
+	var/teleport_max_distance = 5
+
+	// Get potential teleport locations
+	turf_list = spiral_range_turfs(teleport_max_distance, get_turf(human_parent), teleport_min_distance)
+
+	// Remove dense turfs
+	for(var/turf/TT in turf_list)
+		if(TT.density)
+			turf_list -= TT
+
+	// Try to find a valid teleport location
+	for(var/i = 1 to 5)
+		if(!LAZYLEN(turf_list))
+			break
+		T = pick(turf_list)
+		turf_list -= T
+		// Check if we can path to it
+		if(LAZYLEN(get_path_to(human_parent, T, TYPE_PROC_REF(/turf, Distance_cardinal), 0, teleport_max_distance * 2)))
+			break
+		T = null
+
+	// Didn't find anything, abort
+	if(!istype(T))
+		to_chat(human_parent, span_warning("Alert system failed to find a safe teleport location!"))
+		return FALSE
+
+	// Create visual trail effect
+	var/list/line_list = getline(get_turf(human_parent), T)
+	for(var/i = 1 to length(line_list))
+		var/turf/TT = line_list[i]
+		var/obj/effect/temp_visual/decoy/D = new (TT, human_parent)
+		D.alpha = min(150 + i*15, 255)
+		animate(D, alpha = 0, time = 2 + i*2)
+
+	// Teleport and play sounds
+	playsound(human_parent, 'sound/effects/hokma_meltdown_short.ogg', 25, TRUE)
+	human_parent.visible_message(span_warning("[human_parent] instinctively reacts to the attack and phases away!"))
+	human_parent.forceMove(T)
+	playsound(T, 'sound/effects/hokma_meltdown_short.ogg', 25, TRUE)
+	to_chat(human_parent, span_nicegreen("Your Alert augment activates, reducing damage by 80% and teleporting you to safety! Due to Alert"))
+
+	return TRUE
+
 //Defensive Preparations
 /datum/component/augment/defensive_preparations
 	var/defense_cooldown
@@ -833,77 +939,45 @@
 		to_chat(human_parent, span_nicegreen("You inflicted [repeat * 2] tremor to [animal], and gained [repeat] tremor! Due to Reflective Tremor"))
 
 //Blood Thorns
-/datum/component/augment/blood_thorns
+/datum/component/augment/resisting_augment/blood_thorns
 	var/inflict_cooldown
 	var/inflict_cooldown_time = 30
-	var/damage_resist = 0
-	var/can_update_armor = TRUE
 	var/triggered_this_attack = FALSE
 
-/datum/component/augment/blood_thorns/take_damage_effect(datum/source, damage, damagetype, def_zone)
-	. = ..()
+/datum/component/augment/resisting_augment/blood_thorns/get_total_damage_resist(datum/source, damage, damagetype, def_zone)
+	// Check cooldown
 	if(inflict_cooldown > world.time)
-		return FALSE
+		return 0
 
+	// Check bleed stacks
 	var/datum/status_effect/stacking/lc_bleed/UB = human_parent.has_status_effect(/datum/status_effect/stacking/lc_bleed)
 	if(!UB || UB.stacks < 5)
-		return FALSE
+		return 0
 
-	if(!can_update_armor)
-		return FALSE
-	can_update_armor = FALSE
-
+	// Set cooldown and trigger flag
 	inflict_cooldown = world.time + inflict_cooldown_time
 	triggered_this_attack = TRUE
-
-	// Calculate damage reduction: ceil(bleed/2) * repeat, max 80%
-	var/bleed_modifier = round((UB.stacks / 2.0) + 0.5) // Round up
-	damage_resist = (bleed_modifier * repeat) / 100.0
-	if(damage_resist > 0.8)
-		damage_resist = 0.8
-
-	// Apply damage reduction via physiology
-	var/physiology_multiplier = (1 - damage_resist)
-	switch(damagetype)
-		if(RED_DAMAGE)
-			human_parent.physiology.red_mod *= physiology_multiplier
-		if(WHITE_DAMAGE)
-			human_parent.physiology.white_mod *= physiology_multiplier
-		if(BLACK_DAMAGE)
-			human_parent.physiology.black_mod *= physiology_multiplier
-		if(PALE_DAMAGE)
-			human_parent.physiology.pale_mod *= physiology_multiplier
-
-	to_chat(human_parent, span_nicegreen("Your blood forms thorns, reducing damage by [damage_resist * 100]%! Due to Blood Thorns"))
-
-/datum/component/augment/blood_thorns/after_take_damage_effect(datum/source, damage, damagetype, def_zone)
-	. = ..()
-	if(damage_resist <= 0)
-		return
-
-	// Restore physiology
-	var/physiology_divisor = (1 - damage_resist)
-	if(physiology_divisor > 0)
-		switch(damagetype)
-			if(RED_DAMAGE)
-				human_parent.physiology.red_mod /= physiology_divisor
-			if(WHITE_DAMAGE)
-				human_parent.physiology.white_mod /= physiology_divisor
-			if(BLACK_DAMAGE)
-				human_parent.physiology.black_mod /= physiology_divisor
-			if(PALE_DAMAGE)
-				human_parent.physiology.pale_mod /= physiology_divisor
-
-	damage_resist = 0
-	can_update_armor = TRUE
 
 	// Reset trigger flag after a brief moment
 	addtimer(CALLBACK(src, PROC_REF(reset_trigger)), 1)
 
-/datum/component/augment/blood_thorns/proc/reset_trigger()
+	// Calculate damage reduction: ceil(bleed/2) * repeat, max 80%
+	var/bleed_modifier = round((UB.stacks / 2.0) + 0.5) // Round up
+	var/resist = (bleed_modifier * repeat) / 100.0
+	if(resist > 0.8)
+		resist = 0.8
+
+	return resist
+
+/datum/component/augment/resisting_augment/blood_thorns/take_damage_effect(datum/source, damage, damagetype, def_zone)
+	. = ..()
+	if(total_damage_resist > 0)
+		to_chat(human_parent, span_nicegreen("Your blood forms thorns, reducing damage by [total_damage_resist * 100]%! Due to Blood Thorns"))
+
+/datum/component/augment/resisting_augment/blood_thorns/proc/reset_trigger()
 	triggered_this_attack = FALSE
 
-/datum/component/augment/blood_thorns/attackedby_mob(datum/source, mob/living/simple_animal/animal)
+/datum/component/augment/resisting_augment/blood_thorns/attackedby_mob(datum/source, mob/living/simple_animal/animal)
 	. = ..()
 	// Only transfer BLEED if we just triggered the damage reduction
 	if(!triggered_this_attack)
@@ -1300,6 +1374,50 @@
 	to_chat(human_parent, span_nicegreen("You regen [regen_amount] HP due to [bleeder] bleeding! Due to Blood Cycler"))
 
 /datum/component/augment/blood_cycler/UnregisterFromParent()
+	UnregisterSignal(parent, COMSIG_STATUS_BLEED_DAMAGE)
+
+//Crimson Cascade
+/datum/component/augment/crimson_cascade/RegisterWithParent()
+	. = ..()
+	RegisterSignal(parent, COMSIG_STATUS_BLEED_DAMAGE, PROC_REF(bleed_empowerment))
+
+/datum/component/augment/crimson_cascade/proc/bleed_empowerment(datum/source, mob/living/bleeder, bleed_stack)
+	if(get_dist(human_parent, bleeder) > 3)
+		return FALSE
+
+	// Calculate RED Damage Up stacks: bleed_stack / 5
+	var/damage_up_stacks = round(bleed_stack / 5)
+	if(damage_up_stacks < 1)
+		return FALSE
+
+	human_parent.apply_lc_red_strength(damage_up_stacks)
+	to_chat(human_parent, span_nicegreen("You gain [damage_up_stacks] RED Damage Up from [bleeder]'s bleeding! Due to Crimson Cascade"))
+
+/datum/component/augment/crimson_cascade/UnregisterFromParent()
+	UnregisterSignal(parent, COMSIG_STATUS_BLEED_DAMAGE)
+
+//Faint Drain
+/datum/component/augment/faint_drain/RegisterWithParent()
+	. = ..()
+	RegisterSignal(parent, COMSIG_STATUS_BLEED_DAMAGE, PROC_REF(bleed_weakness))
+
+/datum/component/augment/faint_drain/proc/bleed_weakness(datum/source, mob/living/bleeder, bleed_stack)
+	// Only affect mobs, not humans
+	if(ishuman(bleeder))
+		return FALSE
+
+	if(get_dist(human_parent, bleeder) > 3)
+		return FALSE
+
+	// Calculate Feeble stacks: bleed_stack / 10
+	var/feeble_stacks = round(bleed_stack / 10)
+	if(feeble_stacks < 1)
+		return FALSE
+
+	bleeder.apply_lc_feeble(feeble_stacks)
+	to_chat(human_parent, span_nicegreen("You inflict [feeble_stacks] Feeble to [bleeder] from their bleeding! Due to Faint Drain"))
+
+/datum/component/augment/faint_drain/UnregisterFromParent()
 	UnregisterSignal(parent, COMSIG_STATUS_BLEED_DAMAGE)
 
 //Acidic Blood

@@ -132,8 +132,16 @@
 			"name" = "Fireproof",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "Under 15% HP, you become immune to OVERHEAT damage.",
+			"desc" = "Under 15% HP, you become immune to BURN damage.",
 			"component" = /datum/component/augment/fireproof
+		),
+		list(
+			"id" = "alert",
+			"name" = "Alert",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "The first time you take damage, reduce it by 80% and teleport 3-5 tiles away. Has a cooldown of 60 seconds.",
+			"component" = /datum/component/augment/resisting_augment/alert
 		),
 		// --- Attacking Effects ---
 		list(
@@ -248,12 +256,21 @@
 			"component" = /datum/component/augment/scorching_mind
 		),
 		list(
+			"id" = "stigmatize",
+			"name" = "Stigmatize",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "On hit, inflict 1 OVERHEAT for every 25% of your missing SP. Double the OVERHEAT if the attack is a WHITE weapon. (Has a cooldown of 4 / 2 / 1 seconds, scaling with repeat count.)",
+			"component" = /datum/component/augment/stigmatize
+		),
+		list(
 			"id" = "brandish_the_flame",
 			"name" = "Brandish the Flame",
 			"ahn_cost" = 25,
 			"ep_cost" = 2,
 			"repeatable" = 3,
-			"desc" = "On hit against a target with 10+ OVERHEAT, gain Strength equal to (target's OVERHEAT / 10). (Has a cooldown of 15 / X seconds.)",
+			"desc" = "On hit against a target with 10+ OVERHEAT, gain Damage Up equal to (target's OVERHEAT / 10). (Has a cooldown of 15 / X seconds.)",
 			"component" = /datum/component/augment/brandish_the_flame
 		),
 		list(
@@ -269,7 +286,7 @@
 			"name" = "Inner Ardor",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "When making a melee attack, deal an extra 0.5% damage for every point of fire damage you have.",
+			"desc" = "When making a melee attack, deal an extra 0.5% damage for every point of BURN damage you have.",
 			"component" = /datum/component/augment/inner_ardor
 		),
 		list(
@@ -321,7 +338,7 @@
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
 			"repeatable" = 3,
-			"desc" = "On kill, heal 20 * X OVERHEAT damage.",
+			"desc" = "On kill, heal 20 * X BURN damage.",
 			"component" = /datum/component/augment/reclaimed_flame
 		),
 		// --- Status Effects ---
@@ -365,7 +382,7 @@
 			"name" = "TREMOR Break",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "When attacking a target with 15+ TREMOR, trigger a TREMOR Burst on the target and inflict (TREMOR on Target / 5) Feeble to the target. This has a cooldown of 30 seconds.",
+			"desc" = "When attacking a target with 15+ TREMOR, trigger a TREMOR Burst on the target and inflict (TREMOR on Target / 5) Damage Down to the target. This has a cooldown of 30 seconds.",
 			"component" = /datum/component/augment/tremor_break
 		),
 		list(
@@ -541,6 +558,22 @@
 			"desc" = "Any time a mob/human within 3 sqrs of you takes BLEED damage, heal HP equal to 50% of the BLEED damage they have taken. (Max of 100).",
 			"component" = /datum/component/augment/blood_cycler
 		),
+		list(
+			"id" = "crimson_cascade",
+			"name" = "Crimson Cascade",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "When someone within 3 sqrs takes BLEED damage, gain RED Damage Up equal to their BLEED stacks / 5.",
+			"component" = /datum/component/augment/crimson_cascade
+		),
+		list(
+			"id" = "faint_drain",
+			"name" = "Faint Drain",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"desc" = "When a mob (not human) within 3 sqrs takes BLEED damage, inflict Feeble equal to their BLEED stacks / 10.",
+			"component" = /datum/component/augment/faint_drain
+		),
 
 		list(
 			"id" = "acidic_blood",
@@ -566,7 +599,7 @@
 			"name" = "Boot Up Sequence",
 			"ahn_cost" = 25,
 			"ep_cost" = -4,
-			"desc" = "When you make an attack, gain 3 Feeble. This has a cooldown of 70 seconds.",
+			"desc" = "When you make an attack, gain 3 Damage Down. This has a cooldown of 70 seconds.",
 			"component" = /datum/component/augment/bus
 		),
 		list(
@@ -591,7 +624,7 @@
 			"name" = "Pacifist",
 			"ahn_cost" = 25,
 			"ep_cost" = -4,
-			"desc" = "On kill, gain 3 Feeble",
+			"desc" = "On kill, gain 3 Damage Down",
 			"component" = /datum/component/augment/pacifist
 		),
 		list(

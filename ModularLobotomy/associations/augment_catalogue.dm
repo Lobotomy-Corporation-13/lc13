@@ -159,7 +159,224 @@
 			"markup_percent" = effect["markup_percent"] || 0
 		))
 
+	// Status Effects Index
+	data["statusEffects"] = get_status_effects_data()
+
 	return data
+
+/// Returns a list of status effect data for the Index page
+/obj/machinery/augment_catalogue/proc/get_status_effects_data()
+	var/list/status_effects = list()
+	var/icon/status_icon = icon('ModularLobotomy/_Lobotomyicons/status_sprites.dmi')
+
+	// OVERHEAT
+	status_effects += list(list(
+		"name" = "OVERHEAT",
+		"maxStack" = 50,
+		"icon" = "lc_burn",
+		"iconData" = icon2base64(icon(status_icon, "lc_burn")),
+		"description" = "Every 5 seconds, take BURN damage equal to the stack then reduce it by half (This deals *4 damage to mobs.) If no new OVERHEAT is applied during the second tick of burn, it is completely removed."
+	))
+
+	// BLEED
+	status_effects += list(list(
+		"name" = "BLEED",
+		"maxStack" = 50,
+		"icon" = "lc_bleed",
+		"iconData" = icon2base64(icon(status_icon, "lc_bleed")),
+		"description" = "When you move, take BRUTE damage equal to the stack then reduce it by half (This has a cooldown of 2 seconds, and deals *4 damage to mobs.). If you don't trigger BLEED and don't gain any new BLEED for 5-10 seconds, all BLEED will be removed."
+	))
+
+	// TREMOR
+	status_effects += list(list(
+		"name" = "TREMOR",
+		"maxStack" = 50,
+		"icon" = "tremor",
+		"iconData" = icon2base64(icon(status_icon, "tremor")),
+		"description" = "When you have TREMOR, you be slowed down, and the slowdown is increased per TREMOR you have. Also, When you have tremor you can be effected by TREMOR BURSTS, which will knock you down for (stacks/10) seconds. (For mobs, it will deal stacks *5 BRUTE damage instead of knocking them down.) After a tremor burst, all tremor is removed. Tremor also goes away if no new tremor is applied for 10-20 seconds."
+	))
+
+	// Protection
+	status_effects += list(list(
+		"name" = "Protection",
+		"maxStack" = 9,
+		"icon" = "protection",
+		"iconData" = icon2base64(icon(status_icon, "protection")),
+		"description" = "For each stack of Protection you have, you take 10% less damage from all sources. Last for 10 seconds. Protection does not stack from multiple sources, only the highest value stays."
+	))
+
+	// Red Protection
+	status_effects += list(list(
+		"name" = "Red Protection",
+		"maxStack" = 9,
+		"icon" = "red_protection",
+		"iconData" = icon2base64(icon(status_icon, "red_protection")),
+		"description" = "For each stack of Red Protection you have, you take 10% less damage from RED damage. Last for 10 seconds. Red Protection does not stack from multiple sources, only the highest value stays."
+	))
+
+	// White Protection
+	status_effects += list(list(
+		"name" = "White Protection",
+		"maxStack" = 9,
+		"icon" = "white_protection",
+		"iconData" = icon2base64(icon(status_icon, "white_protection")),
+		"description" = "For each stack of White Protection you have, you take 10% less damage from WHITE damage. Last for 10 seconds. White Protection does not stack from multiple sources, only the highest value stays."
+	))
+
+	// Black Protection
+	status_effects += list(list(
+		"name" = "Black Protection",
+		"maxStack" = 9,
+		"icon" = "black_protection",
+		"iconData" = icon2base64(icon(status_icon, "black_protection")),
+		"description" = "For each stack of Black Protection you have, you take 10% less damage from BLACK damage. Last for 10 seconds. Black Protection does not stack from multiple sources, only the highest value stays."
+	))
+
+	// Pale Protection
+	status_effects += list(list(
+		"name" = "Pale Protection",
+		"maxStack" = 9,
+		"icon" = "pale_protection",
+		"iconData" = icon2base64(icon(status_icon, "pale_protection")),
+		"description" = "For each stack of Pale Protection you have, you take 10% less damage from PALE damage. Last for 10 seconds. Pale Protection does not stack from multiple sources, only the highest value stays."
+	))
+
+	// Fragile
+	status_effects += list(list(
+		"name" = "Fragile",
+		"maxStack" = 10,
+		"icon" = "fragile",
+		"iconData" = icon2base64(icon(status_icon, "fragile")),
+		"description" = "For each stack of Fragile you have, you take 10% more damage from all sources. Last for 10 seconds. Fragile does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Red Fragile
+	status_effects += list(list(
+		"name" = "Red Fragile",
+		"maxStack" = 10,
+		"icon" = "red_fragile",
+		"iconData" = icon2base64(icon(status_icon, "red_fragile")),
+		"description" = "For each stack of Red Fragile you have, you take 10% more damage from RED damage. Last for 10 seconds. Red Fragile does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// White Fragile
+	status_effects += list(list(
+		"name" = "White Fragile",
+		"maxStack" = 10,
+		"icon" = "white_fragile",
+		"iconData" = icon2base64(icon(status_icon, "white_fragile")),
+		"description" = "For each stack of White Fragile you have, you take 10% more damage from WHITE damage. Last for 10 seconds. White Fragile does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Black Fragile
+	status_effects += list(list(
+		"name" = "Black Fragile",
+		"maxStack" = 10,
+		"icon" = "black_fragile",
+		"iconData" = icon2base64(icon(status_icon, "black_fragile")),
+		"description" = "For each stack of Black Fragile you have, you take 10% more damage from BLACK damage. Last for 10 seconds. Black Fragile does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Pale Fragile
+	status_effects += list(list(
+		"name" = "Pale Fragile",
+		"maxStack" = 10,
+		"icon" = "pale_fragile",
+		"iconData" = icon2base64(icon(status_icon, "pale_fragile")),
+		"description" = "For each stack of Pale Fragile you have, you take 10% more damage from PALE damage. Last for 10 seconds. Pale Fragile does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Damage Up
+	status_effects += list(list(
+		"name" = "Damage Up",
+		"maxStack" = 10,
+		"icon" = "strength",
+		"iconData" = icon2base64(icon(status_icon, "strength")),
+		"description" = "For each stack of Damage Up, you deal 10% more damage with your melee attacks. Lasts for 10 seconds. Damage Up does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Red Damage Up
+	status_effects += list(list(
+		"name" = "Red Damage Up",
+		"maxStack" = 10,
+		"icon" = "red_strength",
+		"iconData" = icon2base64(icon(status_icon, "red_strength")),
+		"description" = "For each stack of Red Damage Up, you deal 10% more damage with your melee attacks if they share the same RED damage type as the status effect. Lasts for 10 seconds. Red Damage Up does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// White Damage Up
+	status_effects += list(list(
+		"name" = "White Damage Up",
+		"maxStack" = 10,
+		"icon" = "white_strength",
+		"iconData" = icon2base64(icon(status_icon, "white_strength")),
+		"description" = "For each stack of White Damage Up, you deal 10% more damage with your melee attacks if they share the same WHITE damage type as the status effect. Lasts for 10 seconds. White Damage Up does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Black Damage Up
+	status_effects += list(list(
+		"name" = "Black Damage Up",
+		"maxStack" = 10,
+		"icon" = "black_strength",
+		"iconData" = icon2base64(icon(status_icon, "black_strength")),
+		"description" = "For each stack of Black Damage Up, you deal 10% more damage with your melee attacks if they share the same BLACK damage type as the status effect. Lasts for 10 seconds. Black Damage Up does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Pale Damage Up
+	status_effects += list(list(
+		"name" = "Pale Damage Up",
+		"maxStack" = 10,
+		"icon" = "pale_strength",
+		"iconData" = icon2base64(icon(status_icon, "pale_strength")),
+		"description" = "For each stack of Pale Damage Up, you deal 10% more damage with your melee attacks if they share the same PALE damage type as the status effect. Lasts for 10 seconds. Pale Damage Up does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Damage Down
+	status_effects += list(list(
+		"name" = "Damage Down",
+		"maxStack" = 10,
+		"icon" = "feeble",
+		"iconData" = icon2base64(icon(status_icon, "feeble")),
+		"description" = "For each stack of Damage Down, you deal 10% less damage with your melee attacks. Lasts for 10 seconds. Damage Down does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Red Damage Down
+	status_effects += list(list(
+		"name" = "Red Damage Down",
+		"maxStack" = 10,
+		"icon" = "red_feeble",
+		"iconData" = icon2base64(icon(status_icon, "red_feeble")),
+		"description" = "For each stack of Red Damage Down, you deal 10% less damage with your melee attacks if they share the same RED damage type as the status effect. Lasts for 10 seconds. Red Damage Down does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// White Damage Down
+	status_effects += list(list(
+		"name" = "White Damage Down",
+		"maxStack" = 10,
+		"icon" = "white_feeble",
+		"iconData" = icon2base64(icon(status_icon, "white_feeble")),
+		"description" = "For each stack of White Damage Down, you deal 10% less damage with your melee attacks if they share the same WHITE damage type as the status effect. Lasts for 10 seconds. White Damage Down does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Black Damage Down
+	status_effects += list(list(
+		"name" = "Black Damage Down",
+		"maxStack" = 10,
+		"icon" = "black_feeble",
+		"iconData" = icon2base64(icon(status_icon, "black_feeble")),
+		"description" = "For each stack of Black Damage Down, you deal 10% less damage with your melee attacks if they share the same BLACK damage type as the status effect. Lasts for 10 seconds. Black Damage Down does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	// Pale Damage Down
+	status_effects += list(list(
+		"name" = "Pale Damage Down",
+		"maxStack" = 10,
+		"icon" = "pale_feeble",
+		"iconData" = icon2base64(icon(status_icon, "pale_feeble")),
+		"description" = "For each stack of Pale Damage Down, you deal 10% less damage with your melee attacks if they share the same PALE damage type as the status effect. Lasts for 10 seconds. Pale Damage Down does not stack from multiple sources of itself, only the highest value stays."
+	))
+
+	return status_effects
 
 /obj/machinery/augment_catalogue/ui_data(mob/user)
 	var/list/data = list()

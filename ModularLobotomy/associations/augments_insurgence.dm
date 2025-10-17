@@ -86,6 +86,14 @@
 			"desc" = "Under 15% HP, you become immune to OVERHEAT damage.",
 			"component" = /datum/component/augment/fireproof
 		),
+		list(
+			"id" = "alert",
+			"name" = "Alert",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "The first time you take damage, reduce it by 80% and teleport 3-5 tiles away. Has a cooldown of 60 seconds.",
+			"component" = /datum/component/augment/resisting_augment/alert
+		),
 		// --- Attacking Effects ---
 		list(
 			"id" = "regeneration",
@@ -197,6 +205,15 @@
 			"ep_cost" = 2,
 			"desc" = "On hit with a WHITE weapon, inflict 3 OVERHEAT (Cooldown of 1 second.)",
 			"component" = /datum/component/augment/scorching_mind
+		),
+		list(
+			"id" = "stigmatize",
+			"name" = "Stigmatize",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "On hit, inflict 1 OVERHEAT for every 25% of your missing SP. Double the OVERHEAT if the attack is a WHITE weapon. (Has a cooldown of 4 / 2 / 1 seconds, scaling with repeat count.)",
+			"component" = /datum/component/augment/stigmatize
 		),
 		list(
 			"id" = "brandish_the_flame",
@@ -343,7 +360,7 @@
 			"ep_cost" = 2,
 			"repeatable" = 3,
 			"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
-			"component" = /datum/component/augment/blood_thorns
+			"component" = /datum/component/augment/resisting_augment/blood_thorns
 		),
 		list(
 			"id" = "blood_jaunt",
@@ -491,6 +508,22 @@
 			"ep_cost" = 4,
 			"desc" = "Any time a mob/human within 3 sqrs of you takes BLEED damage, heal HP equal to 50% of the BLEED damage they have taken. (Max of 100).",
 			"component" = /datum/component/augment/blood_cycler
+		),
+		list(
+			"id" = "crimson_cascade",
+			"name" = "Crimson Cascade",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "When someone within 3 sqrs takes BLEED damage, gain RED Damage Up equal to their BLEED stacks / 5.",
+			"component" = /datum/component/augment/crimson_cascade
+		),
+		list(
+			"id" = "faint_drain",
+			"name" = "Faint Drain",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"desc" = "When a mob (not human) within 3 sqrs takes BLEED damage, inflict Feeble equal to their BLEED stacks / 10.",
+			"component" = /datum/component/augment/faint_drain
 		),
 
 		list(

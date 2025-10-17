@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Flex,
+  Icon,
   Input,
   LabeledList,
   NoticeBox,
@@ -34,6 +35,7 @@ export const AugmentCatalogue = (props, context) => {
             {page === 'services' && <ServicesPage setPage={setPage} context={context} />}
             {page === 'upload' && <UploadPage setPage={setPage} context={context} />}
             {page === 'library' && <LibraryPage setPage={setPage} context={context} />}
+            {page === 'index' && <IndexPage setPage={setPage} context={context} />}
           </>
         )}
       </Window.Content>
@@ -265,7 +267,12 @@ const TemplatePage = (props, context) => {
             <Button
               icon="wrench"
               content="Services"
-              onClick={() => setPage('services')} />
+              onClick={() => setPage('services')}
+              mr={1} />
+            <Button
+              icon="info-circle"
+              content="Index"
+              onClick={() => setPage('index')} />
           </Flex.Item>
           <Flex.Item>
             <Button
@@ -869,7 +876,136 @@ const UploadPage = (props, context) => {
   );
 };
 
-// Page 5: Library Browser
+// Page 5: Index (Status Effects Reference)
+const IndexPage = (props, context) => {
+  const { setPage } = props;
+  const { data } = useBackend(context);
+
+  const {
+    statusEffects = [],
+  } = data;
+
+  const [searchQuery, setSearchQuery] = useSharedState(context, 'indexSearch', '');
+
+  // Filter status effects based on search
+  const filteredEffects = statusEffects.filter(effect => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    const name = (effect?.name || '').toLowerCase();
+    const desc = (effect?.description || '').toLowerCase();
+    return name.includes(query) || desc.includes(query);
+  });
+
+  return (
+    <Box>
+      {/* Info Banner */}
+      <NoticeBox info>
+        Index of all status effects that can be inflicted by augments. Use this to understand how each effect works.
+      </NoticeBox>
+
+      {/* Search Bar */}
+      <Section>
+        <Input
+          fluid
+          icon="search"
+          placeholder="Search status effects..."
+          value={searchQuery}
+          onInput={(e, value) => setSearchQuery(value)}
+        />
+        {searchQuery && (
+          <Box mt={0.5} color="label" fontSize="small">
+            Showing {filteredEffects.length} of {statusEffects.length} effects
+          </Box>
+        )}
+      </Section>
+
+      {/* Status Effects List */}
+      <Section title={`Status Effects (${filteredEffects.length})`}>
+        {!statusEffects || statusEffects.length === 0 ? (
+          <Box color="label" textAlign="center" mt={2}>
+            No status effects available.
+          </Box>
+        ) : filteredEffects.length === 0 ? (
+          <Box color="label" textAlign="center" mt={2}>
+            No status effects match your search.
+          </Box>
+        ) : (
+          filteredEffects.map((effect, index) => (
+            <Box
+              key={index}
+              mb={2}
+              p={1}
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderRadius: '3px',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+              }}>
+              <Flex direction="row" align="center">
+                <Flex.Item mr={2}>
+                  {effect.iconData ? (
+                    <Box
+                      as="img"
+                      src={`data:image/png;base64,${effect.iconData}`}
+                      width="32px"
+                      height="32px"
+                      style={{
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '3px',
+                        imageRendering: 'pixelated',
+                      }}
+                      title={effect.name}
+                    />
+                  ) : (
+                    <Box
+                      width="32px"
+                      height="32px"
+                      style={{
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        borderRadius: '3px',
+                        backgroundColor: '#333',
+                      }}
+                      textAlign="center"
+                      lineHeight="32px"
+                      fontSize="20px"
+                      title={effect.name}>
+                      ?
+                    </Box>
+                  )}
+                </Flex.Item>
+                <Flex.Item grow={1}>
+                  <Box fontSize="large" bold mb={0.5}>
+                    {effect.name}
+                  </Box>
+                  <Box color="label" fontSize="small" mb={0.5}>
+                    Max Stack: <Box inline color="good">{effect.maxStack}</Box>
+                  </Box>
+                  <Box color="white" fontSize="medium" lineHeight={1.5}>
+                    {effect.description}
+                  </Box>
+                </Flex.Item>
+              </Flex>
+            </Box>
+          ))
+        )}
+      </Section>
+
+      {/* Navigation Button */}
+      <Box
+        borderTop={1}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        mt={1}
+        pt={1}
+        textAlign="left">
+        <Button
+          icon="arrow-left"
+          content="Back to Template"
+          onClick={() => setPage('template')} />
+      </Box>
+    </Box>
+  );
+};
+
+// Page 6: Library Browser
 const LibraryPage = (props, context) => {
   const { setPage } = props;
   const { act, data } = useBackend(context);

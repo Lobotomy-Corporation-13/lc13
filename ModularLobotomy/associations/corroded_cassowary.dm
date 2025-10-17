@@ -13,8 +13,8 @@
 	emote_hear = list("screeches.", "hisses.", "clicks aggressively.")
 	emote_taunt = list("flares its wings", "stamps its feet", "glares menacingly")
 	speak_emote = list("screeches", "shrieks", "caws")
-	maxHealth = 2800
-	health = 2800
+	maxHealth = 1800
+	health = 1800
 	loot = list(/obj/effect/gibspawner/robot)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 3)
 	response_help_continuous = "pats"
@@ -25,8 +25,8 @@
 	response_harm_simple = "strike"
 	move_to_delay = 1.5
 	melee_damage_type = BLACK_DAMAGE
-	melee_damage_lower = 46
-	melee_damage_upper = 50
+	melee_damage_lower = 34
+	melee_damage_upper = 40
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	attack_verb_continuous = "slashes"
