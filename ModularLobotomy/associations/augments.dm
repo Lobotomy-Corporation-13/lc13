@@ -409,7 +409,7 @@
 			"ep_cost" = 2,
 			"repeatable" = 3,
 			"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
-			"component" = /datum/component/augment/blood_thorns
+			"component" = /datum/component/augment/resisting_augment/blood_thorns
 		),
 		list(
 			"id" = "blood_jaunt",
