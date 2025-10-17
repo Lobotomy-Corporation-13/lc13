@@ -231,12 +231,30 @@
 			"component" = /datum/component/augment/gashing_wounds
 		),
 		list(
+			"id" = "backstabber",
+			"name" = "Backstabber",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "When you attack a mob who has the same direction as you, you will deal RED damage equal to their BLEED stack * 2 * X. (Cooldown of 2 seconds)",
+			"component" = /datum/component/augment/backstabber
+		),
+		list(
 			"id" = "scorching_mind",
 			"name" = "Scorching Mind",
 			"ahn_cost" = 25,
 			"ep_cost" = 2,
 			"desc" = "On hit with a WHITE weapon, inflict 3 OVERHEAT (Cooldown of 1 second.)",
 			"component" = /datum/component/augment/scorching_mind
+		),
+		list(
+			"id" = "brandish_the_flame",
+			"name" = "Brandish the Flame",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "On hit against a target with 10+ OVERHEAT, gain Strength equal to (target's OVERHEAT / 10). (Has a cooldown of 15 / X seconds.)",
+			"component" = /datum/component/augment/brandish_the_flame
 		),
 		list(
 			"id" = "slothful_decay",
@@ -247,12 +265,28 @@
 			"component" = /datum/component/augment/slothful_decay
 		),
 		list(
+			"id" = "inner_ardor",
+			"name" = "Inner Ardor",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "When making a melee attack, deal an extra 0.5% damage for every point of fire damage you have.",
+			"component" = /datum/component/augment/inner_ardor
+		),
+		list(
 			"id" = "strong_grip",
 			"name" = "Strong Grip",
 			"ahn_cost" = 100,
 			"ep_cost" = 4,
 			"desc" = "If you attack while you have HARM intent, your weapon will become unable to be dropped. This effect is removed when you attack in any other intent.",
 			"component" = /datum/component/augment/strong_grip
+		),
+		list(
+			"id" = "combustion",
+			"name" = "Combustion",
+			"ahn_cost" = 100,
+			"ep_cost" = 6,
+			"desc" = "When attacking while having 25+ OVERHEAT, consume 25 OVERHEAT to create an explosion that deals 250 WHITE damage (scaled by Justice) to all simple mobs within 5 sqrs. (Has a cooldown of 10 seconds.)",
+			"component" = /datum/component/augment/combustion
 		),
 		// --- Execution Effects ---
 		list(
@@ -350,6 +384,15 @@
 			"repeatable" = 4,
 			"desc" = "When taking RED/BLACK damage from a melee attack, inflict 2*X TREMOR to the target and X TREMOR to self. (This has a cooldown of 1 second)",
 			"component" = /datum/component/augment/reflective_tremor
+		),
+		list(
+			"id" = "blood_thorns",
+			"name" = "Blood Thorns",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
+			"component" = /datum/component/augment/blood_thorns
 		),
 		list(
 			"id" = "blood_jaunt",
@@ -655,12 +698,19 @@
 			effect_data["current_ahn_cost"] = 0
 		effect_data["sale_percent"] = 0
 		effect_data["markup_percent"] = 0
-	// --- End Initialization ---
 
 	// --- Schedule First Market Change Immediately ---
 	ApplyMarketChange() // Run it once at startup
 	// Schedule the next one
 	ScheduleNextMarketChange()
+
+	// --- Spawn Augment Catalogue (office maptype only) ---
+	if(SSmaptype.maptype == "office")
+		// Calculate spawn position: 2 tiles left, 1 tile up
+		var/turf/spawn_turf = locate(x - 2, y + 1, z)
+		if(spawn_turf)
+			new /obj/machinery/augment_catalogue(spawn_turf)
+			log_game("Spawned Augment Catalogue at ([spawn_turf.x],[spawn_turf.y],[spawn_turf.z]) for Fabricator at ([x],[y],[z])")
 
 /// Schedules the next market change event.
 /obj/machinery/augment_fabricator/proc/ScheduleNextMarketChange()

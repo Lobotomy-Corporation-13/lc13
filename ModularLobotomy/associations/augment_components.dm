@@ -272,6 +272,30 @@
 	target.apply_lc_bleed(2)
 	to_chat(human_parent, span_nicegreen("You inflict 2 bleed to [target]! Due to Gashing Wounds"))
 
+//Backstabber
+/datum/component/augment/backstabber
+	var/inflict_cooldown
+	var/inflict_cooldown_time = 20
+
+/datum/component/augment/backstabber/attack_effect(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	. = ..()
+	if(inflict_cooldown > world.time)
+		return FALSE
+	if(item.force <= 0 || target.stat == DEAD)
+		return FALSE
+	// Check if target is facing the same direction as the attacker
+	if(target.dir != human_parent.dir)
+		return FALSE
+	// Get the target's bleed stacks
+	var/datum/status_effect/stacking/lc_bleed/TB = target.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+	if(!TB || TB.stacks <= 0)
+		return FALSE
+	inflict_cooldown = world.time + inflict_cooldown_time
+	// Calculate backstab damage: bleed_stacks * 2 * repeat
+	var/backstab_damage = TB.stacks * 2 * repeat
+	target.deal_damage(backstab_damage, RED_DAMAGE)
+	to_chat(human_parent, span_nicegreen("You backstab [target] for [backstab_damage] RED damage! Due to Backstabber"))
+
 //Scorching Mind
 /datum/component/augment/scorching_mind
 	var/inflict_cooldown
@@ -288,6 +312,29 @@
 	inflict_cooldown = world.time + inflict_cooldown_time
 	target.apply_lc_overheat(3)
 	to_chat(human_parent, span_nicegreen("You inflict 3 burn to [target]! Due to Scorching Mind"))
+
+//Brandish the Flame
+/datum/component/augment/brandish_the_flame
+	var/inflict_cooldown
+	var/inflict_cooldown_time = 150
+
+/datum/component/augment/brandish_the_flame/Initialize(_repeat = 1)
+	. = ..()
+	inflict_cooldown_time = 150 / _repeat
+
+/datum/component/augment/brandish_the_flame/attack_effect(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	. = ..()
+	if(inflict_cooldown > world.time)
+		return FALSE
+	if(item.force <= 0 || target.stat == DEAD)
+		return FALSE
+	var/datum/status_effect/stacking/lc_overheat/TB = target.has_status_effect(/datum/status_effect/stacking/lc_overheat)
+	if(!TB || TB.stacks < 10)
+		return FALSE
+	inflict_cooldown = world.time + inflict_cooldown_time
+	var/strength_stacks = round(TB.stacks / 10)
+	human_parent.apply_lc_strength(strength_stacks)
+	to_chat(human_parent, span_nicegreen("You gain [strength_stacks] Strength from [target]'s flames! Due to Brandish the Flame"))
 
 //Slothful Decay
 /datum/component/augment/slothful_decay
@@ -308,6 +355,53 @@
 	if(item.attack_speed >= 1.5)
 		target.apply_lc_tremor(2, 55)
 		to_chat(human_parent, span_nicegreen("You inflict 2 tremor to [target]! Due to Slothful Decay"))
+
+//Inner Ardor
+/datum/component/augment/inner_ardor
+	var/total_damage_buff = 0
+
+/datum/component/augment/inner_ardor/attack_effect(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	. = ..()
+	if(item.force <= 0 || target.stat == DEAD)
+		return FALSE
+	// Calculate damage buff based on fireloss: 0.5% per point of fire damage
+	total_damage_buff = human_parent.fireloss * 0.5
+	human_parent.extra_damage += total_damage_buff
+	if(total_damage_buff > 0)
+		to_chat(human_parent, span_nicegreen("Your flames fuel your strikes, dealing [total_damage_buff]% more damage! Due to Inner Ardor"))
+
+/datum/component/augment/inner_ardor/afterattack_effect(datum/source, atom/target, mob/user, proximity_flag, obj/item/item)
+	. = ..()
+	human_parent.extra_damage -= total_damage_buff
+	total_damage_buff = 0
+//Combustion
+/datum/component/augment/combustion
+	var/inflict_cooldown
+	var/inflict_cooldown_time = 100
+
+/datum/component/augment/combustion/attack_effect(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	. = ..()
+	if(inflict_cooldown > world.time)
+		return FALSE
+	if(item.force <= 0 || target.stat == DEAD)
+		return FALSE
+	var/datum/status_effect/stacking/lc_overheat/UB = human_parent.has_status_effect(/datum/status_effect/stacking/lc_overheat)
+	if(!UB || UB.stacks < 25)
+		return FALSE
+	inflict_cooldown = world.time + inflict_cooldown_time
+	// Consume 25 OVERHEAT
+	UB.stacks -= 25
+	// Calculate justice-scaled damage
+	var/justice_mod = 1 + (get_modified_attribute_level(human_parent, JUSTICE_ATTRIBUTE)/100)
+	var/total_damage = 250 * justice_mod
+	// Create explosion effect
+	new /obj/effect/temp_visual/explosion(get_turf(human_parent))
+	playsound(get_turf(human_parent), 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
+	// Deal damage to all simple mobs within 5 sqrs (view 2 = 5x5)
+	for(var/mob/living/simple_animal/hostile/H in view(2, human_parent))
+		H.deal_damage(total_damage, WHITE_DAMAGE)
+	to_chat(human_parent, span_userdanger("You combust, dealing [total_damage] WHITE damage to all nearby foes! Due to Combustion"))
+
 //Strong Arms
 /datum/component/augment/dual_wield
 	var/inflict_cooldown
@@ -737,6 +831,96 @@
 		animal.apply_lc_tremor(repeat * 2, 55)
 		human_parent.apply_lc_tremor(repeat, 55)
 		to_chat(human_parent, span_nicegreen("You inflicted [repeat * 2] tremor to [animal], and gained [repeat] tremor! Due to Reflective Tremor"))
+
+//Blood Thorns
+/datum/component/augment/blood_thorns
+	var/inflict_cooldown
+	var/inflict_cooldown_time = 30
+	var/damage_resist = 0
+	var/can_update_armor = TRUE
+	var/triggered_this_attack = FALSE
+
+/datum/component/augment/blood_thorns/take_damage_effect(datum/source, damage, damagetype, def_zone)
+	. = ..()
+	if(inflict_cooldown > world.time)
+		return FALSE
+
+	var/datum/status_effect/stacking/lc_bleed/UB = human_parent.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+	if(!UB || UB.stacks < 5)
+		return FALSE
+
+	if(!can_update_armor)
+		return FALSE
+	can_update_armor = FALSE
+
+	inflict_cooldown = world.time + inflict_cooldown_time
+	triggered_this_attack = TRUE
+
+	// Calculate damage reduction: ceil(bleed/2) * repeat, max 80%
+	var/bleed_modifier = round((UB.stacks / 2.0) + 0.5) // Round up
+	damage_resist = (bleed_modifier * repeat) / 100.0
+	if(damage_resist > 0.8)
+		damage_resist = 0.8
+
+	// Apply damage reduction via physiology
+	var/physiology_multiplier = (1 - damage_resist)
+	switch(damagetype)
+		if(RED_DAMAGE)
+			human_parent.physiology.red_mod *= physiology_multiplier
+		if(WHITE_DAMAGE)
+			human_parent.physiology.white_mod *= physiology_multiplier
+		if(BLACK_DAMAGE)
+			human_parent.physiology.black_mod *= physiology_multiplier
+		if(PALE_DAMAGE)
+			human_parent.physiology.pale_mod *= physiology_multiplier
+
+	to_chat(human_parent, span_nicegreen("Your blood forms thorns, reducing damage by [damage_resist * 100]%! Due to Blood Thorns"))
+
+/datum/component/augment/blood_thorns/after_take_damage_effect(datum/source, damage, damagetype, def_zone)
+	. = ..()
+	if(damage_resist <= 0)
+		return
+
+	// Restore physiology
+	var/physiology_divisor = (1 - damage_resist)
+	if(physiology_divisor > 0)
+		switch(damagetype)
+			if(RED_DAMAGE)
+				human_parent.physiology.red_mod /= physiology_divisor
+			if(WHITE_DAMAGE)
+				human_parent.physiology.white_mod /= physiology_divisor
+			if(BLACK_DAMAGE)
+				human_parent.physiology.black_mod /= physiology_divisor
+			if(PALE_DAMAGE)
+				human_parent.physiology.pale_mod /= physiology_divisor
+
+	damage_resist = 0
+	can_update_armor = TRUE
+
+	// Reset trigger flag after a brief moment
+	addtimer(CALLBACK(src, PROC_REF(reset_trigger)), 1)
+
+/datum/component/augment/blood_thorns/proc/reset_trigger()
+	triggered_this_attack = FALSE
+
+/datum/component/augment/blood_thorns/attackedby_mob(datum/source, mob/living/simple_animal/animal)
+	. = ..()
+	// Only transfer BLEED if we just triggered the damage reduction
+	if(!triggered_this_attack)
+		return FALSE
+
+	var/datum/status_effect/stacking/lc_bleed/UB = human_parent.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+	if(!UB || UB.stacks < 1)
+		return FALSE
+
+	// Transfer 50% of BLEED to attacker
+	var/bleed_transfer = round(UB.stacks * 0.5)
+	if(bleed_transfer <= 0)
+		return FALSE
+
+	UB.stacks -= bleed_transfer
+	animal.apply_lc_bleed(bleed_transfer)
+	to_chat(human_parent, span_nicegreen("Your blood thorns pierce [animal], inflicting [bleed_transfer] BLEED! Due to Blood Thorns"))
 
 //Blood Jaunt
 /datum/component/augment/blood_jaunt
