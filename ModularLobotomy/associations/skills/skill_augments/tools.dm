@@ -178,7 +178,7 @@
 /obj/item/body_modification_battery/examine(mob/user)
 	. = ..()
 	. += span_notice("This is a Tier [tier] battery that restores [charge_amount] charge.")
-	. += span_notice("Use in hand while having a skill modification to recharge it.")
+	. += span_notice("Use in hand while having a skill modification (implanted or injectable) to recharge it.")
 
 /obj/item/body_modification_battery/attack_self(mob/user)
 	. = ..()
@@ -187,30 +187,52 @@
 		return
 
 	var/mob/living/carbon/human/H = user
+
+	// Check for implanted skill modification first
 	var/obj/item/organ/cyberimp/chest/body_modification/SA = H.getorganslot(ORGAN_SLOT_HEART_AID)
+	if(SA && istype(SA, /obj/item/organ/cyberimp/chest/body_modification))
+		if(SA.current_charge >= SA.max_charge)
+			to_chat(user, span_notice("Your implanted skill modification is already fully charged! ([SA.current_charge]/[SA.max_charge])"))
+			return
 
-	if(!SA || !istype(SA, /obj/item/organ/cyberimp/chest/body_modification))
-		to_chat(user, span_warning("You don't have a skill modification installed!"))
+		to_chat(user, span_notice("You begin connecting the battery to your implanted skill modification..."))
+
+		if(!do_after(user, 3 SECONDS, target = user))
+			to_chat(user, span_warning("You stop the charging process."))
+			return
+
+		var/charge_to_add = min(charge_amount, SA.max_charge - SA.current_charge)
+		SA.current_charge += charge_to_add
+
+		to_chat(user, span_notice("You successfully charge your implanted skill modification! (+[charge_to_add] charge, now [SA.current_charge]/[SA.max_charge])"))
+		playsound(get_turf(user), 'sound/machines/ping.ogg', 50, FALSE)
+
+		qdel(src)
 		return
 
-	if(SA.current_charge >= SA.max_charge)
-		to_chat(user, span_notice("Your skill modification is already fully charged! ([SA.current_charge]/[SA.max_charge])"))
-		return
+	// Check for injectable skill modification
+	for(var/obj/item/body_modification_injectable/inj in H.contents)
+		if(inj.used)
+			if(inj.current_charge >= inj.max_charge)
+				to_chat(user, span_notice("Your injectable skill modification is already fully charged! ([inj.current_charge]/[inj.max_charge])"))
+				return
 
-	to_chat(user, span_notice("You begin connecting the battery to your skill modification..."))
+			to_chat(user, span_notice("You begin connecting the battery to your injectable skill modification..."))
 
-	playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 50, TRUE)
-	if(!do_after(user, 3 SECONDS, target = user))
-		to_chat(user, span_warning("You stop the charging process."))
-		return
+			if(!do_after(user, 3 SECONDS, target = user))
+				to_chat(user, span_warning("You stop the charging process."))
+				return
 
-	var/charge_to_add = min(charge_amount, SA.max_charge - SA.current_charge)
-	SA.current_charge += charge_to_add
+			var/charge_to_add = min(charge_amount, inj.max_charge - inj.current_charge)
+			inj.current_charge += charge_to_add
 
-	to_chat(user, span_notice("You successfully charge your skill modification! (+[charge_to_add] charge, now [SA.current_charge]/[SA.max_charge])"))
-	playsound(src.loc, 'sound/abnormalities/clock/turn_on.ogg', 50, TRUE)
+			to_chat(user, span_notice("You successfully charge your injectable skill modification! (+[charge_to_add] charge, now [inj.current_charge]/[inj.max_charge])"))
+			playsound(get_turf(user), 'sound/machines/ping.ogg', 50, FALSE)
 
-	qdel(src)
+			qdel(src)
+			return
+
+	to_chat(user, span_warning("You don't have any skill modification installed!"))
 
 /obj/item/body_modification_battery/tier2
 	name = "body modification battery MK-II"
