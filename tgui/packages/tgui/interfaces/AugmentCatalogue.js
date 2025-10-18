@@ -704,13 +704,15 @@ const ServicesPage = (props, context) => {
     <Box>
       {/* Info Banner */}
       <NoticeBox info>
-        Use these services to scan augment compatibility or remove your current augment.
+        Use these services to scan augment compatibility or remove
+        your current augment.
       </NoticeBox>
 
       {/* Scan Service */}
       <Section title="Augment Scanner">
         <Box mb={1}>
-          Scan your body to check augment compatibility and view current augment details.
+          Scan your body to check augment compatibility and view
+          current augment details.
         </Box>
         <Box mb={1} color="label">
           Cost: {scanCost} {currencySymbol}
@@ -727,7 +729,8 @@ const ServicesPage = (props, context) => {
       {/* Remove Service */}
       <Section title="Augment Removal">
         <Box mb={1}>
-          Remove your current augment. The augment will be extracted and dropped nearby.
+          Remove your current augment. The augment will be extracted
+          and dropped nearby.
         </Box>
         <Box mb={1} color="label">
           Cost: {removeCost} {currencySymbol}
@@ -869,7 +872,8 @@ const UploadPage = (props, context) => {
           icon="upload"
           content="Upload to Library"
           color="good"
-          disabled={busy || !selectedFormId || !augName || selectedEffects.length === 0}
+          disabled={busy || !selectedFormId || !augName
+            || selectedEffects.length === 0}
           onClick={handleUpload} />
       </Box>
     </Box>
@@ -900,7 +904,8 @@ const IndexPage = (props, context) => {
     <Box>
       {/* Info Banner */}
       <NoticeBox info>
-        Index of all status effects that can be inflicted by augments. Use this to understand how each effect works.
+        Index of all status effects that can be inflicted by augments.
+        Use this to understand how each effect works.
       </NoticeBox>
 
       {/* Search Bar */}
@@ -1034,26 +1039,29 @@ const LibraryPage = (props, context) => {
       || desc.includes(query) || explanation.includes(query);
   });
 
-  const selectedEntry = filteredLibrary.find(e => e.id === selectedLibraryId) || null;
+  const selectedEntry =
+    filteredLibrary.find(e => e.id === selectedLibraryId) || null;
 
-  const handleLoadDesign = (entry) => {
+  const handleLoadDesign = entry => {
     act('load_from_library', { libraryId: entry.id });
     setPage('template'); // Go to template page to view loaded design
   };
 
-  const handleCreateTicket = (entry) => {
+  const handleCreateTicket = entry => {
     act('create_ticket_from_library', { libraryId: entry.id });
   };
 
-  const handleDeleteEntry = (entry) => {
-    if (confirm(`Delete "${entry.augment_name}" by ${entry.author}? This cannot be undone.`)) {
+  const handleDeleteEntry = entry => {
+    const confirmMsg = `Delete "${entry.augment_name}" by `
+      + `${entry.author}? This cannot be undone.`;
+    if (confirm(confirmMsg)) {
       act('delete_library_entry', { libraryId: entry.id });
       setSelectedLibraryId(null); // Clear selection after delete
     }
   };
 
   // Check if current user can delete this entry
-  const canDelete = (entry) => {
+  const canDelete = entry => {
     if (!entry) return false;
     const isOwner = userCkey && entry.author_ckey === userCkey;
     return isOwner || isAdmin;
@@ -1063,7 +1071,8 @@ const LibraryPage = (props, context) => {
     <Box>
       {/* Info Banner */}
       <NoticeBox info>
-        Browse augment designs uploaded by other players. Load designs to customize them or create tickets directly.
+        Browse augment designs uploaded by other players. Load designs
+        to customize them or create tickets directly.
       </NoticeBox>
 
       {/* Search Bar */}
@@ -1114,7 +1123,8 @@ const LibraryPage = (props, context) => {
                       {entry.augment_name}
                     </Box>
                     <Box color="label" fontSize="small">
-                      by {entry.author} • Rank {entry.rank} {entry.form_name} • {entry.total_cost} {currencySymbol}
+                      by {entry.author} • Rank {entry.rank}
+                      {' '}{entry.form_name} • {entry.total_cost} {currencySymbol}
                     </Box>
                     {entry.augment_desc && (
                       <Box mt={0.5} fontSize="small" italic>
@@ -1171,14 +1181,17 @@ const LibraryPage = (props, context) => {
 
                 {selectedEntry.explanation && (
                   <Box mt={1}>
-                    <Box bold mb={0.5}>Author's Notes:</Box>
+                    <Box bold mb={0.5}>Author&apos;s Notes:</Box>
                     <Box color="label">{selectedEntry.explanation}</Box>
                   </Box>
                 )}
 
                 <Box mt={1}>
-                  <Box bold mb={0.5}>Effects ({selectedEntry.effect_details?.length || 0}):</Box>
-                  {selectedEntry.effect_details && selectedEntry.effect_details.length > 0 ? (
+                  <Box bold mb={0.5}>
+                    Effects ({selectedEntry.effect_details?.length || 0}):
+                  </Box>
+                  {selectedEntry.effect_details
+                    && selectedEntry.effect_details.length > 0 ? (
                     selectedEntry.effect_details.map((effect, index) => (
                       <Box key={index} mb={0.5}>
                         <Box color="good">• {effect.name}</Box>
