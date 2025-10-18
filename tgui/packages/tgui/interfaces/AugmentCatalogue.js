@@ -1039,8 +1039,8 @@ const LibraryPage = (props, context) => {
       || desc.includes(query) || explanation.includes(query);
   });
 
-  const selectedEntry =
-    filteredLibrary.find(e => e.id === selectedLibraryId) || null;
+  const selectedEntry
+    = filteredLibrary.find(e => e.id === selectedLibraryId) || null;
 
   const handleLoadDesign = entry => {
     act('load_from_library', { libraryId: entry.id });
@@ -1191,18 +1191,18 @@ const LibraryPage = (props, context) => {
                     Effects ({selectedEntry.effect_details?.length || 0}):
                   </Box>
                   {selectedEntry.effect_details
-                    && selectedEntry.effect_details.length > 0 ? (
-                    selectedEntry.effect_details.map((effect, index) => (
-                      <Box key={index} mb={0.5}>
-                        <Box color="good">• {effect.name}</Box>
-                        <Box color="label" fontSize="small" ml={2}>
-                          {effect.desc}
+                      && selectedEntry.effect_details.length > 0 ? (
+                      selectedEntry.effect_details.map((effect, index) => (
+                        <Box key={index} mb={0.5}>
+                          <Box color="good">• {effect.name}</Box>
+                          <Box color="label" fontSize="small" ml={2}>
+                            {effect.desc}
+                          </Box>
                         </Box>
-                      </Box>
-                    ))
-                  ) : (
-                    <Box color="label">No effects listed.</Box>
-                  )}
+                      ))
+                    ) : (
+                      <Box color="label">No effects listed.</Box>
+                    )}
                 </Box>
 
                 <Box mt={2}>
