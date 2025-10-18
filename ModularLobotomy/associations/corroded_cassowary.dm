@@ -13,8 +13,8 @@
 	emote_hear = list("screeches.", "hisses.", "clicks aggressively.")
 	emote_taunt = list("flares its wings", "stamps its feet", "glares menacingly")
 	speak_emote = list("screeches", "shrieks", "caws")
-	maxHealth = 1800
-	health = 1800
+	maxHealth = 2400
+	health = 2400
 	loot = list(/obj/effect/gibspawner/robot)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 3)
 	response_help_continuous = "pats"
@@ -113,6 +113,9 @@
 
 	var/datum/action/innate/converted_ability/toggle_dash/toggle = new()
 	toggle.Grant(src)
+
+	var/datum/action/innate/converted_ability/switch_form/form_switch = new()
+	form_switch.Grant(src)
 
 /mob/living/simple_animal/hostile/corroded_cassowary/is_literate()
 	return TRUE
@@ -461,7 +464,7 @@
 
 /datum/action/cooldown/converted_ability/emergency_repair
 	name = "Emergency Repair"
-	desc = "Activate emergency repair protocols to instantly restore a portion of your health."
+	desc = "Channel for 8 seconds to restore a portion of your health. Interrupted if you take damage."
 	button_icon_state = "rust_wave"
 	cooldown_time = 120 SECONDS
 
@@ -472,17 +475,31 @@
 
 	var/mob/living/simple_animal/hostile/corroded_cassowary/C = owner
 
-	C.visible_message(span_notice("[C]'s damaged components rapidly repair themselves!"), \
-		span_notice("Emergency repair protocols activated!"))
+	// Start channeling message
+	C.visible_message(span_notice("[C] begins channeling repair protocols, mechanisms whirring!"), \
+		span_notice("Channeling emergency repair protocols..."))
 
 	playsound(C, 'sound/items/welder2.ogg', 50, TRUE)
+
+	// Visual effect during channeling
+	new /obj/effect/temp_visual/heal(get_turf(C), "#FF0000")
+
+	// 8 second channel - will interrupt if damaged, moved, stunned, etc
+	if(!do_after(C, 8 SECONDS, target = C))
+		to_chat(C, span_warning("Emergency repair interrupted!"))
+		return FALSE
+
+	// Channel successful - apply heal
+	C.visible_message(span_notice("[C]'s damaged components rapidly repair themselves!"), \
+		span_notice("Emergency repair complete!"))
 
 	// Heal amount based on max health
 	var/heal_amount = C.maxHealth * 0.4
 	C.adjustBruteLoss(-heal_amount)
 
-	// Visual effect
+	// Final visual effect
 	new /obj/effect/temp_visual/heal(get_turf(C), "#FF0000")
+	playsound(C, 'sound/items/welder2.ogg', 50, TRUE)
 
 	StartCooldown()
 	return TRUE
