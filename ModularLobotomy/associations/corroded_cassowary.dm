@@ -114,9 +114,6 @@
 	var/datum/action/innate/converted_ability/toggle_dash/toggle = new()
 	toggle.Grant(src)
 
-	var/datum/action/innate/converted_ability/switch_form/form_switch = new()
-	form_switch.Grant(src)
-
 /mob/living/simple_animal/hostile/corroded_cassowary/is_literate()
 	return TRUE
 

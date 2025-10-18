@@ -90,8 +90,8 @@
 	. = ..()
 	current_design = new /datum/augment_catalogue_design()
 
-	// Copy forms and effects from fabricator
-	var/obj/machinery/augment_fabricator/fab = locate() in world
+	// Copy forms and effects from the closest fabricator within range 7
+	var/obj/machinery/augment_fabricator/fab = locate(/obj/machinery/augment_fabricator) in range(7, src)
 	if(fab)
 		available_forms = fab.available_forms
 		available_effects = fab.available_effects
