@@ -56,10 +56,9 @@
 		adjustStaminaLoss(5)
 	else
 		if(behavior != 1)
-			if(prob(85))
-				visible_message(span_warning("[src] blocks [P]!"))
-				flick("gcorp_def", src)
-				return BULLET_ACT_BLOCK
+			visible_message(span_warning("[src] blocks [P]!"))
+			flick("gcorp_def", src)
+			return BULLET_ACT_BLOCK
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight/update_icon_state()
@@ -67,6 +66,8 @@
 		icon_state = "gcorp_spearhead"
 		return
 	icon_state = "gcorp"
+	if(stat == DEAD)
+		icon_state = icon_dead
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_midnight/AttackingTarget(atom/attacked_target)
 	. = ..()
