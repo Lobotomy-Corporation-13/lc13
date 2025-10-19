@@ -145,11 +145,11 @@
 		flash_color(L, flash_color = COLOR_BLUE_LIGHT, flash_time = 70)
 		var/damage_to_deal = pulse_damage + (cultist_amount * cult_damage_scaling) - get_dist(src, L)
 		if(!ishuman(L))
-			L.deal_damage(damage_to_deal, BLACK_DAMAGE)
+			L.deal_damage(damage_to_deal, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			continue
 		var/mob/living/carbon/human/H = L
 		if(damage_override)
-			H.deal_damage(damage_override, BLACK_DAMAGE)
+			H.deal_damage(damage_override, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			continue
 		if(H.has_status_effect(STATUS_EFFECT_STARCULTIST))
 			var/star_in_range = FALSE
@@ -159,9 +159,9 @@
 					break
 			if(star_in_range)
 				continue
-			H.deal_damage(damage_to_deal/2, WHITE_DAMAGE)
+			H.deal_damage(damage_to_deal/2, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		if(!H.sanity_lost)
-			H.deal_damage(damage_to_deal, BLACK_DAMAGE)
+			H.deal_damage(damage_to_deal, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		if(H.sanity_lost)
 			if(!H.has_status_effect(STATUS_EFFECT_STARCULTIST))
 				H.apply_status_effect(STATUS_EFFECT_STARCULTIST, src, datum_reference.qliphoth_meter)
@@ -212,7 +212,7 @@
 	var/cultist_amount = LAZYLEN(cult)
 	for(var/mob/living/carbon/human/cultist in cult)
 		playsound(get_turf(cultist), "shatter", 50, TRUE)
-		cultist.deal_damage((70 + (30 * cultist_amount)), list(WHITE_DAMAGE, BLACK_DAMAGE))
+		cultist.deal_split_damage((70 + (30 * cultist_amount)), list(WHITE_DAMAGE, BLACK_DAMAGE), flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_STATUS))
 		to_chat(cultist, span_userdanger("Sorrow and pain washes over you, a fellow follower of the Star has perished..."))
 
 /mob/living/simple_animal/hostile/abnormality/star_luminary/BreachEffect(mob/living/carbon/human/user, breach_type)
@@ -461,7 +461,7 @@
 	if(cultists_around) // Basic logic is: The more cultists there are around a particular pebble, the less damage it does to each of them.
 		amount_cultists_around = LAZYLEN(cultists_around)
 		for(var/mob/living/carbon/human/cultist in cultists_around)
-			cultist.deal_damage((pebble_damage/amount_cultists_around), list(WHITE_DAMAGE, BLACK_DAMAGE))
+			cultist.deal_split_damage((pebble_damage/amount_cultists_around), list(WHITE_DAMAGE, BLACK_DAMAGE), flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_STATUS))
 	if(amount_cultists_around >= 2 || low_cult_check)
 		worshipped = TRUE
 	else

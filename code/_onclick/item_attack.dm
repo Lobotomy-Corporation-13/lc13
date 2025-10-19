@@ -308,7 +308,7 @@
 		if(I.damtype == PALE_DAMAGE)
 			damage *= (1 + (user.extra_damage_pale / 100))
 
-		apply_damage(damage, I.damtype, white_healable = TRUE)
+		deal_damage(damage, I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_MELEE))
 		if(I.damtype in list(RED_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE))
 			if(prob(33))
 				I.add_mob_blood(src)

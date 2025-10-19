@@ -266,7 +266,7 @@
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(70, WHITE_DAMAGE)
+			L.deal_damage(70, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		playsound(get_turf(src), 'sound/abnormalities/blackswan/sis_roar.ogg', 30, 0, 4)
 	cut_overlay(visual_overlay)
 	can_act = TRUE

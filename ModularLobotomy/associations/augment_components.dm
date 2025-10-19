@@ -244,7 +244,7 @@
 	if(item.damtype != BLACK_DAMAGE)
 		return FALSE
 	if(human_parent.sanityhealth > human_parent.maxSanity * 0.5)
-		human_parent.deal_damage(human_parent.maxSanity * 0.05, WHITE_DAMAGE)
+		human_parent.deal_damage(human_parent.maxSanity * 0.05, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 		human_parent.extra_damage_black += damage_buff
 		to_chat(human_parent, span_nicegreen("You savagely attack [target], losing a bit of your mind... Due to Unstable"))
 		buffed_damage = TRUE
@@ -364,7 +364,7 @@
 		for(var/mob/living/L in urange(5, human_parent))
 			if(faction_check(human_parent.faction, L.faction)) // I LOVE NESTING IF STATEMENTS
 				continue
-			L.deal_damage(kill_damage * repeat, WHITE_DAMAGE)
+			L.deal_damage(kill_damage * repeat, WHITE_DAMAGE, human_parent, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/gibspawner/human/bodypartless(get_turf(target))
 		to_chat(human_parent, span_nicegreen("You strike fear into your foes as you brutalize [target]! Due to Brutalize"))
 	. = ..()
@@ -685,7 +685,7 @@
 			new /obj/effect/temp_visual/explosion(get_turf(target))
 			playsound(get_turf(target), 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 			for(var/mob/living/simple_animal/hostile/H in view(3, target))
-				H.apply_damage((TT.stacks * 6), RED_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE))
+				H.deal_damage((TT.stacks * 6), RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 
 //Tremor Break
 /datum/component/augment/tremor_break
@@ -1008,7 +1008,7 @@
 			var/justice_mod = 1 + (get_modified_attribute_level(human_parent, JUSTICE_ATTRIBUTE)/100)
 			var/total_damage = item.force * justice_mod * 0.5
 			for(var/mob/living/simple_animal/hostile/H in view(1, target))
-				H.deal_damage(total_damage, item.damtype)
+				H.deal_damage(total_damage, item.damtype, human_parent, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 				H.apply_lc_tremor(repeat, 55)
 			to_chat(human_parent, span_nicegreen("You consumed 3 tremor from yourself, deal an 3x3 AoE around your target! Due to Tremor Deterioration"))
 
@@ -1124,7 +1124,7 @@
 	if(human_parent != bleeder)
 		return FALSE
 	for(var/mob/living/simple_animal/S in view(3, human_parent))
-		S.deal_damage(bleed_stack * 2 * repeat, BLACK_DAMAGE)
+		S.deal_damage(bleed_stack * 2 * repeat, BLACK_DAMAGE, human_parent, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 	to_chat(human_parent, span_nicegreen("You dealt [bleed_stack * 4] BLACK damage to all nearby mobs due to you bleeding! Due to Acidic Blood"))
 
 //Reclaimed Flame
@@ -1180,7 +1180,7 @@
 		nearby_human = TRUE
 	if(!nearby_human)
 		to_chat(human_parent, span_warning("You take 10 WHITE damage, as there are no humans near you! Due to Paranoid"))
-		human_parent.deal_damage(10, WHITE_DAMAGE)
+		human_parent.deal_damage(10, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 
 /datum/component/augment/paranoid/after_take_damage_effect(datum/source, damage, damagetype, def_zone)
 	. = ..()
@@ -1223,7 +1223,7 @@
 	if(tp_cooldown > world.time)
 		return FALSE
 	tp_cooldown = world.time + tp_cooldown_time
-	human_parent.deal_damage(10, WHITE_DAMAGE)
+	human_parent.deal_damage(10, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 	to_chat(human_parent, span_warning("As you take damage under 50% HP, you also take 10 WHITE damage! Due to Thanatophobia"))
 
 //Struggling Weakness
@@ -1316,7 +1316,7 @@
 	if(tp_cooldown > world.time)
 		return FALSE
 	tp_cooldown = world.time + tp_cooldown_time
-	human_parent.deal_damage(damage * repeat, WHITE_DAMAGE)
+	human_parent.deal_damage(damage * repeat, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 	to_chat(human_parent, span_warning("You take [damage * repeat * 0.5] WHITE damage, as you take RED damage! Due to Algophobia"))
 
 //Weak Arms
