@@ -274,7 +274,7 @@
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/SweepTheBackstreetsHit(list/turfs)
 	for(var/hit_turf in turfs)
-		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(hit_mob, span_userdanger("The [src.name] viciously slashes you as it dashes past!"))
 			/// We spawn some gibs and heal if the target hit is human.
 			if(istype(hit_mob, /mob/living/carbon/human))

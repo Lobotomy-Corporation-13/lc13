@@ -338,9 +338,9 @@
 				if(isclosedturf(T))
 					continue
 				new /obj/effect/temp_visual/slice(T)
-				hit_mob = HurtInTurf(T, hit_mob, 50, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
+				hit_mob = HurtInTurf(T, hit_mob, 50, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				for(var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary in hit_mob)
-					mercenary.deal_damage(100, RED_DAMAGE) //triple damge to red
+					mercenary.deal_damage(100, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //triple damge to red
 	can_act = TRUE
 
 //Used in Steel noons for if they are allowed to fly through something.
@@ -379,13 +379,13 @@
 				if(mercenary.IsContained())
 					mercenary.BreachEffect()
 				mercenary.priority_target = src
-				mercenary.deal_damage(150, WHITE_DAMAGE) //She takes triple damage from the wolf, becauser her resistances are high
+				mercenary.deal_damage(150, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL)) //She takes triple damage from the wolf, becauser her resistances are high
 				mercenary.RageUpdate(2)
 			if(faction_check_mob(L, FALSE))
 				continue
 			if(L.stat == DEAD)
 				continue
-			L.deal_damage(50, WHITE_DAMAGE)
+			L.deal_damage(50, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		for(var/obj/vehicle/V in turfs_to_check)
 			V.take_damage(50, WHITE_DAMAGE)
 		playsound(get_turf(src), 'sound/abnormalities/big_wolf/Wolf_Howl.ogg', 30, 0, 4)
@@ -396,7 +396,7 @@
 	if(istype(attacked_target, /mob/living/simple_animal/hostile/abnormality/red_hood)) //Red takes triple damage from the wolf, becauser her resistances are high
 		var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary = attacked_target
 		var/bonus_damage_dealt = 2 * (rand(melee_damage_lower,melee_damage_upper))
-		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE)
+		mercenary.deal_damage(bonus_damage_dealt, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
 	return ..()
 
 #undef BIGWOLF_COOLDOWN_HOWL

@@ -280,7 +280,7 @@
 				if(!datum_reference.stupid)
 					datum_reference.current.WorktickFailure(user)
 				else
-					user.deal_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy)
+					user.deal_split_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy, flags = (DAMAGE_FORCED))
 					var/turf/target_turf = get_ranged_target_turf(datum_reference.current, SOUTHWEST, 1)
 					var/obj/effect/temp_visual/roomdamage/damage = new(target_turf)
 					damage.icon_state = "[datum_reference.work_damage_type_dummy]"
@@ -297,7 +297,7 @@
 				if(!datum_reference.stupid)
 					datum_reference.current.WorktickFailure(user)
 				else
-					user.deal_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy)
+					user.deal_split_damage(datum_reference.work_damage_amount_dummy, datum_reference.work_damage_type_dummy, flags = (DAMAGE_FORCED))
 					var/turf/target_turf = get_ranged_target_turf(datum_reference.current, SOUTHWEST, 1)
 					var/obj/effect/temp_visual/roomdamage/damage = new(target_turf)
 					damage.icon_state = "[datum_reference.work_damage_type_dummy]"

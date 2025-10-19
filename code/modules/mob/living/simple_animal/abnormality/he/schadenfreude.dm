@@ -115,7 +115,7 @@
 /mob/living/simple_animal/hostile/abnormality/schadenfreude/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	. = ..()
 	if(total_players == 1)
-		user.apply_damage(5, RED_DAMAGE, null, user.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		user.deal_damage(5, RED_DAMAGE, flags = (DAMAGE_FORCED))
 
 /mob/living/simple_animal/hostile/abnormality/schadenfreude/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()

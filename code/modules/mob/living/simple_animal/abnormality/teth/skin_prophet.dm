@@ -186,7 +186,7 @@
 	for(var/mob/living/L in get_turf(src))
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
-			H.deal_damage(3, WHITE_DAMAGE)
+			H.deal_damage(3, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 			H.apply_lc_burn(1)
 			dealt_damage = TRUE
 	if(!dealt_damage)

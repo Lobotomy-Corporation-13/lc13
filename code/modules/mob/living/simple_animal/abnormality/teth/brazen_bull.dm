@@ -129,10 +129,7 @@
 			L.visible_message(span_boldwarning("[src] rams [L]!"), span_userdanger("[src] impales you with its horns!"))
 			playsound(L, attack_sound, 75, 1)
 			new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-			if(ishuman(L))
-				L.apply_damage(40, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
-			else
-				L.adjustRedLoss(40)
+			L.deal_damage(40, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(L.stat >= HARD_CRIT)
 				L.gib()
 		for(var/obj/vehicle/V in new_hits)

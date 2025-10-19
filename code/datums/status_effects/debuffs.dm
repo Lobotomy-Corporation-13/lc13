@@ -1176,7 +1176,7 @@
 	stacks -= 3
 
 /datum/status_effect/stacking/lc_burn/proc/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/proc/Update_Burn_Overlay(mob/living/owner)
@@ -1234,9 +1234,9 @@
 	to_chat(owner, "<span class='warning'>The heat consumes you!!</span>")
 	owner.playsound_local(owner, 'sound/effects/burn.ogg', 50, TRUE)
 	if(ishuman(owner))
-		owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
+		owner.deal_damage(stacks, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 	else
-		owner.apply_damage(stacks*4, FIRE, null, owner.run_armor_check(null, FIRE)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
+		owner.deal_damage(stacks*4, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)
@@ -1374,7 +1374,7 @@
 
 /datum/status_effect/stacking/pallid_noise/tick()//TODO:change this to golden apple's life tick for less lag
 	if(!ishuman(owner))
-		owner.apply_damage(stacks * 5, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+		owner.deal_damage(stacks * 5, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 		return
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.adjustSanityLoss(stacks * stacks)//sanity damage is the # of stacks squared
@@ -1480,8 +1480,8 @@
 	icon_state = "dark_flame"
 
 /datum/status_effect/stacking/lc_burn/dark_flame/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, BLACK_DAMAGE))
-	owner.apply_damage(stacks, WHITE_DAMAGE, null, owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/dark_flame/Update_Burn_Overlay(mob/living/owner)

@@ -122,7 +122,7 @@
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 	for(var/mob/living/L in ohearers(3, src))
-		L.apply_damage(60, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+		L.deal_damage(60, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 	//Buff allies, all of these buffs only activate once.
 	//Buff the grunts around you when you die
@@ -193,7 +193,7 @@
 		ArialSupport()
 	else
 		visible_message(span_notice("[src] crashes to the ground."))
-		apply_damage(100, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+		deal_damage(100, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	//return to the ground
 	density = TRUE
 	layer = initial(layer)
@@ -220,7 +220,7 @@
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/proc/SweepAttack(mob/living/sweeptarget)
 	sweeptarget.visible_message(span_danger("[src] slams into [sweeptarget]!"), span_userdanger("[src] slams into you!"))
-	sweeptarget.apply_damage(30, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+	sweeptarget.deal_damage(30, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 50, TRUE)
 	if(sweeptarget.mob_size <= MOB_SIZE_HUMAN)
 		DoKnockback(sweeptarget, src, get_dir(src, sweeptarget))
@@ -375,4 +375,4 @@
 	new /obj/effect/temp_visual/screech(get_turf(src))
 	for(var/mob/living/L in oview(10, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(120, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(120, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
