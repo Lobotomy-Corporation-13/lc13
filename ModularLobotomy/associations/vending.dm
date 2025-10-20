@@ -331,6 +331,8 @@
 	icon_state = "generic"
 	products = list(
 		/obj/item/storage/box/thumb_east_ammo/scorch = 100,
+		/obj/item/storage/box/thumb_east_ammo/quake = 50,
+		/obj/item/storage/box/thumb_east_ammo/inferno = 50,
 	)
 	premium = list(
 		/obj/item/storage/box/thumb_east_ammo/tigermark = 50,
@@ -353,13 +355,19 @@
 	var/thumb_goodboypoints = 0
 	// How much we're currently discounting from prices. Should never be higher than our maximum price.
 	var/currently_discounting_scorch = 0
+	var/currently_discounting_quake = 0
+	var/currently_discounting_inferno = 0
 	var/currently_discounting_tigermark = 0
 	// I hate vending machine code. I am putting the intended base prices for the ammo boxes here. This is probably not good practice.
 	var/scorch_box_price = 900
+	var/quake_box_price = 1100
+	var/inferno_box_price = 1100
 	var/tigermark_box_price = 1500
 	// I also need a way to somehow detect what item we sold last to determine how many thumb_goodboypoints to remove from storage...
 	// This'd be a lot easier if original vending code was a little more modular, but I reaaaally don't want to override the whole damn thing, so hacky workaround it is.
 	var/last_known_scorch_amount = 100
+	var/last_known_quake_amount = 50
+	var/last_known_inferno_amount = 50
 	var/last_known_tigermark_amount = 50
 
 /// This proc is how we recycle the spent ammo. We have to shove our code before the parent proc call because of how it's structured.
@@ -390,6 +398,10 @@
 	for(var/datum/data/vending_product/the_goods in all_records)
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			the_goods.custom_price = scorch_box_price
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			the_goods.custom_price = quake_box_price
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			the_goods.custom_price = inferno_box_price
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			the_goods.custom_premium_price = tigermark_box_price
 
@@ -405,10 +417,17 @@
 /obj/machinery/vending/thumb_east_ammo/proc/HandleCreditSubtraction()
 	var/current_scorch_amount
 	var/current_tigermark_amount
+	var/current_quake_amount
+	var/current_inferno_amount
+
 	var/list/all_records = product_records + coin_records
 	for(var/datum/data/vending_product/the_goods in all_records)
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			current_scorch_amount = the_goods.amount
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			current_quake_amount = the_goods.amount
+		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			current_inferno_amount = the_goods.amount
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			current_tigermark_amount = the_goods.amount
 
@@ -416,6 +435,14 @@
 	if(last_known_scorch_amount > current_scorch_amount)
 		thumb_goodboypoints -= currently_discounting_scorch
 		last_known_scorch_amount = current_scorch_amount
+
+	if(last_known_quake_amount > current_quake_amount)
+		thumb_goodboypoints -= currently_discounting_quake
+		last_known_quake_amount = current_quake_amount
+
+	if(last_known_inferno_amount > current_inferno_amount)
+		thumb_goodboypoints -= currently_discounting_inferno
+		last_known_inferno_amount = current_inferno_amount
 
 	// Same here but for tigermark. Only one of these should ever trigger at any given time, I think
 	if(last_known_tigermark_amount > current_tigermark_amount)
@@ -429,14 +456,14 @@
 	// Unwieldy solution but I really can't be bothered to care, I really hate working on vending machine code
 	var/list/all_records = product_records + coin_records
 	for(var/datum/data/vending_product/the_goods in all_records)
-
+		// Processing Scorch
 		if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/scorch)
 			if(thumb_goodboypoints > 0)
 				currently_discounting_scorch = min(scorch_box_price, thumb_goodboypoints)
 				the_goods.custom_price = max((scorch_box_price - currently_discounting_scorch), 0)
 			else
 				the_goods.custom_price = scorch_box_price
-
+		// Processing Tigermark
 		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/tigermark)
 			if(thumb_goodboypoints > 0)
 				currently_discounting_tigermark = min(tigermark_box_price, thumb_goodboypoints)
@@ -445,7 +472,24 @@
 			else
 				the_goods.custom_price = tigermark_box_price
 				the_goods.custom_premium_price = tigermark_box_price
-
+		// Processing Quake
+		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/quake)
+			if(thumb_goodboypoints > 0)
+				currently_discounting_quake = min(quake_box_price, thumb_goodboypoints)
+				the_goods.custom_price =  max((quake_box_price - currently_discounting_quake), 0)
+				the_goods.custom_premium_price = max((quake_box_price - currently_discounting_quake), 0)
+			else
+				the_goods.custom_price = quake_box_price
+				the_goods.custom_premium_price = quake_box_price
+		// Processing Inferno
+		else if(the_goods.product_path == /obj/item/storage/box/thumb_east_ammo/inferno)
+			if(thumb_goodboypoints > 0)
+				currently_discounting_inferno = min(inferno_box_price, thumb_goodboypoints)
+				the_goods.custom_price =  max((inferno_box_price - currently_discounting_inferno), 0)
+				the_goods.custom_premium_price = max((inferno_box_price - currently_discounting_inferno), 0)
+			else
+				the_goods.custom_price = inferno_box_price
+				the_goods.custom_premium_price = inferno_box_price
 	update_static_data_for_all_viewers()
 
 //Middle Jukebox Vending Machine
