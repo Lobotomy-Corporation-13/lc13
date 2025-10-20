@@ -40,8 +40,8 @@
 			to_chat(user, span_warning("This ticket appears to be invalid or incomplete!"))
 			return TRUE
 
-		// Calculate Ahn cost (material_cost * 30)
-		var/ahn_cost = ticket.material_cost * 30
+		// Calculate Ahn cost (material_cost * 20)
+		var/ahn_cost = ticket.material_cost * 20
 
 		// Check if user can pay
 		if(!can_afford_ahn(user, ahn_cost))

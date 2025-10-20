@@ -8,7 +8,7 @@
 
 /datum/action/cooldown/dismember
 	name = "Execute"
-	desc = "Execute adjacent targets below 10% HP. Dismembers arms from humans, gibs simple animals."
+	desc = "Execute adjacent targets below 25% HP. Dismembers arms from humans, gibs simple animals."
 	icon_icon = 'icons/hud/screen_skills.dmi'
 	button_icon_state = "dismember"
 	cooldown_time = 2 MINUTES
@@ -28,8 +28,8 @@
 		if(M == owner)
 			continue
 
-		//Check if target is below 10% max HP
-		if(M.health > M.maxHealth * 0.1)
+		//Check if target is below 20% max HP
+		if(M.health > M.maxHealth * 0.25)
 			continue
 
 		//Handle carbon mobs (humans and similar)
@@ -68,5 +68,5 @@
 		playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_attack.ogg', 75, 0, 5)
 		StartCooldown()
 	else
-		to_chat(owner, span_warning("No valid targets below 10% HP in range!"))
+		to_chat(owner, span_warning("No valid targets below 25% HP in range!"))
 

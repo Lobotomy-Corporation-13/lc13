@@ -85,7 +85,7 @@
 	// Check charge - if insufficient, deal BURN damage instead of blocking
 	if(current_charge < cost)
 		var/shortfall = cost - current_charge
-		var/burn_damage = shortfall * 2 // 2 BURN damage per missing charge point
+		var/burn_damage = shortfall * 4 // 4 BURN damage per missing charge point
 
 		if(ishuman(owner))
 			var/mob/living/carbon/human/H = owner
@@ -240,7 +240,7 @@
 	// Check charge - if insufficient, deal BURN damage instead of blocking
 	if(current_charge < cost)
 		var/shortfall = cost - current_charge
-		var/burn_damage = shortfall * 2 // 2 BURN damage per missing charge point
+		var/burn_damage = shortfall * 4 // 4 BURN damage per missing charge point
 
 		if(ishuman(loc))
 			var/mob/living/carbon/human/H = loc

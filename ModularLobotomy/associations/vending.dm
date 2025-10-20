@@ -139,6 +139,13 @@
 		/obj/item/reagent_containers/hypospray/medipen/salacid = 100,
 		/obj/item/gps/fixer = 100,
 		/obj/item/pinpointer/coordinate = 20,
+
+		//Imported Body modification batteries
+		/obj/item/body_modification_battery/imported = 100,
+		/obj/item/body_modification_battery/tier2/imported = 100,
+		/obj/item/body_modification_battery/tier3/imported = 100,
+		/obj/item/body_modification_battery/tier4/imported = 100,
+
 	)
 
 	default_price = 300

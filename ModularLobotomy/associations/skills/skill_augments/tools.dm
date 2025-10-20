@@ -199,6 +199,7 @@
 
 	to_chat(user, span_notice("You begin connecting the battery to your skill modification..."))
 
+	playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 50, TRUE)
 	if(!do_after(user, 3 SECONDS, target = user))
 		to_chat(user, span_warning("You stop the charging process."))
 		return
@@ -207,7 +208,7 @@
 	SA.current_charge += charge_to_add
 
 	to_chat(user, span_notice("You successfully charge your skill modification! (+[charge_to_add] charge, now [SA.current_charge]/[SA.max_charge])"))
-	playsound(get_turf(user), 'sound/machines/ping.ogg', 50, FALSE)
+	playsound(src.loc, 'sound/abnormalities/clock/turn_on.ogg', 50, TRUE)
 
 	qdel(src)
 
@@ -234,3 +235,28 @@
 	custom_price = 400
 	charge_amount = 300
 	tier = 4
+
+// Imported batteries, fixers can get them from vending machines, however they are *3 as expensive.
+/obj/item/body_modification_battery/imported
+	name = "imported body modification battery"
+	desc = "A specialized energy cell designed to recharge skill modifications. Imported from another district."
+	color = LIGHT_COLOR_DARK_BLUE
+	custom_price = 300
+
+/obj/item/body_modification_battery/tier2/imported
+	name = "imported body modification battery MK-II"
+	desc = "An improved energy cell with higher capacity for skill modifications. Imported from another district."
+	color = LIGHT_COLOR_DARK_BLUE
+	custom_price = 600
+
+/obj/item/body_modification_battery/tier3/imported
+	name = "imported body modification battery MK-III"
+	desc = "An advanced energy cell with substantial charging capacity. Imported from another district."
+	color = LIGHT_COLOR_DARK_BLUE
+	custom_price = 900
+
+/obj/item/body_modification_battery/tier4/imported
+	name = "imported body modification battery MK-IV"
+	desc = "A top-tier energy cell capable of major charge restoration. Imported from another district."
+	color = LIGHT_COLOR_DARK_BLUE
+	custom_price = 1200

@@ -42,31 +42,31 @@
 			"rank" = 1,
 			"slots" = 4,
 			"charge" = 180,
-			"material_cost" = 50
+			"material_cost" = 25
 		),
 		"Rank 2 - Enhanced" = list(
 			"rank" = 2,
 			"slots" = 6,
 			"charge" = 300,
-			"material_cost" = 100
+			"material_cost" = 50
 		),
 		"Rank 3 - Advanced" = list(
 			"rank" = 3,
 			"slots" = 6,
 			"charge" = 480,
-			"material_cost" = 200
+			"material_cost" = 75
 		),
 		"Rank 4 - Superior" = list(
 			"rank" = 4,
 			"slots" = 8,
 			"charge" = 750,
-			"material_cost" = 400
+			"material_cost" = 100
 		),
 		"Rank 5 - Masterwork" = list(
 			"rank" = 5,
 			"slots" = 9,
 			"charge" = 1050,
-			"material_cost" = 800
+			"material_cost" = 150
 		),
 
 		// Injectable Templates (50% reduced charge)
@@ -75,35 +75,35 @@
 			"slots" = 4,
 			"charge" = 90,
 			"injectable" = TRUE,
-			"material_cost" = 25
+			"material_cost" = 20
 		),
 		"Injectable Rank 2 - Enhanced" = list(
 			"rank" = 2,
 			"slots" = 6,
 			"charge" = 150,
 			"injectable" = TRUE,
-			"material_cost" = 50
+			"material_cost" = 40
 		),
 		"Injectable Rank 3 - Advanced" = list(
 			"rank" = 3,
 			"slots" = 6,
 			"charge" = 240,
 			"injectable" = TRUE,
-			"material_cost" = 100
+			"material_cost" = 60
 		),
 		"Injectable Rank 4 - Superior" = list(
 			"rank" = 4,
 			"slots" = 8,
 			"charge" = 380,
 			"injectable" = TRUE,
-			"material_cost" = 200
+			"material_cost" = 80
 		),
 		"Injectable Rank 5 - Masterwork" = list(
 			"rank" = 5,
 			"slots" = 9,
 			"charge" = 530,
 			"injectable" = TRUE,
-			"material_cost" = 400
+			"material_cost" = 120
 		)
 	)
 
@@ -284,19 +284,19 @@
 		),
 
 		// Level 4 Skills (7 skills - all high power)
-		/datum/action/cooldown/timestop = list(
-			"name" = "Timestop",
-			"slot_cost" = 5,
-			"charge_cost" = 100,
-			"skill_level" = 4,
-			"desc" = "Stop time in a range of 2 tiles, for 2 seconds."
-		),
+		// /datum/action/cooldown/timestop = list(
+		// 	"name" = "Timestop",
+		// 	"slot_cost" = 5,
+		// 	"charge_cost" = 100,
+		// 	"skill_level" = 4,
+		// 	"desc" = "Stop time in a range of 2 tiles, for 2 seconds."
+		// ),
 		/datum/action/cooldown/dismember = list(
 			"name" = "Execute",
 			"slot_cost" = 4,
 			"charge_cost" = 80,
 			"skill_level" = 4,
-			"desc" = "Execute adjacent targets below 10% HP. Dismembers arms from humans, gibs simple animals"
+			"desc" = "Execute adjacent targets below 25% HP. Dismembers arms from humans, gibs simple animals"
 		),
 		/datum/action/cooldown/shockwave = list(
 			"name" = "Shockwave",
