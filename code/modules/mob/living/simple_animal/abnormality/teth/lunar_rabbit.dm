@@ -41,7 +41,8 @@
 		/datum/ego_datum/weapon/patch,
 		/datum/ego_datum/armor/patch
 	)
-	//gift_type =  /datum/ego_gifts/acupuncture
+	gift_message = "your prescription is in, let's make sure you don't ever forget to take it."
+	gift_type =  /datum/ego_gifts/acupuncture
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
 
