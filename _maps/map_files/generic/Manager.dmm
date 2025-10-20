@@ -12,6 +12,15 @@
 "aC" = (
 /turf/open/space,
 /area/space)
+"aL" = (
+/obj/effect/turf_decal/weather/dirt{
+	dir = 3
+	},
+/obj/effect/turf_decal/weather/dirt{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_alley)
 "aW" = (
 /obj/machinery/door/airlock/wood{
 	name = "Officer Bunks"
@@ -25,6 +34,10 @@
 "bh" = (
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/department_main/manager)
+"bi" = (
+/obj/effect/spawner/room/backstreets/pointofinterest,
+/turf/closed/indestructible/reinforced,
+/area/city/backstreets_alley)
 "bj" = (
 /obj/machinery/ntnet_relay,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -141,8 +154,13 @@
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
 "cS" = (
-/obj/structure/barricade/wooden/crude,
-/turf/closed/indestructible/fakeglass,
+/obj/effect/turf_decal/weather/dirt{
+	dir = 3
+	},
+/obj/effect/turf_decal/weather/dirt{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/city/backstreets_alley)
 "cY" = (
 /obj/machinery/vending/coffee,
@@ -855,6 +873,15 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
+"mq" = (
+/obj/effect/turf_decal/weather/dirt{
+	dir = 8
+	},
+/obj/effect/turf_decal/weather/dirt{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_alley)
 "mu" = (
 /obj/structure/chair/comfy/black{
 	dir = 1
@@ -2225,6 +2252,15 @@
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
+"Fd" = (
+/obj/effect/turf_decal/weather/dirt{
+	dir = 4
+	},
+/obj/effect/turf_decal/weather/dirt{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/city/backstreets_alley)
 "Fg" = (
 /obj/structure/table,
 /obj/machinery/light,
@@ -9890,11 +9926,11 @@ Hg
 Hg
 Hg
 Hg
-cS
-cS
-cS
-cS
-cS
+vp
+vp
+vp
+vp
+vp
 Hg
 Hg
 Hg
@@ -10133,7 +10169,7 @@ XL
 XL
 XL
 Hg
-Rn
+mq
 Rn
 Rn
 Rn
@@ -10161,14 +10197,14 @@ Rn
 Rn
 Rn
 Rn
-vp
-vp
-vp
 Rn
-vp
-vp
-vp
-vp
+Rn
+Rn
+Rn
+Rn
+Rn
+Rn
+cS
 Hg
 XL
 XL
@@ -10390,6 +10426,7 @@ XL
 XL
 XL
 Hg
+lv
 vp
 vp
 vp
@@ -10424,8 +10461,7 @@ vp
 vp
 vp
 vp
-vp
-vp
+qN
 Hg
 XL
 XL
@@ -10647,42 +10683,42 @@ XL
 XL
 XL
 Hg
+lv
+vp
+vp
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
+iU
 vp
 vp
 vp
 iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
-iU
 vp
 vp
 vp
-iU
-vp
-vp
-vp
-vp
+qN
 Hg
 XL
 XL
@@ -10936,7 +10972,7 @@ Hg
 Hg
 Hg
 Hg
-Hg
+bi
 lv
 vp
 qN
@@ -18614,7 +18650,7 @@ XL
 XL
 XL
 Hg
-vp
+lv
 vp
 vp
 Rn
@@ -18871,7 +18907,7 @@ XL
 XL
 XL
 Hg
-vp
+lv
 vp
 vp
 vp
@@ -19128,6 +19164,7 @@ XL
 XL
 XL
 Hg
+Fd
 iU
 iU
 iU
@@ -19161,9 +19198,8 @@ iU
 iU
 iU
 iU
-vp
-vp
-qN
+iU
+aL
 Hg
 XL
 XL
