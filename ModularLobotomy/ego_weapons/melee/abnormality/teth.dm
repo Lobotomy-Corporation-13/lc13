@@ -168,11 +168,9 @@
 	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
 	if(thrownby && !caught)
 		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom/movable, throw_at), thrownby, throw_range+2, throw_speed, null, TRUE), 1)
-		if(force<=100)
-			force+= 7
-	if(caught)
-		return
-	else
+		if(force <= 100)
+			force += 7
+	if(!caught)
 		return ..()
 
 /obj/item/ego_weapon/mini/trick/attack_self(mob/living/carbon/user)
