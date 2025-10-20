@@ -14,10 +14,10 @@
 	For the next few minutes; hiring of new personnel will be extremely limited.",
 	sound = 'sound/misc/notice2.ogg',
 	sender_override = "HQ Records")
-
-
+	CONFIG_SET(flag/norespawn, 1)
 
 /datum/round_event/hiring_freeze/end()
-	priority_announce("Welfare HQ is notifying this facility's Manager that the allotted 2 minute break has ended.",
+	priority_announce("Our hiring freeze has completed, and our hiring process has been improved.",
 	sound = 'sound/misc/notice2.ogg',
-	sender_override = "HQ Welfare")
+	sender_override = "HQ Records")
+	CONFIG_SET(flag/norespawn, 0)

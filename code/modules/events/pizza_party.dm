@@ -18,7 +18,6 @@
 	// Funny enough you can still get the murder pizza becuase it's funny
 	pizzatype_list -= /obj/item/food/pizza/margherita/robo // No robo pizza
 	for(var/turf/T in GLOB.department_centers)
-		// Yes, this delivers to dead bodies. It's REALLY FUNNY.
 		var/obj/structure/closet/supplypod/centcompod/pod = new()
 		var/pizzatype = pick(pizzatype_list)
 		new pizzatype(pod)

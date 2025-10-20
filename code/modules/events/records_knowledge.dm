@@ -1,5 +1,5 @@
 /datum/round_event_control/lc13/records_knowledge
-	name = "Camera Failure"
+	name = "Records Knowledge Update"
 	typepath = /datum/round_event/records_knowledge
 	weight = 15
 	max_occurrences = 150

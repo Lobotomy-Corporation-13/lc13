@@ -15,6 +15,11 @@
 	var/obj/structure/pe_sales/chosen_sales
 	var/list/possible_sales = list()
 
+	//Here's the fake company in case you have no real companies.
+	//Taken from the stonks market
+	var/list/fake_companies = list("Love Company", "Leyla Conglomerate", "Enix Corporation",
+		"George's Pets", "Pam's Arsenal", "Will's Wishing Well", "Rival Favella")
+
 /datum/round_event/company_crash/setup()
 	endWhen = rand(200, 24000)	//Who knows when it will end?
 	..()
@@ -37,8 +42,7 @@
 
 /datum/round_event/company_crash/announce()
 	if(!length(possible_sales))
-		var/fake_company = list("Love Company", "Leyla Conglomerate", "Enix Corporation")
-		priority_announce("Control HQ has received word that [pick(fake_company)] has gone under, and as such, all contracts with them have been terminated.",
+		priority_announce("Control HQ has received word that [pick(fake_companies)] has gone under, and as such, all contracts with them have been terminated.",
 		sound = 'sound/misc/notice2.ogg',
 		sender_override = "HQ Control")
 		return

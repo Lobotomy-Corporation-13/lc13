@@ -9,12 +9,12 @@
 ///Spawns a cargo pod containing a random refinery crate
 /datum/round_event/stray_cargo_lc
 	announceChance = 75
-	var/list/possible_pack_types = typecacheof(list(
+	var/list/possible_pack_types = list(
 	/obj/structure/lootcrate/k_corp,
 	/obj/structure/lootcrate/n_corp,
 	/obj/structure/lootcrate/r_corp,
 	/obj/structure/lootcrate/w_corp,
-	))
+	)
 
 /datum/round_event/stray_cargo_lc/announce(fake)
 	priority_announce("Stray Supply Crates detected on facility scanners.", "HQ Information")
@@ -25,8 +25,7 @@
 ///Spawns a random crate
 /datum/round_event/stray_cargo_lc/start()
 	var/spawn_amount = 3
-
-	var/list/potential_locs = GLOB.xeno_spawn.Copy()
 	for(var/i = 1 to spawn_amount)
+		potential_locs = pick(GLOB.xeno_spawn)
 		var/spawning = pick(possible_pack_types)
-		new spawning (potential_locs)
+		new spawning(potential_locs)

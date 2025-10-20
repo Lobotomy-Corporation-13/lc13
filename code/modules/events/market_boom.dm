@@ -8,8 +8,7 @@
 
 /datum/round_event/company_crash/boom/announce()
 	if(!length(possible_sales))
-		var/fake_company = list("Love Company", "Leyla Conglomerate", "Enix Corporation")
-		priority_announce("Control HQ has received word that [pick(fake_company)] has been making big moves in the sector. \
+		priority_announce("Control HQ has received word that [pick(fake_companies)] has been making big moves in the sector. \
 			We are seeking new investment opportunities with them.",
 		sound = 'sound/misc/notice2.ogg',
 		sender_override = "HQ Control")
