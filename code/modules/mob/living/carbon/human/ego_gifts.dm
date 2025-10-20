@@ -1619,14 +1619,14 @@
 
 /datum/ego_gifts/acupuncture/Initialize(mob/living/carbon/human/user)
 	. = ..()
-	drug_user(user)
+	if(ishuman(user))
+		drug_user(user)
 
 /datum/ego_gifts/acupuncture/proc/drug_user(mob/living/carbon/human/user)
-	if(!is_equipped)
-		user.set_drugginess(0)
+	if(!is_equipped || !owner)
 		return
 	addtimer(CALLBACK(src, PROC_REF(drug_user)), 10)
-	user.set_drugginess(15)
+	owner.set_drugginess(15)
 
 /datum/ego_gifts/acupuncture/Remove(mob/living/carbon/human/user)
 	is_equipped = FALSE
