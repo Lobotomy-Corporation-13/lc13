@@ -1148,6 +1148,15 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/human)
+"IZ" = (
+/obj/machinery/augment_fabricator{
+	roles = list("Test Range Agent");
+	sale_percentages = list(100);
+	max_66_sales = 100;
+	on_sale_pct = 1
+	},
+/turf/open/floor/facility,
+/area/test_range)
 "Jr" = (
 /turf/open/floor/wood,
 /turf/open/floor/wood,
@@ -1334,6 +1343,12 @@
 "OU" = (
 /turf/open/space/basic,
 /area/department_main/human)
+"OY" = (
+/obj/machinery/augment_catalogue{
+	pixel_y = -32
+	},
+/turf/open/floor/facility,
+/area/test_range)
 "Pc" = (
 /obj/machinery/bookbinder,
 /turf/open/floor/wood,
@@ -7338,7 +7353,7 @@ eg
 eg
 eg
 eg
-eg
+IZ
 nf
 XL
 XL
@@ -7440,7 +7455,7 @@ eg
 eg
 eg
 eg
-eg
+OY
 nf
 XL
 XL

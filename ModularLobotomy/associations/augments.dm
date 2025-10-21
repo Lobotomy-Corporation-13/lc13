@@ -18,7 +18,7 @@
 	var/datum/tgui_handler/augment_fabricator/ui_handler = null
 
 	var/const/ui_key = "AugmentFabricator"
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Test Range Agent")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant", "Test Range Agent")
 
 	var/market_change_interval = 20 * 60 * 10 // 20 minutes in deciseconds
 	var/list/sale_percentages = list(25, 33, 40, 66)
@@ -1142,7 +1142,7 @@
 		TEMPERANCE_ATTRIBUTE,
 		JUSTICE_ATTRIBUTE,
 	)
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
 	var/active_augment = FALSE
 	// var/mutable_appearance/augment_overlay_prim
 	// var/mutable_appearance/augment_overlay_second
@@ -1354,7 +1354,7 @@
 	icon_state = "gadget1"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
 
 /obj/item/augment_remover/attack(mob/M, mob/user)
 	if (!CanRemoveAugment(user))

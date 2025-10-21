@@ -25,8 +25,8 @@
 	response_harm_simple = "strike"
 	move_to_delay = 1.5
 	melee_damage_type = BLACK_DAMAGE
-	melee_damage_lower = 34
-	melee_damage_upper = 40
+	melee_damage_lower = 30
+	melee_damage_upper = 36
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	attack_verb_continuous = "slashes"
@@ -54,7 +54,7 @@
 
 	// Repair system
 	var/next_repair = 0
-	var/repair_cooldown = 600 // 60 seconds
+	var/repair_cooldown = 300 // 30 seconds
 
 	//Sidesteping
 	var/sidesteping = TRUE
@@ -70,7 +70,7 @@
 	var/dash_range = 7
 	var/dash_ignore_walls = FALSE
 	var/dash_damage = 10
-	var/dash_tremor = 5
+	var/dash_tremor = 2
 	var/next_dash_devastating = FALSE
 	var/dash_warning_time = 0
 	var/dash_enabled = TRUE
@@ -81,7 +81,7 @@
 	. = ..()
 	to_chat(src, span_purple("You have been reborn as a servant of the Tinkerer!"))
 	to_chat(src, span_notice("You can:"))
-	to_chat(src, span_notice("- Slowly regenerate health when not in combat"))
+	to_chat(src, span_notice("- Passively regenerate health over time"))
 	to_chat(src, span_notice("- Collect and expel items using magnetic systems"))
 	to_chat(src, span_notice("- Commune with other converted beings"))
 
@@ -98,9 +98,6 @@
 	// Grant abilities
 	var/datum/action/innate/converted_ability/commune/commune = new()
 	commune.Grant(src)
-
-	var/datum/action/cooldown/converted_ability/emergency_repair/repair = new()
-	repair.Grant(src)
 
 	var/datum/action/cooldown/converted_ability/magnetic_collection/collect = new()
 	collect.Grant(src)
@@ -196,7 +193,7 @@
 
 	// Self-repair over time
 	if(health < maxHealth && world.time > next_repair)
-		adjustBruteLoss(-250, 0)
+		adjustBruteLoss(-300, 0)
 		visible_message(span_notice("[src]'s mechanisms whir as damage is repaired."))
 		next_repair = world.time + repair_cooldown
 		alert = TRUE // Enable alert after healing
@@ -320,6 +317,15 @@
 	for(var/mob/living/L in mobs_to_hit)
 		L.apply_damage(dash_damage, melee_damage_type, null, L.run_armor_check(null, melee_damage_type), spread_damage = TRUE)
 		L.apply_lc_tremor(dash_tremor, 55)
+
+		// Apply BLACK fragile with scaling based on existing stacks
+		var/datum/status_effect/stacking/damtype_protection/black/fragile/existing_fragile = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile)
+		var/fragile_to_apply = 1
+		if(existing_fragile)
+			// If they have fragile, apply 1 + their current stacks (e.g., 3 stacks = apply 1 + 3 = 4 total)
+			fragile_to_apply = 1 + existing_fragile.stacks
+		L.apply_lc_black_fragile(fragile_to_apply)
+
 		L.visible_message(span_danger("[src] tears through [L] with a devastating dash!"))
 
 	// Set ranged cooldown
@@ -402,7 +408,7 @@
 			var/mob/living/carbon/human/H = L
 			// Check if they have enough tremor for burst
 			var/datum/status_effect/stacking/lc_tremor/T = H.has_status_effect(/datum/status_effect/stacking/lc_tremor)
-			if(T && T.stacks >= 40)
+			if(T && T.stacks >= 20)
 				// Trigger tremor burst manually
 				H.visible_message(span_warning("[H]'s body convulses violently as tremor bursts through them!"))
 				T.TremorBurst()
@@ -590,7 +596,7 @@
 
 /datum/action/cooldown/converted_ability/devastating_dash
 	name = "Devastating Dash"
-	desc = "Charge up your next dash attack to deal massive BLACK damage. Has a 4 second wind-up with warning. Deals 100 BLACK damage and dismembers targets with 40+ tremor."
+	desc = "Charge up your next dash attack to deal massive BLACK damage. Has a 4 second wind-up with warning. Deals 100 BLACK damage and dismembers targets with 20+ tremor."
 	icon_icon = 'icons/mob/actions/actions_ecult.dmi'
 	button_icon_state = "cleave"
 	cooldown_time = 30 SECONDS
