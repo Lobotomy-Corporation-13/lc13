@@ -814,7 +814,7 @@
 			return TRUE
 		// Uh oh. We didn't have ammo.
 		else
-			user.visible_message(span_userdanger("[user] pulls the trigger on their [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens. Holy shit, you must look really dumb. Leave no witnesses standing."))
+			user.visible_message(span_userdanger("[user] pulls the trigger on \his [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens. Holy shit, you must look really dumb. Leave no witnesses standing."))
 
 	// We only reach this block if the do_after fails or we're no longer in our COMBO_FINISHER stage.
 	// The do_after can fail if our target isn't in sight anymore, we swap hands, we get stunned or something of the sort.
@@ -848,7 +848,7 @@
 		return TRUE
 	// We only reach this else block if we didn't manage to spend a bullet. We will just hit them normally in this case.
 	else
-		user.visible_message(span_userdanger("[user] pulls the trigger on their [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens."))
+		user.visible_message(span_userdanger("[user] pulls the trigger on \his [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens."))
 		return FALSE
 
 /// This proc generates a range-based AoE for our sweep and our leap finisher.
@@ -1430,13 +1430,13 @@
 // ABILITIES SECTION.
 // Place any skills to be used by the Thumb here. For now, just a self-mutilation skill (exclusively detrimental, for RP.)
 
-// Severs your limb or your tongue from your body after a do_after, if you're holding a loaded Thumb East weapon.
+// Severs your limb or your tongue from your body after a do_after, if you're holding a loaded Thumb East weapon. Kills you if you aim head.
 /datum/action/thumb_selfmutilate
 	name = "Self-Discipline"
-	desc = "Administer 'self-discipline' by mutilating yourself, removing the targeted limb or tongue from your own body. Requires you to hold a loaded Thumb East weapon. Swap hands or move to cancel."
+	desc = "Administer 'self-discipline' by mutilating yourself, removing the targeted limb or tongue from your own body. If targeting your head, will kill yourself. Requires you to hold a loaded Thumb East weapon. Swap hands or move to cancel."
 	icon_icon = 'icons/hud/screen_skills.dmi'
 	button_icon_state = "dismember"
-	var/list/acceptable_targets = list(BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_R_ARM, BODY_ZONE_PRECISE_MOUTH)
+	var/list/acceptable_targets = list(BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_R_ARM, BODY_ZONE_HEAD, BODY_ZONE_PRECISE_MOUTH)
 
 /datum/action/thumb_selfmutilate/Trigger()
 	. = ..()
@@ -1462,7 +1462,31 @@
 		to_chat(thumbling, span_warning("Severing that from your body isn't permitted within Thumb self-discipline guidelines. Pick an arm or your tongue instead."))
 		return FALSE
 
-	if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
+	// Targeting head: kill yourself. This uses different code than delimbing or de-tonguing because I wanted to use different sounds... I mean, I could also set those sounds to be vars, but I feel like the "kill yourself" and "mutilate yourself" behaviours should be separate anyhow.
+	if(selected_zone == BODY_ZONE_HEAD)
+		playsound(thumbling, weapon.reload_end_sound, 75, FALSE)
+		thumbling.visible_message(span_danger("[thumbling] sticks \his [weapon.name] into \his mouth, setting the propulsion mode to 'thrust'..."), span_userdanger("You stick your [weapon.name] into your mouth and set the propulsion mode to 'thrust', preparing to kill yourself..."))
+		if(do_after(thumbling, 4 SECONDS, interaction_key = "selfmutilation", max_interact_count = 1))
+			if(weapon.SpendAmmo(thumbling))
+				playsound(weapon, weapon.detonation_sound, 80, FALSE, 10)
+				playsound(weapon, weapon.hitsound, 30, FALSE)
+				for(var/i in 1 to 5)
+					new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(thumbling), pick(GLOB.alldirs))
+				thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], rocketing the weapon out of \his hands and through \his skull!"))
+				new /obj/effect/gibspawner/generic/trash_disposal(get_turf(thumbling))
+				thumbling.deal_damage(200, BRUTE) // A relatively clean job, all things considered! Wow! They'll barely have to heal you for a revive!
+				thumbling.death() // You rocketed a gunblade through your skull.
+				return TRUE
+			else
+				thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], but nothing happens..."))
+				return FALSE
+		else
+			to_chat(thumbling, span_notice("You decide not to go through with your 'self-discipline'."))
+			return FALSE
+
+
+	// Targeting mouth: we queue our tongue for removal.
+	else if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
 		if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
 			tongue_cut_candidate = thumbling.getorganslot(ORGAN_SLOT_TONGUE)
 			if(!tongue_cut_candidate)
@@ -1470,6 +1494,7 @@
 				return FALSE
 			candidate_name = tongue_cut_candidate.name
 
+	// Targeting an arm or leg: queue them for removal.
 	else
 		limb_snip_candidate = thumbling.get_bodypart(check_zone(selected_zone))
 		if(!limb_snip_candidate)
@@ -1478,7 +1503,7 @@
 		candidate_name = limb_snip_candidate.name
 
 	playsound(thumbling,'sound/effects/butcher.ogg', 75, FALSE)
-	thumbling.visible_message(span_danger("[thumbling] dutifully places the edge of their [weapon.name] against their [candidate_name]..."), span_notice("You begin bracing yourself for your 'self-discipline'..."))
+	thumbling.visible_message(span_danger("[thumbling] dutifully places the edge of \his [weapon.name] against \his [candidate_name]..."), span_notice("You begin bracing yourself for your 'self-discipline'..."))
 
 	if(do_after(thumbling, 4 SECONDS, interaction_key = "selfmutilation", max_interact_count = 1))
 		if(weapon.SpendAmmo(thumbling))
@@ -1487,17 +1512,20 @@
 			for(var/i in 1 to 2)
 				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(thumbling), pick(GLOB.alldirs))
 
-			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on their [weapon.name], severing their [candidate_name] from their body!"))
+			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], severing \his [candidate_name] from \his body!"))
 			if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
 				tongue_cut_candidate.Remove(thumbling)
 				tongue_cut_candidate.forceMove(get_turf(thumbling))
 			else
 				limb_snip_candidate.dismember()
 			new /obj/effect/decal/cleanable/blood/splatter(get_turf(thumbling))
+			return TRUE
 		else
-			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on their [weapon.name], but nothing happens..."))
+			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], but nothing happens..."))
+			return FALSE
 	else
 		to_chat(thumbling, span_notice("You decide not to go through with your 'self-discipline'."))
+		return FALSE
 
 #undef COMBO_NO_AMMO
 #undef COMBO_LUNGE
