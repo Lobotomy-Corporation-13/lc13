@@ -196,6 +196,7 @@
 			return
 
 		to_chat(user, span_notice("You begin connecting the battery to your implanted skill modification..."))
+		playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 50, TRUE)
 
 		if(!do_after(user, 3 SECONDS, target = user))
 			to_chat(user, span_warning("You stop the charging process."))
