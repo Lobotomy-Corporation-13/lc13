@@ -372,11 +372,11 @@
 	new_body.updateappearance()
 
 	// Add distortion traits to the body
-	ADD_TRAIT(new_body, TRAIT_BRUTEPALE, DISTORTION_TRAIT)
-	ADD_TRAIT(new_body, TRAIT_BRUTESANITY, DISTORTION_TRAIT)
-	ADD_TRAIT(new_body, TRAIT_SANITYIMMUNE, DISTORTION_TRAIT)
-	ADD_TRAIT(new_body, TRAIT_GENELESS, DISTORTION_TRAIT)
-	ADD_TRAIT(new_body, TRAIT_COMBATFEAR_IMMUNE, DISTORTION_TRAIT)
+	ADD_TRAIT(new_body, TRAIT_BRUTEPALE, MAGIC_TRAIT)
+	ADD_TRAIT(new_body, TRAIT_BRUTESANITY, MAGIC_TRAIT)
+	ADD_TRAIT(new_body, TRAIT_SANITYIMMUNE, MAGIC_TRAIT)
+	ADD_TRAIT(new_body, TRAIT_GENELESS, MAGIC_TRAIT)
+	ADD_TRAIT(new_body, TRAIT_COMBATFEAR_IMMUNE, MAGIC_TRAIT)
 
 	// Clear the current disguise items list
 	current_disguise_items = list()
@@ -724,7 +724,7 @@
 		if(!current_disguise.dropItemToGround(W))
 			qdel(W)
 	new /obj/effect/gibspawner/human/bodypartless(get_turf(current_disguise))
-	current_disguise.qdel()
+	qdel(current_disguise)
 	current_disguise = null
 
 	// Dramatic entrance
