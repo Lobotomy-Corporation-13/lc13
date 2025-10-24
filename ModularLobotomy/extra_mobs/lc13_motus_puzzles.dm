@@ -127,7 +127,7 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 
 /obj/item/crown_dagger_puzzle/hammer
 	name = "weathered hammer"
-	icon = 'ModularTegustation/Teguicons/workshop.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/workshop.dmi'
 	icon_state = "hammer"
 
 /obj/item/crown_dagger_puzzle/crown
@@ -186,7 +186,7 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 /obj/structure/puzzle_key_case
 	name = "strange keycase"
 	desc = "A case holding a key, however something feels off about it. If only you could test some items on it..."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "key_case"
 	density = TRUE
 	anchored = TRUE
@@ -438,7 +438,7 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 /obj/structure/drone_maker
 	name = "drone maker"
 	desc = "A machine with controls implying that this machine could make drones."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "drone_maker"
 	anchored = TRUE
 	density = TRUE

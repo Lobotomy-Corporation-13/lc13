@@ -30,7 +30,7 @@
 	typing_interval = 30
 	portrait = "elliot.PNG"
 	start_scene_id = "intro"
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "elliot"
 	icon_living = "elliot"
 	icon_dead = "elliot_down"
@@ -89,6 +89,7 @@
 	var/puzzle_riddle = FALSE
 	var/puzzle_heretic = FALSE
 	var/turf/emergency_escape
+	var/pending_boss_dialogue = FALSE
 
 /mob/living/simple_animal/hostile/ui_npc/elliot/Life()
 	if(..())
@@ -301,6 +302,10 @@
 	visible_message(span_warning("[src] gets back up!"))
 	can_act = TRUE
 
+	// Trigger boss dialogue continuation if pending
+	if(pending_boss_dialogue)
+		addtimer(CALLBACK(src, PROC_REF(boss_alert_continue)), 5)
+
 /mob/living/simple_animal/hostile/ui_npc/elliot/proc/Unguilt()
 	if(guilt)
 		cut_overlay(guilt_icon)
@@ -333,7 +338,7 @@
 /atom/movable/screen/alert/status_effect/standstorm_stance
 	name = "Standstorm Stance"
 	desc = "You feel the sand move with you, your attacks now inflict 2 Tremor on hit."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "false_kindness"
 
 /datum/status_effect/standstorm_stance/on_apply()
@@ -356,6 +361,25 @@
 	UnregisterSignal(status_holder, COMSIG_MOB_ITEM_ATTACK)
 
 /mob/living/simple_animal/hostile/ui_npc/elliot/proc/boss_alert()
+	// Apply guilt stun similar to AnnihilationBeam
+	guilt = TRUE
+	ending = TRUE
+	add_overlay(guilt_icon)
+	revive_time = 2 SECONDS
+	pending_boss_dialogue = TRUE
+	say("No... Get out of my head...")
+	Downed(FALSE)
+	SLEEP_CHECK_DEATH(30)
+	say("Please... Help me...")
+
+/mob/living/simple_animal/hostile/ui_npc/elliot/proc/boss_alert_continue()
+	// Called after being saved - explain about door
+	Unguilt()
+	revive_time = 4 SECONDS
+	pending_boss_dialogue = FALSE
+	SLEEP_CHECK_DEATH(20)
+	say("Thank you... I needed that...")
+	SLEEP_CHECK_DEATH(40)
 	say("We are getting close to the final obstacle...")
 	SLEEP_CHECK_DEATH(40)
 	say("Hey, With us getting there soon...")
@@ -440,7 +464,7 @@
 /mob/living/simple_animal/hostile/ui_npc/elliot/Initialize()
 	. = ..()
 	RegisterSignal(src, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(CheckSpace))
-	guilt_icon = mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
+	guilt_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
 	radio = new /obj/item/radio/headset/silicon/ai(src)
 
 	scene_manager.load_scenes(list(
@@ -1331,7 +1355,7 @@
 
 /mob/living/simple_animal/npc/tinkerer/elliot_taunt
 	default_delay = 13
-	speech = list("Icon: tinker_d", "Icon: tinker", "At long last, we meet again...", "Elliot: Tinkerer... What the hell did you do to this place?!", "Oh? You are wondering what I did to this place?", "My cute little drone, don't you know better then anyone?", "Elliot: No... I moved past it...", "Oh did you? Dear Elliot...", "Elliot: I... discarded that name...", "Yet you still returned to this place...", "Aw, don't tell me... Do you still wish to live after all you have done?", "Elliot: I...", "HA! So much for your regrets over this place...", "Elliot: ... Please, I can't just...", "Ha... I have had enough with your excuses, Dear Elliot.", "Tonight, I shall finish what I have started...", "And ruin the last followers of Motus!", "... And rid you of your guilt, Elliot...", "Icon: tinker_u")
+	speech = list("Icon: tinker_d", "Icon: tinker", "Aw, your keycard works no more?...", "This temple has a new master now...", "Elliot: Tinkerer... What the hell did you do to this place?!", "Oh? You are wondering what I did to this place?", "My cute little drone, don't you know better then anyone?", "Elliot: No... I moved past it...", "Oh did you? Dear Elliot...", "Elliot: I... discarded that name...", "Yet you still returned to this place...", "Aw, don't tell me... Do you still wish to live after all you have done?", "Elliot: I...", "HA! So much for your regrets over this place...", "Elliot: ... Please, I can't just...", "Ha... I have had enough with your excuses, Dear Elliot.", "Tonight, I shall finish what I have started...", "And ruin the last followers of Motus!", "... And rid you of your guilt, Elliot...", "Icon: tinker_u")
 	faction = list("city", "hostile", "neutral")
 	var/icon_amount = 0
 	var/elliot_change = FALSE
@@ -1410,7 +1434,7 @@
 	SLEEP_CHECK_DEATH(30)
 	say("Once more... The tides of battle turn to their favor...")
 	SLEEP_CHECK_DEATH(30)
-	say("Everyone is fated to fall... As the sanctuary crumbles around me...") //while I use my core to escape this hellscape
+	say("Everyone is fated to fall... As the sanctuary crumbles around me...")
 	SLEEP_CHECK_DEATH(30)
 	say("Last time, I let my fear consume me, abandoning my allies.")
 	SLEEP_CHECK_DEATH(40)

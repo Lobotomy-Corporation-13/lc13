@@ -60,15 +60,15 @@
 /mob/living/simple_animal/hostile/clan/stone_guard
 	name = "stone statue"
 	desc = "A humanoid looking statue wielding a spear... It appears to have 'Resurgence Clan' etched on their back..."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "stone_guard"
 	icon_living = "stone_guard"
 	icon_dead = "stone_guard_dead"
-	maxHealth = 1000
-	health = 1000
+	maxHealth = 600
+	health = 600
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 14
-	melee_damage_upper = 17
+	melee_damage_lower = 7
+	melee_damage_upper = 9
 	attack_verb_continuous = "stabs"
 	attack_verb_simple = "stab"
 	attack_sound = 'sound/weapons/fixer/generic/spear2.ogg'
@@ -78,7 +78,7 @@
 	clan_charge_cooldown = 1 SECONDS
 	var/attack_tremor = 3
 	var/can_act = TRUE
-	var/ability_damage = 40
+	var/ability_damage = 25
 	var/ability_cooldown
 	var/ability_cooldown_time = 10 SECONDS
 	var/ability_range = 5
@@ -129,7 +129,7 @@
 /mob/living/simple_animal/hostile/clan/stone_guard/proc/stagger()
 	can_act = FALSE
 	playsound(src, 'sound/weapons/ego/devyat_overclock_death.ogg', 50, FALSE, 5)
-	var/mutable_appearance/colored_overlay = mutable_appearance('ModularTegustation/Teguicons/tegumobs.dmi', "small_stagger", layer + 0.1)
+	var/mutable_appearance/colored_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "small_stagger", layer + 0.1)
 	add_overlay(colored_overlay)
 	ChangeResistances(list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.6, BLACK_DAMAGE = 2.4, PALE_DAMAGE = 3))
 	SLEEP_CHECK_DEATH(stun_duration)
@@ -186,7 +186,7 @@
 /mob/living/simple_animal/hostile/mad_fly_swarm
 	name = "mad fly swarm"
 	desc = "A swarm of maddened flies... or are they mosquitoes?"
-	icon = 'ModularTegustation/Teguicons/teaser_mobs.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs.dmi'
 	icon_state = "mad_fly_swarm"
 	icon_living = "mad_fly_swarm"
 	maxHealth = 200
@@ -346,7 +346,7 @@
 /mob/living/simple_animal/hostile/scarlet_rose
 	name = "scarlet rose"
 	desc = "A single blood red rose, connected to all nearby vines..."
-	icon = 'ModularTegustation/Teguicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "rose_red"
 	maxHealth = 800
 	health = 800
@@ -622,7 +622,7 @@
 /mob/living/simple_animal/hostile/clan/stone_keeper
 	name = "stone guardian"
 	desc = "A monstrous machine, with a glare of hatred."
-	icon = 'ModularTegustation/Teguicons/teaser_mobs3.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teaser_mobs3.dmi'
 	icon_state = "stone_keeper"
 	icon_living = "stone_keeper"
 	icon_dead = ""
@@ -1136,7 +1136,7 @@
 /atom/movable/screen/alert/status_effect/keeper_chain
 	name = "Keeper Chain"
 	desc = "You shall not run from this fight..."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "locked"
 
 /datum/status_effect/keeper_chain/on_apply()
@@ -1218,7 +1218,7 @@
 /mob/living/simple_animal/hostile/keeper_piller
 	name = "mimic: pillar of the black sun"
 	desc = "A glowing pillar, a mimic of a certain abnormality, created by the Tinkerer..."
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "sun_pillar"
 	icon_living = "sun_pillar"
 	health = 1000
@@ -1276,7 +1276,7 @@
 //Laser attack
 /obj/effect/temp_visual/keeper_laser
 	name = "keeper laser"
-	icon = 'ModularTegustation/Teguicons/32x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/32x64.dmi'
 	icon_state = "pillar_strike"
 	duration = 15
 
