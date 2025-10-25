@@ -462,8 +462,9 @@
 			var/obj/item/S = new suit_type()
 			// Remove equip slowdown from E.G.O armor to allow instant equipping
 			if(istype(S, /obj/item/clothing/suit/armor/ego_gear))
-				var/obj/item/clothing/suit/armor/ego_gear/E = S
-				E.equip_slowdown = 0
+				var/obj/item/clothing/suit/armor/ego_gear/equippable_gear = new S(get_turf(src))
+				equippable_gear.equip_slowdown = 0
+				new_body.equip_to_slot(equippable_gear,ITEM_SLOT_OCLOTHING, TRUE)
 			new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
 			current_disguise_items += S
 
