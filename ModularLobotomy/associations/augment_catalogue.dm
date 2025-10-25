@@ -447,19 +447,6 @@
 			recalculate_cost()
 			return TRUE
 
-		if("set_name")
-			current_design.augment_name = params["name"]
-			return TRUE
-
-		if("set_description")
-			current_design.augment_desc = params["description"]
-			return TRUE
-
-		if("set_colors")
-			current_design.primary_color = params["primaryColor"]
-			current_design.secondary_color = params["secondaryColor"]
-			return TRUE
-
 		if("add_effect")
 			var/effect_id = params["effectId"]
 			current_design.selected_effects += effect_id
@@ -477,6 +464,16 @@
 			if(!current_design.form_id || !length(current_design.selected_effects))
 				to_chat(usr, span_warning("Design incomplete! Please select a form and at least one effect."))
 				return
+
+			// Update design with latest data from UI
+			if(params["name"])
+				current_design.augment_name = params["name"]
+			if(params["description"])
+				current_design.augment_desc = params["description"]
+			if(params["primaryColor"])
+				current_design.primary_color = params["primaryColor"]
+			if(params["secondaryColor"])
+				current_design.secondary_color = params["secondaryColor"]
 
 			create_order_ticket(usr)
 			return TRUE
@@ -529,6 +526,16 @@
 			if(!current_design.form_id || !length(current_design.selected_effects))
 				to_chat(usr, span_warning("Design incomplete! Please select a form and at least one effect."))
 				return
+
+			// Update design with latest data from UI
+			if(params["name"])
+				current_design.augment_name = params["name"]
+			if(params["description"])
+				current_design.augment_desc = params["description"]
+			if(params["primaryColor"])
+				current_design.primary_color = params["primaryColor"]
+			if(params["secondaryColor"])
+				current_design.secondary_color = params["secondaryColor"]
 
 			upload_to_library(usr, explanation)
 			return TRUE

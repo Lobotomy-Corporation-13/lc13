@@ -1396,3 +1396,121 @@
 	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
 		return TRUE
 	return FALSE
+
+//--------------------------------------
+// Debug Augment Fabricator
+//--------------------------------------
+
+/obj/machinery/augment_fabricator/debug
+	name = "Debug Augment Fabricator"
+	desc = "A modified augment fabricator for testing purposes. No ID required, completely free to use. For development/testing only!"
+	icon_state = "protolathe"
+
+// Override to skip access check - anyone can use this
+/obj/machinery/augment_fabricator/debug/attack_hand(mob/user)
+	if(!Adjacent(user, src))
+		return ..()
+
+	if(!istype(user, /mob/living/carbon/human))
+		to_chat(user, "<span class='warning'>You lack the dexterity to operate this machine.</span>")
+		return TRUE
+
+	// --- NO Access Check - Debug mode! ---
+	// Anyone can use this machine
+
+	// --- Delegate UI Interaction to the Handler ---
+	if(ui_handler)
+		return ui_handler.ui_interact(user)
+	else
+		log_admin("Missing ui_handler on [src] during attack_hand by [user]")
+		to_chat(user, "<span class='warning'>Machine interface error. Please report this.</span>")
+		return TRUE
+
+// Override to always return TRUE - everything is free!
+/obj/machinery/augment_fabricator/debug/deduct_cost(mob/user, amount)
+	// Debug mode - no cost!
+	to_chat(user, "<span class='notice'>[src] is in debug mode - no charge applied.</span>")
+	return TRUE
+
+// Override to skip access check for tickets
+/obj/machinery/augment_fabricator/debug/process_augment_ticket(obj/item/augment_ticket/ticket, mob/user)
+	// --- NO Access Check - Debug mode! ---
+
+	// Validate ticket
+	if(!ticket.form_id || !length(ticket.selected_effects))
+		to_chat(user, span_warning("This ticket appears to be invalid or blank!"))
+		return
+
+	// No cost check in debug mode - always succeed
+	to_chat(user, span_notice("[src] is in debug mode - no charge for ticket processing."))
+
+	// Create a datum/augment_design from the ticket
+	var/datum/augment_design/design = new /datum/augment_design()
+
+	// Find the form by ID
+	var/list/form_data = null
+	for(var/form_name in available_forms)
+		var/list/form = available_forms[form_name]
+		if(form["id"] == ticket.form_id)
+			form_data = form
+			break
+
+	if(!form_data)
+		to_chat(user, span_warning("The form specified in this ticket is no longer available!"))
+		return
+
+	design.form_data = form_data
+	design.rank = ticket.rank
+	design.selected_effects_data = list()
+
+	// Rebuild selected_effects_data from ticket
+	for(var/effect_id in ticket.selected_effects)
+		var/list/effect_def = null
+		for(var/list/possible_effect in available_effects)
+			if(possible_effect["id"] == effect_id)
+				effect_def = possible_effect
+				break
+		if(effect_def)
+			design.selected_effects_data += list(effect_def)
+
+	// Calculate costs (for logging/validation)
+	design.base_ep = form_data["base_ep"] + ((design.rank - 1) * 2)
+	design.total_ep_cost = 0
+	for(var/list/effect in design.selected_effects_data)
+		design.total_ep_cost += effect["ep_cost"]
+	design.base_ahn_cost = form_data["base_cost"] * design.rank
+	design.total_ahn_cost = ticket.total_cost
+
+	// Fabricate the augment
+	to_chat(user, span_notice("Processing augment order ticket..."))
+	var/temp_icon_state = icon_state
+	icon_state = icon_state_animation
+	playsound(get_turf(src), 'sound/items/rped.ogg', 50, TRUE, -1)
+	sleep(7)
+	icon_state = temp_icon_state
+
+	var/obj/item/augment/new_augment = make_new_augment()
+	new_augment.loc = get_turf(src)
+
+	if(new_augment)
+		// Use ticket data for naming
+		var/final_name = ticket.augment_name
+		if(!final_name || final_name == "")
+			final_name = "[form_data["name"]] Augment"
+		new_augment.name = "[final_name] (Rank [design.rank])"
+
+		var/final_desc = ticket.augment_desc
+		if(!final_desc || final_desc == "")
+			final_desc = "A custom-fabricated augment using the '[form_data["name"]]' template at Rank [design.rank]."
+		new_augment.desc = final_desc
+
+		new_augment.apply_design(design, ticket.primary_color, ticket.secondary_color)
+
+		log_game("[key_name(user)] fabricated '[new_augment.name]' from ticket [ticket.ticket_id] using [src.name] (DEBUG) at ([loc.x],[loc.y],[loc.z]). Design Cost: FREE (debug mode).")
+		to_chat(user, span_notice("Augment successfully fabricated from order ticket!"))
+
+		// Delete the ticket after successful fabrication
+		qdel(ticket)
+	else
+		log_runtime("Failed to create augment item at [src] for [user] from ticket.")
+		to_chat(user, span_warning("Critical fabrication failure! Please contact administration.</span>"))

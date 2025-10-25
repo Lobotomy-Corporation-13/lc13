@@ -1,6 +1,3 @@
-// The Envy of Humanity - A distortion that can scan and assume the forms of humans
-// Coded for LC13
-
 /mob/living/simple_animal/hostile/distortion/envy_humanity
 	name = "The Envy of Humanity"
 	desc = "A writhing, shifting mass that hungers to become what it can never truly be."
@@ -44,6 +41,8 @@
 	var/mob/living/carbon/human/current_disguise = null
 	/// Reference to the current simple mob we're possessing (if any)
 	var/mob/living/simple_animal/current_possessed_mob = null
+	/// Reference to the current carbon mob we're possessing (if any)
+	var/mob/living/carbon/current_possessed_carbon = null
 	/// Are we currently in scanning mode?
 	var/scanning_mode = TRUE
 	/// Cooldown for scanning
@@ -66,7 +65,7 @@
 	to_chat(src, span_notice("You can:"))
 	to_chat(src, span_notice("- Scan humans by targeting them (ranged attack)"))
 	to_chat(src, span_notice("- Assume recorded forms to infiltrate and fight"))
-	to_chat(src, span_notice("- Possess dead simple mobs by attacking their corpses"))
+	to_chat(src, span_notice("- Possess dead mobs (simple or carbon) by attacking their corpses"))
 	to_chat(src, span_notice("- Use Lullaby of the Hidden to become nearly invisible"))
 	to_chat(src, span_notice("- Phase through doors by attacking them"))
 	to_chat(src, span_notice("- Explosively revert from human form when needed"))
@@ -89,7 +88,7 @@
 // Override EscapeConfinement to phase out instead of attacking
 /mob/living/simple_animal/hostile/distortion/envy_humanity/EscapeConfinement()
 	// Cannot escape while inside another form
-	if(current_disguise || current_possessed_mob)
+	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		return
 
 	// Phase through buckles (like chairs, beds, etc)
@@ -105,10 +104,10 @@
 			forceMove(exit_turf)
 			visible_message(span_warning("[src] phases out of [container]!"))
 
-// Override AttackingTarget to possess dead simple mobs
+// Override AttackingTarget to possess dead simple mobs and carbon mobs
 /mob/living/simple_animal/hostile/distortion/envy_humanity/AttackingTarget(atom/attacked_target)
 	// Cannot attack while inside another form
-	if(current_disguise || current_possessed_mob)
+	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		return FALSE
 
 	// Door phasing - teleport through doors instead of attacking them
@@ -122,11 +121,19 @@
 	if(hidden_mode)
 		BreakStealth()
 
+	// Check if target is a dead carbon mob we can possess
+	if(istype(attacked_target, /mob/living/carbon))
+		var/mob/living/carbon/C = attacked_target
+		// Only possess if: dead, no existing mind/player, and we're not already in a form
+		if(C.stat == DEAD && !C.mind && !current_disguise && !current_possessed_mob && !current_possessed_carbon)
+			PossessCarbon(C)
+			return TRUE
+
 	// Check if target is a dead simple mob we can possess
 	if(istype(attacked_target, /mob/living/simple_animal))
 		var/mob/living/simple_animal/SA = attacked_target
 		// Only possess if: dead, no existing mind/player, and we're not already in a form
-		if(SA.stat == DEAD && !SA.mind && !current_disguise && !current_possessed_mob)
+		if(SA.stat == DEAD && !SA.mind && !current_disguise && !current_possessed_mob && !current_possessed_carbon)
 			PossessMob(SA)
 			return TRUE
 
@@ -136,12 +143,10 @@
 // Override OpenFire to scan instead of attacking
 /mob/living/simple_animal/hostile/distortion/envy_humanity/OpenFire(atom/A)
 	// Cannot use ranged attacks while inside another form
-	if(current_disguise || current_possessed_mob)
+	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		return
 
-	// Break stealth if trying to use ranged attacks while hidden
-	if(hidden_mode)
-		BreakStealth()
+	// Scanning doesn't break stealth - it's a passive observation ability
 
 	// If we're not in scanning mode or on cooldown, don't scan
 	if(!scanning_mode || world.time < scan_cooldown)
@@ -194,7 +199,7 @@
 	wraith_effect.color = "#000000"
 	animate(wraith_effect, alpha = 0, time = 2 SECONDS)
 
-	// Record the human's data
+	// Record the human's data (create new list to ensure clean data)
 	var/list/body_data = list()
 	body_data["real_name"] = target.real_name
 	body_data["gender"] = target.gender
@@ -205,6 +210,18 @@
 	target.dna.copy_dna(copied_dna)
 	body_data["dna"] = copied_dna
 
+	// Record attributes (with safety checks to ensure numeric values)
+	body_data["fortitude"] = get_attribute_level(target, FORTITUDE_ATTRIBUTE) || 0
+	body_data["prudence"] = get_attribute_level(target, PRUDENCE_ATTRIBUTE) || 0
+	body_data["temperance"] = get_attribute_level(target, TEMPERANCE_ATTRIBUTE) || 0
+	body_data["justice"] = get_attribute_level(target, JUSTICE_ATTRIBUTE) || 0
+
+	// Record assigned role
+	if(target.mind && target.mind.assigned_role)
+		body_data["assigned_role"] = target.mind.assigned_role
+	else
+		body_data["assigned_role"] = "Unknown"
+
 	// Appearance details
 	body_data["underwear"] = target.underwear
 	body_data["underwear_color"] = target.underwear_color
@@ -213,6 +230,8 @@
 	body_data["facial_hair_color"] = target.facial_hair_color
 	body_data["hairstyle"] = target.hairstyle
 	body_data["hair_color"] = target.hair_color
+	body_data["gradient_style"] = target.gradient_style || null
+	body_data["gradient_color"] = target.gradient_color || "000"
 
 	// Record ALL equipment worn by target
 	var/list/equipment = list()
@@ -304,13 +323,25 @@
 		action_types += A.type
 	body_data["action_types"] = action_types
 
-	// Store the body data
+	// Store the body data (this will overwrite any existing entry)
 	recorded_bodies[target.real_name] = body_data
 
+	// Build detailed feedback message (ensure all values are numeric)
+	var/stats_text = "F:[body_data["fortitude"] || 0] P:[body_data["prudence"] || 0] T:[body_data["temperance"] || 0] J:[body_data["justice"] || 0]"
+	var/role_text = body_data["assigned_role"] || "Unknown"
+
 	if(updating)
-		to_chat(src, span_boldnotice("Form updated: [target.real_name] ([length(equipment)] items)"))
+		to_chat(src, span_boldnotice("Form UPDATED: [target.real_name]"))
+		to_chat(src, span_notice("  Role: [role_text] | Stats: [stats_text]"))
+		to_chat(src, span_notice("  Equipment: [length(equipment)] items"))
 	else
-		to_chat(src, span_boldnotice("Form recorded: [target.real_name] ([length(equipment)] items)"))
+		to_chat(src, span_boldnotice("Form RECORDED: [target.real_name]"))
+		to_chat(src, span_notice("  Role: [role_text] | Stats: [stats_text]"))
+		to_chat(src, span_notice("  Equipment: [length(equipment)] items"))
+
+	// Debug logging
+	log_game("[key_name(src)] [updating ? "updated" : "recorded"] form data for [target.real_name] ([role_text], [stats_text], [length(equipment)] items)")
+
 	return TRUE
 
 /// Creates a human body based on recorded data and transfers into it
@@ -326,6 +357,11 @@
 
 	// Can't assume human form while possessing a mob
 	if(current_possessed_mob && !QDELETED(current_possessed_mob))
+		to_chat(src, span_warning("You must abandon your current vessel first!"))
+		return FALSE
+
+	// Can't assume human form while possessing a carbon
+	if(current_possessed_carbon && !QDELETED(current_possessed_carbon))
 		to_chat(src, span_warning("You must abandon your current vessel first!"))
 		return FALSE
 
@@ -368,8 +404,31 @@
 	new_body.facial_hair_color = body_data["facial_hair_color"]
 	new_body.hairstyle = body_data["hairstyle"]
 	new_body.hair_color = body_data["hair_color"]
+	new_body.gradient_style = body_data["gradient_style"]
+	new_body.gradient_color = body_data["gradient_color"]
 
 	new_body.updateappearance()
+
+	// Apply recorded attributes to match the original target's stats
+	if(body_data["fortitude"])
+		var/target_fortitude = body_data["fortitude"]
+		var/current_fortitude = get_attribute_level(new_body, FORTITUDE_ATTRIBUTE)
+		new_body.adjust_attribute_level(FORTITUDE_ATTRIBUTE, target_fortitude - current_fortitude)
+
+	if(body_data["prudence"])
+		var/target_prudence = body_data["prudence"]
+		var/current_prudence = get_attribute_level(new_body, PRUDENCE_ATTRIBUTE)
+		new_body.adjust_attribute_level(PRUDENCE_ATTRIBUTE, target_prudence - current_prudence)
+
+	if(body_data["temperance"])
+		var/target_temperance = body_data["temperance"]
+		var/current_temperance = get_attribute_level(new_body, TEMPERANCE_ATTRIBUTE)
+		new_body.adjust_attribute_level(TEMPERANCE_ATTRIBUTE, target_temperance - current_temperance)
+
+	if(body_data["justice"])
+		var/target_justice = body_data["justice"]
+		var/current_justice = get_attribute_level(new_body, JUSTICE_ATTRIBUTE)
+		new_body.adjust_attribute_level(JUSTICE_ATTRIBUTE, target_justice - current_justice)
 
 	// Add distortion traits to the body
 	ADD_TRAIT(new_body, TRAIT_BRUTEPALE, MAGIC_TRAIT)
@@ -398,6 +457,10 @@
 		if(equipment["suit"])
 			var/suit_type = equipment["suit"]
 			var/obj/item/S = new suit_type()
+			// Remove equip slowdown from E.G.O armor to ensure it can be equipped
+			if(istype(S, /obj/item/clothing/suit/armor/ego_gear))
+				var/obj/item/clothing/suit/armor/ego_gear/ego_suit = S
+				ego_suit.equip_slowdown = 0
 			new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
 			current_disguise_items += S
 
@@ -555,7 +618,7 @@
 		to_chat(src, span_warning("This vessel already has a soul!"))
 		return FALSE
 
-	if(current_disguise || current_possessed_mob)
+	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		to_chat(src, span_warning("You are already inhabiting another form!"))
 		return FALSE
 
@@ -610,6 +673,80 @@
 
 	return TRUE
 
+/// Possesses a dead carbon mob and reanimates it
+/mob/living/simple_animal/hostile/distortion/envy_humanity/proc/PossessCarbon(mob/living/carbon/target)
+	if(!target || !istype(target, /mob/living/carbon))
+		return FALSE
+
+	// Safety checks
+	if(target.stat != DEAD)
+		to_chat(src, span_warning("The target must be dead to possess!"))
+		return FALSE
+
+	if(target.mind)
+		to_chat(src, span_warning("This vessel already has a soul!"))
+		return FALSE
+
+	if(current_disguise || current_possessed_mob || current_possessed_carbon)
+		to_chat(src, span_warning("You are already inhabiting another form!"))
+		return FALSE
+
+	// Break stealth before possessing
+	if(hidden_mode)
+		BreakStealth()
+
+	// Begin possession sequence
+	visible_message(span_danger("[src] begins to seep into [target]'s corpse!"))
+	to_chat(src, span_boldnotice("You begin entering [target]..."))
+	playsound(src, 'sound/magic/demon_consume.ogg', 75, TRUE)
+
+	// Create dark energy visual effect
+	var/obj/effect/temp_visual/dir_setting/wraith/possession_effect = new(get_turf(target))
+	possession_effect.color = "#000000"
+	animate(possession_effect, alpha = 0, time = 3 SECONDS)
+
+	// Possession delay (can be interrupted)
+	if(!do_after(src, 3 SECONDS, target))
+		to_chat(src, span_warning("The possession fails!"))
+		visible_message(span_notice("[src] recoils from [target]!"))
+		return FALSE
+
+	// Success! Possess the mob
+	visible_message(span_userdanger("[target] twitches violently and rises, eyes glowing unnaturally!"))
+	playsound(target, 'sound/hallucinations/growl1.ogg', 50, TRUE)
+
+	// Fully revive and heal the target
+	target.revive(full_heal = TRUE, admin_revive = FALSE)
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		H.fully_heal(TRUE)
+	else
+		target.setMaxHealth(target.maxHealth)
+		target.health = target.maxHealth
+
+	// Transfer mind into the possessed mob
+	if(mind)
+		mind.transfer_to(target)
+
+	// Move distortion inside the mob (hidden)
+	forceMove(target)
+	current_possessed_carbon = target
+
+	// Grant the abandon vessel action (check if they already have one)
+	var/datum/action/innate/abandon_vessel/abandon = locate() in target.actions
+	if(!abandon)
+		abandon = new()
+		abandon.Grant(target)
+	abandon.source_distortion = src
+
+	// Register death signal for the possessed carbon
+	RegisterSignal(target, COMSIG_LIVING_DEATH, PROC_REF(OnPossessedCarbonDeath))
+
+	to_chat(target, span_userdanger("You now inhabit the body of [target]!"))
+	to_chat(target, span_notice("Use the 'Abandon Vessel' action to leave this body."))
+
+	return TRUE
+
 /// Cleanup all items created for the disguise
 /mob/living/simple_animal/hostile/distortion/envy_humanity/proc/CleanupDisguiseItems()
 	if(!length(current_disguise_items))
@@ -655,6 +792,23 @@
 	// Take damage for losing the vessel violently
 	adjustBruteLoss(150)
 
+/// Called when the possessed carbon dies
+/mob/living/simple_animal/hostile/distortion/envy_humanity/proc/OnPossessedCarbonDeath(mob/living/carbon/C, gibbed)
+	SIGNAL_HANDLER
+
+	if(QDELETED(src) || stat == DEAD)
+		return
+
+	// Unregister the signal
+	UnregisterSignal(C, COMSIG_LIVING_DEATH)
+
+	// Force ejection
+	visible_message(span_userdanger("The vessel fails as [C] dies!"))
+	AbandonCarbonVessel()
+
+	// Take damage for losing the vessel violently
+	adjustBruteLoss(150)
+
 /// Leaves the possessed mob's body
 /mob/living/simple_animal/hostile/distortion/envy_humanity/proc/AbandonVessel()
 	if(!current_possessed_mob || QDELETED(current_possessed_mob))
@@ -684,6 +838,39 @@
 
 	// Clear reference
 	current_possessed_mob = null
+
+	visible_message(span_danger("[src] tears free from the dying vessel!"))
+	return TRUE
+
+/// Leaves the possessed carbon body
+/mob/living/simple_animal/hostile/distortion/envy_humanity/proc/AbandonCarbonVessel()
+	if(!current_possessed_carbon || QDELETED(current_possessed_carbon))
+		return FALSE
+
+	var/turf/exit_turf = get_turf(current_possessed_carbon)
+
+	// Unregister death signal
+	UnregisterSignal(current_possessed_carbon, COMSIG_LIVING_DEATH)
+
+	// Transfer mind back to distortion
+	if(current_possessed_carbon.mind)
+		current_possessed_carbon.mind.transfer_to(src)
+
+	// Move distortion back to the world
+	forceMove(exit_turf)
+
+	// Visual and audio effects
+	visible_message(span_userdanger("[current_possessed_carbon] convulses violently as something tears free!"))
+	playsound(exit_turf, 'sound/magic/demon_consume.ogg', 75, TRUE)
+
+	// Kill the possessed carbon
+	current_possessed_carbon.gib()
+
+	// Blood splatter effect
+	new /obj/effect/temp_visual/dir_setting/wraith(exit_turf)
+
+	// Clear reference
+	current_possessed_carbon = null
 
 	visible_message(span_danger("[src] tears free from the dying vessel!"))
 	return TRUE
@@ -745,6 +932,11 @@
 	if(current_possessed_mob && !QDELETED(current_possessed_mob))
 		current_possessed_mob.death()
 		current_possessed_mob = null
+
+	// Kill possessed carbon if present
+	if(current_possessed_carbon && !QDELETED(current_possessed_carbon))
+		current_possessed_carbon.death()
+		current_possessed_carbon = null
 
 	return ..()
 
@@ -931,7 +1123,14 @@
 
 	// Abandon!
 	owner.cut_overlay(dark_overlay)
-	source_distortion.AbandonVessel()
+
+	// Check which type of vessel we're in and abandon accordingly
+	if(source_distortion.current_possessed_carbon && owner == source_distortion.current_possessed_carbon)
+		source_distortion.AbandonCarbonVessel()
+	else if(source_distortion.current_possessed_mob && owner == source_distortion.current_possessed_mob)
+		source_distortion.AbandonVessel()
+	else
+		to_chat(owner, span_warning("Error: Unable to determine vessel type!"))
 
 /// Lullaby of the Hidden - stealth ability
 /datum/action/cooldown/lullaby_hidden
@@ -952,7 +1151,7 @@
 		return FALSE
 
 	// Cannot use while in another form
-	if(envy.current_disguise || envy.current_possessed_mob)
+	if(envy.current_disguise || envy.current_possessed_mob || envy.current_possessed_carbon)
 		to_chat(owner, span_warning("You cannot use this ability while inhabiting another form!"))
 		return FALSE
 

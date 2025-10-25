@@ -1149,12 +1149,7 @@
 /turf/open/floor/wood,
 /area/department_main/human)
 "IZ" = (
-/obj/machinery/augment_fabricator{
-	roles = list("Test Range Agent");
-	sale_percentages = list(100);
-	max_66_sales = 100;
-	on_sale_pct = 1
-	},
+/obj/machinery/augment_fabricator/debug,
 /turf/open/floor/facility,
 /area/test_range)
 "Jr" = (

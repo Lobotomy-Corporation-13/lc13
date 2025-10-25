@@ -90,19 +90,22 @@ const TemplatePage = (props, context) => {
 
   const handleNameChange = (e, value) => {
     setAugName(value);
-    act('set_name', { name: value });
   };
 
   const handleDescChange = (e, value) => {
     setAugDesc(value);
-    act('set_description', { description: value });
   };
 
-  const handleColorChange = () => {
-    act('set_colors', {
-      primaryColor: primaryColor,
-      secondaryColor: secondaryColor,
-    });
+  const handlePrimaryColorChange = (e, value) => {
+    const newColor = value && value.length > 0
+      && !value.startsWith('#') ? '#' + value : value;
+    setPrimaryColor(newColor);
+  };
+
+  const handleSecondaryColorChange = (e, value) => {
+    const newColor = value && value.length > 0
+      && !value.startsWith('#') ? '#' + value : value;
+    setSecondaryColor(newColor);
   };
 
   return (
@@ -176,8 +179,7 @@ const TemplatePage = (props, context) => {
               onInput={handleNameChange}
               width="100%"
               maxLength={64}
-              placeholder="E.g., 'My Custom Augment'"
-              onBlur={handleColorChange} />
+              placeholder="E.g., 'My Custom Augment'" />
           </LabeledList.Item>
           <LabeledList.Item label="Description">
             <TextArea
@@ -186,18 +188,12 @@ const TemplatePage = (props, context) => {
               width="100%"
               height="60px"
               maxLength={256}
-              placeholder="A brief description..."
-              onBlur={handleColorChange} />
+              placeholder="A brief description..." />
           </LabeledList.Item>
           <LabeledList.Item label="Primary Color">
             <Input
               value={primaryColor}
-              onInput={(e, value) => {
-                const newColor = value && value.length > 0
-                  && !value.startsWith('#') ? '#' + value : value;
-                setPrimaryColor(newColor);
-              }}
-              onBlur={handleColorChange}
+              onInput={handlePrimaryColorChange}
               width="100px"
               placeholder="#RRGGBB"
               maxLength={7}
@@ -224,12 +220,7 @@ const TemplatePage = (props, context) => {
           <LabeledList.Item label="Secondary Color">
             <Input
               value={secondaryColor}
-              onInput={(e, value) => {
-                const newColor = value && value.length > 0
-                  && !value.startsWith('#') ? '#' + value : value;
-                setSecondaryColor(newColor);
-              }}
-              onBlur={handleColorChange}
+              onInput={handleSecondaryColorChange}
               width="100px"
               placeholder="#RRGGBB"
               maxLength={7}
@@ -381,7 +372,12 @@ const EffectsPage = (props, context) => {
       alert('Please select at least one effect.');
       return;
     }
-    act('create_ticket');
+    act('create_ticket', {
+      name: augName,
+      description: augDesc,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+    });
   };
 
   return (
@@ -805,7 +801,13 @@ const UploadPage = (props, context) => {
       alert('Please give your augment a name.');
       return;
     }
-    act('upload_design', { explanation: explanation });
+    act('upload_design', {
+      explanation: explanation,
+      name: augName,
+      description: augDesc,
+      primaryColor: primaryColor,
+      secondaryColor: secondaryColor,
+    });
     setExplanation(''); // Clear explanation after upload
     setPage('effects'); // Go back to effects page
   };
