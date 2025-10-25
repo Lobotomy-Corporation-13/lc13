@@ -7,7 +7,7 @@
 	base_pixel_x = -16
 	maxHealth = 2000
 	health = 2000
-	fear_level = WAW_LEVEL
+	fear_level = 0
 	can_spawn = TRUE
 	move_to_delay = 3
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
@@ -116,6 +116,9 @@
 		if(door_turf)
 			forceMove(door_turf)
 		return TRUE
+
+	if(attacked_target == src)
+		return FALSE
 
 	// Break stealth if trying to attack while hidden
 	if(hidden_mode)
