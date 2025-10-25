@@ -459,16 +459,13 @@
 		// Suit
 		if(equipment["suit"])
 			var/suit_type = equipment["suit"]
-			// Check if it's E.G.O armor and handle differently
-			if(ispath(suit_type, /obj/item/clothing/suit/armor/ego_gear))
-				var/obj/item/clothing/suit/armor/ego_gear/S = new suit_type()
-				S.equip_slowdown = 0  // Remove equip slowdown
-				new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
-				current_disguise_items += S
-			else
-				var/obj/item/S = new suit_type()
-				new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
-				current_disguise_items += S
+			var/obj/item/S = new suit_type()
+			// Remove equip slowdown from E.G.O armor to allow instant equipping
+			if(istype(S, /obj/item/clothing/suit/armor/ego_gear))
+				var/obj/item/clothing/suit/armor/ego_gear/ego_armor = S
+				ego_armor.equip_slowdown = 0
+			new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
+			current_disguise_items += S
 
 		// Back
 		if(equipment["back"])
