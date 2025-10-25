@@ -1,0 +1,7 @@
+author: "Aseidos"
+delete-after: True
+changes:
+  - bugfix: "Fixes Blade Lineage \"To Claim Their Bones\" move having inverted HP scaling (Max damage at full HP)"
+  - bugfix: "Fixes Blade Lineage blade Crit/Death prevention capabilities being potentially permanent in some cases."
+  - bugfix: "Fixes Blade Lineage blade damage scaling (via HP lost) being calculated on Yielding and not on Claiming."
+  - bugfix: "Users of the empowered \"To Claim Their Bones\" now properly fall dead afterwards if they were past the death threshold."

@@ -45,7 +45,7 @@
 		/datum/ego_datum/weapon/hexnail,
 		/datum/ego_datum/armor/hexnail
 	)
-//gift_type = /datum/ego_gifts/hex_nail
+	gift_type = /datum/ego_gifts/hex_nail
 
 	grouped_abnos = list(
 		/mob/living/simple_animal/hostile/abnormality/happyteddybear = 1.5,

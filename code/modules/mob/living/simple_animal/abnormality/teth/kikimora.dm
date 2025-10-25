@@ -26,7 +26,7 @@
 	/datum/ego_datum/weapon/kikimora,
 	/datum/ego_datum/armor/kikimora,
 	)
-	gift_type = null
+	gift_type =  /datum/ego_gifts/kikimora
 	//envy due to being a curse
 	chem_type = /datum/reagent/abnormality/sin/envy
 
@@ -88,7 +88,6 @@
 	SIGNAL_HANDLER
 	var/words_to_take = words_per_say
 	var/words_said = 0
-
 	var/message = speech_args[SPEECH_MESSAGE]
 	var/list/split_message = splittext(message, " ") //List each word in the message
 	for (var/i in 1 to length(split_message))
@@ -111,6 +110,11 @@
 	//Infection Mechanic
 	if(ishuman(owner))
 		var/mob/living/carbon/human/L = owner
+		var/mouth = L.ego_gift_list[MOUTH_1]
+		if(istype(mouth, /datum/ego_gifts/kikimora))
+			qdel(src)
+			return
+
 		if(spread_cooldown <= world.time)
 			for(var/mob/living/carbon/human/H in hearers(7, L))
 				if(prob(5 * words_said))

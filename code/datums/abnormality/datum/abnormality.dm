@@ -259,6 +259,7 @@
 			if(HAS_TRAIT(user, TRAIT_BONUS_EXP))
 				attribute_given ++
 			user.adjust_attribute_level(attribute_type, attribute_given)
+			to_chat(user, span_info("You gained [attribute_given] [attribute_type]!"))
 
 	if(console?.tutorial) //don't run logging-related code if tutorial console
 		return

@@ -273,3 +273,14 @@
 
 /obj/structure/fluff/hedge/opaque //useful for mazes and such
 	opacity = TRUE
+
+/obj/structure/fluff/street_light
+	name = "street light"
+	desc = "A street light pole, with 2 lanterns hanging off of it."
+	icon = 'icons/obj/fluff_64x64.dmi'
+	icon_state = "street_light"
+	pixel_x = -16
+	density = TRUE
+	anchored = TRUE
+	light_range = 6
+	light_power = 4

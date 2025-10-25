@@ -127,3 +127,42 @@
 	damage_type = PALE_DAMAGE
 	speed = 2
 	range = 6
+
+/// Ammo fired in Willing by default. Weak, fired quickly, very high spread. Hardly something appropiate for you to be using in ALEPH tier unless you're desperate.
+/obj/projectile/ego_bullet/willing
+	name = "fleshy round"
+	icon_state = "bonebullet"
+	color = COLOR_MOSTLY_PURE_RED
+	speed = 0.5
+	damage = 22
+	damage_type = RED_DAMAGE
+
+/// Ammo fired in Willing while Inexorable is active. Fired about half as fast as the normal ammo, but quite strong and much more precise.
+// Useful, but doesn't beat out real weapons in terms of damage.
+/obj/projectile/ego_bullet/willing/heavy
+	name = "bone round"
+	color = null
+	speed = 0.4
+	damage = 45
+
+/obj/projectile/ego_bullet/willing/heavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+
+/// Ammo fired in Willing while Entrenched is active (final stage). Fired slower than the previous, but extremely strong, accurate and pierces through one mob.
+// This is very strong, even for ALEPH, but limited by you only being able to fire it while standing still, after having progressed the gun to the entrenched state.
+/obj/projectile/ego_bullet/willing/superheavy
+	name = "heavy bone round"
+	color = null
+	speed = 0.3
+	damage = 70
+	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/willing/superheavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		for(var/i in 1 to 2)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+	if(pierces >= 2)
+		qdel(src)

@@ -4,6 +4,7 @@
 #define FILE_PE_QUOTA "data/PEQuota.json"
 #define FILE_ABNO_PICKS "data/abno_rates/[mode].json"
 #define FILE_CORE_SUPPRESSIONS "data/ClearedCores.json"
+#define FILE_RCE_EXPEDITION "data/RCEExpedition.json"
 #define ROUNDCOUNT_BUTTON_PRESSED 0
 
 #define KEEP_ROUNDS_MAP 3
@@ -34,6 +35,8 @@ SUBSYSTEM_DEF(persistence)
 	var/list/cleared_core_suppressions = list()
 	/// LOBOTOMYCORPORATION ADDITION: Button counter
 	var/rounds_since_button_pressed = 0
+	/// RCE Expedition counter
+	var/rce_expedition_number = 0
 	/// Door to Nowhere tape archive
 	var/list/door_to_nowhere_tapes = list()
 	var/list/obj/machinery/tape_archive/tape_archive_machines = list()
@@ -52,6 +55,7 @@ SUBSYSTEM_DEF(persistence)
 		LoadPEStatus()
 	LoadClearedCores()
 	Load_button_counter() // LOBOTOMYCORPORATION ADDITION: Button counter
+	LoadRCEExpedition()
 	LoadRandomizedRecipes()
 	LoadPaintings()
 	load_custom_outfits()
@@ -461,6 +465,31 @@ SUBSYSTEM_DEF(persistence)
 
 	fdel(FILE_CORE_SUPPRESSIONS)
 	text2file(json_encode(cleared_core_suppressions), FILE_CORE_SUPPRESSIONS)
+
+/datum/controller/subsystem/persistence/proc/LoadRCEExpedition()
+	var/json_file = file(FILE_RCE_EXPEDITION)
+	if(fexists(json_file))
+		var/list/data = json_decode(file2text(json_file))
+		if(data && data["expedition_number"])
+			rce_expedition_number = data["expedition_number"]
+
+	// Increment the expedition number if we're on rcorp_factory map
+	if(SSmaptype.maptype == "rcorp_factory")
+		rce_expedition_number++
+		SaveRCEExpedition()
+
+/datum/controller/subsystem/persistence/proc/SaveRCEExpedition()
+	var/list/data = list("expedition_number" = rce_expedition_number)
+	fdel(FILE_RCE_EXPEDITION)
+	text2file(json_encode(data), FILE_RCE_EXPEDITION)
+
+/datum/controller/subsystem/persistence/proc/ShowExpeditionNumber(mob/M)
+	if(!M || !M.client)
+		return
+	if(SSmaptype.maptype != "rcorp_factory")
+		return
+	var/message = "R-CORP 6TH PACK - EXPEDITION #[rce_expedition_number]"
+	show_blurb(M.client, 80, message, 10, 5, "#FFD700", "#8B0000", "center", "LEFT+0,TOP-2", FALSE, 2)
 
 /datum/controller/subsystem/persistence/proc/LoadRandomizedRecipes()
 	var/json_file = file("data/RandomizedChemRecipes.json")

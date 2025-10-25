@@ -41,6 +41,8 @@
 	)
 	var/dashready = TRUE
 	var/reforming = FALSE
+	gift_message = "The clay clings to you, a constant reminder."
+	gift_type =  /datum/ego_gifts/clayman
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
 /mob/living/simple_animal/hostile/abnormality/clayman/WorktickFailure(mob/living/carbon/human/user)
