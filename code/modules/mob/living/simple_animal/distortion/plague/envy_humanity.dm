@@ -7,7 +7,7 @@
 	base_pixel_x = -16
 	maxHealth = 2000
 	health = 2000
-	fear_level = 0
+	fear_level = WAW_LEVEL
 	can_spawn = TRUE
 	move_to_delay = 3
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
@@ -459,13 +459,16 @@
 		// Suit
 		if(equipment["suit"])
 			var/suit_type = equipment["suit"]
-			var/obj/item/S = new suit_type()
-			// Remove equip slowdown from E.G.O armor to ensure it can be equipped
-			if(istype(S, /obj/item/clothing/suit/armor/ego_gear))
-				var/obj/item/clothing/suit/armor/ego_gear/ego_suit = S
-				ego_suit.equip_slowdown = 0
-			new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
-			current_disguise_items += S
+			// Check if it's E.G.O armor and handle differently
+			if(ispath(suit_type, /obj/item/clothing/suit/armor/ego_gear))
+				var/obj/item/clothing/suit/armor/ego_gear/S = new suit_type()
+				S.equip_slowdown = 0  // Remove equip slowdown
+				new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
+				current_disguise_items += S
+			else
+				var/obj/item/S = new suit_type()
+				new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
+				current_disguise_items += S
 
 		// Back
 		if(equipment["back"])
@@ -978,6 +981,7 @@
 	invisibility = INVISIBILITY_OBSERVER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	density = FALSE
+	fear_level = 0
 	to_chat(src, span_notice("You fade into the shadows..."))
 
 /// Breaks stealth mode
@@ -989,6 +993,7 @@
 	invisibility = initial(invisibility)
 	mouse_opacity = initial(mouse_opacity)
 	density = initial(density)
+	fear_level = WAW_LEVEL
 
 	// Quickly restore alpha
 	animate(src, alpha = 255, time = 0.5 SECONDS)
