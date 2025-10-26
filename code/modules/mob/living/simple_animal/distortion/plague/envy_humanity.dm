@@ -5,14 +5,14 @@
 	icon_state = "envy"
 	pixel_x = -16
 	base_pixel_x = -16
-	maxHealth = 2000
-	health = 2000
+	maxHealth = 2500
+	health = 2500
 	fear_level = WAW_LEVEL
 	can_spawn = TRUE
 	move_to_delay = 3
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 25
-	melee_damage_upper = 30
+	melee_damage_lower = 40
+	melee_damage_upper = 45
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	attack_sound = 'sound/hallucinations/growl1.ogg'
@@ -43,6 +43,8 @@
 	var/mob/living/simple_animal/current_possessed_mob = null
 	/// Reference to the current carbon mob we're possessing (if any)
 	var/mob/living/carbon/current_possessed_carbon = null
+	/// Recorded mind from a possessed carbon (if any)
+	var/datum/mind/recorded_carbon_mind = null
 	/// Are we currently in scanning mode?
 	var/scanning_mode = TRUE
 	/// Cooldown for scanning
@@ -127,8 +129,8 @@
 	// Check if target is a dead carbon mob we can possess
 	if(istype(attacked_target, /mob/living/carbon))
 		var/mob/living/carbon/C = attacked_target
-		// Only possess if: dead, no existing mind/player, and we're not already in a form
-		if(C.stat == DEAD && !C.mind && !current_disguise && !current_possessed_mob && !current_possessed_carbon)
+		// Only possess if: dead and we're not already in a form (mind is now recorded rather than blocking possession)
+		if(C.stat == DEAD && !current_disguise && !current_possessed_mob && !current_possessed_carbon)
 			PossessCarbon(C)
 			return TRUE
 
@@ -681,13 +683,17 @@
 		to_chat(src, span_warning("The target must be dead to possess!"))
 		return FALSE
 
-	if(target.mind)
-		to_chat(src, span_warning("This vessel already has a soul!"))
-		return FALSE
-
 	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		to_chat(src, span_warning("You are already inhabiting another form!"))
 		return FALSE
+
+	// Clear any old recorded mind from previous possession
+	recorded_carbon_mind = null
+
+	// Record the target's mind if they have one
+	if(target.mind)
+		recorded_carbon_mind = target.mind
+		to_chat(src, span_notice("You sense a lingering soul in this vessel..."))
 
 	// Break stealth before possessing
 	if(hidden_mode)
@@ -861,8 +867,14 @@
 	visible_message(span_userdanger("[current_possessed_carbon] convulses violently as something tears free!"))
 	playsound(exit_turf, 'sound/magic/demon_consume.ogg', 75, TRUE)
 
-	// Kill the possessed carbon
-	current_possessed_carbon.gib()
+	// Restore the recorded mind if we have one
+	if(recorded_carbon_mind && !QDELETED(recorded_carbon_mind))
+		recorded_carbon_mind.transfer_to(current_possessed_carbon)
+		to_chat(current_possessed_carbon, span_notice("You feel your consciousness returning to your body..."))
+		recorded_carbon_mind = null
+
+	// Kill the possessed carbon (without gibbing)
+	current_possessed_carbon.death()
 
 	// Blood splatter effect
 	new /obj/effect/temp_visual/dir_setting/wraith(exit_turf)
@@ -933,8 +945,15 @@
 
 	// Kill possessed carbon if present
 	if(current_possessed_carbon && !QDELETED(current_possessed_carbon))
+		// Restore mind before death if we recorded one
+		if(recorded_carbon_mind && !QDELETED(recorded_carbon_mind))
+			recorded_carbon_mind.transfer_to(current_possessed_carbon)
+			recorded_carbon_mind = null
 		current_possessed_carbon.death()
 		current_possessed_carbon = null
+
+	// Clear any leftover recorded mind
+	recorded_carbon_mind = null
 
 	return ..()
 

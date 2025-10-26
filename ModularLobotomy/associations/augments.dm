@@ -1144,6 +1144,7 @@
 	)
 	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
 	var/active_augment = FALSE
+	var/debug_use = FALSE
 	// var/mutable_appearance/augment_overlay_prim
 	// var/mutable_appearance/augment_overlay_second
 	// var/overlay_icon_state = ""
@@ -1198,7 +1199,7 @@
 // 	return mutable_appearance(src.icon, src.overlay_icon_state, src.overlay_layer)
 
 /obj/item/augment/proc/CanUseAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
+	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office" || debug_use)
 		return TRUE
 	return FALSE
 
@@ -1503,6 +1504,7 @@
 		if(!final_desc || final_desc == "")
 			final_desc = "A custom-fabricated augment using the '[form_data["name"]]' template at Rank [design.rank]."
 		new_augment.desc = final_desc
+		new_augment.debug_use = TRUE
 
 		new_augment.apply_design(design, ticket.primary_color, ticket.secondary_color)
 
