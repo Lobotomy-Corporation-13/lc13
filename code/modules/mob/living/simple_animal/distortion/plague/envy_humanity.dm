@@ -149,8 +149,6 @@
 	if(current_disguise || current_possessed_mob || current_possessed_carbon)
 		return
 
-	// Scanning doesn't break stealth - it's a passive observation ability
-
 	// If we're not in scanning mode or on cooldown, don't scan
 	if(!scanning_mode || world.time < scan_cooldown)
 		return
@@ -160,10 +158,6 @@
 		return
 
 	var/mob/living/carbon/human/target = A
-
-	// Can't scan dead people
-	if(target.stat == DEAD)
-		return
 
 	// Perform the scan
 	ScanHuman(target)
