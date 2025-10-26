@@ -380,6 +380,10 @@ GLOBAL_LIST_EMPTY(loaded_quest_z_levels)
 		"N Corp Mittlehammer" = list(/obj/item/ego_weapon/city/ncorp_hammer),
 		"N Corp Grosshammer" = list(/obj/item/ego_weapon/city/ncorp_hammer/big),
 		"Grand Inquisitor" = list(/obj/item/ego_weapon/city/ncorp_hammer/grippy),
+		// Middle
+		"Little Brother" = list(/obj/item/ego_weapon/shield/middle_chain),
+		"Younger Brother" = list(/obj/item/ego_weapon/shield/middle_chain/younger),
+		"Big Brother" = list(/obj/item/ego_weapon/shield/middle_chain/big),
 	)
 
 	/// Maps roles to their available armor
@@ -407,6 +411,10 @@ GLOBAL_LIST_EMPTY(loaded_quest_z_levels)
 		"N Corp Mittlehammer" = list(/obj/item/clothing/suit/armor/ego_gear/city/ncorp),
 		"N Corp Grosshammer" = list(/obj/item/clothing/suit/armor/ego_gear/city/ncorp/vet),
 		"Grand Inquisitor" = list(/obj/item/clothing/suit/armor/ego_gear/city/ncorpcommander),
+		// Middle
+		"Little Brother" = list(/obj/item/clothing/suit/armor/ego_gear/city/middle, /obj/item/clothing/suit/armor/ego_gear/city/middle/little_sister, /obj/item/clothing/suit/armor/ego_gear/city/middle/tank_top),
+		"Younger Brother" = list(/obj/item/clothing/suit/armor/ego_gear/city/middle_younger, /obj/item/clothing/suit/armor/ego_gear/city/middle_younger/younger_sister),
+		"Big Brother" = list(/obj/item/clothing/suit/armor/ego_gear/city/middle_big, /obj/item/clothing/suit/armor/ego_gear/city/middle_big/big_sister),
 	)
 
 /obj/machinery/gear_buyback/examine(mob/user)
