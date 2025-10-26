@@ -23,7 +23,7 @@ Civilian
 								TEMPERANCE_ATTRIBUTE = 20,
 								JUSTICE_ATTRIBUTE = 20
 								)
-	job_attribute_limit = 80
+	job_attribute_limit = 100
 	var/static/list/possible_books = null
 
 /datum/job/civilian/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source)
