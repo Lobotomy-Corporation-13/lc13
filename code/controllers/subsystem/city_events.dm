@@ -267,9 +267,9 @@ SUBSYSTEM_DEF(cityevents)
 	if(GLOB.city_fog_controller)
 		return
 
-	// Create the fog weather controller for the main city z-level (typically z=1)
-	GLOB.city_fog_controller = new /datum/city_fog_controller(1)
+	// Create the fog weather controller for the main city z-level (typically z=2)
+	GLOB.city_fog_controller = new /datum/city_fog_controller(2)
 
-	message_admins("City fog weather system activated on z-level 1")
-	log_game("City fog weather system activated on z-level 1")
+	message_admins("City fog weather system activated on z-level 2")
+	log_game("City fog weather system activated on z-level 2")
 	minor_announce("The city's weather patterns have become unstable. Expect heavy fog in the ruins." , "Local Activity Alert:")
