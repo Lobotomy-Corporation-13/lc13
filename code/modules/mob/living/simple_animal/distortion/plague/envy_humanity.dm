@@ -87,6 +87,10 @@
 	var/datum/action/cooldown/lullaby_hidden/lullaby = new()
 	lullaby.Grant(src)
 
+	// Grant pained screech action
+	var/datum/action/cooldown/pained_screech/screech = new()
+	screech.Grant(src)
+
 // Override EscapeConfinement to phase out instead of attacking
 /mob/living/simple_animal/hostile/distortion/envy_humanity/EscapeConfinement()
 	// Cannot escape while inside another form
@@ -968,6 +972,39 @@
 		SendHiddenMessage()
 		next_hidden_message = world.time + 1 MINUTES
 
+/// Pained Screech - AoE attack that deals WHITE damage and inflicts Horror
+/mob/living/simple_animal/hostile/distortion/envy_humanity/proc/PainedScreech()
+	if(stat == DEAD)
+		return
+
+	// Visual and audio effects
+	visible_message(span_userdanger("[src] releases a horrifying screech!"))
+	playsound(src, 'sound/distortions/envy_scream.ogg', 75, TRUE)
+
+	// Create visual effect
+	new /obj/effect/temp_visual/fragment_song(get_turf(src))
+
+	// Get all turfs in range (similar to Big Wolf's Howl - 20 tile range)
+	var/list/turfs_to_check = orange(20, src)
+
+	// Deal damage and apply Horror to all living mobs in range
+	for(var/mob/living/L in turfs_to_check)
+		// Skip if same faction
+		if(faction_check_mob(L, FALSE))
+			continue
+
+		// Skip if dead
+		if(L.stat == DEAD)
+			continue
+
+		// Deal WHITE damage (50, similar to Big Wolf)
+		L.deal_damage(50, WHITE_DAMAGE)
+
+		// Apply Horror status effect
+		L.apply_status_effect(/datum/status_effect/horror, src)
+
+	to_chat(src, span_boldnotice("You unleash your anguish upon all nearby!"))
+
 /// Enters stealth mode
 /mob/living/simple_animal/hostile/distortion/envy_humanity/proc/EnterStealth()
 	if(hidden_mode)
@@ -1151,6 +1188,34 @@
 	else
 		to_chat(owner, span_warning("Error: Unable to determine vessel type!"))
 
+/// Pained Screech - Horror-inducing AoE attack
+/datum/action/cooldown/pained_screech
+	name = "Pained Screech"
+	desc = "Release a horrifying screech that damages nearby enemies and inflicts them with Horror."
+	icon_icon = 'icons/mob/actions/actions_changeling.dmi'
+	button_icon_state = "resonant_shriek"
+	cooldown_time = 30 SECONDS
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/pained_screech/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+
+	var/mob/living/simple_animal/hostile/distortion/envy_humanity/envy = owner
+	if(!istype(envy))
+		return FALSE
+
+	// Cannot use while in another form
+	if(envy.current_disguise || envy.current_possessed_mob || envy.current_possessed_carbon)
+		to_chat(owner, span_warning("You cannot use this ability while inhabiting another form!"))
+		return FALSE
+
+	// Perform the screech
+	envy.PainedScreech()
+	StartCooldown()
+	return TRUE
+
 /// Lullaby of the Hidden - stealth ability
 /datum/action/cooldown/lullaby_hidden
 	name = "Lullaby of the Hidden"
@@ -1209,3 +1274,66 @@
 		button_icon_state = "soulshackle"
 
 	UpdateButtonIcon()
+
+// Horror status effect - applied by Pained Screech
+/datum/status_effect/horror
+	id = "horror"
+	duration = 10 SECONDS // 10 seconds total duration
+	tick_interval = 1 SECONDS // Tick every 1 second
+	alert_type = /atom/movable/screen/alert/status_effect/horror
+	var/mob/living/simple_animal/hostile/distortion/envy_humanity/source_envy // The Envy that caused this
+
+/datum/status_effect/horror/on_creation(mob/living/new_owner, envy_source)
+	source_envy = envy_source
+	return ..()
+
+/datum/status_effect/horror/on_apply()
+	if(!owner || !source_envy)
+		return FALSE
+	to_chat(owner, span_userdanger("You are gripped by an overwhelming sense of HORROR!"))
+	return TRUE
+
+/datum/status_effect/horror/tick()
+	if(!owner || !source_envy || QDELETED(source_envy))
+		qdel(src)
+		return
+
+	// Check if source is dead
+	if(source_envy.stat == DEAD)
+		to_chat(owner, span_notice("The horror fades as your tormentor falls..."))
+		qdel(src)
+		return
+
+	// Check if we have line of sight to the Envy
+	if(!can_see(owner, source_envy, 7))
+		to_chat(owner, span_notice("Breaking line of sight weakens the horror..."))
+		qdel(src)
+		return
+
+	// Check if we are facing the Envy
+	if(!is_A_facing_B(owner, source_envy))
+		return // Don't take damage if not facing, but don't remove effect
+
+	// Deal WHITE damage equal to 10% of max SP
+	var/damage_to_deal = 0
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		damage_to_deal = H.maxSanity * 0.1
+	else
+		// For non-humans, use a default calculation based on health
+		damage_to_deal = owner.maxHealth * 0.05 // 5% of max health as fallback
+
+	if(damage_to_deal > 0)
+		owner.deal_damage(damage_to_deal, WHITE_DAMAGE)
+		to_chat(owner, span_warning("The horrifying visage tears at your mind!"))
+
+/datum/status_effect/horror/on_remove()
+	if(owner)
+		to_chat(owner, span_notice("The horror gradually fades from your mind..."))
+
+// Alert for Horror status effect
+/atom/movable/screen/alert/status_effect/horror
+	name = "Horror"
+	desc = "You are gripped by overwhelming horror! Looking at the source will damage your sanity!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "allure"
