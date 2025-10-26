@@ -26,6 +26,9 @@
 	crit_multiplier = 1
 	var/crit_info
 
+	//Used in CoL, to prevent weapons from being easily removed from the round
+	var/sellable = FALSE
+
 /obj/item/ego_weapon/Initialize()
 	. = ..()
 	if(swingstyle == WEAPONSWING_SMALLSWEEP && reach > 1)

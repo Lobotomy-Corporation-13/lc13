@@ -81,5 +81,14 @@
 		SEND_GLOBAL_SIGNAL(COMSIG_CRATE_LOOTING_ENDED, user, src)
 
 	new loot(get_turf(src))
+
+	if(istype(loot, /obj/item/clothing/suit/armor/ego_gear))
+		var/obj/item/clothing/suit/armor/ego_gear/armor = loot
+		armor.sellable = TRUE
+
+	if(istype(loot, /obj/item/ego_weapon))
+		var/obj/item/ego_weapon/weapon = loot
+		weapon.sellable = TRUE
+
 	qdel(src)
 

@@ -19,6 +19,9 @@
 	var/list/attribute_requirements = list()
 	var/equip_bonus
 
+	//Used in CoL, to prevent weapons from being easily removed from the round
+	var/sellable = FALSE
+
 /obj/item/clothing/suit/armor/ego_gear/Initialize()
 	. = ..()
 	if(hat)
