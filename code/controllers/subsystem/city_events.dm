@@ -32,6 +32,7 @@ SUBSYSTEM_DEF(cityevents)
 		return
 	addtimer(CALLBACK(src, PROC_REF(Event)), 15 MINUTES)	//Start doing events in 15 minutes
 	addtimer(CALLBACK(src, PROC_REF(Daynight)), 10 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(StartCityFog)), 1 MINUTES)	//Start city fog in 1 minute
 
 ///Ran on initialize, slap these puppies in a new list.
 /datum/controller/subsystem/cityevents/proc/InitializeLandmarks()
@@ -259,3 +260,16 @@ SUBSYSTEM_DEF(cityevents)
 	else		//before noon
 		globalillumination += 0.02
 		addtimer(CALLBACK(src, PROC_REF(Daynight)), 10 SECONDS)
+
+//City Fog Weather System
+/datum/controller/subsystem/cityevents/proc/StartCityFog()
+	// Check if fog controller already exists
+	if(GLOB.city_fog_controller)
+		return
+
+	// Create the fog weather controller for the main city z-level (typically z=1)
+	GLOB.city_fog_controller = new /datum/city_fog_controller(1)
+
+	message_admins("City fog weather system activated on z-level 1")
+	log_game("City fog weather system activated on z-level 1")
+	minor_announce("The city's weather patterns have become unstable. Expect heavy fog in the ruins." , "Local Activity Alert:")
