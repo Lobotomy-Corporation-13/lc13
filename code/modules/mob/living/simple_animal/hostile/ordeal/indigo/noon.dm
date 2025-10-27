@@ -110,8 +110,8 @@
 	/// Holds the next moment that this mob will be allowed to dash.
 	var/dash_cooldown
 	/// This is the amount of time added by its dash attack (Sweep the Backstreets) on use onto its cooldown.
-	/// While the cooldown may seem fairly short, every human it hits will increase it by a fair bit.
-	var/dash_cooldown_time = 4 SECONDS
+	// Reduced by hitting enemies with it.
+	var/dash_cooldown_time = 8 SECONDS
 	/// Sweep the Backstreets ability range in tiles.
 	var/dash_range = 3
 	/// Sweep the Backstreets healing per human hit.
@@ -282,9 +282,8 @@
 				SweeperHealing(dash_healing)
 				GainPersistence(1)
 				playsound(hit_mob, attack_sound, 100)
-				/// Dash will come off cooldown faster if it doesn't hit anyone.
-				/// This sounds counter intuitive but I want it to be used more often if players bait them into wasting it early.
-				dash_cooldown += 6 SECONDS
+				/// Dash will come off cooldown faster if it hits someone. Dodge it!
+				dash_cooldown -= 4 SECONDS
 
 /// Called when we're entering a dash (passed all the checks).
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/PrepareDash()

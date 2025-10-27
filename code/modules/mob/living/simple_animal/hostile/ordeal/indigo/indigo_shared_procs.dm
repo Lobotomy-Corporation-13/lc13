@@ -50,7 +50,7 @@ Every time it activates, it loses a stack, but it can also time out over a long 
 /datum/status_effect/stacking/sweeper_persistence
 	id = "persistence"
 	status_type = STATUS_EFFECT_MULTIPLE
-	duration = 45 SECONDS
+	duration = 30 SECONDS
 	alert_type = null
 	var/mutable_appearance/overlay
 	stacks = 1

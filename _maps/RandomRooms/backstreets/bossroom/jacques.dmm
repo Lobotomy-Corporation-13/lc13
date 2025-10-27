@@ -340,7 +340,7 @@
 /turf/open/floor/carpet/black,
 /area/city/backstreets_room)
 "Ka" = (
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red{
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red{
 	name = "\proper Lieutenant Maledy";
 	return_to_origin = 1
 	},

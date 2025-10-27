@@ -226,7 +226,7 @@ SUBSYSTEM_DEF(cityevents)
 			new	/mob/living/simple_animal/hostile/lovetown/abomination (get_turf(T))
 			chosen_event = "lovetowneasy"
 		if ("sweeper")
-			new /mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red (get_turf(T))
+			new /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red (get_turf(T))
 			chosen_event = "scouts"
 		if ("factory")
 			new /mob/living/simple_animal/hostile/ordeal/green_dusk (get_turf(T))

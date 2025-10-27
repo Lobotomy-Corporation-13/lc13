@@ -33,10 +33,10 @@
 
 			else
 				to_spawn = pick(
-					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red,
-					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/white,
-					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/black,
-					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale,)
+					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
+					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
+					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
+					/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,)
 
 	difficulty++
 	var/mob/living/simple_animal/hostile/spawned_enemy = new to_spawn(get_turf(src))

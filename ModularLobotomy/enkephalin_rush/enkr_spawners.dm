@@ -308,18 +308,18 @@
 	max_spawns = 2
 	mobspawn_table = list(
 	/mob/living/simple_animal/hostile/ordeal/indigo_noon = 10,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/white = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/black = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale = 1,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale = 1,
 	)
 
 /obj/effect/spawner/mobspawner/indigo_dusk/quartet//midnight
 	max_spawns = 4
 	mobspawn_table = list(
 	/mob/living/simple_animal/hostile/ordeal/indigo_noon = 5,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/white = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/officer/black = 2,
-	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale = 1,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black = 2,
+	/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale = 1,
 	)
