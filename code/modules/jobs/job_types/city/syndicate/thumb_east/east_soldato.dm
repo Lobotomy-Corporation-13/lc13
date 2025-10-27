@@ -31,7 +31,7 @@
 	. = ..()
 	// The ability to delimb yourself with a Thumb East weapon.
 	var/datum/action/self_discipline = new /datum/action/thumb_selfmutilate
-	self_discipline.Grant(H)
+	H?.mind?.AddBoundAction(self_discipline)
 
 /datum/outfit/job/east_soldato
 	name = "Thumb East Soldato"

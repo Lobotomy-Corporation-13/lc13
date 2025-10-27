@@ -152,7 +152,7 @@
 	/// Should always be TRUE unless the user manually disables combos by using the weapon in-hand. If it's FALSE, we won't try to combo when hitting.
 	var/combo_enabled = TRUE
 	/// Description for the combo. Explain it to the user.
-	var/combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a powerful <b>line AoE through the target</b>. This finisher will Tremor Burst if the target reaches 30 Tremor stacks.\n"+\
+	var/combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a powerful <b>line AoE through the target</b>. This finisher will Tremor Burst if the target has 30 stacks of Tremor.\n"+\
 	"If you trigger but miss your lunge, you can still continue the combo by landing a regular hit on-target."
 	/// Which step in the combo are we at? COMBO_NO_AMMO means we're either out of ammo, just ended a combo, or haven't started it.
 	var/combo_stage = COMBO_NO_AMMO
@@ -937,7 +937,7 @@
 		/obj/item/stack/thumb_east_ammo/tigermark,
 		/obj/item/stack/thumb_east_ammo/tigermark/facility,
 	)
-	combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a devastating but telegraphed <b>ranged AoE leap</b> on the target. This leap can be triggered in melee or at range. This finisher will Tremor Burst the target if it reaches 30 stacks.\n"+\
+	combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a devastating but telegraphed <b>ranged AoE leap</b> on the target. This leap can be triggered in melee or at range. This finisher will Tremor Burst the target if has 30 stacks of Tremor.\n"+\
 	"If you trigger but miss your lunge, you can still continue the combo by landing a regular hit on-target."
 	motion_values = list(COMBO_NO_AMMO = 1, COMBO_LUNGE = 1, COMBO_ATTACK2 = 1.3, COMBO_FINISHER = 2, COMBO_ATTACK2_AOE = 1, COMBO_FINISHER_AOE = 1.2)
 
