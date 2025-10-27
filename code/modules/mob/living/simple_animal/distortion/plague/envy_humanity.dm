@@ -177,10 +177,26 @@
 	if(!target || !ishuman(target))
 		return FALSE
 
+	// Check if target is deleted or being deleted
+	if(QDELETED(target))
+		return FALSE
+
 	// Check if this human is actually another Envy in disguise
-	var/mob/living/simple_animal/hostile/distortion/envy_humanity/hidden_envy = locate() in target
+	var/mob/living/simple_animal/hostile/distortion/envy_humanity/hidden_envy = locate(/mob/living/simple_animal/hostile/distortion/envy_humanity) in target
 	if(hidden_envy)
 		to_chat(src, span_warning("You sense another of your kind within this vessel..."))
+		return FALSE
+
+	// Verify target still exists and has critical data
+	if(QDELETED(target) || !target.dna)
+		return FALSE
+
+	if(!target.dna.species)
+		to_chat(src, span_warning("[target] has no discernible species data!"))
+		return FALSE
+
+	if(!target.real_name)
+		to_chat(src, span_warning("[target] has no identity to record!"))
 		return FALSE
 
 	// Check if already scanned - if so, this will update the recording
@@ -189,26 +205,15 @@
 		to_chat(src, span_notice("Updating recorded data for [target.real_name]..."))
 		updating = TRUE
 
-	// Visual and audio feedback
-	if(updating)
-		visible_message(span_warning("[src]'s form ripples as it re-examines [target]!"))
-		to_chat(target, span_userdanger("You feel [src] studying every detail of your form again..."))
-	else
-		visible_message(span_warning("[src]'s form ripples as it studies [target]!"))
-		to_chat(target, span_userdanger("You feel [src] studying every detail of your form..."))
-
-	// Create scanning visual effect
-	var/obj/effect/temp_visual/dir_setting/wraith/wraith_effect = new(get_turf(target))
-	wraith_effect.color = "#000000"
-	animate(wraith_effect, alpha = 0, time = 2 SECONDS)
-
 	// Record the human's data (create new list to ensure clean data)
 	var/list/body_data = list()
 	body_data["real_name"] = target.real_name
 	body_data["gender"] = target.gender
 	body_data["species"] = target.dna.species.type
 
-	// Copy DNA
+	// Copy DNA (with additional safety check)
+	if(QDELETED(target) || !target.dna)
+		return FALSE
 	var/datum/dna/copied_dna = new /datum/dna
 	target.dna.copy_dna(copied_dna)
 	body_data["dna"] = copied_dna
@@ -238,6 +243,10 @@
 
 	// Record ALL equipment worn by target
 	var/list/equipment = list()
+
+	// Verify target still valid before equipment scan
+	if(QDELETED(target))
+		return FALSE
 
 	// Record each equipment slot
 	var/obj/item/uniform_item = target.get_item_by_slot(ITEM_SLOT_ICLOTHING)
@@ -315,15 +324,20 @@
 
 	body_data["equipment"] = equipment
 
+	// Verify target still valid before recording actions
+	if(QDELETED(target))
+		return FALSE
+
 	// Record actions (same limitations as body preservation unit)
 	var/list/action_types = list()
-	for(var/datum/action/A in target.actions)
-		// Skip item actions and spell actions
-		if(istype(A, /datum/action/item_action))
-			continue
-		if(istype(A, /datum/action/spell_action))
-			continue
-		action_types += A.type
+	if(target.actions && islist(target.actions))
+		for(var/datum/action/A in target.actions)
+			// Skip item actions and spell actions
+			if(istype(A, /datum/action/item_action))
+				continue
+			if(istype(A, /datum/action/spell_action))
+				continue
+			action_types += A.type
 	body_data["action_types"] = action_types
 
 	// Store the body data (this will overwrite any existing entry)
@@ -460,11 +474,7 @@
 		if(equipment["suit"])
 			var/suit_type = equipment["suit"]
 			var/obj/item/S = new suit_type()
-			// Remove equip slowdown from E.G.O armor to allow instant equipping
-			if(istype(S, /obj/item/clothing/suit/armor/ego_gear))
-				var/obj/item/clothing/suit/armor/ego_gear/equippable_gear = new S(get_turf(src))
-				equippable_gear.equip_delay_self = 0
-				new_body.equip_to_slot(equippable_gear,ITEM_SLOT_OCLOTHING, TRUE)
+			S.equip_delay_self = 0
 			new_body.equip_to_slot_or_del(S, ITEM_SLOT_OCLOTHING, TRUE)
 			current_disguise_items += S
 
