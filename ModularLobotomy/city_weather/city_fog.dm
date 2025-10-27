@@ -8,10 +8,10 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 	var/current_state = "clear" // States: "clear", "warning", "fog"
 
 	/// How long the fog lasts
-	var/fog_duration = 15 MINUTES
+	var/fog_duration = 12 MINUTES
 
 	/// How long between fog cycles (clear period)
-	var/clear_duration = 10 MINUTES
+	var/clear_duration = 20 MINUTES
 
 	/// Warning period before fog appears
 	var/warning_duration = 2 MINUTES
@@ -169,7 +169,7 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 	id = "fog_exposure"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = -1 // Infinite while in fog
-	tick_interval = 2 SECONDS
+	tick_interval = 1 SECONDS
 	alert_type = /atom/movable/screen/alert/status_effect/fog_exposure
 
 /datum/status_effect/fog_exposure/on_apply()
@@ -200,13 +200,13 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 	// Deal damage based on sanity state
 	if(H.sanity_lost)
 		// Insane: Deal 10% max HP as PALE damage
-		var/damage = H.maxHealth * 0.1
+		var/damage = H.maxHealth * 0.2
 		H.deal_damage(damage, PALE_DAMAGE)
 		if(prob(25)) // Occasional message to avoid spam
 			to_chat(H, span_danger("The fog tears at your broken mind, damaging your body!"))
 	else
 		// Sane: Deal 5% max SP as SP damage
-		var/sp_damage = H.maxSanity * 0.05
+		var/sp_damage = H.maxSanity * 0.1
 		H.adjustSanityLoss(sp_damage)
 		if(prob(25)) // Occasional message to avoid spam
 			to_chat(H, span_warning("The fog drains your sanity..."))
