@@ -4,10 +4,12 @@
 		guaranteed_butcher_results += list(/obj/item/food/meat/slab/human/mutant/moth = 1)
 		ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.2))
 
+/*
 /mob/living/simple_animal/hostile/ordeal/green_bot/Initialize()
 	. = ..()
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.3, BLACK_DAMAGE = 2, PALE_DAMAGE = 2))
+*/
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/Initialize()
 	. = ..()
