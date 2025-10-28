@@ -55,7 +55,7 @@
 	ADD_TRAIT(user, TRAIT_NOSOFTCRIT, "memento_mori")
 	return TRUE
 
-/mob/living/simple_animal/hostile/abnormality/branch12/show_goes_on/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/branch12/show_goes_on/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	..()
 	//If you're dying, continue the work until the end, but take consistent damage
 	if(user.health < 0)

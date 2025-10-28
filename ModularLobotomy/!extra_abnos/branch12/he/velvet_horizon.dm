@@ -55,7 +55,7 @@
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/abnormality/branch12/velvet_horizon/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/branch12/velvet_horizon/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	user.deal_damage(constant_damage, RED_DAMAGE)
 	WorkDamageEffect()
 	..()
