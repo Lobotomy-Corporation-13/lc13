@@ -1390,26 +1390,6 @@
 	icon_state = "spicebush"
 	duration = 10
 
-
-//temporary
-/obj/item/ego_weapon/willing
-	name = "the flesh is willing"
-	desc = "And really nothing will stop it."
-	icon_state = "willing"
-	force = 105	//Still lower DPS
-	attack_speed = 1.4
-	damtype = RED_DAMAGE
-	knockback = KNOCKBACK_LIGHT
-	attack_verb_continuous = list("bashes", "clubs")
-	attack_verb_simple = list("bashes", "clubs")
-	hitsound = 'sound/weapons/fixer/generic/club1.ogg'
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 100,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 80,
-							JUSTICE_ATTRIBUTE = 80
-							)
-
 /obj/item/ego_weapon/mockery
 	name = "mockery"
 	desc = "...If I earned a name, will I get to receive love and hate from you? \

@@ -779,7 +779,7 @@
 	name = "patch"
 	desc = "A little first aid kit."
 	icon_state = "patch"
-	special = "Activate in hand to heal every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
+	special = "Activate in hand to heal and apply protection to every person(With the exception of the user) on a 4 tile radius in exchange for taking toxin damage. \
 	Has a cooldown of 8 seconds."
 	force = 20
 	damtype = BLACK_DAMAGE
@@ -787,9 +787,10 @@
 	attack_verb_simple = list("smack", "strike", "beat")
 	hitsound = 'sound/weapons/fixer/generic/club3.ogg'
 	var/cooldown = 0
-	var/cooldown_duration = 30
+	var/cooldown_duration = 80
 	var/heal_brute = 15
 	var/dam_tox = 2
+
 //Should heal everyone in a 4 tile radius an amount of brute equal to heal_brute which should be 15, if not varedited, it also will deal 2 toxin damage to the user..
 //It has a cooldown of about 8 seconds.
 /obj/item/ego_weapon/mini/patch/attack_self(mob/user)
@@ -800,4 +801,5 @@
 					human.adjustToxLoss(dam_tox)
 					continue
 				human.adjustBruteLoss(-heal_brute)
+				human.apply_lc_protection(2)
 		cooldown = world.time + cooldown_duration

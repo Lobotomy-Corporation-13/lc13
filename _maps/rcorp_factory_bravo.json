@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"map_name": "R-Corp Expedition City",
+	"map_path": "map_files/RCE",
+	"map_file": [
+		"rcorp_factory_bravo.dmm"
+	],
+	"traits": [
+		{
+			"Baseturf": "/turf/open/floor/plating/asteroid"
+		}
+	],
+	"space_ruin_levels": 0,
+	"space_empty_levels": 0,
+	"minetype": "none",
+	"maptype": "rcorp_factory"
+}

@@ -24,6 +24,8 @@
 
 	var/obj/item/firing_pin/pin = /obj/item/firing_pin/magic //standard firing pin for most guns
 	var/fire_sound = 'sound/weapons/emitter.ogg' //What sound should play when this ammo is fired
+	var/reload_start_sound = 'sound/weapons/gun/general/slide_lock_1.ogg'
+	var/reload_success_sound = 'sound/weapons/gun/general/bolt_rack.ogg'
 
 	trigger_guard = TRIGGER_GUARD_ALLOW_ALL	//trigger guard on the weapon, hulks can't fire them with their big meaty fingers
 
@@ -205,9 +207,9 @@
 /obj/item/ego_weapon/ranged/proc/reload_ego(mob/user)
 	is_reloading = TRUE
 	to_chat(user,span_notice("You start loading a new magazine."))
-	playsound(src, 'sound/weapons/gun/general/slide_lock_1.ogg', 50, TRUE)
+	playsound(src, reload_start_sound, 50, TRUE)
 	if(do_after(user, reloadtime, src)) //gotta reload
-		playsound(src, 'sound/weapons/gun/general/bolt_rack.ogg', 50, TRUE)
+		playsound(src, reload_success_sound, 50, TRUE)
 		shotsleft = initial(shotsleft)
 		forced_melee = FALSE //no longer forced to resort to melee
 

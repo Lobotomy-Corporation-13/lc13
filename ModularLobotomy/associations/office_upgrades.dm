@@ -173,3 +173,69 @@
 
 	// Unregister the signal
 	UnregisterSignal(door, COMSIG_PARCEL_DELIVERED)
+
+//Middle Delivery Radio - Only works in city areas
+/obj/structure/delivery_radio/middle
+	name = "middle's delivery radio"
+	desc = "A radio used by the Middle to deliver 'Mermaid Perfume' packages. Only works in city areas."
+	icon_state = "radio"
+
+/obj/structure/delivery_radio/middle/OrderParcel(mob/living/deliveryman)
+	// Find all delivery doors in city areas
+	var/list/valid_doors = list()
+	for(var/obj/structure/delivery_door/D in GLOB.delivery_doors)
+		var/area/city/door_area = get_area(D)
+		if(istype(door_area, /area/city) && door_area.in_city)
+			valid_doors += D
+
+	// Check if we have any valid doors
+	if(!valid_doors.len)
+		say("No delivery locations available in the city!")
+		playsound(get_turf(src), 'sound/machines/buzz-two.ogg', 35, 3, 3)
+		return FALSE
+
+	// Pick a random valid door
+	var/obj/structure/delivery_door/selected_door = pick(valid_doors)
+	var/mob/living/user = deliveryman
+
+	// Randomly choose parcel type
+	var/parcel_type = pick("perfume", "skin")
+	var/obj/item/delivery_parcel/middle/M
+
+	if(parcel_type == "perfume")
+		M = new /obj/item/delivery_parcel/middle/perfume(user.loc)
+		say("Mermaid Perfume package ready for delivery to [selected_door.address].")
+	else
+		M = new /obj/item/delivery_parcel/middle/skin(user.loc)
+		say("Packaged Mermaid Skin ready for delivery to [selected_door.address].")
+
+	M.labelParcel(selected_door.address)
+	user.playsound_local(get_turf(src), 'sound/effects/cashregister.ogg', 25, 3, 3)
+	currently_delivering += user
+
+	// Set up signal handling for parcel delivery
+	RegisterSignal(selected_door, COMSIG_PARCEL_DELIVERED, PROC_REF(ParcelDelivered))
+	return TRUE
+
+//Middle Delivery Parcels - Base class
+/obj/item/delivery_parcel/middle
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+
+//Mermaid Perfume variant
+/obj/item/delivery_parcel/middle/perfume
+	name = "mermaid perfume"
+	desc = "A bottle of expensive perfume. Handle with care."
+	icon = 'icons/obj/dyespray.dmi'
+	icon_state = "dyespray"
+
+//Packaged Mermaid Skin variant
+/obj/item/delivery_parcel/middle/skin
+	name = "packaged mermaid skin"
+	desc = "A carefully wrapped package containing preserved mermaid skin. Very valuable."
+	icon = 'icons/obj/storage.dmi'
+
+/obj/item/delivery_parcel/middle/skin/Initialize()
+	. = ..()
+	// Randomly pick one of the 5 delivery package variants
+	icon_state = "deliverypackage[rand(1,5)]"

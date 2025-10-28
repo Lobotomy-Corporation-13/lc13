@@ -860,7 +860,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 /mob/living/simple_animal/hostile/proc/ResetAttackCooldown(delay)
 	set waitfor = FALSE
-	SLEEP_CHECK_DEATH(delay)
+	SLEEP_CHECK_DEATH(delay + rand(0,5))
 	attack_is_on_cooldown = FALSE
 	TryAttack()
 

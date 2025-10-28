@@ -20,9 +20,9 @@
 	update_mob()
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
-	for(var/mob/living/simple_animal/H in view(explosion_range, src))
-		H.apply_damage(explosion_damage, explosion_damage_type, null, H.run_armor_check(null, RED_DAMAGE))
-	for(var/mob/living/carbon/C in view(explosion_range, src))
+	for(var/mob/living/simple_animal/H in range(explosion_range, src))
+		H.apply_damage(explosion_damage, explosion_damage_type, null, H.run_armor_check(null, explosion_damage_type))
+	for(var/mob/living/carbon/C in range(explosion_range, src))
 		C.apply_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, null, C.run_armor_check(null, RED_DAMAGE))
 	qdel(src)
 
@@ -50,6 +50,35 @@
 	carbon_damagemod = 1
 	det_time = 20
 
+
+/obj/item/grenade/r_corp/pyro
+	name = "r-corp pyro grenade"
+	desc = "An incendiary grenade that sets everything ablaze. Highly effective against biological targets."
+	icon_state = "r_corp_pyro"
+	explosion_damage = 100 // Half the normal damage
+	carbon_damagemod = 0.2 // Still reduced damage to humans
+
+/obj/item/grenade/r_corp/pyro/detonate(mob/living/lanced_by)
+	var/aThrower = thrower
+	. = ..()
+	update_mob()
+	new /obj/effect/temp_visual/explosion(get_turf(src))
+	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
+
+	// Deal RED damage like normal
+	for(var/mob/living/simple_animal/H in view(explosion_range, src))
+		H.apply_damage(explosion_damage, explosion_damage_type, null, H.run_armor_check(null, explosion_damage_type))
+	for(var/mob/living/carbon/C in view(explosion_range, src))
+		C.apply_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, null, C.run_armor_check(null, RED_DAMAGE))
+
+	// Apply burn and create fire
+	for(var/turf/T in view(explosion_range, src))
+		if(!locate(/obj/effect/turf_fire) in T)
+			new /obj/effect/turf_fire(T)
+		for(var/mob/living/L in T)
+			L.apply_lc_burn(30)
+
+	qdel(src)
 
 /obj/effect/spawner/lootdrop/grenade
 	name = "rcorp grenade spawner"

@@ -634,7 +634,7 @@
 			H.physiology.white_mod /= physiology_mod
 			H.physiology.black_mod /= physiology_mod
 			H.physiology.pale_mod /= physiology_mod
-		physiology_mod = (stacks / 10)*protection
+		physiology_mod = (1 - protection * (stacks / 10))
 		H.physiology.red_mod *= physiology_mod
 		H.physiology.white_mod *= physiology_mod
 		H.physiology.black_mod *= physiology_mod
@@ -738,7 +738,7 @@
 				H.physiology.black_mod /= physiology_mod
 			if(damage_type == PALE_DAMAGE)
 				H.physiology.pale_mod /= physiology_mod
-		physiology_mod = (stacks / 10)*protection
+		physiology_mod = (1 - protection * (stacks / 10))
 		if(damage_type == RED_DAMAGE)
 			H.physiology.red_mod *= physiology_mod
 		if(damage_type == WHITE_DAMAGE)

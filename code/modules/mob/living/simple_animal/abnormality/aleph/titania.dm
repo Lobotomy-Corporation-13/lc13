@@ -44,9 +44,23 @@
 		"Stay silent" = list(FALSE, "Ah... <br>A mere human, human, human. <br>Cease your fear, I shall rid you of your pains. <br>Be reborn as a flower."),
 	)
 
+	generic_bubbles = list(
+		1 = list("%PERSON looks in horror at %ABNO.", "%ABNO seems ready to pull %PERSON limb from limb"),
+		2 = list("The wingbeats of %ABNO create whirlwinds throughout the containment cell."),
+		3 = list("%PERSON is struck in awe at %ABNO."),
+		4 = list("The glow of fairy lights can be seen floating through the room"),
+		5 = list("As work continues, fairies are seen swarming around %PERSON."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("Spare meat is given to %ABNO, and they eat it up."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON puts some flowers near %ABNO."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON talks to %ABNO about their greatest desires."),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON, Attempts to differentiate the libido of %ABNO."),
+	)
+
 	var/fairy_spawn_number = 2
 	var/fairy_spawn_time = 5 SECONDS
-	var/fairy_spawn_limit = 70 // Oh boy, what can go wrong?
+	var/fairy_spawn_limit = 30 // Oh boy, what can go wrong?
 	//Fairy spawn limit only matters for the spawn loop, players she kills and spawned via the law don't count
 	var/list/spawned_mobs = list()
 	var/list/worked = list()
@@ -221,12 +235,15 @@
 
 	if(currentlaw == "ranged")
 		Punishment(Proj.firer)
+		H.apply_lc_feeble(5)
 
 	if(currentlaw == "armor" && Proj.damage_type == RED_DAMAGE)
 		Punishment(Proj.firer)
 
 	if(currentlaw == "nemesis" && H != nemesis)
 		Punishment(Proj.firer)
+		H.apply_lc_fragile(5)
+		H.apply_lc_feeble(5)
 
 	if(currentlaw == "ranged fairy")
 		SpawnFairies(1)
@@ -240,12 +257,15 @@
 
 	if(currentlaw == "melee")
 		Punishment(user)
+		user.apply_lc_feeble(5)
 
 	if(currentlaw == "armor" && I.damtype == RED_DAMAGE && I.force >= 10)
 		Punishment(user)
 
 	if(currentlaw == "nemesis" && user != nemesis)
 		Punishment(user)
+		user.apply_lc_fragile(5)
+		user.apply_lc_feeble(5)
 
 
 
@@ -284,8 +304,8 @@
 	a_intent = INTENT_HARM
 	health = 80
 	maxHealth = 80
-	melee_damage_lower = 12
-	melee_damage_upper = 15
+	melee_damage_lower = 3
+	melee_damage_upper = 5	//They apply fragile
 	melee_damage_type = RED_DAMAGE
 	obj_damage = 0
 	environment_smash = ENVIRONMENT_SMASH_NONE
@@ -306,3 +326,10 @@
 		mommy.spawned_mobs -= src
 		mommy = null
 	return ..()
+
+/mob/living/simple_animal/hostile/fairyswarm/AttackingTarget(atom/attacked_target)
+	..()
+	if(ishuman(attacked_target))
+		var/mob/living/carbon/human/H = attacked_target
+		H.apply_lc_fragile(5)
+

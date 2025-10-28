@@ -399,3 +399,19 @@
 				the_goods.custom_premium_price = tigermark_box_price
 
 	update_static_data_for_all_viewers()
+
+//Middle Jukebox Vending Machine
+/obj/machinery/vending/middle_jukebox
+	name = "\improper Middle Jukebox Vendor"
+	desc = "A vending machine that sells the Middle's signature jukebox. Plays their theme on repeat."
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	product_slogans = "Represent the Middle with style!;Let everyone know who runs these streets!;Music to make money by!"
+	product_ads = "The perfect addition to your office!;Show your pride!;Nothing says 'Middle' like this!"
+	icon_state = "generic"
+	icon_deny = null
+	products = list(
+		/obj/machinery/jukebox/middle = 50,
+	)
+
+	default_price = 10000
+	input_display_header = "Middle Jukebox Vendor"
