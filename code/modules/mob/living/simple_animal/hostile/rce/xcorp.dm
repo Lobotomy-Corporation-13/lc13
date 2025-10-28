@@ -129,7 +129,7 @@
 		L.visible_message(span_warning("[src] shreds [L] as it passes by!"), span_boldwarning("[src] shreds you!"))
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.apply_damage(dash_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(dash_damage, BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		been_hit += L
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
@@ -221,7 +221,7 @@
 		ArialSupport()
 	else
 		visible_message(span_notice("[src] crashes to the ground."))
-		apply_damage(100, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+		deal_damage(100, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	//return to the ground
 	density = TRUE
 	layer = initial(layer)
@@ -247,7 +247,7 @@
 
 /mob/living/simple_animal/hostile/xcorp/scout/proc/SweepAttack(mob/living/sweeptarget)
 	sweeptarget.visible_message(span_danger("[src] slams into [sweeptarget]!"), span_userdanger("[src] slams into you!"))
-	sweeptarget.apply_damage(20, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+	sweeptarget.deal_damage(20, RED_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 50, TRUE)
 	if(sweeptarget.mob_size <= MOB_SIZE_HUMAN)
 		DoKnockback(sweeptarget, src, get_dir(src, sweeptarget))
@@ -302,7 +302,7 @@
 	manual_emote("twitches unnaturally...")
 	for(var/mob/living/L in view(7, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(scream_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+			L.deal_damage(scream_damage, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/xcorp/sapper/Life()
 	..()
@@ -312,7 +312,7 @@
 		manual_emote("twitches unnaturally...")
 		for(var/mob/living/L in view(7, src))
 			if(!faction_check_mob(L))
-				L.apply_damage(scream_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE))
+				L.deal_damage(scream_damage, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 /// X-Corp Heart Grunt
 /mob/living/simple_animal/hostile/xcorp/heart

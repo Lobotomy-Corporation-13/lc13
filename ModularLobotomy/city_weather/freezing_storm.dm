@@ -152,7 +152,7 @@
 
 	// Damage at high stacks
 	if(stacks >= 8)
-		owner.apply_damage(10, BRUTE, null, owner.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		owner.deal_damage(10, BRUTE, attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = owner.run_armor_check(null, PALE_DAMAGE))
 		to_chat(owner, span_userdanger("The extreme cold is damaging your body!"))
 		owner.playsound_local(owner, 'sound/effects/glassbr1.ogg', 50, TRUE)
 	else if(stacks == 7)
