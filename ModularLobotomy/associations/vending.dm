@@ -30,6 +30,7 @@
 		/obj/item/structurecapsule/fixer/recon = 1,
 		/obj/item/structurecapsule/fixer/peacekeeper = 1,
 		/obj/item/structurecapsule/fixer/contract = 1,
+		/obj/item/structurecapsule/fixer/bank = 1,
 
 		//Boxes cost you an extra 700
 		/obj/item/storage/box/fixer/wedge = 1,
