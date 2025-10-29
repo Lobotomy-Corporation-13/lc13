@@ -520,3 +520,17 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 /obj/effect/radiojammer/Initialize()
 	. = ..()
 	GLOB.active_jammers |= src
+
+/// Mirage Reaper spawn point for Achiyalabopa storm
+/obj/effect/landmark/mirage_reaper_spawn
+	name = "Mirage Reaper Spawn"
+	desc = "A spawn point for Mirage Reapers during the Achiyalabopa storm."
+	icon_state = "x2"
+
+/obj/effect/landmark/mirage_reaper_spawn/Initialize()
+	. = ..()
+	GLOB.mirage_reaper_spawns += src
+
+/obj/effect/landmark/mirage_reaper_spawn/Destroy()
+	GLOB.mirage_reaper_spawns -= src
+	return ..()
