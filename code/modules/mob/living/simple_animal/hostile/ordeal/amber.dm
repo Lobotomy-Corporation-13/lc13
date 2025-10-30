@@ -409,6 +409,8 @@
 	var/list/spawned_mobs = list()
 	//If they can burrow or not.
 	var/can_burrow = TRUE
+	///Hole effect left behind by ambers burrowing, if null will nto leave a hole.
+	var/leave_hole = TRUE
 
 	var/datum/looping_sound/amberdusk/soundloop
 
@@ -530,6 +532,8 @@
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_dig_in.ogg', 50, 1)
 	animate(src, alpha = 0, time = 10)
 	SLEEP_CHECK_DEATH(5)
+	if(leave_hole && T != get_turf(src))
+		new /obj/effect/temp_hole(get_turf(src), 6 SECONDS, T)
 	for(var/mob/living/simple_animal/hostile/ordeal/amber_bug/bug as anything in spawned_mobs)
 		addtimer(CALLBACK(bug, PROC_REF(BurrowIn), T))
 	SLEEP_CHECK_DEATH(5)
@@ -561,6 +565,7 @@
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/spawned
 	butcher_results = list()
 	guaranteed_butcher_results = list()
+	leave_hole = FALSE
 	var/mob/living/simple_animal/hostile/ordeal/amber_midnight/bug_daddy
 
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/spawned/Initialize()

@@ -1093,3 +1093,67 @@
 	icon = 'icons/obj/manager_bullets.dmi'
 	icon_state = "execution"
 	duration = 10
+
+/*
+* Normal Portals had too much reliance on other portals
+* and always caused things that moved into them to be
+* transported.
+*/
+/obj/effect/temp_hole
+	name = "hole"
+	desc = "A gaping hole in the floor. Looks unstable."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_structures_64x48.dmi'
+	icon_state = "hole"
+	anchored = TRUE
+	density = FALSE
+	pixel_x = -16
+	base_pixel_x = -16
+	pixel_y = -8
+	base_pixel_y = -8
+	var/uses = 3
+	var/duration
+	var/turf/target_turf
+
+/obj/effect/temp_hole/Initialize(mapload, new_duration = 10, output_loc)
+	. = ..()
+	target_turf = get_turf(output_loc)
+	duration = new_duration
+	QDEL_IN(src, duration)
+	if(duration > 5)
+		addtimer(CALLBACK(src, PROC_REF(FadeOut)), duration-5)
+
+/obj/effect/temp_hole/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
+	Traverse(user)
+
+/obj/effect/temp_hole/attack_tk(mob/user)
+	return
+
+/obj/effect/temp_hole/attackby(obj/item/W, mob/user, params)
+	Traverse(user)
+
+/obj/effect/temp_hole/Destroy()
+	playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_dig_out.ogg', 50, 1)
+	visible_message(span_bolddanger("[src] collapses in on itself!"))
+	return ..()
+
+/obj/effect/temp_hole/proc/Traverse(mob/user)
+	if(!user)
+		return
+	if(Adjacent(user) && target_turf && iscarbon(user))
+		playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_dig_in.ogg', 50, 1)
+		visible_message(span_bolddanger("[user] starts crawling into the [src]!"))
+		if(do_after(user, 1 SECONDS, target = user) && !QDELETED(src))
+			if(!src)
+				return
+			if(uses <= 0)
+				qdel(src)
+				return
+			user.forceMove(get_turf(target_turf))
+			uses--
+			return TRUE
+
+/obj/effect/temp_hole/proc/FadeOut()
+	animate(src, alpha = 0, time = 5)
