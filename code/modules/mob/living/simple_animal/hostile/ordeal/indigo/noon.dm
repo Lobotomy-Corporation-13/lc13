@@ -137,8 +137,6 @@
 
 	// CoL Adjustments: Change these to nerf/buff this variant on City maps, on Initialize.
 	// At the moment I've left them all at 0, because I do not think I need to nerf them on CoL.
-	/// ADDS TO move_to_delay on CoL. If this is positive, we make them slower, if it is negative, we make them faster.
-	var/COL_movespeed_adjustment = 0
 	/// ADDS TO dash_cooldown_time on CoL. If this is positive, dash has a longer cooldown, if it is negative, it is shortened.
 	var/COL_dash_cooldown_adjustment = 0
 	/// ADDS TO dash_evasivemode_duration on CoL. If this is positive, Evasive Mode lasts longer, if it is negative, it is shortened.
@@ -156,8 +154,6 @@
 
 	/// COL Rebalancing
 	if(SSmaptype.maptype in SSmaptype.citymaps)
-		move_to_delay += COL_movespeed_adjustment
-		movespeed = move_to_delay
 		dash_cooldown_time += COL_dash_cooldown_adjustment
 		dash_evasivemode_duration += COL_dash_evasivemode_duration_adjustment
 		dash_evasivemode_client_speed += COL_dash_evasivemode_speed_adjustment
@@ -325,16 +321,16 @@
 		minimum_distance = 1
 		retreat_distance = 2
 		sidestep_per_cycle = 2
-		move_to_delay = dash_evasivemode_noclient_speed
+		ChangeMoveToDelay(dash_evasivemode_noclient_speed)
 	/// Possessed sweepers get a smaller movement speed buff.
 	else
-		move_to_delay = dash_evasivemode_client_speed
+		ChangeMoveToDelay(dash_evasivemode_client_speed)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/DisableEvasiveMode()
 	dodging = initial(dodging)
 	minimum_distance = initial(minimum_distance)
 	retreat_distance = initial(retreat_distance)
-	move_to_delay = movespeed // We do not use initial() here because it gets compiletime value, and we are going to apply nerfs on City modes on Initialize.
+	ChangeMoveToDelay(movespeed) // We do not use initial() here because it gets compiletime value, and we are going to apply nerfs on City modes on Initialize.
 	sidestep_per_cycle = initial(sidestep_per_cycle)
 
 /// I just want to make the telegraphing match properly, so we need a different duration for these than the normal 10 deciseconds

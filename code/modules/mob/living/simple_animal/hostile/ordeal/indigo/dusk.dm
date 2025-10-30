@@ -5,6 +5,8 @@
 /// This is the base template for a dusk. Never spawn these.
 /// Base shared type by all Indigo Dusks.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk
+	name = "\proper Commander Templatus"
+	desc = "You stare into its eyes, and realize it is not meant to be here. It really shouldn't be here - it's an error. Then again, are any of us meant to be here? Anyhow, it shouldn't be a tough fight."
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_dead = "sweeper_dead"
 	faction = list("indigo_ordeal")
@@ -113,7 +115,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/proc/ActivateBuff()
 	buff_ability_cooldown = world.time + buff_ability_cooldown_duration
 	say("296 9246 8572!!")
-	audible_message(span_danger("[src] issues a command to their allies!"))
+	audible_message(span_danger("[src] issues a command to \his allies!"))
 	new /obj/effect/temp_visual/screech(get_turf(src))
 
 	for(var/turf/T in range(buff_ability_range, src))
@@ -168,7 +170,7 @@
 	var/empowered = FALSE
 	/// How many blood units do we lose per life tick? Consider that each blood decal is 50 blood.
 	var/empowered_blood_decay = 60
-	/// Health regened per life tick while empowered
+	/// Health regenned per life tick while empowered
 	var/empowered_periodic_regen = 10
 	/// Health regenned per hit while empowered
 	var/empowered_hit_regen = 15
@@ -178,7 +180,7 @@
 	// Go on half-cooldown for Trash Disposal as soon as we spawn.
 	special_ability_cooldown += special_ability_cooldown_duration * 0.5
 	// Add our Bloodfeast component that lets us siphon blood.
-	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 0, threshold = 1500, max_amount = 1500)
+	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 300, threshold = 2000, max_amount = 2000)
 
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		guaranteed_butcher_results += list(/obj/item/head_trophy/indigo_head = 1)
@@ -250,14 +252,14 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/Empower(datum/component/bloodfeast/bloodfeast_component)
 	empowered = TRUE
 	animate(src, 1 SECONDS, color = "#882020", transform = matrix()*1.10)
-	move_to_delay -= 1
+	ChangeMoveToDelay(move_to_delay - 0.5)
 	rapid_melee += 1
 
 /// Reverts the effects of Empower.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/EmpowerRevert()
 	empowered = FALSE
 	animate(src, 0.6 SECONDS, color = initial(color), transform = initial(transform))
-	move_to_delay = initial(move_to_delay)
+	ChangeMoveToDelay(initial(move_to_delay))
 	rapid_melee = initial(rapid_melee)
 
 /// Called on every life tick while empowered. Regen some health, lose some blood and revert empower if we ran out.
@@ -424,6 +426,8 @@
 	desc = "Uh oh."
 	duration = 2.2 SECONDS
 	randomdir = FALSE
+	movement_type = PHASING | FLYING
+	layer = POINT_LAYER
 
 /obj/effect/gibspawner/generic/trash_disposal
 	gibamounts = list(1, 1, 1)
@@ -454,7 +458,7 @@
 	var/counter_used = FALSE
 	var/parry_stop_timer = null
 	/// We shave this value off our parry cooldown when successfully riposting a target.
-	var/counter_CDR = 8 SECONDS
+	var/counter_CDR = 9 SECONDS
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/Initialize(mapload)
 	. = ..()
@@ -547,7 +551,7 @@
 	special_ability_cooldown -= counter_CDR
 
 /// The WHITE Commander. This one is able to give Persistence to its underlings periodically. Can also shorten the cooldown of combat abilities for fellow Commanders.
-/// For its combat ability, slashes in an area every once in a while, exactly like Lady of the Lake.
+/// For its combat ability, slashes in an area every once in a while, exactly like Lady of the Lake, just a bit smaller.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/white
 	name = "\proper Commander Adelheide"
 	maxHealth = 2000
@@ -565,7 +569,7 @@
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 0.7)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/sweeper = 1)
 	special_ability_cooldown_duration = 7 SECONDS
-	special_ability_damage = 50
+	special_ability_damage = 55
 	buff_ability_capable = TRUE
 	buff_ability_cooldown_duration = 18 SECONDS
 	/// Shortens cooldowns for combat abilities for neighbors hit by this one's buff.
@@ -587,29 +591,30 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/ApplyBuffEffect(mob/living/simple_animal/hostile/ordeal/goon)
-	goon.GainPersistence(2)
-	// Shorten combat ability cooldowns for Indigo Noon & Dusk allies
+	goon.GainPersistence(2) // Nanomachines, son. They harden in response to physical trauma...
+
+	// Shorten combat ability cooldowns for Indigo Noon & Dusk allies. Ongoing cooldowns, that is.
 	switch(goon.type)
-		if(/mob/living/simple_animal/hostile/ordeal/indigo_dusk)
+		if(/mob/living/simple_animal/hostile/ordeal/indigo_dusk) // Other Commanders - Lower CD on Trash Disposal (Jacques), Hammer Slam (Maria), Parry (Silvina)
 			var/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fellow_commander = goon
 			fellow_commander.special_ability_cooldown -= buff_CDR
-		if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky)
+		if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky) // Lanky Sweepers - Lower CD on Sweep the Backstreets (the dash)
 			var/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/beanstalk_lookin_guy = goon
 			beanstalk_lookin_guy.dash_cooldown -= buff_CDR
-		if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky)
+		if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky) // Chunky Sweepers - Lower CD on Extract Fuel (the empowered lifesteal attack after being hit)
 			var/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/stocky_one = goon
 			stocky_one.extract_fuel_cooldown -= buff_CDR
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/UseSpecialAbility(mob/living/target, mob/living/user)
 	if(..())
-		AreaSlash(target, user)
+		INVOKE_ASYNC(src, PROC_REF(AreaSlash), target, user)
 		return TRUE
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/AttackingTarget(atom/attacked_target)
 	if(special_ability_activated)
 		return FALSE
 	var/mob/living/creature_to_be_bisected = attacked_target
-	if(istype(creature_to_be_bisected) && creature_to_be_bisected.stat != DEAD && UseSpecialAbility(creature_to_be_bisected))
+	if(istype(creature_to_be_bisected) && creature_to_be_bisected.stat != DEAD && UseSpecialAbility(creature_to_be_bisected)) // Cancel our attack if we're able to use our special instead
 		return FALSE
 	return ..()
 
@@ -618,7 +623,7 @@
 		return FALSE
 	. = ..()
 
-// Copied code from the Lady of the Lake (Gold Noon).
+// Copied code from the Lady of the Lake (Gold Noon). It's an AoE slash.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/proc/AreaSlash(mob/living/target, mob/living/user)
 	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
 	var/turf/source_turf = get_turf(src)
@@ -748,13 +753,14 @@
 	buff_ability_capable = TRUE
 	buff_ability_cooldown_duration = 25 SECONDS
 	special_ability_damage = 60
-	special_ability_cooldown_duration = 13 SECONDS
+	special_ability_cooldown_duration = 12 SECONDS
+	// The below bonuses are flat and additive.
 	/// Raise ally attack damage by this amount
 	var/buff_melee_bonus = 4
 	/// Lower ally move delay by this amount
 	var/buff_movespeed_bonus = 0.7
 	/// Raise ally rapid_melee by this amount
-	var/buff_attackspeed_bonus = 1.2
+	var/buff_attackspeed_bonus = 1
 	/// Buff lasts this long
 	var/buff_duration = 8 SECONDS
 	/// Telegraph duration for the hammer slam attack
@@ -770,7 +776,7 @@
 /// Maria's buff is handled purely with timers, no status effect datum is involved.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/ApplyBuffEffect(mob/living/simple_animal/hostile/ordeal/goon)
 	BlackCommanderBuff(goon)
-	addtimer(CALLBACK(src, PROC_REF(BlackCommanderBuffRevert), goon), buff_duration)
+	addtimer(CALLBACK(src, PROC_REF(BlackCommanderBuffRevert), goon), buff_duration) // IN THEORY. IF MARIA IS GIBBED BEFORE THE BUFF REVERTS. THE AFFECTED SWEEPERS MAY BE PERMA BUFFED. Coding a fix for this is more trouble than it's worth
 
 /// The buff briefly colours the sweepers black to indicate they were hit by it.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/proc/BlackCommanderBuff(mob/living/simple_animal/hostile/ordeal/goon)
@@ -793,7 +799,7 @@
 	if(special_ability_activated)
 		return FALSE
 	var/mob/living/creature_to_be_pancaked = attacked_target
-	if(istype(creature_to_be_pancaked) && creature_to_be_pancaked.stat != DEAD && UseSpecialAbility(creature_to_be_pancaked))
+	if(istype(creature_to_be_pancaked) && creature_to_be_pancaked.stat != DEAD && UseSpecialAbility(creature_to_be_pancaked)) // Cancel our attack if we can use our special instead
 		return FALSE
 	return ..()
 
@@ -806,7 +812,7 @@
 	if(prob(20))
 		return FALSE // Will not always use its hammer slam when possible, add a bit of randomness into it.
 	if(..())
-		AreaSlam(target, user)
+		INVOKE_ASYNC(src, PROC_REF(AreaSlam), target, user)
 		return TRUE
 
 /// Big, targeted AoE slam, easy to dodge, but will knock you back if hit. A choke-breaker.
