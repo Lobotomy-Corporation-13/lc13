@@ -19,6 +19,29 @@
 	. = ..()
 	set_light_on(TRUE)
 
+/obj/item/coreflame/attack_hand(mob/living/user)
+	// Only check for humans
+	if(!ishuman(user))
+		return ..()
+
+	var/mob/living/carbon/human/H = user
+
+	// Calculate stat average
+	var/stat_average = (get_attribute_level(H, /datum/attribute/fortitude) + get_attribute_level(H, /datum/attribute/prudence) + get_attribute_level(H, /datum/attribute/temperance) + get_attribute_level(H, /datum/attribute/justice)) / 4
+
+	// Check if they have too much potential (stat average > 60)
+	if(stat_average > 60)
+		to_chat(H, span_warning("You reach for [src], but it rejects you. You have not enough potential to wield it."))
+		return
+
+	// Start pickup attempt
+	to_chat(H, span_notice("You begin to reach for [src]..."))
+	if(!do_after(H, 30, target = src)) // 3 seconds
+		return
+
+	// Pickup successful
+	return ..()
+
 /obj/item/coreflame/equipped(mob/user, slot)
 	. = ..()
 	if(!ishuman(user))
@@ -74,3 +97,17 @@
 
 	// Drop the Coreflame
 	current_holder.dropItemToGround(src)
+
+/// Hope Blade - EGO weapon granted by Hope status effect
+/obj/item/ego_weapon/hope_blade
+	name = "hope blade"
+	desc = "A blade forged from hope itself. It shimmers with golden light."
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "spellblade"
+	force = 34
+	damtype = PALE_DAMAGE
+	attack_verb_continuous = "slashes"
+	attack_verb_simple = "slash"
+	hitsound = 'sound/weapons/bladeslice.ogg'
+	attribute_requirements = list()
+	w_class = WEIGHT_CLASS_NORMAL

@@ -487,7 +487,7 @@
 		new /obj/effect/temp_visual/divine_judgment_warning(T)
 
 	// After 2 seconds, damage all targets in the danger zone
-	addtimer(CALLBACK(src, PROC_REF(DivineJudgmentStrike), danger_tiles, wave_number), 2 SECONDS)
+	addtimer(CALLBACK(src, PROC_REF(DivineJudgmentStrike), danger_tiles, wave_number), 1 SECONDS)
 
 /// Generates a normal plus pattern (1 tile thick, range 7)
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetPlusPattern()
@@ -584,7 +584,7 @@
 		for(var/mob/living/L in T)
 			if(faction_check_mob(L))
 				continue
-			L.deal_damage(80, PALE_DAMAGE)
+			L.deal_damage(50, PALE_DAMAGE)
 			to_chat(L, span_userdanger("You are struck by divine judgment!"))
 
 	// Schedule next wave if we haven't done 3 waves yet
@@ -632,7 +632,7 @@
 /obj/effect/temp_visual/divine_judgment_warning
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "lightwarning"
-	duration = 2 SECONDS
+	duration = 1 SECONDS
 	layer = ABOVE_MOB_LAYER
 
 /obj/effect/temp_visual/divine_judgment_warning/Initialize()
@@ -733,6 +733,8 @@
 	var/mutable_appearance/hope_overlay
 	/// Original owner color
 	var/original_color
+	/// Reference to hope blade if granted
+	var/obj/item/ego_weapon/hope_blade/granted_blade
 
 /atom/movable/screen/alert/status_effect/hope
 	name = "Hope"
@@ -760,6 +762,23 @@
 	owner.add_filter("hope_glow", 2, list("type" = "outline", "color" = "#FFD70080", "size" = 2))
 	addtimer(CALLBACK(src, PROC_REF(glow_loop)), rand(1, 19))
 
+	// Grant hope blade if owner is human and not holding any ego weapons
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		var/has_ego_weapon = FALSE
+
+		// Check if they're holding any ego weapons
+		for(var/obj/item/I in H.get_all_gear())
+			if(istype(I, /obj/item/ego_weapon))
+				has_ego_weapon = TRUE
+				break
+
+		// Grant hope blade if they don't have an ego weapon
+		if(!has_ego_weapon)
+			granted_blade = new /obj/item/ego_weapon/hope_blade(get_turf(H))
+			H.put_in_hands(granted_blade)
+			to_chat(H, span_nicegreen("A blade of hope materializes in your hands!"))
+
 	to_chat(owner, span_nicegreen("You are filled with hope! Nothing can stop you now!"))
 	return TRUE
 
@@ -771,6 +790,14 @@
 
 	// Remove outline filter
 	owner.remove_filter("hope_glow")
+
+	// Remove granted blade if it exists
+	if(granted_blade && !QDELETED(granted_blade))
+		if(ishuman(owner))
+			var/mob/living/carbon/human/H = owner
+			H.dropItemToGround(granted_blade)
+		qdel(granted_blade)
+		granted_blade = null
 
 	to_chat(owner, span_notice("The feeling of hope fades..."))
 	return ..()

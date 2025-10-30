@@ -6,17 +6,15 @@
 	icon_state = "reaper1"
 	icon_living = "reaper1"
 	icon_dead = "reaper1_dead"
-	maxHealth = 300
-	health = 300
-	melee_damage_lower = 14
-	melee_damage_upper = 20
+	maxHealth = 150
+	health = 150
+	melee_damage_lower = 7
+	melee_damage_upper = 10
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5)
 	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE
 	move_to_delay = 4
-	vision_range = 10
-	aggro_vision_range = 15
 	attack_verb_continuous = "strikes"
 	attack_verb_simple = "strike"
 	attack_sound = 'sound/creatures/lc13/lovetown/slam.ogg'
@@ -61,12 +59,12 @@
 	icon_dead = "gwyliwr_nos_dead"
 	maxHealth = 2400
 	health = 2400
-	pixel_x = -16
-	base_pixel_x = -16
-	melee_damage_lower = 30
-	melee_damage_upper = 45
+	pixel_x = -32
+	base_pixel_x = -32
+	melee_damage_lower = 25
+	melee_damage_upper = 35
 	damage_coeff = list(RED_DAMAGE = 0.9, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3)
-	melee_damage_type = WHITE_DAMAGE
+	melee_damage_type = BLACK_DAMAGE
 	stat_attack = HARD_CRIT
 	robust_searching = TRUE
 	move_to_delay = 3
@@ -76,7 +74,7 @@
 	attack_verb_simple = "strike"
 	attack_sound = 'sound/weapons/punch1.ogg'
 	death_sound = 'sound/effects/ghost2.ogg'
-	del_on_death = TRUE
+	del_on_death = FALSE
 	fear_level = HE_LEVEL
 	blood_volume = 0
 	ranged = TRUE
@@ -161,6 +159,11 @@
 		if(flying_damage_taken >= 400)
 			Crash()
 
+/mob/living/simple_animal/hostile/distortion/gwyliwr_nos/death(gibbed)
+	if(is_flying)
+		ExitFlight()
+	..()
+
 /// Toggles flying state
 /mob/living/simple_animal/hostile/distortion/gwyliwr_nos/proc/ToggleFlight()
 	if(is_flying)
@@ -178,10 +181,9 @@
 
 	// Visual changes
 	icon_state = "gwyliwr_nos_fly"
-	pixel_y = 32
+	pixel_y = 28
 
-	// Increase movement speed (reduce delay)
-	ChangeMoveToDelay(original_move_delay - 1)
+	density = FALSE
 
 	visible_message(span_warning("[src] takes to the air!"))
 	playsound(get_turf(src), 'sound/effects/bamf.ogg', 50, TRUE)
@@ -198,8 +200,7 @@
 	icon_state = "gwyliwr_nos"
 	pixel_y = initial(pixel_y)
 
-	// Restore movement speed
-	ChangeMoveToDelay(original_move_delay)
+	density = TRUE
 
 	visible_message(span_notice("[src] lands on the ground."))
 
@@ -277,8 +278,8 @@
 /datum/action/cooldown/gwyliwr_flight
 	name = "Toggle Flight"
 	desc = "Take to the air or land. While flying, you move faster and gain defensive bonuses, but your dash is weaker and you cannot melee attack."
-	button_icon = 'icons/mob/actions/actions_abnormality.dmi'
-	button_icon_state = "night_flight"
+	button_icon = 'icons/mob/actions/actions_animal.dmi'
+	button_icon_state = "adjust_vision"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
 	cooldown_time = 5 SECONDS
@@ -292,3 +293,61 @@
 	watcher.ToggleFlight()
 	StartCooldown()
 	return TRUE
+
+/**
+ * # Reaper Rift
+ *
+ * A rift that spawns mirage reapers passively.
+ *
+ * Spawns 2 mirage reapers every 4 seconds, up to a maximum of 10 reapers total.
+ */
+/obj/structure/reaper_rift
+	name = "reaper rift"
+	desc = "A rift from which mirage reapers emerge from the dark storm."
+	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 100, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 100)
+	max_integrity = 400
+	icon = 'icons/obj/carp_rift.dmi'
+	icon_state = "carp_rift"
+	light_color = LIGHT_COLOR_PURPLE
+	light_range = 10
+	anchored = TRUE
+	density = FALSE
+	layer = MASSIVE_OBJ_LAYER
+	/// The time since last reaper spawn.
+	var/last_reaper_spawn = 0
+	/// How often to spawn reapers (in deciseconds) - 4 seconds
+	var/spawn_interval = 40
+	/// Total number of reapers spawned by this rift
+	var/reapers_spawned = 0
+	/// Maximum number of reapers this rift can spawn
+	var/max_reapers = 10
+
+/obj/structure/reaper_rift/Initialize(mapload)
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/obj/structure/reaper_rift/examine(mob/user)
+	. = ..()
+	. += span_notice("It has spawned [reapers_spawned] out of [max_reapers] reapers.")
+
+/obj/structure/reaper_rift/play_attack_sound(damage_amount, damage_type = BRUTE)
+	playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
+
+/obj/structure/reaper_rift/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
+
+/obj/structure/reaper_rift/process(delta_time)
+	// Stop spawning if we've reached the max
+	if(reapers_spawned >= max_reapers)
+		return
+
+	// Increase time tracker
+	last_reaper_spawn += delta_time
+
+	// Spawn 2 reapers every 4 seconds
+	if(last_reaper_spawn >= spawn_interval)
+		new /mob/living/simple_animal/hostile/mirage_reaper(loc)
+		new /mob/living/simple_animal/hostile/mirage_reaper(loc)
+		reapers_spawned += 2
+		last_reaper_spawn = 0

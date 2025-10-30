@@ -2,7 +2,7 @@
 /datum/action/cooldown/hope_aura
 	name = "Hope Aura"
 	desc = "Inspire those around you with hope, granting them immunity to awe and increased damage for 60 seconds."
-	button_icon = 'icons/mob/actions/actions_spells.dmi'
+	icon_icon = 'icons/mob/actions/actions_spells.dmi'
 	button_icon_state = "declaration"
 	cooldown_time = 30 SECONDS
 	/// Range of the aura effect
@@ -31,6 +31,8 @@
 			continue
 
 		// Apply Hope status effect
+		H.adjustSanityLoss(-40)
+		H.adjustBruteLoss(-40)
 		H.apply_status_effect(/datum/status_effect/hope)
 		new /obj/effect/temp_visual/heal(get_turf(H), "#FFD700")
 		affected_count++
@@ -67,7 +69,7 @@
 	set waitfor = FALSE
 
 	// Visual effect - show targeting reticle
-	for(var/turf/T in range(1, target_turf))
+	for(var/turf/T in range(2, target_turf))
 		new /obj/effect/temp_visual/cult/sparks(T)
 
 	playsound(target_turf, 'sound/magic/staff_healing.ogg', 50, TRUE)
