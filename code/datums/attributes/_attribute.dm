@@ -44,7 +44,7 @@ GLOBAL_LIST_INIT(attribute_types, list(
 // Returns current level + initial_stat_value, placed next to information such as modifiers
 // Mainly used by fortitude & prudence
 /datum/attribute/proc/get_printed_level_bonus()
-	return round(level) + initial_stat_value
+	return round(get_level()) + initial_stat_value
 
 /datum/attribute/proc/on_update(mob/living/carbon/human/user)
 	// Check for virtue achievements

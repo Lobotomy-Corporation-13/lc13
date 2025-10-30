@@ -98,7 +98,7 @@
 		for(var/stat in atr.affected_stats)
 			.["stats"] += stat
 			.[stat + "name"] = stat
-			.[stat + "base"] = atr.get_printed_level_bonus() + atr.get_level_buff()
+			.[stat + "base"] = atr.get_printed_level_bonus()
 			.[stat + "bonus"] = round(atr.get_stat_bonus())
 
 /mob/living/carbon/human/ui_interact(mob/user, datum/tgui/ui)
@@ -1318,7 +1318,7 @@
 /mob/living/carbon/human/updatehealth()
 	if(LAZYLEN(attributes))
 		maxHealth = max(1, get_attribute_printed_level_bonus(src, FORTITUDE_ATTRIBUTE) + round(get_stat_bonus(src, FORTITUDE_ATTRIBUTE, no_neg = FALSE)))
-		maxSanity = max(1, get_attribute_printed_level_bonus(src, PRUDENCE_ATTRIBUTE) + get_stat_bonus(src, PRUDENCE_ATTRIBUTE, no_neg = FALSE))
+		maxSanity = max(1, get_attribute_printed_level_bonus(src, PRUDENCE_ATTRIBUTE) + round(get_stat_bonus(src, PRUDENCE_ATTRIBUTE, no_neg = FALSE)))
 	. = ..()
 	dna?.species.spec_updatehealth(src)
 	sanityhealth = maxSanity - sanityloss
