@@ -6,8 +6,8 @@
 	icon_state = "achiyalabopa"
 	icon_living = "achiyalabopa"
 	icon_dead = "achiyalabopa_dead"
-	maxHealth = 25000
-	health = 25000
+	maxHealth = 6000
+	health = 6000
 	damage_coeff = list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2)
 	melee_damage_lower = 20
 	melee_damage_upper = 40
@@ -22,6 +22,7 @@
 	vision_range = 15
 	aggro_vision_range = 20
 	move_to_delay = 4
+	generic_canpass = FALSE
 	fear_level = ALEPH_LEVEL
 	can_spawn = 0
 	del_on_death = TRUE
@@ -37,12 +38,21 @@
 	var/obj/effect/landmark/mirage_reaper_spawn/current_landmark
 	/// Movement timer ID
 	var/move_timer_id
+	/// Reference to impaled spear
+	var/obj/effect/piercing_spear/impaled_spear
 	/// Thunder summoning cooldown
 	var/thunder_cooldown = 0
 	var/thunder_cooldown_time = 3 SECONDS
+	/// Thunder whip cooldown
+	var/thunder_whip_cooldown = 0
+	var/thunder_whip_cooldown_time = 20 SECONDS
 	/// AoE attack cooldown
 	var/aoe_cooldown = 0
 	var/aoe_cooldown_time = 15 SECONDS
+	/// Is currently performing AoE attack
+	var/is_performing_aoe = FALSE
+	/// Is currently performing Thunder Whip
+	var/is_performing_thunder_whip = FALSE
 
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/Initialize()
 	. = ..()
@@ -79,6 +89,22 @@
 	// AoE attack
 	if(aoe_cooldown < world.time)
 		DivineJudgment()
+
+	// Thunder Whip attack
+	if(thunder_whip_cooldown < world.time && target)
+		ThunderWhip(target)
+
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/Move()
+	// Can't move during AoE attack or Thunder Whip
+	if(is_performing_aoe || is_performing_thunder_whip)
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/AttackingTarget(atom/attacked_target)
+	// Can't melee attack during AoE or Thunder Whip
+	if(is_performing_aoe || is_performing_thunder_whip)
+		return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/death(gibbed)
 	// End the storm (which will also clean up reapers)
@@ -117,6 +143,9 @@
 
 	// If spear is provided, attach it to Achiyalabopa
 	if(spear && !QDELETED(spear))
+		// Store reference to spear
+		impaled_spear = spear
+
 		// Move spear to Achiyalabopa's location and attach visually
 		spear.forceMove(loc)
 		spear.pixel_x = pixel_x
@@ -130,8 +159,8 @@
 		animate(spear, alpha = 200, time = 10, loop = -1)
 		animate(alpha = 255, time = 10)
 
-		// Store reference to remove later
-		var/obj/effect/piercing_spear/impaled_spear = spear
+		// Register movement signal to track Achiyalabopa's position
+		RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(UpdateSpearPosition))
 
 		// Set timer to remove spear when vulnerability ends
 		addtimer(CALLBACK(src, PROC_REF(RemoveImpaledSpear), impaled_spear), duration)
@@ -144,6 +173,20 @@
 	if(spear && !QDELETED(spear))
 		animate(spear, alpha = 0, time = 10)
 		QDEL_IN(spear, 10)
+
+	// Unregister movement signal
+	UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
+	impaled_spear = null
+
+/// Updates the spear position when Achiyalabopa moves
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/UpdateSpearPosition()
+	SIGNAL_HANDLER
+
+	if(!impaled_spear || QDELETED(impaled_spear))
+		return
+
+	// Move spear to follow Achiyalabopa
+	impaled_spear.forceMove(loc)
 
 /// Restores Achiyalabopa's normal defenses
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/RestoreDefenses()
@@ -166,6 +209,13 @@
 	if(move_timer_id)
 		deltimer(move_timer_id)
 		move_timer_id = null
+
+	// Clean up impaled spear
+	if(impaled_spear && !QDELETED(impaled_spear))
+		UnregisterSignal(src, COMSIG_MOVABLE_MOVED)
+		qdel(impaled_spear)
+		impaled_spear = null
+
 	return ..()
 
 /// Picks a new random landmark to move towards
@@ -185,6 +235,11 @@
 
 /// Moves towards the current landmark
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/MoveToLandmark()
+	// Don't patrol if we have an active target
+	if(target)
+		move_timer_id = addtimer(CALLBACK(src, PROC_REF(MoveToLandmark)), move_to_delay, TIMER_STOPPABLE)
+		return
+
 	if(!current_landmark || QDELETED(current_landmark))
 		PickNewLandmark()
 		if(!current_landmark)
@@ -228,9 +283,182 @@
 		var/obj/effect/divine_thunderbolt/E = new(get_turf(L.loc))
 		E.master = src
 
+/// Thunder Whip - Conical lightning attack that strikes in waves
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/ThunderWhip(atom/attack_target)
+	set waitfor = FALSE
+
+	thunder_whip_cooldown = world.time + thunder_whip_cooldown_time
+	is_performing_thunder_whip = TRUE
+
+	face_atom(attack_target)
+	icon_state = "achiyalabopa_enraged"
+	visible_message(span_userdanger("[src] raises its wings! Lightning crackles in the air!"))
+	playsound(get_turf(src), 'sound/magic/lightningshock.ogg', 75, TRUE)
+
+	// Calculate conical AoE (similar to LoveWhip)
+	var/smash_width = 1
+	var/smash_length = 3
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(attack_target))
+	var/turf/source_turf = get_turf(src)
+	var/list/area_of_effect = list()
+	var/list/middle_line = list()
+	var/turf/second_line = get_ranged_target_turf(source_turf, dir_to_target, smash_length-2)
+
+	SLEEP_CHECK_DEATH(2.5 SECONDS)
+
+	// Build the cone pattern
+	switch(dir_to_target)
+		if(EAST)
+			for(var/i = 0, i<2, i++)
+				middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
+				for(var/turf/T in middle_line)
+					if(T.density)
+						break
+					for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, smash_width)))
+						if(Y.density)
+							break
+						if(Y in area_of_effect)
+							continue
+						area_of_effect += Y
+					for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, smash_width)))
+						if(U.density)
+							break
+						if(U in area_of_effect)
+							continue
+						area_of_effect += U
+				source_turf = get_ranged_target_turf(second_line, EAST, smash_length)
+				smash_length += 2
+				smash_width++
+		if(WEST)
+			for(var/i = 0, i<2, i++)
+				middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
+				for(var/turf/T in middle_line)
+					if(T.density)
+						break
+					for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, smash_width)))
+						if(Y.density)
+							break
+						if(Y in area_of_effect)
+							continue
+						area_of_effect += Y
+					for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, smash_width)))
+						if(U.density)
+							break
+						if(U in area_of_effect)
+							continue
+						area_of_effect += U
+				source_turf = get_ranged_target_turf(second_line, WEST, smash_length)
+				smash_length += 2
+				smash_width++
+		if(NORTH)
+			for(var/i = 0, i<2, i++)
+				middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
+				for(var/turf/T in middle_line)
+					if(T.density)
+						break
+					for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, smash_width)))
+						if(Y.density)
+							break
+						if(Y in area_of_effect)
+							continue
+						area_of_effect += Y
+					for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, smash_width)))
+						if(U.density)
+							break
+						if(U in area_of_effect)
+							continue
+						area_of_effect += U
+				source_turf = get_ranged_target_turf(second_line, NORTH, smash_length)
+				smash_length += 2
+				smash_width++
+		if(SOUTH)
+			for(var/i = 0, i<2, i++)
+				middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, smash_length))
+				for(var/turf/T in middle_line)
+					if(T.density)
+						break
+					for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, smash_width)))
+						if(Y.density)
+							break
+						if(Y in area_of_effect)
+							continue
+						area_of_effect += Y
+					for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, smash_width)))
+						if(U.density)
+							break
+						if(U in area_of_effect)
+							continue
+						area_of_effect += U
+				source_turf = get_ranged_target_turf(second_line, SOUTH, smash_length)
+				smash_length += 2
+				smash_width++
+		else
+			for(var/turf/T in view(1, src))
+				if(T.density)
+					continue
+				if(T in area_of_effect)
+					continue
+				area_of_effect += T
+
+	if(!LAZYLEN(area_of_effect))
+		is_performing_thunder_whip = FALSE
+		icon_state = "achiyalabopa"
+		return
+
+	// Sort turfs by distance from Achiyalabopa
+	var/list/sorted_turfs = list()
+	var/turf/my_turf = get_turf(src)
+	var/max_distance = 0
+	for(var/turf/T in area_of_effect)
+		var/distance = get_dist(my_turf, T)
+		if(!sorted_turfs["[distance]"])
+			sorted_turfs["[distance]"] = list()
+		sorted_turfs["[distance]"] += T
+		if(distance > max_distance)
+			max_distance = distance
+
+	// Strike turfs in waves of 3, starting from closest
+	var/turfs_per_wave = 3
+	var/delay_per_wave = 1.5 // 0.15 seconds between waves
+
+	var/turfs_struck = 0
+
+	// Process each distance tier in order, from 0 to max_distance
+	for(var/dist = 0 to max_distance)
+		var/list/turfs_at_distance = sorted_turfs["[dist]"]
+		if(!turfs_at_distance)
+			continue
+
+		for(var/turf/T in turfs_at_distance)
+			if(stat == DEAD)
+				is_performing_thunder_whip = FALSE
+				icon_state = "achiyalabopa"
+				return
+
+			// Trigger lightning effect
+			new /obj/effect/temp_visual/thunderbolt_strike(T)
+			playsound(T, 'sound/magic/lightningbolt.ogg', 50, TRUE)
+
+			// Deal damage to mobs in turf
+			for(var/mob/living/L in T)
+				if(faction_check_mob(L))
+					continue
+				L.deal_damage(50, PALE_DAMAGE)
+				to_chat(L, span_userdanger("You are struck by divine lightning!"))
+
+			turfs_struck++
+
+			// Wait after every 3 turfs
+			if(turfs_struck % turfs_per_wave == 0)
+				sleep(delay_per_wave)
+
+	is_performing_thunder_whip = FALSE
+	icon_state = "achiyalabopa"
+
 /// Divine Judgment - Multi-wave AoE attack with thick patterns
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgment()
 	aoe_cooldown = world.time + aoe_cooldown_time
+	is_performing_aoe = TRUE
 
 	visible_message(span_userdanger("[src] raises its wings! Divine judgment descends!"))
 	playsound(src, 'sound/magic/clockwork/narsie_attack.ogg', 75, TRUE, 20)
@@ -241,19 +469,18 @@
 /// Executes a single wave of Divine Judgment
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgmentWave(wave_number)
 	if(stat == DEAD)
+		is_performing_aoe = FALSE
 		return
 
-	// Determine pattern type: first wave is always +, subsequent waves are random
-	var/pattern_type = "plus"
-	if(wave_number > 1)
-		pattern_type = pick("plus", "x")
+	// Randomly pick between normal + (1 tile thick) or wide + (3 tiles wide with safe center)
+	var/pattern_type = pick("plus", "plus_wide")
 
 	// Get danger tiles based on pattern
 	var/list/danger_tiles = list()
 	if(pattern_type == "plus")
 		danger_tiles = GetPlusPattern()
 	else
-		danger_tiles = GetXPattern()
+		danger_tiles = GetWidePlusPattern()
 
 	// Show warning effects
 	for(var/turf/T in danger_tiles)
@@ -262,7 +489,7 @@
 	// After 2 seconds, damage all targets in the danger zone
 	addtimer(CALLBACK(src, PROC_REF(DivineJudgmentStrike), danger_tiles, wave_number), 2 SECONDS)
 
-/// Generates a thick plus pattern (3 tiles wide, range 7)
+/// Generates a normal plus pattern (1 tile thick, range 7)
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetPlusPattern()
 	var/list/danger_tiles = list()
 	var/turf/center = get_turf(src)
@@ -273,88 +500,80 @@
 	// Add center tile
 	danger_tiles += center
 
-	// Create thick cross pattern (3 tiles wide)
+	// Create thin cross pattern (1 tile thick)
 	for(var/i = 1 to 7)
 		// North arm
-		for(var/offset = -1 to 1)
-			var/turf/T = locate(center.x + offset, center.y + i, center.z)
-			if(T)
-				danger_tiles += T
+		var/turf/T_north = locate(center.x, center.y + i, center.z)
+		if(T_north)
+			danger_tiles += T_north
 
 		// South arm
-		for(var/offset = -1 to 1)
-			var/turf/T = locate(center.x + offset, center.y - i, center.z)
-			if(T)
-				danger_tiles += T
+		var/turf/T_south = locate(center.x, center.y - i, center.z)
+		if(T_south)
+			danger_tiles += T_south
 
 		// East arm
-		for(var/offset = -1 to 1)
-			var/turf/T = locate(center.x + i, center.y + offset, center.z)
-			if(T)
-				danger_tiles += T
+		var/turf/T_east = locate(center.x + i, center.y, center.z)
+		if(T_east)
+			danger_tiles += T_east
 
 		// West arm
-		for(var/offset = -1 to 1)
-			var/turf/T = locate(center.x - i, center.y + offset, center.z)
-			if(T)
-				danger_tiles += T
+		var/turf/T_west = locate(center.x - i, center.y, center.z)
+		if(T_west)
+			danger_tiles += T_west
 
 	return danger_tiles
 
-/// Generates a thick X pattern (3 tiles wide, range 7)
-/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetXPattern()
+/// Generates a wide plus pattern (3 tiles wide with safe center, range 7)
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetWidePlusPattern()
 	var/list/danger_tiles = list()
 	var/turf/center = get_turf(src)
 
 	if(!center)
 		return danger_tiles
 
-	// Add center tile
-	danger_tiles += center
+	// Center tile is SAFE - not added to danger_tiles
 
-	// Create thick X pattern (3 tiles wide on diagonals)
+	// Create 3-wide cross pattern with safe center
 	for(var/i = 1 to 7)
-		// Northeast diagonal (with thickness)
-		for(var/offset = -1 to 1)
-			var/turf/T1 = locate(center.x + i + offset, center.y + i, center.z)
-			if(T1)
-				danger_tiles += T1
-			var/turf/T2 = locate(center.x + i, center.y + i + offset, center.z)
-			if(T2)
-				danger_tiles += T2
+		// North arm (left and right sides, skip center)
+		var/turf/T_north_left = locate(center.x - 1, center.y + i, center.z)
+		if(T_north_left)
+			danger_tiles += T_north_left
+		var/turf/T_north_right = locate(center.x + 1, center.y + i, center.z)
+		if(T_north_right)
+			danger_tiles += T_north_right
 
-		// Northwest diagonal (with thickness)
-		for(var/offset = -1 to 1)
-			var/turf/T1 = locate(center.x - i + offset, center.y + i, center.z)
-			if(T1)
-				danger_tiles += T1
-			var/turf/T2 = locate(center.x - i, center.y + i + offset, center.z)
-			if(T2)
-				danger_tiles += T2
+		// South arm (left and right sides, skip center)
+		var/turf/T_south_left = locate(center.x - 1, center.y - i, center.z)
+		if(T_south_left)
+			danger_tiles += T_south_left
+		var/turf/T_south_right = locate(center.x + 1, center.y - i, center.z)
+		if(T_south_right)
+			danger_tiles += T_south_right
 
-		// Southeast diagonal (with thickness)
-		for(var/offset = -1 to 1)
-			var/turf/T1 = locate(center.x + i + offset, center.y - i, center.z)
-			if(T1)
-				danger_tiles += T1
-			var/turf/T2 = locate(center.x + i, center.y - i + offset, center.z)
-			if(T2)
-				danger_tiles += T2
+		// East arm (top and bottom sides, skip center)
+		var/turf/T_east_top = locate(center.x + i, center.y + 1, center.z)
+		if(T_east_top)
+			danger_tiles += T_east_top
+		var/turf/T_east_bottom = locate(center.x + i, center.y - 1, center.z)
+		if(T_east_bottom)
+			danger_tiles += T_east_bottom
 
-		// Southwest diagonal (with thickness)
-		for(var/offset = -1 to 1)
-			var/turf/T1 = locate(center.x - i + offset, center.y - i, center.z)
-			if(T1)
-				danger_tiles += T1
-			var/turf/T2 = locate(center.x - i, center.y - i + offset, center.z)
-			if(T2)
-				danger_tiles += T2
+		// West arm (top and bottom sides, skip center)
+		var/turf/T_west_top = locate(center.x - i, center.y + 1, center.z)
+		if(T_west_top)
+			danger_tiles += T_west_top
+		var/turf/T_west_bottom = locate(center.x - i, center.y - 1, center.z)
+		if(T_west_bottom)
+			danger_tiles += T_west_bottom
 
 	return danger_tiles
 
 /// Executes the Divine Judgment strike
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgmentStrike(list/danger_tiles, wave_number)
 	if(stat == DEAD)
+		is_performing_aoe = FALSE
 		return
 
 	playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 100, TRUE, 20)
@@ -371,6 +590,9 @@
 	// Schedule next wave if we haven't done 3 waves yet
 	if(wave_number < 3)
 		addtimer(CALLBACK(src, PROC_REF(DivineJudgmentWave), wave_number + 1), 1 SECONDS)
+	else
+		// Final wave complete, allow movement again
+		is_performing_aoe = FALSE
 
 /// Divine Thunderbolt - Similar to thunder_bird's thunderbolt but without conversion
 /obj/effect/divine_thunderbolt
@@ -424,6 +646,16 @@
 	icon_state = "anom"
 	duration = 1 SECONDS
 	layer = ABOVE_MOB_LAYER
+
+/// Thunderbolt strike effect for Thunder Whip
+/obj/effect/temp_visual/thunderbolt_strike
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "tbird_bolt"
+	duration = 0.5 SECONDS
+	layer = ABOVE_MOB_LAYER
+	light_range = 2
+	light_power = 2
+	light_color = LIGHT_COLOR_ELECTRIC_CYAN
 
 /// Awe Struck - Prevents approaching Achiyalabopa and applies fragility
 /datum/status_effect/awe_struck
@@ -499,6 +731,8 @@
 	alert_type = /atom/movable/screen/alert/status_effect/hope
 	/// Visual overlay effect
 	var/mutable_appearance/hope_overlay
+	/// Original owner color
+	var/original_color
 
 /atom/movable/screen/alert/status_effect/hope
 	name = "Hope"
@@ -516,22 +750,37 @@
 	// Apply damage buff
 	owner.apply_lc_strength(4)
 
-	// Add visual overlay
-	hope_overlay = mutable_appearance('icons/effects/effects.dmi', "shield2", ABOVE_MOB_LAYER)
-	owner.add_overlay(hope_overlay)
+	// Store original color and apply golden color
+	if(ismob(owner))
+		var/mob/M = owner
+		original_color = M.color
+		M.color = "#FFD700" // Golden color
+
+	// Add yellow outline filter
+	owner.add_filter("hope_glow", 2, list("type" = "outline", "color" = "#FFD70080", "size" = 2))
+	addtimer(CALLBACK(src, PROC_REF(glow_loop)), rand(1, 19))
 
 	to_chat(owner, span_nicegreen("You are filled with hope! Nothing can stop you now!"))
 	return TRUE
 
 /datum/status_effect/hope/on_remove()
+	// Restore original color
+	if(ismob(owner))
+		var/mob/M = owner
+		M.color = original_color
 
-	// Remove visual overlay
-	if(hope_overlay)
-		owner.cut_overlay(hope_overlay)
-		QDEL_NULL(hope_overlay)
+	// Remove outline filter
+	owner.remove_filter("hope_glow")
 
 	to_chat(owner, span_notice("The feeling of hope fades..."))
 	return ..()
+
+/// Animates the glow outline
+/datum/status_effect/hope/proc/glow_loop()
+	var/filter = owner.get_filter("hope_glow")
+	if(filter)
+		animate(filter, alpha = 180, time = 15, loop = -1)
+		animate(alpha = 80, time = 25)
 
 /// Will of Humanity - Special status for Coreflame holder
 /datum/status_effect/will_of_humanity

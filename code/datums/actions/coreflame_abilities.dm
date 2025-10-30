@@ -2,9 +2,8 @@
 /datum/action/cooldown/hope_aura
 	name = "Hope Aura"
 	desc = "Inspire those around you with hope, granting them immunity to awe and increased damage for 60 seconds."
-	button_icon = 'icons/mob/actions/actions_abnormality.dmi'
-	button_icon_state = "golden_bud"
-	background_icon_state = "bg_abnormality"
+	button_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "declaration"
 	cooldown_time = 30 SECONDS
 	/// Range of the aura effect
 	var/aura_range = 7
@@ -47,10 +46,9 @@
 	name = "Piercing Strike"
 	desc = "Call down a divine spear at a target location. If it hits Achiyalabopa, it will temporarily weaken its defenses."
 	action_icon = 'icons/mob/actions/actions_abnormality.dmi'
-	action_icon_state = "spear_split"
-	action_background_icon_state = "bg_abnormality"
+	action_icon_state = "artillery0"
 	clothes_req = FALSE
-	charge_max = 450 // 45 seconds
+	charge_max = 250 // 25 seconds
 	range = 12
 	active_msg = "You raise your hand to the heavens!"
 	deactive_msg = "You lower your hand..."

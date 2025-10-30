@@ -34,6 +34,9 @@
 		// Apply Will of Humanity status effect
 		H.apply_status_effect(/datum/status_effect/will_of_humanity, src)
 
+		// Register signal to drop on death
+		RegisterSignal(H, COMSIG_LIVING_DEATH, PROC_REF(OnHolderDeath))
+
 		visible_message(span_userdanger("[H] claims the Coreflame! They are now the Will of Humanity!"))
 		playsound(src, 'sound/magic/staff_healing.ogg', 75, TRUE)
 
@@ -47,11 +50,27 @@
 		if(will_effect)
 			H.remove_status_effect(/datum/status_effect/will_of_humanity)
 
+		// Unregister death signal
+		UnregisterSignal(H, COMSIG_LIVING_DEATH)
+
 	// Reset claim if dropped voluntarily (not by death)
 	if(user.stat != DEAD)
 		claimed = FALSE
 		current_holder = null
 
 /obj/item/coreflame/Destroy()
+	// Unregister death signal if holder exists
+	if(current_holder)
+		UnregisterSignal(current_holder, COMSIG_LIVING_DEATH)
 	current_holder = null
 	return ..()
+
+/// Called when the holder dies - drops the Coreflame
+/obj/item/coreflame/proc/OnHolderDeath(datum/source)
+	SIGNAL_HANDLER
+
+	if(!current_holder || QDELETED(current_holder))
+		return
+
+	// Drop the Coreflame
+	current_holder.dropItemToGround(src)
