@@ -8,14 +8,14 @@
 
 	telegraph_message = span_userdanger("The sky darkens... An ominous presence approaches!")
 	telegraph_duration = 10 SECONDS
-	telegraph_overlay = "snowfall_calm"
+	telegraph_overlay = "void"
 
 	weather_message = span_userdanger("<b>The storm arrives! Darkness engulfs the city!</b>")
-	weather_overlay = "snowfall_blizzard"
+	weather_overlay = "void_storm"
 	perpetual = TRUE // Lasts forever until manually ended
 
 	end_message = span_boldannounce("The oppressive darkness begins to lift...")
-	end_overlay = "snowfall_calm"
+	end_overlay = "void"
 	end_duration = 10 SECONDS
 
 	area_type = /area

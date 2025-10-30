@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/distortion/achiyalabopa
 	name = "Achiyalabopa"
 	desc = "A magnificent golden being of immense power. Its very presence fills you with overwhelming awe."
-	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/bird_achiyalabopa.dmi'
 	icon_state = "achiyalabopa"
 	icon_living = "achiyalabopa"
 	icon_dead = "achiyalabopa_dead"
@@ -33,6 +33,16 @@
 	var/obj/item/coreflame/coreflame
 	/// Is Achiyalabopa currently vulnerable?
 	var/is_vulnerable = FALSE
+	/// Current target landmark
+	var/obj/effect/landmark/mirage_reaper_spawn/current_landmark
+	/// Movement timer ID
+	var/move_timer_id
+	/// Thunder summoning cooldown
+	var/thunder_cooldown = 0
+	var/thunder_cooldown_time = 3 SECONDS
+	/// AoE attack cooldown
+	var/aoe_cooldown = 0
+	var/aoe_cooldown_time = 15 SECONDS
 
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/Initialize()
 	. = ..()
@@ -40,21 +50,19 @@
 	// Set golden light
 	set_light(8, 6, LIGHT_COLOR_ORANGE)
 
-	// Start the storm
+	// Start the storm after initialization completes (avoid blocking)
+	addtimer(CALLBACK(src, PROC_REF(StartStorm)), 1)
+
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "Achiyalabopa descends upon the city! Darkness engulfs everything!", 25))
+	sound_to_playing_players_on_level('sound/magic/clockwork/narsie_attack.ogg', 50, zlevel = z)
+
+	// Start landmark movement system
+	PickNewLandmark()
+	move_timer_id = addtimer(CALLBACK(src, PROC_REF(MoveToLandmark)), move_to_delay, TIMER_STOPPABLE)
+
+/// Starts the storm (delayed from Initialize to avoid blocking)
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/StartStorm()
 	storm = SSweather.run_weather(/datum/weather/achiyalabopa_storm)
-
-	// Spawn the Coreflame at a nearby location
-	var/turf/spawn_turf = get_turf(src)
-	if(spawn_turf)
-		// Spawn it a bit away from Achiyalabopa
-		var/turf/coreflame_turf = locate(spawn_turf.x + 10, spawn_turf.y, spawn_turf.z)
-		if(!coreflame_turf)
-			coreflame_turf = spawn_turf
-
-		coreflame = new /obj/item/coreflame(coreflame_turf)
-
-	visible_message(span_userdanger("Achiyalabopa descends upon the city! Darkness engulfs everything!"))
-	playsound(src, 'sound/magic/clockwork/narsie_attack.ogg', 100, TRUE, 50)
 
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/Life()
 	. = ..()
@@ -64,24 +72,26 @@
 	// Apply Awe Struck to all visible humans
 	ApplyAweStruck()
 
+	// Passive thunder summoning
+	if(thunder_cooldown < world.time)
+		SummonThunder()
+
+	// AoE attack
+	if(aoe_cooldown < world.time)
+		DivineJudgment()
+
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/death(gibbed)
 	// End the storm (which will also clean up reapers)
 	if(storm && !QDELETED(storm))
 		SSweather.end_weather(storm)
 
-	visible_message(span_userdanger("Achiyalabopa lets out a final roar as it falls! The storm begins to dissipate!"))
-	playsound(src, 'sound/effects/explosion3.ogg', 100, TRUE, 50)
-
+	visible_message(span_userdanger("Achiyalabopa starts fading away... The storm begins to dissipate!"))
 	return ..()
 
 /// Applies Awe Struck status to all humans who can see Achiyalabopa
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/ApplyAweStruck()
 	for(var/mob/living/carbon/human/H in view(vision_range, src))
 		if(H.stat == DEAD)
-			continue
-
-		// Skip if they have immunity (Hope or Will of Humanity)
-		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			continue
 
 		// Apply or refresh Awe Struck
@@ -99,7 +109,7 @@
 	is_vulnerable = TRUE
 
 	// Change resistances to make vulnerable
-	ChangeResistances(list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0))
+	ChangeResistances(list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 4))
 
 	// Visual indication
 	animate(src, color = "#FF8888", time = 5)
@@ -143,7 +153,7 @@
 	is_vulnerable = FALSE
 
 	// Restore original resistances
-	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.2))
+	ChangeResistances(list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.4))
 
 	// Visual indication
 	animate(src, color = initial(color), time = 10)
@@ -152,7 +162,268 @@
 /mob/living/simple_animal/hostile/distortion/achiyalabopa/Destroy()
 	storm = null
 	coreflame = null
+	current_landmark = null
+	if(move_timer_id)
+		deltimer(move_timer_id)
+		move_timer_id = null
 	return ..()
+
+/// Picks a new random landmark to move towards
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/PickNewLandmark()
+	if(!GLOB.mirage_reaper_spawns || !length(GLOB.mirage_reaper_spawns))
+		return
+
+	// Pick a random landmark that isn't the current one
+	var/list/available_landmarks = GLOB.mirage_reaper_spawns.Copy()
+	if(current_landmark && (current_landmark in available_landmarks))
+		available_landmarks -= current_landmark
+
+	if(!length(available_landmarks))
+		return
+
+	current_landmark = pick(available_landmarks)
+
+/// Moves towards the current landmark
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/MoveToLandmark()
+	if(!current_landmark || QDELETED(current_landmark))
+		PickNewLandmark()
+		if(!current_landmark)
+			return
+
+	var/turf/current_turf = get_turf(src)
+	var/turf/target_turf = get_turf(current_landmark)
+
+	if(!target_turf)
+		PickNewLandmark()
+		move_timer_id = addtimer(CALLBACK(src, PROC_REF(MoveToLandmark)), move_to_delay, TIMER_STOPPABLE)
+		return
+
+	// Check if we've reached the landmark
+	if(current_turf == target_turf || get_dist(src, target_turf) <= 1)
+		PickNewLandmark()
+		move_timer_id = addtimer(CALLBACK(src, PROC_REF(MoveToLandmark)), move_to_delay, TIMER_STOPPABLE)
+		return
+
+	// Move towards the landmark
+	step_towards(src, target_turf)
+
+	// Schedule next movement
+	move_timer_id = addtimer(CALLBACK(src, PROC_REF(MoveToLandmark)), move_to_delay, TIMER_STOPPABLE)
+
+/// Summons thunder around Achiyalabopa (like thunder_bird but without conversion)
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/SummonThunder()
+	thunder_cooldown = world.time + thunder_cooldown_time
+
+	var/thunder_range = 7
+	var/targets_hit = 0
+	var/max_targets = 3
+
+	for(var/mob/living/carbon/human/L in range(thunder_range, src))
+		if(L.stat == DEAD)
+			continue
+		if(targets_hit >= max_targets)
+			break
+
+		targets_hit++
+		var/obj/effect/divine_thunderbolt/E = new(get_turf(L.loc))
+		E.master = src
+
+/// Divine Judgment - Multi-wave AoE attack with thick patterns
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgment()
+	aoe_cooldown = world.time + aoe_cooldown_time
+
+	visible_message(span_userdanger("[src] raises its wings! Divine judgment descends!"))
+	playsound(src, 'sound/magic/clockwork/narsie_attack.ogg', 75, TRUE, 20)
+
+	// Execute 3 waves of attacks
+	DivineJudgmentWave(1)
+
+/// Executes a single wave of Divine Judgment
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgmentWave(wave_number)
+	if(stat == DEAD)
+		return
+
+	// Determine pattern type: first wave is always +, subsequent waves are random
+	var/pattern_type = "plus"
+	if(wave_number > 1)
+		pattern_type = pick("plus", "x")
+
+	// Get danger tiles based on pattern
+	var/list/danger_tiles = list()
+	if(pattern_type == "plus")
+		danger_tiles = GetPlusPattern()
+	else
+		danger_tiles = GetXPattern()
+
+	// Show warning effects
+	for(var/turf/T in danger_tiles)
+		new /obj/effect/temp_visual/divine_judgment_warning(T)
+
+	// After 2 seconds, damage all targets in the danger zone
+	addtimer(CALLBACK(src, PROC_REF(DivineJudgmentStrike), danger_tiles, wave_number), 2 SECONDS)
+
+/// Generates a thick plus pattern (3 tiles wide, range 7)
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetPlusPattern()
+	var/list/danger_tiles = list()
+	var/turf/center = get_turf(src)
+
+	if(!center)
+		return danger_tiles
+
+	// Add center tile
+	danger_tiles += center
+
+	// Create thick cross pattern (3 tiles wide)
+	for(var/i = 1 to 7)
+		// North arm
+		for(var/offset = -1 to 1)
+			var/turf/T = locate(center.x + offset, center.y + i, center.z)
+			if(T)
+				danger_tiles += T
+
+		// South arm
+		for(var/offset = -1 to 1)
+			var/turf/T = locate(center.x + offset, center.y - i, center.z)
+			if(T)
+				danger_tiles += T
+
+		// East arm
+		for(var/offset = -1 to 1)
+			var/turf/T = locate(center.x + i, center.y + offset, center.z)
+			if(T)
+				danger_tiles += T
+
+		// West arm
+		for(var/offset = -1 to 1)
+			var/turf/T = locate(center.x - i, center.y + offset, center.z)
+			if(T)
+				danger_tiles += T
+
+	return danger_tiles
+
+/// Generates a thick X pattern (3 tiles wide, range 7)
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/GetXPattern()
+	var/list/danger_tiles = list()
+	var/turf/center = get_turf(src)
+
+	if(!center)
+		return danger_tiles
+
+	// Add center tile
+	danger_tiles += center
+
+	// Create thick X pattern (3 tiles wide on diagonals)
+	for(var/i = 1 to 7)
+		// Northeast diagonal (with thickness)
+		for(var/offset = -1 to 1)
+			var/turf/T1 = locate(center.x + i + offset, center.y + i, center.z)
+			if(T1)
+				danger_tiles += T1
+			var/turf/T2 = locate(center.x + i, center.y + i + offset, center.z)
+			if(T2)
+				danger_tiles += T2
+
+		// Northwest diagonal (with thickness)
+		for(var/offset = -1 to 1)
+			var/turf/T1 = locate(center.x - i + offset, center.y + i, center.z)
+			if(T1)
+				danger_tiles += T1
+			var/turf/T2 = locate(center.x - i, center.y + i + offset, center.z)
+			if(T2)
+				danger_tiles += T2
+
+		// Southeast diagonal (with thickness)
+		for(var/offset = -1 to 1)
+			var/turf/T1 = locate(center.x + i + offset, center.y - i, center.z)
+			if(T1)
+				danger_tiles += T1
+			var/turf/T2 = locate(center.x + i, center.y - i + offset, center.z)
+			if(T2)
+				danger_tiles += T2
+
+		// Southwest diagonal (with thickness)
+		for(var/offset = -1 to 1)
+			var/turf/T1 = locate(center.x - i + offset, center.y - i, center.z)
+			if(T1)
+				danger_tiles += T1
+			var/turf/T2 = locate(center.x - i, center.y - i + offset, center.z)
+			if(T2)
+				danger_tiles += T2
+
+	return danger_tiles
+
+/// Executes the Divine Judgment strike
+/mob/living/simple_animal/hostile/distortion/achiyalabopa/proc/DivineJudgmentStrike(list/danger_tiles, wave_number)
+	if(stat == DEAD)
+		return
+
+	playsound(get_turf(src), 'sound/magic/lightningbolt.ogg', 100, TRUE, 20)
+
+	for(var/turf/T in danger_tiles)
+		new /obj/effect/temp_visual/divine_judgment_strike(T)
+
+		for(var/mob/living/L in T)
+			if(faction_check_mob(L))
+				continue
+			L.deal_damage(80, PALE_DAMAGE)
+			to_chat(L, span_userdanger("You are struck by divine judgment!"))
+
+	// Schedule next wave if we haven't done 3 waves yet
+	if(wave_number < 3)
+		addtimer(CALLBACK(src, PROC_REF(DivineJudgmentWave), wave_number + 1), 1 SECONDS)
+
+/// Divine Thunderbolt - Similar to thunder_bird's thunderbolt but without conversion
+/obj/effect/divine_thunderbolt
+	name = "divine thunder bolt"
+	desc = "LOOK OUT!"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "tbird_bolt"
+	move_force = INFINITY
+	pull_force = INFINITY
+	generic_canpass = FALSE
+	movement_type = PHASING | FLYING
+	layer = POINT_LAYER
+	var/mob/living/simple_animal/hostile/distortion/achiyalabopa/master
+	var/duration = 2 SECONDS
+	var/range = 1
+	var/boom_damage = 40
+
+/obj/effect/divine_thunderbolt/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(Explode)), duration)
+
+/obj/effect/divine_thunderbolt/proc/Explode()
+	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, FALSE, 8)
+	var/list/turfs_to_check = view(range, src)
+	for(var/mob/living/carbon/human/H in turfs_to_check)
+		H.deal_damage(boom_damage, PALE_DAMAGE)
+		H.electrocute_act(1, src, flags = SHOCK_NOSTUN)
+	for(var/obj/vehicle/V in turfs_to_check)
+		V.take_damage(boom_damage, PALE_DAMAGE)
+	new /obj/effect/temp_visual/tbirdlightning(get_turf(src))
+	var/datum/effect_system/smoke_spread/S = new
+	S.set_up(0, get_turf(src))
+	S.start()
+	qdel(src)
+
+/// Warning effect for Divine Judgment
+/obj/effect/temp_visual/divine_judgment_warning
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "lightwarning"
+	duration = 2 SECONDS
+	layer = ABOVE_MOB_LAYER
+
+/obj/effect/temp_visual/divine_judgment_warning/Initialize()
+	. = ..()
+	animate(src, alpha = 100, time = 5, loop = -1)
+	animate(alpha = 255, time = 5)
+
+/// Strike effect for Divine Judgment
+/obj/effect/temp_visual/divine_judgment_strike
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "anom"
+	duration = 1 SECONDS
+	layer = ABOVE_MOB_LAYER
 
 /// Awe Struck - Prevents approaching Achiyalabopa and applies fragility
 /datum/status_effect/awe_struck
@@ -167,20 +438,19 @@
 /atom/movable/screen/alert/status_effect/awe_struck
 	name = "Awe Struck"
 	desc = "You are filled with overwhelming awe and cannot approach this magnificent being."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "awe_struck"
+	icon_state = "blooddrunk"
 
 /datum/status_effect/awe_struck/on_apply()
 	. = ..()
 	if(!.)
 		return
 
-	// Apply 6 fragility
-	owner.apply_lc_fragile(6)
+	// Check if owner has hope or will_of_humanity (which grant immunity)
+	if(owner.has_status_effect(/datum/status_effect/hope) || owner.has_status_effect(/datum/status_effect/will_of_humanity))
+		return FALSE
 
-	// Add visual overlay
-	awe_overlay = mutable_appearance('icons/effects/effects.dmi', "golden_glow", ABOVE_MOB_LAYER)
-	owner.add_overlay(awe_overlay)
+	// Apply 6 fragility
+	owner.apply_lc_feeble(6)
 
 	// Register signal for movement restriction
 	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(PreventApproach))
@@ -233,16 +503,15 @@
 /atom/movable/screen/alert/status_effect/hope
 	name = "Hope"
 	desc = "You are filled with hope! You are immune to awe and deal increased damage."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "hope"
+	icon_state = "lightingorb"
 
 /datum/status_effect/hope/on_apply()
 	. = ..()
 	if(!.)
 		return
 
-	// Grant trait for Awe Struck immunity
-	ADD_TRAIT(owner, TRAIT_COMBATFEAR_IMMUNE, "hope")
+	// Remove awe_struck if present
+	owner.remove_status_effect(/datum/status_effect/awe_struck)
 
 	// Apply damage buff
 	owner.apply_lc_strength(4)
@@ -255,8 +524,6 @@
 	return TRUE
 
 /datum/status_effect/hope/on_remove()
-	// Remove trait
-	REMOVE_TRAIT(owner, TRAIT_COMBATFEAR_IMMUNE, "hope")
 
 	// Remove visual overlay
 	if(hope_overlay)
@@ -284,8 +551,7 @@
 /atom/movable/screen/alert/status_effect/will_of_humanity
 	name = "Will of Humanity"
 	desc = "You carry the Will of Humanity! You can spread hope and strike down those who threaten humanity."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "will_of_humanity"
+	icon_state = "crucible"
 
 /datum/status_effect/will_of_humanity/on_creation(mob/living/new_owner, obj/item/coreflame/coreflame)
 	. = ..()
@@ -297,9 +563,13 @@
 	if(!.)
 		return
 
+	// Remove awe_struck if present
+	owner.remove_status_effect(/datum/status_effect/awe_struck)
+
 	// Add visual overlay
 	will_overlay = mutable_appearance('icons/effects/effects.dmi', "blessed", ABOVE_MOB_LAYER)
 	owner.add_overlay(will_overlay)
+	owner.color = "#b3a400"
 
 	// Grant ability actions
 	hope_action = new(owner)
