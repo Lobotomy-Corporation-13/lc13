@@ -41,6 +41,13 @@ Something for a future refactor?
 		locked_in.add_stacks(stacks_gained)
 	return TRUE
 
+/// Used by attacks that spawn gibs by Sweepers. Spawning gibs is important for 1. Feedback: makes the attacks feel powerful. 2. Jacques: gibs contribute towards their bloodfeast.
+/mob/living/simple_animal/hostile/ordeal/proc/SpawnAppropiateGibs(mob/living/victim)
+	if(victim.mob_biotypes & MOB_ORGANIC)
+		new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
+	else if(victim.mob_biotypes & MOB_ROBOTIC)
+		new /obj/effect/gibspawner/scrap_metal(get_turf(victim))
+
 
 /* Persistence Status Effect
 It allows them to avoid death when struck, with some VFX/SFX indicating that it was activated.

@@ -272,14 +272,21 @@
 	for(var/hit_turf in turfs)
 		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(hit_mob, span_userdanger("The [src.name] viciously slashes you as it dashes past!"))
-			/// We spawn some gibs and heal if the target hit is human.
+			SpawnAppropiateGibs(hit_mob)
+			playsound(hit_mob, attack_sound, 100)
+			// Big slice VFX
+			var/obj/effect/temp_visual/dir_setting/slash/temp = new(hit_turf)
+			temp.dir = dir
+			temp.transform = temp.transform * 2
+			temp.color = COLOR_MOSTLY_PURE_RED
+
+			/// Dash will come off cooldown faster if it hits someone. Dodge it!
+			dash_cooldown -= 4 SECONDS
+
+			/// We gain persistence and heal if the target hit is human.
 			if(istype(hit_mob, /mob/living/carbon/human))
-				new /obj/effect/gibspawner/generic(get_turf(hit_mob))
 				SweeperHealing(dash_healing)
 				GainPersistence(1)
-				playsound(hit_mob, attack_sound, 100)
-				/// Dash will come off cooldown faster if it hits someone. Dodge it!
-				dash_cooldown -= 4 SECONDS
 
 /// Called when we're entering a dash (passed all the checks).
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/PrepareDash()
@@ -431,12 +438,14 @@
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/AttackingTarget(atom/attacked_target)
 	. = ..()
-	if(. && extract_fuel_active && istype(attacked_target, /mob/living/carbon/human))
+	if(. && extract_fuel_active && istype(attacked_target, /mob/living))
 		CancelExtractFuel(TRUE)
-		new /obj/effect/gibspawner/generic(get_turf(attacked_target))
-		SweeperHealing(extract_fuel_healing)
-		GainPersistence(1)
-		visible_message(span_danger("The [src.name] tears into [attacked_target.name] and refuels itself with some of their viscera!"))
+		SpawnAppropiateGibs(attacked_target)
+		if(ishuman(attacked_target))
+			visible_message(span_danger("The [src.name] tears into [attacked_target.name] and refuels itself with some of their viscera!"))
+			SweeperHealing(extract_fuel_healing)
+			GainPersistence(1)
+
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/proc/PrepareExtractFuel()
 	/// I have no idea what could cause this, but just in case

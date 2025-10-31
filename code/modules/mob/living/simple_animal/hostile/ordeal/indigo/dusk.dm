@@ -133,8 +133,8 @@
 	name = "\proper Commander Jacques"
 	desc = "A tall humanoid with red claws. They're dripping with blood."
 	// Consider that this guy is gonna end up regenning a decent chunk of health before tweaking these values
-	health = 1550
-	maxHealth = 1550
+	health = 1650
+	maxHealth = 1650
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 0.7)
 	icon_state = "jacques"
 	icon_living = "jacques"
@@ -333,10 +333,10 @@
 		if(do_after(user, time_between_trash_disposal_hits, target = victim))
 			user.do_attack_animation(victim)
 			playsound(user, attack_sound, 100, TRUE)
-			new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
+			SpawnAppropiateGibs(victim)
 			victim.deal_damage(special_ability_damage, melee_damage_type, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			SweeperHealing(special_ability_damage)
-			user.visible_message(span_danger("[user] rips into [victim] and refuels themselves with their blood!"))
+			SweeperHealing(special_ability_damage * 2)
+			user.visible_message(span_danger("[user] rips into [victim] and refuels themselves with \his blood!"))
 			// Ramp up the speed and damage on each hit.
 			time_between_trash_disposal_hits -= 1
 			special_ability_damage += 3
@@ -545,6 +545,7 @@
 	new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
 	victim.deal_damage(special_ability_damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_COUNTER))
 	visible_message(span_userdanger("[src] deflects [victim]'s attack and performs a counter!"))
+	SpawnAppropiateGibs(victim)
 	SweeperHealing(maxHealth * 0.25)
 
 	// CDR. Shouldn't have hit us...!!!!!!!!!!!!!!
@@ -726,6 +727,12 @@
 			if (L == src)
 				continue
 			HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE)
+			playsound(T, attack_sound, 100, TRUE)
+			// Big slice VFX
+			var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
+			temp.dir = NORTHWEST
+			temp.transform = temp.transform * 1.75
+
 	SLEEP_CHECK_DEATH(0.4 SECONDS)
 	special_ability_activated = FALSE
 
@@ -831,12 +838,13 @@
 	// Hit
 	for(var/turf/T in affected_turfs)
 		new /obj/effect/temp_visual/smash_effect(T)
-		for(var/mob/living/L in HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE))
 			var/throw_comparison = L.loc == target_turf ? src : target_turf // if they're standing on the turf we're targeting we'll throw them directly away from us
 			var/throw_dir = get_cardinal_dir(throw_comparison, L)
-			L.safe_throw_at(target = get_ranged_target_turf(target_turf, throw_dir, 4), range = 4, speed = 2, thrower = src, spin = TRUE)
-			if(L.health < 0)
-				L.gib()
+			if(L)
+				L.safe_throw_at(target = get_ranged_target_turf(target_turf, throw_dir, 4), range = 4, speed = 2, thrower = src, spin = TRUE)
+				if(L.health < 0)
+					L.gib()
 	playsound(get_turf(src), 'sound/weapons/ego/hammer.ogg', 100, FALSE, extrarange = 5)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	special_ability_activated = FALSE
