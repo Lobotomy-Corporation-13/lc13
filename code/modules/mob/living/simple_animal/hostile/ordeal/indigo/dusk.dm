@@ -29,6 +29,8 @@
 	can_patrol = TRUE
 	/// If this is TRUE, creates a leadership component on Initialize.
 	var/commanding_officer = TRUE
+	/// If this is FALSE, we don't get to eat human corpses, they should be saved for the Matriarch.
+	var/permitted_to_feast = TRUE
 	// Combat ability vars. Not implemented for base type.
 	var/special_ability_cooldown = 0
 	var/special_ability_cooldown_duration = 10 SECONDS
@@ -65,6 +67,9 @@
 	. = ..()
 	if(. && isliving(attacked_target))
 		var/mob/living/L = attacked_target
+		if(!permitted_to_feast && ishuman(L)) // We do not get to activate Devour on human corpses if the Matriarch wants the corpse for herself.
+			return
+
 		if(L.stat != DEAD)
 			if(L.health <= HEALTH_THRESHOLD_DEAD && HAS_TRAIT(L, TRAIT_NODEATH))
 				SweeperDevour(L)
@@ -78,6 +83,8 @@
 		for(var/mob/living/L in Targets)
 			if(!CanAttack(L))
 				continue
+			if(!permitted_to_feast && ishuman(L))
+				continue
 			if(L.health < 0 || L.stat == DEAD)
 				highest_priority += L
 		if(LAZYLEN(highest_priority))
@@ -85,6 +92,8 @@
 	var/list/lower_priority = list() // We aren't exactly damaged, but it'd be a good idea to finish the wounded first
 	for(var/mob/living/L in Targets)
 		if(!CanAttack(L))
+			continue
+		if(!permitted_to_feast && ishuman(L))
 			continue
 		if(L.health < L.maxHealth*0.5 && (L.stat < UNCONSCIOUS))
 			lower_priority += L

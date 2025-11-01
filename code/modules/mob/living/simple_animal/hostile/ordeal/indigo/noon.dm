@@ -22,6 +22,8 @@
 	blood_volume = BLOOD_VOLUME_NORMAL
 	silk_results = list(/obj/item/stack/sheet/silk/indigo_advanced = 1,
 						/obj/item/stack/sheet/silk/indigo_simple = 2)
+	/// If this is FALSE, we don't get to eat human corpses, they should be saved for the Matriarch.
+	var/permitted_to_feast = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/Initialize()
 	. = ..()
@@ -41,6 +43,9 @@
 	. = ..()
 	if(. && isliving(attacked_target))
 		var/mob/living/L = attacked_target
+		if(!permitted_to_feast && ishuman(L)) // We do not get to activate Devour on human corpses if the Matriarch wants the corpse for herself.
+			return
+
 		if(L.stat != DEAD)
 			if(L.health <= HEALTH_THRESHOLD_DEAD && HAS_TRAIT(L, TRAIT_NODEATH))
 				SweeperDevour(L)
@@ -56,6 +61,8 @@
 		for(var/mob/living/L in Targets)
 			if(!CanAttack(L))
 				continue
+			if(!permitted_to_feast && ishuman(L))
+				continue
 			if(L.health < 0 || L.stat == DEAD)
 				highest_priority += L
 		if(LAZYLEN(highest_priority))
@@ -63,6 +70,8 @@
 	var/list/lower_priority = list() // We aren't exactly damaged, but it'd be a good idea to finish the wounded first
 	for(var/mob/living/L in Targets)
 		if(!CanAttack(L))
+			continue
+		if(!permitted_to_feast && ishuman(L))
 			continue
 		if(L.health < L.maxHealth*0.5 && (L.stat < UNCONSCIOUS))
 			lower_priority += L
@@ -393,6 +402,8 @@
 	var/COL_extractfuel_damage_adjustment = 0
 	/// ADDS TO Last Stand's stack gain. Positive values makes it give more stacks, negative ones makes it give less.
 	var/COL_laststand_stacks_adjustment = 0
+
+
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/Initialize()
 	. = ..()

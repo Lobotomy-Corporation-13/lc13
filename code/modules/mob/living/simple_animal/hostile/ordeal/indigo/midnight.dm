@@ -18,8 +18,8 @@
 	icon_living = "matriarch"
 	icon_dead = "matriarch_dead"
 	faction = list("indigo_ordeal")
-	maxHealth = 8000
-	health = 8000
+	maxHealth = 7500
+	health = 7500
 	stat_attack = DEAD
 	pixel_x = -16
 	base_pixel_x = -16
@@ -44,36 +44,51 @@
 	projectiletype = null
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
 
-	//How many people has she eaten
+	/// How many non-sweeper corpses has she eaten? Boosts attack speed and movespeed.
 	var/belly = 0
-	//How mad is she?
+
+	/// Controls a ton of different parts of her balancing. This is a number from 1 to 3. If it isn't, something is horribly wrong.
 	var/phase = 1
 
+	// Player scaling vars.
 	var/player_scaling = 1
+	var/player_scaling_health_per_player = 300
+	var/player_scaling_grunts_per_player = 1
+	var/player_scaling_commanders_per_player = 0.34
 
-	/// List of all spawned sweepers
+	/// If we reach this amount of players, we will be spawning a ton of sweepers around the facility, not just as part of the Matriarch's retinue.
+	// The sweepers spawned by this won't automatically come to the Matriarch's aid, they patrol with their own commanders.
+	var/player_scaling_nitb_threshold = 4
+
+	/// Holds the commanders we've deployed as part of the NitB
+	var/list/nitb_deployed_commanders = list()
+
+	var/nitb_cooldown
+	var/nitb_cooldown_duration = 1.5 MINUTES
+
+	/// List of all bound, spawned sweepers in our retinue
 	var/list/allied_sweepers = list()
-	/// List of just the commanders
+	/// List of just the bound retinue commanders
 	var/list/deployed_commanders = list()
-	/// List of just the grunts
+	/// List of just the bound retinue grunts
 	var/list/deployed_grunts = list()
 
 	/// Types of available commanders to spawn. We will pick n take out of this list to avoid duplicates, we will replenish it when they die.
 	var/list/commander_types = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/subordinate,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/subordinate,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/subordinate,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/subordinate,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue,
 	)
 	/// Types of available grunts to spawn
 	var/list/grunt_types = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue,
 	)
 	// Technically, we could get away with just using 1 list here and deriving how many commanders/grunts there are with a for loop and istype check, but I'd rather not?
 
-	/* ABILITIES SECTION
+	/* ABILITY VARIABLES SECTION
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	The Matriarch has access to some of her own abilities, and a bunch of upgraded abilities from her subordinates:
 	Combat:
@@ -85,7 +100,7 @@
 
 	Support:
 		- Offensive Command, an ability from Commander Maria (BLACK Indigo Dusk). This makes all nearby allies move and attack faster and harder, making them appropiate threats for endgame.
-		- Persistent Command, an ability from Commander Adelheide (WHITE Indigo Dusk). This gives all nearby allies three stacks of Persistence and cuts their ongoing combat ability cooldowns by 90%.
+		- Persistent Command, an ability from Commander Adelheide (WHITE Indigo Dusk). This gives all nearby allies three stacks of Persistence and resets their combat ability cooldowns.
 		- Summon Sweepers, her own ability. It's self explanatory.  Will summon standard sweepers as well as variants. Later, able to also summon Indigo Dusks.
 	*/
 
@@ -107,39 +122,46 @@
 	var/list/available_abilities = list()
 	// This one holds the intended cooldown duration for every ability.
 	var/list/ability_cooldown_durations = list(
-		COMBAT_ABILITY_DASH = 15 SECONDS,
+		COMBAT_ABILITY_DASH = 15 SECONDS, // Dash CD is reset on dash hit
 		COMBAT_ABILITY_SLAM = 10 SECONDS,
 		COMBAT_ABILITY_SLASH = 8 SECONDS,
 		COMBAT_ABILITY_TRASH_DISPOSAL = 22 SECONDS,
-		COMBAT_ABILITY_PARRY = 18 SECONDS,
+		COMBAT_ABILITY_PARRY = 18 SECONDS, // Parry has CDR if a riposte lands
 		SUPPORT_ABILITY_OFFENSIVE = 30 SECONDS,
 		SUPPORT_ABILITY_PERSISTENCE = 20 SECONDS,
-		SUPPORT_ABILITY_SUMMON = 60 SECONDS, // Reset every phasechange.
+		SUPPORT_ABILITY_SUMMON = 60 SECONDS, // Summon CD is reset every phasechange.
 	)
 	// These two lists, we will pick_n_take from to add abilities as the fight progresses. On Initialize we pluck three out of locked_combat_abilities to start with as a base.
 	var/list/locked_combat_abilities = list(COMBAT_ABILITY_DASH, COMBAT_ABILITY_SLAM, COMBAT_ABILITY_SLASH, COMBAT_ABILITY_TRASH_DISPOSAL, COMBAT_ABILITY_PARRY)
 	var/list/locked_support_abilities = list(SUPPORT_ABILITY_OFFENSIVE, SUPPORT_ABILITY_PERSISTENCE) // Summon is excluded, we have it by default.
 
 
+	// Sweep the Backstreets (Dash) variables
 	/// We need this to not hit multiple people due to the implementation I used for the dash. Stores every mob hit by the dash, cleared on each dash.
 	var/list/dash_hitlist = list()
 	/// This one is so we can hit all the turfs with the dash at once, to avoid people dodging it by moving inside of it.
 	var/list/dash_hitlist_turfs = list()
 	var/dash_range = 7
 
+	// Area Slash variables
 	// Vars for the size of the slash combat ability. Taken from Lady of the Lake.
 	// We will swap these every time we use the ability.
 	var/slash_length = 3
 	var/slash_width = 2
 
+	// Parry & Riposte variables
+	/// This var will hold the timer for our parry.
 	var/parry_stop_timer = null
+	/// Reduce Parry's CD by this much on a successful riposte.
 	var/riposte_CDR = 14 SECONDS
 
+	// Trash Disposal variables
 	/// How many deciseconds between trash disposal hits? Reduced by 1 decisecond on each hit.
 	var/time_between_trash_disposal_hits = 1 SECONDS
 	/// A failsafe timer in case we miss our lunge, resets it.
 	var/lunge_reset_timer
 
+	// Buff (Frenzy & Persistence) variables
 	/// Range in tiles of our buff abilities.
 	var/buff_ability_range = 13
 	// The below bonuses are flat and additive. They are applied on our offensive buff.
@@ -150,11 +172,12 @@
 	/// Raise ally rapid_melee by this amount
 	var/buff_attackspeed_bonus = 1.2
 	/// Buff lasts this long
-	var/buff_duration = 10 SECONDS
+	var/buff_duration = 12 SECONDS
 
 	// You get a small breather in between her spamming support abilities.
 	var/general_support_cooldown = 0
 	var/general_support_cooldown_duration = 4.5 SECONDS
+
 
 	// Frustration mechanic: if ranged attacks are being used on us, punish the players.
 	// Formerly went off of hitcount, but this unfairly penalized fast firing guns while letting big war criminal guns like Arcadia get off easy.
@@ -162,55 +185,70 @@
 
 	/// Ranged damage taken. Reset by RangedReaction().
 	var/frustration_meter
-	/// Damage threshold over which we'll trigger a RangedReaction().
-	var/frustration_threshold = 150
+	/// Damage threshold over which we'll trigger a RangedReaction(). Increased by amount of players.
+	var/frustration_threshold = 100
 	/// Amount of times we've reached our frustration_threshold. The higher this gets, the more cooked you are.
 	var/frustration_procced = 0
 
+	var/pulse_cooldown
+	var/pulse_cooldown_time = 20 SECONDS // This also controls the "window of opportunity" that you can use ranged on the Matriarch during before she'll punish you again for it
+	var/pulse_base_damage = 50 // Scales off frustration procs.
 
 	/* PHASE SCALING SECTION
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	*/
 	// Big block of phases_ vars that determine what properties she has in each stage. I found this approach to be more useful for being able to compare and directly tweak the values in one place.
+	// A general "rule" she follows, is that she gets more frantic and quick in her movements and attacks as the fight progresses, and heals more, but deals less damage and is more vulnerable.
 
 	// Association list of key: phase to value: amount of health under which the next phase gets triggered.
-	var/list/phases_health_thresholds = list(1 = 5500, 2 = 3300, 3 = -INFINITY)
+	var/list/phases_health_thresholds = alist(1 = 5500, 2 = 3000, 3 = -INFINITY)
 
-	var/list/phases_icon_states = list(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
+	// The icons she uses in each phase.
+	var/list/phases_icon_states = alist(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
+
 	// Association lists that control different balancing values for each phase. The keys are the phase, the values are the corresponding intended value for that phase.
-	var/list/phases_move_delays = list(1 = 3, 2 = 2.5, 3 = 2.2)
-	var/list/phases_rapid_melee = list(1 = 2, 2 = 3, 3 = 4)
-	var/list/phases_melee_damage = list(1 = 55, 2 = 48, 3 = 40)
-	var/list/phases_resistance_lists = list(
+	var/list/phases_move_delays = alist(1 = 3, 2 = 2.5, 3 = 2.2)
+	var/list/phases_rapid_melee = alist(1 = 2, 2 = 3, 3 = 4)
+	var/list/phases_melee_damage = alist(1 = 55, 2 = 48, 3 = 40)
+	var/list/phases_resistance_lists = alist(
 	1 = list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.5),
 	2 = list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.25, PALE_DAMAGE = 0.8),
 	3 = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1),
 	)
 
-	var/list/phases_slam_windup = list(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
-	var/list/phases_slam_damage = list(1 = 120, 2 = 110, 3 = 80)
-	var/list/phases_slam_range = list(1 = 3, 2 = 3, 3 = 2)
+	// Slam phase scaling variables
+	var/list/phases_slam_windup = alist(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
+	var/list/phases_slam_damage = alist(1 = 120, 2 = 110, 3 = 80)
+	var/list/phases_slam_range = alist(1 = 3, 2 = 3, 3 = 2)
 
-	var/list/phases_slash_damage = list(1 = 110, 2 = 100, 3 = 90)
-	var/list/phases_slash_healing = list(1 = 75, 2 = 100, 3 = 250)
+	// Slash phase scaling variables
+	var/list/phases_slash_damage = alist(1 = 110, 2 = 100, 3 = 90)
+	var/list/phases_slash_healing = alist(1 = 75, 2 = 100, 3 = 250)
 
-	var/list/phases_dash_windup = list(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
-	var/list/phases_dash_damage = list(1 = 80, 2 = 70, 3 = 60)
-	var/list/phases_dash_healing = list(1 = 150, 2 = 200, 3 = 350)
+	// Dash phase scaling variables
+	var/list/phases_dash_windup = alist(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
+	var/list/phases_dash_damage = alist(1 = 80, 2 = 70, 3 = 60)
+	var/list/phases_dash_healing = alist(1 = 150, 2 = 200, 3 = 350)
 
-	var/list/phases_riposte_damage = list(1 = 160, 2 = 150, 3 = 140)
-	var/list/phases_riposte_healing = list(1 = 200, 2 = 300, 3 = 500)
+	// Parry & Riposte scaling variables
+	var/list/phases_riposte_damage = alist(1 = 160, 2 = 150, 3 = 140)
+	var/list/phases_riposte_healing = alist(1 = 200, 2 = 300, 3 = 500)
 
-	var/list/phases_disposal_damage = list(1 = 60, 2 = 50, 3 = 40)
-	var/list/phases_disposal_healing = list(1 = 75, 2 = 100, 3 = 150)
+	// Trash Disposal scaling variables
+	var/list/phases_disposal_damage = alist(1 = 60, 2 = 50, 3 = 40)
+	var/list/phases_disposal_healing = alist(1 = 75, 2 = 100, 3 = 150)
 
-	var/list/phases_squad_size_grunts = list(1 = 4, 2 = 5, 3 = 6)
-	var/list/phases_squad_size_commanders = list(1 = 0, 2 = 2, 3 = 3)
+	// Summon Sweepers scaling variables
+	var/list/phases_squad_size_grunts = alist(1 = 4, 2 = 5, 3 = 6)
+	var/list/phases_squad_size_commanders = alist(1 = 0, 2 = 2, 3 = 3)
+
+// Here be procs
 
 /*
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 GENERAL OVERRIDES, PATROLLING AND TARGETING SECTION
-This is all code relating to targeting bodies, patrolling and all of that.
+This is all code relating to targeting corpses, patrolling and all of that. Includes a lot of important overrides like Life() and Move().
+Some other overrides like AttackingTarget() are in the Combat section instead.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
@@ -218,17 +256,18 @@ This is all code relating to targeting bodies, patrolling and all of that.
 	. = ..()
 	// Follow me if you want to live. All Sweeper types will be included in our Leadership component.
 	var/units_to_add = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue = 1,
 		/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_midnight = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/subordinate = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/subordinate = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/subordinate = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/subordinate = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue = 1,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue = 1,
 		)
-	AddComponent(/datum/component/ai_leadership/matriarch, units_to_add, 50)
+	AddComponent(/datum/component/ai_leadership/matriarch, units_to_add, 50) // This leadership component has some special behaviour. Check near the bottom of the file to find it.
+	nitb_cooldown = world.time + nitb_cooldown_duration
+	HandlePlayerScaling()
 
 	// Give us three combat abilities and Summon Sweepers to begin with. We begin with half their cooldown ticked down.
 	for(var/i in 1 to 3)
@@ -237,6 +276,19 @@ This is all code relating to targeting bodies, patrolling and all of that.
 			available_abilities[chosen_combat_ability] = world.time + ability_cooldown_durations[chosen_combat_ability] * 0.5
 	available_abilities[SUPPORT_ABILITY_SUMMON] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_SUMMON] * 0.5
 
+// Called on Initialize() to update our stuff to right values for amount of players we're facing. Please never call this ever again
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/HandlePlayerScaling()
+	var/amount_of_dangerous_fuel = length(AllLivingAgents(TRUE))
+	player_scaling = amount_of_dangerous_fuel
+
+	var/bonus_health = player_scaling_health_per_player * amount_of_dangerous_fuel
+	maxHealth += bonus_health
+	adjustBruteLoss(-bonus_health)
+
+	for(var/phase_h, health_threshold in phases_health_thresholds)
+		phases_health_thresholds[phase_h] += bonus_health
+
+	frustration_threshold += (bonus_health * 0.30)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/Life()
 	. = ..()
@@ -245,10 +297,13 @@ This is all code relating to targeting bodies, patrolling and all of that.
 	if(CanAct() && health <= phases_health_thresholds[phase])
 		PhaseChange()
 
-
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/handle_automated_action()
 	. = ..()
-	AttemptUseSupportAbility()
+	if(lose_patience_timeout && !QDELETED(target) && AIStatus == AI_IDLE && patience_last_interaction + lose_patience_timeout < world.time)
+		LosePatience() // She can, sometimes, have a target while idle but far away from her target, causing her to not patrol towards them.
+
+	AttemptUseSupportAbility() // Try to use a support ability every once in a while. The proc we're calling checks if any are ready.
+	NightInTheBackstreets() // This has a cooldown, don't worry. It will also only trigger if the player scaling's hit a certain amount.
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
 	. = ..()
@@ -256,9 +311,11 @@ This is all code relating to targeting bodies, patrolling and all of that.
 		PhaseChange()
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/Move(atom/newloc, dir, step_x, step_y)
-	if(preparing || disposing || parrying || riposting)
+	if(preparing || disposing || parrying || riposting) // You can't move during these. Never add lunging/dashing to this check, we kinda need to move during those
 		return FALSE
 	. = ..()
+
+	// As we move while dashing, make some small_smoke vfx all around the Matriarch, play a sound, and hit everyone around us. Don't worry, the proc has a mob hitlist, there won't be any double hits.
 	if(dashing)
 		playsound(src, 'sound/effects/meteorimpact.ogg', 75, TRUE, 2, TRUE)
 		dash_hitlist_turfs |= get_turf(newloc)
@@ -368,7 +425,6 @@ This is all code relating to handling incoming ranged damage.
 	var/bullet_damage_type = P.damage_type
 	frustration_meter += (P.damage * damage_coeff.getCoeff(bullet_damage_type)) // If we have 0.5 PALE coeff, and are hit by a 100 PALE damage bullet, add 50 to Frustration.
 	if(frustration_meter >= frustration_threshold)
-		frustration_procced++
 		RangedReaction(P.firer) // Punish players for using ranged on the Matriarch. This will also reset our frustration_meter
 
 	// Activating Parry...
@@ -376,12 +432,43 @@ This is all code relating to handling incoming ranged damage.
 	if(CanAct() && P.damage >= 20 && health > 0 && prob(75))
 		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
 
+// She will do this after she's been shot for enough damage. You can get away with it a couple times but eventually she becomes way too much of an issue if you abuse ranged kiting on her.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/RangedReaction(mob/living/firer)
+	if(pulse_cooldown > world.time)
+		return FALSE
 	frustration_meter = 0
-	if(istype(firer))
-		// behaviour towards firer goes here
-		say("AIIIIEEE [firer] SHOT ME")
-	// general behaviour goes here
+	frustration_procced++
+	audible_message(span_danger("[src] howls in frustration!"))
+	visible_message(span_userdanger("It really doesn't seem like using ranged weaponry on her is a good idea..."))
+
+	// Facility-wide AoE damage. Scales off amount of times it's happened. Clueless people on the other side of the facility will be mostly spared, there is distance dropoff.
+	pulse_cooldown = world.time + pulse_cooldown_time
+	var/pulse_scaled_damage = pulse_base_damage + (frustration_procced * 25) // This becomes a facility-wiping obliteration nuke if you spam ranged on her
+
+	var/sound/sfx = sound('sound/weapons/resonator_blast.ogg')
+	for(var/mob/living/L in urange(90, src))
+		if(faction_check_mob(L, TRUE))
+			continue
+		SEND_SOUND(L, sfx)
+
+		var/distance = round(get_dist(src, L))
+		var/final_damage = max((pulse_scaled_damage - (distance * 2)), (frustration_procced * 20))
+		L.apply_damage(final_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		shake_camera(L, 4, 5)
+		to_chat(L, span_userdanger("A piercing howl corrodes your very being!"))
+
+	// Increase our squad size each time this procs.
+	for(var/phase_g, selected_limit in phases_squad_size_grunts)
+		phases_squad_size_grunts[phase_g] += 1
+
+	if(frustration_procced % 4 == 0) // Every 4th proc of this...
+		for(var/phase_c, selected_commander_limit in phases_squad_size_commanders)
+			phases_squad_size_commanders[phase_c] += 1 // We won't ever have more than 4 Commanders, since each one is unique. Well, we could, if I wanted to... but it feels weird.
+
+	SLEEP_CHECK_DEATH(0.5 SECONDS)
+
+	if(istype(firer) && (available_abilities[COMBAT_ABILITY_DASH] != null))
+		SweepTheBackstreets(firer) // If we have our dash unlocked, use it immediately regardless of cooldown. This will only happen if we're not busy doing something else.
 	return
 
 /*
@@ -402,10 +489,11 @@ This is all code relating to handling phase changes.
 	maxHealth = phases_health_thresholds[phase-1]
 	adjustBruteLoss(-INFINITY, TRUE, TRUE) // Brute loss needs to be reset, just trust me on this one I think
 
-	// This is the bulk of the stat changes. She gets tougher, faster, attacks faster, but deals less damage.
+	// This is the bulk of the stat changes. She moves faster, attacks faster, but deals less damage.
 	ChangeResistances(phases_resistance_lists[phase])
-	ChangeMoveToDelay(phases_move_delays[phase])
-	rapid_melee = phases_rapid_melee[phase]
+
+	UpdateBellyScaling() // Updates our movetodelay and rapid_melee. Factors in corpses eaten.
+
 	melee_damage_lower = phases_melee_damage[phase]
 	melee_damage_upper = phases_melee_damage[phase]
 	icon_state = phases_icon_states[phase]
@@ -434,9 +522,10 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 */
 
 // !!! CanAct as a proc rather than a var: She has so many possible states she can be in, that it's more expedient to check if she should be able to do something in a proc !!!
+// You may be wondering by this point WHY we have all these different states she can be in. The thing is, we can't have one of the combat abilities' "cleanup" procs un-busy us while we're supposed to be winding something up.
+// If we just have one generic can_act variable, some really messed up stuff can happen and she can lock you in a 50 hit DMC air juggle combo out of trash disposal. Just trust me on this one.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/CanAct()
 	return !(preparing || lunging || parrying || riposting || dashing || disposing)
-
 
 // !!! Melee attack override: Basis of how we call most of our attacks. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/AttackingTarget(atom/attacked_target)
@@ -444,12 +533,12 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		return FALSE
 
 	var/mob/living/attacked_living = attacked_target
-	if(istype(attacked_living) && attacked_living.stat < DEAD && AttemptUseCombatAbility(attacked_target))
+	if(istype(attacked_living) && attacked_living.stat < DEAD && AttemptUseCombatAbility(attacked_target)) // If we can use one of our combat abilities, do that instead of an autoattack.
 		return FALSE
 
-	. = ..()
+	. = ..() // We have autoattacked our target.
 
-	if(. && attacked_living)
+	if(. && attacked_living) // Devour them if they're mob/living and they're dead.
 		var/mob/living/L = attacked_target
 		if(L.stat != DEAD)
 			if(L.health <= HEALTH_THRESHOLD_DEAD && HAS_TRAIT(L, TRAIT_NODEATH))
@@ -457,13 +546,15 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		else
 			SweeperDevour(L)
 
+// !!! OpenFire override: This is how we use our lunge or our dash at range. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/OpenFire(atom/A)
 	if(!CanAct())
 		return FALSE
 	var/mob/living/victim = A
 	if(!(istype(A)))
 		return FALSE
-	// Prioritize using our dash at range, Trash Disposal is less likely to land.
+
+	// Prioritize using our dash at range, since Trash Disposal is less likely to land (and more importantly, our dash can go through friendlies).
 	if(get_dist(src, victim) < 6 && (available_abilities[COMBAT_ABILITY_DASH] != null) && (available_abilities[COMBAT_ABILITY_DASH] <= world.time) && prob(60)) // Will only use our dash 60% of the time that it's off cooldown and we check this proc
 		INVOKE_ASYNC(src, PROC_REF(SweepTheBackstreets), victim)
 		return
@@ -471,6 +562,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		INVOKE_ASYNC(src, PROC_REF(TrashDisposalTelegraph), victim)
 		return
 
+// !!! This proc handles casting our combat abilities, prioritizing Disposal>Dash>Slam>Slash. It is called from melee attacks. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/AttemptUseCombatAbility(mob/living/victim)
 	if(!CanAct())
 		return FALSE
@@ -500,7 +592,16 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	if(!devoured_is_sweeper)
 		// we ate a human/other ordeal/a damn clerkbot or something
 		// consequences here
-		say("yummy non sweeper corpse")
+		belly++
+		UpdateBellyScaling()
+
+// Called every time we phasechange or devour someone, to correctly apply scaling based on non-sweeper corpses eaten.
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/UpdateBellyScaling()
+	// Attack and move faster for each corpse eaten, scales up to 5 corpses. We gain 0.1 rapid melee and lose 0.1 move delay per corpse. This can get pretty wild pretty fast.
+	var/extra_speed = clamp(belly, 1, 5)
+	extra_speed *= 0.1
+	ChangeMoveToDelay(phases_move_delays[phase] - extra_speed)
+	rapid_melee = (phases_rapid_melee[phase] + extra_speed)
 
 // !!! Combat ability: Ground Slam. !!!
 /// cannibalized from wendigo
@@ -532,7 +633,6 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	preparing = FALSE
 
 // !!! Combat ability: Sweep the Backstreets (dash). !!!
-
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SweepTheBackstreets(atom/prospective_fuel = target)
 	if(stat == DEAD || !CanAct())
 		return FALSE
@@ -550,7 +650,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	/// This section is for telegraphing the attack.
 	face_atom(prospective_fuel)
 	say("+2653 753 842396.+")
-	var/obj/effect/temp_visual/dragon_swoop/bubblegum/matriarch/telegraph = new(get_turf(src))
+	var/obj/effect/temp_visual/dragon_swoop/bubblegum/matriarch/telegraph = new(dash_start_turf)
 	walk_towards(telegraph, dash_target_turf, 0.1 SECONDS)
 	SLEEP_CHECK_DEATH(phases_dash_windup[phase])
 	/// We're now dashing.
@@ -558,16 +658,12 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	walk_towards(src, dash_target_turf, 0.2)
 	SLEEP_CHECK_DEATH(get_dist(src, dash_target_turf) * 0.2)
 
-	/// This part is for some visual/audio feedback.
-	var/datum/beam/really_temporary_beam = dash_start_turf.Beam(src, icon_state = "1-full", time = 3)
-	really_temporary_beam.visuals.color = COLOR_STRONG_BLUE
-
-	/// We're done dashing. Hit all the affected turfs at the same time (to avoid people dodging it by moving into it).
-	/// The Sweeper won't have added the final turf onto its hit list, so we add it here.
 	/// Yes it needs to get slept for 0.2 seconds here because... it hasn't finished moving or something. I've tested it. Trust me.
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 	CancelDash()
-	if(phase >= 2) // Followup slam on phase 2 and after.
+
+	// Followup slam on phase 2 and after.
+	if(phase >= 2)
 		SLEEP_CHECK_DEATH(0.1 SECONDS)
 		for(var/turf/T in view(2, src))
 			playsound(T,'sound/effects/tableslam.ogg', 100, TRUE, 10)
@@ -584,10 +680,6 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	/// Give the players a tiny bit of time to not instantly get auto hit by the Matriarch after she dashes.
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 
-	/// Re-target our old target.
-	/*if(!client)
-		GiveTarget(prospective_fuel)
-	Commented out 'cause it's sussy */
 	preparing = FALSE
 	return TRUE
 
@@ -596,6 +688,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	layer = POINT_LAYER
 	movement_type = FLYING | PHASING
 
+/// This proc deals damage to the things we dash through. Called by Move() while we're dashing.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SweepTheBackstreetsHit(turf/impacted)
 	if(istype(impacted))
 		for(var/mob/living/hit_mob in HurtInTurf(impacted, dash_hitlist, phases_dash_damage[phase], melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
@@ -614,6 +707,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 /// Called when we're entering a dash (passed all the checks).
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/PrepareDash()
+	walk_to(src, 0)
 	preparing = TRUE
 	dashing = FALSE
 	/// Can't get pushed away during this.
@@ -641,7 +735,6 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	density = TRUE
 
 // !!! Combat ability: Slash. !!!
-
 // Copied code from the Lady of the Lake (Gold Noon). It's an AoE slash.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/AreaSlash(mob/living/target, mob/living/user, repeat = TRUE)
 	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
@@ -728,6 +821,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	if (!LAZYLEN(area_of_effect))
 		return
 
+	// Set our cooldown once we reach this point.
 	available_abilities[COMBAT_ABILITY_SLASH] = ability_cooldown_durations[COMBAT_ABILITY_SLASH] + world.time
 
 	// This is where the actual slash telegraph and hit happen.
@@ -766,6 +860,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	slash_length = slash_width
 	slash_width = old_length
 
+	// On phase 2 and 3, we will use this proc twice in a row.
 	if(repeat && (phase >= 2) && target)
 		INVOKE_ASYNC(src, PROC_REF(AreaSlash), target, user, FALSE)
 		return TRUE
@@ -777,6 +872,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	color = COLOR_STRONG_BLUE
 
 // !!! Combat ability: Parry !!!
+// Replace the current triggers with a PreDamageReaction() once damage refactor is merged. Will also let us parry special attacks.
 
 /// Activates parrying behaviour when hit by a simple_animal.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/attack_animal(mob/living/simple_animal/M, damage)
@@ -804,7 +900,9 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 /// Enter our parrying stance.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/BeginParry(mob/living/target, mob/living/user)
 	if((available_abilities[COMBAT_ABILITY_PARRY] != null) && available_abilities[COMBAT_ABILITY_PARRY] <= world.time)
+		// Set cooldown.
 		available_abilities[COMBAT_ABILITY_PARRY] = ability_cooldown_durations[COMBAT_ABILITY_PARRY] + world.time
+
 		preparing = TRUE // This doesn't mean we're parrying just yet.
 		// Telegraph that we're beginning a parry to give players time to stop attacking. We're not actively parrying at this point.
 		say("676 3246!!")
@@ -833,7 +931,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 	var/riposte_damage = phases_riposte_damage[phase]
 	if(istype(victim, /mob/living/simple_animal/hostile))
-		riposte_damage *= 2
+		riposte_damage *= 3 // Triple damage if we're riposting an ordeal, distortion or abno.
 
 	riposting = TRUE
 
@@ -854,7 +952,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	var/turf/origin = get_turf(src)
 	src.forceMove(destination_turf)
 	var/datum/beam/really_temporary_beam = origin.Beam(src, icon_state = "1-full", time = 3)
-	really_temporary_beam.visuals.color = COLOR_MOSTLY_PURE_PINK
+	really_temporary_beam.visuals.color = COLOR_RED
 
 	riposting = FALSE
 
@@ -871,7 +969,6 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 
 // !!! Combat ability: Trash Disposal !!!
-
 /// First part of Trash Disposal. It CAN fail. Warns all nearby players they're about to get lunged at, then throws the Matriarch at one.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/TrashDisposalTelegraph(mob/living/victim, mob/living/user = src)
 	preparing = TRUE
@@ -879,6 +976,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	toggle_ai(AI_OFF)
 	LoseTarget()
 	walk_to(src, 0) // Resets any ongoing movement
+	var/true_target = victim
 
 	// Telegraph the attack to players.
 	for(var/mob/living/potential_victim in view(10, src))
@@ -886,17 +984,19 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 			continue
 		var/obj/effect/temp_visual/trash_disposal_telegraph/warning = new /obj/effect/temp_visual/trash_disposal_telegraph(get_turf(user))
 		walk_towards(warning, potential_victim, 0.1 SECONDS) // This makes our warning move from the Matriarch to the target.
+		if(prob(33))
+			true_target = potential_victim // This should roughly shuffle our true target, maybe, I don't know, it's 3 AM I'm sleepy. I don't wanna pull all the possible victims and pick()
 
 	say("+5363 23 625 513 93477 2576!+")
 	user.visible_message(span_userdanger("[user] prepares to leap...!"))
 	playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 5)
 
-	SLEEP_CHECK_DEATH(2.4 SECONDS)
+	SLEEP_CHECK_DEATH(2.4 SECONDS) // You should run
 
 	lunging = TRUE // While this is active, anyone we get thrown into is fair game for Trash Disposal.
 	preparing = FALSE
-	user.throw_at(victim, 8, 5, src, FALSE)
-	user.visible_message(span_danger("[user] leaps at [victim]!"))
+	user.throw_at(true_target, 8, 5, src, FALSE)
+	user.visible_message(span_danger("[user] leaps at [true_target]!"))
 	lunge_reset_timer = addtimer(CALLBACK(src, PROC_REF(StopLunging)), 2 SECONDS, TIMER_STOPPABLE) // Failsafe - resets our state if we miss.
 
 /// This proc is called once we successfully impact someone from our lunge. We pin them and begin the sequence of hits.
@@ -1014,29 +1114,39 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
+// !!! Gets called once in a while by handle_automated_action. Tries to use one of our support abilities, if ready and it makes sense to. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/AttemptUseSupportAbility()
-	if(general_support_cooldown > world.time)
+	if(general_support_cooldown > world.time) // This is so we don't spam the buffs super quickly
 		return FALSE
 
+	// First, figure out how many sweepers we have and how many we /could/ have.
 	var/amount_grunts = length(deployed_grunts)
 	var/amount_commanders = length(deployed_commanders)
 
 	var/missing_grunts = phases_squad_size_grunts[phase] - amount_grunts
 	var/missing_commanders = phases_squad_size_commanders[phase] - amount_commanders
 
-	var/really_oughta_get_some_goons = (((missing_commanders >= 1) && length(commander_types) > 0) || (missing_grunts >= 4)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
+	// This will be TRUE if we're missing a commander or if we're missing four grunts. In that case, we'll try to summon some allies.
+	var/really_oughta_get_some_goons = ((missing_grunts >= 4) || ((missing_commanders >= 1) && length(commander_types) > 0)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
 
 	if(really_oughta_get_some_goons && (available_abilities[SUPPORT_ABILITY_SUMMON] != null) && available_abilities[SUPPORT_ABILITY_SUMMON] <= world.time)
 		available_abilities[SUPPORT_ABILITY_SUMMON] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_SUMMON]
-		INVOKE_ASYNC(src, PROC_REF(SummonSweepers), missing_grunts, missing_commanders)
+		var/turf/spawn_here = get_ranged_target_turf(src, pick(GLOB.cardinals), 2)
+		INVOKE_ASYNC(src, PROC_REF(SummonSweepers), missing_grunts, missing_commanders, spawn_here)
 		general_support_cooldown = world.time + general_support_cooldown_duration
+		audible_message(span_userdanger("[src] calls for reinforcements!"))
 		return TRUE
+
+	// If we have deployed allies, and we're in combat, use one of our buff abilities.
 	else if(target && (amount_grunts > 0 || amount_commanders > 0))
+		// Frenzy is prioritized.
 		if((available_abilities[SUPPORT_ABILITY_OFFENSIVE] != null) && available_abilities[SUPPORT_ABILITY_OFFENSIVE] <= world.time)
 			available_abilities[SUPPORT_ABILITY_OFFENSIVE] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_OFFENSIVE]
 			INVOKE_ASYNC(src, PROC_REF(ActivateBuff), SUPPORT_ABILITY_OFFENSIVE)
 			general_support_cooldown = world.time + general_support_cooldown_duration
 			return TRUE
+
+		// Persistence otherwise.
 		else if((available_abilities[SUPPORT_ABILITY_PERSISTENCE] != null) && available_abilities[SUPPORT_ABILITY_PERSISTENCE] <= world.time)
 			available_abilities[SUPPORT_ABILITY_PERSISTENCE] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_PERSISTENCE]
 			INVOKE_ASYNC(src, PROC_REF(ActivateBuff), SUPPORT_ABILITY_PERSISTENCE)
@@ -1047,28 +1157,31 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	else
 		return FALSE
 
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SummonSweepers(amount_grunts, amount_commanders)
-	var/turf/open/prospective_turf = get_ranged_target_turf(src, pick(GLOB.cardinals), 2)
+/// This proc summons as many grunts and commanders as you ask it to at the turf "emergence". It will not check if we have the capacity for them. That is handled by AttemptUseSupportAbility.
+// This sleeps so never call it directly, use INVOKE_ASYNC
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SummonSweepers(amount_grunts, amount_commanders, turf/emergence)
+	var/turf/open/prospective_turf = emergence
 	if(!(istype(prospective_turf)))
 		prospective_turf = get_turf(src)
 
 	var/list/deployment_turfs = list()
 	for(var/turf/T in view(1, prospective_turf))
 		if(istype(T, /turf/closed/indestructible/fakeglass)) // If we're near an indestructible window, forget about fancy deployment, we're all spawning on the Matriarch's turf
-			deployment_turfs = null
+			deployment_turfs = list()
 			prospective_turf = get_turf(src)
 			break
 		deployment_turfs |= T
 
 	new /obj/effect/temp_visual/sweeper_squad_warning(prospective_turf)
 	sleep(3 SECONDS) // Not sleep_check_death, I don't care if you kill the matriarch, you're gonna deal with the GOONS
+
 	if(amount_commanders > 0)
 		for(var/i in 1 to amount_commanders)
 			var/turf/final_deployment_turf = pick_n_take(deployment_turfs)
 			if(!final_deployment_turf)
 				final_deployment_turf = prospective_turf
 
-			var/commander_type = pick_n_take(commander_types)
+			var/commander_type = pick_n_take(commander_types) // We will place their type back into the available pool once they die
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, commander_type, src)
 
 	if(amount_grunts > 0)
@@ -1080,17 +1193,76 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			var/grunt_type = pick(grunt_types)
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, grunt_type, src)
 
+
+/// Only called if we meet player_scaling_nitb_threshold
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/NightInTheBackstreets()
+	if(player_scaling < player_scaling_nitb_threshold || nitb_cooldown > world.time)
+		return FALSE
+
+	// Stop her from trying to do NitB if she's not on the facility Z Level
+	var/turf/sample_dept_center = pick(GLOB.department_centers)
+	var/turf/our_turf = get_turf(src)
+	if(!(sample_dept_center) || (our_turf.z != sample_dept_center.z))
+		return FALSE
+
+	// If we have enough players, spawn Sweepers with a commander in a department center. They won't be bound to the Matriarch, but will still be part of the Ordeal.
+	// No limit on how many grunts there could be, by the way. As long as we need to spawn a NITB Commander, we spawn 'em.
+
+	var/required_amount_nitb_commanders = clamp(floor(player_scaling * player_scaling_commanders_per_player), 0, 4)
+	var/missing_commanders = required_amount_nitb_commanders - length(nitb_deployed_commanders)
+	if(missing_commanders < 1)
+		return
+
+	nitb_cooldown = world.time + nitb_cooldown_duration
+	audible_message(span_userdanger("You hear a distant clamour as more Sweepers arrive in the facility."))
+	for(var/i in 1 to missing_commanders)
+		var/turf/dept_center = pick(GLOB.department_centers)
+		if(!dept_center)
+			return // ????????????
+
+		var/nitb_grunts_amount = floor(player_scaling * player_scaling_grunts_per_player)
+		var/list/nitb_deployment_turfs = list()
+
+		for(var/turf/open/T2 in view(2, dept_center))
+			nitb_deployment_turfs |= T2
+
+		new /obj/effect/temp_visual/sweeper_squad_warning(dept_center)
+
+		for(var/j in 1 to nitb_grunts_amount)
+			var/turf/final_nitb_deploy_turf = pick_n_take(nitb_deployment_turfs)
+			if(!final_nitb_deploy_turf)
+				final_nitb_deploy_turf = dept_center
+
+			var/nitb_grunt_type = pick(list(
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
+				/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
+			))
+			new /obj/effect/specific_sweeper_spawn(final_nitb_deploy_turf, nitb_grunt_type, src, FALSE)
+
+		var/nitb_commander_type = pick(list(
+			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
+			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
+			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
+			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,
+			))
+
+		new /obj/effect/specific_sweeper_spawn(dept_center, nitb_commander_type, src, FALSE)
+
+/// Signal handler that will remove the dead sweeper from our lists, and also place a dead commander's type back into the available pool.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/RegisterSweeperDeath(mob/living/dead_neighbor)
 	SIGNAL_HANDLER
 	var/dead_type = dead_neighbor.type
-	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
+	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk) && !(dead_neighbor in nitb_deployed_commanders))
 		commander_types |= dead_type
 
 	deployed_commanders -= dead_neighbor
+	nitb_deployed_commanders -= dead_neighbor
 	deployed_grunts -= dead_neighbor
 	allied_sweepers -= dead_neighbor
 
 
+// !!! Support abilities: Frenzy / Persistence !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/ActivateBuff(buff_type = null)
 	if((buff_type != SUPPORT_ABILITY_OFFENSIVE) && (buff_type != SUPPORT_ABILITY_PERSISTENCE))
 		return FALSE
@@ -1098,17 +1270,10 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	say("296 9246 8572!!")
 	audible_message(span_danger("[src] issues a command to \his children, rallying them to fight for \him!"))
 	var/obj/effect/temp_visual/screech/command = new(get_turf(src))
-	command.color = (buff_type == SUPPORT_ABILITY_OFFENSIVE ? COLOR_BLACK : null)
+	command.color = (buff_type == SUPPORT_ABILITY_OFFENSIVE ? COLOR_BLACK : COLOR_WHITE)
 
 	var/datum/component/ai_leadership/matriarch/bond_of_motherhood = GetComponent(/datum/component/ai_leadership/matriarch)
-	bond_of_motherhood.HeadCount(src)
-	// There is a handy proc called Regroup() but it will telepathically affect all of our followers and it will also make the Matriarch herself reset her movement (for some reason the leader is in the followers list)
-	for(var/mob/living/simple_animal/hostile/wayward_child in bond_of_motherhood.followers)
-		if((wayward_child == src) || (wayward_child.target))
-			continue
-		if(get_dist(src, wayward_child) < 10)
-			continue
-		bond_of_motherhood.FollowLeader(wayward_child)
+	bond_of_motherhood.HeadCount(src) // Calls allied sweepers to the Matriarch.
 
 	for(var/turf/T in range(buff_ability_range, src))
 		for(var/mob/living/simple_animal/hostile/ordeal/goon in T)
@@ -1116,20 +1281,21 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			if(src != goon && faction_check_mob(goon, TRUE))
 				switch(buff_type)
 					if(SUPPORT_ABILITY_OFFENSIVE)
-						ApplyFrenzyBonus(goon)
+						ApplyFrenzyBonus(goon) // This can stack with Maria's and it's very funny (war crime)
 						addtimer(CALLBACK(src, PROC_REF(RevertFrenzyBonus), goon), buff_duration)
 
 					if(SUPPORT_ABILITY_PERSISTENCE)
 						goon.GainPersistence(2) // Nanomachines, son. They harden in response to physical trauma...
+
 						// Resets combat ability cooldowns for Indigo Noon & Dusk allies.
 						switch(goon.type)
-							if(/mob/living/simple_animal/hostile/ordeal/indigo_dusk) // Commanders - Lower CD on Trash Disposal (Jacques), Hammer Slam (Maria), Parry (Silvina), Slash (Adelheide)
+							if(/mob/living/simple_animal/hostile/ordeal/indigo_dusk) // Commanders - Reset CD on Trash Disposal (Jacques), Hammer Slam (Maria), Parry (Silvina), Slash (Adelheide)
 								var/mob/living/simple_animal/hostile/ordeal/indigo_dusk/favourite_child = goon
 								favourite_child.special_ability_cooldown = world.time
-							if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky) // Lanky Sweepers - Lower CD on Sweep the Backstreets (the dash)
+							if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky) // Lanky Sweepers - Reset CD on Sweep the Backstreets (the dash)
 								var/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/beanstalk_lookin_guy = goon
 								beanstalk_lookin_guy.dash_cooldown = world.time
-							if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky) // Chunky Sweepers - Lower CD on Extract Fuel (the empowered lifesteal attack after being hit)
+							if(/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky) // Chunky Sweepers - Reset CD on Extract Fuel (the empowered lifesteal attack after being hit)
 								var/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/stocky_one = goon
 								stocky_one.extract_fuel_cooldown = world.time
 
@@ -1163,6 +1329,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	base_pixel_y = -32
 	randomdir = FALSE
 
+// Old, we don't use this anymore but it's used elsewhere in the codebase for some reason
 /obj/effect/sweeperspawn
 	name = "bloodpool"
 	desc = "A target warning you of incoming pain"
@@ -1195,15 +1362,20 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/mob/living/simple_animal/hostile/ordeal/indigo_midnight/matriarch
 	var/datum/component/ai_leadership/matriarch/her_divine_right_to_rule_all_sweepers
+	var/datum/ordeal/matriarch_ordeal_reference
+	var/should_bind_to_matriarch = TRUE
 
-/obj/effect/specific_sweeper_spawn/Initialize(mapload, type, mother)
+/obj/effect/specific_sweeper_spawn/Initialize(mapload, type, mother, retinue = TRUE)
 	. = ..()
-	if(!type || !ispath(type, /mob/living/simple_animal/hostile/ordeal))
+	if(!type || !ispath(type, /mob/living/simple_animal/hostile/ordeal) || !mother)
 		qdel(src)
 		return
 	if(istype(mother, /mob/living/simple_animal/hostile/ordeal/indigo_midnight))
 		matriarch = mother
 		her_divine_right_to_rule_all_sweepers = matriarch.GetComponent(/datum/component/ai_leadership/matriarch)
+		if(matriarch.ordeal_reference)
+			matriarch_ordeal_reference = matriarch.ordeal_reference
+		should_bind_to_matriarch = retinue
 	addtimer(CALLBACK(src, PROC_REF(SpawnSweeper), type), 1 SECONDS)
 
 /obj/effect/specific_sweeper_spawn/proc/SpawnSweeper(type)
@@ -1212,15 +1384,32 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 		return
 
 	var/mob/living/simple_animal/hostile/ordeal/new_neighbor = new type(get_turf(src))
+
 	if(matriarch)
-		matriarch.RegisterSignal(new_neighbor, COMSIG_LIVING_DEATH, TYPE_PROC_REF(/mob/living/simple_animal/hostile/ordeal/indigo_midnight, RegisterSweeperDeath))
-		matriarch.allied_sweepers |= new_neighbor
-		her_divine_right_to_rule_all_sweepers.Recruit(new_neighbor)
+		if(matriarch_ordeal_reference) // Add 'em to our ordeal reference
+			new_neighbor.ordeal_reference = matriarch_ordeal_reference
+			matriarch_ordeal_reference.ordeal_mobs |= new_neighbor
+
+		if(should_bind_to_matriarch)
+			matriarch.RegisterSignal(new_neighbor, COMSIG_LIVING_DEATH, TYPE_PROC_REF(/mob/living/simple_animal/hostile/ordeal/indigo_midnight, RegisterSweeperDeath))
+			matriarch.allied_sweepers |= new_neighbor
+			her_divine_right_to_rule_all_sweepers.Recruit(new_neighbor) // Add to our Leadership component followers
+			her_divine_right_to_rule_all_sweepers.FollowLeader(new_neighbor) // Get over here.
+
 		if(istype(new_neighbor, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
-			matriarch.deployed_commanders |= new_neighbor
+			var/mob/living/simple_animal/hostile/ordeal/indigo_dusk/favourite_child = new_neighbor
+			favourite_child.permitted_to_feast = FALSE // Disallow from eating human corpses, those are for the Matriarch
+			if(should_bind_to_matriarch)
+				matriarch.deployed_commanders |= new_neighbor
+			else
+				matriarch.nitb_deployed_commanders |= new_neighbor
 		else
-			matriarch.deployed_grunts |= new_neighbor
-		her_divine_right_to_rule_all_sweepers.FollowLeader(new_neighbor)
+			var/mob/living/simple_animal/hostile/ordeal/indigo_noon/less_favourite_child = new_neighbor
+			if(istype(less_favourite_child))
+				less_favourite_child.permitted_to_feast = FALSE // Disallow from eating human corpses, those are for the Matriarch
+			if(should_bind_to_matriarch)
+				matriarch.deployed_grunts |= new_neighbor
+
 	qdel(src)
 
 // We don't spawn these anymore but I'm keeping it here because one spawns in xicommand.dmm for some reason
@@ -1246,15 +1435,26 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	blood_volume = BLOOD_VOLUME_NORMAL
 
 
-// Special Dusks spawned by the Matriarch. They won't have Leadership components.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/subordinate
+// Special Sweepers spawned by the Matriarch. They won't have Leadership components, and they will be commanded directly by the Matriarch.
+// It'd be more convenient to just set this var to false as they're spawned, but sadly they initialize with the component, and I'd rather not remove the component after it's already been created
+
+// Matriarch's basic sweeper summoning will summon these /retinue types and recruit them into her Leadership component, having them tag along with her for all her patrols.
+// However, Sweepers spawned as part of the NitB (>= 4 player scaling) will not be these retinue types, and will patrol on their own.
+
+// I understand it looks really strange to have 7 subtypes for this, but hey, the green ordeals do it too. It will also make it easier to rebalance them in the future.
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue
 	commanding_officer = FALSE
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/subordinate
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue
 	commanding_officer = FALSE
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/subordinate
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue
 	commanding_officer = FALSE
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/subordinate
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue
 	commanding_officer = FALSE
+
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue
+
 
 // A component subtype for some special behaviour I want in these Sweepers, since I'd rather not mess with the actual component itself.
 /datum/component/ai_leadership/matriarch
@@ -1268,23 +1468,21 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 
 	headcount_cooldown = world.time + headcount_delay
 
-/datum/component/ai_leadership/matriarch/Regroup()
-	var/turf/matriarch_turf = get_turf(parent)
-	for(var/mob/living/simple_animal/hostile/neighbor in followers)
-		if(get_dist(parent, neighbor) < 10)
-			FollowLeader(neighbor)
-		else
-			neighbor.patrol_to(matriarch_turf)
-
 /datum/component/ai_leadership/matriarch/FollowLeader(mob/living/L)
 	if(!L || L.stat >= DEAD) // L can be null here for some reason
 		return
 	var/mob/living/simple_animal/hostile/ordeal/indigo_midnight/matriarch = parent
 	var/mob/living/simple_animal/hostile/ordeal/neighbor = L
-	if(!(istype(matriarch)) || !(istype(neighbor)))
+	if(!matriarch || !(istype(matriarch)) || !(istype(neighbor)))
 		return
-	if(!(neighbor.target))
-		walk_to(neighbor, matriarch, 3, neighbor.move_to_delay)
+
+	if(!(neighbor.target)) // Only unoccupied Sweepers
+		if(get_dist(matriarch, neighbor) < 10) // Closer Sweepers use simpler pathing
+			walk_to(neighbor, matriarch, 3, neighbor.move_to_delay)
+		else
+			var/turf/matriarch_turf = get_turf(parent)
+			neighbor.patrol_to(matriarch_turf) // Dear god, they have to use A* (walk_to will just make them bang their head on a wall in some cases)
+
 
 #undef COMBAT_ABILITY_DASH
 #undef COMBAT_ABILITY_SLAM
