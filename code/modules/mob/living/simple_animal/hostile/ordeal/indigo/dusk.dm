@@ -27,6 +27,8 @@
 	attack_sound = 'sound/effects/ordeals/indigo/stab_1.ogg'
 	blood_volume = BLOOD_VOLUME_NORMAL
 	can_patrol = TRUE
+	/// If this is TRUE, creates a leadership component on Initialize.
+	var/commanding_officer = TRUE
 	// Combat ability vars. Not implemented for base type.
 	var/special_ability_cooldown = 0
 	var/special_ability_cooldown_duration = 10 SECONDS
@@ -41,13 +43,14 @@
 /// This override adds the mobs that will form part of our squad as we patrol around.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/Initialize(mapload)
 	. = ..()
-	var/units_to_add = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 1,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 1, // This should be impossible, right? Well, they spawn on CoL at the same time.
-		)
-	AddComponent(/datum/component/ai_leadership, units_to_add)
+	if(commanding_officer)
+		var/units_to_add = list(
+			/mob/living/simple_animal/hostile/ordeal/indigo_noon = 1,
+			/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky = 1,
+			/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky = 1,
+			/mob/living/simple_animal/hostile/ordeal/indigo_dawn = 1, // This should be impossible, right? Well, they spawn on CoL at the same time.
+			)
+		AddComponent(/datum/component/ai_leadership, units_to_add)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/Aggro()
 	. = ..()
@@ -154,6 +157,8 @@
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
 	var/can_move = TRUE
 	var/can_act = TRUE
+	/// A failsafe timer in case we miss our lunge, resets it.
+	var/lunge_reset_timer
 	/// How many deciseconds between trash disposal hits? Reduced by 1 decisecond on each hit.
 	var/time_between_trash_disposal_hits = 1 SECONDS
 	/// How many times should we smack the target in Trash Disposal?
@@ -294,12 +299,13 @@
 	special_ability_activated = TRUE // While this is active, anyone we get thrown into is fair game for Trash Disposal.
 	user.throw_at(victim, 7, 5, src, FALSE)
 	user.visible_message(span_danger("[user] leaps at [victim]!"))
-	addtimer(CALLBACK(src, PROC_REF(StopLunging)), 2 SECONDS) // Failsafe - resets our state if we miss.
+	lunge_reset_timer = addtimer(CALLBACK(src, PROC_REF(StopLunging)), 2 SECONDS, TIMER_STOPPABLE) // Failsafe - resets our state if we miss.
 
 /// This proc is called once we successfully impact someone from our lunge. We pin them and begin the sequence of hits.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/proc/TrashDisposalInitiate(mob/living/victim, mob/living/user = src)
 	trash_disposal_damagetaken = 0
 	trash_disposal_active = TRUE
+	deltimer(lunge_reset_timer)
 
 	// Need to disable passive siphoning on our bloodfeast component briefly, so that blood we generate from the Trash Disposal isn't eaten immediately (looks weird)
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
@@ -336,7 +342,7 @@
 			SpawnAppropiateGibs(victim)
 			victim.deal_damage(special_ability_damage, melee_damage_type, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			SweeperHealing(special_ability_damage * 2)
-			user.visible_message(span_danger("[user] rips into [victim] and refuels themselves with \his blood!"))
+			user.visible_message(span_danger("[user] rips into [victim] and refuels \himself with [victim.p_their()] blood!"))
 			// Ramp up the speed and damage on each hit.
 			time_between_trash_disposal_hits -= 1
 			special_ability_damage += 3
@@ -513,7 +519,7 @@
 	parrying = FALSE
 	special_ability_activated = FALSE
 	if(!success)
-		visible_message(span_danger("[src] lowers their defensive stance."))
+		visible_message(span_danger("[src] lowers \his defensive stance."))
 	animate(src, 0.5 SECONDS, color = initial(color))
 
 /// This gets called if someone hits us in our parrying stance. This proc just does visual and audio feedback that the attack was parried - the actual hit happens in ParryCounter only if they're in LoS and in range.

@@ -227,7 +227,8 @@
 	/// This section is for telegraphing the attack.
 	face_atom(prospective_fuel)
 	say("+2653 753 842396.+")
-	new /obj/effect/temp_visual/cult/sparks/sweeper(dash_target_turf)
+	var/obj/effect/temp_visual/sweeper_dash_warning/telegraph = new(get_turf(src))
+	walk_towards(telegraph, dash_target_turf, 0.1 SECONDS)
 	SLEEP_CHECK_DEATH(dash_windup)
 	/// We're now dashing.
 	BeginDash()
@@ -268,6 +269,7 @@
 	can_act = TRUE
 	return TRUE
 
+
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/SweepTheBackstreetsHit(list/turfs)
 	for(var/hit_turf in turfs)
 		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
@@ -275,9 +277,8 @@
 			SpawnAppropiateGibs(hit_mob)
 			playsound(hit_mob, attack_sound, 100)
 			// Big slice VFX
-			var/obj/effect/temp_visual/dir_setting/slash/temp = new(hit_turf)
-			temp.dir = dir
-			temp.transform = temp.transform * 2
+			var/obj/effect/temp_visual/slice/temp = new(hit_turf)
+			temp.transform = temp.transform * 1.75
 			temp.color = COLOR_MOSTLY_PURE_RED
 
 			/// Dash will come off cooldown faster if it hits someone. Dodge it!
@@ -341,9 +342,14 @@
 	sidestep_per_cycle = initial(sidestep_per_cycle)
 
 /// I just want to make the telegraphing match properly, so we need a different duration for these than the normal 10 deciseconds
-/obj/effect/temp_visual/cult/sparks/sweeper
+/obj/effect/temp_visual/sweeper_dash_warning
+	name = "dash warning"
+	desc = "Move aside!"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "tbird_bolt"
+	color = COLOR_RED
 	duration = 0.6 SECONDS
-	color = "#FE5343"
+	movement_type = FLYING | PHASING
 
 /// This subtype moves slower, attacks slower, deals a bit more damage per hit, and has access to an empowered lifesteal attack every once in a while after being hit.
 /// Uses the chunky sweeper sprite made by insiteparaful.
@@ -439,10 +445,11 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/AttackingTarget(atom/attacked_target)
 	. = ..()
 	if(. && extract_fuel_active && istype(attacked_target, /mob/living))
+		var/mob/living/victim = attacked_target
 		CancelExtractFuel(TRUE)
 		SpawnAppropiateGibs(attacked_target)
 		if(ishuman(attacked_target))
-			visible_message(span_danger("The [src.name] tears into [attacked_target.name] and refuels itself with some of their viscera!"))
+			visible_message(span_danger("The [src.name] tears into [victim.name] and refuels itself with some of [victim.p_their()] viscera!"))
 			SweeperHealing(extract_fuel_healing)
 			GainPersistence(1)
 
