@@ -144,6 +144,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/red
 	name = "\proper Commander Jacques"
 	desc = "A tall humanoid with red claws. They're dripping with blood."
+	gender = MALE
 	// Consider that this guy is gonna end up regenning a decent chunk of health before tweaking these values
 	health = 1650
 	maxHealth = 1650
@@ -452,6 +453,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale
 	name = "\proper Commander Silvina"
 	desc = "A tall humanoid with glowing pale fists."
+	gender = FEMALE
 	icon_state = "silvina"
 	icon_living = "silvina"
 	health = 1550
@@ -573,6 +575,7 @@
 	maxHealth = 2000
 	health = 2000
 	desc = "A tall humanoid with a white greatsword."
+	gender = FEMALE
 	icon_state = "adelheide"
 	icon_living = "adelheide"
 	melee_damage_type = WHITE_DAMAGE
@@ -759,6 +762,7 @@
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/black
 	name = "\proper Commander Maria"
 	desc = "A tall humanoid with a large black hammer."
+	gender = FEMALE
 	health = 1650
 	maxHealth = 1650
 	icon_state = "maria"

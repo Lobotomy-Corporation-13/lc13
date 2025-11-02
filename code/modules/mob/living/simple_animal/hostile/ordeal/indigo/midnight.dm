@@ -139,7 +139,7 @@
 	// Sweep the Backstreets (Dash) variables
 	/// We need this to not hit multiple people due to the implementation I used for the dash. Stores every mob hit by the dash, cleared on each dash.
 	var/list/dash_hitlist = list()
-	/// This one is so we can hit all the turfs with the dash at once, to avoid people dodging it by moving inside of it.
+	/// This is also a hitlist but for turfs instead.
 	var/list/dash_hitlist_turfs = list()
 	var/dash_range = 7
 
@@ -178,20 +178,19 @@
 	var/general_support_cooldown = 0
 	var/general_support_cooldown_duration = 4.5 SECONDS
 
-
 	// Frustration mechanic: if ranged attacks are being used on us, punish the players.
 	// Formerly went off of hitcount, but this unfairly penalized fast firing guns while letting big war criminal guns like Arcadia get off easy.
 	// Now goes off of the bullets' damage value multiplied by our coeff towards it.
 
 	/// Ranged damage taken. Reset by RangedReaction().
-	var/frustration_meter
+	var/frustration_meter = 0
 	/// Damage threshold over which we'll trigger a RangedReaction(). Increased by amount of players.
 	var/frustration_threshold = 100
 	/// Amount of times we've reached our frustration_threshold. The higher this gets, the more cooked you are.
 	var/frustration_procced = 0
 
 	var/pulse_cooldown
-	var/pulse_cooldown_time = 20 SECONDS // This also controls the "window of opportunity" that you can use ranged on the Matriarch during before she'll punish you again for it
+	var/pulse_cooldown_time = 15 SECONDS // This also controls the "window of opportunity" that you can use ranged on the Matriarch during before she'll punish you again for it
 	var/pulse_base_damage = 50 // Scales off frustration procs.
 
 	/* PHASE SCALING SECTION
@@ -201,46 +200,46 @@
 	// A general "rule" she follows, is that she gets more frantic and quick in her movements and attacks as the fight progresses, and heals more, but deals less damage and is more vulnerable.
 
 	// Association list of key: phase to value: amount of health under which the next phase gets triggered.
-	var/list/phases_health_thresholds = alist(1 = 5500, 2 = 3000, 3 = -INFINITY)
+	var/list/phases_health_thresholds = list(1 = 5500, 2 = 3000, 3 = -INFINITY)
 
 	// The icons she uses in each phase.
-	var/list/phases_icon_states = alist(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
+	var/list/phases_icon_states = list(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
 
 	// Association lists that control different balancing values for each phase. The keys are the phase, the values are the corresponding intended value for that phase.
-	var/list/phases_move_delays = alist(1 = 3, 2 = 2.5, 3 = 2.2)
-	var/list/phases_rapid_melee = alist(1 = 2, 2 = 3, 3 = 4)
-	var/list/phases_melee_damage = alist(1 = 55, 2 = 48, 3 = 40)
-	var/list/phases_resistance_lists = alist(
+	var/list/phases_move_delays = list(1 = 3, 2 = 2.5, 3 = 2.2)
+	var/list/phases_rapid_melee = list(1 = 2, 2 = 3, 3 = 4)
+	var/list/phases_melee_damage = list(1 = 55, 2 = 48, 3 = 40)
+	var/list/phases_resistance_lists = list(
 	1 = list(RED_DAMAGE = 0.3, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.5),
 	2 = list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.25, PALE_DAMAGE = 0.8),
 	3 = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1),
 	)
 
 	// Slam phase scaling variables
-	var/list/phases_slam_windup = alist(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
-	var/list/phases_slam_damage = alist(1 = 120, 2 = 110, 3 = 80)
-	var/list/phases_slam_range = alist(1 = 3, 2 = 3, 3 = 2)
+	var/list/phases_slam_windup = list(1 = 1.2 SECONDS, 2 = 0.9 SECONDS, 3 = 0.6 SECONDS)
+	var/list/phases_slam_damage = list(1 = 120, 2 = 110, 3 = 80)
+	var/list/phases_slam_range = list(1 = 3, 2 = 3, 3 = 2)
 
 	// Slash phase scaling variables
-	var/list/phases_slash_damage = alist(1 = 110, 2 = 100, 3 = 90)
-	var/list/phases_slash_healing = alist(1 = 75, 2 = 100, 3 = 250)
+	var/list/phases_slash_damage = list(1 = 110, 2 = 100, 3 = 90)
+	var/list/phases_slash_healing = list(1 = 75, 2 = 100, 3 = 250)
 
 	// Dash phase scaling variables
-	var/list/phases_dash_windup = alist(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
-	var/list/phases_dash_damage = alist(1 = 80, 2 = 70, 3 = 60)
-	var/list/phases_dash_healing = alist(1 = 150, 2 = 200, 3 = 350)
+	var/list/phases_dash_windup = list(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
+	var/list/phases_dash_damage = list(1 = 80, 2 = 70, 3 = 60)
+	var/list/phases_dash_healing = list(1 = 150, 2 = 200, 3 = 350)
 
 	// Parry & Riposte scaling variables
-	var/list/phases_riposte_damage = alist(1 = 160, 2 = 150, 3 = 140)
-	var/list/phases_riposte_healing = alist(1 = 200, 2 = 300, 3 = 500)
+	var/list/phases_riposte_damage = list(1 = 160, 2 = 150, 3 = 140)
+	var/list/phases_riposte_healing = list(1 = 200, 2 = 300, 3 = 500)
 
 	// Trash Disposal scaling variables
-	var/list/phases_disposal_damage = alist(1 = 60, 2 = 50, 3 = 40)
-	var/list/phases_disposal_healing = alist(1 = 75, 2 = 100, 3 = 150)
+	var/list/phases_disposal_damage = list(1 = 60, 2 = 50, 3 = 40)
+	var/list/phases_disposal_healing = list(1 = 75, 2 = 100, 3 = 150)
 
 	// Summon Sweepers scaling variables
-	var/list/phases_squad_size_grunts = alist(1 = 4, 2 = 5, 3 = 6)
-	var/list/phases_squad_size_commanders = alist(1 = 0, 2 = 2, 3 = 3)
+	var/list/phases_squad_size_grunts = list(1 = 4, 2 = 5, 3 = 6)
+	var/list/phases_squad_size_commanders = list(1 = 0, 2 = 2, 3 = 3)
 
 // Here be procs
 
@@ -285,8 +284,8 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 	maxHealth += bonus_health
 	adjustBruteLoss(-bonus_health)
 
-	for(var/phase_h, health_threshold in phases_health_thresholds)
-		phases_health_thresholds[phase_h] += bonus_health
+	for(var/i in 1 to 3)
+		phases_health_thresholds[i] += bonus_health
 
 	frustration_threshold += (bonus_health * 0.30)
 
@@ -458,12 +457,12 @@ This is all code relating to handling incoming ranged damage.
 		to_chat(L, span_userdanger("A piercing howl corrodes your very being!"))
 
 	// Increase our squad size each time this procs.
-	for(var/phase_g, selected_limit in phases_squad_size_grunts)
-		phases_squad_size_grunts[phase_g] += 1
+	for(var/i in 1 to 3)
+		phases_squad_size_grunts[i] += 1
 
 	if(frustration_procced % 4 == 0) // Every 4th proc of this...
-		for(var/phase_c, selected_commander_limit in phases_squad_size_commanders)
-			phases_squad_size_commanders[phase_c] += 1 // We won't ever have more than 4 Commanders, since each one is unique. Well, we could, if I wanted to... but it feels weird.
+		for(var/j in 1 to 3)
+			phases_squad_size_commanders[j] += 1 // We won't ever have more than 4 Commanders, since each one is unique. Well, we could, if I wanted to... but it feels weird.
 
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 
