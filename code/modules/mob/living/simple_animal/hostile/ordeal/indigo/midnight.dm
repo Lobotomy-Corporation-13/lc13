@@ -107,7 +107,7 @@
 	/// Currently winding up an attack?
 	var/preparing = FALSE
 
-	/// Add turfs we step onto into a list to hit later, if we're in this state.
+	/// Activate dashing behaviour (AoE, VFX, sound) while moving while this is TRUE.
 	var/dashing = FALSE
 	/// Currently lunging as part of Trash Disposal? Will initiate Trash Disposal on anyone she's thrown at while this is TRUE.
 	var/lunging = FALSE

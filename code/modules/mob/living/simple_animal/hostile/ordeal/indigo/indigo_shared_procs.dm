@@ -132,7 +132,7 @@ Every time it activates, it loses a stack, but it can also time out over a long 
 		if(prob(final_chance))
 			playsound(neighbor, 'sound/effects/ordeals/indigo_start.ogg', 33)
 			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/mob/living/simple_animal/hostile/ordeal, SweeperHealing), trigger_healing)
-			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/atom, visible_message), span_danger("[neighbor] endures a fatal hit, some of the fuel being drained from its tank!"), span_userdanger("You suffer a lethal strike, losing some of your fuel!"))
+			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/atom, visible_message), span_danger("[neighbor] endures a fatal hit, some of the fuel being drained from [neighbor.p_their()] tank!"), span_userdanger("You suffer a lethal strike, losing some of your fuel!"))
 			if(src)
 				src.add_stacks(-1)
 			return COMPONENT_MOB_DENY_DAMAGE
