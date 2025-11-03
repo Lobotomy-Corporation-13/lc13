@@ -62,7 +62,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((10), WHITE_DAMAGE)
+		L.deal_damage((10), WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 		L.adjustFireLoss(3)
 
 		if(!ishuman(L))

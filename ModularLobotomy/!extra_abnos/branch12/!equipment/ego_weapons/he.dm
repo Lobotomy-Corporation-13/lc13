@@ -38,13 +38,13 @@
 			var/justicemod = 1 + userjust / 100
 			var/extra_damage = force
 			extra_damage *= justicemod
-			target.deal_damage(extra_damage*3, damtype)
+			target.deal_damage(extra_damage*3, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE))
 			playsound(target, 'sound/abnormalities/spiral_contempt/spiral_hit.ogg', 50, TRUE, 4)
 			to_chat(user, span_nicegreen("FOR THEIR PERFORMANCE, I SHALL ACT!"))
 			crit_chance = default_crit_chance
 		else
 			crit_chance += crit_chance_raise
-			user.deal_damage(force*0.25, damtype)
+			user.deal_damage(force*0.25, damtype, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 			to_chat(user, span_boldwarning("They are watching... Judging..."))
 
 /obj/item/ego_weapon/branch12/nightmares
@@ -237,7 +237,7 @@
 	..()
 	for(var/mob/living/L in view(1, target))
 		new /obj/effect/temp_visual/fire/fast(get_turf(L))
-		L.apply_damage(45, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(45, RED_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
 
 

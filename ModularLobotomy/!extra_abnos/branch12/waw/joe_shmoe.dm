@@ -111,8 +111,8 @@
 	. = ..()
 	for(var/mob/living/carbon/human/H in view(3, src))
 		if(masterjoe.marked)
-			H.deal_damage(2, WHITE_DAMAGE)
-		H.deal_damage(10, WHITE_DAMAGE)
+			H.deal_damage(2, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+		H.deal_damage(10, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 	//don't move or attack if there's no marked.
 /mob/living/simple_animal/hostile/subjoe/Move()

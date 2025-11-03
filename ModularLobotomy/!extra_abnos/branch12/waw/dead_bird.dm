@@ -81,7 +81,7 @@
 		for(var/mob/living/L in T.contents)
 			if(L==src)
 				continue
-			L.deal_damage(40, RED_DAMAGE)
+			L.deal_damage(40, RED_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			L.apply_lc_bleed(60)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/dead_bird/attackby(obj/item/C, mob/user)
