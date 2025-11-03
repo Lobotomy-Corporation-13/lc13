@@ -265,6 +265,7 @@
 	/// Yes it needs to get slept for 0.1 second here because... it hasn't finished moving or something. I've tested it. Trust me.
 	SLEEP_CHECK_DEATH(0.1 SECONDS)
 	CancelDash()
+	walk(src, 0)
 	dash_hitlist_turfs |= get_turf(src)
 	SweepTheBackstreetsHit(dash_hitlist_turfs)
 	/// Give the players a tiny bit of time to not instantly get auto hit by the sweeper after it dashes.

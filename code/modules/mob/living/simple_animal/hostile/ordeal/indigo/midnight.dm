@@ -596,11 +596,11 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 // Called every time we phasechange or devour someone, to correctly apply scaling based on non-sweeper corpses eaten.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/UpdateBellyScaling()
-	// Attack and move faster for each corpse eaten, scales up to 5 corpses. We gain 0.1 rapid melee and lose 0.1 move delay per corpse. This can get pretty wild pretty fast.
+	// Attack and move faster for each corpse eaten, scales up to 5 corpses. We gain 0.2 rapid melee and lose 0.1 move delay per corpse. This can get pretty wild pretty fast.
 	var/extra_speed = clamp(belly, 1, 5)
 	extra_speed *= 0.1
 	ChangeMoveToDelay(phases_move_delays[phase] - extra_speed)
-	rapid_melee = (phases_rapid_melee[phase] + extra_speed)
+	rapid_melee = (phases_rapid_melee[phase] + (extra_speed * 2))
 
 // !!! Combat ability: Ground Slam. !!!
 /// cannibalized from wendigo
@@ -661,6 +661,8 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 	CancelDash()
 
+	walk(src, 0)
+
 	// Followup slam on phase 2 and after.
 	if(phase >= 2)
 		SLEEP_CHECK_DEATH(0.1 SECONDS)
@@ -691,6 +693,8 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SweepTheBackstreetsHit(turf/impacted)
 	if(istype(impacted))
 		for(var/mob/living/hit_mob in HurtInTurf(impacted, dash_hitlist, phases_dash_damage[phase], melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+			if(hit_mob.stat >= DEAD)
+				continue
 			to_chat(hit_mob, span_userdanger("[src] viciously slashes you as she dashes past!"))
 			playsound(hit_mob, attack_sound, 100)
 			available_abilities[COMBAT_ABILITY_DASH] = world.time
@@ -882,7 +886,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	. = ..()
 	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
 	if(CanAct() && health > 0 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(BeginParry), M, src) // It's ASYNC because there's a sleep in it
+		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
 
 /// Activates parrying behaviour when hit by a human with an object.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/attacked_by(obj/item/I, mob/living/user)
@@ -893,11 +897,11 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	. = ..()
 	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
 	if(CanAct() && health > 0 && I.force >= 10 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(BeginParry), user, src) // It's ASYNC because there's a sleep in it
+		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
 
 
 /// Enter our parrying stance.
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/BeginParry(mob/living/target, mob/living/user)
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/BeginParry()
 	if((available_abilities[COMBAT_ABILITY_PARRY] != null) && available_abilities[COMBAT_ABILITY_PARRY] <= world.time)
 		// Set cooldown.
 		available_abilities[COMBAT_ABILITY_PARRY] = ability_cooldown_durations[COMBAT_ABILITY_PARRY] + world.time
@@ -1034,7 +1038,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		SpawnAppropiateGibs(victim)
 		victim.deal_damage(phases_disposal_damage[phase], melee_damage_type)
 		SweeperHealing(phases_disposal_healing[phase])
-		user.visible_message(span_danger("[user] rips into [victim] and refuels \himself with [victim.p_their()] blood!"))
+		user.visible_message(span_danger("[user] rips into [victim] and refuels herself with [victim.p_their()] blood!"))
 		// Ramp up the speed on each hit.
 		time_between_trash_disposal_hits -= 1
 		// Devour the victim if we killed them, and end the sequence.
