@@ -694,7 +694,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	for(var/key, value in area_living)
 		if(key & keys)
 			for(var/i in value)
-				. += "[i]"
+				. += "([i])"
 	return .
 
 /**
@@ -705,7 +705,7 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	. = list()
 	for(var/key, value in area_living)
 		for(var/mob in value)
-			. += "[key] [mob]"
+			. += "([key]: [mob])"
 	return .
 
 /**
@@ -714,5 +714,12 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 /area/proc/get_all_keys()
 	. = list()
 	for(var/key, value in area_living)
-		. += "[key]"
+		. += "([key])"
 	return .
+
+/area/proc/debug_all_areas_moblists()
+	var/debug = list()
+	for(var/area/A in world)
+		var/list/moblist = A.get_all_mobs()
+		debug[A.name] = moblist
+	return debug
