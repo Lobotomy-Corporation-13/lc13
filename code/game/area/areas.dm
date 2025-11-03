@@ -722,4 +722,4 @@ GLOBAL_LIST_EMPTY(teleportlocs)
 	for(var/area/A in world)
 		var/list/moblist = A.get_all_mobs()
 		debug[A.name] = moblist
-	return debug
+	return json_encode(debug)
