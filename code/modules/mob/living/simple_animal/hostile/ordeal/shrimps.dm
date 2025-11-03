@@ -70,6 +70,7 @@
 /mob/living/simple_animal/hostile/senior_shrimp/Initialize()
 	. = ..()
 	if(SSmaptype.maptype in SSmaptype.citymaps)
+		attack_cooldown = 100
 		del_on_death = FALSE
 
 /mob/living/simple_animal/hostile/senior_shrimp/ComponentInitialize()

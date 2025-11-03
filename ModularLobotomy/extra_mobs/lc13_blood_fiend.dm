@@ -9,8 +9,8 @@
 	icon_living = "test_meifiend"
 	icon_dead = "test_meifiend_dead"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.3)
-	melee_damage_lower = 8
-	melee_damage_upper = 10
+	melee_damage_lower = 22
+	melee_damage_upper = 24
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
 	attack_verb_continuous = "slices"
@@ -183,8 +183,8 @@
 	var/hardblood_state = "b_boss_hardblood"
 	var/exhausted_state = "b_boss_exhausted"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 7
-	melee_damage_upper = 8
+	melee_damage_lower = 30
+	melee_damage_upper = 34
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
 	attack_verb_continuous = "slices"
@@ -194,7 +194,7 @@
 	ranged = TRUE
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/crimson = 5, /obj/item/stack/spacecash/c1000 = 1)
 	silk_results = list(/obj/item/stack/sheet/silk/crimson_simple = 4, /obj/item/stack/sheet/silk/crimson_advanced = 2, /obj/item/stack/sheet/silk/crimson_elegant = 1)
-	slash_damage = 50
+	slash_damage = 100
 	blood_feast = 700
 	max_blood_feast = 750
 	var/cutter_bleed_stacks = 15
@@ -216,13 +216,13 @@
 
 	if (blood_feast > max_blood_feast * 0.5)
 		icon_state = hardblood_state
-		melee_damage_lower = 10
-		melee_damage_upper = 12
+		melee_damage_lower = 40
+		melee_damage_upper = 45
 		melee_damage_type = BLACK_DAMAGE
 	else
 		icon_state = normal_state
-		melee_damage_lower = 7
-		melee_damage_upper = 8
+		melee_damage_lower = 30
+		melee_damage_upper = 34
 		melee_damage_type = RED_DAMAGE
 
 /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/Leap(mob/living/target)
@@ -405,8 +405,8 @@
 	icon_living = "bloodbag"
 	icon_dead = "bloodbag_dead"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.4, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.5)
-	melee_damage_lower = 2
-	melee_damage_upper = 3
+	melee_damage_lower = 4
+	melee_damage_upper = 5
 	rapid_melee = 3
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/effects/ordeals/brown/flea_attack.ogg'
