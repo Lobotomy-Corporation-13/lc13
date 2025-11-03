@@ -185,23 +185,13 @@
 	layer = ABOVE_MOB_LAYER
 
 // x2 workspeed buff pro 2022 free hack free robux
-/datum/status_effect/workspeed_buff
-	id = "workspeed_buff"
-	status_type = STATUS_EFFECT_UNIQUE
-	alert_type = /atom/movable/screen/alert/status_effect/workspeed_buff
+/datum/status_effect/workspeed_buff/mail
+	id = "workspeed_buff_mail"
+	alert_type = /atom/movable/screen/alert/status_effect/workspeed_buff_mail
 	duration = 30 SECONDS
+	buff_mod = 1.5
 
-/datum/status_effect/workspeed_buff/on_apply()
-	. = ..()
-	var/mob/living/carbon/human/user = owner
-	user.physiology.work_speed_mod *= 1.5
-
-/datum/status_effect/workspeed_buff/on_remove()
-	. = ..()
-	var/mob/living/carbon/human/user = owner
-	user.physiology.work_speed_mod /= 1.5
-
-/atom/movable/screen/alert/status_effect/workspeed_buff
+/atom/movable/screen/alert/status_effect/workspeed_buff_mail
 	name = "letter from the past"
 	desc = "Reading the letter made you want to try harder for your past friends."
 	icon = 'icons/obj/bureaucracy.dmi'
@@ -362,9 +352,9 @@
 
 /obj/item/mailpaper/attachment/attack_self(mob/living/carbon/human/user)
 	to_chat(user, span_nicegreen("Reading the promotion letter fills you with determination to work harder!"))
-	var/datum/status_effect/workspeed_buff/TMPEFF = user.has_status_effect(/datum/status_effect/workspeed_buff)
+	var/datum/status_effect/workspeed_buff/mail/TMPEFF = user.has_status_effect(/datum/status_effect/workspeed_buff/mail)
 	if (!TMPEFF)
-		user.apply_status_effect(/datum/status_effect/workspeed_buff)
+		user.apply_status_effect(/datum/status_effect/workspeed_buff/mail)
 	qdel(src)
 
 /obj/item/mailpaper/trapped
