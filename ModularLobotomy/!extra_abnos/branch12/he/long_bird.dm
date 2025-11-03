@@ -61,7 +61,7 @@
 		for(var/mob/living/carbon/human/H in range(1,src))
 			H.Stun(20, ignore_canstun = TRUE) // Here we go.
 			H.Knockdown(20)
-			H.deal_damage((30), RED_DAMAGE)
+			H.deal_damage((30), RED_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE))
 			if(prob(30))
 				H.emote("scream")
 

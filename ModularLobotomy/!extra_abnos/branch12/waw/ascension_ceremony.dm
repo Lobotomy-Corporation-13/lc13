@@ -53,7 +53,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/ascension_ceremony/WorktickFailure(mob/living/carbon/human/user)
-	user.apply_damage(9, OXY, null, user.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+	user.deal_damage(9, OXY, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), blocked = user.run_armor_check(null, PALE_DAMAGE))
 	..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/ascension_ceremony/FailureEffect(mob/living/carbon/human/user, work_type, pe)
@@ -72,7 +72,7 @@
 		spaceeffects+=S
 	if(!IsContained())
 		for(var/mob/living/carbon/H in view(12,src))
-			H.apply_damage(9, OXY, null, H.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+			H.deal_damage(9, OXY, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL), blocked = H.run_armor_check(null, PALE_DAMAGE))
 			new /obj/effect/temp_visual/mermaid_drowning(get_turf(H))
 
 

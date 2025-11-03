@@ -161,7 +161,7 @@
 				L.visible_message(span_danger("The vengeance marks on [L] amplify the damage!"))
 
 		// Apply damage
-		L.apply_damage(final_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE))
+		L.deal_damage(final_damage, BLACK_DAMAGE, source = leaper, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), get_dir(impact_turf, L))
 
 		// Clear vengeance marks after damage

@@ -108,13 +108,13 @@
 			if(3)	//Heal 100 HP
 				H.adjustBruteLoss(-100)
 			if(4)
-				H.deal_damage(80, RED_DAMAGE)
+				H.deal_damage(80, RED_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(5)
-				H.deal_damage(80, WHITE_DAMAGE)
+				H.deal_damage(80, WHITE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(6)
-				H.deal_damage(80, BLACK_DAMAGE)
+				H.deal_damage(80, BLACK_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(7)
-				H.deal_damage(80, PALE_DAMAGE)
+				H.deal_damage(80, PALE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(8)	//Heal 100 SP
 				H.adjustSanityLoss(-100)
 
@@ -124,10 +124,10 @@
 			if(1)	//Heal 300
 				L.adjustBruteLoss(-300)
 			if(2)
-				L.deal_damage(100, RED_DAMAGE)
+				L.deal_damage(100, RED_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(3)
-				L.deal_damage(100, WHITE_DAMAGE)
+				L.deal_damage(100, WHITE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(4)
-				L.deal_damage(100, BLACK_DAMAGE)
+				L.deal_damage(100, BLACK_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(5)
-				L.deal_damage(100, PALE_DAMAGE)
+				L.deal_damage(100, PALE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))

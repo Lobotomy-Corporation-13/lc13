@@ -61,7 +61,7 @@
 		var/justicemod = 1 + userjust / 100
 		var/extra_damage = throwforce
 		extra_damage *= justicemod
-		T.deal_damage(extra_damage*bleed_buff, damtype)
+		T.deal_damage(extra_damage*bleed_buff, damtype, source = U, attack_type = (ATTACK_TYPE_THROWING | ATTACK_TYPE_SPECIAL))
 		visible_message(span_warning("[U] punctures [T] with [src]!"))
 
 /obj/item/ego_weapon/branch12/mini/insanity/attack(mob/living/target, mob/living/user)
@@ -397,7 +397,7 @@
 			var/target_aoe_turf = locate(src.x + consuming_range, src.y + consuming_range, user.z)
 			for(var/mob/living/L in range(consuming_range, target_aoe_turf))
 				if(L != user && !(faction_check(L.faction, list("neutral"), FALSE)))
-					L.deal_damage(damage, "black")
+					L.deal_damage(damage, "black", source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 
 	range--
 	damage += damage_falloff_tile

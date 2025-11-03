@@ -110,5 +110,5 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(3, FIRE, null, H.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(3, FIRE, source = connected_abno, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT), blocked = H.run_armor_check(null, RED_DAMAGE))
 

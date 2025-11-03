@@ -88,7 +88,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((pulse_damage), WHITE_DAMAGE)
+		L.deal_damage((pulse_damage), WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(3)
 
 
@@ -101,7 +101,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((weak_pulse_damage), BLACK_DAMAGE)
+		L.deal_damage((weak_pulse_damage), BLACK_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(3)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/BreachEffect(mob/living/carbon/human/user, breach_type)

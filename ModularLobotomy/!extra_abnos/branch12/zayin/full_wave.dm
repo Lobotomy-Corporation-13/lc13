@@ -50,7 +50,7 @@
 		//Deal minor white damage to people
 		for(var/mob/living/carbon/human/H in GLOB.mob_list)
 			if(H.z == z)
-				H.deal_damage(2, WHITE_DAMAGE)
+				H.deal_damage(2, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 
 
 /mob/living/simple_animal/hostile/abnormality/branch12/wave/death()

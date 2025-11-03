@@ -1071,7 +1071,7 @@
 	var/datum/status_effect/stacking/lc_mental_decay/D = owner.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 	if(D)
 		if(!ishuman(owner))
-			owner.apply_damage(D.stacks * 4, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+			owner.deal_damage(D.stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
 		else
 			var/mob/living/carbon/human/status_holder = owner
 			status_holder.adjustSanityLoss(D.stacks)
@@ -1429,7 +1429,7 @@
 		src.apply_status_effect(/datum/status_effect/stacking/vengeance_mark, stacks)
 	else
 		VM.add_stacks(stacks)
-		
+
 #define STATUS_EFFECT_LCMETALDECAY /datum/status_effect/stacking/lc_mental_decay // Deals white damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_mental_decay
 	id = "lc_md"
@@ -1465,7 +1465,7 @@
 	to_chat(owner, "<span class='warning'>Your mind deteriorates!!</span>")
 	owner.playsound_local(owner, 'sound/items/haunted/ghostitemattack.ogg', 40, FALSE)
 	if(!ishuman(owner))
-		owner.apply_damage(stacks * 4, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+		owner.deal_damage(stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
 	else
 		var/mob/living/carbon/human/status_holder = owner
 		status_holder.adjustSanityLoss(stacks)

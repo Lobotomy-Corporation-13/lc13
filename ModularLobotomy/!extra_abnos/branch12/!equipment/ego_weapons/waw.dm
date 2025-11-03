@@ -193,7 +193,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust / 100
 	var/extra_damage = force * justicemod
-	target.deal_damage(-extra_damage, AGGRO_DAMAGE)
+	target.deal_damage(-extra_damage, AGGRO_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 	if(ishostile(target))
 		var/mob/living/simple_animal/hostile/blindfool = target
 		if(blindfool.target != user)
@@ -303,7 +303,7 @@
 		var/datum/status_effect/mental_detonate/D = L.has_status_effect(/datum/status_effect/mental_detonate)
 		if(D)
 			D.shatter()
-			L.deal_damage(damage*2, damage_type)
+			L.deal_damage(damage*2, damage_type, source = firer, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 			for(var/mob/living/simple_animal/hostile/H in view(3, get_turf(src)))
 				H.apply_lc_mental_decay(10)
 

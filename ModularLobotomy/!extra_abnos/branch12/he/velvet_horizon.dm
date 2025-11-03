@@ -56,7 +56,7 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/velvet_horizon/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
-	user.deal_damage(constant_damage, RED_DAMAGE)
+	user.deal_damage(constant_damage, RED_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 	WorkDamageEffect()
 	..()
 
@@ -81,7 +81,7 @@
 	// Ka-boom
 	playsound(get_turf(src), 'sound/abnormalities/scorchedgirl/explosion.ogg', 125, 0, 8)
 	for(var/mob/living/carbon/human/H in view(7, src))
-		H.deal_damage(boom_damage, RED_DAMAGE)
+		H.deal_damage(boom_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 		if(H.health < 0)
 			H.gib()
 	new /obj/effect/temp_visual/explosion(get_turf(src))
