@@ -5411,7 +5411,7 @@
 /turf/open/floor/wood,
 /area/city)
 "MV" = (
-/obj/machinery/vending/weaving,
+/obj/machinery/vending/weaving/cheap,
 /turf/closed/indestructible/reinforced,
 /area/city/backstreets_room)
 "MX" = (
