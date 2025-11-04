@@ -71,23 +71,22 @@
 /mob/living/proc/cleanup_area_presence()
 	SHOULD_NOT_OVERRIDE(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
-	if(!(area_index & FROZEN_INDEX))
+	var/area/our_area = get_area(src)
+	if(isarea(our_area) && !(area_index & FROZEN_INDEX))
 		area_index |= FROZEN_INDEX // First we freeze the index, immediately (Lets hope this avoids bugs coming from race conditions with the signal handlers).
 		UnregisterSignal(src, list(COMSIG_ENTER_AREA, COMSIG_EXIT_AREA)) // We unregister all signals.
-		var/area_index_toclean = (area_index ^ FROZEN_INDEX) // Then we unfreeze the index inside an internal var.
-		var/area/our_area = get_area(src)
-		LAZYREMOVEASSOC((our_area.area_living), area_index_toclean, src) // We clean what we gotta clean.
+		LAZYREMOVEASSOC((our_area.area_living), (area_index ^ FROZEN_INDEX), src) // We clean what we gotta clean.
 
 /// Called when a mob status changes from DEAD to anything else, restoring its present and future presence in the areas moblists.
 /mob/living/proc/restore_area_presence()
 	SHOULD_NOT_OVERRIDE(TRUE)
 	SHOULD_NOT_SLEEP(TRUE)
-	if(area_index & FROZEN_INDEX)
+	var/area/our_area = get_area(src)
+	if(isarea(our_area) && (area_index & FROZEN_INDEX))
 		area_index ^= FROZEN_INDEX // We unfreeze the index.
-		var/area/our_area = get_area(src)
-		LAZYALISTADDLIST((our_area.area_living), area_index, src) // We make our presence known once again.
-		RegisterSignal(src, COMSIG_ENTER_AREA, PROC_REF(on_entered_area)) // And we register our sweet signals.
+		RegisterSignal(src, COMSIG_ENTER_AREA, PROC_REF(on_entered_area)) // We register our sweet signals.
 		RegisterSignal(src, COMSIG_EXIT_AREA, PROC_REF(on_exited_area))
+		LAZYALISTADDLIST((our_area.area_living), area_index, src) // And we make our presence known once again.
 
 /mob/living/canZMove(dir, turf/target)
 	return can_zTravel(target, dir) && (movement_type & FLYING | FLOATING)
