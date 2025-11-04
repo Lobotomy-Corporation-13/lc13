@@ -76,7 +76,6 @@
 	icon_state = "[base_icon_state]0"
 
 /obj/item/ego_weapon/shield/insurgence_shield/attack_self(mob/user)
-	. = ..()
 	if(!CanUseEgo(user))
 		to_chat(user, span_warning("You can't use [src]!"))
 		return FALSE
@@ -88,6 +87,7 @@
 		playsound(user, 'sound/weapons/saberon.ogg', 35, TRUE)
 		to_chat(user, span_notice("[src] is now active."))
 		icon_state = "[base_icon_state][active]"
+	. = ..()
 
 /obj/item/ego_weapon/shield/insurgence_shield/AltClick(mob/user)
 	. = ..()
