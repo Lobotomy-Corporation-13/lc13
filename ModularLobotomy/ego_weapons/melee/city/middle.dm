@@ -18,7 +18,7 @@
 	attack_verb_simple = list("whip", "lash", "strike", "batter")
 	hitsound = 'sound/weapons/fixer/generic/middle_attack.ogg'
 
-	reductions = list(20, 20, 20, 20) // 80
+	reductions = list(0, 0, 0, 0) //Tanking? Na, we eat all of the damage.
 	projectile_block_duration = 1 SECONDS
 	block_duration = 1 SECONDS
 	block_cooldown = 3 SECONDS
@@ -50,6 +50,7 @@
 			if(ishuman(user))
 				var/mob/living/carbon/human/H = user
 				H.add_atom_colour("#8B008B", TEMPORARY_COLOUR_PRIORITY) // Dark purple/magenta color
+				H.Immobilize(block_duration)
 
 			// Register signals to disable blocking when attacked by hand or item
 			RegisterSignal(user, COMSIG_ATOM_ATTACK_HAND, PROC_REF(NoParry), override = TRUE)//creates runtimes without overrides, double check if something's fucked
@@ -80,9 +81,17 @@
 /obj/item/ego_weapon/shield/middle_chain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
 	// Perform counter-attack if we have a valid attacker
 	if(last_attacker && !QDELETED(last_attacker))
-		// Apply counter-attack damage bonus (40% more damage)
+		// Calculate combined damage bonus (counter multiplier + vengeance mark bonus)
 		var/original_force = initial(force)
-		force = round(force * counter_damage_multiplier)
+		var/total_multiplier = counter_damage_multiplier
+
+		// Check for Vengeance Mark and add bonus damage
+		var/datum/status_effect/stacking/vengeance_mark/VM = last_attacker.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
+		if(VM && VM.stacks > 0)
+			total_multiplier += (VM.stacks * vengeance_damage_bonus)
+			to_chat(source, span_danger("Your counter-attack strikes with vengeful fury! ([VM.stacks] marks)"))
+
+		force = round(force * total_multiplier)
 
 		// Perform counter-attack
 		source.do_attack_animation(last_attacker)
@@ -125,19 +134,13 @@
 	if(!CanUseEgo(user))
 		return FALSE
 
-	// Check for Vengeance Mark and calculate bonus damage
-	var/datum/status_effect/stacking/vengeance_mark/VM = target.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
-	var/original_force = initial(force)
-	if(VM && VM.stacks > 0)
-		var/bonus_multiplier = 1 + (VM.stacks * vengeance_damage_bonus)
-		force = round(force * bonus_multiplier)
-		to_chat(user, span_danger("Your chains strike with vengeful fury! ([VM.stacks] marks)"))
+	// Prevent attacking while parrying
+	if(countering)
+		to_chat(user, span_warning("You cannot attack while parrying!"))
+		return FALSE
 
-	// Perform attack
+	// Perform attack (vengeance mark bonus only applies to counter-attacks)
 	. = ..()
-
-	// Reset force
-	force = original_force
 
 //Younger Brother Chain
 /obj/item/ego_weapon/shield/middle_chain/younger
@@ -146,7 +149,6 @@
 	icon_state = "mid_chain"
 	force = 49
 	attack_speed = 1.3
-	reductions = list(40, 40, 40, 40) // 160
 	vengeance_damage_bonus = 0.05 // 5% per stack for Younger Brother
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 80,
@@ -164,7 +166,6 @@
 	force = 63
 	attack_speed = 1.4
 	hitsound = 'sound/weapons/fixer/generic/middle_big_attack.ogg'
-	reductions = list(60, 60, 60, 60) // 240
 	vengeance_damage_bonus = 0.08 // 8% per stack for Big Brother
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 100,
@@ -195,8 +196,15 @@
 
 					// Perform counter-attack on the firer
 					var/original_force = initial(force)
-					// DISABLED: Counter damage multiplier causing unlimited damage
-					force = round(force * counter_damage_multiplier)
+					var/total_multiplier = counter_damage_multiplier
+
+					// Check for Vengeance Mark and add bonus damage
+					var/datum/status_effect/stacking/vengeance_mark/VM = firer.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
+					if(VM && VM.stacks > 0)
+						total_multiplier += (VM.stacks * vengeance_damage_bonus)
+						to_chat(owner, span_danger("Your counter-attack strikes with vengeful fury! ([VM.stacks] marks)"))
+
+					force = round(force * total_multiplier)
 					owner.do_attack_animation(firer)
 					firer.attacked_by(src, owner)
 
