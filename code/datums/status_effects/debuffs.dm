@@ -1429,7 +1429,7 @@
 		src.apply_status_effect(/datum/status_effect/stacking/vengeance_mark, stacks)
 	else
 		VM.add_stacks(stacks)
-		
+
 #define STATUS_EFFECT_LCMETALDECAY /datum/status_effect/stacking/lc_mental_decay // Deals white damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_mental_decay
 	id = "lc_md"
@@ -1578,15 +1578,15 @@
 //Slowdown on stack, prepares tremor burst
 /datum/status_effect/stacking/lc_tremor/on_apply()
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/tremor)
 	return ..()
 
-/datum/status_effect/stacking/lc_tremor/add_stacks(stacks)
+/datum/status_effect/stacking/lc_tremor/add_stacks(stacks_added)
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/can_have_status()
 	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
