@@ -11,15 +11,15 @@
 
 	available_effects = list(
 		// --- Reactive Damage Effects ---
-		list(
-			"id" = "struggling_defense",
-			"name" = "Struggling Defense",
-			"ahn_cost" = 25,
-			"ep_cost" = 2, // Positive EP cost
-			"desc" = "Each 12.5% of HP lost grants 2.5%*X damage reduction (max 17.5%*X at 87.5% HP lost).",
-			"repeatable" = 3, // Max 3 times
-			"component" = /datum/component/augment/resisting_augment/struggling_defense
-		),
+		// list(
+		// 	"id" = "struggling_defense",
+		// 	"name" = "Struggling Defense",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2, // Positive EP cost
+		// 	"desc" = "Each 12.5% of HP lost grants 2.5%*X damage reduction (max 17.5%*X at 87.5% HP lost).",
+		// 	"repeatable" = 3, // Max 3 times
+		// 	"component" = /datum/component/augment/resisting_augment/struggling_defense
+		// ),
 		list(
 			"id" = "ES_red",
 			"name" = "Emergency Shields, RED",
@@ -53,15 +53,15 @@
 			"repeatable" = 3,
 			"component" = /datum/component/augment/defensive_preparations
 		),
-		list(
-			"id" = "reinforcement_nanties",
-			"name" = "Reinforcement Nanties",
-			"ahn_cost" = 25,
-			"ep_cost" = 2,
-			"desc" = "When you take damage, you will take 5*X% less damage per human you can see. (Max of 40%).",
-			"repeatable" = 3,
-			"component" = /datum/component/augment/resisting_augment/reinforcement_nanties
-		),
+		// list(
+		// 	"id" = "reinforcement_nanties",
+		// 	"name" = "Reinforcement Nanties",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"desc" = "When you take damage, you will take 5*X% less damage per human you can see. (Max of 40%).",
+		// 	"repeatable" = 3,
+		// 	"component" = /datum/component/augment/resisting_augment/reinforcement_nanties
+		// ),
 		list(
 			"id" = "cooling_systems",
 			"name" = "Cooling Systems",
@@ -86,14 +86,14 @@
 			"desc" = "Under 15% HP, you become immune to OVERHEAT damage.",
 			"component" = /datum/component/augment/fireproof
 		),
-		list(
-			"id" = "alert",
-			"name" = "Alert",
-			"ahn_cost" = 50,
-			"ep_cost" = 4,
-			"desc" = "The first time you take damage, reduce it by 80% and teleport 3-5 tiles away. Has a cooldown of 60 seconds.",
-			"component" = /datum/component/augment/resisting_augment/alert
-		),
+		// list(
+		// 	"id" = "alert",
+		// 	"name" = "Alert",
+		// 	"ahn_cost" = 50,
+		// 	"ep_cost" = 4,
+		// 	"desc" = "The first time you take damage, reduce it by 80% and teleport 3-5 tiles away. Has a cooldown of 60 seconds.",
+		// 	"component" = /datum/component/augment/resisting_augment/alert
+		// ),
 		// --- Attacking Effects ---
 		list(
 			"id" = "regeneration",
@@ -240,14 +240,14 @@
 			"desc" = "When making a melee attack, deal an extra 0.5% damage for every point of fire damage you have.",
 			"component" = /datum/component/augment/inner_ardor
 		),
-		list(
-			"id" = "strong_grip",
-			"name" = "Strong Grip",
-			"ahn_cost" = 100,
-			"ep_cost" = 4,
-			"desc" = "If you attack while you have HARM intent, your weapon will become unable to be dropped. This effect is removed when you attack in any other intent.",
-			"component" = /datum/component/augment/strong_grip
-		),
+		// list(
+		// 	"id" = "strong_grip",
+		// 	"name" = "Strong Grip",
+		// 	"ahn_cost" = 100,
+		// 	"ep_cost" = 4,
+		// 	"desc" = "If you attack while you have HARM intent, your weapon will become unable to be dropped. This effect is removed when you attack in any other intent.",
+		// 	"component" = /datum/component/augment/strong_grip
+		// ),
 		list(
 			"id" = "combustion",
 			"name" = "Combustion",
@@ -311,15 +311,15 @@
 			"desc" = "When making a melee attack, deal an extra 10*X% more damage for every 5 BLEED on self.",
 			"component" = /datum/component/augment/bleed_vigor
 		),
-		list(
-			"id" = "tremor_defense",
-			"name" = "TREMOR Defense",
-			"ahn_cost" = 25,
-			"ep_cost" = 2,
-			"repeatable" = 3,
-			"desc" = "For every 10 TREMOR on self, take 5*X% less damage from RED/BLACK attacks. (Max of 30% + (X - 1) * 20%)",
-			"component" = /datum/component/augment/resisting_augment/tremor_defense
-		),
+		// list(
+		// 	"id" = "tremor_defense",
+		// 	"name" = "TREMOR Defense",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"repeatable" = 3,
+		// 	"desc" = "For every 10 TREMOR on self, take 5*X% less damage from RED/BLACK attacks. (Max of 30% + (X - 1) * 20%)",
+		// 	"component" = /datum/component/augment/resisting_augment/tremor_defense
+		// ),
 		list(
 			"id" = "earthquake",
 			"name" = "Earthquake",
@@ -353,15 +353,15 @@
 			"desc" = "When taking RED/BLACK damage from a melee attack, inflict 2*X TREMOR to the target and X TREMOR to self. (This has a cooldown of 1 second)",
 			"component" = /datum/component/augment/reflective_tremor
 		),
-		list(
-			"id" = "blood_thorns",
-			"name" = "Blood Thorns",
-			"ahn_cost" = 25,
-			"ep_cost" = 2,
-			"repeatable" = 3,
-			"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
-			"component" = /datum/component/augment/resisting_augment/blood_thorns
-		),
+		// list(
+		// 	"id" = "blood_thorns",
+		// 	"name" = "Blood Thorns",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"repeatable" = 3,
+		// 	"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
+		// 	"component" = /datum/component/augment/resisting_augment/blood_thorns
+		// ),
 		list(
 			"id" = "blood_jaunt",
 			"name" = "Blood Jaunt",
