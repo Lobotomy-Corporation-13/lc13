@@ -35,7 +35,6 @@ extrarange - modifier for sound range. This gets added on top of SOUND_RANGE
 falloff_exponent - Rate of falloff for the audio. Higher means quicker drop to low volume. Should generally be over 1 to indicate a quick dive to 0 rather than a slow dive.
 frequency - playback speed of audio
 channel - The channel the sound is played at
-pressure_affected - Whether or not difference in pressure affects the sound (E.g. if you can hear in space)
 ignore_walls - Whether or not the sound can pass through walls.
 falloff_distance - Distance at which falloff begins. Sound is at peak volume (in regards to falloff) aslong as it is in this range.
 
