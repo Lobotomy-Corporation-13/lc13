@@ -82,6 +82,18 @@
 		//Guarantee one
 		total_adjust += amount
 
+		//Adjust by an extra attribute under level 2
+		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=40)
+			total_adjust += amount
+
+		//And one more under level 3
+		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=60)
+			total_adjust += amount
+
+		//And one last one before L4
+		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE)<=80)
+			total_adjust += amount
+
 		if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 40 && get_attribute_level(user, TEMPERANCE_ATTRIBUTE) + total_adjust >= 40)
 			var/choice = alert("Are you sure you want to become level 2? This will restrict access to lower level skills.", , "Yes", "No")
 			if(choice == "No")
