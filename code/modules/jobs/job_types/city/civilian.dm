@@ -18,12 +18,12 @@ Civilian
 	maptype = list("city", "fixers")
 	paycheck = 170
 	roundstart_attributes = list(
-								FORTITUDE_ATTRIBUTE = 40,
-								PRUDENCE_ATTRIBUTE = 40,
-								TEMPERANCE_ATTRIBUTE = 40,
-								JUSTICE_ATTRIBUTE = 40
+								FORTITUDE_ATTRIBUTE = 20,
+								PRUDENCE_ATTRIBUTE = 20,
+								TEMPERANCE_ATTRIBUTE = 20,
+								JUSTICE_ATTRIBUTE = 20
 								)
-	job_attribute_limit = 130
+	job_attribute_limit = 100
 	var/static/list/possible_books = null
 
 /datum/job/civilian/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE, latejoin = FALSE, datum/outfit/outfit_override = null, client/preference_source)
