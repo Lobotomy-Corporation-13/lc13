@@ -172,11 +172,12 @@
 	//Overridable Mob Reaction
 /turf/open/water/deep/proc/MobSink(mob/living/drowner)
 	//Deal light initial damage - the drowning effect will be the main threat
-	if(ishuman(drowner))
-		var/mob/living/carbon/human/H = drowner
-		H.adjustOxyLoss(5)
-	else
-		drowner.adjustBruteLoss(25)
+	if(dronwer.stat != DEAD)
+		if(ishuman(drowner))
+			var/mob/living/carbon/human/H = drowner
+			H.adjustOxyLoss(5)
+		else
+			drowner.adjustBruteLoss(25)
 
 	//Apply drowning status effect
 	drowner.apply_status_effect(/datum/status_effect/drowning)
