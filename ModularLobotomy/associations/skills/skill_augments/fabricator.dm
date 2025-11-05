@@ -291,34 +291,34 @@
 		// 	"skill_level" = 4,
 		// 	"desc" = "Stop time in a range of 2 tiles, for 2 seconds."
 		// ),
-		/datum/action/cooldown/dismember = list(
-			"name" = "Execute",
-			"slot_cost" = 4,
-			"charge_cost" = 80,
-			"skill_level" = 4,
-			"desc" = "Execute adjacent targets below 25% HP. Dismembers arms from humans, gibs simple animals"
-		),
-		/datum/action/cooldown/shockwave = list(
-			"name" = "Shockwave",
-			"slot_cost" = 4,
-			"charge_cost" = 80,
-			"skill_level" = 4,
-			"desc" = "Knock everything in a radius back"
-		),
-		/datum/action/cooldown/warbanner = list(
-			"name" = "Warbanner",
-			"slot_cost" = 3,
-			"charge_cost" = 70,
-			"skill_level" = 4,
-			"desc" = "All humans in a 3 tile radius gain a 70% damage reduction for 10 seconds."
-		),
-		/datum/action/cooldown/warcry = list(
-			"name" = "Warcry",
-			"slot_cost" = 3,
-			"charge_cost" = 50,
-			"skill_level" = 4,
-			"desc" = "All humans in a 3 tile radius move 50% faster for 10 seconds."
-		),
+		// /datum/action/cooldown/dismember = list(
+		// 	"name" = "Execute",
+		// 	"slot_cost" = 4,
+		// 	"charge_cost" = 80,
+		// 	"skill_level" = 4,
+		// 	"desc" = "Execute adjacent targets below 25% HP. Dismembers arms from humans, gibs simple animals"
+		// ),
+		// /datum/action/cooldown/shockwave = list(
+		// 	"name" = "Shockwave",
+		// 	"slot_cost" = 4,
+		// 	"charge_cost" = 80,
+		// 	"skill_level" = 4,
+		// 	"desc" = "Knock everything in a radius back"
+		// ),
+		// /datum/action/cooldown/warbanner = list(
+		// 	"name" = "Warbanner",
+		// 	"slot_cost" = 3,
+		// 	"charge_cost" = 70,
+		// 	"skill_level" = 4,
+		// 	"desc" = "All humans in a 3 tile radius gain a 70% damage reduction for 10 seconds."
+		// ),
+		// /datum/action/cooldown/warcry = list(
+		// 	"name" = "Warcry",
+		// 	"slot_cost" = 3,
+		// 	"charge_cost" = 50,
+		// 	"skill_level" = 4,
+		// 	"desc" = "All humans in a 3 tile radius move 50% faster for 10 seconds."
+		// ),
 		// /datum/action/cooldown/nuke = list(
 		// 	"name" = "Nuke",
 		// 	"slot_cost" = 6,
