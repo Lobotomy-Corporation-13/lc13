@@ -64,7 +64,7 @@
 	var/list/nitb_deployed_commanders = list()
 
 	var/nitb_cooldown
-	var/nitb_cooldown_duration = 1.5 MINUTES
+	var/nitb_cooldown_duration = 2.5 MINUTES
 
 	/// List of all bound, spawned sweepers in our retinue
 	var/list/allied_sweepers = list()
@@ -73,20 +73,29 @@
 	/// List of just the bound retinue grunts
 	var/list/deployed_grunts = list()
 
-	/// Types of available commanders to spawn. We will pick n take out of this list to avoid duplicates, we will replenish it when they die.
-	var/list/commander_types = list(
+	/// Types of available commanders to spawn for our retinue. We will pick n take out of this list to avoid duplicates, we will replenish it when they die.
+	var/list/retinue_commander_types = list(
 		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue,
 		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue,
 		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue,
 		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue,
 	)
-	/// Types of available grunts to spawn
-	var/list/grunt_types = list(
+	/// Types of available grunts to spawn for our retinue.
+	var/list/retinue_grunt_types = list(
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue,
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue,
 		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue,
 	)
 	// Technically, we could get away with just using 1 list here and deriving how many commanders/grunts there are with a for loop and istype check, but I'd rather not?
+
+	/// Types of commanders that can be spawned for the NitB player scaling mechanic. We are also gonna pick n take out of this one to avoid duplicates...
+	// Mainly to avoid a situation where 3 Marias spawn and give the sweepers 0 move delay (lol)
+	var/list/nitb_commander_types = list(
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,
+	)
 
 	/* ABILITY VARIABLES SECTION
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -117,6 +126,8 @@
 	var/parrying = FALSE
 	/// This is TRUE while we're in the process of riposting, we'll not do any further ripostes on incoming attacks.
 	var/riposting = FALSE
+	/// Used to only riposte once per parry.
+	var/riposte_used = FALSE
 
 	// available_abilities holds the abilities the Matriarch is cleared to use as keys and their current cooldowns as values.
 	var/list/available_abilities = list()
@@ -129,7 +140,7 @@
 		COMBAT_ABILITY_PARRY = 18 SECONDS, // Parry has CDR if a riposte lands
 		SUPPORT_ABILITY_OFFENSIVE = 30 SECONDS,
 		SUPPORT_ABILITY_PERSISTENCE = 20 SECONDS,
-		SUPPORT_ABILITY_SUMMON = 60 SECONDS, // Summon CD is reset every phasechange.
+		SUPPORT_ABILITY_SUMMON = 70 SECONDS, // Summon CD is reset every phasechange.
 	)
 	// These two lists, we will pick_n_take from to add abilities as the fight progresses. On Initialize we pluck three out of locked_combat_abilities to start with as a base.
 	var/list/locked_combat_abilities = list(COMBAT_ABILITY_DASH, COMBAT_ABILITY_SLAM, COMBAT_ABILITY_SLASH, COMBAT_ABILITY_TRASH_DISPOSAL, COMBAT_ABILITY_PARRY)
@@ -190,7 +201,7 @@
 	var/frustration_procced = 0
 
 	var/pulse_cooldown
-	var/pulse_cooldown_time = 15 SECONDS // This also controls the "window of opportunity" that you can use ranged on the Matriarch during before she'll punish you again for it
+	var/pulse_cooldown_time = 8 SECONDS // This also controls the "window of opportunity" that you can use ranged on the Matriarch during before she'll punish you again for it
 	var/pulse_base_damage = 50 // Scales off frustration procs.
 
 	/* PHASE SCALING SECTION
@@ -200,7 +211,7 @@
 	// A general "rule" she follows, is that she gets more frantic and quick in her movements and attacks as the fight progresses, and heals more, but deals less damage and is more vulnerable.
 
 	// Association list of key: phase to value: amount of health under which the next phase gets triggered.
-	var/list/phases_health_thresholds = list(1 = 5500, 2 = 3000, 3 = -INFINITY)
+	var/list/phases_health_thresholds = list(1 = 5000, 2 = 2800, 3 = -INFINITY)
 
 	// The icons she uses in each phase.
 	var/list/phases_icon_states = list(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
@@ -280,14 +291,17 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 	var/amount_of_dangerous_fuel = length(AllLivingAgents(TRUE))
 	player_scaling = amount_of_dangerous_fuel
 
+	// Health scaling
 	var/bonus_health = player_scaling_health_per_player * amount_of_dangerous_fuel
 	maxHealth += bonus_health
 	adjustBruteLoss(-bonus_health)
-
 	for(var/i in 1 to 3)
 		phases_health_thresholds[i] += bonus_health
 
-	frustration_threshold += (bonus_health * 0.30)
+	// Small amount of extra wiggle room for triggering her ranged retaliation for more players
+	frustration_threshold += (bonus_health * 0.10)
+
+	// If the boss is deemed too easy, break open the safety glass to unleash "retinue size player scaling" (at the moment, only NitB is affected by player scaling)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/Life()
 	. = ..()
@@ -304,7 +318,7 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 	AttemptUseSupportAbility() // Try to use a support ability every once in a while. The proc we're calling checks if any are ready.
 	NightInTheBackstreets() // This has a cooldown, don't worry. It will also only trigger if the player scaling's hit a certain amount.
 
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(CanAct() && health <= phases_health_thresholds[phase])
 		PhaseChange()
@@ -409,27 +423,33 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 
 /*
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FRUSTRATION & RANGED DEFENSE SECTION
-This is all code relating to handling incoming ranged damage.
+FRUSTRATION & DEFENSE SECTION
+This is all code relating to handling incoming damage.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/bullet_act(obj/projectile/P)
-	// Activating Riposte...
-	if(parrying && health > 0 && isliving(P.firer) && (get_dist(P.firer, src) < 15))
-		ParryCounter(P.firer)
-		return FALSE
+// Before we take damage: if we're parrying, and it's a parriable attack, deny the damage and parry the attack.
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	// Frustration buildup.
-	var/bullet_damage_type = P.damage_type
-	frustration_meter += (P.damage * damage_coeff.getCoeff(bullet_damage_type)) // If we have 0.5 PALE coeff, and are hit by a 100 PALE damage bullet, add 50 to Frustration.
-	if(frustration_meter >= frustration_threshold)
-		RangedReaction(P.firer) // Punish players for using ranged on the Matriarch. This will also reset our frustration_meter
+	if(source)
+		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
+		if(should_retaliate && parrying && health > 0 && isliving(source))
+			INVOKE_ASYNC(src, PROC_REF(Parry), source)
+			return FALSE
 
-	// Activating Parry...
-	// This won't activate on low caliber projectiles like Havana.
-	if(CanAct() && P.damage >= 20 && health > 0 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
+// After we take damage: Consider turning on our parry if it's available, and tally any ranged damage to our frustration meter.
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+	. = ..()
+	if(source)
+		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
+		if(CanAct() && should_retaliate && . >= 25 && health > 0 && prob(75))
+			INVOKE_ASYNC(src, PROC_REF(BeginParry))
+		if(attack_type & ATTACK_TYPE_RANGED)
+			// Frustration buildup.
+			frustration_meter += (damage_amount) // PostDamageReaction's ..() is giving us the post-coeff damage amount
+
+			if(frustration_meter >= frustration_threshold)
+				INVOKE_ASYNC(src, PROC_REF(RangedReaction), source) // Punish players for using ranged on the Matriarch. This will also reset our frustration_meter
 
 // She will do this after she's been shot for enough damage. You can get away with it a couple times but eventually she becomes way too much of an issue if you abuse ranged kiting on her.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/RangedReaction(mob/living/firer)
@@ -452,7 +472,7 @@ This is all code relating to handling incoming ranged damage.
 
 		var/distance = round(get_dist(src, L))
 		var/final_damage = max((pulse_scaled_damage - (distance * 2)), (frustration_procced * 20))
-		L.apply_damage(final_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(final_damage, BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_SPECIAL))
 		shake_camera(L, 4, 5)
 		to_chat(L, span_userdanger("A piercing howl corrodes your very being!"))
 
@@ -467,7 +487,7 @@ This is all code relating to handling incoming ranged damage.
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 
 	if(istype(firer) && (available_abilities[COMBAT_ABILITY_DASH] != null))
-		SweepTheBackstreets(firer) // If we have our dash unlocked, use it immediately regardless of cooldown. This will only happen if we're not busy doing something else.
+		INVOKE_ASYNC(src, PROC_REF(SweepTheBackstreets), firer) // If we have our dash unlocked, use it immediately regardless of cooldown. This will only happen if we're not busy doing something else.
 	return
 
 /*
@@ -586,15 +606,13 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 // !!! Devour override: Handles what happens when we devour a corpse. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/SweeperDevour(mob/living/L)
-	var/devoured_is_sweeper = faction_check_mob(L, TRUE)
+	var/devoured_is_human = ishuman(L)
 	. = ..()
-	if(!devoured_is_sweeper)
-		// we ate a human/other ordeal/a damn clerkbot or something
-		// consequences here
+	if(devoured_is_human) // ONLY SCALE WHEN EATING HUMANS. Why? Because if we just check for non-sweepers, now she can scale off Spicebush trees or some other ungodly edge case. It's silly.
 		belly++
 		UpdateBellyScaling()
 
-// Called every time we phasechange or devour someone, to correctly apply scaling based on non-sweeper corpses eaten.
+// Called every time we phasechange or devour someone, to correctly apply scaling based on human corpses eaten.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/UpdateBellyScaling()
 	// Attack and move faster for each corpse eaten, scales up to 5 corpses. We gain 0.2 rapid melee and lose 0.1 move delay per corpse. This can get pretty wild pretty fast.
 	var/extra_speed = clamp(belly, 1, 5)
@@ -633,7 +651,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 // !!! Combat ability: Sweep the Backstreets (dash). !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/SweepTheBackstreets(atom/prospective_fuel = target)
-	if(stat == DEAD || !CanAct())
+	if(stat >= DEAD || !CanAct())
 		return FALSE
 	if(get_dist(src, prospective_fuel) > dash_range)
 		return FALSE
@@ -697,8 +715,12 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 				continue
 			to_chat(hit_mob, span_userdanger("[src] viciously slashes you as she dashes past!"))
 			playsound(hit_mob, attack_sound, 100)
-			available_abilities[COMBAT_ABILITY_DASH] = world.time
-			SpawnAppropiateGibs(hit_mob)
+			for(var/i in 1 to 4)
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(impacted, pick(GLOB.alldirs)) // We used to make a gibspawner on hit but it ended up... excessive
+
+			if(ishuman(hit_mob))
+				available_abilities[COMBAT_ABILITY_DASH] = world.time // Cooldown reset if a human gets hit. This used to be ANY mob but it's extremely cruel to let her full heal off LRRHM or similar
+
 			// Big slice VFX
 			var/obj/effect/temp_visual/dir_setting/slash/temp = new(impacted)
 			temp.dir = dir
@@ -877,29 +899,6 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 // !!! Combat ability: Parry !!!
 // Replace the current triggers with a PreDamageReaction() once damage refactor is merged. Will also let us parry special attacks.
 
-/// Activates parrying behaviour when hit by a simple_animal.
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/attack_animal(mob/living/simple_animal/M, damage)
-	// If we're hit in melee by a living mob, while parrying, and are still alive, we retaliate. The attack on us gets cancelled.
-	if(parrying && health > 0 && istype(M))
-		ParryCounter(M)
-		return FALSE
-	. = ..()
-	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
-	if(CanAct() && health > 0 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
-
-/// Activates parrying behaviour when hit by a human with an object.
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/attacked_by(obj/item/I, mob/living/user)
-	// If we're hit in melee by a living mob, while parrying, and are still alive, we retaliate. The attack on us gets cancelled.
-	if(parrying && health > 0 && istype(user))
-		ParryCounter(user)
-		return FALSE
-	. = ..()
-	// If we're hit by a sufficiently strong melee attack, 75% of the time we will go into our parrying stance.
-	if(CanAct() && health > 0 && I.force >= 10 && prob(75))
-		INVOKE_ASYNC(src, PROC_REF(BeginParry)) // It's ASYNC because there's a sleep in it
-
-
 /// Enter our parrying stance.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/BeginParry()
 	if((available_abilities[COMBAT_ABILITY_PARRY] != null) && available_abilities[COMBAT_ABILITY_PARRY] <= world.time)
@@ -907,11 +906,15 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		available_abilities[COMBAT_ABILITY_PARRY] = ability_cooldown_durations[COMBAT_ABILITY_PARRY] + world.time
 
 		preparing = TRUE // This doesn't mean we're parrying just yet.
+		riposte_used = FALSE // Reset from previous uses.
+
 		// Telegraph that we're beginning a parry to give players time to stop attacking. We're not actively parrying at this point.
 		say("676 3246!!")
 		visible_message(span_userdanger("[src] enters a parrying stance!"))
 		var/atom/temp = new /obj/effect/temp_visual/markedfordeath(get_turf(src))
-		temp.pixel_y += 32
+		temp.pixel_y += 48
+		temp.layer = POINT_LAYER
+		temp.transform *= 1.5
 		playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 3)
 		animate(src, 0.4 SECONDS, color = COLOR_RED)
 		SLEEP_CHECK_DEATH(0.7 SECONDS)
@@ -927,27 +930,30 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		visible_message(span_danger("[src] lowers \his defensive stance."))
 	animate(src, 0.5 SECONDS, color = initial(color))
 
+/// Proc that gets called every time we're hit in our parrying stance. Will riposte if possible.
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/Parry(mob/living/victim)
+	// Indicate that we landed a parry.
+	face_atom(victim)
+	var/datum/effect_system/spark_spread/parry_sparks = new /datum/effect_system/spark_spread
+	parry_sparks.set_up(4, 0, loc)
+	parry_sparks.start()
+	playsound(src, 'sound/weapons/parry.ogg', 100, FALSE, 5)
+
+	if(!riposte_used && can_see(src, victim, 14))
+		riposte_used = TRUE
+		ParryCounter(victim)
+
 /// This gets called if someone hits us in our parrying stance. Retaliate by teleporting through them and attacking. We'll heal a bit too.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/ParryCounter(mob/living/victim)
 	if(dashing || lunging)
 		return FALSE
 
+	riposting = TRUE
+
 	var/riposte_damage = phases_riposte_damage[phase]
 	if(istype(victim, /mob/living/simple_animal/hostile))
 		riposte_damage *= 3 // Triple damage if we're riposting an ordeal, distortion or abno.
 
-	riposting = TRUE
-
-	// Clean up our parrying stuff...
-	StopParrying(TRUE)
-	deltimer(parry_stop_timer)
-	parry_stop_timer = null
-
-	// Indicate that we landed a parry.
-	var/datum/effect_system/spark_spread/parry_sparks = new /datum/effect_system/spark_spread
-	parry_sparks.set_up(4, 0, loc)
-	parry_sparks.start()
-	playsound(src, 'sound/weapons/parry.ogg', 100, FALSE, 5)
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 
 	// Teleport to the target and add a visual demonstrating it.
@@ -967,6 +973,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	visible_message(span_userdanger("[src] deflects [victim]'s attack and performs a counter!"))
 	if(victim.mob_biotypes & MOB_ORGANIC)
 		SweeperHealing(phases_riposte_healing[phase])
+
 	// CDR. Shouldn't have hit us...!!!!!!!!!!!!!!
 	available_abilities[COMBAT_ABILITY_PARRY] -= riposte_CDR
 
@@ -1130,7 +1137,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	var/missing_commanders = phases_squad_size_commanders[phase] - amount_commanders
 
 	// This will be TRUE if we're missing a commander or if we're missing four grunts. In that case, we'll try to summon some allies.
-	var/really_oughta_get_some_goons = ((missing_grunts >= 4) || ((missing_commanders >= 1) && length(commander_types) > 0)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
+	var/really_oughta_get_some_goons = ((missing_grunts >= 4) || ((missing_commanders >= 1) && length(retinue_commander_types) > 0)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
 
 	if(really_oughta_get_some_goons && (available_abilities[SUPPORT_ABILITY_SUMMON] != null) && available_abilities[SUPPORT_ABILITY_SUMMON] <= world.time)
 		available_abilities[SUPPORT_ABILITY_SUMMON] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_SUMMON]
@@ -1184,7 +1191,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			if(!final_deployment_turf)
 				final_deployment_turf = prospective_turf
 
-			var/commander_type = pick_n_take(commander_types) // We will place their type back into the available pool once they die
+			var/commander_type = pick_n_take(retinue_commander_types) // We will place their type back into the available pool once they die
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, commander_type, src)
 
 	if(amount_grunts > 0)
@@ -1193,7 +1200,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			if(!final_deployment_turf)
 				final_deployment_turf = prospective_turf
 
-			var/grunt_type = pick(grunt_types)
+			var/grunt_type = pick(retinue_grunt_types)
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, grunt_type, src)
 
 
@@ -1218,8 +1225,14 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 
 	nitb_cooldown = world.time + nitb_cooldown_duration
 	audible_message(span_userdanger("You hear a distant clamour as more Sweepers arrive in the facility."))
+	var/list/cloned_dept_centers = GLOB.department_centers.Copy()
+
 	for(var/i in 1 to missing_commanders)
-		var/turf/dept_center = pick(GLOB.department_centers)
+		var/nitb_commander_type = pick_n_take(nitb_commander_types)
+		if(!nitb_commander_type)
+			return // yeowch! out of commanders! we'd have to dupe one... nuh uh
+
+		var/turf/dept_center = pick_n_take(cloned_dept_centers)
 		if(!dept_center)
 			return // ????????????
 
@@ -1243,21 +1256,17 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			))
 			new /obj/effect/specific_sweeper_spawn(final_nitb_deploy_turf, nitb_grunt_type, src, FALSE)
 
-		var/nitb_commander_type = pick(list(
-			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
-			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
-			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
-			/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,
-			))
-
 		new /obj/effect/specific_sweeper_spawn(dept_center, nitb_commander_type, src, FALSE)
 
 /// Signal handler that will remove the dead sweeper from our lists, and also place a dead commander's type back into the available pool.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/RegisterSweeperDeath(mob/living/dead_neighbor)
 	SIGNAL_HANDLER
 	var/dead_type = dead_neighbor.type
-	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk) && !(dead_neighbor in nitb_deployed_commanders))
-		commander_types |= dead_type
+	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
+		if(!(dead_neighbor in nitb_deployed_commanders))
+			retinue_commander_types |= dead_type
+		else
+			nitb_commander_types |= dead_type
 
 	deployed_commanders -= dead_neighbor
 	nitb_deployed_commanders -= dead_neighbor

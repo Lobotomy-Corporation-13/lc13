@@ -209,7 +209,7 @@
 		empowered_blood_decay -= 10
 		empowered_periodic_regen += 5
 
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/red/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	// Add damage taken during trash disposal to the right var so we know when to interrupt it.
 	if(trash_disposal_active)
@@ -482,15 +482,15 @@
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		guaranteed_butcher_results += list(/obj/item/head_trophy/indigo_head/pale = 1)
 
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PreDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/PreDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(source)
 		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
-		if(parrying && health > 0 && isliving(source) && should_retaliate)
+		if(should_retaliate && parrying && health > 0 && isliving(source))
 			INVOKE_ASYNC(src, PROC_REF(Parry), source)
 			return FALSE
 
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/PostDamageReaction(damage_amount, damage_type, source, attack_type)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(source)
 		var/should_retaliate = !(attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
@@ -525,7 +525,7 @@
 		parrying = TRUE
 		parry_stop_timer = addtimer(CALLBACK(src, PROC_REF(StopParrying)), 1.3 SECONDS, TIMER_STOPPABLE)
 
-/// This proc is called after successfully parrying, or after the timer runs out on our parry stance. It undoes all our changes from going into parry.
+/// This proc is called after the timer runs out on our parry stance. It undoes all our changes from going into parry.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/proc/StopParrying(success = FALSE)
 	parrying = FALSE
 	special_ability_activated = FALSE
@@ -534,7 +534,7 @@
 	animate(src, 0.5 SECONDS, color = initial(color))
 
 /// This gets called if someone hits us in our parrying stance. This proc just does visual and audio feedback that the attack was parried - the actual hit happens in ParryCounter only if they're in LoS and in range.
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/proc/Parry(mob/living/victim)
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/proc/Parry(mob/living/victim)
 	// Indicate that we landed a parry.
 	face_atom(victim)
 	var/datum/effect_system/spark_spread/parry_sparks = new /datum/effect_system/spark_spread
@@ -546,7 +546,8 @@
 		counter_used = TRUE
 		ParryCounter(victim)
 
-/mob/living/simple_animal/hostile/ordeal/indigo_dusk/fighter/pale/proc/ParryCounter(mob/living/victim)
+/// The riposte that punishes someone who attacked us while we were parrying. This doesn't end the parry, but we won't be able to riposte for the rest of it.
+/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/proc/ParryCounter(mob/living/victim)
 	SLEEP_CHECK_DEATH(0.2 SECONDS)
 
 	// Teleport to the target and add a visual demonstrating it.
@@ -744,7 +745,7 @@
 				continue
 			if (L == src)
 				continue
-			HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE)
+			HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			playsound(T, attack_sound, 100, TRUE)
 			// Big slice VFX
 			var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
@@ -857,7 +858,7 @@
 	// Hit
 	for(var/turf/T in affected_turfs)
 		new /obj/effect/temp_visual/smash_effect(T)
-		for(var/mob/living/L in HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE))
+		for(var/mob/living/L in HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			var/throw_comparison = L.loc == target_turf ? src : target_turf // if they're standing on the turf we're targeting we'll throw them directly away from us
 			var/throw_dir = get_cardinal_dir(throw_comparison, L)
 			if(L)
