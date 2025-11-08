@@ -134,6 +134,10 @@
 	var/cloak_alpha = 150
 	var/public_use = FALSE
 
+/obj/item/paramedic_cloak/attack_self(mob/user)
+	. = ..()
+	ToggleCloak(user)
+
 /obj/item/paramedic_cloak/proc/ToggleCloak(mob/living/user)
 	if(!ishuman(user))
 		return
