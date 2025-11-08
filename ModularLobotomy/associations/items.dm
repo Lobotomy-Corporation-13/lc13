@@ -179,12 +179,12 @@
 /obj/item/paramedic_cloak/equipped(mob/living/user, slot)
 	. = ..()
 	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnAttack))
-	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnDamage))
+	RegisterSignal(user, COMSIG_MOB_APPLY_DAMAGE, PROC_REF(OnDamage))
 
 /obj/item/paramedic_cloak/dropped(mob/living/user)
 	. = ..()
 	UnregisterSignal(user, COMSIG_MOB_ITEM_ATTACK)
-	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMAGE)
 	if(cloak_active)
 		DeactivateCloak(user)
 
@@ -193,7 +193,7 @@
 	if(cloak_active)
 		DeactivateCloak(user)
 
-/obj/item/clothing/suit/armor/ego_gear/city/insurgence_nightwatch/proc/OnDamage(mob/living/user, damage, damagetype, def_zone)
+/obj/item/paramedic_cloak/proc/OnDamage(mob/living/user, damage, damagetype, def_zone)
 	SIGNAL_HANDLER
 	if(cloak_active && damage > 0)
 		to_chat(user, span_warning("Your cloak flickers and fails as you take damage!"))
