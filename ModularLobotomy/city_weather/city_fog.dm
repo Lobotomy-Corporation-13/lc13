@@ -8,7 +8,7 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 	var/current_state = "clear" // States: "clear", "warning", "fog"
 
 	/// How long the fog lasts
-	var/fog_duration = 12 MINUTES
+	var/fog_duration = 10 MINUTES
 
 	/// How long between fog cycles (clear period)
 	var/clear_duration = 20 MINUTES
@@ -44,7 +44,11 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 	for(var/mob/M in GLOB.player_list)
 		var/turf/mob_turf = get_turf(M)
 		if(mob_turf && mob_turf.z == z_level)
-			to_chat(M, span_warning("The air is becoming thick and damp. A heavy fog is approaching..."))
+			to_chat(M, span_purple("The air is becoming thick and damp. A heavy fog is approaching..."))
+
+	// Trigger all weather phones to beep and alert
+	for(var/obj/item/weather_phone/phone in GLOB.weather_phones)
+		phone.FogWarningAlert()
 
 	// After warning_duration, start fog
 	addtimer(CALLBACK(src, PROC_REF(StartFog)), warning_duration)
@@ -199,17 +203,15 @@ GLOBAL_DATUM(city_fog_controller, /datum/city_fog_controller)
 
 	// Deal damage based on sanity state
 	if(H.sanity_lost)
-		// Insane: Deal 10% max HP as PALE damage
+		// Insane: Deal 20% max HP as PALE damage
 		var/damage = H.maxHealth * 0.2
 		H.deal_damage(damage, PALE_DAMAGE)
-		if(prob(25)) // Occasional message to avoid spam
-			to_chat(H, span_danger("The fog tears at your broken mind, damaging your body!"))
+		to_chat(H, span_danger("The fog tears at your broken mind, damaging your body!"))
 	else
-		// Sane: Deal 5% max SP as SP damage
+		// Sane: Deal 10% max SP as SP damage
 		var/sp_damage = H.maxSanity * 0.1
 		H.adjustSanityLoss(sp_damage)
-		if(prob(25)) // Occasional message to avoid spam
-			to_chat(H, span_warning("The fog drains your sanity..."))
+		to_chat(H, span_warning("The fog drains your sanity..."))
 
 /datum/status_effect/fog_exposure/proc/can_weather_act(mob/living/L, datum/weather/city_fog/fog)
 	var/turf/mob_turf = get_turf(L)

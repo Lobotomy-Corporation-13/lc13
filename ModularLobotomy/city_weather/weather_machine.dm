@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(weather_phones)
+
 /obj/machinery/city_weather_monitor
 	name = "city weather monitor"
 	desc = "A machine that monitors atmospheric conditions and predicts incoming storms."
@@ -139,6 +141,14 @@
 	w_class = WEIGHT_CLASS_SMALL
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 
+/obj/item/weather_phone/Initialize()
+	. = ..()
+	GLOB.weather_phones += src
+
+/obj/item/weather_phone/Destroy()
+	GLOB.weather_phones -= src
+	return ..()
+
 /obj/item/weather_phone/examine(mob/user)
 	. = ..()
 	. += span_notice("Use it in hand to check weather conditions.")
@@ -207,3 +217,8 @@
 	message += "</div>"
 
 	to_chat(user, message)
+
+/// Alert proc called when fog warning phase starts
+/obj/item/weather_phone/proc/FogWarningAlert()
+	playsound(src, 'sound/machines/warning-buzzer.ogg', 50, TRUE)
+	say("WARNING: Heavy fog approaching. Seek shelter or avoid the ruins.")
