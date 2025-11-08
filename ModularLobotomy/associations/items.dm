@@ -179,12 +179,12 @@
 /obj/item/paramedic_cloak/equipped(mob/living/user, slot)
 	. = ..()
 	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnAttack))
-	RegisterSignal(user, COMSIG_MOB_APPLY_DAMAGE, PROC_REF(OnDamage))
+	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnDamage))
 
 /obj/item/paramedic_cloak/dropped(mob/living/user)
 	. = ..()
 	UnregisterSignal(user, COMSIG_MOB_ITEM_ATTACK)
-	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMAGE)
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
 	if(cloak_active)
 		DeactivateCloak(user)
 
