@@ -486,7 +486,7 @@ This is all code relating to handling incoming damage.
 
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 
-	if(istype(firer) && (available_abilities[COMBAT_ABILITY_DASH] != null))
+	if(CanAct() && istype(firer) && (available_abilities[COMBAT_ABILITY_DASH] != null))
 		INVOKE_ASYNC(src, PROC_REF(SweepTheBackstreets), firer) // If we have our dash unlocked, use it immediately regardless of cooldown. This will only happen if we're not busy doing something else.
 	return
 
@@ -623,6 +623,9 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 // !!! Combat ability: Ground Slam. !!!
 /// cannibalized from wendigo
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/AttackGroundSlam(range)
+	if(!CanAct())
+		return FALSE
+
 	preparing = TRUE
 	available_abilities[COMBAT_ABILITY_SLAM] = ability_cooldown_durations[COMBAT_ABILITY_SLAM] + world.time
 
@@ -715,8 +718,8 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 				continue
 			to_chat(hit_mob, span_userdanger("[src] viciously slashes you as she dashes past!"))
 			playsound(hit_mob, attack_sound, 100)
-			for(var/i in 1 to 4)
-				new /obj/effect/temp_visual/dir_setting/bloodsplatter(impacted, pick(GLOB.alldirs)) // We used to make a gibspawner on hit but it ended up... excessive
+
+			SpawnAppropiateGibs(hit_mob) // This will end up creating a lot of gibs throughout the fight. Ideally we should implement a way for gibs to "merge" so we don't end up with 20 on the same tile.
 
 			if(ishuman(hit_mob))
 				available_abilities[COMBAT_ABILITY_DASH] = world.time // Cooldown reset if a human gets hit. This used to be ANY mob but it's extremely cruel to let her full heal off LRRHM or similar
@@ -762,6 +765,8 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 // !!! Combat ability: Slash. !!!
 // Copied code from the Lady of the Lake (Gold Noon). It's an AoE slash.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/AreaSlash(mob/living/target, mob/living/user, repeat = TRUE)
+	if(!CanAct())
+		return FALSE
 	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
 	var/turf/source_turf = get_turf(src)
 	var/turf/area_of_effect = list()
@@ -939,7 +944,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	parry_sparks.start()
 	playsound(src, 'sound/weapons/parry.ogg', 100, FALSE, 5)
 
-	if(!riposte_used && can_see(src, victim, 14))
+	if(!riposte_used && CanAct() && can_see(src, victim, 14))
 		riposte_used = TRUE
 		ParryCounter(victim)
 
