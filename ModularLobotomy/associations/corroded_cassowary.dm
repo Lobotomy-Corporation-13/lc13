@@ -315,7 +315,7 @@
 
 	// Damage all collected mobs
 	for(var/mob/living/L in mobs_to_hit)
-		L.apply_damage(dash_damage, melee_damage_type, null, L.run_armor_check(null, melee_damage_type), spread_damage = TRUE)
+		L.deal_damage(dash_damage, melee_damage_type)
 		L.apply_lc_tremor(dash_tremor, 55)
 
 		// Apply BLACK fragile with scaling based on existing stacks
@@ -401,7 +401,7 @@
 	// Deal devastating damage to all collected mobs
 	for(var/mob/living/L in mobs_to_hit)
 		// Apply 100 BLACK damage
-		L.apply_damage(100, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(100, BLACK_DAMAGE)
 
 		// Check for tremor burst and dismemberment
 		if(ishuman(L))
@@ -423,7 +423,7 @@
 				H.apply_lc_tremor(20, 55)
 		else
 			// Non-humans just deal extra damage
-			L.apply_damage(300, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(300, BLACK_DAMAGE)
 
 		L.visible_message(span_warning("[src] tears through [L] with apocalyptic force!"))
 
