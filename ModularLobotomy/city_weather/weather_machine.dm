@@ -1,3 +1,5 @@
+GLOBAL_LIST_EMPTY(weather_phones)
+
 /obj/machinery/city_weather_monitor
 	name = "city weather monitor"
 	desc = "A machine that monitors atmospheric conditions and predicts incoming storms."
@@ -47,30 +49,61 @@
 	if(machine_stat & (BROKEN|NOPOWER))
 		return
 
-	if(!GLOB.city_weather_controller)
-		to_chat(user, span_notice("No weather system detected. The skies are clear."))
-		return
-
+	var/has_weather = FALSE
 	var/message = "<div class='notice'>"
 	message += "<b>City Weather Monitoring System</b><br>"
 	message += "━━━━━━━━━━━━━━━━━━━━<br>"
 
-	if(GLOB.city_weather_controller.storm_active)
-		message += "<span class='danger'><b>⚠ FREEZING STORM ACTIVE ⚠</b></span><br>"
-		message += "Seek shelter immediately!<br>"
-		message += "Prolonged exposure causes:<br>"
-		message += "• Movement impairment<br>"
-		message += "• Hypothermia<br>"
-		message += "• Tissue damage at extreme exposure<br>"
-	else
-		message += "<b>Current Conditions:</b> Clear<br>"
-		message += "<b>Next Storm ETA:</b> [GLOB.city_weather_controller.GetTimeToNextStorm()]<br>"
+	// Check for fog
+	if(GLOB.city_fog_controller)
+		has_weather = TRUE
+		message += "<b>FOG SYSTEM:</b><br>"
+		message += "Status: [GLOB.city_fog_controller.GetStatus()]<br>"
+
+		switch(GLOB.city_fog_controller.current_state)
+			if("clear")
+				message += "Conditions: Clear<br>"
+				message += "Next fog approaching in approximately [round((GLOB.city_fog_controller.clear_duration) / 10 / 60)] minutes<br>"
+			if("warning")
+				message += "<span class='warning'>⚠ FOG WARNING ⚠</span><br>"
+				message += "Heavy fog incoming in approximately [round((GLOB.city_fog_controller.warning_duration) / 10 / 60)] minutes!<br>"
+			if("fog")
+				message += "<span class='danger'><b>⚠ HEAVY FOG ACTIVE ⚠</b></span><br>"
+				message += "Avoid the ruins! Fog drains sanity and damages the insane!<br>"
+				message += "Prolonged exposure causes:<br>"
+				message += "• Sanity loss (5% max SP per 2 seconds)<br>"
+				message += "• PALE damage if insane (10% max HP per 2 seconds)<br>"
+
 		message += "<br>"
-		message += "<b>Storm Advisory:</b><br>"
-		message += "• Duration: 4-6 minutes<br>"
-		message += "• Indoor areas provide shelter<br>"
-		message += "• Cold exposure stacks up to 10 levels<br>"
-		message += "• Level 8+ causes tissue damage<br>"
+
+	// Check for freezing storm
+	if(GLOB.city_weather_controller)
+		has_weather = TRUE
+		message += "<b>STORM SYSTEM:</b><br>"
+		message += "Status: [GLOB.city_weather_controller.GetStatus()]<br>"
+
+		if(GLOB.city_weather_controller.storm_active)
+			message += "<span class='danger'><b>⚠ FREEZING STORM ACTIVE ⚠</b></span><br>"
+			message += "Seek shelter immediately!<br>"
+			message += "Prolonged exposure causes:<br>"
+			message += "• Movement impairment<br>"
+			message += "• Hypothermia<br>"
+			message += "• Tissue damage at extreme exposure<br>"
+		else
+			message += "Conditions: Clear<br>"
+			message += "Next storm ETA: [GLOB.city_weather_controller.GetTimeToNextStorm()]<br>"
+			message += "<br>"
+			message += "<b>Storm Advisory:</b><br>"
+			message += "• Duration: 4-6 minutes<br>"
+			message += "• Indoor areas provide shelter<br>"
+			message += "• Cold exposure stacks up to 10 levels<br>"
+			message += "• Level 8+ causes tissue damage<br>"
+
+		message += "<br>"
+
+	if(!has_weather)
+		message += "No weather systems detected.<br>"
+		message += "All conditions nominal.<br>"
 
 	message += "━━━━━━━━━━━━━━━━━━━━<br>"
 	message += "<i>Stay safe, stay warm.</i>"
@@ -98,3 +131,94 @@
 	if(prob(50 / severity))
 		set_machine_stat(machine_stat | BROKEN)
 		update_icon()
+
+// Weather Phone - Handheld weather monitoring device
+/obj/item/weather_phone
+	name = "weather phone"
+	desc = "A handheld device that monitors atmospheric conditions and weather patterns. Useful for checking fog and storm conditions."
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "suspiciousphone"
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+
+/obj/item/weather_phone/Initialize()
+	. = ..()
+	GLOB.weather_phones += src
+
+/obj/item/weather_phone/Destroy()
+	GLOB.weather_phones -= src
+	return ..()
+
+/obj/item/weather_phone/examine(mob/user)
+	. = ..()
+	. += span_notice("Use it in hand to check weather conditions.")
+
+/obj/item/weather_phone/attack_self(mob/user)
+	. = ..()
+	if(.)
+		return
+
+	// Display weather info
+	DisplayWeatherInfo(user)
+
+	// Visual and audio feedback
+	playsound(src, 'sound/machines/terminal_select.ogg', 25, TRUE)
+	user.visible_message(
+		span_notice("[user] checks [src]."),
+		span_notice("You check the weather conditions on [src].")
+	)
+
+/obj/item/weather_phone/proc/DisplayWeatherInfo(mob/user)
+	var/has_weather = FALSE
+	var/message = "<div class='notice'>"
+	message += "<b>Weather Monitoring Device</b><br>"
+	message += "━━━━━━━━━━━━━━━━━━━━<br>"
+
+	// Check for fog
+	if(GLOB.city_fog_controller)
+		has_weather = TRUE
+		message += "<b>FOG SYSTEM:</b><br>"
+		message += "Status: [GLOB.city_fog_controller.GetStatus()]<br>"
+
+		switch(GLOB.city_fog_controller.current_state)
+			if("clear")
+				message += "Conditions: Clear<br>"
+				message += "Next fog approaching in approximately [round((GLOB.city_fog_controller.clear_duration) / 10 / 60)] minutes<br>"
+			if("warning")
+				message += "<span class='warning'>⚠ FOG WARNING ⚠</span><br>"
+				message += "Heavy fog incoming in approximately [round((GLOB.city_fog_controller.warning_duration) / 10 / 60)] minutes!<br>"
+			if("fog")
+				message += "<span class='danger'><b>⚠ HEAVY FOG ACTIVE ⚠</b></span><br>"
+				message += "Avoid the ruins! Fog drains sanity!<br>"
+
+		message += "<br>"
+
+	// Check for freezing storm
+	if(GLOB.city_weather_controller)
+		has_weather = TRUE
+		message += "<b>STORM SYSTEM:</b><br>"
+		message += "Status: [GLOB.city_weather_controller.GetStatus()]<br>"
+
+		if(GLOB.city_weather_controller.storm_active)
+			message += "<span class='danger'><b>⚠ FREEZING STORM ACTIVE ⚠</b></span><br>"
+			message += "Seek shelter immediately!<br>"
+		else
+			message += "Conditions: Clear<br>"
+			message += "Next storm ETA: [GLOB.city_weather_controller.GetTimeToNextStorm()]<br>"
+
+		message += "<br>"
+
+	if(!has_weather)
+		message += "No weather systems detected.<br>"
+		message += "All conditions nominal.<br>"
+
+	message += "━━━━━━━━━━━━━━━━━━━━<br>"
+	message += "<i>Stay safe out there.</i>"
+	message += "</div>"
+
+	to_chat(user, message)
+
+/// Alert proc called when fog warning phase starts
+/obj/item/weather_phone/proc/FogWarningAlert()
+	playsound(src, 'sound/machines/warning-buzzer.ogg', 50, TRUE)
+	say("WARNING: Heavy fog approaching. Seek shelter or avoid the ruins.")
