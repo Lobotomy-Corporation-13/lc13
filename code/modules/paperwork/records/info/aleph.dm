@@ -266,7 +266,7 @@
 	abno_breach_damage_type = "Black/White"
 	abno_breach_damage_count = "High to Extreme" // A high cultist amount breach can reach upwards to 200+ damage per pulse.
 
-// Tear in Reality
+	// Tear in Reality
 
 /obj/item/paper/fluff/info/aleph/tir
 	abno_type = /mob/living/simple_animal/hostile/abnormality/reality_tear
@@ -278,3 +278,4 @@
 		"Over time, more worlds would be torn into, and able to align with this reality.",
 		"WARNING: This Abnormality has been found to be highly unstable, and is likely to change in some way in the future.", //This abno will have a second PR for other things.
 		)
+

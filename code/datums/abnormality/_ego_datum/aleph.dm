@@ -21,6 +21,15 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/star
 	cost = 100
 
+// Star Luminary - Starbound Faith
+/datum/ego_datum/weapon/faith
+	item_path = /obj/item/ego_weapon/faith
+	cost = 100
+
+/datum/ego_datum/armor/faith
+	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/faith
+	cost = 100
+
 // Silent orchestra - Da capo
 /datum/ego_datum/weapon/da_capo
 	item_path = /obj/item/ego_weapon/da_capo
@@ -149,7 +158,7 @@
 	cost = 100
 
 /datum/ego_datum/weapon/willing
-	item_path = /obj/item/ego_weapon/willing
+	item_path = /obj/item/ego_weapon/ranged/willing
 	cost = 100
 
 // Army In Black - Pink
@@ -213,7 +222,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/throne
 	cost = 100
 
-//Tear in Reality - Static
+	//Tear in Reality - Static
 /datum/ego_datum/weapon/tir_claws
 	item_path = /obj/item/ego_weapon/tir_claws
 	cost = 100
@@ -222,3 +231,4 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/tir_mask
 	cost = 100
 
+	

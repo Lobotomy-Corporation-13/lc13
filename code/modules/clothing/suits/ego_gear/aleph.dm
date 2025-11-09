@@ -48,6 +48,19 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 							JUSTICE_ATTRIBUTE = 80
 							)
 
+/obj/item/clothing/suit/armor/ego_gear/aleph/faith
+	name = "starbound faith"
+	desc = "This armor embodies the earnest hope of all those who were born in darkness. \
+	Their only wish was to return to the place bathed with the glow of the Stars."
+	icon_state = "faith"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 30, BLACK_DAMAGE = 80, PALE_DAMAGE = 70) // 240
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)
+
 /obj/item/clothing/suit/armor/ego_gear/aleph/da_capo
 	name = "da capo"
 	desc = "A splendid tailcoat perfect for a symphony. \

@@ -38,7 +38,7 @@
 	var/modified_damage = (ranged_damage*force_multiplier)
 	for(var/turf/open/T in range(target_turf, 1))
 		new /obj/effect/temp_visual/paradise_attack(T)
-		for(var/mob/living/L in user.HurtInTurf(T, list(), modified_damage, PALE_DAMAGE, hurt_mechs = TRUE))
+		for(var/mob/living/L in user.HurtInTurf(T, list(), modified_damage, PALE_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
 			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 				damage_dealt += modified_damage
 	if(damage_dealt > 0)
@@ -94,7 +94,7 @@
 			user.changeNext_move(CLICK_CD_MELEE * 1.2)
 			var/turf/T = get_turf(M)
 			new /obj/effect/temp_visual/justitia_effect(T)
-			user.HurtInTurf(T, list(), 50, PALE_DAMAGE)
+			user.HurtInTurf(T, list(), 50, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		else
 			hitsound = 'sound/weapons/ego/justitia1.ogg'
 			user.changeNext_move(CLICK_CD_MELEE * 0.4)
@@ -105,13 +105,24 @@
 /obj/item/ego_weapon/justitia/get_clamped_volume()
 	return 40
 
+
+/// This scythe attacks quickly for a good amount of WHITE damage with a 3-hit combo.
+/// It has a special ability that summons three musical notes around you - landing the combo finisher in one will deal a lot of damage in an AoE,
+/// and buff the weapon by increasing its "Movement", from the first movement up until the fourth.
+// The intended gameplay loop with this weapon is to "space out" the music note detonations to prolong Movement for as long as possible. That is to say,
+// you should perform some normal combos on an enemy rather than spending all the finishers on musical notes.
+#define DA_CAPO_MUSICNOTE_DEFAULT "default"
 /obj/item/ego_weapon/da_capo
 	name = "da capo"
 	desc = "A scythe that swings silently and with discipline like a conductor's gestures and baton. \
 	If there were a score for this song, it would be one that sings of the apocalypse."
-	special = "This weapon has a combo system, but only on a single enemy."
+	special = "This weapon has a 3-hit combo, but only against the same target. <b>Use it in-hand</b> to spawn 3 musical notes around yourself.\
+	\nLanding your combo's finisher on one of these musical notes will <b>detonate it</b>, dealing 1.2x of the resulting damage in an AoE.\
+	\nDetonating a musical note will also advance your <b>Movement</b>. You begin at the First Movement, and can reach up to the Fourth. \
+	Each Movement increases your weapon's damage further. <b>Reaching the Fourth Movement unlocks Finale</b>, a 6-hit combo with a powerful AoE finisher.\
+	\nYour Movement will <b>expire after 7 seconds</b> if it is not replaced by the next. You will begin anew from the First Movement if you progress past the Fourth."
 	icon_state = "da_capo"
-	force = 40 // It attacks very fast
+	force = 37 // It attacks very fast
 	attack_speed = 0.5
 	swingstyle = WEAPONSWING_LARGESWEEP
 	damtype = WHITE_DAMAGE
@@ -124,35 +135,440 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	crit_multiplier = 0	//No crits for you, you have the combo system.
+	crit_multiplier = 0	// No crits for you, you have the combo system.
 
 	var/combo = 0 // I am copy-pasting justitia "combo" system and nobody can stop me
+	/// The time at which your combo will reset.
 	var/combo_time
-	var/combo_wait = 14
-	var/waltz_partner
-	//I'm making Da Capo a waltzing weapon, It should play like a rhythm game. - Kirie.
+	/// How large your window to continue your combo is, in deciseconds.
+	var/combo_timeout_duration = 16
+
+	/// Damage multiplier for the third hit in the basic combo.
+	var/combo_3hit_finisher_coeff = 1.5
+	/// Damage multiplier for the sixth hit in the final "Finale" combo.
+	var/combo_6hit_finisher_coeff = 3
+
+	var/waltz_partner // I'm making Da Capo a waltzing weapon, it should play like a rhythm game - Kirie
+
+	/// Current movement. Think of it as a power level. This should always be a number between 1 and 4.
+	var/current_movement = 1
+	/// We use current_movement as the index for this list. The corresponding value is added to force before each hit.
+	var/list/movement_force_bonuses = list(0, 6, 10, 14)
+	/// Holds a timer datum for our current Movement's expiration.
+	var/movement_timer
+	/// How long our movement lasts before expiring.
+	var/movement_timer_duration = 7 SECONDS
+
+	/// This is a ring VFX around the user. Non functional, purely aesthetic.
+	var/obj/effect/temp_visual/da_capo_ring/music_notes_ring
+
+	/// List which holds a reference to all active music notes for this weapon.
+	var/list/music_notes_list = list()
+	/// Are we ready to summon more music notes?
+	var/music_notes_ready = TRUE
+	/// Holds a timer datum for refreshing our ability to summon notes.
+	var/music_notes_summon_timer
+	/// How long is the cooldown on summoning notes?
+	var/music_notes_summon_timer_duration = 40 SECONDS
+	/// How many notes should be summoned on each use? This should probably always be 3. I mean, that's how I balanced it, at least.
+	var/music_notes_summon_amount = 3
+	/// Range for the AoE when a music note is blown up.
+	var/music_notes_detonation_range = 5
+	/// Coefficient for the damage dealt by music notes, this is applied on top of force and justice.
+	var/music_notes_damage_coeff = 1.2
+	/// How long it takes for each music note to complete 1 revolution around the user.
+	var/music_notes_aesthetic_rotation_time = 4 SECONDS
+
+	/// Any organic mob killed by a Soundwave() which has a maximum health higher than this value will be headbombed, which is purely aesthetic.
+	// The reason for this is because I don't want to headbomb swarms of weak enemies like Amber Dawns.
+	var/headbomb_hp_requirement = 150
 
 /obj/item/ego_weapon/da_capo/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+
+	// If the mob we hit was a note, save it in the following var. Otherwise keep it as null
+	var/mob/da_capo_musicnote/hit_note
+	if(istype(M, /mob/da_capo_musicnote))
+		hit_note = M
+
+	var/finished_combo = FALSE // This var will be set to TRUE if we land a hit with the final hit of the 3hit combo or 6hit combo.
+
+	force = initial(force) + movement_force_bonuses[current_movement] // Pick the correct force bonus to add depending on what Movement we're on.
+	attack_speed = initial(attack_speed)
+
+	// Your combo cancels if you took too long to hit the enemy, or if you didn't hit your "partner".
 	if(world.time > combo_time)
 		combo = 0
-	if(!waltz_partner || waltz_partner != M)
-		waltz_partner = M
+	if((!hit_note) && ((!waltz_partner) || (waltz_partner != M)))
 		combo = 0
-	combo_time = world.time + combo_wait
-	switch(combo)
-		if(1)
-			hitsound = 'sound/weapons/ego/da_capo2.ogg'
-		if(2)
-			hitsound = 'sound/weapons/ego/da_capo3.ogg'
-			force *= 1.5
-			combo = -1
-		else
-			hitsound = 'sound/weapons/ego/da_capo1.ogg'
-	..()
+		waltz_partner = M
+
+	combo_time = world.time + combo_timeout_duration
+
+	if(current_movement < 4)
+		// The code for the 3-hit combo.
+		switch(combo)
+			if(1)
+				hitsound = 'sound/weapons/ego/da_capo2.ogg'
+			if(2)
+				hitsound = 'sound/weapons/ego/da_capo3.ogg'
+				force *= combo_3hit_finisher_coeff
+				combo = -1
+				finished_combo = TRUE
+			else
+				combo = 0 // Trust me. This is due to how the 6hit combo can be at like, hit 4, then wear off mid-combo. This works just fine. Trust me.
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+	else
+		// The code for the 6-hit combo: on the Fourth Movement.
+		switch(combo)
+			if(0, 2, 4)
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+				attack_speed -= 0.2
+			if(1, 3)
+				hitsound = 'sound/weapons/ego/da_capo2.ogg'
+				attack_speed -= 0.3
+			if(5)
+				hitsound = 'sound/weapons/ego/da_capo3.ogg'
+				force *= combo_6hit_finisher_coeff
+				// Call an AOE, but exclude our main target from it
+				Soundwave(music_notes_damage_coeff, music_notes_detonation_range, user, M)
+				// Big slice VFX
+				var/obj/effect/temp_visual/slice/temp = new (get_turf(M))
+				temp.transform = temp.transform * 2.5
+				if(music_notes_ring)
+					music_notes_ring.Finale()
+				// SFX
+				playsound(src, 'sound/weapons/ego/da_capo_finale.ogg', 75, FALSE, 5)
+				addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), src, 'sound/weapons/ego/da_capo_finale_claps.ogg', 80, FALSE, 5), 1 SECONDS)
+				// We're done here
+				combo = -1
+				finished_combo = TRUE
+				NextMovement(user) // This should throw us back to 1st Movement
+			else
+				hitsound = 'sound/weapons/ego/da_capo1.ogg'
+
+	if(hit_note)
+		playsound(src, hitsound, get_clamped_volume(), TRUE) // We aren't hitting anything, but I'd like to have the hitsound anyway, you know? Feedback and stuff
+		if(finished_combo) // Finisher: detonate the note, and progress to the next movement.
+			user.visible_message(span_danger("[user] confidently swings [src] at thin air, causing a melodic blast!"), span_danger("You expertly slice through a musical note with [src], causing a melodic blast!"))
+			NoteDetonation(hit_note, user)
+			NextMovement(user)
+
+		else // You hit a note, but not with a finisher. The note is destroyed with no extra effect. Yikes.
+			hit_note.Consume()
+			user.visible_message(span_danger("[user] confidently swings [src] at thin air...?!"), span_danger("You slice through a musical note with [src], but lack the momentum to cause a melodic blast!"))
+
+		user.changeNext_move((CLICK_CD_MELEE * attack_speed) * (finished_combo ? 1.4 : 1)) // We need to apply click delay ourselves here, since we're not hitting
+		combo += 1
+		force = initial(force)
+		return TRUE // We don't actually "hit" anything here. This is so we don't do the attack anim towards the root of the 64x64 icon (looks janky AF)
+
+	..() // The actual hit.
+
+	if(finished_combo)
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.4)
+
 	combo += 1
 	force = initial(force)
+
+/// Cleanup in case this weapon gets destroyed. Will get rid of the ring and any notes.
+/obj/item/ego_weapon/da_capo/Destroy(force)
+	RingCleanup()
+	for(var/mob/da_capo_musicnote/note in music_notes_list)
+		qdel(note)
+	return ..()
+
+/// Use in-hand to summon the Musical Notes. Has a cooldown.
+/obj/item/ego_weapon/da_capo/attack_self(mob/living/carbon/human/user)
+	. = ..()
+	if(CanUseEgo(user) && music_notes_ready)
+		music_notes_ready = FALSE
+		INVOKE_ASYNC(src, PROC_REF(SummonNotes), user)
+		addtimer(CALLBACK(src, PROC_REF(ReadyNotes), user), music_notes_summon_timer_duration)
+
+/// Proc that is called by a timer after the cooldown for summoning notes ends. It readies the weapon to summon them again, and alerts the player.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotes(mob/living/user)
+	music_notes_ready = TRUE
+	var/sound/sfx = sound('sound/abnormalities/armyinblack/black_heartbeat.ogg')
+	var/sfx_delay = 0.8 SECONDS
+	ReadyNotesWarning(user, sfx)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay)
+	addtimer(CALLBACK(src, PROC_REF(ReadyNotesWarning), user, sfx), sfx_delay * 2)
+	to_chat(user, span_nicegreen("You are ready to begin the performance anew - [src] is ready to manifest more notes."))
+	balloon_alert(user, "You are ready to begin the performance anew - [src] is ready to manifest more notes.")
+
+/// This proc sends a specified sound to the user, directly, and flashes their screen with a colour.
+/obj/item/ego_weapon/da_capo/proc/ReadyNotesWarning(mob/living/user, sound/sfx)
+	SEND_SOUND(user, sfx)
+	flash_color(user, flash_color = COLOR_PALE_BLUE_GRAY, flash_time = 1 SECONDS)
+
+/// Summons musical notes around the player.
+/obj/item/ego_weapon/da_capo/proc/SummonNotes(mob/living/carbon/human/subject)
+	if(music_notes_summon_amount <= 0)
+		return FALSE
+
+	RingCleanup(music_notes_ring) // This shouldn't ever happen, but get rid of an existing ring if it's still around.
+	music_notes_ring = new(get_turf(subject))
+	RegisterSignal(music_notes_ring, COMSIG_PARENT_QDELETING, PROC_REF(RingCleanup)) // Register a signal to remove its reference if it deletes itself.
+	music_notes_ring.orbit(subject, 0, TRUE, 0, 0, pre_rotation = FALSE)
+	music_notes_ring.BecomeVisibleToUser(subject)
+
+	to_chat(subject, span_notice("You resonate with [src], manifesting musical notes around yourself."))
+	balloon_alert(subject, "You resonate with [src], manifesting musical notes around yourself.")
+	playsound(src, 'sound/magic/summonitems_generic.ogg', 65, FALSE, -5)
+
+	// Spawn the notes!
+	for(var/i in 1 to music_notes_summon_amount)
+		var/mob/da_capo_musicnote/new_note = new(get_turf(subject))
+		music_notes_list += new_note
+		new_note.BindTo(subject, music_notes_list) // Important: this is what makes them actually visible to the user
+		RegisterSignal(new_note, COMSIG_PARENT_QDELETING, PROC_REF(NoteDestructionCleanup))
+		new_note.orbit(subject, 2, TRUE, music_notes_aesthetic_rotation_time, pre_rotation = FALSE)
+
+		sleep((music_notes_aesthetic_rotation_time / music_notes_summon_amount)) // This makes them look spread out in a circle.
+
+/// Called when a note is destroyed, we remove the note reference from our list and if there are none left, we also call RingCleanup().
+/obj/item/ego_weapon/da_capo/proc/NoteDestructionCleanup(mob/da_capo_musicnote/obliterated)
+	SIGNAL_HANDLER
+	music_notes_list -= obliterated
+	if(length(music_notes_list) <= 0)
+		if(music_notes_ring)
+			music_notes_ring.has_notes_remaining = FALSE
+			INVOKE_ASYNC(src, PROC_REF(RingCleanup), music_notes_ring)
+
+/// Proc used to clean-up the ring.
+/obj/item/ego_weapon/da_capo/proc/RingCleanup(obj/effect/temp_visual/da_capo_ring/garbage)
+	SIGNAL_HANDLER
+	if(garbage)
+		UnregisterSignal(garbage, COMSIG_PARENT_QDELETING)
+		if((!(garbage.has_notes_remaining)) && (current_movement != 4))
+			QDEL_IN(garbage, 2.5 SECONDS)
+			animate(garbage, 2 SECONDS, alpha = 0)
+
+/// Blows up a note. Will also call NoteDetonationSpecial(), for whoever wants to implement the Al Coda we've discussed.
+// (context: we've talked about Al Coda buffing this weapon to have new types of notes with special effects and/or buffs)
+/obj/item/ego_weapon/da_capo/proc/NoteDetonation(mob/da_capo_musicnote/hit_note, mob/living/carbon/human/user)
+	playsound(loc, 'sound/weapons/ego/da_capo_note_detonation.ogg', (65 + (current_movement * 3)), TRUE, frequency = 1 + (current_movement * 0.1))
+	new /obj/effect/temp_visual/screech(get_turf(user))
+	Soundwave(music_notes_damage_coeff, music_notes_detonation_range, user)
+
+	INVOKE_ASYNC(src, PROC_REF(NoteDetonationSpecial), hit_note.special_type, user) // Special effects for Al Coda. Unimplemented as of 2025/09/02
+	INVOKE_ASYNC(hit_note, TYPE_PROC_REF(/mob/da_capo_musicnote, Consume)) // Plays an animation and deletes the note
+
+/// Called when detonating a note, to apply effects depending on what the note's special type was. (Al Coda stuff).
+/// Shouldn't rely on the note anymore, it could be deleted by now.
+/obj/item/ego_weapon/da_capo/proc/NoteDetonationSpecial(note_special_type, mob/living/carbon/human/user)
+	return TRUE // Implement some switch case or something with the note_special_type.
+
+/// Handles creating an AoE for our 6hit combo finisher and for detonating the musical notes. Warning: this has no visuals of its own.
+/obj/item/ego_weapon/da_capo/proc/Soundwave(damage_coeff, wave_range, mob/living/carbon/human/user, mob/living/target)
+	var/final_damage = force
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	final_damage*=justicemod
+	final_damage*=force_multiplier
+	final_damage*=damage_coeff
+
+	for(var/mob/living/L in view(wave_range, user))
+		// First conditional for this check: faction check. Second conditional: to exclude our main target, if we receive one. Third: don't hit dead things.
+		if(!(user.faction_check_mob(L, TRUE)) && !(target && target == L) && (L.stat < DEAD))
+			// I have to save these four vars in case our attack qdels the enemy
+			var/turf/hit_turf = get_turf(L)
+			var/victim_name = L.name
+			var/victim_maxhp = L.maxHealth
+			var/victim_biotypes = L.mob_biotypes
+
+			to_chat(L, span_userdanger("The music of the apocalypse pierces through you!"))
+			balloon_alert(L, "The music of the apocalypse pierces through you!")
+			L.deal_damage(final_damage, damtype, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			// If we're hitting a target with enough max hp, who is an organic mob, and was either deleted or killed by the attack, we headbomb them.
+			// This is purely aesthetic.
+			if((victim_maxhp >= headbomb_hp_requirement) && (victim_biotypes & MOB_ORGANIC) && (!L || L.stat >= DEAD))
+				hit_turf.visible_message(span_danger("\The [victim_name]'s head explodes!"))
+				playsound(hit_turf, 'sound/weapons/ego/da_capo_headbomb.ogg', 75, TRUE)
+				new /obj/effect/gibspawner/generic/trash_disposal(hit_turf) // This type spawns less gibs than usual.
+
+			new /obj/effect/temp_visual/sparkles(hit_turf)
+
+/// Advance to the next Movement, increasing weapon damage and giving it some visual flair.
+/obj/item/ego_weapon/da_capo/proc/NextMovement(mob/living/carbon/human/user)
+	filters = null
+	var/rgb_color_values = 135 // We intensify this white colour as the movements progress
+	var/movement_progress_chat_alert_string = "Da capo - you begin anew at the First Movement."
+	if(current_movement >= 4) // If you've reached the last movement, begin again. That's in theme, right?
+		current_movement = 1
+		deltimer(movement_timer)
+	else
+		current_movement++
+		StartMovementTimeoutCountdown(user)
+		switch(current_movement)
+			if(2)
+				movement_progress_chat_alert_string = "Sostenuto - you advance to the Second Movement."
+			if(3)
+				movement_progress_chat_alert_string = "Accelerando e Crescendo - you advance to the Third Movement."
+			if(4)
+				movement_progress_chat_alert_string = "Stringendo - you advance to the Fourth Movement."
+		rgb_color_values += current_movement * 30
+		filters += filter(type="drop_shadow", x=0, y=0, size=current_movement - 1, offset = 1, color=rgb(rgb_color_values, rgb_color_values, rgb_color_values))
+	to_chat(user, span_nicegreen(movement_progress_chat_alert_string))
+	balloon_alert(user, movement_progress_chat_alert_string)
+
+/// Sets a timer for your Movement to expire if you don't refresh it in time. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/StartMovementTimeoutCountdown(mob/living/carbon/human/user)
+	deltimer(movement_timer)
+	movement_timer = addtimer(CALLBACK(src, PROC_REF(MovementTimeout), user), movement_timer_duration, TIMER_STOPPABLE)
+
+/// Returns the weapon to 1st Movement and removes ongoing timers and visuals. Unrelated to the basic 3hit combo.
+/obj/item/ego_weapon/da_capo/proc/MovementTimeout(mob/living/carbon/human/user)
+	filters = null
+	current_movement = 1
+	to_chat(user, span_nicegreen("Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")) // Why nicegreen? All the other Movement messages use it, so it's easier to track in chat.
+	balloon_alert(user, "Da Capo - The Scythe's power wanes and itss influence recedes. You begin anew at the First Movement.")
+	deltimer(movement_timer)
+	if(music_notes_ring && !(music_notes_ring.has_notes_remaining))
+		RingCleanup(music_notes_ring)
+
+/// This proc controls the actual volume for the weapon's hitsound.
+// for the longest time i thought it had something to do with like, physical volume, as in, size
+/obj/item/ego_weapon/da_capo/get_clamped_volume()
+	return 35 + (current_movement * 2)
+
+/// VFX - a ring that encircles the player, in the music notes spin around.
+/// We delete this manually when the weapon runs out of notes.
+// Uses some code to be only visible to the user, stolen right out of Star Luminary.
+/obj/effect/temp_visual/da_capo_ring
+	name = "unending performance"
+	desc = "And again!"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = ""
+	var/visible_icon_state = "da_capo_ring"
+	var/image/visible_image
+	layer = BELOW_MOB_LAYER
+	alpha = 150
+	duration = 35 SECONDS
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+	var/client/user_client
+	var/has_notes_remaining = TRUE
+
+// Logic for these three procs was basically ripped out of Star Luminary, thank you Eidos. Makes it so only the user can see them.
+/obj/effect/temp_visual/da_capo_ring/Initialize(mapload)
+	. = ..()
+	visible_image = image(icon, src, visible_icon_state, layer)
+	visible_image.override = TRUE
+
+/obj/effect/temp_visual/da_capo_ring/Destroy(force)
+	BecomeInvisibleToUser()
+	QDEL_NULL(visible_image)
+	user_client = null
+	return ..()
+
+/obj/effect/temp_visual/da_capo_ring/proc/Finale()
+	icon_state = "da_capo_ring"
+	QDEL_IN(src, 2 SECONDS)
+	animate(src, 1.5 SECONDS, easing = EASE_IN | QUAD_EASING, transform = transform*4.5)
+	animate(src, 1.5 SECONDS, alpha = 0)
+
+/obj/effect/temp_visual/da_capo_ring/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
+	if(!user.client)
+		return
+	user_client = user.client
+	if(user_client)
+		user_client.images |= visible_image
+
+/obj/effect/temp_visual/da_capo_ring/proc/BecomeInvisibleToUser()
+	if(!user_client)
+		return
+	user_client.images -= visible_image
+
+/// This is a dummy mob for Da Capo's ability. It isn't an actual AI controlled thing.
+// Uses some code to be only visible to the user, stolen right out of Star Luminary.
+/mob/da_capo_musicnote
+	name = "musical note"
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_effects64x64.dmi'
+	icon_state = ""
+	var/visible_icon_state = "da_capo_note"
+	var/image/visible_image
+	layer = ABOVE_ALL_MOB_LAYER
+	density = FALSE
+	throwforce = 0
+	move_resist = INFINITY
+	status_flags = GODMODE
+	base_pixel_x = -16
+	pixel_x = -16
+	base_pixel_y = -16
+	pixel_y = -16
+	var/mob/living/carbon/human/bound_to
+	var/client/user_client
+	/// How long it lasts before vanishing.
+	var/duration = 27 SECONDS
+	/// This var holds a string that tells the weapon what to do when this note is detonated. Behaviour for each type should be implemented in the weapon.
+	var/special_type = DA_CAPO_MUSICNOTE_DEFAULT
+
+/mob/da_capo_musicnote/Initialize(mapload)
+	. = ..()
+	// This part makes it actually visible, but only by the person who used the ability
+	visible_image = image(icon, src, visible_icon_state, layer)
+	visible_image.override = TRUE
+	visible_image.filters += filter(type="drop_shadow", x=0, y=0, size = 1, offset = 1, color=rgb(240, 240, 240)) // Players were struggling to find them over darker enemies
+	QDEL_IN(src, duration) // It's a temporary thing.
+
+/mob/da_capo_musicnote/attackby(obj/item/W, mob/user, params)
+	if(..())
+		return TRUE
+	if(istype(W, /obj/item/ego_weapon/da_capo))
+		return W.attack(src, user)
+
+/mob/da_capo_musicnote/Destroy(force)
+	Cleanup(TRUE) // We call this with TRUE so it doesn't try to qdel itself again, we're already destroying it
+	return ..()
+
+/// We call this proc when a note is hit by Da Capo.
+/mob/da_capo_musicnote/proc/Consume()
+	if(visible_image)
+		visible_image.filters = null
+		visible_image.icon_state = "da_capo_note_destroyed" // Death animation
+	QDEL_IN(src, 1.5 SECONDS)
+
+// The following two procs are for the "only the user can see this" stuff. Taken from Star Luminary, slightly modified (user's client is stored as a type var)
+/mob/da_capo_musicnote/proc/BecomeVisibleToUser(mob/living/carbon/human/user)
+	if(!user.client)
+		return
+	user_client = user.client
+	if(user_client)
+		user_client.images |= visible_image
+
+/mob/da_capo_musicnote/proc/BecomeInvisibleToUser()
+	if(!user_client)
+		return
+	user_client.images -= visible_image
+
+/// Proc called by Da Capo on each note once it is created. Importantly, it will let the user see the notes which are normally invisible.
+/mob/da_capo_musicnote/proc/BindTo(mob/living/carbon/human/subject)
+	if(subject)
+		bound_to = subject
+		BecomeVisibleToUser(bound_to)
+		RegisterSignal(bound_to, COMSIG_PARENT_QDELETING, PROC_REF(Cleanup))
+		RegisterSignal(bound_to, COMSIG_LIVING_DEATH, PROC_REF(Cleanup))
+
+/// Cleans up the mob, removing references and unregistering signals.
+/// Called when destroyed, with TRUE as a parameter, or called by the signals set in BindTo() without any parameters (so called_by_destroy = FALSE)
+/mob/da_capo_musicnote/proc/Cleanup(called_by_destroy = FALSE)
+	SIGNAL_HANDLER
+	BecomeInvisibleToUser()
+	visible_image.filters = null
+	QDEL_NULL(visible_image)
+	if(bound_to)
+		UnregisterSignal(bound_to, COMSIG_PARENT_QDELETING)
+		UnregisterSignal(bound_to, COMSIG_LIVING_DEATH)
+		bound_to = null
+	if(!called_by_destroy)
+		qdel(src)
+
+#undef DA_CAPO_MUSICNOTE_DEFAULT
 
 /obj/item/ego_weapon/da_capo/get_clamped_volume()
 	return 40
@@ -262,6 +678,7 @@
 		target.visible_message(span_danger("[user] rears up and slams into [target]!"), \
 						span_userdanger("[user] punches you with everything you got!!"), vision_distance = COMBAT_MESSAGE_RANGE, ignored_mobs = user)
 		to_chat(user, span_danger("You throw your entire body into this punch!"))
+		balloon_alert(user, "You throw your entire body into this punch!")
 		goldrush_damage = force
 		//I gotta regrab  justice here
 		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
@@ -272,12 +689,13 @@
 		if(ishuman(target))
 			goldrush_damage = 50
 
-		target.apply_damage(goldrush_damage, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)		//MASSIVE fuckoff punch
+		target.deal_damage(goldrush_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))		//MASSIVE fuckoff punch
 
 		playsound(src, 'sound/weapons/fixer/generic/gen2.ogg', 50, TRUE)
 		goldrush_damage = initial(goldrush_damage)
 	else
 		to_chat(user, "<span class='spider'><b>Your attack was interrupted!</b></span>")
+		balloon_alert(user, "Your attack was interrupted!")
 		return
 
 /obj/item/ego_weapon/goldrush/attackby(obj/item/I, mob/living/user, params)
@@ -286,6 +704,7 @@
 		return
 	new /obj/item/ego_weapon/goldrush/nihil(get_turf(src))
 	to_chat(user,span_warning("The [I] seems to drain all of the light away as it is absorbed into [src]!"))
+	balloon_alert(user, "The [I] seems to drain all of the light away as it was abosrbed into [src]!")
 	playsound(user, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
 	qdel(I)
 	qdel(src)
@@ -362,6 +781,7 @@
 			force = 80
 			icon_state = "rosered"
 	to_chat(user, span_notice("[src] will now deal [force] [damtype] damage."))
+	balloon_alert(user, "[src] will now deal [force] [damtype] damage.")
 	playsound(src, 'sound/items/screwdriver2.ogg', 50, TRUE)
 
 /obj/item/ego_weapon/censored
@@ -397,9 +817,11 @@
 		return
 	special_attack = !special_attack
 	if(special_attack)
-		to_chat(user, span_notice("You prepare special attack."))
+		to_chat(user, span_notice("You prepare a special attack."))
+		balloon_alert(user, "You prepare a special attack.")
 	else
-		to_chat(user, span_notice("You decide to not use special attack."))
+		to_chat(user, span_notice("You decide to not use the special attack."))
+		balloon_alert(user, "You decide to not use the special attakc.")
 
 /obj/item/ego_weapon/censored/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user))
@@ -434,7 +856,7 @@
 						continue
 				else
 					continue
-			L.apply_damage(modified_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(modified_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
 /obj/item/ego_weapon/censored/get_clamped_volume()
@@ -554,7 +976,7 @@
 	desc = "It hails from realms whose mere existence stuns the brain and numbs us with the black extra-cosmic gulfs it throws open before our frenzied eyes."
 	special = "Use this weapon in hand to dash. Attack after a dash for an AOE."
 	icon_state = "space"
-	force = 50	//Half white, half black.
+	force = 35	//Half white, half black.
 	damtype = WHITE_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("cuts", "attacks", "slashes")
@@ -568,6 +990,7 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	var/canaoe
+	var/dash_stamina_drain = 40
 
 /obj/item/ego_weapon/space/Initialize()
 	. = ..()
@@ -593,7 +1016,7 @@
 	icon_state = "space_aoe"
 	update_icon_state()
 	user.density = FALSE
-	user.adjustStaminaLoss(15, TRUE, TRUE)
+	user.adjustStaminaLoss(dash_stamina_drain, TRUE, TRUE)
 	user.throw_at(dodgelanding, 3, 2, spin = FALSE) // This still collides with people, by the way.
 	canaoe = TRUE
 	sleep(3)
@@ -606,7 +1029,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
 	var/damage = force * justicemod * force_multiplier
-	target.apply_damage(damage, BLACK_DAMAGE, null, target.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+	target.deal_damage(damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 
 	if(!canaoe)
 		return
@@ -621,8 +1044,8 @@
 			aoe*=force_multiplier
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
-			L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 	icon_state = "space"
 	update_icon_state()
 	canaoe = FALSE
@@ -682,11 +1105,13 @@
 	..()
 	if(transforming)
 		to_chat(user,span_warning("[src] will no longer transform to match the seasons."))
+		balloon_alert(user, "[src] will no longer transform to match the seasons.")
 		transforming = FALSE
 		special = "This E.G.O. will not transform to match the seasons."
 		return
 	if(!transforming)
 		to_chat(user,span_warning("[src] will now transform to match the seasons."))
+		balloon_alert(user, "[src] will now transform to match the seasons.")
 		transforming = TRUE
 		special = "This E.G.O. will transform to match the seasons."
 		return
@@ -711,6 +1136,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		playsound(current_holder, "sound/abnormalities/seasons/[current_season]_change.ogg", 50, FALSE)
 	force = season_list[current_season][1]
@@ -778,6 +1204,7 @@
 	. = ..()
 	if(user.get_inactive_held_item())
 		to_chat(user, span_notice("You cannot use [src] with only one hand!"))
+		balloon_alert(user, "You cannot use the [src] with only one hand!")
 		return FALSE
 
 /obj/item/ego_weapon/shield/distortion/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
@@ -832,6 +1259,7 @@
 		user.adjustBruteLoss(-10)
 		user.adjustSanityLoss(-15)
 		to_chat(user, span_notice("You reap the fruits of your labor!"))
+		balloon_alert(user, "You reap the fruits of your labor!")
 		..()
 		return
 	..()
@@ -842,9 +1270,11 @@
 		return
 	if(ability_cooldown > world.time)
 		to_chat(user, span_warning("You have used this ability too recently!"))
+		balloon_alert(user, "You have used this ability too recently!")
 		return
 	playsound(src, 'sound/effects/ordeals/white/white_reflect.ogg', 50, TRUE)
 	to_chat(user, "You cultivate seeds of desires.")
+	balloon_alert(user, "You cultivate seeds of desires.")
 	ability_cooldown = world.time + ability_cooldown_time
 	spawn_plant(user, EAST, NORTH)
 	spawn_plant(user, WEST, NORTH)
@@ -886,10 +1316,12 @@
 		return
 	if(ability_cooldown > world.time)
 		to_chat(user, span_warning("You have used this ability too recently!"))
+		balloon_alert(user, "You have used this ability too recently!")
 		return
 	if(do_after(user, 20, src))
 		playsound(src, 'sound/weapons/ego/spicebush_special.ogg', 50, FALSE)
 		to_chat(user, "You plant some flower buds.")
+		balloon_alert(user, "You plant some flower buds.")
 		spawn_plant(user, EAST, NORTH)//spawns one spicebush plant 2 tiles away in each corner
 		spawn_plant(user, WEST, NORTH)
 		spawn_plant(user, EAST, SOUTH)
@@ -949,7 +1381,7 @@
 		for(var/turf/open/T in range(target_turf, 1))
 			new /obj/effect/temp_visual/spicebloom(T)
 			for(var/mob/living/L in T.contents)
-				L.apply_damage(modified_damage, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(modified_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 				if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 					damage_dealt += modified_damage
 
@@ -957,26 +1389,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
 	icon_state = "spicebush"
 	duration = 10
-
-
-//temporary
-/obj/item/ego_weapon/willing
-	name = "the flesh is willing"
-	desc = "And really nothing will stop it."
-	icon_state = "willing"
-	force = 105	//Still lower DPS
-	attack_speed = 1.4
-	damtype = RED_DAMAGE
-	knockback = KNOCKBACK_LIGHT
-	attack_verb_continuous = list("bashes", "clubs")
-	attack_verb_simple = list("bashes", "clubs")
-	hitsound = 'sound/weapons/fixer/generic/club1.ogg'
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 100,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 80,
-							JUSTICE_ATTRIBUTE = 80
-							)
 
 /obj/item/ego_weapon/mockery
 	name = "mockery"
@@ -1046,7 +1458,7 @@
 		aoe*=justicemod
 		if(user.faction_check_mob(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/mockery/get_clamped_volume()
@@ -1081,6 +1493,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/effects/blobattack.ogg', 75, FALSE)
 	force = weapon_list[form][1]
@@ -1186,7 +1599,7 @@
 		if("sword")
 			var/red = force
 			red*=justicemod
-			target.apply_damage(red * force_multiplier, RED_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			target.deal_damage(red * force_multiplier, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 
 		if("whip")
 			var/multihit = force
@@ -1205,7 +1618,7 @@
 				aoe*=justicemod
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(aoe * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe * force_multiplier, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 				if(!ishuman(L))
 					if(!L.has_status_effect(/datum/status_effect/rend_black))
@@ -1224,6 +1637,7 @@
 					user.changeNext_move(CLICK_CD_MELEE * 4)
 					if(!smashing)
 						to_chat(user,span_warning("The whip starts to thrash around uncontrollably!"))
+						balloon_alert(user, "The whip starts to trash around uncontrollably!")
 						Smash(user, target)
 				else
 					build_up -= (0.1/3)//sortof silly but its a way to fix each whip hit from increasing build up 3 times as it should.
@@ -1244,7 +1658,7 @@
 			for(var/mob/living/L in T)
 				if(user.faction_check_mob(L))
 					continue
-				L.apply_damage(smash_damage * force_multiplier, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(smash_damage * force_multiplier, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		playsound(user, 'sound/abnormalities/fairy_longlegs/attack.ogg', 75, 0, 3)
 		sleep(0.5 SECONDS)
 	smashing = FALSE
@@ -1302,6 +1716,7 @@
 	update_icon_state()
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] suddenly transforms!"))
+		balloon_alert(current_holder, "[src] suddenly transforms!")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/effects/blobattack.ogg', 75, FALSE)
 	force = weapon_list[form][1]
@@ -1383,7 +1798,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 /obj/item/ego_weapon/shield/gasharpoon/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
@@ -1446,7 +1861,7 @@
 	for(var/mob/living/L in view(1, user))
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_COUNTER | ATTACK_TYPE_SPECIAL))
 		var/datum/status_effect/stacking/pallid_noise/P = L.has_status_effect(/datum/status_effect/stacking/pallid_noise)
 		if(!P)
 			L.apply_status_effect(STATUS_EFFECT_PALLIDNOISE)
@@ -1489,6 +1904,7 @@
 	reach = weapon_list[form][3]
 	hitsound = weapon_list[form][4]
 	to_chat(current_holder, span_notice(weapon_list[form][5]))
+	balloon_alert(current_holder, weapon_list[form][5])
 
 /obj/item/ego_weapon/shield/gasharpoon/proc/Revert()
 	if(!form)//is it not transformed?
@@ -1502,6 +1918,7 @@
 	hitsound = initial(hitsound)
 	if(current_holder)
 		to_chat(current_holder,span_notice("[src] returns to its original shape."))
+		balloon_alert(current_holder, "[src] returns to it's original shape.")
 		current_holder.update_inv_hands()
 		current_holder.playsound_local(current_holder, 'sound/weapons/ego/gasharpoon_transform.ogg', 75, FALSE)
 
@@ -1528,6 +1945,7 @@
 	if(!istype(P, matching_armor))
 		Revert()
 		to_chat(current_holder,span_notice("[src] appears unable to release its full potential."))
+		balloon_alert(current_holder, "[src] appears unable to release it's full potential.")
 		return FALSE
 	return TRUE
 
@@ -1592,6 +2010,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your dash is still recharging!")
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -1603,6 +2022,7 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+	balloon_alert(user, "You dash to [A]!")
 
 /obj/item/ego_weapon/faith
 	name = "starbound faith"
