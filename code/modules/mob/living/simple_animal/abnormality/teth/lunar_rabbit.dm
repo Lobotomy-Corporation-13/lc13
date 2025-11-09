@@ -38,6 +38,9 @@
 
 	attack_action_types = list(/datum/action/innate/abnormality_attack/lunar_dust)
 
+	var/lunar_dust_cooldown = 0
+	var/lunar_dust_cooldown_time = 10 SECONDS
+
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Login()
 	. = ..()
 	if(!. || !client)
@@ -136,7 +139,7 @@
 // Player control actions
 /datum/action/innate/abnormality_attack/lunar_dust
 	name = "Lunar Dust"
-	button_icon_state = "lunar_dust"
+	button_icon_state = "wrath_dash"
 	chosen_attack_num = 1
 
 /datum/action/innate/abnormality_attack/lunar_dust/Activate()
@@ -144,6 +147,11 @@
 		return
 	var/mob/living/simple_animal/hostile/abnormality/lunar_rabbit/L = owner
 	if(!istype(L))
+		return
+
+	// Check cooldown
+	if(L.lunar_dust_cooldown > world.time)
+		to_chat(L, span_warning("Lunar Dust is on cooldown! ([round((L.lunar_dust_cooldown - world.time) / 10, 0.1)]s remaining)"))
 		return
 
 	// Show warning overlays on adjacent tiles
@@ -179,11 +187,15 @@
 	if(affected_count > 0)
 		L.visible_message(span_notice("[L] releases a shower of lunar dust!"))
 		to_chat(L, span_nicegreen("You buffed [affected_count] abnormalit[affected_count == 1 ? "y" : "ies"]!"))
+		L.lunar_dust_cooldown = world.time + L.lunar_dust_cooldown_time
 	else
 		to_chat(L, span_warning("There are no abnormalities nearby to buff!"))
 
 // Lunar Flow status effect
-#define MOB_LUNAR_FLOW /datum/movespeed_modifier/metabolicboost
+/datum/movespeed_modifier/lunar_flow
+	multiplicative_slowdown = -2.5
+
+#define MOB_LUNAR_FLOW /datum/movespeed_modifier/lunar_flow
 /datum/status_effect/lunar_flow
 	id = "lunar flow"
 	duration = 8 SECONDS
