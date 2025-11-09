@@ -19,6 +19,7 @@
 	chem_type = /datum/reagent/abnormality/sin/lust
 	max_boxes = 16 // Accurate to base game
 	melee_damage_type = WHITE_DAMAGE
+	attack_sound = 'sound/weapons/slap.ogg'
 	melee_damage_lower = 1
 	melee_damage_upper = 5
 	attack_verb_continuous = "slaps"
@@ -42,23 +43,54 @@
 			You look lonely too, I hope my present will make you laugh as well!"),
 	)
 
-	attack_action_types = list(/datum/action/cooldown/laetitia_gift, /datum/action/cooldown/laetitia_summon)
+	attack_action_types = list(/datum/action/cooldown/laetitia_gift, /datum/action/cooldown/laetitia_summon, /datum/action/cooldown/laetitia_detonate)
+
+	var/list/active_gifts = list()
+	var/total_strength = 0
+
 	var/breaching = FALSE
 	var/summon_cooldown
 	var/summon_cooldown_time = 60 SECONDS
 	var/summon_count = 0
 
+/mob/living/simple_animal/hostile/abnormality/laetitia/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Laetitia, A Support Role Abnormality.</h1><br>\
+		<b>|Small Doll|: Your attacks deal VERY little white damage.<br>\
+		<br>\
+		|Gifts!|: You are able to create Gifts which can heal or damage targets nearby when they are stepped on.<br>\
+		The Gifts don't deal damage to your allies.<br>\
+		You are able to have 10 gifts at a time, but creating gifts with more strength takes up more room.<br>\
+		You are also able to detonate them by using the |Prank| Ability.<br>\
+		<br>\
+		|Friends!|: Using your Call, You are able to summon 2 Allies to protect you.<br>\
+		Once they are summoned, ghost players are given a chance to control them.<br>\
+		They disappear after 60 seconds.</b>")
+
+
 /datum/action/cooldown/laetitia_summon
 	name = "Call for Friends"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
-	button_icon_state = "prank_gift"
+	desc = "Summon some friends to protect you!"
+	button_icon_state = "friends"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
-	cooldown_time = 60 SECONDS
+	cooldown_time = 90 SECONDS
 	var/delete_timer
-	var/delete_cooldown = 30 SECONDS
+	var/delete_cooldown = 60 SECONDS
 	var/mob/living/simple_animal/hostile/gift/G1
 	var/mob/living/simple_animal/hostile/gift/G2
+	var/summoned_gift_maxHealth = 200
+	var/summoned_gift_damage_reduce = 10
+
+/datum/action/cooldown/laetitia_summon/proc/WeakenGift(mob/living/simple_animal/hostile/gift/G)
+	G.maxHealth = summoned_gift_maxHealth
+	G.health = summoned_gift_maxHealth
+	G.melee_damage_lower -= summoned_gift_damage_reduce
+	G.melee_damage_upper -= summoned_gift_damage_reduce
+
 
 /datum/action/cooldown/laetitia_summon/Trigger()
 	if(!..())
@@ -68,10 +100,12 @@
 
 	StartCooldown()
 	G1 = new /mob/living/simple_animal/hostile/gift(owner.loc)
+	WeakenGift(G1)
 	G2 = new /mob/living/simple_animal/hostile/gift(owner.loc)
+	WeakenGift(G2)
 	delete_timer = addtimer(CALLBACK(src, PROC_REF(delete)), delete_cooldown, TIMER_STOPPABLE)
 	// send poll to all ghosts and wait
-	var/list/candidates = pollGhostCandidates("Laetitia is calling for help! Are you willing to protect her?", poll_time=100)
+	var/list/candidates = pollGhostCandidates("Laetitia is calling for help! Are you willing to protect her?", poll_time=100, ignore_category=POLL_IGNORE_LAE_GIFT)
 	if (LAZYLEN(candidates) > 0)
 		var/mob/dead/observer/C = pick(candidates)
 		G1.key = C.key
@@ -82,18 +116,17 @@
 		candidates -= C
 
 /datum/action/cooldown/laetitia_summon/proc/delete()
-	if (!G1.ckey)
-		qdel(G1)
-	if (!G2.ckey)
-		qdel(G2)
+	qdel(G1)
+	qdel(G2)
 
 /datum/action/cooldown/laetitia_gift
 	name = "Gift"
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	desc = "Summon some gifts to prank your friends!"
 	button_icon_state = "prank_gift"
 	check_flags = AB_CHECK_CONSCIOUS
 	transparent_when_unavailable = TRUE
-	cooldown_time = 10 SECONDS
+	cooldown_time = 5 SECONDS
 	var/view_distance = 3
 
 /datum/action/cooldown/laetitia_gift/Trigger()
@@ -101,11 +134,22 @@
 		return FALSE
 	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/laetitia))
 		return FALSE
+	var/mob/living/simple_animal/hostile/abnormality/laetitia/L = owner
+
+	L.total_strength = 0
+	for (var/obj/item/laetitia_gift/G in L.active_gifts)
+		L.total_strength += G.strength
+	if ((L.total_strength) >= 10)
+		to_chat(usr, span_warning("Too many gifts!"))
+		return
+
 	var/kind = tgui_alert(owner, "What kind of gift?", "Custom Speech", list("Good", "Bad"))
 	var/strength = text2num(tgui_alert(owner, "What is the strength of the gift?", "Custom Speech", list("1", "2", "3")))
 	if (strength == null)
 		strength = 2
 	var/obj/item/laetitia_gift/g = new /obj/item/laetitia_gift(owner.loc)
+	g.active_gifts = L.active_gifts
+	L.active_gifts += g
 	g.strength = strength
 	if (strength == 1)
 		g.color = "#F48FB1"
@@ -114,8 +158,30 @@
 		g.color = "#C2185B"
 		g.name = "big laetitia's gift"
 	if (kind == "Good")
-		g.strength *= -1
+		g.strength *= -0.5
+	for (var/obj/item/laetitia_gift/G in L.active_gifts)
+		L.total_strength += G.strength
+
 	StartCooldown()
+
+/datum/action/cooldown/laetitia_detonate
+	name = "Prank!"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	desc = "Time for the Prank!"
+	button_icon_state = "prank_boom"
+	check_flags = AB_CHECK_CONSCIOUS
+	transparent_when_unavailable = TRUE
+	cooldown_time = 1 SECONDS
+
+/datum/action/cooldown/laetitia_detonate/Trigger()
+	if(!..())
+		return FALSE
+	if(!istype(owner, /mob/living/simple_animal/hostile/abnormality/laetitia))
+		return FALSE
+	var/mob/living/simple_animal/hostile/abnormality/laetitia/L = owner
+	for (var/obj/item/laetitia_gift/G in L.active_gifts)
+		G.explode(G.loc)
+
 
 /obj/item/laetitia_gift
 	name = "laetitia's gift"
@@ -123,8 +189,15 @@
 	icon_state = "prank_gift"
 	var/opening = FALSE
 	var/oneuse = TRUE
-	var/basepower = 25
+	var/basepower = 30
 	var/strength = 1
+	var/list/active_gifts
+
+/obj/item/laetitia_gift/Crossed(atom/movable/AM)
+	. = ..()
+	if(istype(AM, /obj/projectile))
+		return
+	explode(loc)
 
 /obj/item/laetitia_gift/attack_self(mob/user)
 	if(opening)
@@ -133,23 +206,31 @@
 	opening = TRUE
 	to_chat(user, "Opening the gift!")
 	if(do_after(user, 5 SECONDS, src))
-		playsound(get_turf(src), 'sound/abnormalities/laetitia/spider_born.ogg', 50, 1)
 		if (istype(user, /mob/living))
 			var/mob/living/L = user
-			L.deal_damage((basepower*strength), RED_DAMAGE, flags = (DAMAGE_FORCED))
-		for(var/turf/T in range(2, user))
-			new /obj/effect/temp_visual/smash_effect(T)
-			user.HurtInTurf(T, list(), (basepower*strength), RED_DAMAGE, check_faction = FALSE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+			L.deal_damage((basepower * strength), RED_DAMAGE)
+		explode(user)
 		to_chat(user, "You opened the gift!")
-		qdel(src)
 	opening = FALSE
+
+/obj/item/laetitia_gift/proc/explode(turf/TURF)
+	playsound(get_turf(src), 'sound/abnormalities/laetitia/spider_born.ogg', 50, 1)
+	var/mob/dummy = new(TURF)
+	dummy.faction = list("hostile")
+	for(var/turf/T in range(2, TURF))
+		new /obj/effect/temp_visual/smash_effect(T)
+		dummy.HurtInTurf(T, list(), (basepower*strength), RED_DAMAGE, check_faction = (strength > 0), hurt_mechs = TRUE)
+	qdel(dummy)
+	active_gifts -= src
+	qdel(src)
 
 /mob/living/simple_animal/hostile/abnormality/laetitia/Life()
 	. = ..()
 	if(!breaching)
 		return
-	if((summon_cooldown < world.time) && !(status_flags & GODMODE))
-		SummonAdds()
+	if(SSmaptype.maptype != "rcorp")
+		if((summon_cooldown < world.time) && !(status_flags & GODMODE))
+			SummonAdds()
 
 /mob/living/simple_animal/hostile/abnormality/laetitia/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()

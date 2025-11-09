@@ -1,4 +1,5 @@
 //Very simple, funny little guy.
+#define STATUS_EFFECT_LUNAR_FLOW /datum/status_effect/lunar_flow
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	name = "Lunar Physician"
 	desc = "A little rabbit girl in a nurse outfit."
@@ -34,6 +35,28 @@
 	)
 	work_damage_amount = 5
 	work_damage_type = BLACK_DAMAGE
+
+	attack_action_types = list(/datum/action/innate/abnormality_attack/lunar_dust)
+
+/mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Lunar Physician, A Support Role Abnormality.</h1><br>\
+		<b>|Melee Attacks|: Your attacks deal BLACK damage and apply various toxic effects.<br>\
+		Enemies you strike will suffer from space drugs, confusion, blindness, or other debilitating status effects.<br>\
+		These toxic effects cannot be healed easily, making you a dangerous debuffer in close combat.<br>\
+		<br>\
+		|Lunar Dust|: You have an ability to buff nearby abnormalities.<br>\
+		When activated, you will channel for 2 seconds, showing warning overlays on adjacent tiles.<br>\
+		If you complete the channel, all abnormalities within 1 tile will receive the Lunar Flow buff.<br>\
+		<br>\
+		|Lunar Flow Effect|: Buffed abnormalities will:<br>\
+		- Move significantly faster for 8 seconds<br>\
+		- Turn dark blue and see the world with a light blue tint<br>\
+		- Become more fragile, taking 30% more damage<br>\
+		<br>\
+		Use this ability strategically to help your fellow abnormalities in combat, but be careful - the fragile effect makes them more vulnerable!</b>")
 
 	ego_list = list(
 		/datum/ego_datum/weapon/patch,
@@ -109,5 +132,116 @@
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	..()
 	user.deal_damage(45, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
+
+// Player control actions
+/datum/action/innate/abnormality_attack/lunar_dust
+	name = "Lunar Dust"
+	button_icon_state = "lunar_dust"
+	chosen_attack_num = 1
+
+/datum/action/innate/abnormality_attack/lunar_dust/Activate()
+	if(!isliving(owner))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/lunar_rabbit/L = owner
+	if(!istype(L))
+		return
+
+	// Show warning overlays on adjacent tiles
+	var/list/affected_turfs = list()
+	for(var/turf/T in range(1, L))
+		if(T == get_turf(L))
+			continue
+		T.add_overlay(icon('icons/effects/effects.dmi', "galaxy_aura"))
+		affected_turfs += T
+
+	to_chat(L, span_notice("You begin gathering lunar dust..."))
+
+	// Do the 2 second wait
+	if(!do_after(L, 2 SECONDS, L))
+		// Failed, remove overlays
+		for(var/turf/T in affected_turfs)
+			T.cut_overlay(icon('icons/effects/effects.dmi', "galaxy_aura"))
+		to_chat(L, span_warning("You were interrupted!"))
+		return
+
+	// Remove overlays
+	for(var/turf/T in affected_turfs)
+		T.cut_overlay(icon('icons/effects/effects.dmi', "galaxy_aura"))
+
+	// Apply effect to adjacent abnormalities
+	var/affected_count = 0
+	for(var/mob/living/simple_animal/hostile/abnormality/A in range(1, L))
+		if(A == L)
+			continue
+		A.apply_status_effect(STATUS_EFFECT_LUNAR_FLOW)
+		affected_count++
+
+	if(affected_count > 0)
+		L.visible_message(span_notice("[L] releases a shower of lunar dust!"))
+		to_chat(L, span_nicegreen("You buffed [affected_count] abnormalit[affected_count == 1 ? "y" : "ies"]!"))
+	else
+		to_chat(L, span_warning("There are no abnormalities nearby to buff!"))
+
+// Lunar Flow status effect
+#define MOB_LUNAR_FLOW /datum/movespeed_modifier/metabolicboost
+/datum/status_effect/lunar_flow
+	id = "lunar flow"
+	duration = 8 SECONDS
+	alert_type = null
+	status_type = STATUS_EFFECT_REFRESH
+	var/statuseffectvisual
+	var/client/C
+	var/initial_color
+	var/initial_mob_color
+
+/datum/status_effect/lunar_flow/on_apply()
+	. = ..()
+
+	// Add speed boost
+	owner.add_movespeed_modifier(MOB_LUNAR_FLOW)
+
+	// Apply fragile
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.apply_lc_fragile(3)
+
+	// Save original colors and change to dark blue
+	initial_mob_color = owner.color
+	owner.color = "#0000aa" // Dark blue
+
+	// Change client vision to light blue if they have a client
+	if(ismob(owner))
+		var/mob/M = owner
+		if(M.client)
+			C = M.client
+			initial_color = C.color
+			C.color = "#aaccffff" // Light blue
+
+	// Add visual overlay
+	var/mutable_appearance/effectvisual = mutable_appearance('icons/obj/clockwork_objects.dmi', "vanguard")
+	effectvisual.color = "#0066ff" // Blue-ish overlay
+	effectvisual.pixel_x = -owner.pixel_x
+	effectvisual.pixel_y = -owner.pixel_y
+	statuseffectvisual = effectvisual
+	owner.add_overlay(statuseffectvisual)
+
+/datum/status_effect/lunar_flow/on_remove()
+	// Remove speed modifier
+	owner.remove_movespeed_modifier(MOB_LUNAR_FLOW)
+
+	// Restore mob color
+	owner.color = initial_mob_color
+
+	// Restore client vision color
+	if(C)
+		C.color = initial_color
+
+	// Remove overlay
+	owner.cut_overlay(statuseffectvisual)
+
+	return ..()
+
+#undef STATUS_EFFECT_LUNAR_FLOW
+#undef MOB_LUNAR_FLOW
 
 

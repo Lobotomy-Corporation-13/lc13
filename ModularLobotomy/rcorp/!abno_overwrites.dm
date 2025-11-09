@@ -140,3 +140,24 @@
 		initial_charge_damage = 200
 		growing_charge_damage = 80
 	return ..()
+
+//Decreases Baba Yaga's landing time to make it a bit harder to dodge, making her a bit more tanky since they have no way of defending themselves.
+//To account for their leaping, deceases the max mobs to avoid enemy spam for no cost.
+/mob/living/simple_animal/hostile/abnormality/babayaga/Initialize()
+	..()
+	if(IsCombatMap())
+		ChangeResistances(list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.4, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 0.6))
+		maxHealth = 5000
+		health = 5000
+		landing_time = 5
+		max_mobs = 3
+	return
+
+/mob/living/simple_animal/hostile/abnormality/shock_centipede/Initialize()
+	..()
+	if(IsCombatMap())
+		max_charge = 30
+		coil_max_shield = 1200
+		tailattack_damage = 60
+		tailattack_charge_per_target = 5
+	return

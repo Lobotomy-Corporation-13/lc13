@@ -109,7 +109,32 @@
 	var/tailattack_charge_per_target = 3
 	var/tailattack_range = 5
 
+	attack_action_types = list(
+		/datum/action/innate/abnormality_attack/toggle/centipede_tail,
+		/datum/action/innate/abnormality_attack/centipede_coil,
+		/datum/action/innate/abnormality_attack/centipede_check_charge
+	)
 
+/mob/living/simple_animal/hostile/abnormality/shock_centipede/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Shock Centipede, A Tank Role Abnormality.</h1><br>\
+		<b>|Charge System|: You build charge by attacking living enemies and lose it by taking damage.<br>\
+		Use the 'Check Charge' button to see your current charge level.<br>\
+		<br>\
+		|Tail Attacks|: You have a powerful tail attack that strikes in a line, hitting multiple enemies.<br>\
+		Use the 'Toggle Tail Attacks' button to control when you use this ability.<br>\
+		When enabled, you will use tail attacks instead of normal melee when targeting enemies.<br>\
+		<br>\
+		|Coil Up|: When you have 12+ charge, you can coil up to create a shield.<br>\
+		After a short time, you will discharge electricity in an area, damaging and stunning enemies.<br>\
+		If enemies break your shield early, you will be stunned briefly and lose charge.<br>\
+		Coiling is automatic when AI-controlled, but you must manually activate it as a player.<br>\
+		<br>\
+		|Immortal Phase|: When you die, you will revive once in a weakened immortal state.<br>\
+		In this phase, you lose charge over time - when it reaches zero, you die permanently.<br>\
+		You can still gain charge during this phase by using tail attacks on enemies.</b>")
 
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/AttemptWork(mob/living/carbon/human/user, work_type)
@@ -251,17 +276,30 @@
 				target_turf = get_step(target_turf, get_dir(get_turf(src), target_turf))
 			TailAttack(target_turf)
 			return FALSE
+	else
+		// Player control: Check for tail attack toggle
+		if(chosen_attack == 1 && tail_attack_cooldown < world.time)
+			var/turf/target_turf = get_turf(attacked_target)
+			for(var/i = 1 to tailattack_range - 2)
+				target_turf = get_step(target_turf, get_dir(get_turf(src), target_turf))
+			TailAttack(target_turf)
+			return FALSE
 	. = ..()
-	if (!immortal)
-		AdjustCharge(1)
-	TryCoil()
+	if (!immortal && isliving(attacked_target))
+		var/mob/living/living_target = attacked_target
+		if(living_target.stat != DEAD)
+			AdjustCharge(1)
+	if(!client)
+		TryCoil()
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/OpenFire()
 	if(!can_act || shield > 0)
 		return
 
 	if(tail_attack_cooldown < world.time)
-		TailAttack(target)
+		// Only tail attack if AI-controlled, or if player has tail attacks enabled
+		if(!client || chosen_attack == 1)
+			TailAttack(target)
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/proc/TryCoil()
 	if (charge >= coil_start_charge && world.time > coil_cooldown && !immortal)
@@ -311,7 +349,8 @@
 		AdjustCharge(-coil_discharge_aoe_missed_charge_loss)
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/Life()
-	TryCoil()
+	if(!client)
+		TryCoil()
 	..()
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/death()
@@ -336,6 +375,57 @@
 		QDEL_IN(src, 10 SECONDS)
 		icon_state = "shock_centipede"
 		return ..()
+
+// Player control actions
+/datum/action/innate/abnormality_attack/toggle/centipede_tail
+	name = "Toggle Tail Attacks"
+	button_icon_state = "tail1"
+	chosen_attack_num = 1
+	chosen_message = span_colossus("You will use tail attacks.")
+	button_icon_toggle_activated = "tail1"
+	toggle_attack_num = 2
+	toggle_message = span_colossus("You won't use tail attacks.")
+	button_icon_toggle_deactivated = "tail0"
+
+/datum/action/innate/abnormality_attack/centipede_coil
+	name = "Coil Up"
+	button_icon_state = "generic_slam"
+
+/datum/action/innate/abnormality_attack/centipede_coil/Activate()
+	if(!isliving(owner))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/shock_centipede/C = owner
+	if(!istype(C))
+		return
+	if(C.immortal)
+		to_chat(C, span_warning("You cannot coil up while in your immortal state!"))
+		return
+	if(C.charge < C.coil_start_charge)
+		to_chat(C, span_warning("You need at least [C.coil_start_charge] charge to coil up! (Current: [C.charge])"))
+		return
+	if(C.coil_cooldown > world.time)
+		to_chat(C, span_warning("You cannot coil up yet! ([round((C.coil_cooldown - world.time) / 10, 0.1)]s remaining)"))
+		return
+	if(C.shield > 0)
+		to_chat(C, span_warning("You are already coiled up!"))
+		return
+	C.TryCoil()
+
+/datum/action/innate/abnormality_attack/centipede_check_charge
+	name = "Check Charge"
+	button_icon_state = "generic_toggle0"
+
+/datum/action/innate/abnormality_attack/centipede_check_charge/Activate()
+	if(!isliving(owner))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/shock_centipede/C = owner
+	if(!istype(C))
+		return
+	to_chat(C, span_notice("Current charge: <b>[C.charge]</b> / [C.max_charge]"))
+	if(C.charge >= C.coil_start_charge)
+		to_chat(C, span_nicegreen("You have enough charge to coil up!"))
+	else
+		to_chat(C, span_warning("You need [C.coil_start_charge - C.charge] more charge to coil up."))
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/proc/TailAttack(target)
 	manual_emote("pulls it's tail back...")
