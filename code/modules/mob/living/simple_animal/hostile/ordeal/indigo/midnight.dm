@@ -1416,6 +1416,8 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 		if(istype(new_neighbor, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
 			var/mob/living/simple_animal/hostile/ordeal/indigo_dusk/favourite_child = new_neighbor
 			favourite_child.permitted_to_feast = FALSE // Disallow from eating human corpses, those are for the Matriarch
+			favourite_child.stat_attack = HARD_CRIT // They will go sicko mode on corpses they can't devour if we don't set this
+
 			if(should_bind_to_matriarch)
 				matriarch.deployed_commanders |= new_neighbor
 			else
@@ -1424,6 +1426,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			var/mob/living/simple_animal/hostile/ordeal/indigo_noon/less_favourite_child = new_neighbor
 			if(istype(less_favourite_child))
 				less_favourite_child.permitted_to_feast = FALSE // Disallow from eating human corpses, those are for the Matriarch
+				less_favourite_child.stat_attack = HARD_CRIT // They will go sicko mode on corpses they can't devour if we don't set this
 			if(should_bind_to_matriarch)
 				matriarch.deployed_grunts |= new_neighbor
 

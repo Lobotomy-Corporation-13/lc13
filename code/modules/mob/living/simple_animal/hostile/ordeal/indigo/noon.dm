@@ -53,7 +53,7 @@
 			SweeperDevour(L)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/PickTarget(list/Targets)
-	if(health <= maxHealth * 0.6) // If we're damaged enough
+	if(permitted_to_feast && health <= maxHealth * 0.6) // If we're damaged enough
 		for(var/mob/living/simple_animal/hostile/ordeal/indigo_noon/sweeper in ohearers(7, src)) // And there is no sweepers even more damaged than us
 			if(sweeper.stat != DEAD && (health > sweeper.health))
 				return ..()
@@ -61,7 +61,7 @@
 		for(var/mob/living/L in Targets)
 			if(!CanAttack(L))
 				continue
-			if(!permitted_to_feast && ishuman(L))
+			if(ishuman(L))
 				continue
 			if(L.health < 0 || L.stat == DEAD)
 				highest_priority += L
@@ -71,7 +71,7 @@
 	for(var/mob/living/L in Targets)
 		if(!CanAttack(L))
 			continue
-		if(!permitted_to_feast && ishuman(L))
+		if(ishuman(L))
 			continue
 		if(L.health < L.maxHealth*0.5 && (L.stat < UNCONSCIOUS))
 			lower_priority += L

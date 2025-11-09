@@ -78,12 +78,12 @@
 
 /// Prioritizes attacking corpses when injured.
 /mob/living/simple_animal/hostile/ordeal/indigo_dusk/PickTarget(list/Targets)
-	if(health <= maxHealth * 0.7) // If we're damaged enough
+	if(permitted_to_feast && health <= maxHealth * 0.7) // If we're damaged enough
 		var/list/highest_priority = list()
 		for(var/mob/living/L in Targets)
 			if(!CanAttack(L))
 				continue
-			if(!permitted_to_feast && ishuman(L))
+			if(ishuman(L))
 				continue
 			if(L.health < 0 || L.stat == DEAD)
 				highest_priority += L
@@ -93,7 +93,7 @@
 	for(var/mob/living/L in Targets)
 		if(!CanAttack(L))
 			continue
-		if(!permitted_to_feast && ishuman(L))
+		if(ishuman(L))
 			continue
 		if(L.health < L.maxHealth*0.5 && (L.stat < UNCONSCIOUS))
 			lower_priority += L
