@@ -181,6 +181,8 @@
 	for(var/mob/living/simple_animal/hostile/abnormality/A in range(1, L))
 		if(A == L)
 			continue
+		if(istype(A, /mob/living/simple_animal/hostile/abnormality/cleaner))
+			continue
 		A.apply_status_effect(STATUS_EFFECT_LUNAR_FLOW)
 		affected_count++
 
