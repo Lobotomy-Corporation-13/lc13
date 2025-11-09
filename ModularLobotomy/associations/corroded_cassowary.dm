@@ -13,8 +13,8 @@
 	emote_hear = list("screeches.", "hisses.", "clicks aggressively.")
 	emote_taunt = list("flares its wings", "stamps its feet", "glares menacingly")
 	speak_emote = list("screeches", "shrieks", "caws")
-	maxHealth = 2400
-	health = 2400
+	maxHealth = 1200
+	health = 1200
 	loot = list(/obj/effect/gibspawner/robot)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 3)
 	response_help_continuous = "pats"
@@ -23,11 +23,11 @@
 	response_disarm_simple = "push"
 	response_harm_continuous = "strikes"
 	response_harm_simple = "strike"
-	move_to_delay = 1.5
+	move_to_delay = 2.5
 	melee_damage_type = BLACK_DAMAGE
 	melee_damage_lower = 30
 	melee_damage_upper = 36
-	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.5)
+	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
 	environment_smash = ENVIRONMENT_SMASH_STRUCTURES
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
@@ -35,7 +35,7 @@
 
 	// Ranged attack variables
 	ranged = TRUE
-	ranged_cooldown_time = 0.5 SECONDS
+	ranged_cooldown_time = 5 SECONDS
 	retreat_distance = 3
 	minimum_distance = 2
 	ranged_message = "prepares to dash at"
@@ -54,7 +54,7 @@
 
 	// Repair system
 	var/next_repair = 0
-	var/repair_cooldown = 300 // 30 seconds
+	var/repair_cooldown = 600 // 60 seconds
 
 	//Sidesteping
 	var/sidesteping = TRUE
@@ -66,10 +66,10 @@
 	var/dash_charges = 5
 	var/max_dash_charges = 5
 	var/next_charge_regen = 0
-	var/charge_regen_time = 5 SECONDS
-	var/dash_range = 7
+	var/charge_regen_time = 30 SECONDS
+	var/dash_range = 4
 	var/dash_ignore_walls = FALSE
-	var/dash_damage = 10
+	var/dash_damage = 5
 	var/dash_tremor = 2
 	var/next_dash_devastating = FALSE
 	var/dash_warning_time = 0
@@ -193,7 +193,7 @@
 
 	// Self-repair over time
 	if(health < maxHealth && world.time > next_repair)
-		adjustBruteLoss(-300, 0)
+		adjustBruteLoss(-100, 0)
 		visible_message(span_notice("[src]'s mechanisms whir as damage is repaired."))
 		next_repair = world.time + repair_cooldown
 		alert = TRUE // Enable alert after healing
