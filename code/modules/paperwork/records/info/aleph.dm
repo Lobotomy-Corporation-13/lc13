@@ -248,6 +248,24 @@
 		"Working on the abnormality will cause it to set once more, and cause all of it's boosts to subside.",
 		)
 
+// Star Luminary (WIP)
+/obj/item/paper/fluff/info/aleph/luminary
+	abno_type = /mob/living/simple_animal/hostile/abnormality/star_luminary
+	abno_code = "O-01-930"
+	abno_info = list(
+		"The abnormality enthralled any employee who performed non-Repression work with it. After this, the Qliphoth Counter increased by one.",
+		"Enthralled employees experienced a significant boost to their Justice and a very significant boost to the quality of non-Instinct work performed with the abnormality, yet their mental corruption levels began to increase continously.",
+		"The abnormality requires constant attention, as the Qliphoth Counter dropped after a period of not being worked with. The abnormality requires more frequent works as the number of enthralled employees raises.",
+		"After a non-enthralled employee performed Repression work with the abnormality, the Qliphoth Counter decreased by one. Afterwards, all enthralled employees experienced a significant reduction in both their immediate mental corruption and in the constant build-up of mental corruption. This effect seems to increase in intensity with the amount of enthralled employees.",
+		"If an enthralled employee died, all other enthralled employees experienced a significant increase in mental corruption, this effect significantly increased in potency with the amount of enthralled employees.",
+		"When the Qliphoth Counter hit zero, the Abnormality appeared in one of the department centers and began emitting damaging pulses. The abnormality grew stronger with the amount of enthralled employees, and enthralled employees experienced a much more pronounced increase in mental corruption from these pulses compared to non-enthralled employees.",
+		"To suppress the abnormality, employees had to find one or more blue marbles scattered through the facility and deliver them to the abnormality, afterwards the abnormality recontained itself willingly.",
+		"WARNING: Enthralled employees are essential for the recovery of the marbles, as the items will generally refuse to move without the presence of enthralled employees. The blue marbles protected enthralled employees from the pulses, but inflicted severe mental corruption on their own continously. This corrupting effect seemed to be greatly diminished with an increased amount of enthralled employees present near the marble.",
+		"WARNING: The blue marbles inflict extreme mental corruption to enthralled employees upon contact, it is recommended that mixed teams of enthralled and non-enthralled employees are formed to suppress the abnormality.",
+		"DANGER: Do not linger around mentally unstable employees who have been enthralled by the abnormality.")
+	abno_breach_damage_type = "Black/White"
+	abno_breach_damage_count = "High to Extreme" // A high cultist amount breach can reach upwards to 200+ damage per pulse.
+
 // Tear in Reality
 
 /obj/item/paper/fluff/info/aleph/tir
@@ -258,5 +276,5 @@
 		"When Instinct work was performed, the Qliphoth Counter decresed.",
 		"When the abnormality breached containment, another world would align with it, and the path would open.",
 		"Over time, more worlds would be torn into, and able to align with this reality.",
-		"WARNING: This Abnormality has been found to be highly unstable, and is likely to change in some way.", //This abno will have a second PR for other things.
+		"WARNING: This Abnormality has been found to be highly unstable, and is likely to change in some way in the future.", //This abno will have a second PR for other things.
 		)

@@ -1604,6 +1604,226 @@
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
 
+/obj/item/ego_weapon/faith
+	name = "starbound faith"
+	desc = "The blue marble is desperately clasped between two blackened hands. \
+	Hope, Faith, Zealotry. The Stars illuminate the path to salvation, and countless hands reach forward to grasp it."
+	icon_state = "faith"
+	inhand_icon_state = "galaxy"
+	force = 85
+	swingstyle = WEAPONSWING_LARGESWEEP
+	damtype = BLACK_DAMAGE
+	attack_speed = 1.2
+	attack_verb_continuous = list("slams", "attacks")
+	attack_verb_simple = list("slam", "attack")
+	hitsound = 'sound/weapons/ego/rapier2.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)
+	color = LIGHT_COLOR_BLUE
+	light_system = MOVABLE_LIGHT
+	light_range = 0
+	light_power = 1
+	light_on = FALSE
+
+	var/ritual_cooldown
+	var/ritual_cooldown_time = 300 SECONDS
+	var/ritual_duration = 100 SECONDS
+	var/ritual_ongoing = FALSE
+	var/ritual_active = FALSE
+	var/ritual_master = FALSE
+	var/ritual_synchronization = FALSE
+
+	var/healing = FALSE
+	var/awakened = FALSE
+
+	var/shot_cooldown_time = 2 SECONDS
+	var/shot_cooldown
+
+	var/buff_timer
+
+// Add a fuckton of player-facing notifications
+
+/obj/item/ego_weapon/faith/dropped(mob/user)
+	. = ..()
+	deltimer(buff_timer)
+	reset()
+
+/obj/item/ego_weapon/faith/attack(mob/living/target, mob/living/carbon/human/user)
+	. = ..()
+	if(healing)
+		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+		var/justicemod = 1 + (userjust / 100)
+		if(!(target.status_flags & GODMODE) && target.stat != DEAD)
+			var/heal_amt = (force * 0.08 * force_multiplier * justicemod)
+			if(isanimal(target))
+				var/mob/living/simple_animal/S = target
+				if(S.damage_coeff.getCoeff(damtype) > 0)
+					heal_amt *= S.damage_coeff.getCoeff(damtype)
+				else
+					heal_amt = 5
+			user.adjustSanityLoss(-heal_amt)
+
+/obj/item/ego_weapon/faith/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
+	..()
+	if(awakened && (!proximity_flag && shot_cooldown <= world.time))
+		var/turf/proj_turf = get_turf(user)
+		if(!proj_turf)
+			return
+		var/obj/projectile/ego_bullet/star_bound/boolet = new /obj/projectile/ego_bullet/star_bound(proj_turf)
+		boolet.fired_from = src // For signal check
+		playsound(user, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
+		boolet.firer = user
+		boolet.preparePixelProjectile(target, user, clickparams)
+		boolet.fire()
+		boolet.damage *= force_multiplier
+		shot_cooldown = world.time + shot_cooldown_time
+		return
+
+/obj/item/ego_weapon/faith/attack_self(mob/living/user)
+	. = ..()
+	if(!ishuman(user))
+		return
+	if((ritual_cooldown > world.time))
+		return
+	ritual_cooldown = world.time + ritual_cooldown_time
+	var/mob/living/carbon/human/wielder = user
+	if(!(wielder.has_status_effect(/datum/status_effect/starcultist)))
+		to_chat(wielder, span_warning("The staff refuses to answer your calling. Reject not the truth of the Stars."))
+		balloon_alert(wielder, "The staff refuses to answer your calling. Reject not the truth of the Stars.")
+		return
+	if(ritual_active || ritual_ongoing)
+		return
+	var/cultist_in_ritual = cultist_check(wielder)
+	if(cultist_in_ritual < 1)
+		to_chat(wielder, span_warning("The staff shines briefly then fizzles out, unable to reach fellow followers of the Star."))
+		balloon_alert(wielder, "The staff shines briefly then fizzles out, unable to reach fellow followers of the Star.")
+		return
+	to_chat(wielder, span_warning("The staff vibrates in your hands, trying to reach towards all followers of the Star."))
+	balloon_alert(wielder, "The staff vibrates in your hands, trying to reach towardsa ll followers of the Star.")
+	playsound(user, 'sound/weapons/plasma_cutter.ogg', 100, TRUE)
+	start_ritual(wielder)
+
+/obj/item/ego_weapon/faith/proc/cultist_check(mob/living/user)
+	var/cultist_count
+	for(var/mob/living/carbon/human/cultman in oview(4, user))
+		if(cultman.has_status_effect(/datum/status_effect/starcultist))
+			if(!ritual_master)
+				var/obj/item/ego_weapon/faith/cultist_wand = cultman.is_holding_item_of_type(/obj/item/ego_weapon/faith)
+				if(cultist_wand)
+					if(cultist_wand.ritual_master)
+						sync_ritual(user)
+						return
+			cultist_count++
+	return cultist_count
+
+/obj/item/ego_weapon/faith/proc/sync_ritual(mob/living/user)
+	ritual_synchronization = TRUE
+	ritual_ongoing = TRUE
+	to_chat(user, span_notice("You feel that a ritual is already underway nearby, and your staff attunes to it."))
+	balloon_alert(user, "You feel that a ritual is already underway nearby, and your staff attunes to it")
+	for(var/i = 1 to 12)
+		if(!user)
+			reset()
+			return
+		if(!do_after(user, 0.5 SECONDS))
+			break
+		if(ritual_active)
+			break
+	ritual_synchronization = FALSE
+	ritual_ongoing = FALSE
+	if(ritual_active)
+		to_chat(user, span_nicegreen("Your staff thrums with energy."))
+		balloon_alert(user, "Your staff thrums with energy.")
+	else
+		playsound(user, 'sound/effects/zzzt.ogg', 60, TRUE)
+		to_chat(user, span_warning("The light in your staff fizzles out, something must have gone wrong."))
+		balloon_alert(user, "The light in your staff fizzles out, something must have gone wrong.")
+/obj/item/ego_weapon/faith/proc/start_ritual(mob/living/user)
+	ritual_master = TRUE
+	ritual_ongoing = TRUE
+	ritual_progress(user)
+
+/obj/item/ego_weapon/faith/proc/ritual_progress(mob/living/user)
+	var/ritual_level
+	for(var/i = 1 to 3)
+		if(!user)
+			reset()
+			return
+		if(!do_after(user, 2 SECONDS))
+			to_chat(user, span_danger("You lose your focus, and the ritual is cut short!"))
+			balloon_alert(user, "You lose your focus, and the ritual is cut short!")
+			break
+		playsound(user, 'sound/effects/curse5.ogg', 60, TRUE)
+		if((cultist_check(user) < 1 + i))
+			break
+		ritual_level++
+	ritual_end(user, ritual_level)
+
+/obj/item/ego_weapon/faith/proc/ritual_end(mob/living/user, ritual_level)
+	ritual_master = FALSE
+	ritual_ongoing = FALSE
+	if(!ritual_level)
+		return
+	for(var/mob/living/carbon/human/cultman in oview(4, user))
+		if(cultman.has_status_effect(/datum/status_effect/starcultist))
+			var/obj/item/ego_weapon/faith/cultist_wand = cultman.is_holding_item_of_type(/obj/item/ego_weapon/faith)
+			if(cultist_wand)
+				if(cultist_wand.ritual_synchronization)
+					cultist_wand.ritual_effect(ritual_level)
+	ritual_effect(user, ritual_level)
+
+/obj/item/ego_weapon/faith/proc/ritual_effect(mob/living/user, ritual_level)
+	if(ritual_active)
+		return
+	ritual_active = TRUE
+	set_light_on(ritual_active)
+	light_range = ritual_level
+	switch(ritual_level)
+		if(1)
+			to_chat(user, span_nicegreen("Your staff slightly loosens its grasp on the holy marble and you feel a surge of courage coursing through you."))
+			balloon_alert(user, "Your staff slightly loosens it's grasp on the holy marble and you feel a surge of courage coursing through you.")
+			healing = TRUE
+		if(2)
+			to_chat(user, span_nicegreen("Your staff loosens its grasp on the holy marble and its light invigorates your every swing."))
+			balloon_alert(user, "Your staff loosens it's grasp on the holy marble and it's light invigorates your every swing.")
+			healing = TRUE
+			force += 25
+		if(3)
+			to_chat(user, span_nicegreen("The Star is unbound if only for a moment, illuminating your path with its majestic light and empowering your attacks with otherwordly energy."))
+			balloon_alert(user, "The Star is unbound if only for a moment, illuminating your path with it's majestic light and empowering your attacks with otherworldy energy.")
+			icon_state = "awakened_faith"
+			healing = TRUE
+			force += 45
+			awakened = TRUE
+
+	//icon_state = "faith[ritual_level]" 	-Probably will remain this way, but it would be nice to have alternative sprites for every ritual level.
+	buff_timer = addtimer(CALLBACK(src, PROC_REF(remove_effects)), ritual_duration, TIMER_STOPPABLE)
+
+/obj/item/ego_weapon/faith/proc/remove_effects()
+	reset()
+
+/obj/item/ego_weapon/faith/proc/reset()
+	icon_state = initial(icon_state)
+	force = initial(force)
+	ritual_ongoing = FALSE
+	ritual_active = FALSE
+	ritual_master = FALSE
+	ritual_synchronization = FALSE
+	healing = FALSE
+	awakened = FALSE
+	set_light_on(ritual_active)
+	light_range = initial(light_range)
+
+/obj/projectile/ego_bullet/star_bound
+	name = "starbound energy"
+	damage = 85
+	damage_type = WHITE_DAMAGE
+	icon_state = "star"
+
 //Tear in Reality
 /obj/item/ego_weapon/tir_claws
 	name = "Claws of Reality"
