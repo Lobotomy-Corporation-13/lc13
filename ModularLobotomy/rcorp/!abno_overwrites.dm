@@ -150,7 +150,7 @@
 		maxHealth = 5000
 		health = 5000
 		landing_time = 5
-		max_mobs = 3
+		max_mobs = 8
 	return
 
 /mob/living/simple_animal/hostile/abnormality/shock_centipede/Initialize()
@@ -160,4 +160,13 @@
 		coil_max_shield = 1200
 		tailattack_damage = 60
 		tailattack_charge_per_target = 5
+	return
+
+/mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Initialize()
+	..()
+	if(IsCombatMap())
+		maxHealth = 600
+		health = 600
+		move_to_delay = 2
+		UpdateSpeed()
 	return

@@ -39,7 +39,7 @@
 	attack_action_types = list(/datum/action/innate/abnormality_attack/lunar_dust)
 
 	var/lunar_dust_cooldown = 0
-	var/lunar_dust_cooldown_time = 10 SECONDS
+	var/lunar_dust_cooldown_time = 15 SECONDS
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Login()
 	. = ..()
@@ -104,6 +104,7 @@
 			L.emote(pick("twitch","drool","moan","giggle"))
 		L.apply_lc_fragile(2)
 
+		if(!IsCombatMap())
 		//Also get a random between Blind, Confusion, Mute and drowsy, and none.
 		var/effect_choice = rand(1,4)
 		switch(effect_choice)
@@ -195,7 +196,7 @@
 
 // Lunar Flow status effect
 /datum/movespeed_modifier/lunar_flow
-	multiplicative_slowdown = -2.5
+	multiplicative_slowdown = -1.5
 
 #define MOB_LUNAR_FLOW /datum/movespeed_modifier/lunar_flow
 /datum/status_effect/lunar_flow

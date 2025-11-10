@@ -106,14 +106,16 @@
 	delete_timer = addtimer(CALLBACK(src, PROC_REF(delete)), delete_cooldown, TIMER_STOPPABLE)
 	// send poll to all ghosts and wait
 	var/list/candidates = pollGhostCandidates("Laetitia is calling for help! Are you willing to protect her?", poll_time=100, ignore_category=POLL_IGNORE_LAE_GIFT)
-	if (LAZYLEN(candidates) > 0)
-		var/mob/dead/observer/C = pick(candidates)
-		G1.key = C.key
-		candidates -= C
-	if (LAZYLEN(candidates) > 0)
-		var/mob/dead/observer/C = pick(candidates)
-		G2.key = C.key
-		candidates -= C
+	if(G1.stat != DEAD)
+		if (LAZYLEN(candidates) > 0)
+			var/mob/dead/observer/C = pick(candidates)
+			G1.key = C.key
+			candidates -= C
+	if(G2.stat != DEAD)
+		if (LAZYLEN(candidates) > 0)
+			var/mob/dead/observer/C = pick(candidates)
+			G2.key = C.key
+			candidates -= C
 
 /datum/action/cooldown/laetitia_summon/proc/delete()
 	qdel(G1)
@@ -195,9 +197,8 @@
 
 /obj/item/laetitia_gift/Crossed(atom/movable/AM)
 	. = ..()
-	if(istype(AM, /obj/projectile))
-		return
-	explode(loc)
+	if(ishuman(AM))
+		explode(loc)
 
 /obj/item/laetitia_gift/attack_self(mob/user)
 	if(opening)
