@@ -42,14 +42,39 @@
 	//gift_type =  /datum/ego_gifts/trick
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/list/current_weaves = list()
+	var/weave_spawn_cooldown = 0
+	var/weave_spawn_cooldown_time = 2 SECONDS
+	attack_action_types = list(/datum/action/innate/abnormality_attack/spawn_weave)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/weave/Life()
 	..()
 	if(IsContained())
 		return
+	if(client) // Don't spawn passively if player-controlled
+		return
 	if(prob(40))
 		var/obj/structure/golden_weave/V = new(get_turf(src))
 		current_weaves+=V
+
+/mob/living/simple_animal/hostile/abnormality/branch12/weave/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(check_stealth))
+	check_stealth() // Check initial position
+
+/mob/living/simple_animal/hostile/abnormality/branch12/weave/proc/check_stealth()
+	var/turf/T = get_turf(src)
+	var/obj/structure/golden_weave/weave_here = locate(/obj/structure/golden_weave) in T
+
+	if(weave_here)
+		// Standing on golden weave - become stealthy
+		alpha = 25
+		density = FALSE
+	else
+		// Not on golden weave - normal visibility
+		alpha = 255
+		density = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/weave/death()
 	for(var/V in current_weaves)
@@ -87,9 +112,48 @@
 
 /obj/structure/golden_weave/Crossed(atom/movable/AM)
 	. = ..()
+	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/branch12/weave))
+		return // Don't trigger on Golden Weave abnormality itself
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
 		H.deal_damage(5, RED_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.apply_lc_bleed(15)
 		H.Knockdown(20)
 		qdel(src)
+
+// Player action for spawning golden weave
+/datum/action/innate/abnormality_attack/spawn_weave
+	name = "Weave Golden Thread"
+	button_icon_state = "web_wrap"
+	chosen_attack_num = 1
+
+/datum/action/innate/abnormality_attack/spawn_weave/Activate()
+	if(!isliving(owner))
+		return
+	var/mob/living/simple_animal/hostile/abnormality/branch12/weave/W = owner
+	if(!istype(W))
+		return
+
+	// Check cooldown
+	if(W.weave_spawn_cooldown > world.time)
+		to_chat(W, span_warning("Weave spawning is on cooldown! ([round((W.weave_spawn_cooldown - world.time) / 10, 0.1)]s remaining)"))
+		return
+
+	// Check if weave already exists at location
+	var/turf/T = get_turf(W)
+	if(locate(/obj/structure/golden_weave) in T)
+		to_chat(W, span_warning("There is already a golden weave here!"))
+		return
+
+	to_chat(W, span_notice("You begin weaving golden threads..."))
+
+	// Do-after channel
+	if(!do_after(W, 2 SECONDS, W))
+		to_chat(W, span_warning("You were interrupted!"))
+		return
+
+	// Spawn the weave
+	var/obj/structure/golden_weave/V = new(get_turf(W))
+	W.current_weaves += V
+	W.visible_message(span_notice("[W] weaves a golden thread beneath itself!"))
+	W.weave_spawn_cooldown = world.time + W.weave_spawn_cooldown_time
