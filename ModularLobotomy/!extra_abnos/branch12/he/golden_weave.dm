@@ -60,6 +60,20 @@
 	. = ..()
 	if(!. || !client)
 		return FALSE
+	to_chat(src, "<h1>You are Golden Weave, A Support Role Abnormality.</h1><br>\
+		|Weave Golden Thread|: You can manually place golden weave traps on the ground.<br>\
+		This ability has a 2-second channel and a 2-second cooldown after use.<br>\
+		You cannot place a weave where one already exists.<br>\
+		<br>\
+		|Golden Weave Traps|: When humans cross over your weaves, they will:<br>\
+		- Take 5 RED damage<br>\
+		- Inflicts 15 stacks BLEED<br>\
+		- Get knocked down for 2 seconds<br>\
+		- The weave is destroyed after triggering<br>\
+		<br>\
+		|Stealth Ability|: When you stand on top of a golden weave, you become nearly invisible.<br>\
+		Your alpha drops to 25 and you become non-solid, making you very hard to detect.<br>\
+		Use this to set up ambushes or escape from danger!<br>")
 	RegisterSignal(src, COMSIG_MOVABLE_MOVED, PROC_REF(check_stealth))
 	check_stealth() // Check initial position
 

@@ -41,10 +41,35 @@
 
 	var/list/ideas_stolen = list() //affects what abilities it has on breach
 	var/list/potential_ideas = list("skitter", "hallucination", "lifesteal", "blindness", "randomdamage", "flametile", "knockdown", "pulse", "bleed", "confusion")
+	var/list/attacked_humans = list() // Track which humans have been attacked for idea stealing
 	var/dashready = TRUE
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 3 SECONDS
 	var/pulse_damage = 20
+
+/mob/living/simple_animal/hostile/abnormality/branch12/ollieoxenfree/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Ollieoxenfree, A Combat Role Abnormality.</h1><br>\
+		<b>|Idea Plagiarism|: You grow stronger by stealing ideas from others.<br>\
+		Each time you attack a NEW human, you steal an idea and gain a new ability.<br>\
+		You can steal up to 10 different ideas, each granting unique powers.<br>\
+		<br>\
+		|Possible Ideas You Can Steal|:<br>\
+		- <b>Skitter</b>: Dash towards distant targets (2+ tiles away)<br>\
+		- <b>Hallucination</b>: Cause hallucinations on hit<br>\
+		- <b>Lifesteal</b>: Heal yourself when you attack<br>\
+		- <b>Blindness</b>: Blur victim's vision<br>\
+		- <b>Random Damage</b>: Your melee damage type changes randomly<br>\
+		- <b>Flame Tile</b>: Leave fire trails as you move<br>\
+		- <b>Knockdown</b>: Knock victims down<br>\
+		- <b>Pulse</b>: Emit WHITE damage pulses while moving (8 tile range, 3s cooldown)<br>\
+		- <b>Bleed</b>: Inflict 30 BLEED on hit<br>\
+		- <b>Confusion</b>: Confuse your victims<br>\
+		<br>\
+		|Strategy|: The more enemies you fight, the more powerful you become!<br>\
+		Each new human you attack makes you deadlier with a new stolen ability.</b>")
 
 /mob/living/simple_animal/hostile/abnormality/branch12/ollieoxenfree/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -74,6 +99,15 @@
 	if(!ishuman(attacked_target))
 		return
 	var/mob/living/carbon/human/H = attacked_target
+
+	// In Combat Mode, gain an idea from attacking a new human
+	if(IsCombatMap() && !(H in attacked_humans) && length(potential_ideas))
+		attacked_humans += H
+		var/new_idea = pick_n_take(potential_ideas)
+		ideas_stolen += new_idea
+		visible_message(span_warning("[src] steals an idea from [H]!"))
+		to_chat(src, span_nicegreen("You have stolen the '[new_idea]' idea from [H]!"))
+
 	for(var/z in ideas_stolen)
 		if(z == "hallucination") //from dangle
 			H.hallucination += 10

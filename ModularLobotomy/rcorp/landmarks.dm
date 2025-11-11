@@ -9,6 +9,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/abnormality/headless_ichthys,
 	/mob/living/simple_animal/hostile/abnormality/puss_in_boots,
 	/mob/living/simple_animal/hostile/abnormality/woodsman,
+	/mob/living/simple_animal/hostile/abnormality/branch12/ollieoxenfree,
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(
@@ -24,6 +25,7 @@ GLOBAL_LIST_INIT(easysupport, list(
 	/mob/living/simple_animal/hostile/abnormality/voiddream,
 	/mob/living/simple_animal/hostile/abnormality/contract,
 	/mob/living/simple_animal/hostile/abnormality/lunar_rabbit,
+	/mob/living/simple_animal/hostile/abnormality/branch12/weave,
 ))
 
 GLOBAL_LIST_INIT(easytank, list(
