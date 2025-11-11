@@ -51,6 +51,9 @@
 
 /mob/living/simple_animal/hostile/distortion/Initialize(mapload)
 	. = ..()
+	for(var/action_type in attack_action_types)
+		var/datum/action/innate/distortion_attack/attack_action = new action_type()
+		attack_action.Grant(src)
 	UpdateSpeed()
 
 /mob/living/simple_animal/hostile/distortion/add_to_mob_list()

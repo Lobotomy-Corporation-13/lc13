@@ -65,6 +65,12 @@
 	volume = 15
 	extra_range = -4
 
+/datum/looping_sound/adversary_breathing
+	mid_sounds = 'sound/distortions/the_adversary/breathing.ogg'
+	mid_length = 5 SECONDS
+	volume = 25
+	extra_range = 2
+
 /datum/looping_sound/nothingthere_breach
 	start_sound = 'sound/abnormalities/nothingthere/ntloop_start.ogg'
 	start_length = 7.2 SECONDS

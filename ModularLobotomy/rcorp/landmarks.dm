@@ -74,7 +74,7 @@ GLOBAL_LIST_INIT(rhinobuster, list(,
 	/mob/living/simple_animal/hostile/abnormality/rudolta,
 	/mob/living/simple_animal/hostile/abnormality/judgement_bird,
 	/mob/living/simple_animal/hostile/abnormality/alriune,
-	/mob/living/simple_animal/hostile/abnormality/fire_bird,
+	/mob/living/simple_animal/hostile/distortion/adversary,
 ))
 
 //Used for the specific raidboss mode
