@@ -259,6 +259,13 @@ No Ability	250
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//Melee
 	realized_ability = /obj/effect/proc_holder/ability/rip_space
 
+/obj/item/clothing/suit/armor/ego_gear/realization/placeholder_replace_before_pr
+	name = "john aedd"
+	desc = "A placeholder."
+	icon_state = "lce_aedd_inactive"
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 80, PALE_DAMAGE = 30)
+	realized_ability = /obj/effect/proc_holder/ability/aedd_sparks
+
 /* WAW Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/goldexperience

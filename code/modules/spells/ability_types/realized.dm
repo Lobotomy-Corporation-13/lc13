@@ -1455,3 +1455,26 @@
 
 /obj/projectile/ripper_dash_effect/on_hit(atom/target, blocked = FALSE)
 	return
+
+/obj/effect/proc_holder/ability/aedd_sparks
+	name = "Placeholder"
+	desc = "uwah"
+	action_icon_state = "ripper0"
+	base_icon_state = "ripper"
+	cooldown_time = 3 SECONDS
+
+/obj/effect/proc_holder/ability/aedd_sparks/Perform(target, mob/living/user)
+	var/mob/living/carbon/human/our_guy = user
+	if(!istype(our_guy))
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/placeholder_replace_before_pr/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return FALSE
+
+	if(our_suit.icon_state == "lce_aedd_inactive")
+		our_suit.icon_state = "lce_aedd_active"
+	else
+		our_suit.icon_state = "lce_aedd_inactive"
+
+	our_guy.regenerate_icons()
+	return ..()
