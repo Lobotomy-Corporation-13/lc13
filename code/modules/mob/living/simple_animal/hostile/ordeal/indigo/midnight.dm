@@ -607,10 +607,22 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 // !!! Devour override: Handles what happens when we devour a corpse. !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/SweeperDevour(mob/living/L)
 	var/devoured_is_human = ishuman(L)
-	. = ..()
-	if(devoured_is_human) // ONLY SCALE WHEN EATING HUMANS. Why? Because if we just check for non-sweepers, now she can scale off Spicebush trees or some other ungodly edge case. It's silly.
+	if(!L)
+		return FALSE
+	if(devoured_is_human && (SSmaptype.maptype in SSmaptype.citymaps))
+		return FALSE
+	visible_message(span_danger("[src] devours [L]!"), span_userdanger("You feast on [L], restoring your health!"))
+
+	// Feeding on a non human will recover health by 10% of the corpse's max hp.
+	if(!devoured_is_human)
+		SweeperHealing(L.maxHealth*0.1)
+	// Feeding on a human will give us 40% of our max health, capped at a flat 1500, and increase belly scaling.
+	else
+		SweeperHealing(min(maxHealth * 0.4), 1500)
 		belly++
 		UpdateBellyScaling()
+	L.gib()
+	return TRUE
 
 // Called every time we phasechange or devour someone, to correctly apply scaling based on human corpses eaten.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/UpdateBellyScaling()
@@ -634,6 +646,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	sleep(phases_slam_windup[phase])
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(range, orgin)
+	var/list/hit_list = list()
 	for(var/i = 0 to range)
 		for(var/turf/T in all_turfs)
 			if(get_dist(orgin, T) > i)
@@ -641,8 +654,9 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 			playsound(T,'sound/effects/bamf.ogg', 60, TRUE, 10)
 			new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 			for(var/mob/living/L in T)
-				if(L == src || L.throwing || faction_check_mob(L, TRUE))
+				if(L == src || L in hit_list || L.throwing || faction_check_mob(L, TRUE))
 					continue
+				hit_list |= L
 				to_chat(L, span_userdanger("[src]'s ground slam shockwave sends you flying!"))
 				var/turf/thrownat = get_ranged_target_turf_direct(src, L, 8, rand(-10, 10))
 				L.throw_at(thrownat, 8, 2, src, TRUE, force = MOVE_FORCE_OVERPOWERING)
@@ -686,13 +700,15 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 
 	// Followup slam on phase 2 and after.
 	if(phase >= 2)
+		var/list/followup_hitlist = list()
 		SLEEP_CHECK_DEATH(0.1 SECONDS)
 		for(var/turf/T in view(2, src))
 			playsound(T,'sound/effects/tableslam.ogg', 100, TRUE, 10)
 			new /obj/effect/temp_visual/smash_effect(T)
 			for(var/mob/living/L in T)
-				if(L == src || L.throwing || faction_check_mob(L, TRUE))
+				if(L == src || L in followup_hitlist || L.throwing || faction_check_mob(L, TRUE))
 					continue
+				followup_hitlist |= L
 				to_chat(L, span_userdanger("[src]'s follow-up slam sends you flying!"))
 				var/turf/thrownat = get_ranged_target_turf_direct(src, L, 8, rand(-10, 10))
 				L.throw_at(thrownat, 8, 2, src, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
@@ -944,7 +960,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	parry_sparks.start()
 	playsound(src, 'sound/weapons/parry.ogg', 100, FALSE, 5)
 
-	if(!riposte_used && CanAct() && can_see(src, victim, 14))
+	if((!riposte_used) && (!dashing && !disposing && !preparing) && (can_see(src, victim, 14)))
 		riposte_used = TRUE
 		ParryCounter(victim)
 
