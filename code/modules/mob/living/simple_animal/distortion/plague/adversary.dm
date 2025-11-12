@@ -1,4 +1,10 @@
 //The Adversary - Plague Distortion
+
+// Movespeed modifier for sprint system
+/datum/movespeed_modifier/adversary_sprint
+	variable = TRUE
+	multiplicative_slowdown = 0
+
 /mob/living/simple_animal/hostile/distortion/adversary
 	name = "The Adversary"
 	desc = "A figure wreathed in a sickly green aura, emanating plague and corruption."
@@ -31,7 +37,8 @@
 		/datum/action/innate/distortion_attack/adversary_entanglement,
 		/datum/action/innate/distortion_attack/adversary_unstable_eye,
 		/datum/action/innate/distortion_attack/adversary_rejuvenate,
-		/datum/action/innate/distortion_attack/toggle/adversary_chase_theme
+		/datum/action/innate/distortion_attack/toggle/adversary_chase_theme,
+		/datum/action/innate/distortion_attack/toggle/adversary_sprint
 	)
 
 	// Ability cooldowns
@@ -79,6 +86,19 @@
 	var/chase_theme_stop = 0
 	var/list/chase_theme_listeners = list()
 
+	// Stamina sprint system
+	var/stamina = 100.0
+	var/max_stamina = 100.0
+	var/sprinting = FALSE
+	var/sprint_transitioning = FALSE  // TRUE when accelerating or decelerating
+	var/min_sprint_stamina = 15.0  // 15% minimum to start sprinting
+	var/sprint_acceleration_steps = 10
+	var/sprint_acceleration_time = 1 SECONDS  // Total time to reach full speed (was 2 seconds)
+	var/sprint_current_step = 0
+	var/sprint_target_speed = -1.5  // Total speed modifier for full sprint
+	var/stamina_update_timer
+	var/image/stamina_bar
+
 /mob/living/simple_animal/hostile/distortion/adversary/Initialize()
 	. = ..()
 
@@ -88,12 +108,17 @@
 	// Initialize looping sound
 	soundloop = new(list(src), FALSE)
 
+	// Start stamina update timer (0.5 second intervals)
+	stamina_update_timer = addtimer(CALLBACK(src, PROC_REF(process_stamina)), 0.5 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+
 	UpdateSpeed()
 
 /mob/living/simple_animal/hostile/distortion/adversary/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	QDEL_NULL(soundloop)
 	stop_chase_theme()
+	deltimer(stamina_update_timer)
+	remove_stamina_bar()
 	return ..()
 
 /mob/living/simple_animal/hostile/distortion/adversary/Login()
@@ -104,6 +129,13 @@
 		<b>|Plague Aura|: You emanate a sickly green aura of corruption.<br>\
 		<br>\
 		|Sweep Attack|: Your melee attacks sweep in a wide arc, hitting all enemies in front of you.<br>\
+		<br>\
+		|SPRINT|: Toggle sprint to move 2.5x faster.<br>\
+		- Drains 5% stamina every 0.5 seconds while active<br>\
+		- Regenerates 5% stamina every 0.5 seconds when not sprinting<br>\
+		- Requires at least 15% stamina to activate<br>\
+		- Automatically stops when using abilities<br>\
+		- Accelerates/decelerates smoothly over 1 second<br>\
 		<br>\
 		|MASS INFECTION|: Fire an AoE shockwave after 1.7s windup.<br>\
 		- Deals 200 BLACK damage initially, 100 BLACK after 8 tiles<br>\
@@ -126,7 +158,14 @@
 		- Killing your own zombies grants speed boost (10s) and damage boost (30s, stacks 25%)<br>\
 		- 200 second cooldown<br>\
 		<br>\
+		|CHASE THEME|: Toggle your chase music on/off.<br>\
+		- Players within 10 tiles will hear your theme<br>\
+		- Loops continuously until stopped<br>\
+		<br>\
 		Grow stronger by consuming the dead!</b>")
+
+	// Update stamina bar display if needed
+	update_stamina_bar()
 
 /mob/living/simple_animal/hostile/distortion/adversary/Life()
 	. = ..()
@@ -147,6 +186,8 @@
 
 	// Stop all actions
 	stop_chase_theme()
+	if(sprinting)
+		stop_sprint()
 
 	// Start escape sequence
 	visible_message(span_danger("[src] begins to retreat through a portal!"))
@@ -524,6 +565,148 @@
 				H.Stun(30) // 3 seconds
 	return BULLET_ACT_FORCE_PIERCE
 
+// Stamina Sprint System
+/mob/living/simple_animal/hostile/distortion/adversary/proc/start_sprint()
+	// Check if already sprinting
+	if(sprinting)
+		return
+
+	// Check if currently transitioning
+	if(sprint_transitioning)
+		to_chat(src, span_warning("Wait for speed transition to complete!"))
+		return
+
+	// Check stamina threshold
+	if(stamina < min_sprint_stamina)
+		to_chat(src, span_warning("Not enough stamina to sprint! Need at least [min_sprint_stamina]%."))
+		return
+
+	// Set sprinting and transitioning state
+	sprinting = TRUE
+	sprint_transitioning = TRUE
+	sprint_current_step = 0
+	to_chat(src, span_nicegreen("You begin sprinting!"))
+
+	// Start smooth acceleration (10 steps over sprint_acceleration_time)
+	var/step_delay = sprint_acceleration_time / sprint_acceleration_steps
+	for(var/i = 1 to sprint_acceleration_steps)
+		addtimer(CALLBACK(src, PROC_REF(process_sprint_step), i, TRUE), step_delay * i)
+
+	// Clear transitioning flag after acceleration completes
+	addtimer(CALLBACK(src, PROC_REF(clear_sprint_transitioning)), sprint_acceleration_time)
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/stop_sprint()
+	// Check if actually sprinting
+	if(!sprinting)
+		return
+
+	// Check if currently transitioning
+	if(sprint_transitioning)
+		to_chat(src, span_warning("Wait for speed transition to complete!"))
+		return
+
+	// Set state to not sprinting but transitioning
+	sprinting = FALSE
+	sprint_transitioning = TRUE
+	to_chat(src, span_warning("You stop sprinting."))
+
+	// Start smooth deceleration from current step back to 0
+	var/steps_to_reverse = sprint_current_step
+	var/step_delay = sprint_acceleration_time / sprint_acceleration_steps
+	var/deceleration_time = step_delay * steps_to_reverse
+	for(var/i = 1 to steps_to_reverse)
+		addtimer(CALLBACK(src, PROC_REF(process_sprint_step), steps_to_reverse - i, FALSE), step_delay * i)
+
+	// After deceleration completes, remove the sprint modifier and clear transitioning flag
+	addtimer(CALLBACK(src, PROC_REF(clear_sprint_modifier)), deceleration_time)
+	addtimer(CALLBACK(src, PROC_REF(clear_sprint_transitioning)), deceleration_time)
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/clear_sprint_modifier()
+	if(QDELETED(src))
+		return
+	// Remove sprint modifier completely when not sprinting
+	remove_movespeed_modifier(/datum/movespeed_modifier/adversary_sprint)
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/clear_sprint_transitioning()
+	if(QDELETED(src))
+		return
+	sprint_transitioning = FALSE
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/process_sprint_step(step_number, is_accelerating)
+	if(QDELETED(src))
+		return
+
+	// Calculate speed change for this step
+	var/speed_per_step = sprint_target_speed / sprint_acceleration_steps  // -1.5 / 10 = -0.15
+	var/target_speed = speed_per_step * step_number
+
+	// Apply the speed change
+	add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/adversary_sprint, TRUE, target_speed)
+
+	// Update current step if accelerating
+	if(is_accelerating)
+		sprint_current_step = step_number
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/process_stamina()
+	if(QDELETED(src))
+		return
+
+	if(sprinting)
+		// Drain stamina: 5% every 0.5 seconds
+		stamina -= 5
+		stamina = max(0, stamina)
+
+		// Check if ran out of stamina
+		if(stamina <= 0)
+			to_chat(src, span_warning("You've run out of stamina!"))
+			stop_sprint()
+	else
+		// Regenerate stamina: 5% per 0.5 seconds
+		stamina += 5
+		stamina = min(max_stamina, stamina)
+
+	// Update stamina bar
+	update_stamina_bar()
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/update_stamina_bar()
+	if(!client)
+		return
+
+	// Remove bar if stamina is full
+	if(stamina >= max_stamina)
+		remove_stamina_bar()
+		return
+
+	// Create bar if it doesn't exist
+	if(!stamina_bar)
+		create_stamina_bar()
+
+	// Update bar icon state (rounded to nearest 5%)
+	var/bar_percent = round(stamina, 5)
+	stamina_bar.icon_state = "prog_bar_[bar_percent]"
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/create_stamina_bar()
+	if(!client)
+		return
+
+	// Create the stamina bar image
+	stamina_bar = image('icons/effects/progessbar.dmi', src, "prog_bar_100", HUD_LAYER)
+	stamina_bar.plane = ABOVE_HUD_PLANE
+	stamina_bar.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+	stamina_bar.pixel_y = 32  // Position above mob
+
+	// Add to client images (visible only to this player)
+	client.images += stamina_bar
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/remove_stamina_bar()
+	if(!stamina_bar)
+		return
+
+	if(client)
+		client.images -= stamina_bar
+
+	stamina_bar = null
+
 // Chase Theme Music System
 /mob/living/simple_animal/hostile/distortion/adversary/proc/start_chase_theme()
 	if(chase_theme_active)
@@ -579,7 +762,8 @@
 // Action Datum 1: MASS INFECTION
 /datum/action/innate/distortion_attack/adversary_mass_infection
 	name = "MASS INFECTION"
-	button_icon_state = "apocalypse_bird"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "mass_infection"
 	chosen_attack_num = 1
 
 /datum/action/innate/distortion_attack/adversary_mass_infection/Activate()
@@ -597,7 +781,8 @@
 // Action Datum 2: ENTANGLEMENT
 /datum/action/innate/distortion_attack/adversary_entanglement
 	name = "ENTANGLEMENT"
-	button_icon_state = "bluestar_gaze"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "entanglement"
 	chosen_attack_num = 2
 
 /datum/action/innate/distortion_attack/adversary_entanglement/Activate()
@@ -615,7 +800,8 @@
 // Action Datum 3: UNSTABLE EYE
 /datum/action/innate/distortion_attack/adversary_unstable_eye
 	name = "UNSTABLE EYE"
-	button_icon_state = "spores"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "unstable_eye"
 	chosen_attack_num = 3
 
 /datum/action/innate/distortion_attack/adversary_unstable_eye/Activate()
@@ -630,6 +816,10 @@
 	if(A.zoomed)
 		to_chat(A, span_warning("You are already using UNSTABLE EYE!"))
 		return
+
+	// Stop sprinting when using ability
+	if(A.sprinting)
+		A.stop_sprint()
 
 	A.unstable_eye_cooldown = world.time + A.unstable_eye_cooldown_time
 	to_chat(A, span_warning("Channeling UNSTABLE EYE..."))
@@ -647,7 +837,8 @@
 // Action Datum 4: REJUVENATE THE ROTTEN
 /datum/action/innate/distortion_attack/adversary_rejuvenate
 	name = "REJUVENATE THE ROTTEN"
-	button_icon_state = "hatching_chick"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "reraise"
 	chosen_attack_num = 4
 
 /datum/action/innate/distortion_attack/adversary_rejuvenate/Activate()
@@ -662,6 +853,10 @@
 	if(!length(A.death_remnants))
 		to_chat(A, span_warning("There are no remnants to rejuvenate!"))
 		return
+
+	// Stop sprinting when using ability
+	if(A.sprinting)
+		A.stop_sprint()
 
 	A.rejuvenate_cooldown = world.time + A.rejuvenate_cooldown_time
 	to_chat(A, span_warning("Channeling REJUVENATE THE ROTTEN..."))
@@ -679,10 +874,11 @@
 // Action Datum 5: CHASE THEME Toggle
 /datum/action/innate/distortion_attack/toggle/adversary_chase_theme
 	name = "Chase Theme"
-	button_icon_state = "musicalnote"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "music_off"
 	chosen_attack_num = 0
-	button_icon_toggle_activated = "musicalnote_on"
-	button_icon_toggle_deactivated = "musicalnote"
+	button_icon_toggle_activated = "music_on"
+	button_icon_toggle_deactivated = "music_off"
 
 /datum/action/innate/distortion_attack/toggle/adversary_chase_theme/Activate()
 	var/mob/living/simple_animal/hostile/distortion/adversary/A = owner
@@ -703,6 +899,39 @@
 		return
 
 	A.stop_chase_theme()
+	button_icon_state = button_icon_toggle_deactivated
+	UpdateButtonIcon()
+	active = FALSE
+
+// Action Datum 6: SPRINT Toggle
+/datum/action/innate/distortion_attack/toggle/adversary_sprint
+	name = "Sprint"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "sprint_off"
+	chosen_attack_num = 0
+	button_icon_toggle_activated = "sprint_on"
+	button_icon_toggle_deactivated = "sprint_off"
+
+/datum/action/innate/distortion_attack/toggle/adversary_sprint/Activate()
+	var/mob/living/simple_animal/hostile/distortion/adversary/A = owner
+	if(!istype(A))
+		return
+
+	if(!A.sprinting)
+		A.start_sprint()
+		if(A.sprinting)  // Only update button if sprint actually started
+			button_icon_state = button_icon_toggle_activated
+			UpdateButtonIcon()
+			active = TRUE
+	else
+		to_chat(A, span_warning("Already sprinting!"))
+
+/datum/action/innate/distortion_attack/toggle/adversary_sprint/Deactivate()
+	var/mob/living/simple_animal/hostile/distortion/adversary/A = owner
+	if(!istype(A))
+		return
+
+	A.stop_sprint()
 	button_icon_state = button_icon_toggle_deactivated
 	UpdateButtonIcon()
 	active = FALSE
@@ -798,6 +1027,10 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/distortion/adversary/proc/fire_mass_infection(atom/target)
+	// Stop sprinting when using ability
+	if(sprinting)
+		stop_sprint()
+
 	can_act = FALSE
 	face_atom(target)
 	to_chat(src, span_warning("Channeling MASS INFECTION..."))
@@ -830,6 +1063,10 @@
 	chosen_attack = 0 // Reset to default
 
 /mob/living/simple_animal/hostile/distortion/adversary/proc/fire_entanglement(atom/target)
+	// Stop sprinting when using ability
+	if(sprinting)
+		stop_sprint()
+
 	can_act = FALSE
 	face_atom(target)
 	to_chat(src, span_warning("Channeling ENTANGLEMENT..."))
