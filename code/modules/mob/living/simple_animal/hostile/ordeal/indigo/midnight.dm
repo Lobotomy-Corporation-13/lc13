@@ -654,7 +654,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 			playsound(T,'sound/effects/bamf.ogg', 60, TRUE, 10)
 			new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 			for(var/mob/living/L in T)
-				if(L == src || L in hit_list || L.throwing || faction_check_mob(L, TRUE))
+				if((L == src) || (L in hit_list) || (L.throwing) || (faction_check_mob(L, TRUE)))
 					continue
 				hit_list |= L
 				to_chat(L, span_userdanger("[src]'s ground slam shockwave sends you flying!"))
@@ -706,7 +706,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 			playsound(T,'sound/effects/tableslam.ogg', 100, TRUE, 10)
 			new /obj/effect/temp_visual/smash_effect(T)
 			for(var/mob/living/L in T)
-				if(L == src || L in followup_hitlist || L.throwing || faction_check_mob(L, TRUE))
+				if((L == src) || (L in followup_hitlist) || (L.throwing) || (faction_check_mob(L, TRUE)))
 					continue
 				followup_hitlist |= L
 				to_chat(L, span_userdanger("[src]'s follow-up slam sends you flying!"))
