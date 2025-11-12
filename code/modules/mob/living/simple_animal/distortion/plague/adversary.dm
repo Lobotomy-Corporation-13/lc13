@@ -30,7 +30,8 @@
 		/datum/action/innate/distortion_attack/adversary_mass_infection,
 		/datum/action/innate/distortion_attack/adversary_entanglement,
 		/datum/action/innate/distortion_attack/adversary_unstable_eye,
-		/datum/action/innate/distortion_attack/adversary_rejuvenate
+		/datum/action/innate/distortion_attack/adversary_rejuvenate,
+		/datum/action/innate/distortion_attack/toggle/adversary_chase_theme
 	)
 
 	// Ability cooldowns
@@ -70,6 +71,14 @@
 	// Looping sound for breathing
 	var/datum/looping_sound/adversary_breathing/soundloop
 
+	// Chase theme music system
+	var/chase_theme_path = 'sound/distortions/the_adversary/chase_theme.ogg'
+	var/chase_theme_length = 120 SECONDS // 2 minutes
+	var/chase_theme_active = FALSE
+	var/chase_theme_volume = 20
+	var/chase_theme_stop = 0
+	var/list/chase_theme_listeners = list()
+
 /mob/living/simple_animal/hostile/distortion/adversary/Initialize()
 	. = ..()
 
@@ -84,6 +93,7 @@
 /mob/living/simple_animal/hostile/distortion/adversary/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	QDEL_NULL(soundloop)
+	stop_chase_theme()
 	return ..()
 
 /mob/living/simple_animal/hostile/distortion/adversary/Login()
@@ -118,6 +128,54 @@
 		<br>\
 		Grow stronger by consuming the dead!</b>")
 
+/mob/living/simple_animal/hostile/distortion/adversary/Life()
+	. = ..()
+	if(!.)
+		return FALSE
+	process_chase_theme()
+
+/mob/living/simple_animal/hostile/distortion/adversary/death(gibbed)
+	if(stat == DEAD)
+		return
+
+	// Heal to full health
+	adjustHealth(-maxHealth)
+
+	// Set to invulnerable during escape sequence
+	status_flags |= GODMODE
+	can_act = FALSE
+
+	// Stop all actions
+	stop_chase_theme()
+
+	// Start escape sequence
+	visible_message(span_danger("[src] begins to retreat through a portal!"))
+
+	// Summon portal behind them (1.5 seconds)
+	var/obj/effect/portal/escape_portal = new(get_step(src, turn(dir, 180)))
+	escape_portal.color = "#00FF00"
+	playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_begin.ogg', 75, TRUE)
+
+	INVOKE_ASYNC(src, PROC_REF(portal_escape), escape_portal)
+
+	return // Don't call parent death
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/portal_escape(obj/effect/portal/escape_portal)
+	sleep(1.5 SECONDS)
+
+	// Turn to face the portal (dir = SOUTH)
+	setDir(NORTH)
+
+	// Step into portal while fading (2 seconds)
+	animate(src, alpha = 0, pixel_y = 32, time = 2 SECONDS)
+
+	sleep(2 SECONDS)
+
+	// Delete portal and self
+	playsound(src, 'sound/abnormalities/wayward_passenger/ripspace_end.ogg', 75, TRUE)
+	qdel(escape_portal)
+	qdel(src)
+
 // Override simple_animal's empty blur procs to enable blur effect
 /mob/living/simple_animal/hostile/distortion/adversary/blur_eyes(amount)
 	if(amount > 0)
@@ -144,7 +202,7 @@
 	// Check if attacking own zombie for instant kill + buffs
 	if(istype(attacked_target, /mob/living/simple_animal/hostile/adversary_zombie))
 		var/mob/living/simple_animal/hostile/adversary_zombie/zombie = attacked_target
-		playsound(zombie, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
+		playsound(zombie, 'sound/distortions/the_adversary/slashhit.ogg', 75, TRUE)
 		visible_message(span_danger("[src] consumes [zombie]!"))
 		to_chat(src, span_nicegreen("You consume the corrupted flesh, growing stronger!"))
 
@@ -173,7 +231,7 @@
 
 	// Sweep attack - works on any target
 	// Play swing sound
-	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 50, TRUE)
+	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 75, TRUE)
 
 	// Show swipe effect
 	new /obj/effect/temp_visual/swipe(get_step(src, SOUTHWEST), get_dir(src, attacked_target), "#055b05", "swipe_r_large")
@@ -197,7 +255,7 @@
 	var/hit_something = FALSE
 	for(var/mob/living/L in hit_mobs)
 		do_attack_animation(L, ATTACK_EFFECT_SLASH)
-		playsound(L, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
+		playsound(L, 'sound/distortions/the_adversary/slashhit.ogg', 75, TRUE)
 		var/damage = rand(melee_damage_lower, melee_damage_upper) * melee_damage_modifier
 		L.deal_damage(damage, melee_damage_type, src, attack_type = (ATTACK_TYPE_MELEE))
 		hit_something = TRUE
@@ -347,6 +405,7 @@
 	var/obj/effect/trail_type = /obj/effect/temp_visual/adversary_trail
 	var/tiles_traveled = 0
 	var/damage_modifier = 1.0
+	var/list/hit_targets = list() // Track targets already hit to prevent double-hitting
 
 /obj/projectile/magic/aoe/adversary_infection/Initialize(mapload, damage_mod = 1.0)
 	. = ..()
@@ -379,6 +438,11 @@
 				continue
 			if(istype(L, /mob/living/simple_animal/hostile/abnormality))
 				continue
+			// Skip if already hit this target
+			if(L in hit_targets)
+				continue
+			// Mark target as hit
+			hit_targets += L
 			// Deal damage directly to targets in AoE
 			L.deal_damage(damage, damage_type, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			playsound(L, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
@@ -387,19 +451,25 @@
 
 /obj/projectile/magic/aoe/adversary_infection/prehit_pierce(atom/A)
 	if(isliving(A))
+		var/mob/living/L = A
 		// Skip The Adversary and abnormality mobs
-		if(istype(A, /mob/living/simple_animal/hostile/distortion/adversary))
+		if(istype(L, /mob/living/simple_animal/hostile/distortion/adversary))
 			return PROJECTILE_PIERCE_PHASE // Phase through without hitting
-		if(istype(A, /mob/living/simple_animal/hostile/abnormality))
+		if(istype(L, /mob/living/simple_animal/hostile/abnormality))
 			return PROJECTILE_PIERCE_PHASE // Phase through without hitting
+		// Skip if already hit this target
+		if(L in hit_targets)
+			return PROJECTILE_PIERCE_PHASE // Phase through already-hit targets
 		return PROJECTILE_PIERCE_HIT // Hit and pierce through all other living targets
 	return ..()
 
 /obj/projectile/magic/aoe/adversary_infection/on_hit(atom/target, blocked = FALSE)
 	. = ..()
 	if(isliving(target))
-		// Don't play sound for The Adversary or abnormalities we're phasing through
-		if(!istype(target, /mob/living/simple_animal/hostile/distortion/adversary) && !istype(target, /mob/living/simple_animal/hostile/abnormality))
+		var/mob/living/L = target
+		// Don't play sound for The Adversary, abnormalities, or already-hit targets
+		if(!istype(L, /mob/living/simple_animal/hostile/distortion/adversary) && !istype(L, /mob/living/simple_animal/hostile/abnormality) && !(L in hit_targets))
+			hit_targets += L // Mark as hit
 			playsound(target, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
 	return BULLET_ACT_FORCE_PIERCE
 
@@ -421,11 +491,17 @@
 	projectile_phasing = ALL // Passes through walls
 	hitsound = 'sound/effects/splat.ogg'
 	var/damage_modifier = 1.0
+	var/obj/effect/trail_type = /obj/effect/temp_visual/adversary_trail
 
 /obj/projectile/adversary_entangle/Initialize(mapload, damage_mod = 1.0)
 	. = ..()
 	damage_modifier = damage_mod
 	damage = 30 * damage_modifier
+
+/obj/projectile/adversary_entangle/Moved(atom/OldLoc, Dir)
+	. = ..()
+	// Spawn trail effect on current turf
+	new trail_type(get_turf(src))
 
 /obj/projectile/adversary_entangle/prehit_pierce(atom/A)
 	if(isliving(A))
@@ -447,6 +523,58 @@
 				var/mob/living/carbon/human/H = target
 				H.Stun(30) // 3 seconds
 	return BULLET_ACT_FORCE_PIERCE
+
+// Chase Theme Music System
+/mob/living/simple_animal/hostile/distortion/adversary/proc/start_chase_theme()
+	if(chase_theme_active)
+		return
+
+	chase_theme_active = TRUE
+	chase_theme_stop = world.time + chase_theme_length
+	to_chat(src, span_nicegreen("You begin playing your chase theme..."))
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/stop_chase_theme()
+	if(!chase_theme_active)
+		return
+
+	chase_theme_active = FALSE
+	for(var/mob/M in chase_theme_listeners)
+		if(!M || !M.client)
+			continue
+		M.stop_sound_channel(CHANNEL_JUKEBOX)
+	chase_theme_listeners = list()
+	to_chat(src, span_warning("Your chase theme stops playing."))
+
+/mob/living/simple_animal/hostile/distortion/adversary/proc/process_chase_theme()
+	if(!chase_theme_active)
+		return
+
+	if(world.time < chase_theme_stop)
+		var/sound/song_played = sound(chase_theme_path)
+
+		// Add new listeners within 10 tiles
+		for(var/mob/M in range(10, src))
+			if(!M.client || !(M.client.prefs.toggles & SOUND_INSTRUMENTS))
+				continue
+			if(!(M in chase_theme_listeners))
+				chase_theme_listeners[M] = TRUE
+				M.playsound_local(get_turf(M), null, chase_theme_volume * 0.5, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
+
+		// Remove listeners who moved too far away
+		for(var/mob/M in chase_theme_listeners)
+			if(get_dist(src, M) > 10)
+				chase_theme_listeners -= M
+				if(!M || !M.client)
+					continue
+				M.stop_sound_channel(CHANNEL_JUKEBOX)
+	else
+		// Track finished, loop it
+		chase_theme_stop = world.time + chase_theme_length
+		var/sound/song_played = sound(chase_theme_path)
+		for(var/mob/M in chase_theme_listeners)
+			if(!M || !M.client)
+				continue
+			M.playsound_local(get_turf(M), null, chase_theme_volume * 0.5, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
 
 // Action Datum 1: MASS INFECTION
 /datum/action/innate/distortion_attack/adversary_mass_infection
@@ -547,6 +675,37 @@
 	A.TemporarySpeedChange(2, 1.5 SECONDS)
 
 	addtimer(CALLBACK(A, TYPE_PROC_REF(/mob/living/simple_animal/hostile/distortion/adversary, rejuvenate_the_rotten)), 1.5 SECONDS)
+
+// Action Datum 5: CHASE THEME Toggle
+/datum/action/innate/distortion_attack/toggle/adversary_chase_theme
+	name = "Chase Theme"
+	button_icon_state = "musicalnote"
+	chosen_attack_num = 0
+	button_icon_toggle_activated = "musicalnote_on"
+	button_icon_toggle_deactivated = "musicalnote"
+
+/datum/action/innate/distortion_attack/toggle/adversary_chase_theme/Activate()
+	var/mob/living/simple_animal/hostile/distortion/adversary/A = owner
+	if(!istype(A))
+		return
+
+	if(!A.chase_theme_active)
+		A.start_chase_theme()
+		button_icon_state = button_icon_toggle_activated
+		UpdateButtonIcon()
+		active = TRUE
+	else
+		to_chat(A, span_warning("Chase theme is already playing!"))
+
+/datum/action/innate/distortion_attack/toggle/adversary_chase_theme/Deactivate()
+	var/mob/living/simple_animal/hostile/distortion/adversary/A = owner
+	if(!istype(A))
+		return
+
+	A.stop_chase_theme()
+	button_icon_state = button_icon_toggle_deactivated
+	UpdateButtonIcon()
+	active = FALSE
 
 // UNSTABLE EYE proc
 /mob/living/simple_animal/hostile/distortion/adversary/proc/activate_unstable_eye()
@@ -650,13 +809,16 @@
 		if(M.z == z && get_dist(src, M) > 7)
 			M.playsound_local(get_turf(M), 'sound/distortions/the_adversary/massinfection_faraway.ogg', 50, TRUE)
 
-	// Show warning overlay
-	var/turf/target_turf = get_turf(target)
-	target_turf.add_overlay(icon('icons/effects/effects.dmi', "shield"))
+	SLEEP_CHECK_DEATH(0.7 SECONDS)
 
-	SLEEP_CHECK_DEATH(1.7 SECONDS)
+	// Show warning line for first 7 tiles
+	var/turf/start_loc = get_turf(src)
+	var/turf/target_loc = get_turf(target)
+	for(var/turf/T in getline(start_loc, get_ranged_target_turf_direct(start_loc, target_loc, 7)))
+		new /obj/effect/temp_visual/cult/sparks(T)
 
-	target_turf.cut_overlay(icon('icons/effects/effects.dmi', "shield"))
+	// Continue channeling
+	SLEEP_CHECK_DEATH(1 SECONDS)
 
 	// Fire projectile
 	var/obj/projectile/magic/aoe/adversary_infection/P = new(get_turf(src), mass_infection_damage_modifier)
@@ -675,7 +837,7 @@
 	// Play sound
 	playsound(src, 'sound/distortions/the_adversary/entanglement.ogg', 75, TRUE)
 
-	SLEEP_CHECK_DEATH(0.75 SECONDS)
+	SLEEP_CHECK_DEATH(1.25 SECONDS)
 
 	// Fire projectile
 	var/obj/projectile/adversary_entangle/P = new(get_turf(src), entanglement_damage_modifier)
