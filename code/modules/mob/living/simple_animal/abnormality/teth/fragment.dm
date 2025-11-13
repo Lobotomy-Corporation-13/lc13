@@ -63,9 +63,14 @@
 /mob/living/simple_animal/hostile/abnormality/fragment/Login()
 	. = ..()
 	to_chat(src, "<h1>You are Fragment of the Universe, A Combat Role Abnormality.</h1><br>\
-		<b>|Echoes of the Stars|: You are able to trigger your “Song” ability using the button on your screen or a hotkey (Spacebar by Default).<br>\
-		While you are using your “Song” all humans that you see will start taking WHITE damage over time.<br>\
-		This attack goes through the Rhinos mechs, which can cause the user to panic within the mech and become completely helpless.</b>")
+		<b>|Echoes of the Stars|: You are able to trigger your 'Song' ability using the button on your screen or a hotkey (Spacebar by Default).<br>\
+		While you are using your 'Song', all enemies in view will take WHITE damage over time (8 ticks total).<br>\
+		<br>\
+		|Fragile Corruption|: Each tick of your song inflicts 1 WHITE FRAGILE and 1 BLACK FRAGILE on targets.<br>\
+		If a target already has fragile stacks, you add 1 more stack to their existing amount.<br>\
+		Example progression: 1, 2, 3, 4, 5, 6, 7, 8 stacks over 8 ticks.<br>\
+		<br>\
+		This attack goes through Rhino mechs, which can cause users to panic within the mech and become completely helpless.</b>")
 
 /datum/action/cooldown/fragment_song
 	name = "Sing"
@@ -141,6 +146,22 @@
 			if(L.stat == DEAD)
 				continue
 			L.deal_damage(song_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+
+			// Apply fragile only on combat maps
+			if(IsCombatMap())
+				// Apply WHITE fragile (current stacks + 1, minimum 1)
+				var/white_fragile_amount = 1
+				var/datum/status_effect/stacking/damtype_protection/white/fragile/WF = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile)
+				if(WF)
+					white_fragile_amount = WF.stacks + 1
+				L.apply_lc_white_fragile(white_fragile_amount)
+
+				// Apply BLACK fragile (current stacks + 1, minimum 1)
+				var/black_fragile_amount = 1
+				var/datum/status_effect/stacking/damtype_protection/black/fragile/BF = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile)
+				if(BF)
+					black_fragile_amount = BF.stacks + 1
+				L.apply_lc_black_fragile(black_fragile_amount)
 		SLEEP_CHECK_DEATH(3)
 
 	animate(src, pixel_y = 0, time = 0)

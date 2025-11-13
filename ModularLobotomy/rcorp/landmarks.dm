@@ -10,6 +10,7 @@ GLOBAL_LIST_INIT(easycombat, list(
 	/mob/living/simple_animal/hostile/abnormality/puss_in_boots,
 	/mob/living/simple_animal/hostile/abnormality/woodsman,
 	/mob/living/simple_animal/hostile/abnormality/branch12/ollieoxenfree,
+	/mob/living/simple_animal/hostile/abnormality/branch12/enchantress_of_wands,
 ))
 
 GLOBAL_LIST_INIT(easysupport, list(

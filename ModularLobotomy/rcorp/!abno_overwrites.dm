@@ -38,7 +38,7 @@
 	if(IsCombatMap())
 		melee_damage_lower = 22
 		melee_damage_upper = 25
-		song_damage = 8
+		song_damage = 18
 	return ..() // Doesn't change on Initialize so order doesn't matter here.
 
 //Clown could be a bit faster, and a bit more damage

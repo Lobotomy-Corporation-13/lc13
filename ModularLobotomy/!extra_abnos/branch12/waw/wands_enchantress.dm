@@ -39,6 +39,14 @@
 
 	//gift_type =  /datum/ego_gifts/icon_of_chaos
 
+/mob/living/simple_animal/hostile/abnormality/branch12/enchantress_of_wands/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<h1>You are Enchantress of Wands, A Combat Role Abnormality.</h1><br>\
+		|Unpredictable Projectiles|: Your chaos bullets have completely random effects when they hit a target. \
+		Against humans, they can: instantly down them, make them vomit, heal 100 HP, deal 80 RED/WHITE/BLACK/PALE damage, or restore 100 SP. \
+		Against non-human enemies, they can: heal 300 HP or deal 100 RED/WHITE/BLACK/PALE damage.<br></b>")
 
 /mob/living/simple_animal/hostile/abnormality/branch12/enchantress_of_wands/WorkChance(mob/living/carbon/human/user, chance)
 	return chance - (datum_reference.qliphoth_meter-1)*10

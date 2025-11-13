@@ -96,6 +96,35 @@
 //from here on, abilities it can gain on breach
 /mob/living/simple_animal/hostile/abnormality/branch12/ollieoxenfree/AttackingTarget(atom/attacked_target) //checking it's ideas and executing them
 	..()
+
+	// Check if attacking a vehicle - steal ideas from occupants (Combat Maps Only)
+	if(istype(attacked_target, /obj/vehicle) && IsCombatMap())
+		var/obj/vehicle/V = attacked_target
+		for(var/mob/living/carbon/human/H in V.occupants)
+			// Gain an idea from attacking a new human
+			if(!(H in attacked_humans) && length(potential_ideas))
+				attacked_humans += H
+				var/new_idea = pick_n_take(potential_ideas)
+				ideas_stolen += new_idea
+				visible_message(span_warning("[src] steals an idea from [H] inside [V]!"))
+				to_chat(src, span_nicegreen("You have stolen the '[new_idea]' idea from [H]!"))
+
+			// Apply effects to humans in vehicle
+			for(var/z in ideas_stolen)
+				if(z == "hallucination") //from dangle
+					H.hallucination += 10
+				if(z == "blindness") //kill their eyes
+					H.adjust_blurriness(15)
+				if(z == "confusion") //kill their legs
+					H.set_confusion(10)
+				if(z == "bleed") //bleed
+					H.apply_lc_bleed(30)
+				if(z == "knockdown") //knock them down, from smile without the weapon drop
+					H.Knockdown(20)
+				if(z == "lifesteal") //heal by the lowest damage it can do
+					adjustBruteLoss(-melee_damage_lower)
+		return
+
 	if(!ishuman(attacked_target))
 		return
 	var/mob/living/carbon/human/H = attacked_target

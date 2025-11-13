@@ -395,6 +395,21 @@
 	light_power = 1
 	light_color = "#00FF00"
 
+// Green remnant visual effect
+/obj/effect/temp_visual/adversary_mass_chain
+	name = "corrupted chain"
+	desc = "Chains surrounding the adversary as they are channeling their MASS INFECTION."
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "locked_down"
+	alpha = 150
+	layer = ABOVE_ALL_MOB_LAYER
+	duration = 1.7 SECONDS
+	color = "#00FF00"
+
+/obj/effect/temp_visual/adversary_mass_chain/entanglement
+	desc = "Chains surrounding the adversary as they are channeling their ENTANGLEMENT."
+	duration = 1.25 SECONDS
+
 // Adversary Zombie Mob
 /mob/living/simple_animal/hostile/adversary_zombie
 	name = "corrupted zombie"
@@ -488,6 +503,27 @@
 			L.deal_damage(damage, damage_type, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			playsound(L, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+		// Hit occupants inside vehicles
+		for(var/obj/vehicle/V in range(1, get_turf(src)))
+			for(var/mob/living/occupant in V.occupants)
+				if(occupant == firer)
+					continue
+				if(occupant.stat == DEAD)
+					continue
+				// Skip The Adversary and abnormality mobs
+				if(istype(occupant, /mob/living/simple_animal/hostile/distortion/adversary))
+					continue
+				if(istype(occupant, /mob/living/simple_animal/hostile/abnormality))
+					continue
+				// Skip if already hit this target
+				if(occupant in hit_targets)
+					continue
+				// Mark target as hit
+				hit_targets += occupant
+				// Deal damage to vehicle occupants
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(V), pick(GLOB.alldirs))
+				occupant.deal_damage(damage, damage_type, source = firer, attack_type = (ATTACK_TYPE_RANGED))
+				playsound(V, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
 	..()
 
 /obj/projectile/magic/aoe/adversary_infection/prehit_pierce(atom/A)
@@ -562,6 +598,23 @@
 			playsound(target, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
 			if(ishuman(target))
 				var/mob/living/carbon/human/H = target
+				H.Stun(30) // 3 seconds
+	// Hit vehicle occupants
+	if(istype(target, /obj/vehicle))
+		var/obj/vehicle/V = target
+		for(var/mob/living/occupant in V.occupants)
+			// Skip The Adversary and abnormality mobs
+			if(istype(occupant, /mob/living/simple_animal/hostile/distortion/adversary))
+				continue
+			if(istype(occupant, /mob/living/simple_animal/hostile/abnormality))
+				continue
+			if(occupant.stat == DEAD)
+				continue
+			playsound(V, 'sound/distortions/the_adversary/slashhit.ogg', 50, TRUE)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(V), pick(GLOB.alldirs))
+			occupant.deal_damage(damage, damage_type, source = firer, attack_type = (ATTACK_TYPE_RANGED))
+			if(ishuman(occupant))
+				var/mob/living/carbon/human/H = occupant
 				H.Stun(30) // 3 seconds
 	return BULLET_ACT_FORCE_PIERCE
 
@@ -1042,6 +1095,7 @@
 		if(M.z == z && get_dist(src, M) > 7)
 			M.playsound_local(get_turf(M), 'sound/distortions/the_adversary/massinfection_faraway.ogg', 50, TRUE)
 
+	new /obj/effect/temp_visual/adversary_mass_chain(get_turf(src))
 	SLEEP_CHECK_DEATH(0.7 SECONDS)
 
 	// Show warning line for first 7 tiles
@@ -1073,6 +1127,7 @@
 
 	// Play sound
 	playsound(src, 'sound/distortions/the_adversary/entanglement.ogg', 75, TRUE)
+	new /obj/effect/temp_visual/adversary_mass_chain/entanglement(get_turf(src))
 
 	SLEEP_CHECK_DEATH(1.25 SECONDS)
 
