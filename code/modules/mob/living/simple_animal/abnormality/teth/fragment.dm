@@ -50,6 +50,7 @@
 	var/song_cooldown
 	var/song_cooldown_time = 10 SECONDS
 	var/song_damage = 5 // Dealt 8 times
+	var/fragile_limit = 5
 	var/can_act = TRUE
 
 	//Visual/Animation Vars
@@ -67,8 +68,8 @@
 		While you are using your 'Song', all enemies in view will take WHITE damage over time (8 ticks total).<br>\
 		<br>\
 		|Fragile Corruption|: Each tick of your song inflicts 1 WHITE FRAGILE and 1 BLACK FRAGILE on targets.<br>\
-		If a target already has fragile stacks, you add 1 more stack to their existing amount.<br>\
-		Example progression: 1, 2, 3, 4, 5, 6, 7, 8 stacks over 8 ticks.<br>\
+		If a target already has fragile stacks, you add 1 more stack to their existing amount. A max of 5 stacks can be inflicted.<br>\
+		Example progression: 1, 2, 3, 4, 5 stacks over 8 ticks.<br>\
 		<br>\
 		This attack goes through Rhino mechs, which can cause users to panic within the mech and become completely helpless.</b>")
 
@@ -154,6 +155,8 @@
 				var/datum/status_effect/stacking/damtype_protection/white/fragile/WF = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/white/fragile)
 				if(WF)
 					white_fragile_amount = WF.stacks + 1
+				if(white_fragile_amount > fragile_limit)
+					white_fragile_amount = fragile_limit
 				L.apply_lc_white_fragile(white_fragile_amount)
 
 				// Apply BLACK fragile (current stacks + 1, minimum 1)
@@ -161,6 +164,8 @@
 				var/datum/status_effect/stacking/damtype_protection/black/fragile/BF = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/fragile)
 				if(BF)
 					black_fragile_amount = BF.stacks + 1
+				if(black_fragile_amount > fragile_limit)
+					black_fragile_amount = fragile_limit
 				L.apply_lc_black_fragile(black_fragile_amount)
 		SLEEP_CHECK_DEATH(3)
 

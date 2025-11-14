@@ -38,6 +38,7 @@
 	if(IsCombatMap())
 		melee_damage_lower = 22
 		melee_damage_upper = 25
+		maxHealth = 1400
 		song_damage = 18
 	return ..() // Doesn't change on Initialize so order doesn't matter here.
 
