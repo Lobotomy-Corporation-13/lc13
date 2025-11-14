@@ -99,6 +99,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/ending_looting_line = "That's it, you asked for this."
 	var/list/glob_faction = list()
 
+	// When hit without a target, will patrol to the source of the damage (if any) as long as we're not on this cooldown.
+	var/investigation_cooldown
+	var/investigation_cooldown_duration = 20 SECONDS
+
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
 		to the equivilent of move_to_delay. Basically
@@ -310,8 +314,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return
 	if(isliving(source) && !faction_check_mob(source)) // If a mob is responsible for the damage we took... (Mind, we will receive source = null for attacks that are not intended to be "trackable")
 		RegisterAggroValue(source, damage_amount, damage_type) // Regardless of whether we have an active target or not, add the damage taken to our target memory.
-		if(!target) // If we don't have a target right now, move to investigate the source of the damage.
-			Goto(get_turf(source), move_to_delay, 2)
+		if(!target && world.time >= investigation_cooldown) // If we don't have a target right now, move to investigate the source of the damage.
+			var/turf/source_turf = get_turf(source)
+			if(!source_turf)
+				return
+			investigation_cooldown = world.time + investigation_cooldown_duration
+			patrol_to(source_turf)
 
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc))
