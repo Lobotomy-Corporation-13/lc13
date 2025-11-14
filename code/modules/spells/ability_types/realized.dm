@@ -61,6 +61,12 @@
 	action_icon_state = "gasharpoon"
 	target_type = /obj/item/ego_weapon/shield/gasharpoon
 
+/obj/effect/proc_holder/ability/ego_assimilation/waxen
+	action_icon = 'ModularLobotomy/!extra_abnos/community/!icons/community_weapons.dmi'
+	base_icon_state = "combust"
+	action_icon_state = "combust"
+	target_type = /obj/item/ego_weapon/shield/waxen
+
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
 	name = "Song of the Universe"
@@ -821,7 +827,7 @@
 	desc = "Burn yourself away in exchange for power."
 	action_icon_state = "overheat0"
 	base_icon_state = "overheat"
-	cooldown_time = 5 MINUTES
+	cooldown_time = 2.5 MINUTES
 
 /obj/effect/proc_holder/ability/overheat/Perform(target, mob/user)
 	var/mob/living/carbon/human/H = user
