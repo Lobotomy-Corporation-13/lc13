@@ -1,5 +1,6 @@
 ///More or less the same as the original, with some tweaks making it more of a menace, like the ability to trigger murderous insanity on combo beak hits.
 /mob/living/simple_animal/hostile/limbus_abno/pbird
+	true_name = "Punishing Bird"
 	maxHealth = 600
 	health = 600
 	melee_damage_lower = 1
@@ -86,11 +87,12 @@
 	stat_attack = DEAD
 	ChangeResistances(list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 0.5))
 	bird_angry = TRUE
+	addtimer(CALLBACK(src, PROC_REF(CalmDown)), 2 MINUTES)
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/proc/CalmDown()
 	if(!bird_angry)
 		return
-	visible_message(span_notice("\The [src] turns back into a fuzzy looking bird!"))
+	visible_message(span_notice("[src] turns back into a fuzzy looking bird!"))
 	sinners = list()
 	icon_state = original_abno.icon_state
 	icon_living = original_abno.icon_living

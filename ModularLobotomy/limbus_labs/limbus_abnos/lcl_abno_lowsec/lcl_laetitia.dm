@@ -1,4 +1,5 @@
 /mob/living/simple_animal/hostile/limbus_abno/laetitia
+	true_name = "Laetitia"
 	maxHealth = 1500
 	health = 1500
 	melee_damage_lower = 1

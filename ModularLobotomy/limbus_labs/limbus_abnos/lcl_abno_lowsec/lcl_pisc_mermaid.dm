@@ -1,4 +1,5 @@
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid
+	true_name = "Piscine Mermaid"
 	maxHealth = 1000
 	health = 1000
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 2)

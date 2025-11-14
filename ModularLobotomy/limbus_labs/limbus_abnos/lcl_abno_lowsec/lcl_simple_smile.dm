@@ -1,6 +1,7 @@
 ///Unlike most LCL abnormality, this one gets most of its abilities with few requirements. It can't really fight, but it sure as hell can be annoying.
 ///Due to its incredibly low health, the player is going to need to learn the hard way that there's a limit to how much you can mess with people before they just kill you.
 /mob/living/simple_animal/hostile/limbus_abno/simple_smile
+	true_name = "Gone with a Simple Smile"
 	maxHealth = 400
 	health = 400
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 2)

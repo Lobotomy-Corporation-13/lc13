@@ -1,4 +1,5 @@
 /mob/living/simple_animal/hostile/limbus_abno/helper
+	true_name = "All-Around Helper"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/helper
 	melee_damage_lower = 0
 	melee_damage_upper = 0 //Harmless in its base state.

@@ -1,4 +1,5 @@
 /mob/living/simple_animal/hostile/limbus_abno/scorched_girl
+	true_name = "Scorched Girl"
 	maxHealth = 400
 	health = 400
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 2, BLACK_DAMAGE = 1, PALE_DAMAGE = 2)
