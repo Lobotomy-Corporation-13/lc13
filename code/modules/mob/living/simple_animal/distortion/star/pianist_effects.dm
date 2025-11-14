@@ -2,7 +2,7 @@
 /mob/living/simple_animal/hostile/pianist_music_note
 	name = "resonating music note"
 	desc = "A physical manifestation of sound that pulses with malevolent energy."
-	icon = 'ModularTegustation/Teguicons/pianist_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/pianist_effects.dmi'
 	icon_state = "music_note_1"
 	layer = ABOVE_MOB_LAYER
 	density = TRUE
@@ -66,7 +66,7 @@
 		if(H.wear_mask && istype(H.wear_mask, /obj/item/clothing/mask/silence))
 			damage *= 0.2
 			to_chat(H, span_nicegreen("The Silence protects you from the music!"))
-		H.apply_damage(damage, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(damage, WHITE_DAMAGE)
 		if(H.sanity_lost)
 			H.apply_status_effect(/datum/status_effect/musical_fascination, pianist_owner)
 
@@ -110,7 +110,7 @@
 /obj/effect/pianist_melody_visual
 	name = "melody"
 	desc = "A red music note orbiting the Pianist."
-	icon = 'ModularTegustation/Teguicons/pianist_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/pianist_effects.dmi'
 	icon_state = "music_note_1"
 	color = "#FF0000"
 	layer = ABOVE_MOB_LAYER
@@ -165,7 +165,7 @@
 /atom/movable/screen/alert/status_effect/reverting_song
 	name = "Reverting Song"
 	desc = "Your experience with the pianist has etched its music into your body and your mind..."
-	icon = 'ModularTegustation/Teguicons/status_sprites.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "musical_addiction"
 
 /datum/status_effect/reverting_song/on_creation(mob/living/new_owner, stacks_to_add = 1)
@@ -237,7 +237,7 @@
 	if(!target_pianist || QDELETED(target_pianist) || target_pianist.stat == DEAD)
 		owner.remove_status_effect(src)
 		return
-	
+
 	// Remove if owner is dead
 	if(owner.stat == DEAD)
 		owner.remove_status_effect(src)
@@ -291,7 +291,7 @@
 /obj/effect/falling_music_note
 	name = "falling music note"
 	desc = "A massive musical note plummeting from above!"
-	icon = 'ModularTegustation/Teguicons/pianist_effects.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/pianist_effects.dmi'
 	icon_state = "music_note_1"
 	layer = ABOVE_ALL_MOB_LAYER
 	pixel_x = -32 // Center the 3x scale sprite
@@ -338,10 +338,10 @@
 	for(var/turf/T in conversion_tiles)
 		// Damage anyone on the tiles
 		for(var/mob/living/L in T)
-			L.apply_damage(75, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(75, RED_DAMAGE)
 			to_chat(L, span_userdanger("The falling note CRUSHES you!"))
 			L.Knockdown(30)
-		
+
 		// Damage structures on the tile
 		for(var/obj/structure/S in T)
 			if(S.resistance_flags & INDESTRUCTIBLE)
@@ -464,7 +464,7 @@
 	// Violent pulsing effect
 	animate(src, alpha = 255, time = 2, loop = -1)
 	animate(alpha = 100, time = 2)
-	
+
 	// Small shake
 	animate(src, pixel_x = rand(-1, 1), pixel_y = rand(-1, 1), time = 1, loop = -1, flags = ANIMATION_PARALLEL)
 	animate(pixel_x = rand(-1, 1), pixel_y = rand(-1, 1), time = 1)

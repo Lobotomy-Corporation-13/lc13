@@ -23,8 +23,6 @@ Core mechanics:
 5. Immune to damage from attackers without "Reverting Song" debuff
 6. Causes special "Musical Fascination" panic that draws victims to be absorbed
 7. Can inflict permanent "Musical Corruption" brain trauma
-
-Based on the design document in PIANIST_PHASE_DESIGN.md
 */
 
 // Phase constants
@@ -33,7 +31,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 /mob/living/simple_animal/hostile/distortion/pianist
 	name = "The Pianist"
 	desc = "A grotesque figure seated at a grand piano made of flesh and bone. Its fingers dance across keys that scream with each press."
-	icon = 'ModularTegustation/Teguicons/256x256.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/256x256.dmi'
 	icon_state = "pianist"
 	icon_living = "pianist"
 	icon_dead = "pianist"
@@ -310,7 +308,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 		if(H.wear_mask && istype(H.wear_mask, /obj/item/clothing/mask/silence))
 			final_damage *= 0.2 // 80% damage reduction
 			to_chat(H, span_nicegreen("The Silence protects you from the music!"))
-	L.apply_damage(final_damage, damage_type, null, L.run_armor_check(null, damage_type), spread_damage = TRUE)
+	L.deal_damage(final_damage, damage_type)
 
 /mob/living/simple_animal/hostile/distortion/pianist/proc/UpdateMelodyVisuals()
 	// Clear old visuals
@@ -759,7 +757,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 		var/damage = 150 - (dist * 20) // More damage at center
 
 		for(var/mob/living/L in T)
-			L.apply_damage(damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(damage, RED_DAMAGE)
 			to_chat(L, span_userdanger("The Pianist's arrival [dist <= 2 ? "crushes" : "batters"] you!"))
 			if(dist <= 2)
 				L.Knockdown(30)
@@ -916,7 +914,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 
 		// Heavy damage and effects on tile - always happens regardless of turf type
 		for(var/mob/living/L in T)
-			L.apply_damage(60, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(60, WHITE_DAMAGE)
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.Knockdown(30) // 3 second knockdown
@@ -939,7 +937,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 
 			// Side tiles take less damage but still convert
 			for(var/mob/living/L in adj)
-				L.apply_damage(30, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(30, WHITE_DAMAGE)
 				to_chat(L, span_warning("The resonance catches you!"))
 				if(L.client)
 					shake_camera(L, 2, 2)
@@ -978,7 +976,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 		// Still damage mobs on wateryrock tiles
 		if(cascade)
 			for(var/mob/living/L in T)
-				L.apply_damage(20, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(20, WHITE_DAMAGE)
 				if(ishuman(L))
 					var/mob/living/carbon/human/H = L
 					H.add_confusion(10)
@@ -1025,7 +1023,7 @@ Based on the design document in PIANIST_PHASE_DESIGN.md
 	// Damage mobs in cascade - even on wateryrock
 	if(cascade)
 		for(var/mob/living/L in T)
-			L.apply_damage(20, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(20, WHITE_DAMAGE)
 			if(ishuman(L))
 				var/mob/living/carbon/human/H = L
 				H.add_confusion(10) // Slowdown effect
