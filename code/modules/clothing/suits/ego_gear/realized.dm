@@ -404,7 +404,8 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	if(found_mob)
 		var/turf/impact_turf = get_turf(found_mob)
 		var/datum/beam/new_beam = origin.Beam(impact_turf, icon_state="lightning[rand(1,12)]", time = 3)
-		new_beam.visuals.color = COLOR_BLUE_LIGHT
+		new_beam.visuals.color = "#70c2e0" // The lion refuses to use colour palette defines
+		new_beam.visuals.layer = POINT_LAYER
 		arc_lightning_turf_hitlist |= impact_turf
 		INVOKE_ASYNC(src, PROC_REF(ArcLightningHit), impact_turf, chains) // ArcLightningHit will call this same proc recursively.
 		return TRUE
@@ -415,7 +416,7 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	owner.HurtInTurf(target_turf, arc_lightning_mob_hitlist, arc_lightning_damage, BLACK_DAMAGE, check_faction = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
 	new /obj/effect/temp_visual/justitia_effect(target_turf)
 	playsound(target_turf, 'sound/weapons/fixer/generic/energy2.ogg', 40, vary = TRUE, extrarange = 5)
-	sleep(0.1 SECONDS)
+	sleep(0.2 SECONDS)
 	ArcLightningScan(target_turf, chains + 1)
 
 /* WAW Realizations */

@@ -1611,9 +1611,10 @@
 	// Add some special effect when shattering in the future, maybe? I don't know, it's an option.
 
 /// Called if you start a work with the shield active. Be grateful I didn't just make it shatter
-/obj/effect/proc_holder/ability/aedd_curl_up/proc/WorkRevert()
-	to_chat(owner, span_danger("A mysterious force compels you to dissipate your shield as you begin your work! Wow!"))
-	RemoveShield(owner, FALSE)
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/WorkRevert(mob/living/carbon/human/user)
+	SIGNAL_HANDLER
+	to_chat(user, span_warning("<b>A mysterious force compels you to dissipate your shield as you begin your work! Wow!</b>"))
+	RemoveShield(user, FALSE)
 
 /// This is called at the end of our cooldown, to re-enable the skill.
 /obj/effect/proc_holder/ability/aedd_curl_up/proc/Refresh(mob/living/carbon/human/user)
@@ -1649,5 +1650,5 @@
 		for(var/mob/living/L in T)
 			if(user.faction_check_mob(L))
 				continue
-			L.deal_damage(final_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.deal_damage(final_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
 			new /obj/effect/temp_visual/justitia_effect(T)
