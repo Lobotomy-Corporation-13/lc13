@@ -1409,7 +1409,7 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/aedd//it's just a HE W.corp baton that deals red
+/obj/item/ego_weapon/aedd//it's just a HE W.corp baton that deals red (becomes low ALEPH tier with the corresponding Realization)
 	name = "AEDD"
 	desc = "A nasty-looking bat covered with nails."
 	special = "Activating the weapon in your hand prepares an attack with additional black damage."
@@ -1426,6 +1426,10 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 	var/charged
+	var/realization_force_multiplier = 1.5
+	var/realization_aoe_force_multiplier = 1.4
+	var/realization_aoe_range = 4
+	var/realization_aoe_charge_per_target = 3
 
 /obj/item/ego_weapon/aedd/attack_self(mob/user)
 	..()
@@ -1436,21 +1440,88 @@
 		balloon_alert(user, "You hoist [src] over your shoulder.")
 		charged = TRUE
 
+/obj/item/ego_weapon/aedd/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Damage is increased, all attacks are now <b>charged by default</b>, and <b>charging the weapon further will unleash a BLACK damage AoE on your next hit</b> that gains Self-Charge for your [our_suit.name] E.G.O.")
+
+// When not wearing the AEDD realization: deals an extra hit in BLACK damage if we charged the weapon.
+// When wearing the AEDD realization: uses RealizationAOE() towards the target if we charged the weapon; if we didn't, then deals an extra hit in BLACK damage.
 /obj/item/ego_weapon/aedd/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+	var/realization_empowered = FALSE
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			realization_empowered = TRUE
+			force = initial(force) * realization_force_multiplier
+
 	..()
+
+	if(!istype(target))
+		return
 	if(charged)
-		power_attack(target, user)
+		if(realization_empowered)
+			RealizationAOE(target, user)
+		else
+			power_attack(target, user)
 		charged = FALSE
+	else if(realization_empowered)
+		power_attack(target, user)
 
 /obj/item/ego_weapon/aedd/proc/power_attack(mob/living/target, mob/living/user)
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
-	target.deal_damage((force * justicemod), BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
+	target.deal_damage((force * justicemod), BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 40, TRUE)
 	var/turf/T = get_turf(target)
 	new /obj/effect/temp_visual/justitia_effect(T)
+
+/// AoE attack used when we're wearing the AEDD Realization and attack an enemy while our weapon is charged. Copied and altered code from Shock Centipede's tail attack.
+/obj/item/ego_weapon/aedd/proc/RealizationAOE(mob/living/target, mob/living/user)
+	if(!ishuman(user))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return
+
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+
+	var/final_damage = initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * justicemod
+	user.visible_message(span_danger("[user] slams down [src] with great force, sending a powerful electric shockwave through [target]!"))
+	var/turf/origin_turf = get_turf(src)
+	var/turf/target_turf = get_ranged_target_turf_direct(user, target, realization_aoe_range)
+
+	var/broken = FALSE
+	var/distance = realization_aoe_range
+	var/list/been_hit = list()
+	for(var/turf/T in getline(origin_turf, target_turf))
+		if (distance < 0)
+			break
+		distance--
+		if(T.density)
+			if(broken)
+				break
+			broken = TRUE
+		if(T != origin_turf)
+			for(var/turf/TF in range(1, T))
+				if(TF.density)
+					continue
+				new /obj/effect/temp_visual/blubbering_smash(TF)
+				for(var/mob/living/L in TF)
+					if(!(L in been_hit) && !(user.faction_check_mob(L)))
+						if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy))
+							continue
+						L.deal_damage(final_damage, BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+						been_hit |= L
+						new /obj/effect/temp_visual/justitia_effect(TF)
+						our_suit.AdjustCharge(realization_aoe_charge_per_target)
+
+	playsound(get_turf(src), 'sound/weapons/fixer/generic/energyfinisher1.ogg', 60, 1)
 
 /obj/item/ego_weapon/lance/split
 	name = "split"

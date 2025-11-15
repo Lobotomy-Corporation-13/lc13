@@ -1456,25 +1456,198 @@
 /obj/projectile/ripper_dash_effect/on_hit(atom/target, blocked = FALSE)
 	return
 
-/obj/effect/proc_holder/ability/aedd_sparks
-	name = "Placeholder"
-	desc = "uwah"
+/obj/effect/proc_holder/ability/aedd_curl_up
+	name = "Curl Up"
+	desc = "Immobilize yourself and gain an universal shield equivalent to 50% of your maximum health for 5 seconds. Accumulates Self-Charge when being hit, and larger hits grant more Self-Charge. \n\
+	If the shield is broken, cooldown on this ability is multiplied by 7 and you gain Fragile. If it doesn't, retaliate with a BLACK damage AoE that scales with Fortitude and inversely scales with remaining shield health. Cooldown: 25s."
 	action_icon_state = "ripper0"
 	base_icon_state = "ripper"
-	cooldown_time = 3 SECONDS
+	cooldown_time = 25 SECONDS
+	var/curl_shield_overlay = icon('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "pale_shield")
+	var/curl_shield_timer
+	var/curl_cooldown_timer
+	var/curl_base_cooldown = 25 SECONDS
+	var/curl_shatter_cooldown_multiplier = 7
+	var/shock_radius = 2
+	var/shock_base_damage = 100
+	var/shield_health = 0
+	var/activated = FALSE
+	var/ready = TRUE
 
-/obj/effect/proc_holder/ability/aedd_sparks/Perform(target, mob/living/user)
+/// This override ensures we can use our custom cooldown logic.
+/obj/effect/proc_holder/ability/aedd_curl_up/Perform(target, mob/living/user)
+	if((!ready) || (activated))
+		to_chat(user, span_warning("This ability isn't ready yet."))
+		return FALSE
 	var/mob/living/carbon/human/our_guy = user
 	if(!istype(our_guy))
 		return FALSE
-	var/obj/item/clothing/suit/armor/ego_gear/realization/placeholder_replace_before_pr/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(our_guy.is_working)
+		to_chat(our_guy, span_warning("You cannot cower from the duties of your work."))
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	if(!istype(our_suit))
 		return FALSE
 
-	if(our_suit.icon_state == "lce_aedd_inactive")
-		our_suit.icon_state = "lce_aedd_active"
-	else
-		our_suit.icon_state = "lce_aedd_inactive"
+	// Go on cooldown.
+	ready = FALSE
+	curl_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(Refresh), user), curl_base_cooldown, TIMER_STOPPABLE)
+	cooldown = world.time + curl_base_cooldown
+	update_icon()
 
-	our_guy.regenerate_icons()
-	return ..()
+	// Actual ability here.
+	ActivateShield(our_guy)
+
+/// Applies the shield to the user, registering a signal for taking damage.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/ActivateShield(mob/living/carbon/human/user)
+	activated = TRUE
+	user.Immobilize(5 SECONDS, TRUE) // You are immobilized. This doesn't get removed early if you lose the shield. Stand your ground!
+
+	shield_health = (user.maxHealth * 0.50) // 50% of your HP as an universal shield.
+	RegisterSignal(user, COMSIG_MOB_APPLY_DAMGE, PROC_REF(ShieldHitReaction)) // Important, this actually handles intercepting hits and lowering shield HP.
+	RegisterSignal(user, COMSIG_WORK_STARTED, PROC_REF(WorkRevert)) // no
+	curl_shield_timer = addtimer(CALLBACK(src, PROC_REF(RemoveShield), user, FALSE), 5 SECONDS, TIMER_STOPPABLE)
+
+	// Aesthetics
+	playsound(get_turf(user), 'sound/weapons/fixer/generic/energy3.ogg', 75, 0)
+	user.add_overlay(curl_shield_overlay) // Looks like a manager PALE shield.
+	user.visible_message(span_danger("[user] takes up a defensive stance, shielding \himself with \his E.G.O suit!"), span_notice("You curl up into a defensive stance, using your E.G.O to create a shield around yourself."))
+
+
+/// Called by the timeout timer or by the shield being shattered, in which case violent == TRUE.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/RemoveShield(mob/living/carbon/human/user, violent = FALSE)
+	deltimer(curl_shield_timer)
+	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
+	UnregisterSignal(user, COMSIG_WORK_STARTED)
+	user.cut_overlay(curl_shield_overlay)
+	activated = FALSE
+	if(violent)
+		user.visible_message(span_danger("[user]'s shield shatters!"), span_userdanger("Your E.G.O.'s shield shatters, and your accumulated charge is lost!"))
+	else
+		user.visible_message(span_danger("[user] abandons \his defensive stance, shocking \his surroundings!"), span_warning("You abandon your defensive stance and unleash an electrical shock around yourself!"))
+		ShockAOE(user, shield_health)
+	shield_health = 0
+
+/// Signal handler that prevents damage by returning COMPONENT_MOB_DENY_DAMAGE. Unfortunately has to replicate some damage calculation code.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/ShieldHitReaction(mob/living/carbon/human/user, damage_amount, damage_type, def_zone)
+	SIGNAL_HANDLER
+	if(!ishuman(user))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return FALSE
+
+	// Below is a bunch of recycled code from Manager Shield bullets and the deal_damage proc itself, because the system simply isn't built to handle things like this properly, sadly.
+
+	// Determine how much we're blocking based on our armour and physiology.
+	var/blocked = 0
+	if((damage_type != (BRUTE || STAMINA)))
+		blocked = user.run_armor_check(def_zone, damage_type) // This is armour from our EGO gear.
+
+	var/hit_percent = (100-blocked)/100
+	hit_percent = (hit_percent * (100-user.physiology.damage_resistance))/100 // Factor in general damage resistance from physiology.
+
+	switch(damage_type) // Now we have to account for physiology... for some reason, damage_resistance is expressed as a value between 0 and 100 but x_mod is a coefficient... GRAHHHH
+		if(RED_DAMAGE)
+			hit_percent = (hit_percent * user.physiology.red_mod)
+		if(WHITE_DAMAGE)
+			hit_percent = (hit_percent * user.physiology.white_mod)
+		if(BLACK_DAMAGE)
+			hit_percent = (hit_percent * user.physiology.black_mod)
+		if(PALE_DAMAGE)
+			hit_percent = (hit_percent * user.physiology.pale_mod)
+
+	var/final_damage = damage_amount * hit_percent
+
+	if(final_damage <= 0) // We took 0 damage, or healed from the attack. Don't react to this.
+		return
+
+	if(final_damage >= shield_health) // The damage exceeds our shield's health.
+		var/chipped_through_damage = final_damage - shield_health // Calculate the "overkill" on our shield...
+		shield_health = 0
+		ShatterShield(user, chipped_through_damage, damage_type, def_zone) // Remove our shield and deal the "overkill" damage. That is to say, if our shield had 50 hp and we took 60 damage, deal 10.
+
+		// Lose all charge and un-empower if our shield shatters.
+		our_suit.charge = 0
+		our_suit.RevertBuff()
+
+		return COMPONENT_MOB_DENY_DAMAGE // Deny the original damage so it doesn't "double dip".
+
+	else // We took damage, but not more than our shield's current health.
+		shield_health = max(0, (shield_health - final_damage)) // Never allow shield_health to become negative. Theoretically it could never happen since it is handled in the prior case, but I want to be cautious
+		// Shield aesthetics, taken from Shock Centipede itself
+		var/obj/effect/temp_visual/shock_shield/AT = new /obj/effect/temp_visual/shock_shield(get_turf(user))
+		AT.transform *= 0.5
+		var/random_x = rand(-8, 8)
+		AT.pixel_x += random_x
+		var/random_y = rand(-12, 12)
+		AT.pixel_y += random_y
+
+		our_suit.AdjustCharge(1) // Gain 1 charge on any hit.
+		if(final_damage > 5) // Generate charge if we took noticeable damage. (This is post reductions............................!!!!!!!!!!!!!!!!!)
+			our_suit.AdjustCharge(1)
+			if(final_damage > 25) // Generate extra charge if we really got cooked.
+				our_suit.AdjustCharge(2)
+
+		playsound(get_turf(user), 'sound/mecha/mech_shield_deflect.ogg', 70)
+
+		return COMPONENT_MOB_DENY_DAMAGE // Deny the damage.
+
+/// Proc called if the shield breaks due to damage. We go on a longer cooldown than usual and deal any overkill damage, and then apply fragile to the user.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/ShatterShield(mob/living/carbon/human/user, damage_amount, damage_type, limb)
+	RemoveShield(user, violent = TRUE)
+
+	var/remaining_time = timeleft(curl_cooldown_timer)
+	var/new_duration = remaining_time * curl_shatter_cooldown_multiplier
+	deltimer(curl_cooldown_timer)
+	curl_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(Refresh), user), new_duration, TIMER_STOPPABLE) // Your ability will now refresh 10 times slower than it should.
+	cooldown = world.time + new_duration
+	update_icon()
+
+	user.deal_damage(damage_amount, damage_type, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE | DAMAGE_PIERCING), def_zone = limb) // This is DAMAGE_PIERCING because we already applied armour reductions.
+	playsound(get_turf(user), 'sound/effects/glassbr1.ogg', 100, 0, 10)
+	user.apply_lc_fragile(1)
+
+	// Add some special effect when shattering in the future, maybe? I don't know, it's an option.
+
+/// Called if you start a work with the shield active. Be grateful I didn't just make it shatter
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/WorkRevert()
+	to_chat(owner, span_danger("A mysterious force compels you to dissipate your shield as you begin your work! Wow!"))
+	RemoveShield(owner, FALSE)
+
+/// This is called at the end of our cooldown, to re-enable the skill.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/Refresh(mob/living/carbon/human/user)
+	if(!istype(user))
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return FALSE
+
+	ready = TRUE
+
+	// Tell the user that they're ready to ball
+	SEND_SOUND(user, sound('sound/abnormalities/armyinblack/black_heartbeat.ogg'))
+	flash_color(user, flash_color = COLOR_PALE_BLUE_GRAY, flash_time = 1 SECONDS)
+	user.visible_message(span_danger("[user]'s [our_suit.name] E.G.O. begins to spark with electrical excitement."), span_nicegreen("Your [our_suit.name] E.G.O. sparks with electrical excitement - it has recharged, and you can use its ability again."))
+
+/// AoE called when our shield expires without shattering. We deal more damage the closer we got to shattering. Scales off Fort instead of Justice.
+/obj/effect/proc_holder/ability/aedd_curl_up/proc/ShockAOE(mob/living/carbon/human/user, remaining_health)
+	var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
+	var/fortitudemod = 1 + userfort/100
+	var/remaininghealthmod = (1 + (0.93 ** (remaining_health * 0.4))) // More damage as the shield has less health left when it expires.
+
+	var/final_damage = (shock_base_damage) * (remaininghealthmod)
+	final_damage*=fortitudemod
+
+	var/final_radius = shock_radius // Radius is increased by 1 tile if we got close to shattering.
+	if(remaining_health < 40)
+		final_radius += 1
+
+	playsound(get_turf(user), 'sound/abnormalities/kqe/hitsound2.ogg', 100, FALSE, 10)
+	for(var/turf/T in view(final_radius, user))
+		new /obj/effect/temp_visual/blubbering_smash(get_turf(T))
+		for(var/mob/living/L in T)
+			if(user.faction_check_mob(L))
+				continue
+			L.deal_damage(final_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
+			new /obj/effect/temp_visual/justitia_effect(T)
