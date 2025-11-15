@@ -34,6 +34,8 @@
 				continue
 			gamemode_abnos[initial(abno.threat_level)] += abno
 			var/rate = (all_abnos[i] * -1) + highest * 2	//Weight counts for half of the abno chance, the other half is guaranteed.
+			if(abno.being_tested) // Abnormalities that are being tested will be nearly guaranteed to spawn
+				rate += 80
 			gamemode_abnos[initial(abno.threat_level)][abno] = rate
 
 	SSabnormality_queue.possible_abnormalities = list()

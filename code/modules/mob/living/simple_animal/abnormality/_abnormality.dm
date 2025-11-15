@@ -152,6 +152,9 @@
 		ABNORMALITY_WORK_REPRESSION = list("%PERSON holds what %ABNO desires, just out of reach..."),
 	)
 
+	// If TRUE, this Abnormality's odds of spawning go up dramatically. Enable for Abnormalities that are being reworked and need testing.
+	var/being_tested = FALSE
+
 /mob/living/simple_animal/hostile/abnormality/Login()
 	. = ..()
 	if(!. || !client)

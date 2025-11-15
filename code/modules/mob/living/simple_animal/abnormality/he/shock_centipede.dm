@@ -43,6 +43,7 @@
 		)
 	gift_type = /datum/ego_gifts/aedd
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
+	being_tested = TRUE // Remove before merging AEDD realization
 
 	observation_prompt = "\"This centipede is capable of discharging a high voltage.\" <br>\
 		That's what the sign attached to the tank says. <br>\
