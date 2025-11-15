@@ -1,7 +1,7 @@
 /turf/open/floor/holofloor
 	icon_state = "floor"
 	holodeck_compatible = TRUE
-	thermal_conductivity = 0
+	// thermal_conductivity = 0
 	flags_1 = NONE
 	var/direction = SOUTH
 
@@ -47,7 +47,7 @@
 
 /turf/open/floor/holofloor/plating/burnmix
 	name = "burn-mix floor"
-	initial_gas_mix = BURNMIX_ATMOS
+	// initial_gas_mix = BURNMIX_ATMOS
 
 /turf/open/floor/holofloor/grass
 	gender = PLURAL
@@ -167,7 +167,7 @@
 	tiled_dirt = FALSE
 
 /turf/open/floor/holofloor/snow/cold
-	initial_gas_mix = "nob=7500;TEMP=2.7"
+	// initial_gas_mix = "nob=7500;TEMP=2.7"
 
 /turf/open/floor/holofloor/dark
 	icon_state = "darkfull"

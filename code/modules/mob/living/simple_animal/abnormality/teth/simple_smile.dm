@@ -54,6 +54,21 @@
 			Then, it disappears with a smile."),
 	)
 
+	generic_bubbles = list(
+		1 = list("%ABNO purrs gently."),
+		2 = list("%ABNO rubs up against %PERSON's hand"),
+		3 = list("%ABNO hisses at %PERSON."),
+		4 = list("%ABNO hisses at %PERSON, as a warning to keep away"),
+		5 = list("%ABNO runs and hides from %PERSON, as if they are scared."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON gives %ABNO a little cup of tea, which it laps up. %ABNO starts to purr gently.",
+				"%PERSON gives %ABNO a little bit of cat food."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans all the cat hair from the containment cell."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON scritches %ABNO under the chin.", "%PERSON mimicks a pet at %ABNO, their hand passing through the ethereal body"),
+		ABNORMALITY_WORK_REPRESSION = list("%ABNO bites %PERSON, who gives it a light whap on the head.", "%PERSON pats %ABNO on the belly, causing it to freak out."),
+	)
+
 	var/list/stats = list(
 		FORTITUDE_ATTRIBUTE,
 		PRUDENCE_ATTRIBUTE,
@@ -88,6 +103,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/smile/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(lucky_counter > 3)
+		user.client?.give_award(/datum/award/achievement/abno/cheshire, user)
 		datum_reference.qliphoth_change(-1)
 	return
 

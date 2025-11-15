@@ -56,7 +56,6 @@
 /area/shuttle/escape)
 "cm" = (
 /obj/effect/turf_decal/stripes/line,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plating,
 /area/shuttle/escape)
 "cL" = (

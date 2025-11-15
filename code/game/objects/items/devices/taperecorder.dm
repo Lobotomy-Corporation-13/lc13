@@ -308,8 +308,10 @@
 
 /obj/item/tape/attack_self(mob/user)
 	if(!ruined)
-		to_chat(user, "<span class='notice'>You pull out all the tape!</span>")
-		ruin()
+		to_chat(user, "<span class='notice'>You start pulling out all the tape's wires...</span>")
+		if(do_after(user, 50, src))
+			to_chat(user, "<span class='notice'>You pull out all the tape!</span>")
+			ruin()
 
 
 /obj/item/tape/proc/ruin()

@@ -23,7 +23,7 @@
 	if(!isbot(H) && isliving(H) && !QDELETED(H))
 		H.visible_message("<span class='warning'>[target] is hit by [src], they seem to wither away!</span>")
 		for(var/i = 1 to 14)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, apply_damage), rand(4,8), BLACK_DAMAGE, null, H.run_armor_check(null, BLACK_DAMAGE)), 2 SECONDS * i)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living, deal_damage), rand(4,8), BLACK_DAMAGE, firer, null, (ATTACK_TYPE_STATUS)), 2 SECONDS * i)
 
 /obj/projectile/ego_bullet/adoration/aoe
 	color = "#6666BB"
@@ -32,7 +32,7 @@
 	. = ..()
 	for(var/mob/living/L in view(2, target))
 		new /obj/effect/temp_visual/revenant/cracks(get_turf(L))
-		L.apply_damage(50, BLACK_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(50, BLACK_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
 
 /obj/projectile/ego_bullet/nihil
@@ -127,3 +127,42 @@
 	damage_type = PALE_DAMAGE
 	speed = 2
 	range = 6
+
+/// Ammo fired in Willing by default. Weak, fired quickly, very high spread. Hardly something appropiate for you to be using in ALEPH tier unless you're desperate.
+/obj/projectile/ego_bullet/willing
+	name = "fleshy round"
+	icon_state = "bonebullet"
+	color = COLOR_MOSTLY_PURE_RED
+	speed = 0.5
+	damage = 22
+	damage_type = RED_DAMAGE
+
+/// Ammo fired in Willing while Inexorable is active. Fired about half as fast as the normal ammo, but quite strong and much more precise.
+// Useful, but doesn't beat out real weapons in terms of damage.
+/obj/projectile/ego_bullet/willing/heavy
+	name = "bone round"
+	color = null
+	speed = 0.4
+	damage = 45
+
+/obj/projectile/ego_bullet/willing/heavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+
+/// Ammo fired in Willing while Entrenched is active (final stage). Fired slower than the previous, but extremely strong, accurate and pierces through one mob.
+// This is very strong, even for ALEPH, but limited by you only being able to fire it while standing still, after having progressed the gun to the entrenched state.
+/obj/projectile/ego_bullet/willing/superheavy
+	name = "heavy bone round"
+	color = null
+	speed = 0.3
+	damage = 70
+	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/willing/superheavy/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(isliving(target))
+		for(var/i in 1 to 2)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+	if(pierces >= 2)
+		qdel(src)

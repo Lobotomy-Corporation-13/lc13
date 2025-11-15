@@ -50,6 +50,20 @@
 			Numerous talons, claws, and fangs bite into you all at once. <br>Now you will know why you fear the night."),
 	)
 
+	generic_bubbles = list(
+		1 = list("%ABNO stares at %PERSON with souless glowing eyes."),
+		2 = list("%PERSON can hear the jingling of keys coming from %ABNO."),
+		3 = list("%ABNO looks wearily at %PERSON."),
+		4 = list("%ABNO's lantern increases in it's intensity.", "The flickering flames eminating from %ABNO snuff out, for just a moment"),
+		5 = list("%ABNO stares into the eyes of %PERSON, studying them intensely.", "%ABNO watches the hands of %PERSON, waiting for them to make a move"),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON gives %ABNO a coin for their troubles.",),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON puts on a bit of music for %ABNO. %ABNO smiles."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON mumbles something to %ABNO, who nods.", "%ABNO whispers something, barely audibly to %PERSON."),
+		ABNORMALITY_WORK_REPRESSION = list("%ABNO whispers threats to %PERSON.", "%ABNO brandishes it's lantern up high, menacingly."),
+	)
+
 	// Speech Lines
 	speak_chance = 4
 	var/speak_normal = list(
@@ -110,12 +124,14 @@
 /// ======================SPEECH CODE======================
 /mob/living/simple_animal/hostile/abnormality/watchman/attacked_by(obj/item/I, mob/living/user)
 	. = ..()
+	user.apply_lc_fragile(3)
 	if(speak_chance)
 		if(prob(speak_chance*2))
 			say(pick(speak_attacked_human))
 
 /mob/living/simple_animal/hostile/abnormality/watchman/attack_hand(mob/living/carbon/human/M)
 	. = ..()
+	M.apply_lc_fragile(3)
 	if(speak_chance)
 		if(prob(speak_chance*2))
 			say(pick(speak_attacked_human))

@@ -1015,8 +1015,6 @@
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cj" = (
-/obj/machinery/atmospherics/components/unary/portables_connector/visible,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
@@ -1026,7 +1024,6 @@
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "ck" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell,
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
@@ -1036,7 +1033,6 @@
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cl" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/freezer,
 /obj/effect/turf_decal/tile/blue{
 	dir = 1
 	},
@@ -1085,19 +1081,12 @@
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cq" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 5
-	},
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cr" = (
-/obj/machinery/atmospherics/pipe/manifold/general/visible,
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "cs" = (
-/obj/machinery/atmospherics/pipe/simple/general/visible{
-	dir = 9
-	},
 /turf/open/floor/plasteel/white,
 /area/shuttle/escape)
 "ct" = (

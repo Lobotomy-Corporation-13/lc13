@@ -5,7 +5,7 @@
 	initial_stat_value = DEFAULT_HUMAN_MAX_HEALTH
 
 /datum/attribute/fortitude/get_printed_level_bonus()
-	return round(level * (FORTITUDE_MOD ? FORTITUDE_MOD : 1)) + initial_stat_value
+	return round(get_level() * (FORTITUDE_MOD ? FORTITUDE_MOD : 1)) + initial_stat_value
 
 /datum/attribute/fortitude/on_update(mob/living/carbon/human/user)
 	if(!istype(user))

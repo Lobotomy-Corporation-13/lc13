@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary/heat_exchanger
+/* /obj/machinery/atmospherics/components/unary/heat_exchanger
 
 	icon_state = "he1"
 
@@ -74,3 +74,4 @@
 
 	if(abs(other_old_temperature-partner_air_contents.temperature) > 1)
 		partner.update_parents()
+ */

@@ -176,8 +176,10 @@
 //For more general defines like SECONDS or QDEL_IN() check the _DEFINES or _HELPERS file.
 
 //Worktick is a proc that activates every time part of a work has been preformed.
-/mob/living/simple_animal/hostile/abnormality/forsaken_murderer/Worktick(mob/living/carbon/human/user)
-	// . = ..() means if the code already in this proc has finished then preform what is listed after this.
+/mob/living/simple_animal/hostile/abnormality/forsaken_murderer/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	// . = ..() runs the parent proc (/abnormality/proc/Worktick) and then sets this proc's DEFAULT return value to whatever that returned.
+	// If the parent proc does not return a value, this simply runs the parent proc.
+	// If you use return by itself, this makes it return the parent proc's value. This can be overwritten by simply listing a return value seperately.
 	. = ..()
 	/**
 	 * Sort of self explanatory, this is if the cooldown variable is less than the current time in the world.

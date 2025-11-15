@@ -197,7 +197,7 @@
 						playsound(L, "sound/abnormalities/dreamingcurrent/bite.ogg", 50, TRUE)
 						visible_message(span_boldwarning("[src] mauls through [L]!"))
 						to_chat(L, span_userdanger("[src] mauls you!"))
-						HurtInTurf(T, list(), dive_damage, RED_DAMAGE)
+						HurtInTurf(T, list(), dive_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 						if(L.health < 0 || L.stat == DEAD)
 							L.gib()
 		SLEEP_CHECK_DEATH(0.5 SECONDS)
@@ -216,8 +216,9 @@
 		datum_reference.qliphoth_change(-1)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/siltcurrent/Worktick(mob/living/carbon/human/user)
+/mob/living/simple_animal/hostile/abnormality/siltcurrent/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	user.adjustOxyLoss(1.5, updating_health=TRUE, forced=TRUE)//haha drown.
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/siltcurrent/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	datum_reference.qliphoth_change(-1)

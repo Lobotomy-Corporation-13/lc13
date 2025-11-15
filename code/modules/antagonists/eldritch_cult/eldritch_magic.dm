@@ -354,8 +354,8 @@
 			L.adjustFireLoss(20)
 			to_chat(L, "<span class='userdanger'>You're hit by [source]'s eldritch flames!</span>")
 
-		new /obj/effect/hotspot(T)
-		T.hotspot_expose(700,50,1)
+		new /obj/effect/turf_fire(T)
+		// T.hotspot_expose(700,50,1)
 		// deals damage to mechs
 		for(var/obj/vehicle/sealed/mecha/M in T.contents)
 			if(M in hit_list)
@@ -410,8 +410,8 @@
 	var/_range = 1
 	for(var/i = 0, i <= max_range,i++)
 		for(var/turf/T in spiral_range_turfs(_range,centre))
-			new /obj/effect/hotspot(T)
-			T.hotspot_expose(700,50,1)
+			new /obj/effect/turf_fire(T)
+			// T.hotspot_expose(700,50,1)
 			for(var/mob/living/livies in T.contents - centre)
 				livies.adjustFireLoss(5)
 		_range++
@@ -460,8 +460,8 @@
 	if(!has_fire_ring)
 		return
 	for(var/turf/T in range(1,current_user))
-		new /obj/effect/hotspot(T)
-		T.hotspot_expose(700, 250 * delta_time, 1)
+		new /obj/effect/turf_fire(T)
+		// T.hotspot_expose(700, 250 * delta_time, 1)
 		for(var/mob/living/livies in T.contents - current_user)
 			livies.adjustFireLoss(2.5 * delta_time)
 

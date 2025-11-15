@@ -61,7 +61,18 @@
 #define ABNORMALITY_ORIGIN_JOKE "Joke"
 #define ABNORMALITY_ORIGIN_COMMUNITY "Community"
 
+#define ABNORMALITY_ORIGIN_BRANCH12 "Branch 12"
+
+//This exists as a dummy tag.
+#define ABNORMALITY_DUMMY "Dummy Abnormality"
+
 // Persistent PE things
 #define PE_GOAL_REACHED	"goal_reached"
 #define PE_GOAL_SPENT	"goal_spent"
 #define PE_LEFTOVER		"leftover_pe"
+
+// Abnormality Balloon Defines
+#define ABNO_BALLOON_OFF 		(1<<0)
+#define ABNO_BALLOON_SPECIFIC 	(1<<1)
+#define ABNO_BALLOON_WORK		(1<<2)
+#define ABNO_BALLOON_GENERIC 	(1<<3)

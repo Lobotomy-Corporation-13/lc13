@@ -63,15 +63,15 @@
 
 //for the ERT.
 /obj/item/clothing/suit/armor/ego_gear/city/zwei/noreq
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 /obj/item/clothing/suit/armor/ego_gear/city/zweivet/noreq
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 /obj/item/clothing/suit/armor/ego_gear/city/zweileader/noreq
-	equip_slowdown = 0
+	equip_delay_self = 0
 	attribute_requirements = list()
 
 

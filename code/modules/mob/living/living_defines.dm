@@ -3,7 +3,7 @@
 	sight = 0
 	see_in_dark = 2
 	hud_possible = list(HEALTH_HUD,STATUS_HUD,ANTAG_HUD,NANITE_HUD,DIAG_NANITE_FULL_HUD)
-	pressure_resistance = 10
+	// pressure_resistance = 10
 
 	hud_type = /datum/hud/living
 
@@ -152,7 +152,7 @@
 	var/worn_slot_flags = NONE //if it can be held, can it be equipped to any slots? (think pAI's on head)
 
 	var/radiation = 0 ///If the mob is irradiated.
-	var/ventcrawl_layer = PIPING_LAYER_DEFAULT
+	// var/ventcrawl_layer = PIPING_LAYER_DEFAULT
 	var/losebreath = 0
 
 	//List of active diseases
@@ -183,3 +183,14 @@
 
 	/// Which god are you aligned with?
 	var/god_aligned = FISHGOD_NONE
+
+	///How much extra damage will they do with thier weapons/attacks? (1% more damage per extra damage)
+	///(Specific damage ups will only work if the attacker is using that specific damage type.)
+	var/extra_damage = 0
+	var/extra_damage_red = 0
+	var/extra_damage_white = 0
+	var/extra_damage_black = 0
+	var/extra_damage_pale = 0
+
+	/// Index used to interact with the moblist of the area they are currently in.
+	var/area_index = MOB_LIVING_INDEX

@@ -1592,3 +1592,92 @@
 	temperance_bonus = -1
 	justice_bonus = 3
 	slot = HAT
+
+/datum/ego_gifts/oracle
+	name = "Dead Dream"
+	icon_state = "dead_dream"
+	fortitude_bonus = -1
+	prudence_bonus = 3
+	slot = HAND_1
+
+/datum/ego_gifts/clayman
+	name = "Creative Expression"
+	icon_state = "creative_freedom"
+	fortitude_bonus = 1
+	prudence_bonus = 1
+	justice_bonus = 1
+	temperance_bonus = 1
+	slot = HAND_2
+
+/datum/ego_gifts/acupuncture
+	name = "acupuncture"
+	icon_state = "lunar_rabbit"
+	desc = "makes sure you take your medicine."
+	prudence_bonus = 10
+	var/is_equipped = TRUE
+	slot = BROOCH
+
+/datum/ego_gifts/acupuncture/Initialize(mob/living/carbon/human/user)
+	. = ..()
+	if(ishuman(user))
+		drug_user(user)
+
+/datum/ego_gifts/acupuncture/proc/drug_user(mob/living/carbon/human/user)
+	if(!is_equipped || !owner)
+		return
+	addtimer(CALLBACK(src, PROC_REF(drug_user)), 10)
+	owner.set_drugginess(15)
+
+/datum/ego_gifts/acupuncture/Remove(mob/living/carbon/human/user)
+	is_equipped = FALSE
+	return ..()
+
+/datum/ego_gifts/kikimora //SHOULD make you immune to the disease (Code for this is in kikimora)
+	name = "Kikimora"
+	icon_state = "kikimora"
+	desc = "Grants the wearer immunity to a certain cognitohazard."
+	justice_bonus = -4
+	fortitude_bonus = 2
+	slot = MOUTH_1
+
+/datum/ego_gifts/rapunzel
+	name = "Rapunzel"
+	icon_state = "rapunzel"
+	fortitude_bonus = 2
+	temperance_bonus = 2
+	prudence_bonus = -2
+	slot = HELMET
+
+/datum/ego_gifts/hex_nail
+	name = "Hex nail"
+	icon_state = "hex_nail"
+	fortitude_bonus = -1
+	justice_bonus = -4
+	temperance_bonus = 6
+	slot = BROOCH
+
+// /datum/ego_gifts/squeak
+
+
+/datum/ego_gifts/ardor_moth //Adds some fireproofing (if I did it right)
+	name = "Ardor Star"
+	icon_state = "ardor_star"
+	fortitude_bonus = 3
+	temperance_bonus = -1
+	slot = RIGHTBACK
+
+/datum/ego_gifts/ardor_moth/Initialize(mob/living/carbon/human/user)
+	. = ..()
+	user.physiology.burn_mod *= 0.8
+
+
+/datum/ego_gifts/ardor_moth/Remove(mob/living/carbon/human/user)
+	user.physiology.burn_mod /= 0.8
+	return ..()
+
+/datum/ego_gifts/caterpillar
+	name = "Havana"
+	icon_state = "havana"
+	justice_bonus = 8
+	temperance_bonus = -2 //smoking kills
+	slot = LEFTBACK

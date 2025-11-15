@@ -9,21 +9,21 @@
 	anchored = TRUE
 	resistance_flags = LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	max_integrity = 200 //The shield can only take so much beating (prevents perma-prisons)
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 
 /obj/structure/emergency_shield/Initialize()
 	. = ..()
 	setDir(pick(GLOB.cardinals))
-	air_update_turf(TRUE, TRUE)
+	// air_update_turf(TRUE, TRUE)
 
-/obj/structure/emergency_shield/Destroy()
+/* /obj/structure/emergency_shield/Destroy()
 	air_update_turf(TRUE, FALSE)
 	. = ..()
 
 /obj/structure/emergency_shield/Move()
 	var/turf/T = loc
 	. = ..()
-	move_update_air(T)
+	move_update_air(T) */
 
 /obj/structure/emergency_shield/emp_act(severity)
 	. = ..()
@@ -72,7 +72,7 @@
 
 /obj/structure/emergency_shield/cult/barrier
 	density = FALSE //toggled on right away by the parent rune
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	///The rune that created the shield itself. Used to delete the rune when the shield is destroyed.
 	var/obj/effect/rune/parent_rune
 
@@ -100,7 +100,7 @@
 */
 /obj/structure/emergency_shield/cult/barrier/proc/Toggle()
 	density = !density
-	air_update_turf(TRUE, !density)
+	// air_update_turf(TRUE, !density)
 	invisibility = initial(invisibility)
 	if(!density)
 		invisibility = INVISIBILITY_OBSERVER
@@ -113,7 +113,7 @@
 	density = TRUE
 	opacity = FALSE
 	anchored = FALSE
-	pressure_resistance = 2*ONE_ATMOSPHERE
+	// pressure_resistance = 2*ONE_ATMOSPHERE
 	req_access = list(ACCESS_ENGINE)
 	max_integrity = 100
 	var/active = FALSE

@@ -59,7 +59,6 @@
 
 	pipe_eject(H, dir, TRUE, target, eject_range, throw_range)
 
-	H.vent_gas(loc)
 	qdel(H)
 
 /obj/structure/disposaloutlet/welder_act(mob/living/user, obj/item/I)

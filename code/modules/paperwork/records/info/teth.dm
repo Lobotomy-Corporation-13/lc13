@@ -201,9 +201,13 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/beanstalk
 	abno_code = "F-03-16"
 	abno_info = list(
-		"When an Agent with Level 1 Temperance and Prudence completed the work, they climbed up the beanstalk and were never seen again.",
+		"Agents with Temperance Level 2 or higher will resist the beanstalk's allure.",
+		"Agents with Fortitude Level 2 or higher are more susceptible to the beanstalk's allure.",
+		"Prudent Agents will snap out of their stupor during a climb.",
 		"Upon attempting an Instinct work with level 4 Fortitude or above, the Agent climbed up the beanstalk willingly.",
 		"Agent Yum Yum perished and fell off the beanstalk after being forced to endure extreme BLACK damage when climbing.",
+		"It is said that there are treasures scattered about on the beanstalk, only an Agent who can resist it's allure may scavenge those treasures.",
+		"An Agent may feel the urge to climb the beanstalk upon touching it.",
 		"No agent has ever returned from the top of the beanstalk, if it even has the concept of a top.")
 
 //My Sweet Home
@@ -243,6 +247,7 @@
 		"When Insight work was performed, the Qliphoth Counter increased by 2. The chains seemed to tighten, keeping the memories locked away.",
 		"When any work other than Insight or Repression was performed, the Qliphoth Counter decreased by 1.",
 		"When the work result was Bad on any work except Repression, there was a 70% chance the employee would be pulled through the door into a realm of sealed regrets.",
+		"Each time a human panicked within the facility, Qliphoth Counter decreased by 1. It appeared to be trying to reach out to those humans...",
 		"Employees who passed through the door reported being trapped in a liminal space filled with forgotten memories and unspoken regrets, each one sealed behind its own chained door.",
 		"When Repression work was performed, any employees lost in the realm of regrets were pulled back through the door to reality.",
 		"When the Qliphoth Counter reached 0, the chains burst open momentarily and 1-3 random facility personnel were dragged through the door into that forsaken realm."
@@ -434,9 +439,11 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/clayman
 	abno_code = "O-04-204"
 	abno_info = list(
-		"Employees who worked on O-04-204 reported no meaningful difference between work types.",
+		"No meaningful difference between work types could be noticed on the first work.",
 		"During work and breaches, the damage type dealt seemed to vary from hit to hit.",
-		"When the work result was Bad, the Qliphoth Counter lowered."
+		"However, each work increased the chances of a successful work on the revelant work by an estimated 10%, with other work being reduced by 5%",
+		"However, should any work type's base success rate reach 100%, O-04-204 would proceed to fall apart, putting all work rates at an equal but very low percentage.",
+		"When the work result was Bad and O-04-204 wasn't falling apart, the Qliphoth Counter lowered."
 	)
 
 //Sirocco

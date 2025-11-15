@@ -1,4 +1,4 @@
-//LISTMOS
+/* //LISTMOS
 //indices of values in gas lists.
 #define MOLES			1
 #define ARCHIVE			2
@@ -537,3 +537,4 @@ GLOBAL_LIST_INIT(pipe_paint_colors, sortList(list(
 		"violet" = rgb(64,0,128),
 		"yellow" = rgb(255,198,0)
 )))
+ */

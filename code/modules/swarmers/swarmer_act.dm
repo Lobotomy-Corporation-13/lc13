@@ -8,7 +8,7 @@
 #define DANGEROUS_DELTA_P 250	//Value in kPa where swarmers arent allowed to break a wall or window with this difference in pressure.
 
 ///Finds the greatest difference in pressure across a turf, only considers open turfs.
-/turf/proc/return_turf_delta_p()
+/* /turf/proc/return_turf_delta_p()
 	var/pressure_greatest = 0
 	var/pressure_smallest = INFINITY 					//Freaking terrified to use INFINITY, man
 	for(var/t in RANGE_TURFS(1, src))			//Begin processing the delta pressure across the wall.
@@ -28,7 +28,7 @@
 			continue
 		var/turf/open/turf_adjacent = t
 		if(turf_adjacent.planetary_atmos)
-			return TRUE
+			return TRUE */
 
 /atom/proc/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
 	actor.dis_integrate(src)
@@ -93,8 +93,8 @@
 		new /obj/structure/lattice/catwalk/swarmer_catwalk(src)
 	return FALSE
 
-/obj/machinery/atmospherics/swarmer_act()
-	return FALSE
+/* /obj/machinery/atmospherics/swarmer_act()
+	return FALSE */
 
 /obj/structure/disposalpipe/swarmer_act()
 	return FALSE
@@ -108,7 +108,7 @@
 	return TRUE
 
 /obj/machinery/door/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
-	var/isonshuttle = istype(get_area(src), /area/shuttle)
+/* 	var/isonshuttle = istype(get_area(src), /area/shuttle)
 	for(var/turf/turf_in_range in range(1, src))
 		var/area/turf_area = get_area(turf_in_range)
 		//Check for dangerous pressure differences
@@ -125,7 +125,7 @@
 		else if(istype(turf_area, /area/engine/supermatter))
 			to_chat(actor, "<span class='warning'>Disrupting the containment of a supermatter crystal would not be to our benefit. Aborting.</span>")
 			actor.target = null
-			return FALSE
+			return FALSE */
 	actor.dis_integrate(src)
 	return TRUE
 
@@ -171,9 +171,9 @@
 	to_chat(actor, "<span class='warning'>Disrupting the power grid would bring no benefit to us. Aborting.</span>")
 	return FALSE
 
-/obj/machinery/portable_atmospherics/canister/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
+/* /obj/machinery/portable_atmospherics/canister/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
 	to_chat(actor, "<span class='warning'>An inhospitable area may be created as a result of destroying this object. Aborting.</span>")
-	return FALSE
+	return FALSE */
 
 /obj/machinery/telecomms/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
 	to_chat(actor, "<span class='warning'>This communications relay should be preserved, it will be a useful resource to our masters in the future. Aborting.</span>")
@@ -192,7 +192,7 @@
 	return FALSE
 
 /turf/closed/wall/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
-	var/isonshuttle = istype(loc, /area/shuttle)
+/* 	var/isonshuttle = istype(loc, /area/shuttle)
 	for(var/turf/turf_in_range in range(1, src))
 		var/area/turf_area = get_area(turf_in_range)
 		if (turf_in_range.return_turf_delta_p() > DANGEROUS_DELTA_P)
@@ -206,11 +206,11 @@
 		else if(istype(turf_area, /area/engine/supermatter))
 			to_chat(actor, "<span class='warning'>Disrupting the containment of a supermatter crystal would not be to our benefit. Aborting.</span>")
 			actor.target = null
-			return TRUE
+			return TRUE */
 	return ..()
 
 /obj/structure/window/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)
-	var/is_on_shuttle = istype(get_area(src), /area/shuttle)
+/* 	var/is_on_shuttle = istype(get_area(src), /area/shuttle)
 	for(var/t in RANGE_TURFS(1, src))
 		var/turf/turf_in_range = t
 		var/area/turf_area = get_area(turf_in_range)
@@ -225,7 +225,7 @@
 		else if(istype(turf_area, /area/engine/supermatter))
 			to_chat(actor, "<span class='warning'>Disrupting the containment of a supermatter crystal would not be to our benefit. Aborting.</span>")
 			actor.target = null
-			return TRUE
+			return TRUE */
 	return ..()
 
 /obj/item/stack/cable_coil/swarmer_act(mob/living/simple_animal/hostile/swarmer/actor)//Wiring would be too effective as a resource

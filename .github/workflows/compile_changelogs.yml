@@ -9,48 +9,48 @@ jobs:
   compile:
     name: "Compile changelogs"
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    if: github.repository == 'Lobotomy-Corporation-13/lc13' # Do not run on forks
     steps:
-      - name: "Check for CHANGELOG_ENABLER secret and pass true to output if it exists to be checked by later steps"
-        id: value_holder
-        env:
-          CHANGELOG_ENABLER: ${{ secrets.CHANGELOG_ENABLER }}
-        run: |
-          unset SECRET_EXISTS
-          if [ -n $CHANGELOG_ENABLER ]; then SECRET_EXISTS='true' ; fi
-          echo ::set-output name=CL_ENABLED::${SECRET_EXISTS}
       - name: "Setup python"
-        if: steps.value_holder.outputs.CL_ENABLED
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
       - name: "Install deps"
-        if: steps.value_holder.outputs.CL_ENABLED
         run: |
           python -m pip install --upgrade pip
           python -m pip install pyyaml
           sudo apt-get install  dos2unix
       - name: "Checkout"
-        if: steps.value_holder.outputs.CL_ENABLED
-        uses: actions/checkout@v1
+        uses: actions/checkout@v5
         with:
           fetch-depth: 25
+          persist-credentials: false
       - name: "Compile"
-        if: steps.value_holder.outputs.CL_ENABLED
         run: |
           python tools/ss13_genchangelog.py html/changelog.html html/changelogs
       - name: "Convert Lineendings"
-        if: steps.value_holder.outputs.CL_ENABLED
         run: |
           unix2dos html/changelogs/.all_changelog.yml
       - name: Commit
-        if: steps.value_holder.outputs.CL_ENABLED
         run: |
-          git config --local user.email "${{ secrets.BOT_EMAIL }}"
-          git config --local user.name "${{ secrets.BOT_NAME }}"
+          git config --local user.name "lc13-automation[bot]"
+          git config --local user.email "230900368+lc13-automation[bot]@users.noreply.github.com"
           git pull origin master
+          git add html/changelogs
           git commit -m "Automatic changelog compile [ci skip]" -a || true
+      - name: Generate App Token
+        id: app-token-generation
+        uses: actions/create-github-app-token@v2
+        if: env.APP_PRIVATE_KEY != '' && env.APP_ID != ''
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+          APP_ID: ${{ secrets.APP_ID }}
       - name: "Push"
-        if: steps.value_holder.outputs.CL_ENABLED
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.BOT_TOKEN }}
+          github_token: ${{ steps.app-token-generation.outputs.token || secrets.GITHUB_TOKEN }}

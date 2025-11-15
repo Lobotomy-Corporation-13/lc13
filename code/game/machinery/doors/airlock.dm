@@ -754,7 +754,7 @@
 				H.visible_message("<span class='danger'>[user] headbutts the airlock.</span>", \
 									"<span class='userdanger'>You headbutt the airlock!</span>")
 				H.Paralyze(100)
-				H.apply_damage(10, BRUTE, BODY_ZONE_HEAD)
+				H.deal_damage(10, BRUTE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_OTHER), def_zone = BODY_ZONE_HEAD)
 			else
 				visible_message("<span class='danger'>[user] headbutts the airlock. Good thing [user.p_theyre()] wearing a helmet.</span>")
 
@@ -1144,7 +1144,7 @@
 	sleep(4)
 	density = FALSE
 	flags_1 &= ~PREVENT_CLICK_UNDER_1
-	air_update_turf(TRUE, FALSE)
+	// air_update_turf(TRUE, FALSE)
 	sleep(1)
 	layer = OPEN_DOOR_LAYER
 	update_icon(AIRLOCK_OPEN, 1)
@@ -1189,12 +1189,12 @@
 	if(air_tight)
 		density = TRUE
 		flags_1 |= PREVENT_CLICK_UNDER_1
-		air_update_turf(TRUE, TRUE)
+		// air_update_turf(TRUE, TRUE)
 	sleep(1)
 	if(!air_tight)
 		density = TRUE
 		flags_1 |= PREVENT_CLICK_UNDER_1
-		air_update_turf(TRUE, TRUE)
+		// air_update_turf(TRUE, TRUE)
 	sleep(4)
 	if(dangerous_close)
 		crush()

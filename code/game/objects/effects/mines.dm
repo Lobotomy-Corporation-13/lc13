@@ -127,7 +127,7 @@
 		qdel(victim.client)
 
 
-/obj/effect/mine/gas
+/* /obj/effect/mine/gas
 	name = "oxygen mine"
 	var/gas_amount = 360
 	var/gas_type = "o2"
@@ -149,7 +149,7 @@
 /obj/effect/mine/gas/water_vapor
 	name = "chilled vapor mine"
 	gas_amount = 500
-	gas_type = "water_vapor"
+	gas_type = "water_vapor" */
 
 /obj/effect/mine/sound
 	name = "honkblaster 1000"

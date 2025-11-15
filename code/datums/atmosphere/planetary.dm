@@ -1,4 +1,4 @@
-// Atmos types used for planetary airs
+/* // Atmos types used for planetary airs
 /datum/atmosphere/lavaland
 	id = LAVALAND_DEFAULT_ATMOS
 
@@ -50,3 +50,4 @@
 	minimum_temp = 180
 	maximum_temp = 180
 
+ */

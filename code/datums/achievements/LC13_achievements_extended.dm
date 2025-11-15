@@ -4,22 +4,6 @@
 // COLLECTION/FARMING ACHIEVEMENTS
 //=================================
 
-/datum/award/achievement/lc13/silk_collector
-	name = "The Legend of the Silksong" // Alternative: "Will Make Fine Silk?"
-	title = "the Legend of the Silksong"
-	desc = "Obtain silk from mobs 120 times."
-	database_id = MEDAL_SILK_COLLECTOR
-	category = "City"
-	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/weapon_forger
-	name = "Workshop Meister" // Alternative: "Respectable Workshop"
-	title = "a Workshop Meister"
-	desc = "Forge 50 weapons as a workshop attendant on City of Light."
-	database_id = MEDAL_WEAPON_FORGER
-	category = "City"
-	difficulty = ACHIEVEMENT_HARD
-
 /datum/award/achievement/lc13/plushie_feeder
 	name = "Plushie Cooking 101" // Alternative: "Soup from a Plush"
 	title = "a Plushie Chef"
@@ -45,127 +29,6 @@
 //=================================
 // ABNORMALITY INTERACTIONS
 //=================================
-
-//Abnormality interaction achievements
-/datum/award/achievement/lc13/die_to_toad
-	name = "Just don't bother it..."
-	title = "reaping their consequences"
-	desc = "Die to Blubbering Toad."
-	database_id = MEDAL_DIE_TO_TOAD
-	difficulty = ACHIEVEMENT_EASY
-
-/datum/award/achievement/lc13/free_toad
-	name = "Gloomy, I said don't bother it!"
-	title = "Sad"
-	desc = "Let Blubbering Toad out of containment."
-	database_id = MEDAL_FREE_TOAD
-	difficulty = ACHIEVEMENT_EASY
-
-/datum/award/achievement/lc13/damage_pbird
-	name = "SINNER!!!"
-	title = "a SINNER!!!"
-	desc = "Damage Punishing Bird and face the consequences."
-	database_id = MEDAL_DAMAGE_PBIRD
-	difficulty = ACHIEVEMENT_EASY
-
-/datum/award/achievement/lc13/nobody_escape
-	name = "Reversal"
-	title = "a Reversal Expert"
-	desc = "Free yourself from Nobody Is' chokehold."
-	database_id = MEDAL_NOBODY_ESCAPE
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/wolf_savior
-	name = "Free the Pig, Wolf and the Seven Lambs"
-	title = "the Wolf and the Seven Lambs"
-	desc = "Save someone from the wolf yourself."
-	database_id = MEDAL_WOLF_SAVIOR
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/red_hood_saved
-	name = "In Sheep's Clothing"
-	title = "being In Sheep's Clothing"
-	desc = "Be saved by Red Hood after getting eaten by Wolf."
-	database_id = MEDAL_RED_HOOD_SAVED
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/golden_apple_breach
-	name = "'I didn’t want to die.'"
-	title = "Yuri"
-	desc = "Breach Golden Apple with a Yuri plushie."
-	database_id = MEDAL_GOLDEN_APPLE_BREACH
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/orchestra_listener
-	name = "Curtains down for the performance of history, Give applause to the song no one can hear, but all can listen to"
-	title = "bringing Curtains Down"
-	desc = "Hear Silent Orchestra's full performance."
-	database_id = MEDAL_ORCHESTRA_LISTENER
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/hammer_activate
-	name = "It gives you as much as it takes..."
-	title = "Noble Sacrifice"
-	desc = "Activate Hammer of Light."
-	database_id = MEDAL_HAMMER_ACTIVATE
-	difficulty = ACHIEVEMENT_EASY
-
-/datum/award/achievement/lc13/nothing_survivor
-	name = "Nothing Survivor"
-	title = "Surviving Nothing"
-	desc = "Survive a non-instinct/attachment work on Nothing There."
-	database_id = MEDAL_NOTHING_SURVIVOR
-	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/punishing_bird_innocent
-	name = "Lethal Birdpany, Misdeeds not allowed!"
-	title = "forbidding Misdeeds"
-	desc = "Die to Punishing Bird without having enraged it beforehand."
-	database_id = MEDAL_PUNISHING_BIRD_INNOCENT
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/one_sin_confession
-	name = "Jesus is that you?, The 12th Apostle"
-	title = "the 12th Apostle"
-	desc = "Kill WhiteNight by confessing to one sin."
-	database_id = MEDAL_ONE_SIN_CONFESSION
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/hammer_kill_wn
-	name = "Divine Intervention"
-	title = "a Divine Intervener"
-	desc = "Kill WhiteNight with Hammer of Light."
-	database_id = MEDAL_HAMMER_KILL_WN
-	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/snow_queen_rescue
-	name = "Gerda and Kai"
-	title = "being like Gerda and Kai"
-	desc = "Rescue a friend/Be rescued from Snow Queen."
-	database_id = MEDAL_SNOW_QUEEN_RESCUE
-	difficulty = ACHIEVEMENT_NORMAL
-
-/datum/award/achievement/lc13/snow_queen_frozen
-	name = "Frozen Honor"
-	title = "being Frozen with Honor"
-	desc = "Trigger Snow Queen's ice encasement due to wearing Feather of Honour."
-	database_id = MEDAL_SNOW_QUEEN_FROZEN
-	difficulty = ACHIEVEMENT_NORMAL
-
-/*
-/datum/award/achievement/lc13/naked_nest_cure_without
-	name = "Natural Recovery"
-	desc = "Cure Naked Nest infection without a cure."
-	database_id = MEDAL_NAKED_NEST_CURE_WITHOUT
-	difficulty = ACHIEVEMENT_HARD
-*/
-
-/datum/award/achievement/lc13/naked_nest_cure_with
-	name = "Clothed Nest, Nakedly Unafraid"
-	title = "Nakedly Unafraid"
-	desc = "Cure Naked Nest infection with a cure."
-	database_id = MEDAL_NAKED_NEST_CURE_WITH
-	difficulty = ACHIEVEMENT_EASY
 
 //=================================
 // DEATH ACHIEVEMENTS
@@ -213,16 +76,7 @@
 	desc = "Beat Abno Blitz."
 	database_id = MEDAL_ABNO_BLITZ
 	difficulty = ACHIEVEMENT_VERYHARD
-*/
 
-/datum/award/achievement/lc13/train_survivor
-	name = "Not my stop"
-	title = "Loving Trains"
-	desc = "Get hit by hell train and survive."
-	database_id = MEDAL_TRAIN_SURVIVOR
-	difficulty = ACHIEVEMENT_HARD
-
-/*
 /datum/award/achievement/lc13/warp_20min
 	name = "Warp Veteran"
 	desc = "Survive 20 minutes in Warp corp cleanup."
@@ -254,13 +108,6 @@
 	difficulty = ACHIEVEMENT_HARD
 */
 
-/datum/award/achievement/lc13/fan_trigger
-	name = "Refreshing air for 199,99!"
-	title = "selling Refreshing Air"
-	desc = "Trigger FAN five times on the same character."
-	database_id = MEDAL_FAN_TRIGGER
-	difficulty = ACHIEVEMENT_NORMAL
-
 // Duplicate of the earlier damage_pbird achievement
 /*
 /datum/award/achievement/lc13/damage_pbird
@@ -269,20 +116,6 @@
 	database_id = MEDAL_DAMAGE_PBIRD
 	difficulty = ACHIEVEMENT_EASY
 */
-
-/datum/award/achievement/lc13/kill_pbird
-	name = "Punishment denied!"
-	title = "denying Punishment"
-	desc = "Kill Punishing Bird."
-	database_id = MEDAL_KILL_PBIRD
-	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/kill_distorted
-	name = "Egoism"
-	title = "being Egoism Incarnate"
-	desc = "Kill Distorted form."
-	database_id = MEDAL_KILL_DISTORTED
-	difficulty = ACHIEVEMENT_HARD
 
 //=================================
 // BOSS ACHIEVEMENTS
@@ -455,20 +288,6 @@
 	database_id = MEDAL_VIRTUE_200_ALL
 	difficulty = ACHIEVEMENT_HARD
 
-/datum/award/achievement/lc13/melting_love_blessing_repress
-	name = "Begone Thot!"
-	title = "Rejector of Love"
-	desc = "Repress Melting Love whilst having her blessing - and survive."
-	database_id = MEDAL_MELTING_LOVE_BLESSING_REPRESS
-	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/kill_wn_pink_midnight
-	name = "A Night Everlasting"
-	title = "a Night Everlasting"
-	desc = "Kill WhiteNight during a pink midnight."
-	database_id = MEDAL_KILL_WN_PINK_MIDNIGHT
-	difficulty = ACHIEVEMENT_HARD
-
 /datum/award/achievement/lc13/khz_codes
 	name = "Charlie Alpha November Yankee Oscar Uniform Hotel Echo Alpha Romeo"
 	title = "a Radio Operator"
@@ -482,13 +301,6 @@
 	desc = "Get killed by friendly breach Queen of Hatred."
 	database_id = MEDAL_FRIENDLY_QOH_KILL
 	difficulty = ACHIEVEMENT_HARD
-
-/datum/award/achievement/lc13/bald_round
-	name = "Now We're Awesome"
-	title = "SUPER Bald"
-	desc = "Be in a round where Bald balds everyone in the facility."
-	database_id = MEDAL_BALD_ROUND
-	difficulty = ACHIEVEMENT_NORMAL
 
 /datum/award/achievement/lc13/clerk_high_ego
 	name = "Breaking the Limits"

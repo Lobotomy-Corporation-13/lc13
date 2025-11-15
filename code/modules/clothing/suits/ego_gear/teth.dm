@@ -328,37 +328,18 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	// Notify the user
 	to_chat(panicked_user, span_warning("The liminal suit resonates with your panic, pulling you into a familiar yet alien space..."))
 
-	// Find a backrooms location
-	var/list/backrooms_locations = list()
-	for(var/obj/effect/landmark/backrooms_spawn/L in GLOB.landmarks_list)
-		backrooms_locations += get_turf(L)
-
-	// Fallback if no landmarks exist
-	if(!LAZYLEN(backrooms_locations))
-		var/turf/T = locate(1, 1, panicked_user.z)
-		if(T)
-			backrooms_locations += T
-		else
-			return
-
-	// Teleport without animation
-	var/turf/destination = pick(backrooms_locations)
-	panicked_user.forceMove(destination)
-	playsound(get_turf(panicked_user), 'sound/effects/podwoosh.ogg', 50, TRUE)
-
-	// Add them to the door's trapped employees list
-	door.trapped_employees |= panicked_user
-	door.original_locations[panicked_user] = get_turf(src)
-
-	// Apply backrooms status effect
-	var/datum/status_effect/backrooms_ambience/B = panicked_user.apply_status_effect(/datum/status_effect/backrooms_ambience)
-	if(B && door)
-		door.backrooms_effects[panicked_user] = B
-
-	to_chat(panicked_user, span_warning("You are now trapped in the realm of sealed regrets. Someone must perform Repression work to free you."))
+	// Use INVOKE_ASYNC to avoid sleeping in signal handler
+	INVOKE_ASYNC(src, PROC_REF(emergency_teleport), panicked_user)
 
 	// Un-panic the user after 1 second by dealing white damage
 	addtimer(CALLBACK(src, PROC_REF(cure_panic), panicked_user), 10)
+
+/obj/item/clothing/suit/armor/ego_gear/teth/liminal/proc/emergency_teleport(mob/living/carbon/human/panicked_user)
+	// This proc can sleep safely since it's called async
+	var/message = "The liminal suit pulls you into the realm of sealed regrets..."
+	SendToRepentanceDimension(panicked_user, message, FALSE)
+
+	to_chat(panicked_user, span_warning("You are now trapped in the realm of sealed regrets. Someone must perform Repression work to free you."))
 
 /obj/item/clothing/suit/armor/ego_gear/teth/liminal/proc/cure_panic(mob/living/carbon/human/H)
 	if(!H || QDELETED(H))

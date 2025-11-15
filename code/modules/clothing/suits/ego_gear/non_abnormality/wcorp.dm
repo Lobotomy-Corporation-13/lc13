@@ -36,4 +36,4 @@
 
 /obj/item/clothing/suit/armor/ego_gear/wcorp/noreq
 	attribute_requirements = list()
-	equip_slowdown = 0
+	equip_delay_self = 0

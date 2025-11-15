@@ -96,6 +96,8 @@
 	return chance
 
 /mob/living/simple_animal/hostile/abnormality/express_train/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
+	if(datum_reference.qliphoth_meter == 0)
+		user.client?.give_award(/datum/award/achievement/abno/train_time, user)
 	datum_reference.qliphoth_change(4)
 	meltdown_timer = world.time + meltdown_tick
 	lightscount = 0
@@ -172,7 +174,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/express_train/proc/CheckTrainSurvival(mob/living/carbon/human/H)
 	if(H && H.stat != DEAD)
-		H.client?.give_award(/datum/award/achievement/lc13/train_survivor, H)
+		H.client?.give_award(/datum/award/achievement/abno/train_survivor, H)
 
 /mob/living/simple_animal/hostile/abnormality/express_train/proc/damageTiles()
 	for(var/obj/effect/expresstrain/seg in segments)
@@ -193,7 +195,7 @@
 					else
 						playsound(get_turf(seg), 'sound/abnormalities/expresstrain/express_whistle.ogg', 100, 0, 40)
 					seg.noise = 1
-				M.deal_damage(400, BLACK_DAMAGE)
+				M.deal_damage(400, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 				// Award achievement for getting hit by hell train and surviving
 				if(ishuman(M) && M.stat != DEAD)
 					var/mob/living/carbon/human/H = M

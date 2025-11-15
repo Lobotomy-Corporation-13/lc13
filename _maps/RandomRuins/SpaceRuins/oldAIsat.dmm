@@ -64,7 +64,6 @@
 /turf/open/floor/plating/airless,
 /area/tcommsat/oldaisat)
 "an" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/plating/airless,
 /area/tcommsat/oldaisat)
 "ao" = (
@@ -110,7 +109,6 @@
 /obj/structure/window/reinforced{
 	dir = 4
 	},
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/plating/airless,
 /area/tcommsat/oldaisat)
 "ax" = (

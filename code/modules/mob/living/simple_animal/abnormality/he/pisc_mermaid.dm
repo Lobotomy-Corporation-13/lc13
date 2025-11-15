@@ -256,23 +256,17 @@
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "I am merely in love, I am merely wanting salvation."), 5 SECONDS)
 	addtimer(CALLBACK(src, PROC_REF(FluffSpeak), "You can breath underwater right?"), 30 SECONDS)
 	// here, we murder them whilst we are talking
-	petter.Stun(2 MINUTES)
+	petter.Stun(41 SECONDS)
 	petter.move_resist = MOVE_FORCE_VERY_STRONG
 	petter.pull_force = MOVE_FORCE_VERY_STRONG
-	var/time_strangled = 0
-	while(petter.stat != DEAD)
-		if(time_strangled > 2 MINUTES) // if they live for 2 minutes, make sure they are not alive and reset them
-			petter.losebreath += 500
-			petter.move_resist = MOVE_RESIST_DEFAULT
-			petter.pull_force = PULL_FORCE_DEFAULT
-			break
+	for(var/times_strangled in 1 to 10)
 		if(petter.stat == DEAD)
-			petter.move_resist = MOVE_RESIST_DEFAULT
-			petter.pull_force = PULL_FORCE_DEFAULT
 			break
-		petter.adjustOxyLoss(3, updating_health=TRUE, forced=TRUE)
-		time_strangled++
-		SLEEP_CHECK_DEATH(1 SECONDS)
+		petter.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE * times_strangled) // 440 oxydamage total.
+		times_strangled++
+		SLEEP_CHECK_DEATH(4 SECONDS)
+	petter.move_resist = MOVE_RESIST_DEFAULT
+	petter.pull_force = PULL_FORCE_DEFAULT
 
 //This is a dating sim now fuck you
 /mob/living/simple_animal/hostile/abnormality/pisc_mermaid/funpet(mob/living/carbon/human/current_petter)

@@ -65,7 +65,7 @@
 				/obj/item/bikehorn/ = 1)
 	time = 40
 	category = CAT_ROBOT
-
+/*
 /datum/crafting_recipe/firebot
 	name = "Firebot"
 	result = /mob/living/simple_animal/bot/firebot
@@ -75,7 +75,7 @@
 				/obj/item/clothing/head/hardhat/red = 1)
 	time = 40
 	category = CAT_ROBOT
-
+ */
 /datum/crafting_recipe/vibebot
 	name = "Vibebot"
 	result = /mob/living/simple_animal/bot/vibebot

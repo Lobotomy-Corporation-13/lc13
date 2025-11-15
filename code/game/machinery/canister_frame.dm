@@ -1,4 +1,4 @@
-//Canister Frames
+/* //Canister Frames
 /obj/structure/canister_frame
 	name = "canister frame"
 	icon = 'icons/obj/atmos.dmi'
@@ -121,3 +121,4 @@
 	if (I.use_tool(src, user, 2 SECONDS, volume=50))
 		to_chat(user, span_notice("You dismantle \the [src]."))
 		deconstruct()
+ */

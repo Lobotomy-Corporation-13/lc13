@@ -34,7 +34,6 @@
 #define MEDAL_HOT_DAMN "Hot Damn!"
 
 //LC13 Achievements
-#define MEDAL_SCORPWORLD "Scorp World"
 #define MEDAL_LCORPWORLD "Lcorp World"
 #define MEDAL_TWILIGHT "Twilight"
 #define BOSS_MEDAL_WHITENIGHT "White Night"
@@ -98,6 +97,12 @@
 #define MEDAL_SOLEMN "Solemn Lament for the Living"
 #define MEDAL_GALAXY_PEBBLE "Friends with the Galaxy"
 #define MEDAL_GALAXY_SHATTER "Make Him Cry"
+#define MEDAL_CHERRY_DEATH "Wilted Blossoms"
+#define MEDAL_CHESHIRE "Cheshire Grin"
+#define MEDAL_CENSORED "I don't get it"
+#define MEDAL_TRAIN_LAST "Crazy Train"
+#define MEDAL_SCORPWORLD "Scorp World"
+
 
 
 

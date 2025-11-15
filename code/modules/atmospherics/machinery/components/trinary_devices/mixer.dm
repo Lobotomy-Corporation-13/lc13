@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/trinary/mixer
+/* /obj/machinery/atmospherics/components/trinary/mixer
 	icon_state = "mixer_off-0"
 	density = FALSE
 
@@ -243,3 +243,4 @@
 /obj/machinery/atmospherics/components/trinary/mixer/airmix/flipped/inverse
 	node1_concentration = O2STANDARD
 	node2_concentration = N2STANDARD
+ */

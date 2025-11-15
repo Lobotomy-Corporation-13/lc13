@@ -61,7 +61,7 @@
 				"<span class='cultlarge'>\"You shouldn't play with sharp things. You'll poke someone's eye out.\"</span>")
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			H.apply_damage(rand(force/2, force), BRUTE, pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
+			H.deal_damage(rand(force/2, force), BRUTE, flags = (DAMAGE_FORCED), def_zone = pick(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM))
 		else
 			user.adjustBruteLoss(rand(force/2,force))
 		return
@@ -277,9 +277,9 @@
 	flags_cover = HEADCOVERSEYES
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 40)
 	cold_protection = HEAD
-	min_cold_protection_temperature = HELMET_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = HELMET_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 
 /obj/item/clothing/suit/hooded/cultrobes
 	name = "ancient cultist robes"
@@ -291,9 +291,9 @@
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 40)
 	flags_inv = HIDEJUMPSUIT
 	cold_protection = CHEST|GROIN|LEGS|ARMS
-	min_cold_protection_temperature = ARMOR_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|ARMS
-	max_heat_protection_temperature = ARMOR_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	hoodtype = /obj/item/clothing/head/hooded/cult_hoodie
 
 
@@ -767,9 +767,9 @@
 		if(iscarbon(user))
 			var/mob/living/carbon/C = user
 			if(C.active_hand_index == 1)
-				C.apply_damage(20, BRUTE, BODY_ZONE_L_ARM, wound_bonus = 20, sharpness = SHARP_EDGED) //oof ouch
+				C.deal_damage(20, BRUTE, flags = (DAMAGE_FORCED), def_zone = BODY_ZONE_L_ARM, wound_bonus = 20, sharpness = SHARP_EDGED) //oof ouch
 			else
-				C.apply_damage(20, BRUTE, BODY_ZONE_R_ARM, wound_bonus = 20, sharpness = SHARP_EDGED)
+				C.deal_damage(20, BRUTE, flags = (DAMAGE_FORCED), def_zone = BODY_ZONE_R_ARM, wound_bonus = 20, sharpness = SHARP_EDGED)
 		qdel(src)
 		return FALSE
 

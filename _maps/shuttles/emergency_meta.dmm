@@ -669,7 +669,6 @@
 	name = "Station Intercom (General)";
 	pixel_y = -31
 	},
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /obj/effect/turf_decal/bot,
 /turf/open/floor/plasteel,
 /area/shuttle/escape)

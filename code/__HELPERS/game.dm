@@ -349,6 +349,10 @@
 	O.screen_loc = screen_loc
 	return O
 
+/// Removes an image from a client's `.images`. Useful as a callback.
+/proc/remove_image_from_client(image/image, client/remove_from)
+	remove_from?.images -= image
+
 /proc/remove_images_from_clients(image/I, list/show_to)
 	for(var/client/C in show_to)
 		C.images -= I
@@ -532,7 +536,7 @@
 	var/obj/machinery/announcement_system/announcer = pick(GLOB.announcement_systems)
 	announcer.announce("ARRIVAL", character.real_name, displayed_rank, list()) //make the list empty to make it announce it in common
 //Tegu edit ends
-/proc/lavaland_equipment_pressure_check(turf/T)
+/* /proc/lavaland_equipment_pressure_check(turf/T)
 	. = FALSE
 	if(!istype(T))
 		return
@@ -541,15 +545,15 @@
 		return
 	var/pressure = environment.return_pressure()
 	if(pressure <= LAVALAND_EQUIPMENT_EFFECT_PRESSURE)
-		. = TRUE
+		. = TRUE */
 
-/proc/ispipewire(item)
+/* /proc/ispipewire(item)
 	var/static/list/pire_wire = list(
 		/obj/machinery/atmospherics,
 		/obj/structure/disposalpipe,
 		/obj/structure/cable
 	)
-	return (is_type_in_list(item, pire_wire))
+	return (is_type_in_list(item, pire_wire)) */
 
 // Find an obstruction free turf that's within the range of the center. Can also condition on if it is of a certain area type.
 /proc/find_obstruction_free_location(range, atom/center, area/specific_area)

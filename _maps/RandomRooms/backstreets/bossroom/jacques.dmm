@@ -45,6 +45,10 @@
 "gQ" = (
 /turf/open/indestructible/necropolis/air,
 /area/city/backstreets_room)
+"hr" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
+/turf/open/indestructible/necropolis/air,
+/area/city/backstreets_room)
 "ht" = (
 /obj/structure/closet/crate/large,
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -70,6 +74,13 @@
 /area/city/backstreets_room)
 "mN" = (
 /obj/structure/bookcase/random/religion,
+/turf/open/floor/plasteel/cult,
+/area/city/backstreets_room)
+"nP" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
 /turf/open/floor/plasteel/cult,
 /area/city/backstreets_room)
 "qV" = (
@@ -100,6 +111,10 @@
 /obj/item/stack/spacecash/c100,
 /obj/item/stack/spacecash/c100,
 /turf/open/floor/plasteel/cult,
+/area/city/backstreets_room)
+"sR" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
+/turf/open/indestructible/necropolis/air,
 /area/city/backstreets_room)
 "us" = (
 /obj/structure/chair/pew/right{
@@ -187,6 +202,10 @@
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 8
 	},
+/turf/open/floor/plasteel/cult,
+/area/city/backstreets_room)
+"BT" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
 /turf/open/floor/plasteel/cult,
 /area/city/backstreets_room)
 "Ct" = (
@@ -621,7 +640,7 @@ Bh
 EP
 EP
 EP
-rx
+BT
 EP
 EP
 EP
@@ -727,7 +746,7 @@ xD
 BF
 gQ
 gQ
-OL
+sR
 Am
 YU
 xD
@@ -769,7 +788,7 @@ UT
 zt
 gQ
 gQ
-OL
+hr
 ZT
 gQ
 gQ
@@ -781,7 +800,7 @@ gQ
 gQ
 gQ
 gQ
-OJ
+nP
 EP
 Fy
 "}
@@ -837,7 +856,7 @@ Ku
 SY
 gQ
 gQ
-OL
+sR
 AI
 Eb
 Ku
@@ -908,7 +927,7 @@ HO
 Rb
 EP
 Rb
-rx
+BT
 Rb
 EP
 us

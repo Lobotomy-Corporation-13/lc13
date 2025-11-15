@@ -1,6 +1,6 @@
 // Disposal bin and Delivery chute.
 
-#define SEND_PRESSURE (0.05*ONE_ATMOSPHERE)
+#define SEND_PRESSURE 3
 
 /obj/machinery/disposal
 	icon = 'icons/obj/atmospherics/pipes/disposal.dmi'
@@ -12,9 +12,9 @@
 	obj_flags = CAN_BE_HIT | USES_TGUI
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 
-	var/datum/gas_mixture/air_contents	// internal reservoir
 	var/full_pressure = FALSE
 	var/pressure_charging = TRUE
+	var/pressure = 0
 	var/flush = 0	// true if flush handle is pulled
 	var/obj/structure/disposalpipe/trunk/trunk = null // the attached pipe trunk
 	var/flushing = 0	// true if flushing in progress
@@ -23,7 +23,6 @@
 	var/last_sound = 0
 	var/obj/structure/disposalconstruct/stored
 	// create a new disposal
-	// find the attached trunk (if present) and init gas resvr.
 
 /obj/machinery/disposal/Initialize(mapload, obj/structure/disposalconstruct/make_from)
 	. = ..()
@@ -38,11 +37,9 @@
 
 	trunk_check()
 
-	air_contents = new /datum/gas_mixture()
-	//gas.volume = 1.05 * CELLSTANDARD
 	update_icon()
 
-	return INITIALIZE_HINT_LATELOAD //we need turfs to have air
+	return
 
 /obj/machinery/disposal/proc/trunk_check()
 	trunk = locate() in loc
@@ -70,15 +67,6 @@
 	..()
 	if(current_size >= STAGE_FIVE)
 		deconstruct()
-
-/obj/machinery/disposal/LateInitialize()
-	//this will get a copy of the air turf and take a SEND PRESSURE amount of air from it
-	var/atom/L = loc
-	var/datum/gas_mixture/env = new
-	env.copy_from(L.return_air())
-	var/datum/gas_mixture/removed = env.remove(SEND_PRESSURE + 1)
-	air_contents.merge(removed)
-	trunk_check()
 
 /obj/machinery/disposal/attackby(obj/item/I, mob/user, params)
 	add_fingerprint(user)
@@ -195,7 +183,6 @@
 	var/obj/structure/disposalholder/H = new(src)
 	newHolderDestination(H)
 	H.init(src)
-	air_contents = new()
 	H.start(src)
 	flushing = FALSE
 	flush = FALSE
@@ -216,7 +203,6 @@
 
 	pipe_eject(H)
 
-	H.vent_gas(loc)
 	qdel(H)
 
 /obj/machinery/disposal/deconstruct(disassembled = TRUE)
@@ -291,7 +277,7 @@
 	data["full_pressure"] = full_pressure
 	data["pressure_charging"] = pressure_charging
 	data["panel_open"] = panel_open
-	data["per"] = CLAMP01(air_contents.return_pressure() / (SEND_PRESSURE))
+	data["per"] = CLAMP01(pressure / (SEND_PRESSURE))
 	data["isai"] = isAI(user)
 	return data
 
@@ -339,6 +325,7 @@
 
 /obj/machinery/disposal/bin/flush()
 	..()
+	pressure = initial(pressure)
 	full_pressure = FALSE
 	pressure_charging = TRUE
 	update_icon()
@@ -379,7 +366,7 @@
 	flush()
 
 //timed process
-//charge the gas reservoir and perform flush if ready
+//charge the pressure count and perform flush if ready
 /obj/machinery/disposal/bin/process(delta_time)
 	if(machine_stat & BROKEN) //nothing can happen if broken
 		return
@@ -393,7 +380,7 @@
 
 	updateDialog()
 
-	if(flush && air_contents.return_pressure() >= SEND_PRESSURE) // flush can happen even without power
+	if(flush) // flush can happen even without power
 		do_flush()
 
 	if(machine_stat & NOPOWER) // won't charge if no power
@@ -406,26 +393,13 @@
 
 	// otherwise charge
 	use_power(500) // charging power usage
-
-	var/atom/L = loc //recharging from loc turf
-
-	var/datum/gas_mixture/env = L.return_air()
-	if(!env.temperature)
-		return
-	var/pressure_delta = (SEND_PRESSURE*1.01) - air_contents.return_pressure()
-
-	var/transfer_moles = 0.05 * delta_time * (pressure_delta*air_contents.volume)/(env.temperature * R_IDEAL_GAS_EQUATION)
-
-	//Actually transfer the gas
-	var/datum/gas_mixture/removed = env.remove(transfer_moles)
-	air_contents.merge(removed)
-	air_update_turf(FALSE, FALSE)
-
+	pressure++	// charging "pressure"
 	//if full enough, switch to ready mode
-	if(air_contents.return_pressure() >= SEND_PRESSURE)
+	if(pressure >= SEND_PRESSURE)
 		full_pressure = TRUE
 		pressure_charging = FALSE
 		update_icon()
+
 	return
 
 /obj/machinery/disposal/bin/get_remote_view_fullscreens(mob/user)

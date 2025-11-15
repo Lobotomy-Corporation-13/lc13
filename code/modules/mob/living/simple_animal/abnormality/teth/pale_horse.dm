@@ -65,11 +65,10 @@
 	datum_reference.qliphoth_change(1)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user)
-	if(user.health < (user.maxHealth * 0.5))
-		return
-	else
-		user.deal_damage(4, PALE_DAMAGE)
+/mob/living/simple_animal/hostile/abnormality/pale_horse/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
+	if(user.health >= (user.maxHealth * 0.5))
+		user.deal_damage(4, PALE_DAMAGE, flags = (DAMAGE_FORCED))
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Initialize()
 	. = ..()
@@ -126,7 +125,7 @@
 		for(var/mob/living/H in T)
 			if(faction_check_mob(H))
 				continue
-			H.deal_damage(fog_damage, PALE_DAMAGE)
+			H.deal_damage(fog_damage, PALE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /mob/living/simple_animal/hostile/abnormality/pale_horse/Moved() //more damaging fog when moving
@@ -171,7 +170,7 @@
 		for(var/mob/living/H in F)
 			if(faction_check_mob(H))
 				continue
-			H.deal_damage(ash_damage, PALE_DAMAGE)
+			H.deal_damage(ash_damage, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(H.health < 0 && ishuman(H))
 				H.dust()
 	T.dust()
@@ -292,7 +291,7 @@
 	icon_state = "mortis"
 
 /datum/status_effect/mortis/tick()
-	owner.deal_damage(damage, PALE_DAMAGE)
+	owner.deal_damage(damage, PALE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 	if(owner.health < 0 && ishuman(owner))
 		owner.dust()
 

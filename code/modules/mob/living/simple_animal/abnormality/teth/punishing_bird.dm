@@ -191,7 +191,7 @@
 		// Achievement for dying to Punishing Bird without enraging it
 		if(ishuman(L) && !bird_angry && L.health <= 0 && L.stat != DEAD)
 			var/mob/living/carbon/human/H = L
-			H.client?.give_award(/datum/award/achievement/lc13/punishing_bird_innocent, H)
+			H.client?.give_award(/datum/award/achievement/abno/punishing_bird_innocent, H)
 		..()
 		if(obj_damage <= 0) // Not transformed
 			if(ishuman(L))
@@ -217,7 +217,7 @@
 	// Award achievement to all nearby humans for killing Punishing Bird
 	for(var/mob/living/carbon/human/H in view(7, src))
 		if(H.stat != DEAD)
-			H.client?.give_award(/datum/award/achievement/lc13/kill_pbird, H)
+			H.client?.give_award(/datum/award/achievement/abno/kill_pbird, H)
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
@@ -264,7 +264,7 @@
 		if(ishuman(A))
 			var/mob/living/carbon/human/H = A
 			if(H.client)
-				H.client.player_details.achievements.unlock(/datum/award/achievement/lc13/damage_pbird, H)
+				H.client.player_details.achievements.unlock(/datum/award/achievement/abno/damage_pbird, H)
 
 	if(isliving(A))
 		var/mob/living/M = A
@@ -303,7 +303,7 @@
 	// Award achievement for damaging Punishing Bird
 	if(ishuman(user) && health < maxHealth)
 		var/mob/living/carbon/human/H = user
-		H.client?.give_award(/datum/award/achievement/lc13/damage_pbird, H)
+		H.client?.give_award(/datum/award/achievement/abno/damage_pbird, H)
 	Retaliate(user)
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)

@@ -112,7 +112,6 @@
 
 	playsound(src, 'sound/machines/hiss.ogg', 50, FALSE, FALSE)
 	pipe_eject(H, direction, TRUE, target, eject_range)
-	H.vent_gas(T)
 	qdel(H)
 
 

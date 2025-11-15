@@ -89,10 +89,13 @@
 	anchored = TRUE
 	density = FALSE
 	var/list/moblist = list()
+	var/target
 
 /obj/structure/den/tunnel/Initialize(mapload)
 	. = ..()
-	AddComponent(/datum/component/monwave_spawner, attack_target = get_turf(src), new_wave_order = moblist)
+	if(!target)
+		target = get_turf(src)
+	AddComponent(/datum/component/monwave_spawner, attack_target = target, new_wave_order = moblist)
 
 /obj/structure/den/proc/changeTarget(thing)
 	var/turf/target_turf = get_turf(thing)

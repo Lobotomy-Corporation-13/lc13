@@ -18,8 +18,7 @@
 /turf/open/floor/carpet/blue,
 /area/city/backstreets_room)
 "t" = (
-/mob/living/simple_animal/hostile/ordeal/indigo_noon,
-/mob/living/simple_animal/hostile/ordeal/indigo_noon,
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky,
 /turf/open/floor/carpet/blue,
 /area/city/backstreets_room)
 "v" = (
@@ -31,6 +30,10 @@
 /area/city/backstreets_room)
 "A" = (
 /obj/structure/reagent_dispensers/water_cooler,
+/turf/open/floor/carpet/blue,
+/area/city/backstreets_room)
+"F" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky,
 /turf/open/floor/carpet/blue,
 /area/city/backstreets_room)
 "H" = (
@@ -120,7 +123,7 @@ W
 x
 S
 o
-v
+F
 s
 P
 t

@@ -90,7 +90,7 @@
 	visible_message(span_danger("[src] suddenly explodes!"))
 	for(var/mob/living/L in view(5, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(35, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(35, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 	new /obj/item/food/meat/slab/crimson (get_turf(src))
 	gib()
 
@@ -294,7 +294,7 @@
 			to_chat(L, span_userdanger("[src] rolls past you!"))
 			var/turf/LT = get_turf(L)
 			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.apply_damage(50, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(50, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(!(L in been_hit))
 				been_hit += L
 	addtimer(CALLBACK(src, PROC_REF(do_roll), move_dir, (times_ran + 1)), 1.5)
@@ -379,7 +379,7 @@
 		B.bloodiness = 100
 	for(var/mob/living/L in view(5, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(700, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(700, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 	gib()
 
 /mob/living/simple_animal/hostile/ordeal/crimson_tent/AttackingTarget(atom/attacked_target)
@@ -486,7 +486,7 @@
 				continue
 			if (L == src)
 				continue
-			L.apply_damage(bite_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(bite_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	can_act = TRUE
 

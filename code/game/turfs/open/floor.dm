@@ -16,8 +16,8 @@
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_OPEN_FLOOR)
 	canSmoothWith = list(SMOOTH_GROUP_OPEN_FLOOR, SMOOTH_GROUP_TURF_OPEN)
 
-	thermal_conductivity = 0.04
-	heat_capacity = 10000
+	// thermal_conductivity = 0.04
+	// heat_capacity = 10000
 	intact = TRUE
 	tiled_dirt = TRUE
 
@@ -91,13 +91,13 @@
 						ScrapeAway(flags = CHANGETURF_INHERIT_AIR)
 					else
 						break_tile()
-					hotspot_expose(1000,CELL_VOLUME)
+					// hotspot_expose(1000,CELL_VOLUME)
 					if(prob(33))
 						new /obj/item/stack/sheet/metal(src)
 		if(3)
 			if (prob(50))
 				src.break_tile()
-				src.hotspot_expose(1000,CELL_VOLUME)
+				// src.hotspot_expose(1000,CELL_VOLUME)
 
 /turf/open/floor/is_shielded()
 	for(var/obj/structure/A in contents)
@@ -106,9 +106,9 @@
 /turf/open/floor/blob_act(obj/structure/blob/B)
 	return
 
-/turf/open/floor/update_icon()
+/* /turf/open/floor/update_icon()
 	. = ..()
-	update_visuals()
+	update_visuals() */
 
 /turf/open/floor/attack_paw(mob/user)
 	return attack_hand(user)

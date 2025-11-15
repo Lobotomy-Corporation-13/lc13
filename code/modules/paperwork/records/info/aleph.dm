@@ -251,10 +251,10 @@
 // Star Luminary (WIP)
 /obj/item/paper/fluff/info/aleph/luminary
 	abno_type = /mob/living/simple_animal/hostile/abnormality/star_luminary
-	abno_code = "O-??-???"
+	abno_code = "O-01-930"
 	abno_info = list(
 		"The abnormality enthralled any employee who performed non-Repression work with it. After this, the Qliphoth Counter increased by one.",
-		"Enthralled employees experienced a significant boost to their Temperance and a very significant boost to the quality of non-Instinct work performed with the abnormality, yet their mental corruption levels began to increase continously.",
+		"Enthralled employees experienced a significant boost to their Justice and a very significant boost to the quality of non-Instinct work performed with the abnormality, yet their mental corruption levels began to increase continously.",
 		"The abnormality requires constant attention, as the Qliphoth Counter dropped after a period of not being worked with. The abnormality requires more frequent works as the number of enthralled employees raises.",
 		"After a non-enthralled employee performed Repression work with the abnormality, the Qliphoth Counter decreased by one. Afterwards, all enthralled employees experienced a significant reduction in both their immediate mental corruption and in the constant build-up of mental corruption. This effect seems to increase in intensity with the amount of enthralled employees.",
 		"If an enthralled employee died, all other enthralled employees experienced a significant increase in mental corruption, this effect significantly increased in potency with the amount of enthralled employees.",

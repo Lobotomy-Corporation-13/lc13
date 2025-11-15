@@ -19,7 +19,7 @@
 	return FALSE
 
 
-/mob/living/simple_animal/drone/can_equip(obj/item/I, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+/mob/living/simple_animal/drone/can_equip(obj/item/I, slot, disable_warning = FALSE)
 	switch(slot)
 		if(ITEM_SLOT_HEAD)
 			if(head)
@@ -31,7 +31,7 @@
 			if(internal_storage)
 				return FALSE
 			return TRUE
-	..()
+	return ..()
 
 
 /mob/living/simple_animal/drone/get_item_by_slot(slot_id)

@@ -1,4 +1,4 @@
-///Max temperature allowed inside the cryotube, should break before reaching this heat
+/* ///Max temperature allowed inside the cryotube, should break before reaching this heat
 #define MAX_TEMPERATURE 4000
 // Multiply factor is used with efficiency to multiply Tx quantity
 // Tx quantity is how much volume should be removed from the cell's beaker - multiplied by delta_time
@@ -553,3 +553,4 @@ GLOBAL_VAR_INIT(cryo_overlay_cover_off, mutable_appearance('icons/obj/cryogenics
 #undef CRYO_THROTTLE_CTR_MAX
 #undef CRYO_MIN_GAS_MOLES
 #undef CRYO_BREAKOUT_TIME
+ */

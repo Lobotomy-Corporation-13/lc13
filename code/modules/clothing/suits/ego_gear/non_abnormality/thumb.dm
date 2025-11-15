@@ -79,43 +79,9 @@
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat"
 
-// Most of everything below this point is modified code copied from /obj/item/clothing/suit/armor/ego_gear/adjustable.
-// I could also make an adjustable hat parent type, if there's demand in the codebase for it, I guess.
-	var/list/alternative_styles = list("thumb_east_hat_shadowed")
-	var/index = 1
-
-/obj/item/clothing/head/thumb_east_hat/Initialize(mapload)
+/obj/item/clothing/head/thumb_east_hat/ComponentInitialize()
 	. = ..()
-	alternative_styles |= icon_state
-	index = alternative_styles.len
-
-/obj/item/clothing/head/thumb_east_hat/examine(mob/user)
-	. = ..()
-	. += span_notice("You can adjust it to obscure more of your face by right-clicking it.")
-
-/obj/item/clothing/head/thumb_east_hat/verb/AdjustStyle()
-	set name = "Adjust Hat Style"
-	set category = null
-	set src in usr
-	Adjust()
-
-/obj/item/clothing/head/thumb_east_hat/proc/Adjust()
-	if(!ishuman(usr))
-		return
-	if(alternative_styles.len <= 1)
-		to_chat(usr, span_notice("There's no other way to wear this hat!"))
-		return
-	index++
-	if(index > alternative_styles.len)
-		index = 1
-	icon_state = alternative_styles[index]
-	if(icon_state == initial(icon_state))
-		to_chat(usr, span_notice("You adjust your hat to wear it normally once again."))
-	else
-		to_chat(usr, span_notice("You adjust your hat, lowering it to partially conceal your face."))
-	var/mob/living/carbon/human/H = usr
-	H.update_inv_head()
-	H.update_body()
+	AddComponent(/datum/component/adjustable_gear, list(icon_state, icon_state+"_shadowed"), "You adjust your hat to see better.")
 
 /obj/item/clothing/head/thumb_east_hat/capo
 	name = "thumb east capo hat"
@@ -124,4 +90,3 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat_capo"
-	alternative_styles = list("thumb_east_hat_capo_shadowed")

@@ -38,7 +38,7 @@
 		/datum/ego_datum/weapon/havana,
 		/datum/ego_datum/armor/havana,
 	)
-//	gift_type =  /datum/ego_gifts/caterpillar
+	gift_type =  /datum/ego_gifts/caterpillar
 	abnormality_origin = ABNORMALITY_ORIGIN_WONDERLAB
 
 	var/darts_smoked	//how many times you didnt' work repression
@@ -113,7 +113,7 @@
 
 	C.smoke_delay++
 	addtimer(CALLBACK(src, PROC_REF(remove_smoke_delay), C), 10)
-	C.deal_damage(27, PALE_DAMAGE)
+	C.deal_damage(27, PALE_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 	to_chat(C, span_danger("IT BURNS!"))
 	C.emote("scream")
 	return TRUE

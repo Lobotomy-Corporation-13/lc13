@@ -7,9 +7,9 @@
 	density = FALSE
 	max_integrity = 15
 
-/obj/structure/spider/ComponentInitialize()
+/* /obj/structure/spider/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/structure/spider/play_attack_sound(damage_amount, damage_type = BRUTE)
 	if(damage_type == FIRE)//the stickiness of the web mutes all attack sounds except fire damage type
@@ -23,11 +23,11 @@
 			damage_amount *= 0.25
 	. = ..()
 
-/obj/structure/spider/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/structure/spider/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 300
 
 /obj/structure/spider/atmos_expose(datum/gas_mixture/air, exposed_temperature)
-	take_damage(5, FIRE, 0)
+	take_damage(5, FIRE, 0) */
 
 /obj/structure/spider/stickyweb
 	var/genetic = FALSE
@@ -163,8 +163,8 @@
 	max_integrity = 3
 	var/amount_grown = 0
 	var/grow_as = null
-	var/obj/machinery/atmospherics/components/unary/vent_pump/entry_vent
-	var/travelling_in_vent = 0
+	// var/obj/machinery/atmospherics/components/unary/vent_pump/entry_vent
+	// var/travelling_in_vent = 0
 	var/directive = "" //Message from the mother
 	var/list/faction = list("spiders")
 
@@ -200,7 +200,7 @@
 	else
 		..()
 
-/obj/structure/spider/spiderling/proc/cancel_vent_move()
+/* /obj/structure/spider/spiderling/proc/cancel_vent_move()
 	forceMove(entry_vent)
 	entry_vent = null
 
@@ -229,9 +229,10 @@
 		return
 	forceMove(exit_vent.loc)
 	entry_vent = null
+ */
 
 /obj/structure/spider/spiderling/process()
-	if(travelling_in_vent)
+	/* if(travelling_in_vent)
 		if(isturf(loc))
 			travelling_in_vent = 0
 			entry_vent = null
@@ -249,24 +250,23 @@
 				visible_message("<B>[src] scrambles into the ventilation ducts!</B>", \
 								"<span class='hear'>You hear something scampering through the ventilation ducts.</span>")
 
-			addtimer(CALLBACK(src, PROC_REF(vent_move), exit_vent), rand(20,60))
-
+			addtimer(CALLBACK(src, PROC_REF(vent_move), exit_vent), rand(20,60)) */
 	//=================
 
-	else if(prob(33))
+	if(prob(33))
 		var/list/nearby = oview(10, src)
 		if(nearby.len)
 			var/target_atom = pick(nearby)
 			walk_to(src, target_atom)
 			if(prob(40))
 				src.visible_message("<span class='notice'>\The [src] skitters[pick(" away"," around","")].</span>")
-	else if(prob(10))
+/* 	else if(prob(10))
 		//ventcrawl!
 		for(var/obj/machinery/atmospherics/components/unary/vent_pump/v in view(7,src))
 			if(!v.welded)
 				entry_vent = v
 				walk_to(src, entry_vent, 1)
-				break
+				break */
 	if(isturf(loc))
 		amount_grown += rand(0,2)
 		if(amount_grown >= 100)

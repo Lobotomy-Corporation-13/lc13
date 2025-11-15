@@ -1,7 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/atmospherics/components/unary/tank/air,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
 "d" = (
@@ -18,9 +17,6 @@
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
 "h" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	dir = 8
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/warning/coldtemp{
 	pixel_x = -32
@@ -44,7 +40,6 @@
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
 "s" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
@@ -75,7 +70,6 @@
 	pixel_x = 32
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/atmospherics/components/unary/tank/air,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
 "H" = (
@@ -103,9 +97,6 @@
 /turf/open/floor/plasteel/freezer,
 /area/city/backstreets_room)
 "M" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	autoeject = 0
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sigsystem/tower{
 	signal_range = 5;
@@ -123,9 +114,6 @@
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
 "P" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	dir = 8
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
@@ -144,9 +132,6 @@
 /turf/open/floor/plasteel/freezer,
 /area/city/backstreets_room)
 "Z" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell{
-	dir = 4
-	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)

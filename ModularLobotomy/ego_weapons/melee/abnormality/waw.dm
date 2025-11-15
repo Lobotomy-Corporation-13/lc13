@@ -29,7 +29,7 @@
 		aoe *= force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 
 
@@ -59,10 +59,12 @@
 	..()
 	if(combo_on)
 		to_chat(user,span_warning("You swap your grip, and will no longer perform a finisher."))
+		balloon_alert(user, "You swap your grip, and will no longer perform a finisher.")
 		combo_on = FALSE
 		return
 	if(!combo_on)
 		to_chat(user,span_warning("You swap your grip, and will now perform a finisher."))
+		balloon_alert(user, "You swap your grip, and will now perform a finisher.")
 		combo_on =TRUE
 		return
 
@@ -79,6 +81,7 @@
 		force *= 5	// Should actually keep up with normal damage.
 		playsound(src, 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
 		to_chat(user,span_warning("You are offbalance, you take a moment to reset your stance."))
+		balloon_alert(user, "You are offbalance, you take a moment to reset your stance.")
 	else
 		user.changeNext_move(CLICK_CD_MELEE * 0.4)
 	..()
@@ -91,6 +94,7 @@
 		return
 	new /obj/item/ego_weapon/shield/despair_nihil(get_turf(src))
 	to_chat(user,span_warning("The [I] seems to drain all of the light away as it is absorbed into [src]!"))
+	balloon_alert(user, "The [I] seems to drain all of the light away as it is absorbed into [src]!")
 	playsound(user, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
 	qdel(I)
 	qdel(src)
@@ -123,6 +127,7 @@
 		charged = TRUE
 		force = 120	//FULL POWER
 		to_chat(user,span_warning("You put your strength behind this attack."))
+		balloon_alert(user, "You put your strength behind this attack.")
 
 /obj/item/ego_weapon/totalitarianism/get_clamped_volume()
 	return 50
@@ -151,6 +156,7 @@
 	if (!charged)
 		charged = TRUE
 		to_chat(user,span_warning("You focus your energy, adding [meter] damage to your next attack."))
+		balloon_alert(user, "You focus your energy, adding [meter] damage to your next attack.")
 		force += meter
 		meter = 0
 
@@ -200,7 +206,7 @@
 	if(mode)
 		if(M in targets)
 			playsound(M, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
-			M.apply_damage(ranged_damage, WHITE_DAMAGE, null, M.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			M.deal_damage(ranged_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/remorse(get_turf(M))
 			targets -= M
 	..()
@@ -211,12 +217,14 @@
 	if(mode)	//Turn to nail
 		mode = FALSE
 		to_chat(user,span_warning("You swap to nail mode, clearing all marks."))
+		balloon_alert(user, "You swap to nail mode, clearing all marks.")
 		targets = list()
 		return
 
 	if(!mode)	//Turn to hammer
 		mode = TRUE
 		to_chat(user,span_warning("You swap to hammer mode."))
+		balloon_alert(user, "You swap to hammer mode.")
 		return
 
 /obj/item/ego_weapon/mini/crimson
@@ -277,8 +285,11 @@
 	special_attack = !special_attack
 	if(special_attack)
 		to_chat(user, span_notice("You prepare to throw [src]."))
+		balloon_alert(user, "You prepare to throw [src].")
+
 	else
 		to_chat(user, span_notice("You decide to not throw [src], for now."))
+		balloon_alert(user, "You decide to not throw [src], for now.")
 
 /obj/item/ego_weapon/mini/crimson/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user))
@@ -323,7 +334,8 @@
 			if(special_checks_faction && user.faction_check_mob(L))
 				continue
 			to_chat(L, span_userdanger("You are hit by [src]!"))
-			L.apply_damage(dealing_damage, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			balloon_alert(L, "You are hit by [src]!")
+			L.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
@@ -410,6 +422,7 @@
 		//Bonus Damage is applied if sanity is below 30%
 		if(L.sanityhealth <= (L.maxSanity * 0.3))
 			to_chat(user, span_warning("You feel her influence as the [src] digs into your arm."))
+			balloon_alert(user, "You feel her influence as the [src] digs into your arm.")
 			vine_damage_bonus = vine_damage * 0.5
 
 		for(var/i = 1 to channeling_cycle_max)
@@ -417,6 +430,7 @@
 			var/channel_level = channeling_duration_start / i
 			if(!do_after(user, channel_level, target = user))
 				to_chat(user, span_warning("Your vineburst is interrupted."))
+				balloon_alert(user, "Your vineburst is interrupted.")
 				AlterMoveResist(user, 0.4)
 				break
 			for(var/mob/living/C in oview(5, get_turf(src)))
@@ -424,7 +438,7 @@
 				if(user.faction_check_mob(C) && !vine_damage_bonus)
 					continue
 				new /obj/effect/temp_visual/vinespike(get_turf(C))
-				C.apply_damage(vine_damage + vine_damage_bonus, BLACK_DAMAGE, null, C.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				C.deal_damage(vine_damage + vine_damage_bonus, BLACK_DAMAGE, user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 				affected_mobs += 1
 			playsound(loc, 'sound/creatures/venus_trap_hurt.ogg', min(75, affected_mobs * 15), TRUE, round( affected_mobs * 0.5))
 		AlterMoveResist(user, 0.4)
@@ -465,6 +479,7 @@
 /obj/item/ego_weapon/ebony_stem/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(ranged_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your ranged attack is still recharging!")
+		balloon_alert(user, "Your ranged attack is still recharging!")
 		return
 	if(!CanUseEgo(user))
 		return
@@ -480,7 +495,7 @@
 		playsound(target_turf, 'sound/abnormalities/ebonyqueen/attack.ogg', 50, TRUE)
 		for(var/turf/open/T in RANGE_TURFS(1, target_turf))
 			new /obj/effect/temp_visual/thornspike(T)
-			user.HurtInTurf(T, list(), damage_dealt, BLACK_DAMAGE, hurt_mechs = TRUE)
+			user.HurtInTurf(T, list(), damage_dealt, BLACK_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /obj/item/ego_weapon/wings // Is this overcomplicated? Yes. But I'm finally happy with what I want to make of this weapon.
 	name = "torn off wings"
@@ -522,6 +537,7 @@
 		hit_count++
 	else if(prob(10))
 		to_chat(user, span_notice("[src]' feathers bristle!")) // "Hey dumbass, you can stop smacking them now"
+		balloon_alert(user, "[src]' feathers bristle!")
 	combo_hold = world.time + decay_time
 	..()
 	INVOKE_ASYNC(src, PROC_REF(SecondSwing), M, user)
@@ -531,6 +547,7 @@
 	. = ..()
 	if(world.time > combo_hold && hit_count > 0)
 		to_chat(user, span_notice("[src]' feathers fall still...")) // Notify you the combo's over
+		balloon_alert(user, "[src]' feathers fall still...")
 		hit_count = 0
 	if(!(special_cost > hit_count) && !(specialing))
 		specialing = TRUE
@@ -546,6 +563,7 @@
 /obj/item/ego_weapon/wings/afterattack(atom/A, mob/living/user, params) // Time for the ANIME BLADE DASH ATTACK
 	if(world.time > combo_hold && hit_count > 0)
 		to_chat(user, span_notice("[src]' feathers fall still..."))
+		balloon_alert(user, "[src]' feathers fall still.")
 		hit_count = 0
 		return
 	if(special_cost > hit_count || !CanUseEgo(user) || get_dist(get_turf(A), get_turf(user)) < 2 || specialing)
@@ -553,6 +571,7 @@
 	var/aim_dir = get_cardinal_dir(get_turf(user), get_turf(A)) // You can only anime dash in a cardinal direction.
 	if(CheckPath(user, aim_dir))
 		to_chat(user,span_notice("You need more room to do that!"))
+		balloon_alert(user, "You need more room to do that!")
 	else
 		user.visible_message(span_notice("[user] lunges forward, [src] dancing in their grasp!")) // ANIME AS FUCK
 		playsound(src, hitsound, 75, FALSE, 4) // Might need a punchier sound, but none come to mind.
@@ -589,7 +608,7 @@
 			var/mob/living/carbon/human/H = L
 			if(!H.sanity_lost)
 				continue
-		L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		L.visible_message(span_danger("[user] slices [L]!"))
 
 /obj/item/ego_weapon/wings/proc/Leap(mob/living/user, dir = SOUTH, times_ran = 3)
@@ -599,6 +618,7 @@
 		end_leap = TRUE
 	if(CheckPath(user, dir)) // If we have something ahead of us, yes, but we're ALSO going to attack around us
 		to_chat(user,span_notice("You cut your leap short!"))
+		balloon_alert(user, "You cut your leap short!")
 		for(var/turf/T in orange(1, user)) // I hate having to use this code twice but it's TWO LINES and I don't need to use callbacks with it so it's not getting a proc
 			hit_turfs |= T
 		end_leap = TRUE
@@ -617,7 +637,7 @@
 					var/mob/living/carbon/human/H = L
 					if(!H.sanity_lost)
 						continue
-				L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				L.visible_message(span_danger("[user] evicerates [L]!"))
 		return
 	for(var/turf/T in orange(1, user))
@@ -645,11 +665,13 @@
 		return
 	if(force && HAS_TRAIT(user, TRAIT_PACIFISM))
 		to_chat(user, span_warning("You don't want to harm other living beings!"))
+		balloon_alert(user, "You don't want to harm other living beings!")
 		return
 	if(max_count > hit_count)
 		hit_count++
 	else if(prob(10))
 		to_chat(user, span_notice("[src]' feathers bristle!")) // "Hey dumbass, you can stop smacking them now"
+		balloon_alert(user, "[src]' feathers bristle!")
 	combo_hold = world.time + decay_time
 	playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 	user.do_attack_animation(M)
@@ -689,6 +711,7 @@
 		if("Yes")
 			if(get_dist(src, user) > 1 || get_dist(I, user) > 1)
 				to_chat(user, span_notice("You're too far away to perform this combination!"))
+				balloon_alert(user, "You're too far away to perform this combination!")
 				return
 		if("No")
 			return FALSE
@@ -697,6 +720,7 @@
 	var/obj/item/ego_weapon/mini/malice/component = I
 	theweapon.force_multiplier = max(component.force_multiplier, force_multiplier)
 	to_chat(user, span_notice("You combine [src] and [I] to create [theweapon]!"))
+	balloon_alert(user, "You combine [src] and [I] to create [theweapon]!")
 	qdel(I)
 	qdel(src)
 
@@ -707,6 +731,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your dash is still recharging!")
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -718,6 +743,7 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+	balloon_alert(user, "You dash to [A]!")
 
 /obj/item/ego_weapon/mini/malice
 	name = "malice"
@@ -749,6 +775,7 @@
 		if("Yes")
 			if(get_dist(src, user) > 1 || get_dist(I, user) > 1)
 				to_chat(user, span_notice("You're too far away to perform this combination!"))
+				balloon_alert(user, "You're too far away to perform this combination!")
 				return
 		if("No")
 			return FALSE
@@ -757,6 +784,7 @@
 	var/obj/item/ego_weapon/mini/mirth/component = I
 	theweapon.force_multiplier = max(component.force_multiplier, force_multiplier)
 	to_chat(user, span_notice("You combine [src] and [I] to create [theweapon]!"))
+	balloon_alert(user, "You combine [src] and [I] to create [theweapon]!")
 	qdel(I)
 	qdel(src)
 
@@ -767,6 +795,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your dash is still recharging!")
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -778,6 +807,7 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/abnormalities/clownsmiling/jumpscare.ogg', 50, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+	balloon_alert(user, "You dash to [A]!")
 
 /obj/item/ego_weapon/shield/swan
 	name = "black swan"
@@ -809,6 +839,7 @@
 /obj/item/ego_weapon/shield/swan/attack_self(mob/user)
 	if(close_cooldown > world.time) //prevents shield usage with no DPS loss
 		to_chat(user,span_warning("You cannot use this again so soon!"))
+		balloon_alert(user, "You cannot use this again so soon!")
 		return
 	if(do_after(user, 4, src))
 		icon_state = "swan"
@@ -820,6 +851,7 @@
 	. = ..()
 	icon_state = "swan_closed"
 	to_chat(user,span_nicegreen("You close the umbrella."))
+	balloon_alert(user, "You close the umbrella.")
 	user.update_inv_hands()
 	return
 
@@ -896,6 +928,7 @@
 		for(var/mob/living/carbon/human/L in range(5, get_turf(user)))
 			if(L.is_working)
 				to_chat(L, span_nicegreen("The powers of the moon are the same as the powers of the sun. The redundancy of moonlight does not make this work any less mind-numbing."))
+				balloon_alert(L, "The powers of the moon are the same as the powers of the sun. The redundancy of moonlight does not make this work any less mind-numbing.")
 				continue
 			L.adjustSanityLoss(-10)
 	inuse = FALSE
@@ -987,6 +1020,7 @@
 		return
 	if(siphoning)
 		to_chat(user,span_warning("You cease siphoning with [src] sword."))
+		balloon_alert(user, "You cease siphoning with [src] sword.")
 		siphoning = FALSE
 		filters = null
 		user.playsound_local(user, 'sound/effects/bleed.ogg', 25, TRUE)
@@ -995,8 +1029,10 @@
 	siphoning = TRUE
 	user.playsound_local(user, 'sound/effects/bleed_apply.ogg', 25, TRUE)
 	to_chat(user,span_warning("You begin siphoning with [src] sword."))
+	balloon_alert(user, "You begin siphoning with [src] sword.")
 	if(bloodfeast.blood_amount < 100)
 		to_chat(user,span_warning("The sword drains your blood to fuel itself!"))
+		balloon_alert(user, "The sword drains your blood to fuel itself!")
 		user.adjustBruteLoss(20)
 		AdjustThirst(100)
 	AdjustThirst(-50)
@@ -1012,6 +1048,7 @@
 			filters = null
 			if(user)
 				to_chat(user,span_warning("Your [src.name] sword shuts off due to a lack of blood!"))
+				balloon_alert(user, "Your [src.name] sword shuts off due to a lack of blood!")
 				return
 		addtimer(CALLBACK(src, PROC_REF(SiphonDrain), user), siphon_time)
 
@@ -1115,8 +1152,8 @@
 		var/obj/effect/temp_visual/small_smoke/halfsecond/smonk = new(T)
 		smonk.color = COLOR_GREEN
 		var/list/been_hit = QDELETED(M) ? list() : list(M)
-		user.HurtInTurf(T, been_hit, damage, damtype, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE)
-		user.HurtInTurf(T, list(), damage, aoe_damage_type, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE)
+		user.HurtInTurf(T, been_hit, damage, damtype, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		user.HurtInTurf(T, list(), damage, aoe_damage_type, hurt_mechs = TRUE, hurt_structure = TRUE, break_not_destroy = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if(prob(5))
 			new /obj/effect/gibspawner/generic/silent/wrath_acid(T) // The non-damaging one
 	var/mob/living/carbon/human/myman = user
@@ -1131,6 +1168,7 @@
 		return
 	new /obj/item/ego_weapon/blind_rage/nihil(get_turf(src))
 	to_chat(user,span_warning("The [I] seems to drain all of the light away as it is absorbed into [src]!"))
+	balloon_alert(user, "The [I] seems to drain all of the light away as it is absorbed into [src]!")
 	playsound(user, 'sound/abnormalities/nihil/filter.ogg', 15, FALSE, -3)
 	qdel(I)
 	qdel(src)
@@ -1201,6 +1239,7 @@
 		target.visible_message(span_danger("[user] markes [target]!"), \
 						span_userdanger("[user] marks you!"), COMBAT_MESSAGE_RANGE, user)
 		to_chat(user, span_danger("You enscribe a code on [target]!"))
+		balloon_alert(user, "You enscribe a code on [target]!")
 
 		mark_damage = force*2
 		//I gotta grab  justice here
@@ -1224,6 +1263,7 @@
 
 	else
 		to_chat(user, "<span class='spider'><b>Your attack was interrupted!</b></span>")
+		balloon_alert(user, "Your attack was interrupted!")
 		return
 
 /obj/effect/infinity
@@ -1238,7 +1278,7 @@
 	QDEL_IN(src, 1 SECONDS)
 
 /obj/item/ego_weapon/mini/infinity/proc/cast(mob/living/target, mob/living/user, damage_color)
-	target.apply_damage(mark_damage, damage_color, null, target.run_armor_check(null, damage_color), spread_damage = TRUE)		//MASSIVE fuckoff punch
+	target.deal_damage(mark_damage, damage_color, user, attack_type = (ATTACK_TYPE_SPECIAL))		//MASSIVE fuckoff punch
 	playsound(loc, 'sound/weapons/fixer/generic/energyfinisher3.ogg', 15, TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
 	mark_damage = force
@@ -1281,6 +1321,7 @@
 		return
 	if(!can_spin)
 		to_chat(user,span_warning("You attacked too recently."))
+		balloon_alert(user, "You attacked too recently.")
 		return
 	can_spin = FALSE
 	if(do_after(user, 13, src))
@@ -1299,7 +1340,7 @@
 		for(var/mob/living/L in range(2, user)) //knocks enemies away from you
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(firsthit)
 				aoe = (aoe / 2)
 				firsthit = FALSE
@@ -1425,6 +1466,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, span_warning("Your dash is still recharging!"))
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -1446,6 +1488,7 @@
 		if((get_dist(user, A) < 2))
 			JumpAttack(A,user)
 		to_chat(user, span_warning("You jump towards [A]!"))
+		balloon_alert(user, "You jump towards [A]!")
 		animate(user, alpha = 255,pixel_x = 0, pixel_z = -16, time = 0.1 SECONDS)
 		user.pixel_z = 0
 
@@ -1465,7 +1508,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(get_turf(L))
 		FX.color = "#a2d2df"
 
@@ -1550,11 +1593,13 @@
 	..()
 	if(charging)
 		to_chat(user,span_warning("You change your stance, and will no longer perform a dash towards enemies."))
+		balloon_alert(user, "You change your stance, and will no longer perform a dash towards enemies.")
 		charging = FALSE
 		force = initial(force) + 2
 		return
 	if(!charging)
 		to_chat(user,span_warning("You change your stance, and will now perform a dash towards enemies."))
+		balloon_alert(user, "You change your stance, and will now perform a sdash towards your enemies.")
 		charging =TRUE
 		force = initial(force)
 		return
@@ -1566,6 +1611,7 @@
 		return
 	if(dash_cooldown > world.time)
 		to_chat(user, "<span class='warning'>Your dash is still recharging!")
+		balloon_alert(user, "Your dash is still recharging!")
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
@@ -1577,6 +1623,7 @@
 		A.attackby(src,user)
 	playsound(src, 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
 	to_chat(user, "<span class='warning'>You dash to [A]!")
+	balloon_alert(user, "You dash to [A]!")
 
 /obj/item/ego_weapon/cobalt
 	name = "cobalt scar"
@@ -1669,6 +1716,7 @@
 		amount_filled = clamp(amount_filled + heal_amt, 0, amount_max)
 		if(amount_filled >= amount_max)
 			to_chat(user, "<span class='warning'>[src] is full!")
+			balloon_alert(user, "[src] is full!")
 	update_icon()
 	..()
 
@@ -1676,9 +1724,11 @@
 	..()
 	if(!amount_filled)
 		to_chat(user, "<span class='warning'>[src] is empty!")
+		balloon_alert(user, "[src] is empty!")
 		return
 	if(do_after(user, 12, src))
 		to_chat(user, "<span class='warning'>You take a sip from [src]!")
+		balloon_alert(user, "You take a sip from the [src]!")
 		playsound(get_turf(src), 'sound/items/drink.ogg', 50, TRUE) //slurp
 		user.adjustBruteLoss(-amount_filled)
 		user.adjustSanityLoss(-amount_filled)
@@ -1764,7 +1814,7 @@
 		aoe*=justicemod
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING | ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/tbirdlightning(get_turf(L))
 	icon_state = initial(icon_state)
 	hitsound = initial(hitsound)
@@ -1823,19 +1873,22 @@
 	force = 42
 	switch(chosen_style)
 		if("red")
-			user.apply_damage(50, RED_DAMAGE, null, user.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, RED_DAMAGE, flags = (DAMAGE_FORCED))
 			damtype = RED_DAMAGE
 			to_chat(user, span_notice("Your bones are painfully sculpted to fit a muscular claw."))
+			balloon_alert(user, "Your bones are painfully scuplted to fit a muscular claw.")
 			hitsound = 'sound/weapons/bladeslice.ogg'
 		if("white")
-			user.apply_damage(50, WHITE_DAMAGE, null, user.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, WHITE_DAMAGE, flags = (DAMAGE_FORCED))
 			damtype = WHITE_DAMAGE
 			to_chat(user, span_notice("Your angst is plastered onto your arm."))
+			balloon_alert(user, "Your angst is plastered onto your arm.")
 			hitsound = 'sound/effects/hit_kick.ogg'
 		if("black")
-			user.apply_damage(50, BLACK_DAMAGE, null, user.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			user.deal_damage(50, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
 			damtype = BLACK_DAMAGE
 			to_chat(user, span_notice("Bristles are painfully ejected from your arm, filled with hate."))
+			balloon_alert(user, "Bristiles are painfully ejected from your arm, filled with hate.")
 			hitsound = 'sound/weapons/ego/spear1.ogg'
 	ADD_TRAIT(src, TRAIT_NODROP, HAND_REPLACEMENT_TRAIT)
 	user.update_inv_hands()
@@ -1885,6 +1938,7 @@
 	if(user)
 		user.update_inv_hands()
 		to_chat(user, span_notice("Your arm returns to normal."))
+		balloon_alert(user, "Your arm returns to normal.")
 		playsound(get_turf(src),'sound/effects/attackblob.ogg', 75, 1)
 
 /obj/item/ego_weapon/hyde/on_thrown(mob/living/carbon/user, atom/target)//you can't throw it. bleh
@@ -2001,24 +2055,29 @@
 	. = ..()
 	if(user.get_inactive_held_item())
 		to_chat(user, span_notice("You cannot use [src] with only one hand!"))
+		balloon_alert(user, "You cannot use [src] with only one hand!")
 		return FALSE
 
 /obj/item/ego_weapon/blind_obsession/attack_self(mob/user)
 	if(user.get_inactive_held_item())
 		to_chat(user, span_notice("You cannot impower [src] with only one hand!"))
+		balloon_alert(user, "You cannot impower [src] with only one hand!")
 		return
 	if(charged)
 		to_chat(user, span_notice("You've already prepared to throw [src]!"))
+		balloon_alert(user, "You've already prepared to throw [src]!")
 		return
 	if(do_after(user, 12, src))
 		charged = TRUE
 		speed_slowdown = 1
 		throwforce = 100//TIME TO DIE!
 		to_chat(user,span_warning("You put your strength behind this attack."))
+		balloon_alert(user, "You put your strength behind this attack.")
 		power_timer = addtimer(CALLBACK(src, PROC_REF(PowerReset)), 3 SECONDS, TIMER_STOPPABLE)//prevents storing 3 powered up anchors and unloading all of them at once
 
 /obj/item/ego_weapon/blind_obsession/proc/PowerReset(mob/user)
 	to_chat(user, span_warning("You lose your balance while holding [src]."))
+	balloon_alert(user, "You lose your balance while holding [src].")
 	charged = FALSE
 	speed_slowdown = 0
 	throwforce = 80
@@ -2030,6 +2089,7 @@
 		return
 	if(user.get_inactive_held_item())
 		to_chat(user, span_notice("You cannot throw [src] with only one hand!"))
+		balloon_alert(user, "You cannot throw [src] with only one hand!")
 		return
 	thrown = TRUE
 	user.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/anchor, multiplicative_slowdown = 0)
@@ -2049,7 +2109,7 @@
 				smonk.color = COLOR_TEAL
 				if(!ismob(thrownby))
 					continue
-				thrownby.HurtInTurf(T, list(thrownby), damage, RED_DAMAGE)
+				thrownby.HurtInTurf(T, list(thrownby), damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_THROWING))
 			PowerReset(thrownby)
 
 /datum/movespeed_modifier/anchor
@@ -2081,10 +2141,12 @@
 	..()
 	if(combo_on)
 		to_chat(user, span_warning("You swap your grip, and will no longer perform a dive finisher."))
+		balloon_alert(user, "You swap your grip, and will no longer perform a dive finisher.")
 		combo_on = FALSE
 		return
 	if(!combo_on)
 		to_chat(user, span_warning("You swap your grip, and will now perform a dive finisher."))
+		balloon_alert(user, "You swap your grip, and will now perform a dive finisher.")
 		combo_on = TRUE
 		return
 
@@ -2136,6 +2198,7 @@
 			DiveAttack(A,user)
 		playsound(get_turf(src), 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 20, 0, 3)
 		to_chat(user, span_warning("You dive towards [A]!"))
+		balloon_alert(user, "You dive towards [A]!")
 		animate(user, alpha = 255,pixel_x = 0, pixel_z = 16, time = 0.1 SECONDS)
 		user.pixel_z = 0
 
@@ -2156,7 +2219,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 /obj/item/ego_weapon/abyssal_route/proc/DiveReset()
 	can_attack = TRUE
@@ -2196,11 +2259,13 @@
 		return
 	if(charges >= 4)
 		to_chat(user,span_warning("You can't crank it any further!"))
+		balloon_alert(user, "You can't crank it any further!")
 		return
 	if(do_after(user, (8 + (charges * 4)), src))
 		charges = min(charges + 1, 4)
 		force = (charges * 10 + 5)
 		to_chat(user,span_warning("You crank the [src]."))
+		balloon_alert(user, "You crank the [src].")
 		playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 75, TRUE)
 		PlayChargeSound()
 
@@ -2268,6 +2333,7 @@
 		return
 	if(!can_spin)
 		to_chat(user,span_warning("You attacked too recently."))
+		balloon_alert(user, "You attacked too recently.")
 		return
 	if(do_after(user, 12, src))
 		can_spin = TRUE
@@ -2287,7 +2353,7 @@
 				for(var/mob/living/L in T)
 					if(L == user || ishuman(L))
 						continue
-					L.apply_damage(aoe, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+					L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			sleep(1.5)
 
 /obj/item/ego_weapon/sunyata/proc/spin_reset()
@@ -2376,7 +2442,7 @@
 	. = ..()
 	for(var/mob/living/victim in orange(2, src))
 		if(faction_check(victim.faction, owner.faction))
-			victim.deal_damage(10, WHITE_DAMAGE)
+			victim.deal_damage(10, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 	if(prob(40))
 		playsound(owner, 'sound/abnormalities/ambling pearl/goo effect.ogg', 40)
 
@@ -2389,6 +2455,7 @@
 	if(wiper != owner)
 		owner.visible_message(span_notice("[wiper] begins to clean the muck off [owner]."), span_notice("You begin to wipe the muck off [owner]."), ignored_mobs = owner)
 		to_chat(owner, span_notice("[wiper] begins to wipe the muck off of you."))
+		owner.balloon_alert("[wiper] begins to wipe the muck off of you.")
 	else
 		owner.visible_message(span_notice("[owner] begins to wipe the muck off themselves."), span_notice("You begin to wipe the muck off yourself."))
 	if(!do_after(wiper, 5, owner))
@@ -2398,8 +2465,10 @@
 	if(wiper != owner)
 		owner.visible_message(span_nicegreen("[wiper] wipes the muck off [owner]."), span_nicegreen("You wipe the muck off [owner]."), ignored_mobs = owner)
 		to_chat(owner, span_nicegreen("[wiper] wipes the muck off of you."))
+		owner.balloon_alert("[wiper] wipes the muck off of you.")
 	else
 		owner.visible_message(span_nicegreen("[owner] wipes the muck off themselves."), span_nicegreen("You wipe the muck off yourself."))
+		wiper.balloon_alert("You wipe the muck off yourself.")
 	qdel(src)
 	return TRUE
 
@@ -2411,10 +2480,10 @@
 /obj/item/ego_weapon/contempt
 	name = "contempt, awe"
 	desc = "From the excavated brain, geysers of hatred and contempt erupt. It's as if those feelings were inside you all along."
-	special = "Melee hits with this E.G.O. accumulate stacks of Gaze. Each stack of Gaze can be used to raise throwing damage by 15. \n\
-	After spending Gaze, you won't be able to gain any more for 8 seconds.\n\
-	Gaze can be spent by throwing this weapon at an enemy. Landing a thrown hit with 6 stacks of Gaze will teleport you to your enemy and automatically pick up this weapon.\n\
-	If you reach 7 stacks of Gaze, Gaze will transform into Contempt, temporarily slowing you down and lowering your power modifier. You can reset your Gaze stacks at the cost of 10 health by using the weapon in-hand."
+	special = "Melee hits with this E.G.O. accumulate stacks of <b>Gaze</b>. Each stack of Gaze can be used to <b>raise throwing damage by 15</b>. \n\
+	After spending Gaze, you won't be able to gain any more for 3.5 seconds.\n\
+	<b>Gaze can be spent by throwing this weapon at an enemy.</b> Landing a thrown hit with <b>6 stacks of Gaze will teleport you to your enemy and automatically pick up this weapon</b>.\n\
+	If you reach 7 stacks of Gaze, Gaze will transform into Contempt, <b>temporarily slowing you down and lowering your power modifier</b>. You can reset your Gaze stacks at the cost of 10 health by using the weapon in-hand."
 	icon_state = "contempt"
 	force = 50
 	reach = 2
@@ -2436,25 +2505,30 @@
 	/// The next world time at which we'll be allowed to generate Gaze stacks, after spending them.
 	var/gaze_gain_cooldown_period = 0
 	/// How long should we have to wait after spending Gaze to gain it again?
-	var/gaze_gain_cooldown_period_duration = 8 SECONDS
+	var/gaze_gain_cooldown_period_duration = 3.5 SECONDS
 
 /// This override handles generating Gaze stacks on hit. We won't generate them if we spent Gaze recently.
 /obj/item/ego_weapon/contempt/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return FALSE
+
+	var/are_we_attacking_corpse = M.stat >= DEAD // I need to check if they're dead BEFORE we hit them. We still want to gain Gaze on finishing blows.
+
 	. = ..()
-	if(gaze_gain_cooldown_period < world.time)
-		var/mob/living/carbon/human/john_contempt = user
-		if(istype(john_contempt))
-			var/datum/status_effect/contempt_weapon_contempt/contempt_debuff = john_contempt.has_status_effect(STATUS_EFFECT_CONTEMPT)
-			// Do not gain Gaze stacks if we already have the Contempt debuff.
-			if(!contempt_debuff)
-				var/datum/status_effect/stacking/contempt_weapon_gaze/gaze_buff = john_contempt.has_status_effect(STATUS_EFFECT_GAZE)
-				// Stacking status effects have this quirk where you've got to check to see if you already have it, if so, add a stack, otherwise, make a new one...
-				if(gaze_buff)
-					gaze_buff.add_stacks(1)
-				else
-					john_contempt.apply_status_effect(STATUS_EFFECT_GAZE)
+	if((gaze_gain_cooldown_period > world.time) || (M.status_flags & GODMODE) || (are_we_attacking_corpse)) // Don't gain Gaze if you're in gain-cooldown, the target is in godmode, or dead.
+		return
+
+	var/mob/living/carbon/human/john_contempt = user
+	if(istype(john_contempt))
+		var/datum/status_effect/contempt_weapon_contempt/contempt_debuff = john_contempt.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		// Do not gain Gaze stacks if we already have the Contempt debuff.
+		if(!contempt_debuff)
+			var/datum/status_effect/stacking/contempt_weapon_gaze/gaze_buff = john_contempt.has_status_effect(STATUS_EFFECT_GAZE)
+			// Stacking status effects have this quirk where you've got to check to see if you already have it, if so, add a stack, otherwise, make a new one...
+			if(gaze_buff)
+				gaze_buff.add_stacks(1)
+			else
+				john_contempt.apply_status_effect(STATUS_EFFECT_GAZE)
 
 /// This override handles the spending of gaze stacks on throwing hit.
 /obj/item/ego_weapon/contempt/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
@@ -2471,14 +2545,18 @@
 				gaze_stacks.add_stacks(-7)
 				gaze_gain_cooldown_period = world.time + gaze_gain_cooldown_period_duration
 				throwforce += (force_per_gaze_stack * spent_stacks)
+
+				// Aesthetics: this happens before the hit in case the hit qdels the enemy.
+				playsound(src, 'sound/abnormalities/spiral_contempt/spiral_bleed.ogg', 100, FALSE)
+				var/turf/target_turf = get_turf(hit_atom)
+				new /obj/effect/temp_visual/contempt_blood(target_turf)
+
 				. = ..()
 				throwforce = initial(throwforce)
-				// Aesthetics
-				playsound(src, 'sound/abnormalities/spiral_contempt/spiral_bleed.ogg', 100, FALSE)
-				new /obj/effect/temp_visual/contempt_blood(get_turf(hit_atom))
+
 				// If you did this weapon's gimmick perfectly and nuked the enemy at 6 stacks, you are now being teleported. Do not resist.
 				if(spent_stacks == 6)
-					INVOKE_ASYNC(src, PROC_REF(ThrownHitTeleport), hit_atom, john_gaze)
+					INVOKE_ASYNC(src, PROC_REF(ThrownHitTeleport), hit_atom, target_turf, john_gaze)
 				return
 		. = ..()
 		return
@@ -2493,25 +2571,31 @@
 	var/datum/status_effect/stacking/contempt_weapon_gaze/gaze_stacks = user.has_status_effect(STATUS_EFFECT_GAZE)
 	if(gaze_stacks)
 		gaze_stacks.add_stacks(-7)
-		user.adjustBruteLoss(10)
+		user.adjustBruteLoss(15)
 		playsound(src, 'sound/abnormalities/spiral_contempt/spiral_whine.ogg', 40, FALSE)
 		playsound(src, 'sound/abnormalities/spiral_contempt/spiral_bleed.ogg', 60, FALSE)
 		new /obj/effect/temp_visual/contempt_blood(get_turf(user))
 		user.visible_message(span_danger("[user] slices themselves with [src], their blood siphoning into the spikes!"), span_danger("You slice yourself, using some of your blood to avert your weapon's attentive gaze."))
 
 /// This proc happens when we land a throwing hit with 6 gaze stacks. You get briefly immobilized, teleport in front of the enemy, and pick the weapon back up.
-/obj/item/ego_weapon/contempt/proc/ThrownHitTeleport(mob/living/target, mob/living/carbon/human/user)
-	user.visible_message(span_danger("[user] begins to shift towards [target]..."))
-	user.Immobilize(1 SECONDS)
-	var/turf/origin = get_turf(user)
-	var/turf/destination = get_ranged_target_turf_direct(user, target, get_dist(user, target) - 1)
-	new /obj/effect/temp_visual/cult/blood/out(origin)
-	new /obj/effect/temp_visual/cult/blood(destination)
-	sleep(1 SECONDS)
-	user.forceMove(destination)
-	user.put_in_active_hand(src)
-	user.visible_message(span_danger("[user] suddenly appears in front of [target], brandishing their [src.name]!"))
-
+// The target is only used for their name. We only care about the turf for teleporting calculations, because I'm worried about mobs that qdel and stuff like that.
+/obj/item/ego_weapon/contempt/proc/ThrownHitTeleport(mob/living/target, turf/target_turf, mob/living/carbon/human/user)
+	if(!target || (get_dist(target, user) > 20)) // Without this check, we may end up teleporting into the godforsaken backrooms (the corner of the map) if target qdels
+		to_chat(user, span_danger("No point in shifting towards the target - they're long gone."))
+		user.put_in_active_hand(src)
+		return FALSE
+	else
+		user.visible_message(span_danger("[user] begins to shift towards [target]..."))
+		user.Immobilize(1 SECONDS)
+		var/turf/origin = get_turf(user)
+		var/turf/destination = get_ranged_target_turf_direct(user, target_turf, get_dist(user, target) - 1)
+		new /obj/effect/temp_visual/cult/blood/out(origin)
+		new /obj/effect/temp_visual/cult/blood(destination)
+		sleep(1 SECONDS)
+		user.forceMove(destination)
+		user.put_in_active_hand(src)
+		user.visible_message(span_danger("[user] suddenly appears in front of [target], brandishing their [src.name]!"))
+		return TRUE
 
 /obj/item/ego_weapon/contempt/get_clamped_volume()
 	return 25
@@ -2602,6 +2686,7 @@
 		force += 35
 	else
 		to_chat(user, "<span class= 'spider'><b>Your attack was unstrengthened!</b></span>")
+		balloon_alert(user, "Your attack was unstrengthened!")
 		force = initial(force)
 		return
 

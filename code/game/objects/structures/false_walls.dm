@@ -16,7 +16,7 @@
 	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_WALLS)
 	can_be_unanchored = FALSE
-	CanAtmosPass = ATMOS_PASS_DENSITY
+	// CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 	var/mineral = /obj/item/stack/sheet/metal
@@ -26,9 +26,9 @@
 	var/opening = FALSE
 
 
-/obj/structure/falsewall/Initialize()
+/* /obj/structure/falsewall/Initialize()
 	. = ..()
-	air_update_turf(TRUE, TRUE)
+	air_update_turf(TRUE, TRUE) */
 
 /obj/structure/falsewall/attack_hand(mob/user)
 	if(opening)
@@ -52,7 +52,7 @@
 		set_opacity(density)
 		opening = FALSE
 		update_icon()
-		air_update_turf(TRUE, !density)
+		// air_update_turf(TRUE, !density)
 
 /obj/structure/falsewall/update_icon()//Calling icon_update will refresh the smoothwalls if it's closed, otherwise it will make sure the icon is correct if it's open
 	if(opening)
@@ -239,20 +239,21 @@
 	smoothing_groups = list(SMOOTH_GROUP_WALLS, SMOOTH_GROUP_PLASMA_WALLS)
 	canSmoothWith = list(SMOOTH_GROUP_PLASMA_WALLS)
 
-/obj/structure/falsewall/plasma/ComponentInitialize()
+/* /obj/structure/falsewall/plasma/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/structure/falsewall/plasma/attackby(obj/item/W, mob/user, params)
-	if(W.get_temperature() > 300)
+	if(W.get_temperature())
 		var/turf/T = get_turf(src)
 		message_admins("Plasma falsewall ignited by [ADMIN_LOOKUPFLW(user)] in [ADMIN_VERBOSEJMP(T)]")
 		log_game("Plasma falsewall ignited by [key_name(user)] in [AREACOORD(T)]")
-		burnbabyburn()
-	else
-		return ..()
+		playsound(src, 'sound/items/welder.ogg', 100, TRUE)
+		explosion(T, 0, 0, 5, 8, flame_range = 2)
+		new /obj/structure/girder/displaced(loc)
+		qdel(src)
 
-/obj/structure/falsewall/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/structure/falsewall/plasma/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 300
 
 /obj/structure/falsewall/plasma/atmos_expose(datum/gas_mixture/air, exposed_temperature)
@@ -260,10 +261,10 @@
 
 /obj/structure/falsewall/plasma/proc/burnbabyburn(user)
 	playsound(src, 'sound/items/welder.ogg', 100, TRUE)
-	atmos_spawn_air("plasma=400;TEMP=1000")
+	explosion(target_turf, 0, 0, 5, 8, flame_range = 2)
 	new /obj/structure/girder/displaced(loc)
 	qdel(src)
-
+*/
 /obj/structure/falsewall/bananium
 	name = "bananium wall"
 	desc = "A wall with bananium plating. Honk!"

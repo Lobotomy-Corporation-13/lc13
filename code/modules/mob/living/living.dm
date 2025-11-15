@@ -2,6 +2,7 @@
 	. = ..()
 	create_reagents(1000)
 	register_init_signals()
+	astype(get_area(src), /area)?.Entered(src) // We can move this back to atom/movable if we want, but for now it stays here for the purposes that we need it for.
 	if(unique_name)
 		set_name()
 	var/datum/atom_hud/data/human/medical/advanced/medhud = GLOB.huds[DATA_HUD_MEDICAL_ADVANCED]
@@ -37,6 +38,7 @@
 		buckled.unbuckle_mob(src,force=1)
 
 	remove_from_all_data_huds()
+	cleanup_area_presence()
 	GLOB.mob_living_list -= src
 	QDEL_LIST(diseases)
 	return ..()
@@ -838,7 +840,7 @@
 	else
 		return pick("trails_1", "trails_2")
 
-/mob/living/experience_pressure_difference(pressure_difference, direction, pressure_resistance_prob_delta = 0)
+/* /mob/living/experience_pressure_difference(pressure_difference, direction, pressure_resistance_prob_delta = 0)
 	if(buckled)
 		return
 	if(client && client.move_delay >= world.time + world.tick_lag*2)
@@ -865,7 +867,7 @@
 					pressure_resistance_prob_delta -= 20
 					break
 	if(!force_moving)
-		..(pressure_difference, direction, pressure_resistance_prob_delta)
+		..(pressure_difference, direction, pressure_resistance_prob_delta) */
 
 /mob/living/can_resist()
 	return !((next_move > world.time) || incapacitated(ignore_restraints = TRUE, ignore_stasis = TRUE))
@@ -1011,6 +1013,8 @@
 			final_where = where
 
 		if(!what.mob_can_equip(who, src, final_where, TRUE, TRUE))
+			if(istype(what, /obj/item/clothing/suit/armor/ego_gear))
+				return // Text already handled by the armor
 			to_chat(src, "<span class='warning'>\The [what.name] doesn't fit in that place!</span>")
 			return
 		if(istype(what,/obj/item/clothing))
@@ -1025,11 +1029,7 @@
 		who.log_message("[key_name(who)] is having [what] put on them by [key_name(src)]", LOG_ATTACK, color="red")
 		log_message("[key_name(who)] is having [what] put on them by [key_name(src)]", LOG_ATTACK, color="red", log_globally=FALSE)
 
-		var/equip_delay = what.equip_delay_other
-		if(istype(what,/obj/item/clothing/suit/armor/ego_gear))
-			var/obj/item/clothing/suit/armor/ego_gear/EGO = what
-			equip_delay = max(EGO.equip_delay_other, EGO.equip_slowdown) //Preventing 0 delay on some ego suits
-		if(do_mob(src, who, equip_delay))
+		if(do_mob(src, who, what.equip_delay_other))
 			if(what && Adjacent(who) && what.mob_can_equip(who, src, final_where, TRUE, TRUE))
 				if(temporarilyRemoveItemFromInventory(what))
 					if(where_list)
@@ -1060,18 +1060,6 @@
 	var/pixel_y_diff = rand(-amplitude/3, amplitude/3)
 	animate(src, pixel_x = pixel_x_diff, pixel_y = pixel_y_diff , time = 2, loop = 6, flags = ANIMATION_RELATIVE|ANIMATION_PARALLEL)
 	animate(pixel_x = -pixel_x_diff , pixel_y = -pixel_y_diff , time = 2, flags = ANIMATION_RELATIVE)
-
-/mob/living/proc/get_temperature(datum/gas_mixture/environment)
-	var/loc_temp = environment ? environment.temperature : T0C
-	if(isobj(loc))
-		var/obj/oloc = loc
-		var/obj_temp = oloc.return_temperature()
-		if(obj_temp != null)
-			loc_temp = obj_temp
-	else if(isspaceturf(get_turf(src)))
-		var/turf/heat_turf = get_turf(src)
-		loc_temp = heat_turf.temperature
-	return loc_temp
 
 /mob/living/cancel_camera()
 	..()
@@ -1174,7 +1162,7 @@
 	var/blocked = getarmor(null, RAD)
 
 	if(amount > RAD_BURN_THRESHOLD)
-		apply_damage(RAD_BURN_CURVE(amount), FIRE, null, blocked)
+		deal_damage(RAD_BURN_CURVE(amount), FIRE, flags = (DAMAGE_FORCED), blocked = blocked)
 
 	apply_effect((amount*RAD_MOB_COEFFICIENT)/max(1, (radiation**2)*RAD_OVERDOSE_REDUCTION), EFFECT_IRRADIATE, blocked)
 
@@ -1408,7 +1396,7 @@
 			AT.get_remote_view_fullscreens(src)
 		else
 			clear_fullscreen("remote_view", 0)
-		update_pipe_vision()
+		// update_pipe_vision()
 
 /mob/living/update_mouse_pointer()
 	..()
@@ -1688,6 +1676,7 @@
 		if(DEAD)
 			remove_from_dead_mob_list()
 			add_to_alive_mob_list()
+			restore_area_presence()
 	switch(stat) //Current stat.
 		if(CONSCIOUS)
 			if(. >= UNCONSCIOUS)
@@ -1717,6 +1706,7 @@
 			REMOVE_TRAIT(src, TRAIT_CRITICAL_CONDITION, STAT_TRAIT)
 			remove_from_alive_mob_list()
 			add_to_dead_mob_list()
+			cleanup_area_presence()
 
 
 ///Reports the event of the change in value of the buckled variable.

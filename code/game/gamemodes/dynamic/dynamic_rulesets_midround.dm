@@ -422,7 +422,7 @@
 //           XENOMORPH (GHOST)              //
 //                                          //
 //////////////////////////////////////////////
-
+/*
 /datum/dynamic_ruleset/midround/from_ghosts/xenomorph
 	name = "Alien Infestation"
 	antag_datum = /datum/antagonist/xeno
@@ -461,7 +461,7 @@
 	message_admins("[ADMIN_LOOKUPFLW(new_xeno)] has been made into an alien by the midround ruleset.")
 	log_game("DYNAMIC: [key_name(new_xeno)] was spawned as an alien by the midround ruleset.")
 	return new_xeno
-
+ */
 //////////////////////////////////////////////
 //                                          //
 //           NIGHTMARE (GHOST)              //

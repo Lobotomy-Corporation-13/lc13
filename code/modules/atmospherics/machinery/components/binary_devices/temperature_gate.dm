@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/binary/temperature_gate
+/* /obj/machinery/atmospherics/components/binary/temperature_gate
 	icon_state = "tgate_map-3"
 	name = "temperature gate"
 	desc = "An activable gate that compares the input temperature with the interface set temperature to check if the gas can flow or not."
@@ -127,3 +127,4 @@
 		else
 			to_chat(user, span_notice("You set the [src]'s sensors to the default settings."))
 	return TRUE
+ */

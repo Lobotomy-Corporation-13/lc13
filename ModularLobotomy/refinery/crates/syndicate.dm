@@ -12,7 +12,7 @@
 
 	rareloot =	list(
 		/obj/item/clothing/suit/armor/ego_gear/city/blade_lineage_cutthroat,
-		/obj/item/clothing/suit/armor/ego_gear/adjustable/index_proxy,
+		/obj/item/clothing/suit/armor/ego_gear/index_proxy,
 		/obj/item/ego_weapon/city/index,
 		/obj/item/ego_weapon/city/awl,
 		/obj/item/ego_weapon/city/kurokumo,

@@ -5,8 +5,6 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
 	icon_state = "lunar_rabbit"
 	icon_living = "lunar_rabbit"
-	pixel_x = -8
-	base_pixel_x = -8
 	del_on_death = TRUE
 	maxHealth = 300	//She's a fast motherfucker.
 	health = 300
@@ -34,15 +32,31 @@
 		ABNORMALITY_WORK_ATTACHMENT = 30,
 		ABNORMALITY_WORK_REPRESSION = 60,
 	)
-	work_damage_amount = 12
+	work_damage_amount = 5
 	work_damage_type = BLACK_DAMAGE
 
 	ego_list = list(
 		/datum/ego_datum/weapon/patch,
 		/datum/ego_datum/armor/patch
 	)
-	//gift_type =  /datum/ego_gifts/acupuncture
+	gift_message = "your prescription is in, let's make sure you don't ever forget to take it."
+	gift_type =  /datum/ego_gifts/acupuncture
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
+
+	generic_bubbles = list(
+		1 = list("%ABNO watches you from the corner of her eye."),
+		2 = list("%ABNO skips around the cell."),
+		3 = list("%ABNO is flicking the tip of her syringe to remove air bubbles."),
+		4 = list("%ABNO is munching on a little bit of mochi."),
+		5 = list("%PERSON seems very willing to take the medicine."),
+	)
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%ABNO starts mortaring ingredients."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans up some used needles.", "%PERSON restocks some ingredients in the cell"),
+		ABNORMALITY_WORK_ATTACHMENT = list("%ABNO tugs on your sleeve.", "%ABNO hands you a little handmade mochi.",
+				"$%ABNO places a bandage on %PERSON's arm.", "%ABNO appreciates your gestures of kindness"),
+		ABNORMALITY_WORK_REPRESSION = list("%ABNO swats at %PERSON with a pawed hand.", "%ABNO tries to bite %PERSON's arm."),
+	)
 
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Initialize(atom/attacked_target)
@@ -59,9 +73,24 @@
 		var/mob/living/carbon/human/L = attacked_target
 
 		//Give it the same effects as space drugs
-		L.set_drugginess(15)
+		L.set_drugginess(25)
 		if(prob(20))
 			L.emote(pick("twitch","drool","moan","giggle"))
+		L.apply_lc_fragile(2)
+
+		//Also get a random between Blind, Confusion, Mute and drowsy, and none.
+		var/effect_choice = rand(1,5)
+		switch(effect_choice)
+			if(1)
+				L.set_confusion(10)
+			if(2)
+				L.silent = 100
+			if(3)
+				L.drowsyness += 30
+			if(4)
+				L.adjust_blindness(5)
+			if(5)
+				return
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()
@@ -81,6 +110,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	..()
-	user.deal_damage(45, BLACK_DAMAGE)
+	user.deal_damage(45, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
 
 

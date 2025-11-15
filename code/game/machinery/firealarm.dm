@@ -52,9 +52,9 @@
 	myarea = get_area(src)
 	LAZYADD(myarea.firealarms, src)
 
-/obj/machinery/firealarm/ComponentInitialize()
+/* /obj/machinery/firealarm/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/machinery/firealarm/Destroy()
 	LAZYREMOVE(myarea.firealarms, src)
@@ -131,7 +131,7 @@
 							"<span class='notice'>You emag [src], disabling its thermal sensors.</span>")
 	playsound(src, "sparks", 50, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
 
-/obj/machinery/firealarm/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/machinery/firealarm/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return (exposed_temperature > T0C + 200 || exposed_temperature < BODYTEMP_COLD_DAMAGE_LIMIT) && !(obj_flags & EMAGGED) && !machine_stat
 
 /obj/machinery/firealarm/atmos_expose(datum/gas_mixture/air, exposed_temperature)
@@ -149,7 +149,7 @@
 	if(triggered)
 		triggered = FALSE
 		myarea.triggered_firealarms -= 1
-		update_icon()
+		update_icon()*/
 
 /obj/machinery/firealarm/proc/alarm(mob/user)
 	if(!is_operational || !COOLDOWN_FINISHED(src, last_alarm))

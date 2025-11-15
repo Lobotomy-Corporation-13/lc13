@@ -1,6 +1,6 @@
-#define HEATER_MODE_STANDBY	"standby"
-#define HEATER_MODE_HEAT	"heat"
-#define HEATER_MODE_COOL	"cool"
+// #define HEATER_MODE_STANDBY	"standby"
+// #define HEATER_MODE_HEAT	"heat"
+// #define HEATER_MODE_COOL	"cool"
 
 /obj/machinery/space_heater
 	anchored = FALSE
@@ -16,15 +16,15 @@
 	/// We don't use area power, we always use the cell
 	use_power = NO_POWER_USE
 	var/obj/item/stock_parts/cell/cell
-	var/on = FALSE
-	var/mode = HEATER_MODE_STANDBY
-	var/setMode = "auto" // Anything other than "heat" or "cool" is considered auto.
-	var/targetTemperature = T20C
-	var/heatingPower = 20000
-	var/efficiency = 20000
-	var/temperatureTolerance = 1
-	var/settableTemperatureMedian = 30 + T0C
-	var/settableTemperatureRange = 30
+	// var/on = FALSE
+	// var/mode = HEATER_MODE_STANDBY
+	// var/setMode = "auto" // Anything other than "heat" or "cool" is considered auto.
+	// var/targetTemperature = T20C
+	// var/heatingPower = 20000
+	// var/efficiency = 20000
+	// var/temperatureTolerance = 1
+	// var/settableTemperatureMedian = 30 + T0C
+	// var/settableTemperatureRange = 30
 
 /obj/machinery/space_heater/get_cell()
 	return cell
@@ -49,26 +49,26 @@
 
 /obj/machinery/space_heater/examine(mob/user)
 	. = ..()
-	. += "\The [src] is [on ? "on" : "off"], and the hatch is [panel_open ? "open" : "closed"]."
+	. += "\The [src] is off, and the hatch is [panel_open ? "open" : "closed"]."
 	if(cell)
 		. += "The charge meter reads [cell ? round(cell.percent(), 1) : 0]%."
 	else
 		. += "There is no power cell installed."
-	if(in_range(user, src) || isobserver(user))
-		. += "<span class='notice'>The status display reads: Temperature range at <b>[settableTemperatureRange]°C</b>.<br>Heating power at <b>[siunit(heatingPower, "W", 1)]</b>.<br>Power consumption at <b>[(efficiency*-0.0025)+150]%</b>.</span>" //100%, 75%, 50%, 25%
+/* 	if(in_range(user, src) || isobserver(user))
+		. += "<span class='notice'>The status display reads: Temperature range at <b>[settableTemperatureRange]°C</b>.<br>Heating power at <b>[siunit(heatingPower, "W", 1)]</b>.<br>Power consumption at <b>[(efficiency*-0.0025)+150]%</b>.</span>" */ //100%, 75%, 50%, 25%
 
-/obj/machinery/space_heater/update_icon_state()
+/* /obj/machinery/space_heater/update_icon_state()
 	if(on)
 		icon_state = "sheater-[mode]"
 	else
-		icon_state = "sheater-off"
+		icon_state = "sheater-off" */
 
 /obj/machinery/space_heater/update_overlays()
 	. = ..()
 
 	if(panel_open)
 		. += "sheater-open"
-
+/*
 /obj/machinery/space_heater/process(delta_time)
 	if(!on || !is_operational)
 		if (on) // If it's broken, turn it off too
@@ -133,7 +133,7 @@
 	targetTemperature = clamp(targetTemperature,
 		max(settableTemperatureMedian - settableTemperatureRange, TCMB),
 		settableTemperatureMedian + settableTemperatureRange)
-
+ */
 /obj/machinery/space_heater/emp_act(severity)
 	. = ..()
 	if(machine_stat & (NOPOWER|BROKEN) || . & EMP_PROTECT_CONTENTS)
@@ -160,6 +160,11 @@
 		else
 			to_chat(user, "<span class='warning'>The hatch must be open to insert a power cell!</span>")
 			return
+	else if(I.tool_behaviour == TOOL_CROWBAR && panel_open)
+		to_chat(user, span_info("You remove the power cell inside the \the [src]."))
+		cell.forceMove(get_turf(user))
+		cell = null
+
 	else if(I.tool_behaviour == TOOL_SCREWDRIVER)
 		panel_open = !panel_open
 		user.visible_message("<span class='notice'>\The [user] [panel_open ? "opens" : "closes"] the hatch on \the [src].</span>", "<span class='notice'>You [panel_open ? "open" : "close"] the hatch on \the [src].</span>")
@@ -168,7 +173,7 @@
 		return
 	else
 		return ..()
-
+/*
 /obj/machinery/space_heater/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
@@ -233,7 +238,7 @@
 				cell.forceMove(drop_location())
 				cell = null
 				. = TRUE
-
-#undef HEATER_MODE_STANDBY
-#undef HEATER_MODE_HEAT
-#undef HEATER_MODE_COOL
+ */
+// #undef HEATER_MODE_STANDBY
+// #undef HEATER_MODE_HEAT
+// #undef HEATER_MODE_COOL

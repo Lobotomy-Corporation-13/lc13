@@ -65,6 +65,9 @@
 	/// Exclusive to LC13 - Toggles whether or not fire armor shows up in tags. Hides the armor value from the player if automatically generated.
 	var/fire_display = TRUE
 
+	///Exclusive to LC13 - Toggles whether or not this piece of clothing blocks surgery or not
+	var/blocks_surgery = TRUE
+
 /obj/item/clothing/Initialize()
 	if((clothing_flags & VOICEBOX_TOGGLABLE))
 		actions_types += /datum/action/item_action/toggle_voice_box

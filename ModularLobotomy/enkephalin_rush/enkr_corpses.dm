@@ -14,9 +14,9 @@
 	..()
 	if(ispath(suit, /obj/item/clothing/suit/armor/ego_gear))
 		var/obj/item/clothing/suit/armor/ego_gear/mysuit = new suit(get_turf(src))
-		mysuit.equip_slowdown = 0
+		mysuit.equip_delay_self = 0
 		H.equip_to_slot(mysuit,ITEM_SLOT_OCLOTHING, TRUE)
-		mysuit.equip_slowdown = 3
+		mysuit.equip_delay_self = initial(mysuit.equip_delay_self)
 
 /obj/effect/mob_spawn/human/agent/loot
 	icon_state = "corpsehuman"
@@ -113,7 +113,7 @@
 	var/obj/item/clothing/suit/armor/ego_gear/modsuit = new suit(get_turf(src))
 	modsuit.name = "tattered fixer jacket"
 	modsuit.armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
-	modsuit.equip_slowdown = 0
+	modsuit.equip_delay_self = 0
 	H.equip_to_slot(modsuit,ITEM_SLOT_OCLOTHING, TRUE)
 
 /obj/effect/mob_spawn/human/fixer/tieoffice
@@ -147,6 +147,6 @@
 	var/obj/item/clothing/suit/armor/ego_gear/modsuit = new suit(get_turf(src))
 	modsuit.name = "ruined thumb soldato uniform"
 	modsuit.armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
-	modsuit.equip_slowdown = 0
+	modsuit.equip_delay_self = 0
 	modsuit.attribute_requirements = list()
 	H.equip_to_slot(modsuit,ITEM_SLOT_OCLOTHING, TRUE)

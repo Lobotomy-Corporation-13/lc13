@@ -724,6 +724,10 @@
 /obj/item/reagent_containers/glass/bottle/nutrient,
 /turf/open/floor/wood,
 /area/city/house)
+"eI" = (
+/obj/machinery/augment_fabricator,
+/turf/open/floor/plasteel/white,
+/area/city/house)
 "eK" = (
 /obj/structure/closet,
 /turf/open/indestructible/white,
@@ -791,6 +795,8 @@
 /obj/effect/landmark/cityloot,
 /turf/open/floor/plating/beach/sand,
 /area/city)
+"fj" = (
+)
 "fl" = (
 /turf/open/floor/carpet,
 /area/city)
@@ -1674,12 +1680,6 @@
 /area/city)
 "mI" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
 /obj/machinery/door/airlock/grunge{
 	name = "Vacant Office A"
 	},
@@ -2761,9 +2761,6 @@
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8
 	},
-/obj/item/ego_weapon/city/carnival_spear{
-	pixel_y = 17
-	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
 "un" = (
@@ -3621,6 +3618,11 @@
 "Av" = (
 /turf/open/floor/facility/white,
 /area/city/house)
+"Ax" = (
+/obj/structure/rack,
+/obj/item/augment_remover,
+/turf/open/indestructible/white,
+/area/city)
 "Ay" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/machinery/light,
@@ -4011,6 +4013,10 @@
 	},
 /turf/open/indestructible/white,
 /area/city/house)
+"Dt" = (
+/obj/machinery/augment_fabricator,
+/turf/open/floor/plasteel/white,
+/area/city)
 "Dv" = (
 /obj/structure/bed/maint,
 /obj/effect/decal/cleanable/dirt,
@@ -4097,6 +4103,7 @@
 /area/city)
 "Ef" = (
 /obj/structure/rack,
+/obj/item/augment_remover,
 /turf/open/indestructible/white,
 /area/city/house)
 "Ek" = (
@@ -4410,6 +4417,11 @@
 /obj/machinery/light,
 /turf/open/floor/facility/white,
 /area/city/house)
+"GC" = (
+/obj/structure/rack,
+/obj/item/augment_tester,
+/turf/open/indestructible/white,
+/area/city/house)
 "GE" = (
 /obj/machinery/door/airlock/medical{
 	name = "Triage and Operating Room";
@@ -4543,7 +4555,6 @@
 /obj/effect/turf_decal/trimline/red/filled/line{
 	dir = 8
 	},
-/obj/item/ego_weapon/city/carnival_spear,
 /obj/item/paper/fluff/silk_guide,
 /obj/item/paper/fluff/silk_guide,
 /turf/open/floor/facility/dark,
@@ -5973,6 +5984,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/item/augment_tester,
 /turf/open/indestructible/white,
 /area/city)
 "Rz" = (
@@ -6438,16 +6450,6 @@
 /obj/item/clothing/suit/apron,
 /turf/open/indestructible/white,
 /area/city/shop)
-"Ur" = (
-/obj/structure/delivery_door{
-	density = 1;
-	desc = "A mailbox for this house.";
-	icon = 'icons/obj/votebox.dmi';
-	icon_state = "votebox_maint";
-	name = "mail box"
-	},
-/turf/closed/indestructible/reinforced,
-/area/space)
 "Us" = (
 /obj/structure/chair/office/light,
 /turf/open/floor/plasteel/white,
@@ -6620,10 +6622,6 @@
 	},
 /obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
 /obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
-/obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
-/obj/item/clothing/mask/carnival_mask,
-/obj/item/clothing/mask/carnival_mask,
-/obj/item/clothing/mask/carnival_mask,
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
 "Vx" = (
@@ -7185,7 +7183,7 @@
 /area/space)
 "ZD" = (
 /obj/machinery/button/door{
-	id = "outside";
+	id = "southclinic";
 	name = "prosthetics clinic shutters";
 	pixel_y = 26;
 	req_access_txt = "9"
@@ -31776,7 +31774,7 @@ lV
 lV
 lV
 OD
-Ru
+Ax
 lf
 Pf
 KP
@@ -32035,7 +32033,7 @@ lV
 OD
 Ry
 lf
-Pf
+Dt
 OD
 xC
 Pf
@@ -40643,7 +40641,7 @@ Gz
 wX
 zA
 It
-Ur
+fj
 Hz
 Hz
 lV
@@ -47762,7 +47760,7 @@ lT
 lT
 lT
 HC
-Ef
+GC
 my
 ZY
 IL
@@ -48021,7 +48019,7 @@ lT
 HC
 Oo
 my
-ZY
+eI
 HC
 ZD
 ZY
@@ -49060,7 +49058,7 @@ lT
 lT
 lT
 OD
-lV
+OD
 lV
 lV
 lV

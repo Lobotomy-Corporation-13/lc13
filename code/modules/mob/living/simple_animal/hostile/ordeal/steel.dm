@@ -27,6 +27,7 @@
 	butcher_results = list(/obj/item/food/meat/slab/buggy = 2)
 	silk_results = list(/obj/item/stack/sheet/silk/steel_simple = 1)
 
+
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/Initialize()
 	. = ..()
 	attack_sound = "sound/effects/ordeals/steel/gcorp_attack[pick(1,2,3)].ogg"
@@ -62,22 +63,58 @@
 	maxHealth = 1000	//Effectively have 750 HP
 	health = 1000		//Effectively have 750 HP
 	rapid_melee = 2
-	damage_coeff = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 0.8)
+	move_to_delay = 3
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.5)
 	attack_verb_continuous = "slashes"
 	attack_verb_simple = "slash"
 	death_sound = 'sound/voice/mook_death.ogg'
 	butcher_results = list(/obj/item/food/meat/slab/buggy = 2)
 	silk_results = list(/obj/item/stack/sheet/silk/steel_simple = 2, /obj/item/stack/sheet/silk/steel_advanced = 1)
 
+	//Cooldown for the speed up.
+	var/speedUpCooldown = 0
+	//Duration of the cooldown for the speed up.
+	var/speedUpCooldownDuration = 10 SECONDS
+	//Vars for activating the speed up.
+	//Measures when the last attack was.
+	var/lastAttack = 0
+	//Time required not attacking before
+	var/noAttackTime = 15 SECONDS
+	//Time shot, self-explanatory.
+	var/timesShot = 0
+	//Times shot required before activating the speed up.
+	var/shotRequirement = 5
+	//This is to activate the speed up through shots.
+	var/shotActive = FALSE
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/AttackingTarget(atom/attacked_target)
 	adjustBruteLoss(-10)
+	//Measures when the Steel Noon last attacked.
+	lastAttack = world.time
 	if(health <= maxHealth * 0.25 && stat != DEAD && prob(75))
 		walk_to(src, 0)
 		say("FOR G CORP!!!")
 		animate(src, transform = matrix()*1.8, color = "#FF0000", time = 15)
 		addtimer(CALLBACK(src, PROC_REF(DeathExplosion)), 15)
 	..()
-
+//Activates the speed up.
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/handle_automated_action()
+	if(shotActive == TRUE || lastAttack + noAttackTime <= world.time)
+		if(world.time >= speedUpCooldown)
+			visible_message(span_warning("[src] starts to move faster!"))
+			say("+RAAAGH!!+")
+			var/speedUpDuration = 3 SECONDS
+			TemporarySpeedChange(-1.2, speedUpDuration)
+			shotActive = FALSE
+			lastAttack = world.time
+			speedUpCooldown = world.time + speedUpCooldownDuration
+	..()
+//Measures how many times the Steel Noon was shot.
+/mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/bullet_act()
+	timesShot++
+	if(timesShot >= shotRequirement)
+		shotActive = TRUE
+		timesShot = 0
+	..()
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/proc/DeathExplosion()
 	if(QDELETED(src))
 		return
@@ -85,7 +122,7 @@
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 	for(var/mob/living/L in ohearers(3, src))
-		L.apply_damage(60, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+		L.deal_damage(60, RED_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 	//Buff allies, all of these buffs only activate once.
 	//Buff the grunts around you when you die
@@ -108,6 +145,8 @@
 		Z.screech_windup = 3 SECONDS
 
 	gib()
+
+
 
 //flying varient trades movement and attack speed for a sweeping attack.
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying
@@ -154,7 +193,7 @@
 		ArialSupport()
 	else
 		visible_message(span_notice("[src] crashes to the ground."))
-		apply_damage(100, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+		deal_damage(100, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	//return to the ground
 	density = TRUE
 	layer = initial(layer)
@@ -181,7 +220,7 @@
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/proc/SweepAttack(mob/living/sweeptarget)
 	sweeptarget.visible_message(span_danger("[src] slams into [sweeptarget]!"), span_userdanger("[src] slams into you!"))
-	sweeptarget.apply_damage(30, RED_DAMAGE, null, run_armor_check(null, RED_DAMAGE))
+	sweeptarget.deal_damage(30, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 50, TRUE)
 	if(sweeptarget.mob_size <= MOB_SIZE_HUMAN)
 		DoKnockback(sweeptarget, src, get_dir(src, sweeptarget))
@@ -336,4 +375,4 @@
 	new /obj/effect/temp_visual/screech(get_turf(src))
 	for(var/mob/living/L in oview(10, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(120, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(120, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))

@@ -117,7 +117,7 @@
 		var/static/list/blacklisted = typecacheof(list(
 			/turf,
 			/obj/structure/cable,
-			/obj/machinery/atmospherics,
+			// /obj/machinery/atmospherics,
 			/obj/item/ammo_casing,
 			/obj/item/implant,
 			/obj/singularity,

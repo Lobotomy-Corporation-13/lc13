@@ -4,15 +4,15 @@
 	name = "\proper space"
 	intact = 0
 
-	temperature = TCMB
+/* 	temperature = TCMB
 	thermal_conductivity = OPEN_HEAT_TRANSFER_COEFFICIENT
-	heat_capacity = 700000
-	
+	heat_capacity = 700000 */
+
 	var/destination_z
 	var/destination_x
 	var/destination_y
 
-	var/static/datum/gas_mixture/immutable/space/space_gas = new
+	// var/static/datum/gas_mixture/immutable/space/space_gas = new
 	plane = PLANE_SPACE
 	layer = SPACE_LAYER
 	light_power = 0.25
@@ -32,7 +32,7 @@
 /turf/open/space/Initialize()
 	SHOULD_CALL_PARENT(FALSE)
 	icon_state = SPACE_ICON_STATE
-	air = space_gas
+	// air = space_gas
 	vis_contents.Cut() //removes inherited overlays
 	visibilityChanged()
 
@@ -53,8 +53,8 @@
 	if(!IS_DYNAMIC_LIGHTING(src) && IS_DYNAMIC_LIGHTING(A))
 		add_overlay(/obj/effect/fullbright)
 
-	if(requires_activation)
-		SSair.add_to_active(src, TRUE)
+/* 	if(requires_activation)
+		SSair.add_to_active(src, TRUE) */
 
 	if (light_system == STATIC_LIGHT && light_power && light_range)
 		update_light()
@@ -79,24 +79,24 @@
 		var/turf/T = locate(destination_x, destination_y, destination_z)
 		user.forceMove(T)
 
-/turf/open/space/Initalize_Atmos(times_fired)
-	return
+// /turf/open/space/Initalize_Atmos(times_fired)
+// 	return
 
-/turf/open/space/TakeTemperature(temp)
+// /turf/open/space/TakeTemperature(temp)
 
 /turf/open/space/RemoveLattice()
 	return
 
-/turf/open/space/AfterChange()
+/* /turf/open/space/AfterChange()
 	..()
-	atmos_overlay_types = null
+	atmos_overlay_types = null */
 
-/turf/open/space/Assimilate_Air()
-	return
+// /turf/open/space/Assimilate_Air()
+// 	return
 
 //IT SHOULD RETURN NULL YOU MONKEY, WHY IN TARNATION WHAT THE FUCKING FUCK
-/turf/open/space/remove_air(amount)
-	return null
+// /turf/open/space/remove_air(amount)
+// 	return null
 
 /turf/open/space/proc/update_starlight()
 	if(CONFIG_GET(flag/starlight))

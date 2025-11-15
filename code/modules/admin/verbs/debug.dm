@@ -26,7 +26,7 @@ Because if you select a player mob as owner it tries to do the proc for
 But you can call procs that are of type /mob/living/carbon/human/proc/ for that player.
 */
 
-/client/proc/Cell()
+/* /client/proc/Cell()
 	set category = "Debug"
 	set name = "Air Status in Location"
 	if(!mob)
@@ -36,7 +36,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 		return
 	atmosanalyzer_scan(usr, T, TRUE)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Air Status In Location") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
+ */
 /client/proc/cmd_admin_robotize(mob/M in GLOB.mob_list)
 	set category = "Admin.Fun"
 	set name = "Make Robot"
@@ -275,7 +275,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 	log_admin("[key_name(usr)] gave away direct control of [M] to [newkey].")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Give Direct Control") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/client/proc/cmd_admin_test_atmos_controllers()
+/* /client/proc/cmd_admin_test_atmos_controllers()
 	set category = "Mapping"
 	set name = "Test Atmos Monitoring Consoles"
 
@@ -309,7 +309,7 @@ But you can call procs that are of type /mob/living/carbon/human/proc/ for that 
 
 	var/datum/browser/popup = new(usr, "testatmoscontroller", "Test Atmos Monitoring Consoles", 500, 750)
 	popup.set_content(dat.Join())
-	popup.open()
+	popup.open() */
 
 /client/proc/cmd_admin_areatest(on_station)
 	set category = "Mapping"

@@ -49,6 +49,7 @@
 	var/list/values = list()
 	var/list/shareholders = list()
 
+
 /datum/stonk_company/New(company_name, company_product, company_value, company_desc)
 	name = company_name
 	if(company_product)
@@ -146,18 +147,55 @@
 		GenerateNewsText(I, 3, "[name] has filed for bankruptsy.")
 		return
 
+
+	var/bad_news = list("The owner of [name] has been suspected of commiting a Taboo",
+		"Rats have stolen the staff of [name]",
+		"An excutive at [name] is being charged with corruption",
+		"The owner of [name] has distorted",
+		"[name] had a poor earnings report, citing espionage",
+		"[name] had a senior manager shot and killed. They did not have life insurance",
+		"[product] sales are down, heavily.",
+		"A defect was discovered with [product]. They are being recalled",
+		"Employees at [name] had an incident that requires sensitivity training",
+		"A gang that identifies themselves as [pick("The Green Grinners", "The Gang Gang", "The Toe")] have stolen a large amount of [product]",
+		)
+
+	var/neutral_news = list("[name] has released a new advertising campaign",
+		"[name] has launched a service discount",
+		"[name] has made a murder attempt on a customer",
+		"[name] is releasing a new product",
+		"[name] has announced a new member of the board",
+		"A popular burger chain has created a new burger named after [name]",
+		"[name] has sacrificed a middle manager for an unknown reason",
+		"[name] had a senior manager shot and killed. Luckily they have life insurance",
+		"Prices for [product] are down across the board",
+		"[name] had hired a few fixers to assist the company",
+		"New reports say that [name] had hired a Shi fixer for an unknown purpose",
+		"A senior executive at [name] was involved in insider trading",
+		)
+
+	var/good_news = list("The owner of [name] did a backflip infront of a cheering crowd",
+		"Rat populations around [name] have decreased significantly",
+		"A major competitor to [name] had their CEO die under mysterious circumstances",
+		"The public is absolutely raving for [product]! They just can't get enough",
+		"Due to public demand, a shareholder of [name] shot themself in the head to show dedication",
+		"The daughter of the owner of [name] possibly seen on a yacht in the Great Lake",
+		"To show the safety of [product], the owner of [name] ate one on a live broadcast",
+		)
+
+
 	switch(effect)
 		if(1)
 			GenerateNewsText(I, rand(-3, -1),"\
-				[pick("The owner of [name] has been suspected of commiting a Taboo", "Rats have stolen the staff of [name]", "The owner of [name] has distorted")], <br>\
+				[pick(bad_news)], <br>\
 				investors are losing faith in the companies survival.")
 		if(2 to 3)
 			GenerateNewsText(I, rand(-2, 3),"\
-				[name] has [pick("a new advertising campaign", "a service discount", "made a murder attempt on a customer")], <br>\
+				[pick(neutral_news)], <br>\
 				investors are yet to see the effect this has on profits.")
 		if(4)
 			GenerateNewsText(I, rand(1, 2),"\
-				[pick("The owner of [name] did a backflip infront of a cheering crowd", "Rat populations around [name] have decreased significantly")], <br>\
+				[pick(good_news)], <br>\
 				company stocks are sure to increase now.")
 		else
 			return

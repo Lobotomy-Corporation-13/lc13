@@ -61,7 +61,8 @@
 
 		if(W.use_tool(src, user, 0, volume=40))
 			if(mineralType == "plasma")
-				atmos_spawn_air("plasma=5;TEMP=1000")
+				var/turf/here = get_turf(src)
+				explosion(here, 0, 0, 5, 8, flame_range = 2)
 				user.visible_message("<span class='warning'>[user.name] sets the plasma tiles on fire!</span>", \
 									"<span class='warning'>You set the plasma tiles on fire!</span>")
 				qdel(src)

@@ -2,14 +2,14 @@
 	layer = CLOSED_TURF_LAYER
 	opacity = TRUE
 	density = TRUE
-	blocks_air = TRUE
+	// blocks_air = TRUE
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 	pass_flags_self = PASSCLOSEDTURF
 
-/turf/closed/AfterChange()
+/* /turf/closed/AfterChange()
 	. = ..()
-	SSair.high_pressure_delta -= src
+	SSair.high_pressure_delta -= src */
 
 /turf/closed/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	return FALSE
@@ -373,3 +373,11 @@
 	smoothing_flags = SMOOTH_CORNERS
 	smoothing_groups = list(SMOOTH_GROUP_HIERO_WALL)
 	canSmoothWith = list(SMOOTH_GROUP_HIERO_WALL)
+
+/turf/closed/indestructible/brick
+	icon = 'icons/turf/walls/brick_wall.dmi'
+	icon_state = "brick_wall-0"
+	base_icon_state = "brick_wall"
+	smoothing_flags = SMOOTH_BITMASK
+	smoothing_groups = list(SMOOTH_GROUP_CLOSED_TURFS, SMOOTH_GROUP_WALLS, SMOOTH_GROUP_BRICK_WALL)
+	canSmoothWith = list(SMOOTH_GROUP_BRICK_WALL)

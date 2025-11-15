@@ -109,6 +109,7 @@
 			if(outfit_owner.ears)
 				qdel(outfit_owner.ears)
 			outfit_owner.equip_to_slot_or_del(new ears(outfit_owner),ITEM_SLOT_EARS)
+
 	if(department != "None" && department)
 		to_chat(M, "<b>You have been assigned to [department]!</b>")
 	else
@@ -166,6 +167,12 @@
 
 	return ..()
 
+//For MOBA Agents
+/datum/outfit/job/agent/post_equip(mob/living/carbon/human/outfit_owner, visualsOnly = FALSE)
+	..()
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_MOBA_AGENTS)
+		outfit_owner.equip_to_slot_or_del(new /obj/item/class_chooser(outfit_owner), ITEM_SLOT_HANDS, TRUE)
+
 /datum/outfit/job/agent
 	name = "Agent"
 	jobtype = /datum/job/agent
@@ -178,7 +185,6 @@
 	shoes = /obj/item/clothing/shoes/laceup
 	gloves = /obj/item/clothing/gloves/color/black
 	implants = list(/obj/item/organ/cyberimp/eyes/hud/security)
-	l_hand = /obj/item/class_chooser
 
 	backpack_contents = list(
 		/obj/item/melee/classic_baton,

@@ -36,6 +36,9 @@
 	name = "Thumb East Capsule"
 	template_id = "thumb_east_base"
 
+/obj/item/structurecapsule/syndicate/middle
+	name = "Middle Capsule"
+	template_id = "middle_base"
 
 //Office templates
 /datum/map_template/shelter/index
@@ -73,3 +76,9 @@
 	shelter_id = "thumb_east_base"
 	description = "A place for the thumb's eastern branch."
 	mappath = "_maps/templates/syndicate_office/thumb_east.dmm"
+
+/datum/map_template/shelter/middle
+	name = "Middle Base"
+	shelter_id = "middle_base"
+	description = "A place for the middle's u-corp branch."
+	mappath = "_maps/templates/syndicate_office/middle.dmm"

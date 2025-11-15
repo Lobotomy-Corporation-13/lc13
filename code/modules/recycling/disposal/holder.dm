@@ -1,14 +1,12 @@
 // virtual disposal object
 // travels through pipes in lieu of actual items
 // contents will be items flushed by the disposal
-// this allows the gas flushed to be tracked
 
 /obj/structure/disposalholder
 	invisibility = INVISIBILITY_MAXIMUM
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	dir = NONE
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
-	var/datum/gas_mixture/gas	// gas used to flush, will appear at exit point
 	var/active = FALSE			// true if the holder is moving, otherwise inactive
 	var/count = 1000			// can travel 1000 steps before going inactive (in case of loops)
 	var/destinationTag = NONE	// changes if contains a delivery container
@@ -16,13 +14,11 @@
 	var/hasmob = FALSE			// contains a mob
 
 /obj/structure/disposalholder/Destroy()
-	QDEL_NULL(gas)
 	active = FALSE
 	return ..()
 
 // initialize a holder from the contents of a disposal unit
 /obj/structure/disposalholder/proc/init(obj/machinery/disposal/D)
-	gas = D.air_contents// transfer gas resv. into holder object
 
 	//Check for any living mobs trigger hasmob.
 	//hasmob effects whether the package goes to cargo or its tagged destination.
@@ -91,9 +87,6 @@
 	. = ..()
 	var/static/list/pipes_typecache = typecacheof(/obj/structure/disposalpipe)
 	if(!pipes_typecache[loc.type])
-		var/turf/T = get_turf(loc)
-		if(T)
-			vent_gas(T)
 		for(var/A in contents)
 			var/atom/movable/AM = A
 			AM.forceMove(drop_location())
@@ -134,11 +127,6 @@
 	for(var/mob/M in range(5, get_turf(src)))
 		M.show_message("<FONT size=[max(0, 5 - get_dist(src, M))]>CLONG, clong!</FONT>", MSG_AUDIBLE)
 	playsound(src.loc, 'sound/effects/clang.ogg', 50, FALSE, FALSE)
-
-// called to vent all gas in holder to a location
-/obj/structure/disposalholder/proc/vent_gas(turf/T)
-	T.assume_air(gas)
-	T.air_update_turf(FALSE, FALSE)
 
 /obj/structure/disposalholder/AllowDrop()
 	return TRUE

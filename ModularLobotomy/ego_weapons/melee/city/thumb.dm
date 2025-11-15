@@ -851,7 +851,7 @@
 				continue
 			if(L == target)
 				continue
-			L.apply_damage((ishuman(L) ? aoe_no_justice : aoe), damtype, null, L.run_armor_check(null, damtype), spread_damage = TRUE)
+			L.deal_damage((ishuman(L) ? aoe_no_justice : aoe), damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(hit_type == COMBO_ATTACK2)
 				ApplyStatusEffects(L, COMBO_ATTACK2_AOE)
 				L.visible_message(span_danger("[user] cuts through [L] with a wide, explosive sweep!"))
@@ -1108,7 +1108,7 @@
 	var/justicemod = 1 + userjust/100
 	if(ishuman(target))
 		justicemod = 1
-	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE)
+	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	ApplyStatusEffects(target, COMBO_FINISHER)
 	RadiusAOE(target, user, COMBO_FINISHER)
 

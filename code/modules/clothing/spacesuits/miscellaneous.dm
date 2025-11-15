@@ -24,7 +24,7 @@ Contains:
 	inhand_icon_state = "deathsquad"
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 90)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	actions_types = list()
 
@@ -39,7 +39,7 @@ Contains:
 	allowed = list(/obj/item/gun, /obj/item/ammo_box, /obj/item/ammo_casing, /obj/item/melee/baton, /obj/item/restraints/handcuffs, /obj/item/tank/internals, /obj/item/kitchen/knife/combat)
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 90)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/deathsquad
 	dog_fashion = /datum/dog_fashion/back/deathsquad
@@ -65,7 +65,7 @@ Contains:
 	flags_inv = 0
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 90)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 
 /obj/item/clothing/suit/space/officer
@@ -80,7 +80,7 @@ Contains:
 	allowed = list(/obj/item/gun, /obj/item/ammo_box, /obj/item/ammo_casing, /obj/item/melee/baton, /obj/item/restraints/handcuffs, /obj/item/tank/internals)
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 80, BLACK_DAMAGE = 80, PALE_DAMAGE = 90)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 
 	//NASA Voidsuit
@@ -170,7 +170,7 @@ Contains:
 	strip_delay = 130
 	light_range = 7
 	resistance_flags = FIRE_PROOF
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	actions_types = list(
 		/datum/action/item_action/toggle_helmet_light,
 		/datum/action/item_action/toggle_beacon_hud
@@ -220,7 +220,7 @@ Contains:
 	slowdown = 0
 	strip_delay = 130
 	resistance_flags = FIRE_PROOF
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	cell = /obj/item/stock_parts/cell/bluespace
 	actions_types = list(/datum/action/item_action/toggle_spacesuit, \
 		/datum/action/item_action/toggle_helmet,
@@ -363,7 +363,7 @@ Contains:
 	inhand_icon_state = "griffinhat"
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 10)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = ACID_PROOF | FIRE_PROOF
 
 /obj/item/clothing/suit/space/freedom
@@ -374,7 +374,7 @@ Contains:
 	allowed = list(/obj/item/gun, /obj/item/ammo_box, /obj/item/ammo_casing, /obj/item/melee/baton, /obj/item/restraints/handcuffs, /obj/item/tank/internals)
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 10)
 	strip_delay = 130
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = ACID_PROOF | FIRE_PROOF
 	slowdown = 0
 
@@ -425,7 +425,7 @@ Contains:
 	icon_state = "hardsuit0-prt"
 	inhand_icon_state = "hardsuit0-prt"
 	hardsuit_type = "prt"
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	actions_types = list()
 	resistance_flags = FIRE_PROOF
 	beacon_colour = "#9ddb56"
@@ -436,7 +436,7 @@ Contains:
 	icon_state = "knight_grey"
 	inhand_icon_state = "knight_grey"
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/ert/paranormal
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF
 
 /obj/item/clothing/suit/space/hardsuit/ert/paranormal/Initialize()
@@ -463,7 +463,7 @@ Contains:
 	slowdown = 0
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/berserker
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = -100, BLACK_DAMAGE = -50, PALE_DAMAGE = 50)
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/pickaxe, /obj/item/spear, /obj/item/organ/regenerative_core/legion, /obj/item/kitchen/knife, /obj/item/kinetic_crusher, /obj/item/resonator, /obj/item/melee/transforming/cleaving_saw)
 
@@ -493,7 +493,7 @@ Contains:
 	hardsuit_type = "berserker"
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = -100, BLACK_DAMAGE = -50, PALE_DAMAGE = 50)
 	actions_types = list(/datum/action/item_action/berserk_mode)
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF
 	/// Current charge of berserk, goes from 0 to 100
 	var/berserk_charge = 0

@@ -1,4 +1,4 @@
-#define CAN_DEFAULT_RELEASE_PRESSURE 	(ONE_ATMOSPHERE)
+/* #define CAN_DEFAULT_RELEASE_PRESSURE 	(ONE_ATMOSPHERE)
 ///Used when setting the mode of the canisters, enabling us to switch the overlays
 //These are used as icon states later down the line for tier overlays
 #define CANISTER_TIER_1					1
@@ -643,3 +643,4 @@
 				replace_tank(usr, FALSE)
 				. = TRUE
 	update_icon()
+ */
