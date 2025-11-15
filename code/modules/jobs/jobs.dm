@@ -285,7 +285,7 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Thumb East Capo",
 	"Thumb East Soldato",
   
-  "Big Brother",
+  	"Big Brother",
 	"Younger Brother",
 	"Little Brother",
 
