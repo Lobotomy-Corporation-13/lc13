@@ -68,7 +68,6 @@
 		|Golden Weave Traps|: When humans cross over your weaves, they will:<br>\
 		- Take 5 RED damage<br>\
 		- Inflicts 15 stacks BLEED<br>\
-		- Get knocked down for 2 seconds<br>\
 		- The weave is destroyed after triggering<br>\
 		<br>\
 		|Stealth Ability|: When you stand on top of a golden weave, you become nearly invisible.<br>\
@@ -117,6 +116,7 @@
 	name = "golden weave"
 	desc = "a very faint golden thread."
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
+	alpha = 50
 	icon_state = "weave_trap"
 	anchored = TRUE
 	density = FALSE
@@ -132,7 +132,8 @@
 		var/mob/living/carbon/human/H = AM
 		H.deal_damage(5, RED_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.apply_lc_bleed(15)
-		H.Knockdown(20)
+		if(!IsCombatMap())
+			H.Knockdown(20)
 		qdel(src)
 
 // Player action for spawning golden weave
