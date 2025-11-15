@@ -1618,13 +1618,13 @@
 
 /// This is called at the end of our cooldown, to re-enable the skill.
 /obj/effect/proc_holder/ability/aedd_curl_up/proc/Refresh(mob/living/carbon/human/user)
+	ready = TRUE
+
 	if(!istype(user))
 		return FALSE
 	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 	if(!istype(our_suit))
 		return FALSE
-
-	ready = TRUE
 
 	// Tell the user that they're ready to ball
 	SEND_SOUND(user, sound('sound/abnormalities/armyinblack/black_heartbeat.ogg'))
