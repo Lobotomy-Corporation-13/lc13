@@ -132,7 +132,7 @@
 		var/mob/living/carbon/human/H = AM
 		H.deal_damage(5, RED_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.apply_lc_bleed(15)
-		if(!IsCombatMap())
+		if(SSmaptype.maptype != "rcorp")
 			H.Knockdown(20)
 		qdel(src)
 
