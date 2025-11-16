@@ -63,8 +63,8 @@
 	/// Holds the commanders we've deployed as part of the NitB
 	var/list/nitb_deployed_commanders = list()
 
-	var/nitb_cooldown
-	var/nitb_cooldown_duration = 2.5 MINUTES
+	var/nitb_cooldown = INFINITY
+	var/nitb_cooldown_duration = 5 MINUTES
 
 	/// List of all bound, spawned sweepers in our retinue
 	var/list/allied_sweepers = list()
@@ -140,7 +140,7 @@
 		COMBAT_ABILITY_PARRY = 18 SECONDS, // Parry has CDR if a riposte lands
 		SUPPORT_ABILITY_OFFENSIVE = 30 SECONDS,
 		SUPPORT_ABILITY_PERSISTENCE = 20 SECONDS,
-		SUPPORT_ABILITY_SUMMON = 70 SECONDS, // Summon CD is reset every phasechange.
+		SUPPORT_ABILITY_SUMMON = 80 SECONDS, // Summon CD is reset every phasechange. This also gets increased by 20s every time it gets used.
 	)
 	// These two lists, we will pick_n_take from to add abilities as the fight progresses. On Initialize we pluck three out of locked_combat_abilities to start with as a base.
 	var/list/locked_combat_abilities = list(COMBAT_ABILITY_DASH, COMBAT_ABILITY_SLAM, COMBAT_ABILITY_SLASH, COMBAT_ABILITY_TRASH_DISPOSAL, COMBAT_ABILITY_PARRY)
@@ -217,7 +217,7 @@
 	var/list/phases_icon_states = list(1 = "matriarch", 2 = "matriarch_slim", 3 = "matriarch_fast")
 
 	// Association lists that control different balancing values for each phase. The keys are the phase, the values are the corresponding intended value for that phase.
-	var/list/phases_move_delays = list(1 = 3, 2 = 2.5, 3 = 2.2)
+	var/list/phases_move_delays = list(1 = 3, 2 = 2.6, 3 = 2.4)
 	var/list/phases_rapid_melee = list(1 = 2, 2 = 3, 3 = 4)
 	var/list/phases_melee_damage = list(1 = 55, 2 = 48, 3 = 40)
 	var/list/phases_resistance_lists = list(
@@ -233,12 +233,12 @@
 
 	// Slash phase scaling variables
 	var/list/phases_slash_damage = list(1 = 110, 2 = 100, 3 = 90)
-	var/list/phases_slash_healing = list(1 = 75, 2 = 100, 3 = 250)
+	var/list/phases_slash_healing = list(1 = 75, 2 = 100, 3 = 200)
 
 	// Dash phase scaling variables
 	var/list/phases_dash_windup = list(1 = 1.1 SECONDS, 2 = 0.9 SECONDS, 3 = 0.8 SECONDS)
 	var/list/phases_dash_damage = list(1 = 80, 2 = 70, 3 = 60)
-	var/list/phases_dash_healing = list(1 = 150, 2 = 200, 3 = 350)
+	var/list/phases_dash_healing = list(1 = 100, 2 = 150, 3 = 250)
 
 	// Parry & Riposte scaling variables
 	var/list/phases_riposte_damage = list(1 = 160, 2 = 150, 3 = 140)
@@ -249,8 +249,8 @@
 	var/list/phases_disposal_healing = list(1 = 75, 2 = 100, 3 = 150)
 
 	// Summon Sweepers scaling variables
-	var/list/phases_squad_size_grunts = list(1 = 4, 2 = 5, 3 = 6)
-	var/list/phases_squad_size_commanders = list(1 = 0, 2 = 2, 3 = 3)
+	var/list/phases_squad_size_grunts = list(1 = 6, 2 = 5, 3 = 4)
+	var/list/phases_squad_size_commanders = list(1 = 2, 2 = 1, 3 = 0)
 
 // Here be procs
 
@@ -276,7 +276,7 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue = 1,
 		)
 	AddComponent(/datum/component/ai_leadership/matriarch, units_to_add, 50) // This leadership component has some special behaviour. Check near the bottom of the file to find it.
-	nitb_cooldown = world.time + nitb_cooldown_duration
+	nitb_cooldown = world.time + (nitb_cooldown_duration * 0.33)
 	HandlePlayerScaling()
 
 	// Give us three combat abilities and Summon Sweepers to begin with. We begin with half their cooldown ticked down.
@@ -346,10 +346,6 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 
 //Remind me to return to this and make complex targeting a option for all creatures. I may make it a TRUE FALSE var.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/ValueTarget(atom/target_thing)
-	//Higher brain functions have been turned off.
-	if(phase >= 3)
-		return ..()
-
 	. = ..()
 
 	if(isliving(target_thing))
@@ -1162,6 +1158,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 
 	if(really_oughta_get_some_goons && (available_abilities[SUPPORT_ABILITY_SUMMON] != null) && available_abilities[SUPPORT_ABILITY_SUMMON] <= world.time)
 		available_abilities[SUPPORT_ABILITY_SUMMON] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_SUMMON]
+		ability_cooldown_durations[SUPPORT_ABILITY_SUMMON] += 20 SECONDS // Every time she uses it, it takes a bit longer to use the next time. Still gets reset by phase change.
 		var/turf/spawn_here = get_ranged_target_turf(src, pick(GLOB.cardinals), 2)
 		INVOKE_ASYNC(src, PROC_REF(SummonSweepers), missing_grunts, missing_commanders, spawn_here)
 		general_support_cooldown = world.time + general_support_cooldown_duration
