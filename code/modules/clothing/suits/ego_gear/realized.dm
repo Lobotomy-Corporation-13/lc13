@@ -429,7 +429,7 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 				L.apply_lc_black_protection(new_stack_amount)
 
 			var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/also_has_suit_like_ours = L.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-			if(also_has_suit_like_ours) // If they're wearing this same realization, give them 1 self-charge (it's funny)
+			if(istype(also_has_suit_like_ours)) // If they're wearing this same realization, give them 1 self-charge (it's funny)
 				also_has_suit_like_ours.AdjustCharge(1)
 
 		else // Enemy. Zap!
