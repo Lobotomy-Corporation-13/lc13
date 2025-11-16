@@ -391,15 +391,14 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	// Get all the nearby turfs and eliminate turfs we've already hit
 	var/list/valid_turfs = view(arc_lightning_range, origin)
 	valid_turfs -= arc_lightning_turf_hitlist
-	// Try to find a simple_animal that isn't dead and isn't in our faction.
+	// Try to find a mob that isn't dead and isn't in our faction. Considers allies, too. Won't hurt 'em though, gives a buff instead.
 	var/mob/living/found_mob
 	for(var/turf/T in valid_turfs)
-		for(var/mob/living/simple_animal/L in T)
-			if((!owner.faction_check_mob(L)))
-				if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy) || (L in arc_lightning_mob_hitlist))
-					continue
-				found_mob = L
-				break
+		for(var/mob/living/L in T)
+			if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy) || (L in arc_lightning_mob_hitlist) || L == owner)
+				continue
+			found_mob = L
+			break
 	// Found one? Shock them.
 	if(found_mob)
 		var/turf/impact_turf = get_turf(found_mob)
@@ -411,9 +410,34 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 		return TRUE
 	return FALSE
 
-/// Proc which deals damage to all mobs that aren't in the owner's faction in the given turf, and will attempt to chain lightning again from that turf.
+/// Proc which deals damage to all mobs that aren't in the owner's faction in the given turf, gives BLACK protection to allies in the turf, and will attempt to chain lightning again from that turf.
 /obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/ArcLightningHit(turf/target_turf, chains)
-	owner.HurtInTurf(target_turf, arc_lightning_mob_hitlist, arc_lightning_damage, BLACK_DAMAGE, check_faction = TRUE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
+	for(var/mob/living/L in target_turf)
+		if(L in arc_lightning_mob_hitlist) // This mob was already zapped. Ignore!
+			continue
+		if(L == owner) // duh
+			continue
+
+		if(owner.faction_check_mob(L)) // Ally. Don't damage, give BLACK protection up to 3 stacks.
+			to_chat(L, span_nicegreen("Electricity harmlessly arcs through you, and you feel it protect you against BLACK damage!"))
+			var/datum/status_effect/stacking/damtype_protection/black/current_stacks = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/)
+			var/current_stack_amount = current_stacks ? current_stacks.stacks : 0
+			var/new_stack_amount = current_stack_amount + 1
+			if(new_stack_amount >= 4)
+				current_stacks.refresh()
+			else
+				L.apply_lc_black_protection(new_stack_amount)
+
+			var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/also_has_suit_like_ours = L.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+			if(also_has_suit_like_ours) // If they're wearing this same realization, give them 1 self-charge (it's funny)
+				also_has_suit_like_ours.AdjustCharge(1)
+
+		else // Enemy. Zap!
+			L.deal_damage(arc_lightning_damage, BLACK_DAMAGE, source = owner, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
+			to_chat(L, span_danger("Electricity arcs through you, shocking you!"))
+
+		arc_lightning_mob_hitlist |= L // Add mob we just hit to our mob hitlist.
+
 	new /obj/effect/temp_visual/justitia_effect(target_turf)
 	playsound(target_turf, 'sound/weapons/fixer/generic/energy2.ogg', 40, vary = TRUE, extrarange = 5)
 	sleep(0.2 SECONDS)
