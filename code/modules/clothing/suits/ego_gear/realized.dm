@@ -415,7 +415,7 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	for(var/mob/living/L in target_turf)
 		if(L in arc_lightning_mob_hitlist) // This mob was already zapped. Ignore!
 			continue
-		if(L == owner) // duh
+		if(L == owner || L.stat >= DEAD) // duh
 			continue
 
 		if(owner.faction_check_mob(L)) // Ally. Don't damage, give BLACK protection up to 3 stacks.
