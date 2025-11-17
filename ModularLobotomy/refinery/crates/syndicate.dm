@@ -65,8 +65,8 @@
 		/obj/item/ego_weapon/city/axegang/leader,
 		/obj/item/ego_weapon/city/district23,
 		/obj/item/ego_weapon/city/district23/pierre,
-		/obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak/masquerade_coat
-		/obj/item/clothing/suit/armor/ego_gear/city/carnival_robes
+		/obj/item/clothing/suit/armor/ego_gear/city/masquerade_cloak/masquerade_coat,
+		/obj/item/clothing/suit/armor/ego_gear/city/carnival_robes,
 	)
 
 	veryrareloot =	list(
