@@ -22,6 +22,14 @@
 		/obj/item/ego_weapon/ungezifer,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/limbus_coat,
 		/obj/item/clothing/suit/armor/ego_gear/limbus/limbus_coat_short,
+		/obj/item/clothing/suit/armor/ego_gear/limbus_labs,
+		/obj/item/ego_weapon/ranged/city/limbuspistol,
+		/obj/item/ego_weapon/ranged/city/limbusautopistol,
+		/obj/item/ego_weapon/ranged/city/limbusmagnum,
+		/obj/item/ego_weapon/ranged/city/limbussmg,
+		/obj/item/ego_weapon/ranged/city/limbusshottie,
+		/obj/item/ego_weapon/shield/lccb,
+		/obj/item/ego_weapon/city/lccb_bat,
 	)
 
 	rareloot =	list(

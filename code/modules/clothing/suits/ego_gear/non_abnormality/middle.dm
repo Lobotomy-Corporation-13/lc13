@@ -75,8 +75,8 @@
 /obj/item/clothing/suit/armor/ego_gear/city/middle_big/equipped(mob/living/carbon/human/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
-		// Check if user is Big Brother
-		if(user.mind && user.mind.assigned_role == "Big Brother")
+		// Check if user is Big Brother or it is Facility Mode
+		if((user.mind && user.mind.assigned_role == "Big Brother") || !(SSmaptype.maptype in SSmaptype.citymaps))
 			// Grant the ability action to the user
 			if(great_leap_ability)
 				var/datum/action/spell_action/ability/item/A = great_leap_ability.action
