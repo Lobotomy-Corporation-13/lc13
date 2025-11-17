@@ -29,7 +29,8 @@
 		/obj/item/clothing/suit/armor/ego_gear/city/cinq,
 		/obj/item/ego_weapon/city/cinq,
 		/obj/item/clothing/suit/armor/ego_gear/city/devyat_suit/weak,
-		/obj/item/ego_weapon/city/cinqwest_selfiestick,
+		/obj/item/ego_weapon/city/cinq/section4,
+		/obj/item/ego_weapon/city/cinq/section4/west,
 		/obj/item/ego_weapon/city/dieci,
 	)
 
@@ -186,7 +187,7 @@
 		/obj/item/ego_weapon/city/cinq/section4,
 		/obj/item/clothing/suit/armor/ego_gear/city/cinq,
 		/obj/item/clothing/suit/armor/ego_gear/city/cinqwest,
-		/obj/item/ego_weapon/city/cinqwest_selfiestick
+		/obj/item/ego_weapon/city/cinq/section4/west,
 	)
 
 	rareloot =	list(
