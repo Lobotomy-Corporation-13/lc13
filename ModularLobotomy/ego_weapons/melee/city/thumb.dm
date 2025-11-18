@@ -976,12 +976,13 @@
 	actions_types = list(/datum/action/item_action/chachihu)
 	var/special_ability_targeting = FALSE
 	var/special_ability_simplemob_oldAI
+	var/aurafarming_line = "Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!"
 
 // Following code corresponds to a silly ability for the admin-only weapon and can be ignored for all normal gameplay purposes. It should never show up in a normal round.
 // It is basically like Furioso: long cutscene that is purely aesthetic, and then the damage is applied at the end.
 /datum/action/item_action/chachihu
 	name = "Savage Tigerslayer's Perfected Flurry of Blades"
-	desc = "Click on a non-adjacent target after using this action to ultrakill them. Requires 10 heat and 6 live rounds. Does not include anti-chasm/lava insurance."
+	desc = "Click on a non-adjacent target after using this action to ultrakill them. Requires 10 heat and 6 live rounds. Does not include anti-chasm/lava insurance. Change your taunt by hitting the weapon with a cigar(ette)."
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	button_icon_state = "chachihu"
 
@@ -995,6 +996,16 @@
 		else
 			sword.special_ability_targeting = TRUE
 			to_chat(owner, span_danger("You will use your perfected technique on your next target."))
+
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/attackby(obj/item/stack/thumb_east_ammo/I, mob/living/user, params)
+	. = ..()
+	if(istype(I, /obj/item/clothing/mask/cigarette))
+		switch(tgui_alert(user, "Would you like to customize your Savage Tigerslayer's Perfected Flurry of Blades aurafarming line?", "Custom Aurafarming Line", list("Yes", "No", "Reset")))
+			if("Yes")
+				aurafarming_line = input(user, "What should you say before beginning your combo on the target?", "Aurafarming Query") as null|text
+			if("Reset")
+				aurafarming_line = initial(aurafarming_line)
+		return
 
 /// This override checks to see if we've activated our flurry. If we have, and we click someone at range, we activate the flurry.
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
@@ -1063,7 +1074,7 @@
 	// Beginning.
 	sleep(0.5 SECONDS)
 	user.face_atom(target)
-	user.say("Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!")
+	user.say(aurafarming_line)
 	playsound(src, 'sound/weapons/ego/thumb_east_podao_leap_prep.ogg', 80, FALSE, 10)
 	sleep(1.2 SECONDS)
 
