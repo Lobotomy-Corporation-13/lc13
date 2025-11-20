@@ -1578,7 +1578,9 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(!damage_amount) // There are some extremely rare instances of 0 damage pre-armour reduction, for example King of Greed does a 0 damage HurtInTurf to fill up a hitlist to attack later.
 		return FALSE
 
-	// We have already run the shuffler in the mob/living/carbon deal_damage that called this proc. Any incoming damage has already been shuffled (if it is enabled, anyhow).
+	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type)) // Yes I have to do yet another shuffler check here because god damn it we're handling human damage in the species datum
+		var/datum/damage_type_shuffler/shuffler = GLOB.damage_type_shuffler
+		damage_type = shuffler.mapping_offense[damage_type]
 
 	// Automatically run an armour check for the provided damage type if we weren't already provided with a blocked value, and if we aren't taking BRUTE damage.
 	if((isnull(blocked)) && (damage_type != BRUTE))
