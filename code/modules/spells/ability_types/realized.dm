@@ -1467,7 +1467,7 @@
 	var/curl_shield_timer
 	var/curl_cooldown_timer
 	var/curl_base_cooldown = 25 SECONDS
-	var/curl_shatter_cooldown_multiplier = 7
+	var/curl_shatter_cooldown_multiplier = 4.5
 	var/shock_radius = 2
 	var/shock_base_damage = 100
 	var/shield_health = 0
@@ -1567,7 +1567,7 @@
 		shield_health = 0
 		ShatterShield(user, chipped_through_damage, damage_type, def_zone) // Remove our shield and deal the "overkill" damage. That is to say, if our shield had 50 hp and we took 60 damage, deal 10.
 
-		// Lose all charge and un-empower if our shield shatters.
+		// Lose all charge and un-empower if our shield shatters. The reason we handle this here instead of ShatterShield is because we already pulled our suit in this proc so it's less wasteful.
 		our_suit.charge = 0
 		our_suit.RevertBuff()
 
@@ -1590,6 +1590,9 @@
 				our_suit.AdjustCharge(2)
 
 		playsound(get_turf(user), 'sound/mecha/mech_shield_deflect.ogg', 70)
+
+		if(our_suit.empowered)
+			our_suit.StartArcLightning() // If we're empowered, cause an arc lightning to start. Normally it's called by the "apply damage" signal but we're literally intercepting that one in this proc
 
 		return COMPONENT_MOB_DENY_DAMAGE // Deny the damage.
 

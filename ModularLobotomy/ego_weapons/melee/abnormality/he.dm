@@ -1426,16 +1426,24 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 	var/charged
-	var/realization_force_multiplier = 1.5
+	var/base_windup = 3 SECONDS
+	var/realization_force_multiplier = 1.55
 	var/realization_aoe_force_multiplier = 1.4
 	var/realization_aoe_range = 4
 	var/realization_aoe_charge_per_target = 3
+	var/realization_windup_reduction = 1.7 SECONDS
 
 /obj/item/ego_weapon/aedd/attack_self(mob/user)
 	..()
 	if(!CanUseEgo(user))
 		return
-	if(do_after(user, 30, src))//3 seconds
+	var/final_windup = base_windup
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			final_windup -= realization_windup_reduction
+
+	if(do_after(user, final_windup, src))
 		to_chat(user, span_notice("You hoist [src] over your shoulder."))
 		balloon_alert(user, "You hoist [src] over your shoulder.")
 		charged = TRUE
@@ -1445,7 +1453,7 @@
 	if(ishuman(user))
 		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(our_suit))
-			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Damage is increased, all attacks are now <b>charged by default</b>, and <b>charging the weapon further will unleash a BLACK damage AoE on your next hit</b> that gains Self-Charge for your [our_suit.name] E.G.O.")
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Damage is increased, all attacks are now <b>charged by default</b>, and <b>charging the weapon further will unleash a BLACK damage AoE on your next hit</b> that gains Self-Charge for your [our_suit.name] E.G.O. Charging the weapon in this manner has a reduced windup.")
 
 // When not wearing the AEDD realization: deals an extra hit in BLACK damage if we charged the weapon.
 // When wearing the AEDD realization: uses RealizationAOE() towards the target if we charged the weapon; if we didn't, then deals an extra hit in BLACK damage.
