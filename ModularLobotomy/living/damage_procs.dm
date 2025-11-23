@@ -70,7 +70,7 @@ sharpness - Irrelevant in most cases.
 		else
 			adjustBruteLoss(final_damage, forced = bypass_resistance)
 
-	if(alive)
+	if(alive && !(status_flags & GODMODE))
 		PostDamageReaction(final_damage, damage_type, flags & DAMAGE_UNTRACKABLE ? null : source, attack_type)
 
 	return final_damage

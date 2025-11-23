@@ -313,6 +313,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 	if(!damage_amount || stat >= DEAD || client)
 		return
 	if(isliving(source) && !faction_check_mob(source)) // If a mob is responsible for the damage we took... (Mind, we will receive source = null for attacks that are not intended to be "trackable")
+		var/mob/living/source_of_damage = source
+		if(source_of_damage.status_flags & GODMODE) // Let's not aggro on things we can't hurt anyhow
+			return
 		RegisterAggroValue(source, damage_amount, damage_type) // Regardless of whether we have an active target or not, add the damage taken to our target memory.
 		if(!target && world.time >= investigation_cooldown) // If we don't have a target right now, move to investigate the source of the damage.
 			var/turf/source_turf = get_turf(source)
