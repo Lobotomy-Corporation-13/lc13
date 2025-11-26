@@ -1483,7 +1483,8 @@
 /obj/item/ego_weapon/aedd/proc/power_attack(mob/living/target, mob/living/user)
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
-	target.deal_damage((force * justicemod), BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	var/final_damage = force * justicemod * force_multiplier
+	target.deal_damage((final_damage), BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 40, TRUE)
 	var/turf/T = get_turf(target)
 	new /obj/effect/temp_visual/justitia_effect(T)
@@ -1499,7 +1500,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
 
-	var/final_damage = initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * justicemod
+	var/final_damage = (initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * justicemod) * force_multiplier
 	user.visible_message(span_danger("[user] slams down [src] with great force, sending a powerful electric shockwave through [target]!"))
 	var/turf/origin_turf = get_turf(src)
 	var/turf/target_turf = get_ranged_target_turf_direct(user, target, realization_aoe_range)
@@ -1522,7 +1523,7 @@
 				new /obj/effect/temp_visual/blubbering_smash(TF)
 				for(var/mob/living/L in TF)
 					if(!(L in been_hit) && !(user.faction_check_mob(L)))
-						if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy))
+						if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy) || L.status_flags & GODMODE)
 							continue
 						L.deal_damage(final_damage, BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 						been_hit |= L
