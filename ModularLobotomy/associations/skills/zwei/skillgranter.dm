@@ -10,9 +10,9 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned two Zwei association skills. <br>Your Shield which allows you to reduce incoming damage. <br>Stand Proud which allows you to negate damage at the cost of being immobilized."))
 
 	var/datum/action/G = new /datum/action/cooldown/yourshield
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/standproud
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)
 
@@ -28,13 +28,13 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned four Zwei association skills. <br>Your Shield which allows you to reduce incoming damage. <br>Stand Proud which allows you to negate damage at the cost of being immobilized. <br>Protect the Innocent which allows you to grant damage reduction for those weaker than you. <br>Last Stand which allows you to come back from dead at the cost of taking constant damage."))
 
 	var/datum/action/G = new /datum/action/cooldown/yourshield
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/standproud
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/protectinnocent
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/laststand
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)
 
@@ -50,14 +50,14 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned five Zwei association skills. <br>Your Shield which allows you to reduce incoming damage. <br>Stand Proud which allows you to negate damage at the cost of being immobilized. <br>Protect the Innocent which allows you to grant damage reduction for those weaker than you. <br>Last Stand which allows you to come back from dead at the cost of taking constant damage. <br>Flexible Suppression which will strike and slowdown those with higher max hp than you"))
 
 	var/datum/action/G = new /datum/action/cooldown/yourshield
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/standproud
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/protectinnocent
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/laststand
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/flexsuppress
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)

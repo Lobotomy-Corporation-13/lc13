@@ -10,11 +10,11 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned three Liu association skills. <br>Flamekissed which allows you to thrive in the heat <br>Ember which allows you to set those around you alight. <br>Burn Swap which allows you to swap burn and white damage on those close to you"))
 
 	var/datum/action/G = new /datum/action/innate/flamekiss
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/ember
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/doubleburn
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)
 
@@ -30,15 +30,15 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned five Liu association skills. <br>Flamekissed which allows you to thrive in the heat <br>Ember which allows you to set those around you alight. <br>Burn Swap which allows you to swap burn and white damage on those close to you. <br> Blast Spear which increases your speed for each person around you. <br> Flare which sets everything around you ablaze."))
 
 	var/datum/action/G = new /datum/action/innate/flamekiss
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/ember
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/doubleburn
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/bspear
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/flare
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)
 
@@ -54,16 +54,16 @@
 	to_chat(user, span_greenannounce("You finish reading the book having learned six Liu association skills. <br>Flamekissed which allows you to thrive in the heat <br>Ember which allows you to set those around you alight. <br>Burn Swap which allows you to swap burn and white damage on those close to you. <br> Blast Spear which increases your speed for each person around you. <br> Flare which sets everything around you ablaze. <br> Final Burn which allows you to double the burn on anyone standing atop the blazes"))
 
 	var/datum/action/G = new /datum/action/innate/flamekiss
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/ember
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/doubleburn
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/bspear
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/flare
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 	G = new /datum/action/cooldown/finalburn
-	G.Grant(user)
+	user?.mind?.AddBoundAction(G)
 
 	qdel(src)
