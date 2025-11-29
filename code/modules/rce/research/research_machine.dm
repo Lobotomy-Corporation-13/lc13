@@ -88,7 +88,8 @@
 			"prerequisites" = node.prerequisites,
 			"favoredTraits" = node.favored_traits,
 			"negativeTraits" = node.negative_traits,
-			"requiredTraits" = node.required_traits
+			"requiredTraits" = node.required_traits,
+			"branch" = node.branch
 		))
 	world.log << "RCE Research UI: Sending [length(tree_data)] nodes to UI"
 	data["researchTree"] = tree_data
@@ -235,10 +236,6 @@
 		var/obj/item/portable_factory/PF = result
 		PF.factory_name = node.name
 		PF.factory_desc = node.desc
-
-/obj/machinery/rce_research/proc/initialize_research_tree()
-	// This will be populated by research_tree.dm
-	return
 
 // Portable factory item that can be deployed
 /obj/item/portable_factory

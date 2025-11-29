@@ -1,23 +1,24 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack, Tabs, LabeledList, ProgressBar, Tooltip } from '../components';
+import { Box, Button, Section, Stack, Tabs, LabeledList, ProgressBar } from '../components';
+import { Window } from '../layouts';
 
-// Research status constants
-const RESEARCH_LOCKED = 0;
-const RESEARCH_AVAILABLE = 1;
-const RESEARCH_COMPLETED = 2;
+// Research status constants (must match DM defines)
+const RESEARCH_LOCKED = 'locked';
+const RESEARCH_AVAILABLE = 'available';
+const RESEARCH_COMPLETED = 'completed';
 
-// Status colors
-const STATUS_COLORS = {
-  [RESEARCH_LOCKED]: '#666666',
-  [RESEARCH_AVAILABLE]: '#4488ff',
-  [RESEARCH_COMPLETED]: '#44ff44',
+// Branch colors
+const BRANCH_COLORS = {
+  hellfire: '#ff4444',
+  venom: '#44ff44',
+  storm: '#4488ff',
 };
 
-// Status labels
-const STATUS_LABELS = {
-  [RESEARCH_LOCKED]: 'Locked',
-  [RESEARCH_AVAILABLE]: 'Available',
-  [RESEARCH_COMPLETED]: 'Completed',
+// Branch labels
+const BRANCH_LABELS = {
+  hellfire: 'Hellfire (Fire)',
+  venom: 'Venom (Toxic)',
+  storm: 'Storm (Electric)',
 };
 
 export const RCEResearch = (props, context) => {
@@ -32,93 +33,101 @@ export const RCEResearch = (props, context) => {
     researchProgress = {},
   } = data;
 
-  // Derive currentResearch from selectedResearch and researchTree
   const currentResearch = selectedResearch && researchTree
     ? researchTree.find(n => n.id === selectedResearch)
     : null;
 
   return (
-    <Box fillPositionedParent>
-      <Stack fill vertical>
-        <Stack.Item>
-          <Tabs fluid>
-            <Tabs.Tab
-              selected={tab === 'tree'}
-              onClick={() => setTab('tree')}>
-              Research Tree
-            </Tabs.Tab>
-            <Tabs.Tab
-              selected={tab === 'samples'}
-              onClick={() => setTab('samples')}>
-              Samples ({storedParts})
-            </Tabs.Tab>
-            <Tabs.Tab
-              selected={tab === 'progress'}
-              onClick={() => setTab('progress')}>
-              Research Progress
-            </Tabs.Tab>
-          </Tabs>
-        </Stack.Item>
-        <Stack.Item grow>
-          {tab === 'tree' && (
-            <ResearchTreeTab
-              researchTree={researchTree}
-              selectedResearch={selectedResearch}
-              researchProgress={researchProgress}
-            />
-          )}
-          {tab === 'samples' && (
-            <SamplesTab
-              partsList={partsList}
-              selectedResearch={selectedResearch}
-              currentResearch={currentResearch}
-              storedParts={storedParts}
-            />
-          )}
-          {tab === 'progress' && (
-            <ProgressTab
-              currentResearch={currentResearch}
-              researchProgress={researchProgress}
-              selectedResearch={selectedResearch}
-            />
-          )}
-        </Stack.Item>
-      </Stack>
-    </Box>
+    <Window
+      title="R-Corp Biological Research Station"
+      width={800}
+      height={600}>
+      <Window.Content scrollable>
+        <Stack fill vertical>
+          <Stack.Item>
+            <Tabs fluid>
+              <Tabs.Tab
+                selected={tab === 'tree'}
+                onClick={() => setTab('tree')}>
+                Research Tree
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={tab === 'samples'}
+                onClick={() => setTab('samples')}>
+                Samples ({storedParts})
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={tab === 'progress'}
+                onClick={() => setTab('progress')}>
+                Current Research
+              </Tabs.Tab>
+            </Tabs>
+          </Stack.Item>
+          <Stack.Item grow>
+            {tab === 'tree' && (
+              <ResearchTreeTab
+                researchTree={researchTree}
+                selectedResearch={selectedResearch}
+                researchProgress={researchProgress}
+              />
+            )}
+            {tab === 'samples' && (
+              <SamplesTab
+                partsList={partsList}
+                selectedResearch={selectedResearch}
+                currentResearch={currentResearch}
+                storedParts={storedParts}
+              />
+            )}
+            {tab === 'progress' && (
+              <ProgressTab
+                currentResearch={currentResearch}
+                researchProgress={researchProgress}
+                selectedResearch={selectedResearch}
+              />
+            )}
+          </Stack.Item>
+        </Stack>
+      </Window.Content>
+    </Window>
   );
 };
 
-// Research Tree Tab - Shows all research in a visual tree
+// Research Tree Tab - Simple list layout with three branches
 const ResearchTreeTab = (props, context) => {
   const { act } = useBackend(context);
   const { researchTree, selectedResearch, researchProgress } = props;
 
-  // Group research by tier
-  const tiers = {};
+  // Group by branch
+  const branches = {
+    hellfire: researchTree.filter(n => n.branch === 'hellfire'),
+    venom: researchTree.filter(n => n.branch === 'venom'),
+    storm: researchTree.filter(n => n.branch === 'storm'),
+  };
+
+  // Sort each branch by tier
+  Object.keys(branches).forEach(branch => {
+    branches[branch].sort((a, b) => (a.tier || 0) - (b.tier || 0));
+  });
+
+  // Create node lookup for prerequisite names
+  const nodeMap = {};
   researchTree.forEach(node => {
-    if (!tiers[node.tier]) {
-      tiers[node.tier] = [];
-    }
-    tiers[node.tier].push(node);
+    nodeMap[node.id] = node;
   });
 
   return (
     <Section fill scrollable title="Research Tree">
-      <Stack vertical fill>
-        {Object.keys(tiers).sort((a, b) => a - b).map(tier => (
-          <Stack.Item key={tier}>
-            <Box bold mb={1}>Tier {tier}</Box>
-            <Stack wrap>
-              {tiers[tier].map(node => (
-                <Stack.Item key={node.id} basis="200px" mb={1} mr={1}>
-                  <ResearchNode
-                    node={node}
-                    selected={selectedResearch === node.id}
-                    progress={researchProgress[node.id] || 0}
-                  />
-                </Stack.Item>
-              ))}
-            </Stack>
+      <Stack>
+        {['hellfire', 'venom', 'storm'].map(branch => (
+          <Stack.Item key={branch} grow basis="33%">
+            <BranchList
+              branch={branch}
+              nodes={branches[branch]}
+              selectedResearch={selectedResearch}
+              researchProgress={researchProgress}
+              nodeMap={nodeMap}
+            />
           </Stack.Item>
         ))}
       </Stack>
@@ -126,67 +135,182 @@ const ResearchTreeTab = (props, context) => {
   );
 };
 
-// Individual research node display
-const ResearchNode = (props, context) => {
+// Branch list component
+const BranchList = (props, context) => {
   const { act } = useBackend(context);
-  const { node, selected, progress } = props;
+  const { branch, nodes, selectedResearch, researchProgress, nodeMap } = props;
 
-  const statusColor = STATUS_COLORS[node.status];
-  const statusLabel = STATUS_LABELS[node.status];
-  const progressPercent = node.cost > 0 ? (progress / node.cost) * 100 : 0;
+  const branchColor = BRANCH_COLORS[branch];
+  const branchLabel = BRANCH_LABELS[branch];
 
   return (
     <Box
       style={{
-        border: selected ? '2px solid #ffff00' : '1px solid ' + statusColor,
+        border: `2px solid ${branchColor}`,
         borderRadius: '4px',
-        padding: '8px',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        cursor: node.status === RESEARCH_AVAILABLE ? 'pointer' : 'default',
-        opacity: node.status === RESEARCH_LOCKED ? 0.6 : 1,
+        margin: '0 4px',
+      }}>
+      {/* Header */}
+      <Box
+        bold
+        textAlign="center"
+        p={1}
+        style={{
+          backgroundColor: branchColor + '44',
+          borderBottom: `1px solid ${branchColor}`,
+          color: branchColor,
+        }}>
+        {branchLabel}
+      </Box>
+
+      {/* Nodes */}
+      <Box p={1}>
+        {nodes.length === 0 ? (
+          <Box color="label" textAlign="center" p={2}>
+            No research available
+          </Box>
+        ) : (
+          nodes.map(node => (
+            <ResearchNodeCard
+              key={node.id}
+              node={node}
+              selected={selectedResearch === node.id}
+              progress={researchProgress[node.id] || 0}
+              branchColor={branchColor}
+              nodeMap={nodeMap}
+            />
+          ))
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+// Individual research node card
+const ResearchNodeCard = (props, context) => {
+  const { act } = useBackend(context);
+  const { node, selected, progress, branchColor, nodeMap } = props;
+
+  const isLocked = node.status === RESEARCH_LOCKED;
+  const isAvailable = node.status === RESEARCH_AVAILABLE;
+  const isCompleted = node.status === RESEARCH_COMPLETED;
+
+  // Get prerequisite names
+  const prereqNames = (node.prerequisites || [])
+    .map(id => nodeMap[id]?.name || id)
+    .join(', ');
+
+  // Determine border color
+  let borderColor = '#555';
+  if (isCompleted) {
+    borderColor = '#44ff44';
+  } else if (isAvailable) {
+    borderColor = branchColor;
+  } else if (selected) {
+    borderColor = '#ffff00';
+  }
+
+  const progressPercent = node.cost > 0 ? (progress / node.cost) * 100 : 0;
+
+  return (
+    <Box
+      mb={1}
+      p={1}
+      style={{
+        border: selected ? '2px solid #ffff00' : `1px solid ${borderColor}`,
+        borderRadius: '4px',
+        backgroundColor: isLocked ? 'rgba(30, 30, 30, 0.8)' : 'rgba(50, 50, 50, 0.8)',
+        opacity: isLocked ? 0.6 : 1,
+        cursor: isAvailable ? 'pointer' : 'default',
       }}
       onClick={() => {
-        if (node.status === RESEARCH_AVAILABLE) {
+        if (isAvailable) {
           act('selectResearch', { nodeId: node.id });
         }
       }}>
-      <Box bold color={statusColor} mb={1}>
-        {node.name}
-      </Box>
-      <Box fontSize="11px" mb={1} style={{ minHeight: '32px' }}>
+      {/* Title row */}
+      <Stack justify="space-between" align="center">
+        <Stack.Item grow>
+          <Box bold color={isCompleted ? '#44ff44' : (isAvailable ? branchColor : '#888')}>
+            {node.name}
+          </Box>
+        </Stack.Item>
+        <Stack.Item>
+          {isCompleted && (
+            <Box color="#44ff44" bold>[DONE]</Box>
+          )}
+          {isAvailable && (
+            <Box color={branchColor}>[AVAILABLE]</Box>
+          )}
+          {isLocked && (
+            <Box color="#666">[LOCKED]</Box>
+          )}
+        </Stack.Item>
+      </Stack>
+
+      {/* Description */}
+      <Box fontSize="11px" color="label" mt={0.5}>
         {node.desc}
       </Box>
-      <Box fontSize="10px" color="label" mb={1}>
-        Status: {statusLabel}
+
+      {/* Tier */}
+      <Box fontSize="10px" color="label" mt={0.5}>
+        Tier: {node.tier === 0 ? 'ROOT' : node.tier} | Cost: {node.cost} points
       </Box>
-      {node.status !== RESEARCH_LOCKED && (
-        <ProgressBar
-          value={progressPercent}
-          maxValue={100}
-          color={node.status === RESEARCH_COMPLETED ? 'good' : 'blue'}>
-          {progress}/{node.cost}
-        </ProgressBar>
-      )}
-      {node.prerequisites && node.prerequisites.length > 0 && (
-        <Box fontSize="10px" color="label" mt={1}>
-          Requires: {node.prerequisites.join(', ')}
+
+      {/* Prerequisites - IMPORTANT: Shows what you need */}
+      {prereqNames && (
+        <Box fontSize="10px" color={isLocked ? 'orange' : 'label'} mt={0.5}>
+          <b>Requires:</b> {prereqNames}
         </Box>
       )}
-      {node.favoredTraits && Object.keys(node.favoredTraits).length > 0 && (
-        <Box fontSize="10px" color="green" mt={1}>
-          Favored: {Object.keys(node.favoredTraits).join(', ')}
+
+      {/* What this unlocks */}
+      {node.unlocks && node.unlocks.length > 0 && (
+        <Box fontSize="10px" color="green" mt={0.5}>
+          <b>Unlocks:</b> {node.unlocks.join(', ')}
         </Box>
       )}
-      {node.requiredTraits && node.requiredTraits.length > 0 && (
-        <Box fontSize="10px" color="orange" mt={1}>
-          Required: {node.requiredTraits.join(', ')}
+
+      {/* Progress bar for non-locked */}
+      {!isLocked && (
+        <Box mt={0.5}>
+          <ProgressBar
+            value={progressPercent}
+            maxValue={100}
+            color={isCompleted ? 'good' : 'blue'}>
+            {progress}/{node.cost}
+          </ProgressBar>
+        </Box>
+      )}
+
+      {/* Traits info */}
+      {(node.requiredTraits?.length > 0 ||
+        Object.keys(node.favoredTraits || {}).length > 0 ||
+        Object.keys(node.negativeTraits || {}).length > 0) && (
+        <Box fontSize="9px" mt={0.5} style={{ borderTop: '1px solid #444', paddingTop: '4px' }}>
+          {node.requiredTraits?.length > 0 && (
+            <Box color="orange">
+              Required: {node.requiredTraits.join(', ')}
+            </Box>
+          )}
+          {Object.keys(node.favoredTraits || {}).length > 0 && (
+            <Box color="green">
+              Bonus: {Object.keys(node.favoredTraits).join(', ')}
+            </Box>
+          )}
+          {Object.keys(node.negativeTraits || {}).length > 0 && (
+            <Box color="red">
+              Penalty: {Object.keys(node.negativeTraits).join(', ')}
+            </Box>
+          )}
         </Box>
       )}
     </Box>
   );
 };
 
-// Samples Tab - Shows stored body parts
+// Samples Tab
 const SamplesTab = (props, context) => {
   const { act } = useBackend(context);
   const { partsList, selectedResearch, currentResearch, storedParts } = props;
@@ -215,14 +339,19 @@ const SamplesTab = (props, context) => {
       {selectedResearch ? (
         <Box mb={2} p={1} backgroundColor="rgba(68, 136, 255, 0.2)" style={{ borderRadius: '4px' }}>
           <Box bold>Current Target: {currentResearch?.name || 'Unknown'}</Box>
-          {currentResearch?.requiredTraits && currentResearch.requiredTraits.length > 0 && (
+          {currentResearch?.requiredTraits?.length > 0 && (
             <Box fontSize="11px" color="orange">
               Required traits: {currentResearch.requiredTraits.join(', ')}
             </Box>
           )}
-          {currentResearch?.favoredTraits && Object.keys(currentResearch.favoredTraits).length > 0 && (
+          {Object.keys(currentResearch?.favoredTraits || {}).length > 0 && (
             <Box fontSize="11px" color="green">
               Bonus traits: {Object.keys(currentResearch.favoredTraits).join(', ')}
+            </Box>
+          )}
+          {Object.keys(currentResearch?.negativeTraits || {}).length > 0 && (
+            <Box fontSize="11px" color="red">
+              Penalty traits: {Object.keys(currentResearch.negativeTraits).join(', ')}
             </Box>
           )}
           <Button
@@ -235,51 +364,45 @@ const SamplesTab = (props, context) => {
         </Box>
       ) : (
         <Box mb={2} color="label" italic>
-          Select a research project from the Research Tree tab to begin processing samples.
+          Select a research project from the Research Tree tab first.
         </Box>
       )}
       {partsList.length === 0 ? (
         <Box color="label" italic>
-          No samples stored. Use the R-Corp Harvester to mark enemies, then kill them to collect samples.
+          No samples stored. Use the R-Corp Harvester to collect samples from enemies.
         </Box>
       ) : (
-        <Stack vertical>
-          {partsList.map((part, index) => (
-            <Stack.Item key={index}>
-              <Box
-                p={1}
-                mb={1}
-                backgroundColor="rgba(0, 0, 0, 0.3)"
-                style={{ borderRadius: '4px' }}>
-                <Box bold>{part.name}</Box>
-                <Box fontSize="11px" color="label">
-                  Source: {part.source}
-                </Box>
-                <Box fontSize="11px" color="label">
-                  Base Value: {part.baseValue} points
-                </Box>
-                {part.traits && part.traits.length > 0 && (
-                  <Box fontSize="11px" mt={1}>
-                    Traits: {part.traits.join(', ')}
-                  </Box>
-                )}
+        partsList.map((part, index) => (
+          <Box
+            key={index}
+            p={1}
+            mb={1}
+            backgroundColor="rgba(0, 0, 0, 0.3)"
+            style={{ borderRadius: '4px' }}>
+            <Box bold>{part.name}</Box>
+            <Box fontSize="11px" color="label">
+              Source: {part.source} | Base Value: {part.baseValue} points
+            </Box>
+            {part.traits?.length > 0 && (
+              <Box fontSize="11px">
+                Traits: {part.traits.join(', ')}
               </Box>
-            </Stack.Item>
-          ))}
-        </Stack>
+            )}
+          </Box>
+        ))
       )}
     </Section>
   );
 };
 
-// Progress Tab - Shows current research progress
+// Progress Tab
 const ProgressTab = (props, context) => {
   const { act } = useBackend(context);
   const { currentResearch, researchProgress, selectedResearch } = props;
 
   if (!selectedResearch || !currentResearch) {
     return (
-      <Section fill title="Research Progress">
+      <Section fill title="Current Research">
         <Box color="label" italic>
           No research selected. Choose a research project from the Research Tree tab.
         </Box>
@@ -293,7 +416,7 @@ const ProgressTab = (props, context) => {
     : 0;
 
   return (
-    <Section fill title="Research Progress">
+    <Section fill title="Current Research">
       <LabeledList>
         <LabeledList.Item label="Research">
           {currentResearch.name}
@@ -301,8 +424,13 @@ const ProgressTab = (props, context) => {
         <LabeledList.Item label="Description">
           {currentResearch.desc}
         </LabeledList.Item>
+        <LabeledList.Item label="Branch">
+          <Box color={BRANCH_COLORS[currentResearch.branch]}>
+            {BRANCH_LABELS[currentResearch.branch]}
+          </Box>
+        </LabeledList.Item>
         <LabeledList.Item label="Tier">
-          {currentResearch.tier}
+          {currentResearch.tier === 0 ? 'ROOT' : currentResearch.tier}
         </LabeledList.Item>
         <LabeledList.Item label="Progress">
           <ProgressBar
@@ -312,14 +440,12 @@ const ProgressTab = (props, context) => {
             {progress}/{currentResearch.cost} points
           </ProgressBar>
         </LabeledList.Item>
-        {currentResearch.requiredTraits && currentResearch.requiredTraits.length > 0 && (
+        {currentResearch.requiredTraits?.length > 0 && (
           <LabeledList.Item label="Required Traits">
-            <Box color="orange">
-              {currentResearch.requiredTraits.join(', ')}
-            </Box>
+            <Box color="orange">{currentResearch.requiredTraits.join(', ')}</Box>
           </LabeledList.Item>
         )}
-        {currentResearch.favoredTraits && Object.keys(currentResearch.favoredTraits).length > 0 && (
+        {Object.keys(currentResearch.favoredTraits || {}).length > 0 && (
           <LabeledList.Item label="Favored Traits">
             <Box color="green">
               {Object.keys(currentResearch.favoredTraits).map(trait => (
@@ -330,9 +456,9 @@ const ProgressTab = (props, context) => {
             </Box>
           </LabeledList.Item>
         )}
-        {currentResearch.negativeTraits && Object.keys(currentResearch.negativeTraits).length > 0 && (
+        {Object.keys(currentResearch.negativeTraits || {}).length > 0 && (
           <LabeledList.Item label="Negative Traits">
-            <Box color="bad">
+            <Box color="red">
               {Object.keys(currentResearch.negativeTraits).map(trait => (
                 <Box key={trait}>
                   {trait}: {Math.round(currentResearch.negativeTraits[trait] * 100)}%
@@ -341,7 +467,7 @@ const ProgressTab = (props, context) => {
             </Box>
           </LabeledList.Item>
         )}
-        {currentResearch.prerequisites && currentResearch.prerequisites.length > 0 && (
+        {currentResearch.prerequisites?.length > 0 && (
           <LabeledList.Item label="Prerequisites">
             {currentResearch.prerequisites.join(', ')}
           </LabeledList.Item>
