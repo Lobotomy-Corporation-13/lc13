@@ -3573,6 +3573,8 @@
 #include "code\modules\rce\pouches.dm"
 #include "code\modules\rce\rce_areas.dm"
 #include "code\modules\rce\rce_landmarks.dm"
+#include "code\modules\rce\rce_leaderboard.dm"
+#include "code\modules\rce\rce_leaderboard_console.dm"
 #include "code\modules\rce\rce_materials.dm"
 #include "code\modules\rce\rce_structures.dm"
 #include "code\modules\rce\spawners.dm"

@@ -22,3 +22,10 @@
 #define GATEWAY_TYPE_AIR 1
 #define GATEWAY_TYPE_WALL 2
 #define GATEWAY_TYPE_GATEWAY 3
+
+// RCE Leaderboard - Round end conditions
+#define RCE_END_UNKNOWN "unknown"
+#define RCE_END_SHUTTLE_ESCAPE "shuttle_escape"
+#define RCE_END_ALL_DIED "all_died"
+#define RCE_END_ALL_DIED_LASTWAVE "all_died_lastwave"
+#define RCE_END_HEART_KILLED "heart_killed"

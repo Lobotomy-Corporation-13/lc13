@@ -126,3 +126,7 @@
 	smaterial-=scost
 	omaterial-=ocost
 	bankeditems+=itemnumber
+
+	// Record production for leaderboard
+	if(SSgamedirector.rce_leaderboard)
+		SSgamedirector.rce_leaderboard.RecordFactoryProduction(type, itemnumber, gcost, rcost, bcost, pcost, ocost, scost)

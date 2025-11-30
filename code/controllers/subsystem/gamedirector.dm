@@ -65,6 +65,9 @@ SUBSYSTEM_DEF(gamedirector)
 	var/list/raid_tiers = list()
 	var/list/seed_types = list()
 
+	// RCE Leaderboard tracking
+	var/datum/rce_leaderboard/rce_leaderboard
+
 /datum/controller/subsystem/gamedirector/Initialize()
 	. = ..()
 	if(SSmaptype.maptype != "rcorp_factory")
@@ -79,6 +82,12 @@ SUBSYSTEM_DEF(gamedirector)
 		next_active_seed_time = world.time + 35 MINUTES
 		next_passive_seed_time = world.time + passive_seed_cooldown
 		next_corrupter_time = world.time + rand(corrupter_cooldown_min, corrupter_cooldown_max)
+		// Initialize leaderboard
+		rce_leaderboard = new /datum/rce_leaderboard()
+		// Register for player spawn signals
+		RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_SPAWN, PROC_REF(OnPlayerSpawned))
+		// Register for player death signals
+		RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnPlayerDeath))
 
 /datum/controller/subsystem/gamedirector/fire(resumed = FALSE)
 	if(fightstage != PHASE_FIGHT && SSticker.current_state != GAME_STATE_FINISHED && gamestage < PHASE_NOT_RCE)
@@ -227,10 +236,47 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/RegisterMob(mob/living/simple_animal/hostile/M)
 	controlled_mobs.Add(M)
+	// Register for death tracking for leaderboard
+	if(rce_leaderboard)
+		RegisterSignal(M, COMSIG_LIVING_DEATH, PROC_REF(OnControlledMobDeath))
+
+/// Called when a controlled mob dies - records kill for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnControlledMobDeath(mob/living/simple_animal/hostile/M)
+	SIGNAL_HANDLER
+	if(rce_leaderboard)
+		rce_leaderboard.RecordMobKill(M.type)
+
+/// Called when a player spawns into a job - records participation for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerSpawned(datum/source, mob/living/spawned_mob, client/player_client)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !ishuman(spawned_mob))
+		return
+	var/mob/living/carbon/human/H = spawned_mob
+	if(!H.mind || !H.ckey)
+		return
+	var/job_title = "Unknown"
+	var/datum/job/user_job = H.mind.assigned_role
+	if(user_job)
+		job_title = user_job.title
+	rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title)
+
+/// Called when any mob dies - tracks player deaths for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerDeath(datum/source, mob/living/died_mob, gibbed)
+	SIGNAL_HANDLER
+	if(!rce_leaderboard || !ishuman(died_mob))
+		return
+	var/mob/living/carbon/human/H = died_mob
+	if(!H.ckey)
+		return
+	rce_leaderboard.RecordPlayerDeathCount(H.ckey, H.real_name)
 
 /datum/controller/subsystem/gamedirector/proc/AnnounceVictory()
 	var/text = "The X-Corp Heart has been destroyed! Victory achieved."
 	show_global_blurb(60 SECONDS, text, 1 SECONDS, 2 SECONDS, "gold", "white")
+	// Mark heart killed for leaderboard
+	if(rce_leaderboard)
+		rce_leaderboard.heart_killed = TRUE
+		rce_leaderboard.end_condition = RCE_END_HEART_KILLED
 	SSticker.force_ending = 1
 
 /datum/controller/subsystem/gamedirector/proc/RegisterPortal(obj/structure/rce_portal/portal)
