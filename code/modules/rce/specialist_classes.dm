@@ -1,347 +1,187 @@
-// RCE Specialist Class Equipment
-// Unlocked through the research system
-// Three specialist branches: Hellfire (fire), Venom (toxic), Storm (electric)
+// R-Corp Specialist Class System
+// Implants that transform Rooks into specialized combat roles
 
-// ============================================
-// HELLFIRE SPECIALIST EQUIPMENT (Fire/Pyro)
-// ============================================
+// Base specialist implant
+/obj/item/organ/cyberimp/rce_specialist
+	name = "R-Corp specialist implant"
+	desc = "A military-grade neural implant that reconfigures the user's combat capabilities."
+	icon_state = "cyber_implant"
+	slot = ORGAN_SLOT_BRAIN_ANTISTUN
+	var/class_name = "Specialist"
+	var/list/attribute_modifiers = list()
+	var/list/granted_traits = list()
+	var/specialist_type = null
+	var/datum/status_effect/specialist_class/class_effect
 
-// Tier 1: Thermite Sprayer
-/obj/item/ego_weapon/thermite_sprayer
-	name = "thermite sprayer"
-	desc = "A handheld incendiary weapon that sprays burning thermite at close range."
-	special = "Applies burn stacks to targets hit."
-	icon = 'icons/obj/flamethrower.dmi'
-	icon_state = "flamethrower1"
-	inhand_icon_state = "flamethrower_1"
-	force = 15
-	damtype = RED_DAMAGE
-	attack_verb_continuous = list("scorches", "burns", "sears")
-	attack_verb_simple = list("scorch", "burn", "sear")
-
-/obj/item/ego_weapon/thermite_sprayer/afterattack(atom/target, mob/user, proximity)
+/obj/item/organ/cyberimp/rce_specialist/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
-	if(proximity && isliving(target))
-		var/mob/living/L = target
-		L.apply_lc_burn(2)
+	if(!ishuman(M))
+		return
 
-// Tier 1: Inferno Wall
-/obj/item/ego_weapon/inferno_wall
-	name = "inferno wall projector"
-	desc = "Creates a temporary wall of fire that blocks and damages enemies."
-	special = "Use on ground to create a fire wall."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "yourmorning"
-	w_class = WEIGHT_CLASS_NORMAL
+	var/mob/living/carbon/human/H = M
 
-/obj/item/ego_weapon/inferno_wall/afterattack(atom/target, mob/user, proximity)
+	// Check if user is a Rook
+	if(!istype(H.mind?.assigned_role, /datum/job/rook))
+		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook personnel."))
+		Remove(H)
+		return
+
+	// Apply class transformation
+	ApplyClassTransformation(H)
+
+/obj/item/organ/cyberimp/rce_specialist/Remove(mob/living/carbon/M, special)
+	if(ishuman(M))
+		RemoveClassTransformation(M)
+	return ..()
+
+/obj/item/organ/cyberimp/rce_specialist/proc/ApplyClassTransformation(mob/living/carbon/human/H)
+	// Apply attribute modifiers
+	for(var/attribute in attribute_modifiers)
+		H.adjust_attribute_bonus(attribute, attribute_modifiers[attribute])
+
+	// Grant traits
+	for(var/trait in granted_traits)
+		ADD_TRAIT(H, trait, ORGAN_TRAIT)
+
+	// Apply status effect for visual/mechanical tracking
+	class_effect = H.apply_status_effect(/datum/status_effect/specialist_class, specialist_type)
+
+	// Lock out normal weapons
+	ADD_TRAIT(H, TRAIT_NOGUNS, ORGAN_TRAIT)
+
+	to_chat(H, span_notice("You have been transformed into a [class_name]!"))
+	to_chat(H, span_nicegreen("You can now use [class_name] specialist weapons and equipment."))
+	H.playsound_local(H, 'sound/magic/lightning_chargeup.ogg', 50, TRUE)
+
+/obj/item/organ/cyberimp/rce_specialist/proc/RemoveClassTransformation(mob/living/carbon/human/H)
+	// Remove attribute modifiers
+	for(var/attribute in attribute_modifiers)
+		H.adjust_attribute_bonus(attribute, -attribute_modifiers[attribute])
+
+	// Remove traits
+	for(var/trait in granted_traits)
+		REMOVE_TRAIT(H, trait, ORGAN_TRAIT)
+
+	// Remove status effect
+	if(class_effect)
+		H.remove_status_effect(class_effect)
+
+	// Restore weapon usage
+	REMOVE_TRAIT(H, TRAIT_NOGUNS, ORGAN_TRAIT)
+
+	to_chat(H, span_notice("The [class_name] transformation has ended."))
+
+// HELLFIRE ROOSTER IMPLANT
+/obj/item/organ/cyberimp/rce_specialist/hellfire
+	name = "Hellfire Rooster combat implant"
+	desc = "Transforms the user into a Hellfire Rooster, granting immunity to fire and enhanced pyrotechnic capabilities."
+	class_name = "Hellfire Rooster"
+	specialist_type = SPECIALIST_HELLFIRE
+	attribute_modifiers = list(
+		FORTITUDE_ATTRIBUTE = 20,
+		PRUDENCE_ATTRIBUTE = -20,
+		TEMPERANCE_ATTRIBUTE = 0,
+		JUSTICE_ATTRIBUTE = 40
+	)
+	granted_traits = list(
+		TRAIT_RESISTHEAT,
+		TRAIT_NOFIRE
+	)
+	// No special actions - class just enables weapon usage
+
+// VENOM RATTLESNAKE IMPLANT
+/obj/item/organ/cyberimp/rce_specialist/venom
+	name = "Venom Rattlesnake combat implant"
+	desc = "Transforms the user into a Venom Rattlesnake, specializing in territorial control and toxic warfare."
+	class_name = "Venom Rattlesnake"
+	specialist_type = SPECIALIST_VENOM
+	attribute_modifiers = list(
+		FORTITUDE_ATTRIBUTE = 0,
+		PRUDENCE_ATTRIBUTE = 60,
+		TEMPERANCE_ATTRIBUTE = 0,
+		JUSTICE_ATTRIBUTE = -20
+	)
+
+// STORM RAM IMPLANT
+/obj/item/organ/cyberimp/rce_specialist/storm
+	name = "Storm Ram combat implant"
+	desc = "Transforms the user into a Storm Ram, granting enhanced durability and electromagnetic assault capabilities."
+	class_name = "Storm Ram"
+	specialist_type = SPECIALIST_STORM
+	attribute_modifiers = list(
+		FORTITUDE_ATTRIBUTE = 100,
+		PRUDENCE_ATTRIBUTE = -20,
+		TEMPERANCE_ATTRIBUTE = 0,
+		JUSTICE_ATTRIBUTE = 40
+	)
+	granted_traits = list(
+		TRAIT_PUSHIMMUNE,
+		TRAIT_SHOCKIMMUNE,
+		TRAIT_NOGUNS
+	)
+
+// STATUS EFFECT FOR TRACKING
+/datum/status_effect/specialist_class
+	id = "specialist_class"
+	duration = -1
+	alert_type = null
+	var/specialist_type
+
+/datum/status_effect/specialist_class/on_creation(mob/living/new_owner, specialist)
 	. = ..()
-	if(isturf(target) && !proximity)
-		if(get_dist(user, target) > 4)
-			to_chat(user, span_warning("Too far away!"))
-			return
-		new /obj/effect/turf_fire(target, 10 SECONDS)
-		to_chat(user, span_notice("You create a fire wall."))
-		playsound(target, 'sound/effects/burn.ogg', 50, TRUE)
+	specialist_type = specialist
+	UpdateIcon()
 
-// Tier 2: Inferno Rush
-/obj/item/ego_weapon/inferno_rush
-	name = "inferno rush gauntlets"
-	desc = "Flaming gauntlets that set targets ablaze with each strike."
-	special = "Melee attacks apply burn stacks and ignite targets."
-	icon = 'icons/obj/clothing/gloves.dmi'
-	icon_state = "rainbow"
-	force = 20
-	damtype = RED_DAMAGE
-	attack_verb_continuous = list("incinerates", "scorches", "burns")
-	attack_verb_simple = list("incinerate", "scorch", "burn")
+/datum/status_effect/specialist_class/proc/UpdateIcon()
+	switch(specialist_type)
+		if(SPECIALIST_HELLFIRE)
+			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "fire_glow"))
+		if(SPECIALIST_VENOM)
+			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_aura"))
+		if(SPECIALIST_STORM)
+			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "electricity"))
 
-/obj/item/ego_weapon/inferno_rush/afterattack(atom/target, mob/user, proximity)
+// Persistent fire effect
+/obj/effect/persistent_fire
+	name = "raging flames"
+	desc = "Intense flames that won't go out!"
+	icon = 'icons/effects/fire.dmi'
+	icon_state = "3"
+	anchored = TRUE
+	density = FALSE
+	opacity = FALSE
+	var/damage_per_second = 20
+	var/duration
+
+/obj/effect/persistent_fire/Initialize(mapload, fire_duration = 30 SECONDS)
 	. = ..()
-	if(proximity && isliving(target))
-		var/mob/living/L = target
-		L.apply_lc_burn(3)
+	duration = fire_duration
+	START_PROCESSING(SSobj, src)
+	QDEL_IN(src, duration)
 
-// Tier 2: Pyroclastic Gauntlets
-/obj/item/ego_weapon/pyroclastic_gauntlets
-	name = "pyroclastic gauntlets"
-	desc = "Heavy gauntlets that unleash volcanic fury in melee combat."
-	special = "Strong melee attacks with area fire effect."
-	icon = 'icons/obj/clothing/gloves.dmi'
-	icon_state = "captain"
-	force = 25
-	damtype = RED_DAMAGE
-	attack_verb_continuous = list("smashes", "burns", "crushes")
-	attack_verb_simple = list("smash", "burn", "crush")
+/obj/effect/persistent_fire/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	return ..()
 
-// Tier 2: Napalm Launcher
-/obj/item/ego_weapon/ranged/napalm_launcher
-	name = "napalm launcher"
-	desc = "A modified launcher that fires sticky napalm canisters."
-	special = "Creates pools of burning napalm on impact."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "flashbang"
-	projectile_path = /obj/projectile/ego_bullet/napalm
-	fire_sound = 'sound/weapons/blastcannon.ogg'
+/obj/effect/persistent_fire/process()
+	for(var/mob/living/L in get_turf(src))
+		// Check for Hellfire immunity
+		if(L.has_status_effect(/datum/status_effect/specialist_class))
+			var/datum/status_effect/specialist_class/SC = L.has_status_effect(/datum/status_effect/specialist_class)
+			if(SC.specialist_type == SPECIALIST_HELLFIRE)
+				continue // Immune to own flames
 
-/obj/projectile/ego_bullet/napalm
-	name = "napalm canister"
-	icon_state = "grenade"
-	damage = 15
-	damage_type = RED_DAMAGE
-	speed = 1.5
-	range = 7
+		L.deal_damage(damage_per_second, FIRE)
+		L.adjust_fire_stacks(1)
+		L.IgniteMob()
 
-/obj/projectile/ego_bullet/napalm/on_hit(atom/target, blocked = FALSE)
-	. = ..()
-	var/turf/T = get_turf(target)
-	if(T)
-		new /obj/effect/turf_fire(T, 15 SECONDS)
-	if(isliving(target))
-		var/mob/living/L = target
-		L.apply_lc_burn(5)
+	// Chance to spread
+	if(prob(10))
+		SpreadFire()
 
-// Tier 3: Auto Flamethrower
-/obj/item/auto_flamethrower
-	name = "automated flamethrower turret"
-	desc = "A deployable turret that automatically targets and burns nearby enemies."
-	icon = 'icons/obj/machines/research.dmi'
-	icon_state = "destructive_analyzer"
-	w_class = WEIGHT_CLASS_BULKY
-
-// Tier 3: Hellfire Armor
-/obj/item/clothing/suit/armor/ego_gear/hellfire
-	name = "hellfire suit"
-	desc = "Specialized armor that grants fire immunity and enhances pyrotechnic damage."
-	icon_state = "intrepid_coat"
-	armor = list(MELEE = 30, BULLET = 25, LASER = 40, ENERGY = 40, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 50)
-
-/obj/item/clothing/head/ego_hat/helmet/hellfire
-	name = "hellfire helmet"
-	desc = "A heat-resistant helmet that completes the hellfire specialist set."
-	icon_state = "intrepid_helmet"
-	armor = list(MELEE = 30, BULLET = 25, LASER = 40, ENERGY = 40, BOMB = 50, BIO = 100, RAD = 100, FIRE = 100, ACID = 50)
-
-// ============================================
-// VENOM SPECIALIST EQUIPMENT (Toxic/Acid)
-// ============================================
-
-// Tier 1: Acid Sprayer
-/obj/item/ego_weapon/ranged/acid_sprayer
-	name = "acid sprayer"
-	desc = "A pressurized sprayer that launches corrosive acid."
-	special = "Applies corrosive damage over time."
-	icon = 'icons/obj/flamethrower.dmi'
-	icon_state = "flamethrower1"
-	projectile_path = /obj/projectile/ego_bullet/acid
-	fire_sound = 'sound/effects/spray.ogg'
-
-/obj/projectile/ego_bullet/acid
-	name = "acid glob"
-	icon_state = "toxin"
-	damage = 10
-	damage_type = PALE_DAMAGE
-	speed = 1.2
-	range = 6
-
-// Tier 2: Venom Launcher
-/obj/item/ego_weapon/ranged/venom_launcher
-	name = "venom launcher"
-	desc = "Launches concentrated venom grenades that create toxic clouds."
-	special = "Creates lingering toxic zones."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "chem"
-	projectile_path = /obj/projectile/ego_bullet/venom
-	fire_sound = 'sound/weapons/blastcannon.ogg'
-
-/obj/projectile/ego_bullet/venom
-	name = "venom grenade"
-	icon_state = "grenade"
-	damage = 20
-	damage_type = PALE_DAMAGE
-	speed = 1.5
-	range = 8
-
-// Tier 2: Decay Cloud Generator
-/obj/item/decay_cloud_generator
-	name = "decay cloud generator"
-	desc = "Creates a cloud of decaying toxins that damages all in the area."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "chem"
-	w_class = WEIGHT_CLASS_NORMAL
-
-// Tier 2: Venom Spike Launcher
-/obj/item/venom_spike_launcher
-	name = "venom spike launcher"
-	desc = "Fires toxic spikes that embed in targets and continue dealing damage."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "yourmorning"
-	w_class = WEIGHT_CLASS_NORMAL
-
-// Tier 3: Toxic Bombarder
-/obj/item/ego_weapon/ranged/toxic_bombarder
-	name = "toxic bombarder"
-	desc = "A heavy launcher that blankets areas with corrosive toxins."
-	special = "Massive area denial weapon."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "syndiemini"
-	projectile_path = /obj/projectile/ego_bullet/toxic_bomb
-	fire_sound = 'sound/weapons/blastcannon.ogg'
-
-/obj/projectile/ego_bullet/toxic_bomb
-	name = "toxic bomb"
-	icon_state = "grenade"
-	damage = 30
-	damage_type = PALE_DAMAGE
-	speed = 2
-	range = 10
-
-// Tier 3: Plague Scythe
-/obj/item/ego_weapon/plague_scythe
-	name = "plague scythe"
-	desc = "A wicked scythe dripping with toxic plague that spreads to nearby enemies."
-	special = "Melee strikes spread toxic plague."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "yourmorning"
-	force = 30
-	damtype = PALE_DAMAGE
-	attack_verb_continuous = list("slashes", "reaps", "infects")
-	attack_verb_simple = list("slash", "reap", "infect")
-
-// Tier 3: Miasma Field Generator
-/obj/item/miasma_field_generator
-	name = "miasma field generator"
-	desc = "Deploys a portable toxic miasma that damages enemies within range."
-	icon = 'icons/obj/machines/research.dmi'
-	icon_state = "dvd"
-	w_class = WEIGHT_CLASS_BULKY
-
-// Tier 3: Acid Tank Backpack
-/obj/item/acid_tank_backpack
-	name = "acid tank backpack"
-	desc = "A specialized backpack that enhances toxic weapons and provides acid immunity."
-	icon = 'icons/obj/tank.dmi'
-	icon_state = "plasmaman_tank"
-	slot_flags = ITEM_SLOT_BACK
-	w_class = WEIGHT_CLASS_BULKY
-
-// Tier 3: Toxic Mine
-/obj/item/toxic_mine
-	name = "toxic mine kit"
-	desc = "Deployable mines that release toxic gas when triggered."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "dvmine"
-	w_class = WEIGHT_CLASS_SMALL
-
-// Tier 3: Venom Trap Dispenser
-/obj/item/venom_trap_dispenser
-	name = "venom trap dispenser"
-	desc = "Creates sticky venom traps that slow and poison enemies."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "yourmorning"
-	w_class = WEIGHT_CLASS_NORMAL
-
-// ============================================
-// STORM SPECIALIST EQUIPMENT (Electric)
-// ============================================
-
-// Tier 1: Thunder Gauntlets
-/obj/item/ego_weapon/thunder_gauntlets
-	name = "thunder gauntlets"
-	desc = "Electrified gauntlets that shock targets on impact."
-	special = "Melee strikes have a chance to stun."
-	icon = 'icons/obj/clothing/gloves.dmi'
-	icon_state = "intrepid"
-	force = 18
-	damtype = WHITE_DAMAGE
-	attack_verb_continuous = list("shocks", "electrocutes", "zaps")
-	attack_verb_simple = list("shock", "electrocute", "zap")
-
-// Tier 1: Storm Dash
-/obj/item/storm_dash
-	name = "storm dash module"
-	desc = "Allows the user to dash forward while leaving an electric trail."
-	icon = 'icons/obj/module.dmi'
-	icon_state = "intrepid"
-	w_class = WEIGHT_CLASS_SMALL
-
-// Tier 1: Static Burst Generator
-/obj/item/static_burst_generator
-	name = "static burst generator"
-	desc = "Releases a burst of static electricity that damages and staggers nearby enemies."
-	icon = 'icons/obj/machines/research.dmi'
-	icon_state = "dvd"
-	w_class = WEIGHT_CLASS_NORMAL
-
-// Tier 2: Lightning Ram
-/obj/item/ego_weapon/lightning_ram
-	name = "lightning ram"
-	desc = "A powerful melee weapon that channels lightning through targets."
-	special = "Charged strikes chain to nearby enemies."
-	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "yourmorning"
-	force = 28
-	damtype = WHITE_DAMAGE
-	attack_verb_continuous = list("smashes", "thunders", "shocks")
-	attack_verb_simple = list("smash", "thunder", "shock")
-
-// Tier 2: Thunderclap Gauntlets
-/obj/item/ego_weapon/thunderclap_gauntlets
-	name = "thunderclap gauntlets"
-	desc = "Enhanced gauntlets that release thunderclaps on impact."
-	special = "Attacks create shockwaves that knock back enemies."
-	icon = 'icons/obj/clothing/gloves.dmi'
-	icon_state = "military"
-	force = 25
-	damtype = WHITE_DAMAGE
-	attack_verb_continuous = list("thunders", "claps", "booms")
-	attack_verb_simple = list("thunder", "clap", "boom")
-
-// Tier 2: Storm Surge Barrier
-/obj/item/storm_surge_barrier
-	name = "storm surge barrier"
-	desc = "Creates an electric barrier that damages enemies who pass through."
-	icon = 'icons/obj/machines/research.dmi'
-	icon_state = "dvd"
-	w_class = WEIGHT_CLASS_NORMAL
-
-// Tier 3: Railgun Charge
-/obj/item/ego_weapon/railgun_charge
-	name = "railgun charge"
-	desc = "A devastating electromagnetic weapon that fires supercharged projectiles."
-	special = "Piercing shots that deal massive damage."
-	icon = 'icons/obj/guns/energy.dmi'
-	icon_state = "decloner"
-	force = 35
-	damtype = WHITE_DAMAGE
-
-// Tier 3: Thunderstorm Slam
-/obj/item/thunderstorm_slam
-	name = "thunderstorm slam boots"
-	desc = "Specialized boots that create lightning strikes when the user jumps."
-	icon = 'icons/obj/clothing/shoes.dmi'
-	icon_state = "intrepid"
-	slot_flags = ITEM_SLOT_FEET
-	w_class = WEIGHT_CLASS_SMALL
-
-// Tier 3: Capacitor Pack
-/obj/item/capacitor_pack
-	name = "capacitor pack"
-	desc = "A backpack that stores and amplifies electrical energy for storm weapons."
-	icon = 'icons/obj/tank.dmi'
-	icon_state = "plasmaman_tank"
-	slot_flags = ITEM_SLOT_BACK
-	w_class = WEIGHT_CLASS_BULKY
-
-// Tier 3: EMP Grenade
-/obj/item/grenade/r_corp/emp
-	name = "R-Corp EMP grenade"
-	desc = "A powerful electromagnetic pulse grenade that disables electronics."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "emp"
-	var/emp_range = 4
-
-/obj/item/grenade/r_corp/emp/detonate(mob/living/lanced_by)
-	. = ..()
-	empulse(src, emp_range, emp_range * 2)
-	qdel(src)
+/obj/effect/persistent_fire/proc/SpreadFire()
+	for(var/turf/T in orange(1, src))
+		if(locate(/obj/effect/persistent_fire) in T)
+			continue
+		if(prob(30))
+			new /obj/effect/persistent_fire(T, duration / 2)

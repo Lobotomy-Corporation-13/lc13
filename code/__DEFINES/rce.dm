@@ -29,3 +29,8 @@
 #define RCE_END_ALL_DIED "all_died"
 #define RCE_END_ALL_DIED_LASTWAVE "all_died_lastwave"
 #define RCE_END_HEART_KILLED "heart_killed"
+
+// Specialist class types
+#define SPECIALIST_HELLFIRE "hellfire"
+#define SPECIALIST_VENOM "venom"
+#define SPECIALIST_STORM "storm"

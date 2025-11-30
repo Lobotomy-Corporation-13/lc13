@@ -653,6 +653,80 @@
 	thunderstorm_artillery.required_traits = list(TRAIT_ELITE, TRAIT_ENERGIZED, TRAIT_VOLATILE)
 	GLOB.rce_research_nodes[thunderstorm_artillery.id] = thunderstorm_artillery
 
+	// SPECIALIST CLASS KITS - Combines implant with resource tank
+
+	// Hellfire Rooster Specialist Kit
+	var/datum/rce_research_node/hellfire_specialist = new
+	hellfire_specialist.id = "hellfire_specialist"
+	hellfire_specialist.name = "Hellfire Rooster Specialist Kit"
+	hellfire_specialist.desc = "Unlocks the Hellfire Rooster combat implant and fuel tank backpack. Transforms Rooks into fire-immune pyrotechnic specialists."
+	hellfire_specialist.tier = RCE_RESEARCH_TIER_2
+	hellfire_specialist.cost = 200
+	hellfire_specialist.branch = "hellfire"
+	hellfire_specialist.prerequisites = list("fuel_tank", "hellfire_armor")
+	hellfire_specialist.unlocked_path = /obj/item/portable_factory/hellfire_specialist_kit
+	hellfire_specialist.favored_traits = list(
+		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+		TRAIT_NEURAL = TRAIT_BONUS_MAJOR,
+		TRAIT_ORGANIC = TRAIT_BONUS_MODERATE,
+		TRAIT_BERSERKER = TRAIT_BONUS_MINOR
+	)
+	hellfire_specialist.negative_traits = list(
+		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
+		TRAIT_MECHANICAL = TRAIT_PENALTY_MODERATE,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MINOR
+	)
+	hellfire_specialist.required_traits = list(TRAIT_ELITE, TRAIT_NEURAL, TRAIT_ORGANIC)
+	GLOB.rce_research_nodes[hellfire_specialist.id] = hellfire_specialist
+
+	// Venom Rattlesnake Specialist Kit
+	var/datum/rce_research_node/venom_specialist = new
+	venom_specialist.id = "venom_specialist"
+	venom_specialist.name = "Venom Rattlesnake Specialist Kit"
+	venom_specialist.desc = "Unlocks the Venom Rattlesnake combat implant and acid tank backpack. Transforms Rooks into territorial toxic warfare specialists."
+	venom_specialist.tier = RCE_RESEARCH_TIER_2
+	venom_specialist.cost = 200
+	venom_specialist.branch = "venom"
+	venom_specialist.prerequisites = list("acid_tank", "acid_sprayer")
+	venom_specialist.unlocked_path = /obj/item/portable_factory/venom_specialist_kit
+	venom_specialist.favored_traits = list(
+		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+		TRAIT_NEURAL = TRAIT_BONUS_MAJOR,
+		TRAIT_TOXIC = TRAIT_BONUS_MODERATE,
+		TRAIT_CORRUPTED = TRAIT_BONUS_MINOR
+	)
+	venom_specialist.negative_traits = list(
+		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
+		TRAIT_MECHANICAL = TRAIT_PENALTY_MODERATE,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MINOR
+	)
+	venom_specialist.required_traits = list(TRAIT_ELITE, TRAIT_NEURAL, TRAIT_TOXIC)
+	GLOB.rce_research_nodes[venom_specialist.id] = venom_specialist
+
+	// Storm Ram Specialist Kit
+	var/datum/rce_research_node/storm_specialist = new
+	storm_specialist.id = "storm_specialist"
+	storm_specialist.name = "Storm Ram Specialist Kit"
+	storm_specialist.desc = "Unlocks the Storm Ram combat implant and capacitor pack. Transforms Rooks into shock-immune electromagnetic assault specialists."
+	storm_specialist.tier = RCE_RESEARCH_TIER_2
+	storm_specialist.cost = 200
+	storm_specialist.branch = "storm"
+	storm_specialist.prerequisites = list("capacitor_pack", "thunder_gauntlets")
+	storm_specialist.unlocked_path = /obj/item/portable_factory/storm_specialist_kit
+	storm_specialist.favored_traits = list(
+		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+		TRAIT_NEURAL = TRAIT_BONUS_MAJOR,
+		TRAIT_ENERGIZED = TRAIT_BONUS_MODERATE,
+		TRAIT_BRUTAL = TRAIT_BONUS_MINOR
+	)
+	storm_specialist.negative_traits = list(
+		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
+		TRAIT_ORGANIC = TRAIT_PENALTY_MODERATE,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MINOR
+	)
+	storm_specialist.required_traits = list(TRAIT_ELITE, TRAIT_NEURAL, TRAIT_ENERGIZED)
+	GLOB.rce_research_nodes[storm_specialist.id] = storm_specialist
+
 	// Debug: Log all initialized nodes
 	world.log << "RCE Research Tree initialized with the following nodes:"
 	for(var/node_id in GLOB.rce_research_nodes)
@@ -778,3 +852,65 @@
 	item = /obj/item/grenade/r_corp/emp
 	rcost = 1
 	gcost = 1
+
+// SPECIALIST KIT FACTORIES
+
+/obj/item/portable_factory/hellfire_specialist_kit
+	name = "Hellfire Rooster specialist kit factory module"
+	desc = "Deploys a factory that produces Hellfire Rooster specialist kits containing the combat implant and fuel tank."
+	factory_path = /obj/structure/rcorp_factory/hellfire_specialist_kit
+
+/obj/structure/rcorp_factory/hellfire_specialist_kit
+	name = "Hellfire specialist kit factory"
+	desc = "Produces Hellfire Rooster specialist kits."
+	item = /obj/item/storage/box/hellfire_specialist_kit
+	rcost = 3
+	gcost = 3
+
+/obj/item/storage/box/hellfire_specialist_kit
+	name = "Hellfire Rooster specialist kit"
+	desc = "Contains a Hellfire Rooster combat implant and fuel tank backpack. For Rook personnel only."
+
+/obj/item/storage/box/hellfire_specialist_kit/PopulateContents()
+	new /obj/item/organ/cyberimp/rce_specialist/hellfire(src)
+	new /obj/item/fuel_tank_backpack(src)
+
+/obj/item/portable_factory/venom_specialist_kit
+	name = "Venom Rattlesnake specialist kit factory module"
+	desc = "Deploys a factory that produces Venom Rattlesnake specialist kits containing the combat implant and acid tank."
+	factory_path = /obj/structure/rcorp_factory/venom_specialist_kit
+
+/obj/structure/rcorp_factory/venom_specialist_kit
+	name = "Venom specialist kit factory"
+	desc = "Produces Venom Rattlesnake specialist kits."
+	item = /obj/item/storage/box/venom_specialist_kit
+	rcost = 3
+	gcost = 3
+
+/obj/item/storage/box/venom_specialist_kit
+	name = "Venom Rattlesnake specialist kit"
+	desc = "Contains a Venom Rattlesnake combat implant and acid tank backpack. For Rook personnel only."
+
+/obj/item/storage/box/venom_specialist_kit/PopulateContents()
+	new /obj/item/organ/cyberimp/rce_specialist/venom(src)
+	new /obj/item/acid_tank_backpack(src)
+
+/obj/item/portable_factory/storm_specialist_kit
+	name = "Storm Ram specialist kit factory module"
+	desc = "Deploys a factory that produces Storm Ram specialist kits containing the combat implant and capacitor pack."
+	factory_path = /obj/structure/rcorp_factory/storm_specialist_kit
+
+/obj/structure/rcorp_factory/storm_specialist_kit
+	name = "Storm specialist kit factory"
+	desc = "Produces Storm Ram specialist kits."
+	item = /obj/item/storage/box/storm_specialist_kit
+	rcost = 3
+	gcost = 3
+
+/obj/item/storage/box/storm_specialist_kit
+	name = "Storm Ram specialist kit"
+	desc = "Contains a Storm Ram combat implant and capacitor pack. For Rook personnel only."
+
+/obj/item/storage/box/storm_specialist_kit/PopulateContents()
+	new /obj/item/organ/cyberimp/rce_specialist/storm(src)
+	new /obj/item/capacitor_pack(src)
