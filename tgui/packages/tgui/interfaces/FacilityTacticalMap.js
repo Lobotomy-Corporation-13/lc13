@@ -1,6 +1,6 @@
 import { Component, createRef } from 'inferno';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack, Input, Collapsible, LabeledList } from '../components';
+import { Box, Button, Section, Stack, Input } from '../components';
 import { Window } from '../layouts';
 
 // Drawing tool constants
@@ -61,8 +61,8 @@ class TacticalCanvas extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.annotations !== this.props.annotations ||
-        prevProps.mapGrid !== this.props.mapGrid) {
+    if (prevProps.annotations !== this.props.annotations
+        || prevProps.mapGrid !== this.props.mapGrid) {
       this.drawCanvas();
     }
   }
@@ -90,7 +90,12 @@ class TacticalCanvas extends Component {
           const color = mapGrid[x][gridHeight - 1 - y]; // Flip Y
           if (color && color !== '#000000') {
             ctx.fillStyle = color;
-            ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth + 1, cellHeight + 1);
+            ctx.fillRect(
+              x * cellWidth,
+              y * cellHeight,
+              cellWidth + 1,
+              cellHeight + 1
+            );
           }
         }
       }
@@ -142,7 +147,9 @@ class TacticalCanvas extends Component {
         break;
 
       case 'circle': {
-        const radius = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const radius = Math.sqrt(dx * dx + dy * dy);
         ctx.beginPath();
         ctx.arc(x1, y1, radius, 0, Math.PI * 2);
         ctx.stroke();
@@ -157,7 +164,9 @@ class TacticalCanvas extends Component {
       }
 
       case 'icon': {
-        const iconData = TACTICAL_ICONS.find(function (i) { return i.id === annotation.icon; });
+        const iconData = TACTICAL_ICONS.find(
+          (i) => i.id === annotation.icon
+        );
         ctx.font = '20px monospace';
         ctx.fillText(iconData ? iconData.label : '?', x1 - 10, y1 + 7);
         break;
@@ -166,11 +175,15 @@ class TacticalCanvas extends Component {
       case 'freeform':
         if (annotation.points && annotation.points.length > 1) {
           ctx.beginPath();
-          ctx.moveTo(annotation.points[0].x * scaleX,
-            canvasHeight - annotation.points[0].y * scaleY);
+          ctx.moveTo(
+            annotation.points[0].x * scaleX,
+            canvasHeight - annotation.points[0].y * scaleY
+          );
           for (let i = 1; i < annotation.points.length; i++) {
-            ctx.lineTo(annotation.points[i].x * scaleX,
-              canvasHeight - annotation.points[i].y * scaleY);
+            ctx.lineTo(
+              annotation.points[i].x * scaleX,
+              canvasHeight - annotation.points[i].y * scaleY
+            );
           }
           ctx.stroke();
         }
@@ -179,7 +192,14 @@ class TacticalCanvas extends Component {
   }
 
   drawPreview(ctx) {
-    const { selectedTool, selectedColor, canvasWidth, canvasHeight, mapWidth, mapHeight } = this.props;
+    const {
+      selectedTool,
+      selectedColor,
+      canvasWidth,
+      canvasHeight,
+      mapWidth,
+      mapHeight,
+    } = this.props;
     const { currentPoints } = this.state;
     const scaleX = canvasWidth / (mapWidth || 1);
     const scaleY = canvasHeight / (mapHeight || 1);
@@ -191,11 +211,15 @@ class TacticalCanvas extends Component {
 
     if (selectedTool === TOOL_PENCIL && currentPoints.length > 1) {
       ctx.beginPath();
-      ctx.moveTo(currentPoints[0].x * scaleX,
-        canvasHeight - currentPoints[0].y * scaleY);
+      ctx.moveTo(
+        currentPoints[0].x * scaleX,
+        canvasHeight - currentPoints[0].y * scaleY
+      );
       for (let i = 1; i < currentPoints.length; i++) {
-        ctx.lineTo(currentPoints[i].x * scaleX,
-          canvasHeight - currentPoints[i].y * scaleY);
+        ctx.lineTo(
+          currentPoints[i].x * scaleX,
+          canvasHeight - currentPoints[i].y * scaleY
+        );
       }
       ctx.stroke();
     }
@@ -212,7 +236,9 @@ class TacticalCanvas extends Component {
     const canvasY = event.clientY - rect.top;
 
     const mapX = Math.round((canvasX / canvasWidth) * (mapWidth || 1));
-    const mapY = Math.round(((canvasHeight - canvasY) / canvasHeight) * (mapHeight || 1));
+    const mapY = Math.round(
+      ((canvasHeight - canvasY) / canvasHeight) * (mapHeight || 1)
+    );
 
     return { mapX: mapX, mapY: mapY };
   }
@@ -240,16 +266,24 @@ class TacticalCanvas extends Component {
     const self = this;
 
     if (selectedTool === TOOL_PENCIL) {
-      this.setState(function (prevState) {
-        return {
-          currentPoints: prevState.currentPoints.concat([{ x: coords.mapX, y: coords.mapY }]),
-        };
-      }, function () { self.drawCanvas(); });
+      this.setState(
+        (prevState) => ({
+          currentPoints: prevState.currentPoints.concat([
+            { x: coords.mapX, y: coords.mapY },
+          ]),
+        }),
+        () => { self.drawCanvas(); }
+      );
     }
   }
 
   handleMouseUp(event) {
-    const { selectedTool, selectedColor, selectedIcon, onAddAnnotation } = this.props;
+    const {
+      selectedTool,
+      selectedColor,
+      selectedIcon,
+      onAddAnnotation,
+    } = this.props;
     if (!this.state.isDrawing) return;
 
     const coords = this.getMapCoords(event);
@@ -325,7 +359,15 @@ class TacticalCanvas extends Component {
   }
 
   handleClick(event) {
-    const { selectedTool, selectedColor, selectedIcon, onAddAnnotation, onTextPrompt, onEraseAt, canEdit } = this.props;
+    const {
+      selectedTool,
+      selectedColor,
+      selectedIcon,
+      onAddAnnotation,
+      onTextPrompt,
+      onEraseAt,
+      canEdit,
+    } = this.props;
     if (!canEdit) return;
 
     const coords = this.getMapCoords(event);
@@ -380,7 +422,7 @@ class TacticalCanvas extends Component {
 }
 
 // Tool button component
-const ToolButton = function (props) {
+const ToolButton = (props) => {
   const { label, selected, onClick, tooltip } = props;
   return (
     <Button
@@ -395,7 +437,7 @@ const ToolButton = function (props) {
 };
 
 // Color swatch component (using div for proper color display)
-const ColorSwatch = function (props) {
+const ColorSwatch = (props) => {
   const { color, selected, onClick, tooltip } = props;
   return (
     <div
@@ -417,77 +459,80 @@ const ColorSwatch = function (props) {
 };
 
 // Color picker component
-const ColorPicker = function (props) {
+const ColorPicker = (props) => {
   const { selectedColor, onColorSelect } = props;
   return (
     <Box>
-      {PRESET_COLORS.map(function (color) {
-        return (
-          <ColorSwatch
-            key={color.hex}
-            color={color.hex}
-            selected={selectedColor === color.hex}
-            onClick={function () { onColorSelect(color.hex); }}
-            tooltip={color.name}
-          />
-        );
-      })}
+      {PRESET_COLORS.map((color) => (
+        <ColorSwatch
+          key={color.hex}
+          color={color.hex}
+          selected={selectedColor === color.hex}
+          onClick={() => onColorSelect(color.hex)}
+          tooltip={color.name}
+        />
+      ))}
     </Box>
   );
 };
 
 // Icon picker component
-const IconPicker = function (props) {
+const IconPicker = (props) => {
   const { selectedIcon, onIconSelect } = props;
   return (
     <Box>
-      {TACTICAL_ICONS.map(function (icon) {
-        return (
-          <Button
-            key={icon.id}
-            selected={selectedIcon === icon.id}
-            onClick={function () { onIconSelect(icon.id); }}
-            tooltip={icon.desc}
-            style={{ margin: '2px', fontSize: '16px' }}>
-            {icon.label}
-          </Button>
-        );
-      })}
+      {TACTICAL_ICONS.map((icon) => (
+        <Button
+          key={icon.id}
+          selected={selectedIcon === icon.id}
+          onClick={() => onIconSelect(icon.id)}
+          tooltip={icon.desc}
+          style={{ margin: '2px', fontSize: '16px' }}>
+          {icon.label}
+        </Button>
+      ))}
     </Box>
   );
 };
 
 // Get description of annotation for display
-const getAnnotationDescription = function (annotation) {
+const getAnnotationDescription = (annotation) => {
   switch (annotation.type) {
-    case 'freeform':
+    case 'freeform': {
       const pointCount = annotation.points ? annotation.points.length : 0;
       return 'Freeform (' + pointCount + ' points)';
+    }
     case 'line':
-      return 'Line (' + Math.round(annotation.x1) + ',' + Math.round(annotation.y1) +
-        ' to ' + Math.round(annotation.x2) + ',' + Math.round(annotation.y2) + ')';
+      return 'Line (' + Math.round(annotation.x1) + ','
+        + Math.round(annotation.y1) + ' to '
+        + Math.round(annotation.x2) + ',' + Math.round(annotation.y2) + ')';
     case 'rect':
-      return 'Rectangle (' + Math.round(annotation.x1) + ',' + Math.round(annotation.y1) +
-        ' to ' + Math.round(annotation.x2) + ',' + Math.round(annotation.y2) + ')';
-    case 'circle':
+      return 'Rectangle (' + Math.round(annotation.x1) + ','
+        + Math.round(annotation.y1) + ' to '
+        + Math.round(annotation.x2) + ',' + Math.round(annotation.y2) + ')';
+    case 'circle': {
       const radius = Math.round(Math.sqrt(
-        Math.pow((annotation.x2 || 0) - (annotation.x1 || 0), 2) +
-        Math.pow((annotation.y2 || 0) - (annotation.y1 || 0), 2)
+        Math.pow((annotation.x2 || 0) - (annotation.x1 || 0), 2)
+        + Math.pow((annotation.y2 || 0) - (annotation.y1 || 0), 2)
       ));
-      return 'Circle at (' + Math.round(annotation.x1) + ',' + Math.round(annotation.y1) +
-        ') r=' + radius;
+      return 'Circle at (' + Math.round(annotation.x1) + ','
+        + Math.round(annotation.y1) + ') r=' + radius;
+    }
     case 'text':
       return 'Text: "' + (annotation.text || '') + '"';
-    case 'icon':
-      const iconData = TACTICAL_ICONS.find(function (i) { return i.id === annotation.icon; });
+    case 'icon': {
+      const iconData = TACTICAL_ICONS.find(
+        (i) => i.id === annotation.icon
+      );
       return 'Icon: ' + (iconData ? iconData.desc : annotation.icon);
+    }
     default:
       return annotation.type;
   }
 };
 
 // Annotation list for admin view
-const AnnotationList = function (props) {
+const AnnotationList = (props) => {
   const { annotations, onDelete, isAdmin } = props;
 
   if (!annotations || annotations.length === 0) {
@@ -500,53 +545,51 @@ const AnnotationList = function (props) {
 
   return (
     <Box style={{ maxHeight: '200px', overflowY: 'auto' }}>
-      {annotations.map(function (annotation, index) {
-        return (
-          <Box
-            key={annotation.id || index}
-            mb={1}
-            p={0.5}
-            style={{
-              backgroundColor: 'rgba(255,255,255,0.1)',
-              borderLeft: '3px solid ' + (annotation.color || '#fff'),
-              borderRadius: '2px',
-            }}>
-            <Stack justify="space-between" align="center">
-              <Stack.Item grow>
-                <Box fontSize="11px">
-                  <Box bold>{getAnnotationDescription(annotation)}</Box>
-                  {annotation.ckey && (
-                    <Box color="label">
-                      Drawn by: {annotation.ckey}
-                    </Box>
-                  )}
-                  {!annotation.ckey && annotation.author && (
-                    <Box color="label">
-                      Author: {annotation.author}
-                    </Box>
-                  )}
-                </Box>
+      {annotations.map((annotation, index) => (
+        <Box
+          key={annotation.id || index}
+          mb={1}
+          p={0.5}
+          style={{
+            backgroundColor: 'rgba(255,255,255,0.1)',
+            borderLeft: '3px solid ' + (annotation.color || '#fff'),
+            borderRadius: '2px',
+          }}>
+          <Stack justify="space-between" align="center">
+            <Stack.Item grow>
+              <Box fontSize="11px">
+                <Box bold>{getAnnotationDescription(annotation)}</Box>
+                {annotation.ckey && (
+                  <Box color="label">
+                    Drawn by: {annotation.ckey}
+                  </Box>
+                )}
+                {!annotation.ckey && annotation.author && (
+                  <Box color="label">
+                    Author: {annotation.author}
+                  </Box>
+                )}
+              </Box>
+            </Stack.Item>
+            {isAdmin && onDelete && (
+              <Stack.Item>
+                <Button
+                  icon="times"
+                  color="bad"
+                  compact
+                  onClick={() => onDelete(annotation.id)}
+                />
               </Stack.Item>
-              {isAdmin && onDelete && (
-                <Stack.Item>
-                  <Button
-                    icon="times"
-                    color="bad"
-                    compact
-                    onClick={function () { onDelete(annotation.id); }}
-                  />
-                </Stack.Item>
-              )}
-            </Stack>
-          </Box>
-        );
-      })}
+            )}
+          </Stack>
+        </Box>
+      ))}
     </Box>
   );
 };
 
 // Main component
-export const FacilityTacticalMap = function (props, context) {
+export const FacilityTacticalMap = (props, context) => {
   const { act, data } = useBackend(context);
   const {
     annotations = [],
@@ -558,14 +601,30 @@ export const FacilityTacticalMap = function (props, context) {
     isAdmin = false,
   } = data;
 
-  const [selectedTool, setSelectedTool] = useLocalState(context, 'selectedTool', TOOL_PENCIL);
-  const [selectedColor, setSelectedColor] = useLocalState(context, 'selectedColor', '#ff4444');
-  const [selectedIcon, setSelectedIcon] = useLocalState(context, 'selectedIcon', 'target');
-  const [textInput, setTextInput] = useLocalState(context, 'textInput', '');
-  const [textPos, setTextPos] = useLocalState(context, 'textPos', null);
-  const [showAnnotationList, setShowAnnotationList] = useLocalState(context, 'showAnnotationList', false);
-  const [zoomLevel, setZoomLevel] = useLocalState(context, 'zoomLevel', 1);
-  const [fontSize, setFontSize] = useLocalState(context, 'fontSize', 14);
+  const [selectedTool, setSelectedTool] = useLocalState(
+    context, 'selectedTool', TOOL_PENCIL
+  );
+  const [selectedColor, setSelectedColor] = useLocalState(
+    context, 'selectedColor', '#ff4444'
+  );
+  const [selectedIcon, setSelectedIcon] = useLocalState(
+    context, 'selectedIcon', 'target'
+  );
+  const [textInput, setTextInput] = useLocalState(
+    context, 'textInput', ''
+  );
+  const [textPos, setTextPos] = useLocalState(
+    context, 'textPos', null
+  );
+  const [showAnnotationList, setShowAnnotationList] = useLocalState(
+    context, 'showAnnotationList', false
+  );
+  const [zoomLevel, setZoomLevel] = useLocalState(
+    context, 'zoomLevel', 1
+  );
+  const [fontSize, setFontSize] = useLocalState(
+    context, 'fontSize', 14
+  );
 
   // Calculate canvas dimensions based on map aspect ratio and zoom
   const baseCanvasSize = 480;
@@ -584,15 +643,15 @@ export const FacilityTacticalMap = function (props, context) {
   const canvasWidth = Math.round(baseWidth * zoomLevel);
   const canvasHeight = Math.round(baseHeight * zoomLevel);
 
-  const handleAddAnnotation = function (annotationData) {
+  const handleAddAnnotation = (annotationData) => {
     act('add_annotation', annotationData);
   };
 
-  const handleTextPrompt = function (x, y, color) {
+  const handleTextPrompt = (x, y, color) => {
     setTextPos({ x: x, y: y, color: color });
   };
 
-  const handleTextSubmit = function () {
+  const handleTextSubmit = () => {
     if (textInput && textPos) {
       act('add_annotation', {
         type: 'text',
@@ -607,11 +666,11 @@ export const FacilityTacticalMap = function (props, context) {
     }
   };
 
-  const handleEraseAt = function (x, y) {
+  const handleEraseAt = (x, y) => {
     act('erase_at', { x: x, y: y });
   };
 
-  const handleDeleteAnnotation = function (id) {
+  const handleDeleteAnnotation = (id) => {
     act('delete_annotation', { id: id });
   };
 
@@ -630,49 +689,49 @@ export const FacilityTacticalMap = function (props, context) {
                   label="Ptr"
                   tooltip="Pointer"
                   selected={selectedTool === TOOL_POINTER}
-                  onClick={function () { setSelectedTool(TOOL_POINTER); }}
+                  onClick={() => setSelectedTool(TOOL_POINTER)}
                 />
                 <ToolButton
                   label="Pen"
                   tooltip="Pencil (Freeform)"
                   selected={selectedTool === TOOL_PENCIL}
-                  onClick={function () { setSelectedTool(TOOL_PENCIL); }}
+                  onClick={() => setSelectedTool(TOOL_PENCIL)}
                 />
                 <ToolButton
                   label="Line"
                   tooltip="Line"
                   selected={selectedTool === TOOL_LINE}
-                  onClick={function () { setSelectedTool(TOOL_LINE); }}
+                  onClick={() => setSelectedTool(TOOL_LINE)}
                 />
                 <ToolButton
                   label="Rect"
                   tooltip="Rectangle"
                   selected={selectedTool === TOOL_RECT}
-                  onClick={function () { setSelectedTool(TOOL_RECT); }}
+                  onClick={() => setSelectedTool(TOOL_RECT)}
                 />
                 <ToolButton
                   label="Circ"
                   tooltip="Circle"
                   selected={selectedTool === TOOL_CIRCLE}
-                  onClick={function () { setSelectedTool(TOOL_CIRCLE); }}
+                  onClick={() => setSelectedTool(TOOL_CIRCLE)}
                 />
                 <ToolButton
                   label="Text"
                   tooltip="Text"
                   selected={selectedTool === TOOL_TEXT}
-                  onClick={function () { setSelectedTool(TOOL_TEXT); }}
+                  onClick={() => setSelectedTool(TOOL_TEXT)}
                 />
                 <ToolButton
                   label="Icon"
                   tooltip="Icon/Marker"
                   selected={selectedTool === TOOL_ICON}
-                  onClick={function () { setSelectedTool(TOOL_ICON); }}
+                  onClick={() => setSelectedTool(TOOL_ICON)}
                 />
                 <ToolButton
                   label="Erase"
                   tooltip="Eraser - Click to delete nearby annotation"
                   selected={selectedTool === TOOL_ERASER}
-                  onClick={function () { setSelectedTool(TOOL_ERASER); }}
+                  onClick={() => setSelectedTool(TOOL_ERASER)}
                 />
 
                 <Box mt={2}>
@@ -700,7 +759,7 @@ export const FacilityTacticalMap = function (props, context) {
                       <Stack.Item>
                         <Button
                           icon="minus"
-                          onClick={function () { setFontSize(Math.max(8, fontSize - 2)); }}
+                          onClick={() => setFontSize(Math.max(8, fontSize - 2))}
                           disabled={fontSize <= 8}
                         />
                       </Stack.Item>
@@ -710,7 +769,9 @@ export const FacilityTacticalMap = function (props, context) {
                       <Stack.Item>
                         <Button
                           icon="plus"
-                          onClick={function () { setFontSize(Math.min(48, fontSize + 2)); }}
+                          onClick={() => setFontSize(
+                            Math.min(48, fontSize + 2)
+                          )}
                           disabled={fontSize >= 48}
                         />
                       </Stack.Item>
@@ -731,18 +792,22 @@ export const FacilityTacticalMap = function (props, context) {
                   {/* Zoom controls - always visible */}
                   <Button
                     icon="search-minus"
-                    onClick={function () { setZoomLevel(Math.max(0.5, zoomLevel - 0.25)); }}
+                    onClick={() => setZoomLevel(
+                      Math.max(0.5, zoomLevel - 0.25)
+                    )}
                     disabled={zoomLevel <= 0.5}
                     tooltip="Zoom out"
                   />
                   <Button
                     content={Math.round(zoomLevel * 100) + '%'}
-                    onClick={function () { setZoomLevel(1); }}
+                    onClick={() => setZoomLevel(1)}
                     tooltip="Reset zoom"
                   />
                   <Button
                     icon="search-plus"
-                    onClick={function () { setZoomLevel(Math.min(3, zoomLevel + 0.25)); }}
+                    onClick={() => setZoomLevel(
+                      Math.min(3, zoomLevel + 0.25)
+                    )}
                     disabled={zoomLevel >= 3}
                     tooltip="Zoom in"
                   />
@@ -751,14 +816,14 @@ export const FacilityTacticalMap = function (props, context) {
                     <>
                       <Button
                         icon="undo"
-                        onClick={function () { act('undo'); }}
+                        onClick={() => act('undo')}
                         disabled={annotations.length === 0}
                         tooltip="Undo"
                       />
                       <Button.Confirm
                         icon="trash"
                         color="bad"
-                        onClick={function () { act('clear_all'); }}
+                        onClick={() => act('clear_all')}
                         disabled={annotations.length === 0}
                         confirmContent="Clear?"
                         tooltip="Clear all"
@@ -766,7 +831,9 @@ export const FacilityTacticalMap = function (props, context) {
                       <Button
                         icon="list"
                         selected={showAnnotationList}
-                        onClick={function () { setShowAnnotationList(!showAnnotationList); }}
+                        onClick={() => setShowAnnotationList(
+                          !showAnnotationList
+                        )}
                         tooltip="Show annotation list"
                       />
                     </>
@@ -815,7 +882,7 @@ export const FacilityTacticalMap = function (props, context) {
                             fluid
                             placeholder="Enter text..."
                             value={textInput}
-                            onChange={function (e, value) { setTextInput(value); }}
+                            onChange={(e, value) => setTextInput(value)}
                           />
                         </Stack.Item>
                         <Stack.Item>
@@ -830,7 +897,7 @@ export const FacilityTacticalMap = function (props, context) {
                           <Button
                             icon="times"
                             color="bad"
-                            onClick={function () {
+                            onClick={() => {
                               setTextPos(null);
                               setTextInput('');
                             }}
@@ -847,14 +914,18 @@ export const FacilityTacticalMap = function (props, context) {
                   <Box mt={1} color="label" fontSize="11px" textAlign="center">
                     Annotations: {annotations.length}/{maxAnnotations}
                     {!canEdit && ' (Read-only)'}
-                    {selectedTool === TOOL_ERASER && ' - Click on map to erase nearest annotation'}
+                    {selectedTool === TOOL_ERASER
+                      && ' - Click on map to erase nearest annotation'}
                   </Box>
                 </Stack.Item>
 
                 {/* Annotation list panel */}
                 {showAnnotationList && (
                   <Stack.Item mt={1}>
-                    <Section title="Annotations" scrollable style={{ maxHeight: '150px' }}>
+                    <Section
+                      title="Annotations"
+                      scrollable
+                      style={{ maxHeight: '150px' }}>
                       <AnnotationList
                         annotations={annotations}
                         onDelete={handleDeleteAnnotation}
