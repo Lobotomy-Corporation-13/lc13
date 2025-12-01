@@ -2517,7 +2517,7 @@
 "rS" = (
 /obj/effect/turf_decal/siding/purple,
 /obj/machinery/facility_tactical_map{
-	step_y = -32
+	pixel_y = -32
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
@@ -3868,7 +3868,7 @@
 /obj/machinery/light/cold,
 /obj/structure/table/wood/fancy/blue,
 /obj/machinery/facility_tactical_map{
-	step_y = -32
+	pixel_y = -32
 	},
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)

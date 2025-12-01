@@ -228,7 +228,7 @@
 /obj/item/wrench,
 /obj/item/stack/cable_coil,
 /obj/machinery/facility_tactical_map{
-	step_y = 32
+	pixel_y = 32
 	},
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
@@ -2300,7 +2300,7 @@
 	dir = 4
 	},
 /obj/machinery/facility_tactical_map{
-	step_y = -32
+	pixel_y = -32
 	},
 /turf/open/floor/carpet/stellar,
 /area/department_main/command)
@@ -5866,7 +5866,7 @@
 /area/department_main/command)
 "Dt" = (
 /obj/machinery/facility_tactical_map{
-	step_y = 32
+	pixel_y = 32
 	},
 /turf/open/floor/carpet/orange,
 /area/department_main/training)
@@ -6591,7 +6591,7 @@
 /area/facility_hallway/south)
 "Hi" = (
 /obj/machinery/facility_tactical_map{
-	step_y = 32
+	pixel_y = 32
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
@@ -10068,7 +10068,7 @@
 	icon_state = "plant-21"
 	},
 /obj/machinery/facility_tactical_map{
-	step_y = 32
+	pixel_y = 32
 	},
 /turf/open/floor/facility/white,
 /area/department_main/safety)
