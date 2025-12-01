@@ -149,10 +149,12 @@ class TacticalCanvas extends Component {
         break;
       }
 
-      case 'text':
-        ctx.font = '14px monospace';
+      case 'text': {
+        const textSize = annotation.fontSize || 14;
+        ctx.font = textSize + 'px monospace';
         ctx.fillText(annotation.text || '', x1, y1);
         break;
+      }
 
       case 'icon': {
         const iconData = TACTICAL_ICONS.find(function (i) { return i.id === annotation.icon; });
@@ -562,9 +564,25 @@ export const FacilityTacticalMap = function (props, context) {
   const [textInput, setTextInput] = useLocalState(context, 'textInput', '');
   const [textPos, setTextPos] = useLocalState(context, 'textPos', null);
   const [showAnnotationList, setShowAnnotationList] = useLocalState(context, 'showAnnotationList', false);
+  const [zoomLevel, setZoomLevel] = useLocalState(context, 'zoomLevel', 1);
+  const [fontSize, setFontSize] = useLocalState(context, 'fontSize', 14);
 
-  const canvasWidth = 480;
-  const canvasHeight = 480;
+  // Calculate canvas dimensions based on map aspect ratio and zoom
+  const baseCanvasSize = 480;
+  const aspectRatio = mapWidth / (mapHeight || 1);
+  let baseWidth, baseHeight;
+  if (aspectRatio >= 1) {
+    // Wider than tall
+    baseWidth = baseCanvasSize;
+    baseHeight = Math.round(baseCanvasSize / aspectRatio);
+  } else {
+    // Taller than wide
+    baseHeight = baseCanvasSize;
+    baseWidth = Math.round(baseCanvasSize * aspectRatio);
+  }
+  // Apply zoom
+  const canvasWidth = Math.round(baseWidth * zoomLevel);
+  const canvasHeight = Math.round(baseHeight * zoomLevel);
 
   const handleAddAnnotation = function (annotationData) {
     act('add_annotation', annotationData);
@@ -582,6 +600,7 @@ export const FacilityTacticalMap = function (props, context) {
         y1: textPos.y,
         text: textInput,
         color: textPos.color,
+        fontSize: fontSize,
       });
       setTextInput('');
       setTextPos(null);
@@ -599,12 +618,12 @@ export const FacilityTacticalMap = function (props, context) {
   return (
     <Window
       title="Facility Tactical Map"
-      width={700}
+      width={canEdit ? 700 : 550}
       height={620}>
       <Window.Content>
         <Stack fill>
           {/* Tool palette - only shown when user can edit */}
-          {canEdit && (
+          {canEdit ? (
             <Stack.Item basis="100px">
               <Section title="Tools" fill scrollable>
                 <ToolButton
@@ -664,7 +683,7 @@ export const FacilityTacticalMap = function (props, context) {
                   />
                 </Box>
 
-                {selectedTool === TOOL_ICON && (
+                {selectedTool === TOOL_ICON ? (
                   <Box mt={2}>
                     <Box bold mb={1}>Icons</Box>
                     <IconPicker
@@ -672,10 +691,35 @@ export const FacilityTacticalMap = function (props, context) {
                       onIconSelect={setSelectedIcon}
                     />
                   </Box>
-                )}
+                ) : null}
+
+                {selectedTool === TOOL_TEXT ? (
+                  <Box mt={2}>
+                    <Box bold mb={1}>Font Size</Box>
+                    <Stack align="center">
+                      <Stack.Item>
+                        <Button
+                          icon="minus"
+                          onClick={function () { setFontSize(Math.max(8, fontSize - 2)); }}
+                          disabled={fontSize <= 8}
+                        />
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Box inline mx={1}>{fontSize}px</Box>
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Button
+                          icon="plus"
+                          onClick={function () { setFontSize(Math.min(48, fontSize + 2)); }}
+                          disabled={fontSize >= 48}
+                        />
+                      </Stack.Item>
+                    </Stack>
+                  </Box>
+                ) : null}
               </Section>
             </Stack.Item>
-          )}
+          ) : null}
 
           {/* Main canvas area */}
           <Stack.Item grow>
@@ -683,34 +727,62 @@ export const FacilityTacticalMap = function (props, context) {
               title="Tactical Map"
               fill
               buttons={
-                canEdit && (
-                  <Box>
-                    <Button
-                      icon="undo"
-                      onClick={function () { act('undo'); }}
-                      disabled={annotations.length === 0}
-                      content="Undo"
-                    />
-                    <Button.Confirm
-                      icon="trash"
-                      color="bad"
-                      onClick={function () { act('clear_all'); }}
-                      disabled={annotations.length === 0}
-                      content="Clear All"
-                      confirmContent="Confirm?"
-                    />
-                    <Button
-                      icon="list"
-                      selected={showAnnotationList}
-                      onClick={function () { setShowAnnotationList(!showAnnotationList); }}
-                      tooltip="Show annotation list"
-                    />
-                  </Box>
-                )
+                <Box>
+                  {/* Zoom controls - always visible */}
+                  <Button
+                    icon="search-minus"
+                    onClick={function () { setZoomLevel(Math.max(0.5, zoomLevel - 0.25)); }}
+                    disabled={zoomLevel <= 0.5}
+                    tooltip="Zoom out"
+                  />
+                  <Button
+                    content={Math.round(zoomLevel * 100) + '%'}
+                    onClick={function () { setZoomLevel(1); }}
+                    tooltip="Reset zoom"
+                  />
+                  <Button
+                    icon="search-plus"
+                    onClick={function () { setZoomLevel(Math.min(3, zoomLevel + 0.25)); }}
+                    disabled={zoomLevel >= 3}
+                    tooltip="Zoom in"
+                  />
+                  {/* Edit controls - only for editors */}
+                  {canEdit ? (
+                    <>
+                      <Button
+                        icon="undo"
+                        onClick={function () { act('undo'); }}
+                        disabled={annotations.length === 0}
+                        tooltip="Undo"
+                      />
+                      <Button.Confirm
+                        icon="trash"
+                        color="bad"
+                        onClick={function () { act('clear_all'); }}
+                        disabled={annotations.length === 0}
+                        confirmContent="Clear?"
+                        tooltip="Clear all"
+                      />
+                      <Button
+                        icon="list"
+                        selected={showAnnotationList}
+                        onClick={function () { setShowAnnotationList(!showAnnotationList); }}
+                        tooltip="Show annotation list"
+                      />
+                    </>
+                  ) : null}
+                </Box>
               }>
               <Stack vertical fill>
-                <Stack.Item>
-                  <Box textAlign="center">
+                <Stack.Item grow>
+                  <Box
+                    style={{
+                      overflow: 'auto',
+                      height: Math.min(baseHeight, 480) + 'px',
+                      width: Math.min(baseWidth, 480) + 'px',
+                      margin: '0 auto',
+                      border: '1px solid #333',
+                    }}>
                     <TacticalCanvas
                       mapGrid={mapGrid}
                       mapWidth={mapWidth}
@@ -726,52 +798,56 @@ export const FacilityTacticalMap = function (props, context) {
                       onTextPrompt={handleTextPrompt}
                       onEraseAt={handleEraseAt}
                     />
+                  </Box>
+                </Stack.Item>
 
-                    {/* Text input modal */}
-                    {textPos && (
-                      <Box
-                        mt={1}
-                        p={1}
-                        backgroundColor="rgba(0,0,0,0.8)"
-                        style={{ borderRadius: '4px' }}>
-                        <Stack>
-                          <Stack.Item grow>
-                            <Input
-                              fluid
-                              placeholder="Enter text..."
-                              value={textInput}
-                              onChange={function (e, value) { setTextInput(value); }}
-                            />
-                          </Stack.Item>
-                          <Stack.Item>
-                            <Button
-                              icon="check"
-                              color="good"
-                              onClick={handleTextSubmit}
-                              content="Add"
-                            />
-                          </Stack.Item>
-                          <Stack.Item>
-                            <Button
-                              icon="times"
-                              color="bad"
-                              onClick={function () {
-                                setTextPos(null);
-                                setTextInput('');
-                              }}
-                              content="Cancel"
-                            />
-                          </Stack.Item>
-                        </Stack>
-                      </Box>
-                    )}
-
-                    {/* Status bar */}
-                    <Box mt={1} color="label" fontSize="11px">
-                      Annotations: {annotations.length}/{maxAnnotations}
-                      {!canEdit && ' (Read-only)'}
-                      {selectedTool === TOOL_ERASER && ' - Click on map to erase nearest annotation'}
+                {/* Text input modal */}
+                {textPos ? (
+                  <Stack.Item>
+                    <Box
+                      mt={1}
+                      p={1}
+                      backgroundColor="rgba(0,0,0,0.8)"
+                      style={{ borderRadius: '4px' }}>
+                      <Stack>
+                        <Stack.Item grow>
+                          <Input
+                            fluid
+                            placeholder="Enter text..."
+                            value={textInput}
+                            onChange={function (e, value) { setTextInput(value); }}
+                          />
+                        </Stack.Item>
+                        <Stack.Item>
+                          <Button
+                            icon="check"
+                            color="good"
+                            onClick={handleTextSubmit}
+                            content="Add"
+                          />
+                        </Stack.Item>
+                        <Stack.Item>
+                          <Button
+                            icon="times"
+                            color="bad"
+                            onClick={function () {
+                              setTextPos(null);
+                              setTextInput('');
+                            }}
+                            content="Cancel"
+                          />
+                        </Stack.Item>
+                      </Stack>
                     </Box>
+                  </Stack.Item>
+                ) : null}
+
+                {/* Status bar */}
+                <Stack.Item>
+                  <Box mt={1} color="label" fontSize="11px" textAlign="center">
+                    Annotations: {annotations.length}/{maxAnnotations}
+                    {!canEdit && ' (Read-only)'}
+                    {selectedTool === TOOL_ERASER && ' - Click on map to erase nearest annotation'}
                   </Box>
                 </Stack.Item>
 

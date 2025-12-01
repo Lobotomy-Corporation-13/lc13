@@ -18,7 +18,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	layer = ABOVE_WINDOW_LAYER
 
 	/// The z-level this map displays
-	var/map_z_level = 1
+	var/map_z_level = 2
 	/// Maximum number of annotations allowed
 	var/max_annotations = 200
 	/// Cached map grid data for TGUI
@@ -37,8 +37,12 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	if(auto_update)
 		map_z_level = z
 
-	// Generate map grid after holomap system initializes
-	if(SSholomap.initialized)
+	// Generate map grid after a delay to ensure map is fully loaded
+	addtimer(CALLBACK(src, PROC_REF(delayed_map_init)), 10 SECONDS)
+
+/// Delayed initialization to ensure map is fully loaded
+/obj/machinery/facility_tactical_map/proc/delayed_map_init()
+	if(!cached_map_grid && SSholomap?.initialized)
 		generate_map_grid()
 
 /obj/machinery/facility_tactical_map/Destroy()
@@ -79,6 +83,9 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	ui_interact(user)
 
 /obj/machinery/facility_tactical_map/ui_interact(mob/user, datum/tgui/ui)
+	// Ensure map grid is generated before opening UI
+	if(!cached_map_grid && SSholomap?.initialized)
+		generate_map_grid()
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "FacilityTacticalMap")
@@ -168,6 +175,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 			annotation["text"] = params["text"] || ""
 			annotation["x2"] = text2num(params["x2"])
 			annotation["y2"] = text2num(params["y2"])
+			annotation["fontSize"] = text2num(params["fontSize"]) || 14
 		if("icon")
 			annotation["icon"] = params["icon"] || "waypoint"
 		if("freeform")
@@ -271,18 +279,42 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 // ===== MAP GENERATION =====
 
 /obj/machinery/facility_tactical_map/proc/generate_map_grid()
-	// Use a reduced resolution for performance
-	var/grid_scale = 2  // Each grid cell represents 2x2 turfs
-	var/grid_width = round(world.maxx / grid_scale)
-	var/grid_height = round(world.maxy / grid_scale)
+	// First pass: find the bounding box of actual map content
+	var/min_x = world.maxx
+	var/max_x = 1
+	var/min_y = world.maxy
+	var/max_y = 1
+
+	for(var/tx in 1 to world.maxx)
+		for(var/ty in 1 to world.maxy)
+			var/turf/T = locate(tx, ty, map_z_level)
+			if(T)
+				var/area/A = T.loc
+				if(A && !(A.area_flags & HIDE_FROM_HOLOMAP))
+					if(istype(T, /turf/closed/wall) || istype(T, /turf/closed/indestructible) || istype(T, /turf/open/floor) || istype(T, /turf/closed/mineral))
+						min_x = min(min_x, tx)
+						max_x = max(max_x, tx)
+						min_y = min(min_y, ty)
+						max_y = max(max_y, ty)
+
+	// Add small padding around the content
+	var/padding = 2
+	min_x = max(1, min_x - padding)
+	max_x = min(world.maxx, max_x + padding)
+	min_y = max(1, min_y - padding)
+	max_y = min(world.maxy, max_y + padding)
+
+	// Second pass: generate the cropped grid
+	var/grid_width = max_x - min_x + 1
+	var/grid_height = max_y - min_y + 1
 
 	cached_map_grid = list()
 
 	for(var/gx in 1 to grid_width)
 		var/list/column = list()
 		for(var/gy in 1 to grid_height)
-			var/tx = gx * grid_scale
-			var/ty = gy * grid_scale
+			var/tx = min_x + gx - 1
+			var/ty = min_y + gy - 1
 			var/turf/T = locate(tx, ty, map_z_level)
 
 			var/color = "#000000"  // Default: space/void
