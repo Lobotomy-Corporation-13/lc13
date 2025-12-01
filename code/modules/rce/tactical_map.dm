@@ -19,10 +19,6 @@ GLOBAL_VAR_INIT(rce_tactical_annotation_id, 0)
 	density = FALSE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	layer = ABOVE_WINDOW_LAYER
-	light_color = "#c86464"
-	light_range = 4
-	light_power = 1
-	light_system = STATIC_LIGHT
 
 	/// The z-level this map displays
 	var/map_z_level = 1
