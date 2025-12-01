@@ -165,7 +165,7 @@ class TacticalCanvas extends Component {
 
       case 'icon': {
         const iconData = TACTICAL_ICONS.find(
-          (i) => i.id === annotation.icon
+          i => i.id === annotation.icon
         );
         ctx.font = '20px monospace';
         ctx.fillText(iconData ? iconData.label : '?', x1 - 10, y1 + 7);
@@ -267,7 +267,7 @@ class TacticalCanvas extends Component {
 
     if (selectedTool === TOOL_PENCIL) {
       this.setState(
-        (prevState) => ({
+        prevState => ({
           currentPoints: prevState.currentPoints.concat([
             { x: coords.mapX, y: coords.mapY },
           ]),
@@ -422,7 +422,7 @@ class TacticalCanvas extends Component {
 }
 
 // Tool button component
-const ToolButton = (props) => {
+const ToolButton = props => {
   const { label, selected, onClick, tooltip } = props;
   return (
     <Button
@@ -437,7 +437,7 @@ const ToolButton = (props) => {
 };
 
 // Color swatch component (using div for proper color display)
-const ColorSwatch = (props) => {
+const ColorSwatch = props => {
   const { color, selected, onClick, tooltip } = props;
   return (
     <div
@@ -459,11 +459,11 @@ const ColorSwatch = (props) => {
 };
 
 // Color picker component
-const ColorPicker = (props) => {
+const ColorPicker = props => {
   const { selectedColor, onColorSelect } = props;
   return (
     <Box>
-      {PRESET_COLORS.map((color) => (
+      {PRESET_COLORS.map(color => (
         <ColorSwatch
           key={color.hex}
           color={color.hex}
@@ -477,11 +477,11 @@ const ColorPicker = (props) => {
 };
 
 // Icon picker component
-const IconPicker = (props) => {
+const IconPicker = props => {
   const { selectedIcon, onIconSelect } = props;
   return (
     <Box>
-      {TACTICAL_ICONS.map((icon) => (
+      {TACTICAL_ICONS.map(icon => (
         <Button
           key={icon.id}
           selected={selectedIcon === icon.id}
@@ -496,7 +496,7 @@ const IconPicker = (props) => {
 };
 
 // Get description of annotation for display
-const getAnnotationDescription = (annotation) => {
+const getAnnotationDescription = annotation => {
   switch (annotation.type) {
     case 'freeform': {
       const pointCount = annotation.points ? annotation.points.length : 0;
@@ -522,7 +522,7 @@ const getAnnotationDescription = (annotation) => {
       return 'Text: "' + (annotation.text || '') + '"';
     case 'icon': {
       const iconData = TACTICAL_ICONS.find(
-        (i) => i.id === annotation.icon
+        i => i.id === annotation.icon
       );
       return 'Icon: ' + (iconData ? iconData.desc : annotation.icon);
     }
@@ -532,7 +532,7 @@ const getAnnotationDescription = (annotation) => {
 };
 
 // Annotation list for admin view
-const AnnotationList = (props) => {
+const AnnotationList = props => {
   const { annotations, onDelete, isAdmin } = props;
 
   if (!annotations || annotations.length === 0) {
@@ -643,7 +643,7 @@ export const FacilityTacticalMap = (props, context) => {
   const canvasWidth = Math.round(baseWidth * zoomLevel);
   const canvasHeight = Math.round(baseHeight * zoomLevel);
 
-  const handleAddAnnotation = (annotationData) => {
+  const handleAddAnnotation = annotationData => {
     act('add_annotation', annotationData);
   };
 
@@ -670,7 +670,7 @@ export const FacilityTacticalMap = (props, context) => {
     act('erase_at', { x: x, y: y });
   };
 
-  const handleDeleteAnnotation = (id) => {
+  const handleDeleteAnnotation = id => {
     act('delete_annotation', { id: id });
   };
 
