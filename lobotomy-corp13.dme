@@ -3549,6 +3549,7 @@
 #include "code\modules\rce\rce_structures.dm"
 #include "code\modules\rce\spawners.dm"
 #include "code\modules\rce\temp_resource.dm"
+#include "code\modules\facility_management\facility_tactical_map.dm"
 #include "code\modules\reagents\chem_splash.dm"
 #include "code\modules\reagents\reagent_containers.dm"
 #include "code\modules\reagents\reagent_dispenser.dm"
