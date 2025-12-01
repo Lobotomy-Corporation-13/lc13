@@ -174,6 +174,15 @@
 /obj/structure/railing,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
+"bq" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 8
+	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = -32
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/north)
 "br" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 6
@@ -237,6 +246,9 @@
 /area/facility_hallway/north)
 "bJ" = (
 /obj/structure/refinery,
+/obj/machinery/facility_tactical_map{
+	pixel_x = 32
+	},
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "bO" = (
@@ -1311,7 +1323,7 @@
 /obj/machinery/camera/autoname{
 	dir = 9
 	},
-/obj/structure/sign/poster/official/twelve_gauge{
+/obj/machinery/facility_tactical_map{
 	pixel_x = 32
 	},
 /turf/open/floor/carpet/royalblack,
@@ -2276,6 +2288,15 @@
 	},
 /turf/open/floor/facility/white,
 /area/department_main/safety)
+"qr" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 4
+	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = 32
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/north)
 "qv" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Records Office Secure Area";
@@ -2509,9 +2530,7 @@
 /area/department_main/records)
 "rS" = (
 /obj/machinery/camera/autoname,
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "rZ" = (
@@ -3479,6 +3498,13 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
+"zE" = (
+/obj/effect/turf_decal/siding/purple,
+/obj/machinery/facility_tactical_map{
+	step_y = -32
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/central)
 "zJ" = (
 /obj/effect/turf_decal/stripes/corner{
 	dir = 4
@@ -6028,6 +6054,12 @@
 /obj/structure/chair/office,
 /turf/open/floor/carpet,
 /area/department_main/control)
+"TG" = (
+/obj/machinery/facility_tactical_map{
+	pixel_x = 32
+	},
+/turf/open/floor/plasteel/dark,
+/area/department_main/control)
 "TL" = (
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
@@ -6047,6 +6079,9 @@
 "TY" = (
 /obj/machinery/light/cold,
 /obj/structure/table/wood/fancy/blue,
+/obj/machinery/facility_tactical_map{
+	step_y = -32
+	},
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
 "Uf" = (
@@ -6360,9 +6395,7 @@
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "Wb" = (
-/obj/machinery/modular_computer/console/preset/research{
-	name = "information department console"
-	},
+/obj/machinery/modular_computer/console/preset/research,
 /obj/machinery/camera/autoname,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
@@ -39008,7 +39041,7 @@ YO
 Hv
 ho
 LI
-TM
+zE
 LX
 MJ
 YM
@@ -39480,7 +39513,7 @@ hq
 je
 Zw
 Zw
-Zw
+bq
 Zw
 Zw
 Qu
@@ -39994,7 +40027,7 @@ hq
 Cg
 YW
 YW
-YW
+qr
 YW
 YW
 al
@@ -43317,7 +43350,7 @@ ZL
 ZL
 ZL
 BA
-Iq
+TG
 yX
 ry
 Iq

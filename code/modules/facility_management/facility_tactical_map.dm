@@ -9,16 +9,13 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 /obj/machinery/facility_tactical_map
 	name = "facility tactical command map"
 	desc = "A tactical planning interface for facility management. Authorized personnel can draw on this."
-	icon = 'icons/obj/machines/facilitymap.dmi'
-	icon_state = "station_map"
+	icon = 'icons/obj/machines/cryopod.dmi'
+	icon_state = "cellconsole"
+	color = "#00d9ff"
 	anchored = TRUE
 	density = FALSE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	layer = ABOVE_WINDOW_LAYER
-	light_color = "#6495ED"  // Cornflower blue for facility management theme
-	light_range = 4
-	light_power = 1
-	light_system = STATIC_LIGHT
 
 	/// The z-level this map displays
 	var/map_z_level = 1
@@ -29,27 +26,16 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	/// Whether the map has been initialized
 	var/map_initialized = FALSE
 	/// List of job titles allowed to edit this map
-	var/list/allowed_editors = list("Manager")
+	var/list/allowed_editors = list("Manager", "Extraction Officer", "Records Officer")
+	//Automatic update it's Z level to match it's level?
+	var/auto_update = FALSE
+
 
 /obj/machinery/facility_tactical_map/Initialize()
 	. = ..()
 	GLOB.facility_tactical_maps += src
-	map_z_level = z
-
-	// Pixel offsets based on direction (like facility_holomap)
-	switch(dir)
-		if(NORTH)
-			pixel_x = 0
-			pixel_y = -32
-		if(SOUTH)
-			pixel_x = 0
-			pixel_y = 32
-		if(WEST)
-			pixel_x = 32
-			pixel_y = 0
-		if(EAST)
-			pixel_x = -32
-			pixel_y = 0
+	if(auto_update)
+		map_z_level = z
 
 	// Generate map grid after holomap system initializes
 	if(SSholomap.initialized)
@@ -60,6 +46,13 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	cached_map_grid = null
 	return ..()
 
+/// Returns the annotation list for this map's z-level, initializing it if needed
+/obj/machinery/facility_tactical_map/proc/get_z_annotations()
+	var/z_key = "[map_z_level]"
+	if(!GLOB.facility_tactical_annotations[z_key])
+		GLOB.facility_tactical_annotations[z_key] = list()
+	return GLOB.facility_tactical_annotations[z_key]
+
 /obj/machinery/facility_tactical_map/proc/initialize_map()
 	if(!map_initialized && SSholomap?.initialized)
 		generate_map_grid()
@@ -68,7 +61,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 /obj/machinery/facility_tactical_map/examine(mob/user)
 	. = ..()
 	. += span_notice("Click to open the tactical map interface.")
-	. += span_notice("Annotations: [length(GLOB.facility_tactical_annotations)]/[max_annotations]")
+	. += span_notice("Annotations: [length(get_z_annotations())]/[max_annotations]")
 	if(can_user_edit(user))
 		. += span_notice("You have permission to draw on this map.")
 	else
@@ -94,8 +87,8 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 /obj/machinery/facility_tactical_map/ui_data(mob/user)
 	var/list/data = list()
 
-	// Send annotations
-	data["annotations"] = GLOB.facility_tactical_annotations
+	// Send annotations for this z-level
+	data["annotations"] = get_z_annotations()
 
 	// Send map grid if cached
 	if(cached_map_grid)
@@ -146,8 +139,10 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	if(!params || !params["type"])
 		return FALSE
 
+	var/list/z_annotations = get_z_annotations()
+
 	// Check annotation limit
-	if(length(GLOB.facility_tactical_annotations) >= max_annotations)
+	if(length(z_annotations) >= max_annotations)
 		to_chat(user, span_warning("Maximum annotation limit reached!"))
 		return FALSE
 
@@ -178,7 +173,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		if("freeform")
 			annotation["points"] = params["points"]
 
-	GLOB.facility_tactical_annotations += list(annotation)
+	z_annotations += list(annotation)
 
 	log_game("[user.ckey] ([user]) added facility tactical annotation: [params["type"]] at ([annotation["x1"]], [annotation["y1"]])")
 
@@ -190,10 +185,11 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		return FALSE
 
 	var/annotation_id = text2num(params["id"])
+	var/list/z_annotations = get_z_annotations()
 
-	for(var/list/annotation in GLOB.facility_tactical_annotations)
+	for(var/list/annotation in z_annotations)
 		if(annotation["id"] == annotation_id)
-			GLOB.facility_tactical_annotations -= list(annotation)
+			z_annotations -= list(annotation)
 			log_game("[user.ckey] ([user]) deleted facility tactical annotation ID [annotation_id]")
 			update_all_uis()
 			return TRUE
@@ -201,23 +197,24 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	return FALSE
 
 /obj/machinery/facility_tactical_map/proc/clear_all_annotations(mob/user)
-	var/annotation_count = length(GLOB.facility_tactical_annotations)
-	GLOB.facility_tactical_annotations = list()
-	GLOB.facility_tactical_annotation_id = 0
+	var/list/z_annotations = get_z_annotations()
+	var/annotation_count = length(z_annotations)
+	z_annotations.Cut()
 
-	log_game("[user.ckey] ([user]) cleared all facility tactical annotations ([annotation_count] total)")
+	log_game("[user.ckey] ([user]) cleared facility tactical annotations on z-level [map_z_level] ([annotation_count] total)")
 
 	update_all_uis()
 	return TRUE
 
 /obj/machinery/facility_tactical_map/proc/undo_last_annotation(mob/user)
-	if(!length(GLOB.facility_tactical_annotations))
+	var/list/z_annotations = get_z_annotations()
+	if(!length(z_annotations))
 		return FALSE
 
-	var/list/last_annotation = GLOB.facility_tactical_annotations[length(GLOB.facility_tactical_annotations)]
-	GLOB.facility_tactical_annotations -= list(last_annotation)
+	var/list/last_annotation = z_annotations[length(z_annotations)]
+	z_annotations -= list(last_annotation)
 
-	log_game("[user.ckey] ([user]) undid last facility tactical annotation")
+	log_game("[user.ckey] ([user]) undid last facility tactical annotation on z-level [map_z_level]")
 
 	update_all_uis()
 	return TRUE
@@ -229,18 +226,19 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 	var/erase_x = text2num(params["x"])
 	var/erase_y = text2num(params["y"])
 	var/erase_radius = text2num(params["radius"]) || 10
+	var/list/z_annotations = get_z_annotations()
 
 	var/deleted_count = 0
-	for(var/list/annotation in GLOB.facility_tactical_annotations)
+	for(var/list/annotation in z_annotations)
 		var/x1 = annotation["x1"]
 		var/y1 = annotation["y1"]
 
 		if(sqrt((x1 - erase_x) ** 2 + (y1 - erase_y) ** 2) <= erase_radius)
-			GLOB.facility_tactical_annotations -= list(annotation)
+			z_annotations -= list(annotation)
 			deleted_count++
 
 	if(deleted_count > 0)
-		log_game("[user.ckey] ([user]) erased [deleted_count] facility tactical annotations at ([erase_x], [erase_y])")
+		log_game("[user.ckey] ([user]) erased [deleted_count] facility tactical annotations at ([erase_x], [erase_y]) on z-level [map_z_level]")
 		update_all_uis()
 		return TRUE
 
@@ -265,7 +263,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		return FALSE
 
 	// Check if user's job title is in the allowed editors list
-	if(H.mind.assigned_role.title in allowed_editors)
+	if(H.mind.assigned_role in allowed_editors)
 		return TRUE
 
 	return FALSE
@@ -305,20 +303,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 // ===== UI SYNCHRONIZATION =====
 
 /obj/machinery/facility_tactical_map/proc/update_all_uis()
-	// Update all facility tactical map UIs
+	// Update facility tactical map UIs on the same z-level
 	for(var/obj/machinery/facility_tactical_map/M in GLOB.facility_tactical_maps)
-		SStgui.update_uis(M)
-
-// ===== READ-ONLY DISPLAY VARIANT =====
-
-/obj/machinery/facility_tactical_map/display
-	name = "facility tactical map display"
-	desc = "Displays tactical information from Command. Read-only."
-	icon_state = "computer_display"
-
-/obj/machinery/facility_tactical_map/display/can_user_edit(mob/user)
-	// Only admins can edit display machines (for debugging)
-	if(user.client && check_rights_for(user.client, R_ADMIN, FALSE))
-		return TRUE
-
-	return FALSE
+		if(M.map_z_level == map_z_level)
+			SStgui.update_uis(M)

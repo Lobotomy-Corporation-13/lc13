@@ -344,6 +344,15 @@
 /obj/item/toy/plush/hokma,
 /turf/open/floor/carpet/black,
 /area/department_main/records)
+"bL" = (
+/obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = 32
+	},
+/turf/open/floor/carpet,
+/area/department_main/control)
 "bM" = (
 /obj/machinery/computer/med_data{
 	dir = 1
@@ -967,6 +976,9 @@
 	anchored = 1;
 	icon_state = "plant-21"
 	},
+/obj/machinery/facility_tactical_map{
+	step_y = 32
+	},
 /turf/open/floor/facility/white,
 /area/department_main/safety)
 "eI" = (
@@ -1473,6 +1485,15 @@
 /obj/machinery/light,
 /turf/open/floor/plasteel/dark,
 /area/department_main/safety)
+"hX" = (
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/obj/machinery/facility_tactical_map{
+	step_y = -32
+	},
+/turf/open/floor/carpet/stellar,
+/area/department_main/command)
 "hZ" = (
 /obj/effect/turf_decal/siding{
 	color = "#440000";
@@ -2287,6 +2308,9 @@
 /obj/item/wirecutters,
 /obj/item/wrench,
 /obj/item/stack/cable_coil,
+/obj/machinery/facility_tactical_map{
+	step_y = 32
+	},
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "lE" = (
@@ -3410,6 +3434,17 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
+"ry" = (
+/obj/effect/turf_decal/siding/blue{
+	color = "#3234B9";
+	dir = 4
+	},
+/obj/structure/disposalpipe/segment,
+/obj/machinery/facility_tactical_map{
+	pixel_x = -32
+	},
+/turf/open/floor/plasteel,
+/area/department_main/welfare)
 "rA" = (
 /obj/machinery/computer/crew{
 	dir = 1
@@ -5880,6 +5915,9 @@
 /obj/structure/chair/sofa/corp{
 	dir = 4
 	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = -32
+	},
 /turf/open/floor/carpet/royalblue,
 /area/department_main/welfare)
 "DK" = (
@@ -6092,6 +6130,12 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/department_main/information)
+"EP" = (
+/obj/machinery/facility_tactical_map{
+	step_y = 32
+	},
+/turf/open/floor/carpet/orange,
+/area/department_main/training)
 "ER" = (
 /obj/structure/chair/office,
 /obj/item/toy/plush/gebura,
@@ -6692,6 +6736,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/training)
+"If" = (
+/obj/machinery/facility_tactical_map{
+	step_y = 32
+	},
+/turf/open/floor/carpet/red,
+/area/department_main/discipline)
 "Ih" = (
 /obj/effect/turf_decal/siding/red{
 	dir = 10
@@ -7055,6 +7105,9 @@
 	dir = 6
 	},
 /obj/structure/closet/crate,
+/obj/machinery/facility_tactical_map{
+	pixel_x = -32
+	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/discipline)
 "Kb" = (
@@ -7830,6 +7883,19 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/discipline)
+"NT" = (
+/obj/effect/turf_decal/tile/brown{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/brown,
+/obj/effect/turf_decal/siding/brown{
+	dir = 4
+	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = 32
+	},
+/turf/open/floor/plasteel,
+/area/facility_hallway/training)
 "NV" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 5
@@ -35786,7 +35852,7 @@ cI
 cI
 Lw
 Mi
-wi
+bL
 eN
 xw
 yj
@@ -38141,7 +38207,7 @@ JB
 JB
 JB
 rS
-Px
+If
 Px
 Px
 Px
@@ -39933,7 +39999,7 @@ Bk
 Bk
 Bk
 TP
-TP
+hX
 AI
 JB
 hl
@@ -41515,7 +41581,7 @@ uZ
 GK
 xd
 sm
-BW
+ry
 Gm
 BW
 Yl
@@ -47864,7 +47930,7 @@ zd
 sE
 RG
 SY
-KO
+EP
 jD
 KO
 Ib
@@ -52243,7 +52309,7 @@ Ia
 LA
 Cr
 XW
-dP
+NT
 dP
 jZ
 dP

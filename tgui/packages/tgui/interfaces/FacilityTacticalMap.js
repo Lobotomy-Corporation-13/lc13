@@ -603,77 +603,79 @@ export const FacilityTacticalMap = function (props, context) {
       height={620}>
       <Window.Content>
         <Stack fill>
-          {/* Tool palette */}
-          <Stack.Item basis="100px">
-            <Section title="Tools" fill scrollable>
-              <ToolButton
-                label="Ptr"
-                tooltip="Pointer"
-                selected={selectedTool === TOOL_POINTER}
-                onClick={function () { setSelectedTool(TOOL_POINTER); }}
-              />
-              <ToolButton
-                label="Pen"
-                tooltip="Pencil (Freeform)"
-                selected={selectedTool === TOOL_PENCIL}
-                onClick={function () { setSelectedTool(TOOL_PENCIL); }}
-              />
-              <ToolButton
-                label="Line"
-                tooltip="Line"
-                selected={selectedTool === TOOL_LINE}
-                onClick={function () { setSelectedTool(TOOL_LINE); }}
-              />
-              <ToolButton
-                label="Rect"
-                tooltip="Rectangle"
-                selected={selectedTool === TOOL_RECT}
-                onClick={function () { setSelectedTool(TOOL_RECT); }}
-              />
-              <ToolButton
-                label="Circ"
-                tooltip="Circle"
-                selected={selectedTool === TOOL_CIRCLE}
-                onClick={function () { setSelectedTool(TOOL_CIRCLE); }}
-              />
-              <ToolButton
-                label="Text"
-                tooltip="Text"
-                selected={selectedTool === TOOL_TEXT}
-                onClick={function () { setSelectedTool(TOOL_TEXT); }}
-              />
-              <ToolButton
-                label="Icon"
-                tooltip="Icon/Marker"
-                selected={selectedTool === TOOL_ICON}
-                onClick={function () { setSelectedTool(TOOL_ICON); }}
-              />
-              <ToolButton
-                label="Erase"
-                tooltip="Eraser - Click to delete nearby annotation"
-                selected={selectedTool === TOOL_ERASER}
-                onClick={function () { setSelectedTool(TOOL_ERASER); }}
-              />
-
-              <Box mt={2}>
-                <Box bold mb={1}>Colors</Box>
-                <ColorPicker
-                  selectedColor={selectedColor}
-                  onColorSelect={setSelectedColor}
+          {/* Tool palette - only shown when user can edit */}
+          {canEdit && (
+            <Stack.Item basis="100px">
+              <Section title="Tools" fill scrollable>
+                <ToolButton
+                  label="Ptr"
+                  tooltip="Pointer"
+                  selected={selectedTool === TOOL_POINTER}
+                  onClick={function () { setSelectedTool(TOOL_POINTER); }}
                 />
-              </Box>
+                <ToolButton
+                  label="Pen"
+                  tooltip="Pencil (Freeform)"
+                  selected={selectedTool === TOOL_PENCIL}
+                  onClick={function () { setSelectedTool(TOOL_PENCIL); }}
+                />
+                <ToolButton
+                  label="Line"
+                  tooltip="Line"
+                  selected={selectedTool === TOOL_LINE}
+                  onClick={function () { setSelectedTool(TOOL_LINE); }}
+                />
+                <ToolButton
+                  label="Rect"
+                  tooltip="Rectangle"
+                  selected={selectedTool === TOOL_RECT}
+                  onClick={function () { setSelectedTool(TOOL_RECT); }}
+                />
+                <ToolButton
+                  label="Circ"
+                  tooltip="Circle"
+                  selected={selectedTool === TOOL_CIRCLE}
+                  onClick={function () { setSelectedTool(TOOL_CIRCLE); }}
+                />
+                <ToolButton
+                  label="Text"
+                  tooltip="Text"
+                  selected={selectedTool === TOOL_TEXT}
+                  onClick={function () { setSelectedTool(TOOL_TEXT); }}
+                />
+                <ToolButton
+                  label="Icon"
+                  tooltip="Icon/Marker"
+                  selected={selectedTool === TOOL_ICON}
+                  onClick={function () { setSelectedTool(TOOL_ICON); }}
+                />
+                <ToolButton
+                  label="Erase"
+                  tooltip="Eraser - Click to delete nearby annotation"
+                  selected={selectedTool === TOOL_ERASER}
+                  onClick={function () { setSelectedTool(TOOL_ERASER); }}
+                />
 
-              {selectedTool === TOOL_ICON && (
                 <Box mt={2}>
-                  <Box bold mb={1}>Icons</Box>
-                  <IconPicker
-                    selectedIcon={selectedIcon}
-                    onIconSelect={setSelectedIcon}
+                  <Box bold mb={1}>Colors</Box>
+                  <ColorPicker
+                    selectedColor={selectedColor}
+                    onColorSelect={setSelectedColor}
                   />
                 </Box>
-              )}
-            </Section>
-          </Stack.Item>
+
+                {selectedTool === TOOL_ICON && (
+                  <Box mt={2}>
+                    <Box bold mb={1}>Icons</Box>
+                    <IconPicker
+                      selectedIcon={selectedIcon}
+                      onIconSelect={setSelectedIcon}
+                    />
+                  </Box>
+                )}
+              </Section>
+            </Stack.Item>
+          )}
 
           {/* Main canvas area */}
           <Stack.Item grow>

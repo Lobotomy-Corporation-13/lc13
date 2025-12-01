@@ -731,8 +731,7 @@
 	max_integrity = 25000000;
 	name = "Arcade Secure Storage";
 	normal_integrity = 25000000;
-	req_access_txt = "69";
-	whitelist_door = null
+	req_access_txt = "69"
 	},
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
@@ -1396,6 +1395,9 @@
 /obj/item/kirbyplants/random{
 	pixel_y = 10
 	},
+/obj/machinery/facility_tactical_map{
+	pixel_x = -32
+	},
 /turf/open/floor/plasteel/dark,
 /area/department_main/manager)
 "td" = (
@@ -1655,7 +1657,7 @@
 	dir = 4
 	},
 /obj/effect/turf_decal/tile/neutral,
-/obj/machinery/status_display{
+/obj/machinery/facility_tactical_map{
 	pixel_x = 32
 	},
 /turf/open/floor/plasteel/dark,
@@ -2345,7 +2347,6 @@
 	height = 5;
 	id = "epsilon_control";
 	name = "2F - Control";
-	roundstart_template = null;
 	width = 6
 	},
 /turf/open/floor/plasteel/elevatorshaft,
