@@ -10,16 +10,14 @@
 /datum/reagent/abnormality/lunaphetamine/on_mob_life(mob/living/M)
 	if(prob(10))
 		//Get a random between Blind, Confusion, Mute and drowsy, and none. This is used by the lunar rabbits
-		var/effect_choice = rand(1,4)
+		var/effect_choice = rand(1,3)
 		switch(effect_choice)
 			if(1)
-				L.set_confusion(10)
+				M.set_confusion(10)
 			if(2)
-				L.silent = 100
+				M.drowsyness += 30
 			if(3)
-				L.drowsyness += 30
-			if(4)
-				L.adjust_blindness(5)
+				M.adjust_blindness(5)
 
 	..()
 	return TRUE
@@ -32,7 +30,7 @@
 
 /datum/reagent/abnormality/heavyblood/on_mob_life(mob/living/M)
 	if(prob(10))
-		L.drowsyness += 30
+		M.drowsyness += 30
 	..()
 	return TRUE
 

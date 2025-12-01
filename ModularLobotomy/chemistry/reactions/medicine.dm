@@ -13,7 +13,7 @@
 	required_reagents = list(/datum/reagent/abnormality/healing_gel = 1, /datum/chemical_reaction/sanity_gel = 1,
 		/datum/chemical_reaction/radionex = 1)
 
-
+//The basic Burn salve and anti-toxins
 /datum/chemical_reaction/burn_salve
 	results = list(/datum/reagent/abnormality/burn_salve = 2)
 	required_reagents = list(/datum/reagent/xenotride = 1, /datum/reagent/virothane = 1,

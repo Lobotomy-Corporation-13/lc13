@@ -72,7 +72,7 @@
 	description = "powdered M-Corp moonstone used for regenerating sanity."
 	metabolization_rate = REAGENTS_METABOLISM
 	color = "#6baf65"
-	Sanity_restore = 8
+	sanity_restore = 8
 	overdose_threshold = 30
 
 /datum/reagent/abnormality/sanity_fast/on_mob_life(mob/living/M)
