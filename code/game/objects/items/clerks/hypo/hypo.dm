@@ -103,9 +103,9 @@
 	/// These don't just use the name of the drug via a string in the case that we change their name at any point.
 	var/datum/reagent/medicine/M = /datum/reagent/medicine/epinephrine
 	temp_reag[initial(M.name)] = image(icon = 'icons/hud/screen_gen.dmi', icon_state = "health6")
-	M = /datum/reagent/medicine/sal_acid
+	M = /datum/reagent/abnormality/healing_gel
 	temp_reag[initial(M.name)] = image(icon = 'icons/hud/screen_gen.dmi', icon_state = "health5")
-	M = /datum/reagent/medicine/mental_stabilizator
+	M = /datum/reagent/abnormality/sanity_gel
 	temp_reag[initial(M.name)] = image(icon = 'icons/hud/screen_gen.dmi', icon_state = "sanity5")
 
 	for(var/reag in reagent_names) // For any added via AddReagent proc
