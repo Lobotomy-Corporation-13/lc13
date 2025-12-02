@@ -22,6 +22,9 @@
 
 
 
+
+
+//GOD no
 /datum/ordeal/boss/branch12/kim
 	name = "Memory of a Broken Sword"
 	flavor_name = "Bamboo Hatted Kim"
@@ -29,7 +32,7 @@
 	end_announce_text = "And in the end, he was naught but an animal."
 	announce_sound = 'sound/effects/ordeals/indigo_start.ogg'
 	end_sound = 'sound/effects/ordeals/indigo_end.ogg'
-	level = 4
+	level = 6
 	reward_percent = 0.25
 	color = "#30317a"
 	can_run = FALSE
@@ -37,6 +40,26 @@
 
 
 /datum/ordeal/boss/branch12/kim/AbleToRun()
+	if(SSmaptype.maptype == "branch12")
+		can_run = TRUE
+	return can_run
+
+
+/datum/ordeal/boss/branch12/ripper
+	name = "Memory of a Stopped Watch"
+	flavor_name = "The Time Ripper"
+	announce_text = "A man that froze others in time, comes to collect."
+	end_announce_text = "And in the end, he was got more than what he came for."
+	announce_sound = 'sound/effects/ordeals/indigo_start.ogg'
+	end_sound = 'sound/effects/ordeals/indigo_end.ogg'
+	level = 4
+	reward_percent = 0.25
+	color = "#30317a"
+	can_run = FALSE
+	bosstype = /mob/living/simple_animal/hostile/distortion/timeripper
+
+
+/datum/ordeal/boss/branch12/ripper/AbleToRun()
 	if(SSmaptype.maptype == "branch12")
 		can_run = TRUE
 	return can_run
