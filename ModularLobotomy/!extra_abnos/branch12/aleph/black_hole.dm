@@ -63,6 +63,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/black_hole/Move()
 	. = ..()
+	if(IsContained())
+		return
 	for(var/mob/living/H in range(1, src))
 		if(H.status_flags & GODMODE)
 			continue

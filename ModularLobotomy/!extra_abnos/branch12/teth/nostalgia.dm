@@ -52,5 +52,6 @@
 /obj/item/nostalgia_capsule/attack_self(mob/living/carbon/human/user)
 	..()
 	to_chat(user, span_notice("You open the capsule and take a smell."))
-	user.adjustSanityLoss(-heal_amount)
+	user.adjustSanityLoss(-get_attribute_level(user, PRUDENCE_ATTRIBUTE))
+	apply_lc_white_fragile(5)
 	qdel(src)

@@ -8,8 +8,8 @@
 	end_sound = 'sound/effects/ordeals/crimson_end.ogg'
 	level = 1
 	reward_percent = 0.10
-	spawn_places = 6
-	spawn_amount = 4
+	spawn_places = 4
+	spawn_amount = 3
 	spawn_type = list(
 		/mob/living/simple_animal/hostile/humanoid/blood/bag,
 		)

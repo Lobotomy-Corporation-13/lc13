@@ -27,7 +27,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/passion/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) >= 80)
-		datum_reference.qliphoth_change(-1)
+		if(prob(30))
+			datum_reference.qliphoth_change(-1)
 	if(get_attribute_level(user, JUSTICE_ATTRIBUTE) > 60)
 		datum_reference.qliphoth_change(-1)
 
@@ -35,6 +36,11 @@
 		if(prob(80))
 			datum_reference.qliphoth_change(-1)
 	return
+
+/mob/living/simple_animal/hostile/abnormality/branch12/passion/SuccessEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) >= 80)
+		datum_reference.qliphoth_change(1)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/passion/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
