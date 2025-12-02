@@ -132,8 +132,8 @@
 
 	alert_drones(DRONE_NET_CONNECT)
 
-	var/datum/atom_hud/data/diagnostic/diag_hud = GLOB.huds[DATA_HUD_DIAGNOSTIC_BASIC]
-	diag_hud.add_atom_to_hud(src)
+	for(var/datum/atom_hud/data/diagnostic/diag_hud in GLOB.huds)
+		diag_hud.add_to_hud(src)
 	return INITIALIZE_HINT_LATELOAD
 
 /mob/living/simple_animal/drone/LateInitialize()
