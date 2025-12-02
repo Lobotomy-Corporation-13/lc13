@@ -2,6 +2,7 @@
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird
 	name = "Seeing Bird"
 	desc = "A small floating eye."
+	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
 	icon_state = "eye_bird"
 	icon_living = "eye_bird"
 	portrait = "eye_bird"
