@@ -7,18 +7,19 @@
 	portrait = "eye_bird"
 	maxHealth = 1250
 	health = 1250
-	rapid_melee = 2
-	move_to_delay = 2
-	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1.6, PALE_DAMAGE = 0)
-	melee_damage_lower = 5
-	melee_damage_upper = 5
-	is_flying_animal = TRUE
-	melee_damage_type = BLACK_DAMAGE
-	stat_attack = HARD_CRIT
-	attack_verb_continuous = "bumps"
-	attack_verb_simple = "bumps"
+	rapid_melee = 4
+	move_to_delay = 4
+	attack_verb_continuous = "bites"
+	attack_verb_simple = "bite"
+	pass_flags = PASSTABLE
 	faction = list("hostile")
-	can_breach = TRUE
+	attack_sound = 'sound/weapons/pbird_bite.ogg'
+	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1.6, PALE_DAMAGE = 0)
+	melee_damage_lower = 2
+	melee_damage_upper = 2
+	is_flying_animal = TRUE
+	melee_damage_type = PALE_DAMAGE
+	stat_attack = HARD_CRIT
 	threat_level = ALEPH_LEVEL
 	start_qliphoth = 1
 
@@ -41,10 +42,6 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 15 SECONDS
-
-
-/mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/AttackingTarget()
-	return FALSE
 
 
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
