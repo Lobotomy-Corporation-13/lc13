@@ -53,5 +53,5 @@
 	..()
 	to_chat(user, span_notice("You open the capsule and take a smell."))
 	user.adjustSanityLoss(-get_attribute_level(user, PRUDENCE_ATTRIBUTE))
-	apply_lc_white_fragile(5)
+	user.apply_lc_white_fragile(5)
 	qdel(src)

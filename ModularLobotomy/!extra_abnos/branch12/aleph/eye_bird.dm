@@ -39,16 +39,18 @@
 		/datum/ego_datum/armor/justitia,)
 
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
+	var/pulse_cooldown
+	var/pulse_cooldown_time = 15 SECONDS
 
 
-/mob/living/simple_animal/hostile/sun_pillar/AttackingTarget()
+/mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/AttackingTarget()
 	return FALSE
 
 
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
 	if(prob(40))
-	datum_reference.qliphoth_change(-1)
+		datum_reference.qliphoth_change(-1)
 	return
 
 
