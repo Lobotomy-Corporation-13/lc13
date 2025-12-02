@@ -4085,6 +4085,7 @@
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\black_hole.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\black_sun.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\consilium_fracas.dm"
+#include "ModularLobotomy\!extra_abnos\branch12\aleph\eye_bird.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\heart_madness.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\oldman_pale.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\aleph\selene.dm"
