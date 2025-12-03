@@ -26,7 +26,7 @@
 	desc = "An autoinjector containing L-Corp burn gel, used to treat burn damage."
 	icon_state = "lpenb"
 	inhand_icon_state = "oxapen"
-	list_reagents = list(/datum/reagent/burn_salve = 10)
+	list_reagents = list(/datum/reagent/abnormality/burn_salve = 10)
 
 /obj/item/reagent_containers/hypospray/medipen/antitoxin
 	name = "Universal Anti-Toxin medipen"
