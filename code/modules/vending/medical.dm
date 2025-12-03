@@ -22,6 +22,8 @@
 					/obj/item/reagent_containers/hypospray/medipen/l_health = 6,
 					/obj/item/reagent_containers/hypospray/medipen/l_mixed = 6,
 					/obj/item/reagent_containers/hypospray/medipen/l_burn = 6,
+					/obj/item/reagent_containers/hypospray/medipen/purgeall = 3,
+					/obj/item/reagent_containers/hypospray/medipen/antitoxin = 1,
 					/obj/item/storage/box/bodybags = 4,
 					/obj/item/storage/box/masks = 1)
 	contraband = list(/obj/item/storage/box/gum/happiness = 3,

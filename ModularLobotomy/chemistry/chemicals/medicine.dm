@@ -89,7 +89,7 @@
 	color = "#6baf65"
 	overdose_threshold = 30
 
-/datum/reagent/abnormality/sanity_fast/on_mob_life(mob/living/M)
+/datum/reagent/antitoxin/on_mob_life(mob/living/M)
 	if(overdosed)
 		return
 	M.adjustToxLoss(-2*REM, 0)

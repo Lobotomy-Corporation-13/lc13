@@ -26,7 +26,7 @@
 	desc = "An autoinjector containing L-Corp burn gel, used to treat burn damage."
 	icon_state = "lpenb"
 	inhand_icon_state = "oxapen"
-	list_reagents = list(/datum/reagent/abnormality/burn_salve = 10)
+	list_reagents = list(/datum/reagent/burn_salve = 10)
 
 /obj/item/reagent_containers/hypospray/medipen/antitoxin
 	name = "Universal Anti-Toxin medipen"
@@ -38,8 +38,15 @@
 //K-Corp pens
 /obj/item/reagent_containers/hypospray/medipen/k_simple
 	name = "K-Corporation Pharmaceutical-Grade Healing Medipen"
-	desc = "An autoinjector containing a patented K-corporation medication. This is weaker than what's given in their\
-			more standard injectors, not working instantly bubt over a short period of time."
+	desc = "An autoinjector containing a patented K-corporation medication. This is weaker than what's given in their \
+			more standard injectors, not working instantly but over a short period of time."
 	icon_state = "kpen"
 	inhand_icon_state = "oxapen"
 	list_reagents = list(/datum/reagent/abnormality/healing_fast = 10)
+
+/obj/item/reagent_containers/hypospray/medipen/purgeall
+	name = "K-Corp Purge-All medipen"
+	desc = "An autoinjector containing medication to purge all chemicals."
+	icon_state = "kpurge"
+	inhand_icon_state = "oxapen"
+	list_reagents = list(/datum/reagent/antitoxin = 10)
