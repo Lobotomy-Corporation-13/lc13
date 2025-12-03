@@ -52,7 +52,7 @@
 	..()
 	return TRUE
 
-//mostly
+//mostly hard to get medicines
 /datum/reagent/abnormality/healing_fast
 	name = "K-Corp regeneration solution"
 	description = "Goo used by K-Corp for healing agents Overdose leads to your body rotting away."
@@ -81,6 +81,7 @@
 	..()
 	return TRUE
 
+//Weird stuff here
 /datum/reagent/antitoxin
 	name = "Universal anti-toxin"
 	description = "A universal anti-toxin used in the city for various purposes."
@@ -91,6 +92,7 @@
 /datum/reagent/abnormality/sanity_fast/on_mob_life(mob/living/M)
 	if(overdosed)
 		return
+	M.adjustToxLoss(-2*REM, 0)
 	..()
 	return TRUE
 
@@ -99,8 +101,23 @@
 	description = "A rare genetic reparation solution."
 	metabolization_rate = REAGENTS_METABOLISM
 	color = "#6baf65"
+	overdose_threshold = 30
 
 /datum/reagent/abnormality/healing_fast/on_mob_life(mob/living/M)
+	if(overdosed)
+		return
 	M.adjustCloneLoss(-2, 0)
 	..()
 	return TRUE
+
+/datum/reagent/purgall
+	name = "K-Corp Purge-All"
+	description = "A serum that purges all chemicals from a system."
+	metabolization_rate = REAGENTS_METABOLISM
+
+/datum/reagent/purgall/on_mob_life(mob/living/M)
+	for(var/datum/reagent/R in M.reagents.reagent_list)
+		if(R != src)
+			M.reagents.remove_reagent(R.type,2)
+	..()
+	. = 1

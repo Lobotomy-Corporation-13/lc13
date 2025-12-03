@@ -18,7 +18,7 @@
 	var/list/available_chems
 	var/controls_inside = FALSE
 	var/list/possible_chems = list(
-		list(/datum/reagent/medicine/epinephrine, /datum/reagent/medicine/c2/probital, /datum/reagent/medicine/mental_stabilizator, /datum/reagent/medicine/c2/aiuri, /datum/reagent/medicine/pen_acid),
+		list(/datum/reagent/medicine/epinephrine, /datum/chemical_reaction/healing_gel, /datum/chemical_reaction/sanity_gel, /datum/chemical_reaction/burn_salve, /datum/reagent/antitoxin, /datum/reagent/purgall),
 		list(),
 		list(),
 		list()
