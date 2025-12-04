@@ -91,13 +91,11 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		ui = new(user, src, "FacilityTacticalMap")
 		ui.open()
 
-/obj/machinery/facility_tactical_map/ui_data(mob/user)
+/// Static data sent only once when UI opens (map grid doesn't change)
+/obj/machinery/facility_tactical_map/ui_static_data(mob/user)
 	var/list/data = list()
 
-	// Send annotations for this z-level
-	data["annotations"] = get_z_annotations()
-
-	// Send map grid if cached
+	// Send map grid once on UI open (it never changes after initialization)
 	if(cached_map_grid)
 		data["mapGrid"] = cached_map_grid
 		data["mapWidth"] = length(cached_map_grid)
@@ -107,6 +105,16 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		data["mapWidth"] = 0
 		data["mapHeight"] = 0
 
+	return data
+
+/// Dynamic data sent on each update (annotations change frequently)
+/obj/machinery/facility_tactical_map/ui_data(mob/user)
+	var/list/data = list()
+
+	// Send annotations for this z-level (dynamic data)
+	data["annotations"] = get_z_annotations()
+
+	// Send permission and config data
 	data["maxAnnotations"] = max_annotations
 	data["canEdit"] = can_user_edit(user)
 	data["isAdmin"] = check_rights_for(user.client, R_ADMIN, FALSE)
@@ -185,7 +193,7 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 
 	log_game("[user.ckey] ([user]) added facility tactical annotation: [params["type"]] at ([annotation["x1"]], [annotation["y1"]])")
 
-	update_all_uis()
+	// Note: UI updates are now manual - user must press Update button
 	return TRUE
 
 /obj/machinery/facility_tactical_map/proc/delete_annotation(mob/user, list/params)
@@ -199,7 +207,6 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 		if(annotation["id"] == annotation_id)
 			z_annotations -= list(annotation)
 			log_game("[user.ckey] ([user]) deleted facility tactical annotation ID [annotation_id]")
-			update_all_uis()
 			return TRUE
 
 	return FALSE
@@ -211,7 +218,6 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 
 	log_game("[user.ckey] ([user]) cleared facility tactical annotations on z-level [map_z_level] ([annotation_count] total)")
 
-	update_all_uis()
 	return TRUE
 
 /obj/machinery/facility_tactical_map/proc/undo_last_annotation(mob/user)
@@ -224,7 +230,6 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 
 	log_game("[user.ckey] ([user]) undid last facility tactical annotation on z-level [map_z_level]")
 
-	update_all_uis()
 	return TRUE
 
 /obj/machinery/facility_tactical_map/proc/erase_at_position(mob/user, list/params)
@@ -247,7 +252,6 @@ GLOBAL_VAR_INIT(facility_tactical_annotation_id, 0)
 
 	if(deleted_count > 0)
 		log_game("[user.ckey] ([user]) erased [deleted_count] facility tactical annotations at ([erase_x], [erase_y]) on z-level [map_z_level]")
-		update_all_uis()
 		return TRUE
 
 	return FALSE

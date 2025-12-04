@@ -39,67 +39,122 @@ const TACTICAL_ICONS = [
 ];
 
 // Canvas component for drawing
+// Uses 3-layer system for performance:
+// 1. Background canvas - map grid (drawn once)
+// 2. Annotations canvas - existing shapes (updated when annotations change)
+// 3. Preview canvas - current drawing (updated during active drawing)
 class TacticalCanvas extends Component {
   constructor(props) {
     super(props);
-    this.canvasRef = createRef();
+    this.backgroundCanvasRef = createRef();
+    this.annotationsCanvasRef = createRef();
+    this.previewCanvasRef = createRef();
     this.state = {
       isDrawing: false,
       startX: 0,
       startY: 0,
       currentPoints: [],
+      mapGridDrawn: false,
     };
     // Bind methods
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    // Throttle mouse move to 30Hz (33ms)
+    this.throttledMouseMove = this.throttle(this.handleMouseMove.bind(this), 33);
+  }
+
+  // Simple throttle implementation
+  throttle(func, delay) {
+    let lastCall = 0;
+    return function(...args) {
+      const now = Date.now();
+      if (now - lastCall >= delay) {
+        lastCall = now;
+        return func(...args);
+      }
+    };
   }
 
   componentDidMount() {
-    this.drawCanvas();
+    this.drawMapGrid();
+    this.drawAnnotations();
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.annotations !== this.props.annotations
-        || prevProps.mapGrid !== this.props.mapGrid) {
-      this.drawCanvas();
+    // Only redraw map grid if it changed (rare)
+    if (prevProps.mapGrid !== this.props.mapGrid) {
+      this.drawMapGrid();
+    }
+    // Only redraw annotations if they changed
+    if (prevProps.annotations !== this.props.annotations) {
+      this.drawAnnotations();
     }
   }
 
-  drawCanvas() {
-    const canvas = this.canvasRef.current;
+  // Draw map background layer (only once or when map changes)
+  drawMapGrid() {
+    const canvas = this.backgroundCanvasRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    const { mapGrid, annotations, canvasWidth, canvasHeight } = this.props;
+    const { mapGrid, canvasWidth, canvasHeight } = this.props;
 
     // Clear canvas
     ctx.fillStyle = '#111111';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-    // Draw map background
+    // Draw map background with optimized rendering
     if (mapGrid && mapGrid.length > 0) {
       const gridWidth = mapGrid.length;
       const gridHeight = mapGrid[0] ? mapGrid[0].length : 0;
       const cellWidth = canvasWidth / gridWidth;
       const cellHeight = canvasHeight / gridHeight;
 
+      // Group cells by color to minimize fillStyle changes
+      const colorGroups = {};
       for (let x = 0; x < gridWidth; x++) {
         for (let y = 0; y < gridHeight; y++) {
           const color = mapGrid[x][gridHeight - 1 - y]; // Flip Y
           if (color && color !== '#000000') {
-            ctx.fillStyle = color;
-            ctx.fillRect(
-              x * cellWidth,
-              y * cellHeight,
-              cellWidth + 1,
-              cellHeight + 1
-            );
+            if (!colorGroups[color]) {
+              colorGroups[color] = [];
+            }
+            colorGroups[color].push({ x, y });
           }
         }
       }
+
+      // Draw each color group in batch
+      for (const color in colorGroups) {
+        ctx.fillStyle = color;
+        const cells = colorGroups[color];
+        for (let i = 0; i < cells.length; i++) {
+          const cell = cells[i];
+          ctx.fillRect(
+            cell.x * cellWidth,
+            cell.y * cellHeight,
+            cellWidth + 1,
+            cellHeight + 1
+          );
+        }
+      }
     }
+
+    this.setState({ mapGridDrawn: true });
+  }
+
+  // Draw annotations layer (when annotations change)
+  drawAnnotations() {
+    const canvas = this.annotationsCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const { annotations, canvasWidth, canvasHeight } = this.props;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // Draw annotations
     if (annotations) {
@@ -107,10 +162,22 @@ class TacticalCanvas extends Component {
         this.drawAnnotation(ctx, annotations[i]);
       }
     }
+  }
+
+  // Draw preview layer (during active drawing)
+  drawPreview() {
+    const canvas = this.previewCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const { canvasWidth, canvasHeight } = this.props;
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     // Draw current drawing preview
     if (this.state.isDrawing) {
-      this.drawPreview(ctx);
+      this.drawPreviewShape(ctx);
     }
   }
 
@@ -122,6 +189,15 @@ class TacticalCanvas extends Component {
     ctx.strokeStyle = annotation.color || '#ffffff';
     ctx.fillStyle = annotation.color || '#ffffff';
     ctx.lineWidth = 2;
+
+    // Visual distinction for pending (draft) annotations
+    if (annotation.pending) {
+      ctx.globalAlpha = 0.6; // Semi-transparent
+      ctx.setLineDash([5, 3]); // Dashed lines
+    } else {
+      ctx.globalAlpha = 1.0;
+      ctx.setLineDash([]);
+    }
 
     const x1 = (annotation.x1 || 0) * scaleX;
     const y1 = canvasHeight - (annotation.y1 || 0) * scaleY;
@@ -189,9 +265,13 @@ class TacticalCanvas extends Component {
         }
         break;
     }
+
+    // Reset canvas state after drawing
+    ctx.globalAlpha = 1.0;
+    ctx.setLineDash([]);
   }
 
-  drawPreview(ctx) {
+  drawPreviewShape(ctx) {
     const {
       selectedTool,
       selectedColor,
@@ -228,7 +308,10 @@ class TacticalCanvas extends Component {
   }
 
   getMapCoords(event) {
-    const canvas = this.canvasRef.current;
+    // Use preview canvas for coordinate calculation (top layer)
+    const canvas = this.previewCanvasRef.current;
+    if (!canvas) return { mapX: 0, mapY: 0 };
+
     const rect = canvas.getBoundingClientRect();
     const { canvasWidth, canvasHeight, mapWidth, mapHeight } = this.props;
 
@@ -263,16 +346,19 @@ class TacticalCanvas extends Component {
     if (!this.state.isDrawing) return;
 
     const coords = this.getMapCoords(event);
-    const self = this;
 
     if (selectedTool === TOOL_PENCIL) {
+      // Batch point updates - add point to array
       this.setState(
         prevState => ({
           currentPoints: prevState.currentPoints.concat([
             { x: coords.mapX, y: coords.mapY },
           ]),
         }),
-        () => { self.drawCanvas(); }
+        () => {
+          // Only redraw preview layer (not entire canvas)
+          this.drawPreview();
+        }
       );
     }
   }
@@ -355,6 +441,9 @@ class TacticalCanvas extends Component {
       startX: 0,
       startY: 0,
       currentPoints: [],
+    }, () => {
+      // Clear preview canvas after drawing completes
+      this.drawPreview();
     });
   }
 
@@ -403,20 +492,49 @@ class TacticalCanvas extends Component {
       cursor = 'not-allowed';
     }
 
+    const canvasStyle = {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+    };
+
     return (
-      <canvas
-        ref={this.canvasRef}
-        width={canvasWidth}
-        height={canvasHeight}
+      <div
         style={{
-          cursor: cursor,
+          position: 'relative',
+          width: canvasWidth + 'px',
+          height: canvasHeight + 'px',
           border: '1px solid #444',
-        }}
-        onMouseDown={this.handleMouseDown}
-        onMouseMove={this.handleMouseMove}
-        onMouseUp={this.handleMouseUp}
-        onClick={this.handleClick}
-      />
+        }}>
+        {/* Layer 1: Background (map grid) - bottom layer */}
+        <canvas
+          ref={this.backgroundCanvasRef}
+          width={canvasWidth}
+          height={canvasHeight}
+          style={canvasStyle}
+        />
+        {/* Layer 2: Annotations - middle layer */}
+        <canvas
+          ref={this.annotationsCanvasRef}
+          width={canvasWidth}
+          height={canvasHeight}
+          style={canvasStyle}
+        />
+        {/* Layer 3: Preview (current drawing) - top layer with interactions */}
+        <canvas
+          ref={this.previewCanvasRef}
+          width={canvasWidth}
+          height={canvasHeight}
+          style={{
+            ...canvasStyle,
+            cursor: cursor,
+          }}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.throttledMouseMove}
+          onMouseUp={this.handleMouseUp}
+          onClick={this.handleClick}
+        />
+      </div>
     );
   }
 }
@@ -551,14 +669,22 @@ const AnnotationList = props => {
           mb={1}
           p={0.5}
           style={{
-            backgroundColor: 'rgba(255,255,255,0.1)',
+            backgroundColor: annotation.pending
+              ? 'rgba(255,200,0,0.15)' // Yellow tint for drafts
+              : 'rgba(255,255,255,0.1)',
             borderLeft: '3px solid ' + (annotation.color || '#fff'),
             borderRadius: '2px',
+            opacity: annotation.pending ? 0.8 : 1,
           }}>
           <Stack justify="space-between" align="center">
             <Stack.Item grow>
               <Box fontSize="11px">
-                <Box bold>{getAnnotationDescription(annotation)}</Box>
+                <Box bold>
+                  {getAnnotationDescription(annotation)}
+                  {annotation.pending && (
+                    <Box inline color="yellow" ml={1}>(DRAFT)</Box>
+                  )}
+                </Box>
                 {annotation.ckey && (
                   <Box color="label">
                     Drawn by: {annotation.ckey}
@@ -571,13 +697,14 @@ const AnnotationList = props => {
                 )}
               </Box>
             </Stack.Item>
-            {isAdmin && onDelete && (
+            {onDelete && (annotation.pending || isAdmin) && (
               <Stack.Item>
                 <Button
                   icon="times"
                   color="bad"
                   compact
                   onClick={() => onDelete(annotation.id)}
+                  tooltip={annotation.pending ? "Remove draft" : "Delete annotation"}
                 />
               </Stack.Item>
             )}
@@ -625,6 +752,14 @@ export const FacilityTacticalMap = (props, context) => {
   const [fontSize, setFontSize] = useLocalState(
     context, 'fontSize', 14
   );
+  // Local draft annotations (not yet submitted to backend)
+  const [pendingAnnotations, setPendingAnnotations] = useLocalState(
+    context, 'pendingAnnotations', []
+  );
+  // Counter for generating local IDs for pending annotations
+  const [pendingIdCounter, setPendingIdCounter] = useLocalState(
+    context, 'pendingIdCounter', 0
+  );
 
   // Calculate canvas dimensions based on map aspect ratio and zoom
   const baseCanvasSize = 480;
@@ -643,8 +778,15 @@ export const FacilityTacticalMap = (props, context) => {
   const canvasWidth = Math.round(baseWidth * zoomLevel);
   const canvasHeight = Math.round(baseHeight * zoomLevel);
 
+  // Add annotation to local drafts (not sent to backend yet)
   const handleAddAnnotation = annotationData => {
-    act('add_annotation', annotationData);
+    const newAnnotation = {
+      ...annotationData,
+      id: 'pending_' + pendingIdCounter, // Temporary local ID
+      pending: true, // Mark as pending
+    };
+    setPendingAnnotations([...pendingAnnotations, newAnnotation]);
+    setPendingIdCounter(pendingIdCounter + 1);
   };
 
   const handleTextPrompt = (x, y, color) => {
@@ -653,7 +795,7 @@ export const FacilityTacticalMap = (props, context) => {
 
   const handleTextSubmit = () => {
     if (textInput && textPos) {
-      act('add_annotation', {
+      handleAddAnnotation({
         type: 'text',
         x1: textPos.x,
         y1: textPos.y,
@@ -667,12 +809,59 @@ export const FacilityTacticalMap = (props, context) => {
   };
 
   const handleEraseAt = (x, y) => {
+    // Erase from pending annotations first
+    const newPending = pendingAnnotations.filter(ann => {
+      const distance = Math.sqrt(
+        Math.pow(ann.x1 - x, 2) + Math.pow(ann.y1 - y, 2)
+      );
+      return distance > 10; // Keep if distance > radius
+    });
+    setPendingAnnotations(newPending);
+
+    // Also erase from backend
     act('erase_at', { x: x, y: y });
   };
 
   const handleDeleteAnnotation = id => {
-    act('delete_annotation', { id: id });
+    // Check if it's a pending annotation
+    if (String(id).startsWith('pending_')) {
+      setPendingAnnotations(
+        pendingAnnotations.filter(ann => ann.id !== id)
+      );
+    } else {
+      // Delete from backend
+      act('delete_annotation', { id: id });
+    }
   };
+
+  // Submit all pending annotations to the backend
+  const handleSubmitAnnotations = () => {
+    if (pendingAnnotations.length === 0) {
+      return;
+    }
+
+    // Send each pending annotation to the backend
+    for (const annotation of pendingAnnotations) {
+      const { id, pending, ...annotationData } = annotation; // Remove local-only fields
+      act('add_annotation', annotationData);
+    }
+
+    // Clear pending annotations
+    setPendingAnnotations([]);
+  };
+
+  // Manually refresh data from backend
+  const handleUpdate = () => {
+    act('refresh');
+  };
+
+  // Discard all pending annotations
+  const handleDiscardDrafts = () => {
+    setPendingAnnotations([]);
+  };
+
+  // Combine backend annotations and pending annotations for display
+  const allAnnotations = [...annotations, ...pendingAnnotations];
 
   return (
     <Window
@@ -811,9 +1000,33 @@ export const FacilityTacticalMap = (props, context) => {
                     disabled={zoomLevel >= 3}
                     tooltip="Zoom in"
                   />
-                  {/* Edit controls - only for editors */}
+                  {/* Submit/Update controls - always visible when can edit */}
                   {canEdit ? (
                     <>
+                      <Button
+                        icon="upload"
+                        color="good"
+                        onClick={handleSubmitAnnotations}
+                        disabled={pendingAnnotations.length === 0}
+                        tooltip="Submit all draft annotations to save globally">
+                        Submit ({pendingAnnotations.length})
+                      </Button>
+                      <Button
+                        icon="sync"
+                        onClick={handleUpdate}
+                        tooltip="Update map from server (fetch latest annotations)">
+                        Update
+                      </Button>
+                      {pendingAnnotations.length > 0 && (
+                        <Button.Confirm
+                          icon="times"
+                          color="bad"
+                          onClick={handleDiscardDrafts}
+                          confirmContent="Discard?"
+                          tooltip="Discard all draft annotations">
+                          Discard
+                        </Button.Confirm>
+                      )}
                       <Button
                         icon="undo"
                         onClick={() => act('undo')}
@@ -854,7 +1067,7 @@ export const FacilityTacticalMap = (props, context) => {
                       mapGrid={mapGrid}
                       mapWidth={mapWidth}
                       mapHeight={mapHeight}
-                      annotations={annotations}
+                      annotations={allAnnotations}
                       canvasWidth={canvasWidth}
                       canvasHeight={canvasHeight}
                       selectedTool={selectedTool}
@@ -912,7 +1125,7 @@ export const FacilityTacticalMap = (props, context) => {
                 {/* Status bar */}
                 <Stack.Item>
                   <Box mt={1} color="label" fontSize="11px" textAlign="center">
-                    Annotations: {annotations.length}/{maxAnnotations}
+                    Saved: {annotations.length} | Drafts: {pendingAnnotations.length} | Total: {allAnnotations.length}/{maxAnnotations}
                     {!canEdit && ' (Read-only)'}
                     {selectedTool === TOOL_ERASER
                       && ' - Click on map to erase nearest annotation'}
@@ -927,7 +1140,7 @@ export const FacilityTacticalMap = (props, context) => {
                       scrollable
                       style={{ maxHeight: '150px' }}>
                       <AnnotationList
-                        annotations={annotations}
+                        annotations={allAnnotations}
                         onDelete={handleDeleteAnnotation}
                         isAdmin={isAdmin}
                       />
