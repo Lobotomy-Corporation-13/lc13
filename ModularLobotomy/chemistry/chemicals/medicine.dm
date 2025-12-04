@@ -13,7 +13,7 @@
 	return TRUE
 
 /datum/reagent/abnormality/sanity_gel
-	name = "L-Corp Sanity Concoction"
+	name = "L-Corp SP Plus"
 	description = "Gel used by L-Corp for healing agent's mental state."
 	color = "#6baf65"
 	sanity_restore = 3
