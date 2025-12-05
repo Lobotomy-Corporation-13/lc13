@@ -2575,6 +2575,10 @@
 "Iq" = (
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"Is" = (
+/obj/structure/closet/secure_closet/record,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/records)
 "It" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 8
@@ -2804,6 +2808,7 @@
 /obj/machinery/camera/autoname{
 	dir = 1
 	},
+/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "Lr" = (
@@ -46864,7 +46869,7 @@ ZK
 uY
 ZK
 ve
-wg
+Is
 ww
 pC
 ve
