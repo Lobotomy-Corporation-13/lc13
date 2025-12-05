@@ -97,7 +97,7 @@
 	//Take the shit from Black Sun
 	var/list/all_turfs = RANGE_TURFS(7, src)
 	for(var/turf/open/F in all_turfs)
-		if(prob(40))
+		if(prob(30))
 			addtimer(CALLBACK(src, PROC_REF(Firelaser), F), rand(1,30))
 
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/proc/Firelaser(turf/open/F)
