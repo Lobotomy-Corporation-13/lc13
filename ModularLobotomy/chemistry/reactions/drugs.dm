@@ -5,4 +5,4 @@
 
 /datum/chemical_reaction/heavyblood
 	results = list(/datum/reagent/abnormality/heavyblood = 1)
-	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/zephyrium_chloride = 1, /datum/reagent/plasmorite = 1)
+	required_reagents = list(/datum/reagent/radionex = 1, /datum/reagent/zephyrium_chloride = 1, /datum/reagent/ferroxan = 1)

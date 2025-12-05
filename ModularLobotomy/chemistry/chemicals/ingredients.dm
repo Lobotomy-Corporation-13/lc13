@@ -1,29 +1,34 @@
 //These are all just mixer reagents.
 
-/datum/reagent/neuroxene7
-	name = "Neuroxene-7"
-	description = "A non-toxic experimental compound."
-	color = "#7f8c8d"
+/datum/reagent/oxalite
+	name = "Oxalite"
+	description = "A non-reactive oxidized crystal."
+	color = "#d3e2f1"
 
-/datum/reagent/cryovium
-	name = "Cryovium"
-	description = "A harmless alloy used in lightweight materials."
-	color = "#3498db"
+/datum/reagent/hydrene
+	name = "Hydrene"
+	description = "A simple water-like compound."
+	color = "#bde7ff"
 
 /datum/reagent/xenotride
 	name = "Xenotride"
 	description = "An inert chemical."
 	color = "#821c15"
 
-/datum/reagent/luminexium
-	name = "Luminexium"
-	description = "A non-reactive luminous compound."
-	color = "#f1c40f"
+/datum/reagent/lithene
+	name = "Lithene"
+	description = "A light, stable mineral compound."
+	color = "#faf0d4"
 
-/datum/reagent/quantaferrite
-	name = "Quantaferrite"
-	description = "A stable, safe crystalline material."
-	color = "#9b59b6"
+/datum/reagent/ferroxan
+	name = "Ferroxan"
+	description = "A safe iron-based suspension."
+	color = "#dbc4b8"
+
+/datum/reagent/purite
+	name = "Purite"
+	description = "A clean, filtered mineral reagent."
+	color = "#f1f1ff"
 
 /datum/reagent/virothane
 	name = "Virothane"
@@ -34,11 +39,6 @@
 	name = "Synthryl"
 	description = "A synthetic compound with no toxic properties."
 	color = "#e67e22"
-
-/datum/reagent/plasmorite
-	name = "Plasmorite"
-	description = "A harmless plasma-stabilizing material."
-	color = "#1abc9c"
 
 /datum/reagent/omnicarbide
 	name = "Omnicarbide"
@@ -60,15 +60,15 @@
 	description = "A non-hazardous futuristic material."
 	color = "#16a085"
 
-/datum/reagent/osmarion
-	name = "Osmarion"
-	description = "A stable, inert chemical used in labs."
-	color = "#d35400"
+/datum/reagent/thermate
+	name = "Thermate"
+	description = "A gentle heat-retaining compound."
+	color = "#ffd9b3"
 
-/datum/reagent/phasium_delta
-	name = "Phasium-Delta"
-	description = "A harmless phase-stabilizing agent."
-	color = "#2980b9"
+/datum/reagent/verdite
+	name = "Verdite"
+	description = "A harmless green-tinted reagent."
+	color = "#a8e6a1"
 
 /datum/reagent/ionovium
 	name = "Ionovium"

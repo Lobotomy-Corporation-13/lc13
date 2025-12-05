@@ -1,19 +1,19 @@
 /obj/machinery/chem_dispenser/lc13
 	dispensable_reagents = list(
-		/datum/reagent/neuroxene7,
-		/datum/reagent/cryovium,
+		/datum/reagent/oxalite,
+		/datum/reagent/hydrene,
 		/datum/reagent/xenotride,
-		/datum/reagent/luminexium,
-		/datum/reagent/quantaferrite,
+		/datum/reagent/lithene,
+		/datum/reagent/ferroxan,
 		/datum/reagent/virothane,
 		/datum/reagent/synthryl,
-		/datum/reagent/plasmorite,
+		/datum/reagent/purite,
 		/datum/reagent/omnicarbide,
 		/datum/reagent/velocium,
 		/datum/reagent/cryostraline,
 		/datum/reagent/nexalite,
-		/datum/reagent/osmarion,
-		/datum/reagent/phasium_delta,
+		/datum/reagent/thermate,
+		/datum/reagent/verdite,
 		/datum/reagent/ionovium,
 	)
 

@@ -83,7 +83,7 @@
 
 //Weird stuff here
 /datum/reagent/antitoxin
-	name = "Universal anti-toxin"
+	name = "Universal antitoxin"
 	description = "A universal anti-toxin used in the city for various purposes."
 	metabolization_rate = REAGENTS_METABOLISM
 	color = "#6baf65"
@@ -98,15 +98,15 @@
 
 /datum/reagent/abnormality/gene_repair
 	name = "Genetic repair solution"
-	description = "A rare genetic reparation solution."
-	metabolization_rate = REAGENTS_METABOLISM
+	description = "A rare genetic reparation solution that heals damage to DNA slowly."
+	metabolization_rate = 0.1*REAGENTS_METABOLISM
 	color = "#6baf65"
 	overdose_threshold = 30
 
 /datum/reagent/abnormality/healing_fast/on_mob_life(mob/living/M)
 	if(overdosed)
 		return
-	M.adjustCloneLoss(-2, 0)
+	M.adjustCloneLoss(-0.5, 0)
 	..()
 	return TRUE
 
