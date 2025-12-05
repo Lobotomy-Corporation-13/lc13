@@ -16,8 +16,9 @@
 	faction = list("hostile")
 	attack_sound = 'sound/weapons/pbird_bite.ogg'
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1.6, PALE_DAMAGE = 0)
-	melee_damage_lower = 5
-	melee_damage_upper = 5
+	melee_damage_lower = 7
+	melee_damage_upper = 7
+	can_breach = TRUE
 	is_flying_animal = TRUE
 	melee_damage_type = PALE_DAMAGE
 	stat_attack = HARD_CRIT
