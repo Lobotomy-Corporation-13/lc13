@@ -42,7 +42,14 @@
 				if(M.z == z && M.client)
 					to_chat(M, span_warning("What is that noise?"))
 			addtimer(CALLBACK(src, PROC_REF(WhitePulse)), 15)
+			addtimer(CALLBACK(src, PROC_REF(StopPulse)), 3 MINUTES)
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/wave/proc/StopPulse()
+	temperance_work = 0
+	for(var/mob/M in GLOB.player_list)
+		if(M.z == z && M.client)
+			to_chat(M, span_nicegreen("The horrors have stopped."))
 
 /mob/living/simple_animal/hostile/abnormality/branch12/wave/proc/WhitePulse()
 	if(temperance_work>=2)
