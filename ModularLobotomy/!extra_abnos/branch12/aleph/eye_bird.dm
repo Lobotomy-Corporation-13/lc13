@@ -6,8 +6,8 @@
 	icon_state = "seeing_bird"
 	icon_living = "seeing_bird"
 	portrait = "eye_bird"
-	maxHealth = 1250
-	health = 1250
+	maxHealth = 2200
+	health = 2200
 	rapid_melee = 4
 	move_to_delay = 4
 	attack_verb_continuous = "bites"
@@ -16,8 +16,8 @@
 	faction = list("hostile")
 	attack_sound = 'sound/weapons/pbird_bite.ogg'
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 1.6, PALE_DAMAGE = 0)
-	melee_damage_lower = 2
-	melee_damage_upper = 2
+	melee_damage_lower = 5
+	melee_damage_upper = 5
 	is_flying_animal = TRUE
 	melee_damage_type = PALE_DAMAGE
 	stat_attack = HARD_CRIT
@@ -96,7 +96,7 @@
 	//Take the shit from Black Sun
 	var/list/all_turfs = RANGE_TURFS(7, src)
 	for(var/turf/open/F in all_turfs)
-		if(prob(30))
+		if(prob(40))
 			addtimer(CALLBACK(src, PROC_REF(Firelaser), F), rand(1,30))
 
 /mob/living/simple_animal/hostile/abnormality/branch12/eye_bird/proc/Firelaser(turf/open/F)
