@@ -3,8 +3,8 @@
 	name = "Seeing Bird"
 	desc = "A small floating eye."
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
-	icon_state = "eye_bird"
-	icon_living = "eye_bird"
+	icon_state = "seeing_bird"
+	icon_living = "seeing_bird"
 	portrait = "eye_bird"
 	maxHealth = 1250
 	health = 1250
