@@ -14,98 +14,75 @@ dm
 	return FALSE
 
 // Capacitor Pack - Core resource for electric weapons
-/obj/item/capacitor_pack
+/obj/item/rce_resource_tank/capacitor_pack
 	name = "storm capacitor pack"
 	desc = "A high-capacity energy storage system that powers Storm Ram burst attacks. Can be recharged at power stations."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "waterbackpackjank"
-	slot_flags = ITEM_SLOT_BACK
-	w_class = WEIGHT_CLASS_BULKY
-	var/max_charge = 1000  // Large reserve for multiple bursts
-	var/current_charge = 1000
+
+	// Resource configuration
+	resource_name = "charge"
+	resource_unit = "units"
+	resource_amount = 1000
+	max_resource = 1000
+
+	// Unique capacitor features
 	var/speed_boost_active = FALSE
-	var/obj/item/ego_weapon/linked_weapon // For weapon connection
 
-/obj/item/capacitor_pack/proc/use_charge(amount)
-	if(current_charge >= amount)
-		current_charge -= amount
-		return TRUE
-	return FALSE
+	// Compatible refill sources
+	compatible_dispensers = list(/obj/structure/power_station)
 
-/obj/item/capacitor_pack/dropped(mob/user)
+	// Custom sounds
+	refill_sound = 'sound/magic/lightningshock.ogg'
+
+/obj/item/rce_resource_tank/capacitor_pack/proc/use_charge(amount)
+	return use_resource(amount)
+
+/obj/item/rce_resource_tank/capacitor_pack/dropped(mob/user)
 	. = ..()
-	if(linked_weapon)
-		to_chat(user, span_warning("The weapon's power cable disconnects!"))
-		linked_weapon = null
 	if(speed_boost_active)
 		remove_speed_boost(user)
 
-/obj/item/capacitor_pack/attackby(obj/item/I, mob/user, params)
-	// Transfer from another capacitor pack
-	if(istype(I, /obj/item/capacitor_pack))
-		var/obj/item/capacitor_pack/other_pack = I
-		if(other_pack.current_charge <= 0)
-			to_chat(user, span_warning("[other_pack] is depleted!"))
-			return
-		if(current_charge >= max_charge)
-			to_chat(user, span_warning("[src] is already fully charged!"))
-			return
-		var/transfer_amount = min(other_pack.current_charge, max_charge - current_charge)
-		current_charge += transfer_amount
-		other_pack.current_charge -= transfer_amount
-		to_chat(user, span_notice("You transfer [transfer_amount] units of charge from [other_pack] to [src]."))
-		playsound(src, 'sound/magic/lightningshock.ogg', 30, TRUE)
-		return
+/obj/item/rce_resource_tank/capacitor_pack/attackby(obj/item/I, mob/user, params)
 	// Portable power cell for Ravens
 	if(istype(I, /obj/item/power_cell))
 		var/obj/item/power_cell/cell = I
 		if(cell.charge_amount <= 0)
 			to_chat(user, span_warning("[cell] is depleted!"))
 			return
-		if(current_charge >= max_charge)
+		if(resource_amount >= max_resource)
 			to_chat(user, span_warning("[src] is already fully charged!"))
 			return
-		var/transfer_amount = min(cell.charge_amount, max_charge - current_charge)
-		current_charge += transfer_amount
+		var/transfer_amount = min(cell.charge_amount, max_resource - resource_amount)
+		resource_amount += transfer_amount
 		cell.charge_amount -= transfer_amount
 		to_chat(user, span_notice("You recharge [src] with [transfer_amount] units from [cell]."))
-		playsound(src, 'sound/magic/lightningshock.ogg', 30, TRUE)
+		playsound(src, refill_sound, 30, TRUE)
 		return
 	return ..()
 
-/obj/item/capacitor_pack/afterattack(atom/target, mob/user, proximity)
-	. = ..()
-	if(!proximity)
+/obj/item/rce_resource_tank/capacitor_pack/try_refill_from_dispenser(obj/structure/power_station/station, mob/user)
+	if(resource_amount >= max_resource)
+		to_chat(user, span_warning("[src] is already fully charged!"))
 		return
-
-	// Recharge from power stations
-	if(istype(target, /obj/structure/power_station))
-		if(current_charge >= max_charge)
-			to_chat(user, span_warning("[src] is already fully charged!"))
-			return
-		var/obj/structure/power_station/station = target
-		if(station.power_stored <= 0)
-			to_chat(user, span_warning("[station] is out of power!"))
-			return
-		var/charge_needed = max_charge - current_charge
-		var/charge_to_transfer = min(charge_needed, station.power_stored, 200)  // Max 200 per recharge
-		station.power_stored -= charge_to_transfer
-		current_charge += charge_to_transfer
-		user.visible_message(span_notice("[user] recharges [src] from [station]."), span_notice("You recharge [src] from [station]. ([current_charge]/[max_charge])"))
-		playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
-		do_sparks(2, TRUE, target)
+	if(station.power_stored <= 0)
+		to_chat(user, span_warning("[station] is out of power!"))
 		return
+	var/charge_needed = max_resource - resource_amount
+	var/charge_to_transfer = min(charge_needed, station.power_stored, 200)
+	station.power_stored -= charge_to_transfer
+	resource_amount += charge_to_transfer
+	user.visible_message(span_notice("[user] recharges [src] from [station]."), span_notice("You recharge [src] from [station]. ([resource_amount]/[max_resource])"))
+	playsound(src, refill_sound, 50, TRUE)
+	do_sparks(2, TRUE, station)
 
-/obj/item/capacitor_pack/examine(mob/user)
+/obj/item/rce_resource_tank/capacitor_pack/examine(mob/user)
 	. = ..()
-	. += span_notice("Charge level: [current_charge]/[max_charge]")
-	if(current_charge < 200)
-		. += span_warning("Low charge! Find a power station to recharge.")
 	if(speed_boost_active)
 		. += span_nicegreen("Speed boost active!")
 
 // Grant speed boost after heavy attacks
-/obj/item/capacitor_pack/proc/grant_speed_boost(mob/living/user, duration = 30)
+/obj/item/rce_resource_tank/capacitor_pack/proc/grant_speed_boost(mob/living/user, duration = 30)
 	if(speed_boost_active)
 		return
 	speed_boost_active = TRUE
@@ -113,7 +90,7 @@ dm
 	addtimer(CALLBACK(src, PROC_REF(remove_speed_boost), user), duration)
 	to_chat(user, span_nicegreen("Capacitor surge grants you enhanced speed!"))
 
-/obj/item/capacitor_pack/proc/remove_speed_boost(mob/living/user)
+/obj/item/rce_resource_tank/capacitor_pack/proc/remove_speed_boost(mob/living/user)
 	speed_boost_active = FALSE
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/storm_escape)
 
@@ -157,20 +134,20 @@ dm
 	name = "electric weapon"
 	desc = "A weapon that uses electrical charge."
 	var/electric_charge_cost = 10
-	var/obj/item/capacitor_pack/linked_pack
+	var/obj/item/rce_resource_tank/capacitor_pack/linked_pack
 
 /obj/item/ego_weapon/electric_base/proc/find_capacitor_pack(mob/living/user)
 	if(!linked_pack || !user.is_holding(src))
-		linked_pack = locate(/obj/item/capacitor_pack) in user.contents
+		linked_pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	return linked_pack
 
 /obj/item/ego_weapon/electric_base/proc/use_charge(mob/living/user, amount)
-	var/obj/item/capacitor_pack/pack = find_capacitor_pack(user)
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = find_capacitor_pack(user)
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to use this weapon!"))
 		return FALSE
 	if(!pack.use_charge(amount))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[amount] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[amount] needed)"))
 		return FALSE
 	return TRUE
 
@@ -186,10 +163,6 @@ dm
 	attack_verb_continuous = list("thunders", "slams", "electrocutes")
 	attack_verb_simple = list("thunder", "slam", "electrocute")
 	hitsound = 'sound/weapons/punch3.ogg'
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 140,  // Storm Ram has +100 Fort
-		JUSTICE_ATTRIBUTE = 80   // Storm Ram has +40 Justice
-	)
 	var/electric_charge_cost = 10
 	var/dash_cost = 20
 	var/stun_duration = 15
@@ -205,13 +178,13 @@ dm
 		to_chat(user, span_warning("Only Storm Rams can use this weapon!"))
 		return FALSE
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to power this weapon!"))
 		return FALSE
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return FALSE
 
 	. = ..()
@@ -241,13 +214,13 @@ dm
 		to_chat(user, span_warning("Dash is still recharging! ([round((dash_cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to dash!"))
 		return
 
 	if(!pack.use_charge(dash_cost))
-		to_chat(user, span_warning("Not enough charge for dash! ([pack.current_charge]/[dash_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge for dash! ([pack.resource_amount]/[dash_cost] needed)"))
 		return
 
 	// Perform thunder dash
@@ -310,13 +283,13 @@ dm
 		to_chat(user, span_warning("[src] is still recharging! ([round((cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to power this device!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	// Get direction for dash
@@ -387,13 +360,13 @@ dm
 		to_chat(user, span_warning("[src] is still recharging! ([round((cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to power this device!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	// Deploy static burst field
@@ -481,10 +454,6 @@ dm
 	attack_verb_continuous = list("rams", "crashes", "thunders")
 	attack_verb_simple = list("ram", "crash", "thunder")
 	hitsound = 'sound/weapons/resonator_blast.ogg'
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 160,  // Storm Ram stats
-		JUSTICE_ATTRIBUTE = 80
-	)
 	var/electric_charge_cost = 40
 	var/charge_range = 8
 	var/charge_damage = 80
@@ -499,7 +468,7 @@ dm
 		to_chat(user, span_warning("Only Storm Rams can wield this weapon!"))
 		return FALSE
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return FALSE
@@ -527,13 +496,13 @@ dm
 		to_chat(user, span_warning("Ram charge still building! ([round((charge_cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	// Perform devastating charge
@@ -605,10 +574,6 @@ dm
 	attack_verb_continuous = list("thunders", "slams", "devastates")
 	attack_verb_simple = list("thunder", "slam", "devastate")
 	hitsound = 'sound/weapons/punch3.ogg'
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 150,
-		JUSTICE_ATTRIBUTE = 90
-	)
 	var/electric_charge_cost = 30
 	var/burst_cost = 50
 	var/burst_damage = 60
@@ -624,7 +589,7 @@ dm
 		to_chat(user, span_warning("Only Storm Rams can use these gauntlets!"))
 		return FALSE
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return FALSE
@@ -654,13 +619,13 @@ dm
 		to_chat(user, span_warning("Thunderclap still charging! ([round((burst_cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return
 
 	if(!pack.use_charge(burst_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[burst_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[burst_cost] needed)"))
 		return
 
 	// Perform thunderclap burst
@@ -768,7 +733,7 @@ dm
 		to_chat(user, span_warning("Only Storm Rams can use this ultimate weapon!"))
 		return FALSE
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return FALSE
@@ -795,13 +760,13 @@ dm
 		to_chat(user, span_warning("Railgun charge still building! ([round((charge_cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	// Perform ultimate railgun charge
@@ -898,13 +863,13 @@ dm
 		deactivate()
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack to power the barrier!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	activate(user, pack)
@@ -1024,13 +989,13 @@ dm
 		to_chat(user, span_warning("[src] is still recharging! ([round((cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/capacitor_pack/pack = locate(/obj/item/capacitor_pack) in user.contents
+	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
 	if(!pack)
 		to_chat(user, span_warning("You need a capacitor pack!"))
 		return
 
 	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.current_charge]/[electric_charge_cost] needed)"))
+		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
 	perform_thunderstorm_slam(user, pack)

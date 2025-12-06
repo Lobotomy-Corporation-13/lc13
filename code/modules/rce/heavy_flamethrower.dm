@@ -2,14 +2,36 @@
 // A powerful flamethrower that requires a fuel tank backpack to operate
 
 // Fuel Tank Backpack
-/obj/item/fuel_tank_backpack
+/obj/item/rce_resource_tank/fuel_backpack
 	name = "heavy fuel tank"
 	desc = "A large fuel tank designed to be worn on the back. Powers heavy flamethrower weapons."
 	icon = 'icons/obj/tank.dmi'
 	icon_state = "rce_fuel"
-	w_class = WEIGHT_CLASS_BULKY
-	slot_flags = ITEM_SLOT_BACK
 	worn_icon = 'icons/mob/clothing/back.dmi'
+
+	// Resource configuration
+	resource_name = "fuel"
+	resource_unit = "units"
+	resource_amount = 1000
+	max_resource = 1000
+
+	// Compatible refill sources
+	compatible_dispensers = list(/obj/structure/reagent_dispensers/fueltank)
+
+/obj/item/rce_resource_tank/fuel_backpack/try_refill_from_dispenser(obj/structure/reagent_dispensers/fueltank/F, mob/user)
+	if(resource_amount >= max_resource)
+		to_chat(user, span_warning("[src] is already full!"))
+		return
+	if(!F.reagents.has_reagent(/datum/reagent/fuel))
+		to_chat(user, span_warning("[F] is out of fuel!"))
+		return
+	var/fuel_needed = max_resource - resource_amount
+	var/fuel_available = F.reagents.get_reagent_amount(/datum/reagent/fuel)
+	var/fuel_to_transfer = min(fuel_needed, fuel_available)
+	F.reagents.remove_reagent(/datum/reagent/fuel, fuel_to_transfer)
+	resource_amount += fuel_to_transfer
+	user.visible_message(span_notice("[user] refills [src] from [F]."), span_notice("You refill [src] from [F]."))
+	playsound(src, refill_sound, 50, TRUE)
 	var/fuel_amount = 1000
 	var/max_fuel = 1000
 	var/obj/item/ego_weapon/ranged/heavy_flamethrower/linked_weapon
@@ -98,7 +120,12 @@
 	autofire = 0.08 SECONDS
 	fire_sound_volume = 10
 	var/fuel_per_shot = 5
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
+
+/obj/item/ego_weapon/ranged/heavy_flamethrower/Destroy()
+	if(fuel_tank)
+		Disconnect()
+	return ..()
 
 /obj/item/ego_weapon/ranged/heavy_flamethrower/Destroy()
 	if(fuel_tank)
@@ -108,7 +135,7 @@
 /obj/item/ego_weapon/ranged/heavy_flamethrower/examine(mob/user)
 	. = ..()
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 	else
 		. += span_warning("No fuel tank connected! Use in-hand to connect to a worn fuel tank.")
 
@@ -128,7 +155,7 @@
 		return TRUE
 
 	// Try to connect to worn tank
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -163,7 +190,7 @@
 /obj/item/ego_weapon/ranged/heavy_flamethrower/can_shoot()
 	if(!fuel_tank)
 		return FALSE
-	if(fuel_tank.fuel_amount < fuel_per_shot)
+	if(fuel_tank.resource_amount < fuel_per_shot)
 		return FALSE
 	return TRUE
 
@@ -175,7 +202,7 @@
 			to_chat(user, span_warning("The fuel tank is empty!"))
 		return FALSE
 
-	fuel_tank.fuel_amount -= fuel_per_shot
+	fuel_tank.resource_amount -= fuel_per_shot
 	return ..()
 
 /obj/item/ego_weapon/ranged/heavy_flamethrower/proc/Disconnect()
@@ -237,7 +264,7 @@
 
 /obj/item/clothing/suit/armor/ego_gear/hellfire
 	name = "r-corp hellfire rooster suit"
-	desc = "Custom armor made for the hellfire units, perfect at protecting the user from flames."
+	desc = "Custom armor made for the hellfire units, perfect at protecting the user from flames. Requires Hellfire Rooster combat implant."
 	slowdown = 0.5
 	icon = 'icons/obj/clothing/suits.dmi'
 	worn_icon = 'icons/mob/clothing/suit.dmi'
@@ -245,6 +272,19 @@
 	inhand_icon_state = "hostrench"
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30, FIRE = 100)
 	hat = /obj/item/clothing/head/ego_hat/helmet/hellfire
+
+/obj/item/clothing/suit/armor/ego_gear/hellfire/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if(!ishuman(M))
+		return FALSE
+
+	var/mob/living/carbon/human/H = M
+	// Check for Hellfire Rooster implant
+	if(!locate(/obj/item/organ/cyberimp/rce_specialist/hellfire) in H.internal_organs)
+		if(!disable_warning)
+			to_chat(H, span_warning("You need the Hellfire Rooster combat implant to use this armor!"))
+		return FALSE
+
+	return ..()
 
 /obj/item/clothing/head/ego_hat/helmet/hellfire
 	name = "r-corp hellfire rooster helmet"
@@ -321,7 +361,7 @@
 	attack_verb_simple = list("burn", "sear", "scorch")
 	hitsound = 'sound/weapons/fixer/generic/sword3.ogg'
 	var/fuel_per_dash = 50
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 1 SECONDS
 	var/dash_damage = 60
@@ -332,7 +372,7 @@
 /obj/item/ego_weapon/inferno_rush/examine(mob/user)
 	. = ..()
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		. += span_notice("Each fire dash consumes [fuel_per_dash] fuel.")
 	else
 		. += span_warning("No fuel tank connected! Use in-hand to connect to a worn fuel tank.")
@@ -353,7 +393,7 @@
 		return TRUE
 
 	// Try to connect to worn tank
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -391,7 +431,7 @@
 		return ..()
 
 	// Check for fuel
-	if(!fuel_tank || fuel_tank.fuel_amount < fuel_per_dash)
+	if(!fuel_tank || fuel_tank.resource_amount < fuel_per_dash)
 		if(!fuel_tank)
 			to_chat(user, span_warning("No fuel tank connected!"))
 		else
@@ -411,7 +451,7 @@
 		return
 
 	// Start the dash
-	fuel_tank.fuel_amount -= fuel_per_dash
+	fuel_tank.resource_amount -= fuel_per_dash
 	dash_cooldown = world.time + dash_cooldown_time
 	FireDash(user, target_turf)
 
@@ -495,7 +535,7 @@
 	force = 10
 	throwforce = 5
 	var/fuel_per_spray = 20
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/spray_cooldown = 0
 	var/spray_cooldown_time = 1 SECONDS
 	var/spray_range = 3
@@ -503,7 +543,7 @@
 /obj/item/ego_weapon/thermite_sprayer/examine(mob/user)
 	. = ..()
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		. += span_notice("Each thermite spray consumes [fuel_per_spray] fuel.")
 	else
 		. += span_warning("No fuel tank connected! Use in-hand to connect to a worn fuel tank.")
@@ -521,7 +561,7 @@
 		fuel_tank = null
 		return TRUE
 
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -556,7 +596,7 @@
 	if(spray_cooldown > world.time)
 		return ..()
 
-	if(!fuel_tank || fuel_tank.fuel_amount < fuel_per_spray)
+	if(!fuel_tank || fuel_tank.resource_amount < fuel_per_spray)
 		if(!fuel_tank)
 			to_chat(user, span_warning("No fuel tank connected!"))
 		else
@@ -572,7 +612,7 @@
 		return ..()
 
 	// Spray thermite
-	fuel_tank.fuel_amount -= fuel_per_spray
+	fuel_tank.resource_amount -= fuel_per_spray
 	spray_cooldown = world.time + spray_cooldown_time
 
 	playsound(user, 'sound/effects/spray2.ogg', 50, TRUE)
@@ -653,7 +693,7 @@
 	force = 15
 	throwforce = 10
 	var/fuel_per_wall = 100
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/wall_cooldown = 0
 	var/wall_cooldown_time = 10 SECONDS
 	var/wall_orientation = "horizontal" // horizontal or vertical
@@ -663,7 +703,7 @@
 	. = ..()
 	. += span_notice("Current orientation: [wall_orientation]")
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		. += span_notice("Each wall consumes [fuel_per_wall] fuel.")
 	else
 		. += span_warning("No fuel tank connected!")
@@ -681,7 +721,7 @@
 		fuel_tank = null
 		return TRUE
 
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -726,7 +766,7 @@
 		to_chat(user, span_warning("Wall projector is recharging! ([round((wall_cooldown - world.time) / 10)] seconds remaining)"))
 		return ..()
 
-	if(!fuel_tank || fuel_tank.fuel_amount < fuel_per_wall)
+	if(!fuel_tank || fuel_tank.resource_amount < fuel_per_wall)
 		if(!fuel_tank)
 			to_chat(user, span_warning("No fuel tank connected!"))
 		else
@@ -742,7 +782,7 @@
 		return ..()
 
 	// Create fire wall
-	fuel_tank.fuel_amount -= fuel_per_wall
+	fuel_tank.resource_amount -= fuel_per_wall
 	wall_cooldown = world.time + wall_cooldown_time
 
 	playsound(user, 'sound/magic/fireball.ogg', 50, TRUE)
@@ -822,7 +862,7 @@
 	zoom_amt = 10
 	zoom_out_amt = 13
 	var/fuel_per_shot = 75
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/setup_time = 2 SECONDS
 	var/min_range = 5
 	var/max_range = 15
@@ -830,7 +870,7 @@
 /obj/item/ego_weapon/ranged/napalm_launcher/examine(mob/user)
 	. = ..()
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		. += span_notice("Each shell consumes [fuel_per_shot] fuel.")
 	else
 		. += span_warning("No fuel tank connected! Use in-hand to connect to a worn fuel tank.")
@@ -848,7 +888,7 @@
 		fuel_tank = null
 		return TRUE
 
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -882,7 +922,7 @@
 /obj/item/ego_weapon/ranged/napalm_launcher/can_shoot()
 	if(!fuel_tank)
 		return FALSE
-	if(fuel_tank.fuel_amount < fuel_per_shot)
+	if(fuel_tank.resource_amount < fuel_per_shot)
 		return FALSE
 	return TRUE
 
@@ -910,7 +950,7 @@
 			to_chat(user, span_warning("Not enough fuel!"))
 		return FALSE
 
-	fuel_tank.fuel_amount -= fuel_per_shot
+	fuel_tank.resource_amount -= fuel_per_shot
 	return ..()
 
 // Napalm shell projectile
@@ -980,7 +1020,7 @@
 	attack_verb_simple = list("punch", "smash", "crush")
 	hitsound = 'sound/weapons/punch3.ogg'
 	var/fuel_per_burst = 30
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/ignition_mode = FALSE
 	var/ignition_damage_bonus = 15
 
@@ -988,7 +1028,7 @@
 	. = ..()
 	. += span_notice("Current mode: [ignition_mode ? "IGNITION" : "Normal"]")
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		if(ignition_mode)
 			. += span_notice("Ignition Mode: Each attack consumes [fuel_per_burst] fuel for guaranteed fire burst.")
 	else
@@ -1007,7 +1047,7 @@
 		fuel_tank = null
 		return TRUE
 
-	var/obj/item/fuel_tank_backpack/tank = H.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
@@ -1057,9 +1097,9 @@
 	var/create_burst = FALSE
 
 	// Check if we should create a fire burst
-	if(ignition_mode && fuel_tank && fuel_tank.fuel_amount >= fuel_per_burst)
+	if(ignition_mode && fuel_tank && fuel_tank.resource_amount >= fuel_per_burst)
 		// Ignition mode: guaranteed burst, costs fuel
-		fuel_tank.fuel_amount -= fuel_per_burst
+		fuel_tank.resource_amount -= fuel_per_burst
 		create_burst = TRUE
 		target.deal_damage(ignition_damage_bonus, FIRE)
 
@@ -1097,7 +1137,7 @@
 	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_SUITSTORE
 	var/active = FALSE
-	var/obj/item/fuel_tank_backpack/fuel_tank
+	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 	var/fuel_per_shot = 3
 	var/scan_range = 6
 	var/last_fired = 0
@@ -1119,7 +1159,7 @@
 	. = ..()
 	. += span_notice("Status: [active ? "ACTIVE" : "Inactive"]")
 	if(fuel_tank)
-		. += span_notice("Connected to fuel tank: [fuel_tank.fuel_amount]/[fuel_tank.max_fuel] fuel remaining.")
+		. += span_notice("Connected to fuel tank: [fuel_tank.resource_amount]/[fuel_tank.max_resource] fuel remaining.")
 		. += span_notice("Each shot consumes [fuel_per_shot] fuel.")
 	else
 		. += span_warning("No fuel tank connected! Equip to suit storage to auto-connect.")
@@ -1160,7 +1200,7 @@
 		return FALSE
 
 	// Try to connect to worn tank
-	var/obj/item/fuel_tank_backpack/tank = wearer.back
+	var/obj/item/rce_resource_tank/fuel_backpack/tank = wearer.back
 	if(!istype(tank))
 		return FALSE
 
@@ -1205,7 +1245,7 @@
 		return
 
 	// Check fuel
-	if(fuel_tank.fuel_amount < fuel_per_shot)
+	if(fuel_tank.resource_amount < fuel_per_shot)
 		if(prob(20)) // Don't spam the message
 			to_chat(wearer, span_warning("[src] clicks empty - out of fuel!"))
 		return
@@ -1246,11 +1286,11 @@
 	fire_at_target(closest_target)
 
 /obj/item/auto_flamethrower/proc/fire_at_target(mob/living/target)
-	if(!target || !fuel_tank || fuel_tank.fuel_amount < fuel_per_shot)
+	if(!target || !fuel_tank || fuel_tank.resource_amount < fuel_per_shot)
 		return
 
 	// Consume fuel
-	fuel_tank.fuel_amount -= fuel_per_shot
+	fuel_tank.resource_amount -= fuel_per_shot
 	last_fired = world.time
 
 	// Create projectile

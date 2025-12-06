@@ -159,13 +159,15 @@
 			return TRUE
 
 /obj/machinery/rce_research/proc/get_node_status(datum/rce_research_node/node)
-	if(node.id in completed_research)
-		return RESEARCH_COMPLETED
-
-	// Check prerequisites
+	// Check prerequisites first
 	for(var/prereq in node.prerequisites)
 		if(!(prereq in completed_research))
 			return RESEARCH_LOCKED
+
+	// Check if research is completed and not repeatable
+	var/current_progress = research_progress[node.id] || 0
+	if(node.id in completed_research && current_progress >= node.cost)
+		return RESEARCH_COMPLETED
 
 	return RESEARCH_AVAILABLE
 
@@ -221,21 +223,34 @@
 	process_next_part()
 
 /obj/machinery/rce_research/proc/complete_research(datum/rce_research_node/node)
-	completed_research += node.id
 	selected_research = null
-	research_progress[node.id] = node.cost // Mark as fully complete
 
 	// Create the unlocked item
 	var/obj/item/result = new node.unlocked_path(get_turf(src))
 	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
 	visible_message(span_notice("[src] completes research of [node.name]!"))
-	say("Research complete: [node.name]. Product dispensed.")
 
-	// Special handling for portable factories
-	if(istype(result, /obj/item/portable_factory))
+	// Check if result is a portable factory
+	var/is_factory = istype(result, /obj/item/portable_factory)
+
+	// Mark as completed (for prerequisite tracking)
+	if(!(node.id in completed_research))
+		completed_research += node.id
+
+	if(is_factory)
+		// Factories are one-time research - keep progress at max
+		research_progress[node.id] = node.cost // Mark as fully complete
+		say("Research complete: [node.name]. Factory module dispensed.")
+
+		// Special handling for portable factories
 		var/obj/item/portable_factory/PF = result
 		PF.factory_name = node.name
 		PF.factory_desc = node.desc
+	else
+		// Non-factory items (weapons, armor, etc.) are repeatable
+		// Reset progress to 0 to allow re-research
+		research_progress[node.id] = 0
+		say("Production complete: [node.name]. Item dispensed. Ready for next production cycle.")
 
 // Portable factory item that can be deployed
 /obj/item/portable_factory
@@ -262,9 +277,18 @@
 		to_chat(user, span_warning("You can't deploy the factory here!"))
 		return
 
+	to_chat(user, span_notice("You begin deploying [src]..."))
+	playsound(T, 'sound/items/ratchet.ogg', 50, TRUE)
+
+	if(!do_after(user, 3 SECONDS, target = T))
+		to_chat(user, span_warning("You stop deploying [src]."))
+		return
+
 	var/obj/structure/rcorp_factory/F = new factory_path(T)
 	F.name = factory_name
 	F.desc = factory_desc
+	F.portable_origin = TRUE  // Mark as coming from portable factory
+	F.source_factory_path = factory_path  // Store the factory type for reconstruction
 	to_chat(user, span_notice("You deploy [src]."))
-	playsound(T, 'sound/items/ratchet.ogg', 50, TRUE)
+	playsound(T, 'sound/machines/click.ogg', 50, TRUE)
 	qdel(src)

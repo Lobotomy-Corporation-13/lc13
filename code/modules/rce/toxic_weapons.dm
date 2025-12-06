@@ -1,107 +1,87 @@
 // Venom Rattlesnakes - Toxic/Decay Weapon Systems
 // Area denial and damage over time specialists
 
+// Helper proc to check if target has venom immunity (wearing venom armor)
+/proc/is_venom_immune(mob/living/target)
+	if(!ishuman(target))
+		return FALSE
+	var/mob/living/carbon/human/H = target
+	var/obj/item/clothing/suit/armor/ego_gear/venom/suit = H.wear_suit
+	if(istype(suit) && suit.venom_immune)
+		return TRUE
+	return FALSE
+
 // Acid Tank Backpack - Core resource for toxic weapons
-/obj/item/acid_tank_backpack
+/obj/item/rce_resource_tank/acid_backpack
 	name = "heavy acid tank"
 	desc = "A reinforced tank containing highly corrosive acids. Powers various R-Corp toxic weapon systems."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "waterbackpack"
-	slot_flags = ITEM_SLOT_BACK
-	w_class = WEIGHT_CLASS_BULKY
-	var/max_acid = 500  // Increased capacity
-	var/current_acid = 500
-	var/obj/item/ego_weapon/linked_weapon // For weapon connection
 
-/obj/item/acid_tank_backpack/proc/use_acid(amount)
-	if(current_acid >= amount)
-		current_acid -= amount
-		return TRUE
-	return FALSE
+	// Resource configuration
+	resource_name = "acid"
+	resource_unit = "units"
+	resource_amount = 500
+	max_resource = 500
 
-/obj/item/acid_tank_backpack/dropped(mob/user)
-	. = ..()
-	if(linked_weapon)
-		to_chat(user, span_warning("The weapon's acid line disconnects!"))
-		linked_weapon = null
+	// Compatible refill sources
+	compatible_dispensers = list(/obj/structure/acid_dispenser, /obj/structure/reagent_dispensers/watertank)
 
-/obj/item/acid_tank_backpack/attackby(obj/item/I, mob/user, params)
-	// Transfer from another acid tank
-	if(istype(I, /obj/item/acid_tank_backpack))
-		var/obj/item/acid_tank_backpack/other_tank = I
-		if(other_tank.current_acid <= 0)
-			to_chat(user, span_warning("[other_tank] is empty!"))
-			return
-		if(current_acid >= max_acid)
-			to_chat(user, span_warning("[src] is already full!"))
-			return
-		var/transfer_amount = min(other_tank.current_acid, max_acid - current_acid)
-		current_acid += transfer_amount
-		other_tank.current_acid -= transfer_amount
-		to_chat(user, span_notice("You transfer [transfer_amount] units of acid from [other_tank] to [src]."))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
-		return
+/obj/item/rce_resource_tank/acid_backpack/proc/use_acid(amount)
+	return use_resource(amount)
+
+/obj/item/rce_resource_tank/acid_backpack/attackby(obj/item/I, mob/user, params)
 	// Portable acid canister for Ravens
 	if(istype(I, /obj/item/acid_canister))
 		var/obj/item/acid_canister/canister = I
 		if(canister.acid_amount <= 0)
 			to_chat(user, span_warning("[canister] is empty!"))
 			return
-		if(current_acid >= max_acid)
+		if(resource_amount >= max_resource)
 			to_chat(user, span_warning("[src] is already full!"))
 			return
-		var/transfer_amount = min(canister.acid_amount, max_acid - current_acid)
-		current_acid += transfer_amount
+		var/transfer_amount = min(canister.acid_amount, max_resource - resource_amount)
+		resource_amount += transfer_amount
 		canister.acid_amount -= transfer_amount
 		to_chat(user, span_notice("You refill [src] with [transfer_amount] units from [canister]."))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		playsound(src, refill_sound, 50, TRUE)
 		return
 	return ..()
 
-/obj/item/acid_tank_backpack/afterattack(atom/target, mob/user, proximity)
-	. = ..()
-	if(!proximity)
-		return
-
-	// Refill from acid dispensers
-	if(istype(target, /obj/structure/acid_dispenser))
-		if(current_acid >= max_acid)
+/obj/item/rce_resource_tank/acid_backpack/try_refill_from_dispenser(obj/structure/dispenser, mob/user)
+	// Handle acid dispensers
+	if(istype(dispenser, /obj/structure/acid_dispenser))
+		if(resource_amount >= max_resource)
 			to_chat(user, span_warning("[src] is already full!"))
 			return
-		var/obj/structure/acid_dispenser/dispenser = target
-		if(dispenser.acid_stored <= 0)
+		var/obj/structure/acid_dispenser/acid_disp = dispenser
+		if(acid_disp.acid_stored <= 0)
 			to_chat(user, span_warning("[dispenser] is out of acid!"))
 			return
-		var/acid_needed = max_acid - current_acid
-		var/acid_to_transfer = min(acid_needed, dispenser.acid_stored, 100)  // Max 100 per refill
-		dispenser.acid_stored -= acid_to_transfer
-		current_acid += acid_to_transfer
-		user.visible_message(span_notice("[user] refills [src] from [dispenser]."), span_notice("You refill [src] from [dispenser]. ([current_acid]/[max_acid])"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		var/acid_needed = max_resource - resource_amount
+		var/acid_to_transfer = min(acid_needed, acid_disp.acid_stored, 100)
+		acid_disp.acid_stored -= acid_to_transfer
+		resource_amount += acid_to_transfer
+		user.visible_message(span_notice("[user] refills [src] from [dispenser]."), span_notice("You refill [src] from [dispenser]. ([resource_amount]/[max_resource])"))
+		playsound(src, refill_sound, 50, TRUE)
 		return
 
-	// Alternative: Refill from chemical tanks with acid
-	if(istype(target, /obj/structure/reagent_dispensers/watertank))
-		if(current_acid >= max_acid)
+	// Handle chemical tanks with acid
+	if(istype(dispenser, /obj/structure/reagent_dispensers/watertank))
+		if(resource_amount >= max_resource)
 			to_chat(user, span_warning("[src] is already full!"))
 			return
-		var/obj/structure/reagent_dispensers/watertank/tank = target
+		var/obj/structure/reagent_dispensers/watertank/tank = dispenser
 		if(!tank.reagents.has_reagent(/datum/reagent/toxin/acid))
 			to_chat(user, span_warning("[tank] doesn't contain acid!"))
 			return
-		var/acid_needed = max_acid - current_acid
+		var/acid_needed = max_resource - resource_amount
 		var/acid_available = tank.reagents.get_reagent_amount(/datum/reagent/toxin/acid)
 		var/acid_to_transfer = min(acid_needed, acid_available)
 		tank.reagents.remove_reagent(/datum/reagent/toxin/acid, acid_to_transfer)
-		current_acid += acid_to_transfer
-		user.visible_message(span_notice("[user] refills [src] from [tank]."), span_notice("You refill [src] from [tank]. ([current_acid]/[max_acid])"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
-
-/obj/item/acid_tank_backpack/examine(mob/user)
-	. = ..()
-	. += span_notice("Acid level: [current_acid]/[max_acid]")
-	if(current_acid < 100)
-		. += span_warning("Low acid! Find an acid dispenser to refill.")
+		resource_amount += acid_to_transfer
+		user.visible_message(span_notice("[user] refills [src] from [tank]."), span_notice("You refill [src] from [tank]. ([resource_amount]/[max_resource])"))
+		playsound(src, refill_sound, 50, TRUE)
 
 // Acid Dispenser Structure (placed at base)
 /obj/structure/acid_dispenser
@@ -140,20 +120,20 @@
 	name = "toxic weapon"
 	desc = "A weapon that uses acid."
 	var/acid_cost = 10
-	var/obj/item/acid_tank_backpack/linked_tank
+	var/obj/item/rce_resource_tank/acid_backpack/linked_tank
 
 /obj/item/ego_weapon/toxic_base/proc/find_acid_tank(mob/living/user)
 	if(!linked_tank || !user.is_holding(src))
-		linked_tank = locate(/obj/item/acid_tank_backpack) in user.contents
+		linked_tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	return linked_tank
 
 /obj/item/ego_weapon/toxic_base/proc/use_acid(mob/living/user, amount)
-	var/obj/item/acid_tank_backpack/tank = find_acid_tank(user)
+	var/obj/item/rce_resource_tank/acid_backpack/tank = find_acid_tank(user)
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
 		return FALSE
 	if(!tank.use_acid(amount))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[amount] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[amount] needed)"))
 		return FALSE
 	return TRUE
 
@@ -170,10 +150,6 @@
 	righthand_file = 'icons/mob/inhands/equipment/mister_righthand.dmi'
 	force = 10
 	special = "This weapon requires an acid tank backpack to function."
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 40,
-		PRUDENCE_ATTRIBUTE = 40
-	)
 	var/acid_cost = 5
 	var/cone_range = 3
 	var/damage_amount = 20
@@ -183,13 +159,13 @@
 	if(!CanUseEgo(user))
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	// Create acid spray cone
@@ -221,6 +197,11 @@
 		for(var/mob/living/L in T)
 			if(L == user)
 				continue
+
+			// Check for venom immunity
+			if(is_venom_immune(L))
+				continue
+
 			// Check for venom stacks for bonus damage
 			var/damage_mult = 1
 			if(L.has_status_effect(/datum/status_effect/venom_stacks))
@@ -278,6 +259,10 @@
 
 	// Apply venom stacks to nearby enemies
 	for(var/mob/living/L in range(2, src))
+		// Check for venom immunity
+		if(is_venom_immune(L))
+			continue
+
 		L.deal_damage(damage, TOX)
 		// Apply multiple venom stacks
 		for(var/i = 1 to venom_stacks_applied)
@@ -356,12 +341,14 @@
 	visible_message(span_danger("[src] triggers!"))
 	playsound(src, 'sound/effects/smoke.ogg', 30, TRUE)
 
-	// Apply venom stacks
-	for(var/i = 1 to venom_stacks)
-		victim.apply_status_effect(/datum/status_effect/venom_stacks)
-	victim.deal_damage(10, TOX)
-	to_chat(victim, span_danger("A hidden trap marks you with venom!"))
-	new /obj/effect/temp_visual/venom_mark(get_turf(victim))
+	// Check for venom immunity
+	if(!is_venom_immune(victim))
+		// Apply venom stacks
+		for(var/i = 1 to venom_stacks)
+			victim.apply_status_effect(/datum/status_effect/venom_stacks)
+		victim.deal_damage(10, TOX)
+		to_chat(victim, span_danger("A hidden trap marks you with venom!"))
+		new /obj/effect/temp_visual/venom_mark(get_turf(victim))
 
 	qdel(src)
 
@@ -388,6 +375,10 @@
 
 /obj/effect/acid_pool/process()
 	for(var/mob/living/L in get_turf(src))
+		// Check for venom immunity
+		if(is_venom_immune(L))
+			continue
+
 		// More damage if target has venom stacks
 		var/damage = damage_per_second
 		if(L.has_status_effect(/datum/status_effect/venom_stacks))
@@ -414,20 +405,16 @@
 	projectile_path = /obj/projectile/venom_shell
 	fire_delay = 15
 	special = "Deals massive bonus damage to enemies with venom stacks."
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 60,
-		PRUDENCE_ATTRIBUTE = 60
-	)
 	var/acid_cost = 10
 
 /obj/item/ego_weapon/ranged/venom_launcher/before_firing(atom/target, mob/living/user)
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
 		return FALSE
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return FALSE
 
 	return ..()
@@ -476,13 +463,13 @@
 		to_chat(user, span_warning("[src] is still recharging! ([round((cooldown - world.time)/10)] seconds)"))
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this device!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	// Create moving toxic cloud
@@ -561,13 +548,13 @@
 		to_chat(user, span_warning("[src] is out of spike strips!"))
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	var/turf/T = get_turf(target)
@@ -583,7 +570,7 @@
 		user.visible_message(span_warning("[user] deploys a venomous spike strip!"), span_notice("You deploy the spike strip. ([strips_remaining] remaining)"))
 	else
 		to_chat(user, span_warning("Deployment interrupted!"))
-		tank.current_acid += acid_cost // Refund acid on interrupt
+		tank.resource_amount += acid_cost // Refund acid on interrupt
 
 // Venom spike strip structure
 /obj/structure/venom_spike_strip
@@ -643,11 +630,6 @@
 	force = 20
 	fire_delay = 30
 	special = "Calls in an artillery strike of toxic shells."
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 80,
-		PRUDENCE_ATTRIBUTE = 80,
-		TEMPERANCE_ATTRIBUTE = 60
-	)
 	var/acid_cost = 30
 	var/shells_per_volley = 6
 	var/cooldown = 0
@@ -661,13 +643,13 @@
 		to_chat(user, span_warning("[src] is still reloading!"))
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	// Target area
@@ -755,13 +737,13 @@
 		to_chat(user, span_warning("You're still recovering from the last spin!"))
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to perform this technique!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	// Perform spin attack
@@ -803,13 +785,13 @@
 		deactivate()
 		return
 
-	var/obj/item/acid_tank_backpack/tank = locate(/obj/item/acid_tank_backpack) in user.contents
+	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to power this device!"))
 		return
 
 	if(!tank.use_acid(acid_cost))
-		to_chat(user, span_warning("Not enough acid! ([tank.current_acid]/[acid_cost] needed)"))
+		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
 
 	activate(user)

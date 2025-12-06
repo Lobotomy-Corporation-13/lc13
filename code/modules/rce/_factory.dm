@@ -34,6 +34,10 @@
 	var/chance_eat = 100			//What's the chance of eating materials
 	var/max = 20
 
+	// Portable factory tracking
+	var/portable_origin = FALSE		// Was this deployed from a portable_factory?
+	var/source_factory_path = null	// What factory_path to use when reverting
+
 /obj/structure/rcorp_factory/examine(mob/user)
 	. = ..()
 	if(!unlocked)
@@ -53,17 +57,60 @@
 	if(item)
 		. += span_notice("This machine will produce [itemnumber] [item.name] when the materials are given.")
 	. += span_notice("This machine will take a maximum of [max] of each material that pass over it. Use a wrench to change this.")
+	if(portable_origin)
+		. += span_notice("Use a crowbar to pack this factory back into portable form. This will drop all stored materials.")
 
 
 /obj/structure/rcorp_factory/attackby(obj/item/I, mob/living/user, params)
 	. = ..()
-	if(I.tool_behaviour != TOOL_WRENCH)
-		return
 
-	var/set_max = input(user, "What is the max amount of materials that you want this to store (1-100)?", "Set Max") as null|num
-	if(set_max && (set_max > 0 && set_max <= 100))
-		max = set_max
-		to_chat(user, "<span class='notice'>You set the factory to eat [max] of items.</span>")
+	// Crowbar deconstruction for portable factories
+	if(I.tool_behaviour == TOOL_CROWBAR && portable_origin)
+		to_chat(user, span_notice("You begin packing [src] back into portable form..."))
+		playsound(src, 'sound/items/crowbar.ogg', 50, TRUE)
+
+		if(!do_after(user, 3 SECONDS, target = src))
+			to_chat(user, span_warning("You stop packing [src]."))
+			return TRUE
+
+		// Drop all stored materials
+		var/turf/T = get_turf(src)
+		if(gmaterial > 0)
+			for(var/i = 1 to gmaterial)
+				new /obj/item/factoryitem/green(T)
+		if(rmaterial > 0)
+			for(var/i = 1 to rmaterial)
+				new /obj/item/factoryitem/red(T)
+		if(bmaterial > 0)
+			for(var/i = 1 to bmaterial)
+				new /obj/item/factoryitem/blue(T)
+		if(pmaterial > 0)
+			for(var/i = 1 to pmaterial)
+				new /obj/item/factoryitem/purple(T)
+		if(smaterial > 0)
+			for(var/i = 1 to smaterial)
+				new /obj/item/factoryitem/silver(T)
+		if(omaterial > 0)
+			for(var/i = 1 to omaterial)
+				new /obj/item/factoryitem/orange(T)
+
+		// Create portable factory
+		var/obj/item/portable_factory/PF = new(T)
+		PF.factory_path = source_factory_path
+		PF.name = name + " module"
+		PF.desc = desc
+
+		to_chat(user, span_notice("You pack [src] into a portable factory module."))
+		playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+		qdel(src)
+		return TRUE
+
+	if(I.tool_behaviour == TOOL_WRENCH)
+		var/set_max = input(user, "What is the max amount of materials that you want this to store (1-100)?", "Set Max") as null|num
+		if(set_max && (set_max > 0 && set_max <= 100))
+			max = set_max
+			to_chat(user, "<span class='notice'>You set the factory to eat [max] of items.</span>")
+		return TRUE
 
 
 /obj/structure/rcorp_factory/Crossed(atom/movable/AM)

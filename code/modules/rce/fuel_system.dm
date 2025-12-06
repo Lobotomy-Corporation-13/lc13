@@ -68,18 +68,18 @@
 
 /obj/machinery/rce_fuel_storage/attackby(obj/item/I, mob/user, params)
 	// Refill fuel tanks
-	if(istype(I, /obj/item/fuel_tank_backpack))
-		var/obj/item/fuel_tank_backpack/tank = I
+	if(istype(I, /obj/item/rce_resource_tank/fuel_backpack))
+		var/obj/item/rce_resource_tank/fuel_backpack/tank = I
 		RefillTank(tank, user)
 		return
 
-	if(istype(I, /obj/item/acid_tank_backpack))
-		var/obj/item/acid_tank_backpack/tank = I
+	if(istype(I, /obj/item/rce_resource_tank/acid_backpack))
+		var/obj/item/rce_resource_tank/acid_backpack/tank = I
 		RefillAcidTank(tank, user)
 		return
 
-	if(istype(I, /obj/item/capacitor_pack))
-		var/obj/item/capacitor_pack/pack = I
+	if(istype(I, /obj/item/rce_resource_tank/capacitor_pack))
+		var/obj/item/rce_resource_tank/capacitor_pack/pack = I
 		RefillCapacitor(pack, user)
 		return
 
@@ -90,65 +90,31 @@
 
 	return ..()
 
-/obj/machinery/rce_fuel_storage/proc/RefillTank(obj/item/fuel_tank_backpack/tank, mob/user)
+/obj/machinery/rce_fuel_storage/proc/RefillTank(obj/item/rce_resource_tank/tank, mob/user)
 	if(current_fuel <= 0)
 		to_chat(user, span_warning("[src] is empty!"))
 		return
 
-	var/fuel_needed = tank.max_fuel - tank.fuel_amount
-	if(fuel_needed <= 0)
+	var/resource_needed = tank.max_resource - tank.resource_amount
+	if(resource_needed <= 0)
 		to_chat(user, span_notice("[tank] is already full."))
 		return
 
 	user.visible_message(span_notice("[user] begins refilling [tank]..."))
 
 	if(do_after(user, 5 SECONDS, src))
-		var/fuel_transferred = min(fuel_needed, current_fuel)
-		tank.fuel_amount += fuel_transferred
-		current_fuel -= fuel_transferred
-		to_chat(user, span_notice("You refill [tank]. ([fuel_transferred] fuel transferred)"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		var/resource_transferred = min(resource_needed, current_fuel)
+		tank.resource_amount += resource_transferred
+		current_fuel -= resource_transferred
+		to_chat(user, span_notice("You refill [tank]. ([resource_transferred] [tank.resource_name] transferred)"))
+		playsound(src, tank.refill_sound, 50, TRUE)
 		update_icon()
 
 /obj/machinery/rce_fuel_storage/proc/RefillAcidTank(obj/item/acid_tank_backpack/tank, mob/user)
-	if(current_fuel <= 0)
-		to_chat(user, span_warning("[src] is empty!"))
-		return
-
-	var/acid_needed = tank.max_acid - tank.current_acid
-	if(acid_needed <= 0)
-		to_chat(user, span_notice("[tank] is already full."))
-		return
-
-	user.visible_message(span_notice("[user] begins refilling [tank]..."))
-
-	if(do_after(user, 5 SECONDS, src))
-		var/acid_transferred = min(acid_needed, current_fuel)
-		tank.current_acid += acid_transferred
-		current_fuel -= acid_transferred
-		to_chat(user, span_notice("You refill [tank]. ([acid_transferred] acid transferred)"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
-		update_icon()
+	return RefillTank(tank, user)
 
 /obj/machinery/rce_fuel_storage/proc/RefillCapacitor(obj/item/capacitor_pack/pack, mob/user)
-	if(current_fuel <= 0)
-		to_chat(user, span_warning("[src] is empty!"))
-		return
-
-	var/charge_needed = pack.max_charge - pack.current_charge
-	if(charge_needed <= 0)
-		to_chat(user, span_notice("[pack] is already fully charged."))
-		return
-
-	user.visible_message(span_notice("[user] begins recharging [pack]..."))
-
-	if(do_after(user, 5 SECONDS, src))
-		var/charge_transferred = min(charge_needed, current_fuel)
-		pack.current_charge += charge_transferred
-		current_fuel -= charge_transferred
-		to_chat(user, span_notice("You recharge [pack]. ([charge_transferred] charge transferred)"))
-		playsound(src, 'sound/weapons/emitter2.ogg', 50, TRUE)
-		update_icon()
+	return RefillTank(pack, user)
 
 /obj/machinery/rce_fuel_storage/proc/RefillCanister(obj/item/rce_fuel_canister/canister, mob/user)
 	if(current_fuel <= 0)
@@ -198,11 +164,11 @@
 		var/mob/living/carbon/human/H = target
 
 		// Try to find a fuel tank
-		var/obj/item/fuel_tank = locate(/obj/item/fuel_tank_backpack) in H.contents
+		var/obj/item/fuel_tank = locate(/obj/item/rce_resource_tank/fuel_backpack) in H.contents
 		if(!fuel_tank)
-			fuel_tank = locate(/obj/item/acid_tank_backpack) in H.contents
+			fuel_tank = locate(/obj/item/rce_resource_tank/acid_backpack) in H.contents
 		if(!fuel_tank)
-			fuel_tank = locate(/obj/item/capacitor_pack) in H.contents
+			fuel_tank = locate(/obj/item/rce_resource_tank/capacitor_pack) in H.contents
 
 		if(!fuel_tank)
 			to_chat(user, span_warning("[H] doesn't have a fuel tank!"))
@@ -210,22 +176,12 @@
 
 		RefuelTarget(fuel_tank, H, user)
 
-/obj/item/rce_fuel_canister/proc/RefuelTarget(obj/item/tank, mob/living/carbon/human/target, mob/user)
+/obj/item/rce_fuel_canister/proc/RefuelTarget(obj/item/rce_resource_tank/tank, mob/living/carbon/human/target, mob/user)
 	if(current_fuel <= 0)
 		to_chat(user, span_warning("[src] is empty!"))
 		return
 
-	var/fuel_needed = 0
-
-	if(istype(tank, /obj/item/fuel_tank_backpack))
-		var/obj/item/fuel_tank_backpack/T = tank
-		fuel_needed = T.max_fuel - T.fuel_amount
-	else if(istype(tank, /obj/item/acid_tank_backpack))
-		var/obj/item/acid_tank_backpack/T = tank
-		fuel_needed = T.max_acid - T.current_acid
-	else if(istype(tank, /obj/item/capacitor_pack))
-		var/obj/item/capacitor_pack/T = tank
-		fuel_needed = T.max_charge - T.current_charge
+	var/fuel_needed = tank.max_resource - tank.resource_amount
 
 	if(fuel_needed <= 0)
 		to_chat(user, span_notice("[target]'s tank is already full."))
@@ -235,21 +191,11 @@
 
 	if(do_after(user, 10 SECONDS, target)) // Takes longer in the field
 		var/fuel_transferred = min(fuel_needed, current_fuel)
-
-		if(istype(tank, /obj/item/fuel_tank_backpack))
-			var/obj/item/fuel_tank_backpack/T = tank
-			T.fuel_amount += fuel_transferred
-		else if(istype(tank, /obj/item/acid_tank_backpack))
-			var/obj/item/acid_tank_backpack/T = tank
-			T.current_acid += fuel_transferred
-		else if(istype(tank, /obj/item/capacitor_pack))
-			var/obj/item/capacitor_pack/T = tank
-			T.current_charge += fuel_transferred
-
+		tank.resource_amount += fuel_transferred
 		current_fuel -= fuel_transferred
-		to_chat(user, span_notice("You refuel [target]'s tank. ([fuel_transferred] fuel transferred)"))
+		to_chat(user, span_notice("You refuel [target]'s tank. ([fuel_transferred] [tank.resource_name] transferred)"))
 		to_chat(target, span_nicegreen("[user] refuels your tank!"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		playsound(src, tank.refill_sound, 50, TRUE)
 
 // FUEL SLOWDOWN COMPONENT
 /datum/component/fuel_slowdown
@@ -274,14 +220,8 @@
 		H.remove_movespeed_modifier(/datum/movespeed_modifier/fuel_tank)
 		return
 
-	// Check for fuel tanks
-	var/has_tank = FALSE
-	if(locate(/obj/item/fuel_tank_backpack) in H.contents)
-		has_tank = TRUE
-	else if(locate(/obj/item/acid_tank_backpack) in H.contents)
-		has_tank = TRUE
-	else if(locate(/obj/item/capacitor_pack) in H.contents)
-		has_tank = TRUE
+	// Check for any RCE resource tank
+	var/has_tank = locate(/obj/item/rce_resource_tank) in H.contents
 
 	if(has_tank)
 		H.add_movespeed_modifier(/datum/movespeed_modifier/fuel_tank)
@@ -291,42 +231,7 @@
 /datum/movespeed_modifier/fuel_tank
 	multiplicative_slowdown = 2
 
-// Apply component to all fuel tanks on equip
-/obj/item/fuel_tank_backpack/equipped(mob/user, slot)
-	. = ..()
-	if(ishuman(user))
-		user.AddComponent(/datum/component/fuel_slowdown)
-
-/obj/item/fuel_tank_backpack/dropped(mob/user)
-	. = ..()
-	if(ishuman(user))
-		var/datum/component/fuel_slowdown/C = user.GetComponent(/datum/component/fuel_slowdown)
-		if(C)
-			C.CheckFuelTank(user)
-
-/obj/item/acid_tank_backpack/equipped(mob/user, slot)
-	. = ..()
-	if(ishuman(user))
-		user.AddComponent(/datum/component/fuel_slowdown)
-
-/obj/item/acid_tank_backpack/dropped(mob/user)
-	. = ..()
-	if(ishuman(user))
-		var/datum/component/fuel_slowdown/C = user.GetComponent(/datum/component/fuel_slowdown)
-		if(C)
-			C.CheckFuelTank(user)
-
-/obj/item/capacitor_pack/equipped(mob/user, slot)
-	. = ..()
-	if(ishuman(user))
-		user.AddComponent(/datum/component/fuel_slowdown)
-
-/obj/item/capacitor_pack/dropped(mob/user)
-	. = ..()
-	if(ishuman(user))
-		var/datum/component/fuel_slowdown/C = user.GetComponent(/datum/component/fuel_slowdown)
-		if(C)
-			C.CheckFuelTank(user)
+// Moved to base rce_resource_tank type - no longer needed here
 
 // FUEL STATION (smaller refueling point)
 /obj/structure/fuel_station
@@ -350,60 +255,21 @@
 		to_chat(user, span_warning("No fuel storage tank in range!"))
 		return
 
-	if(istype(I, /obj/item/fuel_tank_backpack))
-		var/obj/item/fuel_tank_backpack/tank = I
+	if(istype(I, /obj/item/rce_resource_tank))
+		var/obj/item/rce_resource_tank/tank = I
 		if(main_storage.current_fuel <= 0)
 			to_chat(user, span_warning("The main fuel storage is empty!"))
 			return
 
-		var/fuel_needed = tank.max_fuel - tank.fuel_amount
-		if(fuel_needed <= 0)
+		var/resource_needed = tank.max_resource - tank.resource_amount
+		if(resource_needed <= 0)
 			to_chat(user, span_notice("[tank] is already full."))
 			return
 
 		user.visible_message(span_notice("[user] begins refilling [tank]..."))
 		if(do_after(user, refill_time, src))
-			var/fuel_transferred = min(fuel_needed, main_storage.current_fuel)
-			tank.fuel_amount += fuel_transferred
-			main_storage.current_fuel -= fuel_transferred
+			var/resource_transferred = min(resource_needed, main_storage.current_fuel)
+			tank.resource_amount += resource_transferred
+			main_storage.current_fuel -= resource_transferred
 			to_chat(user, span_notice("You refill [tank]."))
-			playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
-
-	// Similar for other tank types...
-	else if(istype(I, /obj/item/acid_tank_backpack))
-		var/obj/item/acid_tank_backpack/tank = I
-		if(main_storage.current_fuel <= 0)
-			to_chat(user, span_warning("The main fuel storage is empty!"))
-			return
-
-		var/acid_needed = tank.max_acid - tank.current_acid
-		if(acid_needed <= 0)
-			to_chat(user, span_notice("[tank] is already full."))
-			return
-
-		user.visible_message(span_notice("[user] begins refilling [tank]..."))
-		if(do_after(user, refill_time, src))
-			var/acid_transferred = min(acid_needed, main_storage.current_fuel)
-			tank.current_acid += acid_transferred
-			main_storage.current_fuel -= acid_transferred
-			to_chat(user, span_notice("You refill [tank]."))
-			playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
-
-	else if(istype(I, /obj/item/capacitor_pack))
-		var/obj/item/capacitor_pack/pack = I
-		if(main_storage.current_fuel <= 0)
-			to_chat(user, span_warning("The main fuel storage is empty!"))
-			return
-
-		var/charge_needed = pack.max_charge - pack.current_charge
-		if(charge_needed <= 0)
-			to_chat(user, span_notice("[pack] is already fully charged."))
-			return
-
-		user.visible_message(span_notice("[user] begins recharging [pack]..."))
-		if(do_after(user, refill_time, src))
-			var/charge_transferred = min(charge_needed, main_storage.current_fuel)
-			pack.current_charge += charge_transferred
-			main_storage.current_fuel -= charge_transferred
-			to_chat(user, span_notice("You recharge [pack]."))
-			playsound(src, 'sound/weapons/emitter2.ogg', 50, TRUE)
+			playsound(src, tank.refill_sound, 50, TRUE)

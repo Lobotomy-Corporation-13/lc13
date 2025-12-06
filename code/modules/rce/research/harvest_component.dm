@@ -317,11 +317,6 @@
 /obj/effect/temp_visual/harvest_extract
 	name = "biological extraction"
 	icon = 'icons/effects/effects.dmi'
-	icon_state = "soulglow"
+	icon_state = "impact_laser_purple"
 	layer = ABOVE_MOB_LAYER
 	duration = 20
-
-/obj/effect/temp_visual/harvest_extract/Initialize()
-	. = ..()
-	color = "#FF00FF"
-	animate(src, alpha = 0, transform = matrix() * 2, time = duration)

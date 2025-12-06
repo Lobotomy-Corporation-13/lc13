@@ -12,6 +12,16 @@
 	var/list/granted_traits = list()
 	var/specialist_type = null
 	var/datum/status_effect/specialist_class/class_effect
+	var/list/usable_roles = list(
+		"R-Corp Rook",
+		"Rook Squad Captain",
+		"Robin Squad Captain",
+		"Robin Section Leader",
+		"Robin Squad Sergeant",
+		"Section A Robin",
+		"Section B Robin",
+		"Section C Robin"
+	)
 
 /obj/item/organ/cyberimp/rce_specialist/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
@@ -20,9 +30,9 @@
 
 	var/mob/living/carbon/human/H = M
 
-	// Check if user is a Rook
-	if(!istype(H.mind?.assigned_role, /datum/job/rook))
-		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook personnel."))
+	// Check if user has a valid role title
+	if(!(H.mind?.assigned_role?.title in usable_roles))
+		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
 		Remove(H)
 		return
 
@@ -130,16 +140,6 @@
 /datum/status_effect/specialist_class/on_creation(mob/living/new_owner, specialist)
 	. = ..()
 	specialist_type = specialist
-	UpdateIcon()
-
-/datum/status_effect/specialist_class/proc/UpdateIcon()
-	switch(specialist_type)
-		if(SPECIALIST_HELLFIRE)
-			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "fire_glow"))
-		if(SPECIALIST_VENOM)
-			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_aura"))
-		if(SPECIALIST_STORM)
-			owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "electricity"))
 
 // Persistent fire effect
 /obj/effect/persistent_fire
