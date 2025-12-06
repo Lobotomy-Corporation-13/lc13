@@ -776,7 +776,7 @@ export const RCETacticalMap = (props, context) => {
                       tooltip="Show annotation list"
                     />
                   </Box>
-              )
+                )
               }>
               <Stack vertical fill>
                 <Stack.Item>
