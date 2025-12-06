@@ -356,7 +356,7 @@
 
 /obj/structure/venom_trap_small/proc/arm()
 	armed = TRUE
-	icon_state = "beacon_active"
+	icon_state = "dodgeball"
 
 /obj/structure/venom_trap_small/Crossed(atom/movable/AM)
 	. = ..()

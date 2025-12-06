@@ -1605,9 +1605,9 @@
 /obj/structure/table/abductor{
 	name = "r&d table"
 	},
-/obj/item/storage/box/rce_bodyparts,
-/obj/item/storage/box/rce_bodyparts,
-/obj/item/storage/box/rce_bodyparts,
+/obj/item/storage/bag/rce_bodyparts,
+/obj/item/storage/bag/rce_bodyparts,
+/obj/item/storage/bag/rce_bodyparts,
 /obj/effect/turf_decal/siding/purple,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)

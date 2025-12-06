@@ -53,6 +53,30 @@
 		playsound(src, 'sound/machines/click.ogg', 50, TRUE)
 		update_icon()
 		return
+	if(istype(I, /obj/item/storage/bag/rce_bodyparts))
+		var/obj/item/storage/bag/rce_bodyparts/bag = I
+		var/datum/component/storage/STR = bag.GetComponent(/datum/component/storage)
+		if(!STR)
+			return ..()
+		var/parts_added = 0
+		var/list/parts_to_add = list()
+		for(var/obj/item/rce_bodypart/part in bag.contents)
+			parts_to_add += part
+		if(!length(parts_to_add))
+			to_chat(user, span_warning("The bag is empty!"))
+			return
+		for(var/obj/item/rce_bodypart/part in parts_to_add)
+			if(length(stored_parts) >= 10)
+				to_chat(user, span_warning("[src] sample storage is full! Inserted [parts_added] samples."))
+				break
+			part.forceMove(src)
+			stored_parts += part
+			parts_added++
+		if(parts_added > 0)
+			to_chat(user, span_notice("You insert [parts_added] samples from [bag] into [src]."))
+			playsound(src, 'sound/machines/click.ogg', 50, TRUE)
+			update_icon()
+		return
 	return ..()
 
 /obj/machinery/rce_research/AltClick(mob/user)

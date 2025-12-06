@@ -102,24 +102,27 @@
 
 // Container for storing body parts in research machine
 // Automatically picks up bodyparts as the user moves (like mining satchel)
-/obj/item/storage/box/rce_bodyparts
+/obj/item/storage/bag/rce_bodyparts
 	name = "biological sample container"
 	desc = "A specialized container for storing biological samples. Automatically collects samples as you walk over them."
-	icon_state = "brassbox"
-	illustration = null
+	icon = 'icons/obj/mining.dmi'
+	icon_state = "satchel"
+	worn_icon_state = "satchel"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
+	w_class = WEIGHT_CLASS_NORMAL
 	/// If TRUE, the holder won't receive any messages when they fail to pick up samples
 	var/spam_protection = FALSE
 	/// The mob we're listening to for movement
 	var/mob/listeningTo
 
-/obj/item/storage/box/rce_bodyparts/ComponentInitialize()
+/obj/item/storage/bag/rce_bodyparts/ComponentInitialize()
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
 	STR.max_items = 20
-	STR.can_hold = typecacheof(list(/obj/item/rce_bodypart))
 	STR.max_combined_w_class = 40
+	STR.set_holdable(list(/obj/item/rce_bodypart))
 
-/obj/item/storage/box/rce_bodyparts/equipped(mob/user)
+/obj/item/storage/bag/rce_bodyparts/equipped(mob/user)
 	. = ..()
 	if(listeningTo == user)
 		return
@@ -128,13 +131,14 @@
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(pickup_bodyparts))
 	listeningTo = user
 
-/obj/item/storage/box/rce_bodyparts/dropped()
+/obj/item/storage/bag/rce_bodyparts/dropped()
 	. = ..()
 	if(listeningTo)
 		UnregisterSignal(listeningTo, COMSIG_MOVABLE_MOVED)
 		listeningTo = null
 
-/obj/item/storage/box/rce_bodyparts/proc/pickup_bodyparts(mob/living/user)
+/obj/item/storage/bag/rce_bodyparts/proc/pickup_bodyparts(mob/living/user)
+	SIGNAL_HANDLER
 	var/show_message = FALSE
 	var/turf/tile = user.loc
 	if(!isturf(tile))

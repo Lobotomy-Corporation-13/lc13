@@ -237,7 +237,7 @@
 		// Check for Hellfire immunity
 		if(is_hellfire_rooster(L))
 			return // Hellfire users are immune
-		L.apply_lc_burn(3)
+		L.apply_lc_overheat(3)
 
 	// Enhanced fire for structures
 	if(isstructure(target))
@@ -270,7 +270,7 @@
 	worn_icon = 'icons/mob/clothing/suit.dmi'
 	icon_state = "hunter"
 	inhand_icon_state = "hostrench"
-	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30, FIRE = 100)
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 50, PALE_DAMAGE = 50, FIRE = 100)
 	hat = /obj/item/clothing/head/ego_hat/helmet/hellfire
 	allowed = list(/obj/item/gun, /obj/item/ego_weapon, /obj/item/melee, /obj/item/auto_flamethrower)
 
@@ -309,7 +309,7 @@
 		if(!locate(/obj/effect/rcorp_fire) in T)
 			new /obj/effect/rcorp_fire(T)
 		for(var/mob/living/L in T)
-			L.apply_lc_burn(30)
+			L.apply_lc_overheat(30)
 	. = ..()
 
 /obj/effect/rcorp_fire
@@ -339,7 +339,7 @@
 	var/dealt_damage = FALSE
 	for(var/mob/living/L in get_turf(src))
 		L.deal_damage(6, FIRE)
-		L.apply_lc_burn(2)
+		L.apply_lc_overheat(2)
 		dealt_damage = TRUE
 	if(!dealt_damage)
 		damaging = FALSE
@@ -508,7 +508,7 @@
 					continue // Hellfire users are immune
 				L.visible_message(span_boldwarning("[user] blazes through [L]!"))
 				L.deal_damage(dash_damage, FIRE)
-				L.apply_lc_burn(10)
+				L.apply_lc_overheat(10)
 				new /obj/effect/temp_visual/cleave(get_turf(L))
 				been_hit += L
 
@@ -644,7 +644,7 @@
 		new /obj/effect/thermite_fire(T)
 		for(var/mob/living/L in T)
 			L.deal_damage(80, FIRE)
-			L.apply_lc_burn(15)
+			L.apply_lc_overheat(15)
 
 	qdel(src)
 
@@ -674,7 +674,7 @@
 	var/dealt_damage = FALSE
 	for(var/mob/living/L in get_turf(src))
 		L.deal_damage(10, FIRE)
-		L.apply_lc_burn(3)
+		L.apply_lc_overheat(3)
 		dealt_damage = TRUE
 	if(!dealt_damage)
 		damaging = FALSE
@@ -826,7 +826,7 @@
 	if(isliving(AM))
 		var/mob/living/L = AM
 		L.deal_damage(30, FIRE)
-		L.apply_lc_burn(5)
+		L.apply_lc_overheat(5)
 		to_chat(L, span_userdanger("You are burned by the wall of flames!"))
 
 /obj/effect/inferno_wall_segment/Bumped(atom/movable/AM)
@@ -834,13 +834,13 @@
 	if(isliving(AM))
 		var/mob/living/L = AM
 		L.deal_damage(20, FIRE)
-		L.apply_lc_burn(3)
+		L.apply_lc_overheat(3)
 		to_chat(L, span_danger("The wall of flames burns you!"))
 
 /obj/effect/inferno_wall_segment/attack_hand(mob/living/user)
 	. = ..()
 	user.deal_damage(25, FIRE)
-	user.apply_lc_burn(3)
+	user.apply_lc_overheat(3)
 	to_chat(user, span_danger("You burn your hand on the wall of flames!"))
 
 // Napalm Launcher - Long range bombardment weapon
@@ -967,7 +967,7 @@
 		new /obj/effect/napalm_fire(T)
 		for(var/mob/living/L in T)
 			L.deal_damage(50, FIRE)
-			L.apply_lc_burn(15)
+			L.apply_lc_overheat(15)
 
 // Long-lasting napalm fire
 /obj/effect/napalm_fire
@@ -996,7 +996,7 @@
 	var/dealt_damage = FALSE
 	for(var/mob/living/L in get_turf(src))
 		L.deal_damage(8, FIRE)
-		L.apply_lc_burn(4)
+		L.apply_lc_overheat(4)
 		dealt_damage = TRUE
 	if(!dealt_damage)
 		damaging = FALSE
@@ -1124,7 +1124,7 @@
 				continue
 			var/damage = empowered ? 30 : 15
 			L.deal_damage(damage, FIRE)
-			L.apply_lc_burn(empowered ? 5 : 2)
+			L.apply_lc_overheat(empowered ? 5 : 2)
 
 // Automatic Defense Flamethrower - Suit storage automated defense system
 /obj/item/auto_flamethrower

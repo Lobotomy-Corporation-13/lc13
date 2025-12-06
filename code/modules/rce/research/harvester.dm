@@ -13,6 +13,7 @@
 	can_charge = FALSE
 	fire_delay = 10 // 1 second cooldown between shots
 	fire_sound = 'sound/weapons/taser.ogg'
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/item/gun/energy/rce_harvester/examine(mob/user)
 	. = ..()

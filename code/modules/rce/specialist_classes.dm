@@ -225,15 +225,16 @@
 			continue // Immune to own flames
 
 		L.deal_damage(damage_per_second, FIRE)
-		L.adjust_fire_stacks(1)
-		L.IgniteMob()
+		L.apply_lc_overheat(1)
 
 	// Chance to spread
 	if(prob(10))
 		SpreadFire()
 
 /obj/effect/persistent_fire/proc/SpreadFire()
-	for(var/turf/T in orange(1, src))
+	for(var/turf/open/T in orange(1, src))
+		if(T.density)
+			continue // Don't spread to walls
 		if(locate(/obj/effect/persistent_fire) in T)
 			continue
 		if(prob(30))
