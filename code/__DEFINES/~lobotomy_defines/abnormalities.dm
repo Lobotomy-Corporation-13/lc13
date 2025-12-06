@@ -62,6 +62,7 @@
 #define ABNORMALITY_ORIGIN_COMMUNITY "Community"
 
 #define ABNORMALITY_ORIGIN_BRANCH12 "Branch 12"
+#define ABNORMALITY_ORIGIN_SS13MINING "SS13 Mining"
 
 //This exists as a dummy tag.
 #define ABNORMALITY_DUMMY "Dummy Abnormality"
