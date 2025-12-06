@@ -151,8 +151,8 @@
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/pillar))
 			var/obj/effect/proc_holder/spell/aimed/fairy/pillarspell = thespell
 			pillarspell.damage_type = damage_type
-		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/fairy/thin_line))
-			var/obj/effect/proc_holder/spell/aimed/fairy/thin_line/linespell = thespell
+		if(istype(thespell, /obj/effect/proc_holder/spell/pointed/thin_line))
+			var/obj/effect/proc_holder/spell/pointed/thin_line/linespell = thespell
 			linespell.damage_type = damage_type
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/thick_line))
 			var/obj/effect/proc_holder/spell/aimed/thick_line/thicklinespell = thespell
@@ -183,10 +183,10 @@
 // Different version of the Complete Arbiter that probably should only show up in adminbus.
 // Replaces Fairy with Thin Line, Pillar with Thick Line. Also gets Birdcage.
 /datum/antagonist/wizard/arbiter/complete/line_variant
-	name = "Arbiter (Line Singularity)"
+	name = "Arbiter (Line Variant)"
 	outfit_type = /datum/outfit/arbiter/line
 	spell_types = list(
-		/obj/effect/proc_holder/spell/aimed/fairy/thin_line,
+		/obj/effect/proc_holder/spell/pointed/thin_line,
 		/obj/effect/proc_holder/spell/aimed/thick_line,
 		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
 		/obj/effect/proc_holder/spell/pointed/lock,
@@ -196,5 +196,78 @@
 	)
 
 /datum/outfit/arbiter/line
-	name = "Arbiter (Line Singularity)"
-	neck = /obj/item/clothing/neck/cloak/arbiter/zena/noleaf
+	name = "Arbiter (Line Variant)"
+	neck = /obj/item/clothing/neck/cloak/arbiter/zena
+
+
+// Below code is for Power Null status effect. It's a stacking debuff that subtracts an amount of Power Modifier from the victim, which must be a human.
+
+// Status effect
+/datum/status_effect/stacking/arbiter_powernull
+	id = "arbiter_powernull"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = 15 SECONDS
+	max_stacks = 10
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/arbiter_powernull
+	var/powermod_loss_per_stack = 20 // AAAAAAAAAAAAAH GIVE ME BACK MY POWERMOD NOOOOOOOOOOO (Power Modifier is the stat affected by Justice, which increases attack damage and movespeed)
+
+/datum/status_effect/stacking/arbiter_powernull/on_apply()
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!owner)
+		return
+	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty)
+
+/datum/status_effect/stacking/arbiter_powernull/add_stacks(stacks_added)
+	var/mob/living/carbon/human/H = owner
+	if(!owner)
+		return
+
+	var/old_penalty = (stacks * powermod_loss_per_stack) * -1 // Calculate what our previous penalty was before adding the stacks.
+
+	. = ..() // Add the stacks
+
+	var/power_penalty = (powermod_loss_per_stack * stacks) * -1 // Calculate the new penalty.
+
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -old_penalty) // Revert our old penalty.
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty) // Add our new penalty.
+
+	linked_alert.desc = initial(linked_alert.desc)+"[stacks*powermod_loss_per_stack]."
+
+// We need to revert the powermod malus when removing the debuff.
+/datum/status_effect/stacking/arbiter_powernull/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/H = owner
+	if(!owner)
+		return
+
+	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -power_penalty)
+
+// Doesn't decay.
+/datum/status_effect/stacking/arbiter_powernull/tick()
+	if(!can_have_status())
+		qdel(src)
+
+/datum/status_effect/stacking/arbiter_powernull/can_have_status()
+	return ((owner.stat < DEAD) && (ishuman(owner)))
+
+// Mob proc which handles applying the debuff and stacking/refreshing it.
+/mob/living/proc/apply_arbiter_powernull(stacks)
+	var/datum/status_effect/stacking/arbiter_powernull/P = src.has_status_effect(/datum/status_effect/stacking/arbiter_powernull)
+	if(!P)
+		src.apply_status_effect(/datum/status_effect/stacking/arbiter_powernull, stacks)
+		return
+	else
+		P.add_stacks(stacks)
+		P.refresh()
+
+// Alert
+/atom/movable/screen/alert/status_effect/arbiter_powernull
+	name = "Faltering Justice"
+	desc = "Your sense of Justice is fading as you confront the true rulers of the City. Power Modifier is reduced by "
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "judge"

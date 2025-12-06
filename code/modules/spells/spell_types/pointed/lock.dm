@@ -1,12 +1,12 @@
 /obj/effect/proc_holder/spell/pointed/lock
 	name = "Lock"
-	desc = "Use the full power of J Corp's Singularity to lock down a single target and prevent them from moving for a limited amount of time."
+	desc = "Use the power of J Corp's Singularity to lock down a single target and prevent them from moving for a limited amount of time."
 	active_msg = "You prepare to use Lock on a target."
 	deactive_msg = "You decide not to use Lock for now..."
 	charge_max = 10
 	clothes_req = FALSE
-	icon = 'ModularTegustation/Teguicons/teguitems.dmi'
-	action_icon = 'ModularTegustation/Teguicons/teguitems.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
+	action_icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	action_icon_state = "lock"
 
 /obj/effect/proc_holder/spell/pointed/lock/cast(list/targets, mob/user = usr)
@@ -28,9 +28,6 @@
 	alert_type = null
 	status_type = STATUS_EFFECT_UNIQUE
 	var/statuseffectvisual
-	// I know this looks weird but yeah, these two variables are needed for Lock interactions with simplemobs.
-	var/should_reactivate_simplemob_AI = FALSE
-	var/prior_AI_state
 
 /datum/status_effect/arbiter_lock/on_apply()
 	. = ..()
@@ -54,13 +51,9 @@
 		// The only way to actually get them to be still is to shut off their AI and cancel any ongoing movements.
 		// Unfortunately this basically deactivates all their thinking and acting. But... well, we just don't have any other way to stop them from moving.
 
-		// We store their previous AI state before we Locked them.
-		prior_AI_state = unfortunate.AIStatus
-		unfortunate.AIStatus = AI_OFF
+		unfortunate.toggle_ai(AI_OFF)
 		unfortunate.Goto(get_turf(unfortunate))
 		unfortunate.patrol_reset()
-		// We set this to remind us to restore their AI once Lock falls off.
-		should_reactivate_simplemob_AI = TRUE
 
 	// Aesthetics: we play a sound and put a lock overlay on them.
 	playsound(owner, 'sound/abnormalities/lighthammer/chain.ogg', 40)
@@ -73,7 +66,7 @@
 /datum/status_effect/arbiter_lock/on_remove()
 	owner.cut_overlay(statuseffectvisual)
 	REMOVE_TRAIT(owner, TRAIT_INCAPACITATED, "Singularity J")
-	if(should_reactivate_simplemob_AI)
-		var/mob/living/simple_animal/unfortunate = owner
-		unfortunate.AIStatus = prior_AI_state
+	var/mob/living/simple_animal/unfortunate = owner
+	if(istype(unfortunate))
+		unfortunate.toggle_ai(AI_ON)
 	return ..()

@@ -262,18 +262,11 @@
 		fired_projs += P
 	return fired_projs
 
-/// It's just Fairy, with a different icon and slight stat differences. You get less Thin Lines, they do more damage, they recharge faster.
-/obj/effect/proc_holder/spell/aimed/fairy/thin_line
-	name = "Thin Line"
-	desc = "Fire a thin line of damaging essence, dealing the damage type corresponding to your active singularity."
-	projectile_amount = 4
-	charge_max = 80
-
-/// Replaces Pillar. Loses meltdown capability, in exchange it can be used more often. Rather than firing a projectile, it's an extremely long and piercing line AOE.
+/// Replaces Pillar. Loses meltdown capability, in exchange it can be used more often. Rather than firing a projectile, it's an extremely long and piercing line AOE. Applies Powernull.
 /// You need to stand still for line_telegraph_duration in order to fire. Moving or being interrupted will refund the spell though.
 /obj/effect/proc_holder/spell/aimed/thick_line
 	name = "Thick Line"
-	desc = "Manifest a powerful, damaging line of energy after a brief windup. Pierces enemies and walls. Deals damage according to your active singularity."
+	desc = "Manifest a powerful, damaging line of energy after a brief windup. Pierces enemies and walls. Deals damage according to your active singularity, and applies 3 stacks of Faltering Justice."
 	school = SCHOOL_EVOCATION
 	charge_max = 120
 	clothes_req = FALSE
@@ -292,8 +285,8 @@
 	var/pale_damage_coefficient = 0.5
 	/// Delay before casting Thick Line. Also counts as the amount of time the telegraphing lasts for it.
 	var/line_telegraph_duration = 1.2 SECONDS
-	/// Just leaving this here in case someone wants to be funny.
-	var/hurts_structures = FALSE
+	/// Apply X stacks of Power Null per hit.
+	var/powernull_stacks_per_hit = 3
 
 /obj/effect/proc_holder/spell/aimed/thick_line/fire_projectile(mob/living/user, atom/target)
 	current_amount--
@@ -324,9 +317,27 @@
 		addtimer(CALLBACK(src, PROC_REF(CancelCastRefund), user), 0.5 SECONDS)
 	return list()
 
-// We hurt absolutely everything that isn't both Head faction and hostile faction. Also you can't hide in disposals or whatever.
+// We hurt absolutely everything that isn't both Head faction and hostile faction.
 /obj/effect/proc_holder/spell/aimed/thick_line/proc/ThickLineHit(mob/living/user, turf/hit_turf, list/hit_list)
-	user.HurtInTurf(hit_turf, hit_list, (damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : line_damage), damage_type, null, TRUE, TRUE, TRUE, hurt_hidden = TRUE, hurt_structure = hurts_structures)
+	// To all living mobs found in the turf who aren't in our hit list: add them to the hit list, deal damage and apply powernull.
+	for(var/mob/living/yikes in hit_turf)
+		if(!(yikes in hit_list))
+			yikes |= hit_list
+			yikes.deal_damage((damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : line_damage), damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+			yikes.apply_arbiter_powernull(powernull_stacks_per_hit)
+
+	// To all mechas found in the turf who aren't in our hit list: add them to the hit list, deal damage, then check to see if they have occupants and also damage them.
+	for(var/obj/vehicle/sealed/mecha/tin_can in hit_turf)
+		if(!(tin_can in hit_list))
+			tin_can |= hit_list
+			tin_can.take_damage(line_damage, damage_type)
+
+			if(length(tin_can.occupants) > 0)
+				var/mob/living/gulp = pick(tin_can.occupants)
+				if(gulp && !(gulp in hit_list))
+					gulp |= hit_list
+					gulp.deal_damage((damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : (line_damage * 0.80)), damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+					gulp.apply_arbiter_powernull(powernull_stacks_per_hit)
 
 /obj/effect/proc_holder/spell/aimed/thick_line/proc/CancelCastRefund(mob/living/user)
 	if(user)
