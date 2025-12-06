@@ -183,6 +183,14 @@ No Ability	250
 	desc = "Many people look for oblivion at the bottom of the glass, I can't be blamed if I give it to 'em now, can I?"
 	icon_state = "stupor"
 
+/obj/item/clothing/suit/armor/ego_gear/realization/deception
+	name = "deception"
+	desc = "Not a single good thing in this City is freely given."
+	icon_state = "lce_lantern"
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 70)		// 230, tank realization so you should get a shield or parry weapon
+	realized_ability = /obj/effect/proc_holder/ability/fairy_lure
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/deception
+
 /* HE Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/grinder

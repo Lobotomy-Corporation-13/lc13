@@ -1869,3 +1869,48 @@
 			modified_guns -= did_you_try_smuggling_one_of_these
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
+// For the Deception realization.
+/obj/effect/proc_holder/ability/fairy_lure
+	name = "Fairy Lure"
+	desc = "Forces nearby enemies to attack you for 10 seconds. This includes potentially passive enemies."
+	//action_icon_state =
+	//base_icon_state =
+	cooldown_time = 15 SECONDS
+
+	var/lure_range = 6 // Radius of lure
+	var/filter //stolen from arbiter code
+	var/f1
+
+/obj/effect/proc_holder/ability/fairy_lure/Perform(target, mob/user)
+	playsound(get_turf(user), 'sound/abnormalities/faelantern/faelantern_giggle.ogg', 75, 0, 5)
+	to_chat(user, span_danger("You lure your enemies to target you!"))
+	if(!filter)
+		filter = TRUE
+		user.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=rgb(4, 30, 87))
+
+	f1 = user.filters[user.filters.len]
+	animate(f1,color = rgb(3, 1, 22),time=5)
+	addtimer(CALLBACK(src, PROC_REF(ResetFilters), user), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
+
+	for(var/turf/T in view(lure_range, user))
+		new /obj/effect/temp_visual/gravpush(T)
+		for(var/mob/living/simple_animal/hostile/L in T)
+			if(user.faction_check_mob(L, FALSE))
+				continue
+			if(L.stat >= DEAD)
+				continue
+			L.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+			addtimer(CALLBACK(src, PROC_REF(EndEnchant), L), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
+
+			L.GiveTarget(user)
+			L.target_switch_resistance += 100
+	return ..()
+
+/obj/effect/proc_holder/ability/fairy_lure/proc/EndEnchant(mob/living/simple_animal/hostile/victim)
+	victim.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+	victim.target_switch_resistance -= 100
+
+/obj/effect/proc_holder/ability/fairy_lure/proc/ResetFilters(mob/user)
+	user.clear_filters()
+	filter = null
+	f1 = null
