@@ -65,6 +65,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
+"dc" = (
+/obj/structure/table/bronze,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "dg" = (
 /obj/structure/table/glass,
 /obj/machinery/computer/libraryconsole{
@@ -1016,6 +1020,14 @@
 /obj/item/reagent_containers/hypospray/medipen/mental,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
+"nz" = (
+/obj/machinery/camera/autoname,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/chair/sofa/corp/left,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "nI" = (
 /obj/structure/chair/stool/bar,
 /turf/open/floor/carpet/orange,
@@ -2040,6 +2052,12 @@
 /obj/machinery/camera/autoname,
 /turf/open/floor/wood,
 /area/department_main/command)
+"zV" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "zW" = (
 /turf/closed/indestructible/reinforced,
 /area/department_main/training)
@@ -2638,6 +2656,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/command)
+"Jl" = (
+/obj/structure/chair/sofa/corp,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "Jm" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/carpet/orange,
@@ -3147,6 +3169,10 @@
 /obj/machinery/regenerator,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
+"PH" = (
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "PI" = (
 /obj/machinery/camera/autoname{
 	dir = 1
@@ -3644,6 +3670,9 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
+"Vf" = (
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "Vg" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/wood,
@@ -3710,6 +3739,12 @@
 "VK" = (
 /turf/open/floor/plating,
 /area/facility_hallway/safety)
+"VL" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "VQ" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -47379,17 +47414,17 @@ Hv
 Hv
 Hv
 Hv
-Hv
-Hv
-Hv
+ZK
+ZK
+ZK
 ve
 ve
 ve
 ve
 ve
-Hv
-Hv
-Hv
+ZK
+ZK
+ZK
 Hv
 ZL
 ZL
@@ -47635,19 +47670,19 @@ ZA
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+ZK
+ZK
+ZK
+ZK
+WW
+ZK
+ZK
+ZK
+ZK
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -47892,19 +47927,19 @@ ZA
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+uY
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -48149,19 +48184,19 @@ ZA
 ZA
 ZA
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+qz
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+qz
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -48406,19 +48441,19 @@ sF
 tp
 ZA
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Hv
+Hv
+Hv
+Hv
+zV
+VL
+Vf
+Hv
+Hv
+Hv
+Hv
+Hv
 ZL
 ZL
 ZL
@@ -48667,11 +48702,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Jl
+dc
+Vf
+Hv
 ZL
 ZL
 ZL
@@ -48924,11 +48959,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+nz
+Vf
+PH
+Hv
 ZL
 ZL
 ZL
@@ -49181,11 +49216,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Hv
+Hv
+Hv
+Hv
 ZL
 ZL
 ZL

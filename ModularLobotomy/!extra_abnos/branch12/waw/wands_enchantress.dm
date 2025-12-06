@@ -117,6 +117,7 @@
 				H.deal_damage(80, PALE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(8)	//Heal 100 SP
 				H.adjustSanityLoss(-100)
+		return
 
 	if(isliving(target))
 		var/mob/living/L = target
