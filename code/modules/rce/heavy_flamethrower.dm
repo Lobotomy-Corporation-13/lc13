@@ -272,6 +272,7 @@
 	inhand_icon_state = "hostrench"
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30, FIRE = 100)
 	hat = /obj/item/clothing/head/ego_hat/helmet/hellfire
+	allowed = list(/obj/item/gun, /obj/item/ego_weapon, /obj/item/melee, /obj/item/auto_flamethrower)
 
 /obj/item/clothing/suit/armor/ego_gear/hellfire/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!ishuman(M))
@@ -316,11 +317,11 @@
 	name = "heavy fire"
 	desc = "a burning pyre."
 	icon = 'icons/effects/effects.dmi'
-	icon_state = "turf_fire"
+	icon_state = "visual_fire"
 	anchored = TRUE
 	layer = TURF_LAYER
 	plane = FLOOR_PLANE
-	base_icon_state = "turf_fire"
+	base_icon_state = "visual_fire"
 	var/damaging = FALSE
 
 /obj/effect/rcorp_fire/Initialize()
@@ -525,8 +526,8 @@
 	desc = "Sprays volatile thermite gel that sticks to surfaces and detonates after a short delay. Excellent for area denial."
 	special = "Use afterattack to spray thermite that explodes after 2 seconds. Use in hand to connect fuel tank."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
-	icon_state = "mister"
-	inhand_icon_state = "mister"
+	icon_state = "misteratmos"
+	inhand_icon_state = "misteratmos"
 	lefthand_file = 'icons/mob/inhands/equipment/mister_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/mister_righthand.dmi'
 	force = 10
@@ -806,8 +807,8 @@
 /obj/effect/inferno_wall_segment
 	name = "wall of flames"
 	desc = "An intense wall of fire that blocks passage."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "turf_fire"
+	icon = 'icons/obj/hydroponics/equipment.dmi'
+	icon_state = "bonfire_on_fire_intense"
 	anchored = TRUE
 	density = TRUE
 	opacity = FALSE
@@ -1129,16 +1130,16 @@
 /obj/item/auto_flamethrower
 	name = "automatic defense flamethrower"
 	desc = "An automated flamethrower system that attaches to your suit storage. When activated, it automatically targets and fires at hostile entities within range."
-	icon = 'icons/obj/guns/projectile.dmi'
-	icon_state = "sentry"
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "kineticgun_h"
 	w_class = WEIGHT_CLASS_NORMAL
 	slot_flags = ITEM_SLOT_SUITSTORE
 	var/active = FALSE
 	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
-	var/fuel_per_shot = 3
+	var/fuel_per_shot = 10
 	var/scan_range = 6
 	var/last_fired = 0
-	var/fire_delay = 10 // 1 second between shots
+	var/fire_delay = 5 // 0.5 second between shots
 	var/datum/action/item_action/toggle_auto_flamethrower/toggle_action
 	var/mob/living/carbon/human/wearer
 
@@ -1221,7 +1222,7 @@
 	START_PROCESSING(SSobj, src)
 	to_chat(wearer, span_danger("Automatic defense system ACTIVATED!"))
 	playsound(src, 'sound/machines/synth_yes.ogg', 50, TRUE)
-	wearer.add_overlay(mutable_appearance('icons/effects/effects.dmi', "shield2", ABOVE_MOB_LAYER))
+	wearer.add_overlay(mutable_appearance('icons/effects/effects.dmi', "shield-red", ABOVE_MOB_LAYER))
 	return TRUE
 
 /obj/item/auto_flamethrower/proc/deactivate()
@@ -1230,7 +1231,7 @@
 	if(wearer)
 		to_chat(wearer, span_notice("Automatic defense system deactivated."))
 		playsound(src, 'sound/machines/synth_no.ogg', 50, TRUE)
-		wearer.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "shield2", ABOVE_MOB_LAYER))
+		wearer.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "shield-red", ABOVE_MOB_LAYER))
 
 /obj/item/auto_flamethrower/process()
 	if(!active || !wearer || !fuel_tank)
@@ -1309,7 +1310,8 @@
 
 // Lighter flame projectile for automatic system
 /obj/projectile/ego_bullet/heavy_flame/auto
-	damage = 5
+	icon_state = "fireball"
+	damage = 75
 	fire_chance = 10
 	range = 6
 

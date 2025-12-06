@@ -348,11 +348,6 @@
 "fd" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_2_3)
-"fe" = (
-/obj/effect/turf_decal/sand,
-/obj/effect/turf_decal/sand/plating,
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
 "fg" = (
 /mob/living/simple_animal/hostile/lizard,
 /turf/open/floor/grass,
@@ -649,15 +644,6 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
-"jA" = (
-/obj/structure/table/abductor{
-	name = "r&d table"
-	},
-/obj/item/storage/box/rce_bodyparts,
-/obj/item/storage/box/rce_bodyparts,
-/obj/item/storage/box/rce_bodyparts,
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
 "jB" = (
 /obj/structure/rack,
 /obj/effect/turf_decal/delivery,
@@ -878,6 +864,11 @@
 /obj/item/combat_log_book,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"lY" = (
+/obj/machinery/rce_research,
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "lZ" = (
 /obj/machinery/conveyor/auto,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1001,13 +992,6 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/closed/wall/mineral/titanium/survival/pod,
 /area/rce/rcorp_base)
-"nz" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/turf_decal/siding/purple{
-	dir = 1
-	},
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
 "nB" = (
 /obj/effect/turf_decal/sand/plating,
 /obj/effect/turf_decal/delivery/white,
@@ -1047,8 +1031,9 @@
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_0_3)
 "nV" = (
-/obj/effect/turf_decal/siding/purple,
-/obj/structure/closet/crate,
+/obj/effect/turf_decal/siding/purple/corner{
+	dir = 8
+	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "nW" = (
@@ -1283,12 +1268,6 @@
 "rE" = (
 /obj/machinery/conveyor/auto{
 	dir = 4
-	},
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
-"rG" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 1
 	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
@@ -1622,6 +1601,16 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"wW" = (
+/obj/structure/table/abductor{
+	name = "r&d table"
+	},
+/obj/item/storage/box/rce_bodyparts,
+/obj/item/storage/box/rce_bodyparts,
+/obj/item/storage/box/rce_bodyparts,
+/obj/effect/turf_decal/siding/purple,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "xb" = (
 /obj/machinery/computer/operating{
 	dir = 4
@@ -1747,10 +1736,6 @@
 /obj/item/conveyor_switch_construct,
 /obj/item/conveyor_switch_construct,
 /obj/item/conveyor_switch_construct,
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
-"yD" = (
-/obj/machinery/rce_research,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "yK" = (
@@ -2336,6 +2321,13 @@
 /obj/structure/rcorp_factory/grenade,
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
+"Hb" = (
+/obj/machinery/computer/rce_leaderboard,
+/obj/effect/turf_decal/siding/purple{
+	dir = 6
+	},
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "He" = (
 /mob/living/simple_animal/hostile/retaliate/frog,
 /turf/open/floor/grass,
@@ -2445,12 +2437,6 @@
 /obj/structure/flora/ash/tall_shroom,
 /turf/open/floor/plating/ashplanet/ash,
 /area/rce/xcorp/rce_2_1)
-"IO" = (
-/obj/machinery/door/airlock/survival_pod{
-	name = "R&D Entrance"
-	},
-/turf/open/floor/pod/light,
-/area/rce/rcorp_base)
 "IQ" = (
 /obj/structure/rack,
 /obj/item/gun/energy/e_gun/rabbitdash,
@@ -3160,8 +3146,7 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Tf" = (
-/obj/effect/turf_decal/siding/purple,
-/obj/machinery/computer/rce_leaderboard,
+/obj/effect/turf_decal/siding/purple/corner,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Tk" = (
@@ -3357,6 +3342,14 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/rce/xcorp/rce_0_3)
+"VZ" = (
+/obj/structure/closet/crate,
+/obj/effect/turf_decal/siding/purple{
+	dir = 10
+	},
+/obj/item/storage/box/rce_guides,
+/turf/open/floor/pod/light,
+/area/rce/rcorp_base)
 "Wg" = (
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_1_3)
@@ -15901,7 +15894,7 @@ ld
 ld
 ld
 ld
-fe
+ld
 re
 re
 re
@@ -16158,7 +16151,7 @@ nX
 ld
 ld
 ld
-fe
+ld
 MA
 ZV
 Bo
@@ -16414,14 +16407,14 @@ ld
 ld
 ld
 VM
-fe
-fe
+ld
+ld
 MA
-rG
+Px
 jT
 Ht
 re
-qH
+re
 qH
 qH
 qH
@@ -16671,14 +16664,14 @@ ld
 ld
 ld
 ld
-fe
+ld
+ld
 nB
-re
-rG
-Zi
+Px
+Px
 nV
+VZ
 re
-qH
 qH
 qH
 qH
@@ -16928,14 +16921,14 @@ ld
 ld
 ld
 ld
-fe
+ld
+ld
 nB
-IO
-nz
-Zi
-yD
+Px
+Px
+jT
+lY
 re
-qH
 qH
 qH
 qH
@@ -17185,14 +17178,14 @@ ld
 ld
 ld
 ld
-fe
+ld
+ld
 nB
-IO
-rG
+Px
+Px
 Zi
-jA
+wW
 re
-qH
 qH
 qH
 qH
@@ -17442,14 +17435,14 @@ ld
 ld
 ld
 ld
-fe
+ld
+ld
 nB
-re
-rG
-jT
+Px
+Px
 Tf
+Hb
 re
-qH
 qH
 qH
 qH
@@ -17699,14 +17692,14 @@ ld
 ld
 nX
 ld
-fe
-fe
+ld
+ld
 MA
-nz
+Px
 Zi
 Ht
 re
-qH
+re
 qH
 qH
 qH
@@ -17957,7 +17950,7 @@ ld
 ld
 ld
 ld
-fe
+ld
 MA
 OO
 DW
@@ -18214,7 +18207,7 @@ ld
 ld
 ld
 ld
-fe
+ld
 re
 re
 re

@@ -7,6 +7,7 @@
 	desc = "A military-grade neural implant that reconfigures the user's combat capabilities."
 	icon_state = "imp_jetpack-on"
 	slot = ORGAN_SLOT_BRAIN_ANTISTUN
+	organ_flags = NONE // Not edible - allows attack() to work for implanting
 	var/class_name = "Specialist"
 	var/list/attribute_modifiers = list()
 	var/list/granted_traits = list()
@@ -23,49 +24,56 @@
 		"Section C Robin"
 	)
 
-/obj/item/organ/cyberimp/rce_specialist/attack_self(mob/user)
-	. = ..()
-	if(!ishuman(user))
+/obj/item/organ/cyberimp/rce_specialist/attack(mob/living/target, mob/living/user)
+	if(!ishuman(target))
 		to_chat(user, span_warning("This implant is only compatible with humans."))
 		return
 
-	var/mob/living/carbon/human/H = user
+	var/mob/living/carbon/human/H = target
 
 	// Check role compatibility first
 	var/datum/job/user_job = H.mind?.assigned_role
 	if(!user_job || !(user_job.title in usable_roles))
-		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
+		to_chat(user, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
 		return
 
 	// Check if already has a specialist implant (check for rce_specialist type specifically)
 	var/obj/item/organ/cyberimp/rce_specialist/existing = locate(/obj/item/organ/cyberimp/rce_specialist) in H.internal_organs
 	if(existing)
-		to_chat(H, span_warning("You already have a specialist implant installed! Remove it first."))
+		to_chat(user, span_warning("[H] already has a specialist implant installed! Remove it first."))
 		return
 
-	to_chat(H, span_notice("You begin inserting [src] into yourself..."))
+	if(target == user)
+		to_chat(user, span_notice("You begin inserting [src] into yourself..."))
+	else
+		user.visible_message(span_warning("[user] begins inserting [src] into [H]..."), \
+			span_notice("You begin inserting [src] into [H]..."))
 	playsound(src, 'sound/weapons/circsawhit.ogg', 50, TRUE)
 
-	if(!do_after(H, 5 SECONDS, target = H))
-		to_chat(H, span_warning("You were interrupted while inserting the implant!"))
+	if(!do_after(user, 5 SECONDS, target = H))
+		to_chat(user, span_warning("You were interrupted while inserting the implant!"))
 		return
 
 	// Double check conditions after the delay
-	if(QDELETED(src) || src.loc != H)
+	if(QDELETED(src) || src.loc != user)
 		return
 
 	existing = locate(/obj/item/organ/cyberimp/rce_specialist) in H.internal_organs
 	if(existing)
-		to_chat(H, span_warning("You already have a specialist implant installed!"))
+		to_chat(user, span_warning("[H] already has a specialist implant installed!"))
 		return
 
 	user_job = H.mind?.assigned_role
 	if(!user_job || !(user_job.title in usable_roles))
-		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
+		to_chat(user, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
 		return
 
 	// Insert the implant
-	to_chat(H, span_notice("You insert [src] into yourself!"))
+	if(target == user)
+		to_chat(user, span_notice("You insert [src] into yourself!"))
+	else
+		user.visible_message(span_warning("[user] inserts [src] into [H]!"), \
+			span_notice("You insert [src] into [H]!"))
 	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
 	Insert(H)
 
@@ -192,8 +200,8 @@
 /obj/effect/persistent_fire
 	name = "raging flames"
 	desc = "Intense flames that won't go out!"
-	icon = 'icons/effects/fire.dmi'
-	icon_state = "3"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "turf_fire"
 	anchored = TRUE
 	density = FALSE
 	opacity = FALSE
