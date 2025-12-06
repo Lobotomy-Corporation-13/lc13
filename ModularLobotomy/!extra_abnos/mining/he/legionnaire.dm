@@ -30,10 +30,10 @@
 	death_message = "'s arms reach out before it falls apart onto the floor, lifeless."
 
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = list(80, 80, 50, 50, 50),
-		ABNORMALITY_WORK_INSIGHT = 50,
-		ABNORMALITY_WORK_ATTACHMENT = 30,
-		ABNORMALITY_WORK_REPRESSION = 80
+		ABNORMALITY_WORK_INSTINCT = 40,
+		ABNORMALITY_WORK_INSIGHT = 30,
+		ABNORMALITY_WORK_ATTACHMENT = 20,
+		ABNORMALITY_WORK_REPRESSION = 60,
 	)
 
 	work_damage_amount = 7

@@ -4142,6 +4142,7 @@
 #include "ModularLobotomy\!extra_abnos\mining\baseabno.dm"
 #include "ModularLobotomy\!extra_abnos\mining\he\herald.dm"
 #include "ModularLobotomy\!extra_abnos\mining\he\legionnaire.dm"
+#include "ModularLobotomy\!extra_abnos\mining\he\pandora.dm"
 #include "ModularLobotomy\altjobtitles\altjobtitles.dm"
 #include "ModularLobotomy\altjobtitles\LC13.dm"
 #include "ModularLobotomy\altjobtitles\outfits.dm"
