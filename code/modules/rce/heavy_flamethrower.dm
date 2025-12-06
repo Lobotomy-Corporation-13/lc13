@@ -1,12 +1,20 @@
 // Heavy Flamethrower System for RCE
 // A powerful flamethrower that requires a fuel tank backpack to operate
 
+// Helper proc to check if user is a Hellfire Rooster (checks for implant directly)
+/proc/is_hellfire_rooster(mob/living/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/cyberimp/rce_specialist/hellfire/implant = locate() in H.internal_organs
+	return !!implant
+
 // Fuel Tank Backpack
 /obj/item/rce_resource_tank/fuel_backpack
 	name = "heavy fuel tank"
 	desc = "A large fuel tank designed to be worn on the back. Powers heavy flamethrower weapons."
 	icon = 'icons/obj/tank.dmi'
-	icon_state = "rce_fuel"
+	icon_state = "hellfire_tank"
 	worn_icon = 'icons/mob/clothing/back.dmi'
 
 	// Resource configuration
@@ -227,10 +235,8 @@
 	if(isliving(target))
 		var/mob/living/L = target
 		// Check for Hellfire immunity
-		if(L.has_status_effect(/datum/status_effect/specialist_class))
-			var/datum/status_effect/specialist_class/SC = L.has_status_effect(/datum/status_effect/specialist_class)
-			if(SC.specialist_type == SPECIALIST_HELLFIRE)
-				return // Hellfire users are immune
+		if(is_hellfire_rooster(L))
+			return // Hellfire users are immune
 		L.apply_lc_burn(3)
 
 	// Enhanced fire for structures
@@ -244,13 +250,7 @@
 	. = ..()
 	if(. && isturf(newloc))
 		// Higher chance and longer duration for Hellfire users
-		var/enhanced_fire = FALSE
-		if(firer && ishuman(firer))
-			var/mob/living/carbon/human/H = firer
-			if(H.has_status_effect(/datum/status_effect/specialist_class))
-				var/datum/status_effect/specialist_class/SC = H.has_status_effect(/datum/status_effect/specialist_class)
-				if(SC.specialist_type == SPECIALIST_HELLFIRE)
-					enhanced_fire = TRUE
+		var/enhanced_fire = is_hellfire_rooster(firer)
 
 		if(enhanced_fire)
 			if(prob(50)) // 50% chance for Hellfire
@@ -480,19 +480,18 @@
 			break
 
 	// Perform the dash
+	var/user_is_hellfire = is_hellfire_rooster(user)
 	for(var/turf/T in path)
 		// Move the user
 		user.forceMove(T)
 
 		// Create enhanced fire effects for Hellfire users
-		if(user.has_status_effect(/datum/status_effect/specialist_class))
-			var/datum/status_effect/specialist_class/SC = user.has_status_effect(/datum/status_effect/specialist_class)
-			if(SC.specialist_type == SPECIALIST_HELLFIRE)
-				new /obj/effect/persistent_fire(T, 30 SECONDS) // Long lasting fire
-				// Create wider fire spread
-				for(var/turf/spread in orange(1, T))
-					if(prob(40))
-						new /obj/effect/persistent_fire(spread, 15 SECONDS)
+		if(user_is_hellfire)
+			new /obj/effect/persistent_fire(T, 30 SECONDS) // Long lasting fire
+			// Create wider fire spread
+			for(var/turf/spread in orange(1, T))
+				if(prob(40))
+					new /obj/effect/persistent_fire(spread, 15 SECONDS)
 		else
 			if(!locate(/obj/effect/rcorp_fire) in T)
 				new /obj/effect/rcorp_fire(T)
@@ -504,10 +503,8 @@
 				if(L == user || (L in been_hit))
 					continue
 				// Check for Hellfire immunity
-				if(L.has_status_effect(/datum/status_effect/specialist_class))
-					var/datum/status_effect/specialist_class/SC = L.has_status_effect(/datum/status_effect/specialist_class)
-					if(SC.specialist_type == SPECIALIST_HELLFIRE)
-						continue // Hellfire users are immune
+				if(is_hellfire_rooster(L))
+					continue // Hellfire users are immune
 				L.visible_message(span_boldwarning("[user] blazes through [L]!"))
 				L.deal_damage(dash_damage, FIRE)
 				L.apply_lc_burn(10)

@@ -1,24 +1,21 @@
-dm
 // Storm Rams - Electric/Mobility Weapon Systems
 // Rush-in burst damage specialists with escape mechanics
 
-// Helper proc to check if user is a Storm Ram
+// Helper proc to check if user is a Storm Ram (checks for implant directly)
 /proc/is_storm_ram(mob/living/user)
 	if(!ishuman(user))
 		return FALSE
 	var/mob/living/carbon/human/H = user
-	if(H.has_status_effect(/datum/status_effect/specialist_class))
-		var/datum/status_effect/specialist_class/SC = H.has_status_effect(/datum/status_effect/specialist_class)
-		if(SC.specialist_type == SPECIALIST_STORM)
-			return TRUE
-	return FALSE
+	var/obj/item/organ/cyberimp/rce_specialist/storm/implant = locate() in H.internal_organs
+	return !!implant
 
 // Capacitor Pack - Core resource for electric weapons
 /obj/item/rce_resource_tank/capacitor_pack
 	name = "storm capacitor pack"
 	desc = "A high-capacity energy storage system that powers Storm Ram burst attacks. Can be recharged at power stations."
-	icon = 'icons/obj/hydroponics/equipment.dmi'
-	icon_state = "waterbackpackjank"
+	icon = 'icons/obj/tank.dmi'
+	icon_state = "storm_tank"
+	worn_icon = 'icons/mob/clothing/back.dmi'
 
 	// Resource configuration
 	resource_name = "charge"
@@ -29,8 +26,6 @@ dm
 	// Unique capacitor features
 	var/speed_boost_active = FALSE
 
-	// Compatible refill sources
-	compatible_dispensers = list(/obj/structure/power_station)
 
 	// Custom sounds
 	refill_sound = 'sound/magic/lightningshock.ogg'
@@ -61,20 +56,6 @@ dm
 		return
 	return ..()
 
-/obj/item/rce_resource_tank/capacitor_pack/try_refill_from_dispenser(obj/structure/power_station/station, mob/user)
-	if(resource_amount >= max_resource)
-		to_chat(user, span_warning("[src] is already fully charged!"))
-		return
-	if(station.power_stored <= 0)
-		to_chat(user, span_warning("[station] is out of power!"))
-		return
-	var/charge_needed = max_resource - resource_amount
-	var/charge_to_transfer = min(charge_needed, station.power_stored, 200)
-	station.power_stored -= charge_to_transfer
-	resource_amount += charge_to_transfer
-	user.visible_message(span_notice("[user] recharges [src] from [station]."), span_notice("You recharge [src] from [station]. ([resource_amount]/[max_resource])"))
-	playsound(src, refill_sound, 50, TRUE)
-	do_sparks(2, TRUE, station)
 
 /obj/item/rce_resource_tank/capacitor_pack/examine(mob/user)
 	. = ..()
@@ -95,23 +76,8 @@ dm
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/storm_escape)
 
 /datum/movespeed_modifier/storm_escape
-	multiplicative_slowdown = -2 // Speed boost for escape
+	multiplicative_slowdown = -0.5 // Speed boost for escape
 
-// Power Station Structure (placed at base)
-/obj/structure/power_station
-	name = "power station"
-	desc = "A high-voltage charging station for recharging R-Corp capacitor packs."
-	icon = 'icons/obj/power.dmi'
-	icon_state = "smes"
-	density = TRUE
-	anchored = TRUE
-	var/power_stored = 10000
-	var/max_power = 10000
-
-/obj/structure/power_station/examine(mob/user)
-	. = ..()
-	. += span_notice("Power reserves: [power_stored]/[max_power]")
-	. += span_nicegreen("Use a capacitor pack on this to recharge.")
 
 // Portable Power Cell (for Ravens)
 /obj/item/power_cell
@@ -165,7 +131,6 @@ dm
 	hitsound = 'sound/weapons/punch3.ogg'
 	var/electric_charge_cost = 10
 	var/dash_cost = 20
-	var/stun_duration = 15
 	var/dash_range = 4
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 30  // 3 seconds
@@ -189,8 +154,7 @@ dm
 
 	. = ..()
 	if(.)
-		// Apply stun and AoE damage
-		target.Paralyze(stun_duration)
+		// Apply AoE damage
 		playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
 		new /obj/effect/temp_visual/lightning_strike(get_turf(target))
 
@@ -199,7 +163,6 @@ dm
 			if(L == user || L == target)
 				continue
 			L.deal_damage(20, FIRE)
-			L.Paralyze(10)
 			do_sparks(2, TRUE, L)
 
 /obj/item/ego_weapon/thunder_gauntlets/afterattack(atom/target, mob/living/user, proximity_flag, params)
@@ -226,7 +189,7 @@ dm
 	// Perform thunder dash
 	thunder_dash(target, user, pack)
 
-/obj/item/ego_weapon/thunder_gauntlets/proc/thunder_dash(atom/target, mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/ego_weapon/thunder_gauntlets/proc/thunder_dash(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	dash_cooldown = world.time + dash_cooldown_time
 	var/turf/T = get_turf(target)
 	var/turf/starting = get_turf(user)
@@ -254,7 +217,6 @@ dm
 				continue
 			L.deal_damage(30, BRUTE)
 			L.deal_damage(15, FIRE)
-			L.Paralyze(20)
 			do_sparks(3, TRUE, L)
 
 	// Grant escape speed boost
@@ -265,7 +227,7 @@ dm
 	name = "R-Corp storm dash module"
 	desc = "Electromagnetic propulsion system that launches you through enemies, dealing chain damage. Click to activate dash."
 	icon = 'icons/obj/device.dmi'
-	icon_state = "powercell"
+	icon_state = "gangtool-blue"
 	w_class = WEIGHT_CLASS_SMALL
 	var/electric_charge_cost = 25
 	var/dash_range = 6
@@ -299,7 +261,7 @@ dm
 
 	storm_dash_attack(T, user, pack)
 
-/obj/item/storm_dash/proc/storm_dash_attack(turf/target, mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/storm_dash/proc/storm_dash_attack(turf/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	cooldown = world.time + cooldown_time
 	var/turf/starting = get_turf(user)
 
@@ -326,7 +288,6 @@ dm
 				continue
 			hit_mobs += L
 			L.deal_damage(dash_damage, BRUTE)
-			L.Paralyze(15)
 			new /obj/effect/temp_visual/lightning_strike(get_turf(L))
 
 			// Chain to nearby enemies
@@ -345,7 +306,7 @@ dm
 	name = "static burst generator"
 	desc = "Creates an electric field that detonates when you pass through it, damaging all nearby enemies."
 	icon = 'icons/obj/device.dmi'
-	icon_state = "gangtool-blue"
+	icon_state = "nanite_scanner"
 	w_class = WEIGHT_CLASS_SMALL
 	var/electric_charge_cost = 20
 	var/field_duration = 100  // Shorter duration, meant for setup
@@ -434,7 +395,6 @@ dm
 		var/distance = get_dist(src, L)
 		var/damage = burst_damage * (1 - (distance / (burst_range + 1)))
 		L.deal_damage(damage, FIRE)
-		L.Paralyze(20)
 		do_sparks(3, TRUE, L)
 		var/turf/source_turf = get_turf(src)
 		source_turf.Beam(L, "lightning", time = 5)
@@ -449,7 +409,7 @@ dm
 	name = "R-Corp lightning ram"
 	desc = "Electromagnetic battering ram that delivers devastating charge attacks. Click distant target to charge."
 	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "thunder_hammer"
+	icon_state = "adjustment"
 	force = 50
 	attack_verb_continuous = list("rams", "crashes", "thunders")
 	attack_verb_simple = list("ram", "crash", "thunder")
@@ -508,7 +468,7 @@ dm
 	// Perform devastating charge
 	lightning_charge(target, user, pack)
 
-/obj/item/ego_weapon/lightning_ram/proc/lightning_charge(atom/target, mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/ego_weapon/lightning_ram/proc/lightning_charge(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	charge_cooldown = world.time + charge_cooldown_time
 	var/turf/T = get_turf(target)
 	var/turf/starting = get_turf(user)
@@ -568,8 +528,8 @@ dm
 /obj/item/ego_weapon/thunderclap_gauntlets
 	name = "R-Corp thunderclap gauntlets"
 	desc = "Gauntlets that create devastating thunder bursts. Right-click to perform area burst with automatic retreat."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "thunder_fist"
+	icon = 'icons/obj/clothing/gloves.dmi'
+	icon_state = "captain"
 	force = 45
 	attack_verb_continuous = list("thunders", "slams", "devastates")
 	attack_verb_simple = list("thunder", "slam", "devastate")
@@ -631,7 +591,7 @@ dm
 	// Perform thunderclap burst
 	thunderclap_burst(target, user, pack)
 
-/obj/item/ego_weapon/thunderclap_gauntlets/proc/thunderclap_burst(atom/target, mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/ego_weapon/thunderclap_gauntlets/proc/thunderclap_burst(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	burst_cooldown = world.time + burst_cooldown_time
 	var/turf/T = get_turf(target)
 	var/turf/starting = get_turf(user)
@@ -663,7 +623,6 @@ dm
 		var/damage = burst_damage * (1 - (distance / (burst_range + 1)))
 		L.deal_damage(damage, BRUTE)
 		L.deal_damage(20, FIRE)
-		L.Paralyze(25)
 		var/atom/throw_target = get_edge_target_turf(L, get_dir(user, L))
 		L.throw_at(throw_target, burst_range + 1 - distance, 2)
 		new /obj/effect/temp_visual/lightning_strike(get_turf(L))
@@ -692,14 +651,18 @@ dm
 	var/emp_range = 3
 
 /obj/item/grenade/r_corp/emp/detonate(mob/living/lanced_by)
-	empulse(src, emp_range, emp_range * 2)
-
-	// Also stun organics
+	// Drain charge from Clan mobs and damage others
 	for(var/mob/living/L in range(emp_range, src))
-		L.deal_damage(20, FIRE)
-		L.Paralyze(30)
-		to_chat(L, span_userdanger("The electromagnetic pulse overwhelms your nervous system!"))
+		if(istype(L, /mob/living/simple_animal/hostile/clan))
+			var/mob/living/simple_animal/hostile/clan/C = L
+			C.charge = 0
+			to_chat(C, span_userdanger("The electromagnetic pulse drains your charge!"))
+			do_sparks(5, TRUE, C)
+		else
+			L.deal_damage(20, FIRE)
+			to_chat(L, span_userdanger("The electromagnetic pulse overwhelms your nervous system!"))
 
+	playsound(src, 'sound/magic/lightningshock.ogg', 100, TRUE)
 	qdel(src)
 
 // TIER 3 WEAPONS
@@ -708,8 +671,8 @@ dm
 /obj/item/ego_weapon/railgun_charge
 	name = "railgun charge module"
 	desc = "The ultimate Storm Ram weapon - transforms you into a living railgun projectile. Devastating but requires recovery time."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "thunder_lance"
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "instagibblue"
 	force = 70
 	reach = 2
 	attack_verb_continuous = list("obliterates", "pierces", "devastates")
@@ -772,7 +735,7 @@ dm
 	// Perform ultimate railgun charge
 	railgun_ultimate(target, user, pack)
 
-/obj/item/ego_weapon/railgun_charge/proc/railgun_ultimate(atom/target, mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/ego_weapon/railgun_charge/proc/railgun_ultimate(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	charge_cooldown = world.time + charge_cooldown_time
 	var/turf/T = get_turf(target)
 	var/turf/starting = get_turf(user)
@@ -827,8 +790,7 @@ dm
 	// Remove invulnerability
 	user.status_flags &= ~GODMODE
 
-	// Recovery period - user is briefly stunned
-	user.Paralyze(20)
+	// Recovery period - user is briefly exhausted
 	to_chat(user, span_warning("The railgun charge leaves you momentarily exhausted!"))
 
 	// But then grant massive speed boost for escape
@@ -838,7 +800,7 @@ dm
 /obj/item/ego_weapon/railgun_charge/proc/recovery_message(mob/user)
 	to_chat(user, span_nicegreen("Energy surge propels you to safety!"))
 
-/obj/item/ego_weapon/railgun_charge/proc/delayed_speed_boost(mob/user, obj/item/capacitor_pack/pack)
+/obj/item/ego_weapon/railgun_charge/proc/delayed_speed_boost(mob/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	if(pack && user)
 		pack.grant_speed_boost(user, 60)
 
@@ -874,7 +836,7 @@ dm
 
 	activate(user, pack)
 
-/obj/item/storm_surge_barrier/proc/activate(mob/user, obj/item/capacitor_pack/pack)
+/obj/item/storm_surge_barrier/proc/activate(mob/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	active = TRUE
 	current_barrier = new /obj/effect/storm_surge(user)
 	current_barrier.generator = src
@@ -1000,7 +962,7 @@ dm
 
 	perform_thunderstorm_slam(user, pack)
 
-/obj/item/thunderstorm_slam/proc/perform_thunderstorm_slam(mob/living/user, obj/item/capacitor_pack/pack)
+/obj/item/thunderstorm_slam/proc/perform_thunderstorm_slam(mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	cooldown = world.time + cooldown_time
 	var/turf/starting = get_turf(user)
 
@@ -1032,7 +994,6 @@ dm
 		var/distance = get_dist(starting, L)
 		var/damage = slam_damage * (1 - (distance / 5))
 		L.deal_damage(damage, BRUTE)
-		L.Paralyze(30)
 		var/atom/throw_target = get_edge_target_turf(L, get_dir(starting, L))
 		L.throw_at(throw_target, 5 - distance, 3)
 		new /obj/effect/temp_visual/lightning_strike(get_turf(L))
@@ -1052,10 +1013,8 @@ dm
 		if(get_dist(T, center) == radius)
 			new /obj/effect/temp_visual/electric_trail(T)
 			for(var/mob/living/L in T)
-				if(L.has_status_effect(/datum/status_effect/specialist_class))
-					var/datum/status_effect/specialist_class/SC = L.has_status_effect(/datum/status_effect/specialist_class)
-					if(SC.specialist_type == SPECIALIST_STORM)
-						continue
+				if(is_storm_ram(L))
+					continue
 				L.deal_damage(20, FIRE)
 				do_sparks(2, TRUE, L)
 
@@ -1084,7 +1043,6 @@ dm
 			continue
 		L.deal_damage(10, FIRE)
 		if(prob(30))
-			L.Paralyze(5)
 			do_sparks(1, TRUE, L)
 
 // Visual effects

@@ -104,7 +104,7 @@
 /obj/item/storage/box/rce_bodyparts
 	name = "biological sample container"
 	desc = "A specialized container for storing biological samples."
-	icon_state = "box"
+	icon_state = "brassbox"
 
 /obj/item/storage/box/rce_bodyparts/ComponentInitialize()
 	. = ..()

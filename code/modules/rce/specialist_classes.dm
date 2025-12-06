@@ -5,7 +5,7 @@
 /obj/item/organ/cyberimp/rce_specialist
 	name = "R-Corp specialist implant"
 	desc = "A military-grade neural implant that reconfigures the user's combat capabilities."
-	icon_state = "cyber_implant"
+	icon_state = "imp_jetpack-on"
 	slot = ORGAN_SLOT_BRAIN_ANTISTUN
 	var/class_name = "Specialist"
 	var/list/attribute_modifiers = list()
@@ -23,6 +23,52 @@
 		"Section C Robin"
 	)
 
+/obj/item/organ/cyberimp/rce_specialist/attack_self(mob/user)
+	. = ..()
+	if(!ishuman(user))
+		to_chat(user, span_warning("This implant is only compatible with humans."))
+		return
+
+	var/mob/living/carbon/human/H = user
+
+	// Check role compatibility first
+	var/datum/job/user_job = H.mind?.assigned_role
+	if(!user_job || !(user_job.title in usable_roles))
+		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
+		return
+
+	// Check if already has a specialist implant (check for rce_specialist type specifically)
+	var/obj/item/organ/cyberimp/rce_specialist/existing = locate(/obj/item/organ/cyberimp/rce_specialist) in H.internal_organs
+	if(existing)
+		to_chat(H, span_warning("You already have a specialist implant installed! Remove it first."))
+		return
+
+	to_chat(H, span_notice("You begin inserting [src] into yourself..."))
+	playsound(src, 'sound/weapons/circsawhit.ogg', 50, TRUE)
+
+	if(!do_after(H, 5 SECONDS, target = H))
+		to_chat(H, span_warning("You were interrupted while inserting the implant!"))
+		return
+
+	// Double check conditions after the delay
+	if(QDELETED(src) || src.loc != H)
+		return
+
+	existing = locate(/obj/item/organ/cyberimp/rce_specialist) in H.internal_organs
+	if(existing)
+		to_chat(H, span_warning("You already have a specialist implant installed!"))
+		return
+
+	user_job = H.mind?.assigned_role
+	if(!user_job || !(user_job.title in usable_roles))
+		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
+		return
+
+	// Insert the implant
+	to_chat(H, span_notice("You insert [src] into yourself!"))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+	Insert(H)
+
 /obj/item/organ/cyberimp/rce_specialist/Insert(mob/living/carbon/M, special, drop_if_replaced)
 	. = ..()
 	if(!ishuman(M))
@@ -31,7 +77,8 @@
 	var/mob/living/carbon/human/H = M
 
 	// Check if user has a valid role title
-	if(!(H.mind?.assigned_role?.title in usable_roles))
+	var/datum/job/user_job = H.mind?.assigned_role
+	if(!user_job || !(user_job.title in usable_roles))
 		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
 		Remove(H)
 		return
@@ -166,10 +213,8 @@
 /obj/effect/persistent_fire/process()
 	for(var/mob/living/L in get_turf(src))
 		// Check for Hellfire immunity
-		if(L.has_status_effect(/datum/status_effect/specialist_class))
-			var/datum/status_effect/specialist_class/SC = L.has_status_effect(/datum/status_effect/specialist_class)
-			if(SC.specialist_type == SPECIALIST_HELLFIRE)
-				continue // Immune to own flames
+		if(is_hellfire_rooster(L))
+			continue // Immune to own flames
 
 		L.deal_damage(damage_per_second, FIRE)
 		L.adjust_fire_stacks(1)

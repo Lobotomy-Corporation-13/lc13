@@ -31,6 +31,7 @@ export const RCEResearch = (props, context) => {
     researchTree = [],
     partsList = [],
     researchProgress = {},
+    branchEnabled = { hellfire: true, venom: true, storm: true },
   } = data;
 
   const currentResearch = selectedResearch && researchTree
@@ -69,6 +70,7 @@ export const RCEResearch = (props, context) => {
                 researchTree={researchTree}
                 selectedResearch={selectedResearch}
                 researchProgress={researchProgress}
+                branchEnabled={branchEnabled}
               />
             )}
             {tab === 'samples' && (
@@ -96,7 +98,7 @@ export const RCEResearch = (props, context) => {
 // Research Tree Tab - Simple list layout with three branches
 const ResearchTreeTab = (props, context) => {
   const { act } = useBackend(context);
-  const { researchTree, selectedResearch, researchProgress } = props;
+  const { researchTree, selectedResearch, researchProgress, branchEnabled } = props;
 
   // Group by branch
   const branches = {
@@ -127,6 +129,7 @@ const ResearchTreeTab = (props, context) => {
               selectedResearch={selectedResearch}
               researchProgress={researchProgress}
               nodeMap={nodeMap}
+              isEnabled={branchEnabled[branch]}
             />
           </Stack.Item>
         ))}
@@ -138,9 +141,16 @@ const ResearchTreeTab = (props, context) => {
 // Branch list component
 const BranchList = (props, context) => {
   const { act } = useBackend(context);
-  const { branch, nodes, selectedResearch, researchProgress, nodeMap } = props;
+  const {
+    branch,
+    nodes,
+    selectedResearch,
+    researchProgress,
+    nodeMap,
+    isEnabled,
+  } = props;
 
-  const branchColor = BRANCH_COLORS[branch];
+  const branchColor = isEnabled ? BRANCH_COLORS[branch] : '#666';
   const branchLabel = BRANCH_LABELS[branch];
 
   return (
@@ -149,6 +159,7 @@ const BranchList = (props, context) => {
         border: `2px solid ${branchColor}`,
         borderRadius: '4px',
         margin: '0 4px',
+        opacity: isEnabled ? 1 : 0.6,
       }}>
       {/* Header */}
       <Box
@@ -161,11 +172,20 @@ const BranchList = (props, context) => {
           color: branchColor,
         }}>
         {branchLabel}
+        {!isEnabled && (
+          <Box color="#ff4444" fontSize="10px">
+            [DISABLED]
+          </Box>
+        )}
       </Box>
 
       {/* Nodes */}
       <Box p={1}>
-        {nodes.length === 0 ? (
+        {!isEnabled ? (
+          <Box color="label" textAlign="center" p={2}>
+            This research branch is currently disabled.
+          </Box>
+        ) : nodes.length === 0 ? (
           <Box color="label" textAlign="center" p={2}>
             No research available
           </Box>
@@ -285,9 +305,9 @@ const ResearchNodeCard = (props, context) => {
       )}
 
       {/* Traits info */}
-      {(node.requiredTraits?.length > 0 ||
-        Object.keys(node.favoredTraits || {}).length > 0 ||
-        Object.keys(node.negativeTraits || {}).length > 0) && (
+      {(node.requiredTraits?.length > 0
+        || Object.keys(node.favoredTraits || {}).length > 0
+        || Object.keys(node.negativeTraits || {}).length > 0) && (
         <Box fontSize="9px" mt={0.5} style={{ borderTop: '1px solid #444', paddingTop: '4px' }}>
           {node.requiredTraits?.length > 0 && (
             <Box color="orange">
@@ -310,10 +330,35 @@ const ResearchNodeCard = (props, context) => {
   );
 };
 
+// Helper to get effectiveness color
+const getEffectivenessColor = (effectiveness, baseValue) => {
+  if (effectiveness === 0) return '#ff4444';
+  if (effectiveness > baseValue * 1.5) return '#44ff44';
+  if (effectiveness > baseValue) return '#88ff88';
+  if (effectiveness < baseValue) return '#ffaa44';
+  return '#ffffff';
+};
+
+// Helper to get effectiveness label
+const getEffectivenessLabel = (effectiveness, baseValue, meetsRequirements) => {
+  if (!meetsRequirements) return 'INCOMPATIBLE';
+  const ratio = effectiveness / baseValue;
+  if (ratio >= 2) return 'Excellent';
+  if (ratio >= 1.5) return 'Good';
+  if (ratio >= 1) return 'Normal';
+  if (ratio >= 0.5) return 'Poor';
+  return 'Minimal';
+};
+
 // Samples Tab
 const SamplesTab = (props, context) => {
   const { act } = useBackend(context);
   const { partsList, selectedResearch, currentResearch, storedParts } = props;
+
+  // Sort parts by effectiveness if research is selected
+  const sortedParts = selectedResearch
+    ? [...partsList].sort((a, b) => b.effectiveness - a.effectiveness)
+    : partsList;
 
   return (
     <Section
@@ -326,7 +371,7 @@ const SamplesTab = (props, context) => {
             icon="play"
             disabled={!selectedResearch || storedParts === 0}
             onClick={() => act('processPart')}>
-            Process One
+            Process First
           </Button>
           <Button
             icon="forward"
@@ -344,16 +389,26 @@ const SamplesTab = (props, context) => {
               Required traits: {currentResearch.requiredTraits.join(', ')}
             </Box>
           )}
-          {Object.keys(currentResearch?.favoredTraits || {}).length > 0 && (
-            <Box fontSize="11px" color="green">
-              Bonus traits: {Object.keys(currentResearch.favoredTraits).join(', ')}
-            </Box>
-          )}
-          {Object.keys(currentResearch?.negativeTraits || {}).length > 0 && (
-            <Box fontSize="11px" color="red">
-              Penalty traits: {Object.keys(currentResearch.negativeTraits).join(', ')}
-            </Box>
-          )}
+          {Object.keys(currentResearch?.favoredTraits || {}).length > 0
+            && (
+              <Box fontSize="11px" color="green">
+                Bonus: {Object.keys(currentResearch.favoredTraits).map(
+                  trait => `${trait} (+${Math.round(
+                    currentResearch.favoredTraits[trait] * 100
+                  )}%)`
+                ).join(', ')}
+              </Box>
+            )}
+          {Object.keys(currentResearch?.negativeTraits || {}).length > 0
+            && (
+              <Box fontSize="11px" color="red">
+                Penalty: {Object.keys(currentResearch.negativeTraits).map(
+                  trait => `${trait} (${Math.round(
+                    currentResearch.negativeTraits[trait] * 100
+                  )}%)`
+                ).join(', ')}
+              </Box>
+            )}
           <Button
             mt={1}
             icon="times"
@@ -364,32 +419,126 @@ const SamplesTab = (props, context) => {
         </Box>
       ) : (
         <Box mb={2} color="label" italic>
-          Select a research project from the Research Tree tab first.
+          Select a research project from the Research Tree tab
+          to see sample effectiveness.
         </Box>
       )}
       {partsList.length === 0 ? (
         <Box color="label" italic>
-          No samples stored. Use the R-Corp Harvester to collect samples from enemies.
+          No samples stored. Use the R-Corp Harvester to collect samples.
         </Box>
       ) : (
-        partsList.map((part, index) => (
-          <Box
-            key={index}
-            p={1}
-            mb={1}
-            backgroundColor="rgba(0, 0, 0, 0.3)"
-            style={{ borderRadius: '4px' }}>
-            <Box bold>{part.name}</Box>
-            <Box fontSize="11px" color="label">
-              Source: {part.source} | Base Value: {part.baseValue} points
+        <>
+          {selectedResearch && (
+            <Box mb={1} fontSize="11px" color="label">
+              Click a sample to process it. Sorted by effectiveness.
             </Box>
-            {part.traits?.length > 0 && (
-              <Box fontSize="11px">
-                Traits: {part.traits.join(', ')}
+          )}
+          {sortedParts.map(part => (
+            <Box
+              key={part.ref}
+              p={1}
+              mb={1}
+              backgroundColor={
+                !part.meetsRequirements && selectedResearch
+                  ? 'rgba(255, 0, 0, 0.15)'
+                  : part.effectiveness > part.baseValue && selectedResearch
+                    ? 'rgba(0, 255, 0, 0.15)'
+                    : 'rgba(0, 0, 0, 0.3)'
+              }
+              style={{
+                borderRadius: '4px',
+                border: selectedResearch
+                  ? `1px solid ${getEffectivenessColor(
+                    part.effectiveness,
+                    part.baseValue
+                  )}`
+                  : '1px solid #444',
+                cursor: selectedResearch && part.meetsRequirements
+                  ? 'pointer'
+                  : 'default',
+                opacity: !part.meetsRequirements && selectedResearch
+                  ? 0.6
+                  : 1,
+              }}
+              onClick={() => {
+                if (selectedResearch && part.meetsRequirements) {
+                  act('processSpecificPart', { partRef: part.ref });
+                }
+              }}>
+              <Stack justify="space-between" align="center">
+                <Stack.Item grow>
+                  <Box bold>{part.name}</Box>
+                </Stack.Item>
+                {selectedResearch && (
+                  <Stack.Item>
+                    <Box
+                      bold
+                      color={getEffectivenessColor(
+                        part.effectiveness,
+                        part.baseValue
+                      )}
+                      style={{ textAlign: 'right' }}>
+                      {part.meetsRequirements ? (
+                        <>
+                          {part.effectiveness} pts
+                          <Box fontSize="10px">
+                            ({getEffectivenessLabel(
+                              part.effectiveness,
+                              part.baseValue,
+                              part.meetsRequirements
+                            )})
+                          </Box>
+                        </>
+                      ) : (
+                        <Box color="#ff4444">INCOMPATIBLE</Box>
+                      )}
+                    </Box>
+                  </Stack.Item>
+                )}
+              </Stack>
+              <Box fontSize="11px" color="label">
+                Source: {part.source} | Base: {part.baseValue} pts
               </Box>
-            )}
-          </Box>
-        ))
+              {part.traits?.length > 0 && (
+                <Box fontSize="11px" mt={0.5}>
+                  <Box as="span" color="label">Traits: </Box>
+                  {part.traits.map((trait, i) => {
+                    let traitColor = '#aaa';
+                    if (selectedResearch && currentResearch) {
+                      if (currentResearch.requiredTraits?.includes(trait)) {
+                        traitColor = '#ffaa00';
+                      } else if (currentResearch.favoredTraits?.[trait]) {
+                        traitColor = '#44ff44';
+                      } else if (currentResearch.negativeTraits?.[trait]) {
+                        traitColor = '#ff4444';
+                      }
+                    }
+                    return (
+                      <Box key={trait} as="span" color={traitColor}>
+                        {trait}{i < part.traits.length - 1 ? ', ' : ''}
+                      </Box>
+                    );
+                  })}
+                </Box>
+              )}
+              {selectedResearch && part.meetsRequirements && (
+                <Box mt={0.5}>
+                  <Button
+                    fluid
+                    icon="flask"
+                    color="good"
+                    onClick={e => {
+                      e.stopPropagation();
+                      act('processSpecificPart', { partRef: part.ref });
+                    }}>
+                    Process This Sample (+{part.effectiveness} pts)
+                  </Button>
+                </Box>
+              )}
+            </Box>
+          ))}
+        </>
       )}
     </Section>
   );
@@ -404,7 +553,8 @@ const ProgressTab = (props, context) => {
     return (
       <Section fill title="Current Research">
         <Box color="label" italic>
-          No research selected. Choose a research project from the Research Tree tab.
+          No research selected. Choose a project from the
+          Research Tree tab.
         </Box>
       </Section>
     );
@@ -450,7 +600,9 @@ const ProgressTab = (props, context) => {
             <Box color="green">
               {Object.keys(currentResearch.favoredTraits).map(trait => (
                 <Box key={trait}>
-                  {trait}: +{Math.round(currentResearch.favoredTraits[trait] * 100)}%
+                  {trait}: +{Math.round(
+                    currentResearch.favoredTraits[trait] * 100
+                  )}%
                 </Box>
               ))}
             </Box>
@@ -461,7 +613,9 @@ const ProgressTab = (props, context) => {
             <Box color="red">
               {Object.keys(currentResearch.negativeTraits).map(trait => (
                 <Box key={trait}>
-                  {trait}: {Math.round(currentResearch.negativeTraits[trait] * 100)}%
+                  {trait}: {Math.round(
+                    currentResearch.negativeTraits[trait] * 100
+                  )}%
                 </Box>
               ))}
             </Box>

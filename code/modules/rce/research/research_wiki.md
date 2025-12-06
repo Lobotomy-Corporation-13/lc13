@@ -487,14 +487,22 @@ The R-Corp Biological Research Station allows you to unlock advanced pyrotechnic
 # Alt-click the research machine to open the interface
 # Insert body parts (from enemies) into the machine
 # Select a research project from the tree
-# Click "Process Part" or "Process All" to convert body parts into research points
+# Click "Process Part", "Process All", or click on a specific sample to process it
 # Once you have enough points, the machine dispenses the unlocked item
+
+'''Sample Effectiveness Display:'''
+When you select a research project, the Samples tab shows:
+* '''Effectiveness rating''' for each stored sample (Excellent/Good/Normal/Poor/Minimal)
+* '''Point value''' each sample will contribute to the selected research
+* '''Color-coded traits''' showing which are required (orange), favored (green), or penalized (red)
+* '''Sorted by effectiveness''' - best samples appear first
+* '''Click any sample''' to process it individually
 
 '''Body Part Quality:'''
 * Different body parts have different base values
 * Parts from tougher enemies are worth more research points
 * Each research project has '''favored traits''' (bonus points), '''negative traits''' (reduced points), and '''required traits''' (must have at least one)
-* Body parts without required traits are rejected
+* Body parts without required traits show as "INCOMPATIBLE" and cannot be processed
 
 === Research Tree Structure ===
 
@@ -514,12 +522,12 @@ The research tree has three branches, each with a different specialist focus:
 |-
 |'''Venom Rattlesnakes'''
 |Toxic Warfare Specialists
-|Poison/Black Damage
+|Trap/Black Damage
 |Venom Rattlesnake Starter Kit
 |-
 |'''Storm Rams'''
 |Electromagnetic Assault
-|Electric/White Damage
+|Melee/White Damage
 |Storm Ram Starter Kit
 |}
 
@@ -580,21 +588,42 @@ The fuel system powers all specialist weapons. Proper fuel logistics is essentia
 
 '''The Heart of Your Logistics'''
 
-The central fuel storage tank is your primary refueling station.
+The central fuel storage tank is your primary refueling station. It uses a silo-style visual indicator showing current fuel levels.
 
-'''Capacity:''' 10,000 fuel units (starts with 5,000)
+'''Capacity:''' 10,000 fuel units (starts with 500)
 
 '''Auto-Refilling:'''
-# Place factory materials (green, red, blue, etc.) within 2 tiles of the storage
+# Place factory materials within 2 tiles of the storage
 # Alt-click the storage tank to toggle automatic refilling
 # Storage consumes up to 5 materials per cycle
-# Generates 10 fuel per material consumed
 # When materials run out, auto-refilling pauses
+
+'''Resource Efficiency:'''
+Different materials provide different amounts of fuel:
+{| class="wikitable"
+|+
+!Resource Tier
+!Materials
+!Fuel Multiplier
+|-
+|Base Tier
+|Green, Red
+|1x (10 fuel each)
+|-
+|Mid Tier
+|Blue, Purple
+|2x (20 fuel each)
+|-
+|High Tier
+|Orange, Silver
+|4x (40 fuel each)
+|}
 
 '''Refilling Tanks:'''
 * Use resource tanks on the storage (5 second channel)
 * Transfers fuel until tank is full or storage is empty
 * Shows remaining fuel on examine
+* Visual overlay shows fill level with color-coded indicator
 
 === Resource Tanks ===
 
@@ -605,22 +634,18 @@ All specialist classes use backpack-mounted resource tanks:
 !Tank Type
 !Capacity
 !Used By
-!Slowdown
 |-
 |'''Fuel Backpack'''
 |1,000 units
 |Hellfire Roosters
-|+2.0 (Ravens immune)
 |-
 |'''Acid Tank'''
 |500 units
 |Venom Rattlesnakes
-|+2.0 (Ravens immune)
 |-
 |'''Capacitor Pack'''
 |1,000 charge
 |Storm Rams
-|+2.0 (Ravens immune)
 |}
 
 '''Features:'''
@@ -630,33 +655,32 @@ All specialist classes use backpack-mounted resource tanks:
 * Can transfer resources between same-type tanks
 * Can refill from compatible dispensers
 
-'''Special - Capacitor Pack:'''
-* Grants temporary speed boost ability
-* Consumes 50 charge for 3 seconds of increased movement speed
-* Useful for rapid repositioning in combat
-
 === Field Refueling ===
 
-'''Portable Fuel Canisters'''
+Ravens can carry portable refueling equipment to support specialists in the field. Each specialist type has dedicated equipment:
 
-Ravens can carry portable fuel canisters to refuel specialists in the field.
+'''Important:''' '''Hellfire Roosters do not receive field refueling support.''' They must return to central storage to refuel.
 
-'''Capacity:''' 100 units
+==== Power Cell (Storm Ram Support) ====
+
+'''Capacity:''' 100 charge
 
 '''How to Use:'''
-# Refill canister at central storage (3 seconds, transfers up to 100 fuel)
-# As a Raven, use canister on a specialist
-# 10-second channel to transfer fuel to their tank
-# '''Only Ravens can refuel others''' - this is their unique support role!
+# Refill power cell at central storage (3 seconds)
+# As a Raven, use power cell on a Storm Ram
+# 10-second channel to transfer charge to their capacitor pack
+# '''Only Ravens can recharge others''' - this is their unique support role!
 
-'''Fuel Stations'''
+==== Acid Canister (Venom Rattlesnake Support) ====
 
-Smaller refueling points that connect to main storage.
+'''Capacity:''' 100 acid units
 
-'''Requirements:'''
-* Must be within 20 tiles of central fuel storage
-* Refill speed: 3 seconds (faster than central storage)
-* Useful for setting up forward refueling points
+'''How to Use:'''
+# Refill acid canister at central storage (3 seconds)
+# As a Raven, use acid canister on a Venom Rattlesnake
+# 10-second channel to transfer acid to their tank
+# '''Only Ravens can refill others''' - this is their unique support role!
+# '''Handle with care!''' - Corrosive contents
 
 === Fuel Consumption ===
 
@@ -700,8 +724,8 @@ Different weapons consume different amounts of fuel:
 !Notes
 |-
 |Acid Sprayer
-|5 per spray
-|Cone spray, applies venom stacks
+|10 per spray
+|4-tile cone spray, 35 damage, applies venom stacks, 0.5s cooldown
 |-
 |Venom Launcher
 |10 per shell
@@ -724,11 +748,11 @@ Different weapons consume different amounts of fuel:
 |-
 |Thunder Gauntlets
 |10 per attack, 20 per dash
-|Melee with dash ability
+|Melee with dash ability, AoE lightning damage
 |-
 |Lightning Ram
 |40 per charge
-|Devastating charge attack
+|Devastating charge attack with knockback
 |-
 |Thunderclap Gauntlets
 |30 per attack, 50 per burst
@@ -741,6 +765,10 @@ Different weapons consume different amounts of fuel:
 |Railgun Charge Module
 |Variable
 |Transform into living projectile
+|-
+|EMP Grenade
+|N/A (consumable)
+|Drains charge from Clan mobs, damages organics
 |}
 
 == Specialist Class System ==
@@ -792,10 +820,19 @@ The research machine dispenses a box containing:
 
 '''Step 3: Install Implant'''
 
-# Have a medical officer install the combat implant (brain surgery)
-# Once installed, you are transformed into that specialist class
-# '''Permanent transformation''' - cannot be removed safely
-# Locks you out of normal weapons (specialist weapons only)
+'''Self-Installation (Recommended):'''
+# Hold the implant in your hand
+# Use it on yourself (click yourself or press Z)
+# Wait 5 seconds for the insertion process
+# You will be transformed into that specialist class
+
+'''Medical Installation:'''
+# Alternatively, have a medical officer install the combat implant via brain surgery
+
+'''Important Notes:'''
+* '''Permanent transformation''' - cannot be removed safely
+* Locks you out of normal weapons (specialist weapons only)
+* Only one specialist implant can be installed at a time
 
 '''Step 4: Equip Your Gear'''
 
@@ -898,7 +935,7 @@ The research machine dispenses a box containing:
 |Acid Sprayer
 |Ranged Cone
 |1
-|Applies venom stacks, armor pierce
+|4-tile cone, 35 damage, applies venom stacks, 0.5s cooldown
 |Close-medium range, debuffing
 |-
 |Venom Launcher
@@ -951,7 +988,7 @@ The research machine dispenses a box containing:
 |Thunder Gauntlets
 |Melee Dash
 |1
-|Short dash attack, stun
+|Short dash attack, AoE lightning
 |Gap closing, disruption
 |-
 |Storm Dash Module
@@ -966,10 +1003,16 @@ The research machine dispenses a box containing:
 |Deploy exploding fields
 |Traps, zone control
 |-
+|EMP Grenade
+|Consumable
+|1
+|Drains Clan mob charge, damages organics
+|Anti-Clan warfare
+|-
 |Lightning Ram
 |Melee Charge
 |2
-|8-tile devastating charge
+|8-tile devastating charge with knockback
 |Initiation, wall breaking
 |-
 |Thunderclap Gauntlets
@@ -1094,8 +1137,9 @@ The research machine dispenses a box containing:
 * Consider having backup equipment researched
 
 '''For Ravens Supporting Specialists:'''
-* Carry multiple fuel canisters
+* '''Power Cells''' for Storm Rams, '''Acid Canisters''' for Venom Rattlesnakes
+* '''Hellfire Roosters cannot be field refueled''' - they must return to base
+* Carry multiple canisters when supporting multiple specialists
 * Refill at central storage between runs
 * Stay close to specialist squads in combat
-* Fuel is heavy - drop other equipment if needed
 * You are immune to resource tank slowdown - use this mobility!

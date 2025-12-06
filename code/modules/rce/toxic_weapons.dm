@@ -1,11 +1,22 @@
 // Venom Rattlesnakes - Toxic/Decay Weapon Systems
 // Area denial and damage over time specialists
 
-// Helper proc to check if target has venom immunity (wearing venom armor)
+// Helper proc to check if user is a Venom Rattlesnake (checks for implant directly)
+/proc/is_venom_rattlesnake(mob/living/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/cyberimp/rce_specialist/venom/implant = locate() in H.internal_organs
+	return !!implant
+
+// Helper proc to check if target has venom immunity (wearing venom armor or is a Venom Rattlesnake)
 /proc/is_venom_immune(mob/living/target)
 	if(!ishuman(target))
 		return FALSE
 	var/mob/living/carbon/human/H = target
+	// Venom Rattlesnakes are immune to venom
+	if(is_venom_rattlesnake(H))
+		return TRUE
 	var/obj/item/clothing/suit/armor/ego_gear/venom/suit = H.wear_suit
 	if(istype(suit) && suit.venom_immune)
 		return TRUE
@@ -139,6 +150,13 @@
 
 // TIER 1 WEAPONS
 
+// Dummy projectile for acid sprayer (required by parent but not actually fired)
+/obj/projectile/acid_spray_dummy
+	name = "acid spray"
+	icon_state = "dvirus"
+	damage = 0
+	nodamage = TRUE
+
 // Acid Sprayer - Basic toxic spray weapon
 /obj/item/ego_weapon/ranged/acid_sprayer
 	name = "R-Corp acid sprayer"
@@ -148,15 +166,22 @@
 	inhand_icon_state = "mister"
 	lefthand_file = 'icons/mob/inhands/equipment/mister_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/equipment/mister_righthand.dmi'
+	projectile_path = /obj/projectile/acid_spray_dummy
 	force = 10
 	special = "This weapon requires an acid tank backpack to function."
-	var/acid_cost = 5
-	var/cone_range = 3
-	var/damage_amount = 20
-	var/armor_pierce = 0.3
+	var/acid_cost = 10
+	var/cone_range = 4
+	var/damage_amount = 35
+	var/spray_cooldown = 0
+	var/spray_cooldown_time = 0.5 SECONDS
 
 /obj/item/ego_weapon/ranged/acid_sprayer/afterattack(atom/target, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user))
+		return
+
+	// Check cooldown
+	if(spray_cooldown > world.time)
+		to_chat(user, span_warning("[src] is still recharging!"))
 		return
 
 	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
@@ -167,6 +192,9 @@
 	if(!tank.use_acid(acid_cost))
 		to_chat(user, span_warning("Not enough acid! ([tank.resource_amount]/[acid_cost] needed)"))
 		return
+
+	// Set cooldown
+	spray_cooldown = world.time + spray_cooldown_time
 
 	// Create acid spray cone
 	var/turf/origin = get_turf(user)
@@ -218,8 +246,9 @@
 /obj/item/toxic_mine
 	name = "toxic proximity mine"
 	desc = "A proximity-triggered mine that marks enemies with venom stacks when triggered."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "beacon"
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "beartrap"
+	color = "#00ff04"
 	w_class = WEIGHT_CLASS_SMALL
 	var/armed = FALSE
 	var/trigger_range = 1
@@ -242,7 +271,7 @@
 /obj/item/toxic_mine/proc/activate()
 	if(!armed)
 		return
-	icon_state = "beacon_active"
+	icon_state = "beartrap1"
 
 /obj/item/toxic_mine/process()
 	if(!armed)
@@ -311,8 +340,9 @@
 /obj/structure/venom_trap_small
 	name = "venom trap"
 	desc = "A small concealed trap filled with venom."
-	icon = 'icons/obj/grenade.dmi'
-	icon_state = "beacon"
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "dodgeball"
+	color = "#00ff04"
 	density = FALSE
 	anchored = TRUE
 	alpha = 50 // Very hard to see
@@ -399,8 +429,8 @@
 /obj/item/ego_weapon/ranged/venom_launcher
 	name = "R-Corp venom launcher"
 	desc = "Fires toxic shells that deal massive damage to venom-marked targets."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "venom_cannon"
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "gravity_gun"
 	force = 15
 	projectile_path = /obj/projectile/venom_shell
 	fire_delay = 15
@@ -486,7 +516,7 @@
 	name = "toxic cloud"
 	desc = "A massive cloud of corrosive gas."
 	icon = 'icons/effects/96x96.dmi'
-	icon_state = "singularity_s3"
+	icon_state = "smoke"
 	pixel_x = -32
 	pixel_y = -32
 	opacity = TRUE
@@ -536,8 +566,8 @@
 /obj/item/venom_spike_launcher
 	name = "venom spike strip deployer"
 	desc = "Launches adhesive spike strips that must be carefully positioned. Enemies who cross them are marked with venom."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "venom_rifle"
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "crossbow"
 	force = 12
 	var/acid_cost = 10
 	var/setup_time = 40 // 4 seconds
@@ -577,7 +607,7 @@
 	name = "venomous spike strip"
 	desc = "A strip of venomous spikes. Stepping on this would be a bad idea."
 	icon = 'icons/obj/structures.dmi'
-	icon_state = "caltrop5"
+	icon_state = "brokenratvargrille"
 	density = FALSE
 	anchored = TRUE
 	alpha = 150
@@ -625,8 +655,8 @@
 /obj/item/ego_weapon/ranged/toxic_bombarder
 	name = "toxic bombardment system"
 	desc = "Heavy artillery that rains acid shells over a large area."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "venom_artillery"
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "flora"
 	force = 20
 	fire_delay = 30
 	special = "Calls in an artillery strike of toxic shells."
@@ -867,7 +897,7 @@
 /atom/movable/screen/alert/status_effect/acid_decay
 	name = "Acid Decay"
 	desc = "Your body is being eaten away by acid!"
-	icon_state = "not_enough_tox"
+	icon_state = "dna_melt"
 
 /datum/status_effect/acid_decay/tick()
 	owner.deal_damage(damage_per_tick, TOX)
@@ -898,16 +928,7 @@
 		if(V != src)
 			stacks = min(stacks + V.stacks, max_stacks)
 			qdel(V)
-	UpdateIcon()
-
-/datum/status_effect/venom_stacks/proc/UpdateIcon()
-	// Visual feedback based on stacks
-	if(stacks >= 8)
-		owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_severe"))
-	else if(stacks >= 5)
-		owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_moderate"))
-	else
-		owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_light"))
+	owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "greenglow"))
 
 /datum/status_effect/venom_stacks/tick()
 	// DoT based on stacks
@@ -916,9 +937,7 @@
 		to_chat(owner, span_danger("The venom courses through your veins!"))
 
 /datum/status_effect/venom_stacks/on_remove()
-	owner.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_severe"))
-	owner.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_moderate"))
-	owner.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "venom_light"))
+	owner.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "greenglow"))
 	return ..()
 
 // Visual effects
@@ -931,8 +950,8 @@
 /obj/effect/temp_visual/venom_mark
 	name = "venom mark"
 	icon = 'icons/effects/effects.dmi'
-	icon_state = "yourmineisnow"
-	duration = 15
+	icon_state = "mech_toxin"
+	duration = 10
 	color = "#00FF00"
 
 /obj/effect/temp_visual/venom_explosion

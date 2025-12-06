@@ -16,6 +16,12 @@
 	var/list/stored_parts = list() // Body parts waiting to be processed
 	var/processing_part = FALSE
 	var/process_time = 3 SECONDS
+	/// Whether the Hellfire Rooster branch is enabled for research
+	var/hellfire_branch_enabled = TRUE
+	/// Whether the Venom Rattlesnake branch is enabled for research
+	var/venom_branch_enabled = TRUE
+	/// Whether the Storm Ram branch is enabled for research (disabled - bugs to fix)
+	var/storm_branch_enabled = FALSE
 
 /obj/machinery/rce_research/Initialize()
 	. = ..()
@@ -71,6 +77,13 @@
 		progress_data[node_id] = research_progress[node_id] || 0
 	data["researchProgress"] = progress_data
 
+	// Branch enabled status
+	data["branchEnabled"] = list(
+		"hellfire" = hellfire_branch_enabled,
+		"venom" = venom_branch_enabled,
+		"storm" = storm_branch_enabled
+	)
+
 	// Research tree data
 	var/list/tree_data = list()
 	world.log << "RCE Research UI: Building tree data from [length(GLOB.rce_research_nodes)] nodes"
@@ -94,15 +107,26 @@
 	world.log << "RCE Research UI: Sending [length(tree_data)] nodes to UI"
 	data["researchTree"] = tree_data
 
-	// Stored parts data
+	// Stored parts data with effectiveness calculation
 	var/list/parts_data = list()
+	var/part_index = 1
 	for(var/obj/item/rce_bodypart/part in stored_parts)
+		var/effectiveness = 0
+		var/meets_requirements = TRUE
+		if(selected_research)
+			effectiveness = part.calculate_value(selected_research.favored_traits, selected_research.negative_traits, selected_research.required_traits)
+			meets_requirements = effectiveness > 0
 		parts_data += list(list(
+			"ref" = REF(part),
+			"index" = part_index,
 			"name" = part.name,
 			"traits" = part.traits,
 			"baseValue" = part.base_value,
-			"source" = part.source_mob
+			"source" = part.source_mob,
+			"effectiveness" = effectiveness,
+			"meetsRequirements" = meets_requirements
 		))
+		part_index++
 	data["partsList"] = parts_data
 
 	return data
@@ -158,7 +182,28 @@
 			process_all_parts()
 			return TRUE
 
+		if("processSpecificPart")
+			if(processing_part)
+				to_chat(usr, span_warning("Already processing a sample!"))
+				return
+			if(!selected_research)
+				to_chat(usr, span_warning("Select a research project first!"))
+				return
+			var/part_ref = params["partRef"]
+			if(!part_ref)
+				return
+			var/obj/item/rce_bodypart/target_part = locate(part_ref) in stored_parts
+			if(!target_part)
+				to_chat(usr, span_warning("That sample is no longer available!"))
+				return
+			process_specific_part(target_part)
+			return TRUE
+
 /obj/machinery/rce_research/proc/get_node_status(datum/rce_research_node/node)
+	// Check if branch is enabled
+	if(!is_branch_enabled(node.branch))
+		return RESEARCH_LOCKED
+
 	// Check prerequisites first
 	for(var/prereq in node.prerequisites)
 		if(!(prereq in completed_research))
@@ -170,6 +215,16 @@
 		return RESEARCH_COMPLETED
 
 	return RESEARCH_AVAILABLE
+
+/obj/machinery/rce_research/proc/is_branch_enabled(branch)
+	switch(branch)
+		if("hellfire")
+			return hellfire_branch_enabled
+		if("venom")
+			return venom_branch_enabled
+		if("storm")
+			return storm_branch_enabled
+	return TRUE
 
 /obj/machinery/rce_research/proc/process_next_part()
 	if(!length(stored_parts) || processing_part || !selected_research)
@@ -221,6 +276,49 @@
 
 /obj/machinery/rce_research/proc/process_all_parts()
 	process_next_part()
+
+/obj/machinery/rce_research/proc/process_specific_part(obj/item/rce_bodypart/part)
+	if(!part || processing_part || !selected_research)
+		return
+
+	processing_part = TRUE
+	stored_parts -= part
+
+	// Calculate value based on selected research
+	var/value = part.calculate_value(selected_research.favored_traits, selected_research.negative_traits, selected_research.required_traits)
+	if(value == 0)
+		to_chat(usr, span_warning("[part] doesn't meet the requirements for [selected_research.name]!"))
+		qdel(part)
+		processing_part = FALSE
+		return
+
+	// Visual feedback
+	playsound(src, 'sound/machines/blender.ogg', 50, TRUE)
+	icon_state = "d_analyzer_process"
+
+	addtimer(CALLBACK(src, PROC_REF(finish_processing_single), part, value), process_time)
+
+/obj/machinery/rce_research/proc/finish_processing_single(obj/item/rce_bodypart/part, value)
+	if(!selected_research)
+		qdel(part)
+		processing_part = FALSE
+		icon_state = "d_analyzer"
+		return
+
+	// Add points to selected research
+	var/current_progress = research_progress[selected_research.id] || 0
+	current_progress = min(current_progress + value, selected_research.cost)
+	research_progress[selected_research.id] = current_progress
+	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[selected_research.cost])"))
+
+	// Check if research is complete
+	if(current_progress >= selected_research.cost)
+		complete_research(selected_research)
+
+	qdel(part)
+	processing_part = FALSE
+	icon_state = "d_analyzer"
+	update_icon()
 
 /obj/machinery/rce_research/proc/complete_research(datum/rce_research_node/node)
 	selected_research = null

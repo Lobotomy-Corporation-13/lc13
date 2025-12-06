@@ -3,7 +3,10 @@
 /obj/machinery/computer/rce_leaderboard
 	name = "R-Corp Expedition Records"
 	desc = "A terminal displaying historical expedition statistics and combat records."
-	icon_screen = "comm_logs"
+	icon = 'icons/obj/computer.dmi'
+	icon_state = "ratvarcomputer1"
+	icon_screen = "ratvar1"
+	icon_keyboard = "ratvar_key1"
 	circuit = null
 	light_color = COLOR_SOFT_RED
 

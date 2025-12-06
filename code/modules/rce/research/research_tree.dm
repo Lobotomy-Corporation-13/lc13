@@ -41,7 +41,7 @@
 	fuel_tank.name = "Hellfire Rooster Starter Kit"
 	fuel_tank.desc = "Unlocks production of fuel tank backpack, Hellfire combat implant, and protective armor. Perfect starting kit for pyro specialists."
 	fuel_tank.tier = 0
-	fuel_tank.cost = 1440
+	fuel_tank.cost = 600
 	fuel_tank.prerequisites = list()
 	fuel_tank.unlocked_path = /obj/item/storage/box/fuel_tank_starter_kit
 	fuel_tank.favored_traits = list(
@@ -231,7 +231,7 @@
 	acid_tank.name = "Venom Rattlesnake Starter Kit"
 	acid_tank.desc = "Unlocks production of acid tank backpack, Venom combat implant, and protective armor. Perfect starting kit for toxic specialists."
 	acid_tank.tier = 0
-	acid_tank.cost = 1440
+	acid_tank.cost = 600
 	acid_tank.branch = "venom"
 	acid_tank.prerequisites = list()
 	acid_tank.unlocked_path = /obj/item/storage/box/acid_tank_starter_kit
@@ -447,7 +447,7 @@
 	capacitor_pack.name = "Storm Ram Starter Kit"
 	capacitor_pack.desc = "Unlocks production of capacitor pack, Storm combat implant, and protective armor. Perfect starting kit for electric specialists."
 	capacitor_pack.tier = 0
-	capacitor_pack.cost = 1440
+	capacitor_pack.cost = 600
 	capacitor_pack.branch = "storm"
 	capacitor_pack.prerequisites = list()
 	capacitor_pack.unlocked_path = /obj/item/storage/box/capacitor_pack_starter_kit

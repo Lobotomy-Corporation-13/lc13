@@ -10,14 +10,16 @@
 	density = TRUE
 	anchored = TRUE
 	var/max_fuel = 10000
-	var/current_fuel = 5000
+	var/current_fuel = 500
 	var/refill_rate = 10 // Fuel per resource consumed
 	var/resource_cost = 5 // Resources needed per refill cycle
 	var/refilling = FALSE
+	var/userface_color = COLOR_VIBRANT_LIME
 
 /obj/machinery/rce_fuel_storage/Initialize()
 	. = ..()
 	START_PROCESSING(SSobj, src)
+	update_icon()
 
 /obj/machinery/rce_fuel_storage/Destroy()
 	STOP_PROCESSING(SSobj, src)
@@ -29,21 +31,47 @@
 
 	// Check for nearby factory items to consume
 	var/items_consumed = 0
+	var/total_fuel_gained = 0
 
 	for(var/obj/item/factoryitem/item in range(2, src))
 		if(items_consumed >= resource_cost)
 			break
+		// Calculate fuel value based on resource type
+		var/fuel_multiplier = GetResourceMultiplier(item)
+		total_fuel_gained += refill_rate * fuel_multiplier
 		qdel(item)
 		items_consumed++
 
 	if(items_consumed == 0)
 		refilling = FALSE
 		visible_message(span_warning("[src] stops refilling - no factory materials nearby!"))
+		update_icon()
 		return
 
 	// Generate fuel from consumed items
-	current_fuel = min(current_fuel + (refill_rate * items_consumed), max_fuel)
-	visible_message(span_notice("[src] processes [items_consumed] factory materials into fuel."))
+	current_fuel = min(current_fuel + total_fuel_gained, max_fuel)
+	visible_message(span_notice("[src] processes [items_consumed] factory materials into [total_fuel_gained] fuel."))
+	update_icon()
+
+/// Returns the fuel multiplier for a given factory item type
+/obj/machinery/rce_fuel_storage/proc/GetResourceMultiplier(obj/item/factoryitem/item)
+	// Base tier (1x): Green, Red
+	if(istype(item, /obj/item/factoryitem/green))
+		return 1
+	if(istype(item, /obj/item/factoryitem/red))
+		return 1
+	// Mid tier (2x): Blue, Purple
+	if(istype(item, /obj/item/factoryitem/blue))
+		return 2
+	if(istype(item, /obj/item/factoryitem/purple))
+		return 2
+	// High tier (4x): Orange, Silver
+	if(istype(item, /obj/item/factoryitem/orange))
+		return 4
+	if(istype(item, /obj/item/factoryitem/silver))
+		return 4
+	// Default fallback
+	return 1
 
 /obj/machinery/rce_fuel_storage/examine(mob/user)
 	. = ..()
@@ -51,6 +79,7 @@
 	. += span_notice("Refilling: [refilling ? "ACTIVE" : "INACTIVE"]")
 	. += span_notice("Place factory materials nearby and Alt-click to toggle automatic refilling.")
 	. += span_notice("Consumes up to [resource_cost] materials per cycle.")
+	. += span_notice("Resource efficiency: Green/Red (1x), Blue/Purple (2x), Orange/Silver (4x)")
 
 /obj/machinery/rce_fuel_storage/AltClick(mob/user)
 	if(!user.canUseTopic(src, BE_CLOSE))
@@ -61,10 +90,40 @@
 	update_icon()
 
 /obj/machinery/rce_fuel_storage/update_icon_state()
+	icon_state = "silo"
+
+/obj/machinery/rce_fuel_storage/update_overlays()
+	. = ..()
+	// Add fill level overlay
+	var/fill_overlay = GetFillOverlay()
+	if(fill_overlay)
+		. += fill_overlay
+	// Add unloading overlay if refilling
 	if(refilling)
-		icon_state = "circ-off-1"
-	else
-		icon_state = "circ-off-0"
+		. += "silo_overlayunloading"
+
+/// Returns the appropriate fill overlay based on current fuel level
+/obj/machinery/rce_fuel_storage/proc/GetFillOverlay()
+	var/fill_percent = (current_fuel / max_fuel) * 100
+	var/fill_text
+	switch(fill_percent)
+		if(-INFINITY to 0)
+			return null
+		if(0.1 to 19)
+			fill_text = 0
+		if(20 to 39)
+			fill_text = 20
+		if(40 to 59)
+			fill_text = 40
+		if(60 to 79)
+			fill_text = 60
+		if(80 to 99)
+			fill_text = 80
+		if(100 to INFINITY)
+			fill_text = 100
+	var/mutable_appearance/percent_overlay = mutable_appearance(icon, "silo_overlay[fill_text]")
+	percent_overlay.color = userface_color
+	return percent_overlay
 
 /obj/machinery/rce_fuel_storage/attackby(obj/item/I, mob/user, params)
 	// Refill fuel tanks
@@ -83,9 +142,14 @@
 		RefillCapacitor(pack, user)
 		return
 
-	if(istype(I, /obj/item/rce_fuel_canister))
-		var/obj/item/rce_fuel_canister/canister = I
-		RefillCanister(canister, user)
+	if(istype(I, /obj/item/rce_power_cell))
+		var/obj/item/rce_power_cell/cell = I
+		RefillPowerCell(cell, user)
+		return
+
+	if(istype(I, /obj/item/rce_acid_canister))
+		var/obj/item/rce_acid_canister/canister = I
+		RefillAcidCanister(canister, user)
 		return
 
 	return ..()
@@ -110,92 +174,186 @@
 		playsound(src, tank.refill_sound, 50, TRUE)
 		update_icon()
 
-/obj/machinery/rce_fuel_storage/proc/RefillAcidTank(obj/item/acid_tank_backpack/tank, mob/user)
+/obj/machinery/rce_fuel_storage/proc/RefillAcidTank(obj/item/rce_resource_tank/acid_backpack/tank, mob/user)
 	return RefillTank(tank, user)
 
-/obj/machinery/rce_fuel_storage/proc/RefillCapacitor(obj/item/capacitor_pack/pack, mob/user)
+/obj/machinery/rce_fuel_storage/proc/RefillCapacitor(obj/item/rce_resource_tank/capacitor_pack/pack, mob/user)
 	return RefillTank(pack, user)
 
-/obj/machinery/rce_fuel_storage/proc/RefillCanister(obj/item/rce_fuel_canister/canister, mob/user)
+/obj/machinery/rce_fuel_storage/proc/RefillPowerCell(obj/item/rce_power_cell/cell, mob/user)
 	if(current_fuel <= 0)
 		to_chat(user, span_warning("[src] is empty!"))
 		return
 
-	var/fuel_needed = canister.max_fuel - canister.current_fuel
-	if(fuel_needed <= 0)
+	var/charge_needed = cell.max_charge - cell.current_charge
+	if(charge_needed <= 0)
+		to_chat(user, span_notice("[cell] is already full."))
+		return
+
+	user.visible_message(span_notice("[user] begins charging [cell]..."))
+
+	if(do_after(user, 3 SECONDS, src))
+		var/charge_transferred = min(charge_needed, current_fuel, 100)
+		cell.current_charge += charge_transferred
+		current_fuel -= charge_transferred
+		to_chat(user, span_notice("You charge [cell]. ([charge_transferred] charge transferred)"))
+		playsound(src, 'sound/machines/defib_charge.ogg', 50, TRUE)
+		do_sparks(2, TRUE, src)
+		update_icon()
+
+/obj/machinery/rce_fuel_storage/proc/RefillAcidCanister(obj/item/rce_acid_canister/canister, mob/user)
+	if(current_fuel <= 0)
+		to_chat(user, span_warning("[src] is empty!"))
+		return
+
+	var/acid_needed = canister.max_acid - canister.current_acid
+	if(acid_needed <= 0)
 		to_chat(user, span_notice("[canister] is already full."))
 		return
 
 	user.visible_message(span_notice("[user] begins filling [canister]..."))
 
 	if(do_after(user, 3 SECONDS, src))
-		var/fuel_transferred = min(fuel_needed, current_fuel, 100) // Canisters fill quickly but hold less
-		canister.current_fuel += fuel_transferred
-		current_fuel -= fuel_transferred
-		to_chat(user, span_notice("You fill [canister]. ([fuel_transferred] fuel transferred)"))
-		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		var/acid_transferred = min(acid_needed, current_fuel, 100)
+		canister.current_acid += acid_transferred
+		current_fuel -= acid_transferred
+		to_chat(user, span_notice("You fill [canister]. ([acid_transferred] acid transferred)"))
+		playsound(src, 'sound/effects/bubbles.ogg', 50, TRUE)
 		update_icon()
 
-// PORTABLE FUEL CANISTER FOR RAVENS
-/obj/item/rce_fuel_canister
-	name = "R-Corp fuel canister"
-	desc = "A portable fuel canister used by Ravens to refuel specialists in the field."
-	icon = 'icons/obj/chemical.dmi'
-	icon_state = "fuel"
+// PORTABLE POWER CELL FOR RAVENS (Storm Ram support)
+/obj/item/rce_power_cell
+	name = "R-Corp power cell"
+	desc = "A portable power cell used by Ravens to recharge Storm Ram capacitor packs in the field."
+	icon = 'icons/obj/power.dmi'
+	icon_state = "cell"
 	w_class = WEIGHT_CLASS_NORMAL
-	var/max_fuel = 100
-	var/current_fuel = 100
+	var/max_charge = 100
+	var/current_charge = 100
 
-/obj/item/rce_fuel_canister/examine(mob/user)
+/obj/item/rce_power_cell/examine(mob/user)
 	. = ..()
-	. += span_notice("Fuel level: [current_fuel]/[max_fuel]")
+	. += span_notice("Charge level: [current_charge]/[max_charge]")
 
-/obj/item/rce_fuel_canister/afterattack(atom/target, mob/user, proximity_flag, params)
+/obj/item/rce_power_cell/afterattack(atom/target, mob/user, proximity_flag, params)
 	if(!proximity_flag)
 		return
 
+	// Refill at central storage
+	if(istype(target, /obj/machinery/rce_fuel_storage))
+		var/obj/machinery/rce_fuel_storage/storage = target
+		storage.RefillPowerCell(src, user)
+		return
+
 	// Check if user is a Raven
-	if(!istype(user.mind?.assigned_role, /datum/job/raven) && !istype(user.mind?.assigned_role, /datum/job/raven_messenger))
+	if(!IsRaven(user))
 		to_chat(user, span_warning("Only Ravens are trained in field refueling procedures!"))
 		return
 
-	// Refuel fuel tanks
+	// Recharge capacitor packs
 	if(ishuman(target))
 		var/mob/living/carbon/human/H = target
+		var/obj/item/rce_resource_tank/capacitor_pack/pack = locate() in H.contents
 
-		// Try to find a fuel tank
-		var/obj/item/fuel_tank = locate(/obj/item/rce_resource_tank/fuel_backpack) in H.contents
-		if(!fuel_tank)
-			fuel_tank = locate(/obj/item/rce_resource_tank/acid_backpack) in H.contents
-		if(!fuel_tank)
-			fuel_tank = locate(/obj/item/rce_resource_tank/capacitor_pack) in H.contents
-
-		if(!fuel_tank)
-			to_chat(user, span_warning("[H] doesn't have a fuel tank!"))
+		if(!pack)
+			to_chat(user, span_warning("[H] doesn't have a capacitor pack!"))
 			return
 
-		RefuelTarget(fuel_tank, H, user)
+		RechargeTarget(pack, H, user)
 
-/obj/item/rce_fuel_canister/proc/RefuelTarget(obj/item/rce_resource_tank/tank, mob/living/carbon/human/target, mob/user)
-	if(current_fuel <= 0)
+/obj/item/rce_power_cell/proc/RechargeTarget(obj/item/rce_resource_tank/capacitor_pack/pack, mob/living/carbon/human/target, mob/user)
+	if(current_charge <= 0)
 		to_chat(user, span_warning("[src] is empty!"))
 		return
 
-	var/fuel_needed = tank.max_resource - tank.resource_amount
+	var/charge_needed = pack.max_resource - pack.resource_amount
 
-	if(fuel_needed <= 0)
-		to_chat(user, span_notice("[target]'s tank is already full."))
+	if(charge_needed <= 0)
+		to_chat(user, span_notice("[target]'s capacitor pack is already full."))
 		return
 
-	user.visible_message(span_notice("[user] begins refueling [target]'s tank..."))
+	user.visible_message(span_notice("[user] begins recharging [target]'s capacitor pack..."))
 
-	if(do_after(user, 10 SECONDS, target)) // Takes longer in the field
-		var/fuel_transferred = min(fuel_needed, current_fuel)
-		tank.resource_amount += fuel_transferred
-		current_fuel -= fuel_transferred
-		to_chat(user, span_notice("You refuel [target]'s tank. ([fuel_transferred] [tank.resource_name] transferred)"))
-		to_chat(target, span_nicegreen("[user] refuels your tank!"))
-		playsound(src, tank.refill_sound, 50, TRUE)
+	if(do_after(user, 10 SECONDS, target))
+		var/charge_transferred = min(charge_needed, current_charge)
+		pack.resource_amount += charge_transferred
+		current_charge -= charge_transferred
+		to_chat(user, span_notice("You recharge [target]'s capacitor pack. ([charge_transferred] charge transferred)"))
+		to_chat(target, span_nicegreen("[user] recharges your capacitor pack!"))
+		playsound(src, 'sound/machines/defib_charge.ogg', 50, TRUE)
+		do_sparks(2, TRUE, target)
+
+// PORTABLE ACID CANISTER FOR RAVENS (Venom Rattlesnake support)
+/obj/item/rce_acid_canister
+	name = "R-Corp acid canister"
+	desc = "A portable acid canister used by Ravens to refill Venom Rattlesnake acid tanks in the field. Handle with care!"
+	icon = 'icons/obj/chemical.dmi'
+	icon_state = "acid"
+	w_class = WEIGHT_CLASS_NORMAL
+	var/max_acid = 100
+	var/current_acid = 100
+
+/obj/item/rce_acid_canister/examine(mob/user)
+	. = ..()
+	. += span_notice("Acid level: [current_acid]/[max_acid]")
+	. += span_warning("Corrosive! Handle with care.")
+
+/obj/item/rce_acid_canister/afterattack(atom/target, mob/user, proximity_flag, params)
+	if(!proximity_flag)
+		return
+
+	// Refill at central storage
+	if(istype(target, /obj/machinery/rce_fuel_storage))
+		var/obj/machinery/rce_fuel_storage/storage = target
+		storage.RefillAcidCanister(src, user)
+		return
+
+	// Check if user is a Raven
+	if(!IsRaven(user))
+		to_chat(user, span_warning("Only Ravens are trained in field refueling procedures!"))
+		return
+
+	// Refill acid tanks
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		var/obj/item/rce_resource_tank/acid_backpack/tank = locate() in H.contents
+
+		if(!tank)
+			to_chat(user, span_warning("[H] doesn't have an acid tank!"))
+			return
+
+		RefillTarget(tank, H, user)
+
+/obj/item/rce_acid_canister/proc/RefillTarget(obj/item/rce_resource_tank/acid_backpack/tank, mob/living/carbon/human/target, mob/user)
+	if(current_acid <= 0)
+		to_chat(user, span_warning("[src] is empty!"))
+		return
+
+	var/acid_needed = tank.max_resource - tank.resource_amount
+
+	if(acid_needed <= 0)
+		to_chat(user, span_notice("[target]'s acid tank is already full."))
+		return
+
+	user.visible_message(span_notice("[user] begins refilling [target]'s acid tank..."))
+
+	if(do_after(user, 10 SECONDS, target))
+		var/acid_transferred = min(acid_needed, current_acid)
+		tank.resource_amount += acid_transferred
+		current_acid -= acid_transferred
+		to_chat(user, span_notice("You refill [target]'s acid tank. ([acid_transferred] acid transferred)"))
+		to_chat(target, span_nicegreen("[user] refills your acid tank!"))
+		playsound(src, 'sound/effects/bubbles.ogg', 50, TRUE)
+
+// Helper proc to check if user is a Raven
+/proc/IsRaven(mob/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/datum/job/user_job = H.mind?.assigned_role
+	if(!user_job)
+		return FALSE
+	return istype(user_job, /datum/job/raven) || istype(user_job, /datum/job/raven_messenger) || istype(user_job, /datum/job/raven_mp) || istype(user_job, /datum/job/rcorp_captain/raven)
 
 // FUEL SLOWDOWN COMPONENT
 /datum/component/fuel_slowdown
@@ -233,43 +391,3 @@
 
 // Moved to base rce_resource_tank type - no longer needed here
 
-// FUEL STATION (smaller refueling point)
-/obj/structure/fuel_station
-	name = "fuel refilling station"
-	desc = "A smaller fuel station connected to the main storage tank. Used for quick refills."
-	icon = 'icons/obj/chemical.dmi'
-	icon_state = "holdingTank"
-	density = TRUE
-	anchored = TRUE
-	var/refill_time = 3 SECONDS
-
-/obj/structure/fuel_station/attackby(obj/item/I, mob/user, params)
-	// Find main fuel storage
-	var/obj/machinery/rce_fuel_storage/main_storage
-	for(var/obj/machinery/rce_fuel_storage/storage in GLOB.machines)
-		if(get_dist(src, storage) <= 20) // Must be reasonably close
-			main_storage = storage
-			break
-
-	if(!main_storage)
-		to_chat(user, span_warning("No fuel storage tank in range!"))
-		return
-
-	if(istype(I, /obj/item/rce_resource_tank))
-		var/obj/item/rce_resource_tank/tank = I
-		if(main_storage.current_fuel <= 0)
-			to_chat(user, span_warning("The main fuel storage is empty!"))
-			return
-
-		var/resource_needed = tank.max_resource - tank.resource_amount
-		if(resource_needed <= 0)
-			to_chat(user, span_notice("[tank] is already full."))
-			return
-
-		user.visible_message(span_notice("[user] begins refilling [tank]..."))
-		if(do_after(user, refill_time, src))
-			var/resource_transferred = min(resource_needed, main_storage.current_fuel)
-			tank.resource_amount += resource_transferred
-			main_storage.current_fuel -= resource_transferred
-			to_chat(user, span_notice("You refill [tank]."))
-			playsound(src, tank.refill_sound, 50, TRUE)
