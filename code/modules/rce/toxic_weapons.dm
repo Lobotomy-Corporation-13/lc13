@@ -931,8 +931,11 @@
 	owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "greenglow"))
 
 /datum/status_effect/venom_stacks/tick()
-	// DoT based on stacks
-	owner.deal_damage(damage_per_tick * stacks, TOX)
+	// DoT based on stacks - 5x damage to simple mobs
+	var/damage_mult = 1
+	if(isanimal(owner))
+		damage_mult = 5
+	owner.deal_damage(damage_per_tick * stacks * damage_mult, TOX)
 	if(prob(stacks * 5)) // Higher stacks = more chance to spread
 		to_chat(owner, span_danger("The venom courses through your veins!"))
 
