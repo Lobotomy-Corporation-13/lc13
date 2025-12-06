@@ -15,19 +15,16 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
-export var RCELeaderboard = function (props, context) {
-  var _useBackend = useBackend(context);
-  var act = _useBackend.act;
-  var data = _useBackend.data;
+export const RCELeaderboard = (props, context) => {
+  const { act, data } = useBackend(context);
+  const [tab, setTab] = useLocalState(context, 'tab', 'current');
 
-  var _useLocalState = useLocalState(context, 'tab', 'current');
-  var tab = _useLocalState[0];
-  var setTab = _useLocalState[1];
-
-  var error = data.error;
-  var current = data.current || {};
-  var history = data.history || [];
-  var all_time = data.all_time || {};
+  const {
+    error,
+    current = {},
+    history = [],
+    all_time: allTime = {},
+  } = data;
 
   if (error) {
     return (
@@ -45,45 +42,36 @@ export var RCELeaderboard = function (props, context) {
         <Tabs fluid>
           <Tabs.Tab
             selected={tab === 'current'}
-            onClick={function () {
-              setTab('current');
-            }}
-          >
+            onClick={() => setTab('current')}>
             Current Expedition
           </Tabs.Tab>
           <Tabs.Tab
             selected={tab === 'history'}
-            onClick={function () {
-              setTab('history');
-            }}
-          >
+            onClick={() => setTab('history')}>
             History ({history.length})
           </Tabs.Tab>
           <Tabs.Tab
             selected={tab === 'alltime'}
-            onClick={function () {
-              setTab('alltime');
-            }}
-          >
+            onClick={() => setTab('alltime')}>
             All-Time Records
           </Tabs.Tab>
         </Tabs>
 
         {tab === 'current' && <CurrentTab data={data} />}
         {tab === 'history' && <HistoryTab history={history} />}
-        {tab === 'alltime' && <AllTimeTab allTime={all_time} />}
+        {tab === 'alltime' && <AllTimeTab allTime={allTime} />}
       </Window.Content>
     </Window>
   );
 };
 
-var CurrentTab = function (props, context) {
-  var data = props.data;
-  var current = data.current || {};
-  var current_factories = data.current_factories || [];
-  var current_mobs = data.current_mobs || [];
-  var current_players = data.current_players || [];
-  var materials = current.materials_consumed || {};
+const CurrentTab = (props, context) => {
+  const { data } = props;
+  const current = data.current || {};
+  const currentFactories = data.current_factories || [];
+  const currentMobs = data.current_mobs || [];
+  const currentPlayers = data.current_players || [];
+  const materials = current.materials_consumed || {};
 
   return (
     <Box>
@@ -118,26 +106,25 @@ var CurrentTab = function (props, context) {
           {current.most_deaths_player && (
             <LabeledList.Item label="Most Deaths">
               <Box color="bad">
-                {current.most_deaths_player.name} ({current.most_deaths_player.deaths} deaths)
+                {current.most_deaths_player.name}
+                {' '}({current.most_deaths_player.deaths} deaths)
               </Box>
             </LabeledList.Item>
           )}
         </LabeledList>
-        {current_mobs.length > 0 && (
+        {currentMobs.length > 0 && (
           <Collapsible title="Kill Breakdown">
             <Table>
               <Table.Row header>
                 <Table.Cell>Enemy Type</Table.Cell>
                 <Table.Cell>Kills</Table.Cell>
               </Table.Row>
-              {current_mobs.map(function (mob, index) {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>{mob.name}</Table.Cell>
-                    <Table.Cell>{mob.kills}</Table.Cell>
-                  </Table.Row>
-                );
-              })}
+              {currentMobs.map((mob, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>{mob.name}</Table.Cell>
+                  <Table.Cell>{mob.kills}</Table.Cell>
+                </Table.Row>
+              ))}
             </Table>
           </Collapsible>
         )}
@@ -162,7 +149,9 @@ var CurrentTab = function (props, context) {
             <LabeledList.Item label="Green">
               {materials.green || 0}
             </LabeledList.Item>
-            <LabeledList.Item label="Red">{materials.red || 0}</LabeledList.Item>
+            <LabeledList.Item label="Red">
+              {materials.red || 0}
+            </LabeledList.Item>
             <LabeledList.Item label="Blue">
               {materials.blue || 0}
             </LabeledList.Item>
@@ -177,43 +166,39 @@ var CurrentTab = function (props, context) {
             </LabeledList.Item>
           </LabeledList>
         </Box>
-        {current_factories.length > 0 && (
+        {currentFactories.length > 0 && (
           <Collapsible title="Factory Breakdown">
             <Table>
               <Table.Row header>
                 <Table.Cell>Factory</Table.Cell>
                 <Table.Cell>Items</Table.Cell>
               </Table.Row>
-              {current_factories.map(function (factory, index) {
-                return (
-                  <Table.Row key={index}>
-                    <Table.Cell>{factory.name}</Table.Cell>
-                    <Table.Cell>{factory.items_produced}</Table.Cell>
-                  </Table.Row>
-                );
-              })}
+              {currentFactories.map((factory, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell>{factory.name}</Table.Cell>
+                  <Table.Cell>{factory.items_produced}</Table.Cell>
+                </Table.Row>
+              ))}
             </Table>
           </Collapsible>
         )}
       </Section>
 
       <Section title="Participants">
-        {current_players.length > 0 ? (
+        {currentPlayers.length > 0 ? (
           <Table>
             <Table.Row header>
               <Table.Cell>Name</Table.Cell>
               <Table.Cell>Job</Table.Cell>
               <Table.Cell>CKey</Table.Cell>
             </Table.Row>
-            {current_players.map(function (player, index) {
-              return (
-                <Table.Row key={index}>
-                  <Table.Cell>{player.name}</Table.Cell>
-                  <Table.Cell>{player.job}</Table.Cell>
-                  <Table.Cell color="label">{player.ckey}</Table.Cell>
-                </Table.Row>
-              );
-            })}
+            {currentPlayers.map((player, index) => (
+              <Table.Row key={index}>
+                <Table.Cell>{player.name}</Table.Cell>
+                <Table.Cell>{player.job}</Table.Cell>
+                <Table.Cell color="label">{player.ckey}</Table.Cell>
+              </Table.Row>
+            ))}
           </Table>
         ) : (
           <Box color="label">No participants recorded yet.</Box>
@@ -223,12 +208,13 @@ var CurrentTab = function (props, context) {
   );
 };
 
-var HistoryTab = function (props, context) {
-  var history = props.history || [];
-
-  var _useLocalState = useLocalState(context, 'selectedExpedition', null);
-  var selectedExpedition = _useLocalState[0];
-  var setSelectedExpedition = _useLocalState[1];
+const HistoryTab = (props, context) => {
+  const { history = [] } = props;
+  const [selectedExpedition, setSelectedExpedition] = useLocalState(
+    context,
+    'selectedExpedition',
+    null
+  );
 
   if (history.length === 0) {
     return (
@@ -251,13 +237,13 @@ var HistoryTab = function (props, context) {
           <Table.Cell>Kills</Table.Cell>
           <Table.Cell>Items</Table.Cell>
         </Table.Row>
-        {history.map(function (expedition, index) {
-          var resultColor = 'label';
+        {history.map((expedition, index) => {
+          let resultColor = 'label';
           if (expedition.heart_killed) {
             resultColor = 'good';
           } else if (
-            expedition.end_condition === 'Total Loss' ||
-            expedition.end_condition === 'Last Stand Failed'
+            expedition.end_condition === 'Total Loss'
+            || expedition.end_condition === 'Last Stand Failed'
           ) {
             resultColor = 'bad';
           } else if (expedition.end_condition === 'Shuttle Escape') {
@@ -269,7 +255,9 @@ var HistoryTab = function (props, context) {
               <Table.Cell bold>#{expedition.expedition_number}</Table.Cell>
               <Table.Cell color="label">{expedition.timestamp}</Table.Cell>
               <Table.Cell>{expedition.duration}</Table.Cell>
-              <Table.Cell color={resultColor}>{expedition.end_condition}</Table.Cell>
+              <Table.Cell color={resultColor}>
+                {expedition.end_condition}
+              </Table.Cell>
               <Table.Cell>{expedition.participants}</Table.Cell>
               <Table.Cell color={expedition.survivors > 0 ? 'good' : 'bad'}>
                 {expedition.survivors}/{expedition.participants}
@@ -284,9 +272,9 @@ var HistoryTab = function (props, context) {
   );
 };
 
-var AllTimeTab = function (props, context) {
-  var allTime = props.allTime || {};
-  var materials = allTime.total_materials_consumed || {};
+const AllTimeTab = (props, context) => {
+  const { allTime = {} } = props;
+  const materials = allTime.total_materials_consumed || {};
 
   return (
     <Box>
@@ -302,13 +290,17 @@ var AllTimeTab = function (props, context) {
                   <Box color="good">{allTime.total_victories || 0}</Box>
                 </LabeledList.Item>
                 <LabeledList.Item label="Shuttle Escapes">
-                  <Box color="average">{allTime.total_shuttle_escapes || 0}</Box>
+                  <Box color="average">
+                    {allTime.total_shuttle_escapes || 0}
+                  </Box>
                 </LabeledList.Item>
                 <LabeledList.Item label="Total Losses">
                   <Box color="bad">{allTime.total_all_died || 0}</Box>
                 </LabeledList.Item>
                 <LabeledList.Item label="Last Stand Failures">
-                  <Box color="bad">{allTime.total_all_died_lastwave || 0}</Box>
+                  <Box color="bad">
+                    {allTime.total_all_died_lastwave || 0}
+                  </Box>
                 </LabeledList.Item>
               </LabeledList>
             </Section>
@@ -317,7 +309,9 @@ var AllTimeTab = function (props, context) {
             <Section title="Personnel">
               <LabeledList>
                 <LabeledList.Item label="Total Survivals">
-                  <Box color="good">{allTime.total_player_survivals || 0}</Box>
+                  <Box color="good">
+                    {allTime.total_player_survivals || 0}
+                  </Box>
                 </LabeledList.Item>
                 <LabeledList.Item label="Total Deaths">
                   <Box color="bad">{allTime.total_player_deaths || 0}</Box>

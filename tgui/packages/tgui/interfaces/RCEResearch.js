@@ -98,7 +98,12 @@ export const RCEResearch = (props, context) => {
 // Research Tree Tab - Simple list layout with three branches
 const ResearchTreeTab = (props, context) => {
   const { act } = useBackend(context);
-  const { researchTree, selectedResearch, researchProgress, branchEnabled } = props;
+  const {
+    researchTree,
+    selectedResearch,
+    researchProgress,
+    branchEnabled,
+  } = props;
 
   // Group by branch
   const branches = {
