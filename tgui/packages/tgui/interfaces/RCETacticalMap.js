@@ -752,32 +752,30 @@ export const RCETacticalMap = (props, context) => {
             <Section
               title="Tactical Map"
               fill
-              buttons={
-                canEdit && (
-                  <Box>
-                    <Button
-                      icon="undo"
-                      onClick={() => act('undo')}
-                      disabled={annotations.length === 0}
-                      content="Undo"
-                    />
-                    <Button.Confirm
-                      icon="trash"
-                      color="bad"
-                      onClick={() => act('clear_all')}
-                      disabled={annotations.length === 0}
-                      content="Clear All"
-                      confirmContent="Confirm?"
-                    />
-                    <Button
-                      icon="list"
-                      selected={showAnnotationList}
-                      onClick={() => setShowAnnotationList(!showAnnotationList)}
-                      tooltip="Show annotation list"
-                    />
-                  </Box>
-                )
-              }>
+              buttons={canEdit && (
+                <Box>
+                  <Button
+                    icon="undo"
+                    onClick={() => act('undo')}
+                    disabled={annotations.length === 0}
+                    content="Undo"
+                  />
+                  <Button.Confirm
+                    icon="trash"
+                    color="bad"
+                    onClick={() => act('clear_all')}
+                    disabled={annotations.length === 0}
+                    content="Clear All"
+                    confirmContent="Confirm?"
+                  />
+                  <Button
+                    icon="list"
+                    selected={showAnnotationList}
+                    onClick={() => setShowAnnotationList(!showAnnotationList)}
+                    tooltip="Show annotation list"
+                  />
+                </Box>
+              )}>
               <Stack vertical fill>
                 <Stack.Item>
                   <Box textAlign="center">
