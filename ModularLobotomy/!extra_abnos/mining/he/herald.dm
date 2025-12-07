@@ -212,6 +212,7 @@
 	is_mirror = TRUE
 	var/mob/living/simple_animal/hostile/abnormality/mining/herald/my_master = null
 	abnormality_origin = ABNORMALITY_DUMMY	///Wuh oh
+	core_enabled = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/mining/herald/mirror/Initialize()
 	. = ..()

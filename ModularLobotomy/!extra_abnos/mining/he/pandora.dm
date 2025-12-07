@@ -37,6 +37,9 @@
 		ABNORMALITY_WORK_ATTACHMENT = list(50, 50, 70, 70, 70),
 		ABNORMALITY_WORK_REPRESSION = list(20, 20, 10, 10, 10),
 	)
+	threat_level = HE_LEVEL
+	work_damage_amount = 7
+	work_damage_type = BLACK_DAMAGE
 
 	var/sing_shot_length = 8
 	var/cooldown_time = 20

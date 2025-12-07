@@ -35,6 +35,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = 20,
 		ABNORMALITY_WORK_REPRESSION = 60,
 	)
+	threat_level = HE_LEVEL
 
 	work_damage_amount = 7
 	work_damage_type = RED_DAMAGE
@@ -255,6 +256,7 @@
 	ranged = FALSE
 	abnormality_origin = ABNORMALITY_DUMMY	///Wuh oh
 	var/mob/living/simple_animal/hostile/abnormality/mining/legionnaire/body = null
+	core_enabled = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/mining/legionnairehead/death()
 	. = ..()
