@@ -31,6 +31,7 @@ SUBSYSTEM_DEF(gamedirector)
 	var/rematch = FALSE
 	var/timestamp_warning = 50000 // Stop announcing shit on other modes dumbass
 	var/timestamp_finalwave = 50000
+	var/timestamp_shuttle = 50000
 	var/timestamp_end = 50000
 
 	// Resource Well Raids variables
@@ -95,9 +96,12 @@ SUBSYSTEM_DEF(gamedirector)
 			gamestage = PHASE_ENDROUND
 			// Let the shuttle handle the evacuation
 		else if(world.time > timestamp_finalwave && gamestage < PHASE_LASTWAVE_PASSED)
-			to_chat(world, span_userdanger("A huge wave of greed is approaching!"))
+			to_chat(world, span_userdanger("A massive wave of greed is here!"))
 			gamestage = PHASE_LASTWAVE_PASSED
 			StartLastWave()
+		else if(world.time > timestamp_shuttle && gamestage < PHASE_SHUTTLE_CALLED)
+			to_chat(world, span_userdanger("A massive wave of greed will arrive in 10 minutes! Evacuate immediately!"))
+			gamestage = PHASE_SHUTTLE_CALLED
 			CallEvacuation()
 		else if(world.time > timestamp_warning && gamestage < PHASE_WARNING_PASSED)
 			to_chat(world, span_userdanger("There are 20 minutes left to kill the heart!"))
@@ -143,7 +147,8 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/SetTimes(warningtime, endtime)
 	timestamp_warning = world.time + warningtime
-	timestamp_finalwave = world.time + warningtime + 10 MINUTES
+	timestamp_shuttle = world.time + 110 MINUTES // Shuttle called at 1 hour 50 minutes
+	timestamp_finalwave = world.time + 120 MINUTES // Final wave at 2 hours
 	timestamp_end = world.time + endtime
 
 /datum/controller/subsystem/gamedirector/proc/GetRandomTarget()
@@ -653,4 +658,4 @@ SUBSYSTEM_DEF(gamedirector)
 		set_security_level(SEC_LEVEL_BLUE)
 
 	// Call the evacuation shuttle
-	SSshuttle.requestEvac(null, "Critical threat detected: R-Corp evacuation protocols activated. Final defensive wave initiated.")
+	SSshuttle.requestEvac(null, "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately.")

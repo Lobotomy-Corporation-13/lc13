@@ -42,7 +42,7 @@
 	if(isliving(target))
 		var/mob/living/L = target
 		// Check if it's a valid target (X-Corp or Clan mob)
-		if(istype(L, /mob/living/simple_animal/hostile/xcorp) || \
+		if(istype(L, /mob/living/simple_animal/hostile/greed) || \
 		   istype(L, /mob/living/simple_animal/hostile/clan))
 			// Add harvest component if not already marked
 			if(!L.GetComponent(/datum/component/rce_harvest_mark))

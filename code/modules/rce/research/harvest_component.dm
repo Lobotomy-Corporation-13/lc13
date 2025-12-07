@@ -75,7 +75,7 @@
 
 /datum/component/rce_harvest_mark/proc/get_harvest_data(mob/living/L)
 	// Check mob type and assign appropriate data
-	if(istype(L, /mob/living/simple_animal/hostile/xcorp))
+	if(istype(L, /mob/living/simple_animal/hostile/greed))
 		return get_xcorp_harvest_data(L)
 	else if(istype(L, /mob/living/simple_animal/hostile/clan))
 		return get_clan_harvest_data(L)
@@ -87,11 +87,11 @@
 // X-CORP MOB HARVEST DATA
 // ============================================
 
-/datum/component/rce_harvest_mark/proc/get_xcorp_harvest_data(mob/living/simple_animal/hostile/xcorp/X)
+/datum/component/rce_harvest_mark/proc/get_xcorp_harvest_data(mob/living/simple_animal/hostile/greed/X)
 	var/datum/harvest_data/data = new
 
 	// Base X-Corp grunt (Laute)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp) && !X.type != /mob/living/simple_animal/hostile/xcorp)
+	if(istype(X, /mob/living/simple_animal/hostile/greed) && !X.type != /mob/living/simple_animal/hostile/greed)
 		data.traits = list(TRAIT_ORGANIC, TRAIT_FODDER, TRAIT_HEAVY)
 		data.drop_count = 1
 		data.drop_chance = 100
@@ -99,31 +99,31 @@
 		return data
 
 	// X-Corp DPS (Studiose)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp/dps))
-		data.traits = list(TRAIT_ORGANIC, TRAIT_WEAPONIZED, TRAIT_AGILE)
+	if(istype(X, /mob/living/simple_animal/hostile/greed/dps))
+		data.traits = list(TRAIT_ORGANIC, TRAIT_VOLATILE, TRAIT_AGILE)
 		data.drop_count = prob(50) ? 2 : 1
 		data.drop_chance = 80
 		data.base_value = 20
 		return data
 
 	// X-Corp Tank (Nimis)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp/tank))
-		data.traits = list(TRAIT_ORGANIC, TRAIT_ARMORED, TRAIT_HEAVY)
+	if(istype(X, /mob/living/simple_animal/hostile/greed/tank))
+		data.traits = list(TRAIT_ORGANIC, TRAIT_ARMORED, TRAIT_HEAVY, TRAIT_TOXIC)
 		data.drop_count = prob(50) ? 2 : 1
 		data.drop_chance = 85
 		data.base_value = 22
 		return data
 
 	// X-Corp Scout (Praepropere)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp/scout))
-		data.traits = list(TRAIT_ORGANIC, TRAIT_AGILE, TRAIT_VOLATILE)
+	if(istype(X, /mob/living/simple_animal/hostile/greed/scout))
+		data.traits = list(TRAIT_ORGANIC, TRAIT_AGILE, TRAIT_VOLATILE, TRAIT_TOXIC)
 		data.drop_count = 1
 		data.drop_chance = 75
 		data.base_value = 22
 		return data
 
 	// X-Corp Sapper (Ardenter)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp/sapper))
+	if(istype(X, /mob/living/simple_animal/hostile/greed/sapper))
 		data.traits = list(TRAIT_ORGANIC, TRAIT_PSIONIC, TRAIT_ABERRANT, TRAIT_TOXIC)
 		data.drop_count = 1
 		data.drop_chance = 90
@@ -131,9 +131,9 @@
 		return data
 
 	// X-Corp Heart Units (Elite)
-	if(istype(X, /mob/living/simple_animal/hostile/xcorp/heart))
+	if(istype(X, /mob/living/simple_animal/hostile/greed/heart))
 		// Heart DPS (Sumptus Excessivi)
-		if(istype(X, /mob/living/simple_animal/hostile/xcorp/heart/dps))
+		if(istype(X, /mob/living/simple_animal/hostile/greed/heart/dps))
 			data.traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_BERSERKER)
 			data.drop_count = prob(50) ? 2 : 1
 			data.drop_chance = 80
@@ -141,7 +141,7 @@
 			return data
 
 		// Heart Ranged (Sicarius)
-		if(istype(X, /mob/living/simple_animal/hostile/xcorp/heart/ranged))
+		if(istype(X, /mob/living/simple_animal/hostile/greed/heart/ranged))
 			data.traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_PRECISION, TRAIT_AGILE)
 			data.drop_count = prob(50) ? 2 : 1
 			data.drop_chance = 80
@@ -317,6 +317,6 @@
 /obj/effect/temp_visual/harvest_extract
 	name = "biological extraction"
 	icon = 'icons/effects/effects.dmi'
-	icon_state = "impact_laser_purple"
+	icon_state = "emppulse"
 	layer = ABOVE_MOB_LAYER
-	duration = 20
+	duration = 16

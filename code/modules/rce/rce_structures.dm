@@ -9,8 +9,8 @@
 	light_power = 1
 	max_integrity = 500
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp = 4,
-		/mob/living/simple_animal/hostile/xcorp/scout = 2,
+		/mob/living/simple_animal/hostile/greed = 4,
+		/mob/living/simple_animal/hostile/greed/scout = 2,
 	)
 	var/announce = FALSE
 	var/id
@@ -23,11 +23,11 @@
 	light_range = 5
 	max_mobs = 40
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp = 2,
-		/mob/living/simple_animal/hostile/xcorp/scout = 3,
-		/mob/living/simple_animal/hostile/xcorp/sapper = 3,
-		/mob/living/simple_animal/hostile/xcorp/tank = 2,
-		/mob/living/simple_animal/hostile/xcorp/dps = 2,
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/scout = 3,
+		/mob/living/simple_animal/hostile/greed/sapper = 3,
+		/mob/living/simple_animal/hostile/greed/tank = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
 	)
 	generate_new_mob_time = 50 SECONDS
 	raider = TRUE
@@ -37,10 +37,10 @@
 	light_range = 4
 	max_mobs = 10
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp = 2,
-		/mob/living/simple_animal/hostile/xcorp/dps = 1,
-		/mob/living/simple_animal/hostile/xcorp/tank = 1,
-		/mob/living/simple_animal/hostile/xcorp/scout = 1,
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 1,
+		/mob/living/simple_animal/hostile/greed/tank = 1,
+		/mob/living/simple_animal/hostile/greed/scout = 1,
 	)
 	generate_new_mob_time = 22 SECONDS
 
@@ -48,10 +48,10 @@
 	light_range = 7
 	max_mobs = 12
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp/scout = 2,
-		/mob/living/simple_animal/hostile/xcorp/sapper = 2,
-		/mob/living/simple_animal/hostile/xcorp/dps = 2,
-		/mob/living/simple_animal/hostile/xcorp/tank = 3,
+		/mob/living/simple_animal/hostile/greed/scout = 2,
+		/mob/living/simple_animal/hostile/greed/sapper = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
+		/mob/living/simple_animal/hostile/greed/tank = 3,
 	)
 	generate_new_mob_time = 15 SECONDS
 
@@ -59,11 +59,11 @@
 	light_range = 5
 	max_mobs = 30
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp = 2,
-		/mob/living/simple_animal/hostile/xcorp/scout = 3,
-		/mob/living/simple_animal/hostile/xcorp/sapper = 1,
-		/mob/living/simple_animal/hostile/xcorp/tank = 2,
-		/mob/living/simple_animal/hostile/xcorp/dps = 2,
+		/mob/living/simple_animal/hostile/greed = 2,
+		/mob/living/simple_animal/hostile/greed/scout = 3,
+		/mob/living/simple_animal/hostile/greed/sapper = 1,
+		/mob/living/simple_animal/hostile/greed/tank = 2,
+		/mob/living/simple_animal/hostile/greed/dps = 2,
 	)
 	assault_type = SEND_TILL_MAX
 	generate_new_mob_time = 30 SECONDS
@@ -88,11 +88,11 @@
 	light_range = 5
 	light_power = 2
 	moblist = list(
-		/mob/living/simple_animal/hostile/xcorp = 4,
-		/mob/living/simple_animal/hostile/xcorp/tank = 4,
-		/mob/living/simple_animal/hostile/xcorp/heart = 3,
-		/mob/living/simple_animal/hostile/xcorp/heart/ranged = 2,
-		/mob/living/simple_animal/hostile/xcorp/heart/dps = 1,
+		/mob/living/simple_animal/hostile/greed = 4,
+		/mob/living/simple_animal/hostile/greed/tank = 4,
+		/mob/living/simple_animal/hostile/greed/heart = 3,
+		/mob/living/simple_animal/hostile/greed/heart/ranged = 2,
+		/mob/living/simple_animal/hostile/greed/heart/dps = 1,
 	)
 	var/announce = FALSE
 	var/id
@@ -200,15 +200,15 @@
 	var/list/assault_path = list()
 	var/list/active_waves = list()	// Track wave commanders
 	var/list/mob_spawn_weights = list(
-		/mob/living/simple_animal/hostile/xcorp = 30,
-		/mob/living/simple_animal/hostile/xcorp/scout = 20,
-		/mob/living/simple_animal/hostile/xcorp/dps = 15,
-		/mob/living/simple_animal/hostile/xcorp/tank = 10,
-		/mob/living/simple_animal/hostile/xcorp/sapper = 8,
-		/mob/living/simple_animal/hostile/xcorp/heart = 7,
-		/mob/living/simple_animal/hostile/xcorp/heart/dps = 5,
-		/mob/living/simple_animal/hostile/xcorp/heart/ranged = 4,
-		/mob/living/simple_animal/hostile/xcorp/heart/pylon = 1
+		/mob/living/simple_animal/hostile/greed = 30,
+		/mob/living/simple_animal/hostile/greed/scout = 20,
+		/mob/living/simple_animal/hostile/greed/dps = 15,
+		/mob/living/simple_animal/hostile/greed/tank = 10,
+		/mob/living/simple_animal/hostile/greed/sapper = 8,
+		/mob/living/simple_animal/hostile/greed/heart = 7,
+		/mob/living/simple_animal/hostile/greed/heart/dps = 5,
+		/mob/living/simple_animal/hostile/greed/heart/ranged = 4,
+		/mob/living/simple_animal/hostile/greed/heart/pylon = 1
 	)
 
 /obj/effect/greed_gateway/Initialize()

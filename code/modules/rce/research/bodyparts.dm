@@ -30,10 +30,10 @@
 	else if(TRAIT_MECHANICAL in traits)
 		color = "#4682B4" // Steel blue for mechanical
 		name = "mechanical component"
-		icon_state = "cyberimp"
 
 	if(TRAIT_ELITE in traits)
 		name = "elite [name]"
+		base_value = 100
 		add_atom_colour("#FFD700", FIXED_COLOUR_PRIORITY) // Gold tint for elite
 
 /obj/item/rce_bodypart/proc/update_desc()
@@ -118,8 +118,8 @@
 /obj/item/storage/bag/rce_bodyparts/ComponentInitialize()
 	. = ..()
 	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
-	STR.max_items = 20
-	STR.max_combined_w_class = 40
+	STR.max_items = 40
+	STR.max_combined_w_class = 80
 	STR.set_holdable(list(/obj/item/rce_bodypart))
 
 /obj/item/storage/bag/rce_bodyparts/equipped(mob/user)

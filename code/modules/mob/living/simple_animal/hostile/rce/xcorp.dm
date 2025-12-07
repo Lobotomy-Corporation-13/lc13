@@ -1,5 +1,5 @@
 /// X-Corp Grunt
-/mob/living/simple_animal/hostile/xcorp
+/mob/living/simple_animal/hostile/greed
 	name = "X-Corp Laute"
 	desc = "A grotesque mockery of biology, the sin of opulence."
 	icon_state = "blank-body"
@@ -18,7 +18,7 @@
 	stat_attack = HARD_CRIT
 	del_on_death = TRUE
 
-/mob/living/simple_animal/hostile/xcorp/Life()
+/mob/living/simple_animal/hostile/greed/Life()
 	. = ..()
 	if(health <= maxHealth*0.2 && stat != DEAD)
 		adjustBruteLoss(-4)
@@ -26,7 +26,7 @@
 			adjustBruteLoss(-16)
 
 /// X-Corp DPS
-/mob/living/simple_animal/hostile/xcorp/dps
+/mob/living/simple_animal/hostile/greed/dps
 	name = "X-Corp Studiose"
 	desc = "A writhing mass of edges, the sin of sophistication."
 	icon = 'icons/mob/eldritch_mobs.dmi'
@@ -52,12 +52,12 @@
 	var/dash_range = 1
 	var/list/been_hit = list() // Don't get hit twice.
 
-/mob/living/simple_animal/hostile/xcorp/dps/Move()
+/mob/living/simple_animal/hostile/greed/dps/Move()
 	if(charging)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/xcorp/dps/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/greed/dps/AttackingTarget(atom/attacked_target)
 	if(charging)
 		return
 	if(dash_cooldown <= world.time && prob(10) && !client)
@@ -71,7 +71,7 @@
 		playsound(src, 'sound/weapons/fixer/generic/blade4.ogg', 75, 1)
 	return
 
-/mob/living/simple_animal/hostile/xcorp/dps/OpenFire()
+/mob/living/simple_animal/hostile/greed/dps/OpenFire()
 	if(dash_cooldown <= world.time)
 		var/chance_to_dash = 25
 		var/dir_to_target = get_dir(get_turf(src), get_turf(target))
@@ -80,7 +80,7 @@
 		if(prob(chance_to_dash))
 			PrepCharge(target)
 
-/mob/living/simple_animal/hostile/xcorp/dps/proc/PrepCharge(target)
+/mob/living/simple_animal/hostile/greed/dps/proc/PrepCharge(target)
 	if(charging || dash_cooldown > world.time)
 		return
 	dash_cooldown = world.time + dash_cooldown_time
@@ -92,7 +92,7 @@
 	addtimer(CALLBACK(src, PROC_REF(Charge), dir_to_target, 0), 2 SECONDS)
 	playsound(src, 'sound/effects/ordeals/brown/pridespin.ogg', 125, FALSE)
 
-/mob/living/simple_animal/hostile/xcorp/dps/proc/Charge(move_dir, times_ran)
+/mob/living/simple_animal/hostile/greed/dps/proc/Charge(move_dir, times_ran)
 	if(health <= 0)
 		return
 	var/stop_charge = FALSE
@@ -140,7 +140,7 @@
 	addtimer(CALLBACK(src, PROC_REF(Charge), move_dir, (times_ran + 1)), 1)
 
 /// X-Corp Tank
-/mob/living/simple_animal/hostile/xcorp/tank
+/mob/living/simple_animal/hostile/greed/tank
 	name = "X-Corp Nimis"
 	desc = "A blob of hardened muscle, the sin of gorging."
 	icon = 'icons/mob/blob.dmi'
@@ -173,7 +173,7 @@
 	embedding = null
 
 /// X-Corp Scout
-/mob/living/simple_animal/hostile/xcorp/scout
+/mob/living/simple_animal/hostile/greed/scout
 	name = "X-Corp Praepropere"
 	desc = "A floating eyeball, the sin of alacrity."
 	icon = 'icons/mob/blob.dmi'
@@ -193,12 +193,12 @@
 	move_to_delay = 3
 	var/charging = FALSE
 
-/mob/living/simple_animal/hostile/xcorp/scout/Move()
+/mob/living/simple_animal/hostile/greed/scout/Move()
 	if(buffed && !charging)
 		return FALSE
 	return ..()
 
-/mob/living/simple_animal/hostile/xcorp/scout/AttackingTarget(atom/attacked_target)
+/mob/living/simple_animal/hostile/greed/scout/AttackingTarget(atom/attacked_target)
 	if(ranged_cooldown <= world.time && prob(30))
 		if(!target)
 			GiveTarget(attacked_target)
@@ -206,12 +206,12 @@
 		return
 	return ..()
 
-/mob/living/simple_animal/hostile/xcorp/scout/CanAllowThrough(atom/movable/mover, turf/target)
+/mob/living/simple_animal/hostile/greed/scout/CanAllowThrough(atom/movable/mover, turf/target)
 	if(charging && isliving(mover))
 		return TRUE
 	. = ..()
 
-/mob/living/simple_animal/hostile/xcorp/scout/Shoot(atom/A)
+/mob/living/simple_animal/hostile/greed/scout/Shoot(atom/A)
 	if(buffed || !isliving(A))
 		return FALSE
 	animate(src, alpha = alpha - 50, pixel_y = base_pixel_y + 25, layer = 6, time = 10)
@@ -230,7 +230,7 @@
 	pixel_y = initial(pixel_y)
 	base_pixel_y = initial(base_pixel_y)
 
-/mob/living/simple_animal/hostile/xcorp/scout/proc/ArialSupport()
+/mob/living/simple_animal/hostile/greed/scout/proc/ArialSupport()
 	charging = TRUE
 	var/turf/target_turf = get_turf(target)
 	for(var/i=0 to 7)
@@ -245,7 +245,7 @@
 		SLEEP_CHECK_DEATH(0.5)
 	charging = FALSE
 
-/mob/living/simple_animal/hostile/xcorp/scout/proc/SweepAttack(mob/living/sweeptarget)
+/mob/living/simple_animal/hostile/greed/scout/proc/SweepAttack(mob/living/sweeptarget)
 	sweeptarget.visible_message(span_danger("[src] slams into [sweeptarget]!"), span_userdanger("[src] slams into you!"))
 	sweeptarget.deal_damage(20, RED_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	playsound(get_turf(src), 'sound/effects/meteorimpact.ogg', 50, TRUE)
@@ -254,7 +254,7 @@
 		shake_camera(sweeptarget, 4, 3)
 		shake_camera(src, 2, 3)
 
-/mob/living/simple_animal/hostile/xcorp/scout/proc/DoKnockback(atom/target, mob/thrower, throw_dir) //stolen from the knockback component since this happens only once
+/mob/living/simple_animal/hostile/greed/scout/proc/DoKnockback(atom/target, mob/thrower, throw_dir) //stolen from the knockback component since this happens only once
 	if(!ismovable(target) || throw_dir == null)
 		return
 	var/atom/movable/throwee = target
@@ -266,7 +266,7 @@
 	throwee.safe_throw_at(throw_target, 1, 1, thrower, gentle = TRUE)
 
 /// X-Corp Sapper
-/mob/living/simple_animal/hostile/xcorp/sapper
+/mob/living/simple_animal/hostile/greed/sapper
 	name = "X-Corp Ardenter"
 	desc = "A creature hellbent on consumption, the sin of insatiability."
 	speak_emote = list("wretches")
@@ -291,11 +291,11 @@
 	wanted_objects = list(/obj/structure/barricade/sandbags, /obj/machinery/manned_turret/rcorp, /obj/machinery/conveyor)
 	see_in_dark = 8
 
-/mob/living/simple_animal/hostile/xcorp/sapper/toggle_ai(togglestatus)
+/mob/living/simple_animal/hostile/greed/sapper/toggle_ai(togglestatus)
 	if(togglestatus != AI_ON && togglestatus != AI_IDLE)
 		..()
 
-/mob/living/simple_animal/hostile/xcorp/sapper/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
+/mob/living/simple_animal/hostile/greed/sapper/say(message, bubble_type, list/spans = list(), sanitize = TRUE, datum/language/language = null, ignore_spam = FALSE, forced = null)
 	..()
 	if(stat)
 		return
@@ -304,7 +304,7 @@
 		if(!faction_check_mob(L))
 			L.deal_damage(scream_damage, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
-/mob/living/simple_animal/hostile/xcorp/sapper/Life()
+/mob/living/simple_animal/hostile/greed/sapper/Life()
 	..()
 	if(stat)
 		return
@@ -315,7 +315,7 @@
 				L.deal_damage(scream_damage, WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 
 /// X-Corp Heart Grunt
-/mob/living/simple_animal/hostile/xcorp/heart
+/mob/living/simple_animal/hostile/greed/heart
 	name = "Accumulatio"
 	desc = "The sin of hoarding."
 	icon = 'icons/mob/vatgrowing.dmi'
@@ -330,14 +330,14 @@
 	melee_damage_lower = 25
 	damage_coeff = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 2, FIRE = 1.5)
 
-/mob/living/simple_animal/hostile/xcorp/heart/Life()
+/mob/living/simple_animal/hostile/greed/heart/Life()
 	. = ..()
 	if(health <= maxHealth*0.5 && stat != DEAD)
 		adjustBruteLoss(-16)
 		if(!target)
 			adjustBruteLoss(-32)
 
-/mob/living/simple_animal/hostile/xcorp/heart/dps
+/mob/living/simple_animal/hostile/greed/heart/dps
 	name = "Sumptus Excessivi"
 	desc = "The sin of squandering."
 	icon = 'icons/mob/32x64.dmi'
@@ -354,7 +354,7 @@
 	damage_coeff = list(RED_DAMAGE = 0.9,  WHITE_DAMAGE = 2, BLACK_DAMAGE = 3, PALE_DAMAGE = 0.1)
 
 
-/mob/living/simple_animal/hostile/xcorp/heart/ranged
+/mob/living/simple_animal/hostile/greed/heart/ranged
 	name = "Sicarius"
 	desc = "The sin of vying."
 	icon = 'icons/mob/eldritch_mobs.dmi'
@@ -382,6 +382,6 @@
 	spread = 16
 	embedding = null
 
-/mob/living/simple_animal/hostile/xcorp/heart/pylon
+/mob/living/simple_animal/hostile/greed/heart/pylon
 	name = "Expectatio"
 	desc = "The sin of entitlement."

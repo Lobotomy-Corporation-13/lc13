@@ -1,6 +1,37 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Section, Stack, Tabs, LabeledList, ProgressBar } from '../components';
+import { Box, Button, Collapsible, Section, Stack, Tabs, LabeledList, ProgressBar } from '../components';
 import { Window } from '../layouts';
+
+// Trait colors for display
+const TRAIT_COLORS = {
+  // Organic traits
+  ORGANIC: '#88cc88',
+  HYBRID: '#88aacc',
+  MECHANICAL: '#aaaacc',
+  // Role traits
+  FODDER: '#888888',
+  ELITE: '#ffcc44',
+  // Combat traits
+  HEAVY: '#cc8844',
+  AGILE: '#44cccc',
+  ARMORED: '#8888cc',
+  VOLATILE: '#ff6644',
+  WEAPONIZED: '#cc4444',
+  PRECISION: '#44cc88',
+  BRUTAL: '#cc4466',
+  BERSERKER: '#ff4444',
+  // Special traits
+  TOXIC: '#44cc44',
+  PSIONIC: '#cc44cc',
+  ABERRANT: '#aa44aa',
+  REGENERATIVE: '#44ff88',
+  CORRUPTED: '#884488',
+  HIVEMIND: '#664488',
+  NEURAL: '#6688cc',
+  OSSIFIED: '#ccaa88',
+  LIGHTWEIGHT: '#aacccc',
+  ERRATIC: '#ffaa44',
+};
 
 // Research status constants (must match DM defines)
 const RESEARCH_LOCKED = 'locked';
@@ -32,6 +63,8 @@ export const RCEResearch = (props, context) => {
     partsList = [],
     researchProgress = {},
     branchEnabled = { hellfire: true, venom: true, storm: true },
+    researchStats = { hellfire: 0, venom: 0, storm: 0 },
+    bestiary = [],
   } = data;
 
   const currentResearch = selectedResearch && researchTree
@@ -62,6 +95,16 @@ export const RCEResearch = (props, context) => {
                 onClick={() => setTab('progress')}>
                 Current Research
               </Tabs.Tab>
+              <Tabs.Tab
+                selected={tab === 'stats'}
+                onClick={() => setTab('stats')}>
+                Statistics
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={tab === 'bestiary'}
+                onClick={() => setTab('bestiary')}>
+                Bestiary
+              </Tabs.Tab>
             </Tabs>
           </Stack.Item>
           <Stack.Item grow>
@@ -86,6 +129,16 @@ export const RCEResearch = (props, context) => {
                 currentResearch={currentResearch}
                 researchProgress={researchProgress}
                 selectedResearch={selectedResearch}
+              />
+            )}
+            {tab === 'stats' && (
+              <StatisticsTab
+                researchStats={researchStats}
+              />
+            )}
+            {tab === 'bestiary' && (
+              <BestiaryTab
+                bestiary={bestiary}
               />
             )}
           </Stack.Item>
@@ -527,20 +580,36 @@ const SamplesTab = (props, context) => {
                   })}
                 </Box>
               )}
-              {selectedResearch && part.meetsRequirements && (
-                <Box mt={0.5}>
-                  <Button
-                    fluid
-                    icon="flask"
-                    color="good"
-                    onClick={e => {
-                      e.stopPropagation();
-                      act('processSpecificPart', { partRef: part.ref });
-                    }}>
-                    Process This Sample (+{part.effectiveness} pts)
-                  </Button>
-                </Box>
-              )}
+              <Box mt={0.5}>
+                <Stack>
+                  {selectedResearch && part.meetsRequirements && (
+                    <Stack.Item grow>
+                      <Button
+                        fluid
+                        icon="flask"
+                        color="good"
+                        onClick={e => {
+                          e.stopPropagation();
+                          act('processSpecificPart', { partRef: part.ref });
+                        }}>
+                        Process (+{part.effectiveness} pts)
+                      </Button>
+                    </Stack.Item>
+                  )}
+                  <Stack.Item grow={!selectedResearch || !part.meetsRequirements}>
+                    <Button
+                      fluid
+                      icon="eject"
+                      color="caution"
+                      onClick={e => {
+                        e.stopPropagation();
+                        act('ejectPart', { partRef: part.ref });
+                      }}>
+                      Eject
+                    </Button>
+                  </Stack.Item>
+                </Stack>
+              </Box>
             </Box>
           ))}
         </>
@@ -641,5 +710,254 @@ const ProgressTab = (props, context) => {
         </Button>
       </Box>
     </Section>
+  );
+};
+
+// Statistics Tab - Shows research completion counts per branch
+const StatisticsTab = (props) => {
+  const { researchStats } = props;
+
+  const totalResearched = researchStats.hellfire + researchStats.venom + researchStats.storm;
+
+  return (
+    <Section fill title="Research Statistics">
+      <Box mb={2} color="label" italic>
+        Total items researched (repeatable only): {totalResearched}
+      </Box>
+      <Stack>
+        {['hellfire', 'venom', 'storm'].map(branch => (
+          <Stack.Item key={branch} grow basis="33%">
+            <Box
+              p={2}
+              m={1}
+              textAlign="center"
+              style={{
+                border: `2px solid ${BRANCH_COLORS[branch]}`,
+                borderRadius: '8px',
+                backgroundColor: `${BRANCH_COLORS[branch]}22`,
+              }}>
+              <Box
+                bold
+                fontSize="16px"
+                color={BRANCH_COLORS[branch]}
+                mb={1}>
+                {BRANCH_LABELS[branch]}
+              </Box>
+              <Box
+                fontSize="32px"
+                bold
+                color={BRANCH_COLORS[branch]}>
+                {researchStats[branch]}
+              </Box>
+              <Box color="label" fontSize="12px">
+                items researched
+              </Box>
+            </Box>
+          </Stack.Item>
+        ))}
+      </Stack>
+      <Box mt={3} color="label" fontSize="11px" textAlign="center">
+        Note: Only counts repeatable research (weapons, armor, starter kits).
+        <br />
+        One-time factory unlocks are not included.
+      </Box>
+    </Section>
+  );
+};
+
+// Get trait color
+const getTraitColor = (trait) => {
+  return TRAIT_COLORS[trait] || '#aaaaaa';
+};
+
+// Rank order for sorting
+const RANK_ORDER = {
+  Elite: 0,
+  Standard: 1,
+  Fodder: 2,
+};
+
+// Bestiary Tab - Shows harvestable mobs organized by folder
+const BestiaryTab = (props) => {
+  const { bestiary } = props;
+
+  if (!bestiary || bestiary.length === 0) {
+    return (
+      <Section fill title="Bestiary">
+        <Box color="label" italic>
+          No bestiary data available.
+        </Box>
+      </Section>
+    );
+  }
+
+  return (
+    <Section fill scrollable title="Harvestable Targets">
+      <Box mb={2} color="label">
+        This bestiary contains information about all creatures that can be
+        harvested for research samples using the R-Corp Harvester.
+      </Box>
+      {bestiary.map(folder => (
+        <BestiaryFolder key={folder.id} folder={folder} />
+      ))}
+    </Section>
+  );
+};
+
+// Bestiary Folder Component
+const BestiaryFolder = (props) => {
+  const { folder } = props;
+
+  // Group mobs by rank
+  const mobsByRank = {
+    Elite: [],
+    Standard: [],
+    Fodder: [],
+  };
+
+  (folder.mobs || []).forEach(mob => {
+    const rank = mob.rank || 'Standard';
+    if (mobsByRank[rank]) {
+      mobsByRank[rank].push(mob);
+    }
+  });
+
+  // Get folder color based on id
+  const folderColor = folder.id === 'xcorp' ? '#ffaa44' : '#aa44ff';
+
+  return (
+    <Collapsible
+      title={folder.name}
+      color={folderColor}
+      open>
+      {/* Folder Lore Section */}
+      <Box
+        p={2}
+        mb={2}
+        backgroundColor="rgba(100, 100, 100, 0.2)"
+        style={{
+          borderLeft: `3px solid ${folderColor}`,
+          borderRadius: '0 4px 4px 0',
+          fontStyle: 'italic',
+        }}>
+        {folder.lore}
+      </Box>
+
+      {/* Mobs by Rank */}
+      {['Elite', 'Standard', 'Fodder'].map(rank => {
+        const mobs = mobsByRank[rank];
+        if (mobs.length === 0) return null;
+
+        const rankColor = rank === 'Elite'
+          ? '#ffcc44'
+          : rank === 'Standard'
+            ? '#aaaaaa'
+            : '#666666';
+
+        return (
+          <Box key={rank} mb={2}>
+            <Box
+              bold
+              p={1}
+              backgroundColor={`${rankColor}33`}
+              style={{
+                borderBottom: `2px solid ${rankColor}`,
+                marginBottom: '8px',
+              }}>
+              <Box as="span" color={rankColor}>{rank.toUpperCase()} RANK</Box>
+            </Box>
+            {mobs.map((mob, index) => (
+              <MobEntry key={index} mob={mob} />
+            ))}
+          </Box>
+        );
+      })}
+    </Collapsible>
+  );
+};
+
+// Individual Mob Entry Component
+const MobEntry = (props) => {
+  const { mob } = props;
+
+  return (
+    <Box
+      p={2}
+      mb={1}
+      backgroundColor="rgba(50, 50, 50, 0.5)"
+      style={{
+        borderRadius: '4px',
+        border: '1px solid #444',
+      }}>
+      <Stack>
+        {/* Mob Icon */}
+        <Stack.Item>
+          <Box
+            style={{
+              width: '64px',
+              height: '64px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              borderRadius: '4px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: '12px',
+            }}>
+            {mob.icon ? (
+              <Box
+                as="img"
+                src={`data:image/png;base64,${mob.icon}`}
+                style={{
+                  imageRendering: 'pixelated',
+                  maxWidth: '64px',
+                  maxHeight: '64px',
+                }}
+              />
+            ) : (
+              <Box color="#666" fontSize="10px" textAlign="center">
+                No Icon
+              </Box>
+            )}
+          </Box>
+        </Stack.Item>
+
+        {/* Mob Info */}
+        <Stack.Item grow>
+          <Box bold fontSize="14px" mb={0.5}>
+            {mob.name}
+          </Box>
+          <Box
+            fontSize="11px"
+            color="label"
+            mb={1}
+            style={{ fontStyle: 'italic' }}>
+            {mob.lore}
+          </Box>
+
+          {/* Traits */}
+          {mob.traits && mob.traits.length > 0 && (
+            <Box fontSize="11px" mb={0.5}>
+              <Box as="span" color="label">Traits: </Box>
+              {mob.traits.map((trait, i) => (
+                <Box
+                  key={trait}
+                  as="span"
+                  color={getTraitColor(trait)}
+                  style={{ marginRight: '4px' }}>
+                  {trait}{i < mob.traits.length - 1 ? ',' : ''}
+                </Box>
+              ))}
+            </Box>
+          )}
+
+          {/* Value and Drop Chance */}
+          <Box fontSize="10px" color="label">
+            Base Value: <Box as="span" color="#88ff88">{mob.baseValue} pts</Box>
+            {' | '}
+            Drop Chance: <Box as="span" color="#ffaa44">{mob.dropChance}%</Box>
+          </Box>
+        </Stack.Item>
+      </Stack>
+    </Box>
   );
 };

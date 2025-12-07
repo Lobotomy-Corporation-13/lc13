@@ -12,6 +12,7 @@
 	var/list/favored_traits = list() // Traits that give bonus points (trait = modifier)
 	var/list/negative_traits = list() // Traits that reduce points (trait = modifier)
 	var/list/required_traits = list() // Must have at least one of these traits
+	var/is_starter_kit = FALSE // Whether this is a starter kit (cost doubles each time)
 
 /proc/initialize_research_tree()
 	GLOB.rce_research_nodes = list()
@@ -42,6 +43,7 @@
 	fuel_tank.desc = "Unlocks production of fuel tank backpack, Hellfire combat implant, and protective armor. Perfect starting kit for pyro specialists."
 	fuel_tank.tier = 0
 	fuel_tank.cost = 150
+	fuel_tank.is_starter_kit = TRUE
 	fuel_tank.prerequisites = list()
 	fuel_tank.unlocked_path = /obj/item/storage/box/fuel_tank_starter_kit
 	fuel_tank.favored_traits = list(
@@ -55,47 +57,49 @@
 	)
 	GLOB.rce_research_nodes[fuel_tank.id] = fuel_tank
 
-	// Tier 2 - Advanced Pyro
-	var/datum/rce_research_node/thermite_sprayer = new
-	thermite_sprayer.id = "thermite_sprayer"
-	thermite_sprayer.name = "Thermite Sprayer"
-	thermite_sprayer.desc = "Sprays volatile thermite gel that explodes after a delay."
-	thermite_sprayer.tier = RCE_RESEARCH_TIER_2
-	thermite_sprayer.cost = 360
-	thermite_sprayer.prerequisites = list("pyro_grenade")
-	thermite_sprayer.unlocked_path = /obj/item/ego_weapon/thermite_sprayer
-	thermite_sprayer.favored_traits = list(
+	// Tier 1 - Support Equipment
+	var/datum/rce_research_node/fuel_canister = new
+	fuel_canister.id = "fuel_canister"
+	fuel_canister.name = "Portable Fuel Canister"
+	fuel_canister.desc = "A portable fuel canister used by Ravens to refuel Hellfire specialists in the field."
+	fuel_canister.tier = RCE_RESEARCH_TIER_1
+	fuel_canister.cost = 75
+	fuel_canister.branch = "hellfire"
+	fuel_canister.prerequisites = list("fuel_tank")
+	fuel_canister.unlocked_path = /obj/item/rce_canister/fuel
+	fuel_canister.favored_traits = list(
+		TRAIT_EFFICIENT = TRAIT_BONUS_MODERATE,
+		TRAIT_MECHANICAL = TRAIT_BONUS_MINOR
+	)
+	fuel_canister.negative_traits = list(
+		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[fuel_canister.id] = fuel_canister
+
+	// Tier 2 - Heavy Armor
+	var/datum/rce_research_node/heavy_hellfire_armor = new
+	heavy_hellfire_armor.id = "heavy_hellfire_armor"
+	heavy_hellfire_armor.name = "Heavy Hellfire Armor"
+	heavy_hellfire_armor.desc = "Reinforced armor for veteran hellfire units. Offers +20 to all non-100 resistances."
+	heavy_hellfire_armor.tier = RCE_RESEARCH_TIER_2
+	heavy_hellfire_armor.cost = 300
+	heavy_hellfire_armor.branch = "hellfire"
+	heavy_hellfire_armor.prerequisites = list("fuel_tank")
+	heavy_hellfire_armor.unlocked_path = /obj/item/clothing/suit/armor/ego_gear/hellfire/heavy
+	heavy_hellfire_armor.favored_traits = list(
 		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
-		TRAIT_TOXIC = TRAIT_BONUS_MODERATE,
-		TRAIT_EXPERIMENTAL = TRAIT_BONUS_MINOR
+		TRAIT_ARMORED = TRAIT_BONUS_MAJOR,
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE,
+		TRAIT_ELITE = TRAIT_BONUS_MODERATE
 	)
-	thermite_sprayer.negative_traits = list(
-		TRAIT_ARMORED = TRAIT_PENALTY_MODERATE,
-		TRAIT_HEAVY = TRAIT_PENALTY_MINOR
+	heavy_hellfire_armor.negative_traits = list(
+		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
+		TRAIT_FODDER = TRAIT_PENALTY_MINOR
 	)
-	thermite_sprayer.required_traits = list(TRAIT_VOLATILE, TRAIT_TOXIC, TRAIT_ORGANIC)
-	GLOB.rce_research_nodes[thermite_sprayer.id] = thermite_sprayer
+	heavy_hellfire_armor.required_traits = list(TRAIT_VOLATILE, TRAIT_ARMORED, TRAIT_HEAVY)
+	GLOB.rce_research_nodes[heavy_hellfire_armor.id] = heavy_hellfire_armor
 
-	var/datum/rce_research_node/inferno_wall = new
-	inferno_wall.id = "inferno_wall"
-	inferno_wall.name = "Inferno Wall Projector"
-	inferno_wall.desc = "Projects walls of intense flames to block enemy advance."
-	inferno_wall.tier = RCE_RESEARCH_TIER_2
-	inferno_wall.cost = 420
-	inferno_wall.prerequisites = list("fuel_tank")
-	inferno_wall.unlocked_path = /obj/item/ego_weapon/inferno_wall
-	inferno_wall.favored_traits = list(
-		TRAIT_NEURAL = TRAIT_BONUS_MODERATE,
-		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE,
-		TRAIT_ENERGIZED = TRAIT_BONUS_MINOR
-	)
-	inferno_wall.negative_traits = list(
-		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MAJOR,
-		TRAIT_FODDER = TRAIT_PENALTY_MODERATE
-	)
-	inferno_wall.required_traits = list(TRAIT_NEURAL, TRAIT_ADAPTIVE, TRAIT_MECHANICAL)
-	GLOB.rce_research_nodes[inferno_wall.id] = inferno_wall
-
+	// Tier 2 - Advanced Pyro
 	var/datum/rce_research_node/auto_flamethrower = new
 	auto_flamethrower.id = "auto_flamethrower"
 	auto_flamethrower.name = "Automatic Defense Flamethrower"
@@ -105,84 +109,18 @@
 	auto_flamethrower.prerequisites = list("fuel_tank")
 	auto_flamethrower.unlocked_path = /obj/item/auto_flamethrower
 	auto_flamethrower.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
 		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_NEURAL = TRAIT_BONUS_MODERATE,
-		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE,
-		TRAIT_PRECISION = TRAIT_BONUS_MINOR
+		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE
 	)
 	auto_flamethrower.negative_traits = list(
 		TRAIT_ERRATIC = TRAIT_PENALTY_MAJOR,
 		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
 		TRAIT_FODDER = TRAIT_PENALTY_MINOR
 	)
-	auto_flamethrower.required_traits = list(TRAIT_MECHANICAL, TRAIT_NEURAL)
+	auto_flamethrower.required_traits = list(TRAIT_VOLATILE, TRAIT_MECHANICAL, TRAIT_NEURAL)
 	GLOB.rce_research_nodes[auto_flamethrower.id] = auto_flamethrower
-
-	// Tier 3 - Elite Pyro
-	var/datum/rce_research_node/inferno_rush = new
-	inferno_rush.id = "inferno_rush"
-	inferno_rush.name = "Inferno Rush Blade"
-	inferno_rush.desc = "Superheated blade that channels fuel for devastating fire dashes."
-	inferno_rush.tier = RCE_RESEARCH_TIER_3
-	inferno_rush.cost = 750
-	inferno_rush.prerequisites = list("fuel_tank")
-	inferno_rush.unlocked_path = /obj/item/ego_weapon/inferno_rush
-	inferno_rush.favored_traits = list(
-		TRAIT_AGILE = TRAIT_BONUS_MAJOR,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MAJOR,
-		TRAIT_LIGHTWEIGHT = TRAIT_BONUS_MODERATE,
-		TRAIT_BERSERKER = TRAIT_BONUS_MINOR
-	)
-	inferno_rush.negative_traits = list(
-		TRAIT_HEAVY = TRAIT_PENALTY_MAJOR,
-		TRAIT_SLUGGISH = TRAIT_PENALTY_MAJOR,
-		TRAIT_ARMORED = TRAIT_PENALTY_MINOR
-	)
-	inferno_rush.required_traits = list(TRAIT_AGILE, TRAIT_WEAPONIZED)
-	GLOB.rce_research_nodes[inferno_rush.id] = inferno_rush
-
-	var/datum/rce_research_node/pyroclastic_gauntlets = new
-	pyroclastic_gauntlets.id = "pyroclastic_gauntlets"
-	pyroclastic_gauntlets.name = "Pyroclastic Burst Gauntlets"
-	pyroclastic_gauntlets.desc = "Heavy gauntlets that channel fuel into explosive fire bursts."
-	pyroclastic_gauntlets.tier = RCE_RESEARCH_TIER_3
-	pyroclastic_gauntlets.cost = 660
-	pyroclastic_gauntlets.prerequisites = list("thermite_sprayer")
-	pyroclastic_gauntlets.unlocked_path = /obj/item/ego_weapon/pyroclastic_gauntlets
-	pyroclastic_gauntlets.favored_traits = list(
-		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR,
-		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE,
-		TRAIT_HEAVY = TRAIT_BONUS_MODERATE,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MINOR
-	)
-	pyroclastic_gauntlets.negative_traits = list(
-		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
-		TRAIT_PRECISION = TRAIT_PENALTY_MINOR
-	)
-	pyroclastic_gauntlets.required_traits = list(TRAIT_BRUTAL, TRAIT_VOLATILE, TRAIT_ORGANIC)
-	GLOB.rce_research_nodes[pyroclastic_gauntlets.id] = pyroclastic_gauntlets
-
-	var/datum/rce_research_node/napalm_launcher = new
-	napalm_launcher.id = "napalm_launcher"
-	napalm_launcher.name = "Napalm Launcher"
-	napalm_launcher.desc = "Heavy launcher that fires arcing napalm shells for area bombardment."
-	napalm_launcher.tier = RCE_RESEARCH_TIER_3
-	napalm_launcher.cost = 840
-	napalm_launcher.prerequisites = list("inferno_wall")
-	napalm_launcher.unlocked_path = /obj/item/ego_weapon/ranged/napalm_launcher
-	napalm_launcher.favored_traits = list(
-		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MAJOR,
-		TRAIT_PRECISION = TRAIT_BONUS_MODERATE,
-		TRAIT_MECHANICAL = TRAIT_BONUS_MINOR
-	)
-	napalm_launcher.negative_traits = list(
-		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
-		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
-		TRAIT_ERRATIC = TRAIT_PENALTY_MINOR
-	)
-	napalm_launcher.required_traits = list(TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_PRECISION)
-	GLOB.rce_research_nodes[napalm_launcher.id] = napalm_launcher
 
 	// VENOM RATTLESNAKES - TOXIC WEAPONS TREE
 
@@ -193,6 +131,7 @@
 	acid_tank.desc = "Unlocks production of acid tank backpack, Venom combat implant, and protective armor. Perfect starting kit for toxic specialists."
 	acid_tank.tier = 0
 	acid_tank.cost = 150
+	acid_tank.is_starter_kit = TRUE
 	acid_tank.branch = "venom"
 	acid_tank.prerequisites = list()
 	acid_tank.unlocked_path = /obj/item/storage/box/acid_tank_starter_kit
@@ -207,178 +146,311 @@
 	)
 	GLOB.rce_research_nodes[acid_tank.id] = acid_tank
 
-	var/datum/rce_research_node/toxic_mines = new
-	toxic_mines.id = "toxic_mines"
-	toxic_mines.name = "Toxic Mine Manufacturing"
-	toxic_mines.desc = "Produces a portable factory that manufactures proximity mines that release toxic clouds."
-	toxic_mines.tier = RCE_RESEARCH_TIER_1
-	toxic_mines.cost = 34
-	toxic_mines.branch = "venom"
-	toxic_mines.prerequisites = list("acid_tank")
-	toxic_mines.unlocked_path = /obj/item/portable_factory/toxic_mines
-	toxic_mines.favored_traits = list(
-		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
-		TRAIT_TOXIC = TRAIT_BONUS_MODERATE,
-		TRAIT_PRECISION = TRAIT_BONUS_MINOR
+	var/datum/rce_research_node/acid_canister = new
+	acid_canister.id = "acid_canister"
+	acid_canister.name = "Portable Acid Canister"
+	acid_canister.desc = "A portable acid canister used by Ravens to refuel Venom Rattlesnake specialists in the field."
+	acid_canister.tier = RCE_RESEARCH_TIER_1
+	acid_canister.cost = 75
+	acid_canister.branch = "venom"
+	acid_canister.prerequisites = list("acid_tank")
+	acid_canister.unlocked_path = /obj/item/rce_canister/acid
+	acid_canister.favored_traits = list(
+		TRAIT_EFFICIENT = TRAIT_BONUS_MODERATE,
+		TRAIT_TOXIC = TRAIT_BONUS_MINOR
 	)
-	toxic_mines.negative_traits = list(
-		TRAIT_ERRATIC = TRAIT_PENALTY_MAJOR,
-		TRAIT_FODDER = TRAIT_PENALTY_MINOR
+	acid_canister.negative_traits = list(
+		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
 	)
-	GLOB.rce_research_nodes[toxic_mines.id] = toxic_mines
+	GLOB.rce_research_nodes[acid_canister.id] = acid_canister
 
-	var/datum/rce_research_node/acid_grenade = new
-	acid_grenade.id = "acid_grenade"
-	acid_grenade.name = "Corrosive Grenade Production"
-	acid_grenade.desc = "Produces a portable factory that manufactures grenades that create lingering acid pools."
-	acid_grenade.tier = RCE_RESEARCH_TIER_1
-	acid_grenade.cost = 41
-	acid_grenade.branch = "venom"
-	acid_grenade.prerequisites = list("acid_tank")
-	acid_grenade.unlocked_path = /obj/item/portable_factory/acid_grenade
-	acid_grenade.favored_traits = list(
-		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE,
-		TRAIT_TOXIC = TRAIT_BONUS_MODERATE,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MINOR
-	)
-	acid_grenade.negative_traits = list(
-		TRAIT_ARMORED = TRAIT_PENALTY_MINOR,
-		TRAIT_MECHANICAL = TRAIT_PENALTY_MINOR
-	)
-	GLOB.rce_research_nodes[acid_grenade.id] = acid_grenade
-
-	// Tier 2 - Advanced Toxic
-	var/datum/rce_research_node/venom_launcher = new
-	venom_launcher.id = "venom_launcher"
-	venom_launcher.name = "Venom Launcher"
-	venom_launcher.desc = "Fires toxic shells that explode into acid clouds."
-	venom_launcher.tier = RCE_RESEARCH_TIER_2
-	venom_launcher.cost = 420
-	venom_launcher.branch = "venom"
-	venom_launcher.prerequisites = list("acid_tank", "acid_grenade")
-	venom_launcher.unlocked_path = /obj/item/ego_weapon/ranged/venom_launcher
-	venom_launcher.favored_traits = list(
+	var/datum/rce_research_node/heavy_venom_armor = new
+	heavy_venom_armor.id = "heavy_venom_armor"
+	heavy_venom_armor.name = "Heavy Venom Armor"
+	heavy_venom_armor.desc = "Reinforced armor for veteran venom units. Offers +20 to all non-100 resistances."
+	heavy_venom_armor.tier = RCE_RESEARCH_TIER_2
+	heavy_venom_armor.cost = 300
+	heavy_venom_armor.branch = "venom"
+	heavy_venom_armor.prerequisites = list("acid_tank")
+	heavy_venom_armor.unlocked_path = /obj/item/clothing/suit/armor/ego_gear/venom/heavy
+	heavy_venom_armor.favored_traits = list(
 		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE,
-		TRAIT_PRECISION = TRAIT_BONUS_MINOR
+		TRAIT_ARMORED = TRAIT_BONUS_MAJOR,
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE,
+		TRAIT_ELITE = TRAIT_BONUS_MODERATE
 	)
-	venom_launcher.negative_traits = list(
+	heavy_venom_armor.negative_traits = list(
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
 		TRAIT_FODDER = TRAIT_PENALTY_MINOR
 	)
-	venom_launcher.required_traits = list(TRAIT_TOXIC, TRAIT_WEAPONIZED)
-	GLOB.rce_research_nodes[venom_launcher.id] = venom_launcher
+	heavy_venom_armor.required_traits = list(TRAIT_TOXIC, TRAIT_ARMORED, TRAIT_HEAVY)
+	GLOB.rce_research_nodes[heavy_venom_armor.id] = heavy_venom_armor
 
-	var/datum/rce_research_node/decay_cloud = new
-	decay_cloud.id = "decay_cloud"
-	decay_cloud.name = "Decay Cloud Generator"
-	decay_cloud.desc = "Creates massive moving toxic clouds."
-	decay_cloud.tier = RCE_RESEARCH_TIER_2
-	decay_cloud.cost = 390
-	decay_cloud.branch = "venom"
-	decay_cloud.prerequisites = list("toxic_mines")
-	decay_cloud.unlocked_path = /obj/item/decay_cloud_generator
-	decay_cloud.favored_traits = list(
-		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
-		TRAIT_CORRUPTED = TRAIT_BONUS_MODERATE,
-		TRAIT_VOLATILE = TRAIT_BONUS_MINOR
+	var/datum/rce_research_node/incendiary_mines = new
+	incendiary_mines.id = "incendiary_mines"
+	incendiary_mines.name = "Incendiary Mine Manufacturing"
+	incendiary_mines.desc = "Produces a portable factory that manufactures proximity mines that create fire zones."
+	incendiary_mines.tier = RCE_RESEARCH_TIER_1
+	incendiary_mines.cost = 34
+	incendiary_mines.branch = "hellfire"
+	incendiary_mines.prerequisites = list("fuel_tank")
+	incendiary_mines.unlocked_path = /obj/item/portable_factory/incendiary_mines
+	incendiary_mines.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE,
+		TRAIT_PRECISION = TRAIT_BONUS_MINOR
 	)
-	decay_cloud.negative_traits = list(
+	incendiary_mines.negative_traits = list(
+		TRAIT_ERRATIC = TRAIT_PENALTY_MAJOR,
+		TRAIT_FODDER = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[incendiary_mines.id] = incendiary_mines
+
+	var/datum/rce_research_node/fire_trap = new
+	fire_trap.id = "fire_trap"
+	fire_trap.name = "Fire Trap Dispenser"
+	fire_trap.desc = "Produces a device that deploys concealed incendiary traps."
+	fire_trap.tier = RCE_RESEARCH_TIER_1
+	fire_trap.cost = 41
+	fire_trap.branch = "hellfire"
+	fire_trap.prerequisites = list("fuel_tank")
+	fire_trap.unlocked_path = /obj/item/fire_trap_dispenser
+	fire_trap.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE,
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MINOR
+	)
+	fire_trap.negative_traits = list(
+		TRAIT_ARMORED = TRAIT_PENALTY_MINOR,
+		TRAIT_ORGANIC = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[fire_trap.id] = fire_trap
+
+	// Tier 2 - Advanced Hellfire
+	var/datum/rce_research_node/inferno_cloud = new
+	inferno_cloud.id = "inferno_cloud"
+	inferno_cloud.name = "Inferno Cloud Generator"
+	inferno_cloud.desc = "Creates massive moving firestorms that incinerate everything."
+	inferno_cloud.tier = RCE_RESEARCH_TIER_2
+	inferno_cloud.cost = 390
+	inferno_cloud.branch = "hellfire"
+	inferno_cloud.prerequisites = list("incendiary_mines")
+	inferno_cloud.unlocked_path = /obj/item/inferno_cloud_generator
+	inferno_cloud.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_CORRUPTED = TRAIT_BONUS_MAJOR,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE,
+		TRAIT_ORGANIC = TRAIT_BONUS_MODERATE
+	)
+	inferno_cloud.negative_traits = list(
 		TRAIT_PRECISION = TRAIT_PENALTY_MODERATE,
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MINOR
 	)
-	decay_cloud.required_traits = list(TRAIT_TOXIC, TRAIT_CORRUPTED, TRAIT_ORGANIC)
-	GLOB.rce_research_nodes[decay_cloud.id] = decay_cloud
+	inferno_cloud.required_traits = list(TRAIT_VOLATILE, TRAIT_CORRUPTED, TRAIT_ORGANIC)
+	GLOB.rce_research_nodes[inferno_cloud.id] = inferno_cloud
 
-	var/datum/rce_research_node/venom_injector = new
-	venom_injector.id = "venom_injector"
-	venom_injector.name = "Venom Injector Rifle"
-	venom_injector.desc = "Precision rifle that injects stacking neurotoxins."
-	venom_injector.tier = RCE_RESEARCH_TIER_2
-	venom_injector.cost = 360
-	venom_injector.branch = "venom"
-	venom_injector.prerequisites = list("acid_tank")
-	venom_injector.unlocked_path = /obj/item/venom_spike_launcher
-	venom_injector.favored_traits = list(
+	var/datum/rce_research_node/thermite_spikes = new
+	thermite_spikes.id = "thermite_spikes"
+	thermite_spikes.name = "Thermite Spike Deployer"
+	thermite_spikes.desc = "Deploys spike strips coated in thermite that ignite enemies."
+	thermite_spikes.tier = RCE_RESEARCH_TIER_2
+	thermite_spikes.cost = 360
+	thermite_spikes.branch = "hellfire"
+	thermite_spikes.prerequisites = list("fuel_tank")
+	thermite_spikes.unlocked_path = /obj/item/thermite_spike_launcher
+	thermite_spikes.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
 		TRAIT_PRECISION = TRAIT_BONUS_MAJOR,
-		TRAIT_TOXIC = TRAIT_BONUS_MODERATE,
-		TRAIT_NEURAL = TRAIT_BONUS_MINOR
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE
 	)
-	venom_injector.negative_traits = list(
+	thermite_spikes.negative_traits = list(
 		TRAIT_BRUTAL = TRAIT_PENALTY_MODERATE,
 		TRAIT_HEAVY = TRAIT_PENALTY_MINOR
 	)
-	venom_injector.required_traits = list(TRAIT_PRECISION, TRAIT_TOXIC)
-	GLOB.rce_research_nodes[venom_injector.id] = venom_injector
+	thermite_spikes.required_traits = list(TRAIT_VOLATILE, TRAIT_PRECISION, TRAIT_MECHANICAL)
+	GLOB.rce_research_nodes[thermite_spikes.id] = thermite_spikes
+
+	var/datum/rce_research_node/blight_sprayer = new
+	blight_sprayer.id = "blight_sprayer"
+	blight_sprayer.name = "Blight Sprayer"
+	blight_sprayer.desc = "Sprays volatile toxic sludge that explodes after a delay into toxic clouds."
+	blight_sprayer.tier = RCE_RESEARCH_TIER_2
+	blight_sprayer.cost = 360
+	blight_sprayer.branch = "venom"
+	blight_sprayer.prerequisites = list("acid_grenade")
+	blight_sprayer.unlocked_path = /obj/item/ego_weapon/blight_sprayer
+	blight_sprayer.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_ORGANIC = TRAIT_BONUS_MODERATE,
+		TRAIT_EXPERIMENTAL = TRAIT_BONUS_MODERATE
+	)
+	blight_sprayer.negative_traits = list(
+		TRAIT_ARMORED = TRAIT_PENALTY_MODERATE,
+		TRAIT_HEAVY = TRAIT_PENALTY_MINOR
+	)
+	blight_sprayer.required_traits = list(TRAIT_TOXIC, TRAIT_VOLATILE, TRAIT_ORGANIC)
+	GLOB.rce_research_nodes[blight_sprayer.id] = blight_sprayer
+
+	var/datum/rce_research_node/miasma_barrier = new
+	miasma_barrier.id = "miasma_barrier"
+	miasma_barrier.name = "Miasma Barrier Projector"
+	miasma_barrier.desc = "Projects a wall of corrosive miasma that poisons enemies who pass through."
+	miasma_barrier.tier = RCE_RESEARCH_TIER_2
+	miasma_barrier.cost = 420
+	miasma_barrier.branch = "venom"
+	miasma_barrier.prerequisites = list("acid_tank")
+	miasma_barrier.unlocked_path = /obj/item/ego_weapon/miasma_barrier
+	miasma_barrier.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_ADAPTIVE = TRAIT_BONUS_MAJOR,
+		TRAIT_CORRUPTED = TRAIT_BONUS_MODERATE,
+		TRAIT_ORGANIC = TRAIT_BONUS_MODERATE
+	)
+	miasma_barrier.negative_traits = list(
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MAJOR,
+		TRAIT_FODDER = TRAIT_PENALTY_MODERATE
+	)
+	miasma_barrier.required_traits = list(TRAIT_TOXIC, TRAIT_ADAPTIVE, TRAIT_ORGANIC)
+	GLOB.rce_research_nodes[miasma_barrier.id] = miasma_barrier
 
 	// Tier 3 - Elite Toxic
-	var/datum/rce_research_node/toxic_bombarder = new
-	toxic_bombarder.id = "toxic_bombarder"
-	toxic_bombarder.name = "Toxic Bombardment System"
-	toxic_bombarder.desc = "Heavy artillery that rains acid over large areas."
-	toxic_bombarder.tier = RCE_RESEARCH_TIER_3
-	toxic_bombarder.cost = 840
-	toxic_bombarder.branch = "venom"
-	toxic_bombarder.prerequisites = list("venom_launcher", "decay_cloud")
-	toxic_bombarder.unlocked_path = /obj/item/ego_weapon/ranged/toxic_bombarder
-	toxic_bombarder.favored_traits = list(
-		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+	var/datum/rce_research_node/venom_strike = new
+	venom_strike.id = "venom_strike"
+	venom_strike.name = "Venom Strike Blade"
+	venom_strike.desc = "A blade coated with venom that can channel acid for devastating toxic dashes."
+	venom_strike.tier = RCE_RESEARCH_TIER_3
+	venom_strike.cost = 750
+	venom_strike.branch = "venom"
+	venom_strike.prerequisites = list("acid_tank")
+	venom_strike.unlocked_path = /obj/item/ego_weapon/venom_strike
+	venom_strike.favored_traits = list(
 		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
-		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE,
-		TRAIT_HEAVY = TRAIT_BONUS_MINOR
+		TRAIT_AGILE = TRAIT_BONUS_MAJOR,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MAJOR,
+		TRAIT_LIGHTWEIGHT = TRAIT_BONUS_MODERATE
 	)
-	toxic_bombarder.negative_traits = list(
+	venom_strike.negative_traits = list(
+		TRAIT_HEAVY = TRAIT_PENALTY_MAJOR,
+		TRAIT_SLUGGISH = TRAIT_PENALTY_MAJOR,
+		TRAIT_ARMORED = TRAIT_PENALTY_MINOR
+	)
+	venom_strike.required_traits = list(TRAIT_TOXIC, TRAIT_AGILE, TRAIT_WEAPONIZED)
+	GLOB.rce_research_nodes[venom_strike.id] = venom_strike
+
+	var/datum/rce_research_node/corrosive_gauntlets = new
+	corrosive_gauntlets.id = "corrosive_gauntlets"
+	corrosive_gauntlets.name = "Corrosive Burst Gauntlets"
+	corrosive_gauntlets.desc = "Heavy gauntlets that channel acid into explosive toxic bursts."
+	corrosive_gauntlets.tier = RCE_RESEARCH_TIER_3
+	corrosive_gauntlets.cost = 660
+	corrosive_gauntlets.branch = "venom"
+	corrosive_gauntlets.prerequisites = list("blight_sprayer")
+	corrosive_gauntlets.unlocked_path = /obj/item/ego_weapon/corrosive_gauntlets
+	corrosive_gauntlets.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR,
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE
+	)
+	corrosive_gauntlets.negative_traits = list(
+		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
+		TRAIT_PRECISION = TRAIT_PENALTY_MINOR
+	)
+	corrosive_gauntlets.required_traits = list(TRAIT_TOXIC, TRAIT_BRUTAL, TRAIT_VOLATILE)
+	GLOB.rce_research_nodes[corrosive_gauntlets.id] = corrosive_gauntlets
+
+	var/datum/rce_research_node/plague_mortar = new
+	plague_mortar.id = "plague_mortar"
+	plague_mortar.name = "Plague Mortar"
+	plague_mortar.desc = "Heavy launcher that fires arcing plague shells for toxic area bombardment."
+	plague_mortar.tier = RCE_RESEARCH_TIER_3
+	plague_mortar.cost = 840
+	plague_mortar.branch = "venom"
+	plague_mortar.prerequisites = list("miasma_barrier")
+	plague_mortar.unlocked_path = /obj/item/ego_weapon/ranged/plague_mortar
+	plague_mortar.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MAJOR,
+		TRAIT_PRECISION = TRAIT_BONUS_MODERATE
+	)
+	plague_mortar.negative_traits = list(
+		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
+		TRAIT_ERRATIC = TRAIT_PENALTY_MINOR
+	)
+	plague_mortar.required_traits = list(TRAIT_TOXIC, TRAIT_ELITE, TRAIT_WEAPONIZED)
+	GLOB.rce_research_nodes[plague_mortar.id] = plague_mortar
+
+	var/datum/rce_research_node/inferno_bombarder = new
+	inferno_bombarder.id = "inferno_bombarder"
+	inferno_bombarder.name = "Inferno Bombardment System"
+	inferno_bombarder.desc = "Heavy artillery that rains incendiary shells over large areas."
+	inferno_bombarder.tier = RCE_RESEARCH_TIER_3
+	inferno_bombarder.cost = 840
+	inferno_bombarder.branch = "hellfire"
+	inferno_bombarder.prerequisites = list("pyro_grenade", "inferno_cloud")
+	inferno_bombarder.unlocked_path = /obj/item/ego_weapon/ranged/inferno_bombarder
+	inferno_bombarder.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MAJOR,
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE
+	)
+	inferno_bombarder.negative_traits = list(
 		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
 		TRAIT_AGILE = TRAIT_PENALTY_MINOR
 	)
-	toxic_bombarder.required_traits = list(TRAIT_ELITE, TRAIT_TOXIC, TRAIT_WEAPONIZED)
-	GLOB.rce_research_nodes[toxic_bombarder.id] = toxic_bombarder
+	inferno_bombarder.required_traits = list(TRAIT_VOLATILE, TRAIT_ELITE, TRAIT_WEAPONIZED)
+	GLOB.rce_research_nodes[inferno_bombarder.id] = inferno_bombarder
 
-	var/datum/rce_research_node/plague_scythe = new
-	plague_scythe.id = "plague_scythe"
-	plague_scythe.name = "Plague Scythe"
-	plague_scythe.desc = "Melee weapon that spreads decay with every swing."
-	plague_scythe.tier = RCE_RESEARCH_TIER_3
-	plague_scythe.cost = 720
-	plague_scythe.branch = "venom"
-	plague_scythe.prerequisites = list("acid_tank", "venom_injector")
-	plague_scythe.unlocked_path = /obj/item/ego_weapon/plague_scythe
-	plague_scythe.favored_traits = list(
+	var/datum/rce_research_node/inferno_scythe = new
+	inferno_scythe.id = "inferno_scythe"
+	inferno_scythe.name = "Inferno Scythe"
+	inferno_scythe.desc = "Blazing scythe that spreads flames with every swing."
+	inferno_scythe.tier = RCE_RESEARCH_TIER_3
+	inferno_scythe.cost = 720
+	inferno_scythe.branch = "hellfire"
+	inferno_scythe.prerequisites = list("fuel_tank", "thermite_spikes")
+	inferno_scythe.unlocked_path = /obj/item/ego_weapon/inferno_scythe
+	inferno_scythe.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
 		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR,
-		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
-		TRAIT_CORRUPTED = TRAIT_BONUS_MODERATE,
-		TRAIT_ORGANIC = TRAIT_BONUS_MINOR
+		TRAIT_CORRUPTED = TRAIT_BONUS_MAJOR,
+		TRAIT_ORGANIC = TRAIT_BONUS_MODERATE
 	)
-	plague_scythe.negative_traits = list(
+	inferno_scythe.negative_traits = list(
 		TRAIT_PRECISION = TRAIT_PENALTY_MODERATE,
 		TRAIT_MECHANICAL = TRAIT_PENALTY_MINOR
 	)
-	plague_scythe.required_traits = list(TRAIT_BRUTAL, TRAIT_TOXIC, TRAIT_ORGANIC)
-	GLOB.rce_research_nodes[plague_scythe.id] = plague_scythe
+	inferno_scythe.required_traits = list(TRAIT_VOLATILE, TRAIT_BRUTAL, TRAIT_CORRUPTED)
+	GLOB.rce_research_nodes[inferno_scythe.id] = inferno_scythe
 
-	var/datum/rce_research_node/miasma_field = new
-	miasma_field.id = "miasma_field"
-	miasma_field.name = "Miasma Field Generator"
-	miasma_field.desc = "Creates a massive toxic field that drains life from everything within."
-	miasma_field.tier = RCE_RESEARCH_TIER_3
-	miasma_field.cost = 780
-	miasma_field.branch = "venom"
-	miasma_field.prerequisites = list("decay_cloud", "venom_injector")
-	miasma_field.unlocked_path = /obj/item/miasma_field_generator
-	miasma_field.favored_traits = list(
-		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+	var/datum/rce_research_node/inferno_field = new
+	inferno_field.id = "inferno_field"
+	inferno_field.name = "Inferno Field Generator"
+	inferno_field.desc = "Creates a massive field of intense flames that incinerates everything within."
+	inferno_field.tier = RCE_RESEARCH_TIER_3
+	inferno_field.cost = 780
+	inferno_field.branch = "hellfire"
+	inferno_field.prerequisites = list("inferno_cloud", "thermite_spikes")
+	inferno_field.unlocked_path = /obj/item/inferno_field_generator
+	inferno_field.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
 		TRAIT_CORRUPTED = TRAIT_BONUS_MAJOR,
-		TRAIT_NEURAL = TRAIT_BONUS_MODERATE,
-		TRAIT_ADAPTIVE = TRAIT_BONUS_MINOR
+		TRAIT_NEURAL = TRAIT_BONUS_MAJOR,
+		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE
 	)
-	miasma_field.negative_traits = list(
+	inferno_field.negative_traits = list(
 		TRAIT_FODDER = TRAIT_PENALTY_MODERATE,
 		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MINOR
 	)
-	miasma_field.required_traits = list(TRAIT_TOXIC, TRAIT_CORRUPTED, TRAIT_NEURAL)
-	GLOB.rce_research_nodes[miasma_field.id] = miasma_field
+	inferno_field.required_traits = list(TRAIT_VOLATILE, TRAIT_CORRUPTED, TRAIT_NEURAL)
+	GLOB.rce_research_nodes[inferno_field.id] = inferno_field
 
 	// STORM RAMS - ELECTRIC WEAPONS TREE
 
@@ -389,6 +461,7 @@
 	capacitor_pack.desc = "Unlocks production of capacitor pack, Storm combat implant, and protective armor. Perfect starting kit for electric specialists."
 	capacitor_pack.tier = 0
 	capacitor_pack.cost = 150
+	capacitor_pack.is_starter_kit = TRUE
 	capacitor_pack.branch = "storm"
 	capacitor_pack.prerequisites = list()
 	capacitor_pack.unlocked_path = /obj/item/storage/box/capacitor_pack_starter_kit
@@ -402,6 +475,46 @@
 		TRAIT_CORRUPTED = TRAIT_PENALTY_MODERATE
 	)
 	GLOB.rce_research_nodes[capacitor_pack.id] = capacitor_pack
+
+	var/datum/rce_research_node/power_cell = new
+	power_cell.id = "power_cell"
+	power_cell.name = "Portable Power Cell"
+	power_cell.desc = "A portable power cell used by Ravens to recharge Storm Ram specialists in the field."
+	power_cell.tier = RCE_RESEARCH_TIER_1
+	power_cell.cost = 75
+	power_cell.branch = "storm"
+	power_cell.prerequisites = list("capacitor_pack")
+	power_cell.unlocked_path = /obj/item/rce_canister/power
+	power_cell.favored_traits = list(
+		TRAIT_EFFICIENT = TRAIT_BONUS_MODERATE,
+		TRAIT_ENERGIZED = TRAIT_BONUS_MINOR
+	)
+	power_cell.negative_traits = list(
+		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[power_cell.id] = power_cell
+
+	var/datum/rce_research_node/heavy_storm_armor = new
+	heavy_storm_armor.id = "heavy_storm_armor"
+	heavy_storm_armor.name = "Heavy Storm Armor"
+	heavy_storm_armor.desc = "Reinforced armor for veteran storm units. Offers +20 to all resistances."
+	heavy_storm_armor.tier = RCE_RESEARCH_TIER_2
+	heavy_storm_armor.cost = 300
+	heavy_storm_armor.branch = "storm"
+	heavy_storm_armor.prerequisites = list("capacitor_pack")
+	heavy_storm_armor.unlocked_path = /obj/item/clothing/suit/armor/ego_gear/storm/heavy
+	heavy_storm_armor.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
+		TRAIT_ARMORED = TRAIT_BONUS_MAJOR,
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE,
+		TRAIT_ELITE = TRAIT_BONUS_MODERATE
+	)
+	heavy_storm_armor.negative_traits = list(
+		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
+		TRAIT_FODDER = TRAIT_PENALTY_MINOR
+	)
+	heavy_storm_armor.required_traits = list(TRAIT_MECHANICAL, TRAIT_ARMORED, TRAIT_HEAVY)
+	GLOB.rce_research_nodes[heavy_storm_armor.id] = heavy_storm_armor
 
 	var/datum/rce_research_node/arc_rifle = new
 	arc_rifle.id = "storm_dash"
@@ -474,15 +587,16 @@
 	tesla_cannon.prerequisites = list("capacitor_pack", "storm_dash")
 	tesla_cannon.unlocked_path = /obj/item/ego_weapon/lightning_ram
 	tesla_cannon.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_ENERGIZED = TRAIT_BONUS_MAJOR,
 		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR,
-		TRAIT_HEAVY = TRAIT_BONUS_MINOR
+		TRAIT_HEAVY = TRAIT_BONUS_MODERATE
 	)
 	tesla_cannon.negative_traits = list(
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
 		TRAIT_FODDER = TRAIT_PENALTY_MINOR
 	)
-	tesla_cannon.required_traits = list(TRAIT_ENERGIZED, TRAIT_BRUTAL)
+	tesla_cannon.required_traits = list(TRAIT_MECHANICAL, TRAIT_ENERGIZED, TRAIT_BRUTAL)
 	GLOB.rce_research_nodes[tesla_cannon.id] = tesla_cannon
 
 	var/datum/rce_research_node/dash_charger = new
@@ -495,15 +609,16 @@
 	dash_charger.prerequisites = list("capacitor_pack")
 	dash_charger.unlocked_path = /obj/item/ego_weapon/thunderclap_gauntlets
 	dash_charger.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_AGILE = TRAIT_BONUS_MAJOR,
-		TRAIT_ENERGIZED = TRAIT_BONUS_MODERATE,
+		TRAIT_ENERGIZED = TRAIT_BONUS_MAJOR,
 		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE
 	)
 	dash_charger.negative_traits = list(
 		TRAIT_SLUGGISH = TRAIT_PENALTY_MAJOR,
 		TRAIT_HEAVY = TRAIT_PENALTY_MODERATE
 	)
-	dash_charger.required_traits = list(TRAIT_AGILE, TRAIT_ENERGIZED)
+	dash_charger.required_traits = list(TRAIT_MECHANICAL, TRAIT_AGILE, TRAIT_ENERGIZED)
 	GLOB.rce_research_nodes[dash_charger.id] = dash_charger
 
 	var/datum/rce_research_node/storm_barrier = new
@@ -516,6 +631,7 @@
 	storm_barrier.prerequisites = list("static_burst", "capacitor_pack")
 	storm_barrier.unlocked_path = /obj/item/storm_surge_barrier
 	storm_barrier.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_ENERGIZED = TRAIT_BONUS_MAJOR,
 		TRAIT_AGILE = TRAIT_BONUS_MODERATE,
 		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE
@@ -524,7 +640,7 @@
 		TRAIT_HEAVY = TRAIT_PENALTY_MODERATE,
 		TRAIT_SLUGGISH = TRAIT_PENALTY_MAJOR
 	)
-	storm_barrier.required_traits = list(TRAIT_ENERGIZED, TRAIT_AGILE)
+	storm_barrier.required_traits = list(TRAIT_MECHANICAL, TRAIT_ENERGIZED, TRAIT_ADAPTIVE)
 	GLOB.rce_research_nodes[storm_barrier.id] = storm_barrier
 
 	// Tier 3 - Elite Electric
@@ -538,17 +654,17 @@
 	railgun_lance.prerequisites = list("thunderclap_gauntlets", "lightning_ram")
 	railgun_lance.unlocked_path = /obj/item/ego_weapon/railgun_charge
 	railgun_lance.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
 		TRAIT_ENERGIZED = TRAIT_BONUS_MAJOR,
-		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR,
-		TRAIT_BERSERKER = TRAIT_BONUS_MODERATE
+		TRAIT_BRUTAL = TRAIT_BONUS_MAJOR
 	)
 	railgun_lance.negative_traits = list(
 		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MODERATE,
 		TRAIT_ERRATIC = TRAIT_PENALTY_MINOR
 	)
-	railgun_lance.required_traits = list(TRAIT_ELITE, TRAIT_ENERGIZED, TRAIT_BRUTAL)
+	railgun_lance.required_traits = list(TRAIT_MECHANICAL, TRAIT_ELITE, TRAIT_BRUTAL)
 	GLOB.rce_research_nodes[railgun_lance.id] = railgun_lance
 
 	var/datum/rce_research_node/thunderstorm_artillery = new
@@ -561,17 +677,17 @@
 	thunderstorm_artillery.prerequisites = list("lightning_ram", "emp_grenade")
 	thunderstorm_artillery.unlocked_path = /obj/item/thunderstorm_slam
 	thunderstorm_artillery.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_ELITE = TRAIT_BONUS_MAJOR,
 		TRAIT_ENERGIZED = TRAIT_BONUS_MAJOR,
-		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
-		TRAIT_HEAVY = TRAIT_BONUS_MINOR
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR
 	)
 	thunderstorm_artillery.negative_traits = list(
 		TRAIT_FODDER = TRAIT_PENALTY_MAJOR,
 		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
 		TRAIT_LIGHTWEIGHT = TRAIT_PENALTY_MINOR
 	)
-	thunderstorm_artillery.required_traits = list(TRAIT_ELITE, TRAIT_ENERGIZED, TRAIT_VOLATILE)
+	thunderstorm_artillery.required_traits = list(TRAIT_MECHANICAL, TRAIT_ELITE, TRAIT_VOLATILE)
 	GLOB.rce_research_nodes[thunderstorm_artillery.id] = thunderstorm_artillery
 
 	// Debug: Log all initialized nodes
@@ -585,37 +701,29 @@
 	name = "pyro grenade factory module"
 	desc = "Deploys a factory that produces R-Corp pyro grenades."
 	factory_path = /obj/structure/rcorp_factory/pyro_grenade
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/structure/rcorp_factory/pyro_grenade
 	name = "pyro grenade factory"
 	desc = "Produces R-Corp pyro grenades using red and green materials."
 	item = /obj/item/grenade/r_corp/pyro
+	resistance_flags = INDESTRUCTIBLE
 	rcost = 1
 	gcost = 1
 
-// TOXIC WEAPON FACTORIES
+// HELLFIRE WEAPON FACTORIES
 
-/obj/item/portable_factory/toxic_mines
-	name = "toxic mine factory module"
-	desc = "Deploys a factory that produces toxic proximity mines."
-	factory_path = /obj/structure/rcorp_factory/toxic_mines
+/obj/item/portable_factory/incendiary_mines
+	name = "incendiary mine factory module"
+	desc = "Deploys a factory that produces incendiary proximity mines."
+	factory_path = /obj/structure/rcorp_factory/incendiary_mines
+	resistance_flags = INDESTRUCTIBLE
 
-/obj/structure/rcorp_factory/toxic_mines
-	name = "toxic mine factory"
-	desc = "Produces toxic proximity mines."
-	item = /obj/item/toxic_mine
-	rcost = 1
-	gcost = 1
-
-/obj/item/portable_factory/acid_grenade
-	name = "acid grenade factory module"
-	desc = "Deploys a factory that produces corrosive grenades."
-	factory_path = /obj/structure/rcorp_factory/acid_grenade
-
-/obj/structure/rcorp_factory/acid_grenade
-	name = "acid grenade factory"
-	desc = "Produces R-Corp corrosive grenades."
-	item = /obj/item/venom_trap_dispenser
+/obj/structure/rcorp_factory/incendiary_mines
+	name = "incendiary mine factory"
+	desc = "Produces incendiary proximity mines."
+	item = /obj/item/incendiary_mine
+	resistance_flags = INDESTRUCTIBLE
 	rcost = 1
 	gcost = 1
 
@@ -625,11 +733,13 @@
 	name = "EMP grenade factory module"
 	desc = "Deploys a factory that produces EMP grenades."
 	factory_path = /obj/structure/rcorp_factory/emp_grenade
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/structure/rcorp_factory/emp_grenade
 	name = "EMP grenade factory"
 	desc = "Produces R-Corp EMP grenades."
 	item = /obj/item/grenade/r_corp/emp
+	resistance_flags = INDESTRUCTIBLE
 	rcost = 1
 	gcost = 1
 
@@ -638,6 +748,7 @@
 /obj/item/storage/box/fuel_tank_starter_kit
 	name = "Hellfire Rooster starter kit"
 	desc = "Contains a fuel tank backpack, Hellfire combat implant, protective armor, and a Heavy Flamethrower. Perfect for starting pyro specialists."
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/item/storage/box/fuel_tank_starter_kit/PopulateContents()
 	new /obj/item/rce_resource_tank/fuel_backpack(src)
@@ -648,6 +759,7 @@
 /obj/item/storage/box/acid_tank_starter_kit
 	name = "Venom Rattlesnake starter kit"
 	desc = "Contains an acid tank backpack, Venom combat implant, protective armor, and an Acid Sprayer. Perfect for starting toxic specialists."
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/item/storage/box/acid_tank_starter_kit/PopulateContents()
 	new /obj/item/rce_resource_tank/acid_backpack(src)
@@ -658,81 +770,10 @@
 /obj/item/storage/box/capacitor_pack_starter_kit
 	name = "Storm Ram starter kit"
 	desc = "Contains a capacitor pack, Storm combat implant, protective armor, and Thunder Gauntlets. Perfect for starting electric specialists."
+	resistance_flags = INDESTRUCTIBLE
 
 /obj/item/storage/box/capacitor_pack_starter_kit/PopulateContents()
 	new /obj/item/rce_resource_tank/capacitor_pack(src)
 	new /obj/item/organ/cyberimp/rce_specialist/storm(src)
 	new /obj/item/clothing/suit/armor/ego_gear/storm(src)
 	new /obj/item/ego_weapon/thunder_gauntlets(src)
-
-// VENOM RATTLESNAKE ARMOR - Immune to own venom/acid
-/obj/item/clothing/suit/armor/ego_gear/venom
-	name = "r-corp venom rattlesnake suit"
-	desc = "Custom armor made for the venom units, providing complete immunity to toxic and acidic damage. Requires Venom Rattlesnake combat implant."
-	slowdown = 0.2
-	icon = 'icons/obj/clothing/suits.dmi'
-	worn_icon = 'icons/mob/clothing/suit.dmi'
-	icon_state = "venom"
-	inhand_icon_state = "hostrench"
-	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 50, BLACK_DAMAGE = 70, PALE_DAMAGE = 50, ACID = 100)
-	hat = /obj/item/clothing/head/ego_hat/helmet/venom
-	var/venom_immune = TRUE // Flag for venom weapons to check
-
-/obj/item/clothing/suit/armor/ego_gear/venom/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if(!ishuman(M))
-		return FALSE
-
-	var/mob/living/carbon/human/H = M
-	// Check for Venom Rattlesnake implant
-	if(!locate(/obj/item/organ/cyberimp/rce_specialist/venom) in H.internal_organs)
-		if(!disable_warning)
-			to_chat(H, span_warning("You need the Venom Rattlesnake combat implant to use this armor!"))
-		return FALSE
-
-	return ..()
-
-/obj/item/clothing/head/ego_hat/helmet/venom
-	name = "r-corp venom rattlesnake helmet"
-	desc = "A custom made helmet worn by venom rattlesnakes, with sealed breathing apparatus to prevent self-poisoning."
-	icon = 'icons/obj/clothing/masks.dmi'
-	worn_icon = 'icons/mob/clothing/mask.dmi'
-	icon_state = "venom"
-	inhand_icon_state = "venom"
-	resistance_flags = FIRE_PROOF | ACID_PROOF
-	flags_inv = HIDEFACIALHAIR|HIDEFACE|HIDEEYES|HIDEEARS|HIDEHAIR|HIDESNOUT
-
-// STORM RAM ARMOR - Speeds up the user
-/obj/item/clothing/suit/armor/ego_gear/storm
-	name = "r-corp storm ram suit"
-	desc = "Custom armor made for the storm units, with integrated mobility enhancers that increase movement speed. Requires Storm Ram combat implant."
-	slowdown = -0.15
-	icon = 'icons/obj/clothing/suits.dmi'
-	worn_icon = 'icons/mob/clothing/suit.dmi'
-	icon_state = "storm"
-	inhand_icon_state = "hostrench"
-	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)
-	hat = /obj/item/clothing/head/ego_hat/helmet/storm
-
-/obj/item/clothing/suit/armor/ego_gear/storm/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
-	if(!ishuman(M))
-		return FALSE
-
-	var/mob/living/carbon/human/H = M
-	// Check for Storm Ram implant
-	if(!locate(/obj/item/organ/cyberimp/rce_specialist/storm) in H.internal_organs)
-		if(!disable_warning)
-			to_chat(H, span_warning("You need the Storm Ram combat implant to use this armor!"))
-		return FALSE
-
-	return ..()
-
-/obj/item/clothing/head/ego_hat/helmet/storm
-	name = "r-corp storm ram helmet"
-	desc = "A custom made helmet worn by storm rams, featuring enhanced sensory systems for rapid response."
-	icon = 'icons/obj/clothing/masks.dmi'
-	worn_icon = 'icons/mob/clothing/mask.dmi'
-	icon_state = "storm"
-	inhand_icon_state = "storm"
-	resistance_flags = FIRE_PROOF | ACID_PROOF
-	flags_inv = HIDEFACIALHAIR|HIDEFACE|HIDEEYES|HIDEEARS|HIDEHAIR|HIDESNOUT
-

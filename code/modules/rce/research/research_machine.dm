@@ -13,6 +13,7 @@
 	var/list/completed_research = list()
 	var/datum/rce_research_node/selected_research // Which research to feed parts to
 	var/list/research_progress = list() // Tracks progress for each research project
+	var/list/research_completions = list() // Tracks how many times each research has been completed (for starter kits)
 	var/list/stored_parts = list() // Body parts waiting to be processed
 	var/processing_part = FALSE
 	var/process_time = 3 SECONDS
@@ -36,14 +37,15 @@
 	. = ..()
 	if(selected_research)
 		var/progress = research_progress[selected_research.id] || 0
-		. += span_notice("Selected research target: [selected_research.name] ([progress]/[selected_research.cost] points)")
+		var/effective_cost = get_effective_cost(selected_research)
+		. += span_notice("Selected research target: [selected_research.name] ([progress]/[effective_cost] points)")
 	. += span_notice("Stored samples: [length(stored_parts)]")
 	. += span_notice("Alt-click to open the research interface.")
 
 /obj/machinery/rce_research/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/rce_bodypart))
 		var/obj/item/rce_bodypart/part = I
-		if(length(stored_parts) >= 10)
+		if(length(stored_parts) >= 25)
 			to_chat(user, span_warning("[src] sample storage is full! Process some samples first."))
 			return
 		if(!user.transferItemToLoc(part, src))
@@ -66,7 +68,7 @@
 			to_chat(user, span_warning("The bag is empty!"))
 			return
 		for(var/obj/item/rce_bodypart/part in parts_to_add)
-			if(length(stored_parts) >= 10)
+			if(length(stored_parts) >= 25)
 				to_chat(user, span_warning("[src] sample storage is full! Inserted [parts_added] samples."))
 				break
 			part.forceMove(src)
@@ -114,12 +116,16 @@
 	for(var/node_id in GLOB.rce_research_nodes)
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
 		var/status = get_node_status(node)
+		var/effective_cost = get_effective_cost(node)
 		tree_data += list(list(
 			"id" = node.id,
 			"name" = node.name,
 			"desc" = node.desc,
 			"tier" = node.tier,
-			"cost" = node.cost,
+			"cost" = effective_cost,
+			"baseCost" = node.cost,
+			"isStarterKit" = node.is_starter_kit,
+			"completions" = research_completions[node.id] || 0,
 			"status" = status,
 			"progress" = research_progress[node.id] || 0,
 			"prerequisites" = node.prerequisites,
@@ -153,7 +159,254 @@
 		part_index++
 	data["partsList"] = parts_data
 
+	// Statistics data - count repeatable research completions per branch
+	var/list/stats_data = list(
+		"hellfire" = 0,
+		"venom" = 0,
+		"storm" = 0
+	)
+	for(var/node_id in research_completions)
+		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
+		if(!node)
+			continue
+		// Only count repeatable items (starter kits and non-factory items)
+		if(node.is_starter_kit || !istype(node.unlocked_path, /obj/item/portable_factory))
+			var/completions = research_completions[node_id]
+			if(completions > 0)
+				stats_data[node.branch] += completions
+	data["researchStats"] = stats_data
+
+	// Bestiary data - static list of harvestable mobs
+	data["bestiary"] = get_bestiary_data()
+
 	return data
+
+/// Returns static bestiary data for the UI
+/obj/machinery/rce_research/proc/get_bestiary_data()
+	var/list/bestiary = list()
+
+	// X-Corp folder data
+	var/list/xcorp_folder = list(
+		"id" = "xcorp",
+		"name" = "Heart of Greed Units",
+		"lore" = "These creatures emerged from deep within X-Corp excavation pits, spawned by a strange flesh construct known as the Heart of Greed. This pulsating organic mass corrupts everything it touches, transforming corpses and beings with weakened willpower into twisted servants. The corrupted spread the Heart's influence, seeking to expand its domain. R-Corp researchers have found their tainted flesh yields valuable biological data for weapon development.",
+		"mobs" = list()
+	)
+
+	// X-Corp Elite units
+	xcorp_folder["mobs"] += list(list(
+		"name" = "Sumptus Excessivi",
+		"rank" = "Elite",
+		"lore" = "Elite heart warriors whose every attack is an expression of violent excess. Berserkers in the truest sense.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_BERSERKER),
+		"base_value" = 35,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart/dps)
+	))
+	xcorp_folder["mobs"] += list(list(
+		"name" = "Sicarius",
+		"rank" = "Elite",
+		"lore" = "Precision killers from the heart units. They have honed their excess into deadly accuracy.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_PRECISION, TRAIT_AGILE),
+		"base_value" = 35,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart/ranged)
+	))
+	xcorp_folder["mobs"] += list(list(
+		"name" = "Accumulatio",
+		"rank" = "Elite",
+		"lore" = "Heart unit grunts who have begun the transformation into true excess. Their regenerative capabilities are remarkable.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_HEAVY, TRAIT_REGENERATIVE),
+		"base_value" = 35,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart)
+	))
+
+	// X-Corp Standard units
+	xcorp_folder["mobs"] += list(list(
+		"name" = "X-Corp Studiose",
+		"rank" = "Standard",
+		"lore" = "Former researchers who delved too deep into the nature of excess. Their volatile nature makes them unpredictable in combat.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_VOLATILE, TRAIT_AGILE),
+		"base_value" = 20,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/dps)
+	))
+	xcorp_folder["mobs"] += list(list(
+		"name" = "X-Corp Nimis",
+		"rank" = "Standard",
+		"lore" = "Heavily armored enforcers whose bodies have calcified into living shields. Their toxic blood corrodes anything it touches.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_ARMORED, TRAIT_HEAVY, TRAIT_TOXIC),
+		"base_value" = 22,
+		"drop_chance" = 85,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/tank)
+	))
+	xcorp_folder["mobs"] += list(list(
+		"name" = "X-Corp Praepropere",
+		"rank" = "Standard",
+		"lore" = "Scouts mutated for speed. They secrete toxins as they move, leaving trails of corruption.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_AGILE, TRAIT_VOLATILE, TRAIT_TOXIC),
+		"base_value" = 22,
+		"drop_chance" = 75,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/scout)
+	))
+	xcorp_folder["mobs"] += list(list(
+		"name" = "X-Corp Ardenter",
+		"rank" = "Standard",
+		"lore" = "Sappers with psionic abilities born from their burning desire. They can disrupt minds as easily as machinery.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_PSIONIC, TRAIT_ABERRANT, TRAIT_TOXIC),
+		"base_value" = 22,
+		"drop_chance" = 90,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/sapper)
+	))
+
+	// X-Corp Fodder units
+	xcorp_folder["mobs"] += list(list(
+		"name" = "X-Corp Laute",
+		"rank" = "Fodder",
+		"lore" = "The lowest rung of X-Corp's hierarchy. Once ordinary workers, their bodies have bloated with accumulated excess. Slow but resilient.",
+		"traits" = list(TRAIT_ORGANIC, TRAIT_FODDER, TRAIT_HEAVY),
+		"base_value" = 10,
+		"drop_chance" = 100,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed)
+	))
+
+	bestiary += list(xcorp_folder)
+
+	// Greed Clan folder data
+	var/list/greed_folder = list(
+		"id" = "greed_clan",
+		"name" = "Greed Touched Units",
+		"lore" = "Resurgence Clan machines sent by the Tinkerer to salvage equipment from X-Corp caves. They encountered the Heart of Greed's corruption - a spreading infection that thrives on resistance. Fire made it grow faster, drilling gave it new hosts, and explosions scattered its spores. Now these hybrid entities serve the Heart, their mechanical forms fused with pulsating flesh. Their unique composition makes them invaluable research subjects.",
+		"mobs" = list()
+	)
+
+	// Greed Clan Elite units
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Corrupter",
+		"rank" = "Elite",
+		"lore" = "Command units that spread the Greed infection. Their presence warps both flesh and metal.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_ELITE, TRAIT_HIVEMIND),
+		"base_value" = 60,
+		"drop_chance" = 60,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/corrupter/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Assassin",
+		"rank" = "Elite",
+		"lore" = "Elite killers whose corruption grants them aberrant speed and agility.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_AGILE, TRAIT_ELITE, TRAIT_ABERRANT),
+		"base_value" = 35,
+		"drop_chance" = 75,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/assassin/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Warper",
+		"rank" = "Elite",
+		"lore" = "Psionic entities that can bend space. The corruption has given them terrifying mental powers.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_PSIONIC, TRAIT_CORRUPTED),
+		"base_value" = 35,
+		"drop_chance" = 75,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/warper/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Bomber Spider",
+		"rank" = "Elite",
+		"lore" = "Explosive units that have embraced self-destruction as their purpose.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_ELITE),
+		"base_value" = 30,
+		"drop_chance" = 70,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/bomber_spider/greed)
+	))
+
+	// Greed Clan Standard units
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Demolisher",
+		"rank" = "Standard",
+		"lore" = "Heavy weapons platforms warped into brutal killing machines. They revel in destruction.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_BRUTAL),
+		"base_value" = 30,
+		"drop_chance" = 85,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/demolisher/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Harpooner",
+		"rank" = "Standard",
+		"lore" = "Brutal hunters that drag prey into melee range. The Greed has made them sadistic.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_BRUTAL),
+		"base_value" = 30,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Gunner",
+		"rank" = "Standard",
+		"lore" = "Standard infantry corrupted by Greed. Their weapons have fused with their bodies.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_FODDER),
+		"base_value" = 25,
+		"drop_chance" = 85,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/gunner/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Sniper",
+		"rank" = "Standard",
+		"lore" = "Precision units aberrantly enhanced by the Greed. Their aim is supernaturally accurate.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_PRECISION, TRAIT_ABERRANT),
+		"base_value" = 22,
+		"drop_chance" = 80,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/sniper/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Defender",
+		"rank" = "Standard",
+		"lore" = "Heavy units whose armor has ossified into organic-metal hybrid plating.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_OSSIFIED),
+		"base_value" = 20,
+		"drop_chance" = 90,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/defender/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Rapid",
+		"rank" = "Standard",
+		"lore" = "Speed units whose corruption manifests as volatile, erratic behavior.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_ERRATIC),
+		"base_value" = 20,
+		"drop_chance" = 90,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/rapid/greed)
+	))
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Drone",
+		"rank" = "Standard",
+		"lore" = "Support units whose neural links have been warped by corruption. They now spread toxins instead of repairs.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_TOXIC),
+		"base_value" = 15,
+		"drop_chance" = 95,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/drone/greed)
+	))
+
+	// Greed Clan Fodder units
+	greed_folder["mobs"] += list(list(
+		"name" = "Greed Touched Scout",
+		"rank" = "Fodder",
+		"lore" = "Light reconnaissance units whose corruption makes them erratic but quick. The Greed has made them expendable.",
+		"traits" = list(TRAIT_HYBRID, TRAIT_LIGHTWEIGHT, TRAIT_FODDER),
+		"base_value" = 10,
+		"drop_chance" = 100,
+		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/scout/greed)
+	))
+
+	bestiary += list(greed_folder)
+
+	return bestiary
+
+/// Gets a base64 encoded icon for a mob type
+/obj/machinery/rce_research/proc/get_mob_icon_base64(mob/living/simple_animal/mob_type)
+	var/icon_file = initial(mob_type.icon)
+	var/icon_state_name = initial(mob_type.icon_state)
+	if(!icon_file || !icon_state_name)
+		return null
+	var/icon/I = icon(icon_file, icon_state_name)
+	return icon2base64(I)
 
 /obj/machinery/rce_research/ui_act(action, params)
 	. = ..()
@@ -223,6 +476,20 @@
 			process_specific_part(target_part)
 			return TRUE
 
+		if("ejectPart")
+			var/part_ref = params["partRef"]
+			if(!part_ref)
+				return
+			var/obj/item/rce_bodypart/target_part = locate(part_ref) in stored_parts
+			if(!target_part)
+				to_chat(usr, span_warning("That sample is no longer available!"))
+				return
+			stored_parts -= target_part
+			target_part.forceMove(get_turf(src))
+			to_chat(usr, span_notice("You eject [target_part] from [src]."))
+			playsound(src, 'sound/machines/click.ogg', 50, TRUE)
+			return TRUE
+
 /obj/machinery/rce_research/proc/get_node_status(datum/rce_research_node/node)
 	// Check if branch is enabled
 	if(!is_branch_enabled(node.branch))
@@ -234,8 +501,9 @@
 			return RESEARCH_LOCKED
 
 	// Check if research is completed and not repeatable
+	var/effective_cost = get_effective_cost(node)
 	var/current_progress = research_progress[node.id] || 0
-	if(node.id in completed_research && current_progress >= node.cost)
+	if(node.id in completed_research && current_progress >= effective_cost)
 		return RESEARCH_COMPLETED
 
 	return RESEARCH_AVAILABLE
@@ -249,6 +517,13 @@
 		if("storm")
 			return storm_branch_enabled
 	return TRUE
+
+/// Returns the effective cost for a research node, accounting for starter kit cost doubling
+/obj/machinery/rce_research/proc/get_effective_cost(datum/rce_research_node/node)
+	if(!node.is_starter_kit)
+		return node.cost
+	var/completions = research_completions[node.id] || 0
+	return node.cost * (2 ** completions) // Cost doubles each completion: base, 2x, 4x, 8x...
 
 /obj/machinery/rce_research/proc/process_next_part()
 	if(!length(stored_parts) || processing_part || !selected_research)
@@ -280,13 +555,14 @@
 		return
 
 	// Add points to selected research
+	var/effective_cost = get_effective_cost(selected_research)
 	var/current_progress = research_progress[selected_research.id] || 0
-	current_progress = min(current_progress + value, selected_research.cost)
+	current_progress = min(current_progress + value, effective_cost)
 	research_progress[selected_research.id] = current_progress
-	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[selected_research.cost])"))
+	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[effective_cost])"))
 
 	// Check if research is complete
-	if(current_progress >= selected_research.cost)
+	if(current_progress >= effective_cost)
 		complete_research(selected_research)
 
 	qdel(part)
@@ -330,13 +606,14 @@
 		return
 
 	// Add points to selected research
+	var/effective_cost = get_effective_cost(selected_research)
 	var/current_progress = research_progress[selected_research.id] || 0
-	current_progress = min(current_progress + value, selected_research.cost)
+	current_progress = min(current_progress + value, effective_cost)
 	research_progress[selected_research.id] = current_progress
-	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[selected_research.cost])"))
+	to_chat(usr, span_notice("Added [value] points to [selected_research.name]. ([current_progress]/[effective_cost])"))
 
 	// Check if research is complete
-	if(current_progress >= selected_research.cost)
+	if(current_progress >= effective_cost)
 		complete_research(selected_research)
 
 	qdel(part)
@@ -361,13 +638,21 @@
 
 	if(is_factory)
 		// Factories are one-time research - keep progress at max
-		research_progress[node.id] = node.cost // Mark as fully complete
+		var/effective_cost = get_effective_cost(node)
+		research_progress[node.id] = effective_cost // Mark as fully complete
 		say("Research complete: [node.name]. Factory module dispensed.")
 
 		// Special handling for portable factories
 		var/obj/item/portable_factory/PF = result
 		PF.factory_name = node.name
 		PF.factory_desc = node.desc
+	else if(node.is_starter_kit)
+		// Starter kits are repeatable but cost doubles each time
+		var/completions = research_completions[node.id] || 0
+		research_completions[node.id] = completions + 1
+		research_progress[node.id] = 0 // Reset progress for next research
+		var/next_cost = get_effective_cost(node)
+		say("Production complete: [node.name]. Kit dispensed. Next production cost: [next_cost] points.")
 	else
 		// Non-factory items (weapons, armor, etc.) are repeatable
 		// Reset progress to 0 to allow re-research
