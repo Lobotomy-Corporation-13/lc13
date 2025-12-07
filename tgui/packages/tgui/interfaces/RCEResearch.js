@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Collapsible, Section, Stack, Tabs, LabeledList, ProgressBar } from '../components';
+import { Box, Button, Collapsible, Input, Section, Stack, Tabs, LabeledList, ProgressBar } from '../components';
 import { Window } from '../layouts';
 
 // Trait colors for display
@@ -65,7 +65,14 @@ export const RCEResearch = (props, context) => {
     branchEnabled = { hellfire: true, venom: true, storm: true },
     researchStats = { hellfire: 0, venom: 0, storm: 0 },
     bestiary = [],
+    isProcessing = false,
   } = data;
+
+  const [bestiarySearch, setBestiarySearch] = useLocalState(
+    context,
+    'bestiarySearch',
+    ''
+  );
 
   const currentResearch = selectedResearch && researchTree
     ? researchTree.find(n => n.id === selectedResearch)
@@ -114,6 +121,7 @@ export const RCEResearch = (props, context) => {
                 selectedResearch={selectedResearch}
                 researchProgress={researchProgress}
                 branchEnabled={branchEnabled}
+                isProcessing={isProcessing}
               />
             )}
             {tab === 'samples' && (
@@ -122,6 +130,8 @@ export const RCEResearch = (props, context) => {
                 selectedResearch={selectedResearch}
                 currentResearch={currentResearch}
                 storedParts={storedParts}
+                isProcessing={isProcessing}
+                bestiary={bestiary}
               />
             )}
             {tab === 'progress' && (
@@ -139,6 +149,8 @@ export const RCEResearch = (props, context) => {
             {tab === 'bestiary' && (
               <BestiaryTab
                 bestiary={bestiary}
+                searchText={bestiarySearch}
+                setSearchText={setBestiarySearch}
               />
             )}
           </Stack.Item>
@@ -156,6 +168,7 @@ const ResearchTreeTab = (props, context) => {
     selectedResearch,
     researchProgress,
     branchEnabled,
+    isProcessing,
   } = props;
 
   // Group by branch
@@ -188,6 +201,7 @@ const ResearchTreeTab = (props, context) => {
               researchProgress={researchProgress}
               nodeMap={nodeMap}
               isEnabled={branchEnabled[branch]}
+              isProcessing={isProcessing}
             />
           </Stack.Item>
         ))}
@@ -206,6 +220,7 @@ const BranchList = (props, context) => {
     researchProgress,
     nodeMap,
     isEnabled,
+    isProcessing,
   } = props;
 
   const branchColor = isEnabled ? BRANCH_COLORS[branch] : '#666';
@@ -256,6 +271,7 @@ const BranchList = (props, context) => {
               progress={researchProgress[node.id] || 0}
               branchColor={branchColor}
               nodeMap={nodeMap}
+              isProcessing={isProcessing}
             />
           ))
         )}
@@ -267,11 +283,19 @@ const BranchList = (props, context) => {
 // Individual research node card
 const ResearchNodeCard = (props, context) => {
   const { act } = useBackend(context);
-  const { node, selected, progress, branchColor, nodeMap } = props;
+  const {
+    node,
+    selected,
+    progress,
+    branchColor,
+    nodeMap,
+    isProcessing,
+  } = props;
 
   const isLocked = node.status === RESEARCH_LOCKED;
   const isAvailable = node.status === RESEARCH_AVAILABLE;
   const isCompleted = node.status === RESEARCH_COMPLETED;
+  const canSelect = isAvailable && !isProcessing;
 
   // Get prerequisite names
   const prereqNames = (node.prerequisites || [])
@@ -298,11 +322,11 @@ const ResearchNodeCard = (props, context) => {
         border: selected ? '2px solid #ffff00' : `1px solid ${borderColor}`,
         borderRadius: '4px',
         backgroundColor: isLocked ? 'rgba(30, 30, 30, 0.8)' : 'rgba(50, 50, 50, 0.8)',
-        opacity: isLocked ? 0.6 : 1,
-        cursor: isAvailable ? 'pointer' : 'default',
+        opacity: isLocked || isProcessing ? 0.6 : 1,
+        cursor: canSelect ? 'pointer' : 'default',
       }}
       onClick={() => {
-        if (isAvailable) {
+        if (canSelect) {
           act('selectResearch', { nodeId: node.id });
         }
       }}>
@@ -408,15 +432,67 @@ const getEffectivenessLabel = (effectiveness, baseValue, meetsRequirements) => {
   return 'Minimal';
 };
 
+// Helper to find recommended mobs for a research project
+const getRecommendedMobs = (currentResearch, bestiary) => {
+  if (!currentResearch || !bestiary) return [];
+
+  const requiredTraits = currentResearch.requiredTraits || [];
+  const favoredTraits = Object.keys(currentResearch.favoredTraits || {});
+  const allDesiredTraits = [...requiredTraits, ...favoredTraits];
+
+  if (allDesiredTraits.length === 0) return [];
+
+  const recommendations = [];
+
+  bestiary.forEach(folder => {
+    (folder.mobs || []).forEach(mob => {
+      const mobTraits = mob.traits || [];
+      // Check if mob has any required trait
+      const hasRequired = requiredTraits.length === 0
+        || requiredTraits.some(t => mobTraits.includes(t));
+      if (!hasRequired) return;
+
+      // Count matching favored traits
+      const matchingFavored = favoredTraits.filter(
+        t => mobTraits.includes(t)
+      );
+      if (matchingFavored.length === 0 && requiredTraits.length === 0) {
+        return;
+      }
+
+      recommendations.push({
+        ...mob,
+        folder: folder.name,
+        matchCount: matchingFavored.length,
+        matchingTraits: matchingFavored,
+      });
+    });
+  });
+
+  // Sort by match count (descending)
+  recommendations.sort((a, b) => b.matchCount - a.matchCount);
+  return recommendations.slice(0, 5); // Top 5
+};
+
 // Samples Tab
 const SamplesTab = (props, context) => {
   const { act } = useBackend(context);
-  const { partsList, selectedResearch, currentResearch, storedParts } = props;
+  const {
+    partsList,
+    selectedResearch,
+    currentResearch,
+    storedParts,
+    isProcessing,
+    bestiary,
+  } = props;
 
   // Sort parts by effectiveness if research is selected
   const sortedParts = selectedResearch
     ? [...partsList].sort((a, b) => b.effectiveness - a.effectiveness)
     : partsList;
+
+  // Get recommended mobs for current research
+  const recommendedMobs = getRecommendedMobs(currentResearch, bestiary);
 
   return (
     <Section
@@ -425,23 +501,34 @@ const SamplesTab = (props, context) => {
       title="Stored Samples"
       buttons={
         <>
+          {!!isProcessing && (
+            <Box inline color="yellow" mr={1}>
+              Processing...
+            </Box>
+          )}
           <Button
             icon="play"
-            disabled={!selectedResearch || storedParts === 0}
+            disabled={!selectedResearch || storedParts === 0 || isProcessing}
             onClick={() => act('processPart')}>
             Process First
           </Button>
           <Button
             icon="forward"
-            disabled={!selectedResearch || storedParts === 0}
+            disabled={!selectedResearch || storedParts === 0 || isProcessing}
             onClick={() => act('processAll')}>
             Process All
           </Button>
         </>
       }>
       {selectedResearch ? (
-        <Box mb={2} p={1} backgroundColor="rgba(68, 136, 255, 0.2)" style={{ borderRadius: '4px' }}>
-          <Box bold>Current Target: {currentResearch?.name || 'Unknown'}</Box>
+        <Box
+          mb={2}
+          p={1}
+          backgroundColor="rgba(68, 136, 255, 0.2)"
+          style={{ borderRadius: '4px' }}>
+          <Box bold>
+            Current Target: {currentResearch?.name || 'Unknown'}
+          </Box>
           {currentResearch?.requiredTraits?.length > 0 && (
             <Box fontSize="11px" color="orange">
               Required traits: {currentResearch.requiredTraits.join(', ')}
@@ -471,9 +558,35 @@ const SamplesTab = (props, context) => {
             mt={1}
             icon="times"
             color="bad"
+            disabled={isProcessing}
             onClick={() => act('deselectResearch')}>
-            Deselect
+            {isProcessing ? 'Processing...' : 'Deselect'}
           </Button>
+          {/* Recommended Mobs Section */}
+          {recommendedMobs.length > 0 && (
+            <Box
+              mt={2}
+              p={1}
+              backgroundColor="rgba(0, 100, 0, 0.2)"
+              style={{ borderRadius: '4px' }}>
+              <Box bold color="green" mb={1}>
+                Recommended Targets:
+              </Box>
+              {recommendedMobs.map((mob, i) => (
+                <Box key={i} fontSize="11px" mb={0.5}>
+                  <Box as="span" bold color="#88ff88">
+                    {mob.name}
+                  </Box>
+                  <Box as="span" color="label">
+                    {' '}({mob.folder})
+                  </Box>
+                  <Box fontSize="10px" color="#88cc88">
+                    Matching: {mob.matchingTraits.join(', ')}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          )}
         </Box>
       ) : (
         <Box mb={2} color="label" italic>
@@ -779,7 +892,7 @@ const RANK_ORDER = {
 
 // Bestiary Tab - Shows harvestable mobs organized by folder
 const BestiaryTab = (props) => {
-  const { bestiary } = props;
+  const { bestiary, searchText, setSearchText } = props;
 
   if (!bestiary || bestiary.length === 0) {
     return (
@@ -791,22 +904,55 @@ const BestiaryTab = (props) => {
     );
   }
 
+  // Filter mobs based on search
+  const searchLower = (searchText || '').toLowerCase();
+  const filteredBestiary = searchLower
+    ? bestiary.map(folder => ({
+      ...folder,
+      mobs: (folder.mobs || []).filter(mob =>
+        mob.name.toLowerCase().includes(searchLower)
+        || (mob.traits || []).some(
+          t => t.toLowerCase().includes(searchLower)
+        )
+        || (mob.lore || '').toLowerCase().includes(searchLower)
+      ),
+    })).filter(folder => folder.mobs.length > 0)
+    : bestiary;
+
   return (
     <Section fill scrollable title="Harvestable Targets">
+      <Box mb={2}>
+        <Input
+          fluid
+          placeholder="Search by name, trait, or lore..."
+          value={searchText}
+          onInput={(e, value) => setSearchText(value)}
+        />
+      </Box>
       <Box mb={2} color="label">
         This bestiary contains information about all creatures that can be
         harvested for research samples using the R-Corp Harvester.
       </Box>
-      {bestiary.map(folder => (
-        <BestiaryFolder key={folder.id} folder={folder} />
-      ))}
+      {filteredBestiary.length === 0 ? (
+        <Box color="label" italic textAlign="center" p={2}>
+          No mobs match your search.
+        </Box>
+      ) : (
+        filteredBestiary.map(folder => (
+          <BestiaryFolder
+            key={folder.id}
+            folder={folder}
+            searchText={searchLower}
+          />
+        ))
+      )}
     </Section>
   );
 };
 
 // Bestiary Folder Component
 const BestiaryFolder = (props) => {
-  const { folder } = props;
+  const { folder, searchText } = props;
 
   // Group mobs by rank
   const mobsByRank = {

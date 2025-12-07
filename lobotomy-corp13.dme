@@ -3580,6 +3580,7 @@
 #include "code\modules\rce\tactical_map.dm"
 #include "code\modules\rce\temp_resource.dm"
 #include "code\modules\rce\research\_research.dm"
+#include "code\modules\rce\research\bestiary_data.dm"
 #include "code\modules\rce\research\bodyparts.dm"
 #include "code\modules\rce\research\harvest_component.dm"
 #include "code\modules\rce\research\harvester.dm"

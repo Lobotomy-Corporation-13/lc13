@@ -178,7 +178,94 @@
 /obj/structure/player_blocker/CanAStarPass(ID, to_dir, requester)
 	return TRUE
 
-// Greed Gateway - spawns X-Corp mobs during last wave
+// Resource Gate - blocks players until they have at least one active resource well
+// Re-activates during final wave to block players again
+/obj/structure/resource_gate
+	name = "resource barrier"
+	desc = "A barrier that requires active resource extraction to pass through."
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "cultshield"
+	light_color = "#aa0000"
+	light_range = 3
+	light_power = 1
+	alpha = 200
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	pass_flags_self = 0
+	var/active = TRUE // Whether the barrier is currently blocking
+	var/deactivation_delay = 1 MINUTES // Delay before deactivating after first well
+
+/obj/structure/resource_gate/Initialize()
+	. = ..()
+	// Register for first well activation signal
+	RegisterSignal(SSdcs, COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED, PROC_REF(OnFirstWellActivated))
+
+/obj/structure/resource_gate/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED)
+	return ..()
+
+/obj/structure/resource_gate/proc/OnFirstWellActivated()
+	SIGNAL_HANDLER
+	// Schedule deactivation after 1 minute
+	addtimer(CALLBACK(src, PROC_REF(DelayedDeactivate)), deactivation_delay)
+
+/obj/structure/resource_gate/proc/DelayedDeactivate()
+	// Only deactivate if not during final wave
+	if(!SSgamedirector.last_wave_started)
+		Deactivate()
+
+/obj/structure/resource_gate/invisible
+	light_color = null
+	light_range = 0
+	light_power = 0
+	alpha = 0
+
+/obj/structure/resource_gate/CanAllowThrough(atom/movable/A, turf/T)
+	. = ..()
+
+	// Always let non-living things through
+	if(!isliving(A))
+		return TRUE
+
+	// Always let simple animals through
+	if(istype(A, /mob/living/simple_animal))
+		return TRUE
+
+	// During final wave, block all players
+	if(SSgamedirector.last_wave_started)
+		if(!active)
+			Activate()
+		return FALSE
+
+	// If gate is deactivated, allow through
+	if(!active)
+		return TRUE
+
+	// Gate is still active, block players
+	return FALSE
+
+/obj/structure/resource_gate/CanAStarPass(ID, to_dir, requester)
+	return TRUE
+
+/obj/structure/resource_gate/proc/Activate()
+	active = TRUE
+	alpha = initial(alpha)
+	mouse_opacity = initial(mouse_opacity)
+	light_range = initial(light_range)
+	light_power = initial(light_power)
+	light_color = "#aa0000" // Red when blocking during final wave
+	update_light()
+
+/obj/structure/resource_gate/proc/Deactivate()
+	active = FALSE
+	alpha = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	light_range = 0
+	light_power = 0
+	update_light()
+
+// Greed Gateway - spawns Greed-Touched Clan mobs during last wave
 /obj/effect/greed_gateway
 	name = "Greed Gateway"
 	desc = "A swirling vortex of avarice that continuously spawns corrupted beings."
@@ -199,16 +286,30 @@
 	var/obj/effect/landmark/fob_escape_shuttle/target_shuttle
 	var/list/assault_path = list()
 	var/list/active_waves = list()	// Track wave commanders
+	var/cleanup_cooldown = 0
+	var/cleanup_cooldown_time = 1.5 MINUTES
 	var/list/mob_spawn_weights = list(
-		/mob/living/simple_animal/hostile/greed = 30,
-		/mob/living/simple_animal/hostile/greed/scout = 20,
-		/mob/living/simple_animal/hostile/greed/dps = 15,
-		/mob/living/simple_animal/hostile/greed/tank = 10,
-		/mob/living/simple_animal/hostile/greed/sapper = 8,
-		/mob/living/simple_animal/hostile/greed/heart = 7,
-		/mob/living/simple_animal/hostile/greed/heart/dps = 5,
-		/mob/living/simple_animal/hostile/greed/heart/ranged = 4,
-		/mob/living/simple_animal/hostile/greed/heart/pylon = 1
+		// X-Corp Greed mobs
+		/mob/living/simple_animal/hostile/greed = 20,
+		/mob/living/simple_animal/hostile/greed/scout = 15,
+		/mob/living/simple_animal/hostile/greed/dps = 12,
+		/mob/living/simple_animal/hostile/greed/tank = 8,
+		/mob/living/simple_animal/hostile/greed/sapper = 6,
+		/mob/living/simple_animal/hostile/greed/heart = 4,
+		/mob/living/simple_animal/hostile/greed/heart/dps = 3,
+		/mob/living/simple_animal/hostile/greed/heart/ranged = 2,
+		// Greed-Touched Clan mobs
+		/mob/living/simple_animal/hostile/clan/scout/greed = 15,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/greed = 12,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 10,
+		/mob/living/simple_animal/hostile/clan/defender/greed = 6,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 5,
+		/mob/living/simple_animal/hostile/clan/drone/greed = 4,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 3,
+		/mob/living/simple_animal/hostile/clan/assassin/greed = 2,
+		/mob/living/simple_animal/hostile/clan/demolisher/greed = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/corrupter/greed = 1
 	)
 
 /obj/effect/greed_gateway/Initialize()
@@ -244,6 +345,11 @@
 		if(QDELETED(M) || M.stat == DEAD)
 			spawned_mobs -= M
 
+	// Check for idle mobs without targets every 1.5 minutes
+	if(world.time >= cleanup_cooldown)
+		CleanupIdleMobs()
+		cleanup_cooldown = world.time + cleanup_cooldown_time
+
 	// Check if we can spawn more mobs
 	if(world.time < spawn_cooldown)
 		return
@@ -254,6 +360,19 @@
 	// Spawn new wave of mobs
 	SpawnWave()
 	spawn_cooldown = world.time + spawn_cooldown_time
+
+/obj/effect/greed_gateway/proc/CleanupIdleMobs()
+	for(var/mob/living/simple_animal/hostile/M in spawned_mobs)
+		if(QDELETED(M) || M.stat == DEAD)
+			spawned_mobs -= M
+			continue
+		// Check if mob has no target
+		if(!M.target)
+			// Teleport away effect and delete
+			playsound(M, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 25, TRUE)
+			new /obj/effect/temp_visual/beam_out(get_turf(M))
+			spawned_mobs -= M
+			qdel(M)
 
 /obj/effect/greed_gateway/proc/SpawnWave()
 	var/spawn_count = rand(min_spawn_count, max_spawn_count)

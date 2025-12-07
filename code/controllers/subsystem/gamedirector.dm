@@ -62,6 +62,7 @@ SUBSYSTEM_DEF(gamedirector)
 	var/last_wave_started = FALSE
 	var/next_fob_raid_time = 0
 	var/fob_raid_cooldown = 4 MINUTES
+	var/first_well_activated = FALSE // Track if first well signal has been sent
 
 	var/list/raid_tiers = list()
 	var/list/seed_types = list()
@@ -85,10 +86,12 @@ SUBSYSTEM_DEF(gamedirector)
 		next_corrupter_time = world.time + rand(corrupter_cooldown_min, corrupter_cooldown_max)
 		// Initialize leaderboard
 		rce_leaderboard = new /datum/rce_leaderboard()
-		// Register for player spawn signals
-		RegisterSignal(SSdcs, COMSIG_GLOB_JOB_AFTER_SPAWN, PROC_REF(OnPlayerSpawned))
+		// Register for late-join player signals
+		RegisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED, PROC_REF(OnPlayerJoined))
 		// Register for player death signals
 		RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnPlayerDeath))
+		// Collect any round-start players after a delay (they spawn before this subsystem initializes)
+		addtimer(CALLBACK(src, PROC_REF(CollectRoundstartPlayers)), 400 SECONDS)
 
 /datum/controller/subsystem/gamedirector/fire(resumed = FALSE)
 	if(fightstage != PHASE_FIGHT && SSticker.current_state != GAME_STATE_FINISHED && gamestage < PHASE_NOT_RCE)
@@ -113,13 +116,8 @@ SUBSYSTEM_DEF(gamedirector)
 		if(!fob_entrances_unlocked && world.time >= fob_unlock_time)
 			fob_entrances_unlocked = TRUE
 
-		// Handle raids based on whether last wave has started
-		if(last_wave_started)
-			// After last wave, spawn powerful raids at FoB entrances every 4 minutes
-			if(world.time >= next_fob_raid_time)
-				TriggerFoBRaid()
-				next_fob_raid_time = world.time + fob_raid_cooldown
-		else
+		// Handle raids (only before last wave - after last wave, gateways handle spawning)
+		if(!last_wave_started)
 			// Normal raid spawning (before last wave)
 			if(world.time >= next_raid_time)
 				TriggerRaid()
@@ -251,19 +249,31 @@ SUBSYSTEM_DEF(gamedirector)
 	if(rce_leaderboard)
 		rce_leaderboard.RecordMobKill(M.type)
 
-/// Called when a player spawns into a job - records participation for leaderboard
-/datum/controller/subsystem/gamedirector/proc/OnPlayerSpawned(datum/source, mob/living/spawned_mob, client/player_client)
+/// Called when a player late-joins - records participation for leaderboard
+/datum/controller/subsystem/gamedirector/proc/OnPlayerJoined(datum/source, mob/living/carbon/human/joined_mob, rank)
 	SIGNAL_HANDLER
-	if(!rce_leaderboard || !ishuman(spawned_mob))
+	if(!rce_leaderboard || !istype(joined_mob))
 		return
-	var/mob/living/carbon/human/H = spawned_mob
-	if(!H.mind || !H.ckey)
+	if(!joined_mob.mind || !joined_mob.ckey)
 		return
-	var/job_title = "Unknown"
-	var/datum/job/user_job = H.mind.assigned_role
-	if(user_job)
-		job_title = user_job.title
-	rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title)
+	var/job_title = rank ? rank : "Unknown"
+	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, job_title)
+
+/// Collect round-start players who spawned before this subsystem initialized
+/datum/controller/subsystem/gamedirector/proc/CollectRoundstartPlayers()
+	if(!rce_leaderboard)
+		return
+	// Iterate all human mobs and add any with minds/ckeys
+	for(var/mob/living/carbon/human/H in GLOB.human_list)
+		if(!H.mind || !H.ckey)
+			continue
+		var/job_title = "Unknown"
+		if(H.mind.assigned_role)
+			var/datum/job/J = H.mind.assigned_role
+			job_title = J.title
+		// Only show expedition number if this is a new participant (not already tracked)
+		if(rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title))
+			SSpersistence.ShowExpeditionNumber(H)
 
 /// Called when any mob dies - tracks player deaths for leaderboard
 /datum/controller/subsystem/gamedirector/proc/OnPlayerDeath(datum/source, mob/living/died_mob, gibbed)
@@ -348,8 +358,13 @@ SUBSYSTEM_DEF(gamedirector)
 
 /datum/controller/subsystem/gamedirector/proc/UpdateActiveStatus(obj/structure/resourcepoint/well)
 	if(well.active > 0)
+		var/was_empty = !length(active_resourcewells)
 		active_resourcewells |= well
 		wells_with_passive_seeds -= well
+		// Send signal when first well is activated
+		if(was_empty && !first_well_activated)
+			first_well_activated = TRUE
+			SEND_GLOBAL_SIGNAL(COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED)
 	else
 		active_resourcewells -= well
 
@@ -436,25 +451,6 @@ SUBSYSTEM_DEF(gamedirector)
 	else
 		show_global_blurb(5 SECONDS, "The '[raid_name]' has breached the FoB entrance!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
 
-/datum/controller/subsystem/gamedirector/proc/TriggerFoBRaid()
-	// Check if fob_entrance spots exist in raid_spots
-	if(!raid_spots["fob_entrance"] || !length(raid_spots["fob_entrance"]))
-		return
-
-	var/list/spawn_spots = raid_spots["fob_entrance"]
-
-	// Use powerful raid composition for FoB raids after last wave
-	var/list/raid_data = GetPowerfulRaidData()
-	if(!raid_data)
-		return
-
-	var/raid_name = raid_data["name"]
-	var/list/raid_composition = raid_data["composition"]
-
-	show_global_blurb(10 SECONDS, "CRITICAL: Elite Greed forces '[raid_name]' assaulting FoB entrance!", text_align = "center", screen_location = "LEFT+0,TOP-2", text_color = "#FF0000")
-
-	addtimer(CALLBACK(src, PROC_REF(SpawnRaid), spawn_spots, raid_composition, null, raid_name), 12 SECONDS)
-
 /datum/controller/subsystem/gamedirector/proc/GetRaidData(rarity)
 	var/list/valid_raids = list()
 	for(var/list/raid in raid_tiers)
@@ -466,51 +462,6 @@ SUBSYSTEM_DEF(gamedirector)
 
 	var/list/chosen_raid = pick(valid_raids)
 	return chosen_raid
-
-/datum/controller/subsystem/gamedirector/proc/GetPowerfulRaidData()
-	// Elite raid compositions for FoB entrance raids after last wave
-	var/list/powerful_raids = list(
-		list(
-			"name" = "Elite Siege Force",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 2,
-				/mob/living/simple_animal/hostile/clan/defender/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 4,
-				/mob/living/simple_animal/hostile/clan/drone/greed = 4
-			)
-		),
-		list(
-			"name" = "Elite Warper Battalion",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 3,
-				/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 5,
-				/mob/living/simple_animal/hostile/clan/assassin/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/rapid/greed = 10
-			)
-		),
-		list(
-			"name" = "Elite Extermination Squad",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 1,
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 4,
-				/mob/living/simple_animal/hostile/clan/ranged/gunner/greed = 6,
-				/mob/living/simple_animal/hostile/clan/bomber_spider/greed = 8,
-				/mob/living/simple_animal/hostile/clan/ranged/sniper/greed = 4
-			)
-		),
-		list(
-			"name" = "Elite Apocalypse Force",
-			"composition" = list(
-				/mob/living/simple_animal/hostile/clan/demolisher/greed = 1,
-				/mob/living/simple_animal/hostile/clan/defender/greed = 3,
-				/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 2,
-				/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed = 6,
-				/mob/living/simple_animal/hostile/clan/scout/greed = 12
-			)
-		)
-	)
-
-	return pick(powerful_raids)
 
 /datum/controller/subsystem/gamedirector/proc/GetPriorityRaidTarget()
 	// Define the two priority lanes

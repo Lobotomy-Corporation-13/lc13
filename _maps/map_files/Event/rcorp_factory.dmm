@@ -45,6 +45,10 @@
 	},
 /turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
+"aP" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "aS" = (
 /obj/structure/chair{
 	dir = 1
@@ -216,6 +220,10 @@
 "cS" = (
 /turf/open/floor/plating/asteroid,
 /area/rce/xcorp/rce_3_1)
+"cU" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/dirt,
+/area/rce/xcorp/rce_1_1)
 "dc" = (
 /obj/structure/table/reinforced,
 /obj/item/powered_gadget/handheld_taser,
@@ -780,6 +788,10 @@
 /obj/structure/flora/tree/jungle,
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_2_3)
+"lm" = (
+/obj/structure/resource_gate,
+/turf/open/floor/grass,
+/area/rce/xcorp/rce_0_3)
 "lp" = (
 /turf/open/floor/sepia,
 /area/rce/xcorp/rce_1_2)
@@ -1062,6 +1074,10 @@
 /obj/structure/flora/ausbushes/fullgrass,
 /turf/open/floor/grass,
 /area/rce/xcorp/rce_1_3)
+"or" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/asteroid,
+/area/rce/xcorp/rce_0_3)
 "os" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_3_3)
@@ -2790,6 +2806,11 @@
 /obj/effect/turf_decal/sand/plating,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Or" = (
+/obj/structure/flora/rock,
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "Ou" = (
 /turf/closed/indestructible/rock,
 /area/rce/rcorp_base)
@@ -3165,6 +3186,11 @@
 	},
 /turf/open/indestructible/boss/air,
 /area/rce/xcorp/bossentrance)
+"Tn" = (
+/obj/structure/flora/ausbushes/sparsegrass,
+/obj/structure/resource_gate,
+/turf/open/floor/plating/beach/sand,
+/area/rce/xcorp/rce_0_0)
 "To" = (
 /obj/machinery/fat_sucker,
 /turf/open/floor/pod/light,
@@ -3381,6 +3407,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Wv" = (
+/obj/structure/resource_gate,
+/turf/open/floor/plating/dirt,
+/area/rce/xcorp/rce_1_2)
 "WN" = (
 /obj/structure/table,
 /turf/open/floor/plating/ashplanet/ash,
@@ -29539,7 +29569,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 mh
 mh
 Xm
@@ -29796,7 +29826,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 mh
 mh
 Xm
@@ -30053,7 +30083,7 @@ Xm
 Xm
 AJ
 Xm
-Xm
+aP
 mh
 Fj
 Fj
@@ -30206,7 +30236,7 @@ xS
 cG
 xS
 KF
-KF
+or
 KF
 KF
 KF
@@ -30310,7 +30340,7 @@ Xm
 Xm
 Xm
 Xm
-Xm
+aP
 Fj
 Fj
 Fj
@@ -30463,7 +30493,7 @@ cG
 cG
 cG
 KF
-KF
+or
 KF
 KF
 KF
@@ -30720,7 +30750,7 @@ Ps
 cG
 cG
 KF
-KF
+or
 KF
 KF
 KF
@@ -30977,7 +31007,7 @@ cG
 cG
 KF
 KF
-KF
+or
 KF
 KF
 KF
@@ -31234,7 +31264,7 @@ cG
 cG
 KF
 KF
-KF
+or
 KF
 KF
 KF
@@ -32008,15 +32038,15 @@ ds
 ds
 ds
 ds
-KF
-KF
-Ys
-KF
-KF
-KF
-Ys
-KF
-Ys
+or
+or
+lm
+or
+or
+or
+lm
+or
+lm
 ds
 ds
 ds
@@ -34405,18 +34435,18 @@ bN
 Fj
 Fj
 Fj
-Xm
-Xm
-Xm
-Xm
-AJ
-Xm
-Ft
-Xm
-Xm
-Xm
-Xm
-Xm
+aP
+aP
+aP
+aP
+Tn
+aP
+Or
+aP
+aP
+aP
+aP
+aP
 Fj
 Fj
 Fj
@@ -42336,10 +42366,10 @@ iN
 iN
 iN
 iN
-zA
-zA
-iP
-iP
+Wv
+Wv
+cU
+cU
 fn
 fn
 fn

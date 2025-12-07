@@ -1122,6 +1122,10 @@
 // When the ordeal ends; (/datum/ordeal)
 #define COMSIG_GLOB_ORDEAL_END "!ordeal_end"
 
+// RCE signals
+// When the first resource well is activated
+#define COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED "!rce_first_well_activated"
+
 
 // Crate signals
 #define COMSIG_CRATE_LOOTING_STARTED "looting_started"

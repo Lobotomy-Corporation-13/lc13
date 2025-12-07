@@ -97,6 +97,7 @@
 	var/list/data = list()
 	data["selectedResearch"] = selected_research?.id
 	data["storedParts"] = length(stored_parts)
+	data["isProcessing"] = processing_part
 	// Add progress data for each research
 	var/list/progress_data = list()
 	for(var/node_id in GLOB.rce_research_nodes)
@@ -181,231 +182,58 @@
 
 	return data
 
-/// Returns static bestiary data for the UI
+/// Returns bestiary data for the UI from the shared global data
 /obj/machinery/rce_research/proc/get_bestiary_data()
+	// Initialize bestiary if needed
+	if(!length(GLOB.rce_bestiary_entries))
+		initialize_rce_bestiary()
+
 	var/list/bestiary = list()
+	var/list/folders_data = list()
 
-	// X-Corp folder data
-	var/list/xcorp_folder = list(
-		"id" = "xcorp",
-		"name" = "Heart of Greed Units",
-		"lore" = "These creatures emerged from deep within X-Corp excavation pits, spawned by a strange flesh construct known as the Heart of Greed. This pulsating organic mass corrupts everything it touches, transforming corpses and beings with weakened willpower into twisted servants. The corrupted spread the Heart's influence, seeking to expand its domain. R-Corp researchers have found their tainted flesh yields valuable biological data for weapon development.",
-		"mobs" = list()
-	)
+	// Build folder structure from entries
+	for(var/mob_type in GLOB.rce_bestiary_entries)
+		var/datum/rce_bestiary_entry/entry = GLOB.rce_bestiary_entries[mob_type]
+		if(!folders_data[entry.folder])
+			folders_data[entry.folder] = list()
+		folders_data[entry.folder] += list(entry)
 
-	// X-Corp Elite units
-	xcorp_folder["mobs"] += list(list(
-		"name" = "Sumptus Excessivi",
-		"rank" = "Elite",
-		"lore" = "Elite heart warriors whose every attack is an expression of violent excess. Berserkers in the truest sense.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_BERSERKER),
-		"base_value" = 35,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart/dps)
-	))
-	xcorp_folder["mobs"] += list(list(
-		"name" = "Sicarius",
-		"rank" = "Elite",
-		"lore" = "Precision killers from the heart units. They have honed their excess into deadly accuracy.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_PRECISION, TRAIT_AGILE),
-		"base_value" = 35,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart/ranged)
-	))
-	xcorp_folder["mobs"] += list(list(
-		"name" = "Accumulatio",
-		"rank" = "Elite",
-		"lore" = "Heart unit grunts who have begun the transformation into true excess. Their regenerative capabilities are remarkable.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_HEAVY, TRAIT_REGENERATIVE),
-		"base_value" = 35,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/heart)
-	))
+	// Build output for each folder
+	for(var/folder_id in GLOB.rce_bestiary_folders)
+		var/list/folder_info = GLOB.rce_bestiary_folders[folder_id]
+		var/list/folder_data = list(
+			"id" = folder_info["id"],
+			"name" = folder_info["name"],
+			"lore" = folder_info["lore"],
+			"mobs" = list()
+		)
 
-	// X-Corp Standard units
-	xcorp_folder["mobs"] += list(list(
-		"name" = "X-Corp Studiose",
-		"rank" = "Standard",
-		"lore" = "Former researchers who delved too deep into the nature of excess. Their volatile nature makes them unpredictable in combat.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_VOLATILE, TRAIT_AGILE),
-		"base_value" = 20,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/dps)
-	))
-	xcorp_folder["mobs"] += list(list(
-		"name" = "X-Corp Nimis",
-		"rank" = "Standard",
-		"lore" = "Heavily armored enforcers whose bodies have calcified into living shields. Their toxic blood corrodes anything it touches.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_ARMORED, TRAIT_HEAVY, TRAIT_TOXIC),
-		"base_value" = 22,
-		"drop_chance" = 85,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/tank)
-	))
-	xcorp_folder["mobs"] += list(list(
-		"name" = "X-Corp Praepropere",
-		"rank" = "Standard",
-		"lore" = "Scouts mutated for speed. They secrete toxins as they move, leaving trails of corruption.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_AGILE, TRAIT_VOLATILE, TRAIT_TOXIC),
-		"base_value" = 22,
-		"drop_chance" = 75,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/scout)
-	))
-	xcorp_folder["mobs"] += list(list(
-		"name" = "X-Corp Ardenter",
-		"rank" = "Standard",
-		"lore" = "Sappers with psionic abilities born from their burning desire. They can disrupt minds as easily as machinery.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_PSIONIC, TRAIT_ABERRANT, TRAIT_TOXIC),
-		"base_value" = 22,
-		"drop_chance" = 90,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed/sapper)
-	))
+		// Add mobs from this folder
+		var/list/entries = folders_data[folder_id]
+		if(entries)
+			for(var/datum/rce_bestiary_entry/entry in entries)
+				folder_data["mobs"] += list(list(
+					"name" = entry.name,
+					"rank" = entry.rank,
+					"lore" = entry.lore,
+					"traits" = entry.traits,
+					"baseValue" = entry.base_value,
+					"dropChance" = entry.drop_chance,
+					"icon" = get_mob_icon_base64(entry.mob_type)
+				))
 
-	// X-Corp Fodder units
-	xcorp_folder["mobs"] += list(list(
-		"name" = "X-Corp Laute",
-		"rank" = "Fodder",
-		"lore" = "The lowest rung of X-Corp's hierarchy. Once ordinary workers, their bodies have bloated with accumulated excess. Slow but resilient.",
-		"traits" = list(TRAIT_ORGANIC, TRAIT_FODDER, TRAIT_HEAVY),
-		"base_value" = 10,
-		"drop_chance" = 100,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/greed)
-	))
-
-	bestiary += list(xcorp_folder)
-
-	// Greed Clan folder data
-	var/list/greed_folder = list(
-		"id" = "greed_clan",
-		"name" = "Greed Touched Units",
-		"lore" = "Resurgence Clan machines sent by the Tinkerer to salvage equipment from X-Corp caves. They encountered the Heart of Greed's corruption - a spreading infection that thrives on resistance. Fire made it grow faster, drilling gave it new hosts, and explosions scattered its spores. Now these hybrid entities serve the Heart, their mechanical forms fused with pulsating flesh. Their unique composition makes them invaluable research subjects.",
-		"mobs" = list()
-	)
-
-	// Greed Clan Elite units
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Corrupter",
-		"rank" = "Elite",
-		"lore" = "Command units that spread the Greed infection. Their presence warps both flesh and metal.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_ELITE, TRAIT_HIVEMIND),
-		"base_value" = 60,
-		"drop_chance" = 60,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/corrupter/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Assassin",
-		"rank" = "Elite",
-		"lore" = "Elite killers whose corruption grants them aberrant speed and agility.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_AGILE, TRAIT_ELITE, TRAIT_ABERRANT),
-		"base_value" = 35,
-		"drop_chance" = 75,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/assassin/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Warper",
-		"rank" = "Elite",
-		"lore" = "Psionic entities that can bend space. The corruption has given them terrifying mental powers.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_PSIONIC, TRAIT_CORRUPTED),
-		"base_value" = 35,
-		"drop_chance" = 75,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/warper/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Bomber Spider",
-		"rank" = "Elite",
-		"lore" = "Explosive units that have embraced self-destruction as their purpose.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_ELITE),
-		"base_value" = 30,
-		"drop_chance" = 70,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/bomber_spider/greed)
-	))
-
-	// Greed Clan Standard units
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Demolisher",
-		"rank" = "Standard",
-		"lore" = "Heavy weapons platforms warped into brutal killing machines. They revel in destruction.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_BRUTAL),
-		"base_value" = 30,
-		"drop_chance" = 85,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/demolisher/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Harpooner",
-		"rank" = "Standard",
-		"lore" = "Brutal hunters that drag prey into melee range. The Greed has made them sadistic.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_BRUTAL),
-		"base_value" = 30,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/harpooner/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Gunner",
-		"rank" = "Standard",
-		"lore" = "Standard infantry corrupted by Greed. Their weapons have fused with their bodies.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_FODDER),
-		"base_value" = 25,
-		"drop_chance" = 85,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/gunner/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Sniper",
-		"rank" = "Standard",
-		"lore" = "Precision units aberrantly enhanced by the Greed. Their aim is supernaturally accurate.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_PRECISION, TRAIT_ABERRANT),
-		"base_value" = 22,
-		"drop_chance" = 80,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/sniper/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Defender",
-		"rank" = "Standard",
-		"lore" = "Heavy units whose armor has ossified into organic-metal hybrid plating.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_OSSIFIED),
-		"base_value" = 20,
-		"drop_chance" = 90,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/defender/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Rapid",
-		"rank" = "Standard",
-		"lore" = "Speed units whose corruption manifests as volatile, erratic behavior.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_ERRATIC),
-		"base_value" = 20,
-		"drop_chance" = 90,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/ranged/rapid/greed)
-	))
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Drone",
-		"rank" = "Standard",
-		"lore" = "Support units whose neural links have been warped by corruption. They now spread toxins instead of repairs.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_TOXIC),
-		"base_value" = 15,
-		"drop_chance" = 95,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/drone/greed)
-	))
-
-	// Greed Clan Fodder units
-	greed_folder["mobs"] += list(list(
-		"name" = "Greed Touched Scout",
-		"rank" = "Fodder",
-		"lore" = "Light reconnaissance units whose corruption makes them erratic but quick. The Greed has made them expendable.",
-		"traits" = list(TRAIT_HYBRID, TRAIT_LIGHTWEIGHT, TRAIT_FODDER),
-		"base_value" = 10,
-		"drop_chance" = 100,
-		"icon" = get_mob_icon_base64(/mob/living/simple_animal/hostile/clan/scout/greed)
-	))
-
-	bestiary += list(greed_folder)
+		bestiary += list(folder_data)
 
 	return bestiary
 
-/// Gets a base64 encoded icon for a mob type
+/// Gets a base64 encoded icon for a mob type (single direction, single frame)
 /obj/machinery/rce_research/proc/get_mob_icon_base64(mob/living/simple_animal/mob_type)
 	var/icon_file = initial(mob_type.icon)
 	var/icon_state_name = initial(mob_type.icon_state)
 	if(!icon_file || !icon_state_name)
 		return null
-	var/icon/I = icon(icon_file, icon_state_name)
+	// Get only SOUTH direction and first frame
+	var/icon/I = icon(icon_file, icon_state_name, SOUTH, 1)
 	return icon2base64(I)
 
 /obj/machinery/rce_research/ui_act(action, params)
@@ -415,6 +243,9 @@
 
 	switch(action)
 		if("selectResearch")
+			if(processing_part)
+				to_chat(usr, span_warning("Cannot change research while processing samples!"))
+				return
 			var/node_id = params["nodeId"]
 			if(!node_id || !GLOB.rce_research_nodes[node_id])
 				return
@@ -427,6 +258,9 @@
 			return TRUE
 
 		if("deselectResearch")
+			if(processing_part)
+				to_chat(usr, span_warning("Cannot change research while processing samples!"))
+				return
 			if(!selected_research)
 				return
 			to_chat(usr, span_notice("Deselected [selected_research.name]."))

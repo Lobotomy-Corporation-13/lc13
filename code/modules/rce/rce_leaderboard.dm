@@ -9,6 +9,7 @@
 	var/list/participated_players = list()  // list of list("ckey", "name", "job")
 	var/list/survived_players = list()
 	var/list/died_players = list()
+	var/list/lost_in_caves = list()  // Players alive but on Z=2 at round end
 
 	// Factory tracking
 	var/total_items_produced = 0
@@ -69,7 +70,8 @@
 			"most_participants" = 0,
 			"total_grenades_primed" = 0,
 			"total_conveyor_belts_placed" = 0,
-			"total_surgeries_completed" = 0
+			"total_surgeries_completed" = 0,
+			"total_lost_in_caves" = 0
 		)
 
 /// Record factory production - called from _factory.dm spit_item()
@@ -148,19 +150,20 @@
 		return list("name" = highest_name, "deaths" = highest_deaths)
 	return null
 
-/// Add a player to the participated list
+/// Add a player to the participated list. Returns TRUE if added, FALSE if already exists.
 /datum/rce_leaderboard/proc/AddParticipant(ckey, name, job_title)
 	if(!ckey)
-		return
+		return FALSE
 	// Check if already added
 	for(var/list/player in participated_players)
 		if(player["ckey"] == ckey)
-			return
+			return FALSE
 	participated_players += list(list(
 		"ckey" = ckey,
 		"name" = name,
 		"job" = job_title
 	))
+	return TRUE
 
 /// Record player death
 /datum/rce_leaderboard/proc/RecordPlayerDeath(ckey, name, job_title)
@@ -180,15 +183,67 @@
 /datum/rce_leaderboard/proc/CollectSurvivalData()
 	survived_players = list()
 	died_players = list()
+	lost_in_caves = list()
+
+	// First, ensure we have all participants from GLOB.joined_player_list
+	// This catches anyone who was missed by the signal (e.g., round-start spawns)
+	CollectParticipantsFromGlobal()
 
 	for(var/list/player in participated_players)
 		var/ckey = player["ckey"]
 		var/mob/living/carbon/human/H = get_mob_by_ckey(ckey)
 
 		if(H && H.stat != DEAD)
-			survived_players += list(player.Copy())
+			// Check Z-level for "lost in caves"
+			var/turf/T = get_turf(H)
+			if(T && T.z == 2)
+				// Lost in caves - counts as died but tracked separately
+				lost_in_caves += list(player.Copy())
+				died_players += list(player.Copy())
+			else
+				survived_players += list(player.Copy())
 		else
 			died_players += list(player.Copy())
+
+/// Collect any missing participants from GLOB.joined_player_list
+/datum/rce_leaderboard/proc/CollectParticipantsFromGlobal()
+	for(var/player_ckey in GLOB.joined_player_list)
+		// Check if already tracked
+		var/already_tracked = FALSE
+		for(var/list/player in participated_players)
+			if(player["ckey"] == player_ckey)
+				already_tracked = TRUE
+				break
+		if(already_tracked)
+			continue
+
+		// Find the mob for this ckey
+		var/mob/living/carbon/human/H = get_mob_by_ckey(player_ckey)
+		var/player_name = "Unknown"
+		var/job_title = "Unknown"
+
+		if(H)
+			player_name = H.real_name
+			if(H.mind?.assigned_role)
+				var/datum/job/J = H.mind.assigned_role
+				job_title = J.title
+		else
+			// Try to find in dead mobs or ghosts
+			for(var/mob/M in GLOB.mob_list)
+				if(M.ckey == player_ckey || M.mind?.key == player_ckey)
+					player_name = M.real_name || M.name
+					if(ishuman(M))
+						var/mob/living/carbon/human/HM = M
+						if(HM.mind?.assigned_role)
+							var/datum/job/J = HM.mind.assigned_role
+							job_title = J.title
+					break
+
+		participated_players += list(list(
+			"ckey" = player_ckey,
+			"name" = player_name,
+			"job" = job_title
+		))
 
 /// Determine round end condition based on game state
 /datum/rce_leaderboard/proc/DetermineEndCondition()
@@ -225,7 +280,8 @@
 	record["players"] = list(
 		"participated" = participated_players.Copy(),
 		"survived" = survived_players.Copy(),
-		"died" = died_players.Copy()
+		"died" = died_players.Copy(),
+		"lost_in_caves" = lost_in_caves.Copy()
 	)
 
 	record["factory_stats"] = list(
@@ -302,6 +358,7 @@
 	all_time_stats["total_grenades_primed"] += expedition["grenades_primed"]
 	all_time_stats["total_conveyor_belts_placed"] += expedition["conveyor_belts_placed"]
 	all_time_stats["total_surgeries_completed"] += expedition["surgeries_completed"]
+	all_time_stats["total_lost_in_caves"] += length(players["lost_in_caves"])
 
 /// Load leaderboard data from file
 /datum/rce_leaderboard/proc/LoadFromFile()
