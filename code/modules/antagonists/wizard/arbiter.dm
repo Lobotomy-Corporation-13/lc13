@@ -135,15 +135,28 @@
 	action_icon_state = "singularity"
 	sound = 'sound/magic/castsummon.ogg'
 	var/damage_type = BLACK_DAMAGE
+	var/queued_damage_type = PALE_DAMAGE
 	var/list/damage_type_list = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/filter
 
+/obj/effect/proc_holder/spell/aoe_turf/singularity/Click()
+	var/list/damagetype_icons = list(
+		RED_DAMAGE = image(icon = 'icons/mob/actions/actions_spells.dmi', icon_state = "RED_DAMAGE"),
+		WHITE_DAMAGE = image(icon = 'icons/mob/actions/actions_spells.dmi', icon_state = "WHITE_DAMAGE"),
+		BLACK_DAMAGE = image(icon = 'icons/mob/actions/actions_spells.dmi', icon_state = "BLACK_DAMAGE"),
+		PALE_DAMAGE = image(icon = 'icons/mob/actions/actions_spells.dmi', icon_state = "PALE_DAMAGE"),
+	)
+	var/choice = show_radial_menu(usr, usr, damagetype_icons, radius = 42)
+	if(!choice)
+		return
+	queued_damage_type = choice
+	. = ..()
+
 /obj/effect/proc_holder/spell/aoe_turf/singularity/cast(list/targets,mob/user = usr)
+	damage_type = queued_damage_type
 	playMagSound()
-	var/index = damage_type_list.Find(damage_type)
-	index = (index % damage_type_list.len) + 1
-	damage_type = damage_type_list[index]
-	to_chat(usr, span_nicegreen("You are now dealing [damage_type] damage with your pillar and fairy attacks!"))
+
+	to_chat(usr, span_nicegreen("You are now dealing [damage_type] damage with your Singularities!"))
 	for(var/thespell in usr.mind.spell_list)
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/fairy))
 			var/obj/effect/proc_holder/spell/aimed/fairy/fairyspell = thespell
@@ -158,20 +171,23 @@
 			var/obj/effect/proc_holder/spell/aimed/thick_line/thicklinespell = thespell
 			thicklinespell.damage_type = damage_type
 
+	var/appropiate_color = rgb(128, 128, 128)
+	switch(damage_type)
+		if(RED_DAMAGE)
+			appropiate_color = rgb(255, 0, 0)
+		if(WHITE_DAMAGE)
+			appropiate_color = rgb(255,255,255)
+		if(BLACK_DAMAGE)
+			appropiate_color = rgb(48, 25, 52)
+		if(PALE_DAMAGE)
+			appropiate_color = rgb(128, 128, 128)
 	if(!filter)
 		filter = TRUE
 		usr.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=rgb(128, 128, 128))
 		return
 	var/f1 = usr.filters[usr.filters.len]
-	switch(damage_type)
-		if(RED_DAMAGE)
-			animate(f1,color = rgb(255, 0, 0),time=5)
-		if(WHITE_DAMAGE)
-			animate(f1,color = rgb(255,255,255),time=5)
-		if(BLACK_DAMAGE)
-			animate(f1,color = rgb(48, 25, 52),time=5)
-		if(PALE_DAMAGE)
-			animate(f1,color = rgb(128, 128, 128),time=5)
+	animate(f1, color = appropiate_color, time = 5)
+
 
 /obj/effect/temp_visual/target_field/yellow
 	name = "arbiter target field"
@@ -190,6 +206,7 @@
 		/obj/effect/proc_holder/spell/aimed/thick_line,
 		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
 		/obj/effect/proc_holder/spell/pointed/lock,
+		/obj/effect/proc_holder/spell/pointed/chain,
 		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
@@ -216,14 +233,14 @@
 /datum/status_effect/stacking/arbiter_powernull/on_apply()
 	. = ..()
 	var/mob/living/carbon/human/H = owner
-	if(!owner)
+	if(!istype(owner))
 		return
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
 	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty)
 
 /datum/status_effect/stacking/arbiter_powernull/add_stacks(stacks_added)
 	var/mob/living/carbon/human/H = owner
-	if(!owner)
+	if(!istype(owner))
 		return
 
 	var/old_penalty = (stacks * powermod_loss_per_stack) * -1 // Calculate what our previous penalty was before adding the stacks.
@@ -241,7 +258,7 @@
 /datum/status_effect/stacking/arbiter_powernull/on_remove()
 	. = ..()
 	var/mob/living/carbon/human/H = owner
-	if(!owner)
+	if(!istype(owner))
 		return
 
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
@@ -257,6 +274,8 @@
 
 // Mob proc which handles applying the debuff and stacking/refreshing it.
 /mob/living/proc/apply_arbiter_powernull(stacks)
+	if(!ishuman(src))
+		return
 	var/datum/status_effect/stacking/arbiter_powernull/P = src.has_status_effect(/datum/status_effect/stacking/arbiter_powernull)
 	if(!P)
 		src.apply_status_effect(/datum/status_effect/stacking/arbiter_powernull, stacks)

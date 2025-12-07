@@ -1,9 +1,9 @@
 /obj/effect/proc_holder/spell/pointed/lock
 	name = "Lock"
-	desc = "Use the power of J Corp's Singularity to lock down a single target and prevent them from moving for a limited amount of time."
-	active_msg = "You prepare to use Lock on a target."
-	deactive_msg = "You decide not to use Lock for now..."
-	charge_max = 10
+	desc = "Use the power of J Corp's Singularity to Lock a single target's offensive potential, preventing them from attacking."
+	active_msg = "You prepare to use Chain on a target."
+	deactive_msg = "You decide not to use Chain for now..."
+	charge_max = 20
 	clothes_req = FALSE
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	action_icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
@@ -11,7 +11,6 @@
 
 /obj/effect/proc_holder/spell/pointed/lock/cast(list/targets, mob/user = usr)
 	var/mob/living/unfortunate = pick(targets)
-	unfortunate.say("I got targeted by Lock...")
 	unfortunate.apply_status_effect(/datum/status_effect/arbiter_lock)
 
 /obj/effect/proc_holder/spell/pointed/lock/can_target(atom/target, mob/user, silent)
@@ -24,7 +23,7 @@
 
 /datum/status_effect/arbiter_lock
 	id = "arbiter lock"
-	duration = 3.5 SECONDS
+	duration = 6 SECONDS
 	alert_type = null
 	status_type = STATUS_EFFECT_UNIQUE
 	var/statuseffectvisual
@@ -35,25 +34,12 @@
 	// If we target a human:
 	if(istype(owner, /mob/living/carbon/human))
 		var/mob/living/carbon/human/unfortunate = owner
-		// If they're insane, the sanity controller is moving them, and so Immobilize and some other methods of binding them don't work. We use the Incapacitated trait.
-		// This has the side effect of preventing them from attacking, too.
-		if(unfortunate.sanity_lost)
-			ADD_TRAIT(unfortunate, TRAIT_INCAPACITATED, "Singularity J")
-		// If the human isn't insane then we just immobilize them. This lets them fight back but they can't move.
-		else
-			unfortunate.Immobilize(duration, TRUE)
-	// If we target a simple_animal/hostile (abnos, distortions, etc)
+		ADD_TRAIT(unfortunate, TRAIT_PACIFISM, "Singularity J") // Can't attack! Yikes! Technically they can still use their actions, if any, but I don't feel like going through the hell that would be locking those away too
+
+	// If we target a simple_animal/hostile (abnos, distortions, etc):
 	if(istype(owner, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/unfortunate = owner
-		// I know this looks strange: let me explain.
-		// Simplemobs don't really care about you setting Immobilize on them. You can put the Incapacitated trait on them, and they'll stop attacking, but they'll keep moving.
-		// I tried some things like increasing their next_move, but it just doesn't work.
-		// The only way to actually get them to be still is to shut off their AI and cancel any ongoing movements.
-		// Unfortunately this basically deactivates all their thinking and acting. But... well, we just don't have any other way to stop them from moving.
-
-		unfortunate.toggle_ai(AI_OFF)
-		unfortunate.Goto(get_turf(unfortunate))
-		unfortunate.patrol_reset()
+		ADD_TRAIT(unfortunate, TRAIT_INCAPACITATED, "Singularity J") // This doesn't stop stuff like DF from using their special attacks due to how they're coded.
 
 	// Aesthetics: we play a sound and put a lock overlay on them.
 	playsound(owner, 'sound/abnormalities/lighthammer/chain.ogg', 40)
@@ -65,8 +51,7 @@
 
 /datum/status_effect/arbiter_lock/on_remove()
 	owner.cut_overlay(statuseffectvisual)
-	REMOVE_TRAIT(owner, TRAIT_INCAPACITATED, "Singularity J")
-	var/mob/living/simple_animal/unfortunate = owner
-	if(istype(unfortunate))
-		unfortunate.toggle_ai(AI_ON)
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "Singularity J")
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		REMOVE_TRAIT(owner, TRAIT_INCAPACITATED, "Singularity J")
 	return ..()

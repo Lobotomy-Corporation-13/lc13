@@ -1,30 +1,44 @@
 /// This replaces Fairy. It hurts the selected target.
 /obj/effect/proc_holder/spell/pointed/thin_line
 	name = "Thin Line"
-	desc = "Assaults the target with Thin Lines, dealing the damage type corresponding to your active singularity and applying 1 stack of Faltering Justice."
+	desc = "Assaults the target with Thin Lines, dealing the damage type corresponding to your active singularity and applying 1 stack of Faltering Justice, up to 10."
+	active_msg = "You activate your Thin Line emitter."
+	deactive_msg = "You deactivate your Thin Line emitter for now..."
 	school = SCHOOL_EVOCATION
 	charge_type = "charges"
 	charge_max = 4
 	clothes_req = FALSE
 	invocation_type = "none"
-	base_icon_state = "lightning"
-	action_icon_state = "lightning0"
+	base_icon_state = "thin_line"
+	action_icon_state = "thin_line"
 	sound = 'sound/magic/arbiter/thinline_cast.ogg'
 	aim_assist = TRUE
-	var/base_damage = 60 // Yes even PALE does this much
+	var/base_damage = 70
+	var/pale_damage_coeff = 0.8 // Only applied when using the PALE version on a mob
 	var/mech_damage_coeff = 6 // I HATE RHINOS I HATE RHINOS
+	var/simplemob_coeff = 5 // Multiplies damage dealt by this much vs. Simplemobs (abnos, ordeals)
 	var/damage_type = BLACK_DAMAGE // Changed by Singularity Swap
 
 	var/powernull_stacks_per_hit = 1
 
 	var/recharge_time_per_charge = 5 SECONDS // Amount of time to regain a charge of this spell
-	var/recharge_timer
+	var/recharge_timer // This timer is always running when we're missing charges. It isn't running when we're full. Only 1 version of this timer can exist.
 
-	var/usage_cooldown_duration = 1.2 SECONDS // Mini cooldown to avoid ultrakilling someone by instantly spamming all your charges on them
+	var/usage_cooldown_duration = 1.2 SECONDS // Mini cooldown to avoid ultrakilling someone by instantly spamming all your charges on them. Feel free to VV this but there's a hard cooldown from casting spells or clicking or something anyways.
 	var/usage_cooldown
 
 /obj/effect/proc_holder/spell/pointed/thin_line/cast(list/targets, mob/user = usr)
 	var/unfortunate = pick(targets)
+	var/appropiate_color = "#DABB04"
+	switch(damage_type)
+		if(RED_DAMAGE)
+			appropiate_color = "#D70000"
+		if(WHITE_DAMAGE)
+			appropiate_color = "#DDDDDD"
+		if(BLACK_DAMAGE)
+			appropiate_color = "#DABB04"
+		if(PALE_DAMAGE)
+			appropiate_color = "#45F7F7"
 
 	// Target is a mech.
 	if(istype(unfortunate, /obj/vehicle/sealed/mecha))
@@ -40,24 +54,22 @@
 		var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = tin_can, icon_state = "thin_line", layer = tin_can.layer + 1)
 		cool_overlay.pixel_x -= 8
 		cool_overlay.pixel_y -= 8
-		switch(damage_type)
-			if(RED_DAMAGE)
-				cool_overlay.color = "#D70000"
-			if(WHITE_DAMAGE)
-				cool_overlay.color = "#DDDDDD"
-			if(BLACK_DAMAGE)
-				cool_overlay.color = "#DABB04"
-			if(PALE_DAMAGE)
-				cool_overlay.color = "#45F7F7"
+		cool_overlay.color = appropiate_color
 		flick_overlay_view(cool_overlay, tin_can, 1.4 SECONDS)
 
 		// Deal damage to mech
 		tin_can.take_damage(base_damage * mech_damage_coeff, damage_type)
-		playsound(tin_can, 'sound/magic/arbiter/thinline_hit.ogg', 100)
-		// If we managed to find the occupant, deal 75% damage to them too
+		playsound(tin_can, 'sound/magic/arbiter/thinline_hit.ogg', 100, FALSE, 6)
+		// If we managed to find the occupant, deal 75% damage to them too.
 		if(flesh_cannot)
-			flesh_cannot.deal_damage(base_damage * 0.75, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+			var/final_damage = base_damage * 0.75
+			if(damage_type == PALE_DAMAGE)
+				final_damage *= pale_damage_coeff
+			if(istype(flesh_cannot, /mob/living/simple_animal))
+				final_damage *= simplemob_coeff
+			flesh_cannot.deal_damage(final_damage, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 			flesh_cannot.apply_arbiter_powernull(powernull_stacks_per_hit)
+			flesh_cannot.visible_message(span_danger("[flesh_cannot] is pierced by an array of thin [damage_type] lines!"), span_userdanger("You're pierced by an array of thin [damage_type] lines!"))
 
 	// Target is a mob.
 	else if(istype(unfortunate, /mob/living))
@@ -66,20 +78,18 @@
 		var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = gremlin, icon_state = "thin_line", layer = gremlin.layer + 1)
 		cool_overlay.pixel_x -= 8
 		cool_overlay.pixel_y -= 8
-		switch(damage_type)
-			if(RED_DAMAGE)
-				cool_overlay.color = "#D70000"
-			if(WHITE_DAMAGE)
-				cool_overlay.color = "#DDDDDD"
-			if(BLACK_DAMAGE)
-				cool_overlay.color = "#DABB04"
-			if(PALE_DAMAGE)
-				cool_overlay.color = "#45F7F7"
+		cool_overlay.color = appropiate_color
 		flick_overlay_view(cool_overlay, gremlin, 1.4 SECONDS)
 
-		gremlin.deal_damage(base_damage, damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+		var/final_damage = base_damage
+		if(damage_type == PALE_DAMAGE)
+			final_damage *= pale_damage_coeff
+		if(istype(gremlin, /mob/living/simple_animal))
+			final_damage *= simplemob_coeff
+		gremlin.deal_damage(final_damage, damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
 		gremlin.apply_arbiter_powernull(powernull_stacks_per_hit)
-		playsound(gremlin, 'sound/magic/arbiter/thinline_hit.ogg', 100)
+		gremlin.visible_message(span_danger("[gremlin] is pierced by an array of thin [damage_type] lines!"), span_userdanger("You're pierced by an array of thin [damage_type] lines!"))
+		playsound(gremlin, 'sound/magic/arbiter/thinline_hit.ogg', 100, FALSE, 6)
 	usage_cooldown = usage_cooldown_duration + world.time
 
 	if(!recharge_timer)
@@ -97,7 +107,7 @@
 		return FALSE
 	return ..()
 
-// Calls itself recursively until we're full on charges.
+// Recharge calls itself recursively until we're full on charges.
 /obj/effect/proc_holder/spell/pointed/thin_line/proc/StartRecharge()
 	deltimer(recharge_timer)
 	recharge_timer = null
