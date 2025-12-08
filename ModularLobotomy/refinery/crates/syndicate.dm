@@ -40,7 +40,6 @@
 	)
 
 	cosmeticloot = list(
-		/obj/item/clothing/neck/ego_neck/middle_cape,
 		/obj/item/clothing/glasses/middle_sunglasses,
 	)
 
