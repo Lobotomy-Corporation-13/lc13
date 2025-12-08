@@ -3,7 +3,7 @@
 	desc = "Use the power of J Corp's Singularity to Lock a single target's offensive potential, preventing them from attacking."
 	active_msg = "You prepare to use Chain on a target."
 	deactive_msg = "You decide not to use Chain for now..."
-	charge_max = 20
+	charge_max = 180
 	clothes_req = FALSE
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	action_icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'

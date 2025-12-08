@@ -13,7 +13,7 @@
 	action_icon_state = "thin_line"
 	sound = 'sound/magic/arbiter/thinline_cast.ogg'
 	aim_assist = TRUE
-	var/base_damage = 70
+	var/base_damage = 60
 	var/pale_damage_coeff = 0.8 // Only applied when using the PALE version on a mob
 	var/mech_damage_coeff = 6 // I HATE RHINOS I HATE RHINOS
 	var/simplemob_coeff = 5 // Multiplies damage dealt by this much vs. Simplemobs (abnos, ordeals)
@@ -51,11 +51,7 @@
 			flesh_cannot = pick(tin_can.occupants) // Goofball inside the mech
 
 		// Show the VFX as an overlay on the mech
-		var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = tin_can, icon_state = "thin_line", layer = tin_can.layer + 1)
-		cool_overlay.pixel_x -= 8
-		cool_overlay.pixel_y -= 8
-		cool_overlay.color = appropiate_color
-		flick_overlay_view(cool_overlay, tin_can, 1.4 SECONDS)
+		DisplayVFX(flesh_cannot, appropiate_color)
 
 		// Deal damage to mech
 		tin_can.take_damage(base_damage * mech_damage_coeff, damage_type)
@@ -75,11 +71,7 @@
 	else if(istype(unfortunate, /mob/living))
 		var/mob/living/gremlin = unfortunate
 
-		var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = gremlin, icon_state = "thin_line", layer = gremlin.layer + 1)
-		cool_overlay.pixel_x -= 8
-		cool_overlay.pixel_y -= 8
-		cool_overlay.color = appropiate_color
-		flick_overlay_view(cool_overlay, gremlin, 1.4 SECONDS)
+		DisplayVFX(gremlin, appropiate_color)
 
 		var/final_damage = base_damage
 		if(damage_type == PALE_DAMAGE)
@@ -106,6 +98,18 @@
 		to_chat(user, span_warning("Your Singularity is cooling down, wait a moment!"))
 		return FALSE
 	return ..()
+
+/obj/effect/proc_holder/spell/pointed/thin_line/proc/DisplayVFX(atom/our_target, appropiate_color)
+	var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = our_target, icon_state = "thin_line", layer = our_target.layer + 2)
+	var/icon/target_icon = icon(our_target.icon, our_target.icon_state, our_target.dir)
+	var/icon_height = target_icon.Height()
+	var/icon_width = target_icon.Width()
+	var/height_diff = 48 - icon_height
+	var/width_diff = 48 - icon_width
+	cool_overlay.pixel_y -= (height_diff * 0.5)
+	cool_overlay.pixel_x -= (width_diff * 0.5)
+	cool_overlay.color = appropiate_color
+	flick_overlay_view(cool_overlay, our_target, 1.4 SECONDS)
 
 // Recharge calls itself recursively until we're full on charges.
 /obj/effect/proc_holder/spell/pointed/thin_line/proc/StartRecharge()

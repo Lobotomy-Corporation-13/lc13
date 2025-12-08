@@ -117,6 +117,7 @@
 		/obj/effect/proc_holder/spell/aimed/pillar,
 		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
 		/obj/effect/proc_holder/spell/pointed/lock,
+		/obj/effect/proc_holder/spell/pointed/chain,
 		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
@@ -183,7 +184,7 @@
 			appropiate_color = rgb(128, 128, 128)
 	if(!filter)
 		filter = TRUE
-		usr.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=rgb(128, 128, 128))
+		usr.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=appropiate_color)
 		return
 	var/f1 = usr.filters[usr.filters.len]
 	animate(f1, color = appropiate_color, time = 5)
@@ -219,6 +220,10 @@
 
 // Below code is for Power Null status effect. It's a stacking debuff that subtracts an amount of Power Modifier from the victim, which must be a human.
 
+// This has an added status effect it applies that does nothing but display a little icon. Why? Because for some reason /status_effect/display is a subtype instead of optional functionality for
+// every status effect, and I can't just kidnap the functionality I want from that subtype because that subtype specifically checks for other status effects of the /display subtype and...
+// Look just trust me on this one. If you have a problem with it please refactor /status_effect/display's stuff to be on every status effect as an option
+
 // Status effect
 /datum/status_effect/stacking/arbiter_powernull
 	id = "arbiter_powernull"
@@ -228,13 +233,18 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/arbiter_powernull
+	var/applied_vfx
 	var/powermod_loss_per_stack = 20 // AAAAAAAAAAAAAH GIVE ME BACK MY POWERMOD NOOOOOOOOOOO (Power Modifier is the stat affected by Justice, which increases attack damage and movespeed)
+	var/datum/status_effect/display/arbiter_powernull_visual/attached_visual_status
 
 /datum/status_effect/stacking/arbiter_powernull/on_apply()
 	. = ..()
 	var/mob/living/carbon/human/H = owner
 	if(!istype(owner))
 		return
+	if(!attached_visual_status)
+		attached_visual_status = H.apply_status_effect(/datum/status_effect/display/arbiter_powernull_visual)
+
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
 	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty)
 
@@ -264,6 +274,9 @@
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
 	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -power_penalty)
 
+	if(attached_visual_status)
+		H.remove_status_effect(attached_visual_status)
+
 // Doesn't decay.
 /datum/status_effect/stacking/arbiter_powernull/tick()
 	if(!can_have_status())
@@ -279,6 +292,12 @@
 	var/datum/status_effect/stacking/arbiter_powernull/P = src.has_status_effect(/datum/status_effect/stacking/arbiter_powernull)
 	if(!P)
 		src.apply_status_effect(/datum/status_effect/stacking/arbiter_powernull, stacks)
+		// Show the VFX as an overlay on the human
+		var/image/cool_overlay = image('icons/effects/effects.dmi', loc = src, icon_state = "powernull", layer = src.layer + 1)
+		cool_overlay.pixel_y += 26
+		cool_overlay.alpha = 220
+		cool_overlay.transform *= 0.85
+		flick_overlay_view(cool_overlay, src, 1.5 SECONDS)
 		return
 	else
 		P.add_stacks(stacks)
@@ -288,5 +307,12 @@
 /atom/movable/screen/alert/status_effect/arbiter_powernull
 	name = "Faltering Justice"
 	desc = "Your sense of Justice is fading as you confront the true rulers of the City. Power Modifier is reduced by "
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "judge"
+	icon_state = "powernull"
+
+// Silly status effect only meant to borrow functionality from /display/ subtype. Does nothing else.
+/datum/status_effect/display/arbiter_powernull_visual
+	id = "arbiter_powernull_visual"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = -1
+	alert_type = null
+	display_name = "powernull"

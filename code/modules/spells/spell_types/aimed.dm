@@ -271,9 +271,9 @@
 	charge_max = 140
 	clothes_req = FALSE
 	invocation_type = "none"
-	base_icon_state = "immrod"
-	action_icon_state = "immrod"
-	sound = 'sound/magic/arbiter/storm_create.ogg'
+	base_icon_state = "thick_line"
+	action_icon_state = "thick_line"
+	sound = 'sound/magic/arbiter/knock.ogg'
 	active_msg = "You prepare a powerful Thick Line."
 	deactive_msg = "You abort the Thick Line generation process."
 	projectile_type = null
@@ -326,6 +326,7 @@
 				appropiate_color = "#45F7F7"
 
 		playsound(user, 'sound/magic/arbiter/thickline_cast.ogg', 50)
+		user.visible_message(span_danger("[user] fires a powerful thick [damage_type] line!"), span_warning("You fire a Thick Line on the [damage_type] damage setting."))
 		var/turf/more_visually_appropiate_beam_start_turf = affected_turfs[1] // Trust me
 		var/datum/beam/our_line = more_visually_appropiate_beam_start_turf.Beam(end_turf, "thick_line", time = 2 SECONDS)
 		our_line.visuals.color = appropiate_color
