@@ -79,9 +79,9 @@
 			last_attacker = user
 
 /obj/item/ego_weapon/shield/middle_chain/AnnounceBlock(mob/living/carbon/human/source, damage, damagetype, def_zone)
-	// Perform counter-attack if we have a valid attacker
-	if(last_attacker && !QDELETED(last_attacker))
-		// Calculate combined damage bonus (counter multiplier + vengeance mark bonus)
+	// Perform counter-attack if we have a valid attacker - but not ourselves
+	if(last_attacker && !QDELETED(last_attacker) && last_attacker != source)
+		// Apply counter-attack damage bonus (40% more damage)
 		var/original_force = initial(force)
 		var/total_multiplier = counter_damage_multiplier
 
@@ -134,12 +134,15 @@
 	if(!CanUseEgo(user))
 		return FALSE
 
-	// Prevent attacking while parrying
-	if(countering)
-		to_chat(user, span_warning("You cannot attack while parrying!"))
-		return FALSE
+	// Check for Vengeance Mark and calculate bonus damage (not against yourself)
+	var/datum/status_effect/stacking/vengeance_mark/VM = target.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
+	var/original_force = force
+	if(VM && VM.stacks > 0 && target != user)
+		var/bonus_multiplier = 1 + (VM.stacks * vengeance_damage_bonus)
+		force = round(initial(force) * bonus_multiplier)
+		to_chat(user, span_danger("Your chains strike with vengeful fury! ([VM.stacks] marks)"))
 
-	// Perform attack (vengeance mark bonus only applies to counter-attacks)
+	// Perform attack
 	. = ..()
 
 //Younger Brother Chain
