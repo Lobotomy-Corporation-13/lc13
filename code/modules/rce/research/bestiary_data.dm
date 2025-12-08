@@ -21,9 +21,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "xcorp",
 		rank = "Elite",
 		lore = "Elite heart warriors whose every attack is an expression of violent excess. Berserkers in the truest sense.",
-		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_BERSERKER),
+		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_WEAPONIZED, TRAIT_BRUTAL),
 		base_value = 35,
-		drop_chance = 80,
+		drop_chance = 100,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -37,7 +37,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		lore = "Precision killers from the heart units. They have honed their excess into deadly accuracy.",
 		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_PRECISION, TRAIT_AGILE),
 		base_value = 35,
-		drop_chance = 80,
+		drop_chance = 100,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -49,9 +49,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "xcorp",
 		rank = "Elite",
 		lore = "Heart unit grunts who have begun the transformation into true excess. Their regenerative capabilities are remarkable.",
-		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_HEAVY, TRAIT_REGENERATIVE),
+		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_HEAVY, TRAIT_ADAPTIVE),
 		base_value = 35,
-		drop_chance = 80,
+		drop_chance = 100,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -66,7 +66,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		lore = "Former researchers who delved too deep into the nature of excess. Their volatile nature makes them unpredictable in combat.",
 		traits = list(TRAIT_ORGANIC, TRAIT_VOLATILE, TRAIT_AGILE),
 		base_value = 20,
-		drop_chance = 80,
+		drop_chance = 70,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -80,7 +80,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		lore = "Heavily armored enforcers whose bodies have calcified into living shields. Their toxic blood corrodes anything it touches.",
 		traits = list(TRAIT_ORGANIC, TRAIT_ARMORED, TRAIT_HEAVY, TRAIT_TOXIC),
 		base_value = 22,
-		drop_chance = 85,
+		drop_chance = 75,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -106,9 +106,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "xcorp",
 		rank = "Standard",
 		lore = "Sappers with psionic abilities born from their burning desire. They can disrupt minds as easily as machinery.",
-		traits = list(TRAIT_ORGANIC, TRAIT_PSIONIC, TRAIT_ABERRANT, TRAIT_TOXIC),
+		traits = list(TRAIT_ORGANIC, TRAIT_NEURAL, TRAIT_CORRUPTED, TRAIT_TOXIC),
 		base_value = 22,
-		drop_chance = 90,
+		drop_chance = 75,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -123,7 +123,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		lore = "The lowest rung of X-Corp's hierarchy. Once ordinary workers, their bodies have bloated with accumulated excess. Slow but resilient.",
 		traits = list(TRAIT_ORGANIC, TRAIT_FODDER, TRAIT_HEAVY),
 		base_value = 10,
-		drop_chance = 100,
+		drop_chance = 50,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -140,9 +140,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Command units that spread the Greed infection. Their presence warps both flesh and metal.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_ELITE, TRAIT_HIVEMIND),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_ELITE, TRAIT_NEURAL),
 		base_value = 105,
-		drop_chance = 60,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 3
 	))
@@ -154,9 +154,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Killers whose corruption grants them aberrant speed and agility.",
-		traits = list(TRAIT_HYBRID, TRAIT_AGILE, TRAIT_ABERRANT),
+		traits = list(TRAIT_CORRUPTED, TRAIT_AGILE, TRAIT_MECHANICAL),
 		base_value = 44,
-		drop_chance = 80,
+		drop_chance = 85,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -168,9 +168,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Psionic entities that can bend space. The corruption has given them terrifying mental powers.",
-		traits = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_PSIONIC, TRAIT_CORRUPTED),
+		traits = list(TRAIT_CORRUPTED, TRAIT_NEURAL, TRAIT_ADAPTIVE, TRAIT_MECHANICAL),
 		base_value = 61,
-		drop_chance = 75,
+		drop_chance = 95,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -182,9 +182,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Fodder",
 		lore = "Explosive units that have embraced self-destruction as their purpose.",
-		traits = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_FODDER),
+		traits = list(TRAIT_CORRUPTED, TRAIT_VOLATILE, TRAIT_FODDER),
 		base_value = 18,
-		drop_chance = 100,
+		drop_chance = 55,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -197,9 +197,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Heavy weapons platforms warped into brutal killing machines. They revel in destruction.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_BRUTAL, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_BRUTAL, TRAIT_ELITE),
 		base_value = 61,
-		drop_chance = 75,
+		drop_chance = 95,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -211,9 +211,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Brutal hunters that drag prey into melee range. The Greed has made them sadistic.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_BRUTAL),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_BRUTAL),
 		base_value = 53,
-		drop_chance = 80,
+		drop_chance = 90,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -225,9 +225,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Fodder",
 		lore = "Standard infantry corrupted by Greed. Their weapons have fused with their bodies.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_FODDER),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_FODDER),
 		base_value = 18,
-		drop_chance = 100,
+		drop_chance = 55,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -239,7 +239,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Precision units aberrantly enhanced by the Greed. Their aim is supernaturally accurate.",
-		traits = list(TRAIT_HYBRID, TRAIT_PRECISION, TRAIT_ABERRANT),
+		traits = list(TRAIT_CORRUPTED, TRAIT_PRECISION, TRAIT_MECHANICAL),
 		base_value = 39,
 		drop_chance = 80,
 		drop_count_min = 1,
@@ -253,9 +253,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Heavy units whose armor has ossified into organic-metal hybrid plating.",
-		traits = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_OSSIFIED, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_ARMORED, TRAIT_HEAVY, TRAIT_ELITE),
 		base_value = 61,
-		drop_chance = 75,
+		drop_chance = 95,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -267,9 +267,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Speed units whose corruption manifests as volatile, erratic behavior.",
-		traits = list(TRAIT_HYBRID, TRAIT_VOLATILE, TRAIT_ERRATIC),
+		traits = list(TRAIT_CORRUPTED, TRAIT_VOLATILE, TRAIT_ERRATIC),
 		base_value = 35,
-		drop_chance = 90,
+		drop_chance = 75,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -281,9 +281,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Support units whose neural links have been warped by corruption. They now spread toxins instead of repairs.",
-		traits = list(TRAIT_HYBRID, TRAIT_NEURAL, TRAIT_TOXIC),
+		traits = list(TRAIT_CORRUPTED, TRAIT_NEURAL, TRAIT_TOXIC),
 		base_value = 26,
-		drop_chance = 95,
+		drop_chance = 65,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -296,9 +296,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Fodder",
 		lore = "Light reconnaissance units whose corruption makes them erratic but quick. The Greed has made them expendable.",
-		traits = list(TRAIT_HYBRID, TRAIT_LIGHTWEIGHT, TRAIT_FODDER),
+		traits = list(TRAIT_CORRUPTED, TRAIT_LIGHTWEIGHT, TRAIT_FODDER),
 		base_value = 18,
-		drop_chance = 100,
+		drop_chance = 55,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -315,9 +315,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Basic automated defense turrets corrupted by the Greed. Their targeting systems have fused with organic matter.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_ARMORED),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_ARMORED),
 		base_value = 35,
-		drop_chance = 80,
+		drop_chance = 75,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -329,9 +329,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Upgraded defense turrets with enhanced firepower. The corruption has improved their targeting algorithms.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_ARMORED, TRAIT_PRECISION),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_ARMORED, TRAIT_PRECISION),
 		base_value = 53,
-		drop_chance = 75,
+		drop_chance = 90,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -343,9 +343,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Advanced defense turrets with maximum firepower. Flesh and metal have become one in these deadly platforms.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_ARMORED, TRAIT_PRECISION, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_ARMORED, TRAIT_PRECISION, TRAIT_ELITE),
 		base_value = 70,
-		drop_chance = 70,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 3
 	))
@@ -358,9 +358,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Heavy artillery platforms corrupted by the Greed. Their explosive shells leave craters of pulsating flesh.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE),
 		base_value = 44,
-		drop_chance = 80,
+		drop_chance = 85,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -372,9 +372,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Upgraded artillery with enhanced explosive power. The corruption has made their shells even more devastating.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE, TRAIT_ELITE),
 		base_value = 70,
-		drop_chance = 70,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 3
 	))
@@ -386,9 +386,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Advanced artillery platforms with devastating firepower. Their bombardments reshape the battlefield into flesh-covered wastelands.",
-		traits = list(TRAIT_HYBRID, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE, TRAIT_ELITE, TRAIT_BRUTAL),
+		traits = list(TRAIT_CORRUPTED, TRAIT_WEAPONIZED, TRAIT_HEAVY, TRAIT_VOLATILE, TRAIT_ELITE, TRAIT_BRUTAL),
 		base_value = 88,
-		drop_chance = 65,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 4
 	))
@@ -401,9 +401,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Defensive structures that project protective shields. The corruption has given them regenerative capabilities.",
-		traits = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_REGENERATIVE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_ARMORED, TRAIT_ADAPTIVE),
 		base_value = 44,
-		drop_chance = 80,
+		drop_chance = 85,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -415,9 +415,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Upgraded shield generators with enhanced coverage. Their protective fields pulse with corrupted energy.",
-		traits = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_REGENERATIVE, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_ARMORED, TRAIT_ADAPTIVE, TRAIT_ELITE),
 		base_value = 70,
-		drop_chance = 70,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 3
 	))
@@ -429,9 +429,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Advanced shield generators with maximum protection range. They form the backbone of corrupted defensive networks.",
-		traits = list(TRAIT_HYBRID, TRAIT_ARMORED, TRAIT_REGENERATIVE, TRAIT_ELITE, TRAIT_HIVEMIND),
+		traits = list(TRAIT_CORRUPTED, TRAIT_ARMORED, TRAIT_ADAPTIVE, TRAIT_ELITE, TRAIT_NEURAL),
 		base_value = 88,
-		drop_chance = 65,
+		drop_chance = 100,
 		drop_count_min = 2,
 		drop_count_max = 4
 	))
@@ -444,9 +444,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Anchor points that deploy and tether corrupted gunner units. Flesh fused with their weapons.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_HIVEMIND),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_NEURAL),
 		base_value = 44,
-		drop_chance = 80,
+		drop_chance = 85,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -458,9 +458,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Anchor points that deploy corrupted long-range sniper units, their forms twisted by greed.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_PRECISION),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_PRECISION),
 		base_value = 35,
-		drop_chance = 85,
+		drop_chance = 75,
 		drop_count_min = 1,
 		drop_count_max = 1
 	))
@@ -472,7 +472,7 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Standard",
 		lore = "Anchor points that deploy corrupted rapid-fire units, their barrels pulsing with flesh.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_VOLATILE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_VOLATILE),
 		base_value = 39,
 		drop_chance = 80,
 		drop_count_min = 1,
@@ -486,9 +486,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Anchor points that deploy corrupted phase-shifting warpers, reality bending around their twisted forms.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_PSIONIC, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_NEURAL, TRAIT_ELITE),
 		base_value = 61,
-		drop_chance = 70,
+		drop_chance = 95,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))
@@ -500,9 +500,9 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 		folder = "greed_clan",
 		rank = "Elite",
 		lore = "Anchor points that deploy corrupted harpooner units, their chains dripping with viscous corruption.",
-		traits = list(TRAIT_HYBRID, TRAIT_CORRUPTED, TRAIT_BRUTAL, TRAIT_ELITE),
+		traits = list(TRAIT_CORRUPTED, TRAIT_MECHANICAL, TRAIT_BRUTAL, TRAIT_ELITE),
 		base_value = 61,
-		drop_chance = 70,
+		drop_chance = 95,
 		drop_count_min = 1,
 		drop_count_max = 2
 	))

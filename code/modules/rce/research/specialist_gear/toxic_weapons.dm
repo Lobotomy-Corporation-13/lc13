@@ -88,7 +88,7 @@
 // Acid Sprayer - Basic toxic spray weapon
 /obj/item/ego_weapon/ranged/acid_sprayer
 	name = "R-Corp acid sprayer"
-	desc = "Sprays a cone of corrosive acid that melts through armor and flesh."
+	desc = "Sprays a cone of corrosive acid that inflicts it's targets with venom."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "mister"
 	inhand_icon_state = "mister"
@@ -160,15 +160,15 @@
 
 			// Check for venom stacks for bonus damage
 			var/damage_mult = 1
-			if(L.has_status_effect(/datum/status_effect/venom_stacks))
-				var/datum/status_effect/venom_stacks/V = L.has_status_effect(/datum/status_effect/venom_stacks)
+			if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+				var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 				damage_mult = 1 + (V.stacks * 0.2) // +20% damage per stack
 				to_chat(user, span_nicegreen("Enhanced damage from venom stacks!"))
 
 			L.deal_damage(damage_amount * damage_mult, TOX)
 			L.deal_damage(damage_amount * 0.5 * damage_mult, FIRE)
 			// Apply a venom stack
-			L.apply_status_effect(/datum/status_effect/venom_stacks)
+			L.apply_venom_stacks()
 
 // Miasma Barrier Projector - Creates offensive toxic barriers
 /obj/item/ego_weapon/miasma_barrier
@@ -311,7 +311,7 @@
 		if(is_venom_immune(L))
 			return
 		L.deal_damage(25, TOX)
-		L.apply_status_effect(/datum/status_effect/venom_stacks, 3) // Heavy stacks for crossing
+		L.apply_venom_stacks(3) // Heavy stacks for crossing
 		to_chat(L, span_userdanger("The toxic miasma burns your lungs!"))
 
 /obj/effect/miasma_barrier_segment/Bumped(atom/movable/AM)
@@ -321,7 +321,7 @@
 		if(is_venom_immune(L))
 			return
 		L.deal_damage(15, TOX)
-		L.apply_status_effect(/datum/status_effect/venom_stacks, 2)
+		L.apply_venom_stacks(2)
 		to_chat(L, span_danger("The toxic miasma stings you!"))
 
 /obj/effect/miasma_barrier_segment/attack_hand(mob/living/user)
@@ -330,10 +330,8 @@
 		to_chat(user, span_notice("The miasma doesn't affect you."))
 		return
 	user.deal_damage(20, TOX)
-	user.apply_status_effect(/datum/status_effect/venom_stacks, 2)
+	user.apply_venom_stacks(2)
 	to_chat(user, span_danger("The toxic miasma burns your hand!"))
-
-
 
 // Venom Strike Blade - Toxic melee weapon with dash ability
 /obj/item/ego_weapon/venom_strike
@@ -414,7 +412,7 @@
 		return
 	// Apply venom stack on regular attacks
 	if(!is_venom_immune(target))
-		target.apply_status_effect(/datum/status_effect/venom_stacks)
+		target.apply_venom_stacks()
 
 /obj/item/ego_weapon/venom_strike/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	// Don't dash if we're already dashing or on cooldown
@@ -491,11 +489,11 @@
 				L.visible_message(span_boldwarning("[user] slashes through [L] with venomous fury!"))
 				// Check for existing venom stacks for bonus damage
 				var/damage_mult = 1
-				if(L.has_status_effect(/datum/status_effect/venom_stacks))
-					var/datum/status_effect/venom_stacks/V = L.has_status_effect(/datum/status_effect/venom_stacks)
+				if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+					var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 					damage_mult = 1 + (V.stacks * 0.25) // +25% damage per stack
 				L.deal_damage(dash_damage * damage_mult, TOX)
-				L.apply_status_effect(/datum/status_effect/venom_stacks, 2) // Apply 2 stacks
+				L.apply_venom_stacks(2) // Apply 2 stacks
 				new /obj/effect/temp_visual/venom_mark(get_turf(L))
 				been_hit += L
 
@@ -536,8 +534,8 @@
 
 		// More damage if target has venom stacks
 		var/damage = damage_per_second
-		if(L.has_status_effect(/datum/status_effect/venom_stacks))
-			var/datum/status_effect/venom_stacks/V = L.has_status_effect(/datum/status_effect/venom_stacks)
+		if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 			damage = damage_per_second * (1 + V.stacks * 0.1) // +10% per stack
 
 		L.deal_damage(damage, TOX)
@@ -668,7 +666,7 @@
 			if(is_venom_immune(L))
 				continue
 			L.deal_damage(60, TOX)
-			L.apply_status_effect(/datum/status_effect/venom_stacks, 3) // Apply 3 stacks
+			L.apply_venom_stacks(3) // Apply 3 stacks
 
 	qdel(src)
 
@@ -701,7 +699,7 @@
 		if(is_venom_immune(L))
 			continue
 		L.deal_damage(8, TOX)
-		L.apply_status_effect(/datum/status_effect/venom_stacks)
+		L.apply_venom_stacks()
 		dealt_damage = TRUE
 	if(!dealt_damage)
 		damaging = FALSE
@@ -735,7 +733,7 @@
 /obj/projectile/venom_shell
 	name = "venom shell"
 	icon_state = "toxin"
-	damage = 30
+	damage = 75
 	damage_type = TOX
 
 /obj/projectile/venom_shell/on_hit(atom/target, blocked)
@@ -743,15 +741,15 @@
 	// Massive damage to venom-marked targets
 	if(isliving(target))
 		var/mob/living/L = target
-		if(L.has_status_effect(/datum/status_effect/venom_stacks))
-			var/datum/status_effect/venom_stacks/V = L.has_status_effect(/datum/status_effect/venom_stacks)
+		if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 			var/bonus_damage = V.stacks * 15 // +15 damage per stack
 			L.deal_damage(bonus_damage, TOX)
 			to_chat(L, span_userdanger("The venom shell reacts violently with your venom marks!"))
 			new /obj/effect/temp_visual/venom_explosion(get_turf(L))
 		else
 			// Only 1 stack if not marked
-			L.apply_status_effect(/datum/status_effect/venom_stacks)
+			L.apply_venom_stacks()
 
 	// Create acid explosion
 	var/turf/T = get_turf(target)
@@ -879,7 +877,7 @@
 			if(is_venom_immune(L))
 				continue
 			L.deal_damage(40, TOX)
-			L.apply_status_effect(/datum/status_effect/venom_stacks, 4) // Apply 4 stacks for big hit
+			L.apply_venom_stacks(4) // Apply 4 stacks for big hit
 
 // Long-lasting plague zone
 /obj/effect/plague_zone
@@ -911,7 +909,7 @@
 		if(is_venom_immune(L))
 			continue
 		L.deal_damage(10, TOX)
-		L.apply_status_effect(/datum/status_effect/venom_stacks)
+		L.apply_venom_stacks()
 		dealt_damage = TRUE
 	if(!dealt_damage)
 		damaging = FALSE
@@ -1002,7 +1000,7 @@
 
 	// Always apply a venom stack on hit
 	if(!is_venom_immune(target))
-		target.apply_status_effect(/datum/status_effect/venom_stacks)
+		target.apply_venom_stacks()
 
 	var/create_burst = FALSE
 
@@ -1014,8 +1012,8 @@
 		// Bonus damage based on venom stacks
 		if(!is_venom_immune(target))
 			var/damage_mult = 1
-			if(target.has_status_effect(/datum/status_effect/venom_stacks))
-				var/datum/status_effect/venom_stacks/V = target.has_status_effect(/datum/status_effect/venom_stacks)
+			if(target.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+				var/datum/status_effect/stacking/venom_stacks/V = target.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 				damage_mult = 1 + (V.stacks * 0.2)
 			target.deal_damage(toxin_damage_bonus * damage_mult, TOX)
 
@@ -1044,65 +1042,61 @@
 				continue
 			var/damage = empowered ? 25 : 10
 			L.deal_damage(damage, TOX)
-			L.apply_status_effect(/datum/status_effect/venom_stacks, empowered ? 2 : 1)
+			L.apply_venom_stacks(empowered ? 2 : 1)
 
 // Status Effects
+#define STATUS_EFFECT_VENOM_STACKS /datum/status_effect/stacking/venom_stacks
 
-/datum/status_effect/acid_decay
-	id = "acid_decay"
-	duration = 100
-	alert_type = /atom/movable/screen/alert/status_effect/acid_decay
-	var/damage_per_tick = 3
-	tick_interval = 10
-
-/atom/movable/screen/alert/status_effect/acid_decay
-	name = "Acid Decay"
-	desc = "Your body is being eaten away by acid!"
-	icon_state = "dna_melt"
-
-/datum/status_effect/acid_decay/tick()
-	owner.deal_damage(damage_per_tick, TOX)
-	// Visual feedback
-	if(prob(30))
-		to_chat(owner, span_danger("The acid burns!"))
-
-/datum/status_effect/venom_stacks
+/datum/status_effect/stacking/venom_stacks
 	id = "venom_stacks"
-	duration = 200 // 20 seconds
-	status_type = STATUS_EFFECT_MULTIPLE
 	alert_type = /atom/movable/screen/alert/status_effect/venom_stacks
+	max_stacks = 10
+	tick_interval = 1 SECONDS
+	consumed_on_threshold = FALSE
 	var/damage_per_tick = 2
-	tick_interval = 10
-	var/stacks = 1
-	var/max_stacks = 10
+	var/new_stack = FALSE
 
 /atom/movable/screen/alert/status_effect/venom_stacks
 	name = "Venom Stacks"
 	desc = "You've been marked with venom! Toxic weapons will deal increased damage to you."
 	icon_state = "convulsing"
 
-/datum/status_effect/venom_stacks/on_creation(mob/living/new_owner, stacks_to_add = 1)
+/datum/status_effect/stacking/venom_stacks/on_apply()
 	. = ..()
-	stacks = min(stacks_to_add, max_stacks)
-	// Merge with existing stacks
-	for(var/datum/status_effect/venom_stacks/V in new_owner.status_effects)
-		if(V != src)
-			stacks = min(stacks + V.stacks, max_stacks)
-			qdel(V)
 	owner.add_overlay(mutable_appearance('icons/effects/effects.dmi', "greenglow"))
 
-/datum/status_effect/venom_stacks/tick()
+/datum/status_effect/stacking/venom_stacks/add_stacks(stacks_added)
+	. = ..()
+	new_stack = TRUE
+
+/datum/status_effect/stacking/venom_stacks/tick()
 	// DoT based on stacks - 5x damage to simple mobs
 	var/damage_mult = 1
 	if(isanimal(owner))
 		damage_mult = 5
 	owner.deal_damage(damage_per_tick * stacks * damage_mult, TOX)
-	if(prob(stacks * 5)) // Higher stacks = more chance to spread
+	if(prob(stacks * 5)) // Higher stacks = more chance to message
 		to_chat(owner, span_danger("The venom courses through your veins!"))
 
-/datum/status_effect/venom_stacks/on_remove()
+	// Decay stacks if no new stacks were added
+	if(new_stack)
+		new_stack = FALSE
+	else
+		stacks -= 1
+		if(stacks <= 0)
+			qdel(src)
+
+/datum/status_effect/stacking/venom_stacks/on_remove()
 	owner.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "greenglow"))
 	return ..()
+
+/// Apply venom stacks to a mob. If they already have venom stacks, add to them instead.
+/mob/living/proc/apply_venom_stacks(stacks_to_add = 1)
+	var/datum/status_effect/stacking/venom_stacks/V = has_status_effect(/datum/status_effect/stacking/venom_stacks)
+	if(!V)
+		apply_status_effect(/datum/status_effect/stacking/venom_stacks, stacks_to_add)
+	else
+		V.add_stacks(stacks_to_add)
 
 // Visual effects
 /obj/effect/temp_visual/acid_splash
