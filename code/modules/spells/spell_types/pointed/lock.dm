@@ -34,12 +34,12 @@
 	// If we target a human:
 	if(istype(owner, /mob/living/carbon/human))
 		var/mob/living/carbon/human/unfortunate = owner
-		ADD_TRAIT(unfortunate, TRAIT_PACIFISM, "Singularity J") // Can't attack! Yikes! Technically they can still use their actions, if any, but I don't feel like going through the hell that would be locking those away too
+		ADD_TRAIT(unfortunate, TRAIT_PACIFISM, "Singularity J - Lock") // Can't attack! Yikes! Technically they can still use their actions, if any, but I don't feel like going through the hell that would be locking those away too
 
 	// If we target a simple_animal/hostile (abnos, distortions, etc):
 	if(istype(owner, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/unfortunate = owner
-		ADD_TRAIT(unfortunate, TRAIT_INCAPACITATED, "Singularity J") // This doesn't stop stuff like DF from using their special attacks due to how they're coded.
+		ADD_TRAIT(unfortunate, TRAIT_INCAPACITATED, "Singularity J - Lock") // This doesn't stop stuff like DF from using their special attacks due to how they're coded.
 
 	// Aesthetics: we play a sound and put a lock overlay on them.
 	playsound(owner, 'sound/abnormalities/lighthammer/chain.ogg', 40)
@@ -51,7 +51,7 @@
 
 /datum/status_effect/arbiter_lock/on_remove()
 	owner.cut_overlay(statuseffectvisual)
-	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "Singularity J")
+	REMOVE_TRAIT(owner, TRAIT_PACIFISM, "Singularity J - Lock")
 	if(istype(owner, /mob/living/simple_animal/hostile))
-		REMOVE_TRAIT(owner, TRAIT_INCAPACITATED, "Singularity J")
+		REMOVE_TRAIT(owner, TRAIT_INCAPACITATED, "Singularity J - Lock")
 	return ..()

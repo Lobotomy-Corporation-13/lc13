@@ -121,8 +121,10 @@
 		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
+		/obj/effect/proc_holder/spell/aoe_turf/summon_meltdown,
 	)
 
+// Allows you to freely swap between the available damage types through a radial menu.
 /obj/effect/proc_holder/spell/aoe_turf/singularity
 	name = "Singularity Swap"
 	desc = "Utilize a different singularity to deal a different damage type."
@@ -140,6 +142,7 @@
 	var/list/damage_type_list = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/filter
 
+// When first clicking the spell. This will only cast the spell if we make a choice in the radial menu.
 /obj/effect/proc_holder/spell/aoe_turf/singularity/Click()
 	var/list/damagetype_icons = list(
 		RED_DAMAGE = image(icon = 'icons/mob/actions/actions_spells.dmi', icon_state = "RED_DAMAGE"),
@@ -153,24 +156,42 @@
 	queued_damage_type = choice
 	. = ..()
 
+// Called after we choose a damage type from the radial menu.
 /obj/effect/proc_holder/spell/aoe_turf/singularity/cast(list/targets,mob/user = usr)
 	damage_type = queued_damage_type
 	playMagSound()
 
 	to_chat(usr, span_nicegreen("You are now dealing [damage_type] damage with your Singularities!"))
-	for(var/thespell in usr.mind.spell_list)
+	for(var/thespell in usr.mind.spell_list) // Add any Arbiter spell that needs a damagetype change to this for loop please <3
+		// Fairy: Incomplete & Complete Arbiter. Hitscan projectile.
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/fairy))
 			var/obj/effect/proc_holder/spell/aimed/fairy/fairyspell = thespell
 			fairyspell.damage_type = damage_type
+
+		// Pillar: Incomplete & Complete Arbiter. AoE, phasing projectile that causes meltdowns when hitting consoles.
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/pillar))
 			var/obj/effect/proc_holder/spell/aimed/fairy/pillarspell = thespell
 			pillarspell.damage_type = damage_type
+
+		// Thin Line: Line Arbiter. Point and click damage that applies Powernull.
 		if(istype(thespell, /obj/effect/proc_holder/spell/pointed/thin_line))
 			var/obj/effect/proc_holder/spell/pointed/thin_line/linespell = thespell
 			linespell.damage_type = damage_type
+
+		// Thick Line: Line Arbiter. Telegraphed 3-tile-thick hitscan beam that applies Powernull.
 		if(istype(thespell, /obj/effect/proc_holder/spell/aimed/thick_line))
 			var/obj/effect/proc_holder/spell/aimed/thick_line/thicklinespell = thespell
 			thicklinespell.damage_type = damage_type
+
+		// Birdcage: Line Arbiter. Point and click 2 instances of damage, applies Chain.
+		if(istype(thespell, /obj/effect/proc_holder/spell/pointed/birdcage))
+			var/obj/effect/proc_holder/spell/pointed/birdcage/birdcagespell = thespell
+			birdcagespell.damage_type = damage_type
+
+		if(istype(thespell, /obj/effect/proc_holder/spell/pointed/chain))
+			var/obj/effect/proc_holder/spell/pointed/chain/chainspell = thespell
+			chainspell.damage_type = damage_type
+
 
 	var/appropiate_color = rgb(128, 128, 128)
 	switch(damage_type)
@@ -197,20 +218,65 @@
 	color = COLOR_YELLOW
 	duration = 4 SECONDS
 
+/// Spell that causes Meltdowns in containment cells when used on the same Z Level as the Facility. Long cooldown. Doesn't do the special melts that Megafauna-Arbiter does.
+/obj/effect/proc_holder/spell/aoe_turf/summon_meltdown
+	name = "Meltdown"
+	desc = "Use Singularity F to create failures in Abnormality containment cells, causing Qliphoth Meltdowns. Has no effect outside of a Lobotomy Corporation facility."
+	school = SCHOOL_EVOCATION
+	charge_max = 1200
+	clothes_req = FALSE
+	antimagic_allowed = TRUE
+	invocation_type = "none"
+	base_icon_state = "singularity"
+	action_icon_state = "singularity"
+	sound = 'sound/magic/castsummon.ogg'
+
+/obj/effect/proc_holder/spell/aoe_turf/summon_meltdown/cast(list/targets, mob/user)
+	. = ..()
+	playsound(get_turf(user), 'sound/magic/arbiter/repulse.ogg', 50, TRUE, 7)
+	for(var/turf/T in orange(2, user))
+		new /obj/effect/temp_visual/revenant(T)
+	user.visible_message(span_danger("[user] emits an energized pulse!"), span_nicegreen("You send out your Fairies to break open some Abnormality containment cells."))
+	addtimer(CALLBACK(src, PROC_REF(CauseMeltdowns), user), 2 SECONDS) // Slight delay.
+
+/obj/effect/proc_holder/spell/aoe_turf/summon_meltdown/proc/CauseMeltdowns(mob/user)
+	// If we're not on a LobCorp mode map, cancel and refund the spell.
+	if(!((SSmaptype.maptype in SSmaptype.lc_maps) || SSmaptype.maptype == "mini"))
+		to_chat(user, span_danger("There are no Abnormality containment cells with a functioning Qliphoth Deterrence to overload nearby. Your Fairies return to you, having found nothing to break open."))
+		revert_cast()
+		return
+	// If we're not on the Facility Z Level, cancel and refund the spell.
+	var/turf/sample_dept_center = pick(GLOB.department_centers)
+	if(!(sample_dept_center && sample_dept_center.z == user.z))
+		to_chat(user, span_danger("You're too far from any Abnormality containment cells to cause meltdowns. Your Fairies return to you."))
+		revert_cast()
+		return
+
+	var/meltdown_type = MELTDOWN_NORMAL
+	var/meltdown_text = "Qliphoth meltdown occured in containment zones of the following abnormalities:"
+	var/meltdown_min_time = 60
+	var/meltdown_max_time = 90
+
+	// Factors only working agents into meltdown amount calculations.
+	var/active_threats = max(1, length(AllLivingAgents(FALSE))) // Working Agents only.
+	SSlobotomy_corp.InitiateMeltdown(clamp(rand(floor(active_threats*0.75), active_threats), 1, 10), TRUE, meltdown_type, meltdown_min_time, meltdown_max_time, meltdown_text, 'sound/magic/arbiter/meltdown.ogg')
+
 // Different version of the Complete Arbiter that probably should only show up in adminbus.
-// Replaces Fairy with Thin Line, Pillar with Thick Line. Also gets Birdcage.
+// Replaces Fairy -> Thin Line, Pillar -> Thick Line. Also gets Birdcage.
 /datum/antagonist/wizard/arbiter/complete/line_variant
 	name = "Arbiter (Line Variant)"
 	outfit_type = /datum/outfit/arbiter/line
 	spell_types = list(
 		/obj/effect/proc_holder/spell/pointed/thin_line,
 		/obj/effect/proc_holder/spell/aimed/thick_line,
+		/obj/effect/proc_holder/spell/pointed/birdcage,
 		/obj/effect/proc_holder/spell/aoe_turf/repulse/arbiter,
 		/obj/effect/proc_holder/spell/pointed/lock,
 		/obj/effect/proc_holder/spell/pointed/chain,
 		/obj/effect/proc_holder/spell/aoe_turf/knock/arbiter,
 		/obj/effect/proc_holder/spell/targeted/touch/arbiterpunch,
 		/obj/effect/proc_holder/spell/aoe_turf/singularity,
+		/obj/effect/proc_holder/spell/aoe_turf/summon_meltdown,
 	)
 
 /datum/outfit/arbiter/line

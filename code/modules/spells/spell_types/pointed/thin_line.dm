@@ -78,7 +78,7 @@
 			final_damage *= pale_damage_coeff
 		if(istype(gremlin, /mob/living/simple_animal))
 			final_damage *= simplemob_coeff
-		gremlin.deal_damage(final_damage, damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+		gremlin.deal_damage(final_damage, damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		gremlin.apply_arbiter_powernull(powernull_stacks_per_hit)
 		gremlin.visible_message(span_danger("[gremlin] is pierced by an array of thin [damage_type] lines!"), span_userdanger("You're pierced by an array of thin [damage_type] lines!"))
 		playsound(gremlin, 'sound/magic/arbiter/thinline_hit.ogg', 100, FALSE, 6)
