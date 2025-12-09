@@ -60,7 +60,7 @@
 			flesh_cannot.deal_damage(final_damage, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 			if(ispath(status_inflicted_type))
 				flesh_cannot.apply_status_effect(status_inflicted_type)
-			flesh_cannot.visible_message(span_danger("[flesh_cannot] is locked down by an array of thin [damage_type] lines!"), span_userdanger("You're locked down by an array of thin [damage_type] lines!"))
+			flesh_cannot.visible_message(span_danger("[flesh_cannot] is trapped by an array of thin [damage_type] lines!"), span_userdanger("You're trapped by an array of thin [damage_type] lines!"))
 
 	// Target is a mob.
 	else if(istype(unfortunate, /mob/living))
@@ -76,7 +76,7 @@
 		gremlin.deal_damage(final_damage, damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		if(ispath(status_inflicted_type))
 			gremlin.apply_status_effect(status_inflicted_type)
-		gremlin.visible_message(span_danger("[gremlin] is locked down by an array of thin [damage_type] lines!"), span_userdanger("You're locked down by an array of thin [damage_type] lines!"))
+		gremlin.visible_message(span_danger("[gremlin] is trapped by an array of thin [damage_type] lines!"), span_userdanger("You're trapped by an array of thin [damage_type] lines!"))
 		playsound(gremlin, 'sound/magic/arbiter/thinline_hit.ogg', 75, FALSE, 6)
 
 	addtimer(CALLBACK(src, PROC_REF(LineFollowup), unfortunate, user, appropiate_color), 1.2 SECONDS)
@@ -158,6 +158,4 @@
 	. = ..()
 
 /datum/status_effect/arbiter_chain/birdcage
-	id = "birdcage"
-	duration = 2.5 SECONDS
-	trait_source = "Singularity J - Birdcage"
+	duration = 3 SECONDS

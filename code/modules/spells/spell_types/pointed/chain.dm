@@ -8,21 +8,12 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	action_icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	action_icon_state = "lock"
-	var/damage_type = BLACK_DAMAGE
 	var/base_damage = 40
 	var/simplemob_coeff = 4
 	var/pale_coeff = 0.8
 
 /obj/effect/proc_holder/spell/pointed/chain/cast(list/targets, mob/user = usr)
 	var/mob/living/unfortunate = pick(targets)
-
-	var/final_damage = base_damage
-	if(damage_type == PALE_DAMAGE)
-		final_damage *= pale_coeff
-	if(isanimal(unfortunate))
-		final_damage *= simplemob_coeff
-	unfortunate.deal_damage(final_damage, damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
-
 	unfortunate.apply_status_effect(/datum/status_effect/arbiter_chain, damage_type)
 
 /obj/effect/proc_holder/spell/pointed/chain/can_target(atom/target, mob/user, silent)
@@ -35,16 +26,11 @@
 
 /datum/status_effect/arbiter_chain
 	id = "arbiter chain"
-	duration = 4 SECONDS
+	duration = 5 SECONDS
 	alert_type = null
-	status_type = STATUS_EFFECT_UNIQUE
+	status_type = STATUS_EFFECT_REFRESH
 	var/statuseffectvisual
 	var/trait_source = "Singularity J - Chain"
-	var/damage_type = BLACK_DAMAGE
-
-/datum/status_effect/arbiter_chain/on_creation(mob/living/new_owner, damagetype, ...)
-	. = ..()
-	damage_type = damagetype
 
 /datum/status_effect/arbiter_chain/on_apply()
 	. = ..()
@@ -69,8 +55,8 @@
 		// Unfortunately this basically deactivates all their thinking and acting. But... well, we just don't have any other way to stop them from moving.
 
 		unfortunate.patrol_reset()
-		unfortunate.Goto(get_turf(unfortunate))
 		unfortunate.toggle_ai(AI_OFF)
+		walk_to(unfortunate, 0)
 
 	// Aesthetics: we play a sound and put a lock overlay on them.
 	playsound(owner, 'sound/abnormalities/lighthammer/chain.ogg', 40)
@@ -80,17 +66,6 @@
 	var/icon_width = target_icon.Width()
 	var/width_diff = 32 - icon_width
 	cool_overlay.pixel_x -= (width_diff * 0.5)
-	var/appropiate_color = "#DABB04"
-	switch(damage_type)
-		if(RED_DAMAGE)
-			appropiate_color = "#D70000"
-		if(WHITE_DAMAGE)
-			appropiate_color = "#DDDDDD"
-		if(BLACK_DAMAGE)
-			appropiate_color = "#DABB04"
-		if(PALE_DAMAGE)
-			appropiate_color = "#45F7F7"
-	cool_overlay.color = appropiate_color
 	if((icon_height > 0) && (icon_width > 0))
 		var/matrix/old_matrix = cool_overlay.transform
 		var/height_ratio = icon_height / 32

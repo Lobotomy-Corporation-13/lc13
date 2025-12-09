@@ -188,11 +188,6 @@
 			var/obj/effect/proc_holder/spell/pointed/birdcage/birdcagespell = thespell
 			birdcagespell.damage_type = damage_type
 
-		if(istype(thespell, /obj/effect/proc_holder/spell/pointed/chain))
-			var/obj/effect/proc_holder/spell/pointed/chain/chainspell = thespell
-			chainspell.damage_type = damage_type
-
-
 	var/appropiate_color = rgb(128, 128, 128)
 	switch(damage_type)
 		if(RED_DAMAGE)
