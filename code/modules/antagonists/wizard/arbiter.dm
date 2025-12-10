@@ -222,8 +222,8 @@
 	clothes_req = FALSE
 	antimagic_allowed = TRUE
 	invocation_type = "none"
-	base_icon_state = "singularity"
-	action_icon_state = "singularity"
+	base_icon_state = "meltdown"
+	action_icon_state = "meltdown"
 	sound = 'sound/magic/castsummon.ogg'
 
 /obj/effect/proc_holder/spell/aoe_turf/summon_meltdown/cast(list/targets, mob/user)

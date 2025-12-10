@@ -14,7 +14,7 @@
 
 /obj/effect/proc_holder/spell/pointed/chain/cast(list/targets, mob/user = usr)
 	var/mob/living/unfortunate = pick(targets)
-	unfortunate.apply_status_effect(/datum/status_effect/arbiter_chain, damage_type)
+	unfortunate.apply_status_effect(/datum/status_effect/arbiter_chain)
 
 /obj/effect/proc_holder/spell/pointed/chain/can_target(atom/target, mob/user, silent)
 	if(!istype(target, /mob/living))
