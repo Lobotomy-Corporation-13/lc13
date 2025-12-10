@@ -633,9 +633,11 @@
 	. = ..()
 	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(Rage))
 
-/datum/status_effect/punishment/proc/Rage(mob/living/sorce, obj/item/thing, mob/living/attacker)
+/datum/status_effect/punishment/proc/Rage(mob/us, damage_amount, damage_type, def_zone, mob/attacker, damage_flags, attack_type)
 	SIGNAL_HANDLER
 	var/mob/living/carbon/human/H = owner
+	if(attacker == us)
+		return
 	H.apply_status_effect(/datum/status_effect/pbird)
 	H.remove_status_effect(/datum/status_effect/punishment)
 	to_chat(H, span_userdanger("You strike back at the wrong doer!"))
