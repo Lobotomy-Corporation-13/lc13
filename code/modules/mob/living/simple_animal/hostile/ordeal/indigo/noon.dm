@@ -381,9 +381,9 @@
 	/// Holds the cooldown time between Extract Fuel uses
 	var/extract_fuel_cooldown_time = 10 SECONDS
 	/// Extract Fuel will hit for this much additional BLACK damage
-	var/extract_fuel_extra_damage = 15
+	var/extract_fuel_extra_damage = 20
 	/// Extract Fuel will heal the sweeper for this much health
-	var/extract_fuel_healing = 100
+	var/extract_fuel_healing = 125
 	/// This controls whether the next hit actually sets off Extract Fuel's additional effects
 	var/extract_fuel_active = FALSE
 	/// We store the timer we use for cancelling Extract Fuel so we can delete it early if we've already used it
@@ -422,21 +422,13 @@
 		extract_fuel_extra_damage += COL_extractfuel_damage_adjustment
 		last_stand_stack_gain += COL_laststand_stacks_adjustment
 
-/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/attacked_by(obj/item/I, mob/living/user)
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	/// If we've dropped to or below 40% health, we may gain Persistence because we are evil and tough to put down.
 	if(!used_last_stand && health <= maxHealth * 0.40 && prob(60))
 		LastStand()
 		return
-	/// Next is the Extract Fuel trigger. I don't want them both to happen on the same hit so there's an early return in the previous block.
-	/// I'm making them only fire it off with a chance to keep players guessing, instead of having them act too predictably.
-	if(extract_fuel_cooldown <= world.time && prob(60))
+	if(extract_fuel_cooldown <= world.time && prob(60) && (get_dist(source, src) < 3))
 		PrepareExtractFuel()
-
-/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/bullet_act(obj/projectile/P)
-	. = ..()
-	if(!used_last_stand && health <= maxHealth * 0.40 && prob(60))
-		LastStand()
 		return
 
 /// This ability is basically "333... 1973". It gives the chunky sweeper 3 persistence stacks, that's all.
@@ -460,9 +452,9 @@
 		var/mob/living/victim = attacked_target
 		CancelExtractFuel(TRUE)
 		SpawnAppropiateGibs(attacked_target)
+		visible_message(span_danger("The [src.name] tears into [victim.name] and refuels itself with some of [victim.p_their()] viscera!"))
+		SweeperHealing(extract_fuel_healing)
 		if(ishuman(attacked_target))
-			visible_message(span_danger("The [src.name] tears into [victim.name] and refuels itself with some of [victim.p_their()] viscera!"))
-			SweeperHealing(extract_fuel_healing)
 			GainPersistence(1)
 
 
@@ -470,7 +462,7 @@
 	/// I have no idea what could cause this, but just in case
 	if(extract_fuel_active)
 		return FALSE
-	if(stat == DEAD)
+	if(stat >= DEAD)
 		return FALSE
 	/// Go on cooldown.
 	extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
@@ -500,6 +492,9 @@
 	animate(src, 0.5 SECONDS, color = initial(color))
 	if(!early)
 		visible_message(span_danger("The [src.name] lowers its aggressive stance."), span_info("You give up on the fuel extraction attempt."))
+		for(var/mob/living/carbon/human/viewer in viewers(7, src))
+			balloon_alert(viewer, "The [src.name] lowers its aggresive stance.")
+
 
 /// This cleanup exists because if we land a hit with Extract Fuel, we want to turn it off, but there's still an ongoing timer it will call CancelExtractFuel
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/proc/ExtractFuelTimerCleanup()
