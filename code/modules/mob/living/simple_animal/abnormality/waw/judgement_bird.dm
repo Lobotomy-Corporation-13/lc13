@@ -65,6 +65,7 @@
 	var/judgement_range = 12
 	var/judging = FALSE
 	var/list/birdlist = list()
+	var/omw_to_apoc = FALSE
 
 /datum/action/innate/abnormality_attack/judgement
 	name = "Judgement"
@@ -164,6 +165,7 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/judgement_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
+	omw_to_apoc = FALSE
 	. = ..()
 	if(IsCombatMap())
 		judgement_damage = 65
@@ -184,6 +186,23 @@
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
 	..()
+
+// Following overrides are so we can meander down to the Black Forest Portal unimpeded
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/RegisterAttackAggro(damage_amount, damage_type, source)
+	if(omw_to_apoc) // Ts ain't nothin to me man
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/ListTargets()
+	if(omw_to_apoc) // I have places to be
+		return list()
+	else
+		return ..()
+
+/mob/living/simple_animal/hostile/abnormality/judgement_bird/FindTarget(list/possible_targets, HasTargetsList)
+	if(omw_to_apoc) // Nah I'd Walk
+		return
+	. = ..()
 
 //Runaway birds - Mini Simple Smile, 2 spawned after Jbird kills a player, and 2 on spawn.
 /mob/living/simple_animal/hostile/runawaybird

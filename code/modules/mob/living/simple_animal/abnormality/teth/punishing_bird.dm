@@ -77,6 +77,7 @@
 	var/angry_damage_human = 500
 
 	var/death_timer
+	var/omw_to_apoc = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/Initialize()
 	. = ..()
@@ -232,7 +233,7 @@
 			return A
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/ListTargets()
-	if(!enemies.len && !pecking_targets.len)
+	if(omw_to_apoc || (!enemies.len && !pecking_targets.len))
 		return list()
 	var/list/see = ..()
 	var/list/targeting = list()
@@ -241,6 +242,16 @@
 		targeting |= pecking_targets
 	see &= targeting // Remove all entries that aren't in enemies
 	return see
+
+/mob/living/simple_animal/hostile/abnormality/punishing_bird/RegisterAttackAggro(damage_amount, damage_type, source)
+	if(omw_to_apoc) // Ts ain't nothin to me man
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/abnormality/punishing_bird/FindTarget(list/possible_targets, HasTargetsList)
+	if(omw_to_apoc) // Nah I'd Walk
+		return
+	. = ..()
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/HandleStructures()
 	. = ..()
@@ -308,6 +319,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
+	omw_to_apoc = FALSE
 	icon_state = initial(icon_state)
 	icon_living = initial(icon_living)
 	pixel_x = initial(pixel_x)

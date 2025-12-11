@@ -152,6 +152,7 @@ SUBSYSTEM_DEF(lobotomy_events)
 				if(istype(A, /mob/living/simple_animal/hostile/abnormality/punishing_bird))
 					var/mob/living/simple_animal/hostile/abnormality/punishing_bird/PB = A
 					deltimer(PB.death_timer)
+				A.LoseTarget()
 				A.patrol_reset()
 				A.patrol_to(get_turf(portal), TRUE)
 				A.density = FALSE // They ignore you and walk past you.
