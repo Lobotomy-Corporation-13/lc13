@@ -173,8 +173,8 @@
 // Miasma Barrier Projector - Creates offensive toxic barriers
 /obj/item/ego_weapon/miasma_barrier
 	name = "miasma barrier projector"
-	desc = "Projects a wall of corrosive miasma that poisons enemies who pass through. Perfect for cutting off retreat routes."
-	special = "Use afterattack to create a toxic barrier. Use in hand to toggle wall orientation and connect acid tank."
+	desc = "Projects a wall of corrosive miasma that poisons enemies who pass through. Perfect for weaking incoming greed monsters."
+	special = "Click on a turf to create a toxic barrier. Use in hand to toggle wall orientation and connect acid tank."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "firing_pin_loyalty"
 	force = 15
@@ -337,7 +337,7 @@
 /obj/item/ego_weapon/venom_strike
 	name = "venom strike blade"
 	desc = "A blade coated with corrosive venom that can channel acid for devastating toxic dashes. The blade drips with deadly poison."
-	special = "Use in hand to connect to an acid tank. Use afterattack to perform a venom dash that applies stacks to all enemies hit."
+	special = "Use in hand to connect to an acid tank. Click on a far away target to perform a venom dash towrads them. That dash applies stacks to all enemies hit."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "contractor_baton_1"
 	inhand_icon_state = "contractor_baton_1"
@@ -550,7 +550,7 @@
 /obj/item/ego_weapon/blight_sprayer
 	name = "blight sprayer"
 	desc = "Sprays volatile toxic sludge that sticks to surfaces and erupts into a toxic cloud after a short delay. Excellent for offensive pushes."
-	special = "Use afterattack to spray blight that explodes into toxic clouds after 2 seconds. Use in hand to connect acid tank."
+	special = "Click on a target to spray blight that explodes into toxic clouds after 2 seconds. Use in hand to connect acid tank."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "misteratmos"
 	inhand_icon_state = "misteratmos"
@@ -876,8 +876,16 @@
 		for(var/mob/living/L in T)
 			if(is_venom_immune(L))
 				continue
-			L.deal_damage(40, TOX)
-			L.apply_venom_stacks(4) // Apply 4 stacks for big hit
+			// 5x damage to simple mobs
+			var/damage_mult = 1
+			if(isanimal(L))
+				damage_mult = 5
+			// +15% damage per venom stack
+			if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+				var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
+				damage_mult *= (1 + (V.stacks * 0.15))
+			L.deal_damage(40 * damage_mult, TOX)
+			L.apply_venom_stacks(3) // Apply 3 stacks
 
 // Long-lasting plague zone
 /obj/effect/plague_zone
@@ -908,7 +916,15 @@
 	for(var/mob/living/L in get_turf(src))
 		if(is_venom_immune(L))
 			continue
-		L.deal_damage(10, TOX)
+		// 5x damage to simple mobs
+		var/damage_mult = 1
+		if(isanimal(L))
+			damage_mult = 5
+		// +15% damage per venom stack
+		if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
+			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
+			damage_mult *= (1 + (V.stacks * 0.15))
+		L.deal_damage(10 * damage_mult, TOX)
 		L.apply_venom_stacks()
 		dealt_damage = TRUE
 	if(!dealt_damage)
@@ -1005,6 +1021,7 @@
 	var/create_burst = FALSE
 
 	// Check if we should create a venom burst
+	// VENOM BURST: An AoE toxic explosion that damages all nearby enemies, applies venom stacks, and creates acid pools
 	if(toxin_mode && acid_tank && acid_tank.resource_amount >= acid_per_burst)
 		// Toxin mode: guaranteed burst, costs acid
 		acid_tank.resource_amount -= acid_per_burst
@@ -1020,6 +1037,9 @@
 	if(create_burst)
 		VenomBurst(target, user, toxin_mode)
 
+/// Creates a venom burst - an AoE toxic explosion that damages nearby enemies and applies venom stacks
+/// When empowered (Toxin Mode active): 3x3 area (1 tile radius), creates acid pools, deals 25 toxin damage, applies 2 venom stacks
+/// When not empowered: single tile only, no acid pools, deals 10 toxin damage, applies 1 venom stack
 /obj/item/ego_weapon/corrosive_gauntlets/proc/VenomBurst(atom/target, mob/user, empowered = FALSE)
 	var/turf/target_turf = get_turf(target)
 	if(!target_turf)
@@ -1028,7 +1048,7 @@
 	playsound(target_turf, 'sound/effects/venom.ogg', 50, TRUE)
 	new /obj/effect/temp_visual/venom_explosion(target_turf)
 
-	// Create venom burst
+	// Create venom burst - empowered mode has 1 tile radius (3x3 area), normal mode only affects target tile
 	var/burst_range = empowered ? 1 : 0
 	for(var/turf/T in range(burst_range, target_turf))
 		new /obj/effect/temp_visual/acid_splash(T)
@@ -1120,3 +1140,462 @@
 	pixel_y = -32
 	duration = 10
 	color = "#00FF00"
+
+// ACID GRENADE - Tier 1 Factory Item
+/obj/item/grenade/r_corp/acid
+	name = "r-corp acid grenade"
+	desc = "A grenade filled with corrosive acid that creates toxic puddles and applies venom stacks."
+	icon_state = "grenade"
+	color = "#00FF00"
+	explosion_damage = 40
+
+/obj/item/grenade/r_corp/acid/detonate(mob/living/lanced_by)
+	// Create acid pools and apply venom stacks
+	for(var/turf/T in view(explosion_range, src))
+		if(!locate(/obj/effect/acid_pool) in T)
+			new /obj/effect/acid_pool(T)
+		for(var/mob/living/L in T)
+			if(is_venom_immune(L))
+				continue
+			L.apply_venom_stacks(2)
+	. = ..()
+
+// TOXIC MINE - Tier 1 Factory Item
+/obj/item/toxic_mine
+	name = "toxic mine"
+	desc = "A proximity-triggered mine that sprays corrosive acid when enemies approach. Use in-hand to arm or disarm."
+	icon = 'icons/obj/items_and_weapons.dmi'
+	icon_state = "beartrap0"
+	base_icon_state = "beartrap"
+	color = "#00FF00"
+	w_class = WEIGHT_CLASS_SMALL
+	var/armed = FALSE
+	var/venom_stacks_applied = 4
+	var/damage = 30
+	var/explosion_range = 2
+
+/obj/item/toxic_mine/Initialize()
+	. = ..()
+	update_icon()
+
+/obj/item/toxic_mine/update_icon_state()
+	icon_state = "[base_icon_state][armed]"
+
+/obj/item/toxic_mine/examine(mob/user)
+	. = ..()
+	. += span_notice("It is currently [armed ? "armed" : "disarmed"].")
+
+/obj/item/toxic_mine/attack_self(mob/user)
+	. = ..()
+	if(!ishuman(user) || user.stat != CONSCIOUS || HAS_TRAIT(user, TRAIT_HANDS_BLOCKED))
+		return
+	armed = !armed
+	anchored = armed
+	update_icon()
+	to_chat(user, span_notice("[src] is now [armed ? "armed" : "disarmed"]."))
+	if(armed)
+		user.visible_message(span_warning("[user] arms [src]!"), span_warning("You arm [src]!"))
+	else
+		user.visible_message(span_notice("[user] disarms [src]."), span_notice("You disarm [src]."))
+
+/obj/item/toxic_mine/Crossed(atom/movable/AM)
+	. = ..()
+	if(!armed || !isturf(loc))
+		return
+	if(!isliving(AM))
+		return
+	var/mob/living/L = AM
+	if(L.stat == DEAD)
+		return
+	if(L.movement_type & (FLYING|FLOATING))
+		return
+	// Detonate
+	detonate()
+
+/obj/item/toxic_mine/proc/detonate()
+	armed = FALSE
+	update_icon()
+	visible_message(span_danger("[src] erupts in a spray of corrosive acid!"))
+	playsound(src, 'sound/effects/venom.ogg', 50, TRUE)
+
+	// Create brief acid mist cloud
+	for(var/turf/T in range(explosion_range, src))
+		new /obj/effect/temp_visual/acid_splash(T)
+
+	for(var/mob/living/L in range(explosion_range, src))
+		// Check for Venom immunity
+		if(is_venom_immune(L))
+			continue
+
+		L.deal_damage(damage, TOX)
+		L.apply_venom_stacks(venom_stacks_applied)
+		to_chat(L, span_danger("You're sprayed with corrosive acid!"))
+
+	qdel(src)
+
+// CORROSIVE SPRAY TURRET - Tier 2 Deployable
+// Projectile that applies acid damage and venom stacks
+/obj/projectile/acid_spray
+	name = "acid spray"
+	icon_state = "toxin"
+	damage = 25
+	damage_type = TOX
+	color = "#00FF00"
+
+/obj/projectile/acid_spray/on_hit(atom/target, blocked)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		if(!is_venom_immune(L))
+			L.apply_venom_stacks()
+
+/obj/item/corrosive_turret_deployable
+	name = "corrosive spray turret module"
+	desc = "A deployable automatic turret that shoots acid at hostile simple mobs. Use in-hand to deploy."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "signaller"
+	color = "#00FF00"
+	w_class = WEIGHT_CLASS_NORMAL
+	var/stored_acid = 200  // Acid stored in the deployable
+
+/obj/item/corrosive_turret_deployable/examine(mob/user)
+	. = ..()
+	. += span_notice("Use in hand to deploy the turret.")
+	. += span_notice("Stored acid: [stored_acid]/200")
+
+/obj/item/corrosive_turret_deployable/attack_self(mob/user)
+	. = ..()
+	var/turf/T = get_turf(user)
+	if(!istype(T))
+		to_chat(user, span_warning("You can't deploy [src] here!"))
+		return
+
+	to_chat(user, span_notice("You deploy [src]..."))
+	playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+
+	if(!do_after(user, 2 SECONDS, target = user))
+		to_chat(user, span_warning("You stop deploying [src]."))
+		return
+
+	// Create turret with stored acid
+	var/obj/machinery/porta_turret/corrosive/turret = new(T)
+	turret.acid_storage = stored_acid
+	to_chat(user, span_notice("You deploy the turret!"))
+	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+	qdel(src)
+
+// Simple turret that only shoots hostile simple mobs
+/obj/machinery/porta_turret/corrosive
+	name = "corrosive spray turret"
+	desc = "An automatic turret that sprays acid at hostile creatures."
+	icon_state = "syndie_lethal"
+	base_icon_state = "syndie"
+	color = "#00FF00"
+	max_integrity = 150
+
+	// Turret configuration - no cover, always up, no power needed
+	has_cover = FALSE
+	always_up = TRUE
+	use_power = NO_POWER_USE
+	uses_stored = FALSE
+
+	// Targeting - only shoot hostile simple mobs
+	turret_flags = TURRET_FLAG_SHOOT_ANOMALOUS
+	faction = list("neutral")
+
+	// Weapon configuration
+	scan_range = 5
+	shot_delay = 20  // 2 seconds between shots
+	lethal_projectile = /obj/projectile/acid_spray
+	lethal_projectile_sound = 'sound/effects/spray2.ogg'
+	mode = TURRET_LETHAL
+
+	var/acid_storage = 200
+	var/max_acid_storage = 200
+	var/acid_per_shot = 15
+
+/obj/machinery/porta_turret/corrosive/examine(mob/user)
+	. = ..()
+	. += span_notice("Acid: [acid_storage]/[max_acid_storage]")
+	. += span_notice("Automatically targets hostile creatures within [scan_range] tiles.")
+
+/obj/machinery/porta_turret/corrosive/shootAt(atom/movable/target)
+	// Check if we have enough acid
+	if(acid_storage < acid_per_shot)
+		return
+
+	// Consume acid instead of power
+	acid_storage -= acid_per_shot
+
+	// Fire the projectile
+	if(!raised)
+		return
+
+	if(last_fired + shot_delay > world.time)
+		return
+	last_fired = world.time
+
+	var/turf/T = get_turf(src)
+	var/turf/U = get_turf(target)
+	if(!istype(T) || !istype(U))
+		return
+
+	update_icon()
+	var/obj/projectile/A = new lethal_projectile(T)
+	playsound(loc, lethal_projectile_sound, 75, TRUE)
+
+	A.preparePixelProjectile(target, T)
+	A.firer = src
+	A.fired_from = src
+	A.fire()
+	return A
+
+/obj/machinery/porta_turret/corrosive/attackby(obj/item/I, mob/user, params)
+	// Refill with acid canister
+	if(istype(I, /obj/item/rce_canister/acid))
+		var/obj/item/rce_canister/acid/can = I
+		var/transfer = min(can.acid_amount, max_acid_storage - acid_storage)
+		if(transfer <= 0)
+			to_chat(user, span_warning("[src]'s acid tank is full!"))
+			return TRUE
+
+		can.acid_amount -= transfer
+		acid_storage += transfer
+		to_chat(user, span_notice("You refill [src] with [transfer] acid."))
+		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		return TRUE
+
+	// Dismantle with crowbar
+	if(I.tool_behaviour == TOOL_CROWBAR)
+		to_chat(user, span_notice("You begin dismantling [src]..."))
+		playsound(src, 'sound/items/crowbar.ogg', 50, TRUE)
+
+		if(!do_after(user, 3 SECONDS, target = src))
+			to_chat(user, span_warning("You stop dismantling [src]."))
+			return TRUE
+
+		to_chat(user, span_notice("You dismantle [src]."))
+		// Preserve acid storage in the deployable
+		var/obj/item/corrosive_turret_deployable/deployable = new(get_turf(src))
+		deployable.stored_acid = acid_storage
+		qdel(src)
+		return TRUE
+
+	return ...()
+
+// AUTO ACID SPRAYER - Tier 2 Automatic Defense (Venom Branch)
+// Projectile for automatic acid sprayer
+/obj/projectile/acid_shot
+	name = "acid spray"
+	icon_state = "toxin"
+	damage = 75
+	damage_type = TOX
+	color = "#00FF00"
+	range = 6
+
+/obj/projectile/acid_shot/on_hit(atom/target, blocked)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		if(!is_venom_immune(L))
+			L.apply_venom_stacks()
+
+/obj/item/auto_acid_sprayer
+	name = "automatic defense acid sprayer"
+	desc = "An automated acid sprayer system that attaches to your suit storage. When activated, it automatically targets and sprays acid at hostile entities within range."
+	icon = 'icons/obj/guns/energy.dmi'
+	icon_state = "kineticgun_h"
+	color = "#00FF00"
+	w_class = WEIGHT_CLASS_NORMAL
+	slot_flags = ITEM_SLOT_SUITSTORE
+	var/active = FALSE
+	var/obj/item/rce_resource_tank/acid_backpack/acid_tank
+	var/acid_per_shot = 10
+	var/scan_range = 6
+	var/last_fired = 0
+	var/fire_delay = 5 // 0.5 second between shots
+	var/datum/action/item_action/toggle_auto_acid_sprayer/toggle_action
+	var/mob/living/carbon/human/wearer
+
+/obj/item/auto_acid_sprayer/Initialize()
+	. = ..()
+	toggle_action = new(src)
+
+/obj/item/auto_acid_sprayer/Destroy()
+	if(active)
+		deactivate()
+	QDEL_NULL(toggle_action)
+	return ..()
+
+/obj/item/auto_acid_sprayer/examine(mob/user)
+	. = ..()
+	. += span_notice("Status: [active ? "ACTIVE" : "Inactive"]")
+	if(acid_tank)
+		. += span_notice("Connected to acid tank: [acid_tank.resource_amount]/[acid_tank.max_resource] acid remaining.")
+		. += span_notice("Each shot consumes [acid_per_shot] acid.")
+	else
+		. += span_warning("No acid tank connected! Equip to suit storage to auto-connect.")
+	. += span_notice("When worn in suit storage, grants an action button to toggle automatic defense mode.")
+
+/obj/item/auto_acid_sprayer/equipped(mob/user, slot)
+	. = ..()
+	if(!ishuman(user))
+		return
+
+	var/mob/living/carbon/human/H = user
+
+	if(slot == ITEM_SLOT_SUITSTORE)
+		wearer = H
+		connect_tank()
+		toggle_action.Grant(H)
+		to_chat(H, span_notice("[src] is ready. Use the action button to activate automatic defense mode."))
+	else
+		if(wearer)
+			if(active)
+				deactivate()
+			disconnect_tank()
+			toggle_action.Remove(wearer)
+			wearer = null
+
+/obj/item/auto_acid_sprayer/dropped(mob/user)
+	. = ..()
+	if(active)
+		deactivate()
+	if(acid_tank)
+		disconnect_tank()
+	if(toggle_action && wearer)
+		toggle_action.Remove(wearer)
+	wearer = null
+
+/obj/item/auto_acid_sprayer/proc/connect_tank()
+	if(!wearer)
+		return FALSE
+
+	// Try to connect to worn tank
+	var/obj/item/rce_resource_tank/acid_backpack/tank = wearer.back
+	if(!istype(tank))
+		return FALSE
+
+	acid_tank = tank
+	to_chat(wearer, span_notice("[src] connects to [tank]."))
+	playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+	return TRUE
+
+/obj/item/auto_acid_sprayer/proc/disconnect_tank()
+	if(acid_tank)
+		to_chat(wearer, span_notice("[src] disconnects from [acid_tank]."))
+		acid_tank = null
+
+/obj/item/auto_acid_sprayer/proc/activate()
+	if(!wearer || !acid_tank)
+		if(!acid_tank)
+			to_chat(wearer, span_warning("No acid tank connected!"))
+		return FALSE
+
+	active = TRUE
+	START_PROCESSING(SSobj, src)
+	to_chat(wearer, span_danger("Automatic defense system ACTIVATED!"))
+	playsound(src, 'sound/machines/synth_yes.ogg', 50, TRUE)
+	wearer.add_overlay(mutable_appearance('icons/effects/effects.dmi', "shield-green", ABOVE_MOB_LAYER))
+	return TRUE
+
+/obj/item/auto_acid_sprayer/proc/deactivate()
+	active = FALSE
+	STOP_PROCESSING(SSobj, src)
+	if(wearer)
+		to_chat(wearer, span_notice("Automatic defense system deactivated."))
+		playsound(src, 'sound/machines/synth_no.ogg', 50, TRUE)
+		wearer.cut_overlay(mutable_appearance('icons/effects/effects.dmi', "shield-green", ABOVE_MOB_LAYER))
+
+/obj/item/auto_acid_sprayer/process()
+	if(!active || !wearer || !acid_tank)
+		deactivate()
+		return
+
+	// Check if wearer is conscious and able
+	if(wearer.stat != CONSCIOUS)
+		return
+
+	// Check acid
+	if(acid_tank.resource_amount < acid_per_shot)
+		if(prob(20)) // Don't spam the message
+			to_chat(wearer, span_warning("[src] clicks empty - out of acid!"))
+		return
+
+	// Check fire delay
+	if(last_fired + fire_delay > world.time)
+		return
+
+	// Find targets
+	var/list/possible_targets = list()
+	for(var/mob/living/simple_animal/hostile/M in range(scan_range, wearer))
+		if(M.stat == DEAD)
+			continue
+		if(!can_see(wearer, M, scan_range))
+			continue
+
+		// Check if it's a valid hostile target
+		if(istype(M, /mob/living/simple_animal/hostile/greed) || \
+		   istype(M, /mob/living/simple_animal/hostile/clan))
+			possible_targets += M
+
+	if(!length(possible_targets))
+		return
+
+	// Get closest target
+	var/mob/living/closest_target = null
+	var/closest_distance = INFINITY
+	for(var/mob/living/L in possible_targets)
+		var/distance = get_dist(wearer, L)
+		if(distance < closest_distance)
+			closest_distance = distance
+			closest_target = L
+
+	if(!closest_target)
+		return
+
+	// Fire at target
+	fire_at_target(closest_target)
+
+/obj/item/auto_acid_sprayer/proc/fire_at_target(mob/living/target)
+	if(!target || !acid_tank || acid_tank.resource_amount < acid_per_shot)
+		return
+
+	// Consume acid
+	acid_tank.resource_amount -= acid_per_shot
+	last_fired = world.time
+
+	// Create projectile
+	var/turf/start_turf = get_turf(wearer)
+	var/obj/projectile/acid_shot/P = new(start_turf)
+
+	// Fire projectile
+	playsound(src, 'sound/effects/spray2.ogg', 30, TRUE)
+	P.preparePixelProjectile(target, start_turf)
+	P.firer = wearer
+	P.fired_from = src
+	P.fire()
+
+	// Visual feedback
+	wearer.visible_message(
+		span_danger("[src] automatically sprays acid at [target]!"),
+		span_notice("Your automatic defense system sprays acid at [target]!")
+	)
+
+// Toggle action for the automatic acid sprayer
+/datum/action/item_action/toggle_auto_acid_sprayer
+	name = "Toggle Automatic Defense"
+	desc = "Activate or deactivate the automatic acid sprayer defense system."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "sniper_zoom"
+
+/datum/action/item_action/toggle_auto_acid_sprayer/Trigger()
+	if(!istype(target, /obj/item/auto_acid_sprayer))
+		return
+
+	var/obj/item/auto_acid_sprayer/sprayer = target
+	if(sprayer.active)
+		sprayer.deactivate()
+	else
+		sprayer.activate()
+	return TRUE

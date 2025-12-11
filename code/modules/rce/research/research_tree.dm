@@ -24,6 +24,7 @@
 	pyro_grenade.desc = "Produces a portable factory that manufactures R-Corp pyro grenades that create fire zones."
 	pyro_grenade.tier = RCE_RESEARCH_TIER_1
 	pyro_grenade.cost = 38
+	pyro_grenade.branch = "hellfire"
 	pyro_grenade.prerequisites = list("fuel_tank")
 	pyro_grenade.unlocked_path = /obj/item/portable_factory/pyro_grenade
 	pyro_grenade.favored_traits = list(
@@ -44,6 +45,7 @@
 	fuel_tank.tier = 0
 	fuel_tank.cost = 150
 	fuel_tank.is_starter_kit = TRUE
+	fuel_tank.branch = "hellfire"
 	fuel_tank.prerequisites = list()
 	fuel_tank.unlocked_path = /obj/item/storage/box/fuel_tank_starter_kit
 	fuel_tank.favored_traits = list(
@@ -102,14 +104,15 @@
 	// Tier 2 - Advanced Pyro
 	var/datum/rce_research_node/auto_flamethrower = new
 	auto_flamethrower.id = "auto_flamethrower"
-	auto_flamethrower.name = "Automatic Defense Flamethrower"
-	auto_flamethrower.desc = "Automated flamethrower system that detects and engages hostile targets automatically."
+	auto_flamethrower.name = "Automatic Defense Acid Sprayer"
+	auto_flamethrower.desc = "Automated acid sprayer system that detects and engages hostile targets automatically with corrosive projectiles."
 	auto_flamethrower.tier = RCE_RESEARCH_TIER_2
-	auto_flamethrower.cost = 1620
-	auto_flamethrower.prerequisites = list("fuel_tank")
-	auto_flamethrower.unlocked_path = /obj/item/auto_flamethrower
+	auto_flamethrower.cost = 420
+	auto_flamethrower.branch = "venom"
+	auto_flamethrower.prerequisites = list("acid_tank")
+	auto_flamethrower.unlocked_path = /obj/item/auto_acid_sprayer
 	auto_flamethrower.favored_traits = list(
-		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
 		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
 		TRAIT_NEURAL = TRAIT_BONUS_MODERATE,
 		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE
@@ -119,7 +122,7 @@
 		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
 		TRAIT_FODDER = TRAIT_PENALTY_MINOR
 	)
-	auto_flamethrower.required_traits = list(TRAIT_VOLATILE, TRAIT_MECHANICAL, TRAIT_NEURAL)
+	auto_flamethrower.required_traits = list(TRAIT_TOXIC, TRAIT_MECHANICAL, TRAIT_NEURAL)
 	GLOB.rce_research_nodes[auto_flamethrower.id] = auto_flamethrower
 
 	// VENOM RATTLESNAKES - TOXIC WEAPONS TREE
@@ -163,6 +166,66 @@
 		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
 	)
 	GLOB.rce_research_nodes[acid_canister.id] = acid_canister
+
+	var/datum/rce_research_node/acid_grenade = new
+	acid_grenade.id = "acid_grenade"
+	acid_grenade.name = "Acid Grenade Manufacturing"
+	acid_grenade.desc = "Produces a portable factory that manufactures acid grenades that create toxic puddles."
+	acid_grenade.tier = RCE_RESEARCH_TIER_1
+	acid_grenade.cost = 40
+	acid_grenade.branch = "venom"
+	acid_grenade.prerequisites = list("acid_tank")
+	acid_grenade.unlocked_path = /obj/item/portable_factory/acid_grenade
+	acid_grenade.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_VOLATILE = TRAIT_BONUS_MODERATE,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MINOR
+	)
+	acid_grenade.negative_traits = list(
+		TRAIT_PRECISION = TRAIT_PENALTY_MINOR,
+		TRAIT_ARMORED = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[acid_grenade.id] = acid_grenade
+
+	var/datum/rce_research_node/toxic_mine = new
+	toxic_mine.id = "toxic_mine"
+	toxic_mine.name = "Toxic Mine Manufacturing"
+	toxic_mine.desc = "Produces proximity-triggered mines that spray corrosive acid when enemies approach."
+	toxic_mine.tier = RCE_RESEARCH_TIER_1
+	toxic_mine.cost = 36
+	toxic_mine.branch = "venom"
+	toxic_mine.prerequisites = list("acid_tank")
+	toxic_mine.unlocked_path = /obj/item/portable_factory/toxic_mine
+	toxic_mine.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_PRECISION = TRAIT_BONUS_MINOR
+	)
+	toxic_mine.negative_traits = list(
+		TRAIT_ERRATIC = TRAIT_PENALTY_MAJOR,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[toxic_mine.id] = toxic_mine
+
+	var/datum/rce_research_node/venom_launcher = new
+	venom_launcher.id = "venom_launcher"
+	venom_launcher.name = "Venom Launcher"
+	venom_launcher.desc = "A ranged launcher that fires toxic shells dealing massive bonus damage to venom-marked targets."
+	venom_launcher.tier = RCE_RESEARCH_TIER_1
+	venom_launcher.cost = 42
+	venom_launcher.branch = "venom"
+	venom_launcher.prerequisites = list("acid_tank")
+	venom_launcher.unlocked_path = /obj/item/ego_weapon/ranged/venom_launcher
+	venom_launcher.favored_traits = list(
+		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE,
+		TRAIT_ORGANIC = TRAIT_BONUS_MINOR
+	)
+	venom_launcher.negative_traits = list(
+		TRAIT_MECHANICAL = TRAIT_PENALTY_MINOR,
+		TRAIT_PRECISION = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[venom_launcher.id] = venom_launcher
 
 	var/datum/rce_research_node/heavy_venom_armor = new
 	heavy_venom_armor.id = "heavy_venom_armor"
@@ -297,10 +360,10 @@
 	miasma_barrier.id = "miasma_barrier"
 	miasma_barrier.name = "Miasma Barrier Projector"
 	miasma_barrier.desc = "Projects a wall of corrosive miasma that poisons enemies who pass through."
-	miasma_barrier.tier = RCE_RESEARCH_TIER_2
-	miasma_barrier.cost = 420
+	miasma_barrier.tier = RCE_RESEARCH_TIER_3
+	miasma_barrier.cost = 600
 	miasma_barrier.branch = "venom"
-	miasma_barrier.prerequisites = list("acid_tank")
+	miasma_barrier.prerequisites = list("blight_sprayer")
 	miasma_barrier.unlocked_path = /obj/item/ego_weapon/miasma_barrier
 	miasma_barrier.favored_traits = list(
 		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
@@ -314,6 +377,29 @@
 	)
 	miasma_barrier.required_traits = list(TRAIT_TOXIC, TRAIT_ADAPTIVE, TRAIT_ORGANIC)
 	GLOB.rce_research_nodes[miasma_barrier.id] = miasma_barrier
+
+	var/datum/rce_research_node/corrosive_turret = new
+	corrosive_turret.id = "corrosive_turret"
+	corrosive_turret.name = "Flame Spray Turret"
+	corrosive_turret.desc = "Deployable automatic turret that sprays flames at approaching enemies. Draws enemy aggro when deployed."
+	corrosive_turret.tier = RCE_RESEARCH_TIER_2
+	corrosive_turret.cost = 400
+	corrosive_turret.branch = "hellfire"
+	corrosive_turret.prerequisites = list("fuel_tank")
+	corrosive_turret.unlocked_path = /obj/item/flame_turret_deployable
+	corrosive_turret.favored_traits = list(
+		TRAIT_VOLATILE = TRAIT_BONUS_MAJOR,
+		TRAIT_MECHANICAL = TRAIT_BONUS_MAJOR,
+		TRAIT_ADAPTIVE = TRAIT_BONUS_MODERATE,
+		TRAIT_WEAPONIZED = TRAIT_BONUS_MODERATE
+	)
+	corrosive_turret.negative_traits = list(
+		TRAIT_ORGANIC = TRAIT_PENALTY_MODERATE,
+		TRAIT_RCE_PRIMITIVE = TRAIT_PENALTY_MODERATE,
+		TRAIT_FODDER = TRAIT_PENALTY_MINOR
+	)
+	corrosive_turret.required_traits = list(TRAIT_VOLATILE, TRAIT_MECHANICAL, TRAIT_ADAPTIVE)
+	GLOB.rce_research_nodes[corrosive_turret.id] = corrosive_turret
 
 	// Tier 3 - Elite Toxic
 	var/datum/rce_research_node/venom_strike = new
@@ -343,10 +429,10 @@
 	corrosive_gauntlets.id = "corrosive_gauntlets"
 	corrosive_gauntlets.name = "Corrosive Burst Gauntlets"
 	corrosive_gauntlets.desc = "Heavy gauntlets that channel acid into explosive toxic bursts."
-	corrosive_gauntlets.tier = RCE_RESEARCH_TIER_3
-	corrosive_gauntlets.cost = 660
+	corrosive_gauntlets.tier = RCE_RESEARCH_TIER_2
+	corrosive_gauntlets.cost = 380
 	corrosive_gauntlets.branch = "venom"
-	corrosive_gauntlets.prerequisites = list("blight_sprayer")
+	corrosive_gauntlets.prerequisites = list("acid_tank")
 	corrosive_gauntlets.unlocked_path = /obj/item/ego_weapon/corrosive_gauntlets
 	corrosive_gauntlets.favored_traits = list(
 		TRAIT_TOXIC = TRAIT_BONUS_MAJOR,
@@ -432,7 +518,7 @@
 	var/datum/rce_research_node/inferno_field = new
 	inferno_field.id = "inferno_field"
 	inferno_field.name = "Inferno Field Generator"
-	inferno_field.desc = "Creates a massive field of intense flames that incinerates everything within."
+	inferno_field.desc = "Creates a moving field of intense flames that incinerates everything. Moves in the direction faced, stops at walls, lasts 10 seconds."
 	inferno_field.tier = RCE_RESEARCH_TIER_3
 	inferno_field.cost = 780
 	inferno_field.branch = "hellfire"
@@ -739,6 +825,36 @@
 	name = "EMP grenade factory"
 	desc = "Produces R-Corp EMP grenades."
 	item = /obj/item/grenade/r_corp/emp
+	resistance_flags = INDESTRUCTIBLE
+	rcost = 1
+	gcost = 1
+
+// VENOM WEAPON FACTORIES
+
+/obj/item/portable_factory/acid_grenade
+	name = "acid grenade factory module"
+	desc = "Deploys a factory that produces R-Corp acid grenades."
+	factory_path = /obj/structure/rcorp_factory/acid_grenade
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/rcorp_factory/acid_grenade
+	name = "acid grenade factory"
+	desc = "Produces R-Corp acid grenades using red and green materials."
+	item = /obj/item/grenade/r_corp/acid
+	resistance_flags = INDESTRUCTIBLE
+	rcost = 1
+	gcost = 1
+
+/obj/item/portable_factory/toxic_mine
+	name = "toxic mine factory module"
+	desc = "Deploys a factory that produces toxic proximity mines."
+	factory_path = /obj/structure/rcorp_factory/toxic_mine
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/rcorp_factory/toxic_mine
+	name = "toxic mine factory"
+	desc = "Produces toxic proximity mines."
+	item = /obj/item/toxic_mine
 	resistance_flags = INDESTRUCTIBLE
 	rcost = 1
 	gcost = 1

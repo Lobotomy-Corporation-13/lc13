@@ -25,7 +25,7 @@
 	fire_sound = 'sound/effects/burn.ogg'
 	autofire = 0.08 SECONDS
 	fire_sound_volume = 10
-	var/fuel_per_shot = 5
+	var/fuel_per_shot = 7
 	var/obj/item/rce_resource_tank/fuel_backpack/fuel_tank
 
 /obj/item/ego_weapon/ranged/heavy_flamethrower/examine(mob/user)
@@ -647,7 +647,7 @@
 	opacity = TRUE
 	density = FALSE
 	var/move_dir
-	var/moves_remaining = 10
+	var/moves_remaining = 5
 	var/damage_per_tick = 20
 
 /obj/effect/moving_fire_cloud/Initialize(mapload, dir)
@@ -768,9 +768,6 @@
 		to_chat(victim, span_userdanger("The thermite spikes pierce and ignite your legs!"))
 		new /obj/effect/rcorp_fire(get_turf(victim))
 
-		// Slow the victim briefly
-		victim.Immobilize(10)
-
 	uses--
 	if(uses <= 0)
 		visible_message(span_notice("[src] breaks apart."))
@@ -846,7 +843,7 @@
 		if(is_hellfire_rooster(L))
 			continue
 
-		L.deal_damage(50, FIRE)
+		L.deal_damage(100, FIRE)
 		L.apply_lc_overheat(40)
 		to_chat(L, span_userdanger("The incendiary bombardment engulfs you in flames!"))
 
@@ -862,18 +859,17 @@
 	attack_verb_continuous = list("slashes", "incinerates", "cleaves")
 	attack_verb_simple = list("slash", "incinerate", "cleave")
 	hitsound = 'sound/weapons/bladeslice.ogg'
-	attribute_requirements = list(
-		FORTITUDE_ATTRIBUTE = 100,
-		PRUDENCE_ATTRIBUTE = 60,
-		JUSTICE_ATTRIBUTE = 80
-	)
 	var/fuel_cost = 20
 	var/spin_cooldown = 0
 	var/spin_cooldown_time = 100
 
 /obj/item/ego_weapon/inferno_scythe/attack(mob/living/target, mob/living/user)
-	. = ..()
+	// Check for Hellfire Rooster implant
+	if(!is_hellfire_rooster(user))
+		to_chat(user, span_warning("You need the Hellfire Rooster combat implant to use this weapon!"))
+		return
 
+	. = ..()
 	if(. && !is_hellfire_rooster(target))
 		// Apply overheat on hit
 		target.apply_lc_overheat(10)
@@ -884,6 +880,11 @@
 				new /obj/effect/rcorp_fire(T)
 
 /obj/item/ego_weapon/inferno_scythe/attack_self(mob/user)
+	// Check for Hellfire Rooster implant
+	if(!is_hellfire_rooster(user))
+		to_chat(user, span_warning("You need the Hellfire Rooster combat implant to perform this technique!"))
+		return
+
 	if(spin_cooldown > world.time)
 		to_chat(user, span_warning("You're still recovering from the last spin!"))
 		return
@@ -956,8 +957,9 @@
 /obj/item/inferno_field_generator/proc/activate(mob/user)
 	active = TRUE
 	var/turf/T = get_turf(user)
-	current_field = new /obj/effect/inferno_field(T)
-	user.visible_message(span_danger("[user] activates [src], creating a field of intense flames!"))
+	var/user_dir = user.dir
+	current_field = new /obj/effect/inferno_field(T, user_dir)
+	user.visible_message(span_danger("[user] activates [src], creating a moving field of intense flames!"))
 	playsound(src, 'sound/effects/ordeals/green/fire.ogg', 100, TRUE)
 
 /obj/item/inferno_field_generator/proc/deactivate()
@@ -975,29 +977,39 @@
 // Inferno field effect
 /obj/effect/inferno_field
 	name = "inferno field"
-	desc = "An intense field of flames that incinerates everything."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "shield2"
+	desc = "An intense moving field of flames that incinerates everything."
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "clockwork_gateway_closing"
 	anchored = TRUE
 	density = FALSE
 	opacity = FALSE
-	var/field_range = 5
-	var/damage_per_tick = 12
+	var/field_range = 2
+	var/damage_per_tick = 45
 	var/fire_chance = 50
+	var/move_dir = NORTH
+	var/move_delay = 10 // Move every 10 ticks (~1 second)
+	var/ticks_since_move = 0
+	var/lifetime = 100 // 10 seconds (100 ticks at 0.1s per tick)
+	var/ticks_alive = 0
 
-/obj/effect/inferno_field/Initialize()
+/obj/effect/inferno_field/Initialize(mapload, direction = NORTH)
 	. = ..()
+	move_dir = direction
 	color = "#FF4400"
 	alpha = 150
-	transform = matrix() * 5
 	set_light(field_range, 2, "#FF4400")
 	START_PROCESSING(SSobj, src)
+	QDEL_IN(src, 10 SECONDS)
 
 /obj/effect/inferno_field/Destroy()
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
 /obj/effect/inferno_field/process()
+	ticks_alive++
+	ticks_since_move++
+
+	// Damage everything in range
 	for(var/mob/living/L in range(field_range, src))
 		if(L.stat == DEAD)
 			continue
@@ -1012,3 +1024,172 @@
 	for(var/turf/T in range(field_range, src))
 		if(prob(fire_chance) && !locate(/obj/effect/rcorp_fire) in T)
 			new /obj/effect/rcorp_fire(T)
+
+	// Move the field periodically
+	if(ticks_since_move >= move_delay)
+		ticks_since_move = 0
+		TryMove()
+
+/obj/effect/inferno_field/proc/TryMove()
+	var/turf/next_turf = get_step(src, move_dir)
+
+	// Check if we can move there
+	if(!next_turf)
+		return
+
+	// Stop if we hit a closed turf (wall)
+	if(isclosedturf(next_turf))
+		return
+
+	// Move to the next location
+	forceMove(next_turf)
+
+// FLAME TURRET - Tier 2 Deployable (Hellfire Branch)
+// Projectile that applies fire damage and overheat
+/obj/projectile/flame_spray
+	name = "flame spray"
+	icon_state = "fireball"
+	damage = 25
+	damage_type = BURN
+	color = "#ff4400"
+
+/obj/projectile/flame_spray/on_hit(atom/target, blocked)
+	. = ..()
+	if(isliving(target))
+		var/mob/living/L = target
+		if(!is_hellfire_immune(L))
+			L.apply_overheat(5)
+
+/obj/item/flame_turret_deployable
+	name = "flame turret module"
+	desc = "A deployable automatic turret that shoots flames at hostile simple mobs. Use in-hand to deploy."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "signaller"
+	color = "#ff4400"
+	w_class = WEIGHT_CLASS_NORMAL
+	var/stored_fuel = 200  // Fuel stored in the deployable
+
+/obj/item/flame_turret_deployable/examine(mob/user)
+	. = ..()
+	. += span_notice("Use in hand to deploy the turret.")
+	. += span_notice("Stored fuel: [stored_fuel]/200")
+
+/obj/item/flame_turret_deployable/attack_self(mob/user)
+	. = ..()
+	var/turf/T = get_turf(user)
+	if(!istype(T))
+		to_chat(user, span_warning("You can't deploy [src] here!"))
+		return
+
+	to_chat(user, span_notice("You deploy [src]..."))
+	playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+
+	if(!do_after(user, 2 SECONDS, target = user))
+		to_chat(user, span_warning("You stop deploying [src]."))
+		return
+
+	// Create turret with stored fuel
+	var/obj/machinery/porta_turret/flame_turret/turret = new(T)
+	turret.fuel_storage = stored_fuel
+	to_chat(user, span_notice("You deploy the turret!"))
+	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+	qdel(src)
+
+// Simple turret that only shoots hostile simple mobs
+/obj/machinery/porta_turret/flame_turret
+	name = "flame spray turret"
+	desc = "An automatic turret that sprays flames at hostile creatures."
+	icon_state = "syndie_lethal"
+	base_icon_state = "syndie"
+	color = "#ff4400"
+	max_integrity = 150
+
+	// Turret configuration - no cover, always up, no power needed
+	has_cover = FALSE
+	always_up = TRUE
+	use_power = NO_POWER_USE
+	uses_stored = FALSE
+
+	// Targeting - only shoot hostile simple mobs
+	turret_flags = TURRET_FLAG_SHOOT_ANOMALOUS
+	faction = list("neutral")
+
+	// Weapon configuration
+	scan_range = 5
+	shot_delay = 20  // 2 seconds between shots
+	lethal_projectile = /obj/projectile/flame_spray
+	lethal_projectile_sound = 'sound/effects/burn.ogg'
+	mode = TURRET_LETHAL
+
+	var/fuel_storage = 200
+	var/max_fuel_storage = 200
+	var/fuel_per_shot = 15
+
+/obj/machinery/porta_turret/flame_turret/examine(mob/user)
+	. = ..()
+	. += span_notice("Fuel: [fuel_storage]/[max_fuel_storage]")
+	. += span_notice("Automatically targets hostile creatures within [scan_range] tiles.")
+
+/obj/machinery/porta_turret/flame_turret/shootAt(atom/movable/target)
+	// Check if we have enough fuel
+	if(fuel_storage < fuel_per_shot)
+		return
+
+	// Consume fuel instead of power
+	fuel_storage -= fuel_per_shot
+
+	// Fire the projectile
+	if(!raised)
+		return
+
+	if(last_fired + shot_delay > world.time)
+		return
+	last_fired = world.time
+
+	var/turf/T = get_turf(src)
+	var/turf/U = get_turf(target)
+	if(!istype(T) || !istype(U))
+		return
+
+	update_icon()
+	var/obj/projectile/A = new lethal_projectile(T)
+	playsound(loc, lethal_projectile_sound, 75, TRUE)
+
+	A.preparePixelProjectile(target, T)
+	A.firer = src
+	A.fired_from = src
+	A.fire()
+	return A
+
+/obj/machinery/porta_turret/flame_turret/attackby(obj/item/I, mob/user, params)
+	// Refill with fuel canister
+	if(istype(I, /obj/item/rce_canister/fuel))
+		var/obj/item/rce_canister/fuel/can = I
+		var/transfer = min(can.fuel_amount, max_fuel_storage - fuel_storage)
+		if(transfer <= 0)
+			to_chat(user, span_warning("[src]'s fuel tank is full!"))
+			return TRUE
+
+		can.fuel_amount -= transfer
+		fuel_storage += transfer
+		to_chat(user, span_notice("You refill [src] with [transfer] fuel."))
+		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
+		return TRUE
+
+	// Dismantle with crowbar
+	if(I.tool_behaviour == TOOL_CROWBAR)
+		to_chat(user, span_notice("You begin dismantling [src]..."))
+		playsound(src, 'sound/items/crowbar.ogg', 50, TRUE)
+
+		if(!do_after(user, 3 SECONDS, target = src))
+			to_chat(user, span_warning("You stop dismantling [src]."))
+			return TRUE
+
+		to_chat(user, span_notice("You dismantle [src]."))
+		// Preserve fuel storage in the deployable
+		var/obj/item/flame_turret_deployable/deployable = new(get_turf(src))
+		deployable.stored_fuel = fuel_storage
+		qdel(src)
+		return TRUE
+
+	return ...()
