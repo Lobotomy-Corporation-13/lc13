@@ -14,7 +14,7 @@
 	aim_assist = TRUE
 	var/thinline_damage = 50
 	var/thinline_pale_damage_coeff = 0.8 // Only applied when using the PALE version on a mob
-	var/line_damage = 200
+	var/line_damage = 120
 	var/line_pale_damage_coeff = 0.6
 	var/mech_damage_coeff = 6 // I HATE RHINOS I HATE RHINOS
 	var/simplemob_coeff = 5 // Multiplies damage dealt by this much vs. Simplemobs (abnos, ordeals)
@@ -52,13 +52,14 @@
 		playsound(tin_can, 'sound/magic/arbiter/thinline_hit.ogg', 75, FALSE, 6)
 		// If we managed to find the occupant, deal 75% damage to them too.
 		if(flesh_cannot)
+			// Calculate damage
 			var/final_damage = thinline_damage * 0.75
 			if(damage_type == PALE_DAMAGE)
 				final_damage *= thinline_pale_damage_coeff
 			if(istype(flesh_cannot, /mob/living/simple_animal))
 				final_damage *= simplemob_coeff
 			flesh_cannot.deal_damage(final_damage, damage_type, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
-			if(ispath(status_inflicted_type))
+			if(ispath(status_inflicted_type)) // sanity check in case someone removes the status from this
 				flesh_cannot.apply_status_effect(status_inflicted_type)
 			flesh_cannot.visible_message(span_danger("[flesh_cannot] is trapped by an array of thin [damage_type] lines!"), span_userdanger("You're trapped by an array of thin [damage_type] lines!"))
 
@@ -68,19 +69,22 @@
 
 		DisplayVFX(gremlin, appropiate_color)
 
+		// Calculate damage
 		var/final_damage = thinline_damage
 		if(damage_type == PALE_DAMAGE)
 			final_damage *= thinline_pale_damage_coeff
 		if(istype(gremlin, /mob/living/simple_animal))
 			final_damage *= simplemob_coeff
 		gremlin.deal_damage(final_damage, damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
-		if(ispath(status_inflicted_type))
+
+		if(ispath(status_inflicted_type)) // sanity check in case someone removes the status from this
 			gremlin.apply_status_effect(status_inflicted_type)
 		gremlin.visible_message(span_danger("[gremlin] is trapped by an array of thin [damage_type] lines!"), span_userdanger("You're trapped by an array of thin [damage_type] lines!"))
 		playsound(gremlin, 'sound/magic/arbiter/thinline_hit.ogg', 75, FALSE, 6)
 
 	addtimer(CALLBACK(src, PROC_REF(LineFollowup), unfortunate, user, appropiate_color), 1.2 SECONDS)
 
+// This is the mini-Thick Line that we shoot after the Thin Line. It is guaranteed to hit and has no AoE.
 /obj/effect/proc_holder/spell/pointed/birdcage/proc/LineFollowup(target, mob/caster, appropiate_color)
 	if((!target) || (!caster))
 		return
@@ -134,6 +138,7 @@
 		temp.transform = temp.transform * 2
 		temp.color = appropiate_color
 
+// This displays the Thin Line overlay on the target, accounting for where their icon's center actually is
 /obj/effect/proc_holder/spell/pointed/birdcage/proc/DisplayVFX(atom/our_target, appropiate_color)
 	var/image/cool_overlay = image('ModularLobotomy/_Lobotomyicons/48x48.dmi', loc = our_target, icon_state = "thin_line", layer = our_target.layer + 2)
 	var/icon/target_icon = icon(our_target.icon, our_target.icon_state, our_target.dir)
@@ -157,5 +162,7 @@
 			return FALSE
 	. = ..()
 
+// Lasts less than regular Chain and doesn't show the Chain overlay when being applied
 /datum/status_effect/arbiter_chain/birdcage
 	duration = 3 SECONDS
+	should_show_chain_overlay = FALSE
