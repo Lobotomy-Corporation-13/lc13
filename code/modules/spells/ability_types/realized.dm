@@ -67,6 +67,11 @@
 	action_icon_state = "combust"
 	target_type = /obj/item/ego_weapon/shield/waxen
 
+/obj/effect/proc_holder/ability/ego_assimilation/eldtree
+	base_icon_state = "lce_lantern"
+	action_icon_state = "lce_lantern"
+	target_type = /obj/item/ego_weapon/eldtree
+
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
 	name = "Song of the Universe"
@@ -1869,7 +1874,8 @@
 			modified_guns -= did_you_try_smuggling_one_of_these
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
-// For the Deception realization.
+
+// For the Eldtree realization.
 /obj/effect/proc_holder/ability/fairy_lure
 	name = "Fairy Lure"
 	desc = "Forces nearby enemies to attack you for 10 seconds. This includes potentially passive enemies."

@@ -2243,3 +2243,24 @@
 	damage = 85
 	damage_type = WHITE_DAMAGE
 	icon_state = "star"
+
+/// An ALEPH E.G.O. weapon related to Faelantern (Midwinter Nightmare). Does not come from the abno itself - only sources are Wishing Well and Eldtree realization assimilation.
+/obj/item/ego_weapon/eldtree
+	name = "eldtree"
+	desc = "A large warhammer, fashioned primarily out of wooden branches and tipped with a metal head. On closer inspection, a myriad malevolent eyes can be sighted inside. \n\
+	It serves as a good reminder that the true essence of things is always hidden within. Never trust the facades presented to you."
+	icon_state = "lce_lantern"
+	inhand_icon_state = "lce_lantern"
+	force = 105
+	swingstyle = WEAPONSWING_LARGESWEEP
+	damtype = WHITE_DAMAGE
+	attack_speed = 1.5
+	attack_verb_continuous = list("slams", "bashes", "crushes", "pulverizes", "obliterates", "wallops", "bonks")
+	attack_verb_simple = list("slam", "bash", "crush", "pulverize", "obliterate", "wallop", "bonk")
+	hitsound = 'sound/weapons/ego/heavy_guard.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 80
+							)

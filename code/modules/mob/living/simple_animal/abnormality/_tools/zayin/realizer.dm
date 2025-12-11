@@ -22,7 +22,7 @@
 		/obj/item/clothing/suit/armor/ego_gear/teth/match 			= /obj/item/clothing/suit/armor/ego_gear/realization/ember_matchlight,
 		/obj/item/clothing/suit/armor/ego_gear/teth/blossoms 		= /obj/item/clothing/suit/armor/ego_gear/realization/sakura_bloom,
 		/obj/item/clothing/suit/armor/ego_gear/teth/sloshing		= /obj/item/clothing/suit/armor/ego_gear/realization/stupor,
-		/obj/item/clothing/suit/armor/ego_gear/teth/faelantern		= /obj/item/clothing/suit/armor/ego_gear/realization/deception,
+		/obj/item/clothing/suit/armor/ego_gear/teth/faelantern		= /obj/item/clothing/suit/armor/ego_gear/realization/eldtree,
 		// HE
 		/obj/item/clothing/suit/armor/ego_gear/he/grinder 			= /obj/item/clothing/suit/armor/ego_gear/realization/grinder,
 		/obj/item/clothing/suit/armor/ego_gear/he/magicbullet		= /obj/item/clothing/suit/armor/ego_gear/realization/bigiron,

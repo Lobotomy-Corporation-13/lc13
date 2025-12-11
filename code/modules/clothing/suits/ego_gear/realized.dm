@@ -145,7 +145,7 @@ No Ability	250
 	flags_inv = null
 
 /obj/item/clothing/suit/armor/ego_gear/realization/exsanguination
-	name = "exsaungination"
+	name = "exsanguination"
 	desc = "It keeps your suit relatively clean."
 	icon_state = "exsanguination"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 80, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)			//No ability
@@ -183,13 +183,13 @@ No Ability	250
 	desc = "Many people look for oblivion at the bottom of the glass, I can't be blamed if I give it to 'em now, can I?"
 	icon_state = "stupor"
 
-/obj/item/clothing/suit/armor/ego_gear/realization/deception
-	name = "deception"
+/obj/item/clothing/suit/armor/ego_gear/realization/eldtree
+	name = "eldtree"
 	desc = "Not a single good thing in this City is freely given."
 	icon_state = "lce_lantern"
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 70)		// 230, tank realization so you should get a shield or parry weapon
 	realized_ability = /obj/effect/proc_holder/ability/fairy_lure
-	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/deception
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/eldtree
 
 /* HE Realizations */
 
