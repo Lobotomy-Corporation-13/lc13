@@ -45,7 +45,7 @@
 			flesh_cannot = pick(tin_can.occupants) // Goofball inside the mech
 
 		// Show the VFX as an overlay on the mech
-		DisplayVFX(flesh_cannot, appropiate_color)
+		DisplayVFX(tin_can, appropiate_color)
 
 		// Deal damage to mech
 		tin_can.take_damage(thinline_damage * mech_damage_coeff, damage_type)

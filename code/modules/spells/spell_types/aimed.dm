@@ -382,7 +382,7 @@
 			if(length(tin_can.occupants) > 0)
 				var/mob/living/gulp = pick(tin_can.occupants)
 				if(gulp && !(gulp in hit_list))
-					gulp |= hit_list
+					hit_list |= gulp
 					gulp.deal_damage((damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : (line_damage * 0.80)), damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 					gulp.apply_arbiter_powernull(powernull_stacks_per_hit)
 					gulp.visible_message(span_danger("[gulp] is torn apart by a thick [damage_type] line!"), span_userdanger("You're torn apart by a thick [damage_type] line!"))
