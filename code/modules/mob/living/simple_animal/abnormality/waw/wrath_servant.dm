@@ -382,6 +382,7 @@
 		SLEEP_CHECK_DEATH(8)
 		src.datum_reference.qliphoth_change(-2)
 		src.faction = list("neutral")
+		swap_area_index(MOB_SIMPLEANIMAL_INDEX) // Don't disrupt regenerators
 		fear_level = TETH_LEVEL
 		toggle_ai(AI_ON)
 		status_flags &= ~GODMODE
@@ -398,6 +399,7 @@
 	fear_level = WAW_LEVEL
 	speak_emote = list("growls")
 	friendly = FALSE
+	swap_area_index(MOB_ABNORMALITY_INDEX) // Disrupt regenerators
 	adjustBruteLoss(-src.getMaxHealth())
 	playsound(src, 'sound/abnormalities/wrath_servant/enrage.ogg', 100, FALSE, 40, falloff_distance = 20)
 	toggle_ai(AI_ON)
@@ -500,6 +502,7 @@
 	breach_affected = list()
 	adjustBruteLoss(-maxHealth, forced = TRUE)
 	toggle_ai(AI_OFF)
+	swap_area_index(MOB_ABNORMALITY_INDEX)
 	status_flags |= GODMODE
 	dir = EAST
 	can_act = TRUE
@@ -569,6 +572,7 @@
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/wrath_servant/death(gibbed)
+	swap_area_index(MOB_ABNORMALITY_INDEX)
 	if(!datum_reference)
 		return ..()
 	if(nihil_present)
