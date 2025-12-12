@@ -166,6 +166,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/judgement_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
 	omw_to_apoc = FALSE
+	docile_confinement = FALSE
 	. = ..()
 	if(IsCombatMap())
 		judgement_damage = 65
@@ -203,6 +204,7 @@
 	if(omw_to_apoc) // Nah I'd Walk
 		return
 	. = ..()
+
 
 //Runaway birds - Mini Simple Smile, 2 spawned after Jbird kills a player, and 2 on spawn.
 /mob/living/simple_animal/hostile/runawaybird

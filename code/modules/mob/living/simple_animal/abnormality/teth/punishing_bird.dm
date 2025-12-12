@@ -320,6 +320,7 @@
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	omw_to_apoc = FALSE
+	docile_confinement = FALSE
 	icon_state = initial(icon_state)
 	icon_living = initial(icon_living)
 	pixel_x = initial(pixel_x)

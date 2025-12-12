@@ -103,6 +103,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/investigation_cooldown
 	var/investigation_cooldown_duration = 20 SECONDS
 
+	// When this var is TRUE, will not attempt to break out of somewhere it's confined in or buckled to.
+	var/docile_confinement = FALSE
+
 /mob/living/simple_animal/hostile/Initialize()
 	/*Update Speed overrides set speed and sets it
 		to the equivilent of move_to_delay. Basically
@@ -1103,6 +1106,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 
 /mob/living/simple_animal/hostile/proc/EscapeConfinement()
+	if(docile_confinement) // Use this var to stop this behaviou
+		return
 	if(buckled)
 		buckled.attack_animal(src)
 	if(!isturf(targets_from.loc) && targets_from.loc != null)//Did someone put us in something?

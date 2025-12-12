@@ -217,6 +217,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
 	omw_to_apoc = FALSE
+	docile_confinement = FALSE
 	. = ..()
 	return
 #undef BIGBIRD_HYPNOSIS_COOLDOWN
