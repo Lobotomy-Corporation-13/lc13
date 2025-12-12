@@ -648,6 +648,7 @@
 	rapid_melee = 1.5
 	move_to_delay = 1.3
 	stat_attack = HARD_CRIT
+	area_index = MOB_SIMPLEANIMAL_INDEX // Won't set off regen threat status
 	/// Will disappear after this time. It's pretty important they don't last forever or people would build up armies of these.
 	var/despawn_time = 18 SECONDS
 	/// How much health they recover per hit.

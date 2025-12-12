@@ -757,6 +757,7 @@
 	icon_dead = "farmwatch_tree"
 	faction = list("neutral")
 	del_on_death = FALSE
+	area_index = MOB_SIMPLEANIMAL_INDEX // Don't trip regenerator threat mode
 
 /mob/living/simple_animal/hostile/farmwatch_plant/Move()
 	return FALSE
@@ -785,6 +786,7 @@
 	icon_dead = "spicebush_tree"
 	faction = list("neutral")
 	del_on_death = FALSE
+	area_index = MOB_SIMPLEANIMAL_INDEX // Don't trip regenerator threat mode
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 1.8 SECONDS
 	var/pulse_damage = -2

@@ -46,6 +46,8 @@
 		"Nothing" = list(FALSE, "Your imagination must be going haywire due to the stress. <br>There's no way such an out-of-place thing could be there!"),
 	)
 
+	area_index = MOB_SIMPLEANIMAL_INDEX // It's been setting off regenerator threat detection for years oh my god
+
 /mob/living/simple_animal/hostile/abnormality/training_rabbit/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
 	GiveTarget(user)
