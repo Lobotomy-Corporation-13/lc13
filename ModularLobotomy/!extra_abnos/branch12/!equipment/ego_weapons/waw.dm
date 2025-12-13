@@ -193,7 +193,7 @@
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust / 100
 	var/extra_damage = force * justicemod
-	target.deal_damage(-extra_damage, AGGRO_DAMAGE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+	target.deal_damage(-extra_damage, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 	if(ishostile(target))
 		var/mob/living/simple_animal/hostile/blindfool = target
 		if(blindfool.target != user)

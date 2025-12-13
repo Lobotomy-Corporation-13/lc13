@@ -67,6 +67,10 @@ sharpness - Irrelevant in most cases.
 			adjustBlackLoss(final_damage, forced = bypass_resistance, white_healable = flags & DAMAGE_WHITE_HEALABLE)
 		if(PALE_DAMAGE)
 			adjustPaleLoss(final_damage, forced = bypass_resistance)
+		if(AGGRO_DAMAGE)
+			var/mob/living/simple_animal/hostile/taunted = src
+			if(source && istype(taunted))
+				taunted.RegisterAggroValue(source, final_damage, AGGRO_DAMAGE)
 		else
 			adjustBruteLoss(final_damage, forced = bypass_resistance)
 

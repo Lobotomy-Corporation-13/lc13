@@ -225,5 +225,5 @@
 // Faelantern - Eldtree
 // Faelantern's actual EGO is Midwinter Nightmare. This EGO should never be made available to Faelantern itself, you access it through either the Wishing Well or the assimilation ability on the Eldtree realization.
 /datum/ego_datum/weapon/eldtree
-	item_path = /obj/item/ego_weapon/eldtree
+	item_path = /obj/item/ego_weapon/wield/eldtree
 	cost = 100

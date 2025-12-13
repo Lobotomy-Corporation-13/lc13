@@ -424,7 +424,7 @@
 	filters = null
 	current_movement = 1
 	to_chat(user, span_nicegreen("Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")) // Why nicegreen? All the other Movement messages use it, so it's easier to track in chat.
-	balloon_alert(user, "Da Capo - The Scythe's power wanes and itss influence recedes. You begin anew at the First Movement.")
+	balloon_alert(user, "Da capo - the scythe's power wanes and its influence recedes. You begin anew at the First Movement.")
 	deltimer(movement_timer)
 	if(music_notes_ring && !(music_notes_ring.has_notes_remaining))
 		RingCleanup(music_notes_ring)
@@ -2245,22 +2245,202 @@
 	icon_state = "star"
 
 /// An ALEPH E.G.O. weapon related to Faelantern (Midwinter Nightmare). Does not come from the abno itself - only sources are Wishing Well and Eldtree realization assimilation.
-/obj/item/ego_weapon/eldtree
+/// It has subpar DPS by default, but becomes very strong when the user is being targeted by multiple enemies.
+/// It deals WHITE damage with its melee, and has an Ebony Stem-like AoE ranged attack that deals RED damage, but has a windup.
+/// Can be wielded to gain knockback (and changes the special attack to single target that pulls the enemy to you and deals extra aggro damage)
+// Due to its special attack triggering at range but having a windup and applying click delay, it's harder to hit and run with this weapon (you can still do it by using sweeps correctly and not mashing).
+/obj/item/ego_weapon/wield/eldtree
 	name = "eldtree"
-	desc = "A large warhammer, fashioned primarily out of wooden branches and tipped with a metal head. On closer inspection, a myriad malevolent eyes can be sighted inside. \n\
+	desc = "A large warhammer, fashioned primarily out of wooden branches and tipped with a metal head. On closer inspection, a myriad of malevolent eyes can be sighted inside. \n\
 	It serves as a good reminder that the true essence of things is always hidden within. Never trust the facades presented to you."
 	icon_state = "lce_lantern"
 	inhand_icon_state = "lce_lantern"
-	force = 105
+	force = 85
+	wielded_force = 110
 	swingstyle = WEAPONSWING_LARGESWEEP
+	swingcolor = "#c2971c"
 	damtype = WHITE_DAMAGE
-	attack_speed = 1.5
+	attack_speed = 1.4
+	wielded_attack_speed = 1.7
 	attack_verb_continuous = list("slams", "bashes", "crushes", "pulverizes", "obliterates", "wallops", "bonks")
 	attack_verb_simple = list("slam", "bash", "crush", "pulverize", "obliterate", "wallop", "bonk")
-	hitsound = 'sound/weapons/ego/heavy_guard.ogg'
+	hitsound = 'sound/weapons/ego/lce_lantern_hit.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
 							PRUDENCE_ATTRIBUTE = 100,
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special = "This weapon <b>gains 5 force</b> for each enemy targeting its user, up to a <b>maximum of 35 extra force</b>. This force gain and its maximum are boosted by 1.25x while wielding the weapon.\n\
+	This weapon gains knockback while wielded. \n\
+	This weapon has access to a justice-scaling <b>ranged RED damage special attack</b> when attacking <b>non-adjacent</b> targets. While using the weapon one-handed, the special attack is weaker but <b>strikes in an area</b>. When wielding the weapon, the special attack is stronger, single-targeted and <b>pulls the struck enemy towards the user</b> while also making them <b>likelier to target the user</b>."
+	/// How much force does the weapon gain per enemy targeting you in sight?
+	var/aggro_force_per_enemy = 5
+	/// How much force can the weapon gain from enemies targeting you, as a maximum?
+	var/aggro_extra_force_cap = 35
+	/// Coefficient for force gained while wielded (that is to say, you will gain more force from aggro when wielding). This modifies aggro_force_per_enemy and aggro_extra_force_cap
+	var/aggro_extra_force_wielded_coeff = 1.25
+	/// How much force do we currently have from enemy aggro?
+	var/aggro_currently_gained_aggro_force
+
+	/// How strong is the weapon's melee knockback when wielding it?
+	var/wielded_knockback_strength = KNOCKBACK_MEDIUM
+	/// How strong is the spike attack's pull when wielding it?
+	var/wielded_pull_strength = 5
+
+	// Spike attack vars. The spike attack is similar to Ebony Queen's Apple or Paradise Lost with the major caveat that it has a windup.
+	// The unwielded version deals less damage but has an AoE, whereas the wielded version deals damage that is competitive with regular melee DPS of the weapon and pulls the enemy towards you.
+	// You get the luxury of picking RED or WHITE damage and being able to AoE, but you will be dealing with pulling enemies if you want max single target DPS, and attacking moving enemies with the spike can be tricky.
+	/// Type of damage dealt by the spike attack.
+	var/spike_damage_type = RED_DAMAGE
+	// I'm sorry the key here is a string, in a perfect world we could just have FALSE/TRUE as keys and pass 'wielded' when accessing these lists, but BYOND won't let me
+	var/list/spike_windup = list("unwielded" = 0.3 SECONDS, "wielded" = 0.5 SECONDS) // Length of the windup for the spike attack
+	var/list/spike_radius = list("unwielded" = 1, "wielded" = 0) // Radius of the spike attack's AOE
+	var/list/spike_damage_coeff = list("unwielded" = 0.8, "wielded" = 1.3) // Damage coefficients applied to the weapon's usual damage when using the spike attack
+
+/obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
+	return 75
+
+/obj/item/ego_weapon/wield/eldtree/examine(mob/user)
+	. = ..()
+	SetAggroForce(user) // This has no consequences but we want to give up-to-date info to the player
+	if(aggro_currently_gained_aggro_force > 0)
+		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder.")
+
+
+/obj/item/ego_weapon/wield/eldtree/attack(mob/living/target, mob/living/user)
+	if(wielded)
+		knockback = KNOCKBACK_MEDIUM
+	else
+		knockback = FALSE
+	SetAggroForce(user) // Gain force depending on how many mobs in sight are targeting the user
+	. = ..()
+
+/// Gain force based on nearby enemies targeting the user.
+/obj/item/ego_weapon/wield/eldtree/proc/SetAggroForce(mob/living/user)
+	if(wielded)
+		force = initial(wielded_force)
+	else
+		force = initial(force)
+
+	var/viewer_amount = 0
+	for(var/mob/living/simple_animal/hostile/menacing_creature in viewers(8, user))
+		if(menacing_creature.target == user)
+			viewer_amount++
+
+	var/force_gain_per_viewer = aggro_force_per_enemy
+	var/force_gain_limit = aggro_extra_force_cap
+	if(wielded) // Gain more force up to a higher limit while wielding. This is to keep the wielded mode competitive with the unwielded one since it attacks slower. (Of course, unwielded is ultimately higher DPS since we want slower weapons to be weaker due to their lesser risk in usage)
+		force_gain_per_viewer *= aggro_extra_force_wielded_coeff
+		force_gain_limit *= aggro_extra_force_wielded_coeff
+
+	var/gained_force = min((viewer_amount * force_gain_per_viewer), (force_gain_limit)) // Will never gain more force than the limit. gained_force can be 0 if we have 0 viewers targeting us.
+	aggro_currently_gained_aggro_force = gained_force
+	force += gained_force
+
+/// This is how we trigger our special ranged attack.
+/obj/item/ego_weapon/wield/eldtree/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(!CanUseEgo(user)) // I hate clerks
+		return
+	var/turf/open/target_turf = get_turf(A) // Only allow targeting open turfs
+	var/turf/user_turf = get_turf(user)
+	if(!istype(target_turf))
+		return
+	if((get_dist(user, target_turf) < 2) || !(target_turf in view(10, user))) // Don't allow targeting adjacent turfs for this, or turfs we can't see
+		return
+
+	user.changeNext_move(CLICK_CD_MELEE * attack_speed) // Prevents telegraph spam. Side effect of making hit-n-runs where you mash attack on the enemy before reaching them a lot more difficult. Still doable if you lock in honestly
+
+	// I hate this so much but BYOND isn't letting me use TRUE and FALSE as keys for a list. So I can't just do spike_windup[wielded], I have to use a string or something. Guh
+	var/are_we_wielded = "unwielded"
+	if(wielded)
+		are_we_wielded = "wielded"
+
+	var/atom/telegraph = new /obj/effect/temp_visual/eldtree_root(target_turf)
+	telegraph.color = "#352819"
+	playsound(user_turf, 'sound/weapons/ego/lce_lantern_spike_prep.ogg', 80, FALSE, 4)
+	QDEL_IN(telegraph, spike_windup[are_we_wielded])
+
+	if(!do_after(user, spike_windup[are_we_wielded], src, interaction_key = "eldtree", max_interact_count = 1))
+		qdel(telegraph) // Get rid of the telegraph early if we cancel the windup
+		return
+
+	..()
+
+	playsound(target_turf, 'sound/weapons/ego/lce_lantern_spike_hit.ogg', 75, TRUE, 6)
+	INVOKE_ASYNC(src, PROC_REF(SpikeAttack), target_turf, user, are_we_wielded) // This proc sleeps so we async it
+	user.changeNext_move(CLICK_CD_MELEE * attack_speed) // Counts as your attack, so here's your cooldown
+
+// Hits the target turf with our spikes. It's a weaker AoE if unwielded, stronger single target with extra aggro and pull effect if wielded. Can be hard to land on enemies.
+/obj/item/ego_weapon/wield/eldtree/proc/SpikeAttack(turf/target_turf, mob/living/user, are_we_wielded = FALSE)
+	if(!target_turf || !user)
+		return
+	var/turf/user_turf = get_turf(user)
+	var/correct_direction = get_dir(get_turf(user), target_turf) // For setting effect visual dir
+	var/turf/in_front_of_user_turf = get_step(user_turf, correct_direction) // So we don't slam enemies directly into us when pulling them
+	var/should_pull = wielded
+
+	SetAggroForce(user)
+	var/final_damage = force
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+
+	final_damage *= justicemod
+	final_damage *= force_multiplier // %dmg buff from Faith & Promise/EO Upgrader/Broken Crown
+	final_damage *= spike_damage_coeff[are_we_wielded]
+
+	var/list/turf/already_hit_turfs = list()
+	var/list/mob_hitlist = list()
+	for(var/i in 1 to (spike_radius[are_we_wielded] + 1)) // Hits the initial turf first, then the ones around it, then the ones around those... etc, while never repeating hit turfs.
+		var/spike_size = max(1 - ((i - 1) * 0.3), 0.25) // First spike looks bigger than the second set, etc
+
+		for(var/turf/open/T in range(i - 1, target_turf)) // Only hits open turfs
+			// Only hit each turf once
+			if(T in already_hit_turfs)
+				continue
+			already_hit_turfs |= T
+
+			// Spike visual
+			var/obj/effect/temp_visual/faespike/fast/R = new(T)
+			R.transform *= spike_size
+			R.dir = correct_direction
+			if(correct_direction & EAST)
+				R.pixel_x += 16
+			else if(correct_direction & WEST)
+				R.pixel_x -= 16
+
+			// Hit all non-faction members in that turf
+			for(var/mob/living/victim in T)
+				if(user.faction_check_mob(victim, FALSE))
+					continue
+				if(victim in mob_hitlist)
+					continue
+				mob_hitlist |= victim
+				victim.deal_damage(final_damage, spike_damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
+				victim.visible_message(span_danger("[victim] is pierced by a burrowing root!"), span_userdanger("You're pierced by a burrowing root!"))
+
+				if(should_pull)
+					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
+					victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+
+				// Hit VFX
+				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
+				temp.dir = pick(NORTHWEST, NORTHEAST, EAST, WEST)
+				temp.color = "#dfb440"
+				temp.transform *= 1.9
+				temp.layer = POINT_LAYER + 1
+
+		sleep(0.1 SECONDS) // This kinda makes it possible for enemies to dodge it like players can dodge a WN pulse but, you know, lock in?
+
+
+/obj/effect/temp_visual/eldtree_root
+	name = "eldtree root"
+	desc = "Shifting roots. Maybe don't stand on them."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
+	icon_state = "vines"
+	duration = 2 SECONDS
+	layer = POINT_LAYER
+
+/obj/effect/temp_visual/faespike/fast
+	name = "eldtree spike"
+	icon_state = "faelantern_spike_fast"

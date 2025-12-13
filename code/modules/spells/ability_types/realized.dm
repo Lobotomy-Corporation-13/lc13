@@ -1,7 +1,7 @@
 /* E.G.O assimilation */
 /obj/effect/proc_holder/ability/ego_assimilation
 	name = "E.G.O assimilation"
-	desc = "Convert an ALEPH E.G.O into a weapon comptaible with your suit. Can only be used once."
+	desc = "Convert an ALEPH E.G.O. weapon into a weapon compatible with your suit. Can only be used once."
 	action_icon = 'icons/obj/ego_weapons.dmi'
 	action_icon_state = ""
 	base_icon_state = "template"
@@ -33,6 +33,8 @@
 	var/list/stufflist = list()
 	var/obj/item/ego_weapon/chosen_ego
 	for(var/obj/item/ego_weapon/i in view(2, user))
+		if(istype(i, target_type)) // If you're trying to create a Gasharpoon weapon then consuming a Gasharpoon weapon to do it is a bit counterintuitive
+			continue
 		stufflist += i
 	chosen_ego = input(user, "Which E.G.O will you assimilate?") as null|anything in stufflist
 	if(!chosen_ego)
@@ -70,7 +72,7 @@
 /obj/effect/proc_holder/ability/ego_assimilation/eldtree
 	base_icon_state = "lce_lantern"
 	action_icon_state = "lce_lantern"
-	target_type = /obj/item/ego_weapon/eldtree
+	target_type = /obj/item/ego_weapon/wield/eldtree
 
 /* Fragment of the Universe - One with the Universe */
 /obj/effect/proc_holder/ability/universe_song
@@ -1905,7 +1907,7 @@
 				continue
 			if(L.stat >= DEAD)
 				continue
-			L.add_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+			L.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
 			addtimer(CALLBACK(src, PROC_REF(EndEnchant), L), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 
 			L.GiveTarget(user)
@@ -1913,7 +1915,7 @@
 	return ..()
 
 /obj/effect/proc_holder/ability/fairy_lure/proc/EndEnchant(mob/living/simple_animal/hostile/victim)
-	victim.cut_overlay(mutable_appearance('ModularTegustation/Teguicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
+	victim.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
 	victim.target_switch_resistance -= 100
 
 /obj/effect/proc_holder/ability/fairy_lure/proc/ResetFilters(mob/user)
