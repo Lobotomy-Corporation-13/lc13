@@ -1050,15 +1050,16 @@
 	name = "flame spray"
 	icon_state = "fireball"
 	damage = 25
-	damage_type = BURN
+	damage_type = FIRE
 	color = "#ff4400"
 
 /obj/projectile/flame_spray/on_hit(atom/target, blocked)
 	. = ..()
-	if(isliving(target))
-		var/mob/living/L = target
-		if(!is_hellfire_immune(L))
-			L.apply_overheat(5)
+	// TODO: Add hellfire immunity check and overheat application when those systems are implemented
+	// if(isliving(target))
+	//	var/mob/living/L = target
+	//	if(!is_hellfire_immune(L))
+	//		L.apply_overheat(5)
 
 /obj/item/flame_turret_deployable
 	name = "flame turret module"
@@ -1165,12 +1166,12 @@
 	// Refill with fuel canister
 	if(istype(I, /obj/item/rce_canister/fuel))
 		var/obj/item/rce_canister/fuel/can = I
-		var/transfer = min(can.fuel_amount, max_fuel_storage - fuel_storage)
+		var/transfer = min(can.current_amount, max_fuel_storage - fuel_storage)
 		if(transfer <= 0)
 			to_chat(user, span_warning("[src]'s fuel tank is full!"))
 			return TRUE
 
-		can.fuel_amount -= transfer
+		can.current_amount -= transfer
 		fuel_storage += transfer
 		to_chat(user, span_notice("You refill [src] with [transfer] fuel."))
 		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
@@ -1192,4 +1193,4 @@
 		qdel(src)
 		return TRUE
 
-	return ...()
+	return ..()

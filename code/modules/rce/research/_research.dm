@@ -33,6 +33,7 @@ GLOBAL_LIST_EMPTY(rce_research_nodes)
 #define TRAIT_MECHANICAL "mechanical"
 #define TRAIT_ORGANIC "organic"
 #define TRAIT_CORRUPTED "corrupted"
+#define TRAIT_HYBRID "hybrid"
 
 // Intelligence traits
 #define TRAIT_NEURAL "neural"
@@ -91,6 +92,8 @@ GLOBAL_LIST_EMPTY(rce_research_nodes)
 			return "Flesh and blood construction"
 		if(TRAIT_CORRUPTED)
 			return "Tainted by greed or corruption"
+		if(TRAIT_HYBRID)
+			return "Mixed organic and mechanical components"
 		// Intelligence
 		if(TRAIT_NEURAL)
 			return "Advanced AI or nervous system"

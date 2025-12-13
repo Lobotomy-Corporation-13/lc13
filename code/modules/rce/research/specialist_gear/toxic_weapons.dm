@@ -1354,12 +1354,12 @@
 	// Refill with acid canister
 	if(istype(I, /obj/item/rce_canister/acid))
 		var/obj/item/rce_canister/acid/can = I
-		var/transfer = min(can.acid_amount, max_acid_storage - acid_storage)
+		var/transfer = min(can.current_amount, max_acid_storage - acid_storage)
 		if(transfer <= 0)
 			to_chat(user, span_warning("[src]'s acid tank is full!"))
 			return TRUE
 
-		can.acid_amount -= transfer
+		can.current_amount -= transfer
 		acid_storage += transfer
 		to_chat(user, span_notice("You refill [src] with [transfer] acid."))
 		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
@@ -1381,7 +1381,7 @@
 		qdel(src)
 		return TRUE
 
-	return ...()
+	return ..()
 
 // AUTO ACID SPRAYER - Tier 2 Automatic Defense (Venom Branch)
 // Projectile for automatic acid sprayer

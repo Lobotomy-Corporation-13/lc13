@@ -488,7 +488,13 @@
 	refill_sound = 'sound/magic/lightningshock.ogg'
 
 /obj/item/rce_resource_tank/capacitor_pack/proc/use_charge(amount)
-	return use_resource(amount)
+	. = use_resource(amount)
+	if(. && ishuman(loc))  // If charge was successfully used and pack is in a human
+		var/mob/living/carbon/human/H = loc
+		var/stacks_to_add = round(amount / 5)  // 1 stack per 5 charge consumed
+		if(stacks_to_add > 0)
+			add_overcharge(H, stacks_to_add)
+	return .
 
 /obj/item/rce_resource_tank/capacitor_pack/dropped(mob/user)
 	. = ..()
@@ -519,23 +525,138 @@
 	if(speed_boost_active)
 		. += span_nicegreen("Speed boost active!")
 
-// Grant speed boost after heavy attacks
-/obj/item/rce_resource_tank/capacitor_pack/proc/grant_speed_boost(mob/living/user, duration = 30)
-	if(speed_boost_active)
+// Grant Overcharge stacks when charge is used
+/obj/item/rce_resource_tank/capacitor_pack/proc/add_overcharge(mob/living/user, amount = 5)
+	if(!ishuman(user))
 		return
-	speed_boost_active = TRUE
-	user.density = FALSE
-	user.add_movespeed_modifier(/datum/movespeed_modifier/storm_escape)
-	addtimer(CALLBACK(src, PROC_REF(remove_speed_boost), user), duration)
-	to_chat(user, span_nicegreen("Capacitor surge grants you enhanced speed!"))
 
-/obj/item/rce_resource_tank/capacitor_pack/proc/remove_speed_boost(mob/living/user)
-	speed_boost_active = FALSE
-	user.density = TRUE
-	user.remove_movespeed_modifier(/datum/movespeed_modifier/storm_escape)
+	// Get or create Overcharge status effect
+	var/datum/status_effect/capacitor_overcharge/overcharge = user.has_status_effect(/datum/status_effect/capacitor_overcharge)
 
-/datum/movespeed_modifier/storm_escape
-	multiplicative_slowdown = -0.5 // Speed boost for escape
+	if(!overcharge)
+		overcharge = user.apply_status_effect(/datum/status_effect/capacitor_overcharge)
+
+	if(overcharge)
+		overcharge.add_stacks(amount)
+
+		// Visual feedback at high stacks
+		if(overcharge.stacks >= 80)
+			do_sparks(5, TRUE, user)
+
+// Capacitor Overcharge - Storm Ram charge accumulation system
+/datum/status_effect/capacitor_overcharge
+	id = "capacitor_overcharge"
+	duration = -1  // Infinite, manual removal when stacks reach 0
+	tick_interval = 10  // Process every 1 second (10 deciseconds)
+	alert_type = /atom/movable/screen/alert/status_effect/overcharge
+	var/stacks = 0
+	var/max_stacks = 100
+	var/drain_per_second = 5
+
+/datum/status_effect/capacitor_overcharge/on_apply()
+	if(!isliving(owner))
+		return FALSE
+	owner.density = FALSE
+
+	// Register movement signal once on apply
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(on_moved))
+
+	update_bonuses()
+	to_chat(owner, span_nicegreen("Overcharge building! [stacks]/[max_stacks]"))
+	return TRUE
+
+/datum/status_effect/capacitor_overcharge/proc/on_moved()
+	SIGNAL_HANDLER
+	// Only create trail effect at 50+ stacks
+	if(stacks >= 50)
+		create_move_trail()
+
+/datum/status_effect/capacitor_overcharge/proc/create_move_trail()
+	set waitfor = FALSE
+	var/obj/viscon_filtereffect/distortedform_trail/trail = new(owner.loc, themob = owner, waittime = 5)
+	trail.vis_contents += owner
+	trail.filters += filter(type="drop_shadow", x=0, y=0, size=3, offset=2, color=rgb(0, 200, 255))  // Electric blue
+	trail.filters += filter(type = "blur", size = 3)
+	animate(trail, alpha=120)
+	animate(alpha = 0, time = 10)
+
+/datum/status_effect/capacitor_overcharge/tick()
+	// Drain stacks passively each second
+	add_stacks(-drain_per_second)
+
+/datum/status_effect/capacitor_overcharge/proc/add_stacks(amount)
+	var/old_stacks = stacks
+	stacks = clamp(stacks + amount, 0, max_stacks)
+
+	// Remove effect if stacks depleted
+	if(stacks <= 0)
+		qdel(src)
+		return
+
+	// Update bonuses when stacks change
+	if(old_stacks != stacks)
+		update_bonuses()
+
+	// Visual feedback at key thresholds
+	if(stacks >= 80 && old_stacks < 80)
+		to_chat(owner, span_danger("OVERCHARGE CRITICAL: [stacks]%!"))
+	else if(stacks >= 50 && old_stacks < 50)
+		to_chat(owner, span_warning("OVERCHARGE ACCELERATING: [stacks]%! Speed trails active!"))
+
+/datum/status_effect/capacitor_overcharge/proc/update_bonuses()
+	if(!isliving(owner))
+		return
+
+	var/mob/living/L = owner
+
+	// Apply damage boost (1% per stack)
+	L.extra_damage = stacks
+
+	// Update speed boost (scales with stacks)
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/overcharge)
+	var/datum/movespeed_modifier/overcharge/speed_mod = new()
+	speed_mod.stacks = stacks
+	speed_mod.multiplicative_slowdown = -(stacks * 0.005)  // -0.005 per stack
+	owner.add_movespeed_modifier(speed_mod)
+
+	// Update alert display
+	if(linked_alert)
+		linked_alert.desc = "Capacitor Overcharge: [stacks]/[max_stacks] stacks\n\
+		Damage Bonus: +[stacks]%\n\
+		Speed Bonus: +[round(stacks * 0.5, 0.1)]%\n\
+		Density: PHASED\n\
+		Drain: -[drain_per_second] per second"
+
+/datum/status_effect/capacitor_overcharge/on_remove()
+	if(!owner)
+		return
+
+	// Unregister movement signal
+	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+
+	// Remove damage boost
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.extra_damage = max(0, L.extra_damage - stacks)  // Safely remove our contribution
+
+	// Restore density
+	owner.density = TRUE
+
+	// Remove speed modifier
+	owner.remove_movespeed_modifier(/datum/movespeed_modifier/overcharge)
+
+	to_chat(owner, span_notice("Overcharge dissipated."))
+
+// Alert icon for Overcharge status
+/atom/movable/screen/alert/status_effect/overcharge
+	name = "Overcharge"
+	desc = "Electrical energy surges through you!"
+	icon_state = "regenerative_core"
+
+// Dynamic movespeed modifier that scales with Overcharge stacks
+/datum/movespeed_modifier/overcharge
+	variable = TRUE
+	var/stacks = 0
 
 // Helper proc to check if user is a Raven
 /proc/IsRaven(mob/user)

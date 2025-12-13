@@ -892,4 +892,4 @@
 	new /obj/item/rce_resource_tank/capacitor_pack(src)
 	new /obj/item/organ/cyberimp/rce_specialist/storm(src)
 	new /obj/item/clothing/suit/armor/ego_gear/storm(src)
-	new /obj/item/ego_weapon/thunder_gauntlets(src)
+	new /obj/item/ego_weapon/thunder_hammer(src)

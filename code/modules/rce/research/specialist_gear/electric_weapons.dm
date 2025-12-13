@@ -11,23 +11,41 @@
 
 // TIER 1 WEAPONS
 
-// Thunder Gauntlets - Basic rush weapon
-/obj/item/ego_weapon/thunder_gauntlets
-	name = "R-Corp thunder gauntlets"
-	desc = "Electrified gauntlets that deliver devastating punches. Right-click to perform a short dash attack."
+// Thunder Hammer - Basic rush weapon
+/obj/item/ego_weapon/thunder_hammer
+	name = "R-Corp thunder hammer"
+	desc = "An electrified hammer that delivers devastating strikes. Use in hand to toggle power. Right-click to perform a short dash attack when powered on."
 	icon = 'icons/obj/items_and_weapons.dmi'
-	icon_state = "powerfist"
+	icon_state = "hammeroff"
 	force = 35  // Higher base damage for melee focus
-	attack_verb_continuous = list("thunders", "slams", "electrocutes")
-	attack_verb_simple = list("thunder", "slam", "electrocute")
+	attack_verb_continuous = list("thunders", "slams", "smashes")
+	attack_verb_simple = list("thunder", "slam", "smash")
 	hitsound = 'sound/weapons/punch3.ogg'
 	var/electric_charge_cost = 10
 	var/dash_cost = 20
 	var/dash_range = 4
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 30  // 3 seconds
+	var/powered = FALSE  // Whether the hammer is powered on
 
-/obj/item/ego_weapon/thunder_gauntlets/attack(mob/living/target, mob/living/user)
+// Toggle hammer on/off
+/obj/item/ego_weapon/thunder_hammer/attack_self(mob/user)
+	if(!is_storm_ram(user))
+		to_chat(user, span_warning("Only Storm Rams can use this weapon!"))
+		return
+
+	powered = !powered
+	icon_state = powered ? "hammeron" : "hammeroff"
+
+	if(powered)
+		to_chat(user, span_notice("You activate [src]. The hammer crackles with electricity!"))
+		playsound(src, 'sound/magic/lightningshock.ogg', 30, TRUE)
+	else
+		to_chat(user, span_notice("You deactivate [src]. The electricity fades."))
+
+	update_appearance()
+
+/obj/item/ego_weapon/thunder_hammer/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return FALSE
 
@@ -35,30 +53,46 @@
 		to_chat(user, span_warning("Only Storm Rams can use this weapon!"))
 		return FALSE
 
-	var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
-	if(!pack)
-		to_chat(user, span_warning("You need a capacitor pack to power this weapon!"))
-		return FALSE
+	// Check if hammer is powered on for AoE effect
+	if(powered)
+		var/obj/item/rce_resource_tank/capacitor_pack/pack = locate(/obj/item/rce_resource_tank/capacitor_pack) in user.contents
+		if(!pack)
+			to_chat(user, span_warning("You need a capacitor pack to power this weapon!"))
+			return FALSE
 
-	if(!pack.use_charge(electric_charge_cost))
-		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
-		return FALSE
+		if(!pack.use_charge(electric_charge_cost))
+			to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
+			return FALSE
 
-	. = ..()
-	if(.)
-		// Apply AoE damage
-		playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
-		new /obj/effect/temp_visual/lightning_strike(get_turf(target))
+		// Perform attack with AoE
+		. = ..()
+		if(.)
+			// Apply AoE damage
+			playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
+			new /obj/effect/temp_visual/lightning_strike(get_turf(target))
 
-		// AoE thunder damage
-		for(var/mob/living/L in range(1, target))
-			if(L == user || L == target)
-				continue
-			L.deal_damage(20, FIRE)
-			do_sparks(2, TRUE, L)
+			// AoE thunder damage based on weapon force
+			var/turf/target_turf = get_turf(target)
+			for(var/mob/living/L in hearers(1, target_turf))
+				if(L == user || ishuman(L))
+					continue
+				var/aoe = force
+				var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+				var/justicemod = 1 + userjust / 100
+				aoe *= justicemod
+				aoe *= force_multiplier
+				L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
+				new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
+	else
+		// Basic attack without AoE when unpowered
+		. = ..()
 
-/obj/item/ego_weapon/thunder_gauntlets/afterattack(atom/target, mob/living/user, proximity_flag, params)
+/obj/item/ego_weapon/thunder_hammer/afterattack(atom/target, mob/living/user, proximity_flag, params)
 	if(proximity_flag) // Normal melee attack
+		return
+
+	if(!powered)
+		to_chat(user, span_warning("The hammer must be powered on to dash!"))
 		return
 
 	if(!is_storm_ram(user))
@@ -81,7 +115,7 @@
 	// Perform thunder dash
 	thunder_dash(target, user, pack)
 
-/obj/item/ego_weapon/thunder_gauntlets/proc/thunder_dash(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
+/obj/item/ego_weapon/thunder_hammer/proc/thunder_dash(atom/target, mob/living/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	dash_cooldown = world.time + dash_cooldown_time
 	var/turf/T = get_turf(target)
 	var/turf/starting = get_turf(user)
@@ -109,15 +143,13 @@
 				continue
 			L.deal_damage(30, BRUTE)
 			L.deal_damage(15, FIRE)
-			do_sparks(3, TRUE, L)
 
-	// Grant escape speed boost
-	pack.grant_speed_boost(user, 20)
+	// Overcharge system automatically provides speed boost
 
 // Storm Dash - Rush through enemies with chain damage
 /obj/item/storm_dash
 	name = "R-Corp storm dash module"
-	desc = "Electromagnetic propulsion system that launches you through enemies, dealing chain damage. Click to activate dash."
+	desc = "Electromagnetic propulsion system that launches you through enemies, dealing chain damage. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-blue"
 	w_class = WEIGHT_CLASS_SMALL
@@ -127,8 +159,28 @@
 	var/chain_damage = 20
 	var/cooldown = 0
 	var/cooldown_time = 50  // 5 seconds
+	var/datum/action/item_action/storm_dash/dash_action
 
-/obj/item/storm_dash/attack_self(mob/user)
+/obj/item/storm_dash/Initialize()
+	. = ..()
+	dash_action = new(src)
+
+/obj/item/storm_dash/Destroy()
+	QDEL_NULL(dash_action)
+	return ..()
+
+/obj/item/storm_dash/equipped(mob/user, slot)
+	. = ..()
+	if(ishuman(user))
+		dash_action.Grant(user)
+		to_chat(user, span_notice("[src] is ready. Use the action button to activate storm dash."))
+
+/obj/item/storm_dash/dropped(mob/user)
+	. = ..()
+	if(dash_action)
+		dash_action.Remove(user)
+
+/obj/item/storm_dash/proc/activate(mob/user)
 	if(!is_storm_ram(user))
 		to_chat(user, span_warning("Only Storm Rams can use this device!"))
 		return
@@ -190,25 +242,48 @@
 				chain.deal_damage(chain_damage, FIRE)
 				L.Beam(chain, "lightning", time = 3)
 
-	// Grant escape speed
-	pack.grant_speed_boost(user, 30)
+	// Overcharge system automatically provides speed boost
 
-// Static Burst Generator - Deploy before rush
+// Static Burst Generator - Teleport back after delay
 /obj/item/static_burst_generator
-	name = "static burst generator"
-	desc = "Creates an electric field that detonates when you pass through it, damaging all nearby enemies."
+	name = "static burst recall"
+	desc = "Marks your current location. After 8 seconds, teleports you back to the marked position. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "nanite_scanner"
 	w_class = WEIGHT_CLASS_SMALL
 	var/electric_charge_cost = 20
-	var/field_duration = 100  // Shorter duration, meant for setup
+	var/recall_delay = 80  // 8 seconds until teleport
 	var/cooldown = 0
-	var/cooldown_time = 80  // Faster cooldown for rush tactics
+	var/cooldown_time = 100  // 10 seconds cooldown
+	var/datum/action/item_action/static_burst_generator/burst_action
+	var/turf/recall_location
+	var/obj/effect/recall_marker/marker
+	var/recall_timer
 
-/obj/item/static_burst_generator/attack_self(mob/user)
+/obj/item/static_burst_generator/Initialize()
+	. = ..()
+	burst_action = new(src)
+
+/obj/item/static_burst_generator/Destroy()
+	QDEL_NULL(burst_action)
+	return ..()
+
+/obj/item/static_burst_generator/equipped(mob/user, slot)
+	. = ..()
+	if(ishuman(user))
+		burst_action.Grant(user)
+		to_chat(user, span_notice("[src] is ready. Use the action button to mark a recall point."))
+
+/obj/item/static_burst_generator/dropped(mob/user)
+	. = ..()
+	if(burst_action)
+		burst_action.Remove(user)
+
+/obj/item/static_burst_generator/proc/activate(mob/user)
 	if(!is_storm_ram(user))
 		to_chat(user, span_warning("Only Storm Rams can use this device!"))
 		return
+
 	if(cooldown > world.time)
 		to_chat(user, span_warning("[src] is still recharging! ([round((cooldown - world.time)/10)] seconds)"))
 		return
@@ -222,15 +297,81 @@
 		to_chat(user, span_warning("Not enough charge! ([pack.resource_amount]/[electric_charge_cost] needed)"))
 		return
 
-	// Deploy static burst field
-	var/turf/T = get_turf(user)
-	var/obj/effect/static_burst_field/field = new(T, field_duration)
-	field.owner = user
+	// Mark current location
+	recall_location = get_turf(user)
+
+	// Create visual marker
+	if(marker)
+		qdel(marker)
+	marker = new(recall_location)
+	marker.owner = user
+
+	// Set up teleport timer
+	recall_timer = addtimer(CALLBACK(src, PROC_REF(recall_teleport), user), recall_delay, TIMER_STOPPABLE)
 
 	cooldown = world.time + cooldown_time
 	playsound(src, 'sound/magic/lightningshock.ogg', 50, TRUE)
-	user.visible_message(span_danger("[user] deploys a static burst field!"))
+	user.visible_message(span_danger("[user] marks their position with crackling energy!"))
+	to_chat(user, span_notice("You will be recalled to this position in [recall_delay/10] seconds."))
 
+/obj/item/static_burst_generator/proc/recall_teleport(mob/living/user)
+	if(!user || QDELETED(user) || user.stat == DEAD)
+		cleanup_recall()
+		return
+
+	if(!recall_location)
+		to_chat(user, span_warning("[src] fails to recall you - location lost!"))
+		cleanup_recall()
+		return
+
+	// Teleport effects
+	playsound(user, 'sound/magic/lightningbolt.ogg', 75, TRUE)
+	user.visible_message(span_danger("[user] vanishes in a flash of electricity!"))
+
+	// Teleport
+	user.forceMove(recall_location)
+
+	// Arrival effects
+	playsound(recall_location, 'sound/magic/lightningbolt.ogg', 75, TRUE)
+	new /obj/effect/temp_visual/lightning_strike(recall_location)
+	user.visible_message(span_danger("[user] reappears in a burst of lightning!"))
+
+	cleanup_recall()
+
+/obj/item/static_burst_generator/proc/cleanup_recall()
+	recall_location = null
+	if(marker)
+		qdel(marker)
+		marker = null
+	if(recall_timer)
+		deltimer(recall_timer)
+		recall_timer = null
+
+/obj/item/static_burst_generator/dropped(mob/user)
+	. = ..()
+	cleanup_recall()
+	if(burst_action)
+		burst_action.Remove(user)
+
+// Visual marker for recall location
+/obj/effect/recall_marker
+	name = "recall marker"
+	desc = "A crackling marker indicating a recall point."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "electricity"
+	density = FALSE
+	anchored = TRUE
+	layer = BELOW_MOB_LAYER
+	var/mob/living/owner
+
+/obj/effect/recall_marker/Initialize()
+	. = ..()
+	animate(src, alpha = 150, time = 5, loop = -1, easing = SINE_EASING)
+	animate(alpha = 255, time = 5, easing = SINE_EASING)
+	// Auto-delete after maximum duration
+	QDEL_IN(src, 100)
+
+// Old static burst field - kept for compatibility but no longer used
 /obj/effect/static_burst_field
 	name = "static burst field"
 	desc = "A crackling field of electricity that will detonate when its owner passes through."
@@ -255,13 +396,17 @@
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/effect/static_burst_field/process()
+/obj/effect/static_burst_field/crossed(atom/movable/AM)
+	. = ..()
 	if(triggered)
 		return
 
-	// Check if owner passes through
-	if(owner && get_turf(owner) == get_turf(src))
+	// Check if owner crosses through
+	if(AM == owner)
 		trigger_burst()
+
+/obj/effect/static_burst_field/process()
+	if(triggered)
 		return
 
 	// Deal minor damage to enemies standing in it
@@ -269,8 +414,6 @@
 		if(L == owner)
 			continue
 		L.deal_damage(5, FIRE)
-		if(prob(20))
-			do_sparks(1, TRUE, L)
 
 /obj/effect/static_burst_field/proc/trigger_burst()
 	triggered = TRUE
@@ -287,7 +430,6 @@
 		var/distance = get_dist(src, L)
 		var/damage = burst_damage * (1 - (distance / (burst_range + 1)))
 		L.deal_damage(damage, FIRE)
-		do_sparks(3, TRUE, L)
 		var/turf/source_turf = get_turf(src)
 		source_turf.Beam(L, "lightning", time = 5)
 
@@ -413,13 +555,12 @@
 		var/atom/throw_target = get_edge_target_turf(L, get_dir(user, L))
 		L.throw_at(throw_target, 4, 2)
 
-	// Grant extended escape speed
-	pack.grant_speed_boost(user, 40)
+	// Overcharge system automatically provides speed boost
 
 // Thunderclap Gauntlets - AoE burst with escape
 /obj/item/ego_weapon/thunderclap_gauntlets
 	name = "R-Corp thunderclap gauntlets"
-	desc = "Gauntlets that create devastating thunder bursts. Right-click to perform area burst with automatic retreat."
+	desc = "Gauntlets that create devastating thunder bursts. Click on to a distant target to perform area burst with automatic retreat."
 	icon = 'icons/obj/clothing/gloves.dmi'
 	icon_state = "captain"
 	force = 45
@@ -457,7 +598,6 @@
 			if(L == user || L == target)
 				continue
 			L.deal_damage(25, FIRE)
-			do_sparks(2, TRUE, L)
 
 /obj/item/ego_weapon/thunderclap_gauntlets/afterattack(atom/target, mob/living/user, proximity_flag, params)
 	if(proximity_flag) // Normal attack
@@ -533,7 +673,7 @@
 		new /obj/effect/temp_visual/electric_trail(retreat_turf)
 
 	// Extended escape speed
-	pack.grant_speed_boost(user, 50)
+	// Overcharge system automatically provides speed boost
 
 // EMP Grenade
 /obj/item/grenade/r_corp/emp
@@ -549,7 +689,6 @@
 			var/mob/living/simple_animal/hostile/clan/C = L
 			C.charge = 0
 			to_chat(C, span_userdanger("The electromagnetic pulse drains your charge!"))
-			do_sparks(5, TRUE, C)
 		else
 			L.deal_damage(20, FIRE)
 			to_chat(L, span_userdanger("The electromagnetic pulse overwhelms your nervous system!"))
@@ -694,21 +833,54 @@
 
 /obj/item/ego_weapon/railgun_charge/proc/delayed_speed_boost(mob/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	if(pack && user)
-		pack.grant_speed_boost(user, 60)
+		// Overcharge system automatically provides speed boost
 
 // Storm Surge Barrier - Mobile shield that damages on contact
 /obj/item/storm_surge_barrier
 	name = "storm surge barrier"
-	desc = "Creates a mobile electromagnetic barrier that moves with you and damages enemies on contact."
+	desc = "Creates a mobile electromagnetic barrier that moves with you and damages enemies on contact. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-purple"
 	w_class = WEIGHT_CLASS_NORMAL
 	var/electric_charge_cost = 30
 	var/barrier_duration = 80  // 8 seconds
 	var/active = FALSE
-	var/obj/effect/storm_surge/current_barrier
+	var/datum/action/item_action/storm_surge_barrier/barrier_action
+	var/mob/living/barrier_user
+	var/contact_damage = 30
+	var/push_force = 3
+	var/mutable_appearance/barrier_overlay
 
-/obj/item/storm_surge_barrier/attack_self(mob/user)
+/obj/item/storm_surge_barrier/Initialize()
+	. = ..()
+	barrier_action = new(src)
+	// Create barrier overlay
+	barrier_overlay = mutable_appearance('icons/effects/effects.dmi', "electricity")
+	barrier_overlay.color = "#4444FF"
+	barrier_overlay.alpha = 150
+	barrier_overlay.layer = ABOVE_MOB_LAYER
+
+/obj/item/storm_surge_barrier/Destroy()
+	if(active)
+		deactivate()
+	QDEL_NULL(barrier_action)
+	QDEL_NULL(barrier_overlay)
+	return ..()
+
+/obj/item/storm_surge_barrier/equipped(mob/user, slot)
+	. = ..()
+	if(ishuman(user))
+		barrier_action.Grant(user)
+		to_chat(user, span_notice("[src] is ready. Use the action button to toggle barrier."))
+
+/obj/item/storm_surge_barrier/dropped(mob/user)
+	. = ..()
+	if(active)
+		deactivate()
+	if(barrier_action)
+		barrier_action.Remove(user)
+
+/obj/item/storm_surge_barrier/proc/toggle(mob/user)
 	if(!is_storm_ram(user))
 		to_chat(user, span_warning("Only Storm Rams can use this device!"))
 		return
@@ -730,24 +902,81 @@
 
 /obj/item/storm_surge_barrier/proc/activate(mob/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	active = TRUE
-	current_barrier = new /obj/effect/storm_surge(user)
-	current_barrier.generator = src
-	current_barrier.follow_target = user
+	barrier_user = user
+
+	// Add barrier overlay to user
+	user.add_overlay(barrier_overlay)
+
+	// Register bullet_act for projectile reflection
+	RegisterSignal(user, COMSIG_ATOM_BULLET_ACT, PROC_REF(on_projectile_hit))
+
+	// Start processing for damage/push
+	START_PROCESSING(SSobj, src)
+
 	user.visible_message(span_danger("[user] activates a storm surge barrier!"))
 	playsound(src, 'sound/magic/lightningshock.ogg', 75, TRUE)
 
 	// Auto-deactivate after duration
 	addtimer(CALLBACK(src, PROC_REF(deactivate)), barrier_duration)
 
-	// Grant speed boost while barrier is active
-	pack.grant_speed_boost(user, barrier_duration)
-
 /obj/item/storm_surge_barrier/proc/deactivate()
+	if(!active)
+		return
+
 	active = FALSE
-	if(current_barrier)
-		qdel(current_barrier)
-		current_barrier = null
-	visible_message(span_notice("The storm surge dissipates."))
+
+	if(barrier_user)
+		// Remove overlay
+		barrier_user.cut_overlay(barrier_overlay)
+
+		// Unregister signal
+		UnregisterSignal(barrier_user, COMSIG_ATOM_BULLET_ACT)
+
+		barrier_user.visible_message(span_notice("The storm surge around [barrier_user] dissipates."))
+		barrier_user = null
+
+	// Stop processing
+	STOP_PROCESSING(SSobj, src)
+
+/obj/item/storm_surge_barrier/process()
+	if(!active || !barrier_user || QDELETED(barrier_user))
+		deactivate()
+		return
+
+	// Damage and push enemies near user
+	for(var/mob/living/L in range(1, barrier_user))
+		if(L == barrier_user)
+			continue
+		if(L.last_push_time && world.time - L.last_push_time < 10) // Prevent spam
+			continue
+
+		L.deal_damage(contact_damage, FIRE)
+		var/atom/throw_target = get_edge_target_turf(L, get_dir(barrier_user, L))
+		L.throw_at(throw_target, push_force, 2)
+		L.last_push_time = world.time
+		to_chat(L, span_danger("The storm surge blasts you away!"))
+		playsound(L, 'sound/magic/lightningshock.ogg', 50, TRUE)
+
+/obj/item/storm_surge_barrier/proc/on_projectile_hit(mob/user, obj/projectile/P)
+	SIGNAL_HANDLER
+
+	if(!active || P.reflectable == NONE)
+		return
+
+	// 50% chance to reflect
+	if(!prob(50))
+		return
+
+	visible_message(span_userdanger("[user]'s storm surge deflects [P]!"))
+
+	// Reflect projectile (based on Black Swan's code)
+	if(P.starting)
+		var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+		var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
+		P.firer = null  // Remove firer to prevent friendly fire
+		P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), user.z), user)
+
+	return COMPONENT_BULLET_BLOCKED
 
 /obj/item/storm_surge_barrier/dropped(mob/user)
 	. = ..()
@@ -776,12 +1005,26 @@
 	transform = matrix() * 1.5
 	START_PROCESSING(SSobj, src)
 
+	// Register signal to follow target
+	if(follow_target)
+		RegisterSignal(follow_target, COMSIG_MOVABLE_MOVED, PROC_REF(target_moved))
+		forceMove(get_turf(follow_target))  // Initial position
+
 	// Animated aura effect
 	animate(src, transform = matrix() * 1.3, alpha = 100, time = 10, loop = -1, easing = SINE_EASING)
 	animate(transform = matrix() * 1.5, alpha = 200, time = 10, easing = SINE_EASING)
 
+/obj/effect/storm_surge/proc/target_moved(mob/user, atom/old_location, direction, forced)
+	SIGNAL_HANDLER
+	var/turf/new_turf = get_turf(follow_target)
+	if(new_turf)
+		forceMove(new_turf)
+
 /obj/effect/storm_surge/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	if(follow_target)
+		UnregisterSignal(follow_target, COMSIG_MOVABLE_MOVED)
+		follow_target = null
 	if(generator)
 		generator.deactivate()
 	return ..()
@@ -790,9 +1033,6 @@
 	if(!follow_target || QDELETED(follow_target))
 		qdel(src)
 		return
-
-	// Follow the user
-	forceMove(get_turf(follow_target))
 
 	// Damage and push enemies on contact
 	for(var/mob/living/L in range(1, src))
@@ -805,7 +1045,6 @@
 		var/atom/throw_target = get_edge_target_turf(L, get_dir(src, L))
 		L.throw_at(throw_target, push_force, 2)
 		L.last_push_time = world.time
-		do_sparks(3, TRUE, L)
 		to_chat(L, span_danger("The storm surge blasts you away!"))
 		playsound(L, 'sound/magic/lightningshock.ogg', 50, TRUE)
 
@@ -815,7 +1054,6 @@
 			var/new_angle = rand(0, 360)
 			P.firer = null  // Remove firer to prevent friendly fire
 			P.set_angle(new_angle)
-			do_sparks(1, TRUE, P)
 
 // Add variable for tracking push time
 /mob/living
@@ -824,7 +1062,7 @@
 // Thunderstorm Slam - Ground pound creates electric field
 /obj/item/thunderstorm_slam
 	name = "thunderstorm slam module"
-	desc = "Leap into the air and slam down, creating a devastating electric storm around you. The ultimate area denial."
+	desc = "Leap into the air and slam down, creating a devastating electric storm around you. The ultimate area denial. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-purple"
 	w_class = WEIGHT_CLASS_NORMAL
@@ -833,8 +1071,28 @@
 	var/storm_duration = 60  // 6 seconds
 	var/cooldown = 0
 	var/cooldown_time = 200  // 20 seconds
+	var/datum/action/item_action/thunderstorm_slam/slam_action
 
-/obj/item/thunderstorm_slam/attack_self(mob/user)
+/obj/item/thunderstorm_slam/Initialize()
+	. = ..()
+	slam_action = new(src)
+
+/obj/item/thunderstorm_slam/Destroy()
+	QDEL_NULL(slam_action)
+	return ..()
+
+/obj/item/thunderstorm_slam/equipped(mob/user, slot)
+	. = ..()
+	if(ishuman(user))
+		slam_action.Grant(user)
+		to_chat(user, span_notice("[src] is ready. Use the action button to perform thunderstorm slam."))
+
+/obj/item/thunderstorm_slam/dropped(mob/user)
+	. = ..()
+	if(slam_action)
+		slam_action.Remove(user)
+
+/obj/item/thunderstorm_slam/proc/activate(mob/user)
 	if(!is_storm_ram(user))
 		to_chat(user, span_warning("Only Storm Rams can perform the thunderstorm slam!"))
 		return
@@ -898,7 +1156,7 @@
 			QDEL_IN(field, storm_duration)
 
 	// Grant escape speed after slam
-	pack.grant_speed_boost(user, 40)
+	// Overcharge system automatically provides speed boost
 
 /obj/item/thunderstorm_slam/proc/expanding_shockwave(turf/center, radius)
 	for(var/turf/T in range(radius, center))
@@ -908,7 +1166,6 @@
 				if(is_storm_ram(L))
 					continue
 				L.deal_damage(20, FIRE)
-				do_sparks(2, TRUE, L)
 
 /obj/effect/thunderstorm_field
 	name = "thunderstorm field"
@@ -934,8 +1191,6 @@
 		if(L == owner)
 			continue
 		L.deal_damage(10, FIRE)
-		if(prob(30))
-			do_sparks(1, TRUE, L)
 
 // Visual effects
 /obj/effect/temp_visual/electric_trail
@@ -986,3 +1241,56 @@
 /obj/effect/temp_visual/chain_lightning/proc/chain_to(atom/target)
 	var/datum/beam/B = Beam(target, "lightning", time = duration)
 	QDEL_IN(B, duration)
+
+// Action buttons for Storm Ram equipment
+/datum/action/item_action/storm_dash
+	name = "Storm Dash"
+	desc = "Transform into living lightning and dash forward through enemies."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "berserk_mode"
+
+/datum/action/item_action/storm_dash/Trigger()
+	if(!istype(target, /obj/item/storm_dash))
+		return
+	var/obj/item/storm_dash/dash = target
+	dash.activate(owner)
+	return TRUE
+
+/datum/action/item_action/static_burst_generator
+	name = "Mark Recall Point"
+	desc = "Mark your current location and teleport back after 8 seconds."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "rcl_gui"
+
+/datum/action/item_action/static_burst_generator/Trigger()
+	if(!istype(target, /obj/item/static_burst_generator))
+		return
+	var/obj/item/static_burst_generator/burst = target
+	burst.activate(owner)
+	return TRUE
+
+/datum/action/item_action/storm_surge_barrier
+	name = "Toggle Storm Surge"
+	desc = "Toggle the mobile electromagnetic barrier."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "kindleKicks"
+
+/datum/action/item_action/storm_surge_barrier/Trigger()
+	if(!istype(target, /obj/item/storm_surge_barrier))
+		return
+	var/obj/item/storm_surge_barrier/barrier = target
+	barrier.toggle(owner)
+	return TRUE
+
+/datum/action/item_action/thunderstorm_slam
+	name = "Thunderstorm Slam"
+	desc = "Leap and slam down, creating a devastating electric storm."
+	icon_icon = 'icons/mob/actions/actions_items.dmi'
+	button_icon_state = "jetboot"
+
+/datum/action/item_action/thunderstorm_slam/Trigger()
+	if(!istype(target, /obj/item/thunderstorm_slam))
+		return
+	var/obj/item/thunderstorm_slam/slam = target
+	slam.activate(owner)
+	return TRUE
