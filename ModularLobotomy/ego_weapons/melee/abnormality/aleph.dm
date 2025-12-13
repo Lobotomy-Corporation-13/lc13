@@ -2271,7 +2271,7 @@
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	special = "This weapon <b>gains 5 force</b> for each enemy targeting its user, up to a <b>maximum of 35 extra force</b>. This force gain and its maximum are boosted by 1.25x while wielding the weapon.\n\
+	special = "This weapon <b>gains 5 force</b> for each enemy targeting its user, up to a <b>maximum of 35 extra force</b>. This force gain and its maximum are <b>boosted by 1.25x while wielding the weapon</b>.\n\
 	This weapon gains knockback while wielded. \n\
 	This weapon has access to a justice-scaling <b>ranged RED damage special attack</b> when attacking <b>non-adjacent</b> targets. While using the weapon one-handed, the special attack is weaker but <b>strikes in an area</b>. When wielding the weapon, the special attack is stronger, single-targeted and <b>pulls the struck enemy towards the user</b> while also making them <b>likelier to target the user</b>."
 	/// How much force does the weapon gain per enemy targeting you in sight?
@@ -2296,7 +2296,7 @@
 	// I'm sorry the key here is a string, in a perfect world we could just have FALSE/TRUE as keys and pass 'wielded' when accessing these lists, but BYOND won't let me
 	var/list/spike_windup = list("unwielded" = 0.3 SECONDS, "wielded" = 0.5 SECONDS) // Length of the windup for the spike attack
 	var/list/spike_radius = list("unwielded" = 1, "wielded" = 0) // Radius of the spike attack's AOE
-	var/list/spike_damage_coeff = list("unwielded" = 0.8, "wielded" = 1.3) // Damage coefficients applied to the weapon's usual damage when using the spike attack
+	var/list/spike_damage_coeff = list("unwielded" = 0.85, "wielded" = 1.35) // Damage coefficients applied to the weapon's usual damage when using the spike attack
 
 /obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
 	return 75
@@ -2305,7 +2305,7 @@
 	. = ..()
 	SetAggroForce(user) // This has no consequences but we want to give up-to-date info to the player
 	if(aggro_currently_gained_aggro_force > 0)
-		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder.")
+		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder on top of its base [wielded ? initial(wielded_force) : initial(force)] force.")
 
 
 /obj/item/ego_weapon/wield/eldtree/attack(mob/living/target, mob/living/user)
