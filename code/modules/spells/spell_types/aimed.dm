@@ -346,6 +346,8 @@
 /obj/effect/proc_holder/spell/aimed/thick_line/proc/ThickLineHit(mob/living/user, turf/hit_turf, list/hit_list, appropiate_color)
 	// To all living mobs found in the turf who aren't in our hit list: add them to the hit list, deal damage and apply powernull.
 	for(var/mob/living/yikes in hit_turf)
+		if(user.faction_check_mob(yikes, TRUE))
+			continue
 		if(!(yikes in hit_list) && yikes.stat < DEAD)
 			var/final_damage = line_damage
 			hit_list |= yikes

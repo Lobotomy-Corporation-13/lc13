@@ -23,7 +23,7 @@
 	if(!istype(target, /mob/living))
 		return FALSE
 	var/mob/living/our_target = target
-	if(faction_check(user.faction, our_target.faction, TRUE))
+	if((user.faction_check_mob(our_target, TRUE)))
 		return FALSE
 	. = ..()
 

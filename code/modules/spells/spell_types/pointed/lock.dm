@@ -23,7 +23,7 @@
 	if(!istype(target, /mob/living))
 		return FALSE
 	var/mob/living/our_target = target
-	if((our_target.stat >= DEAD) || (faction_check(user.faction, our_target.faction, TRUE)))
+	if((our_target.stat >= DEAD) || (user.faction_check_mob(our_target, TRUE)))
 		return FALSE
 	. = ..()
 

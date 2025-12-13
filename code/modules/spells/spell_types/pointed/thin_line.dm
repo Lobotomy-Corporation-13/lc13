@@ -128,6 +128,6 @@
 
 	var/mob/living/our_target = target
 	if(istype(our_target))
-		if((faction_check(user.faction, our_target.faction, TRUE)) || (our_target.stat >= DEAD))
+		if((user.faction_check_mob(our_target, TRUE)) || (our_target.stat >= DEAD))
 			return FALSE
 	. = ..()
