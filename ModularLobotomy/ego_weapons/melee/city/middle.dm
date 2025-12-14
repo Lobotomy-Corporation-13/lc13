@@ -136,7 +136,6 @@
 
 	// Check for Vengeance Mark and calculate bonus damage (not against yourself)
 	var/datum/status_effect/stacking/vengeance_mark/VM = target.has_status_effect(STATUS_EFFECT_VENGEANCEMARK)
-	var/original_force = force
 	if(VM && VM.stacks > 0 && target != user)
 		var/bonus_multiplier = 1 + (VM.stacks * vengeance_damage_bonus)
 		force = round(initial(force) * bonus_multiplier)
