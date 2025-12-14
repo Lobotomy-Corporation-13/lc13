@@ -47,6 +47,12 @@
 
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
+	//Testing
+	ego_list = list(
+		/datum/ego_datum/weapon/fury,
+		/datum/ego_datum/armor/fury,
+	)
+
 	var/mob/living/simple_animal/hostile/abnormality/mining/legionnairehead/myhead = null
 	var/obj/structure/legionnaire_bonfirelc13/mypile = null
 	var/has_head = TRUE

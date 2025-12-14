@@ -40,6 +40,11 @@
 	threat_level = HE_LEVEL
 	work_damage_amount = 7
 	work_damage_type = BLACK_DAMAGE
+	//Testing
+	ego_list = list(
+		/datum/ego_datum/weapon/galaxy,
+		/datum/ego_datum/armor/galaxy,
+	)
 
 	var/sing_shot_length = 8
 	var/cooldown_time = 20

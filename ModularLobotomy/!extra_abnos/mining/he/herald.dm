@@ -51,6 +51,12 @@
 								/datum/action/innate/elite_attack/herald_teleshot,
 								/datum/action/innate/elite_attack/herald_mirror)
 
+	//Testing
+	ego_list = list(
+		/datum/ego_datum/weapon/transmission,
+		/datum/ego_datum/armor/transmission,
+	)
+
 	var/mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/my_mirror = null
 	var/is_mirror = FALSE
 
