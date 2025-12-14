@@ -83,7 +83,7 @@
 	for(var/mob/living/carbon/human/H in view(20, src))
 		possible_targets += H
 	if(LAZYLEN(possible_targets))
-		target = pick(possible_targets)
+		FindTarget(list(pick(possible_targets)), TRUE) // The list(pick()) here makes it equally likely for anyone to be targeted. If you removed it, it'd be based on individual threat level
 		var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
 		if(dir_to_target)
 			can_move = FALSE

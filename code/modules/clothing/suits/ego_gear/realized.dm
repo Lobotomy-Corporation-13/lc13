@@ -183,11 +183,18 @@ No Ability	250
 	desc = "Many people look for oblivion at the bottom of the glass, I can't be blamed if I give it to 'em now, can I?"
 	icon_state = "stupor"
 
+/*
+This Realization has several effects.
+1. Grants the Fairy Lure ability, placing a debuff on enemies which allows you to lock enemy aggro on yourself and make them take extra WHITE damage when hit for a while
+or until the damage cap on the debuff is hit. While Fairy Lure is active on yourself, if you die, you will unleash a RED damage reprisal AOE.
+2. Allows you to Assimilate an ALEPH E.G.O. weapon into the Eldtree weapon.
+3. Buffs the Eldtree weapon by allowing you to regenerate HP/SP through a "marking" mechanic, basically whack an enemy with an unwielded hit then cash it in with a wielded hit. HP from melee, SP from ranged.
+*/
 /obj/item/clothing/suit/armor/ego_gear/realization/eldtree
 	name = "eldtree"
 	desc = "Not a single good thing in this City is freely given."
 	icon_state = "lce_lantern"
-	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 70)		// 230, tank realization so you should get a shield or parry weapon
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 40, PALE_DAMAGE = 70)		// 230, you're going to be under some serious heat if you take this so pack defensive options
 	realized_ability = /obj/effect/proc_holder/ability/fairy_lure
 	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/eldtree
 

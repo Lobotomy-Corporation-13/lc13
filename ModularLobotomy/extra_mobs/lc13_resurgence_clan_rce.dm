@@ -563,9 +563,9 @@
 		if(hunt_target.stat == DEAD || hunt_target.z != z)
 			z_level_hunt_mode = FALSE
 			hunt_target = null
-			target = null
+			LoseTarget(FALSE)
 		else if(!target || target != hunt_target)
-			target = hunt_target
+			FindTarget(list(hunt_target), TRUE)
 
 	if(stealth_mode && !target)
 		// Don't break stealth just to acquire a target
@@ -603,7 +603,7 @@
 
 	if(most_isolated)
 		hunt_target = most_isolated
-		target = hunt_target
+		FindTarget(list(hunt_target), TRUE)
 		visible_message(span_warning("[src]'s eyes glow as it locks onto a distant target!"))
 
 // Movement speed modifier for stealth mode
@@ -840,7 +840,6 @@
 			SA.faction |= "neutral"
 			if(istype(SA, /mob/living/simple_animal/hostile))
 				var/mob/living/simple_animal/hostile/H = SA
-				H.target = null
 				H.LoseTarget()
 			// Add trait to prevent movement
 			ADD_TRAIT(SA, TRAIT_IMMOBILIZED, "artillery_stored")

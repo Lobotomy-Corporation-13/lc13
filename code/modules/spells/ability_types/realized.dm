@@ -1476,7 +1476,7 @@
 /obj/effect/proc_holder/ability/aedd_curl_up
 	name = "Curl Up"
 	desc = "Immobilize yourself and gain an universal shield equivalent to 50% of your maximum health for 5 seconds. Accumulates Self-Charge when being hit, and larger hits grant more Self-Charge. \n\
-	If the shield is broken, cooldown on this ability is multiplied by 7 and you gain Fragile. If it doesn't, retaliate with a BLACK damage AoE that scales with Fortitude and inversely scales with remaining shield health. Cooldown: 25s."
+	If the shield is broken, cooldown on this ability is multiplied by 4.5x and you gain Fragile. If it doesn't, retaliate with a BLACK damage AoE that scales with Fortitude and inversely scales with remaining shield health. Cooldown: 25s."
 	action_icon_state = "ripper0"
 	base_icon_state = "ripper"
 	cooldown_time = 25 SECONDS
@@ -1620,7 +1620,7 @@
 	var/remaining_time = timeleft(curl_cooldown_timer)
 	var/new_duration = remaining_time * curl_shatter_cooldown_multiplier
 	deltimer(curl_cooldown_timer)
-	curl_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(Refresh), user), new_duration, TIMER_STOPPABLE) // Your ability will now refresh 10 times slower than it should.
+	curl_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(Refresh), user), new_duration, TIMER_STOPPABLE) // Your ability will now refresh way slower than it should.
 	cooldown = world.time + new_duration
 	update_icon()
 
@@ -1880,45 +1880,303 @@
 // For the Eldtree realization.
 /obj/effect/proc_holder/ability/fairy_lure
 	name = "Fairy Lure"
-	desc = "Forces nearby enemies to attack you for 10 seconds. This includes potentially passive enemies."
-	//action_icon_state =
-	//base_icon_state =
-	cooldown_time = 15 SECONDS
+	desc = "Applies the 'Distracted' status effect to nearby enemies, forcing them to target you and making them take extra WHITE damage on hit.\n\
+	'Distracted' lasts until a certain amount of WHITE damage is caused by it or until it times out.\n\
+	This ability scales with Temperance starting at 120 and its bonuses reach their maximum at 200 Temperance. These bonuses include the range, cooldown, debuff duration and debuff damage cap. Base Cooldown: 50s."
+	action_icon_state = "fairy_lure"
+	base_icon_state = "fairy_lure"
+	cooldown_time = 50 SECONDS
+	var/ready = TRUE
+	var/activated = FALSE
 
-	var/lure_range = 6 // Radius of lure
-	var/filter //stolen from arbiter code
+	/// Base radius (tiles) of the Lure. Scales with Temperance.
+	var/base_ability_range = 5
+	/// Base duration of the Lured debuff. Scales with Temperance. Remember that it can end early via damage.
+	var/base_debuff_duration = 8 SECONDS
+	/// Base maximum damage during the Lured debuff. After it's dealt this much WHITE damage pre-reductions, it'll be destroyed (or it can time out first). Scales with Temperance.
+	var/base_debuff_damagecap = 500
+
+	// Temperance scaling vars for the ability. It's basically linear scaling.
+	var/tempscaling_lowest_temp = 120
+	var/tempscaling_highest_temp = 200
+
+	// These vars establish the limit of the bonuses that can be gained by having a higher Temperance. Most Agents will get the realization at about 115-130 Temp, a decked out Agent should have like 130-150 Temp, if you spec into Temp you probably are gonna end up at about 160ish, only real psychopaths can get up to 200
+	var/tempscaling_max_ability_range_increase = 7
+	var/tempscaling_max_ability_cd_decrease = 30 SECONDS
+	var/tempscaling_max_debuff_duration_increase = 12 SECONDS
+	var/tempscaling_max_debuff_damagecap_increase = 900
+
+	// These vars control the power of the spike explosion if the user dies while under this ability's power.
+	var/martyrdom_radius = 8
+	var/martyrdom_base_damage = 1500
+	var/martyrdom_damage_falloff_per_tile = 100
+
+	// Filter stuff stolen from Arbiters. This is a visual effect
+	var/filter
 	var/f1
 
+/// This proc maps the user's temperance to a certain value, we use this for providing temperance scaling to our cooldown, range, duration and damage cap.
+// Send user's temperance as first argument and the tempscaling_max_X var that we're scaling for, this returns a scaled value according to the user's temperance relative to its minimum and maximum scaling values.
+// Example: With Temperance 150, tempscaling_lowest_temp of 120, tempscaling_highest_temp of 200 and a tempscaling_max_ability_cd_decrease of 200 (20 seconds), we will get 75 deciseconds (7.5s) of CDR.
+/obj/effect/proc_holder/ability/fairy_lure/proc/LinearTempScalingMap(usertemp, max_increase)
+	return floor(min(max_increase, ((usertemp - tempscaling_lowest_temp) * (max_increase) / (tempscaling_highest_temp - tempscaling_lowest_temp))))
+
 /obj/effect/proc_holder/ability/fairy_lure/Perform(target, mob/user)
-	playsound(get_turf(user), 'sound/abnormalities/faelantern/faelantern_giggle.ogg', 75, 0, 5)
-	to_chat(user, span_danger("You lure your enemies to target you!"))
-	if(!filter)
-		filter = TRUE
-		user.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=rgb(4, 30, 87))
+	if((!ready) || (activated)) // Can only cast this once it's off cooldown and the debuff has timed out from any enemies it's on.
+		to_chat(user, span_warning("This ability isn't ready yet."))
+		return FALSE
+	var/mob/living/carbon/human/caster = user
+	if(!istype(caster))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = caster.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(eldtree_armour))
+		return
 
-	f1 = user.filters[user.filters.len]
-	animate(f1,color = rgb(3, 1, 22),time=5)
-	addtimer(CALLBACK(src, PROC_REF(ResetFilters), user), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
+	var/final_ability_cooldown = cooldown_time
+	var/final_ability_range = base_ability_range
+	var/final_debuff_duration = base_debuff_duration
+	var/final_debuff_damagecap = base_debuff_damagecap
 
-	for(var/turf/T in view(lure_range, user))
+	var/user_temperance = (get_modified_attribute_level(caster, TEMPERANCE_ATTRIBUTE))
+	if((user_temperance > tempscaling_lowest_temp) && (tempscaling_lowest_temp != tempscaling_highest_temp)) // Activate temp scaling if our temperance is above the minimum for scaling, and that second conditional is to avoid division by zero errors
+		// I know this looks like a mess so I'll explain
+		// We are essentially linearly mapping the user's temperance between the minimum temp scaling amount and maximum temp scaling amount to a value between 0 and the maximum of the respective scaling.
+		// We use min() to ensure you can't get higher values than the maximum scaling allowed, and we use floor() to get rid of decimals.
+		// Basically more temp = better
+		var/scaled_cdr = LinearTempScalingMap(user_temperance, tempscaling_max_ability_cd_decrease)
+		var/scaled_extra_range = LinearTempScalingMap(user_temperance, tempscaling_max_ability_range_increase)
+		var/scaled_extra_duration = LinearTempScalingMap(user_temperance, tempscaling_max_debuff_duration_increase)
+		var/scaled_extra_damagecap = LinearTempScalingMap(user_temperance, tempscaling_max_debuff_damagecap_increase)
+
+		final_ability_cooldown = max(1, final_ability_cooldown - scaled_cdr)
+		final_ability_range += scaled_extra_range
+		final_debuff_duration += scaled_extra_duration
+		final_debuff_damagecap += scaled_extra_damagecap
+
+	playsound(get_turf(caster), 'sound/abnormalities/faelantern/faelantern_giggle.ogg', 75, 0, 5)
+	caster.visible_message(span_danger("[caster] shines with an ominous glow, hypnotizing nearby enemies to focus on them!"), span_nicegreen("You resonate with your [eldtree_armour.name] E.G.O. armour, distracting nearby enemies."))
+
+	for(var/turf/T in view(final_ability_range, user))
 		new /obj/effect/temp_visual/gravpush(T)
 		for(var/mob/living/simple_animal/hostile/L in T)
 			if(user.faction_check_mob(L, FALSE))
 				continue
 			if(L.stat >= DEAD)
 				continue
-			L.add_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
-			addtimer(CALLBACK(src, PROC_REF(EndEnchant), L), 10 SECONDS, TIMER_UNIQUE|TIMER_OVERRIDE)
 
-			L.GiveTarget(user)
-			L.target_switch_resistance += 100
-	return ..()
+			L.apply_status_effect(/datum/status_effect/display/eldtree_lured, caster, final_debuff_damagecap, final_debuff_duration)
+			L.FindTarget(list(caster), TRUE) // We use FindTarget instead of GiveTarget in case someone wants to override their mob's FindTarget so we don't disrupt it here
 
-/obj/effect/proc_holder/ability/fairy_lure/proc/EndEnchant(mob/living/simple_animal/hostile/victim)
-	victim.cut_overlay(mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "fairy_lure", -HALO_LAYER))
-	victim.target_switch_resistance -= 100
+	activated = TRUE
+	ready = FALSE
 
-/obj/effect/proc_holder/ability/fairy_lure/proc/ResetFilters(mob/user)
-	user.clear_filters()
+	// Filter visual
+	if(!filter)
+		filter = TRUE
+		user.add_filter("eldtree_caster", 3, list("type"="drop_shadow", "x"=0, "y"=0, "size"=5, "offset"=2, "color"=rgb(4, 30, 87), "name" = "eldtree_caster"))
+
+	f1 = user.filters["eldtree_caster"]
+	animate(f1,color = rgb(3, 1, 22),time=5)
+
+	// Setting cooldown and ability end
+	addtimer(CALLBACK(src, PROC_REF(AbilityEnd), user), final_debuff_duration, TIMER_UNIQUE|TIMER_OVERRIDE) // Latest time at which the debuff wears off the enemies
+	addtimer(CALLBACK(src, PROC_REF(Refresh), user), final_ability_cooldown) // When the ability comes off CD
+	RegisterSignal(user, COMSIG_LIVING_DEATH, PROC_REF(Martyrdom))
+	cooldown = world.time + final_ability_cooldown
+	update_icon()
+
+/// This is called at the end of our cooldown, to re-enable the skill.
+/obj/effect/proc_holder/ability/fairy_lure/proc/Refresh(mob/living/carbon/human/user)
+	ready = TRUE
+	if(!activated)
+		ReadyAlert(user)
+
+/// This is called at the end of the debuff timeout, when we're sure no enemies have the debuff anymore.
+/obj/effect/proc_holder/ability/fairy_lure/proc/AbilityEnd(mob/living/carbon/human/user)
+	UnregisterSignal(user, COMSIG_LIVING_DEATH)
+	activated = FALSE
+	INVOKE_ASYNC(src, PROC_REF(ResetFilters), user)
+	if(ready)
+		ReadyAlert(user)
+
+/// Removes the black glow effect from the user.
+/obj/effect/proc_holder/ability/fairy_lure/proc/ResetFilters(mob/living/carbon/human/user)
+	f1 = user.filters["eldtree_caster"]
+	animate(f1,alpha=0,time=3)
+	sleep(4)
+	user.remove_filter("eldtree_caster")
 	filter = null
 	f1 = null
+
+/// Alerts the player that they can use their ability again.
+/obj/effect/proc_holder/ability/fairy_lure/proc/ReadyAlert(mob/living/carbon/human/user)
+	if(!istype(user))
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return FALSE
+
+	// Tell the user that they're ready to ball
+	SEND_SOUND(user, sound('sound/abnormalities/faelantern/faelantern_uproot_finalpart.ogg'))
+	flash_color(user, flash_color = COLOR_PALE_BLUE_GRAY, flash_time = 1 SECONDS)
+	user.visible_message(span_danger("The eyes on [user]'s [our_suit.name] E.G.O. armour restlessly flit about in agitation."), span_nicegreen("Your [our_suit.name] E.G.O. armour's ability has recharged."))
+
+/// Called when the user dies while under the effects of Fairy Lure. Big spike explosion that cares not for view. Scales off Fortitude.
+/// It snapshots all the important stuff then calls the actual explosion as an async due to the fact it sleeps.
+// I will remember you for as long as I live, John Faelantern.
+/obj/effect/proc_holder/ability/fairy_lure/proc/Martyrdom(datum/source, gibbed)
+	SIGNAL_HANDLER
+	var/mob/living/carbon/human/fallen_hero = source
+	if(istype(fallen_hero))
+		UnregisterSignal(fallen_hero, COMSIG_LIVING_DEATH)
+		var/turf/epicenter = get_turf(fallen_hero)
+		var/list/our_factions = fallen_hero.faction
+		var/fallen_hero_name = fallen_hero.name
+		INVOKE_ASYNC(src, PROC_REF(DeathSpikeExplosion), epicenter, our_factions, fallen_hero_name)
+		return
+
+// I'm taking you all with me...!!!!!!!!!!
+/obj/effect/proc_holder/ability/fairy_lure/proc/DeathSpikeExplosion(turf/epicenter, list/friendly_factions, dead_name)
+	if(!epicenter)
+		return
+	playsound(epicenter, 'sound/abnormalities/faelantern/faelantern_uproot.ogg', 90, FALSE, 10)
+	epicenter.visible_message(span_userdanger("[dead_name]'s dead body erupts in a storm of roots and spikes!"))
+	var/list/turf/already_hit_turfs = list()
+	var/list/mob_hitlist = list()
+
+	for(var/i in 1 to martyrdom_radius) // Hits the initial turf first, then the ones around it, then the ones around those... etc, while never repeating hit turfs.
+		var/final_damage = martyrdom_base_damage - (martyrdom_damage_falloff_per_tile * (i - 1))
+		var/spike_size = max(1 - ((i - 1) * 0.15), 0.4) // First spike looks bigger than the second set, etc
+
+		for(var/turf/open/T in range(i - 1, epicenter)) // Only hits open turfs
+			// Only hit each turf once
+			if(T in already_hit_turfs)
+				continue
+			already_hit_turfs |= T
+
+			// Spike visual
+			var/obj/effect/temp_visual/faespike/fast/R = new(T)
+			R.transform *= spike_size
+			var/correct_direction = get_dir(epicenter, T)
+			R.dir = correct_direction
+			if(correct_direction & EAST)
+				R.pixel_x += 16
+			else if(correct_direction & WEST)
+				R.pixel_x -= 16
+
+			// Hit all non-faction members in that turf
+			for(var/mob/living/victim in T)
+				if(faction_check(friendly_factions, victim.faction, FALSE))
+					continue
+				if(victim in mob_hitlist)
+					continue
+				if(victim.stat >= DEAD)
+					continue
+				mob_hitlist |= victim
+				victim.deal_damage(final_damage, RED_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
+				victim.visible_message(span_danger("[victim] is pierced by a vengeful burrowing root!"), span_userdanger("You're pierced by a vengeful burrowing root!"))
+				playsound(T, 'sound/weapons/ego/lce_lantern_spike_hit.ogg', 60, TRUE, 6)
+				// Hit VFX
+				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
+				temp.dir = pick(NORTHWEST, NORTHEAST, EAST, WEST)
+				temp.color = "#dfb440"
+				temp.transform *= 1.9
+				temp.layer = POINT_LAYER + 1
+
+				if(!victim)
+					continue
+
+		sleep(0.1 SECONDS) // This kinda makes it possible for enemies to dodge it like players can dodge a WN pulse but, you know, lock in?
+
+// This is the status effect applied by Fairy Lure. It does two important things:
+// 1. Anytime an enemy tries to swap target to anything but the caster of Fairy Lure, it will be rejected
+// 2. When the enemy takes damage from anything but environmental damage, they'll take 10 flat WHITE damage + 10% of the original damage as additional WHITE damage.
+// It will also apply a visual filter to the enemy.
+// The debuff will either time out based on the 'debuff_duration' on_creation argument, or once available_damage reaches 0.
+/datum/status_effect/display/eldtree_lured
+	id = "eldtree_lured"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = -1 // We remove this with a timer set by the ability that causes it.
+	tick_interval = -1 // We don't need to tick
+	alert_type = null
+	display_name = "fairy_lure"
+
+	var/mob/living/simple_animal/hostile/lured
+	var/mob/living/carbon/human/eldtree_user
+	var/onhit_available_damage = INFINITY
+	var/onhit_base_flat_damage = 25
+	var/onhit_original_damage_coeff = 0.15
+	var/timeout_timer
+	var/filter
+	var/f1
+
+// We use on_creation instead of on_apply because it's more convenient since we have easy access to the arguments used to create the status.
+/datum/status_effect/display/eldtree_lured/on_creation(mob/living/simple_animal/hostile/new_owner, mob/living/carbon/human/caster, damagecap, debuff_duration)
+	if(!(..()))
+		return FALSE
+	// Ensure we get a valid caster, owner, damage cap and duration.
+	if(!(istype(new_owner)) || !(istype(caster)))
+		return FALSE
+	if(!(damagecap > 0) || !(debuff_duration > 0))
+		return FALSE
+	lured = new_owner
+	eldtree_user = caster
+	onhit_available_damage = damagecap
+	timeout_timer = addtimer(CALLBACK(src, PROC_REF(DebuffEnd)), debuff_duration, TIMER_STOPPABLE) // Timer will have to get deleted if we end the debuff early from reaching damagecap
+
+	// We add a visual filter here. Why not in on_apply? Because on_apply is actually being called way back in the ..() call in this proc, so the lines below it (setting lured and etc) haven't happened
+	if(!filter)
+		filter = TRUE
+		lured.add_filter("eldtree_lured", 3, list("type"="drop_shadow", "x"=0, "y"=0, "size"=2, "offset"=2, "color"=rgb(4, 30, 87), "name" = "eldtree_lured"))
+
+	f1 = lured.filters["eldtree_lured"]
+	animate(f1,color = rgb(3, 1, 22),time=5)
+
+	RegisterSignal(lured, COMSIG_HOSTILE_GAINEDTARGET, PROC_REF(EyesOnMe))
+	RegisterSignal(lured, COMSIG_MOB_APPLY_DAMGE, PROC_REF(ReceiveOnhitDamage))
+	RegisterSignal(eldtree_user, COMSIG_LIVING_DEATH, PROC_REF(DebuffEnd))
+	return TRUE
+
+/datum/status_effect/display/eldtree_lured/on_remove()
+	. = ..()
+	if(lured)
+		UnregisterSignal(lured, COMSIG_HOSTILE_GAINEDTARGET)
+		UnregisterSignal(lured, COMSIG_MOB_APPLY_DAMGE)
+		UnregisterSignal(eldtree_user, COMSIG_LIVING_DEATH)
+		lured.remove_filter("eldtree_lured")
+		filter = null
+		f1 = null
+
+/datum/status_effect/display/eldtree_lured/proc/DebuffEnd()
+	qdel(src)
+
+/datum/status_effect/display/eldtree_lured/proc/EyesOnMe(mob/living/simple_animal/hostile/source, atom/new_target)
+	SIGNAL_HANDLER
+	if(new_target != eldtree_user)
+		lured.FindTarget(list(eldtree_user), TRUE) // This TRUE is the only thing that stands between this code and the server box getting instantly nuked, don't ask me why this proc asks for a "HasTargetsList" argument when it could just check if it was given a list
+		return COMPONENT_HOSTILE_REFUSE_AGGRO
+
+/datum/status_effect/display/eldtree_lured/proc/ReceiveOnhitDamage(mob/us, damage_amount, damage_type, def_zone, mob/attacker, damage_flags, attack_type)
+	SIGNAL_HANDLER
+	if(attack_type & (ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))
+		return
+	if(!(IsColorDamageType(damage_type)) && (damage_type != BRUTE))
+		return
+	var/lured_incoming_damage_coeff = lured.damage_coeff.getCoeff(damage_type)
+	var/lured_white_coeff = lured.damage_coeff.getCoeff(WHITE_DAMAGE)
+	if(damage_amount < 1 || lured_incoming_damage_coeff <= 0 || lured_white_coeff <= 0)
+		return
+	if(!CheckDamageCap())
+		return
+	var/damage_to_deal = floor(onhit_base_flat_damage + (damage_amount * onhit_original_damage_coeff))
+	damage_to_deal = clamp(damage_to_deal, 1, onhit_available_damage)
+	lured.deal_damage(damage_to_deal, WHITE_DAMAGE, source = eldtree_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
+	onhit_available_damage -= damage_to_deal
+	CheckDamageCap()
+
+/datum/status_effect/display/eldtree_lured/proc/CheckDamageCap()
+	if(onhit_available_damage < 1)
+		qdel(src)
+		return FALSE
+	return TRUE
+

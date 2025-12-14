@@ -2300,6 +2300,11 @@
 	var/list/spike_radius = list("unwielded" = 1, "wielded" = 0) // Radius of the spike attack's AOE
 	var/list/spike_damage_coeff = list("unwielded" = 0.85, "wielded" = 1.35) // Damage coefficients applied to the weapon's usual damage when using the spike attack
 
+	// While wearing the realization, unwielded attacks will mark the target, and wielded attacks will restore health (melee) or sanity (ranged). The mark lasts 5 seconds and otherwise does nothing else.
+	// Amount healed increases with how much aggro you have on you.
+	var/realization_mark_base_heal = 5
+	var/realization_mark_heal_aggroforce_bonus_coeff = 0.4
+
 /obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
 	return 75
 
@@ -2308,6 +2313,14 @@
 	SetAggroForce(user) // This has no consequences but we want to give up-to-date info to the player
 	if(aggro_currently_gained_aggro_force > 0)
 		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder on top of its base [wielded ? initial(wielded_force) : initial(force)] force.")
+	var/mob/living/carbon/human/wielder = user
+	if(!istype(wielder))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(istype(eldtree_armour))
+		. += span_nicegreen("Due to wearing the matching E.G.O. armour, you have unlocked this weapon's full potential. Striking enemies with <b>unwielded</b> melee or ranged attacks will mark them.")
+		. += span_nicegreen("Striking a marked enemy with a wielded melee attack will <b>restore your health</b>, and hitting an enemy with a wielded ranged attack will <b>restore your sanity</b>.")
+		. += span_nicegreen("The amount of restored health or sanity <b>scales with the amount of enemies targeting you.</b>")
 
 /obj/item/ego_weapon/wield/eldtree/attack(mob/living/target, mob/living/user)
 	if(wielded)
@@ -2315,7 +2328,30 @@
 	else
 		knockback = FALSE
 	SetAggroForce(user) // Gain force depending on how many mobs in sight are targeting the user
+
+	var/should_send_mark_message
+	var/to_heal
+	var/wearing_eldtree = FALSE
+	var/mob/living/carbon/human/wielder = user
+	if(istype(wielder)) // I have to indent this code block because I want to heal off marks before targets potentially get qdel'd by our attack.
+		var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(eldtree_armour))
+			wearing_eldtree = TRUE
+
+		if(wearing_eldtree && istype(target) && target.stat <= DEAD && !(target.status_flags & GODMODE))
+			var/datum/status_effect/eldtree_mark/mark = target.has_status_effect(/datum/status_effect/eldtree_mark)
+			if(mark && wielded)
+				to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
+				wielder.adjustBruteLoss(-to_heal)
+				should_send_mark_message = target.name
+
+			else if(!mark && !wielded)
+				target.apply_status_effect(/datum/status_effect/eldtree_mark)
+
 	. = ..()
+
+	if(should_send_mark_message)
+		to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to heal you for [to_heal] health!"))
 
 	// All of this is literally just extra VFX on hit and is of no consequence
 	if(!istype(target))
@@ -2328,10 +2364,11 @@
 		hit_displacement_x = floor(hit_displacement_x * 1.2)
 		hit_displacement_y = floor(hit_displacement_y * 1.2)
 	var/obj/effect/temp_visual/smash_effect/hit_vfx = new /obj/effect/temp_visual/smash_effect(get_turf(target))
-	hit_vfx.color = "#dfb440"
+	hit_vfx.color = "#5c4322"
 	hit_vfx.transform *= hit_size
 	hit_vfx.pixel_x = hit_displacement_x
 	hit_vfx.pixel_y = hit_displacement_y
+	hit_vfx.layer = ABOVE_MOB_LAYER
 	QDEL_IN(hit_vfx, 0.4 SECONDS)
 
 /// Gain force based on nearby enemies targeting the user.
@@ -2402,6 +2439,13 @@
 	var/turf/in_front_of_user_turf = get_step(user_turf, correct_direction) // So we don't slam enemies directly into us when pulling them
 	var/should_pull = wielded
 
+	var/wearing_eldtree = FALSE
+	var/mob/living/carbon/human/wielder = user
+	if(istype(wielder))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(eldtree_armour))
+			wearing_eldtree = TRUE
+
 	SetAggroForce(user)
 	var/final_damage = force
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
@@ -2437,15 +2481,24 @@
 					continue
 				if(victim in mob_hitlist)
 					continue
+				if(victim.stat >= DEAD)
+					continue
 				mob_hitlist |= victim
+
+				var/should_send_mark_message
+				var/to_heal
+				if(wearing_eldtree && !(victim.status_flags & GODMODE)) // Have to place this code block earlier because damage might qdel our target
+					var/datum/status_effect/eldtree_mark/mark = victim.has_status_effect(/datum/status_effect/eldtree_mark)
+					if(mark && should_pull)
+						to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
+						wielder.adjustSanityLoss(-to_heal)
+						should_send_mark_message = victim.name
+					else if(!mark && !should_pull)
+						victim.apply_status_effect(/datum/status_effect/eldtree_mark)
+
 				victim.deal_damage(final_damage, spike_damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
 				victim.visible_message(span_danger("[victim] is pierced by a burrowing root!"), span_userdanger("You're pierced by a burrowing root!"))
-
-				if(should_pull)
-					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
-					if(victim) // don't throw if our hit qdel'd them
-						victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
-
+				to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to restore your sanity by [to_heal] points!"))
 				// Hit VFX
 				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
 				temp.dir = pick(NORTHWEST, NORTHEAST, EAST, WEST)
@@ -2453,8 +2506,21 @@
 				temp.transform *= 1.9
 				temp.layer = POINT_LAYER + 1
 
+				if(!victim)
+					continue
+				if(should_pull)
+					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
+					victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+
 		sleep(0.1 SECONDS) // This kinda makes it possible for enemies to dodge it like players can dodge a WN pulse but, you know, lock in?
 
+
+/datum/status_effect/eldtree_mark
+	id = "eldtree mark"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 5 SECONDS
+	tick_interval = -1 // We don't need to tick
+	alert_type = null
 
 /obj/effect/temp_visual/eldtree_root
 	name = "eldtree root"

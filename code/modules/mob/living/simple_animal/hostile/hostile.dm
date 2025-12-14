@@ -328,7 +328,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 			if(!source_turf)
 				return
 			investigation_cooldown = world.time + investigation_cooldown_duration
-			patrol_to(source_turf)
+			INVOKE_ASYNC(src, TYPE_PROC_REF(/mob/living/simple_animal/hostile, patrol_to), source_turf) // This is an ASync because it calls AStar and that calls stoplag so if you ever have deal_damage in a signal it will throw a warning
 
 /mob/living/simple_animal/hostile/Move(atom/newloc, dir , step_x , step_y)
 	if(dodging && approaching_target && prob(dodge_prob) && moving_diagonally == 0 && isturf(loc) && isturf(newloc))
@@ -359,7 +359,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(!ckey && !stat && search_objects < 3 && . > 0)//Not unconscious, and we don't ignore mobs
 		if(search_objects)//Turn off item searching and ignore whatever item we were looking at, we're more concerned with fight or flight
-			target = null
+			LoseTarget(FALSE)
 			LoseSearchObjects()
 		if(AIStatus != AI_ON && AIStatus != AI_OFF)
 			toggle_ai(AI_ON)
@@ -768,8 +768,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
-	target_memory.Cut()
 	if(!QDELETED(new_target))
+		var/signal_return = SEND_SIGNAL(src, COMSIG_HOSTILE_GAINEDTARGET, new_target)
+		if(signal_return & COMPONENT_HOSTILE_REFUSE_AGGRO) // We can be told to cancel our re-targeting
+			return
+		target_memory.Cut()
 		target = new_target
 		target_memory[target] = 0
 		GainPatience()
@@ -779,11 +782,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	LoseTarget()
 	return FALSE
 
-/mob/living/simple_animal/hostile/proc/LoseTarget()
+/mob/living/simple_animal/hostile/proc/LoseTarget(stop_movement = TRUE)
 	target = null
 	approaching_target = FALSE
 	in_melee = FALSE
-	walk(src, 0)
+	if(stop_movement)
+		walk(src, 0)
 	SEND_SIGNAL(src, COMSIG_HOSTILE_LOSTTARGET)
 	LoseAggro()
 
