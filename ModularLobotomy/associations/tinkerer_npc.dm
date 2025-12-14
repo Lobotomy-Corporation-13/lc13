@@ -298,6 +298,8 @@
 	// Transfer player control - handle both mind and key
 	if(target.mind)
 		target.mind.transfer_to(new_mob)
+		// Remove all bound actions (skills) from the mind - they are purged during conversion
+		target.mind.RemoveAllBoundActions()
 	else if(target.ckey)
 		new_mob.ckey = target.ckey
 	else
