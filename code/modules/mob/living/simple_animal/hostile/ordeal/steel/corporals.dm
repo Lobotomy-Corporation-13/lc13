@@ -72,7 +72,7 @@
 	visible_message(span_danger("[src] suddenly explodes!"))
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
-	for(var/mob/living/L in ohearers(3, src
+	for(var/mob/living/L in ohearers(3, src))
 		L.deal_damage(60, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 	//Buff allies, all of these buffs only activate once.
