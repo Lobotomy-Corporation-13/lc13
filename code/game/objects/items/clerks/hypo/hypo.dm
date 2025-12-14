@@ -3,7 +3,7 @@
 	desc = "The Emergency Medical Aid Injector and Synthesiser is a medical device used by L Corp to quickly administer drugs during emergencies."
 	icon_state = "clerkhypo"
 	reagent_flags = NONE
-	var/list/reagent_ids = list(/datum/reagent/medicine/mental_stabilizator,/datum/reagent/medicine/sal_acid,/datum/reagent/medicine/epinephrine)
+	var/list/reagent_ids = list(/datum/reagent/abnormality/sanity_gel,/datum/reagent/abnormality/healing_gel,/datum/reagent/medicine/epinephrine)
 	var/list/reagent_names = list()
 	var/chem_capacity = 15
 	var/list/datum/reagents/reagent_list = list()
