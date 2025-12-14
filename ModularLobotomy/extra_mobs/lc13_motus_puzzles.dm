@@ -225,7 +225,7 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 					new /obj/effect/temp_visual/explosion(get_turf(src))
 					playsound(get_turf(src), 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 					for(var/mob/living/L in view(2, src))
-						L.apply_damage(80, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+						L.deal_damage(80, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
 
 		else
 			to_chat(user, span_nicegreen("You change your mind at the last second."))
