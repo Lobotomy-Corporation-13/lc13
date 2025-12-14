@@ -2251,10 +2251,12 @@
 // Due to its special attack triggering at range but having a windup and applying click delay, it's harder to hit and run with this weapon (you can still do it by using sweeps correctly and not mashing).
 /obj/item/ego_weapon/wield/eldtree
 	name = "eldtree"
-	desc = "A large warhammer, fashioned primarily out of wooden branches and tipped with a metal head. On closer inspection, a myriad of malevolent eyes can be sighted inside. \n\
+	desc = "A large warhammer, its head fashioned primarily out of wooden branches and tipped with metal. On closer inspection, a myriad of malevolent eyes can be sighted inside. \n\
 	It serves as a good reminder that the true essence of things is always hidden within. Never trust the facades presented to you."
 	icon_state = "lce_lantern"
 	inhand_icon_state = "lce_lantern"
+	worn_icon = 'icons/obj/clothing/belt_overlays.dmi'
+	worn_icon_state = "lce_lantern"
 	force = 85
 	wielded_force = 110
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -2262,8 +2264,8 @@
 	damtype = WHITE_DAMAGE
 	attack_speed = 1.4
 	wielded_attack_speed = 1.7
-	attack_verb_continuous = list("slams", "bashes", "crushes", "pulverizes", "obliterates", "wallops", "bonks")
-	attack_verb_simple = list("slam", "bash", "crush", "pulverize", "obliterate", "wallop", "bonk")
+	attack_verb_continuous = list("slams", "bashes", "crushes", "pulverizes", "obliterates", "wallops", "bonks", "tenderizes")
+	attack_verb_simple = list("slam", "bash", "crush", "pulverize", "obliterate", "wallop", "bonk", "tenderize")
 	hitsound = 'sound/weapons/ego/lce_lantern_hit.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
@@ -2307,7 +2309,6 @@
 	if(aggro_currently_gained_aggro_force > 0)
 		. += span_danger("This weapon is currently <b>gaining [aggro_currently_gained_aggro_force] force</b> from nearby enemies targeting its wielder on top of its base [wielded ? initial(wielded_force) : initial(force)] force.")
 
-
 /obj/item/ego_weapon/wield/eldtree/attack(mob/living/target, mob/living/user)
 	if(wielded)
 		knockback = KNOCKBACK_MEDIUM
@@ -2315,6 +2316,23 @@
 		knockback = FALSE
 	SetAggroForce(user) // Gain force depending on how many mobs in sight are targeting the user
 	. = ..()
+
+	// All of this is literally just extra VFX on hit and is of no consequence
+	if(!istype(target))
+		return
+	var/hit_size = 0.8
+	var/hit_displacement_x = rand(-8, 8)
+	var/hit_displacement_y = rand(-10, 6) // Weighted towards the bottom of the turf to account for tiny enemies like Amber/Crimson Dawn
+	if(!wielded) // Smaller vfx and more displaced around the target
+		hit_size -= 0.2
+		hit_displacement_x = floor(hit_displacement_x * 1.2)
+		hit_displacement_y = floor(hit_displacement_y * 1.2)
+	var/obj/effect/temp_visual/smash_effect/hit_vfx = new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	hit_vfx.color = "#dfb440"
+	hit_vfx.transform *= hit_size
+	hit_vfx.pixel_x = hit_displacement_x
+	hit_vfx.pixel_y = hit_displacement_y
+	QDEL_IN(hit_vfx, 0.4 SECONDS)
 
 /// Gain force based on nearby enemies targeting the user.
 /obj/item/ego_weapon/wield/eldtree/proc/SetAggroForce(mob/living/user)
@@ -2342,9 +2360,13 @@
 /obj/item/ego_weapon/wield/eldtree/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user)) // I hate clerks
 		return
+	if(istype(A, /obj/machinery/door)) // If you click on a door you can ignore the open turf/view requirements, so we handle that here
+		to_chat(user, span_warning("Your roots can't burrow through that."))
+		return
 	var/turf/open/target_turf = get_turf(A) // Only allow targeting open turfs
 	var/turf/user_turf = get_turf(user)
 	if(!istype(target_turf))
+		to_chat(user, span_warning("Your roots can't burrow through that."))
 		return
 	if((get_dist(user, target_turf) < 2) || !(target_turf in view(10, user))) // Don't allow targeting adjacent turfs for this, or turfs we can't see
 		return
@@ -2421,7 +2443,8 @@
 
 				if(should_pull)
 					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
-					victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
+					if(victim) // don't throw if our hit qdel'd them
+						victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
 
 				// Hit VFX
 				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
