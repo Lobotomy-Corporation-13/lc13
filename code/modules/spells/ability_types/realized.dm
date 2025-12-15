@@ -1877,7 +1877,7 @@
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
 
-// For the Eldtree realization.
+// For the Eldtree realization. Prevents enemies from swapping targets to anybody but the caster, makes them take extra WHITE damage on hit, and if the caster dies while this is active, they retaliate with a spike explosion.
 /obj/effect/proc_holder/ability/fairy_lure
 	name = "Fairy Lure"
 	desc = "Applies the 'Distracted' status effect to nearby enemies, forcing them to target you and making them take extra WHITE damage on hit.\n\
@@ -1939,7 +1939,7 @@
 
 	var/user_temperance = (get_modified_attribute_level(caster, TEMPERANCE_ATTRIBUTE))
 	if((user_temperance > tempscaling_lowest_temp) && (tempscaling_lowest_temp != tempscaling_highest_temp)) // Activate temp scaling if our temperance is above the minimum for scaling, and that second conditional is to avoid division by zero errors
-		// I know this looks like a mess so I'll explain
+		// I know this looks like a mess
 		// We are essentially linearly mapping the user's temperance between the minimum temp scaling amount and maximum temp scaling amount to a value between 0 and the maximum of the respective scaling.
 		// We use min() to ensure you can't get higher values than the maximum scaling allowed, and we use floor() to get rid of decimals.
 		// Basically more temp = better
@@ -2150,12 +2150,14 @@
 /datum/status_effect/display/eldtree_lured/proc/DebuffEnd()
 	qdel(src)
 
+// Called when a mob with this status effect runs GiveTarget.
 /datum/status_effect/display/eldtree_lured/proc/EyesOnMe(mob/living/simple_animal/hostile/source, atom/new_target)
 	SIGNAL_HANDLER
 	if(new_target != eldtree_user)
-		lured.FindTarget(list(eldtree_user), TRUE) // This TRUE is the only thing that stands between this code and the server box getting instantly nuked, don't ask me why this proc asks for a "HasTargetsList" argument when it could just check if it was given a list
-		return COMPONENT_HOSTILE_REFUSE_AGGRO
+		lured.FindTarget(list(eldtree_user), TRUE) // Make them target us instead. The TRUE argument is the only thing that stands between this code and the server box getting instantly nuked, don't ask me why this proc asks for a "HasTargetsList" argument when it could just check if it was given a list
+		return COMPONENT_HOSTILE_REFUSE_AGGRO // Reject their attempt to swap targets
 
+// Called when a mob with this status effect takes damage.
 /datum/status_effect/display/eldtree_lured/proc/ReceiveOnhitDamage(mob/us, damage_amount, damage_type, def_zone, mob/attacker, damage_flags, attack_type)
 	SIGNAL_HANDLER
 	if(attack_type & (ATTACK_TYPE_ENVIRONMENT | ATTACK_TYPE_STATUS))

@@ -2249,6 +2249,7 @@
 /// It deals WHITE damage with its melee, and has an Ebony Stem-like AoE ranged attack that deals RED damage, but has a windup.
 /// Can be wielded to gain knockback (and changes the special attack to single target that pulls the enemy to you and deals extra aggro damage)
 // Due to its special attack triggering at range but having a windup and applying click delay, it's harder to hit and run with this weapon (you can still do it by using sweeps correctly and not mashing).
+// When wearing the corresponding armour, unwielded hits mark enemies, and wielded hits consume the mark to heal HP (melee) or SP (ranged). The amount healed is increased with aggro'd enemy amount.
 /obj/item/ego_weapon/wield/eldtree
 	name = "eldtree"
 	desc = "A large warhammer, its head fashioned primarily out of wooden branches and tipped with metal. On closer inspection, a myriad of malevolent eyes can be sighted inside. \n\
@@ -2304,6 +2305,7 @@
 	// Amount healed increases with how much aggro you have on you.
 	var/realization_mark_base_heal = 5
 	var/realization_mark_heal_aggroforce_bonus_coeff = 0.4
+	var/realization_mark_heal_sanity_bonus_coeff = 2 // You heal more sanity than HP with this since it's harder to land
 
 /obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
 	return 75
@@ -2329,30 +2331,30 @@
 		knockback = FALSE
 	SetAggroForce(user) // Gain force depending on how many mobs in sight are targeting the user
 
+	// These two vars are a bit jank, they exist so we can retrieve the name and healing amount in case we detonate a mark but the target gets qdel'd by the damage.
 	var/should_send_mark_message
 	var/to_heal
-	var/wearing_eldtree = FALSE
+
 	var/mob/living/carbon/human/wielder = user
 	if(istype(wielder)) // I have to indent this code block because I want to heal off marks before targets potentially get qdel'd by our attack.
 		var/obj/item/clothing/suit/armor/ego_gear/realization/eldtree/eldtree_armour = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(eldtree_armour))
-			wearing_eldtree = TRUE
+			if(istype(target) && target.stat < DEAD && !(target.status_flags & GODMODE)) // Ignore corpses and contained abnos
+				var/datum/status_effect/eldtree_mark/mark = target.has_status_effect(/datum/status_effect/eldtree_mark)
+				if(mark && wielded) // If we're hitting a marked target while the weapon is being 2handed, consume the mark to heal.
+					to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
+					wielder.adjustBruteLoss(-to_heal)
+					should_send_mark_message = target.name
+					qdel(mark)
 
-		if(wearing_eldtree && istype(target) && target.stat <= DEAD && !(target.status_flags & GODMODE))
-			var/datum/status_effect/eldtree_mark/mark = target.has_status_effect(/datum/status_effect/eldtree_mark)
-			if(mark && wielded)
-				to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
-				wielder.adjustBruteLoss(-to_heal)
-				should_send_mark_message = target.name
-
-			else if(!mark && !wielded)
-				target.apply_status_effect(/datum/status_effect/eldtree_mark)
+				else if(!wielded) // If we're hitting a target while the weapon is being 1handed, apply/reapply the mark.
+					target.apply_status_effect(/datum/status_effect/eldtree_mark)
 
 	. = ..()
 
 	if(should_send_mark_message)
-		to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to heal you for [to_heal] health!"))
-
+		to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to heal you for [to_heal] health!")) // We put it here so it shows up after the attack message
+		new /obj/effect/temp_visual/healing(get_turf(wielder))
 	// All of this is literally just extra VFX on hit and is of no consequence
 	if(!istype(target))
 		return
@@ -2485,20 +2487,23 @@
 					continue
 				mob_hitlist |= victim
 
+				// These 2 vars exist so we can retrieve healing amount and the name of the victim if our attack qdels them, so we can still consume the mark
 				var/should_send_mark_message
 				var/to_heal
-				if(wearing_eldtree && !(victim.status_flags & GODMODE)) // Have to place this code block earlier because damage might qdel our target
+				if(wearing_eldtree && !(victim.status_flags & GODMODE) && victim.stat < DEAD) // Have to place this code block earlier because damage might qdel our target
 					var/datum/status_effect/eldtree_mark/mark = victim.has_status_effect(/datum/status_effect/eldtree_mark)
-					if(mark && should_pull)
+					if(mark && should_pull) // If we're hitting a marked target with a 2handed ranged attack, consume the mark to heal sanity
 						to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
-						wielder.adjustSanityLoss(-to_heal)
+						wielder.adjustSanityLoss(-to_heal * realization_mark_heal_sanity_bonus_coeff)
 						should_send_mark_message = victim.name
-					else if(!mark && !should_pull)
+						qdel(mark)
+					else if(!should_pull) // If we're hitting a target with a 1handed ranged attack, apply/reapply the mark
 						victim.apply_status_effect(/datum/status_effect/eldtree_mark)
 
 				victim.deal_damage(final_damage, spike_damage_type, source = user, attack_type = (ATTACK_TYPE_SPECIAL))
 				victim.visible_message(span_danger("[victim] is pierced by a burrowing root!"), span_userdanger("You're pierced by a burrowing root!"))
-				to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to restore your sanity by [to_heal] points!"))
+				if(should_send_mark_message)
+					to_chat(wielder, span_nicegreen("Your E.G.O. absorbs nutrients from [should_send_mark_message] to restore your sanity by [to_heal] points!"))
 				// Hit VFX
 				var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)
 				temp.dir = pick(NORTHWEST, NORTHEAST, EAST, WEST)
@@ -2508,7 +2513,7 @@
 
 				if(!victim)
 					continue
-				if(should_pull)
+				if(should_pull) // On ranged 2handed hits, deal extra aggro damage (enemy is likelier to swap targets to you) and pull them towards us. Won't work on anything with MOVE_RESIST_OVERPOWERING like Red Fixer, White Night, etc.
 					victim.deal_damage(final_damage * 0.75, AGGRO_DAMAGE, source = user, flags = (DAMAGE_FORCED)) // This aggro damage is multiplied by a coeff based on Fort and Prud, about 2.3 at 130/130 so this is like 3 limbillion aggro damage
 					victim.safe_throw_at(in_front_of_user_turf, wielded_pull_strength, wielded_pull_strength, user, TRUE, force = MOVE_FORCE_OVERPOWERING, gentle = TRUE)
 
@@ -2517,7 +2522,7 @@
 
 /datum/status_effect/eldtree_mark
 	id = "eldtree mark"
-	status_type = STATUS_EFFECT_UNIQUE
+	status_type = STATUS_EFFECT_REFRESH
 	duration = 5 SECONDS
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
