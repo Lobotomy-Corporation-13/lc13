@@ -1880,7 +1880,7 @@
 // For the Eldtree realization. Prevents enemies from swapping targets to anybody but the caster, makes them take extra WHITE damage on hit, and if the caster dies while this is active, they retaliate with a spike explosion.
 /obj/effect/proc_holder/ability/fairy_lure
 	name = "Fairy Lure"
-	desc = "Applies the 'Distracted' status effect to nearby enemies, forcing them to target you and making them take extra WHITE damage on hit.\n\
+	desc = "Applies the 'Distracted' status effect to nearby enemies, forcing them to target you and making them take extra WHITE damage on hit. \n\
 	'Distracted' lasts until a certain amount of WHITE damage is caused by it or until it times out.\n\
 	This ability scales with Temperance starting at 120 and its bonuses reach their maximum at 200 Temperance. These bonuses include the range, cooldown, debuff duration and debuff damage cap. Base Cooldown: 50s."
 	action_icon_state = "fairy_lure"

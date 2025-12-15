@@ -2258,10 +2258,10 @@
 	inhand_icon_state = "lce_lantern"
 	worn_icon = 'icons/obj/clothing/belt_overlays.dmi'
 	worn_icon_state = "lce_lantern"
-	force = 85
-	wielded_force = 110
+	force = 78
+	wielded_force = 105
 	swingstyle = WEAPONSWING_LARGESWEEP
-	swingcolor = "#c2971c"
+	swingcolor = "#5c4322"
 	damtype = WHITE_DAMAGE
 	attack_speed = 1.4
 	wielded_attack_speed = 1.7
@@ -2297,15 +2297,15 @@
 	/// Type of damage dealt by the spike attack.
 	var/spike_damage_type = RED_DAMAGE
 	// I'm sorry the key here is a string, in a perfect world we could just have FALSE/TRUE as keys and pass 'wielded' when accessing these lists, but BYOND won't let me
-	var/list/spike_windup = list("unwielded" = 0.3 SECONDS, "wielded" = 0.5 SECONDS) // Length of the windup for the spike attack
+	var/list/spike_windup = list("unwielded" = 0.3 SECONDS, "wielded" = 0.4 SECONDS) // Length of the windup for the spike attack
 	var/list/spike_radius = list("unwielded" = 1, "wielded" = 0) // Radius of the spike attack's AOE
-	var/list/spike_damage_coeff = list("unwielded" = 0.85, "wielded" = 1.35) // Damage coefficients applied to the weapon's usual damage when using the spike attack
+	var/list/spike_damage_coeff = list("unwielded" = 0.6, "wielded" = 1.35) // Damage coefficients applied to the weapon's usual damage when using the spike attack
 
 	// While wearing the realization, unwielded attacks will mark the target, and wielded attacks will restore health (melee) or sanity (ranged). The mark lasts 5 seconds and otherwise does nothing else.
 	// Amount healed increases with how much aggro you have on you.
 	var/realization_mark_base_heal = 5
 	var/realization_mark_heal_aggroforce_bonus_coeff = 0.4
-	var/realization_mark_heal_sanity_bonus_coeff = 2 // You heal more sanity than HP with this since it's harder to land
+	var/realization_mark_heal_sanity_bonus_coeff = 1.5 // You heal more sanity than HP with this since it's harder to land
 
 /obj/item/ego_weapon/wield/eldtree/get_clamped_volume()
 	return 75
@@ -2494,7 +2494,8 @@
 					var/datum/status_effect/eldtree_mark/mark = victim.has_status_effect(/datum/status_effect/eldtree_mark)
 					if(mark && should_pull) // If we're hitting a marked target with a 2handed ranged attack, consume the mark to heal sanity
 						to_heal = realization_mark_base_heal + (realization_mark_heal_aggroforce_bonus_coeff * aggro_currently_gained_aggro_force)
-						wielder.adjustSanityLoss(-to_heal * realization_mark_heal_sanity_bonus_coeff)
+						to_heal *= realization_mark_heal_sanity_bonus_coeff
+						wielder.adjustSanityLoss(-to_heal)
 						should_send_mark_message = victim.name
 						qdel(mark)
 					else if(!should_pull) // If we're hitting a target with a 1handed ranged attack, apply/reapply the mark
