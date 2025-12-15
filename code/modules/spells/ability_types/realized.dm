@@ -1902,8 +1902,8 @@
 
 	// These vars establish the limit of the bonuses that can be gained by having a higher Temperance. Most Agents will get the realization at about 115-130 Temp, a decked out Agent should have like 130-150 Temp, if you spec into Temp you probably are gonna end up at about 160ish, only real psychopaths can get up to 200
 	var/tempscaling_max_ability_range_increase = 7
-	var/tempscaling_max_ability_cd_decrease = 30 SECONDS
-	var/tempscaling_max_debuff_duration_increase = 12 SECONDS
+	var/tempscaling_max_ability_cd_decrease = 28 SECONDS
+	var/tempscaling_max_debuff_duration_increase = 11 SECONDS
 	var/tempscaling_max_debuff_damagecap_increase = 900
 
 	// These vars control the power of the spike explosion if the user dies while under this ability's power.
@@ -1962,6 +1962,8 @@
 			if(user.faction_check_mob(L, FALSE))
 				continue
 			if(L.stat >= DEAD)
+				continue
+			if(L.status_flags & GODMODE)
 				continue
 
 			L.apply_status_effect(/datum/status_effect/display/eldtree_lured, caster, final_debuff_damagecap, final_debuff_duration)
@@ -2071,6 +2073,8 @@
 				if(victim in mob_hitlist)
 					continue
 				if(victim.stat >= DEAD)
+					continue
+				if(victim.status_flags & GODMODE)
 					continue
 				mob_hitlist |= victim
 				victim.deal_damage(final_damage, RED_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
