@@ -42,10 +42,13 @@
 	var/enraged = FALSE
 
 /mob/living/simple_animal/hostile/bloodfiend_mook/Initialize()
+	// Store coeff list before parent converts it to datum
+	var/list/coeff_list = damage_coeff
 	. = ..()
 	base_damage_lower = melee_damage_lower
 	base_damage_upper = melee_damage_upper
-	base_damage_coeff = damage_coeff.Copy()
+	if(islist(coeff_list))
+		base_damage_coeff = coeff_list.Copy()
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 0, max_amount = max_blood)
 
 /mob/living/simple_animal/hostile/bloodfiend_mook/Life()

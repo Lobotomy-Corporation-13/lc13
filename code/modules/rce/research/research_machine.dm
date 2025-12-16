@@ -23,6 +23,8 @@
 	var/venom_branch_enabled = TRUE
 	/// Whether the Storm Ram branch is enabled for research (disabled - bugs to fix)
 	var/storm_branch_enabled = FALSE
+	/// Whether the Utility branch is enabled for research
+	var/utility_branch_enabled = TRUE
 
 /obj/machinery/rce_research/Initialize()
 	. = ..()
@@ -108,7 +110,8 @@
 	data["branchEnabled"] = list(
 		"hellfire" = hellfire_branch_enabled,
 		"venom" = venom_branch_enabled,
-		"storm" = storm_branch_enabled
+		"storm" = storm_branch_enabled,
+		"utility" = utility_branch_enabled
 	)
 
 	// Research tree data
@@ -164,7 +167,8 @@
 	var/list/stats_data = list(
 		"hellfire" = 0,
 		"venom" = 0,
-		"storm" = 0
+		"storm" = 0,
+		"utility" = 0
 	)
 	for(var/node_id in research_completions)
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
@@ -350,6 +354,8 @@
 			return venom_branch_enabled
 		if("storm")
 			return storm_branch_enabled
+		if("utility")
+			return utility_branch_enabled
 	return TRUE
 
 /// Returns the effective cost for a research node, accounting for starter kit cost doubling

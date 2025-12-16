@@ -43,6 +43,7 @@ const BRANCH_COLORS = {
   hellfire: '#ff4444',
   venom: '#44ff44',
   storm: '#4488ff',
+  utility: '#aaaaaa',
 };
 
 // Branch labels
@@ -50,6 +51,7 @@ const BRANCH_LABELS = {
   hellfire: 'Hellfire (Fire)',
   venom: 'Venom (Toxic)',
   storm: 'Storm (Electric)',
+  utility: 'Utility (General)',
 };
 
 export const RCEResearch = (props, context) => {
@@ -62,8 +64,8 @@ export const RCEResearch = (props, context) => {
     researchTree = [],
     partsList = [],
     researchProgress = {},
-    branchEnabled = { hellfire: true, venom: true, storm: true },
-    researchStats = { hellfire: 0, venom: 0, storm: 0 },
+    branchEnabled = { hellfire: true, venom: true, storm: true, utility: true },
+    researchStats = { hellfire: 0, venom: 0, storm: 0, utility: 0 },
     bestiary = [],
     isProcessing = false,
   } = data;
@@ -176,6 +178,7 @@ const ResearchTreeTab = (props, context) => {
     hellfire: researchTree.filter(n => n.branch === 'hellfire'),
     venom: researchTree.filter(n => n.branch === 'venom'),
     storm: researchTree.filter(n => n.branch === 'storm'),
+    utility: researchTree.filter(n => n.branch === 'utility'),
   };
 
   // Sort each branch by tier
@@ -192,8 +195,8 @@ const ResearchTreeTab = (props, context) => {
   return (
     <Section fill scrollable title="Research Tree">
       <Stack>
-        {['hellfire', 'venom', 'storm'].map(branch => (
-          <Stack.Item key={branch} grow basis="33%">
+        {['hellfire', 'venom', 'storm', 'utility'].map(branch => (
+          <Stack.Item key={branch} grow basis="25%">
             <BranchList
               branch={branch}
               nodes={branches[branch]}
@@ -830,7 +833,7 @@ const ProgressTab = (props, context) => {
 const StatisticsTab = (props) => {
   const { researchStats } = props;
 
-  const totalResearched = researchStats.hellfire + researchStats.venom + researchStats.storm;
+  const totalResearched = researchStats.hellfire + researchStats.venom + researchStats.storm + researchStats.utility;
 
   return (
     <Section fill title="Research Statistics">
@@ -838,8 +841,8 @@ const StatisticsTab = (props) => {
         Total items researched (repeatable only): {totalResearched}
       </Box>
       <Stack>
-        {['hellfire', 'venom', 'storm'].map(branch => (
-          <Stack.Item key={branch} grow basis="33%">
+        {['hellfire', 'venom', 'storm', 'utility'].map(branch => (
+          <Stack.Item key={branch} grow basis="25%">
             <Box
               p={2}
               m={1}

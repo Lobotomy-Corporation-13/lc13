@@ -776,11 +776,217 @@
 	thunderstorm_artillery.required_traits = list(TRAIT_MECHANICAL, TRAIT_ELITE, TRAIT_VOLATILE)
 	GLOB.rce_research_nodes[thunderstorm_artillery.id] = thunderstorm_artillery
 
+	// UTILITY BRANCH - General purpose tools
+
+	var/datum/rce_research_node/extraction_pack = new
+	extraction_pack.id = "extraction_pack"
+	extraction_pack.name = "Fulton Extraction Pack"
+	extraction_pack.desc = "A balloon that can extract equipment or personnel to a recovery beacon. 3 uses per pack."
+	extraction_pack.tier = RCE_RESEARCH_TIER_1
+	extraction_pack.cost = 75
+	extraction_pack.branch = "utility"
+	extraction_pack.prerequisites = list()
+	extraction_pack.unlocked_path = /obj/item/extraction_pack
+	extraction_pack.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_LIGHTWEIGHT = TRAIT_BONUS_MINOR
+	)
+	extraction_pack.negative_traits = list(
+		TRAIT_HEAVY = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[extraction_pack.id] = extraction_pack
+
+	var/datum/rce_research_node/extraction_point = new
+	extraction_point.id = "extraction_point"
+	extraction_point.name = "Fulton Recovery Beacon"
+	extraction_point.desc = "A beacon for the fulton recovery system. Link extraction packs to this beacon."
+	extraction_point.tier = RCE_RESEARCH_TIER_1
+	extraction_point.cost = 150
+	extraction_point.branch = "utility"
+	extraction_point.prerequisites = list()
+	extraction_point.unlocked_path = /obj/structure/extraction_point
+	extraction_point.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	extraction_point.negative_traits = list(
+		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[extraction_point.id] = extraction_point
+
+	var/datum/rce_research_node/conveyor_filter = new
+	conveyor_filter.id = "conveyor_filter"
+	conveyor_filter.name = "Conveyor Filter Assembly"
+	conveyor_filter.desc = "A conveyor filter that can sort items. Place on floor to deploy."
+	conveyor_filter.tier = RCE_RESEARCH_TIER_1
+	conveyor_filter.cost = 100
+	conveyor_filter.branch = "utility"
+	conveyor_filter.prerequisites = list()
+	conveyor_filter.unlocked_path = /obj/item/stack/conveyor_filter
+	conveyor_filter.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MODERATE
+	)
+	conveyor_filter.negative_traits = list(
+		TRAIT_ORGANIC = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[conveyor_filter.id] = conveyor_filter
+
+	var/datum/rce_research_node/field_sandbags = new
+	field_sandbags.id = "field_sandbags"
+	field_sandbags.name = "Field Sandbag Kit"
+	field_sandbags.desc = "A kit containing 5 quick-deploy sandbags. Easy to climb over for rapid repositioning."
+	field_sandbags.tier = RCE_RESEARCH_TIER_1
+	field_sandbags.cost = 25
+	field_sandbags.branch = "utility"
+	field_sandbags.prerequisites = list()
+	field_sandbags.unlocked_path = /obj/item/storage/box/field_sandbags
+	field_sandbags.favored_traits = list(
+		TRAIT_ARMORED = TRAIT_BONUS_MODERATE,
+		TRAIT_HEAVY = TRAIT_BONUS_MINOR
+	)
+	field_sandbags.negative_traits = list(
+		TRAIT_AGILE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[field_sandbags.id] = field_sandbags
+
+	var/datum/rce_research_node/storm_gear_pouch = new
+	storm_gear_pouch.id = "storm_gear_pouch"
+	storm_gear_pouch.name = "Storm Ram Gear Pouch"
+	storm_gear_pouch.desc = "A specialized pouch for holding Storm Ram equipment. Does not hold EGO weapons."
+	storm_gear_pouch.tier = RCE_RESEARCH_TIER_1
+	storm_gear_pouch.cost = 50
+	storm_gear_pouch.branch = "utility"
+	storm_gear_pouch.prerequisites = list()
+	storm_gear_pouch.unlocked_path = /obj/item/storage/storm_gear_pouch
+	storm_gear_pouch.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MINOR,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	storm_gear_pouch.negative_traits = list(
+		TRAIT_ORGANIC = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[storm_gear_pouch.id] = storm_gear_pouch
+
+	var/datum/rce_research_node/hellfire_gear_pouch = new
+	hellfire_gear_pouch.id = "hellfire_gear_pouch"
+	hellfire_gear_pouch.name = "Hellfire Rooster Gear Pouch"
+	hellfire_gear_pouch.desc = "A specialized pouch for holding Hellfire Rooster equipment. Does not hold EGO weapons."
+	hellfire_gear_pouch.tier = RCE_RESEARCH_TIER_1
+	hellfire_gear_pouch.cost = 50
+	hellfire_gear_pouch.branch = "utility"
+	hellfire_gear_pouch.prerequisites = list()
+	hellfire_gear_pouch.unlocked_path = /obj/item/storage/hellfire_gear_pouch
+	hellfire_gear_pouch.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MINOR,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	hellfire_gear_pouch.negative_traits = list(
+		TRAIT_ORGANIC = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[hellfire_gear_pouch.id] = hellfire_gear_pouch
+
+	var/datum/rce_research_node/venom_gear_pouch = new
+	venom_gear_pouch.id = "venom_gear_pouch"
+	venom_gear_pouch.name = "Venom Rattlesnake Gear Pouch"
+	venom_gear_pouch.desc = "A specialized pouch for holding Venom Rattlesnake equipment. Does not hold EGO weapons."
+	venom_gear_pouch.tier = RCE_RESEARCH_TIER_1
+	venom_gear_pouch.cost = 50
+	venom_gear_pouch.branch = "utility"
+	venom_gear_pouch.prerequisites = list()
+	venom_gear_pouch.unlocked_path = /obj/item/storage/venom_gear_pouch
+	venom_gear_pouch.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MINOR,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	venom_gear_pouch.negative_traits = list(
+		TRAIT_ORGANIC = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[venom_gear_pouch.id] = venom_gear_pouch
+
+	var/datum/rce_research_node/emergency_extraction = new
+	emergency_extraction.id = "emergency_extraction"
+	emergency_extraction.name = "Emergency Extraction Implant"
+	emergency_extraction.desc = "A one-use implant that automatically extracts you to a linked beacon when you would die."
+	emergency_extraction.tier = RCE_RESEARCH_TIER_1
+	emergency_extraction.cost = 125
+	emergency_extraction.branch = "utility"
+	emergency_extraction.prerequisites = list()
+	emergency_extraction.unlocked_path = /obj/item/emergency_extraction_implant
+	emergency_extraction.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	emergency_extraction.negative_traits = list(
+		TRAIT_VOLATILE = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[emergency_extraction.id] = emergency_extraction
+
+	var/datum/rce_research_node/zerog_crate = new
+	zerog_crate.id = "zerog_crate"
+	zerog_crate.name = "Zero-Gravity Crate"
+	zerog_crate.desc = "A crate with built-in anti-gravity technology. Won't be moved by conveyor belts."
+	zerog_crate.tier = RCE_RESEARCH_TIER_1
+	zerog_crate.cost = 75
+	zerog_crate.branch = "utility"
+	zerog_crate.prerequisites = list()
+	zerog_crate.unlocked_path = /obj/structure/closet/crate/zerog
+	zerog_crate.favored_traits = list(
+		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
+		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR
+	)
+	zerog_crate.negative_traits = list(
+		TRAIT_HEAVY = TRAIT_PENALTY_MINOR
+	)
+	GLOB.rce_research_nodes[zerog_crate.id] = zerog_crate
+
 	// Debug: Log all initialized nodes
 	world.log << "RCE Research Tree initialized with the following nodes:"
 	for(var/node_id in GLOB.rce_research_nodes)
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
 		world.log << "  - [node.id]: [node.name] (Tier [node.tier], Cost: [node.cost])"
+
+// UTILITY BRANCH ITEMS
+
+// Field sandbags
+/obj/item/storage/box/field_sandbags
+	name = "field sandbag kit"
+	desc = "Contains 5 quick-deploy field sandbags. These sandbags are easier to climb over than standard variants."
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/item/storage/box/field_sandbags/PopulateContents()
+	for(var/i in 1 to 5)
+		new /obj/item/deployable_sandbag(src)
+
+/obj/item/deployable_sandbag
+	name = "deployable field sandbag"
+	desc = "A compact sandbag that can be quickly deployed as cover. Easier to climb than standard sandbags."
+	icon = 'icons/obj/stack_objects.dmi'
+	icon_state = "sandbags"
+	w_class = WEIGHT_CLASS_SMALL
+
+/obj/item/deployable_sandbag/attack_self(mob/user)
+	. = ..()
+	deploy(user)
+
+/obj/item/deployable_sandbag/proc/deploy(mob/user)
+	var/turf/T = get_turf(user)
+	if(!T || T.density)
+		to_chat(user, span_warning("You can't deploy the sandbag here!"))
+		return
+	to_chat(user, span_notice("You deploy [src]."))
+	playsound(T, 'sound/items/trayhit2.ogg', 50, TRUE)
+	new /obj/structure/barricade/sandbags/field(T)
+	qdel(src)
+
+// Zero-Gravity Crate - Won't be moved by conveyors
+/obj/structure/closet/crate/zerog
+	name = "zero-gravity crate"
+	desc = "A crate with built-in anti-gravity technology. It hovers slightly above the ground and won't be moved by conveyor belts."
+	icon_state = "scicrate"
+
+/obj/structure/closet/crate/zerog/has_gravity(turf/T)
+	return FALSE
 
 // Portable factory definitions for research unlocks
 /obj/item/portable_factory/pyro_grenade

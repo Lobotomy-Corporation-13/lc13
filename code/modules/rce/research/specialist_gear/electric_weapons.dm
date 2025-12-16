@@ -43,7 +43,7 @@
 	else
 		to_chat(user, span_notice("You deactivate [src]. The electricity fades."))
 
-	update_appearance()
+	update_icon()
 
 /obj/item/ego_weapon/thunder_hammer/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
@@ -396,7 +396,7 @@
 	STOP_PROCESSING(SSobj, src)
 	return ..()
 
-/obj/effect/static_burst_field/crossed(atom/movable/AM)
+/obj/effect/static_burst_field/Crossed(atom/movable/AM)
 	. = ..()
 	if(triggered)
 		return
@@ -683,12 +683,13 @@
 	var/emp_range = 3
 
 /obj/item/grenade/r_corp/emp/detonate(mob/living/lanced_by)
-	// Drain charge from Clan mobs and damage others
+	// Drain charge from Clan mobs, apply qliphoth overload, and damage others
 	for(var/mob/living/L in range(emp_range, src))
 		if(istype(L, /mob/living/simple_animal/hostile/clan))
 			var/mob/living/simple_animal/hostile/clan/C = L
 			C.charge = 0
-			to_chat(C, span_userdanger("The electromagnetic pulse drains your charge!"))
+			C.apply_status_effect(/datum/status_effect/qliphothoverload)
+			to_chat(C, span_userdanger("The electromagnetic pulse drains your charge and disrupts your qliphoth field!"))
 		else
 			L.deal_damage(20, FIRE)
 			to_chat(L, span_userdanger("The electromagnetic pulse overwhelms your nervous system!"))
@@ -834,6 +835,7 @@
 /obj/item/ego_weapon/railgun_charge/proc/delayed_speed_boost(mob/user, obj/item/rce_resource_tank/capacitor_pack/pack)
 	if(pack && user)
 		// Overcharge system automatically provides speed boost
+		return
 
 // Storm Surge Barrier - Mobile shield that damages on contact
 /obj/item/storm_surge_barrier
@@ -973,10 +975,10 @@
 	if(P.starting)
 		var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
 		var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-		P.firer = null  // Remove firer to prevent friendly fire
+		P.firer = user  // Remove firer to prevent friendly fire
 		P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), user.z), user)
 
-	return COMPONENT_BULLET_BLOCKED
+	return BULLET_ACT_BLOCK
 
 /obj/item/storm_surge_barrier/dropped(mob/user)
 	. = ..()
