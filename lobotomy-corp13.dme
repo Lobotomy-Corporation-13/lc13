@@ -3220,6 +3220,7 @@
 #include "code\modules\mob\living\simple_animal\hostile\ordeal\steel\goons.dm"
 #include "code\modules\mob\living\simple_animal\hostile\ordeal\steel\manager.dm"
 #include "code\modules\mob\living\simple_animal\hostile\ordeal\steel\warbeast.dm"
+#include "code\modules\mob\living\simple_animal\hostile\rce\bloodfiends.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\boss.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\xcorp.dm"
 #include "code\modules\mob\living\simple_animal\hostile\retaliate\bat.dm"
