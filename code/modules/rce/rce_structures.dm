@@ -77,6 +77,55 @@
 		target = SSgamedirector.GetRandomRaiderTarget()
 	AddComponent(/datum/component/monwave_spawner, attack_target = target, max_mobs = max_mobs, assault_type = assault_type, new_wave_order = moblist, try_for_announcer = announce, new_wave_cooldown_time = generate_new_mob_time, raider = raider, register = TRUE)
 
+/obj/structure/den/rce/blood
+	name = "Blood Attack Pylon Area 1"
+	desc = "A corrupted structure pulsing with crimson energy. Best destroy this!"
+	icon = 'ModularLobotomy/_Lobotomyicons/teguobjects.dmi'
+	icon_state = "vassalrack"
+	color = null
+	light_color = "#FF0000"
+	light_range = 4
+	light_power = 2
+	max_integrity = 500
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/fashionista = 4,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/fashionista = 2,
+	)
+
+/obj/structure/den/rce/blood/Initialize(mapload)
+	. = ..()
+	AddRedGlow()
+
+/obj/structure/den/rce/blood/proc/AddRedGlow()
+	add_filter("blood_glow", 2, list("type" = "outline", "color" = "#ff000030", "size" = 2))
+	addtimer(CALLBACK(src, PROC_REF(GlowLoop)), rand(1, 19))
+
+/obj/structure/den/rce/blood/proc/GlowLoop()
+	var/filter = get_filter("blood_glow")
+	if(filter)
+		animate(filter, alpha = 110, time = 15, loop = -1)
+		animate(alpha = 40, time = 25)
+
+/obj/structure/den/rce/blood/Destroy()
+	remove_filter("blood_glow")
+	return ..()
+
+/obj/structure/den/rce/blood/area2
+	name = "Blood Attack Pylon Area 2"
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/priest = 3,
+		/mob/living/simple_animal/hostile/bloodbag/priest_alt = 3,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/priest = 1,
+	)
+
+/obj/structure/den/rce/blood/area3
+	name = "Blood Attack Pylon Area 3"
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/parade = 4,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade = 2,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade_alt = 2,
+	)
+
 /obj/structure/den/rce_defender
 	name = "X-Corp Defense Pylon"
 	desc = "Best destroy this!"
@@ -177,6 +226,67 @@
 
 /obj/structure/player_blocker/CanAStarPass(ID, to_dir, requester)
 	return TRUE
+
+// ============================================
+// AREA BLOCKERS - Destroyed when corresponding boss dies
+// ============================================
+
+/obj/structure/area_blocker
+	name = "Area 1 Blocker"
+	desc = "A barrier that blocks passage until the area guardian is defeated."
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "trap"
+	color = "#FF0000"
+	light_color = "#FF0000"
+	light_range = 3
+	light_power = 1
+	alpha = 200
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	pass_flags_self = 0
+	/// Signal to listen for boss death
+	var/boss_death_signal = COMSIG_GLOB_BLOODFIEND_BARBER_DIED
+
+/obj/structure/area_blocker/Initialize()
+	. = ..()
+	if(boss_death_signal)
+		RegisterSignal(SSdcs, boss_death_signal, PROC_REF(OnBossDeath))
+
+/obj/structure/area_blocker/Destroy()
+	if(boss_death_signal)
+		UnregisterSignal(SSdcs, boss_death_signal)
+	return ..()
+
+/obj/structure/area_blocker/proc/OnBossDeath()
+	SIGNAL_HANDLER
+	// Visual effect before destruction
+	playsound(loc, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/beam_out(get_turf(src))
+	qdel(src)
+
+/obj/structure/area_blocker/CanAllowThrough(atom/movable/A, turf/T)
+	. = ..()
+	if(!isliving(A))
+		return FALSE
+	if(istype(A, /mob/living/simple_animal))
+		return TRUE
+	return FALSE
+
+/obj/structure/area_blocker/CanAStarPass(ID, to_dir, requester)
+	return TRUE
+
+/obj/structure/area_blocker/area2
+	name = "Area 2 Blocker"
+	color = "#888888"
+	light_color = "#888888"
+	boss_death_signal = COMSIG_GLOB_BLOODFIEND_PRIEST_DIED
+
+/obj/structure/area_blocker/area3
+	name = "Area 3 Blocker"
+	color = "#AA00AA"
+	light_color = "#AA00AA"
+	boss_death_signal = COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED
 
 // Resource Gate - blocks players until they have at least one active resource well
 // Re-activates during final wave to block players again

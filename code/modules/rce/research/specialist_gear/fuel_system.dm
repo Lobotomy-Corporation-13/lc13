@@ -496,11 +496,6 @@
 			add_overcharge(H, stacks_to_add)
 	return .
 
-/obj/item/rce_resource_tank/capacitor_pack/dropped(mob/user)
-	. = ..()
-	if(speed_boost_active)
-		remove_speed_boost(user)
-
 /obj/item/rce_resource_tank/capacitor_pack/attackby(obj/item/I, mob/user, params)
 	// Portable power cell for Ravens
 	if(istype(I, /obj/item/rce_canister/power))

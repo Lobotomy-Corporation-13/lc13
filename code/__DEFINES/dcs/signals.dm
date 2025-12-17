@@ -1125,6 +1125,10 @@
 // RCE signals
 // When the first resource well is activated
 #define COMSIG_GLOB_RCE_FIRST_WELL_ACTIVATED "!rce_first_well_activated"
+// Bloodfiend boss death signals
+#define COMSIG_GLOB_BLOODFIEND_BARBER_DIED "!bloodfiend_barber_died"
+#define COMSIG_GLOB_BLOODFIEND_PRIEST_DIED "!bloodfiend_priest_died"
+#define COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED "!bloodfiend_dulcinea_died"
 
 
 // Crate signals

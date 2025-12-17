@@ -34,21 +34,15 @@
 	var/base_damage_lower = 8
 	/// Base melee damage upper, used for buff calculations
 	var/base_damage_upper = 10
-	/// Base damage coefficients, stored on init for buff calculations
-	var/list/base_damage_coeff
 	/// Last recorded blood amount for buff updates
 	var/last_blood_check = 0
 	/// Whether currently in enraged state (50%+ blood)
 	var/enraged = FALSE
 
 /mob/living/simple_animal/hostile/bloodfiend_mook/Initialize()
-	// Store coeff list before parent converts it to datum
-	var/list/coeff_list = damage_coeff
 	. = ..()
 	base_damage_lower = melee_damage_lower
 	base_damage_upper = melee_damage_upper
-	if(islist(coeff_list))
-		base_damage_coeff = coeff_list.Copy()
 	AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 0, max_amount = max_blood)
 
 /mob/living/simple_animal/hostile/bloodfiend_mook/Life()
@@ -57,9 +51,9 @@
 		return FALSE
 	UpdateBloodBuff()
 
-/// Updates damage and resistance based on current blood_feast percentage
-/// At 50% blood: +25% damage, -25% damage taken
-/// At 100% blood: +50% damage, -50% damage taken
+/// Updates damage based on current blood_feast percentage
+/// At 50% blood: +25% damage
+/// At 100% blood: +50% damage
 /mob/living/simple_animal/hostile/bloodfiend_mook/proc/UpdateBloodBuff()
 	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
 	if(!bloodfeast)
@@ -74,13 +68,6 @@
 	var/damage_mult = 1 + (buff_percent * 0.5)
 	melee_damage_lower = round(base_damage_lower * damage_mult)
 	melee_damage_upper = round(base_damage_upper * damage_mult)
-
-	// Resistance multiplier: 1.0 to 0.5 (take less damage as blood increases)
-	var/resist_mult = 1 - (buff_percent * 0.5)
-	var/list/new_coeff = list()
-	for(var/damage_type in base_damage_coeff)
-		new_coeff[damage_type] = base_damage_coeff[damage_type] * resist_mult
-	ChangeResistances(new_coeff)
 
 	// Visual change at 50% blood
 	var/should_enrage = buff_percent >= 0.5
@@ -101,8 +88,8 @@
 		var/mob/living/L = target
 		L.apply_lc_bleed(bleed_stacks)
 
-/// Test Meifiend - Weakest variant
-/mob/living/simple_animal/hostile/bloodfiend_mook/meifiend
+/// Fashionista - Weakest variant
+/mob/living/simple_animal/hostile/bloodfiend_mook/fashionista
 	name = "Fashionista Bloodfiend"
 	desc = "A bloodfiend with a keen eye for style, though their taste runs exclusively to crimson."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
@@ -132,7 +119,7 @@
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 1.3)
 
 /// Dulcinea Mook - Balanced variant, slightly more offensive
-/mob/living/simple_animal/hostile/bloodfiend_mook/dulcinea
+/mob/living/simple_animal/hostile/bloodfiend_mook/parade
 	name = "Bloodfiend of the Happy Parade"
 	desc = "A bloodfiend that revels in the festivities of slaughter. Favors offense over defense."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
@@ -147,7 +134,7 @@
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.3)
 
 /// Dulcinea Mook Alt - Balanced variant, slightly more defensive
-/mob/living/simple_animal/hostile/bloodfiend_mook/dulcinea_alt
+/mob/living/simple_animal/hostile/bloodfiend_mook/parade_alt
 	name = "Bloodfiend of the Joyful Parade"
 	desc = "A bloodfiend that delights in the merriment of carnage. Favors defense over offense."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
@@ -162,7 +149,7 @@
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.7, WHITE_DAMAGE = 1.3, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 0.6)
 
 /// Formalfiend - Strongest standered variant
-/mob/living/simple_animal/hostile/bloodfiend_mook/formal
+/mob/living/simple_animal/hostile/bloodfiend_mook/parade_guard
 	name = "Bloodfiend of the Grand Parade"
 	desc = "A bloodfiend of noble bearing who protects the Princess of the Parade."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
@@ -178,7 +165,7 @@
 	/// Enraged icon state for formalfiend
 	var/icon_enraged = "informalfiend"
 
-/mob/living/simple_animal/hostile/bloodfiend_mook/formal/UpdateEnragedVisual()
+/mob/living/simple_animal/hostile/bloodfiend_mook/parade_guard/UpdateEnragedVisual()
 	if(enraged)
 		icon_state = icon_enraged
 		icon_living = icon_enraged
