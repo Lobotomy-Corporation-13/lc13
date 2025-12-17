@@ -229,7 +229,7 @@
 
 	if(force && HAS_TRAIT(user, TRAIT_PACIFISM))
 		var/message = "<span class='warning'>You don't want to harm other living beings!</span>"
-		if(HAS_TRAIT_FROM(user, TRAIT_PACIFISM, "Singularity J"))
+		if(HAS_TRAIT_FROM(user, TRAIT_PACIFISM, "Singularity J - Lock"))
 			message = span_warning("You try to attack, but the concept of violence has been sealed away from you!")
 		to_chat(user, message)
 		return
