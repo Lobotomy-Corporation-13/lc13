@@ -977,6 +977,7 @@
 	var/special_ability_targeting = FALSE
 	var/special_ability_simplemob_oldAI
 	var/aurafarming_line = "Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!"
+	var/savageflurry_coeff = 2
 
 // Following code corresponds to a silly ability for the admin-only weapon and can be ignored for all normal gameplay purposes. It should never show up in a normal round.
 // It is basically like Furioso: long cutscene that is purely aesthetic, and then the damage is applied at the end.
@@ -1193,7 +1194,7 @@
 	var/justicemod = 1 + userjust/100
 	if(ishuman(target))
 		justicemod = 1
-	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * savageflurry_coeff * justicemod), damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	ApplyStatusEffects(target, COMBO_FINISHER)
 	RadiusAOE(target, user, COMBO_FINISHER)
 
