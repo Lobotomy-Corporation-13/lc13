@@ -364,7 +364,7 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	charge = 0 // Goodbye Charge
 	empowered = TRUE // Stop gaining charge and you can't trigger this state while it's already ongoing to double up on buffs
 
-	owner.adjust_attribute_buff(JUSTICE_ATTRIBUTE, empowered_power_buff) // UNLIMITED POWER (modifier)
+	owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, empowered_power_buff) // UNLIMITED POWER (modifier)
 	RegisterSignal(owner, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(StartArcLightning)) // When taking damage, cause a chain lightning effect.
 	revert_buff_timer = addtimer(CALLBACK(src, PROC_REF(RevertBuff)), empowered_duration, TIMER_STOPPABLE) // Revert the buff after this period of time.
 
@@ -383,7 +383,7 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	deltimer(revert_buff_timer)
 	UnregisterSignal(owner, COMSIG_MOB_AFTER_APPLY_DAMGE)
 	empowered = FALSE
-	owner.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -empowered_power_buff)
+	owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -empowered_power_buff)
 
 	owner.visible_message(span_danger("[owner]'s [src.name] E.G.O. settles down, the electric arcs gradually fading away."), span_warning("Your [src.name] E.G.O. has finished discharging, and its power and influence wane back to normal."))
 	icon_state = "lce_aedd_inactive"
