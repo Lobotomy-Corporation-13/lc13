@@ -140,7 +140,9 @@
 	var/damage_type = BLACK_DAMAGE
 	var/queued_damage_type = PALE_DAMAGE
 	var/list/damage_type_list = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
-	var/filter
+	var/filter_enabled
+	var/filter_size = 3
+	var/filter_offset = 2
 
 // When first clicking the spell. This will only cast the spell if we make a choice in the radial menu.
 /obj/effect/proc_holder/spell/aoe_turf/singularity/Click()
@@ -198,12 +200,13 @@
 			appropiate_color = rgb(48, 25, 52)
 		if(PALE_DAMAGE)
 			appropiate_color = rgb(128, 128, 128)
-	if(!filter)
-		filter = TRUE
-		usr.filters += filter(type="drop_shadow", x=0, y=0, size=5, offset=2, color=appropiate_color)
+	if(!filter_enabled)
+		filter_enabled = TRUE
+		user.add_filter("arbiter_singularity_swap", 3, list("type"="drop_shadow", "x"=0, "y"=0, "size" = filter_size, "offset" = filter_offset, "color"=appropiate_color, "name" = "arbiter_singularity_swap"))
 		return
-	var/f1 = usr.filters[usr.filters.len]
-	animate(f1, color = appropiate_color, time = 5)
+	var/f1 = user.filters["arbiter_singularity_swap"]
+	if(f1)
+		animate(f1, color = appropiate_color, size = filter_size, offset = filter_offset, time = 5)
 
 
 /obj/effect/temp_visual/target_field/yellow
