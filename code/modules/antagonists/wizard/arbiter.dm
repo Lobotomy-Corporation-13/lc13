@@ -307,7 +307,7 @@
 		attached_visual_status = H.apply_status_effect(/datum/status_effect/display/arbiter_powernull_visual)
 
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty)
+	H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, power_penalty)
 
 /datum/status_effect/stacking/arbiter_powernull/add_stacks(stacks_added)
 	var/mob/living/carbon/human/H = owner
@@ -320,8 +320,8 @@
 
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1 // Calculate the new penalty.
 
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -old_penalty) // Revert our old penalty.
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, power_penalty) // Add our new penalty.
+	H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -old_penalty) // Revert our old penalty.
+	H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, power_penalty) // Add our new penalty.
 
 	linked_alert.desc = initial(linked_alert.desc)+"[stacks*powermod_loss_per_stack]."
 
@@ -333,7 +333,7 @@
 		return
 
 	var/power_penalty = (powermod_loss_per_stack * stacks) * -1
-	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -power_penalty)
+	H.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -power_penalty)
 
 	if(attached_visual_status)
 		H.remove_status_effect(attached_visual_status)
