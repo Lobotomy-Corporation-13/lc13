@@ -42,12 +42,13 @@
 		var/mob/living/carbon/human/our_wearer = usr
 		var/obj/item/storage/backpack/us = our_wearer.get_item_by_slot(ITEM_SLOT_BACK)
 		if(istype(us) && us == src) // If we're wearing this backpack on our back, proceed
-			var/user_choice = input(our_wearer, "Do you want your [name] to be visible on your person? This is only a cosmetic change.", "Backpack Visibility") as null|anything in list("Visible" , "Invisible")
+			var/user_choice = input(our_wearer, "Do you want your [name] to be visible on your person? This is only a cosmetic change, and can be undone.", "Backpack Visibility") as null|anything in list("Visible" , "Invisible")
 			switch(user_choice)
 				if("Invisible")
-					our_wearer.remove_overlay(BACK_LAYER) // This is temporary. Taking the backpack off and putting it back on again will restore the overlay (or using the other input option in this verb)
+					our_wearer.disabled_backpack_visibility = TRUE
 				if("Visible")
-					our_wearer.update_inv_back() // Overlay comes back wow
+					our_wearer.disabled_backpack_visibility = FALSE
+			our_wearer.update_inv_back()
 
 /*
  * Backpack Types

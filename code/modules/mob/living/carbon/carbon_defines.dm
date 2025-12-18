@@ -108,4 +108,7 @@
 	/// Can other carbons be shoved into this one to make it fall?
 	var/can_be_shoved_into = FALSE
 
+	/// If TRUE, if this carbon is wearing a backpack, it shouldn't have a back overlay while wearing backpacks (other back items are fair game). Can be toggled on and off with a verb called Adjust Backpack Visibility.
+	var/disabled_backpack_visibility = FALSE
+
 	COOLDOWN_DECLARE(bleeding_message_cd)
