@@ -31,6 +31,8 @@ SUBSYSTEM_DEF(persistence)
 	var/list/obj/structure/sign/painting/painting_frames = list()
 	var/list/paintings = list()
 	var/list/abno_rates = list()
+	/// Stores old rates of abnormalities undergoing testing. We set their rates to 9999 temporarily then return them to their old rates before saving them again.
+	var/list/tested_abno_old_rates = list()
 	/// List of ckeys with list of core suppression names that they have cleared before
 	var/list/cleared_core_suppressions = list()
 	/// LOBOTOMYCORPORATION ADDITION: Button counter
@@ -431,7 +433,10 @@ SUBSYSTEM_DEF(persistence)
 
 /datum/controller/subsystem/persistence/proc/SaveAbnoPicks()
 	for(var/datum/abnormality/abno_ref in SSlobotomy_corp.all_abnormality_datums)
-		abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
+		if(tested_abno_old_rates[abno_ref.abno_path]) // If the Abnormality was being tested and thus had a higher spawn rate, we save their actual rate and not their weight boosted one
+			abno_rates[abno_ref.abno_path] = text2num(tested_abno_old_rates[abno_ref.abno_path])
+		else
+			abno_rates[abno_ref.abno_path] = text2num(abno_rates[abno_ref.abno_path]) + 1
 	var/mode = ""
 	if(SSticker.mode)
 		var/datum/game_mode/gm = SSticker.mode
