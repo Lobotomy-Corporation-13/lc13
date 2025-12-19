@@ -250,7 +250,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /obj/effect/decal/cleanable/glass,
 /turf/open/indestructible/white,
@@ -945,16 +945,16 @@
 /obj/structure/table_frame,
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
-	step_y = 4;
+	pixel_y = 4;
 	pixel_x = -7
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /obj/item/stack/ore/glassrubble{
 	step_x = 3;
-	step_y = 5
+	pixel_y = 5
 	},
 /turf/open/indestructible/white,
 /area/city/house)
@@ -2055,12 +2055,12 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
-	step_y = 7;
+	pixel_y = 7;
 	step_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /turf/open/indestructible/white,
 /area/city/house)
@@ -2328,16 +2328,16 @@
 /obj/structure/table_frame,
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
-	step_y = 4;
+	pixel_y = 4;
 	pixel_x = -7
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /obj/item/stack/ore/glassrubble{
 	step_x = 3;
-	step_y = 5
+	pixel_y = 5
 	},
 /turf/open/indestructible/white,
 /area/city)
@@ -2691,7 +2691,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /obj/effect/decal/cleanable/glass,
 /turf/open/indestructible/white,
@@ -3125,7 +3125,7 @@
 /obj/structure/table_frame,
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
-	step_y = 7;
+	pixel_y = 7;
 	step_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
@@ -3584,7 +3584,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /turf/open/indestructible/white,
 /area/city/house)
@@ -3659,7 +3659,7 @@
 /obj/structure/table_frame,
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
-	step_y = 7;
+	pixel_y = 7;
 	step_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
@@ -4222,12 +4222,12 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
-	step_y = 7;
+	pixel_y = 7;
 	step_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /turf/open/indestructible/white,
 /area/city)
@@ -5907,7 +5907,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
-	step_y = -8
+	pixel_y = -8
 	},
 /turf/open/indestructible/white,
 /area/city)
