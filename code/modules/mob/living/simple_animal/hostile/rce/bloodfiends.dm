@@ -88,6 +88,13 @@
 		var/mob/living/L = target
 		L.apply_lc_bleed(bleed_stacks)
 
+/mob/living/simple_animal/hostile/bloodfiend_mook/bullet_act(obj/projectile/P)
+	// 50% damage reduction at 15+ blood thorns stacks
+	var/datum/status_effect/stacking/blood_thorns/BT = has_status_effect(/datum/status_effect/stacking/blood_thorns)
+	if(BT && BT.stacks >= 15)
+		P.damage *= 0.5
+	return ..()
+
 /// Fashionista - Weakest variant
 /mob/living/simple_animal/hostile/bloodfiend_mook/fashionista
 	name = "Greed Touched Fashionista Bloodfiend"

@@ -105,6 +105,13 @@
 	if(boss_death_signal)
 		SEND_SIGNAL(SSdcs, boss_death_signal, src)
 
+/mob/living/simple_animal/hostile/bloodfiend_boss/bullet_act(obj/projectile/P)
+	// 50% damage reduction at 15+ blood thorns stacks
+	var/datum/status_effect/stacking/blood_thorns/BT = has_status_effect(/datum/status_effect/stacking/blood_thorns)
+	if(BT && BT.stacks >= 15)
+		P.damage *= 0.5
+	return ..()
+
 // ============================================
 // BOSS VARIANTS
 // ============================================
@@ -302,7 +309,7 @@
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/sheath2.ogg', 75, 0, 5)
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/cult/sparks(T)
-	SLEEP_CHECK_DEATH(0.25 SECONDS)
+	SLEEP_CHECK_DEATH(0.8 SECONDS)
 
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/blade3.ogg', 100, 0, 5)
 
@@ -375,8 +382,9 @@
 			var/direction = get_dir(src, target_turf)
 			mark_turf = get_ranged_target_turf(target_turf, direction, rand(1, 2))
 		else
-			// Subsequent marks: from previous mark, through target, overshoot on other side
-			var/direction = get_dir(mark_turf, target_turf)
+			// Subsequent marks: from last mark, through target, overshoot on other side
+			var/turf/last_mark_turf = get_turf(blood_marks[i - 1])
+			var/direction = get_dir(last_mark_turf, target_turf)
 			mark_turf = get_ranged_target_turf(target_turf, direction, rand(1, 2))
 
 		if(!mark_turf)
@@ -385,8 +393,13 @@
 		var/obj/effect/barber_blood_mark/mark = new(mark_turf)
 		blood_marks += mark
 
-		// Create beam from barber to the mark
-		var/datum/beam/mark_beam = Beam(mark, icon_state = "blood", time = INFINITY, maxdistance = 50)
+		// Create beam showing the path - from barber to first mark, then between consecutive marks
+		var/atom/beam_origin
+		if(i == 1)
+			beam_origin = src
+		else
+			beam_origin = blood_marks[i - 1]
+		var/datum/beam/mark_beam = beam_origin.Beam(mark, icon_state = "blood", time = INFINITY, maxdistance = 50)
 		blood_beams += mark_beam
 
 		SLEEP_CHECK_DEATH(1 SECONDS)
@@ -553,8 +566,8 @@
 	var/tendril_damage = 20
 	/// Bleed stacks from tendril
 	var/tendril_bleed = 6
-	/// Whether currently in buffed state (30%+ bloodfeast)
-	var/buffed = FALSE
+	/// Whether currently in priest buffed state (30%+ bloodfeast)
+	var/priest_buffed = FALSE
 	/// Buffed icon state
 	var/icon_buffed = "curiambro_buffed"
 	/// Bloodfeast lost when missing an attack
@@ -571,13 +584,13 @@
 	bloodfeast.passive_siphon = (health <= maxHealth * 0.5)
 	// Update buffed visual at 30% bloodfeast
 	var/should_buff = bloodfeast.blood_amount >= (max_blood * 0.3)
-	if(should_buff != buffed)
-		buffed = should_buff
+	if(should_buff != priest_buffed)
+		priest_buffed = should_buff
 		UpdateBuffedVisual()
 
 /// Updates visual appearance when entering/exiting buffed state
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/proc/UpdateBuffedVisual()
-	if(buffed)
+	if(priest_buffed)
 		icon_state = icon_buffed
 		icon_living = icon_buffed
 	else
@@ -602,6 +615,11 @@
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/OpenFire()
 	if(!can_act)
 		return
+	// Use whip attack if target is within whip range
+	if(target && get_dist(src, target) <= whip_range)
+		WhipAttack(target)
+		return
+	// Otherwise use tendril burst if off cooldown
 	if(tendril_cooldown > world.time)
 		return
 	TendrilBurst()
@@ -781,7 +799,7 @@
 	/// Grief AoE warning time
 	var/grief_aoe_warning = 1.5 SECONDS
 	/// Stagger duration
-	var/stagger_duration = 5 SECONDS
+	var/stagger_duration = 10 SECONDS
 	/// Whether currently staggered
 	var/staggered = FALSE
 	/// Rage AoE range (after stagger)
@@ -789,7 +807,7 @@
 	/// Blood thorns application cooldown tracker
 	var/blood_thorns_cooldown = 0
 	/// Time between blood thorns applications
-	var/blood_thorns_cooldown_time = 5 SECONDS
+	var/blood_thorns_cooldown_time = 8 SECONDS
 	/// Rage AoE damage
 	var/rage_aoe_damage = 30
 	/// Rage AoE bleed stacks
@@ -822,9 +840,13 @@
 	if(world.time >= spawn_cooldown && length(spawned_units) < max_spawns)
 		SpawnParadeUnit()
 		spawn_cooldown = world.time + spawn_cooldown_time
-	// Apply blood thorns to self and allies every 5 seconds
+	// Apply blood thorns to self and allies every 5 seconds (1 stack per 10% bloodfeast)
 	if(world.time >= blood_thorns_cooldown)
-		ApplyBloodThorns(5, 10)
+		var/datum/component/bloodfeast/bf = GetComponent(/datum/component/bloodfeast)
+		var/thorns_stacks = 1
+		if(bf)
+			thorns_stacks = max(1, FLOOR(bf.blood_amount / (max_blood * 0.1), 1))
+		ApplyBloodThorns(thorns_stacks, 10)
 		blood_thorns_cooldown = world.time + blood_thorns_cooldown_time
 
 /// Cleans up dead units from tracking lists
@@ -972,21 +994,19 @@
 	grief_stacks = 0
 	last_aoe_threshold = 0
 	// Visual effects
-	var/mutable_appearance/stagger_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
+	var/mutable_appearance/stagger_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi', "small_stagger", layer + 0.1)
 	add_overlay(stagger_overlay)
 	manual_emote("collapses to the ground...")
 	// Increase damage taken during stagger
-	damage_coeff = list(BRUTE = 1.5, RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.8, BLACK_DAMAGE = 1.2, PALE_DAMAGE = 1.8)
+	ChangeResistances(list(BRUTE = 2, RED_DAMAGE = 2, WHITE_DAMAGE = 2.4, BLACK_DAMAGE = 2, PALE_DAMAGE = 2.4))
 	sleep(stagger_duration)
 	if(stat == DEAD)
 		return
 	// Recovery
 	cut_overlays()
 	manual_emote("rises back up, preparing the finale!")
-	icon_state = initial(icon_state)
-	icon_living = initial(icon_living)
 	// Restore resistances
-	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.2)
+	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.2))
 	staggered = FALSE
 	// Rage AoE after recovery
 	RageAoE()
@@ -1119,7 +1139,7 @@
 
 	// Visual feedback
 	playsound(owner, 'sound/weapons/resonator_blast.ogg', 50, TRUE)
-	visible_message(span_danger("Blood thorns deflect [P] away from [owner]!"))
+	owner.visible_message(span_danger("Blood thorns deflect [P] away from [owner]!"))
 
 	// Red outline flash for 1 second
 	owner.add_filter("blood_thorns_glow", 2, list("type" = "outline", "color" = "#ff000030", "size" = 2))

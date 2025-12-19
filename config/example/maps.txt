@@ -85,8 +85,6 @@ endmap
 map rcorp_factory
 endmap
 
-map rcorp_factory_mancha
-endmap
 
 map wcorp
 endmap
