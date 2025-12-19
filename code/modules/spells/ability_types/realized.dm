@@ -2138,6 +2138,7 @@
 
 	RegisterSignal(lured, COMSIG_HOSTILE_GAINEDTARGET, PROC_REF(EyesOnMe))
 	RegisterSignal(lured, COMSIG_MOB_APPLY_DAMGE, PROC_REF(ReceiveOnhitDamage))
+	RegisterSignal(lured, COMSIG_LIVING_DEATH, PROC_REF(DebuffEnd))
 	RegisterSignal(eldtree_user, COMSIG_LIVING_DEATH, PROC_REF(DebuffEnd))
 	return TRUE
 
@@ -2146,6 +2147,7 @@
 	if(lured)
 		UnregisterSignal(lured, COMSIG_HOSTILE_GAINEDTARGET)
 		UnregisterSignal(lured, COMSIG_MOB_APPLY_DAMGE)
+		UnregisterSignal(lured, COMSIG_LIVING_DEATH)
 		UnregisterSignal(eldtree_user, COMSIG_LIVING_DEATH)
 		lured.remove_filter("eldtree_lured")
 		filter = null
@@ -2157,7 +2159,7 @@
 // Called when a mob with this status effect runs GiveTarget.
 /datum/status_effect/display/eldtree_lured/proc/EyesOnMe(mob/living/simple_animal/hostile/source, atom/new_target)
 	SIGNAL_HANDLER
-	if(new_target != eldtree_user)
+	if((eldtree_user) && (new_target != eldtree_user))
 		lured.FindTarget(list(eldtree_user), TRUE) // Make them target us instead. The TRUE argument is the only thing that stands between this code and the server box getting instantly nuked, don't ask me why this proc asks for a "HasTargetsList" argument when it could just check if it was given a list
 		return COMPONENT_HOSTILE_REFUSE_AGGRO // Reject their attempt to swap targets
 
