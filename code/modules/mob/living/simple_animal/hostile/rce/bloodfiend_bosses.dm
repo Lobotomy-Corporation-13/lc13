@@ -44,6 +44,8 @@
 	var/enraged = FALSE
 	/// Signal sent on death to destroy area blockers
 	var/boss_death_signal
+	/// Reference to the landmark that spawned this boss (for weakened variants)
+	var/obj/effect/landmark/bloodfiend_boss/home_landmark
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/Initialize()
 	. = ..()
@@ -1160,3 +1162,655 @@
 		BT = apply_status_effect(/datum/status_effect/stacking/blood_thorns, stacks_to_add)
 	else
 		BT.add_stacks(stacks_to_add)
+
+// ============================================
+// WEAKENED BOSS VARIANTS - Spawned by X-Corp Heart?
+// ============================================
+
+/// Weakened Barber - 25% less health
+/mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened
+	name = "The Barber (Weakened)"
+	maxHealth = 3375 // 4500 * 0.75
+	health = 3375
+	/// Whether we've triggered Dulcinea's rage AoE
+	var/triggered_dulcinea_rage = FALSE
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened/Life()
+	. = ..()
+	if(stat == DEAD)
+		return FALSE
+	// Trigger Dulcinea's RageAoE when below 25% HP
+	if(!triggered_dulcinea_rage && health <= maxHealth * 0.25)
+		triggered_dulcinea_rage = TRUE
+		TriggerDulcineaRage()
+
+/// Find and trigger weakened Dulcinea's RageAoE
+/mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened/proc/TriggerDulcineaRage()
+	if(!home_landmark || !home_landmark.parent_heart)
+		return
+	for(var/obj/effect/landmark/bloodfiend_boss/BL in home_landmark.parent_heart.boss_landmarks)
+		if(BL.spawned_boss && istype(BL.spawned_boss, /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened))
+			var/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/D = BL.spawned_boss
+			INVOKE_ASYNC(D, TYPE_PROC_REF(/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened, TriggeredRageAoE))
+			break
+
+/// Weakened Priest - 25% less health
+/mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened
+	name = "The Priest (Weakened)"
+	maxHealth = 4125 // 5500 * 0.75
+	health = 4125
+	/// Whether we've triggered Dulcinea's rage AoE
+	var/triggered_dulcinea_rage = FALSE
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened/Life()
+	. = ..()
+	if(stat == DEAD)
+		return FALSE
+	// Trigger Dulcinea's RageAoE when below 25% HP
+	if(!triggered_dulcinea_rage && health <= maxHealth * 0.25)
+		triggered_dulcinea_rage = TRUE
+		TriggerDulcineaRage()
+
+/// Find and trigger weakened Dulcinea's RageAoE
+/mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened/proc/TriggerDulcineaRage()
+	if(!home_landmark || !home_landmark.parent_heart)
+		return
+	for(var/obj/effect/landmark/bloodfiend_boss/BL in home_landmark.parent_heart.boss_landmarks)
+		if(BL.spawned_boss && istype(BL.spawned_boss, /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened))
+			var/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/D = BL.spawned_boss
+			INVOKE_ASYNC(D, TYPE_PROC_REF(/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened, TriggeredRageAoE))
+			break
+
+/// Weakened Dulcinea - 25% less health, doesn't spawn allies
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened
+	name = "Dulcinea (Weakened)"
+	maxHealth = 4875 // 6500 * 0.75
+	health = 4875
+	/// Whether the triggered RageAoE has already been used
+	var/triggered_rage_used = FALSE
+
+/// Triggered RageAoE - can only be used once
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/proc/TriggeredRageAoE()
+	if(triggered_rage_used)
+		return
+	if(stat == DEAD || staggered)
+		return
+	triggered_rage_used = TRUE
+	RageAoE()
+
+/// Override to prevent spawning bodyguards
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/SpawnInitialBodyguards()
+	return // Don't spawn bodyguards
+
+/// Override to prevent spawning parade units
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/SpawnParadeUnit()
+	return // Don't spawn parade units
+
+/// Override to prevent spawning bodyguards
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/SpawnBodyguard()
+	return // Don't spawn bodyguards
+
+// ============================================
+// Heart of Greed? - Spawns weakened bosses when destroyed
+// ============================================
+
+/obj/structure/xcorp_heart_research
+	name = "Heart of Greed?"
+	desc = "Best destroy this!"
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "nexus"
+	color = "#FF0000"
+	light_color = "#FF0000"
+	light_range = 5
+	light_power = 2
+	max_integrity = 2000
+	anchored = TRUE
+	density = TRUE
+	resistance_flags = NONE
+	/// List of boss landmarks to activate on destruction
+	var/list/boss_landmarks = list()
+	/// Whether the heart has been destroyed
+	var/destroyed = FALSE
+
+/obj/structure/xcorp_heart_research/Initialize()
+	. = ..()
+	AddElement(/datum/element/point_of_interest)
+	// Add pulsing glow effect
+	add_filter("heart_glow", 2, list("type" = "outline", "color" = "#ff000050", "size" = 3))
+	addtimer(CALLBACK(src, PROC_REF(GlowLoop)), rand(1, 19))
+
+/obj/structure/xcorp_heart_research/proc/GlowLoop()
+	var/filter = get_filter("heart_glow")
+	if(filter)
+		animate(filter, alpha = 180, time = 20, loop = -1)
+		animate(alpha = 60, time = 30)
+
+/obj/structure/xcorp_heart_research/Destroy()
+	if(!destroyed)
+		destroyed = TRUE
+		// Spawn all bosses from landmarks
+		for(var/obj/effect/landmark/bloodfiend_boss/BL in boss_landmarks)
+			BL.SpawnBoss()
+		// Visual effect
+		playsound(loc, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 100, TRUE)
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(src), pick(GLOB.alldirs))
+	return ..()
+
+// ============================================
+// BOSS LANDMARKS - Track bosses and spawn portal when all dead
+// ============================================
+
+/obj/effect/landmark/bloodfiend_boss
+	name = "bloodfiend boss spawn"
+	icon = 'icons/effects/eldritch.dmi'
+	icon_state = "blood_cloud_swirl"
+	/// Type of boss to spawn
+	var/boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened
+	/// Reference to the spawned boss
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/spawned_boss
+	/// Reference to the heart that controls this landmark
+	var/obj/structure/xcorp_heart_research/parent_heart
+	/// Stored location of the heart for portal spawning (persists after heart destruction)
+	var/turf/heart_location
+	/// List of sibling landmarks from the same heart (persists after heart destruction)
+	var/list/sibling_landmarks = list()
+	/// Cooldown tracker for return check
+	var/return_check_cooldown = 0
+	/// Time between return checks (1 minute)
+	var/return_check_time = 1 MINUTES
+
+/obj/effect/landmark/bloodfiend_boss/Initialize()
+	. = ..()
+	START_PROCESSING(SSobj, src)
+
+/obj/effect/landmark/bloodfiend_boss/LateInitialize()
+	. = ..()
+	// Find parent heart and register after map loads
+	for(var/obj/structure/xcorp_heart_research/heart in range(50, src))
+		parent_heart = heart
+		heart.boss_landmarks += src
+		// Store heart location for portal spawning after heart is destroyed
+		heart_location = get_turf(heart)
+		break
+	// Build sibling landmark list (runs after all landmarks have registered)
+	addtimer(CALLBACK(src, PROC_REF(BuildSiblingList)), 1)
+
+/// Builds the sibling landmark list from the parent heart
+/obj/effect/landmark/bloodfiend_boss/proc/BuildSiblingList()
+	if(!parent_heart)
+		return
+	for(var/obj/effect/landmark/bloodfiend_boss/BL in parent_heart.boss_landmarks)
+		if(BL != src)
+			sibling_landmarks += BL
+
+/obj/effect/landmark/bloodfiend_boss/Destroy()
+	STOP_PROCESSING(SSobj, src)
+	if(parent_heart)
+		parent_heart.boss_landmarks -= src
+	// Remove self from siblings' lists
+	for(var/obj/effect/landmark/bloodfiend_boss/BL in sibling_landmarks)
+		BL.sibling_landmarks -= src
+	return ..()
+
+/obj/effect/landmark/bloodfiend_boss/process()
+	if(!spawned_boss)
+		return
+	if(QDELETED(spawned_boss) || spawned_boss.stat == DEAD)
+		spawned_boss = null
+		CheckAllBossesDead()
+		return
+	// Check every minute if boss has no target
+	if(world.time >= return_check_cooldown)
+		return_check_cooldown = world.time + return_check_time
+		if(!spawned_boss.target)
+			ReturnBossToLandmark()
+
+/// Spawns the boss at this landmark
+/obj/effect/landmark/bloodfiend_boss/proc/SpawnBoss()
+	if(spawned_boss && !QDELETED(spawned_boss) && spawned_boss.stat != DEAD)
+		return // Already have a living boss
+	spawned_boss = new boss_type(get_turf(src))
+	spawned_boss.home_landmark = src
+	RegisterSignal(spawned_boss, COMSIG_LIVING_DEATH, PROC_REF(OnBossDeath))
+	// Visual spawn effect
+	playsound(loc, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 75, TRUE)
+	new /obj/effect/temp_visual/beam_out(get_turf(src))
+
+/// Called when the boss dies
+/obj/effect/landmark/bloodfiend_boss/proc/OnBossDeath(mob/living/source)
+	SIGNAL_HANDLER
+	UnregisterSignal(source, COMSIG_LIVING_DEATH)
+	spawned_boss = null
+	INVOKE_ASYNC(src, PROC_REF(CheckAllBossesDead))
+
+/// Checks if all bosses from the parent heart are dead
+/obj/effect/landmark/bloodfiend_boss/proc/CheckAllBossesDead()
+	// Check our own boss first
+	if(spawned_boss && !QDELETED(spawned_boss) && spawned_boss.stat != DEAD)
+		return // Our boss is still alive
+	// Check sibling landmarks' bosses
+	for(var/obj/effect/landmark/bloodfiend_boss/BL in sibling_landmarks)
+		if(BL.spawned_boss && !QDELETED(BL.spawned_boss) && BL.spawned_boss.stat != DEAD)
+			return // At least one boss still alive
+	// All bosses dead - spawn portal at heart location
+	SpawnFinalPortal()
+
+/// Spawns the final boss portal at the heart's location
+/obj/effect/landmark/bloodfiend_boss/proc/SpawnFinalPortal()
+	if(!heart_location)
+		return
+	var/obj/effect/portal/permanent/one_way/portal = new(heart_location)
+	portal.id = "final_boss"
+	portal.add_atom_colour(COLOR_RED_LIGHT, ADMIN_COLOUR_PRIORITY)
+	portal.set_light(10, 2, COLOR_SOFT_RED)
+	// Announcement
+	playsound(heart_location, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 100, TRUE)
+	visible_message(span_boldwarning("A portal to the final confrontation has opened!"))
+
+/// Makes the boss return to this landmark
+/obj/effect/landmark/bloodfiend_boss/proc/ReturnBossToLandmark()
+	if(!spawned_boss || QDELETED(spawned_boss) || spawned_boss.stat == DEAD)
+		return
+	// Walk the boss back to the landmark
+	walk_to(spawned_boss, src, 0, spawned_boss.move_to_delay)
+
+// Landmark subtypes for each boss
+/obj/effect/landmark/bloodfiend_boss/barber
+	name = "barber boss spawn"
+	boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened
+
+/obj/effect/landmark/bloodfiend_boss/priest
+	name = "priest boss spawn"
+	boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened
+
+/obj/effect/landmark/bloodfiend_boss/dulcinea
+	name = "dulcinea boss spawn"
+	boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened
+
+// ============================================
+// LA MANCHA LAND FERRIS WHEEL - Final Boss Arena
+// ============================================
+
+/obj/structure/ferris_wheel
+	name = "La Mancha Land Ferris Wheel"
+	desc = "A massive, corrupted ferris wheel towering over the carnival grounds. The Heart of Greed's influence pulses through its rusted frame."
+	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_240x288.dmi'
+	icon_state = "wheel"
+	anchored = TRUE
+	density = TRUE
+	resistance_flags = INDESTRUCTIBLE
+	max_integrity = 99999
+	layer = ABOVE_MOB_LAYER
+	light_color = "#FF0000"
+	light_range = 8
+	light_power = 2
+	// Large sprite offset adjustments (240x288)
+	pixel_x = -104
+	/// Whether the wheel has been activated
+	var/activated = FALSE
+	/// List of currently alive gondolas
+	var/list/active_gondolas = list()
+	/// Total gondolas spawned across all waves
+	var/gondolas_spawned = 0
+	/// Maximum total gondolas before boss spawns
+	var/max_gondolas = 12
+	/// Gondolas spawned per wave
+	var/gondolas_per_wave = 4
+	/// Total gondolas killed
+	var/gondolas_killed = 0
+
+/obj/structure/ferris_wheel/Initialize()
+	. = ..()
+	AddElement(/datum/element/point_of_interest)
+
+/obj/structure/ferris_wheel/attacked_by(obj/item/I, mob/living/user)
+	. = ..()
+	Activate()
+
+/obj/structure/ferris_wheel/bullet_act(obj/projectile/P)
+	. = ..()
+	Activate()
+
+/// Activates the ferris wheel to start spawning gondolas
+/obj/structure/ferris_wheel/proc/Activate()
+	if(activated)
+		return
+	activated = TRUE
+	visible_message(span_boldwarning("The ferris wheel groans to life, its corrupted gondolas detaching!"))
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	SpawnGondolaWave()
+
+/// Spawns a wave of gondolas
+/obj/structure/ferris_wheel/proc/SpawnGondolaWave()
+	if(gondolas_spawned >= max_gondolas)
+		return
+	var/list/spawn_turfs = list()
+	// Find valid spawn turfs around the wheel
+	for(var/turf/T in view(10, src))
+		if(T.density)
+			continue
+		if(T.is_blocked_turf(exclude_mobs = TRUE))
+			continue
+		// Ensure some distance from wheel center
+		if(get_dist(src, T) < 5)
+			continue
+		spawn_turfs += T
+	if(!length(spawn_turfs))
+		return
+	// Shuffle and pick spawn positions
+	spawn_turfs = shuffle(spawn_turfs)
+	var/list/gondola_types = list(
+		/mob/living/simple_animal/hostile/gondola_spawner/red,
+		/mob/living/simple_animal/hostile/gondola_spawner/gray,
+		/mob/living/simple_animal/hostile/gondola_spawner/purple
+	)
+	for(var/i in 1 to gondolas_per_wave)
+		if(gondolas_spawned >= max_gondolas)
+			break
+		if(i > length(spawn_turfs))
+			break
+		var/turf/spawn_turf = spawn_turfs[i]
+		var/gondola_type = pick(gondola_types)
+		var/mob/living/simple_animal/hostile/gondola_spawner/G = new gondola_type(spawn_turf)
+		G.parent_wheel = src
+		active_gondolas += G
+		gondolas_spawned++
+		RegisterSignal(G, COMSIG_LIVING_DEATH, PROC_REF(OnGondolaDeath))
+		// Trigger the drop attack
+		INVOKE_ASYNC(G, TYPE_PROC_REF(/mob/living/simple_animal/hostile/gondola_spawner, DropFromSky))
+
+/// Called when a gondola dies
+/obj/structure/ferris_wheel/proc/OnGondolaDeath(mob/living/source)
+	SIGNAL_HANDLER
+	UnregisterSignal(source, COMSIG_LIVING_DEATH)
+	active_gondolas -= source
+	gondolas_killed++
+	// Check if wave is complete
+	if(length(active_gondolas) <= 0)
+		if(gondolas_killed >= max_gondolas)
+			// All gondolas killed - spawn boss
+			INVOKE_ASYNC(src, PROC_REF(SpawnDonQuixote))
+		else
+			// Spawn next wave after a delay
+			addtimer(CALLBACK(src, PROC_REF(SpawnGondolaWave)), 3 SECONDS)
+
+/// Spawns Don Quixote after all gondolas are defeated
+/obj/structure/ferris_wheel/proc/SpawnDonQuixote()
+	visible_message(span_boldwarning("The ferris wheel groans as its structure begins to collapse!"))
+	playsound(src, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 100, TRUE)
+	// Change wheel to no_sign state
+	icon_state = "no_sign"
+	// Create the falling sign
+	var/obj/structure/ferris_wheel_sign/sign = new(get_turf(src))
+	sign.pixel_x = pixel_x
+	sign.pixel_y = pixel_y
+	// Flash yellow animation
+	INVOKE_ASYNC(src, PROC_REF(SignFallSequence), sign)
+
+/// Handles the sign falling sequence
+/obj/structure/ferris_wheel/proc/SignFallSequence(obj/structure/ferris_wheel_sign/sign)
+	if(QDELETED(sign))
+		return
+	// Flash yellow several times
+	for(var/i in 1 to 4)
+		sign.color = "#FFFF00"
+		playsound(sign, 'sound/machines/warning-buzzer.ogg', 50, TRUE)
+		sleep(0.3 SECONDS)
+		sign.color = null
+		sleep(0.3 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Final yellow flash before fall
+	sign.color = "#FFFF00"
+	playsound(sign, 'sound/machines/warning-buzzer.ogg', 75, TRUE)
+	sleep(0.5 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Sign falls
+	visible_message(span_boldwarning("The La Mancha Land sign breaks free and plummets!"))
+	playsound(sign, 'sound/abnormalities/babayaga/land.ogg', 100, TRUE)
+	animate(sign, pixel_y = sign.pixel_y - 132, time = 8, easing = QUAD_EASING | EASE_IN)
+	sleep(0.8 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Impact effect
+	playsound(sign, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	for(var/turf/T in view(3, sign))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+	sleep(2 SECONDS)
+	// Spawn Don Quixote
+	visible_message(span_boldwarning("A figure emerges from the wreckage!"))
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	// TODO: Spawn Don Quixote boss here when implemented
+	// var/mob/living/simple_animal/hostile/don_quixote/boss = new(get_turf(src))
+
+/// The falling sign from the ferris wheel
+/obj/structure/ferris_wheel_sign
+	name = "La Mancha Land Sign"
+	desc = "The iconic sign of La Mancha Land, now corrupted by greed."
+	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_240x288.dmi'
+	icon_state = "sign"
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+// ============================================
+// FERRIS WHEEL ACTIVATION LANDMARK
+// ============================================
+
+/obj/effect/landmark/ferris_wheel_trigger
+	name = "ferris wheel trigger"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x"
+	/// Linked ferris wheel
+	var/obj/structure/ferris_wheel/linked_wheel
+
+/obj/effect/landmark/ferris_wheel_trigger/LateInitialize()
+	. = ..()
+	// Find and link to nearby ferris wheel
+	for(var/obj/structure/ferris_wheel/wheel in range(50, src))
+		linked_wheel = wheel
+		break
+
+/obj/effect/landmark/ferris_wheel_trigger/Crossed(atom/movable/AM)
+	. = ..()
+	if(!ishuman(AM))
+		return
+	if(!linked_wheel)
+		return
+	linked_wheel.Activate()
+
+// ============================================
+// GONDOLA SPAWNER - Stationary mob that spawns bloodfiends
+// ============================================
+
+/mob/living/simple_animal/hostile/gondola_spawner
+	name = "Gondola"
+	desc = "A corrupted carnival gondola, now a nest for greed-touched bloodfiends."
+	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_64x64.dmi'
+	icon_state = "ferrispod"
+	icon_living = "ferrispod"
+	pixel_x = -16
+	pixel_y = -16
+	faction = list("hostile")
+	gender = NEUTER
+	mob_biotypes = MOB_ORGANIC
+	move_to_delay = 0
+	stat_attack = HARD_CRIT
+	del_on_death = FALSE
+	maxHealth = 1500
+	health = 1500
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	obj_damage = 0
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.2)
+	/// Color for the overlay
+	var/overlay_color = "#FF0000"
+	/// Cached overlay appearance
+	var/mutable_appearance/color_overlay
+	/// Weighted spawn list for mobs
+	var/list/moblist = list()
+	/// List of spawned mobs
+	var/list/spawned_mobs = list()
+	/// Spawn cooldown tracker
+	var/spawn_cooldown = 0
+	/// Time between spawns
+	var/spawn_cooldown_time = 10 SECONDS
+	/// Number of mobs to spawn each cycle
+	var/spawn_count = 2
+	/// Reference to parent ferris wheel
+	var/obj/structure/ferris_wheel/parent_wheel
+	/// Whether the gondola has landed (can spawn mobs)
+	var/landed = FALSE
+	/// Beam connecting to ferris wheel
+	var/datum/beam/wheel_beam
+
+/mob/living/simple_animal/hostile/gondola_spawner/Initialize()
+	. = ..()
+	// Add colored overlay
+	color_overlay = mutable_appearance(icon, "ferrispod_overlay")
+	color_overlay.color = overlay_color
+	add_overlay(color_overlay)
+	// Add glow filter
+	add_filter("gondola_glow", 2, list("type" = "outline", "color" = overlay_color + "50", "size" = 2))
+
+/mob/living/simple_animal/hostile/gondola_spawner/Move()
+	return FALSE // Completely stationary
+
+/mob/living/simple_animal/hostile/gondola_spawner/CanAttack()
+	return FALSE // Cannot attack
+
+/mob/living/simple_animal/hostile/gondola_spawner/Life()
+	. = ..()
+	if(stat == DEAD)
+		return FALSE
+	if(!landed)
+		return
+	// Spawn mobs periodically
+	if(world.time >= spawn_cooldown)
+		SpawnMobs()
+		spawn_cooldown = world.time + spawn_cooldown_time
+
+/// Spawns mobs from the gondola
+/mob/living/simple_animal/hostile/gondola_spawner/proc/SpawnMobs()
+	if(!length(moblist))
+		return
+	var/list/spawn_turfs = list()
+	for(var/turf/T in view(2, src))
+		if(!T.density && !T.is_blocked_turf(exclude_mobs = TRUE))
+			spawn_turfs += T
+	if(!length(spawn_turfs))
+		spawn_turfs += get_turf(src)
+	for(var/i in 1 to spawn_count)
+		var/mob_type = pickweight(moblist)
+		var/turf/spawn_turf = pick(spawn_turfs)
+		var/mob/living/spawned = new mob_type(spawn_turf)
+		spawned.faction = faction.Copy()
+		spawned_mobs += spawned
+		// Visual effect
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(spawn_turf, pick(GLOB.alldirs))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+/// Drop from sky attack when spawning
+/mob/living/simple_animal/hostile/gondola_spawner/proc/DropFromSky()
+	var/turf/target_turf = get_turf(src)
+	pixel_z = 192
+	alpha = 0
+	// Warning indicator - custom gondola shadow
+	new /obj/effect/temp_visual/gondola_warning(target_turf)
+	playsound(target_turf, 'sound/abnormalities/babayaga/charge.ogg', 50, TRUE)
+	sleep(1.5 SECONDS)
+	if(QDELETED(src) || stat == DEAD)
+		return
+	// Animate falling
+	animate(src, pixel_z = 0, alpha = 255, time = 10)
+	sleep(1)
+	if(QDELETED(src) || stat == DEAD)
+		return
+	// Impact
+	landed = TRUE
+	playsound(src, 'sound/abnormalities/babayaga/land.ogg', 75, TRUE)
+	// Create beam to ferris wheel
+	if(parent_wheel && !QDELETED(parent_wheel))
+		wheel_beam = Beam(parent_wheel, icon_state = "blood", time = INFINITY, maxdistance = 50)
+	// Deal damage in range 2
+	for(var/mob/living/L in view(2, src))
+		if(faction_check_mob(L, TRUE))
+			continue
+		L.deal_damage(150, RED_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+	// Visual effects
+	for(var/turf/T in view(3, src))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+	// Start spawning immediately
+	spawn_cooldown = world.time + 2 SECONDS
+
+/mob/living/simple_animal/hostile/gondola_spawner/death(gibbed)
+	// Clean up beam
+	if(wheel_beam && !QDELETED(wheel_beam))
+		qdel(wheel_beam)
+		wheel_beam = null
+	// Kill all spawned mobs
+	for(var/mob/living/M in spawned_mobs)
+		if(!QDELETED(M) && M.stat != DEAD)
+			M.death()
+	spawned_mobs.Cut()
+	return ..()
+
+// ============================================
+// GONDOLA COLOR VARIANTS
+// ============================================
+
+/// Red Gondola - Spawns Fashionista bloodfiends (Area 1)
+/mob/living/simple_animal/hostile/gondola_spawner/red
+	overlay_color = "#FF0000"
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/fashionista = 4,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/fashionista = 1
+	)
+
+/// Gray Gondola - Spawns Priest bloodfiends (Area 2)
+/mob/living/simple_animal/hostile/gondola_spawner/gray
+	overlay_color = "#888888"
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/priest = 3,
+		/mob/living/simple_animal/hostile/bloodbag/priest_alt = 2,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/priest = 1
+	)
+
+/// Purple Gondola - Spawns Parade bloodfiends (Area 3)
+/mob/living/simple_animal/hostile/gondola_spawner/purple
+	overlay_color = "#AA00AA"
+	moblist = list(
+		/mob/living/simple_animal/hostile/bloodbag/parade = 3,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade = 1,
+		/mob/living/simple_animal/hostile/bloodfiend_mook/parade_alt = 1
+	)
+
+// ============================================
+// GONDOLA WARNING EFFECT
+// ============================================
+
+/// Warning effect showing where a gondola will land
+/obj/effect/temp_visual/gondola_warning
+	name = "falling shadow"
+	desc = "Something is falling!"
+	icon = 'icons/effects/96x96.dmi'
+	icon_state = "warning"
+	pixel_x = -32
+	base_pixel_x = -32
+	pixel_y = -32
+	base_pixel_y = -32
+	color = "#FF0000"
+	alpha = 150
+	pixel_x = -16
+	pixel_y = -16
+	duration = 1.5 SECONDS
+	layer = BELOW_MOB_LAYER
+
+/obj/effect/temp_visual/gondola_warning/Initialize()
+	. = ..()
+	// Pulsing animation
+	animate(src, alpha = 80, time = 5, loop = -1)
+	animate(alpha = 150, time = 5)

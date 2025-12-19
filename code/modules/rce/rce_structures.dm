@@ -1,5 +1,5 @@
 /obj/structure/den/rce
-	name = "X-Corp Attack Pylon"
+	name = "Greed Attack Pylon"
 	desc = "Best destroy this!"
 	icon_state = "powerpylon"
 	icon = 'icons/obj/hand_of_god_structures.dmi'
@@ -127,7 +127,7 @@
 	)
 
 /obj/structure/den/rce_defender
-	name = "X-Corp Defense Pylon"
+	name = "Greed Defense Pylon"
 	desc = "Best destroy this!"
 	icon_state = "defensepylon"
 	icon = 'icons/obj/hand_of_god_structures.dmi'
@@ -159,7 +159,7 @@
 	AddComponent(/datum/component/monwave_spawner, attack_target = target, max_mobs = max_mobs, assault_type = assault_type, new_wave_order = moblist, try_for_announcer = announce, new_wave_cooldown_time = generate_new_mob_time, raider = raider, register = TRUE)
 
 /obj/structure/rce_heart
-	name = "X-Corp Heart"
+	name = "Heart of Greed"
 	desc = "Best destroy this!"
 	icon_state = "nexus"
 	icon = 'icons/obj/hand_of_god_structures.dmi'
