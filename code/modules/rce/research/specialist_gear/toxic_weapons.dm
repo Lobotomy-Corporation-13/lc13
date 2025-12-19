@@ -463,6 +463,8 @@
 		var/turf/next_turf = get_step(current_turf, dir_to_target)
 		if(!next_turf || next_turf.density)
 			break
+		if(locate(/obj/structure/area_blocker) in next_turf)
+			break
 		path += next_turf
 		current_turf = next_turf
 		if(current_turf == target)

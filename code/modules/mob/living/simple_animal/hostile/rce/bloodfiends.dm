@@ -1,7 +1,7 @@
 /// Base bloodfiend mook type - gains damage and resistance buffs from blood_feast
 /mob/living/simple_animal/hostile/bloodfiend_mook
 	name = "bloodfiend"
-	desc = "A humanoid wearing bloody attire and a mask. They seem to grow stronger as they consume blood."
+	desc = "A greed-touched humanoid wearing bloody attire. Corrupted by the Heart of Greed, they hoard blood obsessively - never consuming it, only growing their collection. They grow stronger from accumulation alone."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "test_meifiend"
 	icon_living = "test_meifiend"
@@ -90,8 +90,8 @@
 
 /// Fashionista - Weakest variant
 /mob/living/simple_animal/hostile/bloodfiend_mook/fashionista
-	name = "Fashionista Bloodfiend"
-	desc = "A bloodfiend with a keen eye for style, though their taste runs exclusively to crimson."
+	name = "Greed Touched Fashionista Bloodfiend"
+	desc = "The weakest of the greed-touched bloodfiends, newly corrupted by the Heart of Greed. They hoard blood obsessively, jealously guarding what little they've collected."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "test_meifiend"
 	icon_living = "test_meifiend"
@@ -105,8 +105,8 @@
 
 /// Priest Mook - Standard variant
 /mob/living/simple_animal/hostile/bloodfiend_mook/priest
-	name = "Bloodfiend of Prayers"
-	desc = "A bloodfiend devoted to the rituals of blood. They channel their thirst into unholy strength."
+	name = "Greed Touched Priest Bloodfiend"
+	desc = "Once devoted to blood rituals, now they worship accumulation itself. The Heart of Greed transformed their prayers into inventory counts, their sacrifices into deposits."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "priest_mook"
 	icon_living = "priest_mook"
@@ -120,8 +120,8 @@
 
 /// Dulcinea Mook - Balanced variant, slightly more offensive
 /mob/living/simple_animal/hostile/bloodfiend_mook/parade
-	name = "Bloodfiend of the Happy Parade"
-	desc = "A bloodfiend that revels in the festivities of slaughter. Favors offense over defense."
+	name = "Greed Touched Parade Bloodfiend"
+	desc = "The Heart of Greed twisted their bloodlust into acquisitive frenzy. They strike with wild abandon not to feed, but to collect - each drop extracted is another coin in their master's coffers."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "dulcinea_mook"
 	icon_living = "dulcinea_mook"
@@ -135,8 +135,8 @@
 
 /// Dulcinea Mook Alt - Balanced variant, slightly more defensive
 /mob/living/simple_animal/hostile/bloodfiend_mook/parade_alt
-	name = "Bloodfiend of the Joyful Parade"
-	desc = "A bloodfiend that delights in the merriment of carnage. Favors defense over offense."
+	name = "Greed Touched Marcher Bloodfiend"
+	desc = "Corrupted by the Heart of Greed into patient hoarders. They endure punishment while methodically extracting blood from their victims, never consuming what they take - only stockpiling it."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "dulcinea_mook_1"
 	icon_living = "dulcinea_mook_1"
@@ -150,8 +150,8 @@
 
 /// Formalfiend - Strongest standered variant
 /mob/living/simple_animal/hostile/bloodfiend_mook/parade_guard
-	name = "Bloodfiend of the Grand Parade"
-	desc = "A bloodfiend of noble bearing who protects the Princess of the Parade."
+	name = "Greed Touched Formal Bloodfiend"
+	desc = "Elite guards who protect the blood vaults with unwavering devotion. Their formal attire conceals bodies bloated with hoarded blood they refuse to spend, growing stronger from accumulation alone."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "formalfiend"
 	icon_living = "formalfiend"
@@ -180,7 +180,7 @@
 /// Base bloodbag type - fodder units that drop blood and explode on death
 /mob/living/simple_animal/hostile/bloodbag
 	name = "bloodbag"
-	desc = "A bloated vessel of blood, ready to burst at a moment's notice."
+	desc = "A mindless husk reanimated by bloodfiends and stuffed with hoarded blood. This walking corpse serves only as storage, shambling forward without thought until it explodes violently upon death."
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "bloodbag"
 	icon_living = "bloodbag"
@@ -275,10 +275,10 @@
 				blood_pool = new /obj/effect/decal/cleanable/blood(T)
 				blood_pool.bloodiness = 100
 
-/// Fashionista Bloodbag - Weakest variant
+/// Withered Vessel - Weakest variant
 /mob/living/simple_animal/hostile/bloodbag/fashionista
-	name = "Fashionista Bloodbag"
-	desc = "A bloated vessel trying desperately to look stylish while bursting at the seams."
+	name = "Greed Touched Fashionista Bloodbag"
+	desc = "The weakest of the bloodbag husks, a reanimated corpse stuffed with stolen blood. This mindless shell stumbles forward, bursting at the seams with crimson it cannot comprehend."
 	maxHealth = 200
 	health = 200
 	melee_damage_lower = 2
@@ -286,10 +286,10 @@
 	explosion_damage = 12
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.4, BLACK_DAMAGE = 0.9, PALE_DAMAGE = 1.3)
 
-/// Bloodbag of Prayers - Standard variant
+/// Tithe Vessel - Standard variant
 /mob/living/simple_animal/hostile/bloodbag/priest
-	name = "Bloodbag of Prayers"
-	desc = "A bloated vessel filled with fervent devotion and far too much blood."
+	name = "Greed Touched Priest Bloodbag"
+	desc = "A reanimated victim of the Priest's flock, its hollow body serving as walking storage for hoarded blood. This mindless husk shuffles forward without purpose beyond containment and detonation."
 	maxHealth = 250
 	health = 250
 	melee_damage_lower = 3
@@ -297,10 +297,10 @@
 	explosion_damage = 15
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.3, PALE_DAMAGE = 1.2)
 
-/// Bloodbag of Prayers Alt - Slightly stronger variant
+/// Offering Vessel - Slightly stronger variant
 /mob/living/simple_animal/hostile/bloodbag/priest_alt
-	name = "Bloodbag of Punishment"
-	desc = "A bloated vessel brimming with zealous fervor and crimson ichor."
+	name = "Greed Touched Heavy Bloodbag"
+	desc = "A corpse raised by the Priest's bloodfiends and pumped full of hoarded blood. This mindless husk is sent to punish intruders - its explosive death scattering stolen crimson across the battlefield."
 	maxHealth = 275
 	health = 275
 	melee_damage_lower = 4
@@ -309,10 +309,10 @@
 	bleed_stacks = 2
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3)
 
-/// Parade Bloodbag - Strongest variant
+/// Procession Vessel - Strongest variant
 /mob/living/simple_animal/hostile/bloodbag/parade
-	name = "Bloodbag of the Parade"
-	desc = "A bloated vessel marching proudly in the procession of slaughter."
+	name = "Greed Touched Parade Bloodbag"
+	desc = "A mindless husk reanimated by the Parade's bloodfiends, its body grotesquely swollen with hoarded crimson. This walking blood vault shambles forward without thought, exploding violently when destroyed."
 	maxHealth = 350
 	health = 350
 	melee_damage_lower = 5

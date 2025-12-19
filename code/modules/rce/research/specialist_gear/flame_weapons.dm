@@ -677,7 +677,7 @@
 	// Move forward
 	if(moves_remaining > 0)
 		var/turf/next = get_step(src, move_dir)
-		if(next && !next.density)
+		if(next && !next.density && !locate(/obj/structure/area_blocker) in next)
 			forceMove(next)
 			moves_remaining--
 		else
@@ -1039,6 +1039,10 @@
 
 	// Stop if we hit a closed turf (wall)
 	if(isclosedturf(next_turf))
+		return
+
+	// Stop if we hit an area blocker
+	if(locate(/obj/structure/area_blocker) in next_turf)
 		return
 
 	// Move to the next location

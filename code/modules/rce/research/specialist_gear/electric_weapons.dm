@@ -132,6 +132,8 @@
 			break
 		if(dash_turf.density)
 			break
+		if(locate(/obj/structure/area_blocker) in dash_turf)
+			break
 		distance++
 
 		user.forceMove(dash_turf)
@@ -221,6 +223,8 @@
 	for(var/i = 1 to dash_range)
 		var/turf/dash_turf = get_step(user, user.dir)
 		if(!dash_turf || dash_turf.density)
+			break
+		if(locate(/obj/structure/area_blocker) in dash_turf)
 			break
 
 		user.forceMove(dash_turf)
@@ -530,6 +534,8 @@
 		if(charge_turf.density)
 			// Can't pass through walls (dense turfs)
 			break
+		if(locate(/obj/structure/area_blocker) in charge_turf)
+			break
 		distance++
 
 		// Pass through structures without damaging them
@@ -638,6 +644,8 @@
 		if(get_dist(starting, dash_turf) > 5)
 			break
 		if(dash_turf.density)
+			break
+		if(locate(/obj/structure/area_blocker) in dash_turf)
 			break
 		destination = dash_turf
 		user.forceMove(dash_turf)
@@ -799,6 +807,8 @@
 			break
 		if(charge_turf.density)
 			// Can't pass through walls (dense turfs)
+			break
+		if(locate(/obj/structure/area_blocker) in charge_turf)
 			break
 		distance++
 
