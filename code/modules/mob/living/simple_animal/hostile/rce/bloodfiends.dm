@@ -191,6 +191,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "bloodbag"
 	icon_living = "bloodbag"
+	icon_dead = "bloodbag_dead"
 	faction = list("hostile")
 	gender = NEUTER
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID

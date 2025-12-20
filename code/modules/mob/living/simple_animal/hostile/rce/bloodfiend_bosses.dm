@@ -1263,7 +1263,7 @@
 	light_color = "#FF0000"
 	light_range = 5
 	light_power = 2
-	max_integrity = 2000
+	max_integrity = 500
 	anchored = TRUE
 	density = TRUE
 	resistance_flags = NONE
@@ -1325,7 +1325,11 @@
 
 /obj/effect/landmark/bloodfiend_boss/LateInitialize()
 	. = ..()
-	// Find parent heart and register after map loads
+	// Find parent heart and register 5 seconds after spawn
+	addtimer(CALLBACK(src, PROC_REF(FindParentHeart)), 5 SECONDS)
+
+/// Finds and registers with nearby heart
+/obj/effect/landmark/bloodfiend_boss/proc/FindParentHeart()
 	for(var/obj/structure/xcorp_heart_research/heart in range(50, src))
 		parent_heart = heart
 		heart.boss_landmarks += src
@@ -1639,13 +1643,13 @@
 	mob_biotypes = MOB_ORGANIC
 	move_to_delay = 0
 	stat_attack = HARD_CRIT
-	del_on_death = FALSE
 	maxHealth = 1500
 	health = 1500
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	obj_damage = 0
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.2)
+	del_on_death = TRUE
 	/// Color for the overlay
 	var/overlay_color = "#FF0000"
 	/// Cached overlay appearance
@@ -1732,9 +1736,12 @@
 	// Impact
 	landed = TRUE
 	playsound(src, 'sound/abnormalities/babayaga/land.ogg', 75, TRUE)
-	// Create beam to ferris wheel
+	// Create beam to turf 4 tiles above ferris wheel
 	if(parent_wheel && !QDELETED(parent_wheel))
-		wheel_beam = Beam(parent_wheel, icon_state = "blood", time = INFINITY, maxdistance = 50)
+		var/turf/wheel_turf = get_turf(parent_wheel)
+		var/turf/beam_target = locate(wheel_turf.x, wheel_turf.y + 4, wheel_turf.z)
+		if(beam_target)
+			wheel_beam = Beam(beam_target, icon_state = "blood", time = INFINITY, maxdistance = 50)
 	// Deal damage in range 2
 	for(var/mob/living/L in view(2, src))
 		if(faction_check_mob(L, TRUE))
