@@ -287,6 +287,7 @@
 /mob/living/simple_animal/hostile/bloodbag/fashionista
 	name = "Greed Touched Fashionista Bloodbag"
 	desc = "The weakest of the bloodbag husks, a reanimated corpse stuffed with stolen blood. This mindless shell stumbles forward, bursting at the seams with crimson it cannot comprehend."
+	icon_state = "bloodbag_greed"
 	maxHealth = 200
 	health = 200
 	melee_damage_lower = 2
@@ -298,6 +299,7 @@
 /mob/living/simple_animal/hostile/bloodbag/priest
 	name = "Greed Touched Priest Bloodbag"
 	desc = "A reanimated victim of the Priest's flock, its hollow body serving as walking storage for hoarded blood. This mindless husk shuffles forward without purpose beyond containment and detonation."
+	icon_state = "bloodbag_greed2"
 	maxHealth = 250
 	health = 250
 	melee_damage_lower = 3
@@ -309,6 +311,7 @@
 /mob/living/simple_animal/hostile/bloodbag/priest_alt
 	name = "Greed Touched Heavy Bloodbag"
 	desc = "A corpse raised by the Priest's bloodfiends and pumped full of hoarded blood. This mindless husk is sent to punish intruders - its explosive death scattering stolen crimson across the battlefield."
+	icon_state = "bloodbag_greed3"
 	maxHealth = 275
 	health = 275
 	melee_damage_lower = 4
@@ -321,6 +324,7 @@
 /mob/living/simple_animal/hostile/bloodbag/parade
 	name = "Greed Touched Parade Bloodbag"
 	desc = "A mindless husk reanimated by the Parade's bloodfiends, its body grotesquely swollen with hoarded crimson. This walking blood vault shambles forward without thought, exploding violently when destroyed."
+	icon_state = "bloodbag_greed4"
 	maxHealth = 350
 	health = 350
 	melee_damage_lower = 5

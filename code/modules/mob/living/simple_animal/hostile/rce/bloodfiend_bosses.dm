@@ -554,6 +554,10 @@
 	var/whip_bleed = 4
 	/// Angle variance for whip attack
 	var/whip_angle_variance = 5
+	/// Whip attack cooldown tracker
+	var/whip_cooldown = 0
+	/// Time between whip attacks
+	var/whip_cooldown_time = 3 SECONDS
 	/// Tendril burst cooldown tracker
 	var/tendril_cooldown = 0
 	/// Time between tendril bursts
@@ -617,8 +621,8 @@
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/OpenFire()
 	if(!can_act)
 		return
-	// Use whip attack if target is within whip range
-	if(target && get_dist(src, target) <= whip_range)
+	// Use whip attack if target is within whip range and off cooldown
+	if(target && get_dist(src, target) <= whip_range && whip_cooldown <= world.time)
 		WhipAttack(target)
 		return
 	// Otherwise use tendril burst if off cooldown
@@ -638,6 +642,7 @@
 	if(get_dist(src, whip_target) > whip_range)
 		return
 	can_act = FALSE
+	whip_cooldown = world.time + whip_cooldown_time
 	// Self-harm before attack
 	SelfHarm()
 	face_atom(whip_target)
@@ -1194,11 +1199,12 @@
 			INVOKE_ASYNC(D, TYPE_PROC_REF(/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened, TriggeredRageAoE))
 			break
 
-/// Weakened Priest - 25% less health
+/// Weakened Priest - 25% less health, 200% longer whip cooldown
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened
 	name = "The Priest (Weakened)"
 	maxHealth = 4125 // 5500 * 0.75
 	health = 4125
+	whip_cooldown_time = 6 SECONDS
 	/// Whether we've triggered Dulcinea's rage AoE
 	var/triggered_dulcinea_rage = FALSE
 
