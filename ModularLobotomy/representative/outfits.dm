@@ -79,7 +79,8 @@
 /datum/outfit/kcorp/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
 	var/head = pick(
 		/obj/item/clothing/head/ego_hat/helmet/kcorp,
-		/obj/item/clothing/head/ego_hat/helmet/kcorp/visor,
+		/obj/item/clothing/head/ego_hat/helmet/kcorp_old/visor_old,
+		/obj/item/clothing/head/ego_hat/helmet/kcorp_old,
 	)
 	var/belt = pick(
 		/obj/item/ego_weapon/city/kcorp,

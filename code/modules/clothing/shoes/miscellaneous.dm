@@ -544,3 +544,14 @@
 /obj/item/clothing/shoes/gunboots/Initialize()
 	. = ..()
 	AddComponent(/datum/component/projectile_shooter, projectile_type = projectile_type, shot_prob = shot_prob, signal_or_sig_list = list(COMSIG_SHOES_STEP_ACTION, COMSIG_HUMAN_MELEE_UNARMED_ATTACK))
+
+//Following 2 shoes are sprited by PositiveEntropy
+/obj/item/clothing/shoes/laceup/black
+	name = "black laceup shoes"
+	icon_state = "laceups_black"
+	equip_delay_other = 0
+
+/obj/item/clothing/shoes/laceup/white
+	name = "white laceup shoes"
+	icon_state = "laceups_white"
+	equip_delay_other = 0
