@@ -22,7 +22,7 @@
 	melee_damage_upper = 14
 	base_damage_lower = 10
 	base_damage_upper = 14
-	attack_sound = 'sound/weapons/fixer/generic/fist1.ogg'
+	attack_sound = 'sound/distortions/sancho/wound.ogg'
 	bleed_stacks = 6
 	// Resistances similar to Dulcinea
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.2)
@@ -93,6 +93,8 @@
 	var/in_shield_stance = FALSE
 	/// List of safe zones Sancho created
 	var/list/sancho_safe_zones = list()
+	/// Lance overlay for final clash
+	var/mutable_appearance/lance_overlay
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/Initialize()
 	. = ..()
@@ -281,7 +283,7 @@
 
 	// Move to target location
 	forceMove(target_turf)
-	playsound(src, 'sound/abnormalities/nosferatu/attack_special.ogg', 25, TRUE)
+	playsound(src, 'sound/distortions/sancho/wound.ogg', 25, TRUE)
 
 	// Deal damage along the path
 	var/list/hit_mobs = list()
@@ -310,7 +312,7 @@
 				victim.deal_damage(actual_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				victim.apply_lc_bleed(topple_bleed_per_dash)
 				new /obj/effect/temp_visual/cleave(victim.loc)
-				playsound(victim, 'sound/weapons/fixer/generic/fist1.ogg', 35, TRUE)
+				playsound(victim, 'sound/distortions/sancho/topple.ogg', 35, TRUE)
 
 	// If we ended up in a wall, go back
 	var/turf/current_turf = get_turf(src)
@@ -361,11 +363,11 @@
 				continue
 			new /obj/effect/temp_visual/cult/sparks(TF)
 
-	playsound(src, 'sound/weapons/fixer/generic/energy3.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/sancho/sanguine_joy_windup.ogg', 75, TRUE)
 	SLEEP_CHECK_DEATH(joy_windup)
 
 	// Damage phase
-	playsound(src, 'sound/weapons/fixer/generic/energyfinisher1.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/sancho/sanguine_joy_punch.ogg', 75, TRUE)
 	broken = FALSE
 	var/list/hit_mobs = list()
 
@@ -500,3 +502,60 @@
 	// Resume combat
 	playsound(src, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 50, TRUE)
 	manual_emote("drops her protective barrier.")
+
+// ============================================
+// SANCHO - FINAL BLOW SEQUENCE (Kills Don Quixote)
+// ============================================
+
+/// Equips the lance overlay for the final duel
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/EquipLanceOverlay()
+	lance_overlay = mutable_appearance('icons/mob/inhands/96x96_righthand.dmi', "sangre")
+	lance_overlay.pixel_x = -32
+	lance_overlay.pixel_y = -32
+	add_overlay(lance_overlay)
+
+/// Delivers the final blow to Don Quixote
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/DeliverFinalBlow(mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/don)
+	// Final dialogue
+	say("Until I reach that dream...")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(don))
+		CleanupAfterFinalBlow()
+		return
+
+	say("I'll keep pushing to the\u2014\u2014")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(don))
+		CleanupAfterFinalBlow()
+		return
+
+	say("Nay... I shall gallop ever-onward, unbroken, unrelenting to the end!!")
+	sleep(1 SECONDS)
+
+	// Pierce effect
+	playsound(src, 'sound/weapons/ego/censored2.ogg', 100, TRUE)
+	if(!QDELETED(don))
+		var/turf/don_turf = get_turf(don)
+		for(var/i in 1 to 5)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(don_turf, pick(GLOB.alldirs))
+
+	// Clean up overlay
+	cut_overlays()
+
+	// Signal Don to actually die
+	if(!QDELETED(don))
+		don.ActualDeath()
+
+	// Clean up Sancho
+	CleanupAfterFinalBlow()
+
+/// Cleans up Sancho's state after the final blow sequence
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/CleanupAfterFinalBlow()
+	// Remove GODMODE
+	status_flags &= ~GODMODE
+	// Restore normal behavior
+	can_act = TRUE
+	// Clean up overlays just in case
+	cut_overlays()
+	// Remove any filters
+	remove_filter("clash_glow")

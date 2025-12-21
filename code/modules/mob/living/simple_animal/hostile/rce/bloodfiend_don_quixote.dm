@@ -60,7 +60,26 @@
 		return
 	activated = TRUE
 	visible_message(span_boldwarning("The ferris wheel groans to life, its corrupted gondolas detaching!"))
-	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	playsound(src, 'sound/distortions/don/don_wheel_start.ogg', 100, TRUE)
+	// Wheel start animation - similar to sign fall but light stays on
+	INVOKE_ASYNC(src, PROC_REF(WheelStartSequence))
+
+/// Wheel start animation sequence - flashes yellow but light stays on
+/obj/structure/ferris_wheel/proc/WheelStartSequence()
+	// Flash yellow several times (same as sign fall sequence)
+	for(var/i in 1 to 4)
+		color = "#FFFF00"
+		playsound(src, 'sound/machines/warning-buzzer.ogg', 50, TRUE)
+		sleep(0.3 SECONDS)
+		color = null
+		sleep(0.3 SECONDS)
+	// Final yellow flash
+	color = "#FFFF00"
+	playsound(src, 'sound/machines/warning-buzzer.ogg', 75, TRUE)
+	sleep(0.5 SECONDS)
+	// Reset color but keep light on
+	color = null
+	// Now spawn gondolas
 	SpawnGondolaWave()
 
 /// Spawns a wave of gondolas
@@ -120,7 +139,6 @@
 /// Spawns Don Quixote after all gondolas are defeated
 /obj/structure/ferris_wheel/proc/SpawnDonQuixote()
 	visible_message(span_boldwarning("The ferris wheel groans as its structure begins to collapse!"))
-	playsound(src, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 100, TRUE)
 	// Change wheel to no_sign state
 	icon_state = "no_sign"
 	// Create the falling sign
@@ -134,10 +152,11 @@
 /obj/structure/ferris_wheel/proc/SignFallSequence(obj/structure/ferris_wheel_sign/sign)
 	if(QDELETED(sign))
 		return
+	// Play flicker sound first
+	playsound(src, 'sound/distortions/don/wheel_last_flicker.ogg', 100, TRUE)
 	// Flash yellow several times
 	for(var/i in 1 to 4)
 		sign.color = "#FFFF00"
-		playsound(sign, 'sound/machines/warning-buzzer.ogg', 50, TRUE)
 		sleep(0.3 SECONDS)
 		sign.color = null
 		sleep(0.3 SECONDS)
@@ -145,19 +164,26 @@
 		return
 	// Final yellow flash before fall
 	sign.color = "#FFFF00"
-	playsound(sign, 'sound/machines/warning-buzzer.ogg', 75, TRUE)
 	sleep(0.5 SECONDS)
 	if(QDELETED(sign))
 		return
+	// Turn off the ferris wheel light
+	set_light(0)
+	// Play screech sound after flickering is done
+	playsound(src, 'sound/distortions/don/wheel_last_screech.ogg', 100, TRUE)
+	sleep(2 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Play detach sound before sign falls
+	playsound(src, 'sound/distortions/don/wheel_last_detach.ogg', 100, TRUE)
 	// Sign falls
 	visible_message(span_boldwarning("The La Mancha Land sign breaks free and plummets!"))
-	playsound(sign, 'sound/abnormalities/babayaga/land.ogg', 100, TRUE)
 	animate(sign, pixel_y = sign.pixel_y - 132, time = 8, easing = QUAD_EASING | EASE_IN)
 	sleep(0.8 SECONDS)
 	if(QDELETED(sign))
 		return
-	// Impact effect
-	playsound(sign, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	// Impact effect - play landing sound
+	playsound(sign, 'sound/distortions/don/wheel_last_landing.ogg', 100, TRUE)
 	for(var/turf/T in view(3, sign))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 	sleep(2 SECONDS)
@@ -314,18 +340,19 @@
 	alpha = 0
 	// Warning indicator - custom gondola shadow
 	new /obj/effect/temp_visual/gondola_warning(target_turf)
-	playsound(target_turf, 'sound/abnormalities/babayaga/charge.ogg', 50, TRUE)
+	// Play gondola start sound when warning appears (3 seconds long)
+	playsound(target_turf, 'sound/distortions/don/gondola_start.ogg', 50, TRUE)
 	sleep(1.5 SECONDS)
 	if(QDELETED(src) || stat == DEAD)
 		return
-	// Animate falling
+	// Animate falling (10 deciseconds = 1 second)
 	animate(src, pixel_z = 0, alpha = 255, time = 10)
-	sleep(1)
+	sleep(1 SECONDS)
 	if(QDELETED(src) || stat == DEAD)
 		return
-	// Impact
+	// Impact - play impact sound when it lands on the ground
 	landed = TRUE
-	playsound(src, 'sound/abnormalities/babayaga/land.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/don/gondola_fall.ogg', 75, TRUE)
 	// Create beam to turf 4 tiles above ferris wheel
 	if(parent_wheel && !QDELETED(parent_wheel))
 		var/turf/wheel_turf = get_turf(parent_wheel)
@@ -527,6 +554,11 @@
 	var/obj/effect/greed_orb/active_orb
 	/// Landmark for where the orb lands (if set via map)
 	var/obj/effect/landmark/greed_orb_target/orb_target_landmark
+	// Final Blow Sequence (Sancho kills Don)
+	/// Whether the final blow sequence has been triggered
+	var/final_blow_triggered = FALSE
+	/// Lance overlay for final clash
+	var/mutable_appearance/lance_overlay
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/ListTargets(max_range = vision_range)
 	. = ..()
@@ -817,6 +849,24 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/death(gibbed)
+	// Check for Sancho within range 20 for final blow sequence
+	if(!final_blow_triggered)
+		var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/nearby_sancho
+		for(var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S in range(20, src))
+			// Skip hidden variants
+			if(istype(S, /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden))
+				continue
+			if(!QDELETED(S) && S.stat != DEAD)
+				nearby_sancho = S
+				break
+		if(nearby_sancho)
+			// Cancel death, trigger final sequence instead
+			// Heal Don back to prevent actual death
+			health = maxHealth
+			stat = CONSCIOUS
+			INVOKE_ASYNC(src, PROC_REF(FinalBlowSequence), nearby_sancho)
+			return // Don't call parent death()
+	// Normal death cleanup
 	// Clean up magic circle if any
 	if(magic_circle && !QDELETED(magic_circle))
 		qdel(magic_circle)
@@ -1628,3 +1678,308 @@
 	var/obj/structure/ferris_wheel/wheel = GLOB.bloodfiend_ferris_wheels[link_id]
 	if(wheel)
 		wheel.orb_target_landmark = src
+
+// ============================================
+// DON QUIXOTE - FINAL BLOW SEQUENCE (Sancho kills Don)
+// ============================================
+
+/// The cinematic final blow sequence where Sancho and Don Quixote duel
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/FinalBlowSequence(mob/living/simple_animal/hostile/bloodfiend_boss/sancho/sancho)
+	if(QDELETED(sancho) || sancho.stat == DEAD)
+		// Sancho died, just do normal death
+		final_blow_triggered = TRUE
+		death()
+		return
+
+	// Phase 1: Setup
+	final_blow_triggered = TRUE
+	can_act = FALSE
+	status_flags |= GODMODE
+	health = maxHealth
+
+	sancho.can_act = FALSE
+	sancho.status_flags |= GODMODE
+	sancho.health = sancho.maxHealth
+
+	// Stop all movement
+	walk_to(src, null)
+	walk_to(sancho, null)
+
+	// Visual feedback
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+
+	sleep(1 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Phase 2: Dialogue Part 1 - Don speaks first
+	say("It is unfortunate that you now protect them with your back that once shielded me.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("    ... But I am proud that you stopped my attack")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("Yet... what will you do now, Sancho?")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("... Even if it is not by my hand, even if it is not this day when your adventure ends...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("... this sickness will inevitably drag you off that steed.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("I know that.")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("Even still. ... though to some, I may only appear to be playing a character...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("... though I may never truly reach my destination...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("... should I persevere to walk the journey of my own choosing...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("... and continue this tale...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("Then that shall be my... your dream.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Phase 3: Dialogue Part 2 - Duel proposal
+	say("Sancho... I have conceived... an idea most ingenious...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("What... is it this time...?")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("Let us test our mights in a duel; in a singular bout of our lances.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("Come, now. Let us give it our all...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("...")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("... Is there no other way?")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("This momentum, this responsibility of mine to perpetuate the festival, to provide my Family with what they yearn for... it cannot be stopped.")
+	sleep(4 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("This carousel by the name of La Manchaland... whirls too swiftly for me to dismount, even as it remains anchored in place.")
+	sleep(4 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("Yet, if you could shatter the burden of my nature, my responsibilities... would that not prove your dream mightier than the weight of my duty?")
+	sleep(4 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("Show me. Demonstrate before me the strength of thy dream, the grandeur of it.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("Still... so... ridiculously juvenile...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("How many times must I tell you that it is that very ridiculous juvenility that gives color to life?")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("...")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Phase 4: Lance Equip + Declaration
+	// Move Don to Sancho's tile
+	var/turf/sancho_turf = get_turf(sancho)
+	forceMove(sancho_turf)
+
+	// Don hovers up and faces south, Sancho faces north
+	dir = SOUTH
+	sancho.dir = NORTH
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	// Hover 3 tiles (96 pixels) above Sancho
+	animate(src, pixel_y = 96, time = 2 SECONDS, easing = QUAD_EASING | EASE_OUT)
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Don gets lance overlay
+	lance_overlay = mutable_appearance('icons/mob/inhands/96x96_righthand.dmi', "prophet_lowered")
+	lance_overlay.pixel_x = -32
+	lance_overlay.pixel_y = -32
+	add_overlay(lance_overlay)
+
+	say("My name... is Quixote!")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	say("I, Don Quixote, declare upon my honor: this lance shall end that hollow, juvenile dream!")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Sancho gets lance overlay
+	sancho.EquipLanceOverlay()
+
+	sancho.say("My name is Sancho!")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	sancho.say("And I, Sancho, declare upon my honor: this lance shall end that festering, slothful dream!")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	// Phase 5: Clash (8 seconds)
+	// Don drops down to just above Sancho (1 tile = 32 pixels)
+	animate(src, pixel_y = 32, time = 0.5 SECONDS, easing = QUAD_EASING | EASE_IN)
+	sleep(0.5 SECONDS)
+	if(QDELETED(src) || QDELETED(sancho))
+		ActualDeath()
+		return
+
+	ClashWithSancho(sancho)
+
+	// Phase 6: Final Blow
+	sancho.DeliverFinalBlow(src)
+
+/// Performs the 8-second clash between Don and Sancho
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/ClashWithSancho(mob/living/simple_animal/hostile/bloodfiend_boss/sancho/sancho)
+	var/clash_duration = 8 SECONDS
+	var/start_time = world.time
+	var/clash_intensity = 1
+
+	while(world.time - start_time < clash_duration)
+		if(QDELETED(src) || QDELETED(sancho))
+			break
+
+		// Spawn slash effects on both (they're on the same tile)
+		var/turf/T = get_turf(src)
+		var/obj/effect/temp_visual/dir_setting/slash/S = new(T, pick(GLOB.alldirs))
+		S.pixel_x = rand(-8, 8)
+		S.pixel_y = rand(-8, 8)
+		S.color = "#FF0000"
+		animate(S, alpha = 0, time = 1.5)
+
+		var/obj/effect/temp_visual/dir_setting/slash/SS = new(T, pick(GLOB.alldirs))
+		SS.pixel_x = rand(-8, 8)
+		SS.pixel_y = rand(-8, 8)
+		SS.color = "#FF5500"
+		animate(SS, alpha = 0, time = 1.5)
+
+		// Intensify Sancho's glow over time
+		clash_intensity = 1 + ((world.time - start_time) / clash_duration * 3)
+		sancho.add_filter("clash_glow", 2, list("type" = "outline", "color" = "#FFAA00", "size" = clash_intensity))
+
+		// Screen shake for all nearby players
+		for(var/mob/living/L in range(15, src))
+			if(L.client)
+				shake_camera(L, 1, 1)
+
+		playsound(src, 'sound/weapons/fixer/generic/blade3.ogg', 50, TRUE)
+		sleep(0.3 SECONDS)
+
+/// Called by Sancho after delivering the final blow
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/ActualDeath()
+	// Remove GODMODE
+	status_flags &= ~GODMODE
+	// Clean up lance overlay
+	cut_overlays()
+	// Clean up magic circle if any
+	if(magic_circle && !QDELETED(magic_circle))
+		qdel(magic_circle)
+	// Clean up all heart beams
+	for(var/datum/beam/B in heart_beams)
+		if(!QDELETED(B))
+			qdel(B)
+	heart_beams.Cut()
+	// Kill all greed hearts
+	for(var/mob/living/simple_animal/hostile/greed_heart/heart in spawned_hearts)
+		if(!QDELETED(heart) && heart.stat != DEAD)
+			heart.owner_don = null
+			heart.death()
+	spawned_hearts.Cut()
+	// Announce victory if enabled
+	if(announce_victory_on_death)
+		SSgamedirector.AnnounceVictory()
+	// Actually die
+	health = 0
+	death()
