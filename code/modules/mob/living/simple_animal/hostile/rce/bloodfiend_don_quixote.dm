@@ -411,7 +411,7 @@
 /// Don Quixote - The final boss of the bloodfiend RCE event
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote
 	name = "Don Quixote"
-	desc = "The mad knight of La Mancha Land, corrupted by the Heart of Greed into an avatar of crimson avarice. He charges at windmills of flesh, dreaming of blood."
+	desc = "The founder of La Mancha Land, corrupted by the Heart of Greed into an avatar of crimson avarice."
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "don"
 	icon_living = "don"

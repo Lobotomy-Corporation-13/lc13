@@ -555,6 +555,34 @@ GLOBAL_LIST_INIT(rce_bestiary_folders, list())
 	))
 
 	register_bestiary_entry(new /datum/rce_bestiary_entry(
+		id = "bloodfiend_boss_founder",
+		name = "The Founder",
+		mob_type = /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote,
+		folder = "bloodfiends",
+		rank = "Elite",
+		lore = "The 1st Kindred and creator of La Manchaland, a being of immense power whose mind has long since deteriorated into delusion. He built his amusement park as a monument to joy - a place where bloodfiends and humans could coexist in harmony. To achieve this impossible dream, he forbade his children from consuming human blood, starving them for centuries in pursuit of peaceful coexistence. When they finally rebelled against his vision, he sealed La Manchaland from within - trapping himself and his family to prevent them from ever harming humans. Centuries of isolation left them vulnerable, and the Heart of Greed found its way inside, corrupting them one by one. Now he lies trapped deep within La Manchaland, his body slowly fusing with the Heart of Greed itself. Unable to distinguish fantasy from reality, he sees enemies in shadows and salvation in corruption. The Heart whispers promises of eternal guests, and he listens.",
+		traits = list(TRAIT_ORGANIC, TRAIT_ELITE, TRAIT_BRUTAL, TRAIT_HEAVY, TRAIT_CORRUPTED, TRAIT_NEURAL),
+		base_value = 750,
+		drop_chance = 100,
+		drop_count_min = 5,
+		drop_count_max = 8
+	))
+
+	register_bestiary_entry(new /datum/rce_bestiary_entry(
+		id = "bloodfiend_unknown",
+		name = "???",
+		mob_type = /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden,
+		folder = "bloodfiends",
+		rank = "Elite",
+		lore = "R-Corp scouts have reported sightings of a red blur patrolling the perimeter of La Manchaland. Witnesses describe an entity of extreme speed with a flowing red mane, moving too fast to track. It appears to hunt the corrupted bloodfiends, yet has never engaged R-Corp personnel. Intentions unknown. Approach with caution.",
+		traits = list(),
+		base_value = 0,
+		drop_chance = 0,
+		drop_count_min = 0,
+		drop_count_max = 0
+	))
+
+	register_bestiary_entry(new /datum/rce_bestiary_entry(
 		id = "bloodfiend_mook_parade_guard",
 		name = "Greed Touched Formal Bloodfiend",
 		mob_type = /mob/living/simple_animal/hostile/bloodfiend_mook/parade_guard,
