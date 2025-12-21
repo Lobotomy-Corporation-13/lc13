@@ -54,7 +54,7 @@
 	/// Cooldown for sibling speech
 	var/sibling_speech_cooldown = 0
 	/// Time between sibling speeches
-	var/sibling_speech_cooldown_time = 10 SECONDS
+	var/sibling_speech_cooldown_time = 30 SECONDS
 	/// Lines spoken when fighting The Barber
 	var/list/barber_lines = list(
 		"...Your obsession with beauty was always annoying. But I never wanted this.",
