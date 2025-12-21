@@ -212,7 +212,7 @@
 	venom_launcher.name = "Venom Launcher"
 	venom_launcher.desc = "A ranged launcher that fires toxic shells dealing massive bonus damage to venom-marked targets."
 	venom_launcher.tier = RCE_RESEARCH_TIER_1
-	venom_launcher.cost = 42
+	venom_launcher.cost = 250
 	venom_launcher.branch = "venom"
 	venom_launcher.prerequisites = list("acid_tank")
 	venom_launcher.unlocked_path = /obj/item/ego_weapon/ranged/venom_launcher
@@ -783,7 +783,7 @@
 	extraction_pack.name = "Fulton Extraction Pack"
 	extraction_pack.desc = "A balloon that can extract equipment or personnel to a recovery beacon. 3 uses per pack."
 	extraction_pack.tier = RCE_RESEARCH_TIER_1
-	extraction_pack.cost = 75
+	extraction_pack.cost = 20
 	extraction_pack.branch = "utility"
 	extraction_pack.prerequisites = list()
 	extraction_pack.unlocked_path = /obj/item/extraction_pack
@@ -801,7 +801,7 @@
 	extraction_point.name = "Fulton Recovery Beacon"
 	extraction_point.desc = "A beacon for the fulton recovery system. Link extraction packs to this beacon."
 	extraction_point.tier = RCE_RESEARCH_TIER_1
-	extraction_point.cost = 150
+	extraction_point.cost = 50
 	extraction_point.branch = "utility"
 	extraction_point.prerequisites = list()
 	extraction_point.unlocked_path = /obj/structure/extraction_point
@@ -837,7 +837,7 @@
 	field_sandbags.name = "Field Sandbag Kit"
 	field_sandbags.desc = "A kit containing 5 quick-deploy sandbags. Easy to climb over for rapid repositioning."
 	field_sandbags.tier = RCE_RESEARCH_TIER_1
-	field_sandbags.cost = 25
+	field_sandbags.cost = 10
 	field_sandbags.branch = "utility"
 	field_sandbags.prerequisites = list()
 	field_sandbags.unlocked_path = /obj/item/storage/box/field_sandbags
@@ -909,7 +909,7 @@
 	emergency_extraction.name = "Emergency Extraction Implant"
 	emergency_extraction.desc = "A one-use implant that automatically extracts you to a linked beacon when you would die."
 	emergency_extraction.tier = RCE_RESEARCH_TIER_1
-	emergency_extraction.cost = 125
+	emergency_extraction.cost = 40
 	emergency_extraction.branch = "utility"
 	emergency_extraction.prerequisites = list()
 	emergency_extraction.unlocked_path = /obj/item/emergency_extraction_implant
@@ -927,7 +927,7 @@
 	zerog_crate.name = "Zero-Gravity Crate"
 	zerog_crate.desc = "A crate with built-in anti-gravity technology. Won't be moved by conveyor belts."
 	zerog_crate.tier = RCE_RESEARCH_TIER_1
-	zerog_crate.cost = 75
+	zerog_crate.cost = 25
 	zerog_crate.branch = "utility"
 	zerog_crate.prerequisites = list()
 	zerog_crate.unlocked_path = /obj/structure/closet/crate/zerog
@@ -963,6 +963,7 @@
 	desc = "A compact sandbag that can be quickly deployed as cover. Easier to climb than standard sandbags."
 	icon = 'icons/obj/stack_objects.dmi'
 	icon_state = "sandbags"
+	color = "#568cff"
 	w_class = WEIGHT_CLASS_SMALL
 
 /obj/item/deployable_sandbag/attack_self(mob/user)

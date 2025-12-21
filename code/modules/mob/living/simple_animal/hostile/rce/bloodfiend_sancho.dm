@@ -10,6 +10,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "sancho"
 	icon_living = "sancho"
+	density = FALSE
 	// Health like Dulcinea (second kindred)
 	maxHealth = 6500
 	health = 6500
@@ -84,11 +85,26 @@
 		"I ran away. You stayed and rotted. Neither choice was right.",
 		"...This isn't mercy. It's just... necessary."
 	)
+	/// Whether Sancho refuses to target Don Quixote (during dialogue)
+	var/ignore_don = TRUE
+	/// Whether Sancho is in dialogue mode (allows movement but not attacks)
+	var/in_dialogue = FALSE
+	/// Whether Sancho is in shield stance (protecting players from greed orb)
+	var/in_shield_stance = FALSE
+	/// List of safe zones Sancho created
+	var/list/sancho_safe_zones = list()
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/Initialize()
 	. = ..()
 	// Set to neutral faction - allies with R-Corp against hostile bloodfiends
 	faction = list("neutral")
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/ListTargets(max_range = vision_range)
+	. = ..()
+	// Filter out Don Quixote from possible targets if ignore_don is true
+	if(ignore_don)
+		for(var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/D in .)
+			. -= D
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/face_atom(atom/A)
 	if(!can_act)
@@ -96,7 +112,9 @@
 	. = ..()
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/Move()
-	if(!can_act)
+	if(in_shield_stance)
+		return FALSE // Cannot move during shield stance
+	if(!can_act && !in_dialogue)
 		return FALSE
 	return ..()
 
@@ -118,8 +136,17 @@
 		if(joy_cooldown <= world.time && get_dist(src, attacked_target) <= joy_range)
 			SanguineJoy(attacked_target)
 			return FALSE
-	// Check if target is a simple mob
-	if(istype(attacked_target, /mob/living/simple_animal))
+	// Don Quixote takes 75% less damage
+	if(istype(attacked_target, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
+		var/old_lower = melee_damage_lower
+		var/old_upper = melee_damage_upper
+		melee_damage_lower = round(melee_damage_lower * 0.25)
+		melee_damage_upper = round(melee_damage_upper * 0.25)
+		. = ..()
+		melee_damage_lower = old_lower
+		melee_damage_upper = old_upper
+	// Check if target is a simple mob (but not Don Quixote)
+	else if(istype(attacked_target, /mob/living/simple_animal))
 		// Temporarily boost damage by 130% (2.3x total)
 		var/old_lower = melee_damage_lower
 		var/old_upper = melee_damage_upper
@@ -270,8 +297,11 @@
 
 				// Calculate damage
 				var/actual_damage = topple_damage
+				// Don Quixote takes 75% less damage
+				if(istype(victim, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
+					actual_damage = round(topple_damage * 0.25)
 				// Main target takes 75% less damage
-				if(victim == dash_target && is_main_target)
+				else if(victim == dash_target && is_main_target)
 					actual_damage = round(topple_damage * 0.25)
 				// Simple mobs take 100% more damage
 				else if(istype(victim, /mob/living/simple_animal))
@@ -361,6 +391,9 @@
 				if(BE)
 					bleed_stacks_on_target = BE.stacks
 				var/damage_mult = 1 + (bleed_stacks_on_target * 0.02)
+				// Don Quixote takes 75% less damage
+				if(istype(victim, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
+					damage_mult *= 0.25
 				var/actual_damage = round(joy_damage * damage_mult)
 
 				victim.deal_damage(actual_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -426,3 +459,44 @@
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden/short
 	existence_time = 5 SECONDS
+
+// ============================================
+// SANCHO - SHIELD STANCE (Protects players from Greed Orb)
+// ============================================
+
+/// Enters shield stance when Don Quixote starts the Greed Orb attack
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/EnterShieldStance()
+	if(in_shield_stance)
+		return
+	in_shield_stance = TRUE
+	can_act = FALSE
+	deal_damage(-500, RED_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+	// Stop any current movement
+	walk_to(src, null)
+	// Visual feedback
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 75, TRUE)
+	say("Everyone, stay close to me!")
+	manual_emote("creates a protective barrier!")
+	// Spawn safe zone effects in range 2
+	for(var/turf/T in range(2, src))
+		var/obj/effect/greed_safe_zone/zone = new(T)
+		sancho_safe_zones += zone
+	// Add visual overlay to show stance
+	add_filter("shield_stance_glow", 2, list("type" = "outline", "color" = "#FF555588", "size" = 3))
+
+/// Exits shield stance when Don Quixote finishes the Greed Orb attack
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/ExitShieldStance()
+	if(!in_shield_stance)
+		return
+	in_shield_stance = FALSE
+	can_act = TRUE
+	// Clean up safe zones
+	for(var/obj/effect/greed_safe_zone/zone in sancho_safe_zones)
+		if(!QDELETED(zone))
+			qdel(zone)
+	sancho_safe_zones.Cut()
+	// Remove visual overlay
+	remove_filter("shield_stance_glow")
+	// Resume combat
+	playsound(src, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 50, TRUE)
+	manual_emote("drops her protective barrier.")

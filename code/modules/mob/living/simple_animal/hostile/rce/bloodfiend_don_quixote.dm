@@ -31,6 +31,8 @@
 	var/gondolas_killed = 0
 	/// Link ID for trigger landmarks (set in map editor)
 	var/link_id = "default"
+	/// Landmark for where Don's greed orb lands
+	var/obj/effect/landmark/greed_orb_target/orb_target_landmark
 
 /obj/structure/ferris_wheel/Initialize()
 	. = ..()
@@ -159,10 +161,16 @@
 	for(var/turf/T in view(3, sign))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 	sleep(2 SECONDS)
-	// Spawn Don Quixote
+	// Spawn Don Quixote 1 tile below the ferris wheel
 	visible_message(span_boldwarning("A figure emerges from the wreckage!"))
 	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
-	new /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote(get_turf(src))
+	var/turf/spawn_turf = get_step(get_turf(src), SOUTH)
+	if(!spawn_turf || spawn_turf.density)
+		spawn_turf = get_turf(src)
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/don = new(spawn_turf)
+	// Pass the orb target landmark to Don
+	if(orb_target_landmark)
+		don.orb_target_landmark = orb_target_landmark
 
 /// The falling sign from the ferris wheel
 /obj/structure/ferris_wheel_sign
@@ -433,7 +441,7 @@
 	/// Cooldown tracker for line mark attack
 	var/line_mark_cooldown = 0
 	/// Time between line mark attacks
-	var/line_mark_cooldown_time = 15 SECONDS
+	var/line_mark_cooldown_time = 10 SECONDS
 	/// Damage dealt by line mark attack
 	var/line_mark_damage = 150
 	/// Range for line mark spawn
@@ -502,6 +510,23 @@
 	var/announce_victory_on_death = TRUE
 	/// Whether Don Quixote refuses to target Sancho
 	var/ignore_sancho = TRUE
+	/// List of spawned greed hearts
+	var/list/spawned_hearts = list()
+	/// List of beams connecting Don to hearts
+	var/list/heart_beams = list()
+	// Greed Orb Attack (Ultimate - triggers at 35% HP)
+	/// Whether the greed orb attack has been used (one-time attack)
+	var/greed_orb_used = FALSE
+	/// Whether Don is currently performing the orb attack
+	var/performing_orb_attack = FALSE
+	/// List of spawned shield pylons
+	var/list/spawned_pylons = list()
+	/// List of spawned safe zone effects
+	var/list/spawned_safe_zones = list()
+	/// The greed orb visual effect
+	var/obj/effect/greed_orb/active_orb
+	/// Landmark for where the orb lands (if set via map)
+	var/obj/effect/landmark/greed_orb_target/orb_target_landmark
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/ListTargets(max_range = vision_range)
 	. = ..()
@@ -529,7 +554,6 @@
 		return
 	// Landing impact
 	landed = TRUE
-	status_flags &= ~GODMODE // No longer immune to damage
 	playsound(src, 'sound/abnormalities/babayaga/land.ogg', 100, TRUE)
 	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
 	// Screen shake and knockdown all humans in range 7
@@ -540,7 +564,21 @@
 	// Create floor effect on all turfs in range 5
 	for(var/turf/T in view(5, src))
 		new /obj/effect/temp_visual/cult/turf/floor(T)
-	// Speech after landing
+	// Check if Sancho is within range 25 for special dialogue
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/nearby_sancho
+	for(var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S in range(25, src))
+		if(!istype(S, /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden))
+			nearby_sancho = S
+			break
+	if(nearby_sancho)
+		// Sancho is nearby - do special dialogue
+		SanchoDialogueSequence(nearby_sancho)
+	else
+		// Normal speech without Sancho
+		NormalLandingSpeech()
+
+/// Normal landing speech when Sancho is not present
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/NormalLandingSpeech()
 	sleep(1 SECONDS)
 	if(QDELETED(src) || stat == DEAD)
 		return
@@ -568,7 +606,111 @@
 	sleep(2 SECONDS)
 	if(QDELETED(src) || stat == DEAD)
 		return
+	FinishLandingSequence()
+
+/// Special dialogue sequence when Sancho is present
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/SanchoDialogueSequence(mob/living/simple_animal/hostile/bloodfiend_boss/sancho/sancho)
+	if(QDELETED(sancho) || sancho.stat == DEAD)
+		NormalLandingSpeech()
+		return
+	// Make Sancho walk to 1 tile south of Don Quixote
+	var/turf/destination = get_step(get_turf(src), SOUTH)
+	if(!destination || destination.density)
+		destination = get_turf(src)
+	sancho.can_act = FALSE
+	sancho.in_dialogue = TRUE // Allow movement during dialogue
+	sancho.ignore_don = TRUE // Don't target Don during dialogue
+	walk_to(sancho, destination, 0, sancho.move_to_delay)
+	sleep(1 SECONDS)
+	if(QDELETED(src) || stat == DEAD)
+		return
+	sancho.say("...Father.")
+	sleep(2 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	sancho.say("You, who dreamed so much... who believed we could live alongside humans...")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	sancho.say("The Heart of Greed has stolen everything from you. Your dream. Your mind. Your family.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	sancho.say("How could you let it take you too?")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	// Don Quixote responds
+	say("Sancho... my loyal Sancho. You still cling to the old dream.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	say("But that dream was never meant to succeed. It only brought suffering to those I loved.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	say("Centuries of starvation. Dulcinea's despair. The Barber's madness. The Priest's hollow faith.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	say("I could not build a place where bloodfiends and humans could coexist. I failed them all.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	say("So I accepted that my dream has ended. The Heart offered a more... stable dream.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	say("Its dream has taken over me now. And I am... at peace.")
+	sleep(3 SECONDS)
+	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
+		if(!QDELETED(sancho))
+			sancho.can_act = TRUE
+		FinishLandingSequence()
+		return
+	// Sancho's final response
+	sancho.say("...Then I will end this nightmare. For all of us.")
+	sleep(2 SECONDS)
+	if(!QDELETED(sancho))
+		walk_to(sancho, null) // Stop walking
+		sancho.can_act = TRUE
+		sancho.in_dialogue = FALSE
+		sancho.ignore_don = FALSE // Now Sancho can target Don
+	FinishLandingSequence()
+
+/// Finishes the landing sequence and enables combat
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/FinishLandingSequence()
+	if(QDELETED(src) || stat == DEAD)
+		return
 	can_act = TRUE
+	status_flags &= ~GODMODE // No longer immune to damage
 	// Initialize cooldowns
 	line_mark_cooldown = world.time + 5 SECONDS
 	multislash_cooldown = world.time + 3 SECONDS
@@ -577,15 +719,77 @@
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/Life()
 	. = ..()
-	if(stat == DEAD || !can_act || !landed)
+	if(stat == DEAD || !landed)
 		return FALSE
+	// Check for greed orb attack trigger (35% HP, one-time)
+	if(!greed_orb_used && !performing_orb_attack && health <= maxHealth * 0.35)
+		INVOKE_ASYNC(src, PROC_REF(GreedOrbAttack))
+		return
+	// Block all other actions during orb attack
+	if(performing_orb_attack || !can_act)
+		return FALSE
+	// Check if we need to spawn a greed heart
+	CheckSpawnGreedHeart()
 	// Tracking shots every 2.5 seconds
 	if(world.time >= tracking_shot_cooldown)
 		SpawnTrackingMark()
 		tracking_shot_cooldown = world.time + tracking_shot_cooldown_time
 
+/// Checks if bloodfeast level warrants more greed hearts and spawns them
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/CheckSpawnGreedHeart()
+	// Clean up dead hearts from the list
+	for(var/mob/living/simple_animal/hostile/greed_heart/heart in spawned_hearts)
+		if(QDELETED(heart) || heart.stat == DEAD)
+			spawned_hearts -= heart
+	// Check bloodfeast level to determine how many hearts we should have
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(!bloodfeast)
+		return
+	var/blood_percent = bloodfeast.blood_amount / max_blood
+	// Calculate target heart count: 1 at 25%, 2 at 50%, 3 at 75%, 4 at 100%
+	var/target_hearts = 0
+	if(blood_percent >= 0.25)
+		target_hearts = FLOOR(blood_percent / 0.25, 1)
+	target_hearts = clamp(target_hearts, 0, 4)
+	// Don't spawn if we have enough hearts
+	if(length(spawned_hearts) >= target_hearts)
+		return
+	// Spawn hearts until we reach target
+	var/hearts_to_spawn = target_hearts - length(spawned_hearts)
+	for(var/i in 1 to hearts_to_spawn)
+		SpawnSingleGreedHeart()
+
+/// Spawns a single greed heart nearby
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/SpawnSingleGreedHeart()
+	var/list/possible_turfs = list()
+	for(var/turf/T in view(5, src))
+		if(T.density)
+			continue
+		if(get_dist(src, T) < 2)
+			continue
+		// Don't spawn on top of existing hearts
+		var/has_heart = FALSE
+		for(var/mob/living/simple_animal/hostile/greed_heart/existing in T)
+			has_heart = TRUE
+			break
+		if(has_heart)
+			continue
+		possible_turfs += T
+	if(!length(possible_turfs))
+		return
+	var/turf/spawn_turf = pick(possible_turfs)
+	var/mob/living/simple_animal/hostile/greed_heart/new_heart = new(spawn_turf)
+	new_heart.owner_don = src
+	spawned_hearts += new_heart
+	// Create beam connection
+	var/datum/beam/new_beam = Beam(new_heart, icon_state = "blood", time = INFINITY, maxdistance = 50)
+	heart_beams += new_beam
+	new_heart.my_beam = new_beam
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 75, TRUE)
+	visible_message(span_boldwarning("[src] expels a fragment of the Heart of Greed!"))
+
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/OpenFire()
-	if(!can_act || !landed)
+	if(!can_act || !landed || performing_orb_attack)
 		return
 	// Priority: Drain > MultiSlash > Line Marks
 	if(drain_cooldown <= world.time)
@@ -616,6 +820,17 @@
 	// Clean up magic circle if any
 	if(magic_circle && !QDELETED(magic_circle))
 		qdel(magic_circle)
+	// Clean up all heart beams
+	for(var/datum/beam/B in heart_beams)
+		if(!QDELETED(B))
+			qdel(B)
+	heart_beams.Cut()
+	// Kill all greed hearts
+	for(var/mob/living/simple_animal/hostile/greed_heart/heart in spawned_hearts)
+		if(!QDELETED(heart) && heart.stat != DEAD)
+			heart.owner_don = null // Prevent death effects
+			heart.death()
+	spawned_hearts.Cut()
 	// Announce victory if enabled
 	if(announce_victory_on_death)
 		SSgamedirector.AnnounceVictory()
@@ -683,17 +898,16 @@
 		var/turf/end_turf = get_ranged_target_turf(target_turf, direction, line_mark_overshoot)
 		// Orient the mark toward target
 		mark.OrientToward(target_turf)
-		// Build the attack line with 3x3 AoE around each turf
+		// Build the attack line (just the line, no AoE)
 		var/list/attack_line = list()
 		for(var/turf/T in getline(mark_turf, end_turf))
 			if(T.density)
 				break
-			// Add 3x3 area around each turf in the line (radius 1 = 3x3)
-			for(var/turf/open/TT in RANGE_TURFS(1, T))
-				attack_line |= TT
-		// Show warning sparks
+			attack_line += T
+		// Show warning sparks (skip if turf already has one)
 		for(var/turf/T in attack_line)
-			new /obj/effect/temp_visual/cult/sparks(T)
+			if(!locate(/obj/effect/temp_visual/cult/sparks) in T)
+				new /obj/effect/temp_visual/cult/sparks(T)
 		// Create warning beam from mark to end point
 		var/datum/beam/warning_beam
 		if(end_turf)
@@ -718,7 +932,8 @@
 		// Deal damage along line
 		var/list/been_hit = list()
 		for(var/turf/T in attack_line)
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+			if(!locate(/obj/effect/temp_visual/dir_setting/bloodsplatter) in T)
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 			for(var/mob/living/L in HurtInTurf(T, been_hit, actual_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL)))
 				L.apply_lc_bleed(bleed_stacks)
 				been_hit += L
@@ -813,9 +1028,9 @@
 	if(magic_circle && !QDELETED(magic_circle))
 		qdel(magic_circle)
 		magic_circle = null
-	// Generate bloodfeast from hits
+	// Generate bloodfeast from hits (100 per target hit)
 	if(bloodfeast && total_hits > 0)
-		bloodfeast.blood_amount = min(bloodfeast.blood_amount + (total_hits * 25), max_blood)
+		bloodfeast.AdjustBlood(total_hits * 100)
 		last_blood_check = -1
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	can_act = TRUE
@@ -1050,6 +1265,7 @@
 	icon_state = "banquet"
 	damage = 75
 	damage_type = RED_DAMAGE
+	speed = 1
 
 /obj/projectile/ego_bullet/don_quixote/Initialize()
 	. = ..()
@@ -1064,3 +1280,351 @@
 		playsound(target, 'sound/weapons/fixer/generic/nail1.ogg', 75, TRUE)
 		for(var/i in 1 to 2)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+		// Give Don 500 bloodfeast per target hit
+		if(firer && istype(firer, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
+			var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/don = firer
+			var/datum/component/bloodfeast/bloodfeast = don.GetComponent(/datum/component/bloodfeast)
+			if(bloodfeast)
+				bloodfeast.AdjustBlood(500)
+				don.last_blood_check = -1
+
+// ============================================
+// GREED HEART - Spawned by Don Quixote when bloodfeast > 25%
+// ============================================
+
+/// A fragment of the Heart of Greed that Don Quixote expels
+/// Cannot move or attack, but when killed damages Don and drains his bloodfeast
+/mob/living/simple_animal/hostile/greed_heart
+	name = "Fragment of the Heart of Greed"
+	desc = "A pulsating mass of corrupted flesh, connected to Don Quixote by tendrils of blood."
+	icon = 'icons/obj/meteor.dmi'
+	icon_state = "meateor"
+	faction = list("hostile")
+	gender = NEUTER
+	mob_biotypes = MOB_ORGANIC
+	move_to_delay = 0
+	stat_attack = HARD_CRIT
+	maxHealth = 1500
+	health = 1500
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	obj_damage = 0
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.5)
+	del_on_death = TRUE
+	/// Reference to the Don Quixote that spawned this heart
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/owner_don
+	/// Reference to the beam connecting this heart to Don
+	var/datum/beam/my_beam
+
+/mob/living/simple_animal/hostile/greed_heart/Initialize()
+	. = ..()
+	// Pulsing animation
+	animate(src, color = "#FF6666", time = 5, loop = -1)
+	animate(color = "#FF0000", time = 5)
+
+/mob/living/simple_animal/hostile/greed_heart/Move()
+	return FALSE // Cannot move
+
+/mob/living/simple_animal/hostile/greed_heart/CanAttack()
+	return FALSE // Cannot attack
+
+/mob/living/simple_animal/hostile/greed_heart/death(gibbed)
+	// When killed, damage Don and drain his bloodfeast
+	if(owner_don && !QDELETED(owner_don) && owner_don.stat != DEAD)
+		// Drain 20% bloodfeast
+		var/datum/component/bloodfeast/bloodfeast = owner_don.GetComponent(/datum/component/bloodfeast)
+		if(bloodfeast)
+			var/drain_amount = owner_don.max_blood * 0.2
+			bloodfeast.AdjustBlood(-drain_amount)
+			owner_don.last_blood_check = -1 // Force buff recalculation
+		// Deal 5% max health damage
+		var/damage_amount = owner_don.maxHealth * 0.05
+		owner_don.deal_damage(damage_amount, RED_DAMAGE, src)
+		// Remove from owner's lists
+		owner_don.spawned_hearts -= src
+		if(my_beam)
+			owner_don.heart_beams -= my_beam
+		// Visual feedback
+		playsound(owner_don, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 75, TRUE)
+		visible_message(span_boldwarning("[owner_don] recoils as a heart fragment is destroyed!"))
+	// Clean up the beam
+	if(my_beam && !QDELETED(my_beam))
+		qdel(my_beam)
+		my_beam = null
+	return ..()
+
+// ============================================
+// DON QUIXOTE - SKILL 5: GREED ORB ATTACK (Ultimate)
+// ============================================
+
+/// Ultimate attack that triggers at 35% HP - creates a massive AoE that players must find safe zones for
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/GreedOrbAttack()
+	if(greed_orb_used || performing_orb_attack)
+		return
+	greed_orb_used = TRUE
+	performing_orb_attack = TRUE
+	can_act = FALSE
+	// Phase 1: Setup - hover up and become immune
+	status_flags |= GODMODE
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	say("The Heart of Greed... demands EVERYTHING!")
+	manual_emote("begins channeling immense power!")
+	// Animate hovering up
+	animate(src, pixel_y = 32, time = 2 SECONDS, easing = QUAD_EASING | EASE_OUT)
+	sleep(2 SECONDS)
+	if(QDELETED(src) || stat == DEAD)
+		CleanupGreedOrb()
+		return
+	// Create the singularity visual on Don
+	active_orb = new /obj/effect/greed_orb(get_turf(src))
+	// Spawn 4 shield pylons at least 4 tiles away
+	SpawnShieldPylons()
+	// Signal Sancho to enter shield stance
+	NotifySanchoShieldStance(TRUE)
+	// Wait 10 seconds charge time
+	for(var/i in 1 to 10)
+		sleep(1 SECONDS)
+		if(QDELETED(src) || stat == DEAD)
+			CleanupGreedOrb()
+			return
+		// Pulse effect during charge
+		if(active_orb && !QDELETED(active_orb))
+			playsound(src, 'sound/magic/charge.ogg', 50, TRUE)
+	// Phase 2: Orb landing
+	if(QDELETED(src) || stat == DEAD)
+		CleanupGreedOrb()
+		return
+	// Use landmark if set, otherwise calculate 4 tiles in front of Don
+	var/turf/orb_turf
+	if(orb_target_landmark && !QDELETED(orb_target_landmark))
+		orb_turf = get_turf(orb_target_landmark)
+	else
+		orb_turf = get_ranged_target_turf(src, dir, 4)
+	if(!orb_turf)
+		orb_turf = get_turf(src)
+	// Move the orb to the landing position
+	if(active_orb && !QDELETED(active_orb))
+		playsound(src, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 100, TRUE)
+		animate(active_orb, pixel_x = (orb_turf.x - x) * 32 + active_orb.pixel_x, pixel_y = (orb_turf.y - y) * 32 + active_orb.pixel_y, time = 2 SECONDS)
+	sleep(2 SECONDS)
+	if(QDELETED(src) || stat == DEAD)
+		CleanupGreedOrb()
+		return
+	// Move orb to actual turf
+	if(active_orb && !QDELETED(active_orb))
+		active_orb.forceMove(orb_turf)
+		active_orb.pixel_x = initial(active_orb.pixel_x)
+		active_orb.pixel_y = initial(active_orb.pixel_y)
+	// Phase 3: Detonation - 7 loops
+	say("CONSUME THEM ALL!")
+	for(var/detonation in 1 to 7)
+		if(QDELETED(src) || stat == DEAD)
+			CleanupGreedOrb()
+			return
+		GreedOrbDetonation(orb_turf, detonation)
+		sleep(0.5 SECONDS)
+	// Phase 4: Cleanup
+	CleanupGreedOrb()
+	// Animate landing
+	animate(src, pixel_y = 0, time = 1.5 SECONDS, easing = QUAD_EASING | EASE_IN)
+	sleep(1.5 SECONDS)
+	// Remove GODMODE and enable actions
+	status_flags &= ~GODMODE
+	performing_orb_attack = FALSE
+	can_act = TRUE
+	// Signal Sancho to exit shield stance
+	NotifySanchoShieldStance(FALSE)
+
+/// Spawns 4 shield pylons at least 4 tiles away from Don
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/SpawnShieldPylons()
+	var/list/possible_turfs = list()
+	for(var/turf/T in view(8, src))
+		if(T.density)
+			continue
+		if(get_dist(src, T) < 4)
+			continue
+		// Don't spawn on top of existing structures
+		var/blocked = FALSE
+		for(var/obj/structure/S in T)
+			if(S.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			continue
+		possible_turfs += T
+	if(!length(possible_turfs))
+		return
+	// Shuffle and pick 4 positions
+	possible_turfs = shuffle(possible_turfs)
+	for(var/i in 1 to min(4, length(possible_turfs)))
+		var/turf/spawn_turf = possible_turfs[i]
+		var/obj/structure/greed_pylon/pylon = new(spawn_turf)
+		pylon.owner_don = src
+		spawned_pylons += pylon
+		// Visual effect
+		new /obj/effect/temp_visual/cult/turf/floor(spawn_turf)
+		playsound(spawn_turf, 'sound/magic/exit_blood.ogg', 50, TRUE)
+
+/// Performs a single detonation of the greed orb
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/GreedOrbDetonation(turf/orb_turf, detonation_number)
+	if(!orb_turf)
+		return
+	// Visual effects
+	playsound(orb_turf, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 100, TRUE)
+	for(var/turf/T in range(10, orb_turf))
+		new /obj/effect/temp_visual/cult/turf/floor(T)
+	// Screen shake for everyone in range
+	for(var/mob/living/L in range(20, orb_turf))
+		if(L.client)
+			shake_camera(L, 3, 2)
+	// Deal damage
+	for(var/mob/living/L in range(20, orb_turf))
+		if(faction_check_mob(L))
+			continue
+		// Check if standing on safe zone
+		var/is_protected = FALSE
+		for(var/obj/effect/greed_safe_zone/zone in get_turf(L))
+			is_protected = TRUE
+			break
+		if(is_protected)
+			to_chat(L, span_notice("The protective barrier shields you from the blast!"))
+			new /obj/effect/temp_visual/blood_shield(get_turf(L))
+			continue
+		// Deal damage
+		L.deal_damage(300, BLACK_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+		to_chat(L, span_userdanger("The Heart of Greed's power tears through you!"))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+
+/// Notifies Sancho to enter or exit shield stance
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/NotifySanchoShieldStance(entering_stance)
+	for(var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S in GLOB.mob_living_list)
+		if(QDELETED(S) || S.stat == DEAD)
+			continue
+		if(istype(S, /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden))
+			continue
+		if(entering_stance)
+			S.EnterShieldStance()
+		else
+			S.ExitShieldStance()
+
+/// Cleans up all greed orb related objects
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/CleanupGreedOrb()
+	// Clean up orb
+	if(active_orb && !QDELETED(active_orb))
+		qdel(active_orb)
+		active_orb = null
+	// Clean up safe zones
+	for(var/obj/effect/greed_safe_zone/zone in spawned_safe_zones)
+		if(!QDELETED(zone))
+			qdel(zone)
+	spawned_safe_zones.Cut()
+	// Clean up pylons
+	for(var/obj/structure/greed_pylon/pylon in spawned_pylons)
+		if(!QDELETED(pylon))
+			qdel(pylon)
+	spawned_pylons.Cut()
+
+// ============================================
+// GREED ORB VISUAL EFFECT
+// ============================================
+
+/// The massive singularity-like orb Don Quixote creates
+/obj/effect/greed_orb
+	name = "Heart of Greed"
+	desc = "A massive sphere of concentrated greed, pulsating with malevolent energy."
+	icon = 'icons/effects/224x224.dmi'
+	icon_state = "singularity_s7"
+	pixel_x = -96
+	pixel_y = -96
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	light_color = "#FF0000"
+	light_range = 10
+	light_power = 3
+
+/obj/effect/greed_orb/Initialize()
+	. = ..()
+	// Pulsing animation
+	animate(src, alpha = 200, time = 5, loop = -1)
+	animate(alpha = 255, time = 5)
+
+// ============================================
+// SHIELD PYLON STRUCTURE
+// ============================================
+
+/// Pylon that creates safe zones when destroyed
+/obj/structure/greed_pylon
+	name = "Shield Pylon"
+	desc = "A pulsating pylon of greed energy. Destroy it to create a safe zone."
+	icon = 'icons/obj/hand_of_god_structures.dmi'
+	icon_state = "powerpylon"
+	color = "#FF5522"
+	anchored = TRUE
+	density = TRUE
+	max_integrity = 550
+	/// Range of the safe zone created on destruction
+	var/safe_zone_range = 2
+	/// Reference to Don Quixote
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/owner_don
+
+/obj/structure/greed_pylon/Initialize()
+	. = ..()
+	// Pulsing animation
+	animate(src, color = "#FF8855", time = 5, loop = -1)
+	animate(color = "#FF5522", time = 5)
+
+/obj/structure/greed_pylon/obj_destruction()
+	// Spawn safe zone effects in range 2
+	for(var/turf/T in range(safe_zone_range, src))
+		var/obj/effect/greed_safe_zone/zone = new(T)
+		if(owner_don && !QDELETED(owner_don))
+			owner_don.spawned_safe_zones += zone
+	// Visual/sound feedback
+	playsound(src, 'sound/effects/explosion1.ogg', 75, TRUE)
+	visible_message(span_boldwarning("[src] shatters, creating a protective barrier!"))
+	return ..()
+
+// ============================================
+// SAFE ZONE EFFECT
+// ============================================
+
+/// Protective barrier that shields from the greed orb detonation
+/obj/effect/greed_safe_zone
+	name = "protective barrier"
+	desc = "A shimmering forcefield protecting from the greed orb."
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "shield-cult"
+	layer = BELOW_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	light_color = "#FF5555"
+	light_range = 2
+	light_power = 1
+
+/obj/effect/greed_safe_zone/Initialize()
+	. = ..()
+	// Pulsing animation
+	animate(src, alpha = 150, time = 3, loop = -1)
+	animate(alpha = 255, time = 3)
+
+// ============================================
+// GREED ORB TARGET LANDMARK
+// ============================================
+
+/// Landmark that marks where Don Quixote's greed orb will land
+/obj/effect/landmark/greed_orb_target
+	name = "greed orb target"
+	icon = 'icons/effects/landmarks_static.dmi'
+	icon_state = "x"
+	/// Link ID for matching to ferris wheel
+	var/link_id = "default"
+
+/obj/effect/landmark/greed_orb_target/Initialize()
+	. = ..()
+	return INITIALIZE_HINT_LATELOAD
+
+/obj/effect/landmark/greed_orb_target/LateInitialize()
+	. = ..()
+	// Find and link to ferris wheel via global list
+	var/obj/structure/ferris_wheel/wheel = GLOB.bloodfiend_ferris_wheels[link_id]
+	if(wheel)
+		wheel.orb_target_landmark = src

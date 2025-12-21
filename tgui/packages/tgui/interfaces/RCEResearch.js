@@ -393,7 +393,10 @@ const ResearchNodeCard = (props, context) => {
       {(node.requiredTraits?.length > 0
         || Object.keys(node.favoredTraits || {}).length > 0
         || Object.keys(node.negativeTraits || {}).length > 0) && (
-        <Box fontSize="9px" mt={0.5} style={{ borderTop: '1px solid #444', paddingTop: '4px' }}>
+        <Box
+          fontSize="9px"
+          mt={0.5}
+          style={{ borderTop: '1px solid #444', paddingTop: '4px' }}>
           {node.requiredTraits?.length > 0 && (
             <Box color="orange">
               Required: {node.requiredTraits.join(', ')}

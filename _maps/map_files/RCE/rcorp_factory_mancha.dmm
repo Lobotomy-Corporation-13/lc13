@@ -5012,6 +5012,10 @@
 	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"Vc" = (
+/obj/effect/landmark/greed_orb_target,
+/turf/open/indestructible/cult,
+/area/rce/xcorp/boss)
 "Vf" = (
 /obj/structure/chair/pew/left{
 	dir = 1
@@ -27168,7 +27172,7 @@ pq
 UM
 UM
 UM
-UM
+Vc
 UM
 UM
 UM
