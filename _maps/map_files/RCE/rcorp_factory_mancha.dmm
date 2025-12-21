@@ -440,13 +440,13 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_3)
 "eH" = (
-/obj/effect/light_emitter{
-	light_range = 5;
-	set_cap = 3;
-	set_luminosity = 24;
-	light_color = "#FF0000"
-	},
 /obj/structure/xcorp_heart_research,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/rce/xcorp/boss)
 "eJ" = (
@@ -475,14 +475,20 @@
 /area/rce/xcorp/boss)
 "fd" = (
 /obj/effect/landmark/rce_arena_teleport,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
 /turf/open/indestructible/cult,
 /area/rce/xcorp/bosslobby)
 "fg" = (
 /obj/effect/light_emitter{
-	light_range = 5;
+	light_power = 4;
+	light_range = 25;
 	set_cap = 3;
-	set_luminosity = 24;
-	light_color = "#FF0000"
+	set_luminosity = 24
 	},
 /turf/open/floor/wood{
 	color = "#990012"
@@ -1696,15 +1702,6 @@
 "qB" = (
 /turf/open/floor/carpet/black,
 /area/rce/xcorp/rce_1_3)
-"qD" = (
-/obj/effect/light_emitter{
-	light_range = 5;
-	set_cap = 3;
-	set_luminosity = 24;
-	light_color = "#FF0000"
-	},
-/turf/open/indestructible/cult,
-/area/rce/xcorp/bosslobby)
 "qL" = (
 /obj/effect/decal/cleanable/confetti,
 /turf/open/indestructible/necropolis/air,
@@ -1830,17 +1827,6 @@
 	},
 /turf/open/floor/mineral/titanium/purple,
 /area/rce/xcorp/rce_2_2)
-"rH" = (
-/obj/effect/light_emitter{
-	light_range = 5;
-	set_cap = 3;
-	set_luminosity = 24;
-	light_color = "#FF0000"
-	},
-/turf/open/floor/plating/ashplanet/ash{
-	color = "#787878"
-	},
-/area/rce/xcorp/boss)
 "rP" = (
 /obj/structure/limitedresourcepoint/purple,
 /turf/open/floor/carpet/red,
@@ -2717,6 +2703,15 @@
 	color = "#990012"
 	},
 /area/rce/xcorp)
+"zD" = (
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
+	},
+/turf/open/indestructible/cult,
+/area/rce/xcorp/boss)
 "zE" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/relay/preset/telecomms,
@@ -3030,10 +3025,10 @@
 /area/rce/rcorp_base)
 "CL" = (
 /obj/effect/light_emitter{
-	light_range = 5;
+	light_power = 4;
+	light_range = 25;
 	set_cap = 3;
-	set_luminosity = 24;
-	light_color = "#FF0000"
+	set_luminosity = 24
 	},
 /turf/open/floor/plating/ashplanet/ash{
 	color = "#da82ff"
@@ -4851,9 +4846,6 @@
 	},
 /turf/open/floor/stone,
 /area/rce/xcorp/rce_1_1)
-"Tt" = (
-/turf/closed/indestructible/riveted/boss/see_through,
-/area/rce/xcorp/bosslobby)
 "Tz" = (
 /obj/structure/limitedresourcepoint/silver,
 /turf/open/floor/stone,
@@ -4928,6 +4920,12 @@
 "Uo" = (
 /obj/effect/landmark/portal_exit{
 	id = "final_boss"
+	},
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
 	},
 /turf/open/indestructible/cult,
 /area/rce/xcorp/boss)
@@ -23402,7 +23400,7 @@ cd
 UM
 UM
 UM
-UM
+zD
 UM
 UM
 Ur
@@ -25541,11 +25539,11 @@ hO
 hO
 hO
 hO
-Gf
-Gf
-Gf
-Tt
-Tt
+UM
+UM
+UM
+Pi
+Pi
 Pi
 Pi
 Pi
@@ -25854,9 +25852,9 @@ hO
 hO
 UM
 UM
-Gf
-Tt
-Tt
+UM
+Pi
+Pi
 Pi
 Pi
 Pi
@@ -26166,8 +26164,8 @@ hO
 UM
 UM
 UM
-Gf
-Tt
+UM
+Pi
 Pi
 Pi
 Pi
@@ -26803,7 +26801,7 @@ Pi
 Pi
 Pi
 Pi
-qD
+Pi
 Pi
 fd
 KW
@@ -26830,8 +26828,8 @@ pq
 UM
 UM
 pq
-pq
-pq
+cd
+cd
 pq
 pq
 pq
@@ -27143,8 +27141,8 @@ UM
 UM
 pq
 pq
-UM
-UM
+cd
+cd
 UM
 UM
 UM
@@ -27414,8 +27412,8 @@ hO
 UM
 UM
 UM
-Gf
-Tt
+UM
+Pi
 Pi
 Pi
 Pi
@@ -27455,7 +27453,7 @@ UM
 UM
 pq
 pq
-pq
+cd
 pq
 pq
 pq
@@ -27726,9 +27724,9 @@ hO
 hO
 UM
 UM
-Gf
-Tt
-Tt
+UM
+Pi
+Pi
 Pi
 Pi
 Pi
@@ -28037,11 +28035,11 @@ hO
 hO
 hO
 hO
-Gf
-Gf
-Gf
-Tt
-Tt
+UM
+UM
+UM
+Pi
+Pi
 Pi
 Pi
 Pi
@@ -28079,9 +28077,9 @@ UM
 UM
 UM
 UM
-cd
-cd
-cd
+UM
+UM
+UM
 UM
 UM
 UM
@@ -28391,8 +28389,8 @@ pq
 UM
 UM
 UM
-cd
-cd
+UM
+UM
 cd
 UM
 UM
@@ -29016,7 +29014,7 @@ pq
 pq
 pq
 pq
-pq
+cd
 cd
 pq
 pq
@@ -29328,7 +29326,7 @@ UM
 UM
 UM
 UM
-UM
+cd
 UM
 UM
 UM
@@ -30890,7 +30888,7 @@ ex
 UM
 ex
 UM
-UM
+zD
 UM
 cd
 cd
@@ -33336,7 +33334,7 @@ lc
 lc
 lc
 lc
-rH
+lc
 lc
 lc
 lc
@@ -45596,8 +45594,8 @@ ku
 ZV
 ZV
 ku
-oN
 cs
+oN
 oN
 oN
 oN
@@ -45908,8 +45906,8 @@ ku
 ZV
 ZV
 ku
-oN
 cs
+oN
 oN
 oN
 oN
@@ -46220,8 +46218,8 @@ NF
 ZV
 ZV
 ku
-di
 YG
+di
 di
 oN
 di
@@ -46532,8 +46530,8 @@ NF
 wt
 wt
 NF
-di
 YG
+di
 di
 di
 di
@@ -46844,8 +46842,8 @@ NF
 wt
 wt
 NF
-di
 YG
+di
 di
 di
 di
@@ -47156,8 +47154,8 @@ ku
 ZV
 ZV
 ku
-oN
 cs
+oN
 oN
 oN
 oN
@@ -47468,8 +47466,8 @@ ku
 ZV
 ZV
 ku
-oN
 cs
+oN
 oN
 oN
 oN
@@ -56204,8 +56202,8 @@ Ms
 Zl
 Zl
 Ms
-aX
 kH
+aX
 aX
 aX
 aX
@@ -56516,8 +56514,8 @@ Ms
 Zl
 Zl
 Ms
-aX
 kH
+aX
 aX
 aX
 aX
@@ -56828,8 +56826,8 @@ se
 Lr
 Lr
 se
-eJ
 LB
+eJ
 aX
 eJ
 eJ
@@ -57140,8 +57138,8 @@ se
 Lr
 Lr
 se
-eJ
 LB
+eJ
 eJ
 eJ
 eJ
@@ -57452,8 +57450,8 @@ Ms
 Zl
 Lr
 Ms
-eJ
 LB
+eJ
 eJ
 eJ
 aX
@@ -57764,8 +57762,8 @@ Ms
 Zl
 Zl
 Ms
-aX
 kH
+aX
 aX
 aX
 aX
@@ -58076,8 +58074,8 @@ Ms
 Zl
 Zl
 Ms
-aX
 kH
+aX
 aX
 aX
 aX

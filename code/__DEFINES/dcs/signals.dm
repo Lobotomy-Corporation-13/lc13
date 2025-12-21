@@ -1129,6 +1129,7 @@
 #define COMSIG_GLOB_BLOODFIEND_BARBER_DIED "!bloodfiend_barber_died"
 #define COMSIG_GLOB_BLOODFIEND_PRIEST_DIED "!bloodfiend_priest_died"
 #define COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED "!bloodfiend_dulcinea_died"
+#define COMSIG_GLOB_BLOODFIEND_DONQUIXOTE_DIED "!bloodfiend_donquixote_died"
 
 
 // Crate signals

@@ -3221,6 +3221,7 @@
 #include "code\modules\mob\living\simple_animal\hostile\ordeal\steel\manager.dm"
 #include "code\modules\mob\living\simple_animal\hostile\ordeal\steel\warbeast.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\bloodfiend_bosses.dm"
+#include "code\modules\mob\living\simple_animal\hostile\rce\bloodfiend_don_quixote.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\bloodfiends.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\boss.dm"
 #include "code\modules\mob\living\simple_animal\hostile\rce\xcorp.dm"
