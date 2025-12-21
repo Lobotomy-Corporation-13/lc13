@@ -3,6 +3,7 @@
 // ============================================
 
 /// Sancho - An allied bloodfiend who stands with humanity against the Heart of Greed
+/// Sprite work is done by PositiveEntropy (Github)/Imaginos16 (Discord)
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho
 	name = "Sancho"
 	desc = "A bloodfiend who chose to stand with humanity against the Heart of Greed. Her loyalty to Don Quixote's original dream of coexistence drives her to fight alongside R-Corp."
