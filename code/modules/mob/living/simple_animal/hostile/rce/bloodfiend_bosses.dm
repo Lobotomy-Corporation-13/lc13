@@ -18,7 +18,7 @@
 	aggro_vision_range = 20
 	move_to_delay = 5
 	stat_attack = HARD_CRIT
-	del_on_death = FALSE
+	del_on_death = TRUE
 	maxHealth = 5000
 	health = 5000
 	melee_damage_lower = 15
@@ -192,6 +192,10 @@
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber/AttackingTarget(atom/attacked_target)
 	if(!can_act)
+		return FALSE
+	// Try to use dash attack even while in melee
+	if(dash_cooldown <= world.time && attacked_target)
+		BloodTrailDash(attacked_target)
 		return FALSE
 	return Slash(attacked_target)
 
@@ -1132,7 +1136,16 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/death(gibbed)
-	// Clean up all spawned units and beams
+	// Kill all spawned units
+	for(var/mob/living/L in spawned_units)
+		if(!QDELETED(L) && L.stat != DEAD)
+			L.death()
+	for(var/mob/living/L in bodyguards)
+		if(!QDELETED(L) && L.stat != DEAD)
+			L.death()
+	spawned_units.Cut()
+	bodyguards.Cut()
+	// Clean up beams
 	for(var/datum/beam/B in spawn_beams)
 		if(!QDELETED(B))
 			qdel(B)
@@ -1421,6 +1434,8 @@ GLOBAL_LIST_EMPTY(bloodfiend_ferris_wheels)
 	var/boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened
 	/// Reference to the spawned boss
 	var/mob/living/simple_animal/hostile/bloodfiend_boss/spawned_boss
+	/// Whether this landmark's boss has been killed (vs never spawned)
+	var/boss_killed = FALSE
 	/// Reference to the heart that controls this landmark
 	var/obj/structure/xcorp_heart_research/parent_heart
 	/// Stored location of the heart for portal spawning (persists after heart destruction)
@@ -1502,15 +1517,20 @@ GLOBAL_LIST_EMPTY(bloodfiend_ferris_wheels)
 	SIGNAL_HANDLER
 	UnregisterSignal(source, COMSIG_LIVING_DEATH)
 	spawned_boss = null
+	boss_killed = TRUE
 	INVOKE_ASYNC(src, PROC_REF(CheckAllBossesDead))
 
 /// Checks if all bosses from the parent heart are dead
 /obj/effect/landmark/bloodfiend_boss/proc/CheckAllBossesDead()
-	// Check our own boss first
+	// Check our own boss first - must be killed (not just unspawned)
+	if(!boss_killed)
+		return // Our boss hasn't been killed yet
 	if(spawned_boss && !QDELETED(spawned_boss) && spawned_boss.stat != DEAD)
 		return // Our boss is still alive
 	// Check sibling landmarks' bosses
 	for(var/obj/effect/landmark/bloodfiend_boss/BL in sibling_landmarks)
+		if(!BL.boss_killed)
+			return // This sibling's boss hasn't been killed yet
 		if(BL.spawned_boss && !QDELETED(BL.spawned_boss) && BL.spawned_boss.stat != DEAD)
 			return // At least one boss still alive
 	// All bosses dead - spawn portal at heart location

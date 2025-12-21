@@ -500,6 +500,15 @@
 	)
 	/// Whether to announce victory when Don Quixote dies
 	var/announce_victory_on_death = TRUE
+	/// Whether Don Quixote refuses to target Sancho
+	var/ignore_sancho = TRUE
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/ListTargets(max_range = vision_range)
+	. = ..()
+	// Filter out Sancho from possible targets if ignore_sancho is true
+	if(ignore_sancho)
+		for(var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S in .)
+			. -= S
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/Initialize()
 	. = ..()
@@ -609,7 +618,7 @@
 		qdel(magic_circle)
 	// Announce victory if enabled
 	if(announce_victory_on_death)
-		SSgame_director.AnnounceVictory()
+		SSgamedirector.AnnounceVictory()
 	return ..()
 
 // ============================================
