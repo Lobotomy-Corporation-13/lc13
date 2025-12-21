@@ -56,6 +56,10 @@ SUBSYSTEM_DEF(gamedirector)
 	var/corrupter_cooldown_max = 30 MINUTES
 	var/corrupter_rarity_threshold = 6
 
+	// Bloodfiend Heart Research tracking
+	/// Whether the Heart Research structure has been destroyed (disables raids and final wave)
+	var/heart_research_destroyed = FALSE
+
 	// FoB entrance raid variables
 	var/fob_entrances_unlocked = FALSE
 	var/fob_unlock_time = 30 MINUTES
@@ -116,6 +120,10 @@ SUBSYSTEM_DEF(gamedirector)
 		if(!fob_entrances_unlocked && world.time >= fob_unlock_time)
 			fob_entrances_unlocked = TRUE
 
+		// Skip all raid/seed/corrupter spawning if Heart Research has been destroyed
+		if(heart_research_destroyed)
+			return
+
 		// Handle raids (only before last wave - after last wave, gateways handle spawning)
 		if(!last_wave_started)
 			// Normal raid spawning (before last wave)
@@ -168,6 +176,9 @@ SUBSYSTEM_DEF(gamedirector)
 	return FALSE
 
 /datum/controller/subsystem/gamedirector/proc/StartLastWave()
+	// Don't spawn the final wave if the Heart Research has been destroyed
+	if(heart_research_destroyed)
+		return
 	last_wave_started = TRUE
 	next_fob_raid_time = world.time + fob_raid_cooldown
 
@@ -369,6 +380,9 @@ SUBSYSTEM_DEF(gamedirector)
 		active_resourcewells -= well
 
 /datum/controller/subsystem/gamedirector/proc/TriggerRaid()
+	// Don't trigger raids if the Heart Research has been destroyed
+	if(heart_research_destroyed)
+		return
 	if(!length(active_resourcewells))
 		return
 
@@ -608,5 +622,10 @@ SUBSYSTEM_DEF(gamedirector)
 	if(security_num >= SEC_LEVEL_RED)
 		set_security_level(SEC_LEVEL_BLUE)
 
-	// Call the evacuation shuttle
-	SSshuttle.requestEvac(null, "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately.")
+	// Call the evacuation shuttle with different message based on heart research status
+	var/evac_message
+	if(heart_research_destroyed)
+		evac_message = "The Greed forces appear to have pulled back to defend the heart. Evacuation shuttle en route for extraction."
+	else
+		evac_message = "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately."
+	SSshuttle.requestEvac(null, evac_message)

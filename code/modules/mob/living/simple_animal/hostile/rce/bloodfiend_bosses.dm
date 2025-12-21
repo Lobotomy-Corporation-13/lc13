@@ -1414,6 +1414,8 @@ GLOBAL_LIST_EMPTY(bloodfiend_ferris_wheels)
 		GLOB.bloodfiend_hearts -= link_id
 	if(!destroyed)
 		destroyed = TRUE
+		// Notify gamedirector that the Heart Research has been destroyed - disables raids and final wave
+		SSgamedirector.heart_research_destroyed = TRUE
 		// Spawn all bosses from landmarks
 		for(var/obj/effect/landmark/bloodfiend_boss/BL in boss_landmarks)
 			BL.SpawnBoss()
