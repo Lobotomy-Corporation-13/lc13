@@ -178,7 +178,6 @@
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/ToppleWound(mob/living/main_target)
 	if(!isliving(main_target) || QDELETED(main_target))
 		return
-	topple_cooldown = world.time + topple_cooldown_time
 	can_act = FALSE
 
 	// Calculate dash count based on bloodfeast
@@ -208,6 +207,8 @@
 		DashToTarget(current_target, current_target == main_target)
 		SLEEP_CHECK_DEATH(2)
 
+	// Cooldown starts after all dashes complete
+	topple_cooldown = world.time + topple_cooldown_time
 	can_act = TRUE
 
 /// Find a new hostile target for Topple/Wound
@@ -227,6 +228,10 @@
 
 /// Perform a single dash to target location
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/DashToTarget(mob/living/dash_target, is_main_target = FALSE)
+	// Consume 150 bloodfeast per dash
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.AdjustBlood(-150)
 	var/turf/start_turf = get_turf(src)
 	// Get a turf past the target
 	var/turf/target_turf = get_step(get_turf(dash_target), pick(GLOB.cardinals))
@@ -290,19 +295,32 @@
 	joy_cooldown = world.time + joy_cooldown_time
 	can_act = FALSE
 
+	// Consume 400 bloodfeast
+	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
+	if(bloodfeast)
+		bloodfeast.AdjustBlood(-400)
+
 	face_atom(punch_target)
 	manual_emote("charges up a devastating punch!")
 
 	var/turf/target_turf = get_turf(punch_target)
 	var/turf/source_turf = get_turf(src)
 
+	// Calculate extended end turf (4 tiles past target, max 6 total length)
+	var/dir_to_target = get_dir(source_turf, target_turf)
+	var/turf/extended_turf = target_turf
+	for(var/i in 1 to 4)
+		var/turf/next = get_step(extended_turf, dir_to_target)
+		if(next)
+			extended_turf = next
+	// Get the attack line and limit to max 6 tiles
+	var/list/attack_line = getline(source_turf, extended_turf)
+	if(length(attack_line) > 6)
+		attack_line = attack_line.Copy(1, 7) // Keep first 6 tiles
+
 	// Warning phase - show sparks along the line
 	var/broken = FALSE
-	var/distance = joy_range
-	for(var/turf/T in getline(source_turf, target_turf))
-		if(distance < 0)
-			break
-		distance--
+	for(var/turf/T in attack_line)
 		if(T.density)
 			if(broken)
 				break
@@ -318,13 +336,9 @@
 	// Damage phase
 	playsound(src, 'sound/weapons/fixer/generic/energyfinisher1.ogg', 75, TRUE)
 	broken = FALSE
-	distance = joy_range
 	var/list/hit_mobs = list()
 
-	for(var/turf/T in getline(source_turf, target_turf))
-		if(distance < 0)
-			break
-		distance--
+	for(var/turf/T in attack_line)
 		if(T.density)
 			if(broken)
 				break
