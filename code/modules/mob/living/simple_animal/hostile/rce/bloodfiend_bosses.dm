@@ -361,10 +361,21 @@
 	for(var/turf/T in area_of_effect)
 		var/obj/effect/temp_visual/slice/slash_effect = new(T)
 		slash_effect.color = "#b52e19"
-		// Damage mobs
-		for(var/mob/living/L in HurtInTurf(T, list(), actual_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE)))
+		// Damage mobs - check for bleed bonus
+		for(var/mob/living/L in T)
+			if(faction_check_mob(L))
+				continue
+			// Check if target has 40+ bleed stacks for bonus damage
+			var/target_damage = actual_damage
+			var/datum/status_effect/stacking/lc_bleed/BE = L.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+			if(BE && BE.stacks >= 40)
+				target_damage = actual_damage * 2 // 100% more damage
+			L.deal_damage(target_damage, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
 			L.apply_lc_bleed(bleed_stacks)
 			targets_hit++
+		// Damage mechs
+		for(var/obj/vehicle/sealed/mecha/M in T)
+			M.take_damage(actual_damage, RED_DAMAGE)
 		// Damage barricades (double damage)
 		for(var/obj/structure/barricade/B in T)
 			B.take_damage(actual_damage * 2, RED_DAMAGE)
@@ -499,7 +510,12 @@
 				if(L in hit_mobs)
 					continue
 				hit_mobs += L
-				L.deal_damage(dash_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+				// Check if target has 40+ bleed stacks for bonus damage
+				var/target_damage = dash_damage
+				var/datum/status_effect/stacking/lc_bleed/BE = L.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+				if(BE && BE.stacks >= 40)
+					target_damage = dash_damage * 2 // 100% more damage
+				L.deal_damage(target_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				L.apply_lc_bleed(dash_bleed)
 			// Damage barricades (double damage)
 			for(var/obj/structure/barricade/B in hit_turf)
@@ -511,7 +527,12 @@
 			if(faction_check_mob(L))
 				continue
 			if(!(L in hit_mobs))
-				L.deal_damage(dash_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+				// Check if target has 40+ bleed stacks for bonus damage
+				var/target_damage = dash_damage
+				var/datum/status_effect/stacking/lc_bleed/BE = L.has_status_effect(/datum/status_effect/stacking/lc_bleed)
+				if(BE && BE.stacks >= 40)
+					target_damage = dash_damage * 2 // 100% more damage
+				L.deal_damage(target_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				L.apply_lc_bleed(dash_bleed)
 		// Damage barricades at mark location (double damage)
 		for(var/obj/structure/barricade/B in mark_turf)

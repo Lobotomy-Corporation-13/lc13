@@ -65,7 +65,7 @@
 
 	var/buff_percent = bloodfeast.blood_amount / max_blood
 	// Damage multiplier: 1.0 to 1.5
-	var/damage_mult = 1 + (buff_percent * 0.5)
+	var/damage_mult = 1 + (buff_percent * 1)
 	melee_damage_lower = round(base_damage_lower * damage_mult)
 	melee_damage_upper = round(base_damage_upper * damage_mult)
 

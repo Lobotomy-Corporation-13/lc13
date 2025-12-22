@@ -527,6 +527,9 @@
 
 /// Delivers the final blow to Don Quixote
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/DeliverFinalBlow(mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/don)
+	// Start slash effects during speech (runs for 5 seconds - duration of dialogue)
+	INVOKE_ASYNC(src, PROC_REF(FinalBlowSlashEffects), don, 5 SECONDS)
+
 	// Final dialogue
 	say("Until I reach that dream...")
 	sleep(2 SECONDS)
@@ -574,3 +577,28 @@
 	cut_overlays()
 	// Remove any filters
 	remove_filter("clash_glow")
+
+/// Spawns slash effects during Sancho's final dialogue
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/FinalBlowSlashEffects(mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/don, duration)
+	var/start_time = world.time
+	while(world.time - start_time < duration)
+		if(QDELETED(src) || QDELETED(don))
+			return
+		// Spawn slash effects on Don's position
+		var/turf/T = get_turf(don)
+		var/obj/effect/temp_visual/dir_setting/slash/S = new(T, pick(GLOB.alldirs))
+		S.pixel_x = rand(-8, 8)
+		S.pixel_y = rand(-8, 8)
+		S.color = "#FF0000"
+		animate(S, alpha = 0, time = 1.5)
+		var/obj/effect/temp_visual/dir_setting/slash/SS = new(T, pick(GLOB.alldirs))
+		SS.pixel_x = rand(-8, 8)
+		SS.pixel_y = rand(-8, 8)
+		SS.color = "#FF5500"
+		animate(SS, alpha = 0, time = 1.5)
+		// Screen shake for nearby players
+		for(var/mob/living/L in range(15, src))
+			if(L.client)
+				shake_camera(L, 1, 1)
+		playsound(src, 'sound/weapons/fixer/generic/blade3.ogg', 50, TRUE)
+		sleep(0.3 SECONDS)

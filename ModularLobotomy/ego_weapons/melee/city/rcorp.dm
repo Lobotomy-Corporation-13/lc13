@@ -344,3 +344,22 @@
 
 	//set all to 0
 	teleporting = FALSE
+
+// ========================================
+// IFF (No Friendly Fire) Gun Variants
+// These are the versions crafted by RCE factories
+// ========================================
+
+/obj/item/gun/energy/e_gun/rabbit/nopin/iff
+	name = "R-Corporation R-2800 'Mark 1' (IFF)"
+	desc = "An energy gun produced specifically to suppress threats with a variety of damage types. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(
+		/obj/item/ammo_casing/energy/laser/red/iff,
+		/obj/item/ammo_casing/energy/laser/white/iff,
+		/obj/item/ammo_casing/energy/laser/black/iff
+		)
+
+/obj/item/gun/energy/e_gun/rabbit/minigun/iff
+	name = "R-Corporation X-15 Minigun (IFF)"
+	desc = "An energy machinegun that is extremely heavy, and fires bullets extremely quickly. This model has IFF targeting to prevent friendly fire."
+	ammo_type = list(/obj/item/ammo_casing/energy/laser/red/iff)

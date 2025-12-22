@@ -29,6 +29,10 @@
 	var/gondolas_per_wave = 4
 	/// Total gondolas killed
 	var/gondolas_killed = 0
+	/// Current wave number (1-indexed)
+	var/current_wave = 0
+	/// Reference to spawned Sancho
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/spawned_sancho
 	/// Link ID for trigger landmarks (set in map editor)
 	var/link_id = "default"
 	/// Landmark for where Don's greed orb lands
@@ -86,6 +90,7 @@
 /obj/structure/ferris_wheel/proc/SpawnGondolaWave()
 	if(gondolas_spawned >= max_gondolas)
 		return
+	current_wave++
 	var/list/spawn_turfs = list()
 	// Find valid spawn turfs around the wheel
 	for(var/turf/T in view(10, src))
@@ -133,11 +138,36 @@
 			// All gondolas killed - spawn boss
 			INVOKE_ASYNC(src, PROC_REF(SpawnDonQuixote))
 		else
+			// Spawn Sancho after first wave is defeated
+			if(current_wave == 1 && !spawned_sancho)
+				INVOKE_ASYNC(src, PROC_REF(SpawnSancho))
 			// Spawn next wave after a delay
 			addtimer(CALLBACK(src, PROC_REF(SpawnGondolaWave)), 3 SECONDS)
 
+/// Spawns Sancho after the first wave of gondolas is defeated
+/obj/structure/ferris_wheel/proc/SpawnSancho()
+	if(spawned_sancho)
+		return
+	visible_message(span_boldwarning("An ally emerges to help fight the gondolas!"))
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 75, TRUE)
+	// Spawn Sancho near the wheel
+	var/turf/spawn_turf = get_step(get_turf(src), SOUTH)
+	if(!spawn_turf || spawn_turf.density)
+		spawn_turf = get_turf(src)
+	spawned_sancho = new /mob/living/simple_animal/hostile/bloodfiend_boss/sancho(spawn_turf)
+	new /obj/effect/temp_visual/beam_out(spawn_turf)
+
 /// Spawns Don Quixote after all gondolas are defeated
 /obj/structure/ferris_wheel/proc/SpawnDonQuixote()
+	// Teleport Sancho next to the ferris wheel if she's alive
+	if(spawned_sancho && !QDELETED(spawned_sancho) && spawned_sancho.stat != DEAD)
+		var/turf/sancho_turf = get_step(get_turf(src), EAST)
+		if(!sancho_turf || sancho_turf.density)
+			sancho_turf = get_turf(src)
+		new /obj/effect/temp_visual/beam_out(get_turf(spawned_sancho))
+		spawned_sancho.forceMove(sancho_turf)
+		new /obj/effect/temp_visual/beam_out(sancho_turf)
+		playsound(sancho_turf, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
 	visible_message(span_boldwarning("The ferris wheel groans as its structure begins to collapse!"))
 	// Change wheel to no_sign state
 	icon_state = "no_sign"
@@ -1440,6 +1470,8 @@
 	active_orb = new /obj/effect/greed_orb(get_turf(src))
 	// Spawn 4 shield pylons at least 4 tiles away
 	SpawnShieldPylons()
+	// Check if Sancho is nearby, if not spawn them
+	EnsureSanchoPresent()
 	// Signal Sancho to enter shield stance
 	NotifySanchoShieldStance(TRUE)
 	// Wait 10 seconds charge time
@@ -1567,6 +1599,37 @@
 			S.EnterShieldStance()
 		else
 			S.ExitShieldStance()
+
+/// Ensures Sancho is nearby for the orb attack - spawns them if not present
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/EnsureSanchoPresent()
+	// Check if any living Sancho is within range
+	for(var/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S in range(15, src))
+		if(QDELETED(S) || S.stat == DEAD)
+			continue
+		if(istype(S, /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden))
+			continue
+		return // Sancho is already nearby
+	// No Sancho nearby - spawn one
+	var/list/possible_turfs = list()
+	for(var/turf/T in view(7, src))
+		if(T.density)
+			continue
+		if(get_dist(src, T) < 3) // Don't spawn too close
+			continue
+		var/blocked = FALSE
+		for(var/obj/structure/S in T)
+			if(S.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			continue
+		possible_turfs += T
+	if(!length(possible_turfs))
+		return
+	var/turf/spawn_turf = pick(possible_turfs)
+	playsound(spawn_turf, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/beam_out(spawn_turf)
+	new /mob/living/simple_animal/hostile/bloodfiend_boss/sancho(spawn_turf)
 
 /// Cleans up all greed orb related objects
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/CleanupGreedOrb()
