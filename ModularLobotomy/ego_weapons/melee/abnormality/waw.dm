@@ -400,7 +400,7 @@
 		return
 	var/found_target = 0
 	var/list/target_list = list()
-	for(var/mob/living/target in orange(realization_multithrow_range, user))
+	for(var/mob/living/target in oview(realization_multithrow_range, user))
 		if(found_target >= realization_multithrow_max_bounces)
 			break
 		if(target == user)
