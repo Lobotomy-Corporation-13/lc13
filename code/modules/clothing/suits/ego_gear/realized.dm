@@ -492,26 +492,50 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson
 	name = "crimson lust"
 	desc = "They are always watching you."
-	icon_state = "crimson"
-	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//No Ability
+	icon_state = "crimson" // Sprites by Mel Taculo.
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 50) // 230, since it has an ability and passives.
 	realized_ability = /obj/effect/proc_holder/ability/strike_without_hesitation // Wind-up indiscriminate AoE damage that grants an empowered state based on amount of targets hit. More targets hit = more power. Also lets you dual wield CrimScar. Special interaction with BWBBW and Cobalt Scar.
+	var/last_applied_mark_time
+	var/datum/status_effect/crimlust_mark/last_applied_mark_datum
 
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/examine(mob/user)
 	. = ..()
 	. += span_notice("This E.G.O. will periodically apply <b>Hunter's Mark</b> to a random enemy, allowing you to <b>track them</b> using the <b>Hunter's Trail</b> ability. \
-	This mark lasts 40 seconds and a new one is applied every 60 seconds. \
-	If you <b>land the finishing blow</b> on this enemy, you will be <b>healed and gain a temporary bonus to Power Modifier</b>. \
+	This mark lasts 40 seconds and a new one is applied every 80 seconds. \
+	If you <b>land the finishing blow</b> on this enemy, you will be <b>healed and gain a temporary bonus to Power Modifier</b>. If Strike Without Hesitation's buff is active, refreshes it. \
 	Powerful enemies will grant the same reward after you deal a certain amount of damage to them, based on how much health they have.")
 	. += ""
 	. += span_notice("This E.G.O. will <b>empower</b> the <b>Crimson Claw</b> and <b>Crimson Scar</b> weapons when worn.")
 	. += span_notice("<b>Crimson Claw (sword) bonuses</b>: Increased damage. Gains Justice scaling on its throwing attack. \
-	Applies <b>Hemorrhage</b> on combo finisher or throwing attack. <b>Hemorrhage</b> deals damage when consumed, scaling off of the user's Fortitude.")
+	Applies <b>Hemorrhage</b> on combo finisher or throwing attack. Hemorrhage deals damage when consumed, scaling off of the user's Fortitude.")
 	. += ""
-	. += span_notice("<b>Crimson Scar (hand cannon) bonuses</b>: Increased damage. Infinite ammo. Default ammunition is now piercing. Can now <b>toggle hollowpoint ammunition by reloading the weapon</b>. \
-	Hollowpoint ammunition is accurate and hard-hitting, also <b>consuming Hemorrhage</b>.")
+	. += span_notice("<b>Crimson Scar (hand cannon) bonuses</b>: Increased damage. Infinite ammo. Default ammunition is now piercing. Can now load a hollowpoint shell by reloading the weapon. \
+	Hollowpoint ammunition is accurate and hard-hitting, also <b>consuming Hemorrhage.</b>")
 	. += ""
-	. += span_info("When under the effects of both <b>Strike without Hesitation</b> and <b>Hunter's Mark's payout</b>, \
-	gain HP regen, stun immunity, empower Crimson Claw's throw to <b>hit all nearby enemies</b> and drastically increase Crimson Scar's <b>fire-rate and pellet count</b>.")
+	. += span_info("When under the effects of both <b>Strike without Hesitation</b> and <b>Hunter's Mark's payout</b>, gain HP regen and stun immunity.")
+
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/equipped(mob/user, slot)
+	. = ..()
+
+/datum/status_effect/crimlust_mark
+	id = "crimlust_mark"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 40 SECONDS
+	tick_interval = -1 // We don't need to tick
+	alert_type = null
+	var/mob/living/carbon/human/crimlust_user
+	var/mob/living/simple_animal/hostile/marked_owner
+
+/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary)
+	if(!(..()))
+		return FALSE
+	if(!(ishostile(new_owner)) || !(ishuman(mercenary)))
+		return FALSE
+
+	marked_owner = new_owner
+	crimlust_user = mercenary
+
+	return TRUE
 
 /datum/status_effect/crimlust_mark_payout
 

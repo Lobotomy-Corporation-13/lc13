@@ -259,13 +259,22 @@
 	var/realization_hollowpoint_ammo_type = /obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint
 	var/realization_hollowpoint_firedelay_malus = 2
 	var/realization_hollowpoint_active = FALSE
-	var/realization_hollowpoint_toggle_delay = 0.8 SECONDS
+	var/realization_hollowpoint_toggle_delay = 0.6 SECONDS
 	var/realization_hollowpoint_spam_prevention_cd
 	var/realization_empowered_mode = FALSE
-	var/realization_empowered_pellet_increase = 3
-	var/realization_empowered_variance_increase = 20
-	var/realization_empowered_spread_increase = 10
-	var/realization_empowered_firedelay_decrease = 3
+	var/realization_empowered_pellet_increase = 2
+	var/realization_empowered_variance_increase = 5
+	var/realization_empowered_spread_increase = 15
+	var/realization_empowered_firedelay_decrease = 2
+
+/obj/item/ego_weapon/ranged/pistol/crimson/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Ammo is now infinite, and your standard projectiles deal more damage and pierce all targets.")
+			. += span_nicegreen("You can reload this weapon to load a single Hollowpoint Shell, which is highly accurate and deals more damage, and will consume a target's Hemorrhage (inflicted by Crimson Claw). You may load this shell while moving.")
+			. += span_nicegreen("While under the effect of <b>Strike without Hesitation</b>, your firerate increases, and you fire [initial(pellets) + realization_empowered_pellet_increase] projectiles per shot.")
 
 /obj/item/ego_weapon/ranged/pistol/crimson/equipped(mob/living/user, slot)
 	. = ..()
@@ -277,9 +286,11 @@
 			var/datum/status_effect/crimlust_no_hesitation/very_angry_very_red_mercenary = user.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
 			if(very_angry_very_red_mercenary) // Under the effect of Strike Without Hesitation?
 				weapon_weight = WEAPON_LIGHT // You can now dual-wield.
+				realization_empowered_mode = TRUE
 				very_angry_very_red_mercenary.modified_guns |= src // So this gets reverted once Strike Without Hesitation falls off
 		else
 			weapon_weight = initial(weapon_weight)
+			realization_empowered_mode = FALSE
 
 		SetAmmoStat(realization_active)
 
@@ -305,20 +316,24 @@
 
 /obj/item/ego_weapon/ranged/pistol/crimson/process_chamber()
 	. = ..()
-	realization_hollowpoint_active = FALSE // You only get one Hollowpoint shot, load it again if you want another.
-	SetAmmoStat(TRUE)
+	if(realization_hollowpoint_active)
+		realization_hollowpoint_active = FALSE // You only get one Hollowpoint shot, load it again if you want another.
+		SetAmmoStat(TRUE)
 
 /obj/item/ego_weapon/ranged/pistol/crimson/proc/ToggleHollowpoint(mob/living/user)
 	playsound(src, reload_start_sound, 50, TRUE)
-	if(do_after(user, realization_hollowpoint_toggle_delay, src, interaction_key = "crimscar_hollowpoint", max_interact_count = 1))
+	forced_melee = TRUE
+	if(do_after(user, realization_hollowpoint_toggle_delay, src, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "crimscar_hollowpoint", max_interact_count = 1))
 		realization_hollowpoint_active = !realization_hollowpoint_active // Load a Hollowpoint, or go back to normal I guess
 		SetAmmoStat(TRUE) // We literally can't access this proc without the realization
 		playsound(src, reload_success_sound, 50, TRUE)
 		var/success_message = realization_hollowpoint_active ? "You will now fire a hollowpoint shell with [src]." : "You will now fire a storm of pellets with [src]."
 		to_chat(user, span_info(success_message))
+	forced_melee = FALSE
 
 /obj/item/ego_weapon/ranged/pistol/crimson/proc/SetAmmoStat(realized = FALSE)
 	fire_delay = initial(fire_delay)
+	random_spread = initial(random_spread)
 
 	if(!realized)
 		projectile_path = initial(projectile_path)
@@ -333,21 +348,20 @@
 		variance = 0
 		reloadtime = 0
 		fire_delay += realization_hollowpoint_firedelay_malus
-		forced_melee = FALSE
 		return
 
 	projectile_path = realization_default_ammo_type // Realized default ammo (piercing)
 	pellets = initial(pellets)
 	variance = initial(variance)
 	spread = initial(spread)
-	if(realization_empowered)
+	if(realization_empowered_mode)
 		fire_delay -= realization_empowered_firedelay_decrease
 		pellets += realization_empowered_pellet_increase
 		variance += realization_empowered_variance_increase
 		spread += realization_empowered_spread_increase
+		random_spread = TRUE
 
 	reloadtime = 0
-	forced_melee = FALSE
 	return
 
 /obj/item/ego_weapon/ranged/ecstasy
