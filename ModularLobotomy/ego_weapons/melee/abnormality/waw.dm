@@ -227,12 +227,12 @@
 		balloon_alert(user, "You swap to hammer mode.")
 		return
 
+// This weapon is buffed when using the Crimson Lust realization, and its throw becomes multitarget when under both buffs the armour can provide you.
 /obj/item/ego_weapon/mini/crimson
 	name = "crimson claw"
 	desc = "It's more important to deliver a decisive strike in blind hatred without hesitation than to hold on to insecure courage."
-	special = "Use it in hand to activate ranged attack."
+	special = "Use in-hand to activate a throwing ranged attack. Has an 8s cooldown."
 	icon_state = "crimsonclaw"
-	special = "This weapon hits faster than usual."
 	force = 17
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 0.5
@@ -252,13 +252,36 @@
 	var/special_cooldown
 	var/special_cooldown_time = 8 SECONDS
 	var/special_checks_faction = FALSE
+	// Realization vars
+	var/realization_base_force_coeff = 1.9
+	var/realization_hemorrhage_base_damage = 100
 
 /obj/item/ego_weapon/mini/crimson/get_clamped_volume() //this is loud as balls without this proc
 	return 20
 
+/obj/item/ego_weapon/mini/crimson/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		var/og_force = initial(force)
+		var/new_force = og_force * realization_base_force_coeff
+		var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
+		var/fortmod = 1 + userfort/100
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. \
+			Base force is increased from [og_force] to [new_force], and your throwing attack now scales with Justice. \
+			Combo finishers will inflict <b>Hemorrhage</b> on the target, and consuming it with Crimson Scar deals <b>[realization_hemorrhage_base_damage * fortmod] RED damage</b>, after scaling from your Fortitude. \
+			Additionally, if performing your throwing attack while under the effects of your <b>Hunter's Mark payout buff</b> and <b>Strike Without Hesitation</b>, <b>your throw will hit all nearby enemies</b>.")
+
 /obj/item/ego_weapon/mini/crimson/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+	var/realization_active = FALSE
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			realization_active = TRUE
+			force *= realization_base_force_coeff
 	if(world.time > combo_time)
 		combo = 1
 	combo_time = world.time + combo_wait
@@ -271,9 +294,14 @@
 			hitsound = 'sound/abnormalities/redhood/attack_1.ogg'
 	force *= (1 + (combo * 0.15))
 	user.changeNext_move(CLICK_CD_MELEE * (1 + (combo * 0.2)))
-	if(combo >= 3)
-		combo = 0
 	..()
+	if(combo >= 3)
+		if(realization_active)
+			var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
+			var/fortmod = 1 + userfort/100
+			var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
+			M.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage, src)
+		combo = 0
 	combo += 1
 	force = initial(force)
 
@@ -300,6 +328,19 @@
 		return
 	special_attack = FALSE
 	special_cooldown = world.time + special_cooldown_time
+	var/realization_active = FALSE
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			realization_active = TRUE
+			var/datum/status_effect/crimlust_mark_payout/successful_mercenary = TRUE//user.has_status_effect(/datum/status_effect/crimlust_mark_payout)
+			var/datum/status_effect/crimlust_no_hesitation/angry_mercenary = user.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
+			if(successful_mercenary && angry_mercenary && MultiThrow(user))
+				return
+	SingleThrow(A, user, realization_active)
+	return
+
+/obj/item/ego_weapon/mini/crimson/proc/SingleThrow(atom/A, mob/living/user, realization_active = FALSE, list/multithrow_hitlist)
 	var/turf/target_turf = get_ranged_target_turf_direct(user, A, 8)
 	var/list/turfs_to_hit = list()
 	for(var/turf/T in getline(user, target_turf))
@@ -312,8 +353,16 @@
 		return
 	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
 	user.visible_message(span_warning("[user] throws [src] towards [A]!"))
+
 	var/dealing_damage = special_damage // Damage reduces a little with each mob hit
-	dealing_damage*=force_multiplier
+	dealing_damage*=force_multiplier // %dmg increase from Faith & Promise, EO upgrade tool, etc
+	if(realization_active) // Apply Justice if wearing Crimson Lust realization
+		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+		var/justicemod = 1 + userjust/100
+		dealing_damage*=justicemod
+
+	var/used_from_multithrow = islist(multithrow_hitlist)
+
 	for(var/i = 1 to turfs_to_hit.len) // Basically, I copied my code from helper's realized ability. Yep.
 		var/turf/open/T = turfs_to_hit[i]
 		if(!istype(T))
@@ -333,11 +382,75 @@
 				continue
 			if(special_checks_faction && user.faction_check_mob(L))
 				continue
+			if(used_from_multithrow)
+				if(L in multithrow_hitlist)
+					continue
+				multithrow_hitlist |= L
+
 			to_chat(L, span_userdanger("You are hit by [src]!"))
-			balloon_alert(L, "You are hit by [src]!")
 			L.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
+			if(realization_active)
+				var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
+				var/fortmod = 1 + userfort/100
+				var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
+				L.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage, src)
+
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
+
+/obj/item/ego_weapon/mini/crimson/proc/MultiThrow(mob/living/user)
+	if(!ishuman(user))
+		return
+	var/found_target = FALSE
+	var/list/hitlist = list()
+	for(var/mob/living/target in range(8, user))
+		if(target == user)
+			continue
+		if(user.faction_check_mob(target))
+			continue
+		if(target.stat >= DEAD)
+			continue
+		if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
+			continue
+		found_target = TRUE
+		INVOKE_ASYNC(src, PROC_REF(SingleThrow), target, user, TRUE, hitlist)
+
+	return found_target
+
+/datum/status_effect/display/crimlust_hemorrhage
+	id = "crimlust_hemorrhage"
+	status_type = STATUS_EFFECT_REPLACE
+	duration = 10 SECONDS
+	tick_interval = -1 // We don't need to tick
+	alert_type = null
+	display_name = "heart"
+
+	var/mob/living/carbon/human/crimlust_user
+	var/consume_damage
+
+/datum/status_effect/display/crimlust_hemorrhage/on_creation(mob/living/new_owner, mob/living/carbon/human/supercool_mercenary, hemorrhage_final_damage, obj/item/ego_weapon/mini/crimson/applying_weapon)
+	if(!(..()))
+		return FALSE
+	// Ensure we get a valid user, owner, applying weapon and final damage.
+	if(!(istype(new_owner)) || !(istype(supercool_mercenary)) || !istype(applying_weapon))
+		return FALSE
+	if(!(hemorrhage_final_damage > 0))
+		return FALSE
+	crimlust_user = supercool_mercenary
+	consume_damage = hemorrhage_final_damage
+	return TRUE
+
+/datum/status_effect/display/crimlust_hemorrhage/be_replaced()
+	if(icon_overlay)
+		owner.cut_overlay(icon_overlay) // Need to put this here 'cause apparently on_remove and be_replaced are different, which makes sense honestly but if I don't do this the overlay sticks forever
+	. = ..()
+
+/datum/status_effect/display/crimlust_hemorrhage/proc/Consume()
+	if(owner)
+		owner.deal_damage(consume_damage, RED_DAMAGE, source = crimlust_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
+		for(var/i in 1 to 3)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(owner), pick(GLOB.alldirs))
+	qdel(src)
 
 /obj/item/ego_weapon/thirteen
 	name = "dead silence"

@@ -116,6 +116,26 @@
 	damage = 14
 	damage_type = RED_DAMAGE
 
+// This one is fired by Crimson Scar by default when wearing Crimson Lust. Under a certain buff, fires 6 pellets instead of 3 with a higher spread.
+/obj/projectile/ego_bullet/ego_crimson/lust
+	name = "hateful crimson"
+	damage = 26
+	projectile_piercing = PASSMOB
+
+// This one is fired by Crimson Scar when wearing Crimson Lust while this mode is toggled on. It's only 1 pellet and more accurate. Slower firerate. Consumes Hemorrhage.
+/obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint
+	name = "hollowpoint shell"
+	damage = 120
+
+/obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(!isliving(target))
+		return
+	var/mob/living/horrid_awful_wolf_in_our_nightmares = target
+	var/datum/status_effect/display/crimlust_hemorrhage/well_deserved_wound = horrid_awful_wolf_in_our_nightmares.has_status_effect(/datum/status_effect/display/crimlust_hemorrhage)
+	if(well_deserved_wound)
+		well_deserved_wound.Consume()
+
 /obj/projectile/ego_bullet/ego_ecstasy
 	name = "ecstasy"
 	icon_state = "ecstasy"
