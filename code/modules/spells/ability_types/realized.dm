@@ -1704,7 +1704,8 @@
 	update_icon()
 	user.say("No hesitation!")
 	user.visible_message(span_userdanger("[user] twitches, a frenzied look in \his eyes...!"))
-	for(var/turf/T in orange(radius, user))
+	var/list/danger_turfs = oview(radius, user)
+	for(var/turf/T in danger_turfs)
 		RVP.NewCultSparks(T, windup)
 
 	if(!do_after(our_guy, windup, interaction_key = "strike_without_hesitation", max_interact_count = 1))
@@ -1713,20 +1714,20 @@
 		return
 	. = ..()
 
-	var/targets_hit = MultiThrow(user)
+	var/targets_hit = MultiThrow(user, danger_turfs)
 	var/final_powermod = min((targets_hit * powermod_per_target), powermod_cap)
 	// Actual ability here.
 	our_guy.apply_status_effect(/datum/status_effect/crimlust_no_hesitation, final_powermod)
 
-/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrow(mob/living/user)
+/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrow(mob/living/user, list/turfs_to_check)
 	if(!ishuman(user))
 		return
 	var/list/hitlist = list()
 	var/targets_found = 0
-	for(var/mob/living/target in range(radius, user))
+	for(var/mob/living/target in turfs_to_check)
 		if(target == user)
 			continue
-		if(target.stat >= DEAD)
+		if((target.stat >= DEAD) || (target.status_flags & GODMODE))
 			continue
 		if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
 			continue
@@ -1821,6 +1822,11 @@
 	var/mob/living/carbon/human/our_guy = new_owner
 	powermod_bonus = power_modifier
 
+	// If we have the Mark Payout status effect, link to it here
+	var/datum/status_effect/crimlust_mark_payout/successful_mercenary = our_guy.has_status_effect(/datum/status_effect/crimlust_mark_payout)
+	if(successful_mercenary)
+		successful_mercenary.LinkBuffs(src)
+
 	// We now need to find any CrimScars that may be in our mainhand or offhand and allow us to dual wield them. This isn't necessary for CrimScars anywhere else in our inventory,
 	// because they will need to be passed into the hands at some point and we handle applying the weapon weight change in their equipped(). But any guns already in our hands need this block of code.
 	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = new_owner.get_active_held_item()
@@ -1856,6 +1862,7 @@
 	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
 		if(!QDELETED(did_you_try_smuggling_one_of_these))
 			did_you_try_smuggling_one_of_these.weapon_weight = WEAPON_MEDIUM
+			did_you_try_smuggling_one_of_these.realization_empowered_mode = FALSE
 			modified_guns -= did_you_try_smuggling_one_of_these
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)

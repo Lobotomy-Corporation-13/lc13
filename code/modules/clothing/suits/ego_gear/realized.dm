@@ -489,19 +489,34 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	icon_state = "woundedcourage"
 	flags_inv = HIDEMASK | HIDEEYES
 
+/* This Realization has several effects:
+1. Grants an ability: Strike Without Hesitation. Wind-up AoE that damages all nearby mobs and gives you Power Mod per target hit.
+Also lets you dual wield Crimson Scars and makes your Crimson Claw bounce between all nearby enemies.
+2. Grants a passive ability: Hunter's Mark. An Ordeal enemy or breached Abnormality is marked every once in a while. You can track them using an item action called Hunter's Trail.
+If you land the killing blow on that enemy, you get a buff and a heal.
+3. Empowers the Crimson Scar and Crimson Claw weapons:
+- Crimson Claw gets higher damage and inflicts Hemorrhage on combo finisher/thrown attack, Hemorrhage does nothing on its own but when consumed by CrimScar it deals damage based on the user's Fortitude.
+- Crimson Scar gets higher damage and piercing ammo, and can load a Hollowpoint Shell that consumes Hemorrhage.
+4. If both the buff from Hunter's Mark's payout and Strike Without Hesitation are active at once, you get HP regen and stun immunity for a bit. Both buffs will refresh eachother's duration when applied.
+*/
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson
 	name = "crimson lust"
 	desc = "They are always watching you."
 	icon_state = "crimson" // Sprites by Mel Taculo.
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 50) // 230, since it has an ability and passives.
 	realized_ability = /obj/effect/proc_holder/ability/strike_without_hesitation // Wind-up indiscriminate AoE damage that grants an empowered state based on amount of targets hit. More targets hit = more power. Also lets you dual wield CrimScar. Special interaction with BWBBW and Cobalt Scar.
+	actions_types = list(/datum/action/item_action/crimlust_hunter_trail)
 	var/last_applied_mark_time
+	var/mark_apply_timer
+	var/mark_apply_cooldown_time = 100 SECONDS
 	var/datum/status_effect/crimlust_mark/last_applied_mark_datum
+	var/mob/living/currently_marked
+	var/list/valid_mark_candidates = list()
 
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/examine(mob/user)
 	. = ..()
 	. += span_notice("This E.G.O. will periodically apply <b>Hunter's Mark</b> to a random enemy, allowing you to <b>track them</b> using the <b>Hunter's Trail</b> ability. \
-	This mark lasts 40 seconds and a new one is applied every 80 seconds. \
+	This mark lasts 40 seconds and a new one is applied every 100 seconds. \
 	If you <b>land the finishing blow</b> on this enemy, you will be <b>healed and gain a temporary bonus to Power Modifier</b>. If Strike Without Hesitation's buff is active, refreshes it. \
 	Powerful enemies will grant the same reward after you deal a certain amount of damage to them, based on how much health they have.")
 	. += ""
@@ -514,9 +529,136 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	. += ""
 	. += span_info("When under the effects of both <b>Strike without Hesitation</b> and <b>Hunter's Mark's payout</b>, gain HP regen and stun immunity.")
 
+// This armour will need to be aware of every Abnormality that breaches so it can potentially mark them. It's better than scanning the whole abno list every time
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/Initialize(mapload)
+	. = ..()
+	RegisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH, PROC_REF(AddAbnoToCandidateList))
+
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/Destroy(force)
+	UnregisterSignal(SSdcs, COMSIG_GLOB_ABNORMALITY_BREACH)
+	return ..()
+
+// Called every time an Abno breaches, we add it to our potential targets list.
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/AddAbnoToCandidateList(datum/source, mob/living/simple_animal/hostile/abnormality/breached)
+	SIGNAL_HANDLER
+	if(!istype(breached))
+		return
+	if(istype(breached, /mob/living/simple_animal/hostile/abnormality/wrath_servant)) // Yeah uh, this one doesn't always die when recontained so
+		return
+	valid_mark_candidates |= breached
+	RegisterSignal(breached, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(RemoveAbnoFromCandidateList))
+
+// And when an abno we previously added to our list gets deleted or killed, we remove it.
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/RemoveAbnoFromCandidateList(datum/source)
+	SIGNAL_HANDLER
+	if(!isabnormalitymob(source))
+		return
+	UnregisterSignal(source, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	valid_mark_candidates -= source
+
+/// Chooses 1 random target out of all breached Abnormalities and ongoing Ordeal mobs. Unfortunately this means some special mobs like Runaway Crows or Grown Strong can't be selected.
+// I think it'd be too expensive to run constant scans for potential mark targets, I believe this is the least expensive option all things considered.
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/PickMarkTarget(mob/living/carbon/human/hunter)
+	if(!ishuman(hunter))
+		return FALSE
+
+	// If our mark is still on cooldown, set a timer to call this once the cooldown ends.
+	var/time_since_mark = last_applied_mark_time ? world.time - last_applied_mark_time : INFINITY
+	if(time_since_mark < mark_apply_cooldown_time)
+		SetupMarkTimer(hunter, (mark_apply_cooldown_time - time_since_mark + 1))
+		return FALSE
+
+	if(!QDELETED(last_applied_mark_datum)) // Should never ever happen
+		qdel(last_applied_mark_datum)
+
+	var/list/potential_targets = list() // New list.
+	potential_targets |= valid_mark_candidates // Add all breaching abnormalities to the new list.
+	var/list/ongoing_ordeals = SSlobotomy_corp.current_ordeals
+	if(length(ongoing_ordeals) > 0) // If there's at least 1 ongoing ordeal...
+		for(var/datum/ordeal/O in ongoing_ordeals) // Add every ordeal mob into the new list.
+			potential_targets |= O.ordeal_mobs // |= prevents Pink Midnight from causing duplicate entries
+
+	if(length(potential_targets) <= 0) // No targets found...
+		SetupMarkTimer(hunter, 5 SECONDS)
+		return FALSE
+
+	var/mob/living/chosen_target = pick(potential_targets)
+	last_applied_mark_datum = chosen_target.apply_status_effect(/datum/status_effect/crimlust_mark, hunter, src)
+	last_applied_mark_time = world.time
+	SetupMarkTimer(hunter, mark_apply_cooldown_time) // Call this again once the cooldown's over.
+	if(last_applied_mark_datum)
+		currently_marked = chosen_target
+
+	TrackTarget(hunter, TRUE)
+	return TRUE
+
+// Called once when first acquiring a new marked target, and can be called again by the user if they want. Tells you in chat/balloon alert roughly where your target is.
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/TrackTarget(mob/living/carbon/human/hunter, first_time = FALSE)
+	var/chosen_target = currently_marked
+	if(!chosen_target)
+		to_chat(hunter, span_warning("You're currently not hunting anything - there's nothing to track."))
+		return
+	var/where_are_they = get_dir(hunter, chosen_target)
+	var/how_far = get_dist(hunter, chosen_target)
+	var/dir_message = ""
+	if(where_are_they & NORTH)
+		dir_message = "north"
+	else if (where_are_they & SOUTH)
+		dir_message = "south"
+
+	if(where_are_they & EAST)
+		dir_message += "east"
+	else
+		dir_message += "west"
+	var/assembled_message = "You sense [chosen_target] [how_far] meters [dir_message] of you."
+	if(first_time)
+		assembled_message += " The hunt is on."
+	var/final_message = first_time ? span_userdanger(assembled_message) : span_warning(assembled_message)
+	to_chat(hunter, final_message)
+	hunter.balloon_alert(hunter, assembled_message)
+
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/equipped(mob/user, slot)
 	. = ..()
+	if(!(ishuman(user)) || !(slot == ITEM_SLOT_OCLOTHING))
+		ClearMarkTimer()
+		return
+	PickMarkTarget(user)
 
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/dropped(mob/user)
+	. = ..()
+	ClearMarkTimer()
+	QDEL_NULL(last_applied_mark_datum)
+
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/SetupMarkTimer(mob/user, in_how_long)
+	ClearMarkTimer()
+	mark_apply_timer = addtimer(CALLBACK(src, PROC_REF(PickMarkTarget), user), in_how_long, TIMER_STOPPABLE)
+
+/obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/ClearMarkTimer()
+	if(mark_apply_timer)
+		deltimer(mark_apply_timer)
+		mark_apply_timer = null
+
+// Allows us to track our target if we need to do it again for whatever reason.
+/datum/action/item_action/crimlust_hunter_trail
+	name = "Hunter's Trail"
+	desc = "Remain still for 2 seconds to track down your currently marked target."
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
+	button_icon_state = "red_target"
+
+/datum/action/item_action/crimlust_hunter_trail/Trigger()
+	if(!IsAvailable())
+		return FALSE
+	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = target
+	if(!istype(our_suit))
+		return
+	if(!do_after(owner, 2 SECONDS, interaction_key = "crimlust_hunter_trail", max_interact_count = 1))
+		to_chat(owner, span_warning("You lose concentration. You need to be still to track your target."))
+		return
+	our_suit.TrackTarget(owner, FALSE)
+
+// This status effect does nothing except add a visual mark and check if its owner is killed by the person who applied it. If they are, then that killer gets the payout buff.
 /datum/status_effect/crimlust_mark
 	id = "crimlust_mark"
 	status_type = STATUS_EFFECT_UNIQUE
@@ -524,20 +666,139 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
 	var/mob/living/carbon/human/crimlust_user
+	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/crimlust_suit
 	var/mob/living/simple_animal/hostile/marked_owner
+	var/mutable_appearance/mark_overlay
+	var/bounty_claimed = FALSE
 
-/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary)
+/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary, obj/item/clothing/suit/armor/ego_gear/realization/crimson/crimlust)
 	if(!(..()))
 		return FALSE
-	if(!(ishostile(new_owner)) || !(ishuman(mercenary)))
+	if(!(ishostile(new_owner)) || !(ishuman(mercenary)) || !(istype(crimlust)))
+		qdel(src)
 		return FALSE
 
 	marked_owner = new_owner
 	crimlust_user = mercenary
+	crimlust_suit = crimlust
+	mark_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teguicons.dmi', "red_target", -MUTATIONS_LAYER)
 
+	// Mark visual
+	var/icon/target_icon = icon(marked_owner.icon, marked_owner.icon_state, marked_owner.dir)
+	var/icon_height = target_icon.Height()
+	var/icon_width = target_icon.Width()
+	var/height_diff = icon_height - 32
+	var/width_diff = icon_width - 32
+	mark_overlay.pixel_y += 38 + floor((height_diff * 0.6))
+	mark_overlay.pixel_x += (width_diff * 0.5)
+	marked_owner.add_overlay(mark_overlay)
+
+	// Signal for detecting killing blows
+	RegisterSignal(marked_owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(CheckDeath)) // It really sucks we have to use APPLY_DAMGE here and not AFTER_APPLY_DAMGE, the problem is that anything that qdels or gibs on death won't send PostDamageReaction and refactoring damage to make that happen is too intrusive for this little PR
 	return TRUE
 
+/datum/status_effect/crimlust_mark/on_remove()
+	. = ..()
+	if(marked_owner)
+		marked_owner.cut_overlay(mark_overlay)
+	if(crimlust_suit)
+		crimlust_suit.currently_marked = null
+	if(crimlust_user)
+		var/message = bounty_claimed ? span_nicegreen("You've completed your hunt. Another nightmare is kept from haunting your nights.") : span_warning("You weren't able to complete your hunt.")
+		to_chat(crimlust_user, message)
+
+// Called when the marked enemy is taking damage. Sadly we can't use AFTER_APPLY_DAMGE as explained previously. Also we don't check to make sure we're still wearing Crimson Lust here, because I could but like, this is being run on every hit so let's not
+/datum/status_effect/crimlust_mark/proc/CheckDeath(datum/source, damage_amount, damage_type, def_zone, source_of_damage, flags, attack_type)
+	SIGNAL_HANDLER
+	if(!marked_owner)
+		return
+	if(!(source_of_damage == crimlust_user))
+		return
+	var/datum/dam_coeff/damage_coeff = marked_owner.damage_coeff
+	var/final_damage_dealt = (damage_amount * damage_coeff.getCoeff(damage_type))
+	if(marked_owner.health - final_damage_dealt <= 0)
+		Payout()
+
+// Called only when the owner is killed by the Crimlust user
+/datum/status_effect/crimlust_mark/proc/Payout()
+	if(crimlust_user)
+		crimlust_user.apply_status_effect(/datum/status_effect/crimlust_mark_payout)
+		bounty_claimed = TRUE // Determines the message sent to the user
+	qdel(src)
+
+/// This buff is given when killing a marked target. It heals your HP and SP once and gives you PowerMod
+/// If No Hesitation is present, refreshes it (the buff, not the ability), and will give the owner stun immunity and periodic HP regen.
 /datum/status_effect/crimlust_mark_payout
+	id = "crimlust_mark_payout"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 20 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/crimlust_mark_payout
+	var/powermod_bonus = 20
+	var/initial_hp_sp_heal = 40
+	var/empowered_tick_healing = 6
+	var/check_for_linked_buff = FALSE
+	var/datum/status_effect/crimlust_no_hesitation/linked_buff
+
+/datum/status_effect/crimlust_mark_payout/on_creation(mob/living/new_owner, ...)
+	. = ..()
+	if(!ishuman(new_owner))
+		return
+	var/mob/living/carbon/human/our_owner = new_owner
+
+	// Link to No Hesitation if it already exists
+	var/datum/status_effect/crimlust_no_hesitation/angry_mercenary = new_owner.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
+	if(angry_mercenary)
+		LinkBuffs(angry_mercenary)
+
+	// HP/SP initial heal and VFX
+	our_owner.adjustBruteLoss(-initial_hp_sp_heal)
+	our_owner.adjustSanityLoss(-initial_hp_sp_heal)
+	for(var/i in 1 to 2)
+		new /obj/effect/temp_visual/heal(get_turf(owner))
+		new /obj/effect/temp_visual/heal(get_turf(owner), "#6E6EFF")
+
+	// Power Modifier gain
+	our_owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
+
+// On every tick of this status, if we're linked to an active No Hesitation, recover some HP.
+/datum/status_effect/crimlust_mark_payout/tick()
+	. = ..()
+	if(!check_for_linked_buff)
+		return
+	if(!QDELETED(linked_buff))
+		owner.adjustBruteLoss(-empowered_tick_healing)
+	else
+		UnlinkBuffs()
+
+// When this buff falls off, undo our Power Mod buff and unlink the buff from No Hesitation which will also drop our stun immunity.
+/datum/status_effect/crimlust_mark_payout/on_remove()
+	. = ..()
+	UnlinkBuffs()
+	var/mob/living/carbon/human/our_owner = owner
+	if(istype(our_owner))
+		our_owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
+
+// Called when either: 1. This buff is created and No Hesitation exists or 2. By No Hesitation if it's created while this exists
+/datum/status_effect/crimlust_mark_payout/proc/LinkBuffs(datum/status_effect/crimlust_no_hesitation/link_to_this)
+	if(linked_buff) // This should never happen. We shouldn't have a reference to No Hesitation already
+		return
+	check_for_linked_buff = TRUE
+	linked_buff = link_to_this
+	linked_buff.refresh()
+	refresh()
+	ADD_TRAIT(owner, TRAIT_STUNIMMUNE, "crimlust_empowered")
+
+// This is called once this buff is falling off or when we detect that No Hesitation fell off. We lose stun immunity and we'll stop checking if No Hesitation is active for our HP regen
+/datum/status_effect/crimlust_mark_payout/proc/UnlinkBuffs()
+	check_for_linked_buff = FALSE
+	linked_buff = null
+	REMOVE_TRAIT(owner, TRAIT_STUNIMMUNE, "crimlust_empowered")
+
+/atom/movable/screen/alert/status_effect/crimlust_mark_payout
+	name = "Successful Hunt"
+	desc = "You've laid one of your nightmares to rest. Power Modifier is increased by 20."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "hunt_finished"
 
 /obj/item/clothing/suit/armor/ego_gear/realization/eyes
 	name = "eyes of god"
