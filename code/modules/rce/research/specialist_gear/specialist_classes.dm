@@ -96,7 +96,7 @@
 	icon_state = "hunter"
 	inhand_icon_state = "hostrench"
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30, FIRE = 100)
-	hat = /obj/item/clothing/head/ego_hat/helmet/hellfire
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/hellfire
 	allowed = list(/obj/item/gun, /obj/item/ego_weapon, /obj/item/melee, /obj/item/auto_flamethrower)
 
 /obj/item/clothing/suit/armor/ego_gear/hellfire/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
@@ -112,15 +112,81 @@
 
 	return ..()
 
-/obj/item/clothing/head/ego_hat/helmet/hellfire
-	name = "r-corp hellfire rooster helmet"
-	desc = "A custom made helmet worn by hellfire roosters."
+// Base RCE helmet with permanent flashlight
+/obj/item/clothing/head/ego_hat/flashlight_helmet
+	name = "r-corp tactical helmet"
+	desc = "A tactical helmet with a permanently mounted flashlight."
 	icon = 'icons/obj/clothing/masks.dmi'
 	worn_icon = 'icons/mob/clothing/mask.dmi'
 	icon_state = "hunter"
 	inhand_icon_state = "hunter"
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 	flags_inv = HIDEFACIALHAIR|HIDEFACE|HIDEEYES|HIDEEARS|HIDEHAIR|HIDESNOUT
+	/// The attached flashlight - permanently mounted
+	var/obj/item/flashlight/seclite/attached_light
+	/// The action button for toggling the light
+	var/datum/action/item_action/toggle_helmet_flashlight/alight
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/Initialize()
+	. = ..()
+	// Create the permanent flashlight
+	attached_light = new /obj/item/flashlight/seclite(src)
+	attached_light.set_light_flags(attached_light.light_flags | LIGHT_ATTACHED)
+	alight = new(src)
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/Destroy()
+	if(attached_light)
+		QDEL_NULL(attached_light)
+	if(alight)
+		QDEL_NULL(alight)
+	return ..()
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/examine(mob/user)
+	. = ..()
+	. += span_notice("It has a flashlight permanently mounted on it.")
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/ui_action_click(mob/user, action)
+	if(istype(action, alight))
+		toggle_helmlight()
+	else
+		..()
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/proc/toggle_helmlight()
+	if(!attached_light)
+		return
+	var/mob/user = usr
+	if(user.incapacitated())
+		return
+	attached_light.on = !attached_light.on
+	attached_light.update_brightness()
+	to_chat(user, span_notice("You toggle the helmet light [attached_light.on ? "on" : "off"]."))
+	playsound(user, 'sound/weapons/empty.ogg', 100, TRUE)
+	update_helmlight()
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/proc/update_helmlight()
+	update_icon()
+	for(var/datum/action/A in actions)
+		A.UpdateButtonIcon()
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/update_icon_state()
+	. = ..()
+	if(attached_light?.on)
+		icon_state = "[initial(icon_state)]-flight-on"
+	else if(attached_light)
+		icon_state = "[initial(icon_state)]-flight"
+	else
+		icon_state = initial(icon_state)
+
+/obj/item/clothing/head/ego_hat/flashlight_helmet/ComponentInitialize()
+	. = ..()
+	AddElement(/datum/element/update_icon_updates_onmob)
+
+// HELLFIRE ROOSTER HELMET
+/obj/item/clothing/head/ego_hat/flashlight_helmet/hellfire
+	name = "r-corp hellfire rooster helmet"
+	desc = "A custom made helmet worn by hellfire roosters."
+	icon_state = "hunter"
+	inhand_icon_state = "hunter"
 
 // HEAVY HELLFIRE ROOSTER ARMOR - Upgraded version with better resistances
 /obj/item/clothing/suit/armor/ego_gear/hellfire/heavy
@@ -128,9 +194,9 @@
 	desc = "Reinforced armor for veteran hellfire units. Offers superior protection while maintaining fire immunity. Requires Hellfire Rooster combat implant."
 	color = "#b41e00"
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 50, PALE_DAMAGE = 50, FIRE = 100)
-	hat = /obj/item/clothing/head/ego_hat/helmet/hellfire/heavy
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/hellfire/heavy
 
-/obj/item/clothing/head/ego_hat/helmet/hellfire/heavy
+/obj/item/clothing/head/ego_hat/flashlight_helmet/hellfire/heavy
 	name = "r-corp heavy hellfire helmet"
 	desc = "A reinforced helmet worn by veteran hellfire roosters."
 	color = "#b41e00"
@@ -158,7 +224,7 @@
 	icon_state = "venom"
 	inhand_icon_state = "hostrench"
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 50, PALE_DAMAGE = 30, ACID = 100, TOX = 100)
-	hat = /obj/item/clothing/head/ego_hat/helmet/venom
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/venom
 	var/venom_immune = TRUE // Flag for venom weapons to check
 
 /obj/item/clothing/suit/armor/ego_gear/venom/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
@@ -174,15 +240,11 @@
 
 	return ..()
 
-/obj/item/clothing/head/ego_hat/helmet/venom
+/obj/item/clothing/head/ego_hat/flashlight_helmet/venom
 	name = "r-corp venom rattlesnake helmet"
 	desc = "A custom made helmet worn by venom rattlesnakes, with sealed breathing apparatus to prevent self-poisoning."
-	icon = 'icons/obj/clothing/masks.dmi'
-	worn_icon = 'icons/mob/clothing/mask.dmi'
 	icon_state = "venom"
 	inhand_icon_state = "venom"
-	resistance_flags = FIRE_PROOF | ACID_PROOF
-	flags_inv = HIDEFACIALHAIR|HIDEFACE|HIDEEYES|HIDEEARS|HIDEHAIR|HIDESNOUT
 
 // HEAVY VENOM RATTLESNAKE ARMOR - Upgraded version with better resistances
 /obj/item/clothing/suit/armor/ego_gear/venom/heavy
@@ -190,9 +252,9 @@
 	desc = "Reinforced armor for veteran venom units. Offers superior protection while maintaining acid and toxin immunity. Requires Venom Rattlesnake combat implant."
 	color = "#509b50"
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 50, BLACK_DAMAGE = 70, PALE_DAMAGE = 50, ACID = 100, TOX = 100)
-	hat = /obj/item/clothing/head/ego_hat/helmet/venom/heavy
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/venom/heavy
 
-/obj/item/clothing/head/ego_hat/helmet/venom/heavy
+/obj/item/clothing/head/ego_hat/flashlight_helmet/venom/heavy
 	name = "r-corp heavy venom helmet"
 	desc = "A reinforced helmet worn by veteran venom rattlesnakes."
 	color = "#509b50"
@@ -225,7 +287,7 @@
 	icon_state = "storm"
 	inhand_icon_state = "hostrench"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)
-	hat = /obj/item/clothing/head/ego_hat/helmet/storm
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/storm
 
 /obj/item/clothing/suit/armor/ego_gear/storm/mob_can_equip(mob/living/M, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
 	if(!ishuman(M))
@@ -240,15 +302,11 @@
 
 	return ..()
 
-/obj/item/clothing/head/ego_hat/helmet/storm
+/obj/item/clothing/head/ego_hat/flashlight_helmet/storm
 	name = "r-corp storm ram helmet"
 	desc = "A custom made helmet worn by storm rams, featuring enhanced sensory systems for rapid response."
-	icon = 'icons/obj/clothing/masks.dmi'
-	worn_icon = 'icons/mob/clothing/mask.dmi'
 	icon_state = "storm"
 	inhand_icon_state = "storm"
-	resistance_flags = FIRE_PROOF | ACID_PROOF
-	flags_inv = HIDEFACIALHAIR|HIDEFACE|HIDEEYES|HIDEEARS|HIDEHAIR|HIDESNOUT
 
 // HEAVY STORM RAM ARMOR - Upgraded version with better resistances
 /obj/item/clothing/suit/armor/ego_gear/storm/heavy
@@ -256,9 +314,9 @@
 	desc = "Reinforced armor for veteran storm units. Offers superior protection while maintaining mobility enhancements. Requires Storm Ram combat implant."
 	color = "#3939ab"
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 70, BLACK_DAMAGE = 80, PALE_DAMAGE = 70)
-	hat = /obj/item/clothing/head/ego_hat/helmet/storm/heavy
+	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/storm/heavy
 
-/obj/item/clothing/head/ego_hat/helmet/storm/heavy
+/obj/item/clothing/head/ego_hat/flashlight_helmet/storm/heavy
 	name = "r-corp heavy storm helmet"
 	desc = "A reinforced helmet worn by veteran storm rams."
 	color = "#3939ab"

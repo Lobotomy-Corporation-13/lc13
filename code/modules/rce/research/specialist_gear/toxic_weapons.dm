@@ -128,6 +128,7 @@
 	var/turf/origin = get_turf(user)
 	var/list/affected_turfs = list()
 	var/facing = get_dir(user, target)
+	var/is_diagonal = (facing & (facing - 1)) // Check if diagonal (has multiple direction bits)
 
 	// Get cone pattern
 	for(var/i = 1 to cone_range)
@@ -135,16 +136,38 @@
 		if(!T)
 			break
 		origin = T
-		affected_turfs += T
+		affected_turfs |= T
 
 		// Add side tiles for cone effect
 		if(i > 1)
 			var/turf/left = get_step(T, turn(facing, 90))
 			var/turf/right = get_step(T, turn(facing, -90))
 			if(left)
-				affected_turfs += left
+				affected_turfs |= left
 			if(right)
-				affected_turfs += right
+				affected_turfs |= right
+
+			// For diagonal directions, fill in the gaps by adding adjacent cardinal tiles
+			if(is_diagonal)
+				// Get the two cardinal components of the diagonal
+				var/cardinal1 = facing & (NORTH|SOUTH)
+				var/cardinal2 = facing & (EAST|WEST)
+				// Add tiles adjacent to center in cardinal directions
+				var/turf/adj1 = get_step(T, cardinal1)
+				var/turf/adj2 = get_step(T, cardinal2)
+				if(adj1)
+					affected_turfs |= adj1
+				if(adj2)
+					affected_turfs |= adj2
+				// Also fill gaps next to side tiles
+				if(left)
+					var/turf/left_fill = get_step(left, cardinal1)
+					if(left_fill)
+						affected_turfs |= left_fill
+				if(right)
+					var/turf/right_fill = get_step(right, cardinal2)
+					if(right_fill)
+						affected_turfs |= right_fill
 
 	// Apply effects
 	playsound(src, 'sound/effects/venom.ogg', 50, TRUE)

@@ -41,9 +41,12 @@
 	. = ..()
 	if(isliving(target))
 		var/mob/living/L = target
-		// Check if it's a valid target (X-Corp or Clan mob)
+		// Check if it's a valid target (X-Corp, Clan, or Bloodfiend mob)
 		if(istype(L, /mob/living/simple_animal/hostile/greed) || \
-		   istype(L, /mob/living/simple_animal/hostile/clan))
+		   istype(L, /mob/living/simple_animal/hostile/clan) || \
+		   istype(L, /mob/living/simple_animal/hostile/bloodfiend_boss) || \
+		   istype(L, /mob/living/simple_animal/hostile/bloodfiend_mook) || \
+		   istype(L, /mob/living/simple_animal/hostile/bloodbag))
 			// Add harvest component if not already marked
 			if(!L.GetComponent(/datum/component/rce_harvest_mark))
 				L.AddComponent(/datum/component/rce_harvest_mark)

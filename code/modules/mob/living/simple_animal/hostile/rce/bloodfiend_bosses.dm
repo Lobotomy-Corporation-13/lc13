@@ -46,6 +46,10 @@
 	var/boss_death_signal
 	/// Reference to the landmark that spawned this boss (for weakened variants)
 	var/obj/effect/landmark/bloodfiend_boss/home_landmark
+	/// Looping sound datum for boss theme
+	var/datum/looping_sound/boss_soundloop
+	/// Whether the theme has started playing
+	var/theme_playing = FALSE
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/Initialize()
 	. = ..()
@@ -102,7 +106,18 @@
 		var/mob/living/L = target
 		L.apply_lc_bleed(bleed_stacks)
 
+/mob/living/simple_animal/hostile/bloodfiend_boss/adjustHealth(amount, updating_health, forced)
+	. = ..()
+	// Start theme music on first damage
+	if(!theme_playing && amount > 0 && boss_soundloop)
+		theme_playing = TRUE
+		boss_soundloop.start()
+
 /mob/living/simple_animal/hostile/bloodfiend_boss/death(gibbed)
+	// Stop theme music on death
+	if(boss_soundloop)
+		boss_soundloop.stop()
+		QDEL_NULL(boss_soundloop)
 	. = ..()
 	if(boss_death_signal)
 		SEND_SIGNAL(SSdcs, boss_death_signal, src)
@@ -156,13 +171,13 @@
 	/// Length of the slash attack
 	var/slash_length = 4
 	/// Damage dealt by the slash attack
-	var/slash_damage = 30
+	var/slash_damage = 75
 	/// Cooldown tracker for dash attack
 	var/dash_cooldown = 0
 	/// Time between dash attacks
 	var/dash_cooldown_time = 15 SECONDS
 	/// Damage dealt by the dash attack
-	var/dash_damage = 50
+	var/dash_damage = 150
 	/// Bleed stacks applied by dash
 	var/dash_bleed = 8
 	/// Lines spoken during slash attack
@@ -179,6 +194,10 @@
 		"A little trim here and there...!",
 		"You'll look so pretty when I'm done!"
 	)
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/barber/Initialize()
+	. = ..()
+	boss_soundloop = new /datum/looping_sound/bloodfiend_barber(list(src), FALSE)
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber/face_atom()
 	if(!can_act)
@@ -218,7 +237,8 @@
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber/bullet_act(obj/projectile/P)
 	if(dashing)
-		P.damage *= 0.25 // 75% damage reduction while dashing
+		P.Destroy()
+		new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
 	return ..()
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber/attacked_by(obj/item/I, mob/living/user)
@@ -245,82 +265,74 @@
 	var/list/area_of_effect = list()
 	var/list/middle_line = list()
 
+	// Determine perpendicular and opposite directions
+	var/perp_dir1
+	var/perp_dir2
+	var/opposite_dir
 	switch(dir_to_target)
-		if(EAST)
-			middle_line = getline(get_step_towards(source_turf, slash_target), get_ranged_target_turf(source_turf, EAST, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, slash_width)))
-					if(Y.density)
-						break
-					if(Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, slash_width)))
-					if(U.density)
-						break
-					if(U in area_of_effect)
-						continue
-					area_of_effect += U
-		if(WEST)
-			middle_line = getline(get_step_towards(source_turf, slash_target), get_ranged_target_turf(source_turf, WEST, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, slash_width)))
-					if(Y.density)
-						break
-					if(Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, slash_width)))
-					if(U.density)
-						break
-					if(U in area_of_effect)
-						continue
-					area_of_effect += U
-		if(SOUTH)
-			middle_line = getline(get_step_towards(source_turf, slash_target), get_ranged_target_turf(source_turf, SOUTH, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, slash_width)))
-					if(Y.density)
-						break
-					if(Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, slash_width)))
-					if(U.density)
-						break
-					if(U in area_of_effect)
-						continue
-					area_of_effect += U
 		if(NORTH)
-			middle_line = getline(get_step_towards(source_turf, slash_target), get_ranged_target_turf(source_turf, NORTH, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, slash_width)))
-					if(Y.density)
-						break
-					if(Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, slash_width)))
-					if(U.density)
-						break
-					if(U in area_of_effect)
-						continue
-					area_of_effect += U
+			perp_dir1 = EAST
+			perp_dir2 = WEST
+			opposite_dir = SOUTH
+		if(SOUTH)
+			perp_dir1 = EAST
+			perp_dir2 = WEST
+			opposite_dir = NORTH
+		if(EAST)
+			perp_dir1 = NORTH
+			perp_dir2 = SOUTH
+			opposite_dir = WEST
+		if(WEST)
+			perp_dir1 = NORTH
+			perp_dir2 = SOUTH
+			opposite_dir = EAST
 		else
+			// Fallback for non-cardinal directions
 			for(var/turf/T in view(1, src))
 				if(T.density)
 					continue
 				if(T in area_of_effect)
 					continue
 				area_of_effect |= T
+
+	if(dir_to_target in GLOB.cardinals)
+		// Add Barber's own turf and perpendicular tiles (2 to each side)
+		area_of_effect += source_turf
+		for(var/turf/T in getline(source_turf, get_ranged_target_turf(source_turf, perp_dir1, slash_width)))
+			if(T.density)
+				break
+			area_of_effect |= T
+		for(var/turf/T in getline(source_turf, get_ranged_target_turf(source_turf, perp_dir2, slash_width)))
+			if(T.density)
+				break
+			area_of_effect |= T
+
+		// Add one row behind Barber (with perpendicular spread)
+		var/turf/behind_turf = get_step(source_turf, opposite_dir)
+		if(behind_turf && !behind_turf.density)
+			area_of_effect |= behind_turf
+			for(var/turf/T in getline(behind_turf, get_ranged_target_turf(behind_turf, perp_dir1, slash_width)))
+				if(T.density)
+					break
+				area_of_effect |= T
+			for(var/turf/T in getline(behind_turf, get_ranged_target_turf(behind_turf, perp_dir2, slash_width)))
+				if(T.density)
+					break
+				area_of_effect |= T
+
+		// Add the forward slash area (starting from Barber's position, going forward)
+		middle_line = getline(source_turf, get_ranged_target_turf(source_turf, dir_to_target, slash_length))
+		for(var/turf/T in middle_line)
+			if(T.density)
+				break
+			for(var/turf/Y in getline(T, get_ranged_target_turf(T, perp_dir1, slash_width)))
+				if(Y.density)
+					break
+				area_of_effect |= Y
+			for(var/turf/U in getline(T, get_ranged_target_turf(T, perp_dir2, slash_width)))
+				if(U.density)
+					break
+				area_of_effect |= U
 
 	if(!LAZYLEN(area_of_effect))
 		return
@@ -626,6 +638,10 @@
 		"Such bounty must not be wasted!"
 	)
 
+/mob/living/simple_animal/hostile/bloodfiend_boss/priest/Initialize()
+	. = ..()
+	boss_soundloop = new /datum/looping_sound/bloodfiend_priest(list(src), FALSE)
+
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/Life()
 	. = ..()
 	if(stat == DEAD)
@@ -889,6 +905,7 @@
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/Initialize()
 	. = ..()
+	boss_soundloop = new /datum/looping_sound/bloodfiend_dulcinea(list(src), FALSE)
 	// Spawn initial bodyguards
 	addtimer(CALLBACK(src, PROC_REF(SpawnInitialBodyguards)), 1 SECONDS)
 
@@ -1269,6 +1286,11 @@
 		"DIE FOR THE HEART!!"
 	)
 
+/mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened/Initialize()
+	. = ..()
+	// Don't use individual soundloop - trio theme is handled by barber landmark
+	QDEL_NULL(boss_soundloop)
+
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber/weakened/Life()
 	. = ..()
 	if(stat == DEAD)
@@ -1312,6 +1334,11 @@
 		"Father forgive me... FATHER FORGIVE ME!!"
 	)
 
+/mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened/Initialize()
+	. = ..()
+	// Don't use individual soundloop - trio theme is handled by barber landmark
+	QDEL_NULL(boss_soundloop)
+
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest/weakened/Life()
 	. = ..()
 	if(stat == DEAD)
@@ -1351,6 +1378,11 @@
 		"We chose the Heart... and we would again.",
 		"This is what we wanted."
 	)
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/Initialize()
+	. = ..()
+	// Don't use individual soundloop - trio theme is handled by barber landmark
+	QDEL_NULL(boss_soundloop)
 
 /// Override to prevent spawning bodyguards
 /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened/SpawnInitialBodyguards()
@@ -1569,3 +1601,25 @@ GLOBAL_LIST_EMPTY(bloodfiend_ferris_wheels)
 /obj/effect/landmark/bloodfiend_boss/dulcinea
 	name = "dulcinea boss spawn"
 	boss_type = /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea/weakened
+	/// Trio theme soundloop - controlled by dulcinea landmark
+	var/datum/looping_sound/bloodfiend_trio/trio_soundloop
+
+/obj/effect/landmark/bloodfiend_boss/dulcinea/SpawnBoss()
+	. = ..()
+	// Start trio theme when dulcinea spawns
+	if(!trio_soundloop)
+		trio_soundloop = new(list(src), FALSE)
+	trio_soundloop.start()
+
+/obj/effect/landmark/bloodfiend_boss/dulcinea/SpawnFinalPortal()
+	// Stop trio music when portal spawns
+	if(trio_soundloop)
+		trio_soundloop.stop()
+		QDEL_NULL(trio_soundloop)
+	. = ..()
+
+/obj/effect/landmark/bloodfiend_boss/dulcinea/Destroy()
+	if(trio_soundloop)
+		trio_soundloop.stop()
+		QDEL_NULL(trio_soundloop)
+	return ..()

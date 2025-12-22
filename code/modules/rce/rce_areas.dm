@@ -5,6 +5,7 @@
 	has_gravity = STANDARD_GRAVITY
 	sound_environment = SOUND_AREA_LAVALAND
 	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
+	outdoors = TRUE
 
 /area/rce/rcorp_base
 	name = "R-Corp FOB"

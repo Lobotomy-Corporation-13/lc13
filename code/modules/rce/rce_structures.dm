@@ -18,6 +18,8 @@
 	var/max_mobs = 18
 	var/generate_new_mob_time = NONE
 	var/raider = FALSE
+	/// Area number for this den (1, 2, or 3). Dens won't spawn if boss of previous area is alive.
+	var/area_num = 0
 
 /obj/structure/den/rce/announcer
 	light_range = 5
@@ -77,6 +79,18 @@
 		target = SSgamedirector.GetRandomRaiderTarget()
 	AddComponent(/datum/component/monwave_spawner, attack_target = target, max_mobs = max_mobs, assault_type = assault_type, new_wave_order = moblist, try_for_announcer = announce, new_wave_cooldown_time = generate_new_mob_time, raider = raider, register = TRUE)
 
+/// Checks if this den can spawn mobs based on area progression (previous area's boss must be dead)
+/obj/structure/den/rce/proc/CanSpawnInArea()
+	if(area_num <= 1)
+		return TRUE  // Area 1 dens (or dens with no area) always spawn
+	// Check if the boss of the previous area is dead
+	switch(area_num)
+		if(2)
+			return SSgamedirector.bloodfiend_barber_dead
+		if(3)
+			return SSgamedirector.bloodfiend_priest_dead
+	return TRUE
+
 /obj/structure/den/rce/blood
 	name = "Blood Attack Pylon Area 1"
 	desc = "A corrupted structure pulsing with crimson energy. Best destroy this!"
@@ -87,6 +101,7 @@
 	light_range = 4
 	light_power = 2
 	max_integrity = 500
+	area_num = 1
 	moblist = list(
 		/mob/living/simple_animal/hostile/bloodbag/fashionista = 4,
 		/mob/living/simple_animal/hostile/bloodfiend_mook/fashionista = 2,
@@ -112,6 +127,7 @@
 
 /obj/structure/den/rce/blood/area2
 	name = "Blood Attack Pylon Area 2"
+	area_num = 2
 	moblist = list(
 		/mob/living/simple_animal/hostile/bloodbag/priest = 3,
 		/mob/living/simple_animal/hostile/bloodbag/priest_alt = 3,
@@ -120,6 +136,7 @@
 
 /obj/structure/den/rce/blood/area3
 	name = "Blood Attack Pylon Area 3"
+	area_num = 3
 	moblist = list(
 		/mob/living/simple_animal/hostile/bloodbag/parade = 4,
 		/mob/living/simple_animal/hostile/bloodfiend_mook/parade = 2,
@@ -287,6 +304,76 @@
 	color = "#AA00AA"
 	light_color = "#AA00AA"
 	boss_death_signal = COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED
+
+// ============================================
+// DEN-BASED AREA BLOCKERS - Destroyed when all dens in an area are destroyed
+// ============================================
+
+/obj/structure/area_blocker/den
+	name = "Den Barrier"
+	desc = "A barrier that blocks passage until all dens in this area are destroyed."
+	boss_death_signal = null  // We don't use boss signals, we track dens
+	/// Area number this blocker is associated with
+	var/blocker_area = 1
+	/// List of dens we're tracking
+	var/list/tracked_dens = list()
+
+/obj/structure/area_blocker/den/Initialize()
+	. = ..()
+	// Find and track all dens in our area after a short delay (to let dens initialize first)
+	addtimer(CALLBACK(src, PROC_REF(FindDens)), 1 SECONDS)
+
+/obj/structure/area_blocker/den/Destroy()
+	// Unregister from all tracked dens
+	for(var/obj/structure/den/rce/D in tracked_dens)
+		UnregisterSignal(D, COMSIG_PARENT_QDELETING)
+	tracked_dens.Cut()
+	return ..()
+
+/// Finds all dens with matching area_num and registers for their destruction
+/obj/structure/area_blocker/den/proc/FindDens()
+	// Use the spawners list from gamedirector to find dens
+	for(var/datum/component/monwave_spawner/spawner in SSgamedirector.spawners)
+		if(!spawner.parent || !istype(spawner.parent, /obj/structure/den/rce))
+			continue
+		var/obj/structure/den/rce/den = spawner.parent
+		if(den.area_num == blocker_area)
+			tracked_dens += den
+			RegisterSignal(den, COMSIG_PARENT_QDELETING, PROC_REF(OnDenDestroyed))
+	// If no dens found or all already destroyed, remove blocker
+	if(!length(tracked_dens))
+		OnAllDensDestroyed()
+
+/// Called when a tracked den is destroyed
+/obj/structure/area_blocker/den/proc/OnDenDestroyed(datum/source)
+	SIGNAL_HANDLER
+	tracked_dens -= source
+	if(!length(tracked_dens))
+		INVOKE_ASYNC(src, PROC_REF(OnAllDensDestroyed))
+
+/// Called when all tracked dens have been destroyed
+/obj/structure/area_blocker/den/proc/OnAllDensDestroyed()
+	playsound(loc, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/beam_out(get_turf(src))
+	qdel(src)
+
+/obj/structure/area_blocker/den/area1
+	name = "Area 1 Den Barrier"
+	blocker_area = 1
+	color = "#FF0000"
+	light_color = "#FF0000"
+
+/obj/structure/area_blocker/den/area2
+	name = "Area 2 Den Barrier"
+	blocker_area = 2
+	color = "#888888"
+	light_color = "#888888"
+
+/obj/structure/area_blocker/den/area3
+	name = "Area 3 Den Barrier"
+	blocker_area = 3
+	color = "#AA00AA"
+	light_color = "#AA00AA"
 
 // Resource Gate - blocks players until they have at least one active resource well
 // Re-activates during final wave to block players again

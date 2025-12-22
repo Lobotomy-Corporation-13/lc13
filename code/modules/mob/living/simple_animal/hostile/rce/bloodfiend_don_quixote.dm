@@ -557,6 +557,8 @@
 	// Final Blow Sequence (Sancho kills Don)
 	/// Whether the final blow sequence has been triggered
 	var/final_blow_triggered = FALSE
+	/// Whether Don is currently in the final clash phase (prevents can_act from being re-enabled by other skills)
+	var/in_final_clash = FALSE
 	/// Lance overlay for final clash
 	var/mutable_appearance/lance_overlay
 
@@ -660,28 +662,28 @@
 	sleep(2 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	sancho.say("You, who dreamed so much... who believed we could live alongside humans...")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	sancho.say("The Heart of Greed has stolen everything from you. Your dream. Your mind. Your family.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	sancho.say("How could you let it take you too?")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	// Don Quixote responds
@@ -689,42 +691,42 @@
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	say("But that dream was never meant to succeed. It only brought suffering to those I loved.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	say("Centuries of starvation. Dulcinea's despair. The Barber's madness. The Priest's hollow faith.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	say("I could not build a place where bloodfiends and humans could coexist. I failed them all.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	say("So I accepted that my dream has ended. The Heart offered a more... stable dream.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	say("Its dream has taken over me now. And I am... at peace.")
 	sleep(3 SECONDS)
 	if(QDELETED(src) || stat == DEAD || QDELETED(sancho) || sancho.stat == DEAD)
 		if(!QDELETED(sancho))
-			sancho.can_act = TRUE
+			sancho.TryEnableActions()
 		FinishLandingSequence()
 		return
 	// Sancho's final response
@@ -732,7 +734,7 @@
 	sleep(2 SECONDS)
 	if(!QDELETED(sancho))
 		walk_to(sancho, null) // Stop walking
-		sancho.can_act = TRUE
+		sancho.TryEnableActions()
 		sancho.in_dialogue = FALSE
 		sancho.ignore_don = FALSE // Now Sancho can target Don
 	FinishLandingSequence()
@@ -741,13 +743,20 @@
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/FinishLandingSequence()
 	if(QDELETED(src) || stat == DEAD)
 		return
-	can_act = TRUE
+	TryEnableActions()
 	status_flags &= ~GODMODE // No longer immune to damage
 	// Initialize cooldowns
 	line_mark_cooldown = world.time + 5 SECONDS
 	multislash_cooldown = world.time + 3 SECONDS
 	drain_cooldown = world.time + 10 SECONDS
 	tracking_shot_cooldown = world.time + 2 SECONDS
+
+/// Safely re-enables can_act only if not in a protected phase (greed orb or final clash)
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/TryEnableActions()
+	if(performing_orb_attack || in_final_clash)
+		return FALSE
+	can_act = TRUE
+	return TRUE
 
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/Life()
 	. = ..()
@@ -913,7 +922,7 @@
 			continue // Not right next to Don Quixote
 		possible_turfs += T
 	if(!length(possible_turfs))
-		can_act = TRUE
+		TryEnableActions()
 		return
 	playsound(src, 'sound/abnormalities/nosferatu/special_start.ogg', 75, TRUE)
 	if(prob(40))
@@ -993,7 +1002,7 @@
 	// Clean up marks
 	QDEL_LIST(marks)
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
-	can_act = TRUE
+	TryEnableActions()
 
 // ============================================
 // DON QUIXOTE - SKILL 2: BLOOD MULTISLASH
@@ -1083,7 +1092,7 @@
 		bloodfeast.AdjustBlood(total_hits * 100)
 		last_blood_check = -1
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
-	can_act = TRUE
+	TryEnableActions()
 
 // ============================================
 // DON QUIXOTE - SKILL 3: DRAIN BEAM ATTACK
@@ -1104,12 +1113,14 @@
 	for(var/mob/living/carbon/human/H in view(drain_range, src))
 		if(faction_check_mob(H))
 			continue
+		if(H.stat == DEAD)
+			continue
 		var/datum/beam/B = Beam(H, icon_state = "drainbeam", time = INFINITY, maxdistance = 50)
 		drain_targets[H] = B
 	if(!length(drain_targets))
 		// Restore normal resistances
 		ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.9, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3))
-		can_act = TRUE
+		TryEnableActions()
 		return
 	// Process drain for 6 seconds
 	var/current_damage = drain_base_damage
@@ -1124,7 +1135,7 @@
 					qdel(B)
 			// Restore normal resistances
 			ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.9, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3))
-			can_act = TRUE
+			TryEnableActions()
 			return
 		loops_completed++
 		// Check each target
@@ -1168,7 +1179,7 @@
 	// Restore normal resistances
 	ChangeResistances(list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.9, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3))
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
-	can_act = TRUE
+	TryEnableActions()
 
 // ============================================
 // DON QUIXOTE - SKILL 4: TRACKING PROJECTILES
@@ -1354,8 +1365,8 @@
 	mob_biotypes = MOB_ORGANIC
 	move_to_delay = 0
 	stat_attack = HARD_CRIT
-	maxHealth = 1500
-	health = 1500
+	maxHealth = 750
+	health = 750
 	melee_damage_lower = 0
 	melee_damage_upper = 0
 	obj_damage = 0
@@ -1481,7 +1492,7 @@
 	// Remove GODMODE and enable actions
 	status_flags &= ~GODMODE
 	performing_orb_attack = FALSE
-	can_act = TRUE
+	TryEnableActions() // Use helper in case we're also in final clash
 	// Signal Sancho to exit shield stance
 	NotifySanchoShieldStance(FALSE)
 
@@ -1693,13 +1704,17 @@
 
 	// Phase 1: Setup
 	final_blow_triggered = TRUE
+	in_final_clash = TRUE
 	can_act = FALSE
 	status_flags |= GODMODE
 	health = maxHealth
 
+	sancho.in_final_clash = TRUE
 	sancho.can_act = FALSE
 	sancho.status_flags |= GODMODE
 	sancho.health = sancho.maxHealth
+	// Give Sancho hostile faction so she can damage Don
+	sancho.faction = list("hostile")
 
 	// Stop all movement
 	walk_to(src, null)

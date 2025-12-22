@@ -60,6 +60,14 @@ SUBSYSTEM_DEF(gamedirector)
 	/// Whether the Heart Research structure has been destroyed (disables raids and final wave)
 	var/heart_research_destroyed = FALSE
 
+	// Bloodfiend boss death tracking (for den spawn restrictions)
+	/// Whether the Barber boss has been killed
+	var/bloodfiend_barber_dead = FALSE
+	/// Whether the Priest boss has been killed
+	var/bloodfiend_priest_dead = FALSE
+	/// Whether Dulcinea boss has been killed
+	var/bloodfiend_dulcinea_dead = FALSE
+
 	// FoB entrance raid variables
 	var/fob_entrances_unlocked = FALSE
 	var/fob_unlock_time = 30 MINUTES
@@ -94,6 +102,10 @@ SUBSYSTEM_DEF(gamedirector)
 		RegisterSignal(SSdcs, COMSIG_GLOB_CREWMEMBER_JOINED, PROC_REF(OnPlayerJoined))
 		// Register for player death signals
 		RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(OnPlayerDeath))
+		// Register for bloodfiend boss death signals (for den spawn restrictions)
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_BARBER_DIED, PROC_REF(OnBarberDied))
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_PRIEST_DIED, PROC_REF(OnPriestDied))
+		RegisterSignal(SSdcs, COMSIG_GLOB_BLOODFIEND_DULCINEA_DIED, PROC_REF(OnDulcineaDied))
 		// Collect any round-start players after a delay (they spawn before this subsystem initializes)
 		addtimer(CALLBACK(src, PROC_REF(CollectRoundstartPlayers)), 400 SECONDS)
 
@@ -629,3 +641,16 @@ SUBSYSTEM_DEF(gamedirector)
 	else
 		evac_message = "Critical threat detected: A massive wave of greed will arrive in 10 minutes. Evacuate immediately."
 	SSshuttle.requestEvac(null, evac_message)
+
+// Bloodfiend boss death signal handlers (for den spawn restrictions)
+/datum/controller/subsystem/gamedirector/proc/OnBarberDied()
+	SIGNAL_HANDLER
+	bloodfiend_barber_dead = TRUE
+
+/datum/controller/subsystem/gamedirector/proc/OnPriestDied()
+	SIGNAL_HANDLER
+	bloodfiend_priest_dead = TRUE
+
+/datum/controller/subsystem/gamedirector/proc/OnDulcineaDied()
+	SIGNAL_HANDLER
+	bloodfiend_dulcinea_dead = TRUE

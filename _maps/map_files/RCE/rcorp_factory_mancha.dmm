@@ -1,17 +1,23 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "aa" = (
 /obj/structure/den/rce/high{
-	id = "righthigh"
+	id = "righthigh";
+	area_num = 3
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "ab" = (
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "ac" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "ae" = (
@@ -25,7 +31,9 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "ag" = (
 /turf/closed/indestructible/necropolis,
@@ -56,18 +64,22 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "au" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/cane,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "az" = (
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "aC" = (
@@ -79,7 +91,8 @@
 "aK" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "aO" = (
@@ -95,17 +108,20 @@
 "aU" = (
 /obj/structure/headpike,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "aV" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp)
 "aX" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "ba" = (
@@ -114,14 +130,17 @@
 	},
 /area/rce/xcorp/rce_2_1)
 "be" = (
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "bh" = (
 /obj/effect/turf_decal/trimline/purple/warning{
 	dir = 4
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "bm" = (
@@ -145,7 +164,9 @@
 "bv" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "bw" = (
 /obj/effect/decal/cleanable/dirt,
@@ -169,9 +190,17 @@
 "bQ" = (
 /obj/structure/table/wood/fancy/purple,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
+"bY" = (
+/obj/structure/mineral_door/iron,
+/obj/structure/area_blocker/den/area2,
+/turf/open/floor/stone{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_2)
 "cd" = (
 /turf/closed/mineral/ash_rock{
 	color = "#f06979"
@@ -189,7 +218,9 @@
 /obj/structure/limitedresourcepoint/red{
 	amount_left = 10
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "cl" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
@@ -204,12 +235,15 @@
 "cq" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/cane,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "cs" = (
 /obj/structure/resource_gate,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "cz" = (
@@ -226,7 +260,9 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 5
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "cC" = (
 /obj/structure/table/abductor{
@@ -241,15 +277,20 @@
 /area/rce/rcorp_base)
 "cE" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "cK" = (
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "cN" = (
 /obj/effect/landmark/clan_raid_spot/orange,
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "cO" = (
@@ -267,9 +308,12 @@
 /area/rce/rcorp_base)
 "cQ" = (
 /obj/structure/den/rce{
-	id = "rightmid"
+	id = "rightmid";
+	area_num = 2
 	},
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "cS" = (
 /obj/effect/turf_decal/sand/plating,
@@ -277,10 +321,14 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "cT" = (
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "cX" = (
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "cZ" = (
 /obj/structure/rack,
@@ -304,13 +352,8 @@
 /area/rce/rcorp_base)
 "di" = (
 /turf/open/floor/wood{
-	color = "#990012"
-	},
-/area/rce/xcorp/rce_0_0)
-"dk" = (
-/obj/structure/resourcepoint,
-/turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "dm" = (
@@ -322,7 +365,9 @@
 /area/rce/rcorp_base)
 "do" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "dy" = (
 /turf/closed/indestructible/iron{
@@ -331,7 +376,9 @@
 /area/rce/xcorp/rce_1_0)
 "dB" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "dD" = (
 /obj/structure/rack,
@@ -341,7 +388,8 @@
 /area/rce/rcorp_base)
 "dG" = (
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "dI" = (
@@ -349,7 +397,8 @@
 /area/rce/xcorp/rce_2_2)
 "dO" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "dR" = (
@@ -373,7 +422,9 @@
 /area/rce/rcorp_base)
 "ea" = (
 /obj/structure/resourcepoint/blue,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "ed" = (
 /obj/effect/turf_decal/delivery,
@@ -396,7 +447,9 @@
 	},
 /area/rce/xcorp/rce_1_1)
 "ef" = (
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "eh" = (
 /obj/effect/turf_decal/delivery,
@@ -408,7 +461,8 @@
 "ej" = (
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "el" = (
@@ -417,7 +471,9 @@
 /area/rce/xcorp/rce_2_2)
 "eo" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "et" = (
 /obj/structure/spacevine,
@@ -450,17 +506,21 @@
 	set_cap = 3;
 	set_luminosity = 24
 	},
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/boss)
 "eJ" = (
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "eK" = (
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "eL" = (
@@ -470,12 +530,19 @@
 /area/rce/rcorp_base)
 "eP" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "fa" = (
 /turf/closed/indestructible/necropolis,
 /area/rce/xcorp/boss)
+"fb" = (
+/mob/living/simple_animal/hostile/bloodfiend_mook/priest,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_3)
 "fd" = (
 /obj/effect/landmark/rce_arena_teleport,
 /obj/effect/light_emitter{
@@ -494,7 +561,8 @@
 	set_luminosity = 24
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "fi" = (
@@ -507,14 +575,18 @@
 "fk" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "fl" = (
 /obj/structure/den/rce{
-	id = "leftmid"
+	id = "leftmid";
+	area_num = 2
 	},
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "fn" = (
 /obj/structure/mannequin,
@@ -538,15 +610,24 @@
 /area/rce/xcorp/rce_2_0)
 "fG" = (
 /obj/structure/den/rce{
-	id = "leftmid"
+	id = "leftmid";
+	area_num = 2
 	},
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "fO" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/server/presets/service,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/rce/rcorp_base)
+"fQ" = (
+/mob/living/simple_animal/hostile/bloodfiend_mook/priest,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_0)
 "fR" = (
 /obj/machinery/door/airlock/survival_pod{
 	name = "raven MP prep";
@@ -565,7 +646,9 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "fZ" = (
 /obj/effect/turf_decal/delivery,
@@ -591,7 +674,8 @@
 /area/rce/rcorp_base)
 "ge" = (
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "gg" = (
@@ -613,47 +697,58 @@
 	anchored = 1
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
-"gr" = (
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/rce/xcorp/rce_2_1)
-"gs" = (
+"gp" = (
 /obj/effect/turf_decal/box/red,
 /obj/effect/turf_decal/delivery/red,
 /obj/effect/landmark/rce_target/high_level{
-	id = "righthigh"
+	id = "lefthigh"
 	},
-/turf/open/floor/mineral/plastitanium,
-/area/rce/xcorp/rce_2_3)
+/turf/open/floor/mineral/plastitanium{
+	intact = 0
+	},
+/area/rce/xcorp/rce_2_0)
+"gr" = (
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/rce/xcorp/rce_2_1)
 "gx" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
 /mob/living/simple_animal/hostile/bloodfiend_boss/dulcinea,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "gE" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "gN" = (
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "gP" = (
 /obj/structure/headpike,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "gQ" = (
 /obj/structure/table/reinforced,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "gR" = (
 /turf/closed/indestructible/iron{
@@ -663,7 +758,9 @@
 "gU" = (
 /obj/structure/mineral_door/iron,
 /obj/structure/curtain/bounty,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "gW" = (
 /obj/machinery/telecomms/broadcaster/preset_left,
@@ -705,7 +802,8 @@
 "hx" = (
 /obj/effect/landmark/clan_raid_spot/silver,
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "hz" = (
@@ -715,7 +813,9 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "hA" = (
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "hB" = (
 /obj/effect/turf_decal/siding/purple{
@@ -748,12 +848,15 @@
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp/rce_2_2)
 "hO" = (
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/boss)
 "hQ" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "hU" = (
@@ -761,7 +864,8 @@
 	dir = 8
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "hY" = (
@@ -808,7 +912,9 @@
 /area/rce/rcorp_base)
 "iv" = (
 /obj/structure/player_blocker,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "iy" = (
 /obj/structure/flora/tree/dead,
@@ -829,6 +935,16 @@
 /obj/item/conveyor_switch_construct,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
+"iF" = (
+/obj/structure/den/rce/mid{
+	id = "lefthigh";
+	area_num = 3
+	},
+/turf/open/floor/plasteel/checker{
+	color = "#c963ff";
+	intact = 0
+	},
+/area/rce/xcorp/rce_2_1)
 "iH" = (
 /obj/structure/flora/ash/fern,
 /turf/open/floor/plating/ashplanet/ash{
@@ -853,18 +969,14 @@
 /obj/structure/railing{
 	dir = 4
 	},
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "iW" = (
 /obj/structure/mineral_door/iron,
 /turf/closed/mineral/ash_rock,
 /area/rce/xcorp/rce_1_0)
-"jc" = (
-/obj/structure/area_blocker,
-/turf/open/floor/stone{
-	color = "#f06979"
-	},
-/area/rce/xcorp/rce_0_1)
 "jd" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/glass,
@@ -876,7 +988,8 @@
 /area/rce/xcorp/rce_0_1)
 "ji" = (
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "jm" = (
@@ -889,12 +1002,14 @@
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "jt" = (
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "jv" = (
@@ -903,14 +1018,17 @@
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "jx" = (
 /obj/structure/den/rce/blood/area2{
 	id = "rightmid"
 	},
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "jB" = (
 /obj/structure/rack,
@@ -929,11 +1047,14 @@
 /area/rce/rcorp_base)
 "jG" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "jO" = (
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "jQ" = (
@@ -941,7 +1062,8 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "jV" = (
@@ -963,17 +1085,22 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "ka" = (
 /obj/effect/rune,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "kc" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "kf" = (
 /obj/structure/table/wood,
@@ -985,7 +1112,8 @@
 "kg" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "kl" = (
@@ -998,12 +1126,16 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_3)
 "km" = (
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "kp" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/effect/spawner/lootdrop/three_course_meal,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "kq" = (
 /turf/open/indestructible/necropolis/air,
@@ -1014,7 +1146,8 @@
 /area/rce/rcorp_base)
 "ku" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "kw" = (
@@ -1027,7 +1160,8 @@
 	name = "area 3 door"
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "kC" = (
@@ -1036,10 +1170,21 @@
 	},
 /turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
+"kD" = (
+/obj/effect/turf_decal/box/red,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/landmark/rce_target/high_level{
+	id = "righthigh"
+	},
+/turf/open/floor/mineral/plastitanium{
+	intact = 0
+	},
+/area/rce/xcorp/rce_2_3)
 "kH" = (
 /obj/structure/resource_gate,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "kJ" = (
@@ -1047,7 +1192,8 @@
 	anchored = 1
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "kM" = (
@@ -1065,7 +1211,9 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "kU" = (
 /obj/effect/landmark/lastwave_gateway/air,
@@ -1073,7 +1221,8 @@
 /area/rce/rcorp_base)
 "kY" = (
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "lb" = (
@@ -1089,7 +1238,8 @@
 "ld" = (
 /obj/structure/headpike,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "lf" = (
@@ -1109,27 +1259,34 @@
 /obj/structure/curtain/cloth{
 	color = "#c963ff"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "li" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 4
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "lp" = (
 /obj/structure/railing{
 	dir = 5
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "ls" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 5
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "lu" = (
 /obj/machinery/conveyor/auto,
@@ -1139,7 +1296,8 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew/right,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "lw" = (
@@ -1148,7 +1306,8 @@
 /area/rce/rcorp_base)
 "lD" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "lF" = (
@@ -1160,7 +1319,9 @@
 /area/rce/rcorp_base)
 "lI" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "lK" = (
 /obj/structure/rack,
@@ -1207,18 +1368,23 @@
 "lQ" = (
 /obj/structure/mineral_door/iron,
 /obj/structure/curtain/bounty,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "lS" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "lU" = (
 /obj/structure/mannequin{
 	anchored = 1
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "mb" = (
@@ -1227,7 +1393,8 @@
 	},
 /obj/structure/grille,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "md" = (
@@ -1250,14 +1417,18 @@
 /obj/structure/fluff/divine/convertaltar{
 	density = 1
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "mq" = (
 /obj/structure/curtain/cloth{
 	color = "#c963ff"
 	},
+/obj/structure/area_blocker/den/area3,
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "mt" = (
@@ -1270,7 +1441,9 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "mx" = (
 /obj/structure/table/reinforced,
@@ -1294,9 +1467,12 @@
 /area/rce/rcorp_base)
 "mF" = (
 /obj/structure/den/rce{
-	id = "righthigh"
+	id = "righthigh";
+	area_num = 3
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "mH" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
@@ -1308,16 +1484,21 @@
 	},
 /obj/structure/den/rce{
 	id = "rightlow";
-	assault_type = 2
+	assault_type = 2;
+	area_num = 1
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "mK" = (
 /obj/structure/barricade/sandbags,
 /turf/open/floor/plating/asteroid,
 /area/rce/rcorp_base)
 "mO" = (
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "mP" = (
 /turf/closed/mineral/ash_rock,
@@ -1341,13 +1522,18 @@
 /area/rce/rcorp_base)
 "mU" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "mY" = (
 /obj/structure/den/rce{
-	id = "righthigh"
+	id = "righthigh";
+	area_num = 3
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "nb" = (
 /obj/effect/turf_decal/delivery,
@@ -1369,7 +1555,9 @@
 /area/rce/rcorp_base)
 "ni" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "nj" = (
 /turf/closed/indestructible/syndicate,
@@ -1377,7 +1565,8 @@
 "nm" = (
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "nq" = (
@@ -1393,9 +1582,12 @@
 "nv" = (
 /obj/structure/den/rce{
 	id = "rightlow";
-	assault_type = 2
+	assault_type = 2;
+	area_num = 1
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "nx" = (
 /obj/structure/window/shuttle/survival_pod,
@@ -1412,7 +1604,9 @@
 "nE" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "nF" = (
 /obj/structure/mineral_door/sandstone{
@@ -1420,30 +1614,44 @@
 	name = "area 3 door"
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "nH" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
+"nI" = (
+/obj/structure/resourcepoint/orange,
+/turf/open/floor/stone{
+	color = "#e29eff";
+	intact = 0
+	},
+/area/rce/xcorp/rce_2_0)
 "nJ" = (
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "nL" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "nO" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "nR" = (
 /obj/structure/closet/secure_closet{
@@ -1467,21 +1675,28 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "nW" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "nY" = (
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "nZ" = (
 /obj/structure/table/wood/fancy/red,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "oc" = (
@@ -1507,14 +1722,27 @@
 /area/rce/rcorp_base)
 "on" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
+"ov" = (
+/obj/structure/mineral_door/iron,
+/obj/structure/area_blocker/den/area2,
+/turf/open/floor/stone{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_1)
 "ow" = (
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "oA" = (
 /obj/structure/table/wood/fancy/red,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "oB" = (
 /obj/effect/turf_decal/stripes/line{
@@ -1528,7 +1756,9 @@
 /area/rce/rcorp_base)
 "oK" = (
 /obj/structure/limitedresourcepoint/blue,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "oL" = (
 /obj/structure/table/wood,
@@ -1549,7 +1779,8 @@
 /area/rce/rcorp_base)
 "oN" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "oP" = (
@@ -1561,18 +1792,23 @@
 /area/rce/rcorp_base)
 "oW" = (
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "oX" = (
 /obj/structure/player_blocker,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "oZ" = (
 /obj/structure/mannequin{
 	anchored = 1
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "pb" = (
@@ -1586,19 +1822,13 @@
 "pc" = (
 /turf/closed/indestructible/necropolis,
 /area/rce/xcorp/rce_2_2)
-"pf" = (
-/obj/effect/turf_decal/box/red,
-/obj/effect/turf_decal/delivery/red,
-/obj/effect/landmark/rce_target/low_level{
-	id = "leftlow"
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/rce/xcorp/rce_0_0)
 "pg" = (
 /obj/structure/den/rce/blood{
 	id = "leftlow"
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "pi" = (
 /obj/structure/rack,
@@ -1612,7 +1842,8 @@
 /area/rce/rcorp_base)
 "pq" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "pt" = (
@@ -1625,7 +1856,9 @@
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp/rce_2_0)
 "pD" = (
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "pF" = (
 /obj/structure/table/wood,
@@ -1638,17 +1871,29 @@
 	color = "#c963ff";
 	name = "area 3 door"
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "pM" = (
 /obj/structure/headpike/bone,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
+"pP" = (
+/obj/structure/resourcepoint/silver,
+/turf/open/floor/stone{
+	color = "#e29eff";
+	intact = 0
+	},
+/area/rce/xcorp/rce_2_3)
 "pR" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "pV" = (
 /obj/effect/turf_decal/stripes/white/line,
@@ -1709,7 +1954,9 @@
 	},
 /area/rce/xcorp/rce_2_3)
 "qB" = (
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "qL" = (
 /obj/effect/decal/cleanable/confetti,
@@ -1722,45 +1969,45 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "qN" = (
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "qQ" = (
 /obj/effect/landmark/ferris_wheel_trigger,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "qS" = (
 /obj/structure/bed,
 /obj/item/bedsheet/chaplain,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
-"qV" = (
-/obj/effect/decal/cleanable/confetti,
-/obj/structure/den/rce/mid{
-	id = "righthigh"
-	},
-/turf/open/floor/plasteel/checker{
-	color = "#c963ff"
-	},
-/area/rce/xcorp/rce_2_0)
 "qX" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "qY" = (
-/obj/structure/den/rce/mid{
-	id = "righthigh"
+/obj/structure/den/rce/blood/area3{
+	id = "lefthigh"
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "ra" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "re" = (
@@ -1778,17 +2025,22 @@
 /area/rce/xcorp/rce_1_0)
 "rg" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/dark/side,
+/turf/open/floor/plasteel/dark/side{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "rn" = (
 /obj/structure/limitedresourcepoint/red,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "rq" = (
 /obj/effect/decal/cleanable/glass,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "rr" = (
@@ -1798,17 +2050,23 @@
 /area/rce/rcorp_base)
 "rt" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "rw" = (
 /obj/effect/decal/cleanable/confetti,
 /obj/structure/table/wood/fancy/purple,
 /obj/effect/spawner/lootdrop/three_course_meal,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "rA" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "rB" = (
 /obj/structure/flora/rock/pile{
@@ -1820,7 +2078,9 @@
 /area/rce/xcorp/rce_1_3)
 "rC" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "rE" = (
 /obj/structure/rack,
@@ -1834,16 +2094,31 @@
 /obj/structure/den/rce/blood/area3{
 	id = "righthigh"
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
+"rG" = (
+/obj/effect/turf_decal/box/red,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/landmark/rce_target/mid_level{
+	id = "rightmid"
+	},
+/turf/open/floor/mineral/plastitanium{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_3)
 "rP" = (
 /obj/structure/limitedresourcepoint/purple,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "rR" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "rW" = (
@@ -1863,7 +2138,9 @@
 /obj/structure/fluff/divine/convertaltar{
 	density = 1
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "sd" = (
 /obj/structure/mineral_door/sandstone{
@@ -1872,12 +2149,14 @@
 	desc = "A door made out of blood..."
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "se" = (
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "sf" = (
@@ -1885,19 +2164,24 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "sg" = (
 /obj/structure/mineral_door/sandstone{
 	color = "#c963ff";
 	name = "area 3 door"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "sk" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "sm" = (
@@ -1909,12 +2193,6 @@
 /obj/structure/rcorp_factory/stuntrapper,
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
-"ss" = (
-/obj/structure/resourcepoint/orange,
-/turf/open/floor/plating/ashplanet/ash{
-	color = "#da82ff"
-	},
-/area/rce/xcorp/rce_2_0)
 "su" = (
 /obj/machinery/conveyor/auto{
 	dir = 4
@@ -1948,10 +2226,6 @@
 /obj/item/food/canned/pcorp,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
-"sG" = (
-/obj/structure/area_blocker/area2,
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_1)
 "sI" = (
 /obj/structure/rack,
 /obj/item/clothing/suit/armor/ego_gear/rabbit/assault{
@@ -1987,12 +2261,15 @@
 	dir = 9
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "sY" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "sZ" = (
 /obj/structure/flora/tree/dead,
@@ -2044,7 +2321,9 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "tp" = (
 /obj/effect/turf_decal/delivery,
@@ -2055,7 +2334,9 @@
 /area/rce/rcorp_base)
 "tq" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "ts" = (
 /obj/structure/spacevine,
@@ -2064,7 +2345,8 @@
 "tt" = (
 /obj/structure/table/wood/fancy/purple,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "ty" = (
@@ -2083,7 +2365,8 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "tE" = (
@@ -2127,22 +2410,30 @@
 /area/rce/xcorp/rce_2_0)
 "tV" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "tY" = (
 /obj/structure/limitedresourcepoint/blue,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "ub" = (
 /obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "ud" = (
 /turf/closed/indestructible/fakeglass,
 /area/rce/xcorp/rce_1_3)
 "uf" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "ui" = (
 /turf/closed/indestructible/iron{
@@ -2154,7 +2445,8 @@
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "ul" = (
@@ -2162,7 +2454,9 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/glass,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "up" = (
 /obj/structure/flora/rock/pile{
@@ -2193,11 +2487,15 @@
 	anchored = 1;
 	pixel_x = -16
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "ux" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "uF" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -2205,7 +2503,8 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "uG" = (
@@ -2218,7 +2517,9 @@
 /area/rce/rcorp_base)
 "uI" = (
 /obj/structure/table/wood/fancy/red,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "uL" = (
 /obj/structure/bed/pod,
@@ -2275,11 +2576,15 @@
 	},
 /area/rce/xcorp/rce_2_1)
 "vc" = (
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "vd" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "vo" = (
 /obj/item/flashlight/lantern{
@@ -2295,31 +2600,29 @@
 /turf/open/floor/material,
 /area/rce/xcorp/rce_1_1)
 "vq" = (
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "vr" = (
 /obj/structure/mineral_door/sandstone{
 	color = "#c963ff";
 	name = "area 3 door"
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "vs" = (
 /obj/item/storage/lockbox/medal/officer,
 /obj/structure/table/abductor,
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
-"vz" = (
-/obj/effect/turf_decal/box/red,
-/obj/effect/turf_decal/delivery/red,
-/obj/effect/landmark/rce_target/high_level{
-	id = "righthigh"
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/rce/xcorp/rce_2_0)
 "vB" = (
 /obj/structure/fluff/big_chain,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/boss)
 "vG" = (
 /turf/closed/indestructible/necropolis,
@@ -2328,11 +2631,12 @@
 /turf/open/floor/plasteel/dark,
 /area/rce/xcorp/rce_1_3)
 "vK" = (
-/obj/structure/den/rce{
+/obj/structure/den/rce/blood/area3{
 	id = "righthigh"
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "vN" = (
@@ -2344,9 +2648,12 @@
 "vV" = (
 /obj/structure/den/rce{
 	id = "rightlow";
-	assault_type = 2
+	assault_type = 2;
+	area_num = 1
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "wb" = (
 /obj/effect/landmark/rce_fob,
@@ -2354,7 +2661,9 @@
 /area/rce/rcorp_base)
 "wc" = (
 /obj/structure/table/wood/fancy/purple,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "wg" = (
 /obj/item/defibrillator/loaded,
@@ -2372,7 +2681,20 @@
 "wt" = (
 /obj/effect/landmark/clan_raid_spot/green,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_1)
+"wB" = (
+/obj/structure/mineral_door/sandstone{
+	color = "#FF7777";
+	name = "blood door";
+	desc = "A door made out of blood..."
+	},
+/obj/structure/area_blocker/den/area1,
+/turf/open/floor/wood{
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "wD" = (
@@ -2410,7 +2732,9 @@
 	faction = list("neutral")
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "wN" = (
 /turf/closed/indestructible/brick,
@@ -2428,12 +2752,15 @@
 /turf/open/floor/plasteel/dark,
 /area/rce/xcorp/rce_1_0)
 "wS" = (
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "wU" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "wW" = (
@@ -2466,18 +2793,17 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
-"xh" = (
-/obj/structure/area_blocker/area3,
-/turf/open/floor/mineral/titanium/purple,
-/area/rce/xcorp/rce_2_2)
 "xl" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "xo" = (
@@ -2508,7 +2834,9 @@
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
 "xB" = (
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/boss)
 "xJ" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -2516,7 +2844,9 @@
 	dir = 4
 	},
 /obj/effect/decal/cleanable/glass,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "xO" = (
 /turf/closed/indestructible/rock,
@@ -2527,17 +2857,22 @@
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "xY" = (
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "ya" = (
 /obj/structure/curtain/cloth{
 	color = "#c963ff"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "yg" = (
 /obj/machinery/rce_research,
@@ -2552,7 +2887,9 @@
 /area/rce/rcorp_base)
 "yn" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "yo" = (
 /obj/machinery/conveyor/auto{
@@ -2620,7 +2957,8 @@
 /area/rce/rcorp_base)
 "yJ" = (
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "yN" = (
@@ -2636,12 +2974,15 @@
 /turf/closed/indestructible/necropolis,
 /area/rce/rcorp_base)
 "yS" = (
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "yW" = (
 /obj/structure/statue/bone/rib,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "yX" = (
@@ -2652,7 +2993,9 @@
 	pixel_x = -16
 	},
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "yZ" = (
 /obj/effect/landmark/latejoin,
@@ -2667,13 +3010,15 @@
 "zd" = (
 /obj/structure/headpike,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "zh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "zo" = (
@@ -2693,18 +3038,6 @@
 	},
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
-"zu" = (
-/obj/item/flashlight/lantern{
-	on = 1;
-	color = "#cb3dff";
-	anchored = 1;
-	pixel_x = 16
-	},
-/obj/structure/den/rce/blood/area3{
-	id = "righthigh"
-	},
-/turf/open/floor/carpet/purple,
-/area/rce/xcorp/rce_2_2)
 "zz" = (
 /obj/structure/rack,
 /obj/effect/decal/cleanable/dirt,
@@ -2715,7 +3048,8 @@
 "zA" = (
 /obj/structure/area_blocker,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp)
 "zD" = (
@@ -2743,7 +3077,9 @@
 /obj/structure/den/rce/blood/area3{
 	id = "righthigh"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "zI" = (
 /obj/effect/decal/cleanable/confetti,
@@ -2755,12 +3091,15 @@
 /obj/structure/den/rce/blood{
 	id = "rightlow"
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "zL" = (
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "zN" = (
@@ -2772,7 +3111,8 @@
 "zO" = (
 /obj/structure/headpike,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "zP" = (
@@ -2788,7 +3128,9 @@
 /turf/open/floor/facility/halls,
 /area/rce/rcorp_base)
 "zV" = (
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "zX" = (
 /obj/structure/stairs/west{
@@ -2798,22 +3140,36 @@
 	color = "#787878"
 	},
 /area/rce/xcorp/rce_1_3)
+"Ab" = (
+/obj/effect/turf_decal/box/red,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/landmark/rce_target/low_level{
+	id = "rightlow"
+	},
+/turf/open/floor/mineral/plastitanium{
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_3)
 "Ac" = (
 /obj/structure/chair/pew/right{
 	dir = 1
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Ak" = (
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Aq" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "Ar" = (
@@ -2828,7 +3184,9 @@
 /area/lavaland)
 "Aw" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "AE" = (
 /obj/effect/decal/cleanable/glass,
@@ -2853,12 +3211,15 @@
 /area/rce/rcorp_base)
 "AS" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "AZ" = (
 /obj/structure/table/wood/fancy/red,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "Ba" = (
@@ -2867,7 +3228,9 @@
 /area/rce/xcorp/rce_2_0)
 "Bh" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "Bj" = (
 /obj/structure/closet/secure_closet{
@@ -2900,13 +3263,16 @@
 "Bu" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "By" = (
 /obj/effect/decal/cleanable/confetti,
 /obj/structure/table/wood/fancy/purple,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "BA" = (
 /obj/effect/decal/cleanable/dirt,
@@ -2924,12 +3290,13 @@
 /obj/structure/table/wood/fancy/purple,
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "BH" = (
 /obj/structure/den/rce/blood/area3{
-	id = "righthigh"
+	id = "lefthigh"
 	},
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp/rce_2_1)
@@ -2942,7 +3309,8 @@
 "BK" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "BP" = (
@@ -2955,7 +3323,8 @@
 /area/rce/rcorp_base)
 "BR" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "BS" = (
@@ -2987,7 +3356,8 @@
 "Cd" = (
 /obj/structure/statue/bone/rib,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "Cf" = (
@@ -3005,20 +3375,26 @@
 /area/rce/xcorp/rce_2_0)
 "Ck" = (
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "Cr" = (
 /obj/effect/decal/cleanable/glass,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Cs" = (
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "Cz" = (
 /obj/effect/decal/cleanable/confetti,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "CB" = (
@@ -3028,7 +3404,9 @@
 /area/rce/rcorp_base)
 "CF" = (
 /obj/structure/limitedresourcepoint/purple,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "CG" = (
 /obj/machinery/door/airlock/survival_pod{
@@ -3060,7 +3438,9 @@
 /area/rce/rcorp_base)
 "Dc" = (
 /obj/effect/rune,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "De" = (
 /turf/open/floor/plating/asteroid,
@@ -3075,7 +3455,9 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x64.dmi';
 	dir = 1
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Dk" = (
 /turf/open/indestructible/necropolis/air,
@@ -3086,17 +3468,21 @@
 /area/rce/rcorp_base)
 "Ds" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "Dt" = (
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "Dx" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "DB" = (
@@ -3107,13 +3493,17 @@
 "DC" = (
 /obj/structure/den/rce{
 	id = "leftlow";
-	assault_type = 2
+	assault_type = 2;
+	area_num = 1
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "DH" = (
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "DI" = (
@@ -3153,7 +3543,9 @@
 "DW" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/effect/spawner/lootdrop/three_course_meal,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Ea" = (
 /obj/structure/flora/rock/pile{
@@ -3182,7 +3574,9 @@
 /area/rce/rcorp_base)
 "Eg" = (
 /mob/living/simple_animal/hostile/bloodfiend_boss/barber,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "Ek" = (
 /obj/effect/landmark/clan_raid_spot/purple,
@@ -3203,12 +3597,15 @@
 	dir = 8
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Er" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "Es" = (
 /obj/effect/landmark/bloodfiend_boss/dulcinea,
@@ -3222,7 +3619,8 @@
 "EB" = (
 /obj/structure/chair/pew/left,
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "EC" = (
@@ -3236,7 +3634,9 @@
 /area/rce/rcorp_base)
 "EE" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "EG" = (
 /obj/structure/rack,
@@ -3271,7 +3671,8 @@
 "EV" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "EZ" = (
@@ -3279,21 +3680,27 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Fa" = (
 /obj/structure/mineral_door/iron,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Fb" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "Fe" = (
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "Fh" = (
@@ -3303,7 +3710,9 @@
 /area/rce/rcorp_base)
 "Fj" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "Fm" = (
 /obj/effect/light_emitter{
@@ -3324,7 +3733,8 @@
 "Fq" = (
 /obj/structure/table/wood/fancy/red,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "Fs" = (
@@ -3348,7 +3758,9 @@
 "FA" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew/right,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "FB" = (
 /obj/machinery/conveyor/auto{
@@ -3361,20 +3773,26 @@
 /turf/open/floor/plasteel/dark/corner,
 /area/rce/xcorp/rce_1_0)
 "FH" = (
-/turf/open/floor/plasteel/dark/side,
+/turf/open/floor/plasteel/dark/side{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "FJ" = (
 /turf/closed/indestructible/brick,
 /area/rce/xcorp/rce_0_0)
 "FN" = (
 /obj/structure/limitedresourcepoint/purple,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "FP" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "FR" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3385,7 +3803,8 @@
 	max_integrity = 50
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "FV" = (
@@ -3400,7 +3819,9 @@
 /obj/structure/chair/pew/left{
 	dir = 1
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Ge" = (
 /obj/structure/flora/rock{
@@ -3414,7 +3835,9 @@
 /turf/closed/indestructible/riveted/boss/see_through,
 /area/rce/xcorp/boss)
 "Gk" = (
-/turf/open/floor/plasteel/dark/side,
+/turf/open/floor/plasteel/dark/side{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "Gm" = (
 /obj/effect/turf_decal/delivery,
@@ -3435,7 +3858,9 @@
 	dir = 8
 	},
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "GB" = (
 /obj/structure/meatfloor,
@@ -3444,21 +3869,15 @@
 "GC" = (
 /turf/closed/mineral/ash_rock,
 /area/rce/xcorp/rce_1_0)
-"GE" = (
-/obj/structure/den/rce/blood/area3{
-	id = "righthigh"
-	},
-/turf/open/floor/plasteel/checker{
-	color = "#c963ff"
-	},
-/area/rce/xcorp/rce_2_1)
 "GJ" = (
 /obj/structure/chair/comfy/black,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "GM" = (
 /obj/structure/player_blocker,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "GO" = (
 /turf/closed/mineral/ash_rock,
@@ -3469,7 +3888,8 @@
 	anchored = 1
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "GU" = (
@@ -3498,7 +3918,9 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "Hb" = (
 /obj/effect/turf_decal/stripes/line,
@@ -3516,14 +3938,17 @@
 "Hd" = (
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "Hj" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Hm" = (
 /obj/structure/mineral_door/iron,
@@ -3560,7 +3985,8 @@
 "Hx" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "HG" = (
@@ -3578,13 +4004,17 @@
 /area/rce/rcorp_base)
 "HJ" = (
 /obj/structure/area_blocker/area2,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp)
 "HK" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "HM" = (
 /obj/structure/fence/end{
@@ -3623,7 +4053,9 @@
 /area/rce/rcorp_base)
 "Ie" = (
 /obj/effect/decal/cleanable/confetti,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "Ig" = (
 /obj/structure/sign/warning,
@@ -3633,7 +4065,8 @@
 /area/rce/xcorp/rce_1_1)
 "Ih" = (
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp)
 "Ii" = (
@@ -3644,17 +4077,15 @@
 /area/rce/rcorp_base)
 "Im" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/plastitanium/red,
-/area/rce/xcorp/rce_0_1)
-"Io" = (
-/obj/structure/resourcepoint/red,
-/turf/open/floor/wood{
-	color = "#990012"
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
 	},
-/area/rce/xcorp/rce_0_3)
+/area/rce/xcorp/rce_0_1)
 "Iu" = (
 /obj/structure/dresser,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Iv" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
@@ -3664,31 +4095,29 @@
 "IB" = (
 /obj/effect/decal/cleanable/confetti,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
-"IC" = (
-/obj/effect/turf_decal/box/red,
-/obj/effect/turf_decal/delivery/red,
-/obj/effect/landmark/rce_target/mid_level{
-	id = "rightmid"
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/rce/xcorp/rce_1_3)
 "IF" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "II" = (
 /obj/effect/rune,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "IQ" = (
 /obj/structure/kitchenspike,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "IT" = (
 /obj/structure/chair/comfy/shuttle,
@@ -3700,7 +4129,8 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "IY" = (
@@ -3712,7 +4142,8 @@
 	color = "#c963ff"
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Jb" = (
@@ -3724,14 +4155,17 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 8
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Jd" = (
 /obj/structure/flora/rock{
 	color = "#c963ff"
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "Jf" = (
@@ -3740,12 +4174,6 @@
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_0)
-"Jj" = (
-/obj/structure/area_blocker,
-/turf/open/floor/stone{
-	color = "#f06979"
-	},
-/area/rce/xcorp/rce_0_2)
 "Jl" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/rack,
@@ -3761,11 +4189,15 @@
 /area/rce/rcorp_base)
 "Jn" = (
 /obj/structure/player_blocker,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Jp" = (
 /obj/structure/table/wood/fancy/purple,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Jt" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -3783,12 +4215,15 @@
 /area/rce/rcorp_base)
 "JB" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "JC" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "JE" = (
 /obj/structure/flora/rock/pile{
@@ -3799,14 +4234,6 @@
 	color = "#da82ff"
 	},
 /area/rce/xcorp/boss)
-"JF" = (
-/obj/structure/flora/rock{
-	color = "#c963ff"
-	},
-/turf/open/floor/stone{
-	color = "#e29eff"
-	},
-/area/rce/xcorp/rce_2_3)
 "JH" = (
 /obj/item/statuebust/hippocratic,
 /turf/open/floor/plasteel/dark,
@@ -3838,7 +4265,9 @@
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 1
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Ke" = (
 /obj/structure/flora/rock/pile{
@@ -3852,14 +4281,10 @@
 "Kf" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
-"Ki" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/area_blocker/area2,
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_2)
 "Kk" = (
 /obj/structure/table/abductor{
 	name = "r&d table"
@@ -3883,7 +4308,9 @@
 	color = "#c963ff";
 	name = "area 3 door"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Kt" = (
 /obj/effect/landmark/rce_fob,
@@ -3895,24 +4322,16 @@
 	opacity = 1
 	},
 /area/rce/xcorp/rce_1_2)
-"Kw" = (
-/obj/structure/area_blocker/area2,
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_2)
 "Kx" = (
 /obj/structure/den/rce/announcer,
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp)
 "Ky" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/purple,
-/area/rce/xcorp/rce_2_1)
-"KB" = (
-/obj/structure/resourcepoint/silver,
-/turf/open/floor/stone{
-	color = "#e29eff"
+/turf/open/floor/carpet/purple{
+	intact = 0
 	},
-/area/rce/xcorp/rce_2_3)
+/area/rce/xcorp/rce_2_1)
 "KG" = (
 /obj/structure/fireplace,
 /turf/open/floor/pod/light,
@@ -3921,10 +4340,13 @@
 /turf/open/indestructible/necropolis/air,
 /area/rce/xcorp/rce_2_1)
 "KO" = (
-/obj/structure/den/rce/high{
-	id = "righthigh"
+/obj/structure/den/rce/mid{
+	id = "lefthigh";
+	area_num = 3
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_1)
 "KW" = (
 /turf/closed/indestructible/riveted/boss,
@@ -3946,14 +4368,17 @@
 /turf/open/floor/pod,
 /area/rce/rcorp_base)
 "Lb" = (
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Lc" = (
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "Ld" = (
@@ -3970,7 +4395,9 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "Lj" = (
 /turf/closed/indestructible/necropolis,
@@ -3980,7 +4407,8 @@
 	max_integrity = 50
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "Ll" = (
@@ -3993,22 +4421,17 @@
 /area/rce/rcorp_base)
 "Ln" = (
 /obj/structure/kitchenspike,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Lr" = (
 /obj/effect/landmark/clan_raid_spot/red,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
-"Lt" = (
-/obj/effect/turf_decal/box/red,
-/obj/effect/turf_decal/delivery/red,
-/obj/effect/landmark/rce_target/low_level{
-	id = "rightlow"
-	},
-/turf/open/floor/mineral/plastitanium,
-/area/rce/xcorp/rce_0_3)
 "Lz" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/material,
@@ -4016,7 +4439,8 @@
 "LB" = (
 /obj/structure/resource_gate,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_3)
 "LE" = (
@@ -4031,14 +4455,17 @@
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_0)
-"LL" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/structure/area_blocker/area2,
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_1)
+"LJ" = (
+/obj/structure/resourcepoint/purple,
+/turf/open/floor/stone{
+	intact = 0
+	},
+/area/rce/xcorp/rce_1_3)
 "LP" = (
 /obj/effect/rune,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "LQ" = (
 /obj/machinery/conveyor/auto{
@@ -4049,14 +4476,17 @@
 /area/rce/rcorp_base)
 "LU" = (
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "LW" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 8
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "LX" = (
 /turf/open/indestructible/necropolis/air,
@@ -4079,11 +4509,14 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/rce/rcorp_base)
 "Mm" = (
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Ms" = (
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "Mu" = (
@@ -4092,7 +4525,9 @@
 /area/rce/xcorp)
 "Mw" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "Mx" = (
 /obj/structure/table/reinforced,
@@ -4103,7 +4538,9 @@
 /obj/structure/railing{
 	dir = 8
 	},
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "MB" = (
 /obj/machinery/conveyor/auto,
@@ -4121,7 +4558,9 @@
 /area/rce/rcorp_base)
 "MI" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "MJ" = (
 /obj/machinery/conveyor/auto{
@@ -4132,22 +4571,17 @@
 /area/rce/rcorp_base)
 "MK" = (
 /obj/structure/den/rce{
-	id = "rightmid"
+	id = "rightmid";
+	area_num = 2
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "MM" = (
 /obj/structure/limitedresourcepoint/orange,
 /turf/closed/mineral/ash_rock,
 /area/rce/xcorp/rce_1_2)
-"MS" = (
-/obj/structure/den/rce/blood/area3{
-	id = "righthigh"
-	},
-/turf/open/floor/plasteel/checker{
-	color = "#c963ff"
-	},
-/area/rce/xcorp/rce_2_2)
 "MT" = (
 /obj/structure/area_blocker/area2,
 /turf/open/floor/plating/ashplanet/ash{
@@ -4203,7 +4637,9 @@
 /area/rce/rcorp_base)
 "Ny" = (
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "NA" = (
 /obj/effect/landmark/rce_fob,
@@ -4220,14 +4656,17 @@
 /area/rce/rcorp_base)
 "NF" = (
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "NJ" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "NM" = (
 /obj/item/flashlight/lantern{
@@ -4236,8 +4675,17 @@
 	anchored = 1;
 	pixel_x = -16
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
+"NO" = (
+/obj/structure/resourcepoint/red,
+/turf/open/floor/wood{
+	color = "#990012";
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_3)
 "NS" = (
 /obj/effect/turf_decal/box/red,
 /obj/effect/turf_decal/delivery/red,
@@ -4245,7 +4693,9 @@
 /obj/effect/landmark/rce_target/mid_level{
 	id = "leftmid"
 	},
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Ob" = (
 /turf/open/floor/material,
@@ -4256,7 +4706,8 @@
 	},
 /obj/structure/grille,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "Oe" = (
@@ -4273,12 +4724,15 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Ol" = (
 /obj/structure/table/wood/fancy/red,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "Oo" = (
@@ -4287,7 +4741,9 @@
 	},
 /area/rce/xcorp/rce_2_2)
 "Op" = (
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Or" = (
 /obj/effect/turf_decal/stripes/line{
@@ -4339,11 +4795,15 @@
 /area/rce/xcorp/rce_2_3)
 "OT" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "OY" = (
 /obj/effect/decal/cleanable/glass,
-/turf/open/floor/plasteel/dark/side,
+/turf/open/floor/plasteel/dark/side{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Pb" = (
 /obj/item/clothing/suit/coordinator{
@@ -4363,7 +4823,9 @@
 /area/rce/rcorp_base)
 "Pc" = (
 /obj/structure/limitedresourcepoint,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "Pd" = (
 /obj/structure/table/wood/fancy/purple,
@@ -4400,7 +4862,9 @@
 	color = "#c963ff";
 	name = "area 3 door"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "Pm" = (
 /obj/structure/rack,
@@ -4429,7 +4893,9 @@
 /area/rce/rcorp_base)
 "Pq" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "Pr" = (
 /obj/machinery/computer/rce_leaderboard,
@@ -4477,7 +4943,9 @@
 /area/rce/rcorp_base)
 "PH" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "PI" = (
 /obj/structure/table/wood/fancy/purple,
@@ -4490,12 +4958,6 @@
 "PM" = (
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_3)
-"PQ" = (
-/obj/structure/den/rce{
-	id = "rightmid"
-	},
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_3)
 "PR" = (
 /turf/closed/indestructible/rock,
 /area/rce/xcorp/rce_2_1)
@@ -4503,7 +4965,9 @@
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 4
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "PZ" = (
 /obj/effect/turf_decal/delivery,
@@ -4511,10 +4975,16 @@
 /obj/item/conveyor_switch_construct,
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
-"Qa" = (
-/obj/structure/area_blocker/area3,
-/turf/open/floor/mineral/titanium/purple,
-/area/rce/xcorp/rce_2_1)
+"Qb" = (
+/obj/effect/turf_decal/box/red,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/landmark/rce_target/low_level{
+	id = "leftlow"
+	},
+/turf/open/floor/mineral/plastitanium{
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_0)
 "Qi" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/turf_decal/sand/plating,
@@ -4538,11 +5008,14 @@
 /area/rce/rcorp_base)
 "Qn" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "Qq" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Qs" = (
@@ -4553,7 +5026,8 @@
 /area/rce/xcorp/rce_2_0)
 "Qv" = (
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "Qx" = (
@@ -4564,7 +5038,9 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "QC" = (
 /obj/machinery/door/airlock/survival_pod{
@@ -4578,13 +5054,17 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "QP" = (
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 1
 	},
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "QR" = (
 /obj/effect/landmark/ferris_wheel_trigger,
@@ -4608,12 +5088,15 @@
 "Rc" = (
 /obj/structure/table/wood/fancy/purple,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Rh" = (
 /obj/structure/limitedresourcepoint/orange,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "Rj" = (
 /obj/structure/table/abductor,
@@ -4630,7 +5113,8 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_1)
 "Ro" = (
@@ -4644,21 +5128,26 @@
 /area/rce/rcorp_base)
 "Rv" = (
 /obj/structure/den/rce/mid{
-	id = "righthigh"
+	id = "lefthigh";
+	area_num = 3
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Rw" = (
 /obj/effect/rune,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_2)
 "Rx" = (
 /obj/structure/area_blocker,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp)
 "Ry" = (
@@ -4669,7 +5158,9 @@
 "Rz" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/clothing/suit/apron/purple_bartender,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "RA" = (
 /obj/machinery/conveyor/auto{
@@ -4684,7 +5175,9 @@
 /area/rce/rcorp_base)
 "RG" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "RN" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
@@ -4692,11 +5185,14 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "RO" = (
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "RR" = (
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "RU" = (
@@ -4717,30 +5213,37 @@
 "RZ" = (
 /obj/structure/limitedresourcepoint/silver,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Sa" = (
 /mob/living/simple_animal/hostile/morph,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "Sf" = (
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 4
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Sh" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark/side{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Si" = (
 /obj/structure/headpike/bone,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "Sj" = (
@@ -4783,7 +5286,8 @@
 	desc = "A door made out of blood..."
 	},
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "SK" = (
@@ -4800,7 +5304,9 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 4
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "SU" = (
 /obj/effect/light_emitter{
@@ -4823,7 +5329,9 @@
 	anchored = 1;
 	pixel_x = 16
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_2)
 "Ta" = (
 /obj/machinery/door/airlock/survival_pod{
@@ -4838,12 +5346,16 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "Tm" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew/right,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "Tn" = (
 /obj/item/flashlight/lantern{
@@ -4862,11 +5374,15 @@
 /obj/structure/den/rce/blood/area2{
 	id = "leftmid"
 	},
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "Tz" = (
 /obj/structure/limitedresourcepoint/silver,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "TA" = (
 /obj/structure/flora/rock/pile{
@@ -4881,7 +5397,8 @@
 	dir = 4
 	},
 /turf/open/floor/plasteel/chapel{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "TQ" = (
@@ -4889,13 +5406,16 @@
 /area/rce/xcorp)
 "TV" = (
 /obj/effect/landmark/clan_raid_spot/blue,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "TX" = (
 /obj/structure/table/wood/fancy/red,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "Ua" = (
@@ -4925,7 +5445,8 @@
 /area/rce/xcorp/rce_2_2)
 "Ul" = (
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "Um" = (
@@ -4933,7 +5454,9 @@
 /obj/structure/chair/pew/left{
 	dir = 1
 	},
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Uo" = (
 /obj/effect/landmark/portal_exit{
@@ -4980,9 +5503,11 @@
 /area/rce/rcorp_base)
 "UA" = (
 /obj/structure/den/rce/blood/area3{
-	id = "righthigh"
+	id = "lefthigh"
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "UF" = (
 /obj/machinery/conveyor/auto{
@@ -4996,16 +5521,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/chair/pew/right,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_2)
 "UM" = (
 /turf/open/indestructible/cult,
 /area/rce/xcorp/boss)
-"UT" = (
-/obj/structure/resourcepoint/purple,
-/turf/open/floor/stone,
-/area/rce/xcorp/rce_1_3)
 "UU" = (
 /obj/machinery/conveyor/auto{
 	dir = 1
@@ -5021,13 +5543,16 @@
 	dir = 1
 	},
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Vg" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "Vl" = (
@@ -5041,7 +5566,8 @@
 "Vm" = (
 /obj/structure/player_blocker,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "Vp" = (
@@ -5055,7 +5581,8 @@
 	pixel_x = -96
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/boss)
 "VQ" = (
@@ -5075,7 +5602,9 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x64.dmi';
 	dir = 1
 	},
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Wa" = (
 /obj/structure/rack,
@@ -5102,7 +5631,8 @@
 	dir = 1
 	},
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Wj" = (
@@ -5142,12 +5672,22 @@
 	dir = 8
 	},
 /area/rce/xcorp/rce_1_2)
+"Wr" = (
+/obj/structure/resourcepoint,
+/turf/open/floor/wood{
+	color = "#990012";
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_0)
 "Wv" = (
 /obj/structure/den/rce{
 	id = "leftlow";
-	assault_type = 2
+	assault_type = 2;
+	area_num = 1
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "Wx" = (
 /obj/item/clothing/suit/apron/surgical,
@@ -5159,7 +5699,8 @@
 /area/rce/rcorp_base)
 "Wy" = (
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "WA" = (
@@ -5172,7 +5713,9 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "WL" = (
 /obj/structure/stairs/west{
@@ -5180,25 +5723,32 @@
 	},
 /obj/structure/curtain/bounty,
 /turf/open/floor/plasteel/dark/side{
-	dir = 8
+	dir = 8;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "WT" = (
 /obj/structure/curtain/cloth{
 	color = "#c963ff"
 	},
+/obj/structure/area_blocker/den/area3,
 /turf/open/floor/stone{
-	color = "#e29eff"
+	color = "#e29eff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_2)
 "WW" = (
 /obj/structure/table/wood/fancy/purple,
 /obj/item/clothing/suit/apron/purple_bartender,
-/turf/open/floor/carpet/purple,
+/turf/open/floor/carpet/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Xa" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_3)
 "Xe" = (
 /obj/effect/decal/cleanable/dirt,
@@ -5208,23 +5758,32 @@
 "Xg" = (
 /obj/structure/player_blocker,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_1)
 "Xl" = (
 /obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "Xp" = (
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "Xq" = (
 /obj/structure/limitedresourcepoint/blue,
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
 "Xx" = (
 /obj/structure/player_blocker,
-/turf/open/floor/plasteel/checker,
+/turf/open/floor/plasteel/checker{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_3)
 "Xz" = (
 /turf/closed/indestructible/rock,
@@ -5251,14 +5810,17 @@
 	max_integrity = 50
 	},
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "XS" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 1
 	},
-/turf/open/floor/mineral/plasma/disco,
+/turf/open/floor/mineral/plasma/disco{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "XU" = (
 /obj/effect/turf_decal/delivery,
@@ -5278,7 +5840,9 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/carpet/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_1)
 "Yf" = (
 /obj/effect/turf_decal/caution/white,
@@ -5298,19 +5862,24 @@
 /area/rce/rcorp_base)
 "Yq" = (
 /obj/structure/player_blocker,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "Yr" = (
 /obj/effect/decal/cleanable/confetti,
 /obj/structure/table/wood/fancy/purple,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Ys" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
-/turf/open/floor/plasteel/chapel,
+/turf/open/floor/plasteel/chapel{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Yt" = (
 /turf/open/floor/material,
@@ -5329,7 +5898,8 @@
 "YG" = (
 /obj/structure/resource_gate,
 /turf/open/floor/wood{
-	color = "#990012"
+	color = "#990012";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_0)
 "YH" = (
@@ -5345,8 +5915,22 @@
 /area/rce/xcorp/bossentrance)
 "YK" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/plastitanium/red,
+/turf/open/floor/mineral/plastitanium/red{
+	intact = 0
+	},
 /area/rce/xcorp/rce_0_0)
+"YO" = (
+/obj/structure/mineral_door/sandstone{
+	color = "#FF7777";
+	name = "blood door";
+	desc = "A door made out of blood..."
+	},
+/obj/structure/area_blocker/den/area1,
+/turf/open/floor/wood{
+	color = "#990012";
+	intact = 0
+	},
+/area/rce/xcorp/rce_0_2)
 "YQ" = (
 /obj/machinery/telecomms/server/presets/security,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -5366,14 +5950,18 @@
 /area/rce/rcorp_base)
 "Za" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/black,
+/turf/open/floor/carpet/black{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_0)
 "Zc" = (
 /obj/structure/den/rce{
-	id = "righthigh"
+	id = "righthigh";
+	area_num = 3
 	},
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_3)
 "Zh" = (
@@ -5382,7 +5970,8 @@
 	},
 /obj/structure/grille,
 /turf/open/floor/plasteel/checker{
-	color = "#c963ff"
+	color = "#c963ff";
+	intact = 0
 	},
 /area/rce/xcorp/rce_2_0)
 "Zi" = (
@@ -5400,7 +5989,8 @@
 "Zl" = (
 /obj/effect/landmark/clan_raid_spot/red,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_2)
 "Zm" = (
@@ -5443,26 +6033,34 @@
 /turf/open/floor/pod/light,
 /area/rce/rcorp_base)
 "Zz" = (
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_0)
 "ZC" = (
 /turf/open/floor/plasteel/chapel{
-	dir = 1
+	dir = 1;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "ZD" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/chapel{
-	dir = 4
+	dir = 4;
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "ZI" = (
 /obj/structure/player_blocker,
-/turf/open/floor/mineral/titanium/purple,
+/turf/open/floor/mineral/titanium/purple{
+	intact = 0
+	},
 /area/rce/xcorp/rce_2_3)
 "ZJ" = (
 /obj/effect/landmark/clan_raid_spot/purple,
-/turf/open/floor/stone,
+/turf/open/floor/stone{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_2)
 "ZU" = (
 /obj/effect/turf_decal/siding/purple/corner{
@@ -5473,11 +6071,14 @@
 "ZV" = (
 /obj/effect/landmark/clan_raid_spot/green,
 /turf/open/floor/stone{
-	color = "#f06979"
+	color = "#f06979";
+	intact = 0
 	},
 /area/rce/xcorp/rce_0_1)
 "ZW" = (
-/turf/open/floor/plasteel/dark/side,
+/turf/open/floor/plasteel/dark/side{
+	intact = 0
+	},
 /area/rce/xcorp/rce_1_1)
 "ZY" = (
 /turf/closed/indestructible/rock,
@@ -45283,9 +45884,9 @@ kO
 kO
 kO
 kO
-jc
-jc
-jc
+ku
+ku
+ku
 kO
 kO
 Cs
@@ -45845,9 +46446,9 @@ xO
 xO
 xO
 ui
-LL
-sG
-sG
+tV
+tV
+nY
 ui
 ui
 ui
@@ -46126,8 +46727,8 @@ cN
 cN
 ji
 ji
-ji
-ji
+nI
+gp
 ji
 ji
 ji
@@ -46563,13 +47164,13 @@ di
 di
 di
 di
+Wr
+Qb
 di
 di
 di
 di
 di
-dk
-pf
 di
 Lk
 di
@@ -46755,8 +47356,8 @@ tb
 tb
 Ke
 tb
-ss
-vz
+tb
+tb
 ji
 ji
 tb
@@ -48281,9 +48882,9 @@ LU
 LU
 LU
 ba
-Qa
-Qa
-Qa
+ef
+ef
+ef
 ba
 me
 me
@@ -48619,7 +49220,7 @@ PR
 fj
 fj
 Ez
-qV
+DH
 DH
 DH
 Cz
@@ -48911,7 +49512,7 @@ dB
 ba
 wS
 RR
-qY
+iF
 ba
 RR
 RR
@@ -50471,13 +51072,13 @@ KK
 ba
 wS
 RR
-GE
+RR
 ba
 bQ
 bQ
 bQ
 ba
-GE
+RR
 RR
 wS
 ba
@@ -50875,7 +51476,7 @@ rf
 nr
 nr
 cT
-cT
+fQ
 nr
 dy
 FV
@@ -51187,7 +51788,7 @@ nr
 nr
 nr
 cT
-cT
+fQ
 nr
 dy
 FV
@@ -51464,7 +52065,7 @@ nY
 nY
 nY
 nY
-Ds
+ov
 nY
 nY
 nY
@@ -51529,7 +52130,7 @@ NF
 NF
 NF
 NF
-sd
+wB
 NF
 NF
 NF
@@ -51776,7 +52377,7 @@ mO
 mO
 mO
 mO
-tq
+bY
 mO
 mO
 mO
@@ -51841,7 +52442,7 @@ se
 se
 se
 se
-SG
+YO
 se
 se
 se
@@ -52123,7 +52724,7 @@ vH
 vH
 vH
 qB
-qB
+fb
 vH
 lb
 lP
@@ -52435,7 +53036,7 @@ zX
 vH
 vH
 qB
-qB
+fb
 vH
 lb
 YF
@@ -54545,7 +55146,7 @@ dI
 dI
 dI
 BS
-mF
+Mm
 yJ
 yJ
 Mm
@@ -55145,9 +55746,9 @@ dG
 dG
 dG
 qa
-xh
-xh
-xh
+ow
+ow
+ow
 qa
 hD
 hD
@@ -56423,7 +57024,7 @@ Qv
 Qv
 Qv
 Qv
-JF
+Qv
 Qv
 Qv
 Qv
@@ -56734,8 +57335,8 @@ Qv
 Qv
 Qv
 Qv
-Qv
-Qv
+pP
+kD
 Qv
 Qv
 Qv
@@ -56795,6 +57396,8 @@ Op
 Op
 Op
 Op
+rG
+LJ
 Op
 Op
 Op
@@ -56805,8 +57408,6 @@ Op
 Op
 Op
 Op
-IC
-UT
 Op
 Op
 Op
@@ -57051,8 +57652,8 @@ Qv
 Qv
 Qv
 Qv
-KB
-gs
+Qv
+Qv
 Qv
 Qv
 Qv
@@ -57171,8 +57772,8 @@ eJ
 eJ
 eJ
 eJ
-eJ
-eJ
+NO
+Ab
 aX
 eJ
 eJ
@@ -57451,9 +58052,9 @@ Cf
 Cf
 Cf
 Cf
-Jj
-Jj
-Jj
+Ms
+Ms
+Ms
 Cf
 wN
 Mw
@@ -57488,8 +58089,8 @@ eJ
 eJ
 eJ
 eJ
-Io
-Lt
+eJ
+eJ
 eJ
 xl
 eJ
@@ -57756,7 +58357,7 @@ Op
 GO
 lb
 GO
-PQ
+Op
 Op
 Ry
 Cf
@@ -58014,9 +58615,9 @@ Xz
 Xz
 Xz
 gR
-Kw
-Kw
-Ki
+on
+on
+mO
 gR
 re
 re
@@ -59823,7 +60424,7 @@ qa
 aa
 be
 jG
-zu
+SY
 qa
 dI
 dI
@@ -60147,7 +60748,7 @@ Ul
 hD
 hD
 Ul
-MS
+Ul
 qa
 dI
 dI
@@ -60850,7 +61451,7 @@ Xz
 lb
 qS
 qB
-qB
+MK
 qS
 lb
 qS

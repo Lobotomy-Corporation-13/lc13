@@ -17,8 +17,8 @@
 	del_on_death = TRUE
 	maxHealth = 600
 	health = 600
-	melee_damage_lower = 8
-	melee_damage_upper = 10
+	melee_damage_lower = 20
+	melee_damage_upper = 25
 	melee_damage_type = RED_DAMAGE
 	attack_sound = 'sound/abnormalities/nosferatu/attack.ogg'
 	attack_verb_continuous = "slices"
@@ -31,9 +31,9 @@
 	/// Bleed stacks applied on hit
 	var/bleed_stacks = 2
 	/// Base melee damage lower, used for buff calculations
-	var/base_damage_lower = 8
+	var/base_damage_lower = 20
 	/// Base melee damage upper, used for buff calculations
-	var/base_damage_upper = 10
+	var/base_damage_upper = 25
 	/// Last recorded blood amount for buff updates
 	var/last_blood_check = 0
 	/// Whether currently in enraged state (50%+ blood)
@@ -104,10 +104,10 @@
 	icon_living = "test_meifiend"
 	maxHealth = 400
 	health = 400
-	melee_damage_lower = 6
-	melee_damage_upper = 8
-	base_damage_lower = 6
-	base_damage_upper = 8
+	melee_damage_lower = 9
+	melee_damage_upper = 12
+	base_damage_lower = 9
+	base_damage_upper = 12
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.2)
 
 /// Priest Mook - Standard variant
@@ -117,12 +117,12 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "priest_mook"
 	icon_living = "priest_mook"
-	maxHealth = 500
-	health = 500
-	melee_damage_lower = 7
-	melee_damage_upper = 9
-	base_damage_lower = 7
-	base_damage_upper = 9
+	maxHealth = 600
+	health = 600
+	melee_damage_lower = 18
+	melee_damage_upper = 23
+	base_damage_lower = 18
+	base_damage_upper = 23
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 1.3)
 
 /// Dulcinea Mook - Balanced variant, slightly more offensive
@@ -132,12 +132,12 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "dulcinea_mook"
 	icon_living = "dulcinea_mook"
-	maxHealth = 550
-	health = 550
-	melee_damage_lower = 9
-	melee_damage_upper = 11
-	base_damage_lower = 9
-	base_damage_upper = 11
+	maxHealth = 700
+	health = 700
+	melee_damage_lower = 23
+	melee_damage_upper = 28
+	base_damage_lower = 23
+	base_damage_upper = 28
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.3)
 
 /// Dulcinea Mook Alt - Balanced variant, slightly more defensive
@@ -147,12 +147,12 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/rce_bloodfiend_32x32.dmi'
 	icon_state = "dulcinea_mook_1"
 	icon_living = "dulcinea_mook_1"
-	maxHealth = 550
-	health = 550
-	melee_damage_lower = 7
-	melee_damage_upper = 9
-	base_damage_lower = 7
-	base_damage_upper = 9
+	maxHealth = 700
+	health = 700
+	melee_damage_lower = 18
+	melee_damage_upper = 23
+	base_damage_lower = 18
+	base_damage_upper = 23
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.7, WHITE_DAMAGE = 1.3, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 0.6)
 
 /// Formalfiend - Strongest standered variant
@@ -162,12 +162,12 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/blood_fiends_32x32.dmi'
 	icon_state = "formalfiend"
 	icon_living = "formalfiend"
-	maxHealth = 750
-	health = 750
-	melee_damage_lower = 10
-	melee_damage_upper = 12
-	base_damage_lower = 10
-	base_damage_upper = 12
+	maxHealth = 900
+	health = 900
+	melee_damage_lower = 25
+	melee_damage_upper = 30
+	base_damage_lower = 25
+	base_damage_upper = 30
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.9, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.6)
 	/// Enraged icon state for formalfiend
 	var/icon_enraged = "informalfiend"
@@ -203,8 +203,8 @@
 	stat_attack = HARD_CRIT
 	maxHealth = 250
 	health = 250
-	melee_damage_lower = 3
-	melee_damage_upper = 5
+	melee_damage_lower = 8
+	melee_damage_upper = 13
 	melee_damage_type = RED_DAMAGE
 	rapid_melee = 3
 	attack_sound = 'sound/effects/ordeals/brown/flea_attack.ogg'
@@ -290,8 +290,8 @@
 	icon_state = "bloodbag_greed"
 	maxHealth = 200
 	health = 200
-	melee_damage_lower = 2
-	melee_damage_upper = 4
+	melee_damage_lower = 3
+	melee_damage_upper = 6
 	explosion_damage = 12
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1.4, BLACK_DAMAGE = 0.9, PALE_DAMAGE = 1.3)
 
@@ -302,8 +302,8 @@
 	icon_state = "bloodbag_greed2"
 	maxHealth = 250
 	health = 250
-	melee_damage_lower = 3
-	melee_damage_upper = 5
+	melee_damage_lower = 8
+	melee_damage_upper = 13
 	explosion_damage = 15
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.3, PALE_DAMAGE = 1.2)
 
@@ -314,8 +314,8 @@
 	icon_state = "bloodbag_greed3"
 	maxHealth = 275
 	health = 275
-	melee_damage_lower = 4
-	melee_damage_upper = 6
+	melee_damage_lower = 10
+	melee_damage_upper = 15
 	explosion_damage = 18
 	bleed_stacks = 2
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.7, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1.3)
@@ -327,8 +327,8 @@
 	icon_state = "bloodbag_greed4"
 	maxHealth = 350
 	health = 350
-	melee_damage_lower = 5
-	melee_damage_upper = 7
+	melee_damage_lower = 13
+	melee_damage_upper = 18
 	explosion_damage = 22
 	explosion_bleed = 7
 	bleed_stacks = 2

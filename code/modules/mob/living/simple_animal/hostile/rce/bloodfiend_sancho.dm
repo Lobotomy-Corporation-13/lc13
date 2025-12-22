@@ -91,6 +91,8 @@
 	var/in_dialogue = FALSE
 	/// Whether Sancho is in shield stance (protecting players from greed orb)
 	var/in_shield_stance = FALSE
+	/// Whether Sancho is in the final clash phase (prevents can_act from being re-enabled by other skills)
+	var/in_final_clash = FALSE
 	/// List of safe zones Sancho created
 	var/list/sancho_safe_zones = list()
 	/// Lance overlay for final clash
@@ -119,6 +121,13 @@
 	if(!can_act && !in_dialogue)
 		return FALSE
 	return ..()
+
+/// Safely re-enables can_act only if not in a protected phase (shield stance or final clash)
+/mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/TryEnableActions()
+	if(in_shield_stance || in_final_clash)
+		return FALSE
+	can_act = TRUE
+	return TRUE
 
 // ============================================
 // MELEE ATTACK - 130% More Damage to Simple Mobs
@@ -239,7 +248,7 @@
 
 	// Cooldown starts after all dashes complete
 	topple_cooldown = world.time + topple_cooldown_time
-	can_act = TRUE
+	TryEnableActions()
 
 /// Find a new hostile target for Topple/Wound
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/FindNewHostileTarget()
@@ -415,7 +424,7 @@
 			victim.forceMove(next)
 
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
-	can_act = TRUE
+	TryEnableActions()
 
 // ============================================
 // HIDDEN SANCHO - Mysterious Silhouette Variant
@@ -479,6 +488,8 @@
 	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 75, TRUE)
 	say("Everyone, stay close to me!")
 	manual_emote("creates a protective barrier!")
+	// Global blurb to warn all players
+	show_global_blurb(5 SECONDS, "Get behind Sancho!", fade_in_time = 5, text_color = "#FF5555", outline_color = "#330000", text_align = "center", screen_location = "CENTER,CENTER")
 	// Spawn safe zone effects in range 2
 	for(var/turf/T in range(2, src))
 		var/obj/effect/greed_safe_zone/zone = new(T)
@@ -491,7 +502,7 @@
 	if(!in_shield_stance)
 		return
 	in_shield_stance = FALSE
-	can_act = TRUE
+	TryEnableActions() // Use TryEnableActions in case we're also in final clash
 	// Clean up safe zones
 	for(var/obj/effect/greed_safe_zone/zone in sancho_safe_zones)
 		if(!QDELETED(zone))
@@ -553,8 +564,12 @@
 /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/proc/CleanupAfterFinalBlow()
 	// Remove GODMODE
 	status_flags &= ~GODMODE
+	// Reset final clash state
+	in_final_clash = FALSE
 	// Restore normal behavior
 	can_act = TRUE
+	// Restore faction to neutral
+	faction = list("neutral")
 	// Clean up overlays just in case
 	cut_overlays()
 	// Remove any filters
