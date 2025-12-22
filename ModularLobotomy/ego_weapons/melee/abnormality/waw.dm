@@ -253,8 +253,10 @@
 	var/special_cooldown_time = 8 SECONDS
 	var/special_checks_faction = FALSE
 	// Realization vars
-	var/realization_base_force_coeff = 1.9
-	var/realization_hemorrhage_base_damage = 100
+	var/realization_base_force_coeff = 1.6
+	var/realization_hemorrhage_base_damage = 125
+	var/realization_multithrow_range = 8
+	var/realization_multithrow_max_bounces = 12 // This can get... quirky with Amber Dawns or admin spawned piles of 100 pickelhaube roaches, so we're capping it
 
 /obj/item/ego_weapon/mini/crimson/get_clamped_volume() //this is loud as balls without this proc
 	return 20
@@ -319,6 +321,7 @@
 		to_chat(user, span_notice("You decide to not throw [src], for now."))
 		balloon_alert(user, "You decide to not throw [src], for now.")
 
+/// When using the weapon normally, we can perform a throwing attack. If wearing Crimson Lust and we have No Hesitation, try to activate a multithrow if possible.
 /obj/item/ego_weapon/mini/crimson/afterattack(atom/A, mob/living/user, proximity_flag, params)
 	if(!CanUseEgo(user))
 		return
@@ -333,14 +336,13 @@
 		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(our_suit))
 			realization_active = TRUE
-			var/datum/status_effect/crimlust_mark_payout/successful_mercenary = TRUE//user.has_status_effect(/datum/status_effect/crimlust_mark_payout)
 			var/datum/status_effect/crimlust_no_hesitation/angry_mercenary = user.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
-			if(successful_mercenary && angry_mercenary && MultiThrow(user))
+			if((angry_mercenary) && (MultiThrowScan(A, user) > 1))
 				return
 	SingleThrow(A, user, realization_active)
 	return
 
-/obj/item/ego_weapon/mini/crimson/proc/SingleThrow(atom/A, mob/living/user, realization_active = FALSE, list/multithrow_hitlist)
+/obj/item/ego_weapon/mini/crimson/proc/SingleThrow(atom/A, mob/living/user, realization_active = FALSE)
 	var/turf/target_turf = get_ranged_target_turf_direct(user, A, 8)
 	var/list/turfs_to_hit = list()
 	for(var/turf/T in getline(user, target_turf))
@@ -358,10 +360,8 @@
 	dealing_damage*=force_multiplier // %dmg increase from Faith & Promise, EO upgrade tool, etc
 	if(realization_active) // Apply Justice if wearing Crimson Lust realization
 		var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-		var/justicemod = 1 + userjust/100
+		var/justicemod = (1 + userjust/100) * 0.75 // Not full Justice scaling
 		dealing_damage*=justicemod
-
-	var/used_from_multithrow = islist(multithrow_hitlist)
 
 	for(var/i = 1 to turfs_to_hit.len) // Basically, I copied my code from helper's realized ability. Yep.
 		var/turf/open/T = turfs_to_hit[i]
@@ -382,28 +382,27 @@
 				continue
 			if(special_checks_faction && user.faction_check_mob(L))
 				continue
-			if(used_from_multithrow)
-				if(L in multithrow_hitlist)
-					continue
-				multithrow_hitlist |= L
 
-			to_chat(L, span_userdanger("You are hit by [src]!"))
+			L.visible_message(span_danger("[L] is hit by [src]!"), span_userdanger("You are hit by [src]!"))
 			L.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
 			if(realization_active)
 				var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
 				var/fortmod = 1 + userfort/100
 				var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
-				L.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage, src)
+				L.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
 
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 			dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
-/obj/item/ego_weapon/mini/crimson/proc/MultiThrow(mob/living/user)
+/// This proc looks for up to [realization_multithrow_max_bounces] targets in [realization_multithrow_range] area around the user, and passes a sorted list of targets to MultiThrowHit if it finds at least 2.
+/obj/item/ego_weapon/mini/crimson/proc/MultiThrowScan(atom/A, mob/living/user)
 	if(!ishuman(user))
 		return
-	var/found_target = FALSE
-	var/list/hitlist = list()
-	for(var/mob/living/target in range(8, user))
+	var/found_target = 0
+	var/list/target_list = list()
+	for(var/mob/living/target in orange(realization_multithrow_range, user))
+		if(found_target >= realization_multithrow_max_bounces)
+			break
 		if(target == user)
 			continue
 		if(user.faction_check_mob(target))
@@ -412,10 +411,63 @@
 			continue
 		if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
 			continue
-		found_target = TRUE
-		INVOKE_ASYNC(src, PROC_REF(SingleThrow), target, user, TRUE, hitlist)
+		found_target++
+		target_list[target] = get_dist(A, target) + 1
 
+	if(found_target > 1) // Do we have at least two targets?
+		sortInsert(target_list, associative = TRUE) // Sort the target list - targets closer to the atom we clicked first should be hit first.
+		INVOKE_ASYNC(src, PROC_REF(MultiThrowHit), target_list, user) // Async because it sleeps
 	return found_target
+
+/// This proc WILL hit everything that hasn't been qdeleted in its target list. Everything. It trusts that MultiThrowScan will send it a decently sized list, so cap it over there.
+/// Targets will be hit with a 0.1s delay between each.
+/obj/item/ego_weapon/mini/crimson/proc/MultiThrowHit(list/target_list, mob/living/user)
+	var/atom/last_bounce = user
+
+	var/dealing_damage = special_damage // Damage reduces a little with each mob hit
+
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	dealing_damage*=justicemod
+	dealing_damage*=force_multiplier // %dmg increase from Faith & Promise, EO upgrade tool, etc
+
+	var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
+	var/fortmod = 1 + userfort/100
+	var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
+
+	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
+
+	for(var/mob/living/victim in target_list)
+		if(!victim || !user)
+			continue
+
+		var/i = 1
+		var/list/turf_line = getline(last_bounce, victim)
+
+		for(var/turf/T in turf_line)
+			// Effects
+			var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(T, src)
+			var/matrix/M = matrix(D.transform)
+			M.Turn(45 * i)
+			D.transform = M
+			D.alpha = min(150 + i*15, 255)
+			animate(D, alpha = 0, time = 2 + i*2)
+			for(var/obj/structure/window/W in T)
+				W.obj_destruction("[src.name]")
+
+			i++
+
+		last_bounce = victim
+		victim.visible_message(span_danger("[victim] is hit by [src]!"), span_userdanger("You are hit by [src]!"))
+		victim.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
+		victim.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
+
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(victim), pick(GLOB.alldirs))
+		playsound(user, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
+		dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
+
+		sleep(1)
+
 
 /datum/status_effect/display/crimlust_hemorrhage
 	id = "crimlust_hemorrhage"
@@ -428,16 +480,17 @@
 	var/mob/living/carbon/human/crimlust_user
 	var/consume_damage
 
-/datum/status_effect/display/crimlust_hemorrhage/on_creation(mob/living/new_owner, mob/living/carbon/human/supercool_mercenary, hemorrhage_final_damage, obj/item/ego_weapon/mini/crimson/applying_weapon)
+/datum/status_effect/display/crimlust_hemorrhage/on_creation(mob/living/new_owner, mob/living/carbon/human/supercool_mercenary, hemorrhage_final_damage)
 	if(!(..()))
 		return FALSE
-	// Ensure we get a valid user, owner, applying weapon and final damage.
-	if(!(istype(new_owner)) || !(istype(supercool_mercenary)) || !istype(applying_weapon))
+	// Ensure we get a valid user, owner, and final damage.
+	if(!(istype(new_owner)) || !(istype(supercool_mercenary)))
 		return FALSE
 	if(!(hemorrhage_final_damage > 0))
 		return FALSE
 	crimlust_user = supercool_mercenary
 	consume_damage = hemorrhage_final_damage
+	RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(Consume))
 	return TRUE
 
 /datum/status_effect/display/crimlust_hemorrhage/be_replaced()
@@ -447,9 +500,12 @@
 
 /datum/status_effect/display/crimlust_hemorrhage/proc/Consume()
 	if(owner)
+		UnregisterSignal(owner, COMSIG_LIVING_DEATH)
 		owner.deal_damage(consume_damage, RED_DAMAGE, source = crimlust_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
-		for(var/i in 1 to 3)
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(owner), pick(GLOB.alldirs))
+		playsound(owner, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 25, TRUE, 3)
+		for(var/i in 1 to 4)
+			var/atom/vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(owner), pick(GLOB.alldirs))
+			vfx.transform *= 1.3
 	qdel(src)
 
 /obj/item/ego_weapon/thirteen

@@ -1672,10 +1672,11 @@
 /obj/effect/proc_holder/ability/strike_without_hesitation
 	name = "Strike Without Hesitation"
 	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 75% less damage. \n\
-	Gain 6 Power Modifier per target hit by this ability for 15 seconds, up to 70 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons. \n\
+	Gain 6 Power Modifier per target hit by this ability for 15 seconds, up to 70 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
 	Cooldown: 45s."
-	action_icon_state = "ripper0"
-	base_icon_state = "ripper"
+	action_icon = 'icons/obj/projectiles.dmi'
+	action_icon_state = "hunter_blade"
+	base_icon_state = "hunter_blade"
 	cooldown_time = 45 SECONDS
 	/// Radius of the ability, in tiles.
 	var/radius = 6
@@ -1735,7 +1736,7 @@
 		playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
 		user.visible_message(span_danger("[user] expertly flings hunting blades at all nearby targets!"))
 	else
-		to_chat(user, span_danger("There's nothing nearby...! Your frustration sends you into an impotent rage!"))
+		to_chat(user, span_warning("There's nothing nearby...! Your frustration sends you into an impotent rage!")) // I mean you'll still get the buff, but 0 power modifier and it hit nothing
 
 	return targets_found
 
@@ -1779,6 +1780,7 @@
 			multithrow_hitlist |= L
 
 			L.visible_message(span_danger("[L] is hit by a hunter's blade!"), span_userdanger("You are hit by a hunter's blade!"))
+			playsound(L, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
 			L.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
@@ -1794,13 +1796,22 @@
 	duration = 1.5 SECONDS
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
+/// No Hesitation status effect. Gives you a certain amount of power modifier (can be 0 if you hit nothing with the skill), and allows you to dual wield CrimScars.
+// The code for this dual wielding is kinda split between this status effect and the gun itself, the reason for this is that I want to make 100% sure it affects any CrimScars you may have.
+// We could, of course, go the much simpler route of only applying the effect to the guns you're holding, or the guns you have stored in specific slots if you want to be fancy, but I thought this approach was better.
 /datum/status_effect/crimlust_no_hesitation
 	id = "crimlust_no_hesitation"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = 15 SECONDS
-	alert_type = null
+	alert_type = /atom/movable/screen/alert/status_effect/no_hesitation
 	var/powermod_bonus = 0
 	var/list/modified_guns = list()
+
+/atom/movable/screen/alert/status_effect/no_hesitation
+	name = "No Hesitation"
+	desc = "You're driven by vengeful conviction. Power Modifier is increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "strength"
 
 /datum/status_effect/crimlust_no_hesitation/on_creation(mob/living/new_owner, power_modifier = 0)
 	if(!(..()))
@@ -1815,18 +1826,16 @@
 	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = new_owner.get_active_held_item()
 	if(istype(mainhand_gun))
 		mainhand_gun.weapon_weight = WEAPON_LIGHT
-		our_guy.say("Strike Without Hesitation: Mainhand CrimScar found, dualwield enabled")
+		mainhand_gun.realization_empowered_mode = TRUE
 		modified_guns |= mainhand_gun
 	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = new_owner.get_inactive_held_item()
 	if(istype(offhand_gun))
 		offhand_gun.weapon_weight = WEAPON_LIGHT
-		our_guy.say("Strike Without Hesitation: Offhand CrimScar found, dualwield enabled")
+		offhand_gun.realization_empowered_mode = TRUE
 		modified_guns |= offhand_gun
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
-	our_guy.say("Strike Without Hesitation: Applied [powermod_bonus] power modifier bonus.")
-
-	our_guy.say("Strike Without Hesitation: Expires at world time [duration], which is in [(duration - world.time) * 0.1] seconds.")
+	linked_alert.desc = initial(linked_alert.desc)+"[powermod_bonus], your Crimson Claw's throw hits all nearby targets, and you may dual-wield Crimson Scars."
 	return TRUE
 
 /datum/status_effect/crimlust_no_hesitation/on_remove()
@@ -1835,14 +1844,14 @@
 	if(!istype(our_guy))
 		return
 
-	our_guy.say("Strike Without Hesitation: Reverting.")
-
 	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = owner.get_active_held_item()
 	if(istype(mainhand_gun))
 		mainhand_gun.weapon_weight = WEAPON_MEDIUM
+		mainhand_gun.realization_empowered_mode = FALSE
 	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = owner.get_inactive_held_item()
 	if(istype(offhand_gun))
 		offhand_gun.weapon_weight = WEAPON_MEDIUM
+		offhand_gun.realization_empowered_mode = FALSE
 
 	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
 		if(!QDELETED(did_you_try_smuggling_one_of_these))
