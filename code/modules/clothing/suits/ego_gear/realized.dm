@@ -508,17 +508,23 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	actions_types = list(/datum/action/item_action/crimlust_hunter_trail)
 	var/last_applied_mark_time
 	var/mark_apply_timer
-	var/mark_apply_cooldown_time = 100 SECONDS
+	var/mark_apply_cooldown_time = 120 SECONDS
 	var/datum/status_effect/crimlust_mark/last_applied_mark_datum
 	var/mob/living/currently_marked
 	var/list/valid_mark_candidates = list()
 
+// Don't actually assign this as the hat for the armour, we apply it while under a certain buff and remove it after. I guess players can take it off early if they want
+/obj/item/clothing/head/ego_hat/helmet/crimson
+	name = "crimson lust"
+	desc = "A bright red hood that you don't really have the time to inspect too closely right now."
+	icon_state = "crimson"
+
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/examine(mob/user)
 	. = ..()
 	. += span_notice("This E.G.O. will periodically apply <b>Hunter's Mark</b> to a random enemy, allowing you to <b>track them</b> using the <b>Hunter's Trail</b> ability. \
-	This mark lasts 40 seconds and a new one is applied every 100 seconds. \
+	This mark lasts 50 seconds and a new one is applied every 120 seconds. \
 	If you <b>land the finishing blow</b> on this enemy, you will be <b>healed and gain a temporary bonus to Power Modifier</b>. If Strike Without Hesitation's buff is active, refreshes it. \
-	Powerful enemies will grant the same reward after you deal a certain amount of damage to them, based on how much health they have.")
+	Powerful enemies will grant the same reward after you deal 2000 damage to them.")
 	. += ""
 	. += span_notice("This E.G.O. will <b>empower</b> the <b>Crimson Claw</b> and <b>Crimson Scar</b> weapons when worn.")
 	. += span_notice("<b>Crimson Claw (sword) bonuses</b>: Increased damage. Gains Justice scaling on its throwing attack. \
@@ -562,6 +568,9 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	if(!ishuman(hunter))
 		return FALSE
 
+	if(hunter.stat >= DEAD)
+		return FALSE
+
 	// If our mark is still on cooldown, set a timer to call this once the cooldown ends.
 	var/time_since_mark = last_applied_mark_time ? world.time - last_applied_mark_time : INFINITY
 	if(time_since_mark < mark_apply_cooldown_time)
@@ -578,6 +587,10 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		for(var/datum/ordeal/O in ongoing_ordeals) // Add every ordeal mob into the new list.
 			potential_targets |= O.ordeal_mobs // |= prevents Pink Midnight from causing duplicate entries
 
+	for(var/mob/prospect in potential_targets)
+		if(prospect.z != hunter.z)
+			potential_targets -= prospect
+
 	if(length(potential_targets) <= 0) // No targets found...
 		SetupMarkTimer(hunter, 5 SECONDS)
 		return FALSE
@@ -589,12 +602,15 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	if(last_applied_mark_datum)
 		currently_marked = chosen_target
 
+	SEND_SOUND(hunter, sound('sound/abnormalities/armyinblack/black_heartbeat.ogg'))
+	flash_color(hunter, flash_color = COLOR_RED_LIGHT, flash_time = 1 SECONDS)
+
 	TrackTarget(hunter, TRUE)
 	return TRUE
 
 // Called once when first acquiring a new marked target, and can be called again by the user if they want. Tells you in chat/balloon alert roughly where your target is.
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/TrackTarget(mob/living/carbon/human/hunter, first_time = FALSE)
-	var/chosen_target = currently_marked
+	var/mob/living/chosen_target = currently_marked
 	if(!chosen_target)
 		to_chat(hunter, span_warning("You're currently not hunting anything - there's nothing to track."))
 		return
@@ -610,7 +626,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		dir_message += "east"
 	else
 		dir_message += "west"
-	var/assembled_message = "You sense [chosen_target] [how_far] meters [dir_message] of you."
+	var/assembled_message = "You sense [chosen_target] [how_far] meters [dir_message] of you, in [chosen_target.loc.loc]."
 	if(first_time)
 		assembled_message += " The hunt is on."
 	var/final_message = first_time ? span_userdanger(assembled_message) : span_warning(assembled_message)
@@ -641,28 +657,32 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 // Allows us to track our target if we need to do it again for whatever reason.
 /datum/action/item_action/crimlust_hunter_trail
 	name = "Hunter's Trail"
-	desc = "Remain still for 2 seconds to track down your currently marked target."
+	desc = "Concentrate for 2 seconds to track down your currently marked target."
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/teguicons.dmi'
 	button_icon_state = "red_target"
+	var/cooldown
 
 /datum/action/item_action/crimlust_hunter_trail/Trigger()
 	if(!IsAvailable())
 		return FALSE
 	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
 		return FALSE
+	if(cooldown > world.time)
+		return FALSE
+	cooldown = world.time + 1 SECONDS
 	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = target
 	if(!istype(our_suit))
 		return
-	if(!do_after(owner, 2 SECONDS, interaction_key = "crimlust_hunter_trail", max_interact_count = 1))
-		to_chat(owner, span_warning("You lose concentration. You need to be still to track your target."))
+	if(!do_after(owner, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "crimlust_hunter_trail", max_interact_count = 1))
+		to_chat(owner, span_warning("You lose concentration, and fail to track your target."))
 		return
 	our_suit.TrackTarget(owner, FALSE)
 
-// This status effect does nothing except add a visual mark and check if its owner is killed by the person who applied it. If they are, then that killer gets the payout buff.
+// This status effect does nothing except add a visual mark and check if its owner is killed by the person who applied it/they deal enough damage. If they do, then they get the payout buff.
 /datum/status_effect/crimlust_mark
 	id = "crimlust_mark"
 	status_type = STATUS_EFFECT_UNIQUE
-	duration = 40 SECONDS
+	duration = 50 SECONDS
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
 	var/mob/living/carbon/human/crimlust_user
@@ -670,6 +690,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/mob/living/simple_animal/hostile/marked_owner
 	var/mutable_appearance/mark_overlay
 	var/bounty_claimed = FALSE
+	var/damage_left = 2000
 
 /datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary, obj/item/clothing/suit/armor/ego_gear/realization/crimson/crimlust)
 	if(!(..()))
@@ -681,7 +702,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	marked_owner = new_owner
 	crimlust_user = mercenary
 	crimlust_suit = crimlust
-	mark_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teguicons.dmi', "red_target", -MUTATIONS_LAYER)
+	mark_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teguicons.dmi', "red_target", ABOVE_MOB_LAYER)
 
 	// Mark visual
 	var/icon/target_icon = icon(marked_owner.icon, marked_owner.icon_state, marked_owner.dir)
@@ -689,12 +710,15 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/icon_width = target_icon.Width()
 	var/height_diff = icon_height - 32
 	var/width_diff = icon_width - 32
-	mark_overlay.pixel_y += 38 + floor((height_diff * 0.6))
+	mark_overlay.pixel_y += 36 + floor((height_diff * 0.6))
 	mark_overlay.pixel_x += (width_diff * 0.5)
+	mark_overlay.alpha = 200
 	marked_owner.add_overlay(mark_overlay)
 
 	// Signal for detecting killing blows
 	RegisterSignal(marked_owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(CheckDeath)) // It really sucks we have to use APPLY_DAMGE here and not AFTER_APPLY_DAMGE, the problem is that anything that qdels or gibs on death won't send PostDamageReaction and refactoring damage to make that happen is too intrusive for this little PR
+	// Remove this status if the caster dies
+	RegisterSignal(crimlust_user, COMSIG_LIVING_DEATH, PROC_REF(Cancel))
 	return TRUE
 
 /datum/status_effect/crimlust_mark/on_remove()
@@ -704,26 +728,39 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	if(crimlust_suit)
 		crimlust_suit.currently_marked = null
 	if(crimlust_user)
-		var/message = bounty_claimed ? span_nicegreen("You've completed your hunt. Another nightmare is kept from haunting your nights.") : span_warning("You weren't able to complete your hunt.")
+		var/success_message
+		if(bounty_claimed == "death")
+			success_message = "You've completed your hunt. Another nightmare is kept from haunting your nights."
+		else if(bounty_claimed == "damage")
+			success_message = "Your target is ravaged by grievous wounds. Keep it up and you'll be able to hang its head over your bed."
+		var/message = !isnull(success_message) ? span_nicegreen(success_message) : span_warning("You weren't able to complete your hunt.")
 		to_chat(crimlust_user, message)
 
 // Called when the marked enemy is taking damage. Sadly we can't use AFTER_APPLY_DAMGE as explained previously. Also we don't check to make sure we're still wearing Crimson Lust here, because I could but like, this is being run on every hit so let's not
 /datum/status_effect/crimlust_mark/proc/CheckDeath(datum/source, damage_amount, damage_type, def_zone, source_of_damage, flags, attack_type)
 	SIGNAL_HANDLER
-	if(!marked_owner)
+	if(!marked_owner || bounty_claimed)
 		return
 	if(!(source_of_damage == crimlust_user))
 		return
 	var/datum/dam_coeff/damage_coeff = marked_owner.damage_coeff
 	var/final_damage_dealt = (damage_amount * damage_coeff.getCoeff(damage_type))
-	if(marked_owner.health - final_damage_dealt <= 0)
+	damage_left -= final_damage_dealt
+	if((marked_owner.health - final_damage_dealt <= 0))
+		bounty_claimed = "death" // Determines the message sent to the user
+		Payout()
+	else if(damage_left <= 0)
+		bounty_claimed = "damage" // Determines the message sent to the user
 		Payout()
 
-// Called only when the owner is killed by the Crimlust user
+// Called only when the owner is killed by the Crimlust user/the Crimlust user deals enough damage
 /datum/status_effect/crimlust_mark/proc/Payout()
 	if(crimlust_user)
 		crimlust_user.apply_status_effect(/datum/status_effect/crimlust_mark_payout)
-		bounty_claimed = TRUE // Determines the message sent to the user
+	qdel(src)
+
+/datum/status_effect/crimlust_mark/proc/Cancel()
+	SIGNAL_HANDLER
 	qdel(src)
 
 /// This buff is given when killing a marked target. It heals your HP and SP once and gives you PowerMod
@@ -738,6 +775,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/empowered_tick_healing = 6
 	var/check_for_linked_buff = FALSE
 	var/datum/status_effect/crimlust_no_hesitation/linked_buff
+	var/mutable_appearance/eye_vfx
 
 /datum/status_effect/crimlust_mark_payout/on_creation(mob/living/new_owner, ...)
 	. = ..()
@@ -760,6 +798,9 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	// Power Modifier gain
 	our_owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
 
+	eye_vfx = mutable_appearance('icons/effects/effects.dmi', "redhood_eye_effect", ABOVE_MOB_LAYER)
+	our_owner.add_overlay(eye_vfx)
+
 // On every tick of this status, if we're linked to an active No Hesitation, recover some HP.
 /datum/status_effect/crimlust_mark_payout/tick()
 	. = ..()
@@ -777,6 +818,8 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/mob/living/carbon/human/our_owner = owner
 	if(istype(our_owner))
 		our_owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
+		if(eye_vfx)
+			our_owner.cut_overlay(eye_vfx)
 
 // Called when either: 1. This buff is created and No Hesitation exists or 2. By No Hesitation if it's created while this exists
 /datum/status_effect/crimlust_mark_payout/proc/LinkBuffs(datum/status_effect/crimlust_no_hesitation/link_to_this)
@@ -787,12 +830,22 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	linked_buff.refresh()
 	refresh()
 	ADD_TRAIT(owner, TRAIT_STUNIMMUNE, "crimlust_empowered")
+	RegisterSignal(owner, COMSIG_MOVABLE_MOVED, PROC_REF(EmpoweredMoveVFX))
 
 // This is called once this buff is falling off or when we detect that No Hesitation fell off. We lose stun immunity and we'll stop checking if No Hesitation is active for our HP regen
 /datum/status_effect/crimlust_mark_payout/proc/UnlinkBuffs()
 	check_for_linked_buff = FALSE
 	linked_buff = null
 	REMOVE_TRAIT(owner, TRAIT_STUNIMMUNE, "crimlust_empowered")
+	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
+
+/datum/status_effect/crimlust_mark_payout/proc/EmpoweredMoveVFX(datum/source, OldLoc, Dir, Forced)
+	SIGNAL_HANDLER
+	if(!owner)
+		return
+	var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(OldLoc, owner)
+	D.alpha = 200
+	animate(D, alpha = 0, time = 3)
 
 /atom/movable/screen/alert/status_effect/crimlust_mark_payout
 	name = "Successful Hunt"
