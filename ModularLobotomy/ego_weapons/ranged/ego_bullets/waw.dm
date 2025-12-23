@@ -116,7 +116,7 @@
 	damage = 14
 	damage_type = RED_DAMAGE
 
-// This one is fired by Crimson Scar by default when wearing Crimson Lust. Under a certain buff, fires 5 pellets instead of 3 with a higher spread.
+// This one is fired by Crimson Scar by default when wearing Crimson Lust. Under a certain buff, fires 4 pellets instead of 3 with a higher spread.
 /obj/projectile/ego_bullet/ego_crimson/lust
 	name = "hateful crimson"
 	damage = 22

@@ -255,13 +255,22 @@
 							FORTITUDE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 	)
+	// All these vars are for the Crimson Lust realization.
+	/// Ammo used by this gun when wearing Crimson Lust
 	var/realization_default_ammo_type = /obj/projectile/ego_bullet/ego_crimson/lust
+	/// Ammo used by this gun when wearing Crimson Lust after loading Hollowpoint
 	var/realization_hollowpoint_ammo_type = /obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint
+	/// How much slower you fire Hollowpoint shells
 	var/realization_hollowpoint_firedelay_malus = 5
+	/// Should we be using Hollowpoint rounds?
 	var/realization_hollowpoint_active = FALSE
+	/// How long it takes to load a Hollowpoint shell
 	var/realization_hollowpoint_toggle_delay = 0.6 SECONDS
+	// Spam prevention stuff
 	var/realization_hollowpoint_spam_prevention_cd
+	/// This is TRUE while we're using this gun with No Hesitation active, it gets set on any CrimScars we're holding as it activates, and will be set if we place one in our hands while it's active.
 	var/realization_empowered_mode = FALSE
+	// These four vars just change our stats when No Hesitation is active.
 	var/realization_empowered_pellet_increase = 1
 	var/realization_empowered_variance_increase = 5
 	var/realization_empowered_spread_increase = 15
@@ -272,7 +281,8 @@
 	if(ishuman(user))
 		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(our_suit))
-			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Ammo is now infinite, and your standard projectiles deal more damage and pierce up to 2 targets.")
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential.")
+			. += span_info("Ammo is now infinite, and your standard projectiles deal more damage and pierce up to 2 targets.")
 			. += span_info("You can reload this weapon to load a single <b>Hollowpoint Shell</b>, which is highly accurate and deals more damage, and will <b>consume a target's Hemorrhage</b> (inflicted by Crimson Claw). You may load this shell while moving.")
 			. += span_info("While under the effect of <b>Strike without Hesitation</b>, your firerate increases, you can <b>dual wield</b> this weapon, and you fire [initial(pellets) + realization_empowered_pellet_increase] projectiles per shot.")
 
@@ -286,14 +296,16 @@
 			var/datum/status_effect/crimlust_no_hesitation/very_angry_very_red_mercenary = user.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
 			if(very_angry_very_red_mercenary) // Under the effect of Strike Without Hesitation?
 				weapon_weight = WEAPON_LIGHT // You can now dual-wield.
-				realization_empowered_mode = TRUE
+				realization_empowered_mode = TRUE // Weapon is empowered.
 				very_angry_very_red_mercenary.modified_guns |= src // So this gets reverted once Strike Without Hesitation falls off
-		else
-			weapon_weight = initial(weapon_weight)
-			realization_empowered_mode = FALSE
+				return
+
+		weapon_weight = initial(weapon_weight)
+		realization_empowered_mode = FALSE
 
 		SetAmmoStat(realization_active)
 
+// Replace our reload with loading Hollowpoint if we're wearing Crimson Lust
 /obj/item/ego_weapon/ranged/pistol/crimson/attack_self(mob/user)
 	if(ishuman(user))
 		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
@@ -306,6 +318,7 @@
 			return
 	. = ..()
 
+// Ensure we're firing the right type of ammo
 /obj/item/ego_weapon/ranged/pistol/crimson/before_firing(atom/target, mob/user)
 	var/realization_active = FALSE
 	if(ishuman(user))
@@ -314,6 +327,7 @@
 	SetAmmoStat(realization_active)
 	. = ..()
 
+// Lose Hollowpoint after firing it once
 /obj/item/ego_weapon/ranged/pistol/crimson/process_chamber()
 	. = ..()
 	if(realization_hollowpoint_active)
@@ -331,37 +345,41 @@
 		to_chat(user, span_info(success_message))
 	is_reloading = FALSE
 
+/// Sets the weapon's stats according to whether we're wearing Crimson Lust or not, this proc expects to be passed a bool for that rather than checking by itself.
 /obj/item/ego_weapon/ranged/pistol/crimson/proc/SetAmmoStat(realized = FALSE)
 	fire_delay = initial(fire_delay)
-	random_spread = initial(random_spread)
-
-	if(!realized)
-		projectile_path = initial(projectile_path)
-		pellets = initial(pellets)
-		variance = initial(variance)
-		reloadtime = initial(reloadtime)
-		return
-
-	if(realization_hollowpoint_active)
-		projectile_path = realization_hollowpoint_ammo_type // Realized hollowpoint ammo (consumes hemorrhage)
-		pellets = 1
-		variance = 0
-		reloadtime = 0
-		fire_delay += realization_hollowpoint_firedelay_malus
-		return
-
-	projectile_path = realization_default_ammo_type // Realized default ammo (piercing)
 	pellets = initial(pellets)
 	variance = initial(variance)
 	spread = initial(spread)
-	if(realization_empowered_mode)
+	random_spread = initial(random_spread)
+
+
+	if(!realized) // Not wearing Crimson Lust, go back to normal behaviour
+		projectile_path = initial(projectile_path)
+		reloadtime = initial(reloadtime)
+		return
+
+	reloadtime = 0 // We are wearing Crimson Lust, so we get infinite ammo
+
+	if(realization_hollowpoint_active) // We have Hollowpoint loaded
+		projectile_path = realization_hollowpoint_ammo_type // Realized hollowpoint ammo (consumes hemorrhage)
+		fire_delay += realization_hollowpoint_firedelay_malus
+		pellets = 1
+		variance = 0
+		spread = 0
+		return
+
+	// If we reach this point we're wearing Crimson Lust and not using Hollowpoint
+
+	projectile_path = realization_default_ammo_type // Realized default ammo (piercing)
+
+	if(realization_empowered_mode) // We're under the No Hesitation status
 		fire_delay -= realization_empowered_firedelay_decrease
 		pellets += realization_empowered_pellet_increase
 		variance += realization_empowered_variance_increase
 		spread += realization_empowered_spread_increase
 		random_spread = TRUE
 
-	reloadtime = 0
 	return
 
 /obj/item/ego_weapon/ranged/ecstasy

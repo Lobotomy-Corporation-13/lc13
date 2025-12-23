@@ -253,10 +253,14 @@
 	var/special_cooldown_time = 8 SECONDS
 	var/special_checks_faction = FALSE
 	// Realization vars
+	/// Multiplies the base damage of the weapon while wearing Crimson Lust by this much.
 	var/realization_base_force_coeff = 1.6
-	var/realization_hemorrhage_base_damage = 90
+	/// Base damage pre-fort scaling of Hemorrhage.
+	var/realization_hemorrhage_base_damage = 95
+	/// How far Multithrow should scan, in tiles.
 	var/realization_multithrow_range = 8
-	var/realization_multithrow_max_bounces = 12 // This can get... quirky with Amber Dawns or admin spawned piles of 100 pickelhaube roaches, so we're capping it
+	/// How many bounces multithrow should do at most. This is to avoid "incidents" with piles of 100 pickelhaube roaches
+	var/realization_multithrow_max_bounces = 20
 
 /obj/item/ego_weapon/mini/crimson/get_clamped_volume() //this is loud as balls without this proc
 	return 20
@@ -273,7 +277,7 @@
 			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential.")
 			. += span_info("<b>Base force is increased</b> from [og_force] to [new_force], and your throwing attack now <b>scales with Justice</b>.")
 			. += span_info("Combo finishers will inflict <b>Hemorrhage</b> on the target, and consuming it with Crimson Scar deals <b>[realization_hemorrhage_base_damage * fortmod] RED damage</b>, after scaling from your Fortitude.")
-			. += span_info("Additionally, if performing your throwing attack while under the effects of your <b>Hunter's Mark payout buff</b> and <b>Strike Without Hesitation</b>, <b>your throw will hit all nearby enemies</b>.")
+			. += span_info("Additionally, if performing your throwing attack while under the effects of <b>Strike Without Hesitation</b>, your throw will <b>hit all nearby enemies</b>.")
 
 
 /obj/item/ego_weapon/mini/crimson/attack(mob/living/M, mob/living/user)
@@ -285,9 +289,11 @@
 		if(istype(our_suit))
 			realization_active = TRUE
 			force *= realization_base_force_coeff
-	if(world.time > combo_time)
+
+	if(world.time > combo_time) // Handles combo timeout (waited too long inbetween hits)
 		combo = 1
 	combo_time = world.time + combo_wait
+
 	switch(combo)
 		if(2)
 			hitsound = 'sound/abnormalities/redhood/attack_2.ogg'
@@ -297,9 +303,11 @@
 			hitsound = 'sound/abnormalities/redhood/attack_1.ogg'
 	force *= (1 + (combo * 0.15))
 	user.changeNext_move(CLICK_CD_MELEE * (1 + (combo * 0.2)))
-	..()
+
+	..() // Hit
+
 	if(combo >= 3)
-		if(realization_active && M.stat < DEAD)
+		if(realization_active && M.stat < DEAD) // If we're landing a combo finisher on a living target while wearing Crimson Lust, apply Hemorrhage.
 			var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
 			var/fortmod = 1 + userfort/100
 			var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
@@ -332,14 +340,16 @@
 		return
 	special_attack = FALSE
 	special_cooldown = world.time + special_cooldown_time
+
 	var/realization_active = FALSE
 	if(ishuman(user))
 		var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(our_suit))
 			realization_active = TRUE
 			var/datum/status_effect/crimlust_no_hesitation/angry_mercenary = user.has_status_effect(/datum/status_effect/crimlust_no_hesitation)
-			if((angry_mercenary) && (MultiThrowScan(A, user) > 1))
+			if((angry_mercenary) && (MultiThrowScan(A, user) > 1)) // If we have No Hesitation, try to do a Multithrow. But if there's only 1 target, or none at all, just do a regular throw. Mind that MultiThrowScan() needs to not chain into MultiThrowHit() if it doesn't find >= 2 targets.
 				return
+
 	SingleThrow(A, user, realization_active)
 	return
 
@@ -428,7 +438,7 @@
 	var/dealing_damage = special_damage // Damage reduces a little with each mob hit
 
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
-	var/justicemod = 1 + userjust/100
+	var/justicemod = (1 + userjust/100) * 0.75 // Not full Justice scaling
 	dealing_damage*=justicemod
 	dealing_damage*=force_multiplier // %dmg increase from Faith & Promise, EO upgrade tool, etc
 
@@ -501,18 +511,23 @@
 		owner.cut_overlay(icon_overlay) // Need to put this here 'cause apparently on_remove and be_replaced are different, which makes sense honestly but if I don't do this the overlay sticks forever
 	. = ..()
 
+/// Called when the mob dies or when it's hit by a Hollowpoint Shell
 /datum/status_effect/display/crimlust_hemorrhage/proc/Consume()
-	if(owner)
+	if(!QDELETED(owner))
 		UnregisterSignal(owner, COMSIG_LIVING_DEATH)
 		owner.deal_damage(consume_damage, RED_DAMAGE, source = crimlust_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 		var/turf/owner_turf = get_turf(owner)
 		var/owner_is_robot = FALSE
 
-		if(owner.mob_biotypes & MOB_ROBOTIC) // Owner is a robot
+		if(isnull(owner))
+			qdel(src)
+			return
+
+		if((owner.mob_biotypes & MOB_ROBOTIC)) // Owner is a robot
 			owner_is_robot = TRUE
 			playsound(owner, 'sound/effects/ordeals/green/noon_dead.ogg', 30, TRUE, 3) // Robotic-ish sound for popping the status
 			var/datum/effect_system/spark_spread/robot_hemorrhage_sparks = new /datum/effect_system/spark_spread // Sparks!
-			robot_hemorrhage_sparks.set_up(4, 0, owner_turf)
+			robot_hemorrhage_sparks.set_up(2, 0, owner_turf)
 			robot_hemorrhage_sparks.autocleanup = TRUE
 			robot_hemorrhage_sparks.start()
 			new /obj/effect/decal/cleanable/oil(owner_turf) // Bleeds oil.
@@ -522,12 +537,10 @@
 
 		for(var/i in 1 to 4)
 			var/atom/vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(owner), pick(GLOB.alldirs))
+			vfx.transform *= 1.3
 			if(owner_is_robot)
 				vfx.color = COLOR_ALMOST_BLACK // Oil...?
 				vfx.transform *= 0.9
-			else
-				vfx.transform *= 1.3
-
 	qdel(src)
 
 /obj/item/ego_weapon/thirteen

@@ -1703,6 +1703,7 @@
 	cooldown = world.time + windup + 1 // Just in case someone wants to be funny and spam this
 	update_icon()
 	user.say("No hesitation!")
+	playsound(user, 'sound/abnormalities/crumbling/warning.ogg', 60, FALSE, 4)
 	user.visible_message(span_userdanger("[user] twitches, a frenzied look in \his eyes...!"))
 	var/list/danger_turfs = oview(radius, user)
 	for(var/turf/T in danger_turfs)
@@ -1736,11 +1737,14 @@
 			if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
 				continue
 			targets_found++
+
+			// This little block of code staggers out the blades falling on the enemies in a non-uniform way
 			var/delay = targets_found
 			delay++
 			if(prob(50))
 				delay++
 			addtimer(CALLBACK(src, PROC_REF(BladeImpact), target, user), delay)
+
 	if(targets_found <= 0)
 		to_chat(user, span_warning("There's nothing nearby...! Your frustration sends you into an impotent rage!")) // I mean you'll still get the buff, but 0 power modifier and it hit nothing
 
