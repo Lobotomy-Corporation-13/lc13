@@ -506,12 +506,22 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 50) // 230, since it has an ability and passives.
 	realized_ability = /obj/effect/proc_holder/ability/strike_without_hesitation // Wind-up indiscriminate AoE damage that grants an empowered state based on amount of targets hit. More targets hit = more power. Also lets you dual wield CrimScar. Special interaction with BWBBW and Cobalt Scar.
 	actions_types = list(/datum/action/item_action/crimlust_hunter_trail)
+	/// World time at which we applied the last mark
 	var/last_applied_mark_time
+	/// Holds the timer for applying the next mark. Doesn't necessarily mean a mark WILL be applied when it ends, just that we'll check and try to apply one
 	var/mark_apply_timer
+	/// The cooldown for a successful mark.
 	var/mark_apply_cooldown_time = 120 SECONDS
+	/// Holds a reference to the last mark status effect we applied.
 	var/datum/status_effect/crimlust_mark/last_applied_mark_datum
-	var/mob/living/currently_marked
+	/// A list of breached Abnormalities. Ordeals are pulled from Lobotomy Corp subsystem in PickMarkTarget()
 	var/list/valid_mark_candidates = list()
+	/// These ones can't ever be chosen for our mark
+	var/list/mark_blacklisted_types = list(
+		/mob/living/simple_animal/hostile/abnormality/training_rabbit, // duh
+		/mob/living/simple_animal/hostile/abnormality/training_rabbit/boar, // duh
+		/mob/living/simple_animal/hostile/abnormality/wrath_servant, // Issues with the way she's recontained
+	)
 
 // Don't actually assign this as the hat for the armour, we apply it while under a certain buff and remove it after. I guess players can take it off early if they want
 /obj/item/clothing/head/ego_hat/helmet/crimson
@@ -530,8 +540,8 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	. += span_notice("<b>Crimson Claw (sword) bonuses</b>: Increased damage. Gains Justice scaling on its throwing attack. \
 	Applies <b>Hemorrhage</b> on combo finisher or throwing attack. Hemorrhage deals damage when consumed, scaling off of the user's Fortitude.")
 	. += ""
-	. += span_notice("<b>Crimson Scar (hand cannon) bonuses</b>: Increased damage. Infinite ammo. Default ammunition is now piercing. Can now load a hollowpoint shell by reloading the weapon. \
-	Hollowpoint ammunition is accurate and hard-hitting, also <b>consuming Hemorrhage.</b>")
+	. += span_notice("<b>Crimson Scar (hand cannon) bonuses</b>: Increased damage. Infinite ammo. Default ammunition is now piercing. Fires faster, fires more pellets and can be <b>dual wielded</b> while Strike Without Hesitation is active. \
+	Can now load a hollowpoint shell by reloading the weapon. Hollowpoint ammunition is accurate and hard-hitting, also <b>consuming Hemorrhage.</b>")
 	. += ""
 	. += span_info("When under the effects of both <b>Strike without Hesitation</b> and <b>Hunter's Mark's payout</b>, gain HP regen and stun immunity.")
 
@@ -549,8 +559,14 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	SIGNAL_HANDLER
 	if(!istype(breached))
 		return
-	if(istype(breached, /mob/living/simple_animal/hostile/abnormality/wrath_servant)) // Yeah uh, this one doesn't always die when recontained so
+	if(breached.type in mark_blacklisted_types)
 		return
+	if(is_tutorial_level(breached.z))
+		return
+	/*if(!(breached.area_index & (MOB_ABNORMALITY_INDEX | MOB_HOSTILE_INDEX)))
+		return
+	This would avoid some questionable mark targets like Friendlybreach QoH/Pyg, only issue is that we don't have a way to detect when they become hostile. So uh, I guess we can still mark them.
+		*/
 	valid_mark_candidates |= breached
 	RegisterSignal(breached, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(RemoveAbnoFromCandidateList))
 
@@ -582,25 +598,24 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 
 	var/list/potential_targets = list() // New list.
 	potential_targets |= valid_mark_candidates // Add all breaching abnormalities to the new list.
+
 	var/list/ongoing_ordeals = SSlobotomy_corp.current_ordeals
 	if(length(ongoing_ordeals) > 0) // If there's at least 1 ongoing ordeal...
 		for(var/datum/ordeal/O in ongoing_ordeals) // Add every ordeal mob into the new list.
 			potential_targets |= O.ordeal_mobs // |= prevents Pink Midnight from causing duplicate entries
 
 	for(var/mob/prospect in potential_targets)
-		if(prospect.z != hunter.z)
+		if(prospect.z != hunter.z) // Z level check. Every ongoing ordeal's mobs and every breached abno are candidates no matter where they are, but let's make sure they're on the hunter's z level
 			potential_targets -= prospect
 
 	if(length(potential_targets) <= 0) // No targets found...
-		SetupMarkTimer(hunter, 5 SECONDS)
+		SetupMarkTimer(hunter, 5 SECONDS) // Check again in 5s. An 'expensive' run of this proc should only happen like once every 120s, this proc will mostly be run while valid_mark_candidates and ongoing_ordeals are empty lists.
 		return FALSE
 
 	var/mob/living/chosen_target = pick(potential_targets)
-	last_applied_mark_datum = chosen_target.apply_status_effect(/datum/status_effect/crimlust_mark, hunter, src)
+	last_applied_mark_datum = chosen_target.apply_status_effect(/datum/status_effect/crimlust_mark, hunter)
 	last_applied_mark_time = world.time
 	SetupMarkTimer(hunter, mark_apply_cooldown_time) // Call this again once the cooldown's over.
-	if(last_applied_mark_datum)
-		currently_marked = chosen_target
 
 	SEND_SOUND(hunter, sound('sound/abnormalities/armyinblack/black_heartbeat.ogg'))
 	flash_color(hunter, flash_color = COLOR_RED_LIGHT, flash_time = 1 SECONDS)
@@ -610,10 +625,12 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 
 // Called once when first acquiring a new marked target, and can be called again by the user if they want. Tells you in chat/balloon alert roughly where your target is.
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/proc/TrackTarget(mob/living/carbon/human/hunter, first_time = FALSE)
-	var/mob/living/chosen_target = currently_marked
-	if(!chosen_target)
+	if(QDELETED(last_applied_mark_datum))
 		to_chat(hunter, span_warning("You're currently not hunting anything - there's nothing to track."))
 		return
+
+	var/mob/living/chosen_target = last_applied_mark_datum.owner
+
 	var/where_are_they = get_dir(hunter, chosen_target)
 	var/how_far = get_dist(hunter, chosen_target)
 	var/dir_message = ""
@@ -633,13 +650,15 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	to_chat(hunter, final_message)
 	hunter.balloon_alert(hunter, assembled_message)
 
+// Called when the armour enters our inventory in any slot
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/equipped(mob/user, slot)
 	. = ..()
-	if(!(ishuman(user)) || !(slot == ITEM_SLOT_OCLOTHING))
+	if(!(ishuman(user)) || !(slot == ITEM_SLOT_OCLOTHING)) // If not being grabbed by a human, or not being put on the EGO armour slot, clear the ongoing timer for performance's sake.
 		ClearMarkTimer()
 		return
-	PickMarkTarget(user)
+	PickMarkTarget(user) // Try to immediately set a marked target. Handles cooldown checking by itself and sets up the timer if no targets are available.
 
+// If you take off the armour then we nuke any active marks and the timer
 /obj/item/clothing/suit/armor/ego_gear/realization/crimson/dropped(mob/user)
 	. = ..()
 	ClearMarkTimer()
@@ -662,6 +681,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	button_icon_state = "red_target"
 	var/cooldown
 
+// This needs to be a full override because item actions normally click the item they're associated to
 /datum/action/item_action/crimlust_hunter_trail/Trigger()
 	if(!IsAvailable())
 		return FALSE
@@ -673,7 +693,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = target
 	if(!istype(our_suit))
 		return
-	if(!do_after(owner, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "crimlust_hunter_trail", max_interact_count = 1))
+	if(!do_after(owner, 2 SECONDS, timed_action_flags = IGNORE_USER_LOC_CHANGE | IGNORE_HELD_ITEM, interaction_key = "crimlust_hunter_trail", max_interact_count = 1))
 		to_chat(owner, span_warning("You lose concentration, and fail to track your target."))
 		return
 	our_suit.TrackTarget(owner, FALSE)
@@ -686,22 +706,20 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
 	var/mob/living/carbon/human/crimlust_user
-	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/crimlust_suit
 	var/mob/living/simple_animal/hostile/marked_owner
 	var/mutable_appearance/mark_overlay
 	var/bounty_claimed = FALSE
 	var/damage_left = 2000
 
-/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary, obj/item/clothing/suit/armor/ego_gear/realization/crimson/crimlust)
+/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary)
 	if(!(..()))
 		return FALSE
-	if(!(ishostile(new_owner)) || !(ishuman(mercenary)) || !(istype(crimlust)))
+	if(!(ishostile(new_owner)) || !(ishuman(mercenary)))
 		qdel(src)
 		return FALSE
 
 	marked_owner = new_owner
 	crimlust_user = mercenary
-	crimlust_suit = crimlust
 	mark_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teguicons.dmi', "red_target", ABOVE_MOB_LAYER)
 
 	// Mark visual
@@ -725,8 +743,6 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	. = ..()
 	if(marked_owner)
 		marked_owner.cut_overlay(mark_overlay)
-	if(crimlust_suit)
-		crimlust_suit.currently_marked = null
 	if(crimlust_user)
 		var/success_message
 		if(bounty_claimed == "death")
@@ -743,8 +759,10 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		return
 	if(!(source_of_damage == crimlust_user))
 		return
+	if(marked_owner.stat >= DEAD)
+		return
 	var/datum/dam_coeff/damage_coeff = marked_owner.damage_coeff
-	var/final_damage_dealt = (damage_amount * damage_coeff.getCoeff(damage_type))
+	var/final_damage_dealt = (damage_amount * damage_coeff.getCoeff(damage_type)) // In an ideal world this calc would be unnecessary but this isn't an ideal world
 	damage_left -= final_damage_dealt
 	if((marked_owner.health - final_damage_dealt <= 0))
 		bounty_claimed = "death" // Determines the message sent to the user
@@ -780,7 +798,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 /datum/status_effect/crimlust_mark_payout/on_creation(mob/living/new_owner, ...)
 	. = ..()
 	if(!ishuman(new_owner))
-		return
+		qdel(src)
 	var/mob/living/carbon/human/our_owner = new_owner
 
 	// Link to No Hesitation if it already exists
@@ -792,12 +810,13 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	our_owner.adjustBruteLoss(-initial_hp_sp_heal)
 	our_owner.adjustSanityLoss(-initial_hp_sp_heal)
 	for(var/i in 1 to 2)
-		new /obj/effect/temp_visual/heal(get_turf(owner))
+		new /obj/effect/temp_visual/heal(get_turf(owner), "#FF4444")
 		new /obj/effect/temp_visual/heal(get_turf(owner), "#6E6EFF")
 
 	// Power Modifier gain
 	our_owner.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
 
+	// Flaming eye overlay
 	eye_vfx = mutable_appearance('icons/effects/effects.dmi', "redhood_eye_effect", ABOVE_MOB_LAYER)
 	our_owner.add_overlay(eye_vfx)
 
@@ -839,6 +858,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	REMOVE_TRAIT(owner, TRAIT_STUNIMMUNE, "crimlust_empowered")
 	UnregisterSignal(owner, COMSIG_MOVABLE_MOVED)
 
+// A brief afterimage while moving if both buffs are active
 /datum/status_effect/crimlust_mark_payout/proc/EmpoweredMoveVFX(datum/source, OldLoc, Dir, Forced)
 	SIGNAL_HANDLER
 	if(!owner)
