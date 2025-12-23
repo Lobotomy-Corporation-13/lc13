@@ -231,7 +231,7 @@
 /obj/item/ego_weapon/mini/crimson
 	name = "crimson claw"
 	desc = "It's more important to deliver a decisive strike in blind hatred without hesitation than to hold on to insecure courage."
-	special = "Use in-hand to activate a throwing ranged attack. Has an 8s cooldown."
+	special = "This weapon has a 3-hit melee combo. Use in-hand to activate a throwing ranged attack. Has an 8s cooldown."
 	icon_state = "crimsonclaw"
 	force = 17
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -254,7 +254,7 @@
 	var/special_checks_faction = FALSE
 	// Realization vars
 	var/realization_base_force_coeff = 1.6
-	var/realization_hemorrhage_base_damage = 125
+	var/realization_hemorrhage_base_damage = 90
 	var/realization_multithrow_range = 8
 	var/realization_multithrow_max_bounces = 12 // This can get... quirky with Amber Dawns or admin spawned piles of 100 pickelhaube roaches, so we're capping it
 
@@ -270,10 +270,11 @@
 		var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
 		var/fortmod = 1 + userfort/100
 		if(istype(our_suit))
-			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. \
-			Base force is increased from [og_force] to [new_force], and your throwing attack now scales with Justice. \
-			Combo finishers will inflict <b>Hemorrhage</b> on the target, and consuming it with Crimson Scar deals <b>[realization_hemorrhage_base_damage * fortmod] RED damage</b>, after scaling from your Fortitude. \
-			Additionally, if performing your throwing attack while under the effects of your <b>Hunter's Mark payout buff</b> and <b>Strike Without Hesitation</b>, <b>your throw will hit all nearby enemies</b>.")
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential.")
+			. += span_info("<b>Base force is increased</b> from [og_force] to [new_force], and your throwing attack now <b>scales with Justice</b>.")
+			. += span_info("Combo finishers will inflict <b>Hemorrhage</b> on the target, and consuming it with Crimson Scar deals <b>[realization_hemorrhage_base_damage * fortmod] RED damage</b>, after scaling from your Fortitude.")
+			. += span_info("Additionally, if performing your throwing attack while under the effects of your <b>Hunter's Mark payout buff</b> and <b>Strike Without Hesitation</b>, <b>your throw will hit all nearby enemies</b>.")
+
 
 /obj/item/ego_weapon/mini/crimson/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
@@ -298,7 +299,7 @@
 	user.changeNext_move(CLICK_CD_MELEE * (1 + (combo * 0.2)))
 	..()
 	if(combo >= 3)
-		if(realization_active)
+		if(realization_active && M.stat < DEAD)
 			var/userfort = (get_modified_attribute_level(user, FORTITUDE_ATTRIBUTE))
 			var/fortmod = 1 + userfort/100
 			var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
@@ -475,7 +476,7 @@
 	duration = 10 SECONDS
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
-	display_name = "heart"
+	display_name = "hemorrhage" // I "borrowed" and resized the 32x32 bleed status icon.
 
 	var/mob/living/carbon/human/crimlust_user
 	var/consume_damage
@@ -485,9 +486,11 @@
 		return FALSE
 	// Ensure we get a valid user, owner, and final damage.
 	if(!(istype(new_owner)) || !(istype(supercool_mercenary)))
-		return FALSE
+		qdel(src)
 	if(!(hemorrhage_final_damage > 0))
-		return FALSE
+		qdel(src)
+	if(new_owner.stat >= DEAD)
+		qdel(src)
 	crimlust_user = supercool_mercenary
 	consume_damage = hemorrhage_final_damage
 	RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(Consume))
@@ -502,10 +505,29 @@
 	if(owner)
 		UnregisterSignal(owner, COMSIG_LIVING_DEATH)
 		owner.deal_damage(consume_damage, RED_DAMAGE, source = crimlust_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
-		playsound(owner, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 25, TRUE, 3)
+		var/turf/owner_turf = get_turf(owner)
+		var/owner_is_robot = FALSE
+
+		if(owner.mob_biotypes & MOB_ROBOTIC) // Owner is a robot
+			owner_is_robot = TRUE
+			playsound(owner, 'sound/effects/ordeals/green/noon_dead.ogg', 30, TRUE, 3) // Robotic-ish sound for popping the status
+			var/datum/effect_system/spark_spread/robot_hemorrhage_sparks = new /datum/effect_system/spark_spread // Sparks!
+			robot_hemorrhage_sparks.set_up(4, 0, owner_turf)
+			robot_hemorrhage_sparks.autocleanup = TRUE
+			robot_hemorrhage_sparks.start()
+			new /obj/effect/decal/cleanable/oil(owner_turf) // Bleeds oil.
+		else // Owner is not robotic
+			playsound(owner, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 25, TRUE, 3) // Fleshy sound for popping the status
+			new /obj/effect/decal/cleanable/blood(owner_turf) // I think most living beings bleed blood
+
 		for(var/i in 1 to 4)
 			var/atom/vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(owner), pick(GLOB.alldirs))
-			vfx.transform *= 1.3
+			if(owner_is_robot)
+				vfx.color = COLOR_ALMOST_BLACK // Oil...?
+				vfx.transform *= 0.9
+			else
+				vfx.transform *= 1.3
+
 	qdel(src)
 
 /obj/item/ego_weapon/thirteen

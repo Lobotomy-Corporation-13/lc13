@@ -1681,9 +1681,9 @@
 	/// Radius of the ability, in tiles.
 	var/radius = 6
 	/// Power Modifier (attack damage and movespeed) gained per target hit.
-	var/powermod_per_target = 6
+	var/powermod_per_target = 5
 	/// Maximum amount of Power Modifier that can be gained with the skill.
-	var/powermod_cap = 70
+	var/powermod_cap = 50
 	/// Base damage dealt, always RED.
 	var/base_damage = 300
 	/// Multiply damage dealt against Carbons by this amount (they take less damage)
@@ -1708,93 +1708,73 @@
 	for(var/turf/T in danger_turfs)
 		RVP.NewCultSparks(T, windup)
 
-	if(!do_after(our_guy, windup, interaction_key = "strike_without_hesitation", max_interact_count = 1))
+	if(!do_after(our_guy, windup, timed_action_flags = IGNORE_HELD_ITEM, interaction_key = "strike_without_hesitation", max_interact_count = 1))
 		qdel(RVP) // Clears our telegraph visuals on an early cancel
 		RVP = new(100) // We kinda need that pool back though
 		return
 	. = ..()
 
-	var/targets_hit = MultiThrow(user, danger_turfs)
-	var/final_powermod = min((targets_hit * powermod_per_target), powermod_cap)
-	// Actual ability here.
-	our_guy.apply_status_effect(/datum/status_effect/crimlust_no_hesitation, final_powermod)
+	user.SpinAnimation(4, 1)
+	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 100, TRUE, 3)
+	user.visible_message(span_danger("[user] flings hunting blades into the air!"))
 
-/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrow(mob/living/user, list/turfs_to_check)
+	var/targets_hit = MultiThrowScan(user, danger_turfs)
+	var/final_powermod = min((targets_hit * powermod_per_target), powermod_cap)
+	// Gain status effect here.
+	our_guy.apply_status_effect(/datum/status_effect/crimlust_no_hesitation, final_powermod, our_suit)
+
+/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrowScan(mob/living/user, list/turfs_to_check)
 	if(!ishuman(user))
 		return
-	var/list/hitlist = list()
 	var/targets_found = 0
-	for(var/mob/living/target in turfs_to_check)
-		if(target == user)
-			continue
-		if((target.stat >= DEAD) || (target.status_flags & GODMODE))
-			continue
-		if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
-			continue
-		targets_found++
-		INVOKE_ASYNC(src, PROC_REF(SingleThrow), target, user, hitlist)
-	if(targets_found > 0)
-		playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
-		user.visible_message(span_danger("[user] expertly flings hunting blades at all nearby targets!"))
-	else
+	for(var/turf/T in turfs_to_check)
+		for(var/mob/living/target in T)
+			if(target == user)
+				continue
+			if((target.stat >= DEAD) || (target.status_flags & GODMODE))
+				continue
+			if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
+				continue
+			targets_found++
+			var/delay = targets_found
+			delay++
+			if(prob(50))
+				delay++
+			addtimer(CALLBACK(src, PROC_REF(BladeImpact), target, user), delay)
+	if(targets_found <= 0)
 		to_chat(user, span_warning("There's nothing nearby...! Your frustration sends you into an impotent rage!")) // I mean you'll still get the buff, but 0 power modifier and it hit nothing
 
 	return targets_found
 
-// Copied and altered, from Crimson Claw.
-/obj/effect/proc_holder/ability/strike_without_hesitation/proc/SingleThrow(mob/living/A, mob/living/user, list/multithrow_hitlist)
+// A hunting blade 'falls' on the target.
+/obj/effect/proc_holder/ability/strike_without_hesitation/proc/BladeImpact(mob/living/A, mob/living/user)
 	var/turf/target_turf = get_turf(A)
-	var/list/turfs_to_hit = list()
-	for(var/turf/T in getline(user, target_turf))
-		if(T.density)
-			break
-		if(locate(/obj/machinery/door) in T)
-			continue
-		turfs_to_hit += T
-	if(!LAZYLEN(turfs_to_hit))
-		return
 
 	var/dealing_damage = base_damage
 
-	for(var/i = 1 to turfs_to_hit.len)
-		var/turf/open/T = turfs_to_hit[i]
-		if(!istype(T))
-			continue
-		// Effects
-		var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(T)
-		var/matrix/M = matrix(B.transform)
-		M.Turn(45 * i)
-		B.transform = M
-		B.alpha = min(150 + i*15, 255)
-		animate(B, alpha = 0, time = 2 + i*2)
-		// Actual damage
-		for(var/obj/structure/window/W in T)
-			W.obj_destruction("[src.name]")
-		for(var/mob/living/L in T)
-			if(L == user)
-				continue
-			if(L in multithrow_hitlist)
-				continue
-			if(iscarbon(L))
-				dealing_damage *= carbon_coeff
+	// Effects
+	var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(target_turf)
+	B.alpha = 80
+	B.pixel_z += 180
+	B.pixel_x += rand(-128, 128)
+	animate(B, alpha = 200, pixel_x = 0, pixel_z = 0, time = 2)
+	animate(alpha = 0, time = 2)
+	B.SpinAnimation(2, 3)
 
-			multithrow_hitlist |= L
-
-			L.visible_message(span_danger("[L] is hit by a hunter's blade!"), span_userdanger("You are hit by a hunter's blade!"))
-			playsound(L, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
-			L.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-
-	if(istype(A) && !(A in multithrow_hitlist)) // You don't get to dodge this if you were in the radius. If the previous code didn't result in hitting you, you get hit now
-		multithrow_hitlist |= A
+	if(istype(A))
+		if(iscarbon(A))
+			dealing_damage *= carbon_coeff
 		A.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
+		A.visible_message(span_danger("[A] is hit by a falling hunter's blade!"), span_userdanger("You are hit by a falling hunter's blade!"))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(A), pick(GLOB.alldirs))
+		playsound(A, 'sound/abnormalities/redhood/attack_3.ogg', 33, TRUE, 3)
 
 // A replacement for the decoy we'd usually be able to use with Crimson Claw throwing code (we don't have access to an atom to pass into decoy creation)
 /obj/effect/temp_visual/unhesitant_blade
 	name = "unhesitant blade"
 	icon = 'icons/obj/ego_weapons.dmi'
 	icon_state = "crimsonclaw"
-	duration = 1.5 SECONDS
+	duration = 1 SECONDS
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /// No Hesitation status effect. Gives you a certain amount of power modifier (can be 0 if you hit nothing with the skill), and allows you to dual wield CrimScars.
@@ -1807,6 +1787,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/no_hesitation
 	var/powermod_bonus = 0
 	var/list/modified_guns = list()
+	var/obj/item/clothing/head/ego_hat/helmet/crimson/spawned_hood
 
 /atom/movable/screen/alert/status_effect/no_hesitation
 	name = "No Hesitation"
@@ -1820,6 +1801,7 @@
 	if(!(ishuman(new_owner)))
 		return FALSE
 	var/mob/living/carbon/human/our_guy = new_owner
+
 	powermod_bonus = power_modifier
 
 	// If we have the Mark Payout status effect, link to it here
@@ -1842,6 +1824,17 @@
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
 	linked_alert.desc = initial(linked_alert.desc)+"[powermod_bonus], your Crimson Claw's throw hits all nearby targets, and you may dual-wield Crimson Scars."
+
+	// This snippet is "borrowed" and modified from EGO hat code. We will forcefully put a hood on, unless for some reason we can't remove their hat
+	var/obj/item/clothing/head/headgear = our_guy.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(isnull(headgear))
+		spawned_hood = new
+		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
+	else if(!HAS_TRAIT(headgear, TRAIT_NODROP))
+		our_guy.dropItemToGround(headgear) // Drop the other hat, if it exists.
+		spawned_hood = new
+		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
+
 	return TRUE
 
 /datum/status_effect/crimlust_no_hesitation/on_remove()
@@ -1849,6 +1842,9 @@
 	var/mob/living/carbon/human/our_guy = owner
 	if(!istype(our_guy))
 		return
+
+	if(spawned_hood)
+		QDEL_NULL(spawned_hood)
 
 	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = owner.get_active_held_item()
 	if(istype(mainhand_gun))

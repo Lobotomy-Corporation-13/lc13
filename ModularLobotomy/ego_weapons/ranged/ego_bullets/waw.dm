@@ -116,16 +116,21 @@
 	damage = 14
 	damage_type = RED_DAMAGE
 
-// This one is fired by Crimson Scar by default when wearing Crimson Lust. Under a certain buff, fires 6 pellets instead of 3 with a higher spread.
+// This one is fired by Crimson Scar by default when wearing Crimson Lust. Under a certain buff, fires 5 pellets instead of 3 with a higher spread.
 /obj/projectile/ego_bullet/ego_crimson/lust
 	name = "hateful crimson"
-	damage = 26
+	damage = 22
 	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/ego_crimson/lust/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(pierces >= 2)
+		qdel(src)
 
 // This one is fired by Crimson Scar when wearing Crimson Lust while this mode is toggled on. It's only 1 pellet and more accurate. Slower firerate. Consumes Hemorrhage.
 /obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint
 	name = "hollowpoint shell"
-	damage = 120
+	damage = 100
 
 /obj/projectile/ego_bullet/ego_crimson/lust_hollowpoint/on_hit(atom/target, blocked, pierce_hit)
 	. = ..()
