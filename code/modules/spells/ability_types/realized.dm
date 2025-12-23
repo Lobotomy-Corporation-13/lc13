@@ -1758,12 +1758,12 @@
 
 	// Effects
 	var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(target_turf)
-	B.alpha = 80
+	B.alpha = 90
 	B.pixel_z += 180
 	B.pixel_x += rand(-128, 128)
-	animate(B, alpha = 200, pixel_x = 0, pixel_z = 0, time = 2)
-	animate(alpha = 0, time = 2)
-	B.SpinAnimation(2, 3)
+	animate(B, alpha = 230, pixel_x = 0, pixel_z = 0, time = 2)
+	animate(alpha = 0, time = 1)
+	B.SpinAnimation(2, 2)
 
 	if(istype(A))
 		if(iscarbon(A))

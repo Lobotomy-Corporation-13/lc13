@@ -354,14 +354,18 @@
 	return
 
 /obj/item/ego_weapon/mini/crimson/proc/SingleThrow(atom/A, mob/living/user, realization_active = FALSE)
-	var/turf/target_turf = get_ranged_target_turf_direct(user, A, 8)
+	var/turf/target_turf = get_turf(A)
 	var/list/turfs_to_hit = list()
+	var/tiles_traveled = 0 // Range limit
 	for(var/turf/T in getline(user, target_turf))
+		if(tiles_traveled >= 8)
+			break
 		if(T.density)
 			break
 		if(locate(/obj/machinery/door) in T)
 			continue
 		turfs_to_hit += T
+		tiles_traveled++
 	if(!LAZYLEN(turfs_to_hit))
 		return
 	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
@@ -402,7 +406,12 @@
 				var/hemorrhage_final_damage = realization_hemorrhage_base_damage * fortmod
 				L.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
 
-			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+			var/obj/effect/temp_visual/dir_setting/slash/temp = new(T)
+			temp.dir = pick(GLOB.alldirs)
+			temp.transform *= 1.5
+			temp.color = COLOR_RED_LIGHT
+			playsound(L, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
 			dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
 /// This proc looks for up to [realization_multithrow_max_bounces] targets in [realization_multithrow_range] area around the user, and passes a sorted list of targets to MultiThrowHit if it finds at least 2.
