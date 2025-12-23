@@ -1082,3 +1082,91 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		damage_taken = 0
 	if((health <= stage_threshold) && (current_stage == 1))
 		StageTransition()
+
+//Violet Pet - An eldritch organ that grants buffs when touched
+/datum/crafting_recipe/violet_pet
+	name = "Pulsating Organ"
+	result = /mob/living/simple_animal/hostile/violet_pet
+	reqs = list(/obj/item/food/meat/slab/fruit = 4, /datum/reagent/water = 10)
+	time = 50
+	category = CAT_ROBOT
+
+/mob/living/simple_animal/hostile/violet_pet
+	name = "pulsating organ"
+	desc = "A squishy, violet-hued organ that pulses with a gentle rhythm. It makes soft cooing sounds and seems to enjoy being held."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
+	icon_state = "violet_pet"
+	icon_living = "violet_pet"
+	icon_dead = "violet_pet"
+	faction = list("neutral", "violet_ordeal")
+	response_help_continuous = "pets"
+	response_help_simple = "pet"
+	response_disarm_continuous = "gently pushes aside"
+	response_disarm_simple = "gently push aside"
+	friendly_verb_continuous = "nuzzles against"
+	friendly_verb_simple = "nuzzle against"
+	speak_emote = list("coos softly", "pulses happily", "hums contentedly")
+	emote_hear = list("makes a happy squelching sound.", "throbs gently.", "burbles affectionately.")
+	mob_biotypes = MOB_ORGANIC
+	speak_chance = 3
+	wander = TRUE
+	turns_per_move = 5
+	environment_smash = FALSE
+	density = FALSE
+	maxHealth = 80
+	health = 80
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	a_intent = INTENT_HELP
+	mob_size = MOB_SIZE_SMALL
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1)
+	butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	stop_automated_movement_when_pulled = TRUE
+	tame = TRUE
+	death_message = "lets out a sad little squeak as the violet glow fades from within."
+	/// Cooldown for petting buff
+	var/pet_cooldown = 0
+	/// The last mob who petted us - we follow them
+	var/mob/living/following = null
+
+/mob/living/simple_animal/hostile/violet_pet/Initialize(mapload)
+	. = ..()
+	if(prob(2))
+		icon_state = "sus_pet"
+		icon_living = "sus_pet"
+		name = "peculiar organ"
+		desc = "A squishy little organ that looks a bit... off. It tilts curiously when you look at it and still seems to want pets."
+
+/mob/living/simple_animal/hostile/violet_pet/examine(mob/user)
+	. = ..()
+	. += span_notice("Petting [src] will grant you insight into the black, but leave you more fragile.")
+
+/mob/living/simple_animal/hostile/violet_pet/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<b>The world is strange, but a gentle touch makes it all worthwhile...</b>")
+
+/mob/living/simple_animal/hostile/violet_pet/AttackingTarget()
+	return
+
+/mob/living/simple_animal/hostile/violet_pet/CanAttack(atom/the_target)
+	return
+
+/mob/living/simple_animal/hostile/violet_pet/attack_hand(mob/living/carbon/M)
+	if(!stat && M.a_intent == INTENT_HELP)
+		if(pet_cooldown <= world.time)
+			pet_cooldown = world.time + (15 SECONDS)
+			visible_message(span_notice("[M] pets [src], and it pulses happily!"))
+			playsound(get_turf(src), 'sound/effects/ordeals/violet/fruit_suicide.ogg', 30, TRUE)
+			to_chat(M, span_notice("A warm, tingly feeling spreads through you as you pet [src]..."))
+			new /obj/effect/temp_visual/revenant(get_turf(M))
+			M.apply_lc_fragile(2)
+			M.apply_lc_black_strength(2)
+		if(following != M)
+			following = M
+			visible_message(span_notice("[src] begins following [M]."))
+		walk_to(src, M, 1, move_to_delay)
+		return
+	return ..()
