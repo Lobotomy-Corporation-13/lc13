@@ -1173,7 +1173,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		return
 	return ..()
 
-// Violet pet projectile - passes through humans harmlessly
+// Violet pet projectile - passes through humans harmlessly, explodes on hit
 /obj/projectile/beam/violet_pet
 	name = "violet beam"
 	icon_state = "dvoid_dart"
@@ -1181,8 +1181,41 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	damage_type = BLACK_DAMAGE
 	light_color = COLOR_PURPLE
 	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
+	/// AoE range on hit
+	var/aoe_range = 1
 
 /obj/projectile/beam/violet_pet/prehit_pierce(atom/A)
 	if(ishuman(A))
 		return PROJECTILE_PIERCE_PHASE
 	return ..()
+
+/obj/projectile/beam/violet_pet/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	var/turf/T = get_turf(target)
+	if(!T)
+		return
+
+	// Calculate damage multiplier based on rider's prudence
+	var/damage_mult = 1
+	if(firer && istype(firer, /mob/living/simple_animal/hostile/violet_pet))
+		var/mob/living/simple_animal/hostile/violet_pet/pet = firer
+		for(var/mob/living/carbon/human/rider in pet.buckled_mobs)
+			var/prudence = get_modified_attribute_level(rider, PRUDENCE_ATTRIBUTE)
+			damage_mult = 1 + (prudence * 0.02) // 2% more damage per prudence
+			break // Only use first rider
+
+	var/aoe_damage = damage * damage_mult
+
+	// Visual effect
+	playsound(T, 'sound/effects/ordeals/violet/fruit_suicide.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/revenant(T)
+
+	// Deal AoE damage
+	for(var/turf/aoe_turf in range(aoe_range, T))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(aoe_turf)
+		for(var/mob/living/L in aoe_turf)
+			if(ishuman(L)) // Don't hurt humans
+				continue
+			if(L == target) // Already hit by direct damage
+				continue
+			L.deal_damage(aoe_damage, BLACK_DAMAGE)
