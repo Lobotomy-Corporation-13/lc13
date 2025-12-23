@@ -503,7 +503,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	name = "crimson lust"
 	desc = "They are always watching you."
 	icon_state = "crimson" // Sprites by Mel Taculo.
-	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 50) // 230, since it has an ability and passives.
+	armor = list(RED_DAMAGE = 80, WHITE_DAMAGE = 40, BLACK_DAMAGE = 50, PALE_DAMAGE = 60) // 230, since it has an ability and passives.
 	realized_ability = /obj/effect/proc_holder/ability/strike_without_hesitation // Wind-up indiscriminate AoE damage that grants an empowered state based on amount of targets hit. More targets hit = more power. Also lets you dual wield CrimScar. Special interaction with BWBBW and Cobalt Scar.
 	actions_types = list(/datum/action/item_action/crimlust_hunter_trail)
 	/// World time at which we applied the last mark
@@ -521,7 +521,16 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		/mob/living/simple_animal/hostile/abnormality/training_rabbit, // duh
 		/mob/living/simple_animal/hostile/abnormality/training_rabbit/boar, // duh
 		/mob/living/simple_animal/hostile/abnormality/wrath_servant, // Issues with the way she's recontained
+		/mob/living/simple_animal/hostile/abnormality/sirocco, // Invincible
+		/mob/living/simple_animal/hostile/abnormality/highway_devotee, // Invincible
+		/mob/living/simple_animal/hostile/abnormality/branch12/rock, // You have better things to hunt than boulders
+		/mob/living/simple_animal/hostile/abnormality/branch12/black_hole, // This one is beyond you
 	)
+	// These vars are used for scaling the "early-pop" mark threshold
+	var/mark_payout_hp_scaling_base_threshold = 2000
+	var/mark_payout_hp_scaling_threshold_max_increase = 2000
+	var/mark_payout_hp_scaling_target_lowest_health = 1500
+	var/mark_payout_hp_scaling_target_highest_health = 7000
 
 // Don't actually assign this as the hat for the armour, we apply it while under a certain buff and remove it after. I guess players can take it off early if they want
 /obj/item/clothing/head/ego_hat/helmet/crimson
@@ -534,7 +543,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	. += span_notice("This E.G.O. will periodically apply <b>Hunter's Mark</b> to a random enemy, allowing you to <b>track them</b> using the <b>Hunter's Trail</b> ability. \
 	This mark lasts 50 seconds and a new one is applied every 120 seconds. \
 	If you <b>land the finishing blow</b> on this enemy, you will be <b>healed and gain a temporary bonus to Power Modifier</b>. If Strike Without Hesitation's buff is active, refreshes it. \
-	Powerful enemies will grant the same reward after you deal 2000 damage to them.")
+	Powerful enemies will grant the same reward after you deal enough damage to them.")
 	. += ""
 	. += span_notice("This E.G.O. will <b>empower</b> the <b>Crimson Claw</b> and <b>Crimson Scar</b> weapons when worn.")
 	. += span_notice("<b>Crimson Claw (sword) bonuses</b>: Increased damage. Gains Justice scaling on its throwing attack. \
@@ -613,7 +622,9 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		return FALSE
 
 	var/mob/living/chosen_target = pick(potential_targets)
-	last_applied_mark_datum = chosen_target.apply_status_effect(/datum/status_effect/crimlust_mark, hunter)
+	var/target_maxhp = chosen_target.maxHealth
+	var/mark_hp = mark_payout_hp_scaling_base_threshold + floor(clamp(((target_maxhp - mark_payout_hp_scaling_target_lowest_health) * (mark_payout_hp_scaling_threshold_max_increase) / (mark_payout_hp_scaling_target_highest_health - mark_payout_hp_scaling_target_lowest_health)), 0, mark_payout_hp_scaling_threshold_max_increase))
+	last_applied_mark_datum = chosen_target.apply_status_effect(/datum/status_effect/crimlust_mark, hunter, mark_hp)
 	last_applied_mark_time = world.time
 	SetupMarkTimer(hunter, mark_apply_cooldown_time) // Call this again once the cooldown's over.
 
@@ -711,7 +722,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/bounty_claimed = FALSE
 	var/damage_left = 2000
 
-/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary)
+/datum/status_effect/crimlust_mark/on_creation(mob/living/new_owner, mob/living/carbon/human/mercenary, mark_hp = 2000)
 	if(!(..()))
 		return FALSE
 	if(!(ishostile(new_owner)) || !(ishuman(mercenary)))
@@ -720,6 +731,7 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 
 	marked_owner = new_owner
 	crimlust_user = mercenary
+	damage_left = mark_hp
 	mark_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/teguicons.dmi', "red_target", ABOVE_MOB_LAYER)
 
 	// Mark visual
