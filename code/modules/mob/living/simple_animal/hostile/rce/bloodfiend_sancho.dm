@@ -308,9 +308,9 @@
 
 				// Calculate damage
 				var/actual_damage = topple_damage
-				// Don Quixote takes 75% less damage
+				// Don Quixote takes 95% less damage
 				if(istype(victim, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
-					actual_damage = round(topple_damage * 0.25)
+					actual_damage = round(topple_damage * 0.05)
 				// Main target takes 75% less damage
 				else if(victim == dash_target && is_main_target)
 					actual_damage = round(topple_damage * 0.25)
@@ -402,9 +402,9 @@
 				if(BE)
 					bleed_stacks_on_target = BE.stacks
 				var/damage_mult = 1 + (bleed_stacks_on_target * 0.02)
-				// Don Quixote takes 75% less damage
+				// Don Quixote takes 85% less damage
 				if(istype(victim, /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote))
-					damage_mult *= 0.25
+					damage_mult *= 0.15
 				var/actual_damage = round(joy_damage * damage_mult)
 
 				victim.deal_damage(actual_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -489,7 +489,7 @@
 	say("Everyone, stay close to me!")
 	manual_emote("creates a protective barrier!")
 	// Global blurb to warn all players
-	show_global_blurb(5 SECONDS, "Get behind Sancho!", fade_in_time = 5, text_color = "#FF5555", outline_color = "#330000", text_align = "center", screen_location = "CENTER,CENTER")
+	show_global_blurb(5 SECONDS, "Get behind Sancho!", fade_in_time = 5, text_color = "#FF5555", outline_color = "#330000", text_align = "center", screen_location = "CENTER,BOTTOM+2")
 	// Spawn safe zone effects in range 2
 	for(var/turf/T in range(2, src))
 		var/obj/effect/greed_safe_zone/zone = new(T)

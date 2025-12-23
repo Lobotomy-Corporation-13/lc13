@@ -1596,9 +1596,46 @@
 		if(istype(S, /mob/living/simple_animal/hostile/bloodfiend_boss/sancho/hidden))
 			continue
 		if(entering_stance)
+			// Heal Sancho fully and teleport her within view but at least 4 tiles away
+			HealAndTeleportSancho(S)
 			S.EnterShieldStance()
 		else
 			S.ExitShieldStance()
+
+/// Fully heals Sancho and teleports her within view range of Don but at least 4 tiles away
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/HealAndTeleportSancho(mob/living/simple_animal/hostile/bloodfiend_boss/sancho/S)
+	if(QDELETED(S) || S.stat == DEAD)
+		return
+	// Fully heal Sancho
+	S.health = S.maxHealth
+	// Visual heal effect
+	new /obj/effect/temp_visual/heal(get_turf(S), "#FF0000")
+	playsound(S, 'sound/magic/staff_healing.ogg', 50, TRUE)
+	// Find a valid turf within view but at least 4 tiles away
+	var/list/possible_turfs = list()
+	for(var/turf/T in view(7, src))
+		if(T.density)
+			continue
+		if(get_dist(src, T) < 4) // Must be at least 4 tiles away
+			continue
+		var/blocked = FALSE
+		for(var/obj/structure/O in T)
+			if(O.density)
+				blocked = TRUE
+				break
+		if(blocked)
+			continue
+		possible_turfs += T
+	if(!length(possible_turfs))
+		return
+	// Teleport Sancho
+	var/turf/old_turf = get_turf(S)
+	var/turf/new_turf = pick(possible_turfs)
+	new /obj/effect/temp_visual/beam_out(old_turf)
+	playsound(old_turf, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 50, TRUE)
+	S.forceMove(new_turf)
+	new /obj/effect/temp_visual/beam_out(new_turf)
+	playsound(new_turf, 'sound/effects/ordeals/white/pale_teleport_in.ogg', 50, TRUE)
 
 /// Ensures Sancho is nearby for the orb attack - spawns them if not present
 /mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/proc/EnsureSanchoPresent()
@@ -2061,3 +2098,142 @@
 	// Actually die
 	health = 0
 	death()
+
+// ============================================
+// DON QUIXOTE - SIMPLE VARIANT (No Dialogue, Normal Death)
+// ============================================
+
+/// Simple Don Quixote that dies normally without dialogue or Sancho interaction
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/simple
+	name = "Don Quixote"
+	desc = "The patriarch of the bloodfiend family, consumed by the Heart of Greed. This variant fights without mercy or memory."
+	/// Simple variant does not announce victory
+	announce_victory_on_death = FALSE
+	/// Simple variant does not ignore Sancho
+	ignore_sancho = FALSE
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/simple/Initialize()
+	. = ..()
+	// Override landing sequence to skip Sancho dialogue
+	return .
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/simple/LandingSequence()
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	// Animate floating down
+	animate(src, pixel_y = 0, time = 1.5 SECONDS, easing = QUAD_EASING | EASE_IN)
+	sleep(1.5 SECONDS)
+	if(QDELETED(src) || stat == DEAD)
+		return
+	// Landing impact
+	landed = TRUE
+	playsound(src, 'sound/abnormalities/babayaga/land.ogg', 100, TRUE)
+	playsound(src, 'sound/effects/meteorimpact.ogg', 100, TRUE)
+	// Screen shake and knockdown all humans in range 7
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(!faction_check_mob(H))
+			H.Knockdown(2 SECONDS)
+			shake_camera(H, 4, 3)
+	// Create floor effect on all turfs in range 5
+	for(var/turf/T in view(5, src))
+		new /obj/effect/temp_visual/cult/turf/floor(T)
+	// Remove GODMODE and start fighting immediately (no dialogue)
+	status_flags &= ~GODMODE
+	can_act = TRUE
+
+/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/simple/death(gibbed)
+	// Skip final blow sequence check - just die normally
+	// Clean up magic circle if any
+	if(magic_circle && !QDELETED(magic_circle))
+		qdel(magic_circle)
+	// Clean up all heart beams
+	for(var/datum/beam/B in heart_beams)
+		if(!QDELETED(B))
+			qdel(B)
+	heart_beams.Cut()
+	// Kill all greed hearts
+	for(var/mob/living/simple_animal/hostile/greed_heart/heart in spawned_hearts)
+		if(!QDELETED(heart) && heart.stat != DEAD)
+			heart.owner_don = null
+			heart.death()
+	spawned_hearts.Cut()
+	// Announce victory if enabled
+	if(announce_victory_on_death)
+		SSgamedirector.AnnounceVictory()
+	// Call grandparent death (skip don_quixote's death override)
+	return ..(gibbed)
+
+// ============================================
+// SIMPLE FERRIS WHEEL - Spawns Simple Don Quixote
+// ============================================
+
+/// Ferris wheel variant that spawns the simple Don Quixote without Sancho
+/obj/structure/ferris_wheel/simple
+	name = "La Mancha Land Ferris Wheel"
+	desc = "A massive, corrupted ferris wheel towering over the carnival grounds. The Heart of Greed's influence pulses through its rusted frame."
+
+/// Spawns Simple Don Quixote after all gondolas are defeated
+/obj/structure/ferris_wheel/simple/SpawnDonQuixote()
+	// Skip Sancho teleport since we don't use Sancho
+	visible_message(span_boldwarning("The ferris wheel groans as its structure begins to collapse!"))
+	// Change wheel to no_sign state
+	icon_state = "no_sign"
+	// Create the falling sign
+	var/obj/structure/ferris_wheel_sign/sign = new(get_turf(src))
+	sign.pixel_x = pixel_x
+	sign.pixel_y = pixel_y
+	// Flash yellow animation
+	INVOKE_ASYNC(src, PROC_REF(SignFallSequenceSimple), sign)
+
+/// Handles the sign falling sequence for simple variant
+/obj/structure/ferris_wheel/simple/proc/SignFallSequenceSimple(obj/structure/ferris_wheel_sign/sign)
+	if(QDELETED(sign))
+		return
+	// Play flicker sound first
+	playsound(src, 'sound/distortions/don/wheel_last_flicker.ogg', 100, TRUE)
+	// Flash yellow several times
+	for(var/i in 1 to 4)
+		sign.color = "#FFFF00"
+		sleep(0.3 SECONDS)
+		sign.color = null
+		sleep(0.3 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Final yellow flash before fall
+	sign.color = "#FFFF00"
+	sleep(0.5 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Turn off the ferris wheel light
+	set_light(0)
+	// Play screech sound after flickering is done
+	playsound(src, 'sound/distortions/don/wheel_last_screech.ogg', 100, TRUE)
+	sleep(2 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Play detach sound before sign falls
+	playsound(src, 'sound/distortions/don/wheel_last_detach.ogg', 100, TRUE)
+	// Sign falls
+	visible_message(span_boldwarning("The La Mancha Land sign breaks free and plummets!"))
+	animate(sign, pixel_y = sign.pixel_y - 132, time = 8, easing = QUAD_EASING | EASE_IN)
+	sleep(0.8 SECONDS)
+	if(QDELETED(sign))
+		return
+	// Impact effect - play landing sound
+	playsound(sign, 'sound/distortions/don/wheel_last_landing.ogg', 100, TRUE)
+	for(var/turf/T in view(3, sign))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+	sleep(2 SECONDS)
+	// Spawn Simple Don Quixote 1 tile below the ferris wheel
+	visible_message(span_boldwarning("A figure emerges from the wreckage!"))
+	playsound(src, 'sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg', 100, TRUE)
+	var/turf/spawn_turf = get_step(get_turf(src), SOUTH)
+	if(!spawn_turf || spawn_turf.density)
+		spawn_turf = get_turf(src)
+	var/mob/living/simple_animal/hostile/bloodfiend_boss/don_quixote/simple/don = new(spawn_turf)
+	// Pass the orb target landmark to Don
+	if(orb_target_landmark)
+		don.orb_target_landmark = orb_target_landmark
+
+/// Simple ferris wheel does not spawn Sancho
+/obj/structure/ferris_wheel/simple/SpawnSancho()
+	return // Do not spawn Sancho
