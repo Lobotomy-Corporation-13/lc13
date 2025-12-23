@@ -1,7 +1,20 @@
-/obj/item/clothing/suit/armor/ego_gear/city/hana
+/obj/item/clothing/suit/armor/ego_gear/city/hana_old
 	name = "Hana Association paperwork armor."
 	desc = "Armor worn by hana association pencil pushers."
 	icon_state = "hanapaperwork"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 50)
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+
+//Below armor is sprited by PositiveEntropy
+/obj/item/clothing/suit/armor/ego_gear/city/hana
+	name = "Hana Association paperwork armor."
+	desc = "Armor worn by hana association pencil pushers."
+	icon_state = "hana_paperwork"
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 50)
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
@@ -22,11 +35,17 @@
 							JUSTICE_ATTRIBUTE = 100
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/city/hanacombat/paperwork
+/obj/item/clothing/suit/armor/ego_gear/city/hanacombat/paperwork_old
 	name = "Hana Association administrative armor"
 	desc = "Armor worn by hana association senior administrative fixers."
 	icon_state = "hanaadmin"
 
+//Below armor is sprited by PositiveEntropy
+/obj/item/clothing/suit/armor/ego_gear/city/hanacombat/paperwork
+	name = "Hana Association administrative coat"
+	desc = "Armor worn by hana association senior administrative fixers."
+	flags_inv = 0
+	icon_state = "hana_coat"
 
 /obj/item/clothing/suit/armor/ego_gear/city/hanadirector
 	name = "Hana Association director armor"

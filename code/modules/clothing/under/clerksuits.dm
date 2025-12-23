@@ -120,10 +120,15 @@
 	desc = "A black suit and orange tie worn by rcorp."
 	icon_state = "rcorp"
 
-/obj/item/clothing/under/suit/lobotomy/kcorp
+/obj/item/clothing/under/suit/lobotomy/kcorp_old
 	name = "k-corp officer uniform"
 	desc = "A plain black suit with green tie. Used by K-corp non-combat staff."
-	icon_state = "kcorp"
+	icon_state = "kcorp_old"
+
+/obj/item/clothing/under/suit/lobotomy/kcorp_research_old
+	name = "k-corp research uniform"
+	desc = "A plain black suit with green tie. Used by K-corp research staff."
+	icon_state = "kcorp_research_old"
 
 /obj/item/clothing/under/suit/lobotomy/pcorp
 	name = "p-corp archivist uniform"
@@ -149,3 +154,19 @@
 	name = "j-corp officer uniform"
 	desc = "A business suit. Used by J-corp staff."
 	icon_state = "agent" //Placeholder until a sprite is made
+
+//Following 3 suits are sprited by PositiveEntropy
+/obj/item/clothing/under/suit/lobotomy/kcorp
+	name = "k-corp officer uniform"
+	desc = "A plain black suit with green tie. Used by K-corp non-combat staff."
+	icon_state = "kcorp"
+
+/obj/item/clothing/under/suit/lobotomy/kcorp_research
+	name = "k-corp research uniform"
+	desc = "A plain black suit with green tie. Used by K-corp research staff."
+	icon_state = "kcorp_research"
+
+/obj/item/clothing/under/suit/lobotomy/hana
+	name = "hana fixer uniform"
+	desc = "A business suit. Used by Hana fixers."
+	icon_state = "hana_suit"

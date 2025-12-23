@@ -146,7 +146,7 @@
 /datum/data/lc13research/karmor1/ResearchEffect(obj/structure/representative_console/requester)
 	ItemUnlock(requester.order_list, "K Corp Class-1 Armor", /obj/item/clothing/suit/armor/ego_gear/city/kcorp_l1/weak, 600)
 	ItemUnlock(requester.order_list, "K Corp L1 Helmet",	/obj/item/clothing/head/ego_hat/helmet/kcorp, 100)
-	ItemUnlock(requester.order_list, "K Corp L1 Visor Helmet",	/obj/item/clothing/head/ego_hat/helmet/kcorp/visor, 100)
+	ItemUnlock(requester.order_list, "K Corp L1 Visor Helmet",	/obj/item/clothing/head/ego_hat/helmet/kcorp_old/visor_old, 100)
 	..()
 
 //Spawners

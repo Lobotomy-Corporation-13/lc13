@@ -55,9 +55,9 @@
 	id = /obj/item/card/id/silver/plastic
 	belt = /obj/item/pda/security
 	ears = /obj/item/radio/headset/headset_cent
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
+	uniform = /obj/item/clothing/under/suit/lobotomy/hana
 	glasses = /obj/item/clothing/glasses/sunglasses
-	shoes = /obj/item/clothing/shoes/laceup
+	shoes = /obj/item/clothing/shoes/laceup/white
 	l_hand = /obj/item/clothing/suit/armor/ego_gear/city/hana
 	l_pocket = /obj/item/potential_tester
 
