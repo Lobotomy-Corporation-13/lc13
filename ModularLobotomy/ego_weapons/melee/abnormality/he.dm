@@ -535,9 +535,10 @@
 	name = "bare metal"
 	desc = "Looks to be a fan blade with a handle welded to it."
 	icon_state = "metal"
-	force = 40
+	force = 52
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 1.5
+	stuntime = 7
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slices", "cleaves", "chops")
 	attack_verb_simple = list("slice", "cleave", "chop")

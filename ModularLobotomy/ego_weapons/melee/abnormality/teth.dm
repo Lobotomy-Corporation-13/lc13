@@ -198,30 +198,13 @@
 /obj/item/ego_weapon/sorrow
 	name = "sorrow"
 	desc = "It all returns to nothing."
-	special = "Use this weapon in hand to take damage and teleport to a random department."
 	icon_state = "sorrow"
-	force = 32					//Bad DPS, can teleport
-	attack_speed = 1.5
+	force = 35 //You get Giga DPS
+	stuntime = 3	//but a short stun
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("cleaves", "cuts")
 	attack_verb_simple = list("cleave", "cut")
 	hitsound = 'sound/weapons/fixer/generic/blade4.ogg'
-
-/obj/item/ego_weapon/sorrow/attack_self(mob/living/user)
-	var/area/turf_area = get_area(get_turf(user))
-	if(istype(turf_area, /area/fishboat))
-		to_chat(user, span_warning("[src] will not work here!."))
-		balloon_alert(user, "[src] will not work here!.")
-		return
-	if(do_after(user, 50, src))	//Five seconds of not doing anything, then teleport.
-		new /obj/effect/temp_visual/dir_setting/ninja/phase/out (get_turf(user))
-		user.adjustBruteLoss(user.maxHealth*0.3)
-
-		//teleporting half
-		var/turf/T = pick(GLOB.department_centers)
-		user.forceMove(T)
-		new /obj/effect/temp_visual/dir_setting/ninja/phase (get_turf(user))
-		playsound(src, 'sound/effects/contractorbatonhit.ogg', 100, FALSE, 9)
 
 /obj/item/ego_weapon/sorority
 	name = "sorority"

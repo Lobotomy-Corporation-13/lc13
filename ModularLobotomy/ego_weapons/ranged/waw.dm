@@ -24,9 +24,12 @@
 	name = "hornet"
 	desc = "The kingdom needed to stay prosperous, and more bees were required for that task. \
 	The projectiles relive the legacy of the kingdom as they travel toward the target."
+	special = "Attack an enemy with your bayonet to reload."
 	icon_state = "hornet"
 	inhand_icon_state = "hornet"
-	force = 28
+	force = 41
+	reach = 2
+	stuntime = 5	//but a short stun
 	projectile_path = /obj/projectile/ego_bullet/ego_hornet
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
@@ -36,6 +39,11 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
+
+/obj/item/ego_weapon/ranged/hornet/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(shotsleft < initial(shotsleft))
+		shotsleft = initial(shotsleft)
 
 
 /obj/item/ego_weapon/ranged/hatred
