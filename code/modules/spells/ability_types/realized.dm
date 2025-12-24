@@ -1672,7 +1672,7 @@
 /obj/effect/proc_holder/ability/strike_without_hesitation
 	name = "Strike Without Hesitation"
 	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 75% less damage. \n\
-	Gain 6 Power Modifier per target hit by this ability for 15 seconds, up to 70 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
+	Gain 5 Power Modifier per target hit by this ability for 15 seconds, up to 50 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
 	Cooldown: 45s."
 	action_icon = 'icons/obj/projectiles.dmi'
 	action_icon_state = "hunter_blade"
@@ -1752,19 +1752,21 @@
 
 // A hunting blade 'falls' on the target.
 /obj/effect/proc_holder/ability/strike_without_hesitation/proc/BladeImpact(mob/living/A, mob/living/user)
+	if(QDELETED(A))
+		return
 	var/turf/target_turf = get_turf(A)
 
 	var/dealing_damage = base_damage
 
 	// Effects
 	var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(target_turf)
-	B.alpha = 90
+	B.alpha = 120
 	B.pixel_z += 180
 	B.pixel_x += rand(-128, 128)
-	animate(B, alpha = 230, pixel_x = 0, pixel_z = 0, time = 2)
+	animate(B, alpha = 250, pixel_x = 0, pixel_z = 0, time = 2)
 	animate(alpha = 0, time = 1)
-	B.SpinAnimation(2, 2)
-
+	B.SpinAnimation(3, 2)
+	sleep(1)
 	if(istype(A))
 		if(iscarbon(A))
 			dealing_damage *= carbon_coeff

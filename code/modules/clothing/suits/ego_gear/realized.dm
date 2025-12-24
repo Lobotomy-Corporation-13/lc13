@@ -742,7 +742,8 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/width_diff = icon_width - 32
 	mark_overlay.pixel_y += 36 + floor((height_diff * 0.6))
 	mark_overlay.pixel_x += (width_diff * 0.5)
-	mark_overlay.alpha = 200
+	mark_overlay.alpha = 190
+	mark_overlay.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	marked_owner.add_overlay(mark_overlay)
 
 	// Signal for detecting killing blows
