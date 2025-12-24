@@ -79,7 +79,7 @@
 
 	// If supplies are less than 0, Just lower integrity constantly)
 	if (supplies < 0)
-		supplies == 0
+		supplies = 0
 		integrity --
 
 

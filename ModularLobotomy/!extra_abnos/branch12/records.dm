@@ -482,3 +482,18 @@
 		"After some time, Waxing of The Black Sun will soak the floor of the facility with blood, causing employees to be filled with rage.",
 		"After The Black Sun reaches the zenith, all abnormalities will breach"
 		)
+
+// SS13
+/obj/item/paper/fluff/info/branch12/ss13
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/ss13
+	abno_code = "O-04-12-13"
+	abno_info = list(
+		"O-04-12-13 is currently in orbit above Branch 12, performing research.",
+		"When O-04-12-13 has completed substantial research, it will cause PE gain to rapidly improve.",
+		"O-04-12-13 can be resupplied by bringing both fuel and supplies to the terminal.",
+		"Working on O-04-12-13 sent a message to the staff aboard it, telling them how to manage their station.",
+		"Completing an Instinct work will submit a message for engineers to repair the station, using more supplies.",
+		"Completing an Insight work will allocate funding to the research staff; speeding up research but causing more hull damage.",
+		"Completing an Attachment work will issue extra rations to the staff aboard, reducing the amount of tensions aboard.",
+		"Completing a Repression work will initiate martial law, increasing security.",
+	)
