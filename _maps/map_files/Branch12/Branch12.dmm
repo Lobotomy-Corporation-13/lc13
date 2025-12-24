@@ -885,6 +885,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/north)
+"lS" = (
+/obj/machinery/computer/extraction_cargo{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/department_main/extraction)
 "lY" = (
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
@@ -2680,9 +2686,6 @@
 /obj/machinery/computer/ego_purchase{
 	dir = 8
 	},
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "JF" = (
@@ -2697,8 +2700,7 @@
 /turf/open/floor/plasteel/white,
 /area/department_main/safety)
 "JI" = (
-/obj/structure/chair/comfy/black,
-/turf/open/floor/carpet/royalblack,
+/turf/closed/indestructible/rock,
 /area/department_main/extraction)
 "JR" = (
 /obj/machinery/holopad,
@@ -2719,6 +2721,9 @@
 "JX" = (
 /obj/machinery/computer/abnormality_logs{
 	dir = 8
+	},
+/obj/machinery/camera/autoname{
+	dir = 9
 	},
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
@@ -2797,7 +2802,7 @@
 /area/facility_hallway/control)
 "KX" = (
 /obj/machinery/light,
-/obj/machinery/text_adventure_console,
+/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "KZ" = (
@@ -2830,13 +2835,9 @@
 /obj/machinery/camera/autoname{
 	dir = 1
 	},
-/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "Lr" = (
-/obj/machinery/computer/extraction_cargo{
-	dir = 8
-	},
 /obj/machinery/light,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
@@ -3169,6 +3170,10 @@
 /obj/machinery/regenerator,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
+"PB" = (
+/obj/machinery/text_adventure_console,
+/turf/open/floor/carpet/royalblack,
+/area/department_main/extraction)
 "PH" = (
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/carpet/black,
@@ -35642,14 +35647,14 @@ ZU
 ZU
 ZU
 Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
 ZL
 ZL
 ZL
@@ -35898,15 +35903,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36155,15 +36160,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+Ve
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36412,15 +36417,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36674,9 +36679,9 @@ Kn
 Kn
 Kn
 Th
-Kn
-Kn
-Kn
+QJ
+QJ
+QJ
 Kn
 ZL
 ZL
@@ -37189,7 +37194,7 @@ vg
 vg
 Kn
 QJ
-Ve
+QJ
 QJ
 Kn
 ZL
@@ -41016,7 +41021,7 @@ Gt
 Gt
 IH
 Jp
-JI
+Jr
 KX
 GN
 tN
@@ -41786,8 +41791,8 @@ EI
 Gt
 Gt
 IV
-Jr
 JT
+Jr
 Jr
 GN
 LQ
@@ -42044,7 +42049,7 @@ GC
 Ik
 IY
 JB
-JX
+Jr
 Lr
 GN
 LV
@@ -42300,9 +42305,9 @@ FX
 GN
 GN
 GN
-GN
-GN
-GN
+IV
+JT
+Jr
 GN
 LV
 tN
@@ -42556,11 +42561,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-RV
+GN
+lS
+JX
+PB
+GN
 RV
 Mf
 tN
@@ -42813,11 +42818,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+GN
+GN
+GN
+GN
+GN
 ZL
 Mi
 tN
@@ -43070,11 +43075,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+JI
+JI
+JI
+JI
+JI
 ZL
 Ms
 tN
@@ -43327,7 +43332,7 @@ Xw
 EM
 YO
 ZL
-ZL
+JI
 RV
 RV
 RV
