@@ -528,9 +528,9 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	)
 	// These vars are used for scaling the "early-pop" mark threshold
 	var/mark_payout_hp_scaling_base_threshold = 2000
-	var/mark_payout_hp_scaling_threshold_max_increase = 2000
+	var/mark_payout_hp_scaling_threshold_max_increase = 1500
 	var/mark_payout_hp_scaling_target_lowest_health = 1500
-	var/mark_payout_hp_scaling_target_highest_health = 7000
+	var/mark_payout_hp_scaling_target_highest_health = 6000
 
 // Don't actually assign this as the hat for the armour, we apply it while under a certain buff and remove it after. I guess players can take it off early if they want
 /obj/item/clothing/head/ego_hat/helmet/crimson
