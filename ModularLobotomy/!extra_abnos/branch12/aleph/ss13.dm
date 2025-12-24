@@ -77,6 +77,12 @@
 		var/turf/W = pick(GLOB.xeno_spawn)
 		new /obj/structure/ss13/fuel_crate (get_turf(W))
 
+	// If supplies are less than 0, Just lower integrity constantly)
+	if (supplies < 0)
+		supplies == 0
+		integrity --
+
+
 	//I am too lazy to make this less common, and don't want to run a CALLBACK for it.
 	//Insert that image of the one guy that wanted to optimize atmos by making it run 30% of the time.
 	if(prob(50))
@@ -178,6 +184,26 @@
 	say("Research Capacity: [research]%.")
 	SLEEP_CHECK_DEATH(10)
 	say("Current orders given: [orders].")
+
+//Blow up like everything
+/mob/living/simple_animal/hostile/abnormality/branch12/ss13/ZeroQliphoth()
+	..()
+	datum_reference.qliphoth_change(1)
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		//Throw Gbee explosions around
+		var/list/all_turfs = RANGE_TURFS(7, src)
+		for(var/turf/open/F in all_turfs)
+			if(prob(1))
+				addtimer(CALLBACK(src, PROC_REF(Firebomb), F), rand(1,100))
+
+	for(var/turf/T in GLOB.xeno_spawn)
+		if(prob(70))
+			addtimer(CALLBACK(src, PROC_REF(Firebomb), T), rand(1,100))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/ss13/proc/Firebomb(turf/open/F)
+	new /obj/effect/beeshell(F)
+
+
 
 
 //Equipment crates
