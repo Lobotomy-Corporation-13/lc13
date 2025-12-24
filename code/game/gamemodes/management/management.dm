@@ -30,6 +30,7 @@
 		var/mob/living/simple_animal/hostile/abnormality/abno = i
 		if(initial(abno.can_spawn) && (initial(abno.abnormality_origin) in abno_types))
 			if(abno in gamemode_abnos[initial(abno.threat_level)])
+				stack_trace("WARNING! Duplicate [abno] found in Persistent Abno Rates!")
 				continue
 			gamemode_abnos[initial(abno.threat_level)] += abno
 			var/rate = (all_abnos[i] * -1) + highest * 2	//Weight counts for half of the abno chance, the other half is guaranteed.
