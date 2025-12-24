@@ -482,7 +482,12 @@
 		victim.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
 		victim.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
 
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(victim), pick(GLOB.alldirs))
+		var/turf/hit_turf = get_turf(victim)
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(hit_turf, pick(GLOB.alldirs))
+		var/obj/effect/temp_visual/dir_setting/slash/temp = new(hit_turf)
+		temp.dir = pick(GLOB.alldirs)
+		temp.transform *= 1.5
+		temp.color = COLOR_RED_LIGHT
 		playsound(user, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
 		dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
