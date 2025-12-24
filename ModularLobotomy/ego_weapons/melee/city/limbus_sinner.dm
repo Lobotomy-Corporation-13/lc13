@@ -72,29 +72,38 @@
 /obj/item/ego_weapon/shield/sangria
 	name = "S.A.N.G.R.I.A"
 	desc = "Succinct abbreviation naturally germinates rather immaculate art."
+	special = "Blocking with this weapon does not reduce damage, instead attacks all nearby targets when blocking."
 	icon_state = "sangria"
 	icon = 'icons/obj/limbus_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/weapons/limbus_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/limbus_righthand.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
-	force = 12
-	attack_speed = 0.5
+	force = 32
+	stuntime = 5
 	damtype = BLACK_DAMAGE
 	swingstyle = WEAPONSWING_LARGESWEEP
 
 	attack_verb_continuous = list("pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("poke", "jab", "tear", "lacerate", "gore")
-	reductions = list(20, 20, 20, 0) // 60 - Diet Diet Daredevil
+	reductions = list(0, 0, 0, 0) // You're countering all attacks
 	projectile_block_duration = 0 SECONDS //No ranged parry
 	block_duration = 0.5 SECONDS
 	block_cooldown = 3 SECONDS
 	block_sound = 'sound/weapons/parry.ogg'
-	block_message = "You attempt to parry the attack!"
-	hit_message = "parries the attack!"
+	block_message = "You prepare to strike those around you..."
+	hit_message = "prepares to strike!"
 	block_cooldown_message = "You rearm your blade."
 
 /obj/item/ego_weapon/shield/sangria/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	return 0 //Prevents ranged  parry
+	if(attack_type == MELEE_ATTACK && active_block)
+		for(var/mob/living/L in range(1, owner))
+			if(L == owner)
+				continue
+			if(owner.stat != DEAD)
+				attack(L, owner)
+				sleep(2)
+	return ..()
+
 
 /obj/item/ego_weapon/mini/soleil
 	name = "soleil"

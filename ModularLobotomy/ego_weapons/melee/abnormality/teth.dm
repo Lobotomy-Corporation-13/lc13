@@ -39,6 +39,7 @@
 /obj/item/ego_weapon/shield/lutemia
 	name = "dear lutemia"
 	desc = "Don't you want your cares to go away?"
+	special = "Blocking with this weapon attacks all nearby targets."
 	icon_state = "lutemia"
 	force = 22
 	attack_speed = 1
@@ -57,7 +58,15 @@
 	block_cooldown_message = "You rearm your blade."
 
 /obj/item/ego_weapon/shield/lutemia/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	return 0 //Prevents ranged  parry
+	if(attack_type == MELEE_ATTACK && active_block)
+		for(var/mob/living/L in range(1, owner))
+			if(L == owner)
+				continue
+			if(owner.stat != DEAD)
+				attack(L, owner)
+				sleep(2)
+	return ..()
+
 
 /obj/item/ego_weapon/eyes
 	name = "red eyes"
