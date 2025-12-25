@@ -21,7 +21,8 @@
 	attack_verb_simple = "smash into the side of"
 	attack_sound = 'sound/weapons/sonic_jackhammer.ogg'
 	speed = 3
-	move_to_delay = 10
+	move_to_delay = 4
+	minimum_distance = 4
 	mouse_opacity = MOUSE_OPACITY_ICON
 	death_sound = 'sound/magic/repulse.ogg'
 	death_message = "'s lights flicker, before its top part falls down."
@@ -48,6 +49,19 @@
 
 	var/sing_shot_length = 8
 	var/cooldown_time = 20
+
+
+/mob/living/simple_animal/hostile/abnormality/mining/pandora/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(40))
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/mining/pandora/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(80))
+		datum_reference.qliphoth_change(-1)
+	return
 
 /datum/action/innate/elite_attack/singular_shot
 	name = "Singular Shot"

@@ -36,6 +36,8 @@
 		ABNORMALITY_WORK_REPRESSION = 60,
 	)
 	threat_level = HE_LEVEL
+	start_qliphoth = 2
+	can_breach = TRUE
 
 	work_damage_amount = 7
 	work_damage_type = RED_DAMAGE
@@ -58,6 +60,19 @@
 	var/has_head = TRUE
 	/// Whether or not the legionnaire is currently charging, used to deny movement input if he is
 	var/charging = FALSE
+
+
+/mob/living/simple_animal/hostile/abnormality/mining/legionnaire/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(40))
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/mining/legionnaire/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(80))
+		datum_reference.qliphoth_change(-1)
+	return
 
 /datum/action/innate/elite_attack/legionnaire_charge
 	name = "Legionnaire Charge"

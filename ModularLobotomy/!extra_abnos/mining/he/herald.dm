@@ -37,12 +37,7 @@
 	work_damage_type = RED_DAMAGE
 	threat_level = HE_LEVEL
 	start_qliphoth = 2
-
-	ego_list = list(
-		//datum/ego_datum/weapon/branch12/exterminator,
-		//datum/ego_datum/armor/branch12/exterminator,
-	)
-	//gift_type =  /datum/ego_gifts/signal
+	can_breach = TRUE
 
 	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
@@ -53,12 +48,25 @@
 
 	//Testing
 	ego_list = list(
-		/datum/ego_datum/weapon/transmission,
-		/datum/ego_datum/armor/transmission,
+		/datum/ego_datum/weapon/galaxy,
+		/datum/ego_datum/armor/galaxy,
 	)
 
 	var/mob/living/simple_animal/hostile/asteroid/elite/herald/mirror/my_mirror = null
 	var/is_mirror = FALSE
+
+/mob/living/simple_animal/hostile/abnormality/mining/herald/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(40))
+		datum_reference.qliphoth_change(-1)
+	return
+
+/mob/living/simple_animal/hostile/abnormality/mining/herald/FailureEffect(mob/living/carbon/human/user, work_type, pe)
+	. = ..()
+	if(prob(80))
+		datum_reference.qliphoth_change(-1)
+	return
+
 
 /mob/living/simple_animal/hostile/abnormality/mining/herald/death()
 	. = ..()
