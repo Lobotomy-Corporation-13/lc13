@@ -42,8 +42,8 @@
 	//How much research capacity you have. Increases quota PE when above 20
 	var/research = 0
 
-/mob/living/simple_animal/hostile/abnormality/branch12/ss13/Initialize()
-	..()
+/mob/living/simple_animal/hostile/abnormality/branch12/ss13/PostSpawn()
+	. = ..()
 	var/turf/W = pick(GLOB.xeno_spawn)
 	new /obj/structure/ss13/supplies_crate (get_turf(W))
 
