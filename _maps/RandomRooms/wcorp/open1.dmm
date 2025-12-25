@@ -9,19 +9,38 @@
 	set_cap = 3;
 	set_luminosity = 24
 	},
-/obj/effect/landmark/department_center,
+/turf/open/floor/carpet/blue,
+/area/city/outskirts)
+"gj" = (
+/obj/structure/wave_barrier{
+	controller_id = "open"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
+"nZ" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "open"
+	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "ok" = (
 /obj/structure/barricade/security,
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
+"Dv" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "open"
+	},
+/turf/open/floor/carpet/royalblue,
+/area/city/outskirts)
 "DG" = (
 /obj/structure/barricade/security,
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
-"Ro" = (
-/obj/effect/landmark/department_center,
+"Gx" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "open"
+	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "UR" = (
@@ -35,13 +54,13 @@
 Xn
 Xn
 Xn
-Ro
-UR
-UR
-UR
-UR
-Ro
-UR
+Gx
+Gx
+Gx
+Gx
+Gx
+Gx
+Gx
 Xn
 "}
 (2,1,1) = {"
@@ -98,7 +117,7 @@ Xn
 "}
 (6,1,1) = {"
 Xn
-UR
+nZ
 UR
 UR
 UR
@@ -106,7 +125,7 @@ fU
 UR
 UR
 UR
-UR
+nZ
 Xn
 "}
 (7,1,1) = {"
@@ -150,7 +169,7 @@ Xn
 "}
 (10,1,1) = {"
 Xn
-UR
+nZ
 UR
 UR
 UR
@@ -171,7 +190,7 @@ UR
 UR
 UR
 ag
-ag
+Dv
 Xn
 "}
 (12,1,1) = {"
@@ -191,12 +210,12 @@ Xn
 Xn
 Xn
 Xn
-ag
-ag
-ag
-ag
-ag
-ag
+gj
+gj
+gj
+gj
+gj
+gj
 Xn
 Xn
 "}

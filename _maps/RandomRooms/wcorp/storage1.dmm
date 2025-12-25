@@ -124,6 +124,9 @@
 	dir = 4;
 	icon_state = "wooden_chair"
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
 /turf/open/floor/carpet/stellar,
 /area/city/outskirts)
 "vG" = (
@@ -159,6 +162,12 @@
 	},
 /turf/open/floor/carpet,
 /area/city/outskirts)
+"Dm" = (
+/obj/structure/wave_barrier{
+	controller_id = "storage"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
 "DG" = (
 /obj/effect/decal/cleanable/blood/xtracks{
 	icon_state = "xltrails_1";
@@ -171,11 +180,20 @@
 	dir = 4;
 	icon_state = "wooden_chair"
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
 /turf/open/floor/carpet/green,
 /area/city/outskirts)
 "Hh" = (
 /obj/structure/bookcase{
 	icon_state = "book-3"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
+"Iv" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "storage"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
@@ -193,6 +211,9 @@
 /obj/item/chair/wood{
 	dir = 8
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
 /turf/open/floor/carpet/green,
 /area/city/outskirts)
 "LO" = (
@@ -200,6 +221,16 @@
 	icon_state = "splatter3"
 	},
 /turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
+"Mn" = (
+/obj/effect/decal/cleanable/blood/xtracks{
+	icon_state = "xltrails_1";
+	dir = 4
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
+/turf/open/floor/carpet,
 /area/city/outskirts)
 "Na" = (
 /turf/open/floor/carpet/royalblack,
@@ -259,6 +290,9 @@
 	dir = 8;
 	icon_state = "wooden_chair"
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
 /turf/open/floor/carpet/stellar,
 /area/city/outskirts)
 "UR" = (
@@ -289,6 +323,9 @@
 /obj/item/chair/wood{
 	dir = 4
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "storage"
+	},
 /turf/open/floor/carpet,
 /area/city/outskirts)
 "Xn" = (
@@ -316,11 +353,11 @@
 Xn
 Xn
 Ab
-fU
-fU
-fU
-fU
-fU
+Iv
+Iv
+Iv
+Iv
+Iv
 Xn
 Xn
 Xn
@@ -432,7 +469,7 @@ Xn
 (10,1,1) = {"
 Xn
 Ro
-DG
+Mn
 Td
 Py
 Hh
@@ -472,11 +509,11 @@ Xn
 Xn
 Xn
 jZ
-fU
-fU
-fU
-fU
-fU
+Dm
+Dm
+Dm
+Dm
+Dm
 Xn
 Xn
 Xn

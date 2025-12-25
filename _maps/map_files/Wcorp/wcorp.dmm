@@ -1,33 +1,4 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
-"ar" = (
-/obj/structure/table/reinforced,
-/turf/closed/indestructible/rock,
-/area/space)
-"aW" = (
-/obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/obj/effect/landmark/latejoin,
-/turf/open/indestructible/hotelwood,
-/area/city/outskirts)
-"aX" = (
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/closed/indestructible/rock,
-/area/space)
-"bh" = (
-/obj/effect/decal/cleanable/blood/footprints,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"bU" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/decal/cleanable/blood/gibs/up,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"cp" = (
-/turf/closed/wall/mineral/plastitanium,
-/area/space)
-"cB" = (
-/obj/effect/decal/cleanable/blood/gibs/limb,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
 "cI" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
@@ -45,81 +16,24 @@
 /obj/effect/spawner/room/wcorp,
 /turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
-"df" = (
-/turf/open/floor/plasteel/bluespace,
-/area/space)
-"dh" = (
-/turf/open/floor/carpet/blue,
-/area/space)
-"di" = (
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
-	},
-/turf/open/floor/plating/ashplanet/rocky,
-/area/city/outskirts)
-"dI" = (
-/obj/structure/chair/comfy/shuttle{
-	dir = 8
-	},
-/turf/open/floor/plasteel/bluespace,
-/area/space)
-"dP" = (
-/obj/structure/table/reinforced,
-/turf/open/floor/carpet/blue,
-/area/space)
 "dR" = (
-/obj/structure/chair/sofa/corp/left{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood/gibs/limb,
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/carpet/red,
+/obj/structure/window/shuttle/survival_pod,
+/turf/open/floor/circuit,
 /area/city/outskirts)
-"eX" = (
-/obj/machinery/door/airlock/glass,
+"eK" = (
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "fl" = (
 /turf/open/floor/mineral/titanium/tiled/blue,
-/area/space)
-"fv" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/decal/cleanable/blood/gibs/up,
-/obj/effect/decal/cleanable/blood/gibs/up,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"fy" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/obj/effect/decal/cleanable/glass/plasma,
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"gm" = (
-/obj/structure/window/reinforced/spawner{
-	dir = 8
-	},
-/turf/open/floor/plasteel/bluespace,
 /area/space)
 "gL" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/bluespace,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"hf" = (
-/obj/structure/chair/comfy/shuttle{
-	dir = 8
-	},
-/turf/open/floor/carpet/blue,
-/area/space)
-"hm" = (
-/obj/structure/window/reinforced/spawner{
-	dir = 8
-	},
-/turf/open/floor/carpet/blue,
-/area/space)
 "hs" = (
 /obj/machinery/telecomms/server/presets/engineering,
 /obj/effect/turf_decal/bot,
@@ -129,10 +43,6 @@
 /obj/machinery/telecomms/server/presets/security,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"hO" = (
-/obj/machinery/door/airlock/glass,
-/turf/open/floor/plasteel/bluespace,
-/area/space)
 "id" = (
 /obj/structure/chair/office{
 	dir = 8
@@ -142,15 +52,6 @@
 "iP" = (
 /turf/closed/wall/r_wall/syndicate,
 /area/city/outskirts)
-"iW" = (
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
-	},
-/turf/open/floor/carpet/blue,
-/area/space)
 "je" = (
 /obj/machinery/telecomms/message_server/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -164,57 +65,25 @@
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"jv" = (
-/obj/structure/table/reinforced,
-/obj/structure/table/reinforced,
-/turf/open/floor/carpet/blue,
-/area/space)
-"jF" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/decal/cleanable/blood/gibs/up,
-/turf/closed/wall/mineral/plastitanium/explosive,
+"jY" = (
+/obj/effect/landmark/wave_spawn/boss{
+	controller_id = "final_boss"
+	},
+/turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "kf" = (
 /turf/open/floor/carpet/black,
-/area/space)
-"kp" = (
-/turf/closed/wall/material,
-/area/city/outskirts)
-"ku" = (
-/obj/structure/window/reinforced/spawner{
-	dir = 8
-	},
-/obj/structure/window/reinforced/spawner{
-	dir = 8
-	},
-/turf/open/floor/plasteel/bluespace,
 /area/space)
 "ls" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
-"lB" = (
-/obj/machinery/door/airlock/glass,
-/turf/open/floor/carpet/blue,
-/area/space)
 "lU" = (
-/obj/effect/decal/cleanable/blood,
-/turf/open/floor/carpet/red,
+/obj/machinery/light,
+/turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "mN" = (
 /turf/closed/wall/mineral/plastitanium/explosive,
-/area/city/outskirts)
-"mS" = (
-/obj/structure/chair/sofa/corp/left{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"nu" = (
-/obj/effect/decal/cleanable/blood/innards,
-/turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "ny" = (
 /turf/closed/wall/r_wall/syndicate,
@@ -239,28 +108,12 @@
 /obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"pV" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/turf/closed/wall/r_wall/syndicate,
-/area/city/outskirts)
-"qM" = (
-/obj/structure/chair/sofa/corp/left{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
 "rh" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/city/outskirts)
 "rF" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"rO" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/obj/effect/decal/cleanable/glass/plasma,
-/turf/open/floor/carpet/red,
 /area/city/outskirts)
 "rP" = (
 /obj/effect/light_emitter{
@@ -272,13 +125,11 @@
 /turf/open/floor/carpet/royalblue,
 /area/city/outskirts)
 "sy" = (
-/obj/effect/decal/cleanable/blood/footprints,
-/obj/effect/landmark/wavespawn,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"ta" = (
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/carpet/red,
+/obj/structure/rack,
+/obj/item/storage/firstaid/revival,
+/obj/item/krevive,
+/obj/item/storage/box/pcorp,
+/turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "tb" = (
 /turf/open/floor/plasteel/bluespace,
@@ -298,26 +149,23 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"ub" = (
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/closed/wall/material,
+"vG" = (
+/obj/machinery/jukebox,
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"vL" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "outside"
+	},
+/turf/open/floor/carpet/blue,
 /area/city/outskirts)
 "vS" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "vW" = (
-/obj/effect/landmark/wavespawn,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"wn" = (
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"ws" = (
-/obj/machinery/telecomms/allinone/indestructable,
-/turf/open/indestructible/hotelwood,
+/obj/machinery/door/poddoor/shutters/window/preopen,
+/turf/open/floor/circuit,
 /area/city/outskirts)
 "wu" = (
 /obj/effect/turf_decal/bot,
@@ -347,27 +195,8 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"xH" = (
-/obj/effect/decal/cleanable/blood/gibs/down,
-/obj/effect/decal/cleanable/blood/gibs/up,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"xZ" = (
-/obj/effect/decal/cleanable/glass,
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"yc" = (
-/obj/effect/landmark/department_center,
-/turf/open/indestructible/hotelwood,
-/area/city/outskirts)
-"yD" = (
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
-	},
+"xP" = (
+/obj/effect/landmark/observer_start,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "yK" = (
@@ -375,61 +204,21 @@
 /obj/machinery/telecomms/processor/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"yN" = (
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
 "zh" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/bluespace,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"zz" = (
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"zO" = (
-/obj/effect/decal/cleanable/glass,
-/turf/closed/wall/r_wall/syndicate,
-/area/city/outskirts)
-"zY" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Bk" = (
-/obj/effect/decal/cleanable/glass,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Dh" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/light_emitter{
-	light_power = 4;
-	light_range = 25;
-	set_cap = 3;
-	set_luminosity = 24
-	},
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
 "DE" = (
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"DX" = (
-/obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/turf/closed/wall/r_wall/syndicate,
-/area/city/outskirts)
 "Es" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
 	},
 /turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Fe" = (
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/carpet/red,
 /area/city/outskirts)
 "Fk" = (
 /obj/effect/decal/cleanable/blood/gibs/core,
@@ -446,16 +235,10 @@
 "Ga" = (
 /turf/open/floor/mineral/plastitanium/red,
 /area/space)
-"Gk" = (
-/obj/structure/chair/sofa/corp/left{
-	dir = 4
-	},
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
 "Gq" = (
-/obj/effect/decal/cleanable/blood/tracks,
-/obj/effect/landmark/wavespawn,
-/turf/open/floor/plasteel/bluespace,
+/obj/machinery/clonepod,
+/obj/effect/landmark/latejoin,
+/turf/open/floor/circuit,
 /area/city/outskirts)
 "GC" = (
 /obj/structure/window/reinforced/unanchored{
@@ -467,33 +250,12 @@
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /turf/open/indestructible/hotelwood,
 /area/city/outskirts)
-"He" = (
-/turf/open/floor/plating/ashplanet/rocky,
-/area/city/outskirts)
-"Hf" = (
-/obj/effect/decal/cleanable/blood/gibs/core,
-/obj/effect/landmark/wavespawn,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Hk" = (
-/obj/effect/decal/cleanable/blood/gibs/up,
-/obj/effect/decal/cleanable/blood/innards,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"HL" = (
-/obj/effect/decal/cleanable/blood/tracks,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Ig" = (
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Is" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/obj/effect/decal/cleanable/blood/old,
+"Hg" = (
+/obj/structure/rack,
+/obj/item/storage/firstaid/revival,
+/obj/item/storage/firstaid/revival,
+/obj/item/krevive,
+/obj/item/storage/box/pcorp,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "Iv" = (
@@ -501,6 +263,12 @@
 /obj/machinery/telecomms/bus/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
+"Iy" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "final_boss"
+	},
+/turf/open/indestructible/hotelwood,
+/area/city/outskirts)
 "Jw" = (
 /obj/machinery/telecomms/broadcaster/preset_left,
 /obj/effect/turf_decal/bot,
@@ -511,74 +279,26 @@
 /obj/machinery/ntnet_relay,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"JQ" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/obj/effect/decal/cleanable/blood/old,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"JS" = (
-/obj/effect/decal/cleanable/blood/gibs/core,
-/obj/effect/decal/cleanable/blood/gibs,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Ka" = (
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Kg" = (
-/obj/effect/decal/cleanable/glass,
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Km" = (
-/obj/machinery/door/airlock/glass,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Lk" = (
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Lq" = (
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Lu" = (
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
 "Lz" = (
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/north)
-"LN" = (
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Mi" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"MK" = (
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
+"Mr" = (
+/obj/machinery/button/door{
+	id = "outside";
+	name = "operation start button";
+	req_access_txt = "19"
 	},
-/obj/effect/decal/cleanable/blood/gibs/limb,
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/plasteel/bluespace,
+/turf/closed/wall/r_wall/syndicate,
 /area/city/outskirts)
-"MN" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/obj/effect/decal/cleanable/glass/plasma,
-/obj/effect/decal/cleanable/blood/gibs/core,
-/turf/open/floor/carpet/red,
+"MA" = (
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "final_boss"
+	},
+/turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "MR" = (
-/obj/effect/landmark/latejoin,
+/obj/structure/rack,
+/obj/item/storage/box/pcorp,
 /turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "NR" = (
@@ -590,28 +310,6 @@
 /obj/effect/turf_decal/bot,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"NY" = (
-/obj/effect/decal/cleanable/blood/footprints,
-/obj/effect/decal/cleanable/blood/old,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Oj" = (
-/obj/effect/decal/cleanable/blood/gibs/core,
-/obj/effect/landmark/latejoin,
-/turf/open/indestructible/hotelwood,
-/area/city/outskirts)
-"On" = (
-/obj/effect/decal/cleanable/glass/plasma,
-/turf/closed/wall/mineral/plastitanium/explosive,
-/area/city/outskirts)
-"Os" = (
-/obj/effect/decal/cleanable/glass,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"Ow" = (
-/obj/effect/landmark/wavespawn,
-/turf/open/indestructible/hotelwood,
-/area/city/outskirts)
 "OE" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
@@ -647,28 +345,23 @@
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"Rm" = (
-/obj/effect/decal/cleanable/blood/old,
-/obj/effect/decal/cleanable/blood/gibs/down,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Ro" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/obj/effect/landmark/wavespawn,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Rs" = (
-/obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/turf/closed/wall/mineral/plastitanium,
-/area/city/outskirts)
 "Rv" = (
 /obj/structure/rack,
 /obj/item/storage/firstaid/revival,
+/obj/item/krevive,
 /turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Sq" = (
-/obj/effect/decal/cleanable/blood/gibs/up,
-/turf/open/floor/carpet/red,
+/obj/structure/chair/greyscale{
+	dir = 4
+	},
+/turf/open/floor/plasteel/bluespace,
+/area/city/outskirts)
+"TO" = (
+/obj/structure/chair/comfy/teal{
+	dir = 8
+	},
+/turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "Uw" = (
 /obj/effect/turf_decal/bot,
@@ -682,26 +375,9 @@
 /turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Vw" = (
-/obj/structure/chair/sofa/corp/right{
-	dir = 4
-	},
-/obj/effect/decal/cleanable/blood/tracks,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"VN" = (
-/obj/effect/decal/cleanable/blood,
-/obj/effect/decal/cleanable/blood/old,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/carpet/red,
-/area/city/outskirts)
-"VU" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"VW" = (
-/obj/effect/decal/cleanable/blood/gibs,
-/obj/effect/decal/cleanable/blood/gibs/body,
-/turf/open/floor/plasteel/bluespace,
+/obj/structure/window/shuttle/survival_pod,
+/obj/structure/window/shuttle/survival_pod,
+/turf/open/floor/circuit,
 /area/city/outskirts)
 "Wc" = (
 /turf/open/floor/carpet/purple/airless,
@@ -715,11 +391,6 @@
 	set_cap = 3;
 	set_luminosity = 24
 	},
-/turf/open/indestructible/hotelwood,
-/area/city/outskirts)
-"Ws" = (
-/obj/effect/decal/cleanable/blood/gibs/bubblegum,
-/obj/effect/landmark/observer_start,
 /turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Wz" = (
@@ -740,11 +411,6 @@
 	},
 /turf/open/floor/carpet/blue,
 /area/city/outskirts)
-"XN" = (
-/obj/effect/decal/cleanable/blood/old,
-/obj/effect/decal/cleanable/blood/gibs/old,
-/turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
 "XO" = (
 /turf/open/floor/carpet/red,
 /area/city/outskirts)
@@ -761,11 +427,11 @@
 	},
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
-"ZX" = (
-/obj/structure/chair/sofa/corp/left{
-	dir = 4
+"Zr" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	id = "outside"
 	},
-/turf/open/floor/carpet/red,
+/turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "ZY" = (
 /obj/effect/light_emitter{
@@ -16899,17 +16565,17 @@ pt
 pt
 pt
 pt
-cp
-df
-df
-df
-df
-df
-dh
-dh
-df
-df
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -17201,17 +16867,17 @@ pt
 pt
 pt
 pt
-cp
-df
-gm
-gm
-df
-dh
-dh
-dh
-df
-df
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -17502,18 +17168,18 @@ pt
 pt
 pt
 pt
-aX
-cp
-dh
-dh
-df
-dh
-dh
-dh
-df
-gm
-cp
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -17805,17 +17471,17 @@ pt
 pt
 pt
 pt
-cp
-df
-df
-dh
-df
-iW
-dh
-df
-df
-dh
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -18107,17 +17773,17 @@ pt
 pt
 pt
 pt
-cp
-dI
-hf
-dh
-dh
-dh
-df
-dh
-dI
-dI
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -18409,17 +18075,17 @@ pt
 pt
 pt
 pt
-cp
-cp
-df
-df
-dh
-dh
-dh
-df
-df
-df
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -18705,23 +18371,23 @@ pt
 pt
 pt
 pt
-ar
-ar
-ar
 pt
 pt
 pt
-cp
-cp
-cp
-hm
-dh
-dP
-jv
-dP
-dP
-dh
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -19013,17 +18679,17 @@ pt
 pt
 pt
 pt
-cp
-cp
-cp
-dh
-df
-dh
-df
-df
-hm
-cp
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -19315,17 +18981,17 @@ pt
 pt
 pt
 pt
-cp
-cp
-cp
-gm
-dh
-df
-df
-dh
-dh
-df
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -19610,24 +19276,24 @@ pt
 pt
 pt
 pt
-ar
-ar
-ar
-ar
-ar
 pt
 pt
-cp
-cp
-df
-df
-dh
-dh
-df
-dh
-dh
-dh
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -19919,17 +19585,17 @@ pt
 pt
 pt
 pt
-cp
-dI
-hf
-dh
-df
-iW
-dh
-dh
-dI
-dI
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -20221,17 +19887,17 @@ pt
 pt
 pt
 pt
-cp
-dP
-dP
-dP
-dh
-dh
-dP
-dP
-df
-df
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -20514,26 +20180,26 @@ pt
 pt
 pt
 pt
-ar
-ar
-ar
-ar
-ar
-pt
-ar
 pt
 pt
-cp
-df
-df
-dh
-df
-df
-dh
-ku
-gm
-cp
-cp
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -20815,27 +20481,27 @@ pt
 pt
 pt
 pt
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-ny
-hO
-cp
-hO
-cp
-lB
-ny
-ny
-ny
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -21169,17 +20835,17 @@ pt
 pt
 pt
 pt
-kp
-kp
-kp
-kp
-kp
-kp
-kp
-kp
-kp
-kp
-kp
+iP
+iP
+iP
+iP
+iP
+iP
+iP
+iP
+iP
+iP
+iP
 pt
 pt
 pt
@@ -21471,17 +21137,17 @@ pt
 pt
 pt
 pt
-kp
+iP
+Gq
 vW
-Hf
-vW
-Ro
-vW
+UQ
 sy
-vW
+Hg
+sy
+UQ
 vW
 Gq
-kp
+iP
 pt
 pt
 pt
@@ -21773,17 +21439,17 @@ pt
 pt
 pt
 pt
-kp
+iP
 dR
-MK
+iP
+eK
 tb
-VU
+xP
 tb
-bh
 lU
-ZX
+iP
 Vw
-kp
+iP
 pt
 pt
 pt
@@ -22075,17 +21741,17 @@ pt
 pt
 pt
 pt
-kp
-cB
-ot
-Ka
-zY
+iP
+Gq
+vW
+UQ
 tb
-NY
-Fe
-HL
-HL
-kp
+tb
+tb
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -22377,17 +22043,17 @@ pt
 pt
 pt
 pt
-kp
-Gk
-yD
+iP
+dR
+iP
+UQ
 tb
-VW
-zz
-VN
 tb
-Gk
-yD
-kp
+tb
+UQ
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -22679,17 +22345,17 @@ pt
 pt
 pt
 pt
-kp
-tb
-lU
-tb
-Is
-Ka
-Ka
+iP
+Gq
+vW
+UQ
 tb
 tb
-kp
-kp
+tb
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -22980,18 +22646,18 @@ pt
 pt
 pt
 pt
-kp
-kp
-Gk
-Ig
-Is
-VU
-XN
-Sq
-Sq
+pt
+iP
+dR
+iP
+eK
 tb
-kp
-kp
+tb
+tb
+lU
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -23282,18 +22948,18 @@ pt
 pt
 pt
 pt
-kp
-tb
-wn
-Is
-tb
-VU
-Is
+pt
+iP
+Gq
+vW
+UQ
 Sq
-tb
-Gk
-yD
-kp
+Sq
+Sq
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -23584,18 +23250,18 @@ pt
 pt
 pt
 pt
-kp
-Gk
-xZ
-JQ
-tb
-zY
-JQ
+pt
+iP
+dR
+iP
+UQ
 Sq
-tb
-ta
-tb
-kp
+Sq
+Sq
+UQ
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -23886,18 +23552,18 @@ pt
 pt
 pt
 pt
-kp
-lU
-tb
-JS
-JQ
-zY
-VU
-zz
-bh
-qM
-yD
-kp
+pt
+iP
+Gq
+vW
+UQ
+Sq
+Sq
+Sq
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -24188,18 +23854,18 @@ pt
 pt
 pt
 pt
-kp
-mS
-Lu
-Kg
-tb
-VU
-ZY
-NY
-bh
-tb
-tb
-kp
+pt
+iP
+dR
+iP
+eK
+Sq
+Sq
+Sq
+lU
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -24490,18 +24156,18 @@ pt
 pt
 pt
 pt
-kp
-tb
-tb
-Lk
-Rm
-tb
-tb
-ot
-tb
-Gk
-yD
-kp
+pt
+iP
+Gq
+vW
+UQ
+Sq
+Sq
+Sq
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -24792,18 +24458,18 @@ pt
 pt
 pt
 pt
-kp
-qM
-yD
-Lq
-zz
-zz
+pt
+iP
+dR
+iP
+UQ
 tb
 tb
-nu
 tb
-XO
-kp
+UQ
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -25094,18 +24760,18 @@ pt
 pt
 pt
 pt
-kp
-ta
+pt
+iP
+Gq
+vW
+UQ
 tb
-LN
+TO
 tb
-tb
-tb
-yN
-nu
-Hk
-xH
-kp
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -25396,18 +25062,18 @@ pt
 pt
 pt
 pt
-kp
-ub
-yN
-LN
+pt
+iP
+dR
+iP
+eK
 tb
-tb
-tb
+vG
 tb
 lU
-lU
-tb
-kp
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -25699,17 +25365,17 @@ pt
 pt
 pt
 pt
-kp
-yN
+iP
+Gq
+vW
+UQ
 tb
+Mr
 tb
-tb
-tb
-tb
-tb
-XO
-bU
-kp
+UQ
+vW
+Gq
+iP
 pt
 pt
 pt
@@ -26001,17 +25667,17 @@ pt
 pt
 pt
 pt
-kp
-Bk
-Mi
-mN
+iP
+dR
+iP
+UQ
 tb
 tb
 tb
-Mi
-fv
-jF
-kp
+lU
+iP
+Vw
+iP
 pt
 pt
 pt
@@ -26304,15 +25970,15 @@ pt
 pt
 pt
 iP
-zO
-On
+Gq
+vW
+UQ
 tb
 tb
 tb
-fy
-Mi
-pV
-pV
+UQ
+vW
+Gq
 iP
 pt
 pt
@@ -26606,15 +26272,15 @@ pt
 pt
 pt
 iP
-Dh
-Os
-tb
-tb
-tb
-MN
-rO
+dR
 iP
+eK
+tb
+tb
+tb
+lU
 iP
+Vw
 iP
 pt
 pt
@@ -26908,15 +26574,15 @@ pt
 pt
 pt
 iP
-DX
-Os
+Gq
+vW
+UQ
 tb
 tb
 tb
-Kg
-Kg
-On
-iP
+UQ
+vW
+Gq
 iP
 pt
 pt
@@ -27212,11 +26878,11 @@ ny
 iP
 iP
 iP
-tb
-tb
-tb
-tb
-tb
+vL
+Zr
+Zr
+Zr
+vL
 iP
 iP
 iP
@@ -28118,11 +27784,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -30534,11 +30200,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -31439,13 +31105,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -32346,11 +32012,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -34762,11 +34428,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -35667,13 +35333,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -36574,11 +36240,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -38990,11 +38656,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -39895,13 +39561,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -44123,13 +43789,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -48351,13 +48017,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -52580,11 +52246,11 @@ ny
 iP
 iP
 iP
-Km
-rh
-Km
-rh
-eX
+tb
+tb
+tb
+tb
+tb
 iP
 iP
 iP
@@ -52869,10 +52535,10 @@ pt
 pt
 pt
 pt
-iP
-iP
-iP
-iP
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -52882,11 +52548,11 @@ pt
 rh
 Es
 Xp
-UQ
-UQ
-UQ
-UQ
-UQ
+tb
+tb
+tb
+tb
+tb
 Es
 Xp
 rh
@@ -53171,15 +52837,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-iP
-iP
-iP
-iP
-iP
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 rh
 tb
@@ -53473,15 +53139,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 Qs
@@ -53775,15 +53441,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 XO
@@ -54077,23 +53743,23 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 cI
 Es
 cI
-MR
-aW
-Oj
+UV
+UV
+UV
 cI
 Qw
 jo
@@ -54379,15 +54045,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 YO
@@ -54681,25 +54347,25 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 rh
-rh
+UV
 GW
 UV
 UV
 UV
 UV
-Rs
+UV
 rh
 iP
 pt
@@ -54983,15 +54649,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-di
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 FY
@@ -55285,22 +54951,22 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 Rv
 GW
 UV
-Ws
-yc
+UV
+UV
 UV
 UV
 UV
@@ -55587,15 +55253,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 Rv
@@ -55889,15 +55555,15 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-He
-He
-He
-He
-He
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 Rv
@@ -56191,25 +55857,25 @@ pt
 pt
 pt
 pt
-iP
-He
-He
-iP
-iP
-iP
-iP
-iP
-iP
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
+pt
 pt
 iP
 rh
-rh
 UV
-MR
-Oj
-MR
 UV
-rh
+UV
+UV
+UV
+UV
+UV
 GC
 iP
 pt
@@ -56493,10 +56159,10 @@ pt
 pt
 pt
 pt
-iP
-iP
-iP
-iP
+pt
+pt
+pt
+pt
 pt
 pt
 pt
@@ -56506,11 +56172,11 @@ pt
 iP
 Xp
 Es
-Es
+tb
 UV
 UV
 UV
-Xp
+tb
 Xp
 Xp
 iP
@@ -56808,11 +56474,11 @@ ny
 iP
 iP
 iP
-Km
-rh
-Km
-rh
-eX
+tb
+tb
+tb
+tb
+tb
 iP
 iP
 iP
@@ -60428,7 +60094,7 @@ pt
 pt
 pt
 pt
-cp
+pt
 rh
 tb
 tb
@@ -60730,7 +60396,7 @@ pt
 pt
 pt
 pt
-cp
+pt
 rh
 tb
 tb
@@ -61022,7 +60688,7 @@ pt
 pt
 pt
 pt
-ny
+pt
 ny
 ny
 ny
@@ -61035,13 +60701,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -65250,7 +64916,7 @@ pt
 pt
 pt
 pt
-ny
+pt
 ny
 ny
 ny
@@ -65263,13 +64929,13 @@ ny
 ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -69479,25 +69145,25 @@ pt
 pt
 pt
 pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -70398,11 +70064,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -72814,11 +72480,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -73707,25 +73373,25 @@ pt
 pt
 pt
 pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -74626,11 +74292,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -77042,11 +76708,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -77935,25 +77601,25 @@ pt
 pt
 pt
 pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
 iP
 iP
-iP
 tb
 tb
 tb
 tb
 tb
-iP
+tb
+tb
 iP
 iP
 pt
@@ -78854,11 +78520,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -81270,11 +80936,11 @@ pt
 rh
 tb
 tb
-vW
 tb
 tb
 tb
-vW
+tb
+tb
 tb
 tb
 rh
@@ -82163,24 +81829,24 @@ pt
 pt
 pt
 pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
-pt
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
+ny
 iP
 iP
 iP
-UV
-UV
-UV
-UV
-UV
+Iy
+Iy
+Iy
+Iy
+Iy
 iP
 iP
 iP
@@ -82476,6 +82142,7 @@ pt
 pt
 pt
 rh
+MA
 UV
 UV
 UV
@@ -82483,8 +82150,7 @@ UV
 UV
 UV
 UV
-UV
-UV
+MA
 rh
 pt
 pt
@@ -83382,7 +83048,7 @@ pt
 pt
 pt
 rh
-UV
+MA
 UV
 UV
 UV
@@ -83390,7 +83056,7 @@ FS
 FS
 UV
 UV
-UV
+MA
 rh
 pt
 pt
@@ -83986,7 +83652,7 @@ pt
 pt
 pt
 rh
-Ow
+UV
 UV
 UV
 UV
@@ -84288,15 +83954,15 @@ pt
 pt
 pt
 rh
-ws
+MA
 UV
 FS
 FS
+jY
 UV
 UV
 UV
-UV
-Ow
+MA
 rh
 pt
 pt
@@ -85195,13 +84861,13 @@ pt
 pt
 rh
 rh
-Ow
+UV
 UV
 OU
 ls
 ls
 UV
-Ow
+UV
 rh
 rh
 pt
@@ -85800,11 +85466,11 @@ pt
 pt
 rh
 rh
-Ow
-Ow
-Ow
-Ow
-Ow
+UV
+UV
+UV
+UV
+UV
 rh
 rh
 pt

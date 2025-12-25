@@ -57,6 +57,9 @@
 	dir = 4;
 	icon_state = "tracks"
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/outskirts)
 "cG" = (
@@ -67,7 +70,6 @@
 /area/city/outskirts)
 "df" = (
 /obj/structure/chair/sofa/corp/corner{
-	dir = 2;
 	icon_state = "corp_sofamiddle"
 	},
 /obj/effect/decal/cleanable/glass,
@@ -88,6 +90,9 @@
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4;
 	icon_state = "siding_thinplating_line"
+	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
@@ -163,6 +168,32 @@
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 8
 	},
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
+"lD" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 1;
+	icon_state = "corp_sofamiddle"
+	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/carpet/royalblack,
+/area/city/outskirts)
+"nd" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/outskirts)
+"oY" = (
+/obj/structure/table/reinforced,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "pd" = (
@@ -201,6 +232,12 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/city/outskirts)
+"se" = (
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
 "sk" = (
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/outskirts)
@@ -215,6 +252,9 @@
 /obj/structure/closet/crate/bin,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 8
+	},
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
@@ -263,6 +303,9 @@
 "vh" = (
 /obj/effect/decal/cleanable/blood/gibs/up{
 	icon_state = "floor2"
+	},
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
@@ -325,6 +368,9 @@
 	dir = 4;
 	icon_state = "siding_thinplating_line"
 	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Ac" = (
@@ -353,6 +399,12 @@
 	},
 /turf/open/floor/carpet/royalblack,
 /area/city/outskirts)
+"AU" = (
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirts)
 "DI" = (
 /obj/effect/decal/cleanable/blood/gibs/up{
 	dir = 10;
@@ -362,6 +414,13 @@
 /area/city/outskirts)
 "DJ" = (
 /turf/open/floor/carpet/royalblack,
+/area/city/outskirts)
+"Eo" = (
+/obj/structure/closet,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "kitchen"
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Ew" = (
 /obj/structure/table_frame,
@@ -397,6 +456,9 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	icon_state = "gibmid3"
 	},
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/carpet/royalblack,
 /area/city/outskirts)
 "Hn" = (
@@ -421,6 +483,9 @@
 	icon_state = "trails_2"
 	},
 /obj/effect/turf_decal/siding/thinplating/dark/corner,
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "IJ" = (
@@ -478,6 +543,9 @@
 	},
 /obj/effect/decal/cleanable/glass,
 /obj/effect/decal/cleanable/glass,
+/obj/effect/landmark/wave_spawn/dynamic{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/carpet/royalblack,
 /area/city/outskirts)
 "Kt" = (
@@ -580,6 +648,9 @@
 	dir = 4;
 	icon_state = "siding_thinplating_line"
 	},
+/obj/effect/landmark/wave_trigger{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "QV" = (
@@ -639,6 +710,9 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 8
 	},
+/obj/structure/wave_barrier{
+	controller_id = "kitchen"
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirts)
 "Uy" = (
@@ -660,7 +734,6 @@
 /area/city/outskirts)
 "ZP" = (
 /obj/structure/chair/sofa/corp/corner{
-	dir = 2;
 	icon_state = "corp_sofamiddle"
 	},
 /turf/open/floor/carpet/royalblack,
@@ -669,9 +742,9 @@
 (1,1,1) = {"
 iU
 iU
-sk
-hH
-VY
+nd
+oY
+se
 Iv
 dV
 zU
@@ -702,7 +775,7 @@ EX
 sm
 iC
 IS
-Av
+lD
 iU
 "}
 (4,1,1) = {"
@@ -759,7 +832,7 @@ iU
 "}
 (8,1,1) = {"
 iU
-tA
+Eo
 aS
 OC
 VY
@@ -798,7 +871,7 @@ iU
 "}
 (11,1,1) = {"
 iU
-tA
+Eo
 MG
 Ac
 xZ
@@ -826,8 +899,8 @@ iU
 iU
 iU
 vh
-VY
-VY
+AU
+AU
 jG
 Ut
 Ut

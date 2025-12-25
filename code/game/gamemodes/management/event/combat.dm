@@ -90,9 +90,9 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 
 			//W-Corp stuff
 			if("wcorp")
-				addtimer(CALLBACK(src, PROC_REF(winround)), 20 MINUTES)
+				addtimer(CALLBACK(src, PROC_REF(loseround)), 20 MINUTES)
 				addtimer(CALLBACK(src, PROC_REF(counterincrease)), 3 MINUTES)
-				to_chat(world, span_userdanger("Players will be victorius 20 minutes."))
+				to_chat(world, span_userdanger("Clear all train cars within 20 minutes or lose!"))
 
 				switch(rand(1,5))
 					if(1)
