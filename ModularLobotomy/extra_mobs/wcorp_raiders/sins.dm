@@ -105,12 +105,6 @@
 		L.deal_damage(dash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		been_hit += L
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
-		if(!ishuman(L))
-			continue
-		var/mob/living/carbon/human/H = L
-		if(H.health < 0)
-			H.gib()
-			playsound(src, 'sound/weapons/fixer/generic/blade4.ogg', 75, 1)
 	addtimer(CALLBACK(src, PROC_REF(Charge), move_dir, (times_ran + 1)), 1)
 
 /mob/living/simple_animal/hostile/ordeal/sin_pride/noon/wave
@@ -160,12 +154,6 @@
 		L.deal_damage(dash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		been_hit += L
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
-		if(!ishuman(L))
-			continue
-		var/mob/living/carbon/human/H = L
-		if(H.health < 0)
-			H.gib()
-			playsound(src, 'sound/weapons/fixer/generic/blade4.ogg', 75, 1)
 	addtimer(CALLBACK(src, PROC_REF(Charge), move_dir, (times_ran + 1)), 1)
 
 //Lust - doesn't dash/charge through turfs, uses beam attack
