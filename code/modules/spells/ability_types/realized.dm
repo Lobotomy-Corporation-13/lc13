@@ -1770,10 +1770,11 @@
 	if(istype(A))
 		if(iscarbon(A))
 			dealing_damage *= carbon_coeff
-		A.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 		A.visible_message(span_danger("[A] is hit by a falling hunter's blade!"), span_userdanger("You are hit by a falling hunter's blade!"))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(A), pick(GLOB.alldirs))
 		playsound(A, 'sound/abnormalities/redhood/attack_3.ogg', 33, TRUE, 3)
+		A.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL)) // Damage has to be last in case it qdels the enemy </3
+
 
 // A replacement for the decoy we'd usually be able to use with Crimson Claw throwing code (we don't have access to an atom to pass into decoy creation)
 /obj/effect/temp_visual/unhesitant_blade
