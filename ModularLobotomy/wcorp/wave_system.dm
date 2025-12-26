@@ -610,13 +610,29 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	//Track pending spawn before creating effect
 	wave_controller.AddPendingSpawn()
 
+	//Pick a random turf within view 5 of the spawner
+	var/turf/spawn_turf = GetRandomSpawnTurf()
+
 	//Create spawn effect that will spawn the mob after delay
-	new /obj/effect/wave_mob_spawn(get_turf(src), spawn_type, wave_controller, src)
+	new /obj/effect/wave_mob_spawn(spawn_turf, spawn_type, wave_controller, src)
 
 	current_reserve--
 	current_alive++
 	wave_controller.DecrementReserve()
 	return TRUE
+
+/// Returns a random valid turf within view 5 of the spawner
+/obj/effect/landmark/wave_spawn/proc/GetRandomSpawnTurf()
+	var/list/valid_turfs = list()
+	for(var/turf/T in view(5, src))
+		if(T.density)
+			continue
+		if(locate(/obj/structure/wave_barrier) in T.contents)
+			continue
+		valid_turfs += T
+	if(!LAZYLEN(valid_turfs))
+		return get_turf(src) //Fallback to spawner location
+	return pick(valid_turfs)
 
 /// Ends the spawner cooldown
 /obj/effect/landmark/wave_spawn/proc/EndCooldown()
