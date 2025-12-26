@@ -537,31 +537,55 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
 			return /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave
 
-		//Cars 4-7: Medium - Add Gloom, some Noon variants
+		//Cars 4-7: Medium - Add Gloom, some Noon variants (no Pride/Gloom noon)
 		if(4 to 7)
 			switch(rand(1, 100))
-				if(1 to 30)
+				if(1 to 25)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
-				if(31 to 55)
+				if(26 to 45)
 					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave
-				if(56 to 80)
+				if(46 to 65)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gloom/wave
+				if(66 to 80)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/wave
 				else
-					if(prob(50))
-						return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/wave
 					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/wave
 
-		//Cars 8-9: Hard - Pride, Wrath, Lust, all Noon variants
-		if(8 to 9)
+		//Car 8: Hard - Noon variants but no Pride/Gloom noon yet, always chance for T1
+		if(8)
 			switch(rand(1, 100))
-				if(1 to 20)
-					return /mob/living/simple_animal/hostile/ordeal/sin_pride/noon/wave
-				if(21 to 40)
+				if(1 to 15)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
+				if(16 to 30)
+					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave
+				if(31 to 45)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gloom/wave
+				if(46 to 60)
 					return /mob/living/simple_animal/hostile/ordeal/sin_wrath/noon/wave
-				if(41 to 60)
+				if(61 to 75)
 					return /mob/living/simple_animal/hostile/ordeal/sin_lust/noon/wave
-				if(61 to 80)
+				if(76 to 88)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/wave
+				else
+					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/noon/wave
+
+		//Cars 9-10: Hardest - Pride/Gloom noon can spawn, always chance for T1
+		if(9 to 10)
+			switch(rand(1, 100))
+				if(1 to 10)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/wave
+				if(11 to 20)
+					return /mob/living/simple_animal/hostile/ordeal/sin_sloth/wave
+				if(21 to 30)
+					return /mob/living/simple_animal/hostile/ordeal/sin_gloom/wave
+				if(31 to 45)
+					return /mob/living/simple_animal/hostile/ordeal/sin_pride/noon/wave
+				if(46 to 60)
 					return /mob/living/simple_animal/hostile/ordeal/sin_gloom/noon/wave
+				if(61 to 75)
+					return /mob/living/simple_animal/hostile/ordeal/sin_wrath/noon/wave
+				if(76 to 88)
+					return /mob/living/simple_animal/hostile/ordeal/sin_lust/noon/wave
 				else
 					return /mob/living/simple_animal/hostile/ordeal/sin_gluttony/noon/wave
 
@@ -624,14 +648,23 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 /// Returns a random valid turf within view 5 of the spawner
 /obj/effect/landmark/wave_spawn/proc/GetRandomSpawnTurf()
 	var/list/valid_turfs = list()
+	var/turf/src_turf = get_turf(src)
 	for(var/turf/T in view(5, src))
 		if(T.density)
 			continue
 		if(locate(/obj/structure/wave_barrier) in T.contents)
 			continue
+		//Check line between spawner and turf for wave barriers
+		var/barrier_in_path = FALSE
+		for(var/turf/line_turf in getline(src_turf, T))
+			if(locate(/obj/structure/wave_barrier) in line_turf.contents)
+				barrier_in_path = TRUE
+				break
+		if(barrier_in_path)
+			continue
 		valid_turfs += T
 	if(!LAZYLEN(valid_turfs))
-		return get_turf(src) //Fallback to spawner location
+		return src_turf //Fallback to spawner location
 	return pick(valid_turfs)
 
 /// Ends the spawner cooldown
