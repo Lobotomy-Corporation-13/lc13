@@ -457,12 +457,14 @@
 
 	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 75, TRUE, 3)
 
+	// For every target we get in our list...
 	for(var/mob/living/victim in target_list)
 		if(!victim || !user)
 			continue
 
 		var/i = 1
-		var/list/turf_line = getline(last_bounce, victim)
+		var/list/turf_line = getline(last_bounce, victim) // Get all the turfs inbetween the origin point of the blade (the user for the first hit, the last hit target for subsequent ones) and the target
+		// We do not actually AoE all these turfs. This is just for visuals
 
 		for(var/turf/T in turf_line)
 			// Effects
@@ -479,8 +481,7 @@
 
 		last_bounce = victim
 		victim.visible_message(span_danger("[victim] is hit by [src]!"), span_userdanger("You are hit by [src]!"))
-		victim.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
-		victim.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
+
 
 		var/turf/hit_turf = get_turf(victim)
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(hit_turf, pick(GLOB.alldirs))
@@ -489,6 +490,12 @@
 		temp.transform *= 1.5
 		temp.color = COLOR_RED_LIGHT
 		playsound(user, 'sound/abnormalities/redhood/attack_3.ogg', 20, TRUE, 3)
+
+		// Damage and status have to come after the visuals in case it qdels the victim </3
+		victim.apply_status_effect(/datum/status_effect/display/crimlust_hemorrhage, user, hemorrhage_final_damage)
+		victim.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_THROWING))
+
+		// Reduce damage per target hit
 		dealing_damage = max(dealing_damage * 0.9, special_damage * 0.3)
 
 		sleep(1)
@@ -554,7 +561,6 @@
 			vfx.transform *= 1.3
 			if(owner_is_robot)
 				vfx.color = COLOR_ALMOST_BLACK // Oil...?
-				vfx.transform *= 0.9
 	qdel(src)
 
 /obj/item/ego_weapon/thirteen
