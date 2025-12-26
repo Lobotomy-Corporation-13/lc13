@@ -483,14 +483,18 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/lovetown/slammer
 
-		//Cars 8-9: Hard - Slammers, Shamblers, Slumberers
+		//Cars 8-9: Hard - Mix of all, with Shamblers and Slumberers
 		if(8 to 9)
 			switch(rand(1, 100))
-				if(1 to 25)
+				if(1 to 10)
+					return /mob/living/simple_animal/hostile/lovetown/suicidal
+				if(11 to 25)
 					return /mob/living/simple_animal/hostile/lovetown/slasher
-				if(26 to 50)
+				if(26 to 40)
+					return /mob/living/simple_animal/hostile/lovetown/stabber
+				if(41 to 55)
 					return /mob/living/simple_animal/hostile/lovetown/slammer
-				if(51 to 75)
+				if(56 to 75)
 					return /mob/living/simple_animal/hostile/lovetown/shambler
 				else
 					return /mob/living/simple_animal/hostile/lovetown/slumberer
@@ -516,12 +520,14 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				else
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying
 
-		//Cars 8-9: Hard - Noon, Flying, Dusk managers
+		//Cars 8-9: Hard - Mix of all, with Dusk managers
 		if(8 to 9)
 			switch(rand(1, 100))
-				if(1 to 30)
+				if(1 to 15)
+					return /mob/living/simple_animal/hostile/ordeal/steel_dawn
+				if(16 to 40)
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon
-				if(31 to 60)
+				if(41 to 65)
 					return /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying
 				else
 					return /mob/living/simple_animal/hostile/ordeal/steel_dusk
@@ -606,12 +612,12 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 				return /mob/living/simple_animal/hostile/humanoid/blood/bag/wave
 			return /mob/living/simple_animal/hostile/humanoid/blood/fiend/wave
 
-		//Cars 8-9: Hard - Mostly fiends, some bosses
+		//Cars 8-9: Hard - Mix of all, with bosses
 		if(8 to 9)
 			switch(rand(1, 100))
-				if(1 to 20)
+				if(1 to 25)
 					return /mob/living/simple_animal/hostile/humanoid/blood/bag/wave
-				if(21 to 80)
+				if(26 to 70)
 					return /mob/living/simple_animal/hostile/humanoid/blood/fiend/wave
 				else
 					return /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss/wave
