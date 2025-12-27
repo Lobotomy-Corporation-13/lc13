@@ -628,8 +628,8 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 		for(var/datum/ordeal/O in ongoing_ordeals) // Add every ordeal mob into the new list.
 			potential_targets |= O.ordeal_mobs // |= prevents Pink Midnight from causing duplicate entries
 
-	for(var/mob/prospect in potential_targets)
-		if(prospect.z != hunter.z) // Z level check. Every ongoing ordeal's mobs and every breached abno are candidates no matter where they are, but let's make sure they're on the hunter's z level
+	for(var/mob/living/prospect in potential_targets)
+		if((prospect.z != hunter.z) || (prospect.has_status_effect(/datum/status_effect/crimlust_mark))) // Z level check, also checks for targets already marked for whatever reason
 			potential_targets -= prospect
 
 	if(length(potential_targets) <= 0) // No targets found...
