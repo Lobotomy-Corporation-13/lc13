@@ -10,8 +10,10 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 #define WAVE_SPAWN_DELAY 6
 /// Cooldown between spawner activations (in deciseconds)
 #define WAVE_SPAWNER_COOLDOWN 3 SECONDS
-/// Base population scaling multiplier for wave reserves (added per player)
-#define WAVE_POP_SCALE_MULTIPLIER 0.3
+/// Target mobs per player for wave reserves (20 players = 35 mobs means 1.75 per player)
+#define WAVE_MOBS_PER_PLAYER 1.75
+/// Minimum mobs for a wave (even with few players)
+#define WAVE_MIN_MOBS 8
 
 /*
  * Wave Controller Datum
@@ -80,11 +82,11 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 			return 3 //Boss car - 2 normal waves then boss
 	return 1
 
-/// Returns the reserve multiplier based on population
-/// Base reserve is 3 per spawner, scales up with player count only
-/datum/wave_controller/proc/GetReserveMultiplier()
+/// Returns the target total mobs for a wave based on player count
+/// 20 players = 35 mobs, scales linearly (1.75 mobs per player, minimum 8)
+/datum/wave_controller/proc/GetTargetMobCount()
 	if(controller_number >= 10)
-		return 1.0 //Boss car doesn't need multiplier
+		return WAVE_MIN_MOBS //Boss car uses minimum
 
 	//Count living W-Corp players
 	var/player_count = 0
@@ -92,10 +94,9 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		if(H.stat != DEAD && H.ckey)
 			player_count++
 
-	//Pop scaling: base 1.0x + 0.3x per player
-	var/pop_multiplier = 1.0 + (player_count * WAVE_POP_SCALE_MULTIPLIER)
-
-	return pop_multiplier
+	//Calculate target: 1.75 mobs per player, minimum 8
+	var/target_mobs = round(player_count * WAVE_MOBS_PER_PLAYER)
+	return max(target_mobs, WAVE_MIN_MOBS)
 
 /// Returns the multiplier for splitting reserves across multiple waves
 /// 1 wave = 1.0x, 2 waves = 0.6x each, 3 waves = 0.4x each
@@ -139,20 +140,20 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		SpawnBossWave()
 		return
 
-	//Calculate total reserve for this wave (with population and wave-split scaling)
-	wave_reserve_remaining = 0
-	var/multiplier = GetReserveMultiplier() * GetWaveReserveMultiplier()
+	//Calculate total reserve for this wave based on player count (shared pool)
+	var/target_mobs = round(GetTargetMobCount() * GetWaveReserveMultiplier())
+	wave_reserve_remaining = max(target_mobs, 4) //Minimum 4 mobs per wave
+
+	//Reset all active spawners for this wave
 	for(var/obj/effect/landmark/wave_spawn/spawner in wave_spawners)
-		//wave_number 0 means spawner is active for all waves, otherwise check specific wave
 		if(spawner.wave_number == 0 || spawner.wave_number == current_wave)
-			spawner.ResetForWave(multiplier)
-			wave_reserve_remaining += spawner.current_reserve
+			spawner.ResetForWave()
 
 	//Announce wave start with blurb
 	var/wave_text = "WAVE [current_wave]/[max_waves] - [wave_reserve_remaining] HOSTILES"
 	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 2 SECONDS, wave_text, 0.5 SECONDS, 5, "#1b7ced", "black", "left", "CENTER,BOTTOM+2")
 
-	//Initial spawn from all spawners for this wave
+	//Initial spawn from all spawners for this wave (pulls from shared pool)
 	for(var/obj/effect/landmark/wave_spawn/spawner in wave_spawners)
 		if(spawner.wave_number == 0 || spawner.wave_number == current_wave)
 			spawner.InitialSpawn(src)
@@ -300,22 +301,22 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	living_mobs += spawned_mob
 	GLOB.wave_mob_sources[spawned_mob] = source
 
-/// Decrements the wave reserve counter
-/datum/wave_controller/proc/DecrementReserve()
-	wave_reserve_remaining = max(0, wave_reserve_remaining - 1)
-
 /// Attempts to spawn from any available spawner when mobs are dead but reserve remains
 /datum/wave_controller/proc/TryForceSpawns()
 	//Safety check - if mobs exist or spawns pending, don't force
 	if(LAZYLEN(living_mobs) || pending_spawns > 0)
 		return
 
+	if(wave_reserve_remaining <= 0)
+		INVOKE_ASYNC(src, PROC_REF(WaveCleared))
+		return
+
 	var/spawned_any = FALSE
 	for(var/obj/effect/landmark/wave_spawn/spawner in wave_spawners)
+		if(wave_reserve_remaining <= 0)
+			break
 		//wave_number 0 means spawner is active for all waves
 		if(spawner.wave_number != 0 && spawner.wave_number != current_wave)
-			continue
-		if(spawner.current_reserve <= 0)
 			continue
 		if(spawner.current_alive >= spawner.concurrent_max)
 			continue
@@ -323,12 +324,9 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		INVOKE_ASYNC(spawner, TYPE_PROC_REF(/obj/effect/landmark/wave_spawn, TrySpawnWithRetry), src)
 		spawned_any = TRUE
 
-	//If no spawners could spawn but reserve remains, there's a desync - fix it
+	//If no spawners could spawn but reserve remains, all spawners are at capacity - wait for deaths
 	if(!spawned_any && wave_reserve_remaining > 0)
-		//Reserve counter is desynced from actual spawner reserves, force clear
-		wave_reserve_remaining = 0
-		if(!LAZYLEN(living_mobs) && pending_spawns <= 0)
-			INVOKE_ASYNC(src, PROC_REF(WaveCleared))
+		return //Wait for mobs to die and free up spawner slots
 
 /// Increments pending spawn counter (called when spawn effect is created)
 /datum/wave_controller/proc/AddPendingSpawn()
@@ -396,14 +394,10 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	var/wave_number = 0
 	/// List of possible mob types to spawn (picks one randomly) - used if not using dynamic spawning
 	var/list/spawn_types = list()
-	/// Total mobs in this spawner's reserve for the wave (base, before multiplier)
-	var/wave_reserve = 3
 	/// Maximum concurrent mobs from this spawner at once
 	var/concurrent_max = 2
 	/// Reference to linked controller
 	var/datum/wave_controller/controller
-	/// Current reserve remaining for this spawner (after multiplier applied)
-	var/current_reserve = 0
 	/// Current number of living mobs from this spawner
 	var/current_alive = 0
 	/// Whether to use dynamic faction-based spawning
@@ -422,15 +416,16 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 		controller = new /datum/wave_controller(controller_id)
 	controller.RegisterSpawner(src)
 
-/// Resets spawner state for a new wave, applying reserve multiplier
-/obj/effect/landmark/wave_spawn/proc/ResetForWave(multiplier = 1.0)
-	current_reserve = round(wave_reserve * multiplier)
+/// Resets spawner state for a new wave (shared pool is managed by controller)
+/obj/effect/landmark/wave_spawn/proc/ResetForWave()
 	current_alive = 0
 
-/// Initial spawn when wave starts - spawns up to concurrent_max
+/// Initial spawn when wave starts - spawns up to concurrent_max from shared pool
 /obj/effect/landmark/wave_spawn/proc/InitialSpawn(datum/wave_controller/wave_controller)
-	var/to_spawn = min(concurrent_max, current_reserve)
+	var/to_spawn = min(concurrent_max, wave_controller.wave_reserve_remaining)
 	for(var/i = 1 to to_spawn)
+		if(wave_controller.wave_reserve_remaining <= 0)
+			break
 		SpawnOneMob(wave_controller)
 
 /// Gets the appropriate mob type based on controller number and faction
@@ -626,7 +621,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 
 /// Spawns a single mob and tracks it (creates spawn effect first)
 /obj/effect/landmark/wave_spawn/proc/SpawnOneMob(datum/wave_controller/wave_controller)
-	if(current_reserve <= 0)
+	if(wave_controller.wave_reserve_remaining <= 0)
 		return FALSE
 	if(on_cooldown)
 		return FALSE
@@ -646,9 +641,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 	//Create spawn effect that will spawn the mob after delay
 	new /obj/effect/wave_mob_spawn(spawn_turf, spawn_type, wave_controller, src)
 
-	current_reserve--
+	wave_controller.wave_reserve_remaining--
 	current_alive++
-	wave_controller.DecrementReserve()
 	return TRUE
 
 /// Returns a random valid turf within view 5 of the spawner
@@ -685,8 +679,8 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 /obj/effect/landmark/wave_spawn/proc/TrySpawnReplacement(datum/wave_controller/wave_controller)
 	current_alive = max(0, current_alive - 1)
 
-	//If we have reserve and room for more concurrent mobs, spawn one
-	if(current_reserve > 0 && current_alive < concurrent_max)
+	//If shared pool has reserve and room for more concurrent mobs, spawn one
+	if(wave_controller.wave_reserve_remaining > 0 && current_alive < concurrent_max)
 		sleep(0.5 SECONDS) //Small delay before replacement spawns
 		TrySpawnWithRetry(wave_controller)
 
@@ -694,7 +688,7 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 /obj/effect/landmark/wave_spawn/proc/TrySpawnWithRetry(datum/wave_controller/wave_controller, attempts = 0)
 	if(attempts > 10) //Safety limit - stop after ~30 seconds of trying
 		return
-	if(current_reserve <= 0)
+	if(wave_controller.wave_reserve_remaining <= 0)
 		return
 	if(!SpawnOneMob(wave_controller))
 		//Failed due to cooldown, try again after cooldown ends
@@ -778,7 +772,6 @@ GLOBAL_VAR_INIT(wave_enemy_faction, "") //Which faction enemies come from this r
 /obj/effect/landmark/wave_spawn/boss
 	name = "boss wave spawner"
 	icon_state = "x4"
-	wave_reserve = 1
 	concurrent_max = 1
 	use_dynamic_spawning = FALSE
 	spawn_types = list(
