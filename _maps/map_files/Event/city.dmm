@@ -953,7 +953,7 @@
 	pixel_y = -8
 	},
 /obj/item/stack/ore/glassrubble{
-	step_x = 3;
+	pixel_x = 3;
 	pixel_y = 5
 	},
 /turf/open/indestructible/white,
@@ -2056,7 +2056,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_y = 7;
-	step_x = 4
+	pixel_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
@@ -2336,7 +2336,7 @@
 	pixel_y = -8
 	},
 /obj/item/stack/ore/glassrubble{
-	step_x = 3;
+	pixel_x = 3;
 	pixel_y = 5
 	},
 /turf/open/indestructible/white,
@@ -3126,7 +3126,7 @@
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
 	pixel_y = 7;
-	step_x = 4
+	pixel_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = -4;
@@ -3660,7 +3660,7 @@
 /obj/effect/decal/cleanable/glass,
 /obj/item/stack/ore/glassrubble{
 	pixel_y = 7;
-	step_x = 4
+	pixel_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = -4;
@@ -4223,7 +4223,7 @@
 /obj/item/stack/ore/glassrubble,
 /obj/item/stack/ore/glassrubble{
 	pixel_y = 7;
-	step_x = 4
+	pixel_x = 4
 	},
 /obj/item/stack/ore/glassrubble{
 	pixel_x = 9;
