@@ -1989,7 +1989,7 @@
 // Based on Ruina's combat page, idea was from Potassium_19
 /obj/effect/proc_holder/ability/strike_without_hesitation
 	name = "Strike Without Hesitation"
-	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 75% less damage. \n\
+	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 66% less damage. \n\
 	Gain 5 Power Modifier per target hit by this ability for 15 seconds, up to 50 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
 	Cooldown: 45s."
 	action_icon = 'icons/obj/projectiles.dmi'
@@ -2005,7 +2005,7 @@
 	/// Base damage dealt, always RED.
 	var/base_damage = 300
 	/// Multiply damage dealt against Carbons by this amount (they take less damage)
-	var/carbon_coeff = 0.25
+	var/carbon_coeff = 0.34
 	/// Amount of time it takes to execute this skill, this is also how long allies have to flee if they don't wanna get caught in it, and how long the telegraph lasts.
 	var/windup = 2 SECONDS
 
