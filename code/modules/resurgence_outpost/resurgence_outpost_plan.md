@@ -283,14 +283,19 @@ To prevent resource depletion over multi-day progression:
 
 ## Building System
 
-### Buildable Structures
+There are three ways to build/craft items:
+
+1. **Blueprints** - For anchored structures (walls, doors, stations). Place ghost → add materials → build.
+2. **Crafting Table** - For portable items and decor. Select recipe → craft → pickup item.
+3. **Floor Tiles** - For flooring. Craft tiles at table → place directly on ground.
+
+### Blueprint Structures (Anchored, placed via Blueprint Planner)
 
 **Construction:**
 | Structure | Materials | Description |
 |-----------|-----------|-------------|
 | Wood Wall | 5 wood | Basic wall, blocks movement |
 | Wood Door | 8 wood | Openable passage |
-| Wood Floor | 2 wood | Covers dirt/ground |
 | Window | 4 wood + 2 glass | Wall with visibility |
 
 **Storage:**
@@ -308,14 +313,33 @@ To prevent resource depletion over multi-day progression:
 | Forge | 25 metal + 10 wood | Metalworking station |
 | Loom | 20 wood | Textile crafting |
 
-**Decor (Raises Faith):**
+**Decor (Anchored):**
 | Structure | Materials | Description |
 |-----------|-----------|-------------|
-| Small Statue | 20 wood OR 20 metal | +5 faith when nearby |
-| Carving Block | 15 wood | Customizable decoration |
-| Painting Canvas | 10 wood + 5 cloth | Player-made art |
-| Lantern | 5 wood + 3 glass | Light source, +2 faith |
-| Banner | 8 cloth + 2 wood | Clan decoration, +3 faith |
+| Lantern Post | 5 wood + 3 glass | Standing light source, +2 faith |
+| Banner Stand | 8 cloth + 2 wood | Anchored clan banner, +3 faith |
+
+### Crafting Table Items (Portable, crafted as items)
+
+**Floor Tiles** (place directly on ground after crafting):
+| Item | Materials | Output | Description |
+|------|-----------|--------|-------------|
+| Wood Floor Tiles | 1 wood | 4 tiles | Uses `/obj/item/stack/tile/wood` |
+| Carpet Tiles | 2 cloth | 4 tiles | Uses `/obj/item/stack/tile/carpet` |
+
+**Decor Items** (portable, can be picked up and moved):
+| Item | Materials | Description |
+|------|-----------|-------------|
+| Carving Block | 10 wood | Customizable statue, `/obj/structure/statue` |
+| Canvas | 5 wood + 3 cloth | For painting, `/obj/item/canvas` |
+| Easel | 8 wood | Holds canvas, `/obj/structure/easel` |
+| Small Statue | 15 wood OR 15 metal | Decorative, +5 faith nearby |
+| Lantern (handheld) | 3 wood + 2 glass | Portable light source |
+
+**Reference:**
+- Tiles: `code/game/objects/items/stacks/tiles/tile_types.dm`
+- Statues: `code/game/objects/structures/statues.dm`
+- Canvas/Easel: `code/game/objects/structures/artstuff.dm`
 
 ### Blueprint Planning Tool
 
@@ -353,7 +377,6 @@ GLOBAL_LIST_INIT(blueprint_categories, list(
     BLUEPRINT_CAT_CONSTRUCTION = list(
         /obj/structure/blueprint/wood_wall,
         /obj/structure/blueprint/wood_door,
-        /obj/structure/blueprint/wood_floor,
         /obj/structure/blueprint/window
     ),
     BLUEPRINT_CAT_STORAGE = list(
@@ -368,13 +391,13 @@ GLOBAL_LIST_INIT(blueprint_categories, list(
         /obj/structure/blueprint/loom
     ),
     BLUEPRINT_CAT_DECOR = list(
-        /obj/structure/blueprint/small_statue,
-        /obj/structure/blueprint/carving_block,
-        /obj/structure/blueprint/painting_canvas,
-        /obj/structure/blueprint/lantern,
-        /obj/structure/blueprint/banner
+        /obj/structure/blueprint/lantern_post,
+        /obj/structure/blueprint/banner_stand
     )
 ))
+
+// Note: Floors, carving blocks, canvases, and portable decor are crafted
+// at the Crafting Table as items, not placed via blueprints.
 ```
 
 ### Blueprint Planner UI (TGUI)
@@ -388,15 +411,18 @@ GLOBAL_LIST_INIT(blueprint_categories, list(
 │  [Construction] [Storage] [Production] [Decor]      │  ← Category tabs
 ├─────────────────────────────────────────────────────┤
 │                                                     │
-│   ┌───────┐  ┌───────┐  ┌───────┐  ┌───────┐       │
-│   │ Wood  │  │ Wood  │  │ Wood  │  │Window │       │
-│   │ Wall  │  │ Door  │  │ Floor │  │       │       │
-│   │  5🪵  │  │  8🪵  │  │  2🪵  │  │ 4🪵2⬜│       │  ← Structure icons
-│   └───────┘  └───────┘  └───────┘  └───────┘       │     with costs
+│   ┌───────┐  ┌───────┐  ┌───────┐                  │
+│   │ Wood  │  │ Wood  │  │Window │                  │
+│   │ Wall  │  │ Door  │  │       │                  │
+│   │  5🪵  │  │  8🪵  │  │ 4🪵2⬜│                  │  ← Structure icons
+│   └───────┘  └───────┘  └───────┘                  │     with costs
 │                                                     │
 │   Selected: Wood Wall                               │
 │   Cost: 5 Wood                                      │
 │   Click on ground to place blueprint.               │
+│                                                     │
+│   Note: Floors are crafted as tiles at the          │
+│   Crafting Table, then placed directly.             │
 │                                                     │
 └─────────────────────────────────────────────────────┘
 ```
@@ -501,12 +527,14 @@ GLOBAL_LIST_INIT(blueprint_categories, list(
 /obj/structure/blueprint
     // ... base vars defined above ...
 
+// === CONSTRUCTION ===
+
 // Wood Wall Blueprint
 /obj/structure/blueprint/wood_wall
     name = "wood wall blueprint"
     icon_state = "blueprint_wall"
     required_materials = list(/obj/item/stack/sheet/mineral/wood = 5)
-    build_result = /turf/closed/wall/resurgence/wood  // Linked object
+    build_result = /turf/closed/wall/resurgence/wood
     build_time = 50
 
 // Wood Door Blueprint
@@ -514,51 +542,165 @@ GLOBAL_LIST_INIT(blueprint_categories, list(
     name = "wood door blueprint"
     icon_state = "blueprint_door"
     required_materials = list(/obj/item/stack/sheet/mineral/wood = 8)
-    build_result = /obj/machinery/door/resurgence/wood  // Linked object
+    build_result = /obj/machinery/door/resurgence/wood
     build_time = 60
 
-// Wood Floor Blueprint
-/obj/structure/blueprint/wood_floor
-    name = "wood floor blueprint"
-    icon_state = "blueprint_floor"
-    required_materials = list(/obj/item/stack/sheet/mineral/wood = 2)
-    build_result = /turf/open/floor/resurgence/wood  // Linked object
-    build_time = 20
+// Window Blueprint
+/obj/structure/blueprint/window
+    name = "window blueprint"
+    icon_state = "blueprint_window"
+    required_materials = list(
+        /obj/item/stack/sheet/mineral/wood = 4,
+        /obj/item/stack/sheet/glass = 2
+    )
+    build_result = /obj/structure/window/resurgence
+    build_time = 50
+
+// === STORAGE ===
 
 // Storage Chest Blueprint
 /obj/structure/blueprint/chest
     name = "storage chest blueprint"
     icon_state = "blueprint_chest"
     required_materials = list(/obj/item/stack/sheet/mineral/wood = 10)
-    build_result = /obj/structure/resurgence_chest  // Linked object
+    build_result = /obj/structure/closet/crate/resurgence_chest
     build_time = 40
+
+// Crate Blueprint
+/obj/structure/blueprint/crate
+    name = "crate blueprint"
+    icon_state = "blueprint_crate"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 8)
+    build_result = /obj/structure/closet/crate/resurgence_crate
+    build_time = 35
+
+// Barrel Blueprint
+/obj/structure/blueprint/barrel
+    name = "barrel blueprint"
+    icon_state = "blueprint_barrel"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 6)
+    build_result = /obj/structure/closet/crate/resurgence_barrel
+    build_time = 30
+
+// === PRODUCTION ===
 
 // Crafting Table Blueprint
 /obj/structure/blueprint/crafting_table
     name = "crafting table blueprint"
     icon_state = "blueprint_table"
     required_materials = list(/obj/item/stack/sheet/mineral/wood = 15)
-    build_result = /obj/structure/resurgence_crafting_table  // Linked object
+    build_result = /obj/structure/resurgence_crafting_table
     build_time = 50
 
-// Lantern Blueprint
-/obj/structure/blueprint/lantern
-    name = "lantern blueprint"
+// Research Table Blueprint
+/obj/structure/blueprint/research_table
+    name = "research table blueprint"
+    icon_state = "blueprint_research"
+    required_materials = list(
+        /obj/item/stack/sheet/mineral/wood = 20,
+        /obj/item/stack/sheet/glass = 5
+    )
+    build_result = /obj/structure/resurgence_research_table
+    build_time = 70
+
+// Forge Blueprint
+/obj/structure/blueprint/forge
+    name = "forge blueprint"
+    icon_state = "blueprint_forge"
+    required_materials = list(
+        /obj/item/stack/sheet/metal = 25,
+        /obj/item/stack/sheet/mineral/wood = 10
+    )
+    build_result = /obj/structure/resurgence_forge
+    build_time = 100
+
+// Loom Blueprint
+/obj/structure/blueprint/loom
+    name = "loom blueprint"
+    icon_state = "blueprint_loom"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 20)
+    build_result = /obj/structure/resurgence_loom
+    build_time = 60
+
+// === DECOR (Anchored) ===
+
+// Lantern Post Blueprint (anchored standing lantern)
+/obj/structure/blueprint/lantern_post
+    name = "lantern post blueprint"
     icon_state = "blueprint_lantern"
     required_materials = list(
         /obj/item/stack/sheet/mineral/wood = 5,
         /obj/item/stack/sheet/glass = 3
     )
-    build_result = /obj/structure/resurgence_lantern  // Linked object
-    build_time = 30
+    build_result = /obj/structure/resurgence_lantern_post
+    build_time = 40
 
-// Small Statue Blueprint
-/obj/structure/blueprint/small_statue
-    name = "small statue blueprint"
-    icon_state = "blueprint_statue"
-    required_materials = list(/obj/item/stack/sheet/mineral/wood = 20)
-    build_result = /obj/structure/resurgence_statue/small  // Linked object
-    build_time = 80
+// Banner Stand Blueprint (anchored banner)
+/obj/structure/blueprint/banner_stand
+    name = "banner stand blueprint"
+    icon_state = "blueprint_banner"
+    required_materials = list(
+        /obj/item/stack/sheet/cloth = 8,
+        /obj/item/stack/sheet/mineral/wood = 2
+    )
+    build_result = /obj/structure/resurgence_banner_stand
+    build_time = 45
+```
+
+### Crafting Table Recipes
+
+The Crafting Table creates portable items and floor tiles:
+
+```dm
+/obj/structure/resurgence_crafting_table
+    var/static/list/crafting_recipes = list(
+        // Floor Tiles
+        "Wood Floor Tiles" = list(
+            "result" = /obj/item/stack/tile/wood,
+            "result_amount" = 4,
+            "materials" = list(/obj/item/stack/sheet/mineral/wood = 1),
+            "time" = 20
+        ),
+        "Carpet Tiles" = list(
+            "result" = /obj/item/stack/tile/carpet,
+            "result_amount" = 4,
+            "materials" = list(/obj/item/stack/sheet/cloth = 2),
+            "time" = 25
+        ),
+
+        // Portable Decor
+        "Carving Block" = list(
+            "result" = /obj/structure/statue/dverg/dverg_carving_block,  // Or custom type
+            "materials" = list(/obj/item/stack/sheet/mineral/wood = 10),
+            "time" = 40
+        ),
+        "Canvas" = list(
+            "result" = /obj/item/canvas,
+            "materials" = list(
+                /obj/item/stack/sheet/mineral/wood = 5,
+                /obj/item/stack/sheet/cloth = 3
+            ),
+            "time" = 30
+        ),
+        "Easel" = list(
+            "result" = /obj/structure/easel,
+            "materials" = list(/obj/item/stack/sheet/mineral/wood = 8),
+            "time" = 35
+        ),
+        "Small Wood Statue" = list(
+            "result" = /obj/structure/statue/dverg/dverg_one,  // Placeholder
+            "materials" = list(/obj/item/stack/sheet/mineral/wood = 15),
+            "time" = 60
+        ),
+        "Handheld Lantern" = list(
+            "result" = /obj/item/flashlight/lantern,
+            "materials" = list(
+                /obj/item/stack/sheet/mineral/wood = 3,
+                /obj/item/stack/sheet/glass = 2
+            ),
+            "time" = 25
+        )
+    )
 ```
 
 **Construction Flow:**
@@ -1333,248 +1475,179 @@ When structures are added/removed, the room type may need to update:
 
 ## Woven Outfits (Loom Crafting)
 
-The Loom can weave cloth into outfits that provide passive faith bonuses when worn. This gives machines a way to personalize their appearance while gaining mechanical benefits.
+The Loom can weave cloth into outfits that provide passive faith bonuses when worn. Uses existing clothing sprites to avoid needing new art.
 
-**Reference:** `code/modules/vending/autodrobe.dm`, `code/modules/clothing/clothing.dm`
+**Reference:** `code/modules/clothing/suits/chaplainsuits.dm`, `code/modules/clothing/suits/miscellaneous.dm`
 
-### Outfit Types
+### Outfit Types (Using Existing Sprites)
 
-| Outfit | Slot | Cloth Cost | Faith Bonus | Description |
-|--------|------|------------|-------------|-------------|
-| **Simple Robe** | Suit | 8 | +3 | Basic woven garment |
-| **Clan Tunic** | Under | 6 | +2 | Traditional machine attire |
-| **Woven Cloak** | Suit | 12 | +5 | Flowing ceremonial cloak |
-| **Elder's Vestments** | Suit | 20 + 2 Woven Tapestry | +10 | Sacred garb of leadership |
-| **Pilgrim's Wrap** | Suit | 10 | +4 | Worn by those seeking the City |
-| **Artisan's Apron** | Suit | 5 | +1, -10% craft time | Work garment for crafters |
-| **Woven Hood** | Head | 4 | +2 | Simple head covering |
-| **Ceremonial Mask** | Mask | 6 + 1 Glass Lens | +4 | Decorative face covering |
-| **Woven Gloves** | Gloves | 3 | +1 | Hand wraps |
-| **Clan Sash** | Accessory | 4 | +2 | Worn over other clothing |
+| Outfit | Base Type | Cloth Cost | Faith Bonus | Description |
+|--------|-----------|------------|-------------|-------------|
+| **White Robe** | `/obj/item/clothing/suit/chaplainsuit/whiterobe` | 8 | +3 | Simple cloth robe |
+| **Monk's Habit** | `/obj/item/clothing/suit/hooded/chaplainsuit/monkhabit` | 10 | +4 | Hooded robe (with hood) |
+| **Eastern Robes** | `/obj/item/clothing/suit/chaplainsuit/monkrobeeast` | 6 | +2 | Minimalist eastern style |
+| **Poncho** | `/obj/item/clothing/suit/poncho` | 5 | +2 | Simple travel garment |
+| **Owl Cloak** | `/obj/item/clothing/suit/toggle/owlwings` | 12 | +5 | Feathered ceremonial cloak |
+| **Hastur's Robe** | `/obj/item/clothing/suit/hastur` | 15 + 1 Tapestry | +8 | Mystic elder garment |
+| **Bishop's Robes** | `/obj/item/clothing/suit/chaplainsuit/bishoprobe` | 20 + 2 Tapestry | +10 | Grand ceremonial attire |
+| **Apron** | `/obj/item/clothing/suit/apron` | 4 | +1, -10% craft | Work garment |
+| **Nun Hood** | `/obj/item/clothing/head/nun_hood` | 4 | +2 | Head covering |
+| **Black Beret** | `/obj/item/clothing/head/beret/black` | 3 | +1 | Simple head covering |
+| **Ushanka** | `/obj/item/clothing/head/ushanka` | 5 | +2 | Warm hat |
+| **Scarf** | `/obj/item/clothing/neck/scarf` | 3 | +1 | Neck accessory |
+| **Black Gloves** | `/obj/item/clothing/gloves/color/black` | 3 | +1 | Hand coverings |
 
-### Outfit Base Types
+### Implementation
+
+Instead of creating new clothing subtypes, we use a component system to add faith bonuses to existing clothing when crafted at the Loom:
 
 ```dm
-// Base resurgence clothing with faith bonus
-/obj/item/clothing/suit/resurgence
-    name = "resurgence garment"
-    desc = "A garment woven by the Resurgence Clan."
-    icon = 'icons/obj/resurgence/clothing.dmi'
-    worn_icon = 'icons/mob/resurgence/clothing.dmi'
+// Component that adds faith bonus to any clothing item
+/datum/component/faith_clothing
+    var/faith_bonus = 0
+    var/crafted_by_resurgence = TRUE
 
-    var/faith_bonus = 0  // Faith bonus when worn
+/datum/component/faith_clothing/Initialize(bonus = 0)
+    if(!istype(parent, /obj/item/clothing))
+        return COMPONENT_INCOMPATIBLE
+    faith_bonus = bonus
+    RegisterSignal(parent, COMSIG_ITEM_EQUIPPED, PROC_REF(on_equipped))
+    RegisterSignal(parent, COMSIG_ITEM_DROPPED, PROC_REF(on_dropped))
 
-/obj/item/clothing/suit/resurgence/equipped(mob/user, slot)
-    . = ..()
-    if(slot == ITEM_SLOT_OCLOTHING)
-        apply_faith_bonus(user)
+/datum/component/faith_clothing/proc/on_equipped(datum/source, mob/user, slot)
+    // Check if equipped in correct slot for this clothing type
+    var/obj/item/clothing/C = parent
+    if(!(C.slot_flags & slot))
+        return
+    apply_faith_bonus(user)
 
-/obj/item/clothing/suit/resurgence/dropped(mob/user)
+/datum/component/faith_clothing/proc/on_dropped(datum/source, mob/user)
     remove_faith_bonus(user)
-    . = ..()
 
-/obj/item/clothing/suit/resurgence/proc/apply_faith_bonus(mob/living/carbon/human/H)
+/datum/component/faith_clothing/proc/apply_faith_bonus(mob/living/carbon/human/H)
     if(!istype(H))
         return
     var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
     if(!istype(core))
         return
-    // Add faith event for wearing this garment
     var/datum/faith_event/clothing/E = new
-    E.description = "Wearing [name]"
+    var/obj/item/I = parent
+    E.description = "Wearing [I.name]"
     E.faith_change = faith_bonus
-    E.source_item = src
-    core.add_faith_event("clothing_[REF(src)]", E)
+    core.add_faith_event("clothing_[REF(parent)]", E)
 
-/obj/item/clothing/suit/resurgence/proc/remove_faith_bonus(mob/living/carbon/human/H)
+/datum/component/faith_clothing/proc/remove_faith_bonus(mob/living/carbon/human/H)
     if(!istype(H))
         return
     var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
     if(!istype(core))
         return
-    core.clear_faith_event("clothing_[REF(src)]")
-```
+    core.clear_faith_event("clothing_[REF(parent)]")
 
-### Specific Outfits
+// Modify examine to show faith bonus
+/datum/component/faith_clothing/RegisterWithParent()
+    RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
 
-```dm
-// Simple Robe - Basic garment
-/obj/item/clothing/suit/resurgence/robe
-    name = "simple robe"
-    desc = "A simple woven robe. It provides comfort and a sense of belonging."
-    icon_state = "simple_robe"
-    faith_bonus = 3
-    body_parts_covered = CHEST|GROIN|LEGS|ARMS
-
-// Clan Tunic - Undergarment
-/obj/item/clothing/under/resurgence
-    name = "clan tunic"
-    desc = "A traditional tunic worn by Resurgence Clan members."
-    icon = 'icons/obj/resurgence/clothing.dmi'
-    worn_icon = 'icons/mob/resurgence/clothing.dmi'
-    icon_state = "clan_tunic"
-
-    var/faith_bonus = 2
-
-/obj/item/clothing/under/resurgence/equipped(mob/user, slot)
-    . = ..()
-    if(slot == ITEM_SLOT_ICLOTHING)
-        apply_faith_bonus(user)
-
-/obj/item/clothing/under/resurgence/dropped(mob/user)
-    remove_faith_bonus(user)
-    . = ..()
-
-// Woven Cloak - Higher tier
-/obj/item/clothing/suit/resurgence/cloak
-    name = "woven cloak"
-    desc = "A flowing cloak woven with intricate patterns representing the clan's journey."
-    icon_state = "woven_cloak"
-    faith_bonus = 5
-    body_parts_covered = CHEST|GROIN|LEGS|ARMS
-
-// Elder's Vestments - Highest tier
-/obj/item/clothing/suit/resurgence/elder_vestments
-    name = "elder's vestments"
-    desc = "Sacred garments worn by clan elders. The intricate weavings tell the story of the Great Migration."
-    icon_state = "elder_vestments"
-    faith_bonus = 10
-    body_parts_covered = CHEST|GROIN|LEGS|ARMS
-
-// Pilgrim's Wrap
-/obj/item/clothing/suit/resurgence/pilgrim
-    name = "pilgrim's wrap"
-    desc = "Worn by those who dream of reaching the City. Tattered but treasured."
-    icon_state = "pilgrim_wrap"
-    faith_bonus = 4
-    body_parts_covered = CHEST|GROIN
-
-// Artisan's Apron - Crafting bonus
-/obj/item/clothing/suit/resurgence/artisan_apron
-    name = "artisan's apron"
-    desc = "A practical work apron. The wearer feels more focused on their craft."
-    icon_state = "artisan_apron"
-    faith_bonus = 1
-    body_parts_covered = CHEST|GROIN
-
-    var/craft_speed_bonus = 0.9  // 10% faster crafting
-
-// Woven Hood
-/obj/item/clothing/head/resurgence
-    name = "woven hood"
-    desc = "A simple cloth hood that provides warmth and comfort."
-    icon = 'icons/obj/resurgence/clothing.dmi'
-    worn_icon = 'icons/mob/resurgence/clothing.dmi'
-    icon_state = "woven_hood"
-
-    var/faith_bonus = 2
-
-// Ceremonial Mask
-/obj/item/clothing/mask/resurgence
-    name = "ceremonial mask"
-    desc = "A decorative mask with a glass lens eye. Worn during rituals and celebrations."
-    icon = 'icons/obj/resurgence/clothing.dmi'
-    worn_icon = 'icons/mob/resurgence/clothing.dmi'
-    icon_state = "ceremonial_mask"
-    flags_cover = MASKCOVERSMOUTH
-
-    var/faith_bonus = 4
-
-// Clan Sash - Accessory that stacks with other clothing
-/obj/item/clothing/accessory/resurgence_sash
-    name = "clan sash"
-    desc = "A woven sash displaying clan colors. Can be worn over other clothing."
-    icon = 'icons/obj/resurgence/clothing.dmi'
-    icon_state = "clan_sash"
-
-    var/faith_bonus = 2
+/datum/component/faith_clothing/proc/on_examine(datum/source, mob/user, list/examine_list)
+    examine_list += "<span class='notice'>This garment was crafted by the Resurgence Clan. (+[faith_bonus] faith)</span>"
 ```
 
 ### Loom Outfit Recipes
 
 ```dm
 /obj/structure/resurgence_loom
-    var/list/outfit_recipes = list(
-        "Simple Robe" = list(
-            "result" = /obj/item/clothing/suit/resurgence/robe,
+    var/static/list/outfit_recipes = list(
+        "White Robe" = list(
+            "result" = /obj/item/clothing/suit/chaplainsuit/whiterobe,
             "materials" = list(/obj/item/stack/sheet/cloth = 8),
+            "faith_bonus" = 3,
             "time" = 60
         ),
-        "Clan Tunic" = list(
-            "result" = /obj/item/clothing/under/resurgence,
-            "materials" = list(/obj/item/stack/sheet/cloth = 6),
-            "time" = 50
-        ),
-        "Woven Cloak" = list(
-            "result" = /obj/item/clothing/suit/resurgence/cloak,
-            "materials" = list(/obj/item/stack/sheet/cloth = 12),
+        "Monk's Habit" = list(
+            "result" = /obj/item/clothing/suit/hooded/chaplainsuit/monkhabit,
+            "materials" = list(/obj/item/stack/sheet/cloth = 10),
+            "faith_bonus" = 4,
             "time" = 80
         ),
-        "Elder's Vestments" = list(
-            "result" = /obj/item/clothing/suit/resurgence/elder_vestments,
+        "Eastern Robes" = list(
+            "result" = /obj/item/clothing/suit/chaplainsuit/monkrobeeast,
+            "materials" = list(/obj/item/stack/sheet/cloth = 6),
+            "faith_bonus" = 2,
+            "time" = 50
+        ),
+        "Poncho" = list(
+            "result" = /obj/item/clothing/suit/poncho,
+            "materials" = list(/obj/item/stack/sheet/cloth = 5),
+            "faith_bonus" = 2,
+            "time" = 40
+        ),
+        "Owl Cloak" = list(
+            "result" = /obj/item/clothing/suit/toggle/owlwings,
+            "materials" = list(/obj/item/stack/sheet/cloth = 12),
+            "faith_bonus" = 5,
+            "time" = 100
+        ),
+        "Hastur's Robe" = list(
+            "result" = /obj/item/clothing/suit/hastur,
+            "materials" = list(
+                /obj/item/stack/sheet/cloth = 15,
+                /obj/item/resurgence_component/woven_tapestry = 1
+            ),
+            "faith_bonus" = 8,
+            "time" = 120
+        ),
+        "Bishop's Robes" = list(
+            "result" = /obj/item/clothing/suit/chaplainsuit/bishoprobe,
             "materials" = list(
                 /obj/item/stack/sheet/cloth = 20,
                 /obj/item/resurgence_component/woven_tapestry = 2
             ),
+            "faith_bonus" = 10,
             "time" = 150
         ),
-        "Pilgrim's Wrap" = list(
-            "result" = /obj/item/clothing/suit/resurgence/pilgrim,
-            "materials" = list(/obj/item/stack/sheet/cloth = 10),
-            "time" = 70
-        ),
-        "Artisan's Apron" = list(
-            "result" = /obj/item/clothing/suit/resurgence/artisan_apron,
-            "materials" = list(/obj/item/stack/sheet/cloth = 5),
-            "time" = 40
-        ),
-        "Woven Hood" = list(
-            "result" = /obj/item/clothing/head/resurgence,
+        "Work Apron" = list(
+            "result" = /obj/item/clothing/suit/apron,
             "materials" = list(/obj/item/stack/sheet/cloth = 4),
+            "faith_bonus" = 1,
+            "time" = 30,
+            "craft_speed_bonus" = 0.9  // 10% faster crafting
+        ),
+        "Nun Hood" = list(
+            "result" = /obj/item/clothing/head/nun_hood,
+            "materials" = list(/obj/item/stack/sheet/cloth = 4),
+            "faith_bonus" = 2,
             "time" = 30
         ),
-        "Ceremonial Mask" = list(
-            "result" = /obj/item/clothing/mask/resurgence,
-            "materials" = list(
-                /obj/item/stack/sheet/cloth = 6,
-                /obj/item/resurgence_component/glass_lens = 1
-            ),
-            "time" = 60
-        ),
-        "Woven Gloves" = list(
-            "result" = /obj/item/clothing/gloves/resurgence,
+        "Black Beret" = list(
+            "result" = /obj/item/clothing/head/beret/black,
             "materials" = list(/obj/item/stack/sheet/cloth = 3),
+            "faith_bonus" = 1,
             "time" = 25
         ),
-        "Clan Sash" = list(
-            "result" = /obj/item/clothing/accessory/resurgence_sash,
-            "materials" = list(/obj/item/stack/sheet/cloth = 4),
-            "time" = 35
+        "Ushanka" = list(
+            "result" = /obj/item/clothing/head/ushanka,
+            "materials" = list(/obj/item/stack/sheet/cloth = 5),
+            "faith_bonus" = 2,
+            "time" = 40
+        ),
+        "Scarf" = list(
+            "result" = /obj/item/clothing/neck/scarf,
+            "materials" = list(/obj/item/stack/sheet/cloth = 3),
+            "faith_bonus" = 1,
+            "time" = 20
+        ),
+        "Black Gloves" = list(
+            "result" = /obj/item/clothing/gloves/color/black,
+            "materials" = list(/obj/item/stack/sheet/cloth = 3),
+            "faith_bonus" = 1,
+            "time" = 25
         )
     )
 ```
 
-### Loom Crafting UI
-
-When using the Loom, a radial menu or TGUI shows available recipes:
+### Loom Crafting Process
 
 ```dm
-/obj/structure/resurgence_loom/attack_hand(mob/user)
-    . = ..()
-    if(!istype(user, /mob/living/carbon/human))
-        return
-
-    // Show recipe selection
-    var/list/choices = list()
-    for(var/recipe_name in outfit_recipes)
-        choices[recipe_name] = image(icon = 'icons/obj/resurgence/clothing.dmi', icon_state = "recipe_[recipe_name]")
-
-    var/choice = show_radial_menu(user, src, choices, radius = 42)
-    if(!choice || !Adjacent(user))
-        return
-
-    start_weaving(user, choice)
-
 /obj/structure/resurgence_loom/proc/start_weaving(mob/user, recipe_name)
     var/list/recipe = outfit_recipes[recipe_name]
     if(!recipe)
@@ -1598,18 +1671,38 @@ When using the Loom, a radial menu or TGUI shows available recipes:
 
     // Create the outfit
     var/result_type = recipe["result"]
-    var/obj/item/result = new result_type(get_turf(src))
+    var/obj/item/clothing/result = new result_type(get_turf(src))
+
+    // Add faith bonus component
+    var/faith_bonus = recipe["faith_bonus"]
+    result.AddComponent(/datum/component/faith_clothing, faith_bonus)
+
+    // Add craft speed bonus component if applicable
+    if(recipe["craft_speed_bonus"])
+        result.AddComponent(/datum/component/craft_speed_bonus, recipe["craft_speed_bonus"])
+
+    // Rename to indicate clan crafting
+    result.name = "clan-woven [result.name]"
+    result.desc += " This garment was lovingly crafted by the Resurgence Clan."
+
     to_chat(user, "<span class='notice'>You finish weaving [result.name]!</span>")
 
     // Faith event for crafting
     add_crafting_faith_event(user)
 ```
 
-### Artisan's Apron Crafting Bonus
+### Work Apron Crafting Bonus
 
-The Artisan's Apron provides a crafting speed bonus:
+The Work Apron uses a separate component for craft speed:
 
 ```dm
+/datum/component/craft_speed_bonus
+    var/speed_multiplier = 1.0
+
+/datum/component/craft_speed_bonus/Initialize(multiplier = 0.9)
+    speed_multiplier = multiplier
+
+// Production structures check for this component
 /obj/structure/resurgence_crafting_table/proc/get_craft_time()
     var/area/resurgence_outpost/room/R = get_area(src)
     var/base_time = base_craft_time
@@ -1618,19 +1711,17 @@ The Artisan's Apron provides a crafting speed bonus:
     if(!istype(R) || R.room_type != ROOM_TYPE_WORKSHOP)
         base_time *= 3
 
-    // Check if user is wearing artisan's apron
+    // Check if user is wearing apron with craft bonus
     var/mob/living/carbon/human/H = usr
-    if(istype(H))
-        var/obj/item/clothing/suit/resurgence/artisan_apron/apron = H.wear_suit
-        if(istype(apron))
-            base_time *= apron.craft_speed_bonus  // 10% faster
+    if(istype(H) && H.wear_suit)
+        var/datum/component/craft_speed_bonus/bonus = H.wear_suit.GetComponent(/datum/component/craft_speed_bonus)
+        if(bonus)
+            base_time *= bonus.speed_multiplier
 
     return base_time
 ```
 
 ### Maximum Faith from Clothing
-
-To prevent stacking too many clothing bonuses, cap the total:
 
 ```dm
 #define MAX_CLOTHING_FAITH_BONUS 15
@@ -1657,16 +1748,16 @@ To prevent stacking too many clothing bonuses, cap the total:
 
 | Slot | Best Option | Faith | Notes |
 |------|-------------|-------|-------|
-| Suit | Elder's Vestments | +10 | Requires Woven Tapestry |
-| Under | Clan Tunic | +2 | Basic undergarment |
-| Head | Woven Hood | +2 | Simple covering |
-| Mask | Ceremonial Mask | +4 | Requires Glass Lens |
-| Gloves | Woven Gloves | +1 | Hand wraps |
-| Accessory | Clan Sash | +2 | Stacks with suit |
-| **Max Total** | | **+15** | Capped at 15 |
+| Suit | Bishop's Robes | +10 | Requires 2 Woven Tapestry |
+| Suit (Alt) | Hastur's Robe | +8 | Requires 1 Woven Tapestry |
+| Suit (Basic) | Owl Cloak | +5 | Just cloth |
+| Head | Nun Hood / Ushanka | +2 | Simple coverings |
+| Neck | Scarf | +1 | Accessory slot |
+| Gloves | Black Gloves | +1 | Hand coverings |
+| **Max Total** | | **+15** | Capped |
 
 **Full Outfit Example:**
-- Elder's Vestments (+10) + Clan Tunic (+2) + Woven Hood (+2) + Clan Sash (+2) = +16, capped to **+15**
+- Bishop's Robes (+10) + Nun Hood (+2) + Scarf (+1) + Black Gloves (+1) = **+14 faith**
 
 ---
 
@@ -2071,19 +2162,12 @@ code/modules/resurgence_outpost/
     room_types.dm           # Room type determination logic
 
     # Clothing
-    clothing_base.dm        # Base resurgence clothing types
-    clothing_outfits.dm     # Specific outfit definitions
-    clothing_accessories.dm # Sashes, accessories
+    faith_clothing_component.dm  # Component that adds faith to any clothing
+    craft_speed_component.dm     # Component for crafting speed bonus
 
     # Core
     persistence.dm          # Save/load outpost state (DMM format)
     areas.dm                # Resurgence area types
-
-icons/obj/resurgence/
-    clothing.dmi            # Outfit item sprites
-
-icons/mob/resurgence/
-    clothing.dmi            # Worn outfit sprites
 
 tgui/packages/tgui/interfaces/
     BlueprintPlanner.tsx    # Category-based blueprint selection UI
@@ -2178,11 +2262,11 @@ icons/obj/resurgence/
 46. Verify room designator fails if space is too large (>100 tiles)
 
 ### Woven Outfits
-47. Weave Simple Robe at Loom, verify it's created
-48. Equip Simple Robe, verify +3 faith bonus applied
+47. Weave White Robe at Loom, verify it's created with faith component
+48. Equip clan-woven White Robe, verify +3 faith bonus applied
 49. Unequip robe, verify faith bonus removed
-50. Weave Elder's Vestments (requires Woven Tapestry component)
-51. Equip full outfit set, verify faith is capped at +15
-52. Wear Artisan's Apron, verify 10% faster crafting
-53. Weave Ceremonial Mask (requires Glass Lens)
+50. Weave Bishop's Robes (requires 2 Woven Tapestry)
+51. Equip full outfit set (robe + hood + scarf + gloves), verify faith capped at +15
+52. Wear Work Apron, verify 10% faster crafting
+53. Examine clan-woven clothing, verify it shows faith bonus
 54. Verify Loom uses 3x time when not in Workshop

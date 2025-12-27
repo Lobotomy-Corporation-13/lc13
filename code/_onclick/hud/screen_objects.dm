@@ -691,6 +691,30 @@
 /atom/movable/screen/mood/attack_tk()
 	return
 
+/// Faith display for resurgence machines - shows current faith level
+/// Uses mood icon states: mood1 = worst, mood9 = best
+/// Hidden by default - becomes visible when resurgence_core is inserted
+/atom/movable/screen/faith
+	name = "faith"
+	icon_state = "mood5" // Start at neutral faith
+	screen_loc = ui_faith
+	invisibility = INVISIBILITY_ABSTRACT // Hidden until player has a resurgence_core
+
+/atom/movable/screen/faith/Click()
+	if(!ishuman(usr))
+		return
+	var/mob/living/carbon/human/H = usr
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(!istype(core))
+		return
+	// Trigger the core status check when clicking
+	var/datum/action/item_action/organ_action/resurgence_check/action = locate() in core.actions
+	if(action)
+		action.Trigger()
+
+/atom/movable/screen/faith/attack_tk()
+	return
+
 /atom/movable/screen/splash
 	icon = 'icons/blank_title.png'
 	icon_state = ""

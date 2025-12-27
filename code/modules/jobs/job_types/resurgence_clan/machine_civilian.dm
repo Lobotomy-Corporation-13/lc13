@@ -30,6 +30,17 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 /datum/job/machine_civilian/after_spawn(mob/living/carbon/human/H, mob/M, latejoin = FALSE)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+
+	// Create a wig matching the player's original hair before species change removes it
+	if(H.hairstyle && H.hairstyle != "Bald")
+		var/obj/item/clothing/head/wig/W = new(get_turf(H))
+		W.hairstyle = H.hairstyle
+		W.add_atom_colour("#[H.hair_color]", FIXED_COLOUR_PRIORITY)
+		W.gradient_style = H.gradient_style
+		W.gradient_color = H.gradient_color
+		W.update_icon()
+		H.equip_to_slot_or_del(W, ITEM_SLOT_HEAD)
+
 	H.set_species(/datum/species/resurgence_machine)
 
 	// Initialize the core's charge and faith
