@@ -132,23 +132,457 @@ No new resources needed - leverage existing `/obj/item/stack/sheet/` types.
 
 ---
 
-## Basic Building Recipes
+## Resource Gathering
 
-### Walls
-- **Metal Wall**: 5 metal sheets
-- **Wood Wall**: 5 wood planks
+### Wood
+**Source:** Trees scattered around the map
 
-### Floors
-- **Metal Floor Tile**: 1 metal sheet = 4 tiles
-- **Wood Floor**: 2 wood planks
+```dm
+/obj/structure/flora/tree/resurgence
+    name = "outskirts tree"
+    desc = "A gnarled tree that has adapted to the harsh outskirts."
+    icon_state = "tree_outskirts"
+    var/wood_amount = 10        // Wood dropped when chopped
+    var/chop_time = 40          // Deciseconds per chop
+    var/health = 3              // Chops required to fell
+```
 
-### Structures
-- **Storage Chest**: 10 wood planks
-  - Simple container that holds items
-- **Workbench**: 15 metal sheets + 10 wood
-  - Crafting station for advanced recipes
+**Gathering:**
+1. Hit tree with hatchet/axe → `do_after()` chop animation
+2. Each chop reduces `health` by 1
+3. When `health` reaches 0 → tree falls, drops wood, becomes stump
+4. Stumps can regrow over time (configurable, e.g., 10 minutes)
 
-Use existing stack recipe system (`/datum/stack_recipe`) for these.
+**Tools:**
+| Tool | Chop Speed | Durability |
+|------|------------|------------|
+| Bare hands | Very slow (x3 time) | N/A |
+| Stone Hatchet | Normal | 50 uses |
+| Metal Axe | Fast (x0.5 time) | 150 uses |
+
+### Iron/Metal
+**Source:** Ore deposits in rock formations
+
+```dm
+/turf/closed/mineral/random/resurgence
+    name = "rock face"
+    desc = "A rocky outcropping. Might contain ore."
+    var/ore_type = null         // Set on init
+    var/ore_amount = 3          // Ore dropped when mined
+
+/turf/closed/mineral/random/resurgence/iron
+    ore_type = /obj/item/stack/ore/iron
+    mineralChance = 100
+```
+
+**Gathering:**
+1. Hit rock with pickaxe → mining animation
+2. Rock breaks → drops ore + becomes open turf or rubble
+3. Ore must be smelted at Forge to become metal sheets
+
+**Smelting (at Forge):**
+| Input | Output |
+|-------|--------|
+| 2 Iron Ore | 1 Metal Sheet |
+| 1 Iron Ore + 1 Coal | 2 Metal Sheets (efficient) |
+
+**Tools:**
+| Tool | Mine Speed | Durability |
+|------|------------|------------|
+| Bare hands | Cannot mine | N/A |
+| Stone Pickaxe | Slow | 30 uses |
+| Metal Pickaxe | Normal | 100 uses |
+
+### Glass
+**Source:** Sand deposits + smelting
+
+```dm
+/obj/item/stack/ore/sand
+    name = "sand"
+    desc = "Coarse sand from the outskirts."
+    icon_state = "ite_ore"  // Placeholder
+    refined_type = /obj/item/stack/sheet/glass
+
+/turf/open/floor/resurgence/sand
+    name = "sandy ground"
+    desc = "Loose sand covers the ground here."
+    var/sand_remaining = 5
+```
+
+**Gathering:**
+1. Use shovel on sandy ground → get sand pile
+2. Each dig reduces `sand_remaining`
+3. When depleted, turf becomes regular dirt (can regenerate)
+
+**Smelting (at Forge):**
+| Input | Output |
+|-------|--------|
+| 2 Sand | 1 Glass Sheet |
+
+### Cloth
+**Source:** Plant fibers → Loom processing
+
+```dm
+/obj/structure/flora/resurgence/fiber_plant
+    name = "fiber plant"
+    desc = "A tough plant with fibrous stalks."
+    var/fiber_amount = 3
+    var/regrow_time = 5 MINUTES
+
+/obj/item/stack/sheet/fiber
+    name = "plant fiber"
+    desc = "Raw plant fibers. Can be woven into cloth."
+```
+
+**Gathering:**
+1. Harvest fiber plants by hand or with sickle
+2. Plants regrow after `regrow_time`
+
+**Processing (at Loom):**
+| Input | Output |
+|-------|--------|
+| 3 Plant Fiber | 1 Cloth |
+
+### Resource Summary
+
+| Resource | Raw Source | Processing | Station |
+|----------|------------|------------|---------|
+| Wood | Trees (chop) | None | - |
+| Metal | Iron Ore (mine) | Smelt | Forge |
+| Glass | Sand (dig) | Smelt | Forge |
+| Cloth | Fiber Plants (harvest) | Weave | Loom |
+
+### Starting Tools
+
+Players spawn with basic tools or can craft them:
+
+**Craftable Without Station:**
+| Tool | Recipe | Use |
+|------|--------|-----|
+| Stone Hatchet | 2 wood + 1 stone | Chop trees |
+| Stone Pickaxe | 2 wood + 2 stone | Mine ore |
+| Shovel | 3 wood + 1 metal | Dig sand |
+| Sickle | 2 wood + 1 metal | Harvest fibers |
+
+**Stone Source:**
+- Small rocks scattered on ground (pick up)
+- Breaking rubble/boulders
+
+### Resource Regeneration
+
+To prevent resource depletion over multi-day progression:
+
+| Resource | Regeneration |
+|----------|--------------|
+| Trees | Stumps regrow in 10 min (configurable) |
+| Ore | New deposits spawn at round start from base map |
+| Sand | Sandy turfs regenerate 1 sand per 5 min |
+| Fiber Plants | Regrow 5 min after harvest |
+
+---
+
+## Building System
+
+### Buildable Structures
+
+**Construction:**
+| Structure | Materials | Description |
+|-----------|-----------|-------------|
+| Wood Wall | 5 wood | Basic wall, blocks movement |
+| Wood Door | 8 wood | Openable passage |
+| Wood Floor | 2 wood | Covers dirt/ground |
+| Window | 4 wood + 2 glass | Wall with visibility |
+
+**Storage:**
+| Structure | Materials | Description |
+|-----------|-----------|-------------|
+| Storage Chest | 10 wood | Container for items |
+| Crate | 8 wood | Larger container |
+| Barrel | 6 wood | Stores liquids/bulk items |
+
+**Production:**
+| Structure | Materials | Description |
+|-----------|-----------|-------------|
+| Crafting Table | 15 wood | Basic crafting station |
+| Research Table | 20 wood + 5 glass | Unlocks new blueprints |
+| Forge | 25 metal + 10 wood | Metalworking station |
+| Loom | 20 wood | Textile crafting |
+
+**Decor (Raises Faith):**
+| Structure | Materials | Description |
+|-----------|-----------|-------------|
+| Small Statue | 20 wood OR 20 metal | +5 faith when nearby |
+| Carving Block | 15 wood | Customizable decoration |
+| Painting Canvas | 10 wood + 5 cloth | Player-made art |
+| Lantern | 5 wood + 3 glass | Light source, +2 faith |
+| Banner | 8 cloth + 2 wood | Clan decoration, +3 faith |
+
+### Blueprint Planning Tool
+
+A handheld tool that lets players plan construction by placing transparent "ghost" versions of structures.
+
+**Tool:** `/obj/item/blueprint_planner`
+```dm
+/obj/item/blueprint_planner
+    name = "blueprint planner"
+    desc = "A planning tool for laying out construction blueprints."
+    icon_state = "blueprint_tool"
+    var/selected_structure = null  // Currently selected blueprint type
+    var/selected_category = null   // Currently viewed category
+```
+
+**Usage:**
+1. **Open UI**: Click tool in hand → opens category-based selection UI
+2. **Select category**: Click a category tab (Construction, Decor, Production, Storage)
+3. **Select structure**: Click a structure within the category
+4. **Place blueprint**: Click on ground → places transparent blue ghost
+5. **Rotate**: Alt-click blueprint to rotate
+6. **Remove**: Right-click blueprint to remove (or hit with empty hand)
+7. **Build**: Hit blueprint with required materials → starts construction
+
+### Blueprint Categories
+
+**Category Definitions:**
+```dm
+#define BLUEPRINT_CAT_CONSTRUCTION "Construction"
+#define BLUEPRINT_CAT_STORAGE "Storage"
+#define BLUEPRINT_CAT_PRODUCTION "Production"
+#define BLUEPRINT_CAT_DECOR "Decor"
+
+GLOBAL_LIST_INIT(blueprint_categories, list(
+    BLUEPRINT_CAT_CONSTRUCTION = list(
+        /obj/structure/blueprint/wood_wall,
+        /obj/structure/blueprint/wood_door,
+        /obj/structure/blueprint/wood_floor,
+        /obj/structure/blueprint/window
+    ),
+    BLUEPRINT_CAT_STORAGE = list(
+        /obj/structure/blueprint/chest,
+        /obj/structure/blueprint/crate,
+        /obj/structure/blueprint/barrel
+    ),
+    BLUEPRINT_CAT_PRODUCTION = list(
+        /obj/structure/blueprint/crafting_table,
+        /obj/structure/blueprint/research_table,
+        /obj/structure/blueprint/forge,
+        /obj/structure/blueprint/loom
+    ),
+    BLUEPRINT_CAT_DECOR = list(
+        /obj/structure/blueprint/small_statue,
+        /obj/structure/blueprint/carving_block,
+        /obj/structure/blueprint/painting_canvas,
+        /obj/structure/blueprint/lantern,
+        /obj/structure/blueprint/banner
+    )
+))
+```
+
+### Blueprint Planner UI (TGUI)
+
+**File:** `tgui/packages/tgui/interfaces/BlueprintPlanner.tsx`
+
+```
+┌─────────────────────────────────────────────────────┐
+│  BLUEPRINT PLANNER                              [X] │
+├─────────────────────────────────────────────────────┤
+│  [Construction] [Storage] [Production] [Decor]      │  ← Category tabs
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│   ┌───────┐  ┌───────┐  ┌───────┐  ┌───────┐       │
+│   │ Wood  │  │ Wood  │  │ Wood  │  │Window │       │
+│   │ Wall  │  │ Door  │  │ Floor │  │       │       │
+│   │  5🪵  │  │  8🪵  │  │  2🪵  │  │ 4🪵2⬜│       │  ← Structure icons
+│   └───────┘  └───────┘  └───────┘  └───────┘       │     with costs
+│                                                     │
+│   Selected: Wood Wall                               │
+│   Cost: 5 Wood                                      │
+│   Click on ground to place blueprint.               │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+**UI Data Structure:**
+```dm
+/obj/item/blueprint_planner/ui_data(mob/user)
+    var/list/data = list()
+    data["categories"] = list()
+    for(var/cat_name in GLOB.blueprint_categories)
+        var/list/cat_data = list("name" = cat_name, "structures" = list())
+        for(var/blueprint_type in GLOB.blueprint_categories[cat_name])
+            var/obj/structure/blueprint/B = blueprint_type
+            cat_data["structures"] += list(list(
+                "name" = initial(B.name),
+                "icon" = initial(B.icon_state),
+                "type" = "[blueprint_type]",
+                "materials" = get_material_list(B)
+            ))
+        data["categories"] += list(cat_data)
+    data["selected"] = selected_structure ? "[selected_structure]" : null
+    data["selected_category"] = selected_category
+    return data
+
+/obj/item/blueprint_planner/ui_act(action, params)
+    . = ..()
+    switch(action)
+        if("select_category")
+            selected_category = params["category"]
+            return TRUE
+        if("select_structure")
+            selected_structure = text2path(params["type"])
+            return TRUE
+```
+
+### Blueprint Structure (Ghost)
+
+```dm
+/obj/structure/blueprint
+    name = "blueprint"
+    desc = "A planned construction. Supply materials to build."
+    icon_state = "blueprint_wall"
+    anchored = TRUE
+    density = FALSE           // Can walk through blueprints
+    alpha = 128               // Semi-transparent
+    color = "#4488ff"         // Blue tint
+
+    var/list/required_materials = list()  // What's needed to build
+    var/list/current_materials = list()   // What's been added
+    var/build_result = null               // What gets created when complete
+    var/build_time = 30                   // Deciseconds to build after materials supplied
+
+/obj/structure/blueprint/examine(mob/user)
+    . = ..()
+    . += "Required materials:"
+    for(var/mat_type in required_materials)
+        var/needed = required_materials[mat_type]
+        var/have = current_materials[mat_type] || 0
+        var/obj/item/stack/S = mat_type
+        . += "- [initial(S.name)]: [have]/[needed]"
+
+/obj/structure/blueprint/attackby(obj/item/I, mob/user, params)
+    if(istype(I, /obj/item/stack))
+        var/obj/item/stack/S = I
+        for(var/mat_type in required_materials)
+            if(istype(S, mat_type))
+                var/needed = required_materials[mat_type] - (current_materials[mat_type] || 0)
+                if(needed > 0)
+                    var/to_use = min(S.amount, needed)
+                    S.use(to_use)
+                    current_materials[mat_type] = (current_materials[mat_type] || 0) + to_use
+                    to_chat(user, "<span class='notice'>You add [to_use] [S.singular_name] to the blueprint.</span>")
+                    check_completion(user)
+                    return
+    ..()
+
+/obj/structure/blueprint/proc/check_completion(mob/user)
+    for(var/mat_type in required_materials)
+        if((current_materials[mat_type] || 0) < required_materials[mat_type])
+            return  // Not complete yet
+    // All materials supplied - start building
+    start_construction(user)
+
+/obj/structure/blueprint/proc/start_construction(mob/user)
+    to_chat(user, "<span class='notice'>You begin constructing the [name]...</span>")
+    if(do_after(user, build_time, src))
+        complete_construction()
+
+/obj/structure/blueprint/proc/complete_construction()
+    var/turf/T = get_turf(src)
+    new build_result(T)
+    playsound(T, 'sound/items/deconstruct.ogg', 50, TRUE)
+    qdel(src)
+```
+
+### Blueprint Subtypes
+
+**Important:** Blueprints are NOT subtypes of the objects they build. They are all subtypes of `/obj/structure/blueprint` with a `build_result` variable that points to the linked object type.
+
+```dm
+// All blueprints inherit from base blueprint structure
+/obj/structure/blueprint
+    // ... base vars defined above ...
+
+// Wood Wall Blueprint
+/obj/structure/blueprint/wood_wall
+    name = "wood wall blueprint"
+    icon_state = "blueprint_wall"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 5)
+    build_result = /turf/closed/wall/resurgence/wood  // Linked object
+    build_time = 50
+
+// Wood Door Blueprint
+/obj/structure/blueprint/wood_door
+    name = "wood door blueprint"
+    icon_state = "blueprint_door"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 8)
+    build_result = /obj/machinery/door/resurgence/wood  // Linked object
+    build_time = 60
+
+// Wood Floor Blueprint
+/obj/structure/blueprint/wood_floor
+    name = "wood floor blueprint"
+    icon_state = "blueprint_floor"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 2)
+    build_result = /turf/open/floor/resurgence/wood  // Linked object
+    build_time = 20
+
+// Storage Chest Blueprint
+/obj/structure/blueprint/chest
+    name = "storage chest blueprint"
+    icon_state = "blueprint_chest"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 10)
+    build_result = /obj/structure/resurgence_chest  // Linked object
+    build_time = 40
+
+// Crafting Table Blueprint
+/obj/structure/blueprint/crafting_table
+    name = "crafting table blueprint"
+    icon_state = "blueprint_table"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 15)
+    build_result = /obj/structure/resurgence_crafting_table  // Linked object
+    build_time = 50
+
+// Lantern Blueprint
+/obj/structure/blueprint/lantern
+    name = "lantern blueprint"
+    icon_state = "blueprint_lantern"
+    required_materials = list(
+        /obj/item/stack/sheet/mineral/wood = 5,
+        /obj/item/stack/sheet/glass = 3
+    )
+    build_result = /obj/structure/resurgence_lantern  // Linked object
+    build_time = 30
+
+// Small Statue Blueprint
+/obj/structure/blueprint/small_statue
+    name = "small statue blueprint"
+    icon_state = "blueprint_statue"
+    required_materials = list(/obj/item/stack/sheet/mineral/wood = 20)
+    build_result = /obj/structure/resurgence_statue/small  // Linked object
+    build_time = 80
+```
+
+**Construction Flow:**
+1. Blueprint placed (e.g., `/obj/structure/blueprint/wood_wall`)
+2. Player hits with materials until `required_materials` satisfied
+3. `do_after()` build timer completes
+4. Blueprint calls `new build_result(get_turf(src))` to create the linked object
+5. Blueprint `qdel()`s itself
+
+### Radial Menu for Structure Selection
+
+When clicking the blueprint planner in hand:
+```dm
+/obj/item/blueprint_planner/attack_self(mob/user)
+    var/list/choices = list()
+    for(var/struct_name in available_structures)
+        var/obj/structure/blueprint/B = available_structures[struct_name]
+        choices[struct_name] = image(icon = initial(B.icon), icon_state = initial(B.icon_state))
+
+    var/choice = show_radial_menu(user, src, choices, radius = 36)
+    if(choice)
+        selected_structure = available_structures[choice]
+        to_chat(user, "<span class='notice'>Selected: [choice]</span>")
+```
 
 ---
 
@@ -384,10 +818,29 @@ When round starts fresh (no save or reset):
 
 ```
 code/modules/resurgence_outpost/
-    statue.dm           # Monument structure
-    structures.dm       # Chest, workbench, walls
-    recipes.dm          # Stack recipes for building
-    persistence.dm      # Save/load outpost state
+    # Building
+    monument.dm             # Monument of Hope structure
+    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
+    walls_floors.dm         # Wood wall, wood floor, window turfs
+    doors.dm                # Wood door
+
+    # Blueprints
+    blueprint_planner.dm    # Blueprint planning tool + UI
+    blueprints.dm           # Blueprint ghost structures (all categories)
+    blueprint_categories.dm # Category definitions and global list
+
+    # Resources
+    trees.dm                # Choppable trees, stumps, regrowth
+    mining.dm               # Ore deposits, rock faces
+    gathering.dm            # Sand digging, fiber harvesting
+    processing.dm           # Forge smelting, Loom weaving
+    tools.dm                # Hatchet, pickaxe, shovel, sickle
+
+    # Core
+    persistence.dm          # Save/load outpost state (DMM format)
+
+tgui/packages/tgui/interfaces/
+    BlueprintPlanner.tsx    # Category-based blueprint selection UI
 
 code/modules/surgery/organs/
     resurgence_core.dm  # Updated with new faith/charge system
@@ -412,6 +865,1256 @@ data/resurgence_outpost/
 
 ---
 
+## Crafted Components
+
+Complex projects require intermediate components crafted from basic materials. This adds depth to crafting and makes advanced structures/items feel more earned.
+
+### Component Tiers
+
+**Tier 1 - Basic Materials** (gathered directly):
+- Wood, Metal Sheets, Glass, Cloth, Stone
+
+**Tier 2 - Simple Components** (crafted at Crafting Table):
+| Component | Recipe | Used For |
+|-----------|--------|----------|
+| Wooden Plank | 2 Wood | Furniture, weapon handles |
+| Metal Rod | 1 Metal Sheet | Weapon shafts, reinforcement |
+| Metal Plate | 2 Metal Sheets | Armor, structural |
+| Rope | 3 Cloth | Bindings, pulleys |
+| Leather Strip | 2 Cloth | Grips, straps |
+| Glass Lens | 2 Glass | Optics, lanterns |
+| Nails | 1 Metal Sheet → 10 Nails | Construction |
+
+**Tier 3 - Complex Components** (crafted at Forge or specialized station):
+| Component | Recipe | Used For |
+|-----------|--------|----------|
+| Metal Frame | 4 Metal Rods + 2 Metal Plates | Large structures |
+| Gear Assembly | 3 Metal Sheets (at Forge) | Machinery |
+| Reinforced Plate | 2 Metal Plates + 1 Plasteel | Monument, heavy armor |
+| Carved Ornament | 5 Wood + 1 Glass Lens | Monument detailing |
+| Woven Tapestry | 10 Cloth + 3 Rope | Monument, decor |
+
+### Component Definitions
+
+```dm
+// Base component item
+/obj/item/resurgence_component
+    name = "component"
+    desc = "A crafted component for construction."
+    icon = 'icons/obj/resurgence/components.dmi'
+    w_class = WEIGHT_CLASS_SMALL
+
+// Tier 2 Components
+/obj/item/resurgence_component/wooden_plank
+    name = "wooden plank"
+    desc = "A shaped wooden plank, ready for construction."
+    icon_state = "wooden_plank"
+
+/obj/item/resurgence_component/metal_rod
+    name = "metal rod"
+    desc = "A sturdy metal rod."
+    icon_state = "metal_rod"
+
+/obj/item/resurgence_component/metal_plate
+    name = "metal plate"
+    desc = "A flat metal plate for structural use."
+    icon_state = "metal_plate"
+
+/obj/item/resurgence_component/rope
+    name = "rope"
+    desc = "Strong woven rope."
+    icon_state = "rope"
+
+/obj/item/resurgence_component/leather_strip
+    name = "leather strip"
+    desc = "A strip of treated leather for grips and straps."
+    icon_state = "leather_strip"
+
+/obj/item/resurgence_component/glass_lens
+    name = "glass lens"
+    desc = "A polished glass lens."
+    icon_state = "glass_lens"
+
+/obj/item/stack/resurgence_nails
+    name = "nails"
+    desc = "Metal nails for construction."
+    icon_state = "nails"
+    singular_name = "nail"
+    max_amount = 50
+
+// Tier 3 Components
+/obj/item/resurgence_component/metal_frame
+    name = "metal frame"
+    desc = "A sturdy metal frame for large construction projects."
+    icon_state = "metal_frame"
+    w_class = WEIGHT_CLASS_NORMAL
+
+/obj/item/resurgence_component/gear_assembly
+    name = "gear assembly"
+    desc = "Interlocking gears for machinery."
+    icon_state = "gear_assembly"
+
+/obj/item/resurgence_component/reinforced_plate
+    name = "reinforced plate"
+    desc = "A heavy reinforced plate for critical structures."
+    icon_state = "reinforced_plate"
+    w_class = WEIGHT_CLASS_NORMAL
+
+/obj/item/resurgence_component/carved_ornament
+    name = "carved ornament"
+    desc = "An intricately carved decorative piece."
+    icon_state = "carved_ornament"
+
+/obj/item/resurgence_component/woven_tapestry
+    name = "woven tapestry"
+    desc = "A large decorative tapestry depicting the clan's journey."
+    icon_state = "woven_tapestry"
+    w_class = WEIGHT_CLASS_NORMAL
+```
+
+### Updated Monument Requirements
+
+The Monument of Hope now requires components instead of raw materials:
+
+| Stage | Requirements | Description |
+|-------|--------------|-------------|
+| 1 - Foundation | 8 Metal Frames + 20 Nails | Structural base |
+| 2 - Framework | 10 Wooden Planks + 6 Metal Rods + 30 Nails | Inner skeleton |
+| 3 - Detailing | 5 Carved Ornaments + 4 Glass Lenses | Decorative elements |
+| 4 - Completion | 4 Reinforced Plates + 2 Woven Tapestries + 2 Gear Assemblies | Final touches |
+
+**Material Breakdown (total raw materials needed):**
+- Stage 1: 32 Metal Sheets (for frames) + 2 Metal Sheets (for nails) = 34 Metal
+- Stage 2: 20 Wood + 6 Metal + 3 Metal = 29 raw materials
+- Stage 3: 25 Wood + 5 Glass + 8 Glass = 25 Wood, 13 Glass
+- Stage 4: 16 Metal + 4 Plasteel + 20 Cloth + 6 Rope (18 Cloth) + 6 Metal = 22 Metal, 4 Plasteel, 38 Cloth
+
+This makes the monument a significant undertaking requiring diverse resource gathering.
+
+---
+
+## Room System (Dynamic Areas)
+
+Machines can designate enclosed spaces as rooms, which provide bonuses based on their contents. Uses the existing area system as a base.
+
+**Reference:** `code/game/objects/items/blueprints.dm`, `code/__HELPERS/areas.dm`
+
+### Room Types
+
+Room type is automatically determined by scanning structures inside:
+
+| Room Type | Triggers | Faith Effect | Production Effect |
+|-----------|----------|--------------|-------------------|
+| **Workshop** | Contains Forge, Loom, or Crafting Table | -25% faith gain | Normal crafting speed |
+| **Common Room** | Contains Decor, no production structures | +50% faith gain | N/A |
+| **Storage Room** | Contains only Storage structures | +10% faith gain | N/A |
+| **Shrine** | Contains Small Statue or Monument | +75% faith gain | N/A |
+| **Basic Room** | Enclosed but no special structures | +25% faith gain (shelter bonus) | 3x crafting time |
+
+**Key Rule:** Production structures (Forge, Loom, Crafting Table) take **3x longer** if not in a Workshop area.
+
+### Room Designator Tool
+
+```dm
+/obj/item/room_designator
+    name = "room designator"
+    desc = "A tool for marking enclosed spaces as rooms. The room type is determined by its contents."
+    icon = 'icons/obj/resurgence/tools.dmi'
+    icon_state = "room_designator"
+
+/obj/item/room_designator/attack_self(mob/user)
+    // Check if user is in a valid enclosed space
+    var/list/turfs = detect_enclosed_room(get_turf(user))
+    if(!turfs)
+        to_chat(user, "<span class='warning'>You must be in a fully enclosed space with walls on all sides.</span>")
+        return
+
+    if(turfs.len > ROOM_MAX_SIZE)
+        to_chat(user, "<span class='warning'>This space is too large to designate as a room. Maximum [ROOM_MAX_SIZE] tiles.</span>")
+        return
+
+    // Scan for structures to determine room type
+    var/room_type = determine_room_type(turfs)
+    var/room_name = get_default_room_name(room_type)
+
+    // Ask for custom name
+    var/custom_name = stripped_input(user, "Name this room:", "Room Designation", room_name, MAX_NAME_LEN)
+    if(!custom_name)
+        return
+
+    // Create the area
+    create_resurgence_room(turfs, room_type, custom_name, user)
+```
+
+### Room Detection
+
+```dm
+#define ROOM_MAX_SIZE 100
+
+// Detect enclosed room using flood fill, stopping at walls/doors
+/proc/detect_enclosed_room(turf/origin)
+    var/list/found_turfs = list()
+    var/list/to_check = list(origin)
+    var/list/checked = list()
+
+    while(to_check.len && found_turfs.len <= ROOM_MAX_SIZE)
+        var/turf/T = to_check[1]
+        to_check -= T
+
+        if(T in checked)
+            continue
+        checked += T
+
+        // If this is a wall or closed turf, it's a boundary
+        if(T.density || istype(T, /turf/closed))
+            continue
+
+        // If this is open space/outdoors, room is not enclosed
+        if(istype(T, /turf/open/space) || istype(T.loc, /area/resurgence_outpost/outdoors))
+            return null  // Not enclosed
+
+        found_turfs += T
+
+        // Check adjacent tiles (cardinal directions only)
+        for(var/dir in GLOB.cardinals)
+            var/turf/adjacent = get_step(T, dir)
+            if(adjacent && !(adjacent in checked))
+                to_check += adjacent
+
+    if(found_turfs.len > ROOM_MAX_SIZE)
+        return null  // Too big
+
+    return found_turfs
+```
+
+### Room Type Determination
+
+```dm
+#define ROOM_TYPE_BASIC     "basic"
+#define ROOM_TYPE_WORKSHOP  "workshop"
+#define ROOM_TYPE_COMMON    "common"
+#define ROOM_TYPE_STORAGE   "storage"
+#define ROOM_TYPE_SHRINE    "shrine"
+
+/proc/determine_room_type(list/turfs)
+    var/has_production = FALSE
+    var/has_decor = FALSE
+    var/has_storage = FALSE
+    var/has_shrine = FALSE
+
+    for(var/turf/T in turfs)
+        for(var/obj/structure/S in T)
+            // Production structures
+            if(istype(S, /obj/structure/resurgence_forge) || \
+               istype(S, /obj/structure/resurgence_loom) || \
+               istype(S, /obj/structure/resurgence_crafting_table))
+                has_production = TRUE
+
+            // Decor structures
+            if(istype(S, /obj/structure/resurgence_lantern) || \
+               istype(S, /obj/structure/resurgence_banner) || \
+               istype(S, /obj/structure/resurgence_painting))
+                has_decor = TRUE
+
+            // Storage structures
+            if(istype(S, /obj/structure/resurgence_chest) || \
+               istype(S, /obj/structure/resurgence_crate) || \
+               istype(S, /obj/structure/resurgence_barrel))
+                has_storage = TRUE
+
+            // Shrine structures
+            if(istype(S, /obj/structure/resurgence_statue) || \
+               istype(S, /obj/structure/resurgence_monument))
+                has_shrine = TRUE
+
+    // Priority: Shrine > Workshop > Common > Storage > Basic
+    if(has_shrine)
+        return ROOM_TYPE_SHRINE
+    if(has_production)
+        return ROOM_TYPE_WORKSHOP
+    if(has_decor && !has_production)
+        return ROOM_TYPE_COMMON
+    if(has_storage && !has_production && !has_decor)
+        return ROOM_TYPE_STORAGE
+    return ROOM_TYPE_BASIC
+```
+
+### Resurgence Area Types
+
+```dm
+/area/resurgence_outpost
+    name = "Resurgence Outpost"
+    icon_state = "resurgence"
+    has_gravity = TRUE
+    requires_power = FALSE  // No power system for machines
+    outdoors = TRUE
+
+    var/room_type = null    // Set for designated rooms
+    var/faith_modifier = 1.0  // Multiplier for faith gain in this area
+
+/area/resurgence_outpost/outdoors
+    name = "Outskirts"
+    outdoors = TRUE
+    faith_modifier = 1.0    // Neutral
+
+/area/resurgence_outpost/room
+    name = "Room"
+    outdoors = FALSE
+    room_type = ROOM_TYPE_BASIC
+    faith_modifier = 1.25   // +25% base shelter bonus
+
+/area/resurgence_outpost/room/workshop
+    name = "Workshop"
+    room_type = ROOM_TYPE_WORKSHOP
+    faith_modifier = 0.75   // -25% (focused on work, less communal)
+    icon_state = "resurgence_workshop"
+
+/area/resurgence_outpost/room/common
+    name = "Common Room"
+    room_type = ROOM_TYPE_COMMON
+    faith_modifier = 1.5    // +50% (community gathering)
+    icon_state = "resurgence_common"
+
+/area/resurgence_outpost/room/storage
+    name = "Storage Room"
+    room_type = ROOM_TYPE_STORAGE
+    faith_modifier = 1.1    // +10%
+    icon_state = "resurgence_storage"
+
+/area/resurgence_outpost/room/shrine
+    name = "Shrine"
+    room_type = ROOM_TYPE_SHRINE
+    faith_modifier = 1.75   // +75% (spiritual center)
+    icon_state = "resurgence_shrine"
+```
+
+### Room Creation
+
+```dm
+/proc/create_resurgence_room(list/turfs, room_type, room_name, mob/creator)
+    var/area/resurgence_outpost/room/new_area
+
+    switch(room_type)
+        if(ROOM_TYPE_WORKSHOP)
+            new_area = new /area/resurgence_outpost/room/workshop
+        if(ROOM_TYPE_COMMON)
+            new_area = new /area/resurgence_outpost/room/common
+        if(ROOM_TYPE_STORAGE)
+            new_area = new /area/resurgence_outpost/room/storage
+        if(ROOM_TYPE_SHRINE)
+            new_area = new /area/resurgence_outpost/room/shrine
+        else
+            new_area = new /area/resurgence_outpost/room
+
+    new_area.name = room_name
+    new_area.setup(room_name)
+
+    // Move all turfs to new area
+    for(var/turf/T in turfs)
+        var/area/old_area = T.loc
+        new_area.contents += T
+        T.change_area(old_area, new_area)
+
+    new_area.reg_in_areas_in_z()
+
+    to_chat(creator, "<span class='notice'>You have designated this space as '[room_name]' ([room_type]).</span>")
+    announce_room_created(room_name, room_type)
+    return new_area
+
+/proc/announce_room_created(room_name, room_type)
+    for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+        if(istype(H.dna?.species, /datum/species/resurgence_machine))
+            to_chat(H, "<span class='notice'>A new [room_type] has been established: '[room_name]'.</span>")
+```
+
+### Production Speed Modifier
+
+Production structures check their area for workshop status:
+
+```dm
+/obj/structure/resurgence_crafting_table
+    var/base_craft_time = 30  // Base time in deciseconds
+
+/obj/structure/resurgence_crafting_table/proc/get_craft_time()
+    var/area/resurgence_outpost/room/R = get_area(src)
+    if(!istype(R) || R.room_type != ROOM_TYPE_WORKSHOP)
+        return base_craft_time * 3  // 3x slower outside workshop
+    return base_craft_time
+
+/obj/structure/resurgence_forge
+    var/base_smelt_time = 50
+
+/obj/structure/resurgence_forge/proc/get_smelt_time()
+    var/area/resurgence_outpost/room/R = get_area(src)
+    if(!istype(R) || R.room_type != ROOM_TYPE_WORKSHOP)
+        return base_smelt_time * 3
+    return base_smelt_time
+
+/obj/structure/resurgence_loom
+    var/base_weave_time = 40
+
+/obj/structure/resurgence_loom/proc/get_weave_time()
+    var/area/resurgence_outpost/room/R = get_area(src)
+    if(!istype(R) || R.room_type != ROOM_TYPE_WORKSHOP)
+        return base_weave_time * 3
+    return base_weave_time
+```
+
+### Faith Modifier Integration
+
+Update the faith event system to apply area modifiers:
+
+```dm
+/obj/item/organ/resurgence_core/proc/add_faith_event(category, datum/faith_event/event)
+    // Apply area faith modifier
+    var/area/resurgence_outpost/room/R = get_area(owner)
+    if(istype(R))
+        event.faith_change = event.faith_change * R.faith_modifier
+
+    // Replace existing event in same category
+    if(faith_events[category])
+        qdel(faith_events[category])
+    faith_events[category] = event
+    recalculate_faith()
+```
+
+### Room Update on Structure Change
+
+When structures are added/removed, the room type may need to update:
+
+```dm
+// Called when a structure is built or deconstructed in a room
+/proc/check_room_type_change(turf/T)
+    var/area/resurgence_outpost/room/R = get_area(T)
+    if(!istype(R))
+        return
+
+    // Get all turfs in this area
+    var/list/room_turfs = list()
+    for(var/turf/room_turf in R.contents)
+        room_turfs += room_turf
+
+    // Determine new room type
+    var/new_type = determine_room_type(room_turfs)
+
+    if(new_type != R.room_type)
+        // Room type has changed - notify and update
+        var/old_type = R.room_type
+        update_room_type(R, new_type)
+        announce_room_type_change(R.name, old_type, new_type)
+
+/proc/update_room_type(area/resurgence_outpost/room/R, new_type)
+    R.room_type = new_type
+    switch(new_type)
+        if(ROOM_TYPE_WORKSHOP)
+            R.faith_modifier = 0.75
+        if(ROOM_TYPE_COMMON)
+            R.faith_modifier = 1.5
+        if(ROOM_TYPE_STORAGE)
+            R.faith_modifier = 1.1
+        if(ROOM_TYPE_SHRINE)
+            R.faith_modifier = 1.75
+        else
+            R.faith_modifier = 1.25
+```
+
+### Room Summary
+
+| Room Type | Faith Modifier | Crafting Speed | Triggered By |
+|-----------|----------------|----------------|--------------|
+| Outdoors | 1.0x (neutral) | 3x slower | Not enclosed |
+| Basic Room | 1.25x (+25%) | 3x slower | Enclosed, no structures |
+| Workshop | 0.75x (-25%) | Normal | Forge, Loom, or Crafting Table |
+| Common Room | 1.5x (+50%) | N/A | Decor only, no production |
+| Storage Room | 1.1x (+10%) | N/A | Storage only |
+| Shrine | 1.75x (+75%) | N/A | Statue or Monument |
+
+---
+
+## Woven Outfits (Loom Crafting)
+
+The Loom can weave cloth into outfits that provide passive faith bonuses when worn. This gives machines a way to personalize their appearance while gaining mechanical benefits.
+
+**Reference:** `code/modules/vending/autodrobe.dm`, `code/modules/clothing/clothing.dm`
+
+### Outfit Types
+
+| Outfit | Slot | Cloth Cost | Faith Bonus | Description |
+|--------|------|------------|-------------|-------------|
+| **Simple Robe** | Suit | 8 | +3 | Basic woven garment |
+| **Clan Tunic** | Under | 6 | +2 | Traditional machine attire |
+| **Woven Cloak** | Suit | 12 | +5 | Flowing ceremonial cloak |
+| **Elder's Vestments** | Suit | 20 + 2 Woven Tapestry | +10 | Sacred garb of leadership |
+| **Pilgrim's Wrap** | Suit | 10 | +4 | Worn by those seeking the City |
+| **Artisan's Apron** | Suit | 5 | +1, -10% craft time | Work garment for crafters |
+| **Woven Hood** | Head | 4 | +2 | Simple head covering |
+| **Ceremonial Mask** | Mask | 6 + 1 Glass Lens | +4 | Decorative face covering |
+| **Woven Gloves** | Gloves | 3 | +1 | Hand wraps |
+| **Clan Sash** | Accessory | 4 | +2 | Worn over other clothing |
+
+### Outfit Base Types
+
+```dm
+// Base resurgence clothing with faith bonus
+/obj/item/clothing/suit/resurgence
+    name = "resurgence garment"
+    desc = "A garment woven by the Resurgence Clan."
+    icon = 'icons/obj/resurgence/clothing.dmi'
+    worn_icon = 'icons/mob/resurgence/clothing.dmi'
+
+    var/faith_bonus = 0  // Faith bonus when worn
+
+/obj/item/clothing/suit/resurgence/equipped(mob/user, slot)
+    . = ..()
+    if(slot == ITEM_SLOT_OCLOTHING)
+        apply_faith_bonus(user)
+
+/obj/item/clothing/suit/resurgence/dropped(mob/user)
+    remove_faith_bonus(user)
+    . = ..()
+
+/obj/item/clothing/suit/resurgence/proc/apply_faith_bonus(mob/living/carbon/human/H)
+    if(!istype(H))
+        return
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+    // Add faith event for wearing this garment
+    var/datum/faith_event/clothing/E = new
+    E.description = "Wearing [name]"
+    E.faith_change = faith_bonus
+    E.source_item = src
+    core.add_faith_event("clothing_[REF(src)]", E)
+
+/obj/item/clothing/suit/resurgence/proc/remove_faith_bonus(mob/living/carbon/human/H)
+    if(!istype(H))
+        return
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+    core.clear_faith_event("clothing_[REF(src)]")
+```
+
+### Specific Outfits
+
+```dm
+// Simple Robe - Basic garment
+/obj/item/clothing/suit/resurgence/robe
+    name = "simple robe"
+    desc = "A simple woven robe. It provides comfort and a sense of belonging."
+    icon_state = "simple_robe"
+    faith_bonus = 3
+    body_parts_covered = CHEST|GROIN|LEGS|ARMS
+
+// Clan Tunic - Undergarment
+/obj/item/clothing/under/resurgence
+    name = "clan tunic"
+    desc = "A traditional tunic worn by Resurgence Clan members."
+    icon = 'icons/obj/resurgence/clothing.dmi'
+    worn_icon = 'icons/mob/resurgence/clothing.dmi'
+    icon_state = "clan_tunic"
+
+    var/faith_bonus = 2
+
+/obj/item/clothing/under/resurgence/equipped(mob/user, slot)
+    . = ..()
+    if(slot == ITEM_SLOT_ICLOTHING)
+        apply_faith_bonus(user)
+
+/obj/item/clothing/under/resurgence/dropped(mob/user)
+    remove_faith_bonus(user)
+    . = ..()
+
+// Woven Cloak - Higher tier
+/obj/item/clothing/suit/resurgence/cloak
+    name = "woven cloak"
+    desc = "A flowing cloak woven with intricate patterns representing the clan's journey."
+    icon_state = "woven_cloak"
+    faith_bonus = 5
+    body_parts_covered = CHEST|GROIN|LEGS|ARMS
+
+// Elder's Vestments - Highest tier
+/obj/item/clothing/suit/resurgence/elder_vestments
+    name = "elder's vestments"
+    desc = "Sacred garments worn by clan elders. The intricate weavings tell the story of the Great Migration."
+    icon_state = "elder_vestments"
+    faith_bonus = 10
+    body_parts_covered = CHEST|GROIN|LEGS|ARMS
+
+// Pilgrim's Wrap
+/obj/item/clothing/suit/resurgence/pilgrim
+    name = "pilgrim's wrap"
+    desc = "Worn by those who dream of reaching the City. Tattered but treasured."
+    icon_state = "pilgrim_wrap"
+    faith_bonus = 4
+    body_parts_covered = CHEST|GROIN
+
+// Artisan's Apron - Crafting bonus
+/obj/item/clothing/suit/resurgence/artisan_apron
+    name = "artisan's apron"
+    desc = "A practical work apron. The wearer feels more focused on their craft."
+    icon_state = "artisan_apron"
+    faith_bonus = 1
+    body_parts_covered = CHEST|GROIN
+
+    var/craft_speed_bonus = 0.9  // 10% faster crafting
+
+// Woven Hood
+/obj/item/clothing/head/resurgence
+    name = "woven hood"
+    desc = "A simple cloth hood that provides warmth and comfort."
+    icon = 'icons/obj/resurgence/clothing.dmi'
+    worn_icon = 'icons/mob/resurgence/clothing.dmi'
+    icon_state = "woven_hood"
+
+    var/faith_bonus = 2
+
+// Ceremonial Mask
+/obj/item/clothing/mask/resurgence
+    name = "ceremonial mask"
+    desc = "A decorative mask with a glass lens eye. Worn during rituals and celebrations."
+    icon = 'icons/obj/resurgence/clothing.dmi'
+    worn_icon = 'icons/mob/resurgence/clothing.dmi'
+    icon_state = "ceremonial_mask"
+    flags_cover = MASKCOVERSMOUTH
+
+    var/faith_bonus = 4
+
+// Clan Sash - Accessory that stacks with other clothing
+/obj/item/clothing/accessory/resurgence_sash
+    name = "clan sash"
+    desc = "A woven sash displaying clan colors. Can be worn over other clothing."
+    icon = 'icons/obj/resurgence/clothing.dmi'
+    icon_state = "clan_sash"
+
+    var/faith_bonus = 2
+```
+
+### Loom Outfit Recipes
+
+```dm
+/obj/structure/resurgence_loom
+    var/list/outfit_recipes = list(
+        "Simple Robe" = list(
+            "result" = /obj/item/clothing/suit/resurgence/robe,
+            "materials" = list(/obj/item/stack/sheet/cloth = 8),
+            "time" = 60
+        ),
+        "Clan Tunic" = list(
+            "result" = /obj/item/clothing/under/resurgence,
+            "materials" = list(/obj/item/stack/sheet/cloth = 6),
+            "time" = 50
+        ),
+        "Woven Cloak" = list(
+            "result" = /obj/item/clothing/suit/resurgence/cloak,
+            "materials" = list(/obj/item/stack/sheet/cloth = 12),
+            "time" = 80
+        ),
+        "Elder's Vestments" = list(
+            "result" = /obj/item/clothing/suit/resurgence/elder_vestments,
+            "materials" = list(
+                /obj/item/stack/sheet/cloth = 20,
+                /obj/item/resurgence_component/woven_tapestry = 2
+            ),
+            "time" = 150
+        ),
+        "Pilgrim's Wrap" = list(
+            "result" = /obj/item/clothing/suit/resurgence/pilgrim,
+            "materials" = list(/obj/item/stack/sheet/cloth = 10),
+            "time" = 70
+        ),
+        "Artisan's Apron" = list(
+            "result" = /obj/item/clothing/suit/resurgence/artisan_apron,
+            "materials" = list(/obj/item/stack/sheet/cloth = 5),
+            "time" = 40
+        ),
+        "Woven Hood" = list(
+            "result" = /obj/item/clothing/head/resurgence,
+            "materials" = list(/obj/item/stack/sheet/cloth = 4),
+            "time" = 30
+        ),
+        "Ceremonial Mask" = list(
+            "result" = /obj/item/clothing/mask/resurgence,
+            "materials" = list(
+                /obj/item/stack/sheet/cloth = 6,
+                /obj/item/resurgence_component/glass_lens = 1
+            ),
+            "time" = 60
+        ),
+        "Woven Gloves" = list(
+            "result" = /obj/item/clothing/gloves/resurgence,
+            "materials" = list(/obj/item/stack/sheet/cloth = 3),
+            "time" = 25
+        ),
+        "Clan Sash" = list(
+            "result" = /obj/item/clothing/accessory/resurgence_sash,
+            "materials" = list(/obj/item/stack/sheet/cloth = 4),
+            "time" = 35
+        )
+    )
+```
+
+### Loom Crafting UI
+
+When using the Loom, a radial menu or TGUI shows available recipes:
+
+```dm
+/obj/structure/resurgence_loom/attack_hand(mob/user)
+    . = ..()
+    if(!istype(user, /mob/living/carbon/human))
+        return
+
+    // Show recipe selection
+    var/list/choices = list()
+    for(var/recipe_name in outfit_recipes)
+        choices[recipe_name] = image(icon = 'icons/obj/resurgence/clothing.dmi', icon_state = "recipe_[recipe_name]")
+
+    var/choice = show_radial_menu(user, src, choices, radius = 42)
+    if(!choice || !Adjacent(user))
+        return
+
+    start_weaving(user, choice)
+
+/obj/structure/resurgence_loom/proc/start_weaving(mob/user, recipe_name)
+    var/list/recipe = outfit_recipes[recipe_name]
+    if(!recipe)
+        return
+
+    // Check materials
+    if(!check_materials(user, recipe["materials"]))
+        to_chat(user, "<span class='warning'>You don't have the required materials for [recipe_name].</span>")
+        return
+
+    // Consume materials
+    consume_materials(user, recipe["materials"])
+
+    // Get weave time (affected by workshop bonus)
+    var/weave_time = get_weave_time(recipe["time"])
+
+    to_chat(user, "<span class='notice'>You begin weaving [recipe_name]...</span>")
+    if(!do_after(user, weave_time, src))
+        to_chat(user, "<span class='warning'>You stop weaving.</span>")
+        return
+
+    // Create the outfit
+    var/result_type = recipe["result"]
+    var/obj/item/result = new result_type(get_turf(src))
+    to_chat(user, "<span class='notice'>You finish weaving [result.name]!</span>")
+
+    // Faith event for crafting
+    add_crafting_faith_event(user)
+```
+
+### Artisan's Apron Crafting Bonus
+
+The Artisan's Apron provides a crafting speed bonus:
+
+```dm
+/obj/structure/resurgence_crafting_table/proc/get_craft_time()
+    var/area/resurgence_outpost/room/R = get_area(src)
+    var/base_time = base_craft_time
+
+    // Workshop penalty
+    if(!istype(R) || R.room_type != ROOM_TYPE_WORKSHOP)
+        base_time *= 3
+
+    // Check if user is wearing artisan's apron
+    var/mob/living/carbon/human/H = usr
+    if(istype(H))
+        var/obj/item/clothing/suit/resurgence/artisan_apron/apron = H.wear_suit
+        if(istype(apron))
+            base_time *= apron.craft_speed_bonus  // 10% faster
+
+    return base_time
+```
+
+### Maximum Faith from Clothing
+
+To prevent stacking too many clothing bonuses, cap the total:
+
+```dm
+#define MAX_CLOTHING_FAITH_BONUS 15
+
+/obj/item/organ/resurgence_core/proc/recalculate_faith()
+    var/total = 50  // Base faith
+    var/clothing_total = 0
+
+    for(var/category in faith_events)
+        var/datum/faith_event/event = faith_events[category]
+        if(istype(event, /datum/faith_event/clothing))
+            clothing_total += event.faith_change
+        else
+            total += event.faith_change
+
+    // Cap clothing bonus
+    clothing_total = min(clothing_total, MAX_CLOTHING_FAITH_BONUS)
+    total += clothing_total
+
+    faith = clamp(total, 0, max_faith)
+```
+
+### Outfit Summary
+
+| Slot | Best Option | Faith | Notes |
+|------|-------------|-------|-------|
+| Suit | Elder's Vestments | +10 | Requires Woven Tapestry |
+| Under | Clan Tunic | +2 | Basic undergarment |
+| Head | Woven Hood | +2 | Simple covering |
+| Mask | Ceremonial Mask | +4 | Requires Glass Lens |
+| Gloves | Woven Gloves | +1 | Hand wraps |
+| Accessory | Clan Sash | +2 | Stacks with suit |
+| **Max Total** | | **+15** | Capped at 15 |
+
+**Full Outfit Example:**
+- Elder's Vestments (+10) + Clan Tunic (+2) + Woven Hood (+2) + Clan Sash (+2) = +16, capped to **+15**
+
+---
+
+## Weapons
+
+### Melee Weapons
+
+#### Wooden Spear
+A basic hunting weapon made from wood.
+
+```dm
+/obj/item/resurgence_weapon/spear/wooden
+    name = "wooden spear"
+    desc = "A sharpened wooden spear. Simple but effective."
+    icon_state = "wooden_spear"
+    force = 15
+    throwforce = 20
+    throw_speed = 4
+    reach = 2                    // Can attack 2 tiles away
+    attack_verb = list("stabbed", "poked", "jabbed")
+    w_class = WEIGHT_CLASS_BULKY
+
+    var/durability = 30          // Breaks after 30 hits
+    var/max_durability = 30
+```
+
+**Recipe (Crafting Table):**
+| Component | Amount |
+|-----------|--------|
+| Wood | 3 |
+| Stone | 1 (for sharpening) |
+
+#### Metal Spear
+An upgraded spear with a metal tip.
+
+```dm
+/obj/item/resurgence_weapon/spear/metal
+    name = "metal-tipped spear"
+    desc = "A spear with a forged metal tip. Much more durable."
+    icon_state = "metal_spear"
+    force = 22
+    throwforce = 28
+    throw_speed = 4
+    reach = 2
+
+    var/durability = 80
+    var/max_durability = 80
+```
+
+**Recipe (Forge):**
+| Component | Amount |
+|-----------|--------|
+| Wooden Plank | 2 |
+| Metal Rod | 1 |
+| Leather Strip | 1 (for grip) |
+
+#### Spear Base Type
+
+```dm
+/obj/item/resurgence_weapon/spear
+    name = "spear"
+    icon = 'icons/obj/resurgence/weapons.dmi'
+    slot_flags = ITEM_SLOT_BACK
+    hitsound = 'sound/weapons/bladeslice.ogg'
+    attack_verb = list("attacked", "stabbed", "jabbed")
+
+    var/durability = 50
+    var/max_durability = 50
+
+/obj/item/resurgence_weapon/spear/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+    . = ..()
+    if(proximity_flag)
+        durability--
+        if(durability <= 0)
+            to_chat(user, "<span class='warning'>Your [name] breaks!</span>")
+            playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
+            qdel(src)
+        else if(durability <= max_durability * 0.2)
+            to_chat(user, "<span class='warning'>Your [name] is close to breaking!</span>")
+
+/obj/item/resurgence_weapon/spear/examine(mob/user)
+    . = ..()
+    var/condition
+    var/percent = (durability / max_durability) * 100
+    switch(percent)
+        if(80 to 100)
+            condition = "in excellent condition"
+        if(60 to 79)
+            condition = "in good condition"
+        if(40 to 59)
+            condition = "showing wear"
+        if(20 to 39)
+            condition = "damaged"
+        else
+            condition = "about to break"
+    . += "It is [condition]."
+```
+
+### Ranged Weapons
+
+#### Sling
+A simple ranged weapon that launches stones.
+
+```dm
+/obj/item/resurgence_weapon/sling
+    name = "sling"
+    desc = "A leather sling for hurling stones at enemies."
+    icon = 'icons/obj/resurgence/weapons.dmi'
+    icon_state = "sling"
+    w_class = WEIGHT_CLASS_SMALL
+
+    var/obj/item/ammo_casing/resurgence/loaded_ammo = null
+    var/fire_delay = 15          // 1.5 seconds between shots
+    var/last_fire = 0
+
+/obj/item/resurgence_weapon/sling/examine(mob/user)
+    . = ..()
+    if(loaded_ammo)
+        . += "It is loaded with [loaded_ammo.name]."
+    else
+        . += "It is not loaded. Use stones or crafted shot to load it."
+
+/obj/item/resurgence_weapon/sling/attackby(obj/item/I, mob/user, params)
+    if(istype(I, /obj/item/ammo_casing/resurgence/sling))
+        if(loaded_ammo)
+            to_chat(user, "<span class='warning'>The sling is already loaded!</span>")
+            return
+        var/obj/item/ammo_casing/resurgence/sling/ammo = I
+        if(ammo.amount > 0)
+            loaded_ammo = new ammo.type(src)
+            ammo.amount--
+            if(ammo.amount <= 0)
+                qdel(ammo)
+            to_chat(user, "<span class='notice'>You load the sling.</span>")
+        return
+    ..()
+
+/obj/item/resurgence_weapon/sling/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+    if(proximity_flag)
+        return ..()  // Melee attack
+
+    // Ranged attack
+    if(!loaded_ammo)
+        to_chat(user, "<span class='warning'>The sling is not loaded!</span>")
+        return
+
+    if(world.time < last_fire + fire_delay)
+        return
+
+    last_fire = world.time
+    fire_projectile(target, user)
+
+/obj/item/resurgence_weapon/sling/proc/fire_projectile(atom/target, mob/user)
+    var/obj/projectile/P = new loaded_ammo.projectile_type(get_turf(user))
+    P.preparePixelProjectile(target, user)
+    P.firer = user
+    P.fire()
+    playsound(user, 'sound/weapons/bowfire.ogg', 50, TRUE)
+    to_chat(user, "<span class='notice'>You hurl the [loaded_ammo.name] at [target]!</span>")
+    QDEL_NULL(loaded_ammo)
+```
+
+**Recipe (Crafting Table):**
+| Component | Amount |
+|-----------|--------|
+| Leather Strip | 2 |
+| Rope | 1 |
+
+#### Crossbow
+A more powerful ranged weapon requiring bolts.
+
+```dm
+/obj/item/resurgence_weapon/crossbow
+    name = "crossbow"
+    desc = "A mechanical crossbow. Powerful but slow to reload."
+    icon = 'icons/obj/resurgence/weapons.dmi'
+    icon_state = "crossbow"
+    w_class = WEIGHT_CLASS_NORMAL
+    slot_flags = ITEM_SLOT_BACK
+
+    var/obj/item/ammo_casing/resurgence/crossbow/loaded_bolt = null
+    var/fire_delay = 30          // 3 seconds between shots
+    var/last_fire = 0
+    var/cocked = FALSE
+
+/obj/item/resurgence_weapon/crossbow/attack_self(mob/user)
+    if(cocked)
+        to_chat(user, "<span class='warning'>The crossbow is already cocked.</span>")
+        return
+    to_chat(user, "<span class='notice'>You begin cocking the crossbow...</span>")
+    if(do_after(user, 20, src))
+        cocked = TRUE
+        to_chat(user, "<span class='notice'>You cock the crossbow.</span>")
+        update_icon()
+
+/obj/item/resurgence_weapon/crossbow/examine(mob/user)
+    . = ..()
+    if(loaded_bolt)
+        . += "It is loaded with [loaded_bolt.name]."
+    else
+        . += "It is not loaded."
+    if(cocked)
+        . += "It is cocked and ready to fire."
+    else
+        . += "It needs to be cocked before firing. Click it in hand."
+
+/obj/item/resurgence_weapon/crossbow/attackby(obj/item/I, mob/user, params)
+    if(istype(I, /obj/item/ammo_casing/resurgence/crossbow))
+        if(loaded_bolt)
+            to_chat(user, "<span class='warning'>The crossbow is already loaded!</span>")
+            return
+        var/obj/item/ammo_casing/resurgence/crossbow/bolt = I
+        if(bolt.amount > 0)
+            loaded_bolt = new bolt.type(src)
+            bolt.amount--
+            if(bolt.amount <= 0)
+                qdel(bolt)
+            to_chat(user, "<span class='notice'>You load a bolt into the crossbow.</span>")
+            update_icon()
+        return
+    ..()
+
+/obj/item/resurgence_weapon/crossbow/proc/fire_projectile(atom/target, mob/user)
+    if(!cocked)
+        to_chat(user, "<span class='warning'>You need to cock the crossbow first!</span>")
+        return
+    if(!loaded_bolt)
+        to_chat(user, "<span class='warning'>The crossbow is not loaded!</span>")
+        return
+
+    var/obj/projectile/P = new loaded_bolt.projectile_type(get_turf(user))
+    P.preparePixelProjectile(target, user)
+    P.firer = user
+    P.fire()
+    playsound(user, 'sound/weapons/bowfire.ogg', 75, TRUE)
+    to_chat(user, "<span class='notice'>You fire the crossbow!</span>")
+    QDEL_NULL(loaded_bolt)
+    cocked = FALSE
+    update_icon()
+```
+
+**Recipe (Forge):**
+| Component | Amount |
+|-----------|--------|
+| Wooden Plank | 3 |
+| Metal Rod | 2 |
+| Gear Assembly | 1 |
+| Rope | 2 |
+
+### Ammunition
+
+#### Sling Stones
+Basic ammunition gathered from the ground.
+
+```dm
+/obj/item/ammo_casing/resurgence/sling/stone
+    name = "sling stones"
+    desc = "Smooth stones suitable for slinging."
+    icon_state = "sling_stones"
+    projectile_type = /obj/projectile/resurgence/stone
+
+    var/amount = 10
+    var/max_amount = 20
+
+/obj/projectile/resurgence/stone
+    name = "stone"
+    icon_state = "yourub_neutral"  // Placeholder
+    damage = 15
+    damage_type = BRUTE
+    armour_penetration = 0
+```
+
+**Source:** Pick up from ground (scattered small rocks) or craft from larger stones.
+
+#### Metal Shot
+Crafted ammunition for slings - more damaging.
+
+```dm
+/obj/item/ammo_casing/resurgence/sling/metal_shot
+    name = "metal shot"
+    desc = "Small metal balls for slinging. More damaging than stones."
+    icon_state = "metal_shot"
+    projectile_type = /obj/projectile/resurgence/metal_shot
+
+    var/amount = 10
+    var/max_amount = 20
+
+/obj/projectile/resurgence/metal_shot
+    name = "metal shot"
+    damage = 22
+    damage_type = BRUTE
+    armour_penetration = 10
+```
+
+**Recipe (Forge):**
+| Input | Output |
+|-------|--------|
+| 1 Metal Sheet | 10 Metal Shot |
+
+#### Wooden Bolts
+Basic crossbow ammunition.
+
+```dm
+/obj/item/ammo_casing/resurgence/crossbow/wooden
+    name = "wooden bolts"
+    desc = "Simple wooden crossbow bolts."
+    icon_state = "wooden_bolts"
+    projectile_type = /obj/projectile/resurgence/bolt/wooden
+
+    var/amount = 5
+    var/max_amount = 10
+
+/obj/projectile/resurgence/bolt/wooden
+    name = "wooden bolt"
+    damage = 25
+    damage_type = BRUTE
+    armour_penetration = 5
+```
+
+**Recipe (Crafting Table):**
+| Input | Output |
+|-------|--------|
+| 2 Wood | 5 Wooden Bolts |
+
+#### Metal Bolts
+Upgraded crossbow ammunition.
+
+```dm
+/obj/item/ammo_casing/resurgence/crossbow/metal
+    name = "metal bolts"
+    desc = "Metal-tipped crossbow bolts. Deadly."
+    icon_state = "metal_bolts"
+    projectile_type = /obj/projectile/resurgence/bolt/metal
+
+    var/amount = 5
+    var/max_amount = 10
+
+/obj/projectile/resurgence/bolt/metal
+    name = "metal bolt"
+    damage = 35
+    damage_type = BRUTE
+    armour_penetration = 20
+```
+
+**Recipe (Forge):**
+| Input | Output |
+|-------|--------|
+| 1 Wood + 1 Metal Rod | 5 Metal Bolts |
+
+### Weapon Summary
+
+| Weapon | Type | Damage | Special | Recipe Location |
+|--------|------|--------|---------|-----------------|
+| Wooden Spear | Melee | 15 (22 thrown) | 2-tile reach, 30 durability | Crafting Table |
+| Metal Spear | Melee | 22 (28 thrown) | 2-tile reach, 80 durability | Forge |
+| Sling | Ranged | Varies by ammo | Fast reload | Crafting Table |
+| Crossbow | Ranged | Varies by ammo | Slow, powerful, needs cocking | Forge |
+
+| Ammo | Damage | Armor Pen | Recipe |
+|------|--------|-----------|--------|
+| Sling Stones | 15 | 0 | Found on ground |
+| Metal Shot | 22 | 10 | 1 Metal → 10 |
+| Wooden Bolts | 25 | 5 | 2 Wood → 5 |
+| Metal Bolts | 35 | 20 | 1 Wood + 1 Metal Rod → 5 |
+
+---
+
+## Updated File Structure
+
+```
+code/modules/resurgence_outpost/
+    # Building
+    monument.dm             # Monument of Hope structure
+    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
+    walls_floors.dm         # Wood wall, wood floor, window turfs
+    doors.dm                # Wood door
+
+    # Blueprints
+    blueprint_planner.dm    # Blueprint planning tool + UI
+    blueprints.dm           # Blueprint ghost structures (all categories)
+    blueprint_categories.dm # Category definitions and global list
+
+    # Resources
+    trees.dm                # Choppable trees, stumps, regrowth
+    mining.dm               # Ore deposits, rock faces
+    gathering.dm            # Sand digging, fiber harvesting
+    processing.dm           # Forge smelting, Loom weaving
+    tools.dm                # Hatchet, pickaxe, shovel, sickle
+
+    # Components
+    components.dm           # All crafted components (Tier 2 & 3)
+    component_recipes.dm    # Recipes for components at various stations
+
+    # Weapons
+    weapons_melee.dm        # Spears and other melee weapons
+    weapons_ranged.dm       # Sling, crossbow
+    ammo.dm                 # Ammunition types and projectiles
+
+    # Rooms
+    room_designator.dm      # Room designator tool
+    room_detection.dm       # Enclosed space detection
+    room_types.dm           # Room type determination logic
+
+    # Clothing
+    clothing_base.dm        # Base resurgence clothing types
+    clothing_outfits.dm     # Specific outfit definitions
+    clothing_accessories.dm # Sashes, accessories
+
+    # Core
+    persistence.dm          # Save/load outpost state (DMM format)
+    areas.dm                # Resurgence area types
+
+icons/obj/resurgence/
+    clothing.dmi            # Outfit item sprites
+
+icons/mob/resurgence/
+    clothing.dmi            # Worn outfit sprites
+
+tgui/packages/tgui/interfaces/
+    BlueprintPlanner.tsx    # Category-based blueprint selection UI
+
+code/modules/surgery/organs/
+    resurgence_core.dm  # Updated with new faith/charge system
+
+code/datums/
+    faith_event.dm      # Faith event datum (mood-like system)
+
+code/datums/faith_events/
+    generic_events.dm   # Common faith events (community, injury, etc.)
+    outpost_events.dm   # Outpost-specific events (monument, shelter)
+
+code/game/gamemodes/resurgence_outpost/
+    resurgence_outpost.dm   # Gamemode with 1.5hr timer
+
+_maps/
+    resurgence_outpost.dmm  # Base map (starting state)
+
+data/resurgence_outpost/
+    outpost_save.dmm        # Full map snapshot (generated at round end)
+    outpost_meta.json       # Day number, monument progress, etc.
+
+icons/obj/resurgence/
+    components.dmi          # Component sprites
+    weapons.dmi             # Weapon sprites
+```
+
+---
+
 ## Testing
 
 ### Building & Structures
@@ -425,12 +2128,61 @@ data/resurgence_outpost/
 6. Start new round, verify structures reload correctly
 7. Verify chest contents persist across rounds
 
+### Blueprint System
+8. Spawn blueprint planner, verify radial menu opens
+9. Select structure, click ground to place blueprint
+10. Verify blueprint is transparent blue and walkable
+11. Hit blueprint with wrong material, verify rejection
+12. Hit blueprint with correct materials, verify progress
+13. Complete blueprint, verify structure is built
+14. Alt-click to rotate blueprint
+15. Right-click to remove blueprint
+
 ### Faith & Charge System
-8. Verify charge decays passively (no regen)
-9. Add positive faith event, verify faith increases
-10. Verify high faith slows charge decay
-11. Add negative faith event, verify faith decreases
-12. Verify low faith speeds up charge decay
-13. Verify faith events with timeout expire correctly
-14. Verify "Despairing" level applies movement penalty
-15. Test monument contribution adds faith event
+16. Verify charge decays passively (no regen)
+17. Add positive faith event, verify faith increases
+18. Verify high faith slows charge decay
+19. Add negative faith event, verify faith decreases
+20. Verify low faith speeds up charge decay
+21. Verify faith events with timeout expire correctly
+22. Verify "Despairing" level applies movement penalty
+23. Test monument contribution adds faith event
+
+### Components
+24. Craft Tier 2 component (wooden plank) at Crafting Table
+25. Verify Tier 2 components can be used in Tier 3 recipes
+26. Craft Tier 3 component (metal frame) at Forge
+27. Verify monument accepts components (not raw materials)
+
+### Weapons
+28. Craft wooden spear, verify 2-tile reach
+29. Use spear until durability depletes, verify it breaks
+30. Craft metal spear at forge, verify higher durability
+31. Craft sling, load with stones, fire at target
+32. Verify sling fire delay works
+33. Craft crossbow, verify cocking requirement
+34. Load crossbow with wooden bolts, fire at target
+35. Craft metal bolts, verify higher damage
+36. Pick up sling stones from ground, verify they stack
+
+### Rooms
+37. Build enclosed 4-wall structure, use room designator inside
+38. Verify basic room is created with +25% faith modifier
+39. Add crafting table to room, verify it becomes Workshop (-25% faith)
+40. Remove crafting table, add lantern, verify it becomes Common Room (+50% faith)
+41. Use crafting table outside workshop, verify 3x crafting time
+42. Use crafting table inside workshop, verify normal crafting time
+43. Add statue to room, verify it becomes Shrine (+75% faith)
+44. Build and remove structures, verify room type updates dynamically
+45. Verify room designator fails in non-enclosed space
+46. Verify room designator fails if space is too large (>100 tiles)
+
+### Woven Outfits
+47. Weave Simple Robe at Loom, verify it's created
+48. Equip Simple Robe, verify +3 faith bonus applied
+49. Unequip robe, verify faith bonus removed
+50. Weave Elder's Vestments (requires Woven Tapestry component)
+51. Equip full outfit set, verify faith is capped at +15
+52. Wear Artisan's Apron, verify 10% faster crafting
+53. Weave Ceremonial Mask (requires Glass Lens)
+54. Verify Loom uses 3x time when not in Workshop
