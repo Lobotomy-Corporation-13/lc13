@@ -1673,210 +1673,6 @@
 			L.deal_damage(final_damage, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
 			new /obj/effect/temp_visual/justitia_effect(T)
 
-
-/// A moderately powerful AoE attack that can FF. Every target hit gives you more Power Modifier. While the buff is active, you can dualwield the CrimScar guns.
-// Based on Ruina's combat page, idea was from Potassium_19
-/obj/effect/proc_holder/ability/strike_without_hesitation
-	name = "Strike Without Hesitation"
-	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 75% less damage. \n\
-	Gain 5 Power Modifier per target hit by this ability for 15 seconds, up to 50 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
-	Cooldown: 45s."
-	action_icon = 'icons/obj/projectiles.dmi'
-	action_icon_state = "hunter_blade"
-	base_icon_state = "hunter_blade"
-	cooldown_time = 45 SECONDS
-	/// Radius of the ability, in tiles.
-	var/radius = 6
-	/// Power Modifier (attack damage and movespeed) gained per target hit.
-	var/powermod_per_target = 5
-	/// Maximum amount of Power Modifier that can be gained with the skill.
-	var/powermod_cap = 50
-	/// Base damage dealt, always RED.
-	var/base_damage = 300
-	/// Multiply damage dealt against Carbons by this amount (they take less damage)
-	var/carbon_coeff = 0.25
-	/// Amount of time it takes to execute this skill, this is also how long allies have to flee if they don't wanna get caught in it, and how long the telegraph lasts.
-	var/windup = 2 SECONDS
-
-	var/datum/reusable_visual_pool/RVP = new(100)
-
-/obj/effect/proc_holder/ability/strike_without_hesitation/Perform(target, mob/living/user)
-	var/mob/living/carbon/human/our_guy = user
-	if(!istype(our_guy))
-		return FALSE
-	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-	if(!istype(our_suit))
-		return FALSE
-	cooldown = world.time + windup + 1 // Just in case someone wants to be funny and spam this
-	update_icon()
-	user.say("No hesitation!")
-	playsound(user, 'sound/abnormalities/crumbling/warning.ogg', 60, FALSE, 4)
-	user.visible_message(span_userdanger("[user] twitches, a frenzied look in \his eyes...!"))
-	var/list/danger_turfs = oview(radius, user)
-	for(var/turf/T in danger_turfs)
-		RVP.NewCultSparks(T, windup)
-
-	if(!do_after(our_guy, windup, timed_action_flags = IGNORE_HELD_ITEM, interaction_key = "strike_without_hesitation", max_interact_count = 1))
-		qdel(RVP) // Clears our telegraph visuals on an early cancel
-		RVP = new(100) // We kinda need that pool back though
-		return
-	. = ..()
-
-	user.SpinAnimation(4, 1)
-	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 100, TRUE, 3)
-	user.visible_message(span_danger("[user] flings hunting blades into the air!"))
-
-	var/targets_hit = MultiThrowScan(user, danger_turfs)
-	var/final_powermod = min((targets_hit * powermod_per_target), powermod_cap)
-	// Gain status effect here.
-	our_guy.apply_status_effect(/datum/status_effect/crimlust_no_hesitation, final_powermod, our_suit)
-
-/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrowScan(mob/living/user, list/turfs_to_check)
-	if(!ishuman(user))
-		return
-	var/targets_found = 0
-	for(var/turf/T in turfs_to_check)
-		for(var/mob/living/target in T)
-			if(target == user)
-				continue
-			if((target.stat >= DEAD) || (target.status_flags & GODMODE))
-				continue
-			if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
-				continue
-			targets_found++
-
-			// This little block of code staggers out the blades falling on the enemies in a non-uniform way
-			var/delay = targets_found
-			delay++
-			if(prob(50))
-				delay++
-			addtimer(CALLBACK(src, PROC_REF(BladeImpact), target, user), delay)
-
-	if(targets_found <= 0)
-		to_chat(user, span_warning("There's nothing nearby...! Your frustration sends you into an impotent rage!")) // I mean you'll still get the buff, but 0 power modifier and it hit nothing
-
-	return targets_found
-
-// A hunting blade 'falls' on the target.
-/obj/effect/proc_holder/ability/strike_without_hesitation/proc/BladeImpact(mob/living/A, mob/living/user)
-	if(QDELETED(A))
-		return
-	var/turf/target_turf = get_turf(A)
-
-	var/dealing_damage = base_damage
-
-	// Effects
-	var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(target_turf)
-	B.alpha = 120
-	B.pixel_z += 180
-	B.pixel_x += rand(-128, 128)
-	animate(B, alpha = 250, pixel_x = 0, pixel_z = 0, time = 2)
-	animate(alpha = 0, time = 1)
-	B.SpinAnimation(3, 2)
-	sleep(1)
-	if(istype(A))
-		if(iscarbon(A))
-			dealing_damage *= carbon_coeff
-		A.visible_message(span_danger("[A] is hit by a falling hunter's blade!"), span_userdanger("You are hit by a falling hunter's blade!"))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(A), pick(GLOB.alldirs))
-		playsound(A, 'sound/abnormalities/redhood/attack_3.ogg', 33, TRUE, 3)
-		A.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL)) // Damage has to be last in case it qdels the enemy </3
-
-
-// A replacement for the decoy we'd usually be able to use with Crimson Claw throwing code (we don't have access to an atom to pass into decoy creation)
-/obj/effect/temp_visual/unhesitant_blade
-	name = "unhesitant blade"
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "crimsonclaw"
-	duration = 1 SECONDS
-	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-
-/// No Hesitation status effect. Gives you a certain amount of power modifier (can be 0 if you hit nothing with the skill), and allows you to dual wield CrimScars.
-// The code for this dual wielding is kinda split between this status effect and the gun itself, the reason for this is that I want to make 100% sure it affects any CrimScars you may have.
-// We could, of course, go the much simpler route of only applying the effect to the guns you're holding, or the guns you have stored in specific slots if you want to be fancy, but I thought this approach was better.
-/datum/status_effect/crimlust_no_hesitation
-	id = "crimlust_no_hesitation"
-	status_type = STATUS_EFFECT_UNIQUE
-	duration = 15 SECONDS
-	alert_type = /atom/movable/screen/alert/status_effect/no_hesitation
-	var/powermod_bonus = 0
-	var/list/modified_guns = list()
-	var/obj/item/clothing/head/ego_hat/helmet/crimson/spawned_hood
-
-/atom/movable/screen/alert/status_effect/no_hesitation
-	name = "No Hesitation"
-	desc = "You're driven by vengeful conviction. Power Modifier is increased by "
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "strength"
-
-/datum/status_effect/crimlust_no_hesitation/on_creation(mob/living/new_owner, power_modifier = 0)
-	if(!(..()))
-		return FALSE
-	if(!(ishuman(new_owner)))
-		return FALSE
-	var/mob/living/carbon/human/our_guy = new_owner
-
-	powermod_bonus = power_modifier
-
-	// If we have the Mark Payout status effect, link to it here
-	var/datum/status_effect/crimlust_mark_payout/successful_mercenary = our_guy.has_status_effect(/datum/status_effect/crimlust_mark_payout)
-	if(successful_mercenary)
-		successful_mercenary.LinkBuffs(src)
-
-	// We now need to find any CrimScars that may be in our mainhand or offhand and allow us to dual wield them. This isn't necessary for CrimScars anywhere else in our inventory,
-	// because they will need to be passed into the hands at some point and we handle applying the weapon weight change in their equipped(). But any guns already in our hands need this block of code.
-	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = new_owner.get_active_held_item()
-	if(istype(mainhand_gun))
-		mainhand_gun.weapon_weight = WEAPON_LIGHT
-		mainhand_gun.realization_empowered_mode = TRUE
-		modified_guns |= mainhand_gun
-	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = new_owner.get_inactive_held_item()
-	if(istype(offhand_gun))
-		offhand_gun.weapon_weight = WEAPON_LIGHT
-		offhand_gun.realization_empowered_mode = TRUE
-		modified_guns |= offhand_gun
-
-	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
-	linked_alert.desc = initial(linked_alert.desc)+"[powermod_bonus], your Crimson Claw's throw hits all nearby targets, and you may dual-wield Crimson Scars."
-
-	// This snippet is "borrowed" and modified from EGO hat code. We will forcefully put a hood on, unless for some reason we can't remove their hat
-	var/obj/item/clothing/head/headgear = our_guy.get_item_by_slot(ITEM_SLOT_HEAD)
-	if(isnull(headgear))
-		spawned_hood = new
-		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
-	else if(!HAS_TRAIT(headgear, TRAIT_NODROP))
-		our_guy.dropItemToGround(headgear) // Drop the other hat, if it exists.
-		spawned_hood = new
-		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
-
-	return TRUE
-
-/datum/status_effect/crimlust_no_hesitation/on_remove()
-	. = ..()
-	var/mob/living/carbon/human/our_guy = owner
-	if(!istype(our_guy))
-		return
-
-	if(spawned_hood)
-		QDEL_NULL(spawned_hood)
-
-	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = owner.get_active_held_item()
-	if(istype(mainhand_gun))
-		mainhand_gun.weapon_weight = WEAPON_MEDIUM
-		mainhand_gun.realization_empowered_mode = FALSE
-	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = owner.get_inactive_held_item()
-	if(istype(offhand_gun))
-		offhand_gun.weapon_weight = WEAPON_MEDIUM
-		offhand_gun.realization_empowered_mode = FALSE
-
-	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
-		if(!QDELETED(did_you_try_smuggling_one_of_these))
-			did_you_try_smuggling_one_of_these.weapon_weight = WEAPON_MEDIUM
-			did_you_try_smuggling_one_of_these.realization_empowered_mode = FALSE
-			modified_guns -= did_you_try_smuggling_one_of_these
-
-	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
-
 // For the Eldtree realization. Prevents enemies from swapping targets to anybody but the caster, makes them take extra WHITE damage on hit, and if the caster dies while this is active, they retaliate with a spike explosion.
 /obj/effect/proc_holder/ability/fairy_lure
 	name = "Fairy Lure"
@@ -2187,4 +1983,208 @@
 		qdel(src)
 		return FALSE
 	return TRUE
+
+// For the Crimson Lust realization.
+/// A moderately powerful AoE attack that can FF. Every target hit gives you more Power Modifier. While the buff is active, you can dualwield the CrimScar guns.
+// Based on Ruina's combat page, idea was from Potassium_19
+/obj/effect/proc_holder/ability/strike_without_hesitation
+	name = "Strike Without Hesitation"
+	desc = "After a 2 second wind-up, throw your hunting blades towards anything in the vicinity, dealing 300 RED damage indiscriminately to anything within 6 tiles of you. Humans take 75% less damage. \n\
+	Gain 5 Power Modifier per target hit by this ability for 15 seconds, up to 50 Power Modifier. While the buff is active, you may dual wield Crimson Scar handcannons and your Crimson Claw's throw will hit all nearby enemies. Additionally, refreshes the duration of the buff earned from Hunter's Mark. \n\
+	Cooldown: 45s."
+	action_icon = 'icons/obj/projectiles.dmi'
+	action_icon_state = "hunter_blade"
+	base_icon_state = "hunter_blade"
+	cooldown_time = 45 SECONDS
+	/// Radius of the ability, in tiles.
+	var/radius = 6
+	/// Power Modifier (attack damage and movespeed) gained per target hit.
+	var/powermod_per_target = 5
+	/// Maximum amount of Power Modifier that can be gained with the skill.
+	var/powermod_cap = 50
+	/// Base damage dealt, always RED.
+	var/base_damage = 300
+	/// Multiply damage dealt against Carbons by this amount (they take less damage)
+	var/carbon_coeff = 0.25
+	/// Amount of time it takes to execute this skill, this is also how long allies have to flee if they don't wanna get caught in it, and how long the telegraph lasts.
+	var/windup = 2 SECONDS
+
+	var/datum/reusable_visual_pool/RVP = new(100)
+
+/obj/effect/proc_holder/ability/strike_without_hesitation/Perform(target, mob/living/user)
+	var/mob/living/carbon/human/our_guy = user
+	if(!istype(our_guy))
+		return FALSE
+	var/obj/item/clothing/suit/armor/ego_gear/realization/crimson/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return FALSE
+	cooldown = world.time + windup + 1 // Just in case someone wants to be funny and spam this
+	update_icon()
+	user.say("No hesitation!")
+	playsound(user, 'sound/abnormalities/crumbling/warning.ogg', 60, FALSE, 4)
+	user.visible_message(span_userdanger("[user] twitches, a frenzied look in \his eyes...!"))
+	var/list/danger_turfs = oview(radius, user)
+	for(var/turf/T in danger_turfs)
+		RVP.NewCultSparks(T, windup)
+
+	if(!do_after(our_guy, windup, timed_action_flags = IGNORE_HELD_ITEM, interaction_key = "strike_without_hesitation", max_interact_count = 1))
+		qdel(RVP) // Clears our telegraph visuals on an early cancel
+		RVP = new(100) // We kinda need that pool back though
+		return
+	. = ..()
+
+	user.SpinAnimation(4, 1)
+	playsound(user, 'sound/abnormalities/redhood/throw.ogg', 100, TRUE, 3)
+	user.visible_message(span_danger("[user] flings hunting blades into the air!"))
+
+	var/targets_hit = MultiThrowScan(user, danger_turfs)
+	var/final_powermod = min((targets_hit * powermod_per_target), powermod_cap)
+	// Gain status effect here.
+	our_guy.apply_status_effect(/datum/status_effect/crimlust_no_hesitation, final_powermod, our_suit)
+
+/obj/effect/proc_holder/ability/strike_without_hesitation/proc/MultiThrowScan(mob/living/user, list/turfs_to_check)
+	if(!ishuman(user))
+		return
+	var/targets_found = 0
+	for(var/turf/T in turfs_to_check)
+		for(var/mob/living/target in T)
+			if(target == user)
+				continue
+			if((target.stat >= DEAD) || (target.status_flags & GODMODE))
+				continue
+			if(istype(target, /mob/living/simple_animal/projectile_blocker_dummy))
+				continue
+			targets_found++
+
+			// This little block of code staggers out the blades falling on the enemies in a non-uniform way
+			var/delay = targets_found
+			delay++
+			if(prob(50))
+				delay++
+			addtimer(CALLBACK(src, PROC_REF(BladeImpact), target, user), delay)
+
+	if(targets_found <= 0)
+		to_chat(user, span_warning("There's nothing nearby...! Your frustration sends you into an impotent rage!")) // I mean you'll still get the buff, but 0 power modifier and it hit nothing
+
+	return targets_found
+
+// A hunting blade 'falls' on the target.
+/obj/effect/proc_holder/ability/strike_without_hesitation/proc/BladeImpact(mob/living/A, mob/living/user)
+	if(QDELETED(A))
+		return
+	var/turf/target_turf = get_turf(A)
+
+	var/dealing_damage = base_damage
+
+	// Effects
+	var/obj/effect/temp_visual/unhesitant_blade/B = new /obj/effect/temp_visual/unhesitant_blade(target_turf)
+	B.alpha = 120
+	B.pixel_z += 180
+	B.pixel_x += rand(-128, 128)
+	animate(B, alpha = 250, pixel_x = 0, pixel_z = 0, time = 2)
+	animate(alpha = 0, time = 1)
+	B.SpinAnimation(3, 2)
+	sleep(1)
+	if(istype(A))
+		if(iscarbon(A))
+			dealing_damage *= carbon_coeff
+		A.visible_message(span_danger("[A] is hit by a falling hunter's blade!"), span_userdanger("You are hit by a falling hunter's blade!"))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(A), pick(GLOB.alldirs))
+		playsound(A, 'sound/abnormalities/redhood/attack_3.ogg', 33, TRUE, 3)
+		A.deal_damage(dealing_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL)) // Damage has to be last in case it qdels the enemy </3
+
+
+// A replacement for the decoy we'd usually be able to use with Crimson Claw throwing code (we don't have access to an atom to pass into decoy creation)
+/obj/effect/temp_visual/unhesitant_blade
+	name = "unhesitant blade"
+	icon = 'icons/obj/ego_weapons.dmi'
+	icon_state = "crimsonclaw"
+	duration = 1 SECONDS
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/// No Hesitation status effect. Gives you a certain amount of power modifier (can be 0 if you hit nothing with the skill), and allows you to dual wield CrimScars.
+// The code for this dual wielding is kinda split between this status effect and the gun itself, the reason for this is that I want to make 100% sure it affects any CrimScars you may have.
+// We could, of course, go the much simpler route of only applying the effect to the guns you're holding, or the guns you have stored in specific slots if you want to be fancy, but I thought this approach was better.
+/datum/status_effect/crimlust_no_hesitation
+	id = "crimlust_no_hesitation"
+	status_type = STATUS_EFFECT_UNIQUE
+	duration = 15 SECONDS
+	alert_type = /atom/movable/screen/alert/status_effect/no_hesitation
+	var/powermod_bonus = 0
+	var/list/modified_guns = list()
+	var/obj/item/clothing/head/ego_hat/helmet/crimson/spawned_hood
+
+/atom/movable/screen/alert/status_effect/no_hesitation
+	name = "No Hesitation"
+	desc = "You're driven by vengeful conviction. Power Modifier is increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "strength"
+
+/datum/status_effect/crimlust_no_hesitation/on_creation(mob/living/new_owner, power_modifier = 0)
+	if(!(..()))
+		return FALSE
+	if(!(ishuman(new_owner)))
+		return FALSE
+	var/mob/living/carbon/human/our_guy = new_owner
+
+	powermod_bonus = power_modifier
+
+	// If we have the Mark Payout status effect, link to it here
+	var/datum/status_effect/crimlust_mark_payout/successful_mercenary = our_guy.has_status_effect(/datum/status_effect/crimlust_mark_payout)
+	if(successful_mercenary)
+		successful_mercenary.LinkBuffs(src)
+
+	// We now need to find any CrimScars that may be in our mainhand or offhand and allow us to dual wield them. This isn't necessary for CrimScars anywhere else in our inventory,
+	// because they will need to be passed into the hands at some point and we handle applying the weapon weight change in their equipped(). But any guns already in our hands need this block of code.
+	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = new_owner.get_active_held_item()
+	if(istype(mainhand_gun))
+		mainhand_gun.weapon_weight = WEAPON_LIGHT
+		mainhand_gun.realization_empowered_mode = TRUE
+		modified_guns |= mainhand_gun
+	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = new_owner.get_inactive_held_item()
+	if(istype(offhand_gun))
+		offhand_gun.weapon_weight = WEAPON_LIGHT
+		offhand_gun.realization_empowered_mode = TRUE
+		modified_guns |= offhand_gun
+
+	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, powermod_bonus)
+	linked_alert.desc = initial(linked_alert.desc)+"[powermod_bonus], your Crimson Claw's throw hits all nearby targets, and you may dual-wield Crimson Scars."
+
+	// This snippet is "borrowed" and modified from EGO hat code. We will forcefully put a hood on, unless for some reason we can't remove their hat
+	var/obj/item/clothing/head/headgear = our_guy.get_item_by_slot(ITEM_SLOT_HEAD)
+	if(isnull(headgear))
+		spawned_hood = new
+		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
+	else if(!HAS_TRAIT(headgear, TRAIT_NODROP))
+		our_guy.dropItemToGround(headgear) // Drop the other hat, if it exists.
+		spawned_hood = new
+		our_guy.equip_to_slot(spawned_hood, ITEM_SLOT_HEAD) // Equip the hood!
+
+	return TRUE
+
+/datum/status_effect/crimlust_no_hesitation/on_remove()
+	. = ..()
+	var/mob/living/carbon/human/our_guy = owner
+	if(!istype(our_guy))
+		return
+
+	if(spawned_hood)
+		QDEL_NULL(spawned_hood)
+
+	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = owner.get_active_held_item()
+	if(istype(mainhand_gun))
+		mainhand_gun.weapon_weight = WEAPON_MEDIUM
+		mainhand_gun.realization_empowered_mode = FALSE
+	var/obj/item/ego_weapon/ranged/pistol/crimson/offhand_gun = owner.get_inactive_held_item()
+	if(istype(offhand_gun))
+		offhand_gun.weapon_weight = WEAPON_MEDIUM
+		offhand_gun.realization_empowered_mode = FALSE
+
+	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
+		if(!QDELETED(did_you_try_smuggling_one_of_these))
+			did_you_try_smuggling_one_of_these.weapon_weight = WEAPON_MEDIUM
+			did_you_try_smuggling_one_of_these.realization_empowered_mode = FALSE
+			modified_guns -= did_you_try_smuggling_one_of_these
+
+	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
 
