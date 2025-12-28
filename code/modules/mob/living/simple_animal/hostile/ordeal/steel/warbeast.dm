@@ -11,8 +11,8 @@
 	pixel_x = -16
 	base_pixel_x = -16
 	death_message = "falls to the floor violently spasming before falling still."
-	maxHealth = 5000
-	health = 5000
+	maxHealth = 7500
+	health = 7500
 	buffed = 5
 	rapid_melee = 1
 	melee_damage_lower = 50
