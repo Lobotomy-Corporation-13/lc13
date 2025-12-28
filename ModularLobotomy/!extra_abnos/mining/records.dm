@@ -16,6 +16,15 @@
 	return ..()
 
 //Heh. All of these are from Branch 13 get it? Like SS13?
+//  ------------TETH------------
+//Ice Whelp
+/obj/item/paper/fluff/info/mining/whelp
+	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/ice_whelp
+	abno_code = "S-02-13-03"
+	abno_info = list(
+		"When the work result was Normal, the Qliphoth Counter lowered.",
+	)
+
 
 //	-------------HE-------------
 // Herald
@@ -27,6 +36,7 @@
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
 	)
 
+//Legionnaire
 /obj/item/paper/fluff/info/mining/legionnaire
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/legionnaire
 	abno_code = "S-01-13-06"
@@ -35,6 +45,7 @@
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
 	)
 
+//Pandora
 /obj/item/paper/fluff/info/mining/pandora
 	abno_type = /mob/living/simple_animal/hostile/abnormality/mining/pandora
 	abno_code = "S-06-13-02"

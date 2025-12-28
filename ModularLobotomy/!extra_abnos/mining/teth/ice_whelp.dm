@@ -24,9 +24,6 @@
 	move_force = MOVE_FORCE_VERY_STRONG
 	move_resist = MOVE_FORCE_VERY_STRONG
 	pull_force = MOVE_FORCE_VERY_STRONG
-	butcher_results = list(/obj/item/stack/ore/diamond = 3, /obj/item/stack/sheet/sinew = 2, /obj/item/stack/sheet/bone = 10, /obj/item/stack/sheet/animalhide/ashdrake = 1)
-	loot = list()
-	crusher_loot = /obj/item/crusher_trophy/tail_spike
 	death_message = "collapses on its side."
 	death_sound = 'sound/magic/demon_dies.ogg'
 	stat_attack = HARD_CRIT
@@ -50,6 +47,7 @@
 		ABNORMALITY_WORK_ATTACHMENT = 60,
 		ABNORMALITY_WORK_REPRESSION = 20,
 	)
+	neutral_droprate = 100
 	work_damage_amount = 6
 	work_damage_type = WHITE_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/sloth
@@ -59,7 +57,7 @@
 		/datum/ego_datum/armor/dream,
 	)
 	gift_type =  /datum/ego_gifts/dream
-	abnormality_origin = ABNORMALITY_ORIGIN_MINING
+	abnormality_origin = ABNORMALITY_ORIGIN_SS13MINING
 
 
 	/// How far the whelps fire can go
