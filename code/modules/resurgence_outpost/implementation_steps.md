@@ -158,7 +158,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 2. Spawn each component via admin panel
 3. Verify they can be picked up, dropped, stored in containers
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -193,7 +193,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 4. Test all Tier 2 component recipes
 5. Test floor tile recipes
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -223,7 +223,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 2. Smelt ore into metal sheets
 3. Craft Tier 3 components from Tier 2 components
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -243,7 +243,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 2. Process fiber into cloth
 3. Verify cloth can be used in crafting table recipes
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -409,7 +409,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 3. Check core - should show +5 faith from clothing
 4. Unequip - faith should return to normal
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -432,7 +432,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 3. Equip on machine, verify +3 faith bonus
 4. Test Bishop's Robes requiring woven tapestry
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 

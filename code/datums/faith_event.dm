@@ -50,9 +50,16 @@
 // Specific Faith Event Subtypes
 // ============================================
 
-/// Faith events from wearing clan-woven clothing
+/// Faith events from wearing clan-woven clothing (permanent until clothing removed)
 /datum/faith_event/clothing
 	category = "clothing"
+
+/datum/faith_event/clothing/New(desc, change, cat = "clothing")
+	description = desc
+	faith_change = change
+	category = cat
+	timeout = null // Permanent - removed when clothing is unequipped
+	hidden = FALSE
 
 /// Faith events from being in a designated shelter/room
 /datum/faith_event/shelter

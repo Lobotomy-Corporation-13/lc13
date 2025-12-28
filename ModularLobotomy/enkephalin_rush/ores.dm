@@ -47,3 +47,14 @@
 	scan_state = "rock_Plasma"
 	spreadChance = 8
 	merge_type = /obj/item/stack/ore/plasteel
+
+/obj/item/stack/ore/rock
+	name = "rock"
+	icon_state = "rock ore"
+	inhand_icon_state = "Iron ore"
+	singular_name = "rock chunk"
+	points = 1
+	mats_per_unit = list(/datum/material/iron=1)
+	mine_experience = 0
+	scan_state = "rock_Iron"
+	merge_type = /obj/item/stack/ore/rock
