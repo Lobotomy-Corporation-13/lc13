@@ -170,7 +170,7 @@
 	attack_verb_continuous = list("slams", "strikes", "smashes")
 	attack_verb_simple = list("slam", "strike", "smash")
 	attribute_requirements = list(
-							TEMPRANCE_ATTRIBUTE = 40
+							TEMPERANCE_ATTRIBUTE = 40
 							)
 
 /obj/item/ego_weapon/branch12/mini/gold_needle/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)

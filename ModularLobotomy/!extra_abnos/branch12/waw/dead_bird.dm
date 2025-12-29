@@ -37,8 +37,9 @@
 	work_damage_type = RED_DAMAGE
 
 	ego_list = list(
-	//	/datum/ego_datum/weapon/branch12/egoification,
-	//	/datum/ego_datum/armor/legs
+	//Placeholder
+		/datum/ego_datum/weapon/lamp,
+		/datum/ego_datum/armor/lamp
 	)
 	//gift_type =  /datum/ego_gifts/departure
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
