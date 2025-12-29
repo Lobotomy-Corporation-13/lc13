@@ -53,7 +53,7 @@
 	var/obj/item/wep = new /obj/item/ego_weapon/ranged/branch12/enchanted_wand(user)
 	user.dropItemToGround(held) //Drop weapon
 	ADD_TRAIT(wep, TRAIT_NODROP, wep)
-	user.put_in_hands(wep) 		//Time for pale
+	user.put_in_hands(wep) 		//Stuck in your hands idiot until you cast it
 
 /mob/living/simple_animal/hostile/abnormality/branch12/enchantress_of_wands/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -117,6 +117,7 @@
 				H.deal_damage(80, PALE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 			if(8)	//Heal 100 SP
 				H.adjustSanityLoss(-100)
+		return
 
 	if(isliving(target))
 		var/mob/living/L = target

@@ -507,3 +507,38 @@
 	name = "lucifer"
 	damage = 140 // VERY high damage
 	damage_type = BLACK_DAMAGE
+
+
+/obj/item/ego_weapon/branch12/prognostica
+	name = "prognostica"
+	desc = "The chain of time binds itself to it's target, tearing it to shreds."
+	special = "This weapon hits 4 times for every hit"
+	icon_state = "prognostica"
+	force = 15
+	attack_speed = 1.3
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("slices", "saws", "rips")
+	attack_verb_simple = list("slice", "saw", "rip")
+	hitsound = 'sound/abnormalities/helper/attack.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+
+/obj/item/ego_weapon/branch12/prognostica/attack(mob/living/target, mob/living/user)
+	if(!..())
+		return
+	for(var/i = 1 to 3)
+		sleep(2)
+		if(target in view(reach,user))
+			playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+			user.do_attack_animation(target)
+			target.attacked_by(src, user)
+			log_combat(user, target, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+
+/obj/item/ego_weapon/branch12/prognostica/melee_attack_chain(mob/living/user, atom/target, params)
+	..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))

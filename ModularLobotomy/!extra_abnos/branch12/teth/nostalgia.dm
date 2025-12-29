@@ -43,7 +43,7 @@
 /obj/item/nostalgia_capsule
 	name = "nostalgia capsule"
 	desc = "A small yellow capsule holding some nostalgia."
-	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/branch12/gadgets.dmi'
 	icon_state = "capsule"
 	slot_flags = ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
@@ -52,5 +52,6 @@
 /obj/item/nostalgia_capsule/attack_self(mob/living/carbon/human/user)
 	..()
 	to_chat(user, span_notice("You open the capsule and take a smell."))
-	user.adjustSanityLoss(-heal_amount)
+	user.adjustSanityLoss(-get_attribute_level(user, PRUDENCE_ATTRIBUTE))
+	user.apply_lc_white_fragile(5)
 	qdel(src)

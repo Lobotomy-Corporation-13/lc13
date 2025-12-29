@@ -113,6 +113,7 @@
 					/obj/structure/jester_tile/stun,
 					/obj/structure/jester_tile/drugs,
 					/obj/structure/jester_tile/statdown,
+					/obj/structure/jester_tile/bleed,
 					)
 			new to_spawn(F)
 
@@ -195,13 +196,6 @@
 	if(connected_abno)
 		connected_abno.effect_tiles += src
 
-/obj/structure/jester_tile/Crossed(atom/movable/AM)
-	. = ..()
-	if(ishuman(AM))
-		var/mob/living/carbon/human/H = AM
-		H.deal_damage(RED_DAMAGE, 30, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
-
-
 // Jester Tiles
 /obj/structure/jester_tile/red
 	name = "Red Tile"
@@ -248,15 +242,14 @@
 
 
 /obj/structure/jester_tile/stun
-	name = "Stun Tile"
-	icon_state = "stun"
+	name = "Tremor Tile"
+	icon_state = "tremor"
 
 /obj/structure/jester_tile/stun/Crossed(atom/movable/AM)
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.Stun(5, ignore_canstun = TRUE) // Here we go.
-		H.Knockdown(5)
+		H.apply_lc_tremor(10, 40)
 
 
 /obj/structure/jester_tile/drugs
@@ -269,6 +262,15 @@
 		var/mob/living/carbon/human/H = AM
 		H.set_drugginess(15)
 
+/obj/structure/jester_tile/bleed
+	name = "Bleed Tile"
+	icon_state = "bleed"
+
+/obj/structure/jester_tile/bleed/Crossed(atom/movable/AM)
+	. = ..()
+	if(ishuman(AM))
+		var/mob/living/carbon/human/H = AM
+		H.apply_lc_bleed(10)
 
 /obj/structure/jester_tile/statdown
 	name = "Stat Down Tile"

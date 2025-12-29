@@ -26,6 +26,16 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 
 /mob/living/simple_animal/hostile/abnormality/branch12/sunset/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
+	if(work_type != wanted_work)
+		switch(wanted_work)
+			if(ABNORMALITY_WORK_INSTINCT)
+				user.adjust_attribute_level(FORTITUDE_ATTRIBUTE, -3)
+			if(ABNORMALITY_WORK_INSIGHT)
+				user.adjust_attribute_level(PRUDENCE_ATTRIBUTE, -3)
+			if(ABNORMALITY_WORK_ATTACHMENT)
+				user.adjust_attribute_level(TEMPERANCE_ATTRIBUTE, -3)
+			if(ABNORMALITY_WORK_REPRESSION)
+				user.adjust_attribute_level(JUSTICE_ATTRIBUTE, -3)
 	wanted_work = pick(lotus)
 	switch(wanted_work)
 		if(ABNORMALITY_WORK_INSTINCT)
@@ -44,16 +54,6 @@
 			work_damage_type = PALE_DAMAGE
 			work_damage_amount = 7
 			icon_state = "sunset_pale"
-	if(work_type != wanted_work)
-		switch(wanted_work)
-			if(ABNORMALITY_WORK_INSTINCT)
-				user.adjust_attribute_level(FORTITUDE_ATTRIBUTE, -3)
-			if(ABNORMALITY_WORK_INSIGHT)
-				user.adjust_attribute_level(PRUDENCE_ATTRIBUTE, -3)
-			if(ABNORMALITY_WORK_ATTACHMENT)
-				user.adjust_attribute_level(TEMPERANCE_ATTRIBUTE, -3)
-			if(ABNORMALITY_WORK_REPRESSION)
-				user.adjust_attribute_level(JUSTICE_ATTRIBUTE, -3)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/sunset/WorkChance(mob/living/carbon/human/user, chance, work_type)
 	if (!wanted_work)
