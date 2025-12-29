@@ -38,6 +38,17 @@
 	/// Whether the tool is currently being used for room operations (prevents spam)
 	var/in_use = FALSE
 
+	// ===== Farming Zone Variables =====
+
+	/// Whether we're in farming zone selection mode
+	var/farming_mode = FALSE
+	/// Turfs selected for new zone
+	var/list/farming_zone_selection = list()
+	/// Selection overlay effects
+	var/list/selection_overlays = list()
+	/// Maximum tiles per farming zone
+	var/static/farming_max_tiles = 16
+
 /obj/item/resurgence_outpost_planner/Initialize(mapload)
 	. = ..()
 	if(!blueprint_categories)
@@ -166,7 +177,20 @@
 
 	data["in_use"] = in_use
 
+	// Farming zone data
+	data["farming_mode"] = farming_mode
+	data["farming_selection"] = farming_zone_selection.len
+	data["farming_max"] = farming_max_tiles
+	data["existing_zones"] = get_farming_zones_data()
+
 	return data
+
+/// Get data for all existing farming zones
+/obj/item/resurgence_outpost_planner/proc/get_farming_zones_data()
+	var/list/zones = list()
+	for(var/datum/farm_zone/zone in GLOB.resurgence_farm_zones)
+		zones += list(zone.get_stats())
+	return zones
 
 /// Get data for a single structure
 /obj/item/resurgence_outpost_planner/proc/get_structure_data(name, blueprint_type)
@@ -263,10 +287,54 @@
 			in_use = FALSE
 			return TRUE
 
+		// ===== Farming Actions =====
+		if("toggle_farming_mode")
+			farming_mode = !farming_mode
+			if(!farming_mode)
+				clear_farming_selection()
+			else
+				// Clear blueprint selection when entering farming mode
+				selected_blueprint = null
+				selected_name = null
+			return TRUE
+
+		if("confirm_farming_zone")
+			if(farming_zone_selection.len >= 1)
+				var/zone_name = stripped_input(usr, "Name your farm zone:", "Farm Zone", "Farm Zone", MAX_NAME_LEN)
+				if(zone_name)
+					create_farming_zone(usr, zone_name)
+			return TRUE
+
+		if("clear_farming_selection")
+			clear_farming_selection()
+			return TRUE
+
+		if("dissolve_zone")
+			var/zone_id = text2num(params["id"])
+			for(var/datum/farm_zone/zone in GLOB.resurgence_farm_zones)
+				if(zone.zone_id == zone_id)
+					to_chat(usr, span_notice("Dissolved farm zone '[zone.name]'."))
+					qdel(zone)
+					break
+			return TRUE
+
+		if("highlight_zone")
+			var/zone_id = text2num(params["id"])
+			for(var/datum/farm_zone/zone in GLOB.resurgence_farm_zones)
+				if(zone.zone_id == zone_id)
+					highlight_farm_zone(zone, usr)
+					break
+			return TRUE
+
 // ===== Blueprint Placement =====
 
 /obj/item/resurgence_outpost_planner/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
+
+	// Handle farming mode tile selection
+	if(farming_mode)
+		handle_farming_selection(target, user)
+		return
 
 	if(!selected_blueprint)
 		return
@@ -440,6 +508,121 @@
 		highlight.color = "#88ff88"
 		highlight.alpha = 128
 		QDEL_IN(highlight, 2 SECONDS)
+
+// ===== Farming Zone Management =====
+
+/// Handle tile selection for farming zones
+/obj/item/resurgence_outpost_planner/proc/handle_farming_selection(atom/target, mob/user)
+	var/turf/T = get_turf(target)
+	if(!T || !user.Adjacent(T))
+		return
+
+	if(!is_valid_farm_tile(T))
+		to_chat(user, span_warning("This tile cannot be farmed."))
+		return
+
+	// Toggle selection - removing is always allowed
+	if(T in farming_zone_selection)
+		farming_zone_selection -= T
+		remove_selection_overlay(T)
+		to_chat(user, span_notice("Removed tile from selection. ([farming_zone_selection.len]/[farming_max_tiles])"))
+	else if(farming_zone_selection.len < farming_max_tiles)
+		// Check adjacency requirement (first tile is free, rest must be adjacent)
+		if(farming_zone_selection.len > 0 && !is_adjacent_to_selection(T))
+			to_chat(user, span_warning("New tiles must be adjacent to existing selection."))
+			return
+		farming_zone_selection += T
+		add_selection_overlay(T)
+		to_chat(user, span_notice("Added tile to selection. ([farming_zone_selection.len]/[farming_max_tiles])"))
+	else
+		to_chat(user, span_warning("Maximum [farming_max_tiles] tiles per zone."))
+
+	SStgui.update_uis(src)
+
+/// Check if a turf is adjacent to any already-selected turf
+/obj/item/resurgence_outpost_planner/proc/is_adjacent_to_selection(turf/T)
+	for(var/turf/selected in farming_zone_selection)
+		if(get_dist(T, selected) == 1)
+			return TRUE
+	return FALSE
+
+/// Check if a turf is valid for farming
+/obj/item/resurgence_outpost_planner/proc/is_valid_farm_tile(turf/T)
+	if(isspaceturf(T))
+		return FALSE
+	if(isclosedturf(T))
+		return FALSE
+	if(istype(T, /turf/open/water))
+		return FALSE
+	// Check for existing farm plots
+	for(var/obj/structure/farm_plot/plot in T)
+		return FALSE
+	// Check for dense objects
+	for(var/obj/O in T)
+		if(O.density)
+			return FALSE
+	return TRUE
+
+/// Add a selection overlay to a turf
+/obj/item/resurgence_outpost_planner/proc/add_selection_overlay(turf/T)
+	var/obj/effect/farm_selection_overlay/selection = new(T)
+	selection_overlays[T] = selection
+
+/// Remove a selection overlay from a turf
+/obj/item/resurgence_outpost_planner/proc/remove_selection_overlay(turf/T)
+	var/obj/effect/farm_selection_overlay/selection = selection_overlays[T]
+	if(selection)
+		qdel(selection)
+		selection_overlays -= T
+
+/// Visual overlay for farm zone tile selection
+/obj/effect/farm_selection_overlay
+	name = "farm zone selection"
+	desc = "This tile is selected for a farm zone."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "shieldsparkles"
+	layer = ABOVE_MOB_LAYER
+	color = "#88ff88"
+	alpha = 180
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/// Clear all farming zone selections
+/obj/item/resurgence_outpost_planner/proc/clear_farming_selection()
+	for(var/turf/T in farming_zone_selection)
+		remove_selection_overlay(T)
+	farming_zone_selection.Cut()
+	selection_overlays.Cut()
+
+/// Create a farming zone from selected tiles
+/obj/item/resurgence_outpost_planner/proc/create_farming_zone(mob/user, zone_name)
+	var/datum/farm_zone/zone = new(zone_name)
+
+	for(var/turf/T in farming_zone_selection)
+		var/obj/structure/farm_plot/plot = new(T)
+		zone.add_plot(plot)
+
+	clear_farming_selection()
+	farming_mode = FALSE
+
+	to_chat(user, span_notice("Created farm zone '[zone_name]' with [zone.plots.len] plots."))
+	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
+	SStgui.update_uis(src)
+
+/// Highlight an existing farm zone's plots
+/obj/item/resurgence_outpost_planner/proc/highlight_farm_zone(datum/farm_zone/zone, mob/user)
+	to_chat(user, span_notice("Highlighting farm zone '[zone.name]'..."))
+	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+	for(var/obj/structure/farm_plot/plot in zone.plots)
+		var/turf/T = get_turf(plot)
+		if(T)
+			var/obj/effect/temp_visual/decoy/fading/highlight = new(T)
+			highlight.name = "farm plot"
+			highlight.icon = 'icons/effects/effects.dmi'
+			highlight.icon_state = "shieldsparkles"
+			highlight.color = "#88ff88"
+			highlight.alpha = 180
+			QDEL_IN(highlight, 3 SECONDS)
 
 #undef BLUEPRINT_CAT_CONSTRUCTION
 #undef BLUEPRINT_CAT_STORAGE

@@ -43,7 +43,7 @@
 
 /obj/structure/resurgence_cotton/Initialize(mapload)
 	. = ..()
-	update_appearance()
+	update_icon()
 
 /obj/structure/resurgence_cotton/update_icon_state()
 	. = ..()
@@ -162,7 +162,7 @@
 	// Start regrowth from seedling stage
 	growth_stage = COTTON_STAGE_SEEDLING
 	work_points = 0
-	update_appearance()
+	update_icon()
 
 	// Start growth cycle
 	addtimer(CALLBACK(src, PROC_REF(advance_growth)), growth_time)
@@ -173,7 +173,7 @@
 		return
 
 	growth_stage++
-	update_appearance()
+	update_icon()
 
 	// Continue growing if not yet harvestable
 	if(growth_stage < COTTON_STAGE_HARVEST)

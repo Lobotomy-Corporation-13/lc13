@@ -28,16 +28,20 @@ export const OutpostPlanner = (props, context) => {
                 onClick={() => setMainTab('rooms')}>
                 Rooms
               </Tabs.Tab>
+              <Tabs.Tab
+                icon="seedling"
+                selected={mainTab === 'farming'}
+                onClick={() => setMainTab('farming')}>
+                Farming
+              </Tabs.Tab>
             </Tabs>
           </Stack.Item>
 
           {/* Tab Content */}
           <Stack.Item grow>
-            {mainTab === 'blueprints' ? (
-              <BlueprintTab />
-            ) : (
-              <RoomTab />
-            )}
+            {mainTab === 'blueprints' && <BlueprintTab />}
+            {mainTab === 'rooms' && <RoomTab />}
+            {mainTab === 'farming' && <FarmingTab />}
           </Stack.Item>
         </Stack>
       </Window.Content>
@@ -376,6 +380,150 @@ const RoomTab = (props, context) => {
           </Stack.Item>
         )}
       </Stack>
+    </Section>
+  );
+};
+
+// ===== Farming Tab =====
+const FarmingTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const {
+    farming_mode,
+    farming_selection,
+    farming_max,
+    existing_zones = [],
+  } = data;
+
+  return (
+    <Section fill title="Farming Zones">
+      <Stack fill vertical>
+        {/* Zone Creation */}
+        <Stack.Item>
+          <Section title="Create New Zone">
+            <Box mb={1}>
+              Select up to {farming_max} tiles to create a farming zone.
+              All plots in a zone share one growth timer for better performance.
+            </Box>
+            <Button
+              fluid
+              icon={farming_mode ? "times" : "seedling"}
+              color={farming_mode ? "bad" : "good"}
+              content={farming_mode ? "Cancel Selection" : "Start Selecting Tiles"}
+              onClick={() => act('toggle_farming_mode')} />
+            {farming_mode && (
+              <Box mt={1}>
+                <Box bold mb={1}>
+                  <Icon name="hand-pointer" mr={1} />
+                  Click tiles on the ground to select them.
+                </Box>
+                <Box bold color="good" mb={1}>
+                  Selected: {farming_selection} / {farming_max}
+                </Box>
+                <Stack>
+                  <Stack.Item grow>
+                    <Button
+                      fluid
+                      icon="check"
+                      color="good"
+                      disabled={farming_selection < 1}
+                      content="Create Zone"
+                      onClick={() => act('confirm_farming_zone')} />
+                  </Stack.Item>
+                  <Stack.Item grow>
+                    <Button
+                      fluid
+                      icon="eraser"
+                      disabled={farming_selection < 1}
+                      content="Clear Selection"
+                      onClick={() => act('clear_farming_selection')} />
+                  </Stack.Item>
+                </Stack>
+              </Box>
+            )}
+          </Section>
+        </Stack.Item>
+
+        {/* Existing Zones */}
+        <Stack.Item grow>
+          <Section fill scrollable title="Existing Zones">
+            {existing_zones.length > 0 ? (
+              <Stack vertical>
+                {existing_zones.map(zone => (
+                  <Stack.Item key={zone.id}>
+                    <FarmingZoneCard zone={zone} />
+                  </Stack.Item>
+                ))}
+              </Stack>
+            ) : (
+              <Box italic color="label" textAlign="center" mt={2}>
+                <Icon name="seedling" size={2} mb={1} />
+                <Box>No farming zones created yet.</Box>
+                <Box mt={1}>Create a zone to start growing crops!</Box>
+              </Box>
+            )}
+          </Section>
+        </Stack.Item>
+
+        {/* Info */}
+        <Stack.Item>
+          <Section>
+            <Box color="label" fontSize="12px">
+              <Icon name="info-circle" mr={1} />
+              Plant seeds in plots and water them regularly.
+              Crops will grow over time and can be harvested when ready.
+            </Box>
+          </Section>
+        </Stack.Item>
+      </Stack>
+    </Section>
+  );
+};
+
+const FarmingZoneCard = (props, context) => {
+  const { act } = useBackend(context);
+  const { zone } = props;
+
+  return (
+    <Section
+      title={(
+        <Box inline>
+          <Icon name="seedling" mr={1} color="good" />
+          {zone.name}
+        </Box>
+      )}
+      buttons={(
+        <>
+          <Button
+            icon="eye"
+            tooltip="Highlight Zone"
+            onClick={() => act('highlight_zone', { id: zone.id })} />
+          <Button
+            icon="trash"
+            color="bad"
+            tooltip="Dissolve Zone"
+            onClick={() => act('dissolve_zone', { id: zone.id })} />
+        </>
+      )}>
+      <Flex>
+        <Flex.Item grow>
+          <Box>
+            <Icon name="th" mr={1} />
+            Plots: {zone.plot_count}
+          </Box>
+        </Flex.Item>
+        <Flex.Item grow>
+          <Box color={zone.ready_count > 0 ? "good" : "label"}>
+            <Icon name="check-circle" mr={1} />
+            Ready: {zone.ready_count}
+          </Box>
+        </Flex.Item>
+        <Flex.Item grow>
+          <Box color={zone.avg_water < 20 ? "bad" : zone.avg_water < 50 ? "average" : "good"}>
+            <Icon name="tint" mr={1} />
+            Water: {zone.avg_water}%
+          </Box>
+        </Flex.Item>
+      </Flex>
     </Section>
   );
 };
