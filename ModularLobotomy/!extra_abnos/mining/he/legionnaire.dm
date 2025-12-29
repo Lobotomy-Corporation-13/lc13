@@ -5,7 +5,7 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/mining/legionnaire
-	name = "legionnaire"
+	name = "Legionnaire"
 	desc = "A towering skeleton, embodying the terrifying power of Legion."
 	icon_state = "legionnaire"
 	icon_living = "legionnaire"
