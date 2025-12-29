@@ -47,6 +47,94 @@
 		/obj/item/stack/sheet/mineral/wood = 8
 	)
 
+/obj/structure/resurgence_blueprint/iron_door
+	name = "iron door blueprint"
+	result_name = "iron door"
+	icon = 'icons/obj/doors/mineral_doors.dmi'
+	icon_state = "metal"
+	result_type = /obj/structure/mineral_door/iron
+
+/obj/structure/resurgence_blueprint/iron_door/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 10
+	)
+
+/obj/structure/resurgence_blueprint/silver_door
+	name = "silver door blueprint"
+	result_name = "silver door"
+	icon = 'icons/obj/doors/mineral_doors.dmi'
+	icon_state = "silver"
+	result_type = /obj/structure/mineral_door/silver
+
+/obj/structure/resurgence_blueprint/silver_door/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/silver = 10
+	)
+
+/obj/structure/resurgence_blueprint/gold_door
+	name = "gold door blueprint"
+	result_name = "gold door"
+	icon = 'icons/obj/doors/mineral_doors.dmi'
+	icon_state = "gold"
+	result_type = /obj/structure/mineral_door/gold
+
+/obj/structure/resurgence_blueprint/gold_door/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/gold = 10
+	)
+
+/obj/structure/resurgence_blueprint/sandstone_door
+	name = "sandstone door blueprint"
+	result_name = "sandstone door"
+	icon = 'icons/obj/doors/mineral_doors.dmi'
+	icon_state = "sandstone"
+	result_type = /obj/structure/mineral_door/sandstone
+
+/obj/structure/resurgence_blueprint/sandstone_door/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/sandstone = 10
+	)
+
+// ===========================================
+// FLOOR BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/wood_floor
+	name = "wood floor blueprint"
+	result_name = "wood floor"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "wood"
+	result_type = /turf/open/floor/wood
+
+/obj/structure/resurgence_blueprint/wood_floor/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 2
+	)
+
+/obj/structure/resurgence_blueprint/iron_floor
+	name = "iron floor blueprint"
+	result_name = "iron floor"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "stone_floor"
+	result_type = /turf/open/floor/stone
+
+/obj/structure/resurgence_blueprint/iron_floor/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 2
+	)
+
+/obj/structure/resurgence_blueprint/sandstone_floor
+	name = "sandstone floor blueprint"
+	result_name = "sandstone floor"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "sandstone_floor"
+	result_type = /turf/open/floor/sandstone
+
+/obj/structure/resurgence_blueprint/sandstone_floor/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/sandstone = 2
+	)
+
 /obj/structure/resurgence_blueprint/iron_wall
 	name = "iron wall blueprint"
 	result_name = "iron wall"

@@ -162,31 +162,15 @@
 	)
 
 	// Floor Tiles
-	recipes["Wood Floor Tiles"] = list(
-		"result" = /obj/item/stack/tile/wood,
-		"result_amount" = 4,
-		"materials" = list(/obj/item/stack/sheet/mineral/wood = 1),
-		"total_work" = 10,
-		"desc" = "1 Wood -> 4 Wood Floor Tiles"
-	)
-
 	recipes["Plasteel Floor Tiles"] = list(
 		"result" = /obj/item/stack/tile/plasteel,
 		"result_amount" = 4,
-		"materials" = list(/obj/item/stack/sheet/plasteel = 1),
+		"materials" = list(/obj/item/stack/sheet/plasteel = 2),
 		"total_work" = 10,
-		"desc" = "1 Plasteel -> 4 Plasteel Floor Tiles"
+		"desc" = "2 Plasteel -> 4 Plasteel Floor Tiles"
 	)
 
 	// Carpet Tiles
-	recipes["Carpet Tiles"] = list(
-		"result" = /obj/item/stack/tile/carpet,
-		"result_amount" = 4,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Carpet Tiles"
-	)
-
 	recipes["Black Carpet"] = list(
 		"result" = /obj/item/stack/tile/carpet/black,
 		"result_amount" = 4,
@@ -612,6 +596,8 @@
 			return "Silver"
 		if(/obj/item/stack/sheet/mineral/gold)
 			return "Gold"
+		if(/obj/item/stack/sheet/mineral/sandstone)
+			return "Sandstone"
 		// Ores
 		if(/obj/item/stack/ore/iron)
 			return "Iron Ore"
@@ -625,6 +611,8 @@
 			return "Silver Ore"
 		if(/obj/item/stack/ore/gold)
 			return "Gold Ore"
+		if(/obj/item/stack/ore/rock)
+			return "Rock"
 		// Raw materials
 		if(/obj/item/stack/sheet/cotton)
 			return "Cotton"

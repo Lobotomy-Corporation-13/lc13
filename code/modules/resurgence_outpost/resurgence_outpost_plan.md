@@ -220,28 +220,18 @@ No new resources needed - leverage existing `/obj/item/stack/sheet/` types.
 | 2 Sand | 1 Glass Sheet |
 
 ### Cloth
-**Source:** Plant fibers → Loom processing
+**Source:** Cotton → Loom processing
 
-```dm
-/obj/structure/flora/resurgence/fiber_plant
-    name = "fiber plant"
-    desc = "A tough plant with fibrous stalks."
-    var/fiber_amount = 3
-    var/regrow_time = 5 MINUTES
-
-/obj/item/stack/sheet/fiber
-    name = "plant fiber"
-    desc = "Raw plant fibers. Can be woven into cloth."
-```
+Cotton is obtained directly from cotton plants found in the world. No intermediate processing needed.
 
 **Gathering:**
-1. Harvest fiber plants by hand or with sickle
-2. Plants regrow after `regrow_time`
+1. Harvest cotton plants by hand
+2. Plants regrow after 5 minutes
 
 **Processing (at Loom):**
 | Input | Output |
 |-------|--------|
-| 3 Plant Fiber | 1 Cloth |
+| 3 Cotton | 1 Cloth |
 
 ### Resource Summary
 
@@ -250,7 +240,7 @@ No new resources needed - leverage existing `/obj/item/stack/sheet/` types.
 | Wood | Trees (chop) | None | - |
 | Metal | Iron Ore (mine) | Smelt | Forge |
 | Glass | Sand (dig) | Smelt | Forge |
-| Cloth | Fiber Plants (harvest) | Weave | Loom |
+| Cloth | Cotton Plants (harvest) | Weave | Loom |
 
 ### Starting Tools
 
@@ -262,7 +252,6 @@ Players spawn with basic tools or can craft them:
 | Stone Hatchet | 2 wood + 1 stone | Chop trees |
 | Stone Pickaxe | 2 wood + 2 stone | Mine ore |
 | Shovel | 3 wood + 1 metal | Dig sand |
-| Sickle | 2 wood + 1 metal | Harvest fibers |
 
 **Stone Source:**
 - Small rocks scattered on ground (pick up)
@@ -277,7 +266,7 @@ To prevent resource depletion over multi-day progression:
 | Trees | Stumps regrow in 10 min (configurable) |
 | Ore | New deposits spawn at round start from base map |
 | Sand | Sandy turfs regenerate 1 sand per 5 min |
-| Fiber Plants | Regrow 5 min after harvest |
+| Cotton Plants | Regrow 5 min after harvest |
 
 ---
 
@@ -974,7 +963,7 @@ code/modules/resurgence_outpost/
     # Resources
     trees.dm                # Choppable trees, stumps, regrowth
     mining.dm               # Ore deposits, rock faces
-    gathering.dm            # Sand digging, fiber harvesting
+    gathering.dm            # Sand digging, cotton harvesting
     processing.dm           # Forge smelting, Loom weaving
     tools.dm                # Hatchet, pickaxe, shovel, sickle
 
@@ -2143,7 +2132,7 @@ code/modules/resurgence_outpost/
     # Resources
     trees.dm                # Choppable trees, stumps, regrowth
     mining.dm               # Ore deposits, rock faces
-    gathering.dm            # Sand digging, fiber harvesting
+    gathering.dm            # Sand digging, cotton harvesting
     processing.dm           # Forge smelting, Loom weaving
     tools.dm                # Hatchet, pickaxe, shovel, sickle
 
@@ -2473,6 +2462,134 @@ All items crafted via blueprints or crafting tables have a base beauty rating:
     return base_beauty + crafter_bonus
 ```
 
+### Cramped Room Penalty
+
+Rooms that are too small or narrow apply a faith penalty to occupants:
+
+| Condition | Faith Penalty | Description |
+|-----------|---------------|-------------|
+| ≤10 free tiles | -5 faith | "Cramped Room" - not enough space |
+| Width or height <3 tiles | -5 faith | "Cramped Room" - too narrow |
+| Both conditions | -8 faith | "Very Cramped" - claustrophobic |
+
+**Implementation:**
+
+```dm
+/area/resurgence_outpost/room
+    var/is_cramped = FALSE
+    var/cramped_severity = 0  // 0 = not cramped, 1 = cramped, 2 = very cramped
+    var/room_width = 0
+    var/room_height = 0
+    var/free_tiles = 0
+
+/area/resurgence_outpost/room/proc/calculate_room_dimensions()
+    // Find bounding box of room
+    var/min_x = INFINITY
+    var/max_x = 0
+    var/min_y = INFINITY
+    var/max_y = 0
+    free_tiles = 0
+
+    for(var/turf/T in contents)
+        if(T.x < min_x) min_x = T.x
+        if(T.x > max_x) max_x = T.x
+        if(T.y < min_y) min_y = T.y
+        if(T.y > max_y) max_y = T.y
+        free_tiles++
+
+    room_width = (max_x - min_x) + 1
+    room_height = (max_y - min_y) + 1
+
+    // Check cramped conditions
+    var/too_small = (free_tiles <= 10)
+    var/too_narrow = (room_width < 3 || room_height < 3)
+
+    if(too_small && too_narrow)
+        is_cramped = TRUE
+        cramped_severity = 2  // Very cramped
+    else if(too_small || too_narrow)
+        is_cramped = TRUE
+        cramped_severity = 1  // Cramped
+    else
+        is_cramped = FALSE
+        cramped_severity = 0
+
+/area/resurgence_outpost/room/proc/get_cramped_faith_penalty()
+    switch(cramped_severity)
+        if(2)
+            return -8  // Very Cramped
+        if(1)
+            return -5  // Cramped
+    return 0
+```
+
+**Faith Events for Cramped Rooms:**
+
+```dm
+/datum/faith_event/cramped
+    category = "room_size"
+
+/datum/faith_event/cramped/cramped
+    description = "Cramped Room"
+    faith_change = -5
+
+/datum/faith_event/cramped/very_cramped
+    description = "Very Cramped Room"
+    faith_change = -8
+```
+
+### Common Room Eating Bonus
+
+Eating food in a Common Room (a room with seating and tables) provides a bonus to meal quality:
+
+- **+1 quality tier** when eating in a Common Room
+- Encourages communal dining and building proper dining areas
+- Stacks with other quality modifiers (cooking stat, kitchen cooking)
+
+**Detection:** A room is considered a "Common Room" if it contains:
+- At least one chair or bench (seating)
+- At least one table
+
+```dm
+/area/resurgence_outpost/room
+    var/is_common_room = FALSE
+
+/area/resurgence_outpost/room/proc/check_common_room()
+    var/has_seating = FALSE
+    var/has_table = FALSE
+
+    for(var/turf/T in contents)
+        for(var/obj/structure/S in T)
+            if(istype(S, /obj/structure/chair) || istype(S, /obj/structure/resurgence_chair))
+                has_seating = TRUE
+            if(istype(S, /obj/structure/table) || istype(S, /obj/structure/resurgence_table))
+                has_table = TRUE
+
+    is_common_room = (has_seating && has_table)
+
+// In meal component, when eaten:
+/datum/component/resurgence_meal/proc/get_eating_location_bonus(mob/living/eater)
+    var/area/A = get_area(eater)
+
+    // Check if in a common room
+    if(istype(A, /area/resurgence_outpost/room))
+        var/area/resurgence_outpost/room/R = A
+        if(R.is_common_room)
+            return 1  // +1 quality tier
+
+    return 0  // No bonus for eating outside or in non-common rooms
+```
+
+**Quality Tier Progression with Common Room Bonus:**
+| Base Quality | + Common Room | Final Quality |
+|--------------|---------------|---------------|
+| Awful | +1 | Poor |
+| Poor | +1 | Decent |
+| Decent | +1 | Good |
+| Good | +1 | Excellent |
+| Excellent | +1 | Masterwork |
+| Masterwork | +1 | Masterwork (capped) |
+
 ---
 
 ## Character Stats System
@@ -2677,13 +2794,34 @@ Resource gathering takes significant time and can be interrupted and resumed.
 
 ### Gathering Parameters
 
-| Resource | Base Time | Base Yield | Work Needed |
-|----------|-----------|------------|-------------|
-| Tree | 2.5 minutes | 45 wood | 300 work |
-| Iron Ore Deposit | 2 minutes | 30 ore | 240 work |
-| Stone Deposit | 1.5 minutes | 25 stone | 180 work |
-| Fiber Plant | 30 seconds | 5 fiber | 60 work |
-| Sand Pile | 45 seconds | 10 sand | 90 work |
+| Resource | Base Time | Base Yield | Work Needed | Faith Drain |
+|----------|-----------|------------|-------------|-------------|
+| Tree | 2.5 minutes | 45 wood | 300 work | -30 faith |
+| Iron Ore Deposit | 2 minutes | 30 ore | 240 work | -24 faith |
+| Stone Deposit | 1.5 minutes | 25 stone | 180 work | -18 faith |
+| Cotton Plant | 30 seconds | 5 cotton | 60 work | -6 faith |
+| Sand Pile | 45 seconds | 10 sand | 90 work | -9 faith |
+
+### Work Drains Faith
+
+**All work (gathering, crafting, cooking, construction) slowly drains faith directly.**
+
+This is NOT a faith event - it directly reduces the faith value by 0.1 per work point. This creates a natural need for:
+- Rest in comfortable rooms (passive faith gain)
+- Good meals (faith bonus from eating)
+- Community activities (faith events)
+
+| Activity | Faith Drain Rate |
+|----------|------------------|
+| Gathering | -0.1 per work point |
+| Crafting | -0.1 per work point |
+| Cooking | -0.1 per work point |
+| Construction | -0.1 per work point |
+
+**Examples:**
+- Chopping a full tree (300 work) = -30 faith
+- Crafting a 20-work item = -2 faith
+- Building a structure (50 work) = -5 faith
 
 ### Charge Requirement
 
@@ -2691,6 +2829,7 @@ Resource gathering takes significant time and can be interrupted and resumed.
 
 ```dm
 #define MIN_CHARGE_FOR_WORK 5
+#define FAITH_DRAIN_PER_WORK 0.1
 
 /obj/structure/resurgence_tree/attackby(obj/item/I, mob/user)
     if(!is_axe(I))
@@ -2742,6 +2881,9 @@ Resource gathering takes significant time and can be interrupted and resumed.
 
         // Award XP
         core.add_xp("gathering", work_per_tick)
+
+        // Drain faith directly (not via events)
+        core.adjust_faith(-FAITH_DRAIN_PER_WORK * work_per_tick)
 
         // Periodic feedback
         if(work_progress % 30 == 0)
@@ -3113,7 +3255,7 @@ code/modules/resurgence_outpost/
     # Resources
     trees.dm                # Choppable trees with interruptible progress
     mining.dm               # Ore deposits with interruptible progress
-    gathering.dm            # Sand digging, fiber harvesting
+    gathering.dm            # Sand digging, cotton harvesting
     processing.dm           # Forge smelting, Loom weaving
     tools.dm                # Hatchet, pickaxe, shovel, sickle
 
@@ -3194,48 +3336,71 @@ data/resurgence_outpost/
 63. Stay in room with beauty 30+, verify faith slowly increases
 64. Add debris/garbage to room, verify beauty decreases
 65. Stay in squalid room, verify faith slowly decreases
-66. Remove garbage, add more furniture, verify quality improves
+
+### Cramped Rooms
+66. Build tiny 2x3 room (6 tiles), verify "Very Cramped" debuff (-8 faith)
+67. Build narrow 2x10 room, verify "Cramped Room" debuff for width <3 (-5 faith)
+68. Build 3x3 room (9 tiles), verify "Cramped Room" debuff for ≤10 tiles (-5 faith)
+69. Build 4x4 room (16 tiles), verify no cramped debuff
+70. Build 3x4 room (12 tiles, both dimensions ≥3), verify no cramped debuff
+
+### Common Room Eating Bonus
+71. Build room with table and chairs (Common Room)
+72. Cook a "Decent" quality meal
+73. Eat meal outside, verify +5 faith event
+74. Cook another "Decent" quality meal
+75. Eat meal inside Common Room, verify +8 faith event (Decent +1 = Good)
+76. Build room without table (just chairs), verify NOT a Common Room
+77. Eat in non-Common Room, verify no eating bonus
 
 ### Character Stats
-67. Start with level 1 construction, build something, verify 1.5x time
-68. Repeat until level up, verify speed improves
-69. Build at high level, verify beauty bonus applied
-70. Craft items, verify crafting XP gained
-71. Gather resources, verify gathering XP gained
-72. Level up gathering, verify improved yield
+78. Start with level 1 construction, build something, verify 1.5x time
+79. Repeat until level up, verify speed improves
+80. Build at high level, verify beauty bonus applied
+81. Craft items, verify crafting XP gained
+82. Gather resources, verify gathering XP gained
+83. Level up gathering, verify improved yield
 
 ### Bed and Stats UI
-73. Build bed in owned room
-74. Click bed, verify stats UI opens
-75. Verify stats display correctly
-76. Click "Save & Rest", verify data saved
-77. Reload round, verify stats persist
+84. Build bed in owned room
+85. Click bed, verify stats UI opens
+86. Verify stats display correctly
+87. Click "Save & Rest", verify data saved
+88. Reload round, verify stats persist
 
 ### Charge Requirements
-78. Reduce charge to below 5
-79. Try to craft, verify blocked with message
-80. Try to gather resources, verify blocked with message
-81. Restore charge above 5, verify can work again
+89. Reduce charge to below 5
+90. Try to craft, verify blocked with message
+91. Try to gather resources, verify blocked with message
+92. Restore charge above 5, verify can work again
 
 ### Extended Gathering
-82. Start chopping tree, interrupt halfway
-83. Verify progress is saved on tree
-84. Resume chopping, verify progress continues
-85. Another player continues, verify progress shared
-86. Complete gathering, verify yield based on gathering stat
+93. Start chopping tree, interrupt halfway
+94. Verify progress is saved on tree
+95. Resume chopping, verify progress continues
+96. Another player continues, verify progress shared
+97. Complete gathering, verify yield based on gathering stat
+
+### Faith Drain from Work
+98. Note starting faith value
+99. Chop full tree (300 work), verify faith decreased by ~30
+100. Craft a 20-work item, verify faith decreased by ~2
+101. Build a structure (50 work), verify faith decreased by ~5
+102. Verify faith drain is direct (not a faith event in the list)
+103. Verify comfortable room passive faith gain can offset work drain
 
 ### Cooking System
-87. Build cooking station (pot/campfire)
-88. Add raw meat, cook it, verify roasted meat created
-89. Eat roasted meat, verify charge is restored
-90. Verify faith event "Ate a decent meal" appears (+5 faith)
-91. Cook excellent quality meal, eat it
-92. Verify faith event upgrades to "Ate an excellent meal" (+12 faith)
-93. Eat a poor quality meal while excellent event active
-94. Verify faith event stays at excellent (highest quality wins)
-95. Wait 5 minutes, verify meal faith event expires
-96. Test cooking stat affects final quality
-97. Build Kitchen room, cook inside, verify +1 quality tier
-98. Interrupt cooking early, verify meal is burnt (-2 quality tiers)
-99. Verify cooking XP gained from completing recipes
-100. Level up cooking stat, verify speed and quality improve
+104. Build cooking station (pot/campfire)
+105. Add raw meat, cook it, verify roasted meat created
+106. Eat roasted meat, verify charge is restored
+107. Verify faith event "Ate a decent meal" appears (+5 faith)
+108. Cook excellent quality meal, eat it
+109. Verify faith event upgrades to "Ate an excellent meal" (+12 faith)
+110. Eat a poor quality meal while excellent event active
+111. Verify faith event stays at excellent (highest quality wins)
+112. Wait 5 minutes, verify meal faith event expires
+113. Test cooking stat affects final quality
+114. Build Kitchen room, cook inside, verify +1 quality tier
+115. Interrupt cooking early, verify meal is burnt (-2 quality tiers)
+116. Verify cooking XP gained from completing recipes
+117. Level up cooking stat, verify speed and quality improve

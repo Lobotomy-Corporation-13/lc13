@@ -153,6 +153,10 @@
 // Faith Management
 // ============================================
 
+/// Directly adjust faith value (for work drain, bypasses events)
+/obj/item/organ/resurgence_core/proc/adjust_faith(amount)
+	faith = clamp(faith + amount, 0, max_faith)
+
 /// Apply faith changes from all active events
 /obj/item/organ/resurgence_core/proc/apply_faith_changes()
 	recalculate_faith_rate()

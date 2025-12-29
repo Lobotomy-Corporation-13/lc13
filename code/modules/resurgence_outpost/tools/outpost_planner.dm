@@ -55,7 +55,14 @@
 		"Gold Wall" = /obj/structure/resurgence_blueprint/gold_wall,
 		"Silver Wall" = /obj/structure/resurgence_blueprint/silver_wall,
 		"Reinforced Wall" = /obj/structure/resurgence_blueprint/reinforced_wall,
-		"Wood Door" = /obj/structure/resurgence_blueprint/wood_door
+		"Wood Door" = /obj/structure/resurgence_blueprint/wood_door,
+		"Iron Door" = /obj/structure/resurgence_blueprint/iron_door,
+		"Silver Door" = /obj/structure/resurgence_blueprint/silver_door,
+		"Gold Door" = /obj/structure/resurgence_blueprint/gold_door,
+		"Sandstone Door" = /obj/structure/resurgence_blueprint/sandstone_door,
+		"Wood Floor" = /obj/structure/resurgence_blueprint/wood_floor,
+		"Iron Floor" = /obj/structure/resurgence_blueprint/iron_floor,
+		"Sandstone Floor" = /obj/structure/resurgence_blueprint/sandstone_floor
 	)
 
 	// Storage category - chests, crates

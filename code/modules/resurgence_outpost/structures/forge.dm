@@ -99,3 +99,12 @@
 		"total_work" = 25,
 		"desc" = "10 Sand -> 1 Sandstone"
 	)
+
+	// Iron from rock (inefficient but possible)
+	recipes["Iron Ore (Rock)"] = list(
+		"result" = /obj/item/stack/ore/iron,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/rock = 25),
+		"total_work" = 30,
+		"desc" = "25 Rock -> 1 Iron Ore"
+	)

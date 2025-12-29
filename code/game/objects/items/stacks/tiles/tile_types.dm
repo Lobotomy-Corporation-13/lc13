@@ -451,3 +451,23 @@
 	turf_type = /turf/open/floor/bronze
 	mats_per_unit = list(/datum/material/bronze=500)
 	merge_type = /obj/item/stack/tile/bronze
+
+//Stone
+/obj/item/stack/tile/stone
+	name = "stone brick tile"
+	singular_name = "stone brick floor tile"
+	desc = "A sturdy tile made from stone bricks."
+	icon_state = "tile_stone"
+	inhand_icon_state = "tile-basalt"
+	turf_type = /turf/open/floor/stone
+	merge_type = /obj/item/stack/tile/stone
+
+//Sandstone
+/obj/item/stack/tile/sandstone
+	name = "sandstone tile"
+	singular_name = "sandstone floor tile"
+	desc = "A tile made from compressed sandstone."
+	icon_state = "tile_sandstone"
+	inhand_icon_state = "tile-basalt"
+	turf_type = /turf/open/floor/sandstone
+	merge_type = /obj/item/stack/tile/sandstone

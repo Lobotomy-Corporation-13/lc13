@@ -10,9 +10,7 @@ This document lists all materials available to players for crafting recipes.
 | Name | Type Path | Source |
 |------|-----------|--------|
 | Iron Ore | `/obj/item/stack/ore/iron` | Mining |
-| Iron Scrap | `/obj/item/stack/ore/ironscrap` | Scavenging |
-| Sand/Glass Ore | `/obj/item/stack/ore/glass` | Mining |
-| Glass Rubble | `/obj/item/stack/ore/glassrubble` | Scavenging |
+| Coal | `/obj/item/stack/sheet/mineral/coal` | Mining |
 | Rock | `/obj/item/stack/ore/rock` | Mining |
 | Silver Ore | `/obj/item/stack/ore/silver` | Mining |
 | Gold Ore | `/obj/item/stack/ore/gold` | Mining |
@@ -22,7 +20,9 @@ This document lists all materials available to players for crafting recipes.
 |------|-----------|--------|
 | Wood | `/obj/item/stack/sheet/mineral/wood` | Chopping trees |
 | Sandstone | `/obj/item/stack/sheet/mineral/sandstone` | Mining/gathering |
-| Coal | `/obj/item/stack/sheet/mineral/coal` | Mining |
+| Glass Rubble | `/obj/item/stack/ore/glassrubble` | Scavenging |
+| Sand/Glass Ore | `/obj/item/stack/ore/glass` | Mining |
+| Iron Scrap | `/obj/item/stack/ore/ironscrap` | Scavenging |
 
 ### Fibers & Hides (Gathered/Hunted)
 | Name | Type Path | Source |

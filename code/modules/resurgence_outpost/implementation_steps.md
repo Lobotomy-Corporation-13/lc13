@@ -479,7 +479,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ## Step 16: Room Quality (Beauty) System
 
-**Goal:** Make room quality affect faith based on furniture beauty ratings.
+**Goal:** Make room quality affect faith based on furniture beauty ratings and room size.
 
 **Files to create:**
 - `code/modules/resurgence_outpost/rooms/room_quality.dm`
@@ -494,6 +494,7 @@ Each step is self-contained and can be tested independently. Complete and test e
   - Positive beauty: Passive faith gain over time while in room
   - Negative beauty: Passive faith loss over time while in room
 - Process() checks player location and applies faith modifier
+- **Cramped Room Penalty:** Rooms with ≤10 free tiles OR width/height <3 tiles get "Cramped" debuff
 
 **Beauty Ratings (examples):**
 | Item | Base Beauty |
@@ -519,12 +520,30 @@ Each step is self-contained and can be tested independently. Complete and test e
 | -1 to -19 | Shabby | -0.1 faith/min |
 | -20 or less | Squalid | -0.3 faith/min |
 
+**Cramped Room Penalty:**
+| Condition | Effect |
+|-----------|--------|
+| ≤10 free tiles | -5 faith event "Cramped Room" |
+| Width or height <3 tiles | -5 faith event "Cramped Room" |
+| Both conditions | -8 faith event "Very Cramped" |
+
+**Common Room Eating Bonus:**
+- Eating food in a Common Room grants +1 quality tier to the meal's faith effect
+- Encourages communal dining rather than eating alone outdoors
+- Common Room detected by having seating (chairs) and tables
+
 **Testing:**
 1. Build empty room, check beauty = 0, no faith effect
 2. Add furniture, verify beauty increases
 3. Stay in comfortable room, verify faith slowly increases
 4. Add debris/garbage to room, verify beauty decreases
 5. Stay in squalid room, verify faith slowly decreases
+6. Build tiny 2x3 room, verify "Cramped Room" debuff appears
+7. Build narrow 2x10 room, verify cramped debuff for width <3
+8. Build 3x3 room (9 tiles), verify cramped debuff for ≤10 tiles
+9. Build 4x4 room (16 tiles), verify no cramped debuff
+10. Eat food outside, note faith bonus
+11. Eat same quality food in Common Room, verify +1 quality tier bonus
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
@@ -610,13 +629,13 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 ├─────────────────────────────────────────────────────┤
 │                                                     │
 │  Construction: 5 ████████░░░░░░░░░░░░ (320/400 XP)  │
-│    Build Speed: 1.26x | Beauty Bonus: +0           │
+│    Build Speed: 1.26x | Beauty Bonus: +0            │
 │                                                     │
 │  Crafting: 8 ██████████████░░░░░░░░ (1100/1600 XP)  │
-│    Craft Speed: 1.08x | Beauty Bonus: +2           │
+│    Craft Speed: 1.08x | Beauty Bonus: +2            │
 │                                                     │
 │  Gathering: 3 ████░░░░░░░░░░░░░░░░░░ (80/200 XP)    │
-│    Yield: 0.71x | Gather Speed: 1.37x              │
+│    Yield: 0.71x | Gather Speed: 1.37x               │
 │                                                     │
 │  ─────────────────────────────────────────────────  │
 │  Resting in your room. Stats will be saved.         │
@@ -697,15 +716,29 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 - Multiple players can contribute to same resource
 - Gathering stats affect speed and yield
 - **Minimum 5 charge required to gather** - cannot gather below 5 charge
+- **Work drains faith directly** - each work increment reduces faith by 0.1 (not via events)
 
 **Example - Tree Chopping:**
 - Base time: 150 seconds (2.5 minutes)
 - Base yield: 45 wood
 - Work points needed: 300 (at 2 per second)
 - Gathering stat modifies both speed and yield
+- Faith drain: ~30 faith over full tree (300 work × 0.1)
+
+**Faith Drain from Work:**
+| Activity | Faith Drain per Work Point |
+|----------|---------------------------|
+| Gathering | -0.1 faith |
+| Crafting | -0.1 faith |
+| Cooking | -0.1 faith |
+| Construction | -0.1 faith |
+
+This creates a need for rest, good meals, and comfortable rooms to restore faith.
 
 **Key Logic:**
 ```dm
+#define FAITH_DRAIN_PER_WORK 0.1
+
 /obj/structure/resurgence_tree
     var/work_points = 0
     var/work_needed = 300
@@ -742,6 +775,8 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
         work_points += work_per_tick
         // Award gathering XP
         award_gathering_xp(user, work_per_tick)
+        // Drain faith directly (not via events)
+        core.adjust_faith(-FAITH_DRAIN_PER_WORK * work_per_tick)
 
     if(work_points >= work_needed)
         complete_gathering(user)
@@ -758,9 +793,9 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 
 ---
 
-## Step 21: Charge Requirement for Crafting
+## Step 21: Charge Requirement and Faith Drain for Crafting
 
-**Goal:** Prevent crafting when charge is below 5.
+**Goal:** Prevent crafting when charge is below 5, and drain faith during work.
 
 **Files to modify:**
 - `code/modules/resurgence_outpost/structures/crafting_table.dm`
@@ -771,11 +806,28 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 - Check charge before starting any craft
 - Stop auto-continue if charge drops below 5
 - Display warning in UI when charge is low
+- **Drain faith by 0.1 per work point** during crafting (same as gathering)
+
+**Faith Drain Example:**
+- Recipe with 20 total_work = 4 work sessions × 5 work per session
+- Faith drain = 20 × 0.1 = -2 faith total
+
+**Key Logic:**
+```dm
+// In continue_craft, after adding work points:
+current_work += WORK_PER_SESSION
+// Drain faith directly
+var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+if(istype(core))
+    core.adjust_faith(-FAITH_DRAIN_PER_WORK * WORK_PER_SESSION)
+```
 
 **Testing:**
 1. Start crafting with full charge, verify works
 2. Start crafting with charge < 5, verify blocked
 3. Start batch craft, let charge drop below 5, verify stops
+4. Craft item, verify faith decreases by ~0.1 per work point
+5. Craft 20-work item, verify faith decreased by ~2
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
@@ -865,33 +917,48 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 
 ---
 
-## Step 23: Fiber Plants and Farming
+## Step 23: Cotton Plants
 
-**Goal:** Create harvestable plants for cloth production.
+**Goal:** Create harvestable cotton plants for cloth production.
 
-**Files to create:**
-- `code/modules/resurgence_outpost/resources/plants.dm`
+**Files created:**
+- `code/modules/resurgence_outpost/resources/cotton.dm`
 
 **Implementation:**
-- Plant structure that can be harvested
-- Drops plant fiber
-- Regrows after time
-- Follows same interruptible progress as other gathering
+- Cotton plant structure with work-based harvesting
+- Growth stage system (seedling → growing → maturing → harvest → dead)
+- Uses icon states from `icons/obj/hydroponics/growing.dmi`:
+  - cotton-grow1, cotton-grow2, cotton-grow3, cotton-harvest, cotton-dead
+- Drops cotton sheets which can be processed at the loom
+- Regular cotton plants regrow after harvest (1 minute per growth stage)
+- Wild cotton plants die after harvest (non-renewable)
+- Large cotton variant with more yield but slower growth
+- Follows same work-based progress system as other gathering
+
+**Variants:**
+| Type | Base Yield | Work Needed | Growth Time | Regrows? |
+|------|------------|-------------|-------------|----------|
+| Regular | 5 | 60 | 1 min/stage | Yes |
+| Wild | 3 | 40 | - | No (dies) |
+| Large | 8 | 80 | 1.5 min/stage | Yes |
 
 **Testing:**
-1. Spawn fiber plant
-2. Harvest by hand or with sickle
-3. Verify fiber drops
-4. Process fiber at loom
-5. Use cloth in crafting
+1. Spawn cotton plant
+2. Harvest by hand (no tool required)
+3. Verify cotton drops
+4. Check growth stage icons change correctly
+5. Wait for regrowth, verify plant becomes harvestable again
+6. Test wild cotton dies after harvest
+7. Process cotton at loom
+8. Use cloth in crafting
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
 ## Step 24: Basic Tools with Durability
 
-**Goal:** Create gathering tools (hatchet, pickaxe, shovel, sickle).
+**Goal:** Create gathering tools (hatchet, pickaxe, shovel).
 
 **Files to create:**
 - `code/modules/resurgence_outpost/tools/gathering_tools.dm`
@@ -900,6 +967,7 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 - Tools with durability
 - Speed modifiers for gathering
 - Can be crafted at crafting table
+- Note: Cotton is harvested by hand, no sickle needed
 
 **Testing:**
 1. Spawn each tool type
@@ -1122,7 +1190,7 @@ The following steps are deprioritized to focus on basebuilding and living system
 - Extended gathering with progress saving (Step 20)
 - Charge requirements (Step 21)
 - Cooking system for charge restoration and faith (Step 22)
-- Fiber plants and farming (Step 23)
+- Cotton plants for cloth production (Step 23) ✓
 - Tools with durability (Step 24)
 - Beauty for crafted items (Step 25)
 
