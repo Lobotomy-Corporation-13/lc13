@@ -2162,14 +2162,26 @@
 
 	return TRUE
 
+
+// We need a destroy AND remove override, destroy specifically because on_remove isn't called when the owner is qdel'd
+/datum/status_effect/crimlust_no_hesitation/Destroy(force)
+	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
+		if(!QDELETED(did_you_try_smuggling_one_of_these))
+			did_you_try_smuggling_one_of_these.weapon_weight = WEAPON_MEDIUM
+			did_you_try_smuggling_one_of_these.realization_empowered_mode = FALSE
+			modified_guns -= did_you_try_smuggling_one_of_these
+
+	if(spawned_hood)
+		QDEL_NULL(spawned_hood)
+
+	return ..()
+
+
 /datum/status_effect/crimlust_no_hesitation/on_remove()
 	. = ..()
 	var/mob/living/carbon/human/our_guy = owner
 	if(!istype(our_guy))
 		return
-
-	if(spawned_hood)
-		QDEL_NULL(spawned_hood)
 
 	var/obj/item/ego_weapon/ranged/pistol/crimson/mainhand_gun = owner.get_active_held_item()
 	if(istype(mainhand_gun))
@@ -2179,12 +2191,6 @@
 	if(istype(offhand_gun))
 		offhand_gun.weapon_weight = WEAPON_MEDIUM
 		offhand_gun.realization_empowered_mode = FALSE
-
-	for(var/obj/item/ego_weapon/ranged/pistol/crimson/did_you_try_smuggling_one_of_these in modified_guns) // Edge case of someone juggling like 500 guns and trying to permanently make one dual wieldable
-		if(!QDELETED(did_you_try_smuggling_one_of_these))
-			did_you_try_smuggling_one_of_these.weapon_weight = WEAPON_MEDIUM
-			did_you_try_smuggling_one_of_these.realization_empowered_mode = FALSE
-			modified_guns -= did_you_try_smuggling_one_of_these
 
 	our_guy.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, -powermod_bonus)
 
