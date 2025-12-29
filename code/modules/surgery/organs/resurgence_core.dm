@@ -53,7 +53,7 @@
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		if(H.hud_used?.faith_display)
-			H.hud_used.faith_display.invisibility = 0
+			H.hud_used.faith_display.show_display()
 			H.update_faith_hud()
 
 /obj/item/organ/resurgence_core/Remove(mob/living/carbon/M, special)
@@ -61,7 +61,7 @@
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		if(H.hud_used?.faith_display)
-			H.hud_used.faith_display.invisibility = INVISIBILITY_ABSTRACT
+			H.hud_used.faith_display.hide_display()
 	return ..()
 
 /obj/item/organ/resurgence_core/on_life()
@@ -276,6 +276,11 @@
 		return
 
 	var/mob/living/carbon/human/H = core.owner
+
+	// Make sure the faith display is visible
+	if(H.hud_used?.faith_display)
+		H.hud_used.faith_display.show_display()
+		H.update_faith_hud()
 
 	// Header
 	to_chat(H, span_notice("<b>=== Core Status ===</b>"))

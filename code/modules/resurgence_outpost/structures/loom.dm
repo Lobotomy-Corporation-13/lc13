@@ -12,15 +12,10 @@
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "loom"
 
-	// UI Theming - purple/blue for cloth
-	browser_id = "loom"
-	browser_title = "Loom"
-	ui_header_color = "#6b5b95"
-	ui_recipe_color = "#9370db"
-	ui_button_color = "#483d8b"
-	ui_button_hover = "#6a5acd"
+	// UI Theming
 	action_verb = "Weave"
 	busy_verb = "weaving"
+	ui_color = "purple"
 
 /obj/structure/resurgence_crafting_table/loom/init_recipes()
 	recipes = list()
@@ -32,7 +27,7 @@
 		"result" = /obj/item/stack/sheet/cotton/cloth,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton = 3),
-		"time" = 3 SECONDS,
+		"total_work" = 15,
 		"desc" = "3 Cotton -> 1 Cloth"
 	)
 
@@ -42,27 +37,27 @@
 		"result" = /obj/item/clothing/suit/chaplainsuit/whiterobe,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 8),
-		"time" = 6 SECONDS,
-		"desc" = "8 Cloth -> White Robe (+3 faith)",
-		"faith_bonus" = 3
+		"total_work" = 30,
+		"desc" = "8 Cloth -> White Robe (+0.3 faith)",
+		"faith_bonus" = 0.3
 	)
 
 	recipes["Monk's Habit"] = list(
 		"result" = /obj/item/clothing/suit/hooded/chaplainsuit/monkhabit,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 10),
-		"time" = 8 SECONDS,
-		"desc" = "10 Cloth -> Monk's Habit (+4 faith)",
-		"faith_bonus" = 4
+		"total_work" = 40,
+		"desc" = "10 Cloth -> Monk's Habit (+0.4 faith)",
+		"faith_bonus" = 0.4
 	)
 
 	recipes["Owl Cloak"] = list(
 		"result" = /obj/item/clothing/suit/toggle/owlwings,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 12),
-		"time" = 10 SECONDS,
-		"desc" = "12 Cloth -> Owl Cloak (+5 faith)",
-		"faith_bonus" = 5
+		"total_work" = 50,
+		"desc" = "12 Cloth -> Owl Cloak (+0.5 faith)",
+		"faith_bonus" = 0.5
 	)
 
 	recipes["Hastur's Robe"] = list(
@@ -72,9 +67,9 @@
 			/obj/item/stack/sheet/cotton/cloth = 20,
 			/obj/item/resurgence_component/rope = 2
 		),
-		"time" = 12 SECONDS,
-		"desc" = "20 Cloth + 2 Rope -> Hastur's Robe (+8 faith)",
-		"faith_bonus" = 8
+		"total_work" = 60,
+		"desc" = "20 Cloth + 2 Rope -> Hastur's Robe (+0.8 faith)",
+		"faith_bonus" = 0.8
 	)
 
 	recipes["Bishop's Robes"] = list(
@@ -84,9 +79,9 @@
 			/obj/item/stack/sheet/cotton/cloth = 30,
 			/obj/item/resurgence_component/rope = 4
 		),
-		"time" = 15 SECONDS,
-		"desc" = "30 Cloth + 4 Rope -> Bishop's Robes (+10 faith)",
-		"faith_bonus" = 10
+		"total_work" = 90,
+		"desc" = "30 Cloth + 4 Rope -> Bishop's Robes (+1 faith)",
+		"faith_bonus" = 1
 	)
 
 	// === OUTFITS (Head) ===
@@ -95,18 +90,18 @@
 		"result" = /obj/item/clothing/head/nun_hood,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
-		"time" = 3 SECONDS,
-		"desc" = "4 Cloth -> Nun Hood (+2 faith)",
-		"faith_bonus" = 2
+		"total_work" = 15,
+		"desc" = "4 Cloth -> Nun Hood (+0.2 faith)",
+		"faith_bonus" = 0.2
 	)
 
 	recipes["Ushanka"] = list(
 		"result" = /obj/item/clothing/head/ushanka,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 5),
-		"time" = 4 SECONDS,
-		"desc" = "5 Cloth -> Ushanka (+2 faith)",
-		"faith_bonus" = 2
+		"total_work" = 20,
+		"desc" = "5 Cloth -> Ushanka (+0.2 faith)",
+		"faith_bonus" = 0.2
 	)
 
 	// === OUTFITS (Accessories) ===
@@ -115,18 +110,66 @@
 		"result" = /obj/item/clothing/neck/scarf,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
-		"time" = 2 SECONDS,
-		"desc" = "3 Cloth -> Scarf (+1 faith)",
-		"faith_bonus" = 1
+		"total_work" = 10,
+		"desc" = "3 Cloth -> Scarf (+0.1 faith)",
+		"faith_bonus" = 0.1
 	)
 
 	recipes["Black Gloves"] = list(
 		"result" = /obj/item/clothing/gloves/color/black,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
-		"time" = 2 SECONDS,
-		"desc" = "3 Cloth -> Black Gloves (+1 faith)",
-		"faith_bonus" = 1
+		"total_work" = 10,
+		"desc" = "3 Cloth -> Black Gloves (+0.1 faith)",
+		"faith_bonus" = 0.1
+	)
+
+	// === STORAGE (Backpacks) ===
+
+	recipes["Backpack"] = list(
+		"result" = /obj/item/storage/backpack,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 8),
+		"total_work" = 25,
+		"desc" = "8 Cloth -> Backpack"
+	)
+
+	recipes["Explorer Backpack"] = list(
+		"result" = /obj/item/storage/backpack/explorer,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 10,
+			/obj/item/stack/sheet/leather = 2
+		),
+		"total_work" = 30,
+		"desc" = "10 Cloth + 2 Leather -> Explorer Backpack"
+	)
+
+	recipes["Satchel"] = list(
+		"result" = /obj/item/storage/backpack/satchel,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 6),
+		"total_work" = 20,
+		"desc" = "6 Cloth -> Satchel"
+	)
+
+	recipes["Leather Satchel"] = list(
+		"result" = /obj/item/storage/backpack/satchel/leather,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/leather = 5),
+		"total_work" = 25,
+		"desc" = "5 Leather -> Leather Satchel"
+	)
+
+	recipes["Duffel Bag"] = list(
+		"result" = /obj/item/storage/backpack/duffelbag,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 12,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 35,
+		"desc" = "12 Cloth + 1 Rope -> Duffel Bag"
 	)
 
 /// Override create_result to handle faith clothing

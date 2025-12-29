@@ -66,5 +66,6 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 	backpack_contents = list(
 		/obj/item/flashlight = 1,
 		/obj/item/crowbar = 1,
-		/obj/item/resurgence_debugger = 1
+		/obj/item/resurgence_debugger = 1,
+		/obj/item/resurgence_outpost_planner = 1
 	)

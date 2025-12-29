@@ -2,8 +2,19 @@
  * Resurgence Outpost - Crafting Table
  *
  * Base workbench for crafting. Subtypes (forge, loom) override recipes and theming.
- * Uses an HTML browser window for recipe selection.
+ * Uses a progress-based system where players work in increments and can leave/return.
+ *
+ * Work System:
+ * - Each recipe has a "total_work" value (e.g., 20 work)
+ * - Each 5-second work session adds WORK_PER_SESSION points (default 5)
+ * - Example: 20 work / 5 per session = 4 sessions = 20 seconds at base speed
+ * - This allows for speed modifiers (faster workers add more per session)
  */
+
+/// How many seconds each work session takes
+#define WORK_SESSION_TIME 5 SECONDS
+/// How many work points are added per session (at base speed)
+#define WORK_PER_SESSION 5
 
 /obj/structure/resurgence_crafting_table
 	name = "crafting table"
@@ -12,30 +23,38 @@
 	icon_state = "tomealtar"
 	density = TRUE
 	anchored = TRUE
+
+	/// Whether someone is currently working at the table
 	var/busy = FALSE
 
 	/// List of available recipes - initialized per subtype
 	var/list/recipes
 
 	// UI Theming - override in subtypes
-	/// Browser window ID
-	var/browser_id = "crafting_table"
-	/// Browser window title
-	var/browser_title = "Crafting Table"
-	/// Header color for CSS
-	var/ui_header_color = "#8b7355"
-	/// Recipe name color for CSS
-	var/ui_recipe_color = "#c9a959"
-	/// Craft button color for CSS
-	var/ui_button_color = "#4a6741"
-	/// Craft button hover color for CSS
-	var/ui_button_hover = "#5a7751"
 	/// Action verb (e.g., "Craft", "Smelt", "Weave")
 	var/action_verb = "Craft"
 	/// Busy message verb (e.g., "crafting", "smelting", "weaving")
 	var/busy_verb = "crafting"
 	/// Sound to play on completion
 	var/complete_sound = 'sound/items/deconstruct.ogg'
+	/// UI accent color (used in TGUI)
+	var/ui_color = "brown"
+
+	// Progress-based crafting state
+	/// Current recipe being crafted (null if nothing in progress)
+	var/current_recipe_name = null
+	/// Current work points completed (0 to total_work)
+	var/current_work = 0
+	/// Total work points needed for current craft
+	var/total_work_needed = 0
+	/// Cached recipe data for the current craft
+	var/list/current_recipe_data = null
+
+	// Batch crafting state
+	/// How many copies the player wants to craft total
+	var/target_copies = 1
+	/// How many copies have been completed so far
+	var/completed_copies = 0
 
 /obj/structure/resurgence_crafting_table/Initialize(mapload)
 	. = ..()
@@ -51,7 +70,7 @@
 		"result" = /obj/item/stack/rods,
 		"result_amount" = 2,
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "1 Metal -> 2 Metal Rods"
 	)
 
@@ -59,7 +78,7 @@
 		"result" = /obj/item/resurgence_component/rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "3 Cloth -> 1 Rope"
 	)
 
@@ -67,8 +86,79 @@
 		"result" = /obj/item/stack/resurgence_nails,
 		"result_amount" = 10,
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "1 Metal -> 10 Nails"
+	)
+
+	recipes["Torch"] = list(
+		"result" = /obj/item/flashlight/flare/torch,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Torch"
+	)
+
+	// Tools - ordered by complexity
+	recipes["Improvised Pickaxe"] = list(
+		"result" = /obj/item/pickaxe/improvised,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/rods = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 15,
+		"desc" = "2 Metal Rods + 1 Rope -> Improvised Pickaxe (slow but cheap)"
+	)
+
+	recipes["Pickaxe"] = list(
+		"result" = /obj/item/pickaxe,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 20,
+		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe"
+	)
+
+	recipes["Compact Pickaxe"] = list(
+		"result" = /obj/item/pickaxe/mini,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 25,
+		"desc" = "5 Metal + 2 Wood + 1 Rope -> Compact Pickaxe (portable)"
+	)
+
+	recipes["Silver Pickaxe"] = list(
+		"result" = /obj/item/pickaxe/silver,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/silver = 5,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 40,
+		"desc" = "5 Metal + 5 Silver + 2 Wood + 1 Rope -> Silver Pickaxe (fast mining)"
+	)
+
+	recipes["Shovel"] = list(
+		"result" = /obj/item/shovel,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 1 Wood -> Shovel"
 	)
 
 	// Floor Tiles
@@ -76,7 +166,7 @@
 		"result" = /obj/item/stack/tile/wood,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/mineral/wood = 1),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "1 Wood -> 4 Wood Floor Tiles"
 	)
 
@@ -84,7 +174,7 @@
 		"result" = /obj/item/stack/tile/plasteel,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/plasteel = 1),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "1 Plasteel -> 4 Plasteel Floor Tiles"
 	)
 
@@ -93,7 +183,7 @@
 		"result" = /obj/item/stack/tile/carpet,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Carpet Tiles"
 	)
 
@@ -101,7 +191,7 @@
 		"result" = /obj/item/stack/tile/carpet/black,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Black Carpet"
 	)
 
@@ -109,7 +199,7 @@
 		"result" = /obj/item/stack/tile/carpet/blue,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Blue Carpet"
 	)
 
@@ -117,7 +207,7 @@
 		"result" = /obj/item/stack/tile/carpet/cyan,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Cyan Carpet"
 	)
 
@@ -125,7 +215,7 @@
 		"result" = /obj/item/stack/tile/carpet/green,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Green Carpet"
 	)
 
@@ -133,7 +223,7 @@
 		"result" = /obj/item/stack/tile/carpet/orange,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Orange Carpet"
 	)
 
@@ -141,7 +231,7 @@
 		"result" = /obj/item/stack/tile/carpet/purple,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Purple Carpet"
 	)
 
@@ -149,7 +239,7 @@
 		"result" = /obj/item/stack/tile/carpet/red,
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
-		"time" = 2 SECONDS,
+		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Red Carpet"
 	)
 
@@ -161,7 +251,7 @@
 			/obj/item/stack/sheet/cotton/cloth = 2,
 			/obj/item/stack/sheet/mineral/gold = 1
 		),
-		"time" = 3 SECONDS,
+		"total_work" = 15,
 		"desc" = "2 Cloth + 1 Gold -> 4 Royal Black Carpet"
 	)
 
@@ -172,7 +262,7 @@
 			/obj/item/stack/sheet/cotton/cloth = 2,
 			/obj/item/stack/sheet/mineral/gold = 1
 		),
-		"time" = 3 SECONDS,
+		"total_work" = 15,
 		"desc" = "2 Cloth + 1 Gold -> 4 Royal Blue Carpet"
 	)
 
@@ -183,90 +273,281 @@
 	ui_interact(user)
 	return TRUE
 
-/obj/structure/resurgence_crafting_table/ui_interact(mob/user)
-	. = ..()
+// ===== TGUI Interface =====
 
-	var/dat = "<head><style>"
-	dat += "body { font-family: monospace; background-color: #1a1a1a; color: #e0e0e0; margin: 10px; }"
-	dat += "h2 { color: [ui_header_color]; border-bottom: 2px solid [ui_header_color]; padding-bottom: 5px; }"
-	dat += ".recipe { background-color: #2a2a2a; border: 1px solid #444; margin: 5px 0; padding: 8px; border-radius: 4px; }"
-	dat += ".recipe:hover { background-color: #3a3a3a; }"
-	dat += ".recipe-name { font-weight: bold; color: [ui_recipe_color]; font-size: 14px; }"
-	dat += ".recipe-desc { color: #aaa; font-size: 12px; margin: 3px 0; }"
-	dat += ".craft-btn { background-color: [ui_button_color]; color: white; border: none; padding: 5px 15px; cursor: pointer; border-radius: 3px; }"
-	dat += ".craft-btn:hover { background-color: [ui_button_hover]; }"
-	dat += ".craft-btn-disabled { background-color: #555; color: #888; }"
-	dat += ".status { color: #888; font-size: 11px; }"
-	dat += ".can-craft { color: #6a6; }"
-	dat += ".cannot-craft { color: #a66; }"
-	dat += "</style></head><body>"
+/obj/structure/resurgence_crafting_table/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "ResurgenceCrafting", name)
+		ui.open()
 
-	dat += "<h2>[browser_title]</h2>"
+/obj/structure/resurgence_crafting_table/ui_data(mob/user)
+	var/list/data = list()
 
-	if(busy)
-		dat += "<p><b>Currently [busy_verb]...</b></p>"
-	else
-		dat += "<p>Select a recipe to craft:</p>"
+	data["busy"] = busy
+	data["action_verb"] = action_verb
+	data["busy_verb"] = busy_verb
+	data["ui_color"] = ui_color
 
-	dat += "<hr>"
+	// Current craft in progress
+	data["has_craft_in_progress"] = (current_recipe_name != null)
+	data["current_recipe"] = current_recipe_name
+	data["current_work"] = current_work
+	data["total_work"] = total_work_needed
+	data["progress_percent"] = total_work_needed > 0 ? round((current_work / total_work_needed) * 100) : 0
 
+	// Batch crafting info
+	data["target_copies"] = target_copies
+	data["completed_copies"] = completed_copies
+
+	// Build recipe list with availability info
+	var/list/recipe_data = list()
 	for(var/recipe_name in recipes)
 		var/list/recipe = recipes[recipe_name]
 		var/list/materials = recipe["materials"]
-		var/can_craft = check_materials(user, materials)
 
-		dat += "<div class='recipe'>"
-		dat += "<span class='recipe-name'>[recipe_name]</span>"
-		if(recipe["result_amount"] > 1)
-			dat += " (x[recipe["result_amount"]])"
-		dat += "<br>"
-		dat += "<span class='recipe-desc'>[recipe["desc"]]</span><br>"
+		var/list/mat_data = list()
+		var/can_craft = TRUE
+		var/max_craftable = 999 // Will be reduced by limiting material
 
-		// Show material availability
-		dat += "<span class='status'>"
 		for(var/mat_type in materials)
 			var/needed = materials[mat_type]
 			var/have = count_materials(user, mat_type)
 			var/mat_name = get_material_name(mat_type)
-			if(have >= needed)
-				dat += "<span class='can-craft'>[mat_name]: [have]/[needed]</span> "
-			else
-				dat += "<span class='cannot-craft'>[mat_name]: [have]/[needed]</span> "
-		dat += "</span><br>"
 
-		if(can_craft && !busy)
-			dat += "<a class='craft-btn' href='byond://?src=[REF(src)];craft=[url_encode(recipe_name)]'>[action_verb]</a>"
-		else if(busy)
-			dat += "<span class='craft-btn craft-btn-disabled'>Busy...</span>"
-		else
-			dat += "<span class='craft-btn craft-btn-disabled'>Missing Materials</span>"
+			mat_data += list(list(
+				"name" = mat_name,
+				"needed" = needed,
+				"have" = have,
+				"enough" = (have >= needed)
+			))
 
-		dat += "</div>"
+			if(have < needed)
+				can_craft = FALSE
 
-	dat += "</body>"
+			// Calculate max craftable based on this material
+			if(needed > 0)
+				var/possible = round(have / needed)
+				max_craftable = min(max_craftable, possible)
 
-	var/datum/browser/popup = new(user, browser_id, browser_title, 450, 550)
-	popup.set_content(dat)
-	popup.open()
+		recipe_data += list(list(
+			"name" = recipe_name,
+			"desc" = recipe["desc"],
+			"result_amount" = recipe["result_amount"],
+			"total_work" = recipe["total_work"],
+			"materials" = mat_data,
+			"can_craft" = can_craft,
+			"max_craftable" = max_craftable
+		))
 
-/obj/structure/resurgence_crafting_table/Topic(href, href_list)
+	data["recipes"] = recipe_data
+
+	return data
+
+/obj/structure/resurgence_crafting_table/ui_act(action, params)
 	. = ..()
 	if(.)
-		return .
-
-	if(!ishuman(usr))
 		return
 
-	if(!in_range(src, usr))
-		to_chat(usr, span_warning("You are too far away from the [name]."))
+	switch(action)
+		if("start_craft")
+			var/recipe_name = params["recipe"]
+			var/quantity = text2num(params["quantity"]) || 1
+			quantity = clamp(quantity, 1, 99) // Safety limit
+			start_new_craft(usr, recipe_name, quantity)
+			return TRUE
+
+		if("continue_craft")
+			continue_craft(usr)
+			return TRUE
+
+		if("cancel_craft")
+			cancel_craft(usr)
+			return TRUE
+
+	return FALSE
+
+/// Start a new craft - consumes materials for first copy and sets up progress tracking
+/obj/structure/resurgence_crafting_table/proc/start_new_craft(mob/user, recipe_name, quantity = 1)
+	if(busy)
+		to_chat(user, span_warning("Someone is already working at the [name]."))
+		return FALSE
+
+	if(current_recipe_name)
+		to_chat(user, span_warning("There's already a [current_recipe_name] in progress. Finish or cancel it first."))
+		return FALSE
+
+	var/list/recipe = recipes[recipe_name]
+	if(!recipe)
+		return FALSE
+
+	var/list/materials = recipe["materials"]
+
+	// Check if user has required materials for at least one copy
+	if(!check_materials(user, materials))
+		to_chat(user, span_warning("You don't have the required materials for [recipe_name]."))
+		return FALSE
+
+	// Consume materials for first copy only (per-copy consumption)
+	consume_materials(user, materials)
+
+	// Set up the craft
+	current_recipe_name = recipe_name
+	current_recipe_data = recipe.Copy()
+	current_work = 0
+	total_work_needed = recipe["total_work"]
+
+	// Set up batch crafting
+	target_copies = quantity
+	completed_copies = 0
+
+	if(target_copies > 1)
+		to_chat(user, span_notice("You begin working on [recipe_name] (1 of [target_copies]). Materials consumed. ([total_work_needed] work needed)"))
+	else
+		to_chat(user, span_notice("You begin working on [recipe_name]. Materials consumed. ([total_work_needed] work needed)"))
+	playsound(src, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+	SStgui.update_uis(src)
+
+	// Immediately start the first work session
+	continue_craft(user)
+	return TRUE
+
+/// Continue working on the current craft - auto-continues until interrupted or complete
+/obj/structure/resurgence_crafting_table/proc/continue_craft(mob/user)
+	if(busy)
+		to_chat(user, span_warning("Someone is already working at the [name]."))
+		return FALSE
+
+	if(!current_recipe_name)
+		to_chat(user, span_warning("There's nothing being crafted here."))
+		return FALSE
+
+	busy = TRUE
+	on_craft_start()
+	SStgui.update_uis(src)
+
+	if(target_copies > 1)
+		to_chat(user, span_notice("You continue [busy_verb] [current_recipe_name] ([completed_copies + 1] of [target_copies])..."))
+	else
+		to_chat(user, span_notice("You continue [busy_verb] [current_recipe_name]..."))
+
+	// Auto-continue loop - keeps working until interrupted or all copies complete
+	while(current_recipe_name)
+		if(!do_after(user, WORK_SESSION_TIME, target = src))
+			// Player was interrupted
+			to_chat(user, span_warning("You stop [busy_verb]. Progress saved."))
+			break
+
+		// Add work points (base amount, could be modified by skills/tools later)
+		current_work += WORK_PER_SESSION
+
+		// Check if this copy is complete
+		if(current_work >= total_work_needed)
+			// Create the result for this copy
+			create_result(user, current_recipe_data)
+			completed_copies++
+
+			if(completed_copies >= target_copies)
+				// All copies complete!
+				complete_batch(user)
+				break
+			else
+				// Try to start the next copy
+				if(!start_next_copy(user))
+					// Out of materials
+					break
+
+		SStgui.update_uis(src)
+
+	busy = FALSE
+	on_craft_stop()
+	SStgui.update_uis(src)
+	return TRUE
+
+/// Start the next copy in a batch - consumes materials and resets work progress
+/obj/structure/resurgence_crafting_table/proc/start_next_copy(mob/user)
+	if(!current_recipe_data)
+		return FALSE
+
+	var/list/materials = current_recipe_data["materials"]
+
+	// Check if user has materials for another copy
+	if(!check_materials(user, materials))
+		to_chat(user, span_warning("Completed [completed_copies]/[target_copies] copies. Out of materials for more."))
+		reset_craft_state()
+		return FALSE
+
+	// Consume materials for this copy
+	consume_materials(user, materials)
+
+	// Reset work progress for new copy
+	current_work = 0
+
+	to_chat(user, span_notice("Starting copy [completed_copies + 1] of [target_copies]..."))
+	return TRUE
+
+/// Complete a batch of crafts (all copies done)
+/obj/structure/resurgence_crafting_table/proc/complete_batch(mob/user)
+	if(!current_recipe_name)
 		return
 
-	if(href_list["craft"])
-		var/recipe_name = href_list["craft"]
-		try_craft(usr, recipe_name)
-		// Refresh the UI after crafting attempt
-		ui_interact(usr)
-		return TRUE
+	if(completed_copies > 1)
+		to_chat(user, span_notice("<b>Complete!</b> You finish [busy_verb] [completed_copies]x [current_recipe_name]."))
+	else
+		to_chat(user, span_notice("<b>Complete!</b> You finish [busy_verb] [current_recipe_name]."))
+	playsound(src, complete_sound, 50, TRUE)
+
+	reset_craft_state()
+
+/// Reset all crafting state
+/obj/structure/resurgence_crafting_table/proc/reset_craft_state()
+	current_recipe_name = null
+	current_recipe_data = null
+	current_work = 0
+	total_work_needed = 0
+	target_copies = 1
+	completed_copies = 0
+
+/// Cancel the current craft (materials for current copy are lost)
+/obj/structure/resurgence_crafting_table/proc/cancel_craft(mob/user)
+	if(busy)
+		to_chat(user, span_warning("Someone is currently working. Wait for them to stop first."))
+		return FALSE
+
+	if(!current_recipe_name)
+		to_chat(user, span_warning("There's nothing being crafted here."))
+		return FALSE
+
+	if(completed_copies > 0)
+		to_chat(user, span_warning("You cancel the [current_recipe_name]. [completed_copies] copies were completed. Materials for the current copy are lost."))
+	else
+		to_chat(user, span_warning("You cancel the [current_recipe_name]. The materials are lost."))
+	playsound(src, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+	reset_craft_state()
+	on_craft_stop()
+
+	SStgui.update_uis(src)
+	return TRUE
+
+/// Called when crafting starts - override for visual effects (e.g., forge lights up)
+/obj/structure/resurgence_crafting_table/proc/on_craft_start()
+	return
+
+/// Called when crafting stops - override for visual effects (e.g., forge dims)
+/obj/structure/resurgence_crafting_table/proc/on_craft_stop()
+	return
+
+/// Check if an item matches the required material type
+/obj/structure/resurgence_crafting_table/proc/item_matches_material(obj/item/I, material_type)
+	if(!istype(I, material_type))
+		return FALSE
+	// Special case: cotton should NOT match cloth (cloth is a subtype of cotton)
+	if(material_type == /obj/item/stack/sheet/cotton)
+		if(istype(I, /obj/item/stack/sheet/cotton/cloth))
+			return FALSE
+	return TRUE
 
 /// Count how many of a material type the user has available
 /obj/structure/resurgence_crafting_table/proc/count_materials(mob/living/carbon/human/user, material_type)
@@ -277,7 +558,7 @@
 
 	// Check hands
 	for(var/obj/item/I in user.held_items)
-		if(istype(I, material_type))
+		if(item_matches_material(I, material_type))
 			if(istype(I, /obj/item/stack))
 				var/obj/item/stack/S = I
 				found += S.amount
@@ -288,18 +569,18 @@
 	var/obj/item/storage/backpack = user.get_item_by_slot(ITEM_SLOT_BACK)
 	if(istype(backpack))
 		for(var/obj/item/I in backpack.contents)
-			if(istype(I, material_type))
+			if(item_matches_material(I, material_type))
 				if(istype(I, /obj/item/stack))
 					var/obj/item/stack/S = I
 					found += S.amount
 				else
 					found += 1
 
-	// Check nearby closed closets/crates (contents are accessible when closed)
+	// Check nearby closed closets/crates
 	for(var/obj/structure/closet/C in range(1, src))
 		if(!C.opened)
 			for(var/obj/item/I in C.contents)
-				if(istype(I, material_type))
+				if(item_matches_material(I, material_type))
 					if(istype(I, /obj/item/stack))
 						var/obj/item/stack/S = I
 						found += S.amount
@@ -326,6 +607,11 @@
 			return "Cloth"
 		if(/obj/item/stack/rods)
 			return "Metal Rods"
+		// Mineral sheets
+		if(/obj/item/stack/sheet/mineral/silver)
+			return "Silver"
+		if(/obj/item/stack/sheet/mineral/gold)
+			return "Gold"
 		// Ores
 		if(/obj/item/stack/ore/iron)
 			return "Iron Ore"
@@ -358,50 +644,6 @@
 			var/obj/item/temp = material_type
 			return initial(temp.name)
 
-/// Attempt to craft the selected recipe
-/obj/structure/resurgence_crafting_table/proc/try_craft(mob/user, recipe_name)
-	if(busy)
-		to_chat(user, span_warning("The [name] is currently in use."))
-		return FALSE
-
-	var/list/recipe = recipes[recipe_name]
-	if(!recipe)
-		return FALSE
-
-	var/list/materials = recipe["materials"]
-
-	// Check if user has required materials
-	if(!check_materials(user, materials))
-		to_chat(user, span_warning("You don't have the required materials for [recipe_name]."))
-		return FALSE
-
-	// Start crafting
-	busy = TRUE
-	to_chat(user, span_notice("You begin [busy_verb]..."))
-
-	var/craft_time = get_craft_time(recipe["time"])
-
-	if(!do_after(user, craft_time, target = src))
-		to_chat(user, span_warning("You stop [busy_verb]."))
-		busy = FALSE
-		return FALSE
-
-	// Re-check materials after do_after (they may have been moved)
-	if(!check_materials(user, materials))
-		to_chat(user, span_warning("You no longer have the required materials."))
-		busy = FALSE
-		return FALSE
-
-	// Consume materials and create result
-	consume_materials(user, materials)
-	create_result(user, recipe)
-
-	to_chat(user, span_notice("You craft [recipe_name]."))
-	playsound(src, complete_sound, 50, TRUE)
-
-	busy = FALSE
-	return TRUE
-
 /// Check if the user has all required materials
 /obj/structure/resurgence_crafting_table/proc/check_materials(mob/living/carbon/human/user, list/materials)
 	if(!istype(user))
@@ -428,7 +670,7 @@
 		for(var/obj/item/I in user.held_items)
 			if(needed <= 0)
 				break
-			if(istype(I, material_type))
+			if(item_matches_material(I, material_type))
 				if(istype(I, /obj/item/stack))
 					var/obj/item/stack/S = I
 					var/to_use = min(S.amount, needed)
@@ -444,7 +686,7 @@
 			for(var/obj/item/I in backpack.contents)
 				if(needed <= 0)
 					break
-				if(istype(I, material_type))
+				if(item_matches_material(I, material_type))
 					if(istype(I, /obj/item/stack))
 						var/obj/item/stack/S = I
 						var/to_use = min(S.amount, needed)
@@ -459,11 +701,11 @@
 			for(var/obj/structure/closet/C in range(1, src))
 				if(needed <= 0)
 					break
-				if(!C.opened) // Only consume from closed closets
+				if(!C.opened)
 					for(var/obj/item/I in C.contents)
 						if(needed <= 0)
 							break
-						if(istype(I, material_type))
+						if(item_matches_material(I, material_type))
 							if(istype(I, /obj/item/stack))
 								var/obj/item/stack/S = I
 								var/to_use = min(S.amount, needed)
@@ -486,12 +728,16 @@
 		for(var/i in 1 to result_amount)
 			new result_type(get_turf(src))
 
-/// Get the crafting time, potentially modified by room bonuses
-/obj/structure/resurgence_crafting_table/proc/get_craft_time(base_time)
-	// TODO: Check if in workshop room for speed bonus
-	// For now, return base time
-	return base_time
-
 /obj/structure/resurgence_crafting_table/examine(mob/user)
 	. = ..()
 	. += span_notice("Click to open the crafting menu.")
+	if(current_recipe_name)
+		if(target_copies > 1)
+			. += span_notice("Currently [busy_verb] [current_recipe_name] (copy [completed_copies + 1] of [target_copies], [current_work]/[total_work_needed] work).")
+		else
+			. += span_notice("Currently [busy_verb] [current_recipe_name] ([current_work]/[total_work_needed] work complete).")
+		if(!busy)
+			. += span_notice("Anyone can continue working on it.")
+
+#undef WORK_SESSION_TIME
+#undef WORK_PER_SESSION

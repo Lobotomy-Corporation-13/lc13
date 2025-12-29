@@ -2270,3 +2270,972 @@ icons/obj/resurgence/
 52. Wear Work Apron, verify 10% faster crafting
 53. Examine clan-woven clothing, verify it shows faith bonus
 54. Verify Loom uses 3x time when not in Workshop
+
+---
+
+## Room Ownership System
+
+Players can claim rooms as their personal space. Having a room provides faith benefits, while being homeless causes faith penalties.
+
+### Ownership Mechanics
+
+```dm
+/area/resurgence_outpost/room
+    var/owner_ckey = null       // ckey of the player who owns this room
+    var/room_id = null          // Unique ID for persistence
+
+/datum/faith_event/room_ownership
+    category = "room_ownership"
+
+// Homeless event - applied when player has no room
+/datum/faith_event/room_ownership/homeless
+    description = "Homeless - no place to call home"
+    faith_change = -10
+
+// Has room event - applied when player owns a room
+/datum/faith_event/room_ownership/has_room
+    description = "Has personal room"
+    faith_change = +5
+```
+
+### Claiming Rooms
+
+```dm
+/obj/item/room_designator/proc/claim_room(mob/user, area/resurgence_outpost/room/R)
+    if(!istype(R))
+        to_chat(user, span_warning("This is not a valid room to claim."))
+        return FALSE
+
+    if(R.owner_ckey)
+        if(R.owner_ckey == user.ckey)
+            to_chat(user, span_notice("You already own this room."))
+        else
+            to_chat(user, span_warning("This room is already claimed by someone else."))
+        return FALSE
+
+    // Check if player already owns a room
+    for(var/area/resurgence_outpost/room/other_room in GLOB.resurgence_rooms)
+        if(other_room.owner_ckey == user.ckey)
+            to_chat(user, span_warning("You already own a room. Unclaim it first."))
+            return FALSE
+
+    // Claim the room
+    R.owner_ckey = user.ckey
+    to_chat(user, span_notice("You claim this room as your own!"))
+
+    // Update faith event
+    update_room_ownership_faith(user)
+    return TRUE
+```
+
+### Faith Integration
+
+```dm
+/proc/update_room_ownership_faith(mob/living/carbon/human/H)
+    if(!istype(H))
+        return
+
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+
+    // Check if player owns any room
+    for(var/area/resurgence_outpost/room/R in GLOB.resurgence_rooms)
+        if(R.owner_ckey == H.ckey)
+            // Has a room
+            var/datum/faith_event/room_ownership/has_room/E = new
+            core.add_faith_event("room_ownership", E)
+            return
+
+    // No room - homeless
+    var/datum/faith_event/room_ownership/homeless/E = new
+    core.add_faith_event("room_ownership", E)
+```
+
+---
+
+## Room Quality (Beauty) System
+
+Room quality affects faith based on the total beauty of furniture inside. Uses the existing beauty component system as reference.
+
+**Reference:** `code/datums/components/beauty.dm`
+
+### Beauty Ratings
+
+All items crafted via blueprints or crafting tables have a base beauty rating:
+
+| Category | Item | Base Beauty |
+|----------|------|-------------|
+| **Furniture** | Basic Wooden Chair | +2 |
+| | Wooden Table | +3 |
+| | Bed | +5 |
+| | Dresser | +4 |
+| **Storage** | Storage Chest | +1 |
+| | Crate | +1 |
+| | Barrel | +1 |
+| **Lighting** | Lantern Post | +4 |
+| | Wall Torch | +2 |
+| **Decor** | Banner Stand | +6 |
+| | Small Statue | +10 |
+| | Canvas Painting | +3 to +8 (quality varies) |
+| **Flooring** | Carpet Tile | +1 per tile |
+| | Wood Floor | +0.5 per tile |
+| | Bare Floor | 0 |
+| **Negative** | Rubble/Debris | -5 |
+| | Blood stains | -3 |
+| | Garbage | -4 |
+
+### Room Quality Levels
+
+| Total Beauty | Quality Level | Faith Effect |
+|--------------|---------------|--------------|
+| 50+ | Luxurious | +0.5 faith/min while inside |
+| 30-49 | Comfortable | +0.3 faith/min while inside |
+| 10-29 | Adequate | +0.1 faith/min while inside |
+| 0-9 | Bare | No effect |
+| -1 to -19 | Shabby | -0.1 faith/min while inside |
+| -20 or less | Squalid | -0.3 faith/min while inside |
+
+### Implementation
+
+```dm
+/area/resurgence_outpost/room
+    var/total_beauty = 0
+    var/quality_level = "bare"
+
+/area/resurgence_outpost/room/proc/recalculate_beauty()
+    total_beauty = 0
+
+    for(var/turf/T in contents)
+        // Check floor beauty
+        if(istype(T, /turf/open/floor/resurgence/carpet))
+            total_beauty += 1
+        else if(istype(T, /turf/open/floor/resurgence/wood))
+            total_beauty += 0.5
+
+        // Check objects on turf
+        for(var/obj/O in T)
+            var/datum/component/beauty/B = O.GetComponent(/datum/component/beauty)
+            if(B)
+                total_beauty += B.beauty
+
+    // Determine quality level
+    if(total_beauty >= 50)
+        quality_level = "luxurious"
+    else if(total_beauty >= 30)
+        quality_level = "comfortable"
+    else if(total_beauty >= 10)
+        quality_level = "adequate"
+    else if(total_beauty >= 0)
+        quality_level = "bare"
+    else if(total_beauty >= -19)
+        quality_level = "shabby"
+    else
+        quality_level = "squalid"
+
+/area/resurgence_outpost/room/proc/get_faith_modifier_per_minute()
+    switch(quality_level)
+        if("luxurious")
+            return 0.5
+        if("comfortable")
+            return 0.3
+        if("adequate")
+            return 0.1
+        if("bare")
+            return 0
+        if("shabby")
+            return -0.1
+        if("squalid")
+            return -0.3
+    return 0
+```
+
+### Beauty Component for Crafted Items
+
+```dm
+// Applied automatically when items are crafted
+/datum/component/resurgence_beauty
+    var/base_beauty = 0
+    var/crafter_bonus = 0  // From crafter's stat
+
+/datum/component/resurgence_beauty/Initialize(base = 0, bonus = 0)
+    base_beauty = base
+    crafter_bonus = bonus
+
+    // Add to room beauty calculations
+    var/obj/O = parent
+    if(istype(O))
+        var/area/resurgence_outpost/room/R = get_area(O)
+        if(istype(R))
+            R.recalculate_beauty()
+
+/datum/component/resurgence_beauty/proc/get_total_beauty()
+    return base_beauty + crafter_bonus
+```
+
+---
+
+## Character Stats System
+
+Rimworld-inspired stats that affect gameplay and improve through use.
+
+### Stats Overview
+
+| Stat | Affects | Level 1 | Level 10 | Level 20 |
+|------|---------|---------|----------|----------|
+| **Construction** | Blueprint building | 1.5x time, -2 beauty | Normal | 0.5x time, +5 beauty |
+| **Crafting** | Crafting stations | 1.5x time, -2 beauty | Normal | 0.5x time, +5 beauty |
+| **Gathering** | Resource gathering | 0.5x yield, 1.5x time | Normal | 1.5x yield, 0.5x time |
+| **Cooking** | Cooking meals | 1.5x time, -1 quality tier | Normal | 0.5x time, +2 quality tiers |
+
+### Storage
+
+Stats are stored on the resurgence_core organ:
+
+```dm
+/obj/item/organ/resurgence_core
+    // Character stats (1-20 scale)
+    var/stat_construction = 1
+    var/stat_crafting = 1
+    var/stat_gathering = 1
+    var/stat_cooking = 1
+
+    // XP tracking
+    var/xp_construction = 0
+    var/xp_crafting = 0
+    var/xp_gathering = 0
+    var/xp_cooking = 0
+
+/obj/item/organ/resurgence_core/proc/get_stat_speed_modifier(stat_name)
+    var/stat_level
+    switch(stat_name)
+        if("construction")
+            stat_level = stat_construction
+        if("crafting")
+            stat_level = stat_crafting
+        if("gathering")
+            stat_level = stat_gathering
+        if("cooking")
+            stat_level = stat_cooking
+        else
+            return 1.0
+
+    // 1.5 at level 1, 1.0 at level 10, 0.5 at level 20
+    return 1.5 - (stat_level - 1) * (1.0 / 19)
+
+/obj/item/organ/resurgence_core/proc/get_stat_beauty_bonus(stat_name)
+    var/stat_level
+    switch(stat_name)
+        if("construction")
+            stat_level = stat_construction
+        if("crafting")
+            stat_level = stat_crafting
+        else
+            return 0
+
+    // -2 at level 1, 0 at level 10, +5 at level 20
+    return round(-2 + (stat_level - 1) * (7.0 / 19))
+
+/obj/item/organ/resurgence_core/proc/get_gathering_yield_modifier()
+    // 0.5 at level 1, 1.0 at level 10, 1.5 at level 20
+    return 0.5 + (stat_gathering - 1) * (1.0 / 19)
+```
+
+### XP and Leveling
+
+```dm
+#define XP_BASE_REQUIREMENT 100
+
+/obj/item/organ/resurgence_core/proc/get_xp_required(current_level)
+    // Doubles each level: 100, 200, 400, 800...
+    return XP_BASE_REQUIREMENT * (2 ** (current_level - 1))
+
+/obj/item/organ/resurgence_core/proc/add_xp(stat_name, amount)
+    var/current_xp
+    var/current_level
+
+    switch(stat_name)
+        if("construction")
+            current_xp = xp_construction
+            current_level = stat_construction
+        if("crafting")
+            current_xp = xp_crafting
+            current_level = stat_crafting
+        if("gathering")
+            current_xp = xp_gathering
+            current_level = stat_gathering
+        else
+            return
+
+    current_xp += amount
+
+    // Check for level up
+    var/xp_needed = get_xp_required(current_level)
+    while(current_xp >= xp_needed && current_level < 20)
+        current_xp -= xp_needed
+        current_level++
+        xp_needed = get_xp_required(current_level)
+        announce_level_up(stat_name, current_level)
+
+    // Store back
+    switch(stat_name)
+        if("construction")
+            xp_construction = current_xp
+            stat_construction = current_level
+        if("crafting")
+            xp_crafting = current_xp
+            stat_crafting = current_level
+        if("gathering")
+            xp_gathering = current_xp
+            stat_gathering = current_level
+
+/obj/item/organ/resurgence_core/proc/announce_level_up(stat_name, new_level)
+    if(owner)
+        to_chat(owner, span_notice("<b>Level Up!</b> Your [stat_name] skill is now level [new_level]!"))
+```
+
+### XP Gains
+
+| Activity | XP Type | Amount |
+|----------|---------|--------|
+| Complete blueprint | Construction | 5-20 (based on material cost) |
+| Complete craft | Crafting | 5-15 (based on work required) |
+| Gather resource chunk | Gathering | 1 per work point |
+| Complete cooking recipe | Cooking | 5-15 (based on work required) |
+
+---
+
+## Bed and Stat Viewing
+
+Players can rest in a bed in their owned room to view stats and save progress.
+
+### Bed Structure
+
+```dm
+/obj/structure/resurgence_bed
+    name = "bed"
+    desc = "A comfortable bed. Rest here to view your stats and save progress."
+    icon = 'icons/obj/furniture.dmi'
+    icon_state = "bed"
+    anchored = TRUE
+    var/base_beauty = 5
+
+/obj/structure/resurgence_bed/attack_hand(mob/living/carbon/human/user)
+    . = ..()
+    if(!istype(user))
+        return
+
+    // Check if bed is in user's owned room
+    var/area/resurgence_outpost/room/R = get_area(src)
+    if(!istype(R) || R.owner_ckey != user.ckey)
+        to_chat(user, span_warning("This isn't your room. You can only rest in your own room."))
+        return
+
+    // Open stats UI
+    ui_interact(user)
+
+/obj/structure/resurgence_bed/ui_interact(mob/user, datum/tgui/ui)
+    ui = SStgui.try_update_ui(user, src, ui)
+    if(!ui)
+        ui = new(user, src, "ResurgenceStats", "Character Stats")
+        ui.open()
+```
+
+### Stats UI (TGUI)
+
+```
+┌─────────────────────────────────────────────────────┐
+│  CHARACTER STATS                                [X] │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Construction: Lv 5                                 │
+│  ████████████░░░░░░░░░░░░░░░░░░ (320/400 XP)       │
+│  Speed: 1.26x slower | Beauty: +0                  │
+│                                                     │
+│  Crafting: Lv 8                                     │
+│  ██████████████████████░░░░░░░░ (1100/1600 XP)     │
+│  Speed: 1.08x slower | Beauty: +2                  │
+│                                                     │
+│  Gathering: Lv 3                                    │
+│  ██████░░░░░░░░░░░░░░░░░░░░░░░░ (80/200 XP)        │
+│  Yield: 0.71x | Speed: 1.37x slower                │
+│                                                     │
+│  ─────────────────────────────────────────────────  │
+│  Room Quality: Comfortable (+0.3 faith/min)         │
+│  Total Beauty: 35                                   │
+│                                                     │
+│  [Save & Rest]                                      │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## Extended Resource Gathering
+
+Resource gathering takes significant time and can be interrupted and resumed.
+
+### Gathering Parameters
+
+| Resource | Base Time | Base Yield | Work Needed |
+|----------|-----------|------------|-------------|
+| Tree | 2.5 minutes | 45 wood | 300 work |
+| Iron Ore Deposit | 2 minutes | 30 ore | 240 work |
+| Stone Deposit | 1.5 minutes | 25 stone | 180 work |
+| Fiber Plant | 30 seconds | 5 fiber | 60 work |
+| Sand Pile | 45 seconds | 10 sand | 90 work |
+
+### Charge Requirement
+
+**Players cannot gather or craft if charge is below 5.**
+
+```dm
+#define MIN_CHARGE_FOR_WORK 5
+
+/obj/structure/resurgence_tree/attackby(obj/item/I, mob/user)
+    if(!is_axe(I))
+        return ..()
+
+    // Check charge
+    var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        to_chat(user, span_warning("You don't have a resurgence core."))
+        return
+
+    if(core.charge < MIN_CHARGE_FOR_WORK)
+        to_chat(user, span_warning("You're too exhausted to gather resources. Rest to regain charge."))
+        return
+
+    start_chopping(user, I)
+```
+
+### Interruptible Progress
+
+```dm
+/obj/structure/resurgence_tree
+    var/work_progress = 0
+    var/work_needed = 300
+    var/base_yield = 45
+
+/obj/structure/resurgence_tree/proc/start_chopping(mob/user, obj/item/tool)
+    var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+
+    var/speed_mod = core.get_stat_speed_modifier("gathering")
+    var/work_per_tick = 2 / speed_mod  // Higher gathering = more work per tick
+
+    to_chat(user, span_notice("You begin chopping the tree... ([round(work_progress/work_needed*100)]% complete)"))
+
+    while(work_progress < work_needed)
+        // Check charge each second
+        if(core.charge < MIN_CHARGE_FOR_WORK)
+            to_chat(user, span_warning("You're too exhausted to continue. Progress: [round(work_progress/work_needed*100)]%"))
+            break
+
+        // 1-second work interval
+        if(!do_after(user, 1 SECONDS, src))
+            to_chat(user, span_notice("You stop chopping. Progress saved: [round(work_progress/work_needed*100)]%"))
+            break
+
+        work_progress += work_per_tick
+
+        // Award XP
+        core.add_xp("gathering", work_per_tick)
+
+        // Periodic feedback
+        if(work_progress % 30 == 0)
+            to_chat(user, span_notice("Chopping... [round(work_progress/work_needed*100)]%"))
+
+    if(work_progress >= work_needed)
+        complete_harvest(user)
+
+/obj/structure/resurgence_tree/proc/complete_harvest(mob/user)
+    var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+
+    var/yield_mod = core ? core.get_gathering_yield_modifier() : 1.0
+    var/final_yield = round(base_yield * yield_mod)
+
+    to_chat(user, span_notice("The tree falls! You gather [final_yield] wood."))
+    new /obj/item/stack/sheet/mineral/wood(get_turf(src), final_yield)
+
+    // Become stump
+    become_stump()
+```
+
+---
+
+## Cooking System
+
+Cooking allows players to create meals that restore charge and provide temporary faith bonuses.
+
+### Cooking Station
+
+A crafting station (campfire, cooking pot, or stove) that uses the same work-based system as other stations:
+
+```dm
+/obj/structure/resurgence_crafting_table/cooking_station
+    name = "cooking pot"
+    desc = "A pot for cooking hearty meals over a fire."
+    icon_state = "cooking_pot"
+
+    action_verb = "Cook"
+    busy_verb = "cooking"
+    ui_color = "brown"
+```
+
+### Meal Component
+
+All cooked food gets a component that tracks quality and charge value:
+
+```dm
+/datum/component/resurgence_meal
+    var/charge_value = 10      // How much charge is restored
+    var/quality = "decent"     // Quality tier
+    var/faith_bonus = 5        // Faith event strength
+    var/quality_name = ""      // Display name like "Good Meal"
+
+/datum/component/resurgence_meal/Initialize(charge = 10, qual = "decent")
+    charge_value = charge
+    quality = qual
+    faith_bonus = get_faith_bonus_for_quality(qual)
+    quality_name = get_quality_display_name(qual)
+
+    // Hook into eating
+    RegisterSignal(parent, COMSIG_FOOD_EATEN, PROC_REF(on_eaten))
+
+/datum/component/resurgence_meal/proc/on_eaten(datum/source, mob/living/eater, mob/living/feeder)
+    if(!ishuman(eater))
+        return
+
+    var/mob/living/carbon/human/H = eater
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+
+    // Restore charge
+    core.adjust_charge(charge_value)
+    to_chat(H, span_notice("The [quality_name] restores [charge_value] charge."))
+
+    // Handle faith event (highest quality wins)
+    apply_meal_faith_event(core)
+
+/datum/component/resurgence_meal/proc/apply_meal_faith_event(obj/item/organ/resurgence_core/core)
+    // Check for existing meal faith event
+    var/datum/faith_event/existing = core.get_faith_event_by_category("meal")
+
+    if(existing)
+        // Only replace if our faith bonus is higher
+        if(existing.faith_change >= faith_bonus)
+            to_chat(core.owner, span_notice("You already feel well-fed from a better meal."))
+            return
+        // Remove the weaker event
+        core.clear_faith_events_by_category("meal")
+
+    // Add our faith event
+    if(faith_bonus > 0)
+        var/datum/faith_event/meal/E = new(quality, faith_bonus)
+        core.add_faith_event("meal", E)
+        to_chat(core.owner, span_notice("The [quality_name] lifts your spirits! (+[faith_bonus] faith for 5 minutes)"))
+```
+
+### Meal Quality Levels
+
+| Quality | Faith Bonus | Description |
+|---------|-------------|-------------|
+| Awful | +0 | Burnt or spoiled - no faith benefit |
+| Poor | +2 | Barely edible |
+| Decent | +5 | Filling but plain |
+| Good | +8 | Tasty and satisfying |
+| Excellent | +12 | Delicious, well-prepared |
+| Masterwork | +18 | A culinary masterpiece |
+
+### Faith Event for Meals
+
+```dm
+/datum/faith_event/meal
+    category = "meal"
+    timeout = 5 MINUTES
+
+/datum/faith_event/meal/New(quality, bonus)
+    faith_change = bonus
+    switch(quality)
+        if("awful")
+            description = "Ate an awful meal"
+        if("poor")
+            description = "Ate a poor meal"
+        if("decent")
+            description = "Ate a decent meal"
+        if("good")
+            description = "Ate a good meal"
+        if("excellent")
+            description = "Ate an excellent meal"
+        if("masterwork")
+            description = "Ate a masterwork meal"
+    ..()
+```
+
+### Cooking Recipes
+
+| Meal | Ingredients | Base Charge | Base Quality | Work |
+|------|-------------|-------------|--------------|------|
+| Roasted Meat | 1 Raw Meat | 15 | Decent | 10 |
+| Grilled Vegetables | 2 Vegetables | 10 | Decent | 10 |
+| Simple Soup | 1 Vegetable + 1 Water | 12 | Poor | 8 |
+| Vegetable Stew | 2 Vegetables + 1 Water | 20 | Good | 20 |
+| Meat Stew | 1 Raw Meat + 1 Vegetable + 1 Water | 25 | Good | 25 |
+| Bread | 3 Wheat | 10 | Decent | 15 |
+| Meat Pie | 1 Raw Meat + 2 Wheat | 30 | Good | 30 |
+| Hearty Stew | 2 Meat + 2 Vegetables + 1 Water | 35 | Excellent | 40 |
+| Feast Plate | 2 Meat + 2 Vegetables + 1 Bread | 40 | Excellent | 50 |
+
+### Quality Modifiers
+
+Quality can be improved or reduced by various factors:
+
+**Positive Modifiers:**
+- High Cooking stat: Up to +2 quality tiers at level 20
+- Cooking in Kitchen room: +1 quality tier
+- Using fresh/high-quality ingredients: +1 quality tier (future feature)
+
+**Negative Modifiers:**
+- Low Cooking stat: -1 quality tier at level 1
+- Interrupted/cancelled cook: -2 quality tiers (burnt)
+- Cooking outdoors: -1 quality tier
+
+**Quality Tier Order:**
+Awful → Poor → Decent → Good → Excellent → Masterwork
+
+```dm
+/obj/structure/resurgence_crafting_table/cooking_station/proc/calculate_final_quality(mob/user, base_quality)
+    var/quality_index = quality_to_index(base_quality)
+
+    // Check cooking stat
+    var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+    if(istype(core))
+        var/cooking_level = core.stat_cooking
+        // Level 1: -1, Level 10: 0, Level 20: +2
+        var/stat_mod = round(-1 + (cooking_level - 1) * (3.0 / 19))
+        quality_index += stat_mod
+
+    // Check if in kitchen
+    var/area/A = get_area(src)
+    if(istype(A, /area/resurgence_outpost/room/kitchen))
+        quality_index += 1
+
+    // Clamp to valid range
+    quality_index = clamp(quality_index, 0, 5)
+
+    return index_to_quality(quality_index)
+
+/proc/quality_to_index(quality)
+    switch(quality)
+        if("awful") return 0
+        if("poor") return 1
+        if("decent") return 2
+        if("good") return 3
+        if("excellent") return 4
+        if("masterwork") return 5
+    return 2
+
+/proc/index_to_quality(index)
+    switch(index)
+        if(0) return "awful"
+        if(1) return "poor"
+        if(2) return "decent"
+        if(3) return "good"
+        if(4) return "excellent"
+        if(5) return "masterwork"
+    return "decent"
+```
+
+### Cooking Stat
+
+A fourth character stat for cooking:
+
+```dm
+/obj/item/organ/resurgence_core
+    // Add to existing stats
+    var/stat_cooking = 1
+    var/xp_cooking = 0
+```
+
+**Cooking Stat Effects:**
+| Level | Speed Modifier | Quality Modifier |
+|-------|----------------|------------------|
+| 1 | 1.5x slower | -1 tier |
+| 10 | Normal | +0 tiers |
+| 20 | 0.5x faster | +2 tiers |
+
+### Kitchen Room Type
+
+Add Kitchen as a room type that provides cooking bonuses:
+
+```dm
+/area/resurgence_outpost/room/kitchen
+    name = "Kitchen"
+    // Cooking stations inside get +1 quality tier
+    // Faith modifier: +25% (good smells, warm atmosphere)
+```
+
+**Room Detection:** A room becomes a Kitchen if it contains a cooking station.
+
+---
+
+## Player Data Persistence
+
+Player stats and room ownership are saved per ckey.
+
+### Save Location
+
+`data/resurgence_outpost/players/[ckey].json`
+
+### Save Format
+
+```json
+{
+    "ckey": "exampleplayer",
+    "owned_room_id": "room_15",
+    "stats": {
+        "construction": {
+            "level": 5,
+            "xp": 320
+        },
+        "crafting": {
+            "level": 8,
+            "xp": 1100
+        },
+        "gathering": {
+            "level": 3,
+            "xp": 80
+        }
+    },
+    "last_save": "2024-01-15T14:30:00Z"
+}
+```
+
+### Save/Load Procs
+
+```dm
+/proc/save_player_data(mob/living/carbon/human/H)
+    if(!H.ckey)
+        return FALSE
+
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return FALSE
+
+    // Find owned room
+    var/owned_room_id = null
+    for(var/area/resurgence_outpost/room/R in GLOB.resurgence_rooms)
+        if(R.owner_ckey == H.ckey)
+            owned_room_id = R.room_id
+            break
+
+    var/list/data = list(
+        "ckey" = H.ckey,
+        "owned_room_id" = owned_room_id,
+        "stats" = list(
+            "construction" = list("level" = core.stat_construction, "xp" = core.xp_construction),
+            "crafting" = list("level" = core.stat_crafting, "xp" = core.xp_crafting),
+            "gathering" = list("level" = core.stat_gathering, "xp" = core.xp_gathering)
+        ),
+        "last_save" = time2text(world.realtime, "YYYY-MM-DD hh:mm:ss")
+    )
+
+    var/json = json_encode(data)
+    var/path = "data/resurgence_outpost/players/[H.ckey].json"
+
+    rustg_file_write(json, path)
+    return TRUE
+
+/proc/load_player_data(mob/living/carbon/human/H)
+    if(!H.ckey)
+        return FALSE
+
+    var/path = "data/resurgence_outpost/players/[H.ckey].json"
+    if(!fexists(path))
+        return FALSE
+
+    var/json = file2text(path)
+    var/list/data = json_decode(json)
+    if(!data)
+        return FALSE
+
+    var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return FALSE
+
+    // Restore stats
+    var/list/stats = data["stats"]
+    if(stats)
+        if(stats["construction"])
+            core.stat_construction = stats["construction"]["level"]
+            core.xp_construction = stats["construction"]["xp"]
+        if(stats["crafting"])
+            core.stat_crafting = stats["crafting"]["level"]
+            core.xp_crafting = stats["crafting"]["xp"]
+        if(stats["gathering"])
+            core.stat_gathering = stats["gathering"]["level"]
+            core.xp_gathering = stats["gathering"]["xp"]
+
+    // Restore room ownership
+    var/owned_room_id = data["owned_room_id"]
+    if(owned_room_id)
+        for(var/area/resurgence_outpost/room/R in GLOB.resurgence_rooms)
+            if(R.room_id == owned_room_id)
+                R.owner_ckey = H.ckey
+                break
+
+    // Update faith events
+    update_room_ownership_faith(H)
+
+    return TRUE
+```
+
+---
+
+## Updated File Structure
+
+```
+code/modules/resurgence_outpost/
+    # Building
+    monument.dm             # Monument of Hope structure (DEPRIORITIZED)
+    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
+    walls_floors.dm         # Wood wall, wood floor, window turfs
+    doors.dm                # Wood door
+
+    # Blueprints
+    blueprint_planner.dm    # Blueprint planning tool + UI
+    blueprints.dm           # Blueprint ghost structures (all categories)
+    blueprint_categories.dm # Category definitions and global list
+
+    # Resources
+    trees.dm                # Choppable trees with interruptible progress
+    mining.dm               # Ore deposits with interruptible progress
+    gathering.dm            # Sand digging, fiber harvesting
+    processing.dm           # Forge smelting, Loom weaving
+    tools.dm                # Hatchet, pickaxe, shovel, sickle
+
+    # Components
+    components.dm           # All crafted components (Tier 2 & 3)
+    component_recipes.dm    # Recipes for components at various stations
+
+    # Weapons (DEPRIORITIZED)
+    weapons_melee.dm        # Spears and other melee weapons
+    weapons_ranged.dm       # Sling, crossbow
+    ammo.dm                 # Ammunition types and projectiles
+
+    # Rooms
+    room_designator.dm      # Room designator tool
+    room_detection.dm       # Enclosed space detection
+    room_types.dm           # Room type determination logic
+    room_ownership.dm       # Room claiming and ownership tracking
+    room_quality.dm         # Beauty calculation and faith effects
+
+    # Character Stats
+    character_stats.dm      # Stat definitions and modifiers
+    stat_leveling.dm        # XP system and leveling
+    bed.dm                  # Bed structure and stat UI
+
+    # Food & Cooking
+    food/
+        cooking_station.dm      # Cooking pot/campfire structure
+        meal_component.dm       # Component for cooked meals (charge + quality)
+        recipes.dm              # Cooking recipes
+        ingredients.dm          # Raw ingredients (meat, vegetables, wheat)
+
+    # Clothing
+    faith_clothing_component.dm  # Component that adds faith to any clothing
+    craft_speed_component.dm     # Component for crafting speed bonus
+
+    # Core
+    persistence.dm          # Save/load outpost state (DMM format)
+    player_data.dm          # Per-ckey save/load for stats and room ownership
+    areas.dm                # Resurgence area types
+
+tgui/packages/tgui/interfaces/
+    BlueprintPlanner.tsx    # Category-based blueprint selection UI
+    ResurgenceCrafting.js   # Crafting table UI with batch crafting
+    ResurgenceStats.tsx     # Character stats viewing UI
+
+code/modules/surgery/organs/
+    resurgence_core.dm      # Updated with stats (including cooking), XP tracking
+
+code/datums/
+    faith_event.dm          # Faith event datum (mood-like system)
+
+code/datums/faith_events/
+    generic_events.dm       # Common faith events (community, injury, etc.)
+    outpost_events.dm       # Outpost-specific events (room ownership, quality, meals)
+
+data/resurgence_outpost/
+    outpost_save.dmm        # Full map snapshot (generated at round end)
+    outpost_meta.json       # Day number, monument progress, etc.
+    players/                # Per-player save files
+        [ckey].json         # Individual player stats and room ownership
+```
+
+---
+
+## Testing - Living Systems
+
+### Room Ownership
+55. Spawn as machine, verify -10 faith "Homeless" event appears
+56. Build and designate room, claim it
+57. Verify faith changes to +5 "Has Personal Room"
+58. Try to claim second room, verify blocked
+59. Have another player try to claim your room, verify blocked
+60. Save/reload, verify room ownership persists
+
+### Room Quality
+61. Build empty room, verify beauty = 0
+62. Add furniture (table, chair, bed), verify beauty increases
+63. Stay in room with beauty 30+, verify faith slowly increases
+64. Add debris/garbage to room, verify beauty decreases
+65. Stay in squalid room, verify faith slowly decreases
+66. Remove garbage, add more furniture, verify quality improves
+
+### Character Stats
+67. Start with level 1 construction, build something, verify 1.5x time
+68. Repeat until level up, verify speed improves
+69. Build at high level, verify beauty bonus applied
+70. Craft items, verify crafting XP gained
+71. Gather resources, verify gathering XP gained
+72. Level up gathering, verify improved yield
+
+### Bed and Stats UI
+73. Build bed in owned room
+74. Click bed, verify stats UI opens
+75. Verify stats display correctly
+76. Click "Save & Rest", verify data saved
+77. Reload round, verify stats persist
+
+### Charge Requirements
+78. Reduce charge to below 5
+79. Try to craft, verify blocked with message
+80. Try to gather resources, verify blocked with message
+81. Restore charge above 5, verify can work again
+
+### Extended Gathering
+82. Start chopping tree, interrupt halfway
+83. Verify progress is saved on tree
+84. Resume chopping, verify progress continues
+85. Another player continues, verify progress shared
+86. Complete gathering, verify yield based on gathering stat
+
+### Cooking System
+87. Build cooking station (pot/campfire)
+88. Add raw meat, cook it, verify roasted meat created
+89. Eat roasted meat, verify charge is restored
+90. Verify faith event "Ate a decent meal" appears (+5 faith)
+91. Cook excellent quality meal, eat it
+92. Verify faith event upgrades to "Ate an excellent meal" (+12 faith)
+93. Eat a poor quality meal while excellent event active
+94. Verify faith event stays at excellent (highest quality wins)
+95. Wait 5 minutes, verify meal faith event expires
+96. Test cooking stat affects final quality
+97. Build Kitchen room, cook inside, verify +1 quality tier
+98. Interrupt cooking early, verify meal is burnt (-2 quality tiers)
+99. Verify cooking XP gained from completing recipes
+100. Level up cooking stat, verify speed and quality improve

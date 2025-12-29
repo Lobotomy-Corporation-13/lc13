@@ -267,7 +267,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 4. Verify transparent blue ghost appears
 5. Test rotation and removal
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -295,7 +295,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 3. Verify wall appears and blueprint disappears
 4. Test chest and crafting table blueprints
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -317,7 +317,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 2. Open/close chest, store items
 3. Verify wall blocks movement
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -341,7 +341,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 4. Test with gap in wall - should return null
 5. Test with very large space - should return null
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -365,7 +365,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 3. Verify Workshop area is created
 4. Check area has correct faith_modifier (0.75)
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -436,176 +436,436 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
-## Step 15: Wooden Spear
+## Step 15: Room Ownership System
 
-**Goal:** Create basic melee weapon with durability.
+**Goal:** Allow players to claim rooms as their personal space.
 
 **Files to create:**
-- `code/modules/resurgence_outpost/weapons/spear.dm`
+- `code/modules/resurgence_outpost/rooms/room_ownership.dm`
 
 **Implementation:**
-- 2-tile reach melee weapon
-- Durability that decreases on hit
-- Breaks when durability reaches 0
-- Examine shows condition
+- Add `owner_ckey` variable to room areas
+- Add "Claim Room" option to room designator or separate claim marker item
+- Only one room per player
+- Track ownership in persistence system
+- Faith events:
+  - "Homeless" (-10 faith) if player has no claimed room
+  - "Has Personal Room" (+5 faith) if player has a claimed room
+
+**Key Logic:**
+```dm
+// On player spawn/load
+/proc/check_room_ownership(mob/living/carbon/human/H)
+    var/ckey = H.ckey
+    // Check if this ckey owns any room
+    for(var/area/resurgence_outpost/room/R in GLOB.resurgence_rooms)
+        if(R.owner_ckey == ckey)
+            // Has a room - add positive faith event
+            add_faith_event(H, "room_ownership", "Has personal room", +5)
+            return
+    // No room - add negative faith event
+    add_faith_event(H, "room_ownership", "Homeless", -10)
+```
 
 **Testing:**
-1. Spawn wooden spear
-2. Attack enemy from 2 tiles away - should hit
-3. Check durability decreases
-4. Use until broken
+1. Spawn as machine without a room, verify -10 faith "Homeless" event
+2. Claim a room, verify faith event changes to +5 "Has Personal Room"
+3. Verify room persists across rounds for that ckey
+4. Verify another player cannot claim the same room
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 16: Sling and Stones
+## Step 16: Room Quality (Beauty) System
 
-**Goal:** Create basic ranged weapon with ammunition.
+**Goal:** Make room quality affect faith based on furniture beauty ratings.
 
 **Files to create:**
-- `code/modules/resurgence_outpost/weapons/sling.dm`
-- `code/modules/resurgence_outpost/weapons/ammo.dm`
+- `code/modules/resurgence_outpost/rooms/room_quality.dm`
+
+**Files to reference:**
+- `code/datums/components/beauty.dm`
 
 **Implementation:**
-- Sling weapon that uses stone ammo
-- Load with stones via attackby
-- Click target to fire projectile
-- Fire delay between shots
+- All furniture built via blueprints or crafting tables gets a beauty rating
+- Room calculates total beauty of all furniture inside
+- Beauty affects faith:
+  - Positive beauty: Passive faith gain over time while in room
+  - Negative beauty: Passive faith loss over time while in room
+- Process() checks player location and applies faith modifier
+
+**Beauty Ratings (examples):**
+| Item | Base Beauty |
+|------|-------------|
+| Basic Wooden Chair | +2 |
+| Wooden Table | +3 |
+| Storage Chest | +1 |
+| Bed | +5 |
+| Lantern Post | +4 |
+| Banner Stand | +6 |
+| Small Statue | +10 |
+| Carpet Floor | +1 per tile |
+| Bare Floor | 0 |
+| Rubble/Debris | -5 |
+
+**Room Quality Levels:**
+| Total Beauty | Level | Faith Effect |
+|--------------|-------|--------------|
+| 50+ | Luxurious | +0.5 faith/min |
+| 30-49 | Comfortable | +0.3 faith/min |
+| 10-29 | Adequate | +0.1 faith/min |
+| 0-9 | Bare | No effect |
+| -1 to -19 | Shabby | -0.1 faith/min |
+| -20 or less | Squalid | -0.3 faith/min |
 
 **Testing:**
-1. Spawn sling and sling stones
-2. Load sling with stones
-3. Click distant target to fire
-4. Verify projectile hits and damages
-5. Verify fire delay works
+1. Build empty room, check beauty = 0, no faith effect
+2. Add furniture, verify beauty increases
+3. Stay in comfortable room, verify faith slowly increases
+4. Add debris/garbage to room, verify beauty decreases
+5. Stay in squalid room, verify faith slowly decreases
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 17: Crossbow
+## Step 17: Character Stats System
 
-**Goal:** Create advanced ranged weapon with cocking mechanic.
+**Goal:** Add Rimworld-style stats that affect gameplay.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/stats/character_stats.dm`
+- `code/modules/resurgence_outpost/stats/stat_leveling.dm`
+
+**Implementation:**
+- Stats stored on the resurgence_core organ
+- Three core stats:
+  1. **Construction** - Affects blueprint building speed and beauty of built structures
+  2. **Crafting** - Affects crafting speed and beauty of crafted items
+  3. **Gathering** - Affects resource gathering speed and yield amount
+- Stats range from 1-20
+- Stats saved per ckey in persistence
+
+**Stat Effects:**
+| Stat | Level 1 Effect | Level 10 Effect | Level 20 Effect |
+|------|----------------|-----------------|-----------------|
+| Construction | 1.5x build time, -2 beauty | Normal | 0.5x build time, +5 beauty |
+| Crafting | 1.5x craft time, -2 beauty | Normal | 0.5x craft time, +5 beauty |
+| Gathering | 0.5x yield, 1.5x time | Normal | 1.5x yield, 0.5x time |
+
+**Formula:**
+```dm
+// Speed modifier: 1.5 at level 1, 1.0 at level 10, 0.5 at level 20
+var/speed_mod = 1.5 - (stat_level - 1) * (1.0 / 19)
+
+// Yield modifier: 0.5 at level 1, 1.0 at level 10, 1.5 at level 20
+var/yield_mod = 0.5 + (stat_level - 1) * (1.0 / 19)
+
+// Beauty bonus: -2 at level 1, 0 at level 10, +5 at level 20
+var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
+```
+
+**Testing:**
+1. Spawn with level 1 construction, verify building takes 1.5x normal time
+2. Level up construction, verify speed improves
+3. Build structure at level 20, verify +5 beauty bonus applied
+4. Test all three stats affect their respective activities
+
+**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+
+---
+
+## Step 18: Bed and Stat Leveling UI
+
+**Goal:** Allow players to rest in beds to view and level up stats.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/structures/bed.dm`
+- `tgui/packages/tgui/interfaces/ResurgenceStats.tsx`
+
+**Implementation:**
+- Bed blueprint/structure
+- Must be in player's owned room to use for stat leveling
+- Clicking bed in owned room opens stat UI
+- UI shows current stats and allows spending XP to level up
+- XP earned by performing activities:
+  - Building structures → Construction XP
+  - Crafting items → Crafting XP
+  - Gathering resources → Gathering XP
+
+**XP Requirements:**
+| Level | XP to Next Level |
+|-------|------------------|
+| 1→2 | 100 |
+| 2→3 | 200 |
+| 3→4 | 400 |
+| ... | Doubles each level |
+| 19→20 | 25600 |
+
+**UI Mockup:**
+```
+┌─────────────────────────────────────────────────────┐
+│  CHARACTER STATS                                [X] │
+├─────────────────────────────────────────────────────┤
+│                                                     │
+│  Construction: 5 ████████░░░░░░░░░░░░ (320/400 XP)  │
+│    Build Speed: 1.26x | Beauty Bonus: +0           │
+│                                                     │
+│  Crafting: 8 ██████████████░░░░░░░░ (1100/1600 XP)  │
+│    Craft Speed: 1.08x | Beauty Bonus: +2           │
+│                                                     │
+│  Gathering: 3 ████░░░░░░░░░░░░░░░░░░ (80/200 XP)    │
+│    Yield: 0.71x | Gather Speed: 1.37x              │
+│                                                     │
+│  ─────────────────────────────────────────────────  │
+│  Resting in your room. Stats will be saved.         │
+│                                                     │
+└─────────────────────────────────────────────────────┘
+```
+
+**Testing:**
+1. Build bed in owned room
+2. Click bed, verify stat UI opens
+3. Perform construction, verify Construction XP gained
+4. Level up stat, verify effects apply
+5. Verify stats persist after using bed
+
+**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+
+---
+
+## Step 19: Persistence - Player Data
+
+**Goal:** Save room ownership and character stats per ckey.
 
 **Files to modify:**
-- `code/modules/resurgence_outpost/weapons/ranged.dm` (or new file)
+- `code/modules/resurgence_outpost/persistence/save.dm`
+- `code/modules/resurgence_outpost/persistence/load.dm`
+
+**Files to create:**
+- `code/modules/resurgence_outpost/persistence/player_data.dm`
 
 **Implementation:**
-- Must be cocked before firing (click in hand)
-- Load bolts via attackby
-- Higher damage than sling
+- Save player data to JSON file when they use a bed
+- Load player data when they spawn
+- Data includes:
+  - ckey
+  - owned_room_id (reference to area)
+  - construction_level, construction_xp
+  - crafting_level, crafting_xp
+  - gathering_level, gathering_xp
+
+**Save File:**
+`data/resurgence_outpost/players/[ckey].json`
+```json
+{
+  "ckey": "exampleplayer",
+  "owned_room_id": "room_15",
+  "stats": {
+    "construction": { "level": 5, "xp": 320 },
+    "crafting": { "level": 8, "xp": 1100 },
+    "gathering": { "level": 3, "xp": 80 }
+  },
+  "last_save": "2024-01-15 14:30:00"
+}
+```
 
 **Testing:**
-1. Spawn crossbow and wooden bolts
-2. Try to fire uncocked - should fail
-3. Cock crossbow (click in hand)
-4. Load bolt, fire at target
-5. Verify damage is higher than sling
+1. Create character, claim room, level up stats
+2. Use bed to save
+3. Restart round, verify room ownership persists
+4. Verify stats persist at saved values
+5. Test with multiple players, verify each has separate save
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 18: Weapon Crafting Recipes
+## Step 20: Resource Gathering - Extended System
 
-**Goal:** Add weapon recipes to crafting stations.
+**Goal:** Implement time-based gathering with interruptible progress.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/resources/trees.dm`
+- `code/modules/resurgence_outpost/resources/mining.dm`
+- `code/modules/resurgence_outpost/resources/gathering_base.dm`
+
+**Implementation:**
+- Gathering takes significant time (e.g., 2.5 minutes for chopping a tree)
+- Progress is saved on the resource if interrupted
+- Multiple players can contribute to same resource
+- Gathering stats affect speed and yield
+- **Minimum 5 charge required to gather** - cannot gather below 5 charge
+
+**Example - Tree Chopping:**
+- Base time: 150 seconds (2.5 minutes)
+- Base yield: 45 wood
+- Work points needed: 300 (at 2 per second)
+- Gathering stat modifies both speed and yield
+
+**Key Logic:**
+```dm
+/obj/structure/resurgence_tree
+    var/work_points = 0
+    var/work_needed = 300
+    var/base_yield = 45
+
+/obj/structure/resurgence_tree/attackby(obj/item/I, mob/user)
+    if(!is_axe(I))
+        return ..()
+
+    // Check charge requirement
+    var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core) || core.charge < 5)
+        to_chat(user, span_warning("You're too exhausted to gather resources. You need at least 5 charge."))
+        return
+
+    start_gathering(user, I)
+
+/obj/structure/resurgence_tree/proc/start_gathering(mob/user, obj/item/tool)
+    var/gather_stat = get_gathering_stat(user)
+    var/speed_mod = get_speed_modifier(gather_stat)
+    var/work_per_tick = 2 / speed_mod  // Higher stat = more work per tick
+
+    while(work_points < work_needed)
+        // Check charge each tick
+        var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
+        if(!istype(core) || core.charge < 5)
+            to_chat(user, span_warning("You're too exhausted to continue."))
+            break
+
+        if(!do_after(user, 1 SECONDS, src))
+            to_chat(user, span_notice("You stop chopping. Progress: [round(work_points/work_needed*100)]%"))
+            break
+
+        work_points += work_per_tick
+        // Award gathering XP
+        award_gathering_xp(user, work_per_tick)
+
+    if(work_points >= work_needed)
+        complete_gathering(user)
+```
+
+**Testing:**
+1. Start chopping tree, interrupt partway, verify progress saved
+2. Resume chopping, verify progress continues
+3. Reduce charge below 5, verify cannot gather
+4. Complete gathering, verify yield based on gathering stat
+5. Test mining and other resource types similarly
+
+**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+
+---
+
+## Step 21: Charge Requirement for Crafting
+
+**Goal:** Prevent crafting when charge is below 5.
 
 **Files to modify:**
 - `code/modules/resurgence_outpost/structures/crafting_table.dm`
 - `code/modules/resurgence_outpost/structures/forge.dm`
-
-**Recipes:**
-| Station | Output | Input |
-|---------|--------|-------|
-| Crafting Table | Wooden Spear | 3 Wood + 1 Stone |
-| Crafting Table | Sling | 2 Leather Strip + 1 Rope |
-| Crafting Table | 5 Wooden Bolts | 2 Wood |
-| Forge | Metal Spear | 2 Wooden Plank + 1 Metal Rod + 1 Leather Strip |
-| Forge | Crossbow | 3 Wooden Plank + 2 Metal Rod + 1 Gear Assembly + 2 Rope |
-| Forge | 10 Metal Shot | 1 Metal Sheet |
-| Forge | 5 Metal Bolts | 1 Wood + 1 Metal Rod |
-
-**Testing:**
-1. Craft each weapon at appropriate station
-2. Verify all material costs are correct
-3. Test crafted weapons work properly
-
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
-
----
-
-## Step 19: Monument of Hope
-
-**Goal:** Create the central monument structure.
-
-**Files to create:**
-- `code/modules/resurgence_outpost/structures/monument.dm`
+- `code/modules/resurgence_outpost/structures/loom.dm`
 
 **Implementation:**
-- 4-stage structure
-- Accepts specific components per stage
-- Tracks progress, announces stage completion
-- Victory announcement on stage 4
+- Check charge before starting any craft
+- Stop auto-continue if charge drops below 5
+- Display warning in UI when charge is low
 
 **Testing:**
-1. Spawn monument (stage 0)
-2. Add required components for stage 1
-3. Verify stage advances and announcement plays
-4. Complete all 4 stages
-5. Verify victory message
+1. Start crafting with full charge, verify works
+2. Start crafting with charge < 5, verify blocked
+3. Start batch craft, let charge drop below 5, verify stops
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 20: Resource Gathering - Trees
+## Step 22: Cooking System
 
-**Goal:** Create choppable trees that drop wood.
+**Goal:** Allow players to cook meals that restore charge and provide faith bonuses.
 
 **Files to create:**
-- `code/modules/resurgence_outpost/resources/trees.dm`
+- `code/modules/resurgence_outpost/structures/cooking_station.dm`
+- `code/modules/resurgence_outpost/food/meal_component.dm`
+- `code/modules/resurgence_outpost/food/recipes.dm`
 
 **Implementation:**
-- Tree structure with health
-- Hit with axe/hatchet to chop
-- Drops wood when felled
-- Becomes stump, can regrow
+- Cooking station structure (campfire, cooking pot, or stove)
+- Uses same work-based crafting system as other stations
+- Meals have a component storing quality and charge value
+- When eaten:
+  - Restore charge equal to meal's charge value
+  - Add faith event based on meal quality
+  - Faith events don't stack - highest quality takes priority
+- Cooking stat (new stat) affects quality and speed
+
+**Meal Quality Levels:**
+| Quality | Faith Bonus | Duration |
+|---------|-------------|----------|
+| Awful | +0 | - |
+| Poor | +2 | 5 min |
+| Decent | +5 | 5 min |
+| Good | +8 | 5 min |
+| Excellent | +12 | 5 min |
+| Masterwork | +18 | 5 min |
+
+**Example Recipes:**
+| Meal | Ingredients | Base Charge | Base Quality | Work |
+|------|-------------|-------------|--------------|------|
+| Roasted Meat | 1 Raw Meat | 15 | Decent | 10 |
+| Grilled Vegetables | 2 Vegetables | 10 | Decent | 10 |
+| Vegetable Stew | 2 Vegetables + 1 Water | 20 | Good | 20 |
+| Meat Stew | 1 Raw Meat + 1 Vegetable + 1 Water | 25 | Good | 25 |
+| Bread | 3 Wheat | 10 | Decent | 15 |
+| Meat Pie | 1 Raw Meat + 2 Wheat | 30 | Good | 30 |
+| Feast Plate | 2 Meat + 2 Vegetables + 1 Bread | 40 | Excellent | 50 |
+
+**Quality Modifiers:**
+- Cooking stat affects final quality (like Crafting stat for beauty)
+- Cooking in proper Kitchen room: +1 quality tier
+- Burnt/failed cook (interrupted early): -2 quality tiers
+
+**Key Logic:**
+```dm
+/datum/component/resurgence_meal
+    var/charge_value = 10
+    var/quality = "decent"  // awful, poor, decent, good, excellent, masterwork
+    var/faith_bonus = 5
+
+/datum/component/resurgence_meal/proc/on_eat(mob/living/carbon/human/eater)
+    var/obj/item/organ/resurgence_core/core = eater.getorganslot(ORGAN_SLOT_HEART)
+    if(!istype(core))
+        return
+
+    // Restore charge
+    core.adjust_charge(charge_value)
+    to_chat(eater, span_notice("The meal restores [charge_value] charge."))
+
+    // Add faith event (replaces lower quality meal events)
+    var/datum/faith_event/meal/existing = core.get_faith_event_by_category("meal")
+    if(existing && existing.faith_change >= faith_bonus)
+        return  // Already have better meal event
+
+    core.clear_faith_events_by_category("meal")
+    core.add_faith_event(new /datum/faith_event/meal(quality, faith_bonus))
+```
 
 **Testing:**
-1. Spawn tree and hatchet
-2. Chop tree repeatedly
-3. Verify wood drops
-4. Verify stump remains
-5. Wait for regrowth (or speed up timer)
+1. Build cooking station
+2. Cook raw meat, verify roasted meat is created with meal component
+3. Eat meal, verify charge is restored
+4. Verify faith event appears based on quality
+5. Eat higher quality meal, verify faith event upgrades
+6. Eat lower quality meal, verify faith event stays at higher level
+7. Test cooking stat affects quality
+8. Test Kitchen room bonus
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 21: Resource Gathering - Mining
-
-**Goal:** Create mineable ore deposits.
-
-**Files to create:**
-- `code/modules/resurgence_outpost/resources/mining.dm`
-
-**Implementation:**
-- Rock turf or structure containing ore
-- Hit with pickaxe to mine
-- Drops ore when destroyed
-
-**Testing:**
-1. Spawn ore deposit and pickaxe
-2. Mine deposit
-3. Verify ore drops
-4. Smelt ore at forge
-
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
-
----
-
-## Step 22: Resource Gathering - Fiber Plants
+## Step 23: Fiber Plants and Farming
 
 **Goal:** Create harvestable plants for cloth production.
 
@@ -616,6 +876,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 - Plant structure that can be harvested
 - Drops plant fiber
 - Regrows after time
+- Follows same interruptible progress as other gathering
 
 **Testing:**
 1. Spawn fiber plant
@@ -628,7 +889,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
-## Step 23: Basic Tools
+## Step 24: Basic Tools with Durability
 
 **Goal:** Create gathering tools (hatchet, pickaxe, shovel, sickle).
 
@@ -650,7 +911,31 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
-## Step 24: Persistence - Save System
+## Step 25: Beauty System for Crafted Items
+
+**Goal:** Apply beauty ratings to all crafted/built items.
+
+**Files to modify:**
+- `code/modules/resurgence_outpost/structures/crafting_table.dm`
+- `code/modules/resurgence_outpost/blueprints/blueprint_base.dm`
+
+**Implementation:**
+- All recipes have base_beauty value
+- When item is created, apply beauty component
+- Beauty = base_beauty + crafter's stat bonus
+- Examine shows beauty rating
+
+**Testing:**
+1. Craft item at level 1, verify beauty is base - 2
+2. Craft same item at level 20, verify beauty is base + 5
+3. Place items in room, verify room quality updates
+4. Build via blueprint, verify builder's construction stat applies
+
+**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+
+---
+
+## Step 26: Persistence - Save System
 
 **Goal:** Save outpost state to DMM file at round end.
 
@@ -662,6 +947,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 - Generate DMM format with object states
 - Save to data folder
 - Save metadata (day number, etc.) to JSON
+- Save room ownership data
 
 **Testing:**
 1. Build some structures
@@ -673,7 +959,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
-## Step 25: Persistence - Load System
+## Step 27: Persistence - Load System
 
 **Goal:** Load saved outpost state at round start.
 
@@ -685,18 +971,20 @@ Each step is self-contained and can be tested independently. Complete and test e
 - Load DMM if exists, else load base map
 - Load metadata from JSON
 - Announce day number
+- Restore room ownership from saved data
 
 **Testing:**
 1. Start round with no save - should load base map
 2. Build structures, save, restart
 3. Verify structures persist
 4. Verify day counter increments
+5. Verify room ownership persists
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
 
 ---
 
-## Step 26: Gamemode Shell
+## Step 28: Gamemode Shell
 
 **Goal:** Create basic gamemode with round timer.
 
@@ -719,7 +1007,7 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
-## Step 27: Map Creation
+## Step 29: Map Creation
 
 **Goal:** Create base outpost map.
 
@@ -742,17 +1030,76 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ---
 
+## DEPRIORITIZED - Combat Features
+
+The following steps are deprioritized to focus on basebuilding and living systems first. Implement after core living systems are complete.
+
+### Step D1: Wooden Spear (DEPRIORITIZED)
+
+**Goal:** Create basic melee weapon with durability.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/weapons/spear.dm`
+
+**Implementation:**
+- 2-tile reach melee weapon
+- Durability that decreases on hit
+- Breaks when durability reaches 0
+- Examine shows condition
+
+**Status:** [ ] Deprioritized
+
+---
+
+### Step D2: Sling and Stones (DEPRIORITIZED)
+
+**Goal:** Create basic ranged weapon with ammunition.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/weapons/sling.dm`
+- `code/modules/resurgence_outpost/weapons/ammo.dm`
+
+**Status:** [ ] Deprioritized
+
+---
+
+### Step D3: Crossbow (DEPRIORITIZED)
+
+**Goal:** Create advanced ranged weapon with cocking mechanic.
+
+**Status:** [ ] Deprioritized
+
+---
+
+### Step D4: Weapon Crafting Recipes (DEPRIORITIZED)
+
+**Goal:** Add weapon recipes to crafting stations.
+
+**Status:** [ ] Deprioritized
+
+---
+
+### Step D5: Monument of Hope (DEPRIORITIZED)
+
+**Goal:** Create the central monument structure.
+
+**Note:** The monument is the victory condition but is deprioritized since it requires combat progression. Focus on living systems first.
+
+**Status:** [ ] Deprioritized
+
+---
+
 ## Implementation Priority Order
 
-**Phase 1 - Core Systems (Steps 1-3)**
+**Phase 1 - Core Systems (Steps 1-3)** ✓
 - Faith events, core updates, components
 - Foundation for everything else
 
-**Phase 2 - Crafting Stations (Steps 4-6)**
+**Phase 2 - Crafting Stations (Steps 4-6)** ✓
 - Crafting table, forge, loom
 - Enables making things
 
-**Phase 3 - Building System (Steps 7-9)**
+**Phase 3 - Building System (Steps 7-9)** ✓
 - Blueprint planner and construction
 - Enables base building
 
@@ -760,28 +1107,36 @@ Each step is self-contained and can be tested independently. Complete and test e
 - Detection, designation, bonuses
 - Adds strategic depth
 
-**Phase 5 - Clothing (Steps 13-14)**
+**Phase 5 - Clothing (Steps 13-14)** ✓
 - Faith clothing system
 - Loom outfit crafting
 
-**Phase 6 - Weapons (Steps 15-18)**
-- Spears, sling, crossbow
-- Combat capability
+**Phase 6 - Living Systems (Steps 15-19)** ← CURRENT PRIORITY
+- Room Ownership (Step 15)
+- Room Quality/Beauty (Step 16)
+- Character Stats (Step 17)
+- Bed & Stat Leveling (Step 18)
+- Player Data Persistence (Step 19)
 
-**Phase 7 - Monument (Step 19)**
-- Victory objective
+**Phase 7 - Resource & Survival (Steps 20-25)**
+- Extended gathering with progress saving (Step 20)
+- Charge requirements (Step 21)
+- Cooking system for charge restoration and faith (Step 22)
+- Fiber plants and farming (Step 23)
+- Tools with durability (Step 24)
+- Beauty for crafted items (Step 25)
 
-**Phase 8 - Resource Gathering (Steps 20-23)**
-- Trees, mining, plants, tools
-- Self-sustaining gameplay
-
-**Phase 9 - Persistence (Steps 24-25)**
+**Phase 8 - Persistence (Steps 26-27)**
 - Save/load system
 - Multi-round progression
 
-**Phase 10 - Gamemode (Steps 26-27)**
+**Phase 9 - Gamemode (Steps 28-29)**
 - Full gamemode and map
 - Complete experience
+
+**Phase 10 - Combat (Steps D1-D5)** ← DEPRIORITIZED
+- Weapons (spears, sling, crossbow)
+- Monument victory objective
 
 ---
 
@@ -791,3 +1146,4 @@ Each step is self-contained and can be tested independently. Complete and test e
 - Placeholder sprites are acceptable initially
 - Focus on functionality before polish
 - Update this document as steps are completed
+- Combat features can be added later once living systems are solid

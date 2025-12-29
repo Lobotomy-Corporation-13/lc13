@@ -698,7 +698,18 @@
 	name = "faith"
 	icon_state = "mood5" // Start at neutral faith
 	screen_loc = ui_faith
-	invisibility = INVISIBILITY_ABSTRACT // Hidden until player has a resurgence_core
+	alpha = 0 // Hidden until player has a resurgence_core
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+/// Makes the faith display visible
+/atom/movable/screen/faith/proc/show_display()
+	alpha = 255
+	mouse_opacity = MOUSE_OPACITY_ICON
+
+/// Hides the faith display
+/atom/movable/screen/faith/proc/hide_display()
+	alpha = 0
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 
 /atom/movable/screen/faith/Click()
 	if(!ishuman(usr))
