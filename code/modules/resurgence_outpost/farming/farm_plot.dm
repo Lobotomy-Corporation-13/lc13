@@ -67,14 +67,29 @@
 
 	update_icon()
 
-/obj/structure/farm_plot/update_overlays()
+/obj/structure/farm_plot/update_icon()
 	. = ..()
+	cut_overlays()
+	update_icon_plant()
+	update_icon_water()
+
+/// Update plant overlay based on growth stage (similar to hydroponics)
+/obj/structure/farm_plot/proc/update_icon_plant()
 	if(!planted_seed || growth_stage == FARM_STAGE_EMPTY)
 		return
 
-	// Add plant overlay based on growth stage
-	var/mutable_appearance/plant_overlay = mutable_appearance(planted_seed.plant_icon, planted_seed.get_icon_state(growth_stage))
-	. += plant_overlay
+	var/mutable_appearance/plant_overlay = mutable_appearance(planted_seed.plant_icon, planted_seed.get_icon_state(growth_stage), layer = OBJ_LAYER + 0.01)
+	add_overlay(plant_overlay)
+
+/// Update water indicator overlay
+/obj/structure/farm_plot/proc/update_icon_water()
+	// Show low water indicator when planted and needs water
+	if(planted_seed && growth_stage != FARM_STAGE_EMPTY && growth_stage != FARM_STAGE_HARVEST)
+		if(water_level <= 10)
+			add_overlay(mutable_appearance('icons/obj/hydroponics/equipment.dmi', "over_lowwater3"))
+	// Show harvest indicator when ready
+	if(growth_stage == FARM_STAGE_HARVEST)
+		add_overlay(mutable_appearance('icons/obj/hydroponics/equipment.dmi', "over_harvest3"))
 
 // ===== Interactions =====
 /obj/structure/farm_plot/attackby(obj/item/I, mob/user, params)
