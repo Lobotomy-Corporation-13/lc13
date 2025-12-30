@@ -99,9 +99,9 @@
 	start_harvesting(user)
 
 /obj/structure/resurgence_cotton/proc/start_harvesting(mob/living/carbon/human/user)
-	// Check charge requirement
+	// Check faith requirement
 	if(!can_gather(user))
-		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_CHARGE_FOR_WORK] charge."))
+		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
 	// Work rate - cotton harvesting is done by hand at base rate
@@ -120,7 +120,7 @@
 
 	// Harvesting loop - continues until interrupted or complete
 	while(work_points < work_needed)
-		// Check charge each tick
+		// Check faith each tick
 		if(!can_gather(user))
 			to_chat(user, span_warning("You're too exhausted to continue harvesting."))
 			break
@@ -146,11 +146,15 @@
 		complete_harvest(user)
 
 /obj/structure/resurgence_cotton/proc/complete_harvest(mob/user)
-	user.visible_message(
-		span_notice("[user] finishes harvesting [src]."),
-		span_notice("You harvest the cotton from [src]!"),
-		span_hear("You hear rustling.")
-	)
+	if(user)
+		user.visible_message(
+			span_notice("[user] finishes harvesting [src]."),
+			span_notice("You harvest the cotton from [src]!"),
+			span_hear("You hear rustling.")
+		)
+	else
+		// Harvester or other automated source
+		visible_message(span_notice("[src] is harvested!"))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
 
 	// Calculate yield
@@ -212,11 +216,15 @@
 	var/dies_after_harvest = TRUE
 
 /obj/structure/resurgence_cotton/wild/complete_harvest(mob/user)
-	user.visible_message(
-		span_notice("[user] finishes harvesting [src]."),
-		span_notice("You harvest the cotton from [src]. The plant withers away."),
-		span_hear("You hear rustling.")
-	)
+	if(user)
+		user.visible_message(
+			span_notice("[user] finishes harvesting [src]."),
+			span_notice("You harvest the cotton from [src]. The plant withers away."),
+			span_hear("You hear rustling.")
+		)
+	else
+		// Harvester or other automated source
+		visible_message(span_notice("[src] is harvested and withers away!"))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
 
 	// Drop cotton

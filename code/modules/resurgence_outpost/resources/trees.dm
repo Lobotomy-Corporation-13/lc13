@@ -50,9 +50,9 @@
 	start_chopping(user, W)
 
 /obj/structure/resurgence_tree/proc/start_chopping(mob/living/carbon/human/user, obj/item/tool)
-	// Check charge requirement
+	// Check faith requirement
 	if(!can_gather(user))
-		to_chat(user, span_warning("You're too exhausted to chop. You need at least [MIN_CHARGE_FOR_WORK] charge."))
+		to_chat(user, span_warning("You're too exhausted to chop. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
 	// Calculate work rate based on tool force (force 10 = base rate)
@@ -72,7 +72,7 @@
 
 	// Gathering loop - continues until interrupted or complete
 	while(work_points < work_needed)
-		// Check charge each tick
+		// Check faith each tick
 		if(!can_gather(user))
 			to_chat(user, span_warning("You're too exhausted to continue chopping."))
 			break
@@ -98,11 +98,15 @@
 		fell_tree(user)
 
 /obj/structure/resurgence_tree/proc/fell_tree(mob/user)
-	user.visible_message(
-		span_notice("[user] fells [src] with a crash!"),
-		span_notice("You fell [src]! The tree crashes to the ground."),
-		span_hear("You hear a tree crashing down.")
-	)
+	if(user)
+		user.visible_message(
+			span_notice("[user] fells [src] with a crash!"),
+			span_notice("You fell [src]! The tree crashes to the ground."),
+			span_hear("You hear a tree crashing down.")
+		)
+	else
+		// Harvester or other automated source
+		visible_message(span_notice("[src] crashes to the ground!"))
 	playsound(src, 'sound/effects/meteorimpact.ogg', 80, TRUE)
 
 	// Calculate yield (base, will be modified by gathering stat later)

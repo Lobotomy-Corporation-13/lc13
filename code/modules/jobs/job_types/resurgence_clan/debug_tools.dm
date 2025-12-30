@@ -34,12 +34,13 @@
 		return
 
 	switch(mode)
-		if("charge")
-			var/amount = input(user, "Adjust charge by how much? (Current: [core.charge]/[core.max_charge])", "Charge Adjustment", 10) as num
-			if(!amount)
-				return
-			core.adjust_charge(amount)
-			to_chat(user, span_notice("Adjusted [M]'s charge by [amount]. New value: [core.charge]/[core.max_charge]"))
+		// CHARGE DEBUG DISABLED - charge system is disabled
+		// if("charge")
+		// 	var/amount = input(user, "Adjust charge by how much? (Current: [core.charge]/[core.max_charge])", "Charge Adjustment", 10) as num
+		// 	if(!amount)
+		// 		return
+		// 	core.adjust_charge(amount)
+		// 	to_chat(user, span_notice("Adjusted [M]'s charge by [amount]. New value: [core.charge]/[core.max_charge]"))
 
 		if("faith")
 			// Directly adjust faith value

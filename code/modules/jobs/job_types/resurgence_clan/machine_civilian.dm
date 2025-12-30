@@ -43,10 +43,10 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 
 	H.set_species(/datum/species/resurgence_machine)
 
-	// Initialize the core's charge and faith
+	// Initialize the core's faith (charge system is disabled)
 	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 	if(istype(core))
-		core.charge = 100
+		// core.charge = 100 // DISABLED
 		core.faith = 100
 
 	..()

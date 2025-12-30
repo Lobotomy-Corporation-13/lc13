@@ -52,9 +52,9 @@
 	start_mining(user, I)
 
 /turf/closed/mineral/resurgence/proc/start_mining(mob/living/carbon/human/user, obj/item/tool)
-	// Check charge requirement
+	// Check faith requirement
 	if(!can_gather(user))
-		to_chat(user, span_warning("You're too exhausted to mine. You need at least [MIN_CHARGE_FOR_WORK] charge."))
+		to_chat(user, span_warning("You're too exhausted to mine. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
 	// Work rate based on tool speed (lower toolspeed = faster)
@@ -77,7 +77,7 @@
 
 	// Mining loop - continues until interrupted or complete
 	while(work_points < work_needed)
-		// Check charge each tick
+		// Check faith each tick
 		if(!can_gather(user))
 			to_chat(user, span_warning("You're too exhausted to continue mining."))
 			break
@@ -106,11 +106,15 @@
 		complete_mining(user)
 
 /turf/closed/mineral/resurgence/proc/complete_mining(mob/user)
-	user.visible_message(
-		span_notice("[user] breaks through [src]!"),
-		span_notice("You break through [src] and collect the ore!"),
-		span_hear("You hear rock breaking.")
-	)
+	if(user)
+		user.visible_message(
+			span_notice("[user] breaks through [src]!"),
+			span_notice("You break through [src] and collect the ore!"),
+			span_hear("You hear rock breaking.")
+		)
+	else
+		// Harvester or other automated source
+		visible_message(span_notice("[src] crumbles apart!"))
 	playsound(src, 'sound/effects/break_stone.ogg', 60, TRUE)
 
 	// Drop ore

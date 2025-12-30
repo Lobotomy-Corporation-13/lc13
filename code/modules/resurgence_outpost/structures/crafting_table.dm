@@ -161,6 +161,18 @@
 		"desc" = "3 Metal + 1 Wood -> Shovel"
 	)
 
+	recipes["Simple Harvester"] = list(
+		"result" = /obj/item/harvester/simple,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 5,
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 25,
+		"desc" = "5 Wood + 5 Metal + 2 Rope -> Simple Harvester (auto-harvests resources)"
+	)
+
 	// Floor Tiles
 	recipes["Plasteel Floor Tiles"] = list(
 		"result" = /obj/item/stack/tile/plasteel,

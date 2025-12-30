@@ -3,8 +3,15 @@
  *
  * Individual farming plots that belong to a farm zone.
  * Plots respond to zone growth ticks rather than processing themselves.
- * Growth stage constants are defined in farm_zone.dm
+ * Compatible with standard hydroponics /obj/item/seeds
  */
+
+/// Base harvest work required (can be modified by potency)
+#define FARM_HARVEST_WORK_BASE 5
+/// Water drain per zone tick
+#define FARM_WATER_DRAIN 5
+/// Minimum water level for growth
+#define FARM_MIN_WATER 10
 
 /obj/structure/farm_plot
 	name = "farm plot"
@@ -13,18 +20,18 @@
 	icon_state = "soil"
 	density = FALSE
 	anchored = TRUE
-	max_integrity = 100
+	max_integrity = 500
 
 	/// Reference to managing zone
 	var/datum/farm_zone/parent_zone
-	/// Currently planted crop (datum, not item)
-	var/datum/farm_seed/planted_seed
+	/// Currently planted seed (standard hydroponics seed)
+	var/obj/item/seeds/myseed
 	/// Water level 0-100
 	var/water_level = 0
-	/// Current growth stage
-	var/growth_stage = FARM_STAGE_EMPTY
-	/// Progress toward next stage (zone ticks)
-	var/growth_progress = 0
+	/// Growth age in zone ticks
+	var/age = 0
+	/// Ready to harvest?
+	var/harvest = FALSE
 	/// Prevents double-harvesting
 	var/being_harvested = FALSE
 	/// Accumulated harvest work points
@@ -37,33 +44,40 @@
 /obj/structure/farm_plot/Destroy()
 	if(parent_zone)
 		parent_zone.remove_plot(src)
-	if(planted_seed)
-		QDEL_NULL(planted_seed)
+	// Drop the planted seed onto the ground
+	if(myseed)
+		var/turf/T = get_turf(src)
+		if(T)
+			myseed.forceMove(T)
+		else
+			QDEL_NULL(myseed)
+		myseed = null
 	return ..()
 
 /// Called by zone during shared growth tick
 /obj/structure/farm_plot/proc/on_zone_tick()
-	if(!planted_seed || growth_stage == FARM_STAGE_EMPTY)
+	if(!myseed)
 		return
 
 	// Already ready to harvest - don't process further
-	if(growth_stage == FARM_STAGE_HARVEST)
+	if(harvest)
 		return
 
 	// Drain water
-	water_level = max(0, water_level - planted_seed.water_drain)
+	water_level = max(0, water_level - FARM_WATER_DRAIN)
 
 	// Check water requirement - no water = no growth (but doesn't die)
-	if(water_level < planted_seed.min_water)
+	if(water_level < FARM_MIN_WATER)
+		update_icon()
 		return
 
-	// Advance growth progress
-	growth_progress += 1
-	if(growth_progress >= planted_seed.growth_per_stage)
-		growth_progress = 0
-		growth_stage = min(growth_stage + 1, FARM_STAGE_HARVEST)
-		if(growth_stage == FARM_STAGE_HARVEST)
-			visible_message(span_notice("[src] is ready for harvest!"))
+	// Advance age
+	age++
+
+	// Check if ready to harvest (based on maturation)
+	if(age >= myseed.maturation)
+		harvest = TRUE
+		visible_message(span_notice("[src] is ready for harvest!"))
 
 	update_icon()
 
@@ -73,22 +87,35 @@
 	update_icon_plant()
 	update_icon_water()
 
-/// Update plant overlay based on growth stage (similar to hydroponics)
+/// Update plant overlay based on growth stage (using hydroponics seed properties)
 /obj/structure/farm_plot/proc/update_icon_plant()
-	if(!planted_seed || growth_stage == FARM_STAGE_EMPTY)
+	if(!myseed)
 		return
 
-	var/mutable_appearance/plant_overlay = mutable_appearance(planted_seed.plant_icon, planted_seed.get_icon_state(growth_stage), layer = OBJ_LAYER + 0.01)
+	var/icon_state_to_use
+	if(harvest)
+		// Use harvest icon or final growth stage
+		if(myseed.icon_harvest)
+			icon_state_to_use = myseed.icon_harvest
+		else
+			icon_state_to_use = "[myseed.icon_grow][myseed.growthstages]"
+	else
+		// Calculate growth stage from age vs maturation
+		var/growth_percent = age / max(myseed.maturation, 1)
+		var/stage = clamp(round(growth_percent * myseed.growthstages) + 1, 1, myseed.growthstages)
+		icon_state_to_use = "[myseed.icon_grow][stage]"
+
+	var/mutable_appearance/plant_overlay = mutable_appearance(myseed.growing_icon, icon_state_to_use, layer = OBJ_LAYER + 0.01)
 	add_overlay(plant_overlay)
 
 /// Update water indicator overlay
 /obj/structure/farm_plot/proc/update_icon_water()
 	// Show low water indicator when planted and needs water
-	if(planted_seed && growth_stage != FARM_STAGE_EMPTY && growth_stage != FARM_STAGE_HARVEST)
-		if(water_level <= 10)
+	if(myseed && !harvest)
+		if(water_level <= FARM_MIN_WATER)
 			add_overlay(mutable_appearance('icons/obj/hydroponics/equipment.dmi', "over_lowwater3"))
 	// Show harvest indicator when ready
-	if(growth_stage == FARM_STAGE_HARVEST)
+	if(harvest)
 		add_overlay(mutable_appearance('icons/obj/hydroponics/equipment.dmi', "over_harvest3"))
 
 // ===== Interactions =====
@@ -108,28 +135,35 @@
 				to_chat(user, span_warning("The plot is already fully watered."))
 			return
 
-	// Plant seeds
-	if(istype(I, /obj/item/seeds/farm))
-		if(planted_seed)
+	// Plant any hydroponics seed
+	if(istype(I, /obj/item/seeds))
+		if(myseed)
 			to_chat(user, span_warning("Something is already planted here."))
 			return
-		if(growth_stage != FARM_STAGE_EMPTY)
-			to_chat(user, span_warning("Clear the plot first."))
+		var/obj/item/seeds/S = I
+		// Check if this seed can be harvested
+		if(S.yield == -1)
+			to_chat(user, span_warning("This seed cannot be planted in a farm plot."))
 			return
-		var/obj/item/seeds/farm/seed_item = I
-		plant_seed(seed_item.seed_datum)
-		to_chat(user, span_notice("You plant [seed_item]."))
-		qdel(I)
+		if(!S.product)
+			to_chat(user, span_warning("This seed doesn't produce anything harvestable."))
+			return
+		plant_seed(S, user)
 		return
 
 	return ..()
 
 /// Plant a seed in this plot
-/obj/structure/farm_plot/proc/plant_seed(datum/farm_seed/seed)
-	// Create a copy of the seed datum for this plot
-	planted_seed = new seed.type()
-	growth_stage = FARM_STAGE_GROWING_1
-	growth_progress = 0
+/obj/structure/farm_plot/proc/plant_seed(obj/item/seeds/S, mob/user)
+	if(user)
+		user.transferItemToLoc(S, src)
+		to_chat(user, span_notice("You plant [S]."))
+	else
+		S.forceMove(src)
+
+	myseed = S
+	age = 0
+	harvest = FALSE
 	harvest_work_points = 0
 	update_icon()
 
@@ -138,11 +172,11 @@
 	if(.)
 		return
 
-	if(growth_stage == FARM_STAGE_EMPTY)
+	if(!myseed)
 		to_chat(user, span_notice("Nothing is planted here."))
 		return
 
-	if(growth_stage != FARM_STAGE_HARVEST)
+	if(!harvest)
 		to_chat(user, span_warning("This plant isn't ready for harvest yet."))
 		return
 
@@ -155,34 +189,43 @@
 
 	start_harvest(user)
 
+/// Calculate harvest work based on seed properties
+/obj/structure/farm_plot/proc/get_harvest_work()
+	if(!myseed)
+		return FARM_HARVEST_WORK_BASE
+	// Higher yield = more work, potency affects slightly
+	return (myseed.yield * 3)
+
 /// Begin work-based harvesting
 /obj/structure/farm_plot/proc/start_harvest(mob/living/carbon/human/user)
-	// Check charge requirement
+	// Check faith requirement
 	if(!can_gather(user))
-		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_CHARGE_FOR_WORK] charge."))
+		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
+
+	var/total_work = get_harvest_work()
 
 	// Starting message
 	if(harvest_work_points > 0)
-		var/progress_pct = round((harvest_work_points / planted_seed.harvest_work) * 100)
-		to_chat(user, span_notice("You continue harvesting [planted_seed.name]... ([progress_pct]% complete)"))
+		var/progress_pct = round((harvest_work_points / total_work) * 100)
+		to_chat(user, span_notice("You continue harvesting [myseed.plantname]... ([progress_pct]% complete)"))
 	else
-		to_chat(user, span_notice("You begin harvesting [planted_seed.name]..."))
+		to_chat(user, span_notice("You begin harvesting [myseed.plantname]..."))
 
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 30, TRUE)
 
 	being_harvested = TRUE
 
 	// Harvesting loop - continues until interrupted or complete
-	while(harvest_work_points < planted_seed.harvest_work)
-		// Check charge each tick
+	while(harvest_work_points < total_work)
+		// Check faith each tick
 		if(!can_gather(user))
 			to_chat(user, span_warning("You're too exhausted to continue harvesting."))
 			break
 
 		// Do the work tick
 		if(!do_after(user, GATHER_TICK_TIME, target = src))
-			var/progress_pct = round((harvest_work_points / planted_seed.harvest_work) * 100)
+			var/progress_pct = round((harvest_work_points / total_work) * 100)
 			to_chat(user, span_notice("You stop harvesting. Progress: [progress_pct]%"))
 			break
 
@@ -197,59 +240,55 @@
 	being_harvested = FALSE
 
 	// Check completion
-	if(harvest_work_points >= planted_seed.harvest_work)
+	if(harvest_work_points >= total_work)
 		complete_harvest(user)
 
 /// Finish harvesting and drop produce
 /obj/structure/farm_plot/proc/complete_harvest(mob/user)
-	user.visible_message(
-		span_notice("[user] harvests [planted_seed.name]."),
-		span_notice("You harvest [planted_seed.name]!"),
-		span_hear("You hear rustling.")
-	)
+	if(user)
+		user.visible_message(
+			span_notice("[user] harvests [myseed.plantname]."),
+			span_notice("You harvest [myseed.plantname]!"),
+			span_hear("You hear rustling.")
+		)
+	else
+		// Harvester or other automated source
+		visible_message(span_notice("[myseed.plantname] is harvested!"))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
 
-	// Create produce
-	var/product_type = planted_seed.product_type
-	var/product_amount = planted_seed.product_amount
-	if(ispath(product_type, /obj/item/stack))
-		new product_type(get_turf(src), product_amount)
-	else
-		for(var/i in 1 to product_amount)
-			new product_type(get_turf(src))
+	// Create produce using seed properties
+	var/product_type = myseed.product
+	var/product_count = myseed.yield
 
-	// Reset work points
+	for(var/i in 1 to product_count)
+		new product_type(get_turf(src), myseed)
+
+	// Reset for next harvest cycle
 	harvest_work_points = 0
-
-	// Handle regrowth or clear
-	if(planted_seed.regrows)
-		growth_stage = FARM_STAGE_GROWING_1
-		growth_progress = 0
-	else
-		QDEL_NULL(planted_seed)
-		growth_stage = FARM_STAGE_EMPTY
+	harvest = FALSE
+	age = 0  // Reset age to regrow
 
 	update_icon()
 
 /obj/structure/farm_plot/examine(mob/user)
 	. = ..()
 	. += span_notice("Water level: [water_level]%")
-	if(planted_seed)
-		switch(growth_stage)
-			if(FARM_STAGE_GROWING_1)
-				. += span_notice("[planted_seed.name] - Seedling")
-			if(FARM_STAGE_GROWING_2)
-				. += span_notice("[planted_seed.name] - Growing")
-			if(FARM_STAGE_GROWING_3)
-				. += span_notice("[planted_seed.name] - Almost ready")
-			if(FARM_STAGE_HARVEST)
-				. += span_notice("[planted_seed.name] - Ready to harvest!")
-				if(harvest_work_points > 0)
-					var/progress_pct = round((harvest_work_points / planted_seed.harvest_work) * 100)
-					. += span_notice("Harvest progress: [progress_pct]%")
-		if(water_level < planted_seed.min_water && growth_stage != FARM_STAGE_HARVEST)
+	if(myseed)
+		if(harvest)
+			. += span_notice("[myseed.plantname] - Ready to harvest!")
+			if(harvest_work_points > 0)
+				var/progress_pct = round((harvest_work_points / get_harvest_work()) * 100)
+				. += span_notice("Harvest progress: [progress_pct]%")
+		else
+			var/growth_pct = round((age / max(myseed.maturation, 1)) * 100)
+			. += span_notice("[myseed.plantname] - [min(growth_pct, 100)]% grown")
+		if(water_level < FARM_MIN_WATER && !harvest)
 			. += span_warning("Needs water to grow!")
 	else
 		. += span_notice("Ready for planting.")
 	if(parent_zone)
 		. += span_notice("Part of farm zone: [parent_zone.name]")
+
+#undef FARM_HARVEST_WORK_BASE
+#undef FARM_WATER_DRAIN
+#undef FARM_MIN_WATER

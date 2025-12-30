@@ -108,3 +108,16 @@
 		"total_work" = 30,
 		"desc" = "25 Rock -> 1 Iron Ore"
 	)
+
+	// Advanced Tools
+	recipes["Advanced Harvester"] = list(
+		"result" = /obj/item/harvester/advanced,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/harvester/simple = 1,
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 40,
+		"desc" = "Simple Harvester + 5 Metal + 2 Silver -> Advanced Harvester (stores faith, auto-seeks)"
+	)

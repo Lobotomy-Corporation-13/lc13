@@ -1,21 +1,22 @@
 /**
  * Resurgence Core - The mechanical heart of Resurgence Machines
  *
- * Manages two core resources:
- * - Charge: Power that decays over time. Must be restored via batteries/charging.
- * - Faith: Changes over time based on active faith events. Affects charge decay rate.
+ * Manages Faith as the core resource.
+ * Faith changes over time based on active faith events.
  *
  * Faith levels:
- * - 80-100 (Inspired): Charge decays 50% slower
- * - 60-79 (Steady): Charge decays 25% slower
- * - 40-59 (Neutral): Normal charge decay
- * - 20-39 (Wavering): Charge decays 25% faster
- * - 0-19 (Despairing): Charge decays 50% faster, movement penalty
+ * - 80-100 (Inspired): High morale bonus
+ * - 60-79 (Steady): Good morale
+ * - 40-59 (Neutral): Normal operation
+ * - 20-39 (Wavering): Low morale
+ * - 0-19 (Despairing): Movement penalty, work restricted
+ *
+ * NOTE: Charge system is disabled but code preserved for potential future use.
  */
 
 /obj/item/organ/resurgence_core
 	name = "mechanical core"
-	desc = "A complex mechanical core that powers a resurgence machine, managing their charge."
+	desc = "A complex mechanical core that powers a resurgence machine, managing their faith."
 	icon = 'icons/obj/assemblies/new_assemblies.dmi'
 	icon_state = "rawcore_bluespace"
 	zone = BODY_ZONE_CHEST
@@ -23,10 +24,10 @@
 	organ_flags = ORGAN_SYNTHETIC
 	actions_types = list(/datum/action/item_action/organ_action/resurgence_check)
 
-	// Charge variables
-	var/charge = 100
-	var/max_charge = 100
-	var/charge_decay_rate = 0.5 // per life tick (every 2 seconds)
+	// Charge variables (DISABLED - kept for potential future use)
+	// var/charge = 100
+	// var/max_charge = 100
+	// var/charge_decay_rate = 0.5 // per life tick (every 2 seconds)
 
 	// Faith variables
 	var/faith = 50 // Current faith level
@@ -35,7 +36,7 @@
 	var/faith_change_rate = 0 // Net faith change per 5 seconds (calculated from events)
 
 	// Internal tracking
-	var/charge_tick_counter = 0 // Track ticks for charge decay messages
+	// var/charge_tick_counter = 0 // Track ticks for charge decay messages (DISABLED)
 	var/faith_tick_counter = 0 // Track ticks for faith updates (every 5 seconds)
 
 /obj/item/organ/resurgence_core/Destroy()
@@ -69,13 +70,13 @@
 	if(!owner || owner.stat == DEAD)
 		return
 
-	// Decay charge based on faith level
-	var/decay_modifier = get_faith_decay_modifier()
-	var/actual_decay = charge_decay_rate * decay_modifier
-	adjust_charge(-actual_decay)
+	// CHARGE DECAY DISABLED - Code preserved for potential future use
+	// var/decay_modifier = get_faith_decay_modifier()
+	// var/actual_decay = charge_decay_rate * decay_modifier
+	// adjust_charge(-actual_decay)
 
 	// Track ticks for periodic messages
-	charge_tick_counter++
+	// charge_tick_counter++ // DISABLED
 	faith_tick_counter++
 
 	// Apply faith changes every 5 seconds (~2-3 life ticks)
@@ -83,22 +84,20 @@
 		faith_tick_counter = 0
 		apply_faith_changes()
 
-	// Low charge warning (every 30 ticks = 60 seconds)
-	if(charge_tick_counter >= 30)
-		charge_tick_counter = 0
-
-		// Add or remove charge anxiety based on current charge
-		if(charge < 30)
-			add_faith_event("charge_anxiety", new /datum/faith_event/charge_anxiety(
-				"Low charge is causing anxiety.",
-				-1, // Lose 1 faith per 5 seconds while low charge
-				null,
-				"charge_anxiety"
-			))
-			if(prob(20))
-				to_chat(owner, span_warning("Your charge is running low... You need to recharge soon."))
-		else
-			clear_faith_event("charge_anxiety")
+	// CHARGE WARNING DISABLED - Code preserved for potential future use
+	// if(charge_tick_counter >= 30)
+	// 	charge_tick_counter = 0
+	// 	if(charge < 30)
+	// 		add_faith_event("charge_anxiety", new /datum/faith_event/charge_anxiety(
+	// 			"Low charge is causing anxiety.",
+	// 			-1,
+	// 			null,
+	// 			"charge_anxiety"
+	// 		))
+	// 		if(prob(20))
+	// 			to_chat(owner, span_warning("Your charge is running low... You need to recharge soon."))
+	// 	else
+	// 		clear_faith_event("charge_anxiety")
 
 	// Apply movement penalty for low faith
 	if(faith < 20)
@@ -108,10 +107,10 @@
 	else
 		owner.remove_movespeed_modifier(/datum/movespeed_modifier/resurgence_low_faith)
 
-	// Critical charge warning
-	if(charge <= 0)
-		to_chat(owner, span_danger("Your core is completely drained! Find power immediately!"))
-		owner.adjustOxyLoss(5) // Simulate power starvation
+	// CRITICAL CHARGE DISABLED - Code preserved for potential future use
+	// if(charge <= 0)
+	// 	to_chat(owner, span_danger("Your core is completely drained! Find power immediately!"))
+	// 	owner.adjustOxyLoss(5)
 
 	// Update faith HUD display
 	if(ishuman(owner))
@@ -119,9 +118,9 @@
 		H.update_faith_hud()
 
 // ============================================
-// Charge Management
+// Charge Management (DISABLED - preserved for future use)
 // ============================================
-
+/*
 /obj/item/organ/resurgence_core/proc/adjust_charge(amount)
 	charge = clamp(charge + amount, 0, max_charge)
 
@@ -148,6 +147,7 @@
 			"sustenance"
 		))
 	return restored
+*/
 
 // ============================================
 // Faith Management
@@ -207,17 +207,17 @@
 		if(event)
 			faith_change_rate += event.faith_change
 
-/// Get charge decay modifier based on current faith level
-/obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()
-	if(faith >= 80)
-		return 0.5  // Inspired - 50% slower decay
-	if(faith >= 60)
-		return 0.75 // Steady - 25% slower decay
-	if(faith >= 40)
-		return 1.0  // Neutral - normal decay
-	if(faith >= 20)
-		return 1.25 // Wavering - 25% faster decay
-	return 1.5      // Despairing - 50% faster decay
+// DISABLED - Charge decay modifier (preserved for future use)
+// /obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()
+// 	if(faith >= 80)
+// 		return 0.5  // Inspired - 50% slower decay
+// 	if(faith >= 60)
+// 		return 0.75 // Steady - 25% slower decay
+// 	if(faith >= 40)
+// 		return 1.0  // Neutral - normal decay
+// 	if(faith >= 20)
+// 		return 1.25 // Wavering - 25% faster decay
+// 	return 1.5      // Despairing - 50% faster decay
 
 /// Get the name of the current faith level
 /obj/item/organ/resurgence_core/proc/get_faith_level_name()
@@ -240,15 +240,15 @@
 	if(!owner)
 		return
 
-	// EMPs damage the core and drain charge
+	// EMPs damage the core and drain faith
 	switch(severity)
 		if(EMP_LIGHT)
 			owner.adjustBruteLoss(10)
-			adjust_charge(-20)
+			adjust_faith(-10)
 			to_chat(owner, span_warning("Your core systems are disrupted by the electromagnetic pulse!"))
 		if(EMP_HEAVY)
 			owner.adjustBruteLoss(20)
-			adjust_charge(-40)
+			adjust_faith(-20)
 			owner.Paralyze(20)
 			to_chat(owner, span_danger("Your core systems are severely disrupted by the electromagnetic pulse!"))
 
@@ -268,7 +268,7 @@
 /// Action for checking core status
 /datum/action/item_action/organ_action/resurgence_check
 	name = "Check Core Status"
-	desc = "Check your mechanical core's charge and faith levels."
+	desc = "Check your mechanical core's faith level and status."
 
 /datum/action/item_action/organ_action/resurgence_check/Trigger()
 	. = ..()
@@ -289,15 +289,14 @@
 	// Header
 	to_chat(H, span_notice("<b>=== Core Status ===</b>"))
 
-	// Charge display with bar
-	var/charge_percent = round((core.charge / core.max_charge) * 100)
-	var/charge_color = "green"
-	if(charge_percent < 30)
-		charge_color = "red"
-	else if(charge_percent < 60)
-		charge_color = "orange"
-
-	to_chat(H, "<span style='color: [charge_color];'>Charge: [round(core.charge)]/[core.max_charge] ([charge_percent]%)</span>")
+	// CHARGE DISPLAY DISABLED - preserved for future use
+	// var/charge_percent = round((core.charge / core.max_charge) * 100)
+	// var/charge_color = "green"
+	// if(charge_percent < 30)
+	// 	charge_color = "red"
+	// else if(charge_percent < 60)
+	// 	charge_color = "orange"
+	// to_chat(H, "<span style='color: [charge_color];'>Charge: [round(core.charge)]/[core.max_charge] ([charge_percent]%)</span>")
 
 	// Faith display with level name
 	var/faith_level = core.get_faith_level_name()
@@ -330,16 +329,16 @@
 		rate_color = "gray"
 	to_chat(H, "<span style='color: [rate_color];'>[rate_text]</span>")
 
-	// Show decay modifier
-	var/decay_mod = core.get_faith_decay_modifier()
-	var/decay_text
-	if(decay_mod < 1)
-		decay_text = "Charge decay reduced by [round((1 - decay_mod) * 100)]%"
-	else if(decay_mod > 1)
-		decay_text = "Charge decay increased by [round((decay_mod - 1) * 100)]%"
-	else
-		decay_text = "Charge decay is normal"
-	to_chat(H, span_notice(decay_text))
+	// DECAY MODIFIER DISPLAY DISABLED - preserved for future use
+	// var/decay_mod = core.get_faith_decay_modifier()
+	// var/decay_text
+	// if(decay_mod < 1)
+	// 	decay_text = "Charge decay reduced by [round((1 - decay_mod) * 100)]%"
+	// else if(decay_mod > 1)
+	// 	decay_text = "Charge decay increased by [round((decay_mod - 1) * 100)]%"
+	// else
+	// 	decay_text = "Charge decay is normal"
+	// to_chat(H, span_notice(decay_text))
 
 	// Show active faith events (non-hidden)
 	var/has_events = FALSE

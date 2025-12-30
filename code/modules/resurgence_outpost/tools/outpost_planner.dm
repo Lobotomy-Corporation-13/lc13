@@ -87,7 +87,8 @@
 	blueprint_categories[BLUEPRINT_CAT_PRODUCTION] = list(
 		"Crafting Table" = /obj/structure/resurgence_blueprint/crafting_table,
 		"Forge" = /obj/structure/resurgence_blueprint/forge,
-		"Loom" = /obj/structure/resurgence_blueprint/loom
+		"Loom" = /obj/structure/resurgence_blueprint/loom,
+		"Seed Extractor" = /obj/structure/resurgence_blueprint/seed_extractor
 	)
 
 	// Furniture category - beds, chairs, tables, racks
@@ -182,6 +183,16 @@
 	data["farming_selection"] = farming_zone_selection.len
 	data["farming_max"] = farming_max_tiles
 	data["existing_zones"] = get_farming_zones_data()
+
+	// Check if selection will join an existing zone
+	if(farming_mode && farming_zone_selection.len > 0)
+		var/datum/farm_zone/adjacent = find_adjacent_zone()
+		if(adjacent)
+			data["will_join_zone"] = adjacent.name
+		else
+			data["will_join_zone"] = null
+	else
+		data["will_join_zone"] = null
 
 	return data
 
@@ -300,9 +311,14 @@
 
 		if("confirm_farming_zone")
 			if(farming_zone_selection.len >= 1)
-				var/zone_name = stripped_input(usr, "Name your farm zone:", "Farm Zone", "Farm Zone", MAX_NAME_LEN)
-				if(zone_name)
-					create_farming_zone(usr, zone_name)
+				// Check if we're joining an existing zone (no name needed)
+				var/datum/farm_zone/adjacent = find_adjacent_zone()
+				if(adjacent)
+					create_farming_zone(usr, null)
+				else
+					var/zone_name = stripped_input(usr, "Name your farm zone:", "Farm Zone", "Farm Zone", MAX_NAME_LEN)
+					if(zone_name)
+						create_farming_zone(usr, zone_name)
 			return TRUE
 
 		if("clear_farming_selection")
@@ -593,18 +609,41 @@
 	farming_zone_selection.Cut()
 	selection_overlays.Cut()
 
-/// Create a farming zone from selected tiles
-/obj/item/resurgence_outpost_planner/proc/create_farming_zone(mob/user, zone_name)
-	var/datum/farm_zone/zone = new(zone_name)
+/// Find an existing farm zone adjacent to any of the selected tiles
+/obj/item/resurgence_outpost_planner/proc/find_adjacent_zone()
+	for(var/turf/T in farming_zone_selection)
+		// Check all cardinal directions for existing farm plots
+		for(var/dir in GLOB.cardinals)
+			var/turf/adjacent = get_step(T, dir)
+			for(var/obj/structure/farm_plot/plot in adjacent)
+				if(plot.parent_zone)
+					return plot.parent_zone
+	return null
 
+/// Create a farming zone from selected tiles (or add to existing adjacent zone)
+/obj/item/resurgence_outpost_planner/proc/create_farming_zone(mob/user, zone_name)
+	// Check for adjacent existing zone first
+	var/datum/farm_zone/zone = find_adjacent_zone()
+	var/joined_existing = FALSE
+
+	if(zone)
+		joined_existing = TRUE
+	else
+		zone = new(zone_name)
+
+	var/plots_created = 0
 	for(var/turf/T in farming_zone_selection)
 		var/obj/structure/farm_plot/plot = new(T)
 		zone.add_plot(plot)
+		plots_created++
 
 	clear_farming_selection()
 	farming_mode = FALSE
 
-	to_chat(user, span_notice("Created farm zone '[zone_name]' with [zone.plots.len] plots."))
+	if(joined_existing)
+		to_chat(user, span_notice("Added [plots_created] plots to existing zone '[zone.name]'."))
+	else
+		to_chat(user, span_notice("Created farm zone '[zone_name]' with [plots_created] plots."))
 	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
 	SStgui.update_uis(src)
 

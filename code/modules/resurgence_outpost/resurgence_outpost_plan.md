@@ -50,37 +50,40 @@ Faith is calculated from mood events, similar to TGStation's mood system.
 | Witnessed death | -20 | 10 min | "death" |
 | Injured | -5 | Until healed | "injury" |
 | In completed shelter | +5 | While inside | "shelter" |
-| Low charge warning | -10 | While low | "charge_anxiety" |
 
-### Charge (Passive Decay)
-Charge no longer regenerates passively. It only decays.
+**Faith Event Design Guidelines:**
 
-**Changes from current system:**
-- Remove `charge_regen_rate` (no passive regen)
-- Add `charge_decay_rate` (base: 0.5 per life tick)
-- Decay rate modified by faith level
+Faith event amounts should be balanced based on their duration:
 
-**Charge Decay Formula:**
-```dm
-var/decay_modifier = get_faith_decay_modifier()  // 0.5 to 1.5 based on faith
-var/actual_decay = charge_decay_rate * decay_modifier
-adjust_charge(-actual_decay)
-```
+| Event Duration | Faith Change | Examples |
+|----------------|--------------|----------|
+| Permanent/Long (>30 sec) | ≤ ±1 per tick | Room bonuses, worn clothing, nearby community |
+| Short/Temporary (<30 sec) | Higher amounts | Eating meals (+5 to +18), contributing to monument (+15) |
 
-**Restoring Charge:**
-- Consuming power cells/batteries
-- Using charging stations
-- Resting at powered structures
-- Special items/abilities
+**Rationale:**
+- Long-duration events tick continuously, so small values (≤1) accumulate over time without overwhelming the system
+- Short-duration events need larger values to have meaningful impact before expiring
+- This prevents permanent bonuses from trivializing faith management while allowing impactful temporary boosts
 
-### Updated Core Procs
+### Charge System (DISABLED)
+The charge system has been disabled to simplify gameplay. Only faith is used as a resource.
+The charge code is preserved (commented out) for potential future re-activation.
+
+**Current system:**
+- Faith is the only active resource
+- Work (gathering, harvesting) requires minimum 5 faith
+- EMPs drain faith instead of charge
+- Low faith (< 20) applies movement penalty
+
+### Updated Core Procs (Faith-Only)
 ```dm
 /obj/item/organ/resurgence_core
-    var/charge = 100
-    var/max_charge = 100
-    var/charge_decay_rate = 0.5  // per life tick (replaces regen)
+    // Charge variables (DISABLED)
+    // var/charge = 100
+    // var/max_charge = 100
+    // var/charge_decay_rate = 0.5
 
-    var/faith = 50              // Calculated from events
+    var/faith = 50              // Current faith level
     var/max_faith = 100
     var/list/faith_events = list()  // category -> /datum/faith_event
 
@@ -89,31 +92,16 @@ adjust_charge(-actual_decay)
     if(faith_events[category])
         qdel(faith_events[category])
     faith_events[category] = event
-    recalculate_faith()
+    recalculate_faith_rate()
 
 /obj/item/organ/resurgence_core/proc/clear_faith_event(category)
     if(faith_events[category])
         qdel(faith_events[category])
         faith_events -= category
-    recalculate_faith()
+    recalculate_faith_rate()
 
-/obj/item/organ/resurgence_core/proc/recalculate_faith()
-    var/total = 50  // Base faith
-    for(var/category in faith_events)
-        var/datum/faith_event/event = faith_events[category]
-        total += event.faith_change
-    faith = clamp(total, 0, max_faith)
-
-/obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()
-    if(faith >= 80)
-        return 0.5   // Inspired - 50% slower decay
-    if(faith >= 60)
-        return 0.75  // Steady - 25% slower
-    if(faith >= 40)
-        return 1.0   // Neutral - normal
-    if(faith >= 20)
-        return 1.25  // Wavering - 25% faster
-    return 1.5       // Despairing - 50% faster
+/obj/item/organ/resurgence_core/proc/adjust_faith(amount)
+    faith = clamp(faith + amount, 0, max_faith)
 ```
 
 ---
@@ -2823,26 +2811,26 @@ This is NOT a faith event - it directly reduces the faith value by 0.1 per work 
 - Crafting a 20-work item = -2 faith
 - Building a structure (50 work) = -5 faith
 
-### Charge Requirement
+### Faith Requirement (Charge System Disabled)
 
-**Players cannot gather or craft if charge is below 5.**
+**Players cannot gather or craft if faith is below 5.**
 
 ```dm
-#define MIN_CHARGE_FOR_WORK 5
+#define MIN_FAITH_FOR_WORK 5
 #define FAITH_DRAIN_PER_WORK 0.1
 
 /obj/structure/resurgence_tree/attackby(obj/item/I, mob/user)
     if(!is_axe(I))
         return ..()
 
-    // Check charge
+    // Check faith
     var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
     if(!istype(core))
         to_chat(user, span_warning("You don't have a resurgence core."))
         return
 
-    if(core.charge < MIN_CHARGE_FOR_WORK)
-        to_chat(user, span_warning("You're too exhausted to gather resources. Rest to regain charge."))
+    if(core.faith < MIN_FAITH_FOR_WORK)
+        to_chat(user, span_warning("You're too exhausted to gather resources."))
         return
 
     start_chopping(user, I)
@@ -2867,8 +2855,8 @@ This is NOT a faith event - it directly reduces the faith value by 0.1 per work 
     to_chat(user, span_notice("You begin chopping the tree... ([round(work_progress/work_needed*100)]% complete)"))
 
     while(work_progress < work_needed)
-        // Check charge each second
-        if(core.charge < MIN_CHARGE_FOR_WORK)
+        // Check faith each second (charge system disabled)
+        if(core.faith < MIN_FAITH_FOR_WORK)
             to_chat(user, span_warning("You're too exhausted to continue. Progress: [round(work_progress/work_needed*100)]%"))
             break
 
@@ -2907,9 +2895,94 @@ This is NOT a faith event - it directly reduces the faith value by 0.1 per work 
 
 ---
 
+## Harvester Tool
+
+An automated gathering tool that can be attached to resources to harvest them without continuous player interaction.
+
+### Variants
+
+| Variant | Faith Storage | Search Range | Special |
+|---------|--------------|--------------|---------|
+| Simple Harvester | None (uses player) | None | Single target only |
+| Advanced Harvester | 100 faith | 3 tiles | Auto-seeks next target |
+
+### Simple Harvester
+
+**Crafting:** Basic materials at Crafting Table
+- 5 Wood
+- 5 Metal
+- 2 Rope
+
+**Behavior:**
+1. Player attaches harvester to a valid resource (tree, ore deposit, cotton plant, farm plot)
+2. Faith cost is paid from player based on target's `work_needed` value
+3. Harvester begins working at normal player speed
+4. When complete, resource is harvested and loot drops at location
+5. Harvester drops to ground, ready for reuse
+6. Unlimited uses - no durability
+
+**Faith Costs (based on resource work_needed):**
+
+| Resource | Work Needed | Faith Cost |
+|----------|-------------|------------|
+| Tree | 300 | 30 |
+| Iron Ore | 240 | 24 |
+| Stone | 180 | 18 |
+| Sand Pile | 90 | 9 |
+| Cotton Plant | 60 | 6 |
+| Farm Plot (harvest) | varies | varies |
+
+### Advanced Harvester
+
+**Crafting:** Upgrade at Forge
+- 1 Simple Harvester
+- 5 Metal
+- 2 Silver
+
+**Behavior:**
+1. Has internal faith storage (100 faith capacity)
+2. Player can "charge" it by transferring faith from their core
+3. When attached to resource, uses stored faith instead of player's
+4. After completing harvest, automatically seeks next valid target within 3 tiles
+5. Only targets same resource type (trees -> trees, ore -> ore)
+6. Continues until faith depleted or no valid targets remain
+7. When stopped, drops to ground at last location
+
+**Auto-Seek Logic:**
+```dm
+/obj/item/harvester/advanced/proc/find_next_target()
+    var/list/candidates = list()
+    for(var/obj/target in range(3, get_turf(src)))
+        if(is_valid_harvest_target(target))
+            if(is_same_resource_type(target, last_target_type))
+                candidates += target
+
+    if(candidates.len)
+        return pick(candidates)
+    return null
+```
+
+### Valid Targets
+
+Both harvester variants can target:
+- `/obj/structure/resurgence_tree` - Trees
+- `/obj/structure/resurgence_ore_deposit` - Ore deposits
+- `/obj/structure/resurgence_cotton` - Cotton plants
+- `/obj/structure/farm_plot` - Farm plots (only when harvest-ready)
+
+### Destruction Behavior
+
+When a harvester is destroyed while in use:
+- Drops to ground at current location
+- Partially refunds faith (50% of remaining work value)
+- Does NOT complete the harvest
+- Resource retains its current progress
+
+---
+
 ## Cooking System
 
-Cooking allows players to create meals that restore charge and provide temporary faith bonuses.
+Cooking allows players to create meals that provide faith bonuses (charge system disabled).
 
 ### Cooking Station
 
@@ -2928,17 +3001,16 @@ A crafting station (campfire, cooking pot, or stove) that uses the same work-bas
 
 ### Meal Component
 
-All cooked food gets a component that tracks quality and charge value:
+All cooked food gets a component that tracks quality and provides faith bonuses:
 
 ```dm
 /datum/component/resurgence_meal
-    var/charge_value = 10      // How much charge is restored
+    // var/charge_value = 10   // DISABLED - charge system not active
     var/quality = "decent"     // Quality tier
     var/faith_bonus = 5        // Faith event strength
     var/quality_name = ""      // Display name like "Good Meal"
 
-/datum/component/resurgence_meal/Initialize(charge = 10, qual = "decent")
-    charge_value = charge
+/datum/component/resurgence_meal/Initialize(qual = "decent")
     quality = qual
     faith_bonus = get_faith_bonus_for_quality(qual)
     quality_name = get_quality_display_name(qual)
@@ -2954,10 +3026,6 @@ All cooked food gets a component that tracks quality and charge value:
     var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
     if(!istype(core))
         return
-
-    // Restore charge
-    core.adjust_charge(charge_value)
-    to_chat(H, span_notice("The [quality_name] restores [charge_value] charge."))
 
     // Handle faith event (highest quality wins)
     apply_meal_faith_event(core)

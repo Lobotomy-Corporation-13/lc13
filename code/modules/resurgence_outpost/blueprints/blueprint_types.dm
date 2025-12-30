@@ -266,6 +266,19 @@
 		/obj/item/resurgence_component/rope = 3
 	)
 
+/obj/structure/resurgence_blueprint/seed_extractor
+	name = "seed extractor blueprint"
+	result_name = "seed extractor"
+	icon = 'icons/obj/hydroponics/equipment.dmi'
+	icon_state = "sextractor"
+	result_type = /obj/structure/resurgence_seed_extractor
+
+/obj/structure/resurgence_blueprint/seed_extractor/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 5,
+		/obj/item/stack/sheet/metal = 2
+	)
+
 // ===========================================
 // FURNITURE BLUEPRINTS
 // ===========================================

@@ -45,6 +45,20 @@ Each step is self-contained and can be tested independently. Complete and test e
     category = "monument"
 ```
 
+**Faith Event Design Guidelines:**
+
+Faith event amounts should be balanced based on their duration:
+
+| Event Duration | Faith Change | Examples |
+|----------------|--------------|----------|
+| Permanent/Long (>30 sec) | ≤ ±1 per tick | Room bonuses, worn clothing, nearby community |
+| Short/Temporary (<30 sec) | Higher amounts | Eating meals (+5 to +18), contributing to monument (+15) |
+
+**Rationale:**
+- Long-duration events tick continuously, so small values (≤1) accumulate over time without overwhelming the system
+- Short-duration events need larger values to have meaningful impact before expiring
+- This prevents permanent bonuses from trivializing faith management while allowing impactful temporary boosts
+
 **Testing:**
 1. Compile - should have no errors
 2. No in-game testing needed yet (this is a data structure)
@@ -55,24 +69,25 @@ Each step is self-contained and can be tested independently. Complete and test e
 
 ## Step 2: Update Resurgence Core Organ
 
-**Goal:** Add faith event list and decay-based charge system to the existing core.
+**Goal:** Faith-only resource system (charge system disabled but preserved).
 
 **Files to modify:**
 - `code/modules/surgery/organs/resurgence_core.dm`
 
 **Changes:**
-1. Remove `charge_regen_rate`, add `charge_decay_rate`
-2. Add `faith_events` list
-3. Add procs: `add_faith_event()`, `clear_faith_event()`, `recalculate_faith()`, `get_faith_decay_modifier()`
-4. Update `on_life()` to decay charge instead of regenerate
+1. Faith is the only active resource
+2. Charge system code commented out (preserved for potential future use)
+3. Faith events system active
+4. EMPs drain faith instead of charge
+5. Work requires minimum 5 faith
 
 **Testing:**
 1. Spawn a resurgence machine mob
-2. Use "Check Core Status" action - should show charge and faith
-3. Wait and verify charge decreases over time (not increases)
-4. Verify faith level affects charge decay speed
+2. Use "Check Core Status" action - should show faith level
+3. Verify faith changes over time based on events
+4. Verify low faith (< 20) applies movement penalty
 
-**Status:** [x] Complete
+**Status:** [x] Complete (Updated to faith-only system)
 
 ---
 
@@ -1098,6 +1113,103 @@ if(istype(core))
 
 ---
 
+## Step 30: Harvester Tool
+
+**Goal:** Create automated harvesting tools that can gather resources while the player does other tasks.
+
+**Files to create:**
+- `code/modules/resurgence_outpost/tools/harvester.dm`
+
+**Overview:**
+Two variants of the Harvester tool:
+1. **Simple Harvester** - Attaches to a single resource, harvests it, then drops to ground
+2. **Advanced Harvester** - Stores faith, after finishing seeks nearby same-type resources (3 tile range)
+
+**Simple Harvester Implementation:**
+```dm
+/obj/item/resurgence_harvester
+    name = "harvester"
+    desc = "A mechanical device that can be attached to resources to automatically harvest them."
+    // Attach to: mining turfs, trees, cotton plants, farm plots
+    // Faith cost: Depends on source type (based on work_needed of target)
+    // Speed: Same as manual harvesting
+    // Reusable: Yes (unlimited uses)
+    // On destruction while working: Drops + partial faith refund
+
+/obj/item/resurgence_harvester/proc/attach_to(atom/target, mob/user)
+    // Validate target is harvestable
+    // Calculate faith cost based on target's work_needed
+    // Deduct faith from user's core
+    // Begin automated harvesting process
+    // When complete: detach and drop to ground
+
+/obj/item/resurgence_harvester/proc/process_harvest()
+    // Runs on a timer, adds work_points like manual harvesting
+    // Same speed as player harvesting (GATHER_WORK_PER_TICK)
+    // No faith drain during harvest (paid upfront)
+```
+
+**Advanced Harvester Implementation:**
+```dm
+/obj/item/resurgence_harvester/advanced
+    name = "advanced harvester"
+    desc = "An upgraded harvester that can store faith and automatically seek nearby resources."
+    var/stored_faith = 0
+    var/max_faith = 100
+    var/search_range = 3  // tiles
+
+/obj/item/resurgence_harvester/advanced/proc/load_faith(mob/user, amount)
+    // Transfer faith from user to harvester storage
+
+/obj/item/resurgence_harvester/advanced/proc/seek_next_target()
+    // After completing current harvest:
+    // Search within 3 tiles for same-type harvestable
+    // Mining -> other mining turfs (same ore type)
+    // Trees -> other trees
+    // Cotton -> other cotton plants
+    // Farm plots -> other plots in same zone
+    // If found and has enough stored faith: move and attach
+    // If not found or out of faith: drop to ground
+```
+
+**Faith Costs (based on target work_needed):**
+| Target Type | Base Work | Faith Cost |
+|-------------|-----------|------------|
+| Mining (ore) | 30-50 | 3-5 |
+| Tree | 40 | 4 |
+| Cotton | 20 | 2 |
+| Farm Plot | varies by yield | yield * 1 |
+
+**Crafting Recipes:**
+- Simple Harvester: 5 Metal + 3 Wood + 1 Rope (at Crafting Table)
+- Advanced Harvester: 1 Simple Harvester + 5 Metal + 2 Silver (at Forge)
+
+**Valid Targets:**
+- `/turf/closed/mineral/resurgence` (mining)
+- `/obj/structure/resurgence_tree` (trees)
+- `/obj/structure/resurgence_cotton` (cotton)
+- `/obj/structure/farm_plot` (farming)
+
+**Behavior on Destruction:**
+- If attacked/destroyed while harvesting
+- Drops the harvester item
+- Refunds remaining faith (proportional to work not completed)
+
+**Testing:**
+1. Craft Simple Harvester at crafting table
+2. Attach to tree - verify faith is deducted
+3. Wait for harvest completion - verify drops and item falls
+4. Pick up and reuse on mining node
+5. Craft Advanced Harvester at forge
+6. Load faith into advanced harvester
+7. Attach to mining node near other nodes
+8. Verify it moves to next node after completing first
+9. Attack harvester while working - verify drop + partial refund
+
+**Status:** [X] Complete
+
+---
+
 ## DEPRIORITIZED - Combat Features
 
 The following steps are deprioritized to focus on basebuilding and living systems first. Implement after core living systems are complete.
@@ -1186,13 +1298,14 @@ The following steps are deprioritized to focus on basebuilding and living system
 - Bed & Stat Leveling (Step 18)
 - Player Data Persistence (Step 19)
 
-**Phase 7 - Resource & Survival (Steps 20-25)**
+**Phase 7 - Resource & Survival (Steps 20-25, 30)**
 - Extended gathering with progress saving (Step 20)
-- Charge requirements (Step 21)
-- Cooking system for charge restoration and faith (Step 22)
+- Faith requirements (Step 21) - Updated: charge system disabled
+- Cooking system for faith restoration (Step 22)
 - Cotton plants for cloth production (Step 23) ✓
 - Tools with durability (Step 24)
 - Beauty for crafted items (Step 25)
+- Harvester tool for automated gathering (Step 30)
 
 **Phase 8 - Persistence (Steps 26-27)**
 - Save/load system

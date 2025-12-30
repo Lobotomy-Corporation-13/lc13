@@ -4,14 +4,8 @@
  * Zone-based farming with shared timers to reduce server load.
  * All plots in a zone share a single growth timer instead of
  * each plot having its own process() call.
+ * Compatible with standard hydroponics /obj/item/seeds.
  */
-
-/// Growth stage constants
-#define FARM_STAGE_EMPTY 0
-#define FARM_STAGE_GROWING_1 1
-#define FARM_STAGE_GROWING_2 2
-#define FARM_STAGE_GROWING_3 3
-#define FARM_STAGE_HARVEST 4
 
 /// Global list of all farming zones
 GLOBAL_LIST_EMPTY(resurgence_farm_zones)
@@ -82,7 +76,7 @@ GLOBAL_LIST_EMPTY(resurgence_farm_zones)
 	var/ready_count = 0
 	var/total_water = 0
 	for(var/obj/structure/farm_plot/plot in plots)
-		if(plot.growth_stage == FARM_STAGE_HARVEST)
+		if(plot.harvest)
 			ready_count++
 		total_water += plot.water_level
 	return list(

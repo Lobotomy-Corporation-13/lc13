@@ -5,8 +5,8 @@
  * Used by trees, ore deposits, and other harvestable resources.
  */
 
-/// Minimum charge required to perform gathering work
-#define MIN_CHARGE_FOR_WORK 5
+/// Minimum faith required to perform gathering work
+#define MIN_FAITH_FOR_WORK 5
 
 /// Faith drained per work point during gathering
 #define FAITH_DRAIN_PER_WORK 0.1
@@ -17,14 +17,14 @@
 /// Time per gathering tick in deciseconds
 #define GATHER_TICK_TIME 1 SECONDS
 
-/// Check if user has enough charge to gather
+/// Check if user has enough faith to gather
 /proc/can_gather(mob/living/carbon/human/user)
 	if(!istype(user))
 		return FALSE
 	var/obj/item/organ/resurgence_core/core = user.getorganslot(ORGAN_SLOT_HEART)
 	if(!istype(core))
 		return FALSE
-	return core.charge >= MIN_CHARGE_FOR_WORK
+	return core.faith >= MIN_FAITH_FOR_WORK
 
 /// Apply faith drain for work done (directly, not via events)
 /proc/apply_work_faith_drain(mob/living/carbon/human/user, work_amount)
