@@ -11,9 +11,10 @@
 					/obj/item/encryptionkey/headset_training = 20,
 					/obj/item/encryptionkey/headset_command = 20,
 					/obj/item/encryptionkey/headset_welfare = 20,
-					/obj/item/encryptionkey/headset_discipline = 20)
-					// /obj/item/encryptionkey/headset_extraction = 4, //Placeholder for when they're added.
-					// /obj/item/encryptionkey/headset_records = 4) //Same as above.
+					/obj/item/encryptionkey/headset_discipline = 20,
+					/obj/item/encryptionkey/headset_extraction = 20,
+					/obj/item/encryptionkey/headset_records = 20,
+					)
 
 	refill_canister = null //Refill it with the clothing of the dead.
 	default_price = PAYCHECK_RESOURCE  //Makes vended items cost 0 ahn.
