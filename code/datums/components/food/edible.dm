@@ -333,6 +333,23 @@ Behavior that's still missing from this component that original food items had t
 			On_Consume(eater, feeder)
 		checkLiked(fraction, eater)
 
+		// Common room eating bonus for resurgence machines
+		if(ishuman(eater))
+			var/mob/living/carbon/human/H = eater
+			var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+			if(istype(core))
+				var/tier_bonus = get_common_room_eating_bonus(H)
+				if(tier_bonus > 0)
+					// Apply temporary faith boost for eating in common room
+					var/datum/faith_event/common_eating/event = new(
+						"Enjoying a meal in the common room.",
+						0.5, // Small bonus per tick while event active
+						30 SECONDS,
+						"common_eating"
+					)
+					core.add_faith_event("common_eating", event)
+					to_chat(H, span_notice("Eating with company lifts your spirits!"))
+
 		//Invoke our after eat callback if it is valid
 		if(after_eat)
 			after_eat.Invoke(eater, feeder, bitecount)

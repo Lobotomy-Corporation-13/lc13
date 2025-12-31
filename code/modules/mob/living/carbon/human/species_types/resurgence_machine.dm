@@ -95,18 +95,19 @@
 
 	// Color the icon based on faith change rate (sum of all active faith events)
 	// Red = losing faith, Green = gaining faith, White = stable
-	// Intensity scales from 0 at rate 0, to max at rate ±2
+	// Intensity scales from 0 at rate 0, to max at rate ±5
+	// This requires multiple stacking events to achieve deep colors
 	var/rate = core.faith_change_rate
 	if(rate > 0)
-		// Gaining faith - green tint, intensity scales with rate (0 to 2 maps to 0% to 100%)
-		var/intensity = clamp(rate / 2, 0, 1) // 0 at rate 0, 1 at rate 2+
+		// Gaining faith - green tint, intensity scales with rate (0 to 5 maps to 0% to 100%)
+		var/intensity = clamp(rate / 5, 0, 1) // 0 at rate 0, 1 at rate 5+
 		// Interpolate from white (255,255,255) to pure green (0,255,0)
 		var/red_val = round(255 * (1 - intensity))
 		var/blue_val = round(255 * (1 - intensity))
 		hud_used.faith_display.color = rgb(red_val, 255, blue_val)
 	else if(rate < 0)
-		// Losing faith - red tint, intensity scales with rate (0 to -2 maps to 0% to 100%)
-		var/intensity = clamp(abs(rate) / 2, 0, 1) // 0 at rate 0, 1 at rate -2 or lower
+		// Losing faith - red tint, intensity scales with rate (0 to -5 maps to 0% to 100%)
+		var/intensity = clamp(abs(rate) / 5, 0, 1) // 0 at rate 0, 1 at rate -5 or lower
 		// Interpolate from white (255,255,255) to pure red (255,0,0)
 		var/green_val = round(255 * (1 - intensity))
 		var/blue_val = round(255 * (1 - intensity))

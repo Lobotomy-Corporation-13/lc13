@@ -5,6 +5,20 @@
  * Different room types provide different faith bonuses/penalties.
  */
 
+/// Global tracking of room ownership: ckey -> area reference
+GLOBAL_LIST_EMPTY(resurgence_room_owners)
+
+// Room quality thresholds (beauty per tile)
+#define ROOM_QUALITY_LUXURIOUS 50
+#define ROOM_QUALITY_COMFORTABLE 30
+#define ROOM_QUALITY_ADEQUATE 10
+#define ROOM_QUALITY_BARE 0
+#define ROOM_QUALITY_SHABBY -20
+
+// Room cramped thresholds
+#define ROOM_MIN_TILES 11  // 10 or less = cramped
+#define ROOM_MIN_DIMENSION 3  // width or height < 3 = cramped
+
 
 
 /// Base outpost area
@@ -46,8 +60,14 @@
 	var/list/boundary_doors = list()
 	/// Whether this room is being dissolved
 	var/dissolving = FALSE
+	/// The ckey of the player who owns this room (null = unclaimed)
+	var/owner_ckey = null
 
 /area/resurgence_outpost/room/Destroy()
+	// Clean up ownership before destroying
+	if(owner_ckey)
+		GLOB.resurgence_room_owners -= owner_ckey
+		apply_homeless_faith_event(owner_ckey)
 	unregister_boundary_signals()
 	return ..()
 
@@ -96,6 +116,57 @@
 			dissolve_room("A wall forming the room boundary was destroyed.")
 			return FALSE
 	return TRUE
+
+/// Claim this room for a player
+/area/resurgence_outpost/room/proc/claim_room(ckey)
+	if(!ckey)
+		return FALSE
+
+	// Unclaim any previously owned room by this player
+	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[ckey]
+	if(old_room && !QDELETED(old_room) && old_room != src)
+		old_room.unclaim_room(silent = TRUE)
+
+	// Set new owner
+	owner_ckey = ckey
+	GLOB.resurgence_room_owners[ckey] = src
+
+	// Update faith event for the owner
+	update_owner_faith_event()
+	return TRUE
+
+/// Remove ownership from this room
+/area/resurgence_outpost/room/proc/unclaim_room(silent = FALSE)
+	if(!owner_ckey)
+		return FALSE
+
+	var/old_ckey = owner_ckey
+	GLOB.resurgence_room_owners -= owner_ckey
+	owner_ckey = null
+
+	// Update faith event - player is now homeless (unless silent, for when claiming new room)
+	if(!silent)
+		apply_homeless_faith_event(old_ckey)
+	return TRUE
+
+/// Update the room owner's faith event to "Has Personal Room"
+/area/resurgence_outpost/room/proc/update_owner_faith_event()
+	if(!owner_ckey)
+		return
+
+	// Find the player's resurgence core
+	var/obj/item/organ/resurgence_core/core = get_resurgence_core_by_ckey(owner_ckey)
+	if(!core)
+		return
+
+	// Add "Has Personal Room" event (+5 faith per 30 seconds = +1 per 6-second tick)
+	var/datum/faith_event/room_ownership/event = new(
+		"You have a personal room.",
+		1, // +1 per tick (applied every ~6 seconds, so ~+5 per 30 sec)
+		null, // permanent until room lost
+		"room_ownership"
+	)
+	core.add_faith_event("room_ownership", event)
 
 /// Dissolve this room back to outdoors
 /area/resurgence_outpost/room/proc/dissolve_room(reason = "")
@@ -273,3 +344,65 @@
 		return 1.0
 	return A.faith_modifier
 
+/**
+ * Apply "Homeless" faith event to a player without a room.
+ *
+ * Arguments:
+ * * ckey - The ckey of the player to apply the event to
+ */
+/proc/apply_homeless_faith_event(ckey)
+	if(!ckey)
+		return
+
+	var/obj/item/organ/resurgence_core/core = get_resurgence_core_by_ckey(ckey)
+	if(!core)
+		return
+
+	// Add "Homeless" event (-1 per tick, following Faith Event Design Guidelines for permanent events)
+	var/datum/faith_event/room_ownership/event = new(
+		"You have no personal room.",
+		-1, // -1 per tick (permanent events should be ≤ ±1 per tick per guidelines)
+		null, // permanent until room claimed
+		"room_ownership"
+	)
+	core.add_faith_event("room_ownership", event)
+
+/**
+ * Helper to find a resurgence core by ckey.
+ *
+ * Arguments:
+ * * ckey - The ckey to search for
+ *
+ * Returns: The resurgence core if found, null otherwise
+ */
+/proc/get_resurgence_core_by_ckey(ckey)
+	if(!ckey)
+		return null
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		if(H.ckey == ckey)
+			var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+			if(istype(core))
+				return core
+	return null
+
+/**
+ * Check if a mob is eating in a common room.
+ * Returns bonus tier adjustment for meal quality.
+ *
+ * Arguments:
+ * * eater - The mob that is eating
+ *
+ * Returns: 1 if in common room, 0 otherwise
+ */
+/proc/get_common_room_eating_bonus(mob/living/eater)
+	if(!ishuman(eater))
+		return 0
+
+	var/area/resurgence_outpost/room/room = get_area(eater)
+	if(!istype(room))
+		return 0
+
+	if(room.room_type == ROOM_TYPE_COMMON)
+		return 1  // +1 quality tier
+
+	return 0

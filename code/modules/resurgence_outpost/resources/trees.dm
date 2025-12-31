@@ -7,7 +7,7 @@
 
 /obj/structure/resurgence_tree
 	name = "gnarled tree"
-	desc = "A twisted tree that has adapted to the harsh outskirts. It can be chopped for wood."
+	desc = "A twisted tree that has adapted to the harsh outskirts. Chop it with your hands or use an axe to work faster."
 	icon = 'icons/obj/flora/jungletreesmall.dmi'
 	max_integrity = 10000
 	icon_state = "tree"
@@ -28,22 +28,37 @@
 	var/tree_type = /obj/structure/resurgence_tree
 	/// Whether to randomize icon on init
 	var/randomize_icon = TRUE
+	/// Speed bonus when using a sharp tool (0.25 = 25% faster)
+	var/tool_speed_bonus = 0.25
 
 /obj/structure/resurgence_tree/Initialize(mapload)
 	. = ..()
 	if(randomize_icon)
 		icon_state = pick("tree", "tree1", "tree2", "tree3", "tree4", "tree5", "tree6")
 
-/obj/structure/resurgence_tree/attackby(obj/item/W, mob/user, params)
-	// Check for valid cutting tool (needs sharpness and force)
-	if(!W.get_sharpness() || W.force <= 0)
-		return ..()
+/obj/structure/resurgence_tree/attack_hand(mob/user, list/modifiers)
+	. = ..()
+	if(.)
+		return
 
 	if(being_worked)
 		to_chat(user, span_warning("Someone is already working on this tree."))
 		return
 
-	// Must be human with resurgence core
+	if(!ishuman(user))
+		return
+
+	start_chopping(user, null)
+
+/obj/structure/resurgence_tree/attackby(obj/item/W, mob/user, params)
+	// Check for valid cutting tool (needs sharpness) - if not, try bare hands
+	if(!W.get_sharpness())
+		return attack_hand(user)
+
+	if(being_worked)
+		to_chat(user, span_warning("Someone is already working on this tree."))
+		return
+
 	if(!ishuman(user))
 		return ..()
 
@@ -55,18 +70,28 @@
 		to_chat(user, span_warning("You're too exhausted to chop. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
-	// Calculate work rate based on tool force (force 10 = base rate)
-	var/work_per_tick = GATHER_WORK_PER_TICK * (tool.force / 10)
+	// Work rate - base rate for bare hands, sharp tools provide speed bonus
+	var/work_per_tick = GATHER_WORK_PER_TICK
+	var/using_tool = FALSE
+	if(tool?.get_sharpness())
+		work_per_tick *= (1 + tool_speed_bonus) // 25% faster with sharp tool
+		using_tool = TRUE
 
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
 		to_chat(user, span_notice("You continue chopping [src]... ([progress_pct]% complete)"))
 	else
-		to_chat(user, span_notice("You begin chopping [src]..."))
+		if(using_tool)
+			to_chat(user, span_notice("You begin chopping [src] with [tool]..."))
+		else
+			to_chat(user, span_notice("You begin chopping [src] with your bare hands..."))
 
-	if(tool.hitsound)
+	// Play sound
+	if(using_tool && tool.hitsound)
 		playsound(src, tool.hitsound, 50, TRUE)
+	else
+		playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
 
 	being_worked = TRUE
 
@@ -88,8 +113,11 @@
 		apply_work_faith_drain(user, work_per_tick)
 
 		// Periodic sound (30% chance each tick)
-		if(prob(30) && tool.hitsound)
-			playsound(src, tool.hitsound, 50, TRUE)
+		if(prob(30))
+			if(using_tool && tool.hitsound)
+				playsound(src, tool.hitsound, 50, TRUE)
+			else
+				playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
 
 	being_worked = FALSE
 
@@ -127,9 +155,9 @@
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
 		. += span_notice("It has been partially chopped. ([progress_pct]% complete)")
-		. += span_notice("Anyone can continue working on it with a sharp tool.")
+		. += span_notice("Anyone can continue working on it. A sharp tool works faster.")
 	else
-		. += span_notice("Use a sharp tool to chop it down for wood.")
+		. += span_notice("Chop it with your hands, or use a sharp tool for faster work.")
 
 // ===== Tree Variants =====
 

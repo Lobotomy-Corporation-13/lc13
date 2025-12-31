@@ -49,14 +49,25 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 		// core.charge = 100 // DISABLED
 		core.faith = 100
 
+		// Give newcomers a 10-minute grace period to find a home
+		// This offsets the homeless penalty and gives time to claim a room
+		var/datum/faith_event/newcomer/event = new(
+			"Recently awakened - finding your place.",
+			1.5, // +1.5 per tick to offset homeless penalty and give buffer
+			10 MINUTES,
+			"newcomer"
+		)
+		core.add_faith_event("newcomer", event)
+
 	..()
 
 /datum/outfit/job/machine_civilian
 	name = "Machine Civilian"
 	jobtype = /datum/job/machine_civilian
-	uniform = /obj/item/clothing/under/suit/charcoal
-	shoes = /obj/item/clothing/shoes/sneakers/black
-	ears = /obj/item/radio/headset
+	uniform = /obj/item/clothing/under/misc/assistantformal
+	suit = /obj/item/clothing/suit/hooded/cloak/goliath
+	shoes = /obj/item/clothing/shoes/workboots/mining
+	ears = null
 	id = /obj/item/card/id
 
 	backpack = /obj/item/storage/backpack

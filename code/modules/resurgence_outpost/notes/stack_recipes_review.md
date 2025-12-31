@@ -7,7 +7,7 @@ Check which ones should be added to the Resurgence crafting system.
 
 ## Metal Recipes (`GLOB.metal_recipes`)
 
-### Furniture
+### Furniture [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Stool | 1 Metal | Simple seating |
@@ -19,82 +19,40 @@ Check which ones should be added to the Resurgence crafting system.
 | Sofas (middle/left/right/corner) | 1 Metal | |
 | Corporate Sofas | 1 Metal | |
 
-### Chess Pieces
+### Chess Pieces [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Chess pieces (all types) | 2 Metal | White/Black Pawn, Rook, Knight, Bishop, Queen, King |
 
-### Basic Items
+### Construction (Complex) [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
-| Rack Parts | 1 Metal | Storage rack |
-| Floor Tile | 1 Metal -> 4 tiles | Already in crafting table |
-| Metal Rod | 1 Metal -> 2 rods | Already in crafting table |
-
-### Construction (Complex)
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Computer Frame | 5 Metal | High-tech |
-| Modular Console | 10 Metal | High-tech |
-| Machine Frame | 5 Metal | High-tech |
-| Airlock Assemblies | 4 Metal | Various types |
-| Firelock Frame | 3 Metal | |
-| Turret Frame | 5 Metal | |
 | Meatspike Frame | 5 Metal | Kitchen |
-| Reflector Frame | 5 Metal | |
 
-### Wall Fixtures
+### Misc [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
-| Grenade Casing | 1 Metal | Weapon-related |
-| Light Fixture Frame | 2 Metal | |
-| Small Light Fixture Frame | 1 Metal | |
-| APC Frame | 2 Metal | High-tech |
-| Air Alarm Frame | 2 Metal | High-tech |
-| Fire Alarm Frame | 2 Metal | |
-| Extinguisher Cabinet Frame | 2 Metal | |
-| Button Frame | 1 Metal | |
-
-### Misc
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Floodlight Frame | 5 Metal | |
 | Voting Box | 15 Metal | |
 | Pestle | 1 Metal | Kitchen tool |
-| Hygienebot Assembly | 2 Metal | Robot |
 | Shower Frame | 2 Metal | |
-
----
-
-## Plasteel Recipes (`GLOB.plasteel_recipes`)
-
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| AI Core | 4 Plasteel | High-tech |
-| Bomb Assembly | 10 Plasteel | Dangerous |
-| High Security Airlock | 4 Plasteel | |
-| Vault Door | 6 Plasteel | |
 
 ---
 
 ## Wood Recipes (`GLOB.wood_recipes`)
 
-### Items
+### Items [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Picture Frame | 1 Wood | Decor |
 | Painting Frame | 1 Wood | Decor |
 | Wooden Sandals | 1 Wood | Footwear |
 | Wood Floor Tile | 1 Wood -> 4 tiles | Already in crafting table |
-| Firebrand | 2 Wood | Fire starter |
 | Rolling Pin | 2 Wood | Kitchen |
 | Tiki Mask | 2 Wood | Clothing |
 | Mortar | 3 Wood | Kitchen/Alchemy |
 | Wooden Bucket | 3 Wood | Container |
-| Honey Frame | 5 Wood | Beekeeping |
-| Rake | 5 Wood | Farming tool |
 
-### Structures
+### Structures [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Wood Table Frame | 2 Wood | Furniture |
@@ -103,16 +61,9 @@ Check which ones should be added to the Resurgence crafting system.
 | Ore Box | 4 Wood | Mining storage |
 | Wooden Barricade | 5 Wood | Defense |
 | Coffin | 5 Wood | Storage/burial |
-| Display Case Chassis | 5 Wood | |
 | Wooden Crate | 6 Wood | Storage |
-| Wooden Barrel | 8 Wood | Fermenting |
 | Dog Bed | 10 Wood | Pet furniture |
 | Dresser | 10 Wood | Storage/decor |
-| Loom | 10 Wood | Crafting station |
-| Drying Rack | 10 Wood | Hide processing |
-| Primitive Produce Bin | 25 Wood | Farming storage |
-| Primitive Seed Bin | 25 Wood | Farming storage |
-| Primitive Seed Grinder | 30 Wood | Farming |
 | Book Case | 35 Wood | Storage/decor |
 | Apiary | 40 Wood | Beekeeping |
 | Pews (middle/left/right) | 3 Wood | Church furniture |
@@ -121,7 +72,7 @@ Check which ones should be added to the Resurgence crafting system.
 
 ## Cloth Recipes (`GLOB.cloth_recipes`)
 
-### Clothing
+### Clothing [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | White Jumpskirt | 3 Cloth | |
@@ -134,7 +85,7 @@ Check which ones should be added to the Resurgence crafting system.
 | White Beanie | 2 Cloth | |
 | Blindfold | 2 Cloth | |
 
-### Bags
+### Bags [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Backpack | 4 Cloth | Already in loom |
@@ -142,19 +93,13 @@ Check which ones should be added to the Resurgence crafting system.
 | Plant Bag | 4 Cloth | Farming |
 | Book Bag | 4 Cloth | |
 | Mining Satchel | 4 Cloth | Mining |
-| Chemistry Bag | 4 Cloth | |
-| Bio Bag | 4 Cloth | |
-| Construction Bag | 4 Cloth | |
 
-### Misc
+### Misc [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
-| Improvised Gauze | 1 Cloth -> 2 | Medical |
-| Rag | 1 Cloth | Cleaning |
 | Bedsheet | 3 Cloth | Furniture |
-| Empty Sandbag | 4 Cloth | Defense |
 
-### Canvas
+### Canvas [ ]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | 19x19 Canvas | 3 Cloth | Art |
@@ -163,7 +108,7 @@ Check which ones should be added to the Resurgence crafting system.
 
 ---
 
-## Leather Recipes (`GLOB.leather_recipes`)
+## Leather Recipes (`GLOB.leather_recipes`) [ ]
 
 | Recipe | Cost | Notes |
 |--------|------|-------|
@@ -180,23 +125,7 @@ Check which ones should be added to the Resurgence crafting system.
 
 ---
 
-## Sinew Recipes (`GLOB.sinew_recipes`)
-
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Sinew Restraints | 1 Sinew | Handcuffs |
-
----
-
-## Silk Recipes (`GLOB.silk_recipes`)
-
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Silk String | 2 Silk | Crafting component |
-
----
-
-## Durathread Recipes (`GLOB.durathread_recipes`)
+## Durathread Recipes (`GLOB.durathread_recipes`) [ ]
 
 | Recipe | Cost | Notes |
 |--------|------|-------|
@@ -207,61 +136,13 @@ Check which ones should be added to the Resurgence crafting system.
 
 ---
 
-## Plastic Recipes (`GLOB.plastic_recipes`)
-
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Plastic Floor Tile | 1 Plastic -> 4 | |
-| Folding Plastic Chair | 2 Plastic | |
-| Water Bottle | 1 Plastic | Container |
-| Large Water Bottle | 3 Plastic | Container |
-| Colo Cups | 1 Plastic | Container |
-| Wet Floor Sign | 2 Plastic | |
-| Blank Wall Sign | 1 Plastic | |
-
----
-
-## Cardboard Recipes (`GLOB.cardboard_recipes`)
+## Cardboard Recipes (`GLOB.cardboard_recipes`) [ ]
 
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Box | 1 Cardboard | Storage |
-| Cardborg Suit | 3 Cardboard | Costume |
-| Cardborg Helmet | 1 Cardboard | Costume |
-| Cardboard Cutout | 5 Cardboard | Decor |
-| Pizza Box | 1 Cardboard | |
 | Folder | 1 Cardboard | |
 | Various Fancy Boxes | 1 Cardboard | Storage types |
-
----
-
-## Bronze Recipes (`GLOB.bronze_recipes`)
-
-| Recipe | Cost | Notes |
-|--------|------|-------|
-| Wall Gear | 2 Bronze | Construction |
-| Bronze Windows | 1-2 Bronze | |
-| Pinion Airlock | 4 Bronze | |
-| Bronze Floor Tile | 1 Bronze -> 4 | |
-| Bronze Hat | 1 Bronze | Clothing |
-| Bronze Suit | 1 Bronze | Clothing |
-| Bronze Boots | 1 Bronze | Clothing |
-| Bronze Chair | 1 Bronze | Furniture |
-
----
-
-## Costume Recipes (Animal Hides)
-
-| Recipe | Hide Type | Cost | Notes |
-|--------|-----------|------|-------|
-| Bloated Human Costume | Human Skin | 5 | |
-| Gondola Mask | Gondola Hide | 1 | |
-| Gondola Suit | Gondola Hide | 2 | |
-| Corgi Costume | Corgi Hide | 3 | |
-| Monkey Mask | Monkey Hide | 1 | |
-| Monkey Suit | Monkey Hide | 2 | |
-| Alien Helmet | Xeno Hide | 1 | |
-| Alien Suit | Xeno Hide | 2 | |
 
 ---
 
@@ -274,7 +155,6 @@ Check which ones should be added to the Resurgence crafting system.
 - [ ] Wooden Crate (6 Wood)
 - [ ] Ore Box (4 Wood)
 - [ ] Wooden Barrel (8 Wood) - for fermenting
-- [ ] Rack Parts (1 Metal)
 - [ ] Mortar (3 Wood)
 - [ ] Pestle (1 Metal)
 - [ ] Wooden Bucket (3 Wood)

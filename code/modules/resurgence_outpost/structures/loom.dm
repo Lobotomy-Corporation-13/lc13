@@ -194,3 +194,11 @@
 		// Create individual items (components, etc.)
 		for(var/i in 1 to result_amount)
 			new result_type(get_turf(src))
+
+// ===== Portable Loom =====
+// Does not require a workshop - works at full speed anywhere
+
+/obj/structure/resurgence_crafting_table/loom/portable
+	name = "portable loom"
+	desc = "A compact loom that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
+	requires_workshop = FALSE

@@ -10,22 +10,24 @@
 
 /turf/closed/mineral/resurgence
 	name = "rock"
-	desc = "A rocky outcrop. Use a pickaxe to mine it."
+	desc = "A rocky outcrop. Mine it with your hands or use a pickaxe to work faster."
 	icon = 'icons/turf/mining.dmi'
 	icon_state = "rock"
 	baseturfs = /turf/open/floor/plating/dirt
 	// Base rock contains plain rock chunks
 	mineralType = /obj/item/stack/ore/rock
-	mineralAmt = 30
+	mineralAmt = 8
 
 	/// Current work points accumulated
 	var/work_points = 0
 	/// Total work points needed to mine
-	var/work_needed = 100
+	var/work_needed = 50
 	/// Whether someone is currently mining
 	var/being_worked = FALSE
 	/// Whether this turf can be spread to by ore veins (base rock only)
 	var/can_be_spread_to = TRUE
+	/// Speed bonus when using a proper mining tool (0.25 = 25% faster)
+	var/tool_speed_bonus = 0.25
 
 /turf/closed/mineral/resurgence/Initialize(mapload)
 	. = ..()
@@ -35,17 +37,29 @@
 	// Color is set per-subtype, no action needed here
 	return
 
-/turf/closed/mineral/resurgence/attackby(obj/item/I, mob/user, params)
-	// Check for mining tool
-	if(I.tool_behaviour != TOOL_MINING)
-		to_chat(user, span_warning("You need a mining tool like a pickaxe to mine this."))
+/turf/closed/mineral/resurgence/attack_hand(mob/user, list/modifiers)
+	. = ..()
+	if(.)
 		return
 
 	if(being_worked)
 		to_chat(user, span_warning("Someone is already mining this."))
 		return
 
-	// Must be human with resurgence core
+	if(!ishuman(user))
+		return
+
+	start_mining(user, null)
+
+/turf/closed/mineral/resurgence/attackby(obj/item/I, mob/user, params)
+	// Check for mining tool - if not, try bare hands
+	if(I.tool_behaviour != TOOL_MINING)
+		return attack_hand(user)
+
+	if(being_worked)
+		to_chat(user, span_warning("Someone is already mining this."))
+		return
+
 	if(!ishuman(user))
 		return
 
@@ -57,21 +71,31 @@
 		to_chat(user, span_warning("You're too exhausted to mine. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
-	// Work rate based on tool speed (lower toolspeed = faster)
-	var/work_per_tick = GATHER_WORK_PER_TICK / tool.toolspeed
+	// Work rate - base rate for bare hands, tools provide speed bonus
+	var/work_per_tick = GATHER_WORK_PER_TICK
+	var/using_tool = FALSE
+	if(tool?.tool_behaviour == TOOL_MINING)
+		work_per_tick *= (1 + tool_speed_bonus) // 25% faster with proper tool
+		using_tool = TRUE
 
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
 		to_chat(user, span_notice("You continue mining [src]... ([progress_pct]% complete)"))
 	else
-		to_chat(user, span_notice("You begin mining [src]..."))
+		if(using_tool)
+			to_chat(user, span_notice("You begin mining [src] with [tool]..."))
+		else
+			to_chat(user, span_notice("You begin mining [src] with your bare hands..."))
 
-	// Play tool sound
-	if(islist(tool.usesound))
-		playsound(src, pick(tool.usesound), 50, TRUE)
-	else if(tool.usesound)
-		playsound(src, tool.usesound, 50, TRUE)
+	// Play sound
+	if(using_tool)
+		if(islist(tool.usesound))
+			playsound(src, pick(tool.usesound), 50, TRUE)
+		else if(tool.usesound)
+			playsound(src, tool.usesound, 50, TRUE)
+	else
+		playsound(src, 'sound/effects/stonedoor_openclose.ogg', 50, TRUE)
 
 	being_worked = TRUE
 
@@ -94,10 +118,13 @@
 
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
-			if(islist(tool.usesound))
-				playsound(src, pick(tool.usesound), 50, TRUE)
-			else if(tool.usesound)
-				playsound(src, tool.usesound, 50, TRUE)
+			if(using_tool)
+				if(islist(tool.usesound))
+					playsound(src, pick(tool.usesound), 50, TRUE)
+				else if(tool.usesound)
+					playsound(src, tool.usesound, 50, TRUE)
+			else
+				playsound(src, 'sound/effects/stonedoor_openclose.ogg', 50, TRUE)
 
 	being_worked = FALSE
 
@@ -133,11 +160,11 @@
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
 		. += span_notice("It has been partially mined. ([progress_pct]% complete)")
-		. += span_notice("Anyone can continue working on it with a pickaxe.")
+		. += span_notice("Anyone can continue working on it. A pickaxe works faster.")
 	else if(mineralType)
-		. += span_notice("Use a pickaxe to mine the ore inside.")
+		. += span_notice("Mine the ore with your hands, or use a pickaxe for faster work.")
 	else
-		. += span_notice("Use a pickaxe to break through the rock.")
+		. += span_notice("Break through the rock with your hands, or use a pickaxe.")
 
 /// Check if a turf is a valid target for vein spreading (base rock only, not ore)
 /turf/closed/mineral/resurgence/proc/is_valid_spread_target(turf/T)
@@ -239,24 +266,6 @@
 	work_needed = 300
 	can_be_spread_to = FALSE
 
-/turf/closed/mineral/resurgence/glass_rubble
-	name = "glass rubble"
-	desc = "Broken glass that can be recycled."
-	mineralType = /obj/item/stack/ore/glassrubble
-	mineralAmt = 60
-	color = "#87CEEB" // Light blue for glass
-	work_needed = 80
-	can_be_spread_to = FALSE
-
-/turf/closed/mineral/resurgence/iron_scrap
-	name = "iron scrap pile"
-	desc = "Rusted iron scrap that can be salvaged."
-	mineralType = /obj/item/stack/ore/ironscrap
-	mineralAmt = 100
-	color = "#B7410E" // Rust orange for scrap
-	work_needed = 120
-	can_be_spread_to = FALSE
-
 // ===== Random Ore Turfs (Spread Veins on Init) =====
 // Place these on the map - they become ore and spread a vein to adjacent base rock
 
@@ -321,27 +330,15 @@
 	min_spread = 2
 	max_spread = 4
 
-/turf/closed/mineral/resurgence/random/glass_rubble
-	ore_turf_type = /turf/closed/mineral/resurgence/glass_rubble
-	min_spread = 4
-	max_spread = 7
-
-/turf/closed/mineral/resurgence/random/iron_scrap
-	ore_turf_type = /turf/closed/mineral/resurgence/iron_scrap
-	min_spread = 5
-	max_spread = 8
-
 // Random ore picker - randomly selects an ore type on initialization
 /turf/closed/mineral/resurgence/random/any
 	name = "random ore vein"
 	/// List of possible ore types with their weights
 	var/static/list/ore_weights = list(
-		/turf/closed/mineral/resurgence/iron = 30,
-		/turf/closed/mineral/resurgence/coal = 25,
-		/turf/closed/mineral/resurgence/iron_scrap = 15,
-		/turf/closed/mineral/resurgence/glass_rubble = 15,
-		/turf/closed/mineral/resurgence/silver = 10,
-		/turf/closed/mineral/resurgence/gold = 5
+		/turf/closed/mineral/resurgence/iron = 40,
+		/turf/closed/mineral/resurgence/coal = 30,
+		/turf/closed/mineral/resurgence/silver = 20,
+		/turf/closed/mineral/resurgence/gold = 10
 	)
 
 /turf/closed/mineral/resurgence/random/any/Initialize(mapload)
@@ -361,10 +358,4 @@
 		if(/turf/closed/mineral/resurgence/gold)
 			min_spread = 2
 			max_spread = 4
-		if(/turf/closed/mineral/resurgence/glass_rubble)
-			min_spread = 4
-			max_spread = 7
-		if(/turf/closed/mineral/resurgence/iron_scrap)
-			min_spread = 5
-			max_spread = 8
 	return ..()

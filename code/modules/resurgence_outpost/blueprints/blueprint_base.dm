@@ -27,8 +27,10 @@
 	/// List of materials already added: type path -> amount added
 	var/list/added_materials = list()
 
-	/// Time it takes to add each material batch
+	/// Base time it takes to add each material batch
 	var/build_time = 2 SECONDS
+	/// XP awarded per material unit added
+	var/xp_per_material = 2
 	/// Sound to play when adding materials
 	var/build_sound = 'sound/items/deconstruct.ogg'
 	/// Sound to play when construction completes
@@ -36,6 +38,10 @@
 
 	/// Whether this blueprint is currently being worked on
 	var/being_built = FALSE
+	/// Reference to the last person who contributed materials (for beauty bonus)
+	var/mob/last_builder = null
+	/// If TRUE, the result structure will not be anchored (e.g., trash cart)
+	var/unanchored_result = FALSE
 
 /obj/structure/resurgence_blueprint/Initialize(mapload)
 	. = ..()
@@ -110,6 +116,35 @@
 			return FALSE
 	return TRUE
 
+/// Get build time accounting for player's construction stat
+/obj/structure/resurgence_blueprint/proc/get_build_time(mob/user)
+	var/time = build_time
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			time *= get_stat_speed_modifier(core.stat_construction)
+	return time
+
+/// Award construction XP to a player
+/obj/structure/resurgence_blueprint/proc/award_construction_xp(mob/user, amount)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(istype(core))
+		core.award_xp("construction", amount)
+
+/// Get beauty bonus from player's construction stat
+/obj/structure/resurgence_blueprint/proc/get_construction_beauty_bonus(mob/user)
+	if(!ishuman(user))
+		return 0
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(istype(core))
+		return get_stat_beauty_bonus(core.stat_construction)
+	return 0
+
 /obj/structure/resurgence_blueprint/examine(mob/user)
 	. = ..()
 	. += span_notice("Alt-click to rotate. Hit with an outpost planner to remove.")
@@ -142,7 +177,7 @@
 		being_built = TRUE
 		to_chat(user, span_notice("You begin adding [I.name] to the [name]..."))
 
-		if(!do_after(user, build_time, target = src))
+		if(!do_after(user, get_build_time(user), target = src))
 			being_built = FALSE
 			return
 
@@ -156,6 +191,11 @@
 		added_materials[matching_type] = added + to_add
 		playsound(src, build_sound, 50, TRUE)
 		to_chat(user, span_notice("You add [to_add] [I.name] to the [name]."))
+
+		// Award construction XP for materials added
+		award_construction_xp(user, to_add * xp_per_material)
+		last_builder = user
+
 		being_built = FALSE
 
 	// Handle non-stack items (components, etc.)
@@ -163,7 +203,7 @@
 		being_built = TRUE
 		to_chat(user, span_notice("You begin adding [I.name] to the [name]..."))
 
-		if(!do_after(user, build_time, target = src))
+		if(!do_after(user, get_build_time(user), target = src))
 			being_built = FALSE
 			return
 
@@ -176,6 +216,11 @@
 		added_materials[matching_type] = added + 1
 		playsound(src, build_sound, 50, TRUE)
 		to_chat(user, span_notice("You add [I.name] to the [name]."))
+
+		// Award construction XP for materials added
+		award_construction_xp(user, xp_per_material)
+		last_builder = user
+
 		being_built = FALSE
 
 	update_desc()
@@ -211,8 +256,12 @@
 			if(istype(result, /obj/structure))
 				var/obj/structure/S = result
 				S.setDir(dir)
-				// Auto-anchor built structures
-				S.anchored = TRUE
+				// Auto-anchor built structures unless unanchored_result is set
+				if(!unanchored_result)
+					S.anchored = TRUE
+
+			// TODO: Apply beauty bonus from builder's construction stat (Step 25)
+			// Use get_construction_beauty_bonus(user) when beauty system is integrated
 
 	// Remove the blueprint
 	qdel(src)

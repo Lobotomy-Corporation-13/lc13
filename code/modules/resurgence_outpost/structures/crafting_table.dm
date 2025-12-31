@@ -40,6 +40,12 @@
 	/// UI accent color (used in TGUI)
 	var/ui_color = "brown"
 
+	/// Whether this crafting table requires a workshop for normal speed
+	/// If TRUE, crafting is 3x slower when not in a workshop
+	var/requires_workshop = TRUE
+	/// Multiplier for work time when not in a workshop (default 3x slower)
+	var/outdoor_penalty = 3
+
 	// Progress-based crafting state
 	/// Current recipe being crafted (null if nothing in progress)
 	var/current_recipe_name = null
@@ -60,6 +66,30 @@
 	. = ..()
 	if(!recipes)
 		init_recipes()
+
+/// Get the work session time, accounting for workshop bonus and player stats
+/obj/structure/resurgence_crafting_table/proc/get_work_time(mob/user = null)
+	var/base_time = WORK_SESSION_TIME
+
+	// Apply workshop penalty if required
+	if(requires_workshop && !is_in_workshop(src))
+		base_time *= outdoor_penalty
+
+	// Apply crafting stat speed modifier if user is a resurgence machine
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/stat_mod = get_stat_speed_modifier(core.stat_crafting)
+			base_time *= stat_mod
+
+	return base_time
+
+/// Check if crafting is at reduced efficiency (not in workshop when required)
+/obj/structure/resurgence_crafting_table/proc/is_at_reduced_efficiency()
+	if(!requires_workshop)
+		return FALSE
+	return !is_in_workshop(src)
 
 /// Initialize the recipe list - override in subtypes
 /obj/structure/resurgence_crafting_table/proc/init_recipes()
@@ -428,15 +458,23 @@
 	else
 		to_chat(user, span_notice("You continue [busy_verb] [current_recipe_name]..."))
 
+	// Warn about reduced efficiency if not in workshop
+	if(is_at_reduced_efficiency())
+		to_chat(user, span_warning("Working outside a workshop - [outdoor_penalty]x slower!"))
+
 	// Auto-continue loop - keeps working until interrupted or all copies complete
 	while(current_recipe_name)
-		if(!do_after(user, WORK_SESSION_TIME, target = src))
+		var/work_time = get_work_time(user)
+		if(!do_after(user, work_time, target = src))
 			// Player was interrupted
 			to_chat(user, span_warning("You stop [busy_verb]. Progress saved."))
 			break
 
 		// Add work points (base amount, could be modified by skills/tools later)
 		current_work += WORK_PER_SESSION
+
+		// Award crafting XP for work done
+		award_crafting_xp(user, WORK_PER_SESSION)
 
 		// Check if this copy is complete
 		if(current_work >= total_work_needed)
@@ -728,6 +766,15 @@
 		for(var/i in 1 to result_amount)
 			new result_type(get_turf(src))
 
+/// Award crafting XP to a player
+/obj/structure/resurgence_crafting_table/proc/award_crafting_xp(mob/user, amount)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(istype(core))
+		core.award_xp("crafting", amount)
+
 /obj/structure/resurgence_crafting_table/examine(mob/user)
 	. = ..()
 	. += span_notice("Click to open the crafting menu.")
@@ -738,6 +785,18 @@
 			. += span_notice("Currently [busy_verb] [current_recipe_name] ([current_work]/[total_work_needed] work complete).")
 		if(!busy)
 			. += span_notice("Anyone can continue working on it.")
+	if(is_at_reduced_efficiency())
+		. += span_warning("Not in a workshop - crafting is [outdoor_penalty]x slower!")
+	else if(requires_workshop)
+		. += span_notice("In a workshop - crafting at full speed.")
+
+// ===== Portable Crafting Table =====
+// Does not require a workshop - works at full speed anywhere
+
+/obj/structure/resurgence_crafting_table/portable
+	name = "portable crafting table"
+	desc = "A compact workbench that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
+	requires_workshop = FALSE
 
 #undef WORK_SESSION_TIME
 #undef WORK_PER_SESSION

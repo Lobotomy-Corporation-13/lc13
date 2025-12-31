@@ -188,27 +188,27 @@
 // ===========================================
 
 /obj/structure/resurgence_blueprint/storage_chest
-	name = "storage chest blueprint"
-	result_name = "storage chest"
+	name = "wooden crate blueprint"
+	result_name = "wooden crate"
 	icon = 'icons/obj/crates.dmi'
 	icon_state = "wooden"
 	result_type = /obj/structure/closet/crate/wooden
 
 /obj/structure/resurgence_blueprint/storage_chest/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 10
+		/obj/item/stack/sheet/mineral/wood = 4
 	)
 
 /obj/structure/resurgence_blueprint/crate
-	name = "crate blueprint"
-	result_name = "crate"
+	name = "metal crate blueprint"
+	result_name = "metal crate"
 	icon = 'icons/obj/crates.dmi'
 	icon_state = "crate"
 	result_type = /obj/structure/closet/crate
 
 /obj/structure/resurgence_blueprint/crate/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/metal = 5
+		/obj/item/stack/sheet/metal = 4
 	)
 
 /obj/structure/resurgence_blueprint/barrel
@@ -221,6 +221,67 @@
 /obj/structure/resurgence_blueprint/barrel/init_materials()
 	required_materials = list(
 		/obj/item/stack/sheet/mineral/wood = 6
+	)
+
+/obj/structure/resurgence_blueprint/freezer
+	name = "freezer blueprint"
+	result_name = "freezer"
+	icon = 'icons/obj/crates.dmi'
+	icon_state = "freezer"
+	result_type = /obj/structure/closet/crate/freezer
+
+/obj/structure/resurgence_blueprint/freezer/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 6
+	)
+
+/obj/structure/resurgence_blueprint/trashcart
+	name = "trash cart blueprint"
+	result_name = "trash cart"
+	icon = 'icons/obj/crates.dmi'
+	icon_state = "trashcart"
+	result_type = /obj/structure/closet/crate/trashcart
+	unanchored_result = TRUE
+
+/obj/structure/resurgence_blueprint/trashcart/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 4
+	)
+
+/obj/structure/resurgence_blueprint/coffin
+	name = "coffin blueprint"
+	result_name = "coffin"
+	icon = 'icons/obj/crates.dmi'
+	icon_state = "coffin"
+	result_type = /obj/structure/closet/crate/coffin
+
+/obj/structure/resurgence_blueprint/coffin/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 5
+	)
+
+/obj/structure/resurgence_blueprint/trashbin
+	name = "trash bin blueprint"
+	result_name = "trash bin"
+	icon = 'icons/obj/crates.dmi'
+	icon_state = "largebins"
+	result_type = /obj/structure/closet/crate/bin
+
+/obj/structure/resurgence_blueprint/trashbin/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 4
+	)
+
+/obj/structure/resurgence_blueprint/fridge
+	name = "refrigerator blueprint"
+	result_name = "refrigerator"
+	icon = 'icons/obj/closet.dmi'
+	icon_state = "freezer"
+	result_type = /obj/structure/closet/secure_closet/freezer/fridge/open
+
+/obj/structure/resurgence_blueprint/fridge/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 8
 	)
 
 // ===========================================
@@ -288,12 +349,12 @@
 	result_name = "bed"
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "bed"
-	result_type = /obj/structure/bed
+	result_type = /obj/structure/resurgence_bed
 
 /obj/structure/resurgence_blueprint/bed/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 5,
-		/obj/item/stack/sheet/cotton/cloth = 4
+		/obj/item/stack/sheet/mineral/wood = 10,
+		/obj/item/stack/sheet/cotton/cloth = 5
 	)
 
 /obj/structure/resurgence_blueprint/chair

@@ -386,23 +386,31 @@ Faith event amounts should be balanced based on their duration:
 
 ## Step 12: Production Speed Modifier
 
-**Goal:** Make crafting take 3x longer outside workshops.
+**Goal:** Make crafting take 3x longer outside workshops, with portable variants that work anywhere.
 
-**Files to modify:**
+**Files modified:**
 - `code/modules/resurgence_outpost/structures/crafting_table.dm`
 - `code/modules/resurgence_outpost/structures/forge.dm`
 - `code/modules/resurgence_outpost/structures/loom.dm`
 
 **Implementation:**
-- Add `get_craft_time()` proc that checks area type
-- Multiply time by 3 if not in Workshop
+- Added `requires_workshop` variable (default TRUE) and `outdoor_penalty` (default 3x)
+- Added `get_work_time()` proc that checks workshop status via `is_in_workshop()`
+- Added `is_at_reduced_efficiency()` proc for UI feedback
+- Examine text shows workshop status and efficiency
+- Work session uses `get_work_time()` instead of fixed `WORK_SESSION_TIME`
+- Created portable variants that don't require workshops:
+  - `/obj/structure/resurgence_crafting_table/portable`
+  - `/obj/structure/resurgence_crafting_table/forge/portable`
+  - `/obj/structure/resurgence_crafting_table/loom/portable`
 
 **Testing:**
-1. Place crafting table outdoors, time a craft
+1. Place crafting table outdoors, time a craft - should show "3x slower" warning
 2. Designate workshop around it
-3. Time same craft - should be 3x faster
+3. Time same craft - should be 3x faster, shows "full speed" message
+4. Place portable crafting table outdoors - should work at full speed
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -488,7 +496,7 @@ Faith event amounts should be balanced based on their duration:
 3. Verify room persists across rounds for that ckey
 4. Verify another player cannot claim the same room
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -560,7 +568,7 @@ Faith event amounts should be balanced based on their duration:
 10. Eat food outside, note faith bonus
 11. Eat same quality food in Common Room, verify +1 quality tier bonus
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -606,7 +614,7 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 3. Build structure at level 20, verify +5 beauty bonus applied
 4. Test all three stats affect their respective activities
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 
@@ -665,7 +673,7 @@ var/beauty_bonus = -2 + (stat_level - 1) * (7.0 / 19)
 4. Level up stat, verify effects apply
 5. Verify stats persist after using bed
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [x] Complete
 
 ---
 

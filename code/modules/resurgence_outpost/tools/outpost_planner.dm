@@ -78,9 +78,14 @@
 
 	// Storage category - chests, crates
 	blueprint_categories[BLUEPRINT_CAT_STORAGE] = list(
-		"Storage Chest" = /obj/structure/resurgence_blueprint/storage_chest,
-		"Crate" = /obj/structure/resurgence_blueprint/crate,
-		"Large Crate" = /obj/structure/resurgence_blueprint/barrel
+		"Wooden Crate" = /obj/structure/resurgence_blueprint/storage_chest,
+		"Metal Crate" = /obj/structure/resurgence_blueprint/crate,
+		"Large Crate" = /obj/structure/resurgence_blueprint/barrel,
+		"Freezer" = /obj/structure/resurgence_blueprint/freezer,
+		"Refrigerator" = /obj/structure/resurgence_blueprint/fridge,
+		"Trash Cart" = /obj/structure/resurgence_blueprint/trashcart,
+		"Coffin" = /obj/structure/resurgence_blueprint/coffin,
+		"Trash Bin" = /obj/structure/resurgence_blueprint/trashbin
 	)
 
 	// Production category - crafting stations
@@ -159,6 +164,12 @@
 		data["room_size"] = room_size
 		data["room_walls"] = current_room.boundary_walls.len
 		data["room_doors"] = current_room.boundary_doors.len
+
+		// Room ownership info
+		data["room_owner"] = current_room.owner_ckey
+		data["user_ckey"] = user.ckey
+		data["user_owns_this_room"] = (current_room.owner_ckey == user.ckey)
+		data["user_has_room"] = (GLOB.resurgence_room_owners[user.ckey] != null)
 	else
 		// Check if we can designate a room here
 		data["in_room"] = FALSE
@@ -295,6 +306,22 @@
 				return TRUE
 			in_use = TRUE
 			dissolve_current_room(usr)
+			in_use = FALSE
+			return TRUE
+
+		if("claim_room")
+			if(in_use)
+				return TRUE
+			in_use = TRUE
+			claim_current_room(usr)
+			in_use = FALSE
+			return TRUE
+
+		if("unclaim_room")
+			if(in_use)
+				return TRUE
+			in_use = TRUE
+			unclaim_current_room(usr)
 			in_use = FALSE
 			return TRUE
 
@@ -513,6 +540,56 @@
 	to_chat(user, span_notice("Dissolving '[room.name]'..."))
 	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
 	room.dissolve_room("Manually dissolved by [user.name].")
+
+/// Claim the current room for the user
+/obj/item/resurgence_outpost_planner/proc/claim_current_room(mob/user)
+	var/turf/origin = get_turf(user)
+	var/area/resurgence_outpost/room/room = get_area(origin)
+
+	if(!istype(room))
+		to_chat(user, span_warning("You must be inside a designated room to claim it."))
+		return
+
+	if(!user.ckey)
+		to_chat(user, span_warning("You cannot claim rooms."))
+		return
+
+	// Check if already owned by someone else
+	if(room.owner_ckey && room.owner_ckey != user.ckey)
+		to_chat(user, span_warning("This room is already claimed by [room.owner_ckey]."))
+		return
+
+	// Check if user already owns this room
+	if(room.owner_ckey == user.ckey)
+		to_chat(user, span_warning("You already own this room."))
+		return
+
+	// Check if user owns another room (will be unclaimed)
+	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[user.ckey]
+	if(old_room && !QDELETED(old_room) && old_room != room)
+		to_chat(user, span_notice("You will release ownership of '[old_room.name]' to claim this room."))
+
+	// Claim the room (will auto-unclaim previous)
+	room.claim_room(user.ckey)
+	to_chat(user, span_notice("You have claimed '[room.name]' as your personal room."))
+	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+/// Unclaim the current room
+/obj/item/resurgence_outpost_planner/proc/unclaim_current_room(mob/user)
+	var/turf/origin = get_turf(user)
+	var/area/resurgence_outpost/room/room = get_area(origin)
+
+	if(!istype(room))
+		to_chat(user, span_warning("You must be inside a designated room."))
+		return
+
+	if(room.owner_ckey != user.ckey)
+		to_chat(user, span_warning("You don't own this room."))
+		return
+
+	room.unclaim_room()
+	to_chat(user, span_notice("You have unclaimed '[room.name]'."))
+	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 
 /// Briefly highlight room turfs with a visual effect
 /obj/item/resurgence_outpost_planner/proc/highlight_room(list/turfs)

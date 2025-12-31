@@ -96,3 +96,23 @@
 /// Debug faith event for testing
 /datum/faith_event/debug
 	category = "debug"
+
+/// Faith events from room ownership status (having a personal room or being homeless)
+/datum/faith_event/room_ownership
+	category = "room_ownership"
+
+/// Faith events from room quality/beauty level
+/datum/faith_event/room_quality
+	category = "room_quality"
+
+/// Faith events from being in a cramped room
+/datum/faith_event/room_cramped
+	category = "room_cramped"
+
+/// Faith events from eating in a common room
+/datum/faith_event/common_eating
+	category = "common_eating"
+
+/// Faith events for newcomers (grace period to find a home)
+/datum/faith_event/newcomer
+	category = "newcomer"

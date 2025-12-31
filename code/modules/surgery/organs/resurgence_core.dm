@@ -38,6 +38,17 @@
 	// Internal tracking
 	// var/charge_tick_counter = 0 // Track ticks for charge decay messages (DISABLED)
 	var/faith_tick_counter = 0 // Track ticks for faith updates (every 5 seconds)
+	var/room_quality_tick_counter = 0 // Track ticks for room quality checks (every 30 seconds)
+
+	// Character stats (1-20)
+	var/stat_construction = 1
+	var/stat_crafting = 1
+	var/stat_gathering = 1
+
+	// XP accumulation (resets to 0 after level up)
+	var/xp_construction = 0
+	var/xp_crafting = 0
+	var/xp_gathering = 0
 
 /obj/item/organ/resurgence_core/Destroy()
 	// Clean up all faith events
@@ -57,12 +68,21 @@
 			H.hud_used.faith_display.show_display()
 			H.update_faith_hud()
 
+		// Register for login to check room ownership
+		RegisterSignal(H, COMSIG_MOB_LOGIN, PROC_REF(on_owner_login))
+
+		// Check room ownership now if player is already logged in
+		if(H.ckey)
+			check_room_ownership()
+
 /obj/item/organ/resurgence_core/Remove(mob/living/carbon/M, special)
 	// Hide the faith HUD when core is removed
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
 		if(H.hud_used?.faith_display)
 			H.hud_used.faith_display.hide_display()
+		// Unregister login signal
+		UnregisterSignal(H, COMSIG_MOB_LOGIN)
 	return ..()
 
 /obj/item/organ/resurgence_core/on_life()
@@ -83,6 +103,12 @@
 	if(faith_tick_counter >= 3) // 3 ticks * ~2 seconds = ~6 seconds (close to 5)
 		faith_tick_counter = 0
 		apply_faith_changes()
+
+	// Room quality check every 30 seconds (~15 life ticks at 2 sec/tick)
+	room_quality_tick_counter++
+	if(room_quality_tick_counter >= 15)
+		room_quality_tick_counter = 0
+		check_room_quality()
 
 	// CHARGE WARNING DISABLED - Code preserved for potential future use
 	// if(charge_tick_counter >= 30)
@@ -206,6 +232,222 @@
 		var/datum/faith_event/event = faith_events[category]
 		if(event)
 			faith_change_rate += event.faith_change
+
+// ============================================
+// Character Stats & XP
+// ============================================
+
+/**
+ * Award XP to a specific stat and handle level ups.
+ *
+ * Arguments:
+ * * stat_type - "construction", "crafting", or "gathering"
+ * * amount - Amount of XP to award
+ */
+/obj/item/organ/resurgence_core/proc/award_xp(stat_type, amount)
+	if(amount <= 0)
+		return
+
+	var/current_level
+	var/current_xp
+
+	switch(stat_type)
+		if("construction")
+			current_level = stat_construction
+			current_xp = xp_construction
+		if("crafting")
+			current_level = stat_crafting
+			current_xp = xp_crafting
+		if("gathering")
+			current_level = stat_gathering
+			current_xp = xp_gathering
+		else
+			return // Invalid stat type
+
+	// Check if already at max level
+	if(current_level >= STAT_MAX_LEVEL)
+		return
+
+	// Add XP
+	current_xp += amount
+	var/xp_needed = get_xp_for_level(current_level)
+
+	// Check for level up
+	while(current_xp >= xp_needed && current_level < STAT_MAX_LEVEL)
+		current_xp -= xp_needed
+		current_level++
+		if(owner)
+			to_chat(owner, span_notice("<b>Your [stat_type] skill has increased to level [current_level]!</b>"))
+		xp_needed = get_xp_for_level(current_level)
+
+	// Store the updated values
+	switch(stat_type)
+		if("construction")
+			stat_construction = current_level
+			xp_construction = current_xp
+		if("crafting")
+			stat_crafting = current_level
+			xp_crafting = current_xp
+		if("gathering")
+			stat_gathering = current_level
+			xp_gathering = current_xp
+
+/// Get the current level of a stat
+/obj/item/organ/resurgence_core/proc/get_stat_level(stat_type)
+	switch(stat_type)
+		if("construction")
+			return stat_construction
+		if("crafting")
+			return stat_crafting
+		if("gathering")
+			return stat_gathering
+	return 1
+
+/// Get the current XP of a stat
+/obj/item/organ/resurgence_core/proc/get_stat_xp(stat_type)
+	switch(stat_type)
+		if("construction")
+			return xp_construction
+		if("crafting")
+			return xp_crafting
+		if("gathering")
+			return xp_gathering
+	return 0
+
+// ============================================
+// Room Ownership & Quality
+// ============================================
+
+/// Called when the owner logs in
+/obj/item/organ/resurgence_core/proc/on_owner_login(datum/source)
+	SIGNAL_HANDLER
+	check_room_ownership()
+
+/// Check if owner has a claimed room and apply appropriate faith event
+/obj/item/organ/resurgence_core/proc/check_room_ownership()
+	if(!owner || !owner.ckey)
+		return
+
+	var/area/resurgence_outpost/room/owned_room = GLOB.resurgence_room_owners[owner.ckey]
+
+	if(owned_room && !QDELETED(owned_room))
+		// Player has a room - add positive event
+		var/datum/faith_event/room_ownership/event = new(
+			"You have a personal room.",
+			1, // +1 per tick (~+5 per 30 sec)
+			null,
+			"room_ownership"
+		)
+		add_faith_event("room_ownership", event)
+	else
+		// Player has no room - add homeless event
+		var/datum/faith_event/room_ownership/event = new(
+			"You have no personal room.",
+			-1, // -1 per tick (permanent events should be ≤ ±1 per tick per guidelines)
+			null,
+			"room_ownership"
+		)
+		add_faith_event("room_ownership", event)
+
+/// Check room quality and apply faith bonus/penalty
+/obj/item/organ/resurgence_core/proc/check_room_quality()
+	if(!owner)
+		return
+
+	var/area/resurgence_outpost/room/current_room = get_area(owner)
+	if(!istype(current_room))
+		// Not in a designated room - clear room quality events
+		clear_faith_event("room_quality")
+		clear_faith_event("room_cramped")
+		return
+
+	// Calculate quality level from beauty
+	// beauty is already calculated as totalbeauty / areasize by SS13's beauty system
+	var/beauty_level = current_room.beauty
+	var/faith_change = 0
+	var/quality_desc = ""
+
+	if(beauty_level >= ROOM_QUALITY_LUXURIOUS)
+		faith_change = 0.5
+		quality_desc = "Luxurious surroundings."
+	else if(beauty_level >= ROOM_QUALITY_COMFORTABLE)
+		faith_change = 0.3
+		quality_desc = "Comfortable room."
+	else if(beauty_level >= ROOM_QUALITY_ADEQUATE)
+		faith_change = 0.1
+		quality_desc = "Adequate accommodations."
+	else if(beauty_level >= ROOM_QUALITY_BARE)
+		// No effect for bare rooms
+		clear_faith_event("room_quality")
+		faith_change = 0
+	else if(beauty_level >= ROOM_QUALITY_SHABBY)
+		faith_change = -0.1
+		quality_desc = "Shabby surroundings."
+	else
+		faith_change = -0.3
+		quality_desc = "Squalid conditions."
+
+	// Apply room quality event if there's a change
+	if(faith_change != 0)
+		var/datum/faith_event/room_quality/event = new(
+			quality_desc,
+			faith_change,
+			35 SECONDS, // Slightly longer than check interval to prevent flickering
+			"room_quality"
+		)
+		add_faith_event("room_quality", event)
+
+	// Check for cramped room penalty
+	check_room_cramped(current_room)
+
+/// Check if room is cramped and apply penalty
+/obj/item/organ/resurgence_core/proc/check_room_cramped(area/resurgence_outpost/room/room)
+	// Count floor tiles in the room
+	var/list/room_turfs = list()
+	for(var/turf/T in room.contents)
+		if(!isclosedturf(T))
+			room_turfs += T
+
+	var/tile_count = room_turfs.len
+	var/is_cramped_tiles = (tile_count < ROOM_MIN_TILES)
+
+	// Calculate bounding box for dimension check
+	var/min_x = INFINITY
+	var/max_x = 0
+	var/min_y = INFINITY
+	var/max_y = 0
+
+	for(var/turf/T in room_turfs)
+		min_x = min(min_x, T.x)
+		max_x = max(max_x, T.x)
+		min_y = min(min_y, T.y)
+		max_y = max(max_y, T.y)
+
+	var/width = max_x - min_x + 1
+	var/height = max_y - min_y + 1
+	var/is_cramped_dimensions = (width < ROOM_MIN_DIMENSION || height < ROOM_MIN_DIMENSION)
+
+	// Apply cramped penalties
+	if(is_cramped_tiles && is_cramped_dimensions)
+		// Both conditions - very cramped (-8 faith per 30 sec = ~-1.6 per tick)
+		var/datum/faith_event/room_cramped/event = new(
+			"This room is very cramped!",
+			-1.6,
+			35 SECONDS,
+			"room_cramped"
+		)
+		add_faith_event("room_cramped", event)
+	else if(is_cramped_tiles || is_cramped_dimensions)
+		// One condition - cramped (-5 faith per 30 sec = ~-1 per tick)
+		var/datum/faith_event/room_cramped/event = new(
+			"This room feels cramped.",
+			-1,
+			35 SECONDS,
+			"room_cramped"
+		)
+		add_faith_event("room_cramped", event)
+	else
+		clear_faith_event("room_cramped")
 
 // DISABLED - Charge decay modifier (preserved for future use)
 // /obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()

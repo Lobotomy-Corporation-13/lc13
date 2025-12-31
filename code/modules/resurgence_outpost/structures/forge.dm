@@ -121,3 +121,11 @@
 		"total_work" = 40,
 		"desc" = "Simple Harvester + 5 Metal + 2 Silver -> Advanced Harvester (stores faith, auto-seeks)"
 	)
+
+// ===== Portable Forge =====
+// Does not require a workshop - works at full speed anywhere
+
+/obj/structure/resurgence_crafting_table/forge/portable
+	name = "portable forge"
+	desc = "A compact forge that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
+	requires_workshop = FALSE
