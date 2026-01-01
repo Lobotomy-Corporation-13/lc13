@@ -782,3 +782,45 @@
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 3
 	)
+
+// ===========================================
+// MISC BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/meatspike
+	name = "meat spike blueprint"
+	result_name = "meat spike"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "spike"
+	result_type = /obj/structure/kitchenspike
+
+/obj/structure/resurgence_blueprint/meatspike/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 4,
+		/obj/item/stack/rods = 4
+	)
+
+/obj/structure/resurgence_blueprint/shower
+	name = "shower frame blueprint"
+	result_name = "shower frame"
+	icon = 'icons/obj/watercloset.dmi'
+	icon_state = "shower_frame"
+	result_type = /obj/structure/showerframe
+
+/obj/structure/resurgence_blueprint/shower/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 4,
+		/obj/item/stack/sheet/glass = 2
+	)
+
+/obj/structure/resurgence_blueprint/wooden_barricade
+	name = "wooden barricade blueprint"
+	result_name = "wooden barricade"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "woodenbarricade"
+	result_type = /obj/structure/barricade/wooden
+
+/obj/structure/resurgence_blueprint/wooden_barricade/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 5
+	)
