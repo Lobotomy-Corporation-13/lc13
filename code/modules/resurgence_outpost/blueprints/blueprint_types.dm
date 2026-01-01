@@ -340,6 +340,68 @@
 		/obj/item/stack/sheet/metal = 2
 	)
 
+/obj/structure/resurgence_blueprint/condiment_station
+	name = "condiment station blueprint"
+	result_name = "condiment station"
+	icon = 'icons/obj/chemical.dmi'
+	icon_state = "mixer0"
+	result_type = /obj/structure/resurgence_kitchen/condiment_station
+
+/obj/structure/resurgence_blueprint/condiment_station/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 10,
+		/obj/item/stack/sheet/glass = 5
+	)
+
+/obj/structure/resurgence_blueprint/meat_grinder
+	name = "meat grinder blueprint"
+	result_name = "meat grinder"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "grinder"
+	result_type = /obj/structure/resurgence_kitchen/meat_grinder
+
+/obj/structure/resurgence_blueprint/meat_grinder/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 15
+	)
+
+/obj/structure/resurgence_blueprint/food_processor
+	name = "food processor blueprint"
+	result_name = "food processor"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "processor1"
+	result_type = /obj/structure/resurgence_kitchen/food_processor
+
+/obj/structure/resurgence_blueprint/food_processor/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 12
+	)
+
+/obj/structure/resurgence_blueprint/stove
+	name = "stove blueprint"
+	result_name = "stove"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "mw"
+	result_type = /obj/structure/resurgence_kitchen/stove
+
+/obj/structure/resurgence_blueprint/stove/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 15
+	)
+
+/obj/structure/resurgence_blueprint/grinder
+	name = "hand grinder blueprint"
+	result_name = "hand grinder"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "juicer1"
+	result_type = /obj/structure/resurgence_kitchen/grinder
+
+/obj/structure/resurgence_blueprint/grinder/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 10,
+		/obj/item/stack/sheet/glass = 3
+	)
+
 // ===========================================
 // FURNITURE BLUEPRINTS
 // ===========================================

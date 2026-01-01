@@ -8,10 +8,12 @@
 
 /// Base harvest work required (can be modified by potency)
 #define FARM_HARVEST_WORK_BASE 5
-/// Water drain per zone tick
-#define FARM_WATER_DRAIN 5
+/// Water drain per zone tick (reduced by 75% for resurgence farming)
+#define FARM_WATER_DRAIN 1
 /// Minimum water level for growth
 #define FARM_MIN_WATER 10
+/// Growth rate multiplier (3x slower than normal hydroponics)
+#define FARM_GROWTH_MULTIPLIER 3
 
 /obj/structure/farm_plot
 	name = "farm plot"
@@ -74,8 +76,8 @@
 	// Advance age
 	age++
 
-	// Check if ready to harvest (based on maturation)
-	if(age >= myseed.maturation)
+	// Check if ready to harvest (based on maturation * growth multiplier)
+	if(age >= myseed.maturation * FARM_GROWTH_MULTIPLIER)
 		harvest = TRUE
 		visible_message(span_notice("[src] is ready for harvest!"))
 
@@ -100,8 +102,9 @@
 		else
 			icon_state_to_use = "[myseed.icon_grow][myseed.growthstages]"
 	else
-		// Calculate growth stage from age vs maturation
-		var/growth_percent = age / max(myseed.maturation, 1)
+		// Calculate growth stage from age vs adjusted maturation
+		var/adjusted_maturation = myseed.maturation * FARM_GROWTH_MULTIPLIER
+		var/growth_percent = age / max(adjusted_maturation, 1)
 		var/stage = clamp(round(growth_percent * myseed.growthstages) + 1, 1, myseed.growthstages)
 		icon_state_to_use = "[myseed.icon_grow][stage]"
 
@@ -280,7 +283,8 @@
 				var/progress_pct = round((harvest_work_points / get_harvest_work()) * 100)
 				. += span_notice("Harvest progress: [progress_pct]%")
 		else
-			var/growth_pct = round((age / max(myseed.maturation, 1)) * 100)
+			var/adjusted_maturation = myseed.maturation * FARM_GROWTH_MULTIPLIER
+			var/growth_pct = round((age / max(adjusted_maturation, 1)) * 100)
 			. += span_notice("[myseed.plantname] - [min(growth_pct, 100)]% grown")
 		if(water_level < FARM_MIN_WATER && !harvest)
 			. += span_warning("Needs water to grow!")
@@ -292,3 +296,4 @@
 #undef FARM_HARVEST_WORK_BASE
 #undef FARM_WATER_DRAIN
 #undef FARM_MIN_WATER
+#undef FARM_GROWTH_MULTIPLIER

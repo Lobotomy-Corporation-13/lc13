@@ -93,9 +93,15 @@
 	// Trees
 	if(istype(target, /obj/structure/resurgence_tree))
 		return TRUE
-	// Ore deposits
+	// Ore deposits (old turf-based)
 	if(istype(target, /turf/closed/mineral/resurgence))
 		return TRUE
+	// Ore deposits (new structure-based)
+	if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		if(!O.depleted)
+			return TRUE
+		return FALSE
 	// Cotton plants (only if harvestable)
 	if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
@@ -119,6 +125,9 @@
 	if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		return M.work_needed
+	if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		return O.work_needed
 	if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		return C.work_needed
@@ -135,6 +144,9 @@
 	if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		return M.work_points
+	if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		return O.work_points
 	if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		return C.work_points
@@ -151,6 +163,9 @@
 	else if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		M.work_points = value
+	else if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		O.work_points = value
 	else if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		C.work_points = value
@@ -166,6 +181,9 @@
 	if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		return M.being_worked
+	if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		return O.being_worked
 	if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		return C.being_worked
@@ -182,6 +200,9 @@
 	else if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		M.being_worked = busy
+	else if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		O.being_worked = busy
 	else if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		C.being_worked = busy
@@ -197,6 +218,9 @@
 	else if(istype(target, /turf/closed/mineral/resurgence))
 		var/turf/closed/mineral/resurgence/M = target
 		M.complete_mining(null)
+	else if(istype(target, /obj/structure/resurgence_ore_deposit))
+		var/obj/structure/resurgence_ore_deposit/O = target
+		O.complete_mining(null)
 	else if(istype(target, /obj/structure/resurgence_cotton))
 		var/obj/structure/resurgence_cotton/C = target
 		C.complete_harvest(null)
@@ -400,8 +424,10 @@
 
 /obj/item/harvester/simple
 	name = "simple harvester"
-	desc = "A basic automated harvesting device. Attach to a resource and it will harvest it for you. Requires faith payment upfront."
+	desc = "A basic automated harvesting device. Attach to a resource and it will harvest it for you. Requires faith payment upfront. Has limited uses before breaking."
 	icon_state = "drone_maint_blue"
+	/// Number of uses remaining before this harvester breaks
+	var/uses_remaining = 3
 
 /obj/item/harvester/simple/pay_faith_cost(mob/user, faith_cost)
 	if(!ishuman(user))
@@ -430,11 +456,23 @@
 
 	attach_to_target(target, user)
 
+/obj/item/harvester/simple/on_harvest_complete()
+	. = ..()
+	// Decrement uses
+	uses_remaining--
+	if(uses_remaining <= 0)
+		visible_message(span_warning("[src] breaks apart from wear!"))
+		qdel(src)
+
+/obj/item/harvester/simple/examine(mob/user)
+	. = ..()
+	. += span_notice("Uses remaining: [uses_remaining]")
+
 // ===== Advanced Harvester =====
 
 /obj/item/harvester/advanced
 	name = "advanced harvester"
-	desc = "An advanced automated harvesting device with internal faith storage. Can automatically seek nearby targets of the same type."
+	desc = "An advanced automated harvesting device with internal faith storage. Can automatically seek nearby targets of the same type. Breaks after using 500 total faith."
 	icon_state = "drone_synd"
 	/// Stored faith for autonomous operation
 	var/stored_faith = 0
@@ -442,6 +480,10 @@
 	var/max_faith = 100
 	/// Search range for auto-seek
 	var/search_range = 3
+	/// Total faith used over the harvester's lifetime
+	var/total_faith_used = 0
+	/// Maximum total faith before the harvester breaks
+	var/max_total_faith = 500
 
 /obj/item/harvester/advanced/pay_faith_cost(mob/user, faith_cost)
 	// Advanced harvester uses stored faith, not player's
@@ -461,6 +503,13 @@
 /obj/item/harvester/advanced/consume_work_faith(work_amount)
 	var/faith_cost = work_amount * FAITH_DRAIN_PER_WORK
 	stored_faith = max(0, stored_faith - faith_cost)
+	total_faith_used += faith_cost
+
+	// Check if harvester has exceeded its lifetime
+	if(total_faith_used >= max_total_faith)
+		visible_message(span_warning("[src] breaks apart from extensive use!"))
+		detach_from_target()
+		qdel(src)
 
 /obj/item/harvester/advanced/on_faith_depleted()
 	visible_message(span_warning("[src] stops - out of faith!"))
@@ -506,13 +555,14 @@
 	start_working()
 	return TRUE
 
-/// Find the next valid target of the same type within range
+/// Find the next valid target of the same type within range (picks nearest)
 /obj/item/harvester/advanced/proc/find_next_target()
 	if(!target_type)
 		return null
 
-	var/list/candidates = list()
 	var/turf/center = get_turf(src)
+	var/atom/nearest_target = null
+	var/nearest_dist = INFINITY
 
 	for(var/atom/A in view(search_range, center))
 		if(A.type != target_type)
@@ -521,12 +571,12 @@
 			continue
 		if(is_target_busy(A))
 			continue
-		candidates += A
+		var/dist = get_dist(center, get_turf(A))
+		if(dist < nearest_dist)
+			nearest_dist = dist
+			nearest_target = A
 
-	if(!length(candidates))
-		return null
-
-	return pick(candidates)
+	return nearest_target
 
 /obj/item/harvester/advanced/attack_self(mob/user)
 	// Transfer faith from user to harvester
@@ -550,8 +600,23 @@
 		to_chat(user, span_warning("You don't have enough faith to spare. You need to keep at least [MIN_FAITH_FOR_WORK]."))
 		return
 
+	// Calculate remaining lifetime faith
+	var/remaining_lifetime = max_total_faith - total_faith_used
+	var/effective_remaining = remaining_lifetime - stored_faith
+
+	// Warn if trying to add more faith than the harvester can use
+	var/warning_text = ""
+	if(transfer_amount > effective_remaining && effective_remaining > 0)
+		warning_text = "\n\nWARNING: This harvester can only use [effective_remaining] more faith before breaking. Any excess will be wasted!"
+	else if(effective_remaining <= 0)
+		to_chat(user, span_warning("[src] is near the end of its lifespan! It can only use [remaining_lifetime] more faith total."))
+		// Cap transfer to remaining lifetime
+		transfer_amount = min(transfer_amount, remaining_lifetime)
+		if(transfer_amount <= 0)
+			return
+
 	// Ask how much to transfer
-	var/amount = input(user, "How much faith to transfer? (Available: [transfer_amount], Current storage: [stored_faith]/[max_faith])", "Transfer Faith", transfer_amount) as num|null
+	var/amount = input(user, "How much faith to transfer? (Available: [transfer_amount], Current storage: [stored_faith]/[max_faith])[warning_text]", "Transfer Faith", min(transfer_amount, max(1, effective_remaining))) as num|null
 	if(!amount || amount <= 0)
 		return
 	amount = min(amount, transfer_amount)
@@ -571,6 +636,11 @@
 /obj/item/harvester/advanced/examine(mob/user)
 	. = ..()
 	. += span_notice("Faith storage: [stored_faith]/[max_faith]")
+	var/remaining_lifetime = max_total_faith - total_faith_used
+	if(remaining_lifetime > 50)
+		. += span_notice("Lifetime remaining: [remaining_lifetime]/[max_total_faith] faith")
+	else
+		. += span_warning("Lifetime remaining: [remaining_lifetime]/[max_total_faith] faith - near end of lifespan!")
 	. += span_notice("Use in hand to transfer faith from your core.")
 	. += span_notice("Auto-seeks same resource type within [search_range] tiles after completing a harvest.")
 

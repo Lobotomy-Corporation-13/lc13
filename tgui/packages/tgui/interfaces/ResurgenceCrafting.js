@@ -1,11 +1,12 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, Icon, Input, NumberInput, ProgressBar, Section, Stack } from '../components';
+import { Box, Button, Flex, Icon, Input, NumberInput, ProgressBar, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 
 export const ResurgenceCrafting = (props, context) => {
   const { act, data } = useBackend(context);
   const {
     recipes = [],
+    categories = [],
     busy,
     action_verb,
     busy_verb,
@@ -19,9 +20,19 @@ export const ResurgenceCrafting = (props, context) => {
   } = data;
 
   const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
+  const [activeCategory, setActiveCategory] = useLocalState(
+    context,
+    'activeCategory',
+    categories[0] || 'All'
+  );
 
-  // Filter recipes based on search
+  // Filter recipes based on search and category
   const filteredRecipes = recipes.filter(recipe => {
+    // Category filter (unless searching)
+    if (!searchText && activeCategory !== 'All' && recipe.category !== activeCategory) {
+      return false;
+    }
+    // Search filter
     if (!searchText) return true;
     const search = searchText.toLowerCase();
     if (recipe.name.toLowerCase().includes(search)) return true;
@@ -113,6 +124,22 @@ export const ResurgenceCrafting = (props, context) => {
                 onInput={(e, value) => setSearchText(value)} />
             </Section>
           </Stack.Item>
+
+          {/* Category Tabs */}
+          {!searchText && categories.length > 1 && (
+            <Stack.Item>
+              <Tabs fluid>
+                {categories.map(category => (
+                  <Tabs.Tab
+                    key={category}
+                    selected={activeCategory === category}
+                    onClick={() => setActiveCategory(category)}>
+                    {category}
+                  </Tabs.Tab>
+                ))}
+              </Tabs>
+            </Stack.Item>
+          )}
 
           {/* Recipe List */}
           <Stack.Item grow>

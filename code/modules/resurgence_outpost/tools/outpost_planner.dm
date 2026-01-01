@@ -42,6 +42,8 @@
 
 	/// Whether we're in farming zone selection mode
 	var/farming_mode = FALSE
+	/// Cooldown on highlight operations (prevents spam)
+	var/highlight_cooldown = FALSE
 	/// Turfs selected for new zone
 	var/list/farming_zone_selection = list()
 	/// Selection overlay effects
@@ -93,7 +95,12 @@
 		"Crafting Table" = /obj/structure/resurgence_blueprint/crafting_table,
 		"Forge" = /obj/structure/resurgence_blueprint/forge,
 		"Loom" = /obj/structure/resurgence_blueprint/loom,
-		"Seed Extractor" = /obj/structure/resurgence_blueprint/seed_extractor
+		"Seed Extractor" = /obj/structure/resurgence_blueprint/seed_extractor,
+		"Condiment Station" = /obj/structure/resurgence_blueprint/condiment_station,
+		"Meat Grinder" = /obj/structure/resurgence_blueprint/meat_grinder,
+		"Food Processor" = /obj/structure/resurgence_blueprint/food_processor,
+		"Stove" = /obj/structure/resurgence_blueprint/stove,
+		"Hand Grinder" = /obj/structure/resurgence_blueprint/grinder
 	)
 
 	// Furniture category - beds, chairs, tables, racks
@@ -194,6 +201,7 @@
 	data["farming_selection"] = farming_zone_selection.len
 	data["farming_max"] = farming_max_tiles
 	data["existing_zones"] = get_farming_zones_data()
+	data["fertilizer_count"] = count_fertilizer(user)
 
 	// Check if selection will join an existing zone
 	if(farming_mode && farming_zone_selection.len > 0)
@@ -369,6 +377,14 @@
 					break
 			return TRUE
 
+		if("regenerate_plots")
+			var/zone_id = text2num(params["id"])
+			for(var/datum/farm_zone/zone in GLOB.resurgence_farm_zones)
+				if(zone.zone_id == zone_id)
+					regenerate_zone_plots(zone, usr)
+					break
+			return TRUE
+
 // ===== Blueprint Placement =====
 
 /obj/item/resurgence_outpost_planner/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
@@ -497,6 +513,10 @@
 
 /// Highlight the room the user is currently in
 /obj/item/resurgence_outpost_planner/proc/highlight_current_room(mob/user)
+	if(highlight_cooldown)
+		to_chat(user, span_warning("Please wait before highlighting again."))
+		return
+
 	var/turf/origin = get_turf(user)
 	var/area/resurgence_outpost/room/room = get_area(origin)
 
@@ -511,6 +531,10 @@
 	to_chat(user, span_notice("Highlighting '[room.name]'..."))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 	highlight_room(room_turfs)
+
+	// Start cooldown
+	highlight_cooldown = TRUE
+	addtimer(CALLBACK(src, PROC_REF(reset_highlight_cooldown)), 3 SECONDS)
 
 /// Dissolve the room the user is currently in
 /obj/item/resurgence_outpost_planner/proc/dissolve_current_room(mob/user)
@@ -699,6 +723,17 @@
 
 /// Create a farming zone from selected tiles (or add to existing adjacent zone)
 /obj/item/resurgence_outpost_planner/proc/create_farming_zone(mob/user, zone_name)
+	// Check fertilizer requirement
+	var/fertilizer_needed = farming_zone_selection.len
+	var/fertilizer_available = count_fertilizer(user)
+
+	if(fertilizer_available < fertilizer_needed)
+		to_chat(user, span_warning("You need [fertilizer_needed] fertilizer to create [fertilizer_needed] plots, but only have [fertilizer_available]."))
+		return
+
+	// Consume fertilizer
+	consume_fertilizer(user, fertilizer_needed)
+
 	// Check for adjacent existing zone first
 	var/datum/farm_zone/zone = find_adjacent_zone()
 	var/joined_existing = FALSE
@@ -718,14 +753,18 @@
 	farming_mode = FALSE
 
 	if(joined_existing)
-		to_chat(user, span_notice("Added [plots_created] plots to existing zone '[zone.name]'."))
+		to_chat(user, span_notice("Added [plots_created] plots to existing zone '[zone.name]'. Used [fertilizer_needed] fertilizer."))
 	else
-		to_chat(user, span_notice("Created farm zone '[zone_name]' with [plots_created] plots."))
+		to_chat(user, span_notice("Created farm zone '[zone_name]' with [plots_created] plots. Used [fertilizer_needed] fertilizer."))
 	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
 	SStgui.update_uis(src)
 
 /// Highlight an existing farm zone's plots
 /obj/item/resurgence_outpost_planner/proc/highlight_farm_zone(datum/farm_zone/zone, mob/user)
+	if(highlight_cooldown)
+		to_chat(user, span_warning("Please wait before highlighting again."))
+		return
+
 	to_chat(user, span_notice("Highlighting farm zone '[zone.name]'..."))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 
@@ -739,6 +778,105 @@
 			highlight.color = "#88ff88"
 			highlight.alpha = 180
 			QDEL_IN(highlight, 3 SECONDS)
+
+	// Start cooldown
+	highlight_cooldown = TRUE
+	addtimer(CALLBACK(src, PROC_REF(reset_highlight_cooldown)), 3 SECONDS)
+
+/// Reset the highlight cooldown
+/obj/item/resurgence_outpost_planner/proc/reset_highlight_cooldown()
+	highlight_cooldown = FALSE
+
+/// Regenerate missing plots in a farm zone
+/obj/item/resurgence_outpost_planner/proc/regenerate_zone_plots(datum/farm_zone/zone, mob/user)
+	if(!zone || QDELETED(zone))
+		to_chat(user, span_warning("This zone no longer exists."))
+		return
+
+	if(!zone.zone_turfs || zone.zone_turfs.len == 0)
+		to_chat(user, span_warning("This zone has no recorded turfs."))
+		return
+
+	// Check each turf in the zone for missing plots
+	var/list/missing_turfs = list()
+	for(var/turf/T in zone.zone_turfs)
+		var/has_plot = FALSE
+		for(var/obj/structure/farm_plot/plot in T)
+			if(!QDELETED(plot) && plot.parent_zone == zone)
+				has_plot = TRUE
+				break
+		if(!has_plot)
+			missing_turfs += T
+
+	if(missing_turfs.len == 0)
+		to_chat(user, span_notice("All plots in '[zone.name]' are intact. Nothing to regenerate."))
+		return
+
+	// Check fertilizer
+	var/fertilizer_available = count_fertilizer(user)
+	if(fertilizer_available < missing_turfs.len)
+		to_chat(user, span_warning("You need [missing_turfs.len] fertilizer to regenerate all missing plots, but only have [fertilizer_available]."))
+		return
+
+	// Consume fertilizer and create plots
+	consume_fertilizer(user, missing_turfs.len)
+
+	var/plots_created = 0
+	for(var/turf/T in missing_turfs)
+		var/obj/structure/farm_plot/plot = new(T)
+		zone.add_plot(plot)
+		plots_created++
+
+	to_chat(user, span_notice("Regenerated [plots_created] plots in '[zone.name]'. Used [plots_created] fertilizer."))
+	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
+	SStgui.update_uis(src)
+
+// ===== Fertilizer Helpers =====
+
+/// Count how many fertilizer the user has available (stack-aware)
+/obj/item/resurgence_outpost_planner/proc/count_fertilizer(mob/living/carbon/human/user)
+	if(!istype(user))
+		return 0
+
+	var/count = 0
+
+	// Check hands
+	for(var/obj/item/stack/resurgence_fertilizer/F in user.held_items)
+		count += F.amount
+
+	// Check backpack
+	var/obj/item/storage/backpack = user.get_item_by_slot(ITEM_SLOT_BACK)
+	if(istype(backpack))
+		for(var/obj/item/stack/resurgence_fertilizer/F in backpack.contents)
+			count += F.amount
+
+	return count
+
+/// Consume fertilizer from the user (stack-aware)
+/obj/item/resurgence_outpost_planner/proc/consume_fertilizer(mob/living/carbon/human/user, amount)
+	if(!istype(user) || amount <= 0)
+		return
+
+	var/remaining = amount
+
+	// Take from hands first
+	for(var/obj/item/stack/resurgence_fertilizer/F in user.held_items)
+		if(remaining <= 0)
+			break
+		var/to_use = min(F.amount, remaining)
+		F.use(to_use)
+		remaining -= to_use
+
+	// Then from backpack
+	if(remaining > 0)
+		var/obj/item/storage/backpack = user.get_item_by_slot(ITEM_SLOT_BACK)
+		if(istype(backpack))
+			for(var/obj/item/stack/resurgence_fertilizer/F in backpack.contents)
+				if(remaining <= 0)
+					break
+				var/to_use = min(F.amount, remaining)
+				F.use(to_use)
+				remaining -= to_use
 
 #undef BLUEPRINT_CAT_CONSTRUCTION
 #undef BLUEPRINT_CAT_STORAGE

@@ -15,6 +15,8 @@ GLOBAL_LIST_EMPTY(resurgence_farm_zones)
 	var/name = "Farm Zone"
 	/// List of /obj/structure/farm_plot in this zone
 	var/list/plots = list()
+	/// List of turfs that belong to this zone (for regeneration)
+	var/list/zone_turfs = list()
 	/// Time between growth ticks (30 seconds default)
 	var/growth_interval = 30 SECONDS
 	/// Timer ID for cancellation
@@ -64,6 +66,10 @@ GLOBAL_LIST_EMPTY(resurgence_farm_zones)
 /datum/farm_zone/proc/add_plot(obj/structure/farm_plot/plot)
 	plots += plot
 	plot.parent_zone = src
+	// Track the turf for regeneration
+	var/turf/T = get_turf(plot)
+	if(T && !(T in zone_turfs))
+		zone_turfs += T
 
 /// Remove a plot from this zone
 /datum/farm_zone/proc/remove_plot(obj/structure/farm_plot/plot)
@@ -79,10 +85,24 @@ GLOBAL_LIST_EMPTY(resurgence_farm_zones)
 		if(plot.harvest)
 			ready_count++
 		total_water += plot.water_level
+
+	// Count missing plots
+	var/missing_count = 0
+	for(var/turf/T in zone_turfs)
+		var/has_plot = FALSE
+		for(var/obj/structure/farm_plot/plot in T)
+			if(!QDELETED(plot) && plot.parent_zone == src)
+				has_plot = TRUE
+				break
+		if(!has_plot)
+			missing_count++
+
 	return list(
 		"id" = zone_id,
 		"name" = name,
 		"plot_count" = plots.len,
+		"total_turfs" = zone_turfs.len,
+		"missing_count" = missing_count,
 		"ready_count" = ready_count,
 		"avg_water" = plots.len ? round(total_water / plots.len) : 0
 	)

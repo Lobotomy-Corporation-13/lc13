@@ -370,13 +370,7 @@ const RoomTab = (props, context) => {
                 <Box mb={2}>
                   The room type is automatically determined by the structures inside:
                 </Box>
-                <Box fontSize="12px" mb={2}>
-                  <Box><b>Workshop</b>: Crafting stations (forge, loom, table)</Box>
-                  <Box><b>Shrine</b>: Monuments or statues</Box>
-                  <Box><b>Common Room</b>: Decorations, no production</Box>
-                  <Box><b>Storage Room</b>: Only storage containers</Box>
-                  <Box><b>Basic Room</b>: Enclosed with no special structures</Box>
-                </Box>
+                <RoomTypeGuide />
                 <Button
                   fluid
                   icon="plus"
@@ -389,26 +383,87 @@ const RoomTab = (props, context) => {
           </>
         ) : (
           // Not in a room and cannot designate
-          <Stack.Item grow>
-            <Section fill title="No Enclosed Space">
-              <Box textAlign="center" mt={4}>
-                <Icon name="times-circle" size={4} color="bad" />
-                <Box mt={2} bold fontSize="14px">
-                  Not in an enclosed space
+          <>
+            <Stack.Item>
+              <Section title="No Enclosed Space">
+                <Box textAlign="center">
+                  <Icon name="times-circle" size={3} color="bad" />
+                  <Box mt={1} bold fontSize="14px">
+                    Not in an enclosed space
+                  </Box>
+                  <Box mt={1} color="label">
+                    You must be standing in a fully enclosed area
+                    with walls on all sides to designate a room.
+                  </Box>
+                  <Box mt={1} color="label">
+                    Doors (wood, metal, etc.) count as valid walls.
+                  </Box>
                 </Box>
-                <Box mt={1} color="label">
-                  You must be standing in a fully enclosed area
-                  with walls on all sides to designate a room.
-                </Box>
-                <Box mt={2} color="label">
-                  Doors (wood, metal, etc.) count as valid walls.
-                </Box>
-              </Box>
-            </Section>
-          </Stack.Item>
+              </Section>
+            </Stack.Item>
+            <Stack.Item grow>
+              <Section fill scrollable title="Room Types Reference">
+                <RoomTypeGuide />
+              </Section>
+            </Stack.Item>
+          </>
         )}
       </Stack>
     </Section>
+  );
+};
+
+// ===== Room Type Guide =====
+const RoomTypeGuide = () => {
+  const roomTypes = [
+    {
+      name: 'Shrine',
+      faith: '+75%',
+      faithColor: 'good',
+      requirements: 'Statues',
+    },
+    {
+      name: 'Common Room',
+      faith: '+50%',
+      faithColor: 'good',
+      requirements: 'Decor (bed, chair, easel), no crafting stations',
+    },
+    {
+      name: 'Basic Room',
+      faith: '+25%',
+      faithColor: 'good',
+      requirements: 'Any enclosed space',
+    },
+    {
+      name: 'Storage Room',
+      faith: '+10%',
+      faithColor: 'good',
+      requirements: 'Crates/closets, no decor or crafting',
+    },
+    {
+      name: 'Workshop',
+      faith: '-25%',
+      faithColor: 'average',
+      requirements: 'Crafting Table, Forge, or Loom',
+    },
+  ];
+
+  return (
+    <Box fontSize="11px" mb={2}>
+      {roomTypes.map((room, index) => (
+        <Flex key={index} mb={0.5} align="center">
+          <Flex.Item basis="28%">
+            <Box bold>{room.name}</Box>
+          </Flex.Item>
+          <Flex.Item basis="17%">
+            <Box color={room.faithColor}>{room.faith}</Box>
+          </Flex.Item>
+          <Flex.Item grow>
+            <Box color="label">{room.requirements}</Box>
+          </Flex.Item>
+        </Flex>
+      ))}
+    </Box>
   );
 };
 
@@ -420,6 +475,7 @@ const FarmingTab = (props, context) => {
     farming_selection,
     farming_max,
     existing_zones = [],
+    fertilizer_count = 0,
   } = data;
 
   return (
@@ -430,13 +486,18 @@ const FarmingTab = (props, context) => {
           <Section title="Create New Zone">
             <Box mb={1}>
               Select up to {farming_max} tiles to create a farming zone.
-              All plots in a zone share one growth timer for better performance.
+              Each plot requires 1 fertilizer to create.
+            </Box>
+            <Box mb={1} color={fertilizer_count > 0 ? "good" : "bad"}>
+              <Icon name="seedling" mr={1} />
+              Fertilizer available: {fertilizer_count}
             </Box>
             <Button
               fluid
               icon={farming_mode ? "times" : "seedling"}
               color={farming_mode ? "bad" : "good"}
               content={farming_mode ? "Cancel Selection" : "Start Selecting Tiles"}
+              disabled={fertilizer_count < 1 && !farming_mode}
               onClick={() => act('toggle_farming_mode')} />
             {farming_mode && (
               <Box mt={1}>
@@ -444,8 +505,13 @@ const FarmingTab = (props, context) => {
                   <Icon name="hand-pointer" mr={1} />
                   Click tiles on the ground to select them.
                 </Box>
-                <Box bold color="good" mb={1}>
+                <Box bold color={farming_selection <= fertilizer_count ? "good" : "bad"} mb={1}>
                   Selected: {farming_selection} / {farming_max}
+                  {farming_selection > fertilizer_count && (
+                    <Box color="bad">
+                      (Need {farming_selection} fertilizer, have {fertilizer_count})
+                    </Box>
+                  )}
                 </Box>
                 <Stack>
                   <Stack.Item grow>
@@ -453,7 +519,7 @@ const FarmingTab = (props, context) => {
                       fluid
                       icon="check"
                       color="good"
-                      disabled={farming_selection < 1}
+                      disabled={farming_selection < 1 || farming_selection > fertilizer_count}
                       content="Create Zone"
                       onClick={() => act('confirm_farming_zone')} />
                   </Stack.Item>
@@ -508,8 +574,12 @@ const FarmingTab = (props, context) => {
 };
 
 const FarmingZoneCard = (props, context) => {
-  const { act } = useBackend(context);
+  const { act, data } = useBackend(context);
   const { zone } = props;
+  const { fertilizer_count = 0 } = data;
+
+  const hasMissingPlots = zone.missing_count > 0;
+  const canRegenerate = hasMissingPlots && fertilizer_count >= zone.missing_count;
 
   return (
     <Section
@@ -521,6 +591,15 @@ const FarmingZoneCard = (props, context) => {
       )}
       buttons={(
         <>
+          {hasMissingPlots && (
+            <Button
+              icon="sync"
+              color={canRegenerate ? "good" : "bad"}
+              tooltip={canRegenerate
+                ? `Regenerate ${zone.missing_count} missing plots`
+                : `Need ${zone.missing_count} fertilizer (have ${fertilizer_count})`}
+              onClick={() => act('regenerate_plots', { id: zone.id })} />
+          )}
           <Button
             icon="eye"
             tooltip="Highlight Zone"
@@ -534,9 +613,10 @@ const FarmingZoneCard = (props, context) => {
       )}>
       <Flex>
         <Flex.Item grow>
-          <Box>
+          <Box color={hasMissingPlots ? "bad" : "label"}>
             <Icon name="th" mr={1} />
-            Plots: {zone.plot_count}
+            Plots: {zone.plot_count}/{zone.total_turfs}
+            {hasMissingPlots && ` (${zone.missing_count} missing)`}
           </Box>
         </Flex.Item>
         <Flex.Item grow>

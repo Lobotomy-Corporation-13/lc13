@@ -16,6 +16,11 @@
 /// How many work points are added per session (at base speed)
 #define WORK_PER_SESSION 5
 
+/// Crafting recipe categories
+#define CRAFT_CAT_PROCESSING "Processing"
+#define CRAFT_CAT_TOOLS "Tools"
+#define CRAFT_CAT_FLOORING "Flooring"
+
 /obj/structure/resurgence_crafting_table
 	name = "crafting table"
 	desc = "A sturdy workbench for crafting components and items."
@@ -101,7 +106,8 @@
 		"result_amount" = 2,
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
 		"total_work" = 10,
-		"desc" = "1 Metal -> 2 Metal Rods"
+		"desc" = "1 Metal -> 2 Metal Rods",
+		"category" = CRAFT_CAT_PROCESSING
 	)
 
 	recipes["Rope"] = list(
@@ -109,15 +115,17 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
 		"total_work" = 10,
-		"desc" = "3 Cloth -> 1 Rope"
+		"desc" = "3 Cloth -> 1 Rope",
+		"category" = CRAFT_CAT_PROCESSING
 	)
 
-	recipes["Nails"] = list(
-		"result" = /obj/item/stack/resurgence_nails,
-		"result_amount" = 10,
-		"materials" = list(/obj/item/stack/sheet/metal = 1),
+	recipes["Fertilizer"] = list(
+		"result" = /obj/item/stack/resurgence_fertilizer,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/mineral/coal = 5),
 		"total_work" = 10,
-		"desc" = "1 Metal -> 10 Nails"
+		"desc" = "5 Coal -> 1 Fertilizer (used to make farm plots)",
+		"category" = CRAFT_CAT_PROCESSING
 	)
 
 	recipes["Torch"] = list(
@@ -128,7 +136,8 @@
 			/obj/item/stack/sheet/cotton/cloth = 1
 		),
 		"total_work" = 10,
-		"desc" = "1 Wood + 1 Cloth -> Torch"
+		"desc" = "1 Wood + 1 Cloth -> Torch",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	// Tools - ordered by complexity
@@ -140,7 +149,8 @@
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 15,
-		"desc" = "2 Metal Rods + 1 Rope -> Improvised Pickaxe (slow but cheap)"
+		"desc" = "2 Metal Rods + 1 Rope -> Improvised Pickaxe (slow but cheap)",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	recipes["Pickaxe"] = list(
@@ -152,19 +162,21 @@
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 20,
-		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe"
+		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	recipes["Compact Pickaxe"] = list(
 		"result" = /obj/item/pickaxe/mini,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/sheet/metal = 5,
-			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/sheet/metal = 2,
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/resurgence_component/rope = 4
 		),
 		"total_work" = 25,
-		"desc" = "5 Metal + 2 Wood + 1 Rope -> Compact Pickaxe (portable)"
+		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	recipes["Silver Pickaxe"] = list(
@@ -174,10 +186,11 @@
 			/obj/item/stack/sheet/metal = 5,
 			/obj/item/stack/sheet/mineral/silver = 5,
 			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 40,
-		"desc" = "5 Metal + 5 Silver + 2 Wood + 1 Rope -> Silver Pickaxe (fast mining)"
+		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	recipes["Shovel"] = list(
@@ -188,7 +201,8 @@
 			/obj/item/stack/sheet/mineral/wood = 1
 		),
 		"total_work" = 20,
-		"desc" = "3 Metal + 1 Wood -> Shovel"
+		"desc" = "3 Metal + 1 Wood -> Shovel",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	recipes["Simple Harvester"] = list(
@@ -200,7 +214,65 @@
 			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 25,
-		"desc" = "5 Wood + 5 Metal + 2 Rope -> Simple Harvester (auto-harvests resources)"
+		"desc" = "5 Wood + 5 Metal + 2 Rope -> Simple Harvester (auto-harvests resources)",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Wooden Bucket"] = list(
+		"result" = /obj/item/reagent_containers/glass/bucket/wooden,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 3
+		),
+		"total_work" = 10,
+		"desc" = "3 Wood -> Wooden Bucket (can be filled at water sources)",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	// Kitchen Tools
+	recipes["Beaker"] = list(
+		"result" = /obj/item/reagent_containers/glass/beaker,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 3),
+		"total_work" = 15,
+		"desc" = "3 Metal -> Beaker",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Large Beaker"] = list(
+		"result" = /obj/item/reagent_containers/glass/beaker/large,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 6),
+		"total_work" = 20,
+		"desc" = "6 Metal -> Large Beaker",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Bowl"] = list(
+		"result" = /obj/item/reagent_containers/glass/bowl,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 3),
+		"total_work" = 15,
+		"desc" = "3 Metal -> Bowl",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Universal Enzyme"] = list(
+		"result" = /obj/item/reagent_containers/food/condiment/enzyme,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 5),
+		"total_work" = 25,
+		"desc" = "5 Metal -> Universal Enzyme",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Kitchen Knife"] = list(
+		"result" = /obj/item/kitchen/knife,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 8),
+		"total_work" = 20,
+		"desc" = "8 Metal -> Kitchen Knife",
+		"category" = CRAFT_CAT_TOOLS
 	)
 
 	// Floor Tiles
@@ -209,7 +281,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/plasteel = 2),
 		"total_work" = 10,
-		"desc" = "2 Plasteel -> 4 Plasteel Floor Tiles"
+		"desc" = "2 Plasteel -> 4 Plasteel Floor Tiles",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	// Carpet Tiles
@@ -218,7 +291,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Black Carpet"
+		"desc" = "2 Cloth -> 4 Black Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Blue Carpet"] = list(
@@ -226,7 +300,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Blue Carpet"
+		"desc" = "2 Cloth -> 4 Blue Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Cyan Carpet"] = list(
@@ -234,7 +309,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Cyan Carpet"
+		"desc" = "2 Cloth -> 4 Cyan Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Green Carpet"] = list(
@@ -242,7 +318,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Green Carpet"
+		"desc" = "2 Cloth -> 4 Green Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Orange Carpet"] = list(
@@ -250,7 +327,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Orange Carpet"
+		"desc" = "2 Cloth -> 4 Orange Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Purple Carpet"] = list(
@@ -258,7 +336,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Purple Carpet"
+		"desc" = "2 Cloth -> 4 Purple Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Red Carpet"] = list(
@@ -266,7 +345,8 @@
 		"result_amount" = 4,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
-		"desc" = "2 Cloth -> 4 Red Carpet"
+		"desc" = "2 Cloth -> 4 Red Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	// Royal Carpets (require gold)
@@ -278,7 +358,8 @@
 			/obj/item/stack/sheet/mineral/gold = 1
 		),
 		"total_work" = 15,
-		"desc" = "2 Cloth + 1 Gold -> 4 Royal Black Carpet"
+		"desc" = "2 Cloth + 1 Gold -> 4 Royal Black Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 	recipes["Royal Blue Carpet"] = list(
@@ -289,7 +370,8 @@
 			/obj/item/stack/sheet/mineral/gold = 1
 		),
 		"total_work" = 15,
-		"desc" = "2 Cloth + 1 Gold -> 4 Royal Blue Carpet"
+		"desc" = "2 Cloth + 1 Gold -> 4 Royal Blue Carpet",
+		"category" = CRAFT_CAT_FLOORING
 	)
 
 /obj/structure/resurgence_crafting_table/attack_hand(mob/user)
@@ -326,11 +408,17 @@
 	data["target_copies"] = target_copies
 	data["completed_copies"] = completed_copies
 
-	// Build recipe list with availability info
+	// Build recipe list with availability info, organized by category
 	var/list/recipe_data = list()
+	var/list/categories = list()
 	for(var/recipe_name in recipes)
 		var/list/recipe = recipes[recipe_name]
 		var/list/materials = recipe["materials"]
+		var/category = recipe["category"] || "Other"
+
+		// Track unique categories
+		if(!(category in categories))
+			categories += category
 
 		var/list/mat_data = list()
 		var/can_craft = TRUE
@@ -363,10 +451,12 @@
 			"total_work" = recipe["total_work"],
 			"materials" = mat_data,
 			"can_craft" = can_craft,
-			"max_craftable" = max_craftable
+			"max_craftable" = max_craftable,
+			"category" = category
 		))
 
 	data["recipes"] = recipe_data
+	data["categories"] = categories
 
 	return data
 
@@ -472,6 +562,9 @@
 
 		// Add work points (base amount, could be modified by skills/tools later)
 		current_work += WORK_PER_SESSION
+
+		// Drain small amount of faith per work session (0.1 per session)
+		apply_work_faith_drain(user, 1)
 
 		// Award crafting XP for work done
 		award_crafting_xp(user, WORK_PER_SESSION)
@@ -663,6 +756,8 @@
 			return "Gold Ore"
 		if(/obj/item/stack/ore/rock)
 			return "Rock"
+		if(/obj/item/stack/sheet/mineral/coal)
+			return "Coal"
 		// Raw materials
 		if(/obj/item/stack/sheet/cotton)
 			return "Cotton"
@@ -675,8 +770,11 @@
 		// Resurgence components
 		if(/obj/item/resurgence_component/rope)
 			return "Rope"
-		if(/obj/item/stack/resurgence_nails)
-			return "Nails"
+		if(/obj/item/resurgence_component/ash_plating)
+			return "Ash Plating"
+		// Resurgence tools
+		if(/obj/item/harvester/simple)
+			return "Simple Harvester"
 		else
 			// Fallback: get the name from the type
 			var/obj/item/temp = material_type
@@ -800,3 +898,6 @@
 
 #undef WORK_SESSION_TIME
 #undef WORK_PER_SESSION
+#undef CRAFT_CAT_PROCESSING
+#undef CRAFT_CAT_TOOLS
+#undef CRAFT_CAT_FLOORING

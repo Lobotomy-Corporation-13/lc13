@@ -28,19 +28,6 @@
 	icon_state = "coil"
 
 // ============================================
-// Nails - Stack type for construction
-// ============================================
-
-/obj/item/stack/resurgence_nails
-	name = "nails"
-	desc = "Metal nails for construction."
-	singular_name = "nail"
-	icon = 'icons/obj/stack_objects.dmi'
-	icon_state = "sheet-silver" // Placeholder
-	max_amount = 50
-	w_class = WEIGHT_CLASS_SMALL
-
-// ============================================
 // Ash Plating - Metal component
 // ============================================
 
@@ -69,4 +56,17 @@
 	name = "super microchip"
 	desc = "A high-performance processing chip for sophisticated machinery."
 	icon_state = "cpu_super"
+
+// ============================================
+// Fertilizer - Made from coal, used for farming
+// ============================================
+
+/obj/item/stack/resurgence_fertilizer
+	name = "fertilizer"
+	desc = "Nutrient-rich soil amendment made from processed coal. Used to prepare farm plots."
+	singular_name = "fertilizer"
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "plantbag"
+	max_amount = 50
+	w_class = WEIGHT_CLASS_SMALL
 
