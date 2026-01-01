@@ -62,9 +62,15 @@ const BlueprintTab = (props, context) => {
   const [
     activeCategory,
     setActiveCategory,
-  ] = useLocalState(context, 'activeCategory', selected_category || categories[0]?.name);
+  ] = useLocalState(
+    context,
+    'activeCategory',
+    selected_category || categories[0]?.name
+  );
 
-  const currentCategory = categories.find(cat => cat.name === activeCategory) || categories[0];
+  const currentCategory = categories.find(
+    cat => cat.name === activeCategory
+  ) || categories[0];
   const structures = currentCategory?.structures || [];
 
   return (
@@ -139,7 +145,10 @@ const BlueprintTab = (props, context) => {
                   tooltip="West" />
               </Flex.Item>
               <Flex.Item mx={2}>
-                <Box bold textAlign="center" style={{ textTransform: 'capitalize' }}>
+                <Box
+                  bold
+                  textAlign="center"
+                  style={{ textTransform: 'capitalize' }}>
                   {selected_direction || "south"}
                 </Box>
               </Flex.Item>
@@ -259,7 +268,11 @@ const RoomTab = (props, context) => {
                   </Box>
                   <Box>
                     <Box inline bold mr={1}>Faith Modifier:</Box>
-                    <Box inline color={room_faith_modifier?.includes('+') ? 'good' : 'bad'}>
+                    <Box
+                      inline
+                      color={
+                        room_faith_modifier?.includes('+') ? 'good' : 'bad'
+                      }>
                       {room_faith_modifier}
                     </Box>
                   </Box>
@@ -274,7 +287,9 @@ const RoomTab = (props, context) => {
                   <Box>
                     <Box inline bold mr={1}>Owner:</Box>
                     {room_owner ? (
-                      <Box inline color={user_owns_this_room ? 'good' : 'label'}>
+                      <Box
+                        inline
+                        color={user_owns_this_room ? 'good' : 'label'}>
                         {room_owner} {user_owns_this_room && '(You)'}
                       </Box>
                     ) : (
@@ -293,14 +308,18 @@ const RoomTab = (props, context) => {
                       fluid
                       icon={user_owns_this_room ? "door-open" : "key"}
                       color={user_owns_this_room ? "average" : "good"}
-                      content={user_owns_this_room ? "Unclaim Room" : "Claim as Personal Room"}
+                      content={
+                        user_owns_this_room ? "Unclaim Room" : "Claim Room"
+                      }
                       disabled={in_use || (room_owner && !user_owns_this_room)}
                       tooltip={room_owner && !user_owns_this_room
                         ? "This room is owned by someone else"
                         : user_has_room && !user_owns_this_room
                           ? "You will release your current room"
                           : null}
-                      onClick={() => act(user_owns_this_room ? 'unclaim_room' : 'claim_room')} />
+                      onClick={() => act(
+                        user_owns_this_room ? 'unclaim_room' : 'claim_room'
+                      )} />
                   </Stack.Item>
                   <Stack.Item mt={1}>
                     <Button
@@ -349,7 +368,11 @@ const RoomTab = (props, context) => {
                   </Box>
                   <Box>
                     <Box inline bold mr={1}>Faith Modifier:</Box>
-                    <Box inline color={detected_faith?.includes('+') ? 'good' : 'average'}>
+                    <Box
+                      inline
+                      color={
+                        detected_faith?.includes('+') ? 'good' : 'average'
+                      }>
                       {detected_faith}
                     </Box>
                   </Box>
@@ -368,7 +391,8 @@ const RoomTab = (props, context) => {
             <Stack.Item grow>
               <Section fill title="Designate Room">
                 <Box mb={2}>
-                  The room type is automatically determined by the structures inside:
+                  The room type is automatically determined by
+                  the structures inside:
                 </Box>
                 <RoomTypeGuide />
                 <Button
@@ -490,7 +514,9 @@ const FarmingTab = (props, context) => {
               fluid
               icon={farming_mode ? "times" : "seedling"}
               color={farming_mode ? "bad" : "good"}
-              content={farming_mode ? "Cancel Selection" : "Start Selecting Tiles"}
+              content={
+                farming_mode ? "Cancel Selection" : "Start Selecting Tiles"
+              }
               disabled={fertilizer_count < 1 && !farming_mode}
               onClick={() => act('toggle_farming_mode')} />
             {farming_mode && (
@@ -499,11 +525,17 @@ const FarmingTab = (props, context) => {
                   <Icon name="hand-pointer" mr={1} />
                   Click tiles on the ground to select them.
                 </Box>
-                <Box bold color={farming_selection <= fertilizer_count ? "good" : "bad"} mb={1}>
+                <Box
+                  bold
+                  color={
+                    farming_selection <= fertilizer_count ? "good" : "bad"
+                  }
+                  mb={1}>
                   Selected: {farming_selection} / {farming_max}
                   {farming_selection > fertilizer_count && (
                     <Box color="bad">
-                      (Need {farming_selection} fertilizer, have {fertilizer_count})
+                      (Need {farming_selection} fertilizer,
+                      have {fertilizer_count})
                     </Box>
                   )}
                 </Box>
@@ -513,7 +545,10 @@ const FarmingTab = (props, context) => {
                       fluid
                       icon="check"
                       color="good"
-                      disabled={farming_selection < 1 || farming_selection > fertilizer_count}
+                      disabled={
+                        farming_selection < 1 ||
+                        farming_selection > fertilizer_count
+                      }
                       content="Create Zone"
                       onClick={() => act('confirm_farming_zone')} />
                   </Stack.Item>
@@ -573,7 +608,8 @@ const FarmingZoneCard = (props, context) => {
   const { fertilizer_count = 0 } = data;
 
   const hasMissingPlots = zone.missing_count > 0;
-  const canRegenerate = hasMissingPlots && fertilizer_count >= zone.missing_count;
+  const canRegenerate = hasMissingPlots &&
+    fertilizer_count >= zone.missing_count;
 
   return (
     <Section
@@ -591,7 +627,7 @@ const FarmingZoneCard = (props, context) => {
               color={canRegenerate ? "good" : "bad"}
               tooltip={canRegenerate
                 ? `Regenerate ${zone.missing_count} missing plots`
-                : `Need ${zone.missing_count} fertilizer (have ${fertilizer_count})`}
+                : `Need ${zone.missing_count} fertilizer`}
               onClick={() => act('regenerate_plots', { id: zone.id })} />
           )}
           <Button
@@ -620,7 +656,14 @@ const FarmingZoneCard = (props, context) => {
           </Box>
         </Flex.Item>
         <Flex.Item grow>
-          <Box color={zone.avg_water < 20 ? "bad" : zone.avg_water < 50 ? "average" : "good"}>
+          <Box
+            color={
+              zone.avg_water < 20
+                ? "bad"
+                : zone.avg_water < 50
+                  ? "average"
+                  : "good"
+            }>
             <Icon name="tint" mr={1} />
             Water: {zone.avg_water}%
           </Box>

@@ -669,50 +669,11 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "orebox"
 	result_type = /obj/structure/ore_box
+	unanchored_result = TRUE
 
 /obj/structure/resurgence_blueprint/ore_box/init_materials()
 	required_materials = list(
 		/obj/item/stack/sheet/mineral/wood = 4
-	)
-
-// ===========================================
-// DECOR BLUEPRINTS
-// ===========================================
-
-/obj/structure/resurgence_blueprint/wooden_barricade
-	name = "wooden barricade blueprint"
-	result_name = "wooden barricade"
-	icon = 'icons/obj/structures.dmi'
-	icon_state = "yourshitiscrappy"
-	result_type = /obj/structure/barricade/wooden
-
-/obj/structure/resurgence_blueprint/wooden_barricade/init_materials()
-	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 5
-	)
-
-/obj/structure/resurgence_blueprint/meatspike
-	name = "meat spike blueprint"
-	result_name = "meat spike frame"
-	icon = 'icons/obj/kitchen.dmi'
-	icon_state = "yourshitiscrappy"
-	result_type = /obj/structure/kitchenspike_frame
-
-/obj/structure/resurgence_blueprint/meatspike/init_materials()
-	required_materials = list(
-		/obj/item/stack/sheet/metal = 5
-	)
-
-/obj/structure/resurgence_blueprint/shower
-	name = "shower blueprint"
-	result_name = "shower frame"
-	icon = 'icons/obj/structures.dmi'
-	icon_state = "yourshitiscrappy"
-	result_type = /obj/structure/showerframe
-
-/obj/structure/resurgence_blueprint/shower/init_materials()
-	required_materials = list(
-		/obj/item/stack/sheet/metal = 2
 	)
 
 // ===========================================

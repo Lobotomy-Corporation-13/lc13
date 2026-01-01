@@ -1,5 +1,16 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, Icon, Input, NumberInput, ProgressBar, Section, Stack, Tabs } from '../components';
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Input,
+  NumberInput,
+  ProgressBar,
+  Section,
+  Stack,
+  Tabs,
+} from '../components';
 import { Window } from '../layouts';
 
 export const ResurgenceCrafting = (props, context) => {
@@ -29,7 +40,9 @@ export const ResurgenceCrafting = (props, context) => {
   // Filter recipes based on search and category
   const filteredRecipes = recipes.filter(recipe => {
     // Category filter (unless searching)
-    if (!searchText && activeCategory !== 'All' && recipe.category !== activeCategory) {
+    const wrongCategory = activeCategory !== 'All' &&
+      recipe.category !== activeCategory;
+    if (!searchText && wrongCategory) {
       return false;
     }
     // Search filter
@@ -90,7 +103,7 @@ export const ResurgenceCrafting = (props, context) => {
                     <Stack.Item>
                       <Box color="label" fontSize="11px" mt={0.5}>
                         <Icon name="layer-group" mr={1} />
-                        Batch progress: {completed_copies}/{target_copies} copies complete
+                        Batch: {completed_copies}/{target_copies} copies
                       </Box>
                     </Stack.Item>
                   )}
@@ -106,7 +119,8 @@ export const ResurgenceCrafting = (props, context) => {
                   <Stack.Item>
                     <Box color="label" fontSize="11px" mt={1}>
                       <Icon name="info-circle" mr={1} />
-                      Auto-continues until interrupted. Progress is saved if you leave.
+                      Auto-continues until interrupted.
+                      Progress is saved if you leave.
                     </Box>
                   </Stack.Item>
                 </Stack>
@@ -160,7 +174,7 @@ export const ResurgenceCrafting = (props, context) => {
                 {filteredRecipes.length === 0 && (
                   <Stack.Item>
                     <Box color="label" italic textAlign="center" mt={2}>
-                      No recipes found matching "{searchText}"
+                      No recipes found matching &quot;{searchText}&quot;
                     </Box>
                   </Stack.Item>
                 )}
@@ -259,7 +273,9 @@ const RecipeCard = (props, context) => {
               <Button
                 icon="plus"
                 disabled={quantity >= maxCraftable}
-                onClick={() => setQuantity(Math.min(maxCraftable, quantity + 1))} />
+                onClick={() => setQuantity(
+                  Math.min(maxCraftable, quantity + 1)
+                )} />
             </Flex.Item>
             <Flex.Item grow>
               <Box color="label" fontSize="11px" ml={1}>

@@ -1,5 +1,16 @@
 import { useBackend } from '../backend';
-import { Box, Button, Collapsible, Divider, Flex, Icon, NoticeBox, ProgressBar, Section, Stack } from '../components';
+import {
+  Box,
+  Button,
+  Collapsible,
+  Divider,
+  Flex,
+  Icon,
+  NoticeBox,
+  ProgressBar,
+  Section,
+  Stack,
+} from '../components';
 import { Window } from '../layouts';
 
 export const ResourcesRecorder = (props, context) => {
@@ -122,7 +133,8 @@ const WarehouseContentsSection = (props, context) => {
       )}>
       {closets.length === 0 && (
         <NoticeBox>
-          No containers found. Click "Scan Warehouse" to detect closets and crates.
+          No containers found. Click &quot;Scan Warehouse&quot;
+          to detect closets and crates.
         </NoticeBox>
       )}
       {closets.length > 0 && (
@@ -142,8 +154,12 @@ const WarehouseContentsSection = (props, context) => {
                   icon="paper-plane"
                   content={`Export Selected (${selectedCount})`}
                   color="good"
-                  disabled={exporting || selectedCount === 0 || phase < 2}
-                  tooltip={phase < 2 ? "Complete building objectives first" : null}
+                  disabled={
+                    exporting || selectedCount === 0 || phase < 2
+                  }
+                  tooltip={
+                    phase < 2 ? "Complete building objectives first" : null
+                  }
                   onClick={() => act('export')}
                 />
               </Flex.Item>
@@ -175,7 +191,7 @@ const ClosetEntry = (props, context) => {
             <Button
               icon={closet.selected ? 'check-square-o' : 'square-o'}
               color={closet.selected ? 'good' : 'default'}
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 act('toggle_select', { ref: closet.ref });
               }}
@@ -192,7 +208,10 @@ const ClosetEntry = (props, context) => {
           </Flex.Item>
           {hasContributingItems && (
             <Flex.Item>
-              <Icon name="star" color="gold" title="Contains items for objectives" />
+              <Icon
+                name="star"
+                color="gold"
+                title="Contains items for objectives" />
             </Flex.Item>
           )}
         </Flex>
@@ -200,7 +219,9 @@ const ClosetEntry = (props, context) => {
       <Box pl={3}>
         {closet.contents.map((item, index) => (
           <Box key={index} color={item.contributes ? 'good' : 'label'}>
-            {item.contributes && <Icon name="arrow-right" color="good" mr={1} />}
+            {item.contributes && (
+              <Icon name="arrow-right" color="good" mr={1} />
+            )}
             {item.name}: {item.count}
           </Box>
         ))}
