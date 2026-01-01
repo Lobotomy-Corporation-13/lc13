@@ -1,9 +1,8 @@
 //Ah, sweet! Man-made horrors beyond my comprehension!
-//An Abberation of Schwarzchild Radius
 /mob/living/simple_animal/hostile/abnormality/reality_tear
 	name = "Tear in Reality"
-	desc = "Something is staring back, strangely, you feel like you recognize it."
-	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi' //Outline this eventually
+	desc = "Something is lost, strangely, you feel like you recognize it."
+	icon = 'ModularLobotomy/_Lobotomyicons/64x96.dmi'
 	icon_state = "reality_tear"
 	pixel_x = -32
 	base_pixel_x = -32
@@ -12,8 +11,8 @@
 	del_on_death = TRUE
 	layer = ABOVE_OPEN_TURF_LAYER
 
-	maxHealth = 2000
-	health = 2000
+	maxHealth = 5000
+	health = 5000
 
 	damage_coeff = list(RED_DAMAGE = 0.2, WHITE_DAMAGE = -2, BLACK_DAMAGE = 0.8, PALE_DAMAGE = 1)
 	stat_attack = HARD_CRIT
@@ -37,7 +36,7 @@
 	)
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
-///////////////EVERYTHING HERE FROM GREEN DUSK////////////////////////////
+///////////////CURRENTLY DOESN'T WORK/////////////////////////////////////
 
 	var/spawn_progress = 18
 	var/list/spawned_mobs = list()
@@ -97,18 +96,19 @@ var/list/worked = list()
 	return
 
 if(work_type == ABNORMALITY_WORK_INSTINCT)
-	span_danger "As you reach out for the tear, something lunges at you!"
+	span_danger "You plunge your arm into the static, it hurts."
+	span_danger "You pull out a paper, it thanks you for personally guiding them."
 	datum_reference.qliphoth_change(-2) //Insta breaches & special message on Instinct
 
 ////////////////////////////////////////////////////////OPEN SOURCE FLUFF PAPER//////////////////////////////////
 /obj/item/paper/fluff/plea
 	name = "Strange Note"
-	info = {"Give us drawings.<br>
-	Give us universes.<br>
-	Give us flesh.<br>
-	Please.<br>
-	Please.<br>
-	Please.<br>
+	info = {"All that enters exits elsewhere.<br>
+	The worlds align at the white noise intersection.<br>
+	All that is needed for us to find eachother, are directions.<br>
+	Please give us directions to the 13th Station.<br>
+	Please give us directions to the "City".<br>
+	Please give us directions to Lobotomy Corporation.<br>
 	code/modules/mobs/living/simple_animal/abnormality/aleph/tear_in_reality<br>
 	"}
 

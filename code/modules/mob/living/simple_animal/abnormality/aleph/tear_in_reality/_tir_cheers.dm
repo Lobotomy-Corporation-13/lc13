@@ -3,7 +3,7 @@
 
 //////////////////////FOR OPEN SOURCE:
 //////////////////////USE AS A TEMPLATE FOR YOUR ENEMIES
-//////////////////////ONCE ENEMY IS FINISHED, PUT IN LIST AT LINE 61
+//////////////////////ONCE ENEMY IS FINISHED, PUT IN LIST AT LINE 57
 //////////////////////(picked_mob = pick())
 
 /mob/living/simple_animal/hostile/_tir_cheers
