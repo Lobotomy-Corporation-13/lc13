@@ -547,8 +547,8 @@ const FarmingTab = (props, context) => {
                       icon="check"
                       color="good"
                       disabled={
-                        farming_selection < 1 ||
-                        farming_selection > fertilizer_count
+                        farming_selection < 1
+                        || farming_selection > fertilizer_count
                       }
                       content="Create Zone"
                       onClick={() => act('confirm_farming_zone')} />
