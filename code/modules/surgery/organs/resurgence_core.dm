@@ -41,14 +41,16 @@
 	var/room_quality_tick_counter = 0 // Track ticks for room quality checks (every 30 seconds)
 
 	// Character stats (1-20)
-	var/stat_construction = 1
 	var/stat_crafting = 1
-	var/stat_gathering = 1
+	var/stat_mining = 1
+	var/stat_harvesting = 1
+	var/stat_cooking = 1
 
 	// XP accumulation (resets to 0 after level up)
-	var/xp_construction = 0
 	var/xp_crafting = 0
-	var/xp_gathering = 0
+	var/xp_mining = 0
+	var/xp_harvesting = 0
+	var/xp_cooking = 0
 
 /obj/item/organ/resurgence_core/Destroy()
 	// Clean up all faith events
@@ -241,7 +243,7 @@
  * Award XP to a specific stat and handle level ups.
  *
  * Arguments:
- * * stat_type - "construction", "crafting", or "gathering"
+ * * stat_type - "crafting", "mining", "harvesting", or "cooking"
  * * amount - Amount of XP to award
  */
 /obj/item/organ/resurgence_core/proc/award_xp(stat_type, amount)
@@ -252,15 +254,18 @@
 	var/current_xp
 
 	switch(stat_type)
-		if("construction")
-			current_level = stat_construction
-			current_xp = xp_construction
 		if("crafting")
 			current_level = stat_crafting
 			current_xp = xp_crafting
-		if("gathering")
-			current_level = stat_gathering
-			current_xp = xp_gathering
+		if("mining")
+			current_level = stat_mining
+			current_xp = xp_mining
+		if("harvesting")
+			current_level = stat_harvesting
+			current_xp = xp_harvesting
+		if("cooking")
+			current_level = stat_cooking
+			current_xp = xp_cooking
 		else
 			return // Invalid stat type
 
@@ -282,36 +287,43 @@
 
 	// Store the updated values
 	switch(stat_type)
-		if("construction")
-			stat_construction = current_level
-			xp_construction = current_xp
 		if("crafting")
 			stat_crafting = current_level
 			xp_crafting = current_xp
-		if("gathering")
-			stat_gathering = current_level
-			xp_gathering = current_xp
+		if("mining")
+			stat_mining = current_level
+			xp_mining = current_xp
+		if("harvesting")
+			stat_harvesting = current_level
+			xp_harvesting = current_xp
+		if("cooking")
+			stat_cooking = current_level
+			xp_cooking = current_xp
 
 /// Get the current level of a stat
 /obj/item/organ/resurgence_core/proc/get_stat_level(stat_type)
 	switch(stat_type)
-		if("construction")
-			return stat_construction
 		if("crafting")
 			return stat_crafting
-		if("gathering")
-			return stat_gathering
+		if("mining")
+			return stat_mining
+		if("harvesting")
+			return stat_harvesting
+		if("cooking")
+			return stat_cooking
 	return 1
 
 /// Get the current XP of a stat
 /obj/item/organ/resurgence_core/proc/get_stat_xp(stat_type)
 	switch(stat_type)
-		if("construction")
-			return xp_construction
 		if("crafting")
 			return xp_crafting
-		if("gathering")
-			return xp_gathering
+		if("mining")
+			return xp_mining
+		if("harvesting")
+			return xp_harvesting
+		if("cooking")
+			return xp_cooking
 	return 0
 
 // ============================================
@@ -389,6 +401,11 @@
 
 	// Apply room quality event if there's a change
 	if(faith_change != 0)
+		// Halve the quality bonus for Living Quarters made with sandstone
+		if(current_room.is_sandstone && current_room.room_type == ROOM_TYPE_LIVING_QUARTERS && faith_change > 0)
+			faith_change *= 0.5
+			quality_desc += " (Sandstone construction)"
+
 		var/datum/faith_event/room_quality/event = new(
 			quality_desc,
 			faith_change,
@@ -591,7 +608,14 @@
 				to_chat(H, span_notice("<b>Active Faith Effects:</b>"))
 				has_events = TRUE
 			var/sign = event.faith_change >= 0 ? "+" : ""
-			to_chat(H, span_notice("  [event.description] ([sign][event.faith_change] per 5 sec)"))
+			var/time_remaining = event.get_time_remaining()
+			var/time_text = ""
+			if(!isnull(time_remaining))
+				if(time_remaining >= 60)
+					time_text = " - [round(time_remaining / 60)]m [time_remaining % 60]s left"
+				else
+					time_text = " - [time_remaining]s left"
+			to_chat(H, span_notice("  [event.description] ([sign][event.faith_change] per 5 sec)[time_text]"))
 
 	if(!has_events)
 		to_chat(H, span_notice("No special faith effects active."))

@@ -178,15 +178,21 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 	)
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
 
-	// Drop 1-3 produce
+	// Drop 1-3 produce with harvesting skill bonus
 	var/product_type = myseed.product
 	var/yield = rand(1, 3)
+	// Apply harvesting yield bonus (+1 every 5 levels)
+	var/harvesting_level = get_harvesting_stat(user)
+	yield += get_harvesting_yield_bonus(harvesting_level)
 
 	for(var/i in 1 to yield)
 		new product_type(get_turf(src), myseed)
 
 	// Apply faith drain
 	apply_work_faith_drain(user, 5)
+
+	// Award harvesting XP
+	award_harvesting_xp(user, 5)
 
 	// Mark as harvested and start regrowth timer
 	harvestable = FALSE

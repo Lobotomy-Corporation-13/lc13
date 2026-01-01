@@ -21,6 +21,8 @@
 	var/hidden = FALSE
 	/// Reference to the core this event is attached to
 	var/obj/item/organ/resurgence_core/parent_core
+	/// World time when this event expires (null = permanent)
+	var/expiration_time = null
 
 /datum/faith_event/New(desc, change, time = null, cat = "generic", hidden_event = FALSE)
 	. = ..()
@@ -30,7 +32,17 @@
 	category = cat
 	hidden = hidden_event
 	if(timeout)
+		expiration_time = world.time + timeout
 		addtimer(CALLBACK(src, PROC_REF(expire)), timeout)
+
+/// Returns the time remaining in seconds, or null if permanent
+/datum/faith_event/proc/get_time_remaining()
+	if(!expiration_time)
+		return null
+	var/remaining = expiration_time - world.time
+	if(remaining <= 0)
+		return 0
+	return round(remaining / 10) // Convert deciseconds to seconds
 
 /datum/faith_event/Destroy()
 	if(parent_core)
@@ -112,6 +124,10 @@
 /// Faith events from eating in a common room
 /datum/faith_event/common_eating
 	category = "common_eating"
+
+/// Faith events from eating quality food (1 minute duration)
+/datum/faith_event/meal_quality
+	category = "meal_quality"
 
 /// Faith events for newcomers (grace period to find a home)
 /datum/faith_event/newcomer

@@ -13,7 +13,7 @@
 	icon_state = "lattice"
 	anchored = TRUE
 	density = FALSE
-	layer = ABOVE_OBJ_LAYER
+	layer = 2.5
 	alpha = 180  // Transparent ghost appearance
 	color = "#80c0ff"  // Light blue tint
 
@@ -123,26 +123,26 @@
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
-			time *= get_stat_speed_modifier(core.stat_construction)
+			time *= get_stat_speed_modifier(core.stat_crafting)
 	return time
 
-/// Award construction XP to a player
+/// Award crafting XP to a player for building
 /obj/structure/resurgence_blueprint/proc/award_construction_xp(mob/user, amount)
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
 	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 	if(istype(core))
-		core.award_xp("construction", amount)
+		core.award_xp("crafting", amount)
 
-/// Get beauty bonus from player's construction stat
+/// Get beauty bonus from player's crafting stat
 /obj/structure/resurgence_blueprint/proc/get_construction_beauty_bonus(mob/user)
 	if(!ishuman(user))
 		return 0
 	var/mob/living/carbon/human/H = user
 	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 	if(istype(core))
-		return get_stat_beauty_bonus(core.stat_construction)
+		return get_stat_beauty_bonus(core.stat_crafting)
 	return 0
 
 /obj/structure/resurgence_blueprint/examine(mob/user)

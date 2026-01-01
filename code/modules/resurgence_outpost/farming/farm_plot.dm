@@ -208,6 +208,11 @@
 
 	var/total_work = get_harvest_work()
 
+	// Work rate with harvesting stat bonus
+	var/work_per_tick = GATHER_WORK_PER_TICK
+	var/harvesting_level = get_harvesting_stat(user)
+	work_per_tick += (harvesting_level - 1)
+
 	// Starting message
 	if(harvest_work_points > 0)
 		var/progress_pct = round((harvest_work_points / total_work) * 100)
@@ -233,8 +238,8 @@
 			break
 
 		// Add work and drain faith
-		harvest_work_points += GATHER_WORK_PER_TICK
-		apply_work_faith_drain(user, GATHER_WORK_PER_TICK)
+		harvest_work_points += work_per_tick
+		apply_work_faith_drain(user, work_per_tick)
 
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
@@ -248,12 +253,19 @@
 
 /// Finish harvesting and drop produce
 /obj/structure/farm_plot/proc/complete_harvest(mob/user)
+	// Calculate yield with harvesting skill bonus
+	var/product_count = myseed.yield
 	if(user)
 		user.visible_message(
 			span_notice("[user] harvests [myseed.plantname]."),
 			span_notice("You harvest [myseed.plantname]!"),
 			span_hear("You hear rustling.")
 		)
+		// Award harvesting XP based on yield
+		award_harvesting_xp(user, myseed.yield * 2)
+		// Apply harvesting yield bonus (+1 every 5 levels)
+		var/harvesting_level = get_harvesting_stat(user)
+		product_count += get_harvesting_yield_bonus(harvesting_level)
 	else
 		// Harvester or other automated source
 		visible_message(span_notice("[myseed.plantname] is harvested!"))
@@ -261,7 +273,6 @@
 
 	// Create produce using seed properties
 	var/product_type = myseed.product
-	var/product_count = myseed.yield
 
 	for(var/i in 1 to product_count)
 		new product_type(get_turf(src), myseed)

@@ -75,8 +75,8 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 	duffelbag = /obj/item/storage/backpack/duffelbag
 
 	backpack_contents = list(
-		/obj/item/flashlight = 1,
 		/obj/item/crowbar = 1,
-		/obj/item/resurgence_debugger = 1,
+		/obj/item/hatchet/wooden = 1,
+		/obj/item/pickaxe/improvised = 1,
 		/obj/item/resurgence_outpost_planner = 1
 	)

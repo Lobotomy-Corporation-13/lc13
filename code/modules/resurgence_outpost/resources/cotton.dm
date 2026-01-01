@@ -107,6 +107,10 @@
 	// Work rate - cotton harvesting is done by hand at base rate
 	var/work_per_tick = GATHER_WORK_PER_TICK
 
+	// Harvesting stat bonus: +1 work per tick for each level above 1
+	var/harvesting_level = get_harvesting_stat(user)
+	work_per_tick += (harvesting_level - 1)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -146,19 +150,23 @@
 		complete_harvest(user)
 
 /obj/structure/resurgence_cotton/proc/complete_harvest(mob/user)
+	// Calculate yield with harvesting skill bonus
+	var/yield = base_yield
 	if(user)
 		user.visible_message(
 			span_notice("[user] finishes harvesting [src]."),
 			span_notice("You harvest the cotton from [src]!"),
 			span_hear("You hear rustling.")
 		)
+		// Award harvesting XP based on work difficulty
+		award_harvesting_xp(user, round(work_needed / 10))
+		// Apply harvesting yield bonus (+1 every 5 levels)
+		var/harvesting_level = get_harvesting_stat(user)
+		yield += get_harvesting_yield_bonus(harvesting_level)
 	else
 		// Harvester or other automated source
 		visible_message(span_notice("[src] is harvested!"))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
-
-	// Calculate yield
-	var/yield = base_yield
 
 	// Drop cotton
 	new /obj/item/stack/sheet/cotton(get_turf(src), yield)

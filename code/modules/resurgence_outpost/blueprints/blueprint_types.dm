@@ -402,6 +402,18 @@
 		/obj/item/stack/sheet/glass = 3
 	)
 
+/obj/structure/resurgence_blueprint/griddle
+	name = "griddle blueprint"
+	result_name = "griddle"
+	icon = 'icons/obj/machines/griddle.dmi'
+	icon_state = "griddle1_off"
+	result_type = /obj/structure/resurgence_kitchen/griddle
+
+/obj/structure/resurgence_blueprint/griddle/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 12
+	)
+
 // ===========================================
 // FURNITURE BLUEPRINTS
 // ===========================================

@@ -78,6 +78,10 @@
 		work_per_tick *= (1 + tool_speed_bonus) // 25% faster with proper tool
 		using_tool = TRUE
 
+	// Mining stat bonus: +1 work per tick for each level above 1
+	var/mining_level = get_mining_stat(user)
+	work_per_tick += (mining_level - 1)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -133,20 +137,28 @@
 		complete_mining(user)
 
 /turf/closed/mineral/resurgence/proc/complete_mining(mob/user)
+	// Calculate yield with mining skill bonus
+	var/final_amount = mineralAmt
 	if(user)
 		user.visible_message(
 			span_notice("[user] breaks through [src]!"),
 			span_notice("You break through [src] and collect the ore!"),
 			span_hear("You hear rock breaking.")
 		)
+		// Award mining XP based on work difficulty
+		award_mining_xp(user, round(work_needed / 10))
+		// Apply mining yield multiplier (+25% every 5 levels)
+		var/mining_level = get_mining_stat(user)
+		var/yield_mult = get_mining_yield_multiplier(mining_level)
+		final_amount = round(mineralAmt * yield_mult)
 	else
 		// Harvester or other automated source
 		visible_message(span_notice("[src] crumbles apart!"))
 	playsound(src, 'sound/effects/break_stone.ogg', 60, TRUE)
 
 	// Drop ore
-	if(mineralType && mineralAmt > 0)
-		new mineralType(src, mineralAmt)
+	if(mineralType && final_amount > 0)
+		new mineralType(src, final_amount)
 
 	// Remove scanner overlay if present
 	for(var/obj/effect/temp_visual/mining_overlay/M in src)

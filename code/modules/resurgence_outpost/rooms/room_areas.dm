@@ -62,6 +62,8 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	var/dissolving = FALSE
 	/// The ckey of the player who owns this room (null = unclaimed)
 	var/owner_ckey = null
+	/// Whether this room was built with sandstone walls/doors (halves quality bonus for living quarters)
+	var/is_sandstone = FALSE
 
 /area/resurgence_outpost/room/Destroy()
 	// Clean up ownership before destroying
@@ -120,6 +122,10 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 /// Claim this room for a player
 /area/resurgence_outpost/room/proc/claim_room(ckey)
 	if(!ckey)
+		return FALSE
+
+	// Only living quarters can be claimed
+	if(room_type != ROOM_TYPE_LIVING_QUARTERS)
 		return FALSE
 
 	// Unclaim any previously owned room by this player
@@ -229,12 +235,19 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	faith_modifier = 1.1  // +10% faith gain
 	icon_state = "brown"
 
-/// Shrine - spiritual center, highest faith bonus
-/area/resurgence_outpost/room/shrine
-	name = "Shrine"
-	room_type = ROOM_TYPE_SHRINE
-	faith_modifier = 1.75  // +75% faith gain (spiritual center)
-	icon_state = "purple"
+/// Kitchen - food preparation, moderate faith bonus
+/area/resurgence_outpost/room/kitchen
+	name = "Kitchen"
+	room_type = ROOM_TYPE_KITCHEN
+	faith_modifier = 1.3  // +30% faith gain (nourishment)
+	icon_state = "orange"
+
+/// Living Quarters - personal sanctuary, only claimable room type
+/area/resurgence_outpost/room/living_quarters
+	name = "Living Quarters"
+	room_type = ROOM_TYPE_LIVING_QUARTERS
+	faith_modifier = 1.4  // +40% faith gain (personal sanctuary)
+	icon_state = "pink"
 
 /**
  * Create a new resurgence room area from a list of turfs.
@@ -253,6 +266,17 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	if(!turfs || !turfs.len)
 		return null
 
+	// Check for sandstone in boundaries
+	var/has_sandstone = check_for_sandstone_boundary(boundary_walls, boundary_doors)
+
+	// Sandstone can only be used for Living Quarters and Workshop
+	if(has_sandstone)
+		var/list/allowed_types = get_sandstone_allowed_room_types()
+		if(!(room_type in allowed_types))
+			if(creator)
+				to_chat(creator, span_warning("Sandstone walls and doors can only be used for Living Quarters and Workshop. For other room types, use proper building materials."))
+			return null
+
 	// Create the appropriate area type based on room type
 	var/area/resurgence_outpost/room/new_area
 
@@ -263,13 +287,18 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 			new_area = new /area/resurgence_outpost/room/common()
 		if(ROOM_TYPE_STORAGE)
 			new_area = new /area/resurgence_outpost/room/storage()
-		if(ROOM_TYPE_SHRINE)
-			new_area = new /area/resurgence_outpost/room/shrine()
+		if(ROOM_TYPE_KITCHEN)
+			new_area = new /area/resurgence_outpost/room/kitchen()
+		if(ROOM_TYPE_LIVING_QUARTERS)
+			new_area = new /area/resurgence_outpost/room/living_quarters()
 		else
 			new_area = new /area/resurgence_outpost/room()
 
 	// Setup the area with custom name
 	new_area.setup(room_name)
+
+	// Mark if room was built with sandstone (affects quality bonus)
+	new_area.is_sandstone = has_sandstone
 
 	// Store boundary information for integrity checking
 	if(boundary_walls)
@@ -329,6 +358,43 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	if(!istype(R))
 		return FALSE
 	return R.room_type == ROOM_TYPE_WORKSHOP
+
+/**
+ * Check if atom is in a room of the specified type.
+ *
+ * Arguments:
+ * * source - The atom to check
+ * * expected_type - The room type constant to check for
+ *
+ * Returns: TRUE if in correct room type, FALSE otherwise
+ */
+/proc/is_in_room_type(atom/source, expected_type)
+	var/area/resurgence_outpost/room/R = get_area(source)
+	if(!istype(R))
+		return FALSE
+	return R.room_type == expected_type
+
+/**
+ * Check if atom is in a kitchen.
+ *
+ * Arguments:
+ * * source - The atom to check
+ *
+ * Returns: TRUE if in kitchen, FALSE otherwise
+ */
+/proc/is_in_kitchen(atom/source)
+	return is_in_room_type(source, ROOM_TYPE_KITCHEN)
+
+/**
+ * Check if atom is in living quarters.
+ *
+ * Arguments:
+ * * source - The atom to check
+ *
+ * Returns: TRUE if in living quarters, FALSE otherwise
+ */
+/proc/is_in_living_quarters(atom/source)
+	return is_in_room_type(source, ROOM_TYPE_LIVING_QUARTERS)
 
 /**
  * Get the faith modifier for an area.

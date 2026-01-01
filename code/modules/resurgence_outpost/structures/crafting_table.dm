@@ -141,15 +141,39 @@
 	)
 
 	// Tools - ordered by complexity
+	recipes["Wooden Hatchet"] = list(
+		"result" = /obj/item/hatchet/wooden,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 15,
+		"desc" = "2 Wood + 1 Rope -> Wooden Hatchet",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Iron Hatchet"] = list(
+		"result" = /obj/item/hatchet,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 20,
+		"desc" = "4 Metal + 1 Rope -> Iron Hatchet",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
 	recipes["Improvised Pickaxe"] = list(
 		"result" = /obj/item/pickaxe/improvised,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/rods = 2,
+			/obj/item/stack/sheet/mineral/wood = 2,
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 15,
-		"desc" = "2 Metal Rods + 1 Rope -> Improvised Pickaxe (slow but cheap)",
+		"desc" = "2 Wood + 1 Rope -> Improvised Pickaxe (slow but cheap)",
 		"category" = CRAFT_CAT_TOOLS
 	)
 

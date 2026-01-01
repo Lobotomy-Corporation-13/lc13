@@ -77,6 +77,10 @@
 		work_per_tick *= (1 + tool_speed_bonus) // 25% faster with sharp tool
 		using_tool = TRUE
 
+	// Harvesting stat bonus: +1 work per tick for each level above 1
+	var/harvesting_level = get_harvesting_stat(user)
+	work_per_tick += (harvesting_level - 1)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -126,19 +130,23 @@
 		fell_tree(user)
 
 /obj/structure/resurgence_tree/proc/fell_tree(mob/user)
+	// Calculate yield with harvesting skill bonus
+	var/yield = base_yield
 	if(user)
 		user.visible_message(
 			span_notice("[user] fells [src] with a crash!"),
 			span_notice("You fell [src]! The tree crashes to the ground."),
 			span_hear("You hear a tree crashing down.")
 		)
+		// Award harvesting XP based on work difficulty
+		award_harvesting_xp(user, round(work_needed / 10))
+		// Apply harvesting yield bonus (+1 every 5 levels)
+		var/harvesting_level = get_harvesting_stat(user)
+		yield += get_harvesting_yield_bonus(harvesting_level)
 	else
 		// Harvester or other automated source
 		visible_message(span_notice("[src] crashes to the ground!"))
 	playsound(src, 'sound/effects/meteorimpact.ogg', 80, TRUE)
-
-	// Calculate yield (base, will be modified by gathering stat later)
-	var/yield = base_yield
 
 	// Drop wood
 	new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)

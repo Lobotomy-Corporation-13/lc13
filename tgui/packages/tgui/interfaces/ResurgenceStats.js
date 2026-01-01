@@ -5,47 +5,37 @@ import { Window } from '../layouts';
 export const ResurgenceStats = (props, context) => {
   const { data } = useBackend(context);
   const {
-    construction_level = 1,
-    construction_xp = 0,
-    construction_xp_needed = 100,
-    construction_speed = 1.5,
-    construction_beauty = -2,
     crafting_level = 1,
     crafting_xp = 0,
     crafting_xp_needed = 100,
     crafting_speed = 1.5,
     crafting_beauty = -2,
-    gathering_level = 1,
-    gathering_xp = 0,
-    gathering_xp_needed = 100,
-    gathering_speed = 1.5,
-    gathering_yield = 0.5,
+    mining_level = 1,
+    mining_xp = 0,
+    mining_xp_needed = 100,
+    mining_work_bonus = 0,
+    mining_yield = 1.0,
+    harvesting_level = 1,
+    harvesting_xp = 0,
+    harvesting_xp_needed = 100,
+    harvesting_work_bonus = 0,
+    harvesting_yield = 0,
+    cooking_level = 1,
+    cooking_xp = 0,
+    cooking_xp_needed = 100,
+    cooking_speed = 1.5,
+    cooking_quality = -2,
     max_level = 20,
   } = data;
 
   return (
-    <Window width={420} height={380}>
+    <Window width={420} height={480}>
       <Window.Content>
         <Stack fill vertical>
           <Stack.Item>
             <Box italic color="label" textAlign="center" mb={1}>
               Rest in your room to view your progress.
             </Box>
-          </Stack.Item>
-
-          <Stack.Item grow>
-            <Section fill title="Construction">
-              <StatDisplay
-                level={construction_level}
-                xp={construction_xp}
-                xpNeeded={construction_xp_needed}
-                maxLevel={max_level}
-                effects={[
-                  `Build Speed: ${construction_speed.toFixed(2)}x`,
-                  `Beauty Bonus: ${construction_beauty >= 0 ? '+' : ''}${construction_beauty}`,
-                ]}
-              />
-            </Section>
           </Stack.Item>
 
           <Stack.Item grow>
@@ -64,15 +54,45 @@ export const ResurgenceStats = (props, context) => {
           </Stack.Item>
 
           <Stack.Item grow>
-            <Section fill title="Gathering">
+            <Section fill title="Mining">
               <StatDisplay
-                level={gathering_level}
-                xp={gathering_xp}
-                xpNeeded={gathering_xp_needed}
+                level={mining_level}
+                xp={mining_xp}
+                xpNeeded={mining_xp_needed}
                 maxLevel={max_level}
                 effects={[
-                  `Gather Speed: ${gathering_speed.toFixed(2)}x`,
-                  `Yield: ${gathering_yield.toFixed(2)}x`,
+                  `Work Bonus: +${mining_work_bonus} per tick`,
+                  `Yield: ${mining_yield.toFixed(2)}x`,
+                ]}
+              />
+            </Section>
+          </Stack.Item>
+
+          <Stack.Item grow>
+            <Section fill title="Harvesting">
+              <StatDisplay
+                level={harvesting_level}
+                xp={harvesting_xp}
+                xpNeeded={harvesting_xp_needed}
+                maxLevel={max_level}
+                effects={[
+                  `Work Bonus: +${harvesting_work_bonus} per tick`,
+                  `Yield Bonus: +${harvesting_yield}`,
+                ]}
+              />
+            </Section>
+          </Stack.Item>
+
+          <Stack.Item grow>
+            <Section fill title="Cooking">
+              <StatDisplay
+                level={cooking_level}
+                xp={cooking_xp}
+                xpNeeded={cooking_xp_needed}
+                maxLevel={max_level}
+                effects={[
+                  `Cook Speed: ${cooking_speed.toFixed(2)}x`,
+                  `Quality Bonus: ${cooking_quality >= 0 ? '+' : ''}${cooking_quality}`,
                 ]}
               />
             </Section>

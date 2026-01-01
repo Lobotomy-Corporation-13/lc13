@@ -812,7 +812,7 @@ This creates a need for rest, good meals, and comfortable rooms to restore faith
 4. Complete gathering, verify yield based on gathering stat
 5. Test mining and other resource types similarly
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [X] Complete
 
 ---
 
@@ -852,7 +852,7 @@ if(istype(core))
 4. Craft item, verify faith decreases by ~0.1 per work point
 5. Craft 20-work item, verify faith decreased by ~2
 
-**Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
+**Status:** [X] Complete
 
 ---
 

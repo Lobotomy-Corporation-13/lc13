@@ -204,6 +204,10 @@
 		work_per_tick *= (1 + tool_speed_bonus)
 		using_tool = TRUE
 
+	// Mining stat bonus: +1 work per tick for each level above 1
+	var/mining_level = get_mining_stat(user)
+	work_per_tick += (mining_level - 1)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -259,17 +263,25 @@
 		complete_mining(user)
 
 /obj/structure/resurgence_ore_deposit/proc/complete_mining(mob/user)
+	// Calculate yield with mining skill bonus
+	var/final_amount = ore_amount
 	if(user)
 		user.visible_message(
 			span_notice("[user] extracts ore from [src]!"),
 			span_notice("You extract [ore_name] ore from [src]!"),
 			span_hear("You hear rock crumbling.")
 		)
+		// Award mining XP based on work difficulty
+		award_mining_xp(user, round(work_needed / 10))
+		// Apply mining yield multiplier (+25% every 5 levels)
+		var/mining_level = get_mining_stat(user)
+		var/yield_mult = get_mining_yield_multiplier(mining_level)
+		final_amount = round(ore_amount * yield_mult)
 	playsound(src, 'sound/effects/break_stone.ogg', 60, TRUE)
 
 	// Drop ore
-	if(ore_drop_type && ore_amount > 0)
-		new ore_drop_type(get_turf(src), ore_amount)
+	if(ore_drop_type && final_amount > 0)
+		new ore_drop_type(get_turf(src), final_amount)
 
 	// Deplete the deposit
 	deplete()

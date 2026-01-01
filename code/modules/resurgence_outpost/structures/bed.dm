@@ -29,17 +29,22 @@
 	if(!istype(core))
 		return
 
-	// Check if bed is in user's owned room
+	// Check if bed is in user's owned living quarters
 	var/area/resurgence_outpost/room/room = get_area(src)
 	if(!istype(room))
 		to_chat(H, span_warning("This bed is not in a designated room. You cannot view your stats here."))
 		return
 
+	// Must be in living quarters
+	if(room.room_type != ROOM_TYPE_LIVING_QUARTERS)
+		to_chat(H, span_warning("This bed must be in living quarters to view your stats. This room is a [room.room_type]."))
+		return
+
 	if(room.owner_ckey != H.ckey)
 		if(!room.owner_ckey)
-			to_chat(H, span_warning("This room is unclaimed. You can only view stats in your own room."))
+			to_chat(H, span_warning("This room is unclaimed. You can only view stats in your own living quarters."))
 		else
-			to_chat(H, span_warning("This is not your room. You can only view stats in your own room."))
+			to_chat(H, span_warning("This is not your room. You can only view stats in your own living quarters."))
 		return
 
 	// Open the stats UI
@@ -47,6 +52,9 @@
 	ui_interact(H)
 
 /obj/structure/resurgence_bed/ui_interact(mob/user, datum/tgui/ui)
+	// Only show stats if user is buckled to this bed
+	if(!has_buckled_mobs() || !(user in buckled_mobs))
+		return
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "ResurgenceStats", "Character Stats")
@@ -63,13 +71,6 @@
 	if(!istype(core))
 		return data
 
-	// Construction stat
-	data["construction_level"] = core.stat_construction
-	data["construction_xp"] = core.xp_construction
-	data["construction_xp_needed"] = get_xp_for_level(core.stat_construction)
-	data["construction_speed"] = get_stat_speed_modifier(core.stat_construction)
-	data["construction_beauty"] = get_stat_beauty_bonus(core.stat_construction)
-
 	// Crafting stat
 	data["crafting_level"] = core.stat_crafting
 	data["crafting_xp"] = core.xp_crafting
@@ -77,12 +78,26 @@
 	data["crafting_speed"] = get_stat_speed_modifier(core.stat_crafting)
 	data["crafting_beauty"] = get_stat_beauty_bonus(core.stat_crafting)
 
-	// Gathering stat
-	data["gathering_level"] = core.stat_gathering
-	data["gathering_xp"] = core.xp_gathering
-	data["gathering_xp_needed"] = get_xp_for_level(core.stat_gathering)
-	data["gathering_speed"] = get_stat_speed_modifier(core.stat_gathering)
-	data["gathering_yield"] = get_stat_yield_modifier(core.stat_gathering)
+	// Mining stat
+	data["mining_level"] = core.stat_mining
+	data["mining_xp"] = core.xp_mining
+	data["mining_xp_needed"] = get_xp_for_level(core.stat_mining)
+	data["mining_work_bonus"] = core.stat_mining - 1
+	data["mining_yield"] = get_mining_yield_multiplier(core.stat_mining)
+
+	// Harvesting stat
+	data["harvesting_level"] = core.stat_harvesting
+	data["harvesting_xp"] = core.xp_harvesting
+	data["harvesting_xp_needed"] = get_xp_for_level(core.stat_harvesting)
+	data["harvesting_work_bonus"] = core.stat_harvesting - 1
+	data["harvesting_yield"] = get_harvesting_yield_bonus(core.stat_harvesting)
+
+	// Cooking stat
+	data["cooking_level"] = core.stat_cooking
+	data["cooking_xp"] = core.xp_cooking
+	data["cooking_xp_needed"] = get_xp_for_level(core.stat_cooking)
+	data["cooking_speed"] = get_stat_speed_modifier(core.stat_cooking)
+	data["cooking_quality"] = get_stat_beauty_bonus(core.stat_cooking)
 
 	return data
 

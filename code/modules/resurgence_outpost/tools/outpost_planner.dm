@@ -100,7 +100,8 @@
 		"Meat Grinder" = /obj/structure/resurgence_blueprint/meat_grinder,
 		"Food Processor" = /obj/structure/resurgence_blueprint/food_processor,
 		"Stove" = /obj/structure/resurgence_blueprint/stove,
-		"Hand Grinder" = /obj/structure/resurgence_blueprint/grinder
+		"Hand Grinder" = /obj/structure/resurgence_blueprint/grinder,
+		"Griddle" = /obj/structure/resurgence_blueprint/griddle
 	)
 
 	// Furniture category - beds, chairs, tables, racks
@@ -185,10 +186,12 @@
 			var/list/detected_turfs = detection_result["turfs"]
 			var/list/detected_walls = detection_result["boundary_walls"]
 			var/list/detected_doors = detection_result["boundary_doors"]
+			var/list/valid_types = determine_valid_room_types(detected_turfs)
 			data["can_designate"] = TRUE
 			data["detected_size"] = detected_turfs.len
-			data["detected_type"] = determine_room_type(detected_turfs)
-			data["detected_faith"] = get_faith_modifier_info(data["detected_type"])
+			data["detected_type"] = valid_types[1]  // Primary type
+			data["detected_valid_types"] = valid_types  // All valid types
+			data["detected_faith"] = get_faith_modifier_info(valid_types[1])
 			data["detected_walls"] = detected_walls.len
 			data["detected_doors"] = detected_doors.len
 		else
@@ -253,8 +256,10 @@
 			return "+50% (community)"
 		if(ROOM_TYPE_STORAGE)
 			return "+10% (organization)"
-		if(ROOM_TYPE_SHRINE)
-			return "+75% (spiritual)"
+		if(ROOM_TYPE_KITCHEN)
+			return "+30% (nourishment)"
+		if(ROOM_TYPE_LIVING_QUARTERS)
+			return "+40% (personal sanctuary)"
 		else
 			return "+25% (shelter)"
 
@@ -483,8 +488,32 @@
 		to_chat(user, span_warning("This space is too large. Maximum [ROOM_MAX_SIZE] tiles, current: [room_turfs.len]."))
 		return
 
-	// Determine the room type based on contents
-	var/room_type = determine_room_type(room_turfs)
+	// Determine valid room types based on contents
+	var/list/valid_types = determine_valid_room_types(room_turfs)
+
+	var/room_type
+	if(length(valid_types) == 1)
+		room_type = valid_types[1]
+	else
+		// Build a list with faith info for each type
+		var/list/type_choices = list()
+		for(var/rtype in valid_types)
+			type_choices += "[rtype] ([get_faith_modifier_info(rtype)])"
+
+		var/choice = tgui_input_list(user, "This room qualifies as multiple types. Choose one:", "Room Type", type_choices)
+		if(!choice)
+			to_chat(user, span_notice("Room designation cancelled."))
+			return
+		// Extract room type from the choice string (remove faith info)
+		for(var/rtype in valid_types)
+			if(findtext(choice, rtype))
+				room_type = rtype
+				break
+
+	if(!room_type)
+		to_chat(user, span_warning("Failed to determine room type."))
+		return
+
 	var/default_name = get_default_room_name(room_type)
 
 	// Prompt for custom name
@@ -578,6 +607,11 @@
 		to_chat(user, span_warning("You cannot claim rooms."))
 		return
 
+	// Only living quarters can be claimed
+	if(room.room_type != ROOM_TYPE_LIVING_QUARTERS)
+		to_chat(user, span_warning("Only living quarters can be claimed as personal rooms. This room needs a bed."))
+		return
+
 	// Check if already owned by someone else
 	if(room.owner_ckey && room.owner_ckey != user.ckey)
 		to_chat(user, span_warning("This room is already claimed by [room.owner_ckey]."))
@@ -594,7 +628,9 @@
 		to_chat(user, span_notice("You will release ownership of '[old_room.name]' to claim this room."))
 
 	// Claim the room (will auto-unclaim previous)
-	room.claim_room(user.ckey)
+	if(!room.claim_room(user.ckey))
+		to_chat(user, span_warning("Failed to claim room."))
+		return
 	to_chat(user, span_notice("You have claimed '[room.name]' as your personal room."))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 

@@ -417,12 +417,6 @@ const RoomTab = (props, context) => {
 const RoomTypeGuide = () => {
   const roomTypes = [
     {
-      name: 'Shrine',
-      faith: '+75%',
-      faithColor: 'good',
-      requirements: 'Statues',
-    },
-    {
       name: 'Common Room',
       faith: '+50%',
       faithColor: 'good',

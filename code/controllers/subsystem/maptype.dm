@@ -45,7 +45,7 @@ SUBSYSTEM_DEF(maptype)
 	var/chosen_trait = "No Trait"
 
 	//All the map tags that are combat maps and need abnos to breach immediately
-	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office")
+	var/list/combatmaps = list("rcorp", "rcorp_factory", "wcorp", "limbus_labs", "fixers", "office", "outpost")
 
 	//Ghosts should be possessbale at all times
 	var/list/autopossess = list("rcorp", "limbus_labs")

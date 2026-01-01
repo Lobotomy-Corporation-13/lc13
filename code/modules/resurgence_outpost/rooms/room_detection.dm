@@ -9,11 +9,12 @@
 #define ROOM_MAX_SIZE 100
 
 /// Room type defines
-#define ROOM_TYPE_BASIC     "Basic Room"
-#define ROOM_TYPE_WORKSHOP  "Workshop"
-#define ROOM_TYPE_COMMON    "Common Room"
-#define ROOM_TYPE_STORAGE   "Storage Room"
-#define ROOM_TYPE_SHRINE    "Shrine"
+#define ROOM_TYPE_BASIC           "Basic Room"
+#define ROOM_TYPE_WORKSHOP        "Workshop"
+#define ROOM_TYPE_COMMON          "Common Room"
+#define ROOM_TYPE_STORAGE         "Storage Room"
+#define ROOM_TYPE_KITCHEN         "Kitchen"
+#define ROOM_TYPE_LIVING_QUARTERS "Living Quarters"
 
 /**
  * Detect an enclosed room using flood-fill algorithm.
@@ -105,9 +106,69 @@
 	)
 
 /**
+ * Determine all valid room types based on contained structures.
+ *
+ * A room can qualify as multiple types if it has the required structures.
+ * The player will be able to choose if multiple types apply.
+ *
+ * Arguments:
+ * * turfs - List of turfs that make up the room
+ *
+ * Returns: List of valid room type string constants
+ */
+/proc/determine_valid_room_types(list/turfs)
+	var/list/valid_types = list()
+
+	var/has_crafting_table = FALSE
+	var/has_kitchen = FALSE
+	var/has_table = FALSE
+	var/has_chair = FALSE
+	var/has_bed = FALSE
+	var/has_closet = FALSE
+	var/has_fridge = FALSE
+
+	// Scan all turfs for structures
+	for(var/turf/T in turfs)
+		for(var/obj/structure/S in T)
+			if(istype(S, /obj/structure/resurgence_crafting_table))
+				has_crafting_table = TRUE
+			if(istype(S, /obj/structure/resurgence_kitchen))
+				has_kitchen = TRUE
+			if(istype(S, /obj/structure/table))
+				has_table = TRUE
+			if(istype(S, /obj/structure/chair))
+				has_chair = TRUE
+			if(istype(S, /obj/structure/resurgence_bed))
+				has_bed = TRUE
+			if(istype(S, /obj/structure/closet))
+				has_closet = TRUE
+		// Check for fridge (it's a closet subtype but special)
+		for(var/obj/structure/closet/secure_closet/freezer/fridge/F in T)
+			has_fridge = TRUE
+
+	// Check each room type based on required structures
+	if(has_crafting_table)
+		valid_types += ROOM_TYPE_WORKSHOP
+	if(has_kitchen || has_fridge)
+		valid_types += ROOM_TYPE_KITCHEN
+	if(has_table && has_chair)
+		valid_types += ROOM_TYPE_COMMON
+	if(has_bed)
+		valid_types += ROOM_TYPE_LIVING_QUARTERS
+	if(has_closet)
+		valid_types += ROOM_TYPE_STORAGE
+
+	// Default to basic if nothing else
+	if(!length(valid_types))
+		valid_types += ROOM_TYPE_BASIC
+
+	return valid_types
+
+/**
  * Determine the type of room based on contained structures.
  *
- * Priority order: Shrine > Workshop > Common > Storage > Basic
+ * Wrapper that returns a single type (first valid or basic).
+ * For multi-type selection, use determine_valid_room_types() instead.
  *
  * Arguments:
  * * turfs - List of turfs that make up the room
@@ -115,42 +176,8 @@
  * Returns: Room type string constant
  */
 /proc/determine_room_type(list/turfs)
-	var/has_production = FALSE
-	var/has_decor = FALSE
-	var/has_storage = FALSE
-	var/has_shrine = FALSE
-
-	for(var/turf/T in turfs)
-		for(var/obj/structure/S in T)
-			// Production structures - make this a Workshop
-			if(istype(S, /obj/structure/resurgence_crafting_table))
-				has_production = TRUE
-
-			// Decor structures - statues, easels, beds make it feel like a home
-			if(istype(S, /obj/structure/statue) || \
-			   istype(S, /obj/structure/easel) || \
-			   istype(S, /obj/structure/bed) || \
-			   istype(S, /obj/structure/chair))
-				has_decor = TRUE
-
-			// Storage structures
-			if(istype(S, /obj/structure/closet))
-				has_storage = TRUE
-
-			// Shrine structures - statues are spiritual symbols
-			if(istype(S, /obj/structure/statue))
-				has_shrine = TRUE
-
-	// Priority: Shrine > Workshop > Common > Storage > Basic
-	if(has_shrine)
-		return ROOM_TYPE_SHRINE
-	if(has_production)
-		return ROOM_TYPE_WORKSHOP
-	if(has_decor && !has_production)
-		return ROOM_TYPE_COMMON
-	if(has_storage && !has_production && !has_decor)
-		return ROOM_TYPE_STORAGE
-	return ROOM_TYPE_BASIC
+	var/list/valid = determine_valid_room_types(turfs)
+	return valid[1]
 
 /**
  * Get the default name for a room type.
@@ -168,8 +195,36 @@
 			return "Common Area"
 		if(ROOM_TYPE_STORAGE)
 			return "Storage Chamber"
-		if(ROOM_TYPE_SHRINE)
-			return "Sacred Shrine"
+		if(ROOM_TYPE_KITCHEN)
+			return "Clan Kitchen"
+		if(ROOM_TYPE_LIVING_QUARTERS)
+			return "Living Quarters"
 		else
 			return "Clan Room"
+
+/**
+ * Check if any boundary walls or doors are made of sandstone.
+ *
+ * Arguments:
+ * * boundary_walls - List of wall turfs forming the boundary
+ * * boundary_doors - List of door structures forming the boundary
+ *
+ * Returns: TRUE if any sandstone is found, FALSE otherwise
+ */
+/proc/check_for_sandstone_boundary(list/boundary_walls, list/boundary_doors)
+	// Check walls for sandstone
+	for(var/turf/closed/wall/mineral/sandstone/W in boundary_walls)
+		return TRUE
+	// Check doors for sandstone
+	for(var/obj/structure/mineral_door/sandstone/D in boundary_doors)
+		return TRUE
+	return FALSE
+
+/**
+ * Get a list of room types that can be made with sandstone.
+ *
+ * Returns: List of valid room type constants for sandstone construction
+ */
+/proc/get_sandstone_allowed_room_types()
+	return list(ROOM_TYPE_LIVING_QUARTERS, ROOM_TYPE_WORKSHOP)
 
