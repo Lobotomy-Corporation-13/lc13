@@ -70,7 +70,8 @@ const BlueprintTab = (props, context) => {
 
   const currentCategory = categories.find(
     cat => cat.name === activeCategory
-  ) || categories[0];
+  )
+    || categories[0];
   const structures = currentCategory?.structures || [];
 
   return (
@@ -608,8 +609,8 @@ const FarmingZoneCard = (props, context) => {
   const { fertilizer_count = 0 } = data;
 
   const hasMissingPlots = zone.missing_count > 0;
-  const canRegenerate = hasMissingPlots &&
-    fertilizer_count >= zone.missing_count;
+  const canRegenerate = hasMissingPlots
+    && fertilizer_count >= zone.missing_count;
 
   return (
     <Section

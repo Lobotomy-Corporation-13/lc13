@@ -40,8 +40,8 @@ export const ResurgenceCrafting = (props, context) => {
   // Filter recipes based on search and category
   const filteredRecipes = recipes.filter(recipe => {
     // Category filter (unless searching)
-    const wrongCategory = activeCategory !== 'All' &&
-      recipe.category !== activeCategory;
+    const wrongCategory = activeCategory !== 'All'
+      && recipe.category !== activeCategory;
     if (!searchText && wrongCategory) {
       return false;
     }
