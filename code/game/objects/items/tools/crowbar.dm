@@ -21,6 +21,10 @@
 	toolspeed = 1
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 30)
 	var/force_opens = FALSE
+	/// Resurgence outpost durability (wood tier for compact)
+	var/resurgence_durability = 100
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 100
 
 /obj/item/crowbar/suicide_act(mob/user)
 	user.visible_message("<span class='suicide'>[user] is beating [user.p_them()]self to death with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")
@@ -52,6 +56,9 @@
 	inhand_icon_state = "crowbar"
 	worn_icon_state = "crowbar"
 	toolspeed = 0.7
+	// Iron tier durability
+	resurgence_durability = 200
+	resurgence_max_durability = 200
 
 /obj/item/crowbar/power
 	name = "jaws of life"

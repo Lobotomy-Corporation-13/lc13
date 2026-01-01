@@ -131,6 +131,10 @@
 	attack_verb_simple = list("chop", "tear", "lacerate", "cut")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	sharpness = SHARP_EDGED
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
 
 /obj/item/hatchet/Initialize()
 	. = ..()
@@ -146,6 +150,9 @@
 	icon_state = "woodhatchet"
 	custom_materials = null
 	flags_1 = NONE
+	// Wood tier durability
+	resurgence_durability = 100
+	resurgence_max_durability = 100
 
 /obj/item/scythe
 	icon_state = "scythe0"
@@ -165,6 +172,10 @@
 	attack_verb_simple = list("chop", "slice", "cut", "reap")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	var/swiping = FALSE
+	/// Resurgence outpost durability (iron tier)
+	var/resurgence_durability = 200
+	/// Maximum durability for percentage calculations
+	var/resurgence_max_durability = 200
 
 /obj/item/scythe/Initialize()
 	. = ..()
@@ -194,6 +205,16 @@
 				melee_attack_chain(user, V)
 	swiping = FALSE
 	return TRUE
+
+/obj/item/scythe/wooden
+	name = "wooden scythe"
+	desc = "A crude scythe with a wooden handle and a dull blade. Better than nothing for harvesting."
+	icon_state = "scythe_wooden"
+	force = 8
+	flags_1 = NONE
+	// Wood tier durability
+	resurgence_durability = 100
+	resurgence_max_durability = 100
 
 /obj/item/secateurs
 	name = "secateurs"

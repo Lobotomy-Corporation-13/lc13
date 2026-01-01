@@ -81,6 +81,9 @@
 	var/harvesting_level = get_harvesting_stat(user)
 	work_per_tick += (harvesting_level - 1)
 
+	// Tool tier bonus (hatchets)
+	work_per_tick += get_tool_work_bonus(tool)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -116,9 +119,16 @@
 		work_points += work_per_tick
 		apply_work_faith_drain(user, work_per_tick)
 
+		// Decrement tool durability
+		if(tool && !use_tool_durability(tool, user))
+			// Tool broke - continue without tool bonuses
+			tool = null
+			using_tool = FALSE
+			work_per_tick = GATHER_WORK_PER_TICK + (harvesting_level - 1)
+
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
-			if(using_tool && tool.hitsound)
+			if(using_tool && tool?.hitsound)
 				playsound(src, tool.hitsound, 50, TRUE)
 			else
 				playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
@@ -127,9 +137,9 @@
 
 	// Check completion
 	if(work_points >= work_needed)
-		fell_tree(user)
+		fell_tree(user, tool)
 
-/obj/structure/resurgence_tree/proc/fell_tree(mob/user)
+/obj/structure/resurgence_tree/proc/fell_tree(mob/user, obj/item/tool)
 	// Calculate yield with harvesting skill bonus
 	var/yield = base_yield
 	if(user)
@@ -138,8 +148,10 @@
 			span_notice("You fell [src]! The tree crashes to the ground."),
 			span_hear("You hear a tree crashing down.")
 		)
-		// Award harvesting XP based on work difficulty
-		award_harvesting_xp(user, round(work_needed / 10))
+		// Award harvesting XP based on work difficulty (with tool multiplier)
+		var/base_xp = round(work_needed / 10)
+		var/xp_mult = get_tool_xp_multiplier(tool)
+		award_harvesting_xp(user, round(base_xp * xp_mult))
 		// Apply harvesting yield bonus (+1 every 5 levels)
 		var/harvesting_level = get_harvesting_stat(user)
 		yield += get_harvesting_yield_bonus(harvesting_level)

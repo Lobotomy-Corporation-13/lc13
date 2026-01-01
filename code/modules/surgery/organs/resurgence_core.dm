@@ -38,7 +38,7 @@
 	// Internal tracking
 	// var/charge_tick_counter = 0 // Track ticks for charge decay messages (DISABLED)
 	var/faith_tick_counter = 0 // Track ticks for faith updates (every 5 seconds)
-	var/room_quality_tick_counter = 0 // Track ticks for room quality checks (every 30 seconds)
+	// var/room_quality_tick_counter = 0 // DISABLED - room quality now uses area enter/exit signals
 
 	// Character stats (1-20)
 	var/stat_crafting = 1
@@ -73,9 +73,16 @@
 		// Register for login to check room ownership
 		RegisterSignal(H, COMSIG_MOB_LOGIN, PROC_REF(on_owner_login))
 
+		// Register for area enter/exit to track room quality
+		RegisterSignal(H, COMSIG_ENTER_AREA, PROC_REF(on_area_entered))
+		RegisterSignal(H, COMSIG_EXIT_AREA, PROC_REF(on_area_exited))
+
 		// Check room ownership now if player is already logged in
 		if(H.ckey)
 			check_room_ownership()
+
+		// Check current room quality immediately
+		check_room_quality()
 
 /obj/item/organ/resurgence_core/Remove(mob/living/carbon/M, special)
 	// Hide the faith HUD when core is removed
@@ -83,8 +90,14 @@
 		var/mob/living/carbon/human/H = M
 		if(H.hud_used?.faith_display)
 			H.hud_used.faith_display.hide_display()
-		// Unregister login signal
+		// Unregister signals
 		UnregisterSignal(H, COMSIG_MOB_LOGIN)
+		UnregisterSignal(H, COMSIG_ENTER_AREA)
+		UnregisterSignal(H, COMSIG_EXIT_AREA)
+	// Clear room quality events
+	clear_faith_event("room_quality")
+	clear_faith_event("room_cramped")
+	clear_faith_event("room_dirt_floor")
 	return ..()
 
 /obj/item/organ/resurgence_core/on_life()
@@ -106,11 +119,7 @@
 		faith_tick_counter = 0
 		apply_faith_changes()
 
-	// Room quality check every 30 seconds (~15 life ticks at 2 sec/tick)
-	room_quality_tick_counter++
-	if(room_quality_tick_counter >= 15)
-		room_quality_tick_counter = 0
-		check_room_quality()
+	// Room quality is now checked via area enter/exit signals, not periodic ticks
 
 	// CHARGE WARNING DISABLED - Code preserved for potential future use
 	// if(charge_tick_counter >= 30)
@@ -335,6 +344,22 @@
 	SIGNAL_HANDLER
 	check_room_ownership()
 
+/// Called when the owner enters a new area
+/obj/item/organ/resurgence_core/proc/on_area_entered(datum/source, area/new_area)
+	SIGNAL_HANDLER
+	// Check room quality when entering any area
+	check_room_quality()
+
+/// Called when the owner exits an area
+/obj/item/organ/resurgence_core/proc/on_area_exited(datum/source, area/old_area)
+	SIGNAL_HANDLER
+	// Room quality will be updated by the subsequent ENTER_AREA signal
+	// But we clear immediately if leaving a resurgence room
+	if(istype(old_area, /area/resurgence_outpost/room))
+		clear_faith_event("room_quality")
+		clear_faith_event("room_cramped")
+		clear_faith_event("room_dirt_floor")
+
 /// Check if owner has a claimed room and apply appropriate faith event
 /obj/item/organ/resurgence_core/proc/check_room_ownership()
 	if(!owner || !owner.ckey)
@@ -361,7 +386,7 @@
 		)
 		add_faith_event("room_ownership", event)
 
-/// Check room quality and apply faith bonus/penalty
+/// Check room quality and apply faith bonus/penalty (permanent event while in room)
 /obj/item/organ/resurgence_core/proc/check_room_quality()
 	if(!owner)
 		return
@@ -371,7 +396,28 @@
 		// Not in a designated room - clear room quality events
 		clear_faith_event("room_quality")
 		clear_faith_event("room_cramped")
+		clear_faith_event("room_dirt_floor")
 		return
+
+	// Check for dirt/sand floors - big quality penalty
+	var/has_dirt_floor = FALSE
+	for(var/turf/T in current_room.contents)
+		if(istype(T, /turf/open/floor/plating/dirt/jungle/wasteland) || \
+		   istype(T, /turf/open/floor/plating/dirt/dark) || \
+		   istype(T, /turf/open/floor/plating/ironsand))
+			has_dirt_floor = TRUE
+			break
+
+	if(has_dirt_floor)
+		var/datum/faith_event/room_quality/dirt_event = new(
+			"Dirt floor in the room.",
+			-0.8, // Big penalty
+			null,
+			"room_dirt_floor"
+		)
+		add_faith_event("room_dirt_floor", dirt_event)
+	else
+		clear_faith_event("room_dirt_floor")
 
 	// Calculate quality level from beauty
 	// beauty is already calculated as totalbeauty / areasize by SS13's beauty system
@@ -401,15 +447,21 @@
 
 	// Apply room quality event if there's a change
 	if(faith_change != 0)
+		// Apply room's faith modifier (different room types have different modifiers)
+		faith_change *= current_room.faith_modifier
+
 		// Halve the quality bonus for Living Quarters made with sandstone
 		if(current_room.is_sandstone && current_room.room_type == ROOM_TYPE_LIVING_QUARTERS && faith_change > 0)
 			faith_change *= 0.5
 			quality_desc += " (Sandstone construction)"
 
+		// Add room type to description
+		quality_desc = "[current_room.room_type]: [quality_desc]"
+
 		var/datum/faith_event/room_quality/event = new(
 			quality_desc,
 			faith_change,
-			35 SECONDS, // Slightly longer than check interval to prevent flickering
+			null, // Permanent - removed when leaving room via area exit signal
 			"room_quality"
 		)
 		add_faith_event("room_quality", event)
@@ -417,7 +469,7 @@
 	// Check for cramped room penalty
 	check_room_cramped(current_room)
 
-/// Check if room is cramped and apply penalty
+/// Check if room is cramped and apply penalty (permanent event while in room)
 /obj/item/organ/resurgence_core/proc/check_room_cramped(area/resurgence_outpost/room/room)
 	// Count floor tiles in the room
 	var/list/room_turfs = list()
@@ -444,22 +496,22 @@
 	var/height = max_y - min_y + 1
 	var/is_cramped_dimensions = (width < ROOM_MIN_DIMENSION || height < ROOM_MIN_DIMENSION)
 
-	// Apply cramped penalties
+	// Apply cramped penalties (permanent - removed when leaving room)
 	if(is_cramped_tiles && is_cramped_dimensions)
-		// Both conditions - very cramped (-8 faith per 30 sec = ~-1.6 per tick)
+		// Both conditions - very cramped
 		var/datum/faith_event/room_cramped/event = new(
 			"This room is very cramped!",
 			-1.6,
-			35 SECONDS,
+			null, // Permanent - removed when leaving room
 			"room_cramped"
 		)
 		add_faith_event("room_cramped", event)
 	else if(is_cramped_tiles || is_cramped_dimensions)
-		// One condition - cramped (-5 faith per 30 sec = ~-1 per tick)
+		// One condition - cramped
 		var/datum/faith_event/room_cramped/event = new(
 			"This room feels cramped.",
 			-1,
-			35 SECONDS,
+			null, // Permanent - removed when leaving room
 			"room_cramped"
 		)
 		add_faith_event("room_cramped", event)
@@ -619,3 +671,53 @@
 
 	if(!has_events)
 		to_chat(H, span_notice("No special faith effects active."))
+
+	// Show outpost objectives if in outpost gamemode
+	if(SSmaptype.maptype == "outpost" && length(GLOB.resurgence_objectives))
+		display_objectives(H)
+
+/// Display outpost objectives grouped by category
+/datum/action/item_action/organ_action/resurgence_check/proc/display_objectives(mob/living/H)
+	to_chat(H, span_notice("<b>=== OUTPOST OBJECTIVES ===</b>"))
+
+	var/phase = GLOB.resurgence_objective_phase
+
+	// Count building objectives
+	var/building_complete = 0
+	var/building_total = 0
+	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+		if(obj.category == "building")
+			building_total++
+			if(obj.completed)
+				building_complete++
+
+	// Display building objectives
+	to_chat(H, span_notice("<b>BUILDING ([building_complete]/[building_total] complete):</b>"))
+	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+		if(obj.category != "building")
+			continue
+		var/status = obj.completed ? "\[X\]" : "\[ \]"
+		var/color = obj.completed ? "green" : "white"
+		to_chat(H, "<span style='color: [color];'>  [status] [obj.get_display_text()]</span>")
+
+	// Count export objectives
+	var/export_complete = 0
+	var/export_total = 0
+	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+		if(obj.category == "export")
+			export_total++
+			if(obj.completed)
+				export_complete++
+
+	// Display export objectives
+	if(phase < 2)
+		to_chat(H, span_notice("<b>EXPORTING (locked until building complete):</b>"))
+		to_chat(H, span_notice("  Complete all building objectives to unlock exports."))
+	else
+		to_chat(H, span_notice("<b>EXPORTING ([export_complete]/[export_total] complete):</b>"))
+		for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+			if(obj.category != "export")
+				continue
+			var/status = obj.completed ? "\[X\]" : "\[ \]"
+			var/color = obj.completed ? "green" : "white"
+			to_chat(H, "<span style='color: [color];'>  [status] [obj.get_display_text()]</span>")

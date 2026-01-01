@@ -81,3 +81,6 @@
 /// Level 1-4 = +0, Level 5-9 = +1, Level 10-14 = +2, Level 15-19 = +3, Level 20 = +4
 /proc/get_harvesting_yield_bonus(level)
 	return round(level / 5)
+
+// Note: Scythe/tool bonuses are now handled by the tool_durability.dm system
+// Use get_tool_work_bonus() and get_tool_xp_multiplier() instead

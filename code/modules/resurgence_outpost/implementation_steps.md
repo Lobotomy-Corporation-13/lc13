@@ -1086,12 +1086,12 @@ if(istype(core))
 - 90-minute round timer
 - Warnings at 15/5/1 minutes
 - Trigger save on round end
-- Victory condition (monument complete)
+- Victory condition (all export objectives complete - see Step 31)
 
 **Testing:**
 1. Start gamemode
 2. Verify timer appears
-3. Complete monument - verify victory
+3. Complete all objectives - verify victory
 4. Let timer run out - verify save triggers
 
 **Status:** [ ] Not Started / [ ] In Progress / [ ] Complete
@@ -1218,6 +1218,120 @@ Two variants of the Harvester tool:
 
 ---
 
+## Step 31: Global Objectives & Export System
+
+**Goal:** Replace the Monument victory condition with a Global Objectives System where players complete building objectives, then export resources back to the Historian's main village.
+
+**Files created:**
+- `code/modules/resurgence_outpost/objectives/global_objectives.dm`
+- `code/modules/resurgence_outpost/structures/resources_recorder.dm`
+- `tgui/packages/tgui/interfaces/ResourcesRecorder.js`
+
+**Files modified:**
+- `code/modules/resurgence_outpost/rooms/room_detection.dm` - Added ROOM_TYPE_EXPORT_WAREHOUSE
+- `code/modules/resurgence_outpost/rooms/room_areas.dm` - Added Export Warehouse area subtype
+- `code/modules/resurgence_outpost/blueprints/blueprint_types.dm` - Added resources_recorder blueprint
+- `code/modules/resurgence_outpost/tools/outpost_planner.dm` - Added wall-mounted placement logic
+- `code/modules/surgery/organs/resurgence_core.dm` - Added objectives display to Core status
+
+**Implementation Overview:**
+
+### Objective Phases
+
+**Phase 1 - Building Objectives (initial):**
+1. Make 5 Living Quarters rooms
+2. Make a Workshop room
+3. Make a Kitchen room
+4. Make 2+ Farming Zones with 6+ tiles each
+5. Make an Export Warehouse room
+
+**Phase 2 - Export Objectives (after Phase 1 complete):**
+- Export 50 Metal Sheets
+- Export 100 Wood
+- Export 5 Harvesters
+- Export 25 Gold
+- Export 30 Cloth
+
+### Key Systems
+
+**Objective Display:**
+- Players view objectives via Core's "Check Core Status" action
+- Objectives are grouped by category (Building vs Export)
+- Progress bars show completion status
+
+**Completion Rewards:**
+When an objective is completed:
+1. Show global blurb to all players using `show_global_blurb()`
+2. Give faith event to ALL resurgence machines for 5 minutes (+1 faith every 5 seconds)
+
+**Export Warehouse Room:**
+- New room type: ROOM_TYPE_EXPORT_WAREHOUSE
+- Requires Resources Recorder structure
+- Faith modifier: +20% (logistics bonus)
+
+**Resources Recorder Structure:**
+- Wall-mounted console (must be placed adjacent to a wall)
+- Icon: `'icons/obj/machines/mining_machines.dmi'`, icon_state "console"
+- Density: FALSE
+- TGUI interface for:
+  - "Scan Warehouse" - scans all closets in the Export Warehouse room
+  - Checkbox selection for which closets/items to export
+  - "Export Selected" - triggers fulton animation and adds to objective progress
+
+**Wall-Adjacent Placement:**
+- Player selects direction (N/S/E/W) when placing via outpost_planner
+- Checks if wall exists in that direction
+- Applies pixel offset (32 pixels) to hug wall
+
+**Fulton Export Animation:**
+- Plays balloon animation when exporting closets
+- Animates closet rising and fading
+- Plays sound effect
+- Deletes closet and contents after animation
+- Adds exported quantities to objective progress
+
+**Key Data Structures:**
+```dm
+GLOBAL_LIST_EMPTY(resurgence_objectives)
+GLOBAL_VAR_INIT(resurgence_objective_phase, 1)
+GLOBAL_LIST_EMPTY(resurgence_exported_totals)
+
+/datum/resurgence_objective
+    var/name = "Objective"
+    var/category = "building"  // or "export"
+    var/completed = FALSE
+    var/current_progress = 0
+    var/required_progress = 1
+```
+
+**Testing:**
+
+Building Objectives:
+1. Create 5 living quarters - objective updates and completes
+2. Create workshop - objective completes
+3. Create kitchen - objective completes
+4. Create 2 farming zones with 6+ tiles - objective updates correctly
+5. Create export warehouse with resources recorder - objective completes
+6. All Phase 1 complete - Phase 2 objectives unlock
+
+Export Objectives:
+7. Resources recorder scans closets in room
+8. Items matching objectives are highlighted
+9. Selecting closets and exporting works
+10. Fulton animation plays
+11. Closets are deleted after export
+12. Objective progress updates
+13. Objective completion triggers blurb and faith event
+
+Core Display:
+14. Core status shows objectives grouped by category
+15. Progress is accurate
+16. Completed objectives show checkmark
+
+**Status:** [x] Complete
+
+---
+
 ## DEPRIORITIZED - Combat Features
 
 The following steps are deprioritized to focus on basebuilding and living systems first. Implement after core living systems are complete.
@@ -1267,13 +1381,11 @@ The following steps are deprioritized to focus on basebuilding and living system
 
 ---
 
-### Step D5: Monument of Hope (DEPRIORITIZED)
+### Step D5: Monument of Hope (REPLACED)
 
-**Goal:** Create the central monument structure.
+**Note:** This step has been replaced by the Global Objectives & Export System (Step 31). The monument victory condition is no longer used.
 
-**Note:** The monument is the victory condition but is deprioritized since it requires combat progression. Focus on living systems first.
-
-**Status:** [ ] Deprioritized
+**Status:** [x] Replaced by Step 31
 
 ---
 
@@ -1323,9 +1435,14 @@ The following steps are deprioritized to focus on basebuilding and living system
 - Full gamemode and map
 - Complete experience
 
-**Phase 10 - Combat (Steps D1-D5)** ← DEPRIORITIZED
+**Phase 10 - Global Objectives (Step 31)** ✓
+- Global Objectives & Export System
+- Export Warehouse room type
+- Resources Recorder structure
+- Fulton export animation
+
+**Phase 11 - Combat (Steps D1-D4)** ← DEPRIORITIZED
 - Weapons (spears, sling, crossbow)
-- Monument victory objective
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Focus on basic survival building mechanics first. Players gather resources, build structures, and contribute to a central statue.
+Focus on basic survival building mechanics first. Players gather resources, build structures, complete building objectives, and export resources to the Historian's village.
 
 ---
 
@@ -44,7 +44,7 @@ Faith is calculated from mood events, similar to TGStation's mood system.
 **Example Faith Events:**
 | Event | Faith Change | Timeout | Category |
 |-------|--------------|---------|----------|
-| Contributed to monument | +15 | 5 min | "monument" |
+| Objective completed | +1/5sec | 5 min | "objective_completion" |
 | Near other machines | +5 | While nearby | "community" |
 | Ate/recharged | +3 | 3 min | "sustenance" |
 | Witnessed death | -20 | 10 min | "death" |
@@ -58,7 +58,7 @@ Faith event amounts should be balanced based on their duration:
 | Event Duration | Faith Change | Examples |
 |----------------|--------------|----------|
 | Permanent/Long (>30 sec) | ≤ ±1 per tick | Room bonuses, worn clothing, nearby community |
-| Short/Temporary (<30 sec) | Higher amounts | Eating meals (+5 to +18), contributing to monument (+15) |
+| Short/Temporary (<30 sec) | Higher amounts | Eating meals (+5 to +18), objective completion (+1/5sec for 5min) |
 
 **Rationale:**
 - Long-duration events tick continuously, so small values (≤1) accumulate over time without overwhelming the system
@@ -705,24 +705,77 @@ When clicking the blueprint planner in hand:
 
 ---
 
-## Monument of Hope (Statue)
+## Global Objectives & Export System (Victory Condition)
 
-Simple tiered construction - each stage requires ONE resource type:
+The victory condition is a Global Objectives System where players complete building objectives, then export resources back to the Historian's main village.
 
-| Stage | Requirement | Description |
-|-------|-------------|-------------|
-| 1 | 100 Metal Sheets | Foundation |
-| 2 | 75 Wood Planks | Framework |
-| 3 | 50 Glass Sheets | Detailing |
-| 4 | 25 Plasteel Sheets | Completion |
+### Phase 1 - Building Objectives
 
-**Total**: ~250 material units across all stages
+Players must complete these building objectives first:
 
-### Statue Mechanics
-- Click statue with material stack to add
-- Shows current progress when examined
-- Announces to all players when stage completes
-- Victory when stage 4 complete
+| Objective | Requirement | Progress |
+|-----------|-------------|----------|
+| Living Quarters | Build 5 living quarters rooms | 0/5 |
+| Workshop | Build 1 workshop room | 0/1 |
+| Kitchen | Build 1 kitchen room | 0/1 |
+| Farming Zones | Create 2+ farming zones with 6+ tiles each | 0/2 |
+| Export Warehouse | Build 1 export warehouse room | 0/1 |
+
+### Phase 2 - Export Objectives
+
+After all building objectives are complete, export objectives unlock:
+
+| Objective | Amount | Progress |
+|-----------|--------|----------|
+| Metal Sheets | 50 | 0/50 |
+| Wood | 100 | 0/100 |
+| Harvesters | 5 | 0/5 |
+| Gold | 25 | 0/25 |
+| Cloth | 30 | 0/30 |
+
+### Viewing Objectives
+
+Players view objectives by checking their Core (existing "Check Core Status" action).
+Objectives are displayed grouped by category (Building vs Export).
+
+### Export Warehouse Room
+
+New room type requiring a Resources Recorder structure:
+- Faith modifier: +20% (logistics bonus)
+- Required to scan and export resources
+
+### Resources Recorder Structure
+
+Wall-mounted console for managing exports:
+- Icon: `'icons/obj/machines/mining_machines.dmi'`, icon_state "console"
+- Density: FALSE (no collision)
+- Must be placed next to a wall (wall-adjacent placement)
+- TGUI interface for scanning, selecting, and exporting
+
+**Functions:**
+1. "Scan Warehouse" - scans all closets in the Export Warehouse room
+2. Shows list of detected exportable items with quantities
+3. Checkboxes to select which crates/items to export
+4. "Export Selected" - triggers fulton animation and adds to objective progress
+
+### Objective Completion Effects
+
+When an objective is completed:
+1. Show global blurb to all players using `show_global_blurb()`
+2. Give faith event to ALL resurgence machines for 5 minutes (+1 faith every 5 seconds)
+
+### Fulton Export Animation
+
+When exporting closets:
+1. Spawn balloon effect at closet location
+2. Animate closet rising (pixel_z) and fading (alpha)
+3. Play sound effect
+4. Delete closet and contents after animation
+5. Add exported quantities to objective progress
+
+### Victory
+
+Game is won when all Phase 2 export objectives are completed
 
 ---
 
@@ -730,12 +783,18 @@ Simple tiered construction - each stage requires ONE resource type:
 
 ```
 code/modules/resurgence_outpost/
-    statue.dm           # Monument structure
-    structures.dm       # Chest, workbench, shelter
-    recipes.dm          # Stack recipes for building
+    objectives/
+        global_objectives.dm    # Objective datums and tracking
+    structures/
+        resources_recorder.dm   # Export console structure
+    structures.dm               # Chest, workbench, shelter
+    recipes.dm                  # Stack recipes for building
+
+tgui/packages/tgui/interfaces/
+    ResourcesRecorder.js        # Export console UI
 
 code/game/gamemodes/resurgence_outpost/
-    resurgence_outpost.dm   # Basic gamemode (later)
+    resurgence_outpost.dm       # Basic gamemode (later)
 ```
 
 ---
@@ -750,8 +809,8 @@ Add stack recipes to existing materials:
 - Metal sheets � metal wall, metal floor
 - Wood � wood wall, chest
 
-### Step 3: Monument Structure
-Basic `attackby()` to accept materials, `examine()` to show progress.
+### Step 3: Global Objectives & Export System
+Objective tracking, Resources Recorder structure, and export mechanics. See implementation_steps.md Step 31.
 
 ### Step 4: Gamemode (Later)
 Defer full gamemode until mechanics work. Test on existing maps first.
@@ -776,9 +835,9 @@ Rounds last 1.5 hours (representing 1.5 days). At round end, the outpost state i
 - Players are notified at 15 min, 5 min, and 1 min before end
 
 ### What Gets Saved
-- All placed structures (walls, floors, chests, workbench, monument)
+- All placed structures (walls, floors, chests, workbench, resources recorder)
 - Contents of containers (chests, storage)
-- Monument progress (current stage + materials contributed)
+- Objective progress (building objectives completed, export totals)
 - Structure positions (x, y, z coordinates)
 
 ### What Does NOT Get Saved
@@ -823,8 +882,8 @@ acacacacacacabab
 ```json
 {
   "day": 3,
-  "monument_stage": 2,
-  "monument_progress": 45,
+  "objective_phase": 2,
+  "exported_totals": {"metal": 30, "wood": 75, "harvesters": 2, "gold": 10, "cloth": 15},
   "last_save": "2024-01-15 14:30:00"
 }
 ```
@@ -892,7 +951,7 @@ Objects with contents (chests, etc.) need special handling:
     text2file(dmm_content, "data/resurgence_outpost/outpost_save.dmm")
 
     // 4. Save metadata
-    var/list/meta = list("day" = GLOB.outpost_day, "monument_stage" = ...)
+    var/list/meta = list("day" = GLOB.outpost_day, "objective_phase" = GLOB.resurgence_objective_phase, "exported_totals" = GLOB.resurgence_exported_totals)
     text2file(json_encode(meta), "data/resurgence_outpost/outpost_meta.json")
 
 /proc/get_tile_composition(turf/T)
@@ -937,9 +996,14 @@ When round starts fresh (no save or reset):
 
 ```
 code/modules/resurgence_outpost/
+    # Objectives
+    objectives/
+        global_objectives.dm    # Objective datums and tracking
+
     # Building
-    monument.dm             # Monument of Hope structure
-    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
+    structures/
+        resources_recorder.dm   # Export console structure
+    structures.dm               # Chest, crate, barrel, tables, lantern, statues, etc.
     walls_floors.dm         # Wood wall, wood floor, window turfs
     doors.dm                # Wood door
 
@@ -969,7 +1033,7 @@ code/datums/
 
 code/datums/faith_events/
     generic_events.dm   # Common faith events (community, injury, etc.)
-    outpost_events.dm   # Outpost-specific events (monument, shelter)
+    outpost_events.dm   # Outpost-specific events (objective completion, shelter)
 
 code/game/gamemodes/resurgence_outpost/
     resurgence_outpost.dm   # Gamemode with 1.5hr timer
@@ -979,7 +1043,7 @@ _maps/
 
 data/resurgence_outpost/
     outpost_save.dmm        # Full map snapshot (generated at round end)
-    outpost_meta.json       # Day number, monument progress, etc.
+    outpost_meta.json       # Day number, objective progress, etc.
 ```
 
 ---
@@ -1009,9 +1073,9 @@ Complex projects require intermediate components crafted from basic materials. T
 |-----------|--------|----------|
 | Metal Frame | 4 Metal Rods + 2 Metal Plates | Large structures |
 | Gear Assembly | 3 Metal Sheets (at Forge) | Machinery |
-| Reinforced Plate | 2 Metal Plates + 1 Plasteel | Monument, heavy armor |
-| Carved Ornament | 5 Wood + 1 Glass Lens | Monument detailing |
-| Woven Tapestry | 10 Cloth + 3 Rope | Monument, decor |
+| Reinforced Plate | 2 Metal Plates + 1 Plasteel | Heavy armor, fortifications |
+| Carved Ornament | 5 Wood + 1 Glass Lens | Decorative detailing |
+| Woven Tapestry | 10 Cloth + 3 Rope | Decor, room decoration |
 
 ### Component Definitions
 
@@ -1091,24 +1155,26 @@ Complex projects require intermediate components crafted from basic materials. T
     w_class = WEIGHT_CLASS_NORMAL
 ```
 
-### Updated Monument Requirements
+### Export Objectives (Victory Condition)
 
-The Monument of Hope now requires components instead of raw materials:
+The Monument of Hope victory condition has been replaced with the Global Objectives & Export System.
+See the "Global Objectives & Export System" section above for details.
 
-| Stage | Requirements | Description |
-|-------|--------------|-------------|
-| 1 - Foundation | 8 Metal Frames + 20 Nails | Structural base |
-| 2 - Framework | 10 Wooden Planks + 6 Metal Rods + 30 Nails | Inner skeleton |
-| 3 - Detailing | 5 Carved Ornaments + 4 Glass Lenses | Decorative elements |
-| 4 - Completion | 4 Reinforced Plates + 2 Woven Tapestries + 2 Gear Assemblies | Final touches |
+**Phase 1 - Building Objectives:**
+- 5 Living Quarters rooms
+- 1 Workshop room
+- 1 Kitchen room
+- 2+ Farming Zones (6+ tiles each)
+- 1 Export Warehouse room
 
-**Material Breakdown (total raw materials needed):**
-- Stage 1: 32 Metal Sheets (for frames) + 2 Metal Sheets (for nails) = 34 Metal
-- Stage 2: 20 Wood + 6 Metal + 3 Metal = 29 raw materials
-- Stage 3: 25 Wood + 5 Glass + 8 Glass = 25 Wood, 13 Glass
-- Stage 4: 16 Metal + 4 Plasteel + 20 Cloth + 6 Rope (18 Cloth) + 6 Metal = 22 Metal, 4 Plasteel, 38 Cloth
+**Phase 2 - Export Objectives:**
+- 50 Metal Sheets
+- 100 Wood
+- 5 Harvesters
+- 25 Gold
+- 30 Cloth
 
-This makes the monument a significant undertaking requiring diverse resource gathering.
+The Export Warehouse room requires a Resources Recorder structure for scanning and exporting resources.
 
 ---
 
@@ -1127,7 +1193,7 @@ Room type is automatically determined by scanning structures inside:
 | **Workshop** | Contains Forge, Loom, or Crafting Table | -25% faith gain | Normal crafting speed |
 | **Common Room** | Contains Decor, no production structures | +50% faith gain | N/A |
 | **Storage Room** | Contains only Storage structures | +10% faith gain | N/A |
-| **Shrine** | Contains Small Statue or Monument | +75% faith gain | N/A |
+| **Shrine** | Contains Small Statue | +75% faith gain | N/A |
 | **Basic Room** | Enclosed but no special structures | +25% faith gain (shelter bonus) | 3x crafting time |
 
 **Key Rule:** Production structures (Forge, Loom, Crafting Table) take **3x longer** if not in a Workshop area.
@@ -1242,8 +1308,7 @@ Room type is automatically determined by scanning structures inside:
                 has_storage = TRUE
 
             // Shrine structures
-            if(istype(S, /obj/structure/resurgence_statue) || \
-               istype(S, /obj/structure/resurgence_monument))
+            if(istype(S, /obj/structure/resurgence_statue))
                 has_shrine = TRUE
 
     // Priority: Shrine > Workshop > Common > Storage > Basic
@@ -1446,7 +1511,7 @@ When structures are added/removed, the room type may need to update:
 | Workshop | 0.75x (-25%) | Normal | Forge, Loom, or Crafting Table |
 | Common Room | 1.5x (+50%) | N/A | Decor only, no production |
 | Storage Room | 1.1x (+10%) | N/A | Storage only |
-| Shrine | 1.75x (+75%) | N/A | Statue or Monument |
+| Shrine | 1.75x (+75%) | N/A | Statue |
 
 ---
 
@@ -2106,11 +2171,16 @@ Upgraded crossbow ammunition.
 
 ```
 code/modules/resurgence_outpost/
+    # Objectives
+    objectives/
+        global_objectives.dm    # Objective datums and tracking
+
     # Building
-    monument.dm             # Monument of Hope structure
-    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
-    walls_floors.dm         # Wood wall, wood floor, window turfs
-    doors.dm                # Wood door
+    structures/
+        resources_recorder.dm   # Export console structure
+    structures.dm               # Chest, crate, barrel, tables, lantern, statues, etc.
+    walls_floors.dm             # Wood wall, wood floor, window turfs
+    doors.dm                    # Wood door
 
     # Blueprints
     blueprint_planner.dm    # Blueprint planning tool + UI
@@ -2157,7 +2227,7 @@ code/datums/
 
 code/datums/faith_events/
     generic_events.dm   # Common faith events (community, injury, etc.)
-    outpost_events.dm   # Outpost-specific events (monument, shelter)
+    outpost_events.dm   # Outpost-specific events (objective completion, shelter)
 
 code/game/gamemodes/resurgence_outpost/
     resurgence_outpost.dm   # Gamemode with 1.5hr timer
@@ -2167,7 +2237,7 @@ _maps/
 
 data/resurgence_outpost/
     outpost_save.dmm        # Full map snapshot (generated at round end)
-    outpost_meta.json       # Day number, monument progress, etc.
+    outpost_meta.json       # Day number, objective progress, etc.
 
 icons/obj/resurgence/
     components.dmi          # Component sprites
@@ -2181,8 +2251,8 @@ icons/obj/resurgence/
 ### Building & Structures
 1. Spawn chest, verify storage works
 2. Build walls/floors from materials
-3. Add materials to monument, verify stage progression
-4. Complete all 4 stages, verify victory message
+3. Build rooms to complete building objectives, verify progress updates
+4. Complete all building objectives, verify Phase 2 unlocks
 
 ### Persistence
 5. Let round timer expire, verify save is created
@@ -2207,13 +2277,13 @@ icons/obj/resurgence/
 20. Verify low faith speeds up charge decay
 21. Verify faith events with timeout expire correctly
 22. Verify "Despairing" level applies movement penalty
-23. Test monument contribution adds faith event
+23. Test objective completion adds faith event to all machines
 
 ### Components
 24. Craft Tier 2 component (wooden plank) at Crafting Table
 25. Verify Tier 2 components can be used in Tier 3 recipes
 26. Craft Tier 3 component (metal frame) at Forge
-27. Verify monument accepts components (not raw materials)
+27. Test Resources Recorder scans closets in Export Warehouse and exports correctly
 
 ### Weapons
 28. Craft wooden spear, verify 2-tile reach
@@ -3309,11 +3379,16 @@ Player stats and room ownership are saved per ckey.
 
 ```
 code/modules/resurgence_outpost/
+    # Objectives
+    objectives/
+        global_objectives.dm    # Objective datums and tracking
+
     # Building
-    monument.dm             # Monument of Hope structure (DEPRIORITIZED)
-    structures.dm           # Chest, crate, barrel, tables, lantern, statues, etc.
-    walls_floors.dm         # Wood wall, wood floor, window turfs
-    doors.dm                # Wood door
+    structures/
+        resources_recorder.dm   # Export console structure
+    structures.dm               # Chest, crate, barrel, tables, lantern, statues, etc.
+    walls_floors.dm             # Wood wall, wood floor, window turfs
+    doors.dm                    # Wood door
 
     # Blueprints
     blueprint_planner.dm    # Blueprint planning tool + UI
@@ -3381,7 +3456,7 @@ code/datums/faith_events/
 
 data/resurgence_outpost/
     outpost_save.dmm        # Full map snapshot (generated at round end)
-    outpost_meta.json       # Day number, monument progress, etc.
+    outpost_meta.json       # Day number, objective progress, etc.
     players/                # Per-player save files
         [ckey].json         # Individual player stats and room ownership
 ```

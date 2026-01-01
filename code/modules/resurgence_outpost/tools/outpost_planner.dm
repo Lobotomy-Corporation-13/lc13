@@ -101,7 +101,8 @@
 		"Food Processor" = /obj/structure/resurgence_blueprint/food_processor,
 		"Stove" = /obj/structure/resurgence_blueprint/stove,
 		"Hand Grinder" = /obj/structure/resurgence_blueprint/grinder,
-		"Griddle" = /obj/structure/resurgence_blueprint/griddle
+		"Griddle" = /obj/structure/resurgence_blueprint/griddle,
+		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder
 	)
 
 	// Furniture category - beds, chairs, tables, racks
@@ -260,6 +261,8 @@
 			return "+30% (nourishment)"
 		if(ROOM_TYPE_LIVING_QUARTERS)
 			return "+40% (personal sanctuary)"
+		if(ROOM_TYPE_EXPORT_WAREHOUSE)
+			return "+20% (logistics)"
 		else
 			return "+25% (shelter)"
 
@@ -452,10 +455,29 @@
 
 /// Place the selected blueprint on the turf
 /obj/item/resurgence_outpost_planner/proc/place_blueprint(turf/T, mob/user)
+	// Special handling for wall-mounted structures like resources recorder
+	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/resources_recorder))
+		place_wall_mounted_blueprint(T, user)
+		return
+
 	var/obj/structure/resurgence_blueprint/BP = new selected_blueprint(T)
 	if(BP)
 		BP.setDir(selected_direction)
 		to_chat(user, span_notice("You place a [BP.result_name] blueprint facing [dir2text(selected_direction)]. Add the required materials to build it."))
+		playsound(T, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+/// Place a wall-mounted blueprint (resources recorder, etc.)
+/obj/item/resurgence_outpost_planner/proc/place_wall_mounted_blueprint(turf/T, mob/user)
+	// Check for wall in the selected direction
+	var/turf/wall_turf = get_step(T, selected_direction)
+	if(!isclosedturf(wall_turf))
+		to_chat(user, span_warning("The Resources Recorder must be placed adjacent to a wall. There is no wall to the [dir2text(selected_direction)]."))
+		return
+
+	// Create the blueprint with wall direction
+	var/obj/structure/resurgence_blueprint/resources_recorder/BP = new selected_blueprint(T, selected_direction)
+	if(BP)
+		to_chat(user, span_notice("You place a [BP.result_name] blueprint mounted towards the [dir2text(selected_direction)] wall. Add the required materials to build it."))
 		playsound(T, 'sound/items/deconstruct.ogg', 30, TRUE)
 
 // ===== Room Designation =====

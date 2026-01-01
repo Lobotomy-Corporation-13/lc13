@@ -95,9 +95,9 @@
 	recipes["Sandstone"] = list(
 		"result" = /obj/item/stack/sheet/mineral/sandstone,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/glass = 10),
-		"total_work" = 25,
-		"desc" = "10 Sand -> 1 Sandstone"
+		"materials" = list(/obj/item/stack/ore/glass = 1),
+		"total_work" = 5,
+		"desc" = "1 Sand -> 1 Sandstone"
 	)
 
 	// Iron from rock (inefficient but possible)
@@ -119,6 +119,141 @@
 		),
 		"total_work" = 200,
 		"desc" = "10 Metal + 20 Coal -> Ash Plating (used for advanced tools)"
+	)
+
+	// Metal Tools
+	recipes["Iron Hatchet"] = list(
+		"result" = /obj/item/hatchet,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 20,
+		"desc" = "4 Metal + 1 Rope -> Iron Hatchet"
+	)
+
+	recipes["Pickaxe"] = list(
+		"result" = /obj/item/pickaxe,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 20,
+		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe"
+	)
+
+	recipes["Compact Pickaxe"] = list(
+		"result" = /obj/item/pickaxe/mini,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 2,
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/resurgence_component/rope = 4
+		),
+		"total_work" = 25,
+		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)"
+	)
+
+	recipes["Silver Pickaxe"] = list(
+		"result" = /obj/item/pickaxe/silver,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/silver = 5,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 40,
+		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)"
+	)
+
+	recipes["Shovel"] = list(
+		"result" = /obj/item/shovel,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 1 Wood -> Shovel"
+	)
+
+	recipes["Scythe"] = list(
+		"result" = /obj/item/scythe,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 6,
+			/obj/item/stack/sheet/mineral/wood = 4,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 25,
+		"desc" = "6 Metal + 4 Wood + 2 Rope -> Scythe (+5 work/tick when harvesting)"
+	)
+
+	recipes["Crowbar"] = list(
+		"result" = /obj/item/crowbar/large,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 15,
+		"desc" = "3 Metal + 1 Wood -> Crowbar"
+	)
+
+	recipes["Compact Crowbar"] = list(
+		"result" = /obj/item/crowbar,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 20,
+		"desc" = "4 Metal + 2 Rope -> Compact Crowbar (portable)"
+	)
+
+	// Kitchen Tools
+	recipes["Beaker"] = list(
+		"result" = /obj/item/reagent_containers/glass/beaker,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/glass = 10),
+		"total_work" = 15,
+		"desc" = "10 Sand -> Beaker"
+	)
+
+	recipes["Large Beaker"] = list(
+		"result" = /obj/item/reagent_containers/glass/beaker/large,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/glass = 20),
+		"total_work" = 20,
+		"desc" = "20 Sand -> Large Beaker"
+	)
+
+	recipes["Bowl"] = list(
+		"result" = /obj/item/reagent_containers/glass/bowl,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 3),
+		"total_work" = 15,
+		"desc" = "3 Metal -> Bowl"
+	)
+
+	recipes["Universal Enzyme"] = list(
+		"result" = /obj/item/reagent_containers/food/condiment/enzyme,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 5),
+		"total_work" = 25,
+		"desc" = "5 Metal -> Universal Enzyme"
+	)
+
+	recipes["Kitchen Knife"] = list(
+		"result" = /obj/item/kitchen/knife,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 8),
+		"total_work" = 20,
+		"desc" = "8 Metal -> Kitchen Knife"
 	)
 
 	// Advanced Tools

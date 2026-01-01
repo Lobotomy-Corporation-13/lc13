@@ -82,6 +82,9 @@
 	var/mining_level = get_mining_stat(user)
 	work_per_tick += (mining_level - 1)
 
+	// Tool tier bonus (pickaxes)
+	work_per_tick += get_tool_work_bonus(tool)
+
 	// Starting message
 	if(work_points > 0)
 		var/progress_pct = round((work_points / work_needed) * 100)
@@ -120,9 +123,16 @@
 		work_points += work_per_tick
 		apply_work_faith_drain(user, work_per_tick)
 
+		// Decrement tool durability
+		if(tool && !use_tool_durability(tool, user))
+			// Tool broke - continue without tool bonuses
+			tool = null
+			using_tool = FALSE
+			work_per_tick = GATHER_WORK_PER_TICK + (mining_level - 1)
+
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
-			if(using_tool)
+			if(using_tool && tool)
 				if(islist(tool.usesound))
 					playsound(src, pick(tool.usesound), 50, TRUE)
 				else if(tool.usesound)
@@ -134,9 +144,9 @@
 
 	// Check completion
 	if(work_points >= work_needed)
-		complete_mining(user)
+		complete_mining(user, tool)
 
-/turf/closed/mineral/resurgence/proc/complete_mining(mob/user)
+/turf/closed/mineral/resurgence/proc/complete_mining(mob/user, obj/item/tool)
 	// Calculate yield with mining skill bonus
 	var/final_amount = mineralAmt
 	if(user)
@@ -145,8 +155,10 @@
 			span_notice("You break through [src] and collect the ore!"),
 			span_hear("You hear rock breaking.")
 		)
-		// Award mining XP based on work difficulty
-		award_mining_xp(user, round(work_needed / 10))
+		// Award mining XP based on work difficulty (with tool multiplier)
+		var/base_xp = round(work_needed / 10)
+		var/xp_mult = get_tool_xp_multiplier(tool)
+		award_mining_xp(user, round(base_xp * xp_mult))
 		// Apply mining yield multiplier (+25% every 5 levels)
 		var/mining_level = get_mining_stat(user)
 		var/yield_mult = get_mining_yield_multiplier(mining_level)

@@ -128,18 +128,6 @@
 		"category" = CRAFT_CAT_PROCESSING
 	)
 
-	recipes["Torch"] = list(
-		"result" = /obj/item/flashlight/flare/torch,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/mineral/wood = 1,
-			/obj/item/stack/sheet/cotton/cloth = 1
-		),
-		"total_work" = 10,
-		"desc" = "1 Wood + 1 Cloth -> Torch",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
 	// Tools - ordered by complexity
 	recipes["Wooden Hatchet"] = list(
 		"result" = /obj/item/hatchet/wooden,
@@ -153,18 +141,6 @@
 		"category" = CRAFT_CAT_TOOLS
 	)
 
-	recipes["Iron Hatchet"] = list(
-		"result" = /obj/item/hatchet,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 4,
-			/obj/item/resurgence_component/rope = 1
-		),
-		"total_work" = 20,
-		"desc" = "4 Metal + 1 Rope -> Iron Hatchet",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
 	recipes["Improvised Pickaxe"] = list(
 		"result" = /obj/item/pickaxe/improvised,
 		"result_amount" = 1,
@@ -174,58 +150,6 @@
 		),
 		"total_work" = 15,
 		"desc" = "2 Wood + 1 Rope -> Improvised Pickaxe (slow but cheap)",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Pickaxe"] = list(
-		"result" = /obj/item/pickaxe,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 4,
-			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
-		),
-		"total_work" = 20,
-		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Compact Pickaxe"] = list(
-		"result" = /obj/item/pickaxe/mini,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 2,
-			/obj/item/stack/sheet/mineral/wood = 1,
-			/obj/item/resurgence_component/rope = 4
-		),
-		"total_work" = 25,
-		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Silver Pickaxe"] = list(
-		"result" = /obj/item/pickaxe/silver,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 5,
-			/obj/item/stack/sheet/mineral/silver = 5,
-			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 2
-		),
-		"total_work" = 40,
-		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Shovel"] = list(
-		"result" = /obj/item/shovel,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 3,
-			/obj/item/stack/sheet/mineral/wood = 1
-		),
-		"total_work" = 20,
-		"desc" = "3 Metal + 1 Wood -> Shovel",
 		"category" = CRAFT_CAT_TOOLS
 	)
 
@@ -253,49 +177,15 @@
 		"category" = CRAFT_CAT_TOOLS
 	)
 
-	// Kitchen Tools
-	recipes["Beaker"] = list(
-		"result" = /obj/item/reagent_containers/glass/beaker,
+	recipes["Wooden Scythe"] = list(
+		"result" = /obj/item/scythe/wooden,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 3),
-		"total_work" = 15,
-		"desc" = "3 Metal -> Beaker",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Large Beaker"] = list(
-		"result" = /obj/item/reagent_containers/glass/beaker/large,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 6),
-		"total_work" = 20,
-		"desc" = "6 Metal -> Large Beaker",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Bowl"] = list(
-		"result" = /obj/item/reagent_containers/glass/bowl,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 3),
-		"total_work" = 15,
-		"desc" = "3 Metal -> Bowl",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Universal Enzyme"] = list(
-		"result" = /obj/item/reagent_containers/food/condiment/enzyme,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 5),
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 6,
+			/obj/item/resurgence_component/rope = 2
+		),
 		"total_work" = 25,
-		"desc" = "5 Metal -> Universal Enzyme",
-		"category" = CRAFT_CAT_TOOLS
-	)
-
-	recipes["Kitchen Knife"] = list(
-		"result" = /obj/item/kitchen/knife,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 8),
-		"total_work" = 20,
-		"desc" = "8 Metal -> Kitchen Knife",
+		"desc" = "6 Wood + 2 Rope -> Wooden Scythe (harvesting tool)",
 		"category" = CRAFT_CAT_TOOLS
 	)
 

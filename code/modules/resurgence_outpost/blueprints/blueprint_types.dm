@@ -44,7 +44,7 @@
 
 /obj/structure/resurgence_blueprint/wood_door/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 8
+		/obj/item/stack/sheet/mineral/wood = 10
 	)
 
 /obj/structure/resurgence_blueprint/iron_door
@@ -56,7 +56,7 @@
 
 /obj/structure/resurgence_blueprint/iron_door/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/metal = 10
+		/obj/item/stack/sheet/metal = 8
 	)
 
 /obj/structure/resurgence_blueprint/silver_door
@@ -68,7 +68,7 @@
 
 /obj/structure/resurgence_blueprint/silver_door/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/silver = 10
+		/obj/item/stack/sheet/mineral/silver = 8
 	)
 
 /obj/structure/resurgence_blueprint/gold_door
@@ -80,7 +80,7 @@
 
 /obj/structure/resurgence_blueprint/gold_door/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/gold = 10
+		/obj/item/stack/sheet/mineral/gold = 8
 	)
 
 /obj/structure/resurgence_blueprint/sandstone_door
@@ -144,7 +144,7 @@
 
 /obj/structure/resurgence_blueprint/iron_wall/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/metal = 10
+		/obj/item/stack/sheet/metal = 4
 	)
 
 /obj/structure/resurgence_blueprint/sandstone_wall
@@ -478,3 +478,66 @@
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 2
 	)
+
+// ===========================================
+// LOGISTICS BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/resources_recorder
+	name = "resources recorder blueprint"
+	result_name = "resources recorder"
+	icon = 'icons/obj/machines/mining_machines.dmi'
+	icon_state = "console"
+	result_type = /obj/structure/resources_recorder
+	density = FALSE
+
+	/// Direction towards the wall this console will be mounted on
+	var/wall_dir = SOUTH
+
+/obj/structure/resurgence_blueprint/resources_recorder/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 15,
+		/obj/item/stack/sheet/glass = 5
+	)
+
+/obj/structure/resurgence_blueprint/resources_recorder/Initialize(mapload, wall_direction)
+	. = ..()
+	if(wall_direction)
+		wall_dir = wall_direction
+	apply_wall_offset()
+
+/// Apply pixel offset to match wall placement
+/obj/structure/resurgence_blueprint/resources_recorder/proc/apply_wall_offset()
+	switch(wall_dir)
+		if(NORTH)
+			pixel_y = 32
+			pixel_x = 0
+		if(SOUTH)
+			pixel_y = -32
+			pixel_x = 0
+		if(EAST)
+			pixel_x = 32
+			pixel_y = 0
+		if(WEST)
+			pixel_x = -32
+			pixel_y = 0
+
+/obj/structure/resurgence_blueprint/resources_recorder/complete_construction(mob/user)
+	if(!result_type)
+		to_chat(user, span_warning("Error: Blueprint has no result type defined!"))
+		return
+
+	to_chat(user, span_notice("You finish building the [result_name]!"))
+	playsound(src, complete_sound, 50, TRUE)
+
+	var/turf/T = get_turf(src)
+
+	// Create the resources recorder with wall direction
+	var/obj/structure/resources_recorder/recorder = new result_type(T)
+	if(recorder)
+		recorder.wall_dir = wall_dir
+		recorder.apply_wall_offset()
+		recorder.anchored = TRUE
+
+	// Remove the blueprint
+	qdel(src)

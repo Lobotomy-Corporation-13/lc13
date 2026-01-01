@@ -123,6 +123,21 @@
 
 // ===== Interactions =====
 /obj/structure/farm_plot/attackby(obj/item/I, mob/user, params)
+	// Scythe triggers harvesting if ready
+	if(istype(I, /obj/item/scythe))
+		if(!myseed)
+			to_chat(user, span_notice("Nothing is planted here."))
+			return
+		if(!harvest)
+			to_chat(user, span_warning("This plant isn't ready for harvest yet."))
+			return
+		if(being_harvested)
+			to_chat(user, span_warning("Someone is already harvesting this."))
+			return
+		if(ishuman(user))
+			start_harvest(user)
+		return
+
 	// Water with reagent containers
 	if(istype(I, /obj/item/reagent_containers))
 		var/obj/item/reagent_containers/container = I
@@ -206,12 +221,20 @@
 		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
+	// Check if user is holding a scythe
+	var/obj/item/tool = user.get_active_held_item()
+	if(!istype(tool, /obj/item/scythe))
+		tool = null
+
 	var/total_work = get_harvest_work()
 
 	// Work rate with harvesting stat bonus
 	var/work_per_tick = GATHER_WORK_PER_TICK
 	var/harvesting_level = get_harvesting_stat(user)
 	work_per_tick += (harvesting_level - 1)
+
+	// Tool tier bonus (scythe)
+	work_per_tick += get_tool_work_bonus(tool)
 
 	// Starting message
 	if(harvest_work_points > 0)
@@ -241,6 +264,12 @@
 		harvest_work_points += work_per_tick
 		apply_work_faith_drain(user, work_per_tick)
 
+		// Decrement tool durability
+		if(tool && !use_tool_durability(tool, user))
+			// Tool broke - continue without tool bonuses
+			tool = null
+			work_per_tick = GATHER_WORK_PER_TICK + (harvesting_level - 1)
+
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
 			playsound(src, 'sound/weapons/thudswoosh.ogg', 30, TRUE)
@@ -249,10 +278,10 @@
 
 	// Check completion
 	if(harvest_work_points >= total_work)
-		complete_harvest(user)
+		complete_harvest(user, tool)
 
 /// Finish harvesting and drop produce
-/obj/structure/farm_plot/proc/complete_harvest(mob/user)
+/obj/structure/farm_plot/proc/complete_harvest(mob/user, obj/item/tool)
 	// Calculate yield with harvesting skill bonus
 	var/product_count = myseed.yield
 	if(user)
@@ -261,8 +290,10 @@
 			span_notice("You harvest [myseed.plantname]!"),
 			span_hear("You hear rustling.")
 		)
-		// Award harvesting XP based on yield
-		award_harvesting_xp(user, myseed.yield * 2)
+		// Award harvesting XP based on yield (with tool multiplier)
+		var/base_xp = myseed.yield * 2
+		var/xp_mult = get_tool_xp_multiplier(tool)
+		award_harvesting_xp(user, round(base_xp * xp_mult))
 		// Apply harvesting yield bonus (+1 every 5 levels)
 		var/harvesting_level = get_harvesting_stat(user)
 		product_count += get_harvesting_yield_bonus(harvesting_level)

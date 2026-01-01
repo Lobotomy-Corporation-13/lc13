@@ -249,6 +249,13 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	faith_modifier = 1.4  // +40% faith gain (personal sanctuary)
 	icon_state = "pink"
 
+/// Export Warehouse - logistics hub for exporting resources
+/area/resurgence_outpost/room/export_warehouse
+	name = "Export Warehouse"
+	room_type = ROOM_TYPE_EXPORT_WAREHOUSE
+	faith_modifier = 1.2  // +20% faith gain (logistics)
+	icon_state = "purple"
+
 /**
  * Create a new resurgence room area from a list of turfs.
  *
@@ -291,6 +298,8 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 			new_area = new /area/resurgence_outpost/room/kitchen()
 		if(ROOM_TYPE_LIVING_QUARTERS)
 			new_area = new /area/resurgence_outpost/room/living_quarters()
+		if(ROOM_TYPE_EXPORT_WAREHOUSE)
+			new_area = new /area/resurgence_outpost/room/export_warehouse()
 		else
 			new_area = new /area/resurgence_outpost/room()
 

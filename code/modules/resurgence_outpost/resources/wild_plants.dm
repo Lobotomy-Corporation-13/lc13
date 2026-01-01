@@ -138,6 +138,20 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 	start_harvest(user)
 
 /obj/structure/resurgence_wild_plant/attackby(obj/item/I, mob/user, params)
+	// Scythe triggers harvesting
+	if(istype(I, /obj/item/scythe))
+		if(!myseed)
+			to_chat(user, span_warning("This plant has nothing to harvest."))
+			return
+		if(!harvestable)
+			to_chat(user, span_warning("This plant has already been harvested. It needs time to regrow."))
+			return
+		if(being_harvested)
+			to_chat(user, span_warning("Someone is already harvesting this."))
+			return
+		if(ishuman(user))
+			start_harvest(user)
+		return
 	// Allow harvesting with any item by falling back to hand
 	return attack_hand(user)
 
@@ -147,13 +161,23 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
+	// Check for scythe - halves harvest time
+	var/obj/item/tool = user.get_active_held_item()
+	var/harvest_time = 2 SECONDS
+	var/using_scythe = FALSE
+	if(istype(tool, /obj/item/scythe))
+		harvest_time = 1 SECONDS
+		using_scythe = TRUE
+	else
+		tool = null
+
 	to_chat(user, span_notice("You begin harvesting [src]..."))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 30, TRUE)
 
 	being_harvested = TRUE
 
 	// Simple harvest - just one do_after
-	if(!do_after(user, 2 SECONDS, target = src))
+	if(!do_after(user, harvest_time, target = src))
 		to_chat(user, span_notice("You stop harvesting."))
 		being_harvested = FALSE
 		return
@@ -164,10 +188,14 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 		being_harvested = FALSE
 		return
 
-	being_harvested = FALSE
-	complete_harvest(user)
+	// Decrement tool durability (once per harvest)
+	if(tool)
+		use_tool_durability(tool, user)
 
-/obj/structure/resurgence_wild_plant/proc/complete_harvest(mob/user)
+	being_harvested = FALSE
+	complete_harvest(user, using_scythe, tool)
+
+/obj/structure/resurgence_wild_plant/proc/complete_harvest(mob/user, using_scythe = FALSE, obj/item/tool = null)
 	if(!myseed || !harvestable)
 		return
 
@@ -184,6 +212,9 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 	// Apply harvesting yield bonus (+1 every 5 levels)
 	var/harvesting_level = get_harvesting_stat(user)
 	yield += get_harvesting_yield_bonus(harvesting_level)
+	// Scythe bonus yield
+	if(using_scythe)
+		yield += 1
 
 	for(var/i in 1 to yield)
 		new product_type(get_turf(src), myseed)
@@ -191,8 +222,10 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 	// Apply faith drain
 	apply_work_faith_drain(user, 5)
 
-	// Award harvesting XP
-	award_harvesting_xp(user, 5)
+	// Award harvesting XP (with tool multiplier)
+	var/base_xp = 5
+	var/xp_mult = get_tool_xp_multiplier(tool)
+	award_harvesting_xp(user, round(base_xp * xp_mult))
 
 	// Mark as harvested and start regrowth timer
 	harvestable = FALSE

@@ -15,6 +15,7 @@
 #define ROOM_TYPE_STORAGE         "Storage Room"
 #define ROOM_TYPE_KITCHEN         "Kitchen"
 #define ROOM_TYPE_LIVING_QUARTERS "Living Quarters"
+#define ROOM_TYPE_EXPORT_WAREHOUSE "Export Warehouse"
 
 /**
  * Detect an enclosed room using flood-fill algorithm.
@@ -126,6 +127,7 @@
 	var/has_bed = FALSE
 	var/has_closet = FALSE
 	var/has_fridge = FALSE
+	var/has_resources_recorder = FALSE
 
 	// Scan all turfs for structures
 	for(var/turf/T in turfs)
@@ -142,6 +144,8 @@
 				has_bed = TRUE
 			if(istype(S, /obj/structure/closet))
 				has_closet = TRUE
+			if(istype(S, /obj/structure/resources_recorder))
+				has_resources_recorder = TRUE
 		// Check for fridge (it's a closet subtype but special)
 		for(var/obj/structure/closet/secure_closet/freezer/fridge/F in T)
 			has_fridge = TRUE
@@ -157,6 +161,8 @@
 		valid_types += ROOM_TYPE_LIVING_QUARTERS
 	if(has_closet)
 		valid_types += ROOM_TYPE_STORAGE
+	if(has_resources_recorder)
+		valid_types += ROOM_TYPE_EXPORT_WAREHOUSE
 
 	// Default to basic if nothing else
 	if(!length(valid_types))
@@ -199,6 +205,8 @@
 			return "Clan Kitchen"
 		if(ROOM_TYPE_LIVING_QUARTERS)
 			return "Living Quarters"
+		if(ROOM_TYPE_EXPORT_WAREHOUSE)
+			return "Export Warehouse"
 		else
 			return "Clan Room"
 

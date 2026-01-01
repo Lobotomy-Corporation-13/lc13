@@ -92,9 +92,14 @@
 		to_chat(user, span_warning("Someone is already harvesting this plant."))
 		return
 
-	// Allow harvesting with any item (or bare hands via attack_hand)
+	// Allow harvesting with scythe or bare hands
 	if(!ishuman(user))
 		return ..()
+
+	// Scythe triggers harvesting
+	if(istype(W, /obj/item/scythe))
+		start_harvesting(user)
+		return
 
 	start_harvesting(user)
 
@@ -104,12 +109,20 @@
 		to_chat(user, span_warning("You're too exhausted to harvest. You need at least [MIN_FAITH_FOR_WORK] faith."))
 		return
 
+	// Check if user is holding a scythe
+	var/obj/item/tool = user.get_active_held_item()
+	if(!istype(tool, /obj/item/scythe))
+		tool = null
+
 	// Work rate - cotton harvesting is done by hand at base rate
 	var/work_per_tick = GATHER_WORK_PER_TICK
 
 	// Harvesting stat bonus: +1 work per tick for each level above 1
 	var/harvesting_level = get_harvesting_stat(user)
 	work_per_tick += (harvesting_level - 1)
+
+	// Tool tier bonus (scythe)
+	work_per_tick += get_tool_work_bonus(tool)
 
 	// Starting message
 	if(work_points > 0)
@@ -139,6 +152,12 @@
 		work_points += work_per_tick
 		apply_work_faith_drain(user, work_per_tick)
 
+		// Decrement tool durability
+		if(tool && !use_tool_durability(tool, user))
+			// Tool broke - continue without tool bonuses
+			tool = null
+			work_per_tick = GATHER_WORK_PER_TICK + (harvesting_level - 1)
+
 		// Periodic sound (30% chance each tick)
 		if(prob(30))
 			playsound(src, 'sound/weapons/thudswoosh.ogg', 30, TRUE)
@@ -147,9 +166,9 @@
 
 	// Check completion
 	if(work_points >= work_needed)
-		complete_harvest(user)
+		complete_harvest(user, tool)
 
-/obj/structure/resurgence_cotton/proc/complete_harvest(mob/user)
+/obj/structure/resurgence_cotton/proc/complete_harvest(mob/user, obj/item/tool)
 	// Calculate yield with harvesting skill bonus
 	var/yield = base_yield
 	if(user)
@@ -158,8 +177,10 @@
 			span_notice("You harvest the cotton from [src]!"),
 			span_hear("You hear rustling.")
 		)
-		// Award harvesting XP based on work difficulty
-		award_harvesting_xp(user, round(work_needed / 10))
+		// Award harvesting XP based on work difficulty (with tool multiplier)
+		var/base_xp = round(work_needed / 10)
+		var/xp_mult = get_tool_xp_multiplier(tool)
+		award_harvesting_xp(user, round(base_xp * xp_mult))
 		// Apply harvesting yield bonus (+1 every 5 levels)
 		var/harvesting_level = get_harvesting_stat(user)
 		yield += get_harvesting_yield_bonus(harvesting_level)
