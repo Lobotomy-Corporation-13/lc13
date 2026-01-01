@@ -79,7 +79,6 @@ var/list/worked = list()
 
 /mob/living/simple_animal/hostile/abnormality/reality_tear/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
 
-	//Code is copied directly from 680 KHz.
 	if(!(user in worked))
 		worked+=user
 		new /obj/item/paper/fluff/plea(get_turf(user))
