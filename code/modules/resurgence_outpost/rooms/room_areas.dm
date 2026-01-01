@@ -335,6 +335,9 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	// Announce to all resurgence machines
 	announce_room_created(room_name, room_type)
 
+	// Update global objectives (building objectives track room counts)
+	update_all_objectives()
+
 	return new_area
 
 /**

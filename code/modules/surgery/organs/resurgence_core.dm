@@ -672,9 +672,12 @@
 	if(!has_events)
 		to_chat(H, span_notice("No special faith effects active."))
 
-	// Show outpost objectives if in outpost gamemode
-	if(SSmaptype.maptype == "outpost" && length(GLOB.resurgence_objectives))
+	// Show outpost objectives if they exist
+	if(length(GLOB.resurgence_objectives))
 		display_objectives(H)
+	else
+		to_chat(H, span_notice("<b>=== OUTPOST OBJECTIVES ===</b>"))
+		to_chat(H, span_notice("No objectives active. Use the admin panel to initialize objectives."))
 
 /// Display outpost objectives grouped by category
 /datum/action/item_action/organ_action/resurgence_check/proc/display_objectives(mob/living/H)

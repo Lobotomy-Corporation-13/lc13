@@ -11,14 +11,17 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 	access = list(ACCESS_LAWYER)
 	minimal_access = list(ACCESS_LAWYER)
 	departments = DEPARTMENT_SERVICE
+	maptype = list("outpost")
 	outfit = /datum/outfit/job/machine_civilian
 	display_order = JOB_DISPLAY_ORDER_CIVILIAN
 	allow_bureaucratic_error = FALSE
 	paycheck = 0
-	job_important = "You are a mechanical being of the Resurgence Clan, living in hiding beneath the City. \
-			Work together with your fellow machines to gather resources, maintain your village, and preserve your Faith. \
-			Your Charge regenerates over time and is used for abilities. \
-			Your Faith slowly decays and must be restored through communal activities and sermons."
+	job_important = "You are a mechanical being of the Resurgence Clan, establishing an outpost for the Historian's village. \
+			Work together to gather resources, build rooms, and complete objectives. \
+			Use 'Check Core Status' to view your Faith level and current objectives. \
+			Build Living Quarters, a Workshop, Kitchen, Farming Zones, and an Export Warehouse. \
+			Once building objectives are complete, export resources back to the village to win. \
+			Maintain your Faith through good living conditions, proper rooms, and community."
 
 	roundstart_attributes = list(
 		FORTITUDE_ATTRIBUTE = 40,
@@ -78,5 +81,7 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 		/obj/item/crowbar = 1,
 		/obj/item/hatchet/wooden = 1,
 		/obj/item/pickaxe/improvised = 1,
-		/obj/item/resurgence_outpost_planner = 1
+		/obj/item/resurgence_outpost_planner = 1,
+		/obj/item/weldingtool/experimental = 1,
+		/obj/item/folder/resurgence_guides = 1
 	)

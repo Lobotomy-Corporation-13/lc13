@@ -219,7 +219,8 @@
 		return FALSE
 
 	for(var/datum/resurgence_objective/export/obj in GLOB.resurgence_objectives)
-		if(!obj.completed && obj.export_type == type_path)
+		// Use ispath to match subtypes as well
+		if(!obj.completed && ispath(type_path, obj.export_type))
 			return TRUE
 
 	return FALSE
@@ -311,7 +312,11 @@
 	for(var/item_type in export_counts)
 		add_exported_resources(item_type, export_counts[item_type])
 
-	// Delete the closet and contents
+	// Delete contents FIRST to prevent them from being dumped when closet is deleted
+	for(var/atom/movable/AM in target.contents)
+		qdel(AM)
+
+	// Now delete the empty closet
 	qdel(target)
 
 /// Check if atom is in an export warehouse

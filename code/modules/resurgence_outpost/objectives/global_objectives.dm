@@ -104,11 +104,29 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 		if(all_complete)
 			advance_to_phase_two()
 
-/// Advance to Phase 2 (Export objectives)
+/// Advance to Phase 2 (Export objectives) - with 10 second delay
 /proc/advance_to_phase_two()
+	// Announce phase transition with countdown
+	var/blurb = "ALL BUILDING OBJECTIVES COMPLETE! Phase 2 begins in 10 seconds..."
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, blurb, 1 SECONDS, "dark gray", "gold", "left", "CENTER,BOTTOM+2")
+
+	// Notify all resurgence machines about the upcoming phase change
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		if(!H.mind)
+			continue
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(!istype(core))
+			continue
+		to_chat(H, span_notice("<b>All building objectives complete!</b> Phase 2 will begin in 10 seconds..."))
+
+	// Schedule the actual phase change after 10 seconds
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(do_phase_two_transition)), 10 SECONDS)
+
+/// Actually transition to phase 2 (called after delay)
+/proc/do_phase_two_transition()
 	GLOB.resurgence_objective_phase = 2
 
-	// Announce phase change
+	// Announce phase 2 start
 	var/blurb = "PHASE 2 UNLOCKED: BEGIN RESOURCE EXPORTS"
 	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, blurb, 1 SECONDS, "dark gray", "gold", "left", "CENTER,BOTTOM+2")
 
@@ -119,7 +137,7 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(!istype(core))
 			continue
-		to_chat(H, span_notice("<b>All building objectives complete!</b> The Export Warehouse is now operational. Begin exporting resources to the Historian's village."))
+		to_chat(H, span_notice("<b>PHASE 2 STARTED!</b> The Export Warehouse is now operational. Begin exporting resources to the Historian's village."))
 
 // ============================================
 // BUILDING OBJECTIVES
@@ -298,14 +316,23 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 
 /// Add exported resources to totals and check objectives
 /proc/add_exported_resources(type_path, amount)
-	if(!GLOB.resurgence_exported_totals[type_path])
-		GLOB.resurgence_exported_totals[type_path] = 0
-	GLOB.resurgence_exported_totals[type_path] += amount
-
-	// Update export objectives
+	// Find which objective(s) this item type contributes to using ispath
+	// Store under the objective's export_type (base type) for proper tracking
+	var/matched_any = FALSE
 	for(var/datum/resurgence_objective/export/obj in GLOB.resurgence_objectives)
-		if(obj.export_type == type_path)
+		if(ispath(type_path, obj.export_type))
+			// Store under the objective's base export type
+			if(!GLOB.resurgence_exported_totals[obj.export_type])
+				GLOB.resurgence_exported_totals[obj.export_type] = 0
+			GLOB.resurgence_exported_totals[obj.export_type] += amount
 			obj.check_progress()
+			matched_any = TRUE
+
+	// If no objective matched, still track it (for potential future objectives)
+	if(!matched_any)
+		if(!GLOB.resurgence_exported_totals[type_path])
+			GLOB.resurgence_exported_totals[type_path] = 0
+		GLOB.resurgence_exported_totals[type_path] += amount
 
 /// Get objectives grouped by category for display
 /proc/get_objectives_by_category()
@@ -329,6 +356,51 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /// Faith event subtype for objective completion
 /datum/faith_event/objective_completion
 	category = "objective_completion"
+
+// ============================================
+// Admin Verbs
+// ============================================
+
+/// Admin verb to initialize objectives for testing
+/client/proc/init_resurgence_objectives()
+	set name = "Initialize Resurgence Objectives"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	initialize_resurgence_objectives()
+	to_chat(src, span_notice("Resurgence objectives have been initialized."))
+	message_admins("[key_name(src)] initialized resurgence objectives.")
+
+/// Admin verb to complete a building objective for testing
+/client/proc/complete_building_objective()
+	set name = "Complete Building Objective"
+	set category = "Debug"
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	var/list/incomplete = list()
+	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+		if(obj.category == "building" && !obj.completed)
+			incomplete += obj.name
+
+	if(!length(incomplete))
+		to_chat(src, span_warning("No incomplete building objectives."))
+		return
+
+	var/choice = input(src, "Select objective to complete:", "Complete Objective") as null|anything in incomplete
+	if(!choice)
+		return
+
+	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
+		if(obj.name == choice)
+			obj.current_progress = obj.required_progress
+			obj.on_complete()
+			to_chat(src, span_notice("Completed objective: [obj.name]"))
+			message_admins("[key_name(src)] completed resurgence objective: [obj.name]")
+			break
 
 #undef OBJECTIVE_CAT_BUILDING
 #undef OBJECTIVE_CAT_EXPORT

@@ -214,3 +214,56 @@
 	if(durability < 0 || max_durability <= 0)
 		return 100
 	return round((durability / max_durability) * 100)
+
+/// Get durability condition text based on percentage
+/proc/get_durability_condition(percent)
+	if(percent >= 90)
+		return list("pristine", "good")
+	if(percent >= 70)
+		return list("good", "good")
+	if(percent >= 50)
+		return list("worn", "average")
+	if(percent >= 30)
+		return list("damaged", "orange")
+	if(percent >= 10)
+		return list("heavily damaged", "bad")
+	return list("about to break", "bad")
+
+// ============================================
+// Examine Hooks for Tools
+// ============================================
+
+/obj/item/hatchet/examine(mob/user)
+	. = ..()
+	if(is_durability_active() && resurgence_max_durability > 0)
+		var/percent = get_tool_durability_percent(src)
+		var/list/condition = get_durability_condition(percent)
+		. += span_notice("Durability: [resurgence_durability]/[resurgence_max_durability] ([percent]%) - <span class='[condition[2]]'>[condition[1]]</span>")
+
+/obj/item/pickaxe/examine(mob/user)
+	. = ..()
+	if(is_durability_active() && resurgence_max_durability > 0)
+		var/percent = get_tool_durability_percent(src)
+		var/list/condition = get_durability_condition(percent)
+		. += span_notice("Durability: [resurgence_durability]/[resurgence_max_durability] ([percent]%) - <span class='[condition[2]]'>[condition[1]]</span>")
+
+/obj/item/scythe/examine(mob/user)
+	. = ..()
+	if(is_durability_active() && resurgence_max_durability > 0)
+		var/percent = get_tool_durability_percent(src)
+		var/list/condition = get_durability_condition(percent)
+		. += span_notice("Durability: [resurgence_durability]/[resurgence_max_durability] ([percent]%) - <span class='[condition[2]]'>[condition[1]]</span>")
+
+/obj/item/shovel/examine(mob/user)
+	. = ..()
+	if(is_durability_active() && resurgence_max_durability > 0)
+		var/percent = get_tool_durability_percent(src)
+		var/list/condition = get_durability_condition(percent)
+		. += span_notice("Durability: [resurgence_durability]/[resurgence_max_durability] ([percent]%) - <span class='[condition[2]]'>[condition[1]]</span>")
+
+/obj/item/crowbar/examine(mob/user)
+	. = ..()
+	if(is_durability_active() && resurgence_max_durability > 0)
+		var/percent = get_tool_durability_percent(src)
+		var/list/condition = get_durability_condition(percent)
+		. += span_notice("Durability: [resurgence_durability]/[resurgence_max_durability] ([percent]%) - <span class='[condition[2]]'>[condition[1]]</span>")

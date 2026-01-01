@@ -20,6 +20,8 @@
 #define CRAFT_CAT_PROCESSING "Processing"
 #define CRAFT_CAT_TOOLS "Tools"
 #define CRAFT_CAT_FLOORING "Flooring"
+#define CRAFT_CAT_ART "Art"
+#define CRAFT_CAT_PAPERWORK "Paperwork"
 
 /obj/structure/resurgence_crafting_table
 	name = "crafting table"
@@ -286,6 +288,389 @@
 		"total_work" = 15,
 		"desc" = "2 Cloth + 1 Gold -> 4 Royal Blue Carpet",
 		"category" = CRAFT_CAT_FLOORING
+	)
+
+	// Art Supplies
+	recipes["Canvas (11x11)"] = list(
+		"result" = /obj/item/canvas,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
+		"total_work" = 10,
+		"desc" = "2 Cloth -> Small Canvas (11x11)",
+		"category" = CRAFT_CAT_ART
+	)
+
+	recipes["Canvas (19x19)"] = list(
+		"result" = /obj/item/canvas/nineteen_nineteen,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
+		"total_work" = 15,
+		"desc" = "3 Cloth -> Medium Canvas (19x19)",
+		"category" = CRAFT_CAT_ART
+	)
+
+	recipes["Canvas (23x19)"] = list(
+		"result" = /obj/item/canvas/twentythree_nineteen,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
+		"total_work" = 15,
+		"desc" = "4 Cloth -> Wide Canvas (23x19)",
+		"category" = CRAFT_CAT_ART
+	)
+
+	recipes["Canvas (23x23)"] = list(
+		"result" = /obj/item/canvas/twentythree_twentythree,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 5),
+		"total_work" = 20,
+		"desc" = "5 Cloth -> Large Canvas (23x23)",
+		"category" = CRAFT_CAT_ART
+	)
+
+	recipes["Painting Frame"] = list(
+		"result" = /obj/item/wallframe/painting/resurgence,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/mineral/wood = 2),
+		"total_work" = 10,
+		"desc" = "2 Wood -> Painting Frame (wall mount for canvases, paintings preserved)",
+		"category" = CRAFT_CAT_ART
+	)
+
+	// Paperwork - Pens
+	recipes["Pen (Black)"] = list(
+		"result" = /obj/item/pen,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 1),
+		"total_work" = 5,
+		"desc" = "1 Metal -> Black Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Pen (Blue)"] = list(
+		"result" = /obj/item/pen/blue,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 1),
+		"total_work" = 5,
+		"desc" = "1 Metal -> Blue Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Pen (Red)"] = list(
+		"result" = /obj/item/pen/red,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 1),
+		"total_work" = 5,
+		"desc" = "1 Metal -> Red Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Pen (Invisible)"] = list(
+		"result" = /obj/item/pen/invisible,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 1),
+		"total_work" = 5,
+		"desc" = "1 Metal -> Invisible Ink Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Four-Color Pen"] = list(
+		"result" = /obj/item/pen/fourcolor,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/metal = 2),
+		"total_work" = 10,
+		"desc" = "2 Metal -> Four-Color Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Fountain Pen"] = list(
+		"result" = /obj/item/pen/fountain,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 1,
+			/obj/item/stack/sheet/mineral/wood = 2
+		),
+		"total_work" = 15,
+		"desc" = "1 Metal + 2 Wood -> Fountain Pen",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Charcoal Stylus"] = list(
+		"result" = /obj/item/pen/charcoal,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/mineral/wood = 1),
+		"total_work" = 5,
+		"desc" = "1 Wood -> Charcoal Stylus",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	// Paperwork - Paper & Storage
+	recipes["Paper"] = list(
+		"result" = /obj/item/paper,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 1),
+		"total_work" = 5,
+		"desc" = "1 Cloth -> Paper",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Folder"] = list(
+		"result" = /obj/item/folder,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 5,
+		"desc" = "1 Cloth + 1 Wood -> Folder",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Folder (Blue)"] = list(
+		"result" = /obj/item/folder/blue,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 5,
+		"desc" = "1 Cloth + 1 Wood -> Blue Folder",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Folder (Red)"] = list(
+		"result" = /obj/item/folder/red,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 5,
+		"desc" = "1 Cloth + 1 Wood -> Red Folder",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Folder (Yellow)"] = list(
+		"result" = /obj/item/folder/yellow,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 5,
+		"desc" = "1 Cloth + 1 Wood -> Yellow Folder",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Folder (White)"] = list(
+		"result" = /obj/item/folder/white,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/sheet/mineral/wood = 1
+		),
+		"total_work" = 5,
+		"desc" = "1 Cloth + 1 Wood -> White Folder",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Clipboard"] = list(
+		"result" = /obj/item/clipboard,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 1,
+			/obj/item/stack/sheet/mineral/wood = 2
+		),
+		"total_work" = 10,
+		"desc" = "1 Metal + 2 Wood -> Clipboard",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Empty Paper Bin"] = list(
+		"result" = /obj/item/paper_bin/empty,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/mineral/wood = 3),
+		"total_work" = 10,
+		"desc" = "3 Wood -> Empty Paper Bin",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	// Paperwork - Hand Labeler
+	recipes["Hand Labeler"] = list(
+		"result" = /obj/item/hand_labeler,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 2,
+			/obj/item/stack/sheet/metal = 2
+		),
+		"total_work" = 15,
+		"desc" = "2 Cloth + 2 Metal -> Hand Labeler",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Hand Labeler Refill"] = list(
+		"result" = /obj/item/hand_labeler_refill,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 1),
+		"total_work" = 5,
+		"desc" = "1 Cloth -> Hand Labeler Refill",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	// Paperwork - Stamps
+	recipes["GRANTED Stamp"] = list(
+		"result" = /obj/item/stamp,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> GRANTED Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["DENIED Stamp"] = list(
+		"result" = /obj/item/stamp/denied,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> DENIED Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["QM Stamp"] = list(
+		"result" = /obj/item/stamp/qm,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Quartermaster's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Captain Stamp"] = list(
+		"result" = /obj/item/stamp/captain,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Captain's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["HoP Stamp"] = list(
+		"result" = /obj/item/stamp/hop,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Head of Personnel's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["HoS Stamp"] = list(
+		"result" = /obj/item/stamp/hos,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Head of Security's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["CE Stamp"] = list(
+		"result" = /obj/item/stamp/ce,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Chief Engineer's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["RD Stamp"] = list(
+		"result" = /obj/item/stamp/rd,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Research Director's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["CMO Stamp"] = list(
+		"result" = /obj/item/stamp/cmo,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Chief Medical Officer's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Law Stamp"] = list(
+		"result" = /obj/item/stamp/law,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Law Office's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Clown Stamp"] = list(
+		"result" = /obj/item/stamp/clown,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Clown's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Mime Stamp"] = list(
+		"result" = /obj/item/stamp/mime,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Mime's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	recipes["Chaplain Stamp"] = list(
+		"result" = /obj/item/stamp/chap,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Wood + 1 Cloth -> Chaplain's Stamp",
+		"category" = CRAFT_CAT_PAPERWORK
 	)
 
 /obj/structure/resurgence_crafting_table/attack_hand(mob/user)
@@ -815,3 +1200,5 @@
 #undef CRAFT_CAT_PROCESSING
 #undef CRAFT_CAT_TOOLS
 #undef CRAFT_CAT_FLOORING
+#undef CRAFT_CAT_ART
+#undef CRAFT_CAT_PAPERWORK

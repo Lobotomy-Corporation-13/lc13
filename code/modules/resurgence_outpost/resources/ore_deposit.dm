@@ -9,6 +9,9 @@
 /// Time for a depleted deposit to regenerate
 #define ORE_DEPOSIT_REGEN_TIME (10 MINUTES)
 
+/// Global list of ore types that have spawned at least once (ensures variety)
+GLOBAL_LIST_EMPTY(resurgence_spawned_ore_types)
+
 /obj/structure/resurgence_ore_deposit
 	name = "ore deposit"
 	desc = "A rocky deposit containing valuable ore. It appears to slowly regenerate over time."
@@ -86,12 +89,27 @@
 	// Spread to nearby deposits after a short delay
 	addtimer(CALLBACK(src, PROC_REF(spread_to_neighbors)), 1 SECONDS)
 
-/// Pick a random ore type based on weights
+/// Pick a random ore type based on weights, ensuring each type spawns at least once
 /obj/structure/resurgence_ore_deposit/proc/pick_random_ore()
-	var/list/weighted_list = list()
+	// First, check if there are any ore types that haven't spawned yet
+	var/list/unspawned_ores = list()
 	for(var/ore in ore_data)
-		weighted_list[ore] = ore_data[ore]["weight"]
-	ore_type = pickweight(weighted_list)
+		if(!(ore in GLOB.resurgence_spawned_ore_types))
+			unspawned_ores += ore
+
+	// If there are unspawned ore types, pick one of those first (guarantees variety)
+	if(length(unspawned_ores))
+		ore_type = pick(unspawned_ores)
+	else
+		// All ore types have spawned at least once, use weighted random
+		var/list/weighted_list = list()
+		for(var/ore in ore_data)
+			weighted_list[ore] = ore_data[ore]["weight"]
+		ore_type = pickweight(weighted_list)
+
+	// Track that this ore type has spawned
+	GLOB.resurgence_spawned_ore_types |= ore_type
+
 	apply_ore_data()
 
 /// Apply data from the ore_data list based on ore_type

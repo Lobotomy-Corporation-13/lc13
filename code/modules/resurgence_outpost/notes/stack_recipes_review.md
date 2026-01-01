@@ -40,19 +40,13 @@ Check which ones should be added to the Resurgence crafting system.
 
 ## Wood Recipes (`GLOB.wood_recipes`)
 
-### Items [ ]
+### Items [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Picture Frame | 1 Wood | Decor |
 | Painting Frame | 1 Wood | Decor |
-| Wooden Sandals | 1 Wood | Footwear |
-| Wood Floor Tile | 1 Wood -> 4 tiles | Already in crafting table |
-| Rolling Pin | 2 Wood | Kitchen |
-| Tiki Mask | 2 Wood | Clothing |
-| Mortar | 3 Wood | Kitchen/Alchemy |
-| Wooden Bucket | 3 Wood | Container |
 
-### Structures [ ]
+### Structures [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Wood Table Frame | 2 Wood | Furniture |
@@ -72,7 +66,7 @@ Check which ones should be added to the Resurgence crafting system.
 
 ## Cloth Recipes (`GLOB.cloth_recipes`)
 
-### Clothing [ ]
+### Clothing [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | White Jumpskirt | 3 Cloth | |
@@ -85,7 +79,7 @@ Check which ones should be added to the Resurgence crafting system.
 | White Beanie | 2 Cloth | |
 | Blindfold | 2 Cloth | |
 
-### Bags [ ]
+### Bags [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Backpack | 4 Cloth | Already in loom |
@@ -94,12 +88,12 @@ Check which ones should be added to the Resurgence crafting system.
 | Book Bag | 4 Cloth | |
 | Mining Satchel | 4 Cloth | Mining |
 
-### Misc [ ]
+### Misc [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | Bedsheet | 3 Cloth | Furniture |
 
-### Canvas [ ]
+### Canvas [X]
 | Recipe | Cost | Notes |
 |--------|------|-------|
 | 19x19 Canvas | 3 Cloth | Art |
@@ -181,11 +175,3 @@ Check which ones should be added to the Resurgence crafting system.
 - [ ] Canvas (3-5 Cloth)
 - [ ] Various bags (4 Cloth each)
 - [ ] Leather clothing items
-
-### Skip (Too High-Tech or Special)
-- Machine/Computer Frames
-- Airlocks
-- APC/Alarm Frames
-- Turret Frame
-- AI Core
-- Bomb Assembly

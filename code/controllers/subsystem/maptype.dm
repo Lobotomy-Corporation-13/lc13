@@ -12,7 +12,7 @@ SUBSYSTEM_DEF(maptype)
 	var/jobtype		//If a map RNGs which jobs are available, use this
 
 	//All the map tags that delete all jobs and replace them with others.
-	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "rcorp_factory", "office")
+	var/list/clearmaps = list("rcorp", "city", "wcorp", "limbus_labs", "fixers", "rcorp_factory", "office", "outpost")
 
 	//LC13 Maps, this enables Traits and cores
 	var/list/lc_maps = list("standard", "fishing")

@@ -479,6 +479,242 @@
 		/obj/item/stack/sheet/metal = 2
 	)
 
+/obj/structure/resurgence_blueprint/stool
+	name = "stool blueprint"
+	result_name = "stool"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "stool"
+	result_type = /obj/structure/chair/stool
+
+/obj/structure/resurgence_blueprint/stool/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/bar_stool
+	name = "bar stool blueprint"
+	result_name = "bar stool"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "bar"
+	result_type = /obj/structure/chair/stool/bar
+
+/obj/structure/resurgence_blueprint/bar_stool/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/comfy_chair
+	name = "comfy chair blueprint"
+	result_name = "comfy chair"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "comfychair"
+	result_type = /obj/structure/chair/comfy/beige
+
+/obj/structure/resurgence_blueprint/comfy_chair/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 2
+	)
+
+/obj/structure/resurgence_blueprint/office_chair
+	name = "office chair blueprint"
+	result_name = "office chair"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "officechair_dark"
+	result_type = /obj/structure/chair/office
+
+/obj/structure/resurgence_blueprint/office_chair/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 5
+	)
+
+/obj/structure/resurgence_blueprint/winged_chair
+	name = "winged wooden chair blueprint"
+	result_name = "winged wooden chair"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "wooden_chair_wings"
+	result_type = /obj/structure/chair/wood/wings
+
+/obj/structure/resurgence_blueprint/winged_chair/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 3
+	)
+
+/obj/structure/resurgence_blueprint/sofa_middle
+	name = "sofa (middle) blueprint"
+	result_name = "sofa"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "sofa_mid"
+	result_type = /obj/structure/chair/sofa
+
+/obj/structure/resurgence_blueprint/sofa_middle/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/sofa_left
+	name = "sofa (left) blueprint"
+	result_name = "sofa left end"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "sofa_left"
+	result_type = /obj/structure/chair/sofa/left
+
+/obj/structure/resurgence_blueprint/sofa_left/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/sofa_right
+	name = "sofa (right) blueprint"
+	result_name = "sofa right end"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "sofa_right"
+	result_type = /obj/structure/chair/sofa/right
+
+/obj/structure/resurgence_blueprint/sofa_right/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/sofa_corner
+	name = "sofa (corner) blueprint"
+	result_name = "sofa corner"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "sofa_corner"
+	result_type = /obj/structure/chair/sofa/corner
+
+/obj/structure/resurgence_blueprint/sofa_corner/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 1
+	)
+
+/obj/structure/resurgence_blueprint/pew
+	name = "pew blueprint"
+	result_name = "pew"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "pew"
+	result_type = /obj/structure/chair/pew
+
+/obj/structure/resurgence_blueprint/pew/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 3
+	)
+
+/obj/structure/resurgence_blueprint/pew_left
+	name = "pew (left) blueprint"
+	result_name = "pew left end"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "pew_left"
+	result_type = /obj/structure/chair/pew/left
+
+/obj/structure/resurgence_blueprint/pew_left/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 3
+	)
+
+/obj/structure/resurgence_blueprint/pew_right
+	name = "pew (right) blueprint"
+	result_name = "pew right end"
+	icon = 'icons/obj/chairs.dmi'
+	icon_state = "pew_right"
+	result_type = /obj/structure/chair/pew/right
+
+/obj/structure/resurgence_blueprint/pew_right/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 3
+	)
+
+/obj/structure/resurgence_blueprint/dresser
+	name = "dresser blueprint"
+	result_name = "dresser"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "dresser"
+	result_type = /obj/structure/dresser
+
+/obj/structure/resurgence_blueprint/dresser/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 10
+	)
+
+/obj/structure/resurgence_blueprint/bookcase
+	name = "bookcase blueprint"
+	result_name = "bookcase"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "bookcase"
+	result_type = /obj/structure/bookcase
+
+/obj/structure/resurgence_blueprint/bookcase/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 35
+	)
+
+/obj/structure/resurgence_blueprint/dog_bed
+	name = "dog bed blueprint"
+	result_name = "dog bed"
+	icon = 'icons/obj/objects.dmi'
+	icon_state = "dogbed"
+	result_type = /obj/structure/bed/dogbed
+
+/obj/structure/resurgence_blueprint/dog_bed/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 10
+	)
+
+// ===========================================
+// STORAGE BLUEPRINTS (ADDITIONAL)
+// ===========================================
+
+/obj/structure/resurgence_blueprint/ore_box
+	name = "ore box blueprint"
+	result_name = "ore box"
+	icon = 'icons/obj/mining.dmi'
+	icon_state = "orebox"
+	result_type = /obj/structure/ore_box
+
+/obj/structure/resurgence_blueprint/ore_box/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 4
+	)
+
+// ===========================================
+// DECOR BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/wooden_barricade
+	name = "wooden barricade blueprint"
+	result_name = "wooden barricade"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "yourshitiscrappy"
+	result_type = /obj/structure/barricade/wooden
+
+/obj/structure/resurgence_blueprint/wooden_barricade/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 5
+	)
+
+/obj/structure/resurgence_blueprint/meatspike
+	name = "meat spike blueprint"
+	result_name = "meat spike frame"
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "yourshitiscrappy"
+	result_type = /obj/structure/kitchenspike_frame
+
+/obj/structure/resurgence_blueprint/meatspike/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 5
+	)
+
+/obj/structure/resurgence_blueprint/shower
+	name = "shower blueprint"
+	result_name = "shower frame"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "yourshitiscrappy"
+	result_type = /obj/structure/showerframe
+
+/obj/structure/resurgence_blueprint/shower/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 2
+	)
+
 // ===========================================
 // LOGISTICS BLUEPRINTS
 // ===========================================
@@ -541,3 +777,47 @@
 
 	// Remove the blueprint
 	qdel(src)
+
+// ===========================================
+// ART BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/easel
+	name = "easel blueprint"
+	result_name = "easel"
+	icon = 'icons/obj/artstuff.dmi'
+	icon_state = "easel"
+	result_type = /obj/structure/easel
+
+/obj/structure/resurgence_blueprint/easel/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 5
+	)
+
+// ===========================================
+// OFFICE BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/filing_cabinet
+	name = "filing cabinet blueprint"
+	result_name = "filing cabinet"
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "filingcabinet"
+	result_type = /obj/structure/filingcabinet
+
+/obj/structure/resurgence_blueprint/filing_cabinet/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 4
+	)
+
+/obj/structure/resurgence_blueprint/chest_drawer
+	name = "chest drawer blueprint"
+	result_name = "chest drawer"
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "chestdrawer"
+	result_type = /obj/structure/filingcabinet/chestdrawer
+
+/obj/structure/resurgence_blueprint/chest_drawer/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 3
+	)

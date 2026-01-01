@@ -1,14 +1,35 @@
 /**
  * Resurgence Outpost - Loom
  *
- * A weaving station for processing plant fibers into cloth and crafting textile components.
- * Also crafts faith-boosting outfits from cloth.
- * Subtype of crafting_table with different recipes and theming.
+ * A weaving station for processing plant fibers into cloth, crafting faith fabrics,
+ * and weaving clothing from any existing design in the game.
+ *
+ * Woven clothing creates generic "resurgence" subtypes that copy visuals from originals.
+ * These can have faith fabrics attached for passive faith bonuses.
  */
+
+/// Category for fabric crafting
+#define CRAFT_CAT_FABRICS "Fabrics"
+/// Category for material processing
+#define CRAFT_CAT_MATERIALS "Materials"
+/// Category for storage items
+#define CRAFT_CAT_STORAGE "Storage"
+/// Clothing categories
+#define CRAFT_CAT_JUMPSUITS "Jumpsuits"
+#define CRAFT_CAT_OUTERWEAR "Outerwear"
+#define CRAFT_CAT_HEADWEAR "Headwear"
+#define CRAFT_CAT_MASKS "Masks"
+#define CRAFT_CAT_GLOVES "Gloves"
+#define CRAFT_CAT_SHOES "Shoes"
+
+/// Uniform cloth cost for all clothing
+#define CLOTHING_CLOTH_COST 10
+/// Work required for all clothing
+#define CLOTHING_WORK_COST 25
 
 /obj/structure/resurgence_crafting_table/loom
 	name = "loom"
-	desc = "A wooden loom for weaving fibers into cloth and crafting garments."
+	desc = "A wooden loom for weaving fibers into cloth, crafting faith fabrics, and creating clothing."
 	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "loom"
 
@@ -17,121 +38,72 @@
 	busy_verb = "weaving"
 	ui_color = "purple"
 
+	/// Cached list of valid clothing types - built once globally
+	var/static/list/cached_clothing_types
+	/// Cached clothing metadata for UI - list of lists with name, icon, category, source_type
+	var/static/list/cached_clothing_data
+
 /obj/structure/resurgence_crafting_table/loom/init_recipes()
 	recipes = list()
 
 	// === MATERIALS ===
 
-	// Fiber Processing
 	recipes["Cloth"] = list(
 		"result" = /obj/item/stack/sheet/cotton/cloth,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton = 3),
 		"total_work" = 15,
-		"desc" = "3 Cotton -> 1 Cloth"
+		"desc" = "3 Cotton -> 1 Cloth",
+		"category" = CRAFT_CAT_MATERIALS
 	)
 
-	// === OUTFITS (Body) ===
+	// === FAITH FABRICS ===
 
-	recipes["White Robe"] = list(
-		"result" = /obj/item/clothing/suit/chaplainsuit/whiterobe,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 8),
-		"total_work" = 30,
-		"desc" = "8 Cloth -> White Robe (+0.3 faith)",
-		"faith_bonus" = 0.3
-	)
-
-	recipes["Monk's Habit"] = list(
-		"result" = /obj/item/clothing/suit/hooded/chaplainsuit/monkhabit,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 10),
-		"total_work" = 40,
-		"desc" = "10 Cloth -> Monk's Habit (+0.4 faith)",
-		"faith_bonus" = 0.4
-	)
-
-	recipes["Owl Cloak"] = list(
-		"result" = /obj/item/clothing/suit/toggle/owlwings,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 12),
-		"total_work" = 50,
-		"desc" = "12 Cloth -> Owl Cloak (+0.5 faith)",
-		"faith_bonus" = 0.5
-	)
-
-	recipes["Hastur's Robe"] = list(
-		"result" = /obj/item/clothing/suit/hastur,
+	recipes["Simple Azure Faith Fabric"] = list(
+		"result" = /obj/item/resurgence_fabric/simple,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 20,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/sheet/cotton/cloth = 15,
+			/obj/item/resurgence_component/rope = 1
+		),
+		"total_work" = 20,
+		"desc" = "15 Cloth + 1 Rope -> Simple Faith Fabric (+0.1 faith)",
+		"category" = CRAFT_CAT_FABRICS
+	)
+
+	recipes["Advanced Azure Faith Fabric"] = list(
+		"result" = /obj/item/resurgence_fabric/advanced,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 25,
+			/obj/item/resurgence_component/rope = 3
+		),
+		"total_work" = 40,
+		"desc" = "25 Cloth + 3 Rope -> Advanced Faith Fabric (+0.5 faith)",
+		"category" = CRAFT_CAT_FABRICS
+	)
+
+	recipes["Elegant Azure Faith Fabric"] = list(
+		"result" = /obj/item/resurgence_fabric/elegant,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 40,
+			/obj/item/resurgence_component/rope = 5
 		),
 		"total_work" = 60,
-		"desc" = "20 Cloth + 2 Rope -> Hastur's Robe (+0.8 faith)",
-		"faith_bonus" = 0.8
+		"desc" = "40 Cloth + 5 Rope -> Elegant Faith Fabric (+1.0 faith)",
+		"category" = CRAFT_CAT_FABRICS
 	)
 
-	recipes["Bishop's Robes"] = list(
-		"result" = /obj/item/clothing/suit/chaplainsuit/bishoprobe,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 30,
-			/obj/item/resurgence_component/rope = 4
-		),
-		"total_work" = 90,
-		"desc" = "30 Cloth + 4 Rope -> Bishop's Robes (+1 faith)",
-		"faith_bonus" = 1
-	)
-
-	// === OUTFITS (Head) ===
-
-	recipes["Nun Hood"] = list(
-		"result" = /obj/item/clothing/head/nun_hood,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
-		"total_work" = 15,
-		"desc" = "4 Cloth -> Nun Hood (+0.2 faith)",
-		"faith_bonus" = 0.2
-	)
-
-	recipes["Ushanka"] = list(
-		"result" = /obj/item/clothing/head/ushanka,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 5),
-		"total_work" = 20,
-		"desc" = "5 Cloth -> Ushanka (+0.2 faith)",
-		"faith_bonus" = 0.2
-	)
-
-	// === OUTFITS (Accessories) ===
-
-	recipes["Scarf"] = list(
-		"result" = /obj/item/clothing/neck/scarf,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
-		"total_work" = 10,
-		"desc" = "3 Cloth -> Scarf (+0.1 faith)",
-		"faith_bonus" = 0.1
-	)
-
-	recipes["Black Gloves"] = list(
-		"result" = /obj/item/clothing/gloves/color/black,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
-		"total_work" = 10,
-		"desc" = "3 Cloth -> Black Gloves (+0.1 faith)",
-		"faith_bonus" = 0.1
-	)
-
-	// === STORAGE (Backpacks) ===
+	// === STORAGE ===
 
 	recipes["Backpack"] = list(
 		"result" = /obj/item/storage/backpack,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 8),
 		"total_work" = 25,
-		"desc" = "8 Cloth -> Backpack"
+		"desc" = "8 Cloth -> Backpack",
+		"category" = CRAFT_CAT_STORAGE
 	)
 
 	recipes["Explorer Backpack"] = list(
@@ -142,7 +114,8 @@
 			/obj/item/stack/sheet/leather = 2
 		),
 		"total_work" = 30,
-		"desc" = "10 Cloth + 2 Leather -> Explorer Backpack"
+		"desc" = "10 Cloth + 2 Leather -> Explorer Backpack",
+		"category" = CRAFT_CAT_STORAGE
 	)
 
 	recipes["Satchel"] = list(
@@ -150,7 +123,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 6),
 		"total_work" = 20,
-		"desc" = "6 Cloth -> Satchel"
+		"desc" = "6 Cloth -> Satchel",
+		"category" = CRAFT_CAT_STORAGE
 	)
 
 	recipes["Leather Satchel"] = list(
@@ -158,7 +132,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/leather = 5),
 		"total_work" = 25,
-		"desc" = "5 Leather -> Leather Satchel"
+		"desc" = "5 Leather -> Leather Satchel",
+		"category" = CRAFT_CAT_STORAGE
 	)
 
 	recipes["Duffel Bag"] = list(
@@ -169,31 +144,147 @@
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 35,
-		"desc" = "12 Cloth + 1 Rope -> Duffel Bag"
+		"desc" = "12 Cloth + 1 Rope -> Duffel Bag",
+		"category" = CRAFT_CAT_STORAGE
 	)
 
-/// Override create_result to handle faith clothing
-/obj/structure/resurgence_crafting_table/loom/create_result(mob/user, list/recipe)
-	var/result_type = recipe["result"]
-	var/result_amount = recipe["result_amount"]
-	var/faith_bonus = recipe["faith_bonus"]
+	// === DYNAMIC CLOTHING ===
+	// Build cache if not already done, then add clothing recipes
+	build_clothing_cache()
+	add_clothing_recipes()
 
-	if(ispath(result_type, /obj/item/stack))
-		// Create a stack with the correct amount (no faith bonus for stacks)
-		new result_type(get_turf(src), result_amount)
-	else if(ispath(result_type, /obj/item/clothing) && faith_bonus)
-		// Create clothing with faith bonus component
-		for(var/i in 1 to result_amount)
-			var/obj/item/clothing/C = new result_type(get_turf(src))
-			// Rename to indicate clan crafting
-			C.name = "clan-woven [C.name]"
-			C.desc += " This garment was lovingly crafted by the Resurgence Clan."
-			// Add faith bonus component
-			C.AddComponent(/datum/component/faith_clothing, faith_bonus)
-	else
-		// Create individual items (components, etc.)
-		for(var/i in 1 to result_amount)
-			new result_type(get_turf(src))
+/// Build the global clothing cache - called once, caches all valid clothing types
+/obj/structure/resurgence_crafting_table/loom/proc/build_clothing_cache()
+	if(cached_clothing_types)
+		return  // Already built
+
+	cached_clothing_types = list()
+	cached_clothing_data = list()
+
+	var/list/base_types = list(
+		list("base" = /obj/item/clothing/under, "category" = CRAFT_CAT_JUMPSUITS, "resurgence" = /obj/item/clothing/under/resurgence),
+		list("base" = /obj/item/clothing/suit, "category" = CRAFT_CAT_OUTERWEAR, "resurgence" = /obj/item/clothing/suit/resurgence),
+		list("base" = /obj/item/clothing/head, "category" = CRAFT_CAT_HEADWEAR, "resurgence" = /obj/item/clothing/head/resurgence),
+		list("base" = /obj/item/clothing/mask, "category" = CRAFT_CAT_MASKS, "resurgence" = /obj/item/clothing/mask/resurgence),
+		list("base" = /obj/item/clothing/gloves, "category" = CRAFT_CAT_GLOVES, "resurgence" = /obj/item/clothing/gloves/resurgence),
+		list("base" = /obj/item/clothing/shoes, "category" = CRAFT_CAT_SHOES, "resurgence" = /obj/item/clothing/shoes/resurgence)
+	)
+
+	for(var/list/type_info in base_types)
+		var/base_type = type_info["base"]
+		var/category = type_info["category"]
+		var/resurgence_type = type_info["resurgence"]
+
+		for(var/clothing_type in subtypesof(base_type))
+			// Skip excluded types
+			if(is_excluded_clothing(clothing_type))
+				continue
+
+			// Get initial values for display
+			var/obj/item/clothing/temp = clothing_type
+			var/clothing_name = initial(temp.name)
+
+			// Skip items with empty or generic names
+			if(!clothing_name || clothing_name == "clothing" || clothing_name == "jumpsuit" || clothing_name == "suit")
+				continue
+
+			// Store in cache
+			cached_clothing_types += clothing_type
+			cached_clothing_data += list(list(
+				"name" = clothing_name,
+				"source_type" = clothing_type,
+				"resurgence_type" = resurgence_type,
+				"category" = category
+			))
+
+/// Check if a clothing type should be excluded from weaving
+/obj/structure/resurgence_crafting_table/loom/proc/is_excluded_clothing(clothing_path)
+	var/path_text = "[clothing_path]"
+
+	// EXCEPTION: Allow city EGO gear suits (check this BEFORE excluding ego/armor)
+	if(ispath(clothing_path, /obj/item/clothing/suit/armor/ego_gear/city))
+		return FALSE
+
+	// Exclude EGO items (except city gear allowed above)
+	if(findtext(path_text, "ego"))
+		return TRUE
+
+	// Exclude our own resurgence types (avoid recursion)
+	if(findtext(path_text, "resurgence"))
+		return TRUE
+
+	// Exclude admin/debug items
+	if(findtext(path_text, "intangible"))
+		return TRUE
+	if(findtext(path_text, "admin"))
+		return TRUE
+
+	// Exclude armored items by path (helmets, hardhats, armor, security gear)
+	// Note: city ego gear is already allowed above
+	if(findtext(path_text, "armor"))
+		return TRUE
+	return FALSE
+
+/// Add clothing recipes from the cache to the recipe list
+/obj/structure/resurgence_crafting_table/loom/proc/add_clothing_recipes()
+	if(!cached_clothing_data)
+		return
+
+	for(var/list/clothing_info in cached_clothing_data)
+		var/clothing_name = clothing_info["name"]
+		var/source_type = clothing_info["source_type"]
+		var/resurgence_type = clothing_info["resurgence_type"]
+		var/category = clothing_info["category"]
+
+		// Create a unique recipe name (capitalize first letter)
+		var/recipe_name = capitalize(clothing_name)
+
+		// Skip if we somehow already have this recipe
+		if(recipes[recipe_name])
+			continue
+
+		recipes[recipe_name] = list(
+			"result" = resurgence_type,
+			"result_amount" = 1,
+			"materials" = list(/obj/item/stack/sheet/cotton/cloth = CLOTHING_CLOTH_COST),
+			"total_work" = CLOTHING_WORK_COST,
+			"desc" = "[CLOTHING_CLOTH_COST] Cloth -> [clothing_name] (no faith - attach fabric for faith)",
+			"category" = category,
+			"is_clothing" = TRUE,
+			"source_type" = source_type
+		)
+
+/// Override create_result to handle clothing visual copying
+/obj/structure/resurgence_crafting_table/loom/create_result(mob/user, list/recipe)
+	// Check if this is a clothing recipe that needs visual copying
+	if(!recipe["is_clothing"])
+		return ..()  // Normal handling for non-clothing
+
+	var/source_type = recipe["source_type"]
+	var/result_type = recipe["result"]
+
+	// Create the resurgence clothing
+	var/obj/item/clothing/C = new result_type(get_turf(src))
+
+	// Copy visual properties from source type
+	var/obj/item/clothing/source = source_type
+	C.name = "clan-woven [initial(source.name)]"
+	C.desc = "[initial(source.desc)] This garment was lovingly crafted by the Resurgence Clan."
+	C.icon = initial(source.icon)
+	C.icon_state = initial(source.icon_state)
+
+	// Copy optional visual properties if they exist
+	var/inhand = initial(source.inhand_icon_state)
+	if(inhand)
+		C.inhand_icon_state = inhand
+
+	var/worn = initial(source.worn_icon)
+	if(worn)
+		C.worn_icon = worn
+
+	var/worn_state = initial(source.worn_icon_state)
+	if(worn_state)
+		C.worn_icon_state = worn_state
 
 // ===== Portable Loom =====
 // Does not require a workshop - works at full speed anywhere
@@ -202,3 +293,15 @@
 	name = "portable loom"
 	desc = "A compact loom that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
 	requires_workshop = FALSE
+
+#undef CRAFT_CAT_FABRICS
+#undef CRAFT_CAT_MATERIALS
+#undef CRAFT_CAT_STORAGE
+#undef CRAFT_CAT_JUMPSUITS
+#undef CRAFT_CAT_OUTERWEAR
+#undef CRAFT_CAT_HEADWEAR
+#undef CRAFT_CAT_MASKS
+#undef CRAFT_CAT_GLOVES
+#undef CRAFT_CAT_SHOES
+#undef CLOTHING_CLOTH_COST
+#undef CLOTHING_WORK_COST

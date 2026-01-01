@@ -83,11 +83,16 @@
 		"Wooden Crate" = /obj/structure/resurgence_blueprint/storage_chest,
 		"Metal Crate" = /obj/structure/resurgence_blueprint/crate,
 		"Large Crate" = /obj/structure/resurgence_blueprint/barrel,
+		"Ore Box" = /obj/structure/resurgence_blueprint/ore_box,
 		"Freezer" = /obj/structure/resurgence_blueprint/freezer,
 		"Refrigerator" = /obj/structure/resurgence_blueprint/fridge,
+		"Dresser" = /obj/structure/resurgence_blueprint/dresser,
+		"Bookcase" = /obj/structure/resurgence_blueprint/bookcase,
 		"Trash Cart" = /obj/structure/resurgence_blueprint/trashcart,
 		"Coffin" = /obj/structure/resurgence_blueprint/coffin,
-		"Trash Bin" = /obj/structure/resurgence_blueprint/trashbin
+		"Trash Bin" = /obj/structure/resurgence_blueprint/trashbin,
+		"Filing Cabinet" = /obj/structure/resurgence_blueprint/filing_cabinet,
+		"Chest Drawer" = /obj/structure/resurgence_blueprint/chest_drawer
 	)
 
 	// Production category - crafting stations
@@ -102,16 +107,33 @@
 		"Stove" = /obj/structure/resurgence_blueprint/stove,
 		"Hand Grinder" = /obj/structure/resurgence_blueprint/grinder,
 		"Griddle" = /obj/structure/resurgence_blueprint/griddle,
+		"Meat Spike" = /obj/structure/resurgence_blueprint/meatspike,
+		"Shower Frame" = /obj/structure/resurgence_blueprint/shower,
 		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder
 	)
 
-	// Furniture category - beds, chairs, tables, racks
+	// Furniture category - beds, chairs, tables, seating
 	blueprint_categories[BLUEPRINT_CAT_FURNITURE] = list(
 		"Bed" = /obj/structure/resurgence_blueprint/bed,
+		"Dog Bed" = /obj/structure/resurgence_blueprint/dog_bed,
 		"Chair" = /obj/structure/resurgence_blueprint/chair,
+		"Winged Chair" = /obj/structure/resurgence_blueprint/winged_chair,
+		"Stool" = /obj/structure/resurgence_blueprint/stool,
+		"Bar Stool" = /obj/structure/resurgence_blueprint/bar_stool,
+		"Comfy Chair" = /obj/structure/resurgence_blueprint/comfy_chair,
+		"Office Chair" = /obj/structure/resurgence_blueprint/office_chair,
+		"Sofa (Middle)" = /obj/structure/resurgence_blueprint/sofa_middle,
+		"Sofa (Left)" = /obj/structure/resurgence_blueprint/sofa_left,
+		"Sofa (Right)" = /obj/structure/resurgence_blueprint/sofa_right,
+		"Sofa (Corner)" = /obj/structure/resurgence_blueprint/sofa_corner,
+		"Pew" = /obj/structure/resurgence_blueprint/pew,
+		"Pew (Left)" = /obj/structure/resurgence_blueprint/pew_left,
+		"Pew (Right)" = /obj/structure/resurgence_blueprint/pew_right,
 		"Table" = /obj/structure/resurgence_blueprint/table,
 		"Table Frame" = /obj/structure/resurgence_blueprint/table_frame,
-		"Rack" = /obj/structure/resurgence_blueprint/rack
+		"Rack" = /obj/structure/resurgence_blueprint/rack,
+		"Wooden Barricade" = /obj/structure/resurgence_blueprint/wooden_barricade,
+		"Easel" = /obj/structure/resurgence_blueprint/easel
 	)
 
 /obj/item/resurgence_outpost_planner/examine(mob/user)
@@ -463,6 +485,7 @@
 	var/obj/structure/resurgence_blueprint/BP = new selected_blueprint(T)
 	if(BP)
 		BP.setDir(selected_direction)
+		BP.blueprint_category = selected_category
 		to_chat(user, span_notice("You place a [BP.result_name] blueprint facing [dir2text(selected_direction)]. Add the required materials to build it."))
 		playsound(T, 'sound/items/deconstruct.ogg', 30, TRUE)
 
@@ -477,6 +500,7 @@
 	// Create the blueprint with wall direction
 	var/obj/structure/resurgence_blueprint/resources_recorder/BP = new selected_blueprint(T, selected_direction)
 	if(BP)
+		BP.blueprint_category = selected_category
 		to_chat(user, span_notice("You place a [BP.result_name] blueprint mounted towards the [dir2text(selected_direction)] wall. Add the required materials to build it."))
 		playsound(T, 'sound/items/deconstruct.ogg', 30, TRUE)
 
@@ -536,28 +560,16 @@
 		to_chat(user, span_warning("Failed to determine room type."))
 		return
 
-	var/default_name = get_default_room_name(room_type)
-
-	// Prompt for custom name
-	var/custom_name = stripped_input(user, "Enter a name for this room:", "Room Designation", default_name, MAX_NAME_LEN)
-
-	if(!custom_name)
-		to_chat(user, span_notice("Room designation cancelled."))
-		return
-
-	// Verify user is still valid
-	if(!user.canUseTopic(src, BE_CLOSE))
-		to_chat(user, span_warning("You need to stay near the planner."))
-		return
+	var/room_name = get_default_room_name(room_type)
 
 	// Create the room
 	to_chat(user, span_notice("Designating room..."))
 	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
 
-	var/area/new_room = create_resurgence_room(room_turfs, room_type, custom_name, user, boundary_walls, boundary_doors)
+	var/area/new_room = create_resurgence_room(room_turfs, room_type, room_name, user, boundary_walls, boundary_doors)
 
 	if(new_room)
-		to_chat(user, span_notice("<b>Success!</b> '[custom_name]' has been designated as a [room_type]."))
+		to_chat(user, span_notice("<b>Success!</b> '[room_name]' has been designated as a [room_type]."))
 		highlight_room(room_turfs)
 	else
 		to_chat(user, span_warning("Failed to create room. Please try again."))
@@ -816,6 +828,9 @@
 		to_chat(user, span_notice("Created farm zone '[zone_name]' with [plots_created] plots. Used [fertilizer_needed] fertilizer."))
 	playsound(user, 'sound/items/deconstruct.ogg', 50, TRUE)
 	SStgui.update_uis(src)
+
+	// Update global objectives (farming zone objectives track zone counts)
+	update_all_objectives()
 
 /// Highlight an existing farm zone's plots
 /obj/item/resurgence_outpost_planner/proc/highlight_farm_zone(datum/farm_zone/zone, mob/user)

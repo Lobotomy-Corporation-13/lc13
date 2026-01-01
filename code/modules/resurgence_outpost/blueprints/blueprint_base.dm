@@ -42,6 +42,12 @@
 	var/mob/last_builder = null
 	/// If TRUE, the result structure will not be anchored (e.g., trash cart)
 	var/unanchored_result = FALSE
+	/// Category this blueprint belongs to (set by outpost_planner)
+	var/blueprint_category = ""
+	/// Base beauty value for production structures (negative)
+	var/production_beauty = -15
+	/// Base beauty value for non-production structures
+	var/base_beauty = 5
 
 /obj/structure/resurgence_blueprint/Initialize(mapload)
 	. = ..()
@@ -144,6 +150,18 @@
 	if(istype(core))
 		return get_stat_beauty_bonus(core.stat_crafting)
 	return 0
+
+/// Calculate the beauty value for the constructed structure
+/// Production structures get negative beauty, others get positive based on crafting skill
+/obj/structure/resurgence_blueprint/proc/calculate_beauty_value(mob/user)
+	// Production structures always have negative beauty (industrial equipment)
+	if(blueprint_category == "Production")
+		return production_beauty
+
+	// Other structures get positive beauty based on crafting skill
+	var/beauty = base_beauty
+	var/skill_bonus = get_construction_beauty_bonus(user)
+	return beauty + skill_bonus
 
 /obj/structure/resurgence_blueprint/examine(mob/user)
 	. = ..()
@@ -260,8 +278,10 @@
 				if(!unanchored_result)
 					S.anchored = TRUE
 
-			// TODO: Apply beauty bonus from builder's construction stat (Step 25)
-			// Use get_construction_beauty_bonus(user) when beauty system is integrated
+			// Apply beauty based on category
+			var/beauty_value = calculate_beauty_value(user)
+			if(beauty_value != 0)
+				result.AddComponent(/datum/component/beauty, beauty_value)
 
 	// Remove the blueprint
 	qdel(src)
