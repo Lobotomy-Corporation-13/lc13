@@ -447,9 +447,6 @@
 
 	// Apply room quality event if there's a change
 	if(faith_change != 0)
-		// Apply room's faith modifier (different room types have different modifiers)
-		faith_change *= current_room.faith_modifier
-
 		// Halve the quality bonus for Living Quarters made with sandstone
 		if(current_room.is_sandstone && current_room.room_type == ROOM_TYPE_LIVING_QUARTERS && faith_change > 0)
 			faith_change *= 0.5

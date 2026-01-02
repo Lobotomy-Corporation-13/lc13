@@ -76,7 +76,9 @@ const ExportObjectivesSection = (props, context) => {
                 <Box
                   color={obj.completed ? 'good' : 'label'}
                   bold={!obj.completed}>
-                  {obj.completed && <Icon name="check" color="good" mr={1} />}
+                  {!!obj.completed && (
+                    <Icon name="check" color="good" mr={1} />
+                  )}
                   {obj.name}
                 </Box>
               </Flex.Item>
@@ -167,7 +169,7 @@ const WarehouseContentsSection = (props, context) => {
           </Stack.Item>
         </Stack>
       )}
-      {exporting && (
+      {!!exporting && (
         <NoticeBox info mt={2}>
           <Icon name="spinner" spin mr={1} />
           Exporting resources...
@@ -219,7 +221,7 @@ const ClosetEntry = (props, context) => {
       <Box pl={3}>
         {closet.contents.map((item, index) => (
           <Box key={index} color={item.contributes ? 'good' : 'label'}>
-            {item.contributes && (
+            {!!item.contributes && (
               <Icon name="arrow-right" color="good" mr={1} />
             )}
             {item.name}: {item.count}

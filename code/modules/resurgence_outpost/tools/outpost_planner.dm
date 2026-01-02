@@ -109,12 +109,13 @@
 		"Griddle" = /obj/structure/resurgence_blueprint/griddle,
 		"Meat Spike" = /obj/structure/resurgence_blueprint/meatspike,
 		"Shower Frame" = /obj/structure/resurgence_blueprint/shower,
-		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder
+		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder,
+		"Machine Fabricator" = /obj/structure/resurgence_blueprint/machine_fabricator
 	)
 
 	// Furniture category - beds, chairs, tables, seating
 	blueprint_categories[BLUEPRINT_CAT_FURNITURE] = list(
-		"Bed" = /obj/structure/resurgence_blueprint/bed,
+		"Wooden Sleeper" = /obj/structure/resurgence_blueprint/bed,
 		"Dog Bed" = /obj/structure/resurgence_blueprint/dog_bed,
 		"Chair" = /obj/structure/resurgence_blueprint/chair,
 		"Winged Chair" = /obj/structure/resurgence_blueprint/winged_chair,
@@ -186,7 +187,6 @@
 		data["in_room"] = TRUE
 		data["room_name"] = current_room.name
 		data["room_type"] = current_room.room_type
-		data["room_faith_modifier"] = get_faith_modifier_info(current_room.room_type)
 
 		// Count room turfs
 		var/room_size = 0
@@ -231,11 +231,9 @@
 			if(length(valid_types) > 0)
 				data["detected_type"] = valid_types[1]  // Primary type
 				data["detected_valid_types"] = valid_types  // All valid types
-				data["detected_faith"] = get_faith_modifier_info(valid_types[1])
 			else
 				data["detected_type"] = null
 				data["detected_valid_types"] = list()
-				data["detected_faith"] = null
 			data["detected_walls"] = detected_walls.len
 			data["detected_doors"] = detected_doors.len
 		else
@@ -291,24 +289,6 @@
 
 	qdel(temp)
 	return data
-
-/// Get a human-readable description of the faith modifier for a room type.
-/obj/item/resurgence_outpost_planner/proc/get_faith_modifier_info(room_type)
-	switch(room_type)
-		if(ROOM_TYPE_WORKSHOP)
-			return "-25% (focused work)"
-		if(ROOM_TYPE_COMMON)
-			return "+50% (community)"
-		if(ROOM_TYPE_STORAGE)
-			return "+10% (organization)"
-		if(ROOM_TYPE_KITCHEN)
-			return "+30% (nourishment)"
-		if(ROOM_TYPE_LIVING_QUARTERS)
-			return "+40% (personal sanctuary)"
-		if(ROOM_TYPE_EXPORT_WAREHOUSE)
-			return "+20% (logistics)"
-		else
-			return "+25% (shelter)"
 
 /obj/item/resurgence_outpost_planner/ui_act(action, params)
 	. = ..()
@@ -597,20 +577,12 @@
 	if(length(valid_types) == 1)
 		room_type = valid_types[1]
 	else
-		// Build a list with faith info for each type
-		var/list/type_choices = list()
-		for(var/rtype in valid_types)
-			type_choices += "[rtype] ([get_faith_modifier_info(rtype)])"
-
-		var/choice = tgui_input_list(user, "This room qualifies as multiple types. Choose one:", "Room Type", type_choices)
+		// Let user pick from valid types
+		var/choice = tgui_input_list(user, "This room qualifies as multiple types. Choose one:", "Room Type", valid_types)
 		if(!choice)
 			to_chat(user, span_notice("Room designation cancelled."))
 			return
-		// Extract room type from the choice string (remove faith info)
-		for(var/rtype in valid_types)
-			if(findtext(choice, rtype))
-				room_type = rtype
-				break
+		room_type = choice
 
 	if(!room_type)
 		to_chat(user, span_warning("Failed to determine room type."))

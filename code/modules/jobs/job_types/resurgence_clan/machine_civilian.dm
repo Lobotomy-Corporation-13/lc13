@@ -34,6 +34,9 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 
+	// Store the name before any changes
+	var/inspiration_name = H.real_name
+
 	// Create a wig matching the player's original hair before species change removes it
 	if(H.hairstyle && H.hairstyle != "Bald")
 		var/obj/item/clothing/head/wig/W = new(get_turf(H))
@@ -61,6 +64,9 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 			"newcomer"
 		)
 		core.add_faith_event("newcomer", event)
+
+	// Tell the player about their inspiration (delayed so they can read it)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(to_chat), H, span_notice("<b>You were inspired by a city folk by the name of [inspiration_name], so you are now acting like them.</b>")), 3 SECONDS)
 
 	..()
 

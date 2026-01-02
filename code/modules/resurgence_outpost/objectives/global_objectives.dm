@@ -106,10 +106,6 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 
 /// Advance to Phase 2 (Export objectives) - with 10 second delay
 /proc/advance_to_phase_two()
-	// Announce phase transition with countdown
-	var/blurb = "ALL BUILDING OBJECTIVES COMPLETE! Phase 2 begins in 10 seconds..."
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 5 SECONDS, blurb, 1 SECONDS, "dark gray", "gold", "left", "CENTER,BOTTOM+2")
-
 	// Notify all resurgence machines about the upcoming phase change
 	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
 		if(!H.mind)

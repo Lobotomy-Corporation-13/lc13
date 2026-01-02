@@ -419,10 +419,10 @@
 // ===========================================
 
 /obj/structure/resurgence_blueprint/bed
-	name = "bed blueprint"
-	result_name = "bed"
-	icon = 'icons/obj/objects.dmi'
-	icon_state = "bed"
+	name = "wooden sleeper blueprint"
+	result_name = "wooden sleeper"
+	icon = 'icons/obj/machines/sleeper.dmi'
+	icon_state = "sleeper_clockwork-open"
 	result_type = /obj/structure/resurgence_bed
 
 /obj/structure/resurgence_blueprint/bed/init_materials()
@@ -822,4 +822,23 @@
 /obj/structure/resurgence_blueprint/wooden_barricade/init_materials()
 	required_materials = list(
 		/obj/item/stack/sheet/mineral/wood = 5
+	)
+
+// ===========================================
+// MEDICAL BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/machine_fabricator
+	name = "machine fabricator blueprint"
+	result_name = "machine fabricator"
+	icon = 'icons/mob/hivebot.dmi'
+	icon_state = "fab_robot_open"
+	result_type = /obj/structure/resurgence_fabricator
+
+/obj/structure/resurgence_blueprint/machine_fabricator/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 20,
+		/obj/item/stack/sheet/glass = 10,
+		/obj/item/stack/sheet/mineral/gold = 5,
+		/obj/item/stack/sheet/mineral/silver = 5
 	)

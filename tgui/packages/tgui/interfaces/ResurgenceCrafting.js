@@ -59,7 +59,7 @@ export const ResurgenceCrafting = (props, context) => {
       <Window.Content>
         <Stack fill vertical>
           {/* Current Craft In Progress */}
-          {has_craft_in_progress && (
+          {!!has_craft_in_progress && (
             <Stack.Item>
               <Section
                 title="Craft In Progress"
@@ -142,7 +142,9 @@ export const ResurgenceCrafting = (props, context) => {
                   <Button
                     icon="search"
                     tooltip="Search"
-                    onClick={() => act('set_search', { search: localSearch })} />
+                    onClick={() => act('set_search', {
+                      search: localSearch,
+                    })} />
                 </Flex.Item>
                 {localSearch && (
                   <Flex.Item ml={0.5}>
@@ -192,7 +194,9 @@ export const ResurgenceCrafting = (props, context) => {
                     icon="angle-left"
                     disabled={current_page <= 1}
                     tooltip="Previous page"
-                    onClick={() => act('set_page', { page: current_page - 1 })} />
+                    onClick={() => act('set_page', {
+                      page: current_page - 1,
+                    })} />
                   <Box inline mx={1} color="label">
                     {current_page} / {total_pages}
                   </Box>
@@ -200,7 +204,9 @@ export const ResurgenceCrafting = (props, context) => {
                     icon="angle-right"
                     disabled={current_page >= total_pages}
                     tooltip="Next page"
-                    onClick={() => act('set_page', { page: current_page + 1 })} />
+                    onClick={() => act('set_page', {
+                      page: current_page + 1,
+                    })} />
                   <Button
                     icon="angles-right"
                     disabled={current_page >= total_pages}

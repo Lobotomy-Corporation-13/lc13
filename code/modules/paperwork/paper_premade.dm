@@ -668,23 +668,20 @@
 	<i>- The Historian</i>"}
 
 /obj/item/paper/fluff/resurgence/guide_room_quality
-	name = "Outpost Guide: Room Types and Faith"
-	info = {"<center><b>Room Types and Faith Modifiers</b></center><br>
+	name = "Outpost Guide: Room Types and Beauty"
+	info = {"<center><b>Room Types and Beauty</b></center><br>
 	<i>A guide prepared by the Historian</i><br>
 	<br>
-	Different rooms affect Faith regeneration differently. Understanding this helps you plan your outpost.<br>
+	Different rooms serve different purposes in your outpost. Understanding this helps you plan effectively.<br>
 	<br>
-	<b>Room Faith Modifiers</b><br>
-	- Common Room: +50% Faith gain (community gathering)<br>
-	- Living Quarters: +40% Faith gain (personal sanctuary)<br>
-	- Kitchen: +30% Faith gain (nourishment preparation)<br>
-	- Basic Room: +25% Faith gain (simple shelter)<br>
-	- Export Warehouse: +20% Faith gain (logistics)<br>
-	- Storage Room: +10% Faith gain (organization)<br>
-	- Workshop: -25% Faith gain (focused on work)<br>
-	<br>
-	<b>Understanding Modifiers</b><br>
-	Workshops have reduced Faith gain because intense focus on labor leaves less room for spiritual connection. This is expected and normal - craft what you need, then rest in a better room.<br>
+	<b>Room Types</b><br>
+	- Living Quarters: Personal sanctuary (requires bed)<br>
+	- Common Room: Community gathering (requires table + chair)<br>
+	- Kitchen: Food preparation (requires stove or fridge)<br>
+	- Workshop: Production focused (requires crafting station)<br>
+	- Storage Room: Organized goods (requires crates/closets)<br>
+	- Export Warehouse: Logistics hub (requires Resources Recorder)<br>
+	- Basic Room: Simple shelter (any enclosed space)<br>
 	<br>
 	<b>Room Beauty</b><br>
 	Rooms have a 'quality' rating based on their contents:<br>
@@ -695,7 +692,7 @@
 	- Shabby: Below 0 beauty per tile<br>
 	<br>
 	<b>Improving Quality</b><br>
-	Add furniture, decorations, and carpet to increase room quality. Quality affects Faith bonuses for room owners.<br>
+	Add furniture, decorations, and carpet to increase room quality. Higher quality rooms are more pleasant to inhabit.<br>
 	<br>
 	<i>- The Historian</i>"}
 

@@ -1,5 +1,7 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, Icon, Input, Section, Stack, Tabs } from '../components';
+import {
+  Box, Button, Flex, Icon, Input, Section, Stack, Tabs,
+} from '../components';
 import { Window } from '../layouts';
 
 export const OutpostPlanner = (props, context) => {
@@ -280,7 +282,6 @@ const RoomTab = (props, context) => {
     in_room,
     room_name,
     room_type,
-    room_faith_modifier,
     room_size,
     room_walls,
     room_doors,
@@ -293,7 +294,6 @@ const RoomTab = (props, context) => {
     can_designate,
     detected_size,
     detected_type,
-    detected_faith,
     detected_walls,
     detected_doors,
     detected_is_cramped,
@@ -316,16 +316,6 @@ const RoomTab = (props, context) => {
                   <Box>
                     <Box inline bold mr={1}>Type:</Box>
                     {room_type}
-                  </Box>
-                  <Box>
-                    <Box inline bold mr={1}>Faith Modifier:</Box>
-                    <Box
-                      inline
-                      color={
-                        room_faith_modifier?.includes('+') ? 'good' : 'bad'
-                      }>
-                      {room_faith_modifier}
-                    </Box>
                   </Box>
                   <Box>
                     <Box inline bold mr={1}>Size:</Box>
@@ -441,19 +431,9 @@ const RoomTab = (props, context) => {
                     {detected_type}
                   </Box>
                   <Box>
-                    <Box inline bold mr={1}>Faith Modifier:</Box>
-                    <Box
-                      inline
-                      color={
-                        detected_faith?.includes('+') ? 'good' : 'average'
-                      }>
-                      {detected_faith}
-                    </Box>
-                  </Box>
-                  <Box>
                     <Box inline bold mr={1}>Size:</Box>
                     {detected_size} tiles
-                    {detected_is_cramped && (
+                    {!!detected_is_cramped && (
                       <Box inline color="average" ml={1}>
                         (Cramped)
                       </Box>
@@ -463,7 +443,7 @@ const RoomTab = (props, context) => {
                     <Box inline bold mr={1}>Boundary:</Box>
                     {detected_walls} walls, {detected_doors} doors
                   </Box>
-                  {detected_is_cramped && (
+                  {!!detected_is_cramped && (
                     <Box color="average" mt={1} fontSize="11px">
                       <Icon name="compress-alt" mr={1} />
                       This space is cramped. Only Living Quarters and
@@ -560,43 +540,31 @@ const RoomTypeGuide = () => {
   const roomTypes = [
     {
       name: 'Living Quarters',
-      faith: '+40%',
-      faithColor: 'good',
       requirements: 'Bed',
       canBeCramped: true,
     },
     {
       name: 'Common Room',
-      faith: '+50%',
-      faithColor: 'good',
       requirements: 'Table + Chair',
       canBeCramped: true,
     },
     {
       name: 'Workshop',
-      faith: '-25%',
-      faithColor: 'average',
       requirements: 'Crafting Table, Forge, or Loom',
       canBeCramped: false,
     },
     {
       name: 'Kitchen',
-      faith: '+30%',
-      faithColor: 'good',
       requirements: 'Stove or Fridge',
       canBeCramped: false,
     },
     {
       name: 'Storage Room',
-      faith: '+10%',
-      faithColor: 'good',
       requirements: 'Crates/closets',
       canBeCramped: false,
     },
     {
       name: 'Basic Room',
-      faith: '+25%',
-      faithColor: 'good',
       requirements: 'Any enclosed space',
       canBeCramped: false,
     },
@@ -606,11 +574,8 @@ const RoomTypeGuide = () => {
     <Box fontSize="11px" mb={2}>
       {roomTypes.map((room, index) => (
         <Flex key={index} mb={0.5} align="center">
-          <Flex.Item basis="28%">
+          <Flex.Item basis="35%">
             <Box bold>{room.name}</Box>
-          </Flex.Item>
-          <Flex.Item basis="15%">
-            <Box color={room.faithColor}>{room.faith}</Box>
           </Flex.Item>
           <Flex.Item grow>
             <Box color="label">{room.requirements}</Box>
@@ -678,7 +643,7 @@ const FarmingTab = (props, context) => {
               }
               disabled={fertilizer_count < 1 && !farming_mode}
               onClick={() => act('toggle_farming_mode')} />
-            {farming_mode && (
+            {!!farming_mode && (
               <Box mt={1}>
                 <Box bold mb={1}>
                   <Icon name="hand-pointer" mr={1} />

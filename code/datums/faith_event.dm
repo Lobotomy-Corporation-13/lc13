@@ -132,3 +132,7 @@
 /// Faith events for newcomers (grace period to find a home)
 /datum/faith_event/newcomer
 	category = "newcomer"
+
+/// Faith events from being revived in a fabricator (existential dread)
+/datum/faith_event/revival_trauma
+	category = "revival_trauma"

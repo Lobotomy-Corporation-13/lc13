@@ -28,8 +28,6 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 
 	/// Room type for designated rooms (null for undesignated areas)
 	var/room_type = null
-	/// Faith modifier multiplier (1.0 = neutral)
-	var/faith_modifier = 1.0
 	// Set outdoors to TRUE for base outpost area
 	outdoors = TRUE
 
@@ -38,14 +36,12 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	name = "Outskirts"
 	outdoors = TRUE
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
-	faith_modifier = 1.0  // Neutral
 
 /// Base room area (enclosed but unspecialized)
 /area/resurgence_outpost/room
 	name = "Clan Room"
 	outdoors = FALSE
 	room_type = ROOM_TYPE_BASIC
-	faith_modifier = 1.25  // +25% faith gain (shelter bonus)
 	icon_state = "blue"
 
 	/// List of wall turfs that form the room boundary
@@ -208,46 +204,40 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 		if(istype(core))
 			to_chat(H, span_warning("The room '[room_name]' has been dissolved! [reason]"))
 
-/// Workshop - production focused, reduced faith for focused work
+/// Workshop - production focused
 /area/resurgence_outpost/room/workshop
 	name = "Workshop"
 	room_type = ROOM_TYPE_WORKSHOP
-	faith_modifier = 0.75  // -25% faith gain (focused on work)
 	icon_state = "yellow"
 
-/// Common Room - community gathering, increased faith
+/// Common Room - community gathering
 /area/resurgence_outpost/room/common
 	name = "Common Room"
 	room_type = ROOM_TYPE_COMMON
-	faith_modifier = 1.5  // +50% faith gain (community)
 	icon_state = "green"
 
-/// Storage Room - organized goods, small faith bonus
+/// Storage Room - organized goods
 /area/resurgence_outpost/room/storage
 	name = "Storage Room"
 	room_type = ROOM_TYPE_STORAGE
-	faith_modifier = 1.1  // +10% faith gain
 	icon_state = "brown"
 
-/// Kitchen - food preparation, moderate faith bonus
+/// Kitchen - food preparation
 /area/resurgence_outpost/room/kitchen
 	name = "Kitchen"
 	room_type = ROOM_TYPE_KITCHEN
-	faith_modifier = 1.3  // +30% faith gain (nourishment)
 	icon_state = "orange"
 
 /// Living Quarters - personal sanctuary, only claimable room type
 /area/resurgence_outpost/room/living_quarters
 	name = "Living Quarters"
 	room_type = ROOM_TYPE_LIVING_QUARTERS
-	faith_modifier = 1.4  // +40% faith gain (personal sanctuary)
 	icon_state = "pink"
 
 /// Export Warehouse - logistics hub for exporting resources
 /area/resurgence_outpost/room/export_warehouse
 	name = "Export Warehouse"
 	room_type = ROOM_TYPE_EXPORT_WAREHOUSE
-	faith_modifier = 1.2  // +20% faith gain (logistics)
 	icon_state = "purple"
 
 /**
@@ -404,20 +394,6 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
  */
 /proc/is_in_living_quarters(atom/source)
 	return is_in_room_type(source, ROOM_TYPE_LIVING_QUARTERS)
-
-/**
- * Get the faith modifier for an area.
- *
- * Arguments:
- * * source - The atom to check
- *
- * Returns: Faith modifier (1.0 = neutral)
- */
-/proc/get_area_faith_modifier(atom/source)
-	var/area/resurgence_outpost/A = get_area(source)
-	if(!istype(A))
-		return 1.0
-	return A.faith_modifier
 
 /**
  * Apply "Homeless" faith event to a player without a room.
