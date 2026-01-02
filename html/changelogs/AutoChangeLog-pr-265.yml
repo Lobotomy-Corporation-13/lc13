@@ -1,0 +1,5 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - code_imp: "Adds Extraction and Records frequencies"
+  - imageadd: "Sprites for Records and Extraction encryption keys"
