@@ -191,6 +191,18 @@
 		"category" = CRAFT_CAT_TOOLS
 	)
 
+	recipes["Cable Coil"] = list(
+		"result" = /obj/item/stack/cable_coil,
+		"result_amount" = 15,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 1,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "1 Metal + 1 Cloth -> 15 Cable Coil (heals machines)",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
 	// Floor Tiles
 	recipes["Plasteel Floor Tiles"] = list(
 		"result" = /obj/item/stack/tile/plasteel,
@@ -707,6 +719,17 @@
 	data["target_copies"] = target_copies
 	data["completed_copies"] = completed_copies
 
+	// OPTIMIZATION: When busy or craft in progress, skip expensive recipe rebuilding
+	// The user can't start new crafts anyway, and the UI will use cached data
+	if(busy)
+		data["recipes"] = list()
+		data["categories"] = list()
+		data["skip_recipes"] = TRUE
+		return data
+
+	// Cache material counts - count each unique material type only once
+	var/list/material_cache = list()
+
 	// Build recipe list with availability info, organized by category
 	var/list/recipe_data = list()
 	var/list/categories = list()
@@ -725,7 +748,14 @@
 
 		for(var/mat_type in materials)
 			var/needed = materials[mat_type]
-			var/have = count_materials(user, mat_type)
+			// Use cached count if available, otherwise count and cache
+			var/have
+			var/cache_key = "[mat_type]"
+			if(cache_key in material_cache)
+				have = material_cache[cache_key]
+			else
+				have = count_materials(user, mat_type)
+				material_cache[cache_key] = have
 			var/mat_name = get_material_name(mat_type)
 
 			mat_data += list(list(
@@ -756,6 +786,7 @@
 
 	data["recipes"] = recipe_data
 	data["categories"] = categories
+	data["skip_recipes"] = FALSE
 
 	return data
 
@@ -883,8 +914,10 @@
 				if(!start_next_copy(user))
 					// Out of materials
 					break
+				// Update UI only when starting a new copy
+				SStgui.update_uis(src)
 
-		SStgui.update_uis(src)
+		// Note: We don't update UI every tick - only on completion or interruption
 
 	busy = FALSE
 	on_craft_stop()

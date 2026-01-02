@@ -28,6 +28,7 @@ export const ResurgenceCrafting = (props, context) => {
     progress_percent,
     target_copies = 1,
     completed_copies = 0,
+    skip_recipes = false,
   } = data;
 
   const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
@@ -37,8 +38,34 @@ export const ResurgenceCrafting = (props, context) => {
     categories[0] || 'All'
   );
 
+  // Cache recipes locally to avoid flickering when server skips sending them
+  const [cachedRecipes, setCachedRecipes] = useLocalState(
+    context,
+    'cachedRecipes',
+    []
+  );
+  const [cachedCategories, setCachedCategories] = useLocalState(
+    context,
+    'cachedCategories',
+    []
+  );
+
+  // Update cache when server sends new recipe data
+  if (!skip_recipes && recipes.length > 0) {
+    if (JSON.stringify(recipes) !== JSON.stringify(cachedRecipes)) {
+      setCachedRecipes(recipes);
+    }
+    if (JSON.stringify(categories) !== JSON.stringify(cachedCategories)) {
+      setCachedCategories(categories);
+    }
+  }
+
+  // Use cached data for display
+  const displayRecipes = skip_recipes ? cachedRecipes : recipes;
+  const displayCategories = skip_recipes ? cachedCategories : categories;
+
   // Filter recipes based on search and category
-  const filteredRecipes = recipes.filter(recipe => {
+  const filteredRecipes = displayRecipes.filter(recipe => {
     // Category filter (unless searching)
     const wrongCategory = activeCategory !== 'All'
       && recipe.category !== activeCategory;
@@ -140,10 +167,10 @@ export const ResurgenceCrafting = (props, context) => {
           </Stack.Item>
 
           {/* Category Tabs */}
-          {!searchText && categories.length > 1 && (
+          {!searchText && displayCategories.length > 1 && (
             <Stack.Item>
               <Tabs fluid>
-                {categories.map(category => (
+                {displayCategories.map(category => (
                   <Tabs.Tab
                     key={category}
                     selected={activeCategory === category}
@@ -162,21 +189,33 @@ export const ResurgenceCrafting = (props, context) => {
               scrollable
               title={`Recipes (${filteredRecipes.length})`}>
               <Stack vertical>
-                {filteredRecipes.map(recipe => (
-                  <Stack.Item key={recipe.name}>
-                    <RecipeCard
-                      recipe={recipe}
-                      busy={busy}
-                      has_craft_in_progress={has_craft_in_progress}
-                      action_verb={action_verb} />
-                  </Stack.Item>
-                ))}
-                {filteredRecipes.length === 0 && (
+                {filteredRecipes.length > 200 ? (
                   <Stack.Item>
                     <Box color="label" italic textAlign="center" mt={2}>
-                      No recipes found matching &quot;{searchText}&quot;
+                      Too many recipes to display ({filteredRecipes.length}).
+                      <br />
+                      Please refine your search or select a category.
                     </Box>
                   </Stack.Item>
+                ) : (
+                  <>
+                    {filteredRecipes.map(recipe => (
+                      <Stack.Item key={recipe.name}>
+                        <RecipeCard
+                          recipe={recipe}
+                          busy={busy}
+                          has_craft_in_progress={has_craft_in_progress}
+                          action_verb={action_verb} />
+                      </Stack.Item>
+                    ))}
+                    {filteredRecipes.length === 0 && (
+                      <Stack.Item>
+                        <Box color="label" italic textAlign="center" mt={2}>
+                          No recipes found matching &quot;{searchText}&quot;
+                        </Box>
+                      </Stack.Item>
+                    )}
+                  </>
                 )}
               </Stack>
             </Section>

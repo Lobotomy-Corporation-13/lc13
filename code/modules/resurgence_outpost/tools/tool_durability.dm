@@ -5,9 +5,9 @@
  * Only active when SSmaptype.maptype == "outpost"
  *
  * Tier System:
- * - Wood: 50 durability, +3 work/tick, 1.25x XP
- * - Iron: 100 durability, +5 work/tick, 1.5x XP
- * - Silver: 200 durability, +8 work/tick, 2.0x XP
+ * - Wood: 200 durability, +3 work/tick, 1.25x XP
+ * - Iron: 300 durability, +5 work/tick, 1.5x XP
+ * - Silver: 500 durability, +8 work/tick, 2.0x XP
  */
 
 /// Tool tier constants
@@ -17,9 +17,9 @@
 #define TOOL_TIER_SILVER 3
 
 /// Durability by tier
-#define DURABILITY_WOOD 100
-#define DURABILITY_IRON 200
-#define DURABILITY_SILVER 400
+#define DURABILITY_WOOD 200
+#define DURABILITY_IRON 300
+#define DURABILITY_SILVER 500
 
 /// Work bonus by tier
 #define WORK_BONUS_WOOD 3

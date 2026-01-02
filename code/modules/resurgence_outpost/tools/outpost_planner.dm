@@ -210,15 +210,33 @@
 			var/list/detected_walls = detection_result["boundary_walls"]
 			var/list/detected_doors = detection_result["boundary_doors"]
 			var/list/valid_types = determine_valid_room_types(detected_turfs)
-			data["can_designate"] = TRUE
+
+			// Check if cramped and filter restricted types for display
+			var/is_cramped = is_room_cramped(detected_turfs)
+			data["detected_is_cramped"] = is_cramped
+			if(is_cramped)
+				var/list/restricted_types = get_cramped_restricted_room_types()
+				var/list/allowed_types = list()
+				for(var/rtype in valid_types)
+					if(!(rtype in restricted_types))
+						allowed_types += rtype
+				valid_types = allowed_types
+
+			data["can_designate"] = length(valid_types) > 0
 			data["detected_size"] = detected_turfs.len
-			data["detected_type"] = valid_types[1]  // Primary type
-			data["detected_valid_types"] = valid_types  // All valid types
-			data["detected_faith"] = get_faith_modifier_info(valid_types[1])
+			if(length(valid_types) > 0)
+				data["detected_type"] = valid_types[1]  // Primary type
+				data["detected_valid_types"] = valid_types  // All valid types
+				data["detected_faith"] = get_faith_modifier_info(valid_types[1])
+			else
+				data["detected_type"] = null
+				data["detected_valid_types"] = list()
+				data["detected_faith"] = null
 			data["detected_walls"] = detected_walls.len
 			data["detected_doors"] = detected_doors.len
 		else
 			data["can_designate"] = FALSE
+			data["detected_is_cramped"] = FALSE
 
 	data["in_use"] = in_use
 
@@ -462,6 +480,23 @@
 		to_chat(user, span_warning("There's already a blueprint here."))
 		return FALSE
 
+	// Check if the result type already exists on this turf
+	if(selected_blueprint)
+		var/obj/structure/resurgence_blueprint/temp_bp = selected_blueprint
+		var/result_type = initial(temp_bp.result_type)
+		if(result_type)
+			// For turfs, check if this turf is already that type
+			if(ispath(result_type, /turf))
+				if(istype(T, result_type))
+					to_chat(user, span_warning("This location already has that floor type."))
+					return FALSE
+			// For objects, check if one exists on the turf
+			else
+				for(var/atom/A in T)
+					if(istype(A, result_type))
+						to_chat(user, span_warning("There's already a [A.name] here."))
+						return FALSE
+
 	// Check for dense objects that would block construction
 	for(var/obj/structure/S in T)
 		if(S.density)
@@ -536,6 +571,19 @@
 
 	// Determine valid room types based on contents
 	var/list/valid_types = determine_valid_room_types(room_turfs)
+
+	// Check if room is cramped and filter out restricted types
+	var/is_cramped = is_room_cramped(room_turfs)
+	if(is_cramped)
+		var/list/restricted_types = get_cramped_restricted_room_types()
+		var/list/allowed_types = list()
+		for(var/rtype in valid_types)
+			if(!(rtype in restricted_types))
+				allowed_types += rtype
+		if(!length(allowed_types))
+			to_chat(user, span_warning("This space is too cramped for a specialized room. It needs more than [ROOM_MIN_TILES] tiles and dimensions of at least [ROOM_MIN_DIMENSION]x[ROOM_MIN_DIMENSION]. Only Living Quarters and Common Rooms can be cramped."))
+			return
+		valid_types = allowed_types
 
 	var/room_type
 	if(length(valid_types) == 1)

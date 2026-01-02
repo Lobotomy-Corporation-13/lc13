@@ -15,12 +15,6 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 #define ROOM_QUALITY_BARE 0
 #define ROOM_QUALITY_SHABBY -20
 
-// Room cramped thresholds
-#define ROOM_MIN_TILES 11  // 10 or less = cramped
-#define ROOM_MIN_DIMENSION 3  // width or height < 3 = cramped
-
-
-
 /// Base outpost area
 /area/resurgence_outpost
 	name = "Resurgence Outpost"
@@ -328,6 +322,9 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	// Register the area with the mapping subsystem
 	new_area.reg_in_areas_in_z()
 
+	// Recalculate beauty from scratch for the new room
+	recalculate_area_beauty(new_area)
+
 	// Announce to creator
 	if(creator)
 		to_chat(creator, span_notice("You have designated this space as '[room_name]' ([room_type])."))
@@ -484,3 +481,33 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 		return 1  // +1 quality tier
 
 	return 0
+
+/**
+ * Recalculate the beauty of an area from scratch.
+ * Resets totalbeauty to 0 and counts all beauty components in the area.
+ *
+ * Arguments:
+ * * target_area - The area to recalculate beauty for
+ */
+/proc/recalculate_area_beauty(area/target_area)
+	if(!target_area)
+		return
+
+	// Don't calculate for outdoor areas
+	if(target_area.outdoors)
+		return
+
+	// Reset beauty to 0
+	target_area.totalbeauty = 0
+
+	// Go through all turfs in the area
+	for(var/turf/T in target_area.contents)
+		// Check all atoms on this turf
+		for(var/atom/A in T.contents)
+			// Get the beauty component if it exists
+			var/datum/component/beauty/B = A.GetComponent(/datum/component/beauty)
+			if(B)
+				target_area.totalbeauty += B.beauty
+
+	// Update the beauty average
+	target_area.update_beauty()

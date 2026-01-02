@@ -57,6 +57,9 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 		// Skip abstract types
 		if(ispath(seed_type, /obj/item/seeds/sample))
 			continue
+		// Skip replicapod (requires special cloning mechanics)
+		if(ispath(seed_type, /obj/item/seeds/replicapod))
+			continue
 		// Create a temporary seed to check its properties
 		var/obj/item/seeds/temp_seed = new seed_type()
 		// Must have a valid yield and product

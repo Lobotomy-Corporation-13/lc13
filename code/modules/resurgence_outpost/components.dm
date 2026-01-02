@@ -70,3 +70,34 @@
 	max_amount = 50
 	w_class = WEIGHT_CLASS_SMALL
 
+// ============================================
+// Sandstone Crafting from Glass Ore
+// ============================================
+
+/// Allow crafting sandstone from glass ore via attack_self
+/obj/item/stack/ore/glass/attack_self(mob/user)
+	. = ..()
+	if(.)
+		return
+
+	// Only in outpost gamemode
+	if(SSmaptype.maptype != "outpost")
+		return
+
+	if(amount < 1)
+		return
+
+	to_chat(user, span_notice("You begin compressing the sand into sandstone..."))
+	if(!do_after(user, 2 SECONDS, src))
+		return
+
+	if(QDELETED(src) || amount < 1)
+		return
+
+	// Create sandstone
+	var/obj/item/stack/sheet/mineral/sandstone/S = new(user.drop_location())
+	use(1)
+	user.put_in_hands(S)
+	to_chat(user, span_notice("You compress the sand into a sandstone brick."))
+	playsound(user, 'sound/effects/stonedoor_openclose.ogg', 30, TRUE)
+

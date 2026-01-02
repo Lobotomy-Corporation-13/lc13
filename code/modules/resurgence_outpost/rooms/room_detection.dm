@@ -8,6 +8,10 @@
 /// Maximum size of a designatable room in tiles
 #define ROOM_MAX_SIZE 100
 
+/// Room cramped thresholds
+#define ROOM_MIN_TILES 9  // 10 or less = cramped
+#define ROOM_MIN_DIMENSION 3  // width or height < 3 = cramped
+
 /// Room type defines
 #define ROOM_TYPE_BASIC           "Basic Room"
 #define ROOM_TYPE_WORKSHOP        "Workshop"
@@ -235,4 +239,60 @@
  */
 /proc/get_sandstone_allowed_room_types()
 	return list(ROOM_TYPE_LIVING_QUARTERS, ROOM_TYPE_WORKSHOP)
+
+/**
+ * Check if a room would be considered cramped based on its turfs.
+ *
+ * A room is cramped if:
+ * - It has 10 or fewer tiles (ROOM_MIN_TILES)
+ * - OR any dimension (width/height) is less than 3 (ROOM_MIN_DIMENSION)
+ *
+ * Arguments:
+ * * turfs - List of turfs that make up the room
+ *
+ * Returns: TRUE if the room is cramped, FALSE otherwise
+ */
+/proc/is_room_cramped(list/turfs)
+	if(!turfs || !length(turfs))
+		return TRUE
+
+	// Check tile count
+	if(length(turfs) <= ROOM_MIN_TILES)
+		return TRUE
+
+	// Calculate bounding box dimensions
+	var/min_x = INFINITY
+	var/max_x = -INFINITY
+	var/min_y = INFINITY
+	var/max_y = -INFINITY
+
+	for(var/turf/T in turfs)
+		min_x = min(min_x, T.x)
+		max_x = max(max_x, T.x)
+		min_y = min(min_y, T.y)
+		max_y = max(max_y, T.y)
+
+	var/width = max_x - min_x + 1
+	var/height = max_y - min_y + 1
+
+	// Check if any dimension is too small
+	if(width < ROOM_MIN_DIMENSION || height < ROOM_MIN_DIMENSION)
+		return TRUE
+
+	return FALSE
+
+/**
+ * Get a list of room types that can be cramped.
+ * Living Quarters and Common Room are exempt from cramped restrictions.
+ *
+ * Returns: List of room type constants that CANNOT be cramped
+ */
+/proc/get_cramped_restricted_room_types()
+	return list(
+		ROOM_TYPE_WORKSHOP,
+		ROOM_TYPE_STORAGE,
+		ROOM_TYPE_KITCHEN,
+		ROOM_TYPE_EXPORT_WAREHOUSE,
+		ROOM_TYPE_BASIC
+	)
 

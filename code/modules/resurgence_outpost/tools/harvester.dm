@@ -454,7 +454,8 @@
 	if(!proximity_flag)
 		return
 
-	attach_to_target(target, user)
+	if(attach_to_target(target, user))
+		return TRUE  // Prevent further processing
 
 /obj/item/harvester/simple/on_harvest_complete()
 	. = ..()
@@ -631,7 +632,8 @@
 	if(!proximity_flag)
 		return
 
-	attach_to_target(target, user)
+	if(attach_to_target(target, user))
+		return TRUE  // Prevent further processing
 
 /obj/item/harvester/advanced/examine(mob/user)
 	. = ..()

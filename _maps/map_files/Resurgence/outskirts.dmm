@@ -131,6 +131,11 @@
 	slowdown = 0
 	},
 /area/resurgence_outpost/outdoors)
+"R" = (
+/obj/effect/landmark/latejoin,
+/obj/effect/landmark/observer_start,
+/turf/open/floor/plating/ironsand,
+/area/resurgence_outpost/outdoors)
 "T" = (
 /obj/structure/resurgence_ore_deposit/blank,
 /turf/open/floor/plating/dirt/dark,
@@ -14166,7 +14171,7 @@ a
 a
 J
 J
-J
+R
 J
 a
 a

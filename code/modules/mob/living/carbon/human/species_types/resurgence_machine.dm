@@ -5,7 +5,6 @@
 	species_traits = list(NOBLOOD)
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
-		TRAIT_NOMETABOLISM,
 		TRAIT_TOXIMMUNE,
 		TRAIT_RESISTHEAT,
 		TRAIT_NOBREATH,
@@ -27,6 +26,11 @@
 	damage_overlay_type = "synth"
 	mutanttongue = /obj/item/organ/tongue/robot
 	mutantheart = /obj/item/organ/resurgence_core
+	mutanteyes = /obj/item/organ/eyes/robotic
+	mutantears = /obj/item/organ/ears/cybernetic
+	mutantliver = /obj/item/organ/liver/cybernetic
+	mutantstomach = /obj/item/organ/stomach/cybernetic
+	mutantlungs = /obj/item/organ/lungs/cybernetic
 	species_language_holder = /datum/language_holder/synthetic
 	limbs_id = "synth"
 	changesource_flags = MIRROR_BADMIN | WABBAJACK | MIRROR_PRIDE | MIRROR_MAGIC | RACE_SWAP | ERT_SPAWN | SLIME_EXTRACT

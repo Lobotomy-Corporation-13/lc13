@@ -247,6 +247,7 @@ const RoomTab = (props, context) => {
     detected_faith,
     detected_walls,
     detected_doors,
+    detected_is_cramped,
     in_use,
   } = data;
 
@@ -380,11 +381,23 @@ const RoomTab = (props, context) => {
                   <Box>
                     <Box inline bold mr={1}>Size:</Box>
                     {detected_size} tiles
+                    {detected_is_cramped && (
+                      <Box inline color="average" ml={1}>
+                        (Cramped)
+                      </Box>
+                    )}
                   </Box>
                   <Box>
                     <Box inline bold mr={1}>Boundary:</Box>
                     {detected_walls} walls, {detected_doors} doors
                   </Box>
+                  {detected_is_cramped && (
+                    <Box color="average" mt={1} fontSize="11px">
+                      <Icon name="compress-alt" mr={1} />
+                      This space is cramped. Only Living Quarters and
+                      Common Rooms can be designated here.
+                    </Box>
+                  )}
                 </Box>
               </Section>
             </Stack.Item>
@@ -403,6 +416,38 @@ const RoomTab = (props, context) => {
                   content="Designate This Space"
                   disabled={in_use}
                   onClick={() => act('designate_room')} />
+              </Section>
+            </Stack.Item>
+          </>
+        ) : detected_is_cramped ? (
+          // Space is too cramped for any valid room type
+          <>
+            <Stack.Item>
+              <Section title="Cramped Space">
+                <Box textAlign="center">
+                  <Icon name="compress-alt" size={3} color="average" />
+                  <Box mt={1} bold fontSize="14px">
+                    Space is too cramped
+                  </Box>
+                  <Box mt={1} color="label">
+                    This enclosed space has {detected_size} tiles, which is
+                    too small for the detected room type.
+                  </Box>
+                  <Box mt={1} color="label">
+                    Most room types require more than 9 tiles and dimensions
+                    of at least 3x3.
+                  </Box>
+                  <Box mt={1} color="good">
+                    Only Living Quarters and Common Rooms can be cramped.
+                    Add a bed for Living Quarters, or a table and chair
+                    for a Common Room.
+                  </Box>
+                </Box>
+              </Section>
+            </Stack.Item>
+            <Stack.Item grow>
+              <Section fill scrollable title="Room Types Reference">
+                <RoomTypeGuide />
               </Section>
             </Stack.Item>
           </>
@@ -442,28 +487,46 @@ const RoomTab = (props, context) => {
 const RoomTypeGuide = () => {
   const roomTypes = [
     {
+      name: 'Living Quarters',
+      faith: '+40%',
+      faithColor: 'good',
+      requirements: 'Bed',
+      canBeCramped: true,
+    },
+    {
       name: 'Common Room',
       faith: '+50%',
       faithColor: 'good',
-      requirements: 'Decor (bed, chair, easel), no crafting stations',
-    },
-    {
-      name: 'Basic Room',
-      faith: '+25%',
-      faithColor: 'good',
-      requirements: 'Any enclosed space',
-    },
-    {
-      name: 'Storage Room',
-      faith: '+10%',
-      faithColor: 'good',
-      requirements: 'Crates/closets, no decor or crafting',
+      requirements: 'Table + Chair',
+      canBeCramped: true,
     },
     {
       name: 'Workshop',
       faith: '-25%',
       faithColor: 'average',
       requirements: 'Crafting Table, Forge, or Loom',
+      canBeCramped: false,
+    },
+    {
+      name: 'Kitchen',
+      faith: '+30%',
+      faithColor: 'good',
+      requirements: 'Stove or Fridge',
+      canBeCramped: false,
+    },
+    {
+      name: 'Storage Room',
+      faith: '+10%',
+      faithColor: 'good',
+      requirements: 'Crates/closets',
+      canBeCramped: false,
+    },
+    {
+      name: 'Basic Room',
+      faith: '+25%',
+      faithColor: 'good',
+      requirements: 'Any enclosed space',
+      canBeCramped: false,
     },
   ];
 
@@ -474,14 +537,33 @@ const RoomTypeGuide = () => {
           <Flex.Item basis="28%">
             <Box bold>{room.name}</Box>
           </Flex.Item>
-          <Flex.Item basis="17%">
+          <Flex.Item basis="15%">
             <Box color={room.faithColor}>{room.faith}</Box>
           </Flex.Item>
           <Flex.Item grow>
             <Box color="label">{room.requirements}</Box>
           </Flex.Item>
+          <Flex.Item basis="12%">
+            {room.canBeCramped ? (
+              <Box color="good" textAlign="right">
+                <Icon name="compress-alt" />
+              </Box>
+            ) : (
+              <Box color="bad" textAlign="right">
+                <Icon name="expand-alt" />
+              </Box>
+            )}
+          </Flex.Item>
         </Flex>
       ))}
+      <Box color="label" mt={1} fontSize="10px">
+        <Icon name="compress-alt" color="good" mr={1} />
+        Can be cramped
+        <Box inline ml={2}>
+          <Icon name="expand-alt" color="bad" mr={1} />
+          Requires {'>'}9 tiles, 3x3 min
+        </Box>
+      </Box>
     </Box>
   );
 };

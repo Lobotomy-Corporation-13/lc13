@@ -427,8 +427,7 @@
 
 /obj/structure/resurgence_blueprint/bed/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 10,
-		/obj/item/stack/sheet/cotton/cloth = 5
+		/obj/item/stack/sheet/mineral/wood = 10
 	)
 
 /obj/structure/resurgence_blueprint/chair
@@ -542,8 +541,8 @@
 /obj/structure/resurgence_blueprint/sofa_middle
 	name = "sofa (middle) blueprint"
 	result_name = "sofa"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "sofa_mid"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "sofamiddle"
 	result_type = /obj/structure/chair/sofa
 
 /obj/structure/resurgence_blueprint/sofa_middle/init_materials()
@@ -554,8 +553,8 @@
 /obj/structure/resurgence_blueprint/sofa_left
 	name = "sofa (left) blueprint"
 	result_name = "sofa left end"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "sofa_left"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "sofaend_left"
 	result_type = /obj/structure/chair/sofa/left
 
 /obj/structure/resurgence_blueprint/sofa_left/init_materials()
@@ -566,8 +565,8 @@
 /obj/structure/resurgence_blueprint/sofa_right
 	name = "sofa (right) blueprint"
 	result_name = "sofa right end"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "sofa_right"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "sofaend_right"
 	result_type = /obj/structure/chair/sofa/right
 
 /obj/structure/resurgence_blueprint/sofa_right/init_materials()
@@ -578,8 +577,8 @@
 /obj/structure/resurgence_blueprint/sofa_corner
 	name = "sofa (corner) blueprint"
 	result_name = "sofa corner"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "sofa_corner"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "sofacorner"
 	result_type = /obj/structure/chair/sofa/corner
 
 /obj/structure/resurgence_blueprint/sofa_corner/init_materials()
@@ -590,8 +589,8 @@
 /obj/structure/resurgence_blueprint/pew
 	name = "pew blueprint"
 	result_name = "pew"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "pew"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "pewmiddle"
 	result_type = /obj/structure/chair/pew
 
 /obj/structure/resurgence_blueprint/pew/init_materials()
@@ -602,8 +601,8 @@
 /obj/structure/resurgence_blueprint/pew_left
 	name = "pew (left) blueprint"
 	result_name = "pew left end"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "pew_left"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "pewend_left"
 	result_type = /obj/structure/chair/pew/left
 
 /obj/structure/resurgence_blueprint/pew_left/init_materials()
@@ -614,8 +613,8 @@
 /obj/structure/resurgence_blueprint/pew_right
 	name = "pew (right) blueprint"
 	result_name = "pew right end"
-	icon = 'icons/obj/chairs.dmi'
-	icon_state = "pew_right"
+	icon = 'icons/obj/sofa.dmi'
+	icon_state = "pewend_right"
 	result_type = /obj/structure/chair/pew/right
 
 /obj/structure/resurgence_blueprint/pew_right/init_materials()
@@ -638,8 +637,8 @@
 /obj/structure/resurgence_blueprint/bookcase
 	name = "bookcase blueprint"
 	result_name = "bookcase"
-	icon = 'icons/obj/stationobjs.dmi'
-	icon_state = "bookcase"
+	icon = 'icons/obj/library.dmi'
+	icon_state = "bookempty"
 	result_type = /obj/structure/bookcase
 
 /obj/structure/resurgence_blueprint/bookcase/init_materials()
