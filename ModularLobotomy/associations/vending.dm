@@ -139,6 +139,46 @@
 		/obj/item/reagent_containers/hypospray/medipen/salacid = 100,
 		/obj/item/gps/fixer = 100,
 		/obj/item/pinpointer/coordinate = 20,
+
+		//Imported Body modification batteries
+		/obj/item/body_modification_battery/imported = 100,
+		/obj/item/body_modification_battery/tier2/imported = 100,
+		/obj/item/body_modification_battery/tier3/imported = 100,
+		/obj/item/body_modification_battery/tier4/imported = 100,
+
+	)
+
+	default_price = 300
+	extra_price = 1000
+	input_display_header = "Fixer Equipment"
+
+//This is just incase something breaks with the modifications, we can give the people their books back.
+/obj/machinery/vending/old_fixer
+	name = "\improper OLd Fixer Equipment vending"
+	desc = "A machine used by fixers to get equipment"
+	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF | FREEZE_PROOF
+	product_slogans = "What's a fixer without gear?"
+	product_ads = "You need it!"
+	icon_state = "robotics"
+	icon_deny = null
+	products = list(
+		/obj/item/flashlight/seclite = 100,
+		/obj/item/attribute_increase/fixer = 1500,
+		/obj/item/attribute_increase/fixer/office = 1500,
+		/obj/item/radio/headset = 200,
+		/obj/item/crowbar = 100,
+		/obj/item/clothing/suit/armor/ego_gear/city/misc/lone = 100,
+		/obj/item/ego_weapon/city/fixerblade = 20,
+		/obj/item/ego_weapon/city/fixergreatsword = 20,
+		/obj/item/ego_weapon/city/fixerhammer = 20,
+		/obj/item/ego_weapon/city/zweibaton/protection = 20,
+		/obj/item/storage/box/fishing = 20,
+		/obj/item/kitchen/knife/combat/survival = 100,
+		/obj/item/weldingtool/mini = 100,
+		/obj/item/reagent_containers/hypospray/medipen/mental = 100,
+		/obj/item/reagent_containers/hypospray/medipen/salacid = 100,
+		/obj/item/gps/fixer = 100,
+		/obj/item/pinpointer/coordinate = 20,
 	)
 
 	premium = list(
@@ -182,8 +222,6 @@
 	default_price = 300
 	extra_price = 1000
 	input_display_header = "Fixer Equipment"
-
-
 
 //cityvending
 /obj/machinery/vending/city
@@ -243,6 +281,16 @@
 		/obj/item/organ/tongue/robot = 100,
 		/obj/item/organ/cyberimp/arm/zippy = 100,
 		/obj/item/organ/cyberimp/arm/fixertools = 100,
+
+		//Body modification batteries
+		/obj/item/body_modification_battery = 100,
+		/obj/item/body_modification_battery/tier2 = 100,
+		/obj/item/body_modification_battery/tier3 = 100,
+		/obj/item/body_modification_battery/tier4 = 100,
+
+		//Body modification tools
+		/obj/item/body_modification_tester = 100,
+		/obj/item/body_modification_remover = 100,
 	)
 
 	premium = list(

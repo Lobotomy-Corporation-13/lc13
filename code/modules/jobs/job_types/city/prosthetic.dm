@@ -1,8 +1,8 @@
 /datum/job/prosdoctor
 	title = "Prosthetics Surgeon"
 	faction = "Station"
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 0
+	spawn_positions = 0
 	selection_color = "#8888cc"
 
 	outfit = /datum/outfit/job/prosdoctor

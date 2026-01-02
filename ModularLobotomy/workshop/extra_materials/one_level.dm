@@ -6,6 +6,7 @@
 	quality = 1
 	color = COLOR_VERY_LIGHT_GRAY
 	heated_type = /obj/item/hot_tresmetal/puremetal
+	mat_density = 100
 
 /obj/item/hot_tresmetal/puremetal
 	matname = "puremetal"
@@ -23,6 +24,7 @@
 	quality = 1
 	color = COLOR_PINK
 	heated_type = /obj/item/hot_tresmetal/pinksteel
+	mat_density = 100
 
 /obj/item/hot_tresmetal/pinksteel
 	matname = "pinksteel"

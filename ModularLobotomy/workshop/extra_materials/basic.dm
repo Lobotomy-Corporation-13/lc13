@@ -6,6 +6,7 @@
 	quality = 1
 	color = COLOR_GRAY
 	heated_type = /obj/item/hot_tresmetal/steel
+	mat_density = 20
 
 /obj/item/hot_tresmetal/steel
 	matname = "steel"
@@ -22,6 +23,7 @@
 	quality = 1
 	color = COLOR_BLUE
 	heated_type = /obj/item/hot_tresmetal/cobalt
+	mat_density = 20
 
 /obj/item/hot_tresmetal/cobalt
 	matname = "cobalt"
@@ -38,6 +40,7 @@
 	quality = 1
 	color = COLOR_RED
 	heated_type = /obj/item/hot_tresmetal/bloodiron
+	mat_density = 20
 
 /obj/item/hot_tresmetal/bloodiron
 	matname = "bloodiron"
@@ -55,6 +58,7 @@
 	quality = 1
 	color = COLOR_ALMOST_BLACK
 	heated_type = /obj/item/hot_tresmetal/darksteel
+	mat_density = 20
 
 /obj/item/hot_tresmetal/darksteel
 	matname = "darksteel"
