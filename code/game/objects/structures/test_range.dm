@@ -57,7 +57,7 @@
 			abnospawned.BreachEffect()
 
 /obj/machinery/computer/testrangespawner/process()
-	var/area/A = get_area(src)
+	var/area/A = get_area(src) // cataclysmic world iteration, remove before merge
 	for(var/mob/living/carbon/human/H in A)
 		if(H.stat != DEAD)
 			return
