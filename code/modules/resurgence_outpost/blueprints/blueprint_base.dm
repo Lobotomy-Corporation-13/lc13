@@ -14,7 +14,7 @@
 	anchored = TRUE
 	density = FALSE
 	layer = 2.5
-	alpha = 180  // Transparent ghost appearance
+	alpha = 100  // Transparent ghost appearance
 	color = "#80c0ff"  // Light blue tint
 
 	/// The structure type this blueprint builds
@@ -260,12 +260,8 @@
 
 	// Handle turf creation (walls, floors) differently from structures
 	if(ispath(result_type, /turf))
-		// Check if building over wasteland - if so, set baseturfs to chasm
-		var/list/new_baseturfs = null
-		if(istype(T, /turf/open/floor/plating/dirt/jungle/wasteland))
-			new_baseturfs = /turf/open/chasm/jungle
 		// Change the turf to the new type
-		var/turf/new_turf = T.ChangeTurf(result_type, new_baseturfs)
+		var/turf/new_turf = T.ChangeTurf(result_type)
 		if(new_turf)
 			// Update smoothing for the new wall and its neighbors
 			QUEUE_SMOOTH(new_turf)

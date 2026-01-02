@@ -21,6 +21,7 @@
 /turf/open/floor/plating/dirt/dark
 	icon_state = "greenerdirt"
 	base_icon_state = "greenerdirt"
+	baseturfs = /turf/open/floor/plating/ironsand
 
 /turf/open/floor/plating/dirt/try_replace_tile(obj/item/stack/tile/T, mob/user, params)
 	return
@@ -39,6 +40,7 @@
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "wasteland"
 	base_icon_state = "wasteland"
+	baseturfs = /turf/open/floor/plating/ironsand
 	slowdown = 1
 	var/floor_variance = 15
 

@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, Icon, Section, Stack, Tabs } from '../components';
+import { Box, Button, Flex, Icon, Input, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
 
 export const OutpostPlanner = (props, context) => {
@@ -68,11 +68,33 @@ const BlueprintTab = (props, context) => {
     selected_category || categories[0]?.name
   );
 
+  const [searchText, setSearchText] = useLocalState(
+    context,
+    'blueprintSearch',
+    ''
+  );
+
   const currentCategory = categories.find(
     cat => cat.name === activeCategory
   )
     || categories[0];
-  const structures = currentCategory?.structures || [];
+
+  // Get all structures for searching, or current category's structures
+  let structures = [];
+  if (searchText) {
+    // Search across all categories
+    const search = searchText.toLowerCase();
+    for (const cat of categories) {
+      for (const struct of cat.structures || []) {
+        if (struct.name.toLowerCase().includes(search)
+            || struct.result_name?.toLowerCase().includes(search)) {
+          structures.push(struct);
+        }
+      }
+    }
+  } else {
+    structures = currentCategory?.structures || [];
+  }
 
   return (
     <Section
@@ -86,29 +108,54 @@ const BlueprintTab = (props, context) => {
           onClick={() => act('clear_selection')} />
       )}>
       <Stack fill vertical>
-        {/* Category Tabs */}
+        {/* Search Bar */}
         <Stack.Item>
-          <Tabs fluid>
-            {categories.map(category => (
-              <Tabs.Tab
-                key={category.name}
-                selected={category.name === activeCategory}
-                onClick={() => {
-                  setActiveCategory(category.name);
-                  act('select_category', { category: category.name });
-                }}>
-                {category.name}
-              </Tabs.Tab>
-            ))}
-          </Tabs>
+          <Flex align="center">
+            <Flex.Item grow>
+              <Input
+                fluid
+                placeholder="Search blueprints..."
+                value={searchText}
+                onInput={(e, value) => setSearchText(value)} />
+            </Flex.Item>
+            {searchText && (
+              <Flex.Item ml={1}>
+                <Button
+                  icon="times"
+                  tooltip="Clear search"
+                  onClick={() => setSearchText('')} />
+              </Flex.Item>
+            )}
+          </Flex>
         </Stack.Item>
+
+        {/* Category Tabs (hidden when searching) */}
+        {!searchText && (
+          <Stack.Item>
+            <Tabs fluid>
+              {categories.map(category => (
+                <Tabs.Tab
+                  key={category.name}
+                  selected={category.name === activeCategory}
+                  onClick={() => {
+                    setActiveCategory(category.name);
+                    act('select_category', { category: category.name });
+                  }}>
+                  {category.name}
+                </Tabs.Tab>
+              ))}
+            </Tabs>
+          </Stack.Item>
+        )}
 
         {/* Structure Grid */}
         <Stack.Item grow>
           <Section
             fill
             scrollable
-            title={activeCategory}>
+            title={searchText
+              ? `Search Results (${structures.length})`
+              : activeCategory}>
             <Flex wrap="wrap" justify="flex-start">
               {structures.map(structure => (
                 <Flex.Item
@@ -238,6 +285,8 @@ const RoomTab = (props, context) => {
     room_walls,
     room_doors,
     room_owner,
+    room_beauty,
+    room_beauty_avg,
     user_ckey,
     user_owns_this_room,
     user_has_room,
@@ -287,6 +336,20 @@ const RoomTab = (props, context) => {
                     {room_walls} walls, {room_doors} doors
                   </Box>
                   <Box>
+                    <Box inline bold mr={1}>Beauty:</Box>
+                    <Box
+                      inline
+                      color={
+                        room_beauty_avg > 0
+                          ? 'good'
+                          : room_beauty_avg < 0
+                            ? 'bad'
+                            : 'label'
+                      }>
+                      {room_beauty} total ({room_beauty_avg} avg)
+                    </Box>
+                  </Box>
+                  <Box>
                     <Box inline bold mr={1}>Owner:</Box>
                     {room_owner ? (
                       <Box
@@ -330,6 +393,15 @@ const RoomTab = (props, context) => {
                       content="Highlight Room"
                       disabled={in_use}
                       onClick={() => act('highlight_room')} />
+                  </Stack.Item>
+                  <Stack.Item mt={1}>
+                    <Button
+                      fluid
+                      icon="sync"
+                      content="Recalculate Beauty"
+                      disabled={in_use}
+                      tooltip="Reset and recount all beauty in this room"
+                      onClick={() => act('recalculate_beauty')} />
                   </Stack.Item>
                   <Stack.Item mt={1}>
                     <Button
@@ -592,6 +664,10 @@ const FarmingTab = (props, context) => {
             <Box mb={1} color={fertilizer_count > 0 ? "good" : "bad"}>
               <Icon name="seedling" mr={1} />
               Fertilizer available: {fertilizer_count}
+            </Box>
+            <Box mb={1} color="label" fontSize="11px">
+              <Icon name="fire" mr={1} />
+              Fertilizer is crafted from coal at a Crafting Table.
             </Box>
             <Button
               fluid

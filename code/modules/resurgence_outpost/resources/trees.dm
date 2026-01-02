@@ -21,7 +21,7 @@
 	/// Total work points needed to fell the tree
 	var/work_needed = 300
 	/// Base amount of wood dropped when felled
-	var/base_yield = 135
+	var/base_yield = 90
 	/// Whether someone is currently chopping
 	var/being_worked = FALSE
 	/// What type of tree to spawn on regrowth
@@ -188,7 +188,7 @@
 	icon_state = "tree1"
 	pixel_x = -48
 	pixel_y = -20
-	base_yield = 150
+	base_yield = 100
 	work_needed = 350
 	tree_type = /obj/structure/resurgence_tree/oak
 
@@ -203,7 +203,7 @@
 	icon = 'icons/obj/flora/deadtrees.dmi'
 	icon_state = "tree_1"
 	pixel_x = -16
-	base_yield = 60
+	base_yield = 40
 	work_needed = 150
 	tree_type = /obj/structure/resurgence_tree/dead
 

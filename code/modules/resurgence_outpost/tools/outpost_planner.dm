@@ -196,6 +196,10 @@
 		data["room_walls"] = current_room.boundary_walls.len
 		data["room_doors"] = current_room.boundary_doors.len
 
+		// Room beauty info
+		data["room_beauty"] = current_room.totalbeauty
+		data["room_beauty_avg"] = current_room.beauty
+
 		// Room ownership info
 		data["room_owner"] = current_room.owner_ckey
 		data["user_ckey"] = user.ckey
@@ -379,6 +383,10 @@
 			in_use = TRUE
 			unclaim_current_room(usr)
 			in_use = FALSE
+			return TRUE
+
+		if("recalculate_beauty")
+			recalculate_room_beauty(usr)
 			return TRUE
 
 		// ===== Farming Actions =====
@@ -731,6 +739,22 @@
 
 	room.unclaim_room()
 	to_chat(user, span_notice("You have unclaimed '[room.name]'."))
+	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
+
+/// Recalculate the beauty of the current room
+/obj/item/resurgence_outpost_planner/proc/recalculate_room_beauty(mob/user)
+	var/turf/origin = get_turf(user)
+	var/area/resurgence_outpost/room/room = get_area(origin)
+
+	if(!istype(room))
+		to_chat(user, span_warning("You must be inside a designated room."))
+		return
+
+	var/old_beauty = room.totalbeauty
+	recalculate_area_beauty(room)
+	var/new_beauty = room.totalbeauty
+
+	to_chat(user, span_notice("Recalculated room beauty: [old_beauty] -> [new_beauty]"))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 
 /// Briefly highlight room turfs with a visual effect

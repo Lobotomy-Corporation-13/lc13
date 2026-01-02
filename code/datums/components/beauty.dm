@@ -45,6 +45,9 @@
 		qdel(src)
 		return
 	beauty += beautyamount
+	// Sanity check - catch extreme accumulation
+	if(beauty < -1000 || beauty > 1000)
+		log_game("BEAUTY BUG: [parent?.type] accumulated extreme beauty: [beauty] (added [beautyamount])")
 	var/area/A = get_area(parent)
 	if(A && !A.outdoors)
 		A.totalbeauty += beautyamount

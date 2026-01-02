@@ -74,7 +74,7 @@
 // Sandstone Crafting from Glass Ore
 // ============================================
 
-/// Allow crafting sandstone from glass ore via attack_self
+/// Allow crafting sandstone from glass ore via attack_self (converts ALL sand at once)
 /obj/item/stack/ore/glass/attack_self(mob/user)
 	. = ..()
 	if(.)
@@ -87,17 +87,52 @@
 	if(amount < 1)
 		return
 
-	to_chat(user, span_notice("You begin compressing the sand into sandstone..."))
+	var/convert_amount = amount
+	to_chat(user, span_notice("You begin compressing [convert_amount] sand into sandstone..."))
 	if(!do_after(user, 2 SECONDS, src))
 		return
 
 	if(QDELETED(src) || amount < 1)
 		return
 
-	// Create sandstone
-	var/obj/item/stack/sheet/mineral/sandstone/S = new(user.drop_location())
-	use(1)
+	// Get the actual amount to convert (may have changed during do_after)
+	convert_amount = amount
+
+	// Create sandstone stack
+	var/obj/item/stack/sheet/mineral/sandstone/S = new(user.drop_location(), convert_amount)
+	use(convert_amount)
 	user.put_in_hands(S)
-	to_chat(user, span_notice("You compress the sand into a sandstone brick."))
+	to_chat(user, span_notice("You compress the sand into [convert_amount] sandstone bricks."))
+	playsound(user, 'sound/effects/stonedoor_openclose.ogg', 30, TRUE)
+
+/// Allow breaking down sandstone into sand via attack_self (converts ALL sandstone at once)
+/obj/item/stack/sheet/mineral/sandstone/attack_self(mob/user)
+	. = ..()
+	if(.)
+		return
+
+	// Only in outpost gamemode
+	if(SSmaptype.maptype != "outpost")
+		return
+
+	if(amount < 1)
+		return
+
+	var/convert_amount = amount
+	to_chat(user, span_notice("You begin crushing [convert_amount] sandstone into sand..."))
+	if(!do_after(user, 2 SECONDS, src))
+		return
+
+	if(QDELETED(src) || amount < 1)
+		return
+
+	// Get the actual amount to convert (may have changed during do_after)
+	convert_amount = amount
+
+	// Create sand stack
+	var/obj/item/stack/ore/glass/S = new(user.drop_location(), convert_amount)
+	use(convert_amount)
+	user.put_in_hands(S)
+	to_chat(user, span_notice("You crush the sandstone into [convert_amount] sand."))
 	playsound(user, 'sound/effects/stonedoor_openclose.ogg', 30, TRUE)
 

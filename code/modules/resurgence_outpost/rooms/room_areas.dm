@@ -507,6 +507,12 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 			// Get the beauty component if it exists
 			var/datum/component/beauty/B = A.GetComponent(/datum/component/beauty)
 			if(B)
+				// Sanity check - beauty values should be reasonable (-1000 to +1000)
+				if(B.beauty < -1000 || B.beauty > 1000)
+					// Log the problematic object for debugging
+					log_game("BEAUTY BUG: [A.type] at [T.x],[T.y],[T.z] has extreme beauty value: [B.beauty]")
+					message_admins("BEAUTY BUG: [A.type] has extreme beauty value: [B.beauty] - skipping")
+					continue
 				target_area.totalbeauty += B.beauty
 
 	// Update the beauty average

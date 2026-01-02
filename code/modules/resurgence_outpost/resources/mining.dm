@@ -258,7 +258,7 @@
 	name = "iron deposit"
 	desc = "Rock with visible veins of iron ore."
 	mineralType = /obj/item/stack/ore/iron
-	mineralAmt = 80
+	mineralAmt = 160
 	color = "#8B5A2B" // Brown-orange for iron
 	work_needed = 200
 	can_be_spread_to = FALSE

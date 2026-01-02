@@ -54,7 +54,7 @@ GLOBAL_LIST_EMPTY(resurgence_spawned_ore_types)
 			"weight" = 40,
 			"color" = "#8B5A2B",
 			"drop_type" = /obj/item/stack/ore/iron,
-			"amount" = 80,
+			"amount" = 160,
 			"work" = 200
 		),
 		"coal" = list(

@@ -700,7 +700,7 @@
 		if(obj.category != "building")
 			continue
 		var/status = obj.completed ? "\[X\]" : "\[ \]"
-		var/color = obj.completed ? "green" : "white"
+		var/color = obj.completed ? "green" : "#80C0FF"
 		to_chat(H, "<span style='color: [color];'>  [status] [obj.get_display_text()]</span>")
 
 	// Count export objectives
@@ -722,5 +722,5 @@
 			if(obj.category != "export")
 				continue
 			var/status = obj.completed ? "\[X\]" : "\[ \]"
-			var/color = obj.completed ? "green" : "white"
+			var/color = obj.completed ? "green" : "#80C0FF"
 			to_chat(H, "<span style='color: [color];'>  [status] [obj.get_display_text()]</span>")

@@ -69,6 +69,16 @@
 	/// How many copies have been completed so far
 	var/completed_copies = 0
 
+	// UI pagination state (per-table, shared across users)
+	/// Current page number (1-indexed)
+	var/ui_current_page = 1
+	/// Current search text filter
+	var/ui_search_text = ""
+	/// Current active category filter
+	var/ui_active_category = "All"
+	/// Recipes per page
+	var/static/recipes_per_page = 10
+
 /obj/structure/resurgence_crafting_table/Initialize(mapload)
 	. = ..()
 	if(!recipes)
@@ -719,36 +729,94 @@
 	data["target_copies"] = target_copies
 	data["completed_copies"] = completed_copies
 
-	// OPTIMIZATION: When busy or craft in progress, skip expensive recipe rebuilding
-	// The user can't start new crafts anyway, and the UI will use cached data
+	// Pagination state
+	data["current_page"] = ui_current_page
+	data["search_text"] = ui_search_text
+	data["active_category"] = ui_active_category
+
+	// Build categories list first (always needed)
+	var/list/categories = list("All")
+	for(var/recipe_name in recipes)
+		var/list/recipe = recipes[recipe_name]
+		var/category = recipe["category"] || "Other"
+		if(!(category in categories))
+			categories += category
+	data["categories"] = categories
+
+	// OPTIMIZATION: When busy, only send pagination info, not recipe data
 	if(busy)
 		data["recipes"] = list()
-		data["categories"] = list()
+		data["total_recipes"] = 0
+		data["total_pages"] = 1
 		data["skip_recipes"] = TRUE
 		return data
 
-	// Cache material counts - count each unique material type only once
-	var/list/material_cache = list()
+	// SERVER-SIDE FILTERING: Filter recipes based on search and category
+	var/list/filtered_names = list()
+	var/search_lower = lowertext(ui_search_text)
 
-	// Build recipe list with availability info, organized by category
-	var/list/recipe_data = list()
-	var/list/categories = list()
 	for(var/recipe_name in recipes)
 		var/list/recipe = recipes[recipe_name]
-		var/list/materials = recipe["materials"]
 		var/category = recipe["category"] || "Other"
 
-		// Track unique categories
-		if(!(category in categories))
-			categories += category
+		// Category filter (skip if searching)
+		if(!ui_search_text && ui_active_category != "All" && category != ui_active_category)
+			continue
+
+		// Search filter
+		if(ui_search_text)
+			var/matches = FALSE
+			if(findtext(lowertext(recipe_name), search_lower))
+				matches = TRUE
+			else if(findtext(lowertext(recipe["desc"]), search_lower))
+				matches = TRUE
+			else
+				// Check material names
+				for(var/mat_type in recipe["materials"])
+					var/mat_name = get_material_name(mat_type)
+					if(findtext(lowertext(mat_name), search_lower))
+						matches = TRUE
+						break
+			if(!matches)
+				continue
+
+		filtered_names += recipe_name
+
+	// Pagination calculations
+	var/total_recipes = length(filtered_names)
+	var/total_pages = max(1, CEILING(total_recipes / recipes_per_page, 1))
+
+	// Clamp current page to valid range
+	if(ui_current_page > total_pages)
+		ui_current_page = total_pages
+	if(ui_current_page < 1)
+		ui_current_page = 1
+
+	var/start_index = (ui_current_page - 1) * recipes_per_page + 1
+	var/end_index = min(start_index + recipes_per_page - 1, total_recipes)
+
+	data["total_recipes"] = total_recipes
+	data["total_pages"] = total_pages
+	data["current_page"] = ui_current_page
+
+	// Cache material counts - only for materials used in visible recipes
+	var/list/material_cache = list()
+
+	// Build recipe data ONLY for the current page
+	var/list/recipe_data = list()
+	for(var/i in start_index to end_index)
+		if(i > length(filtered_names))
+			break
+		var/recipe_name = filtered_names[i]
+		var/list/recipe = recipes[recipe_name]
+		var/list/materials = recipe["materials"]
 
 		var/list/mat_data = list()
 		var/can_craft = TRUE
-		var/max_craftable = 999 // Will be reduced by limiting material
+		var/max_craftable = 999
 
 		for(var/mat_type in materials)
 			var/needed = materials[mat_type]
-			// Use cached count if available, otherwise count and cache
 			var/have
 			var/cache_key = "[mat_type]"
 			if(cache_key in material_cache)
@@ -768,7 +836,6 @@
 			if(have < needed)
 				can_craft = FALSE
 
-			// Calculate max craftable based on this material
 			if(needed > 0)
 				var/possible = round(have / needed)
 				max_craftable = min(max_craftable, possible)
@@ -781,11 +848,10 @@
 			"materials" = mat_data,
 			"can_craft" = can_craft,
 			"max_craftable" = max_craftable,
-			"category" = category
+			"category" = recipe["category"] || "Other"
 		))
 
 	data["recipes"] = recipe_data
-	data["categories"] = categories
 	data["skip_recipes"] = FALSE
 
 	return data
@@ -809,6 +875,22 @@
 
 		if("cancel_craft")
 			cancel_craft(usr)
+			return TRUE
+
+		// Pagination actions
+		if("set_page")
+			var/new_page = text2num(params["page"]) || 1
+			ui_current_page = max(1, new_page)
+			return TRUE
+
+		if("set_search")
+			ui_search_text = params["search"] || ""
+			ui_current_page = 1  // Reset to first page on search
+			return TRUE
+
+		if("set_category")
+			ui_active_category = params["category"] || "All"
+			ui_current_page = 1  // Reset to first page on category change
 			return TRUE
 
 	return FALSE

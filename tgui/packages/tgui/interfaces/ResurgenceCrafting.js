@@ -29,59 +29,28 @@ export const ResurgenceCrafting = (props, context) => {
     target_copies = 1,
     completed_copies = 0,
     skip_recipes = false,
+    // Server-side pagination data
+    current_page = 1,
+    total_pages = 1,
+    total_recipes = 0,
+    search_text = '',
+    active_category = 'All',
   } = data;
 
-  const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
-  const [activeCategory, setActiveCategory] = useLocalState(
+  // Local state for input (to avoid sending on every keystroke)
+  const [localSearch, setLocalSearch] = useLocalState(
     context,
-    'activeCategory',
-    categories[0] || 'All'
+    'localSearch',
+    search_text
   );
 
-  // Cache recipes locally to avoid flickering when server skips sending them
-  const [cachedRecipes, setCachedRecipes] = useLocalState(
-    context,
-    'cachedRecipes',
-    []
-  );
-  const [cachedCategories, setCachedCategories] = useLocalState(
-    context,
-    'cachedCategories',
-    []
-  );
-
-  // Update cache when server sends new recipe data
-  if (!skip_recipes && recipes.length > 0) {
-    if (JSON.stringify(recipes) !== JSON.stringify(cachedRecipes)) {
-      setCachedRecipes(recipes);
-    }
-    if (JSON.stringify(categories) !== JSON.stringify(cachedCategories)) {
-      setCachedCategories(categories);
+  // Sync local search with server state when it changes externally
+  if (localSearch !== search_text && !busy) {
+    // Only sync if significantly different (server reset)
+    if (search_text === '' && localSearch !== '') {
+      // Keep local state
     }
   }
-
-  // Use cached data for display
-  const displayRecipes = skip_recipes ? cachedRecipes : recipes;
-  const displayCategories = skip_recipes ? cachedCategories : categories;
-
-  // Filter recipes based on search and category
-  const filteredRecipes = displayRecipes.filter(recipe => {
-    // Category filter (unless searching)
-    const wrongCategory = activeCategory !== 'All'
-      && recipe.category !== activeCategory;
-    if (!searchText && wrongCategory) {
-      return false;
-    }
-    // Search filter
-    if (!searchText) return true;
-    const search = searchText.toLowerCase();
-    if (recipe.name.toLowerCase().includes(search)) return true;
-    if (recipe.desc.toLowerCase().includes(search)) return true;
-    for (const mat of recipe.materials) {
-      if (mat.name.toLowerCase().includes(search)) return true;
-    }
-    return false;
-  });
 
   return (
     <Window
@@ -158,23 +127,47 @@ export const ResurgenceCrafting = (props, context) => {
           {/* Search Bar */}
           <Stack.Item>
             <Section>
-              <Input
-                fluid
-                placeholder="Search recipes..."
-                value={searchText}
-                onInput={(e, value) => setSearchText(value)} />
+              <Flex align="center">
+                <Flex.Item grow>
+                  <Input
+                    fluid
+                    placeholder="Search recipes..."
+                    value={localSearch}
+                    onInput={(e, value) => setLocalSearch(value)}
+                    onEnter={(e, value) => {
+                      act('set_search', { search: value });
+                    }} />
+                </Flex.Item>
+                <Flex.Item ml={1}>
+                  <Button
+                    icon="search"
+                    tooltip="Search"
+                    onClick={() => act('set_search', { search: localSearch })} />
+                </Flex.Item>
+                {localSearch && (
+                  <Flex.Item ml={0.5}>
+                    <Button
+                      icon="times"
+                      tooltip="Clear search"
+                      onClick={() => {
+                        setLocalSearch('');
+                        act('set_search', { search: '' });
+                      }} />
+                  </Flex.Item>
+                )}
+              </Flex>
             </Section>
           </Stack.Item>
 
           {/* Category Tabs */}
-          {!searchText && displayCategories.length > 1 && (
+          {!search_text && categories.length > 1 && (
             <Stack.Item>
               <Tabs fluid>
-                {displayCategories.map(category => (
+                {categories.map(category => (
                   <Tabs.Tab
                     key={category}
-                    selected={activeCategory === category}
-                    onClick={() => setActiveCategory(category)}>
+                    selected={active_category === category}
+                    onClick={() => act('set_category', { category: category })}>
                     {category}
                   </Tabs.Tab>
                 ))}
@@ -187,35 +180,60 @@ export const ResurgenceCrafting = (props, context) => {
             <Section
               fill
               scrollable
-              title={`Recipes (${filteredRecipes.length})`}>
+              title={`Recipes (${total_recipes})`}
+              buttons={total_pages > 1 && (
+                <Box inline>
+                  <Button
+                    icon="angles-left"
+                    disabled={current_page <= 1}
+                    tooltip="First page"
+                    onClick={() => act('set_page', { page: 1 })} />
+                  <Button
+                    icon="angle-left"
+                    disabled={current_page <= 1}
+                    tooltip="Previous page"
+                    onClick={() => act('set_page', { page: current_page - 1 })} />
+                  <Box inline mx={1} color="label">
+                    {current_page} / {total_pages}
+                  </Box>
+                  <Button
+                    icon="angle-right"
+                    disabled={current_page >= total_pages}
+                    tooltip="Next page"
+                    onClick={() => act('set_page', { page: current_page + 1 })} />
+                  <Button
+                    icon="angles-right"
+                    disabled={current_page >= total_pages}
+                    tooltip="Last page"
+                    onClick={() => act('set_page', { page: total_pages })} />
+                </Box>
+              )}>
               <Stack vertical>
-                {filteredRecipes.length > 200 ? (
+                {skip_recipes ? (
                   <Stack.Item>
                     <Box color="label" italic textAlign="center" mt={2}>
-                      Too many recipes to display ({filteredRecipes.length}).
-                      <br />
-                      Please refine your search or select a category.
+                      <Icon name="spinner" spin mr={1} />
+                      Working...
                     </Box>
                   </Stack.Item>
+                ) : recipes.length > 0 ? (
+                  recipes.map(recipe => (
+                    <Stack.Item key={recipe.name}>
+                      <RecipeCard
+                        recipe={recipe}
+                        busy={busy}
+                        has_craft_in_progress={has_craft_in_progress}
+                        action_verb={action_verb} />
+                    </Stack.Item>
+                  ))
                 ) : (
-                  <>
-                    {filteredRecipes.map(recipe => (
-                      <Stack.Item key={recipe.name}>
-                        <RecipeCard
-                          recipe={recipe}
-                          busy={busy}
-                          has_craft_in_progress={has_craft_in_progress}
-                          action_verb={action_verb} />
-                      </Stack.Item>
-                    ))}
-                    {filteredRecipes.length === 0 && (
-                      <Stack.Item>
-                        <Box color="label" italic textAlign="center" mt={2}>
-                          No recipes found matching &quot;{searchText}&quot;
-                        </Box>
-                      </Stack.Item>
-                    )}
-                  </>
+                  <Stack.Item>
+                    <Box color="label" italic textAlign="center" mt={2}>
+                      {search_text
+                        ? `No recipes found matching "${search_text}"`
+                        : "No recipes available"}
+                    </Box>
+                  </Stack.Item>
                 )}
               </Stack>
             </Section>
