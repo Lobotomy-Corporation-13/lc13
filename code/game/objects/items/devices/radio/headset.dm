@@ -8,6 +8,8 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 	RADIO_CHANNEL_COMMAND = RADIO_TOKEN_COMMAND,
 	RADIO_CHANNEL_WELFARE = RADIO_TOKEN_WELFARE,
 	RADIO_CHANNEL_DISCIPLINE = RADIO_TOKEN_DISCIPLINE,
+	RADIO_CHANNEL_RECORDS = RADIO_TOKEN_RECORDS,
+	RADIO_CHANNEL_EXTRACTION = RADIO_TOKEN_EXTRACTION,
 	RADIO_CHANNEL_ARCHITECTURE = RADIO_TOKEN_ARCHITECTURE,
 	RADIO_CHANNEL_HEAD = RADIO_TOKEN_HEAD,
 	RADIO_CHANNEL_CENTCOM = RADIO_TOKEN_CENTCOM,
@@ -162,15 +164,15 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 
 /obj/item/radio/headset/headset_extraction
 	name = "extraction headset"
-	desc = "This is used by the extraction department."
+	desc = "This is used by the extraction department. Bears a faint, lingering smell of black tea."
 	icon_state = "extraction_headset"
-	//keyslot = new /obj/item/encryptionkey/headset_extraction //Waiting for someone to add in radio channels for them because i cannot find a way to add it in.
+	keyslot = new /obj/item/encryptionkey/headset_extraction
 
 /obj/item/radio/headset/headset_records
 	name = "records headset"
-	desc = "This is used by the records department."
+	desc = "This is used by the records department. While worn in absolute silence, you can hear the ticking of a clock. Some agents describe it as comforting, and others as bothersome."
 	icon_state = "records_headset"
-	//keyslot = new /obj/item/encryptionkey/headset_records
+	keyslot = new /obj/item/encryptionkey/headset_records
 
 /obj/item/radio/headset/headset_architecture
 	name = "architecture headset"
@@ -224,6 +226,18 @@ GLOBAL_LIST_INIT(channel_tokens, list(
 /obj/item/radio/headset/heads
 	command = TRUE
 	keyslot = new /obj/item/encryptionkey/headset_architecture
+
+/obj/item/radio/headset/heads/extraction
+	name = "\proper the extraction officer's headset"
+	desc = "A headset used by the Extraction Officer in Lobotomy Corporation. There are reports of hearing voices telling the wearer to 'gamble more', but they're probably just joking."
+	icon_state = "extraction_headset_alt"
+	keyslot = new /obj/item/encryptionkey/extraction_officer
+
+/obj/item/radio/headset/heads/records
+	name = "\proper the records officer's headset"
+	desc = "A headset used by the Records Officer in Lobotomy Corporation. Wearing it makes you appreciate silence all the more."
+	icon_state = "records_headset_alt"
+	keyslot = new /obj/item/encryptionkey/records_officer
 
 /obj/item/radio/headset/heads/rep
 	command = TRUE
