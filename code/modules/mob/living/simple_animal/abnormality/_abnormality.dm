@@ -141,7 +141,7 @@
 
 	/// Bubbles and their speech
 	// Generic bubbles by agent level.
-	var/list/generic_bubbles = list(
+	var/list/generic_bubbles = alist(
 		1 = list("%PERSON looks nervously at %ABNO...", "%PERSON tries to stay focused."),
 		2 = list("%PERSON focuses on the task at hand.", "%PERSON follows the directions as trained."),
 		3 = list("%PERSON keeps an eye on %ABNO.", "%PERSON considers what they'll eat next."),

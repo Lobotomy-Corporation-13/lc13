@@ -461,7 +461,7 @@
 	return parts.Join("<br>")
 
 /datum/controller/subsystem/ticker/proc/abnormality_report()
-	var/list/parts = list()
+	var/list/parts = alist()
 	var/datum/abnormality/highest_abno = null
 	var/highest_work_count = 0
 	var/full_abno_count = 0

@@ -44,7 +44,7 @@
 		"Stay silent" = list(FALSE, "Ah... <br>A mere human, human, human. <br>Cease your fear, I shall rid you of your pains. <br>Be reborn as a flower."),
 	)
 
-	generic_bubbles = list(
+	generic_bubbles = alist(
 		1 = list("%PERSON looks in horror at %ABNO.", "%ABNO seems ready to pull %PERSON limb from limb"),
 		2 = list("The wingbeats of %ABNO create whirlwinds throughout the containment cell."),
 		3 = list("%PERSON is struck in awe at %ABNO."),

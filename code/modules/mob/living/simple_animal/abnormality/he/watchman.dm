@@ -50,7 +50,7 @@
 			Numerous talons, claws, and fangs bite into you all at once. <br>Now you will know why you fear the night."),
 	)
 
-	generic_bubbles = list(
+	generic_bubbles = alist(
 		1 = list("%ABNO stares at %PERSON with souless glowing eyes."),
 		2 = list("%PERSON can hear the jingling of keys coming from %ABNO."),
 		3 = list("%ABNO looks wearily at %PERSON."),
