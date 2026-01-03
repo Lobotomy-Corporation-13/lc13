@@ -1,0 +1,4 @@
+author: "InsightfulParasite"
+delete-after: True
+changes:
+  - refactor: "Mob Shooting"
