@@ -1082,3 +1082,140 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 		damage_taken = 0
 	if((health <= stage_threshold) && (current_stage == 1))
 		StageTransition()
+
+//Violet Pet - An eldritch organ turret that shoots friendly black damage projectiles
+/datum/crafting_recipe/violet_pet
+	name = "Pulsating Organ"
+	result = /mob/living/simple_animal/hostile/violet_pet
+	reqs = list(/obj/item/food/meat/slab/fruit = 4, /datum/reagent/water = 10)
+	time = 50
+	category = CAT_ROBOT
+
+/mob/living/simple_animal/hostile/violet_pet
+	name = "pulsating organ"
+	desc = "A squishy, violet-hued organ that pulses with a gentle rhythm. It makes soft cooing sounds and seems to enjoy being held. Its eye tracks nearby threats."
+	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
+	icon_state = "violet_pet"
+	icon_living = "violet_pet"
+	icon_dead = "violet_pet"
+	faction = list("neutral", "violet_ordeal")
+	response_help_continuous = "pets"
+	response_help_simple = "pet"
+	response_disarm_continuous = "gently pushes aside"
+	response_disarm_simple = "gently push aside"
+	friendly_verb_continuous = "nuzzles against"
+	friendly_verb_simple = "nuzzle against"
+	speak_emote = list("coos softly", "pulses happily", "hums contentedly")
+	emote_hear = list("makes a happy squelching sound.", "throbs gently.", "burbles affectionately.")
+	mob_biotypes = MOB_ORGANIC
+	speak_chance = 3
+	environment_smash = FALSE
+	density = FALSE
+	maxHealth = 80
+	health = 80
+	melee_damage_lower = 0
+	melee_damage_upper = 0
+	mob_size = MOB_SIZE_SMALL
+	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 1.2, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1)
+	butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	guaranteed_butcher_results = list(/obj/item/food/meat/slab/fruit = 1)
+	stop_automated_movement_when_pulled = TRUE
+	tame = TRUE
+	death_message = "lets out a sad little squeak as the violet glow fades from within."
+	// Turret functionality
+	ranged = TRUE
+	retreat_distance = 0
+	minimum_distance = 0
+	ranged_cooldown_time = 2 SECONDS
+	projectiletype = /obj/projectile/beam/violet_pet
+	projectilesound = 'sound/effects/ordeals/violet/fruit_suicide.ogg'
+	// Ridable functionality
+	can_buckle = TRUE
+	buckle_lying = 0
+
+/mob/living/simple_animal/hostile/violet_pet/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/ridable, /datum/component/riding/creature/no_monsteroffset)
+	if(prob(2))
+		icon_state = "sus_pet"
+		icon_living = "sus_pet"
+		name = "peculiar organ"
+		desc = "A squishy little organ that looks a bit... off. Its eye darts around nervously, but it still wants pets."
+
+/mob/living/simple_animal/hostile/violet_pet/examine(mob/user)
+	. = ..()
+	. += span_notice("[src] will shoot at hostile creatures, but its projectiles pass harmlessly through humans.")
+	. += span_notice("You can drag yourself onto [src] to ride it, allowing it to move.")
+
+/mob/living/simple_animal/hostile/violet_pet/Login()
+	. = ..()
+	if(!. || !client)
+		return FALSE
+	to_chat(src, "<b>The world is strange, but a gentle touch makes it all worthwhile...</b>")
+
+// Cannot move unless ridden
+/mob/living/simple_animal/hostile/violet_pet/Move()
+	if(!has_buckled_mobs())
+		return FALSE
+	return ..()
+
+// Override CanAttack to not target humans
+/mob/living/simple_animal/hostile/violet_pet/CanAttack(atom/the_target)
+	if(ishuman(the_target))
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/violet_pet/attack_hand(mob/living/carbon/M)
+	if(!stat && M.a_intent == INTENT_HELP)
+		visible_message(span_notice("[M] pets [src], and it pulses happily!"))
+		playsound(get_turf(src), 'sound/effects/ordeals/violet/fruit_suicide.ogg', 30, TRUE)
+		to_chat(M, span_notice("[src] coos affectionately at your touch."))
+		return
+	return ..()
+
+// Violet pet projectile - passes through humans harmlessly, explodes on hit
+/obj/projectile/beam/violet_pet
+	name = "violet beam"
+	icon_state = "dvoid_dart"
+	damage = 20
+	damage_type = BLACK_DAMAGE
+	light_color = COLOR_PURPLE
+	impact_effect_type = /obj/effect/temp_visual/impact_effect/purple_laser
+	/// AoE range on hit
+	var/aoe_range = 1
+
+/obj/projectile/beam/violet_pet/prehit_pierce(atom/A)
+	if(ishuman(A))
+		return PROJECTILE_PIERCE_PHASE
+	return ..()
+
+/obj/projectile/beam/violet_pet/on_hit(atom/target, blocked = FALSE, pierce_hit)
+	. = ..()
+	var/turf/T = get_turf(target)
+	if(!T)
+		return
+
+	// Calculate damage multiplier based on rider's prudence
+	var/damage_mult = 1
+	if(firer && istype(firer, /mob/living/simple_animal/hostile/violet_pet))
+		var/mob/living/simple_animal/hostile/violet_pet/pet = firer
+		for(var/mob/living/carbon/human/rider in pet.buckled_mobs)
+			var/prudence = get_modified_attribute_level(rider, PRUDENCE_ATTRIBUTE)
+			damage_mult = 1 + (prudence * 0.02) // 2% more damage per prudence
+			break // Only use first rider
+
+	var/aoe_damage = damage * damage_mult
+
+	// Visual effect
+	playsound(T, 'sound/effects/ordeals/violet/fruit_suicide.ogg', 50, TRUE)
+	new /obj/effect/temp_visual/revenant(T)
+
+	// Deal AoE damage
+	for(var/turf/aoe_turf in range(aoe_range, T))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(aoe_turf)
+		for(var/mob/living/L in aoe_turf)
+			if(ishuman(L)) // Don't hurt humans
+				continue
+			if(L == target) // Already hit by direct damage
+				continue
+			L.deal_damage(aoe_damage, BLACK_DAMAGE)
