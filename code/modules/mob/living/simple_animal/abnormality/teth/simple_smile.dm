@@ -54,7 +54,7 @@
 			Then, it disappears with a smile."),
 	)
 
-	generic_bubbles = alist(
+	generic_bubbles = list(
 		1 = list("%ABNO purrs gently."),
 		2 = list("%ABNO rubs up against %PERSON's hand"),
 		3 = list("%ABNO hisses at %PERSON."),

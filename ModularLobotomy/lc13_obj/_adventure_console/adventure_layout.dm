@@ -42,7 +42,7 @@
 	///Currently Selected Event
 	var/datum/adventure_event/event_data
 	///Used in event chances.
-	var/list/virtual_stats = alist(
+	var/list/virtual_stats = list(
 		WRATH_STAT = 10,
 		LUST_STAT = 10,
 		SLOTH_STAT = 10,

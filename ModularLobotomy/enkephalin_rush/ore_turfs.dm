@@ -358,7 +358,7 @@
 	new /obj/effect/spawner/map_enemy(get_turf(src), threat_level)
 
 /turf/closed/mineral/random/facility/proc/AbnoEvent(user)
-	var/list/abnolevels = alist(
+	var/list/abnolevels = list(
 			ZAYIN_LEVEL = 1,
 			TETH_LEVEL = 2,
 			HE_LEVEL = 3,
