@@ -161,6 +161,8 @@
 #include "code\__DEFINES\dcs\signals.dm"
 #include "code\__DEFINES\dcs\signals_fish.dm"
 #include "code\__DEFINES\research\anomalies.dm"
+#include "code\__DEFINES\~lobotomy_defines\signals.dm"
+#include "code\__DEFINES\~lobotomy_defines\traits.dm"
 #include "code\__DEFINES\~lobotomy_defines\_patreon.dm"
 #include "code\__DEFINES\~lobotomy_defines\abnormalities.dm"
 #include "code\__DEFINES\~lobotomy_defines\adventure.dm"
@@ -4657,5 +4659,8 @@
 #include "ModularLobotomy\workshop\templates\scythe.dm"
 #include "ModularLobotomy\workshop\templates\fishing\fishingweapons.dm"
 #include "ModularLobotomy\zTegu_overwrite\tegu_overwrite_vars.dm"
+#include "code\modules\gunpoint\code\gunpoint.dm"
+#include "code\modules\gunpoint\code\gunpoint_datum.dm"
+#include "code\modules\gunpoint\code\gunpoint_radial.dm"
 // END_INCLUDE
 
