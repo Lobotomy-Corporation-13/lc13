@@ -26,7 +26,7 @@
 	damage_overlay_type = "synth"
 	mutanttongue = /obj/item/organ/tongue/robot
 	mutantheart = /obj/item/organ/resurgence_core
-	mutanteyes = /obj/item/organ/eyes/robotic
+	mutanteyes = /obj/item/organ/eyes/robotic/shield
 	mutantears = /obj/item/organ/ears/cybernetic
 	mutantliver = /obj/item/organ/liver/cybernetic
 	mutantstomach = /obj/item/organ/stomach/cybernetic

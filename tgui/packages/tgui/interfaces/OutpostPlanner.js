@@ -294,6 +294,7 @@ const RoomTab = (props, context) => {
     can_designate,
     detected_size,
     detected_type,
+    detected_valid_types = [],
     detected_walls,
     detected_doors,
     detected_is_cramped,
@@ -426,9 +427,24 @@ const RoomTab = (props, context) => {
                     <Icon name="check-circle" mr={1} />
                     Valid space detected!
                   </Box>
-                  <Box>
-                    <Box inline bold mr={1}>Detected Type:</Box>
-                    {detected_type}
+                  <Box mb={1}>
+                    <Box bold mr={1}>
+                      {detected_valid_types.length > 1
+                        ? "Valid Room Types:"
+                        : "Detected Type:"}
+                    </Box>
+                    {detected_valid_types.length > 1 ? (
+                      <Box ml={1}>
+                        {detected_valid_types.map((rtype, index) => (
+                          <Box key={index} color="good">
+                            <Icon name="check" mr={1} />
+                            {rtype}
+                          </Box>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Box inline color="good">{detected_type}</Box>
+                    )}
                   </Box>
                   <Box>
                     <Box inline bold mr={1}>Size:</Box>
@@ -456,16 +472,26 @@ const RoomTab = (props, context) => {
 
             <Stack.Item grow>
               <Section fill title="Designate Room">
-                <Box mb={2}>
-                  The room type is automatically determined by
-                  the structures inside:
-                </Box>
+                {detected_valid_types.length > 1 ? (
+                  <Box mb={2} color="good">
+                    <Icon name="list" mr={1} />
+                    This room qualifies as multiple types! You will be
+                    able to choose which type to designate.
+                  </Box>
+                ) : (
+                  <Box mb={2}>
+                    The room type is automatically determined by
+                    the structures inside:
+                  </Box>
+                )}
                 <RoomTypeGuide />
                 <Button
                   fluid
                   icon="plus"
                   color="good"
-                  content="Designate This Space"
+                  content={detected_valid_types.length > 1
+                    ? "Choose Room Type..."
+                    : "Designate This Space"}
                   disabled={in_use}
                   onClick={() => act('designate_room')} />
               </Section>
@@ -540,8 +566,13 @@ const RoomTypeGuide = () => {
   const roomTypes = [
     {
       name: 'Living Quarters',
-      requirements: 'Bed',
+      requirements: 'Wooden Sleeper (personal room)',
       canBeCramped: true,
+    },
+    {
+      name: 'Barracks',
+      requirements: '2+ Wooden Sleepers (shared, no faith bonus)',
+      canBeCramped: false,
     },
     {
       name: 'Common Room',

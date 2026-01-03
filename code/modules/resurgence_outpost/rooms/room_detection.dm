@@ -20,6 +20,7 @@
 #define ROOM_TYPE_KITCHEN         "Kitchen"
 #define ROOM_TYPE_LIVING_QUARTERS "Living Quarters"
 #define ROOM_TYPE_EXPORT_WAREHOUSE "Export Warehouse"
+#define ROOM_TYPE_BARRACKS        "Barracks"
 
 /**
  * Detect an enclosed room using flood-fill algorithm.
@@ -128,7 +129,7 @@
 	var/has_kitchen = FALSE
 	var/has_table = FALSE
 	var/has_chair = FALSE
-	var/has_bed = FALSE
+	var/bed_count = 0
 	var/has_closet = FALSE
 	var/has_fridge = FALSE
 	var/has_resources_recorder = FALSE
@@ -145,7 +146,7 @@
 			if(istype(S, /obj/structure/chair))
 				has_chair = TRUE
 			if(istype(S, /obj/structure/resurgence_bed))
-				has_bed = TRUE
+				bed_count++
 			if(istype(S, /obj/structure/closet))
 				has_closet = TRUE
 			if(istype(S, /obj/structure/resources_recorder))
@@ -161,7 +162,9 @@
 		valid_types += ROOM_TYPE_KITCHEN
 	if(has_table && has_chair)
 		valid_types += ROOM_TYPE_COMMON
-	if(has_bed)
+	if(bed_count >= 2)
+		valid_types += ROOM_TYPE_BARRACKS
+	if(bed_count >= 1)
 		valid_types += ROOM_TYPE_LIVING_QUARTERS
 	if(has_closet)
 		valid_types += ROOM_TYPE_STORAGE
@@ -211,6 +214,8 @@
 			return "Living Quarters"
 		if(ROOM_TYPE_EXPORT_WAREHOUSE)
 			return "Export Warehouse"
+		if(ROOM_TYPE_BARRACKS)
+			return "Clan Barracks"
 		else
 			return "Clan Room"
 
@@ -293,6 +298,7 @@
 		ROOM_TYPE_STORAGE,
 		ROOM_TYPE_KITCHEN,
 		ROOM_TYPE_EXPORT_WAREHOUSE,
+		ROOM_TYPE_BARRACKS,
 		ROOM_TYPE_BASIC
 	)
 

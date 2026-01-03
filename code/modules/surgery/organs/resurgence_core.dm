@@ -38,6 +38,7 @@
 	// Internal tracking
 	// var/charge_tick_counter = 0 // Track ticks for charge decay messages (DISABLED)
 	var/faith_tick_counter = 0 // Track ticks for faith updates (every 5 seconds)
+	var/companion_tick_counter = 0 // Track ticks for nearby companion checks (every ~10 seconds)
 	// var/room_quality_tick_counter = 0 // DISABLED - room quality now uses area enter/exit signals
 
 	// Character stats (1-20)
@@ -118,6 +119,12 @@
 	if(faith_tick_counter >= 3) // 3 ticks * ~2 seconds = ~6 seconds (close to 5)
 		faith_tick_counter = 0
 		apply_faith_changes()
+
+	// Check for nearby companions every ~10 seconds (5 ticks)
+	companion_tick_counter++
+	if(companion_tick_counter >= 5)
+		companion_tick_counter = 0
+		check_nearby_companions()
 
 	// Room quality is now checked via area enter/exit signals, not periodic ticks
 
@@ -426,23 +433,23 @@
 	var/quality_desc = ""
 
 	if(beauty_level >= ROOM_QUALITY_LUXURIOUS)
-		faith_change = 0.5
+		faith_change = 2.5
 		quality_desc = "Luxurious surroundings."
 	else if(beauty_level >= ROOM_QUALITY_COMFORTABLE)
-		faith_change = 0.3
+		faith_change = 1.5
 		quality_desc = "Comfortable room."
 	else if(beauty_level >= ROOM_QUALITY_ADEQUATE)
-		faith_change = 0.1
+		faith_change = 0.5
 		quality_desc = "Adequate accommodations."
 	else if(beauty_level >= ROOM_QUALITY_BARE)
 		// No effect for bare rooms
 		clear_faith_event("room_quality")
 		faith_change = 0
 	else if(beauty_level >= ROOM_QUALITY_SHABBY)
-		faith_change = -0.1
+		faith_change = -0.5
 		quality_desc = "Shabby surroundings."
 	else
-		faith_change = -0.3
+		faith_change = -1.5
 		quality_desc = "Squalid conditions."
 
 	// Apply room quality event if there's a change
@@ -514,6 +521,39 @@
 		add_faith_event("room_cramped", event)
 	else
 		clear_faith_event("room_cramped")
+
+/// Check for nearby fellow resurgence machines and apply community bonus
+/// Runs every ~10 seconds to minimize performance impact with many players
+/obj/item/organ/resurgence_core/proc/check_nearby_companions()
+	if(!owner)
+		return
+
+	var/companion_count = 0
+	// Use view(7) for default view range, with type filtering for efficiency
+	for(var/mob/living/carbon/human/H in view(7, owner))
+		if(H == owner)
+			continue
+		if(H.stat == DEAD)
+			continue
+		// Check if they're a resurgence machine
+		if(!istype(H.dna?.species, /datum/species/resurgence_machine))
+			continue
+		companion_count++
+		// Early exit once we've found enough - no need to count all
+		if(companion_count >= 2)
+			break
+
+	if(companion_count >= 2)
+		// Add community bonus for having companions nearby
+		var/datum/faith_event/community/event = new(
+			"Working alongside fellow machines.",
+			0.5, // Small faith bonus per tick
+			null, // Permanent while conditions met
+			"community"
+		)
+		add_faith_event("community", event)
+	else
+		clear_faith_event("community")
 
 // DISABLED - Charge decay modifier (preserved for future use)
 // /obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()

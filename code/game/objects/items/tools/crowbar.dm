@@ -25,6 +25,8 @@
 	var/resurgence_durability = 100
 	/// Maximum durability for percentage calculations
 	var/resurgence_max_durability = 100
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/crowbar/suicide_act(mob/user)
 	user.visible_message("<span class='suicide'>[user] is beating [user.p_them()]self to death with [src]! It looks like [user.p_theyre()] trying to commit suicide!</span>")

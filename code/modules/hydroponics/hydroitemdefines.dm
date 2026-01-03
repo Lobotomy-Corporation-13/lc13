@@ -135,6 +135,8 @@
 	var/resurgence_durability = 200
 	/// Maximum durability for percentage calculations
 	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/hatchet/Initialize()
 	. = ..()
@@ -176,6 +178,8 @@
 	var/resurgence_durability = 200
 	/// Maximum durability for percentage calculations
 	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/scythe/Initialize()
 	. = ..()

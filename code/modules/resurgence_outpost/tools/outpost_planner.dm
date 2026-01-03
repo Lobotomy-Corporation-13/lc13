@@ -92,13 +92,17 @@
 		"Coffin" = /obj/structure/resurgence_blueprint/coffin,
 		"Trash Bin" = /obj/structure/resurgence_blueprint/trashbin,
 		"Filing Cabinet" = /obj/structure/resurgence_blueprint/filing_cabinet,
-		"Chest Drawer" = /obj/structure/resurgence_blueprint/chest_drawer
+		"Chest Drawer" = /obj/structure/resurgence_blueprint/chest_drawer,
+		"Sign" = /obj/structure/resurgence_blueprint/sign,
+		"Notice Board" = /obj/structure/resurgence_blueprint/noticeboard
 	)
 
 	// Production category - crafting stations
 	blueprint_categories[BLUEPRINT_CAT_PRODUCTION] = list(
 		"Crafting Table" = /obj/structure/resurgence_blueprint/crafting_table,
+		"Primitive Forge" = /obj/structure/resurgence_blueprint/forge/primitive,
 		"Forge" = /obj/structure/resurgence_blueprint/forge,
+		"Primitive Loom" = /obj/structure/resurgence_blueprint/loom/primitive,
 		"Loom" = /obj/structure/resurgence_blueprint/loom,
 		"Seed Extractor" = /obj/structure/resurgence_blueprint/seed_extractor,
 		"Condiment Station" = /obj/structure/resurgence_blueprint/condiment_station,
@@ -200,11 +204,19 @@
 		data["room_beauty"] = current_room.totalbeauty
 		data["room_beauty_avg"] = current_room.beauty
 
-		// Room ownership info
-		data["room_owner"] = current_room.owner_ckey
+		// Room ownership info - handle barracks differently (multiple owners)
 		data["user_ckey"] = user.ckey
-		data["user_owns_this_room"] = (current_room.owner_ckey == user.ckey)
 		data["user_has_room"] = (GLOB.resurgence_room_owners[user.ckey] != null)
+		data["is_barracks"] = (current_room.room_type == ROOM_TYPE_BARRACKS)
+		if(current_room.room_type == ROOM_TYPE_BARRACKS)
+			var/area/resurgence_outpost/room/barracks/barracks = current_room
+			data["room_owner"] = barracks.owner_ckeys.len ? barracks.owner_ckeys.Join(", ") : null
+			data["room_owner_count"] = barracks.owner_ckeys.len
+			data["user_owns_this_room"] = (user.ckey in barracks.owner_ckeys)
+		else
+			data["room_owner"] = current_room.owner_ckey
+			data["room_owner_count"] = current_room.owner_ckey ? 1 : 0
+			data["user_owns_this_room"] = (current_room.owner_ckey == user.ckey)
 	else
 		// Check if we can designate a room here
 		data["in_room"] = FALSE
@@ -304,10 +316,17 @@
 		if("select_structure")
 			var/struct_name = params["name"]
 			var/struct_type = text2path(params["type"])
-			if(struct_type && blueprint_categories[selected_category]?[struct_name])
-				selected_blueprint = struct_type
-				selected_name = struct_name
-				to_chat(usr, span_notice("Selected: <b>[selected_name]</b>. Click on the ground to place the blueprint."))
+			if(struct_type)
+				// Search all categories for the structure (needed for search results)
+				var/found = FALSE
+				for(var/cat_name in blueprint_categories)
+					if(blueprint_categories[cat_name]?[struct_name])
+						found = TRUE
+						break
+				if(found)
+					selected_blueprint = struct_type
+					selected_name = struct_name
+					to_chat(usr, span_notice("Selected: <b>[selected_name]</b>. Click on the ground to place the blueprint."))
 			return TRUE
 
 		if("clear_selection")
@@ -469,12 +488,14 @@
 		return FALSE
 
 	// Check if the result type already exists on this turf
+	var/is_floor_blueprint = FALSE
 	if(selected_blueprint)
 		var/obj/structure/resurgence_blueprint/temp_bp = selected_blueprint
 		var/result_type = initial(temp_bp.result_type)
 		if(result_type)
 			// For turfs, check if this turf is already that type
 			if(ispath(result_type, /turf))
+				is_floor_blueprint = TRUE
 				if(istype(T, result_type))
 					to_chat(user, span_warning("This location already has that floor type."))
 					return FALSE
@@ -485,11 +506,12 @@
 						to_chat(user, span_warning("There's already a [A.name] here."))
 						return FALSE
 
-	// Check for dense objects that would block construction
-	for(var/obj/structure/S in T)
-		if(S.density)
-			to_chat(user, span_warning("Something is blocking this location."))
-			return FALSE
+	// Check for dense objects that would block construction (skip for floor blueprints)
+	if(!is_floor_blueprint)
+		for(var/obj/structure/S in T)
+			if(S.density)
+				to_chat(user, span_warning("Something is blocking this location."))
+				return FALSE
 
 	// Check for walls (can't place on walls unless it's a door frame, etc.)
 	if(isclosedturf(T))
@@ -500,9 +522,12 @@
 
 /// Place the selected blueprint on the turf
 /obj/item/resurgence_outpost_planner/proc/place_blueprint(turf/T, mob/user)
-	// Special handling for wall-mounted structures like resources recorder
+	// Special handling for wall-mounted structures like resources recorder and noticeboard
 	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/resources_recorder))
 		place_wall_mounted_blueprint(T, user)
+		return
+	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/noticeboard))
+		place_wall_mounted_blueprint(T, user, "Notice Board")
 		return
 
 	var/obj/structure/resurgence_blueprint/BP = new selected_blueprint(T)
@@ -512,16 +537,16 @@
 		to_chat(user, span_notice("You place a [BP.result_name] blueprint facing [dir2text(selected_direction)]. Add the required materials to build it."))
 		playsound(T, 'sound/items/deconstruct.ogg', 30, TRUE)
 
-/// Place a wall-mounted blueprint (resources recorder, etc.)
-/obj/item/resurgence_outpost_planner/proc/place_wall_mounted_blueprint(turf/T, mob/user)
+/// Place a wall-mounted blueprint (resources recorder, noticeboard, etc.)
+/obj/item/resurgence_outpost_planner/proc/place_wall_mounted_blueprint(turf/T, mob/user, custom_name = "Resources Recorder")
 	// Check for wall in the selected direction
 	var/turf/wall_turf = get_step(T, selected_direction)
 	if(!isclosedturf(wall_turf))
-		to_chat(user, span_warning("The Resources Recorder must be placed adjacent to a wall. There is no wall to the [dir2text(selected_direction)]."))
+		to_chat(user, span_warning("The [custom_name] must be placed adjacent to a wall. There is no wall to the [dir2text(selected_direction)]."))
 		return
 
 	// Create the blueprint with wall direction
-	var/obj/structure/resurgence_blueprint/resources_recorder/BP = new selected_blueprint(T, selected_direction)
+	var/obj/structure/resurgence_blueprint/BP = new selected_blueprint(T, selected_direction)
 	if(BP)
 		BP.blueprint_category = selected_category
 		to_chat(user, span_notice("You place a [BP.result_name] blueprint mounted towards the [dir2text(selected_direction)] wall. Add the required materials to build it."))
@@ -669,20 +694,28 @@
 		to_chat(user, span_warning("You cannot claim rooms."))
 		return
 
-	// Only living quarters can be claimed
-	if(room.room_type != ROOM_TYPE_LIVING_QUARTERS)
-		to_chat(user, span_warning("Only living quarters can be claimed as personal rooms. This room needs a bed."))
+	// Only living quarters and barracks can be claimed
+	if(room.room_type != ROOM_TYPE_LIVING_QUARTERS && room.room_type != ROOM_TYPE_BARRACKS)
+		to_chat(user, span_warning("Only living quarters and barracks can be claimed. This room needs a bed."))
 		return
 
-	// Check if already owned by someone else
-	if(room.owner_ckey && room.owner_ckey != user.ckey)
-		to_chat(user, span_warning("This room is already claimed by [room.owner_ckey]."))
-		return
+	// Barracks can have multiple claimers, living quarters only one
+	if(room.room_type == ROOM_TYPE_BARRACKS)
+		var/area/resurgence_outpost/room/barracks/barracks = room
+		// Check if user already claimed this barracks
+		if(user.ckey in barracks.owner_ckeys)
+			to_chat(user, span_warning("You already have a bunk in this barracks."))
+			return
+	else
+		// Living quarters - check if already owned by someone else
+		if(room.owner_ckey && room.owner_ckey != user.ckey)
+			to_chat(user, span_warning("This room is already claimed by [room.owner_ckey]."))
+			return
 
-	// Check if user already owns this room
-	if(room.owner_ckey == user.ckey)
-		to_chat(user, span_warning("You already own this room."))
-		return
+		// Check if user already owns this room
+		if(room.owner_ckey == user.ckey)
+			to_chat(user, span_warning("You already own this room."))
+			return
 
 	// Check if user owns another room (will be unclaimed)
 	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[user.ckey]
@@ -705,11 +738,19 @@
 		to_chat(user, span_warning("You must be inside a designated room."))
 		return
 
-	if(room.owner_ckey != user.ckey)
-		to_chat(user, span_warning("You don't own this room."))
-		return
+	// Handle barracks differently (multiple owners)
+	if(room.room_type == ROOM_TYPE_BARRACKS)
+		var/area/resurgence_outpost/room/barracks/barracks = room
+		if(!(user.ckey in barracks.owner_ckeys))
+			to_chat(user, span_warning("You don't have a bunk in this barracks."))
+			return
+		barracks.unclaim_room_by_ckey(user.ckey)
+	else
+		if(room.owner_ckey != user.ckey)
+			to_chat(user, span_warning("You don't own this room."))
+			return
+		room.unclaim_room()
 
-	room.unclaim_room()
 	to_chat(user, span_notice("You have unclaimed '[room.name]'."))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 

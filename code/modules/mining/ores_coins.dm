@@ -112,6 +112,9 @@ GLOBAL_LIST_INIT(sand_recipes, list(\
 
 /obj/item/stack/ore/glass/get_main_recipes()
 	. = ..()
+	// Disable sand recipes in management gamemode (use forge instead)
+	if(SSticker?.mode && istype(SSticker.mode, /datum/game_mode/management))
+		return
 	. += GLOB.sand_recipes
 
 /obj/item/stack/ore/glass/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)

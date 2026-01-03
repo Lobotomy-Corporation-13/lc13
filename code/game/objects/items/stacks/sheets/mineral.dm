@@ -45,6 +45,9 @@ GLOBAL_LIST_INIT(sandstone_recipes, list ( \
 
 /obj/item/stack/sheet/mineral/sandstone/get_main_recipes()
 	. = ..()
+	// Disable sandstone recipes in management gamemode (use planner instead)
+	if(SSticker?.mode && istype(SSticker.mode, /datum/game_mode/management))
+		return
 	. += GLOB.sandstone_recipes
 
 /obj/item/stack/sheet/mineral/sandstone/thirty

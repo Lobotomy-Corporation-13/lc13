@@ -198,6 +198,8 @@
 	clawfootstep = FOOTSTEP_CARPET_BAREFOOT
 	heavyfootstep = FOOTSTEP_GENERIC_HEAVY
 	tiled_dirt = FALSE
+	/// Beauty bonus this carpet provides to rooms
+	var/carpet_beauty = 1
 
 /turf/open/floor/carpet/setup_broken_states()
 	return list("damaged")
@@ -209,6 +211,8 @@
 /turf/open/floor/carpet/Initialize()
 	. = ..()
 	update_icon()
+	if(carpet_beauty)
+		AddComponent(/datum/component/beauty, carpet_beauty)
 
 /turf/open/floor/carpet/update_icon()
 	. = ..()
@@ -289,6 +293,7 @@
 	floor_tile = /obj/item/stack/tile/carpet/royalblack
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_CARPET_ROYAL_BLACK)
 	canSmoothWith = list(SMOOTH_GROUP_CARPET_ROYAL_BLACK)
+	carpet_beauty = 5
 
 /turf/open/floor/carpet/royalblue
 	icon = 'icons/turf/floors/carpet_royalblue.dmi'
@@ -297,6 +302,7 @@
 	floor_tile = /obj/item/stack/tile/carpet/royalblue
 	smoothing_groups = list(SMOOTH_GROUP_TURF_OPEN, SMOOTH_GROUP_CARPET_ROYAL_BLUE)
 	canSmoothWith = list(SMOOTH_GROUP_CARPET_ROYAL_BLUE)
+	carpet_beauty = 5
 
 /turf/open/floor/carpet/executive
 	name = "executive carpet"

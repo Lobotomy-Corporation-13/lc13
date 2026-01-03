@@ -3748,6 +3748,7 @@
 #include "code\modules\resurgence_outpost\blueprints\blueprint_base.dm"
 #include "code\modules\resurgence_outpost\blueprints\blueprint_types.dm"
 #include "code\modules\resurgence_outpost\components.dm"
+#include "code\modules\resurgence_outpost\components\deconstructable.dm"
 #include "code\modules\resurgence_outpost\faith_clothing_component.dm"
 #include "code\modules\resurgence_outpost\clothing\resurgence_fabric.dm"
 #include "code\modules\resurgence_outpost\clothing\resurgence_clothing.dm"

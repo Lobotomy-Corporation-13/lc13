@@ -145,6 +145,12 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 		apply_homeless_faith_event(old_ckey)
 	return TRUE
 
+/// Unclaim room by specific ckey (base implementation for Living Quarters)
+/area/resurgence_outpost/room/proc/unclaim_room_by_ckey(ckey, silent = FALSE)
+	if(owner_ckey != ckey)
+		return FALSE
+	return unclaim_room(silent)
+
 /// Update the room owner's faith event to "Has Personal Room"
 /area/resurgence_outpost/room/proc/update_owner_faith_event()
 	if(!owner_ckey)
@@ -155,10 +161,10 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	if(!core)
 		return
 
-	// Add "Has Personal Room" event (+5 faith per 30 seconds = +1 per 6-second tick)
+	// Add "Has Personal Room" event (+0.25 faith per minute = +0.025 per 6-second tick)
 	var/datum/faith_event/room_ownership/event = new(
 		"You have a personal room.",
-		1, // +1 per tick (applied every ~6 seconds, so ~+5 per 30 sec)
+		0.025, // +0.025 per tick (applied every ~6 seconds, so ~+0.25 per min)
 		null, // permanent until room lost
 		"room_ownership"
 	)
@@ -240,6 +246,61 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	room_type = ROOM_TYPE_EXPORT_WAREHOUSE
 	icon_state = "purple"
 
+/// Barracks - shared sleeping quarters, multiple beds and claimers, no faith bonus
+/area/resurgence_outpost/room/barracks
+	name = "Barracks"
+	room_type = ROOM_TYPE_BARRACKS
+	icon_state = "blue2"
+	/// List of ckeys who have claimed a bunk in this barracks
+	var/list/owner_ckeys = list()
+
+/area/resurgence_outpost/room/barracks/Destroy()
+	// Clean up all ownerships before destroying
+	for(var/ckey in owner_ckeys)
+		GLOB.resurgence_room_owners -= ckey
+		// Barracks residents don't get homeless penalty (no ownership event to begin with)
+	owner_ckeys.Cut()
+	return ..()
+
+/// Override claim for barracks - allows multiple claimers, no faith bonus
+/area/resurgence_outpost/room/barracks/claim_room(ckey)
+	if(!ckey)
+		return FALSE
+
+	// Check if already claimed this barracks
+	if(ckey in owner_ckeys)
+		return FALSE
+
+	// Unclaim any previously owned room by this player
+	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[ckey]
+	if(old_room && !QDELETED(old_room) && old_room != src)
+		old_room.unclaim_room_by_ckey(ckey, silent = TRUE)
+
+	// Add to owner list
+	owner_ckeys += ckey
+	GLOB.resurgence_room_owners[ckey] = src
+
+	// Barracks does NOT give a positive faith event - just removes homeless penalty
+	remove_homeless_faith_event(ckey)
+	return TRUE
+
+/// Override unclaim for barracks - removes specific claimer
+/area/resurgence_outpost/room/barracks/unclaim_room(silent = FALSE)
+	// This is called with no args - unclaim all
+	for(var/ckey in owner_ckeys)
+		GLOB.resurgence_room_owners -= ckey
+	owner_ckeys.Cut()
+	return TRUE
+
+/// Unclaim by specific ckey for barracks
+/area/resurgence_outpost/room/barracks/unclaim_room_by_ckey(ckey, silent = FALSE)
+	if(!(ckey in owner_ckeys))
+		return FALSE
+	owner_ckeys -= ckey
+	GLOB.resurgence_room_owners -= ckey
+	// No homeless penalty for leaving barracks
+	return TRUE
+
 /**
  * Create a new resurgence room area from a list of turfs.
  *
@@ -284,6 +345,8 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 			new_area = new /area/resurgence_outpost/room/living_quarters()
 		if(ROOM_TYPE_EXPORT_WAREHOUSE)
 			new_area = new /area/resurgence_outpost/room/export_warehouse()
+		if(ROOM_TYPE_BARRACKS)
+			new_area = new /area/resurgence_outpost/room/barracks()
 		else
 			new_area = new /area/resurgence_outpost/room()
 
@@ -417,6 +480,23 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 		"room_ownership"
 	)
 	core.add_faith_event("room_ownership", event)
+
+/**
+ * Remove the homeless faith event for a player (used by barracks which gives no positive bonus).
+ *
+ * Arguments:
+ * * ckey - The ckey of the player to remove the event from
+ */
+/proc/remove_homeless_faith_event(ckey)
+	if(!ckey)
+		return
+
+	var/obj/item/organ/resurgence_core/core = get_resurgence_core_by_ckey(ckey)
+	if(!core)
+		return
+
+	// Remove the room_ownership event entirely (barracks gives no bonus or penalty)
+	core.clear_faith_event("room_ownership")
 
 /**
  * Helper to find a resurgence core by ckey.

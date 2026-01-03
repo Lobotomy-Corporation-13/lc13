@@ -14,6 +14,10 @@
 	if(!isatom(parent) || isarea(parent))
 		return COMPONENT_INCOMPATIBLE
 
+	// Don't attach beauty to stacks - they merge and cause accumulation bugs
+	if(istype(parent, /obj/item/stack))
+		return COMPONENT_INCOMPATIBLE
+
 	beauty = beautyamount
 
 	if(ismovable(parent))
@@ -44,10 +48,14 @@
 	if((beauty + beautyamount) == 0)
 		qdel(src)
 		return
-	beauty += beautyamount
-	// Sanity check - catch extreme accumulation
-	if(beauty < -1000 || beauty > 1000)
-		log_game("BEAUTY BUG: [parent?.type] accumulated extreme beauty: [beauty] (added [beautyamount])")
+
+	// Sanity check - prevent extreme accumulation
+	var/new_beauty = beauty + beautyamount
+	if(new_beauty < -1000 || new_beauty > 1000)
+		log_game("BEAUTY BUG: [parent?.type] has extreme beauty value: [new_beauty] - skipping")
+		return  // Don't apply the change
+
+	beauty = new_beauty
 	var/area/A = get_area(parent)
 	if(A && !A.outdoors)
 		A.totalbeauty += beautyamount

@@ -58,6 +58,21 @@
 	icon_state = "cpu_super"
 
 // ============================================
+// Vines - Dropped from trees, used for rope
+// ============================================
+
+/obj/item/stack/resurgence_vines
+	name = "vines"
+	desc = "Flexible plant vines harvested from trees. Can be woven into rope."
+	singular_name = "vine"
+	icon = 'icons/obj/power.dmi'
+	icon_state = "coil"
+	color = "#4a8c3b"  // Green color
+	max_amount = 50
+	w_class = WEIGHT_CLASS_SMALL
+	merge_type = /obj/item/stack/resurgence_vines
+
+// ============================================
 // Fertilizer - Made from coal, used for farming
 // ============================================
 

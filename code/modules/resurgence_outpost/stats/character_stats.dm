@@ -63,7 +63,11 @@
 
 /**
  * Get the XP required to reach the next level.
- * XP increases by 100 each level: 100, 200, 300, 400, ...
+ * XP increases by 100 every 5 levels:
+ * - Levels 1-5: 100 XP each
+ * - Levels 6-10: 200 XP each
+ * - Levels 11-15: 300 XP each
+ * - Levels 16-20: 400 XP each
  *
  * Arguments:
  * * level - The current stat level (1-19)
@@ -74,4 +78,6 @@
 	if(level >= STAT_MAX_LEVEL)
 		return 0 // Already max level
 	level = clamp(level, 1, STAT_MAX_LEVEL - 1)
-	return STAT_XP_BASE * level // 100, 200, 300, ...
+	// XP increases by 100 every 5 levels
+	var/tier = round((level - 1) / 5) + 1 // 1 for levels 1-5, 2 for 6-10, etc.
+	return STAT_XP_BASE * tier // 100, 100, 100, 100, 100, 200, 200, ...

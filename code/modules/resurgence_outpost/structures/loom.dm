@@ -52,22 +52,23 @@
 		"result" = /obj/item/stack/sheet/cotton/cloth,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton = 3),
-		"total_work" = 15,
+		"total_work" = 5,
 		"desc" = "3 Cotton -> 1 Cloth",
 		"category" = CRAFT_CAT_MATERIALS
 	)
 
 	// === FAITH FABRICS ===
+	// Higher tier fabrics require durathread cotton instead of massive cloth costs
 
 	recipes["Simple Azure Faith Fabric"] = list(
 		"result" = /obj/item/resurgence_fabric/simple,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 15,
+			/obj/item/stack/sheet/cotton/cloth = 5,
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 20,
-		"desc" = "15 Cloth + 1 Rope -> Simple Faith Fabric (+0.1 faith)",
+		"desc" = "5 Cloth + 1 Rope -> Simple Faith Fabric (+0.1 faith)",
 		"category" = CRAFT_CAT_FABRICS
 	)
 
@@ -75,11 +76,12 @@
 		"result" = /obj/item/resurgence_fabric/advanced,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 25,
-			/obj/item/resurgence_component/rope = 3
+			/obj/item/stack/sheet/cotton/cloth = 8,
+			/obj/item/grown/cotton/durathread = 3,
+			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 40,
-		"desc" = "25 Cloth + 3 Rope -> Advanced Faith Fabric (+0.5 faith)",
+		"desc" = "8 Cloth + 3 Durathread + 2 Rope -> Advanced Faith Fabric (+0.5 faith)",
 		"category" = CRAFT_CAT_FABRICS
 	)
 
@@ -87,11 +89,12 @@
 		"result" = /obj/item/resurgence_fabric/elegant,
 		"result_amount" = 1,
 		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 40,
-			/obj/item/resurgence_component/rope = 5
+			/obj/item/stack/sheet/cotton/cloth = 10,
+			/obj/item/grown/cotton/durathread = 6,
+			/obj/item/resurgence_component/rope = 3
 		),
 		"total_work" = 60,
-		"desc" = "40 Cloth + 5 Rope -> Elegant Faith Fabric (+1.0 faith)",
+		"desc" = "10 Cloth + 6 Durathread + 3 Rope -> Elegant Faith Fabric (+1.0 faith)",
 		"category" = CRAFT_CAT_FABRICS
 	)
 
@@ -293,6 +296,47 @@
 	name = "portable loom"
 	desc = "A compact loom that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
 	requires_workshop = FALSE
+
+// ===== Primitive Loom =====
+// Made from wood only, can only make cloth and rope at 2x work time
+// Used to bootstrap textile production before building a proper loom
+
+/obj/structure/resurgence_crafting_table/loom/primitive
+	name = "primitive loom"
+	desc = "A simple wooden frame for basic weaving. Slower than a proper loom and can only produce cloth and rope."
+	icon = 'icons/obj/hydroponics/equipment.dmi'
+	icon_state = "loom"
+
+/obj/structure/resurgence_crafting_table/loom/primitive/init_recipes()
+	recipes = list()
+
+	// Basic Materials Only - 2x work time compared to regular loom
+	recipes["Cloth"] = list(
+		"result" = /obj/item/stack/sheet/cotton/cloth,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton = 3),
+		"total_work" = 10,
+		"desc" = "3 Cotton -> 1 Cloth (slow)",
+		"category" = CRAFT_CAT_MATERIALS
+	)
+
+	recipes["Rope"] = list(
+		"result" = /obj/item/resurgence_component/rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton = 5),
+		"total_work" = 15,
+		"desc" = "5 Cotton -> 1 Rope (slow)",
+		"category" = CRAFT_CAT_MATERIALS
+	)
+
+	recipes["Rope (Vines)"] = list(
+		"result" = /obj/item/resurgence_component/rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/resurgence_vines = 3),
+		"total_work" = 10,
+		"desc" = "3 Vines -> 1 Rope",
+		"category" = CRAFT_CAT_MATERIALS
+	)
 
 #undef CRAFT_CAT_FABRICS
 #undef CRAFT_CAT_MATERIALS

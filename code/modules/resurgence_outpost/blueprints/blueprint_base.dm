@@ -283,6 +283,9 @@
 			if(beauty_value != 0)
 				result.AddComponent(/datum/component/beauty, beauty_value)
 
+			// Add deconstructable component with the materials used
+			result.AddComponent(/datum/component/resurgence_deconstructable, required_materials.Copy())
+
 	// Remove the blueprint
 	qdel(src)
 

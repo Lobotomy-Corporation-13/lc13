@@ -309,9 +309,19 @@
 
 /obj/structure/resurgence_blueprint/forge/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/metal = 15,
-		/obj/item/stack/ore/rock = 20,
-		/obj/item/stack/sheet/mineral/coal = 5
+		/obj/item/stack/sheet/metal = 10,
+		/obj/item/stack/sheet/mineral/wood = 10,
+		/obj/item/resurgence_component/rope = 2
+	)
+
+/obj/structure/resurgence_blueprint/forge/primitive
+	name = "primitive forge blueprint"
+	result_name = "primitive forge"
+	result_type = /obj/structure/resurgence_crafting_table/forge/primitive
+
+/obj/structure/resurgence_blueprint/forge/primitive/init_materials()
+	required_materials = list(
+		/obj/item/stack/ore/rock = 50
 	)
 
 /obj/structure/resurgence_blueprint/loom
@@ -323,8 +333,20 @@
 
 /obj/structure/resurgence_blueprint/loom/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/mineral/wood = 12,
-		/obj/item/resurgence_component/rope = 3
+		/obj/item/stack/sheet/metal = 5,
+		/obj/item/stack/sheet/mineral/wood = 10,
+		/obj/item/resurgence_component/rope = 4
+	)
+
+/obj/structure/resurgence_blueprint/loom/primitive
+	name = "primitive loom blueprint"
+	result_name = "primitive loom"
+	result_type = /obj/structure/resurgence_crafting_table/loom/primitive
+
+/obj/structure/resurgence_blueprint/loom/primitive/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 20,
+		/obj/item/stack/resurgence_vines = 5
 	)
 
 /obj/structure/resurgence_blueprint/seed_extractor
@@ -781,6 +803,76 @@
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 3
 	)
+
+/obj/structure/resurgence_blueprint/sign
+	name = "sign blueprint"
+	result_name = "sign"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "sign"
+	result_type = /obj/structure/resurgence_sign
+
+/obj/structure/resurgence_blueprint/sign/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 2
+	)
+
+/obj/structure/resurgence_blueprint/noticeboard
+	name = "notice board blueprint"
+	result_name = "notice board"
+	icon = 'icons/obj/stationobjs.dmi'
+	icon_state = "nboard00"
+	result_type = /obj/structure/noticeboard
+	density = FALSE
+
+	/// Direction towards the wall this board will be mounted on
+	var/wall_dir = SOUTH
+
+/obj/structure/resurgence_blueprint/noticeboard/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 4
+	)
+
+/obj/structure/resurgence_blueprint/noticeboard/Initialize(mapload, wall_direction)
+	. = ..()
+	if(wall_direction)
+		wall_dir = wall_direction
+	apply_wall_offset()
+
+/// Apply pixel offset to match wall placement
+/obj/structure/resurgence_blueprint/noticeboard/proc/apply_wall_offset()
+	switch(wall_dir)
+		if(NORTH)
+			pixel_y = 32
+			pixel_x = 0
+		if(SOUTH)
+			pixel_y = -32
+			pixel_x = 0
+		if(EAST)
+			pixel_x = 32
+			pixel_y = 0
+		if(WEST)
+			pixel_x = -32
+			pixel_y = 0
+
+/obj/structure/resurgence_blueprint/noticeboard/complete_construction(mob/user)
+	if(!result_type)
+		to_chat(user, span_warning("Error: Blueprint has no result type defined!"))
+		return
+
+	to_chat(user, span_notice("You finish building the [result_name]!"))
+	playsound(src, complete_sound, 50, TRUE)
+
+	var/turf/T = get_turf(src)
+
+	// Create the noticeboard with wall direction
+	var/obj/structure/noticeboard/board = new result_type(T)
+	if(board)
+		board.pixel_x = pixel_x
+		board.pixel_y = pixel_y
+		board.anchored = TRUE
+
+	// Remove the blueprint
+	qdel(src)
 
 // ===========================================
 // MISC BLUEPRINTS

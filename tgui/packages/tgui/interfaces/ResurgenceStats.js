@@ -46,7 +46,7 @@ export const ResurgenceStats = (props, context) => {
                 xpNeeded={crafting_xp_needed}
                 maxLevel={max_level}
                 effects={[
-                  `Speed: ${crafting_speed.toFixed(2)}x`,
+                  `Speed: +${Math.round((1 - crafting_speed) * 100)}%`,
                   `Beauty: ${(crafting_beauty >= 0 ? '+' : '')
                     + crafting_beauty}`,
                 ]}
@@ -92,7 +92,7 @@ export const ResurgenceStats = (props, context) => {
                 xpNeeded={cooking_xp_needed}
                 maxLevel={max_level}
                 effects={[
-                  `Speed: ${cooking_speed.toFixed(2)}x`,
+                  `Speed: +${Math.round((1 - cooking_speed) * 100)}%`,
                   `Quality: ${(cooking_quality >= 0 ? '+' : '')
                     + cooking_quality}`,
                 ]}

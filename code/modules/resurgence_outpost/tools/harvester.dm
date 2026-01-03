@@ -79,10 +79,32 @@
 	var/target_type = null
 	/// Whether currently working
 	var/working = FALSE
-	/// Work points per tick (same as player base rate)
+	/// Base work points per tick (same as player base rate)
+	var/base_work_per_tick = GATHER_WORK_PER_TICK
+	/// Actual work points per tick (modified by quality tier)
 	var/work_per_tick = GATHER_WORK_PER_TICK
 	/// The mount structure holding us while working
 	var/obj/structure/harvester_mount/current_mount = null
+	/// Quality tier (1-5, affects speed and durability)
+	var/quality_tier = 1
+
+/obj/item/harvester/Initialize(mapload)
+	. = ..()
+	apply_quality_tier()
+
+/// Apply quality tier effects to stats
+/obj/item/harvester/proc/apply_quality_tier()
+	// Quality tier adds (tier - 1) * 2 work per tick
+	work_per_tick = base_work_per_tick + get_quality_work_bonus(quality_tier)
+	// Update name if not shoddy
+	if(quality_tier > QUALITY_TIER_SHODDY)
+		var/quality_name = get_quality_tier_name(quality_tier)
+		name = "[quality_name] [initial(name)]"
+
+/// Set the quality tier and apply effects
+/obj/item/harvester/proc/set_quality_tier(new_tier)
+	quality_tier = clamp(new_tier, 1, 5)
+	apply_quality_tier()
 
 /obj/item/harvester/Destroy()
 	detach_from_target()
@@ -412,6 +434,11 @@
 
 /obj/item/harvester/examine(mob/user)
 	. = ..()
+	// Show quality tier
+	var/quality_name = get_quality_tier_name(quality_tier)
+	var/quality_color = get_quality_tier_color(quality_tier)
+	. += span_notice("Quality: <span class='[quality_color]'>[quality_name]</span>")
+	. += span_notice("Work per tick: [work_per_tick]")
 	if(working && current_target)
 		var/work_needed = get_target_work_needed(current_target)
 		var/work_done = get_target_work_points(current_target)
@@ -426,8 +453,17 @@
 	name = "simple harvester"
 	desc = "A basic automated harvesting device. Attach to a resource and it will harvest it for you. Requires faith payment upfront. Has limited uses before breaking."
 	icon_state = "drone_maint_blue"
+	/// Base number of uses before breaking
+	var/base_uses = 3
 	/// Number of uses remaining before this harvester breaks
 	var/uses_remaining = 3
+
+/// Apply quality tier effects - simple harvester gets more uses
+/obj/item/harvester/simple/apply_quality_tier()
+	..()
+	// Quality tier increases uses: tier 1 = 3, tier 5 = 7 (base + (tier-1))
+	var/bonus_uses = quality_tier - 1
+	uses_remaining = base_uses + bonus_uses
 
 /obj/item/harvester/simple/pay_faith_cost(mob/user, faith_cost)
 	if(!ishuman(user))
@@ -473,7 +509,7 @@
 
 /obj/item/harvester/advanced
 	name = "advanced harvester"
-	desc = "An advanced automated harvesting device with internal faith storage. Can automatically seek nearby targets of the same type. Breaks after using 500 total faith."
+	desc = "An advanced automated harvesting device with internal faith storage. Can automatically seek nearby targets of the same type. Breaks after using its faith limit."
 	icon_state = "drone_synd"
 	/// Stored faith for autonomous operation
 	var/stored_faith = 0
@@ -483,8 +519,17 @@
 	var/search_range = 3
 	/// Total faith used over the harvester's lifetime
 	var/total_faith_used = 0
-	/// Maximum total faith before the harvester breaks
+	/// Base maximum total faith before the harvester breaks
+	var/base_max_total_faith = 500
+	/// Maximum total faith before the harvester breaks (modified by quality)
 	var/max_total_faith = 500
+
+/// Apply quality tier effects - advanced harvester gets more lifetime faith
+/obj/item/harvester/advanced/apply_quality_tier()
+	..()
+	// Quality tier increases max_total_faith: tier 1 = 500, tier 5 = 700 (base + (tier-1)*50)
+	var/bonus_faith = (quality_tier - 1) * 50
+	max_total_faith = base_max_total_faith + bonus_faith
 
 /obj/item/harvester/advanced/pay_faith_cost(mob/user, faith_cost)
 	// Advanced harvester uses stored faith, not player's

@@ -23,6 +23,8 @@
 	var/resurgence_durability = 200
 	/// Maximum durability for percentage calculations
 	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/pickaxe/suicide_act(mob/living/user)
 	user.visible_message(span_suicide("[user] begins digging into [user.p_their()] chest! It looks like [user.p_theyre()] trying to commit suicide!"))
@@ -161,6 +163,8 @@
 	var/resurgence_durability = 200
 	/// Maximum durability for percentage calculations
 	var/resurgence_max_durability = 200
+	/// Resurgence quality tier (1-5, affects work bonus and durability)
+	var/resurgence_quality_tier = 1
 
 /obj/item/shovel/Initialize()
 	. = ..()

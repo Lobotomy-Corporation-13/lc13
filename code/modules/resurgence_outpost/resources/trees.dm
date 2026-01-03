@@ -163,6 +163,10 @@
 	// Drop wood
 	new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
 
+	// Drop vines (roughly 1 vine per 5 wood)
+	var/vine_yield = max(1, round(yield / 5))
+	new /obj/item/stack/resurgence_vines(get_turf(src), vine_yield)
+
 	// Create stump that will regrow
 	var/obj/structure/resurgence_tree_stump/stump = new(loc)
 	stump.name = "[name] stump"
@@ -216,7 +220,7 @@
 
 /obj/structure/resurgence_tree_stump
 	name = "tree stump"
-	desc = "The remains of a felled tree. Given time, it may regrow."
+	desc = "The remains of a felled tree. Given time, it may regrow. You can chop it down to clear the area."
 	icon = 'icons/obj/flora/deadtrees.dmi'
 	icon_state = "tree_stump"
 	density = FALSE
@@ -226,11 +230,145 @@
 	var/regrow_time = 10 MINUTES
 	/// What type of tree to spawn on regrowth
 	var/tree_type = /obj/structure/resurgence_tree
+	/// Current work points accumulated
+	var/work_points = 0
+	/// Total work points needed to remove the stump
+	var/work_needed = 100
+	/// Amount of wood dropped when removed
+	var/base_yield = 10
+	/// Whether someone is currently chopping
+	var/being_worked = FALSE
+	/// Speed bonus when using a sharp tool
+	var/tool_speed_bonus = 0.25
 
 /obj/structure/resurgence_tree_stump/Initialize(mapload)
 	. = ..()
 	// Start regrowth timer
 	addtimer(CALLBACK(src, PROC_REF(regrow)), regrow_time)
+
+/obj/structure/resurgence_tree_stump/attack_hand(mob/user, list/modifiers)
+	. = ..()
+	if(.)
+		return
+
+	if(being_worked)
+		to_chat(user, span_warning("Someone is already working on this stump."))
+		return
+
+	if(!ishuman(user))
+		return
+
+	start_chopping(user, null)
+
+/obj/structure/resurgence_tree_stump/attackby(obj/item/W, mob/user, params)
+	// Check for valid cutting tool (needs sharpness) - if not, try bare hands
+	if(!W.get_sharpness())
+		return attack_hand(user)
+
+	if(being_worked)
+		to_chat(user, span_warning("Someone is already working on this stump."))
+		return
+
+	if(!ishuman(user))
+		return ..()
+
+	start_chopping(user, W)
+
+/obj/structure/resurgence_tree_stump/proc/start_chopping(mob/living/carbon/human/user, obj/item/tool)
+	// Check faith requirement
+	if(!can_gather(user))
+		to_chat(user, span_warning("You're too exhausted to chop. You need at least [MIN_FAITH_FOR_WORK] faith."))
+		return
+
+	// Work rate - base rate for bare hands, sharp tools provide speed bonus
+	var/work_per_tick = GATHER_WORK_PER_TICK
+	var/using_tool = FALSE
+	if(tool?.get_sharpness())
+		work_per_tick *= (1 + tool_speed_bonus)
+		using_tool = TRUE
+
+	// Harvesting stat bonus
+	var/harvesting_level = get_harvesting_stat(user)
+	work_per_tick += (harvesting_level - 1)
+
+	// Tool tier bonus (hatchets)
+	work_per_tick += get_tool_work_bonus(tool)
+
+	// Starting message
+	if(work_points > 0)
+		var/progress_pct = round((work_points / work_needed) * 100)
+		to_chat(user, span_notice("You continue chopping [src]... ([progress_pct]% complete)"))
+	else
+		if(using_tool)
+			to_chat(user, span_notice("You begin chopping [src] with [tool]..."))
+		else
+			to_chat(user, span_notice("You begin chopping [src] with your bare hands..."))
+
+	// Play sound
+	if(using_tool && tool.hitsound)
+		playsound(src, tool.hitsound, 50, TRUE)
+	else
+		playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
+
+	being_worked = TRUE
+
+	// Gathering loop
+	while(work_points < work_needed)
+		if(!can_gather(user))
+			to_chat(user, span_warning("You're too exhausted to continue chopping."))
+			break
+
+		if(!do_after(user, GATHER_TICK_TIME, target = src))
+			var/progress_pct = round((work_points / work_needed) * 100)
+			to_chat(user, span_notice("You stop chopping [src]. Progress: [progress_pct]%"))
+			break
+
+		work_points += work_per_tick
+		apply_work_faith_drain(user, work_per_tick)
+
+		// Decrement tool durability
+		if(tool && !use_tool_durability(tool, user))
+			tool = null
+			using_tool = FALSE
+			work_per_tick = GATHER_WORK_PER_TICK + (harvesting_level - 1)
+
+		// Periodic sound
+		if(prob(30))
+			if(using_tool && tool?.hitsound)
+				playsound(src, tool.hitsound, 50, TRUE)
+			else
+				playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
+
+	being_worked = FALSE
+
+	// Check completion
+	if(work_points >= work_needed)
+		remove_stump(user, tool)
+
+/obj/structure/resurgence_tree_stump/proc/remove_stump(mob/user, obj/item/tool)
+	var/yield = base_yield
+	if(user)
+		user.visible_message(
+			span_notice("[user] uproots [src]!"),
+			span_notice("You uproot [src]!")
+		)
+		// Award harvesting XP
+		var/base_xp = round(work_needed / 10)
+		var/xp_mult = get_tool_xp_multiplier(tool)
+		award_harvesting_xp(user, round(base_xp * xp_mult))
+		// Apply harvesting yield bonus
+		var/harvesting_level = get_harvesting_stat(user)
+		yield += get_harvesting_yield_bonus(harvesting_level)
+	else
+		visible_message(span_notice("[src] is uprooted!"))
+
+	playsound(src, 'sound/effects/woodhit.ogg', 50, TRUE)
+
+	// Drop wood
+	if(yield > 0)
+		new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
+
+	qdel(src)
 
 /obj/structure/resurgence_tree_stump/proc/regrow()
 	// Don't regrow if something is on top of us
@@ -249,4 +387,8 @@
 
 /obj/structure/resurgence_tree_stump/examine(mob/user)
 	. = ..()
-	. += span_notice("The stump looks like it could sprout new growth eventually.")
+	if(work_points > 0)
+		var/progress_pct = round((work_points / work_needed) * 100)
+		. += span_notice("It has been partially chopped. ([progress_pct]% complete)")
+	else
+		. += span_notice("You can chop it down to clear the area, or wait for it to regrow.")

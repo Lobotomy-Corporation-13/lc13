@@ -34,7 +34,7 @@
 		"result" = /obj/item/stack/sheet/metal,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/iron = 2),
-		"total_work" = 15,
+		"total_work" = 5,
 		"desc" = "2 Iron Ore -> 1 Metal Sheet"
 	)
 
@@ -42,7 +42,7 @@
 		"result" = /obj/item/stack/sheet/metal,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/ironscrap = 3),
-		"total_work" = 20,
+		"total_work" = 5,
 		"desc" = "3 Iron Scrap -> 1 Metal Sheet"
 	)
 
@@ -50,7 +50,7 @@
 		"result" = /obj/item/stack/sheet/glass,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/glass = 2),
-		"total_work" = 15,
+		"total_work" = 5,
 		"desc" = "2 Sand -> 1 Glass Sheet"
 	)
 
@@ -58,7 +58,7 @@
 		"result" = /obj/item/stack/sheet/glass,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/glassrubble = 3),
-		"total_work" = 20,
+		"total_work" = 5,
 		"desc" = "3 Glass Rubble -> 1 Glass Sheet"
 	)
 
@@ -67,7 +67,7 @@
 		"result" = /obj/item/stack/sheet/mineral/silver,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/silver = 2),
-		"total_work" = 20,
+		"total_work" = 5,
 		"desc" = "2 Silver Ore -> 1 Silver Sheet"
 	)
 
@@ -75,7 +75,7 @@
 		"result" = /obj/item/stack/sheet/mineral/gold,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/gold = 2),
-		"total_work" = 20,
+		"total_work" = 5,
 		"desc" = "2 Gold Ore -> 1 Gold Sheet"
 	)
 
@@ -275,3 +275,82 @@
 	name = "portable forge"
 	desc = "A compact forge that can be used anywhere. Less efficient than a proper workshop station, but functional outdoors."
 	requires_workshop = FALSE
+
+// ===== Primitive Forge =====
+// Made from rock only, can only smelt ore to sheets at 2x work time
+// Used to bootstrap metal production before building a proper forge
+
+/obj/structure/resurgence_crafting_table/forge/primitive
+	name = "primitive forge"
+	desc = "A crude stone forge for basic smelting. Slower than a proper forge and can only smelt raw ore into sheets."
+	icon_state = "forge_off"
+
+/obj/structure/resurgence_crafting_table/forge/primitive/init_recipes()
+	recipes = list()
+
+	// Basic Smelting Only - 2x work time compared to regular forge
+	recipes["Metal Sheet"] = list(
+		"result" = /obj/item/stack/sheet/metal,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/iron = 2),
+		"total_work" = 10,
+		"desc" = "2 Iron Ore -> 1 Metal Sheet (slow)"
+	)
+
+	recipes["Metal Sheet (Scrap)"] = list(
+		"result" = /obj/item/stack/sheet/metal,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/ironscrap = 3),
+		"total_work" = 10,
+		"desc" = "3 Iron Scrap -> 1 Metal Sheet (slow)"
+	)
+
+	recipes["Glass Sheet"] = list(
+		"result" = /obj/item/stack/sheet/glass,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/glass = 2),
+		"total_work" = 10,
+		"desc" = "2 Sand -> 1 Glass Sheet (slow)"
+	)
+
+	recipes["Glass Sheet (Rubble)"] = list(
+		"result" = /obj/item/stack/sheet/glass,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/glassrubble = 3),
+		"total_work" = 10,
+		"desc" = "3 Glass Rubble -> 1 Glass Sheet (slow)"
+	)
+
+	recipes["Silver Sheet"] = list(
+		"result" = /obj/item/stack/sheet/mineral/silver,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/silver = 2),
+		"total_work" = 10,
+		"desc" = "2 Silver Ore -> 1 Silver Sheet (slow)"
+	)
+
+	recipes["Gold Sheet"] = list(
+		"result" = /obj/item/stack/sheet/mineral/gold,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/gold = 2),
+		"total_work" = 10,
+		"desc" = "2 Gold Ore -> 1 Gold Sheet (slow)"
+	)
+
+	// Sandstone from sand
+	recipes["Sandstone"] = list(
+		"result" = /obj/item/stack/sheet/mineral/sandstone,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/glass = 1),
+		"total_work" = 10,
+		"desc" = "1 Sand -> 1 Sandstone (slow)"
+	)
+
+	// Iron from rock - same as regular forge (already slow)
+	recipes["Iron Ore (Rock)"] = list(
+		"result" = /obj/item/stack/ore/iron,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/ore/rock = 25),
+		"total_work" = 30,
+		"desc" = "25 Rock -> 1 Iron Ore"
+	)

@@ -22,6 +22,9 @@
 #define CRAFT_CAT_FLOORING "Flooring"
 #define CRAFT_CAT_ART "Art"
 #define CRAFT_CAT_PAPERWORK "Paperwork"
+#define CRAFT_CAT_CLEANING "Cleaning"
+#define CRAFT_CAT_MUSIC "Music"
+#define CRAFT_CAT_ELECTRONICS "Electronics"
 
 /obj/structure/resurgence_crafting_table
 	name = "crafting table"
@@ -128,6 +131,24 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
 		"total_work" = 10,
 		"desc" = "3 Cloth -> 1 Rope",
+		"category" = CRAFT_CAT_PROCESSING
+	)
+
+	recipes["Rope (Cotton)"] = list(
+		"result" = /obj/item/resurgence_component/rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton = 8),
+		"total_work" = 25,
+		"desc" = "8 Cotton -> 1 Rope (slow, no loom needed)",
+		"category" = CRAFT_CAT_PROCESSING
+	)
+
+	recipes["Rope (Vines)"] = list(
+		"result" = /obj/item/resurgence_component/rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/resurgence_vines = 3),
+		"total_work" = 15,
+		"desc" = "3 Vines -> 1 Rope",
 		"category" = CRAFT_CAT_PROCESSING
 	)
 
@@ -693,6 +714,391 @@
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Chaplain's Stamp",
 		"category" = CRAFT_CAT_PAPERWORK
+	)
+
+	// Cleaning Equipment
+	recipes["Push Broom"] = list(
+		"result" = /obj/item/pushbroom,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 3,
+			/obj/item/stack/sheet/cotton/cloth = 2
+		),
+		"total_work" = 15,
+		"desc" = "3 Wood + 2 Cloth -> Push Broom (sweeps items when braced)",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	recipes["Spray Can"] = list(
+		"result" = /obj/item/toy/crayon/spraycan,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 2
+		),
+		"total_work" = 10,
+		"desc" = "2 Metal -> Spray Can (for graffiti art)",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	recipes["Infinite Spray Can"] = list(
+		"result" = /obj/item/toy/crayon/spraycan/infinite,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/gold = 2
+		),
+		"total_work" = 30,
+		"desc" = "5 Metal + 2 Gold -> Infinite Spray Can (never runs out)",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	recipes["Janitor Chem Sprayer"] = list(
+		"result" = /obj/item/reagent_containers/spray/chemsprayer/janitor,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/glass = 5,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 50,
+		"desc" = "10 Metal + 5 Glass + 2 Rope -> Janitor Chem Sprayer (self-regenerating cleaner)",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	recipes["Trash Bag"] = list(
+		"result" = /obj/item/storage/bag/trash,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 3
+		),
+		"total_work" = 10,
+		"desc" = "3 Cloth -> Trash Bag",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	recipes["Trash Bag of Holding"] = list(
+		"result" = /obj/item/storage/bag/trash/bluespace,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 5,
+			/obj/item/stack/sheet/mineral/gold = 3
+		),
+		"total_work" = 40,
+		"desc" = "5 Cloth + 3 Gold -> Trash Bag of Holding (holds way more trash)",
+		"category" = CRAFT_CAT_CLEANING
+	)
+
+	// Musical Instruments
+	recipes["Violin"] = list(
+		"result" = /obj/item/instrument/violin,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 8,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 30,
+		"desc" = "8 Wood + 2 Rope -> Violin",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Golden Violin"] = list(
+		"result" = /obj/item/instrument/violin/golden,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 8,
+			/obj/item/stack/sheet/mineral/gold = 5,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 50,
+		"desc" = "8 Wood + 5 Gold + 2 Rope -> Golden Violin",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Synthesizer"] = list(
+		"result" = /obj/item/instrument/piano_synth,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/glass = 5
+		),
+		"total_work" = 40,
+		"desc" = "10 Metal + 5 Glass -> Synthesizer",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Synthesizer Headphones"] = list(
+		"result" = /obj/item/instrument/piano_synth/headphones,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 8,
+			/obj/item/stack/sheet/glass = 3,
+			/obj/item/stack/sheet/cotton/cloth = 2
+		),
+		"total_work" = 35,
+		"desc" = "8 Metal + 3 Glass + 2 Cloth -> Synthesizer Headphones",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Banjo"] = list(
+		"result" = /obj/item/instrument/banjo,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 6,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 25,
+		"desc" = "6 Wood + 2 Rope -> Banjo",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Guitar"] = list(
+		"result" = /obj/item/instrument/guitar,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 8,
+			/obj/item/resurgence_component/rope = 3
+		),
+		"total_work" = 30,
+		"desc" = "8 Wood + 3 Rope -> Guitar",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Glockenspiel"] = list(
+		"result" = /obj/item/instrument/glockenspiel,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/mineral/wood = 4
+		),
+		"total_work" = 35,
+		"desc" = "10 Metal + 4 Wood -> Glockenspiel",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Accordion"] = list(
+		"result" = /obj/item/instrument/accordion,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 6,
+			/obj/item/stack/sheet/cotton/cloth = 4
+		),
+		"total_work" = 30,
+		"desc" = "6 Metal + 4 Cloth -> Accordion",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Trumpet"] = list(
+		"result" = /obj/item/instrument/trumpet,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 8
+		),
+		"total_work" = 25,
+		"desc" = "8 Metal -> Trumpet",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Saxophone"] = list(
+		"result" = /obj/item/instrument/saxophone,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10
+		),
+		"total_work" = 30,
+		"desc" = "10 Metal -> Saxophone",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Recorder"] = list(
+		"result" = /obj/item/instrument/recorder,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 3
+		),
+		"total_work" = 10,
+		"desc" = "3 Wood -> Recorder",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Harmonica"] = list(
+		"result" = /obj/item/instrument/harmonica,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4
+		),
+		"total_work" = 15,
+		"desc" = "4 Metal -> Harmonica",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Bike Horn Instrument"] = list(
+		"result" = /obj/item/instrument/bikehorn,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 2,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "2 Metal + 1 Cloth -> Bike Horn Instrument",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	recipes["Musical Moth"] = list(
+		"result" = /obj/item/instrument/musicalmoth,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 5,
+			/obj/item/stack/sheet/metal = 2
+		),
+		"total_work" = 20,
+		"desc" = "5 Cloth + 2 Metal -> Musical Moth",
+		"category" = CRAFT_CAT_MUSIC
+	)
+
+	// Radio Headsets
+	recipes["Radio Headset"] = list(
+		"result" = /obj/item/radio/headset,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Radio Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Bowman Headset"] = list(
+		"result" = /obj/item/radio/headset/alt,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/stack/sheet/mineral/silver = 2,
+			/obj/item/stack/sheet/cotton/cloth = 2
+		),
+		"total_work" = 25,
+		"desc" = "4 Metal + 2 Silver + 2 Cloth -> Bowman Headset (ear protection)",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Control Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_control,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Control Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Information Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_information,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Information Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Safety Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_safety,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Safety Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Training Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_training,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Training Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Central Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_command,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Central Command Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Welfare Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_welfare,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Welfare Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Disciplinary Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_discipline,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Disciplinary Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Extraction Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_extraction,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Extraction Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Records Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_records,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Records Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
+	)
+
+	recipes["Architecture Headset"] = list(
+		"result" = /obj/item/radio/headset/headset_architecture,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 3,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 20,
+		"desc" = "3 Metal + 2 Silver -> Architecture Department Headset",
+		"category" = CRAFT_CAT_ELECTRONICS
 	)
 
 /obj/structure/resurgence_crafting_table/attack_hand(mob/user)
@@ -1270,13 +1676,54 @@
 	var/result_type = recipe["result"]
 	var/result_amount = recipe["result_amount"]
 
+	// Get crafter's skill level for quality tier rolling
+	var/crafting_skill = 1
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			crafting_skill = core.stat_crafting
+
 	if(ispath(result_type, /obj/item/stack))
 		// Create a stack with the correct amount
 		new result_type(get_turf(src), result_amount)
 	else
 		// Create individual items
 		for(var/i in 1 to result_amount)
-			new result_type(get_turf(src))
+			var/obj/item/created = new result_type(get_turf(src))
+			// Apply quality tier to tools and harvesters
+			apply_quality_to_crafted(created, crafting_skill)
+
+/// Apply quality tier to crafted tools based on crafter's skill
+/obj/structure/resurgence_crafting_table/proc/apply_quality_to_crafted(obj/item/crafted, crafting_skill)
+	if(!crafted)
+		return
+
+	// Roll quality tier based on crafter's skill
+	var/quality = roll_quality_tier(crafting_skill)
+
+	// Apply to harvesters
+	if(istype(crafted, /obj/item/harvester))
+		var/obj/item/harvester/H = crafted
+		H.set_quality_tier(quality)
+		return
+
+	// Apply to tools with durability
+	if(istype(crafted, /obj/item/hatchet))
+		set_tool_quality_tier(crafted, quality)
+		return
+	if(istype(crafted, /obj/item/pickaxe))
+		set_tool_quality_tier(crafted, quality)
+		return
+	if(istype(crafted, /obj/item/scythe))
+		set_tool_quality_tier(crafted, quality)
+		return
+	if(istype(crafted, /obj/item/shovel))
+		set_tool_quality_tier(crafted, quality)
+		return
+	if(istype(crafted, /obj/item/crowbar))
+		set_tool_quality_tier(crafted, quality)
+		return
 
 /// Award crafting XP to a player
 /obj/structure/resurgence_crafting_table/proc/award_crafting_xp(mob/user, amount)
@@ -1317,3 +1764,6 @@
 #undef CRAFT_CAT_FLOORING
 #undef CRAFT_CAT_ART
 #undef CRAFT_CAT_PAPERWORK
+#undef CRAFT_CAT_CLEANING
+#undef CRAFT_CAT_MUSIC
+#undef CRAFT_CAT_ELECTRONICS
