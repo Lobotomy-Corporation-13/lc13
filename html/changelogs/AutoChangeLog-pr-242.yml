@@ -1,0 +1,4 @@
+author: "Cupax3"
+delete-after: True
+changes:
+  - bugfix: "We now tell byond.com who we are when we \"spam\" it with download requests"
