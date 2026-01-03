@@ -132,6 +132,30 @@
 		if(fill_text)
 			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
 
+//Upgrades sandbag
+/obj/structure/barricade/sandbags/grey
+	name = "concrete barrier"
+	desc = "A concrete barrier made with a quick mixing solution. Use a crowbar to deconstruct the pile."
+	icon_state = "strongbags-0"
+	base_icon_state = "strongbags"
+	color = COLOR_GRAY
+	max_integrity = 700
+	proj_pass_rate = 10
+
+/obj/structure/barricade/sandbags/grey/hole
+	name = "concrete tunnel"
+	desc = "Weaponized playground equipment. In exchange for 3/5 of the health of sandbags it allows items to freely pass through it. Use a crowbar to deconstruct the pile."
+	icon_state = "strongbags-0"
+	base_icon_state = "strongbags"
+	color = COLOR_SILVER
+	max_integrity = 300
+	proj_pass_rate = 20
+
+/obj/structure/barricade/sandbags/grey/hole/CanAllowThrough(atom/movable/mover, turf/target)
+	if(isitem(mover))
+		return TRUE
+	return ..()
+
 /obj/structure/barricade/security
 	name = "security barrier"
 	desc = "A deployable barrier. Provides good cover in fire fights."
