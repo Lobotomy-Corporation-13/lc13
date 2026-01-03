@@ -46,12 +46,14 @@
 	var/stat_mining = 1
 	var/stat_harvesting = 1
 	var/stat_cooking = 1
+	var/stat_analysis = 1
 
 	// XP accumulation (resets to 0 after level up)
 	var/xp_crafting = 0
 	var/xp_mining = 0
 	var/xp_harvesting = 0
 	var/xp_cooking = 0
+	var/xp_analysis = 0
 
 /obj/item/organ/resurgence_core/Destroy()
 	// Clean up all faith events
@@ -282,6 +284,9 @@
 		if("cooking")
 			current_level = stat_cooking
 			current_xp = xp_cooking
+		if("analysis")
+			current_level = stat_analysis
+			current_xp = xp_analysis
 		else
 			return // Invalid stat type
 
@@ -315,6 +320,9 @@
 		if("cooking")
 			stat_cooking = current_level
 			xp_cooking = current_xp
+		if("analysis")
+			stat_analysis = current_level
+			xp_analysis = current_xp
 
 /// Get the current level of a stat
 /obj/item/organ/resurgence_core/proc/get_stat_level(stat_type)
@@ -327,6 +335,8 @@
 			return stat_harvesting
 		if("cooking")
 			return stat_cooking
+		if("analysis")
+			return stat_analysis
 	return 1
 
 /// Get the current XP of a stat
@@ -340,6 +350,8 @@
 			return xp_harvesting
 		if("cooking")
 			return xp_cooking
+		if("analysis")
+			return xp_analysis
 	return 0
 
 // ============================================

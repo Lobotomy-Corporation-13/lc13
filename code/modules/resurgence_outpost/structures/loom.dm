@@ -69,7 +69,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "5 Cloth + 1 Rope -> Simple Faith Fabric (+0.1 faith)",
-		"category" = CRAFT_CAT_FABRICS
+		"category" = CRAFT_CAT_FABRICS,
+		"research_required" = "faith_weaving"
 	)
 
 	recipes["Advanced Azure Faith Fabric"] = list(
@@ -82,7 +83,8 @@
 		),
 		"total_work" = 40,
 		"desc" = "8 Cloth + 3 Durathread + 2 Rope -> Advanced Faith Fabric (+0.5 faith)",
-		"category" = CRAFT_CAT_FABRICS
+		"category" = CRAFT_CAT_FABRICS,
+		"research_required" = "advanced_weaving"
 	)
 
 	recipes["Elegant Azure Faith Fabric"] = list(
@@ -95,7 +97,8 @@
 		),
 		"total_work" = 60,
 		"desc" = "10 Cloth + 6 Durathread + 3 Rope -> Elegant Faith Fabric (+1.0 faith)",
-		"category" = CRAFT_CAT_FABRICS
+		"category" = CRAFT_CAT_FABRICS,
+		"research_required" = "master_weaving"
 	)
 
 	// === STORAGE ===
@@ -106,7 +109,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 8),
 		"total_work" = 25,
 		"desc" = "8 Cloth -> Backpack",
-		"category" = CRAFT_CAT_STORAGE
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "textiles"
 	)
 
 	recipes["Explorer Backpack"] = list(
@@ -118,7 +122,8 @@
 		),
 		"total_work" = 30,
 		"desc" = "10 Cloth + 2 Leather -> Explorer Backpack",
-		"category" = CRAFT_CAT_STORAGE
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "advanced_weaving"
 	)
 
 	recipes["Satchel"] = list(
@@ -127,7 +132,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 6),
 		"total_work" = 20,
 		"desc" = "6 Cloth -> Satchel",
-		"category" = CRAFT_CAT_STORAGE
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "textiles"
 	)
 
 	recipes["Leather Satchel"] = list(
@@ -136,7 +142,8 @@
 		"materials" = list(/obj/item/stack/sheet/leather = 5),
 		"total_work" = 25,
 		"desc" = "5 Leather -> Leather Satchel",
-		"category" = CRAFT_CAT_STORAGE
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "advanced_weaving"
 	)
 
 	recipes["Duffel Bag"] = list(
@@ -148,7 +155,8 @@
 		),
 		"total_work" = 35,
 		"desc" = "12 Cloth + 1 Rope -> Duffel Bag",
-		"category" = CRAFT_CAT_STORAGE
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "advanced_weaving"
 	)
 
 	// === DYNAMIC CLOTHING ===
@@ -254,7 +262,8 @@
 			"desc" = "[CLOTHING_CLOTH_COST] Cloth -> [clothing_name] (no faith - attach fabric for faith)",
 			"category" = category,
 			"is_clothing" = TRUE,
-			"source_type" = source_type
+			"source_type" = source_type,
+			"research_required" = "master_weaving"
 		)
 
 /// Override create_result to handle clothing visual copying

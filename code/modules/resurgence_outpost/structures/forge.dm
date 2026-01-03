@@ -88,7 +88,8 @@
 			/obj/item/stack/sheet/mineral/coal = 1
 		),
 		"total_work" = 30,
-		"desc" = "2 Metal + 1 Coal -> 1 Plasteel"
+		"desc" = "2 Metal + 1 Coal -> 1 Plasteel",
+		"research_required" = "advanced_metallurgy"
 	)
 
 	// Sandstone from sand
@@ -118,7 +119,8 @@
 			/obj/item/stack/sheet/mineral/coal = 20
 		),
 		"total_work" = 200,
-		"desc" = "10 Metal + 20 Coal -> Ash Plating (used for advanced tools)"
+		"desc" = "10 Metal + 20 Coal -> Ash Plating (used for advanced tools)",
+		"research_required" = "advanced_metallurgy"
 	)
 
 	// Metal Tools
@@ -130,7 +132,8 @@
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 20,
-		"desc" = "4 Metal + 1 Rope -> Iron Hatchet"
+		"desc" = "4 Metal + 1 Rope -> Iron Hatchet",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Pickaxe"] = list(
@@ -142,7 +145,8 @@
 			/obj/item/resurgence_component/rope = 1
 		),
 		"total_work" = 20,
-		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe"
+		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Compact Pickaxe"] = list(
@@ -154,7 +158,8 @@
 			/obj/item/resurgence_component/rope = 4
 		),
 		"total_work" = 25,
-		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)"
+		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Silver Pickaxe"] = list(
@@ -167,7 +172,8 @@
 			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 40,
-		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)"
+		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)",
+		"research_required" = "advanced_metallurgy"
 	)
 
 	recipes["Shovel"] = list(
@@ -178,7 +184,8 @@
 			/obj/item/stack/sheet/mineral/wood = 1
 		),
 		"total_work" = 20,
-		"desc" = "3 Metal + 1 Wood -> Shovel"
+		"desc" = "3 Metal + 1 Wood -> Shovel",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Scythe"] = list(
@@ -190,7 +197,8 @@
 			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 25,
-		"desc" = "6 Metal + 4 Wood + 2 Rope -> Scythe (+5 work/tick when harvesting)"
+		"desc" = "6 Metal + 4 Wood + 2 Rope -> Scythe (+5 work/tick when harvesting)",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Crowbar"] = list(
@@ -201,7 +209,8 @@
 			/obj/item/stack/sheet/mineral/wood = 1
 		),
 		"total_work" = 15,
-		"desc" = "3 Metal + 1 Wood -> Crowbar"
+		"desc" = "3 Metal + 1 Wood -> Crowbar",
+		"research_required" = "metallurgy"
 	)
 
 	recipes["Compact Crowbar"] = list(
@@ -212,7 +221,8 @@
 			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 20,
-		"desc" = "4 Metal + 2 Rope -> Compact Crowbar (portable)"
+		"desc" = "4 Metal + 2 Rope -> Compact Crowbar (portable)",
+		"research_required" = "metallurgy"
 	)
 
 	// Kitchen Tools
@@ -221,7 +231,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/glass = 10),
 		"total_work" = 15,
-		"desc" = "10 Sand -> Beaker"
+		"desc" = "10 Sand -> Beaker",
+		"research_required" = "culinary"
 	)
 
 	recipes["Large Beaker"] = list(
@@ -229,7 +240,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/glass = 20),
 		"total_work" = 20,
-		"desc" = "20 Sand -> Large Beaker"
+		"desc" = "20 Sand -> Large Beaker",
+		"research_required" = "culinary"
 	)
 
 	recipes["Bowl"] = list(
@@ -237,15 +249,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/metal = 3),
 		"total_work" = 15,
-		"desc" = "3 Metal -> Bowl"
-	)
-
-	recipes["Universal Enzyme"] = list(
-		"result" = /obj/item/reagent_containers/food/condiment/enzyme,
-		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 5),
-		"total_work" = 25,
-		"desc" = "5 Metal -> Universal Enzyme"
+		"desc" = "3 Metal -> Bowl",
+		"research_required" = "culinary"
 	)
 
 	recipes["Kitchen Knife"] = list(
@@ -253,7 +258,8 @@
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/metal = 8),
 		"total_work" = 20,
-		"desc" = "8 Metal -> Kitchen Knife"
+		"desc" = "8 Metal -> Kitchen Knife",
+		"research_required" = "culinary"
 	)
 
 	// Advanced Tools
@@ -265,7 +271,8 @@
 			/obj/item/resurgence_component/ash_plating = 1
 		),
 		"total_work" = 50,
-		"desc" = "1 Simple Harvester + 1 Ash Plating -> Advanced Harvester (stores faith, auto-seeks)"
+		"desc" = "1 Simple Harvester + 1 Ash Plating -> Advanced Harvester (stores faith, auto-seeks)",
+		"research_required" = "industrial"
 	)
 
 // ===== Portable Forge =====

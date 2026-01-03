@@ -18,6 +18,12 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 	/// Nodes organized by tier for UI display
 	var/list/nodes_by_tier = list()
 
+	/// Current research progress by node ID: list("woodworking" = 15, ...)
+	var/list/research_progress = list()
+
+	/// Currently active research node ID (global, shared research)
+	var/current_research_node = null
+
 /datum/resurgence_research_manager/New()
 	. = ..()
 	init_all_nodes()
@@ -83,34 +89,75 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 			available += all_nodes[node_id]
 	return available
 
-/// Research a node - consumes faith from the user
-/datum/resurgence_research_manager/proc/research_node(node_id, mob/user)
+/// Get the current progress for a research node
+/datum/resurgence_research_manager/proc/get_progress(node_id)
+	if(!node_id)
+		return 0
+	return research_progress[node_id] || 0
+
+/// Start researching a node (sets it as the current research)
+/datum/resurgence_research_manager/proc/start_research(node_id, mob/user)
 	if(!can_research(node_id))
+		to_chat(user, span_warning("Cannot research this node!"))
 		return FALSE
 
 	var/datum/resurgence_research_node/node = all_nodes[node_id]
 	if(!node)
 		return FALSE
 
-	// Check if user has enough faith
-	if(!ishuman(user))
+	current_research_node = node_id
+	if(!research_progress[node_id])
+		research_progress[node_id] = 0
+
+	to_chat(user, span_notice("Started researching [node.name]."))
+	return TRUE
+
+/// Cancel current research (progress is saved)
+/datum/resurgence_research_manager/proc/cancel_research(mob/user)
+	if(!current_research_node)
 		return FALSE
 
-	var/mob/living/carbon/human/H = user
-	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
-	if(!istype(core))
-		to_chat(user, span_warning("You need a resurgence core to research!"))
+	var/datum/resurgence_research_node/node = all_nodes[current_research_node]
+	if(node)
+		to_chat(user, span_notice("Stopped researching [node.name]. Progress saved."))
+
+	current_research_node = null
+	return TRUE
+
+/// Add work to current research - returns TRUE if research completed
+/datum/resurgence_research_manager/proc/add_research_work(amount, mob/user)
+	if(!current_research_node)
 		return FALSE
 
-	if(core.faith < node.faith_cost)
-		to_chat(user, span_warning("You need [node.faith_cost] faith to research [node.name]. You have [round(core.faith)]."))
+	var/datum/resurgence_research_node/node = all_nodes[current_research_node]
+	if(!node)
 		return FALSE
 
-	// Consume faith
-	core.adjust_faith(-node.faith_cost)
+	// Add work
+	if(!research_progress[current_research_node])
+		research_progress[current_research_node] = 0
+	research_progress[current_research_node] += amount
+
+	// Check if complete
+	if(research_progress[current_research_node] >= node.total_work)
+		complete_research(current_research_node)
+		return TRUE
+
+	return FALSE
+
+/// Complete a research node (called when work reaches total)
+/datum/resurgence_research_manager/proc/complete_research(node_id)
+	var/datum/resurgence_research_node/node = all_nodes[node_id]
+	if(!node)
+		return FALSE
 
 	// Mark as researched
 	researched_nodes += node_id
+
+	// Clear progress
+	research_progress[node_id] = 0
+	if(current_research_node == node_id)
+		current_research_node = null
 
 	// Announce to all players
 	for(var/mob/living/carbon/human/player in GLOB.player_list)
@@ -130,7 +177,7 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 			"name" = node.name,
 			"desc" = node.desc,
 			"tier" = node.tier,
-			"faith_cost" = node.faith_cost,
+			"total_work" = node.total_work,
 			"prerequisites" = node.prerequisites.Copy(),
 			"unlocks_desc" = node.unlocks_desc,
 			"x" = node.ui_x,

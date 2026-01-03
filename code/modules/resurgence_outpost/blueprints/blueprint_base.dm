@@ -48,6 +48,8 @@
 	var/production_beauty = -15
 	/// Base beauty value for non-production structures
 	var/base_beauty = 5
+	/// Research node ID required to build this blueprint (null = always available)
+	var/research_required = null
 
 /obj/structure/resurgence_blueprint/Initialize(mapload)
 	. = ..()

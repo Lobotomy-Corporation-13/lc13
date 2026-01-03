@@ -99,6 +99,7 @@
 
 	// Production category - crafting stations
 	blueprint_categories[BLUEPRINT_CAT_PRODUCTION] = list(
+		"Research Station" = /obj/structure/resurgence_blueprint/research_station,
 		"Crafting Table" = /obj/structure/resurgence_blueprint/crafting_table,
 		"Primitive Forge" = /obj/structure/resurgence_blueprint/forge/primitive,
 		"Forge" = /obj/structure/resurgence_blueprint/forge,
@@ -114,6 +115,7 @@
 		"Meat Spike" = /obj/structure/resurgence_blueprint/meatspike,
 		"Shower Frame" = /obj/structure/resurgence_blueprint/shower,
 		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder,
+		"Comms Console" = /obj/structure/resurgence_blueprint/comms_console,
 		"Machine Fabricator" = /obj/structure/resurgence_blueprint/machine_fabricator
 	)
 
@@ -299,6 +301,17 @@
 			"amount" = amount
 		))
 
+	// Add research status
+	var/research_req = temp.research_required
+	if(research_req)
+		data["research_required"] = research_req
+		data["is_locked"] = !GLOB.resurgence_research.is_researched(research_req)
+		data["lock_reason"] = GLOB.resurgence_research.get_node_name(research_req)
+	else
+		data["research_required"] = null
+		data["is_locked"] = FALSE
+		data["lock_reason"] = null
+
 	qdel(temp)
 	return data
 
@@ -324,6 +337,14 @@
 						found = TRUE
 						break
 				if(found)
+					// Check research requirement
+					var/obj/structure/resurgence_blueprint/temp = new struct_type()
+					var/research_req = temp.research_required
+					qdel(temp)
+					if(research_req && !GLOB.resurgence_research.is_researched(research_req))
+						var/node_name = GLOB.resurgence_research.get_node_name(research_req)
+						to_chat(usr, span_warning("This blueprint requires [node_name] research."))
+						return TRUE
 					selected_blueprint = struct_type
 					selected_name = struct_name
 					to_chat(usr, span_notice("Selected: <b>[selected_name]</b>. Click on the ground to place the blueprint."))
@@ -525,6 +546,9 @@
 	// Special handling for wall-mounted structures like resources recorder and noticeboard
 	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/resources_recorder))
 		place_wall_mounted_blueprint(T, user)
+		return
+	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/comms_console))
+		place_wall_mounted_blueprint(T, user, "Comms Console")
 		return
 	if(ispath(selected_blueprint, /obj/structure/resurgence_blueprint/noticeboard))
 		place_wall_mounted_blueprint(T, user, "Notice Board")

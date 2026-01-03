@@ -261,13 +261,20 @@ const RecipeCard = (props, context) => {
     1
   );
 
-  const canStart = recipe.can_craft && !busy && !has_craft_in_progress;
+  const isLocked = recipe.is_locked;
+  const canStart = recipe.can_craft && !busy && !has_craft_in_progress
+    && !isLocked;
   const maxCraftable = recipe.max_craftable || 0;
 
   return (
     <Section
+      style={{
+        opacity: isLocked ? 0.6 : 1,
+        backgroundColor: isLocked ? 'rgba(100, 100, 100, 0.1)' : undefined,
+      }}
       title={(
         <Box inline>
+          {!!isLocked && <Icon name="lock" color="bad" mr={1} />}
           {recipe.name}
           {recipe.result_amount > 1 && (
             <Box inline color="label" ml={1}>
@@ -278,8 +285,17 @@ const RecipeCard = (props, context) => {
       )}
       buttons={(
         <Box inline color="label" fontSize="11px">
-          <Icon name="clock" mr={0.5} />
-          {recipe.total_work} work
+          {isLocked ? (
+            <>
+              <Icon name="flask" color="bad" mr={0.5} />
+              Requires: {recipe.lock_reason}
+            </>
+          ) : (
+            <>
+              <Icon name="clock" mr={0.5} />
+              {recipe.total_work} work
+            </>
+          )}
         </Box>
       )}>
       <Stack vertical>
@@ -352,19 +368,21 @@ const RecipeCard = (props, context) => {
         <Stack.Item>
           <Button
             fluid
-            icon="hammer"
+            icon={isLocked ? "lock" : "hammer"}
             color={canStart ? 'good' : 'grey'}
             disabled={!canStart}
             content={
-              has_craft_in_progress
-                ? "Finish current craft first"
-                : busy
-                  ? "Busy..."
-                  : !recipe.can_craft
-                    ? "Missing Materials"
-                    : quantity > 1
-                      ? `Start ${action_verb} (${quantity}x)`
-                      : `Start ${action_verb}`
+              isLocked
+                ? `Requires: ${recipe.lock_reason}`
+                : has_craft_in_progress
+                  ? "Finish current craft first"
+                  : busy
+                    ? "Busy..."
+                    : !recipe.can_craft
+                      ? "Missing Materials"
+                      : quantity > 1
+                        ? `Start ${action_verb} (${quantity}x)`
+                        : `Start ${action_verb}`
             }
             onClick={() => act('start_craft', {
               recipe: recipe.name,

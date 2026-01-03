@@ -111,6 +111,33 @@
 		return FALSE
 	return !is_in_workshop(src)
 
+/// Check if a recipe is available (research requirements met)
+/obj/structure/resurgence_crafting_table/proc/is_recipe_available(recipe_name)
+	var/list/recipe = recipes[recipe_name]
+	if(!recipe)
+		return FALSE
+
+	var/research_req = recipe["research_required"]
+	if(!research_req)
+		return TRUE  // No research needed
+
+	return GLOB.resurgence_research.is_researched(research_req)
+
+/// Get the lock reason for a recipe (returns null if not locked)
+/obj/structure/resurgence_crafting_table/proc/get_recipe_lock_reason(recipe_name)
+	var/list/recipe = recipes[recipe_name]
+	if(!recipe)
+		return null
+
+	var/research_req = recipe["research_required"]
+	if(!research_req)
+		return null
+
+	if(GLOB.resurgence_research.is_researched(research_req))
+		return null
+
+	return GLOB.resurgence_research.get_node_name(research_req)
+
 /// Initialize the recipe list - override in subtypes
 /obj/structure/resurgence_crafting_table/proc/init_recipes()
 	recipes = list()
@@ -196,7 +223,8 @@
 		),
 		"total_work" = 25,
 		"desc" = "5 Wood + 5 Metal + 2 Rope -> Simple Harvester (auto-harvests resources)",
-		"category" = CRAFT_CAT_TOOLS
+		"category" = CRAFT_CAT_TOOLS,
+		"research_required" = "harvesting_tech"
 	)
 
 	recipes["Wooden Bucket"] = list(
@@ -219,7 +247,8 @@
 		),
 		"total_work" = 25,
 		"desc" = "6 Wood + 2 Rope -> Wooden Scythe (harvesting tool)",
-		"category" = CRAFT_CAT_TOOLS
+		"category" = CRAFT_CAT_TOOLS,
+		"research_required" = "woodworking"
 	)
 
 	recipes["Cable Coil"] = list(
@@ -241,7 +270,8 @@
 		"materials" = list(/obj/item/stack/sheet/plasteel = 2),
 		"total_work" = 10,
 		"desc" = "2 Plasteel -> 4 Plasteel Floor Tiles",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "advanced_metallurgy"
 	)
 
 	// Carpet Tiles
@@ -251,7 +281,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Black Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Blue Carpet"] = list(
@@ -260,7 +291,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Blue Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Cyan Carpet"] = list(
@@ -269,7 +301,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Cyan Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Green Carpet"] = list(
@@ -278,7 +311,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Green Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Orange Carpet"] = list(
@@ -287,7 +321,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Orange Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Purple Carpet"] = list(
@@ -296,7 +331,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Purple Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	recipes["Red Carpet"] = list(
@@ -305,7 +341,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> 4 Red Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "flooring"
 	)
 
 	// Royal Carpets (require gold)
@@ -318,7 +355,8 @@
 		),
 		"total_work" = 15,
 		"desc" = "2 Cloth + 1 Gold -> 4 Royal Black Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "luxury_decor"
 	)
 
 	recipes["Royal Blue Carpet"] = list(
@@ -330,7 +368,8 @@
 		),
 		"total_work" = 15,
 		"desc" = "2 Cloth + 1 Gold -> 4 Royal Blue Carpet",
-		"category" = CRAFT_CAT_FLOORING
+		"category" = CRAFT_CAT_FLOORING,
+		"research_required" = "luxury_decor"
 	)
 
 	// Art Supplies
@@ -340,7 +379,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 2),
 		"total_work" = 10,
 		"desc" = "2 Cloth -> Small Canvas (11x11)",
-		"category" = CRAFT_CAT_ART
+		"category" = CRAFT_CAT_ART,
+		"research_required" = "artistry"
 	)
 
 	recipes["Canvas (19x19)"] = list(
@@ -349,7 +389,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
 		"total_work" = 15,
 		"desc" = "3 Cloth -> Medium Canvas (19x19)",
-		"category" = CRAFT_CAT_ART
+		"category" = CRAFT_CAT_ART,
+		"research_required" = "artistry"
 	)
 
 	recipes["Canvas (23x19)"] = list(
@@ -358,7 +399,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
 		"total_work" = 15,
 		"desc" = "4 Cloth -> Wide Canvas (23x19)",
-		"category" = CRAFT_CAT_ART
+		"category" = CRAFT_CAT_ART,
+		"research_required" = "artistry"
 	)
 
 	recipes["Canvas (23x23)"] = list(
@@ -367,7 +409,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 5),
 		"total_work" = 20,
 		"desc" = "5 Cloth -> Large Canvas (23x23)",
-		"category" = CRAFT_CAT_ART
+		"category" = CRAFT_CAT_ART,
+		"research_required" = "artistry"
 	)
 
 	recipes["Painting Frame"] = list(
@@ -376,7 +419,8 @@
 		"materials" = list(/obj/item/stack/sheet/mineral/wood = 2),
 		"total_work" = 10,
 		"desc" = "2 Wood -> Painting Frame (wall mount for canvases, paintings preserved)",
-		"category" = CRAFT_CAT_ART
+		"category" = CRAFT_CAT_ART,
+		"research_required" = "artistry"
 	)
 
 	// Paperwork - Pens
@@ -386,7 +430,8 @@
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
 		"total_work" = 5,
 		"desc" = "1 Metal -> Black Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Pen (Blue)"] = list(
@@ -395,7 +440,8 @@
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
 		"total_work" = 5,
 		"desc" = "1 Metal -> Blue Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Pen (Red)"] = list(
@@ -404,7 +450,8 @@
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
 		"total_work" = 5,
 		"desc" = "1 Metal -> Red Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Pen (Invisible)"] = list(
@@ -413,7 +460,8 @@
 		"materials" = list(/obj/item/stack/sheet/metal = 1),
 		"total_work" = 5,
 		"desc" = "1 Metal -> Invisible Ink Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Four-Color Pen"] = list(
@@ -422,7 +470,8 @@
 		"materials" = list(/obj/item/stack/sheet/metal = 2),
 		"total_work" = 10,
 		"desc" = "2 Metal -> Four-Color Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Fountain Pen"] = list(
@@ -434,7 +483,8 @@
 		),
 		"total_work" = 15,
 		"desc" = "1 Metal + 2 Wood -> Fountain Pen",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Charcoal Stylus"] = list(
@@ -443,7 +493,8 @@
 		"materials" = list(/obj/item/stack/sheet/mineral/wood = 1),
 		"total_work" = 5,
 		"desc" = "1 Wood -> Charcoal Stylus",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	// Paperwork - Paper & Storage
@@ -453,7 +504,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 1),
 		"total_work" = 5,
 		"desc" = "1 Cloth -> Paper",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Folder"] = list(
@@ -465,7 +517,8 @@
 		),
 		"total_work" = 5,
 		"desc" = "1 Cloth + 1 Wood -> Folder",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Folder (Blue)"] = list(
@@ -477,7 +530,8 @@
 		),
 		"total_work" = 5,
 		"desc" = "1 Cloth + 1 Wood -> Blue Folder",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Folder (Red)"] = list(
@@ -489,7 +543,8 @@
 		),
 		"total_work" = 5,
 		"desc" = "1 Cloth + 1 Wood -> Red Folder",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Folder (Yellow)"] = list(
@@ -501,7 +556,8 @@
 		),
 		"total_work" = 5,
 		"desc" = "1 Cloth + 1 Wood -> Yellow Folder",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Folder (White)"] = list(
@@ -513,7 +569,8 @@
 		),
 		"total_work" = 5,
 		"desc" = "1 Cloth + 1 Wood -> White Folder",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Clipboard"] = list(
@@ -525,7 +582,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Metal + 2 Wood -> Clipboard",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Empty Paper Bin"] = list(
@@ -534,7 +592,8 @@
 		"materials" = list(/obj/item/stack/sheet/mineral/wood = 3),
 		"total_work" = 10,
 		"desc" = "3 Wood -> Empty Paper Bin",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	// Paperwork - Hand Labeler
@@ -547,7 +606,8 @@
 		),
 		"total_work" = 15,
 		"desc" = "2 Cloth + 2 Metal -> Hand Labeler",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Hand Labeler Refill"] = list(
@@ -556,7 +616,8 @@
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 1),
 		"total_work" = 5,
 		"desc" = "1 Cloth -> Hand Labeler Refill",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	// Paperwork - Stamps
@@ -569,7 +630,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> GRANTED Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["DENIED Stamp"] = list(
@@ -581,7 +643,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> DENIED Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["QM Stamp"] = list(
@@ -593,7 +656,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Quartermaster's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Captain Stamp"] = list(
@@ -605,7 +669,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Captain's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["HoP Stamp"] = list(
@@ -617,7 +682,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Head of Personnel's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["HoS Stamp"] = list(
@@ -629,7 +695,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Head of Security's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["CE Stamp"] = list(
@@ -641,7 +708,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Chief Engineer's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["RD Stamp"] = list(
@@ -653,7 +721,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Research Director's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["CMO Stamp"] = list(
@@ -665,7 +734,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Chief Medical Officer's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Law Stamp"] = list(
@@ -677,7 +747,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Law Office's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Clown Stamp"] = list(
@@ -689,7 +760,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Clown's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Mime Stamp"] = list(
@@ -701,7 +773,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Mime's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	recipes["Chaplain Stamp"] = list(
@@ -713,7 +786,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Wood + 1 Cloth -> Chaplain's Stamp",
-		"category" = CRAFT_CAT_PAPERWORK
+		"category" = CRAFT_CAT_PAPERWORK,
+		"research_required" = "papercraft"
 	)
 
 	// Cleaning Equipment
@@ -726,7 +800,8 @@
 		),
 		"total_work" = 15,
 		"desc" = "3 Wood + 2 Cloth -> Push Broom (sweeps items when braced)",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "cleaning"
 	)
 
 	recipes["Spray Can"] = list(
@@ -737,7 +812,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "2 Metal -> Spray Can (for graffiti art)",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "cleaning"
 	)
 
 	recipes["Infinite Spray Can"] = list(
@@ -749,7 +825,8 @@
 		),
 		"total_work" = 30,
 		"desc" = "5 Metal + 2 Gold -> Infinite Spray Can (never runs out)",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "advanced_cleaning"
 	)
 
 	recipes["Janitor Chem Sprayer"] = list(
@@ -762,7 +839,8 @@
 		),
 		"total_work" = 50,
 		"desc" = "10 Metal + 5 Glass + 2 Rope -> Janitor Chem Sprayer (self-regenerating cleaner)",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "advanced_cleaning"
 	)
 
 	recipes["Trash Bag"] = list(
@@ -773,7 +851,8 @@
 		),
 		"total_work" = 10,
 		"desc" = "3 Cloth -> Trash Bag",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "cleaning"
 	)
 
 	recipes["Trash Bag of Holding"] = list(
@@ -785,10 +864,62 @@
 		),
 		"total_work" = 40,
 		"desc" = "5 Cloth + 3 Gold -> Trash Bag of Holding (holds way more trash)",
-		"category" = CRAFT_CAT_CLEANING
+		"category" = CRAFT_CAT_CLEANING,
+		"research_required" = "advanced_cleaning"
 	)
 
-	// Musical Instruments
+	// Musical Instruments - Basic Music
+	recipes["Recorder"] = list(
+		"result" = /obj/item/instrument/recorder,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 3
+		),
+		"total_work" = 10,
+		"desc" = "3 Wood -> Recorder",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "basic_music"
+	)
+
+	recipes["Harmonica"] = list(
+		"result" = /obj/item/instrument/harmonica,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4
+		),
+		"total_work" = 15,
+		"desc" = "4 Metal -> Harmonica",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "basic_music"
+	)
+
+	recipes["Banjo"] = list(
+		"result" = /obj/item/instrument/banjo,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 6,
+			/obj/item/resurgence_component/rope = 2
+		),
+		"total_work" = 25,
+		"desc" = "6 Wood + 2 Rope -> Banjo",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "basic_music"
+	)
+
+	recipes["Bike Horn Instrument"] = list(
+		"result" = /obj/item/instrument/bikehorn,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 2,
+			/obj/item/stack/sheet/cotton/cloth = 1
+		),
+		"total_work" = 10,
+		"desc" = "2 Metal + 1 Cloth -> Bike Horn Instrument",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "basic_music"
+	)
+
+	// Musical Instruments - Advanced Music
 	recipes["Violin"] = list(
 		"result" = /obj/item/instrument/violin,
 		"result_amount" = 1,
@@ -798,9 +929,87 @@
 		),
 		"total_work" = 30,
 		"desc" = "8 Wood + 2 Rope -> Violin",
-		"category" = CRAFT_CAT_MUSIC
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
 	)
 
+	recipes["Guitar"] = list(
+		"result" = /obj/item/instrument/guitar,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 8,
+			/obj/item/resurgence_component/rope = 3
+		),
+		"total_work" = 30,
+		"desc" = "8 Wood + 3 Rope -> Guitar",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	recipes["Accordion"] = list(
+		"result" = /obj/item/instrument/accordion,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 6,
+			/obj/item/stack/sheet/cotton/cloth = 4
+		),
+		"total_work" = 30,
+		"desc" = "6 Metal + 4 Cloth -> Accordion",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	recipes["Trumpet"] = list(
+		"result" = /obj/item/instrument/trumpet,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 8
+		),
+		"total_work" = 25,
+		"desc" = "8 Metal -> Trumpet",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	recipes["Saxophone"] = list(
+		"result" = /obj/item/instrument/saxophone,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10
+		),
+		"total_work" = 30,
+		"desc" = "10 Metal -> Saxophone",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	recipes["Glockenspiel"] = list(
+		"result" = /obj/item/instrument/glockenspiel,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/mineral/wood = 4
+		),
+		"total_work" = 35,
+		"desc" = "10 Metal + 4 Wood -> Glockenspiel",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	recipes["Musical Moth"] = list(
+		"result" = /obj/item/instrument/musicalmoth,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/cotton/cloth = 5,
+			/obj/item/stack/sheet/metal = 2
+		),
+		"total_work" = 20,
+		"desc" = "5 Cloth + 2 Metal -> Musical Moth",
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "advanced_music"
+	)
+
+	// Musical Instruments - Master Music
 	recipes["Golden Violin"] = list(
 		"result" = /obj/item/instrument/violin/golden,
 		"result_amount" = 1,
@@ -811,7 +1020,8 @@
 		),
 		"total_work" = 50,
 		"desc" = "8 Wood + 5 Gold + 2 Rope -> Golden Violin",
-		"category" = CRAFT_CAT_MUSIC
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "master_music"
 	)
 
 	recipes["Synthesizer"] = list(
@@ -823,7 +1033,8 @@
 		),
 		"total_work" = 40,
 		"desc" = "10 Metal + 5 Glass -> Synthesizer",
-		"category" = CRAFT_CAT_MUSIC
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "master_music"
 	)
 
 	recipes["Synthesizer Headphones"] = list(
@@ -836,123 +1047,8 @@
 		),
 		"total_work" = 35,
 		"desc" = "8 Metal + 3 Glass + 2 Cloth -> Synthesizer Headphones",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Banjo"] = list(
-		"result" = /obj/item/instrument/banjo,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/mineral/wood = 6,
-			/obj/item/resurgence_component/rope = 2
-		),
-		"total_work" = 25,
-		"desc" = "6 Wood + 2 Rope -> Banjo",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Guitar"] = list(
-		"result" = /obj/item/instrument/guitar,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/mineral/wood = 8,
-			/obj/item/resurgence_component/rope = 3
-		),
-		"total_work" = 30,
-		"desc" = "8 Wood + 3 Rope -> Guitar",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Glockenspiel"] = list(
-		"result" = /obj/item/instrument/glockenspiel,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 10,
-			/obj/item/stack/sheet/mineral/wood = 4
-		),
-		"total_work" = 35,
-		"desc" = "10 Metal + 4 Wood -> Glockenspiel",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Accordion"] = list(
-		"result" = /obj/item/instrument/accordion,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 6,
-			/obj/item/stack/sheet/cotton/cloth = 4
-		),
-		"total_work" = 30,
-		"desc" = "6 Metal + 4 Cloth -> Accordion",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Trumpet"] = list(
-		"result" = /obj/item/instrument/trumpet,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 8
-		),
-		"total_work" = 25,
-		"desc" = "8 Metal -> Trumpet",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Saxophone"] = list(
-		"result" = /obj/item/instrument/saxophone,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 10
-		),
-		"total_work" = 30,
-		"desc" = "10 Metal -> Saxophone",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Recorder"] = list(
-		"result" = /obj/item/instrument/recorder,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/mineral/wood = 3
-		),
-		"total_work" = 10,
-		"desc" = "3 Wood -> Recorder",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Harmonica"] = list(
-		"result" = /obj/item/instrument/harmonica,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 4
-		),
-		"total_work" = 15,
-		"desc" = "4 Metal -> Harmonica",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Bike Horn Instrument"] = list(
-		"result" = /obj/item/instrument/bikehorn,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/metal = 2,
-			/obj/item/stack/sheet/cotton/cloth = 1
-		),
-		"total_work" = 10,
-		"desc" = "2 Metal + 1 Cloth -> Bike Horn Instrument",
-		"category" = CRAFT_CAT_MUSIC
-	)
-
-	recipes["Musical Moth"] = list(
-		"result" = /obj/item/instrument/musicalmoth,
-		"result_amount" = 1,
-		"materials" = list(
-			/obj/item/stack/sheet/cotton/cloth = 5,
-			/obj/item/stack/sheet/metal = 2
-		),
-		"total_work" = 20,
-		"desc" = "5 Cloth + 2 Metal -> Musical Moth",
-		"category" = CRAFT_CAT_MUSIC
+		"category" = CRAFT_CAT_MUSIC,
+		"research_required" = "master_music"
 	)
 
 	// Radio Headsets
@@ -965,7 +1061,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Radio Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Bowman Headset"] = list(
@@ -978,7 +1075,8 @@
 		),
 		"total_work" = 25,
 		"desc" = "4 Metal + 2 Silver + 2 Cloth -> Bowman Headset (ear protection)",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Control Headset"] = list(
@@ -990,7 +1088,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Control Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Information Headset"] = list(
@@ -1002,7 +1101,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Information Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Safety Headset"] = list(
@@ -1014,7 +1114,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Safety Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Training Headset"] = list(
@@ -1026,7 +1127,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Training Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Central Headset"] = list(
@@ -1038,7 +1140,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Central Command Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Welfare Headset"] = list(
@@ -1050,7 +1153,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Welfare Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Disciplinary Headset"] = list(
@@ -1062,7 +1166,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Disciplinary Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Extraction Headset"] = list(
@@ -1074,7 +1179,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Extraction Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Records Headset"] = list(
@@ -1086,7 +1192,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Records Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 	recipes["Architecture Headset"] = list(
@@ -1098,7 +1205,8 @@
 		),
 		"total_work" = 20,
 		"desc" = "3 Metal + 2 Silver -> Architecture Department Headset",
-		"category" = CRAFT_CAT_ELECTRONICS
+		"category" = CRAFT_CAT_ELECTRONICS,
+		"research_required" = "communications"
 	)
 
 /obj/structure/resurgence_crafting_table/attack_hand(mob/user)
@@ -1246,15 +1354,21 @@
 				var/possible = round(have / needed)
 				max_craftable = min(max_craftable, possible)
 
+		// Check research lock status
+		var/is_locked = !is_recipe_available(recipe_name)
+		var/lock_reason = get_recipe_lock_reason(recipe_name)
+
 		recipe_data += list(list(
 			"name" = recipe_name,
 			"desc" = recipe["desc"],
 			"result_amount" = recipe["result_amount"],
 			"total_work" = recipe["total_work"],
 			"materials" = mat_data,
-			"can_craft" = can_craft,
+			"can_craft" = can_craft && !is_locked,
 			"max_craftable" = max_craftable,
-			"category" = recipe["category"] || "Other"
+			"category" = recipe["category"] || "Other",
+			"is_locked" = is_locked,
+			"lock_reason" = lock_reason
 		))
 
 	data["recipes"] = recipe_data
@@ -1313,6 +1427,12 @@
 
 	var/list/recipe = recipes[recipe_name]
 	if(!recipe)
+		return FALSE
+
+	// Check research requirements
+	if(!is_recipe_available(recipe_name))
+		var/lock_reason = get_recipe_lock_reason(recipe_name)
+		to_chat(user, span_warning("This recipe requires research: [lock_reason]!"))
 		return FALSE
 
 	var/list/materials = recipe["materials"]

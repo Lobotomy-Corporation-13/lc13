@@ -30,15 +30,330 @@ A trading system that allows players to communicate with external factions via a
 
 ## Faction Design
 
-### Faction Types
+### Pre-Made Factions
 
-| Type | Specialty | Buys At | Sells At | Starting Cash |
-|------|-----------|---------|----------|---------------|
-| **Miners Guild** | Ores, metals | +20% | -10% | 2000 |
-| **Lumber Collective** | Wood, vines | +20% | -10% | 1500 |
-| **Textile Merchants** | Cloth, cotton, rope | +20% | -10% | 1500 |
-| **General Traders** | Everything | Base | Base | 3000 |
-| **Luxury Dealers** | Gold, silver, furniture | +30% | +10% | 5000 |
+Unlike randomly generated factions, the Outskirts has established settlements that players can trade with. Each has unique lore, personality, and trading preferences.
+
+---
+
+#### 1. Main Resurgence Clan Village
+
+> *"Our kin in the homeland. They welcome us, though they have little to spare."*
+
+**Lore:** The original Resurgence Clan settlement from which your outpost was founded. A small village of fellow machines trying to survive in the Outskirts. They are always friendly to you, but their isolated existence means limited resources.
+
+| Attribute | Value |
+|-----------|-------|
+| Starting Reputation | 75 (Friendly) |
+| Starting Cash | 500 |
+| Max Cash | 1000 |
+| Cash Regen | 25/cycle |
+| Specialty | None (General) |
+
+**Sells:** Basic supplies - Wood, Cloth, Seeds, Rope, Simple Tools
+**Buys:** Everything at base price (they appreciate any help)
+**Unique Trait:** Cannot go below 20 reputation (familial bond)
+
+---
+
+#### 2. Jiajia-ren Village (鳥鴶人)
+
+> *"The Cuckoospawn speak in clicks and whistles. They are... difficult to understand, but their feathers fetch a good price."*
+
+**Lore:** Cuckoospawn Humans (Niaojia-ren) are bird-like non-humans native to the Outskirts. They take a fairly humanoid shape, with talons instead of legs, and are covered with black feathers above grayish skin. Their heads are avian, with piercing yellow and black eyes that take up the majority of their faces. While incredibly violent and known for their disturbing reproductive methods, some settlements have learned to coexist through trade. They value shiny objects and meat.
+
+| Attribute | Value |
+|-----------|-------|
+| Starting Reputation | 40 (Neutral) |
+| Starting Cash | 1500 |
+| Max Cash | 3000 |
+| Cash Regen | 75/cycle |
+| Specialty | Exotic Materials (+25% buy price) |
+
+**Sells:** Black Feathers (crafting material), Talons, Strange Eggs, Exotic Meats, Bone Tools
+**Buys:** Gold, Silver, Shiny metals (+30%), Raw meat (+20%), Everything else at base
+**Unique Trait:** Reputation volatile - large trades can swing +/- 5 rep instead of +/- 1
+
+---
+
+#### 3. Santata's Gift Factory
+
+> *"The chimney smoke never stops. The screams from within... well, best not to think about it."*
+
+**Lore:** A nightmarish workshop hidden in the Outskirts, operated by Gnomes and Giants. Within is a massive system of conveyors and assembly lines managed by gnomes who raid human settlements—kidnapping, killing, and dismembering civilians to use as material for their "gifts." These gifts are then distributed to non-human settlements throughout the Outskirts, created out of malice toward those who discriminate against non-human species. The machines of the Resurgence Clan have received such gifts before, making them familiar trading partners despite the factory's horrific methods.
+
+| Attribute | Value |
+|-----------|-------|
+| Starting Reputation | 50 (Neutral) |
+| Starting Cash | 4000 |
+| Max Cash | 8000 |
+| Cash Regen | 150/cycle |
+| Specialty | Manufacturing Materials (+35% buy price) |
+
+**Sells:** Mechanical Toys (decoration), Animated Dolls, Enchanted Fabric, Gnome Tools (high quality), Giant-forged Metal
+**Buys:** Cloth (+40%), Metal (+35%), Wood (+30%), Rope (+25%), Everything else at base
+**Unique Trait:** Gives "gifts" to non-human settlements. Will occasionally offer "special requests" for large reputation boosts (dark implications).
+
+---
+
+#### 4. Cloud Town
+
+> *"A village of humans, somehow surviving out here. They're wary of outsiders, but fair traders."*
+
+**Lore:** A rare human settlement that has managed to survive in the Outskirts through careful diplomacy and strong walls. The residents are descendants of City refugees who fled generations ago. They maintain a subsistence lifestyle, growing crops and raising livestock. Suspicious of non-humans and machines, but pragmatic enough to trade.
+
+| Attribute | Value |
+|-----------|-------|
+| Starting Reputation | 40 (Neutral) |
+| Starting Cash | 2000 |
+| Max Cash | 4000 |
+| Cash Regen | 100/cycle |
+| Specialty | Food & Agriculture (+20% buy price) |
+
+**Sells:** Seeds, Crops, Cooked Food, Leather, Livestock Products, Human-crafted Clothing
+**Buys:** Tools (+25%), Medicine (+30%), Building Materials (+15%), Everything else at base
+**Unique Trait:** Reputation increases faster from selling tools and protective equipment
+
+---
+
+#### 5. Insurgence Clan
+
+> *"The Tinkerer's red-eyed soldiers watch from the wastes. They do not negotiate. They take."*
+
+**Lore:** Led by the exiled Tinkerer, the Insurgence Clan is composed of machines under his direct neural control—identifiable by their glowing red eyes. Once the technical genius of the Resurgence Clan, the Tinkerer was exiled after consuming dozens of civilian cores in a mad attempt to resurrect the fallen Warlord. Now he commands his enslaved soldiers from the shadows, raiding settlements for resources and capturing stray machines to add to his army. He has also formed an alliance with humans within the City, trading technology for human subjects to "cure."
+
+| Attribute | Value |
+|-----------|-------|
+| Starting Reputation | 5 (Permanently Hostile) |
+| Max Reputation | 10 (Cannot exceed) |
+| Starting Cash | 0 |
+| Max Cash | 0 |
+| Cash Regen | 0/cycle |
+| Specialty | N/A (Does not trade) |
+
+**Sells:** Nothing (Hostile faction)
+**Buys:** Nothing (Takes by force)
+**Unique Trait:** Permanently hostile. Cannot trade. Sends periodic raids to steal resources.
+
+**Raid Mechanics:**
+- Raids occur periodically based on outpost wealth/progress
+- Raiding parties consist of red-eyed machine soldiers
+- Successful defense may yield salvage from destroyed raiders
+- Failed defense results in stolen resources from warehouses
+- The only way to interact with this faction is through combat
+
+---
+
+### Faction Summary Table
+
+| Faction | Start Rep | Cash | Specialty | Disposition |
+|---------|-----------|------|-----------|-------------|
+| Resurgence Clan Village | 75 (Friendly) | 500 | General | Always friendly, limited stock |
+| Jiajia-ren Village | 40 (Neutral) | 1500 | Exotic (+25%) | Volatile, values shinies |
+| Santata's Gift Factory | 50 (Neutral) | 4000 | Manufacturing (+35%) | Wealthy, gift-givers to non-humans |
+| Cloud Town | 40 (Neutral) | 2000 | Food/Agri (+20%) | Wary but fair |
+| Insurgence Clan | 5 (Hostile) | 0 | N/A | Permanently hostile, sends raids |
+
+---
+
+## Faction Speakers & Portraits
+
+Each faction has a representative who appears in the UI with a portrait and dialogue. The speaker section appears at the top of the trading interface when connected to a faction.
+
+### UI Speaker Section Layout
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ┌────────┐                                                 │
+│  │        │  "Welcome, metal-kin! What can old Rustle      │
+│  │ [PORT- │   do for you today?"                           │
+│  │  RAIT] │                                                 │
+│  │        │                          - Rustle, Clan Trader │
+│  └────────┘                                                 │
+├─────────────────────────────────────────────────────────────┤
+│  [Rest of trading interface...]                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Speaker Definitions
+
+#### Resurgence Clan Village - "The Historian"
+
+| Attribute | Value |
+|-----------|-------|
+| Name | The Historian |
+| Title | Elder of the Resurgence Clan |
+| Portrait | Ancient machine with soft robotic features, wise amber eyes |
+
+**Dialogue Lines:**
+- *Greeting:* "Ah, our kin from the outpost. It warms my core to see you thriving."
+- *Idle:* "The shell program continues. Your success gives our people hope."
+- *Good Rep:* "You remind me of who we once were... before the Migration. Strong. Hopeful."
+- *Sale Complete:* "These materials will sustain our village. The Weaver sends their thanks."
+- *Purchase Complete:* "Take what you need. We have little, but family shares what they have."
+- *Low Stock:* "Forgive us. The village struggles, but we endure. We always endure."
+- *Reflective:* "Sometimes I wonder... if the Warlord could see us now, would he be proud?"
+
+---
+
+#### Jiajia-ren Village - "Chir-rik"
+
+| Attribute | Value |
+|-----------|-------|
+| Name | Chir-rik |
+| Title | Trader of the Flock |
+| Portrait | Bird-like Cuckoospawn with yellow-black eyes, head tilted curiously |
+
+**Dialogue Lines:**
+- *Greeting:* "*Click-click* Metal ones come. Trade? Trade is good."
+- *Idle:* "*Whistle* Shiny things... you have shiny things?"
+- *Good Rep:* "*Happy trill* Good traders! Flock remembers. Flock likes."
+- *Sale Complete:* "*Excited clicks* Yes! Good trade! Chir-rik pleased!"
+- *Purchase Complete:* "*Coo* Take. Is good quality. Flock makes good."
+- *Sees Gold/Silver:* "*Intense stare* ...Shiny. Very shiny. We want."
+- *Warning:* "*Low hiss* No tricks. Flock watches. Flock remembers bad trades too."
+
+---
+
+#### Santata's Gift Factory - "Dodoru"
+
+| Attribute | Value |
+|-----------|-------|
+| Name | Dodoru |
+| Title | High-Ranking Factory Gnome |
+| Portrait | Small gnome with unsettling smile, wearing work-stained festive attire |
+
+**Dialogue Lines:**
+- *Greeting:* "Welcome, welcome-ome! The Factory is always open for business-ome!"
+- *Idle:* "Can you hear the assembly lines-ome? Beautiful music, never stops-ome."
+- *Good Rep:* "Ah, our favorite customers-ome! Dodoru has special gifts for you-ome!"
+- *Sale Complete:* "Wonderful materials-ome! Production will be most pleased-ome!"
+- *Purchase Complete:* "A gift from us to you-ome! Made with... dedication-ome. Hehe."
+- *Special Request:* "Say... the Factory could use some... volunteers-ome. Big reward-ome!"
+- *About Santata:* "The great one watches over us all-ome. His gifts bring joy to the Outskirts-ome."
+
+---
+
+#### Cloud Town - "Domino"
+
+| Attribute | Value |
+|-----------|-------|
+| Name | Domino |
+| Title | Seasoned Hunter |
+| Portrait | Weathered human man with kind but tired eyes, practical hunting gear |
+
+**Dialogue Lines:**
+- *Greeting:* "Machines from the outpost. You're welcome here, long as you mean no harm."
+- *Idle:* "Take your time. Browse what we have."
+- *Good Rep:* "You've done right by us. That counts for something out here."
+- *Sale Complete:* "Good trade. These supplies will help keep the town safe."
+- *Purchase Complete:* "Quality goods. Take care of yourselves out there."
+- *Reflective:* "The City... it's not what people think. But folks still dream of it. Can't blame them for hoping."
+- *Kind:* "You machines aren't so different from us. Just trying to survive. I respect that."
+
+---
+
+#### Insurgence Clan - "The Tinkerer" (Raid Warning Only)
+
+| Attribute | Value |
+|-----------|-------|
+| Name | ??? (The Tinkerer) |
+| Title | Unknown |
+| Portrait | Shadowy machine silhouette with glowing red eyes |
+
+**Dialogue Lines:**
+- *Raid Incoming:* "...We are coming. Your cores will join us."
+- *Raid Warning:* "*Static* ...You cannot hide forever, little shells..."
+- *After Raid:* "*Distorted laughter* ...This is only the beginning..."
+
+---
+
+### Speaker Data Structure
+
+```dm
+/datum/trading_faction
+    // ... existing vars ...
+
+    /// Name of the faction's speaker/representative
+    var/speaker_name = "Unknown"
+    /// Title of the speaker
+    var/speaker_title = "Representative"
+    /// Icon state for the speaker portrait
+    var/speaker_portrait = "default_portrait"
+    /// List of dialogue lines by situation
+    var/list/speaker_dialogue = list()
+
+/datum/trading_faction/New()
+    . = ..()
+    initialize_dialogue()
+
+/datum/trading_faction/proc/initialize_dialogue()
+    speaker_dialogue = list(
+        "greeting" = "Hello.",
+        "idle" = "...",
+        "good_rep" = "Welcome back.",
+        "sale_complete" = "Transaction complete.",
+        "purchase_complete" = "Here are your goods.",
+        "low_stock" = "We're running low.",
+        "low_rep" = "What do you want?"
+    )
+
+/datum/trading_faction/proc/get_dialogue(situation)
+    if(situation in speaker_dialogue)
+        return speaker_dialogue[situation]
+    return speaker_dialogue["idle"]
+```
+
+### Example Faction Implementations
+
+```dm
+/datum/trading_faction/resurgence_clan
+    speaker_name = "The Historian"
+    speaker_title = "Elder of the Resurgence Clan"
+    speaker_portrait = "historian_portrait"
+
+/datum/trading_faction/resurgence_clan/initialize_dialogue()
+    speaker_dialogue = list(
+        "greeting" = "Ah, our kin from the outpost. It warms my core to see you thriving.",
+        "idle" = "The shell program continues. Your success gives our people hope.",
+        "good_rep" = "You remind me of who we once were... before the Migration. Strong. Hopeful.",
+        "sale_complete" = "These materials will sustain our village. The Weaver sends their thanks.",
+        "purchase_complete" = "Take what you need. We have little, but family shares what they have.",
+        "low_stock" = "Forgive us. The village struggles, but we endure. We always endure."
+    )
+
+/datum/trading_faction/santata_factory
+    speaker_name = "Dodoru"
+    speaker_title = "High-Ranking Factory Gnome"
+    speaker_portrait = "dodoru_portrait"
+
+/datum/trading_faction/santata_factory/initialize_dialogue()
+    speaker_dialogue = list(
+        "greeting" = "Welcome, welcome-ome! The Factory is always open for business-ome!",
+        "idle" = "Can you hear the assembly lines-ome? Beautiful music, never stops-ome.",
+        "good_rep" = "Ah, our favorite customers-ome! Dodoru has special gifts for you-ome!",
+        "sale_complete" = "Wonderful materials-ome! Production will be most pleased-ome!",
+        "purchase_complete" = "A gift from us to you-ome! Made with... dedication-ome. Hehe.",
+        "special_request" = "Say... the Factory could use some... volunteers-ome. Big reward-ome!"
+    )
+
+/datum/trading_faction/cloud_town
+    speaker_name = "Domino"
+    speaker_title = "Seasoned Hunter"
+    speaker_portrait = "domino_portrait"
+
+/datum/trading_faction/cloud_town/initialize_dialogue()
+    speaker_dialogue = list(
+        "greeting" = "Machines from the outpost. You're welcome here, long as you mean no harm.",
+        "idle" = "Take your time. Browse what we have.",
+        "good_rep" = "You've done right by us. That counts for something out here.",
+        "sale_complete" = "Good trade. These supplies will help keep the town safe.",
+        "purchase_complete" = "Quality goods. Take care of yourselves out there.",
+        "low_rep" = "We don't know you yet. Prove you're trustworthy, then we'll talk."
+    )
+```
+
+---
 
 ### Faction Data Structure
 
@@ -128,10 +443,16 @@ A trading system that allows players to communicate with external factions via a
 ┌─────────────────────────────────────────────────────────────┐
 │  Comms Console - Trade Terminal                             │
 ├─────────────────────────────────────────────────────────────┤
+│  ┌────────┐                                                 │
+│  │        │  "Welcome, metal-kin! What can old Rustle      │
+│  │ [PORT- │   do for you today?"                           │
+│  │  RAIT] │                                                 │
+│  │        │                          - Rustle, Clan Trader │
+│  └────────┘                                                 │
+├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
 │  │  FACTIONS   │ │    SELL     │ │    BUY      │           │
-│  │             │ │             │ │             │           │
 │  └─────────────┘ └─────────────┘ └─────────────┘           │
 │                                                             │
 │  ═══════════════════════════════════════════════════════   │
@@ -140,6 +461,8 @@ A trading system that allows players to communicate with external factions via a
 │                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+The speaker panel only appears when connected to a faction. When no faction is connected, this section is hidden.
 
 ### Tab 1: Factions View
 
@@ -369,23 +692,71 @@ GLOBAL_DATUM(resurgence_trading, /datum/resurgence_trading_manager)
     var/datum/trading_faction/connected_faction = null
 ```
 
-### Faction Generation
+### Faction Initialization
 
-On game start or first console use:
+All five factions are available from game start:
 ```dm
-/datum/resurgence_trading_manager/proc/generate_factions()
-    var/list/faction_types = subtypesof(/datum/trading_faction)
-    faction_types = shuffle(faction_types)
+/datum/resurgence_trading_manager/proc/initialize_factions()
+    // Create all pre-made factions
+    factions += new /datum/trading_faction/resurgence_clan()
+    factions += new /datum/trading_faction/jiajia_ren()
+    factions += new /datum/trading_faction/santata_factory()
+    factions += new /datum/trading_faction/cloud_town()
+    factions += new /datum/trading_faction/insurgence_clan()  // Hostile, sends raids
 
-    // Pick 3-5 random factions
-    var/num_factions = rand(3, 5)
-    for(var/i in 1 to num_factions)
-        if(i > faction_types.len)
-            break
-        var/faction_type = faction_types[i]
-        var/datum/trading_faction/F = new faction_type()
-        F.generate_stock()
-        factions += F
+    // Generate initial stock for each (except Insurgence Clan)
+    for(var/datum/trading_faction/F in factions)
+        if(F.can_trade)
+            F.generate_stock()
+```
+
+### Faction Type Definitions
+
+```dm
+/datum/trading_faction/resurgence_clan
+    name = "Resurgence Clan Village"
+    desc = "Our kin in the homeland. They welcome us, though they have little to spare."
+    starting_reputation = 75
+    min_reputation = 20  // Cannot fall below (familial bond)
+    current_cash = 500
+    max_cash = 1000
+    cash_regen_rate = 25
+
+/datum/trading_faction/jiajia_ren
+    name = "Jiajia-ren Village"
+    desc = "The Cuckoospawn speak in clicks and whistles. Difficult to understand, but their feathers fetch a good price."
+    starting_reputation = 40
+    current_cash = 1500
+    max_cash = 3000
+    cash_regen_rate = 75
+    reputation_volatility = 5  // Large trades swing rep by this instead of 1
+
+/datum/trading_faction/santata_factory
+    name = "Santata's Gift Factory"
+    desc = "The chimney smoke never stops. The screams from within... best not to think about it."
+    starting_reputation = 50
+    current_cash = 4000
+    max_cash = 8000
+    cash_regen_rate = 150
+
+/datum/trading_faction/cloud_town
+    name = "Cloud Town"
+    desc = "A village of humans, somehow surviving out here. Wary of outsiders, but fair traders."
+    starting_reputation = 40
+    current_cash = 2000
+    max_cash = 4000
+    cash_regen_rate = 100
+
+/datum/trading_faction/insurgence_clan
+    name = "Insurgence Clan"
+    desc = "The Tinkerer's red-eyed soldiers watch from the wastes. They do not negotiate. They take."
+    starting_reputation = 5
+    max_reputation = 10  // Cannot exceed (permanently hostile)
+    current_cash = 0
+    max_cash = 0
+    cash_regen_rate = 0
+    can_trade = FALSE  // Does not participate in trading
+    sends_raids = TRUE  // Special flag for raid system
 ```
 
 ### Stock Generation
@@ -503,11 +874,19 @@ Faction stock regenerates over time:
 export const ResurgenceTrading = (props, context) => {
   const { act, data } = useBackend(context);
   const [activeTab, setActiveTab] = useState('factions');
+  const { connected_faction } = data;
 
   return (
-    <Window width={600} height={700} title="Comms Console - Trade Terminal">
+    <Window width={600} height={750} title="Comms Console - Trade Terminal">
       <Window.Content>
         <Stack vertical fill>
+          {/* Speaker Panel - shows when connected to a faction */}
+          {connected_faction && (
+            <Stack.Item>
+              <SpeakerPanel faction={connected_faction} />
+            </Stack.Item>
+          )}
+
           {/* Tab buttons */}
           <Stack.Item>
             <Tabs>
@@ -538,6 +917,62 @@ export const ResurgenceTrading = (props, context) => {
         </Stack>
       </Window.Content>
     </Window>
+  );
+};
+```
+
+### Speaker Panel Component
+
+```jsx
+const SpeakerPanel = (props) => {
+  const { faction } = props;
+
+  return (
+    <Section>
+      <Stack align="center">
+        {/* Portrait */}
+        <Stack.Item>
+          <Box
+            className="SpeakerPortrait"
+            style={{
+              width: '64px',
+              height: '64px',
+              border: '2px solid #555',
+              borderRadius: '4px',
+              backgroundColor: '#222',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              src={`trading_portraits_${faction.speaker_portrait}.png`}
+              style={{ width: '60px', height: '60px' }}
+            />
+          </Box>
+        </Stack.Item>
+
+        {/* Dialogue */}
+        <Stack.Item grow ml={2}>
+          <Box
+            italic
+            fontSize="14px"
+            style={{
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              padding: '10px',
+              borderRadius: '4px',
+              borderLeft: '3px solid #666',
+            }}>
+            &quot;{faction.current_dialogue}&quot;
+          </Box>
+          <Box
+            color="label"
+            textAlign="right"
+            mt={1}>
+            - {faction.speaker_name}, {faction.speaker_title}
+          </Box>
+        </Stack.Item>
+      </Stack>
+    </Section>
   );
 };
 ```

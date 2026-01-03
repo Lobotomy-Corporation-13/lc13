@@ -14,8 +14,10 @@
 	var/desc = "Research description."
 	/// Research tier (1-5)
 	var/tier = 1
-	/// Faith cost to research
-	var/faith_cost = 100
+	/// Total work points needed to complete research
+	var/total_work = 100
+	/// Faith cost per work session (always 1)
+	var/faith_per_session = 1
 	/// List of prerequisite node IDs that must be researched first
 	var/list/prerequisites = list()
 	/// Human-readable description of what this unlocks
@@ -32,7 +34,7 @@
 	name = "Woodworking"
 	desc = "Basic woodworking techniques for furniture and tool crafting."
 	tier = 1
-	faith_cost = 100
+	total_work = 100
 	prerequisites = list()
 	unlocks_desc = "Crafting: Wooden Scythe. Blueprints: Crafting table, furniture, storage."
 	ui_x = 50
@@ -43,7 +45,7 @@
 	name = "Metallurgy"
 	desc = "Working with metal to create tools and structures."
 	tier = 1
-	faith_cost = 100
+	total_work = 100
 	prerequisites = list()
 	unlocks_desc = "Forge: Iron tools. Blueprints: Forge, iron walls/doors."
 	ui_x = 50
@@ -54,7 +56,7 @@
 	name = "Textiles"
 	desc = "Weaving cloth into useful items and clothing."
 	tier = 1
-	faith_cost = 100
+	total_work = 100
 	prerequisites = list()
 	unlocks_desc = "Loom: Backpack, Satchel. Blueprints: Loom."
 	ui_x = 50
@@ -67,7 +69,7 @@
 	name = "Agriculture"
 	desc = "Farming techniques and seed management."
 	tier = 2
-	faith_cost = 200
+	total_work = 200
 	prerequisites = list("woodworking")
 	unlocks_desc = "Blueprints: Seed extractor."
 	ui_x = 220
@@ -78,7 +80,7 @@
 	name = "Artistry"
 	desc = "Creating art and decorative items."
 	tier = 2
-	faith_cost = 200
+	total_work = 100  // Flavor content - reduced cost
 	prerequisites = list("woodworking")
 	unlocks_desc = "Crafting: Canvas sizes, Painting Frame. Blueprints: Sign, Noticeboard."
 	ui_x = 220
@@ -89,7 +91,7 @@
 	name = "Harvesting Tech"
 	desc = "Automated resource collection tools."
 	tier = 2
-	faith_cost = 200
+	total_work = 200
 	prerequisites = list("woodworking", "metallurgy")
 	unlocks_desc = "Crafting: Simple Harvester."
 	ui_x = 220
@@ -100,7 +102,7 @@
 	name = "Papercraft"
 	desc = "Paper production and office supplies."
 	tier = 2
-	faith_cost = 200
+	total_work = 100  // Flavor content - reduced cost
 	prerequisites = list("textiles")
 	unlocks_desc = "Crafting: Paper, Pens, Folders, Clipboard, etc. Blueprints: Filing cabinet."
 	ui_x = 220
@@ -111,7 +113,7 @@
 	name = "Flooring"
 	desc = "Decorative floor coverings."
 	tier = 2
-	faith_cost = 200
+	total_work = 100  // Flavor content - reduced cost
 	prerequisites = list("textiles")
 	unlocks_desc = "Crafting: All carpet tiles."
 	ui_x = 220
@@ -122,7 +124,7 @@
 	name = "Culinary"
 	desc = "Kitchen equipment and food preparation."
 	tier = 2
-	faith_cost = 200
+	total_work = 200
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Forge: Beakers, Bowl, Kitchen Knife, Universal Enzyme. Blueprints: Kitchen equipment."
 	ui_x = 220
@@ -133,9 +135,9 @@
 	name = "Machine Fabrication"
 	desc = "Creating complex machinery."
 	tier = 2
-	faith_cost = 200
+	total_work = 300  // Important infrastructure - increased cost
 	prerequisites = list("metallurgy")
-	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder."
+	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder, Communications Console."
 	ui_x = 220
 	ui_y = 480
 
@@ -144,7 +146,7 @@
 	name = "Cleaning"
 	desc = "Sanitation tools and equipment."
 	tier = 2
-	faith_cost = 200
+	total_work = 100  // Flavor content - reduced cost
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Crafting: Push Broom, Spray Can, Trash Bag. Blueprints: Trash bin, cart."
 	ui_x = 220
@@ -157,7 +159,7 @@
 	name = "Basic Music"
 	desc = "Simple musical instruments."
 	tier = 3
-	faith_cost = 300
+	total_work = 150  // Flavor content - reduced cost
 	prerequisites = list("woodworking")
 	unlocks_desc = "Crafting: Recorder, Harmonica, Banjo, Bike Horn."
 	ui_x = 390
@@ -168,7 +170,7 @@
 	name = "Advanced Metallurgy"
 	desc = "Working with advanced alloys and reinforced materials."
 	tier = 3
-	faith_cost = 300
+	total_work = 500  // Important production - increased cost
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Forge: Plasteel, Silver Pickaxe, Ash Plating. Blueprints: Reinforced wall."
 	ui_x = 390
@@ -179,7 +181,7 @@
 	name = "Faith Weaving"
 	desc = "Infusing cloth with spiritual energy."
 	tier = 3
-	faith_cost = 300
+	total_work = 400
 	prerequisites = list("textiles")
 	unlocks_desc = "Loom: Simple Azure Faith Fabric."
 	ui_x = 390
@@ -192,7 +194,7 @@
 	name = "Advanced Music"
 	desc = "Complex musical instruments."
 	tier = 4
-	faith_cost = 400
+	total_work = 250  // Flavor content - reduced cost
 	prerequisites = list("basic_music", "metallurgy")
 	unlocks_desc = "Crafting: Violin, Guitar, Accordion, Trumpet, Saxophone, Glockenspiel."
 	ui_x = 560
@@ -203,7 +205,7 @@
 	name = "Fine Furniture"
 	desc = "Comfortable and decorative seating."
 	tier = 4
-	faith_cost = 400
+	total_work = 300  // Flavor content - reduced cost
 	prerequisites = list("woodworking", "metallurgy")
 	unlocks_desc = "Blueprints: Comfy chair, Office chair, Sofa variants, Bar stool."
 	ui_x = 560
@@ -214,7 +216,7 @@
 	name = "Advanced Weaving"
 	desc = "Complex textile techniques and better storage."
 	tier = 4
-	faith_cost = 400
+	total_work = 600
 	prerequisites = list("faith_weaving")
 	unlocks_desc = "Loom: Advanced Faith Fabric, Duffel Bag, Explorer Backpack, Leather Satchel."
 	ui_x = 560
@@ -225,7 +227,7 @@
 	name = "Luxury Decor"
 	desc = "Opulent decorations using precious metals."
 	tier = 4
-	faith_cost = 400
+	total_work = 350  // Flavor content - reduced cost
 	prerequisites = list("advanced_metallurgy")
 	unlocks_desc = "Crafting: Royal Carpets. Blueprints: Gold/Silver walls and doors."
 	ui_x = 560
@@ -236,7 +238,7 @@
 	name = "Advanced Cleaning"
 	desc = "Enhanced sanitation equipment."
 	tier = 4
-	faith_cost = 400
+	total_work = 250  // Flavor content - reduced cost
 	prerequisites = list("cleaning")
 	unlocks_desc = "Crafting: Infinite Spray Can, Trash Bag of Holding, Janitor Chem Sprayer."
 	ui_x = 560
@@ -247,7 +249,7 @@
 	name = "Communications"
 	desc = "Radio and communication devices."
 	tier = 4
-	faith_cost = 400
+	total_work = 600
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Crafting: All Radio Headsets."
 	ui_x = 560
@@ -258,7 +260,7 @@
 	name = "Storage Tech"
 	desc = "Advanced storage and preservation."
 	tier = 4
-	faith_cost = 400
+	total_work = 600
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Blueprints: Freezer, Fridge, Shower frame."
 	ui_x = 560
@@ -271,7 +273,7 @@
 	name = "Master Music"
 	desc = "The pinnacle of musical craftsmanship."
 	tier = 5
-	faith_cost = 500
+	total_work = 350  // Flavor content - reduced cost
 	prerequisites = list("advanced_music", "luxury_decor")
 	unlocks_desc = "Crafting: Golden Violin, Synthesizer, Synthesizer Headphones."
 	ui_x = 730
@@ -282,7 +284,7 @@
 	name = "Industrial"
 	desc = "Large-scale automated production."
 	tier = 5
-	faith_cost = 500
+	total_work = 800  // Important production - increased cost
 	prerequisites = list("advanced_metallurgy", "harvesting_tech")
 	unlocks_desc = "Forge: Advanced Harvester."
 	ui_x = 730
@@ -293,7 +295,7 @@
 	name = "Master Weaving"
 	desc = "The highest art of textile crafting."
 	tier = 5
-	faith_cost = 500
+	total_work = 700  // Important production - increased cost
 	prerequisites = list("advanced_weaving")
 	unlocks_desc = "Loom: Elegant Faith Fabric, All dynamic clothing."
 	ui_x = 730

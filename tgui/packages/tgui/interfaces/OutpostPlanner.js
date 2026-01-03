@@ -250,26 +250,39 @@ const BlueprintTab = (props, context) => {
 const StructureCard = (props, context) => {
   const { act } = useBackend(context);
   const { structure, selected } = props;
+  const isLocked = structure.is_locked;
 
   return (
     <Button
       fluid
-      selected={selected}
+      selected={selected && !isLocked}
+      disabled={isLocked}
+      style={{
+        opacity: isLocked ? 0.5 : 1,
+      }}
       onClick={() => act('select_structure', {
         name: structure.name,
         type: structure.type,
       })}>
       <Box>
         <Box bold mb={0.5}>
+          {!!isLocked && <Icon name="lock" color="bad" mr={1} />}
           {structure.name}
         </Box>
-        <Box fontSize="11px" color="label">
-          {structure.materials.map((mat, index) => (
-            <Box key={index}>
-              {mat.amount}x {mat.name}
-            </Box>
-          ))}
-        </Box>
+        {isLocked ? (
+          <Box fontSize="11px" color="bad">
+            <Icon name="flask" mr={0.5} />
+            Requires: {structure.lock_reason}
+          </Box>
+        ) : (
+          <Box fontSize="11px" color="label">
+            {structure.materials.map((mat, index) => (
+              <Box key={index}>
+                {mat.amount}x {mat.name}
+              </Box>
+            ))}
+          </Box>
+        )}
       </Box>
     </Button>
   );

@@ -28,6 +28,8 @@ This document lists all materials available to players for crafting recipes.
 | Name | Type Path | Source |
 |------|-----------|--------|
 | Cotton | `/obj/item/stack/sheet/cotton` | Harvesting cotton plants |
+| Vines | `/obj/item/stack/resurgence_vines` | Harvesting wild plants |
+| Durathread | `/obj/item/grown/cotton/durathread` | Harvesting durathread plants |
 | Animal Hide | `/obj/item/stack/sheet/animalhide/generic` | Hunting animals |
 | Hairless Hide | `/obj/item/stack/sheet/hairlesshide` | Processing hide (cut with knife) |
 | Wet Hide | `/obj/item/stack/sheet/wethide` | Washing hairless hide |
@@ -44,8 +46,7 @@ This document lists all materials available to players for crafting recipes.
 | Metal Rods | `/obj/item/stack/rods` | 1 Metal Sheet | Crafting Table |
 | Cloth | `/obj/item/stack/sheet/cotton/cloth` | 3 Cotton | Loom |
 | Leather | `/obj/item/stack/sheet/leather` | Drying wet hide | Drying/Heat |
-| Reinforced Glass | `/obj/item/stack/sheet/rglass` | 1 Glass + 1 Metal Rod | Crafting Table (future) |
-| Plasteel | `/obj/item/stack/sheet/plasteel` | Special (rare material) | N/A |
+| Plasteel | `/obj/item/stack/sheet/plasteel` | 2 Metal + 1 Coal | Forge |
 
 ### Precious Metals (Forge)
 | Name | Type Path | Made From | Station |
@@ -53,33 +54,30 @@ This document lists all materials available to players for crafting recipes.
 | Silver Sheet | `/obj/item/stack/sheet/mineral/silver` | 2 Silver Ore | Forge |
 | Gold Sheet | `/obj/item/stack/sheet/mineral/gold` | 2 Gold Ore | Forge |
 
-### Advanced Textiles (Loom)
-| Name | Type Path | Made From | Station |
-|------|-----------|-----------|---------|
-| Durathread | `/obj/item/stack/sheet/durathread` | Special fiber | Loom (future) |
-
 ---
 
 ## Crafted Components (Resurgence-specific)
 
-### Components (Crafting Table)
+### Components (Crafting Table/Loom/Forge)
+| Name | Type Path | Made From | Station |
+|------|-----------|-----------|---------|
+| Rope | `/obj/item/resurgence_component/rope` | 3 Cloth OR 8 Cotton OR 3 Vines | Crafting Table |
+| Fertilizer | `/obj/item/stack/resurgence_fertilizer` | 5 Coal | Crafting Table |
+| Ash Plating | `/obj/item/resurgence_component/ash_plating` | 10 Metal + 20 Coal | Forge |
+
+### Faith Fabrics (Loom)
 | Name | Type Path | Made From |
 |------|-----------|-----------|
-| Rope | `/obj/item/resurgence_component/rope` | 3 Cloth |
-| Nails (x10) | `/obj/item/stack/resurgence_nails` | 1 Metal Sheet |
-| Ash Plating | `/obj/item/resurgence_component/ash_plating` | TBD |
-| Basic Microchip | `/obj/item/resurgence_component/microchip` | TBD |
-| Advanced Microchip | `/obj/item/resurgence_component/microchip/advanced` | TBD |
-| Super Microchip | `/obj/item/resurgence_component/microchip/super` | TBD |
+| Simple Azure Faith Fabric | `/obj/item/resurgence_fabric/simple` | 5 Cloth + 1 Rope |
+| Advanced Azure Faith Fabric | `/obj/item/resurgence_fabric/advanced` | 8 Cloth + 3 Durathread + 2 Rope |
+| Elegant Azure Faith Fabric | `/obj/item/resurgence_fabric/elegant` | 10 Cloth + 6 Durathread + 3 Rope |
 
 ---
 
 ## Floor Tiles (Crafting Table)
 | Name | Type Path | Made From |
 |------|-----------|-----------|
-| Wood Floor Tiles (x4) | `/obj/item/stack/tile/wood` | 1 Wood |
-| Plasteel Floor Tiles (x4) | `/obj/item/stack/tile/plasteel` | 1 Plasteel |
-| Carpet Tiles (x4) | `/obj/item/stack/tile/carpet` | 2 Cloth |
+| Plasteel Floor Tiles (x4) | `/obj/item/stack/tile/plasteel` | 2 Plasteel |
 | Black Carpet (x4) | `/obj/item/stack/tile/carpet/black` | 2 Cloth |
 | Blue Carpet (x4) | `/obj/item/stack/tile/carpet/blue` | 2 Cloth |
 | Cyan Carpet (x4) | `/obj/item/stack/tile/carpet/cyan` | 2 Cloth |
@@ -94,27 +92,27 @@ This document lists all materials available to players for crafting recipes.
 
 ## Material Categories by Use
 
-### Construction
-- Wood, Metal Sheet, Metal Rods, Nails, Plasteel
+### Construction (Blueprints)
+- Wood, Metal Sheet, Metal Rods, Plasteel, Sandstone, Silver, Gold, Rope
 
-### Metalworking
-- Iron Ore, Iron Scrap, Metal Sheet, Metal Rods, Plasteel
+### Metalworking (Forge)
+- Iron Ore, Iron Scrap, Metal Sheet, Coal, Plasteel, Ash Plating
 
-### Textiles
-- Cotton, Cloth, Rope, Durathread
+### Textiles (Loom)
+- Cotton, Cloth, Rope, Durathread, Leather
 
 ### Leatherworking
 - Animal Hide, Hairless Hide, Wet Hide, Leather
 
-### Glassworking
-- Sand/Glass Ore, Glass Rubble, Glass Sheet, Reinforced Glass
+### Glassworking (Forge)
+- Sand/Glass Ore, Glass Rubble, Glass Sheet
 
 ### Precious/Decorative
 - Gold Ore, Gold Sheet, Silver Ore, Silver Sheet
 
 ---
 
-## Quick Reference: Type Paths
+## Quick Reference: Type Paths (Implemented)
 
 ```dm
 // Raw Ores
@@ -135,34 +133,34 @@ This document lists all materials available to players for crafting recipes.
 /obj/item/stack/sheet/mineral/silver
 /obj/item/stack/sheet/mineral/gold
 /obj/item/stack/sheet/plasteel
-/obj/item/stack/sheet/rglass
 
 // Textiles
 /obj/item/stack/sheet/cotton
 /obj/item/stack/sheet/cotton/cloth
-/obj/item/stack/sheet/durathread
 
 // Leather Processing Chain
-/obj/item/stack/sheet/animalhide/generic  // Raw hide from animals
-/obj/item/stack/sheet/hairlesshide        // After cutting with knife
-/obj/item/stack/sheet/wethide             // After washing
-/obj/item/stack/sheet/leather             // After drying
+/obj/item/stack/sheet/animalhide/generic
+/obj/item/stack/sheet/hairlesshide
+/obj/item/stack/sheet/wethide
+/obj/item/stack/sheet/leather
 
-// Other
+// Other Base Game
 /obj/item/stack/rods
-/obj/item/stack/resurgence_nails
 
-// Resurgence Components
+// Resurgence-Specific Materials (IMPLEMENTED)
 /obj/item/resurgence_component/rope
 /obj/item/resurgence_component/ash_plating
-/obj/item/resurgence_component/microchip
-/obj/item/resurgence_component/microchip/advanced
-/obj/item/resurgence_component/microchip/super
+/obj/item/stack/resurgence_vines
+/obj/item/stack/resurgence_fertilizer
+/obj/item/grown/cotton/durathread
+
+// Faith Fabrics (IMPLEMENTED)
+/obj/item/resurgence_fabric/simple
+/obj/item/resurgence_fabric/advanced
+/obj/item/resurgence_fabric/elegant
 
 // Floor Tiles
-/obj/item/stack/tile/wood
 /obj/item/stack/tile/plasteel
-/obj/item/stack/tile/carpet
 /obj/item/stack/tile/carpet/black
 /obj/item/stack/tile/carpet/blue
 /obj/item/stack/tile/carpet/cyan
@@ -187,21 +185,45 @@ This document lists all materials available to players for crafting recipes.
 
 ## Notes
 
-- **Plasteel** is rare/special and not easily obtainable - used for high-tier recipes
-- **Durathread** requires special processing (future implementation)
+- **Plasteel** is crafted at the Forge (2 Metal + 1 Coal), requires advanced_metallurgy research
+- **Rope** can be made from Cloth (3), Cotton (8), or Vines (3)
+- **Ash Plating** is a high-tier component for advanced tools
+- **Faith Fabrics** provide passive faith bonuses when attached to clothing
 - Metal Rods use the existing `/obj/item/stack/rods` type
-- Use existing game materials where possible instead of custom components
 - All ore smelting happens at the Forge
 - All textile processing happens at the Loom
 - General component crafting happens at the Crafting Table
 
-### Removed Components (Use Base Game Materials Instead)
-- ~~wooden_plank~~ → Use `/obj/item/stack/sheet/mineral/wood`
-- ~~metal_plate~~ → Use `/obj/item/stack/sheet/metal`
-- ~~leather_strip~~ → Use `/obj/item/stack/sheet/leather`
-- ~~glass_lens~~ → Use `/obj/item/stack/sheet/glass`
-- ~~reinforced_plate~~ → Use `/obj/item/stack/sheet/plasteel`
-- ~~metal_frame~~ → Removed
-- ~~gear_assembly~~ → Removed
-- ~~carved_ornament~~ → Removed
-- ~~woven_tapestry~~ → Removed
+---
+
+# Planned Materials (Not Yet Implemented)
+
+The following materials are planned but have not been coded yet.
+
+## Planned Crafted Components
+
+| Name | Planned Type Path | Notes |
+|------|-------------------|-------|
+| Nails (x10) | `/obj/item/stack/resurgence_nails` | For construction recipes |
+| Basic Microchip | `/obj/item/resurgence_component/microchip` | For electronics |
+| Advanced Microchip | `/obj/item/resurgence_component/microchip/advanced` | For advanced electronics |
+| Super Microchip | `/obj/item/resurgence_component/microchip/super` | For high-tier electronics |
+
+## Planned Advanced Materials
+
+| Name | Planned Type Path | Notes |
+|------|-------------------|-------|
+| Reinforced Glass | `/obj/item/stack/sheet/rglass` | Glass + Metal Rod combination |
+
+---
+
+## Removed Components (Use Base Game Materials Instead)
+- ~~wooden_plank~~ -> Use `/obj/item/stack/sheet/mineral/wood`
+- ~~metal_plate~~ -> Use `/obj/item/stack/sheet/metal`
+- ~~leather_strip~~ -> Use `/obj/item/stack/sheet/leather`
+- ~~glass_lens~~ -> Use `/obj/item/stack/sheet/glass`
+- ~~reinforced_plate~~ -> Use `/obj/item/stack/sheet/plasteel`
+- ~~metal_frame~~ -> Removed
+- ~~gear_assembly~~ -> Removed
+- ~~carved_ornament~~ -> Removed
+- ~~woven_tapestry~~ -> Removed
