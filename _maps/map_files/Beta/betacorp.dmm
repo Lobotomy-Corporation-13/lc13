@@ -270,7 +270,7 @@
 /area/facility_hallway/north)
 "bw" = (
 /obj/structure/table/wood/fancy/green,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/purgeall,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "by" = (
@@ -2669,7 +2669,8 @@
 /area/department_main/safety)
 "nl" = (
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/welfare)
 "nm" = (
@@ -3197,8 +3198,9 @@
 /area/facility_hallway/training)
 "qw" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "qA" = (
@@ -3546,11 +3548,7 @@
 	dir = 5
 	},
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/carpet,
 /area/department_main/control)
 "sc" = (
@@ -4403,7 +4401,7 @@
 /area/department_main/command)
 "vu" = (
 /obj/structure/table/wood/fancy/green,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_mixed,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "vA" = (
@@ -5417,11 +5415,7 @@
 /area/facility_hallway/south)
 "Be" = (
 /obj/structure/table/reinforced,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/carpet,
 /area/department_main/control)
 "Bg" = (
@@ -5650,7 +5644,8 @@
 /area/department_main/training)
 "Cb" = (
 /obj/structure/rack,
-/obj/item/reagent_containers/hypospray/medipen/salacid,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
+/obj/item/reagent_containers/hypospray/medipen/l_health,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/welfare)
 "Ce" = (
@@ -9204,8 +9199,9 @@
 "Vi" = (
 /obj/structure/table/reinforced,
 /obj/machinery/light,
-/obj/item/reagent_containers/hypospray/medipen/mental,
-/obj/item/reagent_containers/hypospray/medipen/mental,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
+/obj/item/reagent_containers/hypospray/medipen/l_sanity,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "Vj" = (
@@ -9660,6 +9656,7 @@
 /obj/machinery/status_display{
 	pixel_y = -32
 	},
+/obj/item/reagent_containers/hypospray/medipen/l_mixed,
 /turf/open/floor/carpet/royalblue,
 /area/department_main/welfare)
 "Xt" = (
@@ -40913,7 +40910,7 @@ CR
 Ew
 Pe
 Pe
-bw
+dj
 Pe
 XD
 Pe
@@ -41169,7 +41166,7 @@ hP
 cu
 vO
 Pe
-dj
+bw
 oB
 yx
 am
