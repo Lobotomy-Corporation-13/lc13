@@ -418,37 +418,41 @@ GLOBAL_LIST_EMPTY(marked_players)
 				return null
 
 /mob/living/simple_animal/hostile/DamageEffect(damage, damtype)
-	var/obj/effect/dam_effect = null
+	var/effect_name
 	if(!damage)
-		dam_effect = new /obj/effect/temp_visual/healing/no_dam(get_turf(src))
-		if(damage_effect_scale != 1)
-			dam_effect.transform *= damage_effect_scale
-		return dam_effect
+		effect_name = "no_dam"
 	if(damage < 0)
-		dam_effect = new /obj/effect/temp_visual/healing(get_turf(src))
-		if(damage_effect_scale != 1)
-			dam_effect.transform *= damage_effect_scale
-		return dam_effect
-	switch(damtype)
-		if(RED_DAMAGE, BRUTE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/red(get_turf(src))
-		if(WHITE_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/white(get_turf(src))
-		if(BLACK_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/black(get_turf(src))
-		if(PALE_DAMAGE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/pale(get_turf(src))
-		if(FIRE)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/burn(get_turf(src))
-		if(TOX)
-			dam_effect = new /obj/effect/temp_visual/damage_effect/tox(get_turf(src))
-		else
+		effect_name = "healing"
+	if(!effect_name)
+		switch(damtype)
+			if(RED_DAMAGE, BRUTE)
+				effect_name = "dam_red"
+			if(WHITE_DAMAGE)
+				effect_name = "dam_white"
+			if(BLACK_DAMAGE)
+				effect_name = "dam_black"
+			if(PALE_DAMAGE)
+				effect_name = "dam_pale"
+			if(FIRE)
+				effect_name = "dam_burn"
+			if(TOX)
+				effect_name = "dam_tox"
+		if(!effect_name)
 			return null
+		else
+			effect_name += "[rand(1,2)]"
+	var/image/dam_effect = image('ModularLobotomy/_Lobotomyicons/lc13_coloreffect.dmi', get_turf(src), effect_name, src.layer + 0.1)
+	dam_effect.pixel_x = rand(-12, 12)
+	dam_effect.pixel_y = rand(-9, 0)
+	dam_effect.plane = GAME_PLANE
+	dam_effect.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+
 	if(damage_effect_scale != 1)
 		dam_effect.transform *= damage_effect_scale
 	if(length(projectile_blockers) > 0)
 		dam_effect.pixel_x += rand(-occupied_tiles_left_current * 32, occupied_tiles_right_current * 32)
 		dam_effect.pixel_y += rand(-occupied_tiles_down_current * 32, occupied_tiles_up_current * 32)
+	flick_overlay(dam_effect, GLOB.clients, 8)
 	return dam_effect
 
 /mob/living/simple_animal/hostile/adjustBruteLoss(amount, updating_health, forced)
