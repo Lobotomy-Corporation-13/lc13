@@ -291,10 +291,9 @@
 /area/department_main/control)
 "cj" = (
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/telecomms/bus/preset_four,
+/obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "cm" = (
 /obj/structure/disposalpipe/segment{
 	dir = 9
@@ -431,9 +430,9 @@
 /area/department_main/control)
 "do" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/hub/preset,
+/obj/machinery/telecomms/receiver/preset_left,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "du" = (
 /obj/effect/turf_decal/stripes/full,
 /obj/structure/sign/poster/official/safety_eye_protection{
@@ -714,7 +713,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/processor/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "fo" = (
 /obj/machinery/door/airlock/highsecurity{
 	name = "Extraction Office"
@@ -938,10 +937,6 @@
 	},
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
-"gX" = (
-/obj/machinery/telecomms/server/presets/medical,
-/turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
 "hc" = (
 /obj/machinery/camera/autoname,
 /turf/open/floor/plasteel/dark,
@@ -1091,10 +1086,6 @@
 	},
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/department_main/training)
-"ih" = (
-/obj/machinery/telecomms/server/presets/security,
-/turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
 "ii" = (
 /obj/structure/disposalpipe/segment{
 	dir = 4
@@ -1382,9 +1373,11 @@
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
 "kj" = (
-/obj/machinery/telecomms/server/presets/common,
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/processor/preset_one,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "kn" = (
 /obj/structure/disposalpipe/segment,
 /obj/effect/decal/cleanable/dirt,
@@ -1758,10 +1751,10 @@
 /turf/open/floor/facility,
 /area/facility_hallway/west)
 "mn" = (
+/obj/machinery/telecomms/broadcaster/preset_left,
 /obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/receiver/preset_right,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "mt" = (
 /obj/effect/turf_decal/siding/green,
 /turf/open/floor/facility,
@@ -2200,11 +2193,9 @@
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "pT" = (
-/obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/telecomms/bus/preset_one,
+/obj/machinery/telecomms/server/presets/command,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "pU" = (
 /obj/structure/table/wood/fancy/blue,
 /obj/structure/sign/ordealmonitor{
@@ -2304,12 +2295,9 @@
 /turf/open/floor/plating,
 /area/department_main/training)
 "qC" = (
-/obj/machinery/telecomms/message_server/preset,
-/obj/machinery/light{
-	dir = 4
-	},
+/obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "qF" = (
 /turf/open/floor/facility,
 /area/facility_hallway/central)
@@ -2570,9 +2558,9 @@
 /area/facility_hallway/north)
 "sz" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/receiver/preset_left,
+/obj/machinery/telecomms/bus/preset_two,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "sA" = (
 /obj/machinery/light/cold,
 /obj/structure/table/wood/fancy/blue,
@@ -2815,9 +2803,10 @@
 /area/facility_hallway/central)
 "uA" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/bus/preset_two,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/bus/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "uC" = (
 /obj/effect/turf_decal/siding/yellow/corner,
 /obj/structure/table/wood/fancy/blue,
@@ -3037,9 +3026,10 @@
 /area/facility_hallway/east)
 "vT" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/bus/preset_three,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/bus/preset_one,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "vW" = (
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/siding/white{
@@ -4149,14 +4139,11 @@
 /turf/open/floor/facility/white,
 /area/department_main/safety)
 "EM" = (
-/obj/machinery/telecomms/server/presets/supply{
-	name = "Control Server"
-	},
-/obj/machinery/light/small{
-	dir = 4
-	},
+/obj/effect/turf_decal/bot,
+/obj/effect/decal/cleanable/dirt,
+/obj/machinery/telecomms/processor/preset_three,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/department_main/control)
+/area/facility_hallway/south)
 "ET" = (
 /obj/effect/turf_decal/tile/brown,
 /obj/effect/turf_decal/tile/brown{
@@ -4620,8 +4607,10 @@
 /turf/open/floor/carpet/orange,
 /area/department_main/training)
 "Jp" = (
-/turf/closed/indestructible/fakeglass,
-/area/department_main/control)
+/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/bus/preset_three,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/south)
 "Jr" = (
 /obj/machinery/light/cold{
 	dir = 8
@@ -5644,14 +5633,10 @@
 /turf/open/floor/facility/dark,
 /area/department_main/training)
 "QZ" = (
+/obj/machinery/telecomms/broadcaster/preset_right,
 /obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/telecomms/processor/preset_three,
-/obj/machinery/light{
-	dir = 8
-	},
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "Rb" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 1
@@ -5835,10 +5820,9 @@
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "Sy" = (
-/obj/effect/turf_decal/bot,
-/obj/machinery/telecomms/processor/preset_four,
+/obj/machinery/telecomms/server/presets/medical,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "SC" = (
 /obj/structure/disposalpipe/segment,
 /turf/open/floor/facility/dark,
@@ -5919,8 +5903,10 @@
 /turf/open/floor/facility,
 /area/facility_hallway/north)
 "Tb" = (
-/turf/closed/indestructible/fakeglass,
-/area/facility_hallway/central)
+/obj/effect/turf_decal/bot,
+/obj/machinery/ntnet_relay,
+/turf/open/floor/circuit/telecomms/mainframe,
+/area/facility_hallway/south)
 "Tc" = (
 /obj/structure/table/reinforced,
 /obj/effect/turf_decal/siding/brown{
@@ -6063,10 +6049,10 @@
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
 "Uh" = (
-/obj/machinery/telecomms/broadcaster/preset_left,
 /obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/processor/preset_four,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "Ui" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 1
@@ -6507,10 +6493,9 @@
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
 "Xg" = (
-/obj/machinery/telecomms/broadcaster/preset_right,
-/obj/effect/turf_decal/bot,
+/obj/machinery/telecomms/message_server/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "Xj" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 9
@@ -6549,11 +6534,9 @@
 /turf/open/floor/carpet/royalblue,
 /area/department_main/command)
 "Xv" = (
-/obj/effect/turf_decal/bot,
-/obj/effect/decal/cleanable/dirt,
-/obj/machinery/telecomms/processor/preset_one,
+/obj/machinery/telecomms/server/presets/security,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "Xw" = (
 /obj/effect/turf_decal/siding/purple{
 	dir = 5
@@ -6570,7 +6553,7 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/relay/preset/telecomms,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "XB" = (
 /obj/structure/disposalpipe/junction/yjunction{
 	dir = 4
@@ -6690,12 +6673,9 @@
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
 "Yx" = (
-/obj/machinery/announcement_system,
-/obj/machinery/light/small{
-	dir = 8
-	},
+/obj/machinery/telecomms/server/presets/science,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/department_main/control)
+/area/facility_hallway/south)
 "YA" = (
 /obj/structure/table/glass,
 /obj/structure/lootcrate/l_corp,
@@ -6814,9 +6794,9 @@
 /area/department_main/information)
 "YZ" = (
 /obj/effect/turf_decal/bot,
-/obj/machinery/ntnet_relay,
+/obj/machinery/telecomms/receiver/preset_right,
 /turf/open/floor/circuit/telecomms/mainframe,
-/area/facility_hallway/central)
+/area/facility_hallway/south)
 "Zb" = (
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/south)
@@ -36703,10 +36683,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-Hv
-Hv
-Hv
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -36960,10 +36940,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-Sy
-QZ
-vT
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -37217,10 +37197,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-Xy
-mn
-cj
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -37474,10 +37454,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-Uh
-YZ
-Xg
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -37732,9 +37712,9 @@ Hv
 Hv
 Hv
 se
-Tb
-Tb
-Tb
+Hv
+Hv
+Hv
 Kn
 vg
 vg
@@ -38689,9 +38669,9 @@ ZL
 ZL
 ZL
 ZL
-rg
-rg
-rg
+ZL
+ZL
+ZL
 ZL
 rg
 fL
@@ -38946,9 +38926,9 @@ rg
 rg
 rg
 rg
-rg
-Yx
-rg
+ZL
+ZL
+ZL
 ZL
 rg
 sr
@@ -39204,7 +39184,7 @@ wD
 lB
 rg
 rg
-Jp
+rg
 rg
 rg
 rg
@@ -40232,7 +40212,7 @@ wD
 bu
 rg
 rg
-Jp
+rg
 rg
 rg
 rg
@@ -40488,9 +40468,9 @@ rg
 rg
 rg
 rg
-rg
-EM
-rg
+ZL
+ZL
+ZL
 ZL
 rg
 By
@@ -40745,9 +40725,9 @@ ZL
 ZL
 ZL
 ZL
-rg
-rg
-rg
+ZL
+ZL
+ZL
 ZL
 rg
 Lq
@@ -41844,9 +41824,9 @@ Hv
 Hv
 Hv
 Hv
-Tb
-Tb
-Tb
+Hv
+Hv
+Hv
 Kn
 vg
 vg
@@ -42100,10 +42080,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-gX
-do
-ih
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -42357,10 +42337,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-fk
-Xv
-uA
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -42614,10 +42594,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-kj
-sz
-pT
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -42871,10 +42851,10 @@ Hv
 ZL
 ZL
 ZL
-Hv
-Hv
-qC
-Hv
+ZL
+ZL
+ZL
+ZL
 Kn
 vg
 vg
@@ -43129,9 +43109,9 @@ ZL
 ZL
 ZL
 ZL
-Hv
-Hv
-Hv
+ZL
+ZL
+ZL
 Kn
 Kn
 Kn
@@ -46210,11 +46190,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Kn
+Kn
+Kn
+Kn
 ZL
 ZL
 ZL
@@ -46467,11 +46447,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Yx
+Xg
+Sy
+Kn
 ZL
 ZL
 ZL
@@ -46724,11 +46704,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+fk
+sz
+YZ
+Kn
 ZL
 ZL
 ZL
@@ -46981,11 +46961,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+kj
+vT
+do
+Kn
 ZL
 ZL
 ZL
@@ -47238,11 +47218,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Uh
+Jp
+QZ
+Kn
 ZL
 ZL
 ZL
@@ -47495,11 +47475,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+EM
+uA
+mn
+Kn
 ZL
 ZL
 ZL
@@ -47752,11 +47732,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Xy
+Tb
+cj
+Kn
 ZL
 ZL
 ZL
@@ -48009,11 +47989,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+qC
+pT
+Xv
+Kn
 ZL
 ZL
 ZL
@@ -48266,11 +48246,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Kn
+Kn
+Kn
+Kn
 ZL
 ZL
 ZL
