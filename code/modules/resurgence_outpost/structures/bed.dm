@@ -347,6 +347,11 @@ GLOBAL_LIST_EMPTY(resurgence_bed_owners)
 	data["analysis_xp"] = core.xp_analysis
 	data["analysis_xp_needed"] = get_xp_for_level(core.stat_analysis)
 
+	// Social stat
+	data["social_level"] = core.stat_social
+	data["social_xp"] = core.xp_social
+	data["social_xp_needed"] = get_xp_for_level(core.stat_social)
+
 	// Active events
 	if(GLOB.resurgence_events)
 		data["active_events"] = GLOB.resurgence_events.get_active_events_data()

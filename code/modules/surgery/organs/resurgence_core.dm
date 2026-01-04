@@ -47,6 +47,7 @@
 	var/stat_harvesting = 1
 	var/stat_cooking = 1
 	var/stat_analysis = 1
+	var/stat_social = 1
 
 	// XP accumulation (resets to 0 after level up)
 	var/xp_crafting = 0
@@ -54,6 +55,13 @@
 	var/xp_harvesting = 0
 	var/xp_cooking = 0
 	var/xp_analysis = 0
+	var/xp_social = 0
+
+	// Personalization System
+	/// Passions datum tracking XP bonuses
+	var/datum/resurgence_passions/passions = null
+	/// List of applied trait datums
+	var/list/applied_traits = list()
 
 	/// Accelerated Crafting Protocol - whether the action has been granted
 	var/acceleration_action_granted = FALSE
@@ -67,6 +75,16 @@
 		event.parent_core = null
 		qdel(event)
 	faith_events.Cut()
+
+	// Clean up personalization
+	if(passions)
+		qdel(passions)
+		passions = null
+	for(var/datum/resurgence_trait/T in applied_traits)
+		T.remove()
+		qdel(T)
+	applied_traits.Cut()
+
 	return ..()
 
 /obj/item/organ/resurgence_core/Insert(mob/living/carbon/M, special, drop_if_replaced)
@@ -277,6 +295,15 @@
 	if(amount <= 0)
 		return
 
+	// Apply trait XP modifier (Quick Learner, Slow Learner, Too Smart)
+	if(owner && ishuman(owner))
+		var/trait_modifier = get_trait_xp_modifier(owner)
+		amount *= trait_modifier
+
+	// Apply passion bonus
+	if(passions)
+		amount *= passions.get_xp_multiplier(stat_type)
+
 	var/current_level
 	var/current_xp
 
@@ -296,6 +323,9 @@
 		if("analysis")
 			current_level = stat_analysis
 			current_xp = xp_analysis
+		if("social")
+			current_level = stat_social
+			current_xp = xp_social
 		else
 			return // Invalid stat type
 
@@ -332,6 +362,9 @@
 		if("analysis")
 			stat_analysis = current_level
 			xp_analysis = current_xp
+		if("social")
+			stat_social = current_level
+			xp_social = current_xp
 
 /// Get the current level of a stat
 /obj/item/organ/resurgence_core/proc/get_stat_level(stat_type)
@@ -346,6 +379,8 @@
 			return stat_cooking
 		if("analysis")
 			return stat_analysis
+		if("social")
+			return stat_social
 	return 1
 
 /// Get the current XP of a stat
@@ -361,6 +396,8 @@
 			return xp_cooking
 		if("analysis")
 			return xp_analysis
+		if("social")
+			return xp_social
 	return 0
 
 // ============================================

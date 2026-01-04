@@ -46,8 +46,27 @@
 	// Machines don't eat, hunger or metabolise foods
 	C.set_safe_hunger_level()
 
+	// Apply personalization if client is connected
+	if(ishuman(C))
+		var/mob/living/carbon/human/H = C
+		if(H.client?.prefs)
+			// Client is connected, apply personalization now
+			apply_resurgence_personalization(H)
+		else
+			// Client not connected yet, register for login signal
+			RegisterSignal(C, COMSIG_MOB_LOGIN, PROC_REF(on_resurgence_login))
+
+/// Called when a resurgence machine logs in without personalization applied
+/datum/species/resurgence_machine/proc/on_resurgence_login(mob/living/carbon/human/source)
+	SIGNAL_HANDLER
+	UnregisterSignal(source, COMSIG_MOB_LOGIN)
+
+	// Apply personalization now that client is connected
+	apply_resurgence_personalization(source)
+
 /datum/species/resurgence_machine/on_species_loss(mob/living/carbon/C)
 	. = ..()
+	UnregisterSignal(C, COMSIG_MOB_LOGIN)
 	for(var/X in C.bodyparts)
 		var/obj/item/bodypart/O = X
 		O.change_bodypart_status(BODYPART_ORGANIC, FALSE, TRUE)

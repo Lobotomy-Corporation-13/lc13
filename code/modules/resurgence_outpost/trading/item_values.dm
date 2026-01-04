@@ -144,6 +144,30 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 	/obj/item/instrument/trumpet = 45
 ))
 
+/// Get the social skill buy modifier for a mob
+/// Returns a multiplier (1.0 = no bonus, lower = better discount)
+/// Formula: 2% discount per level above 1 (level 1 = 0%, level 20 = 38%)
+/proc/get_social_buy_modifier(mob/living/carbon/human/H)
+	if(!istype(H))
+		return 1.0
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(!istype(core))
+		return 1.0
+	var/bonus = (core.stat_social - 1) * 0.02
+	return max(0.5, 1.0 - bonus) // Cap at 50% discount
+
+/// Get the social skill sell modifier for a mob
+/// Returns a multiplier (1.0 = no bonus, higher = better prices)
+/// Formula: 2% bonus per level above 1 (level 1 = 0%, level 20 = 38%)
+/proc/get_social_sell_modifier(mob/living/carbon/human/H)
+	if(!istype(H))
+		return 1.0
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(!istype(core))
+		return 1.0
+	var/bonus = (core.stat_social - 1) * 0.02
+	return 1.0 + bonus // No cap on sell bonus
+
 /// Get the base value of an item (uses custom_price or fallback)
 /proc/get_item_trade_value(obj/item/I)
 	if(!I)
@@ -166,8 +190,8 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 	// Default value for unknown items
 	return 1
 
-/// Get the sell value of an item to a faction (with reputation modifier)
-/proc/get_item_sell_value(obj/item/I, datum/trading_faction/faction)
+/// Get the sell value of an item to a faction (with reputation and social modifiers)
+/proc/get_item_sell_value(obj/item/I, datum/trading_faction/faction, mob/living/carbon/human/seller = null)
 	var/base_value = get_item_trade_value(I)
 	if(!faction)
 		return base_value
@@ -177,6 +201,10 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 
 	// Apply global event sell modifier
 	final_value *= GLOB.resurgence_sell_modifier
+
+	// Apply social skill modifier
+	if(seller)
+		final_value *= get_social_sell_modifier(seller)
 
 	// Handle stacks - multiply by amount
 	if(istype(I, /obj/item/stack))
@@ -190,8 +218,8 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 /// Minimum price for any item (even with max reputation discount)
 #define FACTION_MIN_BUY_PRICE 5
 
-/// Get the buy value of an item from a faction (with reputation modifier)
-/proc/get_item_buy_value(base_price, datum/trading_faction/faction)
+/// Get the buy value of an item from a faction (with reputation and social modifiers)
+/proc/get_item_buy_value(base_price, datum/trading_faction/faction, mob/living/carbon/human/buyer = null)
 	if(!faction)
 		return max(base_price * FACTION_BUY_MARKUP, FACTION_MIN_BUY_PRICE)
 
@@ -200,6 +228,10 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 
 	// Apply global event buy modifier
 	final_value *= GLOB.resurgence_buy_modifier
+
+	// Apply social skill modifier
+	if(buyer)
+		final_value *= get_social_buy_modifier(buyer)
 
 	// Ensure minimum price of 5 credits (no free items even with best discount)
 	return max(round(final_value), FACTION_MIN_BUY_PRICE)

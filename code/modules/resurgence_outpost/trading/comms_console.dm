@@ -162,8 +162,11 @@
 				"total_value" = 0
 			)
 			var/closet_total = 0
+			var/sell_mod = connected.get_sell_modifier()
+			if(ishuman(user))
+				sell_mod *= get_social_sell_modifier(user)
 			for(var/list/item_data in last_scan_results[C])
-				var/item_value = item_data["value"] * connected.get_sell_modifier()
+				var/item_value = item_data["value"] * sell_mod
 				closet_total += round(item_value)
 				closet_data["items"] += list(list(
 					"name" = item_data["name"],
@@ -176,18 +179,22 @@
 	// Calculate selected total
 	var/selected_total = 0
 	if(connected)
+		var/sell_mod = connected.get_sell_modifier()
+		if(ishuman(user))
+			sell_mod *= get_social_sell_modifier(user)
 		for(var/obj/structure/closet/C in selected_for_sale)
 			if(QDELETED(C) || !(C in last_scan_results))
 				continue
 			for(var/list/item_data in last_scan_results[C])
-				selected_total += round(item_data["value"] * connected.get_sell_modifier())
+				selected_total += round(item_data["value"] * sell_mod)
 	data["selected_total"] = selected_total
 
 	// Faction stock for buying
 	data["faction_stock"] = list()
 	if(connected && connected.can_trade)
+		var/buyer = ishuman(user) ? user : null
 		for(var/list/stock_item in connected.stock)
-			var/buy_price = get_item_buy_value(stock_item["base_price"], connected)
+			var/buy_price = get_item_buy_value(stock_item["base_price"], connected, buyer)
 			data["faction_stock"] += list(list(
 				"type" = "[stock_item["type"]]",
 				"name" = stock_item["name"],
@@ -274,7 +281,7 @@
 		if("add_to_cart")
 			var/item_type = params["type"]
 			var/quantity = text2num(params["quantity"])
-			add_to_cart(item_type, quantity)
+			add_to_cart(item_type, quantity, usr)
 			return TRUE
 
 		if("remove_from_cart")
@@ -359,13 +366,16 @@
 		to_chat(user, span_warning("Not connected to a trading faction."))
 		return
 
-	// Calculate total value
+	// Calculate total value (with social skill modifier)
+	var/sell_mod = faction.get_sell_modifier()
+	if(ishuman(user))
+		sell_mod *= get_social_sell_modifier(user)
 	var/total_value = 0
 	for(var/obj/structure/closet/C in selected_for_sale)
 		if(QDELETED(C) || !(C in last_scan_results))
 			continue
 		for(var/list/item_data in last_scan_results[C])
-			total_value += round(item_data["value"] * faction.get_sell_modifier())
+			total_value += round(item_data["value"] * sell_mod)
 
 	// Check if faction can afford
 	if(faction.current_cash < total_value)
@@ -389,6 +399,14 @@
 
 	// Calculate and apply rep gain based on transaction value
 	var/rep_gain = faction.on_trade_completed(total_value, TRUE)
+
+	// Award social XP (1 XP per 10 credits, minimum 1)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/xp_amount = max(1, round(total_value / 10))
+			core.award_xp("social", xp_amount)
 
 	// Show result message with rep gain info
 	if(rep_gain > 0)
@@ -442,7 +460,7 @@
 
 // ===== Buying =====
 
-/obj/structure/comms_console/proc/add_to_cart(item_type_str, quantity)
+/obj/structure/comms_console/proc/add_to_cart(item_type_str, quantity, mob/buyer = null)
 	var/datum/trading_faction/faction = GLOB.resurgence_trading.connected_faction
 	if(!faction || !faction.can_trade)
 		return
@@ -453,7 +471,8 @@
 			var/available = stock_item["quantity"]
 			quantity = clamp(quantity, 1, available)
 
-			var/buy_price = get_item_buy_value(stock_item["base_price"], faction)
+			var/human_buyer = ishuman(buyer) ? buyer : null
+			var/buy_price = get_item_buy_value(stock_item["base_price"], faction, human_buyer)
 			var/total = buy_price * quantity
 
 			// Check if already in cart
@@ -577,6 +596,14 @@
 
 	// Calculate and apply rep gain based on transaction value
 	var/rep_gain = faction.on_trade_completed(total_cost, FALSE)
+
+	// Award social XP (1 XP per 10 credits, minimum 1)
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/xp_amount = max(1, round(total_cost / 10))
+			core.award_xp("social", xp_amount)
 
 	// Show result message with rep gain info
 	if(rep_gain > 0)

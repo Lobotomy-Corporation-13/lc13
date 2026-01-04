@@ -79,12 +79,14 @@ GLOBAL_VAR_INIT(resurgence_durability_modifier, 1.0)
 			return TRUE
 	return FALSE
 
+/* DISABLED - Weather events disabled, see weather_events.dm
 /// Check if ANY resurgence weather is active
 /proc/is_any_resurgence_weather_active()
 	for(var/datum/weather/W in SSweather.processing)
 		if(istype(W, /datum/weather/resurgence))
 			return TRUE
 	return FALSE
+*/
 
 /// Announce an event to all resurgence players
 /proc/announce_resurgence_event(name, desc, category, duration = 0)

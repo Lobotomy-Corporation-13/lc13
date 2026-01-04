@@ -251,8 +251,9 @@
 	if(!.)
 		return FALSE
 	// Only trigger if no weather is currently active
-	if(is_any_resurgence_weather_active())
-		return FALSE
+	// Note: Weather events disabled, always allow clear skies
+	// if(is_any_resurgence_weather_active())
+	// 	return FALSE
 	return TRUE
 
 /datum/resurgence_event/clear_skies/apply_modifiers()

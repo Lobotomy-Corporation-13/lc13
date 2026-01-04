@@ -43,6 +43,9 @@ export const ResurgenceStats = (props, context) => {
     analysis_level = 1,
     analysis_xp = 0,
     analysis_xp_needed = 100,
+    social_level = 1,
+    social_xp = 0,
+    social_xp_needed = 100,
     max_level = 20,
     active_events = [],
   } = data;
@@ -94,6 +97,12 @@ export const ResurgenceStats = (props, context) => {
                 onClick={() => setCurrentTab('analysis')}>
                 <Icon name="microscope" mr={1} />
                 Analysis
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={currentTab === 'social'}
+                onClick={() => setCurrentTab('social')}>
+                <Icon name="comments" mr={1} />
+                Social
               </Tabs.Tab>
               <Tabs.Tab
                 selected={currentTab === 'events'}
@@ -253,6 +262,33 @@ export const ResurgenceStats = (props, context) => {
                 }
               />
             )}
+            {currentTab === 'social' && (
+              <StatPage
+                title="Social"
+                icon="comments"
+                level={social_level}
+                xp={social_xp}
+                xpNeeded={social_xp_needed}
+                maxLevel={max_level}
+                effects={[
+                  {
+                    label: 'Buy Discount',
+                    value: `-${(social_level - 1) * 2}%`,
+                    desc: 'Reduces prices when buying from traders',
+                  },
+                  {
+                    label: 'Sell Bonus',
+                    value: `+${(social_level - 1) * 2}%`,
+                    desc: 'Increases prices when selling to traders',
+                  },
+                ]}
+                description={
+                  'Social skill affects your trading ability. Higher '
+                  + 'levels give better prices when buying and selling '
+                  + 'goods at the Comms Console.'
+                }
+              />
+            )}
             {currentTab === 'events' && (
               <EventsTab active_events={active_events} />
             )}
@@ -280,16 +316,19 @@ const OverviewTab = props => {
     harvesting_level,
     cooking_level,
     analysis_level,
+    social_level,
     crafting_xp,
     mining_xp,
     harvesting_xp,
     cooking_xp,
     analysis_xp,
+    social_xp,
     crafting_xp_needed,
     mining_xp_needed,
     harvesting_xp_needed,
     cooking_xp_needed,
     analysis_xp_needed,
+    social_xp_needed,
     max_level,
   } = data;
 
@@ -408,6 +447,16 @@ const OverviewTab = props => {
                 level={analysis_level}
                 xp={analysis_xp}
                 xpNeeded={analysis_xp_needed}
+                maxLevel={max_level}
+              />
+            </Stack.Item>
+            <Stack.Item>
+              <MiniStatBar
+                name="Social"
+                icon="comments"
+                level={social_level}
+                xp={social_xp}
+                xpNeeded={social_xp_needed}
                 maxLevel={max_level}
               />
             </Stack.Item>

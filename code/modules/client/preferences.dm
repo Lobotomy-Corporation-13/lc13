@@ -340,6 +340,16 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<a href='byond://?_src_=prefs;preference=achievement_spec;task=input'>Change</a><BR>"
 			dat += "<br>"
 
+			dat += "<b>Resurgence Character:</b><BR>"
+			dat += "<a href='byond://?_src_=prefs;preference=resurgence;task=menu'>Configure Traits, Passions & Stats</a><BR>"
+			var/trait_count = length(resurgence_traits)
+			var/passion_text = resurgence_passion ? capitalize(resurgence_passion) : "None"
+			var/stat_points = 0
+			for(var/s in resurgence_stat_points)
+				stat_points += resurgence_stat_points[s]
+			dat += "<b>Traits:</b> [trait_count] | <b>Passion:</b> [passion_text] | <b>Stats:</b> [stat_points]/6<BR>"
+			dat += "<br>"
+
 			dat += "<h2>Background Information:</h2>"
 			dat += "<a href='byond://?_src_=prefs;preference=wingselect;task=input'><b>District Origin:</b> [district_origin]</a><BR>"
 			dat += "<a href='byond://?_src_=prefs;preference=zoneselect;task=input'><b>Zone Origin:</b> [zone_origin]</a><BR></td>"
@@ -1332,6 +1342,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 				SetQuirks(user)
 			else
 				SetQuirks(user)
+		return TRUE
+
+	else if(href_list["preference"] == "resurgence")
+		switch(href_list["task"])
+			if("menu")
+				// Open the Resurgence Character Setup TGUI
+				var/datum/resurgence_character_setup/setup = new(src, user)
+				setup.ui_interact(user)
 		return TRUE
 
 	switch(href_list["task"])
