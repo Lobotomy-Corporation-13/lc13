@@ -298,6 +298,9 @@
 		// Apply harvesting yield bonus (+1 every 5 levels)
 		var/harvesting_level = get_harvesting_stat(user)
 		product_count += get_harvesting_yield_bonus(harvesting_level)
+		// Apply Green Thumb trait (+20% harvest yield)
+		if(ishuman(user))
+			product_count = round(product_count * get_trait_harvest_modifier(user))
 	else
 		// Harvester or other automated source
 		visible_message(span_notice("[myseed.plantname] is harvested!"))

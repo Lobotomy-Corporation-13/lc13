@@ -67,8 +67,10 @@
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
-			core.adjust_faith(-instant_drain)
-			to_chat(H, span_warning("A wave of doubt washes over you... (-[instant_drain] faith)"))
+			// Apply trait modifier for faith loss (Iron-Willed, Sickly, Too Smart)
+			var/actual_drain = instant_drain * get_trait_faith_loss_modifier(H)
+			core.adjust_faith(-actual_drain)
+			to_chat(H, span_warning("A wave of doubt washes over you... (-[round(actual_drain)] faith)"))
 
 /datum/resurgence_event/faith_crisis/apply_modifiers()
 	GLOB.resurgence_faith_regen_modifier *= 0.5

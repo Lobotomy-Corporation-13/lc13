@@ -96,33 +96,55 @@
 /datum/resurgence_character_setup/ui_static_data(mob/user)
 	var/list/data = list()
 
+	// Point pools (these never change, safe for static data)
+	data["trait_point_pool"] = TRAIT_POINT_POOL
+	data["max_negative_trait_points"] = MAX_NEGATIVE_TRAIT_POINTS
+	data["stat_point_pool"] = STAT_POINT_POOL
+	data["max_starting_stat"] = MAX_STARTING_STAT
+	data["max_total_starting_stat"] = MAX_TOTAL_STARTING_STAT
+	data["random_stat_bonus"] = RANDOM_STAT_BONUS
+
+	return data
+
+/datum/resurgence_character_setup/ui_data(mob/user)
+	var/list/data = list()
+
 	// Initialize trait cache if needed
-	if(!length(GLOB.resurgence_trait_cache))
+	if(!length(GLOB.resurgence_trait_types))
 		init_resurgence_traits()
 
-	// Trait definitions for UI
+	// Trait definitions for UI - use initial() like the quirks system
 	var/list/positive_traits = list()
 	var/list/negative_traits = list()
 	var/list/mixed_traits = list()
 
-	for(var/trait_type in GLOB.resurgence_trait_cache)
-		var/datum/resurgence_trait/T = GLOB.resurgence_trait_cache[trait_type]
+	for(var/trait_type in GLOB.resurgence_trait_types)
+		var/datum/resurgence_trait/T = trait_type
+		var/trait_name = initial(T.name)
+		var/trait_desc = initial(T.desc)
+		var/trait_cost = initial(T.point_cost)
+		var/trait_mixed = initial(T.is_mixed)
+		var/list/trait_incompat = initial(T.incompatible)
+
+		var/list/incompatible_list = list()
+		if(trait_incompat)
+			for(var/incompat_type in trait_incompat)
+				incompatible_list += "[incompat_type]"
+
 		var/list/trait_data = list(
 			"type" = "[trait_type]",
-			"name" = T.name,
-			"desc" = T.desc,
-			"cost" = T.point_cost,
-			"incompatible" = list()
+			"name" = trait_name,
+			"desc" = trait_desc,
+			"cost" = trait_cost,
+			"incompatible" = incompatible_list
 		)
-		for(var/incompat_type in T.incompatible)
-			trait_data["incompatible"] += "[incompat_type]"
 
-		if(T.is_mixed)
-			mixed_traits[++mixed_traits.len] = trait_data
-		else if(T.point_cost > 0)
-			positive_traits[++positive_traits.len] = trait_data
-		else if(T.point_cost < 0)
-			negative_traits[++negative_traits.len] = trait_data
+		if(trait_mixed)
+			mixed_traits += list(trait_data)
+		else if(trait_cost > 0)
+			positive_traits += list(trait_data)
+		else if(trait_cost < 0)
+			negative_traits += list(trait_data)
 
 	data["positive_traits"] = positive_traits
 	data["negative_traits"] = negative_traits
@@ -138,18 +160,6 @@
 		))
 	data["stats"] = stats
 
-	// Point pools
-	data["trait_point_pool"] = TRAIT_POINT_POOL
-	data["stat_point_pool"] = STAT_POINT_POOL
-	data["max_starting_stat"] = MAX_STARTING_STAT
-	data["max_total_starting_stat"] = MAX_TOTAL_STARTING_STAT
-	data["random_stat_bonus"] = RANDOM_STAT_BONUS
-
-	return data
-
-/datum/resurgence_character_setup/ui_data(mob/user)
-	var/list/data = list()
-
 	if(!prefs)
 		return data
 
@@ -159,13 +169,24 @@
 		selected_traits += "[trait_type]"
 	data["selected_traits"] = selected_traits
 
-	// Calculate trait points used
-	var/points_used = 0
+	// Calculate trait points - separate positive and negative
+	var/positive_points_used = 0
+	var/negative_points_taken = 0
 	for(var/trait_type in prefs.resurgence_traits)
-		var/datum/resurgence_trait/T = get_resurgence_trait(trait_type)
-		if(T)
-			points_used += T.point_cost
-	data["trait_points_used"] = points_used
+		if(!(trait_type in GLOB.resurgence_trait_types))
+			continue
+		var/datum/resurgence_trait/T = trait_type
+		var/cost = initial(T.point_cost)
+		if(cost > 0)
+			positive_points_used += cost
+		else if(cost < 0)
+			negative_points_taken += abs(cost)
+	data["positive_points_used"] = positive_points_used
+	data["negative_points_taken"] = negative_points_taken
+	// Total available = base pool + negative traits taken
+	data["total_positive_available"] = TRAIT_POINT_POOL + negative_points_taken
+	// Net points used (for legacy compatibility)
+	data["trait_points_used"] = positive_points_used - negative_points_taken
 
 	// Selected passion
 	data["selected_passion"] = prefs.resurgence_passion

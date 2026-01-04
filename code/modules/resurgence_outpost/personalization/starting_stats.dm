@@ -311,23 +311,42 @@
 	if(!selected_traits)
 		return TRUE  // Empty is valid
 
-	var/total_cost = 0
+	// Make sure trait cache is initialized
+	if(!length(GLOB.resurgence_trait_types))
+		init_resurgence_traits()
+
+	var/positive_cost = 0
+	var/negative_points_taken = 0
 	var/list/all_incompatible = list()
 
 	for(var/trait_type in selected_traits)
-		var/datum/resurgence_trait/T = get_resurgence_trait(trait_type)
-		if(!T)
+		// Check if trait type is valid
+		if(!(trait_type in GLOB.resurgence_trait_types))
 			return FALSE  // Invalid trait type
 
 		// Check for incompatibilities
 		if(trait_type in all_incompatible)
 			return FALSE
 
-		all_incompatible |= T.incompatible
-		total_cost += T.point_cost
+		// Get trait info using initial()
+		var/datum/resurgence_trait/T = trait_type
+		var/list/trait_incompat = initial(T.incompatible)
+		if(trait_incompat)
+			all_incompatible |= trait_incompat
 
-	// Check point budget (negative traits give points back)
-	if(total_cost > TRAIT_POINT_POOL)
+		var/cost = initial(T.point_cost)
+		if(cost > 0)
+			positive_cost += cost
+		else if(cost < 0)
+			negative_points_taken += abs(cost)
+
+	// Check negative trait limit
+	if(negative_points_taken > MAX_NEGATIVE_TRAIT_POINTS)
+		return FALSE
+
+	// Check positive point budget (base + negative traits taken)
+	var/available_points = TRAIT_POINT_POOL + negative_points_taken
+	if(positive_cost > available_points)
 		return FALSE
 
 	return TRUE

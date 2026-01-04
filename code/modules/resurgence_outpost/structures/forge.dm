@@ -106,7 +106,7 @@
 		"result" = /obj/item/stack/ore/iron,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/ore/rock = 25),
-		"total_work" = 30,
+		"total_work" = 10,
 		"desc" = "25 Rock -> 1 Iron Ore"
 	)
 
@@ -256,9 +256,9 @@
 	recipes["Kitchen Knife"] = list(
 		"result" = /obj/item/kitchen/knife,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/sheet/metal = 8),
+		"materials" = list(/obj/item/stack/sheet/metal = 2),
 		"total_work" = 20,
-		"desc" = "8 Metal -> Kitchen Knife",
+		"desc" = "2 Metal -> Kitchen Knife",
 		"research_required" = "culinary"
 	)
 
@@ -295,69 +295,69 @@
 /obj/structure/resurgence_crafting_table/forge/primitive/init_recipes()
 	recipes = list()
 
-	// Basic Smelting Only - 2x work time compared to regular forge
+	// Basic Smelting Only - 2x cost compared to regular forge
 	recipes["Metal Sheet"] = list(
 		"result" = /obj/item/stack/sheet/metal,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/iron = 2),
-		"total_work" = 10,
-		"desc" = "2 Iron Ore -> 1 Metal Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/iron = 4),
+		"total_work" = 5,
+		"desc" = "4 Iron Ore -> 1 Metal Sheet (inefficient)"
 	)
 
 	recipes["Metal Sheet (Scrap)"] = list(
 		"result" = /obj/item/stack/sheet/metal,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/ironscrap = 3),
-		"total_work" = 10,
-		"desc" = "3 Iron Scrap -> 1 Metal Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/ironscrap = 6),
+		"total_work" = 5,
+		"desc" = "6 Iron Scrap -> 1 Metal Sheet (inefficient)"
 	)
 
 	recipes["Glass Sheet"] = list(
 		"result" = /obj/item/stack/sheet/glass,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/glass = 2),
-		"total_work" = 10,
-		"desc" = "2 Sand -> 1 Glass Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/glass = 4),
+		"total_work" = 5,
+		"desc" = "4 Sand -> 1 Glass Sheet (inefficient)"
 	)
 
 	recipes["Glass Sheet (Rubble)"] = list(
 		"result" = /obj/item/stack/sheet/glass,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/glassrubble = 3),
-		"total_work" = 10,
-		"desc" = "3 Glass Rubble -> 1 Glass Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/glassrubble = 6),
+		"total_work" = 5,
+		"desc" = "6 Glass Rubble -> 1 Glass Sheet (inefficient)"
 	)
 
 	recipes["Silver Sheet"] = list(
 		"result" = /obj/item/stack/sheet/mineral/silver,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/silver = 2),
-		"total_work" = 10,
-		"desc" = "2 Silver Ore -> 1 Silver Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/silver = 4),
+		"total_work" = 5,
+		"desc" = "4 Silver Ore -> 1 Silver Sheet (inefficient)"
 	)
 
 	recipes["Gold Sheet"] = list(
 		"result" = /obj/item/stack/sheet/mineral/gold,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/gold = 2),
-		"total_work" = 10,
-		"desc" = "2 Gold Ore -> 1 Gold Sheet (slow)"
+		"materials" = list(/obj/item/stack/ore/gold = 4),
+		"total_work" = 5,
+		"desc" = "4 Gold Ore -> 1 Gold Sheet (inefficient)"
 	)
 
 	// Sandstone from sand
 	recipes["Sandstone"] = list(
 		"result" = /obj/item/stack/sheet/mineral/sandstone,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/glass = 1),
-		"total_work" = 10,
-		"desc" = "1 Sand -> 1 Sandstone (slow)"
+		"materials" = list(/obj/item/stack/ore/glass = 2),
+		"total_work" = 5,
+		"desc" = "2 Sand -> 1 Sandstone (inefficient)"
 	)
 
 	// Iron from rock - same as regular forge (already slow)
 	recipes["Iron Ore (Rock)"] = list(
 		"result" = /obj/item/stack/ore/iron,
 		"result_amount" = 1,
-		"materials" = list(/obj/item/stack/ore/rock = 25),
-		"total_work" = 30,
-		"desc" = "25 Rock -> 1 Iron Ore"
+		"materials" = list(/obj/item/stack/ore/rock = 50),
+		"total_work" = 10,
+		"desc" = "50 Rock -> 1 Iron Ore (inefficient)"
 	)

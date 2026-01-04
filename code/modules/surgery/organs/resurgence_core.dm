@@ -234,6 +234,10 @@
 		// Apply global event faith regen modifier (affects positive changes only)
 		if(faith_change_rate > 0)
 			effective_rate *= GLOB.resurgence_faith_regen_modifier
+		else
+			// Apply trait modifier for negative faith changes (Iron-Willed, Sickly, Too Smart)
+			if(owner && ishuman(owner))
+				effective_rate *= get_trait_faith_loss_modifier(owner)
 		faith = clamp(faith + effective_rate, 0, max_faith)
 
 /// Add a faith event, replacing any existing event in the same category
@@ -653,14 +657,18 @@
 		return
 
 	// EMPs damage the core and drain faith
+	var/trait_modifier = 1.0
+	if(ishuman(owner))
+		trait_modifier = get_trait_faith_loss_modifier(owner)
+
 	switch(severity)
 		if(EMP_LIGHT)
 			owner.adjustBruteLoss(10)
-			adjust_faith(-10)
+			adjust_faith(-10 * trait_modifier)
 			to_chat(owner, span_warning("Your core systems are disrupted by the electromagnetic pulse!"))
 		if(EMP_HEAVY)
 			owner.adjustBruteLoss(20)
-			adjust_faith(-20)
+			adjust_faith(-20 * trait_modifier)
 			owner.Paralyze(20)
 			to_chat(owner, span_danger("Your core systems are severely disrupted by the electromagnetic pulse!"))
 

@@ -9,8 +9,11 @@
 // Point Pool Defines
 // ============================================
 
-/// Number of trait points players can spend on positive traits
-#define TRAIT_POINT_POOL 4
+/// Base trait points players start with for positive traits
+#define TRAIT_POINT_POOL 2
+
+/// Maximum negative points worth of negative traits (gives extra positive points)
+#define MAX_NEGATIVE_TRAIT_POINTS 2
 
 /// Number of stat points players can allocate manually
 #define STAT_POINT_POOL 6
@@ -126,63 +129,72 @@ GLOBAL_LIST_EMPTY(resurgence_trait_cache)
  * Called once at world startup
  */
 /proc/init_resurgence_traits()
-	if(length(GLOB.resurgence_trait_cache))
+	if(length(GLOB.resurgence_trait_types))
 		return  // Already initialized
 
+	// Initialize the lists if they're null (GLOBAL_LIST_EMPTY starts as null)
+	if(!GLOB.resurgence_trait_cache)
+		GLOB.resurgence_trait_cache = list()
+	if(!GLOB.resurgence_trait_types)
+		GLOB.resurgence_trait_types = list()
+
+	// Use initial() like the quirks system - no instance creation needed for type list
 	for(var/trait_type in subtypesof(/datum/resurgence_trait))
-		var/datum/resurgence_trait/T = new trait_type()
-		if(T.name == "Unnamed" || T.abstract_type)
-			qdel(T)
+		var/datum/resurgence_trait/T = trait_type
+		if(initial(T.name) == "Unnamed" || initial(T.abstract_type))
 			continue
 		GLOB.resurgence_trait_types += trait_type
-		GLOB.resurgence_trait_cache[trait_type] = T
+		// Store the type path, not an instance - we'll create instances when needed
+		GLOB.resurgence_trait_cache[trait_type] = trait_type
 
 /**
- * Get a cached trait instance by type
+ * Get a trait instance by type (creates new instance if needed)
  */
 /proc/get_resurgence_trait(trait_type)
-	if(!length(GLOB.resurgence_trait_cache))
+	if(!length(GLOB.resurgence_trait_types))
 		init_resurgence_traits()
-	return GLOB.resurgence_trait_cache[trait_type]
+	if(!(trait_type in GLOB.resurgence_trait_types))
+		return null
+	return new trait_type()
 
 /**
- * Get all positive traits (sorted by cost)
+ * Get all positive trait types
  */
 /proc/get_positive_resurgence_traits()
-	if(!length(GLOB.resurgence_trait_cache))
+	if(!length(GLOB.resurgence_trait_types))
 		init_resurgence_traits()
 
 	var/list/positive = list()
-	for(var/trait_type in GLOB.resurgence_trait_cache)
-		var/datum/resurgence_trait/T = GLOB.resurgence_trait_cache[trait_type]
-		if(T.point_cost > 0)
-			positive += T
+	for(var/trait_type in GLOB.resurgence_trait_types)
+		var/datum/resurgence_trait/T = trait_type
+		if(initial(T.point_cost) > 0)
+			positive += trait_type
 	return positive
 
 /**
- * Get all negative traits (sorted by cost)
+ * Get all negative trait types
  */
 /proc/get_negative_resurgence_traits()
-	if(!length(GLOB.resurgence_trait_cache))
+	if(!length(GLOB.resurgence_trait_types))
 		init_resurgence_traits()
 
 	var/list/negative = list()
-	for(var/trait_type in GLOB.resurgence_trait_cache)
-		var/datum/resurgence_trait/T = GLOB.resurgence_trait_cache[trait_type]
-		if(T.point_cost < 0)
-			negative += T
+	for(var/trait_type in GLOB.resurgence_trait_types)
+		var/datum/resurgence_trait/T = trait_type
+		if(initial(T.point_cost) < 0)
+			negative += trait_type
 	return negative
 
 /**
- * Get mixed traits (trade-off traits)
+ * Get mixed trait types (trade-off traits)
  */
 /proc/get_mixed_resurgence_traits()
-	if(!length(GLOB.resurgence_trait_cache))
+	if(!length(GLOB.resurgence_trait_types))
 		init_resurgence_traits()
 
 	var/list/mixed = list()
-	for(var/trait_type in GLOB.resurgence_trait_cache)
-		var/datum/resurgence_trait/T = GLOB.resurgence_trait_cache[trait_type]
-		if(T.is_mixed)
-			mixed += T
+	for(var/trait_type in GLOB.resurgence_trait_types)
+		var/datum/resurgence_trait/T = trait_type
+		if(initial(T.is_mixed))
+			mixed += trait_type
 	return mixed

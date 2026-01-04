@@ -189,6 +189,10 @@
 		visible_message(span_notice("[src] is harvested!"))
 	playsound(src, 'sound/weapons/thudswoosh.ogg', 50, TRUE)
 
+	// Apply Green Thumb trait (+20% harvest yield)
+	if(ishuman(user))
+		yield = round(yield * get_trait_harvest_modifier(user))
+
 	// Drop cotton
 	new /obj/item/stack/sheet/cotton(get_turf(src), yield)
 

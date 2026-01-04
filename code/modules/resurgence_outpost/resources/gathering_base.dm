@@ -88,5 +88,20 @@
 	// Apply global event modifier (multiply and round)
 	return round(base * GLOB.resurgence_yield_modifier)
 
+/// Get the harvesting yield multiplier including trait bonus
+/// Used for wood, cotton, farming, etc.
+/proc/get_full_harvesting_yield_multiplier(mob/living/carbon/human/user)
+	var/base = 1.0
+
+	// Apply harvesting stat bonus
+	if(istype(user))
+		var/level = get_harvesting_stat(user)
+		base += get_harvesting_yield_bonus(level) * 0.1  // +10% per bonus level
+
+		// Apply Green Thumb trait (+20% harvest yield)
+		base *= get_trait_harvest_modifier(user)
+
+	return base
+
 // Note: Scythe/tool bonuses are now handled by the tool_durability.dm system
 // Use get_tool_work_bonus() and get_tool_xp_multiplier() instead

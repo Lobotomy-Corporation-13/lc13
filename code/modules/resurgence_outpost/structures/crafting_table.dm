@@ -120,7 +120,7 @@
 		return FALSE
 	return core.acceleration_active
 
-/// Get the work per session, accounting for crafting stat bonus and event modifiers
+/// Get the work per session, accounting for crafting stat bonus, traits, and event modifiers
 /obj/structure/resurgence_crafting_table/proc/get_work_per_session(mob/user = null)
 	var/work = WORK_PER_SESSION
 
@@ -131,6 +131,9 @@
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
 			work += (core.stat_crafting - 1) * CRAFTING_WORK_PER_LEVEL
+
+		// Apply trait work speed modifier (Industrious, Lazy, Nervous)
+		work *= get_trait_work_speed_modifier(H)
 
 	// Apply global work modifier from events
 	work *= GLOB.resurgence_work_modifier
@@ -1581,8 +1584,8 @@
 
 		// Check if this copy is complete
 		if(current_work >= total_work_needed)
-			// Create the result for this copy
-			create_result(user, current_recipe_data)
+			// Create the result for this copy (pass user for trait bonuses)
+			create_result(user, current_recipe_data, user)
 			completed_copies++
 
 			if(completed_copies >= target_copies)
@@ -1811,8 +1814,20 @@
 	if(!istype(user))
 		return
 
+	// Clumsy trait check - 15% chance to waste 1 extra material per type
+	var/clumsy_wasted = FALSE
+	if(check_trait_craft_waste(user))
+		clumsy_wasted = TRUE
+		to_chat(user, span_warning("You fumble and waste some materials!"))
+
 	for(var/material_type in materials)
-		var/needed = materials[material_type]
+		// Add 1 to needed if clumsy wasted (but only if we have extra)
+		var/extra_waste = 0
+		if(clumsy_wasted)
+			var/available = count_materials(user, material_type)
+			if(available > materials[material_type])
+				extra_waste = 1
+		var/needed = materials[material_type] + extra_waste
 
 		// Consume from hands first
 		for(var/obj/item/I in user.held_items)
@@ -1864,14 +1879,14 @@
 								needed -= 1
 
 /// Create the crafted result
-/obj/structure/resurgence_crafting_table/proc/create_result(mob/user, list/recipe)
+/obj/structure/resurgence_crafting_table/proc/create_result(mob/crafter, list/recipe, mob/user = null)
 	var/result_type = recipe["result"]
 	var/result_amount = recipe["result_amount"]
 
 	// Get crafter's skill level for quality tier rolling
 	var/crafting_skill = 1
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
+	if(ishuman(crafter))
+		var/mob/living/carbon/human/H = crafter
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
 			crafting_skill = core.stat_crafting
@@ -1883,11 +1898,11 @@
 		// Create individual items
 		for(var/i in 1 to result_amount)
 			var/obj/item/created = new result_type(get_turf(src))
-			// Apply quality tier to tools and harvesters
-			apply_quality_to_crafted(created, crafting_skill)
+			// Apply quality tier to tools and harvesters (pass user for trait bonuses)
+			apply_quality_to_crafted(created, crafting_skill, user)
 
 /// Apply quality tier to crafted tools based on crafter's skill
-/obj/structure/resurgence_crafting_table/proc/apply_quality_to_crafted(obj/item/crafted, crafting_skill)
+/obj/structure/resurgence_crafting_table/proc/apply_quality_to_crafted(obj/item/crafted, crafting_skill, mob/user = null)
 	if(!crafted)
 		return
 
@@ -1896,6 +1911,10 @@
 
 	// Apply global quality bonus from events (clamped to 1-5 range)
 	quality = clamp(quality + GLOB.resurgence_quality_bonus, 1, 5)
+
+	// Apply Meticulous trait bonus (+1 tool quality)
+	if(ishuman(user))
+		quality = clamp(quality + get_trait_tool_quality_bonus(user), 1, 5)
 
 	// Apply to harvesters
 	if(istype(crafted, /obj/item/harvester))

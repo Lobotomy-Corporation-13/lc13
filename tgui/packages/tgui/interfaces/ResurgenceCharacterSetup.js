@@ -9,26 +9,22 @@ import {
   Section,
   Stack,
   Tabs,
-  Tooltip,
 } from '../components';
 import { Window } from '../layouts';
 
 export const ResurgenceCharacterSetup = (props, context) => {
   const { data } = useBackend(context);
   const {
-    trait_point_pool = 4,
     stat_point_pool = 6,
-    trait_points_used = 0,
     stat_points_used = 0,
   } = data;
 
   const [currentTab, setCurrentTab] = useLocalState(
     context,
     'currentTab',
-    'traits'
+    'passions'
   );
 
-  const traitPointsRemaining = trait_point_pool - trait_points_used;
   const statPointsRemaining = stat_point_pool - stat_points_used;
 
   return (
@@ -37,12 +33,6 @@ export const ResurgenceCharacterSetup = (props, context) => {
         <Stack fill vertical>
           <Stack.Item>
             <Tabs fluid>
-              <Tabs.Tab
-                selected={currentTab === 'traits'}
-                onClick={() => setCurrentTab('traits')}>
-                <Icon name="user-tag" mr={1} />
-                Traits ({traitPointsRemaining}/{trait_point_pool})
-              </Tabs.Tab>
               <Tabs.Tab
                 selected={currentTab === 'passions'}
                 onClick={() => setCurrentTab('passions')}>
@@ -58,7 +48,6 @@ export const ResurgenceCharacterSetup = (props, context) => {
             </Tabs>
           </Stack.Item>
           <Stack.Item grow>
-            {currentTab === 'traits' && <TraitsTab />}
             {currentTab === 'passions' && <PassionsTab />}
             {currentTab === 'stats' && <StatsTab />}
           </Stack.Item>
@@ -68,163 +57,6 @@ export const ResurgenceCharacterSetup = (props, context) => {
         </Stack>
       </Window.Content>
     </Window>
-  );
-};
-
-const TraitsTab = (props, context) => {
-  const { act, data } = useBackend(context);
-  const {
-    positive_traits = [],
-    negative_traits = [],
-    mixed_traits = [],
-    selected_traits = [],
-    trait_point_pool = 4,
-    trait_points_used = 0,
-  } = data;
-
-  const pointsRemaining = trait_point_pool - trait_points_used;
-
-  const isIncompatible = (trait, selectedList) => {
-    if (!trait.incompatible) return false;
-    for (const selected of selectedList) {
-      if (trait.incompatible.includes(selected)) {
-        return true;
-      }
-    }
-    return false;
-  };
-
-  const canSelect = (trait, selectedList) => {
-    if (selectedList.includes(trait.type)) return true;
-    if (isIncompatible(trait, selectedList)) return false;
-    if (trait.cost > pointsRemaining) return false;
-    return true;
-  };
-
-  return (
-    <Stack fill vertical>
-      <Stack.Item>
-        <NoticeBox info>
-          Points: {pointsRemaining}/{trait_point_pool} remaining.
-          Unspent points will be randomly assigned.
-        </NoticeBox>
-      </Stack.Item>
-      <Stack.Item grow>
-        <Stack fill>
-          <Stack.Item grow basis={0}>
-            <Section
-              fill
-              scrollable
-              title={
-                <Box>
-                  <Icon name="plus" color="green" mr={1} />
-                  Positive Traits
-                </Box>
-              }>
-              {positive_traits.map((trait) => (
-                <TraitButton
-                  key={trait.type}
-                  trait={trait}
-                  selected={selected_traits.includes(trait.type)}
-                  disabled={!canSelect(trait, selected_traits)}
-                  incompatible={isIncompatible(trait, selected_traits)}
-                  onClick={() =>
-                    act('toggle_trait', { trait_type: trait.type })}
-                />
-              ))}
-            </Section>
-          </Stack.Item>
-          <Stack.Item grow basis={0}>
-            <Section
-              fill
-              scrollable
-              title={
-                <Box>
-                  <Icon name="minus" color="red" mr={1} />
-                  Negative Traits
-                </Box>
-              }>
-              {negative_traits.map((trait) => (
-                <TraitButton
-                  key={trait.type}
-                  trait={trait}
-                  selected={selected_traits.includes(trait.type)}
-                  disabled={!canSelect(trait, selected_traits)}
-                  incompatible={isIncompatible(trait, selected_traits)}
-                  onClick={() =>
-                    act('toggle_trait', { trait_type: trait.type })}
-                />
-              ))}
-              {mixed_traits.length > 0 && (
-                <Box mt={2} mb={1} bold color="label">
-                  Mixed Traits
-                </Box>
-              )}
-              {mixed_traits.map((trait) => (
-                <TraitButton
-                  key={trait.type}
-                  trait={trait}
-                  selected={selected_traits.includes(trait.type)}
-                  disabled={!canSelect(trait, selected_traits)}
-                  incompatible={isIncompatible(trait, selected_traits)}
-                  onClick={() =>
-                    act('toggle_trait', { trait_type: trait.type })}
-                  isMixed
-                />
-              ))}
-            </Section>
-          </Stack.Item>
-        </Stack>
-      </Stack.Item>
-      <Stack.Item>
-        <Button
-          fluid
-          icon="eraser"
-          color="bad"
-          onClick={() => act('clear_traits')}>
-          Clear All Traits
-        </Button>
-      </Stack.Item>
-    </Stack>
-  );
-};
-
-const TraitButton = (props) => {
-  const {
-    trait,
-    selected,
-    disabled,
-    incompatible,
-    onClick,
-    isMixed,
-  } = props;
-
-  const costText = trait.cost > 0
-    ? `-${trait.cost}`
-    : `+${Math.abs(trait.cost)}`;
-  const costColor = trait.cost > 0 ? 'red' : 'green';
-
-  return (
-    <Tooltip content={trait.desc} position="right">
-      <Button
-        fluid
-        mb={0.5}
-        selected={selected}
-        disabled={disabled && !selected}
-        color={incompatible ? 'grey' : (isMixed ? 'orange' : null)}
-        onClick={onClick}>
-        <Stack>
-          <Stack.Item grow>
-            {trait.name}
-          </Stack.Item>
-          <Stack.Item>
-            <Box color={costColor} bold>
-              {costText}
-            </Box>
-          </Stack.Item>
-        </Stack>
-      </Button>
-    </Tooltip>
   );
 };
 
