@@ -5,23 +5,61 @@
 	icon = 'icons/obj/machines/droneDispenser.dmi'
 	icon_state = "on"
 	resistance_flags = INDESTRUCTIBLE
+	var/static/list/ego_datums = list()
+	var/ego_datums_initialized = FALSE
 
-/obj/machinery/ego_printer/attack_hand(mob/living/user)
-	. = ..()
-	var/list/ego_list = list()
-	for(var/path in subtypesof(/datum/ego_datum))
-		var/datum/ego_datum/ego = path
-		if(ego.item_path != /obj/item/ego_weapon/sorrow)
-			ego_list += initial(ego.item_path)
-		else
+/obj/machinery/ego_printer/proc/InitializeDatums()
+	if(!ego_datums_initialized)
+		for(var/datumpath in subtypesof(/datum/ego_datum))
+			var/datum/ego_datum/ED = new datumpath
+			if(!(ED.testrange_blacklisted))
+				ego_datums |= ED
+			else
+				qdel(ED)
+
+		ego_datums_initialized = TRUE
+
+/obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
+	InitializeDatums()
+
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
+		ui.open()
+
+/obj/machinery/ego_printer/ui_data(mob/user)
+	var/list/data = list()
+	data["ego_datums"] = list()
+
+	for(var/datum/ego_datum/ED in ego_datums)
+		if(!ED.item_path)
 			continue
-	user.playsound_local(user, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
-	var/chosen_ego = tgui_input_list(user,"Which EGO do you want to print","Select EGO", ego_list)
-	if(!chosen_ego)
-		user.playsound_local(user, 'sound/machines/terminal_error.ogg', 50, FALSE)
-		to_chat(user, span_warning("No EGO was specified."))
+		var/list/datum_data = list(
+			"path" = ED.item_path,
+			"cost" = ED.cost,
+			"tags" = ED.information["tags"]
+		)
+
+		data["ego_datums"] |= list(datum_data)
+
+	return data
+
+/obj/machinery/ego_printer/ui_act(action, list/params)
+	. = ..()
+	if(.)
 		return
-	new chosen_ego((get_turf(user)))
+	warning("[src] received [action] action")
+	if(action == "print_ego")
+		warning("[src] attempting EGO print")
+		var/chosen_ego = params["chosen_ego"]
+		DispenseEgo(usr, chosen_ego)
+	. = TRUE
+	update_icon()
+
+/obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
+	warning("Received ego_path is: [ego_path] from user [user]")
+	var/unstringified = ego_path
+	new unstringified((get_turf(user)))
 	to_chat(user, span_nicegreen("You successfully printed the EGO."))
 
 //Abnormality Spawner

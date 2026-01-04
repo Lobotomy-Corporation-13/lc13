@@ -148,6 +148,7 @@
 /datum/ego_datum/weapon/sorrow
 	item_path = /obj/item/ego_weapon/sorrow
 	cost = 20
+	testrange_blacklisted = TRUE
 
 /datum/ego_datum/armor/sorrow
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/sorrow
