@@ -57,6 +57,15 @@
 		"category" = CRAFT_CAT_MATERIALS
 	)
 
+	recipes["Durathread"] = list(
+		"result" = /obj/item/stack/sheet/durathread,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/durathread = 3),
+		"total_work" = 10,
+		"desc" = "3 Durathread Cotton -> 1 Durathread",
+		"category" = CRAFT_CAT_MATERIALS
+	)
+
 	// === FAITH FABRICS ===
 	// Higher tier fabrics require durathread cotton instead of massive cloth costs
 
@@ -78,7 +87,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 8,
-			/obj/item/grown/cotton/durathread = 3,
+			/obj/item/stack/sheet/durathread = 3,
 			/obj/item/resurgence_component/rope = 2
 		),
 		"total_work" = 40,
@@ -92,7 +101,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 10,
-			/obj/item/grown/cotton/durathread = 6,
+			/obj/item/stack/sheet/durathread = 6,
 			/obj/item/resurgence_component/rope = 3
 		),
 		"total_work" = 60,

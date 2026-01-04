@@ -40,6 +40,9 @@ export const ResurgenceStats = (props, context) => {
     cooking_xp_needed = 100,
     cooking_speed = 1.0,
     cooking_quality = -2,
+    analysis_level = 1,
+    analysis_xp = 0,
+    analysis_xp_needed = 100,
     max_level = 20,
     active_events = [],
   } = data;
@@ -85,6 +88,12 @@ export const ResurgenceStats = (props, context) => {
                 onClick={() => setCurrentTab('cooking')}>
                 <Icon name="utensils" mr={1} />
                 Cooking
+              </Tabs.Tab>
+              <Tabs.Tab
+                selected={currentTab === 'analysis'}
+                onClick={() => setCurrentTab('analysis')}>
+                <Icon name="microscope" mr={1} />
+                Analysis
               </Tabs.Tab>
               <Tabs.Tab
                 selected={currentTab === 'events'}
@@ -222,6 +231,28 @@ export const ResurgenceStats = (props, context) => {
                 }
               />
             )}
+            {currentTab === 'analysis' && (
+              <StatPage
+                title="Analysis"
+                icon="microscope"
+                level={analysis_level}
+                xp={analysis_xp}
+                xpNeeded={analysis_xp_needed}
+                maxLevel={max_level}
+                effects={[
+                  {
+                    label: 'Research Speed',
+                    value: `+${(analysis_level - 1) * 5}%`,
+                    desc: 'Faster research and analysis tasks',
+                  },
+                ]}
+                description={
+                  'Analysis skill affects your ability to research '
+                  + 'and study various subjects. Higher levels allow '
+                  + 'faster research and unlock advanced discoveries.'
+                }
+              />
+            )}
             {currentTab === 'events' && (
               <EventsTab active_events={active_events} />
             )}
@@ -248,14 +279,17 @@ const OverviewTab = props => {
     mining_level,
     harvesting_level,
     cooking_level,
+    analysis_level,
     crafting_xp,
     mining_xp,
     harvesting_xp,
     cooking_xp,
+    analysis_xp,
     crafting_xp_needed,
     mining_xp_needed,
     harvesting_xp_needed,
     cooking_xp_needed,
+    analysis_xp_needed,
     max_level,
   } = data;
 
@@ -364,6 +398,16 @@ const OverviewTab = props => {
                 level={cooking_level}
                 xp={cooking_xp}
                 xpNeeded={cooking_xp_needed}
+                maxLevel={max_level}
+              />
+            </Stack.Item>
+            <Stack.Item>
+              <MiniStatBar
+                name="Analysis"
+                icon="microscope"
+                level={analysis_level}
+                xp={analysis_xp}
+                xpNeeded={analysis_xp_needed}
                 maxLevel={max_level}
               />
             </Stack.Item>

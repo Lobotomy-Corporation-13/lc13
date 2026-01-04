@@ -517,6 +517,19 @@
 		/obj/item/stack/rods = 2
 	)
 
+/obj/structure/resurgence_blueprint/table_frame/wood
+	name = "wooden table frame blueprint"
+	result_name = "wooden table frame"
+	icon = 'icons/obj/structures.dmi'
+	icon_state = "wood_frame"
+	result_type = /obj/structure/table_frame/wood
+	research_required = null  // Tier 0 - always available
+
+/obj/structure/resurgence_blueprint/table_frame/wood/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 2
+	)
+
 /obj/structure/resurgence_blueprint/rack
 	name = "rack blueprint"
 	result_name = "rack"

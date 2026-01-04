@@ -342,6 +342,11 @@ GLOBAL_LIST_EMPTY(resurgence_bed_owners)
 	data["cooking_speed"] = get_stat_speed_modifier(core.stat_cooking)
 	data["cooking_quality"] = get_stat_beauty_bonus(core.stat_cooking)
 
+	// Analysis stat
+	data["analysis_level"] = core.stat_analysis
+	data["analysis_xp"] = core.xp_analysis
+	data["analysis_xp_needed"] = get_xp_for_level(core.stat_analysis)
+
 	// Active events
 	if(GLOB.resurgence_events)
 		data["active_events"] = GLOB.resurgence_events.get_active_events_data()
