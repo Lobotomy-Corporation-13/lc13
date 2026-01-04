@@ -35,6 +35,8 @@ export const ResurgenceCrafting = (props, context) => {
     total_recipes = 0,
     search_text = '',
     active_category = 'All',
+    // Hide locked recipes
+    hide_locked_recipes = true,
   } = data;
 
   // Local state for input (to avoid sending on every keystroke)
@@ -124,7 +126,7 @@ export const ResurgenceCrafting = (props, context) => {
             </Stack.Item>
           )}
 
-          {/* Search Bar */}
+          {/* Search Bar and Filters */}
           <Stack.Item>
             <Section>
               <Flex align="center">
@@ -157,6 +159,17 @@ export const ResurgenceCrafting = (props, context) => {
                       }} />
                   </Flex.Item>
                 )}
+                <Flex.Item ml={1}>
+                  <Button
+                    icon={hide_locked_recipes ? 'eye-slash' : 'eye'}
+                    color={hide_locked_recipes ? 'default' : 'grey'}
+                    tooltip={hide_locked_recipes
+                      ? 'Showing only researched'
+                      : 'Showing all recipes'}
+                    onClick={() => act('toggle_hide_locked')}>
+                    {hide_locked_recipes ? 'Researched' : 'All'}
+                  </Button>
+                </Flex.Item>
               </Flex>
             </Section>
           </Stack.Item>

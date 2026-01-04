@@ -55,6 +55,11 @@
 	var/xp_cooking = 0
 	var/xp_analysis = 0
 
+	/// Accelerated Crafting Protocol - whether the action has been granted
+	var/acceleration_action_granted = FALSE
+	/// Accelerated Crafting Protocol - whether the mode is currently active
+	var/acceleration_active = FALSE
+
 /obj/item/organ/resurgence_core/Destroy()
 	// Clean up all faith events
 	for(var/category in faith_events)
@@ -207,7 +212,11 @@
 /obj/item/organ/resurgence_core/proc/apply_faith_changes()
 	recalculate_faith_rate()
 	if(faith_change_rate != 0)
-		faith = clamp(faith + faith_change_rate, 0, max_faith)
+		var/effective_rate = faith_change_rate
+		// Apply global event faith regen modifier (affects positive changes only)
+		if(faith_change_rate > 0)
+			effective_rate *= GLOB.resurgence_faith_regen_modifier
+		faith = clamp(faith + effective_rate, 0, max_faith)
 
 /// Add a faith event, replacing any existing event in the same category
 /obj/item/organ/resurgence_core/proc/add_faith_event(category, datum/faith_event/event)
@@ -379,26 +388,32 @@
 		clear_faith_event("room_cramped")
 		clear_faith_event("room_dirt_floor")
 
-/// Check if owner has a claimed room and apply appropriate faith event
+/// Check if owner has a claimed bed and apply appropriate faith event
 /obj/item/organ/resurgence_core/proc/check_room_ownership()
 	if(!owner || !owner.ckey)
 		return
 
-	var/area/resurgence_outpost/room/owned_room = GLOB.resurgence_room_owners[owner.ckey]
+	var/obj/structure/resurgence_bed/owned_bed = GLOB.resurgence_bed_owners[owner.ckey]
 
-	if(owned_room && !QDELETED(owned_room))
-		// Player has a room - add positive event
-		var/datum/faith_event/room_ownership/event = new(
-			"You have a personal room.",
-			1, // +1 per tick (~+5 per 30 sec)
-			null,
-			"room_ownership"
-		)
-		add_faith_event("room_ownership", event)
+	if(owned_bed && !QDELETED(owned_bed))
+		// Player has a bed - check room type for appropriate bonus
+		var/area/resurgence_outpost/room/room = get_area(owned_bed)
+		if(istype(room) && room.room_type == ROOM_TYPE_LIVING_QUARTERS)
+			// Living quarters gives faith bonus
+			var/datum/faith_event/room_ownership/event = new(
+				"You have a personal sleeper.",
+				0.025, // +0.025 per tick
+				null,
+				"room_ownership"
+			)
+			add_faith_event("room_ownership", event)
+		else
+			// Barracks just removes homeless penalty
+			clear_faith_event("room_ownership")
 	else
-		// Player has no room - add homeless event
+		// Player has no bed - add homeless event
 		var/datum/faith_event/room_ownership/event = new(
-			"You have no personal room.",
+			"You have no personal sleeper.",
 			-1, // -1 per tick (permanent events should be ≤ ±1 per tick per guidelines)
 			null,
 			"room_ownership"
@@ -773,3 +788,94 @@
 			var/status = obj.completed ? "\[X\]" : "\[ \]"
 			var/color = obj.completed ? "green" : "#80C0FF"
 			to_chat(H, "<span style='color: [color];'>  [status] [obj.get_display_text()]</span>")
+
+// ============================================
+// Accelerated Crafting Protocol
+// ============================================
+
+/// Grant the Accelerated Crafting Protocol action to the owner
+/obj/item/organ/resurgence_core/proc/grant_acceleration_action()
+	if(acceleration_action_granted)
+		return FALSE
+	if(!owner)
+		return FALSE
+
+	var/datum/action/item_action/organ_action/acceleration_protocol/accel_action = new(src)
+	accel_action.Grant(owner)
+	acceleration_action_granted = TRUE
+
+	to_chat(owner, span_notice("<b>Accelerated Crafting Protocol unlocked!</b> Use the action button to toggle accelerated crafting."))
+	return TRUE
+
+/// Remove the Accelerated Crafting Protocol action
+/obj/item/organ/resurgence_core/proc/remove_acceleration_action()
+	if(!acceleration_action_granted)
+		return FALSE
+
+	// Find and remove the action
+	for(var/datum/action/item_action/organ_action/acceleration_protocol/A in actions)
+		A.Remove(owner)
+		qdel(A)
+
+	acceleration_action_granted = FALSE
+	// Also disable acceleration if it was active
+	if(acceleration_active)
+		toggle_acceleration()
+	return TRUE
+
+/// Toggle Accelerated Crafting Protocol on/off
+/obj/item/organ/resurgence_core/proc/toggle_acceleration()
+	acceleration_active = !acceleration_active
+	update_acceleration_filter()
+
+	if(acceleration_active)
+		to_chat(owner, span_boldwarning("Accelerated Crafting ACTIVATED - 2x crafting speed, 3x faith drain!"))
+	else
+		to_chat(owner, span_notice("Accelerated Crafting deactivated."))
+
+/// Update the visual filter for acceleration state
+/obj/item/organ/resurgence_core/proc/update_acceleration_filter()
+	if(!owner)
+		return
+
+	if(acceleration_active)
+		// Add orange overcharge glow when active
+		owner.add_filter("accel_glow", 2, list("type" = "outline", "color" = "#ff660080", "size" = 2))
+		// Animate the glow
+		var/filter = owner.get_filter("accel_glow")
+		if(filter)
+			animate(filter, alpha = 180, time = 8, loop = -1)
+			animate(alpha = 80, time = 8)
+	else
+		// Remove the glow when inactive
+		owner.remove_filter("accel_glow")
+
+/// Action for toggling Accelerated Crafting Protocol
+/datum/action/item_action/organ_action/acceleration_protocol
+	name = "Accelerated Crafting"
+	desc = "Toggle accelerated crafting mode. Doubles crafting speed but triples faith drain."
+	button_icon = 'icons/hud/screen_alert.dmi'
+	button_icon_state = "etherealcharge3"
+
+/datum/action/item_action/organ_action/acceleration_protocol/UpdateButtonIcon(status_only, force)
+	. = ..()
+	if(!istype(target, /obj/item/organ/resurgence_core))
+		return
+	var/obj/item/organ/resurgence_core/core = target
+	// Update icon based on active state
+	if(core.acceleration_active)
+		button_icon_state = "ethereal_overcharge2"
+	else
+		button_icon_state = "etherealcharge3"
+
+/datum/action/item_action/organ_action/acceleration_protocol/Trigger()
+	. = ..()
+	if(!istype(target, /obj/item/organ/resurgence_core))
+		return
+
+	var/obj/item/organ/resurgence_core/core = target
+	if(!core.owner)
+		return
+
+	core.toggle_acceleration()
+	UpdateButtonIcon()

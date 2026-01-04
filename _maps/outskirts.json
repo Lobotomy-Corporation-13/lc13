@@ -8,6 +8,7 @@
 	"traits": [
 		{
 			"Station": true,
+			"Resurgence": true,
 			"Baseturf": "/turf/open/floor/plating/ironsand"
 		}
 	],

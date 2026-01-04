@@ -298,12 +298,13 @@ const RoomTab = (props, context) => {
     room_size,
     room_walls,
     room_doors,
-    room_owner,
     room_beauty,
     room_beauty_avg,
     user_ckey,
-    user_owns_this_room,
-    user_has_room,
+    user_has_bed,
+    user_owns_bed_here,
+    room_bed_count,
+    is_barracks,
     can_designate,
     detected_size,
     detected_type,
@@ -353,18 +354,16 @@ const RoomTab = (props, context) => {
                       {room_beauty} total ({room_beauty_avg} avg)
                     </Box>
                   </Box>
-                  <Box>
-                    <Box inline bold mr={1}>Owner:</Box>
-                    {room_owner ? (
-                      <Box
-                        inline
-                        color={user_owns_this_room ? 'good' : 'label'}>
-                        {room_owner} {user_owns_this_room && '(You)'}
+                  {(room_type === 'Living Quarters'
+                    || room_type === 'Barracks') && (
+                    <Box>
+                      <Box inline bold mr={1}>Sleepers:</Box>
+                      <Box inline color={room_bed_count > 0 ? 'good' : 'label'}>
+                        {room_bed_count}
+                        {user_owns_bed_here && ' (You own one here)'}
                       </Box>
-                    ) : (
-                      <Box inline color="label" italic>Unclaimed</Box>
-                    )}
-                  </Box>
+                    </Box>
+                  )}
                 </Box>
               </Section>
             </Stack.Item>
@@ -372,25 +371,20 @@ const RoomTab = (props, context) => {
             <Stack.Item grow>
               <Section fill title="Actions">
                 <Stack vertical>
+                  {(room_type === 'Living Quarters'
+                    || room_type === 'Barracks') && (
+                    <Stack.Item>
+                      <Box color="label" fontSize="12px" mb={1}>
+                        <Icon name="bed" mr={1} />
+                        To claim a sleeper, enter it and use the stats menu.
+                        {room_type === 'Living Quarters'
+                          && ' Grants +0.025 faith/tick when claimed.'}
+                        {room_type === 'Barracks'
+                          && ' Barracks sleepers remove the homeless penalty.'}
+                      </Box>
+                    </Stack.Item>
+                  )}
                   <Stack.Item>
-                    <Button
-                      fluid
-                      icon={user_owns_this_room ? "door-open" : "key"}
-                      color={user_owns_this_room ? "average" : "good"}
-                      content={
-                        user_owns_this_room ? "Unclaim Room" : "Claim Room"
-                      }
-                      disabled={in_use || (room_owner && !user_owns_this_room)}
-                      tooltip={room_owner && !user_owns_this_room
-                        ? "This room is owned by someone else"
-                        : user_has_room && !user_owns_this_room
-                          ? "You will release your current room"
-                          : null}
-                      onClick={() => act(
-                        user_owns_this_room ? 'unclaim_room' : 'claim_room'
-                      )} />
-                  </Stack.Item>
-                  <Stack.Item mt={1}>
                     <Button
                       fluid
                       icon="eye"

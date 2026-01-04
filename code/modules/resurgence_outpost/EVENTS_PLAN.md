@@ -2,22 +2,21 @@
 
 ## Overview
 
-A dynamic events system that creates random occurrences throughout the round, adding variety and challenge to the gameplay. Events can be positive (resource drops, faction gifts), negative (raids, blights, weather), or neutral (traders, eclipses). The system integrates with existing faith, trading, and research systems.
+A dynamic events system that creates random occurrences throughout the round, adding variety and challenge to the gameplay. Events can be positive (bonuses, gifts), negative (penalties, challenges), or neutral (weather, mixed effects). The system integrates with existing faith, trading, farming, and research systems.
 
 **IMPORTANT: All colonists are PLAYERS, not AI pawns.** Events are designed around multiplayer cooperation, affecting the shared outpost rather than individual colonists. Events should create shared challenges or opportunities that players tackle together.
-
-**Inspired by:** [RimWorld Events](https://rimworldwiki.com/wiki/Events)
 
 ---
 
 ## Design Philosophy
 
 Since all colonists are players:
-- **No individual targeting**: Events don't randomly afflict one player (no random disease/inspiration on one person)
+- **No individual targeting**: Events don't randomly afflict one player
 - **Shared experiences**: Events affect the outpost, environment, or all players equally
-- **Cooperative challenges**: Negative events encourage teamwork to overcome
+- **Simple modifiers**: Events use existing systems (work per tick, yields, prices, faith)
 - **Fair rewards**: Positive events benefit the whole group
-- **Player agency**: Players can prepare for and respond to events together
+- **Clear effects**: Players can easily understand what's happening
+- **No combat (yet)**: Combat events will be added in a future update
 
 ---
 
@@ -26,50 +25,97 @@ Since all colonists are players:
 ### Positive Events
 Beneficial occurrences that help the outpost.
 
-| Event | Description | Effect |
-|-------|-------------|--------|
-| **Resource Drop** | A cargo pod crashes nearby with supplies | Free resources spawn on map |
-| **Faith Surge** | Spiritual energy flows through the area | All players gain faith bonus |
-| **Trader Caravan** | Merchants arrive unannounced | Trading opportunity with bonus prices |
-| **Bountiful Harvest** | Plants grow exceptionally well | Increased crop yields for duration |
-| **Ancient Cache** | Hidden supplies discovered on map | Rare items at marked location |
-| **Faction Gift** | A friendly faction sends supplies | Free resources delivered |
-| **Skill Blessing** | Divine favor enhances abilities | All players gain temporary stat boost |
-| **Fertile Soil** | Ground becomes enriched | Farming zones more productive |
-| **Market Boom** | Trade prices shift favorably | Better sell prices, cheaper buys |
+| Event | Duration | Effect | Systems |
+|-------|----------|--------|---------|
+| **Bountiful Harvest** | 8 min | Harvesting yields +50% resources | Farming, Wild Plants |
+| **Rich Soil** | 10 min | Farm plots grow 50% faster | Farming |
+| **Favorable Conditions** | 8 min | All gathering gives +1 bonus work per tick | Mining, Trees, Cotton |
+| **Market Boom** | 10 min | +25% sell prices, -15% buy prices | Trading |
+| **Faith Surge** | 5 min | +30 instant faith, 2x faith regen | Faith System |
+| **Research Momentum** | 8 min | Research gives +50% work per session | Research |
+| **Crafting Inspiration** | 10 min | +2 bonus to quality tier rolls when crafting | Crafting Tables |
+| **Resource Discovery** | Instant | A new ore deposit or tree cluster spawns on map | Resources |
+| **Faction Goodwill** | Instant | A discovered faction sends a small gift (requires 40+ rep) | Trading |
 
 ### Negative Events
-Challenges that threaten the outpost (require cooperation to overcome).
+Challenges that affect the outpost (encourage adaptation).
 
-| Event | Description | Effect |
-|-------|-------------|--------|
-| **Raid** | Hostile NPC forces attack | Combat encounter, defend outpost |
-| **Crop Blight** | Disease spreads through plants | Crops damaged, players must contain |
-| **Infestation** | Hostile NPC creatures spawn | Combat in enclosed spaces |
-| **Solar Flare** | Electromagnetic disruption | All electronics disabled |
-| **Heat Wave** | Extreme temperatures | Faster faith drain outdoors, crop wilting |
-| **Cold Snap** | Freezing conditions | Movement penalty, faith drain outdoors |
-| **Manhunter Pack** | Crazed NPC animals attack | Combat with animal swarm |
-| **Faith Crisis** | Doubt spreads through outpost | All players' faith drains faster |
-| **Structural Decay** | Buildings deteriorate | Random structures take damage |
-| **Tool Wear** | Equipment stress | All tools lose durability |
-| **Resource Blight** | Supplies contaminated | Some stored resources destroyed |
-| **Bandit Camp** | Hostile camp appears nearby | Ongoing threat until cleared |
-| **Market Crash** | Trade prices shift unfavorably | Worse sell prices, expensive buys |
+| Event | Duration | Effect | Systems |
+|-------|----------|--------|---------|
+| **Heat Wave** | 8 min | Outdoor faith drain +50%, crop growth -25% | Faith, Farming |
+| **Cold Snap** | 8 min | Outdoor movement -30%, outdoor faith drain +50% | Faith, Movement |
+| **Drought** | 10 min | Farm plots grow 50% slower | Farming |
+| **Market Crash** | 10 min | -30% sell prices, +30% buy prices | Trading |
+| **Faith Crisis** | 5 min | -20 instant faith, 50% slower faith regen | Faith System |
+| **Fatigue Wave** | 6 min | All work actions give -25% work per tick | All Work Systems |
+| **Resource Scarcity** | 8 min | Gathering yields -25% resources | Mining, Trees, Cotton |
+| **Tool Strain** | 10 min | Tools lose 2x durability on use | Tools |
 
-### Neutral Events
-Events that present opportunities or changes without being strictly good or bad.
+### Neutral/Weather Events
+Events that present mixed effects or atmospheric changes.
 
-| Event | Description | Effect |
-|-------|-------------|--------|
-| **Eclipse** | Darkness covers the land | Visibility reduced, atmosphere |
-| **Wandering Trader** | Single merchant passes through | Limited trading window |
-| **Mysterious Signal** | Strange transmission detected | Quest location revealed |
-| **Faction Messenger** | Envoy from trading faction | Quest offer or reputation event |
-| **Animal Herd** | Wild animals pass through | Hunting opportunity (or danger) |
-| **Weather Shift** | Conditions change | Environmental effects |
-| **Abandoned Shipment** | Lost cargo found | Resources at risky location |
-| **Refugee Workers** | NPC laborers arrive temporarily | Extra hands for limited time |
+| Event | Duration | Effect |
+|-------|----------|--------|
+| **Heavy Rain** | 6 min | Outdoor movement -20%, farm plots grow +25% faster |
+| **Dense Fog** | 5 min | Reduced vision outdoors (atmospheric, no gameplay effect) |
+| **Clear Skies** | 10 min | +10% work speed outdoors, +10% crop growth |
+
+---
+
+## Weather System Integration
+
+The codebase has an existing weather system (`/datum/weather`) managed by SSweather. Weather events can leverage this system for visual effects and area-based mechanics.
+
+### How Weather Works
+
+Weather datums have four stages:
+1. **Telegraph** - Warning phase with light overlay and announcement
+2. **Main** - Active weather with full effects
+3. **Wind Down** - Weather ending with reduced overlay
+4. **End** - Weather fully ends, overlays removed
+
+Key weather properties:
+```dm
+/datum/weather
+    var/name                    // Display name
+    var/telegraph_message       // Warning message to players
+    var/telegraph_duration      // Warning phase length (deciseconds)
+    var/telegraph_overlay       // Light visual overlay
+    var/weather_message         // Main phase message
+    var/weather_duration_lower  // Min duration
+    var/weather_duration_upper  // Max duration
+    var/weather_overlay         // Main visual overlay
+    var/end_message             // Ending message
+    var/end_overlay             // Ending visual overlay
+    var/area_type               // Areas to affect
+    var/protect_indoors = FALSE // If TRUE, indoor areas are protected
+    var/target_trait            // Z-level trait to affect
+    var/immunity_type           // Mobs with this immunity are unaffected
+    var/perpetual = FALSE       // If TRUE, doesn't auto-end
+```
+
+Weather effects are applied via `weather_act(mob/living/L)` which is called on affected mobs during the main stage.
+
+### Resurgence Weather Implementation
+
+For Resurgence Outpost, we can either:
+
+**Option A: Use Full Weather System**
+- Create new `/datum/weather/resurgence_*` types
+- Set `target_trait = ZTRAIT_RESURGENCE` (new trait for outpost z-level)
+- Set `protect_indoors = TRUE` so designated rooms provide shelter
+- Use existing overlay system for visuals
+
+**Option B: Simplified Event System**
+- Create simpler event datums that apply modifiers
+- Use visual effects placed on turfs instead of area overlays
+- Less complex but less immersive
+
+**Recommended: Option A** - Use the existing weather system for:
+- Heavy Rain, Dense Fog, Heat Wave, Cold Snap
+- Consistent with rest of codebase
+- Built-in indoor protection via `protect_indoors`
+- Already has announcement and overlay handling
 
 ---
 
@@ -77,145 +123,83 @@ Events that present opportunities or changes without being strictly good or bad.
 
 ### Positive Events
 
-#### Resource Drop
-A cargo pod crashes somewhere on the map with valuable supplies.
+#### Bountiful Harvest
+Plants yield more when harvested.
 
 ```dm
-/datum/resurgence_event/resource_drop
-    name = "Resource Drop"
-    desc = "A cargo pod has crashed nearby!"
+/datum/resurgence_event/bountiful_harvest
+    name = "Bountiful Harvest"
+    desc = "The plants are thriving! Harvesting yields increased."
     category = EVENT_POSITIVE
-    weight = 100  // Common
+    weight = 80
     min_time = 10 MINUTES
-    max_time = null  // Can happen anytime after min
+    duration = 8 MINUTES
 
-    var/list/possible_contents = list(
-        /obj/item/stack/sheet/mineral/wood = 30,
-        /obj/item/stack/sheet/metal = 20,
-        /obj/item/stack/sheet/glass = 15,
-        /obj/item/stack/ore/iron = 25,
-        /obj/item/stack/sheet/cotton = 20,
-        /obj/item/stack/ore/silver = 10,
-        /obj/item/stack/ore/gold = 5
-    )
+    var/yield_multiplier = 1.5  // +50% harvest yields
 ```
 
 **Mechanics:**
-- Cargo pod spawns at random outdoor location
-- Announcement tells all players approximate location
-- Contains 2-4 random resource stacks
-- Pod must be opened to retrieve contents
-- Rare chance for valuable items (gold, silver, tools)
-- First-come-first-served encourages quick response
+- All harvesting (farm plots, wild plants, cotton) yields 50% more
+- Applies to harvest amount, not growth speed
+- Visual: Green sparkle effect on plants
+- Good time to harvest mature crops
 
-#### Faith Surge
-Spiritual energy flows through the area, blessing all faithful.
+#### Rich Soil
+Farm plots grow faster.
 
 ```dm
-/datum/resurgence_event/faith_surge
-    name = "Faith Surge"
-    desc = "A wave of spiritual energy washes over the outpost!"
+/datum/resurgence_event/rich_soil
+    name = "Rich Soil"
+    desc = "The soil is exceptionally fertile! Crops grow faster."
     category = EVENT_POSITIVE
-    weight = 40
-    min_time = 25 MINUTES
-    max_time = null
-
-    var/faith_bonus = 50        // Instant faith gain
-    var/regen_bonus = 2.0       // Faith regen multiplier
-    var/duration = 5 MINUTES
-```
-
-**Mechanics:**
-- ALL players with resurgence cores gain instant faith
-- Faith regeneration doubled for duration
-- Visual effect (ambient golden glow on map)
-- Sound effect (ethereal chime)
-- Encourages players to do faith-draining activities during boost
-
-#### Trader Caravan
-A merchant caravan arrives with goods to trade.
-
-```dm
-/datum/resurgence_event/trader_caravan
-    name = "Trader Caravan"
-    desc = "A trading caravan has arrived at the outpost!"
-    category = EVENT_POSITIVE
-    weight = 60
+    weight = 70
     min_time = 15 MINUTES
-    max_time = null
+    duration = 10 MINUTES
 
-    var/stay_duration = 15 MINUTES
-    var/price_discount = 0.9  // 10% better prices
+    var/growth_multiplier = 1.5  // 50% faster growth
 ```
 
 **Mechanics:**
-- Links to Trading System
-- Random faction sends NPC traders
-- Traders set up near outpost entrance
-- 10% better prices than using Comms Console
-- Stay for 15-20 minutes then leave
-- Players can trade directly with caravan NPCs
-- Reputation boost with faction after trading
+- Farm plot growth ticks happen 50% faster
+- Affects all active farm plots
+- Does not affect wild plants
+- Good time to plant new crops
 
-#### Faction Gift
-A friendly trading faction sends supplies as a goodwill gesture.
+#### Favorable Conditions
+Gathering work is more productive.
 
 ```dm
-/datum/resurgence_event/faction_gift
-    name = "Faction Gift"
-    desc = "[faction_name] has sent a gift to the outpost!"
+/datum/resurgence_event/favorable_conditions
+    name = "Favorable Conditions"
+    desc = "Perfect weather for gathering! Work is more productive."
     category = EVENT_POSITIVE
-    weight = 35
-    min_time = 30 MINUTES
-    max_time = null
+    weight = 75
+    min_time = 12 MINUTES
+    duration = 8 MINUTES
+
+    var/bonus_work = 1  // +1 work per tick
 ```
 
 **Mechanics:**
-- Requires at least one faction at 60+ reputation
-- Higher reputation = better gifts
-- Cargo pod drops near Comms Console
-- Contains faction specialty items
-- Small reputation boost (+5)
-- More likely with high-rep factions
-
-#### Skill Blessing
-Divine favor enhances all workers' abilities temporarily.
-
-```dm
-/datum/resurgence_event/skill_blessing
-    name = "Skill Blessing"
-    desc = "Divine favor flows through the workers!"
-    category = EVENT_POSITIVE
-    weight = 30
-    min_time = 35 MINUTES
-    max_time = null
-
-    var/duration = 8 MINUTES
-    var/stat_bonus = 3  // +3 to all resurgence stats
-```
-
-**Mechanics:**
-- ALL players gain +3 to crafting, mining, harvesting, cooking stats
-- Affects work speed and quality
-- Visual indicator on player (subtle glow)
-- Good time to craft high-quality items
-- Stacks with room bonuses
+- Mining, tree chopping, and cotton picking give +1 work per tick
+- Stacks with stat bonuses
+- Encourages outdoor gathering activities
+- Visual: Sunny weather effect
 
 #### Market Boom
-Trade prices shift in the outpost's favor.
+Trade prices shift favorably.
 
 ```dm
 /datum/resurgence_event/market_boom
     name = "Market Boom"
     desc = "Market conditions are favorable! Trade prices improved."
     category = EVENT_POSITIVE
-    weight = 40
+    weight = 60
     min_time = 20 MINUTES
-    max_time = null
+    duration = 10 MINUTES
 
-    var/duration = 10 MINUTES
-    var/sell_bonus = 1.25    // +25% sell prices
-    var/buy_discount = 0.85  // -15% buy prices
+    var/sell_multiplier = 1.25   // +25% sell prices
+    var/buy_multiplier = 0.85    // -15% buy prices
 ```
 
 **Mechanics:**
@@ -223,436 +207,461 @@ Trade prices shift in the outpost's favor.
 - All faction sell prices decreased by 15%
 - Affects Comms Console trading
 - Good time to sell stockpiled resources
-- Announcement encourages trading activity
+
+#### Faith Surge
+Spiritual energy flows through the area.
+
+```dm
+/datum/resurgence_event/faith_surge
+    name = "Faith Surge"
+    desc = "A wave of spiritual energy washes over the outpost!"
+    category = EVENT_POSITIVE
+    weight = 50
+    min_time = 25 MINUTES
+    duration = 5 MINUTES
+
+    var/instant_faith = 30      // Instant faith gain
+    var/regen_multiplier = 2.0  // 2x faith regen
+```
+
+**Mechanics:**
+- ALL players with resurgence cores gain +30 faith instantly
+- Faith regeneration doubled for duration
+- Visual: Golden ambient glow
+- Good time to do faith-draining activities
+
+#### Research Momentum
+Research progresses faster.
+
+```dm
+/datum/resurgence_event/research_momentum
+    name = "Research Momentum"
+    desc = "A breakthrough! Research progresses faster."
+    category = EVENT_POSITIVE
+    weight = 55
+    min_time = 20 MINUTES
+    duration = 8 MINUTES
+
+    var/work_multiplier = 1.5  // +50% research work
+```
+
+**Mechanics:**
+- Research station gives 50% more work per session
+- Affects all players researching
+- Does not reduce faith cost
+- Good time to push through research
+
+#### Crafting Inspiration
+Crafted items tend to be higher quality.
+
+```dm
+/datum/resurgence_event/crafting_inspiration
+    name = "Crafting Inspiration"
+    desc = "The workers feel inspired! Crafted items are higher quality."
+    category = EVENT_POSITIVE
+    weight = 50
+    min_time = 25 MINUTES
+    duration = 10 MINUTES
+
+    var/quality_bonus = 2  // +2 to quality tier rolls
+```
+
+**Mechanics:**
+- Quality tier rolls get +2 bonus (as if +2 crafting levels)
+- Affects all crafting tables, forges, looms
+- Good time to craft important tools/items
+- Visual: Sparkle effect on crafting stations
+
+#### Resource Discovery
+A new resource node spawns on the map.
+
+```dm
+/datum/resurgence_event/resource_discovery
+    name = "Resource Discovery"
+    desc = "A new resource deposit has been discovered!"
+    category = EVENT_POSITIVE
+    weight = 40
+    min_time = 30 MINUTES
+    duration = 0  // Instant
+
+    var/list/possible_resources = list(
+        /obj/structure/ore_deposit/iron = 40,
+        /obj/structure/ore_deposit/silver = 25,
+        /obj/structure/ore_deposit/gold = 15,
+        /obj/structure/resurgence_tree = 20
+    )
+```
+
+**Mechanics:**
+- Spawns a new ore deposit or tree cluster
+- Location announced to all players
+- Weighted toward common resources
+- Permanent addition to map
+
+#### Faction Goodwill
+A friendly faction sends a gift.
+
+```dm
+/datum/resurgence_event/faction_goodwill
+    name = "Faction Goodwill"
+    desc = "[faction_name] has sent a gift to show their appreciation!"
+    category = EVENT_POSITIVE
+    weight = 35
+    min_time = 30 MINUTES
+    duration = 0  // Instant
+```
+
+**Mechanics:**
+- Requires at least one faction at 40+ reputation
+- Higher reputation = better gifts
+- Spawns a small crate near Comms Console
+- Contains faction specialty items (2-4 items)
+- Small reputation boost (+3)
 
 ---
 
 ### Negative Events
 
-#### Raid
-Hostile NPC forces assault the outpost.
-
-```dm
-/datum/resurgence_event/raid
-    name = "Raid"
-    desc = "Hostile forces are attacking the outpost!"
-    category = EVENT_NEGATIVE
-    weight = 80
-    min_time = 25 MINUTES
-    max_time = null
-
-    var/warning_time = 2 MINUTES
-    var/min_raiders = 3
-    var/max_raiders = 8
-    var/raider_types = list(
-        /mob/living/simple_animal/hostile/resurgence_raider/scavenger,
-        /mob/living/simple_animal/hostile/resurgence_raider/marauder,
-        /mob/living/simple_animal/hostile/resurgence_raider/brute
-    )
-```
-
-**Mechanics:**
-- **2-minute warning** before attack (time to prepare)
-- NPC raiders spawn at map edge
-- Scale with difficulty (time + outpost wealth)
-- Raiders target players and structures
-- Players must cooperate to defend
-- Defeated raiders may drop loot (weapons, materials)
-- Clearing all raiders ends event
-
-**Raider Scaling:**
-| Difficulty | Raider Count | Types |
-|------------|--------------|-------|
-| 1.0 (early) | 3-4 | Scavengers only |
-| 1.5 (mid) | 5-6 | Scavengers + Marauders |
-| 2.0 (late) | 7-10 | All types including Brutes |
-| 2.5 (endgame) | 10-15 | Heavy Brute presence |
-
-#### Crop Blight
-A disease spreads through cultivated plants.
-
-```dm
-/datum/resurgence_event/blight
-    name = "Crop Blight"
-    desc = "A mysterious blight is spreading through your crops!"
-    category = EVENT_NEGATIVE
-    weight = 70
-    min_time = 15 MINUTES
-    max_time = null
-
-    var/spread_interval = 30 SECONDS
-    var/spread_chance = 30  // % chance per plant per cycle
-    var/damage_per_cycle = 15
-```
-
-**Mechanics:**
-- Starts on one random farming zone
-- Spreads to adjacent plants every 30 seconds
-- Affected plants show visual wilting (overlay)
-- Players can:
-  - Harvest early (50% yield) before plant dies
-  - Destroy affected plants to stop spread
-  - Create firebreaks (4+ tile gaps)
-- Blight dies out after 5 minutes if contained
-- Encourages players to split farming zones
-
-#### Infestation
-Hostile NPC creatures spawn in enclosed areas.
-
-```dm
-/datum/resurgence_event/infestation
-    name = "Infestation"
-    desc = "Creatures have infested an enclosed area!"
-    category = EVENT_NEGATIVE
-    weight = 50
-    min_time = 30 MINUTES
-    max_time = null
-
-    var/creature_type = /mob/living/simple_animal/hostile/resurgence_vermin
-    var/min_creatures = 4
-    var/max_creatures = 10
-```
-
-**Mechanics:**
-- Spawns in random enclosed room (workshop, storage, bedroom)
-- NPC creatures are hostile, attack on sight
-- Can damage stored items and furniture
-- Players must clear room together
-- Clearing grants small faith bonus to participants
-- More likely in cluttered/dirty rooms
-- Warning: announces which room is infested
-
-#### Solar Flare
-Electromagnetic disruption disables all electronics.
-
-```dm
-/datum/resurgence_event/solar_flare
-    name = "Solar Flare"
-    desc = "A solar flare has disrupted all electronic systems!"
-    category = EVENT_NEGATIVE
-    weight = 40
-    min_time = 35 MINUTES
-    max_time = null
-
-    var/warning_time = 30 SECONDS
-    var/duration = 5 MINUTES
-```
-
-**Mechanics:**
-- **30-second warning** to finish electronic tasks
-- Affected machines:
-  - Comms Console (no trading)
-  - Research Station (no researching)
-  - Machine Fabricator (no machine crafting)
-  - Any future electronic structures
-- Primitive structures unaffected (forge, loom, crafting table)
-- Players should switch to manual tasks during flare
-- Good time for gathering, building, farming
-
 #### Heat Wave
-Extreme temperatures stress the outpost.
+Extreme heat stresses outdoor activities. Uses the weather system.
 
 ```dm
-/datum/resurgence_event/heat_wave
-    name = "Heat Wave"
-    desc = "Extreme heat is bearing down on the outpost!"
-    category = EVENT_NEGATIVE
-    weight = 55
-    min_time = 20 MINUTES
-    max_time = null
+/datum/weather/resurgence/heat_wave
+    name = "heat wave"
+    desc = "Extreme heat bears down on the outpost."
 
-    var/duration = 8 MINUTES
-    var/outdoor_faith_drain = 1.5  // 50% faster drain outdoors
-    var/crop_wilt_chance = 10      // % per minute
+    telegraph_message = span_warning("The temperature begins to rise...")
+    telegraph_duration = 300
+    telegraph_overlay = "light_ash"  // Reuse ash overlay for heat shimmer
+
+    weather_message = span_userdanger("A scorching heat wave grips the outpost!")
+    weather_duration_lower = 4200  // 7 minutes
+    weather_duration_upper = 5400  // 9 minutes
+    weather_overlay = "heavy_ash"
+
+    end_message = span_notice("The temperature starts to return to normal.")
+    end_duration = 100
+    end_overlay = "light_ash"
+
+    area_type = /area/resurgence_outpost
+    protect_indoors = TRUE
+    target_trait = ZTRAIT_RESURGENCE
+    immunity_type = "heat"
+
+    var/faith_drain_mult = 1.5   // +50% faith drain outdoors
+    var/growth_mult = 0.75       // -25% crop growth
+
+/datum/weather/resurgence/heat_wave/weather_act(mob/living/carbon/human/L)
+    if(!ishuman(L))
+        return
+    // Faith drain is handled by checking if heat wave is active
+    // in the faith tick proc
 ```
 
 **Mechanics:**
-- Faith drains 50% faster when outdoors
-- Crops have chance to wilt each minute
-- Staying indoors (in rooms) negates faith penalty
-- Certain room types provide better protection
-- Visual effect (heat shimmer, orange tint)
-- Strategy: work indoors, check crops periodically
+- Faith drains 50% faster when outdoors (checked in faith tick)
+- Crop growth slowed by 25% (global modifier)
+- Being indoors (in designated rooms) negates faith penalty
+- Visual: Orange/ash overlay for heat shimmer effect
+- Strategy: Work indoors, check crops when needed
 
 #### Cold Snap
-Freezing conditions grip the land.
+Freezing conditions grip the land. Uses the weather system.
 
 ```dm
-/datum/resurgence_event/cold_snap
-    name = "Cold Snap"
-    desc = "A sudden freeze grips the land!"
-    category = EVENT_NEGATIVE
-    weight = 55
-    min_time = 20 MINUTES
-    max_time = null
+/datum/weather/resurgence/cold_snap
+    name = "cold snap"
+    desc = "A sudden freeze grips the land."
 
-    var/duration = 8 MINUTES
-    var/outdoor_faith_drain = 1.5
-    var/movement_penalty = 0.7  // 30% slower outdoors
-```
+    telegraph_message = span_warning("The temperature begins to drop rapidly...")
+    telegraph_duration = 300
+    telegraph_overlay = "snowfall_calm"
 
-**Mechanics:**
-- Faith drains 50% faster outdoors
-- Movement speed reduced 30% outdoors
-- Staying indoors negates penalties
-- Visual effect (frost overlay, blue tint)
-- Strategy: batch outdoor trips, stay inside
+    weather_message = span_userdanger("A bitter cold snap freezes the outpost!")
+    weather_duration_lower = 4200  // 7 minutes
+    weather_duration_upper = 5400  // 9 minutes
+    weather_overlay = "snowfall_blizzard"
 
-#### Manhunter Pack
-Crazed NPC animals attack the outpost.
+    end_message = span_notice("The cold begins to recede.")
+    end_duration = 100
+    end_overlay = "snowfall_calm"
 
-```dm
-/datum/resurgence_event/manhunter
-    name = "Manhunter Pack"
-    desc = "A pack of crazed animals is hunting for prey!"
-    category = EVENT_NEGATIVE
-    weight = 45
-    min_time = 30 MINUTES
-    max_time = null
+    area_type = /area/resurgence_outpost
+    protect_indoors = TRUE
+    target_trait = ZTRAIT_RESURGENCE
+    immunity_type = "cold"
 
-    var/animal_types = list(
-        /mob/living/simple_animal/hostile/resurgence_wolf = 50,
-        /mob/living/simple_animal/hostile/resurgence_boar = 35,
-        /mob/living/simple_animal/hostile/resurgence_bear = 15
+    var/faith_drain_mult = 1.5   // +50% faith drain outdoors
+    var/movement_mult = 0.7      // -30% movement speed outdoors
+
+/datum/weather/resurgence/cold_snap/weather_act(mob/living/carbon/human/L)
+    if(!ishuman(L))
+        return
+    // Apply movement slowdown
+    L.add_or_update_variable_movespeed_modifier(
+        /datum/movespeed_modifier/resurgence_cold,
+        multiplicative_slowdown = 0.3
     )
-    var/pack_size_min = 4
-    var/pack_size_max = 8
+
+/datum/weather/resurgence/cold_snap/end()
+    . = ..()
+    // Remove movement modifiers from all players
+    for(var/mob/living/carbon/human/L in GLOB.player_list)
+        L.remove_movespeed_modifier(/datum/movespeed_modifier/resurgence_cold)
 ```
 
 **Mechanics:**
-- NPC animal pack spawns at map edge
-- Animals are hostile, hunt any player they see
-- Cannot open doors (safe inside buildings)
-- Will attack doors if they saw player enter
-- Leave after 30-45 minutes if not killed
-- Killing yields meat and leather (resources!)
-- Strategy: fight together or wait inside
+- Faith drains 50% faster outdoors (checked in faith tick)
+- Movement speed reduced 30% outdoors (via movespeed modifier)
+- Being indoors negates penalties
+- Visual: Snow/blizzard overlay
+- Strategy: Batch outdoor trips, stay inside
 
-#### Faith Crisis
-A wave of doubt spreads through the outpost.
+#### Drought
+Lack of water slows crop growth.
 
 ```dm
-/datum/resurgence_event/faith_crisis
-    name = "Faith Crisis"
-    desc = "Doubt and despair spread through the outpost..."
+/datum/resurgence_event/drought
+    name = "Drought"
+    desc = "A drought has set in. Crops struggle to grow."
     category = EVENT_NEGATIVE
-    weight = 35
-    min_time = 40 MINUTES
-    max_time = null
+    weight = 65
+    min_time = 15 MINUTES
+    duration = 10 MINUTES
 
-    var/instant_drain = 30   // Immediate faith loss
-    var/regen_penalty = 0.5  // 50% regen during event
-    var/duration = 5 MINUTES
+    var/growth_mult = 0.5  // -50% crop growth
 ```
 
 **Mechanics:**
-- ALL players lose 30 faith immediately
-- Faith regeneration halved for duration
-- High room quality reduces effect (luxury rooms = less drain)
-- Players can pray at shrine to gain faith during crisis
-- Ends after duration or if total outpost faith exceeds threshold
-- Strategy: stay in high-quality rooms, use shrine
-
-#### Bandit Camp
-A hostile NPC encampment appears nearby.
-
-```dm
-/datum/resurgence_event/bandit_camp
-    name = "Bandit Camp"
-    desc = "Bandits have set up camp nearby!"
-    category = EVENT_NEGATIVE
-    weight = 30
-    min_time = 45 MINUTES
-    max_time = null
-
-    var/camp_duration = 15 MINUTES  // How long before they attack
-    var/num_bandits = 5
-```
-
-**Mechanics:**
-- Bandit camp structure spawns at map edge
-- Bandits patrol around camp
-- After 15 minutes, bandits raid the outpost
-- Players can:
-  - Ignore (face larger raid later)
-  - Attack camp proactively (risky but rewarding)
-  - Negotiate via Comms Console (costs credits)
-- Destroying camp yields loot cache
-- Creates optional objective for players
+- Farm plot growth slowed by 50%
+- Does not affect already-mature crops
+- Good time to focus on other activities
+- Visual: Dry/cracked ground effect on farm plots
 
 #### Market Crash
-Trade prices shift against the outpost.
+Trade prices shift unfavorably.
 
 ```dm
 /datum/resurgence_event/market_crash
     name = "Market Crash"
     desc = "Market conditions worsen. Trade prices are unfavorable."
     category = EVENT_NEGATIVE
-    weight = 40
+    weight = 60
     min_time = 20 MINUTES
-    max_time = null
+    duration = 10 MINUTES
 
-    var/duration = 10 MINUTES
-    var/sell_penalty = 0.7   // -30% sell prices
-    var/buy_penalty = 1.3    // +30% buy prices
+    var/sell_multiplier = 0.7    // -30% sell prices
+    var/buy_multiplier = 1.3     // +30% buy prices
 ```
 
 **Mechanics:**
 - All faction buy prices decreased by 30%
 - All faction sell prices increased by 30%
 - Affects Comms Console trading
-- Bad time to trade - wait it out
-- Strategy: stockpile resources, trade later
+- Strategy: Stockpile resources, trade later
+
+#### Faith Crisis
+A wave of doubt affects everyone.
+
+```dm
+/datum/resurgence_event/faith_crisis
+    name = "Faith Crisis"
+    desc = "Doubt and despair spread through the outpost..."
+    category = EVENT_NEGATIVE
+    weight = 45
+    min_time = 30 MINUTES
+    duration = 5 MINUTES
+
+    var/instant_drain = 20       // Immediate faith loss
+    var/regen_multiplier = 0.5   // 50% slower regen
+```
+
+**Mechanics:**
+- ALL players lose 20 faith immediately
+- Faith regeneration halved for duration
+- High room quality reduces effect slightly
+- Visual: Desaturated colors, gloomy ambiance
+- Shortest negative event duration
+
+#### Fatigue Wave
+Everyone feels tired and sluggish.
+
+```dm
+/datum/resurgence_event/fatigue_wave
+    name = "Fatigue Wave"
+    desc = "A wave of exhaustion washes over the workers..."
+    category = EVENT_NEGATIVE
+    weight = 55
+    min_time = 20 MINUTES
+    duration = 6 MINUTES
+
+    var/work_multiplier = 0.75  // -25% work per tick
+```
+
+**Mechanics:**
+- All work actions (crafting, mining, research, etc.) give 25% less work
+- Affects everyone equally
+- Does not affect faith drain
+- Strategy: Do less demanding tasks or rest
+
+#### Resource Scarcity
+Gathering yields less.
+
+```dm
+/datum/resurgence_event/resource_scarcity
+    name = "Resource Scarcity"
+    desc = "Resources are harder to come by..."
+    category = EVENT_NEGATIVE
+    weight = 60
+    min_time = 18 MINUTES
+    duration = 8 MINUTES
+
+    var/yield_multiplier = 0.75  // -25% gathering yields
+```
+
+**Mechanics:**
+- Mining, tree chopping, cotton picking yield 25% less
+- Affects resource drops, not work speed
+- Does not affect farming
+- Strategy: Wait it out or focus on crafting
+
+#### Tool Strain
+Tools wear out faster.
+
+```dm
+/datum/resurgence_event/tool_strain
+    name = "Tool Strain"
+    desc = "Something in the air is wearing down tools faster..."
+    category = EVENT_NEGATIVE
+    weight = 50
+    min_time = 25 MINUTES
+    duration = 10 MINUTES
+
+    var/durability_multiplier = 2  // 2x durability loss
+```
+
+**Mechanics:**
+- All tools lose durability twice as fast
+- Affects pickaxes, hatchets, scythes, etc.
+- Good time to do non-tool activities
+- Strategy: Use backup tools or wait
 
 ---
 
-### Neutral Events
+### Neutral/Weather Events
 
-#### Eclipse
-A celestial event darkens the sky.
+These events use the existing `/datum/weather` system for visual effects and area-based mechanics.
+
+#### Heavy Rain
+Rain affects outdoor activities but helps crops.
 
 ```dm
-/datum/resurgence_event/eclipse
-    name = "Eclipse"
-    desc = "An eclipse has darkened the sky."
-    category = EVENT_NEUTRAL
-    weight = 50
-    min_time = 25 MINUTES
-    max_time = null
+/datum/weather/resurgence/heavy_rain
+    name = "heavy rain"
+    desc = "Heavy rainfall blankets the outpost."
 
-    var/duration = 5 MINUTES
-    var/darkness_level = 0.3
+    telegraph_message = span_warning("Dark clouds gather overhead...")
+    telegraph_duration = 300  // 30 seconds
+    telegraph_overlay = "light_rain"
+
+    weather_message = span_notice("Heavy rain begins to fall across the outpost.")
+    weather_duration_lower = 3000  // 5 minutes
+    weather_duration_upper = 4200  // 7 minutes
+    weather_overlay = "rain_storm"
+
+    end_message = span_notice("The rain begins to let up.")
+    end_duration = 100
+    end_overlay = "light_rain"
+
+    area_type = /area/resurgence_outpost
+    protect_indoors = TRUE
+    target_trait = ZTRAIT_RESURGENCE
+    immunity_type = "rain"
+
+    var/movement_mult = 0.8      // -20% movement outdoors
+    var/growth_mult = 1.25       // +25% crop growth
+
+/datum/weather/resurgence/heavy_rain/weather_act(mob/living/L)
+    // Apply movement slowdown via movespeed modifier
+    L.add_or_update_variable_movespeed_modifier(
+        /datum/movespeed_modifier/resurgence_rain,
+        multiplicative_slowdown = 0.2
+    )
 ```
 
 **Mechanics:**
-- Map becomes significantly darker
-- Atmospheric effect (eerie mood)
-- Some creatures may become more active
-- Neither strictly good nor bad
-- Crops don't grow during eclipse
-- Slight increase in negative event chance after
+- Movement slowed 20% outdoors (via movespeed modifier)
+- Farm plots grow 25% faster (checked via global modifier)
+- Mixed blessing - helps farmers, slows gatherers
+- Visual: Rain overlay from weather_effects.dmi
+- Indoor areas protected via `protect_indoors = TRUE`
 
-#### Mysterious Signal
-A strange transmission is detected.
+#### Dense Fog
+Fog rolls in, reducing visibility.
 
 ```dm
-/datum/resurgence_event/mysterious_signal
-    name = "Mysterious Signal"
-    desc = "A strange signal has been detected..."
-    category = EVENT_NEUTRAL
-    weight = 30
-    min_time = 35 MINUTES
-    max_time = null
+/datum/weather/resurgence/dense_fog
+    name = "dense fog"
+    desc = "A thick fog has rolled in across the outpost."
+
+    telegraph_message = span_warning("The air grows thick and hazy...")
+    telegraph_duration = 200
+    telegraph_overlay = "light_fog"
+
+    weather_message = span_notice("Dense fog blankets the area, reducing visibility.")
+    weather_duration_lower = 2400  // 4 minutes
+    weather_duration_upper = 3600  // 6 minutes
+    weather_overlay = "heavy_fog"
+
+    end_message = span_notice("The fog begins to lift.")
+    end_duration = 150
+    end_overlay = "light_fog"
+
+    area_type = /area/resurgence_outpost
+    protect_indoors = TRUE
+    target_trait = ZTRAIT_RESURGENCE
+    aesthetic = TRUE  // No gameplay effect, just visual
 ```
 
 **Mechanics:**
-- Requires Comms Console to detect
-- Signal points to location on map (marked)
-- Players must investigate together
-- Outcome is random:
-  - 40%: Valuable cache (resources, tools)
-  - 25%: Hostile ambush (small raid)
-  - 20%: Abandoned supplies (minor loot)
-  - 10%: Ancient artifact (rare item)
-  - 5%: Nothing (false signal)
-- Creates mini-adventure for group
+- Atmospheric event, no gameplay effect (`aesthetic = TRUE`)
+- Visual: Fog overlay reduces visibility
+- Creates eerie atmosphere
+- Purely for flavor/immersion
+- Indoor areas protected
 
-#### Faction Messenger
-An NPC envoy arrives from a trading faction.
+#### Clear Skies
+Perfect weather for outdoor work.
 
 ```dm
-/datum/resurgence_event/faction_messenger
-    name = "Faction Messenger"
-    desc = "A messenger has arrived from [faction_name]."
+// Clear Skies is NOT a weather datum - it's an event that sets
+// global modifiers when no weather is active
+
+/datum/resurgence_event/clear_skies
+    name = "Clear Skies"
+    desc = "The weather is perfect for outdoor work!"
     category = EVENT_NEUTRAL
-    weight = 40
-    min_time = 20 MINUTES
-    max_time = null
+    weight = 60
+    min_time = 10 MINUTES
+    duration = 10 MINUTES
+
+    var/work_mult = 1.1          // +10% outdoor work speed
+    var/growth_mult = 1.1        // +10% crop growth
+
+/datum/resurgence_event/clear_skies/can_start()
+    // Only trigger if no weather is currently active
+    for(var/datum/weather/W in SSweather.processing)
+        if(istype(W, /datum/weather/resurgence))
+            return FALSE
+    return TRUE
 ```
 
 **Mechanics:**
-- Links to Trading System
-- Random faction sends NPC messenger
-- Messenger offers one of:
-  - **Trade deal**: Discounted goods for limited time
-  - **Quest**: "Deliver X resources for +15 rep"
-  - **Warning**: "Raid coming in 10 minutes" (useful intel)
-  - **Request**: "We need X, will pay premium"
-- Player choice affects faction reputation
-- Refusing messenger = small rep loss
-
-#### Animal Herd
-Wild NPC animals pass through the area.
-
-```dm
-/datum/resurgence_event/animal_herd
-    name = "Animal Herd"
-    desc = "A herd of wild animals is passing through."
-    category = EVENT_NEUTRAL
-    weight = 55
-    min_time = 15 MINUTES
-    max_time = null
-
-    var/animal_type = /mob/living/simple_animal/resurgence_deer
-    var/herd_size_min = 5
-    var/herd_size_max = 12
-```
-
-**Mechanics:**
-- Passive NPC animals spawn at edge, cross map
-- Players can hunt them for meat/leather
-- Animals flee if attacked
-- Limited time opportunity (they leave in 5 min)
-- Encourages coordinated hunting
-- Some herds are dangerous if provoked (boars)
-
-#### Refugee Workers
-Temporary NPC laborers arrive seeking shelter.
-
-```dm
-/datum/resurgence_event/refugee_workers
-    name = "Refugee Workers"
-    desc = "Refugees have arrived, offering labor in exchange for shelter."
-    category = EVENT_NEUTRAL
-    weight = 25
-    min_time = 40 MINUTES
-    max_time = null
-
-    var/num_workers = 3
-    var/stay_duration = 10 MINUTES
-```
-
-**Mechanics:**
-- 3-5 NPC workers arrive at outpost
-- Will help with tasks:
-  - Hauling resources
-  - Basic gathering (wood, stone)
-  - Simple construction
-- Stay for 10 minutes then leave
-- Cannot do skilled work (crafting, forging)
-- Provides temporary labor boost
-- Players can assign them tasks via simple commands
-
-#### Abandoned Shipment
-Lost cargo is discovered at a location.
-
-```dm
-/datum/resurgence_event/abandoned_shipment
-    name = "Abandoned Shipment"
-    desc = "An abandoned shipment has been spotted nearby."
-    category = EVENT_NEUTRAL
-    weight = 45
-    min_time = 20 MINUTES
-    max_time = null
-```
-
-**Mechanics:**
-- Cargo spawns at map edge location
-- Location may be dangerous (near hazards)
-- Contains moderate resources
-- Might be trapped or guarded
-- Risk vs reward decision for players
-- First to arrive claims the goods
+- Small bonus to outdoor work speed
+- Small bonus to crop growth
+- Mild positive effect
+- Only triggers when no weather is active
+- Visual: Bright, sunny lighting (no overlay)
 
 ---
 
@@ -682,12 +691,9 @@ GLOBAL_DATUM(resurgence_events, /datum/resurgence_event_manager)
     /// Base chance for event each check (%)
     var/base_event_chance = 35
 
-    /// Difficulty scaling factor (increases over time)
-    var/difficulty = 1.0
-
     /// Category weights (can be adjusted)
-    var/positive_weight = 35
-    var/negative_weight = 45
+    var/positive_weight = 40
+    var/negative_weight = 40
     var/neutral_weight = 20
 ```
 
@@ -706,7 +712,7 @@ Events are checked every 2 minutes with increasing probability:
     chance += min(20, round_time / (5 MINUTES))
 
     // Decrease chance if recent event
-    if(event_history.len && world.time - event_history[event_history.len]["time"] < event_cooldown)
+    if(length(event_history) && world.time - event_history[length(event_history)]["time"] < event_cooldown)
         chance *= 0.5
 
     if(prob(chance))
@@ -728,28 +734,6 @@ First select category, then event within category:
         return EVENT_NEGATIVE
     else
         return EVENT_NEUTRAL
-```
-
-### Difficulty Scaling
-
-Difficulty affects negative event severity:
-
-```dm
-/datum/resurgence_event_manager/proc/update_difficulty()
-    var/round_time = world.time - SSticker.round_start_time
-    var/round_minutes = round_time / (1 MINUTES)
-
-    // Base scaling: +10% every 10 minutes
-    difficulty = 1.0 + (round_minutes / 10) * 0.1
-
-    // Cap at 2.5x
-    difficulty = min(difficulty, 2.5)
-
-    // Bonus difficulty for wealthy outpost
-    if(GLOB.resurgence_research?.researched_nodes.len > 5)
-        difficulty += 0.2
-    if(GLOB.resurgence_credits > 1000)
-        difficulty += 0.1
 ```
 
 ---
@@ -781,10 +765,9 @@ All events broadcast to all players:
         if(is_resurgence_player(H))
             to_chat(H, span_[color]bold("EVENT: [name]"))
             to_chat(H, span_notice(desc))
+            if(duration)
+                to_chat(H, span_notice("Duration: [duration / (1 MINUTES)] minutes"))
             SEND_SOUND(H, sound(sound_file))
-
-    // TGUI popup (optional)
-    show_event_popup(name, desc, category)
 ```
 
 ### Event UI
@@ -792,45 +775,60 @@ All events broadcast to all players:
 Simple HUD showing active events:
 
 ```
-┌────────────────────┐
-│ ACTIVE EVENTS      │
-├────────────────────┤
-│ 🔴 Heat Wave       │
-│    4:32 remaining  │
-├────────────────────┤
-│ 🟢 Market Boom     │
-│    2:15 remaining  │
-└────────────────────┘
++--------------------+
+| ACTIVE EVENTS      |
++--------------------+
+| [red] Heat Wave    |
+|    4:32 remaining  |
++--------------------+
+| [green] Market Boom|
+|    2:15 remaining  |
++--------------------+
 ```
 
 ---
 
 ## Integration with Other Systems
 
+### Global Modifiers
+
+Events set global modifier variables that other systems check:
+
+```dm
+// In gathering_base.dm
+/proc/get_gathering_yield_modifier()
+    var/mod = 1.0
+    if(GLOB.resurgence_events)
+        mod *= GLOB.resurgence_events.yield_modifier
+    return mod
+
+// In farm_plot.dm
+/obj/structure/resurgence_farm_plot/proc/get_growth_modifier()
+    var/mod = 1.0
+    if(GLOB.resurgence_events)
+        mod *= GLOB.resurgence_events.growth_modifier
+    return mod
+```
+
 ### Research System
 
 | Research Node | Event Effect |
 |---------------|--------------|
-| **Communications** | Enables Faction Messenger, Mysterious Signal |
-| **Trade Networks** | Increases Trader Caravan frequency |
-| **Advanced Metallurgy** | Better loot in Resource Drops |
-| **Agriculture** | Reduces Blight spread speed by 50% |
+| **Communications** | Enables Faction Goodwill event |
+| **Agriculture** | Reduces Drought severity by 25% |
 | **Faith Weaving** | Reduces Faith Crisis severity |
 
 ### Trading System
 
-- **Trader Caravan**: Spawns faction NPCs with goods
-- **Faction Messenger**: Offers deals/quests
-- **Faction Gift**: Rewards high reputation
-- **Market Boom/Crash**: Affects all trading prices
-- **Bandit Camp**: Can be negotiated away for credits
+- **Market Boom**: Multiplies all trade prices favorably
+- **Market Crash**: Multiplies all trade prices unfavorably
+- **Faction Goodwill**: Sends gift from high-rep faction
 
 ### Faith System
 
-- **Faith Surge**: Grants bonus to all players
-- **Faith Crisis**: Drains faith, tests group
-- **Room Quality**: High quality rooms reduce negative effects
-- **Shrine**: Can end Faith Crisis early
+- **Faith Surge**: Instant gain + regen boost
+- **Faith Crisis**: Instant drain + regen penalty
+- **Weather events**: Affect outdoor faith drain
 
 ---
 
@@ -838,62 +836,68 @@ Simple HUD showing active events:
 
 | File | Action |
 |------|--------|
+| `code/modules/resurgence_outpost/events/_events.dm` | **CREATE** - Defines and globals |
 | `code/modules/resurgence_outpost/events/event_manager.dm` | **CREATE** - Global event manager |
-| `code/modules/resurgence_outpost/events/event_types.dm` | **CREATE** - Base event datum |
+| `code/modules/resurgence_outpost/events/event_base.dm` | **CREATE** - Base event datum |
 | `code/modules/resurgence_outpost/events/positive_events.dm` | **CREATE** - All positive events |
 | `code/modules/resurgence_outpost/events/negative_events.dm` | **CREATE** - All negative events |
-| `code/modules/resurgence_outpost/events/neutral_events.dm` | **CREATE** - All neutral events |
-| `code/modules/resurgence_outpost/events/event_mobs.dm` | **CREATE** - Raiders, animals, workers |
+| `code/modules/resurgence_outpost/events/weather_events.dm` | **CREATE** - Weather datums (using /datum/weather) |
+| `code/modules/resurgence_outpost/events/weather_modifiers.dm` | **CREATE** - Movespeed modifiers for weather |
 | `tgui/packages/tgui/interfaces/ResurgenceEvents.js` | **CREATE** - Active events HUD |
+| `code/__DEFINES/traits.dm` | **MODIFY** - Add ZTRAIT_RESURGENCE for weather targeting |
 | `lobotomy-corp13.dme` | **MODIFY** - Include event files |
 
 ---
 
 ## Implementation Steps
 
-### Step 1: Create Event Manager
-- Global singleton with event loop
-- Category and difficulty scaling
-- Event cooldown tracking
+### Step 1: Setup Z-Level Trait
+- Add `ZTRAIT_RESURGENCE` to `code/__DEFINES/traits.dm`
+- Apply trait to resurgence outpost z-level in map loading
 
-### Step 2: Create Base Event Type
-- Common variables and procs
+### Step 2: Create Event Manager
+- Global singleton with event loop
+- Category weights and selection
+- Event cooldown tracking
+- Global modifier variables
+
+### Step 3: Create Base Event Type
+- Common variables (name, desc, duration, weight)
 - Announcement system
 - Duration/timer handling
+- Start/end hooks
 
-### Step 3: Implement Positive Events
-- Resource Drop, Faith Surge, Trader Caravan
-- Faction Gift, Skill Blessing, Market Boom
-- Bountiful Harvest, Fertile Soil
+### Step 4: Create Weather Types
+- Create `/datum/weather/resurgence` base type
+- Implement Heat Wave, Cold Snap (negative weather)
+- Implement Heavy Rain, Dense Fog (neutral weather)
+- Create movespeed modifiers for weather effects
+- Use `protect_indoors = TRUE` so rooms provide shelter
 
-### Step 4: Implement Negative Events
-- Raid (NPC enemies)
-- Crop Blight, Infestation
-- Weather events (Heat Wave, Cold Snap)
-- Manhunter Pack, Faith Crisis
-- Market Crash, Bandit Camp
+### Step 5: Implement Positive Events
+- Bountiful Harvest, Rich Soil, Favorable Conditions
+- Market Boom, Faith Surge, Research Momentum
+- Crafting Inspiration, Resource Discovery, Faction Goodwill
 
-### Step 5: Implement Neutral Events
-- Eclipse, Mysterious Signal
-- Faction Messenger, Animal Herd
-- Refugee Workers, Abandoned Shipment
+### Step 6: Implement Non-Weather Negative Events
+- Drought, Market Crash, Faith Crisis
+- Fatigue Wave, Resource Scarcity, Tool Strain
 
-### Step 6: Create Event NPCs
-- Raiders (Scavenger, Marauder, Brute)
-- Animals (Wolf, Boar, Bear, Deer)
-- Vermin (infestation creatures)
-- Workers (refugee laborers)
+### Step 7: Implement Clear Skies
+- Event that triggers when no weather is active
+- Provides mild positive modifiers
 
-### Step 7: Create Event UI
+### Step 8: Create Event UI
 - Announcement popups
-- Active events HUD
-- Event log (history)
+- Active events HUD (including weather)
+- Duration countdown
 
-### Step 8: Balance & Integration
-- Tune frequencies and severities
-- Link with Research prerequisites
-- Link with Trading prices
-- Test multiplayer scenarios
+### Step 9: Integration
+- Hook modifiers into gathering, farming, crafting
+- Hook into trading price calculations
+- Hook into faith drain calculations (check for active weather)
+- Hook into room `outdoors` check for weather protection
+- Test all interactions
 
 ---
 
@@ -901,24 +905,22 @@ Simple HUD showing active events:
 
 ### Event Frequency by Player Count
 
-| Players | Event Frequency | Negative Scaling |
-|---------|-----------------|------------------|
-| 1-2 | Every 4-5 min | 0.7x severity |
-| 3-4 | Every 3-4 min | 1.0x severity |
-| 5-6 | Every 2-3 min | 1.2x severity |
-| 7+ | Every 2 min | 1.5x severity |
+| Players | Check Interval | Event Chance |
+|---------|----------------|--------------|
+| 1-2 | Every 3 min | 30% base |
+| 3-4 | Every 2 min | 35% base |
+| 5+ | Every 2 min | 40% base |
 
-### Cooperative Incentives
+### Fair Distribution
 
-- **Raids**: More raiders, need teamwork
-- **Manhunters**: Pack too large for one player
-- **Blight**: Spreads fast, needs multiple people
-- **Mysterious Signal**: Better rewards with group
-- **Bandit Camp**: Solo attack very risky
+- Positive and negative events have equal weight (40/40)
+- Neutral events are less common (20%)
+- All effects apply to everyone equally
+- No individual targeting
 
-### Shared Rewards
+### Duration Balance
 
-- Resource Drops benefit whoever reaches them
-- Market effects help all traders equally
-- Faith Surge helps everyone equally
-- Trader Caravan available to all
+- Positive events: 5-10 minutes (enjoy the bonus)
+- Negative events: 5-10 minutes (manageable challenge)
+- Weather events: 5-10 minutes (atmospheric)
+- Cooldown between events: 3 minutes minimum

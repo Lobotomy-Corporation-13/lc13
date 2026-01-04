@@ -326,7 +326,7 @@
 			return XP_MULT_SILVER
 	return 1.0
 
-/// Decrement tool durability by 1
+/// Decrement tool durability (affected by global durability modifier)
 /// Returns TRUE if tool is still usable, FALSE if tool broke
 /proc/use_tool_durability(obj/item/tool, mob/user)
 	if(!is_durability_active())
@@ -342,7 +342,8 @@
 	if(durability < 0)
 		return TRUE
 
-	durability--
+	// Apply global event durability modifier (higher = faster wear)
+	durability -= GLOB.resurgence_durability_modifier
 	set_tool_durability(tool, durability)
 
 	// Check if tool broke

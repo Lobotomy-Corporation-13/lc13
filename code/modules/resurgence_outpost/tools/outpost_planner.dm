@@ -206,19 +206,19 @@
 		data["room_beauty"] = current_room.totalbeauty
 		data["room_beauty_avg"] = current_room.beauty
 
-		// Room ownership info - handle barracks differently (multiple owners)
+		// Bed ownership info - beds are now claimed, not rooms
 		data["user_ckey"] = user.ckey
-		data["user_has_room"] = (GLOB.resurgence_room_owners[user.ckey] != null)
+		var/obj/structure/resurgence_bed/user_bed = GLOB.resurgence_bed_owners[user.ckey]
+		data["user_has_bed"] = (user_bed != null)
 		data["is_barracks"] = (current_room.room_type == ROOM_TYPE_BARRACKS)
-		if(current_room.room_type == ROOM_TYPE_BARRACKS)
-			var/area/resurgence_outpost/room/barracks/barracks = current_room
-			data["room_owner"] = barracks.owner_ckeys.len ? barracks.owner_ckeys.Join(", ") : null
-			data["room_owner_count"] = barracks.owner_ckeys.len
-			data["user_owns_this_room"] = (user.ckey in barracks.owner_ckeys)
-		else
-			data["room_owner"] = current_room.owner_ckey
-			data["room_owner_count"] = current_room.owner_ckey ? 1 : 0
-			data["user_owns_this_room"] = (current_room.owner_ckey == user.ckey)
+		// Count beds in this room
+		var/list/room_beds = list()
+		for(var/turf/T in current_room.contents)
+			for(var/obj/structure/resurgence_bed/bed in T)
+				room_beds += bed
+		data["room_bed_count"] = room_beds.len
+		// Check if user owns a bed in this room
+		data["user_owns_bed_here"] = (user_bed && (get_area(user_bed) == current_room))
 	else
 		// Check if we can designate a room here
 		data["in_room"] = FALSE
@@ -718,65 +718,37 @@
 		to_chat(user, span_warning("You cannot claim rooms."))
 		return
 
-	// Only living quarters and barracks can be claimed
+	// Beds are now claimed, not rooms
+	// Check if there's a sleeper in this room
 	if(room.room_type != ROOM_TYPE_LIVING_QUARTERS && room.room_type != ROOM_TYPE_BARRACKS)
-		to_chat(user, span_warning("Only living quarters and barracks can be claimed. This room needs a bed."))
+		to_chat(user, span_warning("Only sleepers in living quarters and barracks can be claimed."))
 		return
 
-	// Barracks can have multiple claimers, living quarters only one
-	if(room.room_type == ROOM_TYPE_BARRACKS)
-		var/area/resurgence_outpost/room/barracks/barracks = room
-		// Check if user already claimed this barracks
-		if(user.ckey in barracks.owner_ckeys)
-			to_chat(user, span_warning("You already have a bunk in this barracks."))
-			return
-	else
-		// Living quarters - check if already owned by someone else
-		if(room.owner_ckey && room.owner_ckey != user.ckey)
-			to_chat(user, span_warning("This room is already claimed by [room.owner_ckey]."))
-			return
+	// Find a sleeper in the room
+	var/obj/structure/resurgence_bed/found_bed = null
+	for(var/turf/T in room.contents)
+		found_bed = locate(/obj/structure/resurgence_bed) in T
+		if(found_bed)
+			break
 
-		// Check if user already owns this room
-		if(room.owner_ckey == user.ckey)
-			to_chat(user, span_warning("You already own this room."))
-			return
-
-	// Check if user owns another room (will be unclaimed)
-	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[user.ckey]
-	if(old_room && !QDELETED(old_room) && old_room != room)
-		to_chat(user, span_notice("You will release ownership of '[old_room.name]' to claim this room."))
-
-	// Claim the room (will auto-unclaim previous)
-	if(!room.claim_room(user.ckey))
-		to_chat(user, span_warning("Failed to claim room."))
+	if(!found_bed)
+		to_chat(user, span_warning("There is no sleeper in this room. Build one first!"))
 		return
-	to_chat(user, span_notice("You have claimed '[room.name]' as your personal room."))
-	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
 
-/// Unclaim the current room
+	to_chat(user, span_notice("To claim a sleeper, enter it and use the stats menu."))
+
+/// Unclaim the current bed (redirects to sleeper UI)
 /obj/item/resurgence_outpost_planner/proc/unclaim_current_room(mob/user)
-	var/turf/origin = get_turf(user)
-	var/area/resurgence_outpost/room/room = get_area(origin)
-
-	if(!istype(room))
-		to_chat(user, span_warning("You must be inside a designated room."))
+	if(!user.ckey)
 		return
 
-	// Handle barracks differently (multiple owners)
-	if(room.room_type == ROOM_TYPE_BARRACKS)
-		var/area/resurgence_outpost/room/barracks/barracks = room
-		if(!(user.ckey in barracks.owner_ckeys))
-			to_chat(user, span_warning("You don't have a bunk in this barracks."))
-			return
-		barracks.unclaim_room_by_ckey(user.ckey)
-	else
-		if(room.owner_ckey != user.ckey)
-			to_chat(user, span_warning("You don't own this room."))
-			return
-		room.unclaim_room()
+	// Check if user has a claimed bed
+	var/obj/structure/resurgence_bed/owned_bed = GLOB.resurgence_bed_owners[user.ckey]
+	if(!owned_bed || QDELETED(owned_bed))
+		to_chat(user, span_warning("You don't own any sleeper."))
+		return
 
-	to_chat(user, span_notice("You have unclaimed '[room.name]'."))
-	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
+	to_chat(user, span_notice("To unclaim your sleeper, enter it and use the stats menu."))
 
 /// Recalculate the beauty of the current room
 /obj/item/resurgence_outpost_planner/proc/recalculate_room_beauty(mob/user)

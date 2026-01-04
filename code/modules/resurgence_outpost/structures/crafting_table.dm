@@ -12,9 +12,15 @@
  */
 
 /// How many seconds each work session takes
-#define WORK_SESSION_TIME 5 SECONDS
+#define WORK_SESSION_TIME 2 SECONDS
 /// How many work points are added per session (at base speed)
-#define WORK_PER_SESSION 5
+#define WORK_PER_SESSION 2
+/// Extra work per crafting level above 1
+#define CRAFTING_WORK_PER_LEVEL 0.5
+/// Acceleration mode faith drain multiplier
+#define ACCELERATION_FAITH_MULT 3
+/// Minimum faith required to craft
+#define MIN_FAITH_FOR_CRAFTING 5
 
 /// Crafting recipe categories
 #define CRAFT_CAT_PROCESSING "Processing"
@@ -82,12 +88,15 @@
 	/// Recipes per page
 	var/static/recipes_per_page = 10
 
+	/// Hide recipes that haven't been researched yet (default TRUE)
+	var/hide_locked_recipes = TRUE
+
 /obj/structure/resurgence_crafting_table/Initialize(mapload)
 	. = ..()
 	if(!recipes)
 		init_recipes()
 
-/// Get the work session time, accounting for workshop bonus and player stats
+/// Get the work session time, accounting for workshop and acceleration
 /obj/structure/resurgence_crafting_table/proc/get_work_time(mob/user = null)
 	var/base_time = WORK_SESSION_TIME
 
@@ -95,15 +104,48 @@
 	if(requires_workshop && !is_in_workshop(src))
 		base_time *= outdoor_penalty
 
-	// Apply crafting stat speed modifier if user is a resurgence machine
+	// Accelerated Crafting halves crafting time (checked on user's core)
+	if(is_user_accelerated(user))
+		base_time *= 0.5
+
+	return base_time
+
+/// Check if the user has Accelerated Crafting active
+/obj/structure/resurgence_crafting_table/proc/is_user_accelerated(mob/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(!istype(core))
+		return FALSE
+	return core.acceleration_active
+
+/// Get the work per session, accounting for crafting stat bonus and event modifiers
+/obj/structure/resurgence_crafting_table/proc/get_work_per_session(mob/user = null)
+	var/work = WORK_PER_SESSION
+
+	// Apply crafting stat work bonus if user is a resurgence machine
+	// +0.5 work per level above 1
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
-			var/stat_mod = get_stat_speed_modifier(core.stat_crafting)
-			base_time *= stat_mod
+			work += (core.stat_crafting - 1) * CRAFTING_WORK_PER_LEVEL
 
-	return base_time
+	// Apply global work modifier from events
+	work *= GLOB.resurgence_work_modifier
+
+	return work
+
+/// Check if the user has enough faith to craft (> MIN_FAITH_FOR_CRAFTING)
+/obj/structure/resurgence_crafting_table/proc/check_user_faith(mob/user)
+	if(!ishuman(user))
+		return TRUE
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+	if(!istype(core))
+		return TRUE
+	return core.faith > MIN_FAITH_FOR_CRAFTING
 
 /// Check if crafting is at reduced efficiency (not in workshop when required)
 /obj/structure/resurgence_crafting_table/proc/is_at_reduced_efficiency()
@@ -1243,6 +1285,9 @@
 	data["target_copies"] = target_copies
 	data["completed_copies"] = completed_copies
 
+	// Hide locked recipes toggle
+	data["hide_locked_recipes"] = hide_locked_recipes
+
 	// Pagination state
 	data["current_page"] = ui_current_page
 	data["search_text"] = ui_search_text
@@ -1272,6 +1317,10 @@
 	for(var/recipe_name in recipes)
 		var/list/recipe = recipes[recipe_name]
 		var/category = recipe["category"] || "Other"
+
+		// Hide locked recipes filter
+		if(hide_locked_recipes && !is_recipe_available(recipe_name))
+			continue
 
 		// Category filter (skip if searching)
 		if(!ui_search_text && ui_active_category != "All" && category != ui_active_category)
@@ -1413,6 +1462,11 @@
 			ui_current_page = 1  // Reset to first page on category change
 			return TRUE
 
+		if("toggle_hide_locked")
+			hide_locked_recipes = !hide_locked_recipes
+			ui_current_page = 1  // Reset to first page
+			return TRUE
+
 	return FALSE
 
 /// Start a new craft - consumes materials for first copy and sets up progress tracking
@@ -1477,6 +1531,11 @@
 		to_chat(user, span_warning("There's nothing being crafted here."))
 		return FALSE
 
+	// Check faith before starting
+	if(!check_user_faith(user))
+		to_chat(user, span_warning("You're too exhausted to craft. Need more than [MIN_FAITH_FOR_CRAFTING] faith."))
+		return FALSE
+
 	busy = TRUE
 	on_craft_start()
 	SStgui.update_uis(src)
@@ -1490,22 +1549,35 @@
 	if(is_at_reduced_efficiency())
 		to_chat(user, span_warning("Working outside a workshop - [outdoor_penalty]x slower!"))
 
+	// Warn about accelerated crafting mode (checked on user's core)
+	if(is_user_accelerated(user))
+		to_chat(user, span_boldwarning("Accelerated Crafting active - 2x speed, 3x faith drain!"))
+
 	// Auto-continue loop - keeps working until interrupted or all copies complete
 	while(current_recipe_name)
+		// Check faith each tick
+		if(!check_user_faith(user))
+			to_chat(user, span_warning("You're too exhausted to continue. Progress saved."))
+			break
+
 		var/work_time = get_work_time(user)
 		if(!do_after(user, work_time, target = src))
 			// Player was interrupted
 			to_chat(user, span_warning("You stop [busy_verb]. Progress saved."))
 			break
 
-		// Add work points (base amount, could be modified by skills/tools later)
-		current_work += WORK_PER_SESSION
+		// Add work points (base + crafting stat bonus)
+		var/work_done = get_work_per_session(user)
+		current_work += work_done
 
-		// Drain small amount of faith per work session (0.1 per session)
-		apply_work_faith_drain(user, 1)
+		// Drain faith - base 0.4 per 2s interval (same rate as old 5s intervals)
+		// 3x if user has acceleration active
+		var/base_faith = 0.4
+		var/faith_drain = is_user_accelerated(user) ? (base_faith * ACCELERATION_FAITH_MULT) : base_faith
+		apply_work_faith_drain(user, faith_drain)
 
 		// Award crafting XP for work done
-		award_crafting_xp(user, WORK_PER_SESSION)
+		award_crafting_xp(user, work_done)
 
 		// Check if this copy is complete
 		if(current_work >= total_work_needed)
@@ -1822,6 +1894,9 @@
 	// Roll quality tier based on crafter's skill
 	var/quality = roll_quality_tier(crafting_skill)
 
+	// Apply global quality bonus from events (clamped to 1-5 range)
+	quality = clamp(quality + GLOB.resurgence_quality_bonus, 1, 5)
+
 	// Apply to harvesters
 	if(istype(crafted, /obj/item/harvester))
 		var/obj/item/harvester/H = crafted
@@ -1879,6 +1954,9 @@
 
 #undef WORK_SESSION_TIME
 #undef WORK_PER_SESSION
+#undef CRAFTING_WORK_PER_LEVEL
+#undef ACCELERATION_FAITH_MULT
+#undef MIN_FAITH_FOR_CRAFTING
 #undef CRAFT_CAT_PROCESSING
 #undef CRAFT_CAT_TOOLS
 #undef CRAFT_CAT_FLOORING

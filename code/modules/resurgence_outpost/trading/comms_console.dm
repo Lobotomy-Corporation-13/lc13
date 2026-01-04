@@ -218,7 +218,10 @@
 				if(F)
 					playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
 					// Mark faction as discovered on first connection
+					var/was_discovered = F.discovered
 					F.discovered = TRUE
+					if(!was_discovered)
+						on_faction_discovered()
 				// Set connection time for static fade effect
 				connection_time = world.time
 				// Clear previous scan/cart when switching factions
@@ -392,6 +395,9 @@
 		to_chat(user, span_notice("Sale complete! Earned [total_value] credits. (+[rep_gain] reputation with [faction.name])"))
 	else
 		to_chat(user, span_notice("Sale complete! Earned [total_value] credits."))
+
+	// Track trading objective progress
+	on_trading_credits_earned(total_value)
 
 	// Clear and rescan
 	selected_for_sale = list()
@@ -577,6 +583,9 @@
 		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits. Delivery has arrived. (+[rep_gain] reputation with [faction.name])"))
 	else
 		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits. Delivery has arrived."))
+
+	// Track trading objective progress
+	on_trading_purchase_made(total_cost)
 
 	shopping_cart = list()
 	busy = FALSE

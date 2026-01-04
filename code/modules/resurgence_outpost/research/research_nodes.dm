@@ -187,6 +187,17 @@
 	ui_x = 390
 	ui_y = 320
 
+/datum/resurgence_research_node/acceleration_protocol
+	id = "acceleration_protocol"
+	name = "Accelerated Crafting Protocol"
+	desc = "Overclock your crafting speed at the cost of increased faith consumption."
+	tier = 3
+	total_work = 350
+	prerequisites = list("machine_fabrication")
+	unlocks_desc = "Grants Accelerated Crafting action (2x crafting speed, 3x faith drain)."
+	ui_x = 390
+	ui_y = 440
+
 // ==================== TIER 4 - Expert ====================
 
 /datum/resurgence_research_node/advanced_music

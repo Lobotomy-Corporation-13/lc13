@@ -175,6 +175,9 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 	// Apply faction's sell modifier (reputation-based)
 	var/final_value = base_value * faction.get_sell_modifier()
 
+	// Apply global event sell modifier
+	final_value *= GLOB.resurgence_sell_modifier
+
 	// Handle stacks - multiply by amount
 	if(istype(I, /obj/item/stack))
 		var/obj/item/stack/S = I
@@ -194,6 +197,9 @@ GLOBAL_LIST_INIT(resurgence_fallback_prices, list(
 
 	// Apply markup first, then faction's buy modifier (reputation-based discount)
 	var/final_value = base_price * FACTION_BUY_MARKUP * faction.get_buy_modifier()
+
+	// Apply global event buy modifier
+	final_value *= GLOB.resurgence_buy_modifier
 
 	// Ensure minimum price of 5 credits (no free items even with best discount)
 	return max(round(final_value), FACTION_MIN_BUY_PRICE)

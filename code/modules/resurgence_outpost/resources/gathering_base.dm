@@ -15,7 +15,7 @@
 #define GATHER_WORK_PER_TICK 2
 
 /// Time per gathering tick in deciseconds
-#define GATHER_TICK_TIME 1 SECONDS
+#define GATHER_TICK_TIME 2 SECONDS
 
 /// Check if user has enough faith to gather
 /proc/can_gather(mob/living/carbon/human/user)
@@ -73,14 +73,20 @@
 
 /// Get the mining yield multiplier (25% bonus every 5 levels)
 /// Level 1-4 = 1.0x, Level 5-9 = 1.25x, Level 10-14 = 1.5x, Level 15-19 = 1.75x, Level 20 = 2.0x
+/// Also applies global yield modifier from events
 /proc/get_mining_yield_multiplier(level)
 	var/bonus_tiers = round(level / 5)
-	return 1.0 + (bonus_tiers * 0.25)
+	var/base = 1.0 + (bonus_tiers * 0.25)
+	// Apply global event modifier
+	return base * GLOB.resurgence_yield_modifier
 
 /// Get the harvesting yield bonus (+1 every 5 levels)
 /// Level 1-4 = +0, Level 5-9 = +1, Level 10-14 = +2, Level 15-19 = +3, Level 20 = +4
+/// Also applies global yield modifier from events
 /proc/get_harvesting_yield_bonus(level)
-	return round(level / 5)
+	var/base = round(level / 5)
+	// Apply global event modifier (multiply and round)
+	return round(base * GLOB.resurgence_yield_modifier)
 
 // Note: Scythe/tool bonuses are now handled by the tool_durability.dm system
 // Use get_tool_work_bonus() and get_tool_xp_multiplier() instead

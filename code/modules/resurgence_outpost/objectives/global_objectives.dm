@@ -18,6 +18,7 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /// Objective categories
 #define OBJECTIVE_CAT_BUILDING "building"
 #define OBJECTIVE_CAT_EXPORT "export"
+#define OBJECTIVE_CAT_TRADING "trading"
 
 /**
  * Base objective datum
@@ -265,6 +266,103 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	sort_order = 14
 
 // ============================================
+// TRADING OBJECTIVES
+// ============================================
+
+/datum/resurgence_objective/trading
+	category = OBJECTIVE_CAT_TRADING
+
+/// Discover all trading factions
+/datum/resurgence_objective/trading/discover_factions
+	name = "Discover All Factions"
+	description = "Connect to each nearby faction for the first time to learn who your neighbors are."
+	required_progress = 4  // 4 discoverable factions (excluding Resurgence Clan which starts discovered)
+	sort_order = 20
+
+/datum/resurgence_objective/trading/discover_factions/check_progress()
+	current_progress = 0
+	if(GLOB.resurgence_trading)
+		for(var/datum/trading_faction/F in GLOB.resurgence_trading.factions)
+			if(F.discovered && F.id != "resurgence_clan")  // Don't count the starting faction
+				current_progress++
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Earn credits through trading
+/datum/resurgence_objective/trading/earn_credits
+	name = "Earn 1000 Credits"
+	description = "Earn a total of 1000 credits by selling goods to trading factions."
+	required_progress = 1000
+	sort_order = 21
+	/// Track total earned (separate from current balance)
+	var/static/total_earned = 0
+
+/datum/resurgence_objective/trading/earn_credits/check_progress()
+	current_progress = total_earned
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Reach Friendly status with any faction
+/datum/resurgence_objective/trading/friendly_reputation
+	name = "Befriend a Faction"
+	description = "Reach Friendly reputation (60+) with any trading faction through trade."
+	required_progress = 1
+	sort_order = 22
+
+/datum/resurgence_objective/trading/friendly_reputation/check_progress()
+	current_progress = 0
+	if(GLOB.resurgence_trading)
+		for(var/datum/trading_faction/F in GLOB.resurgence_trading.factions)
+			// Don't count Resurgence Clan since they start friendly
+			if(F.id == "resurgence_clan")
+				continue
+			if(F.reputation >= 60)
+				current_progress = 1
+				break
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Reach Allied status with any faction
+/datum/resurgence_objective/trading/allied_reputation
+	name = "Forge an Alliance"
+	description = "Reach Allied reputation (80+) with any trading faction through dedicated trade."
+	required_progress = 1
+	sort_order = 23
+
+/datum/resurgence_objective/trading/allied_reputation/check_progress()
+	current_progress = 0
+	if(GLOB.resurgence_trading)
+		for(var/datum/trading_faction/F in GLOB.resurgence_trading.factions)
+			// Don't count Resurgence Clan
+			if(F.id == "resurgence_clan")
+				continue
+			if(F.reputation >= 80)
+				current_progress = 1
+				break
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Make a large purchase
+/datum/resurgence_objective/trading/big_spender
+	name = "Big Spender"
+	description = "Spend 500 credits or more in a single purchase from a faction."
+	required_progress = 1
+	sort_order = 24
+	/// Whether the objective has been triggered
+	var/static/triggered = FALSE
+
+/datum/resurgence_objective/trading/big_spender/check_progress()
+	if(triggered)
+		current_progress = 1
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+// ============================================
 // HELPER PROCS
 // ============================================
 
@@ -305,6 +403,17 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	new /datum/resurgence_objective/export/gold()
 	new /datum/resurgence_objective/export/cloth()
 
+	// Create trading objectives
+	new /datum/resurgence_objective/trading/discover_factions()
+	new /datum/resurgence_objective/trading/earn_credits()
+	new /datum/resurgence_objective/trading/friendly_reputation()
+	new /datum/resurgence_objective/trading/allied_reputation()
+	new /datum/resurgence_objective/trading/big_spender()
+
+	// Reset trading objective static vars
+	/datum/resurgence_objective/trading/earn_credits::total_earned = 0
+	/datum/resurgence_objective/trading/big_spender::triggered = FALSE
+
 /// Update all objective progress - called when relevant things change
 /proc/update_all_objectives()
 	for(var/datum/resurgence_objective/obj in GLOB.resurgence_objectives)
@@ -334,7 +443,8 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /proc/get_objectives_by_category()
 	var/list/result = list(
 		OBJECTIVE_CAT_BUILDING = list(),
-		OBJECTIVE_CAT_EXPORT = list()
+		OBJECTIVE_CAT_EXPORT = list(),
+		OBJECTIVE_CAT_TRADING = list()
 	)
 
 	// Sort objectives by sort_order
@@ -398,5 +508,21 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 			message_admins("[key_name(src)] completed resurgence objective: [obj.name]")
 			break
 
+/// Called when credits are earned from selling to a faction
+/proc/on_trading_credits_earned(amount)
+	/datum/resurgence_objective/trading/earn_credits::total_earned += amount
+	update_all_objectives()
+
+/// Called when a purchase is made from a faction
+/proc/on_trading_purchase_made(amount)
+	if(amount >= 500)
+		/datum/resurgence_objective/trading/big_spender::triggered = TRUE
+	update_all_objectives()
+
+/// Called when a faction is discovered (first connection)
+/proc/on_faction_discovered()
+	update_all_objectives()
+
 #undef OBJECTIVE_CAT_BUILDING
 #undef OBJECTIVE_CAT_EXPORT
+#undef OBJECTIVE_CAT_TRADING

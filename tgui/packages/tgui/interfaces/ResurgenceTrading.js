@@ -225,13 +225,21 @@ const FactionCard = (props, context) => {
   const { act } = useBackend(context);
   const { faction } = props;
 
-  const stars = Math.floor(faction.reputation / 20);
-  const starDisplay = '\u2605'.repeat(stars)
-    + '\u2606'.repeat(5 - stars);
+  // For undiscovered factions, show mystery display
+  const isDiscovered = faction.discovered;
 
-  let repColor = 'white';
-  if (faction.reputation >= 60) repColor = 'good';
-  else if (faction.reputation < 30) repColor = 'bad';
+  // Only calculate stars for discovered factions
+  const stars = isDiscovered ? Math.floor(faction.reputation / 20) : 0;
+  const starDisplay = isDiscovered
+    ? '\u2605'.repeat(stars) + '\u2606'.repeat(5 - stars)
+    : '\u2606\u2606\u2606\u2606\u2606';
+
+  let repColor = 'label';
+  if (isDiscovered) {
+    if (faction.reputation >= 60) repColor = 'good';
+    else if (faction.reputation < 30) repColor = 'bad';
+    else repColor = 'white';
+  }
 
   return (
     <Box
@@ -249,7 +257,9 @@ const FactionCard = (props, context) => {
       <Flex align="center">
         <Flex.Item grow>
           <Box bold fontSize="14px">
-            <Box inline color="gold">{starDisplay}</Box>
+            <Box inline color={isDiscovered ? 'gold' : 'label'}>
+              {starDisplay}
+            </Box>
             {' '}{faction.name}
             {faction.is_connected && (
               <Box inline color="good" ml={1}>
@@ -258,18 +268,27 @@ const FactionCard = (props, context) => {
             )}
           </Box>
           <Box color="label" italic mt={1}>{faction.desc}</Box>
-          <Box mt={1}>
-            <Box inline color={repColor}>
-              Reputation: {faction.reputation} ({faction.reputation_label})
+          {isDiscovered ? (
+            <>
+              <Box mt={1}>
+                <Box inline color={repColor}>
+                  Reputation: {faction.reputation}
+                  {' '}({faction.reputation_label})
+                </Box>
+              </Box>
+              {faction.can_trade && (
+                <Box>
+                  Cash: {faction.current_cash} / {faction.max_cash}
+                </Box>
+              )}
+              {!faction.can_trade && (
+                <Box color="bad">Cannot trade with this faction</Box>
+              )}
+            </>
+          ) : (
+            <Box color="label" mt={1}>
+              Connect to learn more about this faction.
             </Box>
-          </Box>
-          {faction.can_trade && (
-            <Box>
-              Cash: {faction.current_cash} / {faction.max_cash}
-            </Box>
-          )}
-          {!faction.can_trade && (
-            <Box color="bad">Cannot trade with this faction</Box>
           )}
         </Flex.Item>
         <Flex.Item>

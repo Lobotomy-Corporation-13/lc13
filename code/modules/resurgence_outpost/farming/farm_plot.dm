@@ -73,8 +73,9 @@
 		update_icon()
 		return
 
-	// Advance age
-	age++
+	// Advance age (apply global growth modifier from events)
+	// Higher modifier = faster growth
+	age += GLOB.resurgence_growth_modifier
 
 	// Check if ready to harvest (based on maturation * growth multiplier)
 	if(age >= myseed.maturation * FARM_GROWTH_MULTIPLIER)

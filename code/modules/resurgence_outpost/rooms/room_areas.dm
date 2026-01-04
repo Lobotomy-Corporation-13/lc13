@@ -3,10 +3,8 @@
  *
  * Area definitions for designated rooms with faith modifiers.
  * Different room types provide different faith bonuses/penalties.
+ * Note: Players claim BEDS, not rooms. See bed.dm for ownership system.
  */
-
-/// Global tracking of room ownership: ckey -> area reference
-GLOBAL_LIST_EMPTY(resurgence_room_owners)
 
 // Room quality thresholds (beauty per tile)
 #define ROOM_QUALITY_LUXURIOUS 50
@@ -50,16 +48,10 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	var/list/boundary_doors = list()
 	/// Whether this room is being dissolved
 	var/dissolving = FALSE
-	/// The ckey of the player who owns this room (null = unclaimed)
-	var/owner_ckey = null
 	/// Whether this room was built with sandstone walls/doors (halves quality bonus for living quarters)
 	var/is_sandstone = FALSE
 
 /area/resurgence_outpost/room/Destroy()
-	// Clean up ownership before destroying
-	if(owner_ckey)
-		GLOB.resurgence_room_owners -= owner_ckey
-		apply_homeless_faith_event(owner_ckey)
 	unregister_boundary_signals()
 	return ..()
 
@@ -108,67 +100,6 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 			dissolve_room("A wall forming the room boundary was destroyed.")
 			return FALSE
 	return TRUE
-
-/// Claim this room for a player
-/area/resurgence_outpost/room/proc/claim_room(ckey)
-	if(!ckey)
-		return FALSE
-
-	// Only living quarters can be claimed
-	if(room_type != ROOM_TYPE_LIVING_QUARTERS)
-		return FALSE
-
-	// Unclaim any previously owned room by this player
-	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[ckey]
-	if(old_room && !QDELETED(old_room) && old_room != src)
-		old_room.unclaim_room(silent = TRUE)
-
-	// Set new owner
-	owner_ckey = ckey
-	GLOB.resurgence_room_owners[ckey] = src
-
-	// Update faith event for the owner
-	update_owner_faith_event()
-	return TRUE
-
-/// Remove ownership from this room
-/area/resurgence_outpost/room/proc/unclaim_room(silent = FALSE)
-	if(!owner_ckey)
-		return FALSE
-
-	var/old_ckey = owner_ckey
-	GLOB.resurgence_room_owners -= owner_ckey
-	owner_ckey = null
-
-	// Update faith event - player is now homeless (unless silent, for when claiming new room)
-	if(!silent)
-		apply_homeless_faith_event(old_ckey)
-	return TRUE
-
-/// Unclaim room by specific ckey (base implementation for Living Quarters)
-/area/resurgence_outpost/room/proc/unclaim_room_by_ckey(ckey, silent = FALSE)
-	if(owner_ckey != ckey)
-		return FALSE
-	return unclaim_room(silent)
-
-/// Update the room owner's faith event to "Has Personal Room"
-/area/resurgence_outpost/room/proc/update_owner_faith_event()
-	if(!owner_ckey)
-		return
-
-	// Find the player's resurgence core
-	var/obj/item/organ/resurgence_core/core = get_resurgence_core_by_ckey(owner_ckey)
-	if(!core)
-		return
-
-	// Add "Has Personal Room" event (+0.25 faith per minute = +0.025 per 6-second tick)
-	var/datum/faith_event/room_ownership/event = new(
-		"You have a personal room.",
-		0.025, // +0.025 per tick (applied every ~6 seconds, so ~+0.25 per min)
-		null, // permanent until room lost
-		"room_ownership"
-	)
-	core.add_faith_event("room_ownership", event)
 
 /// Dissolve this room back to outdoors
 /area/resurgence_outpost/room/proc/dissolve_room(reason = "")
@@ -246,60 +177,11 @@ GLOBAL_LIST_EMPTY(resurgence_room_owners)
 	room_type = ROOM_TYPE_EXPORT_WAREHOUSE
 	icon_state = "purple"
 
-/// Barracks - shared sleeping quarters, multiple beds and claimers, no faith bonus
+/// Barracks - shared sleeping quarters, multiple beds
 /area/resurgence_outpost/room/barracks
 	name = "Barracks"
 	room_type = ROOM_TYPE_BARRACKS
 	icon_state = "blue2"
-	/// List of ckeys who have claimed a bunk in this barracks
-	var/list/owner_ckeys = list()
-
-/area/resurgence_outpost/room/barracks/Destroy()
-	// Clean up all ownerships before destroying
-	for(var/ckey in owner_ckeys)
-		GLOB.resurgence_room_owners -= ckey
-		// Barracks residents don't get homeless penalty (no ownership event to begin with)
-	owner_ckeys.Cut()
-	return ..()
-
-/// Override claim for barracks - allows multiple claimers, no faith bonus
-/area/resurgence_outpost/room/barracks/claim_room(ckey)
-	if(!ckey)
-		return FALSE
-
-	// Check if already claimed this barracks
-	if(ckey in owner_ckeys)
-		return FALSE
-
-	// Unclaim any previously owned room by this player
-	var/area/resurgence_outpost/room/old_room = GLOB.resurgence_room_owners[ckey]
-	if(old_room && !QDELETED(old_room) && old_room != src)
-		old_room.unclaim_room_by_ckey(ckey, silent = TRUE)
-
-	// Add to owner list
-	owner_ckeys += ckey
-	GLOB.resurgence_room_owners[ckey] = src
-
-	// Barracks does NOT give a positive faith event - just removes homeless penalty
-	remove_homeless_faith_event(ckey)
-	return TRUE
-
-/// Override unclaim for barracks - removes specific claimer
-/area/resurgence_outpost/room/barracks/unclaim_room(silent = FALSE)
-	// This is called with no args - unclaim all
-	for(var/ckey in owner_ckeys)
-		GLOB.resurgence_room_owners -= ckey
-	owner_ckeys.Cut()
-	return TRUE
-
-/// Unclaim by specific ckey for barracks
-/area/resurgence_outpost/room/barracks/unclaim_room_by_ckey(ckey, silent = FALSE)
-	if(!(ckey in owner_ckeys))
-		return FALSE
-	owner_ckeys -= ckey
-	GLOB.resurgence_room_owners -= ckey
-	// No homeless penalty for leaving barracks
-	return TRUE
 
 /**
  * Create a new resurgence room area from a list of turfs.

@@ -45,6 +45,7 @@ require only minor tweaks.
 #define ZTRAIT_ASHSTORM "Weather_Ashstorm"
 #define ZTRAIT_ACIDRAIN "Weather_Acidrain"
 #define ZTRAIT_VOIDSTORM "Weather_Voidstorm"
+#define ZTRAIT_RESURGENCE "Resurgence"  // Resurgence Outpost weather/events
 
 // number - bombcap is multiplied by this before being applied to bombs
 #define ZTRAIT_BOMBCAP_MULTIPLIER "Bombcap Multiplier"
