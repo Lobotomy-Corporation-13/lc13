@@ -200,15 +200,15 @@
 	if(!turfs || !turfs.len)
 		return null
 
-	// Check for sandstone in boundaries
-	var/has_sandstone = check_for_sandstone_boundary(boundary_walls, boundary_doors)
+	// Check for low quality walls (sandstone or raw mineral) in boundaries
+	var/has_low_quality = check_for_low_quality_boundary(boundary_walls, boundary_doors)
 
-	// Sandstone can only be used for Living Quarters and Workshop
-	if(has_sandstone)
-		var/list/allowed_types = get_sandstone_allowed_room_types()
+	// Low quality walls can only be used for Living Quarters and Workshop
+	if(has_low_quality)
+		var/list/allowed_types = get_low_quality_allowed_room_types()
 		if(!(room_type in allowed_types))
 			if(creator)
-				to_chat(creator, span_warning("Sandstone walls and doors can only be used for Living Quarters and Workshop. For other room types, use proper building materials."))
+				to_chat(creator, span_warning("Low quality walls (sandstone or unprocessed rock) can only be used for Living Quarters and Workshop. For other room types, use proper building materials."))
 			return null
 
 	// Create the appropriate area type based on room type
@@ -235,8 +235,8 @@
 	// Setup the area with custom name
 	new_area.setup(room_name)
 
-	// Mark if room was built with sandstone (affects quality bonus)
-	new_area.is_sandstone = has_sandstone
+	// Mark if room was built with low quality walls (affects quality bonus)
+	new_area.is_sandstone = has_low_quality
 
 	// Store boundary information for integrity checking
 	if(boundary_walls)

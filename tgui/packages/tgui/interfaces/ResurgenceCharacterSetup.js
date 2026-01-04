@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Icon,
-  LabeledList,
   NoticeBox,
   ProgressBar,
   Section,
@@ -154,59 +153,52 @@ const StatsTab = (props, context) => {
       </Stack.Item>
       <Stack.Item grow>
         <Section fill title="Allocate Starting Stats">
-          <LabeledList>
-            {stats.map((stat) => {
-              const allocated = stat_allocation[stat.id] || 0;
-              const canIncrease =
-                allocated < max_starting_stat && pointsRemaining > 0;
-              const canDecrease = allocated > 0;
+          {stats.map((stat) => {
+            const allocated = stat_allocation[stat.id] || 0;
+            const canIncrease =
+              allocated < max_starting_stat && pointsRemaining > 0;
+            const canDecrease = allocated > 0;
 
-              return (
-                <LabeledList.Item
-                  key={stat.id}
-                  label={
-                    <Box>
-                      <Icon name={stat.icon} mr={1} />
-                      {stat.name}
+            return (
+              <Stack key={stat.id} align="center" mb={1}>
+                <Stack.Item basis="120px">
+                  <Icon name={stat.icon} mr={1} />
+                  {stat.name}
+                </Stack.Item>
+                <Stack.Item>
+                  <Button
+                    icon="minus"
+                    disabled={!canDecrease}
+                    onClick={() =>
+                      act('adjust_stat', { stat: stat.id, adjustment: -1 })
+                    }
+                  />
+                </Stack.Item>
+                <Stack.Item basis="80px">
+                  <ProgressBar
+                    value={allocated}
+                    maxValue={max_starting_stat}
+                    color={allocated > 0 ? 'good' : 'average'}>
+                    <Box textAlign="center">
+                      {1 + allocated}
+                      <Box as="span" color="label">
+                        {' '}(+{allocated})
+                      </Box>
                     </Box>
-                  }>
-                  <Stack align="center">
-                    <Stack.Item>
-                      <Button
-                        icon="minus"
-                        disabled={!canDecrease}
-                        onClick={() =>
-                          act('adjust_stat', { stat: stat.id, adjustment: -1 })
-                        }
-                      />
-                    </Stack.Item>
-                    <Stack.Item basis="80px">
-                      <ProgressBar
-                        value={allocated}
-                        maxValue={max_starting_stat}
-                        color={allocated > 0 ? 'good' : 'average'}>
-                        <Box textAlign="center">
-                          {1 + allocated}
-                          <Box as="span" color="label">
-                            {' '}(+{allocated})
-                          </Box>
-                        </Box>
-                      </ProgressBar>
-                    </Stack.Item>
-                    <Stack.Item>
-                      <Button
-                        icon="plus"
-                        disabled={!canIncrease}
-                        onClick={() =>
-                          act('adjust_stat', { stat: stat.id, adjustment: 1 })
-                        }
-                      />
-                    </Stack.Item>
-                  </Stack>
-                </LabeledList.Item>
-              );
-            })}
-          </LabeledList>
+                  </ProgressBar>
+                </Stack.Item>
+                <Stack.Item>
+                  <Button
+                    icon="plus"
+                    disabled={!canIncrease}
+                    onClick={() =>
+                      act('adjust_stat', { stat: stat.id, adjustment: 1 })
+                    }
+                  />
+                </Stack.Item>
+              </Stack>
+            );
+          })}
         </Section>
       </Stack.Item>
       <Stack.Item>

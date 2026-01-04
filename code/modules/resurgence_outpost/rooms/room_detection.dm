@@ -220,17 +220,24 @@
 			return "Clan Room"
 
 /**
- * Check if any boundary walls or doors are made of sandstone.
+ * Check if any boundary walls or doors are low quality (sandstone or raw mineral).
+ *
+ * Low quality walls include:
+ * - Sandstone walls and doors
+ * - Raw mineral walls (unprocessed rock)
  *
  * Arguments:
  * * boundary_walls - List of wall turfs forming the boundary
  * * boundary_doors - List of door structures forming the boundary
  *
- * Returns: TRUE if any sandstone is found, FALSE otherwise
+ * Returns: TRUE if any low quality walls are found, FALSE otherwise
  */
-/proc/check_for_sandstone_boundary(list/boundary_walls, list/boundary_doors)
+/proc/check_for_low_quality_boundary(list/boundary_walls, list/boundary_doors)
 	// Check walls for sandstone
 	for(var/turf/closed/wall/mineral/sandstone/W in boundary_walls)
+		return TRUE
+	// Check walls for raw mineral (unprocessed rock)
+	for(var/turf/closed/mineral/M in boundary_walls)
 		return TRUE
 	// Check doors for sandstone
 	for(var/obj/structure/mineral_door/sandstone/D in boundary_doors)
@@ -238,11 +245,11 @@
 	return FALSE
 
 /**
- * Get a list of room types that can be made with sandstone.
+ * Get a list of room types that can be made with low quality walls.
  *
- * Returns: List of valid room type constants for sandstone construction
+ * Returns: List of valid room type constants for low quality wall construction
  */
-/proc/get_sandstone_allowed_room_types()
+/proc/get_low_quality_allowed_room_types()
 	return list(ROOM_TYPE_LIVING_QUARTERS, ROOM_TYPE_WORKSHOP)
 
 /**
