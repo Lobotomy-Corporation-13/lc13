@@ -373,7 +373,7 @@ const OverviewTab = props => {
               )}
             </Stack.Item>
             <Stack.Item mt={1}>
-              {can_claim && (
+              {!!can_claim && (
                 <Button
                   fluid
                   icon="hand-paper"
@@ -382,7 +382,7 @@ const OverviewTab = props => {
                   onClick={() => act('claim_bed')}
                 />
               )}
-              {is_owner && (
+              {!!is_owner && (
                 <Button
                   fluid
                   icon="sign-out-alt"

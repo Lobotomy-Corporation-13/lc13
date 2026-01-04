@@ -14,13 +14,13 @@
 /// Base work points per session
 #define RESEARCH_BASE_WORK_PER_SESSION 5
 /// Faith cost per research session
-#define RESEARCH_FAITH_PER_SESSION 1
+#define RESEARCH_FAITH_PER_SESSION 2
 /// XP awarded per research session
 #define RESEARCH_XP_PER_SESSION 5
 
 /obj/structure/resurgence_research_station
 	name = "research station"
-	desc = "A mystical altar for channeling faith into knowledge. Use this to unlock new recipes and blueprints."
+	desc = "A mystical altar for channeling faith into knowledge. Use this to unlock new recipes and blueprints. Works best in a workshop."
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "minibar"
 	density = TRUE
@@ -28,6 +28,10 @@
 
 	/// Whether someone is currently researching
 	var/busy = FALSE
+	/// Whether this station requires a workshop for full efficiency
+	var/requires_workshop = TRUE
+	/// Time multiplier when outside a workshop
+	var/outdoor_penalty = 3
 
 /obj/structure/resurgence_research_station/attack_hand(mob/user)
 	. = ..()
@@ -36,8 +40,9 @@
 	ui_interact(user)
 	return TRUE
 
-/// Get session time based on analysis stat
+/// Get session time based on analysis stat and workshop location
 /// Base 5s, -1s every 5 levels, minimum 1s at level 20
+/// Time is multiplied by outdoor_penalty when not in a workshop
 /obj/structure/resurgence_research_station/proc/get_session_time(mob/user)
 	var/base_time = RESEARCH_BASE_SESSION_TIME
 	if(ishuman(user))
@@ -47,7 +52,18 @@
 			var/level = core.stat_analysis
 			var/reduction = floor(level / 5)
 			base_time = max(1, RESEARCH_BASE_SESSION_TIME - reduction)
+
+	// Apply workshop penalty if required
+	if(requires_workshop && !is_in_workshop(src))
+		base_time *= outdoor_penalty
+
 	return base_time SECONDS
+
+/// Check if this station is operating at reduced efficiency (not in workshop)
+/obj/structure/resurgence_research_station/proc/is_at_reduced_efficiency()
+	if(!requires_workshop)
+		return FALSE
+	return !is_in_workshop(src)
 
 /// Get work per session based on analysis stat
 /// Base 5, +1 per level after 1
@@ -92,6 +108,11 @@
 
 	// Busy state
 	data["busy"] = busy
+
+	// Workshop efficiency
+	data["in_workshop"] = is_in_workshop(src)
+	data["reduced_efficiency"] = is_at_reduced_efficiency()
+	data["outdoor_penalty"] = outdoor_penalty
 
 	// Current research in progress
 	var/current_node_id = GLOB.resurgence_research.current_research_node
@@ -255,6 +276,13 @@
 /obj/structure/resurgence_research_station/examine(mob/user)
 	. = ..()
 	. += span_notice("Click to open the research tree.")
+
+	// Workshop status
+	if(requires_workshop)
+		if(is_in_workshop(src))
+			. += span_notice("Operating at full efficiency (in workshop).")
+		else
+			. += span_warning("Operating at reduced efficiency! Place in a workshop for [outdoor_penalty]x faster research.")
 
 	var/researched_count = length(GLOB.resurgence_research.researched_nodes)
 	var/total_count = length(GLOB.resurgence_research.all_nodes)

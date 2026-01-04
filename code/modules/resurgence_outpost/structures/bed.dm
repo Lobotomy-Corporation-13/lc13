@@ -135,6 +135,8 @@ GLOBAL_LIST_EMPTY(resurgence_bed_owners)
 		return
 
 	var/mob/living/M = occupant
+	// Close the UI for the occupant before ejecting
+	SStgui.close_uis(src, M)
 	occupant = null
 	M.forceMove(get_turf(src))
 	update_icon_state()
@@ -185,6 +187,8 @@ GLOBAL_LIST_EMPTY(resurgence_bed_owners)
 /obj/structure/resurgence_bed/Exited(atom/movable/gone, direction)
 	. = ..()
 	if(gone == occupant)
+		// Close the UI for the occupant
+		SStgui.close_uis(src, gone)
 		occupant = null
 		update_icon_state()
 
