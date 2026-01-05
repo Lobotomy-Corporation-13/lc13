@@ -12,7 +12,7 @@
 	if(!ego_datums_initialized)
 		for(var/datumpath in subtypesof(/datum/ego_datum))
 			var/datum/ego_datum/ED = new datumpath
-			if(!(ED.testrange_blacklisted))
+			if(!(ED.testrange_blacklisted) && (ED.item_path))
 				ego_datums |= ED
 			else
 				qdel(ED)
@@ -48,19 +48,23 @@
 	. = ..()
 	if(.)
 		return
-	warning("[src] received [action] action")
 	if(action == "print_ego")
-		warning("[src] attempting EGO print")
 		var/chosen_ego = params["chosen_ego"]
 		DispenseEgo(usr, chosen_ego)
 	. = TRUE
 	update_icon()
 
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
-	warning("Received ego_path is: [ego_path] from user [user]")
-	var/unstringified = ego_path
-	new unstringified((get_turf(user)))
-	to_chat(user, span_nicegreen("You successfully printed the EGO."))
+	if(!ego_path)
+		return
+	var/atom/dispensed_item = new ego_path((get_turf(user)))
+
+	if(istype(dispensed_item)) // Register signals on it or whatever if you need to here
+		visible_message(span_nicegreen("The [src] beeps as it prints [dispensed_item]."))
+		playsound(get_turf(src), 'sound/machines/ping.ogg', 50, TRUE)
+		return
+	to_chat(user, span_warning("Something's gone horribly wrong with the E.G.O. printing process... contact a coder and tell them [ego_path] is bugged on the testing range printer."))
+	playsound(src, 'sound/machines/buzz-two.ogg', 50)
 
 //Abnormality Spawner
 /obj/machinery/computer/testrangespawner

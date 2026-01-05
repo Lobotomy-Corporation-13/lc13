@@ -11,7 +11,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 	return (
 		<Window
       width={600}
-      height={700}>
+      height={800}>
 			<Window.Content scrollable>
 				<Section title="E.G.O. List">
 					<LabeledList>
