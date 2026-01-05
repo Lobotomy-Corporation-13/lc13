@@ -517,3 +517,12 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	icon_state = "contempt"
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 20, BLACK_DAMAGE = 60, PALE_DAMAGE = 10) // 140
 	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 60, TEMPERANCE_ATTRIBUTE = 60)
+
+/obj/item/clothing/suit/armor/ego_gear/waw/yearningmircalla
+	name = "yearning-mircalla"
+	desc = "A dark coat with yellow details. You feel as if you can hear faint buzzing coming out of it."
+	icon_state = "mircalla"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 20, BLACK_DAMAGE = 30, PALE_DAMAGE = 40) // 140
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80
+							)
