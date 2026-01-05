@@ -5,13 +5,13 @@
 
 /datum/chemical_reaction/sanity_gel
 	results = list(/datum/reagent/abnormality/sanity_gel = 2)
-	required_reagents = list(/datum/reagent/lithene = 1, /datum/reagent/virothane = 1, /datum/chemical_reaction/hyperlithium_oxide = 1)
+	required_reagents = list(/datum/reagent/lithene = 1, /datum/reagent/virothane = 1, /datum/reagent/hyperlithium_oxide = 1)
 
 //Takes a mixture of all the items for a mixed gel.
 /datum/chemical_reaction/mixed_gel
 	results = list(/datum/reagent/abnormality/mixed_gel = 2)
-	required_reagents = list(/datum/reagent/abnormality/healing_gel = 1, /datum/chemical_reaction/sanity_gel = 1,
-		/datum/chemical_reaction/radionex = 1)
+	required_reagents = list(/datum/reagent/abnormality/healing_gel = 1, /datum/reagent/abnormality/sanity_gel = 1,
+		/datum/reagent/radionex = 1)
 
 //The basic Burn salve and anti-toxins
 /datum/chemical_reaction/burn_salve
