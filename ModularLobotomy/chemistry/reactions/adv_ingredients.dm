@@ -11,4 +11,4 @@
 
 /datum/chemical_reaction/radionex
 	results = list(/datum/reagent/radionex = 1)
-	required_reagents = list(/datum/chemical_reaction/zephyrium_chloride = 1, /datum/chemical_reaction/hyperlithium_oxide = 1)
+	required_reagents = list(/datum/reagent/zephyrium_chloride = 1, /datum/reagent/hyperlithium_oxide = 1)
