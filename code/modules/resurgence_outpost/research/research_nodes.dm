@@ -277,6 +277,50 @@
 	ui_x = 560
 	ui_y = 600
 
+/datum/resurgence_research_node/grid_crafting
+	id = "grid_crafting"
+	name = "Weapon Grid Navigation"
+	desc = "Learn to use navigation cores to traverse the weapon crafting grid. Unlocks visibility of common city weapon blueprints scattered in nearby zones."
+	tier = 2
+	total_work = 250
+	prerequisites = list("metallurgy")
+	unlocks_desc = "Blueprints: Ore Refiner, Grid Crafting Station. Reveals: Common city weapons (gray/green zones)."
+	ui_x = 220
+	ui_y = 120
+
+/datum/resurgence_research_node/advanced_grid_crafting
+	id = "advanced_grid_crafting"
+	name = "Association Weapon Patterns"
+	desc = "Study the weapon patterns used by city associations. Reveals mid-tier association weapon blueprints hidden in distant grid coordinates."
+	tier = 3
+	total_work = 400
+	prerequisites = list("grid_crafting", "advanced_metallurgy")
+	unlocks_desc = "Reveals: Association-grade weapons (blue zones)."
+	ui_x = 390
+	ui_y = 120
+
+/datum/resurgence_research_node/expert_grid_crafting
+	id = "expert_grid_crafting"
+	name = "Corporate Weapon Schematics"
+	desc = "Decode the manufacturing secrets of corporate weapon designs. Reveals powerful corporate weapon blueprints in the far reaches of the grid."
+	tier = 4
+	total_work = 600
+	prerequisites = list("advanced_grid_crafting")
+	unlocks_desc = "Reveals: Corporate-grade weapons (purple zones)."
+	ui_x = 560
+	ui_y = 120
+
+/datum/resurgence_research_node/master_grid_crafting
+	id = "master_grid_crafting"
+	name = "Legendary Armaments"
+	desc = "Master the art of legendary weapon crafting. Reveals the most powerful director-grade weapon blueprints hidden at the furthest reaches of the grid."
+	tier = 5
+	total_work = 800
+	prerequisites = list("expert_grid_crafting")
+	unlocks_desc = "Reveals: Color-grade weapons (gold zones)."
+	ui_x = 730
+	ui_y = 120
+
 // ==================== TIER 5 - Master ====================
 
 /datum/resurgence_research_node/master_music

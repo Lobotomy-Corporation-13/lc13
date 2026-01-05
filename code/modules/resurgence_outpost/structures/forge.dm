@@ -129,7 +129,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 4,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 20,
 		"desc" = "4 Metal + 1 Rope -> Iron Hatchet",
@@ -142,7 +142,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 4,
 			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 20,
 		"desc" = "4 Metal + 2 Wood + 1 Rope -> Pickaxe",
@@ -155,7 +155,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 2,
 			/obj/item/stack/sheet/mineral/wood = 1,
-			/obj/item/resurgence_component/rope = 4
+			/obj/item/stack/resurgence_rope = 4
 		),
 		"total_work" = 25,
 		"desc" = "2 Metal + 1 Wood + 4 Rope -> Compact Pickaxe (portable)",
@@ -169,7 +169,7 @@
 			/obj/item/stack/sheet/metal = 5,
 			/obj/item/stack/sheet/mineral/silver = 5,
 			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 40,
 		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Pickaxe (fast mining)",
@@ -194,7 +194,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 6,
 			/obj/item/stack/sheet/mineral/wood = 4,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 25,
 		"desc" = "6 Metal + 4 Wood + 2 Rope -> Scythe (+5 work/tick when harvesting)",
@@ -218,7 +218,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 4,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 20,
 		"desc" = "4 Metal + 2 Rope -> Compact Crowbar (portable)",

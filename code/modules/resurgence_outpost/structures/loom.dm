@@ -74,7 +74,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 5,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 20,
 		"desc" = "5 Cloth + 1 Rope -> Simple Faith Fabric (+0.1 faith)",
@@ -88,7 +88,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 8,
 			/obj/item/stack/sheet/durathread = 3,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 40,
 		"desc" = "8 Cloth + 3 Durathread + 2 Rope -> Advanced Faith Fabric (+0.5 faith)",
@@ -102,7 +102,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 10,
 			/obj/item/stack/sheet/durathread = 6,
-			/obj/item/resurgence_component/rope = 3
+			/obj/item/stack/resurgence_rope = 3
 		),
 		"total_work" = 60,
 		"desc" = "10 Cloth + 6 Durathread + 3 Rope -> Elegant Faith Fabric (+1.0 faith)",
@@ -160,7 +160,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/cotton/cloth = 12,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 35,
 		"desc" = "12 Cloth + 1 Rope -> Duffel Bag",
@@ -339,7 +339,7 @@
 	)
 
 	recipes["Rope"] = list(
-		"result" = /obj/item/resurgence_component/rope,
+		"result" = /obj/item/stack/resurgence_rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton = 5),
 		"total_work" = 15,
@@ -348,7 +348,7 @@
 	)
 
 	recipes["Rope (Vines)"] = list(
-		"result" = /obj/item/resurgence_component/rope,
+		"result" = /obj/item/stack/resurgence_rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/resurgence_vines = 3),
 		"total_work" = 10,

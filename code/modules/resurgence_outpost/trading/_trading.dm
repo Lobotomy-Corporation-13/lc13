@@ -22,6 +22,19 @@ GLOBAL_VAR_INIT(resurgence_credits, 0)
 /datum/resurgence_trading_manager/New()
 	. = ..()
 	initialize_factions()
+	// Start the regeneration loop (runs every 5 minutes)
+	start_regeneration_loop()
+
+/// Start the periodic regeneration timer
+/datum/resurgence_trading_manager/proc/start_regeneration_loop()
+	// Process every 5 minutes (3000 deciseconds)
+	addtimer(CALLBACK(src, PROC_REF(regeneration_tick)), 5 MINUTES)
+
+/// Called by the regeneration timer
+/datum/resurgence_trading_manager/proc/regeneration_tick()
+	process_regeneration()
+	// Schedule the next tick
+	addtimer(CALLBACK(src, PROC_REF(regeneration_tick)), 5 MINUTES)
 
 /// Initialize all pre-made factions
 /datum/resurgence_trading_manager/proc/initialize_factions()

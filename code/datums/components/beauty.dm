@@ -24,9 +24,24 @@
 		RegisterSignal(parent, COMSIG_ENTER_AREA, PROC_REF(enter_area))
 		RegisterSignal(parent, COMSIG_EXIT_AREA, PROC_REF(exit_area))
 
+	// Add examine text in outpost gamemode
+	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
+
 	var/area/A = get_area(parent)
 	if(A)
 		enter_area(null, A)
+
+/datum/component/beauty/proc/on_examine(datum/source, mob/user, list/examine_list)
+	SIGNAL_HANDLER
+
+	// Only show beauty info in outpost gamemode
+	if(SSmaptype.maptype != "outpost")
+		return
+
+	if(beauty > 0)
+		examine_list += span_notice("This provides <b>+[beauty]</b> beauty to the room.")
+	else if(beauty < 0)
+		examine_list += span_warning("This provides <b>[beauty]</b> beauty to the room.")
 
 /datum/component/beauty/proc/enter_area(datum/source, area/A)
 	SIGNAL_HANDLER

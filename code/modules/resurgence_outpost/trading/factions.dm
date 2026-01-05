@@ -168,7 +168,7 @@
 	// Cotton
 	stock += list(list("type" = /obj/item/stack/sheet/cotton, "name" = "Cotton", "quantity" = rand(10, 20), "base_price" = 1))
 	// Rope
-	stock += list(list("type" = /obj/item/resurgence_component/rope, "name" = "Rope", "quantity" = rand(5, 10), "base_price" = 8))
+	stock += list(list("type" = /obj/item/stack/resurgence_rope, "name" = "Rope", "quantity" = rand(5, 10), "base_price" = 8))
 
 	// === BASIC WOODEN TOOLS ===
 	stock += list(list("type" = /obj/item/hatchet/wooden, "name" = "Wooden Hatchet", "quantity" = rand(1, 3), "base_price" = 16))
@@ -183,10 +183,22 @@
 /datum/trading_faction/proc/regenerate_cash()
 	current_cash = min(current_cash + cash_regen_rate, max_cash)
 
-/// Regenerate stock over time
+/// Regenerate stock over time - adds small amounts to existing stock
 /datum/trading_faction/proc/regenerate_stock()
-	// Override in subtypes for specific behavior
-	return
+	if(!length(stock))
+		return
+	// Each item has a small chance to regenerate 1-2 units
+	for(var/list/item_entry in stock)
+		if(!item_entry["quantity"])
+			continue
+		// 20% chance per regeneration cycle to add stock
+		if(prob(20))
+			var/max_quantity = item_entry["max_quantity"]
+			// If no max set, use 2x current as soft cap
+			if(!max_quantity)
+				max_quantity = max(item_entry["quantity"] * 2, 10)
+			if(item_entry["quantity"] < max_quantity)
+				item_entry["quantity"] += rand(1, 2)
 
 /// Calculate reputation gain based on transaction value
 /// 1500 credits = 5 rep, so 300 credits per rep point
@@ -617,6 +629,9 @@
 	stock += list(list("type" = /obj/item/reagent_containers/food/condiment/rice, "name" = "Rice", "quantity" = rand(6, 12), "base_price" = 4))
 	stock += list(list("type" = /obj/item/storage/fancy/egg_box, "name" = "Egg Box", "quantity" = rand(3, 6), "base_price" = 10))
 	stock += list(list("type" = /obj/item/reagent_containers/food/condiment/enzyme, "name" = "Universal Enzyme", "quantity" = rand(2, 4), "base_price" = 15))
+	stock += list(list("type" = /obj/item/reagent_containers/food/condiment/milk, "name" = "Milk", "quantity" = rand(4, 8), "base_price" = 5))
+	stock += list(list("type" = /obj/item/reagent_containers/food/condiment/soymilk, "name" = "Soy Milk", "quantity" = rand(3, 6), "base_price" = 5))
+	stock += list(list("type" = /obj/item/reagent_containers/food/condiment/mayonnaise, "name" = "Mayonnaise", "quantity" = rand(2, 5), "base_price" = 6))
 
 // ==================== Insurgence Clan ====================
 // Hostile faction - does not trade, only raids.

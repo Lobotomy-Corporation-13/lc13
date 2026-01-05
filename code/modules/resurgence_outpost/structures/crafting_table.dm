@@ -198,7 +198,7 @@
 	)
 
 	recipes["Rope"] = list(
-		"result" = /obj/item/resurgence_component/rope,
+		"result" = /obj/item/stack/resurgence_rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 3),
 		"total_work" = 10,
@@ -207,7 +207,7 @@
 	)
 
 	recipes["Rope (Cotton)"] = list(
-		"result" = /obj/item/resurgence_component/rope,
+		"result" = /obj/item/stack/resurgence_rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/sheet/cotton = 8),
 		"total_work" = 25,
@@ -216,7 +216,7 @@
 	)
 
 	recipes["Rope (Vines)"] = list(
-		"result" = /obj/item/resurgence_component/rope,
+		"result" = /obj/item/stack/resurgence_rope,
 		"result_amount" = 1,
 		"materials" = list(/obj/item/stack/resurgence_vines = 3),
 		"total_work" = 15,
@@ -239,7 +239,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 15,
 		"desc" = "2 Wood + 1 Rope -> Wooden Hatchet",
@@ -251,7 +251,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 2,
-			/obj/item/resurgence_component/rope = 1
+			/obj/item/stack/resurgence_rope = 1
 		),
 		"total_work" = 15,
 		"desc" = "2 Wood + 1 Rope -> Improvised Pickaxe (slow but cheap)",
@@ -264,7 +264,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 5,
 			/obj/item/stack/sheet/metal = 5,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 25,
 		"desc" = "5 Wood + 5 Metal + 2 Rope -> Simple Harvester (auto-harvests resources)",
@@ -288,7 +288,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 6,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 25,
 		"desc" = "6 Wood + 2 Rope -> Wooden Scythe (harvesting tool)",
@@ -305,6 +305,18 @@
 		),
 		"total_work" = 10,
 		"desc" = "1 Metal + 1 Cloth -> 15 Cable Coil (heals machines)",
+		"category" = CRAFT_CAT_TOOLS
+	)
+
+	recipes["Mining Satchel"] = list(
+		"result" = /obj/item/storage/bag/ore,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/leather = 3,
+			/obj/item/stack/resurgence_rope = 1
+		),
+		"total_work" = 15,
+		"desc" = "3 Leather + 1 Rope -> Mining Satchel (auto-picks up ore)",
 		"category" = CRAFT_CAT_TOOLS
 	)
 
@@ -880,7 +892,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/metal = 10,
 			/obj/item/stack/sheet/glass = 5,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 50,
 		"desc" = "10 Metal + 5 Glass + 2 Rope -> Janitor Chem Sprayer (self-regenerating cleaner)",
@@ -943,7 +955,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 6,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 25,
 		"desc" = "6 Wood + 2 Rope -> Banjo",
@@ -970,7 +982,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 8,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 30,
 		"desc" = "8 Wood + 2 Rope -> Violin",
@@ -983,7 +995,7 @@
 		"result_amount" = 1,
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 8,
-			/obj/item/resurgence_component/rope = 3
+			/obj/item/stack/resurgence_rope = 3
 		),
 		"total_work" = 30,
 		"desc" = "8 Wood + 3 Rope -> Guitar",
@@ -1061,7 +1073,7 @@
 		"materials" = list(
 			/obj/item/stack/sheet/mineral/wood = 8,
 			/obj/item/stack/sheet/mineral/gold = 5,
-			/obj/item/resurgence_component/rope = 2
+			/obj/item/stack/resurgence_rope = 2
 		),
 		"total_work" = 50,
 		"desc" = "8 Wood + 5 Gold + 2 Rope -> Golden Violin",
@@ -1783,7 +1795,7 @@
 		if(/obj/item/stack/sheet/wethide)
 			return "Wet Hide"
 		// Resurgence components
-		if(/obj/item/resurgence_component/rope)
+		if(/obj/item/stack/resurgence_rope)
 			return "Rope"
 		if(/obj/item/resurgence_component/ash_plating)
 			return "Ash Plating"

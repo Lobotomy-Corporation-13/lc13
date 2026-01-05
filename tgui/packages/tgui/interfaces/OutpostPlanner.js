@@ -602,6 +602,11 @@ const RoomTypeGuide = () => {
       canBeCramped: false,
     },
     {
+      name: 'Export Warehouse',
+      requirements: 'Resources Recorder',
+      canBeCramped: false,
+    },
+    {
       name: 'Basic Room',
       requirements: 'Any enclosed space',
       canBeCramped: false,

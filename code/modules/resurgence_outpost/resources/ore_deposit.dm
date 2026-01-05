@@ -54,28 +54,28 @@ GLOBAL_LIST_EMPTY(resurgence_spawned_ore_types)
 			"weight" = 40,
 			"color" = "#8B5A2B",
 			"drop_type" = /obj/item/stack/ore/iron,
-			"amount" = 160,
+			"amount" = 80,
 			"work" = 200
 		),
 		"coal" = list(
 			"weight" = 30,
 			"color" = "#2A2A2A",
 			"drop_type" = /obj/item/stack/sheet/mineral/coal,
-			"amount" = 100,
+			"amount" = 16,
 			"work" = 150
 		),
 		"silver" = list(
 			"weight" = 20,
 			"color" = "#C0C0C0",
 			"drop_type" = /obj/item/stack/ore/silver,
-			"amount" = 50,
+			"amount" = 25,
 			"work" = 250
 		),
 		"gold" = list(
 			"weight" = 10,
 			"color" = "#FFD700",
 			"drop_type" = /obj/item/stack/ore/gold,
-			"amount" = 40,
+			"amount" = 20,
 			"work" = 300
 		)
 	)

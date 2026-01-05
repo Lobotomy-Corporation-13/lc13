@@ -143,14 +143,14 @@
 	if(istype(core))
 		core.award_xp("crafting", amount)
 
-/// Get beauty bonus from player's crafting stat
+/// Get beauty bonus from player's crafting stat (level / 4, rounded up)
 /obj/structure/resurgence_blueprint/proc/get_construction_beauty_bonus(mob/user)
 	if(!ishuman(user))
 		return 0
 	var/mob/living/carbon/human/H = user
 	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 	if(istype(core))
-		return get_stat_beauty_bonus(core.stat_crafting)
+		return CEILING(core.stat_crafting / 4, 1)
 	return 0
 
 /// Calculate the beauty value for the constructed structure

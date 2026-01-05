@@ -99,8 +99,8 @@ Behavior that's still missing from this component that original food items had t
 	src.microwaved_type = microwaved_type
 	src.check_liked = check_liked
 
-	// Raw and grown foods start with awful quality
-	if((src.foodtypes & RAW) || istype(parent, /obj/item/food/grown))
+	// Raw, gross, and grown foods start with awful quality
+	if((src.foodtypes & RAW) || (src.foodtypes & GROSS) || istype(parent, /obj/item/food/grown) || istype(parent, /obj/item/food/meat/slab/meatwheat))
 		quality = QUALITY_AWFUL
 
 	var/atom/owner = parent

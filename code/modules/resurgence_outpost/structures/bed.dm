@@ -265,7 +265,7 @@ GLOBAL_LIST_EMPTY(resurgence_bed_owners)
 		// Living quarters gives faith bonus
 		var/datum/faith_event/room_ownership/event = new(
 			"You have a personal sleeper.",
-			0.025, // +0.025 per tick
+			0.5, // +0.5 per tick (every 5 seconds)
 			null, // permanent until lost
 			"room_ownership"
 		)

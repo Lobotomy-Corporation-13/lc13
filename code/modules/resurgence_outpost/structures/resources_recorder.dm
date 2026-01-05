@@ -264,7 +264,8 @@
 
 	var/turf/T = get_turf(target)
 
-	// Count and record exports BEFORE animation
+	// IMPORTANT: Count contents at export time to prevent exploit
+	// where items are removed after scanning but before exporting
 	var/list/export_counts = list()
 	for(var/obj/item/I in target.contents)
 		var/item_type = I.type
@@ -277,6 +278,11 @@
 			if(!export_counts[item_type])
 				export_counts[item_type] = 0
 			export_counts[item_type] += 1
+
+	// Prevent exporting empty closets
+	if(!length(export_counts))
+		visible_message(span_warning("The [target.name] is empty! Nothing to export."))
+		return
 
 	// Create balloon effect
 	var/mutable_appearance/balloon = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_expand")

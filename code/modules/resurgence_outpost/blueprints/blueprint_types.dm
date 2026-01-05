@@ -328,7 +328,7 @@
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 10,
 		/obj/item/stack/sheet/mineral/wood = 10,
-		/obj/item/resurgence_component/rope = 2
+		/obj/item/stack/resurgence_rope = 2
 	)
 
 /obj/structure/resurgence_blueprint/forge/primitive
@@ -354,7 +354,7 @@
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 5,
 		/obj/item/stack/sheet/mineral/wood = 10,
-		/obj/item/resurgence_component/rope = 4
+		/obj/item/stack/resurgence_rope = 4
 	)
 
 /obj/structure/resurgence_blueprint/loom/primitive
@@ -1078,4 +1078,39 @@
 	required_materials = list(
 		/obj/item/stack/sheet/mineral/wood = 10,
 		/obj/item/stack/sheet/metal = 5
+	)
+
+// ===========================================
+// GRID CRAFTING BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/ore_refiner
+	name = "ore refiner blueprint"
+	result_name = "ore refiner"
+	icon = 'icons/obj/machines/mining_machines.dmi'
+	icon_state = "furnace"
+	result_type = /obj/structure/ore_refiner
+	research_required = "metallurgy"
+
+/obj/structure/resurgence_blueprint/ore_refiner/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 10,
+		/obj/item/stack/sheet/plasteel = 5,
+		/obj/item/stack/sheet/mineral/coal = 20
+	)
+
+/obj/structure/resurgence_blueprint/grid_crafting_station
+	name = "grid crafting station blueprint"
+	result_name = "grid crafting station"
+	icon = 'icons/obj/machines/research.dmi'
+	icon_state = "dvir"
+	result_type = /obj/structure/grid_crafting_station
+	research_required = "grid_crafting"
+
+/obj/structure/resurgence_blueprint/grid_crafting_station/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/plasteel = 15,
+		/obj/item/stack/sheet/mineral/silver = 10,
+		/obj/item/stack/sheet/mineral/gold = 5,
+		/obj/item/stack/sheet/glass = 10
 	)

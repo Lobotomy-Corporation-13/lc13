@@ -20,12 +20,16 @@
 // Rope - Made from cloth at Crafting Table
 // ============================================
 
-/obj/item/resurgence_component/rope
+/obj/item/stack/resurgence_rope
 	name = "rope"
-	icon = 'icons/obj/power.dmi'
+	singular_name = "rope"
 	desc = "Strong woven rope, useful for binding and construction."
-	color = "#a07935"
+	icon = 'icons/obj/power.dmi'
 	icon_state = "coil"
+	color = "#a07935"
+	max_amount = 50
+	w_class = WEIGHT_CLASS_SMALL
+	merge_type = /obj/item/stack/resurgence_rope
 
 // ============================================
 // Ash Plating - Metal component

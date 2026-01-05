@@ -453,9 +453,16 @@
 	animate(target, pixel_z = 200, alpha = 0, time = 20)
 	sleep(20)
 
-	// Delete contents first
+	// Delete contents first, but eject mobs instead of deleting them
+	var/turf/eject_turf = get_turf(target)
 	for(var/atom/movable/AM in target.contents)
-		qdel(AM)
+		if(ismob(AM))
+			// Eject mobs instead of deleting them
+			AM.forceMove(eject_turf)
+			if(isliving(AM))
+				to_chat(AM, span_warning("You fall out of [target] as it's exported!"))
+		else
+			qdel(AM)
 	qdel(target)
 
 // ===== Buying =====

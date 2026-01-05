@@ -193,11 +193,11 @@
 	. = ..()
 	if(!.)
 		return
-	H.AddComponent(/datum/component/resurgence_beauty, 3)
+	H.AddComponent(/datum/component/beauty, 3)
 
 /datum/resurgence_trait/beautiful/remove()
 	if(holder)
-		var/datum/component/resurgence_beauty/B = holder.GetComponent(/datum/component/resurgence_beauty)
+		var/datum/component/beauty/B = holder.GetComponent(/datum/component/beauty)
 		if(B)
 			qdel(B)
 	return ..()
@@ -213,11 +213,11 @@
 	. = ..()
 	if(!.)
 		return
-	H.AddComponent(/datum/component/resurgence_beauty, 1)
+	H.AddComponent(/datum/component/beauty, 1)
 
 /datum/resurgence_trait/pretty/remove()
 	if(holder)
-		var/datum/component/resurgence_beauty/B = holder.GetComponent(/datum/component/resurgence_beauty)
+		var/datum/component/beauty/B = holder.GetComponent(/datum/component/beauty)
 		if(B)
 			qdel(B)
 	return ..()
@@ -338,11 +338,11 @@
 	. = ..()
 	if(!.)
 		return
-	H.AddComponent(/datum/component/resurgence_beauty, -2)
+	H.AddComponent(/datum/component/beauty, -2)
 
 /datum/resurgence_trait/ugly/remove()
 	if(holder)
-		var/datum/component/resurgence_beauty/B = holder.GetComponent(/datum/component/resurgence_beauty)
+		var/datum/component/beauty/B = holder.GetComponent(/datum/component/beauty)
 		if(B)
 			qdel(B)
 	return ..()
@@ -358,11 +358,11 @@
 	. = ..()
 	if(!.)
 		return
-	H.AddComponent(/datum/component/resurgence_beauty, -5)
+	H.AddComponent(/datum/component/beauty, -5)
 
 /datum/resurgence_trait/staggeringly_ugly/remove()
 	if(holder)
-		var/datum/component/resurgence_beauty/B = holder.GetComponent(/datum/component/resurgence_beauty)
+		var/datum/component/beauty/B = holder.GetComponent(/datum/component/beauty)
 		if(B)
 			qdel(B)
 	return ..()
@@ -403,17 +403,17 @@
 // Beauty Component for Character
 // ============================================
 
-/datum/component/resurgence_beauty
+/datum/component/beauty
 	/// Beauty value of this character
 	var/beauty_value = 0
 
-/datum/component/resurgence_beauty/Initialize(beauty = 0)
+/datum/component/beauty/Initialize(beauty = 0)
 	. = ..()
 	if(!ishuman(parent))
 		return COMPONENT_INCOMPATIBLE
 	beauty_value = beauty
 
-/datum/component/resurgence_beauty/Destroy()
+/datum/component/beauty/Destroy()
 	return ..()
 
 // ============================================

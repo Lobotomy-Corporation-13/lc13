@@ -21,7 +21,7 @@
 	/// Total work points needed to fell the tree
 	var/work_needed = 300
 	/// Base amount of wood dropped when felled
-	var/base_yield = 90
+	var/base_yield = 45
 	/// Whether someone is currently chopping
 	var/being_worked = FALSE
 	/// What type of tree to spawn on regrowth
@@ -195,7 +195,7 @@
 	icon_state = "tree1"
 	pixel_x = -48
 	pixel_y = -20
-	base_yield = 100
+	base_yield = 50
 	work_needed = 350
 	tree_type = /obj/structure/resurgence_tree/oak
 
@@ -210,7 +210,7 @@
 	icon = 'icons/obj/flora/deadtrees.dmi'
 	icon_state = "tree_1"
 	pixel_x = -16
-	base_yield = 40
+	base_yield = 20
 	work_needed = 150
 	tree_type = /obj/structure/resurgence_tree/dead
 
@@ -374,11 +374,12 @@
 	qdel(src)
 
 /obj/structure/resurgence_tree_stump/proc/regrow()
-	// Don't regrow if something is on top of us
-	if(locate(/obj/structure) in loc)
-		// Try again later
-		addtimer(CALLBACK(src, PROC_REF(regrow)), 2 MINUTES)
-		return
+	// Don't regrow if another structure is on top of us (besides ourselves)
+	for(var/obj/structure/S in loc)
+		if(S != src)
+			// Try again later
+			addtimer(CALLBACK(src, PROC_REF(regrow)), 2 MINUTES)
+			return
 
 	var/obj/structure/resurgence_tree/new_tree = new tree_type(loc)
 	new_tree.name = "young [initial(new_tree.name)]"
