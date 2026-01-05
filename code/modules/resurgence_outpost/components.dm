@@ -88,6 +88,7 @@
 	icon_state = "plantbag"
 	max_amount = 50
 	w_class = WEIGHT_CLASS_SMALL
+	merge_type = /obj/item/stack/resurgence_fertilizer
 
 // ============================================
 // Sandstone Crafting from Glass Ore
