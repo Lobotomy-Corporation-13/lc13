@@ -174,7 +174,7 @@ export const OreRefiner = (props, context) => {
   );
 };
 
-const OreRow = (props) => {
+const OreRow = props => {
   const { name, count, max, pct, color, onEject, disabled } = props;
 
   return (
@@ -199,7 +199,7 @@ const OreRow = (props) => {
   );
 };
 
-const getMovementDesc = (coreType) => {
+const getMovementDesc = coreType => {
   switch (coreType) {
     case 'iron':
       return 'Cardinal (N/S/E/W)';
@@ -214,7 +214,7 @@ const getMovementDesc = (coreType) => {
   }
 };
 
-const getFuelColor = (fuelLevel) => {
+const getFuelColor = fuelLevel => {
   switch (fuelLevel) {
     case 0:
       return 'bad';

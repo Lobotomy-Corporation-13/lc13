@@ -78,7 +78,7 @@ const PassionsTab = (props, context) => {
       </Stack.Item>
       <Stack.Item grow>
         <Section fill title="Choose Your Passion">
-          {stats.map((stat) => (
+          {stats.map(stat => (
             <Button
               key={stat.id}
               fluid
@@ -153,10 +153,10 @@ const StatsTab = (props, context) => {
       </Stack.Item>
       <Stack.Item grow>
         <Section fill title="Allocate Starting Stats">
-          {stats.map((stat) => {
+          {stats.map(stat => {
             const allocated = stat_allocation[stat.id] || 0;
-            const canIncrease =
-              allocated < max_starting_stat && pointsRemaining > 0;
+            const canIncrease
+              = allocated < max_starting_stat && pointsRemaining > 0;
             const canDecrease = allocated > 0;
 
             return (
@@ -169,10 +169,10 @@ const StatsTab = (props, context) => {
                   <Button
                     icon="minus"
                     disabled={!canDecrease}
-                    onClick={() =>
-                      act('adjust_stat', { stat: stat.id, adjustment: -1 })
-                    }
-                  />
+                    onClick={() => act('adjust_stat', {
+                      stat: stat.id,
+                      adjustment: -1,
+                    })} />
                 </Stack.Item>
                 <Stack.Item basis="80px">
                   <ProgressBar
@@ -191,10 +191,10 @@ const StatsTab = (props, context) => {
                   <Button
                     icon="plus"
                     disabled={!canIncrease}
-                    onClick={() =>
-                      act('adjust_stat', { stat: stat.id, adjustment: 1 })
-                    }
-                  />
+                    onClick={() => act('adjust_stat', {
+                      stat: stat.id,
+                      adjustment: 1,
+                    })} />
                 </Stack.Item>
               </Stack>
             );

@@ -180,7 +180,7 @@ export const GridCraftingStation = (props, context) => {
   );
 };
 
-const GridMap = (props) => {
+const GridMap = props => {
   const {
     focus_x,
     focus_y,
@@ -201,8 +201,8 @@ const GridMap = (props) => {
   const centerY = MAP_SIZE / 2;
 
   // Convert world coords to screen coords
-  const toScreenX = (x) => centerX + (x - focus_x) * MAP_SCALE;
-  const toScreenY = (y) => centerY - (y - focus_y) * MAP_SCALE;
+  const toScreenX = x => centerX + (x - focus_x) * MAP_SCALE;
+  const toScreenY = y => centerY - (y - focus_y) * MAP_SCALE;
 
   // Filter items to show (within view radius)
   const visibleItems = items.filter(item => {
@@ -357,7 +357,7 @@ const GridMap = (props) => {
   );
 };
 
-const MovementControls = (props) => {
+const MovementControls = props => {
   const { selected_core, focus_x, focus_y, act } = props;
 
   const canMove = (dx, dy) => {
@@ -428,7 +428,7 @@ const MovementControls = (props) => {
   );
 };
 
-const DirBtn = (props) => {
+const DirBtn = props => {
   const { dir, dx, dy, enabled, act } = props;
   const arrows = {
     N: 'arrow-up', S: 'arrow-down', E: 'arrow-right', W: 'arrow-left',
@@ -491,7 +491,7 @@ const TeleportControls = (props, context) => {
   );
 };
 
-const CoresSection = (props) => {
+const CoresSection = props => {
   const { cores, selected_core, act, stored_count, max_stored } = props;
 
   if (cores.length === 0) {
@@ -548,7 +548,7 @@ const CoresSection = (props) => {
   );
 };
 
-const NearbyItems = (props) => {
+const NearbyItems = props => {
   const { items } = props;
 
   if (items.length === 0) {
@@ -582,7 +582,7 @@ const NearbyItems = (props) => {
   );
 };
 
-const getCoreColor = (oreType) => {
+const getCoreColor = oreType => {
   const colors = {
     iron: '#8B5A2B',
     silver: '#C0C0C0',
@@ -592,18 +592,18 @@ const getCoreColor = (oreType) => {
   return colors[oreType] || 'white';
 };
 
-const getTierColor = (tier) => {
+const getTierColor = tier => {
   // Tier colors: 0=gray, 1=green, 2=blue, 3=purple, 4=gold
   const colors = ['#666666', '#22cc44', '#4488ff', '#cc44ff', '#ffcc00'];
   return colors[tier] || '#666666';
 };
 
-const getMovementShort = (movementType) => {
+const getMovementShort = movementType => {
   const names = { 1: 'Cardinal', 2: 'Diagonal', 3: '8-Dir', 4: 'Teleport' };
   return names[movementType] || '?';
 };
 
-const getTierIcon = (tier) => {
+const getTierIcon = tier => {
   const icons = ['circle', 'star', 'star', 'crown', 'crown'];
   const colors = ['label', 'average', 'good', 'blue', 'gold'];
   return (

@@ -297,7 +297,7 @@ export const ResurgenceFabricator = (props, context) => {
   );
 };
 
-const formatTime = (seconds) => {
+const formatTime = seconds => {
   if (seconds === null) {
     return "permanent";
   }
