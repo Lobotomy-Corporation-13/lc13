@@ -11,7 +11,7 @@ else
   rm -rf "$HOME/BYOND"
   mkdir -p "$HOME/BYOND"
   cd "$HOME/BYOND"
-  curl --user-agent "lc13-ci/1.0 (Linux; curl/8; +https://github.com/Lobotomy-Corporation-13/lc13)" "$MIRROR_URL/${BYOND_MAJOR}/${BYOND_MAJOR}.${BYOND_MINOR}_byond_linux.zip" -o byond.zip
+  curl --user-agent "lc13-ci/1.0 (Linux; curl/8; +https://github.com/Lobotomy-Corporation-13/lc13)" "https://lc13.net/temp-ci/${BYOND_MAJOR}/${BYOND_MAJOR}.${BYOND_MINOR}_byond_linux.zip" -o byond.zip
   unzip byond.zip
   rm byond.zip
   cd byond
