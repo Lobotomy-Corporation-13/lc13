@@ -11,6 +11,16 @@
 	projectile.firer = user
 	projectile.fired_from = fired_from
 	distro += variance
+	if(projectile.icon_state == "bullet")
+		switch(projectile.damage_type)
+			if(RED_DAMAGE)
+				projectile.icon_state = "red_bullet"
+			if(WHITE_DAMAGE)
+				projectile.icon_state = "white_bullet"
+			if(BLACK_DAMAGE)
+				projectile.icon_state = "black_bullet"
+			if(PALE_DAMAGE)
+				projectile.icon_state = "pale_bullet"
 
 	var/targloc = get_turf(target)
 
