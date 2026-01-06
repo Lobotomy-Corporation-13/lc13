@@ -1,4 +1,8 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ay" = (
+/obj/effect/landmark/raid_spawn/insurgence/east,
+/turf/open/floor/plating/ironsand,
+/area/resurgence_outpost/outdoors)
 "cX" = (
 /obj/machinery/telecomms/server/presets/medical,
 /turf/open/floor/circuit/telecomms/mainframe,
@@ -59,6 +63,10 @@
 "tc" = (
 /turf/open/water,
 /area/resurgence_outpost/outdoors)
+"xp" = (
+/obj/effect/landmark/raid_spawn/insurgence/south,
+/turf/open/floor/plating/ironsand,
+/area/resurgence_outpost/outdoors)
 "As" = (
 /obj/structure/resurgence_wild_plant,
 /turf/open/floor/grass,
@@ -115,6 +123,10 @@
 /turf/open/floor/plating/dirt/jungle/wasteland{
 	slowdown = 0
 	},
+/area/resurgence_outpost/outdoors)
+"EW" = (
+/obj/effect/landmark/raid_spawn/insurgence/north,
+/turf/open/floor/plating/ironsand,
 /area/resurgence_outpost/outdoors)
 "Fu" = (
 /turf/closed/indestructible/rock,
@@ -239,6 +251,10 @@
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/hub/preset,
 /turf/open/floor/circuit/telecomms/mainframe,
+/area/resurgence_outpost/outdoors)
+"TV" = (
+/obj/effect/landmark/raid_spawn/insurgence/west,
+/turf/open/floor/plating/ironsand,
 /area/resurgence_outpost/outdoors)
 "Ux" = (
 /turf/open/floor/plating/dirt/dark,
@@ -710,7 +726,7 @@ gX
 gX
 gX
 gX
-gX
+TV
 gX
 gX
 gX
@@ -866,7 +882,7 @@ gX
 gX
 gX
 gX
-gX
+TV
 gX
 gX
 gX
@@ -1031,7 +1047,7 @@ gX
 gX
 gX
 gX
-gX
+TV
 gX
 gX
 gX
@@ -1187,7 +1203,7 @@ gX
 gX
 gX
 gX
-gX
+TV
 gX
 gX
 gX
@@ -1354,7 +1370,7 @@ gX
 gX
 gX
 gX
-gX
+TV
 gX
 gX
 gX
@@ -11626,7 +11642,7 @@ gX
 gX
 gX
 gX
-gX
+xp
 gX
 gX
 Fu
@@ -11786,7 +11802,7 @@ gX
 gX
 gX
 gX
-gX
+xp
 gX
 gX
 gX
@@ -12112,7 +12128,7 @@ gX
 gX
 gX
 gX
-gX
+xp
 gX
 gX
 Fu
@@ -12125,7 +12141,7 @@ Fu
 Fu
 gX
 gX
-gX
+EW
 gX
 gX
 gX
@@ -12272,7 +12288,7 @@ gX
 Ow
 Ow
 gX
-gX
+xp
 gX
 gX
 gX
@@ -12598,7 +12614,7 @@ nm
 gX
 gX
 gX
-gX
+xp
 gX
 gX
 Fu
@@ -12609,7 +12625,7 @@ Yg
 Fu
 Fu
 Fu
-gX
+EW
 gX
 gX
 gX
@@ -12773,7 +12789,7 @@ Fu
 Fu
 gX
 gX
-gX
+EW
 gX
 gX
 gX
@@ -12937,7 +12953,7 @@ gX
 gX
 gX
 gX
-gX
+EW
 gX
 gX
 gX
@@ -13581,7 +13597,7 @@ Yg
 Fu
 Fu
 Fu
-gX
+EW
 gX
 gX
 gX
@@ -14069,7 +14085,7 @@ Fu
 Fu
 gX
 gX
-gX
+EW
 gX
 gX
 gX
@@ -25323,12 +25339,12 @@ gX
 gX
 gX
 gX
+ay
 gX
 gX
 gX
 gX
-gX
-gX
+ay
 gX
 gX
 gX
@@ -25488,7 +25504,7 @@ gX
 gX
 gX
 gX
-gX
+ay
 gX
 gX
 gX
@@ -25645,7 +25661,7 @@ gX
 gX
 gX
 gX
-gX
+ay
 gX
 gX
 gX
@@ -25811,7 +25827,7 @@ gX
 gX
 gX
 gX
-gX
+ay
 gX
 gX
 gX
