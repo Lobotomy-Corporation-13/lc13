@@ -111,13 +111,13 @@
 		// No spawn points - try getting all spawn points as fallback
 		spawn_points = get_all_raid_spawn_points()
 		if(!spawn_points.len)
-			log_game("RAID ERROR: No spawn points found for [name]")
+			log_admin("RAID ERROR: No spawn points found for [name]")
 			return FALSE
 
 	// Find target rooms
 	target_rooms = select_target_rooms()
 	if(!target_rooms.len)
-		log_game("RAID WARNING: No target rooms found for [name], raiders will roam")
+		log_admin("RAID WARNING: No target rooms found for [name], raiders will roam")
 
 	// Calculate difficulty and raiders
 	calculate_difficulty()
@@ -176,12 +176,15 @@
  * Select target rooms for the raid based on type.
  */
 /datum/resurgence_raid/proc/select_target_rooms()
+	log_admin("RAID DEBUG: [name] selecting target rooms...")
 	// Check if any mob type in composition can smash walls
 	var/can_smash = check_raid_can_smash_walls()
 
 	// Get accessible rooms
 	var/list/all_rooms = get_resurgence_room_areas(TRUE, can_smash)
+	log_admin("RAID DEBUG: Found [all_rooms.len] accessible rooms (can_smash_walls: [can_smash])")
 	if(!all_rooms.len)
+		log_admin("RAID DEBUG: No accessible rooms found - raiders will have no valid targets!")
 		return list()
 
 	// Get preferred room types for this raid type
@@ -208,6 +211,12 @@
 		if(!targets.len)
 			break
 		final_targets += pick_n_take(targets)
+
+	// Log selected rooms
+	var/list/room_names = list()
+	for(var/area/resurgence_outpost/room/R in final_targets)
+		room_names += R.name
+	log_admin("RAID DEBUG: Selected [final_targets.len] target rooms: [room_names.Join(", ")]")
 
 	return final_targets
 
@@ -280,7 +289,7 @@
 		total_in_comp += composition[mob_type]
 
 	if(total_in_comp <= 0)
-		log_game("RAID ERROR: Empty composition for [name]")
+		log_admin("RAID ERROR: Empty composition for [name]")
 		end_raid(FALSE)
 		return
 
@@ -308,11 +317,13 @@
  */
 /datum/resurgence_raid/proc/spawn_single_raider(mob_type)
 	if(!spawn_points.len)
+		log_admin("RAID DEBUG: spawn_single_raider() failed - no spawn points")
 		return null
 
 	var/obj/effect/landmark/raid_spawn/spawn_point = pick(spawn_points)
 	var/turf/spawn_loc = get_turf(spawn_point)
 	if(!spawn_loc)
+		log_admin("RAID DEBUG: spawn_single_raider() failed - could not get spawn location turf")
 		return null
 
 	// Create the mob
@@ -327,13 +338,18 @@
 	if(target_rooms.len)
 		var/area/resurgence_outpost/room/target_room = pick(target_rooms)
 		target = get_random_turf_in_room(target_room)
+		log_admin("RAID DEBUG: Raider [M.type] assigned to room [target_room.name], target turf: [target ? AREACOORD(target) : "NULL"]")
 	if(!target)
 		target = spawn_loc
+		log_admin("RAID DEBUG: Raider [M.type] has NO target room - defaulting to spawn location (will not move!)")
 
 	// Add raider component
+	// For delayed raids, raiders wait at spawn until begin_attack() is called
+	var/should_wait = (raid_type == RAID_TYPE_DELAYED)
 	var/component_type = get_raider_component_type()
-	M.AddComponent(component_type, src, target, spawn_point)
+	M.AddComponent(component_type, src, target, spawn_point, should_wait)
 
+	log_admin("RAID DEBUG: Spawned [M.type] at [AREACOORD(spawn_loc)], waiting: [should_wait]")
 	return M
 
 /**
@@ -358,14 +374,18 @@
 		if(istype(core))
 			to_chat(H, span_danger("The [get_faction_display_name()] raiders are attacking!"))
 
-	// Assign targets to all raiders
+	// Start attack for all raiders (calculates A* paths)
 	for(var/mob/living/simple_animal/hostile/M in raiders)
 		if(M.stat == DEAD)
 			continue
 		var/datum/component/raider/comp = M.GetComponent(/datum/component/raider)
-		if(comp && target_rooms.len)
-			var/area/resurgence_outpost/room/target_room = pick(target_rooms)
-			comp.assign_room_target(target_room)
+		if(comp)
+			// Clear waiting flag first (for delayed raids)
+			comp.start_attack()
+			// Then assign a target room (this will calculate A* path and start movement)
+			if(target_rooms.len)
+				var/area/resurgence_outpost/room/target_room = pick(target_rooms)
+				comp.assign_room_target(target_room)
 
 /**
  * Called when a raider is removed (dies or deleted).
@@ -382,12 +402,36 @@
 			begin_retreat()
 			return
 
+	// Check if all looters are gone - support troops should retreat
+	if(get_alive_looter_count() <= 0 && get_alive_raider_count() > 0)
+		log_admin("RAID: All looters eliminated - support troops retreating")
+		retreat_support_troops(TRUE) // TRUE = players won (looters died)
+		return
+
 	// Check for raid end
 	if(get_alive_raider_count() <= 0)
 		end_raid(TRUE)
 
 /**
- * Get the count of alive raiders.
+ * Called when a raider successfully escapes with loot.
+ */
+/datum/resurgence_raid/proc/on_raider_escaped(mob/living/raider)
+	raiders -= raider
+	log_admin("RAID: Raider [raider?.type] escaped with loot. [get_alive_raider_count()] raiders remaining.")
+
+	// Check if all looters escaped - support troops should retreat
+	if(get_alive_looter_count() <= 0 && get_alive_raider_count() > 0)
+		log_admin("RAID: All looters escaped - support troops retreating")
+		retreat_support_troops(FALSE) // FALSE = players lost (looters escaped)
+		return
+
+	// Check for raid end - all raiders escaped or dead
+	if(get_alive_raider_count() <= 0)
+		// Raiders escaped successfully - this is a loss for the players
+		end_raid(FALSE)
+
+/**
+ * Get the count of alive raiders (all mobs in raid).
  */
 /datum/resurgence_raid/proc/get_alive_raider_count()
 	var/count = 0
@@ -395,6 +439,46 @@
 		if(M.stat != DEAD)
 			count++
 	return count
+
+/**
+ * Get the count of alive looters (actual raider subtypes that can steal).
+ */
+/datum/resurgence_raid/proc/get_alive_looter_count()
+	var/count = 0
+	for(var/mob/living/M in raiders)
+		if(M.stat != DEAD && istype(M, /mob/living/simple_animal/hostile/clan/raider))
+			count++
+	return count
+
+/**
+ * Teleport away all support troops (non-looter mobs).
+ *
+ * Arguments:
+ * * victory - TRUE if players won (looters killed), FALSE if looters escaped
+ */
+/datum/resurgence_raid/proc/retreat_support_troops(victory = FALSE)
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		if(!H.mind)
+			continue
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			to_chat(H, span_notice("The remaining raiders are retreating!"))
+
+	// Teleport away all non-raider mobs
+	for(var/mob/living/simple_animal/hostile/M in raiders)
+		if(M.stat == DEAD)
+			continue
+		// Skip actual raider types - they handle their own retreat
+		if(istype(M, /mob/living/simple_animal/hostile/clan/raider))
+			continue
+		// Teleport away support troops
+		M.visible_message(span_warning("[M] vanishes!"))
+		playsound(M, 'sound/effects/ordeals/white/pale_teleport_out.ogg', 25, TRUE)
+		new /obj/effect/temp_visual/beam_out(get_turf(M))
+		qdel(M)
+
+	// End the raid
+	end_raid(victory)
 
 /**
  * Begin retreat for all raiders.
@@ -457,11 +541,11 @@
 	if(source_faction)
 		if(victory)
 			// Small rep increase for defending
-			source_faction.modify_reputation(5)
+			source_faction.adjust_reputation(5)
 		// No penalty for losing - reputation was already low
 
 	// Log the result
-	log_game("RAID: [name] ended. Victory: [victory]. Raiders killed: [initial_raider_count - get_alive_raider_count()]/[initial_raider_count]")
+	log_admin("RAID: [name] ended. Victory: [victory]. Raiders killed: [initial_raider_count - get_alive_raider_count()]/[initial_raider_count]")
 
 /datum/resurgence_raid/Destroy()
 	if(raid_timer)

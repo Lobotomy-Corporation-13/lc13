@@ -145,23 +145,29 @@
 /obj/item/raid_debug_tool/proc/spawn_test_raider(mob/user)
 	var/turf/T = get_turf(user)
 	if(!T)
+		log_admin("RAID DEBUG: spawn_test_raider() failed - could not get user turf")
 		return
 
 	// Create a scout with raider component
-	var/mob/living/simple_animal/hostile/clan/scout/raider = new(T)
+	var/mob/living/simple_animal/hostile/clan/raider/scout/raider = new(T)
 	raider.faction = list("insurgence_raiders")
 
 	// Find a target
-	var/atom/target = user
+	var/atom/target = null
 	var/list/rooms = get_resurgence_room_areas(FALSE)
+	log_admin("RAID DEBUG: spawn_test_raider() found [rooms.len] rooms")
 	if(rooms.len)
 		var/area/resurgence_outpost/room/R = pick(rooms)
 		target = get_random_turf_in_room(R)
+		log_admin("RAID DEBUG: spawn_test_raider() targeting room [R.name], turf: [target ? AREACOORD(target) : "NULL"]")
+	if(!target)
+		target = user
+		log_admin("RAID DEBUG: spawn_test_raider() no rooms found - targeting user instead (raider may not move properly!)")
 
 	// Add component
 	raider.AddComponent(/datum/component/raider, null, target, null)
 
-	to_chat(user, span_notice("Spawned test raider targeting [target]."))
+	to_chat(user, span_notice("Spawned test raider targeting [target]. Check game logs for debug info."))
 	message_admins("[key_name(user)] spawned a test raider via debug tool")
 
 // ==================== Admin Verb ====================

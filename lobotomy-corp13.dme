@@ -4490,6 +4490,7 @@
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_buildings.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_greed_touched.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_mobs.dm"
+#include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_raiders.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_npcs.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_rce.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_rce_ranged.dm"

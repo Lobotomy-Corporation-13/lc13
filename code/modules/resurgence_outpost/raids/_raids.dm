@@ -91,28 +91,35 @@ GLOBAL_LIST_INIT(raid_type_room_preferences, list(
 ))
 
 /// Insurgence Clan raid compositions by raid type
+/// Uses raider variants with stealing/trampling/looting abilities
+/// Ranged units use normal clan mobs (they provide cover fire, not looting)
 GLOBAL_LIST_INIT(insurgence_raid_compositions, list(
 	RAID_TYPE_DELAYED = list(
-		/mob/living/simple_animal/hostile/clan/scout = 3,
-		/mob/living/simple_animal/hostile/clan/defender = 1
+		/mob/living/simple_animal/hostile/clan/raider/scout = 2,
+		/mob/living/simple_animal/hostile/clan/raider/defender = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner = 1
 	),
 	RAID_TYPE_BASIC = list(
-		/mob/living/simple_animal/hostile/clan/scout = 4,
-		/mob/living/simple_animal/hostile/clan/defender = 1
+		/mob/living/simple_animal/hostile/clan/raider/scout = 3,
+		/mob/living/simple_animal/hostile/clan/raider/defender = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid = 1
 	),
 	RAID_TYPE_PILLAGE = list(
-		/mob/living/simple_animal/hostile/clan/scout = 4,
-		/mob/living/simple_animal/hostile/clan/defender = 2
+		/mob/living/simple_animal/hostile/clan/raider/scout/pillager = 4,
+		/mob/living/simple_animal/hostile/clan/raider/defender = 2
 	),
 	RAID_TYPE_SIEGE = list(
-		/mob/living/simple_animal/hostile/clan/defender = 2,
-		/mob/living/simple_animal/hostile/clan/scout = 4
+		/mob/living/simple_animal/hostile/clan/raider/defender = 2,
+		/mob/living/simple_animal/hostile/clan/raider/scout = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner = 2
 	),
 	RAID_TYPE_ASSASSINATION = list(
-		/mob/living/simple_animal/hostile/clan/scout = 3,
-		/mob/living/simple_animal/hostile/clan/defender = 1
+		/mob/living/simple_animal/hostile/clan/raider/scout = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner = 1
 	),
 	RAID_TYPE_OVERWHELMING = list(
-		/mob/living/simple_animal/hostile/clan/scout = 8
+		/mob/living/simple_animal/hostile/clan/raider/scout = 5,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid = 3
 	)
 ))

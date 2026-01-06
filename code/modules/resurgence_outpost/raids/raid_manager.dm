@@ -25,7 +25,7 @@ SUBSYSTEM_DEF(resurgence_raids)
 /datum/controller/subsystem/resurgence_raids/Initialize()
 	// Set initial cooldown
 	raid_cooldown = world.time + minimum_round_time
-	return SS_INIT_SUCCESS
+	return ..()
 
 /datum/controller/subsystem/resurgence_raids/fire(resumed = FALSE)
 	if(!raids_enabled)
@@ -111,7 +111,7 @@ SUBSYSTEM_DEF(resurgence_raids)
 	// Set cooldown
 	raid_cooldown = world.time + RAID_MINIMUM_COOLDOWN
 
-	log_game("RAID: [raid.name] triggered for faction [faction_id]")
+	log_admin("RAID: [raid.name] triggered for faction [faction_id]")
 
 	return raid
 
@@ -148,7 +148,7 @@ SUBSYSTEM_DEF(resurgence_raids)
 		weights[RAID_TYPE_ASSASSINATION] += 10
 
 	// Pick weighted random
-	return pick_weight(weights)
+	return pickweight(weights)
 
 /**
  * Force trigger a raid immediately (for debug/admin use).
