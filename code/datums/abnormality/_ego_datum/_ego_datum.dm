@@ -26,8 +26,10 @@ GLOBAL_LIST_EMPTY(ego_datums)
 /datum/ego_datum/New(datum/abnormality/DA)
 	if(!name && item_path)
 		name = initial(item_path.name)
+		information["name"] = name
 	if(DA)
 		linked_abno = DA
+
 
 /datum/ego_datum/Destroy()
 	GLOB.ego_datums -= src
@@ -53,6 +55,10 @@ GLOBAL_LIST_EMPTY(ego_datums)
 
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
 		var/obj/item/ego_weapon/ranged/E = new item_path(src)
+		information["damtype_melee"] = E.damtype
+		information["force_melee"] = E.force
+		information["damtype_ranged"] = E.last_projectile_type
+		information["force_ranged"] = E.last_projectile_damage
 		var/bullet_damage_type = E.last_projectile_type
 		var/bullet_damage = E.last_projectile_damage
 		if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(bullet_damage_type))
@@ -80,6 +86,8 @@ GLOBAL_LIST_EMPTY(ego_datums)
 		return
 
 	var/obj/item/ego_weapon/E = new item_path(src)
+	information["damtype_melee"] = E.damtype
+	information["force_melee"] = E.force
 	var/damage_type = E.damtype
 	var/damage = E.force
 	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(damage_type))
