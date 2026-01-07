@@ -49,4 +49,4 @@
 	desc = "An autoinjector containing medication to purge all chemicals."
 	icon_state = "kpurge"
 	inhand_icon_state = "oxapen"
-	list_reagents = list(/datum/reagent/antitoxin = 10)
+	list_reagents = list(/datum/reagent/purgall = 10)
