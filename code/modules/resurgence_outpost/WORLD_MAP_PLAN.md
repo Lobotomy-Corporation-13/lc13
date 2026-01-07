@@ -26,35 +26,47 @@ A Rimworld-style square grid world map with procedural generation, faction locat
 - [x] Add location data to factions (`world_x`, `world_y`)
 
 ### Phase 2: Expedition Framework
-- [ ] Create `_expeditions.dm` with state defines
-- [ ] Implement `/datum/expedition_party`
-- [ ] Create signup console and TGUI
-- [ ] Implement route planning (A* pathfinding) - *partially done in world_map_manager*
-- [ ] Create departure/return landmarks
+- [x] Create `_expeditions.dm` with state defines
+- [x] Implement `/datum/expedition_party`
+- [x] Create expedition map device (`expedition_map_device.dm`)
+- [x] Implement route planning (A* pathfinding in world_map_manager)
+- [x] Create departure/return landmarks
 
 ### Phase 3: Travel Corridors
-- [ ] Create corridor area definitions
-- [ ] Create 6 terrain segment templates (.dmm files)
-- [ ] Implement corridor generator
-- [ ] Implement party teleport to corridor
-- [ ] Create arrival triggers
-- [ ] Test end-to-end travel
+- [x] Create corridor area definitions (`corridor/corridor_areas.dm`)
+- [x] Create single reusable corridor (14×80 tiles)
+- [x] Implement corridor manager (`corridor/corridor_manager.dm`)
+- [x] Implement corridor turfs with terrain transformation (`corridor/corridor_turfs.dm`)
+- [x] Implement party teleport to corridor
+- [x] Create start/event/end landmarks (`corridor/corridor_landmarks.dm`)
+- [x] Implement screen fade transitions between terrain legs
+- [x] Test end-to-end travel
 
 ### Phase 4: Travel Events
-- [ ] Create `/datum/travel_event` base
-- [ ] Implement invisible barrier system
-- [ ] Implement skill check system
-- [ ] Create 15-20 events across categories
-- [ ] Create encounter objects
-- [ ] Balance difficulty/rewards
+- [x] Create `/datum/travel_event` base with multi-choice system (`events/travel_event.dm`)
+- [x] Implement `/datum/event_choice` for individual choices with different skills/outcomes
+- [x] Implement invisible barrier system (spawns on event landmark crossing)
+- [x] Implement skill check system (formula: 50 + (skill - difficulty) * 5, clamped 5-95%)
+- [x] Create 14 events across categories:
+  - [x] 6 scavenge events (`events/events_scavenge.dm`)
+  - [x] 8 hazard events (`events/events_hazard.dm`)
+- [x] Each event has 2-3 choices with different skill types (Mining/Cooking/Crafting)
+- [x] HTML popup interface for event interaction
+- [ ] Combat events (future)
+- [ ] Social events (future)
+- [ ] Balance difficulty/rewards (ongoing)
 
 ### Phase 5: Faction Hubs
-- [ ] Create 5 faction hub map templates
-- [ ] Create faction trader NPC
-- [ ] Implement hub controller
-- [ ] Create `FactionHubTrading.js`
+- [x] Create faction hub area definitions (`faction_hubs/faction_hub_areas.dm`)
+- [x] Create faction hub controller datum (`faction_hubs/faction_hub_controller.dm`)
+- [x] Create faction trader NPC (`faction_hubs/faction_trader_npc.dm`)
+- [x] Create hub landmarks - spawn, exit, trader spawn (`faction_hubs/faction_hub_landmarks.dm`)
+- [x] Implement hub arrival via expedition corridor manager
+- [x] Create map creation guide (`faction_hubs/MAP_CREATION_GUIDE.md`)
+- [ ] Create 5 faction hub map templates (.dmm files) - **Needs mapping**
+- [ ] Create `FactionHubTrading.js` TGUI interface (currently using HTML popup)
 - [ ] Add hub-exclusive items to factions
-- [ ] Implement hub arrival/departure
+- [ ] Integrate credit system with hub trading
 
 ### Phase 6: Faction Caravans
 - [ ] Create `/datum/faction_caravan` datum
@@ -90,30 +102,37 @@ _maps/templates/resurgence/corridor_segments/
 
 ### Core Files to Create
 
-| File | Purpose |
-|------|---------|
-| `world_map/_world_map.dm` | Global defines, terrain types |
-| `world_map/world_map_manager.dm` | Singleton manager, generation, state |
-| `world_map/world_tile.dm` | Tile datum with terrain properties |
-| `world_map/world_generator.dm` | Procedural noise-based generation |
-| `world_map/map_console.dm` | Physical console to view/interact with map |
-| `expeditions/_expeditions.dm` | Expedition state defines |
-| `expeditions/expedition_party.dm` | Party datum tracking members/route |
-| `expeditions/expedition_signup.dm` | Sign-up console object |
-| `expeditions/corridor/corridor_generator.dm` | Procedural corridor creation |
-| `expeditions/corridor/corridor_tiles.dm` | Terrain tile objects for corridors |
-| `expeditions/events/travel_event_base.dm` | Base event with skill checks |
-| `expeditions/events/travel_events_*.dm` | Event types (combat, scavenge, etc.) |
-| `expeditions/faction_hubs/faction_hub_base.dm` | Hub controller datum |
-| `expeditions/faction_hubs/faction_trader_npc.dm` | Trader NPC mob |
-| `expeditions/caravans/caravan_base.dm` | Faction caravan datum |
-| `expeditions/caravans/caravan_manager.dm` | Caravan spawning and movement |
-| `expeditions/caravans/caravan_encounter.dm` | Caravan encounter event |
-| `expeditions/caravans/caravan_guards.dm` | Caravan guard mobs |
-| `tgui/.../ResurgenceWorldMap.js` | World map TGUI interface |
-| `tgui/.../ExpeditionSignup.js` | Party formation UI |
-| `tgui/.../FactionHubTrading.js` | Enhanced hub trading UI |
-| `tgui/.../CaravanTrading.js` | Mobile caravan trading UI |
+| File | Purpose | Status |
+|------|---------|--------|
+| `world_map/_world_map.dm` | Global defines, terrain types | ✅ Done |
+| `world_map/world_map_manager.dm` | Singleton manager, generation, state | ✅ Done |
+| `world_map/world_tile.dm` | Tile datum with terrain properties | ✅ Done |
+| `world_map/map_console.dm` | Physical console to view/interact with map | ✅ Done |
+| `expeditions/_expeditions.dm` | Expedition state defines | ✅ Done |
+| `expeditions/expedition_party.dm` | Party datum tracking members/route | ✅ Done |
+| `expeditions/expedition_map_device.dm` | Handheld map device for expedition control | ✅ Done |
+| `expeditions/corridor/corridor_areas.dm` | Corridor area definitions | ✅ Done |
+| `expeditions/corridor/corridor_manager.dm` | Corridor state and transitions | ✅ Done |
+| `expeditions/corridor/corridor_turfs.dm` | Terrain-transforming floor/wall turfs | ✅ Done |
+| `expeditions/corridor/corridor_landmarks.dm` | Start/event/end landmark triggers | ✅ Done |
+| `expeditions/events/travel_event.dm` | Base event with multi-choice skill checks | ✅ Done |
+| `expeditions/events/events_scavenge.dm` | 6 scavenge events (3 choices each) | ✅ Done |
+| `expeditions/events/events_hazard.dm` | 8 hazard events (3 choices each) | ✅ Done |
+| `expeditions/events/events_combat.dm` | Combat encounter events | ❌ Planned |
+| `expeditions/events/events_social.dm` | NPC interaction events | ❌ Planned |
+| `expeditions/faction_hubs/faction_hub_areas.dm` | Hub area definitions | ✅ Done |
+| `expeditions/faction_hubs/faction_hub_controller.dm` | Hub controller datum | ✅ Done |
+| `expeditions/faction_hubs/faction_hub_landmarks.dm` | Spawn/exit/trader landmarks | ✅ Done |
+| `expeditions/faction_hubs/faction_trader_npc.dm` | Trader NPC mob | ✅ Done |
+| `expeditions/faction_hubs/MAP_CREATION_GUIDE.md` | Map creation documentation | ✅ Done |
+| `expeditions/caravans/caravan_base.dm` | Faction caravan datum | ❌ Planned |
+| `expeditions/caravans/caravan_manager.dm` | Caravan spawning and movement | ❌ Planned |
+| `expeditions/caravans/caravan_encounter.dm` | Caravan encounter event | ❌ Planned |
+| `expeditions/caravans/caravan_guards.dm` | Caravan guard mobs | ❌ Planned |
+| `tgui/.../ResurgenceWorldMap.js` | World map TGUI interface | ✅ Done |
+| `tgui/.../ExpeditionSignup.js` | Party formation UI | ❌ Planned |
+| `tgui/.../FactionHubTrading.js` | Enhanced hub trading UI | ❌ Planned |
+| `tgui/.../CaravanTrading.js` | Mobile caravan trading UI | ❌ Planned |
 
 ### Existing Files to Modify
 
@@ -162,19 +181,34 @@ _maps/templates/resurgence/corridor_segments/
 	var/route_index = 0
 ```
 
-### Travel Event
+### Event Choice (Implemented)
+```dm
+/datum/event_choice
+	var/name = "Do Something"           // Display name
+	var/desc = "Attempt to do something." // Description
+	var/skill_type = EVENT_SKILL_NONE   // mining, cooking, crafting, or none
+	var/difficulty = 5                  // 1-20 scale
+	var/pass_credits = 0                // Credits on success
+	var/list/pass_items = list()        // Items spawned on success
+	var/pass_message = "Success!"       // Message on success
+	var/fail_damage = 0                 // Damage on failure
+	var/fail_damage_type = BRUTE        // BRUTE, BURN, TOX, OXY
+	var/fail_message = "You failed."    // Message on failure
+	var/auto_success = FALSE            // Skip skill check
+	var/one_attempt = TRUE              // One try per player
+```
+
+### Travel Event (Implemented)
 ```dm
 /datum/travel_event
-	var/name, desc
-	var/category  // combat, scavenge, navigation, social, hazard
-	var/weight = 50
-	var/skill_type  // crafting, mining, cooking, or null
-	var/difficulty = 5  // 1-20
-	var/list/valid_terrains
-	// Pass rewards
-	var/pass_credits, pass_reputation, list/pass_items
-	// Fail penalties
-	var/fail_damage, fail_debuff
+	var/name = "Unknown Event"
+	var/desc = "Something blocks your path."
+	var/category = EVENT_CATEGORY_SCAVENGE  // scavenge, hazard, combat, social
+	var/weight = 50                     // Spawn weight (higher = more common)
+	var/list/valid_terrains             // Which terrain types allow this event
+	var/list/datum/event_choice/choices = list()  // Available choices
+	var/global_fail_damage = 0          // Damage if ALL players fail ALL choices
+	var/global_fail_message = "Everyone failed."
 ```
 
 ---
@@ -331,13 +365,416 @@ Player continues walking in new terrain
 
 ### Corridor Map File
 
-A single `.dmm` file contains the entire corridor:
-- `_maps/resurgence/expedition_corridor.dmm`
+**File**: `_maps/resurgence/expedition_corridor.dmm`
+
+A single reusable corridor that transforms based on the current world tile:
+- **Dimensions**: 14 tiles wide × 80 tiles tall = **1,120 turfs**
 - Loaded with the main outpost map
-- Contains all 5 terrain sections + portals
-- Each section ~100 tiles long (to accommodate mountain's 2.0x cost)
-- **Total corridor: ~500 tiles long × 7 tiles wide**
-- Destination portal position is dynamically set based on terrain type
+- All turfs update appearance before players enter
+
+---
+
+## Single Corridor Loop System
+
+### Core Concept
+
+One corridor serves ALL terrain types. Before players enter, every turf transforms to match the world tile they're traversing:
+
+```
+      START (Y=1)
+         ↓
+   [==============]  14 tiles wide
+   [              ]
+   [   WALKING    ]
+   [    AREA      ]
+   [              ]
+   [==============]  ← Y=40: EVENT LANDMARK (halfway)
+   [              ]     Blocks passage until event complete
+   [   WALKING    ]
+   [    AREA      ]
+   [              ]
+   [==============]  ← Y=80: END LANDMARK
+         ↓              When enough players arrive:
+   TRANSITION:          1. Screen fade to black
+   - Teleport all       2. Teleport players to Y=1
+     players to start   3. Teleport floor items to start
+   - Teleport items     4. Update all turfs to next terrain
+   - Update terrain     5. Screen fade in
+   - Loop continues     6. Continue walking
+```
+
+### Corridor Layout (14×80)
+
+```
+X:  1    2    3    4    5    6    7    8    9   10   11   12   13   14
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+80 |WALL|WALL|WALL|WALL|WALL|END |END |END |END |WALL|WALL|WALL|WALL|WALL| ← End landmark
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+79 |WALL|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|WALL|
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+   |    |    |  ... 38 rows of walking space ...                   |    |
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+40 |WALL|PATH|PATH|PATH|EVNT|EVNT|EVNT|EVNT|EVNT|EVNT|PATH|PATH|PATH|WALL| ← Event landmark
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+   |    |    |  ... 38 rows of walking space ...                   |    |
+   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+ 2 |WALL|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|PATH|WALL|
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+ 1 |WALL|WALL|WALL|WALL|WALL|STRT|STRT|STRT|STRT|WALL|WALL|WALL|WALL|WALL| ← Start landmark
+   +----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+
+STRT = Start landmark (where players spawn/teleport to)
+EVNT = Event landmark (triggers event, blocks until resolved)
+END  = End landmark (triggers transition when enough players arrive)
+PATH = Walking floor (transforms per terrain)
+WALL = Boundary walls (also transform per terrain)
+```
+
+### Turf Transformation
+
+All corridor turfs can change their appearance:
+
+```dm
+/turf/open/floor/expedition
+	name = "path"
+	icon = 'icons/turf/floors/expedition.dmi'
+	icon_state = "plains"
+	/// Current terrain type
+	var/current_terrain = TERRAIN_PLAINS
+
+/turf/open/floor/expedition/proc/set_terrain(terrain_type)
+	current_terrain = terrain_type
+	switch(terrain_type)
+		if(TERRAIN_PLAINS)
+			icon_state = "plains"
+			name = "grassy path"
+		if(TERRAIN_FOREST)
+			icon_state = "forest"
+			name = "forest floor"
+		if(TERRAIN_MOUNTAIN)
+			icon_state = "mountain"
+			name = "rocky trail"
+		if(TERRAIN_DESERT)
+			icon_state = "desert"
+			name = "sandy path"
+		if(TERRAIN_RUINS)
+			icon_state = "ruins"
+			name = "crumbled stone"
+
+/turf/closed/wall/expedition
+	name = "barrier"
+	icon = 'icons/turf/walls/expedition.dmi'
+	icon_state = "wall_plains"
+	var/current_terrain = TERRAIN_PLAINS
+
+/turf/closed/wall/expedition/proc/set_terrain(terrain_type)
+	current_terrain = terrain_type
+	switch(terrain_type)
+		if(TERRAIN_PLAINS)
+			icon_state = "wall_plains"
+			name = "hillside"
+		if(TERRAIN_FOREST)
+			icon_state = "wall_forest"
+			name = "dense trees"
+		if(TERRAIN_MOUNTAIN)
+			icon_state = "wall_mountain"
+			name = "cliff face"
+		if(TERRAIN_DESERT)
+			icon_state = "wall_desert"
+			name = "sand dune"
+		if(TERRAIN_RUINS)
+			icon_state = "wall_ruins"
+			name = "ruined wall"
+```
+
+### Corridor Manager
+
+```dm
+/datum/expedition_corridor_manager
+	/// The expedition party using this corridor
+	var/datum/expedition_party/expedition
+	/// Current index in the route
+	var/route_index = 0
+	/// List of all floor turfs in corridor
+	var/list/floor_turfs = list()
+	/// List of all wall turfs in corridor
+	var/list/wall_turfs = list()
+	/// Reference to event landmark
+	var/obj/effect/landmark/expedition_event/event_landmark
+	/// Reference to end landmark
+	var/obj/effect/landmark/expedition_end/end_landmark
+	/// Reference to start landmark
+	var/obj/effect/landmark/expedition_start/start_landmark
+	/// Whether event has been triggered this leg
+	var/event_triggered = FALSE
+	/// Whether event has been completed this leg
+	var/event_completed = FALSE
+	/// Players who have reached the end landmark
+	var/list/players_at_end = list()
+
+/datum/expedition_corridor_manager/proc/initialize_corridor()
+	// Find all turfs in the corridor area
+	for(var/turf/T in get_area_turfs(/area/resurgence/expedition_corridor))
+		if(istype(T, /turf/open/floor/expedition))
+			floor_turfs += T
+		else if(istype(T, /turf/closed/wall/expedition))
+			wall_turfs += T
+
+	// Find landmarks
+	event_landmark = locate(/obj/effect/landmark/expedition_event)
+	end_landmark = locate(/obj/effect/landmark/expedition_end)
+	start_landmark = locate(/obj/effect/landmark/expedition_start)
+
+/datum/expedition_corridor_manager/proc/prepare_for_terrain(terrain_type)
+	// Update all floor turfs
+	for(var/turf/open/floor/expedition/T in floor_turfs)
+		T.set_terrain(terrain_type)
+
+	// Update all wall turfs
+	for(var/turf/closed/wall/expedition/T in wall_turfs)
+		T.set_terrain(terrain_type)
+
+	// Clear and spawn decorations
+	update_decorations(terrain_type)
+
+	// Reset event state
+	event_triggered = FALSE
+	event_completed = FALSE
+	players_at_end = list()
+
+	// Unblock event landmark
+	event_landmark.unblock()
+```
+
+### Decoration System
+
+```dm
+GLOBAL_LIST_INIT(expedition_decorations, list(
+	TERRAIN_PLAINS = list(/obj/structure/flora/grass/expedition, /obj/structure/flora/rock/small),
+	TERRAIN_FOREST = list(/obj/structure/flora/tree/expedition, /obj/structure/flora/bush/expedition),
+	TERRAIN_MOUNTAIN = list(/obj/structure/flora/rock/large, /obj/structure/flora/rock/boulder),
+	TERRAIN_DESERT = list(/obj/structure/flora/cactus, /obj/structure/flora/dead_bush),
+	TERRAIN_RUINS = list(/obj/structure/ruins/pillar, /obj/structure/ruins/debris)
+))
+
+/datum/expedition_corridor_manager/proc/update_decorations(terrain_type)
+	// Remove existing decorations
+	for(var/turf/T in floor_turfs)
+		for(var/obj/structure/flora/F in T)
+			qdel(F)
+		for(var/obj/structure/ruins/R in T)
+			qdel(R)
+
+	// Spawn new decorations (avoid blocking walking path)
+	var/list/deco_types = GLOB.expedition_decorations[terrain_type]
+	if(!deco_types)
+		return
+
+	for(var/turf/open/floor/expedition/T in floor_turfs)
+		// Only decorate edge tiles (X = 2-3 or X = 12-13)
+		if(T.x <= 3 || T.x >= 12)
+			if(prob(20))
+				var/deco_type = pick(deco_types)
+				new deco_type(T)
+```
+
+### Event Landmark
+
+```dm
+/obj/effect/landmark/expedition_event
+	name = "event trigger"
+	invisibility = INVISIBILITY_ABSTRACT
+	/// Whether passage is blocked
+	var/blocked = FALSE
+	/// The blocking wall objects
+	var/list/obj/structure/expedition_barrier/barriers = list()
+	/// Parent corridor manager
+	var/datum/expedition_corridor_manager/manager
+
+/obj/effect/landmark/expedition_event/proc/trigger_event(mob/living/triggerer)
+	if(manager.event_triggered)
+		return
+
+	manager.event_triggered = TRUE
+	block_passage()
+
+	// Pick and start a random event
+	var/datum/travel_event/event = pick_event_for_terrain(manager.get_current_terrain())
+	event.start(manager.expedition)
+
+/obj/effect/landmark/expedition_event/proc/block_passage()
+	blocked = TRUE
+	// Spawn barrier walls across the corridor at Y+1
+	for(var/x in 2 to 13)
+		var/turf/T = locate(x, src.y + 1, src.z)
+		var/obj/structure/expedition_barrier/B = new(T)
+		barriers += B
+
+/obj/effect/landmark/expedition_event/proc/unblock()
+	blocked = FALSE
+	for(var/obj/structure/expedition_barrier/B in barriers)
+		qdel(B)
+	barriers = list()
+
+/obj/effect/landmark/expedition_event/Crossed(atom/movable/AM)
+	if(!isliving(AM))
+		return
+	if(!manager.event_triggered)
+		trigger_event(AM)
+```
+
+### End Landmark & Transition
+
+```dm
+/obj/effect/landmark/expedition_end
+	name = "path continues"
+	invisibility = INVISIBILITY_ABSTRACT
+	/// Parent corridor manager
+	var/datum/expedition_corridor_manager/manager
+	/// Minimum players needed to trigger transition (percentage of party)
+	var/required_ratio = 0.5
+
+/obj/effect/landmark/expedition_end/Crossed(atom/movable/AM)
+	if(!isliving(AM))
+		return
+	var/mob/living/L = AM
+	if(!(L in manager.expedition.members))
+		return
+
+	manager.players_at_end |= L
+	check_transition()
+
+/obj/effect/landmark/expedition_end/proc/check_transition()
+	var/living_members = 0
+	for(var/mob/living/M in manager.expedition.members)
+		if(M.stat != DEAD)
+			living_members++
+
+	var/needed = max(1, round(living_members * required_ratio))
+
+	if(length(manager.players_at_end) >= needed)
+		manager.begin_transition()
+
+/datum/expedition_corridor_manager/proc/begin_transition()
+	// Advance route
+	route_index++
+
+	// Check if we've reached destination
+	if(route_index >= length(expedition.route))
+		arrive_at_destination()
+		return
+
+	// Get next terrain
+	var/datum/world_tile/next_tile = expedition.route[route_index + 1]
+	var/next_terrain = next_tile.terrain_type
+
+	// Fade out all players
+	for(var/mob/living/M in expedition.members)
+		animate(M.client, color = list(0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,1), time = 5)
+
+	// Wait for fade
+	addtimer(CALLBACK(src, PROC_REF(execute_transition), next_terrain), 5)
+
+/datum/expedition_corridor_manager/proc/execute_transition(next_terrain)
+	// Collect all items on floor
+	var/list/floor_items = list()
+	for(var/turf/T in floor_turfs)
+		for(var/obj/item/I in T)
+			floor_items += I
+
+	// Get start position
+	var/turf/start_turf = get_turf(start_landmark)
+
+	// Teleport all players to start
+	for(var/mob/living/M in expedition.members)
+		M.forceMove(start_turf)
+
+	// Teleport all items to start area
+	for(var/obj/item/I in floor_items)
+		I.forceMove(start_turf)
+
+	// Update terrain
+	prepare_for_terrain(next_terrain)
+
+	// Fade back in
+	for(var/mob/living/M in expedition.members)
+		animate(M.client, color = null, time = 5)
+
+	// Notify
+	for(var/mob/living/M in expedition.members)
+		to_chat(M, span_notice("You continue into [get_terrain_name(next_terrain)] territory..."))
+```
+
+### Travel Flow (Complete Example)
+
+**Route**: Outpost → Forest → Mountain → Cloud Town
+
+```
+1. DEPARTURE
+   - Party forms at outpost signup console
+   - Leader clicks "Depart"
+   - prepare_for_terrain(TERRAIN_FOREST) called
+   - All corridor turfs become forest-themed
+   - Players teleported to start landmark (Y=1)
+
+2. WALKING (Y=1 to Y=40)
+   - Players walk north through forest corridor
+   - Decorations: trees, bushes along edges
+   - Optional: Apply movement speed modifier for terrain
+
+3. EVENT (Y=40)
+   - First player crosses event landmark
+   - Barrier walls spawn at Y=41
+   - Random forest event triggers (e.g., "Wolf Pack Encounter")
+   - Players must resolve event (combat/skill check)
+   - On success: barriers removed, event_completed = TRUE
+
+4. WALKING (Y=40 to Y=80)
+   - Players continue north
+   - Reach end landmark
+
+5. TRANSITION
+   - 50%+ of living players at end landmark
+   - Screen fades to black (0.5 sec)
+   - All players teleported to Y=1
+   - All floor items teleported to Y=1
+   - prepare_for_terrain(TERRAIN_MOUNTAIN) called
+   - All turfs become mountain-themed
+   - Screen fades in (0.5 sec)
+
+6. WALKING (Y=1 to Y=40) - Mountain
+   - Same as step 2, but mountain theme
+   - Players move slower (mountain terrain penalty)
+
+7. EVENT (Y=40) - Mountain
+   - Different event pool (mountain events)
+   - e.g., "Rockslide" skill check
+
+8. WALKING (Y=40 to Y=80) - Mountain
+   - Continue to end
+
+9. ARRIVAL
+   - route_index reaches end
+   - arrive_at_destination() called
+   - Players teleported to Cloud Town faction hub
+   - Expedition complete!
+```
+
+### Memory Efficiency
+
+| Component | Count |
+|-----------|-------|
+| Floor turfs | 14 × 78 = 1,092 |
+| Wall turfs | (14 × 2) = 28 |
+| **Total** | **1,120 turfs** |
+
+Compared to alternatives:
+- Per-terrain corridors: 5 × 1,120 = 5,600 turfs
+- This approach: **1,120 turfs (80% reduction)**
 
 ### Multi-Player Expedition Mechanics
 
@@ -429,52 +866,91 @@ If all party members die during the expedition:
 
 ---
 
-## Event System
+## Event System (Implemented)
 
 ### Event Trigger Mechanic
-Each corridor segment has an **invisible barrier wall** placed at the halfway point:
-1. When a player walks into the barrier, a random event is triggered
-2. The barrier blocks further progress until the event is resolved
-3. Players must deal with the event (skill check, combat, etc.) to proceed
-4. Once resolved, the barrier disappears and the corridor exit becomes accessible
-5. **The barrier resets each time players re-enter the corridor** (returning to outpost and departing again)
+Each corridor has an **invisible barrier wall** at the halfway point (Y=40):
+1. When a player crosses the expedition_event landmark, barriers spawn at Y=41
+2. Walking into/clicking a barrier opens an HTML popup with event choices
+3. Players select a choice to attempt (each choice has different skill/difficulty)
+4. Skill check is performed, pass/fail outcomes applied
+5. First player to succeed resolves the event for everyone
+6. If ALL players fail ALL choices, global fail penalty applied
+7. Barriers removed, players can proceed to end landmark
 
-### Event Barrier Implementation
+### Event Barrier Implementation (Implemented)
 ```dm
-/obj/effect/expedition_barrier
-	name = "something blocks your path"
+/obj/structure/expedition_barrier
+	name = "impassable obstacle"
 	density = TRUE
-	invisibility = INVISIBILITY_ABSTRACT
+	invisibility = INVISIBILITY_ABSTRACT  // Invisible but blocks movement
+	alpha = 0
 	var/datum/travel_event/current_event
-	var/resolved = FALSE
 
-/obj/effect/expedition_barrier/Bumped(atom/movable/AM)
+/obj/structure/expedition_barrier/Bumped(atom/movable/AM)
 	if(isliving(AM) && !resolved)
-		trigger_event(AM)
+		interact_with_event(AM)  // Opens HTML popup
 ```
 
-### Skill Check Formula
+### Skill Check Formula (Implemented)
 ```
 success_chance = 50 + (skill_level - difficulty) * 5
 clamped to 5-95%
+
+Example: Skill 7 vs Difficulty 5 = 50 + (7-5)*5 = 60% chance
+Example: Skill 3 vs Difficulty 8 = 50 + (3-8)*5 = 25% chance
 ```
 
-### Event Categories & Examples
+### Multi-Choice System (Implemented)
+Each event has 2-3 choices with different approaches:
+- **Different skill types**: Mining, Cooking, or Crafting per choice
+- **Different difficulties**: Easy (3-5), Medium (5-7), Hard (7-9)
+- **Different outcomes**: Credits, items, damage amounts vary
+- **Safe options**: Some choices have `auto_success = TRUE`
+- **One-attempt tracking**: Each player can only try each choice once
+- **Flee option**: Take damage to mark all choices as attempted
 
-**Scavenge (40% weight)**
-- Abandoned Cache (mining check) - Find supplies or trigger trap
-- Overgrown Garden (cooking check) - Harvest plants or get poisoned
-- Scrap Pile (crafting check) - Salvage materials or cut yourself
+### HTML Popup Interface (Implemented)
+- Styled popup window (450x550) with dark theme
+- Event title, category badge, and description
+- Each choice shows:
+  - Name and description
+  - Skill badge (colored by type: Mining=brown, Cooking=green, Crafting=blue)
+  - Difficulty rating
+  - "Choose" button (or "Already Tried" if attempted)
+- Flee button at bottom with damage warning
+- Reopens when player bumps/clicks barrier again
 
-**Combat (25% weight)**
-- Wolf Pack - Fight hostile wolves
-- Bandit Ambush - Fight raiders (Insurgence scouts)
-- Insect Swarm - Fight bugs
+### Event Categories & Implemented Events
 
-**Hazard (15% weight)**
-- Quicksand (mining) - Escape or take damage
-- Toxic Spores (cooking) - Resist poison or get debuffed
-- Rockslide (crafting) - Dodge or take damage
+**Scavenge (6 events implemented)**
+| Event | Choices | Terrains |
+|-------|---------|----------|
+| Abandoned Cache | Disarm (Mining 7), Force (Crafting 5), Leave (Safe) | Plains, Desert, Ruins, Mountain |
+| Overgrown Garden | Identify (Cooking 5), Track (Mining 6), Grab All (Cooking 8) | Plains, Forest |
+| Scrap Pile | Careful (Crafting 6), Dig (Mining 5), Search Edges (Crafting 3) | Ruins, Desert, Plains |
+| Forgotten Supply Drop | Hack (Crafting 8), Manual Release (Mining 6), Brute Force (Mining 4) | All terrains |
+| Mushroom Patch | Identify (Cooking 6), Harvest Glowing (Cooking 9), Take Common (Safe) | Forest, Ruins |
+| Mineral Vein | Careful (Mining 7), Smash (Crafting 5), Surface Only (Mining 3) | Mountain, Ruins |
+
+**Hazard (8 events implemented)**
+| Event | Choices | Terrains |
+|-------|---------|----------|
+| Quicksand Pit | Read Terrain (Mining 6), Sprint (Crafting 7), Go Around (Safe) | Desert, Forest |
+| Toxic Spores | Burn (Cooking 7), Hold Breath (Mining 6), Alternate Route (Crafting 5) | Forest, Ruins |
+| Unstable Cliff | Analyze (Crafting 7), Shore Up (Mining 8), Run For It (Mining 5) | Mountain, Ruins |
+| Sandstorm | Dig Shelter (Mining 6), Find Cover (Cooking 5), Outrun (Crafting 8) | Desert |
+| Flash Flood | High Ground (Mining 7), Anchor (Crafting 6), Swim (Cooking 8) | Plains, Forest |
+| Poison Ivy | Identify Path (Cooking 5), Clear Path (Crafting 6), Push Through (Safe+damage) | Forest, Plains |
+| Collapsing Structure | Shore Up (Crafting 7), Quick Nav (Mining 6), Go Around (Cooking 4) | Ruins |
+| Heat Wave | Pace/Hydrate (Cooking 5), Seek Shade (Mining 5), Sprint (Crafting 7) | Desert |
+
+**Combat (planned)**
+- Wolf Pack, Bandit Ambush, Insect Swarm
+
+**Social (planned)**
+- Traveling Merchant, Lost Traveler, Faction Scout
+
 ---
 
 ## Faction Hub System

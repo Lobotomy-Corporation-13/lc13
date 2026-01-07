@@ -20,6 +20,17 @@ export const ResurgenceWorldMap = (props, context) => {
     planned_route = [],
     route_cost = 0,
     generated = false,
+    debug_mode = false,
+    has_expedition = false,
+    expedition = null,
+    user_in_expedition = false,
+    user_is_leader = false,
+    // Portable device fields
+    is_portable = false,
+    on_expedition = false,
+    expedition_state = '',
+    current_x = 0,
+    current_y = 0,
   } = data;
 
   const mapPixelWidth = map_width * TILE_SIZE + MAP_PADDING * 2;
@@ -36,7 +47,20 @@ export const ResurgenceWorldMap = (props, context) => {
                 <Box>
                   <Icon name="map" mr={1} />
                   World Map
+                  {debug_mode && (
+                    <Box as="span" ml={1} color="orange">
+                      [DEBUG]
+                    </Box>
+                  )}
                 </Box>
+              }
+              buttons={
+                <Button
+                  icon={debug_mode ? 'eye' : 'eye-slash'}
+                  tooltip="Toggle Debug Mode (No Fog)"
+                  selected={debug_mode}
+                  onClick={() => act('toggle_debug')}
+                />
               }>
               {generated ? (
                 <WorldMapGrid
@@ -49,7 +73,11 @@ export const ResurgenceWorldMap = (props, context) => {
                   selected_x={selected_x}
                   selected_y={selected_y}
                   planned_route={planned_route}
+                  debug_mode={debug_mode}
                   act={act}
+                  current_x={current_x}
+                  current_y={current_y}
+                  is_portable={is_portable}
                 />
               ) : (
                 <Box textAlign="center" color="label" p={4}>
@@ -71,7 +99,9 @@ export const ResurgenceWorldMap = (props, context) => {
                   title={
                     <Box>
                       <Icon name="crosshairs" mr={1} />
-                      {selected_tile ? selected_tile.terrain_name : 'No Selection'}
+                      {selected_tile
+                        ? selected_tile.terrain_name
+                        : 'No Selection'}
                     </Box>
                   }
                   buttons={
@@ -108,6 +138,50 @@ export const ResurgenceWorldMap = (props, context) => {
                       route={planned_route}
                       cost={route_cost}
                       act={act}
+                      hasExpedition={has_expedition}
+                      isPortable={is_portable}
+                      onExpedition={on_expedition}
+                      expeditionState={expedition_state}
+                    />
+                  </Section>
+                </Stack.Item>
+              )}
+
+              {/* Portable Device Status */}
+              {is_portable && on_expedition && (
+                <Stack.Item>
+                  <Section
+                    title={
+                      <Box>
+                        <Icon name="location-arrow" mr={1} />
+                        Expedition Status
+                      </Box>
+                    }>
+                    <PortableStatus
+                      expeditionState={expedition_state}
+                      currentX={current_x}
+                      currentY={current_y}
+                      act={act}
+                    />
+                  </Section>
+                </Stack.Item>
+              )}
+
+              {/* Expedition Panel */}
+              {has_expedition && (
+                <Stack.Item>
+                  <Section
+                    title={
+                      <Box>
+                        <Icon name="hiking" mr={1} />
+                        Active Expedition
+                      </Box>
+                    }>
+                    <ExpeditionPanel
+                      expedition={expedition}
+                      userInExpedition={user_in_expedition}
+                      userIsLeader={user_is_leader}
+                      act={act}
                     />
                   </Section>
                 </Stack.Item>
@@ -138,7 +212,11 @@ const WorldMapGrid = (props) => {
     selected_x,
     selected_y,
     planned_route,
+    debug_mode,
     act,
+    current_x = 0,
+    current_y = 0,
+    is_portable = false,
   } = props;
 
   const mapPixelWidth = width * TILE_SIZE + MAP_PADDING * 2;
@@ -182,13 +260,19 @@ const WorldMapGrid = (props) => {
           const isSelected = tile.x === selected_x && tile.y === selected_y;
           const isOnRoute = routeSet.has(`${tile.x},${tile.y}`);
           const isOutpost = tile.x === outpost_x && tile.y === outpost_y;
+          const isCurrent = is_portable
+            && current_x > 0
+            && tile.x === current_x
+            && tile.y === current_y;
 
           return (
             <g
               key={index}
-              style={{ cursor: tile.discovered ? 'pointer' : 'default' }}
+              style={{
+                cursor: tile.discovered || debug_mode ? 'pointer' : 'default',
+              }}
               onClick={() => {
-                if (tile.discovered) {
+                if (tile.discovered || debug_mode) {
                   act('select_tile', { x: tile.x, y: tile.y });
                 }
               }}>
@@ -212,7 +296,7 @@ const WorldMapGrid = (props) => {
               />
 
               {/* Fog of war overlay for undiscovered */}
-              {!tile.discovered && (
+              {!tile.discovered && !debug_mode && (
                 <rect
                   x={px}
                   y={py}
@@ -249,7 +333,9 @@ const WorldMapGrid = (props) => {
               )}
 
               {/* Faction marker */}
-              {tile.faction_id && !isOutpost && tile.discovered && (
+              {tile.faction_id
+                && !isOutpost
+                && (tile.discovered || debug_mode) && (
                 <g>
                   <circle
                     cx={px + TILE_SIZE / 2}
@@ -268,6 +354,26 @@ const WorldMapGrid = (props) => {
                     fontWeight="bold">
                     {getFactionLetter(tile.faction_id)}
                   </text>
+                </g>
+              )}
+
+              {/* Current position marker (portable device) */}
+              {isCurrent && (
+                <g>
+                  <circle
+                    cx={px + TILE_SIZE / 2}
+                    cy={py + TILE_SIZE / 2}
+                    r={10}
+                    fill="none"
+                    stroke="#ff6600"
+                    strokeWidth={3}
+                  />
+                  <circle
+                    cx={px + TILE_SIZE / 2}
+                    cy={py + TILE_SIZE / 2}
+                    r={4}
+                    fill="#ff6600"
+                  />
                 </g>
               )}
             </g>
@@ -422,11 +528,24 @@ const TileInfo = (props) => {
 };
 
 const RouteInfo = (props) => {
-  const { route, cost, act } = props;
+  const {
+    route,
+    cost,
+    act,
+    hasExpedition,
+    isPortable = false,
+    onExpedition = false,
+    expeditionState = '',
+  } = props;
 
   const travelTime = Math.round(cost * 30);
   const minutes = Math.floor(travelTime / 60);
   const seconds = travelTime % 60;
+
+  // Portable device can only set destination when at a location
+  const canSetDestination = isPortable
+    && onExpedition
+    && expeditionState === 'at_destination';
 
   return (
     <Stack vertical>
@@ -452,14 +571,187 @@ const RouteInfo = (props) => {
           </Flex.Item>
         </Flex>
       </Stack.Item>
+      {/* Console: Plan new expedition */}
+      {!isPortable && !hasExpedition && (
+        <Stack.Item mt={1}>
+          <Button
+            fluid
+            icon="hiking"
+            color="good"
+            content="Plan Expedition"
+            onClick={() => act('plan_expedition')}
+          />
+        </Stack.Item>
+      )}
+      {/* Portable: Set new destination */}
+      {canSetDestination && (
+        <Stack.Item mt={1}>
+          <Button
+            fluid
+            icon="map-marker-alt"
+            color="good"
+            content="Set New Destination"
+            onClick={() => act('set_new_destination')}
+          />
+        </Stack.Item>
+      )}
+    </Stack>
+  );
+};
+
+const PortableStatus = (props) => {
+  const { expeditionState, currentX, currentY, act } = props;
+
+  const stateLabels = {
+    forming: 'Forming',
+    departing: 'Departing',
+    traveling: 'Traveling',
+    at_destination: 'At Destination',
+    returning: 'Returning',
+    complete: 'Complete',
+    failed: 'Failed',
+  };
+
+  const canReturn = expeditionState === 'at_destination';
+
+  return (
+    <Stack vertical>
+      <Stack.Item>
+        <Flex>
+          <Flex.Item grow>
+            <Box color="label" fontSize="11px">
+              Status
+            </Box>
+            <Box>
+              <Icon
+                name={expeditionState === 'traveling' ? 'walking' : 'flag'}
+                mr={1}
+              />
+              {stateLabels[expeditionState] || expeditionState}
+            </Box>
+          </Flex.Item>
+          <Flex.Item grow>
+            <Box color="label" fontSize="11px">
+              Position
+            </Box>
+            <Box>
+              <Icon name="map-pin" mr={1} color="orange" />
+              ({currentX}, {currentY})
+            </Box>
+          </Flex.Item>
+        </Flex>
+      </Stack.Item>
+      {canReturn && (
+        <Stack.Item mt={1}>
+          <Button
+            fluid
+            icon="home"
+            color="average"
+            content="Return to Outpost"
+            onClick={() => act('return_to_outpost')}
+          />
+        </Stack.Item>
+      )}
+      {expeditionState === 'traveling' && (
+        <Stack.Item mt={1}>
+          <Box color="label" fontSize="11px" textAlign="center">
+            <Icon name="info-circle" mr={1} />
+            Reach destination to change route
+          </Box>
+        </Stack.Item>
+      )}
+    </Stack>
+  );
+};
+
+const ExpeditionPanel = (props) => {
+  const { expedition, userInExpedition, userIsLeader, act } = props;
+
+  if (!expedition) {
+    return null;
+  }
+
+  return (
+    <Stack vertical>
+      <Stack.Item>
+        <Box bold mb={1}>
+          <Icon name="users" mr={1} />
+          Expedition #{expedition.expedition_id}
+        </Box>
+        <Box color="label" fontSize="11px">
+          Status: {expedition.state}
+        </Box>
+      </Stack.Item>
+
       <Stack.Item mt={1}>
-        <Button
-          fluid
-          icon="hiking"
-          color="good"
-          content="Plan Expedition"
-          onClick={() => act('plan_expedition')}
-        />
+        <Box color="label" fontSize="11px">
+          Destination
+        </Box>
+        <Box>
+          {expedition.destination_name} ({expedition.destination_x},
+          {expedition.destination_y})
+        </Box>
+      </Stack.Item>
+
+      <Stack.Item mt={1}>
+        <Box color="label" fontSize="11px">
+          Party ({expedition.member_count} members)
+        </Box>
+        {expedition.members
+          && expedition.members.map((member, i) => (
+            <Box key={i} fontSize="12px">
+              {member.is_leader && <Icon name="crown" mr={1} color="gold" />}
+              {member.name}
+            </Box>
+          ))}
+      </Stack.Item>
+
+      <Stack.Item mt={1}>
+        <Box color="label" fontSize="11px">
+          Est. Travel Time
+        </Box>
+        <Box>{expedition.estimated_time}</Box>
+      </Stack.Item>
+
+      <Stack.Item mt={2}>
+        {!userInExpedition ? (
+          <Button
+            fluid
+            icon="sign-in-alt"
+            color="good"
+            content="Join Expedition"
+            onClick={() => act('join_expedition')}
+          />
+        ) : (
+          <Stack vertical>
+            {userIsLeader && (
+              <Stack.Item>
+                <Button
+                  fluid
+                  icon="play"
+                  color="good"
+                  content="Depart Now"
+                  onClick={() => act('depart_expedition')}
+                />
+              </Stack.Item>
+            )}
+            <Stack.Item mt={1}>
+              <Button
+                fluid
+                icon="sign-out-alt"
+                color={userIsLeader ? 'bad' : 'average'}
+                content={userIsLeader
+                  ? 'Cancel Expedition'
+                  : 'Leave Expedition'}
+                onClick={() =>
+                  act(userIsLeader
+                    ? 'cancel_expedition'
+                    : 'leave_expedition')
+                }
+              />
+            </Stack.Item>
+          </Stack>
+        )}
       </Stack.Item>
     </Stack>
   );

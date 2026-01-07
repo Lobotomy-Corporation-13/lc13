@@ -30,8 +30,8 @@
 	var/move_failures = 0
 	/// Maximum move failures before giving up
 	var/max_failures = 10
-	/// Movement delay in deciseconds (matches wave_commander timing)
-	var/move_delay = 5
+	/// Movement delay in deciseconds (faster than wave_commander for responsive raiding)
+	var/move_delay = 3
 	/// Callback when we reach destination
 	var/datum/callback/on_arrival
 	/// Callback when we fail to reach destination
@@ -99,7 +99,6 @@
 		return // Don't schedule next step - door_opened_callback will resume
 
 	// Try to move to next step
-	var/turf/old_loc = get_turf(src)
 	forceMove(next_step)
 
 	if(get_turf(src) == next_step)
@@ -221,6 +220,15 @@
 	/// Whether the raider is waiting at spawn (for delayed raids)
 	var/waiting_at_spawn = FALSE
 
+	/// List of crates to loot in the current room
+	var/list/room_crates = list()
+
+	/// Whether we're currently looting crates in a room
+	var/looting_crates = FALSE
+
+	/// Current crate we're navigating to
+	var/obj/structure/closet/current_target_crate
+
 /datum/component/raider/Initialize(datum/resurgence_raid/_raid, atom/_objective, obj/effect/landmark/raid_spawn/_retreat_point, start_waiting = FALSE)
 	if(!ishostile(parent))
 		log_admin("RAID DEBUG: Raider component rejected - parent [parent?.type] is not hostile")
@@ -274,6 +282,8 @@
 	if(raid && !escaped)
 		raid.on_raider_removed(parent)
 	target_door = null
+	current_target_crate = null
+	room_crates.Cut()
 
 	// Drop stolen items (only if we didn't escape - escaped raiders take their loot)
 	if(stolen_items.len && !escaped)
@@ -304,6 +314,14 @@
 		var/turf/our_turf = get_turf(parent)
 		if(our_turf == retreat_turf || get_dist(our_turf, retreat_turf) <= 1)
 			INVOKE_ASYNC(src, PROC_REF(on_reached_retreat_point))
+			return
+
+	// Check if we've reached a crate we're looting
+	if(looting_crates && current_target_crate && !QDELETED(current_target_crate))
+		var/turf/crate_turf = get_turf(current_target_crate)
+		var/turf/our_turf = get_turf(parent)
+		if(our_turf == crate_turf || get_dist(our_turf, crate_turf) <= 1)
+			INVOKE_ASYNC(src, PROC_REF(on_reached_crate))
 			return
 
 	// Check if we've reached our objective
@@ -679,6 +697,166 @@
 	// Assign the new room
 	assign_room_target(new_room)
 
+// ==================== CRATE LOOTING ====================
+
+/**
+ * Scan the current room for crates to loot.
+ * Returns TRUE if crates were found and looting started.
+ */
+/datum/component/raider/proc/scan_room_for_crates()
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H || H.stat == DEAD)
+		return FALSE
+
+	// Check if this raider can loot crates
+	if(!istype(H, /mob/living/simple_animal/hostile/clan/raider))
+		return FALSE
+	var/mob/living/simple_animal/hostile/clan/raider/R = H
+	if(!R.crate_looter)
+		return FALSE
+
+	// Get current room
+	var/area/resurgence_outpost/room/current_room = get_area(H)
+	if(!istype(current_room))
+		return FALSE
+
+	// Clear previous crate list
+	room_crates.Cut()
+	current_target_crate = null
+
+	// Find all closed crates/closets in the room
+	for(var/obj/structure/closet/crate in current_room)
+		if(QDELETED(crate))
+			continue
+		if(crate.opened)
+			continue // Already open
+		room_crates += crate
+
+	if(!room_crates.len)
+		log_admin("RAID DEBUG: [H.type] found no crates in room [current_room.name]")
+		return FALSE
+
+	log_admin("RAID DEBUG: [H.type] found [room_crates.len] crates to loot in room [current_room.name]")
+	looting_crates = TRUE
+
+	// Start looting the first crate
+	loot_next_crate()
+	return TRUE
+
+/**
+ * Navigate to and loot the next crate in the room.
+ */
+/datum/component/raider/proc/loot_next_crate()
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H || H.stat == DEAD || retreating)
+		looting_crates = FALSE
+		return
+
+	// Remove any invalid crates from the list
+	for(var/obj/structure/closet/crate in room_crates)
+		if(QDELETED(crate) || crate.opened)
+			room_crates -= crate
+
+	if(!room_crates.len)
+		// All crates looted
+		log_admin("RAID DEBUG: [H.type] finished looting all crates in room")
+		looting_crates = FALSE
+		current_target_crate = null
+		// Continue with normal room clearing (look for targets)
+		H.FindTarget()
+		return
+
+	// Pick the closest crate
+	var/obj/structure/closet/closest_crate = null
+	var/closest_dist = INFINITY
+	for(var/obj/structure/closet/crate in room_crates)
+		var/dist = get_dist(H, crate)
+		if(dist < closest_dist)
+			closest_dist = dist
+			closest_crate = crate
+
+	if(!closest_crate)
+		looting_crates = FALSE
+		return
+
+	current_target_crate = closest_crate
+	room_crates -= closest_crate
+
+	log_admin("RAID DEBUG: [H.type] targeting crate at [AREACOORD(closest_crate)], [room_crates.len] crates remaining")
+
+	// Navigate to the crate
+	current_objective = get_turf(closest_crate)
+	reached_objective = FALSE
+	navigate_to_objective()
+
+/**
+ * Called when raider reaches a crate they're trying to loot.
+ */
+/datum/component/raider/proc/on_reached_crate()
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H || H.stat == DEAD)
+		return
+
+	if(!current_target_crate || QDELETED(current_target_crate))
+		// Crate is gone, move to next
+		loot_next_crate()
+		return
+
+	log_admin("RAID DEBUG: [H.type] reached crate at [AREACOORD(current_target_crate)]")
+
+	// Open the crate
+	if(istype(H, /mob/living/simple_animal/hostile/clan/raider))
+		var/mob/living/simple_animal/hostile/clan/raider/R = H
+		if(!current_target_crate.opened)
+			if(current_target_crate.locked || current_target_crate.welded)
+				if(R.crate_breaker)
+					R.attack_crate(current_target_crate)
+					// Wait a bit then check again
+					addtimer(CALLBACK(src, PROC_REF(check_crate_opened)), 2 SECONDS)
+					return
+				else
+					// Can't open locked crate, skip it
+					log_admin("RAID DEBUG: [H.type] can't open locked crate - skipping")
+			else
+				R.open_crate(current_target_crate)
+
+	current_target_crate = null
+
+	// Short delay before moving to next crate (for stealing items)
+	addtimer(CALLBACK(src, PROC_REF(loot_next_crate)), 1 SECONDS)
+
+/**
+ * Check if a crate was opened after attacking it.
+ */
+/datum/component/raider/proc/check_crate_opened()
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H || H.stat == DEAD)
+		return
+
+	if(!current_target_crate || QDELETED(current_target_crate))
+		loot_next_crate()
+		return
+
+	// If crate is now open or destroyed, move on
+	if(current_target_crate.opened)
+		// Steal items from it
+		if(istype(H, /mob/living/simple_animal/hostile/clan/raider))
+			var/mob/living/simple_animal/hostile/clan/raider/R = H
+			R.try_steal_items()
+		current_target_crate = null
+		addtimer(CALLBACK(src, PROC_REF(loot_next_crate)), 1 SECONDS)
+	else
+		// Still locked, keep attacking
+		if(istype(H, /mob/living/simple_animal/hostile/clan/raider))
+			var/mob/living/simple_animal/hostile/clan/raider/R = H
+			if(R.crate_breaker)
+				R.attack_crate(current_target_crate)
+				addtimer(CALLBACK(src, PROC_REF(check_crate_opened)), 2 SECONDS)
+				return
+		// Give up on this crate
+		current_target_crate = null
+		loot_next_crate()
+
 /**
  * Navigate to the current objective using commander-follower A* pathfinding.
  * Creates an invisible commander that follows a pre-calculated A* path,
@@ -798,7 +976,10 @@
 			// We're inside the target room - start clearing it
 			log_admin("RAID DEBUG: [H?.type] entered room [target_room.name] - starting to clear it")
 			room_clear_time = 0 // Reset timer, check_room_clear will track time
-			// Look for targets in the room
+			// First, scan for crates to loot
+			if(scan_room_for_crates())
+				return // Crate looting started, will call FindTarget when done
+			// No crates (or can't loot) - look for targets in the room
 			H.FindTarget()
 		else
 			// We're at the entry point but not inside yet - get a turf inside

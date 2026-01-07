@@ -22,6 +22,8 @@
 	var/generation_seed
 	/// Whether the map has been generated
 	var/generated = FALSE
+	/// Debug mode - disables fog of war
+	var/debug_mode = FALSE
 
 /datum/world_map_manager/New()
 	. = ..()
@@ -73,6 +75,12 @@
 
 	// Discover initial area around outpost
 	discover_radius(outpost_tile, INITIAL_DISCOVERY_RADIUS)
+
+	// Reveal path to friendly Resurgence Clan faction
+	reveal_initial_paths()
+
+	// Load the expedition corridor z-level (async to avoid sleep in Initialize)
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(load_expedition_corridor))
 
 	generated = TRUE
 
@@ -272,6 +280,30 @@
 				tile.discover()
 
 /**
+ * Reveal initial paths to friendly factions
+ * Called during world generation to give players a clear starting destination
+ */
+/datum/world_map_manager/proc/reveal_initial_paths()
+	// Reveal path to the friendly Resurgence Clan faction
+	var/datum/world_tile/clan_tile = get_faction_tile("resurgence_clan")
+	if(!clan_tile)
+		return
+
+	// Calculate path from outpost to clan
+	var/list/path = find_path(outpost_tile, clan_tile)
+	if(!path || !length(path))
+		// Fallback: just discover the clan tile directly
+		clan_tile.discover()
+		return
+
+	// Discover all tiles along the path and their adjacent tiles
+	for(var/datum/world_tile/tile in path)
+		tile.discover()
+		// Also discover adjacent tiles for better visibility
+		for(var/datum/world_tile/adj in tile.adjacent_tiles)
+			adj.discover()
+
+/**
  * Get a tile at specific coordinates
  */
 /datum/world_map_manager/proc/get_tile(x, y)
@@ -368,13 +400,15 @@
 	data["outpost_x"] = outpost_tile?.x_coord
 	data["outpost_y"] = outpost_tile?.y_coord
 	data["generated"] = generated
+	data["debug_mode"] = debug_mode
 
 	// Build tiles array
 	var/list/tiles_data = list()
 	for(var/x in 1 to map_width)
 		for(var/y in 1 to map_height)
 			var/datum/world_tile/tile = tiles[x][y]
-			tiles_data += list(tile.get_ui_data())
+			// In debug mode, show all tiles as discovered
+			tiles_data += list(tile.get_ui_data(debug_mode))
 
 	data["tiles"] = tiles_data
 
