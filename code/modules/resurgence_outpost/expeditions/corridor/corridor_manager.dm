@@ -315,6 +315,14 @@
  * Execute the terrain transition
  */
 /datum/expedition_corridor_manager/proc/execute_transition(next_terrain)
+	// Get the next tile for caravan check
+	var/datum/world_tile/next_tile = expedition.route[route_index + 2]
+
+	// Check for caravan on next tile BEFORE normal transition
+	if(next_tile?.caravan)
+		start_caravan_encounter(next_tile.caravan)
+		return
+
 	// Collect all items on floor (that aren't decorations or barriers)
 	var/list/floor_items = list()
 	for(var/turf/T in floor_turfs)
@@ -353,6 +361,90 @@
 	// Update world map discovery
 	if(expedition.current_tile && GLOB.resurgence_world_map)
 		GLOB.resurgence_world_map.discover_radius(expedition.current_tile, VISIT_DISCOVERY_RADIUS)
+		update_all_world_map_uis()
+
+	transitioning = FALSE
+
+/**
+ * Start a caravan encounter
+ * Called when the expedition enters a tile with a caravan
+ */
+/datum/expedition_corridor_manager/proc/start_caravan_encounter(datum/faction_caravan/caravan)
+	if(!caravan || !expedition)
+		return FALSE
+
+	log_game("Expedition [expedition.expedition_id] encountered caravan [caravan.caravan_id] ([caravan.name])")
+
+	// Stop the caravan
+	caravan.stop_for_encounter()
+
+	// Update current position
+	expedition.current_tile = caravan.current_tile
+
+	// Load caravan encounter area if not loaded
+	if(!GLOB.caravan_encounter_loaded)
+		if(!load_caravan_encounter())
+			// Failed to load - continue normal travel instead
+			log_game("Failed to load caravan encounter area, continuing normal travel")
+			var/next_terrain = caravan.current_tile.terrain_type
+			if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+				next_terrain = TERRAIN_PLAINS
+			execute_transition_continue(next_terrain)
+			return FALSE
+
+	// Create encounter controller
+	var/datum/caravan_encounter_controller/controller = new(caravan, expedition)
+
+	// Notify players about the encounter
+	for(var/mob/living/M in expedition.members)
+		if(caravan.is_hostile())
+			to_chat(M, span_boldwarning("You've encountered a hostile [caravan.name]!"))
+		else
+			to_chat(M, span_boldnotice("You've encountered a [caravan.name] from [caravan.owner_faction?.name || "unknown faction"]!"))
+
+	// Start the encounter (teleport players to encounter area)
+	if(!controller.start_encounter())
+		log_game("Failed to start caravan encounter")
+		qdel(controller)
+		// Continue normal travel
+		var/next_terrain = caravan.current_tile.terrain_type
+		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+			next_terrain = TERRAIN_PLAINS
+		execute_transition_continue(next_terrain)
+		return FALSE
+
+	transitioning = FALSE
+	return TRUE
+
+/**
+ * Continue transition after caravan check failed
+ */
+/datum/expedition_corridor_manager/proc/execute_transition_continue(next_terrain)
+	// Get start position
+	var/turf/start_turf = get_turf(start_landmark)
+	if(!start_turf)
+		start_turf = locate(EXPEDITION_CORRIDOR_WIDTH / 2, EXPEDITION_START_Y + 1, GLOB.expedition_corridor_z)
+
+	// Teleport all players to start
+	for(var/mob/living/M in expedition.members)
+		M.forceMove(start_turf)
+		apply_terrain_speed(M, next_terrain)
+
+	// Update terrain
+	prepare_for_terrain(next_terrain)
+
+	// Fade back in
+	for(var/mob/living/M in expedition.members)
+		fade_from_black(M)
+		to_chat(M, span_notice("You continue into [GLOB.terrain_names[next_terrain]] territory..."))
+
+	// Update current position
+	expedition.current_tile = expedition.route[route_index + 2]
+
+	// Update world map discovery
+	if(expedition.current_tile && GLOB.resurgence_world_map)
+		GLOB.resurgence_world_map.discover_radius(expedition.current_tile, VISIT_DISCOVERY_RADIUS)
+		update_all_world_map_uis()
 
 	transitioning = FALSE
 
@@ -403,6 +495,7 @@
 	// Discover destination tile
 	if(GLOB.resurgence_world_map)
 		GLOB.resurgence_world_map.discover_radius(dest_tile, VISIT_DISCOVERY_RADIUS)
+		update_all_world_map_uis()
 
 /**
  * Handle arrival at a faction hub
@@ -474,6 +567,9 @@
 	expedition.state = EXPEDITION_COMPLETE
 	expedition.end_time = world.time
 	end_expedition()
+
+	// Update world map UI to reflect return
+	update_all_world_map_uis()
 
 /**
  * Continue an expedition with a new route (after setting new destination)
@@ -557,3 +653,15 @@
 /datum/movespeed_modifier/expedition_terrain
 	variable = TRUE
 	multiplicative_slowdown = 0  // Set dynamically based on terrain
+
+// ============================================
+// GLOBAL HELPER PROCS
+// ============================================
+
+/**
+ * Update all world map console UIs
+ * Called when tiles are discovered or expedition state changes
+ */
+/proc/update_all_world_map_uis()
+	for(var/obj/structure/world_map_console/console in GLOB.world_map_consoles)
+		SStgui.update_uis(console)

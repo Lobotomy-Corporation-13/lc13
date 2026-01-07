@@ -30,6 +30,8 @@
 	var/terrain_desc = "Open grasslands with few obstacles."
 	/// List of adjacent tile references for pathfinding
 	var/list/datum/world_tile/adjacent_tiles
+	/// Caravan currently on this tile (if any)
+	var/datum/faction_caravan/caravan
 
 /**
  * Initialize a world tile at specific coordinates
@@ -157,6 +159,12 @@
 		data["event_chance"] = event_chance_mod
 		data["faction_id"] = faction_id
 		data["is_destination"] = is_destination()
+		// Add caravan data if present
+		if(caravan)
+			data["has_caravan"] = TRUE
+			data["caravan"] = caravan.get_ui_data()
+		else
+			data["has_caravan"] = FALSE
 	else
 		// Hidden tile - show minimal data
 		data["terrain_type"] = "unknown"

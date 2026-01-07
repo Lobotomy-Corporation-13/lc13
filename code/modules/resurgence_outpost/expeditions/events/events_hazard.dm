@@ -72,7 +72,7 @@
 	burn.pass_credits = 30
 	burn.pass_message = "The fire consumes the spores, clearing a safe path!"
 	burn.fail_damage = 20
-	burn.fail_damage_type = BURN
+	burn.fail_damage_type = FIRE
 	burn.fail_message = "The fire spreads uncontrollably! You get singed escaping."
 	choices += burn
 
@@ -389,7 +389,7 @@
 	hydrate.pass_credits = 25
 	hydrate.pass_message = "You pace yourself perfectly and weather the heat!"
 	hydrate.fail_damage = 15
-	hydrate.fail_damage_type = BURN
+	hydrate.fail_damage_type = FIRE
 	hydrate.fail_message = "You misjudge your water needs and suffer mild heat stroke."
 	choices += hydrate
 
@@ -402,7 +402,7 @@
 	shade.pass_credits = 20
 	shade.pass_message = "You find enough shade to make the crossing bearable!"
 	shade.fail_damage = 12
-	shade.fail_damage_type = BURN
+	shade.fail_damage_type = FIRE
 	shade.fail_message = "The shade you found wasn't enough. You're sunburned and exhausted."
 	choices += shade
 
@@ -415,6 +415,6 @@
 	rush.pass_credits = 15
 	rush.pass_message = "You push through quickly before the heat can affect you!"
 	rush.fail_damage = 25
-	rush.fail_damage_type = BURN
+	rush.fail_damage_type = FIRE
 	rush.fail_message = "The exertion in this heat is too much! You collapse briefly from heat exhaustion."
 	choices += rush

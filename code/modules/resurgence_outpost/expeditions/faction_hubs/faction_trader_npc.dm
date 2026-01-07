@@ -17,8 +17,6 @@
 	health = 200
 
 	// Non-hostile, doesn't move
-	stat_attack = CONSCIOUS
-	move_to_delay = 0
 	wander = FALSE
 	density = TRUE
 	anchored = FALSE
@@ -42,7 +40,7 @@
 	/// The faction this trader represents
 	var/faction_id = null
 	/// Reference to the faction datum
-	var/datum/trading_faction/faction
+	var/datum/trading_faction/trading_faction
 	/// Reference to the hub controller
 	var/datum/faction_hub_controller/controller
 	/// Idle dialogue lines to say randomly
@@ -55,11 +53,11 @@
 /mob/living/simple_animal/faction_trader/Initialize(mapload)
 	. = ..()
 	// Find our faction
-	if(faction_id && GLOB.resurgence_factions)
-		faction = GLOB.resurgence_factions[faction_id]
-		if(faction)
-			name = faction.speaker_name
-			desc = "[faction.speaker_title]. They represent [faction.name]."
+	if(faction_id && GLOB.resurgence_trading)
+		trading_faction = GLOB.resurgence_trading.get_faction(faction_id)
+		if(trading_faction)
+			name = trading_faction.speaker_name
+			desc = "[trading_faction.speaker_title]. They represent [trading_faction.name]."
 
 	// Set up idle chat
 	setup_idle_lines()
@@ -67,7 +65,7 @@
 
 /mob/living/simple_animal/faction_trader/Destroy()
 	STOP_PROCESSING(SSobj, src)
-	faction = null
+	trading_faction = null
 	controller = null
 	return ..()
 
@@ -115,7 +113,7 @@
  */
 /mob/living/simple_animal/faction_trader/examine(mob/user)
 	. = ..()
-	if(faction)
+	if(trading_faction)
 		. += span_notice("Click to open the trading interface.")
 		. += span_notice("Trading here gives you a 10% discount on purchases!")
 
@@ -123,17 +121,17 @@
  * Open the trading interface for a user
  */
 /mob/living/simple_animal/faction_trader/proc/open_trading(mob/living/user)
-	if(!faction)
+	if(!trading_faction)
 		to_chat(user, span_warning("[src] doesn't seem to have anything to trade."))
 		return
 
-	if(!faction.can_trade)
+	if(!trading_faction.can_trade)
 		to_chat(user, span_warning("[src] refuses to trade with you."))
-		say(faction.get_dialogue("low_rep"))
+		say(trading_faction.get_dialogue("low_rep"))
 		return
 
 	// Greet the player
-	say(faction.get_dialogue("greeting"))
+	say(trading_faction.get_dialogue("greeting"))
 
 	// Open trading UI
 	// For now, just show a message - full UI would require TGUI integration
@@ -144,8 +142,8 @@
  * Generate trading HTML interface
  */
 /mob/living/simple_animal/faction_trader/proc/get_trading_html(mob/living/user)
-	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
-	var/sell_mod = controller ? controller.get_hub_sell_modifier() : faction.get_sell_modifier()
+	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
+	// var/sell_mod = controller ? controller.get_hub_sell_modifier() : trading_faction.get_sell_modifier()  // Unused for now
 	var/discount_percent = round((1 - HUB_TRADING_DISCOUNT) * 100)
 
 	var/html = {"
@@ -153,7 +151,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>[faction.name] Trading</title>
+	<title>[trading_faction.name] Trading</title>
 	<style>
 		body {
 			font-family: Verdana, sans-serif;
@@ -266,9 +264,9 @@
 </head>
 <body>
 	<div class="header">
-		<div class="trader-name">[faction.speaker_name]</div>
-		<div class="trader-title">[faction.speaker_title]</div>
-		<div class="faction-name">[faction.name]</div>
+		<div class="trader-name">[trading_faction.speaker_name]</div>
+		<div class="trader-title">[trading_faction.speaker_title]</div>
+		<div class="faction-name">[trading_faction.name]</div>
 	</div>
 
 	<div class="bonus-box">
@@ -277,22 +275,22 @@
 	</div>
 
 	<div class="dialogue-box">
-		"[faction.get_current_dialogue()]"
+		"[trading_faction.get_current_dialogue()]"
 	</div>
 
 	<div class="stats-row">
-		<span>Reputation: [faction.get_reputation_label()] ([faction.reputation])</span>
-		<span>Faction Cash: [faction.current_cash]</span>
+		<span>Reputation: [trading_faction.get_reputation_label()] ([trading_faction.reputation])</span>
+		<span>Faction Cash: [trading_faction.current_cash]</span>
 	</div>
 
 	<div class="stock-header">Available Stock</div>
 "}
 
 	// List stock items
-	if(!length(faction.stock))
+	if(!length(trading_faction.stock))
 		html += {"<div class="stock-item">No items available at this time.</div>"}
 	else
-		for(var/list/item_entry in faction.stock)
+		for(var/list/item_entry in trading_faction.stock)
 			var/item_name = item_entry["name"]
 			var/quantity = item_entry["quantity"]
 			var/base_price = item_entry["base_price"]
@@ -350,12 +348,12 @@
  * Attempt to purchase an item
  */
 /mob/living/simple_animal/faction_trader/proc/attempt_purchase(mob/living/user, item_name)
-	if(!faction || !item_name)
+	if(!trading_faction || !item_name)
 		return
 
 	// Find the item in stock
 	var/list/target_item = null
-	for(var/list/item_entry in faction.stock)
+	for(var/list/item_entry in trading_faction.stock)
 		if(item_entry["name"] == item_name)
 			target_item = item_entry
 			break
@@ -366,11 +364,11 @@
 
 	if(target_item["quantity"] <= 0)
 		to_chat(user, span_warning("That item is out of stock."))
-		say(faction.get_dialogue("low_stock"))
+		say(trading_faction.get_dialogue("low_stock"))
 		return
 
 	// Calculate price with hub discount
-	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
+	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
 	var/final_price = round(target_item["base_price"] * buy_mod)
 
 	// Check if user can afford it
@@ -386,10 +384,10 @@
 	if(item_type)
 		var/obj/item/I = new item_type(get_turf(user))
 		to_chat(user, span_notice("You receive: [I.name]"))
-		say(faction.get_dialogue("purchase_complete"))
+		say(trading_faction.get_dialogue("purchase_complete"))
 
 		// Give reputation for trading
-		faction.on_trade_completed(final_price, FALSE)
+		trading_faction.on_trade_completed(final_price, FALSE)
 
 	// Refresh UI
 	open_trading(user)

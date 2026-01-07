@@ -24,8 +24,17 @@
 
 /obj/structure/world_map_console/Initialize(mapload)
 	. = ..()
+	// Register with global list for UI updates
+	GLOB.world_map_consoles += src
 	// Ensure world map is generated
 	init_resurgence_world_map()
+
+/obj/structure/world_map_console/Destroy()
+	GLOB.world_map_consoles -= src
+	if(forming_expedition)
+		qdel(forming_expedition)
+		forming_expedition = null
+	return ..()
 
 /obj/structure/world_map_console/examine(mob/user)
 	. = ..()
@@ -287,5 +296,8 @@
 	// Notify
 	for(var/mob/living/M in departing.members)
 		to_chat(M, span_boldnotice("The expedition departs!"))
+
+	// Update the UI to reflect the expedition departure
+	SStgui.update_uis(src)
 
 	return TRUE

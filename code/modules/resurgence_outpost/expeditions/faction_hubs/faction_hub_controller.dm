@@ -55,7 +55,7 @@ GLOBAL_LIST_EMPTY(faction_hubs)
 	hub_z_level = z_level
 
 	// Find the faction datum
-	faction = GLOB.resurgence_factions[faction_id]
+	faction = GLOB.resurgence_trading?.get_faction(faction_id)
 	if(!faction)
 		log_game("Faction hub controller for [faction_id] could not find faction datum")
 		return FALSE

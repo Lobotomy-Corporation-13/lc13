@@ -482,7 +482,7 @@
 
 	// Apply damage
 	if(choice.fail_damage > 0)
-		user.apply_damage(choice.fail_damage, choice.fail_damage_type)
+		user.apply_damage_type(choice.fail_damage, choice.fail_damage_type)
 		to_chat(user, span_danger("You take [choice.fail_damage] damage!"))
 
 /**
@@ -502,7 +502,7 @@
 	if(damage_count > 0)
 		flee_damage = max(10, round(total_damage / damage_count / 2))
 
-	user.apply_damage(flee_damage, BRUTE)
+	user.apply_damage_type(flee_damage, BRUTE)
 	to_chat(user, span_danger("You take [flee_damage] damage while fleeing!"))
 
 	// Mark all choices as attempted for this user
@@ -546,7 +546,7 @@
 
 		// Apply global fail damage if any
 		if(global_fail_damage > 0)
-			M.apply_damage(global_fail_damage, BRUTE)
+			M.apply_damage_type(global_fail_damage, BRUTE)
 			to_chat(M, span_danger("You take [global_fail_damage] damage!"))
 
 	// Still resolve the event (let them pass)

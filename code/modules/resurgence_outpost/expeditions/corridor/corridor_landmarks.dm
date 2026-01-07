@@ -85,16 +85,20 @@
 
 /**
  * Block passage past this point
+ * Creates barriers 3 tiles above every expedition_event landmark on this z-level
  */
 /obj/effect/landmark/expedition_event/proc/block_passage()
 	blocked = TRUE
 
-	// Spawn barrier walls across the corridor at Y+1
-	var/barrier_y = src.y + 1
 	var/datum/travel_event/shared_event = null
 
-	for(var/bx in 2 to (EXPEDITION_CORRIDOR_WIDTH - 1))
-		var/turf/T = locate(bx, barrier_y, src.z)
+	// Find all expedition_event landmarks on this z-level and create barriers 3 tiles above each
+	for(var/obj/effect/landmark/expedition_event/event_landmark in GLOB.landmarks_list)
+		if(event_landmark.z != src.z)
+			continue
+
+		var/barrier_y = event_landmark.y + 3
+		var/turf/T = locate(event_landmark.x, barrier_y, event_landmark.z)
 		if(T && !isclosedturf(T))
 			var/obj/structure/expedition_barrier/B = new(T)
 			B.parent_landmark = src

@@ -114,6 +114,9 @@ GLOBAL_LIST_INIT(terrain_descriptions, list(
 
 GLOBAL_DATUM(resurgence_world_map, /datum/world_map_manager)
 
+/// List of all world map consoles for UI updates
+GLOBAL_LIST_EMPTY(world_map_consoles)
+
 /// Initialize the world map manager - call this during game setup
 /proc/init_resurgence_world_map()
 	if(!GLOB.resurgence_world_map)

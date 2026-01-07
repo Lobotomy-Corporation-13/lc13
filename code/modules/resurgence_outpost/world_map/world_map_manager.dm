@@ -82,6 +82,9 @@
 	// Load the expedition corridor z-level (async to avoid sleep in Initialize)
 	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(load_expedition_corridor))
 
+	// Initialize caravan system
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(init_caravan_system))
+
 	generated = TRUE
 
 /**
@@ -423,5 +426,11 @@
 			"discovered" = ft.discovered
 		))
 	data["factions"] = factions_data
+
+	// Build caravan data
+	if(GLOB.caravan_manager)
+		data["caravans"] = GLOB.caravan_manager.get_caravans_ui_data()
+	else
+		data["caravans"] = list()
 
 	return data

@@ -22,7 +22,7 @@
 	disarm.skill_type = EVENT_SKILL_MINING
 	disarm.difficulty = 7
 	disarm.pass_credits = 60
-	disarm.pass_items = list(/obj/item/stack/sheet/iron)
+	disarm.pass_items = list(/obj/item/stack/sheet/metal)
 	disarm.pass_message = "You expertly disarm the trap and open the cache, revealing valuable supplies!"
 	disarm.fail_damage = 20
 	disarm.fail_damage_type = BRUTE
@@ -141,7 +141,7 @@
 	dig.skill_type = EVENT_SKILL_MINING
 	dig.difficulty = 5
 	dig.pass_credits = 35
-	dig.pass_items = list(/obj/item/stack/sheet/iron)
+	dig.pass_items = list(/obj/item/stack/sheet/metal)
 	dig.pass_message = "You muscle through the scrap and find some useful materials!"
 	dig.fail_damage = 20
 	dig.fail_damage_type = BRUTE
