@@ -55,6 +55,11 @@
 	/// Whether this faction sends raids
 	var/sends_raids = FALSE
 
+	/// World map X coordinate (assigned by world_map_manager during generation)
+	var/world_x = 0
+	/// World map Y coordinate (assigned by world_map_manager during generation)
+	var/world_y = 0
+
 	/// Reputation volatility (multiplier for rep changes)
 	var/reputation_volatility = 1
 
