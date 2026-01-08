@@ -181,6 +181,36 @@
 /turf/closed/indestructible/reinforced/old
 	icon = 'icons/turf/walls/facility_old.dmi'
 
+// Cheap Colored Walls
+/turf/closed/indestructible/reinforced/cheap
+	icon = 'icons/turf/walls/cheap_wall.dmi'
+	icon_state = "icon-0"
+	base_icon_state = "icon"
+
+/turf/closed/indestructible/reinforced/cheap/blue
+	icon = 'icons/turf/walls/blue_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/brown
+	icon = 'icons/turf/walls/brown_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/cream
+	icon = 'icons/turf/walls/cream_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/green
+	icon = 'icons/turf/walls/green_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/purple
+	icon = 'icons/turf/walls/purple_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/red
+	icon = 'icons/turf/walls/red_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/fancy
+	icon = 'icons/turf/walls/fancy_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/yellow
+	icon = 'icons/turf/walls/yellow_wall.dmi'
+
 /turf/closed/indestructible/riveted
 	icon = 'icons/turf/walls/riveted.dmi'
 	icon_state = "riveted-0"
