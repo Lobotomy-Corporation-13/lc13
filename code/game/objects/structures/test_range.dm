@@ -7,6 +7,7 @@
 	resistance_flags = INDESTRUCTIBLE
 	var/static/list/ego_datums = list()
 	var/static/list/ego_preview_icons_cache = list()
+	/// This var limits how much EGO each ckey can print before having to get rid of some.
 	var/ego_per_person_limit = 6
 	var/list/printed_ego = list()
 	var/ego_datums_initialized = FALSE
@@ -24,6 +25,7 @@
 	. = ..()
 
 
+// Evil proc that generates an ego datum for every EGO that isn't test range blacklisted and has a path, also generating a preview icon WHICH IS A BIT HEAVY ON DISK USAGE ! ! !
 /obj/machinery/ego_printer/proc/InitializeDatums()
 	if(!ego_datums_initialized)
 		for(var/datumpath in subtypesof(/datum/ego_datum))
@@ -36,6 +38,38 @@
 
 		ego_datums_initialized = TRUE
 
+// This proc doesn't SEEM that bad but it's being run on like 500 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it
+/// Takes an object's icon in DM and turns it into a base64 string, uses caching when possible
+/obj/machinery/ego_printer/proc/GenerateEgoPreviewIcon(item_path)
+	if(!ispath(item_path))
+		return
+
+	// Cached? Use that instead
+	var/wait_did_we_already_do_this = ego_preview_icons_cache[item_path]
+	if(wait_did_we_already_do_this)
+		return wait_did_we_already_do_this
+
+	var/icon/final_icon = GetEgoDatumItemIcon(item_path)
+	var/base64icon = null
+
+	if(final_icon)
+		base64icon = icon2base64(final_icon) // Icon is now a string we can pass into TGUI
+		ego_preview_icons_cache[item_path] = base64icon // Add to cache
+
+	qdel(final_icon)
+	return base64icon
+
+/// Extracts an item's icon state so we can use it a a preview
+/obj/machinery/ego_printer/proc/GetEgoDatumItemIcon(obj/item/item_path)
+	if(!ispath(item_path))
+		return
+	var/item_icon = initial(item_path.icon)
+	var/item_icon_state = initial(item_path.icon_state)
+	if(!(item_icon_state in icon_states(icon(item_icon))))
+		return null
+	var/icon/final_icon = icon(icon = item_icon, icon_state = item_icon_state, frame = 1)
+	return final_icon
+
 /obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
 	InitializeDatums()
 
@@ -46,18 +80,25 @@
 
 /obj/machinery/ego_printer/ui_data(mob/user)
 	var/list/data = list()
-	data["ego_datums"] = list()
+	data["ego_weapon_datums"] = list()
+	data["ego_armor_datums"] = list()
 	for(var/datum/ego_datum/ED in ego_datums)
 		if(!ED.item_path)
 			continue
+		var/ego_threatclass = ED.CostToThreatClass()
 		var/list/datum_data = list(
 			"path" = ED.item_path,
 			"cost" = ED.cost,
 			"information" = ED.information,
-			"icon" = GenerateEgoPreviewIcon(ED.item_path)
+			"icon" = GenerateEgoPreviewIcon(ED.item_path),
+			"threatclass_name" = THREAT_TO_NAME[ego_threatclass],
+			"threatclass_color" = THREAT_TO_COLOR[ego_threatclass]
 		)
+		if(istype(ED, /datum/ego_datum/weapon))
+			data["ego_weapon_datums"] |= list(datum_data)
+		else if(istype(ED, /datum/ego_datum/armor))
+			data["ego_armor_datums"] |= list(datum_data)
 
-		data["ego_datums"] |= list(datum_data)
 	return data
 
 /obj/machinery/ego_printer/ui_act(action, list/params)
@@ -70,43 +111,22 @@
 	. = TRUE
 	update_icon()
 
-// Had to look at Augment code to figure out how to send icons to TGUI, this should work just fine
-/obj/machinery/ego_printer/proc/GenerateEgoPreviewIcon(item_path)
-	if(!ispath(item_path))
-		return
-
-	var/wait_did_we_already_do_this = ego_preview_icons_cache[item_path]
-	if(wait_did_we_already_do_this)
-		return wait_did_we_already_do_this
-
-	var/icon/final_icon = GetEgoDatumItemIcon(item_path)
-	var/base64icon = null
-
-	if(final_icon)
-		base64icon = icon2base64(final_icon)
-		ego_preview_icons_cache[item_path] = base64icon
-
-	qdel(final_icon)
-	return base64icon
-
-/obj/machinery/ego_printer/proc/GetEgoDatumItemIcon(obj/item/item_path)
-	if(!ispath(item_path))
-		return
-	var/item_icon = initial(item_path.icon)
-	var/item_icon_state = initial(item_path.icon_state)
-	if(!(item_icon_state in icon_states(icon(item_icon))))
-		return null
-	var/icon/final_icon = icon(icon = item_icon, icon_state = item_icon_state, frame = 1)
-	return final_icon
-
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
 	if(!ego_path)
 		return
 
 	var/user_prints = printed_ego[user.ckey]
 
+	// Firstly, don't allow users to print too much EGO. This is just spam prevention since now it is very easy to spawn 50000000000 chaos dunks which could cause [A Bit] of lag
 	if(islist(user_prints))
 		var/list/thats_a_lot_of_ego = user_prints
+
+		// I can't imagine this happening with anything off the top of my head, but if an EGO gets deleted somehow before the user can place it back into the printer, it could permanently stay in their printed ego list.
+		// So this little code block should handle exceptions for that without having to use a signal on deletion instead.
+		for(var/atom/thing in thats_a_lot_of_ego)
+			if(QDELETED(thing))
+				thats_a_lot_of_ego -= thing
+
 		if(length(thats_a_lot_of_ego) >= ego_per_person_limit)
 			to_chat(user, span_warning("You've printed too much E.G.O. gear. Place some back into the printer."))
 			playsound(src, 'sound/machines/buzz-two.ogg', 50)

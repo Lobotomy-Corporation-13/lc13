@@ -38,6 +38,27 @@ GLOBAL_LIST_EMPTY(ego_datums)
 /datum/ego_datum/proc/PrintOutInfo()
 	return
 
+/datum/ego_datum/proc/CostToThreatClass()
+	switch(cost)
+		if(0 to 11) // ???
+			return 0
+		if(12 to 19)
+			return ZAYIN_LEVEL
+		if(20 to 34)
+			return TETH_LEVEL
+		if(35 to 49)
+			return HE_LEVEL
+		if(50 to 99)
+			return WAW_LEVEL
+		if(100 to 250) // Includes Super ALEPH
+			return ALEPH_LEVEL
+		if(999) // Default value
+			return 0
+		if(1000) // Iron Maiden (WCCA)
+			return ALEPH_LEVEL
+		else
+			return 0
+
 // Because I'm lazy to type it all
 /datum/ego_datum/weapon
 	item_category = "Weapon"
@@ -55,6 +76,7 @@ GLOBAL_LIST_EMPTY(ego_datums)
 
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
 		var/obj/item/ego_weapon/ranged/E = new item_path(src)
+		information["threat_class"] = CostToThreatClass()
 		information["damtype_melee"] = E.damtype
 		information["force_melee"] = E.force
 		information["damtype_ranged"] = E.last_projectile_type
@@ -86,6 +108,7 @@ GLOBAL_LIST_EMPTY(ego_datums)
 		return
 
 	var/obj/item/ego_weapon/E = new item_path(src)
+	information["threat_class"] = CostToThreatClass()
 	information["damtype_melee"] = E.damtype
 	information["force_melee"] = E.force
 	var/damage_type = E.damtype

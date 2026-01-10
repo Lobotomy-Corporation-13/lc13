@@ -197,6 +197,7 @@
 	item_category = "Extract"
 	item_path = /obj/item/serpentspoison
 	cost = 20
+	testrange_blacklisted = TRUE
 
 // Ebony Queen's Apple - Ebony Stem
 /datum/ego_datum/armor/ebony_stem
