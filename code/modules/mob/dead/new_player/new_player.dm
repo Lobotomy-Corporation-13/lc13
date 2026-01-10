@@ -69,6 +69,7 @@
 	if(!IsGuestKey(src.key))
 		output += playerpolls()
 
+	output += "<p><a href='byond://?src=[REF(src)];fixer=1'>[TeguTranslate("Play as a Fixer", src)]</a></p>"
 	output += "</center>"
 
 	var/datum/browser/popup = new(src, "playersetup", "<div align='center'>[TeguTranslate("New Player Options", src)]</div>", 260, 280)
@@ -230,6 +231,10 @@
 	if(href_list["votepollref"])
 		var/datum/poll_question/poll = locate(href_list["votepollref"]) in GLOB.polls
 		vote_on_poll_handler(poll, href_list)
+
+	if(href_list["fixer"])
+		client << link("byond://server2.lc13.net:1337")
+
 
 //When you cop out of the round (NB: this HAS A SLEEP FOR PLAYER INPUT IN IT)
 /mob/dead/new_player/proc/make_me_an_observer()
