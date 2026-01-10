@@ -172,14 +172,146 @@ GLOBAL_VAR_INIT(expedition_id_counter, 0)
 	state = EXPEDITION_FAILED
 	end_time = world.time
 
-	// TODO: Handle respawning, loot loss, etc.
+	// Notify all members
 	for(var/mob/living/M in members)
-		if(M.stat == DEAD)
-			to_chat(M, span_boldwarning("Your expedition has failed. All party members have fallen."))
+		to_chat(M, span_boldwarning("Your expedition has failed. All party members have fallen."))
+		to_chat(M, span_notice("Emergency extraction in progress..."))
+
+	// Fulton all members back to outpost
+	fulton_party_to_outpost()
 
 	// End the expedition in corridor manager
 	if(GLOB.expedition_corridor?.expedition == src)
 		GLOB.expedition_corridor.end_expedition()
+
+/**
+ * Fulton all party members back to the outpost with visual effect
+ */
+/datum/expedition_party/proc/fulton_party_to_outpost()
+	// Find return location
+	var/turf/return_turf
+	if(departure_console)
+		return_turf = get_turf(departure_console)
+		// Try to find an adjacent open turf
+		for(var/dir in GLOB.cardinals)
+			var/turf/T = get_step(return_turf, dir)
+			if(T && !T.density)
+				return_turf = T
+				break
+
+	if(!return_turf)
+		// Fallback - try to find a world map console
+		if(length(GLOB.world_map_consoles))
+			var/obj/structure/world_map_console/console = GLOB.world_map_consoles[1]
+			return_turf = get_turf(console)
+			// Try to find an adjacent open turf
+			for(var/dir in GLOB.cardinals)
+				var/turf/T = get_step(return_turf, dir)
+				if(T && !T.density)
+					return_turf = T
+					break
+
+	if(!return_turf)
+		log_game("Expedition party wipe: Could not find return turf!")
+		return
+
+	// Fulton each member
+	for(var/mob/living/M in members)
+		fulton_mob_to_turf(M, return_turf)
+
+/**
+ * Perform fulton extraction animation on a mob
+ */
+/datum/expedition_party/proc/fulton_mob_to_turf(mob/living/M, turf/destination)
+	if(!M || !destination)
+		return
+
+	// Create holder for the animation
+	var/obj/effect/extraction_holder/holder = new(get_turf(M))
+	holder.appearance = M.appearance
+
+	// Move mob into holder
+	M.forceMove(holder)
+
+	// Add balloon overlay
+	var/mutable_appearance/balloon_expand = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_expand")
+	balloon_expand.pixel_y = 10
+	balloon_expand.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder.add_overlay(balloon_expand)
+
+	// Spawn the animation sequence
+	INVOKE_ASYNC(src, PROC_REF(run_fulton_animation), M, holder, destination)
+
+/**
+ * Run the fulton animation sequence
+ */
+/datum/expedition_party/proc/run_fulton_animation(mob/living/M, obj/effect/extraction_holder/holder, turf/destination)
+	if(!holder || QDELETED(holder))
+		return
+
+	// Wait for balloon expand
+	sleep(4)
+	if(QDELETED(holder))
+		return
+
+	// Swap to full balloon
+	holder.cut_overlays()
+	var/mutable_appearance/balloon = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_balloon")
+	balloon.pixel_y = 10
+	balloon.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder.add_overlay(balloon)
+
+	// Play deploy sound
+	playsound(holder.loc, 'sound/items/fultext_deploy.ogg', 50, TRUE, -3)
+
+	// Animate bobbing
+	animate(holder, pixel_z = 10, time = 20)
+	sleep(20)
+	if(QDELETED(holder))
+		return
+
+	animate(holder, pixel_z = 15, time = 10)
+	sleep(10)
+	if(QDELETED(holder))
+		return
+
+	// Launch sound and fly up
+	playsound(holder.loc, 'sound/items/fultext_launch.ogg', 50, TRUE, -3)
+	animate(holder, pixel_z = 500, time = 20)
+	sleep(20)
+	if(QDELETED(holder))
+		return
+
+	// Move to destination
+	holder.forceMove(destination)
+	animate(holder, pixel_z = 10, time = 30)
+	sleep(30)
+	if(QDELETED(holder))
+		return
+
+	// Retract balloon
+	holder.cut_overlays()
+	var/mutable_appearance/balloon_retract = mutable_appearance('icons/obj/fulton_balloon.dmi', "fulton_retract")
+	balloon_retract.pixel_y = 10
+	balloon_retract.appearance_flags = RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM
+	holder.add_overlay(balloon_retract)
+	sleep(4)
+	if(QDELETED(holder))
+		return
+
+	holder.cut_overlays()
+	animate(holder, pixel_z = 0, time = 5)
+	sleep(5)
+
+	// Release the mob
+	if(M && !QDELETED(M))
+		M.forceMove(destination)
+		// Remove speed modifiers
+		M.remove_movespeed_modifier(/datum/movespeed_modifier/expedition_terrain)
+
+	// Clean up holder
+	if(!QDELETED(holder))
+		qdel(holder)
 
 /**
  * Start the expedition (depart from outpost)

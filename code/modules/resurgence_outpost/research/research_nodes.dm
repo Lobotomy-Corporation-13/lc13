@@ -97,6 +97,17 @@
 	ui_x = 220
 	ui_y = 160
 
+/datum/resurgence_research_node/expedition_logistics
+	id = "expedition_logistics"
+	name = "Expedition Logistics"
+	desc = "Reinforced containers designed to survive the rigors of expedition travel. These crates can be dragged through terrain and brought to faction hubs for trading."
+	tier = 2
+	total_work = 150
+	prerequisites = list("woodworking", "metallurgy")
+	unlocks_desc = "Blueprints: Expedition Crate. Allows hauling goods on expeditions for trade."
+	ui_x = 220
+	ui_y = 200
+
 /datum/resurgence_research_node/papercraft
 	id = "papercraft"
 	name = "Papercraft"
@@ -137,7 +148,7 @@
 	tier = 2
 	total_work = 300  // Important infrastructure - increased cost
 	prerequisites = list("metallurgy")
-	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder, Communications Console."
+	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder."
 	ui_x = 220
 	ui_y = 480
 
@@ -355,3 +366,14 @@
 	unlocks_desc = "Loom: Elegant Faith Fabric, All dynamic clothing."
 	ui_x = 730
 	ui_y = 240
+
+/datum/resurgence_research_node/remote_trading
+	id = "remote_trading"
+	name = "Remote Trading Network"
+	desc = "Establish a long-range communications network for trading with distant factions without physical travel."
+	tier = 5
+	total_work = 800
+	prerequisites = list("communications", "storage_tech")
+	unlocks_desc = "Blueprints: Communications Console. Enables remote trading with visited factions."
+	ui_x = 730
+	ui_y = 560

@@ -132,6 +132,95 @@
 
 			tile.set_terrain(terrain)
 
+	// Create desert ring around the center/outpost
+	create_desert_center()
+
+	// Validate terrain adjacency rules (snow can't be next to desert)
+	validate_terrain_adjacency()
+
+/**
+ * Create a desert region surrounding the center of the map (outpost area)
+ * This ensures the outpost is always surrounded by desert terrain
+ */
+/datum/world_map_manager/proc/create_desert_center()
+	var/center_x = WORLD_MAP_CENTER_X
+	var/center_y = WORLD_MAP_CENTER_Y
+
+	// Create desert in a ring around the outpost (distance 1-2 from center)
+	for(var/x in 1 to map_width)
+		for(var/y in 1 to map_height)
+			var/datum/world_tile/tile = tiles[x][y]
+
+			// Skip outpost tile itself
+			if(tile == outpost_tile)
+				continue
+
+			// Calculate distance from center
+			var/dist = abs(x - center_x) + abs(y - center_y)
+
+			// Set tiles within distance 1-2 to desert
+			if(dist >= 1 && dist <= 2)
+				tile.set_terrain(TERRAIN_DESERT)
+
+/**
+ * Validate terrain adjacency rules
+ * Snow terrain cannot be adjacent to desert terrain
+ * Uses iterative approach to handle cascading changes
+ */
+/datum/world_map_manager/proc/validate_terrain_adjacency()
+	var/changes_made = TRUE
+	var/max_iterations = 10
+
+	while(changes_made && max_iterations > 0)
+		changes_made = FALSE
+		max_iterations--
+
+		for(var/x in 1 to map_width)
+			for(var/y in 1 to map_height)
+				var/datum/world_tile/tile = tiles[x][y]
+
+				// Skip special tiles
+				if(tile.terrain_type == TERRAIN_OUTPOST)
+					continue
+
+				// Check snow tiles for desert neighbors
+				if(tile.terrain_type == TERRAIN_SNOW)
+					if(has_adjacent_terrain(x, y, TERRAIN_DESERT))
+						// Convert snow to plains or mountain
+						tile.set_terrain(TERRAIN_PLAINS)
+						changes_made = TRUE
+
+/**
+ * Check if a tile has adjacent terrain of a specific type
+ */
+/datum/world_map_manager/proc/has_adjacent_terrain(x, y, terrain_type)
+	// Check all 4 cardinal directions
+	if(x > 1 && tiles[x-1][y].terrain_type == terrain_type)
+		return TRUE
+	if(x < map_width && tiles[x+1][y].terrain_type == terrain_type)
+		return TRUE
+	if(y > 1 && tiles[x][y-1].terrain_type == terrain_type)
+		return TRUE
+	if(y < map_height && tiles[x][y+1].terrain_type == terrain_type)
+		return TRUE
+	return FALSE
+
+/**
+ * Count how many adjacent tiles have a specific terrain type
+ */
+/datum/world_map_manager/proc/count_adjacent_terrain(x, y, terrain_type)
+	var/count = 0
+	// Check all 4 cardinal directions
+	if(x > 1 && tiles[x-1][y].terrain_type == terrain_type)
+		count++
+	if(x < map_width && tiles[x+1][y].terrain_type == terrain_type)
+		count++
+	if(y > 1 && tiles[x][y-1].terrain_type == terrain_type)
+		count++
+	if(y < map_height && tiles[x][y+1].terrain_type == terrain_type)
+		count++
+	return count
+
 /**
  * Simple noise function approximation
  * Returns a value between 0 and 1
@@ -156,6 +245,10 @@
  * Select terrain type based on elevation and moisture
  */
 /datum/world_map_manager/proc/select_terrain(elevation, moisture)
+	// High elevation + high moisture = snow (cold mountain peaks)
+	if(elevation > 0.5 && moisture > 0.65)
+		return TERRAIN_SNOW
+
 	// High elevation = mountains
 	if(elevation > 0.7)
 		return TERRAIN_MOUNTAIN
@@ -190,6 +283,12 @@
 
 	faction_tiles = list()
 
+	// Ensure required terrain exists for all factions before placement
+	for(var/faction_id in faction_ids)
+		var/required_terrain = GLOB.faction_terrain_requirements[faction_id]
+		if(required_terrain)
+			ensure_faction_terrain(faction_id, required_terrain)
+
 	for(var/faction_id in faction_ids)
 		var/datum/world_tile/tile = find_faction_placement(faction_id)
 		if(tile)
@@ -203,18 +302,136 @@
 				faction.world_y = tile.y_coord
 
 /**
+ * Ensure terrain of a specific type exists for faction placement
+ * Creates terrain clusters so factions can have 4+ adjacent tiles of required terrain
+ */
+/datum/world_map_manager/proc/ensure_faction_terrain(faction_id, required_terrain)
+	// First check if any valid tiles already exist (with 4+ adjacent terrain)
+	var/valid_count = 0
+	for(var/x in 1 to map_width)
+		for(var/y in 1 to map_height)
+			var/datum/world_tile/tile = tiles[x][y]
+			if(tile.terrain_type != required_terrain)
+				continue
+			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+
+			var/dist_outpost = tile.distance_to(outpost_tile)
+			if(dist_outpost >= FACTION_MIN_DIST_FROM_OUTPOST && dist_outpost <= FACTION_MAX_DIST_FROM_OUTPOST)
+				// Check if this tile has 4 adjacent tiles of same terrain
+				if(count_adjacent_terrain(x, y, required_terrain) >= 4)
+					valid_count++
+
+	// If we have at least 1 valid tile with 4 adjacent, no need to create more
+	if(valid_count >= 1)
+		return
+
+	// Find center points for creating terrain clusters
+	var/list/cluster_centers = list()
+	for(var/x in 2 to (map_width - 1))
+		for(var/y in 2 to (map_height - 1))
+			var/datum/world_tile/tile = tiles[x][y]
+
+			// Skip special tiles
+			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+
+			// Check distance requirements
+			var/dist_outpost = tile.distance_to(outpost_tile)
+			if(dist_outpost < FACTION_MIN_DIST_FROM_OUTPOST || dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
+				continue
+
+			// Check distance from existing factions
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
+
+			// For snow terrain, check adjacency rules (no desert within 2 tiles)
+			if(required_terrain == TERRAIN_SNOW)
+				var/near_desert = FALSE
+				for(var/dx in -1 to 1)
+					for(var/dy in -1 to 1)
+						var/nx = x + dx
+						var/ny = y + dy
+						if(nx >= 1 && nx <= map_width && ny >= 1 && ny <= map_height)
+							if(tiles[nx][ny].terrain_type == TERRAIN_DESERT)
+								near_desert = TRUE
+								break
+					if(near_desert)
+						break
+				if(near_desert)
+					continue
+
+			// Prefer tiles that are plains or forest
+			if(tile.terrain_type == TERRAIN_PLAINS || tile.terrain_type == TERRAIN_FOREST)
+				cluster_centers += tile
+
+	// Create a cluster of terrain around a random center point
+	if(length(cluster_centers))
+		var/datum/world_tile/center = pick(cluster_centers)
+		create_terrain_cluster(center.x_coord, center.y_coord, required_terrain)
+
+/**
+ * Create a cluster of terrain around a center point
+ * Creates a plus-shaped pattern (center + 4 cardinals) for faction placement
+ */
+/datum/world_map_manager/proc/create_terrain_cluster(center_x, center_y, terrain_type)
+	// Convert the center and all 4 cardinal directions
+	var/list/offsets = list(
+		list(0, 0),   // Center
+		list(-1, 0),  // West
+		list(1, 0),   // East
+		list(0, -1),  // South
+		list(0, 1)    // North
+	)
+
+	for(var/list/offset in offsets)
+		var/x = center_x + offset[1]
+		var/y = center_y + offset[2]
+
+		// Bounds check
+		if(x < 1 || x > map_width || y < 1 || y > map_height)
+			continue
+
+		var/datum/world_tile/tile = tiles[x][y]
+
+		// Don't overwrite special tiles
+		if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+			continue
+
+		tile.set_terrain(terrain_type)
+
+/**
  * Find a valid placement for a faction
+ * Distance between factions is ALWAYS enforced (never relaxed)
+ * Terrain requirements are relaxed progressively if needed
  */
 /datum/world_map_manager/proc/find_faction_placement(faction_id)
 	var/list/candidates = list()
 
-	// Find all valid candidate tiles
+	// Get required terrain for this faction (if any)
+	var/required_terrain = GLOB.faction_terrain_requirements[faction_id]
+
+	// Find all valid candidate tiles (strict requirements)
 	for(var/x in 1 to map_width)
 		for(var/y in 1 to map_height)
 			var/datum/world_tile/tile = tiles[x][y]
 
 			// Skip if already a special tile
 			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+
+			// ALWAYS check distance from other factions - this is never relaxed
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
 				continue
 
 			// Check distance from outpost
@@ -224,14 +441,15 @@
 			if(dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
 				continue
 
-			// Check distance from other factions
-			var/too_close = FALSE
-			for(var/datum/world_tile/ft in faction_tiles)
-				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
-					too_close = TRUE
-					break
-			if(too_close)
+			// Check terrain requirement
+			if(required_terrain && tile.terrain_type != required_terrain)
 				continue
+
+			// Check for 4+ adjacent tiles of required terrain
+			if(required_terrain)
+				var/adjacent_count = count_adjacent_terrain(x, y, required_terrain)
+				if(adjacent_count < 4)
+					continue
 
 			candidates += tile
 
@@ -239,15 +457,105 @@
 	if(length(candidates))
 		return pick(candidates)
 
-	// Fallback: relax constraints and try again
+	// Fallback 1: relax adjacency requirement to 3+ tiles (keep distance requirements!)
+	candidates = list()
 	for(var/x in 1 to map_width)
 		for(var/y in 1 to map_height)
 			var/datum/world_tile/tile = tiles[x][y]
 			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
 				continue
+			// ALWAYS check faction distance
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
 			var/dist_outpost = tile.distance_to(outpost_tile)
-			if(dist_outpost >= 2 && dist_outpost <= 7)
-				return tile
+			if(dist_outpost < 2 || dist_outpost > 7)
+				continue
+			if(required_terrain && tile.terrain_type != required_terrain)
+				continue
+			// Relaxed: only need 3 adjacent tiles
+			if(required_terrain && count_adjacent_terrain(x, y, required_terrain) < 3)
+				continue
+			candidates += tile
+	if(length(candidates))
+		return pick(candidates)
+
+	// Fallback 2: relax to 2+ adjacent tiles (keep distance requirements!)
+	candidates = list()
+	for(var/x in 1 to map_width)
+		for(var/y in 1 to map_height)
+			var/datum/world_tile/tile = tiles[x][y]
+			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+			// ALWAYS check faction distance
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
+			var/dist_outpost = tile.distance_to(outpost_tile)
+			if(dist_outpost < 2 || dist_outpost > 7)
+				continue
+			if(required_terrain && tile.terrain_type != required_terrain)
+				continue
+			// Further relaxed: only need 2 adjacent tiles
+			if(required_terrain && count_adjacent_terrain(x, y, required_terrain) < 2)
+				continue
+			candidates += tile
+	if(length(candidates))
+		return pick(candidates)
+
+	// Fallback 3: ignore adjacency requirement entirely (keep distance requirements!)
+	candidates = list()
+	for(var/x in 1 to map_width)
+		for(var/y in 1 to map_height)
+			var/datum/world_tile/tile = tiles[x][y]
+			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+			// ALWAYS check faction distance
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
+			var/dist_outpost = tile.distance_to(outpost_tile)
+			if(dist_outpost < 2 || dist_outpost > 7)
+				continue
+			if(required_terrain && tile.terrain_type != required_terrain)
+				continue
+			candidates += tile
+	if(length(candidates))
+		return pick(candidates)
+
+	// Fallback 4: ignore terrain requirement entirely (keep distance requirements!)
+	candidates = list()
+	for(var/x in 1 to map_width)
+		for(var/y in 1 to map_height)
+			var/datum/world_tile/tile = tiles[x][y]
+			if(tile.terrain_type == TERRAIN_OUTPOST || tile.terrain_type == TERRAIN_FACTION)
+				continue
+			// ALWAYS check faction distance - never skip this
+			var/too_close = FALSE
+			for(var/datum/world_tile/ft in faction_tiles)
+				if(tile.distance_to(ft) < FACTION_MIN_DIST_BETWEEN)
+					too_close = TRUE
+					break
+			if(too_close)
+				continue
+			var/dist_outpost = tile.distance_to(outpost_tile)
+			if(dist_outpost < 2 || dist_outpost > 7)
+				continue
+			candidates += tile
+	if(length(candidates))
+		return pick(candidates)
 
 	return null
 

@@ -10,8 +10,8 @@
 /obj/item/expedition_map
 	name = "expedition map device"
 	desc = "A portable electronic map showing the surrounding region. Use it to plan your route during expeditions."
-	icon = 'icons/obj/device.dmi'
-	icon_state = "securetablet"
+	icon = 'icons/obj/modular_tablet.dmi'
+	icon_state = "map-tablet"
 	w_class = WEIGHT_CLASS_SMALL
 	/// The expedition party this device is tracking (if any)
 	var/datum/expedition_party/tracked_expedition
@@ -121,7 +121,8 @@
 			var/y = text2num(params["y"])
 			if(x && y && GLOB.resurgence_world_map)
 				var/datum/world_tile/tile = GLOB.resurgence_world_map.get_tile(x, y)
-				if(tile && (tile.discovered || GLOB.resurgence_world_map.debug_mode))
+				// Allow selection of any tile (discovered or not)
+				if(tile)
 					selected_x = x
 					selected_y = y
 					return TRUE

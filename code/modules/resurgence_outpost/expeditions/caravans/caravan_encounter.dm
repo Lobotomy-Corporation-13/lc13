@@ -10,8 +10,157 @@
 	icon_state = "yellow"
 	requires_power = FALSE
 	has_gravity = STANDARD_GRAVITY
-	static_lighting = TRUE
-	base_lighting_alpha = 200
+
+// ============================================
+// CARAVAN ENCOUNTER TURFS
+// ============================================
+
+/// List of floor turfs in the caravan encounter area
+GLOBAL_LIST_EMPTY(caravan_encounter_floor_turfs)
+/// List of wall turfs in the caravan encounter area
+GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
+
+/**
+ * Caravan Encounter Floor Turf
+ * Changes appearance based on the terrain where the caravan was encountered
+ */
+/turf/open/floor/caravan_encounter
+	name = "path"
+	desc = "Ground near the caravan."
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "grass0"
+	/// Current terrain type being displayed
+	var/current_terrain = TERRAIN_PLAINS
+
+/turf/open/floor/caravan_encounter/Initialize(mapload)
+	. = ..()
+	GLOB.caravan_encounter_floor_turfs += src
+
+/turf/open/floor/caravan_encounter/Destroy()
+	GLOB.caravan_encounter_floor_turfs -= src
+	return ..()
+
+/**
+ * Set the terrain type and update appearance
+ */
+/turf/open/floor/caravan_encounter/proc/set_terrain(terrain_type)
+	current_terrain = terrain_type
+	update_terrain_appearance()
+
+/**
+ * Update the turf's appearance based on current terrain
+ */
+/turf/open/floor/caravan_encounter/proc/update_terrain_appearance()
+	switch(current_terrain)
+		if(TERRAIN_PLAINS)
+			icon_state = "grass[rand(0,3)]"
+			icon = 'icons/turf/floors.dmi'
+			name = "grassy clearing"
+			desc = "Soft grass underfoot."
+			color = null
+		if(TERRAIN_FOREST)
+			icon_state = "grass[rand(0,3)]"
+			icon = 'icons/turf/floors.dmi'
+			name = "forest floor"
+			desc = "Fallen leaves and soft earth."
+			color = "#90b090"
+		if(TERRAIN_MOUNTAIN)
+			icon_state = "rockyash"
+			icon = 'icons/turf/mining.dmi'
+			name = "rocky ground"
+			desc = "Uneven stone terrain."
+			color = null
+		if(TERRAIN_DESERT)
+			icon_state = "ironsand[rand(0,3)]"
+			icon = 'icons/turf/floors.dmi'
+			name = "sandy ground"
+			desc = "Fine sand shifts beneath your feet."
+			color = null
+		if(TERRAIN_RUINS)
+			icon_state = "basalt"
+			icon = 'icons/turf/floors.dmi'
+			name = "crumbled floor"
+			desc = "Ancient stonework, cracked and weathered."
+			color = "#a09080"
+		if(TERRAIN_SNOW)
+			icon_state = "snow"
+			icon = 'icons/turf/floors.dmi'
+			name = "snowy ground"
+			desc = "Crunchy snow underfoot."
+			color = null
+		else
+			icon_state = "grass0"
+			name = "path"
+			color = null
+
+/**
+ * Caravan Encounter Wall Turf
+ * Forms the boundaries of the encounter area
+ */
+/turf/closed/wall/caravan_encounter
+	name = "natural barrier"
+	desc = "Impassable terrain."
+	icon = 'icons/turf/walls/wall.dmi'
+	icon_state = "wall-0"
+	/// Current terrain type being displayed
+	var/current_terrain = TERRAIN_PLAINS
+
+/turf/closed/wall/caravan_encounter/Initialize(mapload)
+	. = ..()
+	GLOB.caravan_encounter_wall_turfs += src
+
+/turf/closed/wall/caravan_encounter/Destroy()
+	GLOB.caravan_encounter_wall_turfs -= src
+	return ..()
+
+/**
+ * Set the terrain type and update appearance
+ */
+/turf/closed/wall/caravan_encounter/proc/set_terrain(terrain_type)
+	current_terrain = terrain_type
+	update_terrain_appearance()
+
+/**
+ * Update the wall's appearance based on current terrain
+ */
+/turf/closed/wall/caravan_encounter/proc/update_terrain_appearance()
+	switch(current_terrain)
+		if(TERRAIN_PLAINS)
+			name = "grassy hillside"
+			desc = "A steep grassy slope."
+			color = "#4a7c3f"
+		if(TERRAIN_FOREST)
+			name = "dense treeline"
+			desc = "Thick forest growth."
+			color = "#2d5a27"
+		if(TERRAIN_MOUNTAIN)
+			name = "cliff face"
+			desc = "Sheer rock walls."
+			color = "#8b8b8b"
+		if(TERRAIN_DESERT)
+			name = "sand dune"
+			desc = "A massive dune."
+			color = "#c2b280"
+		if(TERRAIN_RUINS)
+			name = "collapsed wall"
+			desc = "Rubble and debris."
+			color = "#6b5b4f"
+		if(TERRAIN_SNOW)
+			name = "frozen cliff"
+			desc = "Ice-covered rock walls."
+			color = "#e8e8f0"
+		else
+			name = "natural barrier"
+			color = null
+
+/**
+ * Update all caravan encounter turfs to match a terrain type
+ */
+/proc/update_caravan_encounter_terrain(terrain_type)
+	for(var/turf/open/floor/caravan_encounter/F in GLOB.caravan_encounter_floor_turfs)
+		F.set_terrain(terrain_type)
+	for(var/turf/closed/wall/caravan_encounter/W in GLOB.caravan_encounter_wall_turfs)
+		W.set_terrain(terrain_type)
 
 // ============================================
 // CARAVAN ENCOUNTER LANDMARKS
@@ -112,6 +261,16 @@
 
 	// Set current encounter globally
 	GLOB.current_caravan_encounter = caravan
+	GLOB.current_caravan_controller = src
+
+	// Update encounter terrain to match the tile the caravan is on
+	var/terrain_type = TERRAIN_PLAINS
+	if(caravan.current_tile)
+		terrain_type = caravan.current_tile.terrain_type
+		// Don't use faction/outpost terrain types
+		if(terrain_type == TERRAIN_FACTION || terrain_type == TERRAIN_OUTPOST)
+			terrain_type = TERRAIN_PLAINS
+	update_caravan_encounter_terrain(terrain_type)
 
 	// Spawn guards if hostile
 	if(caravan.is_hostile())
@@ -301,9 +460,9 @@ body {
 	popup.open()
 
 /**
- * Handle player choice
+ * Handle player choice from browser popup
  */
-/datum/caravan_encounter_controller/proc/Topic(href, list/href_list)
+/datum/caravan_encounter_controller/Topic(href, list/href_list)
 	if(resolved)
 		return
 
@@ -501,10 +660,13 @@ body {
 	// Close popup
 	user << browse(null, "window=caravan_encounter")
 
-	// Get player's crafting skill
+	// Get player's crafting skill from their core
 	var/skill_level = 5  // Default
-	if(user.mind?.resurgence_stats)
-		skill_level = user.mind.resurgence_stats.get_stat("crafting")
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(core)
+			skill_level = core.stat_crafting
 
 	// Difficulty based on guard count
 	var/difficulty = 5 + caravan.guard_count
@@ -571,6 +733,7 @@ body {
 
 	// Clear global encounter
 	GLOB.current_caravan_encounter = null
+	GLOB.current_caravan_controller = null
 
 	// Return players to corridor
 	return_to_corridor()
@@ -632,7 +795,7 @@ body {
 /datum/caravan_encounter_controller/proc/apply_reputation_change(faction_id, amount)
 	var/datum/trading_faction/faction = GLOB.resurgence_trading?.get_faction(faction_id)
 	if(faction)
-		faction.modify_reputation(amount)
+		faction.adjust_reputation(amount)
 
 // ============================================
 // CARAVAN GUARD MOB
@@ -648,7 +811,8 @@ body {
 	maxHealth = 80
 	melee_damage_lower = 15
 	melee_damage_upper = 25
-	attacktext = "strikes"
+	attack_verb_continuous = "strikes"
+	attack_verb_simple = "strike"
 	attack_sound = 'sound/weapons/punch1.ogg'
 	speed = 1
 	faction = list("caravan")
@@ -695,14 +859,14 @@ body {
 /mob/living/simple_animal/hostile/caravan_guard/death(gibbed)
 	. = ..()
 	// Check if all guards are dead
-	if(GLOB.current_caravan_encounter)
+	if(GLOB.current_caravan_controller)
 		var/all_dead = TRUE
-		var/datum/caravan_encounter_controller/controller = locate() in GLOB.active_expeditions
-		// Find controller through caravan
+		// Check if any other guards in range are still alive
 		for(var/mob/living/simple_animal/hostile/caravan_guard/G in view(10, src))
-			if(G.stat != DEAD)
+			if(G != src && G.stat != DEAD)
 				all_dead = FALSE
 				break
 		if(all_dead)
-			// Signal guards defeated - would need proper controller reference
+			// Signal guards defeated to the encounter controller
 			log_game("All caravan guards defeated")
+			GLOB.current_caravan_controller.guards_defeated()

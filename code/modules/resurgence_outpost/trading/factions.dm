@@ -31,8 +31,10 @@
 	/// Speaker portrait icon state
 	var/speaker_portrait = "default"
 
-	/// Whether this faction has been discovered (connected to at least once)
+	/// Whether this faction has been discovered (found on world map)
 	var/discovered = FALSE
+	/// Whether this faction has been physically visited (required for remote trading)
+	var/visited = FALSE
 
 	/// Current reputation (0-100)
 	var/reputation = 50
@@ -319,6 +321,7 @@
 	speaker_portrait = "trader_historian.png"
 
 	discovered = TRUE  // Main faction always known
+	visited = TRUE  // Can trade remotely from start
 
 	starting_reputation = 75
 	min_reputation = 20  // Familial bond

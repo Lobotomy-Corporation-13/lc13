@@ -178,9 +178,9 @@
 		return FALSE
 
 	var/terrain = first_tile.terrain_type
-	// If it's a faction tile, use the underlying terrain or plains
+	// If it's a faction tile, use the faction's required terrain or plains
 	if(terrain == TERRAIN_FACTION || terrain == TERRAIN_OUTPOST)
-		terrain = TERRAIN_PLAINS
+		terrain = get_faction_terrain(first_tile.faction_id)
 
 	log_game("start_expedition: first_terrain=[GLOB.terrain_names[terrain] || terrain]")
 
@@ -201,6 +201,12 @@
 
 	log_game("Expedition starting at turf: [start_turf] ([start_turf.x], [start_turf.y], [start_turf.z])")
 
+	// Collect crates near the departure console to bring on the expedition
+	var/list/departure_crates = list()
+	if(party.departure_console)
+		for(var/obj/structure/closet/crate/C in range(3, party.departure_console))
+			departure_crates += C
+
 	// Build terrain list for the journey (skip outpost at index 1)
 	var/list/journey_terrains = list()
 	for(var/i in 2 to length(party.route))
@@ -220,6 +226,14 @@
 			to_chat(M, span_notice("Your expedition begins. Route: [journey_terrains.Join(" -> ")]"))
 		else
 			to_chat(M, span_notice("Your expedition begins. Travel through [GLOB.terrain_names[terrain]] territory..."))
+
+	// Teleport crates from departure area to corridor start (on the start landmark turf)
+	if(length(departure_crates))
+		for(var/obj/structure/closet/crate/C in departure_crates)
+			C.forceMove(start_turf)
+		// Notify party about crates
+		for(var/mob/living/M in party.members)
+			to_chat(M, span_notice("[length(departure_crates)] crate(s) have been brought along on this expedition."))
 
 	party.state = EXPEDITION_TRAVELING
 	return TRUE
@@ -280,8 +294,9 @@
 		return
 
 	var/next_terrain = next_tile.terrain_type
+	// For faction/outpost tiles, use the faction's required terrain or fallback to plains
 	if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
-		next_terrain = TERRAIN_PLAINS
+		next_terrain = get_faction_terrain(next_tile.faction_id)
 
 	// Debug: Log the transition
 	log_game("begin_transition: route_index=[route_index], next_tile index=[route_index + 2], next_terrain=[GLOB.terrain_names[next_terrain] || next_terrain]")
@@ -329,6 +344,12 @@
 		for(var/obj/item/I in T)
 			floor_items += I
 
+	// Collect all crates on floor for transport
+	var/list/floor_crates = list()
+	for(var/turf/T in floor_turfs)
+		for(var/obj/structure/closet/crate/C in T)
+			floor_crates += C
+
 	// Get start position
 	var/turf/start_turf = get_turf(start_landmark)
 	if(!start_turf)
@@ -340,12 +361,13 @@
 		// Update speed modifier for new terrain
 		apply_terrain_speed(M, next_terrain)
 
-	// Teleport all items to start area (spread them out a bit)
-	var/item_offset = 0
+	// Teleport all items to start turf (landmark location)
 	for(var/obj/item/I in floor_items)
-		var/turf/item_dest = locate(start_turf.x + (item_offset % 3) - 1, start_turf.y + round(item_offset / 3), start_turf.z)
-		I.forceMove(item_dest)
-		item_offset++
+		I.forceMove(start_turf)
+
+	// Teleport all crates to start turf (landmark location)
+	for(var/obj/structure/closet/crate/C in floor_crates)
+		C.forceMove(start_turf)
 
 	// Update terrain
 	prepare_for_terrain(next_terrain)
@@ -388,7 +410,7 @@
 			log_game("Failed to load caravan encounter area, continuing normal travel")
 			var/next_terrain = caravan.current_tile.terrain_type
 			if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
-				next_terrain = TERRAIN_PLAINS
+				next_terrain = get_faction_terrain(caravan.current_tile.faction_id)
 			execute_transition_continue(next_terrain)
 			return FALSE
 
@@ -409,7 +431,7 @@
 		// Continue normal travel
 		var/next_terrain = caravan.current_tile.terrain_type
 		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
-			next_terrain = TERRAIN_PLAINS
+			next_terrain = get_faction_terrain(caravan.current_tile.faction_id)
 		execute_transition_continue(next_terrain)
 		return FALSE
 
@@ -420,6 +442,12 @@
  * Continue transition after caravan check failed
  */
 /datum/expedition_corridor_manager/proc/execute_transition_continue(next_terrain)
+	// Collect all crates on floor for transport
+	var/list/floor_crates = list()
+	for(var/turf/T in floor_turfs)
+		for(var/obj/structure/closet/crate/C in T)
+			floor_crates += C
+
 	// Get start position
 	var/turf/start_turf = get_turf(start_landmark)
 	if(!start_turf)
@@ -429,6 +457,10 @@
 	for(var/mob/living/M in expedition.members)
 		M.forceMove(start_turf)
 		apply_terrain_speed(M, next_terrain)
+
+	// Teleport all crates to start turf (landmark location)
+	for(var/obj/structure/closet/crate/C in floor_crates)
+		C.forceMove(start_turf)
 
 	// Update terrain
 	prepare_for_terrain(next_terrain)
@@ -505,21 +537,22 @@
 	if(!faction_id)
 		return
 
-	// Get or create the faction hub controller
-	var/datum/faction_hub_controller/hub = get_faction_hub(faction_id)
-	if(!hub)
-		log_game("Could not get faction hub controller for [faction_id]")
+	// Ensure the hub map is loaded and ready
+	if(!ensure_faction_hub_ready(faction_id))
+		log_game("Could not load or initialize faction hub for [faction_id]")
 		// Fall back to basic arrival
 		for(var/mob/living/M in expedition.members)
-			to_chat(M, span_notice("You arrive at [dest_tile.terrain_name]."))
+			to_chat(M, span_notice("You arrive at [dest_tile.terrain_name]. (Hub area not available)"))
+			to_chat(M, span_notice("Use your expedition map device to set a new destination."))
 			remove_terrain_speed(M)
 			fade_from_black(M)
 		expedition.state = EXPEDITION_AT_DESTINATION
 		return
 
-	// Check if hub has a spawn point
-	if(!hub.spawn_point)
-		log_game("Faction hub [faction_id] has no spawn point - hub map may not be loaded")
+	// Get the faction hub controller
+	var/datum/faction_hub_controller/hub = get_faction_hub(faction_id)
+	if(!hub || !hub.spawn_point)
+		log_game("Faction hub [faction_id] not properly initialized")
 		// Fall back to basic arrival message
 		for(var/mob/living/M in expedition.members)
 			to_chat(M, span_notice("You arrive at [dest_tile.terrain_name]. (Hub area not available)"))
@@ -529,11 +562,35 @@
 		expedition.state = EXPEDITION_AT_DESTINATION
 		return
 
+	// Mark faction as discovered and visited for remote trading
+	if(GLOB.resurgence_trading)
+		var/datum/trading_faction/faction = GLOB.resurgence_trading.get_faction(faction_id)
+		if(faction)
+			var/first_visit = !faction.visited
+			faction.discovered = TRUE
+			faction.visited = TRUE
+			if(first_visit)
+				log_game("Faction [faction_id] visited for the first time - remote trading unlocked")
+				for(var/mob/living/M in expedition.members)
+					to_chat(M, span_notice("You have established contact with [faction.name]. Remote trading is now available."))
+
+	// Collect all crates from the corridor
+	var/list/floor_crates = list()
+	for(var/turf/T in floor_turfs)
+		for(var/obj/structure/closet/crate/C in T)
+			floor_crates += C
+
 	// Teleport all expedition members to the hub
 	for(var/mob/living/M in expedition.members)
 		remove_terrain_speed(M)
 		hub.player_arrived(M, expedition)
 		fade_from_black(M)
+
+	// Teleport all crates to the hub spawn point turf
+	var/turf/crate_dest_base = get_turf(hub.spawn_point)
+	if(crate_dest_base)
+		for(var/obj/structure/closet/crate/C in floor_crates)
+			C.forceMove(crate_dest_base)
 
 	expedition.state = EXPEDITION_AT_DESTINATION
 	log_game("Expedition arrived at faction hub: [faction_id]")
@@ -544,6 +601,12 @@
 /datum/expedition_corridor_manager/proc/return_to_outpost()
 	if(!expedition)
 		return
+
+	// Collect all crates from the corridor to return with the party
+	var/list/floor_crates = list()
+	for(var/turf/T in floor_turfs)
+		for(var/obj/structure/closet/crate/C in T)
+			floor_crates += C
 
 	// Find return location - near the departure console
 	var/turf/return_turf
@@ -563,6 +626,11 @@
 		fade_from_black(M)
 		if(return_turf)
 			M.forceMove(return_turf)
+
+	// Teleport crates back to outpost (near the return turf)
+	if(return_turf)
+		for(var/obj/structure/closet/crate/C in floor_crates)
+			C.forceMove(return_turf)
 
 	expedition.state = EXPEDITION_COMPLETE
 	expedition.end_time = world.time
@@ -592,7 +660,7 @@
 
 	var/terrain = first_tile.terrain_type
 	if(terrain == TERRAIN_FACTION || terrain == TERRAIN_OUTPOST)
-		terrain = TERRAIN_PLAINS
+		terrain = get_faction_terrain(first_tile.faction_id)
 
 	// Debug: Log what we're about to do
 	log_game("continue_expedition: route_index=[route_index], route_length=[length(party.route)], first_terrain=[GLOB.terrain_names[terrain] || terrain]")
@@ -609,10 +677,19 @@
  * Execute the continuation after fade
  */
 /datum/expedition_corridor_manager/proc/execute_continue(datum/expedition_party/party, terrain)
-	// Get start position
+	// Get start position - use the landmark turf directly
 	var/turf/start_turf = get_turf(start_landmark)
 	if(!start_turf)
 		start_turf = locate(EXPEDITION_CORRIDOR_WIDTH / 2, EXPEDITION_START_Y + 1, GLOB.expedition_corridor_z)
+
+	// Collect crates from the faction hub before leaving (if coming from a hub)
+	var/list/hub_crates = list()
+	if(party.current_tile?.faction_id)
+		var/datum/faction_hub_controller/hub = get_faction_hub(party.current_tile.faction_id)
+		if(hub?.spawn_point)
+			// Collect all crates near the hub spawn point
+			for(var/obj/structure/closet/crate/C in range(7, hub.spawn_point))
+				hub_crates += C
 
 	// Update current tile to first position in new route
 	if(length(party.route) >= 1)
@@ -622,6 +699,13 @@
 	for(var/mob/living/M in party.members)
 		M.forceMove(start_turf)
 		apply_terrain_speed(M, terrain)
+
+	// Teleport hub crates to the start landmark
+	if(length(hub_crates))
+		for(var/obj/structure/closet/crate/C in hub_crates)
+			C.forceMove(start_turf)
+		for(var/mob/living/M in party.members)
+			to_chat(M, span_notice("[length(hub_crates)] crate(s) have been brought along from the hub."))
 
 	// Update terrain
 	prepare_for_terrain(terrain)
@@ -665,3 +749,15 @@
 /proc/update_all_world_map_uis()
 	for(var/obj/structure/world_map_console/console in GLOB.world_map_consoles)
 		SStgui.update_uis(console)
+
+/**
+ * Get the terrain type for a faction tile
+ * Returns the faction's required terrain from GLOB.faction_terrain_requirements, or TERRAIN_PLAINS as fallback
+ */
+/proc/get_faction_terrain(faction_id)
+	if(!faction_id)
+		return TERRAIN_PLAINS
+	var/required_terrain = GLOB.faction_terrain_requirements[faction_id]
+	if(required_terrain)
+		return required_terrain
+	return TERRAIN_PLAINS

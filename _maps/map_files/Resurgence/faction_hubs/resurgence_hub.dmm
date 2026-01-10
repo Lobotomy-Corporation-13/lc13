@@ -1,0 +1,2200 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aj" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"bR" = (
+/obj/effect/turf_decal/raven/one,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"ci" = (
+/obj/structure/flora/ausbushes/sparsegrass,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"cj" = (
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"cl" = (
+/obj/structure/resurgence_tree,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"cw" = (
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = 16;
+	anchored = 1
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"cR" = (
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"cW" = (
+/obj/structure/mineral_door/wood,
+/obj/effect/turf_decal/siding/blue/end,
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"da" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"dk" = (
+/obj/structure/riser/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"dE" = (
+/obj/structure/displaycase/forsale,
+/obj/structure/table/wood/fancy/royalblue,
+/obj/effect/turf_decal/siding/blue{
+	dir = 6
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"fv" = (
+/obj/structure/fence{
+	dir = 4
+	},
+/turf/open/water/deep/saltwater,
+/area/resurgence/faction_hub/resurgence_clan)
+"gg" = (
+/obj/structure/fence/corner{
+	dir = 6
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"hL" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"hX" = (
+/obj/structure/displaycase/forsale,
+/obj/structure/table/wood/fancy/royalblue,
+/obj/effect/turf_decal/siding/blue,
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"ia" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"iH" = (
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"jb" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/brown,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"jJ" = (
+/obj/structure/farm_plot,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"jO" = (
+/obj/structure/curtain/cloth,
+/turf/closed/indestructible/fakeglass,
+/area/resurgence/faction_hub/resurgence_clan)
+"lr" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"lW" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"nj" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"nA" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"oa" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan)
+"pR" = (
+/obj/structure/flora/ash/garden/waste,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"qP" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_y = 16;
+	anchored = 1
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"qR" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"qS" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan)
+"rr" = (
+/obj/effect/turf_decal/siding/blue,
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"rC" = (
+/obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"sb" = (
+/obj/structure/flora/rock/pile{
+	density = 0
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"sB" = (
+/obj/structure/riser/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"sT" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"sX" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"tr" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/blue/corner,
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"tD" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"wh" = (
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan)
+"xe" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 9
+	},
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_y = 16;
+	anchored = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"xh" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"ya" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"yD" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"zr" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Bo" = (
+/obj/effect/turf_decal/siding/wood/corner,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Bs" = (
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan)
+"Cc" = (
+/obj/structure/resurgence_wild_plant,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan)
+"Cm" = (
+/obj/structure/flora/rock/pile{
+	density = 0
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"CS" = (
+/obj/structure/bonfire/prelit,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"DE" = (
+/obj/structure/chair/sofa/corp/left,
+/obj/effect/turf_decal/siding/blue{
+	dir = 5
+	},
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = 16;
+	anchored = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"Eg" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"Ev" = (
+/obj/effect/landmark/faction_hub_exit/resurgence_clan,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan)
+"Ew" = (
+/obj/structure/resurgence_tree,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"EH" = (
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"ER" = (
+/turf/closed/indestructible/rock,
+/area/resurgence/faction_hub/resurgence_clan)
+"Fc" = (
+/obj/structure/resurgence_wild_plant,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"Gc" = (
+/obj/effect/turf_decal/plaque,
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"HC" = (
+/obj/structure/curtain/cloth,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"HZ" = (
+/obj/structure/flora/ausbushes/sparsegrass,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Ia" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water,
+/area/resurgence/faction_hub/resurgence_clan)
+"Ih" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"ID" = (
+/obj/effect/turf_decal/siding/wood,
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Jq" = (
+/obj/structure/chair/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"JK" = (
+/obj/structure/sign/poster/official/work_for_a_future,
+/turf/closed/indestructible/wood,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"Ld" = (
+/obj/structure/flora/ausbushes/fullgrass,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"Lx" = (
+/obj/structure/curtain/cloth,
+/turf/closed/indestructible/fakeglass,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"LS" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"LV" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Mg" = (
+/obj/structure/chair/sofa/corp/right,
+/obj/effect/turf_decal/siding/blue{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"MY" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"NI" = (
+/obj/effect/turf_decal/siding/wood{
+	color = "#2e1f0e";
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue{
+	dir = 1
+	},
+/obj/effect/landmark/faction_trader_spawn/resurgence_clan,
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"NQ" = (
+/obj/structure/water_source{
+	desc = "A well constructed of stone and wood. From where does it draw water?";
+	icon_state = "wishwell";
+	name = "well";
+	density = 1;
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
+	pixel_y = -3
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"NS" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 1
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"OL" = (
+/obj/effect/turf_decal/raven/three,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"PV" = (
+/obj/structure/fence,
+/turf/open/water/deep/saltwater,
+/area/resurgence/faction_hub/resurgence_clan)
+"QU" = (
+/obj/structure/fence/corner{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Ra" = (
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"RC" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"SF" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = -16;
+	anchored = 1
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"SK" = (
+/turf/open/water/deep/saltwater,
+/area/resurgence/faction_hub/resurgence_clan)
+"Ut" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 10
+	},
+/obj/structure/sign/poster/official/smile{
+	pixel_x = -32
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"Vx" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"Wg" = (
+/obj/effect/turf_decal/siding/blue{
+	dir = 4
+	},
+/obj/structure/sign/poster/official/safety_report{
+	pixel_x = 32
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/faction_hub/resurgence_clan/market)
+"Xl" = (
+/obj/effect/landmark/faction_hub_spawn/resurgence_clan,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/plating/sandy_dirt,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"Xw" = (
+/obj/structure/flora/ash/garden/waste,
+/turf/open/floor/plating/dirt/jungle/wasteland{
+	slowdown = 0
+	},
+/area/resurgence/faction_hub/resurgence_clan)
+"YO" = (
+/obj/structure/fence/corner{
+	dir = 10
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"YP" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"YW" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Zl" = (
+/obj/structure/flora/ausbushes/brflowers,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+
+(1,1,1) = {"
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+lr
+lr
+lr
+lr
+lr
+lr
+ER
+ER
+ER
+ER
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+"}
+(2,1,1) = {"
+ER
+OL
+iH
+sb
+iH
+SK
+SK
+sb
+iH
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+QU
+PV
+PV
+gg
+iH
+iH
+iH
+iH
+wh
+Cc
+wh
+wh
+wh
+lr
+cR
+cR
+cR
+Cm
+cR
+cR
+EH
+cR
+cR
+ER
+"}
+(3,1,1) = {"
+ER
+iH
+ya
+ya
+iH
+SK
+SK
+SK
+iH
+iH
+lr
+iH
+cl
+iH
+iH
+iH
+SK
+SK
+SK
+iH
+iH
+iH
+iH
+wh
+iH
+iH
+wh
+wh
+Cc
+lr
+cR
+cR
+cR
+cR
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(4,1,1) = {"
+ER
+iH
+ya
+Ia
+HZ
+iH
+SK
+SK
+SK
+YO
+lr
+iH
+iH
+iH
+SK
+SK
+SK
+SK
+iH
+iH
+iH
+iH
+wh
+Xw
+iH
+iH
+oa
+wh
+wh
+lr
+Cm
+cR
+cR
+Zl
+Zl
+cR
+nA
+EH
+cR
+ER
+"}
+(5,1,1) = {"
+ER
+iH
+iH
+HZ
+HZ
+iH
+iH
+SK
+SK
+fv
+lr
+iH
+iH
+SK
+SK
+SK
+SK
+iH
+iH
+sT
+iH
+iH
+iH
+iH
+iH
+wh
+iH
+iH
+wh
+lr
+lr
+cR
+cR
+Zl
+Vx
+ci
+cR
+cR
+cR
+ER
+"}
+(6,1,1) = {"
+ER
+iH
+oa
+iH
+iH
+wh
+wh
+wh
+SK
+fv
+SK
+SK
+SK
+SK
+SK
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+wh
+iH
+iH
+lr
+cR
+cR
+cR
+ci
+ci
+cR
+EH
+cR
+ER
+"}
+(7,1,1) = {"
+ER
+wh
+wh
+iH
+iH
+wh
+iH
+iH
+iH
+fv
+SK
+SK
+SK
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+Xw
+iH
+lr
+cR
+cR
+cR
+cR
+cR
+cR
+cR
+EH
+ER
+"}
+(8,1,1) = {"
+ER
+wh
+wh
+wh
+iH
+iH
+iH
+iH
+lr
+lr
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+MY
+iH
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+oa
+iH
+lr
+lr
+cR
+cR
+cR
+EH
+EH
+EH
+EH
+ER
+"}
+(9,1,1) = {"
+ER
+Cc
+iH
+wh
+iH
+iH
+iH
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+lr
+lr
+lr
+lr
+lr
+iH
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+EH
+cR
+EH
+EH
+ER
+"}
+(10,1,1) = {"
+ER
+wh
+wh
+wh
+iH
+iH
+iH
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+lr
+SF
+Jq
+rC
+jO
+iH
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+cR
+EH
+Fc
+EH
+ER
+"}
+(11,1,1) = {"
+ER
+wh
+wh
+wh
+iH
+iH
+iH
+lr
+lr
+iH
+iH
+iH
+iH
+iH
+lr
+Ih
+Jq
+rC
+jO
+Bs
+Bs
+Bs
+iH
+iH
+MY
+iH
+iH
+iH
+sT
+iH
+iH
+lr
+lr
+pR
+cR
+cR
+EH
+EH
+EH
+ER
+"}
+(12,1,1) = {"
+ER
+Cc
+wh
+iH
+wh
+iH
+iH
+lr
+iH
+sT
+iH
+iH
+iH
+iH
+lr
+Ih
+Ih
+Ih
+aj
+Bs
+Bs
+Bs
+iH
+lr
+lr
+lr
+lr
+lr
+lr
+iH
+iH
+iH
+lr
+cR
+EH
+cR
+EH
+EH
+EH
+ER
+"}
+(13,1,1) = {"
+ER
+wh
+Xw
+iH
+oa
+wh
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+HC
+HC
+HC
+lr
+Bs
+Bs
+Bs
+Bs
+lr
+qP
+Ih
+HC
+jb
+lr
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+EH
+EH
+EH
+ER
+"}
+(14,1,1) = {"
+ER
+wh
+iH
+iH
+wh
+iH
+lr
+lr
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+jb
+jb
+jb
+lr
+iH
+Bs
+Bs
+Bs
+aj
+Ih
+Ih
+HC
+jb
+lr
+iH
+iH
+iH
+lr
+lr
+cR
+cR
+EH
+EH
+Fc
+ER
+"}
+(15,1,1) = {"
+ER
+wh
+iH
+iH
+iH
+wh
+lr
+iH
+iH
+iH
+MY
+iH
+iH
+iH
+lr
+lr
+lr
+lr
+lr
+iH
+Bs
+Bs
+Bs
+jO
+rC
+cw
+HC
+jb
+lr
+iH
+iH
+iH
+iH
+lr
+cR
+EH
+cR
+cR
+EH
+ER
+"}
+(16,1,1) = {"
+ER
+iH
+wh
+iH
+iH
+iH
+lr
+iH
+iH
+MY
+iH
+iH
+iH
+iH
+iH
+MY
+iH
+iH
+iH
+iH
+Bs
+Bs
+iH
+lr
+jO
+lr
+lr
+lr
+lr
+iH
+iH
+iH
+iH
+lr
+pR
+cR
+cR
+EH
+cR
+ER
+"}
+(17,1,1) = {"
+ER
+iH
+iH
+iH
+iH
+iH
+Gc
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+Bs
+iH
+iH
+MY
+iH
+iH
+iH
+iH
+cl
+iH
+iH
+Gc
+cR
+cR
+nA
+cR
+cR
+ER
+"}
+(18,1,1) = {"
+ER
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+Bs
+Bs
+xh
+tD
+YP
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+cR
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(19,1,1) = {"
+ER
+Ev
+qS
+iH
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+iH
+iH
+iH
+Bs
+iH
+iH
+Bs
+Bs
+ia
+NS
+iH
+YW
+yD
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+Bs
+Bs
+Bs
+cR
+cR
+cR
+cj
+nj
+Xl
+ER
+"}
+(20,1,1) = {"
+ER
+Ev
+qS
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+LV
+iH
+CS
+iH
+ID
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+cj
+cj
+cj
+cj
+nj
+Xl
+ER
+"}
+(21,1,1) = {"
+ER
+Ev
+qS
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+sX
+hL
+iH
+Bo
+qR
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+cj
+cj
+cj
+cj
+nj
+Xl
+ER
+"}
+(22,1,1) = {"
+ER
+iH
+iH
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+LS
+RC
+zr
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+Bs
+Bs
+cj
+cj
+cj
+cR
+cR
+cR
+ER
+"}
+(23,1,1) = {"
+ER
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+MY
+iH
+iH
+iH
+iH
+cR
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(24,1,1) = {"
+ER
+iH
+sT
+iH
+iH
+iH
+Gc
+iH
+iH
+iH
+lr
+lr
+lr
+lr
+lr
+Bs
+Bs
+Bs
+iH
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+sT
+iH
+iH
+iH
+iH
+iH
+iH
+Gc
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(25,1,1) = {"
+ER
+iH
+iH
+iH
+iH
+iH
+lr
+iH
+iH
+iH
+lr
+SF
+Jq
+rC
+jO
+Bs
+Bs
+iH
+iH
+Bs
+Bs
+Bs
+iH
+lr
+jO
+jO
+lr
+lr
+lr
+iH
+iH
+iH
+iH
+lr
+cR
+cR
+Ew
+cR
+cR
+ER
+"}
+(26,1,1) = {"
+ER
+Xw
+iH
+iH
+MY
+iH
+lr
+iH
+cl
+iH
+lr
+Ih
+Jq
+rC
+jO
+Bs
+Bs
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+lr
+qP
+Ih
+HC
+jb
+lr
+iH
+iH
+MY
+iH
+lr
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(27,1,1) = {"
+ER
+iH
+iH
+iH
+wh
+iH
+lr
+lr
+iH
+iH
+lr
+Ih
+Ih
+Ih
+aj
+Bs
+Bs
+iH
+iH
+Bs
+Bs
+Bs
+Bs
+aj
+Ih
+Ih
+HC
+jb
+lr
+iH
+iH
+iH
+lr
+lr
+cR
+cR
+cR
+cR
+Eg
+ER
+"}
+(28,1,1) = {"
+ER
+iH
+iH
+oa
+iH
+iH
+iH
+lr
+iH
+iH
+lr
+HC
+HC
+HC
+lW
+lW
+lW
+lW
+lW
+Bs
+Bs
+Bs
+Bs
+jO
+rC
+cw
+HC
+jb
+lr
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+Ld
+Cm
+cR
+ER
+"}
+(29,1,1) = {"
+ER
+iH
+wh
+wh
+iH
+iH
+iH
+lr
+iH
+iH
+lr
+jb
+jb
+jb
+lW
+xe
+dk
+Ut
+lW
+Bs
+Bs
+Bs
+iH
+lr
+lr
+lr
+lr
+lr
+lr
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(30,1,1) = {"
+ER
+wh
+wh
+iH
+iH
+iH
+iH
+lr
+lr
+iH
+lr
+lr
+lr
+lr
+lW
+NI
+sB
+rr
+lW
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+lr
+cR
+cR
+cR
+cR
+cR
+cR
+ER
+"}
+(31,1,1) = {"
+ER
+wh
+wh
+wh
+wh
+iH
+iH
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+lW
+da
+Ra
+tr
+cW
+Bs
+Bs
+Bs
+iH
+iH
+iH
+iH
+cl
+iH
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+Zl
+Zl
+cR
+Cm
+ER
+"}
+(32,1,1) = {"
+ER
+Cc
+wh
+iH
+Xw
+iH
+MY
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+lW
+Mg
+Ra
+hX
+Lx
+Bs
+Bs
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+cR
+cR
+cR
+Zl
+Vx
+ci
+cR
+ER
+"}
+(33,1,1) = {"
+ER
+wh
+wh
+iH
+iH
+iH
+iH
+iH
+lr
+lr
+iH
+iH
+iH
+iH
+JK
+DE
+Wg
+dE
+Lx
+Bs
+iH
+iH
+iH
+iH
+iH
+jJ
+jJ
+jJ
+jJ
+iH
+lr
+lr
+cR
+nA
+cR
+cR
+ci
+ci
+cR
+ER
+"}
+(34,1,1) = {"
+ER
+wh
+iH
+iH
+ya
+ya
+iH
+iH
+iH
+lr
+iH
+wh
+iH
+iH
+lW
+lW
+lW
+lW
+lW
+iH
+iH
+iH
+iH
+sT
+iH
+jJ
+jJ
+jJ
+jJ
+iH
+lr
+cR
+cR
+cR
+EH
+cR
+cR
+cR
+cR
+ER
+"}
+(35,1,1) = {"
+ER
+iH
+wh
+iH
+ya
+Ia
+HZ
+iH
+iH
+lr
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+jJ
+jJ
+jJ
+jJ
+iH
+lr
+EH
+EH
+cR
+EH
+cR
+cR
+cR
+cR
+ER
+"}
+(36,1,1) = {"
+ER
+iH
+iH
+wh
+iH
+HZ
+HZ
+iH
+iH
+lr
+lr
+iH
+Xw
+iH
+iH
+iH
+iH
+wh
+iH
+iH
+iH
+MY
+iH
+iH
+iH
+jJ
+jJ
+jJ
+jJ
+lr
+lr
+Fc
+EH
+cR
+EH
+pR
+EH
+cR
+cR
+ER
+"}
+(37,1,1) = {"
+ER
+iH
+oa
+iH
+iH
+iH
+iH
+MY
+iH
+iH
+lr
+wh
+wh
+iH
+iH
+wh
+oa
+wh
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+jJ
+jJ
+jJ
+jJ
+lr
+EH
+EH
+EH
+EH
+cR
+cR
+cR
+cR
+EH
+ER
+"}
+(38,1,1) = {"
+ER
+iH
+iH
+wh
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+Cc
+wh
+wh
+wh
+wh
+iH
+iH
+wh
+iH
+iH
+sT
+iH
+iH
+iH
+jJ
+jJ
+jJ
+jJ
+lr
+EH
+EH
+EH
+EH
+EH
+EH
+EH
+cR
+cR
+ER
+"}
+(39,1,1) = {"
+ER
+bR
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+lr
+wh
+oa
+wh
+Cc
+wh
+iH
+oa
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+iH
+NQ
+lr
+pR
+EH
+nA
+Fc
+EH
+EH
+pR
+EH
+cR
+ER
+"}
+(40,1,1) = {"
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+lr
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+ER
+"}

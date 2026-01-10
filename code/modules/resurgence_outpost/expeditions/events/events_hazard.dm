@@ -418,3 +418,263 @@
 	rush.fail_damage_type = FIRE
 	rush.fail_message = "The exertion in this heat is too much! You collapse briefly from heat exhaustion."
 	choices += rush
+
+// ============================================
+// BLIZZARD (Snow)
+// ============================================
+
+/datum/travel_event/hazard/blizzard
+	name = "Incoming Blizzard"
+	desc = "A wall of swirling snow and ice approaches rapidly. The temperature is dropping fast - you need to find shelter, dig in, or try to push through before visibility drops to zero."
+	category = EVENT_CATEGORY_HAZARD
+	weight = 25
+	valid_terrains = list(TERRAIN_SNOW)
+	global_fail_damage = 25
+	global_fail_message = "The blizzard catches you exposed! Frostbite sets in."
+
+/datum/travel_event/hazard/blizzard/setup_choices()
+	// Choice 1: Build snow shelter (Crafting)
+	var/datum/event_choice/shelter = new()
+	shelter.name = "Build Snow Shelter"
+	shelter.desc = "Quickly construct a snow cave or windbreak to wait out the storm."
+	shelter.skill_type = EVENT_SKILL_CRAFTING
+	shelter.difficulty = 6
+	shelter.pass_credits = 35
+	shelter.pass_message = "You build an effective snow shelter and ride out the blizzard safely!"
+	shelter.fail_damage = 30
+	shelter.fail_damage_type = FIRE
+	shelter.fail_message = "Your shelter collapses! The cold bites deep before you can rebuild."
+	choices += shelter
+
+	// Choice 2: Dig into snowbank (Mining)
+	var/datum/event_choice/dig = new()
+	dig.name = "Burrow Into Snowbank"
+	dig.desc = "Find a deep snowbank and dig in for insulation."
+	dig.skill_type = EVENT_SKILL_MINING
+	dig.difficulty = 5
+	dig.pass_credits = 25
+	dig.pass_message = "You burrow into the snow and stay surprisingly warm until the storm passes!"
+	dig.fail_damage = 20
+	dig.fail_damage_type = OXY
+	dig.fail_message = "The snow compacts too much - you struggle to breathe before digging out!"
+	choices += dig
+
+	// Choice 3: Push through (Risky)
+	var/datum/event_choice/push = new()
+	push.name = "Push Through"
+	push.desc = "Keep moving and try to outpace the worst of the storm."
+	push.skill_type = EVENT_SKILL_COOKING
+	push.difficulty = 8
+	push.pass_credits = 15
+	push.pass_message = "You navigate through the whiteout and emerge on the other side!"
+	push.fail_damage = 40
+	push.fail_damage_type = FIRE
+	push.fail_message = "You get disoriented and wander in circles. Severe frostbite sets in."
+	choices += push
+
+// ============================================
+// THIN ICE (Snow)
+// ============================================
+
+/datum/travel_event/hazard/thin_ice
+	name = "Frozen Lake Crossing"
+	desc = "A frozen lake blocks your path. The ice looks solid in places but thin in others. You can hear it creaking ominously."
+	category = EVENT_CATEGORY_HAZARD
+	weight = 20
+	valid_terrains = list(TERRAIN_SNOW)
+	global_fail_damage = 35
+	global_fail_message = "The ice breaks and you plunge into freezing water!"
+
+/datum/travel_event/hazard/thin_ice/setup_choices()
+	// Choice 1: Test and navigate (Mining)
+	var/datum/event_choice/test = new()
+	test.name = "Test the Ice"
+	test.desc = "Carefully test the ice thickness and find the safest path across."
+	test.skill_type = EVENT_SKILL_MINING
+	test.difficulty = 7
+	test.pass_credits = 40
+	test.pass_message = "You identify the solid ice and cross safely!"
+	test.fail_damage = 45
+	test.fail_damage_type = FIRE
+	test.fail_message = "You misjudged the ice! It cracks and you fall into freezing water."
+	choices += test
+
+	// Choice 2: Distribute weight (Crafting)
+	var/datum/event_choice/crawl = new()
+	crawl.name = "Crawl Across"
+	crawl.desc = "Spread your weight by crawling to reduce pressure on any single point."
+	crawl.skill_type = EVENT_SKILL_CRAFTING
+	crawl.difficulty = 5
+	crawl.pass_credits = 30
+	crawl.pass_message = "By distributing your weight, you make it across safely!"
+	crawl.fail_damage = 35
+	crawl.fail_damage_type = FIRE
+	crawl.fail_message = "Even crawling wasn't enough - the ice gives way beneath you!"
+	choices += crawl
+
+	// Choice 3: Go around (Safe)
+	var/datum/event_choice/around = new()
+	around.name = "Find a Way Around"
+	around.desc = "Take the time to circumnavigate the frozen lake entirely."
+	around.auto_success = TRUE
+	around.pass_message = "You take the long way around the lake, arriving safely but tired."
+	choices += around
+
+// ============================================
+// AVALANCHE RISK (Snow)
+// ============================================
+
+/datum/travel_event/hazard/avalanche
+	name = "Avalanche Risk"
+	desc = "The snowpack above looks dangerously unstable. Any loud noise or wrong step could trigger an avalanche."
+	category = EVENT_CATEGORY_HAZARD
+	weight = 18
+	valid_terrains = list(TERRAIN_SNOW, TERRAIN_MOUNTAIN)
+	global_fail_damage = 30
+	global_fail_message = "Snow cascades down and buries you!"
+
+/datum/travel_event/hazard/avalanche/setup_choices()
+	// Choice 1: Silent passage (Crafting)
+	var/datum/event_choice/silent = new()
+	silent.name = "Move Silently"
+	silent.desc = "Cross with extreme care, making no sudden movements or sounds."
+	silent.skill_type = EVENT_SKILL_CRAFTING
+	silent.difficulty = 7
+	silent.pass_credits = 45
+	silent.pass_message = "You glide across like a ghost, not disturbing a single flake!"
+	silent.fail_damage = 40
+	silent.fail_damage_type = BRUTE
+	silent.fail_message = "A misplaced step triggers the avalanche! You're buried under snow."
+	choices += silent
+
+	// Choice 2: Find protected route (Mining)
+	var/datum/event_choice/route = new()
+	route.name = "Find Protected Path"
+	route.desc = "Identify natural features that would protect you from a slide."
+	route.skill_type = EVENT_SKILL_MINING
+	route.difficulty = 6
+	route.pass_credits = 35
+	route.pass_message = "You find a rocky outcrop that shields you from the avalanche zone!"
+	route.fail_damage = 25
+	route.fail_damage_type = BRUTE
+	route.fail_message = "Your 'protected' path wasn't as safe as you thought."
+	choices += route
+
+	// Choice 3: Sprint across (Very risky)
+	var/datum/event_choice/sprint = new()
+	sprint.name = "Run For It"
+	sprint.desc = "Sprint across as fast as possible before the snow can catch you."
+	sprint.skill_type = EVENT_SKILL_MINING
+	sprint.difficulty = 8
+	sprint.pass_credits = 20
+	sprint.pass_message = "You dash across just as the snow begins to shift behind you!"
+	sprint.fail_damage = 50
+	sprint.fail_damage_type = OXY
+	sprint.fail_message = "The avalanche catches you mid-stride! You barely dig yourself out."
+	choices += sprint
+
+// ============================================
+// FROSTBITE RISK (Snow)
+// ============================================
+
+/datum/travel_event/hazard/frostbite
+	name = "Extreme Cold Snap"
+	desc = "The temperature has plummeted to dangerous levels. Your extremities are going numb. You need to generate heat quickly."
+	category = EVENT_CATEGORY_HAZARD
+	weight = 22
+	valid_terrains = list(TERRAIN_SNOW)
+	global_fail_damage = 20
+	global_fail_message = "The cold seeps into your bones!"
+
+/datum/travel_event/hazard/frostbite/setup_choices()
+	// Choice 1: Start a fire (Cooking)
+	var/datum/event_choice/fire = new()
+	fire.name = "Build a Fire"
+	fire.desc = "Gather whatever fuel you can find and start a warming fire."
+	fire.skill_type = EVENT_SKILL_COOKING
+	fire.difficulty = 6
+	fire.pass_credits = 30
+	fire.pass_message = "You coax a fire to life and warm yourself before continuing!"
+	fire.fail_damage = 15
+	fire.fail_damage_type = FIRE
+	fire.fail_message = "You can't get the fire started. The cold continues to bite."
+	choices += fire
+
+	// Choice 2: Improvise insulation (Crafting)
+	var/datum/event_choice/insulate = new()
+	insulate.name = "Improvise Insulation"
+	insulate.desc = "Use available materials to create additional layers of insulation."
+	insulate.skill_type = EVENT_SKILL_CRAFTING
+	insulate.difficulty = 5
+	insulate.pass_credits = 25
+	insulate.pass_message = "Your improvised insulation traps body heat effectively!"
+	insulate.fail_damage = 18
+	insulate.fail_damage_type = FIRE
+	insulate.fail_message = "Your insulation isn't enough. You shiver uncontrollably."
+	choices += insulate
+
+	// Choice 3: Keep moving (Endurance)
+	var/datum/event_choice/move = new()
+	move.name = "Keep Moving"
+	move.desc = "Generate body heat through constant movement. Exhausting but effective."
+	move.skill_type = EVENT_SKILL_MINING
+	move.difficulty = 4
+	move.pass_credits = 15
+	move.pass_message = "You keep your blood pumping and stay warm through exertion!"
+	move.fail_damage = 12
+	move.fail_damage_type = FIRE
+	move.fail_message = "You exhaust yourself but still feel the cold creeping in."
+	choices += move
+
+// ============================================
+// WHITEOUT CONDITIONS (Snow)
+// ============================================
+
+/datum/travel_event/hazard/whiteout
+	name = "Whiteout Conditions"
+	desc = "Visibility has dropped to near zero. The endless white makes it impossible to tell direction."
+	category = EVENT_CATEGORY_HAZARD
+	weight = 20
+	valid_terrains = list(TERRAIN_SNOW)
+	global_fail_damage = 15
+	global_fail_message = "You wander in circles, wasting precious energy!"
+
+/datum/travel_event/hazard/whiteout/setup_choices()
+	// Choice 1: Navigate by memory (Mining)
+	var/datum/event_choice/navigate = new()
+	navigate.name = "Navigate by Landmarks"
+	navigate.desc = "Recall terrain features from before the whiteout and navigate by memory."
+	navigate.skill_type = EVENT_SKILL_MINING
+	navigate.difficulty = 7
+	navigate.pass_credits = 40
+	navigate.pass_message = "Your mental map guides you true - you emerge on the right path!"
+	navigate.fail_damage = 20
+	navigate.fail_damage_type = BRUTE
+	navigate.fail_message = "You walk straight into a hidden crevasse! The fall hurts."
+	choices += navigate
+
+	// Choice 2: Improvise compass (Crafting)
+	var/datum/event_choice/compass = new()
+	compass.name = "Improvise Direction"
+	compass.desc = "Use improvised methods - sun position, wind direction - to find your way."
+	compass.skill_type = EVENT_SKILL_CRAFTING
+	compass.difficulty = 6
+	compass.pass_credits = 30
+	compass.pass_message = "Your improvised navigation keeps you on course!"
+	compass.fail_damage = 10
+	compass.fail_damage_type = FIRE
+	compass.fail_message = "You go in circles and waste energy. The cold takes its toll."
+	choices += compass
+
+	// Choice 3: Wait it out (Safe)
+	var/datum/event_choice/wait = new()
+	wait.name = "Wait for Visibility"
+	wait.desc = "Find shelter and wait for conditions to improve. Safe but time-consuming."
+	wait.skill_type = EVENT_SKILL_COOKING
+	wait.difficulty = 4
+	wait.pass_credits = 10
+	wait.pass_message = "You hunker down and wait. Eventually the whiteout clears."
+	wait.fail_damage = 8
+	wait.fail_damage_type = FIRE
+	wait.fail_message = "Even sheltered, the cold gets to you while waiting."
+	choices += wait

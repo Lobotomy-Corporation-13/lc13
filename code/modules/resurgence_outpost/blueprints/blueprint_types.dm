@@ -220,6 +220,21 @@
 		/obj/item/stack/sheet/metal = 4
 	)
 
+/obj/structure/resurgence_blueprint/expedition_crate
+	name = "expedition crate blueprint"
+	result_name = "expedition crate"
+	desc = "A reinforced crate for hauling goods on expeditions. Place it near the World Map Console before departing, and it will travel with you to faction hubs where you can sell its contents."
+	icon = 'icons/obj/crates.dmi'
+	icon_state = "crate"
+	result_type = /obj/structure/closet/crate/expedition
+	research_required = "expedition_logistics"
+
+/obj/structure/resurgence_blueprint/expedition_crate/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/mineral/wood = 4,
+		/obj/item/stack/sheet/metal = 4
+	)
+
 /obj/structure/resurgence_blueprint/barrel
 	name = "large crate blueprint"
 	result_name = "large crate"
@@ -825,7 +840,7 @@
 	icon_state = "req_comp0"
 	result_type = /obj/structure/comms_console
 	density = FALSE
-	research_required = "machine_fabrication"
+	research_required = "remote_trading"
 
 	/// Direction towards the wall this console will be mounted on
 	var/wall_dir = SOUTH

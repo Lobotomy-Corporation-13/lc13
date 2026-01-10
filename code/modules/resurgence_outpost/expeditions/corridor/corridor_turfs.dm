@@ -40,29 +40,40 @@
 	switch(current_terrain)
 		if(TERRAIN_PLAINS)
 			icon_state = "grass[rand(0,3)]"
+			icon = 'icons/turf/floors.dmi'
 			name = "grassy path"
 			desc = "Soft grass underfoot. Easy terrain."
 		if(TERRAIN_FOREST)
 			icon_state = "grass[rand(0,3)]"
+			icon = 'icons/turf/floors.dmi'
 			name = "forest floor"
 			desc = "Fallen leaves and soft earth. Watch your step."
 			// Add slight color tint for forest
 			color = "#90b090"
 		if(TERRAIN_MOUNTAIN)
-			icon_state = "rock"
+			icon_state = "rockyash"
+			icon = 'icons/turf/mining.dmi'
 			name = "rocky trail"
 			desc = "Uneven stone makes for difficult footing."
 			color = null
 		if(TERRAIN_DESERT)
-			icon_state = "sand"
+			icon_state = "ironsand[rand(1,3)]"
+			icon = 'icons/turf/floors.dmi'
 			name = "sandy path"
 			desc = "Fine sand shifts beneath your feet."
 			color = null
 		if(TERRAIN_RUINS)
-			icon_state = "plating"
+			icon_state = "basalt"
+			icon = 'icons/turf/floors.dmi'
 			name = "crumbled floor"
 			desc = "Ancient stonework, cracked and weathered."
 			color = "#a09080"
+		if(TERRAIN_SNOW)
+			icon_state = "snow"
+			icon = 'icons/turf/floors.dmi'
+			name = "snowy path"
+			desc = "Crunchy snow underfoot. The cold bites at your extremities."
+			color = null
 		else
 			icon_state = "grass0"
 			name = "path"
@@ -126,6 +137,10 @@
 			name = "collapsed wall"
 			desc = "Rubble and debris block the way."
 			color = "#6b5b4f"
+		if(TERRAIN_SNOW)
+			name = "frozen cliff"
+			desc = "Ice-covered rock walls, treacherous and cold."
+			color = "#e8e8f0"
 		else
 			name = "natural barrier"
 			color = null
@@ -176,10 +191,11 @@
 /obj/structure/flora/expedition/tree
 	name = "tree"
 	desc = "A sturdy tree."
-	icon = 'icons/obj/flora/pinetrees.dmi'
-	icon_state = "pine_1"
+	icon = 'icons/obj/flora/jungletrees.dmi'
+	icon_state = "tree4"
+	pixel_x = -48
+	pixel_y = -20
 	density = TRUE
-	pixel_x = -16
 	layer = ABOVE_ALL_MOB_LAYER
 
 /obj/structure/flora/expedition/bush
@@ -216,12 +232,10 @@
 
 // Ruins decorations
 /obj/structure/flora/expedition/pillar
-	name = "broken pillar"
-	desc = "The remains of an ancient column."
-	icon = 'icons/obj/flora/rocks.dmi'
-	icon_state = "rock2"
-	color = "#808080"
-	density = TRUE
+	name = "clockwork golem scrap"
+	desc = "A pile of scrap metal. It seems damaged beyond repair."
+	icon = 'icons/obj/clockwork_objects.dmi'
+	icon_state = "clockgolem_dead"
 
 /obj/structure/flora/expedition/debris
 	name = "debris"
@@ -229,3 +243,25 @@
 	icon = 'icons/obj/flora/rocks.dmi'
 	icon_state = "rock1"
 	color = "#706050"
+
+// Snow decorations
+/obj/structure/flora/expedition/snowpile
+	name = "pine tree"
+	desc = "A coniferous pine tree."
+	icon = 'icons/obj/flora/pinetrees.dmi'
+	pixel_x = -16
+	icon_state = "pine_1"
+
+/obj/structure/flora/expedition/ice_rock
+	name = "ice-covered rock"
+	desc = "A boulder encased in ice."
+	icon = 'icons/obj/flora/rocks.dmi'
+	icon_state = "lavarocks"
+	color = "#5badff"
+	density = TRUE
+
+/obj/structure/flora/expedition/frozen_shrub
+	name = "frozen shrub"
+	desc = "A bush covered in frost and ice."
+	icon = 'icons/obj/flora/snowflora.dmi'
+	icon_state = "snowgrassall1"

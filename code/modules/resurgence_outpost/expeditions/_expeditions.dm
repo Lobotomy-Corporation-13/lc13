@@ -110,7 +110,8 @@ GLOBAL_LIST_INIT(terrain_speed_modifiers, list(
 	TERRAIN_FOREST = 0.3,
 	TERRAIN_MOUNTAIN = 1.0,
 	TERRAIN_DESERT = 0.5,
-	TERRAIN_RUINS = 0.2
+	TERRAIN_RUINS = 0.2,
+	TERRAIN_SNOW = 0.4
 ))
 
 // ============================================
@@ -122,5 +123,6 @@ GLOBAL_LIST_INIT(expedition_decorations, list(
 	TERRAIN_FOREST = list(/obj/structure/flora/expedition/tree, /obj/structure/flora/expedition/bush),
 	TERRAIN_MOUNTAIN = list(/obj/structure/flora/expedition/rock_large, /obj/structure/flora/expedition/boulder),
 	TERRAIN_DESERT = list(/obj/structure/flora/expedition/cactus, /obj/structure/flora/expedition/dead_bush),
-	TERRAIN_RUINS = list(/obj/structure/flora/expedition/pillar, /obj/structure/flora/expedition/debris)
+	TERRAIN_RUINS = list(/obj/structure/flora/expedition/pillar, /obj/structure/flora/expedition/debris),
+	TERRAIN_SNOW = list(/obj/structure/flora/expedition/snowpile, /obj/structure/flora/expedition/ice_rock, /obj/structure/flora/expedition/frozen_shrub)
 ))

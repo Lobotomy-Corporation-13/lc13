@@ -1,0 +1,2500 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aO" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/blood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"bD" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"cr" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/mineral_door/wood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"cA" = (
+/obj/structure/stone_tile/surrounding/burnt,
+/obj/structure/stone_tile/center/cracked,
+/obj/structure/statue/bone/skull/half,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"cN" = (
+/obj/structure/stone_tile/block{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"dk" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"dK" = (
+/obj/structure/stone_tile/slab/cracked,
+/obj/structure/window/bronze/fulltile{
+	resistance_flags = 64
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"ei" = (
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"em" = (
+/obj/structure/spacevine{
+	name = "old vines"
+	},
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren)
+"eq" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water/jungle,
+/area/resurgence/faction_hub/jiajia_ren)
+"eA" = (
+/obj/structure/stone_tile/slab,
+/obj/effect/decal/cleanable/blood,
+/obj/item/food/meat/slab/meatwheat,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"eL" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"fq" = (
+/obj/structure/stone_tile/slab,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"fQ" = (
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"fV" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"fY" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"gx" = (
+/obj/structure/stone_tile/surrounding/burnt,
+/obj/structure/stone_tile/center/cracked,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"gL" = (
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"hr" = (
+/obj/effect/landmark/faction_hub_spawn/jiajia_ren,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"hC" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/block{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"hQ" = (
+/obj/structure/stone_tile/slab,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"ig" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/blood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"iB" = (
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"iQ" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"iX" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"jE" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/buggy,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"jR" = (
+/obj/structure/stone_tile/slab,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 1
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"kd" = (
+/obj/structure/stone_tile/slab,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+	dir = 1
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"lF" = (
+/obj/structure/flora/rock/pile/largejungle,
+/turf/open/water/jungle,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"lI" = (
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"mb" = (
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"mc" = (
+/obj/structure/stone_tile/slab,
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"na" = (
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"nm" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"nW" = (
+/obj/structure/stone_tile{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"oa" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"ob" = (
+/obj/structure/spacevine{
+	name = "old vines"
+	},
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"or" = (
+/obj/structure/flora/ash/fern,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"pM" = (
+/obj/structure/stone_tile/block/cracked,
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"qG" = (
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"qR" = (
+/obj/structure/stone_tile/slab,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"rP" = (
+/obj/structure/farm_plot,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"rU" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/buggy,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"sI" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/block{
+	dir = 8
+	},
+/obj/effect/landmark/faction_hub_spawn/jiajia_ren,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"tv" = (
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"ty" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"uK" = (
+/obj/structure/water_source/puddle{
+	pixel_x = -3;
+	pixel_y = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"uO" = (
+/obj/structure/stone_tile/slab,
+/obj/effect/decal/cleanable/blood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"vb" = (
+/obj/structure/stone_tile/surrounding_tile,
+/obj/structure/stone_tile/center/cracked,
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"vx" = (
+/obj/structure/stone_tile/slab,
+/obj/effect/decal/cleanable/blood,
+/obj/item/food/meat/slab/buggy,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"vM" = (
+/obj/structure/stone_tile/slab,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"wO" = (
+/obj/effect/landmark/faction_hub_exit/jiajia_ren,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"xE" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/meatwheat,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"yG" = (
+/obj/structure/stone_tile/slab,
+/obj/effect/decal/cleanable/blood,
+/obj/item/food/meat/slab/monkey,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"yJ" = (
+/obj/structure/necropolis_gate/locked,
+/turf/closed/indestructible/riveted/boss/see_through,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"yR" = (
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"yS" = (
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"yW" = (
+/obj/structure/statue/bone/rib,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Aw" = (
+/obj/structure/stone_tile/slab/cracked,
+/obj/structure/window/bronze/fulltile{
+	resistance_flags = 64
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"AX" = (
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"BL" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/block{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"BR" = (
+/obj/structure/stone_tile/block/cracked,
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"BS" = (
+/obj/structure/stone_tile/slab,
+/obj/effect/landmark/faction_trader_spawn/jiajia_ren,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"Ci" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/structure/sushimat{
+	name = "carving mat";
+	desc = "A mat to cut and clean meat.";
+	color = "#777777"
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 1
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Dl" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/structure/mineral_door/wood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Dv" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/structure/window/bronze/fulltile{
+	resistance_flags = 64
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ex" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ez" = (
+/obj/structure/flora/ash/fern,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"Fw" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/table/wood/fancy/black,
+/obj/structure/displaycase/forsale,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"FR" = (
+/obj/structure/stone_tile,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"FX" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/item/toy/plush/bigbird,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Gg" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Gv" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/structure/sushimat{
+	name = "carving mat";
+	desc = "A mat to cut and clean meat.";
+	color = "#777777"
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 1
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"GN" = (
+/obj/structure/stone_tile/block{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Hj" = (
+/obj/structure/stone_tile/surrounding_tile{
+	dir = 4
+	},
+/obj/structure/stone_tile/center/cracked,
+/obj/structure/stone_tile/surrounding_tile/cracked,
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"HH" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/bed/nest,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"IA" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/closet/crate/wooden,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Kq" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"KI" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/structure/statue/bone/skull/half{
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi';
+	icon_state = "thunderbird_altar";
+	pixel_x = -16;
+	name = "old bird statue";
+	desc = "A statue of great worship, it appears to have sinister aura around it... If you understood what it means, you could offer stuff to it..."
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"KL" = (
+/obj/structure/stone_tile/surrounding/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ll" = (
+/obj/structure/necropolis_gate/locked,
+/turf/closed/indestructible/riveted/boss/see_through,
+/area/resurgence/faction_hub/jiajia_ren)
+"Lm" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"LT" = (
+/obj/structure/stone_tile/block/burnt{
+	dir = 8
+	},
+/obj/structure/stone_tile/block/burnt{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Mv" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Mz" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"MC" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/bed/nest,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 8
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ob" = (
+/obj/structure/flora/rock/jungle,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"OQ" = (
+/obj/structure/farm_plot,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"Pf" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/crimson,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Pm" = (
+/obj/structure/flora/rock/jungle,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Pr" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Qb" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"QO" = (
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"QV" = (
+/obj/structure/stone_tile/block/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Rc" = (
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"RI" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/bed/nest,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 4
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"RX" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/bed/nest,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Sk" = (
+/obj/structure/stone_tile/slab/cracked,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"Sq" = (
+/obj/structure/stone_tile/block{
+	dir = 8
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Tc" = (
+/obj/structure/stone_tile/surrounding/burnt,
+/obj/structure/stone_tile/center/cracked,
+/obj/structure/table/wood/fancy/black,
+/obj/structure/displaycase/forsale,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"TC" = (
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"TS" = (
+/obj/structure/stone_tile/slab,
+/obj/structure/mineral_door/wood,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"Uu" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/monkey,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Vd" = (
+/obj/structure/stone_tile/block{
+	dir = 4
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Vo" = (
+/obj/structure/stone_tile/block/cracked,
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Vp" = (
+/obj/structure/stone_tile/slab,
+/obj/item/food/meat/slab/crimson,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"VW" = (
+/obj/structure/stone_tile/cracked,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Xf" = (
+/obj/structure/stone_tile/surrounding_tile{
+	dir = 8
+	},
+/obj/structure/stone_tile/surrounding_tile,
+/obj/structure/stone_tile/center/cracked,
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Xm" = (
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Xq" = (
+/obj/structure/stone_tile/center,
+/obj/structure/bonfire/dense,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ya" = (
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ye" = (
+/obj/structure/stone_tile/slab/cracked,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"Yr" = (
+/turf/closed/indestructible/rock,
+/area/resurgence/faction_hub/jiajia_ren)
+"Ys" = (
+/obj/structure/stone_tile/block,
+/obj/structure/stone_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile{
+	dir = 4
+	},
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Yv" = (
+/obj/structure/stone_tile/cracked{
+	dir = 4
+	},
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"YA" = (
+/obj/structure/spacevine{
+	name = "old vines"
+	},
+/turf/closed/indestructible/riveted/boss,
+/area/resurgence/faction_hub/jiajia_ren/traders_perch)
+"YT" = (
+/obj/structure/stone_tile/block{
+	dir = 1
+	},
+/obj/structure/stone_tile/cracked,
+/obj/structure/stone_tile{
+	dir = 8
+	},
+/obj/structure/table/wood{
+	color = "#2b0300"
+	},
+/mob/living/simple_animal/chicken{
+	name = "\improper tamed chicken";
+	faction = list("neutral", "cuckoospawn")
+	},
+/obj/item/food/fried_chicken,
+/turf/open/indestructible/boss/air,
+/area/resurgence/faction_hub/jiajia_ren)
+"Zp" = (
+/obj/structure/stone_tile/cracked{
+	dir = 8
+	},
+/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+	dir = 8
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+"ZM" = (
+/obj/structure/stone_tile/surrounding_tile{
+	dir = 8
+	},
+/obj/structure/stone_tile/center,
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 1
+	},
+/obj/structure/stone_tile/surrounding_tile/cracked{
+	dir = 4
+	},
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren)
+
+(1,1,1) = {"
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+"}
+(2,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(3,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+em
+em
+em
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(4,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(5,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+or
+fQ
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(6,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+eq
+Ob
+fQ
+fQ
+fQ
+fQ
+dK
+Uu
+IA
+Pf
+IA
+uO
+IA
+Ya
+Ya
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(7,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+or
+Ob
+fQ
+fQ
+fQ
+fQ
+fQ
+dK
+jE
+uO
+Uu
+hQ
+eA
+uO
+xE
+Ya
+Ya
+fQ
+fQ
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(8,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+uO
+IA
+hQ
+IA
+vM
+IA
+jR
+IA
+Ya
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(9,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+rU
+hQ
+vx
+hQ
+hQ
+yG
+Vp
+IA
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(10,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Ya
+Dv
+dK
+Ya
+Ya
+Ya
+Ya
+yW
+fQ
+Ya
+dK
+dK
+Ya
+mc
+Ya
+dK
+dK
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+Yr
+"}
+(11,1,1) = {"
+Yr
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+YT
+Ys
+eL
+Pr
+Gg
+dK
+AX
+fQ
+fQ
+fQ
+fQ
+iB
+BR
+iB
+fQ
+fQ
+fQ
+fQ
+fQ
+or
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+Yr
+"}
+(12,1,1) = {"
+Yr
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+Ys
+aO
+Ci
+Ys
+Gv
+eL
+Ya
+fQ
+fQ
+Ex
+GN
+Kq
+Kq
+BR
+Kq
+Kq
+Kq
+Kq
+Kq
+KL
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+Yr
+"}
+(13,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+KI
+Ys
+Ys
+ig
+eL
+Lm
+Dl
+Ye
+LT
+Ye
+BR
+QV
+QV
+QV
+QV
+QV
+QV
+QV
+QV
+BR
+fQ
+fQ
+iQ
+na
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(14,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+em
+em
+FX
+Ys
+Ci
+eL
+Ci
+eL
+Ya
+fQ
+fQ
+Qb
+BR
+fQ
+em
+Ya
+Ya
+Ya
+Ya
+Ya
+fQ
+BR
+fQ
+Ob
+lF
+iQ
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(15,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+or
+fQ
+fQ
+fQ
+em
+em
+YT
+Ys
+eL
+Ys
+ig
+dK
+AX
+fQ
+fQ
+BR
+fQ
+em
+RX
+hQ
+RI
+hQ
+Ya
+oa
+pM
+na
+na
+iQ
+na
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(16,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+em
+Dv
+dK
+Ya
+Ya
+Ya
+Ya
+yW
+fQ
+fQ
+BR
+fQ
+em
+hQ
+hQ
+hQ
+hQ
+cr
+hC
+Sk
+na
+na
+na
+Ez
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(17,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ob
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+BR
+fQ
+em
+Ya
+HH
+hQ
+RX
+Ya
+dk
+pM
+na
+na
+na
+na
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(18,1,1) = {"
+Yr
+fQ
+Ya
+AX
+fQ
+fQ
+or
+fQ
+Pm
+eq
+Ob
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+FR
+TC
+BR
+qG
+qG
+Ya
+Ya
+Ya
+Ya
+Ya
+ei
+pM
+na
+Ez
+na
+na
+na
+na
+hr
+Rc
+fQ
+Yr
+"}
+(19,1,1) = {"
+Yr
+fQ
+Ya
+wO
+ty
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+or
+fQ
+fQ
+fQ
+fQ
+fQ
+Yv
+vb
+Vd
+Hj
+yR
+na
+na
+na
+na
+na
+na
+pM
+na
+na
+na
+na
+na
+fY
+hr
+Rc
+fQ
+Yr
+"}
+(20,1,1) = {"
+Yr
+fQ
+Ll
+wO
+BL
+BL
+BL
+BL
+BL
+BL
+BL
+Ye
+BL
+BL
+BL
+Ye
+BL
+BL
+BL
+Vo
+Xq
+fV
+BL
+hC
+hC
+Sk
+hC
+hC
+hC
+hC
+hC
+Sk
+hC
+Sk
+hC
+hC
+sI
+yJ
+fQ
+Yr
+"}
+(21,1,1) = {"
+Yr
+fQ
+Ya
+wO
+ty
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ye
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+nW
+Xf
+Sq
+ZM
+FR
+na
+na
+na
+na
+na
+na
+na
+na
+pM
+na
+na
+na
+fY
+hr
+Rc
+fQ
+Yr
+"}
+(22,1,1) = {"
+Yr
+fQ
+Ya
+AX
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+fQ
+Ye
+lI
+Ya
+Ya
+Ya
+Ya
+Ya
+Mv
+mb
+BR
+VW
+tv
+fQ
+Ya
+Ya
+Ya
+Ya
+Ya
+Ya
+na
+pM
+na
+na
+Ez
+na
+hr
+Rc
+fQ
+Yr
+"}
+(23,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+Ya
+RX
+hQ
+RI
+hQ
+Ya
+Xm
+Ye
+Xm
+Ya
+RI
+hQ
+RX
+Ya
+fQ
+fQ
+BR
+fQ
+fQ
+fQ
+Ya
+RI
+hQ
+RX
+hQ
+Ya
+oa
+pM
+na
+na
+na
+na
+na
+Rc
+fQ
+Yr
+"}
+(24,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+em
+hQ
+hQ
+hQ
+hQ
+cr
+BL
+BR
+BL
+cr
+hQ
+hQ
+hQ
+Ya
+fQ
+fQ
+BR
+fQ
+fQ
+fQ
+Ya
+hQ
+hQ
+hQ
+hQ
+cr
+hC
+pM
+na
+na
+iQ
+na
+na
+Rc
+fQ
+Yr
+"}
+(25,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+em
+HH
+hQ
+RX
+hQ
+Ya
+nm
+BR
+nm
+em
+RX
+hQ
+MC
+Ya
+fQ
+fQ
+Ye
+Ob
+eq
+fQ
+em
+HH
+hQ
+RX
+hQ
+Ya
+bD
+cN
+Ez
+iQ
+lF
+na
+na
+ob
+fQ
+Yr
+"}
+(26,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+em
+em
+Ya
+Ya
+Ya
+Ya
+Mz
+BR
+iX
+em
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+BR
+fQ
+Ob
+fQ
+em
+em
+em
+Ya
+Ya
+Ya
+fQ
+fQ
+na
+na
+na
+na
+na
+ob
+fQ
+Yr
+"}
+(27,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+cr
+em
+em
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+BR
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+na
+na
+na
+na
+na
+ob
+fQ
+Yr
+"}
+(28,1,1) = {"
+Yr
+fQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+hQ
+hQ
+hQ
+Ya
+fQ
+fQ
+or
+iB
+fQ
+yW
+Ye
+yW
+fQ
+fQ
+or
+fQ
+fQ
+rP
+fQ
+rP
+fQ
+rP
+na
+OQ
+na
+na
+na
+ob
+fQ
+Yr
+"}
+(29,1,1) = {"
+Yr
+fQ
+Ya
+Ya
+fQ
+fQ
+or
+fQ
+fQ
+Ya
+RX
+hQ
+RX
+Ya
+fQ
+fQ
+fQ
+eq
+Ob
+fQ
+BR
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+rP
+fQ
+rP
+fQ
+rP
+fQ
+rP
+fQ
+fQ
+em
+em
+fQ
+Yr
+"}
+(30,1,1) = {"
+Yr
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Ya
+hQ
+hQ
+hQ
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+BR
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+rP
+fQ
+rP
+fQ
+rP
+fQ
+rP
+fQ
+Ya
+Ya
+fQ
+fQ
+Yr
+"}
+(31,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+Ya
+MC
+hQ
+RX
+Ya
+fQ
+fQ
+fQ
+yW
+fQ
+QO
+Ye
+Zp
+fQ
+yW
+fQ
+or
+fQ
+rP
+fQ
+rP
+fQ
+rP
+iB
+rP
+Ya
+Ya
+fQ
+fQ
+fQ
+Yr
+"}
+(32,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+fQ
+fQ
+fQ
+Ya
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+YA
+Aw
+gL
+TS
+gL
+Aw
+gL
+fQ
+fQ
+fQ
+rP
+fQ
+rP
+fQ
+rP
+rP
+rP
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(33,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+YA
+Tc
+fq
+gx
+fq
+Fw
+gL
+fQ
+fQ
+fQ
+rP
+fQ
+rP
+rP
+rP
+uK
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(34,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+gL
+Fw
+fq
+gx
+gx
+Tc
+gL
+fQ
+fQ
+fQ
+rP
+rP
+rP
+fQ
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(35,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Ya
+em
+fQ
+fQ
+fQ
+yS
+or
+fQ
+fQ
+Aw
+qR
+gx
+fq
+fq
+kd
+Aw
+fQ
+fQ
+fQ
+rP
+iB
+rP
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(36,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+em
+em
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Aw
+gx
+fq
+BS
+fq
+gx
+Aw
+fQ
+fQ
+fQ
+rP
+uK
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(37,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+em
+em
+fQ
+fQ
+fQ
+fQ
+fQ
+gL
+cA
+fq
+gx
+gx
+cA
+gL
+fQ
+fQ
+fQ
+rP
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(38,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+em
+em
+em
+Ya
+Ya
+Ya
+gL
+gL
+gL
+gL
+gL
+gL
+gL
+Ya
+Ya
+Ya
+Ya
+Ya
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(39,1,1) = {"
+Yr
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+fQ
+Yr
+"}
+(40,1,1) = {"
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+Yr
+"}

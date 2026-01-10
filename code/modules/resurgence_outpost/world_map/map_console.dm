@@ -122,8 +122,8 @@
 			var/y = text2num(params["y"])
 			if(x && y && GLOB.resurgence_world_map)
 				var/datum/world_tile/tile = GLOB.resurgence_world_map.get_tile(x, y)
-				// Allow selection if discovered OR in debug mode
-				if(tile && (tile.discovered || GLOB.resurgence_world_map.debug_mode))
+				// Allow selection of any tile (discovered or not)
+				if(tile)
 					selected_x = x
 					selected_y = y
 					// Calculate route from outpost to selected tile

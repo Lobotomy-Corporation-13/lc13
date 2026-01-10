@@ -17,6 +17,9 @@
 #define EVENT_SKILL_MINING "mining"
 #define EVENT_SKILL_COOKING "cooking"
 #define EVENT_SKILL_CRAFTING "crafting"
+#define EVENT_SKILL_HARVESTING "harvesting"
+#define EVENT_SKILL_ANALYSIS "analysis"
+#define EVENT_SKILL_SOCIAL "social"
 #define EVENT_SKILL_NONE "none"
 
 // ============================================
@@ -230,6 +233,18 @@
 		}
 		.skill-crafting {
 			background-color: #4169E1;
+			color: #fff;
+		}
+		.skill-harvesting {
+			background-color: #6B8E23;
+			color: #fff;
+		}
+		.skill-analysis {
+			background-color: #9932CC;
+			color: #fff;
+		}
+		.skill-social {
+			background-color: #DAA520;
 			color: #fff;
 		}
 		.skill-none {
@@ -450,11 +465,33 @@
 
 /**
  * Get a player's skill level for a given skill type
+ * Retrieves stats from the resurgence_core organ
  */
 /datum/travel_event/proc/get_player_skill(mob/living/user, skill_type)
-	// TODO: Integrate with actual skill system
-	// For now, return a default value
-	return 5
+	if(!ishuman(user))
+		return 5  // Default for non-humans
+
+	var/mob/living/carbon/human/H = user
+	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+
+	if(!core || !istype(core))
+		return 5  // Default if no core
+
+	switch(skill_type)
+		if(EVENT_SKILL_MINING)
+			return core.stat_mining
+		if(EVENT_SKILL_COOKING)
+			return core.stat_cooking
+		if(EVENT_SKILL_CRAFTING)
+			return core.stat_crafting
+		if(EVENT_SKILL_HARVESTING)
+			return core.stat_harvesting
+		if(EVENT_SKILL_ANALYSIS)
+			return core.stat_analysis
+		if(EVENT_SKILL_SOCIAL)
+			return core.stat_social
+		else
+			return 5  // Default for unknown skill types
 
 /**
  * Called when a player succeeds at a choice
@@ -462,11 +499,17 @@
 /datum/travel_event/proc/on_choice_pass(mob/living/user, datum/event_choice/choice)
 	to_chat(user, span_boldnotice("[choice.pass_message]"))
 
-	// Give rewards
+	// Give credits reward
 	if(choice.pass_credits > 0)
-		// TODO: Add credits to player/outpost
-		to_chat(user, span_notice("You gained [choice.pass_credits] credits!"))
+		if(GLOB.resurgence_trading)
+			GLOB.resurgence_trading.add_credits(choice.pass_credits)
+		to_chat(user, span_notice("You gained [choice.pass_credits] credits for the outpost!"))
+		// Notify other party members
+		for(var/mob/living/M in expedition?.members)
+			if(M != user)
+				to_chat(M, span_notice("[user.name] earned [choice.pass_credits] credits for the outpost!"))
 
+	// Give item rewards
 	for(var/item_type in choice.pass_items)
 		var/obj/item/I = new item_type(get_turf(user))
 		to_chat(user, span_notice("You obtained: [I.name]"))

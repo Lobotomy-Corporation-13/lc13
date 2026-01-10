@@ -1,0 +1,2444 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aQ" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 6
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"aW" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"be" = (
+/obj/effect/landmark/faction_trader_spawn/cloud_town,
+/obj/structure/chair/sofa{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"bF" = (
+/obj/effect/light_emitter{
+	light_color = "#FAA019";
+	light_range = 4;
+	name = "fire light"
+	},
+/obj/structure/bonfire/dense,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"bJ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"bM" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"dv" = (
+/obj/structure/flora/bush,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town/entrance)
+"dY" = (
+/obj/structure/statue/snow/snowman{
+	anchored = 1;
+	name = "Officer Norm"
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"ep" = (
+/obj/effect/landmark/faction_hub_exit/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"ex" = (
+/obj/structure/flora/grass/both,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town/entrance)
+"eV" = (
+/obj/structure/table/wood,
+/obj/structure/noticeboard{
+	pixel_y = -32;
+	dir = 1
+	},
+/obj/item/head_trophy/flesh_head{
+	step_y = -29;
+	anchored = 1
+	},
+/obj/structure/displaycase/forsale,
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"eX" = (
+/obj/item/paper/crumpled/ruins/snowdin/lootstructures,
+/obj/effect/decal/cleanable/blood/splatter,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"fV" = (
+/obj/structure/flora/grass/both,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"gA" = (
+/obj/effect/landmark/faction_hub_spawn/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"hW" = (
+/turf/closed/wall/mineral/snow,
+/area/resurgence/faction_hub/cloud_town)
+"if" = (
+/obj/structure/bonfire/prelit{
+	burn_icon = "bonfire_warm"
+	},
+/obj/effect/light_emitter{
+	light_color = "#FAA019";
+	light_range = 4;
+	name = "fire light"
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"iC" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"iJ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"jq" = (
+/obj/structure/table/wood,
+/obj/structure/noticeboard{
+	pixel_y = -32;
+	dir = 1
+	},
+/obj/item/head_trophy/steel_head{
+	pixel_y = -28;
+	anchored = 1
+	},
+/obj/structure/displaycase/forsale,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"kq" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"lb" = (
+/obj/structure/flora/bush,
+/obj/structure/barricade/sandbags,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"lK" = (
+/obj/structure/farm_plot,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"ne" = (
+/obj/effect/turf_decal/siding/wood/corner,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"nz" = (
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"oB" = (
+/obj/effect/landmark/faction_hub_exit/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"oI" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"oL" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"oR" = (
+/obj/structure/flora/grass/both,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"pX" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"qH" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"qO" = (
+/obj/structure/barricade/wooden/snowed,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"rh" = (
+/obj/effect/landmark/faction_hub_spawn/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"rj" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town/entrance)
+"rQ" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"rX" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"tL" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"tP" = (
+/obj/structure/water_source{
+	desc = "A well constructed of stone and wood. From where does it draw water?";
+	icon_state = "wishwell";
+	name = "well";
+	density = 1;
+	icon = 'ModularLobotomy/_Lobotomyicons/toolabnormalities.dmi';
+	pixel_y = -3
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"tV" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"up" = (
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"uZ" = (
+/obj/item/kitchen/knife/butcher/deadly,
+/obj/effect/decal/cleanable/blood/footprints,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"vI" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"wl" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"wX" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"wZ" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"xl" = (
+/obj/structure/flora/stump,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"yj" = (
+/obj/structure/barricade/wooden/snowed,
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 10
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"zl" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Aa" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"AL" = (
+/obj/structure/flora/tree/pine,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town/entrance)
+"AP" = (
+/obj/structure/bonfire/prelit,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"AQ" = (
+/obj/structure/barricade/sandbags,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"BH" = (
+/obj/structure/closet/crate/wooden/toy,
+/obj/item/toy/plush/fumo,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"BO" = (
+/obj/effect/landmark/faction_hub_exit/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"CS" = (
+/obj/structure/flora/tree/pine,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"Do" = (
+/obj/effect/turf_decal/siding/wood/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Dp" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/obj/structure/chair/wood{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"EO" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 6
+	},
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"EW" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"FL" = (
+/obj/structure/table/wood,
+/obj/structure/noticeboard{
+	pixel_y = -32;
+	dir = 1
+	},
+/obj/item/head_trophy/steel_head{
+	pixel_y = -28;
+	anchored = 1
+	},
+/obj/structure/displaycase/forsale,
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"FS" = (
+/obj/structure/flora/bush,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"Hb" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 10
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Hm" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 9
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Hq" = (
+/obj/structure/closet/crate/wooden,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"Hu" = (
+/obj/effect/decal/cleanable/blood/splatter,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"Ir" = (
+/obj/structure/barricade/sandbags,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"JK" = (
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"Kp" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"KT" = (
+/obj/machinery/computer/security/wooden_tv,
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"LX" = (
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"Mu" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"MS" = (
+/obj/effect/landmark/faction_hub_spawn/cloud_town,
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"MX" = (
+/obj/effect/mob_spawn/human/corpse/russian,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"NE" = (
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 5
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"PI" = (
+/turf/closed/wall/mineral/snow,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"Qq" = (
+/obj/structure/chair/sofa/right{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblue,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"Ry" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 8
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"RC" = (
+/turf/closed/indestructible/rock/snow/ice,
+/area/resurgence/faction_hub/cloud_town)
+"RG" = (
+/obj/structure/table/wood,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/hunters_lodge)
+"RU" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 1
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"SG" = (
+/obj/structure/chair/sofa/left{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"Tt" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 9
+	},
+/obj/structure/chair/wood{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"TN" = (
+/obj/effect/turf_decal/weather/snow/corner,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"TU" = (
+/obj/structure/statue/snow/snowman{
+	name = "Snow-Luc Price"
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"TW" = (
+/obj/structure/fermenting_barrel,
+/turf/open/floor/plating/asteroid/snow,
+/area/resurgence/faction_hub/cloud_town)
+"Ud" = (
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"US" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/weather/snow/corner{
+	dir = 4
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town/entrance)
+"VY" = (
+/turf/closed/wall/mineral/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"VZ" = (
+/turf/open/floor/plating/ice,
+/area/resurgence/faction_hub/cloud_town)
+"Wz" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 5
+	},
+/obj/structure/chair/wood,
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"WZ" = (
+/obj/effect/turf_decal/siding/wood{
+	dir = 10
+	},
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Xy" = (
+/obj/effect/turf_decal/siding/wood,
+/obj/structure/chair/wood{
+	dir = 1
+	},
+/turf/open/floor/holofloor/snow{
+	base_icon_state = "snow";
+	icon_state = "snow_dug";
+	name = "dug snow"
+	},
+/area/resurgence/faction_hub/cloud_town)
+"Ya" = (
+/obj/structure/table/wood,
+/obj/structure/noticeboard{
+	pixel_y = 32
+	},
+/obj/item/head_trophy/green_datachip{
+	anchored = 1;
+	pixel_y = 30
+	},
+/obj/structure/displaycase/forsale,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+"ZC" = (
+/obj/structure/table/wood,
+/obj/structure/noticeboard{
+	pixel_y = -32;
+	dir = 1
+	},
+/obj/item/head_trophy/flesh_head{
+	step_y = -29;
+	anchored = 1
+	},
+/obj/structure/displaycase/forsale,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/cloud_town/market_square)
+
+(1,1,1) = {"
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+"}
+(2,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+oR
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+aW
+aW
+hW
+iC
+ex
+iC
+iC
+iC
+iC
+RC
+"}
+(3,1,1) = {"
+RC
+aW
+CS
+aW
+xl
+aW
+hW
+aW
+aW
+FS
+aW
+aW
+aW
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+oR
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+rj
+RC
+"}
+(4,1,1) = {"
+RC
+oR
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+CS
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(5,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+FS
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+VZ
+aW
+aW
+aW
+aW
+hW
+iC
+iC
+AL
+iC
+iC
+iC
+RC
+"}
+(6,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+TW
+qH
+up
+up
+Kp
+Kp
+Kp
+Kp
+aQ
+aW
+FS
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(7,1,1) = {"
+RC
+FS
+aW
+aW
+oR
+aW
+hW
+aW
+aW
+aW
+xl
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+fV
+Hm
+rX
+rX
+aQ
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(8,1,1) = {"
+RC
+aW
+aW
+aW
+CS
+aW
+hW
+aW
+aW
+aW
+aW
+JK
+PI
+PI
+PI
+PI
+PI
+JK
+aW
+Mu
+rX
+TN
+aW
+JK
+PI
+PI
+PI
+PI
+PI
+JK
+xl
+aW
+hW
+iC
+iC
+iC
+iC
+AL
+iC
+RC
+"}
+(9,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+CS
+aW
+PI
+PI
+LX
+LX
+RG
+PI
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+PI
+LX
+LX
+RG
+PI
+PI
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(10,1,1) = {"
+RC
+aW
+xl
+aW
+aW
+hW
+hW
+aW
+aW
+aW
+aW
+PI
+Hq
+LX
+LX
+LX
+LX
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+LX
+LX
+LX
+Hu
+LX
+PI
+aW
+aW
+hW
+hW
+ex
+iC
+iC
+ex
+iC
+RC
+"}
+(11,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+PI
+LX
+LX
+if
+LX
+LX
+PI
+xl
+Mu
+rX
+TN
+aW
+PI
+BH
+LX
+bF
+uZ
+MX
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(12,1,1) = {"
+RC
+aW
+oR
+aW
+FS
+hW
+aW
+aW
+FS
+aW
+aW
+PI
+LX
+LX
+LX
+LX
+LX
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+LX
+LX
+Hu
+LX
+eX
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+rj
+iC
+iC
+RC
+"}
+(13,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+PI
+PI
+LX
+LX
+LX
+PI
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+PI
+LX
+LX
+LX
+PI
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(14,1,1) = {"
+RC
+aW
+CS
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+JK
+PI
+PI
+LX
+PI
+PI
+JK
+aW
+Mu
+rX
+TN
+aW
+JK
+PI
+PI
+LX
+PI
+PI
+FS
+aW
+aW
+aW
+hW
+hW
+iC
+iC
+iC
+rj
+RC
+"}
+(15,1,1) = {"
+RC
+aW
+aW
+aW
+hW
+hW
+aW
+CS
+aW
+aW
+aW
+JK
+JK
+PI
+LX
+PI
+JK
+FS
+aW
+Mu
+rX
+TN
+aW
+JK
+JK
+PI
+LX
+PI
+JK
+JK
+aW
+aW
+Ir
+AQ
+hW
+iC
+ex
+iC
+iC
+RC
+"}
+(16,1,1) = {"
+RC
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+JK
+oR
+PI
+wX
+PI
+JK
+JK
+aW
+Mu
+rX
+TN
+aW
+JK
+FS
+PI
+wX
+PI
+JK
+JK
+aW
+aW
+aW
+AQ
+hW
+iC
+iC
+iC
+iC
+RC
+"}
+(17,1,1) = {"
+RC
+aW
+aW
+FS
+hW
+aW
+aW
+FS
+aW
+aW
+xl
+aW
+aW
+Hm
+rX
+Hb
+aW
+aW
+Hm
+rX
+rX
+rX
+Hb
+aW
+aW
+qO
+qO
+yj
+aW
+aW
+CS
+aW
+aW
+lb
+hW
+iC
+iC
+iC
+iC
+RC
+"}
+(18,1,1) = {"
+RC
+aW
+oR
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+Hm
+rX
+rX
+rX
+tL
+tL
+rX
+Tt
+iJ
+vI
+rX
+tL
+tL
+rX
+rX
+rX
+Hb
+aW
+aW
+aW
+aW
+AQ
+hW
+dY
+iC
+iC
+iC
+RC
+"}
+(19,1,1) = {"
+RC
+BO
+Ry
+tL
+tL
+tL
+tL
+tL
+tL
+tL
+tL
+tL
+rX
+rX
+rX
+rX
+rX
+rX
+bJ
+zl
+rX
+Do
+WZ
+rX
+rX
+rX
+rX
+rX
+rX
+tL
+tL
+tL
+tL
+tL
+tL
+EW
+EW
+oL
+MS
+RC
+"}
+(20,1,1) = {"
+RC
+ep
+wl
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+RU
+rX
+AP
+rX
+Xy
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+rX
+Ud
+Ud
+rQ
+rh
+RC
+"}
+(21,1,1) = {"
+RC
+oB
+tV
+Kp
+Kp
+Kp
+Kp
+Kp
+Kp
+Kp
+Kp
+Kp
+rX
+rX
+rX
+rX
+rX
+rX
+Wz
+pX
+rX
+ne
+EO
+rX
+rX
+rX
+rX
+rX
+rX
+Kp
+Kp
+Kp
+Kp
+Kp
+Kp
+kq
+kq
+US
+gA
+RC
+"}
+(22,1,1) = {"
+RC
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+NE
+rX
+rX
+rX
+Kp
+Kp
+rX
+oI
+bM
+Dp
+rX
+Kp
+Kp
+rX
+rX
+rX
+aQ
+aW
+aW
+aW
+aW
+AQ
+hW
+TU
+iC
+iC
+iC
+RC
+"}
+(23,1,1) = {"
+RC
+aW
+oR
+aW
+hW
+aW
+xl
+aW
+aW
+aW
+aW
+aW
+aW
+NE
+rX
+aQ
+aW
+aW
+NE
+rX
+rX
+rX
+aQ
+aW
+aW
+NE
+rX
+aQ
+aW
+aW
+aW
+aW
+aW
+AQ
+hW
+iC
+iC
+iC
+iC
+RC
+"}
+(24,1,1) = {"
+RC
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+oR
+aW
+aW
+FS
+aW
+PI
+wX
+PI
+aW
+oR
+aW
+Mu
+rX
+TN
+FS
+JK
+aW
+PI
+wX
+PI
+aW
+oR
+aW
+FS
+aW
+AQ
+hW
+iC
+dv
+iC
+iC
+RC
+"}
+(25,1,1) = {"
+RC
+aW
+aW
+aW
+hW
+hW
+aW
+aW
+aW
+aW
+aW
+CS
+JK
+PI
+LX
+PI
+JK
+JK
+aW
+Mu
+rX
+TN
+CS
+JK
+JK
+PI
+LX
+PI
+JK
+JK
+aW
+aW
+AQ
+AQ
+hW
+iC
+iC
+iC
+rj
+RC
+"}
+(26,1,1) = {"
+RC
+aW
+oR
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+JK
+PI
+PI
+LX
+PI
+PI
+aW
+aW
+Mu
+rX
+TN
+aW
+JK
+PI
+PI
+LX
+PI
+PI
+aW
+aW
+aW
+CS
+hW
+hW
+iC
+AL
+iC
+iC
+RC
+"}
+(27,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+hW
+FS
+aW
+aW
+aW
+aW
+PI
+PI
+LX
+LX
+LX
+PI
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+PI
+LX
+LX
+LX
+PI
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(28,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+PI
+LX
+LX
+LX
+LX
+LX
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+LX
+LX
+LX
+LX
+LX
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+ex
+iC
+iC
+RC
+"}
+(29,1,1) = {"
+RC
+aW
+xl
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+PI
+Hq
+LX
+if
+LX
+LX
+PI
+xl
+Mu
+rX
+TN
+aW
+PI
+LX
+LX
+if
+LX
+Hq
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(30,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+hW
+hW
+aW
+aW
+aW
+aW
+PI
+LX
+LX
+LX
+LX
+LX
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+LX
+LX
+LX
+LX
+LX
+PI
+aW
+aW
+hW
+hW
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(31,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+oR
+aW
+aW
+PI
+PI
+LX
+LX
+RG
+PI
+PI
+aW
+Mu
+rX
+TN
+aW
+PI
+PI
+LX
+LX
+RG
+PI
+PI
+oR
+aW
+hW
+iC
+iC
+ex
+rj
+iC
+iC
+RC
+"}
+(32,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+CS
+hW
+aW
+aW
+aW
+aW
+JK
+PI
+PI
+PI
+PI
+PI
+aW
+oR
+Mu
+rX
+TN
+aW
+JK
+PI
+PI
+PI
+PI
+PI
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(33,1,1) = {"
+RC
+aW
+oR
+aW
+aW
+aW
+hW
+aW
+aW
+CS
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+VY
+VY
+Aa
+VY
+VY
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(34,1,1) = {"
+RC
+aW
+aW
+aW
+FS
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+VY
+VY
+nz
+nz
+nz
+VY
+VY
+oR
+lK
+aW
+lK
+lK
+lK
+aW
+lK
+hW
+iC
+iC
+AL
+iC
+iC
+iC
+RC
+"}
+(35,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+oR
+aW
+VY
+Ya
+wZ
+wZ
+wZ
+jq
+VY
+aW
+lK
+aW
+lK
+aW
+lK
+aW
+lK
+hW
+iC
+iC
+iC
+iC
+iC
+ex
+RC
+"}
+(36,1,1) = {"
+RC
+aW
+aW
+xl
+aW
+aW
+hW
+aW
+oR
+aW
+aW
+aW
+xl
+aW
+aW
+aW
+aW
+VY
+Ya
+wZ
+wZ
+wZ
+ZC
+VY
+aW
+lK
+aW
+lK
+aW
+lK
+aW
+lK
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(37,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+VY
+wZ
+wZ
+SG
+wZ
+wZ
+VY
+aW
+lK
+aW
+lK
+aW
+lK
+aW
+lK
+hW
+iC
+iC
+iC
+iC
+AL
+iC
+RC
+"}
+(38,1,1) = {"
+RC
+aW
+CS
+aW
+oR
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+CS
+aW
+aW
+aW
+VY
+KT
+wZ
+be
+wZ
+FL
+VY
+aW
+lK
+lK
+lK
+aW
+lK
+lK
+lK
+hW
+rj
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(39,1,1) = {"
+RC
+aW
+aW
+aW
+aW
+aW
+hW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+aW
+FS
+VY
+nz
+nz
+Qq
+nz
+eV
+VY
+tP
+aW
+aW
+aW
+oR
+aW
+aW
+aW
+hW
+iC
+iC
+iC
+iC
+iC
+iC
+RC
+"}
+(40,1,1) = {"
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+VY
+VY
+VY
+VY
+VY
+VY
+VY
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+RC
+"}

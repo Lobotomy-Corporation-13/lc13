@@ -73,6 +73,9 @@ GLOBAL_VAR(caravan_encounter_z)
 /// The current caravan being encountered (if any)
 GLOBAL_DATUM(current_caravan_encounter, /datum/faction_caravan)
 
+/// The current caravan encounter controller (if any)
+GLOBAL_DATUM(current_caravan_controller, /datum/caravan_encounter_controller)
+
 // ============================================
 // CARAVAN ENCOUNTER LOADING
 // ============================================

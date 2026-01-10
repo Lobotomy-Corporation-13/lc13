@@ -12,6 +12,7 @@ export const ResurgenceWorldMap = (props, context) => {
     map_height = 15,
     tiles = [],
     factions = [],
+    caravans = [],
     outpost_x,
     outpost_y,
     selected_x,
@@ -68,6 +69,7 @@ export const ResurgenceWorldMap = (props, context) => {
                   height={map_height}
                   tiles={tiles}
                   factions={factions}
+                  caravans={caravans}
                   outpost_x={outpost_x}
                   outpost_y={outpost_y}
                   selected_x={selected_x}
@@ -187,6 +189,21 @@ export const ResurgenceWorldMap = (props, context) => {
                 </Stack.Item>
               )}
 
+              {/* Caravans Panel */}
+              {caravans.length > 0 && (
+                <Stack.Item>
+                  <Section
+                    title={
+                      <Box>
+                        <Icon name="truck" mr={1} />
+                        Caravans ({caravans.length})
+                      </Box>
+                    }>
+                    <CaravanList caravans={caravans} />
+                  </Section>
+                </Stack.Item>
+              )}
+
               {/* Legend */}
               <Stack.Item>
                 <Section title="Legend">
@@ -207,6 +224,7 @@ const WorldMapGrid = (props) => {
     height,
     tiles,
     factions,
+    caravans = [],
     outpost_x,
     outpost_y,
     selected_x,
@@ -232,6 +250,18 @@ const WorldMapGrid = (props) => {
   const routeSet = new Set();
   planned_route.forEach((point) => {
     routeSet.add(`${point.x},${point.y}`);
+  });
+
+  // Build a lookup for caravans by position
+  const caravanMap = {};
+  caravans.forEach((caravan) => {
+    if (caravan.x && caravan.y) {
+      const key = `${caravan.x},${caravan.y}`;
+      if (!caravanMap[key]) {
+        caravanMap[key] = [];
+      }
+      caravanMap[key].push(caravan);
+    }
   });
 
   // Convert grid coords to pixel coords
@@ -269,12 +299,10 @@ const WorldMapGrid = (props) => {
             <g
               key={index}
               style={{
-                cursor: tile.discovered || debug_mode ? 'pointer' : 'default',
+                cursor: 'pointer',
               }}
               onClick={() => {
-                if (tile.discovered || debug_mode) {
-                  act('select_tile', { x: tile.x, y: tile.y });
-                }
+                act('select_tile', { x: tile.x, y: tile.y });
               }}>
               {/* Tile background */}
               <rect
@@ -407,6 +435,59 @@ const WorldMapGrid = (props) => {
             })}
           </g>
         )}
+
+        {/* Caravan markers */}
+        {caravans.map((caravan, index) => {
+          if (!caravan.x || !caravan.y) return null;
+          const px = toPixelX(caravan.x);
+          const py = toPixelY(caravan.y);
+          const isHostile = caravan.is_patrol
+            || caravan.faction_id === 'insurgence_clan';
+          const isTraveling = caravan.state === 'traveling';
+
+          return (
+            <g key={`caravan-${caravan.caravan_id}`}>
+              {/* Caravan wagon icon - diamond shape */}
+              <g transform={`translate(${px + TILE_SIZE / 2},
+                ${py + TILE_SIZE / 2})`}>
+                {/* Pulsing ring for traveling caravans */}
+                {isTraveling && (
+                  <circle
+                    r={10}
+                    fill="none"
+                    stroke={caravan.color || '#cc9933'}
+                    strokeWidth={2}
+                    opacity={0.6}>
+                    <animate
+                      attributeName="r"
+                      values="6;12;6"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
+                    <animate
+                      attributeName="opacity"
+                      values="0.8;0.2;0.8"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                )}
+                {/* Diamond shape for caravan */}
+                <polygon
+                  points="0,-7 7,0 0,7 -7,0"
+                  fill={caravan.color || '#cc9933'}
+                  stroke={isHostile ? '#ff0000' : '#ffffff'}
+                  strokeWidth={isHostile ? 2 : 1}
+                />
+                {/* Wagon wheel icon */}
+                <circle
+                  r={3}
+                  fill={isHostile ? '#ff0000' : '#ffffff'}
+                />
+              </g>
+            </g>
+          );
+        })}
       </svg>
     </Box>
   );
@@ -417,11 +498,38 @@ const TileInfo = (props) => {
 
   if (!tile.discovered) {
     return (
-      <Box color="label" textAlign="center">
-        <Icon name="question" size={2} mb={1} />
-        <Box>Unexplored Territory</Box>
-        <Box fontSize="11px">Send an expedition to discover this area.</Box>
-      </Box>
+      <Stack vertical>
+        <Stack.Item>
+          <Box color="label" textAlign="center">
+            <Icon name="question" size={2} mb={1} />
+            <Box bold>Unexplored Territory</Box>
+            <Box fontSize="11px" mb={1}>
+              Send an expedition to discover this area.
+            </Box>
+          </Box>
+        </Stack.Item>
+        <Stack.Item>
+          <Flex>
+            <Flex.Item grow basis="50%">
+              <Box color="label" fontSize="11px">
+                Coordinates
+              </Box>
+              <Box>
+                ({tile.x}, {tile.y})
+              </Box>
+            </Flex.Item>
+            <Flex.Item grow basis="50%">
+              <Box color="label" fontSize="11px">
+                Status
+              </Box>
+              <Box color="average">
+                <Icon name="eye-slash" mr={1} />
+                Unknown
+              </Box>
+            </Flex.Item>
+          </Flex>
+        </Stack.Item>
+      </Stack>
     );
   }
 
@@ -713,6 +821,25 @@ const ExpeditionPanel = (props) => {
         <Box>{expedition.estimated_time}</Box>
       </Stack.Item>
 
+      {/* Tip about crates */}
+      {userInExpedition && expedition.state === 'forming' && (
+        <Stack.Item mt={1}>
+          <Box
+            fontSize="10px"
+            color="label"
+            italic
+            style={{
+              backgroundColor: 'rgba(50, 100, 50, 0.3)',
+              padding: '4px 6px',
+              borderRadius: '3px',
+            }}>
+            <Icon name="box" mr={1} />
+            Tip: Place crates near this console before departing to bring
+            goods for trading at faction hubs!
+          </Box>
+        </Stack.Item>
+      )}
+
       <Stack.Item mt={2}>
         {!userInExpedition ? (
           <Button
@@ -757,6 +884,75 @@ const ExpeditionPanel = (props) => {
   );
 };
 
+const CaravanList = (props) => {
+  const { caravans } = props;
+
+  if (!caravans || caravans.length === 0) {
+    return (
+      <Box color="label" fontSize="11px">
+        No caravans spotted.
+      </Box>
+    );
+  }
+
+  return (
+    <Stack vertical>
+      {caravans.map((caravan) => {
+        const isHostile = caravan.is_patrol
+          || caravan.faction_id === 'insurgence_clan';
+        const stateLabel = getCaravanStateLabel(caravan.state);
+
+        return (
+          <Stack.Item key={caravan.caravan_id} mb={0.5}>
+            <Box
+              p={0.5}
+              style={{
+                backgroundColor: (caravan.color || '#cc9933') + '30',
+                borderRadius: '3px',
+                borderLeft: `3px solid ${caravan.color || '#cc9933'}`,
+              }}>
+              <Flex align="center">
+                <Flex.Item>
+                  <Icon
+                    name={isHostile ? 'skull' : 'truck'}
+                    color={isHostile ? 'red' : 'label'}
+                    mr={1}
+                  />
+                </Flex.Item>
+                <Flex.Item grow>
+                  <Box fontSize="11px" bold>
+                    {caravan.name}
+                  </Box>
+                  <Box fontSize="10px" color="label">
+                    ({caravan.x}, {caravan.y}) - {stateLabel}
+                  </Box>
+                </Flex.Item>
+                <Flex.Item>
+                  <Box fontSize="10px" color="label">
+                    <Icon name="users" mr={0.5} />
+                    {caravan.guard_count}
+                  </Box>
+                </Flex.Item>
+              </Flex>
+            </Box>
+          </Stack.Item>
+        );
+      })}
+    </Stack>
+  );
+};
+
+const getCaravanStateLabel = (state) => {
+  const labels = {
+    traveling: 'Traveling',
+    stopped: 'Stopped',
+    at_destination: 'At Destination',
+    destroyed: 'Destroyed',
+    complete: 'Complete',
+  };
+  return labels[state] || state;
+};
+
 const TerrainLegend = () => {
   const terrains = [
     { name: 'Plains', color: '#4a7c3f' },
@@ -764,26 +960,49 @@ const TerrainLegend = () => {
     { name: 'Mountain', color: '#8b8b8b' },
     { name: 'Desert', color: '#c2b280' },
     { name: 'Ruins', color: '#6b5b4f' },
+    { name: 'Snowfields', color: '#e8e8f0' },
     { name: 'Outpost', color: '#3366cc' },
     { name: 'Faction', color: '#cc9933' },
+    { name: 'Caravan', color: '#cc9933', isCaravan: true },
   ];
 
   return (
     <Flex wrap="wrap">
       {terrains.map((t, i) => (
         <Flex.Item key={i} basis="50%" mb={0.5}>
-          <Box
-            as="span"
-            style={{
-              display: 'inline-block',
-              width: '12px',
-              height: '12px',
-              backgroundColor: t.color,
-              borderRadius: '2px',
-              marginRight: '4px',
-              verticalAlign: 'middle',
-            }}
-          />
+          {t.isCaravan ? (
+            <Box
+              as="span"
+              style={{
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                marginRight: '4px',
+                verticalAlign: 'middle',
+              }}>
+              <svg width="12" height="12" viewBox="-7 -7 14 14">
+                <polygon
+                  points="0,-5 5,0 0,5 -5,0"
+                  fill={t.color}
+                  stroke="#ffffff"
+                  strokeWidth={1}
+                />
+              </svg>
+            </Box>
+          ) : (
+            <Box
+              as="span"
+              style={{
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                backgroundColor: t.color,
+                borderRadius: '2px',
+                marginRight: '4px',
+                verticalAlign: 'middle',
+              }}
+            />
+          )}
           <Box as="span" fontSize="11px">
             {t.name}
           </Box>

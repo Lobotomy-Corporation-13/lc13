@@ -49,6 +49,18 @@
 	var/last_idle_chat = 0
 	/// Minimum time between idle chats (in deciseconds)
 	var/idle_chat_interval = 300  // 30 seconds
+	/// Speech bubble icon state
+	var/speech_bubble_type = "default2"
+
+	// Trading state (per-user tracking via weak refs)
+	/// Last scan results: crate ref -> list of item data
+	var/list/last_scan_results
+	/// Currently selected crates for sale
+	var/list/selected_for_sale = list()
+	/// Whether a transaction is in progress
+	var/busy = FALSE
+	/// Shopping cart for purchases: list of (type, quantity, price)
+	var/list/shopping_cart = list()
 
 /mob/living/simple_animal/faction_trader/Initialize(mapload)
 	. = ..()
@@ -59,6 +71,9 @@
 			name = trading_faction.speaker_name
 			desc = "[trading_faction.speaker_title]. They represent [trading_faction.name]."
 
+	// Add speech bubble overlay to indicate this NPC can be talked to
+	add_overlay(mutable_appearance('icons/mob/talk.dmi', speech_bubble_type, ABOVE_MOB_LAYER))
+
 	// Set up idle chat
 	setup_idle_lines()
 	START_PROCESSING(SSobj, src)
@@ -67,6 +82,9 @@
 	STOP_PROCESSING(SSobj, src)
 	trading_faction = null
 	controller = null
+	last_scan_results = null
+	selected_for_sale = null
+	shopping_cart = null
 	return ..()
 
 /**
@@ -105,7 +123,7 @@
 		return ..()
 
 	// Open trading interface
-	open_trading(user)
+	ui_interact(user)
 	return TRUE
 
 /**
@@ -116,11 +134,11 @@
 	if(trading_faction)
 		. += span_notice("Click to open the trading interface.")
 		. += span_notice("Trading here gives you a 10% discount on purchases!")
+		. += span_notice("You can sell items from crates placed nearby.")
 
-/**
- * Open the trading interface for a user
- */
-/mob/living/simple_animal/faction_trader/proc/open_trading(mob/living/user)
+// ===== TGUI Interface =====
+
+/mob/living/simple_animal/faction_trader/ui_interact(mob/user, datum/tgui/ui)
 	if(!trading_faction)
 		to_chat(user, span_warning("[src] doesn't seem to have anything to trade."))
 		return
@@ -130,203 +148,89 @@
 		say(trading_faction.get_dialogue("low_rep"))
 		return
 
-	// Greet the player
+	// Greet the player on first interaction
 	say(trading_faction.get_dialogue("greeting"))
 
-	// Open trading UI
-	// For now, just show a message - full UI would require TGUI integration
-	var/html = get_trading_html(user)
-	user << browse(html, "window=faction_trading_[faction_id];size=500x600;can_close=1;can_minimize=0;can_maximize=0;can_resize=0;titlebar=1")
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "FactionTrader", "[name] - Trading")
+		ui.open()
 
-/**
- * Generate trading HTML interface
- */
-/mob/living/simple_animal/faction_trader/proc/get_trading_html(mob/living/user)
-	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
-	// var/sell_mod = controller ? controller.get_hub_sell_modifier() : trading_faction.get_sell_modifier()  // Unused for now
-	var/discount_percent = round((1 - HUB_TRADING_DISCOUNT) * 100)
+/mob/living/simple_animal/faction_trader/ui_data(mob/user)
+	var/list/data = list()
 
-	var/html = {"
-<!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>[trading_faction.name] Trading</title>
-	<style>
-		body {
-			font-family: Verdana, sans-serif;
-			background-color: #1a1a2e;
-			color: #eee;
-			padding: 15px;
-			margin: 0;
-		}
-		.header {
-			text-align: center;
-			border-bottom: 2px solid #ffd700;
-			padding-bottom: 10px;
-			margin-bottom: 15px;
-		}
-		.trader-name {
-			font-size: 18px;
-			font-weight: bold;
-			color: #ffd700;
-		}
-		.trader-title {
-			font-size: 12px;
-			color: #888;
-		}
-		.faction-name {
-			font-size: 14px;
-			color: #4da6ff;
-			margin-top: 5px;
-		}
-		.bonus-box {
-			background-color: #2d4a2d;
-			border: 1px solid #4a7c4a;
-			border-radius: 5px;
-			padding: 10px;
-			margin-bottom: 15px;
-			text-align: center;
-		}
-		.bonus-title {
-			font-weight: bold;
-			color: #7fff7f;
-		}
-		.dialogue-box {
-			background-color: #252540;
-			border-radius: 5px;
-			padding: 12px;
-			margin-bottom: 15px;
-			font-style: italic;
-		}
-		.stock-header {
-			font-size: 14px;
-			font-weight: bold;
-			color: #ffd700;
-			margin-bottom: 10px;
-		}
-		.stock-item {
-			background-color: #252540;
-			border-radius: 5px;
-			padding: 8px 12px;
-			margin-bottom: 5px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-		.item-name {
-			font-weight: bold;
-		}
-		.item-qty {
-			color: #888;
-			font-size: 12px;
-		}
-		.item-price {
-			color: #7fff7f;
-			font-weight: bold;
-		}
-		.item-price.expensive {
-			color: #ff6b6b;
-		}
-		.buy-btn {
-			background-color: #4CAF50;
-			color: white;
-			border: none;
-			padding: 5px 12px;
-			border-radius: 3px;
-			cursor: pointer;
-			font-size: 12px;
-		}
-		.buy-btn:hover {
-			background-color: #45a049;
-		}
-		.buy-btn:disabled {
-			background-color: #555;
-			color: #999;
-			cursor: not-allowed;
-		}
-		.stats-row {
-			display: flex;
-			justify-content: space-between;
-			font-size: 12px;
-			color: #aaa;
-			margin-bottom: 10px;
-		}
-		.note {
-			font-size: 11px;
-			color: #888;
-			text-align: center;
-			margin-top: 15px;
-			padding-top: 10px;
-			border-top: 1px solid #333;
-		}
-	</style>
-</head>
-<body>
-	<div class="header">
-		<div class="trader-name">[trading_faction.speaker_name]</div>
-		<div class="trader-title">[trading_faction.speaker_title]</div>
-		<div class="faction-name">[trading_faction.name]</div>
-	</div>
+	data["trader_name"] = name
+	data["trader_title"] = trading_faction?.speaker_title || "Trader"
+	data["faction_name"] = trading_faction?.name || "Unknown"
+	data["can_trade"] = trading_faction?.can_trade || FALSE
+	data["credits"] = GLOB.resurgence_credits
+	data["discount_percent"] = round((1 - HUB_TRADING_DISCOUNT) * 100)
+	data["busy"] = busy
+	data["faction_cash"] = trading_faction?.current_cash || 0
 
-	<div class="bonus-box">
-		<span class="bonus-title">In-Person Trading Bonus!</span><br>
-		<span>[discount_percent]% discount on all purchases</span>
-	</div>
-
-	<div class="dialogue-box">
-		"[trading_faction.get_current_dialogue()]"
-	</div>
-
-	<div class="stats-row">
-		<span>Reputation: [trading_faction.get_reputation_label()] ([trading_faction.reputation])</span>
-		<span>Faction Cash: [trading_faction.current_cash]</span>
-	</div>
-
-	<div class="stock-header">Available Stock</div>
-"}
-
-	// List stock items
-	if(!length(trading_faction.stock))
-		html += {"<div class="stock-item">No items available at this time.</div>"}
-	else
-		for(var/list/item_entry in trading_faction.stock)
-			var/item_name = item_entry["name"]
-			var/quantity = item_entry["quantity"]
-			var/base_price = item_entry["base_price"]
-			var/final_price = round(base_price * buy_mod)
-
-			if(quantity <= 0)
+	// Faction stock for buying
+	data["faction_stock"] = list()
+	if(trading_faction?.can_trade)
+		var/buy_mod = get_buy_modifier()
+		for(var/list/stock_item in trading_faction.stock)
+			if(stock_item["quantity"] <= 0)
 				continue
+			// Minimum price of 3 even with discounts
+			var/buy_price = max(3, round(stock_item["base_price"] * buy_mod))
+			data["faction_stock"] += list(list(
+				"type" = "[stock_item["type"]]",
+				"name" = stock_item["name"],
+				"quantity" = stock_item["quantity"],
+				"price" = buy_price
+			))
 
-			html += {"
-	<div class="stock-item">
-		<div>
-			<span class="item-name">[item_name]</span>
-			<span class="item-qty">(x[quantity])</span>
-		</div>
-		<div>
-			<span class="item-price">[final_price] credits</span>
-			<a href="?src=[REF(src)];action=buy;item=[item_name]" class="buy-btn">Buy</a>
-		</div>
-	</div>
-"}
+	// Shopping cart
+	data["cart"] = shopping_cart.Copy()
+	var/cart_total = 0
+	for(var/list/cart_item in shopping_cart)
+		cart_total += cart_item["total"]
+	data["cart_total"] = cart_total
 
-	html += {"
-	<div class="note">
-		Use the outpost trading console for selling items.<br>
-		Visit in person for the best prices!
-	</div>
-</body>
-</html>
-"}
+	// Scanned crates for selling
+	data["scanned_crates"] = list()
+	if(last_scan_results && trading_faction)
+		for(var/obj/structure/closet/C in last_scan_results)
+			if(QDELETED(C))
+				continue
+			var/list/crate_data = list(
+				"ref" = REF(C),
+				"name" = C.name,
+				"items" = list(),
+				"selected" = (C in selected_for_sale),
+				"total_value" = 0
+			)
+			var/crate_total = 0
+			var/sell_mod = get_sell_modifier()
+			for(var/list/item_data in last_scan_results[C])
+				var/item_value = round(item_data["value"] * sell_mod)
+				crate_total += item_value
+				crate_data["items"] += list(list(
+					"name" = item_data["name"],
+					"count" = item_data["count"],
+					"value" = item_value
+				))
+			crate_data["total_value"] = crate_total
+			data["scanned_crates"] += list(crate_data)
 
-	return html
+	// Calculate selected total
+	var/selected_total = 0
+	if(trading_faction)
+		var/sell_mod = get_sell_modifier()
+		for(var/obj/structure/closet/C in selected_for_sale)
+			if(QDELETED(C) || !(C in last_scan_results))
+				continue
+			for(var/list/item_data in last_scan_results[C])
+				selected_total += round(item_data["value"] * sell_mod)
+	data["selected_total"] = selected_total
 
-/**
- * Handle Topic calls from the trading UI
- */
-/mob/living/simple_animal/faction_trader/Topic(href, href_list)
+	return data
+
+/mob/living/simple_animal/faction_trader/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
@@ -335,84 +239,362 @@
 	if(!isliving(user))
 		return
 
-	if(get_dist(user, src) > 2)
+	if(get_dist(user, src) > 3)
 		to_chat(user, span_warning("You're too far away!"))
 		return
 
-	switch(href_list["action"])
-		if("buy")
-			var/item_name = href_list["item"]
-			attempt_purchase(user, item_name)
+	switch(action)
+		// Buying
+		if("add_to_cart")
+			var/item_type = params["type"]
+			var/quantity = text2num(params["quantity"])
+			add_to_cart(item_type, quantity, user)
+			return TRUE
 
-/**
- * Attempt to purchase an item
- */
-/mob/living/simple_animal/faction_trader/proc/attempt_purchase(mob/living/user, item_name)
-	if(!trading_faction || !item_name)
+		if("remove_from_cart")
+			var/item_type = params["type"]
+			remove_from_cart(item_type)
+			return TRUE
+
+		if("clear_cart")
+			shopping_cart = list()
+			return TRUE
+
+		if("purchase")
+			if(!busy && length(shopping_cart))
+				purchase_cart(user)
+			return TRUE
+
+		// Selling
+		if("scan_crates")
+			scan_nearby_crates()
+			return TRUE
+
+		if("toggle_crate")
+			var/ref = params["ref"]
+			var/obj/structure/closet/C = locate(ref)
+			if(C && !QDELETED(C) && (C in last_scan_results))
+				if(C in selected_for_sale)
+					selected_for_sale -= C
+				else
+					selected_for_sale += C
+			return TRUE
+
+		if("select_all")
+			selected_for_sale = list()
+			if(last_scan_results)
+				for(var/obj/structure/closet/C in last_scan_results)
+					if(!QDELETED(C))
+						selected_for_sale += C
+			return TRUE
+
+		if("deselect_all")
+			selected_for_sale = list()
+			return TRUE
+
+		if("sell")
+			if(!busy && length(selected_for_sale))
+				sell_selected(user)
+			return TRUE
+
+	return FALSE
+
+// ===== Buy Modifier =====
+
+/mob/living/simple_animal/faction_trader/proc/get_buy_modifier()
+	if(!trading_faction)
+		return 1.0
+	return trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT
+
+// ===== Sell Modifier =====
+
+/mob/living/simple_animal/faction_trader/proc/get_sell_modifier()
+	if(!trading_faction)
+		return 1.0
+	// In-person selling gets a bonus (opposite of buy discount)
+	return trading_faction.get_sell_modifier() * (1 + (1 - HUB_TRADING_DISCOUNT))
+
+// ===== Cart Management =====
+
+/mob/living/simple_animal/faction_trader/proc/add_to_cart(item_type_str, quantity, mob/buyer = null)
+	if(!trading_faction || !trading_faction.can_trade)
 		return
 
-	// Find the item in stock
-	var/list/target_item = null
-	for(var/list/item_entry in trading_faction.stock)
-		if(item_entry["name"] == item_name)
-			target_item = item_entry
-			break
+	// Find the stock item
+	for(var/list/stock_item in trading_faction.stock)
+		if("[stock_item["type"]]" == item_type_str)
+			var/available = stock_item["quantity"]
+			quantity = clamp(quantity, 1, available)
 
-	if(!target_item)
-		to_chat(user, span_warning("That item is not available."))
+			// Minimum price of 3 even with discounts
+			var/buy_price = max(3, round(stock_item["base_price"] * get_buy_modifier()))
+			var/total = buy_price * quantity
+
+			// Check if already in cart
+			for(var/list/cart_item in shopping_cart)
+				if(cart_item["type"] == item_type_str)
+					// Update existing entry
+					var/new_qty = min(cart_item["quantity"] + quantity, available)
+					cart_item["quantity"] = new_qty
+					cart_item["total"] = buy_price * new_qty
+					return
+
+			// Add new entry
+			shopping_cart += list(list(
+				"type" = item_type_str,
+				"name" = stock_item["name"],
+				"quantity" = quantity,
+				"price" = buy_price,
+				"total" = total
+			))
+			return
+
+/mob/living/simple_animal/faction_trader/proc/remove_from_cart(item_type_str)
+	for(var/list/cart_item in shopping_cart)
+		if(cart_item["type"] == item_type_str)
+			shopping_cart -= list(cart_item)
+			return
+
+/mob/living/simple_animal/faction_trader/proc/purchase_cart(mob/user)
+	if(busy)
+		return
+	if(!length(shopping_cart))
+		to_chat(user, span_warning("Shopping cart is empty."))
 		return
 
-	if(target_item["quantity"] <= 0)
-		to_chat(user, span_warning("That item is out of stock."))
+	if(!trading_faction || !trading_faction.can_trade)
+		to_chat(user, span_warning("This trader cannot trade right now."))
+		return
+
+	// Calculate total cost
+	var/total_cost = 0
+	for(var/list/cart_item in shopping_cart)
+		total_cost += cart_item["total"]
+
+	// Check credits
+	if(GLOB.resurgence_credits < total_cost)
+		to_chat(user, span_warning("Not enough credits! Need [total_cost], have [GLOB.resurgence_credits]."))
+		return
+
+	// Verify stock availability
+	for(var/list/cart_item in shopping_cart)
+		var/found = FALSE
+		for(var/list/stock_item in trading_faction.stock)
+			if("[stock_item["type"]]" == cart_item["type"])
+				if(stock_item["quantity"] < cart_item["quantity"])
+					to_chat(user, span_warning("Not enough [cart_item["name"]] in stock!"))
+					return
+				found = TRUE
+				break
+		if(!found)
+			to_chat(user, span_warning("[cart_item["name"]] is no longer available!"))
+			return
+
+	busy = TRUE
+
+	// Deduct credits
+	GLOB.resurgence_trading.remove_credits(total_cost)
+	trading_faction.current_cash += total_cost
+
+	// Create an expedition crate to hold the purchased items
+	var/obj/structure/closet/crate/expedition/purchase_crate = new(get_turf(user))
+	purchase_crate.name = "trader's crate"
+	purchase_crate.desc = "A crate provided by the trader containing your purchased goods. It will travel with you on expeditions."
+
+	// Spawn items inside the crate and reduce stock
+	for(var/list/cart_item in shopping_cart)
+		for(var/list/stock_item in trading_faction.stock)
+			if("[stock_item["type"]]" == cart_item["type"])
+				var/item_path = stock_item["type"]
+				var/qty = cart_item["quantity"]
+
+				// Reduce stock
+				stock_item["quantity"] -= qty
+
+				// Spawn items inside the crate
+				if(ispath(item_path, /obj/item/stack))
+					new item_path(purchase_crate, qty)
+				else
+					for(var/i in 1 to qty)
+						new item_path(purchase_crate)
+				break
+
+	// Open the crate so player can see contents
+	purchase_crate.open(user)
+
+	// Calculate and apply rep gain
+	var/rep_gain = trading_faction.on_trade_completed(total_cost, FALSE)
+
+	// Say dialogue
+	say(trading_faction.get_dialogue("purchase_complete"))
+
+	// Award social XP
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/xp_amount = max(1, round(total_cost / 10))
+			core.award_xp("social", xp_amount)
+
+	if(rep_gain > 0)
+		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits. (+[rep_gain] reputation)"))
+	else
+		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits."))
+	to_chat(user, span_notice("Your items have been placed in a crate that will travel with you on your expedition."))
+
+	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
+	shopping_cart = list()
+	busy = FALSE
+
+// ===== Crate Scanning =====
+
+/mob/living/simple_animal/faction_trader/proc/scan_nearby_crates()
+	last_scan_results = list()
+	selected_for_sale = list()
+
+	// Scan for crates within 3 tiles
+	for(var/obj/structure/closet/C in range(3, src))
+		if(QDELETED(C))
+			continue
+
+		// Aggregate items by name
+		var/list/item_aggregates = list()
+
+		for(var/obj/item/I in C.contents)
+			var/base_value = get_item_trade_value(I)
+			var/item_count = 1
+			var/item_name = I.name
+
+			if(istype(I, /obj/item/stack))
+				var/obj/item/stack/S = I
+				item_count = S.amount
+				base_value *= item_count
+
+			// Aggregate by name
+			if(item_name in item_aggregates)
+				item_aggregates[item_name]["count"] += item_count
+				item_aggregates[item_name]["value"] += base_value
+			else
+				item_aggregates[item_name] = list(
+					"count" = item_count,
+					"value" = base_value
+				)
+
+		// Convert aggregates to item list
+		var/list/item_list = list()
+		for(var/item_name in item_aggregates)
+			item_list += list(list(
+				"name" = item_name,
+				"count" = item_aggregates[item_name]["count"],
+				"value" = item_aggregates[item_name]["value"]
+			))
+
+		if(length(item_list))
+			last_scan_results[C] = item_list
+
+	playsound(src, 'sound/machines/terminal_prompt.ogg', 25, TRUE)
+
+// ===== Selling =====
+
+/mob/living/simple_animal/faction_trader/proc/sell_selected(mob/user)
+	if(busy)
+		return
+	if(!length(selected_for_sale))
+		to_chat(user, span_warning("No crates selected for sale."))
+		return
+
+	if(!trading_faction || !trading_faction.can_trade)
+		to_chat(user, span_warning("This trader cannot trade right now."))
+		return
+
+	// Calculate total value
+	var/sell_mod = get_sell_modifier()
+	var/total_value = 0
+	for(var/obj/structure/closet/C in selected_for_sale)
+		if(QDELETED(C) || !(C in last_scan_results))
+			continue
+		for(var/list/item_data in last_scan_results[C])
+			total_value += round(item_data["value"] * sell_mod)
+
+	// Check if faction can afford
+	if(trading_faction.current_cash < total_value)
+		to_chat(user, span_warning("[trading_faction.name] cannot afford this sale. They only have [trading_faction.current_cash] credits."))
 		say(trading_faction.get_dialogue("low_stock"))
 		return
 
-	// Calculate price with hub discount
-	var/buy_mod = controller ? controller.get_hub_buy_modifier() : (trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT)
-	var/final_price = round(target_item["base_price"] * buy_mod)
+	busy = TRUE
+	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
 
-	// Check if user can afford it
-	// TODO: Integrate with actual credit system
-	// For now, just process the purchase
-	to_chat(user, span_notice("Purchase system not yet fully integrated. Item: [item_name], Price: [final_price] credits"))
+	// Delete items from crates
+	var/list/to_sell = selected_for_sale.Copy()
+	for(var/obj/structure/closet/C in to_sell)
+		if(QDELETED(C))
+			continue
+		// Delete all items in the crate
+		for(var/obj/item/I in C.contents)
+			qdel(I)
 
-	// Decrease quantity
-	target_item["quantity"]--
+	// Add credits and adjust reputation
+	GLOB.resurgence_trading.add_credits(total_value)
+	trading_faction.current_cash -= total_value
 
-	// Create the item
-	var/item_type = target_item["type"]
-	if(item_type)
-		var/obj/item/I = new item_type(get_turf(user))
-		to_chat(user, span_notice("You receive: [I.name]"))
-		say(trading_faction.get_dialogue("purchase_complete"))
+	// Calculate and apply rep gain
+	var/rep_gain = trading_faction.on_trade_completed(total_value, TRUE)
 
-		// Give reputation for trading
-		trading_faction.on_trade_completed(final_price, FALSE)
+	// Say dialogue
+	say(trading_faction.get_dialogue("sale_complete"))
 
-	// Refresh UI
-	open_trading(user)
+	// Award social XP
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			var/xp_amount = max(1, round(total_value / 10))
+			core.award_xp("social", xp_amount)
+
+	if(rep_gain > 0)
+		to_chat(user, span_notice("Sale complete! Earned [total_value] credits. (+[rep_gain] reputation with [trading_faction.name])"))
+	else
+		to_chat(user, span_notice("Sale complete! Earned [total_value] credits."))
+
+	// Clear and rescan
+	selected_for_sale = list()
+	last_scan_results = list()
+	busy = FALSE
+	scan_nearby_crates()
 
 // ============================================
 // FACTION-SPECIFIC TRADERS
 // ============================================
 
 /mob/living/simple_animal/faction_trader/resurgence_clan
-	name = "The Historian"
+	name = "Ronan"
+	desc = "A friendly clan trader running a humble shop."
+	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_32x48.dmi'
+	icon_state = "clan_citzen_trader"
 	faction_id = "resurgence_clan"
-	icon_state = "faceless"
+
+/mob/living/simple_animal/faction_trader/resurgence_clan/Initialize(mapload)
+	. = ..()
+	// Override to keep Ronan's identity instead of The Historian
+	name = "Ronan"
+	desc = "Clan Trader. They represent [trading_faction?.name || "Resurgence Clan Village"]."
 
 /mob/living/simple_animal/faction_trader/resurgence_clan/setup_idle_lines()
 	idle_lines = list(
-		"The old ways still hold wisdom, young one.",
-		"Your success brings hope to our people.",
-		"The Weaver watches over all our kind.",
-		"Tell me of your travels when you have time."
+		"We-ell, Yo-ou may call me Ronan.",
+		"Currently, I am ru-unning this humble sho-op for passerbys li-ike you!",
+		"Ta-ake your ti-ime browsing.",
+		"Le-et me know if you ne-eed anything.",
+		"The vi-illage appreciates your bu-usiness.",
+		"Hm... a-anything catch your eye?"
 	)
 
 /mob/living/simple_animal/faction_trader/jiajia_ren
 	name = "Chir-rik"
+	icon = 'icons/mob/cuckoospawn.dmi'
+	icon_state = "cuckoospawn"
 	faction_id = "jiajia_ren"
-	icon_state = "faceless"
 
 /mob/living/simple_animal/faction_trader/jiajia_ren/setup_idle_lines()
 	idle_lines = list(

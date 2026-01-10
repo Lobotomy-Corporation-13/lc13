@@ -51,10 +51,28 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	if(faction_id && GLOB.resurgence_trading)
 		owner_faction = GLOB.resurgence_trading.get_faction(faction_id)
 		if(owner_faction)
-			display_color = owner_faction.color || "#cc9933"
+			setup_display_color()
 			setup_caravan_name()
 			setup_stock()
 			setup_guards()
+
+/**
+ * Setup display color based on faction
+ */
+/datum/faction_caravan/proc/setup_display_color()
+	switch(faction_id)
+		if("resurgence_clan")
+			display_color = "#4a7c3f"  // Green
+		if("jiajia_ren")
+			display_color = "#9966cc"  // Purple
+		if("santata_factory")
+			display_color = "#cc3333"  // Red
+		if("cloud_town")
+			display_color = "#3366cc"  // Blue
+		if("insurgence_clan")
+			display_color = "#990000"  // Dark red
+		else
+			display_color = "#cc9933"  // Gold default
 
 /datum/faction_caravan/Destroy()
 	// Remove from tile
@@ -141,7 +159,7 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	if(!route || length(route) < 2)
 		return FALSE
 
-	route_index = 0
+	route_index = 1  // We start at route[1], will move to route[2] next
 	state = CARAVAN_TRAVELING
 
 	// Add to global list
@@ -163,22 +181,31 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 
 /**
  * Execute movement to next tile
+ *
+ * route_index tracks our current position in the route (1-indexed).
+ * We move to route[route_index + 1], then increment route_index.
  */
 /datum/faction_caravan/proc/do_move()
 	if(state != CARAVAN_TRAVELING)
 		return
 
-	// Advance route
-	route_index++
-
-	if(route_index >= length(route))
-		// Reached destination
+	if(!route || !length(route))
+		log_game("Caravan [caravan_id]: do_move called with no route!")
 		arrive_at_destination()
 		return
 
-	// Move to next tile
-	var/datum/world_tile/next_tile = route[route_index + 1]
+	// Calculate next position
+	var/next_index = route_index + 1
+
+	// Check if we've reached the end of the route
+	if(next_index > length(route))
+		arrive_at_destination()
+		return
+
+	// Get the next tile from the route
+	var/datum/world_tile/next_tile = route[next_index]
 	if(!next_tile)
+		log_game("Caravan [caravan_id]: null tile at route index [next_index]!")
 		arrive_at_destination()
 		return
 
@@ -190,11 +217,20 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	current_tile = next_tile
 	current_tile.caravan = src
 
+	// Update our position in the route
+	route_index = next_index
+
+	// Check if we've reached the destination (last tile in route)
+	if(route_index >= length(route))
+		arrive_at_destination()
+		return
+
 	// Check if we entered a tile with an expedition
 	check_expedition_collision()
 
-	// Schedule next move
-	schedule_move()
+	// Schedule next move if still traveling
+	if(state == CARAVAN_TRAVELING)
+		schedule_move()
 
 	// Update world map UIs
 	update_all_world_map_uis()
@@ -322,7 +358,8 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 /datum/faction_caravan/proc/get_item_price(item_path)
 	if(!owner_faction)
 		return 50
-	// Use faction's pricing if available
-	if(item_path in owner_faction.prices)
-		return owner_faction.prices[item_path]
+	// Look up price from faction's stock list
+	for(var/list/item_entry in owner_faction.stock)
+		if(item_entry["type"] == item_path)
+			return item_entry["base_price"] || 50
 	return 50

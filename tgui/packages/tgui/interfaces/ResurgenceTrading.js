@@ -227,6 +227,7 @@ const FactionCard = (props, context) => {
 
   // For undiscovered factions, show mystery display
   const isDiscovered = faction.discovered;
+  const isVisited = faction.visited;
 
   // Only calculate stars for discovered factions
   const stars = isDiscovered ? Math.floor(faction.reputation / 20) : 0;
@@ -240,6 +241,9 @@ const FactionCard = (props, context) => {
     else if (faction.reputation < 30) repColor = 'bad';
     else repColor = 'white';
   }
+
+  // Can only connect if visited
+  const canConnect = isVisited && !faction.is_connected;
 
   return (
     <Box
@@ -276,18 +280,23 @@ const FactionCard = (props, context) => {
                   {' '}({faction.reputation_label})
                 </Box>
               </Box>
-              {faction.can_trade && (
+              {isVisited && faction.can_trade && (
                 <Box>
                   Cash: {faction.current_cash} / {faction.max_cash}
                 </Box>
               )}
-              {!faction.can_trade && (
+              {!isVisited && (
+                <Box color="average">
+                  Visit this faction in person to enable remote trading.
+                </Box>
+              )}
+              {isVisited && !faction.can_trade && (
                 <Box color="bad">Cannot trade with this faction</Box>
               )}
             </>
           ) : (
             <Box color="label" mt={1}>
-              Connect to learn more about this faction.
+              Discover this faction on the world map.
             </Box>
           )}
         </Flex.Item>
@@ -295,9 +304,14 @@ const FactionCard = (props, context) => {
           <Button
             icon={faction.is_connected ? 'check' : 'plug'}
             color={faction.is_connected ? 'good' : 'default'}
-            disabled={faction.is_connected}
+            disabled={!canConnect}
+            tooltip={!isVisited
+              ? 'Must visit faction first'
+              : null}
             onClick={() => act('connect', { faction: faction.id })}>
-            {faction.is_connected ? 'Connected' : 'Connect'}
+            {faction.is_connected
+              ? 'Connected'
+              : (isVisited ? 'Connect' : 'Not Visited')}
           </Button>
         </Flex.Item>
       </Flex>

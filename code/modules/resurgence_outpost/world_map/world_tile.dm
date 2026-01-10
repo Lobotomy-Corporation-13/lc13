@@ -95,7 +95,16 @@
  * Mark this tile as discovered
  */
 /datum/world_tile/proc/discover()
+	if(discovered)
+		return  // Already discovered
 	discovered = TRUE
+
+	// If this is a faction tile, mark the trading faction as discovered
+	if(faction_id && GLOB.resurgence_trading)
+		var/datum/trading_faction/trading_faction = GLOB.resurgence_trading.get_faction(faction_id)
+		if(trading_faction && !trading_faction.discovered)
+			trading_faction.discovered = TRUE
+			log_game("Trading faction [faction_id] discovered on world map")
 
 /**
  * Check if this tile is passable (can be traveled through)

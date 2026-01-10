@@ -143,9 +143,10 @@
 			"reputation_label" = F.discovered ? F.get_reputation_label() : "???",
 			"current_cash" = F.discovered ? F.current_cash : 0,
 			"max_cash" = F.discovered ? F.max_cash : 0,
-			"can_trade" = F.can_trade,
+			"can_trade" = F.can_trade && F.visited,
 			"is_connected" = (F == connected),
-			"discovered" = F.discovered
+			"discovered" = F.discovered,
+			"visited" = F.visited
 		))
 
 	// Scanned closets for selling
@@ -220,15 +221,14 @@
 		// Faction connection
 		if("connect")
 			var/faction_id = params["faction"]
+			var/datum/trading_faction/F = GLOB.resurgence_trading.get_faction(faction_id)
+			// Can only connect to factions that have been visited
+			if(!F || !F.visited)
+				to_chat(usr, span_warning("You must visit this faction in person before establishing remote communications."))
+				return TRUE
 			if(GLOB.resurgence_trading.connect_faction(faction_id))
-				var/datum/trading_faction/F = GLOB.resurgence_trading.connected_faction
 				if(F)
 					playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
-					// Mark faction as discovered on first connection
-					var/was_discovered = F.discovered
-					F.discovered = TRUE
-					if(!was_discovered)
-						on_faction_discovered()
 				// Set connection time for static fade effect
 				connection_time = world.time
 				// Clear previous scan/cart when switching factions
