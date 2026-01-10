@@ -17,6 +17,8 @@
 
 /// List of floor turfs in the caravan encounter area
 GLOBAL_LIST_EMPTY(caravan_encounter_floor_turfs)
+/// List of edge floor turfs that spawn decor
+GLOBAL_LIST_EMPTY(caravan_encounter_edge_turfs)
 /// List of wall turfs in the caravan encounter area
 GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 
@@ -94,6 +96,110 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 			color = null
 
 /**
+ * Caravan Encounter Edge Floor Turf
+ * Same as regular floor but spawns terrain-appropriate decor
+ * Place these around the edges of the encounter area for visual variety
+ */
+/turf/open/floor/caravan_encounter/edge
+	name = "path edge"
+	desc = "The edge of the clearing."
+	/// List of decor objects spawned on this turf
+	var/list/spawned_decor = list()
+	/// Chance to spawn decor (percent)
+	var/decor_chance = 60
+
+/turf/open/floor/caravan_encounter/edge/Initialize(mapload)
+	. = ..()
+	// Remove from regular list and add to edge list
+	GLOB.caravan_encounter_floor_turfs -= src
+	GLOB.caravan_encounter_edge_turfs += src
+
+/turf/open/floor/caravan_encounter/edge/Destroy()
+	GLOB.caravan_encounter_edge_turfs -= src
+	clear_decor()
+	return ..()
+
+/**
+ * Clear all spawned decor from this turf
+ */
+/turf/open/floor/caravan_encounter/edge/proc/clear_decor()
+	for(var/obj/O in spawned_decor)
+		if(!QDELETED(O))
+			qdel(O)
+	spawned_decor = list()
+
+/**
+ * Override set_terrain to also handle decor
+ */
+/turf/open/floor/caravan_encounter/edge/set_terrain(terrain_type)
+	// Clear old decor first
+	clear_decor()
+	// Update terrain appearance
+	current_terrain = terrain_type
+	update_terrain_appearance()
+	// Spawn new decor
+	spawn_terrain_decor()
+
+/**
+ * Spawn decor appropriate for the current terrain
+ */
+/turf/open/floor/caravan_encounter/edge/proc/spawn_terrain_decor()
+	if(!prob(decor_chance))
+		return
+
+	var/list/decor_types = get_terrain_decor_types()
+	if(!length(decor_types))
+		return
+
+	var/decor_path = pick(decor_types)
+	var/obj/decor = new decor_path(src)
+	if(decor)
+		spawned_decor += decor
+
+/**
+ * Get list of appropriate decor types for current terrain
+ */
+/turf/open/floor/caravan_encounter/edge/proc/get_terrain_decor_types()
+	switch(current_terrain)
+		if(TERRAIN_PLAINS)
+			return list(
+				/obj/structure/flora/grass/both,
+				/obj/structure/flora/rock/pile,
+				/obj/structure/flora/bush
+			)
+		if(TERRAIN_FOREST)
+			return list(
+				/obj/structure/flora/tree/dead,
+				/obj/structure/flora/bush,
+				/obj/structure/flora/rock/pile,
+				/obj/structure/flora/grass/both
+			)
+		if(TERRAIN_MOUNTAIN)
+			return list(
+				/obj/structure/flora/rock,
+				/obj/structure/flora/rock/pile,
+				/obj/structure/flora/ash/leaf_shroom
+			)
+		if(TERRAIN_DESERT)
+			return list(
+				/obj/structure/flora/rock/pile,
+				/obj/structure/flora/rock,
+				/obj/structure/flora/ash/cacti
+			)
+		if(TERRAIN_RUINS)
+			return list(
+				/obj/structure/flora/rock/pile,
+				/obj/item/stack/sheet/mineral/wood
+			)
+		if(TERRAIN_SNOW)
+			return list(
+				/obj/structure/flora/rock/icy,
+				/obj/structure/flora/rock/pile,
+				/obj/structure/flora/tree/pine
+			)
+	return list()
+
+/**
  * Caravan Encounter Wall Turf
  * Forms the boundaries of the encounter area
  */
@@ -155,10 +261,16 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 
 /**
  * Update all caravan encounter turfs to match a terrain type
+ * This clears old decor on edge turfs and spawns new terrain-appropriate decor
  */
 /proc/update_caravan_encounter_terrain(terrain_type)
+	// Update regular floor turfs
 	for(var/turf/open/floor/caravan_encounter/F in GLOB.caravan_encounter_floor_turfs)
 		F.set_terrain(terrain_type)
+	// Update edge turfs (these handle their own decor cleanup and spawning)
+	for(var/turf/open/floor/caravan_encounter/edge/E in GLOB.caravan_encounter_edge_turfs)
+		E.set_terrain(terrain_type)
+	// Update wall turfs
 	for(var/turf/closed/wall/caravan_encounter/W in GLOB.caravan_encounter_wall_turfs)
 		W.set_terrain(terrain_type)
 
@@ -182,9 +294,111 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 
 /**
  * Exit point to return to corridor/expedition
+ * Shows a prompt when players step on it
  */
 /obj/effect/landmark/caravan_exit
 	name = "caravan exit"
+	invisibility = INVISIBILITY_ABSTRACT
+
+/obj/effect/landmark/caravan_exit/Initialize(mapload)
+	. = ..()
+	// Register signal on our loc to detect when mobs enter
+	var/turf/T = get_turf(src)
+	if(T)
+		RegisterSignal(T, COMSIG_ATOM_ENTERED, PROC_REF(on_entered))
+
+/obj/effect/landmark/caravan_exit/proc/on_entered(datum/source, atom/movable/AM)
+	SIGNAL_HANDLER
+	if(!isliving(AM))
+		return
+	var/mob/living/L = AM
+	// Async call to show prompt
+	INVOKE_ASYNC(src, PROC_REF(prompt_exit), L)
+
+/obj/effect/landmark/caravan_exit/proc/prompt_exit(mob/living/user)
+	if(!GLOB.current_caravan_controller)
+		return
+
+	var/datum/expedition_party/expedition = GLOB.current_caravan_controller.expedition
+	if(!expedition || !(user in expedition.members))
+		return
+
+	var/datum/browser/popup = new(user, "caravan_exit", "Leave Caravan", 350, 200)
+
+	var/html = {"
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+	font-family: 'Segoe UI', Tahoma, sans-serif;
+	background: #1a1a2e;
+	color: #eee;
+	margin: 0;
+	padding: 20px;
+	text-align: center;
+}
+h3 {
+	margin-top: 0;
+	color: #fff;
+}
+.buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-top: 20px;
+}
+.btn {
+	display: block;
+	padding: 12px;
+	background: #16213e;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 6px;
+	border: 2px solid #333;
+}
+.btn:hover {
+	background: #1a2744;
+	border-color: #4a90d9;
+}
+</style>
+</head>
+<body>
+<h3>Leave the Caravan?</h3>
+<p>Continue your expedition or stay to trade.</p>
+<div class="buttons">
+	<a class="btn" href="?src=\ref[src];action=leave">Continue Expedition</a>
+	<a class="btn" href="?src=\ref[src];action=stay">Stay Here</a>
+</div>
+</body>
+</html>
+"}
+
+	popup.set_content(html)
+	popup.open()
+
+/obj/effect/landmark/caravan_exit/Topic(href, list/href_list)
+	var/mob/living/user = usr
+	if(!isliving(user))
+		return
+
+	var/action = href_list["action"]
+	switch(action)
+		if("leave")
+			// Close popup
+			user << browse(null, "window=caravan_exit")
+			// Return to corridor
+			if(GLOB.current_caravan_controller)
+				GLOB.current_caravan_controller.player_leaving(user)
+		if("stay")
+			// Just close popup
+			user << browse(null, "window=caravan_exit")
+
+/**
+ * Spawn point for caravan trader NPC
+ */
+/obj/effect/landmark/caravan_trader
+	name = "caravan trader spawn"
 	invisibility = INVISIBILITY_ABSTRACT
 
 // ============================================
@@ -203,10 +417,14 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 	var/datum/expedition_party/expedition
 	/// Spawn landmark reference
 	var/obj/effect/landmark/caravan_spawn/spawn_point
-	/// Wagon landmark reference
-	var/obj/effect/landmark/caravan_wagon/wagon_point
+	/// Wagon landmark references (one guard spawns per landmark)
+	var/list/wagon_points = list()
 	/// Exit landmark reference
 	var/obj/effect/landmark/caravan_exit/exit_point
+	/// Trader landmark reference
+	var/obj/effect/landmark/caravan_trader/trader_point
+	/// Spawned trader NPC
+	var/mob/living/simple_animal/caravan_trader/trader_npc
 	/// Whether the encounter is resolved
 	var/resolved = FALSE
 	/// Outcome of the encounter
@@ -227,11 +445,16 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 	for(var/mob/living/G in guards)
 		qdel(G)
 	guards = null
+	// Clean up trader
+	if(trader_npc)
+		qdel(trader_npc)
+		trader_npc = null
 	caravan = null
 	expedition = null
 	spawn_point = null
-	wagon_point = null
+	wagon_points = null
 	exit_point = null
+	trader_point = null
 	return ..()
 
 /**
@@ -241,18 +464,22 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 	if(!GLOB.caravan_encounter_z)
 		return
 
+	wagon_points = list()
 	for(var/obj/effect/landmark/L in GLOB.landmarks_list)
 		if(L.z != GLOB.caravan_encounter_z)
 			continue
 		if(istype(L, /obj/effect/landmark/caravan_spawn))
 			spawn_point = L
 		else if(istype(L, /obj/effect/landmark/caravan_wagon))
-			wagon_point = L
+			wagon_points += L  // Collect all wagon landmarks
 		else if(istype(L, /obj/effect/landmark/caravan_exit))
 			exit_point = L
+		else if(istype(L, /obj/effect/landmark/caravan_trader))
+			trader_point = L
 
 /**
- * Start the encounter - teleport players and show UI
+ * Start the encounter - teleport players to physical caravan area
+ * Players can explore, trade with NPCs, and leave when ready
  */
 /datum/caravan_encounter_controller/proc/start_encounter()
 	if(!spawn_point)
@@ -272,455 +499,125 @@ GLOBAL_LIST_EMPTY(caravan_encounter_wall_turfs)
 			terrain_type = TERRAIN_PLAINS
 	update_caravan_encounter_terrain(terrain_type)
 
-	// Spawn guards if hostile
+	// Spawn entities based on hostility
 	if(caravan.is_hostile())
-		spawn_guards()
+		// Hostile: spawn aggressive guards, no trader
+		spawn_hostile_guards()
+	else
+		// Friendly: spawn passive guards and trader
+		spawn_passive_guards()
+		spawn_trader()
 
 	// Teleport all expedition members
 	var/turf/spawn_turf = get_turf(spawn_point)
 	for(var/mob/living/M in expedition.members)
+		// Fade effect
+		if(M.client)
+			M.client.color = "#000000"
+
 		M.forceMove(spawn_turf)
-		// Show encounter popup
-		show_encounter_popup(M)
+
+		// Fade back in
+		if(M.client)
+			animate(M.client, color = null, time = 5)
+
+		// Show arrival message based on hostility
+		if(caravan.is_hostile())
+			to_chat(M, span_boldwarning("You've encountered a hostile patrol! Prepare for combat!"))
+		else
+			to_chat(M, span_notice("You approach [caravan.name]. Speak with the trader to buy or sell goods."))
+			to_chat(M, span_notice("Walk to the exit when you're ready to continue."))
 
 	return TRUE
 
 /**
- * Spawn caravan guards
+ * Spawn hostile caravan guards - one guard per wagon landmark
+ * Used for hostile caravans (Insurgence patrols)
+ * Guards attack players on sight
+ * For Insurgence, spawns random raid mobs instead
  */
-/datum/caravan_encounter_controller/proc/spawn_guards()
-	if(!wagon_point)
+/datum/caravan_encounter_controller/proc/spawn_hostile_guards()
+	if(!length(wagon_points))
 		return
 
-	var/turf/guard_turf = get_turf(wagon_point)
-	for(var/i in 1 to caravan.guard_count)
+	// For insurgence, spawn raid mobs from the same pool that raids use
+	if(caravan.faction_id == "insurgence_clan")
+		spawn_insurgence_raiders()
+		return
+
+	// For other hostile factions, spawn regular guards
+	for(var/obj/effect/landmark/caravan_wagon/wagon in wagon_points)
+		var/turf/guard_turf = get_turf(wagon)
+		if(!guard_turf)
+			continue
 		var/mob/living/simple_animal/hostile/caravan_guard/guard = new(guard_turf)
 		guard.faction_id = caravan.faction_id
-		guard.setup_appearance()
+		guard.setup_appearance()  // Sets strength based on faction
 		guards += guard
 
 /**
- * Show the encounter popup to a player
+ * Spawn Insurgence raid mobs for hostile caravans
+ * Uses mob types from lc13_resurgence_clan_mobs.dm and lc13_resurgence_clan_rce_ranged.dm
  */
-/datum/caravan_encounter_controller/proc/show_encounter_popup(mob/living/user)
-	var/datum/browser/popup = new(user, "caravan_encounter", "Caravan Encounter", 500, 450)
+/datum/caravan_encounter_controller/proc/spawn_insurgence_raiders()
+	// List of possible raid mob types
+	var/list/raid_mob_types = list(
+		// Melee mobs from lc13_resurgence_clan_mobs.dm
+		/mob/living/simple_animal/hostile/clan/scout,
+		/mob/living/simple_animal/hostile/clan/defender,
+		/mob/living/simple_animal/hostile/clan/drone,
+		// Ranged mobs from lc13_resurgence_clan_rce_ranged.dm
+		/mob/living/simple_animal/hostile/clan/ranged/gunner,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper,
+		/mob/living/simple_animal/hostile/clan/ranged/warper,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner
+	)
 
-	var/html = {"
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-	font-family: 'Segoe UI', Tahoma, sans-serif;
-	background: #1a1a2e;
-	color: #eee;
-	margin: 0;
-	padding: 15px;
-}
-.header {
-	text-align: center;
-	padding: 10px;
-	background: linear-gradient(135deg, #16213e, #1a1a2e);
-	border-radius: 8px;
-	margin-bottom: 15px;
-}
-.header h2 {
-	margin: 0;
-	color: [caravan.display_color];
-}
-.header .subtitle {
-	color: #888;
-	font-size: 12px;
-}
-.info-box {
-	background: #16213e;
-	border-radius: 8px;
-	padding: 12px;
-	margin-bottom: 15px;
-}
-.info-row {
-	display: flex;
-	justify-content: space-between;
-	margin: 5px 0;
-}
-.info-label {
-	color: #888;
-}
-.info-value {
-	color: #fff;
-	font-weight: bold;
-}
-.hostile-warning {
-	background: #4a1010;
-	border: 2px solid #ff4444;
-	border-radius: 8px;
-	padding: 10px;
-	text-align: center;
-	color: #ff6666;
-	margin-bottom: 15px;
-}
-.choices {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-}
-.choice-btn {
-	background: #16213e;
-	border: 2px solid #333;
-	border-radius: 8px;
-	padding: 12px;
-	color: #fff;
-	cursor: pointer;
-	text-align: left;
-	transition: all 0.2s;
-}
-.choice-btn:hover {
-	border-color: [caravan.display_color];
-	background: #1a2744;
-}
-.choice-btn.hostile {
-	border-color: #ff4444;
-}
-.choice-btn.hostile:hover {
-	background: #2a1010;
-}
-.choice-btn h4 {
-	margin: 0 0 5px 0;
-	color: [caravan.display_color];
-}
-.choice-btn.hostile h4 {
-	color: #ff6666;
-}
-.choice-btn p {
-	margin: 0;
-	font-size: 12px;
-	color: #aaa;
-}
-</style>
-</head>
-<body>
-<div class="header">
-	<h2>[caravan.name]</h2>
-	<div class="subtitle">[caravan.owner_faction?.name || "Unknown Faction"]</div>
-</div>
-
-<div class="info-box">
-	<div class="info-row">
-		<span class="info-label">Guards:</span>
-		<span class="info-value">[caravan.guard_count]</span>
-	</div>
-	<div class="info-row">
-		<span class="info-label">Goods:</span>
-		<span class="info-value">[length(caravan.stock)] items</span>
-	</div>
-	[caravan.is_hostile() ? "" : {"
-	<div class="info-row">
-		<span class="info-label">Cash:</span>
-		<span class="info-value">[caravan.caravan_cash] credits</span>
-	</div>
-	"}]
-</div>
-
-[caravan.is_hostile() ? {"
-<div class="hostile-warning">
-	⚠️ HOSTILE PATROL - They attack on sight!
-</div>
-"} : ""]
-
-<div class="choices">
-	[caravan.is_hostile() ? "" : {"
-	<a class="choice-btn" href="?src=\ref[src];action=trade">
-		<h4>🤝 Trade</h4>
-		<p>Open peaceful trade with the caravan. No price discount.</p>
-	</a>
-	"}]
-
-	<a class="choice-btn hostile" href="?src=\ref[src];action=attack">
-		<h4>⚔️ Attack</h4>
-		<p>Fight the guards and loot the caravan. Major reputation loss.</p>
-	</a>
-
-	[caravan.is_hostile() ? "" : {"
-	<a class="choice-btn" href="?src=\ref[src];action=steal">
-		<h4>🤫 Steal</h4>
-		<p>Attempt to pilfer goods unnoticed. Skill check required.</p>
-	</a>
-	"}]
-
-	<a class="choice-btn" href="?src=\ref[src];action=ignore">
-		<h4>👋 [caravan.is_hostile() ? "Flee" : "Ignore"]</h4>
-		<p>[caravan.is_hostile() ? "Try to escape before they catch you." : "Let them pass and continue your journey."]</p>
-	</a>
-</div>
-</body>
-</html>
-"}
-
-	popup.set_content(html)
-	popup.open()
+	// Spawn one random raid mob at each wagon landmark
+	for(var/obj/effect/landmark/caravan_wagon/wagon in wagon_points)
+		var/turf/spawn_turf = get_turf(wagon)
+		if(!spawn_turf)
+			continue
+		var/mob_type = pick(raid_mob_types)
+		var/mob/living/simple_animal/hostile/raider = new mob_type(spawn_turf)
+		guards += raider
 
 /**
- * Handle player choice from browser popup
+ * Spawn passive caravan guards - one guard per wagon landmark
+ * Used for friendly caravans
+ * Guards only attack if provoked
  */
-/datum/caravan_encounter_controller/Topic(href, list/href_list)
-	if(resolved)
+/datum/caravan_encounter_controller/proc/spawn_passive_guards()
+	if(!length(wagon_points))
 		return
 
-	var/mob/living/user = usr
-	if(!istype(user) || !(user in expedition?.members))
+	// Spawn one passive guard at each wagon landmark
+	for(var/obj/effect/landmark/caravan_wagon/wagon in wagon_points)
+		var/turf/guard_turf = get_turf(wagon)
+		if(!guard_turf)
+			continue
+		var/mob/living/simple_animal/hostile/caravan_guard/passive/guard = new(guard_turf)
+		guard.faction_id = caravan.faction_id
+		guard.setup_appearance()  // Sets strength based on faction
+		guards += guard
+
+/**
+ * Spawn caravan trader NPC
+ */
+/datum/caravan_encounter_controller/proc/spawn_trader()
+	// Use trader landmark if available, otherwise first wagon point
+	var/turf/trader_turf
+	if(trader_point)
+		trader_turf = get_turf(trader_point)
+	else if(length(wagon_points))
+		trader_turf = get_turf(wagon_points[1])
+
+	if(!trader_turf)
 		return
 
-	var/action = href_list["action"]
-	switch(action)
-		if("trade")
-			if(!caravan.is_hostile())
-				do_trade(user)
-		if("attack")
-			do_attack(user)
-		if("steal")
-			if(!caravan.is_hostile())
-				do_steal(user)
-		if("ignore")
-			do_ignore(user)
-
-/**
- * Handle trade action
- */
-/datum/caravan_encounter_controller/proc/do_trade(mob/living/user)
-	// Close encounter popup
-	user << browse(null, "window=caravan_encounter")
-
-	// Show trading popup
-	show_trade_popup(user)
-
-/**
- * Show trading interface
- */
-/datum/caravan_encounter_controller/proc/show_trade_popup(mob/living/user)
-	var/datum/browser/popup = new(user, "caravan_trade", "Caravan Trading", 500, 500)
-
-	var/stock_html = ""
-	for(var/item_path in caravan.stock)
-		var/obj/item/temp = item_path
-		var/item_name = initial(temp.name)
-		var/quantity = caravan.stock[item_path]
-		var/price = caravan.get_item_price(item_path)
-		stock_html += {"
-		<div class="item-row">
-			<span class="item-name">[item_name]</span>
-			<span class="item-qty">x[quantity]</span>
-			<span class="item-price">[price]c</span>
-			<a class="buy-btn" href="?src=\ref[src];action=buy;item=[item_path]">Buy</a>
-		</div>
-		"}
-
-	var/html = {"
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-	font-family: 'Segoe UI', Tahoma, sans-serif;
-	background: #1a1a2e;
-	color: #eee;
-	margin: 0;
-	padding: 15px;
-}
-.header {
-	text-align: center;
-	padding: 10px;
-	background: #16213e;
-	border-radius: 8px;
-	margin-bottom: 15px;
-}
-.item-row {
-	display: flex;
-	align-items: center;
-	padding: 8px;
-	background: #16213e;
-	border-radius: 4px;
-	margin-bottom: 5px;
-}
-.item-name {
-	flex: 1;
-}
-.item-qty {
-	color: #888;
-	margin: 0 10px;
-}
-.item-price {
-	color: #ffcc00;
-	margin: 0 10px;
-}
-.buy-btn {
-	background: #2d5a27;
-	color: #fff;
-	padding: 5px 10px;
-	border-radius: 4px;
-	text-decoration: none;
-}
-.buy-btn:hover {
-	background: #3d7a37;
-}
-.done-btn {
-	display: block;
-	background: #16213e;
-	color: #fff;
-	padding: 12px;
-	border-radius: 8px;
-	text-align: center;
-	text-decoration: none;
-	margin-top: 15px;
-}
-.done-btn:hover {
-	background: #1a2744;
-}
-</style>
-</head>
-<body>
-<div class="header">
-	<h3>Trading with [caravan.name]</h3>
-	<p>Caravan Cash: [caravan.caravan_cash] credits</p>
-</div>
-
-[stock_html ? stock_html : "<p>No goods available.</p>"]
-
-<a class="done-btn" href="?src=\ref[src];action=done_trade">Done Trading</a>
-</body>
-</html>
-"}
-
-	popup.set_content(html)
-	popup.open()
-
-/**
- * Handle buy action from trade popup
- */
-/datum/caravan_encounter_controller/proc/handle_buy(mob/living/user, item_path)
-	// Check item exists in stock
-	if(!(item_path in caravan.stock) || caravan.stock[item_path] <= 0)
-		to_chat(user, span_warning("That item is no longer available."))
-		return
-
-	var/price = caravan.get_item_price(item_path)
-
-	// Check player has credits (would need credit system integration)
-	// For now, just spawn the item and reduce stock
-	var/obj/item/new_item = new item_path(get_turf(user))
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		H.put_in_hands(new_item)
-	else
-		new_item.forceMove(get_turf(user))
-
-	caravan.stock[item_path]--
-	if(caravan.stock[item_path] <= 0)
-		caravan.stock -= item_path
-
-	to_chat(user, span_notice("You purchased [new_item.name] for [price] credits."))
-
-	// Small reputation gain
-	apply_reputation_change(caravan.faction_id, CARAVAN_TRADE_REP_GAIN)
-
-	// Refresh trade popup
-	show_trade_popup(user)
-
-/**
- * Handle attack action
- */
-/datum/caravan_encounter_controller/proc/do_attack(mob/living/user)
-	resolved = TRUE
-	outcome = "attack"
-
-	// Close popup
-	user << browse(null, "window=caravan_encounter")
-
-	// Make guards hostile
-	for(var/mob/living/simple_animal/hostile/caravan_guard/guard in guards)
-		guard.GiveTarget(user)
-
-	// Apply reputation loss
-	apply_reputation_change(caravan.faction_id, CARAVAN_ATTACK_REP_LOSS)
-	// Other factions hear about it
-	for(var/other_faction in list("resurgence_clan", "jiajia_ren", "santata_factory", "cloud_town"))
-		if(other_faction != caravan.faction_id)
-			apply_reputation_change(other_faction, CARAVAN_ATTACK_REP_LOSS_OTHER)
-
-	to_chat(user, span_boldwarning("You attack the caravan! The guards defend their goods."))
-
-	// Notify other party members
-	for(var/mob/living/M in expedition.members)
-		if(M != user)
-			to_chat(M, span_boldwarning("[user.name] has attacked the caravan!"))
-
-/**
- * Handle steal action
- */
-/datum/caravan_encounter_controller/proc/do_steal(mob/living/user)
-	// Close popup
-	user << browse(null, "window=caravan_encounter")
-
-	// Get player's crafting skill from their core
-	var/skill_level = 5  // Default
-	if(ishuman(user))
-		var/mob/living/carbon/human/H = user
-		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
-		if(core)
-			skill_level = core.stat_crafting
-
-	// Difficulty based on guard count
-	var/difficulty = 5 + caravan.guard_count
-
-	// Calculate success chance
-	var/success_chance = clamp(50 + (skill_level - difficulty) * 5, 5, 95)
-
-	if(prob(success_chance))
-		// Success! Steal some items
-		var/stolen_count = 0
-		for(var/item_path in caravan.stock)
-			if(caravan.stock[item_path] > 0 && prob(50))
-				var/obj/item/stolen = new item_path(get_turf(user))
-				if(ishuman(user))
-					var/mob/living/carbon/human/H = user
-					H.put_in_hands(stolen)
-				caravan.stock[item_path]--
-				stolen_count++
-				if(stolen_count >= 2)
-					break
-
-		to_chat(user, span_notice("You successfully pilfer [stolen_count] item(s) from the caravan unnoticed!"))
-
-		// End encounter peacefully
-		outcome = "steal"
-		end_encounter_success()
-	else
-		// Caught!
-		to_chat(user, span_boldwarning("You've been caught stealing! The guards attack!"))
-
-		// Apply reputation loss
-		apply_reputation_change(caravan.faction_id, CARAVAN_STEAL_FAIL_REP_LOSS)
-
-		// Trigger combat
-		outcome = "steal_failed"
-		for(var/mob/living/simple_animal/hostile/caravan_guard/guard in guards)
-			guard.GiveTarget(user)
-
-/**
- * Handle ignore/flee action
- */
-/datum/caravan_encounter_controller/proc/do_ignore(mob/living/user)
-	resolved = TRUE
-	outcome = caravan.is_hostile() ? "fled" : "ignore"
-
-	// Close popup
-	user << browse(null, "window=caravan_encounter")
-
-	if(caravan.is_hostile())
-		to_chat(user, span_notice("You slip away before the patrol spots you."))
-	else
-		to_chat(user, span_notice("You let the caravan pass and continue on your way."))
-
-	end_encounter_success()
+	trader_npc = new /mob/living/simple_animal/caravan_trader(trader_turf)
+	trader_npc.link_caravan(caravan)
 
 /**
  * End the encounter and return players to expedition
@@ -765,6 +662,47 @@ body {
 		to_chat(M, span_notice("You continue your expedition..."))
 
 /**
+ * Handle a single player choosing to leave the caravan encounter
+ * Called from the exit landmark when player selects "leave"
+ */
+/datum/caravan_encounter_controller/proc/player_leaving(mob/living/user)
+	if(!user || !(user in expedition?.members))
+		return
+
+	// Return this player to corridor
+	if(!GLOB.expedition_corridor)
+		to_chat(user, span_warning("Cannot find expedition corridor!"))
+		return
+
+	var/turf/return_turf = get_turf(GLOB.expedition_corridor.start_landmark)
+	if(!return_turf)
+		to_chat(user, span_warning("Cannot find return location!"))
+		return
+
+	// Fade effect
+	if(user.client)
+		user.client.color = "#000000"
+
+	user.forceMove(return_turf)
+
+	// Fade back in
+	if(user.client)
+		animate(user.client, color = null, time = 5)
+
+	to_chat(user, span_notice("You leave the caravan and continue your expedition..."))
+
+	// Check if all expedition members have left
+	var/all_left = TRUE
+	for(var/mob/living/M in expedition.members)
+		if(M.z == GLOB.caravan_encounter_z)
+			all_left = FALSE
+			break
+
+	// If everyone has left, end the encounter
+	if(all_left)
+		end_encounter_success()
+
+/**
  * Called when all guards are defeated
  */
 /datum/caravan_encounter_controller/proc/guards_defeated()
@@ -776,9 +714,9 @@ body {
 	// Let players loot
 	to_chat(expedition.members, span_boldnotice("The caravan guards have been defeated! Loot their goods!"))
 
-	// Spawn loot at wagon point
-	if(wagon_point)
-		var/turf/loot_turf = get_turf(wagon_point)
+	// Spawn loot at first wagon point
+	if(length(wagon_points))
+		var/turf/loot_turf = get_turf(wagon_points[1])
 		for(var/item_path in caravan.stock)
 			for(var/i in 1 to caravan.stock[item_path])
 				new item_path(loot_turf)
@@ -823,32 +761,46 @@ body {
 /mob/living/simple_animal/hostile/caravan_guard/proc/setup_appearance()
 	switch(faction_id)
 		if("resurgence_clan")
-			name = "clan pilgrim guard"
-			desc = "A lightly armed pilgrim defending their caravan."
-			health = 60
-			maxHealth = 60
-			melee_damage_lower = 10
-			melee_damage_upper = 18
+			name = "clan scout"
+			desc = "A vigilant scout defending their caravan."
+			icon = 'ModularLobotomy/_Lobotomyicons/resurgence_32x48.dmi'
+			icon_state = "clan_scout_normal"
+			health = 500
+			maxHealth = 500
+			melee_damage_lower = 5
+			melee_damage_upper = 7
+			melee_damage_type = RED_DAMAGE
+			attack_sound = 'sound/weapons/purple_tear/stab2.ogg'
 		if("jiajia_ren")
 			name = "flock protector"
-			desc = "A bird-folk warrior with sharp talons."
-			melee_damage_lower = 18
-			melee_damage_upper = 28
-		if("santata_factory")
-			name = "factory enforcer"
-			desc = "A heavily armored gnome with industrial weapons."
-			health = 100
-			maxHealth = 100
+			desc = "A large bird-folk warrior with sharp talons."
+			icon = 'icons/mob/cuckoospawn_big.dmi'
+			icon_state = "evil_ass_bird"
+			health = 1200
+			maxHealth = 1200
 			melee_damage_lower = 20
 			melee_damage_upper = 30
+		if("santata_factory")
+			name = "factory enforcer"
+			desc = "An armored gnome protecting the caravan's goods."
+			icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
+			icon_state = pick("gnome_green", "gnome_purple")
+			mob_size = MOB_SIZE_SMALL
+			health = 50
+			maxHealth = 50
+			melee_damage_lower = 8
+			melee_damage_upper = 15
 		if("cloud_town")
-			name = "frontier guard"
-			desc = "A seasoned hunter protecting the wagon."
-			health = 80
-			maxHealth = 80
+			name = "caravan hunter"
+			desc = "A skilled hunter protecting the wagon."
+			icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
+			icon_state = pick("cloud_hunter1", "cloud_hunter2", "cloud_hunter3")
+			health = 300
+			maxHealth = 300
 			melee_damage_lower = 15
 			melee_damage_upper = 25
 		if("insurgence_clan")
+			// Insurgence uses raid mobs, not guards
 			name = "insurgence raider"
 			desc = "A hostile raider looking for prey."
 			health = 90
@@ -870,3 +822,64 @@ body {
 			// Signal guards defeated to the encounter controller
 			log_game("All caravan guards defeated")
 			GLOB.current_caravan_controller.guards_defeated()
+
+// ============================================
+// PASSIVE CARAVAN GUARD (for friendly caravans)
+// ============================================
+
+/**
+ * Passive Caravan Guard
+ * Doesn't attack unless provoked. Used for non-hostile caravans.
+ */
+/mob/living/simple_animal/hostile/caravan_guard/passive
+	faction = list("neutral")  // Won't attack players by default
+	/// Whether this guard has been provoked
+	var/provoked = FALSE
+
+/mob/living/simple_animal/hostile/caravan_guard/passive/Initialize(mapload)
+	. = ..()
+	// Don't target anything initially
+	target = null
+
+/**
+ * Handle being attacked - become hostile
+ */
+/mob/living/simple_animal/hostile/caravan_guard/passive/attack_hand(mob/living/user, list/modifiers)
+	if(!provoked)
+		become_hostile(user)
+	return ..()
+
+/mob/living/simple_animal/hostile/caravan_guard/passive/attackby(obj/item/W, mob/living/user, params)
+	if(!provoked)
+		become_hostile(user)
+	return ..()
+
+/mob/living/simple_animal/hostile/caravan_guard/passive/bullet_act(obj/projectile/P)
+	if(!provoked && isliving(P.firer))
+		become_hostile(P.firer)
+	return ..()
+
+/**
+ * Make this guard and nearby guards hostile
+ */
+/mob/living/simple_animal/hostile/caravan_guard/passive/proc/become_hostile(mob/living/attacker)
+	if(provoked)
+		return
+
+	provoked = TRUE
+	faction = list("caravan")
+
+	// Target the attacker
+	if(attacker)
+		GiveTarget(attacker)
+
+	// Alert nearby passive guards
+	for(var/mob/living/simple_animal/hostile/caravan_guard/passive/G in view(7, src))
+		if(G != src && !G.provoked)
+			G.become_hostile(attacker)
+
+	// Apply reputation loss for attacking
+	if(faction_id && GLOB.current_caravan_controller)
+		GLOB.current_caravan_controller.apply_reputation_change(faction_id, CARAVAN_ATTACK_REP_LOSS)
+
+	visible_message(span_danger("[src] becomes hostile!"))

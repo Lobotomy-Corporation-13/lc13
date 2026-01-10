@@ -494,9 +494,9 @@
 	else
 		clear_faith_event("room_dirt_floor")
 
-	// Calculate quality level from beauty
-	// beauty is already calculated as totalbeauty / areasize by SS13's beauty system
-	var/beauty_level = current_room.beauty
+	// Calculate quality level from resurgence beauty
+	// resurgence_beauty is calculated as total_resurgence_beauty / areasize
+	var/beauty_level = current_room.resurgence_beauty
 	var/faith_change = 0
 	var/quality_desc = ""
 

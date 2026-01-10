@@ -5,6 +5,7 @@
 /area/resurgence/faction_hub/santata_factory)
 "aK" = (
 /obj/item/toy/xmas_cracker,
+/obj/structure/closet/crate/miningcar,
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
@@ -99,6 +100,10 @@
 "pj" = (
 /turf/closed/indestructible/wood,
 /area/resurgence/faction_hub/santata_factory/office)
+"pn" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
 "qi" = (
 /obj/effect/landmark/faction_trader_spawn/santata_factory,
 /turf/open/floor/carpet/red,
@@ -143,6 +148,7 @@
 	dir = 8
 	},
 /obj/effect/landmark/faction_hub_spawn/santata_factory,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/carpet/red,
 /area/resurgence/faction_hub/santata_factory/entrance)
 "uA" = (
@@ -181,6 +187,7 @@
 /area/resurgence/faction_hub/santata_factory/entrance)
 "CP" = (
 /obj/item/toy/xmas_cracker,
+/obj/structure/closet/crate/miningcar,
 /turf/open/floor/wood,
 /area/resurgence/faction_hub/santata_factory/entrance)
 "ED" = (
@@ -197,6 +204,7 @@
 /obj/effect/decal/cleanable/blood/tracks{
 	dir = 7
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
 /turf/open/floor/wood{
 	icon_state = "wood-broken7"
 	},
@@ -205,6 +213,7 @@
 /obj/structure/fluff/paper/stack{
 	dir = 8
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
 /turf/open/floor/wood{
 	icon_state = "wood-broken"
 	},
@@ -224,6 +233,7 @@
 	dir = 1
 	},
 /obj/effect/landmark/faction_hub_spawn/santata_factory,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/carpet/red,
 /area/resurgence/faction_hub/santata_factory/entrance)
 "Jo" = (
@@ -235,6 +245,11 @@
 "Js" = (
 /turf/open/floor/carpet/red,
 /area/resurgence/faction_hub/santata_factory/office)
+"LH" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/closet/crate/miningcar,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory)
 "LR" = (
 /obj/effect/turf_decal/weather/snow/corner{
 	dir = 8
@@ -278,6 +293,7 @@
 	},
 /obj/effect/landmark/faction_hub_spawn/santata_factory,
 /obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/carpet/red,
 /area/resurgence/faction_hub/santata_factory/entrance)
 "Qy" = (
@@ -372,6 +388,11 @@
 	icon_state = "wood-broken"
 	},
 /area/resurgence/faction_hub/santata_factory/entrance)
+"XF" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
 "XW" = (
 /obj/effect/landmark/faction_hub_exit/santata_factory,
 /obj/effect/turf_decal/delivery/red,
@@ -390,6 +411,10 @@
 	icon_state = "wood-broken6"
 	},
 /area/resurgence/faction_hub/santata_factory)
+"Zm" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/santata_factory,
+/turf/open/floor/wood,
+/area/resurgence/faction_hub/santata_factory/entrance)
 
 (1,1,1) = {"
 dr
@@ -919,7 +944,7 @@ QL
 QH
 CP
 uA
-dP
+Zm
 dP
 lK
 MP
@@ -1049,7 +1074,7 @@ Rt
 uf
 dP
 Xr
-vj
+XF
 jL
 dR
 sK
@@ -1088,7 +1113,7 @@ QH
 uA
 dP
 dP
-vj
+XF
 dP
 dP
 Ue
@@ -1253,10 +1278,10 @@ QL
 QL
 QL
 QH
-dP
+Zm
 Xr
 vj
-dP
+Zm
 dP
 dN
 vj
@@ -1337,13 +1362,13 @@ QL
 QL
 QL
 ca
-ag
+LH
 QL
 ag
 OL
 QL
 ag
-QL
+pn
 mv
 tj
 dR

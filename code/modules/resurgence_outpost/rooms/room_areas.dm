@@ -29,6 +29,24 @@
 	// Set outdoors to TRUE for base outpost area
 	outdoors = TRUE
 
+	/// Total resurgence beauty in this area (separate from base game beauty)
+	var/total_resurgence_beauty = 0
+	/// Resurgence beauty average per open turf (used for room quality calculations)
+	var/resurgence_beauty = 0
+
+/**
+ * Update the resurgence beauty average for this area.
+ * Called when objects with resurgence_beauty components enter or exit.
+ */
+/area/resurgence_outpost/proc/update_resurgence_beauty()
+	if(!areasize)
+		resurgence_beauty = 0
+		return FALSE
+	if(areasize >= beauty_threshold)
+		resurgence_beauty = 0
+		return FALSE  // Too big
+	resurgence_beauty = total_resurgence_beauty / areasize
+
 /// Outdoor/undesignated outpost area
 /area/resurgence_outpost/outdoors
 	name = "Outskirts"
@@ -421,8 +439,8 @@
 	return 0
 
 /**
- * Recalculate the beauty of an area from scratch.
- * Resets totalbeauty to 0 and counts all beauty components in the area.
+ * Recalculate the resurgence beauty of an area from scratch.
+ * Resets total_resurgence_beauty to 0 and counts all resurgence_beauty components in the area.
  *
  * Arguments:
  * * target_area - The area to recalculate beauty for
@@ -435,23 +453,28 @@
 	if(target_area.outdoors)
 		return
 
+	// Only works for resurgence outpost areas
+	var/area/resurgence_outpost/outpost_area = target_area
+	if(!istype(outpost_area))
+		return
+
 	// Reset beauty to 0
-	target_area.totalbeauty = 0
+	outpost_area.total_resurgence_beauty = 0
 
 	// Go through all turfs in the area
-	for(var/turf/T in target_area.contents)
+	for(var/turf/T in outpost_area.contents)
 		// Check all atoms on this turf
 		for(var/atom/A in T.contents)
-			// Get the beauty component if it exists
-			var/datum/component/beauty/B = A.GetComponent(/datum/component/beauty)
+			// Get the resurgence beauty component if it exists
+			var/datum/component/resurgence_beauty/B = A.GetComponent(/datum/component/resurgence_beauty)
 			if(B)
 				// Sanity check - beauty values should be reasonable (-1000 to +1000)
 				if(B.beauty < -1000 || B.beauty > 1000)
 					// Log the problematic object for debugging
-					log_game("BEAUTY BUG: [A.type] at [T.x],[T.y],[T.z] has extreme beauty value: [B.beauty]")
-					message_admins("BEAUTY BUG: [A.type] has extreme beauty value: [B.beauty] - skipping")
+					log_game("RESURGENCE BEAUTY BUG: [A.type] at [T.x],[T.y],[T.z] has extreme beauty value: [B.beauty]")
+					message_admins("RESURGENCE BEAUTY BUG: [A.type] has extreme beauty value: [B.beauty] - skipping")
 					continue
-				target_area.totalbeauty += B.beauty
+				outpost_area.total_resurgence_beauty += B.beauty
 
 	// Update the beauty average
-	target_area.update_beauty()
+	outpost_area.update_resurgence_beauty()

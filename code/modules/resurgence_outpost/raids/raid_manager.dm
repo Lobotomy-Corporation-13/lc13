@@ -19,8 +19,11 @@ SUBSYSTEM_DEF(resurgence_raids)
 	/// Whether the raid system is enabled
 	var/raids_enabled = TRUE
 
-	/// Minimum round time before raids can occur (5 minutes)
-	var/minimum_round_time = 5 MINUTES
+	/// Minimum round time before raids can occur (30 minutes)
+	var/minimum_round_time = 30 MINUTES
+
+	/// Minimum number of rooms required before raids can occur
+	var/minimum_room_count = 3
 
 /datum/controller/subsystem/resurgence_raids/Initialize()
 	// Set initial cooldown
@@ -33,6 +36,10 @@ SUBSYSTEM_DEF(resurgence_raids)
 
 	// Don't run raids too early in the round
 	if(world.time < minimum_round_time)
+		return
+
+	// Don't run raids until there are enough rooms
+	if(get_outpost_room_count() < minimum_room_count)
 		return
 
 	// Clean up completed raids
@@ -128,7 +135,6 @@ SUBSYSTEM_DEF(resurgence_raids)
 
 	// Base weights
 	weights[RAID_TYPE_BASIC] = 30
-	weights[RAID_TYPE_DELAYED] = 20
 	weights[RAID_TYPE_PILLAGE] = 15
 	weights[RAID_TYPE_SIEGE] = 10
 	weights[RAID_TYPE_ASSASSINATION] = 10
@@ -179,6 +185,8 @@ SUBSYSTEM_DEF(resurgence_raids)
 	info["raid_cooldown"] = raid_cooldown
 	info["cooldown_remaining"] = max(0, raid_cooldown - world.time)
 	info["active_raids"] = active_raids.len
+	info["room_count"] = get_outpost_room_count()
+	info["minimum_room_count"] = minimum_room_count
 
 	var/list/raid_info = list()
 	for(var/datum/resurgence_raid/raid in active_raids)
@@ -191,3 +199,14 @@ SUBSYSTEM_DEF(resurgence_raids)
 	info["raids"] = raid_info
 
 	return info
+
+/**
+ * Count the number of designated rooms in the outpost.
+ * Only counts rooms that have contents (i.e., actual tiles assigned).
+ */
+/datum/controller/subsystem/resurgence_raids/proc/get_outpost_room_count()
+	var/room_count = 0
+	for(var/area/resurgence_outpost/room/R in GLOB.sortedAreas)
+		if(R.contents.len)
+			room_count++
+	return room_count

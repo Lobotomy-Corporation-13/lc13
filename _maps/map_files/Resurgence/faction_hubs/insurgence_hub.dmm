@@ -187,6 +187,7 @@
 /area/resurgence/faction_hub/insurgence_clan)
 "io" = (
 /obj/effect/landmark/faction_hub_spawn/insurgence_clan,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/plating/dirt/jungle/wasteland{
 	slowdown = 0
 	},

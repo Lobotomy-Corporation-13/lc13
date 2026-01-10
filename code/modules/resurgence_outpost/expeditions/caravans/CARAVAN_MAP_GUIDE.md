@@ -6,6 +6,24 @@ This guide explains how to create a caravan encounter map for the Resurgence Out
 
 Caravan encounter maps are special z-levels that load dynamically when players encounter a caravan on the world map. The terrain appearance automatically updates to match the terrain type where the caravan was found.
 
+### Encounter Behavior
+
+Caravan encounters function as "mini-hubs" where players physically explore the area:
+
+**Non-Hostile Caravans** (Resurgence Clan, Jiajia-ren, Santata Factory, Cloud Town):
+- Players teleport into the caravan encounter area
+- **Passive guards** are present but won't attack unless provoked
+- **Trader NPC** is present - click to open the TGUI trading interface
+- Walk to the exit landmark to leave when done
+
+**Hostile Caravans** (Insurgence Clan Patrols):
+- Players teleport into the caravan encounter area
+- **Hostile guards** spawn and attack immediately
+- No trader NPC (combat only)
+- Defeating all guards drops loot, then players can exit
+
+**Guard Provocation**: If players attack a passive guard, ALL nearby guards become hostile and a reputation penalty is applied with that faction.
+
 ## Required File Location
 
 ```
@@ -82,6 +100,24 @@ This turf automatically changes appearance based on terrain type:
 - Ruins: Cracked stone
 - Snow: Snow-covered ground
 
+#### Edge Floor Turf (with Decor)
+
+For the edges of the map, use the edge variant that spawns terrain-appropriate decor:
+
+```dm
+/turf/open/floor/caravan_encounter/edge
+```
+
+This turf has a 60% chance to spawn decor objects when terrain changes:
+- **Plains**: Grass, rock piles, bushes
+- **Forest**: Dead trees, bushes, rock piles, grass
+- **Mountain**: Rocks, rock piles, mushrooms
+- **Desert**: Rock piles, rocks, cacti
+- **Ruins**: Rock piles, wood debris
+- **Snow**: Icy rocks, rock piles, pine trees
+
+When players return to the caravan on a different tile, all old decor is automatically removed and new terrain-appropriate decor spawns.
+
 ### 3. Wall Turfs
 
 Use the terrain-adaptive wall turf for boundaries:
@@ -100,25 +136,42 @@ This turf also adapts to terrain:
 
 ### 4. Required Landmarks
 
-You MUST include these three landmarks for the encounter system to function:
+You MUST include these landmarks for the encounter system to function:
 
-#### Player Spawn Point
+#### Player Spawn Point (Required)
 ```dm
 /obj/effect/landmark/caravan_spawn
 ```
 Where players teleport when the encounter starts.
 
-#### Wagon Location
+#### Wagon Location (Required, Multiple Allowed)
 ```dm
 /obj/effect/landmark/caravan_wagon
 ```
-Where the caravan wagon/cart spawns and guards patrol.
+Where guards spawn for caravans. **One guard spawns per wagon landmark**, so place multiple wagon landmarks to have multiple guards. Guard behavior and strength varies by faction:
 
-#### Exit Point
+**Passive Guards** (non-hostile factions):
+- Resurgence Clan: Weak guards (60 HP, 10-18 damage)
+- Jiajia-ren: Medium guards (80 HP, 18-28 damage)
+- Santata Factory: Strong guards (100 HP, 20-30 damage)
+- Cloud Town: Medium guards (80 HP, 15-25 damage)
+
+**Hostile Guards** (hostile factions):
+- Insurgence Clan: Strong raiders (90 HP, 20-35 damage) - attack on sight
+
+The first wagon landmark is also used as fallback trader spawn and loot drop location.
+
+#### Exit Point (Required)
 ```dm
 /obj/effect/landmark/caravan_exit
 ```
-Where players can leave to return to the expedition corridor.
+Where players can leave to return to the expedition corridor. When a player walks onto this landmark, a popup appears asking if they want to leave or stay. Players who leave are teleported back to the expedition corridor.
+
+#### Trader Spawn Point (Optional)
+```dm
+/obj/effect/landmark/caravan_trader
+```
+Where the caravan trader NPC spawns for non-hostile caravans. If not present, the trader spawns at the wagon location. Place this near (but not on) the wagon for best visual effect.
 
 ## Example Map
 
@@ -129,6 +182,9 @@ Here's a minimal 15x15 caravan encounter map:
 "a" = (
 /turf/closed/wall/caravan_encounter,
 /area/resurgence/caravan_encounter)
+"d" = (
+/turf/open/floor/caravan_encounter/edge,
+/area/resurgence/caravan_encounter)
 "e" = (
 /obj/effect/landmark/caravan_exit,
 /turf/open/floor/caravan_encounter,
@@ -138,6 +194,10 @@ Here's a minimal 15x15 caravan encounter map:
 /area/resurgence/caravan_encounter)
 "s" = (
 /obj/effect/landmark/caravan_spawn,
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"t" = (
+/obj/effect/landmark/caravan_trader,
 /turf/open/floor/caravan_encounter,
 /area/resurgence/caravan_encounter)
 "w" = (
@@ -164,19 +224,19 @@ a
 "}
 (2,1,1) = {"
 a
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
 a
 "}
 (3,1,1) = {"
@@ -272,7 +332,7 @@ f
 f
 f
 f
-f
+t
 f
 f
 f
@@ -368,19 +428,19 @@ a
 "}
 (14,1,1) = {"
 a
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
-f
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d
 a
 "}
 (15,1,1) = {"
@@ -411,26 +471,30 @@ a
 
 ### Layout Tips
 
-1. **Spawn Point Placement**: Place `caravan_spawn` near one edge, giving players room to assess the situation before engaging.
+1. **Edge Turfs**: Use `/turf/open/floor/caravan_encounter/edge` around the perimeter of your walkable area (not against walls, but 1-2 tiles inward). This creates dynamic visual interest with terrain-appropriate decor.
 
-2. **Wagon Placement**: Place `caravan_wagon` in a central or slightly offset position. This is where:
+2. **Spawn Point Placement**: Place `caravan_spawn` near one edge, giving players room to assess the situation before engaging.
+
+3. **Wagon Placement**: Place `caravan_wagon` in a central or slightly offset position. This is where:
    - The caravan's visual representation appears
    - Guards spawn and patrol
    - Loot drops after defeating guards
 
-3. **Exit Placement**: Place `caravan_exit` in an accessible location, ideally opposite the spawn point or clearly visible.
+4. **Exit Placement**: Place `caravan_exit` in an accessible location, ideally opposite the spawn point or clearly visible.
 
-4. **Cover**: Consider adding obstacles (rocks, trees, etc.) for tactical combat:
+5. **Cover**: Consider adding obstacles (rocks, trees, etc.) for tactical combat:
    ```dm
    /obj/structure/flora/rock/pile
    /obj/structure/flora/tree/dead
    ```
 
-5. **Open Space**: Leave enough open floor around the wagon for guard spawning and combat movement.
+6. **Open Space**: Leave enough open floor around the wagon for guard spawning and combat movement.
 
 ## Adding Decorations
 
-You can add static decorations that fit multiple terrain types:
+**Recommended**: Use `/turf/open/floor/caravan_encounter/edge` turfs instead of static decorations. Edge turfs automatically spawn terrain-appropriate decor that updates when players encounter the caravan on different terrain types.
+
+If you need static decorations that don't change, you can add them manually:
 
 ```dm
 "r" = (
@@ -469,11 +533,15 @@ Note: Decorations do NOT automatically change with terrain. For a consistent loo
 
 ### Players Can't Leave
 - Ensure `/obj/effect/landmark/caravan_exit` exists
-- The exit landmark triggers the `return_to_corridor()` proc
+- The exit landmark shows a popup when players walk onto it
+- Players must click "Continue Expedition" in the popup to leave
 
 ### Guards Don't Spawn
-- Ensure `/obj/effect/landmark/caravan_wagon` exists
-- Guards spawn at the wagon location when the caravan is hostile
+- Ensure at least one `/obj/effect/landmark/caravan_wagon` exists
+- One guard spawns per wagon landmark for all caravans
+- Hostile caravans (Insurgence) spawn aggressive guards
+- Non-hostile caravans spawn passive guards that only attack if provoked
+- Add more wagon landmarks to increase the number of guards
 
 ### Terrain Doesn't Update
 - Verify all floor turfs are `/turf/open/floor/caravan_encounter`
@@ -483,6 +551,7 @@ Note: Decorations do NOT automatically change with terrain. For a consistent loo
 ## Related Files
 
 - `code/modules/resurgence_outpost/expeditions/caravans/_caravans.dm` - Caravan system defines
-- `code/modules/resurgence_outpost/expeditions/caravans/caravan_encounter.dm` - Encounter turfs and controller
+- `code/modules/resurgence_outpost/expeditions/caravans/caravan_encounter.dm` - Encounter turfs, landmarks, and controller
+- `code/modules/resurgence_outpost/expeditions/caravans/caravan_trader_npc.dm` - Caravan trader NPC with TGUI interface
 - `code/modules/resurgence_outpost/expeditions/caravans/caravan_manager.dm` - Caravan spawning and movement
 - `_maps/map_files/Resurgence/travel_outskirts.dmm` - Reference for expedition corridor map format

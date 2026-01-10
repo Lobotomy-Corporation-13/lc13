@@ -332,14 +332,17 @@
 		GLOB.current_caravan_encounter = caravan
 		GLOB.current_caravan_controller = controller
 
-		// Spawn guards
-		controller.spawn_guards()
+		// Spawn guards based on caravan hostility
+		if(caravan.is_hostile())
+			controller.spawn_hostile_guards()
+		else
+			controller.spawn_passive_guards()
+			controller.spawn_trader()
 
 		// Teleport user
 		user.forceMove(get_turf(controller.spawn_point))
-		controller.show_encounter_popup(user)
 
-		to_chat(user, span_notice("Started encounter with [caravan.name]."))
+		to_chat(user, span_notice("Started encounter with [caravan.name]. Explore the area!"))
 		message_admins("[key_name(user)] forced caravan encounter via debug tool")
 	else
 		to_chat(user, span_warning("Failed to start encounter - no spawn point found. Is the encounter map loaded?"))

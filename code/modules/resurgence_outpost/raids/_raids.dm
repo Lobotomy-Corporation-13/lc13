@@ -94,11 +94,6 @@ GLOBAL_LIST_INIT(raid_type_room_preferences, list(
 /// Uses raider variants with stealing/trampling/looting abilities
 /// Ranged units use normal clan mobs (they provide cover fire, not looting)
 GLOBAL_LIST_INIT(insurgence_raid_compositions, list(
-	RAID_TYPE_DELAYED = list(
-		/mob/living/simple_animal/hostile/clan/raider/scout = 2,
-		/mob/living/simple_animal/hostile/clan/raider/defender = 1,
-		/mob/living/simple_animal/hostile/clan/ranged/gunner = 1
-	),
 	RAID_TYPE_BASIC = list(
 		/mob/living/simple_animal/hostile/clan/raider/scout = 3,
 		/mob/living/simple_animal/hostile/clan/raider/defender = 1,

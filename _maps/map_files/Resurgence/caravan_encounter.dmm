@@ -1,0 +1,845 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"b" = (
+/obj/effect/landmark/caravan_wagon,
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"c" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/landmark/caravan_spawn,
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"e" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = -16;
+	anchored = 1
+	},
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"f" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_y = 16;
+	anchored = 1
+	},
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"i" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"k" = (
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"m" = (
+/obj/effect/turf_decal/delivery/red,
+/obj/effect/landmark/caravan_exit,
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"q" = (
+/obj/structure/riser/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"s" = (
+/obj/effect/landmark/caravan_trader,
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"v" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_y = 16;
+	anchored = 1
+	},
+/obj/effect/landmark/caravan_wagon,
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"w" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = 16;
+	anchored = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/caravan_encounter)
+"x" = (
+/obj/machinery/door/keycard/cuckoo_nest{
+	resistance_flags = 64
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/caravan_encounter)
+"y" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = 16;
+	anchored = 1
+	},
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"B" = (
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/caravan_encounter)
+"H" = (
+/obj/effect/landmark/caravan_wagon,
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"L" = (
+/turf/closed/indestructible/wood,
+/area/resurgence/caravan_encounter)
+"P" = (
+/obj/effect/turf_decal/delivery,
+/obj/effect/turf_decal/delivery,
+/obj/effect/landmark/caravan_spawn,
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"R" = (
+/turf/closed/wall/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"S" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = -16;
+	anchored = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/resurgence/caravan_encounter)
+"T" = (
+/turf/open/floor/caravan_encounter/edge,
+/area/resurgence/caravan_encounter)
+"U" = (
+/obj/structure/riser/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 8
+	},
+/obj/effect/food_cart_stand,
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"V" = (
+/obj/item/flashlight/lantern{
+	on = 1;
+	pixel_x = 16;
+	anchored = 1
+	},
+/turf/open/floor/wood{
+	color = "#DDDDDD"
+	},
+/area/resurgence/caravan_encounter)
+"W" = (
+/obj/effect/turf_decal/loading_area{
+	dir = 1
+	},
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+"Y" = (
+/obj/effect/turf_decal/loading_area/red{
+	dir = 1
+	},
+/turf/open/floor/caravan_encounter,
+/area/resurgence/caravan_encounter)
+
+(1,1,1) = {"
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+"}
+(2,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(3,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(4,1,1) = {"
+R
+T
+T
+a
+a
+a
+a
+a
+y
+a
+a
+a
+a
+a
+a
+a
+y
+a
+a
+a
+a
+a
+T
+T
+R
+"}
+(5,1,1) = {"
+R
+T
+T
+a
+a
+a
+a
+L
+L
+L
+L
+L
+L
+L
+L
+L
+L
+L
+L
+a
+a
+a
+T
+T
+R
+"}
+(6,1,1) = {"
+R
+T
+T
+a
+a
+a
+L
+L
+k
+k
+k
+L
+v
+k
+k
+x
+B
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(7,1,1) = {"
+R
+T
+T
+a
+a
+L
+L
+L
+k
+k
+k
+x
+k
+k
+H
+L
+B
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(8,1,1) = {"
+R
+T
+T
+a
+a
+L
+k
+L
+k
+V
+k
+L
+k
+k
+k
+L
+w
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(9,1,1) = {"
+R
+T
+T
+a
+a
+L
+k
+L
+x
+L
+L
+L
+f
+k
+k
+L
+L
+L
+L
+L
+a
+a
+T
+T
+R
+"}
+(10,1,1) = {"
+R
+T
+T
+a
+a
+L
+k
+L
+k
+U
+k
+k
+k
+k
+k
+L
+S
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(11,1,1) = {"
+R
+T
+T
+a
+a
+L
+L
+L
+L
+L
+k
+k
+k
+k
+H
+L
+B
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(12,1,1) = {"
+R
+T
+T
+a
+a
+a
+L
+L
+s
+q
+V
+H
+k
+k
+k
+x
+B
+B
+L
+L
+a
+a
+T
+T
+R
+"}
+(13,1,1) = {"
+R
+T
+T
+a
+a
+a
+a
+L
+L
+L
+L
+L
+i
+i
+L
+L
+L
+L
+L
+a
+a
+a
+T
+T
+R
+"}
+(14,1,1) = {"
+R
+m
+Y
+a
+a
+a
+a
+a
+e
+a
+b
+b
+a
+a
+b
+b
+e
+a
+a
+a
+a
+a
+W
+c
+R
+"}
+(15,1,1) = {"
+R
+m
+Y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+W
+P
+R
+"}
+(16,1,1) = {"
+R
+m
+Y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+W
+c
+R
+"}
+(17,1,1) = {"
+R
+m
+Y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+W
+c
+R
+"}
+(18,1,1) = {"
+R
+m
+Y
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+W
+c
+R
+"}
+(19,1,1) = {"
+R
+T
+T
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+T
+T
+R
+"}
+(20,1,1) = {"
+R
+T
+T
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+a
+T
+T
+R
+"}
+(21,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(22,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(23,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(24,1,1) = {"
+R
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+T
+R
+"}
+(25,1,1) = {"
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+R
+"}

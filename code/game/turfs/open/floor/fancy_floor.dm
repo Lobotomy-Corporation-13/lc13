@@ -212,7 +212,8 @@
 	. = ..()
 	update_icon()
 	if(carpet_beauty)
-		AddComponent(/datum/component/beauty, carpet_beauty)
+		// Use resurgence_beauty for room quality calculations in Resurgence Outpost
+		AddComponent(/datum/component/resurgence_beauty, carpet_beauty)
 
 /turf/open/floor/carpet/update_icon()
 	. = ..()

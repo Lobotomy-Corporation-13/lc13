@@ -1,7 +1,17 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"ae" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
 "aj" = (
 /obj/structure/mineral_door/wood,
 /turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"at" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender,
+/turf/open/floor/plating/sandy_dirt,
 /area/resurgence/faction_hub/resurgence_clan)
 "bR" = (
 /obj/effect/turf_decal/raven/one,
@@ -27,7 +37,14 @@
 	pixel_x = 16;
 	anchored = 1
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 1
+	},
 /turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"cE" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan,
+/turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "cR" = (
 /turf/open/floor/plating/ironsand,
@@ -92,7 +109,16 @@
 	dir = 9
 	},
 /obj/structure/chair/wood,
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan,
 /turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"iF" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/brown,
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 8
+	},
+/turf/open/floor/wood,
 /area/resurgence/faction_hub/resurgence_clan)
 "iH" = (
 /turf/open/floor/plating/ironsand,
@@ -117,7 +143,7 @@
 /turf/closed/indestructible/wood,
 /area/resurgence/faction_hub/resurgence_clan/market)
 "nj" = (
-/obj/effect/turf_decal/loading_area/red{
+/obj/effect/turf_decal/loading_area{
 	dir = 1
 	},
 /turf/open/floor/plating/sandy_dirt,
@@ -216,6 +242,12 @@
 	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
+"vG" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
 "wh" = (
 /turf/open/floor/plating/dirt/jungle/wasteland{
 	slowdown = 0
@@ -239,6 +271,9 @@
 /obj/structure/chair/wood{
 	dir = 4
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 4
+	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "ya" = (
@@ -252,6 +287,9 @@
 /obj/structure/chair/wood{
 	dir = 1
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout{
+	dir = 1
+	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "zr" = (
@@ -261,7 +299,16 @@
 /obj/structure/chair/wood{
 	dir = 8
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout{
+	dir = 8
+	},
 /turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"Be" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 8
+	},
+/turf/open/floor/plating/sandy_dirt,
 /area/resurgence/faction_hub/resurgence_clan)
 "Bo" = (
 /obj/effect/turf_decal/siding/wood/corner,
@@ -296,6 +343,7 @@
 	pixel_x = 16;
 	anchored = 1
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan,
 /turf/open/floor/carpet/royalblack,
 /area/resurgence/faction_hub/resurgence_clan/market)
 "Eg" = (
@@ -349,6 +397,9 @@
 /obj/structure/chair/wood{
 	dir = 1
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout{
+	dir = 1
+	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "Jq" = (
@@ -363,6 +414,12 @@
 /obj/structure/flora/ausbushes/fullgrass,
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan/entrance)
+"Lp" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
 "Lx" = (
 /obj/structure/curtain/cloth,
 /turf/closed/indestructible/fakeglass,
@@ -374,6 +431,9 @@
 /obj/structure/chair/wood{
 	dir = 8
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 8
+	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "LV" = (
@@ -381,6 +441,7 @@
 	dir = 1
 	},
 /obj/structure/chair/wood,
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout,
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "Mg" = (
@@ -388,8 +449,21 @@
 /obj/effect/turf_decal/siding/blue{
 	dir = 1
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender,
 /turf/open/floor/carpet/royalblack,
 /area/resurgence/faction_hub/resurgence_clan/market)
+"MI" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender{
+	dir = 8
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan/entrance)
+"ML" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/defender{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
 "MY" = (
 /obj/structure/flora/rock/jungle,
 /turf/open/floor/plating/ironsand,
@@ -446,7 +520,15 @@
 /obj/structure/chair/wood{
 	dir = 8
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 8
+	},
 /turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
+"RX" = (
+/obj/structure/chair/wood,
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan,
+/turf/open/floor/wood,
 /area/resurgence/faction_hub/resurgence_clan)
 "SF" = (
 /obj/item/flashlight/lantern{
@@ -455,6 +537,12 @@
 	anchored = 1
 	},
 /turf/open/floor/wood,
+/area/resurgence/faction_hub/resurgence_clan)
+"SJ" = (
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan/scout{
+	dir = 4
+	},
+/turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "SK" = (
 /turf/open/water/deep/saltwater,
@@ -483,7 +571,7 @@
 /area/resurgence/faction_hub/resurgence_clan/market)
 "Xl" = (
 /obj/effect/landmark/faction_hub_spawn/resurgence_clan,
-/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/plating/sandy_dirt,
 /area/resurgence/faction_hub/resurgence_clan/entrance)
 "Xw" = (
@@ -505,6 +593,9 @@
 /obj/structure/chair/wood{
 	dir = 4
 	},
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan{
+	dir = 4
+	},
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan)
 "YW" = (
@@ -517,6 +608,11 @@
 /obj/structure/flora/ausbushes/brflowers,
 /turf/open/floor/plating/ironsand,
 /area/resurgence/faction_hub/resurgence_clan/entrance)
+"ZF" = (
+/obj/structure/farm_plot,
+/mob/living/simple_animal/hostile/faction_hub_civilian/resurgence_clan,
+/turf/open/floor/plating/ironsand,
+/area/resurgence/faction_hub/resurgence_clan)
 
 (1,1,1) = {"
 ER
@@ -793,7 +889,7 @@ iH
 iH
 iH
 Bs
-Bs
+Be
 Bs
 iH
 iH
@@ -913,7 +1009,7 @@ iH
 iH
 lr
 SF
-Jq
+RX
 rC
 jO
 iH
@@ -955,7 +1051,7 @@ iH
 iH
 lr
 Ih
-Jq
+RX
 rC
 jO
 Bs
@@ -964,7 +1060,7 @@ Bs
 iH
 iH
 MY
-iH
+ae
 iH
 iH
 sT
@@ -1163,7 +1259,7 @@ iH
 iH
 iH
 iH
-iH
+SJ
 MY
 iH
 iH
@@ -1219,7 +1315,7 @@ iH
 MY
 iH
 iH
-iH
+SJ
 iH
 cl
 iH
@@ -1239,7 +1335,7 @@ iH
 iH
 iH
 iH
-iH
+ML
 iH
 iH
 iH
@@ -1266,7 +1362,7 @@ iH
 iH
 iH
 iH
-cR
+vG
 cR
 cR
 cR
@@ -1449,14 +1545,14 @@ iH
 iH
 iH
 iH
+Lp
 iH
 iH
 iH
 iH
 iH
 iH
-iH
-iH
+ae
 iH
 iH
 Bs
@@ -1476,7 +1572,7 @@ iH
 iH
 iH
 iH
-cR
+MI
 cR
 cR
 cR
@@ -1513,7 +1609,7 @@ iH
 iH
 sT
 iH
-iH
+ae
 iH
 iH
 iH
@@ -1672,7 +1768,7 @@ lW
 lW
 lW
 lW
-Bs
+at
 Bs
 Bs
 Bs
@@ -1706,9 +1802,9 @@ lr
 iH
 iH
 lr
+iF
 jb
-jb
-jb
+iF
 lW
 xe
 dk
@@ -1760,7 +1856,7 @@ Bs
 Bs
 Bs
 iH
-iH
+SJ
 iH
 iH
 iH
@@ -1930,7 +2026,7 @@ iH
 iH
 sT
 iH
-jJ
+ZF
 jJ
 jJ
 jJ
@@ -2142,7 +2238,7 @@ iH
 iH
 iH
 iH
-iH
+cE
 NQ
 lr
 pR

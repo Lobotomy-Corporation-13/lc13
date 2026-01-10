@@ -280,10 +280,10 @@
 				if(!unanchored_result)
 					S.anchored = TRUE
 
-			// Apply beauty based on category
+			// Apply resurgence beauty based on category
 			var/beauty_value = calculate_beauty_value(user)
 			if(beauty_value != 0)
-				result.AddComponent(/datum/component/beauty, beauty_value)
+				result.AddComponent(/datum/component/resurgence_beauty, beauty_value)
 
 			// Add deconstructable component with the materials used
 			result.AddComponent(/datum/component/resurgence_deconstructable, required_materials.Copy())

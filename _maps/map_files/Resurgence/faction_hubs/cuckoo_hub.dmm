@@ -15,7 +15,7 @@
 	dir = 1
 	},
 /obj/structure/stone_tile/surrounding_tile/cracked,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren/entrance)
 "cr" = (
@@ -50,7 +50,7 @@
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "ei" = (
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 4
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -94,12 +94,6 @@
 	},
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
-"fY" = (
-/obj/effect/turf_decal/loading_area/red{
-	dir = 1
-	},
-/turf/open/floor/plating/asteroid/basalt,
-/area/resurgence/faction_hub/jiajia_ren/entrance)
 "gx" = (
 /obj/structure/stone_tile/surrounding/burnt,
 /obj/structure/stone_tile/center/cracked,
@@ -110,7 +104,7 @@
 /area/resurgence/faction_hub/jiajia_ren/traders_perch)
 "hr" = (
 /obj/effect/landmark/faction_hub_spawn/jiajia_ren,
-/obj/effect/turf_decal/delivery/red,
+/obj/effect/turf_decal/delivery,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren/entrance)
 "hC" = (
@@ -138,7 +132,7 @@
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "iB" = (
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 4
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -160,14 +154,14 @@
 /area/resurgence/faction_hub/jiajia_ren)
 "jR" = (
 /obj/structure/stone_tile/slab,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 1
 	},
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "kd" = (
 /obj/structure/stone_tile/slab,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard{
 	dir = 1
 	},
 /turf/open/indestructible/boss/air,
@@ -177,7 +171,7 @@
 /turf/open/water/jungle,
 /area/resurgence/faction_hub/jiajia_ren/entrance)
 "lI" = (
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -245,7 +239,7 @@
 /area/resurgence/faction_hub/jiajia_ren)
 "qR" = (
 /obj/structure/stone_tile/slab,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard,
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren/traders_perch)
 "rP" = (
@@ -255,7 +249,7 @@
 "rU" = (
 /obj/structure/stone_tile/slab,
 /obj/item/food/meat/slab/buggy,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard,
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "sI" = (
@@ -266,6 +260,13 @@
 	dir = 8
 	},
 /obj/effect/landmark/faction_hub_spawn/jiajia_ren,
+/obj/effect/turf_decal/delivery,
+/turf/open/floor/plating/asteroid/basalt,
+/area/resurgence/faction_hub/jiajia_ren/entrance)
+"td" = (
+/obj/effect/turf_decal/loading_area{
+	dir = 1
+	},
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren/entrance)
 "tv" = (
@@ -311,7 +312,7 @@
 /area/resurgence/faction_hub/jiajia_ren)
 "vM" = (
 /obj/structure/stone_tile/slab,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "wO" = (
@@ -332,7 +333,7 @@
 /area/resurgence/faction_hub/jiajia_ren)
 "yJ" = (
 /obj/structure/necropolis_gate/locked,
-/turf/closed/indestructible/riveted/boss/see_through,
+/turf/closed/indestructible/riveted/boss,
 /area/resurgence/faction_hub/jiajia_ren/entrance)
 "yR" = (
 /obj/structure/stone_tile{
@@ -341,7 +342,7 @@
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "yS" = (
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "yW" = (
@@ -356,7 +357,7 @@
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren/traders_perch)
 "AX" = (
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "BL" = (
@@ -393,7 +394,7 @@
 	desc = "A mat to cut and clean meat.";
 	color = "#777777"
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 1
 	},
 /turf/open/indestructible/boss/air,
@@ -478,7 +479,7 @@
 	desc = "A mat to cut and clean meat.";
 	color = "#777777"
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 1
 	},
 /turf/open/indestructible/boss/air,
@@ -503,7 +504,7 @@
 "HH" = (
 /obj/structure/stone_tile/slab,
 /obj/structure/bed/nest,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "IA" = (
@@ -578,7 +579,7 @@
 /obj/structure/stone_tile/surrounding_tile/cracked{
 	dir = 4
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -586,7 +587,7 @@
 "MC" = (
 /obj/structure/stone_tile/slab,
 /obj/structure/bed/nest,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 8
 	},
 /turf/open/indestructible/boss/air,
@@ -602,12 +603,12 @@
 "Pf" = (
 /obj/structure/stone_tile/slab,
 /obj/item/food/meat/slab/crimson,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/indestructible/boss/air,
 /area/resurgence/faction_hub/jiajia_ren)
 "Pm" = (
 /obj/structure/flora/rock/jungle,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "Pr" = (
@@ -631,7 +632,7 @@
 /obj/structure/stone_tile/cracked{
 	dir = 4
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard{
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -648,7 +649,7 @@
 "RI" = (
 /obj/structure/stone_tile/slab,
 /obj/structure/bed/nest,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 4
 	},
 /turf/open/indestructible/boss/air,
@@ -666,7 +667,7 @@
 /obj/structure/stone_tile/block{
 	dir = 8
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren{
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -698,14 +699,14 @@
 /obj/structure/stone_tile/block{
 	dir = 4
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard{
 	dir = 4
 	},
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "Vo" = (
 /obj/structure/stone_tile/block/cracked,
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren,
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren,
 /turf/open/floor/plating/asteroid/basalt,
 /area/resurgence/faction_hub/jiajia_ren)
 "Vp" = (
@@ -799,7 +800,7 @@
 /obj/structure/stone_tile/cracked{
 	dir = 8
 	},
-/mob/living/simple_animal/faction_hub_civilian/jiajia_ren/guard{
+/mob/living/simple_animal/hostile/faction_hub_civilian/jiajia_ren/guard{
 	dir = 8
 	},
 /turf/open/floor/plating/asteroid/basalt,
@@ -1568,7 +1569,7 @@ Ez
 na
 na
 na
-na
+td
 hr
 Rc
 fQ
@@ -1610,7 +1611,7 @@ na
 na
 na
 na
-fY
+td
 hr
 Rc
 fQ
@@ -1694,7 +1695,7 @@ pM
 na
 na
 na
-fY
+td
 hr
 Rc
 fQ
@@ -1736,7 +1737,7 @@ pM
 na
 na
 Ez
-na
+td
 hr
 Rc
 fQ

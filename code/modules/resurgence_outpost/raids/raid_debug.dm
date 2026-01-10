@@ -18,7 +18,6 @@
 
 	var/list/options = list(
 		"Trigger Basic Raid",
-		"Trigger Delayed Raid",
 		"Trigger Siege Raid",
 		"Trigger Pillage Raid",
 		"Trigger Assassination Raid",
@@ -39,8 +38,6 @@
 	switch(choice)
 		if("Trigger Basic Raid")
 			trigger_raid_type(user, RAID_TYPE_BASIC)
-		if("Trigger Delayed Raid")
-			trigger_raid_type(user, RAID_TYPE_DELAYED)
 		if("Trigger Siege Raid")
 			trigger_raid_type(user, RAID_TYPE_SIEGE)
 		if("Trigger Pillage Raid")
@@ -181,7 +178,6 @@
 
 	var/list/options = list(
 		"Trigger Basic Raid",
-		"Trigger Delayed Raid",
 		"Trigger Siege Raid",
 		"Trigger Pillage Raid",
 		"Trigger Assassination Raid",
@@ -198,8 +194,6 @@
 	switch(choice)
 		if("Trigger Basic Raid")
 			SSresurgence_raids.force_raid("insurgence_clan", RAID_TYPE_BASIC)
-		if("Trigger Delayed Raid")
-			SSresurgence_raids.force_raid("insurgence_clan", RAID_TYPE_DELAYED)
 		if("Trigger Siege Raid")
 			SSresurgence_raids.force_raid("insurgence_clan", RAID_TYPE_SIEGE)
 		if("Trigger Pillage Raid")

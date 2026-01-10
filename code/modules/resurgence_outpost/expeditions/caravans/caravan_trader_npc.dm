@@ -1,15 +1,15 @@
-// Faction Trader NPC
-// Interactive traders found in faction hubs
+// Caravan Trader NPC
+// Interactive trader found in caravan encounters
 
 /**
- * Faction Trader NPC
+ * Caravan Trader NPC
  *
- * A friendly NPC that handles in-person trading at faction hubs.
- * Players can interact with them to open the trading interface.
+ * A trader NPC that spawns during caravan encounters.
+ * Uses the same TGUI interface as faction hub traders.
  */
-/mob/living/simple_animal/faction_trader
-	name = "Trader"
-	desc = "A faction representative who handles trading."
+/mob/living/simple_animal/caravan_trader
+	name = "Caravan Trader"
+	desc = "A traveling merchant."
 	icon = 'icons/mob/simple_human.dmi'
 	icon_state = "faceless"
 	icon_living = "faceless"
@@ -37,12 +37,12 @@
 	verb_ask = "asks"
 	verb_exclaim = "exclaims"
 
-	/// The faction this trader represents
-	var/faction_id = null
-	/// Reference to the faction datum
+	/// The caravan this trader represents
+	var/datum/faction_caravan/caravan
+	/// Reference to the faction datum (from caravan's owner)
 	var/datum/trading_faction/trading_faction
-	/// Reference to the hub controller
-	var/datum/faction_hub_controller/controller
+	/// Faction ID string
+	var/faction_id = null
 	/// Idle dialogue lines to say randomly
 	var/list/idle_lines = list()
 	/// Time of last idle chat
@@ -52,7 +52,7 @@
 	/// Speech bubble icon state
 	var/speech_bubble_type = "default2"
 
-	// Trading state (per-user tracking via weak refs)
+	// Trading state
 	/// Last scan results: crate ref -> list of item data
 	var/list/last_scan_results
 	/// Currently selected crates for sale
@@ -62,42 +62,101 @@
 	/// Shopping cart for purchases: list of (type, quantity, price)
 	var/list/shopping_cart = list()
 
-/mob/living/simple_animal/faction_trader/Initialize(mapload)
+/mob/living/simple_animal/caravan_trader/Initialize(mapload)
 	. = ..()
-	// Find our faction
-	if(faction_id && GLOB.resurgence_trading)
-		trading_faction = GLOB.resurgence_trading.get_faction(faction_id)
-		if(trading_faction)
-			name = trading_faction.speaker_name
-			desc = "[trading_faction.speaker_title]. They represent [trading_faction.name]."
-
-	// Add speech bubble overlay to indicate this NPC can be talked to
+	// Add speech bubble overlay
 	add_overlay(mutable_appearance('icons/mob/talk.dmi', speech_bubble_type, ABOVE_MOB_LAYER))
 
 	// Set up idle chat
 	setup_idle_lines()
 	START_PROCESSING(SSobj, src)
 
-/mob/living/simple_animal/faction_trader/Destroy()
+/mob/living/simple_animal/caravan_trader/Destroy()
 	STOP_PROCESSING(SSobj, src)
+	caravan = null
 	trading_faction = null
-	controller = null
 	last_scan_results = null
 	selected_for_sale = null
 	shopping_cart = null
 	return ..()
 
 /**
+ * Link this trader to a caravan
+ */
+/mob/living/simple_animal/caravan_trader/proc/link_caravan(datum/faction_caravan/C)
+	if(!C)
+		return
+	caravan = C
+	faction_id = C.faction_id
+	trading_faction = C.owner_faction
+
+	if(trading_faction)
+		name = "[trading_faction.speaker_name]"
+		desc = "A traveling merchant representing [trading_faction.name]."
+	else
+		name = "Caravan Trader"
+		desc = "A traveling merchant."
+
+	setup_appearance()
+	setup_idle_lines()
+
+/**
+ * Set up appearance based on faction
+ * Uses the same sprites as faction hub traders
+ */
+/mob/living/simple_animal/caravan_trader/proc/setup_appearance()
+	switch(faction_id)
+		if("resurgence_clan")
+			icon = 'ModularLobotomy/_Lobotomyicons/resurgence_32x48.dmi'
+			icon_state = "clan_citzen_trader"
+		if("jiajia_ren")
+			icon = 'icons/mob/cuckoospawn.dmi'
+			icon_state = "cuckoospawn"
+		if("santata_factory")
+			icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
+			icon_state = "gnome_red"
+			mob_size = MOB_SIZE_SMALL
+		if("cloud_town")
+			icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
+			icon_state = "cloud_trader"
+
+/**
  * Set up idle dialogue lines based on faction
  */
-/mob/living/simple_animal/faction_trader/proc/setup_idle_lines()
-	idle_lines = list(
-		"Looking for something?",
-		"Take your time browsing.",
-		"Let me know if you need anything."
-	)
+/mob/living/simple_animal/caravan_trader/proc/setup_idle_lines()
+	switch(faction_id)
+		if("resurgence_clan")
+			idle_lines = list(
+				"The road is lo-ong but the trade is go-ood!",
+				"We-elcome, traveler!",
+				"Ta-ake a look at our wa-ares."
+			)
+		if("jiajia_ren")
+			idle_lines = list(
+				"*Click-click* Good trades today!",
+				"*Trill* Flock brings finest goods!",
+				"*Whistle* What catches your eye?"
+			)
+		if("santata_factory")
+			idle_lines = list(
+				"Factory goods-ome! Best quality-ome!",
+				"Need tools-ome? We have plenty-ome!",
+				"Production never stops-ome!"
+			)
+		if("cloud_town")
+			idle_lines = list(
+				"Fresh supplies from Cloud Town.",
+				"Fair prices for fair goods.",
+				"Take a look, traveler."
+			)
+		else
+			idle_lines = list(
+				"Looking for something?",
+				"Take your time browsing.",
+				"Let me know if you need anything."
+			)
 
-/mob/living/simple_animal/faction_trader/process(delta_time)
+/mob/living/simple_animal/caravan_trader/process(delta_time)
 	// Random idle chat
 	if(world.time - last_idle_chat > idle_chat_interval && prob(5))
 		idle_chat()
@@ -105,7 +164,7 @@
 /**
  * Say a random idle line
  */
-/mob/living/simple_animal/faction_trader/proc/idle_chat()
+/mob/living/simple_animal/caravan_trader/proc/idle_chat()
 	if(!length(idle_lines))
 		return
 	last_idle_chat = world.time
@@ -115,7 +174,7 @@
 /**
  * Handle being clicked on
  */
-/mob/living/simple_animal/faction_trader/attack_hand(mob/living/carbon/human/user, list/modifiers)
+/mob/living/simple_animal/caravan_trader/attack_hand(mob/living/carbon/human/user, list/modifiers)
 	if(!isliving(user))
 		return ..()
 
@@ -129,58 +188,61 @@
 /**
  * Handle being examined
  */
-/mob/living/simple_animal/faction_trader/examine(mob/user)
+/mob/living/simple_animal/caravan_trader/examine(mob/user)
 	. = ..()
-	if(trading_faction)
+	if(caravan)
 		. += span_notice("Click to open the trading interface.")
-		. += span_notice("Trading here gives you a 10% discount on purchases!")
 		. += span_notice("You can sell items from crates placed nearby.")
 
 // ===== TGUI Interface =====
 
-/mob/living/simple_animal/faction_trader/ui_interact(mob/user, datum/tgui/ui)
-	if(!trading_faction)
+/mob/living/simple_animal/caravan_trader/ui_interact(mob/user, datum/tgui/ui)
+	if(!caravan)
 		to_chat(user, span_warning("[src] doesn't seem to have anything to trade."))
 		return
 
-	if(!trading_faction.can_trade)
+	if(caravan.is_hostile())
 		to_chat(user, span_warning("[src] refuses to trade with you."))
-		say(trading_faction.get_dialogue("low_rep"))
 		return
 
 	// Greet the player on first interaction
-	say(trading_faction.get_dialogue("greeting"))
+	if(trading_faction)
+		say(trading_faction.get_dialogue("greeting"))
+	else
+		say("Welcome, traveler!")
 
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "FactionTrader", "[name] - Trading")
 		ui.open()
 
-/mob/living/simple_animal/faction_trader/ui_data(mob/user)
+/mob/living/simple_animal/caravan_trader/ui_data(mob/user)
 	var/list/data = list()
 
 	data["trader_name"] = name
-	data["trader_title"] = trading_faction?.speaker_title || "Trader"
-	data["faction_name"] = trading_faction?.name || "Unknown"
-	data["can_trade"] = trading_faction?.can_trade || FALSE
+	data["trader_title"] = "Traveling Merchant"
+	data["faction_name"] = trading_faction?.name || "Traveling Caravan"
+	data["can_trade"] = caravan && !caravan.is_hostile()
 	data["credits"] = GLOB.resurgence_credits
-	data["discount_percent"] = round((1 - HUB_TRADING_DISCOUNT) * 100)
+	data["discount_percent"] = 0  // No discount for caravan trading
 	data["busy"] = busy
-	data["faction_cash"] = trading_faction?.current_cash || 0
+	data["faction_cash"] = caravan?.caravan_cash || 0
 
-	// Faction stock for buying
+	// Caravan stock for buying (convert from caravan format)
 	data["faction_stock"] = list()
-	if(trading_faction?.can_trade)
-		var/buy_mod = get_buy_modifier()
-		for(var/list/stock_item in trading_faction.stock)
-			if(stock_item["quantity"] <= 0)
+	if(caravan && !caravan.is_hostile())
+		for(var/item_path in caravan.stock)
+			var/quantity = caravan.stock[item_path]
+			if(quantity <= 0)
 				continue
-			// Minimum price of 3 even with discounts
-			var/buy_price = max(3, round(stock_item["base_price"] * buy_mod))
+			var/obj/item/temp = item_path
+			var/base_price = caravan.get_item_price(item_path)
+			// Minimum price of 3
+			var/buy_price = max(3, base_price)
 			data["faction_stock"] += list(list(
-				"type" = "[stock_item["type"]]",
-				"name" = stock_item["name"],
-				"quantity" = stock_item["quantity"],
+				"type" = "[item_path]",
+				"name" = initial(temp.name),
+				"quantity" = quantity,
 				"price" = buy_price
 			))
 
@@ -193,7 +255,7 @@
 
 	// Scanned crates for selling
 	data["scanned_crates"] = list()
-	if(last_scan_results && trading_faction)
+	if(last_scan_results && caravan)
 		for(var/obj/structure/closet/C in last_scan_results)
 			if(QDELETED(C))
 				continue
@@ -219,7 +281,7 @@
 
 	// Calculate selected total
 	var/selected_total = 0
-	if(trading_faction)
+	if(caravan)
 		var/sell_mod = get_sell_modifier()
 		for(var/obj/structure/closet/C in selected_for_sale)
 			if(QDELETED(C) || !(C in last_scan_results))
@@ -230,7 +292,7 @@
 
 	return data
 
-/mob/living/simple_animal/faction_trader/ui_act(action, params)
+/mob/living/simple_animal/caravan_trader/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
@@ -299,70 +361,66 @@
 
 	return FALSE
 
-// ===== Buy Modifier =====
-
-/mob/living/simple_animal/faction_trader/proc/get_buy_modifier()
-	if(!trading_faction)
-		return 1.0
-	return trading_faction.get_buy_modifier() * HUB_TRADING_DISCOUNT
-
 // ===== Sell Modifier =====
 
-/mob/living/simple_animal/faction_trader/proc/get_sell_modifier()
+/mob/living/simple_animal/caravan_trader/proc/get_sell_modifier()
 	if(!trading_faction)
 		return 1.0
-	// In-person selling gets a bonus (opposite of buy discount)
-	return trading_faction.get_sell_modifier() * (1 + (1 - HUB_TRADING_DISCOUNT))
+	return trading_faction.get_sell_modifier()
 
 // ===== Cart Management =====
 
-/mob/living/simple_animal/faction_trader/proc/add_to_cart(item_type_str, quantity, mob/buyer = null)
-	if(!trading_faction || !trading_faction.can_trade)
+/mob/living/simple_animal/caravan_trader/proc/add_to_cart(item_type_str, quantity, mob/buyer = null)
+	if(!caravan)
 		return
 
-	// Find the stock item
-	for(var/list/stock_item in trading_faction.stock)
-		if("[stock_item["type"]]" == item_type_str)
-			var/available = stock_item["quantity"]
-			quantity = clamp(quantity, 1, available)
+	// Find the stock item (caravan format: stock[path] = quantity)
+	var/item_path = text2path(item_type_str)
+	if(!item_path || !(item_path in caravan.stock))
+		return
 
-			// Minimum price of 3 even with discounts
-			var/buy_price = max(3, round(stock_item["base_price"] * get_buy_modifier()))
-			var/total = buy_price * quantity
+	var/available = caravan.stock[item_path]
+	quantity = clamp(quantity, 1, available)
 
-			// Check if already in cart
-			for(var/list/cart_item in shopping_cart)
-				if(cart_item["type"] == item_type_str)
-					// Update existing entry
-					var/new_qty = min(cart_item["quantity"] + quantity, available)
-					cart_item["quantity"] = new_qty
-					cart_item["total"] = buy_price * new_qty
-					return
+	var/base_price = caravan.get_item_price(item_path)
+	var/buy_price = max(3, base_price)
+	var/total = buy_price * quantity
 
-			// Add new entry
-			shopping_cart += list(list(
-				"type" = item_type_str,
-				"name" = stock_item["name"],
-				"quantity" = quantity,
-				"price" = buy_price,
-				"total" = total
-			))
+	var/obj/item/temp = item_path
+	var/item_name = initial(temp.name)
+
+	// Check if already in cart
+	for(var/list/cart_item in shopping_cart)
+		if(cart_item["type"] == item_type_str)
+			// Update existing entry
+			var/new_qty = min(cart_item["quantity"] + quantity, available)
+			cart_item["quantity"] = new_qty
+			cart_item["total"] = buy_price * new_qty
 			return
 
-/mob/living/simple_animal/faction_trader/proc/remove_from_cart(item_type_str)
+	// Add new entry
+	shopping_cart += list(list(
+		"type" = item_type_str,
+		"name" = item_name,
+		"quantity" = quantity,
+		"price" = buy_price,
+		"total" = total
+	))
+
+/mob/living/simple_animal/caravan_trader/proc/remove_from_cart(item_type_str)
 	for(var/list/cart_item in shopping_cart)
 		if(cart_item["type"] == item_type_str)
 			shopping_cart -= list(cart_item)
 			return
 
-/mob/living/simple_animal/faction_trader/proc/purchase_cart(mob/user)
+/mob/living/simple_animal/caravan_trader/proc/purchase_cart(mob/user)
 	if(busy)
 		return
 	if(!length(shopping_cart))
 		to_chat(user, span_warning("Shopping cart is empty."))
 		return
 
-	if(!trading_faction || !trading_faction.can_trade)
+	if(!caravan)
 		to_chat(user, span_warning("This trader cannot trade right now."))
 		return
 
@@ -378,55 +436,60 @@
 
 	// Verify stock availability
 	for(var/list/cart_item in shopping_cart)
-		var/found = FALSE
-		for(var/list/stock_item in trading_faction.stock)
-			if("[stock_item["type"]]" == cart_item["type"])
-				if(stock_item["quantity"] < cart_item["quantity"])
-					to_chat(user, span_warning("Not enough [cart_item["name"]] in stock!"))
-					return
-				found = TRUE
-				break
-		if(!found)
+		var/item_path = text2path(cart_item["type"])
+		if(!item_path || !(item_path in caravan.stock))
 			to_chat(user, span_warning("[cart_item["name"]] is no longer available!"))
+			return
+		if(caravan.stock[item_path] < cart_item["quantity"])
+			to_chat(user, span_warning("Not enough [cart_item["name"]] in stock!"))
 			return
 
 	busy = TRUE
 
 	// Deduct credits
 	GLOB.resurgence_trading.remove_credits(total_cost)
-	trading_faction.current_cash += total_cost
+	caravan.caravan_cash += total_cost
 
 	// Create an expedition crate to hold the purchased items
 	var/obj/structure/closet/crate/expedition/purchase_crate = new(get_turf(user))
-	purchase_crate.name = "trader's crate"
-	purchase_crate.desc = "A crate provided by the trader containing your purchased goods. It will travel with you on expeditions."
+	purchase_crate.name = "caravan trader's crate"
+	purchase_crate.desc = "A crate provided by the caravan trader containing your purchased goods."
 
 	// Spawn items inside the crate and reduce stock
 	for(var/list/cart_item in shopping_cart)
-		for(var/list/stock_item in trading_faction.stock)
-			if("[stock_item["type"]]" == cart_item["type"])
-				var/item_path = stock_item["type"]
-				var/qty = cart_item["quantity"]
+		var/item_path = text2path(cart_item["type"])
+		var/qty = cart_item["quantity"]
 
-				// Reduce stock
-				stock_item["quantity"] -= qty
+		// Reduce stock
+		caravan.stock[item_path] -= qty
+		if(caravan.stock[item_path] <= 0)
+			caravan.stock -= item_path
 
-				// Spawn items inside the crate
-				if(ispath(item_path, /obj/item/stack))
-					new item_path(purchase_crate, qty)
-				else
-					for(var/i in 1 to qty)
-						new item_path(purchase_crate)
-				break
+		// Spawn items inside the crate
+		if(ispath(item_path, /obj/item/stack))
+			new item_path(purchase_crate, qty)
+		else
+			for(var/i in 1 to qty)
+				new item_path(purchase_crate)
 
 	// Open the crate so player can see contents
 	purchase_crate.open(user)
 
 	// Calculate and apply rep gain
-	var/rep_gain = trading_faction.on_trade_completed(total_cost, FALSE)
+	if(trading_faction)
+		var/rep_gain = trading_faction.on_trade_completed(total_cost, FALSE)
+		if(rep_gain > 0)
+			to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits. (+[rep_gain] reputation)"))
+		else
+			to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits."))
+	else
+		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits."))
 
 	// Say dialogue
-	say(trading_faction.get_dialogue("purchase_complete"))
+	if(trading_faction)
+		say(trading_faction.get_dialogue("purchase_complete"))
+	else
+		say("Pleasure doing business!")
 
 	// Award social XP
 	if(ishuman(user))
@@ -436,19 +499,13 @@
 			var/xp_amount = max(1, round(total_cost / 10))
 			core.award_xp("social", xp_amount)
 
-	if(rep_gain > 0)
-		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits. (+[rep_gain] reputation)"))
-	else
-		to_chat(user, span_notice("Purchase complete! Spent [total_cost] credits."))
-	to_chat(user, span_notice("Your items have been placed in a crate that will travel with you on your expedition."))
-
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
 	shopping_cart = list()
 	busy = FALSE
 
 // ===== Crate Scanning =====
 
-/mob/living/simple_animal/faction_trader/proc/scan_nearby_crates()
+/mob/living/simple_animal/caravan_trader/proc/scan_nearby_crates()
 	last_scan_results = list()
 	selected_for_sale = list()
 
@@ -496,14 +553,14 @@
 
 // ===== Selling =====
 
-/mob/living/simple_animal/faction_trader/proc/sell_selected(mob/user)
+/mob/living/simple_animal/caravan_trader/proc/sell_selected(mob/user)
 	if(busy)
 		return
 	if(!length(selected_for_sale))
 		to_chat(user, span_warning("No crates selected for sale."))
 		return
 
-	if(!trading_faction || !trading_faction.can_trade)
+	if(!caravan)
 		to_chat(user, span_warning("This trader cannot trade right now."))
 		return
 
@@ -516,10 +573,13 @@
 		for(var/list/item_data in last_scan_results[C])
 			total_value += round(item_data["value"] * sell_mod)
 
-	// Check if faction can afford
-	if(trading_faction.current_cash < total_value)
-		to_chat(user, span_warning("[trading_faction.name] cannot afford this sale. They only have [trading_faction.current_cash] credits."))
-		say(trading_faction.get_dialogue("low_stock"))
+	// Check if caravan can afford
+	if(caravan.caravan_cash < total_value)
+		to_chat(user, span_warning("The caravan cannot afford this sale. They only have [caravan.caravan_cash] credits."))
+		if(trading_faction)
+			say(trading_faction.get_dialogue("low_stock"))
+		else
+			say("I don't have enough money for that...")
 		return
 
 	busy = TRUE
@@ -534,15 +594,21 @@
 		for(var/obj/item/I in C.contents)
 			qdel(I)
 
-	// Add credits and adjust reputation
+	// Add credits and deduct from caravan
 	GLOB.resurgence_trading.add_credits(total_value)
-	trading_faction.current_cash -= total_value
+	caravan.caravan_cash -= total_value
 
 	// Calculate and apply rep gain
-	var/rep_gain = trading_faction.on_trade_completed(total_value, TRUE)
-
-	// Say dialogue
-	say(trading_faction.get_dialogue("sale_complete"))
+	if(trading_faction)
+		var/rep_gain = trading_faction.on_trade_completed(total_value, TRUE)
+		if(rep_gain > 0)
+			to_chat(user, span_notice("Sale complete! Earned [total_value] credits. (+[rep_gain] reputation with [trading_faction.name])"))
+		else
+			to_chat(user, span_notice("Sale complete! Earned [total_value] credits."))
+		say(trading_faction.get_dialogue("sale_complete"))
+	else
+		to_chat(user, span_notice("Sale complete! Earned [total_value] credits."))
+		say("Thanks for the goods!")
 
 	// Award social XP
 	if(ishuman(user))
@@ -552,83 +618,8 @@
 			var/xp_amount = max(1, round(total_value / 10))
 			core.award_xp("social", xp_amount)
 
-	if(rep_gain > 0)
-		to_chat(user, span_notice("Sale complete! Earned [total_value] credits. (+[rep_gain] reputation with [trading_faction.name])"))
-	else
-		to_chat(user, span_notice("Sale complete! Earned [total_value] credits."))
-
 	// Clear and rescan
 	selected_for_sale = list()
 	last_scan_results = list()
 	busy = FALSE
 	scan_nearby_crates()
-
-// ============================================
-// FACTION-SPECIFIC TRADERS
-// ============================================
-
-/mob/living/simple_animal/faction_trader/resurgence_clan
-	name = "Ronan"
-	desc = "A friendly clan trader running a humble shop."
-	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_32x48.dmi'
-	icon_state = "clan_citzen_trader"
-	faction_id = "resurgence_clan"
-
-/mob/living/simple_animal/faction_trader/resurgence_clan/Initialize(mapload)
-	. = ..()
-	// Override to keep Ronan's identity instead of The Historian
-	name = "Ronan"
-	desc = "Clan Trader. They represent [trading_faction?.name || "Resurgence Clan Village"]."
-
-/mob/living/simple_animal/faction_trader/resurgence_clan/setup_idle_lines()
-	idle_lines = list(
-		"We-ell, Yo-ou may call me Ronan.",
-		"Currently, I am ru-unning this humble sho-op for passerbys li-ike you!",
-		"Ta-ake your ti-ime browsing.",
-		"Le-et me know if you ne-eed anything.",
-		"The vi-illage appreciates your bu-usiness.",
-		"Hm... a-anything catch your eye?"
-	)
-
-/mob/living/simple_animal/faction_trader/jiajia_ren
-	name = "Chir-rik"
-	icon = 'icons/mob/cuckoospawn.dmi'
-	icon_state = "cuckoospawn"
-	faction_id = "jiajia_ren"
-
-/mob/living/simple_animal/faction_trader/jiajia_ren/setup_idle_lines()
-	idle_lines = list(
-		"*Click-click* Shiny things, yes yes!",
-		"*Trill* Flock has good trades today!",
-		"*Whistle* You want feathers? Very soft!",
-		"*Coo* Metal ones are funny. Chir-rik likes."
-	)
-
-/mob/living/simple_animal/faction_trader/santata_factory
-	name = "Dodoru"
-	faction_id = "santata_factory"
-	icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
-	icon_state = "gnome_red"
-	mob_size = MOB_SIZE_SMALL
-
-/mob/living/simple_animal/faction_trader/santata_factory/setup_idle_lines()
-	idle_lines = list(
-		"Production never stops-ome! Never-ome!",
-		"You need tools-ome? We have the best-ome!",
-		"The Factory provides-ome. Always provides-ome.",
-		"Hehe-ome... busy busy-ome..."
-	)
-
-/mob/living/simple_animal/faction_trader/cloud_town
-	name = "Domino"
-	faction_id = "cloud_town"
-	icon = 'ModularLobotomy/_Lobotomyicons/outpost_npcs.dmi'
-	icon_state = "cloud_trader"
-
-/mob/living/simple_animal/faction_trader/cloud_town/setup_idle_lines()
-	idle_lines = list(
-		"Fair trade, fair prices. That's how we do things.",
-		"Seeds are in season. Good time to stock up.",
-		"Heard there's trouble in the wastes. Stay safe out there.",
-		"The town's doing well. Trade's been good."
-	)
