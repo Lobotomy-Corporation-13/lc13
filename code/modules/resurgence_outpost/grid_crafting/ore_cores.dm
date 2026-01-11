@@ -6,11 +6,7 @@
  * on the Grid Crafting Station.
  */
 
-/// Core movement types
-#define CORE_MOVEMENT_CARDINAL 1  // N/S/E/W (Iron)
-#define CORE_MOVEMENT_DIAGONAL 2  // NE/NW/SE/SW (Silver)
-#define CORE_MOVEMENT_OCTAGONAL 3 // All 8 directions (Alloy)
-#define CORE_MOVEMENT_TELEPORT 4  // Any point within range (Gold)
+// Core movement types are in _resurgence_defines.dm
 
 /// Core ore types
 #define CORE_ORE_IRON "iron"

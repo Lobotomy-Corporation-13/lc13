@@ -1,6 +1,6 @@
 import { useBackend, useLocalState } from '../backend';
 import {
-  Box, Button, Flex, Icon, Section, Stack, Table,
+  Box, Button, Flex, Icon, Section, Stack,
 } from '../components';
 import { Window } from '../layouts';
 
@@ -20,7 +20,9 @@ export const GridCraftingStation = (props, context) => {
     stored_count = 0,
     max_stored = 50,
     max_revealed_tier = 1,
-    debug_mode = false,
+    debug_mode,
+    highlighted_item_id,
+    crafted_item_ids = [],
   } = data;
 
   // Zoom level: 1 = far out, 5 = close up
@@ -28,6 +30,11 @@ export const GridCraftingStation = (props, context) => {
 
   const zoomIn = () => setZoom(Math.min(zoom + 1, 5));
   const zoomOut = () => setZoom(Math.max(zoom - 1, 1));
+
+  // Find highlighted item data
+  const highlightedItem = highlighted_item_id
+    ? nearby_items.find(item => item.id === highlighted_item_id)
+    : null;
 
   return (
     <Window
@@ -60,11 +67,12 @@ export const GridCraftingStation = (props, context) => {
                         tooltip="Zoom In"
                         disabled={zoom >= 5}
                         onClick={zoomIn} />
-                      <Button
-                        icon="undo"
-                        content="Reset"
-                        disabled={cores_used === 0}
-                        onClick={() => act('reset')} />
+                      {cores_used > 0 && (
+                        <Button
+                          icon="undo"
+                          content="Reset"
+                          onClick={() => act('reset')} />
+                      )}
                     </Box>
                   )}>
                   <GridMap
@@ -74,7 +82,8 @@ export const GridCraftingStation = (props, context) => {
                     craftable_items={craftable_items}
                     zoom={zoom}
                     max_revealed_tier={max_revealed_tier}
-                    debug_mode={debug_mode} />
+                    debug_mode={debug_mode}
+                    highlightedItem={highlightedItem} />
                 </Section>
               </Stack.Item>
 
@@ -142,8 +151,6 @@ export const GridCraftingStation = (props, context) => {
                   <CoresSection
                     cores={available_cores}
                     selected_core={selected_core}
-                    stored_count={stored_count}
-                    max_stored={max_stored}
                     act={act} />
                 </Section>
               </Stack.Item>
@@ -157,9 +164,21 @@ export const GridCraftingStation = (props, context) => {
                     <Box>
                       <Icon name="crosshairs" mr={1} />
                       Nearby Weapons
+                      {highlighted_item_id && (
+                        <Button
+                          ml={1}
+                          icon="times"
+                          color="transparent"
+                          tooltip="Clear highlight"
+                          onClick={() => act('clear_highlight')} />
+                      )}
                     </Box>
                   )}>
-                  <NearbyItems items={nearby_items} />
+                  <NearbyItems
+                    items={nearby_items}
+                    highlighted_item_id={highlighted_item_id}
+                    crafted_item_ids={crafted_item_ids}
+                    act={act} />
                 </Section>
               </Stack.Item>
 
@@ -185,10 +204,10 @@ const GridMap = props => {
     focus_x,
     focus_y,
     items,
-    craftable_items,
     zoom = 2,
     max_revealed_tier = 1,
-    debug_mode = false,
+    debug_mode,
+    highlightedItem,
   } = props;
 
   // Zoom scales: 1=0.5, 2=1.0, 3=2.0, 4=3.0, 5=5.0 pixels per unit
@@ -276,13 +295,30 @@ const GridMap = props => {
           return lines;
         })()}
 
+        {/* Highlight line from center to highlighted item */}
+        {highlightedItem && (
+          <line
+            x1={centerX}
+            y1={centerY}
+            x2={toScreenX(highlightedItem.x)}
+            y2={toScreenY(highlightedItem.y)}
+            stroke="#ffcc00"
+            strokeWidth={2}
+            strokeDasharray="5,3" />
+        )}
+
         {/* Weapon zones */}
         {visibleItems.map((item, index) => {
           const screenX = toScreenX(item.x);
           const screenY = toScreenY(item.y);
           const screenRadius = item.radius * MAP_SCALE;
           const isInRange = item.in_range;
+          const isHighlighted = highlightedItem
+            && highlightedItem.id === item.id;
           const tierColor = getTierColor(item.tier);
+          const strokeColor = isHighlighted
+            ? '#ffcc00'
+            : (isInRange ? '#00ff00' : tierColor);
 
           return (
             <g key={index}>
@@ -292,15 +328,15 @@ const GridMap = props => {
                 cy={screenY}
                 r={screenRadius}
                 fill={isInRange ? tierColor + '40' : tierColor + '20'}
-                stroke={isInRange ? '#00ff00' : tierColor}
-                strokeWidth={isInRange ? 2 : 1}
+                stroke={strokeColor}
+                strokeWidth={isHighlighted ? 3 : (isInRange ? 2 : 1)}
                 strokeDasharray={isInRange ? '' : '4,4'} />
               {/* Center point */}
               <circle
                 cx={screenX}
                 cy={screenY}
-                r={3}
-                fill={tierColor} />
+                r={isHighlighted ? 5 : 3}
+                fill={isHighlighted ? '#ffcc00' : tierColor} />
             </g>
           );
         })}
@@ -349,8 +385,12 @@ const GridMap = props => {
         <Icon name="circle" color="#00ff00" /> You
         {' | '}
         Zoom: {zoom}x
-        {' | '}
-        Tier: {max_revealed_tier}
+        {max_revealed_tier > 0 && (
+          <>
+            {' | '}
+            Tier: {max_revealed_tier}
+          </>
+        )}
         {debug_mode && ' (DEBUG)'}
       </Box>
     </Box>
@@ -358,7 +398,7 @@ const GridMap = props => {
 };
 
 const MovementControls = props => {
-  const { selected_core, focus_x, focus_y, act } = props;
+  const { selected_core, act } = props;
 
   const canMove = (dx, dy) => {
     if (!selected_core) {
@@ -393,8 +433,6 @@ const MovementControls = props => {
   if (selected_core.movement_type === 4) {
     return (
       <TeleportControls
-        focus_x={focus_x}
-        focus_y={focus_y}
         max_range={selected_core.distance_range[1]}
         act={act} />
     );
@@ -447,7 +485,9 @@ const DirBtn = props => {
 };
 
 const TeleportControls = (props, context) => {
-  const { focus_x, focus_y, max_range, act } = props;
+  const { max_range, act } = props;
+  const { data } = useBackend(context);
+  const { focus_x, focus_y } = data;
   const [targetX, setTargetX] = useLocalState(context, 'teleportX', focus_x);
   const [targetY, setTargetY] = useLocalState(context, 'teleportY', focus_y);
 
@@ -485,14 +525,14 @@ const TeleportControls = (props, context) => {
         icon="bolt"
         color={inRange ? 'good' : 'bad'}
         disabled={!inRange}
-        content={`Teleport (${distance.toFixed(0)}/${max_range})`}
+        content={`Teleport (${Math.round(distance)}/${max_range})`}
         onClick={() => act('teleport', { x: targetX, y: targetY })} />
     </Box>
   );
 };
 
 const CoresSection = props => {
-  const { cores, selected_core, act, stored_count, max_stored } = props;
+  const { cores, selected_core, act } = props;
 
   if (cores.length === 0) {
     return (
@@ -549,7 +589,7 @@ const CoresSection = props => {
 };
 
 const NearbyItems = props => {
-  const { items } = props;
+  const { items, highlighted_item_id, crafted_item_ids, act } = props;
 
   if (items.length === 0) {
     return (
@@ -561,23 +601,35 @@ const NearbyItems = props => {
 
   return (
     <Stack vertical>
-      {items.slice(0, 8).map((item, index) => (
-        <Stack.Item key={index}>
-          <Flex align="center">
-            <Flex.Item grow>
-              <Box
-                bold={item.in_range}
-                color={item.in_range ? 'good' : 'default'}>
-                {getTierIcon(item.tier)} {item.name}
-              </Box>
-            </Flex.Item>
-            <Flex.Item color="label" fontSize="11px">
-              {item.distance.toFixed(0)}u
-              {item.in_range && <Icon name="check" color="good" ml={1} />}
-            </Flex.Item>
-          </Flex>
-        </Stack.Item>
-      ))}
+      {items.slice(0, 8).map((item, index) => {
+        const isHighlighted = highlighted_item_id === item.id;
+        const isCrafted = crafted_item_ids.includes(item.id);
+        return (
+          <Stack.Item key={index}>
+            <Flex align="center">
+              <Flex.Item grow>
+                <Button
+                  fluid
+                  color={isHighlighted ? 'yellow' : 'transparent'}
+                  onClick={() => act('highlight_item', { id: item.id })}>
+                  <Box
+                    inline
+                    bold={item.in_range}
+                    color={item.in_range ? 'good' : 'default'}>
+                    {getTierIcon(item.tier)}
+                    {isCrafted && <Icon name="check" color="good" mr={1} />}
+                    {item.name}
+                  </Box>
+                </Button>
+              </Flex.Item>
+              <Flex.Item color="label" fontSize="11px" ml={1}>
+                {Math.round(item.distance)}u
+                {item.in_range && <Icon name="check" color="good" ml={1} />}
+              </Flex.Item>
+            </Flex>
+          </Stack.Item>
+        );
+      })}
     </Stack>
   );
 };

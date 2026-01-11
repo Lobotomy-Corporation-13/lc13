@@ -72,6 +72,24 @@
 		O.brute_reduction = initial(O.brute_reduction)
 		O.burn_reduction = initial(O.burn_reduction)
 
+/// Handle death for resurgence machines
+/datum/species/resurgence_machine/spec_death(gibbed, mob/living/carbon/human/H)
+	. = ..()
+	if(!H)
+		return
+
+	// Clean up any visual effects
+	H.remove_filter("accel_glow")
+
+	// Hide faith HUD on death
+	if(H.hud_used?.faith_display)
+		H.hud_used.faith_display.hide_display()
+
+	// Remove movespeed modifier if present
+	H.remove_movespeed_modifier(/datum/movespeed_modifier/resurgence_low_faith)
+
+	log_game("Resurgence machine [H] died (gibbed: [gibbed])")
+
 // Helper proc to get the core organ
 /datum/species/resurgence_machine/proc/get_core(mob/living/carbon/human/H)
 	var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)

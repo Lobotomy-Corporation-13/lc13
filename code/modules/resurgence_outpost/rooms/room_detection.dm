@@ -5,22 +5,7 @@
  * Used by the room designator tool to create room areas.
  */
 
-/// Maximum size of a designatable room in tiles
-#define ROOM_MAX_SIZE 100
-
-/// Room cramped thresholds
-#define ROOM_MIN_TILES 9  // 10 or less = cramped
-#define ROOM_MIN_DIMENSION 3  // width or height < 3 = cramped
-
-/// Room type defines
-#define ROOM_TYPE_BASIC           "Basic Room"
-#define ROOM_TYPE_WORKSHOP        "Workshop"
-#define ROOM_TYPE_COMMON          "Common Room"
-#define ROOM_TYPE_STORAGE         "Storage Room"
-#define ROOM_TYPE_KITCHEN         "Kitchen"
-#define ROOM_TYPE_LIVING_QUARTERS "Living Quarters"
-#define ROOM_TYPE_EXPORT_WAREHOUSE "Export Warehouse"
-#define ROOM_TYPE_BARRACKS        "Barracks"
+// Room defines are in _resurgence_defines.dm
 
 /**
  * Detect an enclosed room using flood-fill algorithm.

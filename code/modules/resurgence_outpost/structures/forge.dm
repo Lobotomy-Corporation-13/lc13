@@ -275,6 +275,59 @@
 		"research_required" = "industrial"
 	)
 
+	// Clothing Plating
+	recipes["Tier 1 Clothing Plating"] = list(
+		"result" = /obj/item/resurgence_plating,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/cotton/cloth = 3
+		),
+		"total_work" = 30,
+		"desc" = "5 Metal + 3 Cloth -> Tier 1 Plating (20 armor)",
+		"research_required" = "plating_tier1"
+	)
+
+	recipes["Tier 2 Clothing Plating"] = list(
+		"result" = /obj/item/resurgence_plating/tier2,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/cotton/cloth = 5,
+			/obj/item/stack/sheet/mineral/silver = 2
+		),
+		"total_work" = 60,
+		"desc" = "10 Metal + 5 Cloth + 2 Silver -> Tier 2 Plating (40 armor)",
+		"research_required" = "plating_tier2"
+	)
+
+	recipes["Tier 3 Clothing Plating"] = list(
+		"result" = /obj/item/resurgence_plating/tier3,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/plasteel = 5,
+			/obj/item/stack/sheet/durathread = 3,
+			/obj/item/stack/sheet/mineral/gold = 2
+		),
+		"total_work" = 100,
+		"desc" = "5 Plasteel + 3 Durathread + 2 Gold -> Tier 3 Plating (60 armor)",
+		"research_required" = "plating_tier3"
+	)
+
+	recipes["Tier 4 Clothing Plating"] = list(
+		"result" = /obj/item/resurgence_plating/tier4,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/plasteel = 10,
+			/obj/item/stack/sheet/durathread = 5,
+			/obj/item/stack/sheet/mineral/gold = 5,
+			/obj/item/resurgence_component/ash_plating = 1
+		),
+		"total_work" = 200,
+		"desc" = "10 Plasteel + 5 Durathread + 5 Gold + 1 Ash Plating -> Tier 4 Plating (80 armor)",
+		"research_required" = "plating_tier4"
+	)
+
 // ===== Portable Forge =====
 // Does not require a workshop - works at full speed anywhere
 

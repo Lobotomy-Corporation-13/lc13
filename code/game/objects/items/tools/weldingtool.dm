@@ -120,6 +120,14 @@
 	var/obj/item/bodypart/affecting = H.get_bodypart(check_zone(user.zone_selected))
 
 	if(affecting && affecting.status == BODYPART_ROBOTIC && user.a_intent != INTENT_HARM)
+		// In outpost mode, self-healing requires 20 fuel
+		var/fuel_cost = 1
+		if(SSmaptype.maptype == "outpost" && user == H)
+			fuel_cost = 20
+			if(get_fuel() < fuel_cost)
+				to_chat(user, "<span class='warning'>You need at least [fuel_cost] units of fuel to repair yourself!</span>")
+				return
+
 		if(src.use_tool(H, user, 0, volume=50, amount=1))
 			if(user == H)
 				user.visible_message("<span class='notice'>[user] starts to fix some of the dents on [H]'s [affecting.name].</span>",
@@ -127,6 +135,9 @@
 				if(!do_mob(user, H, 50))
 					return
 			item_heal_robotic(H, user, 15, 0)
+			// Consume additional fuel in outpost mode for self-repair (use_tool already used 1)
+			if(fuel_cost > 1)
+				use(fuel_cost - 1)
 	else
 		return ..()
 

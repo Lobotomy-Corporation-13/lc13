@@ -103,6 +103,9 @@
 		RegisterSignal(H, COMSIG_ENTER_AREA, PROC_REF(on_area_entered))
 		RegisterSignal(H, COMSIG_EXIT_AREA, PROC_REF(on_area_exited))
 
+		// Register for death to clean up
+		RegisterSignal(H, COMSIG_LIVING_DEATH, PROC_REF(on_owner_death))
+
 		// Check room ownership now if player is already logged in
 		if(H.ckey)
 			check_room_ownership()
@@ -120,6 +123,7 @@
 		UnregisterSignal(H, COMSIG_MOB_LOGIN)
 		UnregisterSignal(H, COMSIG_ENTER_AREA)
 		UnregisterSignal(H, COMSIG_EXIT_AREA)
+		UnregisterSignal(H, COMSIG_LIVING_DEATH)
 	// Clear room quality events
 	clear_faith_event("room_quality")
 	clear_faith_event("room_cramped")
@@ -428,6 +432,26 @@
 		clear_faith_event("room_quality")
 		clear_faith_event("room_cramped")
 		clear_faith_event("room_dirt_floor")
+
+/// Called when the owner dies - clean up faith events and effects
+/obj/item/organ/resurgence_core/proc/on_owner_death(datum/source, gibbed)
+	SIGNAL_HANDLER
+
+	// Clear all faith events on death
+	for(var/category in faith_events)
+		clear_faith_event(category)
+
+	// Disable acceleration if active
+	if(acceleration_active)
+		acceleration_active = FALSE
+		if(owner)
+			owner.remove_filter("accel_glow")
+
+	// Remove movespeed modifier
+	if(owner)
+		owner.remove_movespeed_modifier(/datum/movespeed_modifier/resurgence_low_faith)
+
+	log_game("Resurgence core owner [owner] died, cleaning up faith events")
 
 /// Check if owner has a claimed bed and apply appropriate faith event
 /obj/item/organ/resurgence_core/proc/check_room_ownership()

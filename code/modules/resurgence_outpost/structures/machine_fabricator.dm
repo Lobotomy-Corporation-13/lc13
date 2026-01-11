@@ -14,6 +14,12 @@
 #define FABRICATOR_PURGE_COST 5
 /// Animation duration for opening/closing
 #define FABRICATOR_ANIM_TIME 3.2 SECONDS
+/// Time to attach a limb
+#define FABRICATOR_LIMB_ATTACH_TIME 5 SECONDS
+/// Time to remove a limb
+#define FABRICATOR_LIMB_REMOVE_TIME 10 SECONDS
+/// Maximum number of limbs that can be stored
+#define FABRICATOR_MAX_LIMBS 10
 
 /obj/structure/resurgence_fabricator
 	name = "machine fabricator"
@@ -33,6 +39,10 @@
 	var/max_protein = 200
 	/// Whether an animation is currently playing
 	var/animating = FALSE
+	/// List of stored bodyparts for transplanting
+	var/list/stored_limbs = list()
+	/// Whether a limb operation is in progress
+	var/limb_operating = FALSE
 
 /obj/structure/resurgence_fabricator/Initialize(mapload)
 	. = ..()
@@ -117,7 +127,180 @@
 		feed_protein(I, user)
 		return
 
+	// Accept bodyparts for storage
+	if(istype(I, /obj/item/bodypart))
+		store_limb(I, user)
+		return
+
 	return ..()
+
+/// Store a limb in the fabricator
+/obj/structure/resurgence_fabricator/proc/store_limb(obj/item/bodypart/BP, mob/user)
+	if(length(stored_limbs) >= FABRICATOR_MAX_LIMBS)
+		to_chat(user, span_warning("The fabricator's limb storage is full."))
+		return
+
+	if(!user.transferItemToLoc(BP, src))
+		return
+
+	stored_limbs += BP
+	to_chat(user, span_notice("You insert [BP] into the fabricator's limb storage."))
+	playsound(src, 'sound/machines/click.ogg', 50, TRUE)
+
+/// Eject a stored limb from the fabricator
+/obj/structure/resurgence_fabricator/proc/eject_stored_limb(mob/user, limb_index)
+	if(limb_index < 1 || limb_index > length(stored_limbs))
+		to_chat(user, span_warning("Invalid limb selection."))
+		return
+
+	var/obj/item/bodypart/BP = stored_limbs[limb_index]
+	if(!BP || QDELETED(BP))
+		stored_limbs -= BP
+		to_chat(user, span_warning("That limb is no longer available."))
+		return
+
+	stored_limbs -= BP
+	BP.forceMove(get_turf(src))
+	to_chat(user, span_notice("You eject [BP] from the fabricator."))
+	playsound(src, 'sound/machines/click.ogg', 50, TRUE)
+
+/// Attempt to attach a stored limb to the occupant
+/obj/structure/resurgence_fabricator/proc/attempt_attach_limb(mob/user, limb_index)
+	if(!occupant)
+		to_chat(user, span_warning("No occupant in the fabricator."))
+		return
+
+	if(!istype(occupant.dna?.species, /datum/species/resurgence_machine))
+		to_chat(user, span_warning("This fabricator can only attach limbs to resurgence machines."))
+		return
+
+	if(limb_operating)
+		to_chat(user, span_warning("A limb operation is already in progress."))
+		return
+
+	if(limb_index < 1 || limb_index > length(stored_limbs))
+		to_chat(user, span_warning("Invalid limb selection."))
+		return
+
+	var/obj/item/bodypart/BP = stored_limbs[limb_index]
+	if(!BP || QDELETED(BP))
+		stored_limbs -= BP
+		to_chat(user, span_warning("That limb is no longer available."))
+		return
+
+	// Check if occupant is missing this limb type
+	var/limb_zone = BP.body_zone
+	var/obj/item/bodypart/existing = occupant.get_bodypart(limb_zone)
+	if(existing)
+		to_chat(user, span_warning("[occupant] already has a [existing.name]."))
+		return
+
+	// Start the attachment process
+	limb_operating = TRUE
+	to_chat(user, span_notice("The fabricator begins attaching [BP] to [occupant]..."))
+	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+
+	if(!do_after(user, FABRICATOR_LIMB_ATTACH_TIME, src))
+		limb_operating = FALSE
+		to_chat(user, span_warning("The limb attachment was interrupted."))
+		return
+
+	// Verify everything is still valid
+	if(!occupant || QDELETED(occupant) || QDELETED(BP) || !(BP in stored_limbs))
+		limb_operating = FALSE
+		to_chat(user, span_warning("The limb attachment failed."))
+		return
+
+	// Check again if they still need the limb
+	existing = occupant.get_bodypart(limb_zone)
+	if(existing)
+		limb_operating = FALSE
+		to_chat(user, span_warning("[occupant] already has a [existing.name]."))
+		return
+
+	// Remove from storage and attach
+	stored_limbs -= BP
+	BP.attach_limb(occupant, TRUE)
+
+	limb_operating = FALSE
+	visible_message(span_notice("[src] successfully attaches [BP] to [occupant]!"))
+	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+	to_chat(occupant, span_notice("You feel a new limb being attached to your body."))
+
+	log_game("[key_name(user)] attached [BP] to [key_name(occupant)] using the resurgence fabricator.")
+
+/// Attempt to remove a limb from the occupant
+/obj/structure/resurgence_fabricator/proc/attempt_remove_limb(mob/user, limb_zone)
+	if(!occupant)
+		to_chat(user, span_warning("No occupant in the fabricator."))
+		return
+
+	if(!istype(occupant.dna?.species, /datum/species/resurgence_machine))
+		to_chat(user, span_warning("This fabricator can only remove limbs from resurgence machines."))
+		return
+
+	if(limb_operating)
+		to_chat(user, span_warning("A limb operation is already in progress."))
+		return
+
+	if(length(stored_limbs) >= FABRICATOR_MAX_LIMBS)
+		to_chat(user, span_warning("The fabricator's limb storage is full."))
+		return
+
+	var/obj/item/bodypart/BP = occupant.get_bodypart(limb_zone)
+	if(!BP)
+		to_chat(user, span_warning("[occupant] doesn't have that limb."))
+		return
+
+	// Can't remove chest or head
+	if(limb_zone == BODY_ZONE_CHEST || limb_zone == BODY_ZONE_HEAD)
+		to_chat(user, span_warning("The fabricator cannot safely remove that body part."))
+		return
+
+	// Start the removal process
+	limb_operating = TRUE
+	to_chat(user, span_notice("The fabricator begins carefully removing [BP] from [occupant]..."))
+	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+
+	if(!do_after(user, FABRICATOR_LIMB_REMOVE_TIME, src))
+		limb_operating = FALSE
+		to_chat(user, span_warning("The limb removal was interrupted."))
+		return
+
+	// Verify everything is still valid
+	if(!occupant || QDELETED(occupant))
+		limb_operating = FALSE
+		to_chat(user, span_warning("The limb removal failed."))
+		return
+
+	// Check if they still have the limb
+	BP = occupant.get_bodypart(limb_zone)
+	if(!BP)
+		limb_operating = FALSE
+		to_chat(user, span_warning("[occupant] no longer has that limb."))
+		return
+
+	// Check storage again
+	if(length(stored_limbs) >= FABRICATOR_MAX_LIMBS)
+		limb_operating = FALSE
+		to_chat(user, span_warning("The fabricator's limb storage is full."))
+		return
+
+	// Remove and store the limb
+	var/obj/item/bodypart/removed = BP.dismember()
+	if(removed)
+		removed.forceMove(src)
+		stored_limbs += removed
+
+		limb_operating = FALSE
+		visible_message(span_notice("[src] carefully removes [removed] from [occupant] and stores it."))
+		playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+		to_chat(occupant, span_warning("You feel a limb being detached from your body."))
+
+		log_game("[key_name(user)] removed [removed] from [key_name(occupant)] using the resurgence fabricator.")
+	else
+		limb_operating = FALSE
+		to_chat(user, span_warning("The limb removal failed unexpectedly."))
 
 /// Extract protein from food and add to storage
 /obj/structure/resurgence_fabricator/proc/feed_protein(obj/item/food/F, mob/user)
@@ -312,6 +495,49 @@
 		var/has_reagents = (length(reagents) > 0 || length(stomach_reagents) > 0)
 		data["can_purge"] = has_reagents && data["is_resurgence_machine"]
 
+		// Get missing limbs for attachment
+		var/list/missing_limbs = list()
+		if(data["is_resurgence_machine"])
+			var/list/limb_zones = list(
+				BODY_ZONE_L_ARM,
+				BODY_ZONE_R_ARM,
+				BODY_ZONE_L_LEG,
+				BODY_ZONE_R_LEG
+			)
+			for(var/zone in limb_zones)
+				if(!occupant.get_bodypart(zone))
+					missing_limbs += list(list(
+						"zone" = zone,
+						"name" = zone
+					))
+		data["missing_limbs"] = missing_limbs
+
+		// Get removable limbs
+		var/list/removable_limbs = list()
+		if(data["is_resurgence_machine"])
+			for(var/obj/item/bodypart/BP as anything in occupant.bodyparts)
+				if(BP.body_zone == BODY_ZONE_CHEST || BP.body_zone == BODY_ZONE_HEAD)
+					continue
+				removable_limbs += list(list(
+					"zone" = BP.body_zone,
+					"name" = BP.name
+				))
+		data["removable_limbs"] = removable_limbs
+
+	// Stored limbs data
+	var/list/limbs_data = list()
+	for(var/i in 1 to length(stored_limbs))
+		var/obj/item/bodypart/BP = stored_limbs[i]
+		if(BP && !QDELETED(BP))
+			limbs_data += list(list(
+				"index" = i,
+				"name" = BP.name,
+				"zone" = BP.body_zone
+			))
+	data["stored_limbs"] = limbs_data
+	data["max_limbs"] = FABRICATOR_MAX_LIMBS
+	data["limb_operating"] = limb_operating
+
 	return data
 
 /obj/structure/resurgence_fabricator/ui_act(action, params)
@@ -336,6 +562,21 @@
 
 		if("purge")
 			attempt_purge(usr)
+			return TRUE
+
+		if("attach_limb")
+			var/limb_index = text2num(params["limb_index"])
+			attempt_attach_limb(usr, limb_index)
+			return TRUE
+
+		if("remove_limb")
+			var/limb_zone = params["limb_zone"]
+			attempt_remove_limb(usr, limb_zone)
+			return TRUE
+
+		if("eject_limb")
+			var/limb_index = text2num(params["limb_index"])
+			eject_stored_limb(usr, limb_index)
 			return TRUE
 
 	return FALSE
@@ -449,3 +690,6 @@
 #undef FABRICATOR_REVIVE_COST
 #undef FABRICATOR_PURGE_COST
 #undef FABRICATOR_ANIM_TIME
+#undef FABRICATOR_LIMB_ATTACH_TIME
+#undef FABRICATOR_LIMB_REMOVE_TIME
+#undef FABRICATOR_MAX_LIMBS

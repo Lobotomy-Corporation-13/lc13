@@ -30,12 +30,7 @@
 #define TOOL_TIER_IRON 2
 #define TOOL_TIER_SILVER 3
 
-/// Tool quality tier constants
-#define QUALITY_TIER_SHODDY 1
-#define QUALITY_TIER_COMMON 2
-#define QUALITY_TIER_QUALITY 3
-#define QUALITY_TIER_EXCELLENT 4
-#define QUALITY_TIER_MASTERWORK 5
+// Quality tier constants are in _resurgence_defines.dm
 
 /// Durability by material tier
 #define DURABILITY_WOOD 200

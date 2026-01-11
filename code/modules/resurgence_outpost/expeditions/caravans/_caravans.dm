@@ -11,6 +11,10 @@
 #define CARAVAN_STOPPED "stopped"
 /// Caravan is at a destination (faction hub, outpost, etc.)
 #define CARAVAN_AT_DESTINATION "at_destination"
+/// Caravan is waiting at destination before returning home
+#define CARAVAN_WAITING "waiting"
+/// Caravan is returning to its home hub
+#define CARAVAN_RETURNING "returning"
 /// Caravan has been destroyed (attacked and defeated)
 #define CARAVAN_DESTROYED "destroyed"
 /// Caravan has completed its journey and despawned
@@ -21,17 +25,18 @@
 // ============================================
 
 /// Chance per faction per tick to spawn a caravan (percent)
-#define CARAVAN_SPAWN_CHANCE 10
+#define CARAVAN_SPAWN_CHANCE 40
 /// Insurgence patrol spawn chance (higher than normal)
-#define CARAVAN_PATROL_SPAWN_CHANCE 15
+#define CARAVAN_PATROL_SPAWN_CHANCE 50
 /// Maximum caravans per trading faction
 #define CARAVAN_MAX_PER_FACTION 1
 /// Maximum Insurgence patrols
 #define CARAVAN_MAX_PATROLS 2
 /// Movement delay between tiles (deciseconds) - 3 minutes
 #define CARAVAN_MOVE_DELAY 180 SECONDS
-/// Caravan despawn time after reaching destination (deciseconds)
-#define CARAVAN_DESPAWN_DELAY 300 SECONDS
+/// Time caravan waits at destination before returning (4-6 minutes, use rand in code)
+#define CARAVAN_WAIT_MIN_DELAY 240 SECONDS
+#define CARAVAN_WAIT_MAX_DELAY 360 SECONDS
 
 // ============================================
 // CARAVAN ENCOUNTER CONFIGURATION

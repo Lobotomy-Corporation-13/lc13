@@ -22,6 +22,12 @@
 	/// Last crafted item name (for display)
 	var/last_crafted = null
 
+	/// Currently highlighted item ID (for UI line drawing)
+	var/highlighted_item_id = null
+
+	/// List of crafted item IDs (so player can highlight them later)
+	var/list/crafted_item_ids = list()
+
 	/// Movement direction being previewed (for UI)
 	var/preview_dir_x = 0
 	var/preview_dir_y = 0
@@ -185,6 +191,9 @@
 			weapon.attribute_requirements = list()
 
 	last_crafted = item.name
+	// Track crafted items so they can be highlighted later
+	if(!(item.item_id in crafted_item_ids))
+		crafted_item_ids += item.item_id
 	to_chat(user, span_notice("<b>Crafted:</b> [item.name]!"))
 	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
 
@@ -320,6 +329,12 @@
 	// Last crafted
 	data["last_crafted"] = last_crafted
 
+	// Highlighted item for line drawing
+	data["highlighted_item_id"] = highlighted_item_id
+
+	// Crafted items (so player can highlight them)
+	data["crafted_item_ids"] = crafted_item_ids
+
 	return data
 
 /obj/structure/grid_crafting_station/ui_act(action, params)
@@ -364,6 +379,19 @@
 
 		if("reset")
 			reset_grid(usr)
+			return TRUE
+
+		if("highlight_item")
+			var/item_id = params["id"]
+			// Toggle highlight - if already highlighted, clear it
+			if(highlighted_item_id == item_id)
+				highlighted_item_id = null
+			else
+				highlighted_item_id = item_id
+			return TRUE
+
+		if("clear_highlight")
+			highlighted_item_id = null
 			return TRUE
 
 	return FALSE

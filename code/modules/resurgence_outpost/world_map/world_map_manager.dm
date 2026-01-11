@@ -473,7 +473,7 @@
 			if(too_close)
 				continue
 			var/dist_outpost = tile.distance_to(outpost_tile)
-			if(dist_outpost < 2 || dist_outpost > 7)
+			if(dist_outpost < FACTION_MIN_DIST_FROM_OUTPOST || dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
 				continue
 			if(required_terrain && tile.terrain_type != required_terrain)
 				continue
@@ -500,7 +500,7 @@
 			if(too_close)
 				continue
 			var/dist_outpost = tile.distance_to(outpost_tile)
-			if(dist_outpost < 2 || dist_outpost > 7)
+			if(dist_outpost < FACTION_MIN_DIST_FROM_OUTPOST || dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
 				continue
 			if(required_terrain && tile.terrain_type != required_terrain)
 				continue
@@ -527,7 +527,7 @@
 			if(too_close)
 				continue
 			var/dist_outpost = tile.distance_to(outpost_tile)
-			if(dist_outpost < 2 || dist_outpost > 7)
+			if(dist_outpost < FACTION_MIN_DIST_FROM_OUTPOST || dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
 				continue
 			if(required_terrain && tile.terrain_type != required_terrain)
 				continue
@@ -551,7 +551,7 @@
 			if(too_close)
 				continue
 			var/dist_outpost = tile.distance_to(outpost_tile)
-			if(dist_outpost < 2 || dist_outpost > 7)
+			if(dist_outpost < FACTION_MIN_DIST_FROM_OUTPOST || dist_outpost > FACTION_MAX_DIST_FROM_OUTPOST)
 				continue
 			candidates += tile
 	if(length(candidates))

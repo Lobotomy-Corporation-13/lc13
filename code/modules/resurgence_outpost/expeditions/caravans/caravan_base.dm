@@ -23,20 +23,24 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	var/datum/world_tile/current_tile
 	/// Destination world tile
 	var/datum/world_tile/destination
+	/// Home tile (faction hub) - where the caravan returns to
+	var/datum/world_tile/home_tile
 	/// Route as list of world tiles
 	var/list/datum/world_tile/route
 	/// Current position in route
 	var/route_index = 0
 	/// Stock carried by the caravan (subset of faction stock)
 	var/list/stock = list()
-	/// Current cash for buying
-	var/caravan_cash = 500
+	/// Current cash for buying (separate from faction cash)
+	var/caravan_cash = 2000
 	/// Number of guards
 	var/guard_count = 3
 	/// Whether this is a hostile patrol (Insurgence)
 	var/is_patrol = FALSE
 	/// Timer ID for movement
 	var/move_timer_id
+	/// Timer ID for waiting at destination
+	var/wait_timer_id
 	/// Display name
 	var/name = "Trading Caravan"
 	/// Display color for map
@@ -81,6 +85,9 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	// Cancel movement timer
 	if(move_timer_id)
 		deltimer(move_timer_id)
+	// Cancel wait timer
+	if(wait_timer_id)
+		deltimer(wait_timer_id)
 	// Remove from global list
 	GLOB.active_caravans -= src
 	// Clear current encounter if it's us
@@ -89,6 +96,7 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	owner_faction = null
 	current_tile = null
 	destination = null
+	home_tile = null
 	route = null
 	stock = null
 	return ..()
@@ -112,25 +120,27 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 
 /**
  * Setup caravan stock from faction
+ * Caravans have their own cash and stock, separate from faction
  */
 /datum/faction_caravan/proc/setup_stock()
 	if(!owner_faction)
 		return
 
-	// Copy a random subset of faction stock
+	// Copy most of the faction's stock with good quantities
 	if(length(owner_faction.stock))
 		var/list/available = owner_faction.stock.Copy()
-		var/items_to_take = min(length(available), rand(3, 6))
+		// Take most items from faction stock (8-15 different items)
+		var/items_to_take = min(length(available), rand(8, 15))
 		for(var/i in 1 to items_to_take)
 			if(!length(available))
 				break
 			var/item = pick(available)
 			available -= item
-			// Add with reduced quantity
-			stock[item] = rand(1, 5)
+			// Give generous quantities (5-20 of each item)
+			stock[item] = rand(5, 20)
 
-	// Set caravan cash based on faction
-	caravan_cash = rand(300, 800)
+	// Set caravan cash - caravans carry significant funds for buying
+	caravan_cash = rand(2000, 5000)
 
 /**
  * Setup guard count based on faction
@@ -147,6 +157,7 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 
 	current_tile = start
 	destination = dest
+	home_tile = start  // Remember where we started from
 
 	// Register with current tile
 	current_tile.caravan = src
@@ -175,7 +186,7 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
  * Schedule next movement
  */
 /datum/faction_caravan/proc/schedule_move()
-	if(state != CARAVAN_TRAVELING)
+	if(state != CARAVAN_TRAVELING && state != CARAVAN_RETURNING)
 		return
 	move_timer_id = addtimer(CALLBACK(src, PROC_REF(do_move)), CARAVAN_MOVE_DELAY, TIMER_STOPPABLE)
 
@@ -186,7 +197,7 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
  * We move to route[route_index + 1], then increment route_index.
  */
 /datum/faction_caravan/proc/do_move()
-	if(state != CARAVAN_TRAVELING)
+	if(state != CARAVAN_TRAVELING && state != CARAVAN_RETURNING)
 		return
 
 	if(!route || !length(route))
@@ -228,8 +239,8 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 	// Check if we entered a tile with an expedition
 	check_expedition_collision()
 
-	// Schedule next move if still traveling
-	if(state == CARAVAN_TRAVELING)
+	// Schedule next move if still traveling or returning
+	if(state == CARAVAN_TRAVELING || state == CARAVAN_RETURNING)
 		schedule_move()
 
 	// Update world map UIs
@@ -277,14 +288,59 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 
 	log_game("Caravan [caravan_id] arrived at destination ([destination.x_coord],[destination.y_coord])")
 
-	// Despawn after a delay
-	addtimer(CALLBACK(src, PROC_REF(complete_journey)), CARAVAN_DESPAWN_DELAY)
+	// If we're back at home, despawn
+	if(current_tile == home_tile)
+		complete_journey()
+		return
+
+	// Otherwise, wait 4-6 minutes then return home
+	state = CARAVAN_WAITING
+	var/wait_time = rand(CARAVAN_WAIT_MIN_DELAY, CARAVAN_WAIT_MAX_DELAY)
+	wait_timer_id = addtimer(CALLBACK(src, PROC_REF(start_return_journey)), wait_time, TIMER_STOPPABLE)
+	log_game("Caravan [caravan_id] waiting [wait_time / 10] seconds before returning home")
+
+/**
+ * Start the return journey back to home hub
+ */
+/datum/faction_caravan/proc/start_return_journey()
+	wait_timer_id = null
+
+	if(!home_tile || !current_tile)
+		complete_journey()
+		return
+
+	// Already at home
+	if(current_tile == home_tile)
+		complete_journey()
+		return
+
+	// Calculate route back home
+	if(!GLOB.resurgence_world_map)
+		complete_journey()
+		return
+
+	route = GLOB.resurgence_world_map.find_path(current_tile, home_tile)
+	if(!route || length(route) < 2)
+		complete_journey()
+		return
+
+	destination = home_tile
+	route_index = 1
+	state = CARAVAN_RETURNING
+
+	// Start moving
+	schedule_move()
+	log_game("Caravan [caravan_id] returning home to ([home_tile.x_coord],[home_tile.y_coord])")
+
+	// Update world map UIs
+	update_all_world_map_uis()
 
 /**
  * Complete the journey and despawn
  */
 /datum/faction_caravan/proc/complete_journey()
 	state = CARAVAN_COMPLETE
+	log_game("Caravan [caravan_id] completed journey and despawning")
 	qdel(src)
 
 /**

@@ -62,9 +62,11 @@ export const OreRefiner = (props, context) => {
                     disabled={processing} />
                 </Stack.Item>
               </Stack>
-              <Box mt={1} color="label" fontSize="11px">
-                Total Primary Ore: {total_ore}
-              </Box>
+              {total_ore > 0 && (
+                <Box mt={1} color="label" fontSize="11px">
+                  Total Primary Ore: {total_ore}
+                </Box>
+              )}
             </Section>
           </Stack.Item>
 
@@ -87,9 +89,10 @@ export const OreRefiner = (props, context) => {
                 </Flex.Item>
               </Flex>
               <Box mt={1} color="label" fontSize="11px">
-                More coal = more distance. Ratio: {total_ore > 0
-                  ? (coal_count / total_ore).toFixed(2)
-                  : '0.00'}:1
+                More coal = more distance.
+                {total_ore > 0 && coal_count > 0 && (
+                  <> Ratio: {(coal_count / total_ore).toFixed(1)}:1</>
+                )}
               </Box>
             </Section>
           </Stack.Item>
@@ -155,7 +158,9 @@ export const OreRefiner = (props, context) => {
                 iconSpin={processing}
                 color={preview.valid ? "good" : "bad"}
                 disabled={processing || !preview.valid}
-                content={processing ? "Processing..." : "Refine Ore"}
+                content={processing
+                  ? "Processing..."
+                  : "Refine Ore (0.25 Faith)"}
                 onClick={() => act('refine')} />
             </Section>
           </Stack.Item>
@@ -186,7 +191,7 @@ const OreRow = props => {
         <ProgressBar
           value={count / max}
           color={color}>
-          {count} ({pct}%)
+          {count > 0 ? `${count} (${pct}%)` : '-'}
         </ProgressBar>
       </Flex.Item>
       <Flex.Item ml={1}>

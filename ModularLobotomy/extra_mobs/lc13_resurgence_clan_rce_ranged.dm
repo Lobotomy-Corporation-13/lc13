@@ -218,6 +218,8 @@
 	damage_type = RED_DAMAGE
 	projectile_piercing = PASSMOB
 	var/passed_faction_mobs = 0
+	/// Damage multiplier against resurgence_machine species
+	var/resurgence_damage_mult = 3
 
 /obj/projectile/clan_bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target) && isliving(firer))
@@ -226,6 +228,11 @@
 		if(shooter.faction_check_mob(L))
 			passed_faction_mobs++
 			return BULLET_ACT_FORCE_PIERCE
+	// Deal triple damage to resurgence_machine species
+	if(ishuman(target))
+		var/mob/living/carbon/human/H = target
+		if(H.dna?.species?.id == "resurgence_machine")
+			damage *= resurgence_damage_mult
 	..()
 
 /obj/projectile/clan_bullet/prehit_pierce(atom/A)

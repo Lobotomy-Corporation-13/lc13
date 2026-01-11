@@ -127,7 +127,8 @@
 	log_admin("RAID DEBUG: Commander arrived at destination [AREACOORD(src)]")
 	if(on_arrival)
 		on_arrival.Invoke()
-	qdel(src)
+	// Wait 1 second before deleting to allow the raider to catch up
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(qdel), src), 1 SECONDS)
 
 /// Called when we fail to reach destination
 /obj/effect/raid_commander/proc/fail()
@@ -203,7 +204,7 @@
 	var/room_clear_time = 0
 
 	/// How long to spend in a room before moving to next (in deciseconds)
-	var/room_clear_duration = 15 SECONDS
+	var/room_clear_duration = 1 MINUTES
 
 	/// Timer for room clearing check
 	var/room_clear_timer
@@ -308,11 +309,11 @@
 	SIGNAL_HANDLER
 	stuck_counter = 0
 
-	// Check if we've reached our retreat point
+	// Check if we've reached our retreat point (teleport away within 3 tiles)
 	if(retreating && retreat_point)
 		var/turf/retreat_turf = get_turf(retreat_point)
 		var/turf/our_turf = get_turf(parent)
-		if(our_turf == retreat_turf || get_dist(our_turf, retreat_turf) <= 1)
+		if(our_turf == retreat_turf || get_dist(our_turf, retreat_turf) <= 3)
 			INVOKE_ASYNC(src, PROC_REF(on_reached_retreat_point))
 			return
 
@@ -485,17 +486,8 @@
 	log_admin("RAID DEBUG: [H.type] opening door [door] at [AREACOORD(door)]")
 	H.visible_message(span_warning("[H] forces open [door]!"))
 
-	// Store original close delay
-	var/original_close_delay = door.close_delay
-
-	// Prevent auto-close by setting close_delay to -1
-	door.close_delay = -1
-
-	// Open the door
-	door.Open()
-
-	// Schedule the door to be unjammed after 15 seconds
-	addtimer(CALLBACK(src, PROC_REF(unjam_door), door, original_close_delay), DOOR_JAM_DURATION)
+	// Use the door's jam function to open and keep it open
+	door.jam(DOOR_JAM_DURATION)
 
 	// Resume navigation after a short delay for the door to finish opening
 	addtimer(CALLBACK(src, PROC_REF(resume_after_door)), 1.5 SECONDS)
@@ -534,17 +526,8 @@
 	log_admin("RAID DEBUG: [H.type] opening door for commander at [AREACOORD(door)]")
 	H.visible_message(span_warning("[H] forces open [door]!"))
 
-	// Store original close delay
-	var/original_close_delay = door.close_delay
-
-	// Prevent auto-close by setting close_delay to -1
-	door.close_delay = -1
-
-	// Open the door
-	door.Open()
-
-	// Schedule the door to be unjammed after 15 seconds
-	addtimer(CALLBACK(src, PROC_REF(unjam_door), door, original_close_delay), DOOR_JAM_DURATION)
+	// Use the door's jam function to open and keep it open
+	door.jam(DOOR_JAM_DURATION)
 
 	// Notify commander after a short delay for the door to finish opening
 	addtimer(CALLBACK(src, PROC_REF(notify_commander_door_opened)), 1.5 SECONDS)
@@ -556,22 +539,6 @@
 	target_door = null
 	if(current_commander && !QDELETED(current_commander))
 		current_commander.door_opened_callback()
-
-/**
- * Restore door's ability to close after jam duration expires.
- */
-/datum/component/raider/proc/unjam_door(obj/structure/mineral_door/door, original_close_delay)
-	if(QDELETED(door))
-		return
-
-	// Restore original close delay
-	door.close_delay = original_close_delay
-
-	// If door should auto-close, start the timer
-	if(door.close_delay != -1 && door.door_opened)
-		addtimer(CALLBACK(door, TYPE_PROC_REF(/obj/structure/mineral_door, Close)), door.close_delay)
-
-	log_admin("RAID DEBUG: Door [door] at [AREACOORD(door)] is no longer jammed")
 
 /**
  * Resume navigation after opening a door.
@@ -671,6 +638,18 @@
 	if(!H || H.stat == DEAD)
 		return
 
+	// Stop all current movement and looting before switching
+	walk(H, 0)
+	if(current_commander && !QDELETED(current_commander))
+		qdel(current_commander)
+		current_commander = null
+
+	// Clear looting state
+	looting_crates = FALSE
+	current_target_crate = null
+	room_crates.Cut()
+	current_objective = null
+
 	// Get all accessible rooms
 	var/can_smash_walls = (H.environment_smash & ENVIRONMENT_SMASH_WALLS)
 	var/list/all_rooms = get_resurgence_room_areas(FALSE, can_smash_walls) // FALSE = don't require open access, raiders can smash doors
@@ -724,16 +703,40 @@
 	room_crates.Cut()
 	current_target_crate = null
 
-	// Find all closed crates/closets in the room
+	// Track if there's any loot worth staying for
+	var/has_loot_remaining = FALSE
+
+	// Find all crates/closets in the room
 	for(var/obj/structure/closet/crate in current_room)
 		if(QDELETED(crate))
 			continue
+		// Check global looted list - another raider may have already claimed this crate
+		if(crate in GLOB.raid_looted_crates)
+			continue
+
 		if(crate.opened)
-			continue // Already open
+			// Crate is open - check if there's loot on the same turf
+			var/turf/crate_turf = get_turf(crate)
+			for(var/obj/item/I in crate_turf)
+				if(!I.anchored)
+					has_loot_remaining = TRUE
+					break
+			continue // Don't add open crates to the list to navigate to
+
+		// Closed crate - add to list
 		room_crates += crate
+		has_loot_remaining = TRUE
+
+	// If no closed crates and no loot remaining, room is cleared
+	if(!room_crates.len && !has_loot_remaining)
+		log_admin("RAID DEBUG: [H.type] found no crates or loot in room [current_room.name] - room cleared")
+		// Mark room as visited and switch to new room
+		visited_rooms += current_room
+		switch_to_new_room()
+		return FALSE
 
 	if(!room_crates.len)
-		log_admin("RAID DEBUG: [H.type] found no crates in room [current_room.name]")
+		log_admin("RAID DEBUG: [H.type] found no closed crates in room [current_room.name], but loot remains on ground")
 		return FALSE
 
 	log_admin("RAID DEBUG: [H.type] found [room_crates.len] crates to loot in room [current_room.name]")
@@ -752,16 +755,49 @@
 		looting_crates = FALSE
 		return
 
-	// Remove any invalid crates from the list
+	// Remove any invalid or already-looted crates from the list
 	for(var/obj/structure/closet/crate in room_crates)
-		if(QDELETED(crate) || crate.opened)
+		if(QDELETED(crate) || crate.opened || (crate in GLOB.raid_looted_crates))
 			room_crates -= crate
 
 	if(!room_crates.len)
-		// All crates looted
+		// All crates looted - stop walking and find targets
 		log_admin("RAID DEBUG: [H.type] finished looting all crates in room")
 		looting_crates = FALSE
 		current_target_crate = null
+		current_objective = null
+		// Stop any ongoing walk_to
+		walk(H, 0)
+		// Clean up commander
+		if(current_commander && !QDELETED(current_commander))
+			qdel(current_commander)
+			current_commander = null
+
+		// Check if there's any loot remaining in the room
+		var/area/resurgence_outpost/room/current_room = get_area(H)
+		if(istype(current_room))
+			var/has_loot = FALSE
+			for(var/obj/structure/closet/crate in current_room)
+				if(QDELETED(crate) || (crate in GLOB.raid_looted_crates))
+					continue
+				if(crate.opened)
+					// Check for items on crate's turf
+					var/turf/crate_turf = get_turf(crate)
+					for(var/obj/item/I in crate_turf)
+						if(!I.anchored)
+							has_loot = TRUE
+							break
+				else
+					has_loot = TRUE // Closed crate still has potential loot
+				if(has_loot)
+					break
+
+			if(!has_loot)
+				log_admin("RAID DEBUG: [H.type] no loot remaining in room [current_room.name] - switching rooms")
+				visited_rooms += current_room
+				switch_to_new_room()
+				return
+
 		// Continue with normal room clearing (look for targets)
 		H.FindTarget()
 		return
@@ -777,10 +813,15 @@
 
 	if(!closest_crate)
 		looting_crates = FALSE
+		current_objective = null
+		walk(H, 0)
 		return
 
 	current_target_crate = closest_crate
 	room_crates -= closest_crate
+
+	// Mark the crate as claimed in the global list to prevent other raiders targeting it
+	GLOB.raid_looted_crates += closest_crate
 
 	log_admin("RAID DEBUG: [H.type] targeting crate at [AREACOORD(closest_crate)], [room_crates.len] crates remaining")
 
@@ -802,25 +843,39 @@
 		loot_next_crate()
 		return
 
+	// Check if crate was already opened (by Move() or another raider)
+	if(current_target_crate.opened)
+		log_admin("RAID DEBUG: [H.type] reached crate at [AREACOORD(current_target_crate)] - already opened, moving on")
+		current_target_crate = null
+		current_objective = null
+		// Stop walking to this spot
+		walk(H, 0)
+		// Move to next crate immediately
+		loot_next_crate()
+		return
+
 	log_admin("RAID DEBUG: [H.type] reached crate at [AREACOORD(current_target_crate)]")
 
 	// Open the crate
 	if(istype(H, /mob/living/simple_animal/hostile/clan/raider))
 		var/mob/living/simple_animal/hostile/clan/raider/R = H
-		if(!current_target_crate.opened)
-			if(current_target_crate.locked || current_target_crate.welded)
-				if(R.crate_breaker)
-					R.attack_crate(current_target_crate)
-					// Wait a bit then check again
-					addtimer(CALLBACK(src, PROC_REF(check_crate_opened)), 2 SECONDS)
-					return
-				else
-					// Can't open locked crate, skip it
-					log_admin("RAID DEBUG: [H.type] can't open locked crate - skipping")
+		if(current_target_crate.locked || current_target_crate.welded)
+			if(R.crate_breaker)
+				R.attack_crate(current_target_crate)
+				// Wait a bit then check again
+				addtimer(CALLBACK(src, PROC_REF(check_crate_opened)), 2 SECONDS)
+				return
 			else
-				R.open_crate(current_target_crate)
+				// Can't open locked crate, skip it
+				log_admin("RAID DEBUG: [H.type] can't open locked crate - skipping")
+		else
+			R.open_crate(current_target_crate)
 
 	current_target_crate = null
+	current_objective = null
+
+	// Stop walking to this spot
+	walk(H, 0)
 
 	// Short delay before moving to next crate (for stealing items)
 	addtimer(CALLBACK(src, PROC_REF(loot_next_crate)), 1 SECONDS)
@@ -844,6 +899,8 @@
 			var/mob/living/simple_animal/hostile/clan/raider/R = H
 			R.try_steal_items()
 		current_target_crate = null
+		current_objective = null
+		walk(H, 0)
 		addtimer(CALLBACK(src, PROC_REF(loot_next_crate)), 1 SECONDS)
 	else
 		// Still locked, keep attacking
@@ -855,6 +912,8 @@
 				return
 		// Give up on this crate
 		current_target_crate = null
+		current_objective = null
+		walk(H, 0)
 		loot_next_crate()
 
 /**
@@ -887,6 +946,9 @@
 
 	var/dist = get_dist(H, target_turf)
 	log_admin("RAID DEBUG: [H.type] at [AREACOORD(H)] navigating to [AREACOORD(target_turf)], distance: [dist]")
+
+	// Stop any existing walk_to before starting new navigation
+	walk(H, 0)
 
 	// Clean up any existing commander
 	if(current_commander && !QDELETED(current_commander))

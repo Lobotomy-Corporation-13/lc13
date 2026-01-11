@@ -377,3 +377,49 @@
 	unlocks_desc = "Blueprints: Communications Console. Enables remote trading with visited factions."
 	ui_x = 730
 	ui_y = 560
+
+// ==================== CLOTHING PLATING ====================
+
+/datum/resurgence_research_node/plating_tier1
+	id = "plating_tier1"
+	name = "Basic Armor Plating"
+	desc = "Learn to craft lightweight metal plating that can be attached to clan-woven suits for protection."
+	tier = 2
+	total_work = 200
+	prerequisites = list("metallurgy", "textiles")
+	unlocks_desc = "Forge: Tier 1 Clothing Plating (20 armor)."
+	ui_x = 390
+	ui_y = 520
+
+/datum/resurgence_research_node/plating_tier2
+	id = "plating_tier2"
+	name = "Reinforced Armor Plating"
+	desc = "Develop reinforced plating techniques using precious metals for improved protection."
+	tier = 3
+	total_work = 400
+	prerequisites = list("plating_tier1", "advanced_metallurgy")
+	unlocks_desc = "Forge: Tier 2 Clothing Plating (40 armor). Requires Tier 1 on garment."
+	ui_x = 560
+	ui_y = 520
+
+/datum/resurgence_research_node/plating_tier3
+	id = "plating_tier3"
+	name = "Heavy Armor Plating"
+	desc = "Master heavy plating construction using plasteel and advanced textiles."
+	tier = 4
+	total_work = 600
+	prerequisites = list("plating_tier2")
+	unlocks_desc = "Forge: Tier 3 Clothing Plating (60 armor). Requires Tier 2 on garment."
+	ui_x = 730
+	ui_y = 520
+
+/datum/resurgence_research_node/plating_tier4
+	id = "plating_tier4"
+	name = "Master Armor Plating"
+	desc = "The pinnacle of armor craftsmanship. Create master-grade plating rivaling corporate equipment."
+	tier = 5
+	total_work = 800
+	prerequisites = list("plating_tier3")
+	unlocks_desc = "Forge: Tier 4 Clothing Plating (80 armor). Requires Tier 3 on garment."
+	ui_x = 900
+	ui_y = 520

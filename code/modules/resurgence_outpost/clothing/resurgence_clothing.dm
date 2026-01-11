@@ -86,6 +86,7 @@
 	icon_state = "chaplain_hoodie"
 
 	var/obj/item/resurgence_fabric/attached_fabric
+	var/plating_tier = 0
 
 /obj/item/clothing/suit/resurgence/Destroy()
 	if(attached_fabric)
@@ -95,6 +96,11 @@
 /obj/item/clothing/suit/resurgence/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/resurgence_fabric))
 		attach_fabric(I, user)
+		return
+	if(istype(I, /obj/item/resurgence_plating))
+		var/result = try_attach_plating(src, I, user, plating_tier)
+		if(result)
+			plating_tier = result
 		return
 	return ..()
 
@@ -140,6 +146,10 @@
 		. += span_notice("Alt-click to detach the fabric.")
 	else
 		. += span_notice("You can attach a faith fabric to this garment for passive faith.")
+	if(plating_tier > 0)
+		. += span_notice("It has tier [plating_tier] plating attached.")
+	else
+		. += span_notice("You can attach clothing plating for armor protection.")
 
 // ============================================
 // HEAD (Headwear)
@@ -408,3 +418,80 @@
 		. += span_notice("Alt-click to detach the fabric.")
 	else
 		. += span_notice("You can attach a faith fabric to this garment for passive faith.")
+
+// ============================================
+// CLOTHING PLATING SYSTEM
+// ============================================
+
+/// Armor values for each plating tier
+#define PLATING_TIER_1_ARMOR 20
+#define PLATING_TIER_2_ARMOR 40
+#define PLATING_TIER_3_ARMOR 60
+#define PLATING_TIER_4_ARMOR 80
+
+/**
+ * Clothing Plating - Tier 1
+ * Provides 20 armor to RED, WHITE, BLACK, PALE when attached to resurgence suit.
+ */
+/obj/item/resurgence_plating
+	name = "tier 1 clothing plating"
+	desc = "Lightweight metal plating that can be attached to clan-woven suits for protection. Provides 20 armor to all damage types."
+	icon = 'icons/obj/stack_objects.dmi'
+	icon_state = "sheet-plasteel"
+	w_class = WEIGHT_CLASS_SMALL
+	/// The tier of this plating (1-4)
+	var/plating_tier = 1
+	/// Armor value this plating provides
+	var/armor_value = PLATING_TIER_1_ARMOR
+
+/obj/item/resurgence_plating/examine(mob/user)
+	. = ..()
+	. += span_notice("Attach to clan-woven suits to set armor to [armor_value].")
+	if(plating_tier > 1)
+		. += span_notice("Requires tier [plating_tier - 1] plating to already be attached.")
+
+/obj/item/resurgence_plating/tier2
+	name = "tier 2 clothing plating"
+	desc = "Reinforced metal plating that can be attached to clan-woven suits for protection. Provides 40 armor to all damage types. Requires tier 1 plating first."
+	plating_tier = 2
+	armor_value = PLATING_TIER_2_ARMOR
+
+/obj/item/resurgence_plating/tier3
+	name = "tier 3 clothing plating"
+	desc = "Heavy metal plating that can be attached to clan-woven suits for protection. Provides 60 armor to all damage types. Requires tier 2 plating first."
+	plating_tier = 3
+	armor_value = PLATING_TIER_3_ARMOR
+
+/obj/item/resurgence_plating/tier4
+	name = "tier 4 clothing plating"
+	desc = "Master-crafted metal plating that can be attached to clan-woven suits for protection. Provides 80 armor to all damage types. Requires tier 3 plating first."
+	plating_tier = 4
+	armor_value = PLATING_TIER_4_ARMOR
+
+/**
+ * Helper proc to attach plating to resurgence suit.
+ * Checks tier requirements and applies armor values.
+ */
+/proc/try_attach_plating(obj/item/clothing/suit/resurgence/C, obj/item/resurgence_plating/P, mob/user, current_tier)
+	// Check if this clothing already has the same or higher tier
+	if(current_tier >= P.plating_tier)
+		to_chat(user, span_warning("[C] already has tier [current_tier] plating attached!"))
+		return null
+
+	// Check if we need a previous tier first
+	if(P.plating_tier > 1 && current_tier != (P.plating_tier - 1))
+		to_chat(user, span_warning("[C] needs tier [P.plating_tier - 1] plating before you can attach tier [P.plating_tier]!"))
+		return null
+
+	// Apply the plating
+	C.armor = list(RED_DAMAGE = P.armor_value, WHITE_DAMAGE = P.armor_value, BLACK_DAMAGE = P.armor_value, PALE_DAMAGE = P.armor_value)
+
+	to_chat(user, span_notice("You attach [P] to [C], setting armor to [P.armor_value]."))
+	playsound(C, 'sound/items/Screwdriver.ogg', 50, TRUE)
+	qdel(P)
+	return P.plating_tier
+
+#undef PLATING_TIER_1_ARMOR
+#undef PLATING_TIER_2_ARMOR
+#undef PLATING_TIER_3_ARMOR
+#undef PLATING_TIER_4_ARMOR

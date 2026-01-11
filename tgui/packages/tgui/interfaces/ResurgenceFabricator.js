@@ -33,12 +33,17 @@ export const ResurgenceFabricator = (props, context) => {
     stomach_reagents = [],
     can_revive,
     can_purge,
+    stored_limbs = [],
+    max_limbs,
+    limb_operating,
+    missing_limbs = [],
+    removable_limbs = [],
   } = data;
 
   return (
     <Window
-      width={420}
-      height={550}>
+      width={450}
+      height={650}>
       <Window.Content>
         <Stack fill vertical>
           {/* Status Header */}
@@ -265,6 +270,83 @@ export const ResurgenceFabricator = (props, context) => {
                     </Button>
                   </Stack.Item>
                 </Stack>
+              </Section>
+            </Stack.Item>
+          )}
+
+          {/* Limb Management */}
+          <Stack.Item>
+            <Section
+              title={`Limb Storage (${stored_limbs.length}/${max_limbs})`}>
+              {stored_limbs.length > 0 ? (
+                <Box>
+                  {stored_limbs.map((limb, index) => (
+                    <Box key={index} mb={0.5}>
+                      <Flex align="center">
+                        <Flex.Item grow>
+                          <Icon name="hand" mr={1} />
+                          {limb.name}
+                        </Flex.Item>
+                        {has_occupant
+                          && is_resurgence_machine
+                          && missing_limbs.some(
+                            m => m.zone === limb.zone
+                          ) && (
+                          <Flex.Item>
+                            <Button
+                              icon="plus"
+                              color="good"
+                              disabled={limb_operating}
+                              tooltip="Attach to occupant"
+                              onClick={() => act('attach_limb', {
+                                limb_index: limb.index,
+                              })} />
+                          </Flex.Item>
+                        )}
+                        <Flex.Item>
+                          <Button
+                            icon="eject"
+                            disabled={limb_operating}
+                            tooltip="Eject limb"
+                            onClick={() => act('eject_limb', {
+                              limb_index: limb.index,
+                            })} />
+                        </Flex.Item>
+                      </Flex>
+                    </Box>
+                  ))}
+                </Box>
+              ) : (
+                <Box color="label" textAlign="center">
+                  No limbs stored. Insert bodyparts to store them.
+                </Box>
+              )}
+            </Section>
+          </Stack.Item>
+
+          {/* Limb Removal (Resurgence Machine Only) */}
+          {!!has_occupant && !!is_resurgence_machine
+            && removable_limbs.length > 0 && (
+            <Stack.Item>
+              <Section title="Remove Limbs">
+                <Box fontSize="11px" color="label" mb={1}>
+                  Warning: Limb removal takes 10 seconds.
+                </Box>
+                <Flex wrap="wrap">
+                  {removable_limbs.map((limb, index) => (
+                    <Flex.Item key={index} mr={1} mb={0.5}>
+                      <Button
+                        icon="scissors"
+                        color="bad"
+                        disabled={limb_operating}
+                        onClick={() => act('remove_limb', {
+                          limb_zone: limb.zone,
+                        })}>
+                        {limb.name}
+                      </Button>
+                    </Flex.Item>
+                  ))}
+                </Flex>
               </Section>
             </Stack.Item>
           )}

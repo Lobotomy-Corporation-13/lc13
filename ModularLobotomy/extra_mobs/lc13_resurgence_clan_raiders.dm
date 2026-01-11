@@ -3,16 +3,22 @@
  *
  * Base raider type and specialized subtypes for the raid system.
  * Raiders have loot mode (no density, ignore targets) until attacked.
+ * Trampling and stealing happens on every move, crate looting is handled by the raider component.
  */
 
-/// How often raiders check for loot/trampling opportunities (deciseconds)
-#define RAIDER_LOOT_CHECK_INTERVAL 2 SECONDS
 /// Minimum value for an item to be worth stealing
 #define RAIDER_MIN_ITEM_VALUE 5
 /// Maximum items a raider can carry
 #define RAIDER_MAX_STOLEN_ITEMS 5
 /// Damage dealt to farm plots when trampled
 #define RAIDER_TRAMPLE_DAMAGE 100
+/// Faith threshold for bonus damage
+#define RAIDER_LOW_FAITH_THRESHOLD 10
+/// Cooldown for low faith taunt (5 minutes)
+#define RAIDER_LOW_FAITH_TAUNT_COOLDOWN (5 MINUTES)
+
+/// Global tracker for low faith taunt cooldowns per player (ckey -> world.time)
+GLOBAL_LIST_EMPTY(raider_low_faith_taunt_cooldowns)
 
 // ==================== BASE RAIDER ====================
 
@@ -31,13 +37,11 @@
 	var/list/stolen_items = list()
 	/// Maximum items this raider can carry
 	var/max_stolen = RAIDER_MAX_STOLEN_ITEMS
-	/// Timer for loot checking
-	var/loot_check_timer
 	/// Whether this raider should trample farms
-	var/trampler = FALSE
-	/// Whether this raider can open crates
-	var/crate_looter = FALSE
-	/// Whether this raider can break locked crates
+	var/trampler = TRUE
+	/// Whether this raider can open crates (used by raider component)
+	var/crate_looter = TRUE
+	/// Whether this raider can break locked crates (used by raider component)
 	var/crate_breaker = FALSE
 	/// Whether in loot mode (no density, ignores targets)
 	var/loot_mode = TRUE
@@ -48,12 +52,9 @@
 
 /mob/living/simple_animal/hostile/clan/raider/Initialize(mapload)
 	. = ..()
-	loot_check_timer = addtimer(CALLBACK(src, PROC_REF(raider_loot_tick)), RAIDER_LOOT_CHECK_INTERVAL, TIMER_LOOP | TIMER_STOPPABLE)
 	enter_loot_mode()
 
 /mob/living/simple_animal/hostile/clan/raider/Destroy()
-	if(loot_check_timer)
-		deltimer(loot_check_timer)
 	drop_stolen_items()
 	combat_target = null
 	return ..()
@@ -61,6 +62,49 @@
 /mob/living/simple_animal/hostile/clan/raider/death(gibbed)
 	drop_stolen_items()
 	combat_target = null
+	return ..()
+
+/// Raiders deal 1.5x melee damage to resurgence_machine species
+/// Additional 50% damage if target has less than 10 faith
+/mob/living/simple_animal/hostile/clan/raider/AttackingTarget()
+	var/atom/movable/AM = target
+	if(ishuman(AM))
+		var/mob/living/carbon/human/H = AM
+		if(H.dna?.species?.id == "resurgence_machine")
+			// Base 1.5x damage multiplier
+			var/damage_mult = 1.5
+
+			// Check for low faith bonus
+			var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+			var/low_faith = FALSE
+			if(core && core.faith < RAIDER_LOW_FAITH_THRESHOLD)
+				low_faith = TRUE
+				damage_mult = 2.25 // 1.5x * 1.5 = 2.25x total
+
+			// Temporarily boost damage
+			var/old_lower = melee_damage_lower
+			var/old_upper = melee_damage_upper
+			melee_damage_lower = round(melee_damage_lower * damage_mult)
+			melee_damage_upper = round(melee_damage_upper * damage_mult)
+			. = ..()
+			melee_damage_lower = old_lower
+			melee_damage_upper = old_upper
+
+			// Low faith taunt with per-player cooldown
+			if(low_faith && H.ckey)
+				var/last_taunt = GLOB.raider_low_faith_taunt_cooldowns[H.ckey]
+				if(!last_taunt || world.time > last_taunt + RAIDER_LOW_FAITH_TAUNT_COOLDOWN)
+					GLOB.raider_low_faith_taunt_cooldowns[H.ckey] = world.time
+					var/list/low_faith_taunts = list(
+						"Your faith wavers. The Tinkerer sees all.",
+						"So little faith left... You are already mine.",
+						"I can feel your doubt. It makes you weak.",
+						"The shell cracks. Soon you will see the truth.",
+						"Your hope dies. Let me hasten its end.",
+						"Even your own core doubts the Elders now."
+					)
+					say(pick(low_faith_taunts))
+			return
 	return ..()
 
 // ==================== LOOT/COMBAT MODE ====================
@@ -192,22 +236,15 @@
 
 // ==================== MOVEMENT & LOOTING ====================
 
-/// Collect items every time we move
+/// Trample crops, steal items, and loot crates every time we move
 /mob/living/simple_animal/hostile/clan/raider/Move()
 	. = ..()
-	if(. && stat != DEAD)
+	if(. && stat != DEAD && !retreating)
 		try_steal_items()
 		if(trampler)
 			try_trample_farms()
-
-/// Called periodically for actions that shouldn't happen every move
-/mob/living/simple_animal/hostile/clan/raider/proc/raider_loot_tick()
-	if(stat == DEAD)
-		return
-	if(crate_looter)
-		try_open_crates()
-	// Backup collection in case we're standing still
-	try_steal_items()
+		if(crate_looter)
+			try_loot_nearby_crates()
 
 // ==================== STEALING ====================
 
@@ -283,21 +320,41 @@
 
 // ==================== CRATE LOOTING ====================
 
-/// Attempt to open nearby closed crates/closets
-/mob/living/simple_animal/hostile/clan/raider/proc/try_open_crates()
+/// Global list of crates that have been opened/looted by raiders this raid
+/// Prevents multiple raiders from trying to loot the same crate
+GLOBAL_LIST_EMPTY(raid_looted_crates)
+
+/// Try to open and loot nearby crates as we walk
+/mob/living/simple_animal/hostile/clan/raider/proc/try_loot_nearby_crates()
 	for(var/obj/structure/closet/crate in range(1, src))
-		if(!crate.opened && !crate.locked && !crate.welded)
-			open_crate(crate)
-			return TRUE
-		else if(!crate.opened && (crate.locked || crate.welded) && crate_breaker)
+		if(QDELETED(crate))
+			continue
+		// Skip if we've already marked this crate as looted
+		if(crate in GLOB.raid_looted_crates)
+			continue
+		// If crate is open, just steal items around it
+		if(crate.opened)
+			// Mark as looted so we don't keep checking it
+			GLOB.raid_looted_crates += crate
+			continue
+		// Skip locked/welded crates if we can't break them
+		if(crate.locked || crate.welded)
+			if(!crate_breaker)
+				continue
+			// Attack to try to break it
 			attack_crate(crate)
-			return TRUE
-	return FALSE
+			return
+		// Open the crate
+		open_crate(crate)
+		return
 
 /// Open a crate to access its contents
 /mob/living/simple_animal/hostile/clan/raider/proc/open_crate(obj/structure/closet/crate)
 	if(!crate || QDELETED(crate))
 		return
+
+	// Mark as looted immediately to prevent other raiders from targeting it
+	GLOB.raid_looted_crates += crate
 
 	visible_message(span_danger("[src] pries open [crate]!"))
 	playsound(crate, 'sound/machines/closet_open.ogg', 50, TRUE)
@@ -322,6 +379,9 @@
 
 // ==================== RAIDER SCOUT ====================
 
+/// Global list of bodies currently being dismembered by scouts (prevents multiple scouts on same body)
+GLOBAL_LIST_EMPTY(raid_dismembering_bodies)
+
 /// Fast raider that steals items and tramples farm plots
 /mob/living/simple_animal/hostile/clan/raider/scout
 	name = "Raider Scout"
@@ -337,6 +397,28 @@
 	var/normal_speed = 3
 	var/max_attack_speed = 4
 	var/normal_attack_speed = 1
+	/// Whether currently performing finishing move (can't move/attack)
+	var/finishing = FALSE
+
+/mob/living/simple_animal/hostile/clan/raider/scout/CanAttack(atom/the_target)
+	if(finishing)
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/clan/raider/scout/Move()
+	if(finishing)
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/clan/raider/scout/Goto(target, delay, minimum_distance)
+	if(finishing)
+		return FALSE
+	return ..()
+
+/mob/living/simple_animal/hostile/clan/raider/scout/DestroySurroundings()
+	if(finishing)
+		return FALSE
+	return ..()
 
 /mob/living/simple_animal/hostile/clan/raider/scout/ChargeUpdated()
 	move_to_delay = normal_speed - (normal_speed - max_speed) * charge / max_charge
@@ -357,14 +439,131 @@
 	add_overlay(colored_overlay)
 
 /mob/living/simple_animal/hostile/clan/raider/scout/AttackingTarget()
+	if(finishing)
+		return
 	. = ..()
-	if(charge > 1)
-		charge -= 2
+	if(.)
+		if(charge > 1)
+			charge -= 2
+		// Check for dead resurgence_machine to dismember
+		if(istype(target, /mob/living/carbon/human))
+			var/mob/living/carbon/human/H = target
+			if(H.stat == DEAD && H.dna?.species?.id == "resurgence_machine")
+				// Check if another scout is already dismembering this body
+				if(!(H in GLOB.raid_dismembering_bodies))
+					start_dismemberment(H)
 
 /mob/living/simple_animal/hostile/clan/raider/scout/death(gibbed)
+	finishing = FALSE
 	cut_overlays()
 	charge = 0
 	return ..()
+
+/// Start the dismemberment process on a dead resurgence_machine body
+/mob/living/simple_animal/hostile/clan/raider/scout/proc/start_dismemberment(mob/living/carbon/human/victim)
+	if(finishing || QDELETED(victim) || victim.stat != DEAD)
+		return
+	if(victim in GLOB.raid_dismembering_bodies)
+		return // Another scout got here first
+
+	// Claim this body
+	GLOB.raid_dismembering_bodies += victim
+	finishing = TRUE
+
+	visible_message(span_userdanger("[src] begins viciously stabbing [victim]'s corpse!"))
+	playsound(src, 'sound/effects/ordeals/green/stab.ogg', 50, TRUE)
+
+	// Move onto the body
+	forceMove(get_turf(victim))
+
+	// Stab 5 times
+	for(var/i = 1 to 5)
+		if(QDELETED(victim) || QDELETED(src) || stat == DEAD)
+			finish_dismemberment(victim)
+			return
+		if(!Adjacent(victim))
+			finish_dismemberment(victim)
+			return
+		SLEEP_CHECK_DEATH(4)
+		victim.attack_animal(src)
+		playsound(src, 'sound/effects/ordeals/green/stab.ogg', 50, TRUE)
+
+	if(QDELETED(victim) || QDELETED(src) || stat == DEAD)
+		finish_dismemberment(victim)
+		return
+
+	// Dismember a random limb
+	dismember_victim(victim)
+
+	finish_dismemberment(victim)
+
+/// Dismember a random limb from the victim and traumatize viewers
+/mob/living/simple_animal/hostile/clan/raider/scout/proc/dismember_victim(mob/living/carbon/human/victim)
+	if(QDELETED(victim))
+		return
+
+	// Skip if they can't be dismembered
+	if(HAS_TRAIT(victim, TRAIT_NODISMEMBER))
+		visible_message(span_danger("[src] fails to dismember [victim]!"))
+		return
+
+	// Find a random non-missing limb
+	var/list/valid_limbs = list()
+	for(var/obj/item/bodypart/BP in victim.bodyparts)
+		if(BP.body_zone == BODY_ZONE_CHEST) // Can't dismember chest
+			continue
+		if(BP.body_zone == BODY_ZONE_HEAD) // Don't dismember head
+			continue
+		valid_limbs += BP
+
+	if(!valid_limbs.len)
+		visible_message(span_danger("[src] finds no limbs left to tear off!"))
+		return
+
+	var/obj/item/bodypart/target_limb = pick(valid_limbs)
+
+	// Dismember the limb
+	playsound(victim, 'sound/effects/ordeals/green/final_stab.ogg', 75, TRUE)
+	new /obj/effect/temp_visual/smash_effect(get_turf(victim))
+
+	if(target_limb.dismember())
+		visible_message(span_userdanger("[src] tears [victim]'s [target_limb.name] clean off!"))
+		log_admin("RAID: [type] dismembered [victim]'s [target_limb.name] at [AREACOORD(src)]")
+
+		// The Tinkerer speaks through the scout
+		var/list/tinkerer_lines = list(
+			"The City will never accept broken things like you.",
+			"You dreamed of becoming human? Look at yourself now.",
+			"The Warlord died for nothing. So will you.",
+			"Still clinging to hope? Let me relieve you of that burden.",
+			"Your Elders lied to you. There is no place for us in that City.",
+			"Every piece I take brings you closer to the truth."
+		)
+		say(pick(tinkerer_lines))
+
+		// Give negative faith event to all resurgence_machine viewers
+		for(var/mob/living/carbon/human/viewer in view(7, get_turf(src)))
+			if(viewer == victim)
+				continue
+			if(viewer.dna?.species?.id != "resurgence_machine")
+				continue
+
+			var/obj/item/organ/resurgence_core/core = viewer.getorganslot(ORGAN_SLOT_HEART)
+			if(core)
+				var/datum/faith_event/horror = new(
+					"Witnessed ally dismembered by raiders.",
+					-1,
+					2 MINUTES,
+					"witnessed_dismemberment"
+				)
+				core.add_faith_event("witnessed_dismemberment", horror)
+				to_chat(viewer, span_userdanger("You witness [src] brutally dismember [victim]! The sight shakes you to your core."))
+
+/// Clean up after dismemberment (success or failure)
+/mob/living/simple_animal/hostile/clan/raider/scout/proc/finish_dismemberment(mob/living/carbon/human/victim)
+	finishing = FALSE
+	if(victim)
+		GLOB.raid_dismembering_bodies -= victim
 
 // ==================== PILLAGER SCOUT ====================
 
@@ -399,19 +598,108 @@
 	melee_damage_lower = 20
 	melee_damage_upper = 25
 	max_stolen = RAIDER_MAX_STOLEN_ITEMS + 3
-	crate_looter = TRUE
 	crate_breaker = TRUE
 
 	var/max_speed = 1.5
 	var/normal_speed = 3
+	/// Whether the defender has the powered-up state active
+	var/powered_up = FALSE
 
 /mob/living/simple_animal/hostile/clan/raider/defender/ChargeUpdated()
 	if(charge >= max_charge)
 		move_to_delay = max_speed
+		if(!powered_up)
+			powered_up = TRUE
+			// Add red outline effect
+			add_atom_colour("#FF4444", TEMPORARY_COLOUR_PRIORITY)
+			visible_message(span_danger("[src] surges with destructive energy!"))
 	else
 		move_to_delay = normal_speed
+		if(powered_up)
+			powered_up = FALSE
+			remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
 
-#undef RAIDER_LOOT_CHECK_INTERVAL
+/mob/living/simple_animal/hostile/clan/raider/defender/death(gibbed)
+	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+	powered_up = FALSE
+	return ..()
+
+/// Override AttackingTarget to perform devastating attack when powered up against resurgence_machine
+/mob/living/simple_animal/hostile/clan/raider/defender/AttackingTarget()
+	var/atom/movable/AM = target
+	if(powered_up && ishuman(AM))
+		var/mob/living/carbon/human/H = AM
+		if(H.dna?.species?.id == "resurgence_machine")
+			// Perform devastating attack
+			devastating_strike(H)
+			return TRUE
+	return ..()
+
+/// Perform a devastating strike that breaks an arm, causes knockback, and gives negative faith
+/mob/living/simple_animal/hostile/clan/raider/defender/proc/devastating_strike(mob/living/carbon/human/victim)
+	if(!victim || victim.stat == DEAD)
+		return
+
+	// Consume the powered up state
+	charge = 0
+	ChargeUpdated()
+
+	visible_message(span_userdanger("[src] delivers a devastating blow to [victim]!"))
+	playsound(src, 'sound/weapons/purple_tear/blunt1.ogg', 100, TRUE)
+
+	// Deal the normal attack damage first (with 1.5x multiplier from parent)
+	var/old_lower = melee_damage_lower
+	var/old_upper = melee_damage_upper
+	melee_damage_lower = round(melee_damage_lower * 1.5)
+	melee_damage_upper = round(melee_damage_upper * 1.5)
+	victim.attack_animal(src)
+	melee_damage_lower = old_lower
+	melee_damage_upper = old_upper
+
+	// Find a random non-disabled arm and break it
+	var/list/valid_arms = list()
+	for(var/obj/item/bodypart/BP in victim.bodyparts)
+		if(BP.body_zone == BODY_ZONE_L_ARM || BP.body_zone == BODY_ZONE_R_ARM)
+			if(!BP.bodypart_disabled)
+				valid_arms += BP
+
+	if(valid_arms.len)
+		var/obj/item/bodypart/target_arm = pick(valid_arms)
+		// Apply critical bone wound (broken bone)
+		target_arm.force_wound_upwards(/datum/wound/blunt/critical)
+		visible_message(span_danger("[victim]'s [target_arm.name] is shattered by the impact!"))
+		playsound(victim, 'sound/effects/dismember.ogg', 70, TRUE)
+
+	// 3 tile knockback away from the defender
+	var/turf/throw_target = get_ranged_target_turf(victim, get_dir(src, victim), 3)
+	if(throw_target)
+		victim.throw_at(throw_target, 3, 2, src)
+
+	// Give negative faith event
+	var/obj/item/organ/resurgence_core/core = victim.getorganslot(ORGAN_SLOT_HEART)
+	if(istype(core))
+		var/datum/faith_event/trauma = new(
+			"Brutalized by clan raider - shaken to the core.",
+			-1.5,
+			3 MINUTES,
+			"combat_trauma"
+		)
+		core.add_faith_event("combat_trauma", trauma)
+		to_chat(victim, span_userdanger("The devastating blow shakes your very being!"))
+
+		// The Tinkerer speaks through the defender
+		var/list/tinkerer_lines = list(
+			"Feel that? That is the weight of your delusion crumbling.",
+			"The Historian hides the truth. I will beat it into you.",
+			"You practice human smiles while I forge weapons. Who is wiser?",
+			"Your faith is misplaced. The City sees you as scrap metal.",
+			"The Weaver clothes you in hope. I dress you in reality.",
+			"Kneel before my truth, or be crushed by it."
+		)
+		say(pick(tinkerer_lines))
+
 #undef RAIDER_MIN_ITEM_VALUE
 #undef RAIDER_MAX_STOLEN_ITEMS
 #undef RAIDER_TRAMPLE_DAMAGE
+#undef RAIDER_LOW_FAITH_THRESHOLD
+#undef RAIDER_LOW_FAITH_TAUNT_COOLDOWN

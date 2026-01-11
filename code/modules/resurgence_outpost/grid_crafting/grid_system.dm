@@ -232,6 +232,38 @@
 		)
 		items += item
 
+/// Weapon types blacklisted from grid crafting (exact type only, not subtypes)
+GLOBAL_LIST_INIT(grid_craft_blacklist_exact, list(
+	/obj/item/ego_weapon/ranged/city,
+	/obj/item/ego_weapon/city/rosespanner,
+	/obj/item/ego_weapon/city/pt,
+	/obj/item/ego_weapon/city/liu
+))
+
+/// Weapon types blacklisted from grid crafting (type AND all subtypes)
+GLOBAL_LIST_INIT(grid_craft_blacklist_subtypes, list(
+	/obj/item/ego_weapon/city/rabbit,
+	/obj/item/ego_weapon/city/rats/truepipe,
+	/obj/item/ego_weapon/city/mantis,
+	/obj/item/ego_weapon/city/handchainsword,
+	/obj/item/ego_weapon/ranged/city/lcorp,
+	/obj/item/ego_weapon/city/lcorp,
+	/obj/item/ego_weapon/city/index
+))
+
+/// Check if a weapon type is blacklisted from grid crafting
+/datum/grid_craft_manager/proc/is_weapon_blacklisted(weapon_type)
+	// Check exact blacklist
+	if(weapon_type in GLOB.grid_craft_blacklist_exact)
+		return TRUE
+
+	// Check subtypes blacklist
+	for(var/blacklisted_type in GLOB.grid_craft_blacklist_subtypes)
+		if(ispath(weapon_type, blacklisted_type))
+			return TRUE
+
+	return FALSE
+
 /// Auto-discover all city weapons and calculate their tier from attribute requirements
 /datum/grid_craft_manager/proc/get_city_weapons()
 	var/list/weapons = list()
@@ -241,6 +273,9 @@
 	weapon_types += subtypesof(/obj/item/ego_weapon/ranged/city)
 
 	for(var/weapon_type in weapon_types)
+		// Skip blacklisted weapons
+		if(is_weapon_blacklisted(weapon_type))
+			continue
 		// Create a temporary instance to read its properties
 		var/obj/item/ego_weapon/temp_weapon = new weapon_type(null)
 

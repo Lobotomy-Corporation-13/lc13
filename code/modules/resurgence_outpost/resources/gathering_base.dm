@@ -5,17 +5,7 @@
  * Used by trees, ore deposits, and other harvestable resources.
  */
 
-/// Minimum faith required to perform gathering work
-#define MIN_FAITH_FOR_WORK 5
-
-/// Faith drained per work point during gathering
-#define FAITH_DRAIN_PER_WORK 0.1
-
-/// Work points added per 1-second gathering tick (base rate)
-#define GATHER_WORK_PER_TICK 2
-
-/// Time per gathering tick in deciseconds
-#define GATHER_TICK_TIME 2 SECONDS
+// Gathering defines are in _resurgence_defines.dm
 
 /// Check if user has enough faith to gather
 /proc/can_gather(mob/living/carbon/human/user)

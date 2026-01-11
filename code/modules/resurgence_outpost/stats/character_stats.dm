@@ -13,8 +13,7 @@
 /// Base XP required for level 1->2 (increases by 100 each level)
 #define STAT_XP_BASE 100
 
-/// Maximum stat level
-#define STAT_MAX_LEVEL 20
+// STAT_MAX_LEVEL is in _resurgence_defines.dm
 
 /**
  * Get the speed modifier for a stat level.

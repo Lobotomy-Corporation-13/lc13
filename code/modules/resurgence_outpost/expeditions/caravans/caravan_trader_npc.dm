@@ -205,14 +205,13 @@
 		to_chat(user, span_warning("[src] refuses to trade with you."))
 		return
 
-	// Greet the player on first interaction
-	if(trading_faction)
-		say(trading_faction.get_dialogue("greeting"))
-	else
-		say("Welcome, traveler!")
-
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
+		// Greet the player only on first interaction (new UI)
+		if(trading_faction)
+			say(trading_faction.get_dialogue("greeting"))
+		else
+			say("Welcome, traveler!")
 		ui = new(user, src, "FactionTrader", "[name] - Trading")
 		ui.open()
 

@@ -134,34 +134,44 @@
 
 /**
  * Calculate raid difficulty based on game state.
+ * Used for scaling non-raider-count aspects of the raid.
  */
 /datum/resurgence_raid/proc/calculate_difficulty()
 	difficulty = 1.0
 
-	// Scale with player count
-	var/player_count = 0
-	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
-		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
-		if(istype(core))
-			player_count++
-
-	difficulty += player_count * 0.2
+	// Count resurgence machine players
+	var/player_count = get_resurgence_player_count()
 
 	// Scale with time (more difficult as round progresses)
-	var/time_factor = min(world.time / (60 MINUTES), 2.0)
-	difficulty += time_factor * 0.3
+	// +0.1 difficulty per 10 minutes, up to +1.0 at 100 minutes
+	var/time_factor = min(world.time / (10 MINUTES), 10.0)
+	difficulty += time_factor * 0.1
+
+	// Scale with player count (after base 5)
+	if(player_count > 5)
+		difficulty += (player_count - 5) * 0.1
 
 	// Clamp difficulty
 	difficulty = clamp(difficulty, 0.5, 3.0)
 
 /**
  * Calculate number of raiders to spawn.
+ * Min 4 raiders, +0.35 per player after 5 people, rounded down.
+ * Also scales with round time.
  */
 /datum/resurgence_raid/proc/calculate_raider_count()
 	var/base_raiders = 4
 
-	// Scale with difficulty
-	base_raiders = round(base_raiders * difficulty)
+	// Count resurgence machine players
+	var/player_count = get_resurgence_player_count()
+
+	// Add 0.35 raiders per player after 5, rounded down
+	if(player_count > 5)
+		base_raiders += floor((player_count - 5) * 0.35)
+
+	// Scale with round time: +1 raider per 15 minutes, up to +4 at 60 minutes
+	var/time_bonus = floor(min(world.time / (15 MINUTES), 4.0))
+	base_raiders += time_bonus
 
 	// Raid type modifiers
 	switch(raid_type)
@@ -170,7 +180,18 @@
 		if(RAID_TYPE_ASSASSINATION)
 			base_raiders = max(3, round(base_raiders * 0.6))
 
-	return clamp(base_raiders, 3, 15)
+	return clamp(base_raiders, 4, 20)
+
+/**
+ * Get the count of alive resurgence machine players.
+ */
+/datum/resurgence_raid/proc/get_resurgence_player_count()
+	var/count = 0
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			count++
+	return count
 
 /**
  * Select target rooms for the raid based on type.
@@ -257,7 +278,7 @@
 		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
 		if(istype(core))
 			to_chat(H, span_userdanger("[warning_message]"))
-			SEND_SOUND(H, sound('sound/effects/alert.ogg'))
+			SEND_SOUND(H, sound('sound/effects/ordeals/azure_end.ogg'))
 
 /**
  * Get the warning message for this raid.
@@ -527,6 +548,9 @@
 			qdel(M)
 
 	raiders.Cut()
+
+	// Clear the global crate looting list for the next raid
+	GLOB.raid_looted_crates.Cut()
 
 	// Notify players
 	var/result_message = victory ? "The raid has been repelled!" : "The raiders have achieved their objective!"

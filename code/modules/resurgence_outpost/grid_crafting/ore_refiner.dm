@@ -314,6 +314,9 @@
 
 	return preview
 
+/// Faith cost to refine a core
+#define REFINER_FAITH_COST 0.25
+
 /// Start the refining process
 /obj/structure/ore_refiner/proc/start_refining(mob/user)
 	if(processing)
@@ -324,6 +327,16 @@
 	if(total_ore <= 0)
 		to_chat(user, span_warning("Load some ore first!"))
 		return FALSE
+
+	// Check faith cost
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			if(core.faith < REFINER_FAITH_COST)
+				to_chat(user, span_warning("You lack the faith to operate the refiner! (Need [REFINER_FAITH_COST] faith)"))
+				return FALSE
+			core.adjust_faith(-REFINER_FAITH_COST)
 
 	processing = TRUE
 	to_chat(user, span_notice("The refiner begins processing..."))

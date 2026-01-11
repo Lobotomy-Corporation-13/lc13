@@ -30,7 +30,8 @@
 	if(active)
 		return
 	active = TRUE
-	schedule_spawn_check()
+	// Do an immediate spawn check so caravans appear right away
+	do_spawn_check()
 	log_game("Caravan manager started")
 
 /**

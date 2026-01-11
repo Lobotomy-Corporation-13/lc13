@@ -1,48 +1,16 @@
 // World Map System for Resurgence Outpost
 // Provides a grid-based world map with terrain, factions, and expedition planning
 
-// ============================================
-// TERRAIN TYPE DEFINES
-// ============================================
-
-/// Plains - Default terrain, easy to traverse
-#define TERRAIN_PLAINS "plains"
-/// Forest - Moderate difficulty, more events
-#define TERRAIN_FOREST "forest"
-/// Mountain - Hard to traverse, fewer events
-#define TERRAIN_MOUNTAIN "mountain"
-/// Desert - Moderate difficulty, standard events
-#define TERRAIN_DESERT "desert"
-/// Ruins - Easy to traverse, many events (scavenging)
-#define TERRAIN_RUINS "ruins"
-/// Snow - Cold terrain, moderate difficulty
-#define TERRAIN_SNOW "snow"
-/// Outpost - Player's home base
-#define TERRAIN_OUTPOST "outpost"
-/// Faction - Trading faction location
-#define TERRAIN_FACTION "faction"
-
-// ============================================
-// MAP CONFIGURATION
-// ============================================
-
-/// World map width in tiles
-#define WORLD_MAP_WIDTH 15
-/// World map height in tiles
-#define WORLD_MAP_HEIGHT 15
-/// Center X coordinate (outpost location)
-#define WORLD_MAP_CENTER_X 8
-/// Center Y coordinate (outpost location)
-#define WORLD_MAP_CENTER_Y 8
+// Terrain and map configuration defines are in _resurgence_defines.dm
 
 // ============================================
 // FACTION PLACEMENT CONSTRAINTS
 // ============================================
 
 /// Minimum distance from outpost for faction placement
-#define FACTION_MIN_DIST_FROM_OUTPOST 3
+#define FACTION_MIN_DIST_FROM_OUTPOST 5
 /// Maximum distance from outpost for faction placement
-#define FACTION_MAX_DIST_FROM_OUTPOST 6
+#define FACTION_MAX_DIST_FROM_OUTPOST 12
 /// Minimum distance between factions
 #define FACTION_MIN_DIST_BETWEEN 4
 
@@ -52,8 +20,7 @@
 
 /// Initial discovery radius around outpost
 #define INITIAL_DISCOVERY_RADIUS 2
-/// Discovery radius when visiting a tile
-#define VISIT_DISCOVERY_RADIUS 1
+// VISIT_DISCOVERY_RADIUS is in _resurgence_defines.dm
 
 // ============================================
 // TERRAIN PROPERTIES

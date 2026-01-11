@@ -20,6 +20,8 @@
 	var/isSwitchingStates = FALSE //don't try to change stats if we're already opening
 
 	var/close_delay = -1 //-1 if does not auto close.
+	var/jammed = FALSE //if TRUE, door cannot close
+	var/original_close_delay = -1 //stored close_delay when jammed
 	var/openSound = 'sound/effects/stonedoor_openclose.ogg'
 	var/closeSound = 'sound/effects/stonedoor_openclose.ogg'
 
@@ -109,6 +111,9 @@
 /obj/structure/mineral_door/proc/Close()
 	if(isSwitchingStates || !door_opened)
 		return
+	if(jammed)
+		visible_message(span_warning("[src] won't budge - something is jamming it open!"))
+		return
 	var/turf/T = get_turf(src)
 	for(var/mob/living/L in T)
 		return
@@ -123,6 +128,43 @@
 	// air_update_turf(TRUE, TRUE)
 	update_icon()
 	isSwitchingStates = FALSE
+
+/**
+ * Jam the door open, preventing it from closing.
+ *
+ * Arguments:
+ * * duration - How long to keep the door jammed (in deciseconds). If 0, stays jammed until unjam() is called.
+ */
+/obj/structure/mineral_door/proc/jam(duration = 0)
+	if(jammed)
+		return // Already jammed
+
+	// Store original close delay
+	original_close_delay = close_delay
+	close_delay = -1
+	jammed = TRUE
+
+	// Open the door if it's closed
+	if(!door_opened && !isSwitchingStates)
+		Open()
+
+	// Schedule unjam if duration specified
+	if(duration > 0)
+		addtimer(CALLBACK(src, PROC_REF(unjam)), duration)
+
+/**
+ * Unjam the door, restoring normal close behavior.
+ */
+/obj/structure/mineral_door/proc/unjam()
+	if(!jammed)
+		return
+
+	jammed = FALSE
+	close_delay = original_close_delay
+
+	// If door should auto-close and is open, schedule close
+	if(close_delay != -1 && door_opened)
+		addtimer(CALLBACK(src, PROC_REF(Close)), close_delay)
 
 /obj/structure/mineral_door/update_icon_state()
 	icon_state = "[initial(icon_state)][door_opened ? "open":""]"

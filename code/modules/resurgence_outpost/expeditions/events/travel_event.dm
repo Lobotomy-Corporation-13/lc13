@@ -1,25 +1,10 @@
 // Travel Event System
 // Handles random encounters during expedition travel
 
-// ============================================
-// EVENT CATEGORIES
-// ============================================
-
-#define EVENT_CATEGORY_SCAVENGE "scavenge"
-#define EVENT_CATEGORY_HAZARD "hazard"
+// Most event defines are in _resurgence_defines.dm
+// Additional defines used only by travel events:
 #define EVENT_CATEGORY_COMBAT "combat"
 #define EVENT_CATEGORY_SOCIAL "social"
-
-// ============================================
-// SKILL TYPES FOR CHECKS
-// ============================================
-
-#define EVENT_SKILL_MINING "mining"
-#define EVENT_SKILL_COOKING "cooking"
-#define EVENT_SKILL_CRAFTING "crafting"
-#define EVENT_SKILL_HARVESTING "harvesting"
-#define EVENT_SKILL_ANALYSIS "analysis"
-#define EVENT_SKILL_SOCIAL "social"
 #define EVENT_SKILL_NONE "none"
 
 // ============================================
