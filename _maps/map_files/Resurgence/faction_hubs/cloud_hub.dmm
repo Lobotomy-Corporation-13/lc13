@@ -108,7 +108,7 @@
 	dir = 1
 	},
 /obj/item/head_trophy/flesh_head{
-	step_y = -29;
+	pixel_y = -29;
 	anchored = 1
 	},
 /obj/structure/displaycase/forsale,
@@ -868,7 +868,7 @@
 	dir = 1
 	},
 /obj/item/head_trophy/flesh_head{
-	step_y = -29;
+	pixel_y = -29;
 	anchored = 1
 	},
 /obj/structure/displaycase/forsale,
