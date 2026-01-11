@@ -106,15 +106,13 @@ export const ResurgenceWorldMap = (props, context) => {
                         : 'No Selection'}
                     </Box>
                   }
-                  buttons={
-                    selected_x > 0 && (
-                      <Button
-                        icon="times"
-                        tooltip="Clear Selection"
-                        onClick={() => act('clear_selection')}
-                      />
-                    )
-                  }>
+                  buttons={selected_x > 0 && (
+                    <Button
+                      icon="times"
+                      tooltip="Clear Selection"
+                      onClick={() => act('clear_selection')}
+                    />
+                  )}>
                   {selected_tile ? (
                     <TileInfo tile={selected_tile} />
                   ) : (
@@ -218,7 +216,7 @@ export const ResurgenceWorldMap = (props, context) => {
   );
 };
 
-const WorldMapGrid = (props) => {
+const WorldMapGrid = props => {
   const {
     width,
     height,
