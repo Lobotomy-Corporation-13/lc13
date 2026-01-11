@@ -2,6 +2,7 @@
 /datum/ego_datum/weapon/correctional
 	item_path = /obj/item/ego_weapon/ranged/correctional
 	cost = 50
+	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /datum/ego_datum/armor/correctional
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/correctional
@@ -17,6 +18,7 @@
 	item_category = "Weapon (Lance)"
 	item_path = /obj/item/ego_weapon/lance/tattered_kingdom
 	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/hornet
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/hornet
@@ -26,73 +28,88 @@
 /datum/ego_datum/weapon/lamp
 	item_path = /obj/item/ego_weapon/lamp
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/lamp
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/lamp
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Knight of despair - Sword sharpened with tears
 /datum/ego_datum/weapon/despair
 	item_path = /obj/item/ego_weapon/despair
 	cost = 50
+	ego_tags = list(EGO_TAG_COMBO)
 
 /datum/ego_datum/armor/despair
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/despair
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Queen of hatred - In the name of love and hate
 /datum/ego_datum/weapon/hatred
 	item_path = /obj/item/ego_weapon/ranged/hatred
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/hatred
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/hatred
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Silent Girl - Remorse
 /datum/ego_datum/weapon/remorse
 	item_path = /obj/item/ego_weapon/remorse
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 // Der Freischutz - Magic Bullet & Magic Pistol
 /datum/ego_datum/weapon/magicbullet
 	item_category = "Weapon (Rifle)"
 	item_path = /obj/item/ego_weapon/ranged/magicbullet
 	cost = 50
+	ego_tags = list(EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/weapon/magicpistol
 	item_category = "Weapon (Hand Cannon)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/magic_pistol
 	cost = 50
+	ego_tags = list(EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
-// Blue Smocked Shepard - Oppression
+// Blue Smocked Shepherd - Oppression
 /datum/ego_datum/weapon/oppression
 	item_path = /obj/item/ego_weapon/oppression
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 /datum/ego_datum/armor/oppression
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/oppression
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_REALIZABLE)
 
 // Reddened Buddy - Totalitarianism
 /datum/ego_datum/weapon/totalitarianism
 	item_path = /obj/item/ego_weapon/totalitarianism
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 /datum/ego_datum/armor/totalitarianism
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/totalitarianism
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 // Funeral of the Dead Butterflies - Solemn Vow and Solemn Lament
 /datum/ego_datum/weapon/solemnvow
 	item_category = "Weapon (Black Pistol)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/solemnvow
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
 /datum/ego_datum/weapon/solemnlament
 	item_category = "Weapon (White Pistol)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/solemnlament
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
 // General Bee - Loyalty & Praetorian
 /datum/ego_datum/weapon/loyalty
@@ -113,11 +130,13 @@
 /datum/ego_datum/armor/goldrush
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/goldrush
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Shrimp Association Executive - Executive
 /datum/ego_datum/armor/executive
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/executive
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/executive
 	item_path = /obj/item/ego_weapon/ranged/pistol/executive
@@ -127,6 +146,7 @@
 /datum/ego_datum/armor/thirteen
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/thirteen
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/thirteen
 	item_path = /obj/item/ego_weapon/thirteen
@@ -149,6 +169,7 @@
 /datum/ego_datum/weapon/stem
 	item_path = /obj/item/ego_weapon/stem
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS, EGO_TAG_REACH)
 
 // Express Train to Hell - Good Intentions & Last Stop
 /datum/ego_datum/armor/intentions
@@ -178,19 +199,23 @@
 /datum/ego_datum/armor/assonance
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/assonance
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/assonance
 	item_path = /obj/item/ego_weapon/ranged/assonance
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 // Naked Nest - Exuviae
 /datum/ego_datum/weapon/exuviae
 	item_path = /obj/item/ego_weapon/ranged/exuviae
 	cost = 50
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/exuviae
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/exuviae
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/exuviae
 	name = "Naked Nest Cure"
@@ -207,11 +232,13 @@
 /datum/ego_datum/weapon/ebony_stem
 	item_path = /obj/item/ego_weapon/ebony_stem
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
 
 // White Lake - Torn Off Wings
 /datum/ego_datum/weapon/wings
 	item_path = /obj/item/ego_weapon/wings
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
 
 // Fire Bird - Feather of Honor
 /datum/ego_datum/armor/feather
@@ -232,6 +259,7 @@
 	item_category = "Weapon (Axe)"
 	item_path = /obj/item/ego_weapon/warring
 	cost = 50
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
 
 // Clown Smiling at Me - Dark Carnival
 /datum/ego_datum/armor/darkcarnival
@@ -241,15 +269,18 @@
 /datum/ego_datum/weapon/mini/mirth
 	item_path = /obj/item/ego_weapon/mini/mirth
 	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/weapon/mini/malice
 	item_path = /obj/item/ego_weapon/mini/malice
 	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 // Dream of a Black Swan - Black Swan
 /datum/ego_datum/weapon/swan
 	item_path = /obj/item/ego_weapon/shield/swan
 	cost = 50
+	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/swan
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/swan
@@ -264,11 +295,13 @@
 	item_category = "Weapon (Sword)"
 	item_path = /obj/item/ego_weapon/dipsia
 	cost = 50
+	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_BLOODFEAST)
 
 /datum/ego_datum/weapon/banquet
 	item_category = "Weapon (Cannon)"
 	item_path = /obj/item/ego_weapon/ranged/banquet
 	cost = 50
+	ego_tags = list(EGO_TAG_BLOODFEAST, EGO_TAG_SUMMONER)
 
 // Sphinx - Pharaoh
 /datum/ego_datum/armor/pharaoh
@@ -278,11 +311,13 @@
 /datum/ego_datum/weapon/pharaoh
 	item_path = /obj/item/ego_weapon/shield/pharaoh
 	cost = 50
+	ego_tags = list(EGO_TAG_GUARD)
 
 // Il Pianto Della Luna - Moonlight
 /datum/ego_datum/weapon/moonlight
 	item_path = /obj/item/ego_weapon/moonlight
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/moonlight
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/moonlight
@@ -292,6 +327,7 @@
 /datum/ego_datum/weapon/spore
 	item_path = /obj/item/ego_weapon/spore
 	cost = 50
+	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_REACH)
 
 /datum/ego_datum/armor/spore
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/spore
@@ -301,23 +337,28 @@
 /datum/ego_datum/weapon/blind_rage
 	item_path = /obj/item/ego_weapon/blind_rage
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS, EGO_TAG_DOT, EGO_TAG_LOCKED_POTENTIAL)
 
 /datum/ego_datum/armor/blind_rage
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/blind_rage
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/blind_gun
 	item_path = /obj/item/ego_weapon/ranged/blind_rage
 	cost = 50 // Unused, available from the well.
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_MULTIHIT, EGO_TAG_HAZARDOUS)
 
 // Flesh Idol - Bleeding Heart
 /datum/ego_datum/armor/heart
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/heart
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/heart
 	item_path = /obj/item/ego_weapon/mini/heart
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_HAZARDOUS)
 
 // Dimensional Refraction - Diffraction
 /datum/ego_datum/armor/diffraction
@@ -345,30 +386,36 @@
 /datum/ego_datum/weapon/amrita
 	item_path = /obj/item/ego_weapon/amrita
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK, EGO_TAG_REACH)
 
 // Yin - Discord
 /datum/ego_datum/armor/discord
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/discord
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/discord
 	item_path = /obj/item/ego_weapon/wield/discord
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_MULTIHIT)
 
 // Little Red Riding Hood Mercenary - Crimson Scar & Crimson Claw
 /datum/ego_datum/armor/crimson
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/crimson
 	cost = 50
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/crimson
 	item_category = "Weapon (Sword)"
 	item_path = /obj/item/ego_weapon/mini/crimson
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_PIERCING, EGO_TAG_COMBO, EGO_TAG_LOCKED_POTENTIAL)
 
 /datum/ego_datum/weapon/crimson/gun
 	item_category = "Weapon (Hand Cannon)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/crimson
 	cost = 50
+	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_LOCKED_POTENTIAL)
 
 // My Sweet Orange Tree - Innocence
 /datum/ego_datum/armor/innocence
@@ -379,6 +426,7 @@
 	item_category = "Weapon (Shield)"
 	item_path = /obj/item/ego_weapon/shield/innocence
 	cost = 50
+	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/weapon/innocence/gun
 	item_category = "Weapon (Pistol)"
@@ -402,6 +450,7 @@
 /datum/ego_datum/weapon/hypocrisy
 	item_path = /obj/item/ego_weapon/ranged/hypocrisy
 	cost = 50
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE)
 
 // Pygmalion - My own Bride
 /datum/ego_datum/weapon/my_own_bride
@@ -420,6 +469,7 @@
 /datum/ego_datum/weapon/animalism
 	item_path = /obj/item/ego_weapon/animalism //I didn't know how this was forgotten.
 	cost = 50
+	ego_tags = list(EGO_TAG_MULTIHIT)
 
 // Little Mermaid - Psychic Dagger
 /datum/ego_datum/armor/psychic
@@ -429,11 +479,13 @@
 /datum/ego_datum/weapon/psychic
 	item_path = /obj/item/ego_weapon/psychic
 	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 // Missed Reaper - Grasp
 /datum/ego_datum/weapon/grasp
 	item_path = /obj/item/ego_weapon/grasp
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_MOBILITY)
 
 // Big and Will be Bad Wolf - Cobalt Scar
 /datum/ego_datum/armor/cobalt
@@ -443,6 +495,7 @@
 /datum/ego_datum/weapon/cobalt
 	item_path = /obj/item/ego_weapon/cobalt
 	cost = 50
+	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_HAZARDOUS)
 
 // Poor Screenwriter's Note - Scenario
 /datum/ego_datum/armor/scene
@@ -452,6 +505,7 @@
 /datum/ego_datum/weapon/scene
 	item_path = /obj/item/ego_weapon/scene
 	cost = 50
+	ego_tags = list(EGO_TAG_SUSTAIN)
 
 // Sign of Roses - Garden Of Thorns
 /datum/ego_datum/armor/rosa
@@ -461,6 +515,7 @@
 /datum/ego_datum/weapon/rosa
 	item_path = /obj/item/ego_weapon/rosa
 	cost = 50
+	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_HAZARDOUS)
 
 // Dream-Devouring Siltcurrent - Blind Obsession/Abyssal-Route
 /datum/ego_datum/armor/blind_obsession
@@ -470,15 +525,18 @@
 /datum/ego_datum/weapon/blind_obsession
 	item_path = /obj/item/ego_weapon/blind_obsession
 	cost = 50
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/weapon/abyssal_route
 	item_path = /obj/item/ego_weapon/abyssal_route
 	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_COMBO, EGO_TAG_AOE_RADIAL)
 
 // Sandolph - Holiday
 /datum/ego_datum/weapon/holiday
 	item_path = /obj/item/ego_weapon/holiday
 	cost = 50
+	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/holiday
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/holiday
@@ -492,11 +550,13 @@
 /datum/ego_datum/weapon/sunyata
 	item_path = /obj/item/ego_weapon/sunyata
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 // Ambling Pearl - Effervescent Corrosion
 /datum/ego_datum/weapon/effervescent
 	item_path = /obj/item/ego_weapon/effervescent
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_DOT, EGO_TAG_REACH)
 
 /datum/ego_datum/armor/effervescent
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/effervescent
@@ -509,10 +569,10 @@
 	cost = 50
 
 // Burrowing Heaven - Heaven
-// This Abnormality does not exist. At least its EGO does.
 /datum/ego_datum/weapon/heaven
 	item_path = /obj/item/ego_weapon/heaven
 	cost = 50
+	ego_tags = list(EGO_TAG_REACH, EGO_TAG_THROWING)
 
 /datum/ego_datum/armor/heaven
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/heaven
@@ -523,16 +583,19 @@
 	item_category = "Weapon (Rifle)"
 	item_path = /obj/item/ego_weapon/ranged/fellbullet
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/weapon/fellscatter
 	item_category = "Weapon (Shotgun)"
 	item_path = /obj/item/ego_weapon/ranged/fellscatter
 	cost = 50
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_MULTIHIT, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 // Spiral of Contempt - Contempt, Awe
 /datum/ego_datum/weapon/contempt
 	item_path = /obj/item/ego_weapon/contempt
 	cost = 50
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_HAZARDOUS, EGO_TAG_REACH)
 
 // Unknown Little Prince Aberration - Tiara
 /datum/ego_datum/armor/tiara

@@ -21,29 +21,35 @@
 /datum/ego_datum/armor/beak
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/beak
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Scorched girl - Fourth match flame
 /datum/ego_datum/weapon/match
 	item_path = /obj/item/ego_weapon/ranged/match
 	cost = 25
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/match
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/match
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Fragment of the universe - Fragments of something
 /datum/ego_datum/weapon/fragment
 	item_path = /obj/item/ego_weapon/fragment
 	cost = 20
+	ego_tags = list(EGO_TAG_REACH)
 
 /datum/ego_datum/armor/fragment
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/fragment
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Beauty and the Beast - Horn
 /datum/ego_datum/weapon/horn
 	item_path = /obj/item/ego_weapon/horn
 	cost = 20
+	ego_tags = list(EGO_TAG_THROWING)
 
 /datum/ego_datum/armor/horn
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/horn
@@ -53,6 +59,7 @@
 /datum/ego_datum/weapon/lutemia
 	item_path = /obj/item/ego_weapon/shield/lutemia
 	cost = 20
+	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/lutemia
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/lutemia
@@ -62,20 +69,24 @@
 /datum/ego_datum/weapon/eyes
 	item_path = /obj/item/ego_weapon/eyes
 	cost = 20
+	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/eyes
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/eyes
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Crumbling Armor - Life for a Daredevil
 /datum/ego_datum/armor/daredevil
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/daredevil
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // 1.76 MHz - Noise
 /datum/ego_datum/weapon/noise
 	item_path = /obj/item/ego_weapon/ranged/noise
 	cost = 20
+	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /datum/ego_datum/armor/noise
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/noise
@@ -85,10 +96,12 @@
 /datum/ego_datum/weapon/wrist
 	item_path = /obj/item/ego_weapon/mini/wrist
 	cost = 20
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/wrist
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/wrist
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Old Lady - Solitude
 /datum/ego_datum/weapon/solitude
@@ -130,15 +143,18 @@
 /datum/ego_datum/weapon/blossom
 	item_path = /obj/item/ego_weapon/mini/blossom
 	cost = 20
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/blossom
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/blossoms
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Gone with a Simple Smile - Hat Trick
 /datum/ego_datum/weapon/trick
 	item_path = /obj/item/ego_weapon/mini/trick
 	cost = 20
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/trick
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/trick
@@ -149,6 +165,7 @@
 	item_path = /obj/item/ego_weapon/sorrow
 	cost = 20
 	testrange_blacklisted = TRUE
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/sorrow
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/sorrow
@@ -195,6 +212,7 @@
 /datum/ego_datum/weapon/hearth
 	item_path = /obj/item/ego_weapon/hearth
 	cost = 20
+	ego_tags = list(EGO_TAG_GUNBLADE)
 
 // Meat Lantern - Lantern
 /datum/ego_datum/armor/lantern
@@ -204,6 +222,7 @@
 /datum/ego_datum/weapon/lantern
 	item_path = /obj/item/ego_weapon/lantern
 	cost = 20
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 // Cinderella's pumpkin - carriage
 /datum/ego_datum/armor/curfew
@@ -213,6 +232,7 @@
 /datum/ego_datum/weapon/curfew
 	item_path = /obj/item/ego_weapon/lance/curfew
 	cost = 20
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 // Lady facing the Wall - Wedge
 /datum/ego_datum/armor/wedge
@@ -254,6 +274,7 @@
 /datum/ego_datum/weapon/wishing_cairn
 	item_path = /obj/item/ego_weapon/ranged/wishing_cairn
 	cost = 20
+	ego_tags = list(EGO_TAG_COMBO)
 
 // Fairy Gentleman - Sloshing
 /datum/ego_datum/armor/sloshing
@@ -272,6 +293,7 @@
 /datum/ego_datum/weapon/red_sheet
 	item_path = /obj/item/ego_weapon/red_sheet
 	cost = 20
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 // Brazen Bull - Capote
 /datum/ego_datum/armor/capote
@@ -281,6 +303,7 @@
 /datum/ego_datum/weapon/capote
 	item_path = /obj/item/ego_weapon/shield/capote
 	cost = 20
+	ego_tags = list(EGO_TAG_GUARD)
 
 // Fairy-Long-Legs - Four-Leaf Clover
 /datum/ego_datum/armor/fourleaf_clover
@@ -299,6 +322,7 @@
 /datum/ego_datum/weapon/patriot
 	item_path = /obj/item/ego_weapon/ranged/patriot
 	cost = 20
+	ego_tags = list(EGO_TAG_MULTIHIT)
 
 // Spirit of Falada - Zauberhorn
 /datum/ego_datum/armor/zauberhorn
@@ -308,6 +332,7 @@
 /datum/ego_datum/weapon/zauberhorn
 	item_path = /obj/item/ego_weapon/zauberhorn
 	cost = 20
+	ego_tags = list(EGO_TAG_GUNBLADE)
 
 // Skin Prophecy - Visions of Future Past
 /datum/ego_datum/armor/visions
@@ -317,6 +342,7 @@
 /datum/ego_datum/weapon/visions
 	item_path = /obj/item/ego_weapon/lance/visions
 	cost = 20
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 // All-Around Cleaner - Sanitizer
 /datum/ego_datum/armor/sanitizer
@@ -326,6 +352,7 @@
 /datum/ego_datum/weapon/sanitizer
 	item_path = /obj/item/ego_weapon/sanitizer
 	cost = 20
+	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 //Kikimora Kiki_Mora
 /datum/ego_datum/weapon/kikimora
@@ -340,11 +367,13 @@
 /datum/ego_datum/armor/faelantern
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/faelantern
 	cost = 20
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 //Dealer of the Damned - Luck of the Draw
 /datum/ego_datum/weapon/luckdraw
 	item_path = /obj/item/ego_weapon/ranged/luckdraw
 	cost = 20
+	ego_tags = list(EGO_TAG_AOE_PIERCING)
 
 /datum/ego_datum/armor/luckdraw
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/luckdraw
@@ -362,6 +391,7 @@
 /datum/ego_datum/weapon/clayman
 	item_path = /obj/item/ego_weapon/mini/clayman
 	cost = 20
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/clayman
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/clayman
@@ -372,7 +402,6 @@
 	item_path = /obj/item/ego_weapon/ranged/pistol/tough
 	cost = 20
 
-
 // Sirocco - Desert Wind
 /datum/ego_datum/armor/desert
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/desert
@@ -382,6 +411,7 @@
 /datum/ego_datum/weapon/white_gossypium
 	item_path = /obj/item/ego_weapon/white_gossypium
 	cost = 20
+	ego_tags = list(EGO_TAG_REACH)
 
 /datum/ego_datum/armor/white_gossypium
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/white_gossypium
@@ -400,6 +430,7 @@
 /datum/ego_datum/weapon/patch
 	item_path = /obj/item/ego_weapon/mini/patch
 	cost = 20
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/patch
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/patch

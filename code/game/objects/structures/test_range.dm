@@ -78,21 +78,34 @@
 		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
 		ui.open()
 
-/obj/machinery/ego_printer/ui_data(mob/user)
+/obj/machinery/ego_printer/ui_static_data(mob/user)
 	var/list/data = list()
 	data["ego_weapon_datums"] = list()
 	data["ego_armor_datums"] = list()
+	data["all_tags"] = list()
+
+	for(var/tag in EGO_TAGS_DESCRIPTION_LIST)
+		var/list/tag_object = list("tag_name" = tag, "tag_description" = EGO_TAGS_DESCRIPTION_LIST[tag], "tag_checked" = FALSE)
+		data["all_tags"] |= list(tag_object)
+
 	for(var/datum/ego_datum/ED in ego_datums)
 		if(!ED.item_path)
 			continue
+
 		var/ego_threatclass = ED.CostToThreatClass()
+		var/ego_tags = ED.ego_tags
+		if(!islist(ego_tags))
+			ego_tags = list(ego_tags)
+		if(ED.item_path in GLOB.small_ego)
+			ego_tags |= EGO_TAG_MINI
+
 		var/list/datum_data = list(
 			"path" = ED.item_path,
 			"cost" = ED.cost,
 			"information" = ED.information,
+			"tags" = ED.ego_tags,
 			"icon" = GenerateEgoPreviewIcon(ED.item_path),
-			"threatclass_name" = THREAT_TO_NAME[ego_threatclass],
-			"threatclass_color" = THREAT_TO_COLOR[ego_threatclass]
+			"threatclass" = ego_threatclass
 		)
 		if(istype(ED, /datum/ego_datum/weapon))
 			data["ego_weapon_datums"] |= list(datum_data)

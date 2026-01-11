@@ -22,6 +22,8 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	var/well_enabled = TRUE
 	/// Anything that could break the test range should have this set to TRUE (won't be spawnable there)
 	var/testrange_blacklisted = FALSE
+	/// A list of tags.
+	var/list/ego_tags = list()
 
 /datum/ego_datum/New(datum/abnormality/DA)
 	if(!name && item_path)
@@ -67,12 +69,6 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	. = ..()
 	if(!ispath(item_path, /obj/item/ego_weapon))
 		return
-
-	// Placeholder tags for testing
-	if(prob(50))
-		information["tags"] = list("offensive")
-	else
-		information["tags"] = list("defensive")
 
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
 		var/obj/item/ego_weapon/ranged/E = new item_path(src)
