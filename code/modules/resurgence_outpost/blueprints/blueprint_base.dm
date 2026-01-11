@@ -50,6 +50,8 @@
 	var/base_beauty = 5
 	/// Research node ID required to build this blueprint (null = always available)
 	var/research_required = null
+	/// Maximum number of this structure type allowed in the world (0 = unlimited)
+	var/max_in_world = 0
 
 /obj/structure/resurgence_blueprint/Initialize(mapload)
 	. = ..()
@@ -153,6 +155,16 @@
 		return CEILING(core.stat_crafting / 4, 1)
 	return 0
 
+/// Count how many of the result structure type already exist in the world
+/obj/structure/resurgence_blueprint/proc/count_existing_structures()
+	if(!result_type)
+		return 0
+	var/count = 0
+	for(var/atom/A in world)
+		if(istype(A, result_type))
+			count++
+	return count
+
 /// Calculate the beauty value for the constructed structure
 /// Production structures get negative beauty, others get positive based on crafting skill
 /obj/structure/resurgence_blueprint/proc/calculate_beauty_value(mob/user)
@@ -254,6 +266,14 @@
 	if(!result_type)
 		to_chat(user, span_warning("Error: Blueprint has no result type defined!"))
 		return
+
+	// Check world limit if set
+	if(max_in_world > 0)
+		var/existing_count = count_existing_structures()
+		if(existing_count >= max_in_world)
+			to_chat(user, span_warning("Cannot build more than [max_in_world] [result_name]\s in the world!"))
+			// Refund materials by not completing
+			return
 
 	to_chat(user, span_notice("You finish building the [result_name]!"))
 	playsound(src, complete_sound, 50, TRUE)

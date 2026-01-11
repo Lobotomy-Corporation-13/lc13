@@ -240,19 +240,19 @@ const WorldMapGrid = props => {
 
   // Build a lookup for tiles by coordinates
   const tileMap = {};
-  tiles.forEach((tile) => {
+  tiles.forEach(tile => {
     tileMap[`${tile.x},${tile.y}`] = tile;
   });
 
   // Build a set of route coordinates for highlighting
   const routeSet = new Set();
-  planned_route.forEach((point) => {
+  planned_route.forEach(point => {
     routeSet.add(`${point.x},${point.y}`);
   });
 
   // Build a lookup for caravans by position
   const caravanMap = {};
-  caravans.forEach((caravan) => {
+  caravans.forEach(caravan => {
     if (caravan.x && caravan.y) {
       const key = `${caravan.x},${caravan.y}`;
       if (!caravanMap[key]) {
@@ -263,8 +263,8 @@ const WorldMapGrid = props => {
   });
 
   // Convert grid coords to pixel coords
-  const toPixelX = (x) => MAP_PADDING + (x - 1) * TILE_SIZE;
-  const toPixelY = (y) => MAP_PADDING + (height - y) * TILE_SIZE;
+  const toPixelX = x => MAP_PADDING + (x - 1) * TILE_SIZE;
+  const toPixelY = y => MAP_PADDING + (height - y) * TILE_SIZE;
 
   return (
     <Box
@@ -491,7 +491,7 @@ const WorldMapGrid = props => {
   );
 };
 
-const TileInfo = (props) => {
+const TileInfo = props => {
   const { tile } = props;
 
   if (!tile.discovered) {
@@ -633,7 +633,7 @@ const TileInfo = (props) => {
   );
 };
 
-const RouteInfo = (props) => {
+const RouteInfo = props => {
   const {
     route,
     cost,
@@ -705,7 +705,7 @@ const RouteInfo = (props) => {
   );
 };
 
-const PortableStatus = (props) => {
+const PortableStatus = props => {
   const { expeditionState, currentX, currentY, act } = props;
 
   const stateLabels = {
@@ -770,7 +770,7 @@ const PortableStatus = (props) => {
   );
 };
 
-const ExpeditionPanel = (props) => {
+const ExpeditionPanel = props => {
   const { expedition, userInExpedition, userIsLeader, act } = props;
 
   if (!expedition) {
@@ -868,11 +868,9 @@ const ExpeditionPanel = (props) => {
                 content={userIsLeader
                   ? 'Cancel Expedition'
                   : 'Leave Expedition'}
-                onClick={() =>
-                  act(userIsLeader
-                    ? 'cancel_expedition'
-                    : 'leave_expedition')
-                }
+                onClick={() => act(userIsLeader
+                  ? 'cancel_expedition'
+                  : 'leave_expedition')}
               />
             </Stack.Item>
           </Stack>
@@ -882,7 +880,7 @@ const ExpeditionPanel = (props) => {
   );
 };
 
-const CaravanList = (props) => {
+const CaravanList = props => {
   const { caravans } = props;
 
   if (!caravans || caravans.length === 0) {
@@ -895,7 +893,7 @@ const CaravanList = (props) => {
 
   return (
     <Stack vertical>
-      {caravans.map((caravan) => {
+      {caravans.map(caravan => {
         const isHostile = caravan.is_patrol
           || caravan.faction_id === 'insurgence_clan';
         const stateLabel = getCaravanStateLabel(caravan.state);
@@ -940,7 +938,7 @@ const CaravanList = (props) => {
   );
 };
 
-const getCaravanStateLabel = (state) => {
+const getCaravanStateLabel = state => {
   const labels = {
     traveling: 'Traveling',
     stopped: 'Stopped',
@@ -1010,7 +1008,7 @@ const TerrainLegend = () => {
   );
 };
 
-const getFactionColor = (factionId) => {
+const getFactionColor = factionId => {
   const colors = {
     resurgence_clan: '#66aaff',
     jiajia_ren: '#ffaa44',
@@ -1021,7 +1019,7 @@ const getFactionColor = (factionId) => {
   return colors[factionId] || '#cc9933';
 };
 
-const getFactionLetter = (factionId) => {
+const getFactionLetter = factionId => {
   const letters = {
     resurgence_clan: 'R',
     jiajia_ren: 'J',
@@ -1032,7 +1030,7 @@ const getFactionLetter = (factionId) => {
   return letters[factionId] || '?';
 };
 
-const getFactionName = (factionId) => {
+const getFactionName = factionId => {
   const names = {
     resurgence_clan: 'Resurgence Clan Village',
     jiajia_ren: 'Jiajia-ren Village',

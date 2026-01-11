@@ -1110,7 +1110,6 @@
 /obj/structure/resurgence_blueprint/ore_refiner/init_materials()
 	required_materials = list(
 		/obj/item/stack/sheet/metal = 10,
-		/obj/item/stack/sheet/plasteel = 5,
 		/obj/item/stack/sheet/mineral/coal = 20
 	)
 
@@ -1124,8 +1123,26 @@
 
 /obj/structure/resurgence_blueprint/grid_crafting_station/init_materials()
 	required_materials = list(
-		/obj/item/stack/sheet/plasteel = 15,
+		/obj/item/stack/sheet/metal = 15,
 		/obj/item/stack/sheet/mineral/silver = 10,
 		/obj/item/stack/sheet/mineral/gold = 5,
+		/obj/item/stack/sheet/glass = 10
+	)
+
+// ===========================================
+// EXPEDITION BLUEPRINTS
+// ===========================================
+
+/obj/structure/resurgence_blueprint/world_map_console
+	name = "expedition planning console blueprint"
+	result_name = "expedition planning console"
+	icon = 'icons/obj/computer.dmi'
+	icon_state = "computer"
+	result_type = /obj/structure/world_map_console
+	max_in_world = 1  // Only one expedition console allowed
+
+/obj/structure/resurgence_blueprint/world_map_console/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 15,
 		/obj/item/stack/sheet/glass = 10
 	)
