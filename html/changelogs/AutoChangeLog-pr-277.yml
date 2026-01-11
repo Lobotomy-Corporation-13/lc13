@@ -1,0 +1,4 @@
+author: "Kitsunemitsu"
+delete-after: True
+changes:
+  - rscadd: "Added button to the main menu to join the second server"
