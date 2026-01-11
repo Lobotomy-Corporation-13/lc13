@@ -151,7 +151,6 @@
 /datum/ego_datum/weapon/isolation
 	item_path = /obj/item/ego_weapon/shield/isolation
 	cost = 35
-	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/isolation
 	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/isolation

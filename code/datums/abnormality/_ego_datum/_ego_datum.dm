@@ -52,11 +52,7 @@ GLOBAL_LIST_EMPTY(ego_datums)
 			return HE_LEVEL
 		if(50 to 99)
 			return WAW_LEVEL
-		if(100 to 250) // Includes Super ALEPH
-			return ALEPH_LEVEL
-		if(999) // Default value
-			return 0
-		if(1000) // Iron Maiden (WCCA)
+		if(100 to INFINITY)
 			return ALEPH_LEVEL
 		else
 			return 0
@@ -70,13 +66,26 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	if(!ispath(item_path, /obj/item/ego_weapon))
 		return
 
+	if(item_path in GLOB.small_ego)
+		ego_tags |= EGO_TAG_MINI
+
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
 		var/obj/item/ego_weapon/ranged/E = new item_path(src)
-		information["threat_class"] = CostToThreatClass()
+
+		// Tags
+		ego_tags |= EGO_TAG_RANGED
+		if(E.reach > 1)
+			ego_tags |= EGO_TAG_REACH
+		if(E.knockback > 0)
+			ego_tags |= EGO_TAG_KNOCKBACK
+
+		// Filling out Information
 		information["damtype_melee"] = E.damtype
 		information["force_melee"] = E.force
 		information["damtype_ranged"] = E.last_projectile_type
 		information["force_ranged"] = E.last_projectile_damage
+		information["magazine_size"] = E.shotsleft
+
 		var/bullet_damage_type = E.last_projectile_type
 		var/bullet_damage = E.last_projectile_damage
 		if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(bullet_damage_type))
@@ -104,7 +113,18 @@ GLOBAL_LIST_EMPTY(ego_datums)
 		return
 
 	var/obj/item/ego_weapon/E = new item_path(src)
-	information["threat_class"] = CostToThreatClass()
+
+	// Tags
+	if(E.reach > 1)
+		ego_tags |= EGO_TAG_REACH
+	if(E.knockback > 0)
+		ego_tags |= EGO_TAG_KNOCKBACK
+	if(istype(E, /obj/item/ego_weapon/shield))
+		ego_tags |= EGO_TAG_GUARD
+	else if(istype(E, /obj/item/ego_weapon/lance))
+		ego_tags |= EGO_TAG_MOBILITY
+
+	// Filling out Information
 	information["damtype_melee"] = E.damtype
 	information["force_melee"] = E.force
 	var/damage_type = E.damtype

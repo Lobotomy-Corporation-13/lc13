@@ -8,7 +8,7 @@
 	var/static/list/ego_datums = list()
 	var/static/list/ego_preview_icons_cache = list()
 	/// This var limits how much EGO each ckey can print before having to get rid of some.
-	var/ego_per_person_limit = 6
+	var/ego_per_person_limit = 10
 	var/list/printed_ego = list()
 	var/ego_datums_initialized = FALSE
 
@@ -96,8 +96,6 @@
 		var/ego_tags = ED.ego_tags
 		if(!islist(ego_tags))
 			ego_tags = list(ego_tags)
-		if(ED.item_path in GLOB.small_ego)
-			ego_tags |= EGO_TAG_MINI
 
 		var/list/datum_data = list(
 			"path" = ED.item_path,

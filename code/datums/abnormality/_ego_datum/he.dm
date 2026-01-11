@@ -57,13 +57,12 @@
 /datum/ego_datum/weapon/daredevil
 	item_path = /obj/item/ego_weapon/shield/daredevil
 	cost = 35
-	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_GUARD, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
 // Rudolta - Merriment
 /datum/ego_datum/weapon/christmas
 	item_path = /obj/item/ego_weapon/christmas
 	cost = 35
-	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/christmas
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/christmas
@@ -84,7 +83,6 @@
 /datum/ego_datum/weapon/frostsplinter
 	item_path = /obj/item/ego_weapon/frostsplinter
 	cost = 35
-	ego_tags = list(EGO_TAG_REACH)
 
 /datum/ego_datum/armor/frostsplinter
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/frostsplinter
@@ -118,7 +116,6 @@
 /datum/ego_datum/weapon/bravery
 	item_path = /obj/item/ego_weapon/shield/bravery
 	cost = 35
-	ego_tags = list(EGO_TAG_GUARD)
 
 //Porccubus - Pleasure
 /datum/ego_datum/armor/pleasure
@@ -208,7 +205,6 @@
 	item_category = "Weapon (Shield)"
 	item_path = /obj/item/ego_weapon/shield/giant
 	cost = 35
-	ego_tags = list(EGO_TAG_GUARD)
 
 //Homing Instinct - The Road Home
 /datum/ego_datum/armor/homing_instinct
@@ -223,7 +219,7 @@
 /datum/ego_datum/weapon/brick_road
 	item_path = /obj/item/ego_weapon/lance/brick_road
 	cost = 35
-	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_DEBUFFER)
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/homing_instinct_old
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/brick
@@ -237,7 +233,6 @@
 /datum/ego_datum/weapon/maneater
 	item_path = /obj/item/ego_weapon/shield/maneater
 	cost = 35
-	ego_tags = list(EGO_TAG_GUARD)
 
 //Pale Horse - Revelation
 /datum/ego_datum/weapon/revelation
@@ -276,7 +271,7 @@
 /datum/ego_datum/weapon/legerdemain
 	item_path = /obj/item/ego_weapon/shield/legerdemain
 	cost = 35
-	ego_tags = list(EGO_TAG_GUARD, EGO_TAG_SUSTAIN)
+	ego_tags = list(EGO_TAG_SUSTAIN)
 
 //Lady facing the Wall - Wedge
 /datum/ego_datum/weapon/wedge
@@ -364,7 +359,7 @@
 /datum/ego_datum/weapon/replica
 	item_path = /obj/item/ego_weapon/replica
 	cost = 35
-	ego_tags = list(EGO_TAG_KNOCKBACK)
+	ego_tags = list(EGO_TAG_KNOCKBACK, EGO_TAG_GUNBLADE)
 
 //Wayward Passenger - Dimension Shredder
 /datum/ego_datum/armor/warp
@@ -381,7 +376,7 @@
 	item_category = "Weapon (Spear)"
 	item_path = /obj/item/ego_weapon/warp
 	cost = 35
-	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 //Missed Reaper - Grasp
 /datum/ego_datum/armor/grasp
@@ -425,7 +420,6 @@
 /datum/ego_datum/weapon/split
 	item_path = /obj/item/ego_weapon/lance/split
 	cost = 35
-	ego_tags = list(EGO_TAG_MOBILITY)
 
 //Basilisoup - Lifetime Stew
 /datum/ego_datum/armor/lifestew
@@ -436,7 +430,7 @@
 	item_category = "Weapon (Lance)"
 	item_path = /obj/item/ego_weapon/lance/lifestew_lance
 	cost = 35
-	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/weapon/lifestew
 	item_category = "Weapon (Mace)"
@@ -477,7 +471,6 @@
 /datum/ego_datum/weapon/coiling
 	item_path = /obj/item/ego_weapon/coiling
 	cost = 35
-	ego_tags = list(EGO_TAG_REACH)
 
 //Highway Devotee - Uturn
 /datum/ego_datum/armor/uturn

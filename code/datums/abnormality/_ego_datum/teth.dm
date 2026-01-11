@@ -38,7 +38,6 @@
 /datum/ego_datum/weapon/fragment
 	item_path = /obj/item/ego_weapon/fragment
 	cost = 20
-	ego_tags = list(EGO_TAG_REACH)
 
 /datum/ego_datum/armor/fragment
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/fragment
@@ -59,7 +58,6 @@
 /datum/ego_datum/weapon/lutemia
 	item_path = /obj/item/ego_weapon/shield/lutemia
 	cost = 20
-	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/lutemia
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/lutemia
@@ -69,7 +67,6 @@
 /datum/ego_datum/weapon/eyes
 	item_path = /obj/item/ego_weapon/eyes
 	cost = 20
-	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/eyes
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/eyes
@@ -212,7 +209,7 @@
 /datum/ego_datum/weapon/hearth
 	item_path = /obj/item/ego_weapon/hearth
 	cost = 20
-	ego_tags = list(EGO_TAG_GUNBLADE)
+	ego_tags = list(EGO_TAG_SPECIAL_RANGED)
 
 // Meat Lantern - Lantern
 /datum/ego_datum/armor/lantern
@@ -232,7 +229,6 @@
 /datum/ego_datum/weapon/curfew
 	item_path = /obj/item/ego_weapon/lance/curfew
 	cost = 20
-	ego_tags = list(EGO_TAG_MOBILITY)
 
 // Lady facing the Wall - Wedge
 /datum/ego_datum/armor/wedge
@@ -303,7 +299,6 @@
 /datum/ego_datum/weapon/capote
 	item_path = /obj/item/ego_weapon/shield/capote
 	cost = 20
-	ego_tags = list(EGO_TAG_GUARD)
 
 // Fairy-Long-Legs - Four-Leaf Clover
 /datum/ego_datum/armor/fourleaf_clover
@@ -352,7 +347,6 @@
 /datum/ego_datum/weapon/sanitizer
 	item_path = /obj/item/ego_weapon/sanitizer
 	cost = 20
-	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 //Kikimora Kiki_Mora
 /datum/ego_datum/weapon/kikimora

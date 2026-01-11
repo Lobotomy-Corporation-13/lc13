@@ -50,7 +50,6 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/buff_christmas
 	item_path = /obj/item/ego_weapon/ultimate_christmas
 	cost = 100
-	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/buff_christmas
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/ultimate_christmas
@@ -90,7 +89,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/wild_ride
 	item_path = /obj/item/ego_weapon/lance/wild_ride
 	cost = 250
-	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/wild_ride
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/wild_ride

@@ -127,7 +127,6 @@
 /datum/ego_datum/weapon/dead_dream
 	item_path = /obj/item/ego_weapon/shield/dead_dream
 	cost = 12
-	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/dead_dream
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/dead_dream

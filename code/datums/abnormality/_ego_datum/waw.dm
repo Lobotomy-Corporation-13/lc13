@@ -18,7 +18,6 @@
 	item_category = "Weapon (Lance)"
 	item_path = /obj/item/ego_weapon/lance/tattered_kingdom
 	cost = 50
-	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/hornet
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/hornet
@@ -68,13 +67,13 @@
 	item_category = "Weapon (Rifle)"
 	item_path = /obj/item/ego_weapon/ranged/magicbullet
 	cost = 50
-	ego_tags = list(EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/weapon/magicpistol
 	item_category = "Weapon (Hand Cannon)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/magic_pistol
 	cost = 50
-	ego_tags = list(EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 // Blue Smocked Shepherd - Oppression
 /datum/ego_datum/weapon/oppression
@@ -169,7 +168,7 @@
 /datum/ego_datum/weapon/stem
 	item_path = /obj/item/ego_weapon/stem
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
 
 // Express Train to Hell - Good Intentions & Last Stop
 /datum/ego_datum/armor/intentions
@@ -232,7 +231,7 @@
 /datum/ego_datum/weapon/ebony_stem
 	item_path = /obj/item/ego_weapon/ebony_stem
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_SPECIAL_RANGED, EGO_TAG_HAZARDOUS)
 
 // White Lake - Torn Off Wings
 /datum/ego_datum/weapon/wings
@@ -280,7 +279,6 @@
 /datum/ego_datum/weapon/swan
 	item_path = /obj/item/ego_weapon/shield/swan
 	cost = 50
-	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/armor/swan
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/swan
@@ -327,7 +325,7 @@
 /datum/ego_datum/weapon/spore
 	item_path = /obj/item/ego_weapon/spore
 	cost = 50
-	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/spore
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/spore
@@ -386,7 +384,7 @@
 /datum/ego_datum/weapon/amrita
 	item_path = /obj/item/ego_weapon/amrita
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK)
 
 // Yin - Discord
 /datum/ego_datum/armor/discord
@@ -409,7 +407,7 @@
 	item_category = "Weapon (Sword)"
 	item_path = /obj/item/ego_weapon/mini/crimson
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_PIERCING, EGO_TAG_COMBO, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_AOE_PIERCING, EGO_TAG_SPECIAL_RANGED, EGO_TAG_COMBO, EGO_TAG_LOCKED_POTENTIAL)
 
 /datum/ego_datum/weapon/crimson/gun
 	item_category = "Weapon (Hand Cannon)"
@@ -426,7 +424,6 @@
 	item_category = "Weapon (Shield)"
 	item_path = /obj/item/ego_weapon/shield/innocence
 	cost = 50
-	ego_tags = list(EGO_TAG_GUARD)
 
 /datum/ego_datum/weapon/innocence/gun
 	item_category = "Weapon (Pistol)"
@@ -536,7 +533,6 @@
 /datum/ego_datum/weapon/holiday
 	item_path = /obj/item/ego_weapon/holiday
 	cost = 50
-	ego_tags = list(EGO_TAG_KNOCKBACK)
 
 /datum/ego_datum/armor/holiday
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/holiday
@@ -556,7 +552,7 @@
 /datum/ego_datum/weapon/effervescent
 	item_path = /obj/item/ego_weapon/effervescent
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_DOT, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/effervescent
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/effervescent
@@ -572,7 +568,7 @@
 /datum/ego_datum/weapon/heaven
 	item_path = /obj/item/ego_weapon/heaven
 	cost = 50
-	ego_tags = list(EGO_TAG_REACH, EGO_TAG_THROWING)
+	ego_tags = list(EGO_TAG_THROWING)
 
 /datum/ego_datum/armor/heaven
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/heaven
@@ -595,7 +591,7 @@
 /datum/ego_datum/weapon/contempt
 	item_path = /obj/item/ego_weapon/contempt
 	cost = 50
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_HAZARDOUS, EGO_TAG_REACH)
+	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_HAZARDOUS)
 
 // Unknown Little Prince Aberration - Tiara
 /datum/ego_datum/armor/tiara

@@ -1,9 +1,7 @@
-import { map } from '../../common/collections';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Flex, LabeledList, Section, Divider, Tab, Tabs, Input, Table } from '../components';
 import { ButtonCheckbox } from '../components/Button';
 import { FlexItem } from '../components/Flex';
-import { LabeledListDivider, LabeledListItem } from '../components/LabeledList';
 import { TableCell, TableRow } from '../components/Table';
 import { Window } from '../layouts';
 
@@ -11,10 +9,18 @@ export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
   const { ego_weapon_datums, ego_armor_datums, all_tags } = data;
   const [tab, setTab] = useLocalState(context, 'tab', 1);
+  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "")
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags)
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null)
   const threatclass_colors = {1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000"}
   const threatclass_names = {1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH"}
+
+  const CheckNameSearchFilter = (datum) => {
+    if(!nameSearchText){
+      return true
+    }
+    return datum.information.name.toLowerCase().includes(nameSearchText.toLowerCase())
+  }
 
 
   const ChangeWeaponDamtypeFilter = (color) => {
@@ -95,7 +101,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
   return (
     datum_list?.map(datum => (
-     CheckWeaponDamtypeFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="weapon" />
+     CheckNameSearchFilter(datum) && CheckWeaponDamtypeFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="weapon" />
     )
     )
   )
@@ -107,7 +113,7 @@ const AllArmorDatums = (props, context) => {
 
   return (
     datum_list?.map(datum => (
-      CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="armor" />
+      CheckNameSearchFilter(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="armor" />
     )
     )
   )
@@ -209,6 +215,7 @@ const RangedWeaponEntryDescription = (props, context) => {
         <FlexItem grow={3} textAlign="center">
           Projectile Damage: {datum.information.force_ranged} {datum.information.damtype_ranged}<br/>
           Projectile Fire Rate: {datum.information.attack_speed} <br/>
+          Magazine Size: {datum.information.magazine_size === 0 ? "Unlimited" : datum.information.magazine_size} <br />
           <br/>
           Melee Damage: {datum.information.force_melee} {datum.information.damtype_melee}
         </FlexItem>
@@ -281,6 +288,9 @@ const ArmorEntryDescription = (props, context) => {
 
                   <Input
                     placeholder="Search..."
+                    autoFocus
+					          value={nameSearchText}
+                    onInput={(_, value) => setNameSearchText(value)}
                     fluid
                   />
                 </Flex.Item>

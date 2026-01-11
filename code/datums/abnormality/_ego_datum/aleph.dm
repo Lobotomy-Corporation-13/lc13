@@ -27,7 +27,7 @@
 /datum/ego_datum/weapon/faith
 	item_path = /obj/item/ego_weapon/faith
 	cost = 100
-	ego_tags = list(EGO_TAG_SUSTAIN)
+	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_GUNBLADE)
 
 /datum/ego_datum/armor/faith
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/faith
@@ -172,7 +172,7 @@
 /datum/ego_datum/weapon/spicebush/fan
 	item_path = /obj/item/ego_weapon/spicebush/fan
 	cost = 100//appears in wishing well
-	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER, EGO_TAG_AOE_RADIAL, EGO_TAG_SUPPORT)
+	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER, EGO_TAG_AOE_RADIAL, EGO_TAG_SUPPORT, EGO_TAG_SPECIAL_RANGED)
 
 // Til the Last Shot - Flesh Is Willing
 /datum/ego_datum/armor/willing
@@ -226,7 +226,7 @@
 /datum/ego_datum/weapon/gasharpoon
 	item_path = /obj/item/ego_weapon/shield/gasharpoon
 	cost = 100//appears in wishing well
-	ego_tags = list(EGO_TAG_GUARD, EGO_TAG_GUNBLADE, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_ASSIMILATION)
+	ego_tags = list(EGO_TAG_GUARD, EGO_TAG_GUNBLADE, EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_ASSIMILATION)
 
 //The Giant Atop the Beanstalk - Giant
 /datum/ego_datum/armor/giant
