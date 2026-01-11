@@ -36,6 +36,8 @@
 	var/fail_damage = 0
 	/// Damage type on failure
 	var/fail_damage_type = BRUTE
+	/// Faith lost on failure (alternative to damage for spiritual/mental effects)
+	var/fail_faith_loss = 0
 	/// Message shown on failure
 	var/fail_message = "You failed."
 	/// Whether this choice auto-succeeds (no skill check)
@@ -495,9 +497,19 @@
 				to_chat(M, span_notice("[user.name] earned [choice.pass_credits] credits for the outpost!"))
 
 	// Give item rewards
+	// pass_items can be:
+	// - Simple list of types: list(/obj/item/foo, /obj/item/bar)
+	// - Associative list with amounts for stacks: list(/obj/item/stack/sheet/metal = 5)
 	for(var/item_type in choice.pass_items)
-		var/obj/item/I = new item_type(get_turf(user))
-		to_chat(user, span_notice("You obtained: [I.name]"))
+		var/amount = choice.pass_items[item_type]
+		if(ispath(item_type, /obj/item/stack) && isnum(amount) && amount > 1)
+			// Create stack with specific amount
+			var/obj/item/stack/S = new item_type(get_turf(user), amount)
+			to_chat(user, span_notice("You obtained: [amount]x [S.name]"))
+		else
+			// Create single item (or stack with default amount)
+			var/obj/item/I = new item_type(get_turf(user))
+			to_chat(user, span_notice("You obtained: [I.name]"))
 
 	// Resolve the event for everyone
 	resolve_event()
@@ -512,6 +524,14 @@
 	if(choice.fail_damage > 0)
 		user.apply_damage_type(choice.fail_damage, choice.fail_damage_type)
 		to_chat(user, span_danger("You take [choice.fail_damage] damage!"))
+
+	// Apply faith loss (for spiritual/mental effects)
+	if(choice.fail_faith_loss > 0 && ishuman(user))
+		var/mob/living/carbon/human/H = user
+		var/obj/item/organ/resurgence_core/core = H.getorganslot(ORGAN_SLOT_HEART)
+		if(istype(core))
+			core.adjust_faith(-choice.fail_faith_loss)
+			to_chat(user, span_warning("You lose [choice.fail_faith_loss] faith!"))
 
 /**
  * Player chooses to flee

@@ -21,7 +21,7 @@
 	read.desc = "Use your knowledge of geology to identify stable ground and pick a safe path."
 	read.skill_type = EVENT_SKILL_MINING
 	read.difficulty = 6
-	read.pass_credits = 25
+	read.pass_credits = 2
 	read.pass_message = "You identify the stable ground and navigate safely through!"
 	read.fail_damage = 30
 	read.fail_damage_type = OXY
@@ -34,7 +34,7 @@
 	dash.desc = "Move fast enough that you don't have time to sink. Risky but quick."
 	dash.skill_type = EVENT_SKILL_CRAFTING
 	dash.difficulty = 7
-	dash.pass_credits = 15
+	dash.pass_credits = 1
 	dash.pass_message = "You dash across before the ground can swallow you!"
 	dash.fail_damage = 35
 	dash.fail_damage_type = OXY
@@ -69,7 +69,7 @@
 	burn.desc = "Create a controlled fire to burn away the spores. Requires knowledge of combustion."
 	burn.skill_type = EVENT_SKILL_COOKING
 	burn.difficulty = 7
-	burn.pass_credits = 30
+	burn.pass_credits = 3
 	burn.pass_message = "The fire consumes the spores, clearing a safe path!"
 	burn.fail_damage = 20
 	burn.fail_damage_type = FIRE
@@ -82,11 +82,12 @@
 	hold.desc = "Take a deep breath and sprint through the cloud as fast as possible."
 	hold.skill_type = EVENT_SKILL_MINING
 	hold.difficulty = 6
-	hold.pass_credits = 15
+	hold.pass_credits = 1
 	hold.pass_message = "You hold your breath and dash through the cloud safely!"
-	hold.fail_damage = 25
-	hold.fail_damage_type = TOX
-	hold.fail_message = "You couldn't hold your breath long enough! Toxins flood your lungs."
+	hold.fail_damage = 15
+	hold.fail_damage_type = BRUTE
+	hold.fail_faith_loss = 5
+	hold.fail_message = "You couldn't hold your breath long enough! The spores cloud your mind."
 	choices += hold
 
 	// Choice 3: Find another path (Crafting - problem solving)
@@ -95,11 +96,10 @@
 	alternate.desc = "Look for a way around or above the spore cloud."
 	alternate.skill_type = EVENT_SKILL_CRAFTING
 	alternate.difficulty = 5
-	alternate.pass_credits = 10
+	alternate.pass_credits = 1
 	alternate.pass_message = "You find a path that avoids the worst of the spores."
-	alternate.fail_damage = 10
-	alternate.fail_damage_type = TOX
-	alternate.fail_message = "The alternate route still has some spores. You inhale a small amount."
+	alternate.fail_faith_loss = 3
+	alternate.fail_message = "The alternate route still has some spores. They cloud your thoughts."
 	choices += alternate
 
 // ============================================
@@ -122,7 +122,7 @@
 	predict.desc = "Study the cliff to predict when it's safe to cross."
 	predict.skill_type = EVENT_SKILL_CRAFTING
 	predict.difficulty = 7
-	predict.pass_credits = 35
+	predict.pass_credits = 3
 	predict.pass_message = "You time your crossing perfectly between rock falls!"
 	predict.fail_damage = 35
 	predict.fail_damage_type = BRUTE
@@ -135,11 +135,11 @@
 	reinforce.desc = "Use available materials to temporarily stabilize the worst sections."
 	reinforce.skill_type = EVENT_SKILL_MINING
 	reinforce.difficulty = 8
-	reinforce.pass_credits = 40
+	reinforce.pass_credits = 4
 	reinforce.pass_message = "Your reinforcements hold long enough for safe passage!"
 	reinforce.fail_damage = 30
-	reinforce.fail_damage_type = BRUTE
-	reinforce.fail_message = "The reinforcements collapse while you're underneath!"
+	reinforce.fail_damage_type = FIRE
+	reinforce.fail_message = "The collapse triggers a gas line! Flames erupt around you!"
 	choices += reinforce
 
 	// Choice 3: Sprint through (Risky)
@@ -148,7 +148,7 @@
 	sprint.desc = "Just run as fast as you can and hope for the best."
 	sprint.skill_type = EVENT_SKILL_MINING
 	sprint.difficulty = 5
-	sprint.pass_credits = 15
+	sprint.pass_credits = 1
 	sprint.pass_message = "You sprint through just as rocks crash behind you!"
 	sprint.fail_damage = 40
 	sprint.fail_damage_type = BRUTE
@@ -175,7 +175,7 @@
 	dig.desc = "Quickly dig a trench and cover yourself until the storm passes."
 	dig.skill_type = EVENT_SKILL_MINING
 	dig.difficulty = 6
-	dig.pass_credits = 30
+	dig.pass_credits = 3
 	dig.pass_message = "You dig in just in time! The storm passes overhead harmlessly."
 	dig.fail_damage = 25
 	dig.fail_damage_type = BRUTE
@@ -188,7 +188,7 @@
 	shelter.desc = "Look for rock formations or debris that could provide shelter."
 	shelter.skill_type = EVENT_SKILL_COOKING
 	shelter.difficulty = 5
-	shelter.pass_credits = 25
+	shelter.pass_credits = 2
 	shelter.pass_message = "You find a rocky overhang that shields you from the worst!"
 	shelter.fail_damage = 15
 	shelter.fail_damage_type = BRUTE
@@ -201,11 +201,11 @@
 	run.desc = "Sprint perpendicular to the storm's path. Exhausting and risky."
 	run.skill_type = EVENT_SKILL_CRAFTING
 	run.difficulty = 8
-	run.pass_credits = 10
+	run.pass_credits = 1
 	run.pass_message = "You barely outpace the storm's edge!"
 	run.fail_damage = 30
-	run.fail_damage_type = BRUTE
-	run.fail_message = "The storm is faster than you! It engulfs you completely."
+	run.fail_damage_type = FIRE
+	run.fail_message = "The storm catches you! The searing sand burns exposed skin raw."
 	choices += run
 
 // ============================================
@@ -228,7 +228,7 @@
 	climb.desc = "Identify and climb to the nearest elevated position."
 	climb.skill_type = EVENT_SKILL_MINING
 	climb.difficulty = 7
-	climb.pass_credits = 35
+	climb.pass_credits = 3
 	climb.pass_message = "You reach high ground just as the waters rush past below!"
 	climb.fail_damage = 40
 	climb.fail_damage_type = BRUTE
@@ -241,7 +241,7 @@
 	anchor.desc = "Find something sturdy to hold onto and ride out the flood."
 	anchor.skill_type = EVENT_SKILL_CRAFTING
 	anchor.difficulty = 6
-	anchor.pass_credits = 25
+	anchor.pass_credits = 2
 	anchor.pass_message = "You cling to a sturdy tree as the waters rush past!"
 	anchor.fail_damage = 35
 	anchor.fail_damage_type = BRUTE
@@ -254,7 +254,7 @@
 	swim.desc = "Try to swim with the flood and guide yourself to safety."
 	swim.skill_type = EVENT_SKILL_COOKING
 	swim.difficulty = 8
-	swim.pass_credits = 15
+	swim.pass_credits = 1
 	swim.pass_message = "You manage to ride the current to calmer waters!"
 	swim.fail_damage = 45
 	swim.fail_damage_type = BRUTE
@@ -281,11 +281,12 @@
 	identify.desc = "Use botanical knowledge to find gaps in the poison ivy."
 	identify.skill_type = EVENT_SKILL_COOKING
 	identify.difficulty = 5
-	identify.pass_credits = 20
+	identify.pass_credits = 2
 	identify.pass_message = "You carefully navigate through the gaps in the ivy!"
-	identify.fail_damage = 10
-	identify.fail_damage_type = TOX
-	identify.fail_message = "You misidentified a plant! Rash spreads across your skin."
+	identify.fail_damage = 8
+	identify.fail_damage_type = BRUTE
+	identify.fail_faith_loss = 4
+	identify.fail_message = "You misidentified a plant! The irritation is maddening."
 	choices += identify
 
 	// Choice 2: Clear a path (Crafting - tool use)
@@ -294,11 +295,12 @@
 	clear.desc = "Use tools to cut away the ivy without touching it directly."
 	clear.skill_type = EVENT_SKILL_CRAFTING
 	clear.difficulty = 6
-	clear.pass_credits = 15
+	clear.pass_credits = 1
 	clear.pass_message = "You carefully cut a path through the ivy!"
-	clear.fail_damage = 12
-	clear.fail_damage_type = TOX
-	clear.fail_message = "Your tool slips and flings ivy oils onto your arms!"
+	clear.fail_damage = 10
+	clear.fail_damage_type = BRUTE
+	clear.fail_faith_loss = 4
+	clear.fail_message = "Your tool slips and flings ivy oils onto your arms! The itching is unbearable."
 	choices += clear
 
 	// Choice 3: Push through (Fast but painful)
@@ -306,10 +308,11 @@
 	push.name = "Just Push Through"
 	push.desc = "Cover up as best you can and force your way through."
 	push.auto_success = TRUE
-	push.pass_credits = 5
-	push.fail_damage = 15
-	push.fail_damage_type = TOX
-	push.pass_message = "You push through, but the ivy still gets to you somewhat."
+	push.pass_credits = 0
+	push.fail_damage = 12
+	push.fail_damage_type = BRUTE
+	push.fail_faith_loss = 3
+	push.pass_message = "You push through, but the ivy still irritates you somewhat."
 	// This choice always "succeeds" but still causes minor damage
 	choices += push
 
@@ -333,7 +336,7 @@
 	reinforce.desc = "Identify and reinforce the critical structural weak points."
 	reinforce.skill_type = EVENT_SKILL_CRAFTING
 	reinforce.difficulty = 7
-	reinforce.pass_credits = 40
+	reinforce.pass_credits = 4
 	reinforce.pass_message = "Your reinforcements hold! The structure stabilizes long enough."
 	reinforce.fail_damage = 30
 	reinforce.fail_damage_type = BRUTE
@@ -346,7 +349,7 @@
 	navigate.desc = "Move fast and light through the structure before it collapses."
 	navigate.skill_type = EVENT_SKILL_MINING
 	navigate.difficulty = 6
-	navigate.pass_credits = 25
+	navigate.pass_credits = 2
 	navigate.pass_message = "You slip through just as the structure groans behind you!"
 	navigate.fail_damage = 25
 	navigate.fail_damage_type = BRUTE
@@ -359,7 +362,7 @@
 	around.desc = "Take time to find a path that avoids the unstable structure entirely."
 	around.skill_type = EVENT_SKILL_COOKING
 	around.difficulty = 4
-	around.pass_credits = 10
+	around.pass_credits = 1
 	around.pass_message = "You find a safe path around the ruins."
 	around.fail_damage = 5
 	around.fail_damage_type = BRUTE
@@ -386,7 +389,7 @@
 	hydrate.desc = "Use survival knowledge to pace yourself and manage water intake."
 	hydrate.skill_type = EVENT_SKILL_COOKING
 	hydrate.difficulty = 5
-	hydrate.pass_credits = 25
+	hydrate.pass_credits = 2
 	hydrate.pass_message = "You pace yourself perfectly and weather the heat!"
 	hydrate.fail_damage = 15
 	hydrate.fail_damage_type = FIRE
@@ -399,7 +402,7 @@
 	shade.desc = "Find sheltered spots to rest in between bursts of movement."
 	shade.skill_type = EVENT_SKILL_MINING
 	shade.difficulty = 5
-	shade.pass_credits = 20
+	shade.pass_credits = 2
 	shade.pass_message = "You find enough shade to make the crossing bearable!"
 	shade.fail_damage = 12
 	shade.fail_damage_type = FIRE
@@ -412,7 +415,7 @@
 	rush.desc = "Move as fast as possible to minimize exposure time."
 	rush.skill_type = EVENT_SKILL_CRAFTING
 	rush.difficulty = 7
-	rush.pass_credits = 15
+	rush.pass_credits = 1
 	rush.pass_message = "You push through quickly before the heat can affect you!"
 	rush.fail_damage = 25
 	rush.fail_damage_type = FIRE
@@ -439,7 +442,7 @@
 	shelter.desc = "Quickly construct a snow cave or windbreak to wait out the storm."
 	shelter.skill_type = EVENT_SKILL_CRAFTING
 	shelter.difficulty = 6
-	shelter.pass_credits = 35
+	shelter.pass_credits = 3
 	shelter.pass_message = "You build an effective snow shelter and ride out the blizzard safely!"
 	shelter.fail_damage = 30
 	shelter.fail_damage_type = FIRE
@@ -452,7 +455,7 @@
 	dig.desc = "Find a deep snowbank and dig in for insulation."
 	dig.skill_type = EVENT_SKILL_MINING
 	dig.difficulty = 5
-	dig.pass_credits = 25
+	dig.pass_credits = 2
 	dig.pass_message = "You burrow into the snow and stay surprisingly warm until the storm passes!"
 	dig.fail_damage = 20
 	dig.fail_damage_type = OXY
@@ -465,7 +468,7 @@
 	push.desc = "Keep moving and try to outpace the worst of the storm."
 	push.skill_type = EVENT_SKILL_COOKING
 	push.difficulty = 8
-	push.pass_credits = 15
+	push.pass_credits = 1
 	push.pass_message = "You navigate through the whiteout and emerge on the other side!"
 	push.fail_damage = 40
 	push.fail_damage_type = FIRE
@@ -492,7 +495,7 @@
 	test.desc = "Carefully test the ice thickness and find the safest path across."
 	test.skill_type = EVENT_SKILL_MINING
 	test.difficulty = 7
-	test.pass_credits = 40
+	test.pass_credits = 4
 	test.pass_message = "You identify the solid ice and cross safely!"
 	test.fail_damage = 45
 	test.fail_damage_type = FIRE
@@ -505,7 +508,7 @@
 	crawl.desc = "Spread your weight by crawling to reduce pressure on any single point."
 	crawl.skill_type = EVENT_SKILL_CRAFTING
 	crawl.difficulty = 5
-	crawl.pass_credits = 30
+	crawl.pass_credits = 3
 	crawl.pass_message = "By distributing your weight, you make it across safely!"
 	crawl.fail_damage = 35
 	crawl.fail_damage_type = FIRE
@@ -540,7 +543,7 @@
 	silent.desc = "Cross with extreme care, making no sudden movements or sounds."
 	silent.skill_type = EVENT_SKILL_CRAFTING
 	silent.difficulty = 7
-	silent.pass_credits = 45
+	silent.pass_credits = 4
 	silent.pass_message = "You glide across like a ghost, not disturbing a single flake!"
 	silent.fail_damage = 40
 	silent.fail_damage_type = BRUTE
@@ -553,7 +556,7 @@
 	route.desc = "Identify natural features that would protect you from a slide."
 	route.skill_type = EVENT_SKILL_MINING
 	route.difficulty = 6
-	route.pass_credits = 35
+	route.pass_credits = 3
 	route.pass_message = "You find a rocky outcrop that shields you from the avalanche zone!"
 	route.fail_damage = 25
 	route.fail_damage_type = BRUTE
@@ -566,7 +569,7 @@
 	sprint.desc = "Sprint across as fast as possible before the snow can catch you."
 	sprint.skill_type = EVENT_SKILL_MINING
 	sprint.difficulty = 8
-	sprint.pass_credits = 20
+	sprint.pass_credits = 2
 	sprint.pass_message = "You dash across just as the snow begins to shift behind you!"
 	sprint.fail_damage = 50
 	sprint.fail_damage_type = OXY
@@ -593,7 +596,7 @@
 	fire.desc = "Gather whatever fuel you can find and start a warming fire."
 	fire.skill_type = EVENT_SKILL_COOKING
 	fire.difficulty = 6
-	fire.pass_credits = 30
+	fire.pass_credits = 3
 	fire.pass_message = "You coax a fire to life and warm yourself before continuing!"
 	fire.fail_damage = 15
 	fire.fail_damage_type = FIRE
@@ -606,7 +609,7 @@
 	insulate.desc = "Use available materials to create additional layers of insulation."
 	insulate.skill_type = EVENT_SKILL_CRAFTING
 	insulate.difficulty = 5
-	insulate.pass_credits = 25
+	insulate.pass_credits = 2
 	insulate.pass_message = "Your improvised insulation traps body heat effectively!"
 	insulate.fail_damage = 18
 	insulate.fail_damage_type = FIRE
@@ -619,7 +622,7 @@
 	move.desc = "Generate body heat through constant movement. Exhausting but effective."
 	move.skill_type = EVENT_SKILL_MINING
 	move.difficulty = 4
-	move.pass_credits = 15
+	move.pass_credits = 1
 	move.pass_message = "You keep your blood pumping and stay warm through exertion!"
 	move.fail_damage = 12
 	move.fail_damage_type = FIRE
@@ -646,7 +649,7 @@
 	navigate.desc = "Recall terrain features from before the whiteout and navigate by memory."
 	navigate.skill_type = EVENT_SKILL_MINING
 	navigate.difficulty = 7
-	navigate.pass_credits = 40
+	navigate.pass_credits = 4
 	navigate.pass_message = "Your mental map guides you true - you emerge on the right path!"
 	navigate.fail_damage = 20
 	navigate.fail_damage_type = BRUTE
@@ -659,7 +662,7 @@
 	compass.desc = "Use improvised methods - sun position, wind direction - to find your way."
 	compass.skill_type = EVENT_SKILL_CRAFTING
 	compass.difficulty = 6
-	compass.pass_credits = 30
+	compass.pass_credits = 3
 	compass.pass_message = "Your improvised navigation keeps you on course!"
 	compass.fail_damage = 10
 	compass.fail_damage_type = FIRE
@@ -672,7 +675,7 @@
 	wait.desc = "Find shelter and wait for conditions to improve. Safe but time-consuming."
 	wait.skill_type = EVENT_SKILL_COOKING
 	wait.difficulty = 4
-	wait.pass_credits = 10
+	wait.pass_credits = 1
 	wait.pass_message = "You hunker down and wait. Eventually the whiteout clears."
 	wait.fail_damage = 8
 	wait.fail_damage_type = FIRE

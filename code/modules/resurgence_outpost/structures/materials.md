@@ -150,6 +150,9 @@ This document lists all materials available to players for crafting recipes.
 // Resurgence-Specific Materials (IMPLEMENTED)
 /obj/item/resurgence_component/rope
 /obj/item/resurgence_component/ash_plating
+/obj/item/resurgence_component/microchip          // Basic
+/obj/item/resurgence_component/microchip/advanced // Advanced
+/obj/item/resurgence_component/microchip/super    // Super
 /obj/item/stack/resurgence_vines
 /obj/item/stack/resurgence_fertilizer
 /obj/item/grown/cotton/durathread
@@ -200,20 +203,19 @@ This document lists all materials available to players for crafting recipes.
 
 The following materials are planned but have not been coded yet.
 
-## Planned Crafted Components
-
-| Name | Planned Type Path | Notes |
-|------|-------------------|-------|
-| Nails (x10) | `/obj/item/stack/resurgence_nails` | For construction recipes |
-| Basic Microchip | `/obj/item/resurgence_component/microchip` | For electronics |
-| Advanced Microchip | `/obj/item/resurgence_component/microchip/advanced` | For advanced electronics |
-| Super Microchip | `/obj/item/resurgence_component/microchip/super` | For high-tier electronics |
-
 ## Planned Advanced Materials
 
 | Name | Planned Type Path | Notes |
 |------|-------------------|-------|
-| Reinforced Glass | `/obj/item/stack/sheet/rglass` | Glass + Metal Rod combination |
+| Reinforced Glass | `/obj/item/stack/sheet/rglass` | Glass + Metal Rod combination (exists in base game) |
+
+## Recently Implemented
+
+| Name | Type Path | Notes |
+|------|-----------|-------|
+| Basic Microchip | `/obj/item/resurgence_component/microchip` | For electronics |
+| Advanced Microchip | `/obj/item/resurgence_component/microchip/advanced` | For advanced electronics |
+| Super Microchip | `/obj/item/resurgence_component/microchip/super` | For high-tier electronics |
 
 ---
 
