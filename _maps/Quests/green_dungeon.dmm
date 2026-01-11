@@ -1168,10 +1168,6 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
-"Ja" = (
-/turf/closed/indestructible/syndicate,
-/turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
 "Jq" = (
 /obj/structure/railing{
 	dir = 8
@@ -4737,7 +4733,7 @@ xE
 tQ
 tQ
 et
-Ja
+xE
 Pn
 Pn
 Pn
