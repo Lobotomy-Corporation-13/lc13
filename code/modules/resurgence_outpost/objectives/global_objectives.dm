@@ -3,20 +3,33 @@
  *
  * Manages global objectives that all players work towards.
  * Phase 1: Building objectives (rooms, farming zones)
- * Phase 2: Export objectives (resources back to the village)
+ * Phase 2: Exploration objectives (world map, expeditions, factions)
  */
 
 /// Global list of all active objectives
 GLOBAL_LIST_EMPTY(resurgence_objectives)
 
-/// Current objective phase (1 = building, 2 = exporting)
+/// Current objective phase (1 = building, 2 = exploration)
 GLOBAL_VAR_INIT(resurgence_objective_phase, 1)
 
 /// Total exported amounts (type path -> count)
 GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 
+/// Total completed expeditions counter
+GLOBAL_VAR_INIT(resurgence_completed_expeditions, 0)
+
+/// Total faction hubs visited
+GLOBAL_LIST_EMPTY(resurgence_visited_faction_hubs)
+
+/// Total caravan encounters
+GLOBAL_VAR_INIT(resurgence_caravan_encounters, 0)
+
+/// Total caravan trades completed
+GLOBAL_VAR_INIT(resurgence_caravan_trades, 0)
+
 /// Objective categories
 #define OBJECTIVE_CAT_BUILDING "building"
+#define OBJECTIVE_CAT_EXPLORATION "exploration"
 #define OBJECTIVE_CAT_EXPORT "export"
 #define OBJECTIVE_CAT_TRADING "trading"
 
@@ -28,7 +41,7 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	var/name = "Objective"
 	/// Detailed description
 	var/description = ""
-	/// Category: "building" or "export"
+	/// Category: "building", "exploration", or "trading"
 	var/category = OBJECTIVE_CAT_BUILDING
 	/// Whether this objective is complete
 	var/completed = FALSE
@@ -38,6 +51,12 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	var/required_progress = 1
 	/// Order for display (lower = first)
 	var/sort_order = 0
+	/// Which phase this objective requires (1 or 2)
+	var/required_phase = 1
+
+/// Check if this objective is currently available (phase unlocked)
+/datum/resurgence_objective/proc/is_available()
+	return GLOB.resurgence_objective_phase >= required_phase
 
 /datum/resurgence_objective/New()
 	. = ..()
@@ -209,16 +228,19 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	return ..()
 
 // ============================================
-// EXPORT OBJECTIVES
+// EXPORT OBJECTIVES (Phase 2)
 // ============================================
 
 /datum/resurgence_objective/export
 	category = OBJECTIVE_CAT_EXPORT
+	required_phase = 2
 	/// The type path of items that count for this objective
 	var/export_type = null
 
 /// Update progress from exported totals
 /datum/resurgence_objective/export/check_progress()
+	if(!is_available())
+		return FALSE
 	if(export_type && GLOB.resurgence_exported_totals[export_type])
 		current_progress = GLOB.resurgence_exported_totals[export_type]
 	if(current_progress >= required_progress && !completed)
@@ -264,6 +286,97 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	required_progress = 30
 	export_type = /obj/item/stack/sheet/cotton/cloth
 	sort_order = 14
+
+// ============================================
+// EXPLORATION OBJECTIVES (Phase 2)
+// ============================================
+
+/datum/resurgence_objective/exploration
+	category = OBJECTIVE_CAT_EXPLORATION
+	required_phase = 2
+
+/// Discover 50% of the world map
+/datum/resurgence_objective/exploration/discover_map
+	name = "Discover 50% of the World"
+	description = "Explore and discover at least half of the world map tiles."
+	required_progress = 50  // Percentage
+	sort_order = 15
+
+/datum/resurgence_objective/exploration/discover_map/check_progress()
+	if(!is_available())
+		return FALSE
+	if(GLOB.resurgence_world_map)
+		var/total_tiles = GLOB.resurgence_world_map.map_width * GLOB.resurgence_world_map.map_height
+		var/discovered = 0
+		for(var/x in 1 to GLOB.resurgence_world_map.map_width)
+			for(var/y in 1 to GLOB.resurgence_world_map.map_height)
+				var/datum/world_tile/tile = GLOB.resurgence_world_map.tiles[x][y]
+				if(tile?.discovered)
+					discovered++
+		current_progress = round((discovered / total_tiles) * 100)
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Complete 5 expeditions
+/datum/resurgence_objective/exploration/complete_expeditions
+	name = "Complete 5 Expeditions"
+	description = "Successfully complete 5 expeditions into the world."
+	required_progress = 5
+	sort_order = 16
+
+/datum/resurgence_objective/exploration/complete_expeditions/check_progress()
+	if(!is_available())
+		return FALSE
+	current_progress = GLOB.resurgence_completed_expeditions
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Visit all 4 faction hubs
+/datum/resurgence_objective/exploration/visit_factions
+	name = "Visit All Faction Hubs"
+	description = "Travel to and visit all 4 faction hub settlements."
+	required_progress = 4
+	sort_order = 17
+
+/datum/resurgence_objective/exploration/visit_factions/check_progress()
+	if(!is_available())
+		return FALSE
+	current_progress = length(GLOB.resurgence_visited_faction_hubs)
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Encounter caravans on the world map
+/datum/resurgence_objective/exploration/encounter_caravans
+	name = "Encounter 5 Caravans"
+	description = "Meet and interact with 5 caravans while exploring the world."
+	required_progress = 5
+	sort_order = 18
+
+/datum/resurgence_objective/exploration/encounter_caravans/check_progress()
+	if(!is_available())
+		return FALSE
+	current_progress = GLOB.resurgence_caravan_encounters
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Trade with caravans
+/datum/resurgence_objective/exploration/trade_caravans
+	name = "Trade with 3 Caravans"
+	description = "Successfully complete trades with 3 different caravans."
+	required_progress = 3
+	sort_order = 19
+
+/datum/resurgence_objective/exploration/trade_caravans/check_progress()
+	if(!is_available())
+		return FALSE
+	current_progress = GLOB.resurgence_caravan_trades
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
 
 // ============================================
 // TRADING OBJECTIVES
@@ -388,15 +501,26 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 	GLOB.resurgence_objectives.Cut()
 	GLOB.resurgence_exported_totals.Cut()
 	GLOB.resurgence_objective_phase = 1
+	GLOB.resurgence_completed_expeditions = 0
+	GLOB.resurgence_visited_faction_hubs.Cut()
+	GLOB.resurgence_caravan_encounters = 0
+	GLOB.resurgence_caravan_trades = 0
 
-	// Create building objectives
+	// Create building objectives (Phase 1)
 	new /datum/resurgence_objective/building/living_quarters()
 	new /datum/resurgence_objective/building/workshop()
 	new /datum/resurgence_objective/building/kitchen()
 	new /datum/resurgence_objective/building/farming_zones()
 	new /datum/resurgence_objective/building/export_warehouse()
 
-	// Create export objectives
+	// Create exploration objectives (Phase 2)
+	new /datum/resurgence_objective/exploration/discover_map()
+	new /datum/resurgence_objective/exploration/complete_expeditions()
+	new /datum/resurgence_objective/exploration/visit_factions()
+	new /datum/resurgence_objective/exploration/encounter_caravans()
+	new /datum/resurgence_objective/exploration/trade_caravans()
+
+	// Create export objectives (Phase 2)
 	new /datum/resurgence_objective/export/metal()
 	new /datum/resurgence_objective/export/wood()
 	new /datum/resurgence_objective/export/harvesters()
@@ -443,6 +567,7 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /proc/get_objectives_by_category()
 	var/list/result = list(
 		OBJECTIVE_CAT_BUILDING = list(),
+		OBJECTIVE_CAT_EXPLORATION = list(),
 		OBJECTIVE_CAT_EXPORT = list(),
 		OBJECTIVE_CAT_TRADING = list()
 	)
@@ -523,6 +648,28 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /proc/on_faction_discovered()
 	update_all_objectives()
 
+/// Called when an expedition is completed successfully
+/proc/on_expedition_completed()
+	GLOB.resurgence_completed_expeditions++
+	update_all_objectives()
+
+/// Called when a faction hub is visited
+/proc/on_faction_hub_visited(faction_id)
+	if(!(faction_id in GLOB.resurgence_visited_faction_hubs))
+		GLOB.resurgence_visited_faction_hubs += faction_id
+	update_all_objectives()
+
+/// Called when a caravan is encountered
+/proc/on_caravan_encountered()
+	GLOB.resurgence_caravan_encounters++
+	update_all_objectives()
+
+/// Called when a caravan trade is completed
+/proc/on_caravan_trade_completed()
+	GLOB.resurgence_caravan_trades++
+	update_all_objectives()
+
 #undef OBJECTIVE_CAT_BUILDING
+#undef OBJECTIVE_CAT_EXPLORATION
 #undef OBJECTIVE_CAT_EXPORT
 #undef OBJECTIVE_CAT_TRADING

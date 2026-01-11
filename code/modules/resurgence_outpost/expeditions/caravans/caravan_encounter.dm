@@ -528,6 +528,9 @@ h3 {
 			to_chat(M, span_notice("You approach [caravan.name]. Speak with the trader to buy or sell goods."))
 			to_chat(M, span_notice("Walk to the exit when you're ready to continue."))
 
+	// Track caravan encounter for objectives
+	on_caravan_encountered()
+
 	return TRUE
 
 /**

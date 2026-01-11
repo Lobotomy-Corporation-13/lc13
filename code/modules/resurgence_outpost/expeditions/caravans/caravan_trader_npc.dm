@@ -498,6 +498,9 @@
 			var/xp_amount = max(1, round(total_cost / 10))
 			core.award_xp("social", xp_amount)
 
+	// Track caravan trade for objectives
+	on_caravan_trade_completed()
+
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 25, TRUE)
 	shopping_cart = list()
 	busy = FALSE
@@ -616,6 +619,9 @@
 		if(istype(core))
 			var/xp_amount = max(1, round(total_value / 10))
 			core.award_xp("social", xp_amount)
+
+	// Track caravan trade for objectives
+	on_caravan_trade_completed()
 
 	// Clear and rescan
 	selected_for_sale = list()

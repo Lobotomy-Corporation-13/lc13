@@ -595,6 +595,9 @@
 	expedition.state = EXPEDITION_AT_DESTINATION
 	log_game("Expedition arrived at faction hub: [faction_id]")
 
+	// Track faction hub visit for objectives
+	on_faction_hub_visited(faction_id)
+
 /**
  * Return the expedition to the outpost
  */
@@ -634,6 +637,10 @@
 
 	expedition.state = EXPEDITION_COMPLETE
 	expedition.end_time = world.time
+
+	// Track expedition completion for objectives
+	on_expedition_completed()
+
 	end_expedition()
 
 	// Update world map UI to reflect return

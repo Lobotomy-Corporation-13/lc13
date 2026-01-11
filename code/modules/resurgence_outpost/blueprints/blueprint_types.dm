@@ -225,7 +225,8 @@
 	result_name = "expedition crate"
 	desc = "A reinforced crate for hauling goods on expeditions. Place it near the World Map Console before departing, and it will travel with you to faction hubs where you can sell its contents."
 	icon = 'icons/obj/crates.dmi'
-	icon_state = "crate"
+	icon_state = "privatecrate"
+	unanchored_result = TRUE
 	result_type = /obj/structure/closet/crate/expedition
 	research_required = "expedition_logistics"
 

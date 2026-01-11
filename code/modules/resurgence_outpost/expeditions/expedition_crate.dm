@@ -8,7 +8,7 @@
 /obj/structure/closet/crate/expedition
 	name = "expedition crate"
 	desc = "A reinforced crate designed for hauling goods on expeditions. Place it near the World Map Console before departing to bring it along."
-	icon_state = "crate"
+	icon_state = "privatecrate"
 	/// The expedition this crate is associated with (if any)
 	var/datum/expedition_party/expedition
 	/// Whether this crate has been marked for selling
