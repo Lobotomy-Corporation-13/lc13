@@ -82,7 +82,7 @@
 #define MIN_FAITH_FOR_WORK 5
 
 /// Faith drained per work point during gathering
-#define FAITH_DRAIN_PER_WORK 0.1
+#define FAITH_DRAIN_PER_WORK 0.05
 
 /// Work points added per 1-second gathering tick (base rate)
 #define GATHER_WORK_PER_TICK 2

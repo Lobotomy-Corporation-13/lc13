@@ -87,7 +87,7 @@ export const ResurgenceResearch = (props, context) => {
   return (
     <Window
       width={920}
-      height={720}>
+      height={800}>
       <Window.Content>
         <Stack fill vertical>
           {/* Header with faith display */}

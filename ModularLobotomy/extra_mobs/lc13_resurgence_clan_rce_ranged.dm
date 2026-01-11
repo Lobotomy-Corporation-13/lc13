@@ -219,7 +219,7 @@
 	projectile_piercing = PASSMOB
 	var/passed_faction_mobs = 0
 	/// Damage multiplier against resurgence_machine species
-	var/resurgence_damage_mult = 3
+	var/resurgence_damage_mult = 1.5
 
 /obj/projectile/clan_bullet/on_hit(atom/target, blocked = FALSE)
 	if(isliving(target) && isliving(firer))

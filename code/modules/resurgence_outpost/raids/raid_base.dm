@@ -156,8 +156,9 @@
 
 /**
  * Calculate number of raiders to spawn.
- * Min 4 raiders, +0.35 per player after 5 people, rounded down.
+ * Base 4 raiders, +0.3 per player after 5 people, rounded down.
  * Also scales with round time.
+ * At 20 players, first raid (30 min) = 4 + 4 + 2 = 10 raiders
  */
 /datum/resurgence_raid/proc/calculate_raider_count()
 	var/base_raiders = 4
@@ -165,12 +166,14 @@
 	// Count resurgence machine players
 	var/player_count = get_resurgence_player_count()
 
-	// Add 0.35 raiders per player after 5, rounded down
+	// Add 0.3 raiders per player after 5, rounded down
+	// At 20 players: floor(15 * 0.3) = 4 extra raiders
 	if(player_count > 5)
-		base_raiders += floor((player_count - 5) * 0.35)
+		base_raiders += floor((player_count - 5) * 0.3)
 
-	// Scale with round time: +1 raider per 15 minutes, up to +4 at 60 minutes
-	var/time_bonus = floor(min(world.time / (15 MINUTES), 4.0))
+	// Scale with round time: +1 raider per 15 minutes, up to +3 at 45 minutes
+	// First raid at 30 min = +2 raiders
+	var/time_bonus = floor(min(world.time / (15 MINUTES), 3.0))
 	base_raiders += time_bonus
 
 	// Raid type modifiers
@@ -180,7 +183,7 @@
 		if(RAID_TYPE_ASSASSINATION)
 			base_raiders = max(3, round(base_raiders * 0.6))
 
-	return clamp(base_raiders, 4, 20)
+	return clamp(base_raiders, 4, 16)
 
 /**
  * Get the count of alive resurgence machine players.
