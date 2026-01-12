@@ -12,7 +12,6 @@
 	var/list/printed_ego = list()
 	var/ego_datums_initialized = FALSE
 
-
 /obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
 	var/list/this_guys_printed_ego = printed_ego[user.ckey]
 	if(islist(this_guys_printed_ego))
@@ -76,6 +75,7 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
+		ui.set_autoupdate(FALSE)
 		ui.open()
 
 /obj/machinery/ego_printer/ui_static_data(mob/user)
@@ -119,8 +119,8 @@
 	if(action == "print_ego")
 		var/chosen_ego = params["chosen_ego"]
 		DispenseEgo(usr, chosen_ego)
-	. = TRUE
-	update_icon()
+		. = TRUE
+		update_icon()
 
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
 	if(!ego_path)
