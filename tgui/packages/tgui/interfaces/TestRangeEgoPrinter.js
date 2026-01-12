@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, LabeledList, Section, Divider, Tab, Tabs, Input, Table, Knob, LabeledControls } from '../components';
+import { Box, Button, Flex, LabeledList, Section, Divider, Tab, Tabs, Input, Table, Slider, LabeledControls } from '../components';
 import { ButtonCheckbox } from '../components/Button';
 import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
@@ -7,7 +7,7 @@ import { Window } from '../layouts';
 // Alright so I can't leave any comments in the below part for some reason
 // 1. Yes the threatclass stuff is hardcoded, sadly the defines THREAT_TO_COLOR and THREAT_TO_NAME are alists and apparently TGUI doesn't like beaming those into the data
 // 2. There's some issue with tooltips flickering every time the TGUI subsystem fires (calling try_update_ui)
-// 3. I'm not coding the roman numerical system here, it's getting hardcoded
+// 3. I'm not coding the roman numerical system here, it's getting hardcoded. And yeah I'm listing all the negative numbers too.
 // 4. I'm sorry this is my first TGUI interface
 
 export const TestRangeEgoPrinter = (props, context) => {
@@ -21,7 +21,8 @@ export const TestRangeEgoPrinter = (props, context) => {
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null)
   const threatclass_colors = {1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000"}
   const threatclass_names = {1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH"}
-  const numerals_to_decimal = {"X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1}
+  const numerals_to_decimals = {"X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10}
+  const decimals_to_numerals = Object.fromEntries(Object.entries(numerals_to_decimals).map(([key, value]) => [value, key]))
 
   const CheckThreatClassFilters = (datum) => {
     return threatClassFilters[datum.threatclass]
@@ -35,12 +36,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         decoded_armor_list[string] = 0
         continue
       }
-      var final_string = armor_list[string]
-      if(final_string.at(0) == "-"){
-        decoded_armor_list[string] *= -1
-        final_string = final_string.substring(1)
-      }
-      decoded_armor_list[string] *= numerals_to_decimal[final_string]
+      decoded_armor_list[string] *= numerals_to_decimals[armor_list[string]]
     }
     return decoded_armor_list
   }
@@ -191,6 +187,7 @@ const EgoDatumEntry = (props, context) => {
             <FlexItem flex>
               <Button
                 content="Print E.G.O."
+                color="green"
                 onClick={() => act('print_ego', {
                   chosen_ego: datum.path,
                 })} />
@@ -274,7 +271,7 @@ const RangedWeaponEntryDescription = (props, context) => {
 
 
 
-const ArmorResistanceFilterKnob = (props, context) =>{
+const ArmorResistanceFilterSlider = (props, context) =>{
   const { resistance_color, color } = props;
 
    const AdjustArmorResistanceFilter = (value) => {
@@ -284,14 +281,15 @@ const ArmorResistanceFilterKnob = (props, context) =>{
   }
 
   return (
-    <Knob
+    <Slider
+      width={"4rem"}
       color={color}
-      size={1}
       step={1}
-      stepPixelSize={50}
+      stepPixelSize={7}
       value={armorResistanceFilters[resistance_color]}
       minValue={-10}
       maxValue={10}
+      format={(value) => decimals_to_numerals[value]}
       onChange={(e, value) => AdjustArmorResistanceFilter(value)}
     />
   )
@@ -350,16 +348,23 @@ const ArmorEntryDescription = (props, context) => {
           <FlexItem >
             <Section title="Filters">
               <Flex direction="column">
-                <Flex.Item grow={1} my={1}>
-                  E.G.O. Name Search Filter
-                  <Input mt={1}
-                    placeholder="Search..."
-                    autoFocus
-					          value={nameSearchText}
-                    onInput={(_, value) => setNameSearchText(value)}
-                    fluid
-                  />
-                </Flex.Item>
+                <FlexItem>
+                  <Flex direction="row">
+                    <Flex.Item grow={1} my={1} mb={2}>
+                    E.G.O. Name Search Filter
+                      <Input mt={1}
+                        placeholder="Search..."
+                        autoFocus
+                        value={nameSearchText}
+                        onInput={(_, value) => setNameSearchText(value)}
+                        fluid
+                      />
+                    </Flex.Item>
+                    <FlexItem align="end" ml={1} mb={2}>
+                      <Button icon="trash" color="red" content="Clear" onClick={() => {setNameSearchText(null)}}/>
+                    </FlexItem>
+                  </Flex>
+                </FlexItem>
 
                 <Flex.Item grow={1}>
                   E.G.O. Threat Class Filter
@@ -444,19 +449,19 @@ const ArmorEntryDescription = (props, context) => {
                 {tab === 2 && <FlexItem my={2}>
                   E.G.O. Armour Resistance Filters
 
-                  <Flex direction="row" wrap maxWidth="24rem" justify="center" mt={1}>
+                  <Flex direction="row" wrap maxWidth="24rem"  mt={1}>
                     <LabeledControls>
                       <LabeledControls.Item label="Min. RED" ml={2}>
-                        <ArmorResistanceFilterKnob color="red" resistance_color="red"/>
+                        <ArmorResistanceFilterSlider color="red" resistance_color="red"/>
                       </LabeledControls.Item>
                       <LabeledControls.Item label="Min. WHITE" ml={2}>
-                        <ArmorResistanceFilterKnob color="white" resistance_color="white"/>
+                        <ArmorResistanceFilterSlider color="white" resistance_color="white"/>
                       </LabeledControls.Item>
                       <LabeledControls.Item label="Min. BLACK" ml={2}>
-                        <ArmorResistanceFilterKnob color="violet" resistance_color="black"/>
+                        <ArmorResistanceFilterSlider color="violet" resistance_color="black"/>
                       </LabeledControls.Item>
                       <LabeledControls.Item label="Min. PALE" ml={2}>
-                        <ArmorResistanceFilterKnob color="teal" resistance_color="pale"/>
+                        <ArmorResistanceFilterSlider color="teal" resistance_color="pale"/>
                       </LabeledControls.Item>
                       <LabeledControls.Item ml={2}>
                         <Button icon="sync" color="red" content="Reset" onClick={() => {setArmorResistanceFilters({"red": -10, "white": -10, "black": -10, "pale": -10})}}/>

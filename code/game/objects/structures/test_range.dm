@@ -7,10 +7,11 @@
 	resistance_flags = INDESTRUCTIBLE
 	var/static/list/ego_datums = list()
 	var/static/list/ego_preview_icons_cache = list()
+	var/static/ego_datums_initialized = FALSE
+	var/static/initializing = FALSE
 	/// This var limits how much EGO each ckey can print before having to get rid of some.
 	var/ego_per_person_limit = 10
 	var/list/printed_ego = list()
-	var/ego_datums_initialized = FALSE
 
 /obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
 	var/list/this_guys_printed_ego = printed_ego[user.ckey]
@@ -24,6 +25,20 @@
 	. = ..()
 
 
+/obj/machinery/ego_printer/proc/CheckInitializedDatums()
+	if(initializing)
+		say("System is still initializing. Please wait. [length(ego_datums)] E.G.O. currently loaded.")
+		playsound(get_turf(src), 'sound/machines/synth_no.ogg', 40, TRUE)
+		return FALSE
+	if(!ego_datums_initialized)
+		initializing = TRUE
+		visible_message(span_danger("The [src.name] begins to whir and beep to life as it is activated."))
+		say("Initializing system. Please wait.")
+		playsound(get_turf(src), 'sound/machines/terminal_alert.ogg', 40, TRUE)
+		INVOKE_ASYNC(src, PROC_REF(InitializeDatums))
+		return FALSE
+	return TRUE
+
 // Evil proc that generates an ego datum for every EGO that isn't test range blacklisted and has a path, also generating a preview icon WHICH IS A BIT HEAVY ON DISK USAGE ! ! !
 /obj/machinery/ego_printer/proc/InitializeDatums()
 	if(!ego_datums_initialized)
@@ -35,7 +50,15 @@
 			else
 				qdel(ED)
 
+			stoplag() // Yes it's that bad
+
+		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
+
+		initializing = FALSE
 		ego_datums_initialized = TRUE
+		visible_message(span_nicegreen("The [src.name] beeps, now displaying a list of E.G.O. ready to print."))
+		say("System initialization complete!")
+		playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
 // This proc doesn't SEEM that bad but it's being run on like 500 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it
 /// Takes an object's icon in DM and turns it into a base64 string, uses caching when possible
@@ -70,7 +93,8 @@
 	return final_icon
 
 /obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
-	InitializeDatums()
+	if(!CheckInitializedDatums())
+		return
 
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
