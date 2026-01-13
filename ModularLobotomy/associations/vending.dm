@@ -146,6 +146,9 @@
 		/obj/item/body_modification_battery/tier3/imported = 100,
 		/obj/item/body_modification_battery/tier4/imported = 100,
 
+		//Office Management
+		/obj/item/office_charter = 20,
+
 	)
 
 	default_price = 300
