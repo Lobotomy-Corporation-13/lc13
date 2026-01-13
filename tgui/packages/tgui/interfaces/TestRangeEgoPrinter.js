@@ -4,23 +4,30 @@ import { ButtonCheckbox } from '../components/Button';
 import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
 import { Window } from '../layouts';
-// Alright so I can't leave any comments in the below part for some reason
-// 1. Yes the threatclass stuff is hardcoded, sadly the defines THREAT_TO_COLOR and THREAT_TO_NAME are alists and apparently TGUI doesn't like beaming those into the data
-// 2. There's some issue with tooltips flickering every time the TGUI subsystem fires (calling try_update_ui)
-// 3. I'm not coding the roman numerical system here, it's getting hardcoded. And yeah I'm listing all the negative numbers too.
-// 4. I'm sorry this is my first TGUI interface
+
+// There's some issue with tooltips flickering every time the TGUI subsystem fires (calling try_update_ui), so this window's TGUI datum should have its autoupdate turned off. Its data shouldn't update anyway.
+// I'm sorry this is my first TGUI interface
 
 export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
   const { ego_weapon_datums, ego_armor_datums, all_tags } = data;
+  /// Controls whether we're viewing Weapons or Armour
   const [tab, setTab] = useLocalState(context, 'tab', 1);
+
+  /// Name search filter.
   const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "")
+  /// Armour resistance filters. It's an object with the colours as keys and the minimum resistance rank from -10 to 10 as the value. Since we receive them as roman numerals, we need to decode them for comparison.
   const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", {"red": -10, "white": -10, "black": -10, "pale": -10})
+  /// Threat class filters. It's an object; the keys are the threat classes: 1 is ZAYIN, 2 is TETH, 3 is HE, 4 is WAW, 5 is ALEPH. The values are whether EGO of that threat class should be visible.
   const [threatClassFilters, setThreatClassFilters] = useLocalState(context, "threatClassFilters", {1: true, 2: true, 3: true, 4: true, 5: true})
+  /// EGO Tag Filters. This is an array of EGO tag objects which are structured like {"tag_name": string:name, "tag_description:" string:description, "tag_checked": bool}. If "tag_checked" is true (by default it's false), only display EGO with that tag on it.
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags)
+  /// Weapon damage type filters. Either null or a string representing one of the colour damtypes.
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null)
+  // This threat class stuff is hardcoded because THREAT_TO_COLOR and THREAT_TO_NAME defines are alists and I can't send them in TGUI data
   const threatclass_colors = {1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000"}
   const threatclass_names = {1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH"}
+  // I'm not coding the roman numerical system, this saves me a lot of sanity
   const numerals_to_decimals = {"X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10}
   const decimals_to_numerals = Object.fromEntries(Object.entries(numerals_to_decimals).map(([key, value]) => [value, key]))
 
@@ -285,7 +292,7 @@ const ArmorResistanceFilterSlider = (props, context) =>{
       width={"4rem"}
       color={color}
       step={1}
-      stepPixelSize={7}
+      stepPixelSize={6}
       value={armorResistanceFilters[resistance_color]}
       minValue={-10}
       maxValue={10}

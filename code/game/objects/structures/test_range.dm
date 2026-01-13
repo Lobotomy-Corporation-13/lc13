@@ -5,11 +5,9 @@
 	icon = 'icons/obj/machines/droneDispenser.dmi'
 	icon_state = "on"
 	resistance_flags = INDESTRUCTIBLE
-	var/static/list/ego_datums = list()
-	var/static/list/ego_preview_icons_cache = list()
-	var/static/ego_datums_initialized = FALSE
-	var/static/initializing = FALSE
-	/// This var limits how much EGO each ckey can print before having to get rid of some.
+	/// A list of instantiated ego datums this printer can vend. NEVER delete this as it can be a reference to SStestrange's list. This var is here so you can make custom lists of datums for other printers
+	var/list/ego_datums = list()
+	/// This var limits how much EGO each ckey can print before having to get rid of some. Specific to each printer.
 	var/ego_per_person_limit = 10
 	var/list/printed_ego = list()
 
@@ -24,73 +22,25 @@
 			return
 	. = ..()
 
+/obj/machinery/ego_printer/Initialize(mapload)
+	. = ..()
+	SStestrange.linked_ego_printers += src
+
+/obj/machinery/ego_printer/Destroy(force)
+	SStestrange.linked_ego_printers -= src
+	return ..()
 
 /obj/machinery/ego_printer/proc/CheckInitializedDatums()
-	if(initializing)
-		say("System is still initializing. Please wait. [length(ego_datums)] E.G.O. currently loaded.")
+	if(SStestrange.initializing)
+		say("System is still initializing. Please wait. [SStestrange.ego_datums ? length(SStestrange.ego_datums) : "0"] E.G.O. currently loaded.")
 		playsound(get_turf(src), 'sound/machines/synth_no.ogg', 40, TRUE)
-		return FALSE
-	if(!ego_datums_initialized)
-		initializing = TRUE
-		visible_message(span_danger("The [src.name] begins to whir and beep to life as it is activated."))
-		say("Initializing system. Please wait.")
-		playsound(get_turf(src), 'sound/machines/terminal_alert.ogg', 40, TRUE)
-		INVOKE_ASYNC(src, PROC_REF(InitializeDatums))
 		return FALSE
 	return TRUE
 
-// Evil proc that generates an ego datum for every EGO that isn't test range blacklisted and has a path, also generating a preview icon WHICH IS A BIT HEAVY ON DISK USAGE ! ! !
-/obj/machinery/ego_printer/proc/InitializeDatums()
-	if(!ego_datums_initialized)
-		for(var/datumpath in subtypesof(/datum/ego_datum))
-			var/datum/ego_datum/ED = new datumpath
-			if(!(ED.testrange_blacklisted) && (ED.item_path))
-				ego_datums |= ED
-				GenerateEgoPreviewIcon(ED.item_path)
-			else
-				qdel(ED)
-
-			stoplag() // Yes it's that bad
-
-		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
-
-		initializing = FALSE
-		ego_datums_initialized = TRUE
-		visible_message(span_nicegreen("The [src.name] beeps, now displaying a list of E.G.O. ready to print."))
-		say("System initialization complete!")
-		playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
-
-// This proc doesn't SEEM that bad but it's being run on like 500 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it
-/// Takes an object's icon in DM and turns it into a base64 string, uses caching when possible
-/obj/machinery/ego_printer/proc/GenerateEgoPreviewIcon(item_path)
-	if(!ispath(item_path))
-		return
-
-	// Cached? Use that instead
-	var/wait_did_we_already_do_this = ego_preview_icons_cache[item_path]
-	if(wait_did_we_already_do_this)
-		return wait_did_we_already_do_this
-
-	var/icon/final_icon = GetEgoDatumItemIcon(item_path)
-	var/base64icon = null
-
-	if(final_icon)
-		base64icon = icon2base64(final_icon) // Icon is now a string we can pass into TGUI
-		ego_preview_icons_cache[item_path] = base64icon // Add to cache
-
-	qdel(final_icon)
-	return base64icon
-
-/// Extracts an item's icon state so we can use it a a preview
-/obj/machinery/ego_printer/proc/GetEgoDatumItemIcon(obj/item/item_path)
-	if(!ispath(item_path))
-		return
-	var/item_icon = initial(item_path.icon)
-	var/item_icon_state = initial(item_path.icon_state)
-	if(!(item_icon_state in icon_states(icon(item_icon))))
-		return null
-	var/icon/final_icon = icon(icon = item_icon, icon_state = item_icon_state, frame = 1)
-	return final_icon
+/obj/machinery/ego_printer/proc/ReadyMessage()
+	visible_message(span_nicegreen("The [src.name] beeps, now displaying a list of E.G.O. ready to print."))
+	say("System initialization complete!")
+	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
 /obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
 	if(!CheckInitializedDatums())
@@ -126,7 +76,7 @@
 			"cost" = ED.cost,
 			"information" = ED.information,
 			"tags" = ED.ego_tags,
-			"icon" = GenerateEgoPreviewIcon(ED.item_path),
+			"icon" = SStestrange.GenerateEgoPreviewIcon(ED.item_path),
 			"threatclass" = ego_threatclass
 		)
 		if(istype(ED, /datum/ego_datum/weapon))
