@@ -12,15 +12,18 @@
 		. += span_notice( "This machine seems to be upgraded, increasing its chance to 75%.")
 
 /obj/structure/altrefiner/chance/proc/reset()
+	playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
 	ready = TRUE
 
 /obj/structure/altrefiner/chance/attack_hand(mob/living/carbon/M)
-	. = ..()
 	if(!.)
 		return
 	if(!ready)
-		to_chat(M, span_warning("The refinery is still processing. Please wait."))
+		to_chat(M, span_warning("The refinery is not ready yet. Please wait."))
+		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 		return
+		
+	. = ..()
 	var/success_chance = 50
 	if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_1))
 		success_chance = 75
