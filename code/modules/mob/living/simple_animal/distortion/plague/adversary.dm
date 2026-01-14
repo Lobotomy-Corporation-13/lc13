@@ -1140,3 +1140,12 @@
 	entanglement_cooldown = world.time + entanglement_cooldown_time
 	chosen_attack = 0 // Reset to default
 
+/mob/living/simple_animal/hostile/distortion/adversary/cracked
+	maxHealth = 7500
+	health = 7500
+	melee_damage_lower = 60
+	melee_damage_upper = 75
+	mass_infection_cooldown_time = 5 SECONDS
+	entanglement_cooldown_time = 5 SECONDS
+	unstable_eye_cooldown_time = 10 SECONDS
+	rejuvenate_cooldown_time = 25 SECONDS
