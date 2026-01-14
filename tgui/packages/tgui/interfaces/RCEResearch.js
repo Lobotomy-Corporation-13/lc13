@@ -715,7 +715,8 @@ const SamplesTab = (props, context) => {
                       </Button>
                     </Stack.Item>
                   )}
-                  <Stack.Item grow={!selectedResearch || !part.meetsRequirements}>
+                  <Stack.Item
+                  grow={!selectedResearch || !part.meetsRequirements}>
                     <Button
                       fluid
                       icon="eject"
@@ -833,10 +834,11 @@ const ProgressTab = (props, context) => {
 };
 
 // Statistics Tab - Shows research completion counts per branch
-const StatisticsTab = (props) => {
+const StatisticsTab = props => {
   const { researchStats } = props;
 
-  const totalResearched = researchStats.hellfire + researchStats.venom + researchStats.storm + researchStats.utility;
+  const totalResearched = researchStats.hellfire + researchStats.venom
+    + researchStats.storm + researchStats.utility;
 
   return (
     <Section fill title="Research Statistics">
@@ -885,7 +887,7 @@ const StatisticsTab = (props) => {
 };
 
 // Get trait color
-const getTraitColor = (trait) => {
+const getTraitColor = trait => {
   return TRAIT_COLORS[trait] || '#aaaaaa';
 };
 
@@ -897,7 +899,7 @@ const RANK_ORDER = {
 };
 
 // Bestiary Tab - Shows harvestable mobs organized by folder
-const BestiaryTab = (props) => {
+const BestiaryTab = props => {
   const { bestiary, searchText, setSearchText } = props;
 
   if (!bestiary || bestiary.length === 0) {
@@ -957,7 +959,7 @@ const BestiaryTab = (props) => {
 };
 
 // Bestiary Folder Component
-const BestiaryFolder = (props) => {
+const BestiaryFolder = props => {
   const { folder, searchText } = props;
 
   // Group mobs by rank
@@ -1029,7 +1031,7 @@ const BestiaryFolder = (props) => {
 };
 
 // Individual Mob Entry Component
-const MobEntry = (props) => {
+const MobEntry = props => {
   const { mob } = props;
 
   return (
