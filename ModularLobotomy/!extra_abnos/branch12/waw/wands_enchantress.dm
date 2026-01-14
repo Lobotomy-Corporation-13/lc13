@@ -45,7 +45,7 @@
 		return FALSE
 	to_chat(src, "<h1>You are Enchantress of Wands, A Combat Role Abnormality.</h1><br>\
 		|Unpredictable Projectiles|: Your chaos bullets have completely random effects when they hit a target. \
-		Against humans, they can: instantly down them, make them vomit, heal 100 HP, deal 80 RED/WHITE/BLACK/PALE damage, or restore 100 SP. \
+		Against humans, they can: instantly make them lose 50% of their current health, make them vomit, heal 100 HP, deal 80 RED/WHITE/BLACK/PALE damage, or restore 100 SP. \
 		Against non-human enemies, they can: heal 300 HP or deal 100 RED/WHITE/BLACK/PALE damage.<br></b>")
 
 /mob/living/simple_animal/hostile/abnormality/branch12/enchantress_of_wands/WorkChance(mob/living/carbon/human/user, chance)
@@ -110,7 +110,11 @@
 		var/mob/living/carbon/human/H = target
 		switch(rand(1,8))
 			if(1)	//Instant Crit
-				H.adjustBruteLoss(H.health+5)
+				if(!IsCombatMap())
+					H.adjustBruteLoss(H.health+5)
+				else
+					//Just deal 50% of their current health as damage.
+					H.adjustBruteLoss(H.health/2)
 			if(2)	//Vomit
 				H.vomit(20, FALSE, distance = 0)
 			if(3)	//Heal 100 HP
