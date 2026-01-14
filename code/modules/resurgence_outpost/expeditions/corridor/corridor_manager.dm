@@ -338,6 +338,11 @@
 		start_caravan_encounter(next_tile.caravan)
 		return
 
+	// Check for raid caravan on next tile - offer intercept
+	if(next_tile?.raid_caravan)
+		offer_raid_intercept(next_tile.raid_caravan)
+		return
+
 	// Collect all items on floor (that aren't decorations or barriers)
 	var/list/floor_items = list()
 	for(var/turf/T in floor_turfs)
@@ -432,6 +437,79 @@
 		var/next_terrain = caravan.current_tile.terrain_type
 		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
 			next_terrain = get_faction_terrain(caravan.current_tile.faction_id)
+		execute_transition_continue(next_terrain)
+		return FALSE
+
+	transitioning = FALSE
+	return TRUE
+
+/**
+ * Offer the expedition leader a choice to intercept a raid caravan
+ */
+/datum/expedition_corridor_manager/proc/offer_raid_intercept(datum/raid_caravan/raid_caravan)
+	if(!raid_caravan || !expedition)
+		// No raid caravan, continue normal transition
+		var/datum/world_tile/next_tile = expedition.route[route_index + 2]
+		var/next_terrain = next_tile?.terrain_type || TERRAIN_PLAINS
+		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+			next_terrain = get_faction_terrain(next_tile?.faction_id)
+		execute_transition_continue(next_terrain)
+		return
+
+	log_game("Expedition [expedition.expedition_id] encountered raid caravan [raid_caravan.caravan_id]")
+
+	// Fade players back in so they can see the popup
+	for(var/mob/living/M in expedition.members)
+		fade_from_black(M)
+
+	// Get the expedition leader
+	var/mob/living/leader = expedition.leader
+	if(!leader?.client)
+		// No leader, skip intercept
+		to_chat(expedition.members, span_warning("You spot a hostile Insurgence raiding party, but have no leader to decide whether to engage..."))
+		var/datum/world_tile/next_tile = expedition.route[route_index + 2]
+		var/next_terrain = next_tile?.terrain_type || TERRAIN_PLAINS
+		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+			next_terrain = get_faction_terrain(next_tile?.faction_id)
+		execute_transition_continue(next_terrain)
+		return
+
+	// Show intercept choice via tgui_alert
+	var/choice = tgui_alert(leader, "A hostile Insurgence raiding party is on this tile! They are heading toward your outpost.\n\nDo you want to intercept them?", "HOSTILE RAIDERS DETECTED", list("Intercept", "Avoid"))
+
+	if(choice == "Intercept")
+		start_raid_intercept(raid_caravan)
+	else
+		to_chat(expedition.members, span_warning("The expedition avoids the raiding party... They continue toward your outpost."))
+		var/datum/world_tile/next_tile = expedition.route[route_index + 2]
+		var/next_terrain = next_tile?.terrain_type || TERRAIN_PLAINS
+		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+			next_terrain = get_faction_terrain(next_tile?.faction_id)
+		execute_transition_continue(next_terrain)
+
+/**
+ * Start the raid intercept encounter
+ */
+/datum/expedition_corridor_manager/proc/start_raid_intercept(datum/raid_caravan/raid_caravan)
+	if(!raid_caravan || !expedition)
+		return FALSE
+
+	// Notify players
+	for(var/mob/living/M in expedition.members)
+		to_chat(M, span_boldwarning("You engage the Insurgence raiding party!"))
+
+	// Create the intercept controller
+	var/datum/raid_intercept_controller/controller = new(raid_caravan, expedition)
+
+	// Start the intercept encounter
+	if(!controller.start_intercept())
+		to_chat(expedition.members, span_warning("Failed to initiate intercept! The raiders continue on..."))
+		qdel(controller)
+		// Continue normal transition
+		var/datum/world_tile/next_tile = expedition.route[route_index + 2]
+		var/next_terrain = next_tile?.terrain_type || TERRAIN_PLAINS
+		if(next_terrain == TERRAIN_FACTION || next_terrain == TERRAIN_OUTPOST)
+			next_terrain = get_faction_terrain(next_tile?.faction_id)
 		execute_transition_continue(next_terrain)
 		return FALSE
 

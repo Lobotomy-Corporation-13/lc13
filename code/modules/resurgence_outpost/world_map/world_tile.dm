@@ -32,6 +32,8 @@
 	var/list/datum/world_tile/adjacent_tiles
 	/// Caravan currently on this tile (if any)
 	var/datum/faction_caravan/caravan
+	/// Raid caravan currently on this tile (if any)
+	var/datum/raid_caravan/raid_caravan
 
 /**
  * Initialize a world tile at specific coordinates
@@ -174,6 +176,12 @@
 			data["caravan"] = caravan.get_ui_data()
 		else
 			data["has_caravan"] = FALSE
+		// Add raid caravan data if present
+		if(raid_caravan)
+			data["has_raid_caravan"] = TRUE
+			data["raid_caravan"] = raid_caravan.get_ui_data()
+		else
+			data["has_raid_caravan"] = FALSE
 	else
 		// Hidden tile - show minimal data
 		data["terrain_type"] = "unknown"

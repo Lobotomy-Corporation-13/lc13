@@ -478,3 +478,73 @@
 
 	// Update the beauty average
 	outpost_area.update_resurgence_beauty()
+
+/**
+ * Get a list of all beauty contributors in an area.
+ * Returns a list of lists with name, beauty value, and source type.
+ *
+ * Arguments:
+ * * target_area - The area to scan for beauty contributors
+ *
+ * Returns: List of associative lists with "name", "beauty", "type" keys
+ */
+/proc/get_area_beauty_breakdown(area/target_area)
+	var/list/contributors = list()
+
+	if(!target_area)
+		return contributors
+
+	// Only works for resurgence outpost areas
+	var/area/resurgence_outpost/outpost_area = target_area
+	if(!istype(outpost_area))
+		return contributors
+
+	// Track counted objects to avoid duplicates
+	var/list/counted = list()
+
+	// Go through all turfs in the area
+	for(var/turf/T in outpost_area.contents)
+		// Check the turf itself for beauty (carpets)
+		var/datum/component/resurgence_beauty/turf_beauty = T.GetComponent(/datum/component/resurgence_beauty)
+		if(turf_beauty && turf_beauty.beauty != 0 && !(T in counted))
+			counted += T
+			contributors += list(list(
+				"name" = T.name,
+				"beauty" = turf_beauty.beauty,
+				"type" = "turf"
+			))
+
+		// Check all atoms on this turf
+		for(var/atom/A in T.contents)
+			if(A in counted)
+				continue
+
+			var/datum/component/resurgence_beauty/B = A.GetComponent(/datum/component/resurgence_beauty)
+			if(B && B.beauty != 0)
+				counted += A
+				var/source_type = "object"
+				if(ismob(A))
+					source_type = "mob"
+				else if(isobj(A))
+					var/obj/O = A
+					if(istype(O, /obj/structure))
+						source_type = "structure"
+					else if(istype(O, /obj/machinery))
+						source_type = "machine"
+					else if(istype(O, /obj/item))
+						source_type = "item"
+
+				contributors += list(list(
+					"name" = A.name,
+					"beauty" = B.beauty,
+					"type" = source_type
+				))
+
+	// Sort by absolute beauty value (highest impact first)
+	contributors = sortTim(contributors, GLOBAL_PROC_REF(cmp_beauty_value_desc))
+
+	return contributors
+
+/// Comparison proc for sorting beauty contributors by absolute value (descending)
+/proc/cmp_beauty_value_desc(list/a, list/b)
+	return abs(b["beauty"]) - abs(a["beauty"])

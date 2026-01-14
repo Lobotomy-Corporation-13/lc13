@@ -44,6 +44,11 @@
 		extract_seeds_grown(produce, user)
 		return
 
+	// Handle raw cotton bundles (sheet form) - extract cotton seeds
+	if(istype(I, /obj/item/stack/sheet/cotton))
+		extract_seeds_from_cotton(I, user)
+		return
+
 	// Handle plant bag - batch extraction
 	if(istype(I, /obj/item/storage/bag/plants))
 		var/obj/item/storage/bag/plants/bag = I
@@ -121,3 +126,22 @@
 	if(.)
 		return
 	to_chat(user, span_notice("Insert grown produce into [src] to extract seeds."))
+
+/// Extract seeds from raw cotton bundles (/obj/item/stack/sheet/cotton)
+/obj/structure/resurgence_seed_extractor/proc/extract_seeds_from_cotton(obj/item/stack/sheet/cotton/cotton_stack, mob/user, silent = FALSE)
+	// Determine seed type based on cotton subtype
+	var/seed_type = /obj/item/seeds/cotton
+	if(istype(cotton_stack, /obj/item/stack/sheet/cotton/durathread))
+		seed_type = /obj/item/seeds/cotton/durathread
+
+	var/seeds_created = 0
+	for(var/i in 1 to seed_yield)
+		new seed_type(get_turf(src))
+		seeds_created++
+
+	if(!silent)
+		to_chat(user, span_notice("You extract [seeds_created] seeds from [cotton_stack]."))
+		playsound(src, 'sound/machines/blender.ogg', 50, TRUE)
+
+	// Use one from the stack (stack auto-deletes if empty)
+	cotton_stack.use(1)

@@ -13,6 +13,7 @@ export const ResurgenceWorldMap = (props, context) => {
     tiles = [],
     factions = [],
     caravans = [],
+    raid_caravans = [],
     outpost_x,
     outpost_y,
     selected_x,
@@ -33,6 +34,8 @@ export const ResurgenceWorldMap = (props, context) => {
     current_x = 0,
     current_y = 0,
   } = data;
+
+  const hasRaidCaravans = raid_caravans.length > 0;
 
   const mapPixelWidth = map_width * TILE_SIZE + MAP_PADDING * 2;
   const mapPixelHeight = map_height * TILE_SIZE + MAP_PADDING * 2;
@@ -63,6 +66,25 @@ export const ResurgenceWorldMap = (props, context) => {
                   onClick={() => act('toggle_debug')}
                 />
               }>
+              {/* Raid Warning Banner */}
+              {hasRaidCaravans && (
+                <Box
+                  p={1}
+                  mb={1}
+                  textAlign="center"
+                  bold
+                  style={{
+                    backgroundColor: '#660000',
+                    border: '2px solid #ff0000',
+                    borderRadius: '4px',
+                    color: '#ff6666',
+                    animation: 'pulse 1s infinite',
+                  }}>
+                  <Icon name="skull-crossbones" mr={1} />
+                  RAID INCOMING - Hostile caravan approaching!
+                  <Icon name="skull-crossbones" ml={1} />
+                </Box>
+              )}
               {generated ? (
                 <WorldMapGrid
                   width={map_width}
@@ -70,6 +92,7 @@ export const ResurgenceWorldMap = (props, context) => {
                   tiles={tiles}
                   factions={factions}
                   caravans={caravans}
+                  raidCaravans={raid_caravans}
                   outpost_x={outpost_x}
                   outpost_y={outpost_y}
                   selected_x={selected_x}
@@ -202,6 +225,21 @@ export const ResurgenceWorldMap = (props, context) => {
                 </Stack.Item>
               )}
 
+              {/* Raid Caravans Panel */}
+              {hasRaidCaravans && (
+                <Stack.Item>
+                  <Section
+                    title={
+                      <Box color="red">
+                        <Icon name="skull-crossbones" mr={1} />
+                        Hostile Raids ({raid_caravans.length})
+                      </Box>
+                    }>
+                    <RaidCaravanList caravans={raid_caravans} />
+                  </Section>
+                </Stack.Item>
+              )}
+
               {/* Legend */}
               <Stack.Item>
                 <Section title="Legend">
@@ -223,6 +261,7 @@ const WorldMapGrid = props => {
     tiles,
     factions,
     caravans = [],
+    raidCaravans = [],
     outpost_x,
     outpost_y,
     selected_x,
@@ -482,6 +521,51 @@ const WorldMapGrid = props => {
                   r={3}
                   fill={isHostile ? '#ff0000' : '#ffffff'}
                 />
+              </g>
+            </g>
+          );
+        })}
+
+        {/* Raid Caravan markers - hostile styling */}
+        {raidCaravans.map((caravan, index) => {
+          if (!caravan.x || !caravan.y) return null;
+          const px = toPixelX(caravan.x);
+          const py = toPixelY(caravan.y);
+
+          return (
+            <g key={`raid-caravan-${index}`}>
+              <g transform={`translate(${px + TILE_SIZE / 2},
+                ${py + TILE_SIZE / 2})`}>
+                {/* Danger pulsing ring - red */}
+                <circle
+                  r={12}
+                  fill="none"
+                  stroke="#ff0000"
+                  strokeWidth={2}
+                  opacity={0.8}>
+                  <animate
+                    attributeName="r"
+                    values="8;14;8"
+                    dur="1s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0.9;0.3;0.9"
+                    dur="1s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+                {/* Dark red diamond */}
+                <polygon
+                  points="0,-8 8,0 0,8 -8,0"
+                  fill="#990000"
+                  stroke="#ff0000"
+                  strokeWidth={2}
+                />
+                {/* Skull icon - simple representation */}
+                <circle cx={0} cy={-1} r={3} fill="#ffffff" />
+                <rect x={-2} y={2} width={4} height={3} fill="#ffffff" />
               </g>
             </g>
           );
@@ -949,6 +1033,81 @@ const getCaravanStateLabel = state => {
   return labels[state] || state;
 };
 
+const RaidCaravanList = props => {
+  const { caravans } = props;
+
+  if (!caravans || caravans.length === 0) {
+    return (
+      <Box color="label" fontSize="11px">
+        No hostile caravans detected.
+      </Box>
+    );
+  }
+
+  return (
+    <Stack vertical>
+      {caravans.map((caravan, index) => {
+        const stateLabel = getRaidStateLabel(caravan.state);
+        const tilesRemaining = caravan.tiles_remaining || '?';
+        const etaMinutes = tilesRemaining !== '?'
+          ? tilesRemaining * 3
+          : '?';
+
+        return (
+          <Stack.Item key={index} mb={0.5}>
+            <Box
+              p={0.5}
+              style={{
+                backgroundColor: '#990000' + '40',
+                borderRadius: '3px',
+                borderLeft: '3px solid #ff0000',
+              }}>
+              <Flex align="center">
+                <Flex.Item>
+                  <Icon name="skull-crossbones" color="red" mr={1} />
+                </Flex.Item>
+                <Flex.Item grow>
+                  <Box fontSize="11px" bold color="red">
+                    {caravan.name || 'Insurgence Raiders'}
+                  </Box>
+                  <Box fontSize="10px" color="label">
+                    ({caravan.x}, {caravan.y}) - {stateLabel}
+                  </Box>
+                </Flex.Item>
+                <Flex.Item>
+                  <Box fontSize="10px" color="average" textAlign="right">
+                    <Icon name="clock" mr={0.5} />
+                    ETA: ~{etaMinutes}m
+                  </Box>
+                  <Box fontSize="9px" color="label" textAlign="right">
+                    {tilesRemaining} tiles
+                  </Box>
+                </Flex.Item>
+              </Flex>
+            </Box>
+          </Stack.Item>
+        );
+      })}
+      <Stack.Item>
+        <Box fontSize="10px" color="average" italic mt={1}>
+          <Icon name="exclamation-triangle" mr={1} />
+          Intercept during expeditions or prepare defenses!
+        </Box>
+      </Stack.Item>
+    </Stack>
+  );
+};
+
+const getRaidStateLabel = state => {
+  const labels = {
+    traveling: 'Approaching',
+    intercepted: 'Intercepted',
+    arrived: 'Arrived!',
+    destroyed: 'Destroyed',
+  };
+  return labels[state] || state;
+};
+
 const TerrainLegend = () => {
   const terrains = [
     { name: 'Plains', color: '#4a7c3f' },
@@ -960,13 +1119,33 @@ const TerrainLegend = () => {
     { name: 'Outpost', color: '#3366cc' },
     { name: 'Faction', color: '#cc9933' },
     { name: 'Caravan', color: '#cc9933', isCaravan: true },
+    { name: 'Raid', color: '#990000', isRaid: true },
   ];
 
   return (
     <Flex wrap="wrap">
       {terrains.map((t, i) => (
         <Flex.Item key={i} basis="50%" mb={0.5}>
-          {t.isCaravan ? (
+          {t.isRaid ? (
+            <Box
+              as="span"
+              style={{
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                marginRight: '4px',
+                verticalAlign: 'middle',
+              }}>
+              <svg width="12" height="12" viewBox="-7 -7 14 14">
+                <polygon
+                  points="0,-5 5,0 0,5 -5,0"
+                  fill={t.color}
+                  stroke="#ff0000"
+                  strokeWidth={1}
+                />
+              </svg>
+            </Box>
+          ) : t.isCaravan ? (
             <Box
               as="span"
               style={{
@@ -999,7 +1178,7 @@ const TerrainLegend = () => {
               }}
             />
           )}
-          <Box as="span" fontSize="11px">
+          <Box as="span" fontSize="11px" color={t.isRaid ? 'red' : undefined}>
             {t.name}
           </Box>
         </Flex.Item>

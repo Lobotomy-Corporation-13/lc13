@@ -28,6 +28,8 @@
 	var/can_be_spread_to = TRUE
 	/// Speed bonus when using a proper mining tool (0.25 = 25% faster)
 	var/tool_speed_bonus = 0.25
+	/// Faith drain multiplier for mining (0.5 = half the normal drain)
+	var/faith_drain_mult = 0.5
 
 /turf/closed/mineral/resurgence/Initialize(mapload)
 	. = ..()
@@ -119,9 +121,9 @@
 			to_chat(user, span_notice("You stop mining [src]. Progress: [progress_pct]%"))
 			break
 
-		// Add work and drain faith
+		// Add work and drain faith (reduced by faith_drain_mult)
 		work_points += work_per_tick
-		apply_work_faith_drain(user, work_per_tick)
+		apply_work_faith_drain(user, work_per_tick * faith_drain_mult)
 
 		// Decrement tool durability
 		if(tool && !use_tool_durability(tool, user))

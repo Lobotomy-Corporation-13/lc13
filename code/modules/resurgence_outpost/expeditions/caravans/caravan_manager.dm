@@ -102,8 +102,19 @@
 
 /**
  * Try to spawn an Insurgence patrol
+ *
+ * NOTE: Insurgence patrols are currently DISABLED.
+ * The current implementation causes infighting between hostile and neutral mobs.
+ * Future plan: Insurgence will have their own DMM file for hostile ambushes,
+ * and will be integrated into the raid system where hostile caravans approach
+ * the outpost on the world map before triggering a raid.
  */
 /datum/caravan_manager/proc/try_spawn_patrol()
+	// DISABLED: Insurgence patrols currently broken (hostile/neutral mob infighting)
+	// TODO: Implement hostile caravan system for raids instead
+	return
+
+	/*
 	// Count existing patrols
 	var/count = 0
 	for(var/datum/faction_caravan/C in GLOB.active_caravans)
@@ -120,6 +131,7 @@
 
 	// Spawn the patrol
 	spawn_caravan("insurgence_clan")
+	*/
 
 /**
  * Spawn a caravan for a faction

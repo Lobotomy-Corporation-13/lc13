@@ -741,4 +741,12 @@
 	else
 		data["caravans"] = list()
 
+	// Build raid caravan data
+	var/list/raid_caravans_data = list()
+	for(var/datum/raid_caravan/rc in GLOB.active_raid_caravans)
+		// Only show raid caravans on discovered tiles (or in debug mode)
+		if(rc.current_tile?.discovered || debug_mode)
+			raid_caravans_data += list(rc.get_ui_data())
+	data["raid_caravans"] = raid_caravans_data
+
 	return data

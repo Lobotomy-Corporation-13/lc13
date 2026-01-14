@@ -118,3 +118,36 @@ GLOBAL_LIST_INIT(insurgence_raid_compositions, list(
 		/mob/living/simple_animal/hostile/clan/ranged/rapid = 3
 	)
 ))
+
+// ==================== Raid Caravan System ====================
+
+/// Whether the raid caravan system is enabled (hostile caravans travel to outpost)
+#define RAID_USE_CARAVAN_SYSTEM TRUE
+
+/// Time for raid caravan to move between world map tiles (in deciseconds)
+#define RAID_CARAVAN_MOVE_DELAY (3 MINUTES)
+
+/// Display color for raid caravans on world map (dark red)
+#define RAID_CARAVAN_DISPLAY_COLOR "#990000"
+
+/// Active raid caravans traveling toward the outpost
+GLOBAL_LIST_EMPTY(active_raid_caravans)
+
+/// Raid intercept encounter map path
+#define RAID_INTERCEPT_MAP "_maps/map_files/Resurgence/raid_intercept.dmm"
+#define RAID_INTERCEPT_MAP_NAME "raid_intercept"
+
+/// Whether the raid intercept map has been loaded
+GLOBAL_VAR_INIT(raid_intercept_loaded, FALSE)
+
+/// Z-level of the raid intercept map
+GLOBAL_VAR(raid_intercept_z)
+
+/// Current raid intercept controller (if an intercept is in progress)
+GLOBAL_VAR(raid_intercept_controller)
+
+/// List of floor turfs in the raid intercept map
+GLOBAL_LIST_EMPTY(raid_intercept_floor_turfs)
+
+/// List of edge turfs in the raid intercept map (spawn decorations)
+GLOBAL_LIST_EMPTY(raid_intercept_edge_turfs)

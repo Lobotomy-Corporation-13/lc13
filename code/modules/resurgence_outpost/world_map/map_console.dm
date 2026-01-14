@@ -143,6 +143,10 @@
 		if("join_expedition")
 			if(forming_expedition && isliving(usr))
 				var/mob/living/L = usr
+				// Check if user is already in an active expedition
+				if(is_mob_in_active_expedition(L))
+					to_chat(usr, span_warning("You are already on an active expedition!"))
+					return FALSE
 				if(forming_expedition.add_member(L))
 					to_chat(usr, span_notice("You have joined the expedition."))
 					return TRUE
@@ -222,6 +226,16 @@
 
 	var/mob/living/L = user
 
+	// Check if there's already an active expedition
+	if(length(GLOB.active_expeditions))
+		to_chat(user, span_warning("An expedition is already in progress. Wait for it to return before planning another."))
+		return FALSE
+
+	// Check if user is already in an active expedition
+	if(is_mob_in_active_expedition(L))
+		to_chat(user, span_warning("You are already on an active expedition!"))
+		return FALSE
+
 	// Check if there's already an expedition forming
 	if(forming_expedition)
 		to_chat(user, span_warning("An expedition is already being planned. Join or wait for it to depart."))
@@ -257,6 +271,11 @@
 
 	if(!length(forming_expedition.members))
 		to_chat(user, span_warning("The expedition has no members."))
+		return FALSE
+
+	// Check if there's already an active expedition
+	if(length(GLOB.active_expeditions))
+		to_chat(user, span_warning("An expedition is already in progress. Wait for it to return before departing."))
 		return FALSE
 
 	// Check corridor is loaded and ready
@@ -301,3 +320,14 @@
 	SStgui.update_uis(src)
 
 	return TRUE
+
+/**
+ * Check if a mob is already in an active expedition
+ */
+/obj/structure/world_map_console/proc/is_mob_in_active_expedition(mob/living/M)
+	if(!M)
+		return FALSE
+	for(var/datum/expedition_party/expedition in GLOB.active_expeditions)
+		if(M in expedition.members)
+			return TRUE
+	return FALSE

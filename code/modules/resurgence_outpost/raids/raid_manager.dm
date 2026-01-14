@@ -93,17 +93,75 @@ SUBSYSTEM_DEF(resurgence_raids)
 /**
  * Trigger a raid from the specified faction.
  *
+ * If RAID_USE_CARAVAN_SYSTEM is enabled, this spawns a raid caravan that
+ * travels across the world map to the outpost. Otherwise, the raid triggers immediately.
+ *
  * Arguments:
  * * faction_id - The faction ID triggering the raid
  * * raid_type - Optional specific raid type (random if not specified)
  *
- * Returns: The raid datum, or null if failed
+ * Returns: The raid datum (immediate) or raid caravan (caravan system), or null if failed
  */
 /datum/controller/subsystem/resurgence_raids/proc/trigger_raid(faction_id, raid_type = null)
 	// Pick raid type if not specified
 	if(!raid_type)
 		raid_type = pick_raid_type(faction_id)
 
+	// Use caravan system if enabled
+	if(RAID_USE_CARAVAN_SYSTEM)
+		return spawn_raid_caravan(faction_id, raid_type)
+
+	// Fallback: Immediate raid (original behavior)
+	return trigger_immediate_raid(faction_id, raid_type)
+
+/**
+ * Spawn a raid caravan that travels to the outpost.
+ * The raid will trigger when the caravan arrives.
+ *
+ * Arguments:
+ * * faction_id - The faction ID sending the raid
+ * * raid_type - The type of raid the caravan will trigger on arrival
+ *
+ * Returns: The raid caravan datum, or null if failed
+ */
+/datum/controller/subsystem/resurgence_raids/proc/spawn_raid_caravan(faction_id, raid_type)
+	// Check if there's already a raid caravan en route
+	if(length(GLOB.active_raid_caravans))
+		log_game("RAID: Cannot spawn raid caravan - one already en route")
+		return null
+
+	// Check if world map exists
+	if(!GLOB.resurgence_world_map)
+		log_game("RAID: Cannot spawn raid caravan - no world map")
+		return trigger_immediate_raid(faction_id, raid_type)  // Fall back to immediate
+
+	// Create the raid caravan
+	var/datum/raid_caravan/caravan = new(raid_type)
+
+	// Start the journey
+	if(!caravan.start_journey())
+		qdel(caravan)
+		log_game("RAID: Raid caravan failed to start journey")
+		return trigger_immediate_raid(faction_id, raid_type)  // Fall back to immediate
+
+	// Set cooldown
+	raid_cooldown = world.time + RAID_MINIMUM_COOLDOWN
+
+	log_admin("RAID: Raid caravan spawned for faction [faction_id] with raid type [raid_type]")
+
+	return caravan
+
+/**
+ * Trigger a raid immediately (bypasses caravan system).
+ * Used as fallback when caravan system fails, or for direct raid triggers.
+ *
+ * Arguments:
+ * * faction_id - The faction ID triggering the raid
+ * * raid_type - The raid type
+ *
+ * Returns: The raid datum, or null if failed
+ */
+/datum/controller/subsystem/resurgence_raids/proc/trigger_immediate_raid(faction_id, raid_type)
 	// Create the raid
 	var/datum/resurgence_raid/raid = new(faction_id, raid_type)
 
@@ -118,7 +176,7 @@ SUBSYSTEM_DEF(resurgence_raids)
 	// Set cooldown
 	raid_cooldown = world.time + RAID_MINIMUM_COOLDOWN
 
-	log_admin("RAID: [raid.name] triggered for faction [faction_id]")
+	log_admin("RAID: [raid.name] triggered immediately for faction [faction_id]")
 
 	return raid
 
@@ -158,15 +216,19 @@ SUBSYSTEM_DEF(resurgence_raids)
 
 /**
  * Force trigger a raid immediately (for debug/admin use).
+ * This always uses immediate raid, bypassing the caravan system.
  *
  * Arguments:
  * * faction_id - The faction ID
  * * raid_type - The raid type
+ * * use_caravan - If TRUE, uses caravan system instead of immediate raid
  *
- * Returns: The raid datum, or null if failed
+ * Returns: The raid datum or caravan, or null if failed
  */
-/datum/controller/subsystem/resurgence_raids/proc/force_raid(faction_id, raid_type)
-	return trigger_raid(faction_id, raid_type)
+/datum/controller/subsystem/resurgence_raids/proc/force_raid(faction_id, raid_type, use_caravan = FALSE)
+	if(use_caravan)
+		return spawn_raid_caravan(faction_id, raid_type)
+	return trigger_immediate_raid(faction_id, raid_type)
 
 /**
  * End all active raids.
@@ -187,6 +249,7 @@ SUBSYSTEM_DEF(resurgence_raids)
 	info["active_raids"] = active_raids.len
 	info["room_count"] = get_outpost_room_count()
 	info["minimum_room_count"] = minimum_room_count
+	info["caravan_system_enabled"] = RAID_USE_CARAVAN_SYSTEM
 
 	var/list/raid_info = list()
 	for(var/datum/resurgence_raid/raid in active_raids)
@@ -197,6 +260,19 @@ SUBSYSTEM_DEF(resurgence_raids)
 			"initial_raiders" = raid.initial_raider_count
 		))
 	info["raids"] = raid_info
+
+	// Add raid caravan info
+	var/list/caravan_info = list()
+	for(var/datum/raid_caravan/caravan in GLOB.active_raid_caravans)
+		caravan_info += list(list(
+			"id" = caravan.caravan_id,
+			"state" = caravan.state,
+			"raid_type" = caravan.raid_type,
+			"spotted" = caravan.has_been_spotted,
+			"position" = "[caravan.current_tile?.x_coord],[caravan.current_tile?.y_coord]",
+			"route_progress" = "[caravan.route_index]/[length(caravan.route)]"
+		))
+	info["raid_caravans"] = caravan_info
 
 	return info
 

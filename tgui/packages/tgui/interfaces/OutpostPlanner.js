@@ -300,6 +300,7 @@ const RoomTab = (props, context) => {
     room_doors,
     room_beauty,
     room_beauty_avg,
+    beauty_breakdown = [],
     user_ckey,
     user_has_bed,
     user_owns_bed_here,
@@ -314,6 +315,12 @@ const RoomTab = (props, context) => {
     detected_is_cramped,
     in_use,
   } = data;
+
+  const [showBreakdown, setShowBreakdown] = useLocalState(
+    context,
+    'showBeautyBreakdown',
+    false
+  );
 
   return (
     <Section fill title="Room Management">
@@ -351,9 +358,17 @@ const RoomTab = (props, context) => {
                             ? 'bad'
                             : 'label'
                       }>
-                      {room_beauty} total ({room_beauty_avg} avg)
+                      {room_beauty} total ({room_beauty_avg}/tile)
                     </Box>
+                    <Button
+                      ml={1}
+                      icon={showBreakdown ? 'chevron-up' : 'chevron-down'}
+                      tooltip="Show beauty breakdown"
+                      onClick={() => setShowBreakdown(!showBreakdown)} />
                   </Box>
+                  {showBreakdown && (
+                    <BeautyBreakdown breakdown={beauty_breakdown} />
+                  )}
                   {(room_type === 'Living Quarters'
                     || room_type === 'Barracks') && (
                     <Box>
@@ -565,6 +580,100 @@ const RoomTab = (props, context) => {
         )}
       </Stack>
     </Section>
+  );
+};
+
+// ===== Beauty Breakdown Component =====
+const BeautyBreakdown = (props) => {
+  const { breakdown = [] } = props;
+
+  if (breakdown.length === 0) {
+    return (
+      <Box color="label" fontSize="11px" mt={1} ml={2}>
+        No beauty contributors found.
+      </Box>
+    );
+  }
+
+  // Group items by name and sum their beauty values
+  const grouped = {};
+  for (const item of breakdown) {
+    const key = item.name + '|' + item.type;
+    if (grouped[key]) {
+      grouped[key].count += 1;
+      grouped[key].totalBeauty += item.beauty;
+    } else {
+      grouped[key] = {
+        name: item.name,
+        type: item.type,
+        beauty: item.beauty,
+        count: 1,
+        totalBeauty: item.beauty,
+      };
+    }
+  }
+
+  // Convert to array and sort by absolute total beauty
+  const items = Object.values(grouped).sort(
+    (a, b) => Math.abs(b.totalBeauty) - Math.abs(a.totalBeauty)
+  );
+
+  // Get icon for source type
+  const getIcon = (type) => {
+    switch (type) {
+      case 'turf':
+        return 'square';
+      case 'structure':
+        return 'cube';
+      case 'machine':
+        return 'cog';
+      case 'mob':
+        return 'user';
+      case 'item':
+        return 'box';
+      default:
+        return 'question';
+    }
+  };
+
+  return (
+    <Box
+      mt={1}
+      ml={2}
+      p={1}
+      style={{
+        background: 'rgba(0, 0, 0, 0.2)',
+        borderRadius: '3px',
+        maxHeight: '120px',
+        overflowY: 'auto',
+      }}>
+      <Box fontSize="10px" color="label" mb={0.5}>
+        Beauty Contributors:
+      </Box>
+      {items.map((item, index) => (
+        <Flex key={index} fontSize="11px" mb={0.25}>
+          <Flex.Item basis="15px">
+            <Icon name={getIcon(item.type)} color="label" />
+          </Flex.Item>
+          <Flex.Item grow>
+            {item.name}
+            {item.count > 1 && ` (x${item.count})`}
+          </Flex.Item>
+          <Flex.Item basis="50px" textAlign="right">
+            <Box
+              inline
+              bold
+              color={item.totalBeauty > 0
+                ? 'good'
+                : item.totalBeauty < 0
+                  ? 'bad'
+                  : 'label'}>
+              {item.totalBeauty > 0 ? '+' : ''}{item.totalBeauty}
+            </Box>
+          </Flex.Item>
+        </Flex>
+      ))}
+    </Box>
   );
 };
 

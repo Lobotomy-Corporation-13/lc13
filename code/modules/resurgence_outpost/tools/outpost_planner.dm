@@ -202,9 +202,11 @@
 		data["room_walls"] = current_room.boundary_walls.len
 		data["room_doors"] = current_room.boundary_doors.len
 
-		// Room beauty info
-		data["room_beauty"] = current_room.totalbeauty
-		data["room_beauty_avg"] = current_room.beauty
+		// Room beauty info (use resurgence beauty system)
+		data["room_beauty"] = current_room.total_resurgence_beauty
+		data["room_beauty_avg"] = round(current_room.resurgence_beauty, 0.1)
+		// Get beauty breakdown for this room
+		data["beauty_breakdown"] = get_area_beauty_breakdown(current_room)
 
 		// Bed ownership info - beds are now claimed, not rooms
 		data["user_ckey"] = user.ckey
@@ -759,9 +761,9 @@
 		to_chat(user, span_warning("You must be inside a designated room."))
 		return
 
-	var/old_beauty = room.totalbeauty
+	var/old_beauty = room.total_resurgence_beauty
 	recalculate_area_beauty(room)
-	var/new_beauty = room.totalbeauty
+	var/new_beauty = room.total_resurgence_beauty
 
 	to_chat(user, span_notice("Recalculated room beauty: [old_beauty] -> [new_beauty]"))
 	playsound(user, 'sound/items/deconstruct.ogg', 30, TRUE)
