@@ -41,6 +41,12 @@ GLOBAL_LIST_EMPTY(dead_players_during_shift)
 		SSblackbox.ReportDeath(src)
 		log_message("has died (BRUTE: [src.getBruteLoss()], FIRE: [src.getFireLoss()], TOX: [src.getToxLoss()], OXY: [src.getOxyLoss()], CLONE: [src.getCloneLoss()])", LOG_ATTACK)
 
+	// Handle bounty death in fixers mode
+	if(SSmaptype.maptype == "fixers" && SScity_economy && ckey)
+		var/datum/city_bounty/bounty = SScity_economy.check_bounty(src)
+		if(bounty)
+			bounty.on_bounty_death()
+
 	med_hud_set_sanity() // Change it to death state
 	to_chat(src, span_warning("You have died. To continue playing, use the \"Respawn\" verb in the OOC tab."))
 

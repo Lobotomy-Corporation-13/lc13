@@ -1,12 +1,7 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "au" = (
-/obj/machinery/door/airlock/medical{
-	hackProof = 1;
-	integrity_failure = 0.1;
-	max_integrity = 1e+009;
-	name = "Secure medical room";
-	normal_integrity = 1e+009;
-	req_access_txt = "9"
+/obj/machinery/newscaster{
+	pixel_y = 32
 	},
 /turf/open/indestructible/white,
 /area/city/shop)
@@ -19,13 +14,6 @@
 /obj/structure/flora/ausbushes/lavendergrass,
 /turf/open/floor/plating/grass,
 /area/city)
-"aT" = (
-/obj/machinery/light{
-	dir = 1
-	},
-/obj/structure/closet/crate/freezer/surplus_limbs,
-/turf/open/floor/plasteel/white,
-/area/city/shop)
 "bc" = (
 /obj/structure/fluff/beach_umbrella/science,
 /turf/open/floor/plating/beach/sand,
@@ -43,9 +31,14 @@
 /turf/open/indestructible/white,
 /area/city/shop)
 "bl" = (
-/obj/structure/rack,
-/turf/open/indestructible/white,
-/area/city/shop)
+/obj/structure/chair/plastic{
+	dir = 1
+	},
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "bn" = (
 /obj/structure/closet/secure_closet/personal/cabinet,
 /obj/item/clothing/under/pants/blackjeans,
@@ -113,6 +106,10 @@
 	},
 /turf/open/floor/wood,
 /area/city/shop)
+"cN" = (
+/obj/machinery/payment_kiosk,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/backstreets_checkpoint)
 "cT" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/effect/turf_decal/tile/red{
@@ -398,6 +395,9 @@
 /obj/structure/chair/sofa/corner{
 	dir = 4
 	},
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
 /turf/open/floor/wood,
 /area/city/shop)
 "fP" = (
@@ -422,6 +422,9 @@
 	dir = 1
 	},
 /obj/machinery/vending/weaving/cheap,
+/obj/machinery/newscaster{
+	pixel_y = 32
+	},
 /turf/open/floor/facility/dark,
 /area/city/shop)
 "gw" = (
@@ -459,6 +462,9 @@
 /obj/effect/spawner/structure/window/reinforced,
 /obj/machinery/door/poddoor/shutters/window/preopen{
 	id = "extraction"
+	},
+/obj/machinery/newscaster{
+	pixel_y = 32
 	},
 /turf/open/floor/plating/airless,
 /area/city/shop)
@@ -526,17 +532,11 @@
 /turf/open/floor/plating/grass,
 /area/city)
 "hE" = (
-/obj/machinery/light{
-	dir = 1
+/obj/machinery/body_modification_fabricator/public,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
 	},
-/obj/machinery/button/door{
-	id = "outside";
-	name = "prosthetics clinic shutters";
-	pixel_y = 26;
-	req_access_txt = "9"
-	},
-/turf/open/floor/plating/ashplanet/rocky,
-/area/city)
+/area/city/shop)
 "hM" = (
 /obj/machinery/door/airlock/medical{
 	hackProof = 1;
@@ -562,6 +562,10 @@
 	dir = 5
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/body_modification_remover,
+/obj/item/body_modification_tester,
+/obj/item/augment_remover,
+/obj/item/augment_tester,
 /turf/open/floor/facility/dark,
 /area/city/shop)
 "ig" = (
@@ -721,15 +725,12 @@
 /turf/open/floor/facility/dark,
 /area/city/shop)
 "kt" = (
-/obj/machinery/door/airlock/medical{
-	hackProof = 1;
-	integrity_failure = 0.1;
-	max_integrity = 1e+009;
-	name = "Secure medical room";
-	normal_integrity = 1e+009;
-	req_access_txt = "9"
+/obj/machinery/body_modification_catalogue{
+	pixel_x = -32
 	},
-/turf/open/floor/plasteel/white,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "ku" = (
 /obj/effect/turf_decal/siding/wideplating/dark{
@@ -943,14 +944,11 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "px" = (
-/obj/machinery/door/airlock/public{
-	name = "prosthetic surgery clinic"
+/obj/machinery/newscaster{
+	pixel_x = 32
 	},
-/obj/machinery/door/poddoor/shutters/indestructible{
-	id = "outside"
-	},
-/turf/open/floor/plasteel/white,
-/area/city/shop)
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "qn" = (
 /obj/machinery/button/door/indestructible{
 	id = "extraction";
@@ -1051,6 +1049,9 @@
 /area/city/shop)
 "rr" = (
 /obj/machinery/vending/custom/unbreakable,
+/obj/machinery/newscaster{
+	pixel_x = 32
+	},
 /turf/open/floor/plasteel,
 /area/city/shop)
 "rt" = (
@@ -1078,6 +1079,10 @@
 /area/city/backstreets_checkpoint)
 "rF" = (
 /turf/open/floor/facility/dark,
+/area/city/shop)
+"rH" = (
+/obj/machinery/payment_kiosk,
+/turf/open/indestructible/white,
 /area/city/shop)
 "rP" = (
 /obj/structure/table,
@@ -1128,8 +1133,7 @@
 /area/city)
 "te" = (
 /obj/machinery/door/airlock/wood{
-	name = "workshop fixer access";
-	req_access_txt = "11"
+	name = "workshop"
 	},
 /turf/open/floor/facility/dark,
 /area/city/shop)
@@ -1143,10 +1147,6 @@
 	},
 /turf/open/floor/wood,
 /area/city/shop)
-"to" = (
-/obj/structure/fixer_grade_terminal,
-/turf/closed/indestructible/riveted/plastinum,
-/area/city/fixers)
 "tv" = (
 /obj/machinery/door/airlock/public,
 /turf/open/floor/eighties,
@@ -1375,11 +1375,9 @@
 /turf/open/indestructible/white,
 /area/city/shop)
 "xj" = (
-/obj/structure/rack,
-/obj/item/weldingtool/experimental,
-/obj/item/screwdriver,
-/turf/open/indestructible/white,
-/area/city/shop)
+/obj/structure/fixer_grade_terminal,
+/turf/closed/indestructible/riveted/plastinum,
+/area/city/fixers)
 "xp" = (
 /obj/machinery/door/airlock/public,
 /turf/open/indestructible/white,
@@ -1477,13 +1475,6 @@
 	pixel_y = 13
 	},
 /turf/open/floor/wood,
-/area/city/shop)
-"zC" = (
-/obj/structure/rack,
-/obj/machinery/light{
-	dir = 1
-	},
-/turf/open/indestructible/white,
 /area/city/shop)
 "zD" = (
 /obj/machinery/vending/city_clothing,
@@ -1778,17 +1769,11 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "Dj" = (
-/obj/machinery/light{
-	dir = 1
+/obj/machinery/newscaster{
+	pixel_y = 32
 	},
-/obj/machinery/button/door{
-	id = "outside";
-	name = "prosthetics clinic shutters";
-	pixel_y = 26;
-	req_access_txt = "9"
-	},
-/turf/open/floor/plasteel/white,
-/area/city/shop)
+/turf/open/floor/plating/grass,
+/area/city)
 "Do" = (
 /obj/structure/table/wood,
 /obj/item/flashlight/lamp,
@@ -1897,8 +1882,8 @@
 /turf/open/floor/facility/dark,
 /area/city/shop)
 "Fx" = (
-/obj/structure/chair/office/light,
-/turf/open/floor/plasteel/white,
+/obj/machinery/body_modification_fabricator,
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "FA" = (
 /obj/effect/turf_decal/bot,
@@ -2077,6 +2062,9 @@
 /area/city/backstreets_alley)
 "Im" = (
 /obj/machinery/body_preservation_unit,
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
 /turf/open/floor/facility,
 /area/city/shop)
 "Iq" = (
@@ -2091,6 +2079,10 @@
 	},
 /turf/open/floor/wood,
 /area/city/shop)
+"IC" = (
+/obj/machinery/payment_kiosk,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "IF" = (
 /obj/machinery/biogenerator,
 /turf/open/indestructible/white,
@@ -2110,8 +2102,7 @@
 /area/city)
 "IX" = (
 /obj/machinery/door/airlock/wood{
-	name = "workshop fixer access";
-	req_access_txt = "11"
+	name = "workshop"
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -2119,6 +2110,9 @@
 /area/city/shop)
 "Je" = (
 /obj/machinery/stasis,
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
 /turf/open/indestructible/white,
 /area/city/shop)
 "Jp" = (
@@ -2502,16 +2496,15 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "Qp" = (
-/obj/structure/reagent_dispensers/fueltank/large,
-/obj/machinery/light{
-	dir = 1
-	},
-/turf/open/indestructible/white,
+/obj/machinery/augment_fabricator,
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "Qw" = (
-/obj/machinery/vending/prosthetic,
-/turf/open/indestructible/white,
-/area/city/shop)
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city)
 "Qy" = (
 /obj/structure/itemselling,
 /turf/open/floor/mineral/titanium/tiled/white,
@@ -2785,8 +2778,12 @@
 /turf/open/floor/eighties,
 /area/city/fixers)
 "Ux" = (
-/obj/structure/table/glass,
-/turf/open/indestructible/white,
+/obj/machinery/newscaster{
+	pixel_y = -32
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "Uz" = (
 /turf/closed/indestructible/fakeglass,
@@ -2808,8 +2805,11 @@
 /turf/open/indestructible/white,
 /area/city/shop)
 "UO" = (
-/turf/open/floor/plasteel/white,
-/area/city/shop)
+/obj/machinery/newscaster{
+	pixel_x = 32
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/fixers)
 "Vb" = (
 /obj/structure/curtain,
 /turf/open/indestructible/white,
@@ -2968,10 +2968,13 @@
 /turf/closed/indestructible/reinforced,
 /area/city/shop)
 "Yl" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	id = "outside"
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
 	},
-/turf/closed/indestructible/fakeglass,
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "Yo" = (
 /obj/machinery/stasis,
@@ -3004,12 +3007,14 @@
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city/backstreets_checkpoint)
 "YA" = (
-/obj/item/storage/backpack/duffelbag/med/surgery{
-	pixel_y = 5
+/obj/effect/turf_decal/weather/sand{
+	dir = 1
 	},
-/obj/structure/table/glass,
-/turf/open/indestructible/white,
-/area/city/shop)
+/obj/machinery/newscaster{
+	pixel_x = -32
+	},
+/turf/open/floor/wood,
+/area/city)
 "YB" = (
 /obj/effect/turf_decal/bot,
 /obj/machinery/telecomms/hub/preset,
@@ -3070,21 +3075,11 @@
 /turf/closed/indestructible/riveted/plastinum,
 /area/city/fixers)
 "ZP" = (
-/obj/structure/table/glass,
-/obj/item/stack/cable_coil,
-/obj/item/stack/cable_coil{
-	pixel_x = 2;
-	pixel_y = -2
+/obj/structure/table/reinforced,
+/obj/machinery/newscaster{
+	pixel_x = -32
 	},
-/obj/item/stack/cable_coil{
-	pixel_x = 3;
-	pixel_y = 3
-	},
-/obj/item/stack/cable_coil{
-	pixel_x = -3;
-	pixel_y = 3
-	},
-/turf/open/indestructible/white,
+/turf/open/floor/plasteel,
 /area/city/shop)
 "ZU" = (
 /obj/machinery/light{
@@ -24554,12 +24549,12 @@ Ta
 Ta
 Ta
 Ta
-PE
-PE
-PE
-PE
-PE
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -24811,12 +24806,12 @@ Ta
 Ta
 Ta
 Ta
-PE
-Hw
-YA
-ZP
-Ux
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -25064,16 +25059,16 @@ Ta
 Ta
 Ta
 Ta
-PE
-PE
-PE
-PE
-PE
-Mo
-KD
-KD
-KD
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -25319,18 +25314,18 @@ Ta
 Ta
 Ta
 Ta
-PE
-PE
-PE
-aT
-xj
-Qw
-PE
-Ux
-KD
-KD
-KD
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -25576,18 +25571,18 @@ Ta
 Ta
 Ta
 Ta
-PE
-Qp
-kt
-UO
-UO
-UO
-PE
-PE
-au
-PE
-au
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -25833,18 +25828,18 @@ Ta
 Ta
 Ta
 Ta
-PE
-PE
-PE
-bl
-KD
-UO
-PE
-Dj
-UO
-Ux
-UO
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -26092,16 +26087,16 @@ Ta
 Ta
 Ta
 Ta
-PE
-bl
-KD
-UO
-au
-UO
-Fx
-Ux
-UO
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -26349,16 +26344,16 @@ Ta
 Ta
 Ta
 Ta
-PE
-zC
-KD
-UO
-PE
-UO
-UO
-Ux
-UO
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -26606,16 +26601,16 @@ Ta
 Ta
 Ta
 Ta
-PE
-PE
-PE
-PE
-PE
-PE
-Yl
-Yl
-px
-PE
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
+Ta
 Ta
 Ta
 Ta
@@ -26869,9 +26864,9 @@ Ta
 Ta
 Ta
 NK
-hE
-LC
-kY
+bY
+bY
+bY
 eW
 ye
 ye
@@ -27127,7 +27122,7 @@ NK
 NK
 NK
 LC
-LC
+Qw
 LC
 ye
 nn
@@ -33038,7 +33033,7 @@ QM
 uG
 QM
 JY
-Na
+ZP
 EV
 qS
 qS
@@ -33046,8 +33041,8 @@ Ys
 LC
 LC
 LC
+IC
 bY
-Ta
 Ta
 bY
 LW
@@ -35342,7 +35337,7 @@ Ta
 PE
 HX
 Wr
-Wr
+Yl
 Wr
 qG
 PE
@@ -36392,7 +36387,7 @@ LC
 LC
 LC
 LC
-LC
+px
 LC
 LC
 LC
@@ -37146,7 +37141,7 @@ ku
 Ge
 qn
 kZ
-qN
+kt
 Js
 PE
 jQ
@@ -37426,7 +37421,7 @@ LC
 LC
 LC
 LC
-LC
+IC
 PE
 PE
 PE
@@ -37657,11 +37652,11 @@ tN
 PE
 WZ
 rF
-rF
+Fx
 bL
 GD
 qN
-qN
+hE
 PE
 RG
 tY
@@ -37914,11 +37909,11 @@ KY
 PE
 CD
 rF
-rF
+Qp
 bL
 GM
 qN
-qN
+Ux
 PE
 bd
 tY
@@ -37966,7 +37961,7 @@ LC
 LC
 LC
 LC
-LC
+IC
 bY
 Ta
 Ta
@@ -38469,7 +38464,7 @@ LC
 LC
 LC
 LC
-LC
+px
 LC
 LC
 LC
@@ -39457,7 +39452,7 @@ Zu
 Yg
 Yg
 Yg
-Yg
+rE
 Yg
 Yg
 Yg
@@ -39712,7 +39707,7 @@ Ia
 Ia
 Zu
 Yg
-rE
+Yg
 Yg
 Yg
 Yg
@@ -39765,7 +39760,7 @@ db
 Ua
 db
 jn
-xY
+bl
 bY
 Ta
 Ta
@@ -39971,7 +39966,7 @@ Hf
 FO
 Bn
 Fa
-FO
+cN
 FO
 FO
 FO
@@ -40229,7 +40224,7 @@ FO
 FO
 FO
 FO
-Ta
+FO
 Ta
 Ta
 Ta
@@ -40748,7 +40743,7 @@ Ta
 Ta
 Ta
 Ta
-to
+xj
 hO
 eN
 Pp
@@ -41804,7 +41799,7 @@ PE
 PE
 bY
 bY
-cm
+Dj
 cm
 cm
 cm
@@ -42292,7 +42287,7 @@ Ta
 Ta
 zQ
 NS
-eN
+UO
 YH
 zQ
 LC
@@ -43075,11 +43070,11 @@ bY
 bY
 LC
 PE
+au
 KD
 KD
 KD
-KD
-KD
+rH
 PE
 TN
 KD
@@ -44858,7 +44853,7 @@ LC
 LC
 LC
 LC
-LC
+Qw
 LC
 LC
 LC
@@ -45131,7 +45126,7 @@ Pz
 Pz
 Pz
 Pz
-Iq
+YA
 vh
 SZ
 XB
