@@ -21,8 +21,8 @@
 	var/hellfire_branch_enabled = TRUE
 	/// Whether the Venom Rattlesnake branch is enabled for research
 	var/venom_branch_enabled = TRUE
-	/// Whether the Storm Ram branch is enabled for research (disabled - bugs to fix)
-	var/storm_branch_enabled = FALSE
+	/// Whether the Storm Ram branch is enabled for research
+	var/storm_branch_enabled = TRUE
 	/// Whether the Utility branch is enabled for research
 	var/utility_branch_enabled = TRUE
 

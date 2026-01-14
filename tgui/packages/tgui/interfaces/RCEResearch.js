@@ -716,7 +716,7 @@ const SamplesTab = (props, context) => {
                     </Stack.Item>
                   )}
                   <Stack.Item
-                  grow={!selectedResearch || !part.meetsRequirements}>
+                    grow={!selectedResearch || !part.meetsRequirements}>
                     <Button
                       fluid
                       icon="eject"
