@@ -11,9 +11,11 @@ import { Window } from '../layouts';
 export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
   const { ego_weapon_datums, ego_armor_datums, all_tags } = data;
+
+  /* ------------ React Hooks ------------*/
+
   /// Controls whether we're viewing Weapons or Armour
   const [tab, setTab] = useLocalState(context, 'tab', 1);
-
   /// Name search filter.
   const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "")
   /// Armour resistance filters. It's an object with the colours as keys and the minimum resistance rank from -10 to 10 as the value. Since we receive them as roman numerals, we need to decode them for comparison.
@@ -26,6 +28,9 @@ export const TestRangeEgoPrinter = (props, context) => {
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null)
   /// This holds either null (not viewing any EGO's details) or an EGO datum object. If it isn't null, we replace the EGO list with the datum's details.
   const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null)
+
+  /* ------------ Other Variables ------------*/
+
   // This threat class stuff is hardcoded because THREAT_TO_COLOR and THREAT_TO_NAME defines are alists and I can't send them in TGUI data
   const threatclass_colors = { 1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000" }
   const threatclass_names = { 1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH" }
@@ -38,10 +43,14 @@ export const TestRangeEgoPrinter = (props, context) => {
   const regex_for_shields = /ego_weapon\/shield\//
   const regex_for_armor = /clothing\/suit\/armor\/ego_gear\//
 
+  /* ------------ Functions ------------*/
+
+  // Checks whether a datum's threat class is currently being filtered for.
   const CheckThreatClassFilters = (datum) => {
     return threatClassFilters[datum.threatclass]
   }
 
+  // Converts an object of roman numeral strings into decimals. The keys must be "red", "white", "black", "pale".
   const DecodeProtectionClasses = (armor_list) => {
     var decoded_armor_list = { "red": 1, "white": 1, "black": 1, "pale": 1 }
 
@@ -55,6 +64,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     return decoded_armor_list
   }
 
+  // Returns TRUE if the datum argument is an armour and its resistance values are all equal or higher than the minimum established by the armour filters.
   const CheckArmorResistanceFilters = (datum) => {
     const decodedProtectionClasses = DecodeProtectionClasses(datum.information.armor)
     for (var string in armorResistanceFilters) {
@@ -66,6 +76,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     return true;
   }
 
+  // Returns TRUE if the datum argument's name includes whatever the user typed into the search bar, and also returns TRUE if there isn't any search filter at all.
   const CheckNameSearchFilter = (datum) => {
     if (!nameSearchText) {
       return true
@@ -73,11 +84,11 @@ export const TestRangeEgoPrinter = (props, context) => {
     return datum.information.name.toLowerCase().includes(nameSearchText.toLowerCase())
   }
 
-
   const ChangeWeaponDamtypeFilter = (color) => {
     color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null) : setCurrentWeaponDamtypeFilter(color)
   }
 
+  // Returns TRUE if the datum argument's damage type matches the damage type filter, or returns TRUE if there isn't a damage type filter. Will check both ranged and melee damage for guns.
   const CheckWeaponDamtypeFilters = (datum) => {
     if (!currentWeaponDamtypeFilter) {
       return true
@@ -93,6 +104,7 @@ export const TestRangeEgoPrinter = (props, context) => {
       return false
   }
 
+  // Returns TRUE if the datum argument has the tags we're filtering for, or if there are no tag filters.
   const CheckTagFilters = (datum) => {
     var should_show = false
     var filtering_tags = egoTagList.map(tag => {
@@ -114,8 +126,10 @@ export const TestRangeEgoPrinter = (props, context) => {
     return should_show
   }
 
-  const AllEgoTagCheckboxes = (props, context) => {
+  /* ------------ Functional Components ------------*/
 
+  // A list of all the EGO tag filter checkboxes.
+  const AllEgoTagCheckboxes = (props, context) => {
     const ChangeEgoTagFilters = (id) => {
       const newEgoTagList = egoTagList?.map(tag => {
         if (tag.tag_name === id) {
@@ -146,6 +160,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // A list of all the weapon datums that pass the filter checks.
   const AllWeaponDatums = (props, context) => {
     const { datum_list } = props;
 
@@ -157,6 +172,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // A list of all the armour datums that pass the filter checks.
   const AllArmorDatums = (props, context) => {
     const { act, data } = useBackend(context);
     const { datum_list } = props;
@@ -169,6 +185,10 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // An entry for an EGO datum. Consists of a preview image, a threat class, a name, the print button and a description.
+  // Passes the 'type' prop to <AppropiateDescription/> to generate an appropiate description.
+  // Print button sends out the 'print_ego' action to the backend with the datum's path as its payload.
+  // The preview image is a base64 string generated and cached in the backend.
   const EgoDatumEntry = (props, context) => {
     const { datum, type } = props;
 
@@ -221,6 +241,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // Returns either an <ArmorEntryDescription/>, <RangedWeaponEntryDescription/> or a <MeleeWeaponEntryDescription/> based on the type passed to it and the result of a regex check on the path.
   const AppropiateDescription = (props) => {
     const { datum, type } = props;
 
@@ -234,6 +255,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     }
   }
 
+  // Basic description of the core stats of a melee weapon, and a details button for further info.
   const MeleeWeaponEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -254,6 +276,8 @@ export const TestRangeEgoPrinter = (props, context) => {
       </FlexItem>
     )
   }
+
+  // Basic description of the core stats of a ranged weapon, and a details button for further info.
   const RangedWeaponEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -277,6 +301,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // Basic description of the resistances of an armour, and a details button for further info.
   const ArmorEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -300,6 +325,8 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
+  // A slider that controls the minimum resistance of a certain damtype that an armour needs to have to be displayed in the EGO list.
+  // Holds numerical values [-10; 10] but displays in roman numeral format.
   const ArmorResistanceFilterSlider = (props, context) => {
     const { resistance_color, color } = props;
 
@@ -323,6 +350,8 @@ export const TestRangeEgoPrinter = (props, context) => {
       />
     )
   }
+
+  // One of the big components of this interface. Holds either all the weapon or armour datums depending on which tab is active.
   const EGOList = (props, context) => {
     const { ego_weapon_datums, ego_armor_datums } = props;
 
@@ -342,32 +371,38 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
-const EGODetails = (props, context) => {
+  // One of the big components of this interface. This is a detailed view of an EGO's properties, it should appear in place of the EGO list. It's a section + a details component based on the datum type.
+  // Runs a bunch of simple regex to figure out if the datum it gets passed is armour, a shield, a gun or a simple melee weapon.
+  // Has a 'back' button to return to the EGO list, and a 'print' button to print the EGO. The latter is because exiting to the EGO list will reset the scroll position, and I don't know how to avoid that.
+  // In theory you should just save the scroll position as a local state, but I don't really know how to access or modify it.
+  const EGODetails = (props, context) => {
     const { detailed_datum } = props;
     const section_title = ("E.G.O. Details - " + detailed_datum.information?.name)
     const common_path_eliminated_string = detailed_datum.path.slice(10)
     const what_are_we_dealing_with = (regex_for_armor.test(common_path_eliminated_string) ? "armor" :
-    regex_for_guns.test(common_path_eliminated_string) ? "gun" :
-    regex_for_shields.test(common_path_eliminated_string) ? "shield" :
-    regex_for_melee.test(common_path_eliminated_string) ? "melee" : null);
+      regex_for_guns.test(common_path_eliminated_string) ? "gun" :
+        regex_for_shields.test(common_path_eliminated_string) ? "shield" :
+          regex_for_melee.test(common_path_eliminated_string) ? "melee" : null);
 
     return (
       <Section scrollable fill title={section_title} buttons={[<Button
-                  content="Print E.G.O."
-                  color="green"
-                  onClick={() => act('print_ego', {
-                    chosen_ego: detailed_datum.path,
-                  })} />, <ExitDetailsButton/>]}>
-          {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum}/> :
-           what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum}/> :
-           what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum}/> :
-           what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum}/> :
-           "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
+        content="Print E.G.O."
+        color="green"
+        onClick={() => act('print_ego', {
+          chosen_ego: detailed_datum.path,
+        })} />, <ExitDetailsButton />]}>
+        {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} /> :
+          what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} /> :
+            what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} /> :
+              what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum} /> :
+                "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
       </Section>
     )
   }
 
-const CommonDetails = (props, context) => {
+  // This part of the details page is shared by all EGO. Except armour which passes the 'hide_special' prop since armour doesn't have that var in the backend.
+  // Includes a preview image, name, threat class, PE cost, path, attribute requirements, description and special info.
+  const CommonDetails = (props, context) => {
     const { detailed_datum, hide_special } = props;
 
     return (
@@ -393,7 +428,7 @@ const CommonDetails = (props, context) => {
         </FlexItem>
 
         <FlexItem>
-          <b>Cost</b>: {detailed_datum.cost} PE Boxes
+          <b>Cost</b>: {detailed_datum.cost} Unique PE Boxes
         </FlexItem>
 
         <FlexItem>
@@ -406,7 +441,7 @@ const CommonDetails = (props, context) => {
               <TableCell backgroundColor="red" px={1}>Fortitude</TableCell><TableCell backgroundColor="white" color="black" px={1}>Prudence</TableCell><TableCell backgroundColor="violet" px={1}>Temperance</TableCell><TableCell backgroundColor="teal" px={1}>Justice</TableCell>
             </TableRow>
             <TableRow textAlign="center">
-              <TableCell backgroundColor="red" textAlign="center">{detailed_datum.information.attribute_requirements.Fortitude?? "-"}</TableCell><TableCell backgroundColor="white" color="black" textAlign="center">{detailed_datum.information.attribute_requirements.Prudence?? "-"}</TableCell><TableCell backgroundColor="violet" textAlign="center">{detailed_datum.information.attribute_requirements.Temperance?? "-"}</TableCell><TableCell backgroundColor="teal" textAlign="center">{detailed_datum.information.attribute_requirements.Justice?? "-"}</TableCell>
+              <TableCell backgroundColor="red" textAlign="center">{detailed_datum.information.attribute_requirements.Fortitude ?? "-"}</TableCell><TableCell backgroundColor="white" color="black" textAlign="center">{detailed_datum.information.attribute_requirements.Prudence ?? "-"}</TableCell><TableCell backgroundColor="violet" textAlign="center">{detailed_datum.information.attribute_requirements.Temperance ?? "-"}</TableCell><TableCell backgroundColor="teal" textAlign="center">{detailed_datum.information.attribute_requirements.Justice ?? "-"}</TableCell>
             </TableRow>
           </Table>
         </FlexItem>
@@ -417,40 +452,41 @@ const CommonDetails = (props, context) => {
         </FlexItem>
 
         <FlexItem minWidth={"100%"} mt={1} mb={3}>
-          <Divider/>
+          <Divider />
         </FlexItem>
 
         <FlexItem align="start" mb={3}>
           <b>Description:</b>
-          <BlockQuote mt={1}>{detailed_datum.information.description?? "This E.G.O. has no description."}</BlockQuote>
+          <BlockQuote mt={1}>{detailed_datum.information.description ?? "This E.G.O. has no description."}</BlockQuote>
         </FlexItem>
         {!hide_special && <FlexItem align="start" mb={3}>
           <b>Special Information:</b>
-          <BlockQuote mt={1}>{detailed_datum.information.special?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
+          <BlockQuote mt={1}>{detailed_datum.information.special ?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
         </FlexItem>}
 
         <FlexItem minWidth={"100%"} mt={1} mb={2}>
-          <Divider/>
+          <Divider />
         </FlexItem>
       </Flex>
     )
   }
 
+  // Details specific to armour. CommonDetails and a table of resistances.
   const ArmorDetails = (props, context) => {
     const { datum } = props;
 
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum} hide_special={true}/>
+          <CommonDetails detailed_datum={datum} hide_special={true} />
         </FlexItem>
         <FlexItem mb={2} align="start">
           <b>Resistances:</b>
         </FlexItem>
         <FlexItem>
           <Table mt={1}>
-              <TableRow color="#020202" bold><TableCell textAlign="center" backgroundColor="red" minWidth="25%">RED</TableCell><TableCell textAlign="center" backgroundColor="white" minWidth="25%">WHITE</TableCell><TableCell textAlign="center" backgroundColor="violet" minWidth="25%">BLACK</TableCell><TableCell textAlign="center" backgroundColor="teal" minWidth="25%">PALE</TableCell></TableRow>
-              <TableRow><TableCell textAlign="center">{datum.information?.armor?.red ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.white ?? "-"}</TableCell ><TableCell textAlign="center">{datum.information?.armor?.black ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.pale ?? "-"}</TableCell></TableRow>
+            <TableRow color="#020202" bold><TableCell textAlign="center" backgroundColor="red" minWidth="25%">RED</TableCell><TableCell textAlign="center" backgroundColor="white" minWidth="25%">WHITE</TableCell><TableCell textAlign="center" backgroundColor="violet" minWidth="25%">BLACK</TableCell><TableCell textAlign="center" backgroundColor="teal" minWidth="25%">PALE</TableCell></TableRow>
+            <TableRow><TableCell textAlign="center">{datum.information?.armor?.red ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.white ?? "-"}</TableCell ><TableCell textAlign="center">{datum.information?.armor?.black ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.pale ?? "-"}</TableCell></TableRow>
           </Table>
         </FlexItem>
 
@@ -458,96 +494,105 @@ const CommonDetails = (props, context) => {
 
     )
   }
+
+  // Details specific to guns. CommonDetails, a table based on the ranged properties of the gun, and a BaseMeleeStatsTable.
   const GunDetails = (props, context) => {
     const { datum } = props;
-    const damtype_cell_background_color = (damage_type) => {return damage_type === "red" ? "red" :
-    damage_type === "white" ? "white" :
-    damage_type === "black" ? "violet" :
-    damage_type === "pale" ? "teal" :
-    "grey"}
+    const damtype_cell_background_color = (damage_type) => {
+      return damage_type === "red" ? "red" :
+        damage_type === "white" ? "white" :
+          damage_type === "black" ? "violet" :
+            damage_type === "pale" ? "teal" :
+              "grey"
+    }
 
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum}/>
+          <CommonDetails detailed_datum={datum} />
         </FlexItem>
         <FlexItem>
           <Flex direction="column" align="center" mb={3}>
-        <FlexItem mb={2} align="start">
-          <b>Base Ranged Stats:</b>
-        </FlexItem>
-        <FlexItem mb={4}>
-          <Table>
-            <TableRow header>
-              <TableCell color="label" textAlign="center" px={1}>Damage</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Damage Type</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Fire Delay</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Projectile Amount</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.force_ranged}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor={damtype_cell_background_color(datum.information.damtype_ranged)} textAlign="center" px={1}><b>{datum.information.damtype_ranged.toUpperCase()}</b></TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.numeric_ranged_attack_speed}ds ({datum.information.ranged_attack_speed})</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.pellets}</TableCell>
-            </TableRow>
-          </Table>
-        </FlexItem>
-        <FlexItem minWidth={"100%"} mt={2}>
-          <Divider/>
-        </FlexItem>
-        <FlexItem>
-          <BaseMeleeStatsTable datum={datum}/>
-        </FlexItem>
-      </Flex>
+            <FlexItem mb={2} align="start">
+              <b>Base Ranged Stats:</b>
+            </FlexItem>
+            <FlexItem mb={4}>
+              <Table>
+                <TableRow header>
+                  <TableCell color="label" textAlign="center" px={1}>Damage</TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>Damage Type</TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>Fire Delay</TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>Projectile Amount</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.force_ranged}</TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor={damtype_cell_background_color(datum.information.damtype_ranged)} textAlign="center" px={1}><b>{datum.information.damtype_ranged.toUpperCase()}</b></TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.numeric_ranged_attack_speed}ds ({datum.information.ranged_attack_speed})</TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.pellets}</TableCell>
+                </TableRow>
+              </Table>
+            </FlexItem>
+            <FlexItem minWidth={"100%"} mt={2}>
+              <Divider />
+            </FlexItem>
+            <FlexItem>
+              <BaseMeleeStatsTable datum={datum} />
+            </FlexItem>
+          </Flex>
         </FlexItem>
 
       </Flex>
     )
   }
+
+  // Details specific to shield weapons. Includes CommonDetails, a BaseMeleeStatsTable and a ShieldWeaponResistancesTable.
   const ShieldDetails = (props, context) => {
     const { datum } = props;
 
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum}/>
+          <CommonDetails detailed_datum={datum} />
         </FlexItem>
         <FlexItem>
-          <BaseMeleeStatsTable datum={datum}/>
+          <BaseMeleeStatsTable datum={datum} />
         </FlexItem>
         <FlexItem>
-          <ShieldWeaponResistancesTable datum={datum}/>
+          <ShieldWeaponResistancesTable datum={datum} />
         </FlexItem>
       </Flex>
     )
   }
+
+  // Details specific to common melee weapons. Includes CommonDetails and a BaseMeleeStatsTable.
   const MeleeDetails = (props, context) => {
     const { datum } = props;
     const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red" :
-    datum.information.damtype_melee === "white" ? "white" :
-    datum.information.damtype_melee === "black" ? "violet" :
-    datum.information.damtype_melee === "pale" ? "teal" :
-    "grey"
+      datum.information.damtype_melee === "white" ? "white" :
+        datum.information.damtype_melee === "black" ? "violet" :
+          datum.information.damtype_melee === "pale" ? "teal" :
+            "grey"
 
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum}/>
+          <CommonDetails detailed_datum={datum} />
         </FlexItem>
         <FlexItem>
-          <BaseMeleeStatsTable datum={datum}/>
+          <BaseMeleeStatsTable datum={datum} />
         </FlexItem>
       </Flex>
     )
   }
 
+  // This is a table of the melee properties of a weapon, including the force, throwforce, damtype, attack speed, reach and selfstun time.
   const BaseMeleeStatsTable = (props, context) => {
     const { datum } = props;
     const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red" :
-    datum.information.damtype_melee === "white" ? "white" :
-    datum.information.damtype_melee === "black" ? "violet" :
-    datum.information.damtype_melee === "pale" ? "teal" :
-    "grey"
+      datum.information.damtype_melee === "white" ? "white" :
+        datum.information.damtype_melee === "black" ? "violet" :
+          datum.information.damtype_melee === "pale" ? "teal" :
+            "grey"
 
     return (
       <Flex direction="column" align="center" mb={3}>
@@ -566,25 +611,26 @@ const CommonDetails = (props, context) => {
             </TableRow>
             <TableRow>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.force_melee}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.throwforce}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.throwforce}</TableCell>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor={damtype_cell_background_color} textAlign="center" px={1}><b>{datum.information.damtype_melee.toUpperCase()}</b></TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.numeric_melee_attack_speed} ({datum.information.melee_attack_speed})</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.reach} tiles</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.stuntime ? datum.information.stuntime + " deciseconds" : "None"}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.numeric_melee_attack_speed} ({datum.information.melee_attack_speed})</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.reach} tiles</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.stuntime ? datum.information.stuntime + " deciseconds" : "None"}</TableCell>
             </TableRow>
           </Table>
         </FlexItem>
         <FlexItem italic color="#FDFDFD">
-          Please note that these values will not always be accurate, since many E.G.O. have effects that cannot be processed by this catalog.<br/><br/>
+          Please note that these values will not always be accurate, since many E.G.O. have effects that cannot be processed by this catalog.<br /><br />
           Force and Attack Speed, especially on Combo or Split Damage E.G.O. weapons, may ultimately be significantly higher or lower than listed in practice.
         </FlexItem>
         <FlexItem minWidth={"100%"} mt={2}>
-          <Divider/>
+          <Divider />
         </FlexItem>
       </Flex>
     )
   }
 
+  // This is a table of resistances per damtype for a shield weapon. Also includes info on the guard duration, cooldown and debuff duration.
   const ShieldWeaponResistancesTable = (props, context) => {
     const { datum } = props;
 
@@ -602,9 +648,9 @@ const CommonDetails = (props, context) => {
             </TableRow>
             <TableRow>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_duration} deciseconds</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.guard_cooldown} deciseconds</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111"textAlign="center" px={1}>{datum.information.guard_debuff_duration} deciseconds</TableCell>
-              </TableRow>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_cooldown} deciseconds</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_debuff_duration} deciseconds</TableCell>
+            </TableRow>
           </Table>
 
           <Table mt={3}>
@@ -616,23 +662,28 @@ const CommonDetails = (props, context) => {
             </TableRow>
             <TableRow>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="red" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.red]}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor="white"textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.white]}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor="white" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.white]}</TableCell>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="violet" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.black]}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="teal"textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.pale]}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="teal" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.pale]}</TableCell>
             </TableRow>
           </Table>
         </FlexItem>
         <i>'Debuff Duration' refers to the length of time during which you will become more vulnerable as a result of a failed guard.</i>
         <FlexItem minWidth={"100%"} mt={1}>
-          <Divider/>
+          <Divider />
         </FlexItem>
       </Flex>
     )
   }
 
+  // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
     return (<Button mx={1} icon="arrow-left" color="red" content="Back" onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />)
   }
+
+  // The actual TestRangeEgoPrinter interface component.
+  // It is a window with a horizontal flex which has 2 main items; the first is either the EGOList or EGODetails, and the second is a Filters section.
+  // A lot of stuff in the filters section COULD be made into functional components but I don't see a need to.
   return (
     <Window
       width={1000}
@@ -642,9 +693,9 @@ const CommonDetails = (props, context) => {
         <Flex>
           <FlexItem grow={3}>
             {currentlyDetailedEgoDatum === null ?
-            <EGOList ego_weapon_datums={ego_weapon_datums} ego_armor_datums={ego_armor_datums}/>
-            :
-            <EGODetails detailed_datum={currentlyDetailedEgoDatum}/>}
+              <EGOList ego_weapon_datums={ego_weapon_datums} ego_armor_datums={ego_armor_datums} />
+              :
+              <EGODetails detailed_datum={currentlyDetailedEgoDatum} />}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
@@ -792,10 +843,3 @@ const CommonDetails = (props, context) => {
     </Window>
   );
 };
-
-
-
-
-
-
-

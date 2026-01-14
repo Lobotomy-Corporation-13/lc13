@@ -160,7 +160,7 @@
 /datum/ego_datum/weapon/sorrow
 	item_path = /obj/item/ego_weapon/sorrow
 	cost = 20
-	testrange_blacklisted = TRUE
+	testrange_blacklisted = TRUE // This weapon can teleport you to a department center.
 	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/sorrow
@@ -418,6 +418,7 @@
 /datum/ego_datum/armor/liminal
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/liminal
 	cost = 20
+	testrange_blacklisted = TRUE // This armour is able to teleport you to another Z Level.
 
 // Lunar Physician - Patch
 /datum/ego_datum/weapon/patch
