@@ -38,6 +38,9 @@
 		if(istype(processing, /datum/job/east_soldato))
 			processing.total_positions = 4
 	. = ..()
+	// The ability to delimb yourself with a Thumb East weapon. Why does the Capo have this? Well, they're still part of the Thumb, and they're not even a top dog.
+	var/datum/action/self_discipline = new /datum/action/thumb_selfmutilate
+	H?.mind?.AddBoundAction(self_discipline)
 
 
 /datum/outfit/job/east_capo

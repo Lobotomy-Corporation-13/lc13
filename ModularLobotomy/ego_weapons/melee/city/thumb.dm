@@ -140,9 +140,9 @@
 							TEMPERANCE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
-	special = "This is a Thumb East weapon. Load it with propellant ammunition to unlock a powerful combo. Initiate the combo by attacking from range. Each hit of the combo requires 1 propellant round to trigger, and have varying damage and attack speed. Your combo will cancel if you run out of ammo, wait more than 5 seconds between hits, or hit without spending a round.\n"+\
-	"Hit the weapon with a handful of propellant ammunition to attempt to load as much of the handful as possible. Toggle your combo on or off by using this weapon in-hand. Alt-click the weapon to unload a round.\n"+\
-	"Spending ammo with this weapon generates heat. Heat increases the base damage of the weapon when not using combo attacks. It decays on each hit and is reset on reloading or unloading."
+	special = "This is a Thumb East weapon. <b>Load it with propellant ammunition to unlock a powerful combo</b>. Initiate the combo by <b>attacking from range</b>. Each hit of the combo requires 1 propellant round to trigger, and have varying damage and attack speed. Your combo will cancel if you run out of ammo, wait more than 5 seconds between hits, or hit without spending a round.\n"+\
+	"<b>Hit the weapon with a handful of propellant ammunition</b> to attempt to load as much of the handful as possible. Toggle your combo on or off by <b>using this weapon in-hand</b>. <b>Alt-click</b> the weapon to unload a round.\n"+\
+	"Spending ammo with this weapon generates <b>heat</b>. Heat increases the base damage of the weapon when <b>not</b> using combo attacks. It decays on each hit and is <b>reset on reloading or unloading</b>. Properly calibrated and well-maintained weapons will also inflict Burn based on their heat."
 	/// This list holds the bonuses that our next hit should deal. The keys for them are ["tremor"], ["burn"], ["aoe_flat_force_bonus"] and ["aoe_size_bonus"].
 	// I wanted to use a define like NEXTHIT_PROPELLANT_TREMOR_BONUS = next_hit_should_apply["tremor"] to simplify readability and maintainability...
 	// but it didn't work. Sorry.
@@ -152,7 +152,7 @@
 	/// Should always be TRUE unless the user manually disables combos by using the weapon in-hand. If it's FALSE, we won't try to combo when hitting.
 	var/combo_enabled = TRUE
 	/// Description for the combo. Explain it to the user.
-	var/combo_description = "This weapon's combo consists of a long-range lunge, followed by a circular AoE sweep around the user, and ends with a powerful line AoE through the target.\n"+\
+	var/combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a powerful <b>line AoE through the target</b>. This finisher will Tremor Burst the target if it has 30 stacks of Tremor.\n"+\
 	"If you trigger but miss your lunge, you can still continue the combo by landing a regular hit on-target."
 	/// Which step in the combo are we at? COMBO_NO_AMMO means we're either out of ammo, just ended a combo, or haven't started it.
 	var/combo_stage = COMBO_NO_AMMO
@@ -163,10 +163,15 @@
 	/// Variable that determines the standard combo reset timer duration. Gets +2s added onto it after COMBO_ATTACK2, so you have more time to do a finisher.
 	var/combo_reset_timer_duration = 5 SECONDS
 	/// List which maps the coefficients by which to multiply our damage on each hit depending on the state of the combo.
-	var/list/motion_values = list(COMBO_NO_AMMO = 1, COMBO_LUNGE = 1, COMBO_ATTACK2 = 1.2, COMBO_FINISHER = 1.5, COMBO_ATTACK2_AOE = 0.8, COMBO_FINISHER_AOE = 1,)
+	var/list/motion_values = list(COMBO_NO_AMMO = 1, COMBO_LUNGE = 1, COMBO_ATTACK2 = 1.25, COMBO_FINISHER = 1.5, COMBO_ATTACK2_AOE = 0.8, COMBO_FINISHER_AOE = 1,)
 	/// This variable holds a flat force increase that is only applied on COMBO_NO_AMMO hits. It increases when ammo is spent, and gets reset on reload or unload.
 	/// It decays on each hit that isn't part of a combo.
+	// On city maps, it will apply augment-burn, too.
 	var/overheat = 0
+	var/overheat_decay = 1
+	/// This variable's value is TRUE when this weapon exists in a City map. When it's TRUE, we apply augment-burn on non-combo hits if we have the heat for it.
+	// I'm sorry about making something this jank, but we're not allowed to apply status effects on Facility mode, and I don't want to directly ask for SSmaptype.maptype on every single attack.
+	var/apply_overheat_burn = FALSE
 
 	// Special attack variables.
 	/// Distance in tiles which our initial lunge reaches.
@@ -209,6 +214,8 @@
 	/// This list holds the types of ammo this weapon can load.
 	var/list/accepted_ammo_table = list(
 		/obj/item/stack/thumb_east_ammo,
+		/obj/item/stack/thumb_east_ammo/quake,
+		/obj/item/stack/thumb_east_ammo/inferno,
 		/obj/item/stack/thumb_east_ammo/facility,
 	)
 
@@ -220,6 +227,7 @@
 	var/lunge_sound = 'sound/weapons/ego/thumb_east_rifle_boostedlunge.ogg'
 	var/sweep_sound = 'sound/weapons/ego/thumb_east_rifle_boostedsweep.ogg'
 	var/finisher_sound = 'sound/weapons/ego/thumb_east_rifle_boostedfinisher.ogg'
+	var/dryfire_sound = 'sound/weapons/gun/general/dry_fire.ogg'
 	/// Ideally this one shouldn't even need to be stored on the weapon, and we'll change it according to the sound on round we fire, but it's convenient to store it here.
 	var/detonation_sound = 'sound/weapons/ego/thumb_east_rifle_detonation.ogg'
 
@@ -227,14 +235,26 @@
 // OVERRIDES SECTION.
 // This is all the code that overrides procs from parent types.
 
+// People complained they were too loud.
+/obj/item/ego_weapon/city/thumb_east/get_clamped_volume()
+	return 50
+
+// Sorry about having to do this, but I don't want to ask SSmaptype.citymaps every time the weapon is swung. This var is set so we know to apply overheat from heat only on city maps.
+/obj/item/ego_weapon/city/thumb_east/Initialize(mapload)
+	. = ..()
+	if(SSmaptype.maptype in SSmaptype.citymaps)
+		apply_overheat_burn = TRUE
+
 /// Includes the most immediately important info for the weapon: ammo amount and type, heat (if any), a description of the combo and a reminder that it can FF.
 /obj/item/ego_weapon/city/thumb_east/examine(mob/user)
 	. = ..()
 	. += span_danger("There are [length(current_ammo)]/[max_ammo] shots of [length(current_ammo) > 0 ? current_ammo_name : "propellant ammunition"] currently loaded.")
 	if(overheat > 0)
-		. += span_danger("This weapon's base damage is being raised by [overheat] due to the heat generated by spent rounds.")
+		. += span_danger("This weapon has [overheat] stored heat, raising base damage by [overheat * 0.75] on a non-combo hit due to the heat generated by spent rounds.")
+		if(apply_overheat_burn)
+			. += span_danger("This weapon [next_hit_should_apply["heat_burn"] > 0 ? "will apply [next_hit_should_apply["heat_burn"]] burn stacks" : "does not have enough heat to apply burn stacks"] on a non-combo hit based on the heat generated by spent rounds.")
 	. += span_info(combo_description)
-	. += span_danger("This weapon's AoE is indiscriminate. Watch out for friendly fire.")
+	. += span_danger("This weapon's AoE is indiscriminate. <b>Watch out for friendly fire</b>.")
 
 /// Using the weapon in-hand toggles comboing on and off.
 /obj/item/ego_weapon/city/thumb_east/attack_self(mob/living/user)
@@ -308,8 +328,10 @@
 	if(!combo_enabled)
 		ReturnToNormal()
 		// Decay our overheat bonus, but don't let it go negative...
-		overheat = max(0, overheat - 0.2)
-		return ..()
+		overheat = max(0, overheat - overheat_decay)
+		. = ..()
+		ApplyStatusEffects(target)
+		return
 	// Here's the core of the weapon. We have to make sure the appropiate bonuses are applied to the weapon before we call ..(), which is the hit itself.
 	switch(combo_stage)
 		// Importantly: every time we want to fire a round, we should use SpendAmmo(user).
@@ -320,8 +342,10 @@
 		if(COMBO_NO_AMMO)
 			ReturnToNormal(user)
 			// Decay our overheat bonus, but don't let it go negative...
-			overheat = max(0, overheat - 0.2)
-			return ..()
+			overheat = max(0, overheat - overheat_decay)
+			. = ..()
+			ApplyStatusEffects(target)
+			return
 		// This case is for an attack made out of a lunge. Lunge() is triggered in afterattack() from range, and the fired round bonuses are applied at that point.
 		if(COMBO_LUNGE)
 			// We already set hitsound in Lunge().
@@ -349,6 +373,7 @@
 			else
 				ReturnToNormal(user)
 				. = ..()
+				ApplyStatusEffects(target)
 				return
 		if(COMBO_FINISHER)
 			hitsound = null
@@ -364,8 +389,10 @@
 		// We should never ever reach this else block, but here is a failsafe.
 		else
 			ReturnToNormal(user)
-			overheat = max(0, overheat - 0.2)
+			overheat = max(0, overheat - overheat_decay)
 			. = ..()
+			ApplyStatusEffects(target)
+			return
 
 /// This overridden proc is only called when attacking something next to us. Basically we want to intercept any possible melee attempts when we're at our finisher stage,
 /// so we can do our finisher instead.
@@ -411,6 +438,7 @@
 				return
 	else
 		to_chat(user, span_userdanger("Combo attacks with this weapon are currently disabled, use it in-hand to re-enable them."))
+		playsound(src, dryfire_sound, 65)
 	return
 
 /// I've been asked by several people to let you light cigars with Thumb East weapons. I mean... okay.
@@ -554,6 +582,7 @@
 	// If we try to spend ammo but don't have any, we reset our combo.
 	if(AmmoDepletedCheck())
 		ReturnToNormal(user)
+		playsound(src, dryfire_sound, 65)
 		return FALSE
 	// We need to delete this round that was fired later by the way.
 	var/obj/item/stack/thumb_east_ammo/fired_round = pick_n_take(current_ammo)
@@ -651,7 +680,11 @@
 
 	// Gather the tremor and burn stacks to apply according to the round we fired.
 	var/tremor_to_apply = next_hit_should_apply["tremor"]
-	var/burn_to_apply = next_hit_should_apply["burn"]
+	var/burn_to_apply
+	if(isnull(hit_type))
+		burn_to_apply = next_hit_should_apply["heat_burn"]
+	else
+		burn_to_apply = next_hit_should_apply["burn"]
 	// Halve them if the statuses are being applied to an AoE's secondary target.
 	if(hit_type == COMBO_ATTACK2_AOE || hit_type == COMBO_FINISHER_AOE)
 		tremor_to_apply *= 0.5
@@ -663,14 +696,19 @@
 	if(tremor_to_apply >= 1)
 		target.apply_lc_tremor(tremor_to_apply, tremorburst_threshold)
 	if(burn_to_apply >= 1)
-		target.apply_lc_burn(burn_to_apply)
+		target.apply_lc_overheat(burn_to_apply)
 
 /// This proc is just cleanup on the weapon's state, and called whenever a combo ends, is cancelled or times out.
 /// Importantly, it will also apply our overheat bonus to our force, if we have any.
+// On CoL, it will also add some augment-burn to be applied based on overheat.
 /obj/item/ego_weapon/city/thumb_east/proc/ReturnToNormal(mob/user)
 	deltimer(combo_expiry_warning_timer)
-	force = initial(force) + overheat
+	force = initial(force) + (overheat * 0.75)
 	next_hit_should_apply = list()
+	if(apply_overheat_burn)
+		var/augment_burn_to_apply = floor((overheat / 2) - 1)
+		if(augment_burn_to_apply >= 1)
+			next_hit_should_apply["heat_burn"] = augment_burn_to_apply
 	if(combo_stage != COMBO_NO_AMMO && combo_stage != COMBO_LUNGE)
 		combo_stage = COMBO_NO_AMMO
 		to_chat(user, span_warning("Your combo resets!"))
@@ -780,7 +818,7 @@
 			return TRUE
 		// Uh oh. We didn't have ammo.
 		else
-			user.visible_message(span_userdanger("[user] pulls the trigger on their [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens. Holy shit, you must look really dumb. Leave no witnesses standing."))
+			user.visible_message(span_userdanger("[user] pulls the trigger on \his [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens. Holy shit, you must look really dumb. Leave no witnesses standing."))
 
 	// We only reach this block if the do_after fails or we're no longer in our COMBO_FINISHER stage.
 	// The do_after can fail if our target isn't in sight anymore, we swap hands, we get stunned or something of the sort.
@@ -814,7 +852,7 @@
 		return TRUE
 	// We only reach this else block if we didn't manage to spend a bullet. We will just hit them normally in this case.
 	else
-		user.visible_message(span_userdanger("[user] pulls the trigger on their [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens."))
+		user.visible_message(span_userdanger("[user] pulls the trigger on \his [src.name], but nothing happens!"), span_danger("You pull the trigger on your [src.name]. Nothing happens."))
 		return FALSE
 
 /// This proc generates a range-based AoE for our sweep and our leap finisher.
@@ -897,11 +935,13 @@
 	finisher_type = FINISHER_LEAP
 	accepted_ammo_table = list(
 		/obj/item/stack/thumb_east_ammo,
+		/obj/item/stack/thumb_east_ammo/quake,
+		/obj/item/stack/thumb_east_ammo/inferno,
 		/obj/item/stack/thumb_east_ammo/facility,
 		/obj/item/stack/thumb_east_ammo/tigermark,
 		/obj/item/stack/thumb_east_ammo/tigermark/facility,
 	)
-	combo_description = "This weapon's combo consists of a long-range lunge, followed by a circular AoE sweep around the user, and ends with a devastating but telegraphed AoE leap on the target.\n"+\
+	combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a devastating but telegraphed <b>ranged AoE leap</b> on the target. This leap can be triggered in melee or at range. This finisher will Tremor Burst the target if it has 30 stacks of Tremor.\n"+\
 	"If you trigger but miss your lunge, you can still continue the combo by landing a regular hit on-target."
 	motion_values = list(COMBO_NO_AMMO = 1, COMBO_LUNGE = 1, COMBO_ATTACK2 = 1.3, COMBO_FINISHER = 2, COMBO_ATTACK2_AOE = 1, COMBO_FINISHER_AOE = 1.2)
 
@@ -926,6 +966,8 @@
 	spent_ammo_behaviour = SPENT_INSTANTEJECT
 	accepted_ammo_table = list(
 		/obj/item/stack/thumb_east_ammo,
+		/obj/item/stack/thumb_east_ammo/quake,
+		/obj/item/stack/thumb_east_ammo/inferno,
 		/obj/item/stack/thumb_east_ammo/facility,
 		/obj/item/stack/thumb_east_ammo/tigermark,
 		/obj/item/stack/thumb_east_ammo/tigermark/facility,
@@ -934,12 +976,14 @@
 	actions_types = list(/datum/action/item_action/chachihu)
 	var/special_ability_targeting = FALSE
 	var/special_ability_simplemob_oldAI
+	var/aurafarming_line = "Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!"
+	var/savageflurry_coeff = 2
 
 // Following code corresponds to a silly ability for the admin-only weapon and can be ignored for all normal gameplay purposes. It should never show up in a normal round.
 // It is basically like Furioso: long cutscene that is purely aesthetic, and then the damage is applied at the end.
 /datum/action/item_action/chachihu
 	name = "Savage Tigerslayer's Perfected Flurry of Blades"
-	desc = "Click on a non-adjacent target after using this action to ultrakill them. Requires 10 heat and 6 live rounds. Does not include anti-chasm/lava insurance."
+	desc = "Click on a non-adjacent target after using this action to ultrakill them. Requires 10 heat and 6 live rounds. Does not include anti-chasm/lava insurance. Change your taunt by hitting the weapon with a cigar(ette)."
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	button_icon_state = "chachihu"
 
@@ -953,6 +997,16 @@
 		else
 			sword.special_ability_targeting = TRUE
 			to_chat(owner, span_danger("You will use your perfected technique on your next target."))
+
+/obj/item/ego_weapon/city/thumb_east/podao/tiantui/attackby(obj/item/stack/thumb_east_ammo/I, mob/living/user, params)
+	. = ..()
+	if(istype(I, /obj/item/clothing/mask/cigarette))
+		switch(tgui_alert(user, "Would you like to customize your Savage Tigerslayer's Perfected Flurry of Blades aurafarming line?", "Custom Aurafarming Line", list("Yes", "No", "Reset")))
+			if("Yes")
+				aurafarming_line = input(user, "What should you say before beginning your combo on the target?", "Aurafarming Query") as null|text
+			if("Reset")
+				aurafarming_line = initial(aurafarming_line)
+		return
 
 /// This override checks to see if we've activated our flurry. If we have, and we click someone at range, we activate the flurry.
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
@@ -969,6 +1023,7 @@
 		FlurryClash(target, user)
 	else
 		to_chat(user, span_danger("You don't have enough resources to use your flurry of blades! You need 6 rounds and 10 heat."))
+		playsound(src, dryfire_sound, 65)
 
 /// Proc handles dashing to or through a target, it's used a lot in FlurryCombo(). It forcemoves our user, which is dubious but should be fine in most cases.
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryDash(mob/living/user, mob/living/target, dash_through = FALSE)
@@ -982,6 +1037,8 @@
 
 /// This proc initiates the flurry of blades. We dash through our target and stun them (and ourselves) for the length of the combo.
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryClash(mob/living/target, mob/living/carbon/human/user)
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 	var/cutscene_duration = 8 SECONDS // I'm genuinely just putting it here as a proc var so it's easier to edit in-code.
 	user.Immobilize(cutscene_duration)
 	user.changeNext_move(cutscene_duration)
@@ -992,7 +1049,7 @@
 	if(istype(target, /mob/living/simple_animal/hostile))
 		var/mob/living/simple_animal/hostile/unfortunate_victim = target
 		special_ability_simplemob_oldAI = unfortunate_victim.AIStatus
-		unfortunate_victim.AIStatus = AI_OFF
+		unfortunate_victim.toggle_ai(AI_OFF)
 		unfortunate_victim.Goto(get_turf(unfortunate_victim))
 		unfortunate_victim.patrol_reset()
 		addtimer(CALLBACK(src, PROC_REF(ReactivateTargetSimplemob), unfortunate_victim), cutscene_duration)
@@ -1011,12 +1068,19 @@
 	FlurryCombo(target, user)
 
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/FlurryCombo(mob/living/target, mob/living/carbon/human/user)
+	// There are going to be like 428930 "if target null or dist over 15" checks here, the reason for this is because our target could vanish into the void mid-flurry by being qdel'd
+
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 	// Beginning.
 	sleep(0.5 SECONDS)
 	user.face_atom(target)
-	user.say("Y'all don't go huntin' tigers without preparin' yerselves to get chomped 'tween one of them jaws!")
+	user.say(aurafarming_line)
 	playsound(src, 'sound/weapons/ego/thumb_east_podao_leap_prep.ogg', 80, FALSE, 10)
 	sleep(1.2 SECONDS)
+
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 
 	// First hit - dash through the target.
 	playsound(src, detonation_sound, 80, FALSE, 10)
@@ -1026,6 +1090,9 @@
 	FlurryHit(target, user, hitsound)
 	ApplyStatusEffects(target, COMBO_LUNGE)
 	sleep(0.7 SECONDS)
+
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 
 	// Second hit - dash to the target and sweep.
 	user.face_atom(target)
@@ -1039,6 +1106,9 @@
 	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	sleep(0.8 SECONDS)
 
+	if(!target || !user || get_dist(target, user) > 15)
+		return
+
 	// Third hit - dash through the target.
 	playsound(src, detonation_sound, 80, FALSE, 10)
 	SpendAmmo(user)
@@ -1047,6 +1117,9 @@
 	FlurryHit(target, user, hitsound)
 	ApplyStatusEffects(target, COMBO_LUNGE)
 	sleep(0.7 SECONDS)
+
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 
 	// Fourth hit - dash to the target and slam.
 	user.face_atom(target)
@@ -1059,6 +1132,9 @@
 	RadiusAOE(target, user, COMBO_FINISHER)
 	sleep(0.7 SECONDS)
 
+	if(!target || !user || get_dist(target, user) > 15)
+		return
+
 	// Fifth hit - slash them away, knocking them back into position for the final hit.
 	user.face_atom(target)
 	SpendAmmo(user)
@@ -1068,12 +1144,18 @@
 	target.throw_at(get_ranged_target_turf_direct(user, target, 3), 3, 4, user, TRUE)
 	sleep(0.8 SECONDS)
 
+	if(!target || !user || get_dist(target, user) > 15)
+		return
+
 	// Final hit - a leap.
 	user.face_atom(target)
 	playsound(src, 'sound/weapons/ego/thumb_east_podao_leap_prep.ogg', 80, FALSE, 10)
 	sleep(1.1 SECONDS)
 	playsound(src, detonation_sound, 80, FALSE, 10)
 	SpendAmmo(user)
+
+	if(!target || !user || get_dist(target, user) > 15)
+		return
 
 	// Below code is the same as in Leap(). I can refactor this to make them both use a smaller, modular code but it would then involve using async stuff in Leap()...
 	// I genuinely think this is a simpler approach but if a maintainer disagrees I will change it.
@@ -1093,7 +1175,11 @@
 	// It's okay if we're on top of the target or next to them, get_ranged_target_turf_direct will just return our own turf anyways.
 	var/turf/landing_zone = get_ranged_target_turf_direct(user, target, get_dist(user, target) - 1)
 	// Janky way to leap at someone? Yes, I guess it is. It can always be made into a "dash" like the lunge is, but I think this is better.
-	landing_zone.is_blocked_turf(TRUE) ? user.forceMove(get_turf(target)) : user.forceMove(landing_zone)
+	if(landing_zone.is_blocked_turf(TRUE))
+		landing_zone = get_turf(target)
+	if(get_dist(user, landing_zone) > 15)
+		return
+	user.forceMove(landing_zone)
 	// Make us appear as though we're coming in really fast from the direction of our starting point.
 	user.pixel_x *= 2.5
 	user.pixel_x *= -1
@@ -1108,7 +1194,7 @@
 	var/justicemod = 1 + userjust/100
 	if(ishuman(target))
 		justicemod = 1
-	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * 2 * justicemod), RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	target.deal_damage(((force + next_hit_should_apply["aoe_flat_force_bonus"]) * 6 * savageflurry_coeff * justicemod), damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	ApplyStatusEffects(target, COMBO_FINISHER)
 	RadiusAOE(target, user, COMBO_FINISHER)
 
@@ -1125,7 +1211,7 @@
 
 /// This proc reactivates a simplemob's AI if we disabled it at the beginning of a flurry. We do this with addtimer().
 /obj/item/ego_weapon/city/thumb_east/podao/tiantui/proc/ReactivateTargetSimplemob(mob/living/simple_animal/hostile/target)
-	target.AIStatus = special_ability_simplemob_oldAI
+	target.toggle_ai(special_ability_simplemob_oldAI)
 
 ////////////////////////////////////////////////////////////
 // AMMUNITION SECTION.
@@ -1155,11 +1241,12 @@
 	var/aesthetic_shockwave_distance = 2
 	/// Controls how much overheat is generated when spending this round. It's a decaying flat force increase on non-combo hits that gets cleared on reload/unload.
 	/// Please never make this negative.
+	// Warning: on CoL, heat will also make non-combo attacks apply augment-burn to the target.
 	var/heat_generation = 2
 	/// Controls how much tremor is applied to a target hit with this ammo in an attack. Multiplied by a motion value coefficient depending on combo stage.
-	var/tremor_base = 5
-	/// Controls how much burn is applied to a target hit with this ammo in an attack. Multiplied by a motion value coefficient depending on combo stage.
-	var/burn_base = 2
+	var/tremor_base = 4
+	/// Controls how much augment-burn is applied to a target hit with this ammo in an attack. Multiplied by a motion value coefficient depending on combo stage.
+	var/burn_base = 3
 	/// Adds flat force to an attack boosted with this ammo. Multiplied by a motion value coefficient depending on combo stage.
 	var/flat_force_base = 8
 	/// AOE radius bonus when spending this shell on an AOE attack. Please never let this be too high or it will cause funny incidents. This is never multiplied.
@@ -1215,6 +1302,36 @@
 /obj/item/stack/thumb_east_ammo/ui_interact(mob/user, datum/tgui/ui)
 	return FALSE
 
+/// Specialized ammo for CoL, you don't spawn with it. Lose ability to inflict burn, and generate way less heat, but deals more damage and applies way more tremor.
+// This ammo encourages a playstyle of burst damage by spending ammo, and speccing into tremor with augments.
+/obj/item/stack/thumb_east_ammo/quake
+	name = "quake propellant ammunition"
+	desc = "Specialized propellant ammunition used by the Eastern branch of the Thumb. These rounds are designed to create extremely potent shockwaves that will disrupt the target's stability.\n\
+	However, the altered design results in the loss of incendiary capabilities, and a diminished generation of heat for the weapon's systems."
+	singular_name = "quake propellant round"
+	merge_type = /obj/item/stack/thumb_east_ammo/quake
+	icon_state = "thumb_east_quake"
+
+	tremor_base = 8
+	burn_base = 0
+	flat_force_base = 12
+	heat_generation =  1
+
+/// Specialized ammo for CoL, you don't spawn with it. Lose ability to inflict tremor, and deal less damage, but generate way more heat and apply way more burn.
+// This ammo encourages a playstyle of speccing into augment-burn and making use of the generated weapon heat to keep applying augment-burn with basic attacks after doing your combo.
+/obj/item/stack/thumb_east_ammo/inferno
+	name = "inferno propellant ammunition"
+	desc = "Specialized propellant ammunition used by the Eastern branch of the Thumb. These rounds are designed to incinerate targets, generating a great deal of heat for the weapon's systems and significantly burning the enemy.\n\
+	However, the altered design results in a weakening of the kinetic energy generated by the round, leading to slightly lower damage, and it is no longer able to disrupt targets with its destabilizing shockwave."
+	singular_name = "inferno propellant round"
+	merge_type = /obj/item/stack/thumb_east_ammo/inferno
+	icon_state = "thumb_east_inferno"
+
+	tremor_base = 0
+	burn_base = 5
+	flat_force_base = 4
+	heat_generation = 4
+
 /// Facility version of the basic ammunition. No status effects, but has a nice amount of force bonus to compensate. Shows up in Thumb lootcrates.
 /obj/item/stack/thumb_east_ammo/facility
 	name = "surplus propellant ammunition"
@@ -1224,6 +1341,7 @@
 	merge_type = /obj/item/stack/thumb_east_ammo/facility
 	tremor_base = 0
 	burn_base = 0
+	heat_generation = 3
 	flat_force_base = 12
 	aesthetic_shockwave_distance = 1
 
@@ -1256,6 +1374,7 @@
 	desc = "Wait... this isn't a Tigermark round at all, is it? Well... it's about the same caliber, so it would probably fit into a Thumb East podao."
 	singular_name = "ligermark round"
 	merge_type = /obj/item/stack/thumb_east_ammo/tigermark/facility
+	heat_generation = 4
 	tremor_base = 0
 	burn_base = 0
 	flat_force_base = 20
@@ -1323,6 +1442,107 @@
 	icon_state = "visual_fire"
 	color = "#6e162c"
 	alpha = 100
+
+////////////////////////////////////////////////////////////
+// ABILITIES SECTION.
+// Place any skills to be used by the Thumb here. For now, just a self-mutilation skill (exclusively detrimental, for RP.)
+
+// Severs your limb or your tongue from your body after a do_after, if you're holding a loaded Thumb East weapon. Kills you if you aim head.
+/datum/action/thumb_selfmutilate
+	name = "Self-Discipline"
+	desc = "Administer 'self-discipline' by mutilating yourself, removing the targeted limb or tongue from your own body. If targeting your head, will kill yourself. Requires you to hold a loaded Thumb East weapon. Swap hands or move to cancel."
+	icon_icon = 'icons/hud/screen_skills.dmi'
+	button_icon_state = "dismember"
+	var/list/acceptable_targets = list(BODY_ZONE_L_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG, BODY_ZONE_R_ARM, BODY_ZONE_HEAD, BODY_ZONE_PRECISE_MOUTH)
+
+/datum/action/thumb_selfmutilate/Trigger()
+	. = ..()
+	if(!.)
+		return FALSE
+	if(owner.stat >= DEAD)
+		return FALSE
+	var/mob/living/carbon/human/thumbling = owner
+	if(!istype(thumbling))
+		return FALSE
+	var/obj/item/ego_weapon/city/thumb_east/weapon = owner.get_active_held_item()
+	if(!istype(weapon))
+		to_chat(owner, span_danger("You must be holding a loaded Thumb East weapon to administer self-discipline!"))
+		return FALSE
+
+	// Here be copied ampshears code.
+	var/candidate_name
+	var/obj/item/bodypart/limb_snip_candidate
+	var/obj/item/organ/tongue_cut_candidate
+
+	var/selected_zone = thumbling.zone_selected
+	if(!(selected_zone in acceptable_targets))
+		to_chat(thumbling, span_warning("Severing that from your body isn't permitted within Thumb self-discipline guidelines. Pick an arm or your tongue instead."))
+		return FALSE
+
+	// Targeting head: kill yourself. This uses different code than delimbing or de-tonguing because I wanted to use different sounds... I mean, I could also set those sounds to be vars, but I feel like the "kill yourself" and "mutilate yourself" behaviours should be separate anyhow.
+	if(selected_zone == BODY_ZONE_HEAD)
+		playsound(thumbling, weapon.reload_end_sound, 75, FALSE)
+		thumbling.visible_message(span_danger("[thumbling] sticks \his [weapon.name] into \his mouth, setting the propulsion mode to 'thrust'..."), span_userdanger("You stick your [weapon.name] into your mouth and set the propulsion mode to 'thrust', preparing to kill yourself..."))
+		if(do_after(thumbling, 4 SECONDS, interaction_key = "selfmutilation", max_interact_count = 1))
+			if(weapon.SpendAmmo(thumbling))
+				playsound(weapon, weapon.detonation_sound, 80, FALSE, 10)
+				playsound(weapon, weapon.hitsound, 30, FALSE)
+				for(var/i in 1 to 5)
+					new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(thumbling), pick(GLOB.alldirs))
+				thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], rocketing the weapon out of \his hands and through \his skull!"))
+				new /obj/effect/gibspawner/generic/trash_disposal(get_turf(thumbling))
+				thumbling.deal_damage(200, BRUTE) // A relatively clean job, all things considered! Wow! They'll barely have to heal you for a revive!
+				thumbling.death() // You rocketed a gunblade through your skull.
+				return TRUE
+			else
+				thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], but nothing happens..."))
+				return FALSE
+		else
+			to_chat(thumbling, span_notice("You decide not to go through with your 'self-discipline'."))
+			return FALSE
+
+
+	// Targeting mouth: we queue our tongue for removal.
+	else if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
+		if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
+			tongue_cut_candidate = thumbling.getorganslot(ORGAN_SLOT_TONGUE)
+			if(!tongue_cut_candidate)
+				to_chat(thumbling, span_warning("You're already missing your tongue..."))
+				return FALSE
+			candidate_name = tongue_cut_candidate.name
+
+	// Targeting an arm or leg: queue them for removal.
+	else
+		limb_snip_candidate = thumbling.get_bodypart(check_zone(selected_zone))
+		if(!limb_snip_candidate)
+			to_chat(thumbling, span_warning("You're already missing that limb... Quit fumbling around."))
+			return FALSE
+		candidate_name = limb_snip_candidate.name
+
+	playsound(thumbling,'sound/effects/butcher.ogg', 75, FALSE)
+	thumbling.visible_message(span_danger("[thumbling] dutifully places the edge of \his [weapon.name] against \his [candidate_name]..."), span_notice("You begin bracing yourself for your 'self-discipline'..."))
+
+	if(do_after(thumbling, 4 SECONDS, interaction_key = "selfmutilation", max_interact_count = 1))
+		if(weapon.SpendAmmo(thumbling))
+			playsound(weapon, weapon.detonation_sound, 80, FALSE, 10)
+			playsound(weapon, 'sound/weapons/bladeslice.ogg', 100, FALSE)
+			for(var/i in 1 to 2)
+				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(thumbling), pick(GLOB.alldirs))
+
+			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], severing \his [candidate_name] from \his body!"))
+			if(selected_zone == BODY_ZONE_PRECISE_MOUTH)
+				tongue_cut_candidate.Remove(thumbling)
+				tongue_cut_candidate.forceMove(get_turf(thumbling))
+			else
+				limb_snip_candidate.dismember()
+			new /obj/effect/decal/cleanable/blood/splatter(get_turf(thumbling))
+			return TRUE
+		else
+			thumbling.visible_message(span_danger("[thumbling] pulls the trigger on \his [weapon.name], but nothing happens..."))
+			return FALSE
+	else
+		to_chat(thumbling, span_notice("You decide not to go through with your 'self-discipline'."))
+		return FALSE
 
 #undef COMBO_NO_AMMO
 #undef COMBO_LUNGE

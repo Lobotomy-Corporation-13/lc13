@@ -279,6 +279,13 @@
 /obj/machinery/light,
 /turf/open/floor/wood,
 /area/city/backstreets_room)
+"vA" = (
+/obj/structure/table/wood/fancy/red,
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
+/turf/open/floor/mineral/gold,
+/area/city/backstreets_room)
 "wd" = (
 /obj/machinery/light{
 	dir = 4;
@@ -335,6 +342,9 @@
 /area/city/backstreets_room)
 "xf" = (
 /obj/machinery/light,
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
+	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
@@ -421,6 +431,9 @@
 /obj/machinery/light{
 	dir = 1;
 	pixel_y = 19
+	},
+/obj/effect/turf_decal/siding/wood{
+	dir = 4
 	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
@@ -634,6 +647,15 @@
 	pixel_x = -3
 	},
 /obj/structure/table/wood/poker,
+/obj/item/keycard{
+	pixel_x = 9;
+	pixel_y = -2;
+	icon = 'icons/obj/card.dmi';
+	icon_state = "gold";
+	name = "sottocapo's token";
+	desc = "This token was issued by a Thumb Sottocapo, so that anyone whom it is presented to knows that the bearer is acting under their authority.";
+	puzzle_id = "not_a_puzzle"
+	},
 /turf/open/floor/wood,
 /area/city/backstreets_room)
 "QX" = (
@@ -972,7 +994,7 @@ Gm
 WR
 iT
 Dy
-oG
+vA
 xf
 iT
 kF
