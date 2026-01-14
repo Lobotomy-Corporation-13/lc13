@@ -1,0 +1,9 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - balance: "Thumb East Weapons: Heat decays faster. CoL only: Heat now also adds burn stacks to normal attacks."
+  - rscadd: "CoL only: Thumb East specialized ammunition"
+  - rscadd: "Thumb East Soldato and Capo are now able to self-mutilate with a new action."
+  - bugfix: "Added some checks to Savage Tigerslayer's Perfected Flurry of Blades to prevent janky behaviour."
+  - imageadd: "Thumb East specialized ammunition and boxes for it."
+  - refactor: "Added procs to bind actions to a mind, Association Skills and Thumb East Self-Mutilate now use this method"
