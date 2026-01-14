@@ -8,6 +8,7 @@
 /datum/ego_datum/weapon/branch12/signal
 	item_path = /obj/item/ego_weapon/ranged/branch12/mini/signal
 	cost = 10
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_SUSTAIN)
 
 /datum/ego_datum/armor/branch12/signal
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/signal
@@ -18,12 +19,13 @@
 /datum/ego_datum/weapon/branch12/serenity
 	item_path = /obj/item/ego_weapon/branch12/mini/serenity
 	cost = 10
-
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_SUSTAIN)
 
 // You Can Become Better - Becoming
 /datum/ego_datum/weapon/branch12/becoming
 	item_path = /obj/item/ego_weapon/branch12/becoming
 	cost = 10
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_VERSATILE_DAMAGE)
 
 /datum/ego_datum/armor/branch12/becoming
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/becoming
@@ -60,6 +62,7 @@
 /datum/ego_datum/weapon/branch12/departure
 	item_path = /obj/item/ego_weapon/branch12/departure
 	cost = 20
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/armor/branch12/departure
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/departure
@@ -69,6 +72,7 @@
 /datum/ego_datum/weapon/branch12/acupuncture
 	item_path = /obj/item/ego_weapon/branch12/mini/acupuncture
 	cost = 20
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/acupuncture
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/acupuncture
@@ -78,6 +82,7 @@
 /datum/ego_datum/weapon/branch12/slot_machine
 	item_path = /obj/item/ego_weapon/branch12/mini/slot_machine
 	cost = 20
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/branch12/slot_machine
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/slot_machine
@@ -87,6 +92,7 @@
 /datum/ego_datum/weapon/branch12/starry_night
 	item_path = /obj/item/ego_weapon/ranged/branch12/starry_night
 	cost = 20
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/branch12/starry_night
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/starry_night
@@ -100,6 +106,7 @@
 /datum/ego_datum/weapon/branch12/black_lotus
 	item_path = /obj/item/ego_weapon/shield/branch12/mini/black_lotus
 	cost = 20
+	ego_tags = list(EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/branch12/white_lotus
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/white_lotus
@@ -127,6 +134,7 @@
 /datum/ego_datum/weapon/branch12/perfectionist
 	item_path = /obj/item/ego_weapon/branch12/perfectionist
 	cost = 35
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/perfectionist
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/perfectionist
@@ -141,6 +149,7 @@
 /datum/ego_datum/weapon/branch12/needle
 	item_path = /obj/item/ego_weapon/branch12/mini/gold_needle
 	cost = 35
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/branch12/needle
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/needle
@@ -155,10 +164,12 @@
 /datum/ego_datum/weapon/branch12/memorable
 	item_path = /obj/item/ego_weapon/ranged/branch12/memorable
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/weapon/branch12/big_day
 	item_path = /obj/item/ego_weapon/ranged/branch12/memorable/big_day
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/armor/branch12/memorable
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/memorable
@@ -173,6 +184,7 @@
 /datum/ego_datum/weapon/branch12/exterminator
 	item_path = /obj/item/ego_weapon/ranged/branch12/mini/exterminator
 	cost = 35
+	ego_tags = list(EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/exterminator
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/exterminator
@@ -192,6 +204,7 @@
 /datum/ego_datum/weapon/branch12/joe
 	item_path = /obj/item/ego_weapon/branch12/joe
 	cost = 50
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/joe
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/joe
@@ -201,6 +214,7 @@
 /datum/ego_datum/weapon/branch12/nightmares
 	item_path = /obj/item/ego_weapon/branch12/nightmares
 	cost = 35
+	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/nightmares
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/nightmares
@@ -210,6 +224,7 @@
 /datum/ego_datum/weapon/branch12/passion
 	item_path = /obj/item/ego_weapon/branch12/passion
 	cost = 50
+	ego_tags = list(EGO_TAG_SUSTAIN)
 
 /datum/ego_datum/armor/branch12/passion
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/passion
@@ -219,6 +234,7 @@
 /datum/ego_datum/weapon/branch12/degraded_honor
 	item_path = /obj/item/ego_weapon/branch12/honor
 	cost = 50
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/degraded_honor
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/degraded_honor
@@ -228,11 +244,13 @@
 /datum/ego_datum/weapon/branch12/medea
 	item_path = /obj/item/ego_weapon/ranged/branch12/mini/medea
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_PIERCING, EGO_TAG_DOT)
 
 //Hand of Babel - Babelling Rumor
 /datum/ego_datum/weapon/branch12/rumor
 	item_path = /obj/item/ego_weapon/branch12/rumor
 	cost = 50
+	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/rumor
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/rumor
@@ -242,11 +260,13 @@
 /datum/ego_datum/weapon/branch12/icon_of_chaos
 	item_path = /obj/item/ego_weapon/ranged/branch12/icon_of_chaos
 	cost = 50
+	ego_tags = list(EGO_TAG_HAZARDOUS)
 
 //Genie of Pentacles - 10000 dolers
 /datum/ego_datum/weapon/branch12/ten_thousand_dolers
 	item_path = /obj/item/ego_weapon/branch12/mini/ten_thousand_dolers
 	cost = 50
+	ego_tags = list(EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_PIERCING, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/ten_thousand_dolers
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/ten_thousand_dolers
@@ -270,6 +290,7 @@
 /datum/ego_datum/weapon/branch12/purity
 	item_path = /obj/item/ego_weapon/branch12/purity
 	cost = 100
+	ego_tags = list(EGO_TAG_SPECIAL_RANGED, EGO_TAG_DOT)
 
 /datum/ego_datum/armor/branch12/purity
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/purity
@@ -280,17 +301,20 @@
 /datum/ego_datum/weapon/branch12/insanity
 	item_path = /obj/item/ego_weapon/branch12/mini/insanity
 	cost = 100
+	ego_tags = list(EGO_TAG_DOT)
 
 // Consilium Fracas - Sands of Time
 /datum/ego_datum/weapon/branch12/time_sands
 	item_path = /obj/item/ego_weapon/branch12/time_sands
 	cost = 100
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
 
 
 // Selene Effigy - Lunar Night
 /datum/ego_datum/weapon/branch12/lunar_night
 	item_path = /obj/item/ego_weapon/branch12/lunar_night
 	cost = 100
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/branch12/lunar_night
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/lunar_night
@@ -301,6 +325,7 @@
 /datum/ego_datum/weapon/branch12/darkness
 	item_path = /obj/item/ego_weapon/branch12/darkness
 	cost = 100
+	ego_tags = list(EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/branch12/darkness
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/darkness

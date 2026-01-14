@@ -368,7 +368,7 @@ const EGODetails = (props, context) => {
   }
 
 const CommonDetails = (props, context) => {
-    const { detailed_datum } = props;
+    const { detailed_datum, hide_special } = props;
 
     return (
       <Flex direction="column" align="center" mt={3}>
@@ -424,10 +424,10 @@ const CommonDetails = (props, context) => {
           <b>Description:</b>
           <BlockQuote mt={1}>{detailed_datum.information.description?? "This E.G.O. has no description."}</BlockQuote>
         </FlexItem>
-        <FlexItem align="start" mb={3}>
+        {!hide_special && <FlexItem align="start" mb={3}>
           <b>Special Information:</b>
           <BlockQuote mt={1}>{detailed_datum.information.special?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
-        </FlexItem>
+        </FlexItem>}
 
         <FlexItem minWidth={"100%"} mt={1} mb={2}>
           <Divider/>
@@ -441,7 +441,19 @@ const CommonDetails = (props, context) => {
 
     return (
       <Flex align="stretch" justify="center" direction="column">
-        <CommonDetails detailed_datum={datum}/>
+        <FlexItem>
+          <CommonDetails detailed_datum={datum} hide_special={true}/>
+        </FlexItem>
+        <FlexItem mb={2} align="start">
+          <b>Resistances:</b>
+        </FlexItem>
+        <FlexItem>
+          <Table mt={1}>
+              <TableRow color="#020202" bold><TableCell textAlign="center" backgroundColor="red" minWidth="25%">RED</TableCell><TableCell textAlign="center" backgroundColor="white" minWidth="25%">WHITE</TableCell><TableCell textAlign="center" backgroundColor="violet" minWidth="25%">BLACK</TableCell><TableCell textAlign="center" backgroundColor="teal" minWidth="25%">PALE</TableCell></TableRow>
+              <TableRow><TableCell textAlign="center">{datum.information?.armor?.red ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.white ?? "-"}</TableCell ><TableCell textAlign="center">{datum.information?.armor?.black ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.pale ?? "-"}</TableCell></TableRow>
+          </Table>
+        </FlexItem>
+
       </Flex>
 
     )

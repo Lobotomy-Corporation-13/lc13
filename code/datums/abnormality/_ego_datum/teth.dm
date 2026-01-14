@@ -48,7 +48,6 @@
 /datum/ego_datum/weapon/horn
 	item_path = /obj/item/ego_weapon/horn
 	cost = 20
-	ego_tags = list(EGO_TAG_THROWING)
 
 /datum/ego_datum/armor/horn
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/horn
@@ -140,7 +139,7 @@
 /datum/ego_datum/weapon/blossom
 	item_path = /obj/item/ego_weapon/mini/blossom
 	cost = 20
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
+	ego_tags = list(EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/blossom
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/blossoms
@@ -151,7 +150,7 @@
 /datum/ego_datum/weapon/trick
 	item_path = /obj/item/ego_weapon/mini/trick
 	cost = 20
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
+	ego_tags = list(EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/trick
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/trick

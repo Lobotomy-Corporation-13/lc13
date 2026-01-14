@@ -59,7 +59,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/chaosdunk
 	item_path = /obj/item/ego_weapon/chaosdunk
 	cost = 100
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_THROWING)
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/chaosdunk
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/chaosdunk

@@ -45,7 +45,7 @@
 /datum/ego_datum/weapon/promise
 	item_path = /obj/item/ego_weapon/promise
 	cost = 12
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
+	ego_tags = list(EGO_TAG_BOOMERANG)
 
 /datum/ego_datum/armor/promise
 	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/promise

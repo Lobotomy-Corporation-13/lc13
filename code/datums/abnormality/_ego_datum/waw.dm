@@ -258,7 +258,7 @@
 	item_category = "Weapon (Axe)"
 	item_path = /obj/item/ego_weapon/warring
 	cost = 50
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_BOOMERANG)
+	ego_tags = list(EGO_TAG_BOOMERANG)
 
 // Clown Smiling at Me - Dark Carnival
 /datum/ego_datum/armor/darkcarnival
@@ -522,7 +522,7 @@
 /datum/ego_datum/weapon/blind_obsession
 	item_path = /obj/item/ego_weapon/blind_obsession
 	cost = 50
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_AOE_RADIAL)
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/weapon/abyssal_route
 	item_path = /obj/item/ego_weapon/abyssal_route
@@ -568,7 +568,6 @@
 /datum/ego_datum/weapon/heaven
 	item_path = /obj/item/ego_weapon/heaven
 	cost = 50
-	ego_tags = list(EGO_TAG_THROWING)
 
 /datum/ego_datum/armor/heaven
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/heaven
@@ -591,7 +590,7 @@
 /datum/ego_datum/weapon/contempt
 	item_path = /obj/item/ego_weapon/contempt
 	cost = 50
-	ego_tags = list(EGO_TAG_THROWING, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_HAZARDOUS)
 
 // Unknown Little Prince Aberration - Tiara
 /datum/ego_datum/armor/tiara
