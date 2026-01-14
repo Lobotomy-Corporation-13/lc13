@@ -1,5 +1,0 @@
-author: "Thundershade09"
-delete-after: True
-changes:
-  - bugfix: "chance refinery no longer drains pe while on cd"
-  - bugfix: "chance refinery now plays a noise when off cd"
