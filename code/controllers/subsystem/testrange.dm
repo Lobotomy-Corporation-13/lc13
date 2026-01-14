@@ -7,10 +7,10 @@ SUBSYSTEM_DEF(testrange)
 	var/static/list/ego_preview_icons_cache = list()
 	var/static/list/linked_ego_printers = list()
 	var/static/ego_datums_initialized = FALSE
-	var/static/initializing = FALSE
+	var/static/ego_datums_initializing = FALSE
 
 /datum/controller/subsystem/testrange/Initialize(start_timeofday)
-	initializing = TRUE
+	ego_datums_initializing = TRUE
 	INVOKE_ASYNC(src, PROC_REF(InitializeDatums))
 	return ..()
 
@@ -27,9 +27,9 @@ SUBSYSTEM_DEF(testrange)
 
 			stoplag() // Yes it's that bad
 
-		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_asc))
+		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
 
-		initializing = FALSE
+		ego_datums_initializing = FALSE
 		ego_datums_initialized = TRUE
 
 		for(var/obj/machinery/ego_printer/EP in linked_ego_printers)

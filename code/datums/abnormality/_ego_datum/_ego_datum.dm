@@ -80,11 +80,15 @@ GLOBAL_LIST_EMPTY(ego_datums)
 			ego_tags |= EGO_TAG_KNOCKBACK
 
 		// Filling out Information
+		information["description"] = E.desc
 		information["damtype_melee"] = E.damtype
 		information["force_melee"] = E.force
-		information["damtype_ranged"] = E.last_projectile_type
+		information["throwforce"] = E.throwforce
+		information["reach"] = E.reach
+		information["stuntime"] = E.stuntime
 		information["force_ranged"] = E.last_projectile_damage
 		information["magazine_size"] = E.shotsleft
+		information["pellets"] = E.pellets
 
 		var/bullet_damage_type = E.last_projectile_type
 		var/bullet_damage = E.last_projectile_damage
@@ -93,22 +97,40 @@ GLOBAL_LIST_EMPTY(ego_datums)
 			var/new_damage_type = shuffler.mapping_offense[bullet_damage_type]
 			bullet_damage_type = new_damage_type
 		information["attribute_requirements"] = E.attribute_requirements.Copy()
+		information["damtype_ranged"] = bullet_damage_type
 		information["attack_info"] = "Its bullets deal [bullet_damage] [bullet_damage_type] damage."
 		information["special"] = E.special
 		var/fire_delay = E.fire_delay
 		if(E.autofire)
 			fire_delay = E.autofire * 0.75
+		information["numeric_ranged_attack_speed"] = fire_delay
 		switch(fire_delay)
 			if(0 to 5)
-				information["attack_speed"] = "Fast"
+				information["ranged_attack_speed"] = "Fast"
 			if(6 to 10)
-				information["attack_speed"] = "Normal"
+				information["ranged_attack_speed"] = "Normal"
 			if(11 to 15)
-				information["attack_speed"] = "Somewhat slow"
+				information["ranged_attack_speed"] = "Somewhat slow"
 			if(16 to 20)
-				information["attack_speed"] = "Slow"
+				information["ranged_attack_speed"] = "Slow"
 			else
-				information["attack_speed"] = "Extremely slow"
+				information["ranged_attack_speed"] = "Extremely slow"
+
+		information["numeric_melee_attack_speed"] = E.attack_speed
+		if(E.attack_speed < 0.4)
+			information["melee_attack_speed"] = "Very fast"
+		else if(E.attack_speed<0.7)
+			information["melee_attack_speed"] = "Fast"
+		else if(E.attack_speed<1)
+			information["melee_attack_speed"] = "Somewhat fast"
+		else if(E.attack_speed == 1)
+			information["melee_attack_speed"] = "Normal"
+		else if(E.attack_speed<1.5)
+			information["melee_attack_speed"] = "Somewhat slow"
+		else if(E.attack_speed<2)
+			information["melee_attack_speed"] = "Slow"
+		else if(E.attack_speed>=2)
+			information["melee_attack_speed"] = "Extremely slow"
 		qdel(E)
 		return
 
@@ -120,11 +142,23 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	if(E.knockback > 0)
 		ego_tags |= EGO_TAG_KNOCKBACK
 	if(istype(E, /obj/item/ego_weapon/shield))
+		var/obj/item/ego_weapon/shield/E_temp = E
 		ego_tags |= EGO_TAG_GUARD
+		// Storing the resistances as an integer... some info is lost here, I fear, but that's just me deciding showing IV or X or -V will be friendlier than 30 or 95. Honestly feel free to change it and the TGUI accordingly if you want
+		information["guard_resistances"] = list()
+		information["guard_resistances"]["red"] = (floor(E_temp.reductions[1] * 0.1))
+		information["guard_resistances"]["white"] = (floor(E_temp.reductions[2] * 0.1))
+		information["guard_resistances"]["black"] = (floor(E_temp.reductions[3] * 0.1))
+		information["guard_resistances"]["pale"] = (floor(E_temp.reductions[4] * 0.1))
+		information["guard_cooldown"] = E_temp.block_cooldown
+		information["guard_duration"] = E_temp.block_duration
+		information["guard_debuff_duration"] = E_temp.debuff_duration
+
 	else if(istype(E, /obj/item/ego_weapon/lance))
 		ego_tags |= EGO_TAG_MOBILITY
 
 	// Filling out Information
+	information["description"] = E.desc
 	information["damtype_melee"] = E.damtype
 	information["force_melee"] = E.force
 	var/damage_type = E.damtype
@@ -138,20 +172,22 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	information["special"] = E.special
 	information["attribute_requirements"] = E.attribute_requirements.Copy()
 	information["reach"] = E.reach
+	information["stuntime"] = E.stuntime
+	information["numeric_melee_attack_speed"] = E.attack_speed
 	if(E.attack_speed < 0.4)
-		information["attack_speed"] = "Very fast"
+		information["melee_attack_speed"] = "Very fast"
 	else if(E.attack_speed<0.7)
-		information["attack_speed"] = "Fast"
+		information["melee_attack_speed"] = "Fast"
 	else if(E.attack_speed<1)
-		information["attack_speed"] = "Somewhat fast"
+		information["melee_attack_speed"] = "Somewhat fast"
 	else if(E.attack_speed == 1)
-		information["attack_speed"] = "Normal"
+		information["melee_attack_speed"] = "Normal"
 	else if(E.attack_speed<1.5)
-		information["attack_speed"] = "Somewhat slow"
+		information["melee_attack_speed"] = "Somewhat slow"
 	else if(E.attack_speed<2)
-		information["attack_speed"] = "Slow"
+		information["melee_attack_speed"] = "Slow"
 	else if(E.attack_speed>=2)
-		information["attack_speed"] = "Extremely slow"
+		information["melee_attack_speed"] = "Extremely slow"
 	qdel(E)
 
 /datum/ego_datum/weapon/PrintOutInfo()
@@ -164,9 +200,9 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	dat += "[information["attack_info"]]<br>"
 	if("special" in information)
 		dat += "[information["special"]]<br>"
-	dat += "Attack speed: [information["attack_speed"]].<br>"
+	dat += "Melee attack speed: [information["attack_speed"]].<br>"
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
-
+		dat += "Ranged attack speed: [information["ranged_attack_speed"]].<br>"
 	else if(ispath(item_path, /obj/item/ego_weapon))
 		if(information["throwforce"] > 0)
 			dat += "Throw force: [information["throwforce"]].<br>"
@@ -183,6 +219,7 @@ GLOBAL_LIST_EMPTY(ego_datums)
 		return
 	var/obj/item/clothing/suit/armor/ego_gear/E = new item_path(src)
 	information["armor"] = list()
+	information["description"] = E.desc
 	var/red_armor = E.armor.red
 	var/white_armor = E.armor.white
 	var/black_armor = E.armor.black

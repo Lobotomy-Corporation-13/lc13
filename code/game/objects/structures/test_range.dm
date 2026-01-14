@@ -31,7 +31,7 @@
 	return ..()
 
 /obj/machinery/ego_printer/proc/CheckInitializedDatums()
-	if(SStestrange.initializing)
+	if(SStestrange.ego_datums_initializing || !(SStestrange.ego_datums_initialized))
 		say("System is still initializing. Please wait. [SStestrange.ego_datums ? length(SStestrange.ego_datums) : "0"] E.G.O. currently loaded.")
 		playsound(get_turf(src), 'sound/machines/synth_no.ogg', 40, TRUE)
 		return FALSE

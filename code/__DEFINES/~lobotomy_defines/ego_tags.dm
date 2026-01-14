@@ -65,8 +65,8 @@
 	EGO_TAG_AOE_RADIAL = "E.G.O. capable of damaging or affecting enemies in a radius.",\
 	EGO_TAG_AOE_PIERCING = "E.G.O. capable of piercing targets in a straight line.",\
 	EGO_TAG_DOT = "E.G.O. capable of placing Damage over Time effects on enemies.",\
-	EGO_TAG_DEBUFFER = "E.G.O. capable of applying impairing effects on enemies.",\
-	EGO_TAG_SUMMONER = "E.G.O. capable of summoning mobs, which could be friendly, neutral or hostile.",\
+	EGO_TAG_DEBUFFER = "E.G.O. capable of applying impairing or otherwise weakening effects on enemies.",\
+	EGO_TAG_SUMMONER = "E.G.O. capable of summoning mobs in some way.",\
 	EGO_TAG_SUPPORT = "E.G.O. capable of providing support to allies, possibly including buffs or healing.",\
 	EGO_TAG_HAZARDOUS = "E.G.O. which either poses a significant threat to its wielder or their own allies and requires cautious usage, or requires the user to harm or impair themselves to make full use of it.",\
 	EGO_TAG_BLOODFEAST = "E.G.O. which can collect, store and make use of blood and giblets.",\

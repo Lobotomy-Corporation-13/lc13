@@ -161,13 +161,13 @@
 /datum/ego_datum/weapon/farmwatch
 	item_path = /obj/item/ego_weapon/farmwatch
 	cost = 100//appears in wishing well
-	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER)
+	ego_tags = list(EGO_TAG_ASSIMILATION, EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER)
 
 // Dongbaek Personal E.G.O - Spicebush
 /datum/ego_datum/weapon/spicebush
 	item_path = /obj/item/ego_weapon/spicebush
 	cost = 100//appears in wishing well
-	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER, EGO_TAG_SUPPORT)
+	ego_tags = list(EGO_TAG_ASSIMILATION, EGO_TAG_SUSTAIN, EGO_TAG_SUMMONER, EGO_TAG_SUPPORT)
 
 /datum/ego_datum/weapon/spicebush/fan
 	item_path = /obj/item/ego_weapon/spicebush/fan
