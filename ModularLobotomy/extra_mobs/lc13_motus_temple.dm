@@ -55,6 +55,9 @@
 	if(chem_type)
 		C.reagents.add_reagent(chem_type, chem_yield)
 	chem_cooldown_timer = world.time + chem_cooldown
+	// Award chemical harvester achievement
+	if(user.client)
+		user.client.give_award(/datum/award/achievement/lc13/city/chemical_harvester, user)
 
 //Stone Guard
 /mob/living/simple_animal/hostile/clan/stone_guard
@@ -793,6 +796,13 @@
 	if(ending)
 		Unlock()
 		new /obj/item/keycard/motus_treasure(get_turf(src))
+		// Award achievements to nearby humans (good ending)
+		for(var/mob/living/carbon/human/H in view(15, src))
+			if(H.client)
+				H.client.give_award(/datum/award/achievement/lc13/city/temple_guardian, H)
+				// Perfect Protector: Elliot never downed during fight
+				if(!elliot_killed_once)
+					H.client.give_award(/datum/award/achievement/lc13/city/perfect_protector, H)
 		return ..()
 	if(!detonating)
 		for(var/mob/living/simple_animal/hostile/keeper_piller/piller in range(20, src))
@@ -847,6 +857,11 @@
 			hurt_targets.playsound_local(hurt_targets, "sound/effects/explosioncreak1.ogg", 100)
 			shake_camera(hurt_targets, 25, 4)
 	SLEEP_CHECK_DEATH(10)
+	// Award achievements to surviving humans (bad ending - Elliot dead)
+	for(var/mob/living/carbon/human/H in view(15, src))
+		if(H.client && H.stat != DEAD)
+			H.client.give_award(/datum/award/achievement/lc13/city/temple_guardian, H)
+			H.client.give_award(/datum/award/achievement/lc13/city/sole_survivor, H)
 	// Trigger rubble spawners to handle their own spawning
 	for(var/obj/effect/rubble_spawner/spawner in range(40, src))
 		spawner.StartSpawning()

@@ -60,6 +60,9 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 	if(correct_statue >= 6)
 		visible_message(span_nicegreen("\The [src] suddenly produces a key and drops it on the groud, looks like you passed it's trial."))
 		new /obj/item/keycard/motus_storage (get_turf(smart_pal))
+		// Award statue whisperer achievement
+		if(smart_pal.client)
+			smart_pal.client.give_award(/datum/award/achievement/lc13/city/statue_whisperer, smart_pal)
 
 /mob/living/simple_animal/hostile/clan/stone_guard/dagger_puzzle/proc/check_assassination()
 	var/mob/living/simple_animal/hostile/clan/stone_guard/dagger_puzzle/king = null
@@ -208,6 +211,9 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 					to_chat(user, span_nicegreen("You collect the real key!"))
 					new /obj/item/keycard/motus_library (get_turf(user))
 					icon_state = "key_case_nokey"
+					// Award key detective achievement
+					if(user.client)
+						user.client.give_award(/datum/award/achievement/lc13/city/key_detective, user)
 					return
 
 				if("illusion")
@@ -343,6 +349,9 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 	var/riddle_ask = input("I am the one that shifts between worlds, and hinders all who follow. To name me is to speak of love, though what I block is hollow.", "What is this?") as text
 	if(riddle_ask == "Door" || riddle_ask == "door")
 		current_riddle++
+		// Award riddler achievement for solving all 3 riddles
+		if(user.client)
+			user.client.give_award(/datum/award/achievement/lc13/city/riddler, user)
 	else
 		playsound(get_turf(src), 'sound/machines/buzz-sigh.ogg', 40, TRUE)
 		if(ishuman(user))
@@ -404,6 +413,9 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 		clapping()
 		visible_message(span_nicegreen("[src] drops a small keycard right before falling apart!"))
 		new /obj/item/keycard/motus_medbay (get_turf(src))
+		// Award heretic hunter achievement
+		if(user.client)
+			user.client.give_award(/datum/award/achievement/lc13/city/heretic_hunter, user)
 		dust()
 	else
 		if(!(user in glob_faction))
@@ -468,6 +480,13 @@ GLOBAL_LIST_EMPTY(heretic_puzzle)
 
 /area/city/backstreets_room/temple_motus
 	name = "Temple Reception"
+
+/area/city/backstreets_room/temple_motus/Entered(atom/movable/arrived, area/old_area)
+	. = ..()
+	if(ishuman(arrived))
+		var/mob/living/carbon/human/H = arrived
+		if(H.client)
+			H.client.give_award(/datum/award/achievement/lc13/city/temple_explorer, H)
 
 /area/city/backstreets_room/temple_motus/factory
 	name = "Temple Factory"

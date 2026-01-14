@@ -82,7 +82,7 @@
 	var/pre_boss_alert = FALSE
 	var/obj/item/radio/headset/radio
 	var/alert_update = 0
-	var/alert_cooldown = 6 MINUTES
+	var/alert_cooldown = 10 MINUTES
 
 	var/puzzle_key = FALSE
 	var/puzzle_dagger = FALSE
@@ -278,6 +278,12 @@
 	icon_state = "elliot_down"
 	density = FALSE
 	stunned = TRUE
+
+/mob/living/simple_animal/hostile/ui_npc/elliot/ui_interact(mob/user, datum/tgui/ui)
+	// Award meet the guide achievement on first interaction
+	if(user.client)
+		user.client.give_award(/datum/award/achievement/lc13/city/meet_guide, user)
+	return ..()
 
 /mob/living/simple_animal/hostile/ui_npc/elliot/attack_hand(mob/living/carbon/human/M)
 	if(!stunned)
@@ -1348,6 +1354,12 @@
 	color = "#a58806"
 	puzzle_id = "motus_treasure"
 
+/obj/item/keycard/motus_treasure/pickup(mob/user)
+	. = ..()
+	// Award temple treasure achievement
+	if(user.client)
+		user.client.give_award(/datum/award/achievement/lc13/city/temple_treasure, user)
+
 /mob/living/simple_animal/hostile/ui_npc/elliot/Destroy()
 	Leader = null
 	QDEL_NULL(radio)
@@ -1473,6 +1485,10 @@
 	SLEEP_CHECK_DEATH(20)
 	say("Joshua?")
 	SLEEP_CHECK_DEATH(20)
+	// Award elliot sacrifice achievement to nearby humans
+	for(var/mob/living/carbon/human/H in view(15, src))
+		if(H.client)
+			H.client.give_award(/datum/award/achievement/lc13/city/elliot_sacrifice, H)
 	gib()
 
 /mob/living/simple_animal/hostile/ui_npc/elliot/proc/dash(turf/target_turf)
