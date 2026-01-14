@@ -7,7 +7,8 @@
 	gender = PLURAL //placeholder
 	living_flags = MOVES_ON_ITS_OWN
 	status_flags = CANPUSH
-
+	area_index = MOB_SIMPLEANIMAL_INDEX
+	
 	var/icon_living = ""
 	///Icon when the animal is dead. Don't use animated icons for this.
 	var/icon_dead = ""
@@ -55,23 +56,8 @@
 	///How much stamina the mob recovers per call of update_stamina
 	var/stamina_recovery = 10
 
-	///Minimal body temperature without receiving damage
-	var/minbodytemp = 250
-	///Maximal body temperature without receiving damage
-	var/maxbodytemp = 350
-	///This damage is taken when the body temp is too cold.
-	var/unsuitable_cold_damage
-	///This damage is taken when the body temp is too hot.
-	var/unsuitable_heat_damage
-
 	///Healable by medical stacks? Defaults to yes.
 	var/healable = 1
-
-	///Atmos effect - Yes, you can make creatures that require plasma or co2 to survive. N2O is a trace gas and handled separately, hence why it isn't here. It'd be hard to add it. Hard and me don't mix (Yes, yes make all the dick jokes you want with that.) - Errorage
-	///Leaving something at 0 means it's off - has no maximum.
-	var/list/atmos_requirements = list("min_oxy" = 5, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 1, "min_co2" = 0, "max_co2" = 5, "min_n2" = 0, "max_n2" = 0)
-	///This damage is taken when atmos doesn't fit all the requirements above.
-	var/unsuitable_atmos_damage = 2
 
 	//Defaults to zero so Ian can still be cuddly. Moved up the tree to living! This allows us to bypass some hardcoded stuff.
 	melee_damage_lower = 0
@@ -218,8 +204,6 @@
 		emote_hear = string_list(emote_hear)
 	if(emote_see)
 		emote_see = string_list(emote_hear)
-	if(atmos_requirements)
-		atmos_requirements = string_assoc_list(atmos_requirements)
 	if (islist(damage_coeff))
 		unmodified_damage_coeff_datum = makeDamCoeff(damage_coeff)
 		damage_coeff = makeDamCoeff(damage_coeff)
@@ -230,10 +214,6 @@
 		stack_trace("Invalid type [damage_coeff.type] found in .damage_coeff during /simple_animal Initialize()")
 	if(footstep_type)
 		AddComponent(/datum/component/footstep, footstep_type)
-	if(!unsuitable_cold_damage)
-		unsuitable_cold_damage = unsuitable_atmos_damage
-	if(!unsuitable_heat_damage)
-		unsuitable_heat_damage = unsuitable_atmos_damage
 	//LC13 Check, it's here to give everything nightvision on Rcorp.
 	if(IsCombatMap())
 		var/obj/effect/proc_holder/spell/targeted/night_vision/bloodspell = new
@@ -473,91 +453,6 @@
 						manual_emote(pick(emote_see))
 					else
 						manual_emote(pick(emote_hear))
-
-/mob/living/simple_animal/proc/environment_air_is_safe()
-	. = TRUE
-
-	if(pulledby && pulledby.grab_state >= GRAB_KILL && atmos_requirements["min_oxy"])
-		. = FALSE //getting choked
-
-	if(isturf(loc) && isopenturf(loc))
-		var/turf/open/ST = loc
-		if(ST.air)
-			var/ST_gases = ST.air.gases
-			ST.air.assert_gases(arglist(GLOB.hardcoded_gases))
-
-			var/tox = ST_gases[/datum/gas/plasma][MOLES]
-			var/oxy = ST_gases[/datum/gas/oxygen][MOLES]
-			var/n2  = ST_gases[/datum/gas/nitrogen][MOLES]
-			var/co2 = ST_gases[/datum/gas/carbon_dioxide][MOLES]
-
-			ST.air.garbage_collect()
-
-			if(atmos_requirements["min_oxy"] && oxy < atmos_requirements["min_oxy"])
-				. = FALSE
-			else if(atmos_requirements["max_oxy"] && oxy > atmos_requirements["max_oxy"])
-				. = FALSE
-			else if(atmos_requirements["min_tox"] && tox < atmos_requirements["min_tox"])
-				. = FALSE
-			else if(atmos_requirements["max_tox"] && tox > atmos_requirements["max_tox"])
-				. = FALSE
-			else if(atmos_requirements["min_n2"] && n2 < atmos_requirements["min_n2"])
-				. = FALSE
-			else if(atmos_requirements["max_n2"] && n2 > atmos_requirements["max_n2"])
-				. = FALSE
-			else if(atmos_requirements["min_co2"] && co2 < atmos_requirements["min_co2"])
-				. = FALSE
-			else if(atmos_requirements["max_co2"] && co2 > atmos_requirements["max_co2"])
-				. = FALSE
-		else
-			if(atmos_requirements["min_oxy"] || atmos_requirements["min_tox"] || atmos_requirements["min_n2"] || atmos_requirements["min_co2"])
-				. = FALSE
-
-/mob/living/simple_animal/proc/environment_temperature_is_safe(datum/gas_mixture/environment)
-	. = TRUE
-	var/areatemp = get_temperature(environment)
-	if((areatemp < minbodytemp) || (areatemp > maxbodytemp))
-		. = FALSE
-
-/mob/living/simple_animal/handle_environment(datum/gas_mixture/environment)
-	var/atom/A = loc
-	if(isturf(A))
-		var/areatemp = get_temperature(environment)
-		if(abs(areatemp - bodytemperature) > 5)
-			var/diff = areatemp - bodytemperature
-			diff = diff / 5
-			adjust_bodytemperature(diff)
-
-	if(!environment_air_is_safe())
-		adjustHealth(unsuitable_atmos_damage)
-		if(unsuitable_atmos_damage > 0)
-			throw_alert("not_enough_oxy", /atom/movable/screen/alert/not_enough_oxy)
-	else
-		clear_alert("not_enough_oxy")
-
-	handle_temperature_damage()
-
-/mob/living/simple_animal/proc/handle_temperature_damage()
-	if(bodytemperature < minbodytemp)
-		adjustHealth(unsuitable_cold_damage)
-		switch(unsuitable_cold_damage)
-			if(1 to 5)
-				throw_alert("temp", /atom/movable/screen/alert/cold, 1)
-			if(5 to 10)
-				throw_alert("temp", /atom/movable/screen/alert/cold, 2)
-			if(10 to INFINITY)
-				throw_alert("temp", /atom/movable/screen/alert/cold, 3)
-	else if(bodytemperature > maxbodytemp)
-		adjustHealth(unsuitable_heat_damage)
-		switch(unsuitable_heat_damage)
-			if(1 to 5)
-				throw_alert("temp", /atom/movable/screen/alert/hot, 1)
-			if(5 to 10)
-				throw_alert("temp", /atom/movable/screen/alert/hot, 2)
-			if(10 to INFINITY)
-				throw_alert("temp", /atom/movable/screen/alert/hot, 3)
-	else
-		clear_alert("temp")
 
 /mob/living/simple_animal/gib()
 	if(butcher_results || guaranteed_butcher_results)

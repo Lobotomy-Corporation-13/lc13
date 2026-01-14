@@ -139,7 +139,6 @@
 /turf/open/floor/plating/asteroid/snow/icemoon,
 /area/icemoon/underground/explored)
 "WK" = (
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/grass/fairy,
 /area/ruin/powered/shuttle)
 "Xh" = (

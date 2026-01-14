@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary/thermomachine
+/* /obj/machinery/atmospherics/components/unary/thermomachine
 	icon = 'icons/obj/atmospherics/components/thermomachine.dmi'
 	icon_state = "freezer"
 
@@ -263,3 +263,4 @@
 /obj/machinery/atmospherics/components/unary/thermomachine/heater/on
 	on = TRUE
 	icon_state = "heater_1"
+ */

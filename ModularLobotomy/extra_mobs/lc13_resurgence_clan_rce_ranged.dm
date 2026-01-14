@@ -586,7 +586,7 @@
 	playsound(chained_target, 'sound/effects/meteorimpact.ogg', 75, TRUE)
 
 	// Deal damage and knockdown
-	chained_target.apply_damage(final_damage, RED_DAMAGE, null, chained_target.run_armor_check(null, RED_DAMAGE))
+	chained_target.deal_damage(final_damage, RED_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 	chained_target.Knockdown(30)
 
 	// Visual effect

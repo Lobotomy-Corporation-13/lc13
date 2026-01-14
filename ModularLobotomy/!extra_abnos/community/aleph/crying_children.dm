@@ -187,13 +187,13 @@
 			continue
 		to_chat(L, span_userdanger("You're boiling alive from the heat of a miniature sun!"))
 		playsound(L, 'sound/abnormalities/crying_children/attack_aoe.ogg', 50, TRUE)
-		L.deal_damage(175, RED_DAMAGE)
-		L.deal_damage(75, FIRE)
+		L.deal_damage(175, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
+		L.deal_damage(75, FIRE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		L.apply_lc_burn(50)
 		new /obj/effect/temp_visual/fire/fast(get_turf(L))
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/BreachEffect(mob/living/carbon/human/user, breach_type)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "No one’s going to cry on my behalf even if I’m sad.", 25))
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "No one's going to cry on my behalf even if I'm sad.", 25))
 	..()
 	desc = "A towering angel statue, setting everything on it's path ablaze"
 	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
@@ -309,7 +309,7 @@
 		S.pixel_x = rand(-8, 8)
 		S.pixel_y = rand(-8, 8)
 		animate(S, alpha = 0, time = 1.5)
-		var/list/new_hits = HurtInTurf(T, been_hit, 60, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(T, been_hit, 60, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			to_chat(L, span_userdanger("[src] stabs you!"))
@@ -367,7 +367,7 @@
 	playsound(src, 'sound/abnormalities/crying_children/attack_aoe.ogg', 50, FALSE)
 	for(var/turf/T in view(4, src))
 		new /obj/effect/temp_visual/fire/fast(T)
-		var/list/new_hits = HurtInTurf(T, been_hit, 250, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE) - been_hit
+		var/list/new_hits = HurtInTurf(T, been_hit, 250, RED_DAMAGE, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_SPECIAL)) - been_hit
 		been_hit += new_hits
 		for(var/mob/living/L in new_hits)
 			to_chat(L, span_userdanger("You were scorched by [src]'s flames!"))
@@ -459,7 +459,7 @@
 		forceMove(T)
 
 /mob/living/simple_animal/hostile/abnormality/crying_children/proc/FinalPhase()
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "I don’t want to hear anything. I don’t want to see anything, or speak anything…", 25))
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(show_global_blurb), 20, "I don't want to hear anything. I don't want to see anything, or speak anything.", 25))
 	icon_phase = "desperation"
 	icon_living = "[icon_phase]_idle"
 	icon_state = "[icon_phase]_idle"

@@ -32,18 +32,18 @@
 	slippery_foam = FALSE
 	var/absorbed_plasma = 0
 
-/obj/effect/particle_effect/foam/firefighting/ComponentInitialize()
+/* /obj/effect/particle_effect/foam/firefighting/ComponentInitialize()
 	..()
-	RemoveElement(/datum/element/atmos_sensitive)
+	RemoveElement(/datum/element/atmos_sensitive) */
 
 /obj/effect/particle_effect/foam/firefighting/process()
 	..()
 
 	var/turf/open/T = get_turf(src)
-	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in T)
-	if(hotspot && istype(T) && T.air)
-		qdel(hotspot)
-		var/datum/gas_mixture/G = T.air
+	var/obj/effect/turf_fire/fire = (locate(/obj/effect/turf_fire) in T)
+	if(fire && istype(T))
+		qdel(fire)
+/* 		var/datum/gas_mixture/G = T.air
 		if(G.gases[/datum/gas/plasma])
 			var/plas_amt = min(30,G.gases[/datum/gas/plasma][MOLES]) //Absorb some plasma
 			G.gases[/datum/gas/plasma][MOLES] -= plas_amt
@@ -51,16 +51,16 @@
 		if(G.temperature > T20C)
 			G.temperature = max(G.temperature/2,T20C)
 		G.garbage_collect()
-		T.air_update_turf(FALSE, FALSE)
+		T.air_update_turf(FALSE, FALSE) */
 
 /obj/effect/particle_effect/foam/firefighting/kill_foam()
 	STOP_PROCESSING(SSfastprocess, src)
 
-	if(absorbed_plasma)
+/* 	if(absorbed_plasma)
 		var/obj/effect/decal/cleanable/plasma/P = (locate(/obj/effect/decal/cleanable/plasma) in get_turf(src))
 		if(!P)
 			P = new(loc)
-		P.reagents.add_reagent(/datum/reagent/stable_plasma, absorbed_plasma)
+		P.reagents.add_reagent(/datum/reagent/stable_plasma, absorbed_plasma) */
 
 	flick("[icon_state]-disolve", src)
 	QDEL_IN(src, 5)
@@ -96,14 +96,14 @@
 	START_PROCESSING(SSfastprocess, src)
 	playsound(src, 'sound/effects/bubbles2.ogg', 80, TRUE, -3)
 
-/obj/effect/particle_effect/foam/ComponentInitialize()
+/* /obj/effect/particle_effect/foam/ComponentInitialize()
 	. = ..()
 	AddElement(/datum/element/atmos_sensitive)
 
 /obj/effect/particle_effect/foam/ComponentInitialize()
 	. = ..()
 	if(slippery_foam)
-		AddComponent(/datum/component/slippery, 100)
+		AddComponent(/datum/component/slippery, 100) */
 
 /obj/effect/particle_effect/foam/Destroy()
 	STOP_PROCESSING(SSfastprocess, src)
@@ -194,12 +194,12 @@
 		F.add_atom_colour(color, FIXED_COLOUR_PRIORITY)
 		F.metal = metal
 
-/obj/effect/particle_effect/foam/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
+/* /obj/effect/particle_effect/foam/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > 475
 
 /obj/effect/particle_effect/foam/atmos_expose(datum/gas_mixture/air, exposed_temperature)
 	if(prob(max(0, exposed_temperature - 475)))   //foam dissolves when heated
-		kill_foam()
+		kill_foam() */
 
 
 ///////////////////////////////////////////////
@@ -268,7 +268,7 @@
 	desc = "A lightweight foamed metal wall."
 	gender = PLURAL
 	max_integrity = 20
-	CanAtmosPass = ATMOS_PASS_DENSITY
+/* 	CanAtmosPass = ATMOS_PASS_DENSITY
 
 /obj/structure/foamedmetal/Initialize()
 	. = ..()
@@ -281,7 +281,7 @@
 /obj/structure/foamedmetal/Move()
 	var/turf/T = loc
 	. = ..()
-	move_update_air(T)
+	move_update_air(T) */
 
 /obj/structure/foamedmetal/attack_paw(mob/user)
 	return attack_hand(user)
@@ -317,7 +317,7 @@
 	if(isopenturf(loc))
 		var/turf/open/O = loc
 		O.ClearWet()
-		if(O.air)
+/* 		if(O.air)
 			var/datum/gas_mixture/G = O.air
 			G.temperature = 293.15
 			for(var/obj/effect/hotspot/H in O)
@@ -332,7 +332,7 @@
 			if(!U.welded)
 				U.welded = TRUE
 				U.update_icon()
-				U.visible_message("<span class='danger'>[U] sealed shut!</span>")
+				U.visible_message("<span class='danger'>[U] sealed shut!</span>") */
 		for(var/mob/living/L in O)
 			L.extinguish_mob()
 		for(var/obj/item/Item in O)

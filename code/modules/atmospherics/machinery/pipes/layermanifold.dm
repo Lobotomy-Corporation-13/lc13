@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/pipe/layer_manifold
+/* /obj/machinery/atmospherics/pipe/layer_manifold
 	name = "layer adaptor"
 	icon = 'icons/obj/atmospherics/pipes/manifold.dmi'
 	icon_state = "manifoldlayer"
@@ -134,3 +134,4 @@
 /obj/machinery/atmospherics/pipe/layer_manifold/visible
 	hide = FALSE
 	layer = GAS_PIPE_VISIBLE_LAYER
+ */

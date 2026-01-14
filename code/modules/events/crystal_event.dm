@@ -357,8 +357,7 @@ This section is for the destabilized SM
 	if(length(GLOB.huge_crystal_portals) == 0 && !changed_icon)
 		icon_state = "psy"
 		changed_icon = TRUE
-
-	var/turf/loc_turf = loc
+/* 	var/turf/loc_turf = loc
 	var/datum/gas_mixture/env = loc_turf.return_air()
 	var/datum/gas_mixture/removed
 	var/gasefficency = 0.5
@@ -373,7 +372,7 @@ This section is for the destabilized SM
 	removed.gases[/datum/gas/bz][MOLES] += 15.5
 	removed.gases[/datum/gas/miasma][MOLES] += 5.5
 	env.merge(removed)
-	air_update_turf(FALSE, FALSE)
+	air_update_turf(FALSE, FALSE) */
 
 /obj/machinery/destabilized_crystal/attackby(obj/item/W, mob/living/user, params)
 	if(!istype(user))
@@ -654,14 +653,10 @@ This section is for the crystal monsters variations
 	speak_emote = list("resonates")
 	emote_see = list("resonates")
 	a_intent = INTENT_HARM
-	minbodytemp = 0
-	maxbodytemp = 1500
 	healable = 0 //they're crystals how would bruise packs help them??
 	attack_verb_continuous = "smashes"
 	attack_verb_simple = "smash"
 	attack_sound = 'sound/effects/supermatter.ogg'
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	unsuitable_atmos_damage = 10
 	robust_searching = 1
 	stat_attack = HARD_CRIT
 	faction = list("crystal")

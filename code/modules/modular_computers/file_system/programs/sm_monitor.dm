@@ -1,4 +1,4 @@
-/datum/computer_file/program/supermatter_monitor
+/* /datum/computer_file/program/supermatter_monitor
 	filename = "ntcims"
 	filedesc = "NT CIMS"
 	ui_header = "smmon_0.gif"
@@ -183,3 +183,4 @@
 					active = S
 					set_signals()
 			return TRUE
+ */

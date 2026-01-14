@@ -4,7 +4,7 @@ GLOBAL_LIST_INIT(typecache_powerfailure_safe_areas, typecacheof(/area/engine/eng
 															    /area/engine/supermatter, \
 															    /area/engine/atmospherics_engine, \
 															    /area/ai_monitored/turret_protected/ai))
-
+/*
 // Gets an atmos isolated contained space
 // Returns an associative list of turf|dirs pairs
 // The dirs are connected turfs in the same space
@@ -39,8 +39,9 @@ GLOBAL_LIST_INIT(typecache_powerfailure_safe_areas, typecacheof(/area/engine/eng
 			if(!cardinal_cache["[dir]"] || !TURFS_CAN_SHARE(sourceT, checkT))
 				continue
 			found_turfs += checkT // Since checkT is connected, add it to the list to be processed
-
-/proc/create_area(mob/creator)
+ */
+// IMPORTANT ATMOS-PURGE RELATED!!! THIS FUNCTIONALITY, WHILE INHERENTLY TIED TO THE ATMOS SUBSYSTEM HAS NOTHING WRONG WITH IT AND SHOULD BE RE-ENABLED AS SOON AS POSSIBLE.
+/* /proc/create_area(mob/creator)
 	// Passed into the above proc as list/break_if_found
 	var/static/area_or_turf_fail_types = typecacheof(list(
 		/turf/open/space,
@@ -101,6 +102,6 @@ GLOBAL_LIST_INIT(typecache_powerfailure_safe_areas, typecacheof(/area/engine/eng
 		FD.CalculateAffectingAreas()
 
 	to_chat(creator, span_notice("You have created a new area, named [newA.name]. It is now weather proof, and constructing an APC will allow it to be powered."))
-	return TRUE
+	return TRUE */
 
 #undef BP_MAX_ROOM_SIZE

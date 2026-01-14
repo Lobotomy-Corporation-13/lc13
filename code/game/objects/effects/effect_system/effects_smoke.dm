@@ -77,7 +77,7 @@
 	if(!t_loc)
 		return
 	var/list/newsmokes = list()
-	for(var/turf/T in t_loc.GetAtmosAdjacentTurfs())
+	for(var/turf/T in t_loc.reachableAdjacentTurfs())
 		var/obj/effect/particle_effect/smoke/foundsmoke = locate() in T //Don't spread smoke where there's already smoke!
 		if(foundsmoke)
 			continue
@@ -162,7 +162,10 @@
 /datum/effect_system/smoke_spread/freezing/proc/Chilled(atom/A)
 	if(isopenturf(A))
 		var/turf/open/T = A
-		if(T.air)
+		var/obj/effect/turf_fire/fire = (locate(/obj/effect/turf_fire) in T)
+		if(fire && istype(T))
+			qdel(fire)
+/* 		if(T.air)
 			var/datum/gas_mixture/G = T.air
 			if(!distcheck || get_dist(T, location) < blast) // Otherwise we'll get silliness like people using Nanofrost to kill people through walls with cold air
 				G.temperature = temperature
@@ -180,7 +183,7 @@
 				if(!isnull(U.welded) && !U.welded) //must be an unwelded vent pump or vent scrubber.
 					U.welded = TRUE
 					U.update_icon()
-					U.visible_message("<span class='danger'>[U] is frozen shut!</span>")
+					U.visible_message("<span class='danger'>[U] is frozen shut!</span>") */
 		for(var/mob/living/L in T)
 			L.extinguish_mob()
 		for(var/obj/item/Item in T)

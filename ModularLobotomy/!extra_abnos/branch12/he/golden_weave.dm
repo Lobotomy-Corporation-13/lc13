@@ -89,7 +89,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(5, RED_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(5, RED_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.apply_lc_bleed(15)
 		H.Knockdown(20)
 		qdel(src)

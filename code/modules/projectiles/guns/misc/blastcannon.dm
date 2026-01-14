@@ -68,9 +68,9 @@
 	if(!istype(bomb_to_attach))
 		return ..()
 
-	if(!bomb_to_attach.tank_one || !bomb_to_attach.tank_two)
+/* 	if(!bomb_to_attach.tank_one || !bomb_to_attach.tank_two)
 		to_chat(user, "<span class='warning'>What good would an incomplete bomb do?</span>")
-		return FALSE
+		return FALSE */
 	if(!user.transferItemToLoc(bomb_to_attach, src))
 		to_chat(user, "<span class='warning'>[bomb_to_attach] seems to be stuck to your hand!</span>")
 		return FALSE
@@ -82,7 +82,7 @@
 	update_icon()
 	return TRUE
 
-/// Handles the bomb power calculations
+/* /// Handles the bomb power calculations
 /obj/item/gun/blastcannon/proc/calculate_bomb()
 	if(!istype(bomb) || !istype(bomb.tank_one) || !istype(bomb.tank_two))
 		return 0
@@ -102,14 +102,14 @@
 	qdel(temp)
 	if(pressure < TANK_FRAGMENT_PRESSURE)
 		return 0
-	return ((pressure - TANK_FRAGMENT_PRESSURE) / TANK_FRAGMENT_SCALE)
+	return ((pressure - TANK_FRAGMENT_PRESSURE) / TANK_FRAGMENT_SCALE) */
 
 
 /obj/item/gun/blastcannon/afterattack(atom/target, mob/user, flag, params)
 	if((!bomb && bombcheck) || (!target) || (get_dist(get_turf(target), get_turf(user)) <= 2))
 		return ..()
 
-	var/power =  bomb ? calculate_bomb() : debug_power
+	var/power = max_power // bomb ? calculate_bomb() : debug_power
 	power = min(power, max_power)
 	QDEL_NULL(bomb)
 	update_icon()

@@ -69,17 +69,39 @@
 	icon_state = "sec_cypherkey"
 	channels = list(RADIO_CHANNEL_DISCIPLINE = 1)
 
+/obj/item/encryptionkey/headset_records
+	name = "records radio encryption key"
+	icon_state = "records_cypherkey"
+	channels = list(RADIO_CHANNEL_RECORDS = 1)
+
+/obj/item/encryptionkey/headset_extraction
+	name = "extraction radio encryption key"
+	icon_state = "extraction_cypherkey"
+	channels = list(RADIO_CHANNEL_EXTRACTION = 1)
+
 /obj/item/encryptionkey/headset_architecture
 	name = "architecture radio encryption key"
 	icon_state = "srvmed_cypherkey"
 	channels = list(RADIO_CHANNEL_ARCHITECTURE = 1)
+
+/obj/item/encryptionkey/extraction_officer
+	name = "\proper the extraction officer's encryption key"
+	icon_state = "extraction_cypherkey"
+	channels = list(
+	RADIO_CHANNEL_EXTRACTION = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
+
+/obj/item/encryptionkey/records_officer
+	name = "\proper the records officer's encryption key"
+	icon_state = "records_cypherkey"
+	channels = list(
+	RADIO_CHANNEL_RECORDS = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
 
 /obj/item/encryptionkey/agent_lieutenant
 	name = "\proper the agent captain's encryption key"
 	icon_state = "cap_cypherkey"
 	channels = list(
 	RADIO_CHANNEL_CONTROL = 1, RADIO_CHANNEL_INFORMATION = 1, RADIO_CHANNEL_SAFETY = 1, RADIO_CHANNEL_TRAINING = 1, \
-	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1)
+	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1, RADIO_CHANNEL_RECORDS = 1, RADIO_CHANNEL_EXTRACTION = 1)
 
 
 /obj/item/encryptionkey/heads/manager
@@ -87,14 +109,14 @@
 	icon_state = "cap_cypherkey"
 	channels = list(
 	RADIO_CHANNEL_CONTROL = 1, RADIO_CHANNEL_INFORMATION = 1, RADIO_CHANNEL_SAFETY = 1, RADIO_CHANNEL_TRAINING = 1, \
-	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
+	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1, RADIO_CHANNEL_RECORDS = 1, RADIO_CHANNEL_EXTRACTION = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
 
 /obj/item/encryptionkey/heads/agent_captain
 	name = "\proper the agent captain's encryption key"
 	icon_state = "cap_cypherkey"
 	channels = list(
 	RADIO_CHANNEL_CONTROL = 1, RADIO_CHANNEL_INFORMATION = 1, RADIO_CHANNEL_SAFETY = 1, RADIO_CHANNEL_TRAINING = 1, \
-	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1)
+	RADIO_CHANNEL_COMMAND = 1, RADIO_CHANNEL_WELFARE = 1, RADIO_CHANNEL_DISCIPLINE = 1, RADIO_CHANNEL_RECORDS = 1, RADIO_CHANNEL_EXTRACTION = 1)
 
 /obj/item/encryptionkey/headset_cent
 	name = "\improper CentCom radio encryption key"
@@ -145,3 +167,13 @@
 	name = "discipline radio encryption key"
 	icon_state = "sec_cypherkey"
 	channels = list(RADIO_CHANNEL_DISCIPLINE = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
+
+/obj/item/encryptionkey/heads/headset_records
+	name = "records radio encryption key"
+	icon_state = "records_cypherkey"
+	channels = list(RADIO_CHANNEL_RECORDS = 1, RADIO_CHANNEL_ARCHITECTURE = 1)
+
+/obj/item/encryptionkey/heads/headset_extraction
+	name = "extraction radio encryption key"
+	icon_state = "extraction_cypherkey"
+	channels = list(RADIO_CHANNEL_EXTRACTION = 1, RADIO_CHANNEL_ARCHITECTURE = 1)

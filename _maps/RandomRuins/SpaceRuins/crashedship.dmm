@@ -1838,7 +1838,6 @@
 /turf/open/floor/plating/airless,
 /area/awaymission/bmpship/midship)
 "hi" = (
-/obj/machinery/portable_atmospherics/canister/air,
 /turf/open/floor/plating/airless,
 /area/awaymission/bmpship/midship)
 "hk" = (

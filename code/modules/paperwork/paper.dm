@@ -28,7 +28,7 @@
 	w_class = WEIGHT_CLASS_TINY
 	throw_range = 1
 	throw_speed = 1
-	pressure_resistance = 0
+	// pressure_resistance = 0
 	slot_flags = ITEM_SLOT_HEAD
 	body_parts_covered = HEAD
 	resistance_flags = FLAMMABLE
@@ -331,7 +331,7 @@
 				return
 
 			log_paper("[key_name(ui.user)] writing to paper [name] ([paper_len] characters)")
-			
+
 			if(info != in_paper)
 				to_chat(ui.user, "You have added to your paper masterpiece!")
 				info = in_paper

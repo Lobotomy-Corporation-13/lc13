@@ -1,4 +1,4 @@
-#define EXT_BOUND	1
+/* #define EXT_BOUND	1
 #define INT_BOUND	2
 #define NO_BOUND	3
 
@@ -497,3 +497,4 @@
 
 #undef SIPHONING
 #undef RELEASING
+ */

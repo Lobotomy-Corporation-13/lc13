@@ -147,7 +147,7 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/cleavesprite(TF)
-			been_hit = HurtInTurf(TF, been_hit, cleave_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
+			been_hit = HurtInTurf(TF, been_hit, cleave_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/L in been_hit)
 		if(L.health < 0)
 			L.gib()
@@ -190,7 +190,7 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/goatjo(TF)
-			been_hit = HurtInTurf(TF, been_hit, worldslash_damage, PALE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE)
+			been_hit = HurtInTurf(TF, been_hit, worldslash_damage, PALE_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/L in been_hit)
 		if(L.health < 0)
 			new /obj/effect/temp_visual/human_horizontal_bisect(get_turf(L))
@@ -305,7 +305,7 @@
 		var/obj/effect/temp_visual/cleavesprite =  new(T)
 		cleavesprite.color = "#df1919"
 		for(var/mob/living/L in T)
-			L.apply_damage(500, PALE_DAMAGE, null, spread_damage = TRUE)
+			L.deal_damage(500, PALE_DAMAGE, attack_type = (ATTACK_TYPE_SPECIAL))
 			if(ishuman(L) && L.health < 0)
 				var/mob/living/carbon/human/H = L
 				new /obj/effect/temp_visual/human_horizontal_bisect(get_turf(H))

@@ -165,7 +165,7 @@
 		var/armor = C.run_armor_check(limb, MELEE, null, null) //armor = the armor value of that randomly chosen bodypart. Nulls to not print a message, because it would still print on pierce.
 		var/datum/spacevine_mutation/thorns/T = locate() in S.mutations //Searches for the thorns mutation in the "mutations"-list inside obj/structure/spacevine, and defines T if it finds it.
 		if(T && (prob(40))) //If we found the thorns mutation there is now a chance to get stung instead of lashed or smashed.
-			C.apply_damage(50, BRUTE, def_zone = limb, wound_bonus = rand(-20,10), sharpness = SHARP_POINTY) //This one gets a bit lower damage because it ignores armor.
+			C.deal_damage(50, BRUTE, attack_type = (ATTACK_TYPE_ENVIRONMENT), def_zone = limb, wound_bonus = rand(-20,10), sharpness = SHARP_POINTY) //This one gets a bit lower damage because it ignores armor.
 			C.Stun(1 SECONDS) //Stopped in place for a moment.
 			playsound(M, 'sound/weapons/pierce.ogg', 50, TRUE, -1)
 			M.visible_message("<span class='danger'>[M] is nailed by a sharp thorn!</span>", \
@@ -173,14 +173,14 @@
 			log_combat(S, M, "aggressively pierced") //"Aggressively" for easy ctrl+F'ing in the attack logs.
 		else
 			if(prob(80))
-				C.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_EDGED)
+				C.deal_damage(60, BRUTE, attack_type = (ATTACK_TYPE_ENVIRONMENT), def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_EDGED)
 				C.Knockdown(2 SECONDS)
 				playsound(M, 'sound/weapons/whip.ogg', 50, TRUE, -1)
 				M.visible_message("<span class='danger'>[M] is lacerated by an outburst of vines!</span>", \
 				"<span class='userdanger'>You are lacerated by an outburst of vines!</span>")
 				log_combat(S, M, "aggressively lacerated")
 			else
-				C.apply_damage(60, BRUTE, def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_NONE)
+				C.deal_damage(60, BRUTE, attack_type = (ATTACK_TYPE_ENVIRONMENT), def_zone = limb, blocked = armor, wound_bonus = rand(-20,10), sharpness = SHARP_NONE)
 				C.Knockdown(3 SECONDS)
 				var/atom/throw_target = get_edge_target_turf(C, get_dir(S, get_step_away(C, S)))
 				C.throw_at(throw_target, 3, 6)
@@ -210,14 +210,14 @@
 	severity = 3
 	quality = NEGATIVE
 
-/datum/spacevine_mutation/oxy_eater/process_mutation(obj/structure/spacevine/holder)
+/* /datum/spacevine_mutation/oxy_eater/process_mutation(obj/structure/spacevine/holder)
 	var/turf/open/floor/T = holder.loc
 	if(istype(T))
 		var/datum/gas_mixture/GM = T.air
 		if(!GM.gases[/datum/gas/oxygen])
 			return
 		GM.gases[/datum/gas/oxygen][MOLES] = max(GM.gases[/datum/gas/oxygen][MOLES] - severity * holder.energy, 0)
-		GM.garbage_collect()
+		GM.garbage_collect() */
 
 /datum/spacevine_mutation/nitro_eater
 	name = "nitrogen consuming"
@@ -225,14 +225,14 @@
 	severity = 3
 	quality = NEGATIVE
 
-/datum/spacevine_mutation/nitro_eater/process_mutation(obj/structure/spacevine/holder)
+/* /datum/spacevine_mutation/nitro_eater/process_mutation(obj/structure/spacevine/holder)
 	var/turf/open/floor/T = holder.loc
 	if(istype(T))
 		var/datum/gas_mixture/GM = T.air
 		if(!GM.gases[/datum/gas/nitrogen])
 			return
 		GM.gases[/datum/gas/nitrogen][MOLES] = max(GM.gases[/datum/gas/nitrogen][MOLES] - severity * holder.energy, 0)
-		GM.garbage_collect()
+		GM.garbage_collect() */
 
 /datum/spacevine_mutation/carbondioxide_eater
 	name = "CO2 consuming"
@@ -240,14 +240,14 @@
 	severity = 3
 	quality = POSITIVE
 
-/datum/spacevine_mutation/carbondioxide_eater/process_mutation(obj/structure/spacevine/holder)
+/* /datum/spacevine_mutation/carbondioxide_eater/process_mutation(obj/structure/spacevine/holder)
 	var/turf/open/floor/T = holder.loc
 	if(istype(T))
 		var/datum/gas_mixture/GM = T.air
 		if(!GM.gases[/datum/gas/carbon_dioxide])
 			return
 		GM.gases[/datum/gas/carbon_dioxide][MOLES] = max(GM.gases[/datum/gas/carbon_dioxide][MOLES] - severity * holder.energy, 0)
-		GM.garbage_collect()
+		GM.garbage_collect() */
 
 /datum/spacevine_mutation/plasma_eater
 	name = "toxins consuming"
@@ -255,14 +255,14 @@
 	severity = 3
 	quality = POSITIVE
 
-/datum/spacevine_mutation/plasma_eater/process_mutation(obj/structure/spacevine/holder)
+/* /datum/spacevine_mutation/plasma_eater/process_mutation(obj/structure/spacevine/holder)
 	var/turf/open/floor/T = holder.loc
 	if(istype(T))
 		var/datum/gas_mixture/GM = T.air
 		if(!GM.gases[/datum/gas/plasma])
 			return
 		GM.gases[/datum/gas/plasma][MOLES] = max(GM.gases[/datum/gas/plasma][MOLES] - severity * holder.energy, 0)
-		GM.garbage_collect()
+		GM.garbage_collect() */
 
 /datum/spacevine_mutation/thorns
 	name = "thorny"
@@ -335,9 +335,9 @@
 	. = ..()
 	add_atom_colour("#ffffff", FIXED_COLOUR_PRIORITY)
 
-/obj/structure/spacevine/ComponentInitialize()
+/* /obj/structure/spacevine/ComponentInitialize()
 	. = ..()
-	AddElement(/datum/element/atmos_sensitive)
+	AddElement(/datum/element/atmos_sensitive) */
 
 /obj/structure/spacevine/examine(mob/user)
 	. = ..()
@@ -572,7 +572,7 @@
 		i += SM.on_explosion(severity, target, src)
 	if(!i && prob(100/severity))
 		qdel(src)
-
+/*
 /obj/structure/spacevine/should_atmos_process(datum/gas_mixture/air, exposed_temperature)
 	return exposed_temperature > FIRE_MINIMUM_TEMPERATURE_TO_SPREAD //if you're cold you're safe
 
@@ -582,7 +582,7 @@
 		if(SM.process_temperature(src, exposed_temperature, volume)) //If it's ever true we're safe
 			return
 	qdel(src)
-
+ */
 /obj/structure/spacevine/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
 	if(isvineimmune(mover))

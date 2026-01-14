@@ -420,13 +420,13 @@
 	item_path = /obj/item/ego_weapon/morii
 	cost = 35
 
-//Will You Play - Voodoo doll
-/datum/ego_datum/armor/voodoo
-	item_path = /obj/item/clothing/suit/armor/ego_gear/he/voodoo
+//Will You Play - Go Fer' Scissors!
+/datum/ego_datum/armor/gofer
+	item_path = /obj/item/clothing/suit/armor/ego_gear/he/gofer
 	cost = 35
 
-/datum/ego_datum/weapon/voodoo
-	item_path = /obj/item/ego_weapon/mini/voodoo
+/datum/ego_datum/weapon/gofer
+	item_path = /obj/item/ego_weapon/mini/gofer
 	cost = 35
 
 //Eris - Coiling

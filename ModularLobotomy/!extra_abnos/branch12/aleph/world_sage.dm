@@ -54,7 +54,7 @@
 	var/list/damtypes = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
 	var/damage = pick(damtypes)
 	work_damage_type = damage
-	user.deal_damage(work_damage_amount, damage)
+	user.deal_damage(work_damage_amount, damage, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 	WorkDamageEffect()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/world_sage/death()
@@ -199,7 +199,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.deal_damage(RED_DAMAGE, 30)
+		H.deal_damage(RED_DAMAGE, 30, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 // Jester Tiles
@@ -211,7 +211,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(50, RED_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(50, RED_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /obj/structure/jester_tile/white
@@ -222,7 +222,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(50, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(50, WHITE_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /obj/structure/jester_tile/black
@@ -233,7 +233,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(50, BLACK_DAMAGE, null, H.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(50, BLACK_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /obj/structure/jester_tile/pale
@@ -244,7 +244,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(50, PALE_DAMAGE, null, H.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(50, PALE_DAMAGE, source = connected_abno, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 
 
 /obj/structure/jester_tile/stun

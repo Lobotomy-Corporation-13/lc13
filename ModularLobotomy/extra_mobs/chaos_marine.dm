@@ -75,7 +75,7 @@
 /turf/open/indestructible/cult
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "cult"
-	//initial_gas_mix = OPENTURF_LOW_PRESSURE
+	// initial_gas_mix = OPENTURF_LOW_PRESSURE
 
 /datum/action/innate/megafauna_attack/blood_dash
 	name = "Blood Dash"
@@ -267,7 +267,7 @@
 			visible_message(span_boldwarning("[src] runs through [L]!"))
 			to_chat(L, span_userdanger("[src] pierces you with a chain-sword!"))
 			shake_camera(L, 2, 1)
-			L.apply_damage(75, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(75, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			playsound(L,"sound/effects/wounds/pierce[pick(1,2,3)].ogg", 200, 1)
 	addtimer(CALLBACK(src, PROC_REF(blood_dash_2), move_dir, (times_ran + 1)), (1.5 * dash_mod))
 
@@ -407,7 +407,7 @@
 	name = "berserker's hardsuit"
 	allowed = list(/obj/item/gun, /obj/item/nullrod, /obj/item/tank/internals)
 	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = -50, BLACK_DAMAGE = 35, PALE_DAMAGE = 60)
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | LAVA_PROOF
 	cell = /obj/item/stock_parts/cell/hyper
 	helmettype = /obj/item/clothing/head/helmet/space/hardsuit/ert/paranormal/berserker/chaos
@@ -418,7 +418,7 @@
 /obj/item/clothing/head/helmet/space/hardsuit/ert/paranormal/berserker/chaos
 	name = "berserker's helmet"
 	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = -50, BLACK_DAMAGE = 35, PALE_DAMAGE = 60)
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | LAVA_PROOF
 	icon_state = "hardsuit0-chaos"
 	icon = 'ModularLobotomy/_Lobotomyicons/teguclothing_worn.dmi'
@@ -454,7 +454,6 @@
 	stop_automated_movement = 1
 	status_flags = CANPUSH
 	attack_sound = 'sound/magic/demon_attack1.ogg'
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
 	faction = list("chaos")
 	maxHealth = 100
 	health = 100

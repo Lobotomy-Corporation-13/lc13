@@ -1,4 +1,4 @@
-/// This is an atmospherics pipe which can relay air up/down a deck.
+/* /// This is an atmospherics pipe which can relay air up/down a deck.
 /obj/machinery/atmospherics/pipe/multiz
 	name = "multi deck pipe adapter"
 	desc = "An adapter which allows pipes to connect to other pipenets on different decks."
@@ -51,3 +51,4 @@
 		nodes += above
 		above.nodes += src //Two way travel :)
 	return ..()
+ */

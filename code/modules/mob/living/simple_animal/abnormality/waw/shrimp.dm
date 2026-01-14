@@ -239,7 +239,11 @@
 /mob/living/simple_animal/hostile/shrimp_soldier/Initialize()
 	. = ..()
 	if(SSmaptype.maptype in SSmaptype.citymaps)
+		casingtype = /obj/item/ammo_casing/caseless/ego_shrimpsoldier/city
 		del_on_death = FALSE
+
+/obj/item/ammo_casing/caseless/ego_shrimpsoldier/city
+	pellets = 3
 
 /mob/living/simple_animal/hostile/shrimp_soldier/friendly
 	name = "wellcheers corp assault officer"

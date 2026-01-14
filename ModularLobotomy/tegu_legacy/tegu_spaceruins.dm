@@ -23,7 +23,7 @@ DATU: Datums for map templates
 	Oh well, we have so many test subjects."}
 
 /turf/open/floor/noslip/airless
-	initial_gas_mix = AIRLESS_ATMOS
+	// initial_gas_mix = AIRLESS_ATMOS
 
 //FSS2: Prototype Station
 

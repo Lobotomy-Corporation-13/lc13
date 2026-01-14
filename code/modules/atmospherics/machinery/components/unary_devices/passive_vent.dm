@@ -1,4 +1,4 @@
-/obj/machinery/atmospherics/components/unary/passive_vent
+/* /obj/machinery/atmospherics/components/unary/passive_vent
 	icon_state = "passive_vent_map-3"
 
 	name = "passive vent"
@@ -38,3 +38,4 @@
 /obj/machinery/atmospherics/components/unary/passive_vent/layer4
 	piping_layer = 4
 	icon_state = "passive_vent_map-4"
+ */

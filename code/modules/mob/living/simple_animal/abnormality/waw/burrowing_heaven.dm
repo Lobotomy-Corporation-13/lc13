@@ -82,7 +82,7 @@
 	if(!seen) //You need two people to work this abno without taking damage.
 		to_chat(user, span_warning("You are injured by [src]!")) // Keeping it clear that the bad work is from being seen and not just luck.
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(user), pick(GLOB.alldirs))
-		user.apply_damage(5, BLACK_DAMAGE, null, user.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+		user.deal_damage(5, BLACK_DAMAGE, flags = (DAMAGE_FORCED), blocked = user.run_armor_check(null, RED_DAMAGE))
 
 /mob/living/simple_animal/hostile/abnormality/burrowing_heaven/BreachEffect(mob/living/carbon/human/user, breach_type)
 	. = ..()
@@ -212,7 +212,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage(40*aoe, BLACK_DAMAGE)
+		L.deal_damage(40*aoe, BLACK_DAMAGE, src, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport)), 5 SECONDS)
 

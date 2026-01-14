@@ -540,7 +540,6 @@
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "bF" = (
-/obj/machinery/atmospherics/components/unary/cryo_cell,
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "bG" = (
@@ -598,15 +597,9 @@
 /turf/open/floor/plasteel/cafeteria,
 /area/awaymission/cabin)
 "bP" = (
-/obj/machinery/atmospherics/pipe/manifold/general/visible{
-	dir = 8
-	},
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "bQ" = (
-/obj/machinery/atmospherics/pipe/manifold/general/visible{
-	dir = 4
-	},
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "bS" = (
@@ -726,10 +719,6 @@
 /turf/open/floor/plasteel/freezer,
 /area/awaymission/cabin)
 "cm" = (
-/obj/machinery/atmospherics/components/unary/portables_connector/visible{
-	dir = 1
-	},
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plasteel/white,
 /area/awaymission/cabin)
 "co" = (
@@ -766,9 +755,6 @@
 /turf/open/floor/wood,
 /area/awaymission/cabin)
 "cu" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/freezer/on{
-	dir = 1
-	},
 /obj/machinery/light{
 	dir = 4
 	},

@@ -43,7 +43,7 @@
 	gift_type =  /datum/ego_gifts/acupuncture
 	abnormality_origin = ABNORMALITY_ORIGIN_ORIGINAL
 
-	generic_bubbles = list(
+	generic_bubbles = alist(
 		1 = list("%ABNO watches you from the corner of her eye."),
 		2 = list("%ABNO skips around the cell."),
 		3 = list("%ABNO is flicking the tip of her syringe to remove air bubbles."),
@@ -110,6 +110,6 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	..()
-	user.deal_damage(45, BLACK_DAMAGE)
+	user.deal_damage(45, BLACK_DAMAGE, flags = (DAMAGE_FORCED))
 
 

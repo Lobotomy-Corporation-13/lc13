@@ -44,7 +44,7 @@
 		"Stay silent" = list(FALSE, "Ah... <br>A mere human, human, human. <br>Cease your fear, I shall rid you of your pains. <br>Be reborn as a flower."),
 	)
 
-	generic_bubbles = list(
+	generic_bubbles = alist(
 		1 = list("%PERSON looks in horror at %ABNO.", "%ABNO seems ready to pull %PERSON limb from limb"),
 		2 = list("The wingbeats of %ABNO create whirlwinds throughout the containment cell."),
 		3 = list("%PERSON is struck in awe at %ABNO."),
@@ -221,7 +221,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/titania/proc/Punishment(mob/living/sinner)
 	to_chat(sinner, span_userdanger("You are hurt due to breaking Fairy Law."))
-	sinner.deal_damage(law_damage, PALE_DAMAGE)
+	sinner.deal_damage(law_damage, PALE_DAMAGE, src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))
 	new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(sinner), pick(GLOB.alldirs))
 
 //Ranged stuff

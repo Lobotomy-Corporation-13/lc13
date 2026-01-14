@@ -21,7 +21,7 @@ RUN apt-get install -y --no-install-recommends \
 COPY dependencies.sh .
 
 RUN . ./dependencies.sh \
-    && curl "http://www.byond.com/download/build/${BYOND_MAJOR}/${BYOND_MAJOR}.${BYOND_MINOR}_byond_linux.zip" -o byond.zip \
+    && curl --user-agent "lc13-ci/1.0 (Linux; curl/8; +https://github.com/Lobotomy-Corporation-13/lc13)" "$MIRROR_URL/${BYOND_MAJOR}/${BYOND_MAJOR}.${BYOND_MINOR}_byond_linux.zip" -o byond.zip \
     && unzip byond.zip \
     && cd byond \
     && sed -i 's|install:|&\n\tmkdir -p $(MAN_DIR)/man6|' Makefile \

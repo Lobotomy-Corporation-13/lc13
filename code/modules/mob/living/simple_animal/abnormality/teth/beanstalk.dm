@@ -140,7 +140,7 @@
 		else //brain damage
 			fallinganimation(user)
 			sleep(3 SECONDS)
-			user.deal_damage(50, RED_DAMAGE)
+			user.deal_damage(50, RED_DAMAGE, flags = (DAMAGE_FORCED))
 			user.gain_trauma_type(BRAIN_TRAUMA_SEVERE, TRAUMA_RESILIENCE_LOBOTOMY)
 			playsound(user, 'sound/effects/wounds/crack1.ogg', 75, FALSE, -1)
 			return
@@ -236,7 +236,7 @@
 		else //brain damage
 			fallinganimation(user)
 			sleep(3 SECONDS)
-			user.deal_damage(50, RED_DAMAGE)
+			user.deal_damage(50, RED_DAMAGE, flags = (DAMAGE_FORCED))
 			user.gain_trauma_type(BRAIN_TRAUMA_SEVERE, TRAUMA_RESILIENCE_LOBOTOMY)
 			playsound(user, 'sound/effects/wounds/crack1.ogg', 75, FALSE, -1)
 			return

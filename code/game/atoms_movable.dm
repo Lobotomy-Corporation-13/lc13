@@ -72,9 +72,9 @@
 	/// Whether this atom should have its dir automatically changed when it moves. Setting this to FALSE allows for things such as directional windows to retain dir on moving without snowflake code all of the place.
 	var/set_dir_on_move = TRUE
 
-
 /atom/movable/Initialize(mapload)
 	. = ..()
+	astype(get_turf(src), /turf)?.Entered(src)
 	switch(blocks_emissive)
 		if(EMISSIVE_BLOCK_GENERIC)
 			var/mutable_appearance/gen_emissive_blocker = mutable_appearance(icon, icon_state, EMISSIVE_BLOCKER_LAYER, EMISSIVE_BLOCKER_PLANE)
@@ -103,10 +103,10 @@
 	unbuckle_all_mobs(force = TRUE)
 
 	if(loc)
-		//Restore air flow if we were blocking it (movables with ATMOS_PASS_PROC will need to do this manually if necessary)
+/* 		//Restore air flow if we were blocking it (movables with ATMOS_PASS_PROC will need to do this manually if necessary)
 		if(((CanAtmosPass == ATMOS_PASS_DENSITY && density) || CanAtmosPass == ATMOS_PASS_NO) && isturf(loc))
-			CanAtmosPass = ATMOS_PASS_YES
-			air_update_turf(TRUE, FALSE)
+			// CanAtmosPass = ATMOS_PASS_YES
+			air_update_turf(TRUE, FALSE) */
 		loc.handle_atom_del(src)
 
 	if(opacity)

@@ -191,6 +191,7 @@
 	desc = "He's got a sword!"
 	if(friendly)
 		fear_level = ZAYIN_LEVEL
+		swap_area_index(MOB_SIMPLEANIMAL_INDEX) // Won't disrupt regenerators
 		health = 300 //He's pretty tough at max HP
 		addtimer(CALLBACK(src, PROC_REF(escape)), 45 SECONDS)
 		GoToFriend()
@@ -199,6 +200,7 @@
 		update_icon()
 		return
 	if(!density) //sanity check for if he was friendly breaching and is no longer friendly
+		swap_area_index(MOB_ABNORMALITY_INDEX)
 		density = TRUE
 		fear_level = HE_LEVEL
 		FearEffect()
@@ -288,10 +290,10 @@
 	icon_state = icon_aggro
 
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/proc/Finisher(mob/living/target) //This is super easy to avoid
-	target.apply_damage(50, PALE_DAMAGE, null, target.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE) //50% of your health in red damage
+	target.deal_damage(50, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL), blocked = target.run_armor_check(null, RED_DAMAGE)) //50% of your health in red damage
 	to_chat(target, span_danger("[src] is trying to cut you in half!"))
 	if(!ishuman(target))
-		target.deal_damage(100, PALE_DAMAGE) //bit more than usual DPS in pale damage
+		target.deal_damage(100, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //bit more than usual DPS in pale damage
 		return
 	if(target.health > 0)
 		return
@@ -315,6 +317,7 @@
 /mob/living/simple_animal/hostile/abnormality/puss_in_boots/death(gibbed)
 	if(health <= 0)
 		playsound(get_turf(src), 'sound/effects/limbus_death.ogg', 50, 0, 2)
+	swap_area_index(MOB_ABNORMALITY_INDEX) // Back to normal
 	density = FALSE
 	animate(src, alpha = 0, time = 5 SECONDS)
 	QDEL_IN(src, 5 SECONDS)

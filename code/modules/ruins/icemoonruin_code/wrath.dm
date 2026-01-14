@@ -4,9 +4,9 @@
 	icon_state = "black"
 	inhand_icon_state = "blackgloves"
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 
 /obj/item/clothing/gloves/butchering/Initialize()
 	. = ..()

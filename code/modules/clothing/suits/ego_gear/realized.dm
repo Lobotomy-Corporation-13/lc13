@@ -11,14 +11,19 @@
 							)
 	/// Type of realized ability, if any
 	var/obj/effect/proc_holder/ability/realized_ability = null
+	/// Set the ego_assimilation ability if the realized EGO is able to assimilate a weapon into a corresponding weapon (example: Gasharpoon armour can turn an ALEPH weapon into Gasharpoon weapon)
+	var/obj/effect/proc_holder/ability/ego_assimilation/assimilation_ability = null
 
 /obj/item/clothing/suit/armor/ego_gear/realization/Initialize()
 	. = ..()
-	if(isnull(realized_ability))
-		return
-	var/obj/effect/proc_holder/ability/AS = new realized_ability
-	var/datum/action/spell_action/ability/item/A = AS.action
-	A.SetItem(src)
+	if(realized_ability)
+		var/obj/effect/proc_holder/ability/AS = new realized_ability
+		var/datum/action/spell_action/ability/item/A = AS.action
+		A.SetItem(src)
+	if(assimilation_ability)
+		var/obj/effect/proc_holder/ability/ego_assimilation/ASSIM = new assimilation_ability
+		var/datum/action/spell_action/ability/item/A2 = ASSIM.action
+		A2.SetItem(src)
 
 /*Armor totals:
 Ability 	230
@@ -259,6 +264,190 @@ No Ability	250
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//Melee
 	realized_ability = /obj/effect/proc_holder/ability/rip_space
 
+/* This Realization has several effects:
+1. Grants an ability: Curl Up. Gives a universal shield (think Manager Shield Bullets) to the user. While it is active, accumulates charge for this armour. If the shield breaks, lose all charge.
+If it survives, unleash an AoE attack that gets stronger the less health the shield had left.
+2. Grants a passive ability: Self-Charge. The armour accumulates charge from using the ability and from the AEDD weapon. Once it reaches maximum charge, empowers the user.
+This empowered state makes them arc lightning to all nearby foes when taking damage, and gives a large amount of power modifier while it lasts.
+3. Empowers the AEDD weapon to low ALEPH tier in strength.
+*/
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation
+	name = "experimentation"
+	desc = "Just as they wished to test and examine me, I would also wish to experiment with attaining freedom."
+	icon_state = "lce_aedd_inactive"
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 70, PALE_DAMAGE = 40)		// Tank, survivability-based. Also buffs AEDD weapon (abysmal by default)
+	realized_ability = /obj/effect/proc_holder/ability/aedd_curl_up
+	var/mob/living/carbon/human/owner
+	/// Current amount of Self-Charge. Gained by blocking hits with Curl Up and landing hits with AEDD E.G.O. weapon special. Lost when entering Empowered state or shield is shattered.
+	var/charge = 0
+	/// Maximum amount of Self-Charge. Also represents the amount needed to enter Empowered state.
+	var/max_charge = 30
+
+	/// If TRUE, we won't be able to gain Self-Charge.
+	var/empowered = FALSE
+	/// Empowered state lasts this long.
+	var/empowered_duration = 20 SECONDS
+	/// Amount of Power Modifier gained while Empowered. This boosts melee attack damage and movement speed.
+	var/empowered_power_buff = 40
+
+	/// Amount of tiles that our lightning reaches out to. Mind, if we hit an enemy 4 tiles away with our lightning, that enemy will continue to chain with a radius of 4 tiles, so we could hit an enemy... potentially across the entire map.
+	var/arc_lightning_range = 4
+	/// Amount of damage dealt by our arc lightning. This is flat, not multiplied by anything (except enemy weaknesses).
+	var/arc_lightning_damage = 50
+	/// Holds current arc lightning cooldown.
+	var/arc_lightning_cooldown
+	/// Period of time in between possible arc lightning procs.
+	var/arc_lightning_cooldown_duration = 2 SECONDS
+	/// Failsafe to avoid insane amounts of recursion. Arc lightning will never chain to more than 30 turfs.
+	var/arc_lightning_max_chains = 30
+	// These hitlists are to avoid repeating hits.
+	var/list/arc_lightning_turf_hitlist = list()
+	var/list/arc_lightning_mob_hitlist = list()
+
+	/// Timer for exiting Empowered.
+	var/revert_buff_timer
+
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/examine(mob/user)
+	. = ..()
+	. += span_notice("This E.G.O. can accumulate <b>Self-Charge</b>. After reaching [max_charge] stacks of Self-Charge, <b>receive +40 Power Modifier</b> and <b>retaliate with BLACK damage chain lightning to all nearby enemies when taking damage</b>. This buff lasts 20 seconds.")
+	. += span_notice("This E.G.O. will <b>empower the AEDD E.G.O. weapon while worn</b>, allowing it to be <b>permanently charged</b> and causing any further charging of the weapon to <b>enable an area attack for the next swing which accumulates 3 Self-Charge</b> for this E.G.O. per target hit.")
+	. += span_danger("<b>Current Self-Charge: [charge]/[max_charge].</b>")
+	if(empowered)
+		. += span_danger("Currently <b>empowered!</b>")
+
+/// Set our owner when equipped to the exosuit slot. If we're being put ANYWHERE ELSE, remove our owner after reverting any buffs we may have given them.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
+		owner = user
+	else
+		RevertBuff()
+		owner = null
+
+/// Remove buffs when being dropped.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/dropped(mob/user)
+	. = ..()
+	RevertBuff()
+	owner = null
+
+/// This proc is used by the Curl Up ability and the AEDD E.G.O. weapon to add charge to this armour.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/AdjustCharge(amount)
+	if(empowered)
+		return
+	charge = clamp(charge + amount, 0, max_charge) // Charge can never < 0 and can never > max_charge
+	if(amount > 0)
+		new /obj/effect/temp_visual/healing/charge(get_turf(src)) // cool vfx
+	if(charge >= max_charge)
+		ActivateBuff()
+
+// The buff isn't a status effect because it doesn't need to be - BUT this is, admittedly, unsafe, and could cause permanent changes to Power Modifier in some rare edge cases (armour deleted?)
+// If maints hate this I can make it a status effect
+/// Gain Power Modifier and shock nearby enemies when taking damage, for a certain period of time. Also updates the armour's sprite.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/ActivateBuff()
+	if(!ishuman(owner) || empowered)
+		return
+	charge = 0 // Goodbye Charge
+	empowered = TRUE // Stop gaining charge and you can't trigger this state while it's already ongoing to double up on buffs
+
+	owner.adjust_attribute_buff(JUSTICE_ATTRIBUTE, empowered_power_buff) // UNLIMITED POWER (modifier)
+	RegisterSignal(owner, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(StartArcLightning)) // When taking damage, cause a chain lightning effect.
+	revert_buff_timer = addtimer(CALLBACK(src, PROC_REF(RevertBuff)), empowered_duration, TIMER_STOPPABLE) // Revert the buff after this period of time.
+
+	// Player feedback: message, sound and icon state change.
+	owner.visible_message(span_danger("[owner]'s [src.name] E.G.O. begins to wildly arc with electricity!"), span_nicegreen("<b>Your [src.name] E.G.O. has reached maximum charge, and begins violently discharging electricity, empowering you!</b>"))
+	playsound(src, 'sound/magic/lightningshock.ogg', 80, FALSE, 5)
+
+	// Make the suit's icon state change to the sparking version.
+	icon_state = "lce_aedd_active"
+	owner.regenerate_icons()
+
+/// Walk all our changes from ActivateBuff back
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/RevertBuff()
+	if(!ishuman(owner) || !empowered)
+		return
+	deltimer(revert_buff_timer)
+	UnregisterSignal(owner, COMSIG_MOB_AFTER_APPLY_DAMGE)
+	empowered = FALSE
+	owner.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -empowered_power_buff)
+
+	owner.visible_message(span_danger("[owner]'s [src.name] E.G.O. settles down, the electric arcs gradually fading away."), span_warning("Your [src.name] E.G.O. has finished discharging, and its power and influence wane back to normal."))
+	icon_state = "lce_aedd_inactive"
+	owner.regenerate_icons()
+
+// Called when user is hit. Will reset the arc lightning hitlist, perform a scan around the user. If it manages to find a target, sets off arc lightning and starts the cooldown.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/StartArcLightning()
+	SIGNAL_HANDLER
+	if(!ishuman(owner))
+		return
+	if(arc_lightning_cooldown > world.time) // No you can't shock people 50 times in 1 tick by diving into an amber bug swarm
+		return
+	arc_lightning_turf_hitlist = list()
+	arc_lightning_mob_hitlist = list()
+	var/turf/startpoint = get_turf(owner)
+
+	// If we found an enemy within range, well, they already got shocked, so set the cooldown.
+	if(ArcLightningScan(startpoint, 1))
+		playsound(startpoint, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 50, vary = TRUE, extrarange = 5)
+		arc_lightning_cooldown = world.time + arc_lightning_cooldown_duration
+
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/ArcLightningScan(turf/origin, chains)
+	if(chains >= arc_lightning_max_chains) // Alright calm down
+		return
+	// Get all the nearby turfs and eliminate turfs we've already hit
+	var/list/valid_turfs = view(arc_lightning_range, origin)
+	valid_turfs -= arc_lightning_turf_hitlist
+	// Try to find a mob that isn't dead and isn't in our faction. Considers allies, too. Won't hurt 'em though, gives a buff instead.
+	var/mob/living/found_mob
+	for(var/turf/T in valid_turfs)
+		for(var/mob/living/L in T)
+			if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy) || (L in arc_lightning_mob_hitlist) || L == owner)
+				continue
+			found_mob = L
+			break
+	// Found one? Shock them.
+	if(found_mob)
+		var/turf/impact_turf = get_turf(found_mob)
+		var/datum/beam/new_beam = origin.Beam(impact_turf, icon_state="lightning[rand(1,12)]", time = 3)
+		new_beam.visuals.color = "#70c2e0" // The lion refuses to use colour palette defines
+		new_beam.visuals.layer = POINT_LAYER
+		arc_lightning_turf_hitlist |= impact_turf
+		INVOKE_ASYNC(src, PROC_REF(ArcLightningHit), impact_turf, chains) // ArcLightningHit will call this same proc recursively.
+		return TRUE
+	return FALSE
+
+/// Proc which deals damage to all mobs that aren't in the owner's faction in the given turf, gives BLACK protection to allies in the turf, and will attempt to chain lightning again from that turf.
+/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/proc/ArcLightningHit(turf/target_turf, chains)
+	for(var/mob/living/L in target_turf)
+		if(L in arc_lightning_mob_hitlist) // This mob was already zapped. Ignore!
+			continue
+		if(L == owner || L.stat >= DEAD) // duh
+			continue
+
+		if(owner.faction_check_mob(L)) // Ally. Don't damage, give BLACK protection up to 3 stacks.
+			to_chat(L, span_nicegreen("Electricity harmlessly arcs through you, and you feel it protect you against BLACK damage!"))
+			var/datum/status_effect/stacking/damtype_protection/black/current_stacks = L.has_status_effect(/datum/status_effect/stacking/damtype_protection/black/)
+			var/current_stack_amount = current_stacks ? current_stacks.stacks : 0
+			var/new_stack_amount = current_stack_amount + 1
+			if(new_stack_amount >= 4)
+				current_stacks.refresh()
+			else
+				L.apply_lc_black_protection(new_stack_amount)
+
+			var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/also_has_suit_like_ours = L.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+			if(istype(also_has_suit_like_ours)) // If they're wearing this same realization, give them 1 self-charge (it's funny)
+				also_has_suit_like_ours.AdjustCharge(1)
+
+		else // Enemy. Zap!
+			L.deal_damage(arc_lightning_damage, BLACK_DAMAGE, source = owner, attack_type = (ATTACK_TYPE_SPECIAL | ATTACK_TYPE_COUNTER))
+			to_chat(L, span_danger("Electricity arcs through you, shocking you!"))
+
+		arc_lightning_mob_hitlist |= L // Add mob we just hit to our mob hitlist.
+
+	new /obj/effect/temp_visual/justitia_effect(target_turf)
+	playsound(target_turf, 'sound/weapons/fixer/generic/energy2.ogg', 40, vary = TRUE, extrarange = 5)
+	sleep(0.2 SECONDS)
+	ArcLightningScan(target_turf, chains + 1)
+
 /* WAW Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/goldexperience
@@ -485,7 +674,7 @@ No Ability	250
 				continue
 			var/atom/throw_target = get_edge_target_turf(L, get_dir(L, get_step_away(L, get_turf(src))))
 			L.throw_at(throw_target, 1, 1)
-			L.apply_damage(5, WHITE_DAMAGE, null, L.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(5, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 
 
 /* Effloresced (Personal) E.G.O */
@@ -495,7 +684,7 @@ No Ability	250
 	icon_state = "farmwatch"
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 70, BLACK_DAMAGE = 40, PALE_DAMAGE = 60)
 	hat = /obj/item/clothing/head/ego_hat/farmwatch_hat
-	realized_ability = /obj/effect/proc_holder/ability/ego_assimilation/farmwatch
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/farmwatch
 
 /obj/item/clothing/head/ego_hat/farmwatch_hat
 	name = "farmwatch"
@@ -507,7 +696,7 @@ No Ability	250
 	desc = "I've always wished to be a bud. Soon to bloom, bearing a scent within."
 	icon_state = "spicebush"
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 70, BLACK_DAMAGE = 70, PALE_DAMAGE = 60)
-	realized_ability = /obj/effect/proc_holder/ability/ego_assimilation/spicebush
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/spicebush
 
 /obj/item/clothing/suit/armor/ego_gear/realization/desperation
 	name = "Scorching Desperation"
@@ -515,10 +704,11 @@ No Ability	250
 	icon_state = "desperation"
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 40, BLACK_DAMAGE = 60, PALE_DAMAGE = 60)
 	realized_ability = /obj/effect/proc_holder/ability/overheat
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/waxen
 
 /obj/item/clothing/suit/armor/ego_gear/realization/gasharpoon
 	name = "gasharpoon"
 	desc = "We must find the Pallid Whale! Look alive, men! Spring! Roar!"
 	icon_state = "gasharpoon"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 70, BLACK_DAMAGE = 20, PALE_DAMAGE = 80)//230, required for the corresponding weapon abilities
-	realized_ability = /obj/effect/proc_holder/ability/ego_assimilation/gasharpoon
+	assimilation_ability = /obj/effect/proc_holder/ability/ego_assimilation/gasharpoon

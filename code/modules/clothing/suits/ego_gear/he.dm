@@ -430,10 +430,10 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 							JUSTICE_ATTRIBUTE = 40
 							)
 
-/obj/item/clothing/suit/armor/ego_gear/he/voodoo
-	name = "voodoo doll"
+/obj/item/clothing/suit/armor/ego_gear/he/gofer
+	name = "Go Fer Scissors"
 	desc = "You look like a little doll."
-	icon_state = "voodoo"
+	icon_state = "voodoo" //Same as weapon.
 	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = -10, PALE_DAMAGE = 20) // 70
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40

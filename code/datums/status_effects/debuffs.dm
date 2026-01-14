@@ -473,8 +473,8 @@
 	effect_sprite = "emark4"
 
 /datum/status_effect/eldritch/void/on_effect()
-	var/turf/open/turfie = get_turf(owner)
-	turfie.TakeTemperature(-40)
+	// var/turf/open/turfie = get_turf(owner)
+	// turfie.TakeTemperature(-40)
 	owner.adjust_bodytemperature(-20)
 	return ..()
 
@@ -1071,7 +1071,7 @@
 	var/datum/status_effect/stacking/lc_mental_decay/D = owner.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 	if(D)
 		if(!ishuman(owner))
-			owner.apply_damage(D.stacks * 4, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+			owner.deal_damage(D.stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
 		else
 			var/mob/living/carbon/human/status_holder = owner
 			status_holder.adjustSanityLoss(D.stacks)
@@ -1231,7 +1231,7 @@
 	stacks -= 3
 
 /datum/status_effect/stacking/lc_burn/proc/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/proc/Update_Burn_Overlay(mob/living/owner)
@@ -1324,9 +1324,9 @@
 	to_chat(owner, "<span class='warning'>The heat consumes you!!</span>")
 	owner.playsound_local(owner, 'sound/effects/burn.ogg', 50, TRUE)
 	if(ishuman(owner))
-		owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, FIRE))
+		owner.deal_damage(stacks, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 	else
-		owner.apply_damage(stacks*4, FIRE, null, owner.run_armor_check(null, FIRE)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
+		owner.deal_damage(stacks*4, FIRE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS)) // x4 on non humans (Average burn stack is 20. 80/5 sec, extra 16 pure dps)
 
 	//Deletes itself after 2 tick if no new burn stack was given
 	if(safety)
@@ -1429,7 +1429,7 @@
 		src.apply_status_effect(/datum/status_effect/stacking/vengeance_mark, stacks)
 	else
 		VM.add_stacks(stacks)
-		
+
 #define STATUS_EFFECT_LCMETALDECAY /datum/status_effect/stacking/lc_mental_decay // Deals white damage every 5 sec, can't be applied to godmode (contained abos)
 /datum/status_effect/stacking/lc_mental_decay
 	id = "lc_md"
@@ -1465,7 +1465,7 @@
 	to_chat(owner, "<span class='warning'>Your mind deteriorates!!</span>")
 	owner.playsound_local(owner, 'sound/items/haunted/ghostitemattack.ogg', 40, FALSE)
 	if(!ishuman(owner))
-		owner.apply_damage(stacks * 4, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+		owner.deal_damage(stacks * 4, WHITE_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS | ATTACK_TYPE_SPECIAL))
 	else
 		var/mob/living/carbon/human/status_holder = owner
 		status_holder.adjustSanityLoss(stacks)
@@ -1536,7 +1536,7 @@
 
 /datum/status_effect/stacking/pallid_noise/tick()//TODO:change this to golden apple's life tick for less lag
 	if(!ishuman(owner))
-		owner.apply_damage(stacks * 5, WHITE_DAMAGE, null, owner.run_armor_check(null, WHITE_DAMAGE))
+		owner.deal_damage(stacks * 5, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 		return
 	var/mob/living/carbon/human/status_holder = owner
 	status_holder.adjustSanityLoss(stacks * stacks)//sanity damage is the # of stacks squared
@@ -1578,15 +1578,15 @@
 //Slowdown on stack, prepares tremor burst
 /datum/status_effect/stacking/lc_tremor/on_apply()
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/on_remove()
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/tremor)
 	return ..()
 
-/datum/status_effect/stacking/lc_tremor/add_stacks(stacks)
+/datum/status_effect/stacking/lc_tremor/add_stacks(stacks_added)
 	. = ..()
-	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.4)
+	owner.add_or_update_variable_movespeed_modifier(/datum/movespeed_modifier/tremor, multiplicative_slowdown = stacks * 0.1)
 
 /datum/status_effect/stacking/lc_tremor/can_have_status()
 	return (owner.stat != DEAD || !(owner.status_flags & GODMODE))
@@ -1642,8 +1642,8 @@
 	icon_state = "dark_flame"
 
 /datum/status_effect/stacking/lc_burn/dark_flame/DealDamage()
-	owner.apply_damage(stacks, FIRE, null, owner.run_armor_check(null, BLACK_DAMAGE))
-	owner.apply_damage(stacks, WHITE_DAMAGE, null, owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, FIRE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
+	owner.deal_damage(stacks, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS), blocked = owner.run_armor_check(null, BLACK_DAMAGE))
 
 //Update burn appearance
 /datum/status_effect/stacking/lc_burn/dark_flame/Update_Burn_Overlay(mob/living/owner)

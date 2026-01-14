@@ -18,7 +18,7 @@
 	var/datum/tgui_handler/augment_fabricator/ui_handler = null
 
 	var/const/ui_key = "AugmentFabricator"
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Test Range Agent")
 
 	var/market_change_interval = 20 * 60 * 10 // 20 minutes in deciseconds
 	var/list/sale_percentages = list(25, 33, 40, 66)

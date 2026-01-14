@@ -201,10 +201,10 @@ GLOBAL_DATUM(syndicate_supermatter_engine, /obj/machinery/power/supermatter_crys
 
 /obj/machinery/power/supermatter_crystal/syndicate
 	desc = "Unstable supermatter crystal recovered from earlier Nanotrasen Researches."
-	explosion_power = 100 //Big ka-boom
+/* 	explosion_power = 100 //Big ka-boom
 	radio_key = /obj/item/encryptionkey/syndicate
 	engineering_channel = "Syndicate"
-	common_channel = "Syndicate"
+	common_channel = "Syndicate" */
 
 /obj/machinery/power/supermatter_crystal/syndicate/Initialize()
 	. = ..()

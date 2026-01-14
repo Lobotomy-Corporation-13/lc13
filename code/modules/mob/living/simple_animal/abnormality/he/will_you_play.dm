@@ -19,8 +19,8 @@
 	max_boxes = 15
 
 	ego_list = list(
-		/datum/ego_datum/weapon/voodoo,
-		/datum/ego_datum/armor/voodoo,
+		/datum/ego_datum/weapon/gofer,
+		/datum/ego_datum/armor/gofer,
 	)
 	gift_type = /datum/ego_gifts/voodoo
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
@@ -98,7 +98,7 @@
 //Player wins RPS, loses an arm tho
 /mob/living/simple_animal/hostile/abnormality/willyouplay/proc/Win(mob/living/carbon/human/user, work_type)
 	say("You lose.")
-	user.deal_damage(80, RED_DAMAGE)
+	user.deal_damage(80, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	IncreaseStats(user, 1, FALSE)
 
 	//Less than 80 fort and you lose an arm

@@ -44,6 +44,8 @@
 	var/projectile_timer
 	var/parry_timer
 	var/aggro_on_block
+	//Am i blocking?
+	var/active_block = FALSE
 
 /obj/item/ego_weapon/shield/Initialize()
 	. = ..()
@@ -91,6 +93,7 @@
 				to_chat(shield_user,span_notice("You cannot defend yourself from responsibility!"))
 				return FALSE
 		block = TRUE
+		active_block = TRUE
 		block_success = FALSE
 		shield_user.physiology.armor = shield_user.physiology.armor.modifyRating(bomb = 1) //bomb defense must be over 0
 		shield_user.physiology.red_mod *= max(0.001, (1 - ((reductions[1]) / 100)))
@@ -111,6 +114,7 @@
 
 //Ends the block, causes you to take more damage for as long as debuff_duration if you did not block any damage
 /obj/item/ego_weapon/shield/proc/DisableBlock(mob/living/carbon/human/user)
+	active_block = FALSE
 	user.physiology.armor = user.physiology.armor.modifyRating(bomb = -1)
 	user.physiology.red_mod /= max(0.001, (1 - ((reductions[1]) / 100)))
 	user.physiology.white_mod /= max(0.001, (1 - ((reductions[2]) / 100)))

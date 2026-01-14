@@ -354,11 +354,11 @@
 /obj/machinery/smartfridge/drying_rack/proc/rack_dry(obj/item/target)
 	SEND_SIGNAL(target, COMSIG_ITEM_DRIED)
 
-/obj/machinery/smartfridge/drying_rack/emp_act(severity)
+/* /obj/machinery/smartfridge/drying_rack/emp_act(severity)
 	. = ..()
 	if(. & EMP_PROTECT_SELF)
 		return
-	atmos_spawn_air("TEMP=1000")
+	atmos_spawn_air("TEMP=1000") */
 
 
 // ----------------------------

@@ -8,7 +8,7 @@
 	strip_delay = 40
 	equip_delay_other = 20
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	custom_price = PAYCHECK_ASSISTANT * 1.5
 	undyeable = TRUE
 
@@ -19,9 +19,9 @@
 	inhand_icon_state = "ggloves"
 	permeability_coefficient = 0.9
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 70, ACID = 30)
 
@@ -34,9 +34,9 @@
 	permeability_coefficient = 0.05
 	strip_delay = 80
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 80, ACID = 50)
 
@@ -50,8 +50,8 @@
 	equip_delay_other = 20
 	body_parts_covered = ARMS
 	cold_protection = ARMS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 	armor = list(MELEE = 15, BULLET = 25, LASER = 15, ENERGY = 15, BOMB = 20, BIO = 10, RAD = 0, FIRE = 0, ACID = 0)
 
@@ -73,9 +73,9 @@
 	icon_state = "plasmaman"
 	inhand_icon_state = "plasmaman"
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 	permeability_coefficient = 0.05
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 100, RAD = 0, FIRE = 95, ACID = 95)
@@ -196,9 +196,9 @@
 	inhand_icon_state = "blackgloves"
 	color = "#555555"
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 
 /obj/item/clothing/gloves/dimensional_storage/ComponentInitialize()

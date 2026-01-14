@@ -2,14 +2,14 @@
 	layer = CLOSED_TURF_LAYER
 	opacity = TRUE
 	density = TRUE
-	blocks_air = TRUE
+	// blocks_air = TRUE
 	flags_1 = RAD_PROTECT_CONTENTS_1 | RAD_NO_CONTAMINATE_1
 	rad_insulation = RAD_MEDIUM_INSULATION
 	pass_flags_self = PASSCLOSEDTURF
 
-/turf/closed/AfterChange()
+/* /turf/closed/AfterChange()
 	. = ..()
-	SSair.high_pressure_delta -= src
+	SSair.high_pressure_delta -= src */
 
 /turf/closed/get_smooth_underlay_icon(mutable_appearance/underlay_appearance, turf/asking_turf, adjacency_dir)
 	return FALSE
@@ -180,6 +180,36 @@
 
 /turf/closed/indestructible/reinforced/old
 	icon = 'icons/turf/walls/facility_old.dmi'
+
+// Cheap Colored Walls
+/turf/closed/indestructible/reinforced/cheap
+	icon = 'icons/turf/walls/cheap_wall.dmi'
+	icon_state = "icon-0"
+	base_icon_state = "icon"
+
+/turf/closed/indestructible/reinforced/cheap/blue
+	icon = 'icons/turf/walls/blue_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/brown
+	icon = 'icons/turf/walls/brown_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/cream
+	icon = 'icons/turf/walls/cream_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/green
+	icon = 'icons/turf/walls/green_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/purple
+	icon = 'icons/turf/walls/purple_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/red
+	icon = 'icons/turf/walls/red_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/fancy
+	icon = 'icons/turf/walls/fancy_wall.dmi'
+
+/turf/closed/indestructible/reinforced/cheap/yellow
+	icon = 'icons/turf/walls/yellow_wall.dmi'
 
 /turf/closed/indestructible/riveted
 	icon = 'icons/turf/walls/riveted.dmi'

@@ -111,7 +111,7 @@
 			continue
 		if(L in knights)
 			continue
-		L.deal_damage(pulse_damage, BLACK_DAMAGE)
+		L.deal_damage(pulse_damage, BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
 

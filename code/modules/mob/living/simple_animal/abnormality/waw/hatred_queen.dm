@@ -390,7 +390,7 @@
 		affected_turfs += TT
 		var/obj/effect/temp_visual/TV = new /obj/effect/temp_visual/revenant(TT)
 		TV.color = COLOR_SOFT_RED
-		beats_hit = HurtInTurf(TT, beats_hit, beats_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		beats_hit = HurtInTurf(TT, beats_hit, beats_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/abnormality/hatred_queen/proc/BeamAttack(target)
 	if(beam_cooldown > world.time)
@@ -522,7 +522,7 @@
 					continue
 				var/damage_before = L.get_damage_amount(BRUTE)
 				var/truedamage = ishuman(L) ? beam_damage_final : beam_damage_final/2 //half damage dealt to nonhumans
-				L.deal_damage(truedamage, BLACK_DAMAGE)
+				L.deal_damage(truedamage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 				var/damage_dealt = abs(L.get_damage_amount(BRUTE)-damage_before)
 				if(!friendly)
 					if(ishuman(L))
@@ -612,7 +612,7 @@
 	new_matrix.Scale(1.75)
 	VO.transform = new_matrix
 	for(var/turf/open/T in view(2, src))
-		HurtInTurf(T, list(), explode_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		HurtInTurf(T, list(), explode_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL))
 
 /mob/living/simple_animal/hostile/abnormality/hatred_queen/WorkChance(mob/living/carbon/human/user, chance)
 	return chance * chance_modifier
@@ -696,6 +696,7 @@
 	teleport_cooldown_time = 10 SECONDS
 	retreat_distance = null //this is annoying
 	beam_cooldown = world.time + beam_cooldown_time
+	swap_area_index(MOB_ABNORMALITY_INDEX) // Now able to disrupt regenerators
 	if(wand)
 		qdel(wand)
 	addtimer(CALLBACK(src, PROC_REF(TryTeleport), TRUE), 5)
@@ -711,6 +712,7 @@
 	if(friendly)
 		icon_state = "hatred_breach"
 		friendly = TRUE
+		swap_area_index(MOB_SIMPLEANIMAL_INDEX) // Don't disrupt regenerators
 		ADD_TRAIT(src, TRAIT_MOVE_FLYING, ROUNDSTART_TRAIT)
 		fear_level = TETH_LEVEL
 		beam_cooldown = world.time + beam_cooldown_time //no immediate beam

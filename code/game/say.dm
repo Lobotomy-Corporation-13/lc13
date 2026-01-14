@@ -11,6 +11,8 @@ GLOBAL_LIST_INIT(freqtospan, list(
 	"[FREQ_COMMAND]" = "comradio",
 	"[FREQ_WELFARE]" = "welfradio",
 	"[FREQ_DISCIPLINE]" = "discradio",
+	"[FREQ_RECORDS]" = "recordsradio",
+	"[FREQ_EXTRACTION]" = "extractionradio",
 	"[FREQ_ARCHITECTURE]" = "archradio",
 	"[FREQ_HEAD]" = "headradio",
 	"[FREQ_AI_PRIVATE]" = "aiprivradio",

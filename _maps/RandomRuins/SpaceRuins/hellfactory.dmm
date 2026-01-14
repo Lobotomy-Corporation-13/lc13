@@ -9,70 +9,29 @@
 /turf/closed/wall/r_wall,
 /area/ruin/space/has_grav/hellfactory)
 "ad" = (
-/obj/machinery/atmospherics/components/unary/thermomachine/freezer/on{
-	dir = 4
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "ae" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/visible{
-	dir = 4
-	},
 /obj/structure/closet/secure_closet/freezer/meat,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "af" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer4{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer2{
-	dir = 4
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "ag" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold{
-	dir = 1
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold/layer2{
-	dir = 1
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold/layer4{
-	dir = 1
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "ah" = (
 /turf/closed/indestructible/reinforced,
 /area/ruin/space/has_grav/hellfactoryoffice)
 "ai" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction{
-	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer2{
-	dir = 8
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/junction/layer4{
-	dir = 8
-	},
 /turf/closed/indestructible/reinforced,
 /area/ruin/space/has_grav/hellfactoryoffice)
 "aj" = (
-/obj/machinery/atmospherics/pipe/layer_manifold/visible{
-	dir = 4
-	},
 /obj/structure/fluff/hedge/opaque,
 /turf/open/floor/plasteel/grimy,
 /area/ruin/space/has_grav/hellfactoryoffice)
 "ak" = (
-/obj/machinery/atmospherics/components/unary/tank/oxygen{
-	dir = 8;
-	gas_type = /datum/gas/water_vapor;
-	initialize_directions = 8
-	},
 /turf/open/floor/plasteel/grimy,
 /area/ruin/space/has_grav/hellfactoryoffice)
 "al" = (
@@ -123,52 +82,16 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/hellfactory)
 "au" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 6
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 6
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 6
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "av" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 4
-	},
 /obj/structure/holobox,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aw" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 4
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "ax" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/manifold/layer4{
-	dir = 4
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "ay" = (
@@ -186,9 +109,6 @@
 /turf/open/floor/plasteel/checker,
 /area/ruin/space/has_grav/hellfactory)
 "aC" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple,
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2,
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aD" = (
@@ -233,39 +153,12 @@
 /turf/closed/wall/rust,
 /area/ruin/space/has_grav/hellfactory)
 "aM" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 5
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 5
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 5
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aN" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 4
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aO" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple{
-	dir = 9
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2{
-	dir = 9
-	},
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4{
-	dir = 9
-	},
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aP" = (
@@ -298,7 +191,7 @@
 /turf/open/floor/plating,
 /area/ruin/space/has_grav/hellfactory)
 "aT" = (
-/obj/effect/mine/gas/water_vapor,
+/obj/effect/mine/stun,
 /obj/machinery/door/window,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
@@ -306,7 +199,7 @@
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aV" = (
-/obj/effect/mine/gas/water_vapor,
+/obj/effect/mine/stun,
 /turf/open/floor/plastic,
 /area/ruin/space/has_grav/hellfactory)
 "aW" = (
@@ -1048,9 +941,6 @@
 /turf/closed/wall,
 /area/ruin/space/has_grav/hellfactory)
 "OJ" = (
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple,
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer2,
-/obj/machinery/atmospherics/pipe/heat_exchanging/simple/layer4,
 /obj/machinery/light{
 	dir = 4
 	},

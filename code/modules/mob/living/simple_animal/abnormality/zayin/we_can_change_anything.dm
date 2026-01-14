@@ -102,7 +102,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/we_can_change_anything/Worktick(mob/living/carbon/human/user, bubble_type = ABNO_BALLOON_GENERIC | ABNO_BALLOON_SPECIFIC, work_type)
 	if(!sacrifice)
-		user.deal_damage(5, RED_DAMAGE) // say goodbye to your kneecaps chucklenuts!
+		user.deal_damage(5, RED_DAMAGE, flags = (DAMAGE_FORCED)) // say goodbye to your kneecaps chucklenuts!
 	else
 		do_shaky_animation(1)
 		playsound(get_turf(src), 'sound/abnormalities/we_can_change_anything/change_generate.ogg', 30, FALSE)
@@ -111,7 +111,7 @@
 				ramping_speed -= 0.2
 			if(8 to 20)
 				ramping_speed -= 0.5
-		user.deal_damage(8, RED_DAMAGE) // say goodbye to a bit more than your kneecaps... (total damage is 800 RED).
+		user.deal_damage(8, RED_DAMAGE, flags = (DAMAGE_FORCED)) // say goodbye to a bit more than your kneecaps... (total damage is 800 RED).
 		total_damage += 8
 	return ..()
 
@@ -204,7 +204,7 @@
 			sound_cooldown = 0
 			playsound(src, 'sound/abnormalities/change/change_ding.ogg', 50)
 		for(var/mob/living/carbon/human/victim in get_turf(src))
-			victim.deal_damage(grind_damage, RED_DAMAGE)
+			victim.deal_damage(grind_damage, RED_DAMAGE, src, flags = (DAMAGE_FORCED))
 			if(victim.health <= 0)
 				victim.gib()
 		stoplag(1)

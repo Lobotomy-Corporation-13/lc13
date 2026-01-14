@@ -123,8 +123,7 @@
 	uniform = /obj/item/clothing/under/rank/medical/paramedic
 	head = /obj/item/clothing/head/soft/paramedic
 	suit =  /obj/item/clothing/suit/toggle/labcoat/paramedic
-	backpack_contents = list(/obj/item/pinpointer/crew=1)
-
+	backpack_contents = list(/obj/item/pinpointer/crew = 1, /obj/item/paramedic_cloak = 1)
 
 //Paramedic but with a gun
 /datum/job/doctor/fixer

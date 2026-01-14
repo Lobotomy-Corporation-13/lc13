@@ -465,19 +465,14 @@
 /turf/open/floor/plasteel/airless,
 /area/awaymission/challenge/main)
 "bF" = (
-/turf/open/floor/plasteel/white/corner{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/white/corner,
 /area/awaymission/challenge/main)
 "bG" = (
-/turf/open/floor/plasteel/white/side{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/white/side,
 /area/awaymission/challenge/main)
 "bH" = (
 /turf/open/floor/plasteel/white/corner{
-	dir = 8;
-	initial_gas_mix = "TEMP=2.7"
+	dir = 8
 	},
 /area/awaymission/challenge/main)
 "bI" = (
@@ -544,9 +539,7 @@
 /area/awaymission/challenge/end)
 "bQ" = (
 /obj/item/gun/ballistic/revolver/russian,
-/turf/open/floor/plasteel/white/side{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/white/side,
 /area/awaymission/challenge/main)
 "bR" = (
 /obj/structure/table/reinforced,
@@ -577,9 +570,7 @@
 /area/awaymission/challenge/main)
 "bU" = (
 /obj/effect/turf_decal/stripes/line,
-/turf/open/floor/plasteel/white{
-	initial_gas_mix = "TEMP=2.7"
-	},
+/turf/open/floor/plasteel/white,
 /area/awaymission/challenge/main)
 "bV" = (
 /obj/structure/window/reinforced{

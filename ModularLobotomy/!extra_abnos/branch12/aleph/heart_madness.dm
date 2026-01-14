@@ -81,7 +81,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((pulse_damage), WHITE_DAMAGE)
+		L.deal_damage((pulse_damage), WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		if(!ishuman(L))
 			continue
 		var/mob/living/carbon/human/H = L
@@ -98,7 +98,7 @@
 		if(faction_check_mob(L))
 			continue
 		new /obj/effect/temp_visual/revenant(get_turf(L))
-		L.deal_damage((sever_damage), BLACK_DAMAGE)
+		L.deal_damage((sever_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_SPECIAL))
 		if(!ishuman(L))
 			continue
 		var/mob/living/carbon/human/H = L

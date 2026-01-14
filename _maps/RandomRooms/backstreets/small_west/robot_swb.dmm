@@ -14,6 +14,9 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
+"d" = (
+/turf/closed/indestructible/fakeglass,
+/area/city/backstreets_room)
 "e" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -73,6 +76,13 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium/red,
+/area/city/backstreets_room)
+"G" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/mineral_door/transparent{
+	resistance_flags = 64
+	},
+/turf/open/floor/plating/asteroid/basalt,
 /area/city/backstreets_room)
 "J" = (
 /obj/structure/railing/corner{
@@ -163,10 +173,10 @@ a
 "}
 (5,1,1) = {"
 a
-X
-v
-X
-v
-v
+d
+d
+G
+d
+d
 a
 "}

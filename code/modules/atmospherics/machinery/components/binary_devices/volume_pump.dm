@@ -1,4 +1,4 @@
-// Every cycle, the pump uses the air in air_in to try and make air_out the perfect pressure.
+/* // Every cycle, the pump uses the air in air_in to try and make air_out the perfect pressure.
 //
 // node1, air1, network1 correspond to input
 // node2, air2, network2 correspond to output
@@ -210,3 +210,4 @@
 /obj/machinery/atmospherics/components/binary/volume_pump/on/layer4
 	piping_layer = 4
 	icon_state = "volpump_map-4"
+ */

@@ -73,7 +73,7 @@
 	if(user && user.mind && user.mind.assigned_role == "Workshop Attendant")
 		user.mind.weapons_forged++
 		if(user.mind.weapons_forged >= 50)
-			user.client?.give_award(/datum/award/achievement/lc13/weapon_forger, user)
+			user.client?.give_award(/datum/award/achievement/city/weapon_forger, user)
 
 	//Modify these
 	force *= mod.forcemod

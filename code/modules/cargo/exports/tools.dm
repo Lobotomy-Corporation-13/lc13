@@ -131,10 +131,10 @@
 	unit_name = "compressed matter cardridge"
 	export_types = list(/obj/item/rcd_ammo)
 
-/datum/export/rpd
+/* /datum/export/rpd
 	cost = CARGO_CRATE_VALUE * 0.5
 	unit_name = "rapid pipe dispenser"
-	export_types = list(/obj/item/pipe_dispenser)
+	export_types = list(/obj/item/pipe_dispenser) */
 
 //artisanal exports for the mom and pops
 /datum/export/soap

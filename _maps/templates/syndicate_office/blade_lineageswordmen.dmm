@@ -111,7 +111,6 @@
 /area/city/backstreets_room)
 "jw" = (
 /obj/structure/window/paperframe{
-	CanAtmosPass = 0;
 	resistance_flags = 115
 	},
 /turf/open/floor/stone,

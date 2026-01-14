@@ -22,6 +22,8 @@
 	blood_volume = BLOOD_VOLUME_NORMAL
 	silk_results = list(/obj/item/stack/sheet/silk/indigo_advanced = 1,
 						/obj/item/stack/sheet/silk/indigo_simple = 2)
+	/// If this is FALSE, we don't get to eat human corpses, they should be saved for the Matriarch.
+	var/permitted_to_feast = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/Initialize()
 	. = ..()
@@ -41,6 +43,9 @@
 	. = ..()
 	if(. && isliving(attacked_target))
 		var/mob/living/L = attacked_target
+		if(!permitted_to_feast && ishuman(L)) // We do not get to activate Devour on human corpses if the Matriarch wants the corpse for herself.
+			return
+
 		if(L.stat != DEAD)
 			if(L.health <= HEALTH_THRESHOLD_DEAD && HAS_TRAIT(L, TRAIT_NODEATH))
 				SweeperDevour(L)
@@ -48,13 +53,15 @@
 			SweeperDevour(L)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/PickTarget(list/Targets)
-	if(health <= maxHealth * 0.6) // If we're damaged enough
+	if(permitted_to_feast && health <= maxHealth * 0.6) // If we're damaged enough
 		for(var/mob/living/simple_animal/hostile/ordeal/indigo_noon/sweeper in ohearers(7, src)) // And there is no sweepers even more damaged than us
 			if(sweeper.stat != DEAD && (health > sweeper.health))
 				return ..()
 		var/list/highest_priority = list()
 		for(var/mob/living/L in Targets)
 			if(!CanAttack(L))
+				continue
+			if(ishuman(L))
 				continue
 			if(L.health < 0 || L.stat == DEAD)
 				highest_priority += L
@@ -63,6 +70,8 @@
 	var/list/lower_priority = list() // We aren't exactly damaged, but it'd be a good idea to finish the wounded first
 	for(var/mob/living/L in Targets)
 		if(!CanAttack(L))
+			continue
+		if(ishuman(L))
 			continue
 		if(L.health < L.maxHealth*0.5 && (L.stat < UNCONSCIOUS))
 			lower_priority += L
@@ -110,8 +119,8 @@
 	/// Holds the next moment that this mob will be allowed to dash.
 	var/dash_cooldown
 	/// This is the amount of time added by its dash attack (Sweep the Backstreets) on use onto its cooldown.
-	/// While the cooldown may seem fairly short, every human it hits will increase it by a fair bit.
-	var/dash_cooldown_time = 4 SECONDS
+	// Reduced by hitting enemies with it.
+	var/dash_cooldown_time = 8 SECONDS
 	/// Sweep the Backstreets ability range in tiles.
 	var/dash_range = 3
 	/// Sweep the Backstreets healing per human hit.
@@ -137,8 +146,6 @@
 
 	// CoL Adjustments: Change these to nerf/buff this variant on City maps, on Initialize.
 	// At the moment I've left them all at 0, because I do not think I need to nerf them on CoL.
-	/// ADDS TO move_to_delay on CoL. If this is positive, we make them slower, if it is negative, we make them faster.
-	var/COL_movespeed_adjustment = 0
 	/// ADDS TO dash_cooldown_time on CoL. If this is positive, dash has a longer cooldown, if it is negative, it is shortened.
 	var/COL_dash_cooldown_adjustment = 0
 	/// ADDS TO dash_evasivemode_duration on CoL. If this is positive, Evasive Mode lasts longer, if it is negative, it is shortened.
@@ -156,8 +163,6 @@
 
 	/// COL Rebalancing
 	if(SSmaptype.maptype in SSmaptype.citymaps)
-		move_to_delay += COL_movespeed_adjustment
-		movespeed = move_to_delay
 		dash_cooldown_time += COL_dash_cooldown_adjustment
 		dash_evasivemode_duration += COL_dash_evasivemode_duration_adjustment
 		dash_evasivemode_client_speed += COL_dash_evasivemode_speed_adjustment
@@ -231,7 +236,8 @@
 	/// This section is for telegraphing the attack.
 	face_atom(prospective_fuel)
 	say("+2653 753 842396.+")
-	new /obj/effect/temp_visual/cult/sparks/sweeper(dash_target_turf)
+	var/obj/effect/temp_visual/sweeper_dash_warning/telegraph = new(get_turf(src))
+	walk_towards(telegraph, dash_target_turf, 0.1 SECONDS)
 	SLEEP_CHECK_DEATH(dash_windup)
 	/// We're now dashing.
 	BeginDash()
@@ -259,6 +265,7 @@
 	/// Yes it needs to get slept for 0.1 second here because... it hasn't finished moving or something. I've tested it. Trust me.
 	SLEEP_CHECK_DEATH(0.1 SECONDS)
 	CancelDash()
+	walk(src, 0)
 	dash_hitlist_turfs |= get_turf(src)
 	SweepTheBackstreetsHit(dash_hitlist_turfs)
 	/// Give the players a tiny bit of time to not instantly get auto hit by the sweeper after it dashes.
@@ -272,19 +279,25 @@
 	can_act = TRUE
 	return TRUE
 
+
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/SweepTheBackstreetsHit(list/turfs)
 	for(var/hit_turf in turfs)
-		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
+		for(var/mob/living/hit_mob in HurtInTurf(hit_turf, dash_hitlist, melee_damage_upper * 1.5, melee_damage_type, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			to_chat(hit_mob, span_userdanger("The [src.name] viciously slashes you as it dashes past!"))
-			/// We spawn some gibs and heal if the target hit is human.
+			SpawnAppropiateGibs(hit_mob)
+			playsound(hit_mob, attack_sound, 100)
+			// Big slice VFX
+			var/obj/effect/temp_visual/slice/temp = new(hit_turf)
+			temp.transform = temp.transform * 1.75
+			temp.color = COLOR_MOSTLY_PURE_RED
+
+			/// Dash will come off cooldown faster if it hits someone. Dodge it!
+			dash_cooldown -= 4 SECONDS
+
+			/// We gain persistence and heal if the target hit is human.
 			if(istype(hit_mob, /mob/living/carbon/human))
-				new /obj/effect/gibspawner/generic(get_turf(hit_mob))
 				SweeperHealing(dash_healing)
 				GainPersistence(1)
-				playsound(hit_mob, attack_sound, 100)
-				/// Dash will come off cooldown faster if it doesn't hit anyone.
-				/// This sounds counter intuitive but I want it to be used more often if players bait them into wasting it early.
-				dash_cooldown += 6 SECONDS
 
 /// Called when we're entering a dash (passed all the checks).
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/PrepareDash()
@@ -326,22 +339,27 @@
 		minimum_distance = 1
 		retreat_distance = 2
 		sidestep_per_cycle = 2
-		move_to_delay = dash_evasivemode_noclient_speed
+		ChangeMoveToDelay(dash_evasivemode_noclient_speed)
 	/// Possessed sweepers get a smaller movement speed buff.
 	else
-		move_to_delay = dash_evasivemode_client_speed
+		ChangeMoveToDelay(dash_evasivemode_client_speed)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/proc/DisableEvasiveMode()
 	dodging = initial(dodging)
 	minimum_distance = initial(minimum_distance)
 	retreat_distance = initial(retreat_distance)
-	move_to_delay = movespeed // We do not use initial() here because it gets compiletime value, and we are going to apply nerfs on City modes on Initialize.
+	ChangeMoveToDelay(movespeed) // We do not use initial() here because it gets compiletime value, and we are going to apply nerfs on City modes on Initialize.
 	sidestep_per_cycle = initial(sidestep_per_cycle)
 
 /// I just want to make the telegraphing match properly, so we need a different duration for these than the normal 10 deciseconds
-/obj/effect/temp_visual/cult/sparks/sweeper
+/obj/effect/temp_visual/sweeper_dash_warning
+	name = "dash warning"
+	desc = "Move aside!"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "tbird_bolt"
+	color = COLOR_RED
 	duration = 0.6 SECONDS
-	color = "#FE5343"
+	movement_type = FLYING | PHASING
 
 /// This subtype moves slower, attacks slower, deals a bit more damage per hit, and has access to an empowered lifesteal attack every once in a while after being hit.
 /// Uses the chunky sweeper sprite made by insiteparaful.
@@ -363,9 +381,9 @@
 	/// Holds the cooldown time between Extract Fuel uses
 	var/extract_fuel_cooldown_time = 10 SECONDS
 	/// Extract Fuel will hit for this much additional BLACK damage
-	var/extract_fuel_extra_damage = 15
+	var/extract_fuel_extra_damage = 20
 	/// Extract Fuel will heal the sweeper for this much health
-	var/extract_fuel_healing = 100
+	var/extract_fuel_healing = 125
 	/// This controls whether the next hit actually sets off Extract Fuel's additional effects
 	var/extract_fuel_active = FALSE
 	/// We store the timer we use for cancelling Extract Fuel so we can delete it early if we've already used it
@@ -386,6 +404,8 @@
 	/// ADDS TO Last Stand's stack gain. Positive values makes it give more stacks, negative ones makes it give less.
 	var/COL_laststand_stacks_adjustment = 0
 
+
+
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/Initialize()
 	. = ..()
 	/// I know this is weird but I don't know how to ONLY override Initialize() for indigo_noon without getting rid of the code from simple_animal and whatnot.
@@ -402,21 +422,13 @@
 		extract_fuel_extra_damage += COL_extractfuel_damage_adjustment
 		last_stand_stack_gain += COL_laststand_stacks_adjustment
 
-/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/attacked_by(obj/item/I, mob/living/user)
+/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	/// If we've dropped to or below 40% health, we may gain Persistence because we are evil and tough to put down.
 	if(!used_last_stand && health <= maxHealth * 0.40 && prob(60))
 		LastStand()
 		return
-	/// Next is the Extract Fuel trigger. I don't want them both to happen on the same hit so there's an early return in the previous block.
-	/// I'm making them only fire it off with a chance to keep players guessing, instead of having them act too predictably.
-	if(extract_fuel_cooldown <= world.time && prob(60))
+	if(extract_fuel_cooldown <= world.time && prob(60) && (get_dist(source, src) < 3))
 		PrepareExtractFuel()
-
-/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/bullet_act(obj/projectile/P)
-	. = ..()
-	if(!used_last_stand && health <= maxHealth * 0.40 && prob(60))
-		LastStand()
 		return
 
 /// This ability is basically "333... 1973". It gives the chunky sweeper 3 persistence stacks, that's all.
@@ -436,18 +448,21 @@
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/AttackingTarget(atom/attacked_target)
 	. = ..()
-	if(. && extract_fuel_active && istype(attacked_target, /mob/living/carbon/human))
+	if(. && extract_fuel_active && istype(attacked_target, /mob/living))
+		var/mob/living/victim = attacked_target
 		CancelExtractFuel(TRUE)
-		new /obj/effect/gibspawner/generic(get_turf(attacked_target))
+		SpawnAppropiateGibs(attacked_target)
+		visible_message(span_danger("The [src.name] tears into [victim.name] and refuels itself with some of [victim.p_their()] viscera!"))
 		SweeperHealing(extract_fuel_healing)
-		GainPersistence(1)
-		visible_message(span_danger("The [src.name] tears into [attacked_target.name] and refuels itself with some of their viscera!"))
+		if(ishuman(attacked_target))
+			GainPersistence(1)
+
 
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/proc/PrepareExtractFuel()
 	/// I have no idea what could cause this, but just in case
 	if(extract_fuel_active)
 		return FALSE
-	if(stat == DEAD)
+	if(stat >= DEAD)
 		return FALSE
 	/// Go on cooldown.
 	extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
@@ -477,6 +492,9 @@
 	animate(src, 0.5 SECONDS, color = initial(color))
 	if(!early)
 		visible_message(span_danger("The [src.name] lowers its aggressive stance."), span_info("You give up on the fuel extraction attempt."))
+		for(var/mob/living/carbon/human/viewer in viewers(7, src))
+			balloon_alert(viewer, "The [src.name] lowers its aggresive stance.")
+
 
 /// This cleanup exists because if we land a hit with Extract Fuel, we want to turn it off, but there's still an ongoing timer it will call CancelExtractFuel
 /mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/proc/ExtractFuelTimerCleanup()

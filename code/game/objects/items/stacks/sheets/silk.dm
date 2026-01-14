@@ -18,7 +18,7 @@
 		var/mob/living/carbon/human/H = harvester
 		H.mind.silk_harvested++
 		if(H.mind.silk_harvested >= 120)
-			H.client?.give_award(/datum/award/achievement/lc13/silk_collector, H)
+			H.client?.give_award(/datum/award/achievement/city/silk_collector, H)
 
 	if(ishuman(meat))
 		// if(meat.client)

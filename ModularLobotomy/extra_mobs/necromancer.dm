@@ -294,7 +294,7 @@
 	for(var/mob/living/L in T)
 		if(faction_check_mob(L))
 			continue
-		L.apply_damage(lightning_damage, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(lightning_damage, BLACK_DAMAGE, src)
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			H.electrocution_animation(4)
@@ -329,14 +329,14 @@
 				var/mob/living/M = AM
 				if(!faction_check_mob(M))
 					M.Knockdown(1)
-					M.apply_damage(50, RED_DAMAGE, null, M.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+					M.deal_damage(50, RED_DAMAGE, src)
 					to_chat(M, span_userdanger("You're slammed into the floor by [src]!"))
 		else
 			new /obj/effect/temp_visual/gravpush(get_turf(AM), get_dir(src, AM))
 			if(isliving(AM))
 				var/mob/living/M = AM
 				if(!faction_check_mob(M))
-					M.apply_damage(25, RED_DAMAGE, null, M.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+					M.deal_damage(25, RED_DAMAGE, src)
 					to_chat(M, span_userdanger("You're thrown back by [src]!"))
 			AM.safe_throw_at(throwtarget, ((clamp((5 - (clamp(distfromcaster - 2, 0, distfromcaster))), 3, 5))), 1, src, force = MOVE_FORCE_VERY_STRONG, gentle = TRUE)
 
@@ -526,9 +526,9 @@
 	desc = "A helmet that was once worn by a powerful mage that delved way too far into the dark magic techniques."
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 70, BLACK_DAMAGE = 80, PALE_DAMAGE = 100)
 	cold_protection = HEAD
-	min_cold_protection_temperature = SPACE_HELM_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HEAD
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	flash_protect = FLASH_PROTECTION_WELDER
 	resistance_flags = FIRE_PROOF | LAVA_PROOF
 	clothing_flags = SNUG_FIT | STOPSPRESSUREDAMAGE | THICKMATERIAL
@@ -564,9 +564,9 @@
 	flags_inv = HIDEGLOVES|HIDESHOES|HIDEJUMPSUIT
 	body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
 	cold_protection = CHEST | GROIN | LEGS | FEET | ARMS | HANDS
-	min_cold_protection_temperature = SPACE_SUIT_MIN_TEMP_PROTECT_OFF
+	min_cold_protection_temperature = TRUE
 	heat_protection = CHEST|GROIN|LEGS|FEET|ARMS|HANDS
-	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = FIRE_PROOF | LAVA_PROOF
 	clothing_flags = STOPSPRESSUREDAMAGE | THICKMATERIAL
 	allowed = list(/obj/item/flashlight, /obj/item/tank/internals, /obj/item/necromancer_sword)
@@ -649,7 +649,7 @@
 		if(currently_affected >= max_affected)
 			return
 		currently_affected += 1
-		L.apply_damage(bolt_power/500, PALE_DAMAGE, null, L.run_armor_check(null, PALE_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(bolt_power/500, PALE_DAMAGE, user)
 		to_chat(L, span_userdanger("You've been hit by a magical lightning bolt!"))
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L

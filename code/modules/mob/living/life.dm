@@ -53,11 +53,7 @@
 			//Random events (vomiting etc)
 			handle_random_events()
 
-		//Handle temperature/pressure differences between body and environment
-		var/datum/gas_mixture/environment = loc.return_air()
-		if(environment)
-			handle_environment(environment)
-
+		// This needs to be axed too.
 		handle_gravity()
 
 		if(stat != DEAD)
@@ -88,16 +84,6 @@
 /mob/living/proc/handle_random_events()
 	return
 
-// Base mob environment handler for body temperature
-/mob/living/proc/handle_environment(datum/gas_mixture/environment)
-	var/loc_temp = get_temperature(environment)
-
-	if(loc_temp < bodytemperature) // it is cold here
-		if(!on_fire) // do not reduce body temp when on fire
-			adjust_bodytemperature(max((loc_temp - bodytemperature) / BODYTEMP_DIVISOR, BODYTEMP_COOLING_MAX))
-	else // this is a hot place
-		adjust_bodytemperature(min((loc_temp - bodytemperature) / BODYTEMP_DIVISOR, BODYTEMP_HEATING_MAX))
-
 /mob/living/proc/handle_fire()
 	if(fire_stacks < 0) //If we've doused ourselves in water to avoid fire, dry off slowly
 		set_fire_stacks(min(0, fire_stacks + 1)) //So we dry ourselves back to default, nonflammable.
@@ -108,14 +94,6 @@
 	else
 		extinguish_mob()
 		return TRUE //mob was put out, on_fire = FALSE via extinguish_mob(), no need to update everything down the chain.
-	var/datum/gas_mixture/G = loc.return_air() // Check if we're standing in an oxygenless environment
-	if(!G.gases[/datum/gas/oxygen] || G.gases[/datum/gas/oxygen][MOLES] < 1)
-		extinguish_mob() //If there's no oxygen in the tile we're on, put out the fire
-		return TRUE
-	/* Removed to prevent weirdness due to atmos being turned off.
-	var/turf/location = get_turf(src)
-	location.hotspot_expose(700, 50, 1)
-	*/
 
 /**
  * Get the fullness of the mob

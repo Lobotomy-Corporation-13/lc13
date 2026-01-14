@@ -189,8 +189,8 @@
 
 	if(human_mob.mind)
 		var/datum/mind/M = human_mob.mind
-		if(M.get_skill_level(/datum/skill/fishing) >= 6)
-			player_client.give_award(/datum/award/achievement/lc13/scorpworld, human_mob)
+		//if(M.get_skill_level(/datum/skill/fishing) >= 6)
+		//	player_client.give_award(/datum/award/achievement/lc13/scorpworld, human_mob)
 		if(istype(human_mob.ego_gift_list["Right Back Slot"], /datum/ego_gifts/twilight))
 			player_client.give_award(/datum/award/achievement/lc13/twilight, human_mob)
 		//If you join not from roundstart you do not apply for these achivements.
@@ -461,7 +461,7 @@
 	return parts.Join("<br>")
 
 /datum/controller/subsystem/ticker/proc/abnormality_report()
-	var/list/parts = list()
+	var/list/parts = alist()
 	var/datum/abnormality/highest_abno = null
 	var/highest_work_count = 0
 	var/full_abno_count = 0

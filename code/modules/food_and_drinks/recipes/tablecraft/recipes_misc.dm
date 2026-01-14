@@ -314,6 +314,16 @@
 //Misc. Frozen.//
 /////////////////
 
+/datum/crafting_recipe/food/bnuuypudding
+	name = "Bunny pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/bnuuypudding
+	subcategory = CAT_MISCFOOD
+
 /datum/crafting_recipe/food/icecreamsandwich
 	name = "Icecream sandwich"
 	reqs = list(

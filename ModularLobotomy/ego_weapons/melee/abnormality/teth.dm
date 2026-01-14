@@ -39,6 +39,7 @@
 /obj/item/ego_weapon/shield/lutemia
 	name = "dear lutemia"
 	desc = "Don't you want your cares to go away?"
+	special = "Blocking with this weapon attacks all nearby targets."
 	icon_state = "lutemia"
 	force = 22
 	attack_speed = 1
@@ -57,7 +58,15 @@
 	block_cooldown_message = "You rearm your blade."
 
 /obj/item/ego_weapon/shield/lutemia/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
-	return 0 //Prevents ranged  parry
+	if(attack_type == MELEE_ATTACK && active_block)
+		for(var/mob/living/L in range(1, owner))
+			if(L == owner)
+				continue
+			if(owner.stat != DEAD)
+				attack(L, owner)
+				sleep(2)
+	return ..()
+
 
 /obj/item/ego_weapon/eyes
 	name = "red eyes"
@@ -145,6 +154,8 @@
 /obj/item/ego_weapon/mini/trick
 	name = "hat trick"
 	desc = "Imagination is the only weapon in the war with reality."
+	special = "Upon throwing, this weapon returns to the user. each time it's thrown, it's damage is increased by 7 until your next melee attack. \
+			Use in hand to dodgeroll."
 	icon_state = "trick"
 	force = 17
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -156,34 +167,44 @@
 	attack_verb_continuous = list("jabs")
 	attack_verb_simple = list("jabs")
 	hitsound = 'sound/weapons/slashmiss.ogg'
+	var/dodgelanding
+
+/obj/item/ego_weapon/mini/trick/attack(mob/living/target, mob/living/user)
+	. = ..()
+	force = initial(force)
+
+/obj/item/ego_weapon/mini/trick/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	var/caught = hit_atom.hitby(src, FALSE, FALSE, throwingdatum=throwingdatum)
+	if(thrownby && !caught)
+		addtimer(CALLBACK(src, TYPE_PROC_REF(/atom/movable, throw_at), thrownby, throw_range+2, throw_speed, null, TRUE), 1)
+		if(force <= 100)
+			force += 7
+	if(!caught)
+		return ..()
+
+/obj/item/ego_weapon/mini/trick/attack_self(mob/living/carbon/user)
+	switch(user.dir)
+		if(NORTH)
+			dodgelanding = locate(user.x, user.y + 5, user.z)
+		if(SOUTH)
+			dodgelanding = locate(user.x, user.y - 5, user.z)
+		if(EAST)
+			dodgelanding = locate(user.x + 5, user.y, user.z)
+		if(WEST)
+			dodgelanding = locate(user.x - 5, user.y, user.z)
+	user.adjustStaminaLoss(25, TRUE, TRUE)
+	user.throw_at(dodgelanding, 3, 2, spin = TRUE)
 
 /obj/item/ego_weapon/sorrow
 	name = "sorrow"
 	desc = "It all returns to nothing."
-	special = "Use this weapon in hand to take damage and teleport to a random department."
 	icon_state = "sorrow"
-	force = 32					//Bad DPS, can teleport
-	attack_speed = 1.5
+	force = 35 //You get Giga DPS
+	stuntime = 3	//but a short stun
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("cleaves", "cuts")
 	attack_verb_simple = list("cleave", "cut")
 	hitsound = 'sound/weapons/fixer/generic/blade4.ogg'
-
-/obj/item/ego_weapon/sorrow/attack_self(mob/living/user)
-	var/area/turf_area = get_area(get_turf(user))
-	if(istype(turf_area, /area/fishboat))
-		to_chat(user, span_warning("[src] will not work here!."))
-		balloon_alert(user, "[src] will not work here!.")
-		return
-	if(do_after(user, 50, src))	//Five seconds of not doing anything, then teleport.
-		new /obj/effect/temp_visual/dir_setting/ninja/phase/out (get_turf(user))
-		user.adjustBruteLoss(user.maxHealth*0.3)
-
-		//teleporting half
-		var/turf/T = pick(GLOB.department_centers)
-		user.forceMove(T)
-		new /obj/effect/temp_visual/dir_setting/ninja/phase (get_turf(user))
-		playsound(src, 'sound/effects/contractorbatonhit.ogg', 100, FALSE, 9)
 
 /obj/item/ego_weapon/sorority
 	name = "sorority"
@@ -268,7 +289,7 @@
 	var/damage_dealt = 0
 	for(var/turf/open/T in range(target_turf, 0))
 		new /obj/effect/temp_visual/smash1(T)
-		for(var/mob/living/L in user.HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE))
+		for(var/mob/living/L in user.HurtInTurf(T, list(), ranged_damage, BLACK_DAMAGE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_SPECIAL)))
 			if((L.stat < DEAD) && !(L.status_flags & GODMODE))
 				damage_dealt += ranged_damage
 
@@ -385,7 +406,7 @@
 	playsound(T, 'sound/effects/ordeals/amber/midnight_out.ogg', 40,TRUE)
 	for(var/turf/open/T2 in RANGE_TURFS(range, src))
 		new /obj/effect/temp_visual/yellowsmoke(T2)
-		for(var/mob/living/L in creator.HurtInTurf(T2, list(), resonance_damage * damage_multiplier, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE))
+		for(var/mob/living/L in creator.HurtInTurf(T2, list(), resonance_damage * damage_multiplier, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT)))
 			to_chat(L, span_userdanger("[src] bites you!"))
 			balloon_alert(L, "[src] bites you!")
 			if(creator)
@@ -772,7 +793,7 @@
 		new /obj/effect/temp_visual/explosion(get_turf(src))
 		playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 60, TRUE)
 		for(var/mob/living/L in ohearers(3, src))
-			L.apply_damage(30, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(30, RED_DAMAGE, user, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_OTHER))
 		qdel(src)
 
 /obj/item/ego_weapon/mini/patch

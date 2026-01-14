@@ -41,6 +41,13 @@ Something for a future refactor?
 		locked_in.add_stacks(stacks_gained)
 	return TRUE
 
+/// Used by attacks that spawn gibs by Sweepers. Spawning gibs is important for 1. Feedback: makes the attacks feel powerful. 2. Jacques: gibs contribute towards their bloodfeast.
+/mob/living/simple_animal/hostile/ordeal/proc/SpawnAppropiateGibs(mob/living/victim)
+	if(victim.mob_biotypes & MOB_ORGANIC)
+		new /obj/effect/gibspawner/generic/trash_disposal(get_turf(victim))
+	else if(victim.mob_biotypes & MOB_ROBOTIC)
+		new /obj/effect/gibspawner/scrap_metal(get_turf(victim))
+
 
 /* Persistence Status Effect
 It allows them to avoid death when struck, with some VFX/SFX indicating that it was activated.
@@ -50,7 +57,7 @@ Every time it activates, it loses a stack, but it can also time out over a long 
 /datum/status_effect/stacking/sweeper_persistence
 	id = "persistence"
 	status_type = STATUS_EFFECT_MULTIPLE
-	duration = 45 SECONDS
+	duration = 30 SECONDS
 	alert_type = null
 	var/mutable_appearance/overlay
 	stacks = 1
@@ -125,7 +132,7 @@ Every time it activates, it loses a stack, but it can also time out over a long 
 		if(prob(final_chance))
 			playsound(neighbor, 'sound/effects/ordeals/indigo_start.ogg', 33)
 			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/mob/living/simple_animal/hostile/ordeal, SweeperHealing), trigger_healing)
-			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/atom, visible_message), span_danger("[neighbor] endures a fatal hit, some of the fuel being drained from its tank!"), span_userdanger("You suffer a lethal strike, losing some of your fuel!"))
+			INVOKE_ASYNC(neighbor, TYPE_PROC_REF(/atom, visible_message), span_danger("[neighbor] endures a fatal hit, some of the fuel being drained from [neighbor.p_their()] tank!"), span_userdanger("You suffer a lethal strike, losing some of your fuel!"))
 			if(src)
 				src.add_stacks(-1)
 			return COMPONENT_MOB_DENY_DAMAGE

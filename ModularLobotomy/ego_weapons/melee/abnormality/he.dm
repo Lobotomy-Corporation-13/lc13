@@ -23,7 +23,7 @@
 	var/justicemod = 1 + userjust / 100
 	var/damage_dealt = force * justicemod * force_multiplier
 	var/list/been_hit = QDELETED(target) ? list() : list(target)
-	user.HurtInTurf(T, been_hit, damage_dealt, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE)
+	user.HurtInTurf(T, been_hit, damage_dealt, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE))
 
 /obj/item/ego_weapon/grinder/get_clamped_volume()
 	return 40
@@ -78,7 +78,7 @@
 			aoe*=justicemod
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 
 
 /obj/item/ego_weapon/fury
@@ -150,7 +150,7 @@
 		aoe*=justicemod
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, RED_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE), blocked = L.run_armor_check(null, BLACK_DAMAGE))
 
 
 
@@ -395,7 +395,7 @@
 			new /obj/effect/temp_visual/smash_effect(T)
 			var/smash_damage = (i > 2 ? 40 : 10)*(1+(get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)/100))
 			smash_damage*=force_multiplier
-			been_hit = user.HurtInTurf(T, been_hit, smash_damage, RED_DAMAGE)
+			been_hit = user.HurtInTurf(T, been_hit, smash_damage, RED_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if (i > 2)
 			playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_strong.ogg', 75, 0, 5) // BAM
 		else
@@ -535,9 +535,10 @@
 	name = "bare metal"
 	desc = "Looks to be a fan blade with a handle welded to it."
 	icon_state = "metal"
-	force = 40
+	force = 52
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 1.5
+	stuntime = 7
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slices", "cleaves", "chops")
 	attack_verb_simple = list("slice", "cleave", "chop")
@@ -907,7 +908,7 @@
 			aoe*=force_multiplier
 			if(L == user || ishuman(L))
 				continue
-			L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+			L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE))
 			new /obj/effect/temp_visual/small_smoke/halfsecond(get_turf(L))
 		icon_state = "impending_day_extended"
 		sacrifice = TRUE
@@ -995,7 +996,7 @@
 		aoe*=force_multiplier
 		if(L == user || ishuman(L))
 			continue
-		L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+		L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(get_turf(L))
 		FX.color = "#b52e19"
 
@@ -1285,7 +1286,7 @@
 			continue
 		playsound(T, 'sound/weapons/fixer/generic/blade3.ogg', 30, TRUE, 3)
 		new /obj/effect/temp_visual/smash_effect(T)
-		been_hit = user.HurtInTurf(T, been_hit, punishment_damage, PALE_DAMAGE, check_faction = TRUE)
+		been_hit = user.HurtInTurf(T, been_hit, punishment_damage, PALE_DAMAGE, check_faction = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 /obj/item/ego_weapon/destiny
 	name = "destiny"
@@ -1409,7 +1410,7 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/aedd//it's just a HE W.corp baton that deals red
+/obj/item/ego_weapon/aedd//it's just a HE W.corp baton that deals red (becomes low ALEPH tier with the corresponding Realization)
 	name = "AEDD"
 	desc = "A nasty-looking bat covered with nails."
 	special = "Activating the weapon in your hand prepares an attack with additional black damage."
@@ -1426,31 +1427,111 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 	var/charged
+	var/base_windup = 3 SECONDS
+	var/realization_force_multiplier = 1.55
+	var/realization_aoe_force_multiplier = 1.4
+	var/realization_aoe_range = 4
+	var/realization_aoe_charge_per_target = 3
+	var/realization_windup_reduction = 1.7 SECONDS
 
 /obj/item/ego_weapon/aedd/attack_self(mob/user)
 	..()
 	if(!CanUseEgo(user))
 		return
-	if(do_after(user, 30, src))//3 seconds
+	var/final_windup = base_windup
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			final_windup -= realization_windup_reduction
+
+	if(do_after(user, final_windup, src))
 		to_chat(user, span_notice("You hoist [src] over your shoulder."))
 		balloon_alert(user, "You hoist [src] over your shoulder.")
 		charged = TRUE
 
+/obj/item/ego_weapon/aedd/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you've unlocked a portion of this weapon's true potential. Damage is increased, all attacks are now <b>charged by default</b>, and <b>charging the weapon further will unleash a BLACK damage AoE on your next hit</b> that gains Self-Charge for your [our_suit.name] E.G.O. Charging the weapon in this manner has a reduced windup.")
+
+// When not wearing the AEDD realization: deals an extra hit in BLACK damage if we charged the weapon.
+// When wearing the AEDD realization: uses RealizationAOE() towards the target if we charged the weapon; if we didn't, then deals an extra hit in BLACK damage.
 /obj/item/ego_weapon/aedd/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+	var/realization_empowered = FALSE
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			realization_empowered = TRUE
+			force = initial(force) * realization_force_multiplier
+
 	..()
+
+	if(!istype(target))
+		return
 	if(charged)
-		power_attack(target, user)
+		if(realization_empowered)
+			RealizationAOE(target, user)
+		else
+			power_attack(target, user)
 		charged = FALSE
+	else if(realization_empowered)
+		power_attack(target, user)
 
 /obj/item/ego_weapon/aedd/proc/power_attack(mob/living/target, mob/living/user)
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
-	target.apply_damage((force * justicemod), BLACK_DAMAGE, null, target.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
+	var/final_damage = force * justicemod * force_multiplier
+	target.deal_damage((final_damage), BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 40, TRUE)
 	var/turf/T = get_turf(target)
 	new /obj/effect/temp_visual/justitia_effect(T)
+
+/// AoE attack used when we're wearing the AEDD Realization and attack an enemy while our weapon is charged. Copied and altered code from Shock Centipede's tail attack.
+/obj/item/ego_weapon/aedd/proc/RealizationAOE(mob/living/target, mob/living/user)
+	if(!ishuman(user))
+		return
+	var/obj/item/clothing/suit/armor/ego_gear/realization/experimentation/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(our_suit))
+		return
+
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+
+	var/final_damage = (initial(force) * realization_force_multiplier * realization_aoe_force_multiplier * justicemod) * force_multiplier
+	user.visible_message(span_danger("[user] slams down [src] with great force, sending a powerful electric shockwave through [target]!"))
+	var/turf/origin_turf = get_turf(src)
+	var/turf/target_turf = get_ranged_target_turf_direct(user, target, realization_aoe_range)
+
+	var/broken = FALSE
+	var/distance = realization_aoe_range
+	var/list/been_hit = list()
+	for(var/turf/T in getline(origin_turf, target_turf))
+		if (distance < 0)
+			break
+		distance--
+		if(T.density)
+			if(broken)
+				break
+			broken = TRUE
+		if(T != origin_turf)
+			for(var/turf/TF in range(1, T))
+				if(TF.density)
+					continue
+				new /obj/effect/temp_visual/blubbering_smash(TF)
+				for(var/mob/living/L in TF)
+					if(!(L in been_hit) && !(user.faction_check_mob(L)))
+						if((L.stat >= DEAD) || istype(L, /mob/living/simple_animal/projectile_blocker_dummy) || L.status_flags & GODMODE)
+							continue
+						L.deal_damage(final_damage, BLACK_DAMAGE, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+						been_hit |= L
+						new /obj/effect/temp_visual/justitia_effect(TF)
+						our_suit.AdjustCharge(realization_aoe_charge_per_target)
+
+	playsound(get_turf(src), 'sound/weapons/fixer/generic/energyfinisher1.ogg', 60, 1)
 
 /obj/item/ego_weapon/lance/split
 	name = "split"
@@ -1518,7 +1599,7 @@
 	for(var/turf/T in view(1, target))
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(T)
 		FX.color = "#622F22"
-		user.HurtInTurf(T, list(), 40, BLACK_DAMAGE, check_faction = TRUE)
+		user.HurtInTurf(T, list(), 40, BLACK_DAMAGE, check_faction = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	return
 
 
@@ -1717,7 +1798,7 @@
 	return ..()
 
 /datum/status_effect/fairybite/tick()
-	owner.apply_damage(damage_amount, RED_DAMAGE, null, owner.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+	owner.deal_damage(damage_amount, RED_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 	playsound(owner, 'sound/abnormalities/mountain/bite.ogg', 70, TRUE) //yes im reusing a sound bite me
 	new /obj/effect/temp_visual/beakbite(get_turf(owner))
 
@@ -1813,10 +1894,10 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/mini/voodoo
-	name = "voodoo"
+/obj/item/ego_weapon/mini/gofer
+	name = "Go Fer Scissors"
 	desc = "What seems to be a giant half of a scissors pair."
-	icon_state = "voodoo"
+	icon_state = "voodoo" //I can change the icon state name later if you want, but I'm on the middle of City of Light and it's too much work to open Dream Maker, sorry...
 	special = "This weapon can be paired with a second copy to use both at the same time."
 	force = 18
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -1829,12 +1910,12 @@
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
-/obj/item/ego_weapon/mini/voodoo/attack(mob/living/target, mob/living/user)
+/obj/item/ego_weapon/mini/gofer/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return
 	var/combo = FALSE
 	var/mob/living/carbon/human/myman = user
-	var/obj/item/ego_weapon/mini/voodoo/Y = myman.get_inactive_held_item()
+	var/obj/item/ego_weapon/mini/gofer/Y = myman.get_inactive_held_item()
 	if(istype(Y)) //dual wielding? if so...
 		combo = TRUE //hits twice, you're spending more PE then you would getting a WAW anyways
 	..()
@@ -2020,7 +2101,7 @@
 				aoe*=force_multiplier
 				if(L == user || ishuman(L))
 					continue
-				been_hit = user.HurtInTurf(T2, been_hit, aoe, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE)
+				been_hit = user.HurtInTurf(T2, been_hit, aoe, RED_DAMAGE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE))
 				var/atom/throw_target = get_edge_target_turf(L, get_dir(L, get_step_towards(L, get_turf(user))))
 				if(!L.anchored)
 					L.throw_at(throw_target, 1, get_dist(user, L) - 1, user)
@@ -2171,7 +2252,7 @@
 					var/mob/living/carbon/human/H = L
 					if(!H.sanity_lost)
 						continue
-				L.apply_damage(aoe, BLACK_DAMAGE, null, L.run_armor_check(null, BLACK_DAMAGE), spread_damage = TRUE)
+				L.deal_damage(aoe, BLACK_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 				L.visible_message(span_danger("[user] sears [L] with the [src]!"))
 		return
 	addtimer(CALLBACK(src, PROC_REF(Leap), user, dir, leap_range), 0.1)

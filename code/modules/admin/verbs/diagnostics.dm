@@ -1,4 +1,4 @@
-/client/proc/air_status(turf/target)
+/* /client/proc/air_status(turf/target)
 	set category = "Debug"
 	set name = "Display Air Status"
 
@@ -6,7 +6,7 @@
 		return
 	atmosanalyzer_scan(usr, target, TRUE)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Show Air Status") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
-
+ */
 /client/proc/fix_next_move()
 	set category = "Debug"
 	set name = "Unfreeze Everyone"

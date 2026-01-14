@@ -100,7 +100,7 @@
 			continue
 		if(faction_check_mob(L))
 			continue
-		L.deal_damage((pulse_damage - get_dist(src, L)), WHITE_DAMAGE)
+		L.deal_damage((pulse_damage - get_dist(src, L)), WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 		flash_color(L, flash_color = COLOR_BLUE_LIGHT, flash_time = 70)
 		if(!ishuman(L))
 			continue

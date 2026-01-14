@@ -154,7 +154,7 @@
 	animate(D, alpha = 0, transform = matrix()*1.5, time = 5)
 	for(var/mob/living/L in target_turf)
 		if(!faction_check_mob(L))
-			L.apply_damage(5, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(5, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	burrow_cooldown = world.time + burrow_cooldown_time
 	burrowing = FALSE
 
@@ -355,7 +355,7 @@
 	var/bug_spawned = feeding_stage + 2 //Should go 3,4,5 bugs then explode, for a total of 12 bugs per body over 4.5 minutes.
 	feeding_duration = world.time + (feeding_interval)
 	feeding_stage++
-	H.apply_damage(feeding_stage * 10, RED_DAMAGE, null, H.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+	H.deal_damage(feeding_stage * 10, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	visible_message(span_danger("[feeding_stage] bugs eat their way out of [H]'s body!"))
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/dawn_dig_out.ogg', 25, 1)
 	if(H.stat != DEAD)
@@ -409,6 +409,8 @@
 	var/list/spawned_mobs = list()
 	//If they can burrow or not.
 	var/can_burrow = TRUE
+	///Hole effect left behind by ambers burrowing, if null will nto leave a hole.
+	var/leave_hole = TRUE
 
 	var/datum/looping_sound/amberdusk/soundloop
 
@@ -530,6 +532,8 @@
 	playsound(get_turf(src), 'sound/effects/ordeals/amber/dusk_dig_in.ogg', 50, 1)
 	animate(src, alpha = 0, time = 10)
 	SLEEP_CHECK_DEATH(5)
+	if(leave_hole && T != get_turf(src))
+		new /obj/effect/temp_hole(get_turf(src), 6 SECONDS, T)
 	for(var/mob/living/simple_animal/hostile/ordeal/amber_bug/bug as anything in spawned_mobs)
 		addtimer(CALLBACK(bug, PROC_REF(BurrowIn), T))
 	SLEEP_CHECK_DEATH(5)
@@ -553,7 +557,7 @@
 	animate(D, alpha = 0, transform = matrix()*1.5, time = 5)
 	for(var/mob/living/L in view(1, src))
 		if(!faction_check_mob(L))
-			L.apply_damage(75, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+			L.deal_damage(75, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 	burrow_cooldown = world.time + burrow_cooldown_time
 	burrowing = FALSE
@@ -561,6 +565,7 @@
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/spawned
 	butcher_results = list()
 	guaranteed_butcher_results = list()
+	leave_hole = FALSE
 	var/mob/living/simple_animal/hostile/ordeal/amber_midnight/bug_daddy
 
 /mob/living/simple_animal/hostile/ordeal/amber_dusk/spawned/Initialize()
@@ -724,7 +729,7 @@
 		if(faction_check_mob(L))
 			continue
 		var/distance_decrease = get_dist(src, L) * 85
-		L.apply_damage((1000 - distance_decrease), RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE))
+		L.deal_damage((1000 - distance_decrease), RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if(L.health < 0)
 			L.gib()
 	SLEEP_CHECK_DEATH(5)

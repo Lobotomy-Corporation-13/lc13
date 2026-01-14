@@ -5,7 +5,7 @@
 	inhand_icon_state = "tackle"
 	transfer_prints = TRUE
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	resistance_flags = NONE
 	custom_premium_price = PAYCHECK_HARD * 3.5
 	/// For storing our tackler datum so we can remove it after
@@ -64,9 +64,9 @@
 	skill_mod = 2
 
 	cold_protection = HANDS
-	min_cold_protection_temperature = GLOVES_MIN_TEMP_PROTECT
+	min_cold_protection_temperature = TRUE
 	heat_protection = HANDS
-	max_heat_protection_temperature = GLOVES_MAX_TEMP_PROTECT
+	max_heat_protection_temperature = TRUE
 	resistance_flags = NONE
 
 /obj/item/clothing/gloves/tackler/combat/insulated

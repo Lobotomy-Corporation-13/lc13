@@ -7,9 +7,8 @@
 	layer = LARGE_MOB_LAYER
 	a_intent = INTENT_HARM
 	del_on_death = TRUE
+	area_index = MOB_ABNORMALITY_INDEX
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
-	atmos_requirements = list("min_oxy" = 0, "max_oxy" = 0, "min_tox" = 0, "max_tox" = 0, "min_co2" = 0, "max_co2" = 0, "min_n2" = 0, "max_n2" = 0)
-	minbodytemp = 0
 	see_in_dark = 7
 	vision_range = 12
 	aggro_vision_range = 20
@@ -32,6 +31,10 @@
 	var/start_qliphoth = 0
 	/// Can it breach? If TRUE - ZeroQliphoth() calls BreachEffect()
 	var/can_breach = FALSE
+	/// The % chance for it to drop Q on each result.
+	var/good_droprate = 0
+	var/neutral_droprate = 0
+	var/bad_droprate = 0
 	/// List of humans that witnessed the abnormality breaching
 	var/list/breach_affected = list()
 	/// Copy-pasted from megafauna.dm: This allows player controlled mobs to use abilities
@@ -138,7 +141,7 @@
 
 	/// Bubbles and their speech
 	// Generic bubbles by agent level.
-	var/list/generic_bubbles = list(
+	var/list/generic_bubbles = alist(
 		1 = list("%PERSON looks nervously at %ABNO...", "%PERSON tries to stay focused."),
 		2 = list("%PERSON focuses on the task at hand.", "%PERSON follows the directions as trained."),
 		3 = list("%PERSON keeps an eye on %ABNO.", "%PERSON considers what they'll eat next."),
@@ -152,6 +155,9 @@
 		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON talks to %ABNO for a while."),
 		ABNORMALITY_WORK_REPRESSION = list("%PERSON holds what %ABNO desires, just out of reach..."),
 	)
+
+	// If TRUE, this Abnormality's odds of spawning go up dramatically. Enable for Abnormalities that are being reworked and need testing.
+	var/being_tested = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/Login()
 	. = ..()
@@ -430,16 +436,22 @@ The variable's key needs to be non-numerical.*/
 // Additional effects on good work result, if any
 /mob/living/simple_animal/hostile/abnormality/proc/SuccessEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("good")
+	if(prob(good_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Additional effects on neutral work result, if any
 /mob/living/simple_animal/hostile/abnormality/proc/NeutralEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("normal")
+	if(prob(neutral_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Additional effects on work failure
 /mob/living/simple_animal/hostile/abnormality/proc/FailureEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	WorkCompleteEffect("bad")
+	if(prob(bad_droprate))
+		datum_reference.qliphoth_change(-1)
 	return
 
 // Visual effect for work completion
@@ -510,7 +522,7 @@ The variable's key needs to be non-numerical.*/
 
 // Additional effect on each individual work tick failure
 /mob/living/simple_animal/hostile/abnormality/proc/WorktickFailure(mob/living/carbon/human/user)
-	user.deal_damage(work_damage_amount, work_damage_type)
+	user.deal_split_damage(work_damage_amount, work_damage_type, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_OTHER))
 	WorkDamageEffect()
 	return
 

@@ -144,7 +144,7 @@
 
 /obj/item/organ/cyberimp/mouth/breathing_tube
 	name = "breathing tube implant"
-	desc = "This simple implant adds an internals connector to your back, allowing you to use internals without a mask and protecting you from being choked."
+	desc = "This simple implant adds an internals connector to your back, allowing you to use internals without a mask." // This has been a bit nerfed by the atmos changes. If someone comes across this comment, please either buff it or tell my lazy ass to buff it -Aseidos
 	icon_state = "implant_mask"
 	slot = ORGAN_SLOT_BREATHING_TUBE
 	w_class = WEIGHT_CLASS_TINY
@@ -155,7 +155,7 @@
 		return
 	if(prob(60/severity))
 		to_chat(owner, "<span class='warning'>Your breathing tube suddenly closes!</span>")
-		owner.losebreath += 2
+		owner.losebreath += HUMAN_MAX_OXYLOSS_RATE
 
 //BOX O' IMPLANTS
 

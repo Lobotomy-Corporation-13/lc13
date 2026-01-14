@@ -7,6 +7,7 @@
 	var/quality = 0
 	var/resource_type = /obj/item/tresmetal
 	var/heated_type = /obj/item/hot_tresmetal
+	var/mat_density = 10 // Material density for skill augment fabricator
 
 /obj/item/tresmetal/Initialize()
 	. = ..()

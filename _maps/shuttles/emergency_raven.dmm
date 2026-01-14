@@ -2000,7 +2000,6 @@
 "ef" = (
 /obj/structure/window/reinforced,
 /obj/effect/turf_decal/bot,
-/obj/machinery/portable_atmospherics/canister/oxygen,
 /turf/open/floor/plating,
 /area/shuttle/escape)
 "eg" = (

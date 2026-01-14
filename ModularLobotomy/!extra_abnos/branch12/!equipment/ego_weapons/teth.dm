@@ -100,7 +100,7 @@
 	var/extra_damage = 0
 	if(A.datum_reference)
 		extra_damage = (A.datum_reference.understanding / A.datum_reference.max_understanding)
-		A.deal_damage(damage*extra_damage, "white")
+		A.deal_damage(damage*extra_damage, WHITE_DAMAGE, source = firer, attack_type = (ATTACK_TYPE_RANGED))
 		A.apply_lc_mental_decay(round(extra_damage*2))
 		if(A.datum_reference.understanding == A.datum_reference.max_understanding)
 			if(!A.has_status_effect(/datum/status_effect/rend_white))

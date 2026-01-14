@@ -28,6 +28,28 @@
 	STR.max_w_class = WEIGHT_CLASS_NORMAL
 	STR.max_items = 21
 
+/obj/item/storage/backpack/Initialize(mapload)
+	. = ..()
+	verbs += /obj/item/storage/backpack/proc/AdjustVisibility // Iunno a better way to do this, something tells me setting the verbs list manually is a bad idea
+
+
+// Extremely suspicious way of making the worn overlay on a backpack invisible, blame whoever did the overlay system for carbons instead of me please. Did you know that backpacks DO have a worn_icon but don't use it at all? Nope, their worn icon states are all the way in a back.dmi file for mobs that is referenced 8 times in the entire codebase.
+/obj/item/storage/backpack/proc/AdjustVisibility()
+	set name = "Adjust Backpack Visibility"
+	set category = "Object"
+	set src in view(0)
+	if(ishuman(usr))
+		var/mob/living/carbon/human/our_wearer = usr
+		var/obj/item/storage/backpack/us = our_wearer.get_item_by_slot(ITEM_SLOT_BACK)
+		if(istype(us) && us == src) // If we're wearing this backpack on our back, proceed
+			var/user_choice = input(our_wearer, "Do you want your [name] to be visible on your person? This is only a cosmetic change, and can be undone.", "Backpack Visibility") as null|anything in list("Visible" , "Invisible")
+			switch(user_choice)
+				if("Invisible")
+					our_wearer.disabled_backpack_visibility = TRUE
+				if("Visible")
+					our_wearer.disabled_backpack_visibility = FALSE
+			our_wearer.update_inv_back()
+
 /*
  * Backpack Types
  */
@@ -408,7 +430,7 @@
 				return
 		///no food found: it bites you and loses some hp
 		var/affecting = user.get_bodypart(BODY_ZONE_CHEST)
-		user.apply_damage(60, BRUTE, affecting)
+		user.deal_damage(60, BRUTE, flags = (DAMAGE_FORCED), def_zone = affecting)
 		hunger = initial(hunger)
 		playsound(src, 'sound/items/eatfood.ogg', 20, TRUE)
 		to_chat(user, "<span class='warning'>The [name] eats your back!</span>")

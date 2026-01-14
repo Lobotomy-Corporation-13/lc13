@@ -6,8 +6,7 @@
 
 /obj/item/class_chooser/Initialize()
 	. = ..()
-	if(SSmaptype.chosen_trait != FACILITY_TRAIT_MOBA_AGENTS)
-		qdel(src)
+	//YOu got 60 seconds to pick one, liberal
 	QDEL_IN(src, 60 SECONDS)	//You MUST pick within 60 seconds
 
 /obj/item/class_chooser/attack_self(mob/living/carbon/human/user)

@@ -6,8 +6,8 @@
 #define RADIO_KEY_COMMON ";"
 
 #define RADIO_CHANNEL_CONTROL "Control"
-#define RADIO_KEY_CONTROL "r"
-#define RADIO_TOKEN_CONTROL ":r"
+#define RADIO_KEY_CONTROL "c"
+#define RADIO_TOKEN_CONTROL ":c"
 
 #define RADIO_CHANNEL_INFORMATION "Information"
 #define RADIO_KEY_INFORMATION "i"
@@ -22,8 +22,8 @@
 #define RADIO_TOKEN_TRAINING ":t"
 
 #define RADIO_CHANNEL_COMMAND "Central"
-#define RADIO_KEY_COMMAND "c"
-#define RADIO_TOKEN_COMMAND ":c"
+#define RADIO_KEY_COMMAND "q"
+#define RADIO_TOKEN_COMMAND ":q"
 
 #define RADIO_CHANNEL_WELFARE "Welfare"
 #define RADIO_KEY_WELFARE "w"
@@ -32,6 +32,14 @@
 #define RADIO_CHANNEL_DISCIPLINE "Discipline"
 #define RADIO_KEY_DISCIPLINE "s"
 #define RADIO_TOKEN_DISCIPLINE ":s"
+
+#define RADIO_CHANNEL_RECORDS "Records"
+#define RADIO_KEY_RECORDS "r"
+#define RADIO_TOKEN_RECORDS ":r"
+
+#define RADIO_CHANNEL_EXTRACTION "Extraction"
+#define RADIO_KEY_EXTRACTION "e"
+#define RADIO_TOKEN_EXTRACTION ":e"
 
 #define RADIO_CHANNEL_ARCHITECTURE "Architecture"
 #define RADIO_KEY_ARCHITECTURE "a"
@@ -47,8 +55,8 @@
 
 
 #define RADIO_CHANNEL_SYNDICATE "Syndicate"
-#define RADIO_KEY_SYNDICATE "e"
-#define RADIO_TOKEN_SYNDICATE ":e"
+#define RADIO_KEY_SYNDICATE "n"
+#define RADIO_TOKEN_SYNDICATE ":n"
 
 #define RADIO_CHANNEL_CENTCOM "CentCom"
 #define RADIO_KEY_CENTCOM "y"
@@ -72,7 +80,9 @@
 #define FREQ_TRAINING 1353  // Training comms frequency, orange
 #define FREQ_COMMAND 1355  // Command comms frequency, gold
 #define FREQ_WELFARE 1357  // Welfare comms frequency, soft blue
-#define FREQ_DISCIPLINE 1359  // Discipline comms frequency, red
+#define FREQ_DISCIPLINE 1359  // Discipline comms frequency, red}
+#define FREQ_RECORDS 1361 // Records comms frequency, dark grey (thanks to whoever left space before Architecture)
+#define FREQ_EXTRACTION 1363 // Extractions comms frequency, dark gold
 #define FREQ_ARCHITECTURE 1365  // Architecture comms frequency, light grey
 
 #define FREQ_HOLOGRID_SOLUTION 1433

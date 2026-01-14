@@ -195,7 +195,6 @@
 /area/ruin/powered/snow_biodome)
 "bl" = (
 /turf/open/floor/wood{
-	initial_gas_mix = "o2=22;n2=82;TEMP=180";
 	name = "bridge"
 	},
 /area/ruin/powered/snow_biodome)
@@ -278,9 +277,7 @@
 	dir = 1
 	},
 /obj/effect/mapping_helpers/no_lava,
-/turf/open/floor/pod/dark{
-	initial_gas_mix = "LAVALAND_ATMOS"
-	},
+/turf/open/floor/pod/dark,
 /area/ruin/powered/snow_biodome)
 "qt" = (
 /obj/machinery/door/airlock/silver,

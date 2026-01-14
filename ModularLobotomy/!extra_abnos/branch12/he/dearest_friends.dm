@@ -71,7 +71,7 @@
 	. = ..()
 	if(!ishuman(attacked_target) && melee_damage_type == WHITE_DAMAGE)
 		for(var/mob/living/carbon/human/M in view(7, src))
-			M.deal_damage(WHITE_DAMAGE, 10)
+			M.deal_damage(WHITE_DAMAGE, 10, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 			M.adjustSanityLoss(-heal_amount) // It heals everyone by 50 or 100 points
 
 

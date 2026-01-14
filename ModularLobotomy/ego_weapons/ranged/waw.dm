@@ -24,9 +24,12 @@
 	name = "hornet"
 	desc = "The kingdom needed to stay prosperous, and more bees were required for that task. \
 	The projectiles relive the legacy of the kingdom as they travel toward the target."
+	special = "Attack an enemy with your bayonet to reload."
 	icon_state = "hornet"
 	inhand_icon_state = "hornet"
-	force = 28
+	force = 41
+	reach = 2
+	stuntime = 5	//but a short stun
 	projectile_path = /obj/projectile/ego_bullet/ego_hornet
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
@@ -36,6 +39,11 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
+
+/obj/item/ego_weapon/ranged/hornet/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(shotsleft < initial(shotsleft))
+		shotsleft = initial(shotsleft)
 
 
 /obj/item/ego_weapon/ranged/hatred
@@ -648,6 +656,7 @@
 	rapid_melee = 1.5
 	move_to_delay = 1.3
 	stat_attack = HARD_CRIT
+	area_index = MOB_SIMPLEANIMAL_INDEX // Won't set off regen threat status
 	/// Will disappear after this time. It's pretty important they don't last forever or people would build up armies of these.
 	var/despawn_time = 18 SECONDS
 	/// How much health they recover per hit.
@@ -793,7 +802,7 @@
 		var/mob/living/L = AM
 		if(!faction_check(faction, L.faction))
 			playsound(get_turf(src), 'sound/machines/clockcult/steam_whoosh.ogg', 10, 1)
-			L.apply_damage(50, RED_DAMAGE, null, L.run_armor_check(null, RED_DAMAGE), spread_damage = FALSE)
+			L.deal_damage(50, RED_DAMAGE, creator, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 			new /obj/effect/temp_visual/cloud_swirl(get_turf(L)) //placeholder
 			to_chat(creator, span_warning("You feel a itch towards [get_area(L)]."))
 			qdel(src)

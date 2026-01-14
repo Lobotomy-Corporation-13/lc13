@@ -131,7 +131,7 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.apply_damage(18, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(18, WHITE_DAMAGE, source = connected_abno, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.set_blurriness(4)
 
 
@@ -150,7 +150,7 @@
 	. = ..()
 	if(ishuman(owner))
 		var/mob/living/carbon/human/H = owner
-		H.apply_damage(2, WHITE_DAMAGE, null, H.run_armor_check(null, WHITE_DAMAGE), spread_damage = TRUE)
+		H.deal_damage(2, WHITE_DAMAGE, attack_type = (ATTACK_TYPE_STATUS))
 		if(H.sanity_lost)
 			new /obj/structure/spreading/pale (get_turf(owner))
 			var/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale/P = locate(/mob/living/simple_animal/hostile/abnormality/branch12/oldman_pale) in GLOB.abnormality_mob_list

@@ -43,6 +43,6 @@
 		display_results(user, target, "<span class='warning'>You screw up, failing to excise [H]'s damaged lobe!</span>",
 			"<span class='warning'>[user] screws up!</span>",
 			"<span class='warning'>[user] screws up!</span>")
-		H.losebreath += 4
+		H.losebreath += HUMAN_MAX_OXYLOSS_RATE
 		H.adjustOrganLoss(ORGAN_SLOT_LUNGS, 10)
 	return FALSE

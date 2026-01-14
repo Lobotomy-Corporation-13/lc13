@@ -130,7 +130,7 @@
 	SetIdiot(user)
 	// Achievement for letting Blubbering Toad out
 	if(user && user.client && breach_type == BREACH_NORMAL)
-		user.client.player_details.achievements.unlock(/datum/award/achievement/lc13/free_toad, user)
+		user.client.player_details.achievements.unlock(/datum/award/achievement/abno/free_toad, user)
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/blubbering_toad/attack_hand(mob/living/carbon/human/user)
@@ -204,7 +204,7 @@
 			if(T.density)
 				break
 			if(idiot in T)
-				idiot.deal_damage(tongue_damage, BLACK_DAMAGE)
+				idiot.deal_damage(tongue_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 				new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(idiot), pick(GLOB.alldirs))
 				if(!idiot.anchored)
 					var/whack_speed = (prob(60) ? 1 : 4)
@@ -253,7 +253,7 @@
 	var/mob/living/carbon/human/H = attacked_target
 	// Achievement for dying to Blubbering Toad
 	if(H.stat == DEAD && H.client)
-		H.client.player_details.achievements.unlock(/datum/award/achievement/lc13/die_to_toad, H)
+		H.client.player_details.achievements.unlock(/datum/award/achievement/abno/die_to_toad, H)
 	if(H.sanity_lost) //prevents hitting the same guy in an infinite loop
 		melee_damage_type = BLACK_DAMAGE
 	if(H.health < 0)

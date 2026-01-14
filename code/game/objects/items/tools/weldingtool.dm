@@ -136,7 +136,7 @@
 		return
 
 	if(isOn())
-		handle_fuel_and_temps(1, user)
+		// handle_fuel_and_temps(1, user)
 
 		if(!QDELETED(O) && isliving(O)) // can't ignite something that doesn't exist
 			var/mob/living/L = O
@@ -155,7 +155,7 @@
 		return
 
 	if(isOn())
-		handle_fuel_and_temps(1, user)
+		// handle_fuel_and_temps(1, user)
 
 		if(!QDELETED(O) && isliving(O)) // can't ignite something that doesn't exist
 			var/mob/living/L = O
@@ -174,10 +174,10 @@
 
 
 // Ah fuck, I can't believe you've done this
-/obj/item/weldingtool/proc/handle_fuel_and_temps(used = 0, mob/living/user)
+/* /obj/item/weldingtool/proc/handle_fuel_and_temps(used = 0, mob/living/user)
 	use(used)
 	var/turf/location = get_turf(user)
-	location.hotspot_expose(700, 50, 1)
+	explosion(location, 0, 0, 2, 4, flame_range = 1) */
 
 // Returns the amount of fuel in the welder
 /obj/item/weldingtool/proc/get_fuel()

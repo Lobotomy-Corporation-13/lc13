@@ -187,7 +187,7 @@
 	hammer_present = FALSE
 	hammer_used = TRUE
 	// Achievement for activating Hammer of Light
-	user.client?.give_award(/datum/award/achievement/lc13/hammer_activate, user)
+	user.client?.give_award(/datum/award/achievement/abno/hammer_activate, user)
 	playsound(get_turf(src), "[pick(pickup_sounds)]", 75, 0, -9)
 	user.hairstyle = "Bald"
 	user.update_hair()

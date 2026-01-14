@@ -220,7 +220,7 @@
 	icon = 'icons/obj/doors/edge_Doorfire.dmi'
 	can_crush = FALSE
 	flags_1 = ON_BORDER_1
-	CanAtmosPass = ATMOS_PASS_PROC
+	// CanAtmosPass = ATMOS_PASS_PROC
 	glass = FALSE
 
 /obj/machinery/door/firedoor/border_only/closed
@@ -238,11 +238,11 @@
 		return !density
 	return TRUE
 
-/obj/machinery/door/firedoor/border_only/CanAtmosPass(turf/T)
+/* /obj/machinery/door/firedoor/border_only/CanAtmosPass(turf/T)
 	if(get_dir(loc, T) == dir)
 		return !density
 	else
-		return TRUE
+		return TRUE */
 
 /obj/machinery/door/firedoor/heavy
 	name = "heavy firelock"

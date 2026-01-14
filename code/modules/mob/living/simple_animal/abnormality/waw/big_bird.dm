@@ -74,6 +74,7 @@
 	var/bite_cooldown_time = 8 SECONDS
 	var/hypnosis_cooldown
 	var/hypnosis_cooldown_time = 16 SECONDS
+	var/omw_to_apoc = FALSE
 
 	//PLAYABLES ATTACKS
 	attack_action_types = list(/datum/action/cooldown/big_bird_hypnosis)
@@ -138,13 +139,13 @@
 			return FALSE
 		var/mob/living/carbon/human/H = attacked_target
 		var/obj/item/bodypart/head/head = H.get_bodypart("head")
+		H.client?.give_award(/datum/award/achievement/abno/headless, H)
 		if(QDELETED(head))
 			return
 		head.dismember()
 		QDEL_NULL(head)
 		H.regenerate_icons()
 		visible_message(span_danger("\The [src] bites [H]'s head off!"))
-		H.client?.give_award(/datum/award/achievement/abno/headless, H)
 		new /obj/effect/gibspawner/generic/silent(get_turf(H))
 		playsound(get_turf(src), 'sound/abnormalities/bigbird/bite.ogg', 50, 1, 2)
 		flick("big_bird_chomp", src)
@@ -197,4 +198,26 @@
 	datum_reference.qliphoth_change(-1)
 	return
 
+// Following overrides are so we can meander down to the Black Forest Portal unimpeded
+/mob/living/simple_animal/hostile/abnormality/big_bird/RegisterAttackAggro(damage_amount, damage_type, source)
+	if(omw_to_apoc) // Ts ain't nothin to me man
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/abnormality/big_bird/FindTarget(list/possible_targets, HasTargetsList)
+	if(omw_to_apoc) // Nah I'd Walk
+		return
+	. = ..()
+
+/mob/living/simple_animal/hostile/abnormality/big_bird/ListTargets()
+	if(omw_to_apoc) // I have places to be
+		return list()
+	else
+		return ..()
+
+/mob/living/simple_animal/hostile/abnormality/punishing_bird/BreachEffect(mob/living/carbon/human/user, breach_type)
+	omw_to_apoc = FALSE
+	docile_confinement = FALSE
+	. = ..()
+	return
 #undef BIGBIRD_HYPNOSIS_COOLDOWN

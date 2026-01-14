@@ -441,7 +441,7 @@
 				SEND_SIGNAL(M, COMSIG_ATOM_USED_IN_CRAFT, src)
 		parts_list.Cut()
 
-///Take air from the passed in gas mixture datum
+/* ///Take air from the passed in gas mixture datum
 /atom/proc/assume_air(datum/gas_mixture/giver)
 	qdel(giver)
 	return null
@@ -459,7 +459,7 @@
 
 ///Return the air if we can analyze it
 /atom/proc/return_analyzable_air()
-	return null
+	return null */
 
 ///Check if this atoms eye is still alive (probably)
 /atom/proc/check_eye(mob/user)

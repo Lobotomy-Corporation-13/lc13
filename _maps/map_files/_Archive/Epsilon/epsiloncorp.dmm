@@ -937,9 +937,6 @@
 	},
 /area/facility_hallway/control)
 "cP" = (
-/obj/machinery/atmospherics/components/unary/thermomachine{
-	resistance_flags = 115
-	},
 /turf/open/floor/bronze,
 /area/department_main/command)
 "cQ" = (
@@ -11767,10 +11764,6 @@
 	},
 /area/department_main/training)
 "Kt" = (
-/obj/machinery/atmospherics/components/unary/thermomachine{
-	pixel_y = 4;
-	resistance_flags = 115
-	},
 /turf/open/floor/bronze,
 /area/department_main/command)
 "Ku" = (

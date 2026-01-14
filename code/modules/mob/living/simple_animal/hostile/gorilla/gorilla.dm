@@ -36,8 +36,6 @@
 	faction = list("jungle")
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
-	minbodytemp = 270
-	maxbodytemp = 350
 	unique_name = TRUE
 	var/list/gorilla_overlays[GORILLA_TOTAL_LAYERS]
 	var/oogas = 0

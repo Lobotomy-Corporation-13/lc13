@@ -300,7 +300,6 @@
 /area/ruin/space/derelict/solar_control)
 "bD" = (
 /obj/structure/rack,
-/obj/item/circuitboard/machine/cryo_tube,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/bridge/ai_upload)
 "bE" = (
@@ -901,7 +900,6 @@
 /area/ruin/space/derelict/bridge)
 "ee" = (
 /obj/structure/window/reinforced,
-/obj/machinery/portable_atmospherics/canister/toxins,
 /turf/open/floor/plasteel/airless{
 	icon_state = "damaged3"
 	},
@@ -2283,7 +2281,6 @@
 /turf/open/floor/plasteel/airless/white,
 /area/ruin/unpowered/no_grav)
 "jr" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /turf/open/floor/plasteel/airless{
 	icon_state = "damaged2"
 	},
@@ -2534,7 +2531,6 @@
 	},
 /area/ruin/space/derelict/hallway/primary)
 "ko" = (
-/obj/machinery/atmospherics/components/unary/vent_scrubber/on,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/hallway/primary)
 "kp" = (
@@ -2559,7 +2555,6 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "ks" = (
-/obj/machinery/portable_atmospherics/scrubber,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "kw" = (
@@ -2580,7 +2575,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/arrival)
 "kC" = (
-/obj/machinery/portable_atmospherics/pump,
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "kD" = (
@@ -2701,7 +2695,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/hallway/primary)
 "lf" = (
-/obj/machinery/atmospherics/components/unary/vent_pump/on,
 /obj/effect/decal/cleanable/blood/splatter,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/hallway/primary)
@@ -2790,7 +2783,6 @@
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lu" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lv" = (
@@ -2800,10 +2792,7 @@
 /turf/closed/wall/r_wall,
 /area/ruin/space/derelict/atmospherics)
 "lw" = (
-/obj/machinery/portable_atmospherics/canister/air,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air,
 /area/ruin/space/derelict/atmospherics)
 "lx" = (
 /turf/closed/wall,
@@ -2856,34 +2845,19 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/hallway/primary)
 "lJ" = (
-/obj/machinery/atmospherics/components/unary/portables_connector/visible{
-	dir = 4
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lK" = (
-/obj/machinery/atmospherics/pipe/manifold/supply/hidden{
-	dir = 4
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lL" = (
-/obj/machinery/atmospherics/components/unary/portables_connector/visible{
-	dir = 8
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lN" = (
-/obj/machinery/atmospherics/components/unary/vent_scrubber,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air,
 /area/ruin/space/derelict/atmospherics)
 "lO" = (
-/obj/machinery/atmospherics/components/unary/outlet_injector/atmos/engine_waste,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air,
 /area/ruin/space/derelict/atmospherics)
 "lP" = (
 /obj/machinery/door/airlock/maintenance{
@@ -2905,21 +2879,12 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/arrival)
 "lT" = (
-/obj/machinery/atmospherics/components/unary/portables_connector/visible{
-	dir = 4
-	},
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "lU" = (
-/obj/machinery/atmospherics/pipe/simple/supply/hidden{
-	dir = 9
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lV" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden{
-	dir = 5
-	},
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "lX" = (
@@ -3030,8 +2995,7 @@
 /area/ruin/space/derelict/atmospherics)
 "mq" = (
 /turf/open/floor/plasteel{
-	icon_state = "damaged2";
-	initial_gas_mix = "TEMP=2.7"
+	icon_state = "damaged2"
 	},
 /area/ruin/space/derelict/atmospherics)
 "mr" = (
@@ -3066,7 +3030,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "mx" = (
-/obj/machinery/portable_atmospherics/canister,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "my" = (
@@ -3156,7 +3119,6 @@
 /turf/template_noop,
 /area/ruin/space/derelict/hallway/primary/port)
 "mP" = (
-/obj/machinery/portable_atmospherics/pump,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "mQ" = (
@@ -3571,10 +3533,7 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/bridge)
 "pZ" = (
-/obj/machinery/air_sensor/atmos/air_tank,
-/turf/open/floor/engine/air{
-	initial_gas_mix = "o2=20000;n2=80000;TEMP=293.15"
-	},
+/turf/open/floor/engine/air,
 /area/ruin/space/derelict/atmospherics)
 "rC" = (
 /obj/structure/closet/crate,
@@ -3677,7 +3636,6 @@
 /area/template_noop)
 "ES" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible,
 /obj/structure/grille,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
@@ -3792,7 +3750,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/se_solar)
 "MS" = (
-/obj/machinery/atmospherics/pipe/simple/supply/visible,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
 "Ni" = (
@@ -3825,12 +3782,10 @@
 /turf/open/floor/plasteel,
 /area/ruin/space/derelict/solar_control)
 "PR" = (
-/obj/machinery/atmospherics/pipe/simple/supply/visible,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "Qt" = (
 /obj/effect/spawner/structure/window/plasma/reinforced,
-/obj/machinery/atmospherics/pipe/simple/supply/visible,
 /obj/structure/grille,
 /turf/open/floor/plating/airless,
 /area/ruin/space/derelict/atmospherics)
@@ -3878,7 +3833,6 @@
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/hallway/primary/port)
 "VV" = (
-/obj/machinery/atmospherics/pipe/simple/scrubbers/visible,
 /turf/open/floor/plasteel/airless,
 /area/ruin/space/derelict/atmospherics)
 "Xq" = (

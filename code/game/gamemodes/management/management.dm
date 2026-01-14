@@ -16,7 +16,7 @@
 		ABNORMALITY_ORIGIN_LIMBUS,
 		ABNORMALITY_ORIGIN_ORIGINAL
 		)
-	var/list/gamemode_abnos = list(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
+	var/list/gamemode_abnos = alist(ZAYIN_LEVEL = list(), TETH_LEVEL = list(), HE_LEVEL = list(), WAW_LEVEL = list(), ALEPH_LEVEL = list())
 
 /datum/game_mode/management/pre_setup()
 	create_portrait_paths()
@@ -34,6 +34,8 @@
 				continue
 			gamemode_abnos[initial(abno.threat_level)] += abno
 			var/rate = (all_abnos[i] * -1) + highest * 2	//Weight counts for half of the abno chance, the other half is guaranteed.
+			if(abno.being_tested) // Abnormalities that are being tested will be nearly guaranteed to spawn
+				rate = 9999 // I know this looks dubious as hell but it doesn't have side effects. Apparently the Persistence system adds 1 to their recorded picks, and those recorded picks get * -1 in line 36 of this file, so uhhh LOOK THIS WORKS TRUST ME
 			gamemode_abnos[initial(abno.threat_level)][abno] = rate
 
 	SSabnormality_queue.possible_abnormalities = list()

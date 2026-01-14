@@ -174,9 +174,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel,
 /area/shuttle/arrival)
 "p" = (
 /obj/effect/turf_decal/tile/neutral{
@@ -211,9 +209,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel,
 /area/shuttle/arrival)
 "s" = (
 /obj/machinery/holopad,
@@ -285,9 +281,7 @@
 /obj/effect/turf_decal/tile/neutral{
 	dir = 8
 	},
-/turf/open/floor/plasteel{
-	heat_capacity = 1e+006
-	},
+/turf/open/floor/plasteel,
 /area/shuttle/arrival)
 "B" = (
 /obj/structure/table/reinforced,

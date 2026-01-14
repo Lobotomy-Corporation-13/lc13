@@ -20,10 +20,10 @@
 	update_mob()
 	new /obj/effect/temp_visual/explosion(get_turf(src))
 	playsound(loc, 'sound/effects/ordeals/steel/gcorp_boom.ogg', 75, TRUE)
-	for(var/mob/living/simple_animal/H in range(explosion_range, src))
-		H.apply_damage(explosion_damage, explosion_damage_type, null, H.run_armor_check(null, explosion_damage_type))
-	for(var/mob/living/carbon/C in range(explosion_range, src))
-		C.apply_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, null, C.run_armor_check(null, RED_DAMAGE))
+	for(var/mob/living/simple_animal/H in view(explosion_range, src))
+		H.deal_damage(explosion_damage, explosion_damage_type, aThrower, attack_type = (ATTACK_TYPE_SPECIAL))
+	for(var/mob/living/carbon/C in view(explosion_range, src))
+		C.deal_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, aThrower, attack_type = (ATTACK_TYPE_SPECIAL))
 	qdel(src)
 
 /obj/item/grenade/r_corp/white
@@ -67,9 +67,9 @@
 
 	// Deal RED damage like normal
 	for(var/mob/living/simple_animal/H in view(explosion_range, src))
-		H.apply_damage(explosion_damage, explosion_damage_type, null, H.run_armor_check(null, explosion_damage_type))
+		H.deal_damage(explosion_damage, explosion_damage_type, source = aThrower, attack_type = (ATTACK_TYPE_SPECIAL))
 	for(var/mob/living/carbon/C in view(explosion_range, src))
-		C.apply_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, null, C.run_armor_check(null, RED_DAMAGE))
+		C.deal_damage(C == aThrower ? explosion_damage * 0.5 : explosion_damage * carbon_damagemod, explosion_damage_type, source = aThrower, attack_type = (ATTACK_TYPE_SPECIAL))
 
 	// Apply burn and create fire
 	for(var/turf/T in view(explosion_range, src))

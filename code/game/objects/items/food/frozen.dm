@@ -49,6 +49,16 @@
 	tastes = list("ice cream" = 1, "banana" = 1, "a bad joke" = 1)
 	foodtypes = FRUIT | DAIRY | SUGAR
 
+/obj/item/food/bnuuypudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon_state = "bnuuypudding"
+	bite_consumption = 1
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 3, /datum/reagent/consumable/sugar = 1, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
 /////////////
 //SNOWCONES//
 /////////////

@@ -156,21 +156,15 @@
 	. = ..()
 	if(!istype(exposed_turf))
 		return
-
-	var/cool_temp = cooling_temperature
 	if(reac_volume >= 5)
 		exposed_turf.MakeSlippery(TURF_WET_WATER, 10 SECONDS, min(reac_volume*1.5 SECONDS, 60 SECONDS))
 
 	for(var/mob/living/simple_animal/slime/exposed_slime in exposed_turf)
 		exposed_slime.apply_water()
 
-	var/obj/effect/hotspot/hotspot = (locate(/obj/effect/hotspot) in exposed_turf)
-	if(hotspot && !isspaceturf(exposed_turf))
-		if(exposed_turf.air)
-			var/datum/gas_mixture/air = exposed_turf.air
-			air.temperature = max(min(air.temperature-(cool_temp*1000), air.temperature/cool_temp),TCMB)
-			air.react(src)
-			qdel(hotspot)
+	var/obj/effect/turf_fire/flames = (locate(/obj/effect/turf_fire) in exposed_turf)
+	if(flames)
+		qdel(flames)
 
 	var/obj/effect/turf_fire/t_fire = (locate(/obj/effect/turf_fire) in exposed_turf)
 	if(t_fire)
@@ -741,12 +735,12 @@
 	taste_mult = 0 // oderless and tasteless
 
 
-/datum/reagent/oxygen/expose_turf(turf/open/exposed_turf, reac_volume)
+/* /datum/reagent/oxygen/expose_turf(turf/open/exposed_turf, reac_volume)
 	. = ..()
 	if(istype(exposed_turf))
 		var/temp = holder ? holder.chem_temp : T20C
 		exposed_turf.atmos_spawn_air("o2=[reac_volume/20];TEMP=[temp]")
-	return
+	return */
 
 /datum/reagent/copper
 	name = "Copper"
@@ -772,11 +766,11 @@
 	color = "#808080" // rgb: 128, 128, 128
 	taste_mult = 0
 
-/datum/reagent/nitrogen/expose_turf(turf/open/exposed_turf, reac_volume)
+/* /datum/reagent/nitrogen/expose_turf(turf/open/exposed_turf, reac_volume)
 	if(istype(exposed_turf))
 		var/temp = holder ? holder.chem_temp : T20C
 		exposed_turf.atmos_spawn_air("n2=[reac_volume/20];TEMP=[temp]")
-	return ..()
+	return ..() */
 
 /datum/reagent/hydrogen
 	name = "Hydrogen"
@@ -1260,11 +1254,11 @@
 	color = "#B0B0B0" // rgb : 192, 192, 192
 	taste_description = "something unknowable"
 
-/datum/reagent/carbondioxide/expose_turf(turf/open/exposed_turf, reac_volume)
+/* /datum/reagent/carbondioxide/expose_turf(turf/open/exposed_turf, reac_volume)
 	if(istype(exposed_turf))
 		var/temp = holder ? holder.chem_temp : T20C
 		exposed_turf.atmos_spawn_air("co2=[reac_volume/20];TEMP=[temp]")
-	return ..()
+	return ..() */
 
 /datum/reagent/nitrous_oxide
 	name = "Nitrous Oxide"
@@ -1274,11 +1268,11 @@
 	color = "#808080"
 	taste_description = "sweetness"
 
-/datum/reagent/nitrous_oxide/expose_turf(turf/open/exposed_turf, reac_volume)
+/* /datum/reagent/nitrous_oxide/expose_turf(turf/open/exposed_turf, reac_volume)
 	. = ..()
 	if(istype(exposed_turf))
 		var/temp = holder ? holder.chem_temp : T20C
-		exposed_turf.atmos_spawn_air("n2o=[reac_volume/20];TEMP=[temp]")
+		exposed_turf.atmos_spawn_air("n2o=[reac_volume/20];TEMP=[temp]") */
 
 /datum/reagent/nitrous_oxide/expose_mob(mob/living/exposed_mob, methods=TOUCH, reac_volume)
 	. = ..()
@@ -1291,7 +1285,7 @@
 		var/mob/living/carbon/human/H = M
 		H.blood_volume = max(H.blood_volume - 10, 0)
 	if(prob(20))
-		M.losebreath += 2
+		M.losebreath += (HUMAN_MEDIUM_OXYLOSS_RATE/TICKS_PER_BREATH)
 		M.set_confusion(min(M.get_confusion() + 2, 5))
 	..()
 

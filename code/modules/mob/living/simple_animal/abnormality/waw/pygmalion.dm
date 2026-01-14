@@ -158,6 +158,7 @@
 		restorePrudence()
 	faction = list()
 	sculptor = null
+	swap_area_index(MOB_ABNORMALITY_INDEX)
 	if(client)
 		to_chat(src, span_userdanger("The sculptor has fallen. It is now your duty to avenge this tragedy!"))
 	return TRUE
@@ -165,6 +166,7 @@
 /mob/living/simple_animal/hostile/abnormality/pygmalion/Life()
 	. = ..()
 	if (IsContained() && sculptor && (sculptor.health/sculptor.maxHealth < 0.5 || sculptor.sanityhealth/sculptor.maxSanity < 0.5) )
+		swap_area_index(MOB_SIMPLEANIMAL_INDEX) // Won't disrupt regenerators
 		BreachEffect()
 		if(client)
 			to_chat(src, span_userdanger("The sculptor is in danger. It is now your duty to protect them!"))
@@ -194,6 +196,7 @@
 	to_chat(sculptor, span_nicegreen("As soon as Pygmalion has fallen, You feel like your mind is back on track."))
 
 /mob/living/simple_animal/hostile/abnormality/pygmalion/death(gibbed)
+	swap_area_index(MOB_ABNORMALITY_INDEX) // Return to normal.
 	if (sculptor)
 		sculptor.remove_status_effect(STATUS_EFFECT_SCULPTOR)
 		if (missing_prudence)
@@ -203,17 +206,15 @@
 	QDEL_IN(src, 5 SECONDS)
 	..()
 
-/mob/living/simple_animal/hostile/abnormality/pygmalion/attackby(obj/item/W, mob/user, params)
+/mob/living/simple_animal/hostile/abnormality/pygmalion/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
-	CounterAttack(user)
-
-/mob/living/simple_animal/hostile/abnormality/pygmalion/bullet_act(obj/projectile/P)
-	. = ..()
-	CounterAttack(P.firer)
+	if((. <= 0) || (!isliving(source)) || (attack_type & (ATTACK_TYPE_COUNTER | ATTACK_TYPE_STATUS | ATTACK_TYPE_ENVIRONMENT)))
+		return
+	CounterAttack(source)
 
 /mob/living/simple_animal/hostile/abnormality/pygmalion/proc/CounterAttack(mob/living/attacker)
 	if (attacker == sculptor)
-		attacker.deal_damage(retaliation, PALE_DAMAGE)
+		attacker.deal_damage(retaliation, PALE_DAMAGE, src, attack_type = (ATTACK_TYPE_COUNTER))
 		to_chat(attacker, span_userdanger("You feel your heart break!"))
 
 /datum/status_effect/sculptor
