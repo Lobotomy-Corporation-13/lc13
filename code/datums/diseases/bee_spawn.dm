@@ -25,20 +25,20 @@
 	if(!istype(affected_mob, affected_mob_type))
 		return
 
-	var/mob/living/carbon/C = affected_mob
-	C.apply_damage(stage*spore_damage, RED_DAMAGE, null, C.run_armor_check(null, RED_DAMAGE), spread_damage = TRUE)
+	var/mob/living/carbon/human/H = affected_mob
+	H.deal_damage(stage*spore_damage, RED_DAMAGE, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 
-	if(C.health <= 0)
-		var/turf/T = get_turf(C)
-		C.visible_message("<span class='danger'>[C] explodes in a shower of gore, as a giant bee appears out of [C.p_them()]!</span>")
-		C.emote("scream")
+	if(H.health <= 0)
+		var/turf/T = get_turf(H)
+		H.visible_message("<span class='danger'>[H] explodes in a shower of gore, as a giant bee appears out of [H.p_them()]!</span>")
+		H.emote("scream")
 		var/mob/living/simple_animal/hostile/worker_bee/bee = new spawned_bee_type(T)
-		if(control_bee_on_death && C.mind)
-			C.mind.transfer_to(bee)
-		C.gib()
+		if(control_bee_on_death && H.mind)
+			H.mind.transfer_to(bee)
+		H.gib()
 		return
 
-	if((stage >= max_stages) && (C.health >= (C.maxHealth * 0.75)) && prob(C.health * 0.25))
+	if((stage >= max_stages) && (H.health >= (H.maxHealth * 0.75)) && prob(H.health * 0.25))
 		cure(FALSE)
 
 /datum/disease/bee_spawn/limbus_bee_spawn
