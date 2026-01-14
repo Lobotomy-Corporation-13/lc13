@@ -198,9 +198,9 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	dat += "[information["attack_info"]]<br>"
 	if("special" in information)
 		dat += "[information["special"]]<br>"
-	dat += "Attack speed: [information["attack_speed"]].<br>"
+	dat += "Melee attack speed: [information["melee_attack_speed"]].<br>"
 	if(ispath(item_path, /obj/item/ego_weapon/ranged))
-
+		dat += "Ranged attack speed: [information["ranged_attack_speed"]].<br>"
 	else if(ispath(item_path, /obj/item/ego_weapon))
 		if(information["throwforce"] > 0)
 			dat += "Throw force: [information["throwforce"]].<br>"

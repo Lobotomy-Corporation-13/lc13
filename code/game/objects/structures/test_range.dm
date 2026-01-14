@@ -93,8 +93,8 @@
 	if(action == "print_ego")
 		var/chosen_ego = params["chosen_ego"]
 		DispenseEgo(usr, chosen_ego)
-		. = TRUE
 		update_icon()
+		return FALSE // I know this looks EXTREMELY suspect but I don't want the UI to update when you do this. Else it resets the scrolling position on the ego list
 
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
 	if(!ego_path)
