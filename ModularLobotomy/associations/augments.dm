@@ -1022,17 +1022,7 @@
 // 	return id_card && id_card.access // Example: Check if any access exists on card
 
 // Helper datum for validation (slightly improved)
-/datum/augment_design
-	var/list/form_data
-	var/rank
-	var/list/selected_effects_data = list()
-	var/base_ep
-	var/total_ep_cost
-	var/remaining_ep
-	var/base_ahn_cost
-	var/effects_ahn_cost
-	var/total_ahn_cost
-	var/validation_error = "" // Store error message for user feedback
+// Base vars defined in code/game/objects/items/augment_base.dm
 
 /datum/augment_design/proc/validate_and_calculate(form_name, rank_num, list/selected_effect_ids, obj/machinery/augment_fabricator/fabricator)
 	src.validation_error = "" // Reset error
@@ -1128,13 +1118,10 @@
 	return effect_definition["id"] == effect_id_to_find
 
 // Augment Item definition (basic structure)
+// Base vars defined in code/game/objects/items/augment_base.dm
 /obj/item/augment
-	name = "Augment"
 	icon = AUGMENT_ICON_FILE
 	icon_state = "prosthetic"
-	var/datum/augment_design/design_details // Store the applied design data
-	var/primary_color = "#FFFFFF"
-	var/secondary_color = "#CCCCCC"
 	var/list/rankAttributeReqs = list(20, 40, 60, 80, 100)
 	var/list/stats = list(
 		FORTITUDE_ATTRIBUTE,
@@ -1143,7 +1130,6 @@
 		JUSTICE_ATTRIBUTE,
 	)
 	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
-	var/active_augment = FALSE
 	var/debug_use = FALSE
 	// var/mutable_appearance/augment_overlay_prim
 	// var/mutable_appearance/augment_overlay_second
