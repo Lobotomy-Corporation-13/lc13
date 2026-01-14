@@ -340,8 +340,6 @@
 		addtimer(CALLBACK(src, PROC_REF(CancelCastRefund), user), 0.5 SECONDS)
 	return list()
 
-/obj/projectile/ego_bullet/ego_magicbullet/abnormality/
-
 // We hurt absolutely everything that isn't both Head faction and hostile faction.
 /obj/effect/proc_holder/spell/aimed/thick_line/proc/ThickLineHit(mob/living/user, turf/hit_turf, list/hit_list, appropiate_color)
 	// To all living mobs found in the turf who aren't in our hit list: add them to the hit list, deal damage and apply powernull.
