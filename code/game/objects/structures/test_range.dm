@@ -11,16 +11,7 @@
 	var/ego_per_person_limit = 10
 	var/list/printed_ego = list()
 
-/obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
-	var/list/this_guys_printed_ego = printed_ego[user.ckey]
-	if(islist(this_guys_printed_ego))
-		if(I in this_guys_printed_ego)
-			visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
-			playsound(get_turf(src), 'sound/machines/juicer.ogg', 40, TRUE)
-			this_guys_printed_ego -= I
-			qdel(I)
-			return
-	. = ..()
+/* ---------- Shared TGUI/Old EGO printer stuff ---------- */
 
 /obj/machinery/ego_printer/Initialize(mapload)
 	. = ..()
@@ -37,64 +28,23 @@
 		return FALSE
 	return TRUE
 
+// SStestrange calls this on all its linked printers when it finishes loading EGO datums
 /obj/machinery/ego_printer/proc/ReadyMessage()
 	visible_message(span_nicegreen("The [src.name] beeps, now displaying a list of E.G.O. ready to print."))
 	say("System initialization complete!")
 	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
-/obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
-	if(!CheckInitializedDatums())
-		return
-
-	ui = SStgui.try_update_ui(user, src, ui)
-	if(!ui)
-		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
-		ui.set_autoupdate(FALSE)
-		ui.open()
-
-/obj/machinery/ego_printer/ui_static_data(mob/user)
-	var/list/data = list()
-	data["ego_weapon_datums"] = list()
-	data["ego_armor_datums"] = list()
-	data["all_tags"] = list()
-
-	for(var/tag in EGO_TAGS_DESCRIPTION_LIST)
-		var/list/tag_object = list("tag_name" = tag, "tag_description" = EGO_TAGS_DESCRIPTION_LIST[tag], "tag_checked" = FALSE)
-		data["all_tags"] |= list(tag_object)
-
-	for(var/datum/ego_datum/ED in ego_datums)
-		if(!ED.item_path)
-			continue
-
-		var/ego_threatclass = ED.CostToThreatClass()
-		var/ego_tags = ED.ego_tags
-		if(!islist(ego_tags))
-			ego_tags = list(ego_tags)
-
-		var/list/datum_data = list(
-			"path" = ED.item_path,
-			"cost" = ED.cost,
-			"information" = ED.information,
-			"tags" = ED.ego_tags,
-			"icon" = SStestrange.GenerateEgoPreviewIcon(ED.item_path),
-			"threatclass" = ego_threatclass
-		)
-		if(istype(ED, /datum/ego_datum/weapon))
-			data["ego_weapon_datums"] |= list(datum_data)
-		else if(istype(ED, /datum/ego_datum/armor))
-			data["ego_armor_datums"] |= list(datum_data)
-
-	return data
-
-/obj/machinery/ego_printer/ui_act(action, list/params)
+// Let someone qdel the EGO they printed by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
+/obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
+	var/list/this_guys_printed_ego = printed_ego[user.ckey]
+	if(islist(this_guys_printed_ego))
+		if(I in this_guys_printed_ego)
+			visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
+			playsound(get_turf(src), 'sound/machines/juicer.ogg', 40, TRUE)
+			this_guys_printed_ego -= I
+			qdel(I)
+			return
 	. = ..()
-	if(.)
-		return
-	if(action == "print_ego")
-		var/chosen_ego = params["chosen_ego"]
-		DispenseEgo(usr, chosen_ego)
-		update_icon()
-		return FALSE // I know this looks EXTREMELY suspect but I don't want the UI to update when you do this. Else it resets the scrolling position on the ego list
 
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
 	if(!ego_path)
@@ -119,7 +69,7 @@
 
 	var/atom/dispensed_item = new ego_path((get_turf(user)))
 
-	if(istype(dispensed_item)) // Register signals on it or whatever if you need to here
+	if(istype(dispensed_item)) // Could register signals on it or whatever if you need to here
 		visible_message(span_nicegreen("The [src.name] beeps as it prints [dispensed_item]."))
 		playsound(get_turf(src), 'sound/machines/ping.ogg', 50, TRUE)
 		if(islist(user_prints))
@@ -130,6 +80,74 @@
 
 	to_chat(user, span_warning("Something's gone horribly wrong with the E.G.O. printing process... contact a coder and tell them [ego_path] is bugged on the testing range printer."))
 	playsound(src, 'sound/machines/buzz-two.ogg', 50)
+
+/* ---------- TGUI EGO Printer stuff ---------- */
+
+// Happens when someone touches this machine with their bare hand.
+/obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
+	if(!CheckInitializedDatums())
+		return
+
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
+		ui.set_autoupdate(FALSE)
+		ui.open()
+
+// Static data because we really don't expect the EGO datums for this to dynamically change.
+/obj/machinery/ego_printer/ui_static_data(mob/user)
+	var/list/data = list()
+	data["ego_weapon_datums"] = list()
+	data["ego_armor_datums"] = list()
+	data["all_tags"] = list()
+
+	// Get all the EGO tags defined in EGO_TAGS_DESCRIPTION_LIST and send an object consisting of their name and description, also tag_checked so we can easily turn their filtering on and off in the frontend
+	for(var/tag in EGO_TAGS_DESCRIPTION_LIST)
+		var/list/tag_object = list("tag_name" = tag, "tag_description" = EGO_TAGS_DESCRIPTION_LIST[tag], "tag_checked" = FALSE)
+		data["all_tags"] |= list(tag_object)
+
+	for(var/datum/ego_datum/ED in ego_datums)
+		if(!ED.item_path)
+			continue
+
+		var/ego_threatclass = ED.CostToThreatClass()
+		var/ego_tags = ED.ego_tags
+		if(!islist(ego_tags))
+			ego_tags = list(ego_tags)
+
+		var/list/datum_data = list(
+			"path" = ED.item_path,
+			"cost" = ED.cost,
+			"information" = ED.information,
+			"tags" = ED.ego_tags,
+			"icon" = SStestrange.GenerateEgoPreviewIcon(ED.item_path),
+			"threatclass" = ego_threatclass,
+			"origin" = ED.origin
+		)
+		if(istype(ED, /datum/ego_datum/weapon))
+			data["ego_weapon_datums"] |= list(datum_data)
+		else if(istype(ED, /datum/ego_datum/armor))
+			data["ego_armor_datums"] |= list(datum_data)
+
+	return data
+
+// The frontend calls this with a certain action and payload.
+/obj/machinery/ego_printer/ui_act(action, list/params)
+	. = ..()
+	if(.)
+		return
+	if(action == "print_ego")
+		var/chosen_ego = params["chosen_ego"]
+		DispenseEgo(usr, chosen_ego)
+		update_icon()
+		return FALSE // I know this looks EXTREMELY suspect but I don't want the UI to update when you do this. Else, it resets the scrolling position on the ego list.
+
+/* ---------- Old EGO Printer stuff ---------- */
+
+
+
+
+
 
 //Abnormality Spawner
 /obj/machinery/computer/testrangespawner

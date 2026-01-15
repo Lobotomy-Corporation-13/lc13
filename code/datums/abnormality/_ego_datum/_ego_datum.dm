@@ -24,6 +24,8 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	var/testrange_blacklisted = FALSE
 	/// A list of tags.
 	var/list/ego_tags = list()
+	/// The origin of this EGO. Could basically only possibly be "LC13" (basegame EGO, even community EGO), "City" (CoL and input gear) or "Branch 12"
+	var/origin = "LC13"
 
 /datum/ego_datum/New(datum/abnormality/DA)
 	if(!name && item_path)

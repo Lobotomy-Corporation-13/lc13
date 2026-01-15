@@ -22,6 +22,8 @@ export const TestRangeEgoPrinter = (props, context) => {
   const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 })
   /// Threat class filters. It's an object; the keys are the threat classes: 1 is ZAYIN, 2 is TETH, 3 is HE, 4 is WAW, 5 is ALEPH. The values are whether EGO of that threat class should be visible.
   const [threatClassFilters, setThreatClassFilters] = useLocalState(context, "threatClassFilters", { 1: true, 2: true, 3: true, 4: true, 5: true })
+  /// Origin filters. The values are whether EGO from that origin should be visible.
+  const [originFilters, setOriginFilters] = useLocalState(context, "originFilters", { "LC13": true, "Branch 12": false, "City": false })
   /// EGO Tag Filters. This is an array of EGO tag objects which are structured like {"tag_name": string:name, "tag_description:" string:description, "tag_checked": bool}. If "tag_checked" is true (by default it's false), only display EGO with that tag on it.
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags)
   /// Weapon damage type filters. Either null or a string representing one of the colour damtypes.
@@ -44,6 +46,11 @@ export const TestRangeEgoPrinter = (props, context) => {
   const regex_for_armor = /clothing\/suit\/armor\/ego_gear\//
 
   /* ------------ Functions ------------*/
+
+  // Checks whether a datum's origin is currently being filtered for.
+  const CheckOriginFilters = (datum) => {
+    return originFilters[datum.origin]
+  }
 
   // Checks whether a datum's threat class is currently being filtered for.
   const CheckThreatClassFilters = (datum) => {
@@ -166,7 +173,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
     return (
       datum_list?.map(datum => (
-        CheckNameSearchFilter(datum) && CheckThreatClassFilters(datum) && CheckWeaponDamtypeFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="weapon" />
+        CheckNameSearchFilter(datum) && CheckOriginFilters(datum) && CheckThreatClassFilters(datum) && CheckWeaponDamtypeFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="weapon" />
       )
       )
     )
@@ -179,7 +186,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
     return (
       datum_list?.map(datum => (
-        CheckNameSearchFilter(datum) && CheckThreatClassFilters(datum) && CheckArmorResistanceFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="armor" />
+        CheckNameSearchFilter(datum) && CheckOriginFilters(datum) && CheckThreatClassFilters(datum) && CheckArmorResistanceFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="armor" />
       )
       )
     )
@@ -428,7 +435,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         </FlexItem>
 
         <FlexItem>
-          <b>Cost</b>: {detailed_datum.cost} Unique PE Boxes
+          <b>Cost</b>: {(detailed_datum.origin === "LC13" || detailed_datum.origin === "Branch 12") ? detailed_datum.cost + " Unique PE Boxes" : "???"}
         </FlexItem>
 
         <FlexItem>
@@ -723,7 +730,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
                 <Flex.Item grow={1}>
                   E.G.O. Threat Class Filter
-                  <Flex my={2}>
+                  <Flex mt={1} mb={1}>
                     <FlexItem ml={0.5}>
                       <ButtonCheckbox
                         checked={threatClassFilters[1]}
@@ -762,15 +769,48 @@ export const TestRangeEgoPrinter = (props, context) => {
                     <FlexItem ml={2}>
                       <Button icon="sync" color="red" content="Reset" onClick={() => { setThreatClassFilters({ 1: true, 2: true, 3: true, 4: true, 5: true }) }} />
                     </FlexItem>
+                  </Flex>
+                </Flex.Item>
+
+                <Flex.Item grow={1}>
+                  E.G.O. Origin Filter
+                  <Flex mt={1}>
+                    <FlexItem ml={0.5}>
+                      <ButtonCheckbox
+                        checked={originFilters["LC13"]}
+                        content={"LC13"}
+                        onClick={() => { setOriginFilters({ ...originFilters, "LC13": !originFilters["LC13"] }) }}
+                        tooltip={"E.G.O. which can be found in Lobotomy Corporation."}
+                      />
+                    </FlexItem>
+                    <FlexItem ml={0.5}>
+                      <ButtonCheckbox
+                        checked={originFilters["Branch 12"]}
+                        content={"Branch 12"}
+                        onClick={() => { setOriginFilters({ ...originFilters, "Branch 12": !originFilters["Branch 12"] }) }}
+                        tooltip={"E.G.O. which can be found in Branch 12."}
+                      />
+                    </FlexItem>
+                    <FlexItem ml={0.5}>
+                      <ButtonCheckbox
+                        checked={originFilters["City"]}
+                        content={"City"}
+                        onClick={() => { setOriginFilters({ ...originFilters, "City": !originFilters["City"] }) }}
+                        tooltip={"Weapons and armour originating from the Associations, Syndicates, Fixer Offices and other dwellers of the City. This is not true E.G.O. gear; threat class is an estimate."}
+                      />
+                    </FlexItem>
+
+                    <FlexItem ml={2}>
+                      <Button icon="sync" color="red" content="Reset" onClick={() => { setOriginFilters({ "LC13": true, "Branch 12": false, "City": false }) }} />
+                    </FlexItem>
 
                   </Flex>
                   <FlexItem ml={0.5}>
 
-
                   </FlexItem>
                 </Flex.Item>
 
-                {tab === 1 && <FlexItem my={2}>
+                {tab === 1 && <FlexItem mt={2}>
                   E.G.O. Weapon Damage Type Filters
                   <Flex direction="row" wrap maxWidth="20rem" justify="center" mt={1}>
                     <FlexItem ml={2}>
@@ -801,7 +841,7 @@ export const TestRangeEgoPrinter = (props, context) => {
                   </Flex>
                 </FlexItem>}
 
-                {tab === 2 && <FlexItem my={2}>
+                {tab === 2 && <FlexItem mt={2}>
                   E.G.O. Armour Resistance Filters
 
                   <Flex direction="row" wrap maxWidth="24rem" mt={1}>

@@ -4251,6 +4251,7 @@
 #include "ModularLobotomy\ego_weapons\melee\abnormality\waw.dm"
 #include "ModularLobotomy\ego_weapons\melee\abnormality\zayin.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\_cityweapons.dm"
+#include "ModularLobotomy\ego_weapons\melee\city\_cityweapons_datums.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\black_silence.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\blue_sicko.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\cane.dm"

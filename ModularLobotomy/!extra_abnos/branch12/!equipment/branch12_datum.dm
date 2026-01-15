@@ -1,7 +1,12 @@
 
 /datum/ego_datum/weapon/branch12
 	well_enabled = FALSE
+	origin = "Branch 12"
 
+/datum/ego_datum/armor/branch12
+	// I'm making this definition just so I can add the origin var to these datum for a test range update. This armor def didn't exist before; it probably should have well_enabled = FALSE
+	// But there could be a reason why it wasn't defined at first, maybe having the B12 armours in the well was intentional since they're harmless, so I'm just leaving this notice here
+	origin = "Branch 12"
 
 // --------ZAYIN---------
 // Full-Wave M'aider - Signal
