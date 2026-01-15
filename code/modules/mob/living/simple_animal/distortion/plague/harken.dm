@@ -71,6 +71,10 @@
 	var/ui_revealed = FALSE
 	/// List of humans who can see the noise UI
 	var/list/ui_viewers = list()
+	/// Harken's own noise meter HUD
+	var/atom/movable/screen/harken_noise/harken_hud
+	/// Dictionary of human -> their noise meter HUD
+	var/list/human_huds = list()
 
 	// ===== SPRINT SYSTEM VARIABLES =====
 	/// Current stamina
@@ -174,6 +178,8 @@
 	stamina_update_timer = addtimer(CALLBACK(src, PROC_REF(process_stamina)), 0.5 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
 	// Calculate initial max_noise based on civilians
 	update_max_noise()
+	// Setup noise meter HUD
+	setup_harken_hud()
 
 /mob/living/simple_animal/hostile/distortion/harken/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_CREATED)
@@ -221,6 +227,10 @@
 		<br>
 		Hunt by sound!</b>"})
 	update_stamina_bar()
+	// Re-add HUD when player logs in
+	if(harken_hud)
+		client.screen += harken_hud
+	update_all_noise_ui()
 
 // ===== LIFE PROCESSING =====
 
@@ -531,6 +541,46 @@
 
 // ===== UI SYSTEM =====
 
+// Screen object for the noise meter HUD
+/atom/movable/screen/harken_noise
+	name = "Noise Meter"
+	icon = 'icons/hud/screen_harken.dmi'
+	icon_state = "noisebar_calm_0"
+	screen_loc = "CENTER,NORTH-1"
+	pixel_x = -169  // Center the 199px wide icon (-99) plus 70px left shift
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	layer = ABOVE_HUD_LAYER
+
+	/// Weak reference to the harken this HUD belongs to
+	var/datum/weakref/harken_ref
+	/// Current displayed percentage
+	var/current_percent = 0
+	/// Current enraged state
+	var/current_enraged = FALSE
+
+/// Update the noise meter display
+/atom/movable/screen/harken_noise/proc/update_display(noise, max_noise, enraged)
+	// Calculate percentage rounded to nearest 5
+	var/raw_percent = (noise / max_noise) * 100
+	var/new_percent = clamp(round(raw_percent, 5), 0, 100)
+
+	// Determine state prefix
+	var/state_prefix = enraged ? "enraged" : "calm"
+
+	// Only update if changed
+	if(new_percent != current_percent || enraged != current_enraged)
+		current_percent = new_percent
+		current_enraged = enraged
+		icon_state = "noisebar_[state_prefix]_[new_percent]"
+
+/// Setup Harken's own noise meter HUD
+/mob/living/simple_animal/hostile/distortion/harken/proc/setup_harken_hud()
+	harken_hud = new()
+	harken_hud.harken_ref = WEAKREF(src)
+	if(client)
+		client.screen += harken_hud
+	update_all_noise_ui()
+
 /mob/living/simple_animal/hostile/distortion/harken/proc/check_ui_reveal()
 	if(ui_revealed)
 		return
@@ -549,18 +599,45 @@
 		to_chat(H, span_userdanger("You sense a rising tension in the air..."))
 
 /mob/living/simple_animal/hostile/distortion/harken/proc/add_ui_to_human(mob/living/carbon/human/H)
+	if(!H?.client)
+		return
 	if(H in ui_viewers)
 		return
 	ui_viewers += H
-	// TODO: Add actual HUD element when sprites are created
+	// Create a noise meter HUD for this human
+	var/atom/movable/screen/harken_noise/human_hud = new()
+	human_hud.harken_ref = WEAKREF(src)
+	human_huds[H] = human_hud
+	H.client.screen += human_hud
+	update_human_hud(H)
 
 /mob/living/simple_animal/hostile/distortion/harken/proc/remove_all_ui()
-	// TODO: Remove HUD elements from all viewers when sprites are created
+	// Remove Harken's own HUD
+	if(harken_hud && client)
+		client.screen -= harken_hud
+	QDEL_NULL(harken_hud)
+	// Remove HUDs from all human viewers
+	for(var/mob/living/carbon/human/H in ui_viewers)
+		var/atom/movable/screen/harken_noise/hud = human_huds[H]
+		if(hud && H.client)
+			H.client.screen -= hud
+		qdel(hud)
+	human_huds = list()
 	ui_viewers = list()
 
 /mob/living/simple_animal/hostile/distortion/harken/proc/update_all_noise_ui()
-	// TODO: Update noise meter display when sprites are created
-	return
+	// Update Harken's own HUD
+	if(harken_hud)
+		harken_hud.update_display(noise, max_noise, enraged)
+	// Update all human viewers
+	for(var/mob/living/carbon/human/H in ui_viewers)
+		update_human_hud(H)
+
+/// Update a specific human's noise meter HUD
+/mob/living/simple_animal/hostile/distortion/harken/proc/update_human_hud(mob/living/carbon/human/H)
+	var/atom/movable/screen/harken_noise/hud = human_huds[H]
+	if(hud)
+		hud.update_display(noise, max_noise, enraged)
 
 // ===== AGITATION ABILITY =====
 
@@ -577,6 +654,16 @@
 	duration = 4.2
 	layer = POINT_LAYER
 
+/// Yellow warning tile for Harken abilities
+/obj/effect/temp_visual/harken_warning
+	name = "ominous glow"
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "spreadwarning"
+	layer = BELOW_MOB_LAYER
+	duration = 5  // 0.5 seconds
+	alpha = 128
+	color = "#FFCC00"  // Yellow tint to match Harken's theme
+
 /mob/living/simple_animal/hostile/distortion/harken/proc/fire_agitation(atom/target)
 	if(agitation_cooldown > world.time)
 		to_chat(src, span_warning("Agitation is on cooldown! ([round((agitation_cooldown - world.time) / 10, 0.1)]s remaining)"))
@@ -592,6 +679,26 @@
 	// Generate noise on use
 	add_noise(agitation_noise)
 
+	// Add yellow blip overlay during windup
+	var/mutable_appearance/blip_overlay = mutable_appearance('icons/effects/effects.dmi', "blip")
+	blip_overlay.color = "#FFCC00"  // Yellow tint
+	add_overlay(blip_overlay)
+
+	// Windup sound and message
+	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 75, TRUE)
+	visible_message(span_danger("[src] prepares a wave of agitation!"))
+
+	// 0.5 second windup delay
+	sleep(5)
+
+	// Remove overlay after windup
+	cut_overlay(blip_overlay)
+
+	if(QDELETED(src) || stat == DEAD)
+		can_act = TRUE
+		return
+
+	// === LINE ATTACK (FIRST) ===
 	// Get the line of turfs from Harken to target
 	var/list/turf/line_turfs = getline(src, target)
 
@@ -620,25 +727,44 @@
 		new /obj/effect/temp_visual/harken_agitation_beam(T)
 		playsound(T, 'sound/effects/bang.ogg', 30, TRUE)
 
-		// Check for mobs on this tile and knock them up
+		// Check for mobs on this tile and knock them up (with damage)
 		for(var/mob/living/L in T)
 			if(L == src)
 				continue
-			agitation_knockup(L)
+			agitation_knockup(L, TRUE)  // With damage
 
 		// Delay before next beam
 		sleep(agitation_beam_delay)
+
+	// === SCREECH AOE EFFECT (1 SECOND AFTER LINE ATTACK) ===
+	sleep(10)  // 1 second delay
+
+	if(QDELETED(src) || stat == DEAD)
+		can_act = TRUE
+		return
+
+	// Sound effect
+	playsound(src, 'sound/effects/screech.ogg', 60, TRUE)
+
+	// Create yellow screech temp_visual
+	var/obj/effect/temp_visual/screech/screech_effect = new(get_turf(src))
+	screech_effect.color = "#FFCC00"  // Yellow tint
+
+	// Knock up all humans within 2 view range (no damage)
+	for(var/mob/living/carbon/human/H in oview(2, src))
+		agitation_knockup(H, FALSE)  // No damage
 
 	can_act = TRUE
 	chosen_attack = 0
 
 /// Knock a mob into the air with animation and spin
-/mob/living/simple_animal/hostile/distortion/harken/proc/agitation_knockup(mob/living/victim)
+/mob/living/simple_animal/hostile/distortion/harken/proc/agitation_knockup(mob/living/victim, deal_damage = TRUE)
 	if(QDELETED(victim))
 		return
 
-	// Deal damage
-	victim.deal_damage(agitation_damage, RED_DAMAGE, src)
+	// Deal damage only if specified
+	if(deal_damage)
+		victim.deal_damage(agitation_damage, RED_DAMAGE, src)
 
 	// Start the knockup animation
 	var/original_pixel_y = victim.pixel_y
@@ -698,6 +824,33 @@
 
 	face_atom(target)
 	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 75, TRUE)
+	visible_message(span_danger("[src] prepares to hurl a light javelin!"))
+
+	// Get line of turfs for warning tiles, stopping at walls
+	var/turf/start_turf = get_turf(src)
+	var/turf/target_turf = get_turf(target)
+	var/list/turf/warning_turfs = list()
+
+	if(start_turf && target_turf)
+		var/list/turf/line_turfs = getline(start_turf, target_turf)
+		for(var/turf/T in line_turfs)
+			// Skip our own tile
+			if(T == start_turf)
+				continue
+			// Stop at walls
+			if(T.density)
+				break
+			warning_turfs += T
+			// Create warning tile
+			new /obj/effect/temp_visual/harken_warning(T)
+
+	// 0.5 second windup delay
+	sleep(5)
+
+	if(QDELETED(src) || stat == DEAD)
+		can_act = TRUE
+		return
+
 	visible_message(span_danger("[src] hurls a light javelin!"))
 
 	// Fire projectile
