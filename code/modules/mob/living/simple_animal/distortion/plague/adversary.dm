@@ -125,7 +125,7 @@
 	. = ..()
 	if(!. || !client)
 		return FALSE
-	to_chat(src, "<h1>You are The Adversary, A Combat Distortion.</h1><br>\
+	to_chat(src, "<h1>You are The Adversary, A Rhino Buster Distortion.</h1><br>\
 		<b>|Plague Aura|: You emanate a sickly green aura of corruption.<br>\
 		<br>\
 		|Sweep Attack|: Your melee attacks sweep in a wide arc, hitting all enemies in front of you.<br>\
@@ -475,7 +475,7 @@
 
 	// Reduce damage after 8 tiles
 	if(tiles_traveled > 8)
-		damage = 100 * damage_modifier
+		damage = 50 * damage_modifier
 
 	// Spawn trail effects
 	for(var/turf/T in range(1, get_turf(src)))

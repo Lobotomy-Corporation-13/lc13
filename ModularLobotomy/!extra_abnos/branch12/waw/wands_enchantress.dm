@@ -110,7 +110,7 @@
 		var/mob/living/carbon/human/H = target
 		switch(rand(1,8))
 			if(1)	//Instant Crit
-				if(!IsCombatMap())
+				if(SSmaptype.maptype != "rcorp")
 					H.adjustBruteLoss(H.health+5)
 				else
 					//Just deal 50% of their current health as damage.
