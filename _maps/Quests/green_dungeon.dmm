@@ -210,7 +210,8 @@
 "gl" = (
 /obj/machinery/conveyor/auto{
 	dir = 1;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /obj/structure/plasticflaps/opaque{
 	resistance_flags = 64
@@ -330,7 +331,8 @@
 "is" = (
 /obj/machinery/conveyor/auto{
 	dir = 8;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -356,7 +358,8 @@
 "je" = (
 /obj/machinery/conveyor/auto{
 	dir = 8;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -404,7 +407,8 @@
 "ky" = (
 /obj/machinery/conveyor/auto{
 	dir = 9;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
@@ -449,7 +453,8 @@
 	},
 /obj/machinery/conveyor/auto{
 	dir = 1;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -576,7 +581,7 @@
 /area/city/outskirtsfactory)
 "qs" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot_big,
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "qu" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
@@ -953,7 +958,8 @@
 "DV" = (
 /obj/machinery/conveyor/auto{
 	dir = 4;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
@@ -1147,7 +1153,8 @@
 "Id" = (
 /obj/machinery/conveyor/auto{
 	dir = 1;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
@@ -1198,7 +1205,8 @@
 	},
 /obj/machinery/conveyor/auto{
 	dir = 1;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -1274,7 +1282,8 @@
 "Mx" = (
 /obj/machinery/conveyor/auto{
 	dir = 8;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
@@ -1522,7 +1531,8 @@
 "Uh" = (
 /obj/machinery/conveyor/auto{
 	dir = 1;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1539,7 +1549,8 @@
 "UC" = (
 /obj/machinery/conveyor/auto{
 	dir = 4;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -1560,7 +1571,8 @@
 "UM" = (
 /obj/machinery/conveyor/auto{
 	dir = 5;
-	resistance_flags = 64
+	resistance_flags = 64;
+	tamperproof = 1
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
@@ -4020,7 +4032,7 @@ ef
 sJ
 RK
 sJ
-qs
+sJ
 sJ
 xE
 Pn
@@ -4119,7 +4131,7 @@ xE
 xE
 xE
 et
-tQ
+qs
 tQ
 xE
 xE
