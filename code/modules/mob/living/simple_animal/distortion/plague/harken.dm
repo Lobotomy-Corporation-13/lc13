@@ -56,6 +56,7 @@
 		/datum/action/innate/distortion_attack/harken_tangle,
 		/datum/action/innate/distortion_attack/harken_immolate,
 		/datum/action/innate/distortion_attack/toggle/harken_sprint,
+		/datum/action/innate/distortion_attack/toggle/harken_theme,
 	)
 
 	// ===== NOISE SYSTEM VARIABLES =====
@@ -66,7 +67,7 @@
 	/// Is Harken currently enraged?
 	var/enraged = FALSE
 	/// Rate at which noise drains while enraged (per Life() tick)
-	var/noise_drain_rate = 2
+	var/noise_drain_rate = 4
 	/// Has the UI been revealed to humans? (triggers at 50%)
 	var/ui_revealed = FALSE
 	/// List of humans who can see the noise UI
@@ -166,6 +167,30 @@
 	/// Can perform actions?
 	var/can_act = TRUE
 
+	// ===== THEME MUSIC SYSTEM =====
+	/// Path to calm theme
+	var/calm_theme_path = 'sound/distortions/harken/harken_calm_theme.ogg'
+	/// Calm theme length
+	var/calm_theme_length = 45 SECONDS
+	/// Path to enraged theme
+	var/enraged_theme_path = 'sound/distortions/harken/harken_enraged_theme.ogg'
+	/// Enraged theme length
+	var/enraged_theme_length = 52 SECONDS
+	/// Path to transition theme
+	var/transition_theme_path = 'sound/distortions/harken/harken_transition_theme.ogg'
+	/// Transition theme length
+	var/transition_theme_length = 2 SECONDS
+	/// Is theme currently active?
+	var/theme_active = FALSE
+	/// Theme volume
+	var/theme_volume = 20
+	/// Time when current theme track ends and needs to loop
+	var/theme_stop = 0
+	/// Currently playing enraged theme (vs calm theme)?
+	var/playing_enraged_theme = FALSE
+	/// Is the transition currently playing?
+	var/transition_playing = FALSE
+
 // ===== INITIALIZATION =====
 
 /mob/living/simple_animal/hostile/distortion/harken/Initialize(mapload)
@@ -180,6 +205,8 @@
 	update_max_noise()
 	// Setup noise meter HUD
 	setup_harken_hud()
+	// Start playing calm theme
+	start_theme()
 
 /mob/living/simple_animal/hostile/distortion/harken/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_CREATED)
@@ -187,6 +214,7 @@
 	remove_all_ui()
 	deltimer(stamina_update_timer)
 	remove_stamina_bar()
+	stop_theme()
 	if(chain_beam)
 		QDEL_NULL(chain_beam)
 	chained_target = null
@@ -241,6 +269,7 @@
 	process_noise_drain()
 	process_chain()
 	check_ui_reveal()
+	process_theme()
 
 // ===== NOISE SYSTEM =====
 
@@ -272,6 +301,8 @@
 	if(immolate_bleeding)
 		end_immolate_bleed()
 	update_all_noise_ui()
+	// Transition to enraged theme
+	swap_theme(TRUE)
 
 /// Exit enraged state
 /mob/living/simple_animal/hostile/distortion/harken/proc/exit_enrage()
@@ -282,6 +313,8 @@
 	// Remove speed boost
 	remove_movespeed_modifier(/datum/movespeed_modifier/harken_enrage)
 	update_all_noise_ui()
+	// Transition to calm theme
+	swap_theme(FALSE)
 
 /// Process noise drain while enraged (called in Life())
 /mob/living/simple_animal/hostile/distortion/harken/proc/process_noise_drain()
@@ -299,6 +332,94 @@
 			civilian_count++
 	max_noise = max(50, civilian_count * 5)  // Minimum 50, scales with civilians
 	update_all_noise_ui()
+
+// ===== THEME MUSIC SYSTEM =====
+
+/// Start playing the theme music
+/mob/living/simple_animal/hostile/distortion/harken/proc/start_theme()
+	if(theme_active)
+		return
+	theme_active = TRUE
+	playing_enraged_theme = FALSE
+	theme_stop = world.time + calm_theme_length
+	// Play initial calm theme
+	play_theme_to_listeners(calm_theme_path)
+
+/// Stop the theme music completely
+/mob/living/simple_animal/hostile/distortion/harken/proc/stop_theme()
+	if(!theme_active)
+		return
+	theme_active = FALSE
+	// Stop music for Harken
+	if(client)
+		stop_sound_channel(CHANNEL_JUKEBOX)
+	// Stop music for all listeners with the noise tracker
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		var/datum/component/harken_noise_tracker/tracker = H.GetComponent(/datum/component/harken_noise_tracker)
+		if(tracker && H.client)
+			H.stop_sound_channel(CHANNEL_JUKEBOX)
+
+/// Swap between calm and enraged themes with transition
+/mob/living/simple_animal/hostile/distortion/harken/proc/swap_theme(to_enraged)
+	if(!theme_active)
+		return
+	if(transition_playing)
+		return
+	// Only play transition when entering enraged state
+	if(to_enraged)
+		transition_playing = TRUE
+		// Play transition sound to all listeners
+		play_theme_to_listeners(transition_theme_path)
+		// After transition ends, start the enraged theme
+		addtimer(CALLBACK(src, PROC_REF(finish_theme_swap), to_enraged), transition_theme_length)
+	else
+		// Immediately switch to calm theme without transition
+		finish_theme_swap(to_enraged)
+
+/// Finish the theme swap after transition
+/mob/living/simple_animal/hostile/distortion/harken/proc/finish_theme_swap(to_enraged)
+	if(QDELETED(src))
+		return
+	transition_playing = FALSE
+	playing_enraged_theme = to_enraged
+	if(to_enraged)
+		theme_stop = world.time + enraged_theme_length
+		play_theme_to_listeners(enraged_theme_path)
+	else
+		theme_stop = world.time + calm_theme_length
+		play_theme_to_listeners(calm_theme_path)
+
+/// Process theme music each Life() tick
+/mob/living/simple_animal/hostile/distortion/harken/proc/process_theme()
+	if(!theme_active)
+		return
+	if(transition_playing)
+		return
+	// Check if the current track needs to loop
+	if(world.time >= theme_stop)
+		if(playing_enraged_theme)
+			theme_stop = world.time + enraged_theme_length
+			play_theme_to_listeners(enraged_theme_path)
+		else
+			theme_stop = world.time + calm_theme_length
+			play_theme_to_listeners(calm_theme_path)
+
+/// Play a theme to Harken and all humans with the harken_noise_tracker component
+/mob/living/simple_animal/hostile/distortion/harken/proc/play_theme_to_listeners(theme_path)
+	var/sound/song_played = sound(theme_path)
+	// Play to Harken
+	if(client)
+		playsound_local(get_turf(src), null, theme_volume, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
+	// Play to all humans with noise tracker
+	for(var/mob/living/carbon/human/H in GLOB.alive_mob_list)
+		var/datum/component/harken_noise_tracker/tracker = H.GetComponent(/datum/component/harken_noise_tracker)
+		if(!tracker)
+			continue
+		if(!H.client)
+			continue
+		if(!(H.client.prefs.toggles & SOUND_INSTRUMENTS))
+			continue
+		H.playsound_local(get_turf(H), null, theme_volume, channel = CHANNEL_JUKEBOX, S = song_played, use_reverb = FALSE)
 
 // ===== ENRAGE COMBAT BONUSES =====
 
@@ -660,7 +781,7 @@
 	icon = 'icons/effects/effects.dmi'
 	icon_state = "spreadwarning"
 	layer = BELOW_MOB_LAYER
-	duration = 5  // 0.5 seconds
+	duration = 10  // 1 second
 	alpha = 128
 	color = "#FFCC00"  // Yellow tint to match Harken's theme
 
@@ -685,7 +806,7 @@
 	add_overlay(blip_overlay)
 
 	// Windup sound and message
-	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/harken/harken_agitation.ogg', 50, TRUE, 7)
 	visible_message(span_danger("[src] prepares a wave of agitation!"))
 
 	// 0.5 second windup delay
@@ -713,8 +834,6 @@
 			line_turfs += next_turf
 			last_turf = next_turf
 
-	// Sound effect
-	playsound(src, 'sound/distortions/the_adversary/massinfection.ogg', 75, TRUE, 7)
 	visible_message(span_danger("[src] releases a wave of agitation!"))
 
 	// Create beams along the line with delay
@@ -732,6 +851,12 @@
 			if(L == src)
 				continue
 			agitation_knockup(L, TRUE)  // With damage
+
+		// Check for mechs on this tile and eject pilots
+		for(var/obj/vehicle/sealed/mecha/mech in T)
+			var/mob/living/pilot = extract_pilot_from_mech(mech)
+			if(pilot)
+				agitation_knockup(pilot, TRUE)  // With damage
 
 		// Delay before next beam
 		sleep(agitation_beam_delay)
@@ -823,7 +948,7 @@
 	add_noise(tangle_noise_throw)
 
 	face_atom(target)
-	playsound(src, 'sound/distortions/the_adversary/swing.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/harken/harken_tangle_throw.ogg', 50, TRUE)
 	visible_message(span_danger("[src] prepares to hurl a light javelin!"))
 
 	// Get line of turfs for warning tiles, stopping at walls
@@ -844,8 +969,8 @@
 			// Create warning tile
 			new /obj/effect/temp_visual/harken_warning(T)
 
-	// 0.5 second windup delay
-	sleep(5)
+	// 1 second windup delay
+	sleep(1)
 
 	if(QDELETED(src) || stat == DEAD)
 		can_act = TRUE
@@ -930,7 +1055,7 @@
 	chain_beam = Beam(victim, icon_state = "chain", time = INFINITY, maxdistance = max_chain_distance + 5)
 
 	visible_message(span_danger("[src] chains [victim] and yanks them close!"))
-	playsound(src, 'sound/weapons/chainhit.ogg', 50, TRUE)
+	playsound(src, 'sound/distortions/harken/harken_tangle_hit.ogg', 25, TRUE)
 
 	// Calculate distance for the throw
 	var/pull_distance = get_dist(src, victim)
@@ -972,7 +1097,7 @@
 		return
 
 	visible_message(span_notice("The chain connecting [src] to [chained_target] shatters!"))
-	playsound(src, 'sound/effects/glassbr1.ogg', 50, TRUE)
+	playsound(src, 'sound/distortions/harken/harken_tangle_break.ogg', 25, TRUE)
 
 	// Generate noise on break
 	add_noise(tangle_noise_break)
@@ -1027,7 +1152,7 @@
 	immolate_cooldown = world.time + immolate_cooldown_time
 
 	// Sound and visual
-	playsound(src, 'sound/distortions/the_adversary/slashhit.ogg', 75, TRUE)
+	playsound(src, 'sound/distortions/harken/harken_immolate.ogg', 50, TRUE)
 	visible_message(span_danger("[src] impales itself with a light javelin!"))
 
 	// Calculate damage based on max HP
@@ -1197,6 +1322,41 @@
 	if(!istype(H))
 		return
 	H.stop_sprint()
+	button_icon_state = button_icon_toggle_deactivated
+	UpdateButtonIcon()
+	active = FALSE
+
+// Action 5: Theme Toggle
+/datum/action/innate/distortion_attack/toggle/harken_theme
+	name = "Theme Music"
+	icon_icon = 'icons/hud/sceen_1x_skills.dmi'
+	button_icon_state = "music_on"
+	chosen_attack_num = 0
+	button_icon_toggle_activated = "music_on"
+	button_icon_toggle_deactivated = "music_off"
+
+/datum/action/innate/distortion_attack/toggle/harken_theme/New()
+	. = ..()
+	// Theme starts active by default
+	active = TRUE
+
+/datum/action/innate/distortion_attack/toggle/harken_theme/Activate()
+	var/mob/living/simple_animal/hostile/distortion/harken/H = owner
+	if(!istype(H))
+		return
+	if(!H.theme_active)
+		H.start_theme()
+		button_icon_state = button_icon_toggle_activated
+		UpdateButtonIcon()
+		active = TRUE
+	else
+		to_chat(H, span_warning("Theme is already playing!"))
+
+/datum/action/innate/distortion_attack/toggle/harken_theme/Deactivate()
+	var/mob/living/simple_animal/hostile/distortion/harken/H = owner
+	if(!istype(H))
+		return
+	H.stop_theme()
 	button_icon_state = button_icon_toggle_deactivated
 	UpdateButtonIcon()
 	active = FALSE
