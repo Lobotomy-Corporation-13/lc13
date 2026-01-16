@@ -1,4 +1,4 @@
-//The Adversary - Plague Distortion
+//The Adversary - Forsaken inspired Distortion
 
 // Movespeed modifier for sprint system
 /datum/movespeed_modifier/adversary_sprint
@@ -130,39 +130,26 @@
 		<br>\
 		|Sweep Attack|: Your melee attacks sweep in a wide arc, hitting all enemies in front of you.<br>\
 		<br>\
-		|SPRINT|: Toggle sprint to move 2.5x faster.<br>\
-		- Drains 5% stamina every 0.5 seconds while active<br>\
-		- Regenerates 5% stamina every 0.5 seconds when not sprinting<br>\
-		- Requires at least 15% stamina to activate<br>\
-		- Automatically stops when using abilities<br>\
-		- Accelerates/decelerates smoothly over 1 second<br>\
+		|Sprint|: Toggle sprint to move 2.5x faster.<br>\
+		Drains 5% stamina every 0.5 seconds while active. Regenerates when not sprinting.<br>\
+		Requires at least 15% stamina to activate. Automatically stops when using abilities.<br>\
 		<br>\
-		|MASS INFECTION|: Fire an AoE shockwave after 1.7s windup.<br>\
-		- Deals 200 BLACK damage initially, 100 BLACK after 8 tiles<br>\
-		- Passes through walls<br>\
-		- 17 second cooldown<br>\
+		|Mass Infection|: Fire an AoE shockwave after 1.7s windup.<br>\
+		Deals 200 BLACK damage initially, 50 BLACK after 8 tiles. Passes through walls.<br>\
+		17 second cooldown.<br>\
 		<br>\
-		|ENTANGLEMENT|: Fire a stunning projectile after 0.75s windup.<br>\
-		- Deals 30 BLACK damage and stuns for 3 seconds<br>\
-		- Passes through walls<br>\
-		- 18 second cooldown<br>\
+		|Entanglement|: Fire a stunning projectile after 0.75s windup.<br>\
+		Deals 30 BLACK damage and stuns for 3 seconds. Passes through walls.<br>\
+		18 second cooldown.<br>\
 		<br>\
-		|UNSTABLE EYE|: Enhance your vision with corrupted sight.<br>\
-		- 1.5 second slowdown, then zoomed vision for 5 seconds<br>\
-		- Your vision blurs during the zoom<br>\
-		- 25 second cooldown<br>\
+		|Unstable Eye|: Enhance your vision with corrupted sight.<br>\
+		1.5 second slowdown, then zoomed vision for 5 seconds. Your vision blurs during the zoom.<br>\
+		25 second cooldown.<br>\
 		<br>\
-		|REJUVENATE THE ROTTEN|: Raise all fallen enemies as zombies.<br>\
-		- When humans die, they leave green remnants<br>\
-		- Activate to raise all remnants as 700 HP zombies<br>\
-		- Killing your own zombies grants speed boost (10s) and damage boost (30s, stacks 25%)<br>\
-		- 200 second cooldown<br>\
-		<br>\
-		|CHASE THEME|: Toggle your chase music on/off.<br>\
-		- Players within 10 tiles will hear your theme<br>\
-		- Loops continuously until stopped<br>\
-		<br>\
-		Grow stronger by consuming the dead!</b>")
+		|Rejuvenate The Rotten|: Raise all fallen enemies as zombies.<br>\
+		When humans die, they leave green remnants. Activate to raise all remnants as 700 HP zombies.<br>\
+		Killing your own zombies grants speed boost (10s) and damage boost (30s, stacks 25%).<br>\
+		200 second cooldown.</b>")
 
 	// Update stamina bar display if needed
 	update_stamina_bar()
