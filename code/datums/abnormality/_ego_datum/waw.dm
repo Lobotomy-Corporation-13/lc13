@@ -203,7 +203,7 @@
 /datum/ego_datum/weapon/assonance
 	item_path = /obj/item/ego_weapon/ranged/assonance
 	cost = 50
-	ego_tags = list(EGO_TAG_SUPPORT)
+	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_LOCKED_POTENTIAL)
 
 // Naked Nest - Exuviae
 /datum/ego_datum/weapon/exuviae
@@ -395,7 +395,7 @@
 /datum/ego_datum/weapon/discord
 	item_path = /obj/item/ego_weapon/wield/discord
 	cost = 50
-	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_MULTIHIT)
+	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_MULTIHIT, EGO_TAG_LOCKED_POTENTIAL)
 
 // Little Red Riding Hood Mercenary - Crimson Scar & Crimson Claw
 /datum/ego_datum/armor/crimson

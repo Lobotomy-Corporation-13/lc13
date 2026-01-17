@@ -72,7 +72,7 @@
 	EGO_TAG_BLOODFEAST = "E.G.O. which can collect, store and make use of blood and giblets.",\
 	EGO_TAG_REALIZED = "Powerful E.G.O. which is obtained from Golden Bough Resonance, able to be performed only by the strongest individuals.",\
 	EGO_TAG_REALIZABLE = "E.G.O. armour which can be Realized to become an ALEPH-tier E.G.O. at a Realization Engine.",\
-	EGO_TAG_LOCKED_POTENTIAL = "E.G.O. weapons which can be enhanced by a corresponding Realization armour.",\
+	EGO_TAG_LOCKED_POTENTIAL = "E.G.O. weapons which can be enhanced by wearing or wielding other specific E.G.O.; usually a counterpart weapon or Realization armour.",\
 	EGO_TAG_RANKBUMP = "E.G.O. originating from an Abnormality with a lower threat class.",\
 	EGO_TAG_ASSIMILATION = "An E.G.O. armour able to assimilate an ALEPH weapon into another, or an E.G.O. weapon generated through that process.",\
 	)
