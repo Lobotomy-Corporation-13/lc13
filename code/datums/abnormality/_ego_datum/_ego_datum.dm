@@ -218,6 +218,10 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	if(!ispath(item_path, /obj/item/clothing/suit/armor/ego_gear))
 		return
 	var/obj/item/clothing/suit/armor/ego_gear/E = new item_path(src)
+
+	if(E.slowdown && E.slowdown < 0)
+		ego_tags |= EGO_TAG_MOBILITY
+
 	information["armor"] = list()
 	information["description"] = E.desc
 	var/red_armor = E.armor.red

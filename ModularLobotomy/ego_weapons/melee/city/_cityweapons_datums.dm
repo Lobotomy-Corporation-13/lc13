@@ -990,7 +990,7 @@ I'm gonna be real I don't even know if we should add these
 /datum/ego_datum/weapon/city/blade_lineage
 	item_path = /obj/item/ego_weapon/city/bladelineage
 	cost = 75
-	ego_tags = list(EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_LOCKED_POTENTIAL)
 
 /* ------------------ Carnival ------------------*/
 

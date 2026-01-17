@@ -2137,6 +2137,7 @@
 #include "code\modules\clothing\suits\ego_gear\waw.dm"
 #include "code\modules\clothing\suits\ego_gear\zayin.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\_cityarmor.dm"
+#include "code\modules\clothing\suits\ego_gear\non_abnormality\_cityarmor_datums.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\bladelineage.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\bloodfiend.dm"
 #include "code\modules\clothing\suits\ego_gear\non_abnormality\carnival.dm"
