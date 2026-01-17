@@ -1,37 +1,27 @@
 import { useBackend } from '../backend';
-import { Component } from 'inferno';
 import { Button, Section, Stack, Box } from '../components';
 import { Window } from '../layouts';
 
-class QuestContract extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      viewing: false,
-    };
-  }
+const QuestContract = (props) => {
+  const { quest, onAccept, canAccept } = props;
 
-  render() {
-    const { quest, onAccept, canAccept } = this.props;
-    const { viewing } = this.state;
+  const typeColors = {
+    hunt: 'red',
+    collect: '#b8860b',
+    info: 'blue',
+    picture: 'purple',
+    distortion: 'orange',
+  };
 
-    const typeColors = {
-      hunt: 'red',
-      collect: '#b8860b',
-      info: 'blue',
-      picture: 'purple',
-      distortion: 'orange',
-    };
+  const typeIcons = {
+    hunt: '🗡️',
+    collect: '📦',
+    info: '📋',
+    picture: '📷',
+    distortion: '⚠️',
+  };
 
-    const typeIcons = {
-      hunt: '🗡️',
-      collect: '📦',
-      info: '📋',
-      picture: '📷',
-      distortion: '⚠️',
-    };
-
-    return (
+  return (
     <Box
       backgroundColor="#ffffff"
       style={{
@@ -41,12 +31,9 @@ class QuestContract extends Component {
         border: '1px solid #8b7355',
         boxShadow: '1px 1px 3px rgba(0,0,0,0.3)',
         padding: '12px',
-        transform: viewing ? 'scale(1.05)' : 'scale(1)',
-        transition: 'transform 0.2s',
         cursor: 'pointer',
         opacity: 1,
-      }}
-      onClick={() => this.setState({ viewing: !viewing })}>
+      }}>
       <Box
         style={{
           position: 'absolute',
@@ -81,91 +68,60 @@ class QuestContract extends Component {
         }}>
         {quest.name}
       </Box>
-      {viewing ? (
-        <>
-          <Box
-            style={{
-              fontSize: '11px',
-              marginBottom: '8px',
-              fontStyle: 'italic',
-              color: '#4a3426',
-            }}>
-            {quest.desc}
-          </Box>
-          <Box
-            style={{
-              fontSize: '12px',
-              marginBottom: '4px',
-              color: typeColors[quest.type] || 'black',
-              fontWeight: 'bold',
-            }}>
-            Type: {quest.type}
-          </Box>
-          <Box
-            style={{
-              fontSize: '14px',
-              marginBottom: '8px',
-              color: '#2a5f2a',
-              fontWeight: 'bold',
-            }}>
-            Reward: {quest.reward} Ahn
-          </Box>
-          {quest.target_names && quest.target_names.length > 0 && (
-            <Box
-              style={{
-                fontSize: '10px',
-                marginBottom: '8px',
-                color: '#5a4a3a',
-              }}>
-              Targets: {quest.target_names.join(', ')}
-            </Box>
-          )}
-          <Button
-            fluid
-            color="default"
-            content="Accept Contract"
-            disabled={!canAccept}
-            onClick={(e) => {
-              e.stopPropagation();
-              onAccept();
-            }}
-          />
-        </>
-      ) : (
-        <>
-          <Box
-            style={{
-              fontSize: '11px',
-              color: '#4a3426',
-              textAlign: 'center',
-              marginBottom: '8px',
-            }}>
-            Click to view details
-          </Box>
-          <Box
-            style={{
-              fontSize: '16px',
-              color: '#2a5f2a',
-              fontWeight: 'bold',
-              textAlign: 'center',
-            }}>
-            {quest.reward} Ahn
-          </Box>
-        </>
+      <Box
+        style={{
+          fontSize: '11px',
+          marginBottom: '8px',
+          fontStyle: 'italic',
+          color: '#4a3426',
+        }}>
+        {quest.desc}
+      </Box>
+      <Box
+        style={{
+          fontSize: '12px',
+          marginBottom: '4px',
+          color: typeColors[quest.type] || 'black',
+          fontWeight: 'bold',
+        }}>
+        Type: {quest.type}
+      </Box>
+      <Box
+        style={{
+          fontSize: '14px',
+          marginBottom: '8px',
+          color: '#2a5f2a',
+          fontWeight: 'bold',
+        }}>
+        Reward: {quest.reward} Ahn
+      </Box>
+      {quest.target_names && quest.target_names.length > 0 && (
+        <Box
+          style={{
+            fontSize: '10px',
+            marginBottom: '8px',
+            color: '#5a4a3a',
+          }}>
+          Targets: {quest.target_names.join(', ')}
+        </Box>
       )}
+      <Button
+        fluid
+        color="default"
+        content="Accept Contract"
+        disabled={!canAccept}
+        onClick={e => {
+          e.stopPropagation();
+          onAccept();
+        }}
+      />
     </Box>
-    );
-  }
-}
+  );
+};
 
-export class QuestBoard extends Component {
-  render() {
-    const { act, data } = useBackend(this.context);
-    const {
-      available_quests = [],
-      can_accept_quest,
-      next_refresh,
-    } = data;
+export const QuestBoard = (props, context) => {
+  const { act, data } = useBackend(context);
+  const { available_quests = [], can_accept_quest, next_refresh } = data;
 
   return (
     <Window width={800} height={600}>
@@ -193,15 +149,16 @@ export class QuestBoard extends Component {
               style={{
                 backgroundColor: '#8b6f47',
                 backgroundImage:
-                  'repeating-linear-gradient(' +
-                  '45deg, #8b6f47, #8b6f47 10px, #7d6340 10px, #7d6340 20px' +
-                  ')',
+                  'repeating-linear-gradient('
+                  + '45deg, #8b6f47, #8b6f47 10px, #7d6340 10px, #7d6340 20px'
+                  + ')',
                 padding: '8px',
               }}>
               <Box
                 style={{
                   display: 'grid',
-                  'grid-template-columns': 'repeat(auto-fill, minmax(180px, 1fr))',
+                  'grid-template-columns':
+                    'repeat(auto-fill, minmax(180px, 1fr))',
                   gap: '16px',
                   'min-height': '400px',
                   padding: '8px',
@@ -222,14 +179,12 @@ export class QuestBoard extends Component {
                     No contracts available at the moment.
                   </Box>
                 ) : (
-                  available_quests.map((quest) => (
+                  available_quests.map(quest => (
                     <QuestContract
                       key={quest.id}
                       quest={quest}
                       canAccept={can_accept_quest}
-                      onAccept={() =>
-                        act('accept', { quest_id: quest.id })
-                      }
+                      onAccept={() => act('accept', { quest_id: quest.id })}
                       act={act}
                     />
                   ))
@@ -240,6 +195,5 @@ export class QuestBoard extends Component {
         </Stack>
       </Window.Content>
     </Window>
-    );
-  }
-}
+  );
+};

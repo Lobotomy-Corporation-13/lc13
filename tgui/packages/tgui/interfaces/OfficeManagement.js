@@ -1,5 +1,5 @@
 import { useBackend } from '../backend';
-import { Button, Section, Stack, Box, ColorBox, Table, ProgressBar } from '../components';
+import { Button, Section, Stack, Box, ColorBox, Table } from '../components';
 import { Window } from '../layouts';
 
 export const OfficeManagement = (props, context) => {
@@ -20,7 +20,7 @@ export const OfficeManagement = (props, context) => {
               {offices.length === 0 ? (
                 <Box color="label">No offices registered.</Box>
               ) : (
-                offices.map((office) => (
+                offices.map(office => (
                   <Box
                     key={office.ref}
                     className="candystripe"
@@ -96,10 +96,10 @@ export const OfficeManagement = (props, context) => {
                         <Table.Row header>
                           <Table.Cell>Name</Table.Cell>
                           <Table.Cell>Role</Table.Cell>
-                          {user_office === selected_office.ref && 
-                           user_is_director && <Table.Cell>Actions</Table.Cell>}
+                          {user_office === selected_office.ref
+                            && user_is_director && <Table.Cell>Actions</Table.Cell>}
                         </Table.Row>
-                        {selected_office.members.map((member) => (
+                        {selected_office.members.map(member => (
                           <Table.Row key={member.ref}>
                             <Table.Cell>
                               {member.name}
@@ -112,8 +112,8 @@ export const OfficeManagement = (props, context) => {
                             <Table.Cell>
                               {member.is_director ? 'Director' : 'Member'}
                             </Table.Cell>
-                            {user_office === selected_office.ref && 
-                             user_is_director && (
+                            {user_office === selected_office.ref
+                              && user_is_director && (
                               <Table.Cell>
                                 {!member.is_director && (
                                   <>
