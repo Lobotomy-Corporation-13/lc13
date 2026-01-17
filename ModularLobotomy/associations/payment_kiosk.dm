@@ -1,7 +1,7 @@
 // Payment Kiosk for taxes and clearing bounties
 /obj/machinery/payment_kiosk
 	name = "City Payment Kiosk"
-	desc = "A terminal for paying taxes and clearing bounties. Access with your ID card."
+	desc = "A terminal for paying taxes and clearing bounties. Access with your ID card. Only registered fixers are required to pay taxes, but in return they gain access to training ampules."
 	icon = 'icons/obj/chemical.dmi'
 	icon_state = "dispenser"
 	density = TRUE
@@ -26,6 +26,8 @@
 	var/datum/city_bounty/bounty = SScity_economy.check_bounty(H)
 
 	var/dat = "<B>City Payment Terminal</B><BR><BR>"
+
+	dat += "<I>Note: Only registered fixers are required to pay taxes. In return, registered fixers gain access to training ampules. Register at a Fixer Grade Terminal.</I><BR><BR>"
 
 	if(bounty)
 		dat += "<B><FONT COLOR='red'>OUTSTANDING BOUNTY</FONT></B><BR>"

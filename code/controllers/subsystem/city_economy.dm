@@ -45,8 +45,8 @@ SUBSYSTEM_DEF(city_economy)
 		if(!H.client || !H.mind)
 			continue
 
-		// Skip non-fixer roles
-		if(H.mind.assigned_role && !(H.mind.assigned_role in list("Fixer", "Office Fixer", "Solo Fixer", "Office Director")))
+		// Skip unregistered fixers
+		if(!H.mind.registered_fixer)
 			continue
 
 		// Check if player is in an office
@@ -70,6 +70,10 @@ SUBSYSTEM_DEF(city_economy)
 	// Check if director is online
 	if(!office.director || !office.director.client || !office.director.mind)
 		return // No director online, skip tax collection
+
+	// Check if director is a registered fixer
+	if(!office.director.mind.registered_fixer)
+		return // Director not registered, skip tax collection
 
 	// Get online members for notifications
 	var/list/online_members = list()

@@ -44,7 +44,7 @@ export const QuestContract = (props, context) => {
 
   const sealColors = {
     hunt: '#cc0000',
-    collect: '#cccc00',
+    collect: '#b8860b',
     info: '#0066cc',
     picture: '#cc00cc',
     distortion: '#cc6600',
@@ -55,8 +55,8 @@ export const QuestContract = (props, context) => {
       <Window.Content>
         <Box
           fill
+          backgroundColor="#f9f3e9"
           style={{
-            backgroundColor: '#f9f3e9',
             position: 'relative',
             fontFamily: 'Georgia, serif',
             color: '#2a1810',
@@ -182,6 +182,41 @@ export const QuestContract = (props, context) => {
                 </Box>
               </Box>
 
+              {data.target_names && data.target_names.length > 0 && (
+                <Box style={{ marginBottom: '15px' }}>
+                  <Box
+                    style={{
+                      fontSize: '12px',
+                      color: '#5a4a3a',
+                      marginBottom: '3px',
+                    }}>
+                    ACCEPTED TARGETS:
+                  </Box>
+                  <Box style={{ fontSize: '12px' }}>
+                    {data.target_names.join(', ')}
+                  </Box>
+                </Box>
+              )}
+
+              {['collect', 'info', 'picture'].includes(contract_type)
+                && !completed && (
+                <Box
+                  style={{
+                    fontSize: '11px',
+                    fontStyle: 'italic',
+                    color: '#5a4a3a',
+                    marginBottom: '10px',
+                    padding: '8px',
+                    border: '1px solid #8b6f47',
+                  }}>
+                  {contract_type === 'picture'
+                    ? 'Submit photos by hitting the Quest Board with them.'
+                    : contract_type === 'collect'
+                      ? 'Submit items by hitting the Quest Board with them.'
+                      : 'Show items by hitting the Quest Board with them.'}
+                </Box>
+              )}
+
               {/* Progress section */}
               <Box
                 style={{
@@ -251,6 +286,16 @@ export const QuestContract = (props, context) => {
                   CONTRACT FULFILLED
                   <Box style={{ fontSize: '14px', fontWeight: 'normal' }}>
                     Report to City Job Board for payment
+                  </Box>
+                  <Box
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 'normal',
+                      fontStyle: 'italic',
+                      marginTop: '8px',
+                      color: '#5a4a3a',
+                    }}>
+                    Hit the Quest Board with this contract to claim reward.
                   </Box>
                 </Box>
               )}

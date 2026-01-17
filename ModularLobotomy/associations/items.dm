@@ -68,6 +68,12 @@
 /obj/item/attribute_increase/fixer/attack_self(mob/living/carbon/human/user)
 	//only civilians can use this.
 	if(!adjusting)
+		// Check fixer registration on fixers maptype
+		if(SSmaptype.maptype == "fixers")
+			if(!user.mind?.registered_fixer)
+				to_chat(user, span_danger("You must be a registered fixer to use this item. Register at a Fixer Grade Terminal."))
+				return
+
 		if(!(user?.mind?.assigned_role in usable_roles))
 			to_chat(user, span_danger("You cannot use this item, as you must not belong to an association."))
 			return

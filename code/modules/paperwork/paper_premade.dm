@@ -492,3 +492,97 @@
 	name = "URGENT!"
 	info = "A hastily written note has been scribbled here... <br><br> Please use the ore redemption machine in the cargo office for smelting. PLEASE! <br><br>--The Research Staff"
 
+/obj/item/paper/fluff/fixer_hana_guide
+	name = "Hana Association: Fixer's Guide to the City"
+	info = {"<center><b>Welcome to the City, Prospective Fixer!</b></center><br>
+	<br>
+	<i>The Hana Association has prepared this guide to help newcomers understand the systems in place for fixers in our great City. Please read carefully, as this information may save your life.</i><br>
+	<br>
+	<br>
+	<center><b>Part 1: Becoming a Registered Fixer</b></center><br>
+	<br>
+	To officially become a fixer, you must register at a <b>Fixer Grade Terminal</b>. These terminals can be found throughout the City. Simply insert your ID card and the terminal will register you as an official fixer.<br>
+	<br>
+	<b>Benefits of Registration:</b><br>
+	- Access to the Backstreets through office scanner gates<br>
+	- Ability to establish your own fixer office<br>
+	- Access to training ampules for stat improvement<br>
+	<br>
+	<b>Obligations of Registration:</b><br>
+	- Registered fixers are subject to hourly taxes on their ahn balance<br>
+	- Taxes help maintain City infrastructure and services<br>
+	<br>
+	<br>
+	<center><b>Part 2: The Tax System</b></center><br>
+	<br>
+	Only <b>registered fixers</b> are taxed. If you are not registered, you will not be taxed. Taxes are collected automatically on an hourly basis based on your current ahn balance. The City uses these funds to maintain public services and infrastructure.<br>
+	<br>
+	If you wish to avoid taxes while still operating in the City, you may choose not to register - however, this will limit your access to certain areas and resources.<br>
+	<br>
+	<br>
+	<center><b>Part 3: The Contract System</b></center><br>
+	<br>
+	The <b>City Job Board</b> is where fixers find work. Click the board to view available contracts. You may hold up to <b>3 active contracts</b> at once. Contracts refresh every 5 minutes.<br>
+	<br>
+	<b>Contract Types:</b><br>
+	<br>
+	<b>Hunt Contracts (Red):</b> Eliminate specific creatures. Progress is tracked automatically when you kill valid targets nearby. Return the completed contract to the board for payment.<br>
+	<br>
+	<b>Collect Contracts (Yellow):</b> Gather specific items. Use the item on the job board to submit it. <i>Submitted items are consumed!</i> Once you've collected enough, turn in the contract.<br>
+	<br>
+	<b>Info Contracts (Blue):</b> Show specific items to the board. Use the item on the board to document it. <i>Items are NOT consumed</i> - you keep them! Lower rewards than collect contracts.<br>
+	<br>
+	<b>Photo Contracts (Purple):</b> Take photographs of specific targets. Use a camera to photograph the target, then submit the photo to the job board. Some contracts require living subjects!<br>
+	<br>
+	<b>Distortion Contracts (Orange):</b> DANGEROUS! A distortion creature will spawn somewhere in the backstreets. Find it and photograph it while alive. High risk, high reward.<br>
+	<br>
+	<b>Completing Contracts:</b><br>
+	When you accept a contract, you receive a physical contract item. This shows your progress. Once complete, use the contract on the job board to receive your Ahn reward!<br>
+	<br>
+	<br>
+	<center><b>Part 4: Establishing Your Own Office</b></center><br>
+	<br>
+	To create your own fixer office, you will need an <b>Office Charter</b>. You must be a registered fixer to use one.<br>
+	<br>
+	<b>The process is as follows:</b><br>
+	1. Use the charter in hand<br>
+	2. Enter your desired office name<br>
+	3. Select your office type (Fishing, Combat, Delivery, Recon, or Contract)<br>
+	4. Choose your office color<br>
+	5. Receive 5 recruitment badges to invite members<br>
+	6. Receive a structure capsule to deploy your office building<br>
+	<br>
+	Each office type comes with a specialized building suited to that work style. Choose wisely!<br>
+	<br>
+	<br>
+	<center><b>Part 5: Training Ampules</b></center><br>
+	<br>
+	Training ampules are powerful substances that can boost your attributes. As a registered fixer, you gain access to these resources. Office training ampules are particularly special - when used, they benefit all nearby members of your office!<br>
+	<br>
+	The boost you receive depends on your current potential. Lower-level fixers will gain more from each ampule than veterans.<br>
+	<br>
+	<br>
+	<center><b>Part 6: Accessing the Backstreets</b></center><br>
+	<br>
+	The Backstreets are dangerous areas filled with valuable resources and deadly creatures. <b>Office scanner gates</b> control access to these areas and only allow registered fixers to pass.<br>
+	<br>
+	If you attempt to enter without registration, you will be denied access. Make sure to register at a Fixer Grade Terminal before venturing into the Backstreets!<br>
+	<br>
+	<br>
+	<center><b>Part 7: Crafting and Equipment</b></center><br>
+	<br>
+	The City offers several resources for crafting equipment:<br>
+	<br>
+	<b>Carnival Weaving Books:</b> These books teach you how to weave armor from silk. In our City, these books are available to everyone - no special affiliation required! Purchase them from weaving vending machines.<br>
+	<br>
+	<b>Body Modification Fabricator:</b> These machines allow you to create cybernetic augments. They are open to all citizens of the City.<br>
+	<br>
+	<br>
+	<center><b>Final Notes</b></center><br>
+	<br>
+	The Hana Association is here to help you navigate the complex world of fixer work. If you have questions, seek out a Hana Representative in town.<br>
+	<br>
+	<i>Stay safe, work hard, and may your contracts be profitable.</i><br>
+	<br>
+	<i>Written by the Hana Association</i>"}
+

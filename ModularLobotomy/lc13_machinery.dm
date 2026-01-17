@@ -384,7 +384,7 @@
 
 /obj/machinery/body_preservation_unit/Initialize()
 	. = ..()
-	if(SSmaptype.maptype == "office")
+	if(SSmaptype.maptype == "office" || SSmaptype.maptype == "fixers")
 		public_use = TRUE
 		clone_delay_seconds = 60
 		revival_attribute_penalty = -4

@@ -538,7 +538,7 @@
 
 /obj/item/book/granter/crafting_recipe/carnival/Initialize()
 	. = ..()
-	if(SSmaptype.maptype == "office")
+	if(SSmaptype.maptype == "office" || SSmaptype.maptype == "fixers")
 		carnival_only = FALSE
 
 /obj/item/book/granter/crafting_recipe/carnival/attack_self(mob/user)

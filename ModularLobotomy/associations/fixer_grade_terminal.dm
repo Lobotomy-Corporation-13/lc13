@@ -69,6 +69,11 @@
 		update_icon()
 		return
 
+	// Mark as registered fixer if not already
+	if(!H.mind.registered_fixer)
+		H.mind.registered_fixer = TRUE
+		to_chat(H, span_nicegreen("You are now registered as an official fixer!"))
+
 	var/grade = calculate_fixer_grade(H)
 	var/datum/fixer_office/office = null
 
@@ -149,3 +154,7 @@
 		icon_state = "req_comp1" // Loaded state
 	else
 		icon_state = "req_comp0" // Default state
+
+// Add registered_fixer variable to mind datum
+/datum/mind
+	var/registered_fixer = FALSE

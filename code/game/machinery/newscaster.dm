@@ -290,7 +290,8 @@ GLOBAL_LIST_EMPTY(allCasters)
 						dat += "<BR><BR><B><FONT COLOR='red'>NEXT TAX COLLECTION IN: [minutes]:[seconds < 10 ? "0[seconds]" : seconds]</FONT></B>"
 					else
 						dat += "<BR><BR><B><FONT COLOR='red'>TAX COLLECTION IN PROGRESS</FONT></B>"
-					
+					dat += "<BR><FONT SIZE=1><I>Only registered fixers pay taxes. Register at a Fixer Grade Terminal to access training ampules.</I></FONT>"
+
 					// Show wanted players
 					if(SScity_economy.bounties && SScity_economy.bounties.len)
 						dat += "<BR><BR><B><FONT COLOR='orange'>WANTED INDIVIDUALS:</FONT></B>"

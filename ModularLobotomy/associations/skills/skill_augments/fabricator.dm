@@ -531,6 +531,9 @@
 	ui_interact(user)
 
 /obj/machinery/body_modification_fabricator/proc/can_use_machine(mob/user)
+	// On fixers maptype, anyone can use the fabricator
+	if(SSmaptype.maptype == "fixers")
+		return TRUE
 	if(!user?.mind?.assigned_role)
 		return FALSE
 	return (user.mind.assigned_role in allowed_roles)

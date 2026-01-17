@@ -18,6 +18,12 @@
 		to_chat(user, span_warning("You need a functioning mind to establish an office!"))
 		return
 
+	// Check fixer registration on fixers maptype
+	if(SSmaptype.maptype == "fixers")
+		if(!H.mind.registered_fixer)
+			to_chat(user, span_warning("You must be a registered fixer to establish an office. Register at a Fixer Grade Terminal."))
+			return
+
 	if(used)
 		to_chat(user, span_warning("This charter has already been used!"))
 		return
@@ -34,6 +40,21 @@
 	var/office_name = stripped_input(user, "Enter your office name:", "Office Charter", "Unnamed Office", MAX_NAME_LEN)
 	if(!office_name)
 		return
+
+	// Choose office type
+	var/list/office_types = list(
+		"Fishing Office" = /obj/item/structurecapsule/fixer,
+		"Combat Office" = /obj/item/structurecapsule/fixer/combat,
+		"Delivery Office" = /obj/item/structurecapsule/fixer/delivery,
+		"Recon Office" = /obj/item/structurecapsule/fixer/recon,
+		"Contract Office" = /obj/item/structurecapsule/fixer/contract
+	)
+
+	var/office_type_choice = input(user, "Choose your office type:", "Office Charter") as null|anything in office_types
+	if(!office_type_choice)
+		return
+
+	var/capsule_type = office_types[office_type_choice]
 
 	// Choose office color
 	var/office_color = input(user, "Choose your office color:", "Office Charter") as color|null
@@ -63,6 +84,12 @@
 		if(!H.put_in_hands(badge))
 			badge.forceMove(get_turf(user))
 		to_chat(user, span_notice("You receive a recruitment badge."))
+
+	// Give the director their office structure capsule
+	var/obj/item/structurecapsule/fixer/capsule = new capsule_type(get_turf(user))
+	if(!H.put_in_hands(capsule))
+		capsule.forceMove(get_turf(user))
+	to_chat(user, span_notice("You receive a [office_type_choice] capsule to deploy your office building."))
 
 	qdel(src)
 
@@ -129,6 +156,12 @@
 	if(M == user && user != linked_office.director)
 		to_chat(user, span_warning("You can't invite yourself!"))
 		return
+
+	// Check fixer registration on fixers maptype
+	if(SSmaptype.maptype == "fixers")
+		if(!M.mind.registered_fixer)
+			to_chat(user, span_warning("[M] must be a registered fixer to join an office. They need to register at a Fixer Grade Terminal."))
+			return
 
 	// Check if target is already in an office
 	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)

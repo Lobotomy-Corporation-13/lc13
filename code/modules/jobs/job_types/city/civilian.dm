@@ -57,6 +57,12 @@ Civilian
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	job_important = "You are an average civilian in The City. You have no goals! However, if you would like to join a fixer office, contact the Hana representative in town."
 	. = ..()
+
+	// Give fixer guide on fixers maptype
+	if(SSmaptype.maptype == "fixers")
+		var/obj/item/paper/fluff/fixer_hana_guide/guide = new(get_turf(H))
+		if(!H.put_in_hands(guide))
+			guide.forceMove(get_turf(H))
 	// if(prob(50))
 	// 	if(!possible_books) // Since possible_books is a static var, we dont know if its generated or not. If its not then generate it
 	// 		possible_books = list(list(), list(), list(), list(), list())

@@ -17,7 +17,7 @@ class QuestContract extends Component {
 
     const typeColors = {
       hunt: 'red',
-      collect: 'yellow',
+      collect: '#b8860b',
       info: 'blue',
       picture: 'purple',
       distortion: 'orange',
@@ -33,11 +33,11 @@ class QuestContract extends Component {
 
     return (
     <Box
+      backgroundColor="#ffffff"
       style={{
         position: 'relative',
         width: '180px',
         minHeight: '220px',
-        backgroundColor: '#ffffff',
         border: '1px solid #8b7355',
         boxShadow: '1px 1px 3px rgba(0,0,0,0.3)',
         padding: '12px',
@@ -110,6 +110,16 @@ class QuestContract extends Component {
             }}>
             Reward: {quest.reward} Ahn
           </Box>
+          {quest.target_names && quest.target_names.length > 0 && (
+            <Box
+              style={{
+                fontSize: '10px',
+                marginBottom: '8px',
+                color: '#5a4a3a',
+              }}>
+              Targets: {quest.target_names.join(', ')}
+            </Box>
+          )}
           <Button
             fluid
             color="default"
@@ -191,11 +201,12 @@ export class QuestBoard extends Component {
               <Box
                 style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 200px))',
+                  'grid-template-columns': 'repeat(auto-fill, minmax(180px, 1fr))',
                   gap: '16px',
-                  minHeight: '400px',
+                  'min-height': '400px',
                   padding: '8px',
-                  justifyContent: 'center',
+                  'justify-content': 'center',
+                  width: '100%',
                 }}>
                 {available_quests.length === 0 ? (
                   <Box

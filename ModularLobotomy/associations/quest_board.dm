@@ -269,12 +269,29 @@
 	// Available quests
 	data["available_quests"] = list()
 	for(var/datum/city_quest/Q in available_quests)
+		var/list/target_names = list()
+		if(istype(Q, /datum/city_quest/hunt))
+			var/datum/city_quest/hunt/HQ = Q
+			for(var/mob_type in HQ.valid_targets)
+				var/mob/M = mob_type
+				target_names += initial(M.name)
+		else if(istype(Q, /datum/city_quest/collect))
+			var/datum/city_quest/collect/CQ = Q
+			for(var/item_type in CQ.items_to_collect)
+				var/obj/item/I = item_type
+				target_names += initial(I.name)
+		else if(istype(Q, /datum/city_quest/info))
+			var/datum/city_quest/info/IQ = Q
+			for(var/item_type in IQ.items_to_show)
+				var/obj/item/I = item_type
+				target_names += initial(I.name)
 		data["available_quests"] += list(list(
 			"id" = REF(Q),
 			"name" = Q.name,
 			"desc" = Q.desc,
 			"type" = Q.quest_type,
-			"reward" = Q.reward_ahn
+			"reward" = Q.reward_ahn,
+			"target_names" = target_names
 		))
 
 	// Check if player can accept more quests

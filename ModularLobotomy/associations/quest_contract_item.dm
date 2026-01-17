@@ -120,7 +120,27 @@
 			data["current_progress"] = D.photo_taken ? 1 : 0
 			data["required_progress"] = 1
 			data["progress_type"] = "Documentation"
-	
+
+	// Add target names for hunt/collect/info quests
+	var/list/target_names = list()
+	switch(linked_quest.quest_type)
+		if("hunt")
+			var/datum/city_quest/hunt/HQ = linked_quest
+			for(var/mob_type in HQ.valid_targets)
+				var/mob/M = mob_type
+				target_names += initial(M.name)
+		if("collect")
+			var/datum/city_quest/collect/CQ = linked_quest
+			for(var/item_type in CQ.items_to_collect)
+				var/obj/item/I = item_type
+				target_names += initial(I.name)
+		if("info")
+			var/datum/city_quest/info/IQ = linked_quest
+			for(var/item_type in IQ.items_to_show)
+				var/obj/item/I = item_type
+				target_names += initial(I.name)
+	data["target_names"] = target_names
+
 	return data
 
 /obj/item/quest_contract/ui_state(mob/user)
