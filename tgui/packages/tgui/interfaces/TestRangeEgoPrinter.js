@@ -1,5 +1,5 @@
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, LabeledList, Section, Divider, Tab, Tabs, Input, Table, Slider, LabeledControls, BlockQuote } from '../components';
+import { Box, Button, Flex, Section, Divider, Tab, Tabs, Input, Table, Slider, LabeledControls, BlockQuote } from '../components';
 import { ButtonCheckbox } from '../components/Button';
 import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
@@ -36,7 +36,9 @@ export const TestRangeEgoPrinter = (props, context) => {
   const threatclass_names = { 1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH" };
   // I'm not coding the roman numerical system, this saves me a lot of sanity
   const numerals_to_decimals = { "X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10 };
-  const decimals_to_numerals = Object.fromEntries(Object.entries(numerals_to_decimals).map(([key, value]) => [value, key]));
+  const decimals_to_numerals =
+    Object.fromEntries(Object.entries(numerals_to_decimals)
+      .map(([key, value]) => [value, key]));
   // Regular expressions to match certain EGO types
   const regex_for_melee = /ego_weapon\//;
   const regex_for_guns = /ego_weapon\/ranged\//;
@@ -46,51 +48,51 @@ export const TestRangeEgoPrinter = (props, context) => {
   /* ------------ Functions ------------*/
 
   // Checks whether a datum's origin is currently being filtered for.
-  const CheckOriginFilters = (datum) => {
+  const CheckOriginFilters = datum => {
     return originFilters[datum.origin];
   };
 
   // Checks whether a datum's threat class is currently being filtered for.
-  const CheckThreatClassFilters = (datum) => {
+  const CheckThreatClassFilters = datum => {
     return threatClassFilters[datum.threatclass];
   };
 
-  // Converts an object of roman numeral strings into decimals. The keys must be "red", "white", "black", "pale".
-  const DecodeProtectionClasses = (armor_list) => {
-    var decoded_armor_list = { "red": 1, "white": 1, "black": 1, "pale": 1 };
+  // Converts an object of roman numeral strings into decimals.
+  const DecodeProtectionClasses = armor_list => {
+    let decoded_armor_list = { "red": 1, "white": 1, "black": 1, "pale": 1 };
 
-    for (var string in armor_list) {
+    for (let string in armor_list) {
       if (!armor_list[string]) {
         decoded_armor_list[string] = 0;
         continue;
-      };
+      }
       decoded_armor_list[string] *= numerals_to_decimals[armor_list[string]];
-    };
+    }
     return decoded_armor_list;
   };
 
-  const CheckArmorResistanceFilters = (datum) => {
+  const CheckArmorResistanceFilters = datum => {
     const decodedProtectionClasses = DecodeProtectionClasses(datum.information.armor);
-    for (var string in armorResistanceFilters) {
+    for (let string in armorResistanceFilters) {
       if (decodedProtectionClasses[string] < armorResistanceFilters[string]) {
         return false;
-      };
-    };
+      }
+    }
     return true;
   };
 
-  const CheckNameSearchFilter = (datum) => {
+  const CheckNameSearchFilter = datum => {
     if (!nameSearchText) {
       return true;
     };
     return datum.information.name.toLowerCase().includes(nameSearchText.toLowerCase());
   };
 
-  const ChangeWeaponDamtypeFilter = (color) => {
+  const ChangeWeaponDamtypeFilter = color => {
     color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null) : setCurrentWeaponDamtypeFilter(color);
   };
 
-  const CheckWeaponDamtypeFilters = (datum) => {
+  const CheckWeaponDamtypeFilters = datum => {
     if (!currentWeaponDamtypeFilter) {
       return true;
     };
@@ -105,23 +107,25 @@ export const TestRangeEgoPrinter = (props, context) => {
       return false;
   };
 
-  const CheckTagFilters = (datum) => {
-    var should_show = false;
-    var filtering_tags = egoTagList.map(tag => {
-      if (tag.tag_checked)
+  const CheckTagFilters = datum => {
+    let should_show = false;
+    let filtering_tags = egoTagList.map(tag => {
+      if (tag.tag_checked) {
         return tag;
-      else
+      }
+      else {
         return null;
+      }
     });
 
     filtering_tags = filtering_tags.filter(tag => tag !== null)
-    if (filtering_tags.length < 1)
+    if (filtering_tags.length < 1) {
       return true;
-
-    for (var tag of filtering_tags) {
+    }
+    for (let tag of filtering_tags) {
       if (datum.tags.includes(tag.tag_name)) { should_show = true; }
       else { should_show = false; break; }
-    };
+    }
 
     return should_show;
   };
@@ -130,7 +134,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
   // A list of all the EGO tag filter checkboxes.
   const AllEgoTagCheckboxes = (props, context) => {
-    const ChangeEgoTagFilters = (id) => {
+    const ChangeEgoTagFilters = id => {
       const newEgoTagList = egoTagList?.map(tag => {
         if (tag.tag_name === id) {
           tag.tag_checked = !tag.tag_checked;
@@ -145,7 +149,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
     return (
       egoTagList?.map(tag => (
-        <FlexItem ml={0.5}>
+        <FlexItem ml={0.5} key={tag.tag_name}>
           <ButtonCheckbox
             checked={tag?.tag_checked}
             content={tag.tag_name}
@@ -153,7 +157,6 @@ export const TestRangeEgoPrinter = (props, context) => {
             tooltip={tag.tag_description}
             tooltipPosition={"left"}
           />
-
         </FlexItem>
       )
       )
@@ -249,11 +252,11 @@ export const TestRangeEgoPrinter = (props, context) => {
   <RangedWeaponEntryDescription/> or a <MeleeWeaponEntryDescription/>
   based on the type passed to it and the result of a regex check on the path.
   */
-  const AppropiateDescription = (props) => {
+  const AppropiateDescription = props => {
     const { datum, type } = props;
 
-    var item_path = datum.path;
-    var common_path_eliminated_string = item_path.slice(10);
+    let item_path = datum.path;
+    let common_path_eliminated_string = item_path.slice(10);
     if (type === "armor") {
       return (<ArmorEntryDescription datum={datum} />);
     }
@@ -339,8 +342,8 @@ export const TestRangeEgoPrinter = (props, context) => {
   const ArmorResistanceFilterSlider = (props, context) => {
     const { resistance_color, color } = props;
 
-    const AdjustArmorResistanceFilter = (value) => {
-      var newFilters = structuredClone(armorResistanceFilters)
+    const AdjustArmorResistanceFilter = value => {
+      let newFilters = structuredClone(armorResistanceFilters)
       newFilters[resistance_color] = value
       setArmorResistanceFilters(newFilters)
     };
@@ -354,7 +357,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         value={armorResistanceFilters[resistance_color]}
         minValue={-10}
         maxValue={10}
-        format={(value) => decimals_to_numerals[value]}
+        format={value => decimals_to_numerals[value]}
         onChange={(e, value) => AdjustArmorResistanceFilter(value)}
       />
     );
@@ -395,10 +398,11 @@ export const TestRangeEgoPrinter = (props, context) => {
     const { detailed_datum } = props;
     const section_title = ("E.G.O. Details - " + detailed_datum.information?.name);
     const common_path_eliminated_string = detailed_datum.path.slice(10);
-    const what_are_we_dealing_with = (regex_for_armor.test(common_path_eliminated_string) ? "armor" :
-      regex_for_guns.test(common_path_eliminated_string) ? "gun" :
-        regex_for_shields.test(common_path_eliminated_string) ? "shield" :
-          regex_for_melee.test(common_path_eliminated_string) ? "melee" : null);
+    const what_are_we_dealing_with = (regex_for_armor.test(common_path_eliminated_string) ? "armor"
+      : regex_for_guns.test(common_path_eliminated_string) ? "gun"
+        : regex_for_shields.test(common_path_eliminated_string) ? "shield"
+          : regex_for_melee.test(common_path_eliminated_string) ? "melee"
+            : null);
 
     return (
       <Section scrollable fill title={section_title} buttons={[<Button
@@ -407,18 +411,18 @@ export const TestRangeEgoPrinter = (props, context) => {
         onClick={() => act('print_ego', {
           chosen_ego: detailed_datum.path,
         })} />, <ExitDetailsButton />]}>
-        {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} /> :
-          what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} /> :
-            what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} /> :
-              what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum} /> :
-                "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
+        {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} />
+          : what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} />
+            : what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} />
+              : what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum} />
+                : "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
       </Section>
     );
   };
 
   /* This part of the details page is shared by all EGO.
   Except armour which passes the 'hide_special' prop since armour
-  doesn't have that var in the backend.
+  doesn't have that let in the backend.
   Includes a preview image, name, threat class, PE cost, path, attribute
   requirements, description and special info.
   */
@@ -513,9 +517,9 @@ export const TestRangeEgoPrinter = (props, context) => {
           <Divider />
         </FlexItem>
         {datum.information.ability ? <FlexItem>
-          <b>Realized Ability: {datum.information.ability?.name?? "Un-named"}</b><br/>
-          <BlockQuote my={1}>{datum.information.ability?.desc?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
-          Cooldown: {datum.information.ability?.cooldown? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed." }
+          <b>Realized Ability: {datum.information.ability?.name ?? "Un-named"}</b><br />
+          <BlockQuote my={1}>{datum.information.ability?.desc ?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
+          Cooldown: {datum.information.ability?.cooldown ? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed."}
         </FlexItem> : null}
       </Flex>
     );
@@ -524,12 +528,12 @@ export const TestRangeEgoPrinter = (props, context) => {
   // Details specific to guns.
   const GunDetails = (props, context) => {
     const { datum } = props;
-    const damtype_cell_background_color = (damage_type) => {
-      return damage_type === "red" ? "red" :
-        damage_type === "white" ? "white" :
-          damage_type === "black" ? "violet" :
-            damage_type === "pale" ? "teal" :
-              "grey"
+    const damtype_cell_background_color = damage_type => {
+      return damage_type === "red" ? "red"
+        : damage_type === "white" ? "white"
+          : damage_type === "black" ? "violet"
+            : damage_type === "pale" ? "teal"
+              : "grey";
     };
 
     return (
@@ -545,16 +549,38 @@ export const TestRangeEgoPrinter = (props, context) => {
             <FlexItem mb={4}>
               <Table>
                 <TableRow header>
-                  <TableCell color="label" textAlign="center" px={1}>Damage</TableCell>
-                  <TableCell color="label" textAlign="center" px={1}>Damage Type</TableCell>
-                  <TableCell color="label" textAlign="center" px={1}>Fire Delay</TableCell>
-                  <TableCell color="label" textAlign="center" px={1}>Projectile Amount</TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>
+                    Damage
+                  </TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>
+                    Damage Type
+                  </TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>
+                    Fire Delay
+                  </TableCell>
+                  <TableCell color="label" textAlign="center" px={1}>
+                    Projectile Amount
+                  </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.force_ranged}</TableCell>
-                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor={damtype_cell_background_color(datum.information.damtype_ranged)} textAlign="center" px={1}><b>{datum.information.damtype_ranged.toUpperCase()}</b></TableCell>
-                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.numeric_ranged_attack_speed}ds ({datum.information.ranged_attack_speed})</TableCell>
-                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.pellets}</TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                    backgroundColor="#111111" textAlign="center" px={1}>
+                    {datum.information.force_ranged}
+                  </TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                    color="black"
+                    backgroundColor={damtype_cell_background_color(datum.information.damtype_ranged)}
+                    textAlign="center" px={1}>
+                    <b>{datum.information.damtype_ranged.toUpperCase()}</b>
+                  </TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                    backgroundColor="#111111" textAlign="center" px={1}>
+                    {datum.information.numeric_ranged_attack_speed}ds ({datum.information.ranged_attack_speed})
+                  </TableCell>
+                  <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                    backgroundColor="#111111" textAlign="center" px={1}>
+                    {datum.information.pellets}
+                  </TableCell>
                 </TableRow>
               </Table>
             </FlexItem>
@@ -609,11 +635,11 @@ export const TestRangeEgoPrinter = (props, context) => {
   // This is a table of the melee properties of a weapon.
   const BaseMeleeStatsTable = (props, context) => {
     const { datum } = props;
-    const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red" :
-      datum.information.damtype_melee === "white" ? "white" :
-        datum.information.damtype_melee === "black" ? "violet" :
-          datum.information.damtype_melee === "pale" ? "teal" :
-            "grey";
+    const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red"
+      : datum.information.damtype_melee === "white" ? "white"
+        : datum.information.damtype_melee === "black" ? "violet"
+          : datum.information.damtype_melee === "pale" ? "teal"
+            : "grey";
 
     return (
       <Flex direction="column" align="center" mb={3}>
@@ -623,20 +649,53 @@ export const TestRangeEgoPrinter = (props, context) => {
         <FlexItem mb={4}>
           <Table>
             <TableRow header>
-              <TableCell color="label" textAlign="center" px={1}>Force</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Throwforce</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Damage Type</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Attack Speed</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Reach</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Self-Stun</TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Force
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Throwforce
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Damage Type
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Attack Speed
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Reach
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Self-Stun
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.force_melee}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.throwforce}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor={damtype_cell_background_color} textAlign="center" px={1}><b>{datum.information.damtype_melee.toUpperCase()}</b></TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.numeric_melee_attack_speed} ({datum.information.melee_attack_speed})</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.reach} tiles</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.stuntime ? datum.information.stuntime + " deciseconds" : "None"}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.force_melee}
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.throwforce}
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                color="black" backgroundColor={damtype_cell_background_color}
+                textAlign="center" px={1}>
+                <b>{datum.information.damtype_melee.toUpperCase()}</b>
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.numeric_melee_attack_speed}
+                ({datum.information.melee_attack_speed})
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.reach} tiles
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+                backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.stuntime ?
+                  datum.information.stuntime + " deciseconds" : "None"}
+              </TableCell>
             </TableRow>
           </Table>
         </FlexItem>
@@ -663,29 +722,64 @@ export const TestRangeEgoPrinter = (props, context) => {
         <FlexItem mb={4}>
           <Table mb={1}>
             <TableRow header>
-              <TableCell color="label" textAlign="center" px={1}>Guard Duration</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Guard Cooldown</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>Debuff Duration</TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Guard Duration
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Guard Cooldown
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                Debuff Duration
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_duration} deciseconds</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_cooldown} deciseconds</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>{datum.information.guard_debuff_duration} deciseconds</TableCell>
+              <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
+              backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.guard_duration} deciseconds
+              </TableCell>
+              <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
+              backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.guard_cooldown} deciseconds
+              </TableCell>
+              <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
+              backgroundColor="#111111" textAlign="center" px={1}>
+                {datum.information.guard_debuff_duration} deciseconds
+              </TableCell>
             </TableRow>
           </Table>
 
           <Table mt={3}>
             <TableRow header>
-              <TableCell color="label" textAlign="center" px={1}>RED</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>WHITE</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>BLACK</TableCell>
-              <TableCell color="label" textAlign="center" px={1}>PALE</TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                RED
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                WHITE
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                BLACK
+              </TableCell>
+              <TableCell color="label" textAlign="center" px={1}>
+                PALE
+              </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="red" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.red]}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} color="black" backgroundColor="white" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.white]}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="violet" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.black]}</TableCell>
-              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="teal" textAlign="center" px={1}>{decimals_to_numerals[datum.information.guard_resistances?.pale]}</TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+              backgroundColor="red" textAlign="center" px={1}>
+                {decimals_to_numerals[datum.information.guard_resistances?.red]}
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+              color="black" backgroundColor="white" textAlign="center" px={1}>
+                {decimals_to_numerals[datum.information.guard_resistances?.white]}
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+              backgroundColor="violet" textAlign="center" px={1}>
+                {decimals_to_numerals[datum.information.guard_resistances?.black]}
+              </TableCell>
+              <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
+              backgroundColor="teal" textAlign="center" px={1}>
+                {decimals_to_numerals[datum.information.guard_resistances?.pale]}
+              </TableCell>
             </TableRow>
           </Table>
         </FlexItem>
@@ -699,7 +793,8 @@ export const TestRangeEgoPrinter = (props, context) => {
 
   // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
-    return (<Button mx={1} icon="arrow-left" color="red" content="Back" onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />);
+    return (<Button mx={1} icon="arrow-left" color="red" content="Back"
+      onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />);
   };
 
   // The actual TestRangeEgoPrinter interface component.
@@ -735,7 +830,8 @@ export const TestRangeEgoPrinter = (props, context) => {
                       />
                     </Flex.Item>
                     <FlexItem align="end" ml={1} mb={2}>
-                      <Button icon="trash" color="red" content="Clear" onClick={() => { setNameSearchText(null) }} />
+                      <Button icon="trash" color="red" content="Clear"
+                      onClick={() => { setNameSearchText(null) }} />
                     </FlexItem>
                   </Flex>
                 </FlexItem>
@@ -779,7 +875,8 @@ export const TestRangeEgoPrinter = (props, context) => {
                       />
                     </FlexItem>
                     <FlexItem ml={2}>
-                      <Button icon="sync" color="red" content="Reset" onClick={() => { setThreatClassFilters({ 1: true, 2: true, 3: true, 4: true, 5: true }) }} />
+                      <Button icon="sync" color="red" content="Reset"
+                      onClick={() => { setThreatClassFilters({ 1: true, 2: true, 3: true, 4: true, 5: true }) }} />
                     </FlexItem>
                   </Flex>
                 </Flex.Item>
@@ -813,13 +910,10 @@ export const TestRangeEgoPrinter = (props, context) => {
                     </FlexItem>
 
                     <FlexItem ml={2}>
-                      <Button icon="sync" color="red" content="Reset" onClick={() => { setOriginFilters({ "LC13": true, "Branch 12": false, "City": false }) }} />
+                      <Button icon="sync" color="red" content="Reset"
+                      onClick={() => { setOriginFilters({ "LC13": true, "Branch 12": false, "City": false }) }} />
                     </FlexItem>
-
                   </Flex>
-                  <FlexItem ml={0.5}>
-
-                  </FlexItem>
                 </Flex.Item>
 
                 {tab === 1 && <FlexItem mt={2}>
