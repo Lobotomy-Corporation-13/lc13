@@ -717,7 +717,6 @@
 	if(stored_data["bank_balance"])
 		new_account.account_balance = stored_data["bank_balance"]
 	new_id.registered_account = new_account
-	SSeconomy.bank_accounts += new_account
 
 	// Equip ID card
 	new_body.equip_to_slot_or_del(new_id, ITEM_SLOT_ID)
