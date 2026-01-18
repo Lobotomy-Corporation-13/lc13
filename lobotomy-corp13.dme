@@ -4535,8 +4535,6 @@
 #include "ModularLobotomy\extra_mobs\syndicatespaceman.dm"
 #include "ModularLobotomy\extra_mobs\tegu.dm"
 #include "ModularLobotomy\extra_mobs\the_claw.dm"
-#include "ModularLobotomy\extra_mobs\echo_office\electric_fixer.dm"
-#include "ModularLobotomy\extra_mobs\echo_office\priest_fixer.dm"
 #include "ModularLobotomy\extra_mobs\wcorp_raiders\bloodfiends.dm"
 #include "ModularLobotomy\extra_mobs\wcorp_raiders\sins.dm"
 #include "ModularLobotomy\extraction\_extraction.dm"
