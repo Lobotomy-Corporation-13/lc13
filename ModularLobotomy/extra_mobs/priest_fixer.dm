@@ -46,7 +46,7 @@
 	// Stagger System
 	var/stagger_amount = 0
 	var/max_stagger = 750
-	var/stagger_decay_rate = 10
+	var/stagger_decay_rate = 40
 	var/stagger_decay_time = 2 SECONDS
 	var/stagger_stun_duration = 5 SECONDS
 	var/is_staggered = FALSE
@@ -62,7 +62,7 @@
 	var/guard_sound_cooldown = 1 SECONDS
 	var/last_guard_sound = 0
 	var/intercept_count = 0
-	var/intercepts_per_feeble = 10
+	var/intercepts_per_feeble = 2
 	var/performing_counter = FALSE
 
 	// Crisis Mode
