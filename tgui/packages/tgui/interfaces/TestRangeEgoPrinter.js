@@ -38,7 +38,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   const numerals_to_decimals = { "X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10 };
   const decimals_to_numerals
   = Object.fromEntries(Object.entries(numerals_to_decimals)
-  .map(([key, value]) => [value, key]));
+    .map(([key, value]) => [value, key]));
   // Regular expressions to match certain EGO types
   const regex_for_melee = /ego_weapon\//;
   const regex_for_guns = /ego_weapon\/ranged\//;
@@ -87,12 +87,12 @@ export const TestRangeEgoPrinter = (props, context) => {
       return true;
     }
     return datum.information.name.toLowerCase()
-    .includes(nameSearchText.toLowerCase());
+      .includes(nameSearchText.toLowerCase());
   };
 
   const ChangeWeaponDamtypeFilter = color => {
     color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null)
-    : setCurrentWeaponDamtypeFilter(color);
+      : setCurrentWeaponDamtypeFilter(color);
   };
 
   const CheckWeaponDamtypeFilters = datum => {
@@ -107,7 +107,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     else if (datum.information.damtype_melee === currentWeaponDamtypeFilter) {
       return true;
     }
-    else{
+    else {
       return false;
     }
   };
@@ -225,7 +225,7 @@ export const TestRangeEgoPrinter = (props, context) => {
                   {threatclass_names[datum.threatclass]}
                 </Box>
               </FlexItem>
-              <FlexItem maxWidth="6rem" textAlign="center">
+              <FlexItem minWidth={"8rem"} maxWidth={"8rem"} textAlign="center">
                 {datum.information.name}
               </FlexItem>
               <FlexItem>
@@ -269,8 +269,8 @@ export const TestRangeEgoPrinter = (props, context) => {
     }
     else {
       return (regex_for_guns.test(common_path_eliminated_string)
-      ? <RangedWeaponEntryDescription datum={datum} />
-      : <MeleeWeaponEntryDescription datum={datum} />);
+        ? <RangedWeaponEntryDescription datum={datum} />
+        : <MeleeWeaponEntryDescription datum={datum} />);
     }
   };
 
@@ -282,7 +282,7 @@ export const TestRangeEgoPrinter = (props, context) => {
       <FlexItem grow={1}>
         <Flex direction="column" align="center">
           <FlexItem grow={3} textAlign="center">
-            Melee Damage: {datum.information.force_melee}
+            Melee Damage: {datum.information.force_melee + " "}
             {datum.information.damtype_melee}<br />
             Melee Attack Speed: {datum.information.melee_attack_speed}<br />
             Melee Reach: {datum.information.reach} tiles
@@ -305,16 +305,16 @@ export const TestRangeEgoPrinter = (props, context) => {
       <FlexItem grow={1}>
         <Flex direction="column" align="center">
           <FlexItem grow={3} textAlign="center">
-            Projectile Damage: {datum.information.force_ranged}
+            Projectile Damage: {datum.information.force_ranged + " "}
             {datum.information.damtype_ranged}
             <br />
             Projectile Fire Rate: {datum.information.ranged_attack_speed}
             <br />
             Magazine Size: {datum.information.magazine_size === 0
-            ? "Unlimited"
-            : datum.information.magazine_size} <br />
+              ? "Unlimited"
+              : datum.information.magazine_size} <br />
             <br />
-            Melee Damage: {datum.information.force_melee}
+            Melee Damage: {datum.information.force_melee + " "}
             {datum.information.damtype_melee}
           </FlexItem>
           <FlexItem mt={3}>
@@ -359,7 +359,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     const { resistance_color, color } = props;
 
     const AdjustArmorResistanceFilter = value => {
-      let newFilters = structuredClone(armorResistanceFilters);
+      let newFilters = {...armorResistanceFilters}
       newFilters[resistance_color] = value;
       setArmorResistanceFilters(newFilters);
     };
@@ -427,7 +427,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         key="print"
         onClick={() => act('print_ego', {
           chosen_ego: detailed_datum.path,
-        })} />, <ExitDetailsButton key="exit"/>]}>
+        })} />, <ExitDetailsButton key="exit" /> ]}>
         {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} />
           : what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} />
             : what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} />
@@ -502,11 +502,11 @@ export const TestRangeEgoPrinter = (props, context) => {
           <b>Description:</b>
           <BlockQuote mt={1}>{detailed_datum.information.description ?? "This E.G.O. has no description."}</BlockQuote>
         </FlexItem>
-        {!hide_special &&
-        <FlexItem align="start" mb={3}>
-          <b>Special Information:</b>
-          <BlockQuote mt={1}>{detailed_datum.information.special ?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
-        </FlexItem>}
+        {!hide_special
+        && <FlexItem align="start" mb={3}>
+              <b>Special Information:</b>
+              <BlockQuote mt={1}>{detailed_datum.information.special ?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
+            </FlexItem>}
 
         <FlexItem minWidth={"100%"} mt={1} mb={2}>
           <Divider />
@@ -522,7 +522,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum} hide_special/>
+          <CommonDetails detailed_datum={datum} hide_special />
         </FlexItem>
         <FlexItem mb={2} align="start">
           <b>Resistances:</b>
@@ -536,12 +536,12 @@ export const TestRangeEgoPrinter = (props, context) => {
         <FlexItem minWidth={"100%"} mt={3} mb={2}>
           <Divider />
         </FlexItem>
-        {datum.information.ability ?
-        <FlexItem>
-          <b>Realized Ability: {datum.information.ability?.name ?? "Un-named"}</b><br />
-          <BlockQuote my={1}>{datum.information.ability?.desc ?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
-          Cooldown: {datum.information.ability?.cooldown ? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed."}
-        </FlexItem> : null}
+        {datum.information.ability
+        ? <FlexItem>
+            <b>Realized Ability: {datum.information.ability?.name ?? "Un-named"}</b><br />
+            <BlockQuote my={1}>{datum.information.ability?.desc ?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
+            Cooldown: {datum.information.ability?.cooldown ? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed."}
+          </FlexItem> : null}
       </Flex>
     );
   };
@@ -590,8 +590,9 @@ export const TestRangeEgoPrinter = (props, context) => {
                   </TableCell>
                   <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
                     color="black"
-                    backgroundColor
-                    ={damtype_cell_background_color(datum.information.damtype_ranged)}
+                    backgroundColor=
+                      {damtype_cell_background_color(datum
+                      .information.damtype_ranged)}
                     textAlign="center" px={1}>
                     <b>{datum.information.damtype_ranged.toUpperCase()}</b>
                   </TableCell>
@@ -716,15 +717,17 @@ export const TestRangeEgoPrinter = (props, context) => {
               </TableCell>
               <TableCell style={{ border: '2px solid rgb(8, 8, 8)' }}
                 backgroundColor="#111111" textAlign="center" px={1}>
-                {datum.information.stuntime
-                ? datum.information.stuntime + " deciseconds" : "None"}
+                  {datum.information.stuntime
+                  ? datum.information.stuntime + " deciseconds" : "None"}
               </TableCell>
             </TableRow>
           </Table>
         </FlexItem>
         <FlexItem italic color="#FDFDFD">
-          Please note that these values will not always be accurate,
-          since many E.G.O. have effects that cannot be processed by this catalog.
+          Please note that these values will
+          not always be accurate,
+          since many E.G.O. have effects that cannot
+          be processed by this catalog.
           <br /><br />
           Force and Attack Speed, especially on Combo or Split Damage E.G.O.
           weapons, may ultimately be significantly higher or lower than listed in practice.
@@ -792,28 +795,29 @@ export const TestRangeEgoPrinter = (props, context) => {
             <TableRow>
               <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
                 backgroundColor="red" textAlign="center" px={1}>
-                {decimals_to_numerals
-                [datum.information.guard_resistances?.red]}
+                  {decimals_to_numerals[datum
+                    .information.guard_resistances?.red]}
               </TableCell>
               <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
                 color="black" backgroundColor="white" textAlign="center" px={1}>
-                {decimals_to_numerals
-                [datum.information.guard_resistances?.white]}
+                  {decimals_to_numerals[datum
+                    .information.guard_resistances?.white]}
               </TableCell>
               <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
                 backgroundColor="violet" textAlign="center" px={1}>
-                {decimals_to_numerals
-                [datum.information.guard_resistances?.black]}
+                  {decimals_to_numerals[datum
+                    .information.guard_resistances?.black]}
               </TableCell>
               <TableCell style={{ border: "2px solid rgb(8, 8, 8)" }}
                 backgroundColor="teal" textAlign="center" px={1}>
-                {decimals_to_numerals
-                [datum.information.guard_resistances?.pale]}
+                  {decimals_to_numerals[datum
+                    .information.guard_resistances?.pale]}
               </TableCell>
             </TableRow>
           </Table>
         </FlexItem>
-        <i>'Debuff Duration' refers to the length of time during which you will become more vulnerable as a result of a failed guard.</i>
+        <i>&apos;'Debuff Duration&apos;' refers to the length of time during which
+           you will become more vulnerable as a result of a failed guard.</i>
         <FlexItem minWidth={"100%"} mt={1}>
           <Divider />
         </FlexItem>
@@ -824,7 +828,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
     return (<Button mx={1} icon="arrow-left" color="red" content="Back"
-      onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />);
+      onClick={() => { setCurrentlyDetailedEgoDatum(null); }} />);
   };
 
   // The actual TestRangeEgoPrinter interface component.
@@ -837,8 +841,9 @@ export const TestRangeEgoPrinter = (props, context) => {
         <Flex>
           <FlexItem grow={3}>
             {currentlyDetailedEgoDatum === null
-            ? <EGOList ego_weapon_datums={ego_weapon_datums} ego_armor_datums={ego_armor_datums} />
-            : <EGODetails detailed_datum={currentlyDetailedEgoDatum} />}
+              ? <EGOList ego_weapon_datums={ego_weapon_datums}
+                   ego_armor_datums={ego_armor_datums} />
+              : <EGODetails detailed_datum={currentlyDetailedEgoDatum} />}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
@@ -872,40 +877,46 @@ export const TestRangeEgoPrinter = (props, context) => {
                       <ButtonCheckbox
                         checked={threatClassFilters[1]}
                         content={"ZAYIN"}
-                        onClick={() => { setThreatClassFilters({ ...threatClassFilters, 1: !threatClassFilters[1] }); }}
+                        onClick={() => { setThreatClassFilters(
+                          { ...threatClassFilters, 1: !threatClassFilters[1] }); }}
                       />
                     </FlexItem>
                     <FlexItem ml={0.5}>
                       <ButtonCheckbox
                         checked={threatClassFilters[2]}
                         content={"TETH"}
-                        onClick={() => { setThreatClassFilters({ ...threatClassFilters, 2: !threatClassFilters[2] }); }}
+                        onClick={() => { setThreatClassFilters(
+                          { ...threatClassFilters, 2: !threatClassFilters[2] }); }}
                       />
                     </FlexItem>
                     <FlexItem ml={0.5}>
                       <ButtonCheckbox
                         checked={threatClassFilters[3]}
                         content={"HE"}
-                        onClick={() => { setThreatClassFilters({ ...threatClassFilters, 3: !threatClassFilters[3] }); }}
+                        onClick={() => { setThreatClassFilters(
+                          { ...threatClassFilters, 3: !threatClassFilters[3] }); }}
                       />
                     </FlexItem>
                     <FlexItem ml={0.5}>
                       <ButtonCheckbox
                         checked={threatClassFilters[4]}
                         content={"WAW"}
-                        onClick={() => { setThreatClassFilters({ ...threatClassFilters, 4: !threatClassFilters[4] }); }}
+                        onClick={() => { setThreatClassFilters(
+                          { ...threatClassFilters, 4: !threatClassFilters[4] }); }}
                       />
                     </FlexItem>
                     <FlexItem ml={0.5}>
                       <ButtonCheckbox
                         checked={threatClassFilters[5]}
                         content={"ALEPH"}
-                        onClick={() => { setThreatClassFilters({ ...threatClassFilters, 5: !threatClassFilters[5] }); }}
+                        onClick={() => { setThreatClassFilters(
+                          { ...threatClassFilters, 5: !threatClassFilters[5] }); }}
                       />
                     </FlexItem>
                     <FlexItem ml={2}>
                       <Button icon="sync" color="red" content="Reset"
-                        onClick={() => { setThreatClassFilters({ 1: true, 2: true, 3: true, 4: true, 5: true }); }} />
+                        onClick={() => { setThreatClassFilters(
+                          { 1: true, 2: true, 3: true, 4: true, 5: true }); }} />
                     </FlexItem>
                   </Flex>
                 </Flex.Item>
@@ -945,8 +956,8 @@ export const TestRangeEgoPrinter = (props, context) => {
                   </Flex>
                 </Flex.Item>
 
-                {tab === 1 &&
-                <FlexItem mt={2}>
+                {tab === 1
+                && <FlexItem mt={2}>
                   E.G.O. Weapon Damage Type Filters
                   <Flex direction="row" wrap maxWidth="20rem" justify="center" mt={1}>
                     <FlexItem ml={2}>
@@ -977,8 +988,8 @@ export const TestRangeEgoPrinter = (props, context) => {
                   </Flex>
                 </FlexItem>}
 
-                {tab === 2 &&
-                <FlexItem mt={2}>
+                {tab === 2
+                && <FlexItem mt={2}>
                   E.G.O. Armour Resistance Filters
 
                   <Flex direction="row" wrap maxWidth="24rem" mt={1}>
@@ -996,7 +1007,7 @@ export const TestRangeEgoPrinter = (props, context) => {
                         <ArmorResistanceFilterSlider color="teal" resistance_color="pale" />
                       </LabeledControls.Item>
                       <LabeledControls.Item ml={2}>
-                        <Button icon="sync" color="red" content="Reset" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }) }} />
+                        <Button icon="sync" color="red" content="Reset" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
                       </LabeledControls.Item>
                     </LabeledControls>
                   </Flex>
