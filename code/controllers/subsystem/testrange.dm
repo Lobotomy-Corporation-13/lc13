@@ -13,6 +13,8 @@ SUBSYSTEM_DEF(testrange)
 	var/static/ego_datums_initialized = FALSE
 	var/static/ego_datums_initializing = FALSE
 
+// So, this subsystem currently exists primarily for the sake of EGO printers - I plan to keep updating the test range so this subsystem will likely be expanded upon
+
 /datum/controller/subsystem/testrange/Initialize(start_timeofday)
 	ego_datums_initializing = TRUE
 	INVOKE_ASYNC(src, PROC_REF(InitializeDatums))
@@ -24,15 +26,16 @@ SUBSYSTEM_DEF(testrange)
 	if(!ego_datums_initialized)
 		for(var/datumpath in subtypesof(/datum/ego_datum))
 			var/datum/ego_datum/ED = new datumpath
-			if(!(ED.testrange_blacklisted) && (ED.item_path))
+			if(!(ED.testrange_blacklisted) && (ED.item_path)) // Condition 1 eliminates evil datums like Sorrow and condition 2 eliminates templates that don't have a path (like /ego_datum/weapon/)
 				ego_datums |= ED
 				ego_datum_paths |= ED.item_path
 				GenerateEgoPreviewIcon(ED.item_path)
 			else
 				qdel(ED)
 
-			stoplag() // Yes it's that bad
+			stoplag() // Yes it's that bad. This makes the process take quite a while, but it's still under a minute and doesn't lag. The alternative is a biblical lagspike.
 
+		// The datums list is currently in the order that they were 'found' in the directory tree. Now we sort them from highest PE cost to lowest PE cost.
 		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
 
 		ego_datums_initializing = FALSE
@@ -43,7 +46,7 @@ SUBSYSTEM_DEF(testrange)
 			EP.ego_datum_paths = src.ego_datum_paths
 			EP.ReadyMessage()
 
-// This proc doesn't SEEM that bad but it's being run on like 500 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it
+// This proc doesn't SEEM that bad but it's being run on like 800 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it
 /// Takes an object's icon in DM and turns it into a base64 string, uses caching when possible
 /datum/controller/subsystem/testrange/proc/GenerateEgoPreviewIcon(item_path)
 	if(!ispath(item_path))
@@ -64,7 +67,7 @@ SUBSYSTEM_DEF(testrange)
 	qdel(final_icon)
 	return base64icon
 
-/// Extracts an item's icon state so we can use it a a preview
+/// Extracts an item's icon state so we can use it as a preview. Looks jank if it has directionals (W Corp Armour Vest my beloathed)
 /datum/controller/subsystem/proc/GetEgoDatumItemIcon(obj/item/item_path)
 	if(!ispath(item_path))
 		return

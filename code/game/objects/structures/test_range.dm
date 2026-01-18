@@ -1,4 +1,5 @@
 // EGO Printer
+// This machine is heavily linked to the Test Range subsystem. Take a look at it if reading or editing this code.
 /obj/machinery/ego_printer
 	name = "E.G.O. printer"
 	desc = "This device is capable of printing most E.G.O. on demand. It can even replicate non-E.G.O. armaments from the City at large. \n\
@@ -12,7 +13,9 @@
 	var/list/ego_datum_paths = list()
 	/// This var limits how much EGO each ckey can print before having to get rid of some. Specific to each printer.
 	var/ego_per_person_limit = 10
+	/// Associates ckey to printed EGO references.
 	var/list/printed_ego = list()
+	/// Holds ckeys that have disabled the new TGUI version of the interface.
 	var/list/disabled_tgui = list()
 
 /* ---------- Shared TGUI/Old EGO printer stuff ---------- */
@@ -20,10 +23,11 @@
 /obj/machinery/ego_printer/Initialize(mapload)
 	. = ..()
 	SStestrange.linked_ego_printers += src
-	if(SStestrange.ego_datums_initialized)
+	if(SStestrange.ego_datums_initialized) // If we're being created after datums were already initialized, then pull the ego datum lists
 		ego_datums = SStestrange.ego_datums
 		ego_datum_paths = SStestrange.ego_datum_paths
 
+/// Alt clicking the printer swaps between new and old interfaces.
 // Temporary; we can make this a Pref later if we ever update the real EGO purchase console to use TGUI
 /obj/machinery/ego_printer/AltClick(mob/user)
 	disabled_tgui ^= user.ckey // Allegedly this is an XOR operator which should "toggle" the value
@@ -34,6 +38,7 @@
 	SStestrange.linked_ego_printers -= src
 	return ..()
 
+/// We use this to bounce attempts to access the printer before it's assembled the full list of EGO datums.
 /obj/machinery/ego_printer/proc/CheckInitializedDatums()
 	if(SStestrange.ego_datums_initializing || !(SStestrange.ego_datums_initialized))
 		say("System is still initializing. Please wait. [SStestrange.ego_datums ? length(SStestrange.ego_datums) : "0"] E.G.O. currently loaded.")
@@ -41,24 +46,25 @@
 		return FALSE
 	return TRUE
 
-// SStestrange calls this on all its linked printers when it finishes loading EGO datums
+/// SStestrange calls this on all its linked printers when it finishes loading EGO datums to warn players that it's ready for operation
 /obj/machinery/ego_printer/proc/ReadyMessage()
 	visible_message(span_nicegreen("The [src.name] beeps, now displaying a list of E.G.O. ready to print."))
 	say("System initialization complete!")
 	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
-// Let someone qdel the EGO they printed by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
+/// Let someone qdel the EGO they printed by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
 /obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
 	var/list/this_guys_printed_ego = printed_ego[user.ckey]
 	if(islist(this_guys_printed_ego))
 		if(I in this_guys_printed_ego)
 			visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
-			playsound(get_turf(src), 'sound/machines/juicer.ogg', 40, TRUE)
+			playsound(get_turf(src), 'sound/machines/juicer.ogg', 20, TRUE)
 			this_guys_printed_ego -= I
 			qdel(I)
 			return
 	. = ..()
 
+/// If the user isn't at the limit of printed EGO, print whatever ego_path is (this could be literally anything but is hopefully an /obj/item)
 /obj/machinery/ego_printer/proc/DispenseEgo(mob/living/user, ego_path)
 	if(!ego_path)
 		return
@@ -161,7 +167,7 @@
 
 /* ---------- Old EGO Printer stuff ---------- */
 
-/// Not 1:1 to old logic, we use the new version of the ego datum list and rip the paths out of it
+/// Not 1:1 to old logic, we use the new version of the ego datum list and rip the paths out of it, also uses the new dispense proc.
 /obj/machinery/ego_printer/proc/ShowOldInterface(mob/living/user)
 	var/list/ego_list = ego_datum_paths
 

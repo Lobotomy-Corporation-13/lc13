@@ -12,6 +12,9 @@
 // All /ego_weapon/ with a reach over 1 are given EGO_TAG_REACH.
 // All /ego_weapon/ with a knockback over 0 are given EGO_TAG_KNOCKBACK.
 // All /ego_weapon/ that exist in GLOB.small_ego are given EGO_TAG_MINI.
+// All /ego_weapon/ranged/ with pellets > 1 are given EGO_TAG_MULTIHIT.
+// All /armor/ego_gear/ with a slowdown < 0 are given EGO_TAG_MOBILITY.
+// All /armor/ego_gear/realization/ are given EGO_TAG_REALIZED.
 
 // More important notice:
 // If you add an EGO_TAG make sure you also add it to EGO_TAGS_DESCRIPTION_LIST further below, and give it an appropiate description! This description is used in tooltips for the tag.
