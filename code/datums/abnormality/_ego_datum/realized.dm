@@ -24,6 +24,8 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /datum/ego_datum/armor/realized/maiden
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/maiden
 /// Wellcheers - Soda (Wellcheers Vending Machine)
+// Warning: This one can very easily be used to lag the server via spawning a bunch of this armour in the test range and using the ability once on each copy.
+// We may need to blacklist it, if it gets exploited. However there are easier ways to lag the server or be annoying.
 /datum/ego_datum/armor/realized/wellcheers
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/wellcheers
 	ego_tags = list(EGO_TAG_SUMMONER)
@@ -147,9 +149,11 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /datum/ego_datum/armor/realized/bell_tolls
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/bell_tolls
 /// Capitalism - Executive
+// Warning: This one can very easily be used to lag the server via spawning a bunch of this armour in the test range and using the ability once on each copy.
+// We may need to blacklist it, if it gets exploited. However there are easier ways to lag the server or be annoying.
 /datum/ego_datum/armor/realized/capitalism
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/capitalism
-	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_HAZARDOUS) // Tagged as hazardous because they LOVE FFing you
+	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_HAZARDOUS) // Tagged as hazardous because they LOVE FFing you}
 /// Duality of Harmony - Assonance (Yang)
 /datum/ego_datum/armor/realized/duality_yang
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/duality_yang
@@ -159,6 +163,7 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/duality_yin
 	ego_tags = list(EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_PIERCING, EGO_TAG_SUPPORT)
 /// Repentance - Bleeding Heart (Flesh Idol)
+// This one has a heal that goes off of player list, however it has a Z level check. The only possible people this could heal are people in the tutorial or records intern area.
 /datum/ego_datum/armor/realized/repentance
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/repentance
 	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT)
@@ -187,7 +192,7 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /// Fallen Color - Out of Space (Lady out of Space)
 /datum/ego_datum/armor/realized/fallencolors
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/fallencolors
-	ego_tags = list(EGO_TAG_RANGED, EGO_TAG_KNOCKBACK)
+	ego_tags = list(EGO_TAG_SPECIAL_RANGED, EGO_TAG_KNOCKBACK)
 
 /* ------------------ Personal EGO Realizations (Effloresced) ------------------*/
 

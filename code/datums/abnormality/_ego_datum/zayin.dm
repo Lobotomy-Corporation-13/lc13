@@ -79,11 +79,11 @@
 /datum/ego_datum/weapon/evening
 	item_path = /obj/item/ego_weapon/support/evening
 	cost = 12
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/evening
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/evening
 	cost = 12
-	ego_tags = list(EGO_TAG_SUPPORT)
 
 // Blubbering Toad - Cavernous Wailing
 /datum/ego_datum/weapon/cavernous_wailing

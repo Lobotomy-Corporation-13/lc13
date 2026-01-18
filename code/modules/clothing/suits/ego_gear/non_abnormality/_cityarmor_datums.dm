@@ -107,7 +107,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus/vet
 	cost = 60
 /// Shi South Section 6 Director Combat Suit
-/datum/ego_datum/armor/city/shi_south/limbus/vet
+/datum/ego_datum/armor/city/shi_south/limbus/director
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director
 	cost = 75
 
@@ -269,7 +269,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	cost = 40
 /// Molar Boatworks Director Wetsuit
 /datum/ego_datum/armor/city/molar/director
-	item_path = /obj/item/clothing/suit/armor/ego_gear/city/molar/director
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/molar/director/boatworks
 	cost = 60
 
 /* ------------------ Echo Office ------------------*/
@@ -397,7 +397,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /// K-Corp Scientist Uniform
 /datum/ego_datum/armor/city/kcorp/sci
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/kcorp_sci
-	cost = 1
+	cost = 10
 
 /* ------------------ L Corp ------------------*/
 
@@ -455,7 +455,7 @@ I'm gonna make the call not to put them here but feel free to override me and pl
 	item_path = /obj/item/clothing/suit/armor/ego_gear/limbus/ego/cast
 	cost = 40
 /// Branch of Knowledge - Sinclair
-/datum/ego_datum/armor/city/lcb_cast
+/datum/ego_datum/armor/city/lcb_branch
 	item_path = /obj/item/clothing/suit/armor/ego_gear/limbus/ego/branch
 	cost = 40
 /// To Pathos Mathos - Outis
@@ -512,7 +512,7 @@ Evilpeople organizations and smaller groups of people, including lesser ones, ra
 /// Kurokumo Captain Kimono
 /datum/ego_datum/armor/city/kurokumo/captain
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/kurokumo/captain
-	cost = 60
+	cost = 65
 
 /* ------------------ The Index ------------------*/
 

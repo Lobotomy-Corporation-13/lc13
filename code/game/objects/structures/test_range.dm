@@ -1,7 +1,8 @@
 // EGO Printer
 /obj/machinery/ego_printer
 	name = "E.G.O. printer"
-	desc = "This device is capable of printing most E.G.O. on demand."
+	desc = "This device is capable of printing most E.G.O. on demand. It can even replicate non-E.G.O. armaments from the City at large. \n\
+	You may alt-click this machine to change between the new and old interfaces for printing E.G.O."
 	icon = 'icons/obj/machines/droneDispenser.dmi'
 	icon_state = "on"
 	resistance_flags = INDESTRUCTIBLE
@@ -25,7 +26,7 @@
 
 // Temporary; we can make this a Pref later if we ever update the real EGO purchase console to use TGUI
 /obj/machinery/ego_printer/AltClick(mob/user)
-	disabled_tgui ^= user // Allegedly this is an XOR operator which should "toggle" the value
+	disabled_tgui ^= user.ckey // Allegedly this is an XOR operator which should "toggle" the value
 	to_chat(user, span_notice("Toggled interface type for EGO printer."))
 	balloon_alert(user, "Toggled interface type for EGO printer.")
 
@@ -100,7 +101,7 @@
 	if(!CheckInitializedDatums())
 		return
 
-	if((user in disabled_tgui))
+	if((user.ckey in disabled_tgui))
 		INVOKE_ASYNC(src, PROC_REF(ShowOldInterface), user)
 		return
 
