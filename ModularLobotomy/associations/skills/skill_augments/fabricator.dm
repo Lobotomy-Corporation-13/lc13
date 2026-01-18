@@ -34,7 +34,7 @@
 	var/datum/body_modification_design/current_design
 
 	// Role restrictions
-	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Fixer", "Workshop Attendant")
+	var/list/allowed_roles = list("Prosthetics Surgeon", "Office Representative", "Office Fixer", "Doctor", "Fixer", "Workshop Attendant")
 
 	// Available templates based on rank
 	var/list/available_templates = list(

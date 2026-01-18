@@ -121,7 +121,7 @@
 			data["required_progress"] = 1
 			data["progress_type"] = "Documentation"
 
-	// Add target names for hunt/collect/info quests
+	// Add target names for hunt/collect/info/picture quests
 	var/list/target_names = list()
 	switch(linked_quest.quest_type)
 		if("hunt")
@@ -139,6 +139,11 @@
 			for(var/item_type in IQ.items_to_show)
 				var/obj/item/I = item_type
 				target_names += initial(I.name)
+		if("picture")
+			var/datum/city_quest/picture/PQ = linked_quest
+			for(var/mob_type in PQ.targets_to_photograph)
+				var/mob/M = mob_type
+				target_names += initial(M.name)
 	data["target_names"] = target_names
 
 	return data

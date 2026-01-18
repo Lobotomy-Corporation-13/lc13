@@ -298,7 +298,7 @@ GLOBAL_LIST_EMPTY(allCasters)
 						for(var/ckey in SScity_economy.bounties)
 							var/datum/city_bounty/B = SScity_economy.bounties[ckey]
 							if(B && B.target)
-								dat += "<BR>- [B.target.real_name]: [B.debt_amount] Ahn"
+								dat += "<BR>- [B.target.real_name]: TOTAL BOUNTY: [B.debt_amount * 10] Ahn"
 				if(GLOB.news_network.wanted_issue.active)
 					dat+= "<HR><A href='byond://?src=[REF(src)];view_wanted=1'>Read Wanted Issue</A>"
 				dat+= "<HR><BR><A href='byond://?src=[REF(src)];create_channel=1'>Create Feed Channel</A>"

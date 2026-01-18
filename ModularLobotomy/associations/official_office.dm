@@ -161,8 +161,8 @@
 	use_power = FALSE
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	var/list/check_times = list()
-	var/list/usable_roles = list("Civilian", "Office Director", "Office Fixer",
-		"Subsidary Office Director", "Fixer")
+	var/list/usable_roles = list("Civilian", "Office Representative", "Office Fixer",
+		"Subsidary Office Representative", "Fixer")
 
 /obj/machinery/scanner_gate/officescanner/auto_scan(atom/movable/AM)
 	return

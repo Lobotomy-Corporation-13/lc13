@@ -520,6 +520,27 @@
 	If you wish to avoid taxes while still operating in the City, you may choose not to register - however, this will limit your access to certain areas and resources.<br>
 	<br>
 	<br>
+	<center><b>Part 2.5: The Bounty System</b></center><br>
+	<br>
+	If you fail to pay your taxes, the City will take action against you:<br>
+	<br>
+	<b>First Missed Payment:</b> You receive a warning strike. No bounty yet, but you are on thin ice.<br>
+	<br>
+	<b>Second Missed Payment:</b> A bounty is placed on your head! The bounty amount is <b>10 times your unpaid debt</b>. All newscasters in the City will broadcast your wanted status.<br>
+	<br>
+	<b>Bounty Effects:</b><br>
+	- Your name appears on all newscasters as a wanted individual<br>
+	- A visual indicator marks you as a bounty target<br>
+	- If you are killed while having a bounty, you will drop Ahn equal to your bounty amount (up to 5000 Ahn) for your killer to collect<br>
+	- Death with a bounty also results in a -20 penalty to all your attributes!<br>
+	<br>
+	<b>Clearing Your Bounty:</b><br>
+	Visit any Payment Kiosk to pay off your debt. You can pay the full amount or make partial payments. Once your debt is cleared, your bounty and any strikes are removed.<br>
+	<br>
+	<b>Bounty Hunting:</b><br>
+	If you see a wanted individual on the newscaster, you can potentially earn their bounty by eliminating them! The bounty is worth 10 times their debt - for example, if someone owes 200 Ahn, their bounty is worth 2000 Ahn!<br>
+	<br>
+	<br>
 	<center><b>Part 3: The Contract System</b></center><br>
 	<br>
 	The <b>City Job Board</b> is where fixers find work. Click the board to view available contracts. You may hold up to <b>3 active contracts</b> at once. Contracts refresh every 5 minutes.<br>
@@ -576,6 +597,21 @@
 	<b>Carnival Weaving Books:</b> These books teach you how to weave armor from silk. In our City, these books are available to everyone - no special affiliation required! Purchase them from weaving vending machines.<br>
 	<br>
 	<b>Body Modification Fabricator:</b> These machines allow you to create cybernetic augments. They are open to all citizens of the City.<br>
+	<br>
+	<br>
+	<center><b>Part 8: Body Preservation Units</b></center><br>
+	<br>
+	<b>Body Preservation Units (BPUs)</b> are machines that can store a digital copy of your body and attributes. If you die, you can be revived at the BPU with a small attribute penalty.<br>
+	<br>
+	<b>How it Works:</b><br>
+	1. Insert Ahn into the machine (or have it in your account)<br>
+	2. Create a body scan - the fee is based on your total attributes<br>
+	3. If you die, you can revive as a ghost after a short delay<br>
+	<br>
+	<b>Tax Compliance Bonus:</b><br>
+	In our City, <b>tax-compliant fixers receive FREE body preservation!</b> As long as you have no bounty or strikes against you, you can create and update your body scan at no cost. This is one of the benefits of staying in good standing with the City.<br>
+	<br>
+	<b>Note:</b> Reviving at a BPU will result in a small attribute penalty, so try not to die!<br>
 	<br>
 	<br>
 	<center><b>Final Notes</b></center><br>

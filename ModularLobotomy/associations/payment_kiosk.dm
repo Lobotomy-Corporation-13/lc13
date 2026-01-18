@@ -61,7 +61,7 @@
 			dat += "Bank Balance: [player_id.registered_account.account_balance] Ahn<BR>"
 		
 		if(player_office && player_office.director != H)
-			dat += "<I>Only the office director can pay taxes for the office.</I><BR>"
+			dat += "<I>Only the office representative can pay taxes for the office.</I><BR>"
 		else
 			dat += "<A href='byond://?src=[REF(src)];pay_tax_early=1'>Pay Tax Early</A><BR>"
 
@@ -108,9 +108,9 @@
 				player_office = F
 				break
 		
-		// If in office but not director, deny payment
+		// If in office but not representative, deny payment
 		if(player_office && player_office.director != H)
-			to_chat(H, span_warning("Only the office director can pay taxes for the office!"))
+			to_chat(H, span_warning("Only the office representative can pay taxes for the office!"))
 			ui_interact(H)
 			return
 		
@@ -147,7 +147,7 @@
 			// Announce via newscaster
 			for(var/obj/machinery/newscaster/N in GLOB.allCasters)
 				if(player_office)
-					N.say("[player_office.name]'s director [H.real_name] has paid their office taxes early. A model organization!")
+					N.say("[player_office.name]'s representative [H.real_name] has paid their office taxes early. A model organization!")
 				else
 					N.say("[H.real_name] has paid their taxes early. A model citizen!")
 		else
@@ -168,10 +168,24 @@
 			return
 
 		processing_payment = TRUE
-		if(try_payment(H, bounty.debt_amount))
+		var/paid = FALSE
+
+		// Try bank account first
+		var/obj/item/card/id/C = H.get_idcard(TRUE)
+		if(C?.registered_account)
+			var/datum/bank_account/account = C.registered_account
+			if(account.adjust_money(-bounty.debt_amount))
+				paid = TRUE
+				account.bank_card_talk("Bounty payment of [bounty.debt_amount] Ahn processed.")
+
+		// Fallback to cash
+		if(!paid)
+			paid = try_payment(H, bounty.debt_amount)
+
+		if(paid)
 			SScity_economy.clear_bounty(H)
 			to_chat(H, span_nicegreen("Bounty cleared! You are now in good standing."))
-			playsound(src, 'sound/machines/chime.ogg', 50, FALSE)
+			H.playsound_local(get_turf(src), 'sound/effects/cashregister.ogg', 25, 3, 3)
 			// Announce via newscasters
 			for(var/obj/machinery/newscaster/N in GLOB.allCasters)
 				N.say("[H.real_name] has paid their debt and cleared their bounty.")
@@ -194,19 +208,32 @@
 
 		processing_payment = TRUE
 		amount = min(amount, bounty.debt_amount) // Can't overpay
+		var/paid = FALSE
 
-		if(try_payment(H, amount))
+		// Try bank account first
+		var/obj/item/card/id/C = H.get_idcard(TRUE)
+		if(C?.registered_account)
+			var/datum/bank_account/account = C.registered_account
+			if(account.adjust_money(-amount))
+				paid = TRUE
+				account.bank_card_talk("Partial bounty payment of [amount] Ahn processed.")
+
+		// Fallback to cash
+		if(!paid)
+			paid = try_payment(H, amount)
+
+		if(paid)
 			bounty.debt_amount -= amount
 			if(bounty.debt_amount <= 0)
 				SScity_economy.clear_bounty(H)
 				to_chat(H, span_nicegreen("Bounty cleared! You are now in good standing."))
-				playsound(src, 'sound/machines/chime.ogg', 50, FALSE)
+				H.playsound_local(get_turf(src), 'sound/effects/cashregister.ogg', 25, 3, 3)
 				// Announce via newscasters
 				for(var/obj/machinery/newscaster/N in GLOB.allCasters)
 					N.say("[H.real_name] has paid their debt and cleared their bounty.")
 			else
 				to_chat(H, span_notice("Payment of [amount] Ahn accepted. Remaining debt: [bounty.debt_amount] Ahn."))
-				playsound(src, 'sound/machines/ping.ogg', 50, FALSE)
+				H.playsound_local(get_turf(src), 'sound/effects/cashregister.ogg', 25, 3, 3)
 		else
 			to_chat(H, span_warning("Insufficient funds!"))
 		processing_payment = FALSE

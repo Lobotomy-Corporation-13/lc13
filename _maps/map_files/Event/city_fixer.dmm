@@ -10,6 +10,10 @@
 /obj/item/bedsheet/medical,
 /turf/open/indestructible/white,
 /area/city/shop)
+"aI" = (
+/obj/effect/landmark/bpu_auto_register,
+/turf/open/floor/plating/ashplanet/rocky,
+/area/city/backstreets_checkpoint)
 "aS" = (
 /obj/structure/flora/ausbushes/lavendergrass,
 /turf/open/floor/plating/grass,
@@ -39181,7 +39185,7 @@ Ia
 Ia
 Zu
 AR
-Yg
+aI
 Yg
 Yg
 Yg
@@ -39438,7 +39442,7 @@ Ia
 Ia
 Zu
 AR
-Yg
+aI
 Yg
 rE
 Yg
@@ -39695,7 +39699,7 @@ Ia
 Ia
 Zu
 AR
-Yg
+aI
 Yg
 Yg
 Yg

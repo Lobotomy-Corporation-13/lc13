@@ -157,7 +157,7 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 	director = new_director
 	
 	to_chat(old_director, span_warning("You have transferred leadership of [name] to [new_director.real_name]."))
-	to_chat(new_director, span_nicegreen("You are now the director of [name]!"))
+	to_chat(new_director, span_nicegreen("You are now the representative of [name]!"))
 	
 	// Give new director some recruitment badges
 	for(var/i in 1 to 3)

@@ -148,6 +148,8 @@
 
 		//Office Management
 		/obj/item/office_charter = 20,
+		/obj/item/camera = 50,
+		/obj/item/camera_film = 2000,
 
 	)
 

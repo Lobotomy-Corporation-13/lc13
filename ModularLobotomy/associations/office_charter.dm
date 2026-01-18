@@ -61,6 +61,22 @@
 	if(!office_color)
 		office_color = "#000000"
 
+	// Choose starting armor box
+	var/list/armor_boxes = list(
+		"Fixer Suit" = /obj/item/storage/box/miscarmor,
+		"Fixer Black Suit" = /obj/item/storage/box/miscarmor/two,
+		"Fixer Plate Armor" = /obj/item/storage/box/miscarmor/three,
+		"Fixer Kimono" = /obj/item/storage/box/miscarmor/four,
+		"Fixer Long Jacket" = /obj/item/storage/box/miscarmor/five,
+		"Fixer Armored Turtleneck" = /obj/item/storage/box/miscarmor/six
+	)
+
+	var/armor_choice = input(user, "Choose your starting armor box:", "Office Charter") as null|anything in armor_boxes
+	if(!armor_choice)
+		return
+
+	var/armor_type = armor_boxes[armor_choice]
+
 	// Create the office
 	var/datum/fixer_office/new_office = new
 	new_office.name = office_name
@@ -91,6 +107,12 @@
 		capsule.forceMove(get_turf(user))
 	to_chat(user, span_notice("You receive a [office_type_choice] capsule to deploy your office building."))
 
+	// Give the director their starting armor box
+	var/obj/item/storage/box/miscarmor/armor_box = new armor_type(get_turf(user))
+	if(!H.put_in_hands(armor_box))
+		armor_box.forceMove(get_turf(user))
+	to_chat(user, span_notice("You receive a [armor_choice] armor kit for your office."))
+
 	qdel(src)
 
 	// Add to global list
@@ -120,7 +142,7 @@
 		if(linked_office in GLOB.all_fixer_offices)
 			. += span_notice("This badge is for [linked_office.name].")
 			if(!used)
-				. += span_notice("Director: [linked_office.director?.real_name || "Unknown"]")
+				. += span_notice("Representative: [linked_office.director?.real_name || "Unknown"]")
 				. += span_notice("Members: [linked_office.members.len]/[linked_office.max_members]")
 			else
 				. += span_notice("This badge has already been used for recruitment.")

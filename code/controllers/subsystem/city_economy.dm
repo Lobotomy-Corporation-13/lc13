@@ -9,6 +9,7 @@ SUBSYSTEM_DEF(city_economy)
 	var/base_tax_amount = 200 // Base tax amount for grade 9
 	var/tax_per_grade = 50 // Additional tax per grade improvement
 	var/list/bounties = list() // Assoc list of ckey = bounty datum
+	var/list/strikes = list() // Track missed tax payments per ckey
 	var/list/player_balances = list() // Track player ahn balances
 	var/list/early_tax_paid = list() // Track players who paid tax early
 	var/list/taxed_offices = list() // Track which offices have been taxed this cycle
@@ -203,6 +204,19 @@ SUBSYSTEM_DEF(city_economy)
 	if(!H.ckey)
 		return
 
+	// Increment strike counter
+	if(!strikes[H.ckey])
+		strikes[H.ckey] = 0
+	strikes[H.ckey]++
+
+	// First strike - warning only, no bounty
+	if(strikes[H.ckey] == 1)
+		to_chat(H, span_boldwarning("WARNING: You failed to pay taxes! This is your first strike. Miss payment again and a bounty will be placed on your head!"))
+		for(var/obj/machinery/newscaster/N in GLOB.allCasters)
+			N.say("[H.real_name] has missed a tax payment! One more miss and they will have a bounty!")
+		return
+
+	// Second+ strike - apply bounty
 	var/datum/city_bounty/B = bounties[H.ckey]
 	if(!B)
 		B = new /datum/city_bounty()
@@ -216,7 +230,7 @@ SUBSYSTEM_DEF(city_economy)
 
 	// Announce via newscasters
 	for(var/obj/machinery/newscaster/N in GLOB.allCasters)
-		N.say("[H.real_name] has failed to pay taxes and now has a bounty of [B.debt_amount] Ahn!")
+		N.say("[H.real_name] has failed to pay taxes and now has a bounty of [B.debt_amount * 10] Ahn!")
 
 /datum/controller/subsystem/city_economy/proc/clear_bounty(mob/living/carbon/human/H)
 	if(!H.ckey || !bounties[H.ckey])
@@ -225,6 +239,7 @@ SUBSYSTEM_DEF(city_economy)
 	var/datum/city_bounty/B = bounties[H.ckey]
 	B.clear_bounty()
 	bounties -= H.ckey
+	strikes -= H.ckey
 	qdel(B)
 
 /datum/controller/subsystem/city_economy/proc/check_bounty(mob/living/carbon/human/H)
@@ -284,8 +299,9 @@ SUBSYSTEM_DEF(city_economy)
 
 	// Need at least 80 total stats (20 in each) to drop cash
 	if(total_stats >= 80)
-		// Drop cash at corpse location
-		var/drop_amount = min(debt_amount, 500) // Cap at 500 to prevent farming
+		// Drop cash at corpse location - bounty is 10x debt
+		var/bounty_amount = debt_amount * 10
+		var/drop_amount = min(bounty_amount, 5000) // Cap at 5000 to prevent farming
 		new /obj/item/holochip(get_turf(target), drop_amount)
 
 		// Apply stat penalty

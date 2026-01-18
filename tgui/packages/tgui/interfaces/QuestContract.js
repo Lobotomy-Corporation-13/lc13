@@ -190,7 +190,15 @@ export const QuestContract = (props, context) => {
                         color: '#5a4a3a',
                         marginBottom: '3px',
                       }}>
-                      ACCEPTED TARGETS:
+                      {contract_type === 'hunt'
+                        ? 'TARGETS TO ELIMINATE:'
+                        : contract_type === 'collect'
+                          ? 'ITEMS TO COLLECT:'
+                          : contract_type === 'info'
+                            ? 'ITEMS TO DOCUMENT:'
+                            : contract_type === 'picture'
+                              ? 'SUBJECTS TO PHOTOGRAPH:'
+                              : 'ACCEPTED TARGETS:'}
                     </Box>
                     <Box style={{ fontSize: '12px' }}>
                       {data.target_names.join(', ')}

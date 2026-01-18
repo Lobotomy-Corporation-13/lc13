@@ -48,7 +48,7 @@
 /obj/structure/fixer_grade_terminal/proc/update_id_assignment(obj/item/card/id/I, datum/fixer_office/office, grade, mob/living/carbon/human/H)
 	if(office)
 		if(office.is_director(H))
-			I.assignment = "Grade [grade] [office.name] Director"
+			I.assignment = "Grade [grade] [office.name] Representative"
 		else
 			I.assignment = "Grade [grade] [office.name] Fixer"
 	else

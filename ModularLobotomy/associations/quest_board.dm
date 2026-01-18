@@ -7,7 +7,7 @@
 	anchored = TRUE
 	var/list/available_quests = list()
 	var/quest_refresh_time = 5 MINUTES
-	var/max_quests = 5
+	var/max_quests = 15
 	var/last_refresh = 0
 
 /obj/structure/quest_board/Initialize()
@@ -38,70 +38,124 @@
 	var/info_quests = rand(0, 2) // Less common than collect
 	var/picture_quests = rand(1, 2)
 
-	// List of special hunt quests that need mob existence checks
+	// Special quests that have their own probability checks - exclude from regular pools
 	var/list/special_hunt_quests = list(
-		/datum/city_quest/hunt/clown_menace = /mob/living/simple_animal/hostile/retaliate/clown,
-		/datum/city_quest/hunt/jungle_mooks = /mob/living/simple_animal/hostile/jungle/mook,
-		/datum/city_quest/hunt/faithless_purge = /mob/living/simple_animal/hostile/faithless,
-		/datum/city_quest/hunt/blood_fiend_boss = /mob/living/simple_animal/hostile/humanoid/blood/fiend/boss,
-		/datum/city_quest/hunt/blood_fiends = /mob/living/simple_animal/hostile/humanoid/blood/fiend,
-		/datum/city_quest/hunt/blood_bags = /mob/living/simple_animal/hostile/humanoid/blood/bag,
-		/datum/city_quest/hunt/ghost_busting = /mob/living/simple_animal/hostile/retaliate/ghost
+		/datum/city_quest/hunt/clown_menace,
+		/datum/city_quest/hunt/jungle_mooks,
+		/datum/city_quest/hunt/faithless_purge,
+		/datum/city_quest/hunt/blood_fiend_boss,
+		/datum/city_quest/hunt/blood_fiends,
+		/datum/city_quest/hunt/blood_bags,
+		/datum/city_quest/hunt/ghost_busting
 	)
-
-	// Add hunt quests
-	for(var/i in 1 to hunt_quests)
-		var/quest_type = pick(subtypesof(/datum/city_quest/hunt) - special_hunt_quests)
-		available_quests += new quest_type
-
-	// Check for special hunt mobs
-	for(var/quest_path in special_hunt_quests)
-		var/mob_path = special_hunt_quests[quest_path]
-		for(var/mob/living/L in GLOB.mob_living_list)
-			if(istype(L, mob_path) && L.z && prob(40))
-				available_quests += new quest_path
-				break
-
-	// List of special collect quests that need item existence checks
 	var/list/special_collect_quests = list(
-		/datum/city_quest/collect/raw_pe = /obj/item/rawpe,
-		/datum/city_quest/collect/refined_pe = /obj/item/refinedpe,
-		/datum/city_quest/collect/redacted_tape = /obj/item/tape/resurgence/redacted,
-		/datum/city_quest/collect/ayin_plush = /obj/item/toy/plush/ayin
+		/datum/city_quest/collect/raw_pe,
+		/datum/city_quest/collect/refined_pe,
+		/datum/city_quest/collect/redacted_tape,
+		/datum/city_quest/collect/ayin_plush
 	)
 
-	// Add collect quests
-	for(var/i in 1 to collect_quests)
-		var/quest_type = pick(subtypesof(/datum/city_quest/collect) - special_collect_quests)
-		available_quests += new quest_type
+	// Add hunt quests - validate targets exist on map
+	var/list/hunt_types = subtypesof(/datum/city_quest/hunt) - special_hunt_quests
+	var/hunt_attempts = 0
+	var/max_attempts = hunt_types.len * 2
+	while(hunt_quests > 0 && hunt_attempts < max_attempts)
+		hunt_attempts++
+		var/quest_type = pick(hunt_types)
+		var/datum/city_quest/hunt/Q = new quest_type
+		if(Q.can_generate())
+			available_quests += Q
+			hunt_quests--
+		else
+			qdel(Q)
 
-	// Check for special collect items
-	for(var/quest_path in special_collect_quests)
-		var/item_path = special_collect_quests[quest_path]
-		for(var/obj/item/I in world)
-			if(istype(I, item_path) && I.z && prob(50))
-				available_quests += new quest_path
-				break
+	// Add collect quests - validate items exist on map
+	var/list/collect_types = subtypesof(/datum/city_quest/collect) - special_collect_quests
+	var/collect_attempts = 0
+	max_attempts = collect_types.len * 2
+	while(collect_quests > 0 && collect_attempts < max_attempts)
+		collect_attempts++
+		var/quest_type = pick(collect_types)
+		var/datum/city_quest/collect/Q = new quest_type
+		if(Q.can_generate())
+			available_quests += Q
+			collect_quests--
+		else
+			qdel(Q)
 
-	// Add info quests
-	for(var/i in 1 to info_quests)
-		var/quest_type = pick(subtypesof(/datum/city_quest/info))
-		available_quests += new quest_type
+	// Add info quests - validate items exist on map
+	var/list/info_types = subtypesof(/datum/city_quest/info)
+	var/info_attempts = 0
+	max_attempts = info_types.len * 2
+	while(info_quests > 0 && info_attempts < max_attempts)
+		info_attempts++
+		var/quest_type = pick(info_types)
+		var/datum/city_quest/info/Q = new quest_type
+		if(Q.can_generate())
+			available_quests += Q
+			info_quests--
+		else
+			qdel(Q)
 
-	// Add picture quests
+	// Add picture quests - validate targets exist on map
+	// Exclude special picture quests that have their own probability checks
 	var/list/excluded_picture_quests = list(
 		/datum/city_quest/picture/monolith_sighting,
 		/datum/city_quest/picture/archsage_wisdom,
 		/datum/city_quest/picture/misguiding_light
 	)
-	for(var/i in 1 to picture_quests)
-		var/quest_type = pick(subtypesof(/datum/city_quest/picture) - excluded_picture_quests)
-		available_quests += new quest_type
+	var/list/picture_types = subtypesof(/datum/city_quest/picture) - excluded_picture_quests
+	var/picture_attempts = 0
+	max_attempts = picture_types.len * 2
+	while(picture_quests > 0 && picture_attempts < max_attempts)
+		picture_attempts++
+		var/quest_type = pick(picture_types)
+		var/datum/city_quest/picture/Q = new quest_type
+		if(Q.can_generate())
+			available_quests += Q
+			picture_quests--
+		else
+			qdel(Q)
 
+	// Special hunt quests - rare, only appear if mobs exist with probability and time lock passed
+	for(var/quest_path in special_hunt_quests)
+		if(prob(40)) // 40% chance even if targets exist
+			var/datum/city_quest/hunt/Q = new quest_path
+			// Check time lock
+			if(Q.time_lock > 0 && world.time < Q.time_lock)
+				qdel(Q)
+				continue
+			if(Q.can_generate())
+				available_quests += Q
+			else
+				qdel(Q)
+
+	// Special collect quests - rare, only appear if items exist with probability and time lock passed
+	for(var/quest_path in special_collect_quests)
+		if(prob(50)) // 50% chance even if items exist
+			var/datum/city_quest/collect/Q = new quest_path
+			// Check time lock
+			if(Q.time_lock > 0 && world.time < Q.time_lock)
+				qdel(Q)
+				continue
+			if(Q.can_generate())
+				available_quests += Q
+			else
+				qdel(Q)
+
+	// Special picture quests - monolith, archsage, joey
 	// Check if monolith exists on map and add special quest if so
 	for(var/obj/machinery/monolith/M in GLOB.machines)
 		if(M.z && prob(50)) // 50% chance even if monolith exists
-			available_quests += new /datum/city_quest/picture/monolith_sighting
+			var/datum/city_quest/picture/Q = new /datum/city_quest/picture/monolith_sighting
+			// Check time lock
+			if(Q.time_lock > 0 && world.time < Q.time_lock)
+				qdel(Q)
+				break
+			if(Q.can_generate())
+				available_quests += Q
+			else
+				qdel(Q)
 			break
 
 	// Check if archsage or joey exist and add their quests
@@ -110,12 +164,26 @@
 	for(var/mob/living/simple_animal/npc/N in GLOB.mob_living_list)
 		if(istype(N, /mob/living/simple_animal/npc/archsage) && !has_archsage)
 			has_archsage = TRUE
-			if(prob(60))
-				available_quests += new /datum/city_quest/picture/archsage_wisdom
+			if(prob(60)) // 60% chance
+				var/datum/city_quest/picture/Q = new /datum/city_quest/picture/archsage_wisdom
+				// Check time lock
+				if(Q.time_lock > 0 && world.time < Q.time_lock)
+					qdel(Q)
+				else if(Q.can_generate())
+					available_quests += Q
+				else
+					qdel(Q)
 		if(istype(N, /mob/living/simple_animal/npc/joey) && !has_joey)
 			has_joey = TRUE
-			if(prob(60))
-				available_quests += new /datum/city_quest/picture/misguiding_light
+			if(prob(60)) // 60% chance
+				var/datum/city_quest/picture/Q = new /datum/city_quest/picture/misguiding_light
+				// Check time lock
+				if(Q.time_lock > 0 && world.time < Q.time_lock)
+					qdel(Q)
+				else if(Q.can_generate())
+					available_quests += Q
+				else
+					qdel(Q)
 		if(has_archsage && has_joey)
 			break
 
@@ -160,14 +228,30 @@
 	if(available_quests.len > max_quests)
 		var/list/randomized_quests = list()
 		var/list/temp_quests = available_quests.Copy()
-		
+
 		// Randomly pick quests until we have max_quests or run out
 		while(randomized_quests.len < max_quests && temp_quests.len)
 			var/datum/city_quest/Q = pick(temp_quests)
 			temp_quests -= Q
 			randomized_quests += Q
-		
+
 		available_quests = randomized_quests
+
+	// Ensure at least 6 unlocked contracts (no grade or office locks)
+	var/unlocked_count = 0
+	var/list/locked_quests = list()
+	for(var/datum/city_quest/Q in available_quests)
+		if(Q.grade_lock > 0 || Q.office_lock)
+			locked_quests += Q
+		else
+			unlocked_count++
+
+	// If fewer than 6 unlocked, remove some locked quests to make room
+	while(unlocked_count < 6 && locked_quests.len > 0)
+		var/datum/city_quest/Q = pick(locked_quests)
+		locked_quests -= Q
+		available_quests -= Q
+		qdel(Q)
 
 	// Update icon based on quest count
 	update_icon()
@@ -291,7 +375,10 @@
 			"desc" = Q.desc,
 			"type" = Q.quest_type,
 			"reward" = Q.reward_ahn,
-			"target_names" = target_names
+			"target_names" = target_names,
+			"grade_lock" = Q.grade_lock,
+			"office_lock" = Q.office_lock,
+			"can_accept" = Q.can_accept(H)
 		))
 
 	// Check if player can accept more quests
@@ -322,6 +409,19 @@
 			var/datum/city_quest/Q = locate(params["quest_id"])
 			if(!Q || !(Q in available_quests))
 				return
+
+			// Check if player can accept this quest (grade and office locks)
+			if(!Q.can_accept(H))
+				if(Q.grade_lock > 0)
+					var/player_grade = Q.get_player_grade(H)
+					if(player_grade > Q.grade_lock)
+						to_chat(H, span_warning("This contract requires Grade [Q.grade_lock] or better. You are Grade [player_grade]."))
+						return
+				if(Q.office_lock)
+					to_chat(H, span_warning("This contract requires you to be a member of an office."))
+					return
+				return
+
 			if(H.mind.quest_tracker.add_quest(Q))
 				available_quests -= Q
 				Q.on_accept(H.mind)

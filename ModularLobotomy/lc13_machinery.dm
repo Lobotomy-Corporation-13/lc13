@@ -412,6 +412,17 @@
 
 	return preservation_fee
 
+/obj/machinery/body_preservation_unit/proc/is_tax_compliant(mob/living/carbon/human/H)
+	if(SSmaptype.maptype != "fixers")
+		return FALSE
+	if(!H.ckey)
+		return FALSE
+	// Check if player has no bounty and no strikes
+	if(SScity_economy.bounties[H.ckey])
+		return FALSE
+	if(SScity_economy.strikes[H.ckey])
+		return FALSE
+	return TRUE
 
 /obj/machinery/body_preservation_unit/ui_interact(mob/user)
 	. = ..()
@@ -426,15 +437,25 @@
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
 			var/preservation_fee = calculate_fee(H)
+			var/is_compliant = is_tax_compliant(H)
 
-			dat += "Preservation Fee: [preservation_fee] AHN<br>"
+			if(is_compliant)
+				dat += "<span style='color:green'><b>Tax Status: COMPLIANT - FREE PRESERVATION</b></span><br>"
+				dat += "Preservation Fee: <b>FREE</b> (normally [preservation_fee] AHN)<br>"
+			else
+				dat += "Preservation Fee: [preservation_fee] AHN<br>"
 			dat += "<hr>"
 
-
 			if(stored_bodies[H.real_name])
-				dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan ([preservation_fee] AHN)</a><br>"
+				if(is_compliant)
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan (FREE)</a><br>"
+				else
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Update body scan ([preservation_fee] AHN)</a><br>"
 			else
-				dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan ([preservation_fee] AHN)</a><br>"
+				if(is_compliant)
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan (FREE)</a><br>"
+				else
+					dat += "<a href='byond://?src=[REF(src)];preserve=[REF(H)]'>Create body scan ([preservation_fee] AHN)</a><br>"
 
 		if (isobserver(user))
 			dat += "<hr>"
@@ -461,8 +482,11 @@
 		var/mob/living/carbon/human/H = locate(href_list["preserve"])
 		if(H && ishuman(H))
 			var/preservation_fee = calculate_fee(H)
-			if(try_payment(preservation_fee, H))
+			var/is_compliant = is_tax_compliant(H)
+			if(is_compliant || try_payment(preservation_fee, H))
 				preserve_body(H)
+				if(is_compliant)
+					to_chat(H, "<span class='notice'>As a tax-compliant fixer, your preservation is free!</span>")
 			else
 				to_chat(H, "<span class='notice'>You don't have enough AHN.</span>")
 
@@ -701,3 +725,81 @@
 		if(O.real_name == real_name)
 			return O
 	return null
+
+/*---------------------
+|BPU Auto-Registration Landmark|
+\---------------------*/
+
+/obj/effect/landmark/bpu_auto_register
+	name = "BPU auto-registration zone"
+	desc = "Automatically registers tax-compliant fixers to a random BPU."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "yourselfdeath"
+	invisibility = INVISIBILITY_ABSTRACT
+
+/obj/effect/landmark/bpu_auto_register/Initialize()
+	. = ..()
+	var/static/list/loc_connections = list(
+		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
+	)
+	AddElement(/datum/element/connect_loc, loc_connections)
+
+/obj/effect/landmark/bpu_auto_register/proc/Crossed(atom/movable/AM)
+	SIGNAL_HANDLER
+	if(!ishuman(AM))
+		return
+
+	var/mob/living/carbon/human/H = AM
+
+	// Only works on fixers maptype
+	if(SSmaptype.maptype != "fixers")
+		return
+
+	// Must be a registered fixer
+	if(!H.mind?.registered_fixer)
+		return
+
+	// Check if already registered in any BPU - silently do nothing
+	if(is_registered_in_any_bpu(H))
+		return
+
+	// Check if tax compliant (no bounty, no strikes) - silently do nothing if not
+	if(!is_bpu_tax_compliant(H))
+		return
+
+	// Find a random BPU and register them
+	var/obj/machinery/body_preservation_unit/target_bpu = get_random_bpu()
+	if(!target_bpu)
+		return
+
+	// Auto-register by preserving their body for free
+	target_bpu.preserve_body(H)
+	to_chat(H, span_nicegreen("As a tax-compliant fixer, you have been automatically registered to a Body Preservation Unit!"))
+	playsound(H, 'sound/machines/ping.ogg', 50, TRUE)
+
+/obj/effect/landmark/bpu_auto_register/proc/is_registered_in_any_bpu(mob/living/carbon/human/H)
+	for(var/obj/machinery/body_preservation_unit/BPU in GLOB.machines)
+		if(BPU.stored_bodies[H.real_name])
+			return TRUE
+	return FALSE
+
+/obj/effect/landmark/bpu_auto_register/proc/is_bpu_tax_compliant(mob/living/carbon/human/H)
+	if(!H.ckey)
+		return FALSE
+	// Check if player has no bounty and no strikes
+	if(SScity_economy.bounties[H.ckey])
+		return FALSE
+	if(SScity_economy.strikes[H.ckey])
+		return FALSE
+	return TRUE
+
+/obj/effect/landmark/bpu_auto_register/proc/get_random_bpu()
+	var/list/available_bpus = list()
+	for(var/obj/machinery/body_preservation_unit/BPU in GLOB.machines)
+		if(BPU.z) // Make sure it's on a valid z-level
+			available_bpus += BPU
+
+	if(!available_bpus.len)
+		return null
+
+	return pick(available_bpus)

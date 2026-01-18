@@ -105,11 +105,33 @@ const QuestContract = (props) => {
           Targets: {quest.target_names.join(', ')}
         </Box>
       )}
+      {quest.grade_lock > 0 && (
+        <Box
+          style={{
+            fontSize: '11px',
+            marginBottom: '4px',
+            color: '#8b0000',
+            fontWeight: 'bold',
+          }}>
+          Grade {quest.grade_lock}+ Required
+        </Box>
+      )}
+      {quest.office_lock && (
+        <Box
+          style={{
+            fontSize: '11px',
+            marginBottom: '4px',
+            color: '#4a148c',
+            fontWeight: 'bold',
+          }}>
+          Office Members Only
+        </Box>
+      )}
       <Button
         fluid
         color="default"
         content="Accept Contract"
-        disabled={!canAccept}
+        disabled={!canAccept || !quest.can_accept}
         onClick={e => {
           e.stopPropagation();
           onAccept();
