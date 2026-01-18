@@ -2,7 +2,6 @@
 /datum/ego_datum/weapon/correctional
 	item_path = /obj/item/ego_weapon/ranged/correctional
 	cost = 50
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /datum/ego_datum/armor/correctional
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/correctional
@@ -345,7 +344,7 @@
 /datum/ego_datum/weapon/blind_gun
 	item_path = /obj/item/ego_weapon/ranged/blind_rage
 	cost = 50 // Unused, available from the well.
-	ego_tags = list(EGO_TAG_DOT, EGO_TAG_MULTIHIT, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_HAZARDOUS)
 
 // Flesh Idol - Bleeding Heart
 /datum/ego_datum/armor/heart
@@ -413,7 +412,7 @@
 	item_category = "Weapon (Hand Cannon)"
 	item_path = /obj/item/ego_weapon/ranged/pistol/crimson
 	cost = 50
-	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_LOCKED_POTENTIAL)
 
 // My Sweet Orange Tree - Innocence
 /datum/ego_datum/armor/innocence
@@ -584,7 +583,7 @@
 	item_category = "Weapon (Shotgun)"
 	item_path = /obj/item/ego_weapon/ranged/fellscatter
 	cost = 50
-	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_MULTIHIT, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 // Spiral of Contempt - Contempt, Awe
 /datum/ego_datum/weapon/contempt

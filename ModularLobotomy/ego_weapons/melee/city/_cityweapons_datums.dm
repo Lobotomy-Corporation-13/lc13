@@ -738,7 +738,6 @@ Feel free to add them here if you disagree though.
 /// Soda Shotgun
 /datum/ego_datum/weapon/city/shrimp/shotgun
 	item_path = /obj/item/ego_weapon/ranged/sodashotty
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /// Soda Submachinegun
 /datum/ego_datum/weapon/city/shrimp/smg
@@ -866,7 +865,6 @@ Feel free to add them here if you disagree though.
 /// LCCB Shotgun
 /datum/ego_datum/weapon/city/lccb/shotgun
 	item_path = /obj/item/ego_weapon/ranged/city/limbusshottie
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /// LCCB Magnum
 /datum/ego_datum/weapon/city/lccb/magnum
@@ -895,7 +893,6 @@ Evilpeople organizations and smaller groups of people, including lesser ones, ra
 /datum/ego_datum/weapon/city/thumb_south_shotgun
 	item_path = /obj/item/ego_weapon/ranged/city/thumb/sottocapo
 	cost = 85
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /// Thumb South Capo Brass Knuckles
 /datum/ego_datum/weapon/city/thumb_south_melee

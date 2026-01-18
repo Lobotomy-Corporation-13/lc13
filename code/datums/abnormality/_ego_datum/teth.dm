@@ -82,7 +82,6 @@
 /datum/ego_datum/weapon/noise
 	item_path = /obj/item/ego_weapon/ranged/noise
 	cost = 20
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 /datum/ego_datum/armor/noise
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/noise
@@ -316,7 +315,6 @@
 /datum/ego_datum/weapon/patriot
 	item_path = /obj/item/ego_weapon/ranged/patriot
 	cost = 20
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 // Spirit of Falada - Zauberhorn
 /datum/ego_datum/armor/zauberhorn

@@ -3,7 +3,11 @@ SUBSYSTEM_DEF(testrange)
 	flags = SS_NO_FIRE
 	/// This MUST initialize after Lobotomy Events subsystem, otherwise it can go anywhere really. If you're wondering why, it's because of GotS EGO.
 	init_order = INIT_ORDER_TESTRANGE
+	/// List of all EGO datums that aren't blacklisted
 	var/static/list/ego_datums = list()
+	/// List of all EGO datum paths, only used for the old EGO printer interface. Better to cache it than compute it every time, I think?
+	var/static/list/ego_datum_paths = list()
+	/// Cache of EGO preview images (base64 strings).
 	var/static/list/ego_preview_icons_cache = list()
 	var/static/list/linked_ego_printers = list()
 	var/static/ego_datums_initialized = FALSE
@@ -15,12 +19,14 @@ SUBSYSTEM_DEF(testrange)
 	return ..()
 
 // Evil proc that generates an ego datum for every EGO that isn't test range blacklisted and has a path, also generating a preview icon WHICH IS A BIT HEAVY ON DISK USAGE ! ! !
+// However, on my machine, this is actually only about as expensive on compute as someone firing Havana... I think that might say more about Havana though
 /datum/controller/subsystem/testrange/proc/InitializeDatums()
 	if(!ego_datums_initialized)
 		for(var/datumpath in subtypesof(/datum/ego_datum))
 			var/datum/ego_datum/ED = new datumpath
 			if(!(ED.testrange_blacklisted) && (ED.item_path))
 				ego_datums |= ED
+				ego_datum_paths |= ED.item_path
 				GenerateEgoPreviewIcon(ED.item_path)
 			else
 				qdel(ED)
@@ -34,6 +40,7 @@ SUBSYSTEM_DEF(testrange)
 
 		for(var/obj/machinery/ego_printer/EP in linked_ego_printers)
 			EP.ego_datums = src.ego_datums
+			EP.ego_datum_paths = src.ego_datum_paths
 			EP.ReadyMessage()
 
 // This proc doesn't SEEM that bad but it's being run on like 500 things... so it's a LITTLE bad. If you can figure out a better way to move icons into TGUI then have at it

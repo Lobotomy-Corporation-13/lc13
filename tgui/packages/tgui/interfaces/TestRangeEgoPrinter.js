@@ -478,7 +478,7 @@ export const TestRangeEgoPrinter = (props, context) => {
     )
   }
 
-  // Details specific to armour. CommonDetails and a table of resistances.
+  // Details specific to armour. CommonDetails and a table of resistances. If it's a Realization with an ability, displays name, description and cooldown of it.
   const ArmorDetails = (props, context) => {
     const { datum } = props;
 
@@ -496,7 +496,14 @@ export const TestRangeEgoPrinter = (props, context) => {
             <TableRow><TableCell textAlign="center">{datum.information?.armor?.red ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.white ?? "-"}</TableCell ><TableCell textAlign="center">{datum.information?.armor?.black ?? "-"}</TableCell><TableCell textAlign="center">{datum.information?.armor?.pale ?? "-"}</TableCell></TableRow>
           </Table>
         </FlexItem>
-
+        <FlexItem minWidth={"100%"} mt={3} mb={2}>
+          <Divider />
+        </FlexItem>
+        {datum.information.ability ? <FlexItem>
+          <b>Realized Ability: {datum.information.ability?.name?? "Un-named"}</b><br/>
+          <BlockQuote my={1}>{datum.information.ability?.desc?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
+          Cooldown: {datum.information.ability?.cooldown? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed." }
+        </FlexItem> : null}
       </Flex>
 
     )

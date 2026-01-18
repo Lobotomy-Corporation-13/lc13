@@ -135,7 +135,6 @@
 /datum/ego_datum/weapon/nihil
 	item_path = /obj/item/ego_weapon/ranged/nihil
 	cost = 100
-	ego_tags = list(EGO_TAG_MULTIHIT)
 
 // God of the Seasons - Season's Greetings
 /datum/ego_datum/armor/seasons

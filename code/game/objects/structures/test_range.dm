@@ -7,15 +7,27 @@
 	resistance_flags = INDESTRUCTIBLE
 	/// A list of instantiated ego datums this printer can vend. NEVER delete this as it can be a reference to SStestrange's list. This var is here so you can make custom lists of datums for other printers
 	var/list/ego_datums = list()
+	/// Only the EGO paths, for the old version of the interface. No relevance to the TGUI interface.
+	var/list/ego_datum_paths = list()
 	/// This var limits how much EGO each ckey can print before having to get rid of some. Specific to each printer.
 	var/ego_per_person_limit = 10
 	var/list/printed_ego = list()
+	var/list/disabled_tgui = list()
 
 /* ---------- Shared TGUI/Old EGO printer stuff ---------- */
 
 /obj/machinery/ego_printer/Initialize(mapload)
 	. = ..()
 	SStestrange.linked_ego_printers += src
+	if(SStestrange.ego_datums_initialized)
+		ego_datums = SStestrange.ego_datums
+		ego_datum_paths = SStestrange.ego_datum_paths
+
+// Temporary; we can make this a Pref later if we ever update the real EGO purchase console to use TGUI
+/obj/machinery/ego_printer/AltClick(mob/user)
+	disabled_tgui ^= user // Allegedly this is an XOR operator which should "toggle" the value
+	to_chat(user, span_notice("Toggled interface type for EGO printer."))
+	balloon_alert(user, "Toggled interface type for EGO printer.")
 
 /obj/machinery/ego_printer/Destroy(force)
 	SStestrange.linked_ego_printers -= src
@@ -88,6 +100,10 @@
 	if(!CheckInitializedDatums())
 		return
 
+	if((user in disabled_tgui))
+		INVOKE_ASYNC(src, PROC_REF(ShowOldInterface), user)
+		return
+
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		ui = new(user, src, "TestRangeEgoPrinter", "E.G.O. Printer")
@@ -144,10 +160,17 @@
 
 /* ---------- Old EGO Printer stuff ---------- */
 
+/// Not 1:1 to old logic, we use the new version of the ego datum list and rip the paths out of it
+/obj/machinery/ego_printer/proc/ShowOldInterface(mob/living/user)
+	var/list/ego_list = ego_datum_paths
 
-
-
-
+	user.playsound_local(user, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
+	var/chosen_ego = tgui_input_list(user,"Which EGO do you want to print","Select EGO", ego_list)
+	if((!chosen_ego))
+		user.playsound_local(user, 'sound/machines/terminal_error.ogg', 50, FALSE)
+		to_chat(user, span_warning("No EGO was specified."))
+		return
+	DispenseEgo(user, chosen_ego)
 
 //Abnormality Spawner
 /obj/machinery/computer/testrangespawner
@@ -182,7 +205,7 @@
 			abnospawned.BreachEffect()
 
 /obj/machinery/computer/testrangespawner/process()
-	var/area/A = get_area(src) // cataclysmic world iteration, remove before merge
+	var/area/A = get_area(src) // cataclysmic world iteration, remove when reworking this (if you iterate over an area you are iterating over the entire world)
 	for(var/mob/living/carbon/human/H in A)
 		if(H.stat != DEAD)
 			return

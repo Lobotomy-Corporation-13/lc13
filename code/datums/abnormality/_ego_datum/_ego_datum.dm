@@ -154,6 +154,8 @@ GLOBAL_LIST_EMPTY(ego_datums)
 		var/obj/item/ego_weapon/ranged/E_gun = E
 
 		ego_tags |= EGO_TAG_RANGED
+		if(E_gun.pellets > 1)
+			ego_tags |= EGO_TAG_MULTIHIT
 
 		// Bullet damage
 		information["force_ranged"] = E_gun.last_projectile_damage
@@ -221,6 +223,14 @@ GLOBAL_LIST_EMPTY(ego_datums)
 
 	if(E.slowdown && E.slowdown < 0)
 		ego_tags |= EGO_TAG_MOBILITY
+
+	if(istype(E, /obj/item/clothing/suit/armor/ego_gear/realization))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/E_realization = E
+		ego_tags |= EGO_TAG_REALIZED
+		if(E_realization.assimilation_ability)
+			ego_tags |= EGO_TAG_ASSIMILATION
+		if(E_realization.realized_ability)
+			information["ability"] = list("name" = E_realization.realized_ability.name, "desc" = E_realization.realized_ability.desc, "cooldown" = E_realization.realized_ability.cooldown_time)
 
 	information["armor"] = list()
 	information["description"] = E.desc
