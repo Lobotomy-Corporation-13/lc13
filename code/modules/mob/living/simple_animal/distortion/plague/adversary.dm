@@ -8,7 +8,7 @@
 /mob/living/simple_animal/hostile/distortion/adversary
 	name = "The Adversary"
 	desc = "A figure wreathed in a sickly green aura, emanating plague and corruption."
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/adversary.dmi'
 	icon_state = "1x1x1x1"
 	icon_living = "1x1x1x1"
 	maxHealth = 2500
@@ -432,7 +432,7 @@
 // MASS INFECTION Projectile
 /obj/projectile/magic/aoe/adversary_infection
 	name = "plague shockwave"
-	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/adversary_shockwave.dmi'
 	pixel_y = -32
 	icon_state = "shockwave"
 	color = "#00FF00"
