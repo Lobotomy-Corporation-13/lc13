@@ -128,7 +128,7 @@
 	can_act = FALSE
 	// Remove showtime overlay, add stagger overlay
 	cut_overlays()
-	var/mutable_appearance/stagger_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
+	var/mutable_appearance/stagger_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "small_stagger", layer + 0.1)
 	add_overlay(stagger_overlay)
 	// Make more vulnerable during stagger
 	ChangeResistances(stagger_resistances)
@@ -218,7 +218,7 @@
 	// Visual telegraph
 	TrySay(pick("Keep moving forward!", "Chase the light!", "Don't look back!"))
 	visible_message(span_warning("[src] crouches, electricity crackling around them!"))
-	playsound(src, 'sound/effects/sparks4.ogg', 50, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
 	// Execute after delay - pass saved target position
 	addtimer(CALLBACK(src, PROC_REF(ExecuteBlazingDash), target_turf), delay)
 
@@ -248,17 +248,17 @@
 	if(!destination || stat == DEAD || is_staggered)
 		return
 	var/list/hit_mobs = list()
-	// Small delay before dash starts, scales with ramp up (1s base, 0.2s at 10 ramp up, 0.1s showtime)
+	// Small delay before dash starts, scales with ramp up (0.8s base, 0.4s at 10 ramp up, 0.3s showtime)
 	var/dash_delay
 	if(in_showtime)
-		dash_delay = 0.1 SECONDS
+		dash_delay = 0.3 SECONDS
 	else
-		dash_delay = max(0.2 SECONDS, 1 SECONDS - (ramp_up * 0.08 SECONDS))
+		dash_delay = max(0.4 SECONDS, 0.8 SECONDS - (ramp_up * 0.04 SECONDS))
 	if(!do_after(src, dash_delay, target = src))
 		return
 	var/turf/current = get_turf(src)
 	var/enemy_direction = get_dir(src, destination)
-	playsound(src, 'sound/effects/sparks4.ogg', 50, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
 	for(var/i in 1 to 7)
 		if(get_turf(src) != current || stat == DEAD)
 			break
@@ -288,12 +288,12 @@
 	last_ability_time = world.time
 	// Mark target position
 	var/turf/target_turf = get_turf(target)
-	// Warning duration (1s base, 0.2s at 10 ramp up, 0.1s showtime)
+	// Warning duration (0.8s base, 0.4s at 10 ramp up, 0.3s showtime)
 	var/warning_delay
 	if(in_showtime)
-		warning_delay = 0.1 SECONDS
+		warning_delay = 0.3 SECONDS
 	else
-		warning_delay = max(0.2 SECONDS, 1 SECONDS - (ramp_up * 0.08 SECONDS))
+		warning_delay = max(0.4 SECONDS, 0.8 SECONDS - (ramp_up * 0.04 SECONDS))
 	// Add warning overlays to landing zone
 	var/static/warning_icon = icon('icons/effects/effects.dmi', "dancing_lights")
 	for(var/turf/T in range(jump_aoe, target_turf))
@@ -302,7 +302,7 @@
 	// Visual telegraph - NO jump animation yet, just prepare
 	TrySay(pick("Reach for the sky!", "If you can see the light...", "Higher and higher!"))
 	visible_message(span_warning("[src] prepares to leap!"))
-	playsound(src, 'sound/effects/sparks4.ogg', 50, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
 	// Execute after warning delay
 	addtimer(CALLBACK(src, PROC_REF(ExecuteFantasiaLights), target_turf), warning_delay)
 
@@ -320,7 +320,7 @@
 	// Land at marked position
 	forceMove(landing_turf)
 	animate(src, pixel_z = 0, time = 0.1 SECONDS)
-	playsound(src, 'sound/effects/sparks4.ogg', 75, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 75, TRUE)
 	// AoE damage at landing
 	for(var/turf/T in range(jump_aoe, landing_turf))
 		new /obj/effect/temp_visual/justitia_effect(T)
@@ -341,25 +341,25 @@
 	last_ability_time = world.time
 	// Stop moving
 	var/turf/my_turf = get_turf(src)
-	// Warning duration (1s base, 0.2s at 10 ramp up, 0.1s showtime)
+	// Warning duration (0.8s base, 0.4s at 10 ramp up, 0.3s showtime)
 	var/warning_delay
 	if(in_showtime)
-		warning_delay = 0.1 SECONDS
+		warning_delay = 0.3 SECONDS
 	else
-		warning_delay = max(0.2 SECONDS, 1 SECONDS - (ramp_up * 0.08 SECONDS))
+		warning_delay = max(0.4 SECONDS, 0.8 SECONDS - (ramp_up * 0.04 SECONDS))
 	// Mark concentric circles with 1-tile gaps (distance 1, 3)
 	var/list/marked_turfs = list()
 	var/static/warning_icon = icon('icons/effects/effects.dmi', "dancing_lights")
 	for(var/turf/T in range(circuit_max_range, my_turf))
 		var/dist = get_dist(my_turf, T)
-		if(dist == 1 || dist == 3 || dist == 4 || dist == 5) // Rings at distance 1, 3, 4, and 5
+		if(dist == 1 || dist == 3 || dist == 5) // Rings at distance 1, 3, 4, and 5
 			marked_turfs += T
 			// Add warning overlay that lasts until attack executes
 			T.add_overlay(warning_icon)
 			addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, cut_overlay), warning_icon), warning_delay)
 	TrySay(pick("Let the light spread!", "Illuminate the path!", "Can you see it now?"))
 	visible_message(span_warning("Amber circuits spread out from [src]!"))
-	playsound(src, 'sound/effects/sparks4.ogg', 50, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
 	// Execute after warning delay
 	addtimer(CALLBACK(src, PROC_REF(ExecuteAmberCircuits), marked_turfs), warning_delay)
 
@@ -368,7 +368,7 @@
 		if(!is_staggered)
 			can_act = TRUE
 		return
-	playsound(src, 'sound/effects/sparks4.ogg', 75, TRUE)
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 75, TRUE)
 	for(var/turf/T in turfs)
 		new /obj/effect/temp_visual/justitia_effect(T)
 		for(var/mob/living/L in T)

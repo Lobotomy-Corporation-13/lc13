@@ -11,6 +11,7 @@
 	gender = MALE
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	robust_searching = TRUE
+	density = FALSE
 	see_in_dark = 7
 	vision_range = 12
 	aggro_vision_range = 20
@@ -77,6 +78,8 @@
 	var/lifelink_update_timer
 	var/stagger_decay_timer
 	var/feeble_decay_timer
+	/// Current stagger bar overlay reference
+	var/mutable_appearance/current_stagger_bar
 
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/Initialize()
 	. = ..()
@@ -152,18 +155,19 @@
 
 // Stagger bar (inverted - shows stability remaining)
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/CreateStaggerBar()
-	var/mutable_appearance/stagger_bar = mutable_appearance('icons/effects/progessbar.dmi', "prog_bar_100", ABOVE_MOB_LAYER)
-	stagger_bar.pixel_y = 32
-	add_overlay(stagger_bar)
+	current_stagger_bar = mutable_appearance('icons/effects/progessbar.dmi', "prog_bar_100", ABOVE_MOB_LAYER)
+	current_stagger_bar.pixel_y = 32
+	add_overlay(current_stagger_bar)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/UpdateStaggerBar()
-	cut_overlays()
-	// Restore wisps overlay by re-adding them (they orbit, but we need to not cut their visual)
+	// Remove only the stagger bar overlay, preserve other overlays
+	if(current_stagger_bar)
+		cut_overlay(current_stagger_bar)
 	var/stability_percent = round(((max_stagger - stagger_amount) / max_stagger) * 100, 5)
 	stability_percent = clamp(stability_percent, 0, 100)
-	var/mutable_appearance/stagger_bar = mutable_appearance('icons/effects/progessbar.dmi', "prog_bar_[stability_percent]", ABOVE_MOB_LAYER)
-	stagger_bar.pixel_y = 32
-	add_overlay(stagger_bar)
+	current_stagger_bar = mutable_appearance('icons/effects/progessbar.dmi', "prog_bar_[stability_percent]", ABOVE_MOB_LAYER)
+	current_stagger_bar.pixel_y = 32
+	add_overlay(current_stagger_bar)
 
 // Lifelink Management
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/UpdateLifelinks()
@@ -245,14 +249,15 @@
 		if(hp_percent < lowest_hp_percent)
 			lowest_hp_percent = hp_percent
 			lowest_hp_ally = M
-	if(lowest_hp_ally && !target)
-		// Follow the ally
+	if(lowest_hp_ally && lowest_hp_ally != target)
+		// Follow the ally like the clan drone does
+		target = lowest_hp_ally
 		if(ai_controller)
-			ai_controller.current_movement_target = lowest_hp_ally
+			ai_controller.current_movement_target = target
 
 // Called by lifelinked status effect when ally takes damage
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/OnAllyDamaged(mob/living/ally, damage, damage_type, mob/living/attacker)
-	if(is_staggered)
+	if(is_staggered || performing_counter)
 		return FALSE
 	// Teleport to ally
 	var/turf/ally_turf = get_turf(ally)
@@ -297,7 +302,11 @@
 // Counter Attack
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/StartCounterAttack(mob/living/attacker)
 	performing_counter = TRUE
-	// Visual telegraph
+	// Add warning overlay to all turfs in counter range
+	for(var/turf/T in range(counter_range, src))
+		T.add_overlay(icon('icons/effects/effects.dmi', "galaxy_aura"))
+		addtimer(CALLBACK(T, TYPE_PROC_REF(/atom, cut_overlay), icon('icons/effects/effects.dmi', "galaxy_aura")), counter_delay)
+	// Visual telegraph on self
 	new /obj/effect/temp_visual/cult/sparks(get_turf(src))
 	// Delayed AoE counter
 	addtimer(CALLBACK(src, PROC_REF(ExecuteCounterAttack)), counter_delay)
@@ -344,7 +353,7 @@
 	feeble_stacks = 0
 	UpdateWisps()
 	// Add stagger overlay and change resistances
-	var/mutable_appearance/stagger_overlay = mutable_appearance(icon, "small_stagger", layer + 0.1)
+	var/mutable_appearance/stagger_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "small_stagger", layer + 0.1)
 	add_overlay(stagger_overlay)
 	ChangeResistances(stagger_resistances)
 	say("...Ah. I see.")
@@ -386,7 +395,7 @@
 	adjustBruteLoss(-heal_amount)
 	// Add wing overlays
 	add_overlay(mutable_appearance('icons/effects/effects.dmi', "breach", ABOVE_MOB_LAYER))
-	add_overlay(mutable_appearance('icons/effects/effects.dmi', "galaxy_aura", BELOW_MOB_LAYER))
+	add_overlay(mutable_appearance('icons/effects/effects.dmi', "galaxy_aura", ABOVE_MOB_LAYER))
 	say("Despite all the struggles, I shall remain myself...")
 	visible_message(span_danger("Wings of light emerge from [src]'s back!"))
 
