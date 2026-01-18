@@ -104,15 +104,13 @@ SUBSYSTEM_DEF(city_economy)
 	var/tax_paid = try_collect_tax(office.director, tax_amount, office)
 
 	if(!tax_paid)
-		// Director couldn't pay - apply bounty to director only
-		apply_bounty(office.director, tax_amount)
-		for(var/mob/living/carbon/human/member in online_members)
-			to_chat(member, span_boldwarning("The office director failed to pay tax of [tax_amount] Ahn! A bounty of [tax_amount] Ahn has been placed on the director!"))
+		// Director couldn't pay - apply bounty to director only (apply_bounty handles messaging)
+		apply_bounty(office.director, tax_amount, office)
 
 	taxed_offices += office
 
 /datum/controller/subsystem/city_economy/proc/try_collect_tax(mob/living/carbon/human/H, amount, datum/fixer_office/office = null)
-	// Try bank account first
+	// Only check bank account - not cash on hand
 	var/obj/item/card/id/player_id = H.get_idcard()
 	if(player_id?.registered_account)
 		var/datum/bank_account/account = player_id.registered_account
@@ -131,51 +129,6 @@ SUBSYSTEM_DEF(city_economy)
 				city_account.adjust_money(amount)
 			return TRUE
 
-	// Try cash
-	var/total_ahn = 0
-	for(var/obj/item/holochip/chip in H.contents)
-		total_ahn += chip.credits
-	for(var/obj/item/stack/spacecash/cash in H.contents)
-		total_ahn += cash.value * cash.amount
-
-	if(total_ahn >= amount)
-		// Deduct from cash
-		var/remaining = amount
-
-		// First try holochips
-		for(var/obj/item/holochip/chip in H.contents)
-			if(remaining <= 0)
-				break
-			if(chip.credits >= remaining)
-				chip.credits -= remaining
-				if(chip.credits <= 0)
-					qdel(chip)
-				remaining = 0
-			else
-				remaining -= chip.credits
-				qdel(chip)
-
-		// Then try cash stacks
-		for(var/obj/item/stack/spacecash/cash in H.contents)
-			if(remaining <= 0)
-				break
-			var/stack_value = cash.value * cash.amount
-			if(stack_value >= remaining)
-				var/stacks_needed = CEILING(remaining / cash.value, 1)
-				cash.use(stacks_needed)
-				remaining = 0
-			else
-				remaining -= stack_value
-				qdel(cash)
-
-		if(office)
-			for(var/mob/living/carbon/human/member in office.members)
-				if(member.client)
-					to_chat(member, span_notice("Office tax of [amount] Ahn has been paid by [H.real_name] from cash."))
-		else
-			to_chat(H, span_notice("Tax of [amount] Ahn has been collected from your cash."))
-		return TRUE
-
 	return FALSE
 
 /datum/controller/subsystem/city_economy/proc/process_tax_payment(mob/living/carbon/human/H)
@@ -191,16 +144,10 @@ SUBSYSTEM_DEF(city_economy)
 
 	// Try to collect tax
 	if(!try_collect_tax(H, tax_amount))
-		// Can't pay - apply bounty
-		var/total_ahn = 0
-		for(var/obj/item/holochip/chip in H.contents)
-			total_ahn += chip.credits
-		for(var/obj/item/stack/spacecash/cash in H.contents)
-			total_ahn += cash.value * cash.amount
-		apply_bounty(H, tax_amount - total_ahn)
-		to_chat(H, span_boldwarning("You cannot afford tax of [tax_amount] Ahn! A bounty of [tax_amount - total_ahn] Ahn has been placed on your head!"))
+		// Can't pay - apply bounty (apply_bounty handles messaging)
+		apply_bounty(H, tax_amount)
 
-/datum/controller/subsystem/city_economy/proc/apply_bounty(mob/living/carbon/human/H, amount)
+/datum/controller/subsystem/city_economy/proc/apply_bounty(mob/living/carbon/human/H, amount, datum/fixer_office/office = null)
 	if(!H.ckey)
 		return
 
@@ -211,7 +158,12 @@ SUBSYSTEM_DEF(city_economy)
 
 	// First strike - warning only, no bounty
 	if(strikes[H.ckey] == 1)
-		to_chat(H, span_boldwarning("WARNING: You failed to pay taxes! This is your first strike. Miss payment again and a bounty will be placed on your head!"))
+		if(office)
+			for(var/mob/living/carbon/human/member in office.members)
+				if(member.client)
+					to_chat(member, span_boldwarning("WARNING: The office director failed to pay tax of [amount] Ahn! This is their first strike. Another missed payment will result in a bounty!"))
+		else
+			to_chat(H, span_boldwarning("WARNING: You failed to pay tax of [amount] Ahn! This is your first strike. Miss payment again and a bounty will be placed on your head!"))
 		for(var/obj/machinery/newscaster/N in GLOB.allCasters)
 			N.say("[H.real_name] has missed a tax payment! One more miss and they will have a bounty!")
 		return
@@ -227,6 +179,14 @@ SUBSYSTEM_DEF(city_economy)
 	B.debt_amount += amount
 	B.bounty_placed_time = world.time
 	B.apply_bounty_effects()
+
+	// Notify about bounty being placed
+	if(office)
+		for(var/mob/living/carbon/human/member in office.members)
+			if(member.client)
+				to_chat(member, span_boldwarning("The office director failed to pay tax of [amount] Ahn! A bounty of [B.debt_amount * 10] Ahn has been placed on the director!"))
+	else
+		to_chat(H, span_boldwarning("You failed to pay tax of [amount] Ahn! A bounty of [B.debt_amount * 10] Ahn has been placed on your head!"))
 
 	// Announce via newscasters
 	for(var/obj/machinery/newscaster/N in GLOB.allCasters)

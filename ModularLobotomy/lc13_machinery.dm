@@ -573,6 +573,29 @@
 	store_actions(H, preserved_data)
 	store_skills(H, preserved_data)
 
+	// Store bank account info
+	preserved_data["bank_balance"] = null
+	var/obj/item/card/id/id_card = H.get_idcard()
+	if(id_card?.registered_account)
+		preserved_data["bank_balance"] = id_card.registered_account.account_balance
+
+	// Store ID card info
+	if(id_card)
+		preserved_data["id_assignment"] = id_card.assignment
+		preserved_data["id_registered_name"] = id_card.registered_name
+
+	// Store registered fixer status
+	preserved_data["registered_fixer"] = H.mind?.registered_fixer
+
+	// Store office membership
+	preserved_data["office_ref"] = null
+	preserved_data["was_director"] = FALSE
+	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)
+		if(H in F.members)
+			preserved_data["office_ref"] = REF(F)
+			preserved_data["was_director"] = (H == F.director)
+			break
+
 	stored_bodies[H.real_name] = preserved_data
 
 
@@ -677,6 +700,34 @@
 	var/assigned_role = stored_data["assigned_role"]
 	if (assigned_role)
 		new_body.mind.assigned_role = assigned_role
+
+	// Restore registered fixer status
+	if(stored_data["registered_fixer"])
+		new_body.mind.registered_fixer = TRUE
+
+	// Create ID card with proper assignment and bank account
+	var/obj/item/card/id/new_id = new /obj/item/card/id(new_body)
+	new_id.registered_name = stored_data["real_name"]
+	if(stored_data["id_assignment"])
+		new_id.assignment = stored_data["id_assignment"]
+	new_id.update_label()
+
+	// Create/restore bank account
+	var/datum/bank_account/new_account = new /datum/bank_account(stored_data["real_name"], stored_data["ckey"])
+	if(stored_data["bank_balance"])
+		new_account.account_balance = stored_data["bank_balance"]
+	new_id.registered_account = new_account
+	SSeconomy.bank_accounts += new_account
+
+	// Equip ID card
+	new_body.equip_to_slot_or_del(new_id, ITEM_SLOT_ID)
+
+	// Restore office membership - replace old body, don't just add
+	if(stored_data["office_ref"])
+		var/datum/fixer_office/office = locate(stored_data["office_ref"])
+		if(office && (office in GLOB.all_fixer_offices))
+			var/mob/living/carbon/human/old_body = locate(stored_data["ref"])
+			office.replace_member(old_body, new_body, stored_data["was_director"])
 
 	playsound(get_turf(src), 'sound/effects/bin_close.ogg', 35, 3, 3)
 	playsound(get_turf(src), 'sound/misc/splort.ogg', 35, 3, 3)

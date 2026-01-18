@@ -152,20 +152,44 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 /datum/fixer_office/proc/transfer_leadership(mob/living/carbon/human/new_director)
 	if(!(new_director in members))
 		return FALSE
-	
+
 	var/old_director = director
 	director = new_director
-	
+
 	to_chat(old_director, span_warning("You have transferred leadership of [name] to [new_director.real_name]."))
 	to_chat(new_director, span_nicegreen("You are now the representative of [name]!"))
-	
+
 	// Give new director some recruitment badges
 	for(var/i in 1 to 3)
 		var/obj/item/clothing/accessory/office_badge/badge = new(get_turf(new_director))
 		badge.linked_office = src
 		badge.name = "[name] recruitment badge"
 		badge.update_icon()
-	
+
+	return TRUE
+
+/// Replaces an old body with a new body in the office (used for BPU revival)
+/// Does NOT trigger disband even if the old body was the director
+/datum/fixer_office/proc/replace_member(mob/living/carbon/human/old_body, mob/living/carbon/human/new_body, was_director = FALSE)
+	if(!new_body)
+		return FALSE
+
+	// Remove old body from members without triggering disband
+	if(old_body && (old_body in members))
+		members -= old_body
+		if(member_actions[old_body])
+			var/datum/action/office_menu/OM = member_actions[old_body]
+			OM.Remove(old_body)
+			qdel(OM)
+			member_actions -= old_body
+
+	// Add new body as member
+	add_member(new_body)
+
+	// Restore director status if they were the director
+	if(was_director)
+		director = new_body
+
 	return TRUE
 
 // Office Management Action

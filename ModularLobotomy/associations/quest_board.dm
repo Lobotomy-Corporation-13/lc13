@@ -30,13 +30,32 @@
 	icon_state = "nboard0[quest_count]"
 
 /obj/structure/quest_board/proc/refresh_quests()
-	available_quests.Cut()
+	// Calculate how many new quests we can add (incremental refresh)
+	var/current_count = available_quests.len
+	var/slots_available = max_quests - current_count
 
-	// Generate random quests
-	var/hunt_quests = rand(1, 3)
-	var/collect_quests = rand(1, 2)
-	var/info_quests = rand(0, 2) // Less common than collect
-	var/picture_quests = rand(1, 2)
+	// Minimum new quests to add per refresh
+	var/min_new_quests = 3
+
+	// If no room, remove some old quests to make room for at least min_new_quests
+	if(slots_available < min_new_quests && current_count > 0)
+		var/to_remove = min_new_quests - slots_available
+		for(var/i in 1 to to_remove)
+			if(!available_quests.len)
+				break
+			var/datum/city_quest/old_quest = pick(available_quests)
+			available_quests -= old_quest
+			qdel(old_quest)
+		slots_available = max_quests - available_quests.len
+
+	// List to hold newly generated quests
+	var/list/new_quests = list()
+
+	// Determine how many of each type to generate based on available slots
+	var/hunt_quests = rand(1, min(3, slots_available))
+	var/collect_quests = rand(1, min(2, max(1, slots_available - hunt_quests)))
+	var/info_quests = rand(0, min(2, max(1, slots_available - hunt_quests - collect_quests)))
+	var/picture_quests = rand(1, min(2, max(1, slots_available - hunt_quests - collect_quests - info_quests)))
 
 	// Special quests that have their own probability checks - exclude from regular pools
 	var/list/special_hunt_quests = list(
@@ -58,13 +77,13 @@
 	// Add hunt quests - validate targets exist on map
 	var/list/hunt_types = subtypesof(/datum/city_quest/hunt) - special_hunt_quests
 	var/hunt_attempts = 0
-	var/max_attempts = hunt_types.len * 2
-	while(hunt_quests > 0 && hunt_attempts < max_attempts)
+	var/max_attempts = hunt_types.len * 3 // More attempts for retry
+	while(hunt_quests > 0 && hunt_attempts < max_attempts && hunt_types.len)
 		hunt_attempts++
 		var/quest_type = pick(hunt_types)
 		var/datum/city_quest/hunt/Q = new quest_type
 		if(Q.can_generate())
-			available_quests += Q
+			new_quests += Q
 			hunt_quests--
 		else
 			qdel(Q)
@@ -72,13 +91,13 @@
 	// Add collect quests - validate items exist on map
 	var/list/collect_types = subtypesof(/datum/city_quest/collect) - special_collect_quests
 	var/collect_attempts = 0
-	max_attempts = collect_types.len * 2
-	while(collect_quests > 0 && collect_attempts < max_attempts)
+	max_attempts = collect_types.len * 3
+	while(collect_quests > 0 && collect_attempts < max_attempts && collect_types.len)
 		collect_attempts++
 		var/quest_type = pick(collect_types)
 		var/datum/city_quest/collect/Q = new quest_type
 		if(Q.can_generate())
-			available_quests += Q
+			new_quests += Q
 			collect_quests--
 		else
 			qdel(Q)
@@ -86,13 +105,13 @@
 	// Add info quests - validate items exist on map
 	var/list/info_types = subtypesof(/datum/city_quest/info)
 	var/info_attempts = 0
-	max_attempts = info_types.len * 2
-	while(info_quests > 0 && info_attempts < max_attempts)
+	max_attempts = info_types.len * 3
+	while(info_quests > 0 && info_attempts < max_attempts && info_types.len)
 		info_attempts++
 		var/quest_type = pick(info_types)
 		var/datum/city_quest/info/Q = new quest_type
 		if(Q.can_generate())
-			available_quests += Q
+			new_quests += Q
 			info_quests--
 		else
 			qdel(Q)
@@ -106,13 +125,13 @@
 	)
 	var/list/picture_types = subtypesof(/datum/city_quest/picture) - excluded_picture_quests
 	var/picture_attempts = 0
-	max_attempts = picture_types.len * 2
-	while(picture_quests > 0 && picture_attempts < max_attempts)
+	max_attempts = picture_types.len * 3
+	while(picture_quests > 0 && picture_attempts < max_attempts && picture_types.len)
 		picture_attempts++
 		var/quest_type = pick(picture_types)
 		var/datum/city_quest/picture/Q = new quest_type
 		if(Q.can_generate())
-			available_quests += Q
+			new_quests += Q
 			picture_quests--
 		else
 			qdel(Q)
@@ -126,7 +145,7 @@
 				qdel(Q)
 				continue
 			if(Q.can_generate())
-				available_quests += Q
+				new_quests += Q
 			else
 				qdel(Q)
 
@@ -139,7 +158,7 @@
 				qdel(Q)
 				continue
 			if(Q.can_generate())
-				available_quests += Q
+				new_quests += Q
 			else
 				qdel(Q)
 
@@ -153,7 +172,7 @@
 				qdel(Q)
 				break
 			if(Q.can_generate())
-				available_quests += Q
+				new_quests += Q
 			else
 				qdel(Q)
 			break
@@ -170,7 +189,7 @@
 				if(Q.time_lock > 0 && world.time < Q.time_lock)
 					qdel(Q)
 				else if(Q.can_generate())
-					available_quests += Q
+					new_quests += Q
 				else
 					qdel(Q)
 		if(istype(N, /mob/living/simple_animal/npc/joey) && !has_joey)
@@ -181,7 +200,7 @@
 				if(Q.time_lock > 0 && world.time < Q.time_lock)
 					qdel(Q)
 				else if(Q.can_generate())
-					available_quests += Q
+					new_quests += Q
 				else
 					qdel(Q)
 		if(has_archsage && has_joey)
@@ -221,21 +240,17 @@
 
 			if(available_distortions.len)
 				var/quest_type = pick(available_distortions)
-				available_quests += new quest_type
+				new_quests += new quest_type
 
-	// Randomize quest order before limiting to max_quests
-	// This gives all quest types equal chance to appear
-	if(available_quests.len > max_quests)
-		var/list/randomized_quests = list()
-		var/list/temp_quests = available_quests.Copy()
+	// Add new quests to available_quests up to max_quests
+	while(new_quests.len && available_quests.len < max_quests)
+		var/datum/city_quest/Q = pick(new_quests)
+		new_quests -= Q
+		available_quests += Q
 
-		// Randomly pick quests until we have max_quests or run out
-		while(randomized_quests.len < max_quests && temp_quests.len)
-			var/datum/city_quest/Q = pick(temp_quests)
-			temp_quests -= Q
-			randomized_quests += Q
-
-		available_quests = randomized_quests
+	// Clean up any excess generated quests that didn't fit
+	for(var/datum/city_quest/Q in new_quests)
+		qdel(Q)
 
 	// Ensure at least 6 unlocked contracts (no grade or office locks)
 	var/unlocked_count = 0
