@@ -737,15 +737,8 @@
 	icon_state = "yourselfdeath"
 	invisibility = INVISIBILITY_ABSTRACT
 
-/obj/effect/landmark/bpu_auto_register/Initialize()
+/obj/effect/landmark/bpu_auto_register/Crossed(atom/movable/AM)
 	. = ..()
-	var/static/list/loc_connections = list(
-		COMSIG_ATOM_ENTERED = PROC_REF(on_entered),
-	)
-	AddElement(/datum/element/connect_loc, loc_connections)
-
-/obj/effect/landmark/bpu_auto_register/proc/Crossed(atom/movable/AM)
-	SIGNAL_HANDLER
 	if(!ishuman(AM))
 		return
 
