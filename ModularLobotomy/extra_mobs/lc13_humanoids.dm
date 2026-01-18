@@ -281,15 +281,12 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/drop_loot()
-	var/list/loot
-
-	if (prob(50))
-		loot = loot_armor
-	else
-		loot = loot_weapon
-
-	if(loot?.len)
-		for(var/i in loot)
+	// Drop both weapon and armor
+	if(loot_weapon?.len)
+		for(var/i in loot_weapon)
+			new i(loc)
+	if(loot_armor?.len)
+		for(var/i in loot_armor)
 			new i(loc)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/Move()
@@ -308,6 +305,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_state = "metal_fixer"
 	icon_living = "metal_fixer"
 	icon_dead = "metal_fixer"
+	faction = list("echo_office")
 	var/icon_attacking = "metal_fixer_weapon"
 	maxHealth = 2000
 	health = 2000
@@ -578,6 +576,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_state = "flame_fixer"
 	icon_living = "flame_fixer"
 	icon_dead = "flame_fixer"
+	faction = list("echo_office")
 	maxHealth = 2500
 	health = 2500
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.3)
