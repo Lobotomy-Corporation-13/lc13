@@ -5,133 +5,126 @@ import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
 import { Window } from '../layouts';
 
-// There's some issue with tooltips flickering every time the TGUI subsystem fires (calling try_update_ui), so this window's TGUI datum should have its autoupdate turned off. Its data shouldn't update anyway.
-// I'm sorry this is my first TGUI interface
+/* There's some issue with tooltips flickering every time the TGUI subsystem
+fires (calling try_update_ui), so this window's TGUI datum should have its
+autoupdate turned off. Its data shouldn't update anyway.
+I'm sorry this is my first TGUI interface
 
+Also, I wished to leave a lot more comments but since comment length is
+capped at 80 in the linter, unfortunately I can't leave too many without
+making this file look like a hot mess
+*/
 export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
   const { ego_weapon_datums, ego_armor_datums, all_tags } = data;
 
   /* ------------ React Hooks ------------*/
 
-  /// Controls whether we're viewing Weapons or Armour
   const [tab, setTab] = useLocalState(context, 'tab', 1);
-  /// Name search filter.
-  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "")
-  /// Armour resistance filters. It's an object with the colours as keys and the minimum resistance rank from -10 to 10 as the value. Since we receive them as roman numerals, we need to decode them for comparison.
-  const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 })
-  /// Threat class filters. It's an object; the keys are the threat classes: 1 is ZAYIN, 2 is TETH, 3 is HE, 4 is WAW, 5 is ALEPH. The values are whether EGO of that threat class should be visible.
-  const [threatClassFilters, setThreatClassFilters] = useLocalState(context, "threatClassFilters", { 1: true, 2: true, 3: true, 4: true, 5: true })
-  /// Origin filters. The values are whether EGO from that origin should be visible.
-  const [originFilters, setOriginFilters] = useLocalState(context, "originFilters", { "LC13": true, "Branch 12": false, "City": false })
-  /// EGO Tag Filters. This is an array of EGO tag objects which are structured like {"tag_name": string:name, "tag_description:" string:description, "tag_checked": bool}. If "tag_checked" is true (by default it's false), only display EGO with that tag on it.
-  const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags)
-  /// Weapon damage type filters. Either null or a string representing one of the colour damtypes.
-  const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null)
-  /// This holds either null (not viewing any EGO's details) or an EGO datum object. If it isn't null, we replace the EGO list with the datum's details.
-  const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null)
+  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "");
+  const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 });
+  const [threatClassFilters, setThreatClassFilters] = useLocalState(context, "threatClassFilters", { 1: true, 2: true, 3: true, 4: true, 5: true });
+  const [originFilters, setOriginFilters] = useLocalState(context, "originFilters", { "LC13": true, "Branch 12": false, "City": false });
+  const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags);
+  const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null);
+  const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null);
 
   /* ------------ Other Variables ------------*/
 
-  // This threat class stuff is hardcoded because THREAT_TO_COLOR and THREAT_TO_NAME defines are alists and I can't send them in TGUI data
-  const threatclass_colors = { 1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000" }
-  const threatclass_names = { 1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH" }
+  // Hardcoded because THREAT_TO_X defines are alists, TGUI hates them
+  const threatclass_colors = { 1: "#008000", 2: "#0000FF", 3: "#C3630C", 4: "#800080", 5: "#FF0000" };
+  const threatclass_names = { 1: "ZAYIN", 2: "TETH", 3: "HE", 4: "WAW", 5: "ALEPH" };
   // I'm not coding the roman numerical system, this saves me a lot of sanity
-  const numerals_to_decimals = { "X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10 }
-  const decimals_to_numerals = Object.fromEntries(Object.entries(numerals_to_decimals).map(([key, value]) => [value, key]))
+  const numerals_to_decimals = { "X": 10, "IX": 9, "VIII": 8, "VII": 7, "VI": 6, "V": 5, "IV": 4, "III": 3, "II": 2, "I": 1, "-": 0, "-I": -1, "-II": -2, "-III": -3, "-IV": -4, "-V": -5, "-VI": -6, "-VII": -7, "-VIII": -8, "-IX": -9, "-X": -10 };
+  const decimals_to_numerals = Object.fromEntries(Object.entries(numerals_to_decimals).map(([key, value]) => [value, key]));
   // Regular expressions to match certain EGO types
-  const regex_for_melee = /ego_weapon\//
-  const regex_for_guns = /ego_weapon\/ranged\//
-  const regex_for_shields = /ego_weapon\/shield\//
-  const regex_for_armor = /clothing\/suit\/armor\/ego_gear\//
+  const regex_for_melee = /ego_weapon\//;
+  const regex_for_guns = /ego_weapon\/ranged\//;
+  const regex_for_shields = /ego_weapon\/shield\//;
+  const regex_for_armor = /clothing\/suit\/armor\/ego_gear\//;
 
   /* ------------ Functions ------------*/
 
   // Checks whether a datum's origin is currently being filtered for.
   const CheckOriginFilters = (datum) => {
-    return originFilters[datum.origin]
-  }
+    return originFilters[datum.origin];
+  };
 
   // Checks whether a datum's threat class is currently being filtered for.
   const CheckThreatClassFilters = (datum) => {
-    return threatClassFilters[datum.threatclass]
-  }
+    return threatClassFilters[datum.threatclass];
+  };
 
   // Converts an object of roman numeral strings into decimals. The keys must be "red", "white", "black", "pale".
   const DecodeProtectionClasses = (armor_list) => {
-    var decoded_armor_list = { "red": 1, "white": 1, "black": 1, "pale": 1 }
+    var decoded_armor_list = { "red": 1, "white": 1, "black": 1, "pale": 1 };
 
     for (var string in armor_list) {
       if (!armor_list[string]) {
-        decoded_armor_list[string] = 0
-        continue
-      }
-      decoded_armor_list[string] *= numerals_to_decimals[armor_list[string]]
-    }
-    return decoded_armor_list
-  }
+        decoded_armor_list[string] = 0;
+        continue;
+      };
+      decoded_armor_list[string] *= numerals_to_decimals[armor_list[string]];
+    };
+    return decoded_armor_list;
+  };
 
-  // Returns TRUE if the datum argument is an armour and its resistance values are all equal or higher than the minimum established by the armour filters.
   const CheckArmorResistanceFilters = (datum) => {
-    const decodedProtectionClasses = DecodeProtectionClasses(datum.information.armor)
+    const decodedProtectionClasses = DecodeProtectionClasses(datum.information.armor);
     for (var string in armorResistanceFilters) {
       if (decodedProtectionClasses[string] < armorResistanceFilters[string]) {
-        return false
-      }
-    }
-
+        return false;
+      };
+    };
     return true;
-  }
+  };
 
-  // Returns TRUE if the datum argument's name includes whatever the user typed into the search bar, and also returns TRUE if there isn't any search filter at all.
   const CheckNameSearchFilter = (datum) => {
     if (!nameSearchText) {
-      return true
-    }
-    return datum.information.name.toLowerCase().includes(nameSearchText.toLowerCase())
-  }
+      return true;
+    };
+    return datum.information.name.toLowerCase().includes(nameSearchText.toLowerCase());
+  };
 
   const ChangeWeaponDamtypeFilter = (color) => {
-    color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null) : setCurrentWeaponDamtypeFilter(color)
-  }
+    color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null) : setCurrentWeaponDamtypeFilter(color);
+  };
 
-  // Returns TRUE if the datum argument's damage type matches the damage type filter, or returns TRUE if there isn't a damage type filter. Will check both ranged and melee damage for guns.
   const CheckWeaponDamtypeFilters = (datum) => {
     if (!currentWeaponDamtypeFilter) {
-      return true
-    }
+      return true;
+    };
 
-    if (datum.information.damtype_ranged && (datum.information.damtype_ranged === currentWeaponDamtypeFilter)) {
-      return true
+    if (datum.information.damtype_ranged && datum.information.damtype_ranged === currentWeaponDamtypeFilter) {
+      return true;
     }
     else if (datum.information.damtype_melee === currentWeaponDamtypeFilter) {
-      return true
+      return true;
     }
     else
-      return false
-  }
+      return false;
+  };
 
-  // Returns TRUE if the datum argument has the tags we're filtering for, or if there are no tag filters.
   const CheckTagFilters = (datum) => {
-    var should_show = false
+    var should_show = false;
     var filtering_tags = egoTagList.map(tag => {
       if (tag.tag_checked)
-        return tag
+        return tag;
       else
-        return null
-    })
+        return null;
+    });
 
-    filtering_tags = filtering_tags.filter(tag => tag != null)
+    filtering_tags = filtering_tags.filter(tag => tag !== null)
     if (filtering_tags.length < 1)
-      return true
+      return true;
 
     for (var tag of filtering_tags) {
-      if (datum.tags.includes(tag.tag_name)) { should_show = true }
+      if (datum.tags.includes(tag.tag_name)) { should_show = true; }
       else { should_show = false; break; }
-    }
+    };
 
-    return should_show
-  }
+    return should_show;
+  };
 
   /* ------------ Functional Components ------------*/
 
@@ -140,15 +133,15 @@ export const TestRangeEgoPrinter = (props, context) => {
     const ChangeEgoTagFilters = (id) => {
       const newEgoTagList = egoTagList?.map(tag => {
         if (tag.tag_name === id) {
-          tag.tag_checked = !tag.tag_checked
-          return tag
+          tag.tag_checked = !tag.tag_checked;
+          return tag;
         }
         else {
-          return tag
+          return tag;
         }
-      })
+      });
       setEgoTagList(newEgoTagList)
-    }
+    };
 
     return (
       egoTagList?.map(tag => (
@@ -164,8 +157,8 @@ export const TestRangeEgoPrinter = (props, context) => {
         </FlexItem>
       )
       )
-    )
-  }
+    );
+  };
 
   // A list of all the weapon datums that pass the filter checks.
   const AllWeaponDatums = (props, context) => {
@@ -176,8 +169,8 @@ export const TestRangeEgoPrinter = (props, context) => {
         CheckNameSearchFilter(datum) && CheckOriginFilters(datum) && CheckThreatClassFilters(datum) && CheckWeaponDamtypeFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="weapon" />
       )
       )
-    )
-  }
+    );
+  };
 
   // A list of all the armour datums that pass the filter checks.
   const AllArmorDatums = (props, context) => {
@@ -189,13 +182,17 @@ export const TestRangeEgoPrinter = (props, context) => {
         CheckNameSearchFilter(datum) && CheckOriginFilters(datum) && CheckThreatClassFilters(datum) && CheckArmorResistanceFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="armor" />
       )
       )
-    )
-  }
+    );
+  };
 
-  // An entry for an EGO datum. Consists of a preview image, a threat class, a name, the print button and a description.
-  // Passes the 'type' prop to <AppropiateDescription/> to generate an appropiate description.
-  // Print button sends out the 'print_ego' action to the backend with the datum's path as its payload.
-  // The preview image is a base64 string generated and cached in the backend.
+  /* An entry for an EGO datum. Consists of a preview image, a threat class,
+  a name, the print button and a description.
+  Passes the 'type' prop to <AppropiateDescription/> to generate an appropiate
+  description.
+  Print button sends out the 'print_ego' action to the backend with the datum's
+  path as its payload.
+  The preview image is a base64 string generated and cached in the backend.
+  */
   const EgoDatumEntry = (props, context) => {
     const { datum, type } = props;
 
@@ -245,24 +242,27 @@ export const TestRangeEgoPrinter = (props, context) => {
         </Flex>
         <Divider />
       </Box>
-    )
-  }
+    );
+  };
 
-  // Returns either an <ArmorEntryDescription/>, <RangedWeaponEntryDescription/> or a <MeleeWeaponEntryDescription/> based on the type passed to it and the result of a regex check on the path.
+  /* Returns either an <ArmorEntryDescription/>,
+  <RangedWeaponEntryDescription/> or a <MeleeWeaponEntryDescription/>
+  based on the type passed to it and the result of a regex check on the path.
+  */
   const AppropiateDescription = (props) => {
     const { datum, type } = props;
 
-    var item_path = datum.path
-    var common_path_eliminated_string = item_path.slice(10)
+    var item_path = datum.path;
+    var common_path_eliminated_string = item_path.slice(10);
     if (type === "armor") {
-      return (<ArmorEntryDescription datum={datum} />)
+      return (<ArmorEntryDescription datum={datum} />);
     }
     else {
-      return (regex_for_guns.test(common_path_eliminated_string) ? <RangedWeaponEntryDescription datum={datum} /> : <MeleeWeaponEntryDescription datum={datum} />)
+      return (regex_for_guns.test(common_path_eliminated_string) ? <RangedWeaponEntryDescription datum={datum} /> : <MeleeWeaponEntryDescription datum={datum} />);
     }
-  }
+  };
 
-  // Basic description of the core stats of a melee weapon, and a details button for further info.
+  // Basic description of the core stats of a melee weapon.
   const MeleeWeaponEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -281,10 +281,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           </FlexItem>
         </Flex>
       </FlexItem>
-    )
-  }
+    );
+  };
 
-  // Basic description of the core stats of a ranged weapon, and a details button for further info.
+  // Basic description of the core stats of a ranged weapon.
   const RangedWeaponEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -305,10 +305,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           </FlexItem>
         </Flex>
       </FlexItem>
-    )
-  }
+    );
+  };
 
-  // Basic description of the resistances of an armour, and a details button for further info.
+  // Basic description of the resistances of an armour.
   const ArmorEntryDescription = (props, context) => {
     const { datum } = props;
 
@@ -329,11 +329,13 @@ export const TestRangeEgoPrinter = (props, context) => {
           </FlexItem>
         </Flex>
       </FlexItem>
-    )
-  }
+    );
+  };
 
-  // A slider that controls the minimum resistance of a certain damtype that an armour needs to have to be displayed in the EGO list.
-  // Holds numerical values [-10; 10] but displays in roman numeral format.
+  /* A slider that controls the minimum resistance of a certain damtype
+  that an armour needs to have to be displayed in the EGO list.
+  Holds numerical values [-10; 10] but displays in roman numeral format.
+  */
   const ArmorResistanceFilterSlider = (props, context) => {
     const { resistance_color, color } = props;
 
@@ -341,7 +343,7 @@ export const TestRangeEgoPrinter = (props, context) => {
       var newFilters = structuredClone(armorResistanceFilters)
       newFilters[resistance_color] = value
       setArmorResistanceFilters(newFilters)
-    }
+    };
 
     return (
       <Slider
@@ -355,10 +357,10 @@ export const TestRangeEgoPrinter = (props, context) => {
         format={(value) => decimals_to_numerals[value]}
         onChange={(e, value) => AdjustArmorResistanceFilter(value)}
       />
-    )
-  }
+    );
+  };
 
-  // One of the big components of this interface. Holds either all the weapon or armour datums depending on which tab is active.
+  // Holds either all the weapon or armour datums depending on which tab.
   const EGOList = (props, context) => {
     const { ego_weapon_datums, ego_armor_datums } = props;
 
@@ -375,17 +377,24 @@ export const TestRangeEgoPrinter = (props, context) => {
         {tab === 1 && <AllWeaponDatums datum_list={ego_weapon_datums} />}
         {tab === 2 && <AllArmorDatums datum_list={ego_armor_datums} />}
       </Section>
-    )
-  }
+    );
+  };
 
-  // One of the big components of this interface. This is a detailed view of an EGO's properties, it should appear in place of the EGO list. It's a section + a details component based on the datum type.
-  // Runs a bunch of simple regex to figure out if the datum it gets passed is armour, a shield, a gun or a simple melee weapon.
-  // Has a 'back' button to return to the EGO list, and a 'print' button to print the EGO. The latter is because exiting to the EGO list will reset the scroll position, and I don't know how to avoid that.
-  // In theory you should just save the scroll position as a local state, but I don't really know how to access or modify it.
+  /* One of the big components of this interface.
+  This is a detailed view of an EGO's properties, it should appear in place of
+  the EGO list. It's a section + a details component based on the datum type.
+  Runs a bunch of simple regex to figure out if the datum it gets passed is
+  armour, a shield, a gun or a simple melee weapon.
+  Has a 'back' button to return to the EGO list, and a 'print' button to print
+  the EGO. The latter is because exiting to the EGO list will reset the scroll
+  position, and I don't know how to avoid that.
+  In theory you should just save the scroll position as a local state,
+  but I don't really know how to access or modify it.
+  */
   const EGODetails = (props, context) => {
     const { detailed_datum } = props;
-    const section_title = ("E.G.O. Details - " + detailed_datum.information?.name)
-    const common_path_eliminated_string = detailed_datum.path.slice(10)
+    const section_title = ("E.G.O. Details - " + detailed_datum.information?.name);
+    const common_path_eliminated_string = detailed_datum.path.slice(10);
     const what_are_we_dealing_with = (regex_for_armor.test(common_path_eliminated_string) ? "armor" :
       regex_for_guns.test(common_path_eliminated_string) ? "gun" :
         regex_for_shields.test(common_path_eliminated_string) ? "shield" :
@@ -404,11 +413,15 @@ export const TestRangeEgoPrinter = (props, context) => {
               what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum} /> :
                 "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
       </Section>
-    )
-  }
+    );
+  };
 
-  // This part of the details page is shared by all EGO. Except armour which passes the 'hide_special' prop since armour doesn't have that var in the backend.
-  // Includes a preview image, name, threat class, PE cost, path, attribute requirements, description and special info.
+  /* This part of the details page is shared by all EGO.
+  Except armour which passes the 'hide_special' prop since armour
+  doesn't have that var in the backend.
+  Includes a preview image, name, threat class, PE cost, path, attribute
+  requirements, description and special info.
+  */
   const CommonDetails = (props, context) => {
     const { detailed_datum, hide_special } = props;
 
@@ -475,10 +488,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           <Divider />
         </FlexItem>
       </Flex>
-    )
-  }
+    );
+  };
 
-  // Details specific to armour. CommonDetails and a table of resistances. If it's a Realization with an ability, displays name, description and cooldown of it.
+  // Details specific to armour.
   const ArmorDetails = (props, context) => {
     const { datum } = props;
 
@@ -505,11 +518,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           Cooldown: {datum.information.ability?.cooldown? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed." }
         </FlexItem> : null}
       </Flex>
+    );
+  };
 
-    )
-  }
-
-  // Details specific to guns. CommonDetails, a table based on the ranged properties of the gun, and a BaseMeleeStatsTable.
+  // Details specific to guns.
   const GunDetails = (props, context) => {
     const { datum } = props;
     const damtype_cell_background_color = (damage_type) => {
@@ -518,7 +530,7 @@ export const TestRangeEgoPrinter = (props, context) => {
           damage_type === "black" ? "violet" :
             damage_type === "pale" ? "teal" :
               "grey"
-    }
+    };
 
     return (
       <Flex align="stretch" justify="center" direction="column">
@@ -556,10 +568,10 @@ export const TestRangeEgoPrinter = (props, context) => {
         </FlexItem>
 
       </Flex>
-    )
-  }
+    );
+  };
 
-  // Details specific to shield weapons. Includes CommonDetails, a BaseMeleeStatsTable and a ShieldWeaponResistancesTable.
+  // Details specific to shield weapons.
   const ShieldDetails = (props, context) => {
     const { datum } = props;
 
@@ -575,17 +587,12 @@ export const TestRangeEgoPrinter = (props, context) => {
           <ShieldWeaponResistancesTable datum={datum} />
         </FlexItem>
       </Flex>
-    )
-  }
+    );
+  };
 
-  // Details specific to common melee weapons. Includes CommonDetails and a BaseMeleeStatsTable.
+  // Details specific to common melee weapons.
   const MeleeDetails = (props, context) => {
     const { datum } = props;
-    const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red" :
-      datum.information.damtype_melee === "white" ? "white" :
-        datum.information.damtype_melee === "black" ? "violet" :
-          datum.information.damtype_melee === "pale" ? "teal" :
-            "grey"
 
     return (
       <Flex align="stretch" justify="center" direction="column">
@@ -596,17 +603,17 @@ export const TestRangeEgoPrinter = (props, context) => {
           <BaseMeleeStatsTable datum={datum} />
         </FlexItem>
       </Flex>
-    )
-  }
+    );
+  };
 
-  // This is a table of the melee properties of a weapon, including the force, throwforce, damtype, attack speed, reach and selfstun time.
+  // This is a table of the melee properties of a weapon.
   const BaseMeleeStatsTable = (props, context) => {
     const { datum } = props;
     const damtype_cell_background_color = datum.information.damtype_melee === "red" ? "red" :
       datum.information.damtype_melee === "white" ? "white" :
         datum.information.damtype_melee === "black" ? "violet" :
           datum.information.damtype_melee === "pale" ? "teal" :
-            "grey"
+            "grey";
 
     return (
       <Flex direction="column" align="center" mb={3}>
@@ -641,10 +648,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           <Divider />
         </FlexItem>
       </Flex>
-    )
-  }
+    );
+  };
 
-  // This is a table of resistances per damtype for a shield weapon. Also includes info on the guard duration, cooldown and debuff duration.
+  // This is a table of resistances per damtype for a shield weapon.
   const ShieldWeaponResistancesTable = (props, context) => {
     const { datum } = props;
 
@@ -687,17 +694,15 @@ export const TestRangeEgoPrinter = (props, context) => {
           <Divider />
         </FlexItem>
       </Flex>
-    )
-  }
+    );
+  };
 
   // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
-    return (<Button mx={1} icon="arrow-left" color="red" content="Back" onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />)
-  }
+    return (<Button mx={1} icon="arrow-left" color="red" content="Back" onClick={() => { setCurrentlyDetailedEgoDatum(null) }} />);
+  };
 
   // The actual TestRangeEgoPrinter interface component.
-  // It is a window with a horizontal flex which has 2 main items; the first is either the EGOList or EGODetails, and the second is a Filters section.
-  // A lot of stuff in the filters section COULD be made into functional components but I don't see a need to.
   return (
     <Window
       width={1000}
