@@ -836,10 +836,10 @@ export const TestRangeEgoPrinter = (props, context) => {
           <FlexItem grow={3}>
             {currentlyDetailedEgoDatum === null
               ? (
-              <EGOList ego_weapon_datums={ego_weapon_datums}
-                ego_armor_datums={ego_armor_datums} />)
+                <EGOList ego_weapon_datums={ego_weapon_datums}
+                  ego_armor_datums={ego_armor_datums} />)
               : (
-              <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
+                <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
