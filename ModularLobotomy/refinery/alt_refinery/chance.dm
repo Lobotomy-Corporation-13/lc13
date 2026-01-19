@@ -20,7 +20,7 @@
 		to_chat(M, span_warning("The refinery is not ready yet. Please wait."))
 		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 		return
-			
+	
 	. = ..()
 	if(!.)
 		return
