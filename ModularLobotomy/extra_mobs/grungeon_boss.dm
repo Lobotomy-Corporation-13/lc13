@@ -180,6 +180,74 @@
 ///mob/living/simple_animal/hostile/ordeal/grungeon_spawner/Initialize() //idk if this is actually the right way to go about this ngl
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_boss/death()
+	var/obj/structure/grungeon_bomb/b = new /obj/structure/grungeon_bomb(loc)
+	b.faction = faction
 	. = ..()
+	gib()
 	for(var/mob/living/simple_animal/hostile/ordeal/grungeon_spawner/Z in range(15, src)) //Many thanks to Ender for helping me see the minor error in the code that prevented this from working.
 		Z.death()
+
+/obj/structure/grungeon_bomb //bomb shamelessly copypasted from Ender's Resurgence Demoman
+	name = "Bomb of Oblivion"
+	icon = 'ModularLobotomy/_Lobotomyicons/resurgence_48x48.dmi'
+	desc = "There is an engraving that says, 'If we're going down, we're taking you with us.'"
+	icon_state = "demolisher_bomb"
+	max_integrity = 5000
+	pixel_x = -8
+	base_pixel_x = -8
+	density = FALSE
+	layer = BELOW_OBJ_LAYER
+	armor = list(RED_DAMAGE = 100, WHITE_DAMAGE = 100, BLACK_DAMAGE = 100, PALE_DAMAGE = 100)
+	var/object_break = FALSE
+	var/detonate_time = 120
+	var/beep_time = 10
+	var/beep_counter = 0
+	var/detonate_max_damage = 3000
+	var/detonate_min_damage = 150
+	var/detonate_object_max_damage = 40
+	var/detonate_object_min_damage = 15
+	var/list/faction = list("hostile")
+
+/obj/structure/grungeon_bomb/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(detonate)), detonate_time)
+	addtimer(CALLBACK(src, PROC_REF(beep)), beep_time)
+
+/obj/structure/grungeon_bomb/proc/beep()
+	playsound(loc, 'sound/items/timer.ogg', 40, 3, 3)
+	if (beep_counter == 0)
+		say("T-10 Seconds before detonation...")
+	else if (beep_counter == 5)
+		say("T-5 Seconds before detonation...")
+	else if (beep_counter == 7)
+		say("3...")
+	else if (beep_counter == 8)
+		say("2...")
+	else if (beep_counter == 9)
+		say("1...")
+	else if (beep_counter == 10)
+		say("Join us.")
+
+	beep_counter++
+	addtimer(CALLBACK(src, PROC_REF(beep)), beep_time)
+
+/obj/structure/grungeon_bomb/proc/detonate()
+	var/mob/living/carbon/human/dummy/D = new /mob/living/carbon/human/dummy(get_turf(src))
+	D.faction = faction
+	new /obj/effect/temp_visual/explosion/fast(get_turf(src))
+	playsound(src, 'sound/effects/explosion1.ogg', 75, TRUE)
+	for(var/mob/living/L in view(12, src))
+		if(D.faction_check_mob(L, FALSE))
+			continue
+		var/dist = get_dist(D, L)
+		if(ishuman(L)) //Different damage formulae for humans vs mobs
+			L.deal_damage(clamp((15 * (2 ** (8 - dist))), detonate_min_damage, detonate_max_damage), FIRE) //15-3840 damage scaling exponentially with distance
+		else
+			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), FIRE) //0-600 damage scaling on distance, we don't want it oneshotting mobs
+		if(object_break)
+			for(var/turf/T in view(8, src))
+				for(var/obj/S in T)
+					S.take_damage(clamp((15 * (2 ** (8 - dist))), detonate_object_min_damage, detonate_object_max_damage), RED_DAMAGE)
+	explosion(loc, 0, 0, 1)
+	qdel(D)
+	qdel(src)
