@@ -130,7 +130,7 @@
 			if(71 to 90)
 				fill_text = 75
 		if(fill_text)
-			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "[base_icon_state][fill_text]")
+			. += mutable_appearance('ModularLobotomy/_Lobotomyicons/sandbag_damage.dmi', "sandbags[fill_text]")
 
 //Upgrades sandbag
 /obj/structure/barricade/sandbags/grey

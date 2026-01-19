@@ -75,6 +75,27 @@
 	new /obj/item/clothing/suit/armor/ego_gear/city/kcorp_l1(src)
 	new loot(src)
 
+// These storage datums are just so we can put the ammo back into the box, without allowing them to be used for storage of other stuff...
+/datum/component/storage/concrete/thumb_east_scorch
+	can_hold = list(/obj/item/stack/thumb_east_ammo = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo = TRUE)
+
+/datum/component/storage/concrete/thumb_east_surplus
+	can_hold = list(/obj/item/stack/thumb_east_ammo/facility = TRUE, /obj/item/stack/thumb_east_ammo/tigermark/facility = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo/facility = TRUE, /obj/item/stack/thumb_east_ammo/tigermark/facility = TRUE)
+
+/datum/component/storage/concrete/thumb_east_tigermark
+	can_hold = list(/obj/item/stack/thumb_east_ammo/tigermark = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo/tigermark = TRUE)
+
+/datum/component/storage/concrete/thumb_east_quake
+	can_hold = list(/obj/item/stack/thumb_east_ammo/quake = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo/quake = TRUE)
+
+/datum/component/storage/concrete/thumb_east_inferno
+	can_hold = list(/obj/item/stack/thumb_east_ammo/inferno = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo/inferno = TRUE)
+
 /// Thumb East's propellant ammo box for Thumb Crate. 9x basic propellant and 6x tigermark. These should be the /facility versions so they don't get status effects.
 /obj/item/storage/box/thumb_east_ammo
 	name = "thumb east surplus ammo box"
@@ -83,6 +104,7 @@
 	icon_state = "thumb_east_box_surplus"
 	/// You can't put these boxes in your backpack.
 	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_surplus
 
 /obj/item/storage/box/thumb_east_ammo/PopulateContents()
 	// I could put these both in the same for loop but I want them to be in order.
@@ -95,26 +117,57 @@
 /obj/item/storage/box/thumb_east_ammo/update_icon()
 	if(!length(contents))
 		icon_state = initial(icon_state) + "_empty"
+	else
+		icon_state = initial(icon_state)
 	. = ..()
 
-/// One of the two boxes Thumb East has access to in CoL. 6x Scorch Propellant. Can be used in any Thumb East weapon.
+/// One of the four boxes Thumb East has access to in CoL. 6x Scorch Propellant. Can be used in any Thumb East weapon.
 /obj/item/storage/box/thumb_east_ammo/scorch
 	name = "scorch propellant ammo box (x6)"
 	desc = "A small box containing six scorch propellant rounds. These can be loaded into Thumb East weaponry, enabling their special techniques and allowing them to inflict Burn and Tremor."
 	icon_state = "thumb_east_box_scorch"
 	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_scorch
 
 /obj/item/storage/box/thumb_east_ammo/scorch/PopulateContents()
 	for(var/i = 1 to 6)
 		new /obj/item/stack/thumb_east_ammo(src)
 
-/// One of the two boxes Thumb East has access to in CoL. 6x Tigermark. More expensive, only fits in Podaos.
+/// One of the four boxes Thumb East has access to in CoL. 6x Quake Propellant. Can be used in any Thumb East weapon.
+// They deal more tremor and have a higher flat force bonus, but generate less heat and do not apply burn.
+/obj/item/storage/box/thumb_east_ammo/quake
+	name = "quake propellant ammo box (x6)"
+	desc = "A small box containing six quake propellant rounds - a specialized, <b>tremor</b> focused ammo type. These can be loaded into Thumb East weaponry, enabling their special techniques and allowing them to inflict a great amount of Tremor."
+	icon_state = "thumb_east_box_quake"
+	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_quake
+
+/obj/item/storage/box/thumb_east_ammo/quake/PopulateContents()
+	for(var/i = 1 to 6)
+		new /obj/item/stack/thumb_east_ammo/quake(src)
+
+/// One of the four boxes Thumb East has access to in CoL. 6x Inferno Propellant. Can be used in any Thumb East weapon.
+// They generate more heat and apply more burn, but do not apply tremor and have a lesser flat force bonus.
+/obj/item/storage/box/thumb_east_ammo/inferno
+	name = "inferno propellant ammo box (x6)"
+	desc = "A small box containing six inferno propellant rounds - a specialized, <b>burn</b> focused ammo type. These can be loaded into Thumb East weaponry, enabling their special techniques and allowing them to inflict a great amount of Burn.\n\
+	You are well aware that one of these ammo boxes was responsible for <b>the Incident</b> a few weeks ago."
+	icon_state = "thumb_east_box_inferno"
+	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_inferno
+
+/obj/item/storage/box/thumb_east_ammo/inferno/PopulateContents()
+	for(var/i = 1 to 6)
+		new /obj/item/stack/thumb_east_ammo/inferno(src)
+
+/// One of the four boxes Thumb East has access to in CoL. 6x Tigermark. More expensive, only fits in Podaos.
 /obj/item/storage/box/thumb_east_ammo/tigermark
 	name = "tigermark ammo box (x6)"
 	desc = "A small, fancy box containing six tigermark rounds. These can be loaded into a Thumb East Podao, enabling its special techniques and allowing it to inflict Burn and Tremor.\n"+\
 	"But do you really need to? Isn't it overkill? There's so much gunpowder loaded into these that they also expand the area-of-effect on its attacks. Try to keep open flames away from these...?"
 	icon_state = "thumb_east_box_tigermark"
 	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_tigermark
 
 /obj/item/storage/box/thumb_east_ammo/tigermark/PopulateContents()
 	for(var/i = 1 to 6)

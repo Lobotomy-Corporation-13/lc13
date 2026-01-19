@@ -261,3 +261,136 @@
 		addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), fire_delay)
 		fired_projs += P
 	return fired_projs
+
+/// Replaces Pillar. Loses meltdown capability, in exchange it can be used more often. Rather than firing a projectile, it's an extremely long and piercing line AOE. Applies Powernull.
+/// You need to stand still for line_telegraph_duration in order to fire. Moving or being interrupted will refund the spell though.
+/obj/effect/proc_holder/spell/aimed/thick_line
+	name = "Thick Line"
+	desc = "Manifest a powerful, damaging Thick Line after a brief windup. Pierces enemies and walls. Deals damage according to your active singularity and applies 3 stacks of Faltering Justice, up to 10."
+	school = SCHOOL_EVOCATION
+	charge_max = 140
+	clothes_req = FALSE
+	invocation_type = "none"
+	base_icon_state = "thick_line"
+	action_icon_state = "thick_line"
+	sound = 'sound/magic/arbiter/knock.ogg'
+	active_msg = "You prepare a powerful Thick Line."
+	deactive_msg = "You abort the Thick Line generation process."
+	projectile_type = null
+	/// Important for Singularity Swap spell. Determines the damage type dealt by the spell, this var gets edited by Singularity Swap.
+	var/damage_type = BLACK_DAMAGE
+	/// Base damage for being hit by Thick Line.
+	var/line_damage = 300
+	/// How much PALE damage should be reduced by. If line_damage is 350 and pale_damage_coefficient is 0.5, then PALE Thick Line deals 175 PALE (survivable with PALE V).
+	var/pale_damage_coefficient = 0.5
+	/// Coefficient that multiplies damage taken by Simplemobs from this.
+	var/simplemob_damage_coefficient = 3
+	/// I HATE RHINOS I HATE RHINOS
+	var/rhino_damage_coefficient = 4
+	/// Delay before casting Thick Line. Also counts as the amount of time the telegraphing lasts for it.
+	var/line_telegraph_duration = 1.2 SECONDS
+	/// Apply X stacks of Power Null per hit.
+	var/powernull_stacks_per_hit = 3
+
+/obj/effect/proc_holder/spell/aimed/thick_line/fire_projectile(mob/living/user, atom/target)
+	current_amount--
+	var/datum/reusable_visual_pool/RVP = new(500)
+	var/list/been_hit = list()
+	been_hit |= user // A bit sus but hey, saves me repeating a "if target is user" check later on
+
+	var/turf/user_turf = get_turf(user)
+	var/turf/end_turf = get_ranged_target_turf_direct(user, target, 50)
+	var/list/main_line_turfs = getline(user_turf, end_turf)
+	main_line_turfs -= user_turf
+
+	var/list/affected_turfs = list()
+	// Initially we have a 1 tile thick line from origin to target. We make every turf in the line add its surrounding turfs to the affected turfs.
+	// This gives us a line with 3 tiles of thickness. Is there a better way to do this? Maybe. I just went off of U-Turn's implementation for this.
+	for(var/turf/main_line_turf in main_line_turfs)
+		for(var/turf/surrounding_line_turf in view(main_line_turf, 1))
+			affected_turfs |= surrounding_line_turf
+
+	for(var/turf/T in affected_turfs)
+		RVP.NewCultSparks(T, line_telegraph_duration)
+	// We have a windup during which we telegraph the spell. If the do_after is not interrupted, we fire the spell.
+	if(do_after(user, line_telegraph_duration, interaction_key = "thick_line", max_interact_count = 1))
+		var/appropiate_color = "#DABB04"
+		switch(damage_type)
+			if(RED_DAMAGE)
+				appropiate_color = "#D70000"
+			if(WHITE_DAMAGE)
+				appropiate_color = "#DDDDDD"
+			if(BLACK_DAMAGE)
+				appropiate_color = "#DABB04"
+			if(PALE_DAMAGE)
+				appropiate_color = "#45F7F7"
+
+		playsound(user, 'sound/magic/arbiter/thickline_cast.ogg', 50)
+		user.visible_message(span_danger("[user] fires a powerful thick [damage_type] line!"), span_warning("You fire a Thick Line on the [damage_type] damage setting."))
+		var/turf/more_visually_appropiate_beam_start_turf = affected_turfs[1] // Trust me
+		var/datum/beam/our_line = more_visually_appropiate_beam_start_turf.Beam(end_turf, "thick_line", time = 2 SECONDS)
+		our_line.visuals.color = appropiate_color
+		our_line.visuals.transform *= 2.1
+		for(var/turf/T2 in affected_turfs)
+			ThickLineHit(user, T2, been_hit, appropiate_color)
+	// If the do_after is interrupted, we refund most of the spell charge. The reason why we have to only partially refund the spell is so Arbiters don't spam their telegraph,
+	// which I imagine could lag the server.
+	else
+		// Why is this a timer? Because the proc that calls fire_projectile sets charge_counter = 0 afterwards, so we have to do it after because I don't want to override it.
+		addtimer(CALLBACK(src, PROC_REF(CancelCastRefund), user), 0.5 SECONDS)
+	return list()
+
+/obj/projectile/ego_bullet/ego_magicbullet/abnormality/
+
+// We hurt absolutely everything that isn't both Head faction and hostile faction.
+/obj/effect/proc_holder/spell/aimed/thick_line/proc/ThickLineHit(mob/living/user, turf/hit_turf, list/hit_list, appropiate_color)
+	// To all living mobs found in the turf who aren't in our hit list: add them to the hit list, deal damage and apply powernull.
+	for(var/mob/living/yikes in hit_turf)
+		if(user.faction_check_mob(yikes, TRUE))
+			continue
+		if(!(yikes in hit_list) && yikes.stat < DEAD)
+			var/final_damage = line_damage
+			hit_list |= yikes
+			if(istype(yikes, /mob/living/simple_animal))
+				final_damage *= simplemob_damage_coefficient
+			if(damage_type == PALE_DAMAGE)
+				final_damage *= pale_damage_coefficient
+			yikes.deal_damage(final_damage, damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+			yikes.apply_arbiter_powernull(powernull_stacks_per_hit)
+
+			// Feedback
+			yikes.visible_message(span_danger("[yikes] is torn apart by a thick [damage_type] line!"), span_userdanger("You're torn apart by a thick [damage_type] line!"))
+			playsound(yikes, 'sound/magic/arbiter/pin.ogg', 80)
+			for(var/i in 1 to 2)
+				// Big slice VFX
+				var/obj/effect/temp_visual/dir_setting/slash/temp = new(hit_turf)
+				temp.dir = pick(GLOB.alldirs)
+				temp.transform = temp.transform * 3
+				temp.color = appropiate_color
+
+	// To all mechas found in the turf who aren't in our hit list: add them to the hit list, deal damage, then check to see if they have occupants and also damage them.
+	for(var/obj/vehicle/sealed/mecha/tin_can in hit_turf)
+		if(!(tin_can in hit_list))
+			hit_list |= tin_can
+			tin_can.take_damage(line_damage * rhino_damage_coefficient, damage_type)
+			playsound(hit_turf, 'sound/magic/arbiter/pin.ogg', 80)
+			for(var/i in 1 to 2)
+				// Big slice VFX
+				var/obj/effect/temp_visual/dir_setting/slash/temp = new(hit_turf)
+				temp.dir = pick(GLOB.alldirs)
+				temp.transform = temp.transform * 3
+				temp.color = appropiate_color
+
+			if(length(tin_can.occupants) > 0)
+				var/mob/living/gulp = pick(tin_can.occupants)
+				if(gulp && !(gulp in hit_list))
+					hit_list |= gulp
+					gulp.deal_damage((damage_type == PALE_DAMAGE ? line_damage * pale_damage_coefficient : (line_damage * 0.80)), damage_type, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
+					gulp.apply_arbiter_powernull(powernull_stacks_per_hit)
+					gulp.visible_message(span_danger("[gulp] is torn apart by a thick [damage_type] line!"), span_userdanger("You're torn apart by a thick [damage_type] line!"))
+
+/obj/effect/proc_holder/spell/aimed/thick_line/proc/CancelCastRefund(mob/living/user)
+	if(user)
+		to_chat(user, span_notice("Your Singularity collects the dissipated energy from your cancelled Thick Line."))
+		charge_counter = charge_max * 0.8
+		start_recharge()

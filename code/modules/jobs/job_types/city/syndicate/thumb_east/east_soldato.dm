@@ -14,7 +14,7 @@
 	departments = DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 100
 	maptype = list("city")
-	job_important = "You are a soldier in the Thumb Syndicate's eastern branch. Conduct yourself according to perfect etiquette and obey your superiors' orders to the letter, or you will be harshly punished.\
+	job_important = "You are a soldier in the Thumb Syndicate's eastern branch. Conduct yourself according to perfect etiquette and obey your superiors' orders to the letter, or you will be harshly punished. \
 	Do not forget to treat your peers with courtesy."
 	job_notice = "Avoid killing other players without a reason."
 
@@ -29,7 +29,9 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	. = ..()
-
+	// The ability to delimb yourself with a Thumb East weapon.
+	var/datum/action/self_discipline = new /datum/action/thumb_selfmutilate
+	H?.mind?.AddBoundAction(self_discipline)
 
 /datum/outfit/job/east_soldato
 	name = "Thumb East Soldato"
