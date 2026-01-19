@@ -12,6 +12,9 @@
 	var/time_lock = 0          // World time in ticks when quest can appear (0 = no lock)
 	var/grade_lock = 0         // Minimum grade required (0 = no lock, 1-9 valid grades, lower = better)
 	var/office_lock = FALSE    // Requires being in an office to accept
+	// Expiration tracking for board cleanup
+	var/refresh_count = 0      // How many board refreshes this quest has survived
+	var/max_refreshes = 3      // Remove from board after this many refreshes without being accepted
 
 /datum/city_quest/proc/on_accept(datum/mind/M)
 	quest_mind = M
@@ -115,6 +118,7 @@
 	var/kills_completed = 0
 	var/list/valid_targets = list() // Specific mob types that count
 	var/list/registered_attackers = list() // Mobs with registered attack signals (for office mate sharing)
+	var/list/registered_death_targets = list() // Mobs with registered death signals
 
 /datum/city_quest/hunt/on_accept(datum/mind/M)
 	. = ..()
@@ -137,6 +141,10 @@
 	for(var/mob/M in registered_attackers)
 		UnregisterSignal(M, COMSIG_MOB_ITEM_AFTERATTACK)
 	registered_attackers.Cut()
+	// Unregister all death signals
+	for(var/mob/living/L in registered_death_targets)
+		UnregisterSignal(L, COMSIG_LIVING_DEATH)
+	registered_death_targets.Cut()
 	return ..()
 
 /// Get the fixer office the quest holder belongs to
@@ -155,10 +163,19 @@
 	if(!isliving(target))
 		return
 	var/mob/living/L = target
-	RegisterSignal(L, COMSIG_LIVING_DEATH, PROC_REF(on_target_death), TRUE)
+	// Only register death signal if not already registered
+	if(!(L in registered_death_targets))
+		RegisterSignal(L, COMSIG_LIVING_DEATH, PROC_REF(on_target_death))
+		registered_death_targets += L
 
 /datum/city_quest/hunt/proc/on_target_death(mob/living/source, gibbed)
 	SIGNAL_HANDLER
+	// Clean up signal registration
+	UnregisterSignal(source, COMSIG_LIVING_DEATH)
+	registered_death_targets -= source
+	// Don't process if quest is already completed or turned in
+	if(completed || turned_in)
+		return
 	if(is_valid_target(source))
 		kills_completed++
 		check_completion()
@@ -278,16 +295,6 @@
 	kill_count_required = 4
 	reward_ahn = 800
 	valid_targets = list(/mob/living/simple_animal/hostile/humanoid/rat)
-
-/datum/city_quest/hunt/dangerous
-	name = "Dangerous Game"
-	desc = "Hunt down 3 powerful enemies."
-	kill_count_required = 3
-	reward_ahn = 1600
-	grade_lock = 7
-
-/datum/city_quest/hunt/dangerous/is_valid_target(mob/living/L)
-	return ..() && L.maxHealth >= 600
 
 // Special mob hunt quests - only appear if mobs exist
 /datum/city_quest/hunt/clown_menace
@@ -661,9 +668,11 @@
 	var/pictures_required = 1
 	var/list/pictures_submitted = list() // Submitted photo items
 	var/require_alive = FALSE // If TRUE, dead mobs don't count
+	var/list/photographed_mobs = list() // Track mobs already photographed to require unique targets
 
 /datum/city_quest/picture/Destroy()
 	pictures_submitted.Cut()
+	photographed_mobs.Cut()
 	return ..()
 
 /datum/city_quest/picture/proc/try_submit_picture(obj/item/photo/P)
@@ -676,9 +685,20 @@
 	if(P in pictures_submitted)
 		return FALSE
 
-	// Check if photo contains valid target
-	if(!is_valid_photo(P))
-		return FALSE
+	// Check if photo contains valid target and get the target mob
+	var/mob/valid_target = get_valid_target_from_photo(P)
+
+	// If no valid target mob found, fall back to is_valid_photo() for special quests (like monolith)
+	if(!valid_target)
+		if(!is_valid_photo(P))
+			return FALSE
+	else
+		// Check if this specific mob has already been photographed (must be unique targets)
+		if(valid_target in photographed_mobs)
+			if(quest_mind?.current)
+				to_chat(quest_mind.current, span_warning("You've already submitted a photo of this target!"))
+			return FALSE
+		photographed_mobs += valid_target
 
 	pictures_submitted += P
 	RegisterSignal(P, COMSIG_PARENT_QDELETING, PROC_REF(on_picture_destroyed))
@@ -687,11 +707,17 @@
 	update_contract()
 	return TRUE
 
-/datum/city_quest/picture/proc/is_valid_photo(obj/item/photo/P)
-	if(!P.picture?.mobs_seen?.len)
-		return FALSE
+/// Returns the first valid target mob found in the photo, or null if none
+/datum/city_quest/picture/proc/get_valid_target_from_photo(obj/item/photo/P)
+	if(!P.picture)
+		return null
+	if(!LAZYLEN(P.picture.mobs_seen))
+		return null
 
 	for(var/mob/M in P.picture.mobs_seen)
+		// Skip deleted mobs (garbage collected references)
+		if(QDELETED(M))
+			continue
 		// Check if dead when we need alive
 		if(require_alive && (M in P.picture.dead_seen))
 			continue
@@ -699,8 +725,11 @@
 		// Check if valid target type
 		for(var/target_type in targets_to_photograph)
 			if(istype(M, target_type))
-				return TRUE
-	return FALSE
+				return M
+	return null
+
+/datum/city_quest/picture/proc/is_valid_photo(obj/item/photo/P)
+	return get_valid_target_from_photo(P) != null
 
 /datum/city_quest/picture/proc/on_picture_destroyed(obj/item/photo/source)
 	SIGNAL_HANDLER
@@ -795,16 +824,18 @@
 	targets_to_photograph = list(/mob/living/simple_animal/hostile/ordeal)
 	require_alive = FALSE
 
-/datum/city_quest/picture/combat_documentation/is_valid_photo(obj/item/photo/P)
+/datum/city_quest/picture/combat_documentation/get_valid_target_from_photo(obj/item/photo/P)
 	if(!P.picture?.mobs_seen?.len)
-		return FALSE
+		return null
 
 	for(var/mob/M in P.picture.mobs_seen)
+		if(QDELETED(M))
+			continue
 		if(M in P.picture.dead_seen) // Only count dead ones
 			for(var/target_type in targets_to_photograph)
 				if(istype(M, target_type))
-					return TRUE
-	return FALSE
+					return M
+	return null
 
 /datum/city_quest/picture/rat_census
 	name = "Rat Population Survey"
@@ -812,24 +843,6 @@
 	pictures_required = 3
 	reward_ahn = 300
 	targets_to_photograph = list(/mob/living/simple_animal/hostile/humanoid/rat)
-
-/datum/city_quest/picture/dangerous_wildlife
-	name = "Dangerous Wildlife Catalog"
-	desc = "Photograph any powerful creature for our threat assessment database."
-	pictures_required = 1
-	reward_ahn = 600
-	require_alive = TRUE
-
-/datum/city_quest/picture/dangerous_wildlife/is_valid_photo(obj/item/photo/P)
-	if(!P.picture?.mobs_seen?.len)
-		return FALSE
-
-	for(var/mob/living/M in P.picture.mobs_seen)
-		if(require_alive && (M in P.picture.dead_seen))
-			continue
-		if(M.maxHealth >= 600)
-			return TRUE
-	return FALSE
 
 /datum/city_quest/picture/monolith_sighting
 	name = "Anomalous Structure Documentation"

@@ -523,10 +523,20 @@
 
 /obj/machinery/body_preservation_unit/proc/store_actions(mob/living/carbon/human/H, list/preserved_data)
 	var/list/action_types = list()
+
+	// Get body modification organ actions to exclude
+	var/list/body_mod_actions = list()
+	var/obj/item/organ/cyberimp/chest/body_modification/body_mod = H.getorganslot(ORGAN_SLOT_HEART_AID)
+	if(istype(body_mod))
+		body_mod_actions = body_mod.granted_actions
+
 	for(var/datum/action/A in H.actions)
 		if(istype(A, /datum/action/item_action))
 			continue
 		if(istype(A, /datum/action/spell_action))
+			continue
+		// Skip actions granted by body modifications
+		if(A in body_mod_actions)
 			continue
 		action_types += A.type
 	preserved_data["action_types"] = action_types
@@ -573,11 +583,16 @@
 	store_actions(H, preserved_data)
 	store_skills(H, preserved_data)
 
+	// Store mind reference for quest preservation
+	preserved_data["mind_ref"] = REF(M)
+
 	// Store bank account info
 	preserved_data["bank_balance"] = null
+	preserved_data["bank_account_id"] = null
 	var/obj/item/card/id/id_card = H.get_idcard()
 	if(id_card?.registered_account)
 		preserved_data["bank_balance"] = id_card.registered_account.account_balance
+		preserved_data["bank_account_id"] = id_card.registered_account.account_id
 
 	// Store ID card info
 	if(id_card)
@@ -652,9 +667,11 @@
 	// Apply attribute penalty and set attributes
 	var/list/stored_attributes = stored_data["attributes"]
 	if(islist(stored_attributes))
-		// TODO Punishment
 		new_body.attributes = stored_attributes
-		new_body.adjust_all_attribute_levels(revival_attribute_penalty)
+		// Only apply attribute penalty for Civilians and Office Fixers (minifixers)
+		var/datum/job/stored_job = stored_data["assigned_role"]
+		if(istype(stored_job, /datum/job/civilian) || istype(stored_job, /datum/job/fixer/smalldirector) || istype(stored_job, /datum/job/fixer/small))
+			new_body.adjust_all_attribute_levels(revival_attribute_penalty)
 		store_attributes(new_body, stored_data)
 	else
 		log_game("Body Preservation Unit: Stored attributes for [real_name] were invalid.")
@@ -680,6 +697,12 @@
 	// 	new_body.ckey = ckey
 	// else
 	new_body.equipOutfit(/datum/outfit/job/civilian)
+
+	// Transfer the original mind to preserve quests before assigning ckey
+	var/datum/mind/original_mind = locate(stored_data["mind_ref"])
+	if(original_mind)
+		original_mind.transfer_to(new_body)
+
 	new_body.ckey = ckey
 
 	var/skills_json = stored_data["skills"]
@@ -712,11 +735,17 @@
 		new_id.assignment = stored_data["id_assignment"]
 	new_id.update_label()
 
-	// Create/restore bank account
-	var/datum/bank_account/new_account = new /datum/bank_account(stored_data["real_name"], stored_data["ckey"])
-	if(stored_data["bank_balance"])
-		new_account.account_balance = stored_data["bank_balance"]
-	new_id.registered_account = new_account
+	// Restore bank account - look up original instead of creating new
+	var/datum/bank_account/restored_account
+	if(stored_data["bank_account_id"])
+		restored_account = SSeconomy.bank_accounts_by_id["[stored_data["bank_account_id"]]"]
+	if(!restored_account)
+		// Fallback: create new account if original not found
+		restored_account = new /datum/bank_account(stored_data["real_name"], stored_data["ckey"])
+		if(stored_data["bank_balance"])
+			restored_account.account_balance = stored_data["bank_balance"]
+	new_id.registered_account = restored_account
+	restored_account.bank_cards += new_id
 
 	// Equip ID card
 	new_body.equip_to_slot_or_del(new_id, ITEM_SLOT_ID)
@@ -727,6 +756,17 @@
 		if(office && (office in GLOB.all_fixer_offices))
 			var/mob/living/carbon/human/old_body = locate(stored_data["ref"])
 			office.replace_member(old_body, new_body, stored_data["was_director"])
+
+	// Re-register quest signals on new body (hunt quests track attacks)
+	if(new_body.mind?.quest_tracker)
+		for(var/datum/city_quest/hunt/HQ in new_body.mind.quest_tracker.active_quests)
+			// Unregister from old attackers
+			for(var/mob/M in HQ.registered_attackers)
+				UnregisterSignal(M, COMSIG_MOB_ITEM_AFTERATTACK)
+			HQ.registered_attackers.Cut()
+			// Register on new body
+			RegisterSignal(new_body, COMSIG_MOB_ITEM_AFTERATTACK, TYPE_PROC_REF(/datum/city_quest/hunt, on_attack))
+			HQ.registered_attackers += new_body
 
 	playsound(get_turf(src), 'sound/effects/bin_close.ogg', 35, 3, 3)
 	playsound(get_turf(src), 'sound/misc/splort.ogg', 35, 3, 3)

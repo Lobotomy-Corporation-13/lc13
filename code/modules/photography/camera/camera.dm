@@ -201,6 +201,12 @@
 			dead_spotted += M
 		desc += M.get_photo_description(src)
 
+	// Add notable objects to description (for quest validation)
+	for(var/turf/T in turfs)
+		for(var/obj/machinery/O in T)
+			if(O.name)
+				desc += "You can see \a [O.name]."
+
 	var/psize_x = (size_x * 2 + 1) * world.icon_size
 	var/psize_y = (size_y * 2 + 1) * world.icon_size
 	var/icon/get_icon = camera_get_icon(turfs, target_turf, psize_x, psize_y, clone_area, size_x, size_y, (size_x * 2 + 1), (size_y * 2 + 1))

@@ -30,6 +30,21 @@
 	icon_state = "nboard0[quest_count]"
 
 /obj/structure/quest_board/proc/refresh_quests()
+	// Increment refresh count and remove expired/impossible quests
+	var/list/to_remove = list()
+	for(var/datum/city_quest/Q in available_quests)
+		Q.refresh_count++
+		// Remove quests that have been on the board too long
+		if(Q.refresh_count >= Q.max_refreshes)
+			to_remove += Q
+		// Also remove quests that can no longer be completed (no targets exist)
+		else if(!Q.can_generate())
+			to_remove += Q
+
+	for(var/datum/city_quest/Q in to_remove)
+		available_quests -= Q
+		qdel(Q)
+
 	// Calculate how many new quests we can add (incremental refresh)
 	var/current_count = available_quests.len
 	var/slots_available = max_quests - current_count
@@ -39,8 +54,8 @@
 
 	// If no room, remove some old quests to make room for at least min_new_quests
 	if(slots_available < min_new_quests && current_count > 0)
-		var/to_remove = min_new_quests - slots_available
-		for(var/i in 1 to to_remove)
+		var/to_remove_extra = min_new_quests - slots_available
+		for(var/i in 1 to to_remove_extra)
 			if(!available_quests.len)
 				break
 			var/datum/city_quest/old_quest = pick(available_quests)

@@ -68,18 +68,22 @@ SUBSYSTEM_DEF(city_economy)
 	if(!office || (office in taxed_offices))
 		return
 
-	// Check if director is online
+	// Check if director is online and alive
 	if(!office.director || !office.director.client || !office.director.mind)
 		return // No director online, skip tax collection
+
+	// Skip if director is dead
+	if(office.director.stat == DEAD)
+		return
 
 	// Check if director is a registered fixer
 	if(!office.director.mind.registered_fixer)
 		return // Director not registered, skip tax collection
 
-	// Get online members for notifications
+	// Get online and alive members for notifications
 	var/list/online_members = list()
 	for(var/mob/living/carbon/human/member in office.members)
-		if(member.client && member.mind)
+		if(member.client && member.mind && member.stat != DEAD)
 			online_members += member
 
 	// Check if director paid early
@@ -133,6 +137,10 @@ SUBSYSTEM_DEF(city_economy)
 
 /datum/controller/subsystem/city_economy/proc/process_tax_payment(mob/living/carbon/human/H)
 	// For solo fixers only
+	// Skip dead players
+	if(H.stat == DEAD)
+		return
+
 	// Check if player paid early
 	if(H.ckey in early_tax_paid)
 		to_chat(H, span_notice("Tax already paid early this cycle."))

@@ -30,8 +30,7 @@
 	active_quests -= Q
 	if(Q.completed)
 		completed_quests += Q.name
-	else
-		qdel(Q)
+	qdel(Q) // Always delete to cleanup signals
 
 /datum/quest_tracker/proc/check_all_quests()
 	for(var/datum/city_quest/Q in active_quests)

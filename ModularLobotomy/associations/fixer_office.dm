@@ -1,22 +1,15 @@
 // Global list for all offices
 GLOBAL_LIST_EMPTY(all_fixer_offices)
 
-// Reserved radio channels for offices (using free frequency range)
-#define OFFICE_FREQ_START 1251
-#define OFFICE_FREQ_END 1289
-#define OFFICE_FREQ_SPAN 2 // Frequency spacing between offices
-
 // Fixer Office Datum
 /datum/fixer_office
 	var/name = "Unnamed Office"
 	var/mob/living/carbon/human/director
 	var/list/members = list()
 	var/max_members = 8
-	var/radio_frequency
 	var/office_color = "#000000"
 	var/creation_time
 	var/office_budget = 0
-	var/datum/radio_frequency/radio_connection
 	var/list/member_actions = list() // Track action datums for cleanup
 
 /datum/fixer_office/New()
@@ -42,23 +35,6 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 	GLOB.all_fixer_offices -= src
 	return ..()
 
-/datum/fixer_office/proc/assign_radio_channel()
-	// Find an unused frequency
-	var/list/used_frequencies = list()
-	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)
-		if(F.radio_frequency)
-			used_frequencies += F.radio_frequency
-	
-	for(var/freq = OFFICE_FREQ_START to OFFICE_FREQ_END step OFFICE_FREQ_SPAN)
-		if(!(freq in used_frequencies))
-			radio_frequency = freq
-			break
-	
-	if(!radio_frequency)
-		radio_frequency = OFFICE_FREQ_START // Fallback if all channels used
-		
-	// Radio connection would be set up here if needed
-
 /datum/fixer_office/proc/add_member(mob/living/carbon/human/H)
 	if(H in members)
 		return
@@ -71,20 +47,19 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 	var/datum/action/office_menu/OM = new(src)
 	OM.Grant(H)
 	member_actions[H] = OM
-	
-	// Give office headset
-	var/obj/item/radio/headset/office/headset = new(get_turf(H), src)
+
+	// Give basic headset
+	var/obj/item/radio/headset/headset = new(get_turf(H))
 	H.put_in_hands(headset)
-	
+
 	// Give office badge
 	var/obj/item/clothing/accessory/office_badge/badge = new(get_turf(H))
 	badge.linked_office = src
 	badge.name = "[name] member badge"
 	badge.update_icon()
 	H.put_in_hands(badge)
-	
+
 	to_chat(H, span_nicegreen("You've joined [name]!"))
-	to_chat(H, span_notice("You receive an office headset tuned to [format_frequency(radio_frequency)] kHz."))
 	to_chat(H, span_notice("Use your Office Menu action to manage office settings."))
 		
 	return TRUE
@@ -124,21 +99,6 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 		
 	// Clean up and destroy
 	qdel(src)
-
-/datum/fixer_office/proc/broadcast_message(message, mob/speaker)
-	if(!radio_connection)
-		return
-		
-	// Format message with office tag
-	var/formatted_message = "\[[name]\] [speaker?.real_name || "Unknown"]: [message]"
-	
-	// Broadcast to all members with radios
-	for(var/mob/living/carbon/human/H in members)
-		if(!H.ears || !istype(H.ears, /obj/item/radio))
-			continue
-		var/obj/item/radio/R = H.ears
-		if(radio_frequency in R.channels)
-			to_chat(H, span_radio("[formatted_message]"))
 
 /datum/fixer_office/proc/get_member_count()
 	return members.len
@@ -219,7 +179,3 @@ GLOBAL_LIST_EMPTY(all_fixer_offices)
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 	return (H in linked_office.members)
-
-#undef OFFICE_FREQ_START
-#undef OFFICE_FREQ_END  
-#undef OFFICE_FREQ_SPAN

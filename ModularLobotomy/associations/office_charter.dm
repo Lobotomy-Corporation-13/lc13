@@ -83,9 +83,8 @@
 	new_office.director = H
 	new_office.office_color = office_color
 	new_office.creation_time = world.time
-	new_office.assign_radio_channel()
 
-	// Add director to office (this will give them headset and badge)
+	// Add director to office
 	new_office.add_member(H)
 
 	// Give the director recruitment badges
@@ -117,11 +116,6 @@
 
 	// Add to global list
 	GLOB.all_fixer_offices += new_office
-
-	// Update user's radio
-	if(H.ears && istype(H.ears, /obj/item/radio/headset))
-		var/obj/item/radio/headset/R = H.ears
-		R.recalculateChannels()
 
 	// Announce office creation
 	minor_announce("[office_name] has been established by [H.real_name]!", "Office Registration")
@@ -207,11 +201,6 @@
 	to_chat(M, span_nicegreen("You have joined [linked_office.name]!"))
 	to_chat(user, span_nicegreen("[M] has joined your office!"))
 
-	// Update radio
-	if(M.ears && istype(M.ears, /obj/item/radio/headset))
-		var/obj/item/radio/headset/R = M.ears
-		R.recalculateChannels()
-
 	// Mark the badge as used instead of deleting
 	used = TRUE
 	name = "[linked_office.name] badge"
@@ -234,18 +223,3 @@
 		to_chat(user, span_warning("This is a recruitment badge, not meant to be worn yet!"))
 		return FALSE
 	return ..()
-
-// Office Radio Headset
-/obj/item/radio/headset/office
-	name = "office radio headset"
-	desc = "A headset with a custom frequency for office communication."
-	icon_state = "headset"
-
-/obj/item/radio/headset/office/Initialize(mapload, datum/fixer_office/office)
-	. = ..()
-	if(office)
-		frequency = office.radio_frequency
-		name = "[office.name] radio headset"
-		freqlock = TRUE // Prevent changing frequency
-		// Add office color tint
-		add_atom_colour(office.office_color, FIXED_COLOUR_PRIORITY)
