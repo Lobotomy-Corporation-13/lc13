@@ -392,6 +392,7 @@
 /datum/ego_datum/weapon/tough
 	item_path = /obj/item/ego_weapon/ranged/pistol/tough
 	cost = 20
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 // Sirocco - Desert Wind
 /datum/ego_datum/armor/desert

@@ -125,7 +125,7 @@
 /datum/ego_datum/weapon/space
 	item_path = /obj/item/ego_weapon/space
 	cost = 100
-	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL, EGO_TAG_SPLIT_DAMAGE)
 
 // Jester of Nihil - Nihil
 /datum/ego_datum/armor/nihil

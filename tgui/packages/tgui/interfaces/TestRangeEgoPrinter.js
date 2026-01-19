@@ -502,11 +502,7 @@ export const TestRangeEgoPrinter = (props, context) => {
           <b>Description:</b>
           <BlockQuote mt={1}>{detailed_datum.information.description ?? "This E.G.O. has no description."}</BlockQuote>
         </FlexItem>
-        {!hide_special
-        && <FlexItem align="start" mb={3}>
-              <b>Special Information:</b>
-              <BlockQuote mt={1}>{detailed_datum.information.special ?? "This E.G.O. doesn't have any Special Information."}</BlockQuote>
-            </FlexItem>}
+        {!hide_special && <FlexItem align="start" mb={3}><b>Special Information:</b><BlockQuote mt={1}>{detailed_datum.information.special ?? "This E.G.O. doesn't have any Special Information."}</BlockQuote></FlexItem>}
 
         <FlexItem minWidth={"100%"} mt={1} mb={2}>
           <Divider />
@@ -536,12 +532,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         <FlexItem minWidth={"100%"} mt={3} mb={2}>
           <Divider />
         </FlexItem>
-        {datum.information.ability
-        ? <FlexItem>
-            <b>Realized Ability: {datum.information.ability?.name ?? "Un-named"}</b><br />
-            <BlockQuote my={1}>{datum.information.ability?.desc ?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>
-            Cooldown: {datum.information.ability?.cooldown ? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed."}
-          </FlexItem> : null}
+        {datum.information.ability ? <FlexItem><b>Realized Ability: {datum.information.ability?.name ?? "Un-named"}</b><br /><BlockQuote my={1}>{datum.information.ability?.desc ?? "ERROR: DESCRIPTION MISSING"}</BlockQuote>Cooldown: {datum.information.ability?.cooldown ? datum.information.ability.cooldown * 0.1 + " seconds" : "No cooldown listed."}</FlexItem> : null}
       </Flex>
     );
   };
@@ -844,9 +835,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         <Flex>
           <FlexItem grow={3}>
             {currentlyDetailedEgoDatum === null
-              ? <EGOList ego_weapon_datums={ego_weapon_datums}
-                  ego_armor_datums={ego_armor_datums} />
-              : <EGODetails detailed_datum={currentlyDetailedEgoDatum} />}
+              ? <EGOList ego_weapon_datums={ego_weapon_datums} ego_armor_datums={ego_armor_datums} /> : <EGODetails detailed_datum={currentlyDetailedEgoDatum} />}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
@@ -965,61 +954,61 @@ export const TestRangeEgoPrinter = (props, context) => {
                   </Flex>
                 </Flex.Item>
 
-                {tab === 1
-                && <FlexItem mt={2}>
+                {tab === 1 && (
+                  <FlexItem mt={2}>
                       E.G.O. Weapon Damage Type Filters
-                      <Flex direction="row" wrap maxWidth="20rem" justify="center" mt={1}>
-                        <FlexItem ml={2}>
-                          <Button fluid
-                            content={"RED"}
-                            color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "red" ? "transparent" : "red"}
-                            onClick={() => (ChangeWeaponDamtypeFilter("red"))} />
-                        </FlexItem>
-                        <FlexItem ml={2}>
-                          <Button fluid
-                            content={"WHITE"}
-                            color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "white" ? "transparent" : "white"}
-                            onClick={() => (ChangeWeaponDamtypeFilter("white"))} />
-                        </FlexItem>
-                        <FlexItem ml={2}>
-                          <Button fluid
-                            content={"BLACK"}
-                            color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "black" ? "transparent" : "violet"}
-                            onClick={() => (ChangeWeaponDamtypeFilter("black"))} />
-                        </FlexItem>
-                        <FlexItem ml={2}>
-                          <Button fluid
-                            content={"PALE"}
-                            color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "pale" ? "transparent" : "teal"}
-                            onClick={() => (ChangeWeaponDamtypeFilter("pale"))} />
-                        </FlexItem>
-                      </Flex>
-                    </FlexItem>}
+                    <Flex direction="row" wrap maxWidth="20rem" justify="center" mt={1}>
+                      <FlexItem ml={2}>
+                        <Button fluid
+                          content={"RED"}
+                          color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "red" ? "transparent" : "red"}
+                          onClick={() => (ChangeWeaponDamtypeFilter("red"))} />
+                      </FlexItem>
+                      <FlexItem ml={2}>
+                        <Button fluid
+                          content={"WHITE"}
+                          color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "white" ? "transparent" : "white"}
+                          onClick={() => (ChangeWeaponDamtypeFilter("white"))} />
+                      </FlexItem>
+                      <FlexItem ml={2}>
+                        <Button fluid
+                          content={"BLACK"}
+                          color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "black" ? "transparent" : "violet"}
+                          onClick={() => (ChangeWeaponDamtypeFilter("black"))} />
+                      </FlexItem>
+                      <FlexItem ml={2}>
+                        <Button fluid
+                          content={"PALE"}
+                          color={currentWeaponDamtypeFilter && currentWeaponDamtypeFilter !== "pale" ? "transparent" : "teal"}
+                          onClick={() => (ChangeWeaponDamtypeFilter("pale"))} />
+                      </FlexItem>
+                    </Flex>
+                  </FlexItem>)}
 
-                {tab === 2
-                && <FlexItem mt={2}>
+                {tab === 2 && (
+                  <FlexItem mt={2}>
                       E.G.O. Armour Resistance Filters
 
-                      <Flex direction="row" wrap maxWidth="24rem" mt={1}>
-                        <LabeledControls>
-                          <LabeledControls.Item label="Min. RED" ml={2}>
-                            <ArmorResistanceFilterSlider color="red" resistance_color="red" />
-                          </LabeledControls.Item>
-                          <LabeledControls.Item label="Min. WHITE" ml={2}>
-                            <ArmorResistanceFilterSlider color="white" resistance_color="white" />
-                          </LabeledControls.Item>
-                          <LabeledControls.Item label="Min. BLACK" ml={2}>
-                            <ArmorResistanceFilterSlider color="violet" resistance_color="black" />
-                          </LabeledControls.Item>
-                          <LabeledControls.Item label="Min. PALE" ml={2}>
-                            <ArmorResistanceFilterSlider color="teal" resistance_color="pale" />
-                          </LabeledControls.Item>
-                          <LabeledControls.Item ml={2}>
-                            <Button icon="sync" color="red" content="Reset" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
-                          </LabeledControls.Item>
-                        </LabeledControls>
-                      </Flex>
-                    </FlexItem>}
+                    <Flex direction="row" wrap maxWidth="24rem" mt={1}>
+                      <LabeledControls>
+                        <LabeledControls.Item label="Min. RED" ml={2}>
+                          <ArmorResistanceFilterSlider color="red" resistance_color="red" />
+                        </LabeledControls.Item>
+                        <LabeledControls.Item label="Min. WHITE" ml={2}>
+                          <ArmorResistanceFilterSlider color="white" resistance_color="white" />
+                        </LabeledControls.Item>
+                        <LabeledControls.Item label="Min. BLACK" ml={2}>
+                          <ArmorResistanceFilterSlider color="violet" resistance_color="black" />
+                        </LabeledControls.Item>
+                        <LabeledControls.Item label="Min. PALE" ml={2}>
+                          <ArmorResistanceFilterSlider color="teal" resistance_color="pale" />
+                        </LabeledControls.Item>
+                        <LabeledControls.Item ml={2}>
+                          <Button icon="sync" color="red" content="Reset" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
+                        </LabeledControls.Item>
+                      </LabeledControls>
+                    </Flex>
+                  </FlexItem>)}
 
                 <FlexItem my={2}>
                   E.G.O. Tag Filters

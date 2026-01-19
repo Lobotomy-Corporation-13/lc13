@@ -39,10 +39,14 @@
 	return ..()
 
 /// We use this to bounce attempts to access the printer before it's assembled the full list of EGO datums.
-/obj/machinery/ego_printer/proc/CheckInitializedDatums()
+/obj/machinery/ego_printer/proc/CheckInitializedDatums(mob/living/user)
 	if(SStestrange.ego_datums_initializing || !(SStestrange.ego_datums_initialized))
-		say("System is still initializing. Please wait. [SStestrange.ego_datums ? length(SStestrange.ego_datums) : "0"] E.G.O. currently loaded.")
-		playsound(get_turf(src), 'sound/machines/synth_no.ogg', 40, TRUE)
+		var/not_ready_message = "System is still initializing. Please wait. [SStestrange.ego_datums ? length(SStestrange.ego_datums) : "0"] E.G.O. currently loaded."
+		if(istype(user) && user.stat < DEAD)
+			say(not_ready_message)
+			playsound(get_turf(src), 'sound/machines/synth_no.ogg', 40, TRUE)
+		else
+			to_chat(user, span_warning(not_ready_message))
 		return FALSE
 	return TRUE
 
@@ -52,16 +56,13 @@
 	say("System initialization complete!")
 	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
-/// Let someone qdel the EGO they printed by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
+/// Let someone qdel the EGO by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
 /obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
-	var/list/this_guys_printed_ego = printed_ego[user.ckey]
-	if(islist(this_guys_printed_ego))
-		if(I in this_guys_printed_ego)
-			visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
-			playsound(get_turf(src), 'sound/machines/juicer.ogg', 20, TRUE)
-			this_guys_printed_ego -= I
-			qdel(I)
-			return
+	if(istype(I, /obj/item/ego_weapon) || istype(I, /obj/item/clothing/suit/armor/ego_gear))
+		visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
+		playsound(get_turf(src), 'sound/machines/juicer.ogg', 20, TRUE)
+		qdel(I) // Its removal from the user's printed ego list is handled by a signal.
+		return
 	. = ..()
 
 /// If the user isn't at the limit of printed EGO, print whatever ego_path is (this could be literally anything but is hopefully an /obj/item)
@@ -75,8 +76,7 @@
 	if(islist(user_prints))
 		var/list/thats_a_lot_of_ego = user_prints
 
-		// I can't imagine this happening with anything off the top of my head, but if an EGO gets deleted somehow before the user can place it back into the printer, it could permanently stay in their printed ego list.
-		// So this little code block should handle exceptions for that without having to use a signal on deletion instead.
+		// Clean up the user's deleted EGO from its list. I know having a bunch of ghost references in their list is iffy but the alternative is attaching a signal to everything we print to remove it from the list as it gets qdeleted...
 		for(var/atom/thing in thats_a_lot_of_ego)
 			if(QDELETED(thing))
 				thats_a_lot_of_ego -= thing
@@ -89,7 +89,8 @@
 	var/atom/dispensed_item = new ego_path((get_turf(user)))
 
 	if(istype(dispensed_item)) // Could register signals on it or whatever if you need to here
-		visible_message(span_nicegreen("The [src.name] beeps as it prints [dispensed_item]."))
+		RegisterSignal(dispensed_item, COMSIG_PARENT_QDELETING, PROC_REF(CleanupPrintedEgo))
+		visible_message(span_nicegreen("The [src.name] beeps as it prints [dispensed_item] for [user]."))
 		playsound(get_turf(src), 'sound/machines/ping.ogg', 50, TRUE)
 		if(islist(user_prints))
 			user_prints |= dispensed_item
@@ -100,11 +101,25 @@
 	to_chat(user, span_warning("Something's gone horribly wrong with the E.G.O. printing process... contact a coder and tell them [ego_path] is bugged on the testing range printer."))
 	playsound(src, 'sound/machines/buzz-two.ogg', 50)
 
+/// Called by an EGO we printed and previously registered into a player's printed EGO list, when it is being deleted. This is so we don't have a buncha qdeleted stuff sitting in a list.
+/obj/machinery/ego_printer/proc/CleanupPrintedEgo(datum/source)
+	SIGNAL_HANDLER
+	for(var/ckey in printed_ego)
+		if(source in printed_ego[ckey])
+			printed_ego[ckey] -= source
+			break
+	UnregisterSignal(source, COMSIG_PARENT_QDELETING)
+	return
+
+
+
+
+
 /* ---------- TGUI EGO Printer stuff ---------- */
 
 // Happens when someone touches this machine with their bare hand.
 /obj/machinery/ego_printer/ui_interact(mob/user, datum/tgui/ui)
-	if(!CheckInitializedDatums())
+	if(!CheckInitializedDatums(user))
 		return
 
 	if((user.ckey in disabled_tgui))
