@@ -835,7 +835,8 @@ export const TestRangeEgoPrinter = (props, context) => {
         <Flex>
           <FlexItem grow={3}>
             {currentlyDetailedEgoDatum === null
-              ? (<EGOList ego_weapon_datums={ego_weapon_datums} ego_armor_datums={ego_armor_datums} />)
+              ? (<EGOList ego_weapon_datums={ego_weapon_datums}
+                  ego_armor_datums={ego_armor_datums} />)
               : (<EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
           <Flex.Item>
@@ -957,7 +958,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
                 {tab === 1 && (
                 <FlexItem mt={2}>
-                    E.G.O. Weapon Damage Type Filters
+                  E.G.O. Weapon Damage Type Filters
                   <Flex direction="row" wrap maxWidth="20rem" justify="center" mt={1}>
                     <FlexItem ml={2}>
                       <Button fluid
@@ -988,8 +989,7 @@ export const TestRangeEgoPrinter = (props, context) => {
 
                 {tab === 2 && (
                 <FlexItem mt={2}>
-                    E.G.O. Armour Resistance Filters
-
+                  E.G.O. Armour Resistance Filters
                   <Flex direction="row" wrap maxWidth="24rem" mt={1}>
                     <LabeledControls>
                       <LabeledControls.Item label="Min. RED" ml={2}>
