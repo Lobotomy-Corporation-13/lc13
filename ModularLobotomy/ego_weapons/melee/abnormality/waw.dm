@@ -2914,10 +2914,10 @@
 /obj/item/ego_weapon/contempt
 	name = "contempt, awe"
 	desc = "From the excavated brain, geysers of hatred and contempt erupt. It's as if those feelings were inside you all along."
-	special = "Melee hits with this E.G.O. accumulate stacks of <b>Gaze</b>. Each stack of Gaze can be used to <b>raise throwing damage by 15</b>. \n\
+	special = "Melee hits with this E.G.O. accumulate stacks of Gaze. Each stack of Gaze can be used to <b>raise throwing damage by 15. \n\
 	After spending Gaze, you won't be able to gain any more for 3.5 seconds.\n\
-	<b>Gaze can be spent by throwing this weapon at an enemy.</b> Landing a thrown hit with <b>6 stacks of Gaze will teleport you to your enemy and automatically pick up this weapon</b>.\n\
-	If you reach 7 stacks of Gaze, Gaze will transform into Contempt, <b>temporarily slowing you down and lowering your power modifier</b>. You can reset your Gaze stacks at the cost of 10 health by using the weapon in-hand."
+	Gaze can be spent by throwing this weapon at an enemy. Landing a thrown hit with 6 stacks of Gaze will teleport you to your enemy and automatically pick up this weapon.\n\
+	If you reach 7 stacks of Gaze, Gaze will transform into Contempt, temporarily slowing you down and lowering your power modifier. You can reset your Gaze stacks at the cost of 10 health by using the weapon in-hand."
 	icon_state = "contempt"
 	force = 50
 	reach = 2
@@ -3059,7 +3059,7 @@
 		qdel(src)
 
 /atom/movable/screen/alert/status_effect/contempt_weapon_gaze
-	name = "Gaze"
+	name = "Gaze \[Contempt, Awe\]"
 	icon_state = "gaze"
 	desc = "Relish the awe within their eyes as you strike them down."
 
@@ -3087,7 +3087,7 @@
 	greedy_bastard.adjust_attribute_bonus(JUSTICE_ATTRIBUTE, power_malus)
 
 /atom/movable/screen/alert/status_effect/contempt_weapon_contempt
-	name = "Contempt"
+	name = "Contempt \[Contempt, Awe\]"
 	icon_state = "weaken"
 	desc = "But why should you get to wield such power, pathetic as you are?"
 

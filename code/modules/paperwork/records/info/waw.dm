@@ -593,3 +593,18 @@
 		"When the work result was Normal, the Qliphoth Counter lowered with a low probability.",
 		"When the work result was Bad, the Qliphoth Counter lowered with a high probability.",
 		"Work on O-04-72 must be done with a second person in the room looking at it, otherwise the Employee will take extra damage.")
+
+// Spiral of Contempt
+/obj/item/paper/fluff/info/waw/spiral
+	abno_type = /mob/living/simple_animal/hostile/abnormality/spiral
+	abno_code = "T-03-20-04"
+	abno_info = list(
+		"Placeholder 1",
+		"Placeholder 2",
+		"Placeholder 3")
+	abno_work_rates = list(
+		"Instinct" = "Low | Low | Low | Common | High",
+		"Insight" = "Low | Low | Common | Common | High",
+		"Attachment" = "Very Low",
+		"Repression" = "Low | Low | Low | Common | Common"
+	)
