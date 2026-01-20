@@ -922,7 +922,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /// Thunderforged Statues - Nicholas spawns statues that Remus dashes through
 /mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/ExecuteThunderforgedStatues(mob/living/simple_animal/hostile/humanoid/fixer/electric/remus)
 	// Voice lines
-	remus.say("Nicholas! The stage is set!")
+	remus.say("Nicholas! The stage is set! En garde!")
 	sleep(5)
 	if(QDELETED(src) || QDELETED(remus))
 		EndCombo()
@@ -1055,7 +1055,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 			var/turf/foe_turf = get_turf(foe)
 			playsound(foe_turf, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE)
 			new /obj/effect/temp_visual/explosion(foe_turf)
-			foe.apply_damage(60, BLACK_DAMAGE, null, foe.run_armor_check(null, BLACK_DAMAGE))
+			foe.deal_damage(60, BLACK_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
 	// Heal Nicholas per living statue
 	for(var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/S in combo_statues)
 		if(!QDELETED(S) && S.stat != DEAD)
@@ -1294,7 +1294,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	if(QDELETED(src) || QDELETED(remus))
 		EndCombo()
 		return
-	remus.say("The light guides us, Asera Helios!")
+	remus.say("The light doth guide us, Asera Helios!")
 	// Find target
 	var/mob/living/combo_target = target
 	if(!combo_target)
@@ -1665,7 +1665,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/EnterShowtime()
 	in_showtime = TRUE
-	say("The light's never been brighter!")
+	say("The light hath never shone brighter!")
 	visible_message(span_danger("[src]'s movements become blindingly fast!"))
 	playsound(src, 'sound/weapons/fixer/generic/finisher1.ogg', 75, TRUE)
 	// Add visual effect
@@ -1688,7 +1688,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	// Make more vulnerable during stagger
 	ChangeResistances(stagger_resistances)
 	visible_message(span_warning("[src] collapses from exhaustion!"))
-	say("Nothing but grey now.")
+	say("Naught but grey remaineth...")
 	// Use SLEEP_CHECK_DEATH pattern
 	SLEEP_CHECK_DEATH(post_showtime_stun)
 	// Recovery
@@ -1696,7 +1696,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	cut_overlay(stagger_overlay)
 	is_staggered = FALSE
 	can_act = TRUE
-	say("...The colors are coming back.")
+	say("...The colours art returning.")
 	visible_message(span_notice("[src] recovers and rises back up."))
 
 // Main ability loop
@@ -1957,7 +1957,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	if(ishuman(attacked_target))
 		var/mob/living/carbon/human/H = attacked_target
 		if(H.sanity_lost)
-			say(pick("...The light's gone from your eyes.", "You stopped seeing it, didn't you?", "Nothing but grey now."))
+			say(pick("...The light hath fled from thine eyes.", "Thou hast ceased to see it, hast thou not?", "Naught but grey remaineth."))
 			visible_message(span_danger("[src] executes [H] mercilessly!"))
 			playsound(src, 'sound/weapons/fixer/generic/finisher1.ogg', 75, TRUE)
 			H.death()
@@ -1986,7 +1986,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /// Knight's Blessing - Lauel empowers Remus for a rapid 8-dash lightning storm
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/ExecuteKnightsBlessing(mob/living/simple_animal/hostile/humanoid/fixer/priest/lauel)
 	// Voice lines
-	say("Lauel! Grant me your strength!")
+	say("Lauel! Grant me thy strength!")
 	sleep(5)
 	if(QDELETED(src) || QDELETED(lauel))
 		EndCombo()
@@ -2524,6 +2524,9 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	SIGNAL_HANDLER
 	if(!linked_priest || QDELETED(linked_priest) || linked_priest.stat == DEAD)
 		qdel(src)
+		return
+	// Only intercept melee and ranged attacks
+	if(!(attack_type & ATTACK_TYPE_MELEE) && !(attack_type & ATTACK_TYPE_RANGED))
 		return
 	// Get attacker
 	var/mob/living/attacker
