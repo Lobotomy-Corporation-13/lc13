@@ -76,11 +76,10 @@
 		if(!other_twin.CanUseEgo(wielder))
 			continue
 		dual_strike_cooldown = world.time + dual_strike_cooldown_time
-		if(living_target in view(other_twin.reach, wielder))
-			playsound(other_twin.loc, other_twin.hitsound)
-			wielder.do_attack_animation(living_target, null, other_twin)
-			living_target.attacked_by(other_twin, wielder)
-			log_combat(wielder, target, pick(other_twin.attack_verb_continuous), other_twin.name, "(INTENT: [uppertext(wielder.a_intent)]) (DAMTYPE: [uppertext(other_twin.damtype)])")
+		playsound(other_twin.loc, other_twin.hitsound)
+		wielder.do_attack_animation(living_target, null, other_twin)
+		living_target.attacked_by(other_twin, wielder)
+		log_combat(wielder, target, pick(other_twin.attack_verb_continuous), other_twin.name, "(INTENT: [uppertext(wielder.a_intent)]) (DAMTYPE: [uppertext(other_twin.damtype)])")
 		break
 
 /obj/item/ego_weapon/city/echo/twins/gomorrah
@@ -188,14 +187,14 @@
 /obj/item/ego_weapon/city/echo/sunstrike
 	name = "sunstrike"
 	desc = "A heavy spear decorated with vibrant patterns on the head. Etched with the name 'Helios' on the grip."
-	special = "This weapon inflicts 6 burn on hit, If you are wearing the Frilled Maid Outfit/Faux Fur Coat outfit, Double the burn inflicted."
+	special = "This weapon inflicts 4 burn on hit, If you are wearing the Frilled Maid Outfit/Faux Fur Coat outfit, Double the burn inflicted."
 	icon_state = "sunstrike"
 	force = 42
 	attack_speed = 1.5
 	reach = 2
 	stuntime = 5
 	damtype = WHITE_DAMAGE
-	var/inflict_burn = 6
+	var/inflict_burn = 4
 	attack_verb_continuous = list("pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("poke", "jab", "tear", "lacerate", "gore")
 	hitsound = 'sound/weapons/ego/spear1.ogg'

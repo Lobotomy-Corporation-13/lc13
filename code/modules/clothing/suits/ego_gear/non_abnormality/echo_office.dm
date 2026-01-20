@@ -54,7 +54,6 @@
 	playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
 	if (ishuman(user))
 		var/mob/living/carbon/human/wielder = user
-		wielder.Stun(12, TRUE, TRUE)
 		new /obj/effect/temp_visual/onesin_blessing (get_turf(wielder))
 		var/obj/item/clothing/suit/armor/ego_gear/city/echo/stars/S = wielder.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		wielder.adjustSanityLoss(wielder.maxSanity*0.25)

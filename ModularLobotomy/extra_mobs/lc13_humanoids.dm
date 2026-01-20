@@ -280,6 +280,30 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/list/loot_armor = list(
 	)
 
+	// Combo Attack System
+	/// Whether this fixer is currently performing a combo attack
+	var/in_combo_attack = FALSE
+	/// World time when combo cooldown expires
+	var/combo_cooldown = 0
+	/// Time between combo attempts (20 seconds default)
+	var/combo_cooldown_time = 20 SECONDS
+	// real_name is inherited from /mob - set per subtype for combo voice lines
+	/// Reference to current combo partner
+	var/mob/living/simple_animal/hostile/humanoid/fixer/combo_partner = null
+	/// Timer for combo detection loop
+	var/combo_check_timer
+	// Combo Waiting System
+	/// Whether this fixer is waiting for a combo partner to become available
+	var/waiting_for_combo = FALSE
+	/// The partner we're waiting to combo with
+	var/mob/living/simple_animal/hostile/humanoid/fixer/pending_combo_partner = null
+	/// The combo type we want to execute when partner is ready
+	var/pending_combo_type = null
+	/// Timer ID for waiting loop
+	var/combo_wait_timer = null
+	/// World time when we started waiting (for timeout)
+	var/combo_wait_start = 0
+
 /mob/living/simple_animal/hostile/humanoid/fixer/drop_loot()
 	// Drop both weapon and armor
 	if(loot_weapon?.len)
@@ -297,7 +321,241 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/humanoid/fixer/AttackingTarget(atom/attacked_target)
 	if(!can_act)
 		return FALSE
+	if(in_combo_attack)
+		return FALSE
 	return ..()
+
+/mob/living/simple_animal/hostile/humanoid/fixer/GiveTarget(new_target)
+	. = ..()
+	// Start combo detection when entering combat
+	if(new_target && ("echo_office" in faction))
+		StartComboDetection()
+
+/mob/living/simple_animal/hostile/humanoid/fixer/LoseTarget()
+	. = ..()
+	// Stop combo detection when leaving combat
+	StopComboDetection()
+
+// ============================================
+// COMBO ATTACK SYSTEM - Base Procs
+// ============================================
+
+/// Checks if this fixer can participate in a combo attack right now
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/CanCombo()
+	if(stat == DEAD)
+		return FALSE
+	if(in_combo_attack)
+		return FALSE
+	if(waiting_for_combo)
+		return FALSE
+	if(!can_act)
+		return FALSE
+	if(world.time < combo_cooldown)
+		return FALSE
+	// Check for stagger state on subtypes that have it
+	if(istype(src, /mob/living/simple_animal/hostile/humanoid/fixer/electric))
+		var/mob/living/simple_animal/hostile/humanoid/fixer/electric/E = src
+		if(E.is_staggered)
+			return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/humanoid/fixer/priest))
+		var/mob/living/simple_animal/hostile/humanoid/fixer/priest/P = src
+		if(P.is_staggered)
+			return FALSE
+	return TRUE
+
+/// Checks if this fixer could potentially join a combo soon (busy now but not blocked)
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/IsPotentialComboPartner()
+	if(stat == DEAD)
+		return FALSE
+	if(in_combo_attack)
+		return FALSE
+	if(waiting_for_combo)
+		return FALSE
+	// Check for stagger state on subtypes that have it
+	if(istype(src, /mob/living/simple_animal/hostile/humanoid/fixer/electric))
+		var/mob/living/simple_animal/hostile/humanoid/fixer/electric/E = src
+		if(E.is_staggered)
+			return FALSE
+	if(istype(src, /mob/living/simple_animal/hostile/humanoid/fixer/priest))
+		var/mob/living/simple_animal/hostile/humanoid/fixer/priest/P = src
+		if(P.is_staggered)
+			return FALSE
+	return TRUE
+
+/// Finds all valid Echo Office combo partners within range
+/// If potential_only is TRUE, finds partners who could combo soon (even if busy now)
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/FindComboPartners(range = 10, potential_only = FALSE)
+	var/list/partners = list()
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/F in view(range, src))
+		if(F == src)
+			continue
+		if(!("echo_office" in F.faction))
+			continue
+		if(potential_only)
+			if(!F.IsPotentialComboPartner())
+				continue
+		else
+			if(!F.CanCombo())
+				continue
+		partners += F
+	return partners
+
+/// Starts the combo detection loop when entering combat
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/StartComboDetection()
+	if(combo_check_timer)
+		return
+	combo_check_timer = addtimer(CALLBACK(src, PROC_REF(CheckForComboOpportunity)), 5 SECONDS, TIMER_LOOP|TIMER_STOPPABLE)
+
+/// Stops the combo detection loop
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/StopComboDetection()
+	if(combo_check_timer)
+		deltimer(combo_check_timer)
+		combo_check_timer = null
+
+/// Called periodically to check if a combo can be initiated
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/CheckForComboOpportunity()
+	if(!target || stat == DEAD)
+		return
+	if(!CanCombo())
+		return
+	// 25% chance to attempt combo when off cooldown
+	if(!prob(25))
+		return
+	// First, try to find partners who can combo immediately
+	var/list/partners = FindComboPartners()
+	var/list/available_combos = list()
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in partners)
+		var/combo_type = GetComboType(partner)
+		if(combo_type)
+			available_combos[partner] = combo_type
+	if(available_combos.len)
+		// Found immediate partner, initiate combo
+		var/mob/living/simple_animal/hostile/humanoid/fixer/chosen_partner = pick(available_combos)
+		var/chosen_combo = available_combos[chosen_partner]
+		InitiateDuoCombo(chosen_partner, chosen_combo)
+		return
+	// No immediate partners, check for potential partners (busy but could be free soon)
+	var/list/potential_partners = FindComboPartners(potential_only = TRUE)
+	if(!potential_partners.len)
+		return
+	// Find combos with potential partners
+	var/list/potential_combos = list()
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in potential_partners)
+		var/combo_type = GetComboType(partner)
+		if(combo_type)
+			potential_combos[partner] = combo_type
+	if(!potential_combos.len)
+		return
+	// Start waiting for one of the potential partners
+	var/mob/living/simple_animal/hostile/humanoid/fixer/chosen_partner = pick(potential_combos)
+	var/chosen_combo = potential_combos[chosen_partner]
+	StartWaitingForCombo(chosen_partner, chosen_combo)
+
+/// Returns the combo type string for a given partner, or null if no combo exists
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/GetComboType(mob/living/simple_animal/hostile/humanoid/fixer/partner)
+	return null // Override in subtypes
+
+/// Initiates a duo combo with a partner
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/InitiateDuoCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	if(!partner || !combo_type)
+		return
+	// Double-check partner can still combo (might have changed since detection)
+	if(!partner.can_act || partner.stat == DEAD || partner.in_combo_attack)
+		return
+	// Set combo state for both participants
+	in_combo_attack = TRUE
+	combo_partner = partner
+	can_act = FALSE
+	stop_automated_movement = TRUE
+	partner.in_combo_attack = TRUE
+	partner.combo_partner = src
+	partner.can_act = FALSE
+	partner.stop_automated_movement = TRUE
+	// Execute the combo (override in subtypes)
+	ExecuteDuoCombo(partner, combo_type)
+
+/// Executes the actual duo combo - override in subtypes
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/ExecuteDuoCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	return
+
+// ============================================
+// COMBO WAITING SYSTEM
+// ============================================
+
+/// Starts waiting for a combo partner to become available
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/StartWaitingForCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	if(!partner || !combo_type)
+		return
+	waiting_for_combo = TRUE
+	can_act = FALSE  // Lock the fixer during wait
+	stop_automated_movement = TRUE
+	pending_combo_partner = partner
+	pending_combo_type = combo_type
+	combo_wait_start = world.time
+	combo_wait_timer = addtimer(CALLBACK(src, PROC_REF(CheckComboPartnerReady)), 5, TIMER_LOOP|TIMER_STOPPABLE)
+
+/// Called periodically while waiting to check if partner is ready
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/CheckComboPartnerReady()
+	// Check timeout (5 seconds)
+	if(world.time > combo_wait_start + 5 SECONDS)
+		CancelComboWait()
+		return
+	// Check if partner is still valid
+	if(!pending_combo_partner || pending_combo_partner.stat == DEAD)
+		CancelComboWait()
+		return
+	// Check if we died
+	if(stat == DEAD)
+		CancelComboWait()
+		return
+	// Check if partner can now join
+	if(pending_combo_partner.CanCombo())
+		var/mob/living/simple_animal/hostile/humanoid/fixer/partner = pending_combo_partner
+		var/combo_type = pending_combo_type
+		CancelComboWait() // Clear waiting state first
+		InitiateDuoCombo(partner, combo_type)
+
+/// Cancels the combo wait and restores normal state
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/CancelComboWait()
+	waiting_for_combo = FALSE
+	can_act = TRUE  // Unlock the fixer
+	stop_automated_movement = FALSE
+	pending_combo_partner = null
+	pending_combo_type = null
+	if(combo_wait_timer)
+		deltimer(combo_wait_timer)
+		combo_wait_timer = null
+
+// ============================================
+// END COMBO WAITING SYSTEM
+// ============================================
+
+/// Ends the combo state for this fixer
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/EndCombo(cooldown_override = null)
+	in_combo_attack = FALSE
+	can_act = TRUE
+	stop_automated_movement = FALSE
+	if(combo_partner)
+		combo_partner.in_combo_attack = FALSE
+		combo_partner.can_act = TRUE
+		combo_partner.stop_automated_movement = FALSE
+		combo_partner.combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
+		combo_partner.combo_partner = null
+	combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
+	combo_partner = null
+
+/// Ends the combo state for a list of fixers
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/EndComboAll(list/fixers, cooldown_override = null)
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/F in fixers)
+		F.in_combo_attack = FALSE
+		F.can_act = TRUE
+		F.stop_automated_movement = FALSE
+		F.combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
+		F.combo_partner = null
+
+// ============================================
+// END COMBO ATTACK SYSTEM - Base Procs
+// ============================================
 
 /mob/living/simple_animal/hostile/humanoid/fixer/metal
 	name = "Memory Forger"
@@ -306,9 +564,11 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_living = "metal_fixer"
 	icon_dead = "metal_fixer"
 	faction = list("echo_office")
+	real_name = "Nicholas"
 	var/icon_attacking = "metal_fixer_weapon"
 	maxHealth = 2000
 	health = 2000
+	gender = MALE
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.3)
 	move_to_delay = 5
 	melee_damage_lower = 12
@@ -547,6 +807,29 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	visible_message("<span class='danger'>The statue crumbles and self-destructs!</span>")
 	qdel(src)
 
+/// Combo statue variant - doesn't auto-heal or self-destruct, used in Sanctuary of Memory combo
+/mob/living/simple_animal/hostile/metal_fixer_statue/combo
+	health = 150
+	maxHealth = 150
+	/// The target this statue is connected to (for per-target damage logic)
+	var/mob/living/connected_target
+	/// The beam connecting this statue to its target
+	var/datum/beam/target_beam
+
+/mob/living/simple_animal/hostile/metal_fixer_statue/combo/Initialize()
+	. = ..()
+	// Cancel the auto-heal and self-destruct timers from parent
+	deltimer(heal_timer)
+	deltimer(self_destruct_timer)
+	heal_timer = null
+	self_destruct_timer = null
+
+/mob/living/simple_animal/hostile/metal_fixer_statue/combo/Destroy()
+	if(target_beam)
+		QDEL_NULL(target_beam)
+	connected_target = null
+	return ..()
+
 /mob/living/simple_animal/hostile/metal_fixer_statue/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	. = ..()
 	if(health <= 0)
@@ -570,6 +853,230 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/metal_fixer_statue/CanAttack(atom/the_target)
 	return FALSE
 
+// Metal Fixer Combo Procs
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/GetComboType(mob/living/simple_animal/hostile/humanoid/fixer/partner)
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/flame))
+		return "burning_memories"
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/electric))
+		return "thunderforged_statues"
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/priest))
+		return "sanctuary_of_memory"
+	return null
+
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/ExecuteDuoCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	switch(combo_type)
+		if("burning_memories")
+			ExecuteBurningMemories(partner)
+		if("thunderforged_statues")
+			ExecuteThunderforgedStatues(partner)
+		if("sanctuary_of_memory")
+			ExecuteSanctuaryOfMemory(partner)
+
+/// Burning Memories - Nicholas fires projectiles that Asera reflects
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/ExecuteBurningMemories(mob/living/simple_animal/hostile/humanoid/fixer/flame/asera)
+	// Voice lines
+	say("Asera Helios... lend me your flame...")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(asera))
+		EndCombo()
+		return
+	// Teleport metal fixer to a position within view 4 of Asera, but at least 2 tiles away
+	var/list/valid_turfs = list()
+	for(var/turf/T in view(4, asera))
+		if(T.density)
+			continue
+		var/dist = get_dist(T, asera)
+		if(dist >= 2)
+			valid_turfs += T
+	if(valid_turfs.len)
+		var/turf/teleport_dest = pick(valid_turfs)
+		forceMove(teleport_dest)
+		new /obj/effect/temp_visual/cult/sparks(teleport_dest)
+	asera.say("Nicholas... let's make them remember!")
+	// Asera enters enhanced counter stance
+	asera.is_countering = TRUE
+	asera.icon_state = "flame_fixer_counter"
+	asera.counter_damage_mult = 2
+	asera.visible_message(span_warning("[asera] enters a blazing counter stance!"))
+	// Fire 8 projectiles at Asera over 3 seconds
+	for(var/i in 1 to 8)
+		if(QDELETED(src) || QDELETED(asera) || stat == DEAD)
+			break
+		var/obj/projectile/metal_fixer_combo/combo_proj = new(get_turf(src))
+		combo_proj.preparePixelProjectile(asera, src)
+		combo_proj.firer = src
+		combo_proj.fired_from = src
+		combo_proj.combo_asera = asera
+		INVOKE_ASYNC(combo_proj, TYPE_PROC_REF(/obj/projectile, fire))
+		playsound(src, 'sound/weapons/fixer/generic/spear1.ogg', 50, TRUE)
+		sleep(3.75) // 3 seconds total for 8 projectiles
+	// Wait for projectiles to resolve
+	sleep(30)
+	// End counter stance
+	if(!QDELETED(asera))
+		asera.is_countering = FALSE
+		asera.icon_state = "flame_fixer"
+		asera.counter_damage_mult = 1
+	EndCombo()
+
+/// Thunderforged Statues - Nicholas spawns statues that Remus dashes through
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/ExecuteThunderforgedStatues(mob/living/simple_animal/hostile/humanoid/fixer/electric/remus)
+	// Voice lines
+	remus.say("Nicholas! The stage is set!")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(remus))
+		EndCombo()
+		return
+	say("Remus Amber... strike true.")
+	// Find target
+	var/mob/living/combo_target = target
+	if(!combo_target)
+		EndCombo()
+		return
+	var/turf/target_turf = get_turf(combo_target)
+	// Spawn 5 statues around the target
+	var/list/statue_turfs = list()
+	var/list/directions = list(NORTH, SOUTH, EAST, WEST, NORTHEAST)
+	for(var/dir in directions)
+		var/turf/statue_turf = get_step(get_step(target_turf, dir), dir)
+		if(statue_turf && !statue_turf.density)
+			statue_turfs += statue_turf
+	var/list/combo_statues = list()
+	for(var/turf/T in statue_turfs)
+		var/mob/living/simple_animal/hostile/metal_fixer_statue/S = new(T)
+		S.metal = src
+		combo_statues += S
+		new /obj/effect/temp_visual/cult/sparks(T)
+	if(!combo_statues.len)
+		EndCombo()
+		return
+	// Create beams from Remus to each statue in sequence
+	var/atom/beam_source = remus
+	for(var/mob/living/simple_animal/hostile/metal_fixer_statue/S in combo_statues)
+		beam_source.Beam(S, icon_state = "lightning[rand(1,12)]", icon = 'icons/effects/beam.dmi', time = 1 SECONDS)
+		beam_source = S
+	sleep(10)
+	// Remus dashes through all statues
+	for(var/mob/living/simple_animal/hostile/metal_fixer_statue/S in combo_statues)
+		if(QDELETED(remus) || remus.stat == DEAD)
+			break
+		var/turf/statue_turf = get_turf(S)
+		// Dash to statue
+		remus.forceMove(statue_turf)
+		playsound(statue_turf, 'sound/weapons/fixer/generic/blade1.ogg', 75, TRUE)
+		// Explode statue
+		new /obj/effect/temp_visual/explosion(statue_turf)
+		var/list/been_hit = list()
+		for(var/turf/T in range(2, statue_turf))
+			been_hit = HurtInTurf(T, been_hit, 35, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+			been_hit = HurtInTurf(T, been_hit, 35, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		qdel(S)
+		sleep(2.5) // 0.25s between dashes
+	EndCombo()
+
+/// Sanctuary of Memory - Nicholas spawns statues connected to foes that must be destroyed to prevent targeted damage
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/ExecuteSanctuaryOfMemory(mob/living/simple_animal/hostile/humanoid/fixer/priest/lauel)
+	// Voice lines
+	lauel.say("I shall be your shield, Nicholas.")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(lauel))
+		EndCombo()
+		return
+	say("...Thank you, Lauel.")
+	// Lauel creates protective barrier (register damage absorption)
+	RegisterSignal(src, COMSIG_MOB_APPLY_DAMGE, PROC_REF(AbsorbDamageForCombo))
+	// Create visual barrier around Nicholas
+	for(var/turf/T in range(1, src))
+		new /obj/effect/temp_visual/cult/sparks(T)
+	// Find up to 5 foes near Nicholas
+	var/list/targeted_foes = list()
+	for(var/mob/living/potential_target in range(7, src))
+		if(potential_target == src || potential_target == lauel)
+			continue
+		if(potential_target.stat == DEAD)
+			continue
+		if(!faction_check_mob(potential_target, FALSE))
+			targeted_foes += potential_target
+			if(targeted_foes.len >= 5)
+				break
+	if(!targeted_foes.len)
+		UnregisterSignal(src, COMSIG_MOB_APPLY_DAMGE)
+		EndCombo()
+		return
+	// For each foe, spawn 2 statues near them and connect with beams
+	var/list/combo_statues = list()
+	for(var/mob/living/foe in targeted_foes)
+		var/turf/foe_turf = get_turf(foe)
+		// Find 2 valid spawn turfs near the foe (1-2 tiles away)
+		var/list/valid_turfs = list()
+		for(var/turf/T in range(2, foe_turf))
+			if(T.density)
+				continue
+			var/dist = get_dist(T, foe_turf)
+			if(dist >= 1 && dist <= 2)
+				valid_turfs += T
+		valid_turfs = shuffle(valid_turfs)
+		// Spawn 2 statues for this foe
+		for(var/i in 1 to min(2, valid_turfs.len))
+			var/turf/spawn_turf = valid_turfs[i]
+			var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/new_statue = new(spawn_turf)
+			new_statue.metal = src
+			new_statue.connected_target = foe
+			// Create beam connecting statue to foe
+			new_statue.target_beam = new_statue.Beam(foe, icon_state = "lightning[rand(1,12)]", icon = 'icons/effects/beam.dmi', time = 6 SECONDS)
+			combo_statues += new_statue
+			new /obj/effect/temp_visual/cult/sparks(spawn_turf)
+	visible_message(span_danger("[src] summons memory statues! Destroy the statues connected to you!"))
+	// 5 second timer for players to break statues
+	sleep(50)
+	// Unregister damage absorption
+	UnregisterSignal(src, COMSIG_MOB_APPLY_DAMGE)
+	if(QDELETED(src) || stat == DEAD)
+		// Clean up any remaining statues
+		for(var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/S in combo_statues)
+			if(!QDELETED(S))
+				qdel(S)
+		EndCombo()
+		return
+	// Check each targeted foe - damage them if any of their connected statues survive
+	var/living_statues = 0
+	for(var/mob/living/foe in targeted_foes)
+		if(QDELETED(foe) || foe.stat == DEAD)
+			continue
+		// Count living statues connected to this foe
+		var/foe_living_statues = 0
+		for(var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/S in combo_statues)
+			if(!QDELETED(S) && S.stat != DEAD && S.connected_target == foe)
+				foe_living_statues++
+				living_statues++
+		// If any statues connected to this foe survive, damage them
+		if(foe_living_statues > 0)
+			to_chat(foe, span_danger("The memory statues connected to you release their stored energy!"))
+			var/turf/foe_turf = get_turf(foe)
+			playsound(foe_turf, 'sound/weapons/fixer/generic/finisher2.ogg', 75, TRUE)
+			new /obj/effect/temp_visual/explosion(foe_turf)
+			foe.apply_damage(60, BLACK_DAMAGE, null, foe.run_armor_check(null, BLACK_DAMAGE))
+	// Heal Nicholas per living statue
+	for(var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/S in combo_statues)
+		if(!QDELETED(S) && S.stat != DEAD)
+			adjustHealth(-100) // Heal 100 HP per living statue
+			new /obj/effect/temp_visual/heal(get_turf(S), "#FFFFFF")
+	// Clean up all statues
+	for(var/mob/living/simple_animal/hostile/metal_fixer_statue/combo/S in combo_statues)
+		if(!QDELETED(S))
+			qdel(S)
+	if(living_statues > 0)
+		visible_message(span_danger("[src] absorbs the energy from [living_statues] surviving statues!"))
+	else
+		visible_message(span_notice("All statues were destroyed! [src]'s channeling is disrupted!"))
+	EndCombo()
+
+/// Signal handler for damage absorption during Sanctuary of Memory
+/mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/AbsorbDamageForCombo(datum/source, damage, damagetype)
+	SIGNAL_HANDLER
+	// Reduce damage by 50%
+	return damage * 0.5
+
 /mob/living/simple_animal/hostile/humanoid/fixer/flame
 	name = "Sanguine Flame"
 	desc = "A lanky young man with fair skin, dark eyes, and an often overoptimistic expression. A heavy spear decorated with vibrant patterns on the head."
@@ -577,8 +1084,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_living = "flame_fixer"
 	icon_dead = "flame_fixer"
 	faction = list("echo_office")
+	real_name = "Asera Helios"
 	maxHealth = 2500
 	health = 2500
+	gender = MALE
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.3)
 	move_to_delay = 4
 	melee_damage_lower = 20
@@ -610,6 +1119,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/counter_timer
 	var/counter_duration = 4 SECONDS
 	var/got_hit = FALSE
+	/// Whether currently in counter stance (used by combo attacks)
+	var/is_countering = FALSE
+	/// Damage multiplier for counter attacks (used by combo attacks)
+	var/counter_damage_mult = 1
 
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/TripleDash()
@@ -719,6 +1232,18 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		counter_cooldown = rand(100, 250)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/bullet_act(obj/projectile/Proj, def_zone, piercing_hit = FALSE)
+	// Combo projectiles - call on_hit for reflection logic, then block damage
+	if(istype(Proj, /obj/projectile/metal_fixer_combo))
+		var/obj/projectile/metal_fixer_combo/combo_proj = Proj
+		if(combo_proj.combo_asera == src)
+			Proj.on_hit(src, 0, piercing_hit) // Call on_hit for reflection
+			return BULLET_ACT_BLOCK // Block damage processing
+	// Don't counter metal fixer's normal projectiles (ally projectiles)
+	if(istype(Proj, /obj/projectile/metal_fixer))
+		if(ismob(Proj.firer))
+			var/mob/living/firer_mob = Proj.firer
+			if(("echo_office" in firer_mob.faction))
+				return BULLET_ACT_BLOCK // Block completely, no damage, no counter
 	..()
 	if(damage_reflection && Proj.firer)
 		if(get_dist(Proj.firer, src) < 8)
@@ -745,7 +1270,177 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	attacker.deal_damage(damage * 2, attack_type, source = src, attack_type = (ATTACK_TYPE_COUNTER))
 	attacker.deal_damage(damage, STAMINA, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_COUNTER))
 
+// Flame Fixer Combo Procs
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/GetComboType(mob/living/simple_animal/hostile/humanoid/fixer/partner)
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/electric))
+		return "blazing_pursuit"
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/priest))
+		return "guardians_flame"
+	// Metal fixer handles burning_memories
+	return null
 
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/ExecuteDuoCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	switch(combo_type)
+		if("blazing_pursuit")
+			ExecuteBlazingPursuit(partner)
+		if("guardians_flame")
+			ExecuteGuardiansFlame(partner)
+
+/// Blazing Pursuit - Asera and Remus dash in crossing patterns
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/ExecuteBlazingPursuit(mob/living/simple_animal/hostile/humanoid/fixer/electric/remus)
+	// Voice lines
+	say("Remus Amber, with me!")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(remus))
+		EndCombo()
+		return
+	remus.say("The light guides us, Asera Helios!")
+	// Find target
+	var/mob/living/combo_target = target
+	if(!combo_target)
+		combo_target = remus.target
+	if(!combo_target)
+		EndCombo()
+		return
+	var/turf/target_turf = get_turf(combo_target)
+	// Find valid positions - at least 3 tiles from target, 5 tiles apart from each other
+	var/list/valid_turfs = list()
+	for(var/turf/T in view(7, target_turf))
+		if(T.density)
+			continue
+		if(get_dist(T, target_turf) >= 3)
+			valid_turfs += T
+	// Find a pair of turfs that are 5 tiles apart
+	var/turf/asera_start = null
+	var/turf/remus_start = null
+	if(valid_turfs.len >= 2)
+		// Shuffle and find a valid pair
+		valid_turfs = shuffle(valid_turfs)
+		for(var/turf/T1 in valid_turfs)
+			for(var/turf/T2 in valid_turfs)
+				if(T1 == T2)
+					continue
+				if(get_dist(T1, T2) >= 5)
+					asera_start = T1
+					remus_start = T2
+					break
+			if(asera_start && remus_start)
+				break
+	// Fallback if no valid pair found
+	if(!asera_start)
+		asera_start = locate(target_turf.x - 3, target_turf.y + 2, target_turf.z)
+		if(!asera_start || asera_start.density)
+			asera_start = get_step(target_turf, NORTHWEST)
+	if(!remus_start)
+		remus_start = locate(target_turf.x + 3, target_turf.y - 2, target_turf.z)
+		if(!remus_start || remus_start.density)
+			remus_start = get_step(target_turf, SOUTHEAST)
+	// Teleport to positions
+	forceMove(asera_start)
+	new /obj/effect/temp_visual/cult/sparks(asera_start)
+	remus.forceMove(remus_start)
+	new /obj/effect/temp_visual/cult/sparks(remus_start)
+	// Create warning lines
+	for(var/turf/T in getline(asera_start, target_turf))
+		new /obj/effect/temp_visual/cult/sparks(T)
+	for(var/turf/T in getline(remus_start, target_turf))
+		new /obj/effect/temp_visual/cult/sparks(T)
+	sleep(10) // 1 second warning
+	// Dash towards target simultaneously
+	var/list/asera_path = getline(asera_start, target_turf)
+	var/list/remus_path = getline(remus_start, target_turf)
+	var/list/asera_hit = list()
+	var/list/remus_hit = list()
+	// Asera dash
+	for(var/turf/T in asera_path)
+		if(QDELETED(src) || stat == DEAD)
+			break
+		forceMove(T)
+		playsound(src, 'sound/weapons/ego/burn_sword.ogg', 20, TRUE)
+		for(var/turf/aoe_turf in range(1, T))
+			new /obj/effect/temp_visual/mech_fire(aoe_turf)
+			for(var/mob/living/L in aoe_turf)
+				if(L == src || ("echo_office" in L.faction) || (L in asera_hit))
+					continue
+				L.deal_damage(30, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
+				L.apply_lc_burn(5)
+				asera_hit += L
+		sleep(1)
+	// Remus dash (happens simultaneously, but we do it right after for simplicity)
+	for(var/turf/T in remus_path)
+		if(QDELETED(remus) || remus.stat == DEAD)
+			break
+		remus.forceMove(T)
+		playsound(remus, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
+		for(var/turf/aoe_turf in range(1, T))
+			new /obj/effect/temp_visual/justitia_effect(aoe_turf)
+			for(var/mob/living/L in aoe_turf)
+				if(L == remus || ("echo_office" in L.faction) || (L in remus_hit))
+					continue
+				L.deal_damage(30, WHITE_DAMAGE, remus, attack_type = ATTACK_TYPE_MELEE)
+				remus_hit += L
+		sleep(1)
+	// Intersection explosion
+	playsound(target_turf, 'sound/weapons/fixer/generic/finisher2.ogg', 100, TRUE, 6)
+	var/list/been_hit = list()
+	for(var/turf/T in range(1, target_turf)) // 3x3 AoE
+		new /obj/effect/temp_visual/explosion(T)
+		been_hit = HurtInTurf(T, been_hit, 50, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+		been_hit = HurtInTurf(T, been_hit, 50, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
+	EndCombo()
+
+/// Guardian's Flame - Lauel empowers Asera's dash attack
+/mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/ExecuteGuardiansFlame(mob/living/simple_animal/hostile/humanoid/fixer/priest/lauel)
+	// Voice lines
+	lauel.say("Go forth, friend Asera. I am with you.")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(lauel))
+		EndCombo()
+		return
+	say("Lauel... I won't let this go to waste.")
+	// Lauel channels healing beam
+	var/datum/beam/healing_beam = lauel.Beam(src, icon_state = "sendbeam", icon = 'icons/effects/beam.dmi', time = 60 SECONDS)
+	// Perform 5 consecutive dashes
+	var/mob/living/dash_target = target
+	for(var/i in 1 to 5)
+		if(QDELETED(src) || stat == DEAD || QDELETED(lauel))
+			break
+		if(!dash_target || dash_target.stat == DEAD)
+			// Find new target
+			for(var/mob/living/L in view(10, src))
+				if(L == src || ("echo_office" in L.faction))
+					continue
+				dash_target = L
+				break
+		if(!dash_target)
+			break
+		// Dash to target
+		var/turf/dash_dest = get_turf(dash_target)
+		var/list/dash_path = getline(get_turf(src), dash_dest)
+		var/list/been_hit = list()
+		for(var/turf/T in dash_path)
+			if(QDELETED(src) || stat == DEAD)
+				break
+			forceMove(T)
+			playsound(src, 'sound/weapons/ego/burn_sword.ogg', 20, TRUE)
+			for(var/turf/aoe_turf in range(1, T))
+				new /obj/effect/temp_visual/mech_fire(aoe_turf)
+				for(var/mob/living/L in aoe_turf)
+					if(L == src || ("echo_office" in L.faction) || (L in been_hit))
+						continue
+					L.deal_damage(40, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
+					L.apply_lc_burn(5)
+					been_hit += L
+			sleep(1)
+		// Lauel heals Asera between dashes
+		if(!QDELETED(lauel) && !QDELETED(src))
+			adjustHealth(-50)
+			new /obj/effect/temp_visual/heal(get_turf(src), "#FFD700")
+		sleep(5) // Brief pause between dashes
+	// End healing beam
+	if(healing_beam)
+		qdel(healing_beam)
+	EndCombo()
 
 /obj/projectile/flame_fixer
 	name ="flame bolt"
@@ -771,8 +1466,12 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	return FALSE
 
 /obj/projectile/flame_fixer/on_hit(atom/target, blocked = FALSE)
-	if (istype(target, /mob/living))
+	// Don't hurt Echo Office allies
+	if(istype(target, /mob/living))
 		var/mob/living/L = target
+		if(L != firer && ("echo_office" in L.faction))
+			qdel(src)
+			return BULLET_ACT_BLOCK
 		L.apply_lc_burn(burn_stacks)
 	if(firer==target)
 		var/mob/living/simple_animal/hostile/humanoid/fixer/flame/F = target
@@ -791,6 +1490,62 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		return BULLET_ACT_BLOCK
 	. = ..()
 
+/// Combo projectile for Burning Memories combo - homes on Asera, reflected to enemies
+/obj/projectile/metal_fixer_combo
+	name = "memory shard"
+	icon_state = "lava"
+	damage = 40
+	speed = 6
+	damage_type = BLACK_DAMAGE
+	homing = TRUE
+	ricochets_max = 20
+	ricochet_chance = 100
+	ricochet_decay_chance = 1
+	ricochet_decay_damage = 1
+	ricochet_incidence_leeway = 0
+	homing_turn_speed = 25
+	var/burn_stacks = 10
+	var/red_damage = 30
+	var/mob/living/simple_animal/hostile/humanoid/fixer/flame/combo_asera = null
+	var/reflected = FALSE
+
+/obj/projectile/metal_fixer_combo/on_hit(atom/target, blocked = FALSE)
+	// If hitting our combo partner (Asera), handle reflection - never deal damage to her
+	if(target == combo_asera && !reflected)
+		var/mob/living/simple_animal/hostile/humanoid/fixer/flame/F = combo_asera
+		if(F.is_countering)
+			// Find nearest enemy to reflect towards
+			var/mob/living/reflect_target = null
+			var/closest_dist = 999
+			for(var/mob/living/L in view(10, F))
+				if(L == F || L == firer)
+					continue
+				if(("echo_office" in L.faction))
+					continue
+				var/dist = get_dist(F, L)
+				if(dist < closest_dist)
+					closest_dist = dist
+					reflect_target = L
+			if(reflect_target)
+				// Create reflected projectile
+				var/obj/projectile/metal_fixer_combo/reflected_proj = new(get_turf(F))
+				reflected_proj.reflected = TRUE
+				reflected_proj.homing = FALSE // No homing on reflected
+				reflected_proj.speed = speed / 3 // 3x faster than original
+				reflected_proj.preparePixelProjectile(reflect_target, F)
+				reflected_proj.firer = F
+				INVOKE_ASYNC(reflected_proj, TYPE_PROC_REF(/obj/projectile, fire))
+				playsound(F, 'sound/weapons/ego/clash1.ogg', 75, TRUE)
+				new /obj/effect/temp_visual/cult/sparks(get_turf(F))
+		qdel(src)
+		return BULLET_ACT_BLOCK
+	// Normal hit - deal damage (only to non-combo-partner targets)
+	if(istype(target, /mob/living))
+		var/mob/living/L = target
+		L.apply_lc_burn(burn_stacks)
+		L.deal_damage(red_damage, RED_DAMAGE, firer, attack_type = ATTACK_TYPE_RANGED)
+	. = ..()
+
 // Electric Fixer - Amber Knight
 // An aggressive combo-based attacker with Ramp Up system
 
@@ -806,6 +1561,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_state = "electic"
 	icon_living = "electic"
 	faction = list("echo_office")
+	real_name = "Remus Amber"
 	gender = MALE
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	robust_searching = TRUE
@@ -814,8 +1570,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	aggro_vision_range = 20
 	move_to_delay = 3
 	stat_attack = HARD_CRIT
-	maxHealth = 1500
-	health = 1500
+	maxHealth = 2000
+	health = 2000
 	melee_damage_lower = 14
 	melee_damage_upper = 20
 	melee_damage_type = WHITE_DAMAGE
@@ -849,15 +1605,15 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/ability_cooldown = 1 SECONDS
 
 	// Dash Variables
-	var/dash_damage = 20
+	var/dash_damage = 40
 	var/dash_count = 2
 
 	// Jump Variables
-	var/jump_damage = 20
+	var/jump_damage = 40
 	var/jump_aoe = 1
 
 	// Circuit Variables
-	var/circuit_damage = 20
+	var/circuit_damage = 40
 	var/circuit_max_range = 5
 
 	// Stagger state
@@ -870,6 +1626,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	// Stagger resistance changes (more vulnerable when staggered after Showtime)
 	var/list/stagger_resistances = list(RED_DAMAGE = 2.0, WHITE_DAMAGE = 1.0, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 3.0)
 	var/list/normal_resistances = list(RED_DAMAGE = 1.0, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
+
+	// Dash resistance changes (reduced damage during dash preparation)
+	var/list/dash_resistances = list(RED_DAMAGE = 0.25, WHITE_DAMAGE = 0.25, BLACK_DAMAGE = 0.25, PALE_DAMAGE = 0.25)
+	var/is_preparing_dash = FALSE
 
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/Initialize()
 	. = ..()
@@ -916,6 +1676,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/EndShowtime()
 	in_showtime = FALSE
 	ramp_up = 0
+	// Clear dash preparation state so stagger resistances aren't overwritten
+	is_preparing_dash = FALSE
 	// Enter stagger state - this prevents abilities from re-enabling can_act
 	is_staggered = TRUE
 	can_act = FALSE
@@ -994,6 +1756,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	can_act = FALSE
 	current_ability = ABILITY_DASH
 	last_ability_time = world.time
+	// Apply dash resistances during preparation (only if not staggered)
+	if(!is_staggered)
+		is_preparing_dash = TRUE
+		ChangeResistances(dash_resistances)
 	// Wind-up delay
 	var/delay = GetAbilityDelay()
 	// Add warning overlays for dash path
@@ -1016,6 +1782,11 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	addtimer(CALLBACK(src, PROC_REF(ExecuteBlazingDash), target_turf), delay)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/ExecuteBlazingDash(turf/initial_target)
+	// End dash preparation - restore resistances only if not staggered
+	if(is_preparing_dash)
+		is_preparing_dash = FALSE
+		if(!is_staggered)
+			ChangeResistances(normal_resistances)
 	if(stat == DEAD || is_staggered)
 		if(!is_staggered)
 			can_act = TRUE
@@ -1200,6 +1971,76 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	duration = 5
 	layer = ABOVE_MOB_LAYER
 
+// Electric Fixer Combo Procs
+/mob/living/simple_animal/hostile/humanoid/fixer/electric/GetComboType(mob/living/simple_animal/hostile/humanoid/fixer/partner)
+	if(istype(partner, /mob/living/simple_animal/hostile/humanoid/fixer/priest))
+		return "knights_blessing"
+	// Flame handles blazing_pursuit, Metal handles thunderforged_statues
+	return null
+
+/mob/living/simple_animal/hostile/humanoid/fixer/electric/ExecuteDuoCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+	switch(combo_type)
+		if("knights_blessing")
+			ExecuteKnightsBlessing(partner)
+
+/// Knight's Blessing - Lauel empowers Remus for a rapid 8-dash lightning storm
+/mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/ExecuteKnightsBlessing(mob/living/simple_animal/hostile/humanoid/fixer/priest/lauel)
+	// Voice lines
+	say("Lauel! Grant me your strength!")
+	sleep(5)
+	if(QDELETED(src) || QDELETED(lauel))
+		EndCombo()
+		return
+	lauel.say("Sire Remus, the light is yours to wield.")
+	// Lauel channels blessing beam
+	var/datum/beam/blessing_beam = lauel.Beam(src, icon_state = "sendbeam", icon = 'icons/effects/beam.dmi', time = 60 SECONDS)
+	new /obj/effect/temp_visual/heal(get_turf(src), "#FFFFFF")
+	visible_message(span_warning("[lauel] channels holy power into [src]!"))
+	// Perform 8 rapid consecutive dashes
+	var/mob/living/dash_target = target
+	var/list/been_hit = list()
+	for(var/i in 1 to 8)
+		if(QDELETED(src) || stat == DEAD || QDELETED(lauel))
+			break
+		// Find target if current is dead/gone
+		if(!dash_target || dash_target.stat == DEAD)
+			for(var/mob/living/L in view(10, src))
+				if(L == src || ("echo_office" in L.faction))
+					continue
+				dash_target = L
+				break
+		if(!dash_target)
+			break
+		// Dash to target
+		var/turf/dash_dest = get_turf(dash_target)
+		var/list/dash_path = getline(get_turf(src), dash_dest)
+		for(var/turf/T in dash_path)
+			if(QDELETED(src) || stat == DEAD)
+				break
+			forceMove(T)
+			playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
+			// 3x3 damage and visuals
+			for(var/turf/aoe_turf in range(1, T))
+				new /obj/effect/temp_visual/justitia_effect(aoe_turf)
+				for(var/mob/living/L in aoe_turf)
+					if(L == src || ("echo_office" in L.faction) || (L in been_hit))
+						continue
+					L.deal_damage(35, WHITE_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
+					been_hit += L
+			sleep(1)
+		// Reset hit list for next dash (allow hitting same targets again)
+		been_hit = list()
+		// Lauel heals Remus between dashes
+		if(!QDELETED(lauel) && !QDELETED(src))
+			adjustHealth(-25)
+			new /obj/effect/temp_visual/heal(get_turf(src), "#FFFFFF")
+		sleep(3) // Brief 0.3s pause between dashes
+	// End blessing beam
+	if(blessing_beam)
+		qdel(blessing_beam)
+	visible_message(span_notice("[src]'s lightning storm subsides."))
+	EndCombo()
+
 #undef ABILITY_NONE
 #undef ABILITY_DASH
 #undef ABILITY_JUMP
@@ -1215,10 +2056,10 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon_state = "priest"
 	icon_living = "priest"
 	faction = list("echo_office")
+	real_name = "Lauel"
 	gender = MALE
 	mob_biotypes = MOB_ORGANIC|MOB_HUMANOID
 	robust_searching = TRUE
-	density = FALSE
 	see_in_dark = 7
 	vision_range = 12
 	aggro_vision_range = 20
@@ -1254,7 +2095,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	// Stagger System
 	var/stagger_amount = 0
 	var/max_stagger = 750
-	var/stagger_decay_rate = 40
+	var/stagger_decay_rate = 10
 	var/stagger_decay_time = 2 SECONDS
 	var/stagger_stun_duration = 5 SECONDS
 	var/is_staggered = FALSE
@@ -1344,6 +2185,11 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	feeble_wisps += W
 
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/UpdateWisps()
+	// First, clean up any stale references in the list
+	for(var/i in feeble_wisps.len to 1 step -1)
+		var/obj/effect/wisp/W = feeble_wisps[i]
+		if(!W || QDELETED(W))
+			feeble_wisps -= W
 	var/target_wisps = max_feeble_stacks - feeble_stacks
 	var/current_wisps = feeble_wisps.len
 	if(target_wisps < current_wisps)
@@ -1353,7 +2199,9 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 			if(feeble_wisps.len)
 				var/obj/effect/wisp/W = feeble_wisps[feeble_wisps.len]
 				feeble_wisps -= W
-				qdel(W)
+				if(W && !QDELETED(W))
+					W.stop_orbit(src)
+					qdel(W)
 	else if(target_wisps > current_wisps)
 		// Add wisps with delays so they spread out
 		var/wisps_to_add = target_wisps - current_wisps
@@ -1466,9 +2314,22 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/proc/OnAllyDamaged(mob/living/ally, damage, damage_type, mob/living/attacker)
 	if(is_staggered || performing_counter)
 		return FALSE
-	// Teleport to ally
+	// Teleport to a turf adjacent to the ally, not on top of them
 	var/turf/ally_turf = get_turf(ally)
-	forceMove(ally_turf)
+	var/turf/destination_turf
+	// Try to find an unblocked adjacent turf
+	var/list/adjacent_turfs = list()
+	for(var/turf/T in range(1, ally_turf))
+		if(T == ally_turf)
+			continue
+		if(!T.density && !T.is_blocked_turf(exclude_mobs = TRUE))
+			adjacent_turfs += T
+	if(adjacent_turfs.len)
+		destination_turf = pick(adjacent_turfs)
+	else
+		// Fallback to ally turf if no adjacent turf is available
+		destination_turf = ally_turf
+	forceMove(destination_turf)
 	// Play guard sound (with cooldown)
 	if(world.time > last_guard_sound + guard_sound_cooldown)
 		playsound(src, guard_sound, 75, TRUE)
