@@ -17,6 +17,7 @@
 		//Captains belong to the "Command" Class
 			"Agent",
 			"Department Captain",
+			"Agent Intern",
 			)
 
 	if(!(user?.mind?.assigned_role in can_class))
