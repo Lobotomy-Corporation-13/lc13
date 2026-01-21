@@ -12,7 +12,7 @@
 	/// Only the EGO paths, for the old version of the interface. No relevance to the TGUI interface.
 	var/list/ego_datum_paths = list()
 	/// This var limits how much EGO each ckey can print before having to get rid of some. Specific to each printer.
-	var/ego_per_person_limit = 10
+	var/ego_per_person_limit = 15
 	/// Associates ckey to printed EGO references.
 	var/list/printed_ego = list()
 	/// Holds ckeys that have disabled the new TGUI version of the interface.

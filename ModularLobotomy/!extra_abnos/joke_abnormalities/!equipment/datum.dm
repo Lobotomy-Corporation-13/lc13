@@ -84,6 +84,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/armor/sandals
 	item_path = /obj/item/clothing/shoes/sandal/sukuna
 	cost = 20
+	testrange_blacklisted = TRUE
 
 // The Ride Never Ends - Wild Ride
 /datum/ego_datum/weapon/wild_ride
