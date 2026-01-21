@@ -109,6 +109,13 @@
 #define MEDAL_PERFECT_PROTECTOR "Perfect Protector"
 #define MEDAL_CHEMICAL_HARVESTER "Chemical Harvester"
 
+// Echo Office Achievements
+#define MEDAL_ECHO_NICHOLAS "Echo Nicholas"
+#define MEDAL_ECHO_ASERA "Echo Asera"
+#define MEDAL_ECHO_REMUS "Echo Remus"
+#define MEDAL_ECHO_ALL_SOLO "Echo All Solo"
+#define MEDAL_ECHO_DUO_WIN "Echo Duo Win"
+
 // Collection/Farming Achievements
 #define MEDAL_SILK_COLLECTOR "Silk Collector"
 #define MEDAL_WEAPON_FORGER "Master Forger"

@@ -89,6 +89,8 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 	var/duel_win_cooldown = 10 MINUTES
 	/// List of player ckeys and when their cooldown expires
 	var/list/duel_cooldowns = list()
+	/// Achievement type to award when beaten in solo duel
+	var/achievement_type
 
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/Initialize()
 	. = ..()
@@ -221,6 +223,10 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			playsound(reward_turf, 'sound/effects/cashregister.ogg', 50, TRUE)
 			// Set cooldown after winning
 			set_duel_cooldown(current_duelist)
+			// Award achievement
+			if(achievement_type && current_duelist.client)
+				current_duelist.client.give_award(achievement_type, current_duelist)
+				check_all_solo_achievement(current_duelist)
 		else
 			to_chat(current_duelist, span_boldwarning("You have been defeated. Train harder and try again."))
 
@@ -325,6 +331,17 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		return
 	H.deal_damage(9999, WHITE_DAMAGE)
 
+/// Check if the player has beaten all three solo-duelable fixers
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/check_all_solo_achievement(mob/living/winner)
+	if(!winner?.client)
+		return
+	var/client/C = winner.client
+	// Check if player has all three solo achievements
+	if(C.get_award_status(/datum/award/achievement/lc13/city/echo_nicholas) && \
+		C.get_award_status(/datum/award/achievement/lc13/city/echo_asera) && \
+		C.get_award_status(/datum/award/achievement/lc13/city/echo_remus))
+		C.give_award(/datum/award/achievement/lc13/city/echo_all_solo, winner)
+
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/EndDuoDuel(player_won = FALSE)
 	if(!in_duel)
 		return
@@ -378,6 +395,9 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			set_duel_cooldown(current_duelist)
 			if(partner)
 				partner.set_duel_cooldown(current_duelist)
+			// Award duo duel achievement
+			if(current_duelist.client)
+				current_duelist.client.give_award(/datum/award/achievement/lc13/city/echo_duo_win, current_duelist)
 		else
 			to_chat(current_duelist, span_boldwarning("You have been defeated. Train harder and try again."))
 
@@ -411,6 +431,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		/obj/item/ego_weapon/city/echo/iria/replica,
 		/obj/item/clothing/suit/armor/ego_gear/city/echo/plated/replica
 	)
+	achievement_type = /datum/award/achievement/lc13/city/echo_nicholas
 
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/nicholas/Initialize()
 	. = ..()
@@ -597,6 +618,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		/obj/item/ego_weapon/city/echo/sunstrike/replica,
 		/obj/item/clothing/suit/armor/ego_gear/city/echo/faux/replica
 	)
+	achievement_type = /datum/award/achievement/lc13/city/echo_asera
 
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/asera/Initialize()
 	. = ..()
@@ -784,6 +806,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		/obj/item/ego_weapon/city/echo/twins/gomorrah/replica,
 		/obj/item/clothing/suit/armor/ego_gear/city/echo/maid_dress/replica
 	)
+	achievement_type = /datum/award/achievement/lc13/city/echo_remus
 
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/remus/Initialize()
 	. = ..()
