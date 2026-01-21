@@ -55,3 +55,15 @@
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 100
 							)
+
+/obj/item/clothing/suit/armor/ego_gear/city/index_proxy_wanderer
+	name = "wandering index proxy armor"
+	desc = "Armor worn by a wandering index proxy."
+	icon_state = "index_proxy_wanderer"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 40, BLACK_DAMAGE = 50, PALE_DAMAGE = 60)
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)

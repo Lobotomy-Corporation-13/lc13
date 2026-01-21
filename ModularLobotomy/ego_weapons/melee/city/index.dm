@@ -133,3 +133,237 @@
 							TEMPERANCE_ATTRIBUTE = 100,
 							JUSTICE_ATTRIBUTE = 120
 							)
+
+/obj/item/index_pager
+	name = "index pager"
+	desc = "A small pager which the index use to get their prescripts remotely."
+	icon = 'icons/obj/index_pager.dmi'
+	icon_state = "index_beeper"
+
+	/// The current prescript text
+	var/prescript_text
+	/// The name of the recipient for this prescript
+	var/prescript_recipient
+	/// Whether the prescript has been loaded (typewriter finished)
+	var/prescript_loaded = FALSE
+	/// Whether the prescript is currently being displayed (typewriter in progress)
+	var/prescript_displaying = FALSE
+	/// Whether the 30-second submission window is open
+	var/submission_window_open = FALSE
+	/// Whether the 4-minute cooldown is active
+	var/on_cooldown = FALSE
+	/// List of submitted prescripts (ckey -> text)
+	var/list/submitted_prescripts = list()
+	/// List of ckeys that have already submitted
+	var/list/submitted_ckeys = list()
+	/// Draft text for each ghost's UI (ckey -> text)
+	var/list/ghost_drafts = list()
+	/// The looping sound datum for prescript loading
+	var/datum/looping_sound/index_pager_prescript/soundloop
+
+/obj/item/index_pager/Initialize(mapload)
+	. = ..()
+	AddElement(/datum/element/point_of_interest)
+	soundloop = new(list(src), FALSE)
+	notify_ghosts(
+		"An index pager is seeking prescripts!",
+		source = src,
+		enter_link = "<a href=?src=[REF(src)];interact=1>(Click to submit)</a>",
+		action = NOTIFY_ORBIT,
+		header = "Index Pager"
+	)
+
+/obj/item/index_pager/Topic(href, href_list)
+	. = ..()
+	if(href_list["interact"])
+		if(isobserver(usr))
+			ui_interact(usr)
+
+/obj/item/index_pager/Destroy()
+	QDEL_NULL(soundloop)
+	return ..()
+
+/obj/item/index_pager/attack_ghost(mob/user)
+	if(!isobserver(user))
+		return
+	ui_interact(user)
+	return ..()
+
+/obj/item/index_pager/attack_self(mob/user)
+	. = ..()
+	if(!isliving(user))
+		return
+
+	// If there's a pending prescript that hasn't been displayed yet
+	if(prescript_text && !prescript_loaded && !prescript_displaying)
+		StartPrescriptDisplay()
+	ui_interact(user)
+
+/obj/item/index_pager/ui_assets(mob/user)
+	return list(
+		get_asset_datum(/datum/asset/simple/index_pager),
+	)
+
+/obj/item/index_pager/ui_state(mob/user)
+	// Use always_state since we need both ghosts and living users to interact
+	// Permission checks are handled in ui_act
+	return GLOB.always_state
+
+/obj/item/index_pager/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "IndexPager", name)
+		ui.open()
+
+/obj/item/index_pager/ui_data(mob/user)
+	var/list/data = list()
+
+	data["is_ghost"] = isobserver(user)
+	data["on_cooldown"] = on_cooldown
+	data["submission_window_open"] = submission_window_open
+	data["has_submitted"] = (user.ckey in submitted_ckeys)
+	data["prescript_text"] = prescript_text
+	data["prescript_recipient"] = prescript_recipient
+	data["prescript_loaded"] = prescript_loaded
+	data["prescript_displaying"] = prescript_displaying
+	data["draft_text"] = ghost_drafts[user.ckey]
+
+	return data
+
+/obj/item/index_pager/ui_act(action, params)
+	. = ..()
+	if(.)
+		return
+
+	var/mob/user = usr
+
+	switch(action)
+		if("submit_prescript")
+			if(!isobserver(user))
+				return
+			if(on_cooldown)
+				to_chat(user, span_warning("The pager is on cooldown."))
+				return
+			if(user.ckey in submitted_ckeys)
+				to_chat(user, span_warning("You have already submitted a prescript."))
+				return
+
+			var/text = params["text"]
+			if(!text || length(text) < 5 || length(text) > 300)
+				to_chat(user, span_warning("Prescript must be between 5 and 300 characters."))
+				return
+
+			// Sanitize the text
+			text = strip_html(text)
+
+			submitted_prescripts[user.ckey] = text
+			submitted_ckeys += user.ckey
+			ghost_drafts[user.ckey] = null
+
+			// Start the submission window on first submission
+			if(!submission_window_open)
+				StartSubmissionWindow()
+
+			to_chat(user, span_notice("Your prescript has been submitted."))
+			return TRUE
+
+		if("update_draft")
+			if(!isobserver(user))
+				return
+			ghost_drafts[user.ckey] = params["text"]
+			return TRUE
+
+		if("typing_complete")
+			if(!isobserver(user))
+				FinishPrescriptDisplay()
+			return TRUE
+
+/// Starts the 30-second submission window
+/obj/item/index_pager/proc/StartSubmissionWindow()
+	submission_window_open = TRUE
+	addtimer(CALLBACK(src, PROC_REF(EndSubmissionWindow)), 30 SECONDS)
+
+/// Ends the submission window and picks a random prescript
+/obj/item/index_pager/proc/EndSubmissionWindow()
+	submission_window_open = FALSE
+
+	if(!length(submitted_prescripts))
+		// No submissions, reset and try again
+		notify_ghosts(
+			"An index pager is seeking prescripts!",
+			source = src,
+			enter_link = "<a href=?src=[REF(src)];interact=1>(Click to submit)</a>",
+			action = NOTIFY_ORBIT,
+			header = "Index Pager"
+		)
+		return
+
+	// Pick a random submission
+	var/selected_ckey = pick(submitted_ckeys)
+	prescript_text = submitted_prescripts[selected_ckey]
+
+	// Determine recipient name
+	var/mob/living/holder = loc
+	if(istype(holder))
+		prescript_recipient = holder.real_name
+	else
+		prescript_recipient = "Unknown"
+
+	// Log to admins
+	message_admins("[selected_ckey] submitted a prescript to [prescript_recipient]: \"[prescript_text]\"")
+	log_game("INDEX PAGER: [selected_ckey] submitted prescript to [prescript_recipient]: \"[prescript_text]\"")
+
+	// Clear submissions for next round
+	submitted_prescripts.Cut()
+	submitted_ckeys.Cut()
+	ghost_drafts.Cut()
+
+	// Deliver the prescript
+	DeliverPrescript()
+
+/// Called when a prescript is ready to be delivered to the holder
+/obj/item/index_pager/proc/DeliverPrescript()
+	playsound(src, 'sound/items/index_beeper_alert.ogg', 50, FALSE)
+	icon_state = "index_beeper_alert"
+
+	var/mob/living/holder = loc
+	if(istype(holder))
+		to_chat(holder, span_userdanger("Your index pager beeps! A new prescript has arrived. Use it in hand to view."))
+
+	// Start the 4-minute cooldown
+	StartCooldown()
+
+/// Starts the 4-minute cooldown period
+/obj/item/index_pager/proc/StartCooldown()
+	on_cooldown = TRUE
+	addtimer(CALLBACK(src, PROC_REF(EndCooldown)), 4 MINUTES)
+
+/// Ends the cooldown and resets the pager for new prescripts
+/obj/item/index_pager/proc/EndCooldown()
+	on_cooldown = FALSE
+	prescript_text = null
+	prescript_recipient = null
+	prescript_loaded = FALSE
+	prescript_displaying = FALSE
+	icon_state = "index_beeper"
+
+	notify_ghosts(
+		"An index pager is ready for new prescripts!",
+		source = src,
+		enter_link = "<a href=?src=[REF(src)];interact=1>(Click to submit)</a>",
+		action = NOTIFY_ORBIT,
+		header = "Index Pager"
+	)
+
+/// Begins the typewriter animation display
+/obj/item/index_pager/proc/StartPrescriptDisplay()
+	prescript_displaying = TRUE
+	icon_state = "index_beeper_prescript_loading"
+	soundloop.start()
+
+/// Called when typewriter animation completes
+/obj/item/index_pager/proc/FinishPrescriptDisplay()
+	prescript_displaying = FALSE
+	prescript_loaded = TRUE
+	icon_state = "index_beeper_prescript"
+	soundloop.stop()
