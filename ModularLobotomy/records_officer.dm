@@ -45,7 +45,7 @@
 	var/mob/living/carbon/human/H = target
 
 	// Check if target is an agent (allow mindless for debugging)
-	if(H.mind && !(H.mind.assigned_role in list("Agent", "Senior Agent", "Captain", "Lieutenant", "Officer", "Clerk")))
+	if(H.mind && !(H.mind.assigned_role in list("Agent", "Agent Intern", "Senior Agent", "Captain", "Lieutenant", "Officer", "Clerk")))
 		to_chat(user, span_warning("This device only works on L-Corp agents!"))
 		return
 
@@ -276,6 +276,8 @@
 		switch(stored_agent_data["assigned_role"])
 			if("Agent")
 				new_body.equipOutfit(/datum/outfit/job/agent)
+			if("Agent Intern")
+				new_body.equipOutfit(/datum/outfit/job/agent/intern)
 			if("Clerk")
 				new_body.equipOutfit(/datum/outfit/job/staff)
 			if("Captain")
