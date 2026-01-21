@@ -20,6 +20,7 @@ SUBSYSTEM_DEF(cityevents)
 	var/boss_events = list("sweeper", "lovetown", "factory", "gcorp")
 	var/list/generated = list()	//Which ckeys have generated stats
 	var/wavetime 		//How many waves have spawned? each wave increases the # of enemies by about 5%. One wave is every 5 minutes
+	var/axe_spawned = FALSE //Are the axegang in town?
 
 	var/list/processing
 
@@ -192,7 +193,7 @@ SUBSYSTEM_DEF(cityevents)
 
 //Add in random antags as time goes on.
 /datum/controller/subsystem/cityevents/proc/JobAddition()
-	var/jobpicked = rand(1,5)
+	var/jobpicked = rand(1,6)
 	for(var/datum/job/processing in SSjob.occupations)
 		if(jobpicked <= 2)
 			if(istype(processing, /datum/job/scavenger))
@@ -213,6 +214,14 @@ SUBSYSTEM_DEF(cityevents)
 			if(istype(processing, /datum/job/butcher))
 				processing.total_positions += 1
 				deadchat_broadcast("A Backstreet Butcher job slot has just opened, respawn to play.", message_type=DEADCHAT_ANNOUNCEMENT)
+
+		if(jobpicked == 6)
+			if(!axe_spawned)
+				axe_spawned = TRUE
+
+			if(istype(processing, /datum/job/axegangleader))
+				processing.total_positions += 1
+				deadchat_broadcast("Axe Gang job slots have just opened, respawn to play.", message_type=DEADCHAT_ANNOUNCEMENT)
 
 /datum/controller/subsystem/cityevents/proc/Boss()
 	minor_announce("Warning, large hostile detected. Suppression required.", "Local Activity Alert:", TRUE)

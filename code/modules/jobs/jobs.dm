@@ -248,7 +248,6 @@ GLOBAL_LIST_INIT(fixer_positions, list(
 
 	"Medical Fixer Assistant",
 	"Fixer",
-	"Rat", // most fitting, somehow
 
 	"Office Fixer",
 ))
@@ -285,10 +284,17 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Thumb East Capo",
 	"Thumb East Soldato",
-
-	"Big Brother",
+  
+  	"Big Brother",
 	"Younger Brother",
 	"Little Brother",
+
+	//The loser pit
+
+	"Rat",
+
+	"Axe Gang Member",
+	"Axe Gang Leader",
 ))
 
 
