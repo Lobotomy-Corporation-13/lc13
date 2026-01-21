@@ -3,9 +3,9 @@ We're currently missing a sprite for it, I might make one myself
 
 ----------- Work Mechs -----------
 --- Basics ---
-> Qlipcounter of 4
+> Qlipcounter of 3
 > Good Instinct and Insight, horrible Attachment, alright Repression.
-> Repression has a 50% chance to raise Qlip by 1.
+> Repression has a chance to raise Qlip by 1 based on Temperance (guaranteed at Temp V+).
 > Qlipdrop on Bad, Qlipdrop chance on Neutral.
 --- Special ---
 > Every non-Repression work done by an agent on Spiral without working on another Abnormality gives you an Awe stack, which
@@ -18,9 +18,10 @@ Note: In the context of Spiral, 'Repression' means refusing to face it, not meet
 ----------- Breach Mechs -----------
 --- Basics ---
 > Teleports to a department center. Cannot move. Will teleport to another department center every 40 seconds. Maybe also let it go to xenospawns?
-> Obnoxiously high resistances (0.1 or 0.2).
-> Hitting it while having your zone target set to arms/hands will cause you to gain a stack of Gaze.
-Gaze will lower the damage resistance that Spiral has against you (todo: check Pianist code?).
+> Normal-ish base resistances, resisting RED/BLACK and being weak to WHITE and fatal to PALE, but only takes 10% of incoming damage by default. Meant to be obnoxiously tanky without Gaze.
+> Hitting it in melee while having your zone target set to arms/hands will cause you to gain a stack of Gaze.
+Gaze will lower the damage resistance that Spiral has against you, but make you take more damage from it, too.
+> Attacks faster at <25% HP.
 --- Attacks ---
 > It Shall Be Insidious: Will periodically attack everyone in the same area as it with an unavoidable blood rain, dealing BLACK damage.
 > It Shall Grip: Will periodically try to attack up to 2 people in the same area as it with gripping fists, dealing wind-up telegraphed AoE BLACK damage.
@@ -42,7 +43,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 #define STATUS_EFFECT_GAZE /datum/status_effect/stacking/spiral_gaze
 #define STATUS_EFFECT_AWE /datum/status_effect/stacking/spiral_awe
 #define STATUS_EFFECT_CONTEMPT /datum/status_effect/spiral_contempt
-
+#define VALID_GAZE_GAIN_TARGET_ZONES list("l_arm", "r_arm", "l_hand", "r_hand")
 /// This thing gives you a lot of PE, has good work rates, trains three stats, and has a rankbump weapon, so it must be WAW+ in breach difficulty.
 /mob/living/simple_animal/hostile/abnormality/spiral
 	name = "Spiral of Contempt"
@@ -63,31 +64,39 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 	/* --- Defense --- */
 	// Should be obscenely tanky. You will need some Gaze if you don't want this fight to turn into a slog meatgrinder
-	maxHealth = 4000
-	health = 4000
-	damage_coeff = list(RED_DAMAGE = 0.2, WHITE_DAMAGE = 0.2, BLACK_DAMAGE = 0.2, PALE_DAMAGE = 0.4)
+	maxHealth = 3500
+	health = 3500
+	// These damage coeffs are basically fake, inbound damage will be severely reduced, you need Gaze stacks to counteract it.
+	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5)
+	var/base_inbound_damage_coeff = 0.1 // You're gonna be here a while if you try to bruteforce this. Not so bad if you stack Gaze.
 
 	/* --- Work --- */
 	// It is intended for Spiral to be hard to please and Awe makes it even harder, but it will always give you a good chunk of PE.
 	max_boxes = 22
 	var/boxes_per_awe = 3
-	var/success_box_percent_required = 0.8
-	var/neutral_box_percent_required = 0.6
+	var/success_box_percent_required = 0.8 // Standard is 0.7
+	var/neutral_box_percent_required = 0.6 // Standard is 0.4
 
-	start_qliphoth = 4
+	start_qliphoth = 3
 	neutral_droprate = 50 // You are going to be getting a lot of neutrals
 	bad_droprate = 100
-	var/repression_qlipraise_chance = 50
+	var/repression_qlipraise_chance = list("I" = 0, "II" = 0, "III" = 33, "IV" = 66, "V" = 90, "EX" = 100) // !WARNING! Based on Temperance, not Justice.
 
+	/// These lists are only kept so we can wipe them when Spiral breaches/dies. Spiral-corp does not provide any warranty that the people in this list actually have these statuses
+	var/list/awed_workers = list()
+	var/list/gazed_fighters = list()
+	var/list/contempted_fighters = list()
+
+	// These work rates are very gentle, but the abno will still often get Neutral/Bad works.
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = list(15, 20, 25, 40, 50),
-		ABNORMALITY_WORK_INSIGHT = list(15, 25, 30, 45, 50),
+		ABNORMALITY_WORK_INSTINCT = list(15, 20, 25, 45, 55),
+		ABNORMALITY_WORK_INSIGHT = list(15, 25, 30, 50, 60),
 		ABNORMALITY_WORK_ATTACHMENT = 0,
-		ABNORMALITY_WORK_REPRESSION = list(10, 15, 20, 35, 40),
+		ABNORMALITY_WORK_REPRESSION = list(10, 15, 20, 40, 45),
 	)
 	work_damage_amount = 10 // Wow! Only 10 damage for a WAW+ abnormality? That's so generous!
-	var/work_damage_per_awe_stack = 3 // :stare: (This can actually be so much worse than an ALEPH if you let it stack)
-	var/work_delay_reduction_per_awe_stack = 1.1 // Positive: player doesn't need to experience the tedium of works with more boxes than ALEPH abnos. Negative: no time for medipens to save you.
+	var/work_damage_per_awe_stack = 4 // :malkstare: (This can actually be so much worse than an ALEPH if you let it stack)
+	var/work_delay_reduction_per_awe_stack = 1.1 // In deciseconds. Positive: player doesn't need to experience the tedium of works with more boxes than ALEPH abnos. Negative: no time for medipens to save you.
 	work_damage_type = BLACK_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/pride
 	ego_list = list(
@@ -100,48 +109,92 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	can_breach = TRUE
 	can_patrol = FALSE
 
+	/* --- General Combat --- */
+	/// GCD applies to autoattack and all abilities, the only exception is Teleport.
+	var/global_cooldown
+	var/global_cooldown_duration = 2 SECONDS
+	/// Spiral enrages when (health <= (maxHealth * [this var]))
+	var/enrage_hp_threshold = 0.25
+	/// Becomes TRUE when Spiral enrages.
+	var/enraged = FALSE
+	/// Enrage: Grip CD is [this var]x as long.
+	var/enrage_grip_cd_coeff = 0.8
+	/// Enrage: Grip is cast an extra [this var] times.
+	var/enrage_grip_extra_iterations = 1
+	/// Enrage: Perforate's CD is [this var]x faster.
+	var/enrage_perforate_cd_speed_coeff = 1.5
+
 	/* --- Teleport --- */
 	var/teleport_timer
-	var/teleport_cooldown_duration = 40 SECONDS
+	var/teleport_cooldown_duration = 45 SECONDS
+
+	/* --- Gaze --- */
+	// Variables for Gaze outgoing and inbound damage are stored on the Gaze status effect.
+
+	// I'm gonna make the judgement call NOT to add a cooldown on gaining Gaze. This means you can instantly rocket to 5 Gaze by hitting Spiral with Animalism.
+	// We'll see if it's the right choice to make. Stuff like lances and Voodoo will be... interesting.
 
 	/* --- Autoattack (It Shall Perforate) --- */
-	var/perforate_bleed_stacks = 5
-	var/perforate_damage = 60
+	// RED damage
+	var/perforate_bleed_stacks = 5 // dw it attacks very slowly
+	melee_damage_lower = 38
+	melee_damage_upper = 44
+	melee_damage_type = RED_DAMAGE
+	melee_reach = 3
+	rapid_melee = 0.15
+	attack_sound = 'sound/abnormalities/spiral_contempt/spiral_hit.ogg'
 
 	/* --- Periodic Damage (It Shall Be Insidious) --- */
-	var/insidious_damage = 35
+	// BLACK damage
+	var/insidious_damage = 40
 	var/insidious_cooldown
-	var/insidious_cooldown_duration = 13 SECONDS
+	var/insidious_cooldown_duration = 15 SECONDS
 
 	/* --- Periodic Telegraphed AoEs (It Shall Grip) --- */
-	var/grip_damage = 90
+	// BLACK damage
+	var/grip_damage = 90 // You should dodge
+	/// Radius in tiles.
 	var/grip_radius = 1
-	var/grip_max_targets = 2
+	/// Telegraph duration for the attack.
+	var/grip_windup = 1.1 SECONDS
 	var/grip_cooldown
-	var/grip_cooldown_duration = 9 SECONDS
+	var/grip_cooldown_duration = 10 SECONDS
+	// When using It Shall Grip, we'll cast it up to [grip_iterations] times, each time it will spawn up to [grip_max_targets] AoEs.
+	var/grip_iterations = 1
+	var/grip_max_targets = 2
 
 	/* --- Contempt Punish/Stagger Opportunity (It Shall Shun) --- */
-	var/shun_damage = 250
+	// BLACK damage
+	var/shun_damage = 200 // Don't flop the DPS check or you get sent directly to Sovngarde (livable with some black res tbh)
 	var/shun_radius = 2
 	var/shun_hands_type
 	// Balance these three variables to ensure that it's a DPS check that can barely be met by 1 WAW agent using the right damage types.
-	var/shun_hands_hp = 750
-	var/shun_hands_resistances = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.1, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.5)
-	var/shun_windup = 6 SECONDS // 750/6 requires 125 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
+	var/shun_hands_hp = 400
+	var/shun_hands_resistances = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.5)
+	var/shun_windup = 6 SECONDS // 400/6 requires 66.67 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
+	/// Holds a list of the buckling mobs created by this attack, we need to wipe this if we die/get staggered
+	var/list/shun_mobs = list()
 
 	/* --- Stagger (Reward for resolving It Shall Shun) --- */
+	var/staggered = FALSE
 	var/stagger_duration = 8 SECONDS
-	var/stagger_resistances = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 1.5)
+	var/stagger_unstagger_time = 100
+	var/list/stagger_resistances = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 2)
 
-/mob/living/simple_animal/hostile/abnormality/spiral/Move(turf/newloc, dir, step_x, step_y)
-	return FALSE
+/mob/living/simple_animal/hostile/abnormality/spiral/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
+	. = ..()
+	playsound(get_turf(src), 'sound/magic/clockwork/invoke_general.ogg', 40, TRUE)
 
+/* ------------------------------- Work Code ------------------------------- */
+
+// Increase work speed based on Awe stacks. This is a double edged sword; you get faster works that generate more PE, but that also means you have less time to heal during the work.
 /mob/living/simple_animal/hostile/abnormality/spiral/SpeedWorktickOverride(mob/living/carbon/human/user, work_speed, init_work_speed, work_type)
 	. = ..()
 	var/datum/status_effect/stacking/spiral_awe/awe = user.has_status_effect(STATUS_EFFECT_AWE)
 	if(awe)
 		return init_work_speed -= (awe.stacks * work_delay_reduction_per_awe_stack)
 
+// Before working: Adjust Max PE boxes, Success PE boxes, Neutral PE boxes and Work Damage based on Awe stacks of the worker.
 /mob/living/simple_animal/hostile/abnormality/spiral/AttemptWork(mob/living/carbon/human/user, work_type)
 	work_damage_amount = initial(work_damage_amount)
 	var/datum/status_effect/stacking/spiral_awe/awe = user.has_status_effect(STATUS_EFFECT_AWE)
@@ -161,17 +214,20 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	say("You don't have Awe. Damage is [work_damage_amount], Max Boxes are [datum_reference.max_boxes], Success Boxes are [datum_reference.success_boxes], Neutral Boxes are [datum_reference.neutral_boxes].")
 	return TRUE
 
+// After working, but before a possible qlipdrop: if we Repressed, chance to raise the qlip by 1. So a Neutral/Bad at Q1 can still be saved from breaching.
 /mob/living/simple_animal/hostile/abnormality/spiral/WorkComplete(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	if(work_type == ABNORMALITY_WORK_REPRESSION)
-		if(prob(repression_qlipraise_chance))
+		var/chance_to_qlipraise = repression_qlipraise_chance[user.get_attribute_text_level(get_modified_attribute_level(user, TEMPERANCE_ATTRIBUTE))] // Yes this is based on Temp, not Just. It's your ability to resist looking at it.
+		say("Your chance to qlipraise is [chance_to_qlipraise].")
+		if(prob(chance_to_qlipraise))
 			datum_reference.qliphoth_change(1, user)
-			to_chat(user, span_notice("You avert your gaze from the Spiral. Its movements slow - you can only guess your actions have placated it."))
-			playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_mark.ogg', 60, 0, 2)
+			to_chat(user, span_nicegreen("You avert your gaze from the Spiral and resist its almost magnetic pull. Its movements slow - you can only guess your actions have placated it."))
+			playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_mark.ogg', 80, 0, 2)
 		else
-			to_chat(user, span_warning("You avert your gaze from the Spiral. But even as you turn away, you can't help but feel like you're doing the wrong thing..."))
+			to_chat(user, span_warning("You avert your gaze from the Spiral. But even as you turn away, you can't help but feel like you're doing the wrong thing... you anxiously glance at it from the corner of your eye, and see that it is utterly unimpressed."))
 	. = ..()
 
-
+// After working, if we didn't Repress, increase the user's Awe. Starts at 1 and goes up to 5. It doesn't go away until Spiral breaches, dies or you work on a different abno.
 /mob/living/simple_animal/hostile/abnormality/spiral/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	if(!(work_type == ABNORMALITY_WORK_REPRESSION))
 		var/datum/status_effect/stacking/spiral_awe/awe = user.has_status_effect(STATUS_EFFECT_AWE)
@@ -180,59 +236,387 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 			awe.add_stacks(1)
 			to_chat(user, span_warning("Even though it's glowering at you with disdain, you can't take your eyes off of it..."))
 		else
-			user.apply_status_effect(STATUS_EFFECT_AWE)
+			user.apply_status_effect(STATUS_EFFECT_AWE, 0, datum_reference)
+			awed_workers |= user
 			to_chat(user, span_warning("As you finish your work, you can't help but meet its gaze. It glares right back at you."))
-		playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_whine.ogg', 60, 0, 2)
+		playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_whine.ogg', 80, 0, 2)
 
 	return
 
-/// Gaze stacking status effect. It allows you to deal some actual damage to the Spiral, and causes It Shall Shun to happen if you max it out. You will also take extra damage from Spiral.
-/datum/status_effect/stacking/spiral_gaze
-	id = "spiral_gaze"
-	alert_type = /atom/movable/screen/alert/status_effect/spiral_gaze
-	stacks = 1
-	max_stacks = 7
-	stack_decay = 0
-	duration = 20 SECONDS
-	stack_threshold = 7
-	consumed_on_threshold = TRUE
-	var/mutable_appearance/gaze_icon
-	var/datum/abnormality/spiral_abno_datum
-	var/additive_personal_shred_per_stack = 0.1 // Spiral's resists go down to 0.8/0.8/0.8/0.9 at 6 stacks
-	var/extra_damage_coeff_per_stack = 0.25 // Up to 2.5x damage taken from Spiral at 6 stacks
+// This literally only exists because I can't call the qlipchange in a signal because it eventually leads to sleep() in a few abnos.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/AweBroken(mob/living/carbon/human/user)
+	datum_reference.qliphoth_change(-1)
+	awed_workers -= user
 
-/datum/status_effect/stacking/spiral_gaze/on_creation(mob/living/new_owner, datum/abnormality/spiral_datum)
-	gaze_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
-	spiral_abno_datum = spiral_datum
-	. = ..()
-	playsound(get_turf(owner), 'sound/abnormalities/silentgirl/Guilt_Apply.ogg', 50, 0, 2)
-	owner.add_overlay(gaze_icon)
-	linked_alert.desc += "[additive_personal_shred_per_stack * stacks], and you are taking [1 + (extra_damage_coeff_per_stack * stacks)]x damage from it."
-	return
-
-/datum/status_effect/stacking/spiral_gaze/on_remove()
-	owner.cut_overlay(gaze_icon)
+/* ------------------------------- Breach/Combat Code ------------------------------- */
+/mob/living/simple_animal/hostile/abnormality/spiral/BreachEffect(mob/living/carbon/human/user, breach_type)
+	for(var/mob/living/awestruck in awed_workers)
+		awestruck.remove_status_effect(STATUS_EFFECT_AWE)
+		awed_workers -= awestruck
+	Teleport() // Z-level safe
 	. = ..()
 
-/datum/status_effect/stacking/spiral_gaze/threshold_cross_effect()
-	. = ..()
-	spiral_abno_datum.current?.say("Threshold on Gaze reached, clearing and casting It Shall Shun.")
-	qdel(src)
+// No regular movement for Spiral. Being able to flee from it is part of the balance.
+/mob/living/simple_animal/hostile/abnormality/spiral/Move(turf/newloc, dir, step_x, step_y)
+	return FALSE
 
-/datum/status_effect/stacking/spiral_gaze/add_stacks(stacks_added)
-	refresh()
+// Cleanup on death.
+/mob/living/simple_animal/hostile/abnormality/spiral/death(gibbed)
+	deltimer(teleport_timer)
+	// Add up the lists that hold all people affected by our status effects, cleanse everyone in those lists and empty them out.
+	var/list/affected_by_stuff = list()
+	affected_by_stuff |= awed_workers
+	affected_by_stuff |= gazed_fighters
+	affected_by_stuff |= contempted_fighters
+	for(var/mob/living/survivor in affected_by_stuff)
+		survivor.remove_status_effect(STATUS_EFFECT_AWE)
+		survivor.remove_status_effect(STATUS_EFFECT_GAZE)
+		survivor.remove_status_effect(STATUS_EFFECT_CONTEMPT)
+	awed_workers = list()
+	gazed_fighters = list()
+	contempted_fighters = list()
+	// Cleanup any Shun mobs that may be left over.
+	for(var/mob/living/simple_animal/spiral_shun/possible_shunners in shun_mobs)
+		qdel(possible_shunners)
+		shun_mobs -= possible_shunners
+
+	shun_mobs = list()
+
+	playsound(loc, 'sound/effects/ordeals/crimson/dusk_dead.ogg', 50, 1)
+	for(var/i in 1 to 5)
+		var/atom/temp = new /obj/effect/temp_visual/dir_setting/bloodsplatter(loc, pick(GLOB.alldirs))
+		temp.transform *= 1.5
+	return ..()
+
+/// Apply Gaze when hit in melee. Always give Gaze if being hit in the hands/arms, otherwise if it's a simplemob give Gaze randomly.
+/mob/living/simple_animal/hostile/abnormality/spiral/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 
-/datum/status_effect/stacking/spiral_gaze/tick()
-	if(!can_have_status())
+	// Check to see if we should enrage.
+	if(!enraged)
+		if(health < (maxHealth * enrage_hp_threshold))
+			// Warn the players.
+			var/warning_message = "[src] begins whirling with greater intensity."
+			visible_message(span_userdanger(warning_message))
+			for(var/mob/living/L in viewers(8, src))
+				balloon_alert(L, warning_message)
+			// Buff our abilities, primarily their frequency
+			grip_cooldown_duration = (initial(grip_cooldown_duration) * enrage_grip_cd_coeff)
+			grip_cooldown = min(world.time + 1 SECONDS, grip_cooldown) // Reset CD
+			grip_iterations = (initial(grip_iterations) + enrage_grip_extra_iterations)
+			rapid_melee = (initial(rapid_melee) * enrage_perforate_cd_speed_coeff)
+			enraged = TRUE
+
+	if(!(isliving(source)) || !(attack_type & ATTACK_TYPE_MELEE))
+		return
+	// If we were hit by a living source with a melee attack, and they don't have Contempt, give them Gaze.
+	var/mob/living/attacker = source
+	if(!(attacker.has_status_effect(STATUS_EFFECT_CONTEMPT)))
+		// If aiming for hands/arms, always give Gaze. Otherwise, if the source is a simpleanimal, let them gain Gaze randomly.
+		if((attacker.zone_selected in VALID_GAZE_GAIN_TARGET_ZONES) || (isanimal(attacker) && prob(50)))
+			var/datum/status_effect/stacking/spiral_gaze/gaze = attacker.has_status_effect(STATUS_EFFECT_GAZE)
+			if(gaze)
+				gaze.add_stacks(1)
+			else
+				attacker.apply_status_effect(STATUS_EFFECT_GAZE, 0, src)
+				gazed_fighters |= attacker
+
+
+
+/// Reduce incoming damage. Lower this reduction if the attacker has Gaze, possibly making Spiral take extra damage instead. Doesn't activate for sourceless damage/when staggered.
+/mob/living/simple_animal/hostile/abnormality/spiral/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
+	if(staggered) // If we're staggered we just take normal damage (with the staggered resistance coeffs)
+		return ..()
+	if(!isliving(source))
+		return ..()
+	var/mob/living/attacker = source
+	var/inbound_damage_coeff = base_inbound_damage_coeff // Normally take 0.1x damage
+
+	// Increase the 0.1x base damage coeff based on how many Gaze stacks the attacker has. Can go up to 1.3x damage received, if the attacker has 6 Gaze stacks (each is 0.2 additive as of writing)
+	var/datum/status_effect/stacking/spiral_gaze/lets_take_a_gaze = attacker.has_status_effect(STATUS_EFFECT_GAZE)
+	if(lets_take_a_gaze)
+		inbound_damage_coeff += (lets_take_a_gaze.stacks * lets_take_a_gaze.spiral_inbound_damage_coeff_additive_per_gaze)
+
+	damage_amount *= inbound_damage_coeff
+	. = ..()
+
+/// Teleport to a department center/xenospawn, if not staggered. Will never cross Z levels.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/Teleport()
+	deltimer(teleport_timer)
+	if(staggered)
+		// Make Teleport fire after we're unstaggered.
+		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), (stagger_unstagger_time - world.time + 1), TIMER_STOPPABLE)
+		return
+
+	animate(src, 0.7 SECONDS, alpha = 0)
+	var/list/department_centers = GLOB.department_centers.Copy()
+	var/list/xenospawns = GLOB.xeno_spawn.Copy()
+	var/list/possible_destinations = department_centers + xenospawns
+	var/turf/destination = pick(possible_destinations)
+	say("Teleporting to [get_area(destination)]. Next teleport at [world.time + teleport_cooldown_duration] world time.")
+	SLEEP_CHECK_DEATH(0.7 SECONDS)
+
+	if((stat < DEAD)) // Z Level Check; only teleport when breaching on the same level as the facility.
+		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), teleport_cooldown_duration, TIMER_STOPPABLE)
+		if(z == destination.z)
+			global_cooldown = world.time + global_cooldown_duration
+			forceMove(destination)
+		animate(src, 0.7 SECONDS, alpha = initial(alpha))
+
+/mob/living/simple_animal/hostile/abnormality/spiral/Life()
+	. = ..()
+	if(!(.) || status_flags & GODMODE || global_cooldown > world.time)
+		return
+	var/list/targets_found = AreaScan()
+	if(TryUseInsidious(targets_found))
+		return
+	if(TryUseGrip(targets_found))
+		return
+
+/// Don't let Perforate go off if the GCD is rolling
+/mob/living/simple_animal/hostile/abnormality/spiral/TryAttack()
+	if(global_cooldown > world.time)
+		return FALSE
+	. = ..()
+
+/// Returns how much damage we should actually deal to the target based on their gaze stacks.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/CalculateDamageFromGazeStacks(mob/living/victim, original_damage)
+	if(!victim || !original_damage)
+		return 0
+
+	var/final_coeff = 1
+	var/datum/status_effect/stacking/spiral_gaze/lets_take_a_gaze = victim.has_status_effect(STATUS_EFFECT_GAZE)
+	if(lets_take_a_gaze)
+		final_coeff += (lets_take_a_gaze.spiral_outgoing_damage_coeff_additive_per_gaze * lets_take_a_gaze.stacks)
+	return (original_damage * final_coeff)
+
+/// Checks the area Spiral is in, with no range limit, for targets, and returns a list of them. Will not target if they pass a faction check/they're dead.
+/// Will also include the people in its sight radius, to avoid cheese from standing in an area boundary.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/AreaScan()
+	var/area/where_am_i = get_area(src)
+	var/list/targets_found = list()
+	for(var/key, value in where_am_i.area_living)
+		for(var/mob/living/victim in value)
+			if((victim.stat < DEAD) && !(faction_check_mob(victim))) // Skip corpses and friendlies
+				// If they're working we won't target them out of courtesy
+				if(ishuman(victim))
+					var/mob/living/carbon/human/unfortunate = victim
+					if(unfortunate.is_working)
+						continue
+
+				// Add valid targets to our list
+				targets_found |= victim
+
+	for(var/mob/living/pretty_close_to_us in viewers(vision_range, src))
+		if((pretty_close_to_us.stat < DEAD) && !(faction_check_mob(pretty_close_to_us))) // Skip corpses and friendlies
+			// Even if you're working, if Spiral can LITERALLY SEE YOU you are getting added into the list
+			targets_found |= pretty_close_to_us // |= avoids duplicates
+
+	targets_found -= contempted_fighters // Remove people who are trapped by It Shall Shun.
+
+	return targets_found
+
+/* --------- It Shall Perforate --------- */
+
+/mob/living/simple_animal/hostile/abnormality/spiral/AttackingTarget(atom/attacked_target)
+	if(staggered || global_cooldown > world.time)
+		return FALSE
+
+	// Increase the damage we should deal based on Gaze stacks on target.
+	var/final_damage = CalculateDamageFromGazeStacks(attacked_target, rand(melee_damage_lower, melee_damage_upper))
+	// Save these two values to restore them later
+	var/old_lower = melee_damage_lower
+	var/old_upper = melee_damage_upper
+	// We already randomized the damage 4 lines ago
+	melee_damage_lower = final_damage
+	melee_damage_upper = final_damage
+
+	animate(src, 0.2 SECONDS, color = "#2a13f7")
+	. = ..()
+	animate(src, 1 SECONDS, color = initial(color))
+	// Restore standard damage values
+	melee_damage_lower = old_lower
+	melee_damage_upper = old_upper
+
+	if(!(.) || !(isliving(attacked_target)))
+		return
+
+	global_cooldown = world.time + (global_cooldown_duration * 1.5) // Longer GCD because this thing SLAPS
+	var/mob/living/victim = attacked_target
+	if(victim && victim.stat < DEAD)
+		victim.apply_lc_bleed(perforate_bleed_stacks)
+
+/* --------- It Shall Be Insidious --------- */
+
+/// Try to use It Shall Be Insidious. If there are any targets, go on cooldown and call InsidiousCast with the targets found.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/TryUseInsidious(list/targets_found)
+	if(staggered || insidious_cooldown > world.time || global_cooldown > world.time)
+		return FALSE
+
+	if(!targets_found || !length(targets_found))
+		return FALSE
+
+	insidious_cooldown = world.time + insidious_cooldown_duration
+	global_cooldown = world.time + global_cooldown_duration
+	INVOKE_ASYNC(src, PROC_REF(InsidiousCast), targets_found)
+	return TRUE
+
+/// Hit every mob in the list argument with It Shall Be Insidious.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/InsidiousCast(list/targets_found)
+	for(var/mob/living/target in targets_found)
+		target.deal_damage(CalculateDamageFromGazeStacks(target, insidious_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_SPECIAL))
+
+		var/turf/target_turf = get_turf(target)
+		playsound(target_turf, 'sound/abnormalities/spiral_contempt/spiral_bleed.ogg', 100, FALSE)
+		new /obj/effect/temp_visual/contempt_blood(target_turf)
+
+		SLEEP_CHECK_DEATH(rand(2, 5)) // Slight delay so it looks more natural
+
+/* --------- It Shall Grip --------- */
+
+/// Try to use It Shall Grip. If there are any targets provided in the argument list, go on cooldown and call GripCast with the targets found.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/TryUseGrip(list/targets_found)
+	if(staggered || grip_cooldown > world.time || global_cooldown > world.time)
+		return FALSE
+
+	if(!targets_found || !length(targets_found))
+		return FALSE
+
+	grip_cooldown = world.time + grip_cooldown_duration
+	global_cooldown = world.time + global_cooldown_duration
+	INVOKE_ASYNC(src, PROC_REF(GripCast), targets_found)
+	return TRUE
+
+/// Spawn a /temp_visual/spiral_grip on up to [grip_max_targets], repeat up to [grip_iterations] times.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/GripCast(list/targets_found)
+	for(var/i in 1 to grip_iterations)
+		playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_grow.ogg', 100, FALSE, 7)
+		var/list/iteration_target_list = targets_found.Copy() // We copy it so we can use a different copy of the list for each iteration. This means that each person can only be targeted once per iteration, but multiple times per cast.
+		for(var/j in 1 to grip_max_targets)
+			if(length(iteration_target_list) < 1)
+				break
+			var/mob/living/target = pick_n_take(iteration_target_list)
+
+			var/turf/target_turf = get_turf(target)
+
+			new /obj/effect/temp_visual/spiral_grip(target_turf, grip_radius, grip_windup, src)
+			SLEEP_CHECK_DEATH(rand(5, 8))
+		SLEEP_CHECK_DEATH(1.5 SECONDS)
+
+/// Gets called by /temp_visual/spiral_grip when it resolves.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/GripHit(mob/living/target)
+	if(!istype(target))
+		return FALSE
+	target.deal_damage(CalculateDamageFromGazeStacks(target, grip_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+/// Grip effect; gets passed arguments by Spiral's GripCast(). Reused for Shun.
+/obj/effect/temp_visual/spiral_grip
+	name = "gripping hands"
+	desc = "You shall be gripped."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "malevolent"
+	randomdir = FALSE
+	duration = 5 SECONDS
+	layer = POINT_LAYER
+	var/final_radius = 1
+	var/final_windup = 1.2 SECONDS
+	var/fadeout_time = 0.5 SECONDS
+	var/list/affected_turfs = list()
+	var/list/telegraph_vfx = list()
+	var/mob/living/simple_animal/hostile/abnormality/spiral/caster
+
+/obj/effect/temp_visual/spiral_grip/Initialize(mapload, radius = 1, windup = 1.2 SECONDS, mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref)
+	. = ..()
+	if(!istype(spiral_ref))
 		qdel(src)
+		return
+	final_radius = radius
+	final_windup = windup
+	caster = spiral_ref
+	Telegraph()
 
-/atom/movable/screen/alert/status_effect/spiral_gaze
-	name = "Gaze \[Spiral of Contempt\]"
-	icon_state = "gaze"
-	desc = "The Spiral is glaring at you. Spiral of Contempt's resistances are weakened additively by "
+/// Warns players about the danger tiles, sets a timer to perform the attack based on windup.
+/obj/effect/temp_visual/spiral_grip/proc/Telegraph()
+	affected_turfs = RANGE_TURFS(final_radius, src)
+	playsound(src, 'sound/weapons/fwoosh.ogg', 100, FALSE, 3)
+	for(var/turf/T in affected_turfs)
+		new /obj/effect/temp_visual/sparkles/spiral(T, final_windup)
+	addtimer(CALLBACK(src, PROC_REF(Resolve)), final_windup)
 
-/// Awe stacking status effect. It does nothing, but works on Spiral will check for stacks of this and adjust PE boxes/work damage accordingly. Also if you work something else with Awe on,
+/// Causes the damage and fades out the effect.
+/obj/effect/temp_visual/spiral_grip/proc/Resolve()
+	// Cleanup telegraphs
+	for(var/atom/effect in telegraph_vfx)
+		qdel(effect)
+	QDEL_NULL(telegraph_vfx)
+
+	playsound(get_turf(src), 'sound/abnormalities/so_that_no_cry/attack.ogg', 75)
+
+	var/list/hitlist = list()
+	for(var/turf/T in affected_turfs)
+		for(var/mob/living/L in T)
+			if(!(L in hitlist) && (L.stat < DEAD))
+				hitlist |= L
+
+				if(caster && istype(caster))
+					if(caster.faction_check_mob(L)) // Yes I know this is a ridiculous level of nesting
+						continue
+
+				if(caster)
+					caster.GripHit(L)
+
+	// Cleanup
+	deltimer(timerid)
+	caster = null
+	affected_turfs = null
+	// Fade out
+	animate(src, fadeout_time, alpha = 0)
+	QDEL_IN(src, fadeout_time + 1)
+
+// Telegraph sparkles with a customizable duration
+/obj/effect/temp_visual/sparkles/spiral
+	name = "grip telegraph"
+	color = COLOR_RED
+	duration = 1 SECONDS
+
+/obj/effect/temp_visual/sparkles/spiral/Initialize(mapload, new_duration = 1 SECONDS)
+	. = ..()
+	deltimer(timerid)
+	duration = new_duration
+	timerid = QDEL_IN(src, duration)
+
+/* --------- It Shall Shun --------- */
+
+/// Called by the Shun mob we spawn. Check the Contempt status effect section for it.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/ShunHit(mob/living/victim)
+	if(!istype(victim))
+		return
+	victim.deal_damage(CalculateDamageFromGazeStacks(victim, shun_damage), BLACK_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+// Don't worry about teleport, it will get delayed to until after the stagger is over.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/Stagger()
+	staggered = TRUE
+	ChangeResistances(stagger_resistances)
+	var/mutable_appearance/colored_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "stagger", src.layer + 0.1)
+	colored_overlay.pixel_x += 32
+	add_overlay(colored_overlay)
+	for(var/mob/living/simple_animal/spiral_shun/possible_extras in shun_mobs)
+		qdel(possible_extras)
+		shun_mobs -= possible_extras
+	say("Staggered!")
+
+	SLEEP_CHECK_DEATH(stagger_duration)
+
+	var/list/old_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5) // For some reason I can't get initial() to work here
+	ChangeResistances(old_coeff)
+	staggered = FALSE
+	cut_overlay(colored_overlay)
+	say("Unstaggered!")
+
+/* ------------------------------- Status Effects ------------------------------- */
+
+/* --------- Awe (Work) --------- */
+/// Awe stacking status effect. It does nothing, but works on Spiral will check for stacks of this and adjust PE boxes/work damage/work speed accordingly. Also if you work something else with Awe on,
 /// Awe is cleared and Spiral qlipdrops.
 /datum/status_effect/stacking/spiral_awe
 	id = "spiral_awe"
@@ -242,13 +626,56 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	stack_decay = 0
 	duration = -1
 	consumed_on_threshold = FALSE
+	var/datum/abnormality/spiral_abno_datum
+
+/atom/movable/screen/alert/status_effect/spiral_awe
+	name = "Awe \[Spiral of Contempt\]"
+	icon_state = "gaze"
+	desc = "Now that you've set eyes on it, don't look away."
+
+/datum/status_effect/stacking/spiral_awe/proc/BreakAwe(datum/source, datum/abnormality/datum_sent, mob/living/carbon/human/user, work_type)
+	SIGNAL_HANDLER
+	if(!istype(spiral_abno_datum))
+		qdel(src)
+		return FALSE
+	if((datum_sent != spiral_abno_datum) && !(ispath(datum_sent.abno_path, /mob/living/simple_animal/hostile/abnormality/training_rabbit)))
+		INVOKE_ASYNC(spiral_abno_datum.current, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/spiral, AweBroken), user) // This is so annoying, apparently ZeroQliphoth sleeps so I can't use it in a signal
+		to_chat(owner, span_danger("As you finish the work, you snap out of your fascination with the Spiral of Contempt."))
+		to_chat(owner, span_phobia("If you were just going to cast a passing glance, you shouldn't have bothered to look in the first place."))
+		playsound(get_turf(owner), 'sound/magic/clockwork/invoke_general.ogg', 50, FALSE, 5)
+		qdel(src)
+
+/datum/status_effect/stacking/spiral_awe/on_creation(mob/living/new_owner, stacks_to_apply, datum/abnormality/spiral_datum)
+	if(istype(spiral_datum))
+		spiral_abno_datum = spiral_datum
+		return ..()
+	else
+		qdel(src)
+		return FALSE
+
+/datum/status_effect/stacking/spiral_awe/on_apply()
+	if(!ishuman(owner))
+		return FALSE
+	RegisterSignal(owner, COMSIG_WORK_COMPLETED, PROC_REF(BreakAwe))
+	return TRUE
+
+/datum/status_effect/stacking/spiral_awe/on_remove()
+	UnregisterSignal(owner, COMSIG_WORK_COMPLETED)
+	var/mob/living/simple_animal/hostile/abnormality/spiral/our_spiral = spiral_abno_datum.current
+	if(!spiral_abno_datum || !our_spiral)
+		return
+	our_spiral.awed_workers -= owner
+	spiral_abno_datum = null
 
 /datum/status_effect/stacking/spiral_awe/tick()
 	if(!can_have_status())
 		qdel(src)
 
+/// Complete override of add_stacks to avoid some behaviour we don't want, also we stick a roman numeral to show how many stacks we have.
 /datum/status_effect/stacking/spiral_awe/add_stacks(stacks_added)
-	. = ..()
+	if(!stacks_added)
+		return
+	stacks = clamp((stacks + stacks_added), 1, max_stacks)
 	linked_alert.name = initial(linked_alert.name)
 	var/adding_to_name = " - "
 	switch(stacks)
@@ -262,17 +689,274 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 			adding_to_name += "IV"
 		if(5)
 			adding_to_name += "V"
-
 		else
 			adding_to_name += "???"
 
 	linked_alert.name += adding_to_name
 
-/atom/movable/screen/alert/status_effect/spiral_awe
-	name = "Awe \[Spiral of Contempt\]"
+/* --------- Gaze (Combat) --------- */
+/// Gaze stacking status effect. It allows you to deal some actual damage to the Spiral, and causes It Shall Shun to happen if you max it out. You will also take extra damage from Spiral.
+/datum/status_effect/stacking/spiral_gaze
+	id = "spiral_gaze"
+	alert_type = /atom/movable/screen/alert/status_effect/spiral_gaze
+	stacks = 1
+	max_stacks = 7
+	stack_decay = 0
+	duration = 20 SECONDS
+	stack_threshold = 7
+	consumed_on_threshold = TRUE
+	var/mutable_appearance/gaze_icon
+	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref
+	var/spiral_outgoing_damage_coeff_additive_per_gaze = 0.25 // At 6 stacks, Spiral deals 2.5x damage to you. A bad time. (Starts at 1x)
+	var/spiral_inbound_damage_coeff_additive_per_gaze = 0.2 // At 6 stacks, Spiral takes up to 1.3x damage from you. (Starts at 0.1x)
+
+/atom/movable/screen/alert/status_effect/spiral_gaze
+	name = "Gaze \[Spiral of Contempt\]"
 	icon_state = "gaze"
-	desc = "Now that you've set eyes on it, don't look away."
+	desc = "The Spiral is glaring at you."
+
+/datum/status_effect/stacking/spiral_gaze/on_creation(mob/living/new_owner, stacks_to_apply, mob/living/simple_animal/hostile/abnormality/spiral/spiral_mob)
+	if(!istype(spiral_mob))
+		new_owner.say("Gaze: didn't receive a correct spiral ref. Deleting.")
+		qdel(src)
+		return FALSE
+	gaze_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
+	spiral_ref = spiral_mob
+	. = ..()
+	playsound(get_turf(owner), 'sound/abnormalities/silentgirl/Guilt_Apply.ogg', 25, 0, 2)
+	owner.add_overlay(gaze_icon)
+	// Set up the desc to explain what this status even does in case people didn't read the book.
+	linked_alert.desc += " Taking [1 + (spiral_outgoing_damage_coeff_additive_per_gaze * stacks)]x damage from Spiral of Contempt, and dealing [0.1 + (spiral_inbound_damage_coeff_additive_per_gaze * stacks)]x damage to it (normal: 0.1x)."
+	return
+
+/datum/status_effect/stacking/spiral_gaze/on_remove()
+	owner.cut_overlay(gaze_icon)
+	QDEL_NULL(gaze_icon)
+	if(!spiral_ref)
+		return
+	spiral_ref.gazed_fighters -= owner
+	spiral_ref = null
+
+/datum/status_effect/stacking/spiral_gaze/threshold_cross_effect()
+	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT, spiral_ref, spiral_ref.shun_windup, spiral_ref.shun_hands_hp, spiral_ref.shun_hands_resistances, spiral_ref.shun_radius)
+	qdel(src)
+
+/// Refresh the duration when gaining stacks, also adjust name and description to match the stack amount.
+/datum/status_effect/stacking/spiral_gaze/add_stacks(stacks_added)
+	if(!stacks_added)
+		return
+	refresh()
+	. = ..()
+	if(!linked_alert)
+		return
+	linked_alert.name = initial(linked_alert.name)
+	linked_alert.desc = initial(linked_alert.desc)
+	var/adding_to_name = " - "
+	switch(stacks)
+		if(1)
+			adding_to_name += "I"
+		if(2)
+			adding_to_name += "II"
+		if(3)
+			adding_to_name += "III"
+		if(4)
+			adding_to_name += "IV"
+		if(5)
+			adding_to_name += "V"
+		if(6)
+			adding_to_name += "VI"
+		else
+			adding_to_name += "???"
+
+	linked_alert.name += adding_to_name
+	linked_alert.desc += " Taking [1 + (spiral_outgoing_damage_coeff_additive_per_gaze * stacks)]x damage from Spiral of Contempt, and dealing [0.1 + (spiral_inbound_damage_coeff_additive_per_gaze * stacks)]x damage to it (normal: 0.1x)."
+
+/datum/status_effect/stacking/spiral_gaze/tick()
+	if(!can_have_status())
+		qdel(src)
+
+/* --------- Contempt/It Shall Shun (Combat) --------- */
+/// Contempt status effect.
+/datum/status_effect/spiral_contempt
+	id = "spiral_contempt"
+	alert_type = /atom/movable/screen/alert/status_effect/spiral_contempt
+	duration = 30 SECONDS
+	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref
+	var/mob/living/simple_animal/spiral_shun/clasped_hands
+	var/clasped_duration = 6 SECONDS
+	var/clasped_hand_hp = 400
+	var/list/clasped_hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
+	var/clasped_attack_radius = 2
+	var/dps_check_failed = FALSE
+
+/atom/movable/screen/alert/status_effect/spiral_contempt
+	name = "Contempt \[Spiral of Contempt\]"
+	icon_state = "weaken"
+	desc = "You're nothing."
+
+/datum/status_effect/spiral_contempt/on_apply()
+	. = ..()
+	if(!owner || !isliving(owner))
+		return FALSE
+
+/datum/status_effect/spiral_contempt/on_creation(mob/living/new_owner, mob/living/simple_animal/hostile/abnormality/spiral/spiral_abno, duration = 6 SECONDS, hand_hp = 400, hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1), attack_radius = 2)
+	if(!istype(spiral_abno) || !istype(new_owner) || !islist(hand_resists))
+		qdel(src)
+		return FALSE
+	. = ..()
+	spiral_ref = spiral_abno
+	spiral_ref.contempted_fighters |= owner
+
+	clasped_duration = duration
+	clasped_hand_hp = hand_hp
+	clasped_hand_resists = hand_resists
+	clasped_attack_radius = attack_radius
+
+	TrapVictim() // Immobilize our victim
+	clasped_hands = new /mob/living/simple_animal/spiral_shun(get_turf(owner), src, owner) // Create the hands mob that must be killed to pass the DPS check. It will also serve to buckle the victim.
+	clasped_hands.buckle_mob(owner, force = TRUE, check_loc = FALSE) // Buckle the victim so it becomes evident that you have to break them out.
+	for(var/mob/living/carbon/human/witnesses in viewers(9, clasped_hands))
+		clasped_hands.balloon_alert("A pair of blackened, bloody hands seize [owner]!")
+
+/datum/status_effect/spiral_contempt/on_remove()
+	. = ..()
+	FreeVictim()
+	spiral_ref.contempted_fighters -= owner
+	clasped_hands = null
+	spiral_ref = null
+
+/// Called with TRUE when the hands are killed, called with FALSE if they time out. Not called at all if it's force deleted.
+/datum/status_effect/spiral_contempt/proc/DPSCheckResult(passed = FALSE)
+	if(passed && spiral_ref)
+		spiral_ref.say("DPS Check result: Passed")
+		INVOKE_ASYNC(spiral_ref, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/spiral, Stagger))
+		return
+	spiral_ref.say("DPS Check result: Failed")
+	// We will be deleted by the clasped hands.
+
+/// Don't let our victim move or do anything. They're at the mercy of their allies.
+/datum/status_effect/spiral_contempt/proc/TrapVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_OFF)
+		walk(animal_owner, 0)
+		animal_owner.Immobilize(clasped_duration, TRUE)
+	else
+		owner.Stun(clasped_duration, TRUE)
+
+/// Let them go now.
+/datum/status_effect/spiral_contempt/proc/FreeVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_ON)
+		walk(animal_owner, 0)
+		animal_owner.remove_status_effect(STATUS_EFFECT_IMMOBILIZED)
+	else
+		owner.remove_status_effect(STATUS_EFFECT_STUN)
+
+/// This is the hands mob that has to be killed
+/mob/living/simple_animal/spiral_shun
+	name = "clasping hands"
+	desc = "You shall be shunned."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "malevolent"
+	icon_dead = "malevolent"
+	layer = POINT_LAYER
+	del_on_death = FALSE
+	var/final_radius = 2
+	var/final_windup = 0.15 SECONDS
+	var/fadeout_time = 0.5 SECONDS
+	var/list/affected_turfs = list()
+	var/list/telegraph_vfx = list()
+	var/datum/status_effect/spiral_contempt/contempt_status
+	var/mob/living/victim
+	var/failure_timer
+	var/its_over = FALSE
+
+/mob/living/simple_animal/spiral_shun/Initialize(mapload, datum/status_effect/spiral_contempt/status, mob/living/target)
+	. = ..()
+	if(!istype(status) || !istype(target))
+		qdel(src)
+		return
+
+	toggle_ai(AI_OFF)
+
+	victim = target
+	contempt_status = status
+	faction = contempt_status.spiral_ref.faction.Copy()
+
+	transform = transform * 2
+
+	final_radius = contempt_status.clasped_attack_radius
+	maxHealth = contempt_status.clasped_hand_hp
+	health = contempt_status.clasped_hand_hp
+	ChangeResistances(contempt_status.clasped_hand_resists)
+
+	buckle_mob(victim, force = TRUE, check_loc = FALSE)
+	failure_timer = addtimer(CALLBACK(src, PROC_REF(DPSCheckFailed)), contempt_status.clasped_duration, TIMER_STOPPABLE)
+
+/mob/living/simple_animal/spiral_shun/Move(atom/newloc, direct, glide_size_override)
+	return FALSE
+
+/mob/living/simple_animal/spiral_shun/Destroy(force)
+	unbuckle_all_mobs(force = TRUE)
+	contempt_status = null
+	victim = null
+	return ..()
+
+/mob/living/simple_animal/spiral_shun/death(gibbed)
+	deltimer(failure_timer)
+	unbuckle_all_mobs(force = TRUE)
+	if(!its_over)
+		contempt_status.DPSCheckResult(TRUE)
+	. = ..()
+	animate(src, fadeout_time, alpha = 0)
+	QDEL_IN(src, fadeout_time + 1)
+
+/mob/living/simple_animal/spiral_shun/proc/DPSCheckFailed()
+	if(!contempt_status)
+		return
+	its_over = TRUE
+	contempt_status.DPSCheckResult(FALSE)
+	Telegraph()
+
+/// Called by the Contempt Status when it expires.
+/mob/living/simple_animal/spiral_shun/proc/Telegraph()
+	affected_turfs = RANGE_TURFS(final_radius, src)
+	playsound(src, 'sound/weapons/fwoosh.ogg', 100, FALSE, 3)
+	for(var/turf/T in affected_turfs)
+		new /obj/effect/temp_visual/sparkles/spiral(T, final_windup)
+	addtimer(CALLBACK(src, PROC_REF(Resolve)), final_windup)
+
+/// Causes the damage and fades out the mob.
+/mob/living/simple_animal/spiral_shun/proc/Resolve()
+	// Cleanup telegraphs
+	for(var/atom/effect in telegraph_vfx)
+		qdel(effect)
+	QDEL_NULL(telegraph_vfx)
+
+	if(stat >= DEAD)
+		return
+
+	playsound(get_turf(src), 'sound/abnormalities/so_that_no_cry/attack.ogg', 75)
+
+	var/list/hitlist = list()
+	for(var/turf/T in affected_turfs)
+		for(var/mob/living/L in T)
+			if(!(L in hitlist) && (L.stat < DEAD))
+				hitlist |= L
+
+				if(istype(contempt_status) && istype(contempt_status.spiral_ref, /mob/living/simple_animal/hostile/abnormality/spiral))
+					if(contempt_status.spiral_ref && !(contempt_status.spiral_ref.faction_check_mob(L))) // Yes I know this is a ridiculous level of nesting
+						contempt_status.spiral_ref.ShunHit(L)
+
+	QDEL_NULL(contempt_status)
+	affected_turfs = null
+	// Fade out
+	animate(src, fadeout_time, alpha = 0)
+	QDEL_IN(src, fadeout_time + 1)
 
 #undef STATUS_EFFECT_GAZE
 #undef STATUS_EFFECT_AWE
 #undef STATUS_EFFECT_CONTEMPT
+#undef VALID_GAZE_GAIN_TARGET_ZONES

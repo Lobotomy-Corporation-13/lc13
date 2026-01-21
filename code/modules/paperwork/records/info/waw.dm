@@ -604,7 +604,7 @@
 		"Placeholder 3")
 	abno_work_rates = list(
 		"Instinct" = "Low | Low | Low | Common | High",
-		"Insight" = "Low | Low | Common | Common | High",
+		"Insight" = "Low | Low | Common | High | High",
 		"Attachment" = "Very Low",
 		"Repression" = "Low | Low | Low | Common | Common"
 	)
