@@ -392,7 +392,7 @@
 		//LC Labs
 		"Chief Medical Officer", "Surgeon", "Nurse Practitioner", "Pharmacist", "Emergency Medical Technician", "Lead Researcher", "Senior Researcher", "Information Systems Tech",
 		"Researcher", "LC Staff", "District Manager", "LC Asset Protection", "High Security Commander", "Low Security Commander", "High Security Officer", "Low Security Officer",
-		"Damage Mitigation Officer", "Damage Exasperation Officer", "Containment Engineer", "LC Chef", "LC Janitor", "Research Archivist", "Internal Police",
+		"Damage Mitigation Officer", "Damage Exasperation Officer", "Containment Engineer", "LC Chef", "LC Janitor", "Research Archivist", "Internal Police", "LC Specimen",
 		)
 
 /proc/get_all_job_icons() //For all existing HUD icons

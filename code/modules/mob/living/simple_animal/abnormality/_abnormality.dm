@@ -202,9 +202,9 @@
 	if(secret_chance && (prob(1) || SSmaptype.chosen_trait == FACILITY_TRAIT_JOKE_ABNOS))
 		InitializeSecretIcon()
 
-	//Abnormalities have no name here. And we don't want nonsentient ones to breach
+	//regular abnormalities shouldn't spawn on the limbus map, but we'll give them a very different name from limbus abnos to avoid confusion.
 	if(SSmaptype.maptype == "limbus_labs")
-		name = "Limbus Company Specimen"
+		name = "Anomaly"
 		faction = list("neutral")
 
 /mob/living/simple_animal/hostile/abnormality/proc/InitializeSecretIcon()

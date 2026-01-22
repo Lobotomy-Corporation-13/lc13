@@ -351,6 +351,7 @@
 	icon_state = "mermaid_water"
 	layer = BELOW_OBJ_LAYER
 	anchored = TRUE
+	var/belongs_to_mermaid = FALSE //IF the water belongs to the abno mermaid or not (instead of something used for a map)
 
 /obj/effect/mermaid_water/unbuckle_mob(mob/living/carbon/human/buckled_mob, force)
 	if(buckled_mob.stat == DEAD || buckled_mob.losebreath <= 0) //you can only unbuckle yourself if you somehow survive the oxyloss long enough, or you're dead

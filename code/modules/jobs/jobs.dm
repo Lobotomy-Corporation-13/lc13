@@ -158,6 +158,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Damage Mitigation Officer",
 	"Damage Exasperation Officer",
 	"Internal Police",
+	"LC Specimen", //Not really a 'security role', but putting it as a silicon/nonhuman feels wrong.
 
 	//Sixth Pack
 	"Robin Section Leader",

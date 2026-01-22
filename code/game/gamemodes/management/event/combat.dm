@@ -16,9 +16,12 @@ GLOBAL_VAR_INIT(wcorp_enemy_faction, "") //decides which faction WCorp will be u
 	..()
 	//No more OOC
 	GLOB.ooc_allowed = FALSE
-	if(!(SSmaptype.maptype in SSmaptype.citymaps))
+	if(!(SSmaptype.maptype in SSmaptype.citymaps) && SSmaptype.maptype != "limbus_labs")
 		CONFIG_SET(flag/norespawn, 1)
-	to_chat(world, "<B>Due to gamemode, Respawn and the OOC channel has been globally disabled.</B>")
+		to_chat(world, "<B>Due to gamemode, Respawn and the OOC channel has been globally disabled.</B>")
+	else
+		CONFIG_SET(flag/norespawn, 0) //I think it's at 0 by default but I'd rather make sure.
+		to_chat(world, "<B>Due to gamemode, the OOC channel has been globally disabled.</B>")
 
 	//Breach all
 	for(var/mob/living/simple_animal/hostile/abnormality/A in GLOB.mob_list)
