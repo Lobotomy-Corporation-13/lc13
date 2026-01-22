@@ -1,0 +1,6 @@
+author: "Caldony"
+delete-after: True
+changes:
+  - rscadd: "Entirely new abno type for the LCL gamemode."
+  - rscadd: "Scorched girl, piscine mermaid and MoSB LCL variant."
+  - rscdel: "Nearly everything to do with the old LCL abno tweaks and changes."
