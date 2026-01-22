@@ -7,6 +7,13 @@ import { Window } from '../layouts';
 const CHAR_MIN = 5;
 const CHAR_MAX = 300;
 const TYPEWRITER_SPEED = 50;
+const WRAP_AFTER = 30;
+
+// Insert zero-width spaces to allow line breaks in long text without spaces
+const insertBreaks = (text) => {
+  if (!text) return text;
+  return text.replace(new RegExp(`(.{${WRAP_AFTER}})`, 'g'), '$1\u200B');
+};
 
 export const IndexPager = (props, context) => {
   const { data } = useBackend(context);
@@ -25,7 +32,7 @@ export const IndexPager = (props, context) => {
   return (
     <Window width={500} height={400} theme="hackerman">
       <Window.Content>
-        <Box
+        <div
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -35,7 +42,7 @@ export const IndexPager = (props, context) => {
             padding: '20px',
             boxSizing: 'border-box',
           }}>
-          <Box
+          <div
             style={{
               backgroundColor: '#000000',
               border: '2px solid #224422',
@@ -46,8 +53,8 @@ export const IndexPager = (props, context) => {
               minWidth: 0,
             }}>
             <HumanView />
-          </Box>
-        </Box>
+          </div>
+        </div>
       </Window.Content>
     </Window>
   );
@@ -56,13 +63,14 @@ export const IndexPager = (props, context) => {
 const GhostView = (props, context) => {
   const { act, data } = useBackend(context);
   const {
-    on_cooldown,
-    submission_window_open,
     has_submitted,
+    current_submission,
     draft_text,
   } = data;
 
-  const [text, setText] = useLocalState(context, 'draft', draft_text || '');
+  // Initialize with current submission (for editing) or draft
+  const initialText = current_submission || draft_text || '';
+  const [text, setText] = useLocalState(context, 'draft', initialText);
   const charCount = text.length;
   const isValidLength = charCount >= CHAR_MIN && charCount <= CHAR_MAX;
 
@@ -75,9 +83,8 @@ const GhostView = (props, context) => {
   };
 
   const handleSubmit = () => {
-    if (isValidLength && !has_submitted && !on_cooldown) {
+    if (isValidLength) {
       act('submit_prescript', { text: text });
-      setText('');
     }
   };
 
@@ -104,45 +111,35 @@ const GhostView = (props, context) => {
         </Box>
       </Section>
 
-      {on_cooldown ? (
-        <NoticeBox info>
-          The pager is on cooldown. Please wait for the next cycle.
-        </NoticeBox>
-      ) : has_submitted ? (
-        <NoticeBox success>
-          Your prescript has been submitted. Waiting for selection...
-        </NoticeBox>
-      ) : (
-        <Section title="Submit Prescript">
-          {submission_window_open && (
-            <NoticeBox info>
-              Submission window is open! Submit your prescript now.
-            </NoticeBox>
-          )}
-          <TextArea
-            fluid
-            height="120px"
-            maxLength={CHAR_MAX}
-            placeholder="Write your prescript here..."
-            value={text}
-            onInput={handleTextInput}
-            onChange={handleTextChange}
-          />
-          <Box mt={1} color={isValidLength ? 'good' : 'bad'}>
-            {charCount} / {CHAR_MAX} characters
-            {charCount < CHAR_MIN
-              && ` (minimum ${CHAR_MIN})`}
-          </Box>
-          <Button
-            fluid
-            mt={1}
-            icon="paper-plane"
-            content="Submit Prescript"
-            disabled={!isValidLength}
-            onClick={handleSubmit}
-          />
-        </Section>
-      )}
+      <Section title={has_submitted ? 'Edit Prescript' : 'Submit Prescript'}>
+        {has_submitted && (
+          <NoticeBox success>
+            Your prescript is in the pool. You can edit it below.
+          </NoticeBox>
+        )}
+        <TextArea
+          fluid
+          height="120px"
+          maxLength={CHAR_MAX}
+          placeholder="Write your prescript here..."
+          value={text}
+          onInput={handleTextInput}
+          onChange={handleTextChange}
+        />
+        <Box mt={1} color={isValidLength ? 'good' : 'bad'}>
+          {charCount} / {CHAR_MAX} characters
+          {charCount < CHAR_MIN
+            && ` (minimum ${CHAR_MIN})`}
+        </Box>
+        <Button
+          fluid
+          mt={1}
+          icon={has_submitted ? 'edit' : 'paper-plane'}
+          content={has_submitted ? 'Update Prescript' : 'Submit Prescript'}
+          disabled={!isValidLength}
+          onClick={handleSubmit}
+        />
+      </Section>
     </Section>
   );
 };
@@ -168,48 +165,48 @@ const HumanView = (props, context) => {
 
   if (!prescript_text) {
     return (
-      <Box>
-        <Box style={{ textAlign: 'center', marginBottom: '24px' }}>
+      <div style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <img
             src={resolveAsset('index_logo.png')}
             style={{ width: '150px', height: 'auto' }}
           />
-        </Box>
-        <Box style={{ ...textStyle, color: '#666' }}>
+        </div>
+        <div style={{ ...textStyle, color: '#666' }}>
           No prescript available.
-        </Box>
-      </Box>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Box>
-      <Box style={{ textAlign: 'center', marginBottom: '24px' }}>
+    <div style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
         <img
           src={resolveAsset('index_logo.png')}
           style={{ width: '150px', height: 'auto' }}
         />
-      </Box>
+      </div>
       <div style={textStyle}>
         【To {prescript_recipient}】
       </div>
       {prescript_loaded ? (
         <div style={{ ...textStyle, marginTop: '16px' }}>
-          【{prescript_text}】
+          【{insertBreaks(prescript_text)}】
         </div>
       ) : prescript_displaying ? (
-        <Box style={{ marginTop: '16px' }}>
+        <div style={{ marginTop: '16px', overflow: 'hidden' }}>
           <TypewriterText
-            text={prescript_text}
+            text={insertBreaks(prescript_text)}
             onComplete={() => act('typing_complete')}
           />
-        </Box>
+        </div>
       ) : (
-        <Box style={{ ...textStyle, color: '#666', marginTop: '16px' }}>
+        <div style={{ ...textStyle, color: '#666', marginTop: '16px' }}>
           Loading...
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 };
 

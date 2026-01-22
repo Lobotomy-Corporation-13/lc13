@@ -54,5 +54,5 @@
 
 /datum/looping_sound/index_pager_prescript
 	mid_sounds = list('sound/items/index_beeper_prescript.ogg')
-	mid_length = 2 SECONDS
-	volume = 50
+	mid_length = 1 SECONDS
+	volume = 25
