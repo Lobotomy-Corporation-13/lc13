@@ -3802,6 +3802,10 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_alley)
+"oH" = (
+/obj/effect/turf_decal/stripes,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "oJ" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4
@@ -4620,6 +4624,12 @@
 /obj/effect/landmark/backstreetspawnwest,
 /turf/open/floor/plating/beach/sand,
 /area/city/backstreets_alley)
+"sv" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "sw" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 8
@@ -5659,6 +5669,13 @@
 	},
 /turf/open/floor/plasteel/vaporwave,
 /area/city/backstreets_alley)
+"wO" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/effect/turf_decal/stripes{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "wP" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -5768,6 +5785,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/wood,
 /area/city/backstreets_alley)
+"xq" = (
+/obj/effect/turf_decal/siding/wideplating/dark{
+	dir = 8
+	},
+/obj/machinery/body_modification_catalogue{
+	pixel_x = -32
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "xt" = (
 /obj/structure/rack,
 /obj/item/clothing/under/rank/cargo/miner{
@@ -7035,6 +7061,12 @@
 /obj/item/choice_beacon/ingredient,
 /turf/open/floor/plating,
 /area/city/backstreets_alley)
+"Cq" = (
+/obj/effect/turf_decal/stripes{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "Cr" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/trimline/red/filled/line{
@@ -7062,6 +7094,10 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_alley)
+"Cw" = (
+/obj/machinery/body_modification_fabricator,
+/turf/open/floor/plasteel/dark,
+/area/city/house)
 "Cz" = (
 /obj/machinery/door/airlock/wood{
 	name = "workshop"
@@ -7442,6 +7478,12 @@
 /obj/effect/decal/cleanable/blood/drip,
 /turf/open/floor/facility/dark,
 /area/city/backstreets_alley)
+"EA" = (
+/obj/effect/turf_decal/stripes{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "EB" = (
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
@@ -7902,7 +7944,9 @@
 	},
 /area/city/backstreets_alley)
 "GE" = (
-/obj/effect/turf_decal/stripes,
+/obj/effect/turf_decal/stripes{
+	dir = 8
+	},
 /obj/machinery/door/poddoor{
 	id = "outskirtslockdown";
 	name = "Outskirts Lockdown Door"
@@ -9262,6 +9306,8 @@
 	dir = 5
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/body_modification_remover,
+/obj/item/body_modification_tester,
 /turf/open/floor/facility/dark,
 /area/city/house)
 "MT" = (
@@ -9530,6 +9576,9 @@
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 8
 	},
+/obj/machinery/augment_catalogue{
+	pixel_x = -32
+	},
 /turf/open/floor/facility/dark,
 /area/city/house)
 "Oa" = (
@@ -9558,6 +9607,13 @@
 	},
 /turf/open/floor/grass,
 /area/city/backstreets_alley)
+"Od" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "Of" = (
 /obj/machinery/modular_computer/console{
 	dir = 4
@@ -10142,6 +10198,10 @@
 /obj/effect/turf_decal/siding/thinplating/dark/corner,
 /turf/open/water/deep/polluted,
 /area/city/backstreets_alley)
+"QR" = (
+/obj/effect/turf_decal/stripes/corner,
+/turf/open/floor/facility/dark,
+/area/city/house)
 "QT" = (
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
@@ -11092,6 +11152,10 @@
 /obj/effect/landmark/cratespawn/corpo,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_alley)
+"VA" = (
+/obj/machinery/augment_fabricator,
+/turf/open/floor/plasteel/dark,
+/area/city/house)
 "VB" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/sign/departments/drop{
@@ -11262,6 +11326,13 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_alley)
+"WH" = (
+/obj/effect/turf_decal/siding/wideplating/dark,
+/obj/effect/turf_decal/stripes/corner{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "WJ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/trimline/blue/arrow_cw{
@@ -46119,7 +46190,7 @@ qI
 ZY
 Zo
 NZ
-NZ
+xq
 JM
 ZY
 eY
@@ -46375,9 +46446,9 @@ cL
 MU
 ZY
 yS
-UQ
-UQ
-lj
+QR
+EA
+WH
 ZY
 Dy
 gx
@@ -46632,9 +46703,9 @@ UQ
 uK
 ZY
 bk
-UQ
-UQ
-lj
+oH
+VA
+wO
 bd
 TI
 Pt
@@ -46889,9 +46960,9 @@ UQ
 xL
 ZY
 bv
-UQ
-UQ
-lj
+oH
+Cw
+wO
 st
 TI
 Pt
@@ -47146,9 +47217,9 @@ oh
 Lb
 NK
 XG
-UQ
-UQ
-lj
+sv
+Cq
+Od
 Cc
 TI
 Pt

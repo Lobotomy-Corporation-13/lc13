@@ -23,6 +23,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Kurokumo Kashira",
 	"Thumb East Capo",
 	"Big Brother",
+	"Insurgence Nightwatch Agent",
 
 	// R-corp Officers
 	"Ground Commander",
@@ -290,6 +291,9 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Big Brother",
 	"Younger Brother",
 	"Little Brother",
+
+	"Insurgence Nightwatch Agent",
+	"Insurgence Transport Agent",
 ))
 
 
