@@ -16,14 +16,15 @@
 	ready = TRUE
 
 /obj/structure/altrefiner/chance/attack_hand(mob/living/carbon/M)
-	if(!.)
-		return
 	if(!ready)
 		to_chat(M, span_warning("The refinery is not ready yet. Please wait."))
 		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 		return
-		
+	
 	. = ..()
+	if(!.)
+		return
+
 	var/success_chance = 50
 	if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_1))
 		success_chance = 75
