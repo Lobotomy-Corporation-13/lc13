@@ -69,6 +69,87 @@
 	database_id = MEDAL_NUKE_RATS_GENOCIDE
 	icon = "rats_genocide"
 
+// Temple Quest Achievements
+/datum/award/achievement/lc13/city/temple_guardian
+	name = "Temple Guardian Defeated"
+	title = "Guardian Slayer"
+	desc = "You've defeated the Stone Keeper, guardian of the Temple of Motus."
+	database_id = MEDAL_TEMPLE_GUARDIAN
+
+/datum/award/achievement/lc13/city/elliot_sacrifice
+	name = "A Machine's Heart"
+	title = "Witness"
+	desc = "You witnessed Elliot's final sacrifice to protect his companions."
+	database_id = MEDAL_ELLIOT_SACRIFICE
+
+/datum/award/achievement/lc13/city/sole_survivor
+	name = "Sole Survivor"
+	title = "Sole Survivor"
+	desc = "You survived the Stone Keeper's self-destruction without Elliot's help."
+	database_id = MEDAL_SOLE_SURVIVOR
+
+/datum/award/achievement/lc13/city/temple_treasure
+	name = "Temple Plunderer"
+	title = "Plunderer"
+	desc = "You obtained the treasure keycard from the Temple of Motus."
+	database_id = MEDAL_TEMPLE_TREASURE
+
+/datum/award/achievement/lc13/city/statue_whisperer
+	name = "Statue Whisperer"
+	title = "Statue Whisperer"
+	desc = "You solved the dagger puzzle in the Temple of Motus."
+	database_id = MEDAL_STATUE_WHISPERER
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/riddler
+	name = "Riddler"
+	title = "Riddler"
+	desc = "You answered all three riddles correctly in the Temple of Motus."
+	database_id = MEDAL_RIDDLER
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/key_detective
+	name = "Key Detective"
+	title = "Key Detective"
+	desc = "You identified the real key among the fakes in the Temple of Motus."
+	database_id = MEDAL_KEY_DETECTIVE
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/heretic_hunter
+	name = "Heretic Hunter"
+	title = "Heretic Hunter"
+	desc = "You identified the heretic among the statues in the Temple of Motus."
+	database_id = MEDAL_HERETIC_HUNTER
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/temple_explorer
+	name = "Temple Explorer"
+	title = "Temple Explorer"
+	desc = "You entered the Temple of Motus."
+	database_id = MEDAL_TEMPLE_EXPLORER
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/meet_guide
+	name = "Meet the Guide"
+	title = "Guided"
+	desc = "You met Elliot, the mysterious guide of the Temple of Motus."
+	database_id = MEDAL_MEET_GUIDE
+	difficulty = ACHIEVEMENT_EASY
+
+/datum/award/achievement/lc13/city/perfect_protector
+	name = "Perfect Protector"
+	title = "Protector"
+	desc = "You defeated the Stone Keeper without Elliot ever falling in battle."
+	database_id = MEDAL_PERFECT_PROTECTOR
+	difficulty = ACHIEVEMENT_HARD
+
+/datum/award/achievement/lc13/city/chemical_harvester
+	name = "Temple Alchemist"
+	title = "Temple Alchemist"
+	desc = "You harvested chemicals from the temple's creatures."
+	database_id = MEDAL_CHEMICAL_HARVESTER
+	difficulty = ACHIEVEMENT_EASY
+
 /datum/award/achievement/city/silk_collector
 	name = "The Legend of the Silksong" // Alternative: "Will Make Fine Silk?"
 	title = "the Legend of the Silksong"

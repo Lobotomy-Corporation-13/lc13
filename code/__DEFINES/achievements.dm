@@ -57,6 +57,20 @@
 #define MEDAL_ACTIVATE_HAMMER "Divine Intervention"
 #define MEDAL_DAMAGE_PBIRD "Dont Poke the Bird"
 
+// Temple Quest Achievements
+#define MEDAL_TEMPLE_GUARDIAN "Temple Guardian"
+#define MEDAL_ELLIOT_SACRIFICE "Elliot Sacrifice"
+#define MEDAL_SOLE_SURVIVOR "Sole Survivor"
+#define MEDAL_TEMPLE_TREASURE "Temple Treasure"
+#define MEDAL_STATUE_WHISPERER "Statue Whisperer"
+#define MEDAL_RIDDLER "Riddler"
+#define MEDAL_KEY_DETECTIVE "Key Detective"
+#define MEDAL_HERETIC_HUNTER "Heretic Hunter"
+#define MEDAL_TEMPLE_EXPLORER "Temple Explorer"
+#define MEDAL_MEET_GUIDE "Meet Guide"
+#define MEDAL_PERFECT_PROTECTOR "Perfect Protector"
+#define MEDAL_CHEMICAL_HARVESTER "Chemical Harvester"
+
 // Collection/Farming Achievements
 #define MEDAL_SILK_COLLECTOR "Silk Collector"
 #define MEDAL_WEAPON_FORGER "Master Forger"
