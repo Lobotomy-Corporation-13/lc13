@@ -3,7 +3,7 @@
 // After using all 9 forms, furioso becomes available
 
 /obj/item/ego_weapon/index_vial
-	name = "index vial"
+	name = "caduceus"
 	desc = "A vial containing a strange liquid that can transform into various weapons."
 	icon = 'icons/obj/index_vial_icon.dmi'
 	icon_state = "index_vial_inactive"
@@ -328,7 +328,7 @@
 // HATCHET - Small, fast weapon with protection on hit
 // ============================================
 /obj/item/ego_weapon/index_vial/hatchet
-	name = "index vial - hatchet"
+	name = "caduceus - hatchet"
 	desc = "When hacking through the ribs with a hatchet... This is barely a weapon, but it's better than a fork."
 	special = "On hit, gain protection."
 	icon_state = "index_vial_hatchet"
@@ -355,7 +355,7 @@
 // STILETTO - Quick stabbing with mental decay DOT
 // ============================================
 /obj/item/ego_weapon/index_vial/stiletto
-	name = "index vial - stiletto"
+	name = "caduceus - stiletto"
 	desc = "When penetrating the lungs with a stiletto... I couldn't help but feel a dreadful chill run down my back whenever I'm given this weapon."
 	special = "On hit, inflict mental decay on the target."
 	icon_state = "index_vial_stiletto"
@@ -384,7 +384,7 @@
 // BASTARD SWORD - Balanced with damage buff on hit
 // ============================================
 /obj/item/ego_weapon/index_vial/bsword
-	name = "index vial - bastard sword"
+	name = "caduceus - bastard sword"
 	desc = "When cleaving through the shoulder and the skull with a bastard sword... This sword is passable, but that quality leaves a lot to be desired."
 	special = "On hit, gain strength. Stacks up to 4 times."
 	icon_state = "index_vial_bsword"
@@ -417,7 +417,7 @@
 // RAPIER - Precise thrusts with defense debuff
 // ============================================
 /obj/item/ego_weapon/index_vial/rapier
-	name = "index vial - rapier"
+	name = "caduceus - rapier"
 	desc = "When punching 10 or more holes in the torso with a rapier... A weapon longer and sharper than the stiletto. I enjoy the rapier as well."
 	special = "On hit, inflict white fragility on the target."
 	icon_state = "index_vial_rapier"
@@ -446,7 +446,7 @@
 // HAMMER - Heavy strikes with stamina damage
 // ============================================
 /obj/item/ego_weapon/index_vial/hammer
-	name = "index vial - hammer"
+	name = "caduceus - hammer"
 	desc = "When caving in the back of the skull with a hammer... Simple, but final. It will crush whatever it hits."
 	special = "On hit, deal stamina damage to the target."
 	icon_state = "index_vial_hammer"
@@ -475,7 +475,7 @@
 // GREATSWORD - Heavy two-hander with RED vulnerability
 // ============================================
 /obj/item/ego_weapon/index_vial/gsword
-	name = "index vial - greatsword"
+	name = "caduceus - greatsword"
 	desc = "When rending the body with a greatsword... It is important to find your center of gravity and take advantage of its sheer mass."
 	special = "On hit, inflict red fragility on the target."
 	icon_state = "index_vial_gsword"
@@ -504,7 +504,7 @@
 // LANCE - Long reach with WHITE vulnerability
 // ============================================
 /obj/item/ego_weapon/index_vial/lance
-	name = "index vial - lance"
+	name = "caduceus - lance"
 	desc = "When boring a 20-inch hole with a lance... I'd consider this weapon a jackpot. This lance has a self-propelling property."
 	special = "On hit, inflict white fragility on the target. Has extended reach."
 	icon_state = "index_vial_lance"
@@ -535,7 +535,7 @@
 // WHIP - Flexible weapon with BLACK vulnerability
 // ============================================
 /obj/item/ego_weapon/index_vial/whip
-	name = "index vial - whip"
+	name = "caduceus - whip"
 	desc = "When ripping the flesh to ten thousand strips with a whip... I am quite fond of it. It tears a strip off the target's flesh, and with it their resolve."
 	special = "On hit, inflict black fragility on the target. Has extended reach."
 	icon_state = "index_vial_whip"
@@ -566,7 +566,7 @@
 // SCYTHE - Death's instrument with high damage
 // ============================================
 /obj/item/ego_weapon/index_vial/scythe
-	name = "index vial - scythe"
+	name = "caduceus - scythe"
 	desc = "When lacerating through space itself with a scythe, like a certain someone... This weapon became my favorite, most familiar, and sharpest weapon."
 	special = "Deals high pale damage. No special effect needed."
 	icon_state = "index_vial_scythe"
@@ -588,7 +588,7 @@
 // FPOON - Rare joke weapon (1% chance on swap)
 // ============================================
 /obj/item/ego_weapon/index_vial/fpoon
-	name = "index vial - fpoon"
+	name = "caduceus - fpoon"
 	desc = "A fpoon. It's a spoon with fork tines. Why did the vial turn into this?"
 	special = "Attack yourself to end it all with a fpoon. How embarrassing."
 	icon_state = "index_vial_fpoon"
