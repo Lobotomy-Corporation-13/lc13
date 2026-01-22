@@ -10,7 +10,7 @@ const TYPEWRITER_SPEED = 50;
 const WRAP_AFTER = 30;
 
 // Insert zero-width spaces to allow line breaks in long text without spaces
-const insertBreaks = (text) => {
+const insertBreaks = text => {
   if (!text) return text;
   return text.replace(new RegExp(`(.{${WRAP_AFTER}})`, 'g'), '$1\u200B');
 };
