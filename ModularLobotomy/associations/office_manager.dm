@@ -16,7 +16,7 @@
 
 /datum/office_management/ui_data(mob/user)
 	var/list/data = list()
-	
+
 	// List of all offices
 	var/list/offices = list()
 	for(var/datum/fixer_office/F in GLOB.all_fixer_offices)
@@ -26,11 +26,10 @@
 			"members" = F.members.len,
 			"max_members" = F.max_members,
 			"color" = F.office_color,
-			"frequency" = F.radio_frequency,
 			"ref" = REF(F)
 		))
 	data["offices"] = offices
-	
+
 	// Selected office details
 	if(selected_office)
 		var/list/members = list()
@@ -40,18 +39,17 @@
 				"is_director" = (H == selected_office.director),
 				"ref" = REF(H)
 			))
-		
+
 		data["selected_office"] = list(
 			"name" = selected_office.name,
 			"director" = selected_office.director?.real_name || "Unknown",
 			"members" = members,
 			"color" = selected_office.office_color,
-			"frequency" = selected_office.radio_frequency,
 			"budget" = selected_office.office_budget,
 			"creation_time" = selected_office.creation_time,
 			"ref" = REF(selected_office)
 		)
-	
+
 	// User's office info
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
@@ -60,23 +58,23 @@
 				data["user_office"] = REF(F)
 				data["user_is_director"] = (H == F.director)
 				break
-	
+
 	return data
 
 /datum/office_management/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
-	
+
 	var/mob/user = usr
-	
+
 	switch(action)
 		if("select_office")
 			var/datum/fixer_office/F = locate(params["office_ref"]) in GLOB.all_fixer_offices
 			if(F)
 				selected_office = F
 				. = TRUE
-		
+
 		if("leave_office")
 			if(!ishuman(user))
 				return
@@ -86,7 +84,7 @@
 					F.remove_member(H)
 					. = TRUE
 					break
-		
+
 		if("transfer_leadership")
 			if(!selected_office || !ishuman(user))
 				return
@@ -94,12 +92,12 @@
 			if(!selected_office.is_director(H))
 				to_chat(user, span_warning("Only the director can transfer leadership!"))
 				return
-			
+
 			var/mob/living/carbon/human/new_director = locate(params["member_ref"]) in selected_office.members
 			if(new_director && new_director != H)
 				selected_office.transfer_leadership(new_director)
 				. = TRUE
-		
+
 		if("kick_member")
 			if(!selected_office || !ishuman(user))
 				return
@@ -107,13 +105,13 @@
 			if(!selected_office.is_director(H))
 				to_chat(user, span_warning("Only the director can kick members!"))
 				return
-			
+
 			var/mob/living/carbon/human/member = locate(params["member_ref"]) in selected_office.members
 			if(member && member != H)
 				selected_office.remove_member(member)
 				to_chat(member, span_warning("You have been kicked from [selected_office.name]."))
 				. = TRUE
-		
+
 		if("change_color")
 			if(!selected_office || !ishuman(user))
 				return
@@ -121,7 +119,7 @@
 			if(!selected_office.is_director(H))
 				to_chat(user, span_warning("Only the director can change office color!"))
 				return
-			
+
 			var/new_color = input(user, "Choose new office color:", "Office Management", selected_office.office_color) as color|null
 			if(new_color)
 				selected_office.office_color = new_color
@@ -140,7 +138,7 @@
 	icon_screen = "comm"
 	icon_keyboard = "tech_key"
 	light_color = LIGHT_COLOR_BLUE
-	
+
 /obj/machinery/computer/office_management/ui_interact(mob/user)
 	. = ..()
 	open_office_management(user)
@@ -149,10 +147,10 @@
 /client/proc/manage_offices()
 	set name = "Manage Fixer Offices"
 	set category = "Admin"
-	
+
 	if(!check_rights(R_ADMIN))
 		return
-	
+
 	open_office_management(mob)
 
 // Add office management to mind datum for easy access
@@ -171,23 +169,6 @@
 		return FALSE
 	return office.is_director(current)
 
-// Radio integration - modify headset to include office channel
-/obj/item/radio/headset/proc/has_office_access()
-	if(!ismob(loc))
-		return FALSE
-	var/mob/M = loc
-	if(!M.mind)
-		return FALSE
-	var/datum/fixer_office/office = M.mind.has_office()
-	return office
-
-/obj/item/radio/headset/talk_into(mob/living/M, message, channel, list/spans, datum/language/language, list/message_mods)
-	// Check if using office channel
-	var/datum/fixer_office/office = M.mind?.has_office()
-	if(office && channel == "office")
-		office.broadcast_message(message, M)
-		return ITALICS | REDUCE_RANGE
-	return ..()
 
 // Initialize office system on world start
 /world/proc/initialize_office_system()
