@@ -16,7 +16,8 @@ making this file look like a hot mess
 */
 export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
-  const { ego_weapon_datums, ego_armor_datums, ego_auxiliary_datums, all_tags } = data;
+  const { ego_weapon_datums, ego_armor_datums,
+    ego_auxiliary_datums, all_tags } = data;
 
   /* ------------ React Hooks ------------*/
 
@@ -375,7 +376,7 @@ export const TestRangeEgoPrinter = (props, context) => {
       <FlexItem grow={1}>
         <Flex direction="column" align="center">
           <FlexItem grow={3} textAlign="center">
-           Category: {datum.category?? "No category found."}
+            Category: {datum.category?? "No category found."}
           </FlexItem>
           <FlexItem mt={3}>
             <Button
@@ -520,18 +521,17 @@ export const TestRangeEgoPrinter = (props, context) => {
         </FlexItem>
 
         {!hide_attribute_requirements && (
-        <FlexItem my={2}>
-          <Table>
-            <TableRow>
-              <TableCell backgroundColor="red" px={1}>Fortitude</TableCell><TableCell backgroundColor="white" color="black" px={1}>Prudence</TableCell><TableCell backgroundColor="violet" px={1}>Temperance</TableCell><TableCell backgroundColor="teal" px={1}>Justice</TableCell>
-            </TableRow>
-            <TableRow textAlign="center">
-              <TableCell backgroundColor="red" textAlign="center">{detailed_datum.information.attribute_requirements.Fortitude ?? "-"}</TableCell><TableCell backgroundColor="white" color="black" textAlign="center">{detailed_datum.information.attribute_requirements.Prudence ?? "-"}</TableCell><TableCell backgroundColor="violet" textAlign="center">{detailed_datum.information.attribute_requirements.Temperance ?? "-"}</TableCell><TableCell backgroundColor="teal" textAlign="center">{detailed_datum.information.attribute_requirements.Justice ?? "-"}</TableCell>
-            </TableRow>
-          </Table>
-        </FlexItem>
-        )
-        }
+          <FlexItem my={2}>
+            <Table>
+              <TableRow>
+                <TableCell backgroundColor="red" px={1}>Fortitude</TableCell><TableCell backgroundColor="white" color="black" px={1}>Prudence</TableCell><TableCell backgroundColor="violet" px={1}>Temperance</TableCell><TableCell backgroundColor="teal" px={1}>Justice</TableCell>
+              </TableRow>
+              <TableRow textAlign="center">
+                <TableCell backgroundColor="red" textAlign="center">{detailed_datum.information.attribute_requirements.Fortitude ?? "-"}</TableCell><TableCell backgroundColor="white" color="black" textAlign="center">{detailed_datum.information.attribute_requirements.Prudence ?? "-"}</TableCell><TableCell backgroundColor="violet" textAlign="center">{detailed_datum.information.attribute_requirements.Temperance ?? "-"}</TableCell><TableCell backgroundColor="teal" textAlign="center">{detailed_datum.information.attribute_requirements.Justice ?? "-"}</TableCell>
+              </TableRow>
+            </Table>
+          </FlexItem>
+        )}
         <FlexItem textAlign="center">
           Tags:
           {detailed_datum.tags[0] ? <BlockQuote>{detailed_datum.tags.toString().replaceAll(",", ", ")}</BlockQuote> : " None"}
@@ -661,7 +661,8 @@ export const TestRangeEgoPrinter = (props, context) => {
     return (
       <Flex align="stretch" justify="center" direction="column">
         <FlexItem>
-          <CommonDetails detailed_datum={datum} hide_attribute_requirements hide_special />
+          <CommonDetails detailed_datum={datum} hide_attribute_requirements
+            hide_special />
         </FlexItem>
       </Flex>
     );
