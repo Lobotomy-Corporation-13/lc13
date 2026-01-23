@@ -13,19 +13,10 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "av" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light{
 	dir = 4
 	},
 /turf/open/floor/plating/ashplanet/ash,
-/area/city/fixers)
-"aw" = (
-/obj/effect/turf_decal/trimline/purple/filled/warning{
-	dir = 1
-	},
-/obj/machinery/door/window/westleft,
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/fixers)
 "aS" = (
 /obj/structure/mineral_door/wood,
@@ -47,7 +38,6 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/fixers)
 "bs" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 4
 	},
@@ -126,8 +116,7 @@
 /area/city/fixers)
 "fg" = (
 /obj/structure/chair/comfy/black{
-	dir = 1;
-	layer = 2.5
+	dir = 1
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/fixers)
@@ -155,7 +144,6 @@
 /area/city/house)
 "fJ" = (
 /obj/effect/turf_decal/trimline/purple/filled/warning,
-/obj/machinery/door/window,
 /obj/machinery/light{
 	dir = 8
 	},
@@ -215,7 +203,6 @@
 /turf/open/indestructible/hoteltile,
 /area/city/house)
 "hF" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
 	dir = 4
 	},
@@ -232,7 +219,6 @@
 /turf/open/floor/mineral/silver,
 /area/city/house)
 "hR" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
 	dir = 5
 	},
@@ -259,12 +245,7 @@
 	},
 /turf/open/floor/oldshuttle,
 /area/city/house)
-"iy" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/closed/wall/mineral/iron,
-/area/city/fixers)
 "iI" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/fixers)
 "iU" = (
@@ -308,7 +289,6 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "ku" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 1
 	},
@@ -374,7 +354,6 @@
 /turf/open/floor/mineral/titanium/white,
 /area/city/fixers)
 "nt" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light{
 	dir = 8
 	},
@@ -440,7 +419,6 @@
 	},
 /area/city)
 "px" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
 /area/city/fixers)
 "pE" = (
@@ -479,7 +457,6 @@
 	},
 /area/city)
 "qQ" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light{
 	dir = 1
 	},
@@ -633,7 +610,6 @@
 /turf/open/indestructible/hoteltile,
 /area/city/house)
 "xe" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 8
 	},
@@ -673,7 +649,6 @@
 /turf/open/floor/noslip,
 /area/city/house)
 "xR" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light{
 	dir = 4
 	},
@@ -684,7 +659,6 @@
 	anchored = 1;
 	dir = 8
 	},
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/fixers)
 "yx" = (
@@ -726,7 +700,6 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "zE" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 8
 	},
@@ -746,7 +719,6 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "Be" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
 	dir = 1
 	},
@@ -781,7 +753,7 @@
 	pixel_y = -16
 	},
 /obj/effect/turf_decal/siding/purple/corner,
-/turf/open/floor/carpet/purple,
+/turf/closed/indestructible/reinforced,
 /area/city/fixers)
 "BI" = (
 /obj/machinery/light{
@@ -798,6 +770,9 @@
 	},
 /turf/open/indestructible/hoteltile,
 /area/city/house)
+"CE" = (
+/turf/closed/indestructible/reinforced,
+/area/space)
 "CJ" = (
 /obj/machinery/telecomms/server/presets/engineering,
 /obj/effect/turf_decal/bot,
@@ -807,7 +782,9 @@
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 5
 	},
-/obj/structure/fluff/street_light,
+/obj/structure/fluff/street_light{
+	density = 0
+	},
 /turf/open/floor/plating/ashplanet/rocky{
 	layer = 1.98
 	},
@@ -819,7 +796,6 @@
 /turf/open/floor/oldshuttle,
 /area/city/house)
 "CX" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
 /area/city/fixers)
 "Dp" = (
@@ -838,16 +814,6 @@
 /obj/item/reagent_containers/food/drinks/bottle/cognac,
 /turf/open/floor/wood,
 /area/city/house)
-"Dx" = (
-/obj/effect/turf_decal/trimline/purple/filled/warning{
-	dir = 1
-	},
-/obj/machinery/door/window/westright{
-	dir = 4
-	},
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/white,
-/area/city/fixers)
 "DA" = (
 /turf/closed/indestructible/rock,
 /area/space)
@@ -885,7 +851,6 @@
 /turf/open/floor/wood,
 /area/city/house)
 "EZ" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark/corner{
 	dir = 8
 	},
@@ -981,9 +946,6 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/obj/machinery/door/window/northright{
-	dir = 2
-	},
 /obj/effect/turf_decal/siding/purple{
 	dir = 4
 	},
@@ -998,7 +960,6 @@
 	},
 /area/city)
 "Iq" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;
@@ -1023,7 +984,6 @@
 	},
 /area/city)
 "Iy" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 3
 	},
@@ -1041,12 +1001,13 @@
 /turf/open/floor/mineral/titanium/white,
 /area/city/fixers)
 "JD" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/fixer_duel/player_spawn,
 /turf/open/floor/carpet/royalblack,
 /area/city/fixers)
 "JN" = (
-/obj/structure/fluff/street_light,
+/obj/structure/fluff/street_light{
+	density = 0
+	},
 /turf/open/floor/plating/ashplanet/rocky{
 	layer = 1.98
 	},
@@ -1060,7 +1021,6 @@
 	},
 /area/city)
 "JS" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 8
 	},
@@ -1070,7 +1030,6 @@
 /turf/open/floor/stone,
 /area/city/fixers)
 "JZ" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 5
 	},
@@ -1088,7 +1047,7 @@
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 8
 	},
-/turf/open/floor/carpet/purple,
+/turf/closed/indestructible/reinforced,
 /area/city/fixers)
 "KA" = (
 /turf/closed/indestructible/fakeglass,
@@ -1147,8 +1106,7 @@
 	pixel_y = 14
 	},
 /obj/structure/chair/comfy/black{
-	dir = 1;
-	layer = 2.5
+	dir = 1
 	},
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 1
@@ -1190,7 +1148,6 @@
 /area/city/house)
 "OZ" = (
 /obj/structure/statue/sandstone/venus,
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plating/ashplanet/ash,
 /area/city/fixers)
 "Pc" = (
@@ -1209,14 +1166,12 @@
 /turf/open/floor/mineral/titanium/white,
 /area/city/fixers)
 "Qa" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 1
 	},
 /turf/open/floor/stone,
 /area/city/fixers)
 "Qi" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light{
 	dir = 8
 	},
@@ -1243,7 +1198,6 @@
 	},
 /area/city)
 "RB" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 4
 	},
@@ -1261,7 +1215,6 @@
 /turf/open/indestructible/hoteltile,
 /area/city/house)
 "Sn" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 6
 	},
@@ -1328,7 +1281,6 @@
 	},
 /area/city)
 "Vg" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 4
@@ -1340,7 +1292,6 @@
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
 "VF" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/fixer_duel/fixer_spawn,
 /turf/open/floor/carpet/royalblack,
 /area/city/fixers)
@@ -1381,8 +1332,7 @@
 	pixel_y = 14
 	},
 /obj/structure/chair/comfy/black{
-	dir = 1;
-	layer = 2.5
+	dir = 1
 	},
 /obj/effect/turf_decal/siding/purple/corner{
 	dir = 4
@@ -1390,7 +1340,6 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/fixers)
 "Xo" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/light,
 /turf/open/floor/carpet/royalblack,
 /area/city/fixers)
@@ -1401,7 +1350,6 @@
 /turf/open/floor/carpet/royalblack,
 /area/city/house)
 "Yn" = (
-/obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/wideplating/dark,
 /obj/effect/turf_decal/siding/wideplating/dark{
 	dir = 8
@@ -1531,7 +1479,7 @@ DA
 DA
 DA
 DA
-DA
+CE
 DA
 DA
 DA
@@ -1593,7 +1541,7 @@ DA
 DA
 DA
 DA
-DA
+CE
 DA
 DA
 DA
@@ -1653,8 +1601,8 @@ DA
 DA
 DA
 DA
-DA
-DA
+CE
+CE
 Xz
 Xz
 Xz
@@ -1839,8 +1787,8 @@ DA
 DA
 DA
 DA
-DA
-DA
+CE
+CE
 Xz
 WG
 EG
@@ -1849,7 +1797,7 @@ kE
 Ec
 Ec
 Mv
-aw
+Gu
 Wt
 fv
 fv
@@ -1905,7 +1853,7 @@ DA
 DA
 co
 WG
-WG
+EG
 Kr
 Mi
 Ec
@@ -1941,8 +1889,8 @@ xh
 iI
 Qa
 px
-iy
-iy
+xh
+xh
 px
 px
 px
@@ -1951,8 +1899,8 @@ Iq
 px
 px
 px
-iy
-iy
+xh
+xh
 px
 Iy
 iI
@@ -1963,8 +1911,8 @@ DA
 DA
 DA
 DA
-DA
-DA
+CE
+CE
 Xz
 BI
 WG
@@ -2003,8 +1951,8 @@ xh
 iI
 Qa
 px
-iy
-iy
+xh
+xh
 px
 px
 px
@@ -2013,8 +1961,8 @@ px
 px
 px
 px
-iy
-iy
+xh
+xh
 px
 Iy
 iI
@@ -2029,7 +1977,7 @@ DA
 DA
 co
 WG
-WG
+EG
 Bq
 Xc
 Ec
@@ -2087,8 +2035,8 @@ DA
 DA
 DA
 DA
-DA
-DA
+CE
+CE
 Xz
 WG
 EG
@@ -2097,7 +2045,7 @@ kE
 Ec
 Ec
 bf
-Dx
+Gu
 Wt
 fv
 fv
@@ -2256,9 +2204,9 @@ CX
 CX
 CX
 CX
-iy
-iy
-iy
+xh
+xh
+xh
 CX
 CX
 CX
@@ -2273,8 +2221,8 @@ DA
 DA
 DA
 DA
-DA
-DA
+CE
+CE
 Xz
 Xz
 Xz
@@ -2337,7 +2285,7 @@ DA
 DA
 DA
 DA
-DA
+CE
 DA
 DA
 DA
@@ -2399,7 +2347,7 @@ DA
 DA
 DA
 DA
-DA
+CE
 DA
 DA
 DA
@@ -2499,8 +2447,8 @@ xh
 iI
 Qa
 px
-iy
-iy
+xh
+xh
 px
 px
 px
@@ -2509,8 +2457,8 @@ px
 px
 px
 px
-iy
-iy
+xh
+xh
 px
 Iy
 iI
@@ -2561,8 +2509,8 @@ xh
 iI
 Qa
 px
-iy
-iy
+xh
+xh
 px
 px
 px
@@ -2571,8 +2519,8 @@ Iq
 px
 px
 px
-iy
-iy
+xh
+xh
 px
 Iy
 iI

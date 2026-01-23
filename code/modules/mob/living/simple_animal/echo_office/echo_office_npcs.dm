@@ -185,7 +185,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 	SIGNAL_HANDLER
 	INVOKE_ASYNC(src, PROC_REF(EndDuel), TRUE) // Player won
 
-/mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/EndDuel(player_won = FALSE)
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/EndDuel(player_won = FALSE, skip_heal = FALSE)
 	if(!in_duel)
 		return
 
@@ -201,8 +201,9 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		if(duelist_return_turf)
 			current_duelist.forceMove(duelist_return_turf)
 
-		// Fully heal the player
-		current_duelist.fully_heal(admin_revive = TRUE)
+		// Fully heal the player (unless skipped for insanity handling)
+		if(!skip_heal)
+			current_duelist.fully_heal(admin_revive = TRUE)
 
 		if(player_won)
 			to_chat(current_duelist, span_boldnotice("You have won the duel! [src] acknowledges your strength."))
@@ -316,11 +317,11 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/OnDuelistInsane(datum/source, attribute)
 	SIGNAL_HANDLER
-	// End duel first (teleports back, heals)
+	// End duel first (teleports back, but don't heal yet)
 	if(is_duo_duel)
-		INVOKE_ASYNC(src, PROC_REF(EndDuoDuel), FALSE)
+		INVOKE_ASYNC(src, PROC_REF(EndDuoDuel), FALSE, TRUE) // skip_heal = TRUE
 	else
-		INVOKE_ASYNC(src, PROC_REF(EndDuel), FALSE)
+		INVOKE_ASYNC(src, PROC_REF(EndDuel), FALSE, TRUE) // skip_heal = TRUE
 	// Deal 9999 white damage to cure insanity after 1 second
 	var/mob/living/L = source
 	addtimer(CALLBACK(src, PROC_REF(CureInsanity), L), 1 SECONDS)
@@ -329,7 +330,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 	var/mob/living/carbon/human/H = target
 	if(!istype(H) || !H.sanity_lost)
 		return
-	H.deal_damage(9999, WHITE_DAMAGE)
+	H.adjustWhiteLoss(9999, updating_health = TRUE, forced = TRUE, white_healable = TRUE)
 
 /// Check if the player has beaten all three solo-duelable fixers
 /mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/check_all_solo_achievement(mob/living/winner)
@@ -342,7 +343,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		C.get_award_status(/datum/award/achievement/lc13/city/echo_remus))
 		C.give_award(/datum/award/achievement/lc13/city/echo_all_solo, winner)
 
-/mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/EndDuoDuel(player_won = FALSE)
+/mob/living/simple_animal/hostile/ui_npc/echo_fixer/proc/EndDuoDuel(player_won = FALSE, skip_heal = FALSE)
 	if(!in_duel)
 		return
 
@@ -361,8 +362,9 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 		if(duelist_return_turf)
 			current_duelist.forceMove(duelist_return_turf)
 
-		// Fully heal the player
-		current_duelist.fully_heal(admin_revive = TRUE)
+		// Fully heal the player (unless skipped for insanity handling)
+		if(!skip_heal)
+			current_duelist.fully_heal(admin_revive = TRUE)
 
 		if(player_won)
 			to_chat(current_duelist, span_boldnotice("You have won the duo duel!"))
@@ -541,7 +543,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"accept" = list(
 					"text" = "I am ready.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel), usr)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel))),
 					"default_scene" = "duel_start"
 				),
 				"decline" = list(
@@ -573,17 +575,17 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"asera" = list(
 					"text" = "Fight with Asera.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
 					"default_scene" = "duo_duel_start"
 				),
 				"remus" = list(
 					"text" = "Fight with Remus.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
 					"default_scene" = "duo_duel_start"
 				),
 				"lauel" = list(
 					"text" = "Fight with Lauel.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
 					"default_scene" = "duo_duel_start"
 				),
 				"back" = list(
@@ -728,7 +730,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"accept" = list(
 					"text" = "I'm ready.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel), usr)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel))),
 					"default_scene" = "duel_start"
 				),
 				"decline" = list(
@@ -760,17 +762,17 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"nicholas" = list(
 					"text" = "Fight with Nicholas.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
 					"default_scene" = "duo_duel_start"
 				),
 				"remus" = list(
 					"text" = "Fight with Remus.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
 					"default_scene" = "duo_duel_start"
 				),
 				"lauel" = list(
 					"text" = "Fight with Lauel.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
 					"default_scene" = "duo_duel_start"
 				),
 				"back" = list(
@@ -916,7 +918,7 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"accept" = list(
 					"text" = "I'm ready!",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel), usr)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuel))),
 					"default_scene" = "duel_start"
 				),
 				"decline" = list(
@@ -948,17 +950,17 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"nicholas" = list(
 					"text" = "Fight with Nicholas.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
 					"default_scene" = "duo_duel_start"
 				),
 				"asera" = list(
 					"text" = "Fight with Asera.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
 					"default_scene" = "duo_duel_start"
 				),
 				"lauel" = list(
 					"text" = "Fight with Lauel.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/priest)),
 					"default_scene" = "duo_duel_start"
 				),
 				"back" = list(
@@ -1110,17 +1112,17 @@ GLOBAL_LIST_EMPTY(fixer_duel_fixer_spawns)
 			"actions" = list(
 				"nicholas" = list(
 					"text" = "Fight with Nicholas.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/metal)),
 					"default_scene" = "duo_duel_start"
 				),
 				"asera" = list(
 					"text" = "Fight with Asera.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/flame)),
 					"default_scene" = "duo_duel_start"
 				),
 				"remus" = list(
 					"text" = "Fight with Remus.",
-					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), usr, /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
+					"proc_callbacks" = list(CALLBACK(src, PROC_REF(StartDuoDuel), /mob/living/simple_animal/hostile/humanoid/fixer/electric)),
 					"default_scene" = "duo_duel_start"
 				),
 				"back" = list(
