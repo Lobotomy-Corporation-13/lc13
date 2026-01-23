@@ -75,3 +75,27 @@
 /obj/projectile/ego_bullet/tendamage
 	name = "bullet"
 	damage = 10
+
+/obj/projectile/ego_bullet/napalm
+	name = "napalm"
+	icon_state = "pulse0"
+	damage = 3
+	damage_type = FIRE
+	projectile_piercing = PASSMOB
+
+/obj/projectile/ego_bullet/napalm/Move()
+	..()
+	for(var/turf/open/T in range(1, src))
+		if(locate(/obj/effect/turf_fire/ardor) in T)
+			for(var/obj/effect/turf_fire/ardor/floor_fire in T)
+				qdel(floor_fire)
+		new /obj/effect/turf_fire/ardor(T)
+
+/obj/effect/turf_fire/ardor
+	burn_time = 15 SECONDS
+
+/obj/effect/turf_fire/ardor/DoDamage(mob/living/fuel)
+	if(ishuman(fuel))
+		fuel.deal_damage(4, FIRE)
+		fuel.apply_lc_burn(2)
+		return TRUE

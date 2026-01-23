@@ -15,6 +15,10 @@
 /obj/effect/landmark/cratespawn,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
+"tR" = (
+/obj/item/quest_ticket/grungeon,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
 "vv" = (
 /mob/living/simple_animal/hostile/ordeal/green_dusk,
 /obj/item/gps/mining{
@@ -396,7 +400,7 @@ An
 "}
 (11,1,1) = {"
 An
-ZT
+tR
 ZT
 ZT
 ZT

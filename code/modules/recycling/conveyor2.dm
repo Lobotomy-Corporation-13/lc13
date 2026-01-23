@@ -18,6 +18,7 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 	var/movedir			// the actual direction to move stuff in
 	var/id = ""			// the control ID	- must match controller ID
 	var/verted = 1		// Inverts the direction the conveyor belt moves.
+	var/tamperproof = FALSE
 	var/conveying = FALSE
 
 /obj/machinery/conveyor/centcom_auto
@@ -172,6 +173,10 @@ GLOBAL_LIST_EMPTY(conveyors_by_id)
 
 // attack with item, place item on conveyor
 /obj/machinery/conveyor/attackby(obj/item/I, mob/user, params)
+	if(tamperproof)
+		to_chat(user, span_notice("This conveyor seems to be stuck to the floor in only one configuration."))
+		return //No cheese for people who packed a crowbar :)
+
 	if(I.tool_behaviour == TOOL_CROWBAR)
 		user.visible_message("<span class='notice'>[user] struggles to pry up \the [src] with \the [I].</span>", \
 		"<span class='notice'>You struggle to pry up \the [src] with \the [I].</span>")

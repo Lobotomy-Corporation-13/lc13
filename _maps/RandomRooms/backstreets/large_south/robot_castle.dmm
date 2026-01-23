@@ -480,6 +480,10 @@
 	pixel_x = 7;
 	pixel_y = -5
 	},
+/obj/item/quest_ticket/grungeon{
+	pixel_y = 9;
+	pixel_x = 6
+	},
 /turf/open/floor/stone,
 /area/city/backstreets_room)
 "Gs" = (

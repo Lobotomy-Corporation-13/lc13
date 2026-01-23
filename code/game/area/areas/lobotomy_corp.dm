@@ -312,6 +312,11 @@
 	ambientsounds = list('sound/ambience/resurgence_village1.ogg')
 	in_city = FALSE
 
+/area/city/outskirtsfactory
+	name = "Outskirts Factory"
+	in_city = FALSE
+	outdoors = FALSE
+
 /area/city/backstreets_room/resurgence_village/Entered(atom/movable/M)
 	set waitfor = FALSE
 	SEND_SIGNAL(src, COMSIG_AREA_ENTERED, M)

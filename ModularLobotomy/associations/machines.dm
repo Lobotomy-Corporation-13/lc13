@@ -326,6 +326,17 @@ GLOBAL_LIST_EMPTY(loaded_quest_z_levels)
 	var/map_name = "ruined_town_floor"
 	var/ticket_name = "Dilapidated Town"
 
+/obj/item/quest_ticket/grungeon
+	name = "'Outskirts Factory' ticket"
+	desc = "A small sheet of paper with a barcode. Could be given to a ticket reader to access to a new area."
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "ticket"
+	inhand_icon_state = "ticket"
+	worn_icon_state = "ticket"
+	map = "_maps/Quests/green_dungeon.dmm"
+	map_name = "grungeon_floor"
+	ticket_name = "Outskirts Factory"
+
 /obj/item/quest_ticket/temple_motus
 	name = "'Temple of Motus' ticket"
 	map = "_maps/Quests/lost_adventures.dmm"
