@@ -33,7 +33,7 @@ if the hands remain alive, the hands close with a huge AOE. (You need allies to 
 ----------- EGO -----------
 --- Weapons ---
 > Contempt, Awe: WAW - The current javelin. I might slightly update it
-> Perversion: ALEPH - A rankbump weapon concept. The weapon used in the N. Corp EGO; some sort of spear/lance that works as a sheathe for a katana.
+> Perversion: ALEPH - A rankbump weapon concept. The weapon used in the N. Corp EGO; some sort of spear/lance that works as a sheath for a katana.
 I think another dev wanted to design it, but if they don't wanna I also have ideas for it.
 --- Armour ---
 > Contempt, Awe: WAW - We don't have sprites for this. If I don't see some pop up soon I'll make a codersprite.
@@ -64,8 +64,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 	/* --- Defense --- */
 	// Should be obscenely tanky. You will need some Gaze if you don't want this fight to turn into a slog meatgrinder
-	maxHealth = 3500
-	health = 3500
+	maxHealth = 3700
+	health = 3700
 	// These damage coeffs are basically fake, inbound damage will be severely reduced, you need Gaze stacks to counteract it.
 	damage_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5)
 	var/base_inbound_damage_coeff = 0.1 // You're gonna be here a while if you try to bruteforce this. Not so bad if you stack Gaze.
@@ -127,6 +127,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	/* --- Teleport --- */
 	var/teleport_timer
 	var/teleport_cooldown_duration = 45 SECONDS
+	var/teleporting = FALSE
 
 	/* --- Gaze --- */
 	// Variables for Gaze outgoing and inbound damage are stored on the Gaze status effect.
@@ -156,7 +157,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	/// Radius in tiles.
 	var/grip_radius = 1
 	/// Telegraph duration for the attack.
-	var/grip_windup = 1.1 SECONDS
+	var/grip_windup = 1.2 SECONDS
 	var/grip_cooldown
 	var/grip_cooldown_duration = 10 SECONDS
 	// When using It Shall Grip, we'll cast it up to [grip_iterations] times, each time it will spawn up to [grip_max_targets] AoEs.
@@ -168,10 +169,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/shun_damage = 200 // Don't flop the DPS check or you get sent directly to Sovngarde (livable with some black res tbh)
 	var/shun_radius = 2
 	var/shun_hands_type
-	// Balance these three variables to ensure that it's a DPS check that can barely be met by 1 WAW agent using the right damage types.
-	var/shun_hands_hp = 400
-	var/shun_hands_resistances = list(RED_DAMAGE = 0.8, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 1.5)
-	var/shun_windup = 6 SECONDS // 400/6 requires 66.67 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
+	// Balance these three variables to ensure that it's a DPS check that can barely be met by 1 WAW agent using the right damage types. Destroying this thing with HE weapons should be EXTREMELY difficult if not impossible.
+	var/shun_hands_hp = 440
+	var/shun_hands_resistances = list(RED_DAMAGE = 0.9, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
+	var/shun_windup = 6.5 SECONDS // 440/6.5 requires 67.7 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
 	/// Holds a list of the buckling mobs created by this attack, we need to wipe this if we die/get staggered
 	var/list/shun_mobs = list()
 
@@ -179,7 +180,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/staggered = FALSE
 	var/stagger_duration = 8 SECONDS
 	var/stagger_unstagger_time = 100
-	var/list/stagger_resistances = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.5, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 2)
+	var/list/stagger_resistances = list(RED_DAMAGE = 1.5, WHITE_DAMAGE = 1.6, BLACK_DAMAGE = 1.5, PALE_DAMAGE = 2) // WHITE and PALE are slightly higher to keep them as more effective during stagger than just 6 gaze stacks
 
 /mob/living/simple_animal/hostile/abnormality/spiral/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
 	. = ..()
@@ -288,13 +289,17 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		temp.transform *= 1.5
 	return ..()
 
-/// Apply Gaze when hit in melee. Always give Gaze if being hit in the hands/arms, otherwise if it's a simplemob give Gaze randomly.
+/// Apply Gaze when hit in melee. Always give Gaze if being hit in the hands/arms, otherwise if it's a simplemob give Gaze randomly. Also, enrage if below X% HP.
 /mob/living/simple_animal/hostile/abnormality/spiral/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 
+	// Don't bother enraging or giving Gaze if we're staggered or teleporting.
+	if(staggered || teleporting)
+		return
+
 	// Check to see if we should enrage.
 	if(!enraged)
-		if(health < (maxHealth * enrage_hp_threshold))
+		if(health <= (maxHealth * enrage_hp_threshold))
 			// Warn the players.
 			var/warning_message = "[src] begins whirling with greater intensity."
 			visible_message(span_userdanger(warning_message))
@@ -348,6 +353,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), (stagger_unstagger_time - world.time + 1), TIMER_STOPPABLE)
 		return
 
+	teleporting = TRUE
 	animate(src, 0.7 SECONDS, alpha = 0)
 	var/list/department_centers = GLOB.department_centers.Copy()
 	var/list/xenospawns = GLOB.xeno_spawn.Copy()
@@ -362,6 +368,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 			global_cooldown = world.time + global_cooldown_duration
 			forceMove(destination)
 		animate(src, 0.7 SECONDS, alpha = initial(alpha))
+
+	teleporting = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/spiral/Life()
 	. = ..()
@@ -464,6 +472,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /// Hit every mob in the list argument with It Shall Be Insidious.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/InsidiousCast(list/targets_found)
 	for(var/mob/living/target in targets_found)
+		if(target in contempted_fighters) // Just in case
+			continue
 		target.deal_damage(CalculateDamageFromGazeStacks(target, insidious_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_SPECIAL))
 
 		var/turf/target_turf = get_turf(target)
@@ -505,9 +515,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 /// Gets called by /temp_visual/spiral_grip when it resolves.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/GripHit(mob/living/target)
-	if(!istype(target))
+	if(!istype(target) || (target in contempted_fighters))
 		return FALSE
 	target.deal_damage(CalculateDamageFromGazeStacks(target, grip_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	target.visible_message(span_warning("[target] is hit by an emerging pair of hands!"), span_userdanger("You're hit by an emerging pair of hands!"))
 
 /// Grip effect; gets passed arguments by Spiral's GripCast(). Reused for Shun.
 /obj/effect/temp_visual/spiral_grip
@@ -592,9 +603,19 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	if(!istype(victim))
 		return
 	victim.deal_damage(CalculateDamageFromGazeStacks(victim, shun_damage), BLACK_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	victim.visible_message(span_warning("[victim] is brutally crushed by a pair of clasping hands!"), span_userdanger("You're crushed by a pair of clasping hands!"))
+
+/// Called by Contempt status to stall Spiral's teleport until, at least, the status times out.
+/mob/living/simple_animal/hostile/abnormality/spiral/proc/ShunDelayTeleport(delay_time)
+	var/time_to_teleport = timeleft(teleport_timer)
+	if(time_to_teleport)
+		deltimer(teleport_timer)
+		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), (time_to_teleport + delay_time), TIMER_STOPPABLE)
 
 // Don't worry about teleport, it will get delayed to until after the stagger is over.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/Stagger()
+	if(staggered)
+		return
 	staggered = TRUE
 	ChangeResistances(stagger_resistances)
 	var/mutable_appearance/colored_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegumobs.dmi', "stagger", src.layer + 0.1)
@@ -603,15 +624,16 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	for(var/mob/living/simple_animal/spiral_shun/possible_extras in shun_mobs)
 		qdel(possible_extras)
 		shun_mobs -= possible_extras
-	say("Staggered!")
+	for(var/mob/living/carbon/human/witness in viewers(vision_range, src))
+		balloon_alert(witness, "[src] is staggered!")
 
+	stagger_unstagger_time = world.time + stagger_duration
 	SLEEP_CHECK_DEATH(stagger_duration)
 
 	var/list/old_coeff = list(RED_DAMAGE = 0.5, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.5) // For some reason I can't get initial() to work here
 	ChangeResistances(old_coeff)
 	staggered = FALSE
 	cut_overlay(colored_overlay)
-	say("Unstaggered!")
 
 /* ------------------------------- Status Effects ------------------------------- */
 
@@ -667,6 +689,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	our_spiral.awed_workers -= owner
 	spiral_abno_datum = null
 
+/// Override to avoid decay
 /datum/status_effect/stacking/spiral_awe/tick()
 	if(!can_have_status())
 		qdel(src)
@@ -717,7 +740,6 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 /datum/status_effect/stacking/spiral_gaze/on_creation(mob/living/new_owner, stacks_to_apply, mob/living/simple_animal/hostile/abnormality/spiral/spiral_mob)
 	if(!istype(spiral_mob))
-		new_owner.say("Gaze: didn't receive a correct spiral ref. Deleting.")
 		qdel(src)
 		return FALSE
 	gaze_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
@@ -776,18 +798,17 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		qdel(src)
 
 /* --------- Contempt/It Shall Shun (Combat) --------- */
-/// Contempt status effect.
+/// Contempt status effect. This spawns a clasped hands mob that must be defeated to pass the DPS check.
 /datum/status_effect/spiral_contempt
 	id = "spiral_contempt"
 	alert_type = /atom/movable/screen/alert/status_effect/spiral_contempt
-	duration = 30 SECONDS
-	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref
-	var/mob/living/simple_animal/spiral_shun/clasped_hands
-	var/clasped_duration = 6 SECONDS
-	var/clasped_hand_hp = 400
-	var/list/clasped_hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1)
-	var/clasped_attack_radius = 2
-	var/dps_check_failed = FALSE
+	duration = 10 SECONDS
+	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref // Passed on creation
+	var/mob/living/simple_animal/spiral_shun/clasped_hands // We create this ourselves
+	var/clasped_duration = 6 SECONDS // We get passed a duration on creation
+	var/clasped_hand_hp = 400 // We get passed HP on creation
+	var/list/clasped_hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1) // We get passed a resist list on creation
+	var/clasped_attack_radius = 2 // We get passed an AOE radius on creation
 
 /atom/movable/screen/alert/status_effect/spiral_contempt
 	name = "Contempt \[Spiral of Contempt\]"
@@ -799,40 +820,39 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	if(!owner || !isliving(owner))
 		return FALSE
 
-/datum/status_effect/spiral_contempt/on_creation(mob/living/new_owner, mob/living/simple_animal/hostile/abnormality/spiral/spiral_abno, duration = 6 SECONDS, hand_hp = 400, hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1), attack_radius = 2)
+/datum/status_effect/spiral_contempt/on_creation(mob/living/new_owner, mob/living/simple_animal/hostile/abnormality/spiral/spiral_abno, duration = 6.5 SECONDS, hand_hp = 400, hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1), attack_radius = 2)
 	if(!istype(spiral_abno) || !istype(new_owner) || !islist(hand_resists))
 		qdel(src)
 		return FALSE
 	. = ..()
+	// We need to update our vars with what we got passed on creation
 	spiral_ref = spiral_abno
 	spiral_ref.contempted_fighters |= owner
-
 	clasped_duration = duration
+	spiral_ref.ShunDelayTeleport(clasped_duration) // Stop Spiral from teleporting until this resolves
 	clasped_hand_hp = hand_hp
 	clasped_hand_resists = hand_resists
 	clasped_attack_radius = attack_radius
 
 	TrapVictim() // Immobilize our victim
+
 	clasped_hands = new /mob/living/simple_animal/spiral_shun(get_turf(owner), src, owner) // Create the hands mob that must be killed to pass the DPS check. It will also serve to buckle the victim.
 	clasped_hands.buckle_mob(owner, force = TRUE, check_loc = FALSE) // Buckle the victim so it becomes evident that you have to break them out.
 	for(var/mob/living/carbon/human/witnesses in viewers(9, clasped_hands))
-		clasped_hands.balloon_alert("A pair of blackened, bloody hands seize [owner]!")
+		clasped_hands.balloon_alert(witnesses, "A pair of blackened, bloody hands seize [owner]!")
 
 /datum/status_effect/spiral_contempt/on_remove()
 	. = ..()
 	FreeVictim()
-	spiral_ref.contempted_fighters -= owner
 	clasped_hands = null
 	spiral_ref = null
 
 /// Called with TRUE when the hands are killed, called with FALSE if they time out. Not called at all if it's force deleted.
 /datum/status_effect/spiral_contempt/proc/DPSCheckResult(passed = FALSE)
 	if(passed && spiral_ref)
-		spiral_ref.say("DPS Check result: Passed")
 		INVOKE_ASYNC(spiral_ref, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/spiral, Stagger))
+		qdel(src)
 		return
-	spiral_ref.say("DPS Check result: Failed")
-	// We will be deleted by the clasped hands.
 
 /// Don't let our victim move or do anything. They're at the mercy of their allies.
 /datum/status_effect/spiral_contempt/proc/TrapVictim()
@@ -846,6 +866,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 /// Let them go now.
 /datum/status_effect/spiral_contempt/proc/FreeVictim()
+	spiral_ref.contempted_fighters -= owner
 	var/mob/living/simple_animal/animal_owner = owner
 	if(istype(animal_owner))
 		animal_owner.toggle_ai(AI_ON)
@@ -864,7 +885,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	layer = POINT_LAYER
 	del_on_death = FALSE
 	var/final_radius = 2
-	var/final_windup = 0.15 SECONDS
+	var/final_windup = 0.5 SECONDS
 	var/fadeout_time = 0.5 SECONDS
 	var/list/affected_turfs = list()
 	var/list/telegraph_vfx = list()
@@ -900,7 +921,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 /mob/living/simple_animal/spiral_shun/Destroy(force)
 	unbuckle_all_mobs(force = TRUE)
-	contempt_status = null
+	QDEL_NULL(contempt_status)
 	victim = null
 	return ..()
 
@@ -913,10 +934,16 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	animate(src, fadeout_time, alpha = 0)
 	QDEL_IN(src, fadeout_time + 1)
 
+/mob/living/simple_animal/spiral_shun/gib()
+	if(its_over)
+		return FALSE
+	. = ..()
+
 /mob/living/simple_animal/spiral_shun/proc/DPSCheckFailed()
 	if(!contempt_status)
 		return
 	its_over = TRUE
+	status_flags |= GODMODE
 	contempt_status.DPSCheckResult(FALSE)
 	Telegraph()
 
@@ -950,7 +977,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 					if(contempt_status.spiral_ref && !(contempt_status.spiral_ref.faction_check_mob(L))) // Yes I know this is a ridiculous level of nesting
 						contempt_status.spiral_ref.ShunHit(L)
 
-	QDEL_NULL(contempt_status)
+	if(!(victim in hitlist) && contempt_status && contempt_status.spiral_ref) // Main target may not actually have been picked up due to weirdness with buckling stuff?
+		contempt_status.spiral_ref.ShunHit(victim)
+
+	QDEL_NULL(contempt_status) // Also frees the victim
 	affected_turfs = null
 	// Fade out
 	animate(src, fadeout_time, alpha = 0)
