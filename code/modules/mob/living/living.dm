@@ -105,7 +105,22 @@
 			if(!(world.time % 5))
 				to_chat(src, "<span class='warning'>[L] is restrained, you cannot push past.</span>")
 			return TRUE
-
+				//QUASAR-13 EDIT ADDITION BEGIN - GUNPOINT
+		if(L.gunpointed.len)
+			var/is_pointing = FALSE
+			for(var/datum/gunpoint/gp in L.gunpointed)
+				if(gp.source == src)
+					is_pointing = TRUE
+					break
+			if(!is_pointing)
+				if(!(world.time % 5))
+					to_chat(src, "<span class='warning'>[L] is being held at gunpoint, it's not wise to push him.</span>")
+				return TRUE
+		if(L.gunpointing)
+			if(!(world.time % 5))
+				to_chat(src, "<span class='warning'>[L] is holding someone at gunpoint, you cannot push past.</span>")
+			return TRUE
+		//QUASAR-13 EDIT ADDITION END
 		if(L.pulling)
 			if(ismob(L.pulling))
 				var/mob/P = L.pulling
@@ -522,7 +537,7 @@
 /// Proc to append and redefine behavior to the change of the [/mob/living/var/resting] variable.
 /mob/living/proc/update_resting()
 	update_rest_hud_icon()
-
+	SEND_SIGNAL(src, COMSIG_LIVING_UPDATED_RESTING, resting) //QUASAR-13 EDIT ADDITION - GUNPOINT
 
 /mob/living/proc/get_up(instant = FALSE)
 	set waitfor = FALSE

@@ -113,6 +113,8 @@ SUBSYSTEM_DEF(job)
 			return FALSE
 		if(!job.player_old_enough(player.client))
 			return FALSE
+		if(!job.unique_job_check(player.client))
+			return FALSE
 		if(job.required_playtime_remaining(player.client))
 			return FALSE
 		if(job.trusted_only && !is_trusted_player(player.client))
@@ -358,6 +360,10 @@ SUBSYSTEM_DEF(job)
 
 				if(!job.player_old_enough(player.client))
 					JobDebug("DO player not old enough, Player: [player], Job:[job.title]")
+					continue
+
+				if(!job.unique_job_check(player.client))
+					JobDebug("DO player failed unique job check, Player: [player], Job:[job.title]")
 					continue
 
 				if(job.required_playtime_remaining(player.client))

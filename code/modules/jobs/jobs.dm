@@ -23,6 +23,7 @@ GLOBAL_LIST_INIT(command_positions, list(
 	"Kurokumo Kashira",
 	"Thumb East Capo",
 	"Big Brother",
+	"Insurgence Nightwatch Agent",
 
 	// R-corp Officers
 	"Ground Commander",
@@ -158,6 +159,7 @@ GLOBAL_LIST_INIT(security_positions, list(
 	"Damage Mitigation Officer",
 	"Damage Exasperation Officer",
 	"Internal Police",
+	"LC Specimen", //Not really a 'security role', but putting it as a silicon/nonhuman feels wrong.
 
 	//Sixth Pack
 	"Robin Section Leader",
@@ -289,6 +291,9 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 	"Big Brother",
 	"Younger Brother",
 	"Little Brother",
+
+	"Insurgence Nightwatch Agent",
+	"Insurgence Transport Agent",
 ))
 
 

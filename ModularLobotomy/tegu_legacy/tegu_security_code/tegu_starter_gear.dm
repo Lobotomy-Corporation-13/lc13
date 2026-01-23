@@ -34,7 +34,7 @@
 	if(!random_static_channel)
 		random_static_channel = pick(rand(MIN_FREE_FREQ, MIN_FREQ-2), rand(MAX_FREQ+2, MAX_FREE_FREQ)) //No public frequencies
 		random_static_channel = sanitize_frequency(random_static_channel, freerange) //Make sure the pick is valid
-	var/list/comparison_frequency_list = list(FREQ_SYNDICATE, FREQ_CTF_RED, FREQ_CTF_BLUE, FREQ_CENTCOM, FREQ_CONTROL, FREQ_INFORMATION, FREQ_SAFETY, FREQ_TRAINING, FREQ_COMMAND, FREQ_WELFARE, FREQ_DISCIPLINE, FREQ_STATUS_DISPLAYS, FREQ_ATMOS_ALARMS, FREQ_ATMOS_CONTROL)
+	var/list/comparison_frequency_list = list(FREQ_SYNDICATE, FREQ_CTF_RED, FREQ_CTF_BLUE, FREQ_CENTCOM, FREQ_CONTROL, FREQ_INFORMATION, FREQ_SAFETY, FREQ_TRAINING, FREQ_COMMAND, FREQ_WELFARE, FREQ_DISCIPLINE, FREQ_RECORDS, FREQ_EXTRACTION, FREQ_STATUS_DISPLAYS, FREQ_ATMOS_ALARMS, FREQ_ATMOS_CONTROL)
 	for(var/comparison_frequency in comparison_frequency_list) //No taken frequencies
 		if(random_static_channel == comparison_frequency)
 			random_static_channel += pick(2, -2)

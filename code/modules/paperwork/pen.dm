@@ -133,63 +133,81 @@
 		return
 
 	if(!force)
-		if(M.can_inject(user, 1))
+		if(M.can_inject(user, 1) && (user.a_intent != INTENT_HELP))
 			to_chat(user, "<span class='warning'>You stab [M] with the pen.</span>")
 			if(!stealth)
 				to_chat(M, "<span class='danger'>You feel a tiny prick!</span>")
 			. = 1
 
-		log_combat(user, M, "stabbed", src)
+			log_combat(user, M, "stabbed", src)
 
 	else
 		. = ..()
 
-/obj/item/pen/afterattack(obj/O, mob/living/user, proximity)
+/obj/item/pen/afterattack(atom/target, mob/living/user, proximity)
 	. = ..()
-	//Changing name/description of items. Only works if they have the UNIQUE_RENAME object flag set
-	if(isobj(O) && proximity && (O.obj_flags & UNIQUE_RENAME))
+	//I'm sorry for how this looks but this is the only way I could think of making it work with both living and objects without copypasting code.
+	var/obj/O
+	var/mob/living/L
+	if(isobj(target))
+		O = target
+		if(!(O.obj_flags & UNIQUE_RENAME))
+			return
+	else if(isliving(target))
+		L = target
+		if(!L.can_be_renamed)
+			return
+	else
+		return
+
+	//Changing name/description of items. Only works if they have the UNIQUE_RENAME object flag set or  the can_be_renamed var if they're a mob.
+	if(proximity)
 		var/penchoice = input(user, "What would you like to edit?", "Rename, change description or reset both?") as null|anything in list("Rename","Change description","Reset")
-		if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
+		if(QDELETED(target) || !user.canUseTopic(target, BE_CLOSE))
 			return
 		if(penchoice == "Rename")
-			var/input = stripped_input(user,"What do you want to name [O]?", ,"[O.name]", MAX_NAME_LEN)
-			var/oldname = O.name
-			if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
+			var/input = stripped_input(user,"What do you want to name [target]?", ,"[target.name]", MAX_NAME_LEN)
+			var/oldname = target.name
+			if(QDELETED(target) || !user.canUseTopic(target, BE_CLOSE))
+				to_chat(user, "<span class='notice'>Their name is supposed to be TARGET: [target] AND USER IS SUPPOSED TO BE: [user].</span>")
 				return
 			if(oldname == input || input == "")
-				to_chat(user, "<span class='notice'>You changed [O] to... well... [O].</span>")
+				to_chat(user, "<span class='notice'>You changed [target] to... well... [target].</span>")
 			else
-				O.name = input
-				var/datum/component/label/label = O.GetComponent(/datum/component/label)
+				target.name = input
+				var/datum/component/label/label = target.GetComponent(/datum/component/label)
 				if(label)
 					label.remove_label()
 					label.apply_label()
-				to_chat(user, "<span class='notice'>You have successfully renamed \the [oldname] to [O].</span>")
-				O.renamedByPlayer = TRUE
+				to_chat(user, "<span class='notice'>You have successfully renamed \the [oldname] to [target].</span>")
+				if(O)
+					O.renamedByPlayer = TRUE
 
 		if(penchoice == "Change description")
-			var/input = stripped_input(user,"Describe [O] here:", ,"[O.desc]", 140)
-			var/olddesc = O.desc
-			if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
+			var/input = stripped_input(user,"Describe [target] here:", ,"[target.desc]", 140)
+			var/olddesc = target.desc
+			if(QDELETED(target) || !user.canUseTopic(target, BE_CLOSE))
 				return
 			if(olddesc == input || input == "")
-				to_chat(user, "<span class='notice'>You decide against changing [O]'s description.</span>")
+				to_chat(user, "<span class='notice'>You decide against changing [target]'s description.</span>")
 			else
-				O.desc = input
-				to_chat(user, "<span class='notice'>You have successfully changed [O]'s description.</span>")
-				O.renamedByPlayer = TRUE
+				target.desc = input
+				to_chat(user, "<span class='notice'>You have successfully changed [target]'s description.</span>")
+				if(O)
+					O.renamedByPlayer = TRUE
 
 		if(penchoice == "Reset")
-			if(QDELETED(O) || !user.canUseTopic(O, BE_CLOSE))
+			if(QDELETED(target) || !user.canUseTopic(target, BE_CLOSE))
 				return
-			O.desc = initial(O.desc)
-			O.name = initial(O.name)
-			var/datum/component/label/label = O.GetComponent(/datum/component/label)
+			target.desc = initial(target.desc)
+			target.name = initial(target.name)
+			var/datum/component/label/label = target.GetComponent(/datum/component/label)
 			if(label)
 				label.remove_label()
 				label.apply_label()
-			to_chat(user, "<span class='notice'>You have successfully reset [O]'s name and description.</span>")
-			O.renamedByPlayer = FALSE
+			to_chat(user, "<span class='notice'>You have successfully reset [target]'s name and description.</span>")
+			if(O)
+				O.renamedByPlayer = FALSE
 
 /*
  * Sleepypens

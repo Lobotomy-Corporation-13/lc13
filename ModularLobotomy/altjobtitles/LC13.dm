@@ -60,10 +60,12 @@
 /datum/outfit/job/assistant/extractiondepartmentclerk
 	name = "Clerk (Extraction)"
 	uniform = /obj/item/clothing/under/suit/lobotomy/extraction
+	ears = /obj/item/radio/headset/headset_extraction
 
 /datum/outfit/job/assistant/recorddepartmentclerk
 	name = "Clerk (Record)"
 	uniform = /obj/item/clothing/under/suit/lobotomy/records
+	ears = /obj/item/radio/headset/headset_records
 
 /datum/outfit/job/assistant/architecturedepartmentclerk
 	name = "Clerk (Architecture)"

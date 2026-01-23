@@ -32,7 +32,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 		)
 
 	// Assoc list of ordeals by level
-	var/list/all_ordeals = list(
+	var/list/all_ordeals = alist(
 							1 = list(),
 							2 = list(),
 							3 = list(),
@@ -357,7 +357,7 @@ SUBSYSTEM_DEF(lobotomy_corp)
 			continue
 		if(!cmp.datum_reference || !cmp.datum_reference.current)
 			continue
-		if(!cmp.datum_reference.current.IsContained() && !cmp.datum_reference.stupid) // Does what the old check did, but allows it to be redefined by abnormalities that do so.
+		if(!cmp.datum_reference.stupid && !cmp.datum_reference.current.IsContained()) // Does what the old check did, but allows it to be redefined by abnormalities that do so.
 			continue
 		if(!(cmp.datum_reference.threat_level in qliphoth_meltdown_affected) && !forced)
 			continue

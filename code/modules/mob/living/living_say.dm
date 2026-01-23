@@ -15,6 +15,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	RADIO_KEY_COMMAND = RADIO_CHANNEL_COMMAND,
 	RADIO_KEY_WELFARE = RADIO_CHANNEL_WELFARE,
 	RADIO_KEY_DISCIPLINE = RADIO_CHANNEL_DISCIPLINE,
+	RADIO_KEY_RECORDS = RADIO_CHANNEL_RECORDS,
+	RADIO_KEY_EXTRACTION = RADIO_CHANNEL_EXTRACTION,
 	RADIO_KEY_ARCHITECTURE = RADIO_CHANNEL_ARCHITECTURE,
 
 	// Faction
@@ -46,6 +48,8 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	"с" = RADIO_CHANNEL_COMMAND,
 	"ц" = RADIO_CHANNEL_WELFARE,
 	"в" = RADIO_CHANNEL_DISCIPLINE,
+	// I'm sorry but I'm completely unfamiliar with Cyrillic and whatnot, adding Records & Extraction channels, but I don't really know what keys to put here for them.
+	// If you have this keyboard layout please do me a favour and add the association entries for Records and Architecture
 	"ф" = RADIO_CHANNEL_ARCHITECTURE,
 
 	// Faction

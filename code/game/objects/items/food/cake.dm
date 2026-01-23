@@ -1,4 +1,5 @@
 /obj/item/food/cake
+	name = "cake"
 	icon = 'icons/obj/food/piecake.dmi'
 	bite_consumption = 3
 	max_volume = 80
@@ -11,6 +12,7 @@
 	AddComponent(/datum/component/food_storage)
 
 /obj/item/food/cakeslice
+	name = "cake slice"
 	icon = 'icons/obj/food/piecake.dmi'
 	trash_type = /obj/item/trash/plate
 	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/nutriment/vitamin = 1)

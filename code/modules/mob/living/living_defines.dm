@@ -184,6 +184,8 @@
 	/// Which god are you aligned with?
 	var/god_aligned = FISHGOD_NONE
 
+	///Can this mob be renamed when a pen is used on them?
+	var/can_be_renamed = FALSE
 	///How much extra damage will they do with thier weapons/attacks? (1% more damage per extra damage)
 	///(Specific damage ups will only work if the attacker is using that specific damage type.)
 	var/extra_damage = 0

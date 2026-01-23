@@ -18,12 +18,14 @@
 	var/datum/tgui_handler/augment_fabricator/ui_handler = null
 
 	var/const/ui_key = "AugmentFabricator"
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Test Range Agent")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant", "Test Range Agent")
 
 	var/market_change_interval = 20 * 60 * 10 // 20 minutes in deciseconds
 	var/list/sale_percentages = list(25, 33, 40, 66)
 	var/list/markup_percentages = list(25, 33, 40)
 	var/max_66_sales = 2
+	var/on_sale_pct = 0.2
+	var/markup_pct = 0.1
 
 	// --- Data (Same as before) ---
 	var/list/available_forms = list(
@@ -58,15 +60,15 @@
 
 	var/list/available_effects = list(
 		// --- Reactive Damage Effects ---
-		list(
-			"id" = "struggling_defense",
-			"name" = "Struggling Defense",
-			"ahn_cost" = 25,
-			"ep_cost" = 2, // Positive EP cost
-			"desc" = "Each 12.5% of HP lost grants 2.5%*X damage reduction (max 17.5%*X at 87.5% HP lost).",
-			"repeatable" = 3, // Max 3 times
-			"component" = /datum/component/augment/resisting_augment/struggling_defense
-		),
+		// list(
+		// 	"id" = "struggling_defense",
+		// 	"name" = "Struggling Defense",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2, // Positive EP cost
+		// 	"desc" = "Each 12.5% of HP lost grants 2.5%*X damage reduction (max 17.5%*X at 87.5% HP lost).",
+		// 	"repeatable" = 3, // Max 3 times
+		// 	"component" = /datum/component/augment/resisting_augment/struggling_defense
+		// ),
 		list(
 			"id" = "ES_red",
 			"name" = "Emergency Shields, RED",
@@ -100,15 +102,15 @@
 			"repeatable" = 3,
 			"component" = /datum/component/augment/defensive_preparations
 		),
-		list(
-			"id" = "reinforcement_nanties",
-			"name" = "Reinforcement Nanties",
-			"ahn_cost" = 25,
-			"ep_cost" = 2,
-			"desc" = "When you take damage, you will take 5*X% less damage per human you can see. (Max of 40%).",
-			"repeatable" = 3,
-			"component" = /datum/component/augment/resisting_augment/reinforcement_nanties
-		),
+		// list(
+		// 	"id" = "reinforcement_nanties",
+		// 	"name" = "Reinforcement Nanties",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"desc" = "When you take damage, you will take 5*X% less damage per human you can see. (Max of 40%).",
+		// 	"repeatable" = 3,
+		// 	"component" = /datum/component/augment/resisting_augment/reinforcement_nanties
+		// ),
 		list(
 			"id" = "cooling_systems",
 			"name" = "Cooling Systems",
@@ -130,9 +132,17 @@
 			"name" = "Fireproof",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "Under 15% HP, you become immune to OVERHEAT damage.",
+			"desc" = "Under 15% HP, you become immune to BURN damage.",
 			"component" = /datum/component/augment/fireproof
 		),
+		// list(
+		// 	"id" = "alert",
+		// 	"name" = "Alert",
+		// 	"ahn_cost" = 50,
+		// 	"ep_cost" = 4,
+		// 	"desc" = "The first time you take damage, reduce it by 80% and teleport 3-5 tiles away. Has a cooldown of 60 seconds.",
+		// 	"component" = /datum/component/augment/resisting_augment/alert
+		// ),
 		// --- Attacking Effects ---
 		list(
 			"id" = "regeneration",
@@ -229,12 +239,39 @@
 			"component" = /datum/component/augment/gashing_wounds
 		),
 		list(
+			"id" = "backstabber",
+			"name" = "Backstabber",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "When you attack a mob who has the same direction as you, you will deal RED damage equal to their BLEED stack * 2 * X. (Cooldown of 2 seconds)",
+			"component" = /datum/component/augment/backstabber
+		),
+		list(
 			"id" = "scorching_mind",
 			"name" = "Scorching Mind",
 			"ahn_cost" = 25,
 			"ep_cost" = 2,
 			"desc" = "On hit with a WHITE weapon, inflict 3 OVERHEAT (Cooldown of 1 second.)",
 			"component" = /datum/component/augment/scorching_mind
+		),
+		list(
+			"id" = "stigmatize",
+			"name" = "Stigmatize",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "On hit, inflict 1 OVERHEAT for every 25% of your missing SP. Double the OVERHEAT if the attack is a WHITE weapon. (Has a cooldown of 4 / 2 / 1 seconds, scaling with repeat count.)",
+			"component" = /datum/component/augment/stigmatize
+		),
+		list(
+			"id" = "brandish_the_flame",
+			"name" = "Brandish the Flame",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"repeatable" = 3,
+			"desc" = "On hit against a target with 10+ OVERHEAT, gain Damage Up equal to (target's OVERHEAT / 10). (Has a cooldown of 15 / X seconds.)",
+			"component" = /datum/component/augment/brandish_the_flame
 		),
 		list(
 			"id" = "slothful_decay",
@@ -245,12 +282,28 @@
 			"component" = /datum/component/augment/slothful_decay
 		),
 		list(
-			"id" = "strong_grip",
-			"name" = "Strong Grip",
-			"ahn_cost" = 100,
+			"id" = "inner_ardor",
+			"name" = "Inner Ardor",
+			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "If you attack while you have HARM intent, your weapon will become unable to be dropped. This effect is removed when you attack in any other intent.",
-			"component" = /datum/component/augment/strong_grip
+			"desc" = "When making a melee attack, deal an extra 0.5% damage for every point of BURN damage you have.",
+			"component" = /datum/component/augment/inner_ardor
+		),
+		// list(
+		// 	"id" = "strong_grip",
+		// 	"name" = "Strong Grip",
+		// 	"ahn_cost" = 100,
+		// 	"ep_cost" = 4,
+		// 	"desc" = "If you attack while you have HARM intent, your weapon will become unable to be dropped. This effect is removed when you attack in any other intent.",
+		// 	"component" = /datum/component/augment/strong_grip
+		// ),
+		list(
+			"id" = "combustion",
+			"name" = "Combustion",
+			"ahn_cost" = 100,
+			"ep_cost" = 6,
+			"desc" = "When attacking while having 25+ OVERHEAT, consume 25 OVERHEAT to create an explosion that deals 250 WHITE damage (scaled by Justice) to all simple mobs within 5 sqrs. (Has a cooldown of 10 seconds.)",
+			"component" = /datum/component/augment/combustion
 		),
 		// --- Execution Effects ---
 		list(
@@ -285,7 +338,7 @@
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
 			"repeatable" = 3,
-			"desc" = "On kill, heal 20 * X OVERHEAT damage.",
+			"desc" = "On kill, heal 20 * X BURN damage.",
 			"component" = /datum/component/augment/reclaimed_flame
 		),
 		// --- Status Effects ---
@@ -307,15 +360,15 @@
 			"desc" = "When making a melee attack, deal an extra 10*X% more damage for every 5 BLEED on self.",
 			"component" = /datum/component/augment/bleed_vigor
 		),
-		list(
-			"id" = "tremor_defense",
-			"name" = "TREMOR Defense",
-			"ahn_cost" = 25,
-			"ep_cost" = 2,
-			"repeatable" = 3,
-			"desc" = "For every 10 TREMOR on self, take 5*X% less damage from RED/BLACK attacks. (Max of 30% + (X - 1) * 20%)",
-			"component" = /datum/component/augment/resisting_augment/tremor_defense
-		),
+		// list(
+		// 	"id" = "tremor_defense",
+		// 	"name" = "TREMOR Defense",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"repeatable" = 3,
+		// 	"desc" = "For every 10 TREMOR on self, take 5*X% less damage from RED/BLACK attacks. (Max of 30% + (X - 1) * 20%)",
+		// 	"component" = /datum/component/augment/resisting_augment/tremor_defense
+		// ),
 		list(
 			"id" = "earthquake",
 			"name" = "Earthquake",
@@ -329,7 +382,7 @@
 			"name" = "TREMOR Break",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "When attacking a target with 15+ TREMOR, trigger a TREMOR Burst on the target and inflict (TREMOR on Target / 5) Feeble to the target. This has a cooldown of 30 seconds.",
+			"desc" = "When attacking a target with 15+ TREMOR, trigger a TREMOR Burst on the target and inflict (TREMOR on Target / 5) Damage Down to the target. This has a cooldown of 30 seconds.",
 			"component" = /datum/component/augment/tremor_break
 		),
 		list(
@@ -349,6 +402,15 @@
 			"desc" = "When taking RED/BLACK damage from a melee attack, inflict 2*X TREMOR to the target and X TREMOR to self. (This has a cooldown of 1 second)",
 			"component" = /datum/component/augment/reflective_tremor
 		),
+		// list(
+		// 	"id" = "blood_thorns",
+		// 	"name" = "Blood Thorns",
+		// 	"ahn_cost" = 25,
+		// 	"ep_cost" = 2,
+		// 	"repeatable" = 3,
+		// 	"desc" = "When taking damage while having 5+ BLEED, take (BLEED / 2, rounded up) * X% less damage (max 80%). Then spend 50% of your BLEED to inflict it on the attacker (only works against simple mobs). (Has a cooldown of 3 seconds)",
+		// 	"component" = /datum/component/augment/resisting_augment/blood_thorns
+		// ),
 		list(
 			"id" = "blood_jaunt",
 			"name" = "Blood Jaunt",
@@ -496,6 +558,22 @@
 			"desc" = "Any time a mob/human within 3 sqrs of you takes BLEED damage, heal HP equal to 50% of the BLEED damage they have taken. (Max of 100).",
 			"component" = /datum/component/augment/blood_cycler
 		),
+		list(
+			"id" = "crimson_cascade",
+			"name" = "Crimson Cascade",
+			"ahn_cost" = 50,
+			"ep_cost" = 4,
+			"desc" = "When someone within 3 sqrs takes BLEED damage, gain RED Damage Up equal to their BLEED stacks / 5.",
+			"component" = /datum/component/augment/crimson_cascade
+		),
+		list(
+			"id" = "faint_drain",
+			"name" = "Faint Drain",
+			"ahn_cost" = 25,
+			"ep_cost" = 2,
+			"desc" = "When a mob (not human) within 3 sqrs takes BLEED damage, inflict Feeble equal to their BLEED stacks / 10.",
+			"component" = /datum/component/augment/faint_drain
+		),
 
 		list(
 			"id" = "acidic_blood",
@@ -521,7 +599,7 @@
 			"name" = "Boot Up Sequence",
 			"ahn_cost" = 25,
 			"ep_cost" = -4,
-			"desc" = "When you make an attack, gain 3 Feeble. This has a cooldown of 70 seconds.",
+			"desc" = "When you make an attack, gain 3 Damage Down. This has a cooldown of 70 seconds.",
 			"component" = /datum/component/augment/bus
 		),
 		list(
@@ -546,7 +624,7 @@
 			"name" = "Pacifist",
 			"ahn_cost" = 25,
 			"ep_cost" = -4,
-			"desc" = "On kill, gain 3 Feeble",
+			"desc" = "On kill, gain 3 Damage Down",
 			"component" = /datum/component/augment/pacifist
 		),
 		list(
@@ -653,12 +731,19 @@
 			effect_data["current_ahn_cost"] = 0
 		effect_data["sale_percent"] = 0
 		effect_data["markup_percent"] = 0
-	// --- End Initialization ---
 
 	// --- Schedule First Market Change Immediately ---
 	ApplyMarketChange() // Run it once at startup
 	// Schedule the next one
 	ScheduleNextMarketChange()
+
+	// --- Spawn Augment Catalogue (office maptype only) ---
+	if(SSmaptype.maptype == "office")
+		// Calculate spawn position: 2 tiles left, 1 tile up
+		var/turf/spawn_turf = locate(x - 2, y + 1, z)
+		if(spawn_turf)
+			new /obj/machinery/augment_catalogue(spawn_turf)
+			log_game("Spawned Augment Catalogue at ([spawn_turf.x],[spawn_turf.y],[spawn_turf.z]) for Fabricator at ([x],[y],[z])")
 
 /// Schedules the next market change event.
 /obj/machinery/augment_fabricator/proc/ScheduleNextMarketChange()
@@ -687,8 +772,8 @@
 
 	// 3. Calculate number of sales and markups
 	var/total_effects = effect_indices.len
-	var/num_on_sale = round(total_effects * 0.20)
-	var/num_marked_up = round(total_effects * 0.10)
+	var/num_on_sale = round(total_effects * on_sale_pct)
+	var/num_marked_up = round(total_effects * markup_pct)
 
 	// Ensure we don't try to select more than available
 	num_on_sale = min(num_on_sale, total_effects)
@@ -775,6 +860,102 @@
 		to_chat(user, "<span class='warning'>Machine interface error. Please report this.</span>")
 		return TRUE
 
+// --- Ticket Interaction ---
+/obj/machinery/augment_fabricator/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/augment_ticket))
+		var/obj/item/augment_ticket/ticket = I
+		process_augment_ticket(ticket, user)
+		return TRUE
+	return ..()
+
+/obj/machinery/augment_fabricator/proc/process_augment_ticket(obj/item/augment_ticket/ticket, mob/user)
+	// Check if user has access
+	if(!(user?.mind?.assigned_role in roles))
+		if(SSmaptype.maptype != "office")
+			to_chat(user, span_warning("You need proper clearance to fabricate augments!"))
+			return
+
+	// Validate ticket
+	if(!ticket.form_id || !length(ticket.selected_effects))
+		to_chat(user, span_warning("This ticket appears to be invalid or blank!"))
+		return
+
+	// Check if user can afford
+	if(!deduct_cost(user, ticket.total_cost))
+		to_chat(user, span_warning("Failed to deduct [ticket.total_cost] [currencySymbol]. Insufficient funds!"))
+		return
+
+	// Create a datum/augment_design from the ticket
+	var/datum/augment_design/design = new /datum/augment_design()
+
+	// Find the form by ID
+	var/list/form_data = null
+	for(var/form_name in available_forms)
+		var/list/form = available_forms[form_name]
+		if(form["id"] == ticket.form_id)
+			form_data = form
+			break
+
+	if(!form_data)
+		to_chat(user, span_warning("The form specified in this ticket is no longer available!"))
+		return
+
+	design.form_data = form_data
+	design.rank = ticket.rank
+	design.selected_effects_data = list()
+
+	// Rebuild selected_effects_data from ticket
+	for(var/effect_id in ticket.selected_effects)
+		var/list/effect_def = null
+		for(var/list/possible_effect in available_effects)
+			if(possible_effect["id"] == effect_id)
+				effect_def = possible_effect
+				break
+		if(effect_def)
+			design.selected_effects_data += list(effect_def)
+
+	// Calculate costs (for logging/validation)
+	design.base_ep = form_data["base_ep"] + ((design.rank - 1) * 2)
+	design.total_ep_cost = 0
+	for(var/list/effect in design.selected_effects_data)
+		design.total_ep_cost += effect["ep_cost"]
+	design.base_ahn_cost = form_data["base_cost"] * design.rank
+	design.total_ahn_cost = ticket.total_cost
+
+	// Fabricate the augment
+	to_chat(user, span_notice("Processing augment order ticket..."))
+	var/temp_icon_state = icon_state
+	icon_state = icon_state_animation
+	playsound(get_turf(src), 'sound/items/rped.ogg', 50, TRUE, -1)
+	sleep(7)
+	icon_state = temp_icon_state
+
+	var/obj/item/augment/new_augment = make_new_augment()
+	new_augment.loc = get_turf(src)
+
+	if(new_augment)
+		// Use ticket data for naming
+		var/final_name = ticket.augment_name
+		if(!final_name || final_name == "")
+			final_name = "[form_data["name"]] Augment"
+		new_augment.name = "[final_name] (Rank [design.rank])"
+
+		var/final_desc = ticket.augment_desc
+		if(!final_desc || final_desc == "")
+			final_desc = "A custom-fabricated augment using the '[form_data["name"]]' template at Rank [design.rank]."
+		new_augment.desc = final_desc
+
+		new_augment.apply_design(design, ticket.primary_color, ticket.secondary_color)
+
+		log_game("[key_name(user)] fabricated '[new_augment.name]' from ticket [ticket.ticket_id] using [src.name] at ([loc.x],[loc.y],[loc.z]). Design Cost: [ticket.total_cost].")
+		to_chat(user, span_notice("Augment successfully fabricated from order ticket!"))
+
+		// Delete the ticket after successful fabrication
+		qdel(ticket)
+	else
+		log_runtime("Failed to create augment item at [src] for [user] from ticket.")
+		to_chat(user, span_warning("Critical fabrication failure! Please contact administration.</span>"))
+
 
 /// Placeholder for deducting the cost.
 /obj/machinery/augment_fabricator/proc/deduct_cost(mob/user, amount)
@@ -795,6 +976,8 @@
 			return TRUE
 	return FALSE
 
+/obj/machinery/augment_fabricator/proc/make_new_augment()
+	return new /obj/item/augment
 
 /// Handles the actual creation of the augment item. Called by the UI handler.
 /obj/machinery/augment_fabricator/proc/perform_fabrication(mob/user, datum/augment_design/design, creator_name, creator_desc, primary_color, secondary_color)
@@ -815,7 +998,8 @@
 	sleep(7)
 	icon_state = temp_icon_state
 
-	var/obj/item/augment/new_augment = new(get_turf(src)) // Create item at machine's location
+	var/obj/item/augment/new_augment = make_new_augment() // Create item at machine's location
+	new_augment.loc = get_turf(src)
 	if(new_augment)
 		new_augment.name = creator_name ? "[creator_name] ([design.form_data["name"]])" : "[design.form_data["name"]] Augment (Rank [design.rank])"
 		new_augment.desc = creator_desc ? creator_desc : "A custom-fabricated augment using the '[design.form_data["name"]]' template at Rank [design.rank]."
@@ -838,17 +1022,7 @@
 // 	return id_card && id_card.access // Example: Check if any access exists on card
 
 // Helper datum for validation (slightly improved)
-/datum/augment_design
-	var/list/form_data
-	var/rank
-	var/list/selected_effects_data = list()
-	var/base_ep
-	var/total_ep_cost
-	var/remaining_ep
-	var/base_ahn_cost
-	var/effects_ahn_cost
-	var/total_ahn_cost
-	var/validation_error = "" // Store error message for user feedback
+// Base vars defined in code/game/objects/items/augment_base.dm
 
 /datum/augment_design/proc/validate_and_calculate(form_name, rank_num, list/selected_effect_ids, obj/machinery/augment_fabricator/fabricator)
 	src.validation_error = "" // Reset error
@@ -944,13 +1118,10 @@
 	return effect_definition["id"] == effect_id_to_find
 
 // Augment Item definition (basic structure)
+// Base vars defined in code/game/objects/items/augment_base.dm
 /obj/item/augment
-	name = "Augment"
 	icon = AUGMENT_ICON_FILE
 	icon_state = "prosthetic"
-	var/datum/augment_design/design_details // Store the applied design data
-	var/primary_color = "#FFFFFF"
-	var/secondary_color = "#CCCCCC"
 	var/list/rankAttributeReqs = list(20, 40, 60, 80, 100)
 	var/list/stats = list(
 		FORTITUDE_ATTRIBUTE,
@@ -958,8 +1129,8 @@
 		TEMPERANCE_ATTRIBUTE,
 		JUSTICE_ATTRIBUTE,
 	)
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor")
-	var/active_augment = FALSE
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
+	var/debug_use = FALSE
 	// var/mutable_appearance/augment_overlay_prim
 	// var/mutable_appearance/augment_overlay_second
 	// var/overlay_icon_state = ""
@@ -1014,7 +1185,7 @@
 // 	return mutable_appearance(src.icon, src.overlay_icon_state, src.overlay_layer)
 
 /obj/item/augment/proc/CanUseAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
+	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office" || debug_use)
 		return TRUE
 	return FALSE
 
@@ -1099,6 +1270,27 @@
 				A = i
 		if(A)
 			to_chat(user, span_notice("The target current has the [A.name] augment."))
+			// List the augment effects
+			if(A.design_details && A.design_details.selected_effects_data && length(A.design_details.selected_effects_data))
+				to_chat(user, span_notice("Augment Effects:"))
+				var/list/effect_counts = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					effect_counts[effect_id] = (effect_counts[effect_id] || 0) + 1
+
+				var/list/shown_effects = list()
+				for(var/list/effect in A.design_details.selected_effects_data)
+					var/effect_id = effect["id"]
+					if(effect_id in shown_effects)
+						continue
+					shown_effects += effect_id
+					var/count = effect_counts[effect_id]
+					var/effect_name = effect["name"]
+					var/effect_desc = effect["desc"]
+					if(count > 1)
+						to_chat(user, span_notice("• [effect_name] (x[count]): [effect_desc]"))
+					else
+						to_chat(user, span_notice("• [effect_name]: [effect_desc]"))
 
 		var/stattotal
 		for(var/attribute in stats)
@@ -1149,7 +1341,7 @@
 	icon_state = "gadget1"
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_POCKETS
 	w_class = WEIGHT_CLASS_SMALL
-	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor")
+	var/list/roles = list("Prosthetics Surgeon", "Office Director", "Office Fixer", "Doctor", "Workshop Attendant")
 
 /obj/item/augment_remover/attack(mob/M, mob/user)
 	if (!CanRemoveAugment(user))
@@ -1191,3 +1383,122 @@
 	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office")
 		return TRUE
 	return FALSE
+
+//--------------------------------------
+// Debug Augment Fabricator
+//--------------------------------------
+
+/obj/machinery/augment_fabricator/debug
+	name = "Debug Augment Fabricator"
+	desc = "A modified augment fabricator for testing purposes. No ID required, completely free to use. For development/testing only!"
+	icon_state = "protolathe"
+
+// Override to skip access check - anyone can use this
+/obj/machinery/augment_fabricator/debug/attack_hand(mob/user)
+	if(!Adjacent(user, src))
+		return ..()
+
+	if(!istype(user, /mob/living/carbon/human))
+		to_chat(user, "<span class='warning'>You lack the dexterity to operate this machine.</span>")
+		return TRUE
+
+	// --- NO Access Check - Debug mode! ---
+	// Anyone can use this machine
+
+	// --- Delegate UI Interaction to the Handler ---
+	if(ui_handler)
+		return ui_handler.ui_interact(user)
+	else
+		log_admin("Missing ui_handler on [src] during attack_hand by [user]")
+		to_chat(user, "<span class='warning'>Machine interface error. Please report this.</span>")
+		return TRUE
+
+// Override to always return TRUE - everything is free!
+/obj/machinery/augment_fabricator/debug/deduct_cost(mob/user, amount)
+	// Debug mode - no cost!
+	to_chat(user, "<span class='notice'>[src] is in debug mode - no charge applied.</span>")
+	return TRUE
+
+// Override to skip access check for tickets
+/obj/machinery/augment_fabricator/debug/process_augment_ticket(obj/item/augment_ticket/ticket, mob/user)
+	// --- NO Access Check - Debug mode! ---
+
+	// Validate ticket
+	if(!ticket.form_id || !length(ticket.selected_effects))
+		to_chat(user, span_warning("This ticket appears to be invalid or blank!"))
+		return
+
+	// No cost check in debug mode - always succeed
+	to_chat(user, span_notice("[src] is in debug mode - no charge for ticket processing."))
+
+	// Create a datum/augment_design from the ticket
+	var/datum/augment_design/design = new /datum/augment_design()
+
+	// Find the form by ID
+	var/list/form_data = null
+	for(var/form_name in available_forms)
+		var/list/form = available_forms[form_name]
+		if(form["id"] == ticket.form_id)
+			form_data = form
+			break
+
+	if(!form_data)
+		to_chat(user, span_warning("The form specified in this ticket is no longer available!"))
+		return
+
+	design.form_data = form_data
+	design.rank = ticket.rank
+	design.selected_effects_data = list()
+
+	// Rebuild selected_effects_data from ticket
+	for(var/effect_id in ticket.selected_effects)
+		var/list/effect_def = null
+		for(var/list/possible_effect in available_effects)
+			if(possible_effect["id"] == effect_id)
+				effect_def = possible_effect
+				break
+		if(effect_def)
+			design.selected_effects_data += list(effect_def)
+
+	// Calculate costs (for logging/validation)
+	design.base_ep = form_data["base_ep"] + ((design.rank - 1) * 2)
+	design.total_ep_cost = 0
+	for(var/list/effect in design.selected_effects_data)
+		design.total_ep_cost += effect["ep_cost"]
+	design.base_ahn_cost = form_data["base_cost"] * design.rank
+	design.total_ahn_cost = ticket.total_cost
+
+	// Fabricate the augment
+	to_chat(user, span_notice("Processing augment order ticket..."))
+	var/temp_icon_state = icon_state
+	icon_state = icon_state_animation
+	playsound(get_turf(src), 'sound/items/rped.ogg', 50, TRUE, -1)
+	sleep(7)
+	icon_state = temp_icon_state
+
+	var/obj/item/augment/new_augment = make_new_augment()
+	new_augment.loc = get_turf(src)
+
+	if(new_augment)
+		// Use ticket data for naming
+		var/final_name = ticket.augment_name
+		if(!final_name || final_name == "")
+			final_name = "[form_data["name"]] Augment"
+		new_augment.name = "[final_name] (Rank [design.rank])"
+
+		var/final_desc = ticket.augment_desc
+		if(!final_desc || final_desc == "")
+			final_desc = "A custom-fabricated augment using the '[form_data["name"]]' template at Rank [design.rank]."
+		new_augment.desc = final_desc
+		new_augment.debug_use = TRUE
+
+		new_augment.apply_design(design, ticket.primary_color, ticket.secondary_color)
+
+		log_game("[key_name(user)] fabricated '[new_augment.name]' from ticket [ticket.ticket_id] using [src.name] (DEBUG) at ([loc.x],[loc.y],[loc.z]). Design Cost: FREE (debug mode).")
+		to_chat(user, span_notice("Augment successfully fabricated from order ticket!"))
+
+		// Delete the ticket after successful fabrication
+		qdel(ticket)
+	else
+		log_runtime("Failed to create augment item at [src] for [user] from ticket.")
+		to_chat(user, span_warning("Critical fabrication failure! Please contact administration.</span>"))
