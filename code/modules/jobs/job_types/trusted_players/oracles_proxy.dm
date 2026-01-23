@@ -38,9 +38,7 @@
 
 	id = /obj/item/card/id/silver/plastic
 	belt = /obj/item/pda/security
-	ears = /obj/item/radio/headset/headset_cent
-	uniform = /obj/item/clothing/under/suit/lobotomy/plain
-	glasses = /obj/item/clothing/glasses/sunglasses
+	uniform = /obj/item/clothing/under/suit/charcoal
 	shoes = /obj/item/clothing/shoes/laceup
 	l_hand = /obj/item/ego_weapon/index_vial
 	r_hand = /obj/item/clothing/suit/armor/ego_gear/city/index_proxy_wanderer

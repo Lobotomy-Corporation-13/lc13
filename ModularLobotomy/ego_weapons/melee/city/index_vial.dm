@@ -91,13 +91,13 @@
 	// Set cooldown for next swap
 	var/new_swap_time = world.time + swap_cooldown
 
-	// 10% chance to become fpoon
-	if(prob(10))
+	// 5% chance to become fpoon
+	if(prob(5))
 		var/obj/item/ego_weapon/index_vial/fpoon/new_weapon = new(user.drop_location())
 		new_weapon.unlocked_list = unlocked_list.Copy()
 		new_weapon.unlocked = unlocked
 		new_weapon.next_swap_time = new_swap_time
-		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 		to_chat(user, span_userdanger("The vial warps into... a fpoon?!"))
 		qdel(src)
 		user.put_in_hands(new_weapon)
@@ -117,7 +117,7 @@
 	new_weapon.unlocked_list = unlocked_list.Copy()
 	new_weapon.unlocked = unlocked
 	new_weapon.next_swap_time = new_swap_time
-	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 
 	qdel(src)
 	user.put_in_hands(new_weapon)
@@ -137,7 +137,7 @@
 		return
 	// Return to inactive state, resetting progress
 	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user.drop_location())
-	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 	to_chat(user, span_notice("You return the vial to its inactive state, resetting your progress."))
 	qdel(src)
 	user.put_in_hands(new_vial)
@@ -166,13 +166,13 @@
 	// Set cooldown for next manual swap
 	var/new_swap_time = world.time + swap_cooldown
 
-	// 10% chance to become fpoon
-	if(prob(10))
+	// 5% chance to become fpoon
+	if(prob(5))
 		var/obj/item/ego_weapon/index_vial/fpoon/new_weapon = new(user.drop_location())
 		new_weapon.unlocked_list = unlocked_list.Copy()
 		new_weapon.unlocked = unlocked
 		new_weapon.next_swap_time = new_swap_time
-		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+		playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 		to_chat(user, span_userdanger("The vial warps into... a fpoon?!"))
 		qdel(src)
 		user.put_in_hands(new_weapon)
@@ -192,7 +192,7 @@
 	new_weapon.unlocked_list = unlocked_list.Copy()
 	new_weapon.unlocked = unlocked
 	new_weapon.next_swap_time = new_swap_time
-	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+	playsound(user, 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
 	to_chat(user, span_warning("The vial shifts, forcing you to change weapons!"))
 
 	qdel(src)
@@ -222,8 +222,6 @@
 	for(var/mob/living/L in range(8, user))
 		if(L == user)
 			continue
-		if(faction_check(user.faction, L.faction))
-			continue
 		if(L.status_flags & GODMODE)
 			continue
 		if(L.stat == DEAD)
@@ -235,16 +233,17 @@
 		return
 
 	// Weapon data for Furioso - each weapon has: name, icon, hits, damage, damtype, sound
+	// Note: damtype uses literal strings ("red", "white", "black", "pale") to ensure proper retrieval from the nested list
 	var/static/list/furioso_weapons = list(
-		list("name" = "hatchet", "icon" = "index_vial_hatchet", "hits" = 5, "damage" = 30, "damtype" = RED_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_hatchet.ogg'),
-		list("name" = "stiletto", "icon" = "index_vial_stiletto", "hits" = 4, "damage" = 35, "damtype" = WHITE_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_stiletto.ogg'),
-		list("name" = "bastard sword", "icon" = "index_vial_bsword", "hits" = 2, "damage" = 75, "damtype" = BLACK_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_bsword.ogg'),
-		list("name" = "rapier", "icon" = "index_vial_rapier", "hits" = 3, "damage" = 50, "damtype" = WHITE_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_rapier.ogg'),
-		list("name" = "hammer", "icon" = "index_vial_hammer", "hits" = 2, "damage" = 90, "damtype" = RED_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_hammer.ogg'),
-		list("name" = "greatsword", "icon" = "index_vial_gsword", "hits" = 2, "damage" = 100, "damtype" = BLACK_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_gsword.ogg'),
-		list("name" = "lance", "icon" = "index_vial_lance", "hits" = 2, "damage" = 95, "damtype" = WHITE_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_lance.ogg'),
-		list("name" = "whip", "icon" = "index_vial_whip", "hits" = 2, "damage" = 60, "damtype" = BLACK_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_whip.ogg'),
-		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 100, "damtype" = PALE_DAMAGE, "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg')
+		list("name" = "hatchet", "icon" = "index_vial_hatchet", "hits" = 5, "damage" = 30, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hatchet.ogg'),
+		list("name" = "stiletto", "icon" = "index_vial_stiletto", "hits" = 4, "damage" = 35, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_stiletto.ogg'),
+		list("name" = "bastard sword", "icon" = "index_vial_bsword", "hits" = 2, "damage" = 75, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_bsword.ogg'),
+		list("name" = "rapier", "icon" = "index_vial_rapier", "hits" = 3, "damage" = 50, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_rapier.ogg'),
+		list("name" = "hammer", "icon" = "index_vial_hammer", "hits" = 2, "damage" = 90, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hammer.ogg'),
+		list("name" = "greatsword", "icon" = "index_vial_gsword", "hits" = 2, "damage" = 100, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_gsword.ogg'),
+		list("name" = "lance", "icon" = "index_vial_lance", "hits" = 2, "damage" = 95, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_lance.ogg'),
+		list("name" = "whip", "icon" = "index_vial_whip", "hits" = 2, "damage" = 60, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_whip.ogg'),
+		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 100, "damtype" = "pale", "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg')
 	)
 
 	furioso_start(user, targets)
@@ -297,9 +296,9 @@
 	var/damage = weapon_data["damage"]
 	var/damtype = weapon_data["damtype"]
 	for(var/i in 1 to hits)
-		playsound(user, weapon_data["sound"], 75, TRUE)
+		playsound(user, weapon_data["sound"], 40, TRUE)
 		new /obj/effect/temp_visual/smash_effect(get_turf(target))
-		target.deal_damage(damage, damtype, user, attack_type = (ATTACK_TYPE_MELEE))
+		target.deal_damage(damage, damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		sleep(0.2 SECONDS)
 	sleep(0.3 SECONDS)
 
@@ -386,7 +385,7 @@
 /obj/item/ego_weapon/index_vial/bsword
 	name = "caduceus - bastard sword"
 	desc = "When cleaving through the shoulder and the skull with a bastard sword... This sword is passable, but that quality leaves a lot to be desired."
-	special = "On hit, gain strength. Stacks up to 4 times."
+	special = "On hit, inflict 5 Overheat."
 	icon_state = "index_vial_bsword"
 	inhand_icon_state = "index_vial_bsword"
 	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
@@ -406,12 +405,9 @@
 	. = ..()
 	if(!.)
 		return
-	// On hit, gain damage buff (simulates Offense Level Up) - max 4 stacks
-	var/datum/status_effect/stacking/damage_up/S = user.has_status_effect(/datum/status_effect/stacking/damage_up)
-	if(!S)
-		user.apply_lc_strength(1)
-	else if(S.stacks < 4)
-		user.apply_lc_strength(S.stacks + 1)
+		// Inflict 5 OVERHEAT on hit
+	if(isliving(M))
+		M.apply_lc_overheat(5)
 
 // ============================================
 // RAPIER - Precise thrusts with defense debuff
@@ -585,7 +581,7 @@
 	attack_verb_simple = list("lacerate", "reap", "scythe")
 
 // ============================================
-// FPOON - Rare joke weapon (1% chance on swap)
+// FPOON - Rare joke weapon (5% chance on swap)
 // ============================================
 /obj/item/ego_weapon/index_vial/fpoon
 	name = "caduceus - fpoon"
@@ -620,4 +616,4 @@
 		return
 	// Inflict 5 bleed on hit
 	if(isliving(M))
-		M.apply_status_effect(/datum/status_effect/stacking/saw_bleed, 5)
+		M.apply_lc_bleed(5)
