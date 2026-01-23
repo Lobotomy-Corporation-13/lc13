@@ -1,0 +1,4 @@
+author: "EnderMage99"
+delete-after: True
+changes:
+  - balance: "Makes the LC13 bleed debuff only deal damage if you are running."
