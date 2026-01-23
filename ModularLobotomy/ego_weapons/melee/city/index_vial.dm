@@ -613,8 +613,9 @@
 			to_chat(user, span_notice("You reconsider your life choices."))
 			return
 		user.death()
-		for(var/mob/P in GLOB.player_list)
-			to_chat(P, span_userdanger("[uppertext(user.real_name)] has died to a fpoon. How embarrassing."))
+		if(!is_tutorial_level(user.z))
+			for(var/mob/P in GLOB.player_list)
+				to_chat(P, span_userdanger("[uppertext(user.real_name)] has died to a fpoon. How embarrassing."))
 		return
 	. = ..()
 	if(!.)
