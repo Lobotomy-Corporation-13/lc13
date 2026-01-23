@@ -17,7 +17,9 @@
 	maptype = list("city", "fixers")
 	job_important = "You are a wandering proxy of the Index, carrying out prescripts delivered to you by the Oracle. \
 		You are not inherently hostile, but you must follow the prescripts you receive. \
-		Use your index pager to receive and view your prescripts."
+		Use your index pager to receive and view your prescripts. \
+		You have buffed stats. You automatically dodge the first attack every 30 seconds, and have a 50% chance to dodge attacks when not holding a weapon. \
+		However, all damage you take also inflicts 5% unhealable damage."
 	job_notice = "Avoid killing other players without a reason. Killing a player for stopping your prescripts is a valid reason."
 
 	roundstart_attributes = list(
@@ -95,10 +97,11 @@
 			playsound(H, 'sound/weapons/black_silence/evasion.ogg', 50, TRUE)
 			return COMPONENT_MOB_DENY_DAMAGE
 
-	// Clone Decay: Take 5% of damage as CLONE damage
-	var/clone_damage = damage * 0.05
-	if(clone_damage > 0)
-		INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
+	// Clone Decay: Take 5% of damage as unhealable damage (not from simple mobs)
+	if(!istype(attack_source, /mob/living/simple_animal))
+		var/clone_damage = damage * 0.05
+		if(clone_damage > 0)
+			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
 
 /datum/component/oracle_proxy_passive/proc/recharge_guaranteed_evade()
 	guaranteed_evade_ready = TRUE

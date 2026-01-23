@@ -81,12 +81,13 @@
 
 	if(!length(available))
 		if(unlocked)
-			to_chat(user, span_notice("You've used all weapon forms. Furioso is ready!"))
+			// Furioso unlocked - can freely swap to any form
+			available = weapon_forms.Copy()
 		else
 			// All forms used, unlock furioso
 			unlocked = TRUE
 			to_chat(user, span_userdanger("You've mastered all weapon forms! Furioso is now available!"))
-		return
+			return
 
 	// Set cooldown for next swap
 	var/new_swap_time = world.time + swap_cooldown
@@ -134,6 +135,10 @@
 	// Already inactive
 	if(icon_state == "index_vial_inactive")
 		to_chat(user, span_notice("The vial is already in its inactive state."))
+		return
+	// Prevent reset if furioso is unlocked
+	if(unlocked)
+		to_chat(user, span_warning("Furioso is unlocked. You cannot reset while it's available."))
 		return
 	// Return to inactive state, resetting progress
 	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user.drop_location())
@@ -243,7 +248,7 @@
 		list("name" = "greatsword", "icon" = "index_vial_gsword", "hits" = 2, "damage" = 100, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_gsword.ogg'),
 		list("name" = "lance", "icon" = "index_vial_lance", "hits" = 2, "damage" = 95, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_lance.ogg'),
 		list("name" = "whip", "icon" = "index_vial_whip", "hits" = 2, "damage" = 60, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_whip.ogg'),
-		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 100, "damtype" = "pale", "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg')
+		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 80, "damtype" = "pale", "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg')
 	)
 
 	furioso_start(user, targets)
@@ -572,7 +577,7 @@
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	hitsound = 'sound/weapons/black_vial/index_vial_scythe.ogg'
-	force = 100
+	force = 80
 	damtype = PALE_DAMAGE
 	attack_speed = 1.5
 	w_class = WEIGHT_CLASS_BULKY
