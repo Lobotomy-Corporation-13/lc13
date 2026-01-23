@@ -1358,7 +1358,7 @@
 
 /atom/movable/screen/alert/status_effect/lc_bleed
 	name = "Bleeding"
-	desc = "You're currently bleeding!!"
+	desc = "You're currently bleeding! Walk in order to prevent your wounds from reopening."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "lc_bleed"
 
@@ -1371,6 +1371,8 @@
 //Deals true damage
 /datum/status_effect/stacking/lc_bleed/proc/Moved(mob/user, atom/new_location)
 	SIGNAL_HANDLER
+	if(owner.m_intent == MOVE_INTENT_WALK)
+		return
 	if (world.time - bleed_time < bleed_cooldown)
 		return
 	bleed_time = world.time
