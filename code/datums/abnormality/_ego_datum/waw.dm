@@ -205,6 +205,7 @@
 	ego_tags = list(EGO_TAG_SUPPORT, EGO_TAG_LOCKED_POTENTIAL)
 
 // Naked Nest - Exuviae
+// Note: Cure moved to auxiliary.dm in this folder
 /datum/ego_datum/weapon/exuviae
 	item_path = /obj/item/ego_weapon/ranged/exuviae
 	cost = 50
@@ -214,13 +215,6 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/exuviae
 	cost = 50
 	ego_tags = list(EGO_TAG_REALIZABLE)
-
-/datum/ego_datum/exuviae
-	name = "Naked Nest Cure"
-	item_category = "Extract"
-	item_path = /obj/item/serpentspoison
-	cost = 20
-	testrange_blacklisted = TRUE
 
 // Ebony Queen's Apple - Ebony Stem
 /datum/ego_datum/armor/ebony_stem

@@ -36,7 +36,7 @@ SUBSYSTEM_DEF(testrange)
 			stoplag() // Yes it's that bad. This makes the process take quite a while, but it's still under a minute and doesn't lag. The alternative is a biblical lagspike.
 
 		// The datums list is currently in the order that they were 'found' in the directory tree. Now we sort them from highest PE cost to lowest PE cost.
-		ego_datums = sortMerge(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
+		ego_datums = sortTim(ego_datums, cmp=GLOBAL_PROC_REF(cmp_ego_cost_dsc))
 
 		ego_datums_initializing = FALSE
 		ego_datums_initialized = TRUE
@@ -74,6 +74,6 @@ SUBSYSTEM_DEF(testrange)
 	var/item_icon = initial(item_path.icon)
 	var/item_icon_state = initial(item_path.icon_state)
 	if(!(item_icon_state in icon_states(icon(item_icon))))
-		return null
+		item_icon_state = "" // Some insidious datums have no icon state, like naked nest cure
 	var/icon/final_icon = icon(icon = item_icon, icon_state = item_icon_state, frame = 1)
 	return final_icon

@@ -29,7 +29,7 @@
 	ego_list = list(
 		/datum/ego_datum/weapon/exuviae,
 		/datum/ego_datum/armor/exuviae,
-		/datum/ego_datum/exuviae,
+		/datum/ego_datum/auxiliary/exuviae,
 	)
 	gift_type =  /datum/ego_gifts/exuviae
 	gift_message = "You manage to shave off a patch of scales."

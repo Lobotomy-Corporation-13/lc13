@@ -3,7 +3,8 @@
 /obj/machinery/ego_printer
 	name = "E.G.O. printer"
 	desc = "This device is capable of printing most E.G.O. on demand. It can even replicate non-E.G.O. armaments from the City at large. \n\
-	You may alt-click this machine to change between the new and old interfaces for printing E.G.O."
+	You may alt-click this machine to change between the new and old interfaces for printing E.G.O. \n\
+	You may also insert any unwanted item into this machine to shred it."
 	icon = 'icons/obj/machines/droneDispenser.dmi'
 	icon_state = "on"
 	resistance_flags = INDESTRUCTIBLE
@@ -17,6 +18,11 @@
 	var/list/printed_ego = list()
 	/// Holds ckeys that have disabled the new TGUI version of the interface.
 	var/list/disabled_tgui = list()
+	/// Anything in this list will be rejected if you try to shred it in the EGO printer.
+	var/static/blacklisted_shred_items = list(
+		/obj/item/lc_debug/attribute_injector,
+		/obj/item/scrying,
+	)
 
 /* ---------- Shared TGUI/Old EGO printer stuff ---------- */
 
@@ -56,13 +62,18 @@
 	say("System initialization complete!")
 	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, TRUE)
 
-/// Let someone qdel the EGO by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
+/// Let someone qdel items by hitting this machine with it. It's this specific override and ..() happens at the end so we can bypass attribute requirements.
+// I'm letting people qdel any item here, I swear if people start abusing this.........................................................
 /obj/machinery/ego_printer/attackby(obj/item/I, mob/living/user, params)
-	if(istype(I, /obj/item/ego_weapon) || istype(I, /obj/item/clothing/suit/armor/ego_gear))
-		visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] back into it."))
-		playsound(get_turf(src), 'sound/machines/juicer.ogg', 20, TRUE)
-		qdel(I) // Its removal from the user's printed ego list is handled by a signal.
-		return
+	if(!(I.type in blacklisted_shred_items))
+		to_chat(user, span_danger("You begin inserting [I] into a dangerous-looking compartment in the machine..."))
+		if(do_after(user, 1 SECONDS, src, interaction_key = "ego_printer_shred", max_interact_count = 1))
+			visible_message(span_warning("The [src.name] makes a concerning sound as [user] inserts [I] into it."))
+			playsound(get_turf(src), 'sound/machines/juicer.ogg', 20, TRUE)
+			qdel(I) // Its removal from the user's printed ego list is handled by a signal.
+			return
+		else
+			to_chat(user, span_warning("You decide not to destroy [I]."))
 	. = ..()
 
 /// If the user isn't at the limit of printed EGO, print whatever ego_path is (this could be literally anything but is hopefully an /obj/item)
@@ -111,10 +122,6 @@
 	UnregisterSignal(source, COMSIG_PARENT_QDELETING)
 	return
 
-
-
-
-
 /* ---------- TGUI EGO Printer stuff ---------- */
 
 // Happens when someone touches this machine with their bare hand.
@@ -137,6 +144,7 @@
 	var/list/data = list()
 	data["ego_weapon_datums"] = list()
 	data["ego_armor_datums"] = list()
+	data["ego_auxiliary_datums"] = list()
 	data["all_tags"] = list()
 
 	// Get all the EGO tags defined in EGO_TAGS_DESCRIPTION_LIST and send an object consisting of their name and description, also tag_checked so we can easily turn their filtering on and off in the frontend
@@ -166,6 +174,9 @@
 			data["ego_weapon_datums"] |= list(datum_data)
 		else if(istype(ED, /datum/ego_datum/armor))
 			data["ego_armor_datums"] |= list(datum_data)
+		else if(istype(ED, /datum/ego_datum/auxiliary))
+			datum_data["category"] = ED.item_category
+			data["ego_auxiliary_datums"] |= list(datum_data)
 
 	return data
 

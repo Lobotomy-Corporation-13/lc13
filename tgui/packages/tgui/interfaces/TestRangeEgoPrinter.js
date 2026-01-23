@@ -16,7 +16,7 @@ making this file look like a hot mess
 */
 export const TestRangeEgoPrinter = (props, context) => {
   const { act, data } = useBackend(context);
-  const { ego_weapon_datums, ego_armor_datums, all_tags } = data;
+  const { ego_weapon_datums, ego_armor_datums, ego_auxiliary_datums, all_tags } = data;
 
   /* ------------ React Hooks ------------*/
 
@@ -193,6 +193,19 @@ export const TestRangeEgoPrinter = (props, context) => {
     );
   };
 
+  // A list of all the auxiliary datums that pass the filter checks.
+  const AllAuxiliaryDatums = (props, context) => {
+    const { act, data } = useBackend(context);
+    const { datum_list } = props;
+
+    return (
+      datum_list?.map(datum => (
+        CheckNameSearchFilter(datum) && CheckOriginFilters(datum) && CheckThreatClassFilters(datum) && CheckTagFilters(datum) && <EgoDatumEntry datum={datum} type="auxiliary" />
+      )
+      )
+    );
+  };
+
   /* An entry for an EGO datum. Consists of a preview image, a threat class,
   a name, the print button and a description.
   Passes the 'type' prop to <AppropiateDescription/> to generate an appropiate
@@ -267,10 +280,13 @@ export const TestRangeEgoPrinter = (props, context) => {
     if (type === "armor") {
       return (<ArmorEntryDescription datum={datum} />);
     }
-    else {
+    else if (type === "weapon") {
       return (regex_for_guns.test(common_path_eliminated_string)
         ? <RangedWeaponEntryDescription datum={datum} />
         : <MeleeWeaponEntryDescription datum={datum} />);
+    }
+    else {
+      return (<AuxiliaryEntryDescription datum={datum} />);
     }
   };
 
@@ -351,6 +367,26 @@ export const TestRangeEgoPrinter = (props, context) => {
     );
   };
 
+  // Basic description of the core stats of a melee weapon.
+  const AuxiliaryEntryDescription = (props, context) => {
+    const { datum } = props;
+
+    return (
+      <FlexItem grow={1}>
+        <Flex direction="column" align="center">
+          <FlexItem grow={3} textAlign="center">
+           Category: {datum.category?? "No category found."}
+          </FlexItem>
+          <FlexItem mt={3}>
+            <Button
+              content="View Details"
+              onClick={() => setCurrentlyDetailedEgoDatum(datum)} />
+          </FlexItem>
+        </Flex>
+      </FlexItem>
+    );
+  };
+
   /* A slider that controls the minimum resistance of a certain damtype
   that an armour needs to have to be displayed in the EGO list.
   Holds numerical values [-10; 10] but displays in roman numeral format.
@@ -392,9 +428,13 @@ export const TestRangeEgoPrinter = (props, context) => {
           <Tabs.Tab selected={tab === 2} onClick={() => setTab(2)}>
             Armour
           </Tabs.Tab>
+          <Tabs.Tab selected={tab === 3} onClick={() => setTab(3)}>
+            Auxiliary
+          </Tabs.Tab>
         </Tabs>
         {tab === 1 && <AllWeaponDatums datum_list={ego_weapon_datums} />}
         {tab === 2 && <AllArmorDatums datum_list={ego_armor_datums} />}
+        {tab === 3 && <AllAuxiliaryDatums datum_list={ego_auxiliary_datums} />}
       </Section>
     );
   };
@@ -418,7 +458,7 @@ export const TestRangeEgoPrinter = (props, context) => {
       : regex_for_guns.test(common_path_eliminated_string) ? "gun"
         : regex_for_shields.test(common_path_eliminated_string) ? "shield"
           : regex_for_melee.test(common_path_eliminated_string) ? "melee"
-            : null);
+            : "auxiliary");
 
     return (
       <Section scrollable fill title={section_title} buttons={[<Button
@@ -432,7 +472,8 @@ export const TestRangeEgoPrinter = (props, context) => {
           : what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} />
             : what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} />
               : what_are_we_dealing_with === "melee" ? <MeleeDetails datum={detailed_datum} />
-                : "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
+                : what_are_we_dealing_with === "auxiliary" ? <AuxiliaryDetails datum={detailed_datum} />
+                  : "Error: This datum's item path doesn't correspond to an armour or an EGO weapon."}
       </Section>
     );
   };
@@ -444,7 +485,7 @@ export const TestRangeEgoPrinter = (props, context) => {
   requirements, description and special info.
   */
   const CommonDetails = (props, context) => {
-    const { detailed_datum, hide_special } = props;
+    const { detailed_datum, hide_special, hide_attribute_requirements } = props;
 
     return (
       <Flex direction="column" align="center" mt={3}>
@@ -478,6 +519,7 @@ export const TestRangeEgoPrinter = (props, context) => {
           <b>Type:</b> {detailed_datum.path}
         </FlexItem>
 
+        {!hide_attribute_requirements && (
         <FlexItem my={2}>
           <Table>
             <TableRow>
@@ -488,7 +530,8 @@ export const TestRangeEgoPrinter = (props, context) => {
             </TableRow>
           </Table>
         </FlexItem>
-
+        )
+        }
         <FlexItem textAlign="center">
           Tags:
           {detailed_datum.tags[0] ? <BlockQuote>{detailed_datum.tags.toString().replaceAll(",", ", ")}</BlockQuote> : " None"}
@@ -607,6 +650,19 @@ export const TestRangeEgoPrinter = (props, context) => {
           </Flex>
         </FlexItem>
 
+      </Flex>
+    );
+  };
+
+  // Details specific to common melee weapons.
+  const AuxiliaryDetails = (props, context) => {
+    const { datum } = props;
+
+    return (
+      <Flex align="stretch" justify="center" direction="column">
+        <FlexItem>
+          <CommonDetails detailed_datum={datum} hide_attribute_requirements hide_special />
+        </FlexItem>
       </Flex>
     );
   };
@@ -837,7 +893,8 @@ export const TestRangeEgoPrinter = (props, context) => {
             {currentlyDetailedEgoDatum === null
               ? (
                 <EGOList ego_weapon_datums={ego_weapon_datums}
-                  ego_armor_datums={ego_armor_datums} />)
+                  ego_armor_datums={ego_armor_datums}
+                  ego_auxiliary_datums={ego_auxiliary_datums} />)
               : (
                 <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
