@@ -307,7 +307,7 @@
 	lefthand_file = 'icons/obj/index_sora_worn.dmi'
 	righthand_file = 'icons/obj/index_sora_worn.dmi'
 	inhand_icon_state = "apprentice_chains"
-	force = 25
+	force = 50
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("lashes", "whips", "strikes")
 	attack_verb_simple = list("lash", "whip", "strike")
