@@ -43,6 +43,104 @@
 			equip_bonus = 0
 	. = ..()
 
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice
+	name = "index proxy apprentice armor"
+	desc = "Armor worn by index proxy apprentices. Grants an ability to summon chains."
+	icon = 'icons/obj/clothing/ego_gear/lc13_armor.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/lc13_armor.dmi'
+	icon_state = "index_apprentice"
+
+	var/obj/item/ego_weapon/city/index_apprentice_chains/chains_weapon
+	var/obj/item/ego_weapon/city/index_procuration/procuration_weapon
+	var/mob/living/carbon/human/armor_wearer
+	/// Prescript completions stored on armor (persists until armor removed)
+	var/prescript_completions = 0
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/Initialize()
+	. = ..()
+	var/obj/effect/proc_holder/ability/AS = new /obj/effect/proc_holder/ability/apprentice_chains
+	var/datum/action/spell_action/ability/item/A = AS.action
+	A.SetItem(src)
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
+		armor_wearer = user
+		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged))
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/dropped(mob/user)
+	. = ..()
+	if(armor_wearer)
+		UnregisterSignal(armor_wearer, COMSIG_MOB_AFTER_APPLY_DAMGE)
+		remove_chains()
+		remove_procuration()
+		armor_wearer = null
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/on_wearer_damaged(datum/source)
+	SIGNAL_HANDLER
+	if(!armor_wearer || !chains_weapon)
+		return
+	if(armor_wearer.health <= (armor_wearer.maxHealth * 0.5))
+		INVOKE_ASYNC(src, PROC_REF(transform_to_procuration), armor_wearer)
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/grant_chains(mob/living/carbon/human/user)
+	if(chains_weapon || procuration_weapon)
+		return FALSE
+
+	// If already unlocked, grant Procuration directly
+	if(prescript_completions >= 3)
+		transform_to_procuration(user)
+		return TRUE
+
+	chains_weapon = new /obj/item/ego_weapon/city/index_apprentice_chains
+	chains_weapon.linked_armor = src
+
+	if(!user.put_in_hands(chains_weapon))
+		QDEL_NULL(chains_weapon)
+		to_chat(user, span_warning("You need a free hand to summon the chains!"))
+		return FALSE
+
+	to_chat(user, span_userdanger("Chains manifest in your hands!"))
+	playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
+	return TRUE
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/remove_chains(reset_progress = FALSE)
+	if(chains_weapon)
+		REMOVE_TRAIT(chains_weapon, TRAIT_NODROP, "index_chains")
+		var/mob/living/holder = chains_weapon.loc
+		if(istype(holder))
+			holder.dropItemToGround(chains_weapon, force = TRUE, silent = TRUE)
+		QDEL_NULL(chains_weapon)
+	if(reset_progress)
+		prescript_completions = 0
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/transform_to_procuration(mob/living/carbon/human/user)
+	remove_chains()
+
+	if(procuration_weapon)
+		return
+
+	procuration_weapon = new /obj/item/ego_weapon/city/index_procuration
+	procuration_weapon.linked_armor = src
+
+	if(!user.put_in_hands(procuration_weapon))
+		QDEL_NULL(procuration_weapon)
+		to_chat(user, span_warning("You need a free hand for the transformation!"))
+		return
+
+	to_chat(user, span_userdanger("Your chains transform into Effloresced E.G.O :: Procuration!"))
+	playsound(get_turf(user), 'sound/items/index_beeper_prescript.ogg', 50, 0, 4)
+	new /obj/effect/temp_visual/onesin_blessing(get_turf(user))
+
+/obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/proc/remove_procuration(reset_progress = FALSE)
+	if(procuration_weapon)
+		REMOVE_TRAIT(procuration_weapon, TRAIT_NODROP, "index_procuration")
+		var/mob/living/holder = procuration_weapon.loc
+		if(istype(holder))
+			holder.dropItemToGround(procuration_weapon, force = TRUE, silent = TRUE)
+		QDEL_NULL(procuration_weapon)
+	if(reset_progress)
+		prescript_completions = 0
 
 /obj/item/clothing/suit/armor/ego_gear/city/index_mess
 	name = "index messenger armor"

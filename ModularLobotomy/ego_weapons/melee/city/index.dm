@@ -164,6 +164,10 @@
 	var/list/ghost_drafts = list()
 	/// The looping sound datum for prescript loading
 	var/datum/looping_sound/index_pager_prescript/soundloop
+	/// Timer ID for the pool timer (so it can be cancelled)
+	var/pool_timer_id
+	/// Whether automatic prescript selection is paused (admin control)
+	var/auto_select_paused = FALSE
 
 /obj/item/clothing/accessory/index_pager/Initialize(mapload)
 	. = ..()
@@ -255,6 +259,9 @@
 	data["prescript_loaded"] = prescript_loaded
 	data["prescript_displaying"] = prescript_displaying
 	data["draft_text"] = ghost_drafts[user.ckey]
+	data["is_admin"] = (user.client && check_rights_for(user.client, R_ADMIN))
+	data["auto_select_paused"] = auto_select_paused
+	data["pool_count"] = length(submitted_prescripts)
 
 	return data
 
@@ -307,16 +314,107 @@
 				FinishPrescriptDisplay()
 			return TRUE
 
+		if("priority_submit")
+			// Only admins who are ghosts can use this
+			if(!isobserver(user))
+				return
+			if(!user.client || !check_rights_for(user.client, R_ADMIN))
+				to_chat(user, span_warning("You do not have permission to use priority submit."))
+				return
+
+			var/text = params["text"]
+			if(!text || length(text) < 5 || length(text) > 300)
+				to_chat(user, span_warning("Prescript must be between 5 and 300 characters."))
+				return
+
+			// Sanitize the text
+			text = strip_html(text)
+
+			// Cancel existing timer if running
+			if(pool_timer_id)
+				deltimer(pool_timer_id)
+				pool_timer_id = null
+
+			// Set the new prescript immediately
+			prescript_text = text
+			prescript_loaded = FALSE
+			prescript_displaying = FALSE
+
+			// Determine recipient name
+			var/mob/living/holder = get_wearer()
+			if(holder)
+				prescript_recipient = holder.real_name
+			else
+				prescript_recipient = "Unknown"
+
+			// Log to admins
+			message_admins("[user.ckey] (ADMIN) sent a PRIORITY prescript to [prescript_recipient]: \"[prescript_text]\"")
+			log_game("INDEX PAGER: [user.ckey] (ADMIN) sent PRIORITY prescript to [prescript_recipient]: \"[prescript_text]\"")
+
+			// Deliver the prescript
+			DeliverPrescript()
+
+			// Restart the 5-minute timer
+			pool_timer_active = TRUE
+			pool_timer_id = addtimer(CALLBACK(src, PROC_REF(PickFromPool)), 5 MINUTES, TIMER_STOPPABLE)
+
+			to_chat(user, span_notice("Priority prescript sent successfully."))
+			return TRUE
+
+		if("toggle_auto_select")
+			if(!isobserver(user))
+				return
+			if(!user.client || !check_rights_for(user.client, R_ADMIN))
+				to_chat(user, span_warning("You do not have permission to do this."))
+				return
+
+			auto_select_paused = !auto_select_paused
+			if(auto_select_paused)
+				message_admins("[user.ckey] (ADMIN) PAUSED automatic prescript selection on index pager.")
+				to_chat(user, span_notice("Automatic prescript selection has been paused."))
+			else
+				message_admins("[user.ckey] (ADMIN) RESUMED automatic prescript selection on index pager.")
+				to_chat(user, span_notice("Automatic prescript selection has been resumed."))
+			return TRUE
+
+		if("skip_timer")
+			if(!isobserver(user))
+				return
+			if(!user.client || !check_rights_for(user.client, R_ADMIN))
+				to_chat(user, span_warning("You do not have permission to do this."))
+				return
+
+			if(!length(submitted_prescripts))
+				to_chat(user, span_warning("There are no prescripts in the pool to pick from."))
+				return
+
+			// Cancel existing timer
+			if(pool_timer_id)
+				deltimer(pool_timer_id)
+				pool_timer_id = null
+
+			message_admins("[user.ckey] (ADMIN) skipped the timer and forced a prescript pick on index pager.")
+			to_chat(user, span_notice("Timer skipped. Picking a random prescript now."))
+
+			// Force pick from pool (bypasses pause)
+			PickFromPool(TRUE)
+			return TRUE
+
 /// Starts the pool timer - first prescript is sent immediately, then checks every 5 minutes
 /obj/item/clothing/accessory/index_pager/proc/StartPoolTimer()
 	pool_timer_active = TRUE
 	PickFromPool()
 
 /// Picks a random prescript from the pool and delivers it
-/obj/item/clothing/accessory/index_pager/proc/PickFromPool()
+/obj/item/clothing/accessory/index_pager/proc/PickFromPool(force_pick = FALSE)
 	if(!length(submitted_prescripts))
 		// Pool is empty - keep current prescript, stop timer
 		pool_timer_active = FALSE
+		return
+
+	// If paused and not forced, just reschedule without picking
+	if(auto_select_paused && !force_pick)
+		pool_timer_id = addtimer(CALLBACK(src, PROC_REF(PickFromPool)), 5 MINUTES, TIMER_STOPPABLE)
 		return
 
 	// Pick a random submission and REMOVE it from the pool
@@ -344,7 +442,7 @@
 	DeliverPrescript()
 
 	// Schedule next pick in 5 minutes
-	addtimer(CALLBACK(src, PROC_REF(PickFromPool)), 5 MINUTES)
+	pool_timer_id = addtimer(CALLBACK(src, PROC_REF(PickFromPool)), 5 MINUTES, TIMER_STOPPABLE)
 
 /// Returns the mob wearing this pager, checking both direct hold and uniform attachment
 /obj/item/clothing/accessory/index_pager/proc/get_wearer()

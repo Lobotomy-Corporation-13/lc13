@@ -66,6 +66,9 @@ const GhostView = (props, context) => {
     has_submitted,
     current_submission,
     draft_text,
+    is_admin,
+    auto_select_paused,
+    pool_count,
   } = data;
 
   // Initialize with current submission (for editing) or draft
@@ -85,6 +88,12 @@ const GhostView = (props, context) => {
   const handleSubmit = () => {
     if (isValidLength) {
       act('submit_prescript', { text: text });
+    }
+  };
+
+  const handlePrioritySubmit = () => {
+    if (isValidLength) {
+      act('priority_submit', { text: text });
     }
   };
 
@@ -139,7 +148,44 @@ const GhostView = (props, context) => {
           disabled={!isValidLength}
           onClick={handleSubmit}
         />
+        {is_admin && (
+          <Button
+            fluid
+            mt={1}
+            icon="bolt"
+            color="red"
+            content="Priority Submit (Admin)"
+            disabled={!isValidLength}
+            onClick={handlePrioritySubmit}
+          />
+        )}
       </Section>
+
+      {is_admin && (
+        <Section title="Admin Controls">
+          <Box color="label" mb={1}>
+            Pool: {pool_count} prescript(s) waiting
+          </Box>
+          <Button
+            fluid
+            icon={auto_select_paused ? 'play' : 'pause'}
+            color={auto_select_paused ? 'good' : 'orange'}
+            content={auto_select_paused
+              ? 'Resume Auto-Select'
+              : 'Pause Auto-Select'}
+            onClick={() => act('toggle_auto_select')}
+          />
+          <Button
+            fluid
+            mt={1}
+            icon="forward"
+            color="blue"
+            content="Skip Timer (Pick Now)"
+            disabled={pool_count === 0}
+            onClick={() => act('skip_timer')}
+          />
+        </Section>
+      )}
     </Section>
   );
 };
