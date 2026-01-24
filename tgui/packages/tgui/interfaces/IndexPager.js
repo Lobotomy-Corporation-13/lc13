@@ -21,7 +21,7 @@ export const IndexPager = (props, context) => {
 
   if (is_ghost) {
     return (
-      <Window width={450} height={500}>
+      <Window width={450} height={600}>
         <Window.Content>
           <GhostView />
         </Window.Content>
@@ -30,7 +30,7 @@ export const IndexPager = (props, context) => {
   }
 
   return (
-    <Window width={500} height={400} theme="hackerman">
+    <Window width={500} height={550} theme="hackerman">
       <Window.Content>
         <div
           style={{
@@ -69,6 +69,9 @@ const GhostView = (props, context) => {
     is_admin,
     auto_select_paused,
     pool_count,
+    prescript_text,
+    prescript_recipient,
+    pending_judgments = [],
   } = data;
 
   // Initialize with current submission (for editing) or draft
@@ -118,6 +121,27 @@ const GhostView = (props, context) => {
           or needless slaughter of staff. Your prescripts should tell the
           Index user to do something, not just &quot;kill everyone&quot;.
         </Box>
+      </Section>
+
+      <Section title="Active Prescript">
+        {prescript_text ? (
+          <Box>
+            <Box color="label" fontSize="12px">
+              Recipient: {prescript_recipient || 'Unknown'}
+            </Box>
+            <Box
+              mt={1}
+              p={1}
+              backgroundColor="rgba(0, 0, 0, 0.3)"
+              style={{ fontStyle: 'italic' }}>
+              &quot;{prescript_text}&quot;
+            </Box>
+          </Box>
+        ) : (
+          <Box color="label" fontSize="12px">
+            No active prescript.
+          </Box>
+        )}
       </Section>
 
       <Section title={has_submitted ? 'Edit Prescript' : 'Submit Prescript'}>
@@ -186,6 +210,61 @@ const GhostView = (props, context) => {
           />
         </Section>
       )}
+
+      {pending_judgments.length > 0 && (
+        <Section title="Pending Judgments">
+          <Box color="label" fontSize="12px" mb={1}>
+            Your prescripts have been completed. Reward or punish the proxy.
+          </Box>
+          {pending_judgments.map(entry => (
+            <Box
+              key={entry.id}
+              mb={1}
+              p={1}
+              backgroundColor="rgba(0, 0, 0, 0.3)">
+              <Box color="label" fontSize="12px">
+                Completed by: {entry.recipient}
+              </Box>
+              <Box mt={1} style={{ fontStyle: 'italic' }} fontSize="12px">
+                &quot;{entry.text}&quot;
+              </Box>
+              <Box mt={1}>
+                <Button
+                  icon="heart"
+                  color="green"
+                  content="Heal"
+                  onClick={() => act('reward_prescript',
+                    { id: entry.id, type: 'heal' })}
+                />
+                <Button
+                  ml={1}
+                  icon="bolt"
+                  color="blue"
+                  content="Power"
+                  onClick={() => act('reward_prescript',
+                    { id: entry.id, type: 'buff' })}
+                />
+                <Button
+                  ml={1}
+                  icon="brain"
+                  color="orange"
+                  content="Damage"
+                  onClick={() => act('punish_prescript',
+                    { id: entry.id, type: 'damage' })}
+                />
+                <Button
+                  ml={1}
+                  icon="arrow-down"
+                  color="red"
+                  content="Weaken"
+                  onClick={() => act('punish_prescript',
+                    { id: entry.id, type: 'debuff' })}
+                />
+              </Box>
+            </Box>
+          ))}
+        </Section>
+      )}
     </Section>
   );
 };
@@ -197,6 +276,7 @@ const HumanView = (props, context) => {
     prescript_recipient,
     prescript_loaded,
     prescript_displaying,
+    prescript_history = [],
   } = data;
 
   const textStyle = {
@@ -250,6 +330,69 @@ const HumanView = (props, context) => {
       ) : (
         <div style={{ ...textStyle, color: '#666', marginTop: '16px' }}>
           Loading...
+        </div>
+      )}
+      {prescript_history.length > 0 && (
+        <div style={{ marginTop: '24px' }}>
+          <div
+            style={{
+              color: '#88c0d0',
+              fontSize: '14px',
+              fontFamily: 'Consolas, monospace',
+              borderBottom: '1px solid #224422',
+              paddingBottom: '8px',
+              marginBottom: '12px',
+            }}>
+            【Past Prescripts】
+          </div>
+          <div
+            style={{
+              maxHeight: '120px',
+              overflowY: 'auto',
+            }}>
+            {prescript_history.map(entry => (
+              <div
+                key={entry.id}
+                style={{
+                  marginBottom: '8px',
+                  padding: '8px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                  border: entry.completed
+                    ? '1px solid #446644'
+                    : '1px solid #224422',
+                }}>
+                <div
+                  style={{
+                    color: entry.completed ? '#666' : '#88c0d0',
+                    fontSize: '12px',
+                    fontFamily: 'Consolas, monospace',
+                    wordBreak: 'break-all',
+                    textDecoration: entry.completed ? 'line-through' : 'none',
+                  }}>
+                  {insertBreaks(entry.text)}
+                </div>
+                {!entry.completed && (
+                  <Button
+                    mt={1}
+                    icon="check"
+                    color="green"
+                    content="Turn In"
+                    onClick={() => act('turn_in', { id: entry.id })}
+                  />
+                )}
+                {entry.completed && (
+                  <div
+                    style={{
+                      color: '#446644',
+                      fontSize: '10px',
+                      marginTop: '4px',
+                    }}>
+                    ✓ Completed
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

@@ -160,6 +160,8 @@
 	var/list/submitted_prescripts = list()
 	/// List of ckeys that have prescripts in pool
 	var/list/submitted_ckeys = list()
+	/// List of submission timestamps (ckey -> world.time when submitted)
+	var/list/submission_times = list()
 	/// Draft text for each ghost's UI (ckey -> text)
 	var/list/ghost_drafts = list()
 	/// The looping sound datum for prescript loading
@@ -168,6 +170,12 @@
 	var/pool_timer_id
 	/// Whether automatic prescript selection is paused (admin control)
 	var/auto_select_paused = FALSE
+	/// List of past prescripts (list of lists with "id", "text", "completed", "creator_ckey", "judged")
+	var/list/prescript_history = list()
+	/// Counter for prescript IDs
+	var/next_prescript_id = 1
+	/// The ckey of the ghost who created the current prescript
+	var/current_prescript_creator
 
 /obj/item/clothing/accessory/index_pager/Initialize(mapload)
 	. = ..()
@@ -262,6 +270,15 @@
 	data["is_admin"] = (user.client && check_rights_for(user.client, R_ADMIN))
 	data["auto_select_paused"] = auto_select_paused
 	data["pool_count"] = length(submitted_prescripts)
+	data["prescript_history"] = prescript_history
+
+	// For ghosts: show pending judgments (prescripts they created that were completed but not judged)
+	if(isobserver(user))
+		var/list/pending_judgments = list()
+		for(var/list/entry in prescript_history)
+			if(entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
+				pending_judgments += list(entry)
+		data["pending_judgments"] = pending_judgments
 
 	return data
 
@@ -291,6 +308,7 @@
 			submitted_prescripts[user.ckey] = text
 			if(!is_update)
 				submitted_ckeys += user.ckey
+				submission_times[user.ckey] = world.time  // Track when first submitted
 			ghost_drafts[user.ckey] = null
 
 			// Start the 5-minute pool timer on first submission
@@ -335,8 +353,14 @@
 				deltimer(pool_timer_id)
 				pool_timer_id = null
 
+			// Archive current prescript to history before replacing
+			if(prescript_text)
+				prescript_history += list(list("id" = next_prescript_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = user.ckey, "completed" = FALSE, "judged" = FALSE))
+				next_prescript_id++
+
 			// Set the new prescript immediately
 			prescript_text = text
+			current_prescript_creator = user.ckey
 			prescript_loaded = FALSE
 			prescript_displaying = FALSE
 
@@ -400,6 +424,72 @@
 			PickFromPool(TRUE)
 			return TRUE
 
+		if("turn_in")
+			// Only living users can turn in prescripts
+			if(isobserver(user))
+				return
+
+			var/prescript_id = text2num(params["id"])
+			if(!prescript_id)
+				return
+
+			// Find the prescript in history
+			for(var/list/entry in prescript_history)
+				if(entry["id"] == prescript_id && !entry["completed"])
+					entry["completed"] = TRUE
+					// Broadcast to ghosts
+					deadchat_broadcast("[span_name("[user.real_name]")] has completed a prescript: \"[entry["text"]]\"", message_type = DEADCHAT_ANNOUNCEMENT)
+					to_chat(user, span_notice("Prescript turned in successfully."))
+					playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
+					return TRUE
+
+			to_chat(user, span_warning("Could not find that prescript or it was already completed."))
+			return
+
+		if("reward_prescript")
+			// Only ghosts can reward
+			if(!isobserver(user))
+				return
+
+			var/prescript_id = text2num(params["id"])
+			var/reward_type = params["type"]
+			if(!prescript_id || !reward_type)
+				return
+
+			// Find the prescript and verify ownership
+			for(var/list/entry in prescript_history)
+				if(entry["id"] == prescript_id && entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
+					if(apply_reward(reward_type))
+						entry["judged"] = TRUE
+						to_chat(user, span_notice("You have rewarded the proxy for completing your prescript."))
+						deadchat_broadcast("[user.ckey] has rewarded [entry["recipient"]] for completing their prescript.", message_type = DEADCHAT_ANNOUNCEMENT)
+					return TRUE
+
+			to_chat(user, span_warning("Could not find that prescript or you cannot judge it."))
+			return
+
+		if("punish_prescript")
+			// Only ghosts can punish
+			if(!isobserver(user))
+				return
+
+			var/prescript_id = text2num(params["id"])
+			var/punish_type = params["type"]
+			if(!prescript_id || !punish_type)
+				return
+
+			// Find the prescript and verify ownership
+			for(var/list/entry in prescript_history)
+				if(entry["id"] == prescript_id && entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
+					if(apply_punishment(punish_type))
+						entry["judged"] = TRUE
+						to_chat(user, span_notice("You have punished the proxy for their execution of your prescript."))
+						deadchat_broadcast("[user.ckey] has punished [entry["recipient"]] for their execution of their prescript.", message_type = DEADCHAT_ANNOUNCEMENT)
+					return TRUE
+
+			to_chat(user, span_warning("Could not find that prescript or you cannot judge it."))
+			return
+
 /// Starts the pool timer - first prescript is sent immediately, then checks every 5 minutes
 /obj/item/clothing/accessory/index_pager/proc/StartPoolTimer()
 	pool_timer_active = TRUE
@@ -417,11 +507,25 @@
 		pool_timer_id = addtimer(CALLBACK(src, PROC_REF(PickFromPool)), 5 MINUTES, TIMER_STOPPABLE)
 		return
 
-	// Pick a random submission and REMOVE it from the pool
-	var/selected_ckey = pick(submitted_ckeys)
+	// Archive current prescript to history before replacing
+	if(prescript_text)
+		prescript_history += list(list("id" = next_prescript_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = current_prescript_creator, "completed" = FALSE, "judged" = FALSE))
+		next_prescript_id++
+
+	// Pick a submission weighted by time in pool (longer = more likely)
+	var/list/weighted_ckeys = list()
+	for(var/ckey in submitted_ckeys)
+		var/time_in_pool = world.time - submission_times[ckey]
+		// Weight is based on minutes in pool, minimum weight of 1
+		var/weight = max(1, round(time_in_pool / (1 MINUTES)) + 1)
+		weighted_ckeys[ckey] = weight
+
+	var/selected_ckey = pickweight(weighted_ckeys)
 	prescript_text = submitted_prescripts[selected_ckey]
+	current_prescript_creator = selected_ckey
 	submitted_prescripts -= selected_ckey
 	submitted_ckeys -= selected_ckey
+	submission_times -= selected_ckey
 
 	// Reset display state for new prescript
 	prescript_loaded = FALSE
@@ -461,6 +565,9 @@
 	playsound(src, 'sound/items/index_beeper_alert.ogg', 50, FALSE)
 	icon_state = "index_beeper_alert"
 
+	// Broadcast to deadchat/observers
+	deadchat_broadcast("Prescript sent to [span_name("[prescript_recipient]")]: \"[prescript_text]\"", message_type = DEADCHAT_ANNOUNCEMENT)
+
 	var/mob/living/holder = get_wearer()
 	if(holder)
 		to_chat(holder, span_userdanger("Your index pager beeps! A new prescript has arrived. Use it in hand to view."))
@@ -477,3 +584,126 @@
 	prescript_loaded = TRUE
 	icon_state = "index_beeper_prescript"
 	soundloop.stop()
+
+/// Applies a reward to the pager holder
+/obj/item/clothing/accessory/index_pager/proc/apply_reward(reward_type)
+	var/mob/living/carbon/human/holder = get_wearer()
+	if(!istype(holder))
+		return FALSE
+
+	switch(reward_type)
+		if("heal")
+			holder.adjustBruteLoss(-50)
+			holder.adjustFireLoss(-50)
+			holder.adjustSanityLoss(-100)
+			to_chat(holder, span_notice("The Oracle has blessed you with healing for completing your prescript."))
+			playsound(src, 'sound/abnormalities/onesin/bless.ogg', 50, FALSE)
+			new /obj/effect/temp_visual/onesin_blessing(get_turf(holder))
+		if("buff")
+			// Apply Justice buff via component (+50 Justice for 5 minutes)
+			holder.AddComponent(/datum/component/index_justice_buff)
+			to_chat(holder, span_userdanger("The Oracle has blessed you with power for completing your prescript!"))
+			playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
+
+	return TRUE
+
+/// Applies a punishment to the pager holder
+/obj/item/clothing/accessory/index_pager/proc/apply_punishment(punish_type)
+	var/mob/living/carbon/human/holder = get_wearer()
+	if(!istype(holder))
+		return FALSE
+
+	switch(punish_type)
+		if("damage")
+			holder.adjustSanityLoss(100)
+			to_chat(holder, span_userdanger("The Oracle is displeased with your execution of the prescript!"))
+			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)
+		if("debuff")
+			// Apply stat debuff via component
+			holder.AddComponent(/datum/component/index_stat_debuff)
+			to_chat(holder, span_userdanger("The Oracle has weakened you for your poor execution of the prescript!"))
+			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)
+
+	return TRUE
+
+/// Component for temporary Justice buff from Oracle reward
+/datum/component/index_justice_buff
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+	/// Whether the buff has already been removed (to prevent double-restore)
+	var/buff_removed = FALSE
+	/// Timer ID for removal (so we can cancel and reset it)
+	var/timer_id
+
+/datum/component/index_justice_buff/Initialize()
+	if(!ishuman(parent))
+		return COMPONENT_INCOMPATIBLE
+	var/mob/living/carbon/human/H = parent
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
+	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_buff)), 5 MINUTES, TIMER_STOPPABLE)
+
+/datum/component/index_justice_buff/InheritComponent(datum/component/C)
+	// Reset the timer duration when receiving a duplicate
+	if(timer_id)
+		deltimer(timer_id)
+	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_buff)), 5 MINUTES, TIMER_STOPPABLE)
+	if(!QDELETED(parent))
+		to_chat(parent, span_notice("The Oracle's blessing duration has been refreshed."))
+
+/datum/component/index_justice_buff/proc/remove_buff()
+	if(QDELETED(parent) || buff_removed)
+		qdel(src)
+		return
+	buff_removed = TRUE
+	var/mob/living/carbon/human/H = parent
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
+	to_chat(H, span_notice("The Oracle's blessing of power has faded."))
+	qdel(src)
+
+/datum/component/index_justice_buff/Destroy()
+	if(timer_id)
+		deltimer(timer_id)
+	if(!buff_removed && !QDELETED(parent) && ishuman(parent))
+		var/mob/living/carbon/human/H = parent
+		H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
+	return ..()
+
+/// Component for temporary Justice debuff from Oracle punishment
+/datum/component/index_stat_debuff
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+	/// Whether the debuff has already been removed (to prevent double-restore)
+	var/debuff_removed = FALSE
+	/// Timer ID for removal (so we can cancel and reset it)
+	var/timer_id
+
+/datum/component/index_stat_debuff/Initialize()
+	if(!ishuman(parent))
+		return COMPONENT_INCOMPATIBLE
+	var/mob/living/carbon/human/H = parent
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -50)
+	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_debuff)), 2 MINUTES, TIMER_STOPPABLE)
+
+/datum/component/index_stat_debuff/InheritComponent(datum/component/C)
+	// Reset the timer duration when receiving a duplicate
+	if(timer_id)
+		deltimer(timer_id)
+	timer_id = addtimer(CALLBACK(src, PROC_REF(remove_debuff)), 2 MINUTES, TIMER_STOPPABLE)
+	if(!QDELETED(parent))
+		to_chat(parent, span_warning("The Oracle's curse duration has been refreshed."))
+
+/datum/component/index_stat_debuff/proc/remove_debuff()
+	if(QDELETED(parent) || debuff_removed)
+		qdel(src)
+		return
+	debuff_removed = TRUE
+	var/mob/living/carbon/human/H = parent
+	H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
+	to_chat(H, span_notice("The Oracle's curse has lifted."))
+	qdel(src)
+
+/datum/component/index_stat_debuff/Destroy()
+	if(timer_id)
+		deltimer(timer_id)
+	if(!debuff_removed && !QDELETED(parent) && ishuman(parent))
+		var/mob/living/carbon/human/H = parent
+		H.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 50)
+	return ..()
