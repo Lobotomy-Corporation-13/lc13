@@ -169,6 +169,7 @@
 	name = "Memory Forged"
 	desc = "You've defeated Nicholas, the Memory Forger, in a duel."
 	database_id = MEDAL_ECHO_NICHOLAS
+	difficulty = ACHIEVEMENT_HARD
 
 /datum/award/achievement/lc13/city/echo_asera
 	name = "Flames Quenched"

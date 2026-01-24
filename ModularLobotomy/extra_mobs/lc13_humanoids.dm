@@ -698,6 +698,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 			visible_message("<span class='danger'>[src] spawns a statue. </span>")
 
 /mob/living/simple_animal/hostile/humanoid/fixer/metal/proc/shoot_projectile(turf/marker, set_angle)
+	if(stat == DEAD || !can_act)
+		return
 	if(!isnum(set_angle) && (!marker || marker == loc))
 		return
 	var/turf/startloc = get_turf(src)
@@ -1217,7 +1219,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	. = ..()
 	if (istype(attacked_target, /mob/living))
 		var/mob/living/L = attacked_target
-		L.apply_lc_burn(burn_stacks)
+		L.apply_lc_overheat(burn_stacks)
 	TripleDash()
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/EndCounter()
@@ -1363,7 +1365,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 				if(L == src || ("echo_office" in L.faction) || (L in asera_hit))
 					continue
 				L.deal_damage(30, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
-				L.apply_lc_burn(5)
+				L.apply_lc_overheat(5)
 				asera_hit += L
 		sleep(1)
 	// Remus dash (happens simultaneously, but we do it right after for simplicity)
@@ -1429,7 +1431,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 					if(L == src || ("echo_office" in L.faction) || (L in been_hit))
 						continue
 					L.deal_damage(40, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
-					L.apply_lc_burn(5)
+					L.apply_lc_overheat(5)
 					been_hit += L
 			sleep(1)
 		// Lauel heals Asera between dashes
@@ -1472,7 +1474,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		if(L != firer && ("echo_office" in L.faction))
 			qdel(src)
 			return BULLET_ACT_BLOCK
-		L.apply_lc_burn(burn_stacks)
+		L.apply_lc_overheat(burn_stacks)
 	if(firer==target)
 		var/mob/living/simple_animal/hostile/humanoid/fixer/flame/F = target
 		F.EndCounter()
@@ -1542,7 +1544,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	// Normal hit - deal damage (only to non-combo-partner targets)
 	if(istype(target, /mob/living))
 		var/mob/living/L = target
-		L.apply_lc_burn(burn_stacks)
+		L.apply_lc_overheat(burn_stacks)
 		L.deal_damage(red_damage, RED_DAMAGE, firer, attack_type = ATTACK_TYPE_RANGED)
 	. = ..()
 
@@ -2141,9 +2143,11 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	feeble_decay_timer = addtimer(CALLBACK(src, PROC_REF(DecayFeeble)), feeble_decay_time, TIMER_LOOP|TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/priest/Destroy()
-	// Clean up beams
-	for(var/datum/beam/B in lifelink_beams)
-		QDEL_NULL(B)
+	// Clean up beams (lifelink_beams is an associative list: mob -> beam)
+	for(var/mob/living/M in lifelink_beams)
+		var/datum/beam/B = lifelink_beams[M]
+		if(B && !QDELETED(B))
+			qdel(B)
 	lifelink_beams.Cut()
 	// Clean up wisps
 	for(var/obj/effect/wisp/W in feeble_wisps)
