@@ -1,7 +1,14 @@
 import { Component } from 'inferno';
 import { resolveAsset } from '../assets';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, NoticeBox, Section, TextArea } from '../components';
+import {
+  Box,
+  Button,
+  NoticeBox,
+  Section,
+  Tabs,
+  TextArea,
+} from '../components';
 import { Window } from '../layouts';
 
 const CHAR_MIN = 5;
@@ -21,10 +28,8 @@ export const IndexPager = (props, context) => {
 
   if (is_ghost) {
     return (
-      <Window width={450} height={600}>
-        <Window.Content>
-          <GhostView />
-        </Window.Content>
+      <Window width={450} height={400}>
+        <GhostView />
       </Window>
     );
   }
@@ -61,20 +66,51 @@ export const IndexPager = (props, context) => {
 };
 
 const GhostView = (props, context) => {
+  const { data } = useBackend(context);
+  const { pending_judgments = [] } = data;
+  const [tab, setTab] = useLocalState(context, 'ghostTab', 'submit');
+
+  const judgmentCount = pending_judgments.length;
+
+  return (
+    <Window.Content scrollable>
+      <Tabs fluid>
+        <Tabs.Tab
+          icon="paper-plane"
+          selected={tab === 'submit'}
+          onClick={() => setTab('submit')}>
+          Submit
+        </Tabs.Tab>
+        <Tabs.Tab
+          icon="gavel"
+          selected={tab === 'judgment'}
+          onClick={() => setTab('judgment')}>
+          Judgment {judgmentCount > 0 && `(${judgmentCount})`}
+        </Tabs.Tab>
+        <Tabs.Tab
+          icon="info-circle"
+          selected={tab === 'status'}
+          onClick={() => setTab('status')}>
+          Status
+        </Tabs.Tab>
+      </Tabs>
+
+      {tab === 'submit' && <SubmitTab />}
+      {tab === 'judgment' && <JudgmentTab />}
+      {tab === 'status' && <StatusTab />}
+    </Window.Content>
+  );
+};
+
+const SubmitTab = (props, context) => {
   const { act, data } = useBackend(context);
   const {
     has_submitted,
     current_submission,
     draft_text,
     is_admin,
-    auto_select_paused,
-    pool_count,
-    prescript_text,
-    prescript_recipient,
-    pending_judgments = [],
   } = data;
 
-  // Initialize with current submission (for editing) or draft
   const initialText = current_submission || draft_text || '';
   const [text, setText] = useLocalState(context, 'draft', initialText);
   const charCount = text.length;
@@ -123,27 +159,6 @@ const GhostView = (props, context) => {
         </Box>
       </Section>
 
-      <Section title="Active Prescript">
-        {prescript_text ? (
-          <Box>
-            <Box color="label" fontSize="12px">
-              Recipient: {prescript_recipient || 'Unknown'}
-            </Box>
-            <Box
-              mt={1}
-              p={1}
-              backgroundColor="rgba(0, 0, 0, 0.3)"
-              style={{ fontStyle: 'italic' }}>
-              &quot;{prescript_text}&quot;
-            </Box>
-          </Box>
-        ) : (
-          <Box color="label" fontSize="12px">
-            No active prescript.
-          </Box>
-        )}
-      </Section>
-
       <Section title={has_submitted ? 'Edit Prescript' : 'Submit Prescript'}>
         {has_submitted && (
           <NoticeBox success>
@@ -161,8 +176,7 @@ const GhostView = (props, context) => {
         />
         <Box mt={1} color={isValidLength ? 'good' : 'bad'}>
           {charCount} / {CHAR_MAX} characters
-          {charCount < CHAR_MIN
-            && ` (minimum ${CHAR_MIN})`}
+          {charCount < CHAR_MIN && ` (minimum ${CHAR_MIN})`}
         </Box>
         <Button
           fluid
@@ -184,12 +198,122 @@ const GhostView = (props, context) => {
           />
         )}
       </Section>
+    </Section>
+  );
+};
+
+const JudgmentTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const { pending_judgments = [] } = data;
+
+  if (pending_judgments.length === 0) {
+    return (
+      <Section title="Pending Judgments">
+        <Box color="label" fontSize="12px">
+          No pending judgments. When a proxy completes your prescript,
+          you can reward or punish them here.
+        </Box>
+      </Section>
+    );
+  }
+
+  return (
+    <Section title="Pending Judgments">
+      <Box color="label" fontSize="12px" mb={1}>
+        Your prescripts have been completed. Reward or punish the proxy.
+      </Box>
+      {pending_judgments.map(entry => (
+        <Box
+          key={entry.id}
+          mb={1}
+          p={1}
+          backgroundColor="rgba(0, 0, 0, 0.3)">
+          <Box color="label" fontSize="12px">
+            Completed by: {entry.recipient}
+          </Box>
+          <Box mt={1} style={{ fontStyle: 'italic' }} fontSize="12px">
+            &quot;{entry.text}&quot;
+          </Box>
+          <Box mt={1}>
+            <Button
+              icon="heart"
+              color="green"
+              content="Heal"
+              onClick={() => act('reward_prescript',
+                { id: entry.id, type: 'heal' })}
+            />
+            <Button
+              ml={1}
+              icon="bolt"
+              color="blue"
+              content="Power"
+              onClick={() => act('reward_prescript',
+                { id: entry.id, type: 'buff' })}
+            />
+            <Button
+              ml={1}
+              icon="brain"
+              color="orange"
+              content="Damage"
+              onClick={() => act('punish_prescript',
+                { id: entry.id, type: 'damage' })}
+            />
+            <Button
+              ml={1}
+              icon="arrow-down"
+              color="red"
+              content="Weaken"
+              onClick={() => act('punish_prescript',
+                { id: entry.id, type: 'debuff' })}
+            />
+          </Box>
+        </Box>
+      ))}
+    </Section>
+  );
+};
+
+const StatusTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const {
+    is_admin,
+    auto_select_paused,
+    pool_count,
+    prescript_text,
+    prescript_recipient,
+  } = data;
+
+  return (
+    <Section>
+      <Section title="Active Prescript">
+        {prescript_text ? (
+          <Box>
+            <Box color="label" fontSize="12px">
+              Recipient: {prescript_recipient || 'Unknown'}
+            </Box>
+            <Box
+              mt={1}
+              p={1}
+              backgroundColor="rgba(0, 0, 0, 0.3)"
+              style={{ fontStyle: 'italic' }}>
+              &quot;{prescript_text}&quot;
+            </Box>
+          </Box>
+        ) : (
+          <Box color="label" fontSize="12px">
+            No active prescript.
+          </Box>
+        )}
+      </Section>
+
+      <Section title="Pool Status">
+        <Box color="label">
+          {pool_count} prescript(s) waiting in pool
+        </Box>
+      </Section>
 
       {is_admin && (
         <Section title="Admin Controls">
-          <Box color="label" mb={1}>
-            Pool: {pool_count} prescript(s) waiting
-          </Box>
           <Button
             fluid
             icon={auto_select_paused ? 'play' : 'pause'}
@@ -210,73 +334,79 @@ const GhostView = (props, context) => {
           />
         </Section>
       )}
-
-      {pending_judgments.length > 0 && (
-        <Section title="Pending Judgments">
-          <Box color="label" fontSize="12px" mb={1}>
-            Your prescripts have been completed. Reward or punish the proxy.
-          </Box>
-          {pending_judgments.map(entry => (
-            <Box
-              key={entry.id}
-              mb={1}
-              p={1}
-              backgroundColor="rgba(0, 0, 0, 0.3)">
-              <Box color="label" fontSize="12px">
-                Completed by: {entry.recipient}
-              </Box>
-              <Box mt={1} style={{ fontStyle: 'italic' }} fontSize="12px">
-                &quot;{entry.text}&quot;
-              </Box>
-              <Box mt={1}>
-                <Button
-                  icon="heart"
-                  color="green"
-                  content="Heal"
-                  onClick={() => act('reward_prescript',
-                    { id: entry.id, type: 'heal' })}
-                />
-                <Button
-                  ml={1}
-                  icon="bolt"
-                  color="blue"
-                  content="Power"
-                  onClick={() => act('reward_prescript',
-                    { id: entry.id, type: 'buff' })}
-                />
-                <Button
-                  ml={1}
-                  icon="brain"
-                  color="orange"
-                  content="Damage"
-                  onClick={() => act('punish_prescript',
-                    { id: entry.id, type: 'damage' })}
-                />
-                <Button
-                  ml={1}
-                  icon="arrow-down"
-                  color="red"
-                  content="Weaken"
-                  onClick={() => act('punish_prescript',
-                    { id: entry.id, type: 'debuff' })}
-                />
-              </Box>
-            </Box>
-          ))}
-        </Section>
-      )}
     </Section>
   );
 };
 
 const HumanView = (props, context) => {
+  const { data } = useBackend(context);
+  const {
+    active_prescripts = [],
+    completed_prescripts = [],
+  } = data;
+  const [tab, setTab] = useLocalState(context, 'humanTab', 'current');
+
+  const activeCount = active_prescripts.length;
+
+  const tabStyle = {
+    display: 'flex',
+    gap: '4px',
+    marginBottom: '16px',
+    borderBottom: '1px solid #224422',
+    paddingBottom: '8px',
+  };
+
+  const tabButtonStyle = selected => ({
+    padding: '6px 12px',
+    backgroundColor: selected ? '#224422' : 'transparent',
+    border: '1px solid #224422',
+    color: selected ? '#88c0d0' : '#666',
+    cursor: 'pointer',
+    fontFamily: 'Consolas, monospace',
+    fontSize: '12px',
+  });
+
+  return (
+    <div style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
+      <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+        <img
+          src={resolveAsset('index_logo.png')}
+          style={{ width: '100px', height: 'auto' }}
+        />
+      </div>
+
+      <div style={tabStyle}>
+        <button
+          style={tabButtonStyle(tab === 'current')}
+          onClick={() => setTab('current')}>
+          Current
+        </button>
+        <button
+          style={tabButtonStyle(tab === 'active')}
+          onClick={() => setTab('active')}>
+          Active {activeCount > 0 && `(${activeCount})`}
+        </button>
+        <button
+          style={tabButtonStyle(tab === 'completed')}
+          onClick={() => setTab('completed')}>
+          Completed
+        </button>
+      </div>
+
+      {tab === 'current' && <HumanCurrentTab />}
+      {tab === 'active' && <HumanActiveTab />}
+      {tab === 'completed' && <HumanCompletedTab />}
+    </div>
+  );
+};
+
+const HumanCurrentTab = (props, context) => {
   const { act, data } = useBackend(context);
   const {
     prescript_text,
     prescript_recipient,
     prescript_loaded,
     prescript_displaying,
-    prescript_history = [],
   } = data;
 
   const textStyle = {
@@ -291,28 +421,14 @@ const HumanView = (props, context) => {
 
   if (!prescript_text) {
     return (
-      <div style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-          <img
-            src={resolveAsset('index_logo.png')}
-            style={{ width: '150px', height: 'auto' }}
-          />
-        </div>
-        <div style={{ ...textStyle, color: '#666' }}>
-          No prescript available.
-        </div>
+      <div style={{ ...textStyle, color: '#666' }}>
+        No prescript available.
       </div>
     );
   }
 
   return (
-    <div style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}>
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <img
-          src={resolveAsset('index_logo.png')}
-          style={{ width: '150px', height: 'auto' }}
-        />
-      </div>
+    <div>
       <div style={textStyle}>
         【To {prescript_recipient}】
       </div>
@@ -332,69 +448,115 @@ const HumanView = (props, context) => {
           Loading...
         </div>
       )}
-      {prescript_history.length > 0 && (
-        <div style={{ marginTop: '24px' }}>
-          <div
-            style={{
-              color: '#88c0d0',
-              fontSize: '14px',
-              fontFamily: 'Consolas, monospace',
-              borderBottom: '1px solid #224422',
-              paddingBottom: '8px',
-              marginBottom: '12px',
-            }}>
-            【Past Prescripts】
+    </div>
+  );
+};
+
+const HumanActiveTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const { active_prescripts = [] } = data;
+
+  const textStyle = {
+    color: '#88c0d0',
+    fontSize: '12px',
+    fontFamily: 'Consolas, monospace',
+    wordBreak: 'break-all',
+  };
+
+  if (active_prescripts.length === 0) {
+    return (
+      <div style={{ ...textStyle, color: '#666' }}>
+        No active prescripts. Complete some prescripts to see them here.
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+      {active_prescripts.map(entry => (
+        <div
+          key={entry.id}
+          style={{
+            marginBottom: '8px',
+            padding: '8px',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            border: '1px solid #224422',
+          }}>
+          <div style={textStyle}>
+            {insertBreaks(entry.text)}
+          </div>
+          {entry.time_remaining && (
+            <div
+              style={{
+                color: '#666',
+                fontSize: '10px',
+                marginTop: '4px',
+              }}>
+              Auto turn-in: {entry.time_remaining}
+            </div>
+          )}
+          <Button
+            mt={1}
+            icon="check"
+            color="green"
+            content="Turn In"
+            onClick={() => act('turn_in', { id: entry.id })}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const HumanCompletedTab = (props, context) => {
+  const { data } = useBackend(context);
+  const { completed_prescripts = [] } = data;
+
+  const textStyle = {
+    color: '#666',
+    fontSize: '12px',
+    fontFamily: 'Consolas, monospace',
+    wordBreak: 'break-all',
+    textDecoration: 'line-through',
+  };
+
+  if (completed_prescripts.length === 0) {
+    return (
+      <div
+        style={{
+          color: '#666',
+          fontSize: '12px',
+          fontFamily: 'Consolas, monospace',
+        }}>
+        No completed prescripts yet.
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+      {completed_prescripts.map(entry => (
+        <div
+          key={entry.id}
+          style={{
+            marginBottom: '8px',
+            padding: '8px',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            border: '1px solid #446644',
+          }}>
+          <div style={textStyle}>
+            {insertBreaks(entry.text)}
           </div>
           <div
             style={{
-              maxHeight: '120px',
-              overflowY: 'auto',
+              color: '#446644',
+              fontSize: '10px',
+              marginTop: '4px',
             }}>
-            {prescript_history.map(entry => (
-              <div
-                key={entry.id}
-                style={{
-                  marginBottom: '8px',
-                  padding: '8px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                  border: entry.completed
-                    ? '1px solid #446644'
-                    : '1px solid #224422',
-                }}>
-                <div
-                  style={{
-                    color: entry.completed ? '#666' : '#88c0d0',
-                    fontSize: '12px',
-                    fontFamily: 'Consolas, monospace',
-                    wordBreak: 'break-all',
-                    textDecoration: entry.completed ? 'line-through' : 'none',
-                  }}>
-                  {insertBreaks(entry.text)}
-                </div>
-                {!entry.completed && (
-                  <Button
-                    mt={1}
-                    icon="check"
-                    color="green"
-                    content="Turn In"
-                    onClick={() => act('turn_in', { id: entry.id })}
-                  />
-                )}
-                {entry.completed && (
-                  <div
-                    style={{
-                      color: '#446644',
-                      fontSize: '10px',
-                      marginTop: '4px',
-                    }}>
-                    ✓ Completed
-                  </div>
-                )}
-              </div>
-            ))}
+            ✓ Completed
           </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };

@@ -170,10 +170,12 @@
 	var/pool_timer_id
 	/// Whether automatic prescript selection is paused (admin control)
 	var/auto_select_paused = FALSE
-	/// List of past prescripts (list of lists with "id", "text", "completed", "creator_ckey", "judged")
+	/// List of past prescripts (list of lists with "id", "text", "completed", "creator_ckey", "judged", "time_received")
 	var/list/prescript_history = list()
 	/// Counter for prescript IDs
 	var/next_prescript_id = 1
+	/// Timer IDs for auto turn-in (prescript_id -> timer_id)
+	var/list/auto_turnin_timers = list()
 	/// The ckey of the ghost who created the current prescript
 	var/current_prescript_creator
 
@@ -270,7 +272,32 @@
 	data["is_admin"] = (user.client && check_rights_for(user.client, R_ADMIN))
 	data["auto_select_paused"] = auto_select_paused
 	data["pool_count"] = length(submitted_prescripts)
-	data["prescript_history"] = prescript_history
+
+	// For living users: split into active (incomplete) and completed prescripts
+	if(!isobserver(user))
+		var/list/active_list = list()
+		var/list/completed_list = list()
+		for(var/list/entry in prescript_history)
+			if(entry["completed"])
+				completed_list += list(entry)
+			else
+				// Calculate time remaining for auto turn-in
+				var/time_received = entry["time_received"]
+				var/time_remaining_text = null
+				if(time_received)
+					var/elapsed = world.time - time_received
+					var/remaining = (10 MINUTES) - elapsed
+					if(remaining > 0)
+						var/mins = round(remaining / (1 MINUTES))
+						var/secs = round((remaining % (1 MINUTES)) / 10)
+						time_remaining_text = "[mins]m [secs]s"
+				var/list/entry_copy = entry.Copy()
+				entry_copy["time_remaining"] = time_remaining_text
+				active_list += list(entry_copy)
+		data["active_prescripts"] = active_list
+		data["completed_prescripts"] = completed_list
+	else
+		data["prescript_history"] = prescript_history
 
 	// For ghosts: show pending judgments (prescripts they created that were completed but not judged)
 	if(isobserver(user))
@@ -355,7 +382,10 @@
 
 			// Archive current prescript to history before replacing
 			if(prescript_text)
-				prescript_history += list(list("id" = next_prescript_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = user.ckey, "completed" = FALSE, "judged" = FALSE))
+				var/new_id = next_prescript_id
+				prescript_history += list(list("id" = new_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = user.ckey, "completed" = FALSE, "judged" = FALSE, "time_received" = world.time))
+				// Start 10-minute auto turn-in timer
+				auto_turnin_timers["[new_id]"] = addtimer(CALLBACK(src, PROC_REF(auto_turn_in), new_id), 10 MINUTES, TIMER_STOPPABLE)
 				next_prescript_id++
 
 			// Set the new prescript immediately
@@ -437,6 +467,11 @@
 			for(var/list/entry in prescript_history)
 				if(entry["id"] == prescript_id && !entry["completed"])
 					entry["completed"] = TRUE
+					// Cancel the auto turn-in timer
+					var/timer_key = "[prescript_id]"
+					if(auto_turnin_timers[timer_key])
+						deltimer(auto_turnin_timers[timer_key])
+						auto_turnin_timers -= timer_key
 					// Broadcast to ghosts
 					deadchat_broadcast("[span_name("[user.real_name]")] has completed a prescript: \"[entry["text"]]\"", message_type = DEADCHAT_ANNOUNCEMENT)
 					to_chat(user, span_notice("Prescript turned in successfully."))
@@ -509,7 +544,10 @@
 
 	// Archive current prescript to history before replacing
 	if(prescript_text)
-		prescript_history += list(list("id" = next_prescript_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = current_prescript_creator, "completed" = FALSE, "judged" = FALSE))
+		var/new_id = next_prescript_id
+		prescript_history += list(list("id" = new_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = current_prescript_creator, "completed" = FALSE, "judged" = FALSE, "time_received" = world.time))
+		// Start 10-minute auto turn-in timer
+		auto_turnin_timers["[new_id]"] = addtimer(CALLBACK(src, PROC_REF(auto_turn_in), new_id), 10 MINUTES, TIMER_STOPPABLE)
 		next_prescript_id++
 
 	// Pick a submission weighted by time in pool (longer = more likely)
@@ -584,6 +622,25 @@
 	prescript_loaded = TRUE
 	icon_state = "index_beeper_prescript"
 	soundloop.stop()
+
+/// Called after 10 minutes to auto turn-in a prescript
+/obj/item/clothing/accessory/index_pager/proc/auto_turn_in(prescript_id)
+	// Remove from timer tracking
+	auto_turnin_timers -= "[prescript_id]"
+
+	// Find the prescript in history
+	for(var/list/entry in prescript_history)
+		if(entry["id"] == prescript_id && !entry["completed"])
+			entry["completed"] = TRUE
+			// Broadcast to ghosts
+			var/recipient_name = entry["recipient"] || "Unknown"
+			deadchat_broadcast("[span_name("[recipient_name]")]'s prescript was auto-completed: \"[entry["text"]]\"", message_type = DEADCHAT_ANNOUNCEMENT)
+			// Notify the holder
+			var/mob/living/holder = get_wearer()
+			if(holder)
+				to_chat(holder, span_notice("A prescript has been automatically turned in after 10 minutes."))
+				playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
+			return
 
 /// Applies a reward to the pager holder
 /obj/item/clothing/accessory/index_pager/proc/apply_reward(reward_type)
