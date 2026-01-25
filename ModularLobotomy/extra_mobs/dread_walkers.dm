@@ -33,8 +33,8 @@ GLOBAL_LIST_EMPTY(dread_walker_patrol_points)
 	mouse_opacity = FALSE
 	density = FALSE
 
-	health = 200
-	maxHealth = 200
+	health = 800
+	maxHealth = 800
 	melee_damage_lower = 15
 	melee_damage_upper = 25
 	melee_damage_type = RED_DAMAGE
@@ -340,6 +340,42 @@ GLOBAL_LIST_EMPTY(dread_walker_patrol_points)
 	. = ..()
 	icon_state = icon_dead
 	UpdateImages()
+
+// ===== HELPER PROCS FOR VISIBILITY-RESTRICTED EFFECTS =====
+
+/// Send a message only to marked humans who can see this walker
+/mob/living/simple_animal/hostile/dread_walker/proc/MarkedVisibleMessage(message)
+	for(var/mob/living/carbon/human/H in GLOB.dread_marked_humans)
+		if(!H.client)
+			continue
+		if(get_dist(src, H) > 7)
+			continue
+		to_chat(H, message)
+
+/// Play a sound only to marked humans
+/mob/living/simple_animal/hostile/dread_walker/proc/MarkedPlaysound(turf/source, sound_file, vol = 50, vary = TRUE)
+	for(var/mob/living/carbon/human/H in GLOB.dread_marked_humans)
+		if(!H.client)
+			continue
+		H.playsound_local(source, sound_file, vol, vary)
+
+/// Create a visual effect only visible to marked humans
+/mob/living/simple_animal/hostile/dread_walker/proc/MarkedVisualEffect(turf/location, icon_file, icon_state, duration = 10)
+	var/image/I = image(icon_file, location, icon_state)
+	I.layer = ABOVE_MOB_LAYER
+	for(var/mob/living/carbon/human/H in GLOB.dread_marked_humans)
+		if(!H.client)
+			continue
+		H.client.images += I
+	addtimer(CALLBACK(src, PROC_REF(CleanupMarkedVisual), I), duration)
+
+/// Cleanup a visual effect from marked humans
+/mob/living/simple_animal/hostile/dread_walker/proc/CleanupMarkedVisual(image/I)
+	for(var/mob/living/carbon/human/H in GLOB.dread_marked_humans)
+		if(H.client)
+			H.client.images -= I
+
+// ===== END HELPER PROCS =====
 
 /// Override melee attack to mark targets
 /mob/living/simple_animal/hostile/dread_walker/AttackingTarget()
