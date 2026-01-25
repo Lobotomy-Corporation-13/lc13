@@ -582,6 +582,82 @@
 	else
 		return FALSE
 
+/obj/machinery/smartfridge/extraction_storage/ego_weapon/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "EgoWeaponVend", name)
+		ui.set_autoupdate(FALSE)
+		ui.open()
+
+/obj/machinery/smartfridge/extraction_storage/ego_weapon/ui_data(mob/user)
+	. = list()
+	var/list/listofitems = list()
+	for(var/obj/item/ego_weapon/W in contents)
+		if(QDELETED(W))
+			continue
+		var/md5name = md5(W.name)
+		if(listofitems[md5name])
+			listofitems[md5name]["amount"]++
+		else
+			var/is_ranged = istype(W, /obj/item/ego_weapon/ranged)
+			var/damage = W.force
+			var/damage_type = W.damtype
+			var/speed = W.attack_speed
+			var/fire_rate = 0
+			if(is_ranged)
+				var/obj/item/ego_weapon/ranged/R = W
+				damage = R.last_projectile_damage
+				damage_type = R.last_projectile_type
+				fire_rate = R.autofire
+			listofitems[md5name] = list(
+				"name" = W.name,
+				"amount" = 1,
+				"damage" = damage,
+				"damtype" = damage_type,
+				"speed" = speed,
+				"fire_rate" = fire_rate,
+				"is_ranged" = is_ranged
+			)
+	sortList(listofitems)
+	.["contents"] = listofitems
+	.["name"] = name
+
+/obj/machinery/smartfridge/extraction_storage/ego_armor/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "EgoArmorVend", name)
+		ui.set_autoupdate(FALSE)
+		ui.open()
+
+/obj/machinery/smartfridge/extraction_storage/ego_armor/ui_data(mob/user)
+	. = list()
+	var/list/listofitems = list()
+	for(var/obj/item/clothing/suit/armor/ego_gear/A in contents)
+		if(QDELETED(A))
+			continue
+		var/md5name = md5(A.name)
+		if(listofitems[md5name])
+			listofitems[md5name]["amount"]++
+		else
+			var/list/attrs = list()
+			for(var/attr in A.attribute_requirements)
+				attrs[attr] = A.attribute_requirements[attr]
+			var/list/resists = list("red" = 0, "white" = 0, "black" = 0, "pale" = 0)
+			if(A.armor)
+				resists["red"] = A.armor.red
+				resists["white"] = A.armor.white
+				resists["black"] = A.armor.black
+				resists["pale"] = A.armor.pale
+			listofitems[md5name] = list(
+				"name" = A.name,
+				"amount" = 1,
+				"requirements" = attrs,
+				"resistances" = resists
+			)
+	sortList(listofitems)
+	.["contents"] = listofitems
+	.["name"] = name
+
 // -------------------------
 //  Rack - Unpowered Smartfridge
 // -------------------------
