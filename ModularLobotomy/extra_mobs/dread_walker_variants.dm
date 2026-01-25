@@ -20,7 +20,7 @@
 
 	attack_verb_continuous = "drains"
 	attack_verb_simple = "drain"
-	attack_sound = 'sound/hallucinations/whispers.ogg'
+	attack_sound = 'sound/hallucinations/i_see_you1.ogg'
 
 	/// Cooldown for memory drain attack
 	var/memory_drain_cooldown = 0
@@ -148,7 +148,7 @@
 	melee_damage_lower += 5
 	melee_damage_upper += 10
 
-	MarkedPlaysound(get_turf(src), 'sound/voice/growl1.ogg', 60, TRUE)
+	MarkedPlaysound(get_turf(src), 'sound/hallucinations/growl1.ogg', 60, TRUE)
 	MarkedVisibleMessage(span_danger("[src] enters a frenzied rage, its form blurring with violence!"))
 
 	// Create red aura for marked viewers - use our own icon for silhouette
@@ -299,7 +299,7 @@
 
 	attack_verb_continuous = "touches"
 	attack_verb_simple = "touch"
-	attack_sound = 'sound/hallucinations/whispers.ogg'
+	attack_sound = 'sound/hallucinations/i_see_you1.ogg'
 
 	// Ranged attack capability
 	ranged = TRUE
@@ -691,7 +691,7 @@
 
 	attack_verb_continuous = "whispers to"
 	attack_verb_simple = "whisper to"
-	attack_sound = 'sound/hallucinations/whispers.ogg'
+	attack_sound = 'sound/hallucinations/i_see_you1.ogg'
 
 	// Ranged capability
 	ranged = TRUE
@@ -743,7 +743,7 @@
 	whisper_cooldown = world.time + whisper_cooldown_time
 	ranged_cooldown = world.time + ranged_cooldown_time
 
-	victim.playsound_local(get_turf(victim), 'sound/hallucinations/whispers.ogg', 50, TRUE)
+	victim.playsound_local(get_turf(victim), 'sound/hallucinations/i_see_you1.ogg', 50, TRUE)
 
 	// Red rune effect around victim - dark red silhouette
 	var/image/rune = image(victim.icon, victim, victim.icon_state, ABOVE_MOB_LAYER)
@@ -776,7 +776,7 @@
 	ritual_active = TRUE
 	can_act = FALSE
 
-	MarkedPlaysound(get_turf(src), 'sound/hallucinations/whispers.ogg', 70, TRUE)
+	MarkedPlaysound(get_turf(src), 'sound/hallucinations/i_see_you1.ogg', 70, TRUE)
 	MarkedVisibleMessage(span_cultlarge("[src] begins a dark ritual, blood swirling around it!"))
 
 	// Create blood circle effect
