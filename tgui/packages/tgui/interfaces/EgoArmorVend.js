@@ -56,7 +56,9 @@ export const EgoArmorVend = (props, context) => {
               </Table.Row>
               {map((value, key) => (
                 <Table.Row key={key}>
-                  <Table.Cell>{value.name}</Table.Cell>
+                  <Table.Cell color={value.can_use ? 'green' : 'red'}>
+                    {value.name}
+                  </Table.Cell>
                   <Table.Cell collapsing textAlign="center">
                     {formatReqs(value.requirements)}
                   </Table.Cell>
