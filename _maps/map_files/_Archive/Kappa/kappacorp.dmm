@@ -3139,11 +3139,11 @@
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/training)
 "pb" = (
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 7;
 	pixel_y = 3
 	},

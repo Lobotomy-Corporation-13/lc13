@@ -6715,19 +6715,19 @@
 /turf/open/floor/pod/dark,
 /area/facility_hallway/command)
 "HA" = (
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 7;
 	pixel_y = 3
 	},
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/green,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/green,
 /obj/item/rawpe,
 /obj/item/rawpe,
 /obj/item/rawpe,
@@ -9960,16 +9960,16 @@
 	},
 /area/facility_hallway/information)
 "Vq" = (
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 7;
 	pixel_y = 3
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/green,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/green,
 /obj/item/rawpe,
 /obj/item/rawpe,
 /obj/item/rawpe,
@@ -10514,12 +10514,6 @@
 	},
 /turf/open/floor/pod,
 /area/department_main/command)
-"XV" = (
-/turf/open/floor/plating/ironsand{
-	density = 1;
-	name = "Outskirt"
-	},
-/area/space)
 "XY" = (
 /obj/effect/turf_decal/trimline/purple/filled/line{
 	dir = 4
@@ -10718,13 +10712,6 @@
 	},
 /turf/open/floor/pod,
 /area/department_main/training)
-"Zo" = (
-/turf/open/floor/fakespace{
-	density = 1;
-	desc = "it is impossible to cross now, this land is no more.";
-	name = "broken reality"
-	},
-/area/space)
 "Zp" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -42836,13 +42823,13 @@ Ia
 Ia
 Ia
 Ia
-XV
-XV
-Zo
-Zo
-Zo
-Zo
-XV
+Ia
+Ia
+wV
+wV
+wV
+wV
+Ia
 UD
 gM
 sS
@@ -43093,13 +43080,13 @@ Ia
 Ia
 Ia
 wV
-XV
+Ia
 bO
 bO
 bO
 bO
 bO
-XV
+Ia
 UD
 gM
 MQ
@@ -43350,13 +43337,13 @@ wV
 wV
 Ia
 wV
-XV
+Ia
 bO
 bO
 bO
 bO
 bO
-Zo
+wV
 Ia
 QF
 So
@@ -43607,13 +43594,13 @@ Ia
 wV
 Ia
 Ia
-Zo
+wV
 bO
 bO
 ZW
 bO
 bO
-XV
+Ia
 Ia
 QF
 Ox
@@ -43864,13 +43851,13 @@ Ia
 wV
 wV
 wV
-Zo
+wV
 bO
 bO
 bO
 bO
 bO
-XV
+Ia
 Ia
 QF
 vR
@@ -44121,13 +44108,13 @@ wV
 wV
 Ia
 Ia
-Zo
+wV
 bO
 bO
 bO
 bO
 bO
-Zo
+wV
 UD
 gM
 MQ
@@ -44378,13 +44365,13 @@ Ia
 Ia
 Ia
 Ia
-Zo
-Zo
-XV
-Zo
-XV
-Zo
-XV
+wV
+wV
+Ia
+wV
+Ia
+wV
+Ia
 UD
 gM
 bJ

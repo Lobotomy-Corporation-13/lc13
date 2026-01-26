@@ -2546,19 +2546,19 @@
 "mP" = (
 /obj/effect/turf_decal/siding/purple/corner,
 /obj/structure/table/glass,
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	pixel_x = 10;
 	pixel_y = -7
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 4;
 	pixel_y = 1
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	pixel_x = -1;
 	pixel_y = -1
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = -4;
 	pixel_y = -8
 	},

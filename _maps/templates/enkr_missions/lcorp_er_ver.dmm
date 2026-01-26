@@ -2505,14 +2505,14 @@
 /area/awaymission/enkr)
 "qi" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/hypospray/medipen/salacid,
 /obj/item/reagent_containers/hypospray/medipen/salacid,
@@ -2879,6 +2879,7 @@
 	threat_level = 3;
 	name = "???'s abnormality core";
 	desc = "A abnormality core for an unkown monster...";
+	
 	},
 /turf/open/floor/facility/dark,
 /area/awaymission/enkr)
@@ -4985,14 +4986,14 @@
 /area/awaymission/enkr)
 "Ge" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/hypospray/medipen/mental,
 /obj/item/reagent_containers/hypospray/medipen/mental,
@@ -5089,14 +5090,14 @@
 /area/awaymission/enkr)
 "GF" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /obj/item/paper/fluff/info/refinery,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/halls,
@@ -5647,26 +5648,26 @@
 /area/awaymission/enkr)
 "Kh" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /obj/item/paper/fluff/info/refinery,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/halls,

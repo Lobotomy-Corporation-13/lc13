@@ -976,23 +976,23 @@
 	desc = "This rolling table doesn't roll like it used to anymore.";
 	name = "Broken Rolling Table"
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be coffee flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be coffee flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be coffee flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be coffee flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be coffee flavored.";
 	name = "Enkephalin Vape"
 	},
@@ -2407,23 +2407,23 @@
 	desc = "This rolling table doesn't roll like it used to anymore.";
 	name = "Broken Rolling Table"
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/green{
+/obj/item/stack/refiner_filter/green{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter.";
 	name = "Enkephalin Vape"
 	},
@@ -3037,23 +3037,23 @@
 	desc = "This rolling table doesn't roll like it used to anymore.";
 	name = "Broken Rolling Table"
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be blueberry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be blueberry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be blueberry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be blueberry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be blueberry flavored.";
 	name = "Enkephalin Vape"
 	},
@@ -3738,23 +3738,23 @@
 	desc = "This rolling table doesn't roll like it used to anymore.";
 	name = "Broken Rolling Table"
 	},
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be cherry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be cherry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be cherry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be cherry flavored.";
 	name = "Enkephalin Vape"
 	},
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/red{
 	desc = "It does not seem you can actually smoke it but you are certain this is a usable filter. It appears to be cherry flavored.";
 	name = "Enkephalin Vape"
 	},
