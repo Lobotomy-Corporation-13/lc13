@@ -52,6 +52,4 @@
 	STR.max_items = 30
 	STR.set_holdable(list(
 		/obj/item/stack/refiner_filter,
-		/obj/item/rawpe,
-		/obj/item/refinedpe,
 	))
