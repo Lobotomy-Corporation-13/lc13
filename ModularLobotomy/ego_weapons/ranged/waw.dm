@@ -12,7 +12,8 @@
 	variance = 20
 	fire_delay = 7
 	shotsleft = 12
-	reloadtime = 1.4 SECONDS
+	reloadtime = 0.4 SECONDS
+	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 
 	attribute_requirements = list(
@@ -57,7 +58,10 @@
 	damtype = BLACK_DAMAGE
 	projectile_path = /obj/projectile/ego_bullet/ego_hatred
 	weapon_weight = WEAPON_HEAVY
-	fire_delay = 15
+	fire_delay = 10
+	shotsleft = 10
+	reloadtime = 2 SECONDS
+
 	fire_sound = 'sound/abnormalities/hatredqueen/attack.ogg'
 
 	attribute_requirements = list(
@@ -353,7 +357,8 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 5
 	shotsleft = 2
-	reloadtime = 10 SECONDS
+	reloadtime = 7 SECONDS
+	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
@@ -387,6 +392,8 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_aroma
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
+	shotsleft = 1
+	reloadtime = 2.1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
@@ -717,7 +724,8 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 5
 	shotsleft = 10
-	reloadtime = 1.4 SECONDS
+	reloadtime = 0.2 SECONDS
+	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
@@ -755,6 +763,8 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_hypocrisy
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
+	shotsleft = 1
+	reloadtime = 2.1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80

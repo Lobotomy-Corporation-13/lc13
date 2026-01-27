@@ -62,6 +62,9 @@
 	projectile_path = /obj/projectile/ego_bullet/adoration
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 10
+	shotsleft = 5
+	reloadtime = 1.2 SECONDS
+
 	pellets = 3
 	variance = 20
 
@@ -281,16 +284,7 @@
 
 	shotsleft = 16	//Based off a henry .44
 	reloadtime = 0.5 SECONDS
-
-/obj/item/ego_weapon/ranged/arcadia/reload_ego(mob/user)
-	if(shotsleft == initial(shotsleft))
-		return
-	is_reloading = TRUE
-	to_chat(user,"<span class='notice'>You start loading a bullet.</span>")
-	if(do_after(user, reloadtime, src)) //gotta reload
-		playsound(src, 'sound/weapons/gun/general/slide_lock_1.ogg', 50, TRUE)
-		shotsleft +=1
-	is_reloading = FALSE
+	roundsreload = TRUE
 
 /obj/item/ego_weapon/ranged/arcadia/judge
 	name = "Judge"
@@ -328,6 +322,7 @@
 							JUSTICE_ATTRIBUTE = 100
 	)
 	shotsleft = 200
+	reloadtime = 4 SECONDS
 
 #define STATUS_EFFECT_ENTRENCHED_INITIAL /datum/status_effect/willing_weapon_entrenched
 #define STATUS_EFFECT_ENTRENCHED_FINAL /datum/status_effect/willing_weapon_entrenched/final_stage

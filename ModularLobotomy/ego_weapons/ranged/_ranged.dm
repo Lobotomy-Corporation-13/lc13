@@ -48,6 +48,8 @@
 	var/reloadtime = 0 SECONDS
 	/// Are we currently reloading?
 	var/is_reloading = FALSE
+	/// Does the gun load one bullet at a time?
+	var/roundsreload = FALSE
 
 	/// Vars used for when you examine a gun
 	var/last_projectile_damage = 0
@@ -57,6 +59,7 @@
 	var/lethal = TRUE
 	/// Should clumsy people shoot themselfes at a chance with it? Usually unused
 	var/clumsy_check = TRUE
+
 
 	/// Sound controls
 	var/vary_fire_sound = TRUE
@@ -201,10 +204,14 @@
 
 /obj/item/ego_weapon/ranged/attack_self(mob/user)
 	if(reloadtime && !is_reloading)
-		INVOKE_ASYNC(src, PROC_REF(reload_ego), user)
+		if(roundsreload)
+			INVOKE_ASYNC(src, PROC_REF(rounds_reload), user)
+		else
+			INVOKE_ASYNC(src, PROC_REF(reload_ego), user)
 	return ..()
 
 /obj/item/ego_weapon/ranged/proc/reload_ego(mob/user)
+
 	is_reloading = TRUE
 	to_chat(user,span_notice("You start loading a new magazine."))
 	playsound(src, reload_start_sound, 50, TRUE)
@@ -214,6 +221,18 @@
 		forced_melee = FALSE //no longer forced to resort to melee
 
 	is_reloading = FALSE
+
+
+/obj/item/ego_weapon/ranged/proc/rounds_reload(mob/user)
+	if(shotsleft == initial(shotsleft))
+		return
+	is_reloading = TRUE
+	to_chat(user,"<span class='notice'>You start loading a bullet.</span>")
+	if(do_after(user, reloadtime, src)) //gotta reload
+		playsound(src, reload_success_sound, 50, TRUE)
+		shotsleft +=1
+	is_reloading = FALSE
+	INVOKE_ASYNC(src, PROC_REF(rounds_reload), user)	//To save you from loading all your bullets
 
 /obj/item/ego_weapon/ranged/equipped(mob/living/user, slot)
 	. = ..()
