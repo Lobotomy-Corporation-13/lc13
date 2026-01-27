@@ -17,7 +17,7 @@ Note: In the context of Spiral, 'Repression' means refusing to face it, not meet
 
 ----------- Breach Mechs -----------
 --- Basics ---
-> Teleports to a department center. Cannot move. Will teleport to another department center every 40 seconds. Maybe also let it go to xenospawns?
+> Teleports to a department center. Cannot move. Will teleport to another department center every 45 seconds. Maybe also let it go to xenospawns?
 > Normal-ish base resistances, resisting RED/BLACK and being weak to WHITE and fatal to PALE, but only takes 10% of incoming damage by default. Meant to be obnoxiously tanky without Gaze.
 > Hitting it in melee while having your zone target set to arms/hands will cause you to gain a stack of Gaze.
 Gaze will lower the damage resistance that Spiral has against you, but make you take more damage from it, too.
@@ -52,13 +52,13 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	desc = "An imposing and beautiful spiral of gold. \n\
 	The upper half is vaguely shaped like a human torso with both arms outstretched towards the sky and sharp 'wings' protruding from the back. \
 	Black hands drip with blood, and its 'head' glowers down at you."
-	portrait = "heaven"
+	portrait = "spiral_of_contempt"
 	being_tested = TRUE // !! REMOVE BEFORE MERGE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	/* --- Appearance --- */
 	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
-	icon_state = "heaven"
-	icon_living = "heaven"
+	icon_state = "spiral"
+	icon_living = "spiral"
 	pixel_x = -32
 	base_pixel_x = -32
 
@@ -87,10 +87,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/list/gazed_fighters = list()
 	var/list/contempted_fighters = list()
 
-	// These work rates are very gentle, but the abno will still often get Neutral/Bad works.
+	// These work rates are very gentle, but the abno will still often get Neutral/Bad works due to its stricter box requirements.
 	work_chances = list(
-		ABNORMALITY_WORK_INSTINCT = list(15, 20, 25, 45, 55),
-		ABNORMALITY_WORK_INSIGHT = list(15, 25, 30, 50, 60),
+		ABNORMALITY_WORK_INSTINCT = list(15, 20, 25, 45, 50),
+		ABNORMALITY_WORK_INSIGHT = list(15, 25, 30, 50, 55),
 		ABNORMALITY_WORK_ATTACHMENT = 0,
 		ABNORMALITY_WORK_REPRESSION = list(10, 15, 20, 40, 45),
 	)
@@ -137,13 +137,15 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 	/* --- Autoattack (It Shall Perforate) --- */
 	// RED damage
-	var/perforate_bleed_stacks = 5 // dw it attacks very slowly
+	var/perforate_bleed_stacks = 8 // dw it attacks very slowly
 	melee_damage_lower = 38
 	melee_damage_upper = 44
 	melee_damage_type = RED_DAMAGE
 	melee_reach = 3
 	rapid_melee = 0.15
 	attack_sound = 'sound/abnormalities/spiral_contempt/spiral_hit.ogg'
+	attack_verb_continuous = "perforates"
+	attack_verb_simple = "perforate"
 
 	/* --- Periodic Damage (It Shall Be Insidious) --- */
 	// BLACK damage
@@ -358,13 +360,18 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/list/department_centers = GLOB.department_centers.Copy()
 	var/list/xenospawns = GLOB.xeno_spawn.Copy()
 	var/list/possible_destinations = department_centers + xenospawns
+	possible_destinations -= get_turf(src)
+	if(!length(possible_destinations))
+		warning("Spiral of Contempt has no valid teleport destinations. Did somebody nuke the department centers and xenospawn global lists?")
+		alpha = initial(alpha)
+		return
 	var/turf/destination = pick(possible_destinations)
 	say("Teleporting to [get_area(destination)]. Next teleport at [world.time + teleport_cooldown_duration] world time.")
 	SLEEP_CHECK_DEATH(0.7 SECONDS)
 
-	if((stat < DEAD)) // Z Level Check; only teleport when breaching on the same level as the facility.
+	if((stat < DEAD))
 		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), teleport_cooldown_duration, TIMER_STOPPABLE)
-		if(z == destination.z)
+		if(z == destination.z) // Z Level Check; only teleport when breaching on the same level as the facility.
 			global_cooldown = world.time + global_cooldown_duration
 			forceMove(destination)
 		animate(src, 0.7 SECONDS, alpha = initial(alpha))
@@ -415,12 +422,13 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 				// Add valid targets to our list
 				targets_found |= victim
 
+	// In addition to people in our area, check for people in LoS
 	for(var/mob/living/pretty_close_to_us in viewers(vision_range, src))
 		if((pretty_close_to_us.stat < DEAD) && !(faction_check_mob(pretty_close_to_us))) // Skip corpses and friendlies
 			// Even if you're working, if Spiral can LITERALLY SEE YOU you are getting added into the list
 			targets_found |= pretty_close_to_us // |= avoids duplicates
 
-	targets_found -= contempted_fighters // Remove people who are trapped by It Shall Shun.
+	targets_found -= contempted_fighters // Don't target people who are trapped by It Shall Shun.
 
 	return targets_found
 
@@ -439,9 +447,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	melee_damage_lower = final_damage
 	melee_damage_upper = final_damage
 
-	animate(src, 0.2 SECONDS, color = "#2a13f7")
 	. = ..()
-	animate(src, 1 SECONDS, color = initial(color))
+
 	// Restore standard damage values
 	melee_damage_lower = old_lower
 	melee_damage_upper = old_upper
@@ -471,6 +478,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 /// Hit every mob in the list argument with It Shall Be Insidious.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/InsidiousCast(list/targets_found)
+	icon_state = "spiral_cast"
 	for(var/mob/living/target in targets_found)
 		if(target in contempted_fighters) // Just in case
 			continue
@@ -481,6 +489,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 		new /obj/effect/temp_visual/contempt_blood(target_turf)
 
 		SLEEP_CHECK_DEATH(rand(2, 5)) // Slight delay so it looks more natural
+	icon_state = initial(icon_state)
 
 /* --------- It Shall Grip --------- */
 
@@ -500,6 +509,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /// Spawn a /temp_visual/spiral_grip on up to [grip_max_targets], repeat up to [grip_iterations] times.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/GripCast(list/targets_found)
 	for(var/i in 1 to grip_iterations)
+		icon_state = "spiral_cast"
 		playsound(get_turf(src), 'sound/abnormalities/spiral_contempt/spiral_grow.ogg', 100, FALSE, 7)
 		var/list/iteration_target_list = targets_found.Copy() // We copy it so we can use a different copy of the list for each iteration. This means that each person can only be targeted once per iteration, but multiple times per cast.
 		for(var/j in 1 to grip_max_targets)
@@ -511,6 +521,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 			new /obj/effect/temp_visual/spiral_grip(target_turf, grip_radius, grip_windup, src)
 			SLEEP_CHECK_DEATH(rand(5, 8))
+		icon_state = initial(icon_state)
 		SLEEP_CHECK_DEATH(1.5 SECONDS)
 
 /// Gets called by /temp_visual/spiral_grip when it resolves.
@@ -520,7 +531,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	target.deal_damage(CalculateDamageFromGazeStacks(target, grip_damage), BLACK_DAMAGE, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	target.visible_message(span_warning("[target] is hit by an emerging pair of hands!"), span_userdanger("You're hit by an emerging pair of hands!"))
 
-/// Grip effect; gets passed arguments by Spiral's GripCast(). Reused for Shun.
+/// Grip effect; gets passed arguments by Spiral's GripCast().
 /obj/effect/temp_visual/spiral_grip
 	name = "gripping hands"
 	desc = "You shall be gripped."
@@ -608,6 +619,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /// Called by Contempt status to stall Spiral's teleport until, at least, the status times out.
 /mob/living/simple_animal/hostile/abnormality/spiral/proc/ShunDelayTeleport(delay_time)
 	var/time_to_teleport = timeleft(teleport_timer)
+	say("Delaying teleport. Current time is [world.time], there is [time_to_teleport] left on the timer. New time of teleport will be [world.time + time_to_teleport + delay_time].")
 	if(time_to_teleport)
 		deltimer(teleport_timer)
 		teleport_timer = addtimer(CALLBACK(src, PROC_REF(Teleport)), (time_to_teleport + delay_time), TIMER_STOPPABLE)

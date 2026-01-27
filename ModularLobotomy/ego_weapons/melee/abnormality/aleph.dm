@@ -2540,3 +2540,88 @@
 /obj/effect/temp_visual/faespike/fast
 	name = "eldtree spike"
 	icon_state = "faelantern_spike_fast"
+
+/obj/item/ego_weapon/perversion
+	name = "perversion"
+	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
+	'Be awed, or be awe-struck.'"
+	icon_state = "sangre"
+	icon = 'icons/obj/limbus_weapons.dmi'
+	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
+	force = 100
+	swingstyle = WEAPONSWING_THRUST
+	damtype = BLACK_DAMAGE
+	attack_speed = 1.4
+	attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
+	attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
+	hitsound = 'sound/abnormalities/spiral_contempt/spiral_hit.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 80
+							)
+
+	/// Empty this out and use it to avoid multihitting stuff on each AoE
+	var/list/shared_hitlist
+
+	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
+	var/sheathed = TRUE
+	var/unsheathe_cooldown
+	var/unsheathe_cooldown_duration = 40 SECONDS
+	var/unsheathe_windup = 0.7 SECONDS
+
+	// Cascading Gaze of Awe Underneath Contempt is the attack automatically performed when unsheathing the katana
+
+	var/cascading_gaze_radius = 3
+	/// Multiplies katana force by this much before Justice
+	var/cascading_gaze_base_damage_coeff = 1.4
+	/// Add to the previous coefficient per gaze stacks on the target we're hitting
+	var/cascading_gaze_additive_damage_coeff_per_gaze = 0.4
+	/// You'll be locked in place and the projectile deleting area will linger for this long.
+	var/cascading_gaze_duration = 2.5 SECONDS
+
+	/// The weapon applies this many Gaze stacks per hit in lance form.
+	var/base_gaze_application = 1
+
+	// We leave these two here to make it easier to varedit the weapon if needed and to avoid initial()
+	var/lance_force = 100
+	var/lance_attack_speed = 1.4
+
+	// Similar to Dark Carnival/Crow's Eye View/Thumb East opener. This lets you dash at a faraway target, dealing extra damage and applying more Gaze.
+	var/lance_dash_range = 4
+	var/lance_dash_cooldown
+	var/lance_dash_cooldown_duration = 4 SECONDS
+	var/lance_dash_damage_coeff = 1.1
+	var/lance_dash_extra_gaze_stacks = 1
+
+	// Immediately after a dash, your next attack will do an AoE thrust through your enemy, dealing extra damage and applying more Gaze.
+	var/lance_followup_range = 2
+	var/lance_followup_damage_coeff = 1.3
+	var/lance_followup_extra_gaze_stacks = 2
+
+	// Katana form vars
+
+	var/katana_icon
+	var/katana_icon_state
+	var/katana_desc = "A blood-red sword, removed from its gilded armour. \n\
+	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody business is settled."
+	var/list/katana_attack_verb_continuous = list("slashes", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "styles on")
+	var/list/katana_attack_verb_simple = list("slash", "cleave", "sunder", "carve", "disembowel", "eviscerate", "style on")
+
+	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
+	var/katana_force = 60
+	var/katana_attack_speed = 1
+	var/katana_base_damage_coeff = 1
+	var/katana_additive_damage_coeff_per_gaze = 0.15
+
+	var/katana_last_target_hit
+
+	var/katana_dash_range = 6
+	var/katana_dash_cooldown
+	var/katana_dash_cooldown_duration = 2 SECONDS
+
+	var/katana_aoe_radius = 2
+
+	var/katana_finisher_damage_coeff = 2.5

@@ -2914,7 +2914,7 @@
 /obj/item/ego_weapon/contempt
 	name = "contempt, awe"
 	desc = "From the excavated brain, geysers of hatred and contempt erupt. It's as if those feelings were inside you all along."
-	special = "Melee hits with this E.G.O. accumulate stacks of Gaze. Each stack of Gaze can be used to <b>raise throwing damage by 15. \n\
+	special = "Melee hits with this E.G.O. accumulate stacks of Gaze. Each stack of Gaze can be used to raise throwing damage by 15. \n\
 	After spending Gaze, you won't be able to gain any more for 3.5 seconds.\n\
 	Gaze can be spent by throwing this weapon at an enemy. Landing a thrown hit with 6 stacks of Gaze will teleport you to your enemy and automatically pick up this weapon.\n\
 	If you reach 7 stacks of Gaze, Gaze will transform into Contempt, temporarily slowing you down and lowering your power modifier. You can reset your Gaze stacks at the cost of 10 health by using the weapon in-hand."
@@ -2924,7 +2924,7 @@
 	stuntime = 5
 	throwforce = 60
 	throw_speed = 5
-	throw_range = 7
+	throw_range = 8
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("poke", "jab", "tear", "lacerate", "gore")
@@ -3014,7 +3014,7 @@
 /// This proc happens when we land a throwing hit with 6 gaze stacks. You get briefly immobilized, teleport in front of the enemy, and pick the weapon back up.
 // The target is only used for their name. We only care about the turf for teleporting calculations, because I'm worried about mobs that qdel and stuff like that.
 /obj/item/ego_weapon/contempt/proc/ThrownHitTeleport(mob/living/target, turf/target_turf, mob/living/carbon/human/user)
-	if(!target || (get_dist(target, user) > 20)) // Without this check, we may end up teleporting into the godforsaken backrooms (the corner of the map) if target qdels
+	if(!target || (get_dist(target_turf, user) > 20)) // Without this check, we may end up teleporting into the godforsaken backrooms (the corner of the map) if target qdels
 		to_chat(user, span_danger("No point in shifting towards the target - they're long gone."))
 		user.put_in_active_hand(src)
 		return FALSE
