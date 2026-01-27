@@ -393,7 +393,7 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
 	shotsleft = 1
-	reloadtime = 2.1 SECONDS
+	reloadtime = 1.4 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
@@ -410,8 +410,8 @@
 	damtype = WHITE_DAMAGE
 	projectile_path = /obj/projectile/beam/assonance
 	weapon_weight = WEAPON_HEAVY
-	fire_delay = 5
-	shotsleft = 17
+	fire_delay = 10
+	shotsleft = 8
 	reloadtime = 1.6 SECONDS
 	fire_sound = 'sound/weapons/gun/smg/mp7.ogg'
 	attribute_requirements = list(
@@ -764,7 +764,7 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
 	shotsleft = 1
-	reloadtime = 2.1 SECONDS
+	reloadtime = 1.4 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
