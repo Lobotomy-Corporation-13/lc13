@@ -393,7 +393,7 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
 	shotsleft = 1
-	reloadtime = 1.4 SECONDS
+	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
@@ -764,7 +764,7 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
 	shotsleft = 1
-	reloadtime = 1.4 SECONDS
+	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
