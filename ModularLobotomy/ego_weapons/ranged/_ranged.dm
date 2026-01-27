@@ -139,6 +139,9 @@
 			if(2.51 to INFINITY)
 				. += span_danger("This weapon has an extremely slow reload.")
 
+	if(roundsreload)
+		. += span_notice("This weapon reloads one round at a time.")
+
 	switch(weapon_weight)
 		if(WEAPON_HEAVY)
 			. += span_danger("This weapon requires both hands to fire.")
@@ -146,6 +149,8 @@
 			. += span_notice("This weapon can be fired with one hand.")
 		if(WEAPON_LIGHT)
 			. += span_nicegreen("This weapon can be dual wielded.")
+			if(roundsreload)
+				. += span_warning("... but cannot akimbo reload")
 
 	if(!autofire)
 		switch(fire_delay)
@@ -207,11 +212,15 @@
 		if(roundsreload)
 			INVOKE_ASYNC(src, PROC_REF(rounds_reload), user)
 		else
+			//Checking for akimbo reload
+			//You can't rounds reload with 1 hand!
+			if(ishuman(user) && user.a_intent == INTENT_HARM && weapon_weight==WEAPON_LIGHT)
+				INVOKE_ASYNC(src, PROC_REF(akimbo_reload), user)
+				return ..()
 			INVOKE_ASYNC(src, PROC_REF(reload_ego), user)
 	return ..()
 
 /obj/item/ego_weapon/ranged/proc/reload_ego(mob/user)
-
 	is_reloading = TRUE
 	to_chat(user,span_notice("You start loading a new magazine."))
 	playsound(src, reload_start_sound, 50, TRUE)
@@ -222,6 +231,30 @@
 
 	is_reloading = FALSE
 
+/obj/item/ego_weapon/ranged/proc/akimbo_reload(mob/user)
+	is_reloading = TRUE
+	to_chat(user,span_danger("You being an akimbo reload..."))
+	var/total_reload = reloadtime
+
+	for(var/obj/item/ego_weapon/ranged/G in user.held_items)
+		if(G == src || G.weapon_weight >= WEAPON_MEDIUM || G.roundsreload)
+			continue
+		playsound(G, reload_start_sound, 25, TRUE)
+		total_reload+=G.reloadtime	// We're going to make sure that reloading akimbo is a bit slower.
+
+	total_reload *= 1.2	//About 20% slower
+
+
+	if(do_after(user, total_reload, src)) //gotta reload
+
+		for(var/obj/item/ego_weapon/ranged/G in user.held_items)
+			if(G.weapon_weight >= WEAPON_MEDIUM|| G.roundsreload)
+				continue
+			playsound(G, reload_success_sound, 25, TRUE)
+			G.shotsleft = initial(G.shotsleft)
+			G.forced_melee = FALSE //no longer forced to resort to melee
+
+	is_reloading = FALSE
 
 /obj/item/ego_weapon/ranged/proc/rounds_reload(mob/user)
 	if(shotsleft == initial(shotsleft))
