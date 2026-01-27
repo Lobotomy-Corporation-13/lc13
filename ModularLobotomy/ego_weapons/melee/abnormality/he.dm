@@ -932,23 +932,10 @@
 	var/dash_cooldown
 	var/dash_cooldown_time = 8 SECONDS
 	var/dash_range = 8
-	var/can_attack = TRUE
-
-/obj/item/ego_weapon/fluid_sac/attack(mob/living/target, mob/living/user)
-	if(!can_attack)
-		return
-	..()
-	can_attack = FALSE
-	addtimer(CALLBACK(src, PROC_REF(JumpReset)), 20)
-
-/obj/item/ego_weapon/fluid_sac/proc/JumpReset()
-	can_attack = TRUE
 
 /obj/item/ego_weapon/fluid_sac/MiddleClickAction(atom/target, mob/living/user)
 	. = ..()
 	if(.)
-		return
-	if(!can_attack)
 		return
 	if(!isliving(target))
 		return
@@ -959,8 +946,9 @@
 		return
 	if((get_dist(user, A) < 2) || (!(can_see(user, A, dash_range))))
 		return
-	if(do_after(user, 5, src))
+	if(do_after(user, 5, interaction_key = "fluid_sac_jump", max_interact_count = 1))
 		dash_cooldown = world.time + dash_cooldown_time
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed)
 		playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 		animate(user, alpha = 1,pixel_x = 0, pixel_z = 16, time = 0.1 SECONDS)
 		user.pixel_z = 16
@@ -984,8 +972,6 @@
 	force = 30
 	A.attackby(src,user)
 	force = initial(force)
-	can_attack = FALSE
-	addtimer(CALLBACK(src, PROC_REF(JumpReset)), 20)
 	for(var/mob/living/L in range(1, A))
 		if(L.z != user.z) // Not on our level
 			continue
@@ -1032,7 +1018,7 @@
 	desc = "A mechanical yet sinewy claw ribbed with circuitry. It reminds you of toy claw machines."
 	special = "The charge effect of this weapon trips humans instead of injuring them."
 	icon_state = "replica"
-	force = 25
+	force = 32
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("grabs", "pinches", "snips", "attacks")
 	attack_verb_simple = list("grab", "pinch", "snip", "attack")
@@ -1293,7 +1279,7 @@
 	desc = "The elderly man showed a red thread connecting the young boy with his future lover. Disgusted at the sight, he ordered her to be executed."
 	special = "This weapon deals significantly more damage when attacking the same target repeatedly."
 	icon_state = "destiny"
-	force = 11
+	force = 15
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 0.5
 	damtype = RED_DAMAGE
@@ -1780,7 +1766,7 @@
 	var/mob/living/H = target
 	if(!isbot(H) && isliving(H))
 		H.apply_status_effect(/datum/status_effect/fairybite)
-		H.visible_message(span_warning("The [src] latches on [target]!"))
+		H.visible_message(span_warning("The [src.name] latches onto [target]!"))
 
 /datum/status_effect/fairybite
 	id = "fairybite"
@@ -1789,7 +1775,7 @@
 	tick_interval = 20 //One tick every 2 seconds
 	on_remove_on_mob_delete = TRUE
 	alert_type = null
-	var/damage_amount = 6
+	var/damage_amount = 10
 
 /datum/status_effect/fairybite/on_apply()
 	return ..()
