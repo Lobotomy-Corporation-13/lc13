@@ -2350,7 +2350,7 @@
 	deltimer(power_timer)
 
 	if(charged)
-		new /obj/effect/temp_visual/flotsam_vfx(get_turf(hit_atom))
+		new /obj/effect/temp_visual/flotsam_vfx(get_turf(src))
 		playsound(src, 'sound/weapons/ego/blind_obsession_impact.ogg', 100, FALSE, 9)
 
 		var/damage = throwing_aoe_damage
@@ -2693,11 +2693,11 @@
 	animate(src, time = spinportion * 2, transform = turn(huh, 45))
 	animate(time = spinportion * 1.5, transform = turn(huh, 90))
 	animate(time = spinportion, transform = turn(huh, 135))
-	animate(time = spinportion * 0.75, transform = turn(huh, 180))
-	animate(time = spinportion * 0.5, transform = turn(huh, 225))
+	animate(time = spinportion, transform = turn(huh, 180))
+	animate(time = spinportion, transform = turn(huh, 225))
 	animate(time = spinportion * 0.75, transform = turn(huh, 270))
-	animate(time = spinportion, transform = turn(huh, 315))
-	animate(time = spinportion, transform = turn(huh, 360))
+	animate(time = spinportion * 0.5, transform = turn(huh, 315))
+	animate(time = spinportion * 0.75, transform = turn(huh, 360))
 	animate(time = fade_time, transform = huh * 1.8, alpha = 0)
 	QDEL_IN(src, duration + fade_time)
 

@@ -202,7 +202,10 @@
 
 /obj/item/ego_weapon/ranged/loyalty
 	name = "loyalty"
-	desc = "Courtesy of the 16th Ego rifleman's brigade."
+	desc = "Courtesy of the 16th Ego Rifleman's Brigade."
+	special = "This weapon has IFF capabilities. \n\
+	This rifle has an underslung grenade launcher. Grenades fired from this rifle also have IFF, and knock back enemies while dealing AoE RED damage. \n\
+	The underslung grenade launcher may only be fired once per magazine."
 	icon_state = "loyalty"
 	inhand_icon_state = "loyalty"
 	force = 28
@@ -211,12 +214,31 @@
 	spread = 26
 	shotsleft = 95
 	reloadtime = 3.2 SECONDS
-	special = "This weapon has IFF capabilities."
 	fire_sound = 'sound/weapons/gun/smg/vp70.ogg'
 	autofire = 0.08 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 	)
+	alternate_fire_name = "Underslung Grenade Launcher"
+	alternate_shotsleft = 1
+	alternate_pellets = 1
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/loyalty_ugl
+	alternate_fire_sound = 'sound/weapons/gun/general/grenade_launch.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You ready your underslung grenade launcher.")
+	alternate_toggle_disabled_message = span_notice("You will no longer use your underslung grenade launcher.")
+
+
+/obj/item/ego_weapon/ranged/loyalty/EnableAltfire(mob/user, silent = TRUE)
+	. = ..()
+	spread = 0
+
+/obj/item/ego_weapon/ranged/loyalty/DisableAltfire(mob/user, silent = TRUE)
+	. = ..()
+	spread = initial(spread)
 
 //Just a funny gold soda pistol. It was originally meant to just be a golden meme weapon, now it is the only pale gun, lol
 /obj/item/ego_weapon/ranged/pistol/executive

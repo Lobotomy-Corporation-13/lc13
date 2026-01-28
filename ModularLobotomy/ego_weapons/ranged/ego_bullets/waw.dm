@@ -92,7 +92,7 @@
 
 /obj/projectile/ego_bullet/ego_loyalty/iff
 	name = "loyalty IFF"
-	damage = 3
+	damage = 9
 	nodamage = TRUE	//Damage is calculated later
 	projectile_piercing = PASSMOB
 
@@ -104,6 +104,110 @@
 	..()
 	if(!ishuman(target))
 		qdel(src)
+
+/// Fired from the Loyalty rifle's UGL. Will go right through mobs and nondense stuff until it reaches the thing you clicked on or a wall.
+/obj/projectile/ego_bullet/loyalty_ugl
+	name = "loyal grenade"
+	icon_state = "bolter"
+	damage = 20
+	range = 16
+	nodamage = TRUE	// Damage is calculated later
+	speed = 0.8
+	projectile_piercing = PASSMOB
+	// No hitsound - we play a sound on detonation
+
+	var/screenshake_radius = 8
+	var/tile_radius = 3
+	/// Damage at epicenter (distance 0)
+	var/base_damage = 180
+	/// Each tile away from the epicenter reduces damage by this much
+	var/falloff_per_dist = 40
+	var/list/hitlist = list()
+	/// We'll update the range the first time we move. We don't want to go any further than the distance between our firer and the original target.
+	var/updated_range = FALSE
+
+/obj/projectile/ego_bullet/loyalty_ugl/on_hit(atom/target, blocked = FALSE)
+	if(target == original || (target.density && !ismob(target)))
+		nodamage = FALSE
+		qdel(src)
+	else
+		return
+	..()
+
+/obj/projectile/ego_bullet/loyalty_ugl/Moved(atom/OldLoc, Dir)
+	. = ..()
+	// Okay so, we don't want the grenade to go any further than the distance between the firer and our original target. We can't do this on Initialize because we won't have
+	// the original var by then. So we just do it once the first time we move.
+	if(!updated_range)
+		updated_range = TRUE
+		range = get_dist(firer, original)
+	if(isturf(original) && loc == original)
+		qdel(src)
+
+/// Whenever this thing finally meets its end, blow up.
+/obj/projectile/ego_bullet/loyalty_ugl/Destroy(force)
+	Detonate()
+	return ..()
+
+/// Explode, dealing damage and knocking back all nearby enemies. Ignore anything that has the firer's faction. Also gib dead things.
+/obj/projectile/ego_bullet/loyalty_ugl/proc/Detonate()
+	var/mob/living/nadeslinger = firer
+	if(!istype(nadeslinger))
+		return
+	var/turf/impact_turf = get_turf(src)
+
+	// Aesthetics
+	playsound(impact_turf, 'sound/abnormalities/armyinblack/black_explosion.ogg', 60, FALSE, 5, ignore_walls = TRUE)
+	var/atom/vfx = new /obj/effect/temp_visual/black_explosion(impact_turf)
+	vfx.transform *= 0.6
+	INVOKE_ASYNC(src, PROC_REF(DetonationShockwaveVisual), impact_turf, tile_radius)
+
+	// Shake the screen of people in a certain radius
+	// Note: we could technically combine the 2 for loops, but I think it'd be more expensive to do so...? I'm really not sure
+	for(var/mob/living/L in view(screenshake_radius, impact_turf))
+		var/dist_from_epicenter = get_dist(L, impact_turf)
+		var/screenshake_intensity = clamp((6 - (dist_from_epicenter * 0.7)), 0.5, 6)
+		shake_camera(L, 6, screenshake_intensity)
+
+	// Check every turf in our radius, hit mobs once at most. This can hit corpses.
+	var/list/affected_turfs = RANGE_TURFS(tile_radius, impact_turf)
+	for(var/turf/T in affected_turfs)
+		for(var/mob/living/M in T)
+			if(M in hitlist)
+				continue
+			if(nadeslinger.faction_check_mob(M))
+				continue
+
+			hitlist |= M
+
+			// Damage
+			var/final_damage = base_damage
+			var/distance_from_epicenter = clamp(get_dist(M, impact_turf), 0, 3)
+			final_damage -= (distance_from_epicenter * falloff_per_dist)
+			M.deal_damage(final_damage, damage_type, source = nadeslinger, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+
+			// Knockback
+			var/throw_comparison = get_turf(M) == impact_turf ? null : impact_turf // If they're standing directly in the epicenter we need to take special measures
+			var/throw_dir = throw_comparison ? get_cardinal_dir(throw_comparison, M) : pick(GLOB.cardinals) // Take a random cardinal if they're directly on top of us
+			if(M)
+				M.safe_throw_at(target = get_ranged_target_turf(impact_turf, throw_dir, 4), range = 5, speed = 5, thrower = nadeslinger, spin = TRUE)
+				// Gib corpses
+				if(M.stat >= DEAD)
+					M.gib()
+
+// Recycled from Thumb East. Visual shockwave with the good old smoke vfx.
+/obj/projectile/ego_bullet/loyalty_ugl/proc/DetonationShockwaveVisual(turf/origin, radius)
+	var/list/already_rendered = list()
+	// There may be a less expensive way to do this. I'm open to ideas.
+	for(var/i in 1 to radius)
+		var/list/turfs_to_spawn_visual_at = list()
+		for(var/turf/T in orange(i, origin))
+			turfs_to_spawn_visual_at |= T
+		turfs_to_spawn_visual_at -= already_rendered
+		for(var/turf/T2 in turfs_to_spawn_visual_at)
+			new /obj/effect/temp_visual/small_smoke/halfsecond(T2)
+			already_rendered |= T2
+		sleep(2)
 
 /obj/projectile/ego_bullet/ego_executive
 	name = "executive"
@@ -157,7 +261,7 @@
 /obj/projectile/ego_bullet/ego_praetorian
 	name = "praetorian"
 	icon_state = "loyalty"
-	damage = 3
+	damage = 14
 	nodamage = TRUE	//Damage is calculated later
 	damage_type = RED_DAMAGE
 	projectile_piercing = PASSMOB
