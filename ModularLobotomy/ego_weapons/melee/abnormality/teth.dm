@@ -711,7 +711,7 @@
 /obj/item/ego_weapon/luminosity
 	name = "luminosity"
 	desc = "A weapon that is hard to use even in the best of circumstances."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand. \
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand. \
 			This weapon has a fast attack speed. The combo finisher heals humans in a small area."
 	icon_state = "luminosity"
 	force = 12

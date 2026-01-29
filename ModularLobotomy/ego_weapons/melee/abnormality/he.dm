@@ -679,7 +679,7 @@
 /obj/item/ego_weapon/inheritance
 	name = "inheritance"
 	desc = "You should consider it an honor. The humans who have joined me could attain greater wealth and glory."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand."
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand."
 	icon_state = "inheritance"
 	force = 12
 	damtype = RED_DAMAGE

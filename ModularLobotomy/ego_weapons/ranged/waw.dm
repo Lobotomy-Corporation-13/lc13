@@ -764,7 +764,7 @@
 	icon_state = "banquet"
 	inhand_icon_state = "banquet"
 	special = "This weapon is a staff that fires blood spikes in much the same way as a regular gun.\n\
-	It is also able to store nearby blood. <b>Alt-click</b> the weapon to summon a friendly bat in exchange for 600 blood.\n\
+	It is also able to store nearby blood. <b>Alt-click</b> the weapon to summon a friendly bat in exchange for blood.\n\
 	The bat will fight by your side for a while, and will prioritize attacking the last target you shot with this weapon.\n\
 	The duration, health and attack damage of your bats linearly scale off of your Temperance, the minimum values being at 80 Temperance and the maximum at 170."
 	force = 44
@@ -815,13 +815,13 @@
 /// We need a Bloodfeast component.
 /obj/item/ego_weapon/ranged/banquet/Initialize()
 	. = ..()
-	bloodfeast_component = AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 600, threshold = 1500, max_amount = 1500)
+	bloodfeast_component = AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 625, threshold = 1500, max_amount = 1500)
 
 /// Show stored blood on Examine.
 /obj/item/ego_weapon/ranged/banquet/examine(mob/user)
 	. = ..()
 	if(bloodfeast_component)
-		. += "It has [bloodfeast_component.blood_amount]/[bloodfeast_component.blood_cap] units of stored blood."
+		. += "It has [bloodfeast_component.blood_amount]/[bloodfeast_component.blood_cap] units of stored blood. Summoning a bat costs <b>[bat_spawn_cost] blood</b>."
 
 /// Proc that changes the amount of blood in our bloodfeast component. Feed it negative values to drain, positive to add blood.
 /obj/item/ego_weapon/ranged/banquet/proc/AdjustThirst(blood_amount)
@@ -897,12 +897,14 @@
 			to_chat(user, span_notice("You use [src]'s stored blood to call forth a friendly bat."))
 			playsound(src, 'sound/abnormalities/nosferatu/batspawn.ogg', 65, FALSE)
 			AdjustThirst(-bat_spawn_cost)
+			user.balloon_alert(user, "You call forth a friendly bat! Blood: ([bloodfeast.blood_amount]/[bloodfeast.blood_cap])")
 			return TRUE
 		else
 			to_chat(user, span_danger("Your bat-summoning is interrupted!"))
 			return FALSE
 	else
-		to_chat(user, span_danger("There's not enough blood stored in [src] to summon a bat."))
+		to_chat(user, span_danger("There's not enough blood stored in [src] to summon a bat. Blood: [bloodfeast.blood_amount]/[bloodfeast.blood_cap] (required [bat_spawn_cost])."))
+		user.balloon_alert(user, "Not enough blood. ([bloodfeast.blood_amount] / [bat_spawn_cost])")
 		return FALSE
 
 /// Called by a signal when the bats are destroyed, removes them from the weapon's reference list of bats.

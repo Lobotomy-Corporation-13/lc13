@@ -37,7 +37,7 @@
 	name = "sword sharpened with tears"
 	desc = "A sword suitable for swift thrusts. \
 	Even someone unskilled in dueling can rapidly puncture an enemy using this E.G.O with remarkable agility."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand. \
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand. \
 			This weapon has a fast attack speed"
 	icon_state = "despair"
 	force = 20
@@ -2418,7 +2418,7 @@
 /obj/item/ego_weapon/abyssal_route //An ungodly love child of sword sharpened with tears and fluid sac
 	name = "abyssal route"//old korean name I think
 	desc = "I am the only one who moves in these waves. ... Shatter."
-	special = "This weapon has a combo system ending with a dive attack. To turn off this combo system, use in hand."
+	special = "This weapon has a combo system ending with a dive attack. To turn off this combo system, use in-hand."
 	icon_state = "abyssal_route"
 	force = 19
 	attack_speed = 0.5
