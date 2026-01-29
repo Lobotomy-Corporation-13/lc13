@@ -264,8 +264,8 @@
 	if(do_after(user, reloadtime, src)) //gotta reload
 		playsound(src, reload_success_sound, 50, TRUE)
 		shotsleft +=1
+		INVOKE_ASYNC(src, PROC_REF(rounds_reload), user)	//To save you from loading all your bullets
 	is_reloading = FALSE
-	INVOKE_ASYNC(src, PROC_REF(rounds_reload), user)	//To save you from loading all your bullets
 
 /obj/item/ego_weapon/ranged/equipped(mob/living/user, slot)
 	. = ..()
