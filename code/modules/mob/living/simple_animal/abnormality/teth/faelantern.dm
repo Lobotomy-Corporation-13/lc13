@@ -42,7 +42,6 @@
 	gift_message = "The fairy extends an olive branch towards you."
 
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
-	being_tested = TRUE // !!!!!!!!!! REMOVE BEFORE MERGING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	observation_prompt = "In the middle of a quiet and peaceful forest, a delicate tree branch is placed. <br>\
 		A small fairy with a green glow sits atop it. <br>\
