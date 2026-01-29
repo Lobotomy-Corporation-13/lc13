@@ -392,8 +392,6 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_aroma
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
-	shotsleft = 1
-	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80
@@ -763,8 +761,6 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_hypocrisy
 	weapon_weight = WEAPON_HEAVY
 	fire_delay = 25
-	shotsleft = 1
-	reloadtime = 1 SECONDS
 	fire_sound = 'sound/weapons/ego/crossbow.ogg'
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 80

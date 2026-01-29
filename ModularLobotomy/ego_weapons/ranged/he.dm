@@ -236,8 +236,6 @@
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 40
 							)
-	shotsleft = 1
-	reloadtime = 0.8 SECONDS
 
 /obj/item/ego_weapon/ranged/pistol/swindle
 	name = "swindle"

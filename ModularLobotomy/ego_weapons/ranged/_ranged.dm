@@ -242,7 +242,7 @@
 		playsound(G, reload_start_sound, 25, TRUE)
 		total_reload+=G.reloadtime	// We're going to make sure that reloading akimbo is a bit slower.
 
-	total_reload *= 1.2	//About 20% slower
+	total_reload *= 1.1	//About 10% slower
 
 
 	if(do_after(user, total_reload, src)) //gotta reload
