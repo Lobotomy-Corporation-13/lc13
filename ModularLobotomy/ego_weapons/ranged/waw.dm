@@ -780,6 +780,7 @@
 							FORTITUDE_ATTRIBUTE = 60,
 							TEMPERANCE_ATTRIBUTE = 60
 	)
+	actions_types = list(/datum/action/item_action/banquet_summon_bat)
 	var/datum/component/bloodfeast/bloodfeast_component
 
 	/// Blood gained per melee hit.
@@ -788,20 +789,22 @@
 	/// Holds a reference of all active summoned bats. The projectile this weapon fires will GiveTarget() to all of them on impact.
 	var/list/bound_bats = list()
 	/// How long does it take to spawn a bat?
-	var/bat_spawn_windup = 1 SECONDS
+	var/bat_spawn_windup = 0.8 SECONDS
+	/// Avoiding multi-summons...
+	var/summoning = FALSE
 	/// How much blood does it take to spawn a bat? Consider: a bloodsplatter has 50 units. Also consider: blood is bugged and can have negative bloodiness (????)
 	var/bat_spawn_cost = 625
 
 	/// How long do bats last by default? Increased by Temperance.
 	var/bat_base_duration = 20 SECONDS
 	/// How tough are bats? Increased by Temperance.
-	var/bat_base_health = 110
+	var/bat_base_health = 145
 	/// How hard do bats hit? Increased by Temperance.
 	var/bat_base_damage = 14
 
 	// Variables used for Temperance scaling increases to the base stats of a bat.
 	var/bat_max_extra_duration = 70 SECONDS
-	var/bat_max_extra_health = 200
+	var/bat_max_extra_health = 230
 	var/bat_max_extra_damage = 30
 	/// At this, or below this Temperance level, bats have their base stats.
 	var/bat_base_temperance = 80
@@ -849,6 +852,21 @@
 /obj/item/ego_weapon/ranged/banquet/AltClick(mob/user)
 	SummonBat(user)
 
+/datum/action/item_action/banquet_summon_bat
+	name = "Summon Bat"
+	desc = "Spend blood to summon an allied bat to your side. Targets hit by Banquet projectiles will be prioritized by these bats."
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
+	button_icon_state = "nosferatu_mob"
+
+/datum/action/item_action/banquet_summon_bat/Trigger()
+	if(!IsAvailable())
+		return FALSE
+	if(SEND_SIGNAL(src, COMSIG_ACTION_TRIGGER, src) & COMPONENT_ACTION_BLOCK_TRIGGER)
+		return FALSE
+	if(target && ismob(owner))
+		var/obj/item/ego_weapon/ranged/banquet/I = target
+		I.SummonBat(owner)
+	return TRUE
 
 /obj/item/ego_weapon/ranged/banquet/Destroy(force)
 	for(var/mob/living/simple_animal/hostile/banquet_bat/minion in bound_bats)
@@ -863,10 +881,13 @@
 		return FALSE
 	if(!ishuman(user))
 		return FALSE
+	if(summoning)
+		return FALSE
 	var/mob/living/carbon/human/summoner = user
 
 	var/datum/component/bloodfeast/bloodfeast = bloodfeast_component
 	if(istype(bloodfeast) && bloodfeast.blood_amount >= bat_spawn_cost)
+		summoning = TRUE
 		if(do_after(summoner, bat_spawn_windup))
 			var/final_bat_duration = bat_base_duration
 			var/final_bat_health = bat_base_health
@@ -898,9 +919,11 @@
 			playsound(src, 'sound/abnormalities/nosferatu/batspawn.ogg', 65, FALSE)
 			AdjustThirst(-bat_spawn_cost)
 			user.balloon_alert(user, "You call forth a friendly bat! Blood: ([bloodfeast.blood_amount]/[bloodfeast.blood_cap])")
+			summoning = FALSE
 			return TRUE
 		else
 			to_chat(user, span_danger("Your bat-summoning is interrupted!"))
+			summoning = FALSE
 			return FALSE
 	else
 		to_chat(user, span_danger("There's not enough blood stored in [src] to summon a bat. Blood: [bloodfeast.blood_amount]/[bloodfeast.blood_cap] (required [bat_spawn_cost])."))
@@ -930,8 +953,8 @@
 	attack_verb_continuous = "bites"
 	attack_verb_simple = "bite"
 	attack_sound = 'sound/abnormalities/nosferatu/bat_attack.ogg'
-	health = 180
-	maxHealth = 180
+	health = 130
+	maxHealth = 130
 	damage_coeff = list(RED_DAMAGE = 1.2, WHITE_DAMAGE = 1.8, BLACK_DAMAGE = 0.6, PALE_DAMAGE = 2)
 	melee_damage_type = RED_DAMAGE
 	melee_damage_lower = 16
@@ -983,7 +1006,7 @@
 	if(QDELETED(master))
 		return
 	// If we're not in combat and not in an ordered movement, and our master is moving away from us, follow them.
-	if(!target && !traveling && (get_dist(master, src) > 3))
+	if(!target && !traveling && master.z == src.z && (get_dist(master, src) > 3) && health > 0 && stat < DEAD) // Those last two checks are to avoid heading back to our master when dying
 		// If our master is reachable directly, just use the normal walking proc
 		if(CheckToolReach(src, master, vision_range))
 			walk_to(src, master, 1, move_to_delay)
@@ -1001,7 +1024,9 @@
 
 // On death, call Despawn.
 /mob/living/simple_animal/hostile/banquet_bat/death(gibbed)
+	var/stored_target = target
 	. = ..()
+	target = stored_target
 	INVOKE_ASYNC(src, PROC_REF(Despawn)) // This MUST be async or it causes some goofy behaviour
 
 // Do a little exploding animation then delete the mob. Should be called when this mob times out or dies.
@@ -1009,7 +1034,12 @@
 	deltimer(despawn_timer)
 
 	toggle_ai(AI_OFF)
-	walk(src, 0)
+	if(ordered_target)
+		walk_towards(src, ordered_target, move_to_delay)
+	else if(target)
+		walk_towards(src, target, move_to_delay)
+	else
+		walk(src, 0)
 	density = FALSE
 	anchored = TRUE
 
@@ -1044,7 +1074,7 @@
 				continue
 			hitlist |= L
 			L.deal_damage(melee_damage_lower * deathsplosion_coeff, melee_damage_type, source = master, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
-
+			L.visible_message(span_danger("[L] is splashed by a pressurised burst of blood from [src]!"), span_userdanger("You're splashed by a pressurised burst of blood from [src]!"))
 	master = null
 	return ..()
 
