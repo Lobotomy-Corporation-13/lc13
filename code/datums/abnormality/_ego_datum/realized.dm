@@ -69,11 +69,10 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /datum/ego_datum/armor/realized/stupor
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/stupor
 /// Eldtree - Midwinter Nightmare (Faelantern)
-/* Commented 'cause it's not in Master
 /datum/ego_datum/armor/realized/eldtree
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/eldtree
 	ego_tags = list(EGO_TAG_DEBUFFER)
-*/
+
 /* ------------------ HE Realizations ------------------*/
 
 /// Grinder MK52 - Grinder MK4 (All-Around Helper)
@@ -153,7 +152,7 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 // We may need to blacklist it, if it gets exploited. However there are easier ways to lag the server or be annoying.
 /datum/ego_datum/armor/realized/capitalism
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/capitalism
-	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_HAZARDOUS) // Tagged as hazardous because they LOVE FFing you}
+	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_HAZARDOUS) // Tagged as hazardous because they LOVE FFing you
 /// Duality of Harmony - Assonance (Yang)
 /datum/ego_datum/armor/realized/duality_yang
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/duality_yang
