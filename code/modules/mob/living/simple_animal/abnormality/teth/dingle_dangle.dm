@@ -78,12 +78,12 @@
 
 /mob/living/simple_animal/hostile/abnormality/dingledangle/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	//give it some empowerment to use.
-	empowerment_stacks+=2
+	empower_stacks+=2
 
 	//if your prudence is low, give a short hallucination, apply empowerment and lower counter.
 	if(get_attribute_level(user, PRUDENCE_ATTRIBUTE) < 40) // below level 2
 		user.hallucination += 20
-		empowerment_stacks += 4
+		empower_stacks += 4
 		datum_reference.qliphoth_change(-1)
 		return ..()
 
@@ -94,7 +94,7 @@
 		return ..()
 
 	//If you dust, release a shitload of empowerment into the system
-	empowerment_stacks+=10
+	empower_stacks+=10
 
 	//I mean it does this in wonderlabs
 	//But here's the twist: You get a better ego.
