@@ -142,3 +142,25 @@
 				var/whack_speed = (prob(60) ? 1 : 4)
 				L.throw_at(throw_target, rand(1, 2), whack_speed, user)
 	addtimer(CALLBACK(src, PROC_REF(Recharge), user), 15 SECONDS)
+
+/obj/item/ego_weapon/ranged/pyrogx
+	name = "pyro-GX prototype"
+	desc = "A clunky-looking, highly mechanical gun salvaged from a factory in the Outskirts."
+	icon_state = "gaze"
+	inhand_icon_state = "gaze"
+	fire_delay = 1
+	autofire = 0.1 SECONDS
+	special = "This weapon can swap modes by using it inhand."
+	force = 30
+	damtype = RED_DAMAGE
+	weapon_weight = WEAPON_HEAVY
+	projectile_path = /obj/projectile/beam/vulcan
+	fire_sound = 'sound/weapons/gun/rifle/shot.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 100
+							)
+
+/obj/item/ego_weapon/ranged/pyrogx/attack_self(mob/user)

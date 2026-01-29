@@ -99,3 +99,28 @@
 		fuel.deal_damage(4, FIRE)
 		fuel.apply_lc_burn(2)
 		return TRUE
+
+/obj/projectile/beam/vulcan
+	name = "vulcan"
+	icon_state = "omnilaser"
+	hitsound = null
+	damage = 15
+	damage_type = RED_DAMAGE
+	hitscan = TRUE
+	muzzle_type = /obj/effect/projectile/muzzle/laser/vulcan
+	tracer_type = /obj/effect/projectile/tracer/laser/vulcan
+	impact_type = /obj/effect/projectile/impact/laser/vulcan
+	wound_bonus = -100
+	bare_wound_bonus = -100
+
+/obj/effect/projectile/muzzle/laser/vulcan
+	name = "vulcan flash"
+	icon_state = "muzzle_vulcan"
+
+/obj/effect/projectile/tracer/laser/vulcan
+	name = "vulcan beam"
+	icon_state = "vulcan"
+
+/obj/effect/projectile/impact/laser/vulcan
+	name = "vulcan impact"
+	icon_state = "impact_vulcan"
