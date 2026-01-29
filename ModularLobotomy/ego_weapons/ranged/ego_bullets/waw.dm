@@ -306,7 +306,7 @@
 //tommygun
 /obj/projectile/ego_bullet/ego_intention
 	name = "good intentions"
-	damage = 10
+	damage = 12
 	speed = 0.2
 	damage_type = RED_DAMAGE
 

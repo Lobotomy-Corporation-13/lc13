@@ -636,7 +636,7 @@
 	if(!CanUseEgo(user))
 		return
 	if(vine_cooldown <= world.time)
-		user.visible_message(span_notice("[user] stabs [src] into the ground."), span_nicegreen("You stab your [src] into the ground."))
+		user.visible_message(span_notice("[user] stabs [src] into the ground."), span_nicegreen("You stab your [src.name] into the ground."))
 		vine_cooldown = world.time + vine_cooldown_duration
 		vine_damage *=force_multiplier
 		var/mob/living/carbon/human/L = user
@@ -645,8 +645,8 @@
 		AlterMoveResist(user, 2.5)
 		//Bonus Damage is applied if sanity is below 30%
 		if(L.sanityhealth <= (L.maxSanity * 0.3))
-			to_chat(user, span_warning("You feel her influence as the [src] digs into your arm."))
-			balloon_alert(user, "You feel her influence as the [src] digs into your arm.")
+			to_chat(user, span_warning("You feel her influence as the [src.name] digs into your arm."))
+			balloon_alert(user, "You feel her influence as the [src.name] digs into your arm.")
 			vine_damage_bonus = vine_damage * 0.5
 
 		for(var/i = 1 to channeling_cycle_max)
@@ -2537,7 +2537,7 @@
 	Just wind it up, close your eyes, and count to ten. When you open them, you will be standing at the exact moment you wished to be in."
 	special = "Use in hand to charge this weapon, up to four times. Deals very little damage when uncharged. Charging the weapon takes time inversely proportional to how much charge you already have."
 	icon_state = "windup"
-	force = 15
+	force = 12
 	attack_speed = 1.2
 	damtype = PALE_DAMAGE
 	attack_verb_continuous = list("cleaves", "cuts")
@@ -2547,11 +2547,12 @@
 							JUSTICE_ATTRIBUTE = 80
 							)
 	var/charges = 0
-	var/force_per_charge = 12
+	var/force_per_charge = 11
 
 /obj/item/ego_weapon/windup/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
+	force = charges > 0 ? (charges * force_per_charge + initial(force)) : initial(force)
 	..()
 	if(charges > 0)
 		if(charges == 4)
@@ -2559,21 +2560,17 @@
 		else
 			playsound(src, 'sound/machines/clockcult/steam_whoosh.ogg', 100)
 	charges = max(0, charges - 1)
-	if(charges == 0)
-		force = initial(force)
 
 /obj/item/ego_weapon/windup/attack_self(mob/user)
 	if(!CanUseEgo(user))
 		return
 	if(charges >= 4)
 		to_chat(user,span_warning("You can't crank it any further!"))
-		balloon_alert(user, "You can't crank it any further!")
 		return
 	if(do_after(user, (12 - (charges * 2)), src))
 		charges = min(charges + 1, 4)
-		force = (charges * force_per_charge + 5)
-		to_chat(user,span_warning("You crank the [src]."))
-		balloon_alert(user, "You crank the [src].")
+		force = (charges * force_per_charge + initial(force))
+		to_chat(user,span_warning("You crank the [src.name]."))
 		playsound(src.loc, 'sound/abnormalities/clock/clank.ogg', 75, TRUE)
 		PlayChargeSound()
 
@@ -2654,7 +2651,7 @@
 	if(QDELETED(staff_vfx))
 		var/turf/user_turf = get_turf(user)
 		staff_vfx = new(user_turf, spin_windup, spin_vfx_fade_time)
-		playsound(user_turf, 'sound/abnormalities/crumbling/warning.ogg', 30, FALSE, -1)
+		playsound(user_turf, 'sound/abnormalities/crumbling/warning.ogg', 65, FALSE, -1)
 
 	if(do_after(user, spin_windup, src, interaction_key = "sunyata_spin", max_interact_count = 1))
 		playsound(src, 'sound/abnormalities/myformempties/MFEattack.ogg', 75, FALSE, 4)//get a proper sound for this

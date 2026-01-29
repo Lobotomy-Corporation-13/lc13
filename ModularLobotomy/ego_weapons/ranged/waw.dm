@@ -435,7 +435,7 @@
 	fire_sound = 'sound/weapons/ego/ecstasy.ogg'
 	autofire = 0.08 SECONDS
 	shotsleft = 40
-	reloadtime = 1.2 SECONDS
+	reloadtime = 1.4 SECONDS
 	attribute_requirements = list(
 							PRUDENCE_ATTRIBUTE = 60,
 							TEMPERANCE_ATTRIBUTE = 60
@@ -452,7 +452,7 @@
 	fire_sound = 'sound/weapons/gun/pistol/tp17.ogg'
 	autofire = 0.12 SECONDS
 	shotsleft = 12
-	reloadtime = 0.5 SECONDS
+	reloadtime = 0.6 SECONDS
 	fire_sound_volume = 30
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
@@ -593,6 +593,10 @@
 		new_icon_state += "_[current_light]"
 	icon_state = new_icon_state
 	inhand_icon_state = new_icon_state
+
+	if(istype(src.loc, /mob/living/carbon/human)) // I know this is horrifying but I sadly don't know any procs that let us pull the holder of an item.
+		var/mob/living/carbon/human/holder = src.loc
+		holder.regenerate_icons()
 
 	// Play a SFX and alert people that this thing changed
 	if(current_light == 0)
@@ -780,14 +784,14 @@
 	var/datum/component/bloodfeast/bloodfeast_component
 
 	/// Blood gained per melee hit.
-	var/base_melee_blood_gain = 100
+	var/base_melee_blood_gain = 80
 
 	/// Holds a reference of all active summoned bats. The projectile this weapon fires will GiveTarget() to all of them on impact.
 	var/list/bound_bats = list()
 	/// How long does it take to spawn a bat?
 	var/bat_spawn_windup = 1 SECONDS
 	/// How much blood does it take to spawn a bat? Consider: a bloodsplatter has 50 units. Also consider: blood is bugged and can have negative bloodiness (????)
-	var/bat_spawn_cost = 600
+	var/bat_spawn_cost = 625
 
 	/// How long do bats last by default? Increased by Temperance.
 	var/bat_base_duration = 20 SECONDS
@@ -997,13 +1001,14 @@
 // On death, call Despawn.
 /mob/living/simple_animal/hostile/banquet_bat/death(gibbed)
 	. = ..()
-	Despawn()
+	INVOKE_ASYNC(src, PROC_REF(Despawn)) // This MUST be async or it causes some goofy behaviour
 
 // Do a little exploding animation then delete the mob. Should be called when this mob times out or dies.
 /mob/living/simple_animal/hostile/banquet_bat/proc/Despawn()
 	deltimer(despawn_timer)
 
 	toggle_ai(AI_OFF)
+	walk(src, 0)
 	density = FALSE
 	anchored = TRUE
 
@@ -1079,11 +1084,11 @@
 	addtimer(CALLBACK(src, TYPE_PROC_REF(/atom, cut_overlay), warning), 1 SECONDS)
 
 	ordered_target = victim
+	RegisterSignal(victim, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(RemoveOrderedTarget))
 
 	if(CheckToolReach(src, victim, vision_range)) // We are able to directly run at the target without any issues.
 		GiveTarget(victim)
 	else // Target is behind a wall, door, window, or outside our vision range.
-		RegisterSignal(victim, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(RemoveOrderedTarget))
 		LoseTarget()
 		traveling = TRUE
 		patrol_to(get_turf(victim)) // Will path with AStar and open doors and whatnot
