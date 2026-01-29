@@ -116,7 +116,7 @@
 	projectile_piercing = PASSMOB
 	// No hitsound - we play a sound on detonation
 
-	var/screenshake_radius = 8
+	var/screenshake_radius = 7
 	var/tile_radius = 3
 	/// Damage at epicenter (distance 0)
 	var/base_damage = 180
@@ -166,8 +166,8 @@
 	// Note: we could technically combine the 2 for loops, but I think it'd be more expensive to do so...? I'm really not sure
 	for(var/mob/living/L in view(screenshake_radius, impact_turf))
 		var/dist_from_epicenter = get_dist(L, impact_turf)
-		var/screenshake_intensity = clamp((6 - (dist_from_epicenter * 0.7)), 0.5, 6)
-		shake_camera(L, 6, screenshake_intensity)
+		var/screenshake_intensity = clamp((3 - (dist_from_epicenter * 0.4)), 0.3, 3)
+		shake_camera(L, 3, screenshake_intensity)
 
 	// Check every turf in our radius, hit mobs once at most. This can hit corpses.
 	var/list/affected_turfs = RANGE_TURFS(tile_radius, impact_turf)

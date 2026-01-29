@@ -764,7 +764,7 @@
 	icon_state = "banquet"
 	inhand_icon_state = "banquet"
 	special = "This weapon is a staff that fires blood spikes in much the same way as a regular gun.\n\
-	It is also able to store nearby blood. <b>Alt-click</b> the weapon to summon a friendly bat in exchange for blood.\n\
+	It is also able to store blood, automatically siphoning nearby blood and gaining a large amount on melee attacks. Alt-click the weapon to summon a friendly bat in exchange for blood.\n\
 	The bat will fight by your side for a while, and will prioritize attacking the last target you shot with this weapon.\n\
 	The duration, health and attack damage of your bats linearly scale off of your Temperance, the minimum values being at 80 Temperance and the maximum at 170."
 	force = 44
@@ -784,7 +784,7 @@
 	var/datum/component/bloodfeast/bloodfeast_component
 
 	/// Blood gained per melee hit.
-	var/base_melee_blood_gain = 80
+	var/base_melee_blood_gain = 160
 
 	/// Holds a reference of all active summoned bats. The projectile this weapon fires will GiveTarget() to all of them on impact.
 	var/list/bound_bats = list()
@@ -793,7 +793,7 @@
 	/// Avoiding multi-summons...
 	var/summoning = FALSE
 	/// How much blood does it take to spawn a bat? Consider: a bloodsplatter has 50 units. Also consider: blood is bugged and can have negative bloodiness (????)
-	var/bat_spawn_cost = 625
+	var/bat_spawn_cost = 1000
 
 	/// How long do bats last by default? Increased by Temperance.
 	var/bat_base_duration = 20 SECONDS
@@ -818,7 +818,7 @@
 /// We need a Bloodfeast component.
 /obj/item/ego_weapon/ranged/banquet/Initialize()
 	. = ..()
-	bloodfeast_component = AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 625, threshold = 1500, max_amount = 1500)
+	bloodfeast_component = AddComponent(/datum/component/bloodfeast, siphon = TRUE, range = 2, starting = 1000, threshold = 2600, max_amount = 2600)
 
 /// Show stored blood on Examine.
 /obj/item/ego_weapon/ranged/banquet/examine(mob/user)
@@ -888,7 +888,7 @@
 	var/datum/component/bloodfeast/bloodfeast = bloodfeast_component
 	if(istype(bloodfeast) && bloodfeast.blood_amount >= bat_spawn_cost)
 		summoning = TRUE
-		if(do_after(summoner, bat_spawn_windup))
+		if(do_after(summoner, bat_spawn_windup, timed_action_flags = IGNORE_HELD_ITEM))
 			var/final_bat_duration = bat_base_duration
 			var/final_bat_health = bat_base_health
 			var/final_bat_damage = bat_base_damage
