@@ -39,6 +39,8 @@
 	var/reset_time = 3 MINUTES //Don't hit everyone with the global pale if it was hit in a small period of time
 	var/datum/looping_sound/silence/soundloop // Tick-tock, tick-tock
 
+	being_tested = TRUE // Remove before merge.
+
 /mob/living/simple_animal/hostile/abnormality/silence/Initialize()
 	. = ..()
 	meltdown_cooldown = world.time + meltdown_cooldown_time

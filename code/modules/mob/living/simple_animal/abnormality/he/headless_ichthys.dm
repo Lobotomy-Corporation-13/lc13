@@ -72,6 +72,8 @@
 		/datum/action/innate/abnormality_attack/BloodCannon,
 	)
 
+	being_tested = TRUE // Remove before merge.
+
 // Player-Controlled code
 /datum/action/innate/abnormality_attack/IchthysJump
 	name = "Pressing Sac"

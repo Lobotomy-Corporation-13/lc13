@@ -585,7 +585,7 @@
 /obj/item/ego_weapon/thirteen/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
-	var/valid_target = ((istype(M)) && (M.stat > DEAD) && (!(M.status_flags & GODMODE)))
+	var/valid_target = ((istype(M)) && (M.stat < DEAD) && (!(M.status_flags & GODMODE)))
 	if(valid_target && combo >= 12)
 		combo = -1
 		force = get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)

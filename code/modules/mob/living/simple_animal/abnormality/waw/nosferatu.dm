@@ -86,6 +86,8 @@
 		/datum/action/innate/change_icon_nosf,
 	)
 
+	being_tested = TRUE // Remove before merge.
+
 // Playables buttons
 /datum/action/cooldown/nosferatu_banquet
 	name = "Banquet"
