@@ -738,6 +738,7 @@
 	visible_message(span_danger("[src] raises \his greatsword...!"))
 	SLEEP_CHECK_DEATH(0.6 SECONDS)
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/blade3.ogg', 100, 0, 5)
+	var/list/hitlist = list()
 	for(var/turf/T in area_of_effect)
 		new /obj/effect/temp_visual/slice(T)
 		for(var/mob/living/L in T)
@@ -745,7 +746,11 @@
 				continue
 			if (L == src)
 				continue
-			HurtInTurf(T, list(), special_ability_damage, melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			if(L in hitlist)
+				continue
+			hitlist |= L
+			L.deal_damage(special_ability_damage, melee_damage_type, source = src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			L.visible_message(span_danger("[L] is cleaved by [src]'s greatsword!"), span_userdanger("You're cleaved by [src]'s greatsword!"))
 			playsound(T, attack_sound, 100, TRUE)
 			// Big slice VFX
 			var/obj/effect/temp_visual/dir_setting/slash/temp = new (T)

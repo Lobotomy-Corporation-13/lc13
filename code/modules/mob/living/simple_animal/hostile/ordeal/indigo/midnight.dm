@@ -1198,6 +1198,8 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			deployment_turfs = list()
 			prospective_turf = get_turf(src)
 			break
+		else if(istype(T, /turf/closed))
+			continue
 		deployment_turfs |= T
 
 	new /obj/effect/temp_visual/sweeper_squad_warning(prospective_turf)
