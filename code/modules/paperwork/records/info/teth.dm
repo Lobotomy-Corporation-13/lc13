@@ -61,7 +61,7 @@
 		"When employees with Prudence Level 1 completed their work with T-04-111, the Qliphoth Counter decreased.",
 		"The above action generates 'stacks' of Strength."
 		"These employees reported a sense of confusion.",
-		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium, and T-04-111 gained 'stacks' of Fragility..")
+		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium, and T-04-111 gained 'stacks' of Fragility.")
 
 //Beauty and the Beast
 /obj/item/paper/fluff/info/teth/beauty
