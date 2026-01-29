@@ -598,7 +598,7 @@
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
 	damtype = WHITE_DAMAGE
-	force = 27 // Significantly higher than Curfew due to hitting less on a charge, being slower and having less reach.
+	force = 29 // Significantly higher than Curfew due to hitting less times on a charge, being slower and having less reach.
 	inhand_x_dimension = 96
 	inhand_y_dimension = 96
 	attack_speed = 2

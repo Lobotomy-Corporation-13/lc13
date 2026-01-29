@@ -585,13 +585,16 @@
 /obj/item/ego_weapon/thirteen/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
-	if(combo >= 12)
+	var/valid_target = ((istype(M)) && (M.stat > DEAD) && (!(M.flags & GODMODE)))
+	if(valid_target && combo >= 12)
 		combo = -1
 		force = get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)
-		new /obj/effect/temp_visual/thirteen(get_turf(M))
+		var/atom/temp = new /obj/effect/temp_visual/thirteen(get_turf(M))
+		temp.layer = POINT_LAYER
 		playsound(src, 'sound/weapons/ego/price_of_silence.ogg', 25, FALSE, 9)
 	..()
-	combo += 1
+	if(valid_target)
+		combo += 1
 	force = initial(force)
 
 /obj/item/ego_weapon/stem
@@ -615,6 +618,7 @@
 							TEMPERANCE_ATTRIBUTE = 80
 							)
 	var/vine_cooldown = 0
+	var/vine_cooldown_duration = 15 SECONDS
 	/*
 	* Added for debugging. channeling_duration_start
 	* is divided by each cycle. So if we go through 2
@@ -633,7 +637,7 @@
 		return
 	if(vine_cooldown <= world.time)
 		user.visible_message(span_notice("[user] stabs [src] into the ground."), span_nicegreen("You stab your [src] into the ground."))
-		vine_cooldown = world.time + (channeling_duration_start * channeling_cycle_max)
+		vine_cooldown = world.time + vine_cooldown_duration
 		vine_damage *=force_multiplier
 		var/mob/living/carbon/human/L = user
 		var/vine_damage_bonus = 0
@@ -2303,11 +2307,13 @@
 			sparks.attach(chosen_turf)
 			sparks.start()
 
-		// Reset if you don't use the empowered throw in 3 seconds
-		power_timer = addtimer(CALLBACK(src, PROC_REF(PowerReset), user), 3 SECONDS, TIMER_STOPPABLE)//prevents storing 3 powered up anchors and unloading all of them at once
+		// Reset if you don't use the empowered throw in 4.5 seconds
+		power_timer = addtimer(CALLBACK(src, PROC_REF(PowerReset), user), 4.5 SECONDS, TIMER_STOPPABLE)//prevents storing 3 powered up anchors and unloading all of them at once
 
 /obj/item/ego_weapon/blind_obsession/proc/PowerReset(mob/user, success = FALSE)
 	deltimer(power_timer)
+	if(throwing && thrown) // Don't cancel midflight.
+		return
 	if(!success)
 		to_chat(user, span_warning("The power fades from [src]..."))
 		balloon_alert(user, "The power fades from [src]...")

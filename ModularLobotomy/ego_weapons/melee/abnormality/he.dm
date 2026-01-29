@@ -917,7 +917,7 @@
 /obj/item/ego_weapon/fluid_sac
 	name = "fluid sac"
 	desc = "Crush them, even if you must disgorge everything."
-	special = "This weapon can be used to perform a jump attack after a short wind-up (Middle mouse button click/alt click an enemy)."
+	special = "This weapon can be used to perform a jump attack after a short wind-up by middle mouse clicking or by alt clicking an enemy."
 	icon_state = "fluid_sac"
 	force = 55
 	attack_speed = 2
@@ -1018,7 +1018,7 @@
 	desc = "A mechanical yet sinewy claw ribbed with circuitry. It reminds you of toy claw machines."
 	special = "The charge effect of this weapon trips humans instead of injuring them."
 	icon_state = "replica"
-	force = 32
+	force = 30
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("grabs", "pinches", "snips", "attacks")
 	attack_verb_simple = list("grab", "pinch", "snip", "attack")
@@ -1279,7 +1279,7 @@
 	desc = "The elderly man showed a red thread connecting the young boy with his future lover. Disgusted at the sight, he ordered her to be executed."
 	special = "This weapon deals significantly more damage when attacking the same target repeatedly."
 	icon_state = "destiny"
-	force = 15
+	force = 16
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_speed = 0.5
 	damtype = RED_DAMAGE
@@ -1772,10 +1772,10 @@
 	id = "fairybite"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = 10 SECONDS
-	tick_interval = 20 //One tick every 2 seconds
+	tick_interval = 20 //One tick every 2 seconds. The last tick doesn't actually go off...
 	on_remove_on_mob_delete = TRUE
 	alert_type = null
-	var/damage_amount = 10
+	var/damage_amount = 14
 
 /datum/status_effect/fairybite/on_apply()
 	return ..()

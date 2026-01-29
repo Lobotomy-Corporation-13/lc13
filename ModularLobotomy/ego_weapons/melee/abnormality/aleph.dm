@@ -712,9 +712,9 @@
 /obj/item/ego_weapon/smile
 	name = "smile"
 	desc = "The monstrous mouth opens wide to devour the target, its hunger insatiable."
-	special = "This weapon instantly kills targets below 10% health"	//To make it more unique, if it's too strong
+	special = "This weapon instantly kills targets below 10% health." // To make it more unique, if it's too strong
 	icon_state = "smile"
-	force = 110 //Slightly less damage, has an ability
+	force = 110 // Slightly less damage, has an ability
 	attack_speed = 1.6
 	damtype = BLACK_DAMAGE
 	attack_verb_continuous = list("slams", "attacks")
@@ -736,7 +736,8 @@
 	. = ..()
 	if((target.health <= target.maxHealth * 0.1 || target.stat == DEAD) && !(target.status_flags & GODMODE))	//Makes up for the lack of damage by automatically killing things under 10% HP
 		target.gib()
-		user.adjustBruteLoss(-user.maxHealth * 0.15)	//Heal 15% HP. Moved here from the armor, because that's a nightmare to code
+		if(QDELETED(target)) // Added to stop infinite healing cheese on Apostles, Hermit etc.
+			user.adjustBruteLoss(-user.maxHealth * 0.15) // Heal 15% HP. Moved here from the armor, because that's a nightmare to code
 
 /obj/item/ego_weapon/smile/get_clamped_volume()
 	return 50
