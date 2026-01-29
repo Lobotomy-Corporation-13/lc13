@@ -585,7 +585,7 @@
 /obj/item/ego_weapon/thirteen/attack(mob/living/M, mob/living/user)
 	if(!CanUseEgo(user))
 		return
-	var/valid_target = ((istype(M)) && (M.stat > DEAD) && (!(M.flags & GODMODE)))
+	var/valid_target = ((istype(M)) && (M.stat > DEAD) && (!(M.status_flags & GODMODE)))
 	if(valid_target && combo >= 12)
 		combo = -1
 		force = get_modified_attribute_level(user, JUSTICE_ATTRIBUTE)
@@ -618,7 +618,7 @@
 							TEMPERANCE_ATTRIBUTE = 80
 							)
 	var/vine_cooldown = 0
-	var/vine_cooldown_duration = 15 SECONDS
+	var/vine_cooldown_duration = 12 SECONDS
 	/*
 	* Added for debugging. channeling_duration_start
 	* is divided by each cycle. So if we go through 2
