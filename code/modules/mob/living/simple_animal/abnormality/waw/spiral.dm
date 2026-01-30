@@ -817,6 +817,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	duration = 10 SECONDS
 	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref // Passed on creation
 	var/mob/living/simple_animal/spiral_shun/clasped_hands // We create this ourselves
+	// These values have defaults but they are a failsafe. If you want to edit this status' stats or the mobs' stats then check Spiral's vars.
 	var/clasped_duration = 6 SECONDS // We get passed a duration on creation
 	var/clasped_hand_hp = 400 // We get passed HP on creation
 	var/list/clasped_hand_resists = list(RED_DAMAGE = 1, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1, PALE_DAMAGE = 1) // We get passed a resist list on creation
@@ -896,9 +897,11 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	icon_dead = "malevolent"
 	layer = POINT_LAYER
 	del_on_death = FALSE
+	// These three values are pulled from the status effect's vars, which in turn come from Spiral's vars.
 	var/final_radius = 2
 	var/final_windup = 0.5 SECONDS
 	var/fadeout_time = 0.5 SECONDS
+
 	var/list/affected_turfs = list()
 	var/list/telegraph_vfx = list()
 	var/datum/status_effect/spiral_contempt/contempt_status
