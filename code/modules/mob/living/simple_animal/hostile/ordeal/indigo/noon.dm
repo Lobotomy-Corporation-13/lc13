@@ -391,7 +391,7 @@
 	/// If we've already used 333... 1973 before, we don't want to use it ever again
 	var/used_last_stand = FALSE
 	/// Amount of Persistence stacks gained when using 333... 1973.
-	var/last_stand_stack_gain = 3
+	var/last_stand_stack_gain = 2
 
 	// CoL balance adjustments. These will be applied on Initialize to rebalance this variant on City modes.
 	// At the moment there are no changes, however there may be the need to nerf or buff them on City in the future.
@@ -402,7 +402,7 @@
 	/// ADDS TO Extract Fuel's extra damage. Positive values make it hit harder, negative ones nerf it.
 	var/COL_extractfuel_damage_adjustment = 0
 	/// ADDS TO Last Stand's stack gain. Positive values makes it give more stacks, negative ones makes it give less.
-	var/COL_laststand_stacks_adjustment = 0
+	var/COL_laststand_stacks_adjustment = 1
 
 
 

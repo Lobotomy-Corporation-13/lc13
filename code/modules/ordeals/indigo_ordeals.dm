@@ -41,6 +41,11 @@
 	var/grunts_per_agent = 0.25
 	var/packs_per_agent = 0.25
 
+	var/max_cap_grunts_per_pack = 6
+	var/max_cap_packs = 6
+	var/max_cap_special_chance = 75
+	var/max_cap_specials_per_pack = 3
+
 /datum/ordeal/indigo_specials/Run()
 	. = ..()
 	if(!LAZYLEN(GLOB.xeno_spawn))
@@ -48,15 +53,18 @@
 		return
 	scaling = length(AllLivingAgents(TRUE))
 
+	// For each agent/CRA/DO found, add the scaling for them...
 	for(var/i in 1 to scaling)
 		max_specials += max_specials_per_agent
 		special_chance += special_chance_per_agent
 		grunts_per_pack += grunts_per_agent
 		pack_amount += packs_per_agent
 
-	max_specials = floor(max_specials)
-	grunts_per_pack = floor(grunts_per_pack)
-	pack_amount = floor(pack_amount)
+	// Remove decimals as appropiate and clamp between the starting value and the max cap values.
+	max_specials = clamp(floor(max_specials), initial(max_specials), max_cap_specials_per_pack)
+	grunts_per_pack = clamp(floor(grunts_per_pack), initial(grunts_per_pack), max_cap_grunts_per_pack)
+	pack_amount = clamp(floor(pack_amount), initial(pack_amount), max_cap_packs)
+	special_chance = clamp(special_chance, initial(special_chance), max_cap_special_chance)
 
 	var/list/available_locs = GLOB.xeno_spawn.Copy()
 	var/commander_amount = LAZYLEN(commander_types)
@@ -111,14 +119,19 @@
 	special_types = list(/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky, /mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky)
 	commander_types = list()
 	max_specials = 2
-	special_chance = 25
+	special_chance = 15
 	grunts_per_pack = 4
 	pack_amount = 4
 
-	max_specials_per_agent = 0.5
-	special_chance_per_agent = 15
+	max_specials_per_agent = 0.20
+	special_chance_per_agent = 12
 	grunts_per_agent = 0.34
-	packs_per_agent = 0.25
+	packs_per_agent = 0.20
+
+	max_cap_grunts_per_pack = 7 // At most, 7 grunts at 9 Agents.
+	max_cap_specials_per_pack = 4 // At most, 4 specials at 10 Agents.
+	max_cap_special_chance = 70 // At most, 70% special chance at 5 Agents.
+	max_cap_packs = 6 // At most, 6 packs at 10 Agents.
 
 // Dusk
 /datum/ordeal/indigo_specials/indigo_dusk
@@ -147,8 +160,12 @@
 
 	max_specials_per_agent = 0.5
 	special_chance_per_agent = 10
-	grunts_per_agent = 0.25
+	grunts_per_agent = 0.20
 	packs_per_agent = 0
+
+	max_cap_grunts_per_pack = 7 // At most, 7 grunts at 15 Agents.
+	max_cap_specials_per_pack = 3 // At most, 3 specials at 6 Agents.
+	max_cap_special_chance = 80 // At most, 80% special chance at 8 Agents.
 
 // Midnight
 /datum/ordeal/boss/indigo_midnight
