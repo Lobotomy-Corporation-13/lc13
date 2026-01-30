@@ -13,7 +13,7 @@
 /datum/ego_datum/weapon/branch12/signal
 	item_path = /obj/item/ego_weapon/ranged/branch12/mini/signal
 	cost = 10
-	ego_tags = list(EGO_TAG_DOT, EGO_TAG_SUSTAIN)
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_SUSTAIN, EGO_TAG_VERSATILE_DAMAGE)
 
 /datum/ego_datum/armor/branch12/signal
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/signal
@@ -97,7 +97,7 @@
 /datum/ego_datum/weapon/branch12/starry_night
 	item_path = /obj/item/ego_weapon/ranged/branch12/starry_night
 	cost = 20
-	ego_tags = list(EGO_TAG_DOT, EGO_TAG_DEBUFFER)
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_DEBUFFER, EGO_TAG_VERSATILE_DAMAGE)
 
 /datum/ego_datum/armor/branch12/starry_night
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/starry_night
@@ -189,7 +189,7 @@
 /datum/ego_datum/weapon/branch12/exterminator
 	item_path = /obj/item/ego_weapon/ranged/branch12/mini/exterminator
 	cost = 35
-	ego_tags = list(EGO_TAG_DOT)
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_VERSATILE_DAMAGE)
 
 /datum/ego_datum/armor/branch12/exterminator
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/exterminator
@@ -341,10 +341,12 @@
 /datum/ego_datum/weapon/branch12/lucifer
 	item_path = /obj/item/ego_weapon/ranged/branch12/lucifer
 	cost = 100
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE)
 
 /datum/ego_datum/weapon/branch12/executioner
 	item_path = /obj/item/ego_weapon/ranged/branch12/lucifer/executioner
 	cost = 100
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE)
 
 
 // Sage of the World - XXI
