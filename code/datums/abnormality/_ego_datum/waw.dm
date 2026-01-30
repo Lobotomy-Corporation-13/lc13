@@ -328,7 +328,7 @@
 /datum/ego_datum/weapon/blind_rage
 	item_path = /obj/item/ego_weapon/blind_rage
 	cost = 50
-	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS, EGO_TAG_DOT, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_SPLIT_DAMAGE, EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS, EGO_TAG_DOT, EGO_TAG_LOCKED_POTENTIAL)
 
 /datum/ego_datum/armor/blind_rage
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/blind_rage

@@ -346,12 +346,12 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /datum/ego_datum/weapon/city/echo_office_sodom
 	item_path = /obj/item/ego_weapon/city/echo/twins/sodom
 	cost = 60
-	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_MULTIHIT, EGO_TAG_LOCKED_POTENTIAL)
 /// Gomorrah
 /datum/ego_datum/weapon/city/echo_office_gomorrah
 	item_path = /obj/item/ego_weapon/city/echo/twins/gomorrah
 	cost = 60
-	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_DEBUFFER, EGO_TAG_MULTIHIT, EGO_TAG_LOCKED_POTENTIAL)
 
 // Metal Fixer
 //
@@ -364,7 +364,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 /datum/ego_datum/weapon/city/echo_office_iria
 	item_path = /obj/item/ego_weapon/city/echo/iria
 	cost = 60
-	ego_tags = list(EGO_TAG_KNOCKBACK, EGO_TAG_LOCKED_POTENTIAL)
+	ego_tags = list(EGO_TAG_KNOCKBACK, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_SUSTAIN)
 
 // Flame Fixer
 //

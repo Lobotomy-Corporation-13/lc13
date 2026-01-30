@@ -254,3 +254,4 @@
 /datum/ego_datum/weapon/eldtree
 	item_path = /obj/item/ego_weapon/wield/eldtree
 	cost = 100
+	ego_tags = list(EGO_TAG_ASSIMILATION, EGO_TAG_VERSATILE_DAMAGE, EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_SUSTAIN)
