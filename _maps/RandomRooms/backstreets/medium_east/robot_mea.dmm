@@ -95,6 +95,10 @@
 /obj/structure/fluff/broken_flooring{
 	dir = 4
 	},
+/obj/item/quest_ticket/grungeon{
+	pixel_y = -6;
+	pixel_x = 6
+	},
 /turf/open/floor/plating,
 /area/city/backstreets_room)
 "X" = (
