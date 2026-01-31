@@ -236,6 +236,11 @@
 	. = ..()
 	. += span_notice("\nGrenades fired from the underslung grenade launcher are 'impact' grenades that will attempt to detonate wherever you click. They explode for 180 RED damage and their damage falls off based on distance from the epicenter.")
 
+/obj/item/ego_weapon/ranged/loyalty/process_chamber()
+	. = ..()
+	if(alternate_selected)
+		DisableAltfire(null, TRUE)
+
 /obj/item/ego_weapon/ranged/loyalty/EnableAltfire(mob/user, silent = TRUE)
 	. = ..()
 	spread = 0
