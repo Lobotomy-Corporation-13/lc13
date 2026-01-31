@@ -230,11 +230,18 @@
 	alternate_toggle_sound_volume = 65
 	alternate_toggle_enabled_message = span_notice("You ready your underslung grenade launcher.")
 	alternate_toggle_disabled_message = span_notice("You will no longer use your underslung grenade launcher.")
+	// Need to store this to modify the autofire after firing UGL
+	var/datum/component/automatic_fire/autofire_component
+	var/firing_ugl_extra_shot_delay_coeff = 8
 
+/obj/item/ego_weapon/ranged/loyalty/Initialize(mapload)
+	. = ..()
+	autofire_component = GetComponent(/datum/component/automatic_fire)
 
 /obj/item/ego_weapon/ranged/loyalty/GunAttackInfo()
 	. = ..()
-	. += span_notice("\nGrenades fired from the underslung grenade launcher are 'impact' grenades that will attempt to detonate wherever you click. They explode for 180 RED damage and their damage falls off based on distance from the epicenter.")
+	. += span_notice("\nGrenades fired from the underslung grenade launcher are 'impact' grenades that will attempt to detonate wherever you click. They explode for 180 RED damage and their damage falls off based on distance from the epicenter.\
+	After firing the UGL, you'll automatically swap to the primary fire mode.")
 
 /obj/item/ego_weapon/ranged/loyalty/process_chamber()
 	. = ..()
@@ -244,10 +251,12 @@
 /obj/item/ego_weapon/ranged/loyalty/EnableAltfire(mob/user, silent = TRUE)
 	. = ..()
 	spread = 0
+	autofire_component.autofire_shot_delay = (autofire * firing_ugl_extra_shot_delay_coeff)
 
 /obj/item/ego_weapon/ranged/loyalty/DisableAltfire(mob/user, silent = TRUE)
 	. = ..()
 	spread = initial(spread)
+	autofire_component.autofire_shot_delay = autofire
 
 //Just a funny gold soda pistol. It was originally meant to just be a golden meme weapon, now it is the only pale gun, lol
 /obj/item/ego_weapon/ranged/pistol/executive
