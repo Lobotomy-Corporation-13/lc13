@@ -4,9 +4,9 @@
 */
 
 /datum/stonk_company
-	var/name
-	var/desc = "An upstart company formed from a group of \"reformed\" rats from the backstreets."
-	var/product = "Scrap & Guts"
+	var/name = "ERROR"
+	var/desc = "THIS IS NOT A COMPANY ALERT YOUR ADMIN"
+	var/product = "RUNTIMES"
 	var/current_value = 100
 	var/last_value = 100
 
@@ -49,16 +49,16 @@
 	var/list/values = list()
 	var/list/shareholders = list()
 
-
 /datum/stonk_company/New(company_name, company_product, company_value, company_desc)
-	name = company_name
+	if(company_name)
+		name = company_name
 	if(company_product)
 		product = company_product
 	if(company_value)
 		current_value = company_value
 		values = list(company_value)
 	else
-		//Gimme a value that is 10% to 100% of default value.
+		//Gimme a value that is 35% to 200% of default value.
 		current_value = current_value * (rand(35,200) / 100)
 	if(company_desc)
 		desc = company_desc
@@ -404,8 +404,9 @@
 
 	//Used in fluctuate()
 /datum/stonk_company/proc/unifyShares()
-	for (var/I in shareholders)
+	for(var/I in shareholders)
 		var/shr = shareholders[I]
+		//Is it dividable by 2
 		if (shr % 2)
 			sellShares(I, 1)
 		shr -= 1

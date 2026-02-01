@@ -3847,6 +3847,7 @@
 #include "code\modules\stock_market\stonk_company.dm"
 #include "code\modules\stock_market\stonk_computer.dm"
 #include "code\modules\stock_market\stonk_market.dm"
+#include "code\modules\stock_market\unique_stonks.dm"
 #include "code\modules\suppressions\_core_suppression.dm"
 #include "code\modules\suppressions\command.dm"
 #include "code\modules\suppressions\control.dm"
