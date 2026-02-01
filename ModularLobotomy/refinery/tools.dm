@@ -7,6 +7,7 @@
 	amount = 1
 	max_amount = 50
 	novariants = TRUE
+	merge_type = /obj/item/stack/refiner_filter
 
 /obj/item/stack/refiner_filter/blue
 	name = "Blue PE Filters"
