@@ -49,7 +49,9 @@
 	grid_manager = new(src)
 	GLOB.lobotomy_devices += src
 	// Register for ordeal completion signal (only once globally)
-	InitializeOrdealTierTracking()
+	if(!GLOB.grid_craft_ordeal_initialized)
+		GLOB.grid_craft_ordeal_initialized = TRUE
+		RegisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END, PROC_REF(OnOrdealComplete))
 
 /obj/structure/grid_crafting_station/Destroy()
 	GLOB.lobotomy_devices -= src
@@ -412,15 +414,8 @@
 
 // ===== Ordeal Tier Unlocking System =====
 
-/// Initialize the global ordeal tier tracking (called once)
-/proc/InitializeOrdealTierTracking()
-	if(GLOB.grid_craft_ordeal_initialized)
-		return
-	GLOB.grid_craft_ordeal_initialized = TRUE
-	RegisterSignal(SSdcs, COMSIG_GLOB_ORDEAL_END, GLOBAL_PROC_REF(OnOrdealComplete))
-
 /// Called when an ordeal completes - updates the global tier unlock
-/proc/OnOrdealComplete(datum/source, datum/ordeal/completed_ordeal)
+/obj/structure/grid_crafting_station/proc/OnOrdealComplete(datum/source, datum/ordeal/completed_ordeal)
 	SIGNAL_HANDLER
 	if(!completed_ordeal)
 		return
