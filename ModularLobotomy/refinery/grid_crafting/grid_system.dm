@@ -557,7 +557,8 @@ GLOBAL_LIST_INIT(grid_craft_blacklist_exact, list(
 	/obj/item/ego_weapon/city/echo,
 	/obj/item/ego_weapon/city/thumbmelee,
 	/obj/item/ego_weapon/city/zweihander/noreq,
-	/obj/item/ego_weapon/city/zweihander/vet/noreq
+	/obj/item/ego_weapon/city/zweihander/vet/noreq,
+	/obj/item/ego_weapon/city/cane
 ))
 
 GLOBAL_LIST_INIT(grid_craft_blacklist_subtypes, list(

@@ -288,6 +288,12 @@
 	data["max_accessible_tier"] = effective_tier
 	data["ordeal_tier"] = GLOB.grid_craft_ordeal_tier
 
+	// Mirror preview data (for showing what movement type will be copied)
+	data["last_movement_type"] = grid_manager.last_movement_type
+	data["last_dir_x"] = grid_manager.last_dir_x
+	data["last_dir_y"] = grid_manager.last_dir_y
+	data["has_previous_move"] = grid_manager.has_previous_move
+
 	// Nearby items (all visible, tier only restricts crafting)
 	var/list/nearby = grid_manager.GetNearbyItems(50)
 	var/list/item_data = list()

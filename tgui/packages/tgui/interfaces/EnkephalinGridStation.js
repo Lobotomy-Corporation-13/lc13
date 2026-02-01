@@ -25,6 +25,10 @@ export const EnkephalinGridStation = (props, context) => {
     crafted_item_ids = [],
     max_accessible_tier = 0,
     ordeal_tier = 0,
+    last_movement_type = 3,
+    last_dir_x = 0,
+    last_dir_y = 0,
+    has_previous_move = false,
   } = data;
 
   const [zoom, setZoom] = useLocalState(context, 'zoom', 2);
@@ -82,7 +86,11 @@ export const EnkephalinGridStation = (props, context) => {
                     debug_mode={debug_mode}
                     highlightedItem={highlightedItem}
                     selected_core={selected_core}
-                    hoveredDir={hoveredDir} />
+                    hoveredDir={hoveredDir}
+                    last_movement_type={last_movement_type}
+                    last_dir_x={last_dir_x}
+                    last_dir_y={last_dir_y}
+                    has_previous_move={has_previous_move} />
                 </Section>
               </Stack.Item>
 
@@ -260,6 +268,10 @@ const GridMap = props => {
     highlightedItem,
     selected_core,
     hoveredDir,
+    last_movement_type,
+    last_dir_x,
+    last_dir_y,
+    has_previous_move,
   } = props;
 
   const zoomScales = { 1: 0.5, 2: 1.0, 3: 2.0, 4: 3.0, 5: 5.0 };
@@ -294,6 +306,17 @@ const GridMap = props => {
         width={MAP_SIZE}
         height={MAP_SIZE}
         style={{ position: 'absolute', top: 0, left: 0 }}>
+        <defs>
+          <style>{`
+            @keyframes prediction-flash {
+              0%, 100% { opacity: 0.25; }
+              50% { opacity: 0.5; }
+            }
+            .prediction-zone {
+              animation: prediction-flash 1s ease-in-out infinite;
+            }
+          `}</style>
+        </defs>
         {(() => {
           const gridSpacing = zoom <= 2 ? 50 : (zoom <= 3 ? 25 : 10);
           const gridCount = Math.ceil(viewRadius / gridSpacing) * 2 + 2;
@@ -348,7 +371,11 @@ const GridMap = props => {
           focus_x={focus_x}
           focus_y={focus_y}
           toScreenX={toScreenX}
-          toScreenY={toScreenY} />
+          toScreenY={toScreenY}
+          last_movement_type={last_movement_type}
+          last_dir_x={last_dir_x}
+          last_dir_y={last_dir_y}
+          has_previous_move={has_previous_move} />
 
         {highlightedItem && (
           <line
@@ -451,6 +478,10 @@ const MovementPrediction = props => {
     focus_y,
     toScreenX,
     toScreenY,
+    last_movement_type,
+    last_dir_x,
+    last_dir_y,
+    has_previous_move,
   } = props;
 
   if (!selected_core || !hoveredDir) {
@@ -472,6 +503,16 @@ const MovementPrediction = props => {
 
     return (
       <g>
+        {/* Flashing landing zone between min and max */}
+        <line
+          x1={endMinX}
+          y1={endMinY}
+          x2={endMaxX}
+          y2={endMaxY}
+          stroke={color}
+          strokeWidth={8}
+          strokeLinecap="round"
+          className="prediction-zone" />
         <line
           x1={centerX}
           y1={centerY}
@@ -486,7 +527,7 @@ const MovementPrediction = props => {
           cy={endMinY}
           r={4}
           fill={color}
-          opacity={0.5} />
+          opacity={0.7} />
         <circle
           cx={endMaxX}
           cy={endMaxY}
@@ -584,6 +625,16 @@ const MovementPrediction = props => {
 
     return (
       <g>
+        {/* Flashing landing zone between min and max */}
+        <line
+          x1={endMinX}
+          y1={endMinY}
+          x2={endMaxX}
+          y2={endMaxY}
+          stroke={color}
+          strokeWidth={8}
+          strokeLinecap="round"
+          className="prediction-zone" />
         <line
           x1={centerX}
           y1={centerY}
@@ -598,7 +649,7 @@ const MovementPrediction = props => {
           cy={endMinY}
           r={4}
           fill={color}
-          opacity={0.5} />
+          opacity={0.7} />
         <circle
           cx={endMaxX}
           cy={endMaxY}
@@ -615,7 +666,6 @@ const MovementPrediction = props => {
   if (mt === 5) {
     const endX = centerX + dx * maxDist * MAP_SCALE;
     const endY = centerY - dy * maxDist * MAP_SCALE;
-    const spreadMin = maxDist * 0.5 * MAP_SCALE;
     const spreadMax = maxDist * 1.0 * MAP_SCALE;
 
     // Calculate perpendicular direction
@@ -630,6 +680,11 @@ const MovementPrediction = props => {
 
     return (
       <g>
+        {/* Flashing spread zone polygon */}
+        <polygon
+          points={`${centerX},${centerY} ${p1x},${p1y} ${p2x},${p2y}`}
+          fill={color}
+          className="prediction-zone" />
         <line
           x1={centerX}
           y1={centerY}
@@ -638,11 +693,7 @@ const MovementPrediction = props => {
           stroke={color}
           strokeWidth={2}
           strokeDasharray="8,4"
-          opacity={0.5} />
-        <polygon
-          points={`${centerX},${centerY} ${p1x},${p1y} ${p2x},${p2y}`}
-          fill={color}
-          opacity={0.2} />
+          opacity={0.6} />
         <line
           x1={p1x}
           y1={p1y}
@@ -703,35 +754,174 @@ const MovementPrediction = props => {
     );
   }
 
-  // Mirror (7): Show mimic symbol - indicates it copies last movement
+  // Mirror (7): Show same prediction as last movement but in purple
   if (mt === 7) {
+    const purpleColor = '#703794';
+
+    // If no previous move, show generic indicator
+    if (!has_previous_move) {
+      return (
+        <g>
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={maxDist * MAP_SCALE}
+            fill={purpleColor}
+            className="prediction-zone" />
+          <circle
+            cx={centerX}
+            cy={centerY}
+            r={minDist * MAP_SCALE}
+            fill="none"
+            stroke={purpleColor}
+            strokeWidth={2}
+            strokeDasharray="4,4"
+            opacity={0.5} />
+          <text
+            x={centerX}
+            y={centerY + 5}
+            textAnchor="middle"
+            fill={purpleColor}
+            fontSize="14"
+            fontWeight="bold"
+            opacity={0.8}>
+            ?
+          </text>
+        </g>
+      );
+    }
+
+    // Mimic last movement type visualization in purple
+    const lastDx = last_dir_x || dx;
+    const lastDy = last_dir_y || dy;
+
+    // Charge-like (last was type 1)
+    if (last_movement_type === 1) {
+      const endMinX = centerX + lastDx * minDist * MAP_SCALE;
+      const endMinY = centerY - lastDy * minDist * MAP_SCALE;
+      const endMaxX = centerX + lastDx * maxDist * MAP_SCALE;
+      const endMaxY = centerY - lastDy * maxDist * MAP_SCALE;
+      return (
+        <g>
+          <line
+            x1={endMinX}
+            y1={endMinY}
+            x2={endMaxX}
+            y2={endMaxY}
+            stroke={purpleColor}
+            strokeWidth={8}
+            strokeLinecap="round"
+            className="prediction-zone" />
+          <line
+            x1={centerX}
+            y1={centerY}
+            x2={endMaxX}
+            y2={endMaxY}
+            stroke={purpleColor}
+            strokeWidth={2}
+            strokeDasharray="8,4"
+            opacity={0.6} />
+          <circle cx={endMinX} cy={endMinY} r={4} fill={purpleColor}
+            opacity={0.7} />
+          <circle cx={endMaxX} cy={endMaxY} r={6} fill="none"
+            stroke={purpleColor} strokeWidth={2} opacity={0.7} />
+        </g>
+      );
+    }
+
+    // Expand-like (last was type 4)
+    if (last_movement_type === 4) {
+      const isDiag = lastDx !== 0 && lastDy !== 0;
+      const distMod = isDiag ? (1 / Math.sqrt(2)) : 1;
+      const endMinX = centerX + lastDx * minDist * distMod * MAP_SCALE;
+      const endMinY = centerY - lastDy * minDist * distMod * MAP_SCALE;
+      const endMaxX = centerX + lastDx * maxDist * distMod * MAP_SCALE;
+      const endMaxY = centerY - lastDy * maxDist * distMod * MAP_SCALE;
+      return (
+        <g>
+          <line
+            x1={endMinX}
+            y1={endMinY}
+            x2={endMaxX}
+            y2={endMaxY}
+            stroke={purpleColor}
+            strokeWidth={8}
+            strokeLinecap="round"
+            className="prediction-zone" />
+          <line
+            x1={centerX}
+            y1={centerY}
+            x2={endMaxX}
+            y2={endMaxY}
+            stroke={purpleColor}
+            strokeWidth={2}
+            strokeDasharray="8,4"
+            opacity={0.6} />
+          <circle cx={endMinX} cy={endMinY} r={4} fill={purpleColor}
+            opacity={0.7} />
+          <circle cx={endMaxX} cy={endMaxY} r={6} fill="none"
+            stroke={purpleColor} strokeWidth={2} opacity={0.7} />
+        </g>
+      );
+    }
+
+    // Drift-like (last was type 5)
+    if (last_movement_type === 5) {
+      const endX = centerX + lastDx * maxDist * MAP_SCALE;
+      const endY = centerY - lastDy * maxDist * MAP_SCALE;
+      const spreadMax = maxDist * 1.0 * MAP_SCALE;
+      const perpX = lastDy !== 0 ? 1 : 0;
+      const perpY = lastDx !== 0 ? 1 : 0;
+      const p1x = endX - perpX * spreadMax;
+      const p1y = endY + perpY * spreadMax;
+      const p2x = endX + perpX * spreadMax;
+      const p2y = endY - perpY * spreadMax;
+      return (
+        <g>
+          <polygon
+            points={`${centerX},${centerY} ${p1x},${p1y} ${p2x},${p2y}`}
+            fill={purpleColor}
+            className="prediction-zone" />
+          <line
+            x1={centerX}
+            y1={centerY}
+            x2={endX}
+            y2={endY}
+            stroke={purpleColor}
+            strokeWidth={2}
+            strokeDasharray="8,4"
+            opacity={0.6} />
+          <line
+            x1={p1x}
+            y1={p1y}
+            x2={p2x}
+            y2={p2y}
+            stroke={purpleColor}
+            strokeWidth={2}
+            strokeDasharray="4,3"
+            opacity={0.6} />
+        </g>
+      );
+    }
+
+    // Default fallback for other types (2, 3, 6) - show generic purple circle
     return (
       <g>
         <circle
           cx={centerX}
           cy={centerY}
           r={maxDist * MAP_SCALE}
-          fill={color}
-          opacity={0.15} />
+          fill={purpleColor}
+          className="prediction-zone" />
         <circle
           cx={centerX}
           cy={centerY}
           r={minDist * MAP_SCALE}
           fill="none"
-          stroke={color}
+          stroke={purpleColor}
           strokeWidth={2}
           strokeDasharray="4,4"
           opacity={0.5} />
-        <text
-          x={centerX}
-          y={centerY + 5}
-          textAnchor="middle"
-          fill={color}
-          fontSize="14"
-          fontWeight="bold"
-          opacity={0.8}>
-          ?
-        </text>
       </g>
     );
   }
