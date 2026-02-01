@@ -240,7 +240,7 @@
 
 /obj/item/ego_weapon/ranged/loyalty/GunAttackInfo()
 	. = ..()
-	. += span_notice("\nGrenades fired from the underslung grenade launcher are 'impact' grenades that will attempt to detonate wherever you click. They explode for 180 RED damage and their damage falls off based on distance from the epicenter.\
+	. += span_notice("\nGrenades fired from the underslung grenade launcher are 'impact' grenades that will attempt to detonate wherever you click. They explode for 180 RED damage and their damage falls off based on distance from the epicenter. \
 	After firing the UGL, you'll automatically swap to the primary fire mode.")
 
 /obj/item/ego_weapon/ranged/loyalty/process_chamber()
