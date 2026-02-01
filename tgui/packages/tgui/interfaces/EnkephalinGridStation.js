@@ -307,15 +307,17 @@ const GridMap = props => {
         height={MAP_SIZE}
         style={{ position: 'absolute', top: 0, left: 0 }}>
         <defs>
-          <style>{`
-            @keyframes prediction-flash {
-              0%, 100% { opacity: 0.25; }
-              50% { opacity: 0.5; }
-            }
-            .prediction-zone {
-              animation: prediction-flash 1s ease-in-out infinite;
-            }
-          `}</style>
+          <style>
+            {`
+              @keyframes prediction-flash {
+                0%, 100% { opacity: 0.25; }
+                50% { opacity: 0.5; }
+              }
+              .prediction-zone {
+                animation: prediction-flash 1s ease-in-out infinite;
+              }
+            `}
+          </style>
         </defs>
         {(() => {
           const gridSpacing = zoom <= 2 ? 50 : (zoom <= 3 ? 25 : 10);

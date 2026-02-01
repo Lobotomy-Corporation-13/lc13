@@ -13,7 +13,7 @@
 	icon_state = "canned_base"
 	w_class = WEIGHT_CLASS_SMALL
 	volume = 30
-	reagent_flags = INJECTABLE | DRAWABLE
+	reagent_flags = OPENCONTAINER | INJECTABLE | DRAWABLE
 	possible_transfer_amounts = list()  // Disable transfer amount cycling
 
 	/// The grade of this template (determines distance range and tier access)
