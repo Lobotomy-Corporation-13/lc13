@@ -550,7 +550,6 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 GLOBAL_LIST_INIT(grid_craft_blacklist_exact, list(
 	/obj/item/ego_weapon/ranged/city,
 	/obj/item/ego_weapon/city/rosespanner,
-	/obj/item/ego_weapon/city/pt,
 	/obj/item/ego_weapon/city/liu,
 	/obj/item/ego_weapon/city/carnival_spear/weak,
 	/obj/item/ego_weapon/city/carnival_spear/arm,
@@ -568,7 +567,8 @@ GLOBAL_LIST_INIT(grid_craft_blacklist_subtypes, list(
 	/obj/item/ego_weapon/city/handchainsword,
 	/obj/item/ego_weapon/ranged/city/lcorp,
 	/obj/item/ego_weapon/city/lcorp,
-	/obj/item/ego_weapon/city/index
+	/obj/item/ego_weapon/city/index,
+	/obj/item/ego_weapon/city/pt
 ))
 
 // IsWeaponBlacklisted moved to global /proc/IsWeaponTypeBlacklisted()
