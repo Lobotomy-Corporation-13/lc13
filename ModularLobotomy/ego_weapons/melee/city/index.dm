@@ -244,6 +244,12 @@
 	// Permission checks are handled in ui_act
 	return GLOB.always_state
 
+/obj/item/clothing/accessory/index_pager/ui_status(mob/user)
+	// Ghosts can always interact regardless of range
+	if(isobserver(user))
+		return UI_INTERACTIVE
+	return ..()
+
 /obj/item/clothing/accessory/index_pager/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)

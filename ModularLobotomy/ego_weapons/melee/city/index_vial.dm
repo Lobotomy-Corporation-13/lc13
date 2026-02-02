@@ -30,6 +30,8 @@
 	var/next_swap_time = 0
 	/// Cooldown between manual swaps (30 seconds)
 	var/swap_cooldown = 30 SECONDS
+	/// Whether furioso is currently being performed
+	var/furioso_active = FALSE
 	/// Mapping of form names to subtypes
 	var/static/list/weapon_types = list(
 		"index_vial_hatchet" = /obj/item/ego_weapon/index_vial/hatchet,
@@ -219,9 +221,12 @@
 		return
 	if(target == user)
 		return
+	if(furioso_active)
+		return
 	INVOKE_ASYNC(src, PROC_REF(furioso), user)
 
 /obj/item/ego_weapon/index_vial/proc/furioso(mob/living/user)
+	furioso_active = TRUE
 	// Collect targets in range
 	var/list/targets = list()
 	for(var/mob/living/L in range(8, user))
@@ -235,6 +240,7 @@
 
 	if(!LAZYLEN(targets))
 		to_chat(user, span_warning("There are no enemies nearby!"))
+		furioso_active = FALSE
 		return
 
 	// Weapon data for Furioso - each weapon has: name, icon, hits, damage, damtype, sound
@@ -326,6 +332,7 @@
 	user.update_inv_hands()
 	unlocked = FALSE
 	unlocked_list = list()
+	furioso_active = FALSE
 	to_chat(user, span_notice("Furioso complete. The vial returns to its inactive state."))
 
 // ============================================
