@@ -2535,7 +2535,7 @@
 	name = "wind-up"
 	desc = "Yes, we can rewind your wasted time. \
 	Just wind it up, close your eyes, and count to ten. When you open them, you will be standing at the exact moment you wished to be in."
-	special = "Use in hand to charge this weapon, up to four times. Deals very little damage when uncharged. Charging the weapon takes time inversely proportional to how much charge you already have."
+	special = "Use in hand to charge this weapon, up to four times. Deals very little damage when uncharged. Each hit drains 1 charge. Charging the weapon takes time inversely proportional to how much charge you already have."
 	icon_state = "windup"
 	force = 12
 	attack_speed = 1.2
