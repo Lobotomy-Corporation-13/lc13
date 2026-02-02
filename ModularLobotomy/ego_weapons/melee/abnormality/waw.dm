@@ -1777,8 +1777,8 @@
 	desc = "A saber from the deepest sea, meant for a groom's mortality."
 	special = "Use this weapon in hand to dodgeroll."
 	icon_state = "psychic"
-	force = 13
-	attack_speed = 0.3
+	force = 20
+	attack_speed = 0.4
 	damtype = WHITE_DAMAGE
 	attack_verb_continuous = list("stabs", "attacks", "slashes")
 	attack_verb_simple = list("stab", "attack", "slash")
