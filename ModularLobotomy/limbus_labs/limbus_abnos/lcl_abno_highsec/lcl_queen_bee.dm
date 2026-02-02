@@ -139,7 +139,7 @@
 	qdel(src)
 
 /mob/living/simple_animal/hostile/worker_bee/lcl_bee
-	faction = list("neutral", "hostile") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
+	faction = list("neutral") //Their AI lobotomy should prevent friendly attack, but better safe than sorry.
 	created_bee_type = /mob/living/simple_animal/hostile/worker_bee/lcl_bee
 	var/mob/living/simple_animal/hostile/limbus_abno/queen_bee/queen
 

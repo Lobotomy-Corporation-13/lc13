@@ -5,27 +5,28 @@
 	health = 600
 	melee_damage_lower = 1
 	melee_damage_upper = 2
-	melee_damage_type = WHITE_DAMAGE
+	melee_damage_type = RED_DAMAGE
 	damage_coeff = list(RED_DAMAGE = 2, WHITE_DAMAGE = 2, BLACK_DAMAGE = 2, PALE_DAMAGE = 2)
 	density = FALSE
 	speak_emote = list("chirps")
 	attack_sound = 'sound/weapons/pbird_bite.ogg'
 	abno_additional_instructions = "The world is full of sinners, and they must be punished, so that they know not to do it again. \
 	When taking damage, you will be able to dish out one singular extremely powerful strike. \
-	Otherwise, pecking people with your beak is enough to rise your mood, but beware! \
-	Your beak deals more and more white damage if you hit the same target in a row, which always causes a murderous insanity, revealing the true sinner beneath."
+	Otherwise, pecking people with your beak is enough to rise your mood, and also restore the sanity of your target, if they have not sinned, of course.\
+	If someone hurts you more than once, it is only fair that you strike them back as many times as they did, but if your target cannot be found, you will wait patiently in a more mercifull form"
 	original_abno = /mob/living/simple_animal/hostile/abnormality/punishing_bird
 
 	diet_list = list(/obj/item/seeds, /obj/item/food/breadslice, /obj/item/food/bread)
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/bodyblock,
 	/datum/action/cooldown/limbus_abno_action/blind_punishment,
-	/datum/action/cooldown/limbus_abno_action/healing_chirp)
+	/datum/action/cooldown/limbus_abno_action/pecking_frenzy)
 	diet_value = 100
 	hunger_cooldown_time = 1 MINUTES
 	desire_cooldown_time = 1 MINUTES
 	desire_loss = 15
 	desire_on_pet = 40
 	desire_on_eat = 40
+	desire_on_talk = 1
 	rep_desire_gain = -100
 	ego_list = list(
 		/datum/ego_datum/weapon/beak,
@@ -41,23 +42,32 @@
 	var/mob/living/carbon/human/combo_target
 	var/calm_down_ratio = 0.3
 	var/active_combo_timer_id
+	var/combo_active = FALSE
+	var/combo_counter = 1
 
 //Being hit multiple times might add the same person more than one time in the sinner's list. That's on purpose as pbird gets a free angry hit on someone for everytime they hurt it.
 /mob/living/simple_animal/hostile/limbus_abno/pbird/attackby(obj/item/W, mob/user, params)
 	. = ..()
-	sinners += user
 	if(HealthCheck())
 		Retaliate()
+		sinners += user
+
+/mob/living/simple_animal/hostile/limbus_abno/pbird/attack_animal(mob/living/simple_animal/M)
+	. = ..()
+	if(HealthCheck())
+		Retaliate()
+		sinners += M
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/bullet_act(obj/projectile/P)
 	. = ..()
 	if(HealthCheck())
 		Retaliate()
-	sinners += P.firer
+		sinners += P.firer
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/attack_hand(mob/living/carbon/human/M)
 	..()
 	if(M.a_intent == INTENT_HARM)
+		sinners += M
 		Retaliate(M)
 
 /mob/living/simple_animal/hostile/limbus_abno/pbird/proc/HealthCheck()
@@ -119,56 +129,65 @@
 		return
 
 	if(!bird_angry)
-		var/mob/living/carbon/human/H
+		if(target != src && isliving(target))
+			AdjustDesire(10)
 		if(!ishuman(attacked_target))
-			combo_target = null
 			return ..()
 
-		H = attacked_target
-		if(H.sanity_lost) //This sanity checks happens BEFORE the damage has been done.
-			if(active_combo_timer_id)
-				ResetCombo()
-			H.adjustSanityLoss(-60)
-			return ..()
+		var/mob/living/carbon/human/H = attacked_target
+		if(!combo_target && combo_active)
+			combo_target = H
 
-		if(combo_target == H)
+		if(combo_target != H && combo_active)
+			combo_counter = 1
+			ResetCombo()
+		else if(combo_target == H && combo_active)
 			to_chat(src, span_warning("You peck [H] harder!"))
-			melee_damage_lower = clamp(melee_damage_lower * 2, 1, 25)
-			melee_damage_upper = clamp(melee_damage_upper * 2, 2, 50)
+			H.adjustWhiteLoss(20 * combo_counter)
+			combo_counter += 1
 			if(!active_combo_timer_id)
 				active_combo_timer_id = addtimer(CALLBACK(src, PROC_REF(ResetCombo)), 10 SECONDS, TIMER_STOPPABLE) //You have 10 seconds to maximize your damage before it resets.
 		else
 			melee_damage_lower = initial(melee_damage_lower)
-			melee_damage_lower = initial(melee_damage_upper)
-			ResetCombo()
+			melee_damage_upper = initial(melee_damage_upper)
+			H.adjustWhiteLoss(-20)
 
-		combo_target = H
 		..()
-		if(H.sanity_lost) //This sanity checks happens AFTER the damage has been done.
+		if(H.sanity_lost && combo_active) //This sanity checks happens AFTER the damage has been done.
 			QDEL_NULL(H.ai_controller)
 			H.ai_controller = /datum/ai_controller/insane/murder
 			H.InitializeAIController()
 		return
 
+	//The part of the code where the bird is angry and attacks.
 	if(isliving(attacked_target))
-		if(blind_punishment)
-			blind_punishment = FALSE
-			return ..()
-		if(LAZYFIND(sinners, attacked_target))
+		if(LAZYFIND(sinners, attacked_target) && !blind_punishment)
+			..()
 			sinners -= attacked_target
 			if(!sinners.len)
 				CalmDown()
-			return ..()
+				return
+		else if(blind_punishment)
+			..()
+			blind_punishment = FALSE
+			if(!sinners.len)
+				CalmDown()
 		else
 			to_chat(src, span_warning("You can't punish innocent people!"))
 	else
 		return ..()
 
+/mob/living/simple_animal/hostile/limbus_abno/pbird/proc/StartCombo()
+	combo_active = TRUE
+	active_combo_timer_id = addtimer(CALLBACK(src, PROC_REF(ResetCombo)), 30 SECONDS, TIMER_STOPPABLE)
+
 /mob/living/simple_animal/hostile/limbus_abno/pbird/proc/ResetCombo()
+	combo_counter = 1
 	if(active_combo_timer_id)
 		deltimer(active_combo_timer_id)
 		active_combo_timer_id = null
 		to_chat(src, span_boldwarning("Your peck frenzy is over."))
+		combo_active = FALSE
 	combo_target = null
 	if(!bird_angry)
 		melee_damage_lower = initial(melee_damage_lower)
@@ -217,24 +236,19 @@
 	return TRUE
 
 ///Heals everyone that hears it, including pbird itself.
-/datum/action/cooldown/limbus_abno_action/healing_chirp
-	name = "Soothing Chirp"
-	desc = "A moment of respite for the innocent beasts of the forest. This chirp heals the sanity and wounds of all that hears it."
+/datum/action/cooldown/limbus_abno_action/pecking_frenzy
+	name = "Pecking frenzy"
+	desc = "Your pecks will deal increasing sanity damage with each peck for 30 seconds on the same target, always leading to a violent insanity. Hitting another target ends the frenzy."
 	icon_icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	button_icon_state = "musical_addiction"
 	transparent_when_unavailable = TRUE
 	cooldown_time = 1.5 MINUTES
 
-/datum/action/cooldown/limbus_abno_action/healing_chirp/Trigger()
+/datum/action/cooldown/limbus_abno_action/pecking_frenzy/Trigger()
 	. = ..()
 	if(!.)
 		return FALSE
-
-	playsound(abno_user.loc, 'sound/abnormalities/pbird/pbird_chirp.ogg', 100, FALSE, 2) //This sound is way too low for some reason but whatever.
-	for(var/mob/living/L in oview(6, src))
-		L.adjustBruteLoss(-80)
-		L.adjustWhiteLoss(-80)
-		to_chat(L, span_green("[abno_user]'s chirping soothes your body and mind."))
+	var/mob/living/simple_animal/hostile/limbus_abno/pbird/bird = abno_user
+	bird.StartCombo() //You have 30 seconds to maximize your damage before it resets.
 	StartCooldown()
 	return TRUE
-

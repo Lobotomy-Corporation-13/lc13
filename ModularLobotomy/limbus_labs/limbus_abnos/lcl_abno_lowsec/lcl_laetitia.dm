@@ -13,7 +13,8 @@
 	diet_list = list(/obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar, /obj/item/food/candy)
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/laetitia_surprise,
 	/datum/action/cooldown/limbus_abno_action/laetitia_gifting,
-	/datum/action/cooldown/limbus_abno_action/special_delivery)
+	/datum/action/cooldown/limbus_abno_action/special_delivery,
+	/datum/action/cooldown/limbus_abno_action/check_gifts)
 	diet_value = 60
 	desire_cooldown_time = 30 SECONDS
 	desire_loss = 5
@@ -24,7 +25,8 @@
 		/datum/ego_datum/weapon/prank,
 		/datum/ego_datum/armor/prank,
 	)
-	var/happy_duration_time = 5 MINUTES
+	desire_on_talk = 1
+	var/happy_duration_time = 20 MINUTES
 	var/happy_duration
 	var/gifting = FALSE
 	var/anticipation_start = FALSE
@@ -106,6 +108,7 @@
 		if(H.stat == DEAD)
 			continue
 		GiveFriend(H)
+	to_chat(src, "<span class='span_warning'>You've given [victim_list.len] gifts, one for each person you know!</span>")
 
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/proc/GiveFriend(mob/living/victim, busted = FALSE)
 	if(victim_list.Find(victim) || victim.stat == DEAD)
@@ -151,7 +154,7 @@
 	playsound(get_turf(src), 'sound/abnormalities/laetitia/spider_born.ogg', 50, 1)
 	FunOver()
 
-///If her desire is kept above 50 for five minute straight, empty the victim list.
+///If her desire is kept above 50 for twenty minute straight, empty the victim list.
 /mob/living/simple_animal/hostile/limbus_abno/laetitia/proc/FunOver(pranked = TRUE)
 	victim_list = list()
 	anticipation = base_anticipation
@@ -201,6 +204,7 @@
 	StartCooldown()
 	return TRUE
 
+//Create gift that has a 50% chance to explode.
 /datum/action/cooldown/limbus_abno_action/special_delivery
 	name = "Special Delivery"
 	desc = "Create a 'normal' gift that has a 50% chance to explode, or to hold a few healing items. You can tell which it is once you've made one, but others can't."
@@ -216,6 +220,34 @@
 	var/obj/item/laetitia_bomb_gift/bomb_gift = new (get_turf(abno_user))
 	abno_user.AdjustDesire(20)
 	bomb_gift.pranked = rand(0, 1)
+	StartCooldown()
+
+//Check how many gifts you have.
+/datum/action/cooldown/limbus_abno_action/check_gifts
+	name = "Check gifts."
+	desc = "Check how many secret gifts inside people are ready to be unwrapped for maximum surprise."
+	icon_icon = 'icons/effects/effects.dmi'
+	button_icon_state = "info"
+	transparent_when_unavailable = TRUE
+	cooldown_time = 1 SECONDS
+
+/datum/action/cooldown/limbus_abno_action/check_gifts/Trigger()
+	. = ..()
+	if(!.)
+		return
+	var/mob/living/simple_animal/hostile/limbus_abno/laetitia/prankster = abno_user
+	var/pranked_amount = prankster.victim_list.len
+	if(pranked_amount == 0)
+		to_chat(prankster, "<span class='span_userdanger'>No one's got any gifts!</span>")
+		StartCooldown()
+		return
+
+	if(prankster.anticipation < 0)
+		to_chat(prankster, "<span class='span_userdanger'>It's too early! But it's fine, it just gives you more time for gifting, [pranked_amount] special gifts and counting!</span>")
+	if(prankster.anticipation > 0 && prankster.anticipation < prankster.max_anticipation)
+		to_chat(prankster, "<span class='span_userdanger'>It's okay, but maybe if you wait a bit longer, the surprise will be even better! There's about [pranked_amount] gifted.</span>")
+	if(prankster.anticipation >= prankster.max_anticipation)
+		to_chat(prankster, "<span class='span_userdanger'>Do it! Do it now! It's fully ready! It'll be so fun! [pranked_amount] of your friends are going to have so much fun!</span>")
 	StartCooldown()
 
 /obj/item/laetitia_bomb_gift

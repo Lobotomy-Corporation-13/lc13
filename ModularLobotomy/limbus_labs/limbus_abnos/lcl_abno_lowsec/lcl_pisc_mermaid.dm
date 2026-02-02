@@ -11,8 +11,8 @@
 	pet_bonus_emote = "smiles!"
 	max_counter = 3
 	abno_additional_instructions = "You like attachment and repression. You need love. You're willing to give so much for it.\
-	You want to be hugged, or they can beat you up, you do not care, as long as they come back to you. \
-	If you breach, the only thing that can bring you back to your senses is the immediate threat of death. Otherwise, your lover will sink into the depths with you. "
+	You want to be hugged and spoken to, they can beat you up, you do not care, as long as they come back to you. \
+	If you breach, the only thing that can bring you back to your senses is the immediate threat of death. Otherwise, your lover will sink into the depths with you."
 	original_abno = /mob/living/simple_animal/hostile/abnormality/pisc_mermaid
 	attack_action_types = list(/datum/action/cooldown/limbus_abno_action/mermaid_chokehold, /datum/action/cooldown/limbus_abno_action/mermaid_telepathy, /datum/action/cooldown/limbus_abno_action/dive_dash)
 	diet_list = list(/obj/item/food/freshfish, /obj/item/food/cake, /obj/item/food/cakeslice, /obj/item/food/chocolatebar) //Sweets and fish.
@@ -22,6 +22,7 @@
 	desire_cooldown_time = 1 MINUTES //Despite being lowsec, she's *extremely* needy and high maintenance. her mood dropping to 0 after only 10 minutes
 	desire_on_eat = 3 //Way less efficient than petting, but you can theoretically keep her happy with cake spam.
 	desire_on_pet = 5 //It's easy to do, but you need to pet her a ton before she's happy.
+	desire_on_talk = 5
 	rep_desire_gain = 0.2
 	rep_desire_loss_at_threshold = 100
 	rep_threshold = 100
@@ -38,6 +39,8 @@
 	var/mob/living/carbon/human/love_target
 	var/mob/living/carbon/human/last_petter
 	var/pet_count = 0
+	var/mob/living/carbon/human/last_speaker
+	var/speak_count = 0
 	var/breached = FALSE
 	var/dashing = FALSE
 
@@ -93,9 +96,11 @@
 	. = ..()
 	if(love_target == user)
 		adjustBruteLoss(W.force * 1.5)
-	if(breached && health < 200)
+
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/updatehealth()
+	..()
+	if(breached && health < 400)
 		Unbreach()
-		return
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/death()
 	. = ..()
@@ -121,6 +126,29 @@
 		playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
 
 	if(petter == love_target)
+		AdjustDesire(25)
+
+//It can trigger from radiospeak, but that's kind of funny so I'll keep it. Online dating.
+/mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/Hear(message, atom/movable/speaker, datum/language/message_language, raw_message, radio_freq, list/spans, list/message_mods)
+	..()
+	if(!ishuman(speaker))
+		return
+	if(last_speaker == speaker)
+		speak_count++
+	else
+		speak_count = 0
+		last_speaker = speaker
+
+	if(speak_count > 4 && isnull(love_target))
+		AssignLover(speaker)
+		var/obj/item/clothing/head/LCL_unrequited_crown/new_crown = new (get_turf(src))
+		insight_cooldown = world.time + insight_cooldown_time //If the crown is still in the room at that time, she'll get angry.
+		new_crown.mermaid = src
+		crown = new_crown
+		playsound(get_turf(src), 'sound/abnormalities/piscinemermaid/bigsplash.ogg', 50, 1)
+		to_chat(src, span_warning("You love the sound of [speaker]'s voice..."))
+
+	if(speaker == love_target)
 		AdjustDesire(25)
 
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/InsightRoomResults(room_score, list/room_obj_list)
@@ -256,6 +284,9 @@
 			mermaid.icon_living = "pmermaid_standing"
 			mermaid.icon_state = "pmermaid_standing"
 		mermaid.manual_emote("rises from the water.")
+		REMOVE_TRAIT(mermaid, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT("mermaid_dive"))
+		mermaid.ranged = FALSE
+		mermaid.dashing = FALSE
 		return FALSE
 
 	mermaid.ranged = TRUE
@@ -289,8 +320,8 @@
 /mob/living/simple_animal/hostile/limbus_abno/pisc_mermaid/OpenFire(atom/A)
 	var/list/dive_line = getline(src, A)
 	var/available_turf = TRUE
-	for(var/turf/line_turf in dive_line) //checks if there's a valid path between the turf and the friend
-		if(line_turf.is_blocked_turf_ignore_climbable() && line_turf.is_blocked_turf(TRUE))
+	for(var/turf/line_turf in dive_line) //checks if there's a valid path between the turf and the target
+		if(line_turf.is_blocked_turf_ignore_climbable() && line_turf.is_blocked_turf(TRUE) && line_turf != get_turf(src))
 			available_turf = FALSE
 	if(available_turf)
 		ranged = FALSE
