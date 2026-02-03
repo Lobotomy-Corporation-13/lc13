@@ -143,19 +143,20 @@
 				L.throw_at(throw_target, rand(1, 2), whack_speed, user)
 	addtimer(CALLBACK(src, PROC_REF(Recharge), user), 15 SECONDS)
 
-/obj/item/ego_weapon/ranged/pyrogx
+/obj/item/ego_weapon/ranged/pyrogx //Grungeon-exclusive ranged weapon with two firemodes
 	name = "pyro-GX prototype"
 	desc = "A clunky-looking, highly mechanical gun salvaged from a factory in the Outskirts."
 	icon_state = "gaze"
 	inhand_icon_state = "gaze"
-	fire_delay = 1
+	fire_delay = 1 //Many dakka for the hitscan mode
 	autofire = 0.1 SECONDS
-	special = "This weapon can swap modes by using it inhand."
+	special = "This weapon can swap modes by using it inhand, with the Vulcan Cannon firing hitscan bullets and the Smart Missiles firing rockets which burst into homing projectiles."
 	force = 30
 	damtype = RED_DAMAGE
 	weapon_weight = WEAPON_HEAVY
+	vary_fire_sound = FALSE
 	projectile_path = /obj/projectile/beam/vulcan
-	fire_sound = 'sound/weapons/gun/rifle/shot.ogg'
+	fire_sound = 'sound/weapons/gun/rifle/gauss.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 100,
 							PRUDENCE_ATTRIBUTE = 80,
@@ -164,3 +165,24 @@
 							)
 
 /obj/item/ego_weapon/ranged/pyrogx/attack_self(mob/user)
+
+
+/obj/item/ego_weapon/ranged/plastest
+	name = "plasma test gun"
+	desc = "A gun made for testing plasma rounds."
+	icon_state = "gaze"
+	inhand_icon_state = "gaze"
+	fire_delay = 8.5
+	special = "This weapon can swap modes by using it inhand, with the Vulcan Cannon firing hitscan bullets and the Smart Missiles firing rockets which burst into homing projectiles."
+	force = 30
+	damtype = RED_DAMAGE
+	weapon_weight = WEAPON_HEAVY
+	vary_fire_sound = FALSE
+	projectile_path = /obj/projectile/ego_bullet/smart_missile
+	fire_sound = 'sound/weapons/gun/rifle/vulcan.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 100
+							)

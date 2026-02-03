@@ -243,7 +243,7 @@
 		if(ishuman(L)) //Different damage formulae for humans vs mobs
 			L.deal_damage(clamp((15 * (2 ** (8 - dist))), detonate_min_damage, detonate_max_damage), FIRE) //15-3840 damage scaling exponentially with distance
 		else
-			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), FIRE) //0-600 damage scaling on distance, we don't want it oneshotting mobs
+			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), FIRE) //600 damage scaling on distance, we want it oneshotting mobs
 		if(object_break)
 			for(var/turf/T in view(8, src))
 				for(var/obj/S in T)

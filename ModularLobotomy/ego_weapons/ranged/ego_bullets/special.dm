@@ -100,7 +100,7 @@
 		fuel.apply_lc_burn(2)
 		return TRUE
 
-/obj/projectile/beam/vulcan
+/obj/projectile/beam/vulcan //Hitscan lasers for the Pyro-GX Prototype and Class-1 Driller
 	name = "vulcan"
 	icon_state = "omnilaser"
 	hitsound = null
@@ -124,3 +124,72 @@
 /obj/effect/projectile/impact/laser/vulcan
 	name = "vulcan impact"
 	icon_state = "impact_vulcan"
+
+/obj/projectile/ego_bullet/smart_missile //Used for the Pyro-GX Prototype and Boarshead
+	name = "smart missile"
+	icon_state = "pulse0"
+	damage = 20 // Direct hit
+	damage_type = RED_DAMAGE
+	ignore_bulletproof = TRUE
+
+/obj/projectile/ego_bullet/smart_missile/on_hit(atom/target, blocked = FALSE) //release the plasma
+	..()
+	for(var/i = 1 to 4)
+		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
+		if(T.density)
+			i -= 1
+			continue
+		var/obj/projectile/ego_bullet/smart_plasma/P
+		P = new(T)
+		P.starting = T
+		P.firer = src
+		P.fired_from = T
+		P.yo = target.y - T.y
+		P.xo = target.x - T.x
+		P.original = target
+		P.preparePixelProjectile(target, T)
+		addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), 0.1)
+
+/obj/projectile/ego_bullet/smart_plasma
+	name = "plasma"
+	icon_state = "green_laser"
+	damage = 30
+	damage_type = BLACK_DAMAGE
+	speed = 5
+	homing = TRUE
+	homing_turn_speed = 75		//Angle per tick.
+	var/homing_range = 7
+	ricochets_max = 2 //I can't get this godforsaken sack of shit to go away from the wall properly without this so suffer
+	ricochet_chance = 100
+	ricochet_decay_chance = 1
+	ricochet_decay_damage = 1
+	ricochet_auto_aim_range = 5
+	ricochet_incidence_leeway = 0
+/obj/projectile/ego_bullet/smart_plasma/Initialize()
+	. = ..()
+	addtimer(CALLBACK(src, PROC_REF(fireback)), 3)
+
+/obj/projectile/ego_bullet/smart_plasma/proc/fireback()
+	icon_state = "magich"
+	var/list/targetslist = list()
+	for(var/mob/living/L in range(homing_range, src))
+		if(ishuman(L) || isbot(L))
+			continue
+		if(L.stat == DEAD)
+			continue
+		if(L.status_flags & GODMODE)
+			continue
+		targetslist+=L
+	if(!LAZYLEN(targetslist))
+		return
+	homing_target = pick(targetslist)
+
+/obj/projectile/ego_bullet/smart_plasma/check_ricochet_flag(atom/A)
+	if(istype(A, /turf/closed))
+		return TRUE
+	if(istype(A, /obj/structure/window))
+		return TRUE
+	if(istype(A, /obj/machinery/door))
+		return TRUE
+
+	return FALSE

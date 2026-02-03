@@ -274,7 +274,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 600
+	delay_time = 500
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
