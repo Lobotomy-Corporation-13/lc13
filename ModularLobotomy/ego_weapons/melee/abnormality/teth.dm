@@ -824,3 +824,15 @@
 				human.adjustBruteLoss(-heal_brute)
 				human.apply_lc_protection(2)
 		cooldown = world.time + cooldown_duration
+
+/obj/item/ego_weapon/electricscreaming //someone with knowledge and free time please code in a big explosion move :)
+	name = "electric screaming"
+	desc = "A ball of fluff filled with electricity with a rod as it's handle, zap your foes with it!"
+	icon_state = "electric_screaming"
+	force = 36
+	attack_speed = 1.5
+	damtype = BLACK_DAMAGE
+	attack_verb_continuous = list("zaps", "electrocutes", "fries")
+	attack_verb_simple = list("zap", "electrocute", "fry")
+	hitsound = 'sound/abnormalities/alleywaywatchdog/telepole_1.ogg'
+
