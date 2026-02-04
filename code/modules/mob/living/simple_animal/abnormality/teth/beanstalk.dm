@@ -49,7 +49,7 @@
 		/obj/structure/lootcrate/jcorp,
 		/obj/item/clothing/suit/armor/ego_gear/teth/bean,
 		/obj/item/ego_weapon/mini/bean,
-		/obj/item/storage/box/fireworks
+		/obj/item/storage/box/fireworks/dangerous
 	)
 
 /mob/living/simple_animal/hostile/abnormality/beanstalk/Move()
