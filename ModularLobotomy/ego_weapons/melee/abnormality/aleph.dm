@@ -2545,6 +2545,13 @@
 	name = "perversion"
 	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
 	'Be awed, or be awe-struck.'"
+	special = "This weapon has two forms; in 'Lance' form, it inflicts Gaze on hit, and it is able to perform a basic combo on targets consisting of a lunging thrust followed by an AoE piercing thrust. \n\
+	Gaze may be stacked on enemies up to 7 times - once it reaches 7, it becomes Contempt instead. By themselves, neither Gaze nor Contempt do anything. \n\
+	\n\
+	On a long cooldown, you may unsheathe the weapon to transform it into the 'Katana' form. The unsheathing has a brief windup and performs 'Cascading Gaze of Awe Underneath Contempt', immobilizing you and boosting your defenses, creating a damaging field that destroys projectiles and ending with burst damage. \n\
+	Enemies will take extra damage from this attack based on Gaze stacks, and enemies with Contempt will, in addition, be rooted for the duration of the attack.\n\
+	\n\
+	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Contempt and gains a 3-hit combo against targets with Gaze, consisting of a dash, cleave and Gaze-consuming finisher."
 	icon_state = "sangre"
 	icon = 'icons/obj/limbus_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
@@ -2566,6 +2573,9 @@
 	/// Empty this out and use it to avoid multihitting stuff on each AoE
 	var/list/shared_hitlist
 
+	/// Combo hit counter!
+	var/combo = 0
+
 	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
 	var/sheathed = TRUE
 	var/unsheathe_cooldown
@@ -2575,12 +2585,16 @@
 	// Cascading Gaze of Awe Underneath Contempt is the attack automatically performed when unsheathing the katana
 
 	var/cascading_gaze_radius = 3
-	/// Multiplies katana force by this much before Justice
+	/// Multiplies katana force by this much before Justice for the Finisher
 	var/cascading_gaze_base_damage_coeff = 1.4
+	/// How much damage each tick of being inside the damaging AoE deals
+	var/cascading_gaze_periodic_damage = 20
+	/// How often the damaging AoE ticks
+	var/cascading_gaze_periodic_tick_rate = 0.3 SECONDS
 	/// Add to the previous coefficient per gaze stacks on the target we're hitting
 	var/cascading_gaze_additive_damage_coeff_per_gaze = 0.4
 	/// You'll be locked in place and the projectile deleting area will linger for this long.
-	var/cascading_gaze_duration = 2.5 SECONDS
+	var/cascading_gaze_duration = 2.4 SECONDS
 
 	/// The weapon applies this many Gaze stacks per hit in lance form.
 	var/base_gaze_application = 1
@@ -2607,8 +2621,8 @@
 	var/katana_icon_state
 	var/katana_desc = "A blood-red sword, removed from its gilded armour. \n\
 	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody business is settled."
-	var/list/katana_attack_verb_continuous = list("slashes", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "styles on")
-	var/list/katana_attack_verb_simple = list("slash", "cleave", "sunder", "carve", "disembowel", "eviscerate", "style on")
+	var/list/katana_attack_verb_continuous = list("slashes", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "bisects", "styles on")
+	var/list/katana_attack_verb_simple = list("slash", "cleave", "sunder", "carve", "disembowel", "eviscerate", "bisect", "style on")
 
 	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
 	var/katana_force = 60
@@ -2625,3 +2639,54 @@
 	var/katana_aoe_radius = 2
 
 	var/katana_finisher_damage_coeff = 2.5
+
+
+/// Gaze stacking status effect: does nothing, the weapon is the one that applies the bonuses. You start with 1 stack, and go up to 6. If you go to 7? Turns into Contempt.
+/datum/status_effect/stacking/perversion_weapon_gaze
+	id = "perversion_weapon_gaze"
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_gaze
+	stacks = 1
+	max_stacks = 7
+	stack_decay = 0
+	duration = 20 SECONDS
+	stack_threshold = 7
+	consumed_on_threshold = TRUE
+
+/datum/status_effect/stacking/perversion_weapon_gaze/threshold_cross_effect()
+	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT)
+	. = ..()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
+	refresh()
+	. = ..()
+
+
+/datum/status_effect/stacking/perversion_weapon_gaze/tick()
+	if(!can_have_status())
+		qdel(src)
+
+/atom/movable/screen/alert/status_effect/perversion_weapon_gaze
+	name = "Gaze \[Perversion\]"
+	icon_state = "gaze"
+	desc = "You're entranced by the blood-red blade."
+
+/// Contempt status effect.
+/datum/status_effect/perversion_weapon_contempt
+	id = "perversion_weapon_contempt"
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
+	duration = 8 SECONDS
+
+/datum/status_effect/perversion_weapon_contempt/on_apply()
+	. = ..()
+
+
+/datum/status_effect/perversion_weapon_contempt/on_remove()
+	. = ..()
+
+/atom/movable/screen/alert/status_effect/perversion_weapon_contempt
+	name = "Contempt \[Perversion\]"
+	icon_state = "weaken"
+	desc = "You're nothing."
+
+#undef STATUS_EFFECT_GAZE
+#undef STATUS_EFFECT_CONTEMPT
