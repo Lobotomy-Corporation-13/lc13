@@ -1815,6 +1815,7 @@
 
 	currently_sawing = TRUE
 
+	user.face_atom(saw_target)
 	user.do_attack_animation(saw_target)
 	playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 
