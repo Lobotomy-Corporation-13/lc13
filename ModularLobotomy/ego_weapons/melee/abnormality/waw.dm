@@ -1741,13 +1741,15 @@
 		var/obj/effect/temp_visual/small_smoke/halfsecond/FX =  new(get_turf(L))
 		FX.color = "#a2d2df"
 
+// This is a chainsaw. There are not many like it, but this one is yours. It will repeatedly attack your target if you manage to remain adjacent to them.
+// Due to the inherent risk of staying glued to a target, this thing has a DPS significantly higher than the WAW baseline.
 /obj/item/ego_weapon/animalism
 	name = "animalism"
 	desc = "The frothing madness of the revving engine brings a fleeting warmth to your hands and heart alike."
-	special = "This weapon hits 4 times for every hit"
+	special = "This weapon will continuously saw through your target as long as you remain adjacent to them. Use in-hand to cancel."
 	icon_state = "animalism"
-	force = 12
-	attack_speed = 1.3
+	force = 23
+	attack_speed = 0.5 // Irrelevant, this just makes it easier to switch targets. Check saw_loop_delay for actual relevant info
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slices", "saws", "rips")
 	attack_verb_simple = list("slice", "saw", "rip")
@@ -1755,22 +1757,107 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
+	/// Delay inbetween chainsaw autohits.
+	var/saw_loop_delay = 0.4 SECONDS
+	/// Target we're currently sawing. Change it if we click on something else.
+	var/atom/saw_target
+	/// Are we currently sawing something?
+	var/currently_sawing = FALSE
+	/// Should we interrupt the saw loop?
+	var/interrupt_loop = FALSE
+
+/obj/item/ego_weapon/animalism/get_clamped_volume()
+	return 35
 
 /obj/item/ego_weapon/animalism/attack(mob/living/target, mob/living/user)
-	if(!..())
-		return
-	for(var/i = 1 to 3)
-		sleep(2)
-		if(target in view(reach,user))
-			playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
-			user.do_attack_animation(target)
-			target.attacked_by(src, user)
-			log_combat(user, target, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+	// Try to start a chainsaw loop on living mobs that aren't us
+	if(isliving(target) && (target != user))
+		BeginSawLoop(target, user)
+		user.changeNext_move(CLICK_CD_MELEE * attack_speed)
+	// If we're not currently sawing and we couldn't start a chainsaw loop, do a regular hit
+	else if(!currently_sawing)
+		return ..()
+	// If we ARE currently sawing you don't get to hit anything
+	else
+		return FALSE
 
-/obj/item/ego_weapon/animalism/melee_attack_chain(mob/living/user, atom/target, params)
-	..()
-	if(isliving(target))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+// Chainsaw loop on structures/machines because it's funny
+/obj/item/ego_weapon/animalism/attack_obj(obj/target, mob/living/user)
+	if(isstructure(target) || ismachinery(target))
+		BeginSawLoop(target, user)
+	else if(!currently_sawing)
+		return ..()
+	else
+		return FALSE
+
+// Use in-hand to interrupt a chainsaw loop.
+/obj/item/ego_weapon/animalism/attack_self(mob/living/user)
+	if(currently_sawing)
+		to_chat(user, span_warning("You shut off your [src.name] E.G.O."))
+	interrupt_loop = TRUE
+
+// Called when hitting a mob or structure or machine with this weapon
+/obj/item/ego_weapon/animalism/proc/BeginSawLoop(atom/target, mob/living/user)
+	// Stop if we don't have an user
+	if(QDELETED(user) || user.stat >= DEAD)
+		return
+	// Set the sawing target to the new target
+	saw_target = target
+	interrupt_loop = FALSE
+	// If we weren't already sawing, start the chainsaw loop
+	if(!currently_sawing)
+		SawLoop(user)
+
+// Hit the target. Hit them again if we haven't broken the conditions in a certain timespan. This is a recursive proc.
+/obj/item/ego_weapon/animalism/proc/SawLoop(mob/living/user)
+	if(QDELETED(saw_target) || QDELETED(user))
+		return FALSE
+
+	currently_sawing = TRUE
+
+	user.do_attack_animation(saw_target)
+	playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+
+	// If it's a mob...
+	if(isliving(saw_target))
+		var/mob/living/victim = saw_target
+		victim.attacked_by(src, user)
+		log_combat(user, victim, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+		// Stop the loop if they're dead.
+		if(victim.health <= 0)
+			interrupt_loop = TRUE
+
+		// Bloodsplatter VFX.
+		var/atom/vfx = new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(victim), pick(GLOB.alldirs))
+		if(victim.mob_biotypes & MOB_ROBOTIC)
+			vfx.color = COLOR_ALMOST_BLACK // Oil...?
+
+	// It's a machine or a structure.
+	else
+		var/obj/structure/inanimate_victim = saw_target
+		inanimate_victim.attacked_by(src, user)
+
+	if(do_after(user, saw_loop_delay, timed_action_flags = (IGNORE_TARGET_LOC_CHANGE | IGNORE_USER_LOC_CHANGE), extra_checks = CALLBACK(src, PROC_REF(SawLoopChecks), saw_target, user), interaction_key = "animalism_saw_loop", max_interact_count = 1))
+		SawLoop(user)
+	else
+		// We failed our checks or interrupted the do_after, funtime's over, reset
+		currently_sawing = FALSE
+		saw_target = null
+		return FALSE
+
+// Checked by do_after.
+/obj/item/ego_weapon/animalism/proc/SawLoopChecks(atom/target, mob/living/user)
+	if(interrupt_loop) // User cancelled the attack or mob was killed.
+		return FALSE
+	if(QDELETED(target)) // Target was deleted.
+		return FALSE
+	if(QDELETED(src)) // Weapon is being deleted...?
+		return TRUE
+	if(src.loc != user) // User isn't holding this weapon.
+		return FALSE
+	if(!(user.Adjacent(target))) // This weapon SHOULD only ever have 1 reach... right? If you want to do a funny with reach weapons use CheckToolReach instead.
+		return FALSE
+	return TRUE
 
 /obj/item/ego_weapon/psychic
 	name = "psychic dagger"
