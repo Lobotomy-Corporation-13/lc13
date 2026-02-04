@@ -497,23 +497,23 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 
 		var/obj/item/ego_weapon/temp_weapon = new weapon_type(null)
 
-		// Calculate average attribute requirement
-		var/avg_req = 0
+		// Calculate highest attribute requirement
+		var/max_req = 0
 		if(LAZYLEN(temp_weapon.attribute_requirements))
-			var/total_req = 0
 			for(var/attr in temp_weapon.attribute_requirements)
-				total_req += temp_weapon.attribute_requirements[attr]
-			avg_req = total_req / length(temp_weapon.attribute_requirements)
+				var/req_value = temp_weapon.attribute_requirements[attr]
+				if(req_value > max_req)
+					max_req = req_value
 
-		// Calculate tier based on average requirement
+		// Calculate tier based on highest requirement
 		var/tier = 0
-		if(avg_req >= 120)
+		if(max_req >= 120)
 			tier = 4
-		else if(avg_req >= 90)
+		else if(max_req >= 90)
 			tier = 3
-		else if(avg_req >= 60)
+		else if(max_req >= 60)
 			tier = 2
-		else if(avg_req >= 30)
+		else if(max_req >= 30)
 			tier = 1
 		else
 			tier = 0

@@ -196,11 +196,7 @@
 
 	// Create the result
 	if(item.result_type)
-		var/obj/item/crafted = new item.result_type(get_turf(src))
-		// Remove attribute requirements from crafted weapons
-		if(istype(crafted, /obj/item/ego_weapon))
-			var/obj/item/ego_weapon/weapon = crafted
-			weapon.attribute_requirements = list()
+		new item.result_type(get_turf(src))
 
 	last_crafted = item.name
 	if(!(item.item_id in crafted_item_ids))
@@ -427,13 +423,11 @@
 		return
 
 	// Map ordeal level to tier: Dawn(1)=Tier1, Noon(2)=Tier2, Dusk(3)=Tier3, Midnight(4)=Tier4
-	var/ordeal_level = completed_ordeal.level
-	// Handle special ordeal levels (6-9 are white ordeal variants of 1-4)
-	if(ordeal_level >= 6 && ordeal_level <= 9)
-		ordeal_level = ordeal_level - 5
+	// Ordeals above level 4 (white ordeals, etc.) grant tier 4 access
+	var/ordeal_level = min(completed_ordeal.level, 4)
 
 	// Only update if this ordeal unlocks a higher tier
-	if(ordeal_level > GLOB.grid_craft_ordeal_tier && ordeal_level <= 4)
+	if(ordeal_level > GLOB.grid_craft_ordeal_tier)
 		GLOB.grid_craft_ordeal_tier = ordeal_level
 		// Announce the unlock
 		var/tier_name
