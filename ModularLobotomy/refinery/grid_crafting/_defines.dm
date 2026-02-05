@@ -43,10 +43,10 @@
 #define TEMPLATE_DIST_BASIC_MAX    15
 #define TEMPLATE_DIST_STANDARD_MIN 10
 #define TEMPLATE_DIST_STANDARD_MAX 25
-#define TEMPLATE_DIST_QUALITY_MIN  15
-#define TEMPLATE_DIST_QUALITY_MAX  40
-#define TEMPLATE_DIST_SUPERIOR_MIN 25
-#define TEMPLATE_DIST_SUPERIOR_MAX 60
+#define TEMPLATE_DIST_QUALITY_MIN  25
+#define TEMPLATE_DIST_QUALITY_MAX  35
+#define TEMPLATE_DIST_SUPERIOR_MIN 35
+#define TEMPLATE_DIST_SUPERIOR_MAX 45
 
 // ===== Template Max Tiers =====
 
@@ -136,13 +136,13 @@ GLOBAL_VAR_INIT(grid_craft_ordeal_initialized, FALSE)
 #define MOVEMENT_MOD_CHARGE   1.0
 /// Attract (Lust) - High accuracy, -20%
 #define MOVEMENT_MOD_ATTRACT  0.8
-/// Shuffle (Sloth) - Lowest accuracy, +30%
-#define MOVEMENT_MOD_SHUFFLE  1.3
-/// Expand (Gluttony) - Medium-high accuracy, -10%
-#define MOVEMENT_MOD_EXPAND   0.9
+/// Shuffle (Sloth) - Lowest accuracy, +75%
+#define MOVEMENT_MOD_SHUFFLE  1.75
+/// Expand (Gluttony) - Medium-high accuracy, -25%
+#define MOVEMENT_MOD_EXPAND   0.75
 /// Drift (Gloom) - Low accuracy, +20%
 #define MOVEMENT_MOD_DRIFT    1.2
-/// Teleport (Pride) - Highest accuracy, -30%
-#define MOVEMENT_MOD_TELEPORT 0.7
+/// Teleport (Pride) - Highest accuracy, -50%
+#define MOVEMENT_MOD_TELEPORT 0.5
 /// Mirror (Envy) - Medium accuracy, +10%
 #define MOVEMENT_MOD_MIRROR   1.1
