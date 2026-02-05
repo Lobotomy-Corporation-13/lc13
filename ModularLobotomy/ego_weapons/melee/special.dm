@@ -373,3 +373,44 @@
 	name = "freshman dagger"
 	icon_state = "freshman"
 	damtype = PALE_DAMAGE
+
+/obj/item/ego_weapon/painprocess
+	name = "painful process"
+	desc = "When we realized the pointlessness of our existence, we yearned to make everything else suffer as we do."
+	special = "This weapon hits 4 times every swing."
+	icon_state = "animalism"
+	force = 30
+	attack_speed = 1.4
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("slices", "saws", "rips")
+	attack_verb_simple = list("slice", "saw", "rip")
+	hitsound = 'sound/abnormalities/helper/attack.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+	charge = TRUE
+	charge_cost = 12
+	charge_effect = "release an AoE which deals BURN damage and knocks enemies back."
+	successfull_activation = "You release a burst of scalding steam, knocking enemies back!"
+
+/obj/item/ego_weapon/painprocess/attack(mob/living/target, mob/living/user)
+	if(!..())
+		return
+	for(var/i = 1 to 3)
+		sleep(2)
+		if(target in view(reach,user))
+			playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+			user.do_attack_animation(target)
+			target.attacked_by(src, user)
+			log_combat(user, target, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+
+/obj/item/ego_weapon/painprocess/melee_attack_chain(mob/living/user, atom/target, params)
+	..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+
+/obj/item/ego_weapon/painprocess/ChargeAttack(mob/living/target, mob/living/user)
+

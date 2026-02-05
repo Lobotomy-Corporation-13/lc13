@@ -100,7 +100,7 @@
 		fuel.apply_lc_burn(2)
 		return TRUE
 
-/obj/projectile/beam/vulcan //Hitscan lasers for the Pyro-GX Prototype and Class-1 Driller
+/obj/projectile/beam/vulcan //Hitscan lasers for Descent into Malice and the Class-1 Driller
 	name = "vulcan"
 	icon_state = "omnilaser"
 	hitsound = null
@@ -125,10 +125,10 @@
 	name = "vulcan impact"
 	icon_state = "impact_vulcan"
 
-/obj/projectile/ego_bullet/smart_missile //Used for the Pyro-GX Prototype and Boarshead
+/obj/projectile/ego_bullet/smart_missile //Used for Descent into Malice and the Boarshead
 	name = "smart missile"
 	icon_state = "pulse0"
-	damage = 20 // Direct hit
+	damage = 40 // Direct hit
 	damage_type = RED_DAMAGE
 	ignore_bulletproof = TRUE
 
@@ -170,7 +170,7 @@
 	addtimer(CALLBACK(src, PROC_REF(fireback)), 3)
 
 /obj/projectile/ego_bullet/smart_plasma/proc/fireback()
-	icon_state = "magich"
+	icon_state = "green_laser"
 	var/list/targetslist = list()
 	for(var/mob/living/L in range(homing_range, src))
 		if(ishuman(L) || isbot(L))

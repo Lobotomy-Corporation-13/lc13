@@ -143,11 +143,11 @@
 				L.throw_at(throw_target, rand(1, 2), whack_speed, user)
 	addtimer(CALLBACK(src, PROC_REF(Recharge), user), 15 SECONDS)
 
-/obj/item/ego_weapon/ranged/pyrogx //Grungeon-exclusive ranged weapon with two firemodes
-	name = "pyro-GX prototype"
-	desc = "A clunky-looking, highly mechanical gun salvaged from a factory in the Outskirts."
-	icon_state = "gaze"
-	inhand_icon_state = "gaze"
+/obj/item/ego_weapon/ranged/malicedescent //Grungeon-exclusive ranged weapon with two firemodes
+	name = "descent into malice"
+	desc = "With the tower's completion, we realized something terrible... that all our efforts and cooperation were for naught."
+	icon_state = "descentvulcan"
+	inhand_icon_state = "descent"
 	fire_delay = 1 //Many dakka for the hitscan mode
 	autofire = 0.1 SECONDS
 	special = "This weapon can swap modes by using it inhand, with the Vulcan Cannon firing hitscan bullets and the Smart Missiles firing rockets which burst into homing projectiles."
@@ -163,26 +163,25 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 100
 							)
+	var/gunmode = 1
 
-/obj/item/ego_weapon/ranged/pyrogx/attack_self(mob/user)
-
-
-/obj/item/ego_weapon/ranged/plastest
-	name = "plasma test gun"
-	desc = "A gun made for testing plasma rounds."
-	icon_state = "gaze"
-	inhand_icon_state = "gaze"
-	fire_delay = 8.5
-	special = "This weapon can swap modes by using it inhand, with the Vulcan Cannon firing hitscan bullets and the Smart Missiles firing rockets which burst into homing projectiles."
-	force = 30
-	damtype = RED_DAMAGE
-	weapon_weight = WEAPON_HEAVY
-	vary_fire_sound = FALSE
-	projectile_path = /obj/projectile/ego_bullet/smart_missile
-	fire_sound = 'sound/weapons/gun/rifle/vulcan.ogg'
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 100,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 80,
-							JUSTICE_ATTRIBUTE = 100
-							)
+/obj/item/ego_weapon/ranged/malicedescent/attack_self(mob/user) //Firemode swapping
+	if(gunmode == 1)
+		if(do_after(user, 0.5 SECONDS, src)) //Would have made it faster if the sound effects couldn't be spammed
+			playsound(src, 'sound/weapons/gun/rifle/descentswap.ogg', 65, FALSE, 1)
+			gunmode = 2
+			icon_state = "descentmissile"
+			fire_delay = 2 SECONDS
+			autofire = 2 SECONDS
+			projectile_path = /obj/projectile/ego_bullet/smart_missile //Yes, this is probably a shitty and jank way of doing this, but it works
+			fire_sound = 'sound/weapons/ego/cannon.ogg'
+			return
+	if(gunmode == 2)
+		if(do_after(user, 0.5 SECONDS, src))
+			playsound(src, 'sound/weapons/gun/rifle/descentswap.ogg', 65, FALSE, 1)
+			gunmode = 1
+			icon_state = "descentvulcan"
+			fire_delay = 1
+			autofire = 0.1 SECONDS
+			projectile_path = /obj/projectile/beam/vulcan
+			fire_sound = 'sound/weapons/gun/rifle/gauss.ogg'
