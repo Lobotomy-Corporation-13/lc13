@@ -181,7 +181,7 @@
 			hitlist |= M
 
 			// Damage
-			var/final_damage = base_damage
+			var/final_damage = base_damage * (damage / initial(damage)) // This is unhinged as hell but the best way to get the Force Multiplier (EO upgrade, Faith & Promise) to affect the explosion.
 			var/distance_from_epicenter = clamp(get_dist(M, impact_turf), 0, 3)
 			final_damage -= (distance_from_epicenter * falloff_per_dist)
 			M.deal_damage(final_damage, damage_type, source = nadeslinger, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))

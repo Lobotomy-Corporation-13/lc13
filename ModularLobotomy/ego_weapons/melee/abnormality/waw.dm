@@ -1770,6 +1770,8 @@
 	return 35
 
 /obj/item/ego_weapon/animalism/attack(mob/living/target, mob/living/user)
+	if(!CanUseEgo(user)) // I keep forgetting this check teehee
+		return FALSE
 	// Try to start a chainsaw loop on living mobs that aren't us
 	if(isliving(target) && (target != user))
 		BeginSawLoop(target, user)
@@ -1783,6 +1785,8 @@
 
 // Chainsaw loop on structures/machines because it's funny
 /obj/item/ego_weapon/animalism/attack_obj(obj/target, mob/living/user)
+	if(!CanUseEgo(user)) // I keep forgetting this check teehee
+		return FALSE
 	if(isstructure(target) || ismachinery(target))
 		BeginSawLoop(target, user)
 	else if(!currently_sawing)
