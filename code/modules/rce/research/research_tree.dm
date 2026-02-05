@@ -801,10 +801,10 @@
 	extraction_point.name = "Fulton Recovery Beacon"
 	extraction_point.desc = "A beacon for the fulton recovery system. Link extraction packs to this beacon."
 	extraction_point.tier = RCE_RESEARCH_TIER_1
-	extraction_point.cost = 50
+	extraction_point.cost = 25
 	extraction_point.branch = "utility"
 	extraction_point.prerequisites = list()
-	extraction_point.unlocked_path = /obj/structure/extraction_point
+	extraction_point.unlocked_path = /obj/item/fulton_core
 	extraction_point.favored_traits = list(
 		TRAIT_MECHANICAL = TRAIT_BONUS_MODERATE,
 		TRAIT_EFFICIENT = TRAIT_BONUS_MINOR

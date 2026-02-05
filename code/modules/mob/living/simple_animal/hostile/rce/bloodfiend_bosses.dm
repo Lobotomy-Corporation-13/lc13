@@ -1086,6 +1086,9 @@
 	for(var/turf/T in view(grief_aoe_range, center))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 		been_hit = HurtInTurf(T, been_hit, grief_aoe_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		// Damage barricades (5x damage)
+		for(var/obj/structure/barricade/B in T)
+			B.take_damage(grief_aoe_damage * 5, RED_DAMAGE)
 	// Apply bleed and buff bloodfiends
 	for(var/mob/living/L in been_hit)
 		L.apply_lc_bleed(grief_aoe_bleed)
@@ -1153,6 +1156,9 @@
 		for(var/turf/T in view(rage_aoe_range, center))
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 			been_hit = HurtInTurf(T, been_hit, rage_aoe_damage, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			// Damage barricades (5x damage)
+			for(var/obj/structure/barricade/B in T)
+				B.take_damage(rage_aoe_damage * 5, RED_DAMAGE)
 		// Apply 20 bleed to all hit
 		for(var/mob/living/L in been_hit)
 			L.apply_lc_bleed(rage_aoe_bleed)

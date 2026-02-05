@@ -506,7 +506,6 @@
 		/mob/living/simple_animal/hostile/clan/assassin/greed = 2,
 		/mob/living/simple_animal/hostile/clan/demolisher/greed = 2,
 		/mob/living/simple_animal/hostile/clan/ranged/warper/greed = 1,
-		/mob/living/simple_animal/hostile/clan/ranged/corrupter/greed = 1
 	)
 
 /obj/effect/greed_gateway/Initialize()

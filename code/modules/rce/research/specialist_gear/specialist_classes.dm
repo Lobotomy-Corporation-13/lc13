@@ -168,15 +168,6 @@
 	for(var/datum/action/A in actions)
 		A.UpdateButtonIcon()
 
-/obj/item/clothing/head/ego_hat/flashlight_helmet/update_icon_state()
-	. = ..()
-	if(attached_light?.on)
-		icon_state = "[initial(icon_state)]-flight-on"
-	else if(attached_light)
-		icon_state = "[initial(icon_state)]-flight"
-	else
-		icon_state = initial(icon_state)
-
 /obj/item/clothing/head/ego_hat/flashlight_helmet/ComponentInitialize()
 	. = ..()
 	AddElement(/datum/element/update_icon_updates_onmob)
