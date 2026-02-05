@@ -2621,8 +2621,8 @@
 	var/katana_icon_state
 	var/katana_desc = "A blood-red sword, removed from its gilded armour. \n\
 	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody business is settled."
-	var/list/katana_attack_verb_continuous = list("slashes", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "bisects", "styles on")
-	var/list/katana_attack_verb_simple = list("slash", "cleave", "sunder", "carve", "disembowel", "eviscerate", "bisect", "style on")
+	var/list/katana_attack_verb_continuous = list("slashes", "slices", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "bisects", "splits", "rends", "rips", "anatomizes", "styles on")
+	var/list/katana_attack_verb_simple = list("slash", "slice", "cleave", "sunder", "carve", "disembowel", "eviscerate", "bisect", "split", "rend", "anatomize", "style on")
 
 	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
 	var/katana_force = 60
