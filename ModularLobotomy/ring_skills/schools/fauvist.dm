@@ -11,7 +11,7 @@
 	tier = 1
 	choice = "a"
 
-	var/damage_bonus = 0.15
+	var/damage_bonus = 15
 	var/active_bonus = 0
 
 /datum/component/ring_skill/fauvist/predators_scent/on_attack(datum/source, mob/living/target, obj/item/weapon)
@@ -93,7 +93,7 @@
 	tier = 2
 	choice = "b"
 
-	var/damage_buff = 0.15
+	var/damage_buff = 15
 	var/buff_duration = 4 SECONDS
 	var/buff_active = FALSE
 	var/buff_timer_id

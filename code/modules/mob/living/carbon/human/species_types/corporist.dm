@@ -62,7 +62,12 @@
 	say_mod = "states"
 	sexes = 0
 	use_skintones = FALSE
-	species_traits = list(NOBLOOD, NOEYESPRITES)
+	species_traits = list(NOBLOOD, NOEYESPRITES, HAIR)
+
+	/// Stored original hair color to restore on species loss
+	var/original_hair_color
+	/// Stored original gradient color to restore on species loss
+	var/original_gradient_color
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
 		TRAIT_NOMETABOLISM,
@@ -103,6 +108,15 @@
 		BP.brute_reduction = 5
 		BP.burn_reduction = 4
 	C.set_safe_hunger_level()
+	// Force hair to white and gradient to gray
+	if(ishuman(C))
+		var/mob/living/carbon/human/H = C
+		original_hair_color = H.hair_color
+		original_gradient_color = H.gradient_color
+		H.hair_color = "FFF"
+		if(H.gradient_style)
+			H.gradient_color = "888"
+		H.update_hair()
 
 /datum/species/corporist_apprentice/on_species_loss(mob/living/carbon/C)
 	. = ..()
@@ -110,3 +124,11 @@
 		BP.change_bodypart_status(BODYPART_ORGANIC, FALSE, TRUE)
 		BP.brute_reduction = initial(BP.brute_reduction)
 		BP.burn_reduction = initial(BP.burn_reduction)
+	// Restore original hair colors
+	if(ishuman(C))
+		var/mob/living/carbon/human/H = C
+		if(original_hair_color)
+			H.hair_color = original_hair_color
+		if(original_gradient_color)
+			H.gradient_color = original_gradient_color
+		H.update_hair()

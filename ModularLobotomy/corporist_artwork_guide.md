@@ -146,7 +146,7 @@ You can invest in **up to 2 schools**. Each has 3 tiers of abilities.
 
 **CUBISTS** - Area control, bleed zones, spatial effects
 
-**CORPORISTS** - Build up bleed, then trigger for massive damage
+**CORPORISTS** - Duality of pain and power, Artistic Synergy bonuses
 
 ---
 
@@ -243,28 +243,30 @@ Theme: Area control, spatial manipulation. Command the battlefield through bleed
 ### CORPORISTS
 *"Those who utilize human bones and muscles, contraction and elongation."*
 
-Theme: Simple and direct. Build up bleed, then trigger it for devastating damage.
+Theme: Duality of pain and power. Inflict negative effects on targets while gaining positive effects. When both occur simultaneously, trigger Artistic Synergy bonuses.
+
+**Core Mechanic - Artistic Synergy:** Your attacks inflict negative effects (bleed) on the target AND grant positive effects (Protection/Damage Up) to you. When both happen, you gain a synergy bonus: SP healing, or an alternative buff if your SP is already full.
 
 #### Tier 1 (1 point) - Choose ONE:
 
 | Skill | Type | Effect |
 |-------|------|--------|
-| **Opening Wounds** | Passive | When off cooldown, next attack applies 8 bleed (20s CD). While on cooldown, attacks apply 1 bleed |
-| **Exposed Veins** | Passive | +3% damage per bleed stack on target (max 30% at 10 stacks) |
+| **Butcher - Ribs** | Passive | On Hit: Apply 2 bleed to target and gain 1 Protection. Heal 5% max SP. If at max SP, gain 1 Damage Up instead |
+| **Rotator Crush** | Passive | On Hit: Apply 2 bleed to target and gain 1 Damage Up. Heal 5% max SP. If at max SP, gain 1 Protection instead |
 
 #### Tier 2 (2 points) - Choose ONE:
 
 | Skill | Type | Effect |
 |-------|------|--------|
-| **Sanguine Absorption** | Passive (5s CD) | Heal 5 HP when attacking a bleeding target |
-| **Rupture** | Passive | Hitting targets with 15+ bleed consumes 10 stacks to deal 40 bonus RED damage |
+| **Repressed Flesh** | Passive (5s CD) | On Hit: If target is bleeding and you have a positive effect, heal 5 HP and apply 2 extra bleed. If target has 10+ bleed, gain 1 extra Protection |
+| **Tendon Tear** | Passive | On Hit: If target is bleeding and you have a positive effect, deal 10 bonus RED damage. If you have 3+ Damage Up, deal additional 15 RED damage |
 
 #### Tier 3 (3 points) - Choose ONE:
 
 | Skill | Type | Effect |
 |-------|------|--------|
-| **Vivisection** | Passive (30s CD) | Hitting bleeding targets below 20% HP deals 100 bonus RED damage |
-| **Exsanguinate** | Active (30s CD) | Buff your weapon for 10s. Next hit consumes ALL bleed on target, dealing 5 damage per stack |
+| **Anatomize** | Passive (30s CD) | On Hit: If target is bleeding and below 25% HP, and you have both Protection and Damage Up, consume all bleed for 5 RED damage per stack and fully restore SP |
+| **Exhibition Arrangements** | Active (30s CD) | For 8s, attacks apply 3 bleed + 1 random negative effect AND grant 1 Protection + 1 Damage Up. Heal 5% max SP per hit (at max SP: +2 Damage Up). On expiry, consume all bleed on last target for 3 damage per stack |
 
 ---
 

@@ -26,12 +26,12 @@
 // Geometric Reach: Your attacks apply 2 bleed to enemies adjacent to your target
 /datum/component/ring_skill/cubist/geometric_reach
 	skill_name = "Geometric Reach"
-	skill_desc = "Your attacks apply 2 bleed to enemies adjacent to your target"
+	skill_desc = "Your attacks apply 5 bleed to enemies adjacent to your target"
 	school = "cubist"
 	tier = 1
 	choice = "b"
 
-	var/splash_stacks = 2
+	var/splash_stacks = 5
 
 /datum/component/ring_skill/cubist/geometric_reach/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
@@ -140,7 +140,7 @@
 // Crimson Dimension: Create bleed zone, damage reduction while inside
 /datum/component/ring_skill/cubist/crimson_dimension
 	skill_name = "Crimson Dimension"
-	skill_desc = "Active (60s CD): Create 3x3 zone applying 2 bleed/sec for 10s; you take 20% less damage while inside"
+	skill_desc = "Active (30 CD): Create 3x3 zone applying 2 bleed/sec for 10s; gain Protection while inside (max 5)"
 	school = "cubist"
 	tier = 3
 	choice = "b"
@@ -160,9 +160,10 @@
 // Action to activate Crimson Dimension
 /datum/action/cooldown/crimson_dimension_activate
 	name = "Crimson Dimension"
-	desc = "Create a 3x3 bleed zone. You take less damage while inside."
-	button_icon_state = "yourarthere"
-	cooldown_time = 60 SECONDS
+	desc = "Create a 3x3 bleed zone. Gain Protection while inside."
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "crimson_dimension"
+	cooldown_time = 30 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
 	var/datum/weakref/skill_ref
@@ -185,19 +186,19 @@
 /obj/effect/crimson_dimension_zone
 	name = "crimson dimension"
 	desc = "A warped area of crimson energy."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "yourarthere" // Placeholder
-	color = "#8B0000"
-	alpha = 150
+	icon = 'icons/effects/cult_effects.dmi'
+	icon_state = "floorglow_looping"
 	anchored = TRUE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	layer = BELOW_MOB_LAYER
 
 	var/duration = 10 SECONDS
 	var/bleed_per_tick = 2
-	var/damage_reduction = 0.20
+	var/protection_per_tick = 1
+	var/max_protection = 5
 	var/mob/living/carbon/human/creator
 	var/list/zone_turfs = list()
+	var/list/zone_effects = list()
 
 /obj/effect/crimson_dimension_zone/Initialize(mapload, mob/living/carbon/human/owner)
 	. = ..()
@@ -207,8 +208,9 @@
 	var/turf/center = get_turf(src)
 	for(var/turf/T in range(1, center))
 		zone_turfs += T
-		// Visual effect on each turf
-		new /obj/effect/temp_visual/crimson_dimension_tile(T)
+		if(T != center)
+			var/obj/effect/crimson_dimension_zone/tile = new(T)
+			zone_effects += tile
 
 	START_PROCESSING(SSobj, src)
 	addtimer(CALLBACK(src, PROC_REF(end_zone)), duration)
@@ -221,20 +223,17 @@
 				continue
 			M.apply_lc_bleed(bleed_per_tick)
 
-	// Check if creator is in zone for damage reduction
+	// Grant Protection to creator while inside the zone
 	if(creator && (get_turf(creator) in zone_turfs))
-		// Apply damage reduction (handled via signal in actual implementation)
-		// For now, just a simple notification
-		return
+		var/datum/status_effect/stacking/protection/P = creator.has_status_effect(/datum/status_effect/stacking/protection)
+		if(!P)
+			creator.apply_status_effect(/datum/status_effect/stacking/protection, min(protection_per_tick, max_protection))
+		else if(P.stacks < max_protection)
+			P.add_stacks(min(protection_per_tick, max_protection - P.stacks))
 
 /obj/effect/crimson_dimension_zone/proc/end_zone()
 	STOP_PROCESSING(SSobj, src)
+	for(var/obj/effect/crimson_dimension_zone/tile in zone_effects)
+		qdel(tile)
+	zone_effects = null
 	qdel(src)
-
-/obj/effect/temp_visual/crimson_dimension_tile
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "yourarthere"
-	color = "#8B0000"
-	alpha = 100
-	duration = 10 SECONDS
-	layer = BELOW_MOB_LAYER

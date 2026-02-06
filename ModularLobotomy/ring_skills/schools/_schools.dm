@@ -54,6 +54,14 @@
 	SIGNAL_HANDLER
 	return
 
+/// Helper to check if user has any positive stacking effect (Protection or Damage Up)
+/datum/component/ring_skill/proc/has_positive_effect(mob/living/user)
+	if(user.has_status_effect(/datum/status_effect/stacking/protection))
+		return TRUE
+	if(user.has_status_effect(/datum/status_effect/stacking/damage_up))
+		return TRUE
+	return FALSE
+
 /// Helper to check if target is bleeding
 /datum/component/ring_skill/proc/target_is_bleeding(mob/living/target)
 	return !!target.has_status_effect(/datum/status_effect/stacking/lc_bleed)
@@ -91,6 +99,30 @@
 		if("mental_decay")
 			target.apply_lc_mental_decay(stacks)
 	return effect_type
+
+/// Ring-specific: Add protection stacks additively, capped at ring_max
+/// Unlike apply_lc_protection which only sets stacks, this actually adds to existing stacks
+/datum/component/ring_skill/proc/add_ring_protection(mob/living/user, stacks_to_add, ring_max = 5)
+	var/datum/status_effect/stacking/protection/P = user.has_status_effect(/datum/status_effect/stacking/protection)
+	if(!P)
+		user.apply_status_effect(/datum/status_effect/stacking/protection, min(stacks_to_add, ring_max))
+		return
+	if(P.stacks >= ring_max)
+		return
+	var/add_amount = min(stacks_to_add, ring_max - P.stacks)
+	P.add_stacks(add_amount)
+
+/// Ring-specific: Add damage up stacks additively, capped at ring_max
+/// Unlike apply_lc_strength which only sets stacks, this actually adds to existing stacks
+/datum/component/ring_skill/proc/add_ring_strength(mob/living/user, stacks_to_add, ring_max = 5)
+	var/datum/status_effect/stacking/damage_up/S = user.has_status_effect(/datum/status_effect/stacking/damage_up)
+	if(!S)
+		user.apply_status_effect(/datum/status_effect/stacking/damage_up, min(stacks_to_add, ring_max))
+		return
+	if(S.stacks >= ring_max)
+		return
+	var/add_amount = min(stacks_to_add, ring_max - S.stacks)
+	S.add_stacks(add_amount)
 
 /// Helper to check if target has a specific effect
 /datum/component/ring_skill/proc/has_effect(mob/living/target, effect_type)

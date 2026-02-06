@@ -7,7 +7,8 @@
 /datum/action/cooldown/sculpt_corpse
 	name = "Sculpt Corpse"
 	desc = "Transform a dead creature into a work of corporeal art."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "statue"
 	cooldown_time = 10 SECONDS
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
 
@@ -60,7 +61,8 @@
 /datum/action/cooldown/demonstrate_artistry
 	name = "Demonstrate Artistry"
 	desc = "Perform an artistic demonstration on a corpse, inspiring all who witness it."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "demonstration"
 	cooldown_time = 5 MINUTES
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
 
@@ -134,7 +136,8 @@
 /datum/action/cooldown/judge_artwork
 	name = "Judge Artwork"
 	desc = "Evaluate an artwork and assign a final grade."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "judgement"
 	cooldown_time = 5 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
@@ -181,7 +184,8 @@
 /datum/action/cooldown/describe_artwork
 	name = "Describe Artwork"
 	desc = "Write a custom description for an artwork you created (or any, if you're the Maestro)."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "spell_default"
 	cooldown_time = 3 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
@@ -226,7 +230,8 @@
 /datum/action/innate/ring_skill_tree
 	name = "Ring Skill Tree"
 	desc = "Open the Ring Skill Tree to spend your skill points on artistic abilities."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "skill_tree"
 	check_flags = AB_CHECK_CONSCIOUS
 
 	var/datum/ring_skill_tree/skill_tree_datum
@@ -259,7 +264,8 @@
 /datum/action/cooldown/reset_artistry
 	name = "Reset Artistry"
 	desc = "Reset a student's skill tree, refunding all their skill points."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "reset_artistry"
 	cooldown_time = 30 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 

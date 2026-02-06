@@ -563,13 +563,15 @@ This makes the Maestro's judgment high-stakes - seek their approval carefully, a
 
 #### School 4: CORPORISTS
 *"Those who utilize human bones and muscles, contraction and elongation."*
-**Theme:** Simple and direct. Build up bleed, then trigger it for devastating damage.
+**Theme:** Duality of pain and power. Inflict negative effects on targets while gaining positive effects. When both occur simultaneously, trigger powerful Artistic Synergy bonuses.
+
+**Core Mechanic - Artistic Synergy:** When an attack inflicts a negative effect (bleed) on the target AND grants a positive effect (Protection/Damage Up) on the user simultaneously, a synergy bonus triggers (SP healing, or alternative buff if at max SP).
 
 | Tier | Choice A | Choice B |
 |------|----------|----------|
-| **1** | **Opening Wounds** (Passive): When off cooldown, your next attack applies 8 bleed stacks (20s cooldown). While on cooldown, attacks apply 1 bleed stack. | **Exposed Veins** (Passive): +3% damage per bleed stack on target (max 30%) |
-| **2** | **Sanguine Absorption** (Passive, 5s CD): Heal 5 HP when applying bleed | **Rupture** (Passive): Hitting targets with 15+ bleed consumes 10 stacks to deal 40 bonus damage |
-| **3** | **Vivisection** (Passive): Hitting bleeding targets below 20% HP deals 100 bonus damage (30s cooldown) | **Exsanguinate** (Active, 30s CD): Activate to buff your held weapon for 10 seconds. Your next hit consumes ALL bleed on the target, dealing 5 damage per stack consumed. |
+| **1** | **Butcher - Ribs** (Passive): On Hit: Apply 2 bleed to target and gain 1 Protection. Artistic Synergy: Heal 5% max SP. If at max SP, gain 1 Damage Up instead. | **Rotator Crush** (Passive): On Hit: Apply 2 bleed to target and gain 1 Damage Up. Artistic Synergy: Heal 5% max SP. If at max SP, gain 1 Protection instead. |
+| **2** | **Repressed Flesh** (Passive, 5s CD): On Hit: If target is bleeding and you have a positive effect, heal 5 HP and apply 2 extra bleed. If target has 10+ bleed, gain 1 extra Protection. | **Tendon Tear** (Passive): On Hit: If target is bleeding and you have a positive effect, deal 10 bonus RED damage. If you have 3+ Damage Up, deal additional 15 RED damage. |
+| **3** | **Anatomize** (Passive, 30s CD): On Hit: If target is bleeding and below 25% HP, and you have both Protection and Damage Up, consume all bleed for 5 RED damage per stack and fully restore SP. | **Exhibition Arrangements** (Active, 30s CD): For 8s, attacks apply 3 bleed + 1 random negative effect AND grant 1 Protection + 1 Damage Up. Heal 5% max SP per hit (at max SP: +2 Damage Up). On expiry, consume all bleed on last target for 3 damage per stack. |
 
 ### Skill Tree Implementation Files
 

@@ -69,7 +69,7 @@
 		"name" = "Corporists",
 		"id" = "corporist",
 		"desc" = "Those who utilize human bones and muscles, contraction and elongation.",
-		"theme" = "Simple and direct. Build up bleed, then trigger it for devastating damage.",
+		"theme" = "Duality of pain and power. Inflict negative effects while gaining positive effects for Artistic Synergy bonuses.",
 		"tiers" = get_school_tiers("corporist", exp_comp)
 	))
 
@@ -316,38 +316,38 @@ GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
 	defs["corporist"] = list(
 		"tier1" = list(
 			"a" = list(
-				"name" = "Opening Wounds",
-				"desc" = "When off cooldown, your next attack applies 8 bleed stacks (20s cooldown). While on cooldown, attacks apply 1 bleed stack.",
-				"type" = /datum/component/ring_skill/corporist/opening_wounds
+				"name" = "Butcher - Ribs",
+				"desc" = "On Hit: Apply 2 bleed to target and gain 1 Protection. Heal 5% max SP. If at max SP, gain 1 Damage Up instead.",
+				"type" = /datum/component/ring_skill/corporist/butcher_ribs
 			),
 			"b" = list(
-				"name" = "Exposed Veins",
-				"desc" = "+3% damage per bleed stack on target (max 30%)",
-				"type" = /datum/component/ring_skill/corporist/exposed_veins
+				"name" = "Rotator Crush",
+				"desc" = "On Hit: Apply 2 bleed to target and gain 1 Damage Up. Heal 5% max SP. If at max SP, gain 1 Protection instead.",
+				"type" = /datum/component/ring_skill/corporist/rotator_crush
 			)
 		),
 		"tier2" = list(
 			"a" = list(
-				"name" = "Sanguine Absorption",
-				"desc" = "Heal 5 HP when applying bleed (5s cooldown)",
-				"type" = /datum/component/ring_skill/corporist/sanguine_absorption
+				"name" = "Repressed Flesh",
+				"desc" = "On Hit: If target is bleeding and you have a positive effect, heal 5 HP and apply 2 extra bleed. If target has 10+ bleed, gain 1 extra Protection. (5s cooldown)",
+				"type" = /datum/component/ring_skill/corporist/repressed_flesh
 			),
 			"b" = list(
-				"name" = "Rupture",
-				"desc" = "Hitting targets with 15+ bleed consumes 10 stacks to deal 40 bonus damage",
-				"type" = /datum/component/ring_skill/corporist/rupture
+				"name" = "Tendon Tear",
+				"desc" = "On Hit: If target is bleeding and you have a positive effect, deal 20 bonus RED damage. If you have 3+ Damage Up, deal additional 15 RED damage.",
+				"type" = /datum/component/ring_skill/corporist/tendon_tear
 			)
 		),
 		"tier3" = list(
 			"a" = list(
-				"name" = "Vivisection",
-				"desc" = "Hitting bleeding targets below 20% HP deals 100 bonus damage (30s cooldown)",
-				"type" = /datum/component/ring_skill/corporist/vivisection
+				"name" = "Anatomize",
+				"desc" = "On Hit: If target is bleeding and below 25% HP, and you have both Protection and Damage Up, consume all bleed for 5 RED damage per stack and fully restore SP. (30s CD)",
+				"type" = /datum/component/ring_skill/corporist/anatomize
 			),
 			"b" = list(
-				"name" = "Exsanguinate",
-				"desc" = "Active (30s CD): Buff your weapon for 10s. Next hit consumes ALL bleed on target, dealing 5 damage per stack.",
-				"type" = /datum/component/ring_skill/corporist/exsanguinate
+				"name" = "Exhibition Arrangements",
+				"desc" = "Active (30s CD): For 8s, attacks apply 3 bleed + 1 random negative effect AND grant 1 Protection + 1 Damage Up. Heal 5% max SP per hit. On expiry, consume all bleed on last target for 3 dmg/stack.",
+				"type" = /datum/component/ring_skill/corporist/exhibition_arrangements
 			)
 		)
 	)

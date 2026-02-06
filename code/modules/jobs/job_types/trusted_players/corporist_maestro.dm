@@ -131,13 +131,9 @@
 		just.level = 100
 		just.on_update(H)
 
-	// Give armor (mask auto-equips when worn)
+	// Give armor (mask auto-equips when worn, weapon is summoned from armor via ability)
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/armor = new(H.loc)
 	H.put_in_hands(armor)
-
-	// Give weapon
-	var/obj/item/ego_weapon/city/ring/fascia/weapon = new(H.loc)
-	H.put_in_hands(weapon)
 
 	// Update ID card assignment
 	// Check for ID in hand or worn
@@ -162,6 +158,12 @@
 
 	// Set the apprentice species (full prosthetic body)
 	H.set_species(/datum/species/corporist_apprentice)
+
+	// Remove underwear/undershirt/socks for full prosthetic body
+	H.underwear = "Nude"
+	H.undershirt = "Nude"
+	H.socks = "Nude"
+	H.updateappearance()
 
 	// Add the oracle proxy passive component and traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, "corporist_apprentice")

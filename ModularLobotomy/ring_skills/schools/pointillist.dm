@@ -12,7 +12,7 @@
 	choice = "a"
 
 	var/stacks_applied = 3
-	var/damage_bonus = 0.10
+	var/damage_bonus = 10
 	var/active_bonus = 0
 
 /datum/component/ring_skill/pointillist/hematic_coloring/on_attack(datum/source, mob/living/target, obj/item/weapon)
@@ -125,8 +125,8 @@
 	tier = 2
 	choice = "b"
 
-	var/damage_per_effect = 0.05
-	var/max_bonus = 0.20
+	var/damage_per_effect = 5
+	var/max_bonus = 20
 	var/active_bonus = 0
 
 /datum/component/ring_skill/pointillist/beat_the_brush/on_attack(datum/source, mob/living/target, obj/item/weapon)
@@ -196,7 +196,7 @@
 	tier = 3
 	choice = "b"
 
-	var/damage_per_effect = 0.10
+	var/damage_per_effect = 10
 	var/bleed_per_effect = 2
 	var/active_bonus = 0
 
