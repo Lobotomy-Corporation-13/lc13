@@ -1,0 +1,357 @@
+// Corporist Artwork System
+// Artworks created by The Ring's Corporist school from flesh and bone
+
+/obj/structure/corporist_artwork
+	name = "crude sculpture"
+	desc = "A basic arrangement of flesh and bone. The artist's vision is barely visible."
+	icon = 'icons/obj/mannequin.dmi'
+	icon_state = "mannequin_human_wood" // Tier 1-2 placeholder
+	anchored = TRUE
+	density = FALSE
+	can_buckle = TRUE
+	buckle_lying = 0
+	max_integrity = 200
+	// Placeholder icon states by tier (using cult icons until custom sprites are made)
+	var/static/list/tier_icon_states = list(
+		"mannequin_human_wood",      // Tier 1 - small
+		"mannequin_human_red",    // Tier 2
+		"mannequin_human_white", // Tier 3
+		"mannequin_human_purple",   // Tier 4
+		"mannequin_human_pale"       // Tier 5 - largest
+	)
+
+	/// Current tier of the artwork (1-5)
+	var/tier = 1
+	/// Number of materials used for tier calculation (bodyparts + simple creatures)
+	var/materials_count = 0
+	/// List tracking bodypart types used - e.g., list("head" = 2, "chest" = 1, "l_arm" = 3)
+	var/list/bodyparts_used = list()
+	/// List tracking simple creatures incorporated - e.g., list("mouse" = 2, "chicken" = 1)
+	var/list/simple_creatures_used = list()
+	/// Reference to the mob who created this artwork
+	var/datum/weakref/creator_ref
+	/// Whether the artwork needs refinement before more bodies can be added
+	var/needs_refinement = FALSE
+	/// Custom description set by the artist
+	var/custom_desc
+	/// Technique grade from refinement minigame (F/C/B/A/S)
+	var/technique_grade
+	/// Final grade from Maestro (F/C/B/A/S)
+	var/final_grade
+	/// Maestro's critique text
+	var/final_grade_critique
+	/// Reference to Maestro who graded it
+	var/datum/weakref/graded_by_ref
+
+	/// SP damage dealt to non-artists on examine (scales with tier)
+	var/list/examine_sp_damage = list(5, 10, 15, 25, 40)
+	/// SP healed for artists on examine (scales with tier)
+	var/list/examine_sp_heal = list(3, 6, 10, 15, 25)
+
+/obj/structure/corporist_artwork/Initialize(mapload, mob/creator)
+	. = ..()
+	if(creator)
+		creator_ref = WEAKREF(creator)
+	update_icon()
+
+/obj/structure/corporist_artwork/examine(mob/user)
+	. = ..()
+
+	// Show custom description or default
+	if(custom_desc)
+		. += span_notice("\"[custom_desc]\"")
+
+	// Show bodyparts used
+	if(length(bodyparts_used))
+		var/parts_text = ""
+		for(var/part_type in bodyparts_used)
+			if(parts_text != "")
+				parts_text += ", "
+			parts_text += "[bodyparts_used[part_type]]x [part_type]"
+		. += span_notice("Incorporated remains: [parts_text]")
+
+	// Show simple creatures used
+	if(length(simple_creatures_used))
+		var/creatures_text = ""
+		for(var/creature_name in simple_creatures_used)
+			if(creatures_text != "")
+				creatures_text += ", "
+			creatures_text += "[simple_creatures_used[creature_name]]x [creature_name]"
+		. += span_notice("Simple-minded creatures: [creatures_text]")
+
+	// Show final grade (visible to everyone)
+	if(final_grade)
+		var/grader_name = "Unknown"
+		var/mob/grader = graded_by_ref?.resolve()
+		if(grader)
+			grader_name = grader.name
+		. += span_purple("Final Grade: [final_grade][final_grade_critique ? " - '[final_grade_critique]'" : ""] - [grader_name]")
+	else
+		. += span_purple("Awaiting judgment.")
+
+	// Check if examiner can create art
+	var/is_artist = can_create_art(user)
+
+	// Show technique grade (only to artists)
+	if(technique_grade && is_artist)
+		var/technique_desc = get_technique_description(technique_grade)
+		. += span_notice("Technique: [technique_grade] - [technique_desc]")
+
+	// Show refinement status
+	if(needs_refinement)
+		. += span_warning("This artwork needs refinement before more can be added.")
+
+	// Apply SP effects based on viewer type
+	if(ishuman(user))
+		var/mob/living/carbon/human/H = user
+		if(is_artist)
+			// Artists heal SP
+			var/heal_amount = examine_sp_heal[tier]
+			H.adjustSanityLoss(-heal_amount)
+			to_chat(user, span_nicegreen("You appreciate the craftsmanship. The artistic vision soothes your mind."))
+		else
+			// Non-artists take SP damage
+			var/damage_amount = examine_sp_damage[tier]
+			H.adjustSanityLoss(damage_amount)
+			to_chat(user, span_warning("The artwork disturbs you deeply. You feel your sanity slipping..."))
+
+/// Returns the technique grade description
+/obj/structure/corporist_artwork/proc/get_technique_description(grade)
+	switch(grade)
+		if("F")
+			return "The craftsmanship is crude and amateurish."
+		if("C")
+			return "Basic competence, but lacking refinement."
+		if("B")
+			return "Solid technique with clear artistic intent."
+		if("A")
+			return "Masterful technique, every cut deliberate."
+		if("S")
+			return "Transcendent skill that defies comprehension."
+	return "Unknown"
+
+/// Check if a mob can create/interact with art
+/obj/structure/corporist_artwork/proc/can_create_art(mob/user)
+	if(!ishuman(user))
+		return FALSE
+	var/mob/living/carbon/human/H = user
+
+	// Check for Maestro/Apprentice species
+	if(istype(H.dna?.species, /datum/species/corporist_maestro) || istype(H.dna?.species, /datum/species/corporist_apprentice))
+		return TRUE
+
+	// Check for Student or Inspired component
+	if(H.GetComponent(/datum/component/corporist_student) || H.GetComponent(/datum/component/inspired_artist))
+		return TRUE
+
+	return FALSE
+
+/// Clicking with empty hand to refine
+/obj/structure/corporist_artwork/attack_hand(mob/living/user, list/modifiers)
+	. = ..()
+	if(.)
+		return
+
+	if(!ishuman(user))
+		return
+
+	var/mob/living/carbon/human/H = user
+
+	// Check if they can create art
+	if(!can_create_art(H))
+		to_chat(H, span_notice("You examine the disturbing artwork..."))
+		return
+
+	// If it needs refinement, start the minigame
+	if(needs_refinement)
+		to_chat(H, span_notice("You begin refining the artwork..."))
+		var/datum/sculpting_minigame/minigame = new(H, src)
+		minigame.ui_interact(H)
+		return
+
+	// Otherwise just examine
+	to_chat(H, span_notice("The artwork is refined and ready for more materials or judgment."))
+
+/// Adding bodyparts by hitting the artwork
+/obj/structure/corporist_artwork/attackby(obj/item/I, mob/living/user, params)
+	// Check if it's a bodypart
+	if(istype(I, /obj/item/bodypart))
+		if(!can_create_art(user))
+			to_chat(user, span_warning("You have no idea how to incorporate this into the artwork."))
+			return
+
+		if(needs_refinement)
+			to_chat(user, span_warning("The artwork needs refinement before more can be added."))
+			return
+
+		var/obj/item/bodypart/BP = I
+		add_bodypart(BP, user)
+		return
+
+	return ..()
+
+/// Add a bodypart to the artwork
+/obj/structure/corporist_artwork/proc/add_bodypart(obj/item/bodypart/BP, mob/user)
+	to_chat(user, span_notice("You begin incorporating the [BP.name] into your work..."))
+
+	if(!do_after(user, 3 SECONDS, src))
+		to_chat(user, span_warning("You were interrupted!"))
+		return
+
+	// Track the bodypart type
+	var/part_type = BP.body_zone
+	if(!bodyparts_used[part_type])
+		bodyparts_used[part_type] = 0
+	bodyparts_used[part_type]++
+
+	materials_count++
+	needs_refinement = TRUE
+
+	to_chat(user, span_nicegreen("You carefully incorporate the [BP.name] into the artwork."))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+	// Store the bodypart inside the artwork
+	if(user.transferItemToLoc(BP, src))
+		BP.forceMove(src)
+	else
+		BP.forceMove(src)
+
+	// Add EXP for adding a body part
+	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
+	if(exp_comp)
+		exp_comp.add_activity_exp("add_body")
+
+	check_tier_upgrade()
+	update_icon()
+
+/// Buckle a dead mob to add its corpse
+/obj/structure/corporist_artwork/user_buckle_mob(mob/living/M, mob/user, check_loc = TRUE)
+	if(!can_create_art(user))
+		to_chat(user, span_warning("You have no idea how to incorporate this into the artwork."))
+		return FALSE
+
+	if(M.stat != DEAD)
+		to_chat(user, span_warning("The subject must be dead first."))
+		return FALSE
+
+	if(!istype(M, /mob/living/simple_animal))
+		to_chat(user, span_warning("Only simple creatures can be incorporated into artwork."))
+		return FALSE
+
+	if(needs_refinement)
+		to_chat(user, span_warning("The artwork needs refinement before more can be added."))
+		return FALSE
+
+	to_chat(user, span_notice("You begin incorporating [M]'s remains into the artwork..."))
+
+	if(!do_after(user, 5 SECONDS, src))
+		to_chat(user, span_warning("You were interrupted!"))
+		return FALSE
+
+	add_corpse(M, user)
+	return TRUE
+
+/// Add a full corpse to the artwork
+/obj/structure/corporist_artwork/proc/add_corpse(mob/living/simple_animal/M, mob/user)
+	// Track the creature by name
+	var/creature_name = M.name
+	if(!simple_creatures_used[creature_name])
+		simple_creatures_used[creature_name] = 0
+	simple_creatures_used[creature_name]++
+
+	// Simple creatures contribute to tier same as bodyparts
+	materials_count++
+	needs_refinement = TRUE
+
+	to_chat(user, span_nicegreen("You incorporate [M]'s remains into the artwork."))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+	// Gib the corpse dramatically
+	M.gib()
+
+	check_tier_upgrade()
+	update_icon()
+
+/// Check if the artwork should upgrade to a higher tier
+/obj/structure/corporist_artwork/proc/check_tier_upgrade()
+	var/new_tier = 1
+	if(materials_count >= 11)
+		new_tier = 5
+	else if(materials_count >= 7)
+		new_tier = 4
+	else if(materials_count >= 4)
+		new_tier = 3
+	else if(materials_count >= 2)
+		new_tier = 2
+
+	if(new_tier > tier)
+		tier = new_tier
+		update_tier_appearance()
+
+/// Update appearance based on tier
+/obj/structure/corporist_artwork/proc/update_tier_appearance()
+	icon_state = tier_icon_states[tier]
+	switch(tier)
+		if(1)
+			name = "crude sculpture"
+			desc = "A basic arrangement of flesh and bone. The artist's vision is barely visible."
+		if(2)
+			name = "developing piece"
+			desc = "Multiple forms intertwined. The artwork begins to take shape."
+		if(3)
+			name = "refined work"
+			desc = "A disturbing yet captivating arrangement. Clear artistic intent."
+			density = TRUE
+		if(4)
+			name = "masterpiece"
+			desc = "A horrifying opus of flesh and bone. Those who gaze upon it feel... something."
+			density = TRUE
+		if(5)
+			name = "magnum opus"
+			desc = "A transcendent work of corporeal art. It seems almost alive."
+			density = TRUE
+
+/// Called when refinement is completed
+/obj/structure/corporist_artwork/proc/complete_refinement(grade)
+	technique_grade = grade
+	needs_refinement = FALSE
+	to_chat(get_turf(src), span_notice("The artwork has been refined. Grade: [grade]"))
+
+/// Called when Maestro assigns a final grade
+/obj/structure/corporist_artwork/proc/assign_final_grade(mob/grader, grade, critique)
+	final_grade = grade
+	final_grade_critique = critique
+	graded_by_ref = WEAKREF(grader)
+
+	// Find the creator and apply EXP effects
+	var/mob/creator = creator_ref?.resolve()
+	if(creator && ishuman(creator))
+		apply_grade_exp(creator, grade)
+
+/// Apply EXP gain/loss based on grade
+/obj/structure/corporist_artwork/proc/apply_grade_exp(mob/living/carbon/human/artist, grade)
+	var/datum/component/artistic_exp/exp_comp = artist.GetComponent(/datum/component/artistic_exp)
+	if(!exp_comp)
+		return
+
+	var/next_threshold = exp_comp.get_next_threshold()
+	var/exp_change = 0
+
+	switch(grade)
+		if("F")
+			exp_change = -round(next_threshold * 0.5)
+			to_chat(artist, span_boldwarning("Your work has been judged harshly. You lose artistic experience."))
+		if("C")
+			exp_change = -round(next_threshold * 0.25)
+			to_chat(artist, span_warning("Your work was deemed mediocre. You lose some artistic experience."))
+		if("B")
+			exp_change = round(next_threshold * 0.25)
+			to_chat(artist, span_notice("Your work was judged favorably. You gain artistic experience."))
+		if("A")
+			exp_change = round(next_threshold * 0.5)
+			to_chat(artist, span_nicegreen("Your work was deemed excellent! You gain significant artistic experience."))
+		if("S")
+			exp_change = next_threshold
+			to_chat(artist, span_greentext("Your work is a masterpiece! You gain a full skill point worth of experience!"))
+
+	exp_comp.modify_exp(exp_change)

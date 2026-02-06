@@ -295,6 +295,8 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Insurgence Nightwatch Agent",
 	"Insurgence Transport Agent",
+
+	"Corporist Maestro",
 ))
 
 

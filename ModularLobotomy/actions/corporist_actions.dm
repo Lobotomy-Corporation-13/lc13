@@ -1,0 +1,310 @@
+// Corporist Maestro Actions
+// Actions for the Maestro and Apprentice roles
+
+// ================== SCULPT CORPSE ==================
+// Primary action to create artwork from a corpse
+
+/datum/action/cooldown/sculpt_corpse
+	name = "Sculpt Corpse"
+	desc = "Transform a dead creature into a work of corporeal art."
+	button_icon_state = "yourarthere"
+	cooldown_time = 10 SECONDS
+	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/sculpt_corpse/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+
+	// Find a dead simple_animal nearby
+	var/mob/living/simple_animal/corpse = null
+	for(var/mob/living/simple_animal/SA in range(1, H))
+		if(SA.stat == DEAD)
+			corpse = SA
+			break
+
+	if(!corpse)
+		to_chat(H, span_warning("You need to be next to a dead creature to sculpt it."))
+		return FALSE
+
+	to_chat(H, span_notice("You begin sculpting [corpse] into a work of art..."))
+
+	if(!do_after(H, 5 SECONDS, corpse))
+		to_chat(H, span_warning("You were interrupted!"))
+		return FALSE
+
+	// Create the artwork
+	var/obj/structure/corporist_artwork/artwork = new(get_turf(corpse), H)
+
+	// Track the simple creature used (not as bodyparts)
+	artwork.simple_creatures_used[corpse.name] = 1
+
+	to_chat(H, span_nicegreen("You create a crude sculpture from [corpse]'s remains."))
+	playsound(H, 'sound/effects/splat.ogg', 50, TRUE)
+
+	// Gib the corpse
+	corpse.gib()
+
+	// Add EXP
+	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
+	if(exp_comp)
+		exp_comp.add_activity_exp("create_artwork")
+
+	StartCooldown()
+	return TRUE
+
+// ================== DEMONSTRATE ARTISTRY ==================
+// Special action to inspire others
+
+/datum/action/cooldown/demonstrate_artistry
+	name = "Demonstrate Artistry"
+	desc = "Perform an artistic demonstration on a corpse, inspiring all who witness it."
+	button_icon_state = "yourarthere"
+	cooldown_time = 5 MINUTES
+	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/demonstrate_artistry/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+
+	// Find a dead simple_animal nearby
+	var/mob/living/simple_animal/corpse = null
+	for(var/mob/living/simple_animal/SA in range(1, H))
+		if(SA.stat == DEAD)
+			corpse = SA
+			break
+
+	if(!corpse)
+		to_chat(H, span_warning("You need to be next to a dead creature for your demonstration."))
+		return FALSE
+
+	// Announce the demonstration
+	H.visible_message(span_boldnotice("[H] begins an artistic demonstration on [corpse]!"))
+	to_chat(H, span_notice("You begin your demonstration. All who watch will be inspired..."))
+
+	if(!do_after(H, 12 SECONDS, corpse))
+		to_chat(H, span_warning("Your demonstration was interrupted!"))
+		return FALSE
+
+	// Dramatic gib
+	playsound(H, 'sound/effects/splat.ogg', 70, TRUE)
+	H.visible_message(span_boldnotice("[H] completes their demonstration with a dramatic flourish!"))
+
+	// Inspire all viewers in range
+	var/inspired_count = 0
+	for(var/mob/living/carbon/human/viewer in view(7, H))
+		if(viewer == H)
+			continue
+		if(viewer.stat != CONSCIOUS)
+			continue
+
+		// Don't inspire those who are already Students or have inspiration
+		if(viewer.GetComponent(/datum/component/corporist_student))
+			to_chat(viewer, span_notice("You appreciate the demonstration, though you've already mastered the basics."))
+			continue
+		if(viewer.GetComponent(/datum/component/inspired_artist))
+			to_chat(viewer, span_notice("Your existing inspiration is renewed!"))
+			// Refresh their timer
+			var/datum/component/inspired_artist/existing = viewer.GetComponent(/datum/component/inspired_artist)
+			qdel(existing)
+
+		// Grant inspiration
+		viewer.AddComponent(/datum/component/inspired_artist)
+
+		// Ensure they have EXP tracking
+		if(!viewer.GetComponent(/datum/component/artistic_exp))
+			viewer.AddComponent(/datum/component/artistic_exp)
+
+		inspired_count++
+
+	to_chat(H, span_nicegreen("You inspired [inspired_count] viewer(s) with your demonstration!"))
+
+	// Gib the corpse
+	corpse.gib()
+
+	StartCooldown()
+	return TRUE
+
+// ================== JUDGE ARTWORK ==================
+// Maestro-only action to assign final grades
+
+/datum/action/cooldown/judge_artwork
+	name = "Judge Artwork"
+	desc = "Evaluate an artwork and assign a final grade."
+	button_icon_state = "yourarthere"
+	cooldown_time = 5 SECONDS
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/judge_artwork/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+
+	// Find an artwork nearby
+	var/obj/structure/corporist_artwork/artwork = null
+	for(var/obj/structure/corporist_artwork/A in range(1, H))
+		artwork = A
+		break
+
+	if(!artwork)
+		to_chat(H, span_warning("You need to be next to an artwork to judge it."))
+		return FALSE
+
+	if(artwork.final_grade)
+		to_chat(H, span_warning("This artwork has already been judged."))
+		return FALSE
+
+	// Ask for grade
+	var/grade = tgui_input_list(H, "What grade do you give this artwork?", "Judge Artwork", list("S", "A", "B", "C", "F"))
+	if(!grade)
+		return FALSE
+
+	// Optional critique
+	var/critique = stripped_input(H, "Add a critique (optional):", "Critique", "", 100)
+
+	// Assign the grade
+	artwork.assign_final_grade(H, grade, critique)
+
+	to_chat(H, span_nicegreen("You have judged the artwork: Grade [grade]"))
+	H.visible_message(span_notice("[H] has judged an artwork, assigning it a grade of [grade]."))
+
+	StartCooldown()
+	return TRUE
+
+// ================== DESCRIBE ARTWORK ==================
+// Action to set custom description on artwork
+
+/datum/action/cooldown/describe_artwork
+	name = "Describe Artwork"
+	desc = "Write a custom description for an artwork you created (or any, if you're the Maestro)."
+	button_icon_state = "yourarthere"
+	cooldown_time = 3 SECONDS
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/describe_artwork/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+
+	// Find an artwork nearby
+	var/obj/structure/corporist_artwork/artwork = null
+	for(var/obj/structure/corporist_artwork/A in range(1, H))
+		artwork = A
+		break
+
+	if(!artwork)
+		to_chat(H, span_warning("You need to be next to an artwork to describe it."))
+		return FALSE
+
+	// Check permissions
+	var/is_maestro = istype(H.dna?.species, /datum/species/corporist_maestro)
+	var/mob/creator = artwork.creator_ref?.resolve()
+
+	if(!is_maestro && creator != H)
+		to_chat(H, span_warning("You can only describe artwork you created."))
+		return FALSE
+
+	// Get description
+	var/new_desc = stripped_input(H, "Write your description (max 300 characters):", "Describe Artwork", artwork.custom_desc || "", 300)
+	if(!new_desc)
+		return FALSE
+
+	artwork.custom_desc = new_desc
+	to_chat(H, span_nicegreen("You have set a custom description for the artwork."))
+
+	StartCooldown()
+	return TRUE
+
+// ================== RING SKILL TREE ==================
+// Action to open the Ring Skill Tree TGUI
+
+/datum/action/innate/ring_skill_tree
+	name = "Ring Skill Tree"
+	desc = "Open the Ring Skill Tree to spend your skill points on artistic abilities."
+	button_icon_state = "yourarthere"
+	check_flags = AB_CHECK_CONSCIOUS
+
+	var/datum/ring_skill_tree/skill_tree_datum
+
+/datum/action/innate/ring_skill_tree/Activate()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H))
+		return
+
+	// Check if they have artistic EXP
+	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
+	if(!exp_comp)
+		to_chat(H, span_warning("You have no artistic experience."))
+		return
+
+	// Create or reuse the skill tree datum
+	if(!skill_tree_datum)
+		skill_tree_datum = new(H)
+
+	skill_tree_datum.ui_interact(H)
+
+/datum/action/innate/ring_skill_tree/Remove(mob/M)
+	if(skill_tree_datum)
+		QDEL_NULL(skill_tree_datum)
+	. = ..()
+
+// ================== RESET ARTISTRY ==================
+// Maestro-only action to respec a student's skill tree
+
+/datum/action/cooldown/reset_artistry
+	name = "Reset Artistry"
+	desc = "Reset a student's skill tree, refunding all their skill points."
+	button_icon_state = "yourarthere"
+	cooldown_time = 30 SECONDS
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/cooldown/reset_artistry/Trigger(trigger_flags)
+	. = ..()
+	if(!.)
+		return FALSE
+	var/mob/living/carbon/human/H = owner
+
+	// Find a human nearby
+	var/mob/living/carbon/human/student = null
+	for(var/mob/living/carbon/human/potential in range(1, H))
+		if(potential == H)
+			continue
+		if(potential.GetComponent(/datum/component/artistic_exp))
+			student = potential
+			break
+
+	if(!student)
+		to_chat(H, span_warning("You need to be next to a student with artistic experience."))
+		return FALSE
+
+	var/datum/component/artistic_exp/exp_comp = student.GetComponent(/datum/component/artistic_exp)
+	if(!exp_comp)
+		to_chat(H, span_warning("[student] has no artistic experience to reset."))
+		return FALSE
+
+	if(exp_comp.skill_points_spent == 0)
+		to_chat(H, span_warning("[student] has not spent any skill points."))
+		return FALSE
+
+	// Confirm
+	var/confirm = tgui_alert(H, "Reset [student]'s skill tree? This will refund [exp_comp.skill_points_spent] skill points.", "Confirm Reset", list("Yes", "No"))
+	if(confirm != "Yes")
+		return FALSE
+
+	// Remove all skill components
+	for(var/datum/component/ring_skill/skill in student.GetComponents(/datum/component/ring_skill))
+		qdel(skill)
+
+	// Refund points
+	exp_comp.refund_all_points()
+
+	to_chat(H, span_nicegreen("You have reset [student]'s artistic skill tree."))
+	to_chat(student, span_notice("[H] has reset your artistic skill tree. All skill points have been refunded."))
+
+	StartCooldown()
+	return TRUE
