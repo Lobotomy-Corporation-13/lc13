@@ -37,7 +37,7 @@ export const RingSkillTree = (props, context) => {
     schools = [],
   } = data;
 
-  const availablePoints = skill_points - skill_points_spent;
+  const availablePoints = skill_points;
   const currentSchool = schools.find((s) => s.id === selectedSchool);
   const canInvestInSchool =
     schools_invested.length < 2 || schools_invested.includes(selectedSchool);

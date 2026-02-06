@@ -5,7 +5,9 @@
 	name = "Corporist Maestro"
 	id = "corporist_maestro"
 	say_mod = "states"
-	species_traits = list(NOBLOOD)
+	sexes = 0
+	use_skintones = FALSE
+	species_traits = list(NOBLOOD, NOEYESPRITES)
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
 		TRAIT_NOMETABOLISM,
@@ -42,7 +44,7 @@
 /datum/species/corporist_maestro/on_species_gain(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, TRUE)
+		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, FALSE)
 		BP.brute_reduction = 5
 		BP.burn_reduction = 4
 	C.set_safe_hunger_level()
@@ -58,7 +60,9 @@
 	name = "Corporist Apprentice"
 	id = "corporist_apprentice"
 	say_mod = "states"
-	species_traits = list(NOBLOOD)
+	sexes = 0
+	use_skintones = FALSE
+	species_traits = list(NOBLOOD, NOEYESPRITES)
 	inherent_traits = list(
 		TRAIT_ADVANCEDTOOLUSER,
 		TRAIT_NOMETABOLISM,
@@ -95,7 +99,7 @@
 /datum/species/corporist_apprentice/on_species_gain(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, TRUE)
+		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, FALSE)
 		BP.brute_reduction = 5
 		BP.burn_reduction = 4
 	C.set_safe_hunger_level()
