@@ -1,5 +1,3 @@
-
-
 /mob/living/simple_animal/hostile/abnormality/mining/herald
 	name = "herald"
 	desc = "A monstrous beast which fires deadly projectiles at threats and prey."

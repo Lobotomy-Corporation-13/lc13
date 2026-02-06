@@ -1,8 +1,3 @@
-#define SINGULAR_SHOT 1
-#define MAGIC_BOX 2
-#define PANDORA_TELEPORT 3
-#define AOE_SQUARES 4
-
 /mob/living/simple_animal/hostile/abnormality/mining/pandora
 	name = "pandora"
 	desc = "A large magic box with similar power and design to the Hierophant.  Once it opens, it's not easy to close it."

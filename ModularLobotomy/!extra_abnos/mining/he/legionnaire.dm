@@ -1,9 +1,3 @@
-#define LEGIONNAIRE_CHARGE 1
-#define HEAD_DETACH 2
-#define BONFIRE_TELEPORT 3
-#define SPEW_SMOKE 4
-
-
 /mob/living/simple_animal/hostile/abnormality/mining/legionnaire
 	name = "Legionnaire"
 	desc = "A towering skeleton, embodying the terrifying power of Legion."
