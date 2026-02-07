@@ -31,6 +31,11 @@
 /datum/job/agent/after_spawn(mob/living/carbon/human/outfit_owner, mob/M, latejoin = FALSE)
 	// Assign department security
 	job_attribute_limit = 130		//Have to set because it's a datum and may be changed later
+
+	var/datum/action/G = new /datum/action/cooldown/dash/back
+	G.Grant(user)
+
+
 	var/department
 	if(M && M.client && M.client.prefs)
 		department = M.client.prefs.prefered_agent_department
