@@ -13,6 +13,10 @@
 	var/list/schools_invested = list()
 	/// Maximum number of schools this player can invest in (2 for students, 3 for apprentice, 4 for maestro)
 	var/max_schools = 2
+	/// The main school this player identifies with (for examine text)
+	var/main_school = null
+	/// List of final grades received from Maestro grading (for round end report)
+	var/list/grades_received = list()
 
 	/// EXP thresholds for skill points (fast for first 4 levels, then slows down)
 	var/static/list/exp_thresholds = list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200)
@@ -30,20 +34,42 @@
 	UnregisterSignal(parent, COMSIG_PARENT_EXAMINE)
 	. = ..()
 
-/// Show EXP info when Maestro examines this player
+/// Show school info to everyone, EXP info only to Maestro
 /datum/component/artistic_exp/proc/on_examine(datum/source, mob/examiner, list/examine_list)
 	SIGNAL_HANDLER
 
-	if(!ishuman(examiner))
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
 		return
 
-	var/mob/living/carbon/human/H = examiner
+	// Show main school to everyone (including ghosts)
+	if(main_school)
+		var/school_name = get_school_display_name(main_school)
+		// Check if this person is a Maestro - they "study" schools, not "belong to" them
+		var/is_maestro = istype(H.dna?.species, /datum/species/corporist_maestro)
+		if(is_maestro)
+			examine_list += span_notice("[H.p_they(TRUE)] [H.p_are()] currently studying the [school_name] school.")
+		else
+			examine_list += span_notice("[H.p_they(TRUE)] [H.p_are()] a follower of the [school_name] school.")
 
-	// Only Maestro can see grade history
-	if(!istype(H.dna?.species, /datum/species/corporist_maestro))
-		return
+	// Only Maestro examiners can see EXP stats
+	if(ishuman(examiner))
+		var/mob/living/carbon/human/examiner_human = examiner
+		if(istype(examiner_human.dna?.species, /datum/species/corporist_maestro))
+			examine_list += span_notice("Artistic EXP: [exp] | Skill Points: [skill_points]/[skill_points + skill_points_spent]")
 
-	examine_list += span_notice("Artistic EXP: [exp] | Skill Points: [skill_points]/[skill_points + skill_points_spent]")
+/// Convert school ID to display name
+/datum/component/artistic_exp/proc/get_school_display_name(school_id)
+	switch(school_id)
+		if("fauvist")
+			return "Fauvist"
+		if("pointillist")
+			return "Pointillist"
+		if("cubist")
+			return "Cubist"
+		if("corporist")
+			return "Corporist"
+	return "Unknown"
 
 /// Get the next EXP threshold
 /datum/component/artistic_exp/proc/get_next_threshold()
@@ -164,3 +190,14 @@
 			max_schools = 3
 			to_chat(parent, span_nicegreen("As an Apprentice, you gain 4 skill points and can invest in up to 3 schools."))
 		// Students start with 0 skill points and max 2 schools (default)
+
+/// Record a grade received from Maestro judgment (for round end tracking)
+/datum/component/artistic_exp/proc/record_grade(grade)
+	grades_received += grade
+
+	// Also notify the antag datum if present
+	var/mob/living/carbon/human/H = parent
+	if(istype(H) && H.mind)
+		var/datum/antagonist/ring_artist/artist = H.mind.has_antag_datum(/datum/antagonist/ring_artist)
+		if(artist)
+			artist.grades_received += grade

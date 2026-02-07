@@ -20,6 +20,10 @@
 	if(!H.GetComponent(/datum/component/artistic_exp))
 		H.AddComponent(/datum/component/artistic_exp)
 
+	// Add student antagonist datum for rules/round end tracking
+	if(H.mind)
+		H.mind.add_antag_datum(/datum/antagonist/ring_artist/student)
+
 	to_chat(H, span_nicegreen("You are now a Student of The Ring's artistic schools."))
 
 /datum/component/corporist_student/RegisterWithParent()
@@ -29,9 +33,16 @@
 	// Register for organ insertions to block skill augment organs
 	RegisterSignal(parent, COMSIG_CARBON_GAIN_ORGAN, PROC_REF(on_organ_gained))
 
+	// Register for examine to show student status
+	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(on_examine))
+
 	// Grant artwork creation action
 	var/datum/action/cooldown/create_artwork_student/create_action = new(H)
 	create_action.Grant(H)
+
+	// Grant describe artwork action
+	var/datum/action/cooldown/describe_artwork/describe_action = new(H)
+	describe_action.Grant(H)
 
 	// Grant skill tree action
 	var/datum/action/innate/ring_skill_tree/tree_action = new(H)
@@ -43,16 +54,27 @@
 	// Remove Ring artist trait
 	REMOVE_TRAIT(H, TRAIT_RING_ARTIST, "corporist_student")
 
-	// Unregister organ signal
+	// Unregister signals
 	UnregisterSignal(parent, COMSIG_CARBON_GAIN_ORGAN)
+	UnregisterSignal(parent, COMSIG_PARENT_EXAMINE)
 
 	// Remove actions
 	for(var/datum/action/cooldown/create_artwork_student/action in H.actions)
+		action.Remove(H)
+	for(var/datum/action/cooldown/describe_artwork/action in H.actions)
 		action.Remove(H)
 	for(var/datum/action/innate/ring_skill_tree/action in H.actions)
 		action.Remove(H)
 
 	return ..()
+
+/// Show student status when examined
+/datum/component/corporist_student/proc/on_examine(datum/source, mob/examiner, list/examine_list)
+	SIGNAL_HANDLER
+
+	var/mob/living/carbon/human/H = parent
+	// Just show "Student of The Ring" - the school is shown by artistic_exp component
+	examine_list += span_notice("[H.p_they(TRUE)] [H.p_are()] a Student of The Ring.")
 
 /// Removes any existing skill augments from the target
 /datum/component/corporist_student/proc/remove_existing_skill_augments(mob/living/carbon/human/H)
@@ -89,7 +111,8 @@
 /datum/action/cooldown/create_artwork_student
 	name = "Create Artwork"
 	desc = "Sculpt a corpse into artwork using your artistic training."
-	button_icon_state = "yourarthere"
+	icon_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "statue"
 	cooldown_time = 15 SECONDS
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
 

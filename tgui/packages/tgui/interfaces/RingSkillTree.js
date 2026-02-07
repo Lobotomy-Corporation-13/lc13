@@ -35,12 +35,26 @@ export const RingSkillTree = (props, context) => {
     skill_points_spent = 0,
     schools_invested = [],
     schools = [],
+    main_school = null,
+    max_schools = 2,
   } = data;
 
   const availablePoints = skill_points;
   const currentSchool = schools.find((s) => s.id === selectedSchool);
   const canInvestInSchool =
-    schools_invested.length < 2 || schools_invested.includes(selectedSchool);
+    schools_invested.length < max_schools
+    || schools_invested.includes(selectedSchool);
+
+  // Get the display name for a school
+  const getSchoolDisplayName = (id) => {
+    const schoolNames = {
+      fauvist: 'Fauvist',
+      pointillist: 'Pointillist',
+      cubist: 'Cubist',
+      corporist: 'Corporist',
+    };
+    return schoolNames[id] || id;
+  };
 
   return (
     <Window width={700} height={550} title="Ring Skill Tree">
@@ -73,12 +87,41 @@ export const RingSkillTree = (props, context) => {
               {schools_invested.length > 0 && (
                 <Box mt={1} fontSize="0.9em" color="gray">
                   Schools invested:{' '}
-                  {schools_invested
-                    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+                  {schools_invested.map((s) => getSchoolDisplayName(s))
                     .join(', ')}
-                  {schools_invested.length >= 2 && (
+                  {schools_invested.length >= max_schools && (
                     <Box as="span" color="orange" ml={1}>
                       (Maximum reached)
+                    </Box>
+                  )}
+                </Box>
+              )}
+              {schools_invested.length > 0 && (
+                <Box mt={1}>
+                  <Box as="span" fontSize="0.9em" color="gray" mr={1}>
+                    Main School:
+                  </Box>
+                  {schools_invested.map((school) => (
+                    <Button
+                      key={school}
+                      selected={main_school === school}
+                      color={main_school === school
+                        ? SCHOOL_COLORS[school]
+                        : 'default'}
+                      onClick={() => act('set_main_school', { school })}
+                    >
+                      {getSchoolDisplayName(school)}
+                    </Button>
+                  ))}
+                  {main_school && (
+                    <Box
+                      as="span"
+                      ml={1}
+                      fontSize="0.85em"
+                      color="label"
+                      italic
+                    >
+                      (Visible when examined)
                     </Box>
                   )}
                 </Box>
@@ -149,8 +192,8 @@ const SchoolDisplay = (props, context) => {
 
       {!canInvest && (
         <NoticeBox color="orange" mb={2}>
-          You have already invested in 2 schools. You cannot learn skills from
-          this school.
+          You have already invested in your maximum number of schools. You
+          cannot learn skills from this school.
         </NoticeBox>
       )}
 

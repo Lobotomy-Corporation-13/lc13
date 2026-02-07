@@ -4,23 +4,36 @@
 /obj/structure/corporist_artwork
 	name = "crude sculpture"
 	desc = "A basic arrangement of flesh and bone. The artist's vision is barely visible."
-	icon = 'icons/obj/mannequin.dmi'
-	icon_state = "mannequin_human_wood" // Tier 1-2 placeholder
+	icon = 'icons/mob/blob.dmi'
+	icon_state = "still_blobpod"
 	anchored = TRUE
 	density = FALSE
 	can_buckle = TRUE
 	buckle_lying = 0
 	max_integrity = 200
-	// Placeholder icon states by tier (using cult icons until custom sprites are made)
-	var/static/list/tier_icon_states = list(
-		"mannequin_human_wood",      // Tier 1 - small
-		"mannequin_human_red",    // Tier 2
-		"mannequin_human_white", // Tier 3
-		"mannequin_human_purple",   // Tier 4
-		"mannequin_human_pale"       // Tier 5 - largest
-	)
 
-	/// Current tier of the artwork (1-5)
+	/// Icon files for each tier
+	var/static/list/tier_icons = list(
+		'icons/mob/blob.dmi',                              // Tier 1
+		'icons/mob/cult.dmi',                              // Tier 2
+		'ModularLobotomy/_Lobotomyicons/32x32.dmi',        // Tier 3
+		'ModularLobotomy/_Lobotomyicons/32x48.dmi',        // Tier 4
+		'ModularLobotomy/_Lobotomyicons/48x48.dmi',        // Tier 5
+		'ModularLobotomy/_Lobotomyicons/64x96.dmi'         // Tier 6 (hidden)
+	)
+	/// Icon states for each tier
+	var/static/list/tier_icon_states = list(
+		"still_blobpod",    // Tier 1
+		"meat_bomb",        // Tier 2
+		"meatboi",          // Tier 3
+		"meatboi_rifle",    // Tier 4
+		"last_shot",        // Tier 5
+		"flesh_idol"        // Tier 6 (hidden)
+	)
+	/// Pixel X offset for each tier (for larger sprites)
+	var/static/list/tier_pixel_x = list(0, 0, 0, 0, -8, -16)
+
+	/// Current tier of the artwork (1-6)
 	var/tier = 1
 	/// Number of materials used for tier calculation (bodyparts + simple creatures)
 	var/materials_count = 0
@@ -46,9 +59,11 @@
 	var/datum/weakref/graded_by_ref
 
 	/// SP damage dealt to non-artists on examine (scales with tier)
-	var/list/examine_sp_damage = list(5, 10, 15, 25, 40)
+	var/list/examine_sp_damage = list(5, 10, 15, 25, 40, 60)
 	/// SP healed for artists on examine (scales with tier)
-	var/list/examine_sp_heal = list(3, 6, 10, 15, 25)
+	var/list/examine_sp_heal = list(3, 6, 10, 15, 25, 40)
+	/// Whether the artwork has been vandalized with spray paint
+	var/vandalized = FALSE
 
 /obj/structure/corporist_artwork/Initialize(mapload, mob/creator)
 	. = ..()
@@ -96,10 +111,14 @@
 
 	// Show tier and technique grade (only to artists)
 	if(is_artist)
-		. += span_notice("Tier: [tier]/5 ([materials_count] materials)")
+		. += span_notice("Tier: [tier]/6 ([materials_count] materials)")
 		if(technique_grade)
 			var/technique_desc = get_technique_description(technique_grade)
 			. += span_notice("Technique: [technique_grade] - [technique_desc]")
+
+	// Show vandalism status
+	if(vandalized)
+		. += span_boldwarning("This artwork has been vandalized! Its technique has been ruined.")
 
 	// Show refinement status
 	if(needs_refinement)
@@ -178,6 +197,21 @@
 
 /// Adding bodyparts by hitting the artwork
 /obj/structure/corporist_artwork/attackby(obj/item/I, mob/living/user, params)
+	// Check if it's a spray bottle - vandalism!
+	if(istype(I, /obj/item/reagent_containers/spray))
+		if(vandalized)
+			to_chat(user, span_warning("This artwork has already been vandalized."))
+			return
+
+		to_chat(user, span_warning("You begin spraying black paint over the artwork..."))
+
+		if(!do_after(user, 3 SECONDS, src))
+			to_chat(user, span_warning("You were interrupted!"))
+			return
+
+		vandalize_artwork(user)
+		return
+
 	// Check if it's a bodypart
 	if(istype(I, /obj/item/bodypart))
 		if(!can_create_art(user))
@@ -193,6 +227,27 @@
 		return
 
 	return ..()
+
+/// Vandalize the artwork with spray paint - ruins technique and turns it black
+/obj/structure/corporist_artwork/proc/vandalize_artwork(mob/user)
+	vandalized = TRUE
+
+	// Ruin the technique grade
+	technique_grade = "F"
+	technique_scores = list(1) // Reset to just an F score
+
+	// Turn the artwork black
+	add_atom_colour("#1a1a1a", FIXED_COLOUR_PRIORITY)
+
+	// Update description to reflect vandalism
+	desc = "This artwork has been defaced with black spray paint. The original craftsmanship is ruined."
+
+	playsound(src, 'sound/effects/spray.ogg', 50, TRUE)
+	to_chat(user, span_boldwarning("You vandalize the artwork, ruining its technique!"))
+
+	// Visible message for others
+	if(user)
+		visible_message(span_warning("[user] sprays black paint all over [src]!"), ignored_mobs = list(user))
 
 /// Wrench to anchor/unanchor the artwork
 /obj/structure/corporist_artwork/wrench_act(mob/living/user, obj/item/I)
@@ -317,7 +372,9 @@
 /// Check if the artwork should upgrade to a higher tier
 /obj/structure/corporist_artwork/proc/check_tier_upgrade()
 	var/new_tier = 1
-	if(materials_count >= 27)
+	if(materials_count >= 60)
+		new_tier = 6
+	else if(materials_count >= 27)
 		new_tier = 5
 	else if(materials_count >= 19)
 		new_tier = 4
@@ -332,7 +389,9 @@
 
 /// Update appearance based on tier
 /obj/structure/corporist_artwork/proc/update_tier_appearance()
+	icon = tier_icons[tier]
 	icon_state = tier_icon_states[tier]
+	pixel_x = tier_pixel_x[tier]
 	switch(tier)
 		if(1)
 			name = "crude sculpture"
@@ -349,8 +408,12 @@
 			desc = "A horrifying opus of flesh and bone. Those who gaze upon it feel... something."
 			density = TRUE
 		if(5)
-			name = "magnum opus"
+			name = "opus"
 			desc = "A transcendent work of corporeal art. It seems almost alive."
+			density = TRUE
+		if(6)
+			name = "magnum opus"
+			desc = "A towering monument of flesh and bone that seems to pulse with unnatural life. Those who behold it are forever changed."
 			density = TRUE
 
 /// Convert letter grade to numeric value for averaging
@@ -410,6 +473,9 @@
 	var/datum/component/artistic_exp/exp_comp = artist.GetComponent(/datum/component/artistic_exp)
 	if(!exp_comp)
 		return
+
+	// Record the grade for round end tracking
+	exp_comp.record_grade(grade)
 
 	var/next_threshold = exp_comp.get_next_threshold()
 	var/exp_change = 0

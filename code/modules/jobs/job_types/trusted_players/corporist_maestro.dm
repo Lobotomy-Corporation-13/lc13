@@ -36,6 +36,12 @@
 	H.AddComponent(/datum/component/oracle_proxy_passive)
 	H.set_species(/datum/species/corporist_maestro)
 
+	// Re-equip hand items after species change (set_species can drop held items)
+	var/obj/item/ego_weapon/city/ring/tibia/weapon = new(H)
+	H.put_in_l_hand(weapon)
+	var/obj/item/clothing/suit/armor/ego_gear/city/ring_maestro/armor = new(H)
+	H.put_in_r_hand(armor)
+
 	// Add artistic EXP component with starting bonus
 	var/datum/component/artistic_exp/exp_comp = H.AddComponent(/datum/component/artistic_exp)
 	exp_comp.grant_starting_points("maestro")
@@ -54,6 +60,10 @@
 	var/datum/action/innate/ring_skill_tree/tree = new(H)
 	tree.Grant(H)
 
+	// Add antagonist datum for rules/round end tracking
+	if(H.mind)
+		H.mind.add_antag_datum(/datum/antagonist/ring_artist/maestro)
+
 	. = ..()
 
 /datum/outfit/job/corporist_maestro
@@ -64,8 +74,7 @@
 	belt = /obj/item/pda/security
 	uniform = /obj/item/clothing/under/suit/charcoal
 	shoes = /obj/item/clothing/shoes/laceup
-	l_hand = /obj/item/ego_weapon/city/ring/tibia
-	r_hand = /obj/item/clothing/suit/armor/ego_gear/city/ring_maestro
+	// l_hand and r_hand are equipped in after_spawn() after set_species()
 	l_pocket = /obj/item/ring_apprentice_recruitment
 
 // Ring Corporist Apprentice Recruitment Scroll
@@ -152,9 +161,15 @@
 		id_card.update_label()
 		id_card.update_icon()
 
-	// Update mind role
+	// Update mind role and add antagonist datum
 	if(H.mind)
 		H.mind.assigned_role = "Corporist Apprentice"
+		// Remove any existing ring_artist datum (if they were a student)
+		var/datum/antagonist/ring_artist/old_antag = H.mind.has_antag_datum(/datum/antagonist/ring_artist)
+		if(old_antag)
+			H.mind.remove_antag_datum(old_antag.type)
+		// Add apprentice antagonist datum
+		H.mind.add_antag_datum(/datum/antagonist/ring_artist/apprentice)
 
 	// Set the apprentice species (full prosthetic body)
 	H.set_species(/datum/species/corporist_apprentice)
@@ -173,10 +188,8 @@
 
 	// Check if they already have artistic EXP (e.g., they were a student)
 	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
-	var/was_student = FALSE
 	if(exp_comp)
 		// They were already a student - preserve their EXP and add 4 skill points
-		was_student = TRUE
 		exp_comp.grant_starting_points("apprentice")
 		// Remove student component if they had one
 		var/datum/component/corporist_student/student_comp = H.GetComponent(/datum/component/corporist_student)

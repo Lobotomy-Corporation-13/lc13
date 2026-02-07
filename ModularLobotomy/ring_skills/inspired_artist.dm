@@ -9,7 +9,7 @@
 	/// Artistic progress toward becoming a Student
 	var/artistic_progress = 0
 	/// Progress needed to become a Student
-	var/progress_threshold = 6
+	var/progress_threshold = 4
 
 /datum/component/inspired_artist/Initialize(duration_override)
 	. = ..()
@@ -32,16 +32,27 @@
 
 /datum/component/inspired_artist/RegisterWithParent()
 	. = ..()
-	// Grant the create artwork action
 	var/mob/living/carbon/human/H = parent
+
+	// Grant the create artwork action
 	var/datum/action/cooldown/create_basic_artwork/action = new(H)
 	action.Grant(H)
 
+	// Grant describe artwork action
+	var/datum/action/cooldown/describe_artwork/describe_action = new(H)
+	describe_action.Grant(H)
+
 /datum/component/inspired_artist/UnregisterFromParent()
-	// Remove the create artwork action
 	var/mob/living/carbon/human/H = parent
+
+	// Remove the create artwork action
 	for(var/datum/action/cooldown/create_basic_artwork/action in H.actions)
 		action.Remove(H)
+
+	// Remove describe artwork action
+	for(var/datum/action/cooldown/describe_artwork/action in H.actions)
+		action.Remove(H)
+
 	return ..()
 
 /// Called when inspiration expires
@@ -76,8 +87,9 @@
 /datum/action/cooldown/create_basic_artwork
 	name = "Create Basic Artwork"
 	desc = "Use your inspiration to sculpt a corpse into basic artwork."
-	button_icon_state = "yourarthere"
-	cooldown_time = 30 SECONDS
+	icon_icon = 'icons/mob/actions/actions_spells.dmi'
+	button_icon_state = "statue"
+	cooldown_time = 15 SECONDS
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
 
 /datum/action/cooldown/create_basic_artwork/Trigger(trigger_flags)

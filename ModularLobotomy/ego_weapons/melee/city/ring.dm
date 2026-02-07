@@ -384,7 +384,7 @@
 /obj/item/ego_weapon/city/ring/fascia/proc/on_wielder_examined(datum/source, mob/examiner, list/examine_list)
 	SIGNAL_HANDLER
 	if(isobserver(examiner) && !possessed)
-		examine_list += span_notice("The blade calls out... <a href='byond://\ref[src]?interact=1'>Listen closely.</a>")
+		examine_list += span_notice("The blade calls out... <a href='byond://?src=[REF(src)];interact=1'>Listen closely.</a>")
 
 /obj/item/ego_weapon/city/ring/fascia/attack_ghost(mob/user)
 	if(!isobserver(user))
@@ -774,7 +774,7 @@
 	desc = "Empower the wielder's next attack within 1.5 seconds, dealing +30 bonus RED damage."
 	icon_icon = 'icons/obj/ring_icons.dmi'
 	button_icon_state = "fascia"
-	cooldown_time = 20 SECONDS
+	cooldown_time = 7 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
 	/// Reference to the weapon
@@ -805,16 +805,17 @@
 		F1.add_atom_colour("#FFD700", TEMPORARY_COLOUR_PRIORITY)
 		if(F1.empower_timer_id)
 			deltimer(F1.empower_timer_id)
-		F1.empower_timer_id = addtimer(CALLBACK(F1, PROC_REF(clear_empower)), 1.5 SECONDS, TIMER_STOPPABLE)
+		F1.empower_timer_id = addtimer(CALLBACK(F1, TYPE_PROC_REF(/obj/item/ego_weapon/city/ring/fascia, clear_empower)), 1.5 SECONDS, TIMER_STOPPABLE)
 	else if(istype(F2))
 		F2.empowered = TRUE
 		F2.add_atom_colour("#FFD700", TEMPORARY_COLOUR_PRIORITY)
 		if(F2.empower_timer_id)
 			deltimer(F2.empower_timer_id)
-		F2.empower_timer_id = addtimer(CALLBACK(F2, PROC_REF(clear_empower)), 1.5 SECONDS, TIMER_STOPPABLE)
+		F2.empower_timer_id = addtimer(CALLBACK(F2, TYPE_PROC_REF(/obj/item/ego_weapon/city/ring/fascia_unleashed, clear_empower)), 1.5 SECONDS, TIMER_STOPPABLE)
 	else
 		return FALSE
 
+	playsound(wielder, 'sound/magic/charge.ogg', 50, TRUE)
 	to_chat(wielder, span_nicegreen("The Fascia surges with power!"))
 	to_chat(owner, span_nicegreen("You empower the blade!"))
 	StartCooldown()
@@ -830,7 +831,7 @@
 	desc = "Compel the wielder to dash 5 tiles in their facing direction."
 	icon_icon = 'icons/effects/cult_effects.dmi'
 	button_icon_state = "pulse"
-	cooldown_time = 15 SECONDS
+	cooldown_time = 5 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
 	/// Reference to the weapon

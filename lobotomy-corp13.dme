@@ -4184,6 +4184,7 @@
 #include "ModularLobotomy\!extra_abnos\mining\he\pandora.dm"
 #include "ModularLobotomy\!extra_abnos\mining\teth\ice_whelp.dm"
 #include "ModularLobotomy\actions\corporist_actions.dm"
+#include "ModularLobotomy\antagonists\ring_artist.dm"
 #include "ModularLobotomy\altjobtitles\altjobtitles.dm"
 #include "ModularLobotomy\altjobtitles\LC13.dm"
 #include "ModularLobotomy\altjobtitles\outfits.dm"

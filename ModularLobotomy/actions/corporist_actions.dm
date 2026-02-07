@@ -365,3 +365,26 @@
 
 	StartCooldown()
 	return TRUE
+
+// ================== VIEW RING RULES ==================
+// Action to view Ring rules and tenants
+
+/datum/action/innate/view_ring_rules
+	name = "View Ring Rules"
+	desc = "Review your artistic rules and tenants."
+	icon_icon = 'icons/hud/actions.dmi'
+	button_icon_state = "round_end"
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/innate/view_ring_rules/Activate()
+	var/mob/living/carbon/human/H = owner
+	if(!istype(H) || !H.mind)
+		return
+
+	var/datum/antagonist/ring_artist/artist = H.mind.has_antag_datum(/datum/antagonist/ring_artist)
+	if(!artist)
+		to_chat(H, span_warning("You are not a Ring artist."))
+		return
+
+	var/html = artist.get_rules_html()
+	H << browse(html, "window=ring_rules;size=600x500")

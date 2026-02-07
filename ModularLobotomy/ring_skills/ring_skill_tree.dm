@@ -33,6 +33,8 @@
 	data["skill_points"] = exp_comp.skill_points
 	data["skill_points_spent"] = exp_comp.skill_points_spent
 	data["schools_invested"] = exp_comp.schools_invested
+	data["main_school"] = exp_comp.main_school
+	data["max_schools"] = exp_comp.max_schools
 
 	// Build skill data for each school
 	data["schools"] = list()
@@ -184,7 +186,41 @@
 
 			return TRUE
 
+		if("set_main_school")
+			var/school_id = params["school"]
+			if(!school_id)
+				return FALSE
+
+			var/datum/component/artistic_exp/exp_comp = viewer.GetComponent(/datum/component/artistic_exp)
+			if(!exp_comp)
+				return FALSE
+
+			// Must have invested in this school to set it as main
+			if(!(school_id in exp_comp.schools_invested))
+				to_chat(viewer, span_warning("You must invest in a school before you can claim it as your main school!"))
+				return FALSE
+
+			exp_comp.main_school = school_id
+
+			var/school_name = get_school_display_name(school_id)
+			to_chat(viewer, span_nicegreen("You now identify as a student of the [school_name] school."))
+
+			return TRUE
+
 	return FALSE
+
+/// Convert school ID to display name
+/datum/ring_skill_tree/proc/get_school_display_name(school_id)
+	switch(school_id)
+		if("fauvist")
+			return "Fauvist"
+		if("pointillist")
+			return "Pointillist"
+		if("cubist")
+			return "Cubist"
+		if("corporist")
+			return "Corporist"
+	return "Unknown"
 
 // Global skill definitions
 GLOBAL_LIST_INIT(ring_skill_definitions, init_ring_skill_definitions())
