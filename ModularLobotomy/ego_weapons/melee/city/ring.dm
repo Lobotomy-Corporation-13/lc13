@@ -19,7 +19,7 @@
 	force = 68
 	damtype = RED_DAMAGE
 	attack_speed = 1
-	range = 2
+	reach = 2
 	stuntime = 5
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("sculpts", "carves", "reshapes", "cleaves")
