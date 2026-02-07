@@ -710,7 +710,7 @@
 	maxHealth = 100
 	health = 100
 	density = FALSE
-	anchored = TRUE
+	move_resist = INFINITY
 	speak_emote = list("whispers")
 	faction = list("neutral")
 	status_flags = GODMODE
