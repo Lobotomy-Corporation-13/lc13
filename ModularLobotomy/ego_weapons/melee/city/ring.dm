@@ -16,7 +16,7 @@
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right_64x64.dmi'
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
-	force = 67
+	force = 68
 	damtype = RED_DAMAGE
 	attack_speed = 1
 	range = 2
