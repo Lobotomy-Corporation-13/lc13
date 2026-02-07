@@ -116,7 +116,6 @@
 	projectile_piercing = PASSMOB
 	// No hitsound - we play a sound on detonation
 
-	var/screenshake_radius = 7
 	var/tile_radius = 3
 	/// Damage at epicenter (distance 0)
 	var/base_damage = 180
@@ -162,12 +161,10 @@
 	vfx.transform *= 0.6
 	INVOKE_ASYNC(src, PROC_REF(DetonationShockwaveVisual), impact_turf, tile_radius)
 
-	// Shake the screen of people in a certain radius
-	// Note: we could technically combine the 2 for loops, but I think it'd be more expensive to do so...? I'm really not sure
-	for(var/mob/living/L in view(screenshake_radius, impact_turf))
-		var/dist_from_epicenter = get_dist(L, impact_turf)
-		var/screenshake_intensity = clamp((3 - (dist_from_epicenter * 0.4)), 0.3, 3)
-		shake_camera(L, 3, screenshake_intensity)
+	// Shake the screen of the firer
+	var/dist_from_epicenter = get_dist(nadeslinger, impact_turf)
+	var/screenshake_intensity = clamp((3.5 - (dist_from_epicenter * 0.4)), 0.3, 3.5)
+	shake_camera(nadeslinger, 3, screenshake_intensity)
 
 	// Check every turf in our radius, hit mobs once at most. This can hit corpses.
 	var/list/affected_turfs = RANGE_TURFS(tile_radius, impact_turf)
