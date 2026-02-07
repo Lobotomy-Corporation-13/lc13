@@ -509,11 +509,11 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 		var/tier = 0
 		if(max_req >= 120)
 			tier = 4
-		else if(max_req >= 90)
+		else if(max_req >= 100)
 			tier = 3
-		else if(max_req >= 60)
+		else if(max_req >= 80)
 			tier = 2
-		else if(max_req >= 30)
+		else if(max_req >= 60)
 			tier = 1
 		else
 			tier = 0
