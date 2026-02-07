@@ -46,6 +46,55 @@
 	var/ranged_cooldown
 	/// Time between ranged attacks
 	var/ranged_cooldown_time = 2 SECONDS
+	/// Timer ID for disgust buildup on non-Maestro holders
+	var/disgust_timer_id
+
+/obj/item/ego_weapon/city/ring/tibia/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_HANDS)
+		// Start disgust timer for non-Maestros
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			if(!istype(H.dna?.species, /datum/species/corporist_maestro))
+				start_disgust_timer(H)
+
+/obj/item/ego_weapon/city/ring/tibia/dropped(mob/user)
+	stop_disgust_timer()
+	return ..()
+
+/obj/item/ego_weapon/city/ring/tibia/Destroy()
+	stop_disgust_timer()
+	return ..()
+
+/// Starts the disgust buildup timer for non-Maestro holders
+/obj/item/ego_weapon/city/ring/tibia/proc/start_disgust_timer(mob/living/carbon/human/H)
+	stop_disgust_timer()
+	disgust_timer_id = addtimer(CALLBACK(src, PROC_REF(apply_disgust), H), 2 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+
+/// Stops the disgust buildup timer
+/obj/item/ego_weapon/city/ring/tibia/proc/stop_disgust_timer()
+	if(disgust_timer_id)
+		deltimer(disgust_timer_id)
+		disgust_timer_id = null
+
+/// Applies disgust to non-Maestro holders and force drops at 100+
+/obj/item/ego_weapon/city/ring/tibia/proc/apply_disgust(mob/living/carbon/human/H)
+	if(QDELETED(H) || QDELETED(src))
+		stop_disgust_timer()
+		return
+	if(!H.is_holding(src))
+		stop_disgust_timer()
+		return
+	// Double-check they're still not a Maestro
+	if(istype(H.dna?.species, /datum/species/corporist_maestro))
+		stop_disgust_timer()
+		return
+
+	H.adjust_disgust(20)
+	if(H.disgust >= 100)
+		to_chat(H, span_warning("The Tibia's fleshy composition overwhelms you with disgust!"))
+		H.dropItemToGround(src, TRUE)
+		stop_disgust_timer()
 
 /obj/item/ego_weapon/city/ring/tibia/attack(mob/living/target, mob/living/user)
 	var/target_was_alive = target && !QDELETED(target) && target.stat != DEAD
@@ -780,8 +829,8 @@
 	var/hunger = 50
 	/// Maximum hunger level
 	var/max_hunger = 100
-	/// Hunger decay per Life() tick
-	var/hunger_decay = 0.5
+	/// Hunger decay per Life() tick (0.067 = ~10 hunger per 5 minutes)
+	var/hunger_decay = 0.067
 
 /mob/living/simple_animal/fascia_spirit/Initialize()
 	. = ..()
