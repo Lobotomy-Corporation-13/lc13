@@ -349,7 +349,6 @@
 	is_reloading = FALSE
 
 /obj/item/ego_weapon/ranged/proc/rounds_reload(mob/user, is_reloading_alt_mag = FALSE)
-
 	if(((!is_reloading_alt_mag) && (shotsleft == initial(shotsleft))) || ((is_reloading_alt_mag) && (alternate_shotsleft == initial(alternate_shotsleft))))
 		return
 	is_reloading = TRUE
