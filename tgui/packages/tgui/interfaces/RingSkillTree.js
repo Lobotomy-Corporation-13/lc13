@@ -40,13 +40,13 @@ export const RingSkillTree = (props, context) => {
   } = data;
 
   const availablePoints = skill_points;
-  const currentSchool = schools.find((s) => s.id === selectedSchool);
-  const canInvestInSchool =
-    schools_invested.length < max_schools
+  const currentSchool = schools.find(s => s.id === selectedSchool);
+  const canInvestInSchool
+    = schools_invested.length < max_schools
     || schools_invested.includes(selectedSchool);
 
   // Get the display name for a school
-  const getSchoolDisplayName = (id) => {
+  const getSchoolDisplayName = id => {
     const schoolNames = {
       fauvist: 'Fauvist',
       pointillist: 'Pointillist',
@@ -87,7 +87,7 @@ export const RingSkillTree = (props, context) => {
               {schools_invested.length > 0 && (
                 <Box mt={1} fontSize="0.9em" color="gray">
                   Schools invested:{' '}
-                  {schools_invested.map((s) => getSchoolDisplayName(s))
+                  {schools_invested.map(s => getSchoolDisplayName(s))
                     .join(', ')}
                   {schools_invested.length >= max_schools && (
                     <Box as="span" color="orange" ml={1}>
@@ -101,7 +101,7 @@ export const RingSkillTree = (props, context) => {
                   <Box as="span" fontSize="0.9em" color="gray" mr={1}>
                     Main School:
                   </Box>
-                  {schools_invested.map((school) => (
+                  {schools_invested.map(school => (
                     <Button
                       key={school}
                       selected={main_school === school}
@@ -132,7 +132,7 @@ export const RingSkillTree = (props, context) => {
           {/* School Tabs */}
           <Stack.Item>
             <Tabs fluid>
-              {schools.map((school) => (
+              {schools.map(school => (
                 <Tabs.Tab
                   key={school.id}
                   selected={selectedSchool === school.id}
@@ -198,7 +198,7 @@ const SchoolDisplay = (props, context) => {
       )}
 
       <Stack vertical>
-        {school.tiers.map((tier) => (
+        {school.tiers.map(tier => (
           <Stack.Item key={tier.tier}>
             <TierDisplay
               tier={tier}
@@ -218,8 +218,8 @@ const TierDisplay = (props, context) => {
   const { tier, schoolId, schoolColor, canInvest, availablePoints } = props;
   const { act } = useBackend(context);
 
-  const tierLocked = tier.choices.some((c) => c.locked);
-  const tierCompleted = tier.choices.some((c) => c.selected);
+  const tierLocked = tier.choices.some(c => c.locked);
+  const tierCompleted = tier.choices.some(c => c.selected);
 
   return (
     <Box
@@ -256,7 +256,7 @@ const TierDisplay = (props, context) => {
       </Flex>
 
       <Stack>
-        {tier.choices.map((choice) => (
+        {tier.choices.map(choice => (
           <Stack.Item key={choice.id} grow basis={0}>
             <SkillChoice
               choice={choice}
@@ -314,12 +314,12 @@ const SkillChoice = (props, context) => {
     statusColor = 'gold';
   }
 
-  const canSelect =
-    choice.available &&
-    canInvest &&
-    availablePoints >= tier &&
-    !choice.selected &&
-    !choice.excluded;
+  const canSelect
+    = choice.available
+    && canInvest
+    && availablePoints >= tier
+    && !choice.selected
+    && !choice.excluded;
 
   return (
     <Box
@@ -363,7 +363,7 @@ const SkillChoice = (props, context) => {
           fluid
           color="good"
           content="Learn Skill"
-          onClick={(e) => {
+          onClick={e => {
             e.stopPropagation();
             act('select_skill', {
               skill_type: choice.type,

@@ -261,7 +261,7 @@ const GameScreen = (props, context) => {
   );
 };
 
-const TimingBar = (props) => {
+const TimingBar = props => {
   const { needlePosition, sweetSpots } = props;
   const safePosition = needlePosition || 0;
 
@@ -477,7 +477,7 @@ const GameOverScreen = (props, context) => {
   );
 };
 
-const GradeDescription = (props) => {
+const GradeDescription = props => {
   const { grade } = props;
 
   const descriptions = {

@@ -377,16 +377,19 @@ const HumanView = (props, context) => {
 
       <div style={tabStyle}>
         <button
+          type="button"
           style={tabButtonStyle(tab === 'current')}
           onClick={() => setTab('current')}>
           Current
         </button>
         <button
+          type="button"
           style={tabButtonStyle(tab === 'active')}
           onClick={() => setTab('active')}>
           Active {activeCount > 0 && `(${activeCount})`}
         </button>
         <button
+          type="button"
           style={tabButtonStyle(tab === 'completed')}
           onClick={() => setTab('completed')}>
           Completed
