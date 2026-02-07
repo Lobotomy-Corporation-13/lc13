@@ -141,6 +141,11 @@
 		.grade-f { color: #ff4444; }
 		ul { margin: 5px 0; }
 		li { margin: 3px 0; }
+		table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+		th, td { border: 1px solid #555; padding: 8px; text-align: left; vertical-align: top; }
+		th { background: #333; color: #ffa500; }
+		td { background: #252525; }
+		.aspect { color: #87ceeb; font-weight: bold; }
 	</style></head><body>
 		<h1>Corporist Maestro - Rules of Conduct</h1>
 		<p class='info'>You are a Maestro of the Corporist school of The Ring, a Syndicate devoted to creating art that reflects the human condition through exhibiting human suffering.</p>
@@ -157,7 +162,35 @@
 		</ul>
 
 		<h2>Judging Guidelines</h2>
-		<p>As a Maestro, you have the authority to judge artwork created by your students and apprentices.</p>
+		<p>When evaluating an artwork, the Maestro should consider these four aspects:</p>
+
+		<table>
+			<tr>
+				<th>Aspect</th>
+				<th>What to Evaluate</th>
+				<th>Questions to Ask</th>
+			</tr>
+			<tr>
+				<td class='aspect'>Composition</td>
+				<td>The bodyparts and creatures used in the artwork</td>
+				<td>Do the materials follow an artistic theme? Is there meaning in their selection? Did they use specific creature types or bodypart combinations intentionally?</td>
+			</tr>
+			<tr>
+				<td class='aspect'>Investment</td>
+				<td>The tier of the artwork and materials invested</td>
+				<td>How many resources did they put into this work? Did they take time to build it up, or is it a rushed piece? Higher tiers show greater dedication.</td>
+			</tr>
+			<tr>
+				<td class='aspect'>Technique</td>
+				<td>The technique grade from the sculpting minigame</td>
+				<td>How delicate and precise was their handywork? A high technique grade (A or S) shows mastery of the craft. Low grades suggest carelessness.</td>
+			</tr>
+			<tr>
+				<td class='aspect'>Vision</td>
+				<td>The custom description written by the artist</td>
+				<td>Did they describe their own artwork? How eloquent and meaningful is their description? Does it convey artistic intent and vision?</td>
+			</tr>
+		</table>
 
 		<h3>Grading Criteria</h3>
 		<ul>
@@ -172,7 +205,6 @@
 		<ul>
 			<li>You may grade based on artistic merit, rewarding those who show true talent.</li>
 			<li>You may also grade unfairly for artistic reasons - rivalry, drama, and favoritism are all part of the art world.</li>
-			<li>Consider the materials used and the composition of the piece.</li>
 			<li>A higher tier artwork does not guarantee a higher grade - a small piece with vision may outshine a large but soulless work.</li>
 			<li>Your judgment shapes your students' futures. Use this power wisely... or don't.</li>
 		</ul>
