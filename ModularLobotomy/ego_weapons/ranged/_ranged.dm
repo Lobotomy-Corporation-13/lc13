@@ -349,13 +349,17 @@
 	is_reloading = FALSE
 
 /obj/item/ego_weapon/ranged/proc/rounds_reload(mob/user, is_reloading_alt_mag = FALSE)
-	if(shotsleft == initial(shotsleft))
+
+	if(((!is_reloading_alt_mag) && (shotsleft == initial(shotsleft))) || ((is_reloading_alt_mag) && (alternate_shotsleft == initial(alternate_shotsleft))))
 		return
 	is_reloading = TRUE
 	to_chat(user,"<span class='notice'>You start loading a bullet.</span>")
-	if(do_after(user, reloadtime, src)) //gotta reload
+	if(do_after(user, (is_reloading_alt_mag ? alternate_reload_time : reloadtime), src)) //gotta reload
 		playsound(src, reload_success_sound, 50, TRUE)
-		shotsleft +=1
+		if(is_reloading_alt_mag)
+			alternate_shotsleft +=1
+		else
+			shotsleft +=1
 		INVOKE_ASYNC(src, PROC_REF(rounds_reload), user, is_reloading_alt_mag)	//To save you from loading all your bullets
 	is_reloading = FALSE
 
