@@ -33,7 +33,7 @@
 	job_attribute_limit = 130		//Have to set because it's a datum and may be changed later
 
 	var/datum/action/G = new /datum/action/cooldown/dash/back
-	G.Grant(user)
+	G.Grant(outfit_owner)
 
 
 	var/department
