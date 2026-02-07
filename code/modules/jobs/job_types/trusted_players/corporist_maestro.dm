@@ -180,6 +180,12 @@
 	H.socks = "Nude"
 	H.updateappearance()
 
+	// Force hair color to white after updateappearance (species sets it but updateappearance can reset it)
+	H.hair_color = "FFF"
+	if(H.gradient_style)
+		H.gradient_color = "888"
+	H.update_hair()
+
 	// Add the oracle proxy passive component and traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, "corporist_apprentice")
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, "corporist_apprentice")

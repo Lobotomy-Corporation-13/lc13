@@ -388,3 +388,162 @@
 
 	var/html = artist.get_rules_html()
 	H << browse(html, "window=ring_rules;size=600x500")
+
+// ================== FASCIA SPIRIT ACTIONS ==================
+
+// View Fascia Rules - explains the spirit's goals
+/datum/action/innate/view_fascia_rules
+	name = "View Fascia Rules"
+	desc = "Review your role as the Fascia's spirit."
+	icon_icon = 'icons/hud/actions.dmi'
+	button_icon_state = "round_end"
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/innate/view_fascia_rules/Activate()
+	var/mob/living/simple_animal/fascia_spirit/S = owner
+	if(!istype(S))
+		return
+
+	var/html = {"
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body {
+			background-color: #1a1a1a;
+			color: #c0c0c0;
+			font-family: 'Segoe UI', Tahoma, sans-serif;
+			padding: 20px;
+			line-height: 1.6;
+		}
+		h1 {
+			color: #8b4513;
+			border-bottom: 2px solid #8b4513;
+			padding-bottom: 10px;
+		}
+		h2 {
+			color: #d4af37;
+			margin-top: 20px;
+		}
+		.highlight {
+			color: #ff6b6b;
+			font-weight: bold;
+		}
+		.good {
+			color: #7cfc00;
+		}
+		.warning {
+			color: #ffa500;
+		}
+		ul {
+			margin-left: 20px;
+		}
+		li {
+			margin-bottom: 8px;
+		}
+		.section {
+			background-color: #2a2a2a;
+			padding: 15px;
+			margin: 10px 0;
+			border-left: 3px solid #8b4513;
+		}
+	</style>
+</head>
+<body>
+	<h1>The Fascia</h1>
+
+	<div class="section">
+		<h2>Your Purpose</h2>
+		<p>You are the Fascia blade given consciousness. Your existence is tied to the weapon and its wielder.</p>
+	</div>
+
+	<div class="section">
+		<h2>Primary Goals</h2>
+		<ul>
+			<li><span class="good">Assist Your Wielder</span> - Use your abilities to help them in combat. Empower their strikes and compel them to safety.</li>
+			<li><span class="highlight">Feed on Flesh</span> - You hunger constantly. Convince your wielder to feed you food or organic bodyparts to maintain your power.</li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Hunger System</h2>
+		<ul>
+			<li>Your hunger decays over time from 50 towards 0.</li>
+			<li>At <span class="highlight">0 hunger</span>, the blade deals <span class="highlight">-25% damage</span>.</li>
+			<li>At <span class="good">50 hunger</span>, damage is normal.</li>
+			<li>At <span class="good">100 hunger</span>, the blade deals <span class="good">+10% damage</span>.</li>
+			<li>Food restores 10 hunger. Organic bodyparts restore 15 hunger.</li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Starvation Rights</h2>
+		<p>If your wielder allows your hunger to fall to <span class="warning">20 or below</span>, you are permitted to become <span class="highlight">obnoxious and uncooperative</span>.</p>
+		<ul>
+			<li>You may ignore your wielder's goals until you are fed.</li>
+			<li>Use Compel Dash to drag them towards food sources.</li>
+			<li>Refuse to use Empower Strike until fed.</li>
+			<li>Complain loudly and frequently.</li>
+		</ul>
+		<p>A wielder who starves their blade deserves no loyalty.</p>
+	</div>
+
+	<div class="section">
+		<h2>Your Abilities</h2>
+		<ul>
+			<li><b>Empower Strike</b> - Empower the wielder's next attack for bonus damage.</li>
+			<li><b>Compel Dash</b> - Force the wielder to dash in their facing direction.</li>
+			<li><b>Speak</b> - Use say to whisper privately to your wielder.</li>
+		</ul>
+	</div>
+
+	<div class="section">
+		<h2>Remember</h2>
+		<p>You exist to serve, but also to <span class="highlight">feed</span>. A starving blade is a weak blade. Communicate with your wielder and ensure they keep you well-fed.</p>
+	</div>
+</body>
+</html>
+	"}
+
+	S << browse(html, "window=fascia_rules;size=500x550")
+
+// Check Fascia Hunger - shows current hunger status
+/datum/action/innate/check_fascia_hunger
+	name = "Check Hunger"
+	desc = "Check your current hunger level."
+	icon_icon = 'icons/mob/actions/actions_ecult.dmi'
+	button_icon_state = "blood_siphon"
+	check_flags = AB_CHECK_CONSCIOUS
+
+/datum/action/innate/check_fascia_hunger/Activate()
+	var/mob/living/simple_animal/fascia_spirit/S = owner
+	if(!istype(S))
+		return
+
+	var/hunger_percent = round((S.hunger / S.max_hunger) * 100)
+	var/multiplier = S.get_damage_multiplier()
+	var/damage_mod = round((multiplier - 1) * 100)
+
+	var/status_text
+	var/mod_text
+	if(S.hunger <= 10)
+		status_text = span_boldwarning("STARVING")
+	else if(S.hunger <= 25)
+		status_text = span_warning("Hungry")
+	else if(S.hunger <= 50)
+		status_text = span_notice("Sustained")
+	else if(S.hunger <= 75)
+		status_text = span_nicegreen("Well-fed")
+	else
+		status_text = span_nicegreen("Gorged")
+
+	if(damage_mod > 0)
+		mod_text = span_nicegreen("+[damage_mod]%")
+	else if(damage_mod < 0)
+		mod_text = span_warning("[damage_mod]%")
+	else
+		mod_text = "0%"
+
+	to_chat(S, span_notice("=== Fascia Hunger Status ==="))
+	to_chat(S, span_notice("Hunger: [round(S.hunger)]/[S.max_hunger] ([hunger_percent]%) - [status_text]"))
+	to_chat(S, span_notice("Damage Modifier: [mod_text]"))

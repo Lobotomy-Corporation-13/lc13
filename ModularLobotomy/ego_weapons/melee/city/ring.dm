@@ -8,7 +8,7 @@
 /obj/item/ego_weapon/city/ring/tibia
 	name = "Tibia"
 	desc = "A massive weapon composed of Callisto's own body. Several large pointed notches line its blade, designed to sculpt flesh with artistic precision."
-	special = "Collects Corpus Ingredients on hit. Use in hand to toggle ranged mode. Click at range to fire."
+	special = "Collects Corpus Ingredients on hit. Stuns targets for half your recovery time. Use in hand to toggle ranged mode. Click at range to fire."
 	icon_state = "tibia"
 	inhand_icon_state = "tibia"
 	icon = 'icons/obj/ring_icons.dmi'
@@ -19,6 +19,8 @@
 	force = 67
 	damtype = RED_DAMAGE
 	attack_speed = 1
+	range = 2
+	stuntime = 5
 	swingstyle = WEAPONSWING_LARGESWEEP
 	attack_verb_continuous = list("sculpts", "carves", "reshapes", "cleaves")
 	attack_verb_simple = list("sculpt", "carve", "reshape", "cleave")
@@ -50,6 +52,13 @@
 	. = ..()
 	if(!target || QDELETED(target) || !target_was_alive)
 		return
+	// Stun target for half the user's stuntime
+	if(stuntime && target.stat != DEAD)
+		target.Immobilize(round(stuntime * 0.5))
+		new /obj/effect/temp_visual/weapon_stun(get_turf(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
 	// Collect Corpus Ingredients on hit - double on kill
 	var/bone_gain = 30
 	var/blood_gain = 1
@@ -160,7 +169,7 @@
 				for(var/turf/open/T in range(target_turf, aoe_radius))
 					if(get_dist(target_turf, T) > 1)
 						new /obj/effect/temp_visual/tibia_spread_warning(T)
-			addtimer(CALLBACK(src, PROC_REF(execute_ranged_attack), user, target_turf, aoe_radius, ranged_damage, heals_sp, mode_name), 7.5)
+			addtimer(CALLBACK(src, PROC_REF(execute_ranged_attack), user, target_turf, aoe_radius, ranged_damage, heals_sp, mode_name), 5)
 
 /// Fires a piercing projectile for Lance and Needle modes
 /obj/item/ego_weapon/city/ring/tibia/proc/fire_tibia_projectile(atom/target, mob/living/user, params)
@@ -371,6 +380,32 @@
 /obj/item/ego_weapon/city/ring/fascia/canStrip(mob/who)
 	return FALSE
 
+/obj/item/ego_weapon/city/ring/fascia/attackby(obj/item/I, mob/user, params)
+	// Allow feeding the spirit with food or bodyparts
+	if(possessed && bound_spirit)
+		if(istype(I, /obj/item/food) || istype(I, /obj/item/bodypart))
+			if(bound_spirit.feed(I, user))
+				return
+	return ..()
+
+/obj/item/ego_weapon/city/ring/fascia/examine(mob/user)
+	. = ..()
+	// Only show hunger info to the wielder
+	if(possessed && bound_spirit && ismob(loc) && user == loc)
+		var/hunger_percent = round((bound_spirit.hunger / bound_spirit.max_hunger) * 100)
+		var/multiplier = bound_spirit.get_damage_multiplier()
+		var/damage_mod = round((multiplier - 1) * 100)
+		var/mod_text
+		if(damage_mod > 0)
+			mod_text = span_nicegreen("+[damage_mod]%")
+		else if(damage_mod < 0)
+			mod_text = span_warning("[damage_mod]%")
+		else
+			mod_text = "0%"
+		. += span_notice("Fascia's hunger: [round(bound_spirit.hunger)]/[bound_spirit.max_hunger] ([hunger_percent]%)")
+		. += span_notice("Damage modifier: [mod_text]")
+		. += span_notice("Feed it with food or organic bodyparts to increase hunger.")
+
 /obj/item/ego_weapon/city/ring/fascia/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_HANDS)
@@ -438,7 +473,14 @@
 	dash_action.weapon_ref = WEAKREF(src)
 	dash_action.Grant(S)
 
-	to_chat(S, span_nicegreen("You inhabit the Fascia! You can speak to the wielder via say. Use your actions to aid them in battle."))
+	// Grant info actions
+	var/datum/action/innate/view_fascia_rules/rules_action = new(S)
+	rules_action.Grant(S)
+
+	var/datum/action/innate/check_fascia_hunger/hunger_action = new(S)
+	hunger_action.Grant(S)
+
+	to_chat(S, span_nicegreen("You inhabit the Fascia! You can speak to the wielder via say. Use your actions to aid them in battle and keep yourself fed!"))
 	if(wielder)
 		to_chat(wielder, span_nicegreen("A spirit has inhabited your Fascia!"))
 
@@ -459,14 +501,22 @@
 	if(linked_armor?.iron_curtain)
 		to_chat(user, span_warning("You cannot attack while Iron Curtain is active!"))
 		return FALSE
+	// Apply hunger damage multiplier from spirit
+	var/original_force = force
+	if(possessed && bound_spirit)
+		force = round(force * bound_spirit.get_damage_multiplier())
 	. = ..()
+	force = original_force
 	// Inflict 3 bleed stacks on hit
 	if(target && !QDELETED(target) && target.stat != DEAD)
 		target.apply_lc_bleed(3)
 	// Empowered strike from spirit
 	if(empowered && target && !QDELETED(target) && target.stat != DEAD)
-		target.deal_damage(empower_bonus, RED_DAMAGE)
-		to_chat(user, span_nicegreen("The Fascia's empowered strike lands! (+[empower_bonus] RED)"))
+		var/modified_empower = empower_bonus
+		if(possessed && bound_spirit)
+			modified_empower = round(empower_bonus * bound_spirit.get_damage_multiplier())
+		target.deal_damage(modified_empower, RED_DAMAGE)
+		to_chat(user, span_nicegreen("The Fascia's empowered strike lands! (+[modified_empower] RED)"))
 		if(bound_spirit)
 			to_chat(bound_spirit, span_nicegreen("Your empowered strike lands!"))
 		empowered = FALSE
@@ -572,14 +622,22 @@
 	return FALSE
 
 /obj/item/ego_weapon/city/ring/fascia_unleashed/attack(mob/living/target, mob/living/user)
+	// Apply hunger damage multiplier from spirit
+	var/original_force = force
+	if(possessed && bound_spirit)
+		force = round(force * bound_spirit.get_damage_multiplier())
 	. = ..()
+	force = original_force
 	// Inflict 3 bleed stacks on hit
 	if(target && !QDELETED(target) && target.stat != DEAD)
 		target.apply_lc_bleed(3)
 	// Empowered strike from spirit
 	if(empowered && target && !QDELETED(target) && target.stat != DEAD)
-		target.deal_damage(empower_bonus, RED_DAMAGE)
-		to_chat(user, span_nicegreen("The Fascia's empowered strike lands! (+[empower_bonus] RED)"))
+		var/modified_empower = empower_bonus
+		if(possessed && bound_spirit)
+			modified_empower = round(empower_bonus * bound_spirit.get_damage_multiplier())
+		target.deal_damage(modified_empower, RED_DAMAGE)
+		to_chat(user, span_nicegreen("The Fascia's empowered strike lands! (+[modified_empower] RED)"))
 		if(bound_spirit)
 			to_chat(bound_spirit, span_nicegreen("Your empowered strike lands!"))
 		empowered = FALSE
@@ -718,9 +776,47 @@
 
 	/// The weapon this spirit inhabits (null when sheltered in armor)
 	var/obj/item/bound_weapon
+	/// Spirit hunger level (0-100, starts at 50)
+	var/hunger = 50
+	/// Maximum hunger level
+	var/max_hunger = 100
+	/// Hunger decay per Life() tick
+	var/hunger_decay = 0.5
 
 /mob/living/simple_animal/fascia_spirit/Initialize()
 	. = ..()
+
+/// Returns the damage multiplier based on hunger (0 hunger = -25%, 50 = 0%, 100 = +10%)
+/mob/living/simple_animal/fascia_spirit/proc/get_damage_multiplier()
+	if(hunger <= 50)
+		// Scale from -25% at 0 to 0% at 50
+		return 1 + ((hunger - 50) * 0.005)
+	else
+		// Scale from 0% at 50 to +10% at 100
+		return 1 + ((hunger - 50) * 0.002)
+
+/// Feed the Fascia with food or bodyparts
+/mob/living/simple_animal/fascia_spirit/proc/feed(obj/item/I, mob/user)
+	var/feed_amount = 0
+
+	if(istype(I, /obj/item/food))
+		feed_amount = 10
+		to_chat(user, span_notice("You feed [I] to the Fascia. It seems satisfied."))
+	else if(istype(I, /obj/item/bodypart))
+		var/obj/item/bodypart/BP = I
+		if(BP.status == BODYPART_ROBOTIC)
+			to_chat(user, span_warning("The Fascia rejects the robotic limb with disgust."))
+			return FALSE
+		feed_amount = 15
+		to_chat(user, span_notice("You feed [I] to the Fascia. It hungrily consumes the flesh!"))
+	else
+		return FALSE
+
+	hunger = clamp(hunger + feed_amount, 0, max_hunger)
+	to_chat(src, span_nicegreen("You consume the offering! Hunger: [round(hunger)]/[max_hunger]"))
+	playsound(user, 'sound/items/eatfood.ogg', 50, TRUE)
+	qdel(I)
+	return TRUE
 
 /mob/living/simple_animal/fascia_spirit/say(message, bubble_type, list/spans, sanitize, datum/language/language, ignore_spam, forced)
 	if(!message)
@@ -744,6 +840,19 @@
 	. = ..()
 	// Keep health stable
 	health = maxHealth
+	// Decay hunger over time
+	if(hunger > 0)
+		hunger = max(0, hunger - hunger_decay)
+		// Warn wielder at low hunger
+		if(hunger == 25 || hunger == 10 || hunger == 0)
+			var/mob/living/wielder
+			if(bound_weapon && ismob(bound_weapon.loc))
+				wielder = bound_weapon.loc
+			if(wielder)
+				if(hunger == 0)
+					to_chat(wielder, span_boldwarning("The Fascia is starving! Weapon damage reduced by 25%."))
+				else
+					to_chat(wielder, span_warning("The Fascia hungers... ([round(hunger)]/[max_hunger])"))
 
 /mob/living/simple_animal/fascia_spirit/death(gibbed)
 	return // Cannot die
@@ -869,15 +978,7 @@
 		to_chat(owner, span_warning("Cannot dash in that direction!"))
 		return FALSE
 
-	// Check path for dense turfs
-	var/turf/user_turf = get_turf(wielder)
-	for(var/turf/T in getline(user_turf, landing))
-		if(T == user_turf)
-			continue
-		if(T.density)
-			to_chat(owner, span_warning("Something blocks the path!"))
-			return FALSE
-
+	// throw_at handles stopping at walls/obstacles automatically
 	wielder.throw_at(landing, 5, 2, spin = TRUE)
 	playsound(wielder, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 	to_chat(wielder, span_warning("The Fascia compels you forward!"))
