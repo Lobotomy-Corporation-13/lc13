@@ -2,17 +2,20 @@
 // Tracks artistic experience and skill points for Ring artists
 
 /datum/component/artistic_exp
+	dupe_mode = COMPONENT_DUPE_UNIQUE
 	/// Current artistic EXP
 	var/exp = 0
 	/// Skill points available to spend
 	var/skill_points = 0
 	/// Skill points already spent
 	var/skill_points_spent = 0
-	/// Schools the player has invested in (max 2)
+	/// Schools the player has invested in
 	var/list/schools_invested = list()
+	/// Maximum number of schools this player can invest in (2 for students, 3 for apprentice, 4 for maestro)
+	var/max_schools = 2
 
-	/// EXP thresholds for skill points
-	var/static/list/exp_thresholds = list(50, 150, 300, 500, 750, 1050, 1400, 1800)
+	/// EXP thresholds for skill points (fast for first 4 levels, then slows down)
+	var/static/list/exp_thresholds = list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200)
 
 /datum/component/artistic_exp/Initialize()
 	. = ..()
@@ -69,20 +72,33 @@
 
 	check_skill_points()
 
-/// Add EXP from artistic activities (percentage of next threshold)
+/// Add EXP from artistic activities (flat amounts for consistent progression)
 /datum/component/artistic_exp/proc/add_activity_exp(activity_type)
-	var/next_threshold = get_next_threshold()
 	var/exp_gain = 0
 
 	switch(activity_type)
 		if("create_artwork")
-			exp_gain = round(next_threshold * 0.03) // 3%
+			exp_gain = 5
 		if("add_body")
-			exp_gain = round(next_threshold * 0.02) // 2%
-		if("refine")
-			exp_gain = round(next_threshold * 0.03) // 3%
-		if("refine_good")
-			exp_gain = round(next_threshold * 0.05) // 5% for A/S technique grade
+			exp_gain = 3
+
+	if(exp_gain > 0)
+		modify_exp(exp_gain)
+
+/// Add flat EXP for completing refinement minigame based on grade
+/datum/component/artistic_exp/proc/add_refine_exp(grade)
+	var/exp_gain = 0
+	switch(grade)
+		if("F")
+			exp_gain = 5
+		if("C")
+			exp_gain = 10
+		if("B")
+			exp_gain = 15
+		if("A")
+			exp_gain = 25
+		if("S")
+			exp_gain = 40
 
 	if(exp_gain > 0)
 		modify_exp(exp_gain)
@@ -126,8 +142,8 @@
 /datum/component/artistic_exp/proc/can_invest_in_school(school_name)
 	if(school_name in schools_invested)
 		return TRUE // Already invested
-	if(length(schools_invested) >= 2)
-		return FALSE // Max 2 schools
+	if(length(schools_invested) >= max_schools)
+		return FALSE // Max schools reached
 	return TRUE
 
 /// Register investment in a school
@@ -135,13 +151,16 @@
 	if(!(school_name in schools_invested))
 		schools_invested += school_name
 
-/// Grant starting skill points based on role
+/// Grant starting skill points and set max schools based on role
 /datum/component/artistic_exp/proc/grant_starting_points(role)
 	switch(role)
 		if("maestro")
 			skill_points = 8
-			to_chat(parent, span_nicegreen("As a Maestro, you start with 8 skill points."))
+			max_schools = 4
+			to_chat(parent, span_nicegreen("As a Maestro, you start with 8 skill points and can invest in all 4 schools."))
 		if("apprentice")
-			skill_points = 4
-			to_chat(parent, span_nicegreen("As an Apprentice, you start with 4 skill points."))
-		// Students start with 0
+			// Add 4 skill points (don't overwrite existing points if they were a student)
+			skill_points += 4
+			max_schools = 3
+			to_chat(parent, span_nicegreen("As an Apprentice, you gain 4 skill points and can invest in up to 3 schools."))
+		// Students start with 0 skill points and max 2 schools (default)

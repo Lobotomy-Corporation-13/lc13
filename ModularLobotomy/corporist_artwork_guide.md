@@ -50,6 +50,21 @@ After adding anything, you must **refine** the artwork before adding more.
 | 4 | 7-10 | Masterpiece |
 | 5 | 11+ | Magnum Opus |
 
+### Creature Contribution
+Larger creatures contribute more materials based on their max health:
+| Max Health | Contribution |
+|------------|--------------|
+| < 100 | 1 |
+| 100-499 | 1 |
+| 500-999 | 2 |
+| 1000-1499 | 3 |
+| 1500-1999 | 4 |
+| 2000-3999 | 5 |
+| 4000+ | 6 |
+
+### Anchoring
+Use a **wrench** on artwork to anchor or unanchor it (2 second delay).
+
 ---
 
 ## The Sculpting Minigame
@@ -80,11 +95,19 @@ Hit consecutive Perfect/Good to build combos:
 Your final score determines your **Technique Grade**:
 | Score | Grade |
 |-------|-------|
-| 0-3 | F |
-| 4-7 | C |
-| 8-11 | B |
-| 12-15 | A |
-| 16+ | S |
+| 0-5 | F |
+| 6-10 | C |
+| 11-15 | B |
+| 16-20 | A |
+| 21+ | S |
+
+### Technique Averaging
+The artwork's displayed Technique Grade is the **average of all minigame sessions**. Each refinement shows both your current session grade and the overall average.
+
+### Artist Examine Info
+When artists examine artwork, they can see:
+- **Tier**: "Tier: 3/5 (6 materials)"
+- **Technique Grade**: "Technique: B - Solid technique with clear artistic intent."
 
 ---
 
@@ -119,23 +142,35 @@ The Maestro can **judge any artwork** and assign a Final Grade (F through S).
 
 As you earn Artistic EXP, you unlock **skill points** to spend on combat abilities.
 
-### Earning EXP
-- Creating artwork: +3% of next threshold
-- Adding bodies: +2% of next threshold
-- Refining artwork: +3-5% of next threshold
-- **Maestro's grades**: 25-100% (the main source!)
+### Earning EXP (Flat Amounts)
+| Activity | XP Gained |
+|----------|-----------|
+| Creating artwork | +5 XP |
+| Adding bodies | +3 XP |
+| Refining (F grade) | +5 XP |
+| Refining (C grade) | +10 XP |
+| Refining (B grade) | +15 XP |
+| Refining (A grade) | +25 XP |
+| Refining (S grade) | +40 XP |
+| **Maestro's grades** | 25-100% of threshold (main source!) |
 
 ### Skill Point Thresholds
-| Total EXP | Skill Points |
-|-----------|--------------|
-| 50 | 1 |
-| 150 | 2 |
-| 300 | 3 |
-| 500 | 4 |
-| 750 | 5 |
-| 1050 | 6 |
-| 1400 | 7 |
-| 1800 | 8 |
+Levels 1-4 are fast, then progression slows down significantly.
+
+| Total XP | Level | XP to Next |
+|----------|-------|------------|
+| 30 | 1 | 40 |
+| 70 | 2 | 50 |
+| 120 | 3 | 60 |
+| 180 | 4 | 170 |
+| 350 | 5 | 250 |
+| 600 | 6 | 350 |
+| 950 | 7 | 450 |
+| 1400 | 8 | 550 |
+| 1950 | 9 | 650 |
+| 2600 | 10 | 750 |
+| 3350 | 11 | 850 |
+| 4200 | 12 | - |
 
 ### The Four Schools
 You can invest in **up to 2 schools**. Each has 3 tiers of abilities.
@@ -305,6 +340,7 @@ Artists can write custom descriptions for their artwork:
 | Create artwork | All artists |
 | Enhance artwork | All artists |
 | Refine (minigame) | All artists |
+| Anchor/unanchor (wrench) | Anyone |
 | Describe artwork | Creator or Maestro |
 | Judge artwork | Maestro only |
 | Demonstrate (inspire others) | Maestro only |

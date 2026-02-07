@@ -34,8 +34,10 @@
 	var/needs_refinement = FALSE
 	/// Custom description set by the artist
 	var/custom_desc
-	/// Technique grade from refinement minigame (F/C/B/A/S)
+	/// Technique grade from refinement minigame (F/C/B/A/S) - calculated as average of all minigames
 	var/technique_grade
+	/// List of all technique scores from minigames (stored as numbers for averaging)
+	var/list/technique_scores = list()
 	/// Final grade from Maestro (F/C/B/A/S)
 	var/final_grade
 	/// Maestro's critique text
@@ -92,10 +94,12 @@
 	// Check if examiner can create art
 	var/is_artist = can_create_art(user)
 
-	// Show technique grade (only to artists)
-	if(technique_grade && is_artist)
-		var/technique_desc = get_technique_description(technique_grade)
-		. += span_notice("Technique: [technique_grade] - [technique_desc]")
+	// Show tier and technique grade (only to artists)
+	if(is_artist)
+		. += span_notice("Tier: [tier]/5 ([materials_count] materials)")
+		if(technique_grade)
+			var/technique_desc = get_technique_description(technique_grade)
+			. += span_notice("Technique: [technique_grade] - [technique_desc]")
 
 	// Show refinement status
 	if(needs_refinement)
@@ -190,6 +194,26 @@
 
 	return ..()
 
+/// Wrench to anchor/unanchor the artwork
+/obj/structure/corporist_artwork/wrench_act(mob/living/user, obj/item/I)
+	. = ..()
+	if(anchored)
+		to_chat(user, span_notice("You begin loosening the bolts on [src]..."))
+	else
+		to_chat(user, span_notice("You begin securing [src] to the floor..."))
+
+	if(!do_after(user, 2 SECONDS, src))
+		to_chat(user, span_warning("You were interrupted!"))
+		return TRUE
+
+	anchored = !anchored
+	if(anchored)
+		to_chat(user, span_notice("You secure [src] to the floor."))
+	else
+		to_chat(user, span_notice("You unanchor [src] from the floor."))
+	playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+	return TRUE
+
 /// Add a bodypart to the artwork
 /obj/structure/corporist_artwork/proc/add_bodypart(obj/item/bodypart/BP, mob/user)
 	to_chat(user, span_notice("You begin incorporating the [BP.name] into your work..."))
@@ -251,6 +275,23 @@
 	add_corpse(M, user)
 	return TRUE
 
+/// Calculate material contribution based on mob's max health
+/obj/structure/corporist_artwork/proc/get_health_contribution(mob/living/M)
+	var/mob_health = M.maxHealth
+	if(mob_health >= 4000)
+		return 6
+	if(mob_health >= 2000)
+		return 5
+	if(mob_health >= 1500)
+		return 4
+	if(mob_health >= 1000)
+		return 3
+	if(mob_health >= 500)
+		return 2
+	if(mob_health >= 100)
+		return 1
+	return 1 // Minimum contribution
+
 /// Add a full corpse to the artwork
 /obj/structure/corporist_artwork/proc/add_corpse(mob/living/simple_animal/M, mob/user)
 	// Track the creature by name
@@ -259,8 +300,9 @@
 		simple_creatures_used[creature_name] = 0
 	simple_creatures_used[creature_name]++
 
-	// Simple creatures contribute to tier same as bodyparts
-	materials_count++
+	// Creatures contribute based on their max health
+	var/contribution = get_health_contribution(M)
+	materials_count += contribution
 	needs_refinement = TRUE
 
 	to_chat(user, span_nicegreen("You incorporate [M]'s remains into the artwork."))
@@ -275,13 +317,13 @@
 /// Check if the artwork should upgrade to a higher tier
 /obj/structure/corporist_artwork/proc/check_tier_upgrade()
 	var/new_tier = 1
-	if(materials_count >= 11)
+	if(materials_count >= 27)
 		new_tier = 5
-	else if(materials_count >= 7)
+	else if(materials_count >= 19)
 		new_tier = 4
-	else if(materials_count >= 4)
+	else if(materials_count >= 12)
 		new_tier = 3
-	else if(materials_count >= 2)
+	else if(materials_count >= 5)
 		new_tier = 2
 
 	if(new_tier > tier)
@@ -311,11 +353,46 @@
 			desc = "A transcendent work of corporeal art. It seems almost alive."
 			density = TRUE
 
+/// Convert letter grade to numeric value for averaging
+/obj/structure/corporist_artwork/proc/grade_to_number(grade)
+	switch(grade)
+		if("F")
+			return 1
+		if("C")
+			return 2
+		if("B")
+			return 3
+		if("A")
+			return 4
+		if("S")
+			return 5
+	return 1
+
+/// Convert numeric average to letter grade
+/obj/structure/corporist_artwork/proc/number_to_grade(value)
+	if(value >= 4.5)
+		return "S"
+	if(value >= 3.5)
+		return "A"
+	if(value >= 2.5)
+		return "B"
+	if(value >= 1.5)
+		return "C"
+	return "F"
+
 /// Called when refinement is completed
 /obj/structure/corporist_artwork/proc/complete_refinement(grade)
-	technique_grade = grade
+	// Add this grade to the list and calculate the average
+	technique_scores += grade_to_number(grade)
+
+	var/total = 0
+	for(var/score in technique_scores)
+		total += score
+	var/average = total / length(technique_scores)
+	technique_grade = number_to_grade(average)
+
 	needs_refinement = FALSE
-	to_chat(get_turf(src), span_notice("The artwork has been refined. Grade: [grade]"))
+	to_chat(get_turf(src), span_notice("The artwork has been refined. This session: [grade] | Overall: [technique_grade]"))
 
 /// Called when Maestro assigns a final grade
 /obj/structure/corporist_artwork/proc/assign_final_grade(mob/grader, grade, critique)

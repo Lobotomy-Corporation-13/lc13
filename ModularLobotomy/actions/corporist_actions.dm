@@ -141,6 +141,15 @@
 	cooldown_time = 5 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
 
+	/// Cooldown tracker for A grade (world.time when available again)
+	var/a_grade_cooldown = 0
+	/// Cooldown tracker for S grade (world.time when available again)
+	var/s_grade_cooldown = 0
+	/// A grade cooldown duration
+	var/a_grade_cooldown_time = 5 MINUTES
+	/// S grade cooldown duration
+	var/s_grade_cooldown_time = 30 MINUTES
+
 /datum/action/cooldown/judge_artwork/Trigger(trigger_flags)
 	. = ..()
 	if(!.)
@@ -161,9 +170,43 @@
 		to_chat(H, span_warning("This artwork has already been judged."))
 		return FALSE
 
+	// Check if this is the Maestro's own artwork
+	var/mob/creator = artwork.creator_ref?.resolve()
+	if(creator == H)
+		to_chat(H, span_warning("You cannot judge your own artwork. A true artist seeks the judgment of others."))
+		return FALSE
+
+	// Build list of available grades based on cooldowns
+	var/list/available_grades = list()
+
+	// S grade check
+	if(s_grade_cooldown <= world.time)
+		available_grades += "S"
+	else
+		var/s_remaining = round((s_grade_cooldown - world.time) / 600) // Convert to minutes
+		to_chat(H, span_notice("S grade is on cooldown ([s_remaining] minutes remaining)."))
+
+	// A grade check
+	if(a_grade_cooldown <= world.time)
+		available_grades += "A"
+	else
+		var/a_remaining = round((a_grade_cooldown - world.time) / 600) // Convert to minutes
+		to_chat(H, span_notice("A grade is on cooldown ([a_remaining] minutes remaining)."))
+
+	// B, C, F are always available
+	available_grades += list("B", "C", "F")
+
 	// Ask for grade
-	var/grade = tgui_input_list(H, "What grade do you give this artwork?", "Judge Artwork", list("S", "A", "B", "C", "F"))
+	var/grade = tgui_input_list(H, "What grade do you give this artwork?", "Judge Artwork", available_grades)
 	if(!grade)
+		return FALSE
+
+	// Double-check cooldowns (in case time passed during input)
+	if(grade == "S" && s_grade_cooldown > world.time)
+		to_chat(H, span_warning("S grade is still on cooldown!"))
+		return FALSE
+	if(grade == "A" && a_grade_cooldown > world.time)
+		to_chat(H, span_warning("A grade is still on cooldown!"))
 		return FALSE
 
 	// Optional critique
@@ -174,6 +217,14 @@
 
 	to_chat(H, span_nicegreen("You have judged the artwork: Grade [grade]"))
 	H.visible_message(span_notice("[H] has judged an artwork, assigning it a grade of [grade]."))
+
+	// Apply grade-specific cooldowns
+	if(grade == "S")
+		s_grade_cooldown = world.time + s_grade_cooldown_time
+		to_chat(H, span_notice("S grade is now on cooldown for 30 minutes."))
+	else if(grade == "A")
+		a_grade_cooldown = world.time + a_grade_cooldown_time
+		to_chat(H, span_notice("A grade is now on cooldown for 5 minutes."))
 
 	StartCooldown()
 	return TRUE

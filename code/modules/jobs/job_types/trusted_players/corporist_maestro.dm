@@ -171,9 +171,21 @@
 	ADD_TRAIT(H, TRAIT_RING_ARTIST, "corporist_apprentice")
 	H.AddComponent(/datum/component/oracle_proxy_passive)
 
-	// Add artistic EXP component with starting bonus
-	var/datum/component/artistic_exp/exp_comp = H.AddComponent(/datum/component/artistic_exp)
-	exp_comp.grant_starting_points("apprentice")
+	// Check if they already have artistic EXP (e.g., they were a student)
+	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
+	var/was_student = FALSE
+	if(exp_comp)
+		// They were already a student - preserve their EXP and add 4 skill points
+		was_student = TRUE
+		exp_comp.grant_starting_points("apprentice")
+		// Remove student component if they had one
+		var/datum/component/corporist_student/student_comp = H.GetComponent(/datum/component/corporist_student)
+		if(student_comp)
+			qdel(student_comp)
+	else
+		// New to the arts - create fresh component
+		exp_comp = H.AddComponent(/datum/component/artistic_exp)
+		exp_comp.grant_starting_points("apprentice")
 
 	// Grant Apprentice actions
 	var/datum/action/cooldown/sculpt_corpse/sculpt = new(H)

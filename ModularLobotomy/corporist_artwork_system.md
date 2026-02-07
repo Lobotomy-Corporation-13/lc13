@@ -45,13 +45,30 @@ Existing artworks can be enhanced by adding bodyparts or corpses directly.
 - You don't need to be the original creator to enhance an artwork
 
 **Tiers:**
-| Tier | Bodies Required | Name | Description |
-|------|-----------------|------|-------------|
+| Tier | Materials Required | Name | Description |
+|------|-------------------|------|-------------|
 | 1 | 1 | "Crude Sculpture" | A basic arrangement of flesh and bone. The artist's vision is barely visible. |
 | 2 | 2-3 | "Developing Piece" | Multiple forms intertwined. The artwork begins to take shape. |
 | 3 | 4-6 | "Refined Work" | A disturbing yet captivating arrangement. Clear artistic intent. |
 | 4 | 7-10 | "Masterpiece" | A horrifying opus of flesh and bone. Those who gaze upon it feel... something. |
 | 5 | 11+ | "Magnum Opus" | A transcendent work of corporeal art. It seems almost alive. |
+
+**Creature Contribution by Max Health:**
+Different creatures contribute different material counts based on their max health:
+| Max Health | Material Contribution |
+|------------|----------------------|
+| < 100 | 1 |
+| 100-499 | 1 |
+| 500-999 | 2 |
+| 1000-1499 | 3 |
+| 1500-1999 | 4 |
+| 2000-3999 | 5 |
+| 4000+ | 6 |
+
+*Note: Bodyparts always contribute 1 material each.*
+
+**Anchoring:**
+Artworks can be anchored or unanchored using a wrench (2 second delay).
 
 ### 3. Demonstration System
 The Maestro can perform a "demonstration" on a corpse to teach others the art of flesh-sculpting.
@@ -190,12 +207,19 @@ The "effect strength" multiplier applies to the artwork's passive effects:
 - Failed refinements (F grade) require 10 minute wait before retry
 
 ### 5. Technique Grade System
-After refinement, the artwork receives a **Technique Grade** that reflects the sculptor's skill.
+After refinement, the artwork receives a **Technique Grade** that reflects the sculptor's skill. The technique grade is calculated as the **average of all minigame sessions** performed on the artwork.
 
 **Visibility:**
 - Only visible to those who can create art (Maestro, Apprentice, Students, Inspired)
+- Artists also see the artwork's **current tier** when examining: *"Tier: 3/5 (6 materials)"*
 - Appears when examining the artwork: *"Technique: B"*
 - Non-artists see only the standard description
+
+**Averaging System:**
+- Each minigame result (F=1, C=2, B=3, A=4, S=5) is added to a running list
+- The technique grade displayed is the average of all scores
+- Thresholds: <1.5=F, <2.5=C, <3.5=B, <4.5=A, ≥4.5=S
+- Upon completing a refinement, shows: *"This session: B | Overall: A"*
 
 **Grade Descriptions (for artists):**
 | Grade | Examine Text |
@@ -269,16 +293,18 @@ The Maestro alone has the authority to judge artwork and assign a **Final Grade*
     - name: varies by tier
     - desc: varies by tier (or custom if set)
     - icon: custom artwork sprites
-    - anchored: TRUE (cannot be moved once placed)
+    - anchored: TRUE (can be toggled with wrench, 2s delay)
     - density: varies by tier
     - can_buckle: TRUE (for adding corpses)
     - var/tier: 1-5
-    - var/bodies_used: tracks corpses incorporated
+    - var/materials_count: total material contribution (bodyparts + creature health-based)
     - var/list/bodyparts_used: list of bodypart types used (e.g., "2x torso, 3x arm")
+    - var/list/simple_creatures_used: list of creatures incorporated
     - var/creator: ref to mob who created it
     - var/needs_refinement: FALSE (set TRUE after adding body, blocks further additions)
     - var/custom_desc: artist's custom description (null if not set)
-    - var/technique_grade: F/C/B/A/S from refinement (null if unrefined)
+    - var/technique_grade: F/C/B/A/S from refinement (averaged from all minigames)
+    - var/list/technique_scores: list of numeric scores for averaging
     - var/final_grade: F/C/B/A/S from Maestro (null if unjudged)
     - var/final_grade_critique: Maestro's critique text
     - var/graded_by: ref to Maestro who graded it
@@ -412,24 +438,24 @@ Students earn **Artistic EXP** from Maestro grades, which grants skill points at
 
 ### Artistic EXP System
 
-**EXP from Artistic Activities (Small Gains):**
-Passive EXP scales with progression, calculated as a percentage of the next skill point threshold:
+**EXP from Artistic Activities (Flat Amounts):**
+All activities give flat XP amounts for consistent, predictable progression:
 
 | Activity | EXP Gained |
 |----------|------------|
-| Create artwork | +3% of next threshold |
-| Add body to artwork | +2% of next threshold |
-| Refine artwork | +3% of next threshold |
-| Refine artwork (A/S technique) | +5% of next threshold |
+| Create artwork | +5 XP |
+| Add body to artwork | +3 XP |
 
-**Scaling examples:**
-| Next Threshold | Create | Add Body | Refine | Refine (A/S) |
-|----------------|--------|----------|--------|--------------|
-| 50 | +1 | +1 | +1 | +2 |
-| 300 | +9 | +6 | +9 | +15 |
-| 1050 | +31 | +21 | +31 | +52 |
+**EXP from Refinement Minigame (Based on Grade):**
+| Grade | EXP Gained |
+|-------|------------|
+| F | +5 XP |
+| C | +10 XP |
+| B | +15 XP |
+| A | +25 XP |
+| S | +40 XP |
 
-*Note: Passive gains are always 3-5% while Maestro grades give 25-100%, ensuring the Maestro remains 5-20x more impactful.*
+*Note: These flat amounts ensure early levels are quick to achieve, while Maestro grades remain the most impactful source of progression.*
 
 **EXP from Maestro Final Grades (Major Changes):**
 The Maestro's grades give or take EXP based on a **percentage of the next skill point threshold**, making each grade significant regardless of current progress.
@@ -452,16 +478,22 @@ The Maestro's grades give or take EXP based on a **percentage of the next skill 
 This makes the Maestro's judgment high-stakes - seek their approval carefully, as poor work is punished!
 
 **Skill Point Thresholds:**
-| Total EXP | Cumulative Skill Points |
-|-----------|-------------------------|
-| 50 | 1 |
-| 150 | 2 |
-| 300 | 3 |
-| 500 | 4 |
-| 750 | 5 |
-| 1050 | 6 |
-| 1400 | 7 |
-| 1800 | 8 |
+The first 4 levels are fast to achieve, then progression slows significantly.
+
+| Total EXP | Skill Points | XP to Next |
+|-----------|--------------|------------|
+| 30 | 1 | 40 |
+| 70 | 2 | 50 |
+| 120 | 3 | 60 |
+| 180 | 4 | 170 |
+| 350 | 5 | 250 |
+| 600 | 6 | 350 |
+| 950 | 7 | 450 |
+| 1400 | 8 | 550 |
+| 1950 | 9 | 650 |
+| 2600 | 10 | 750 |
+| 3350 | 11 | 850 |
+| 4200 | 12 | - |
 
 **Skill Point Costs Per Tier:**
 | Tier | Cost |

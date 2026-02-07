@@ -269,13 +269,10 @@
 	if(artwork)
 		artwork.complete_refinement(grade)
 
-		// Add EXP based on grade
+		// Add flat EXP based on grade
 		var/datum/component/artistic_exp/exp_comp = sculptor.GetComponent(/datum/component/artistic_exp)
 		if(exp_comp)
-			if(grade == "A" || grade == "S")
-				exp_comp.add_activity_exp("refine_good")
-			else
-				exp_comp.add_activity_exp("refine")
+			exp_comp.add_refine_exp(grade)
 
 	to_chat(sculptor, span_notice("Refinement complete! Grade: [grade]"))
 
@@ -283,13 +280,13 @@
 	SStgui.update_uis(src)
 
 /datum/sculpting_minigame/proc/calculate_grade()
-	if(score <= 3)
+	if(score <= 5)
 		return "F"
-	if(score <= 7)
+	if(score <= 10)
 		return "C"
-	if(score <= 11)
-		return "B"
 	if(score <= 15)
+		return "B"
+	if(score <= 20)
 		return "A"
 	return "S"
 
