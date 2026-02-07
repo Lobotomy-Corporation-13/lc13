@@ -93,8 +93,6 @@
 	//PLAYABLES ATTACKS
 	attack_action_types = list(/datum/action/innate/abnormality_attack/toggle/SiltcurrentDive)
 
-	being_tested = TRUE // Remove before merge.
-
 // Player-Controlled code
 /datum/action/innate/abnormality_attack/toggle/SiltcurrentDive
 	name = "Toggle Blind Obsession"

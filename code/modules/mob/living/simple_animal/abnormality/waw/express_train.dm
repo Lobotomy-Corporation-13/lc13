@@ -47,8 +47,6 @@
 	var/list/segments = list()
 	var/list/damaged = list()
 
-	being_tested = TRUE // Remove before merge.
-
 /mob/living/simple_animal/hostile/abnormality/express_train/Initialize()
 	meltdown_timer = world.time + meltdown_tick
 	return ..()

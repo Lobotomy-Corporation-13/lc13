@@ -77,8 +77,6 @@
 	var/recloak_time = 0
 	var/recloak_time_cooldown = 30 SECONDS
 
-	being_tested = TRUE // Remove before merge!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 /mob/living/simple_animal/hostile/abnormality/apex_predator/Move()
 	if(notransform)
 		return ..()

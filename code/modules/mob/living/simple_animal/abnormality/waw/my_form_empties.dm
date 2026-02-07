@@ -79,8 +79,6 @@
 	var/list/current_minions = list()
 	var/minion_amount = 3
 
-	being_tested = TRUE // Remove before merge.
-
 /mob/living/simple_animal/hostile/abnormality/my_form_empties/Initialize()
 	. = ..()
 	soundloop = new(list(src), FALSE)

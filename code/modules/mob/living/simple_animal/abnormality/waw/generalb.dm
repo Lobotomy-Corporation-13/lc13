@@ -76,8 +76,6 @@
 		/datum/action/innate/change_icon_gbee,
 	)
 
-	being_tested = TRUE // Remove before merge.
-
 /datum/action/innate/change_icon_gbee
 	name = "Toggle Icon"
 	desc = "Toggle your icon between breached and contained. (Works only for Limbus Company Labratories)"
