@@ -490,7 +490,7 @@
 
 /// Iron Maiden fractured speed boost - flips 0.75 slowdown to 1.25 speed boost in phase 2
 /datum/movespeed_modifier/iron_maiden_fractured
-	multiplicative_slowdown = -2
+	multiplicative_slowdown = -1
 
 /// Fascia leap miss slowdown - applied when landing with no adjacent enemies
 /datum/movespeed_modifier/fascia_leap_miss
