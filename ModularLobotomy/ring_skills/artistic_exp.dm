@@ -34,7 +34,7 @@
 	UnregisterSignal(parent, COMSIG_PARENT_EXAMINE)
 	. = ..()
 
-/// Show school info to everyone, EXP info only to Maestro
+/// Show school info to other Ring artists, EXP info only to Maestro
 /datum/component/artistic_exp/proc/on_examine(datum/source, mob/examiner, list/examine_list)
 	SIGNAL_HANDLER
 
@@ -42,10 +42,18 @@
 	if(!istype(H))
 		return
 
-	// Show main school to everyone (including ghosts)
-	if(main_school)
+	// Only other Ring artists can see school info
+	var/examiner_is_artist = FALSE
+	var/examiner_is_maestro = FALSE
+	if(ishuman(examiner))
+		var/mob/living/carbon/human/examiner_human = examiner
+		if(examiner_human.GetComponent(/datum/component/artistic_exp))
+			examiner_is_artist = TRUE
+		if(istype(examiner_human.dna?.species, /datum/species/corporist_maestro))
+			examiner_is_maestro = TRUE
+
+	if(examiner_is_artist && main_school)
 		var/school_name = get_school_display_name(main_school)
-		// Check if this person is a Maestro - they "study" schools, not "belong to" them
 		var/is_maestro = istype(H.dna?.species, /datum/species/corporist_maestro)
 		if(is_maestro)
 			examine_list += span_notice("[H.p_they(TRUE)] [H.p_are()] currently studying the [school_name] school.")
@@ -53,10 +61,8 @@
 			examine_list += span_notice("[H.p_they(TRUE)] [H.p_are()] a follower of the [school_name] school.")
 
 	// Only Maestro examiners can see EXP stats
-	if(ishuman(examiner))
-		var/mob/living/carbon/human/examiner_human = examiner
-		if(istype(examiner_human.dna?.species, /datum/species/corporist_maestro))
-			examine_list += span_notice("Artistic EXP: [exp] | Skill Points: [skill_points]/[skill_points + skill_points_spent]")
+	if(examiner_is_maestro)
+		examine_list += span_notice("Artistic EXP: [exp] | Skill Points: [skill_points]/[skill_points + skill_points_spent]")
 
 /// Convert school ID to display name
 /datum/component/artistic_exp/proc/get_school_display_name(school_id)

@@ -19,11 +19,9 @@
 		TRAIT_RESISTLOWPRESSURE,
 		TRAIT_RADIMMUNE,
 		TRAIT_GENELESS,
-		TRAIT_NOFIRE,
 		TRAIT_PIERCEIMMUNE,
 		TRAIT_NOHUNGER,
-		TRAIT_LIMBATTACHMENT,
-		TRAIT_NOCLONELOSS
+		TRAIT_LIMBATTACHMENT
 	)
 	inherent_biotypes = MOB_ROBOTIC|MOB_HUMANOID
 	meat = null
@@ -44,7 +42,6 @@
 /datum/species/corporist_maestro/on_species_gain(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, FALSE)
 		BP.brute_reduction = 5
 		BP.burn_reduction = 4
 	C.set_safe_hunger_level()
@@ -52,7 +49,6 @@
 /datum/species/corporist_maestro/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ORGANIC, FALSE, TRUE)
 		BP.brute_reduction = initial(BP.brute_reduction)
 		BP.burn_reduction = initial(BP.burn_reduction)
 
@@ -79,11 +75,9 @@
 		TRAIT_RESISTLOWPRESSURE,
 		TRAIT_RADIMMUNE,
 		TRAIT_GENELESS,
-		TRAIT_NOFIRE,
 		TRAIT_PIERCEIMMUNE,
 		TRAIT_NOHUNGER,
-		TRAIT_LIMBATTACHMENT,
-		TRAIT_NOCLONELOSS
+		TRAIT_LIMBATTACHMENT
 	)
 	inherent_biotypes = MOB_ROBOTIC|MOB_HUMANOID
 	meat = null
@@ -104,7 +98,6 @@
 /datum/species/corporist_apprentice/on_species_gain(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ROBOTIC, FALSE, FALSE)
 		BP.brute_reduction = 5
 		BP.burn_reduction = 4
 	C.set_safe_hunger_level()
@@ -121,7 +114,6 @@
 /datum/species/corporist_apprentice/on_species_loss(mob/living/carbon/C)
 	. = ..()
 	for(var/obj/item/bodypart/BP in C.bodyparts)
-		BP.change_bodypart_status(BODYPART_ORGANIC, FALSE, TRUE)
 		BP.brute_reduction = initial(BP.brute_reduction)
 		BP.burn_reduction = initial(BP.burn_reduction)
 	// Restore original hair colors
