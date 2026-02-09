@@ -497,6 +497,11 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 
 		var/obj/item/ego_weapon/temp_weapon = new weapon_type(null)
 
+		// Check name-based blacklist
+		if(temp_weapon.name in GLOB.grid_craft_blacklist_names)
+			qdel(temp_weapon)
+			continue
+
 		// Calculate highest attribute requirement
 		var/max_req = 0
 		if(LAZYLEN(temp_weapon.attribute_requirements))
@@ -572,6 +577,25 @@ GLOBAL_LIST_INIT(grid_craft_blacklist_subtypes, list(
 	/obj/item/ego_weapon/city/lcorp,
 	/obj/item/ego_weapon/city/index,
 	/obj/item/ego_weapon/city/pt
+))
+
+/// Weapon names blacklisted from grid crafting (checked after instantiation)
+GLOBAL_LIST_INIT(grid_craft_blacklist_names, list(
+	"Tibia",
+	"Fascia",
+	"caduceus",
+	"caduceus - hatchet",
+	"caduceus - stiletto",
+	"caduceus - bastard sword",
+	"caduceus - rapier",
+	"caduceus - hammer",
+	"caduceus - greatsword",
+	"caduceus - lance",
+	"caduceus - whip",
+	"caduceus - scythe",
+	"caduceus - fpoon",
+	"index apprentice chains",
+	"Effloresced E.G.O :: Procuration",
 ))
 
 // IsWeaponBlacklisted moved to global /proc/IsWeaponTypeBlacklisted()
