@@ -22,7 +22,7 @@ GLOBAL_LIST_INIT(movement_distance_modifiers, list(
 	var/key = "[movement_type]"
 	if(key in GLOB.movement_distance_modifiers)
 		return GLOB.movement_distance_modifiers[key]
-	return 1.0
+	return 1
 
 // ===== Movement Type Names =====
 
@@ -154,15 +154,15 @@ GLOBAL_LIST_INIT(sin_type_names, list(
 /// Calculate distance modifier based on reagent quantity (0.5 to 1.5)
 /proc/GetQuantityModifier(amount, bypasses_quantity)
 	if(bypasses_quantity)
-		return 1.0  // Always 100% for advanced chems
+		return 1  // Always 100% for advanced chems
 
 	// Clamp to valid range
 	amount = clamp(amount, CHEM_QUANTITY_MIN, CHEM_QUANTITY_MAX)
 
-	// Linear interpolation: 5u = 0.5, 15u = 1.0, 25u = 1.5
+	// Linear interpolation: 5u = 0.5, 15u = 1, 25u = 1.5
 	var/range = CHEM_QUANTITY_MAX - CHEM_QUANTITY_MIN  // 20
 	var/normalized = (amount - CHEM_QUANTITY_MIN) / range  // 0 to 1
-	return 0.5 + (normalized * 1.0)  // 0.5 to 1.5
+	return 0.5 + normalized  // 0.5 to 1.5
 
 // ===== Diminishing Returns System =====
 // Tracking is stored on each grid_crafting_station in sin_overuse_counts
@@ -170,19 +170,19 @@ GLOBAL_LIST_INIT(sin_type_names, list(
 /// Get the current diminishing returns modifier for a station (read-only, for UI)
 /proc/GetDiminishingModifier(obj/structure/grid_crafting_station/station, movement_type)
 	if(!station)
-		return 1.0
+		return 1
 
 	var/list/sin_counts = station.sin_overuse_counts
 	if(!sin_counts || !(movement_type in sin_counts))
-		return 1.0
+		return 1
 
 	// Calculate penalty based on current count for this sin
 	var/uses = sin_counts[movement_type]
 	if(uses <= 1)
-		return 1.0
+		return 1
 
 	var/penalty = (uses - 1) * DIMINISHING_PENALTY_PER_USE
-	return max(1.0 - DIMINISHING_MAX_PENALTY, 1.0 - penalty)
+	return max(1 - DIMINISHING_MAX_PENALTY, 1 - penalty)
 
 /// Apply diminishing returns after using a core (updates the tracking)
 /proc/ApplyDiminishingReturns(obj/structure/grid_crafting_station/station, movement_type)
