@@ -49,7 +49,7 @@
 	foodtypes = GRAIN | DAIRY
 
 /obj/item/food/cake/bbird/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/cakeslice/bbird,5,30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/cakeslice/bbird, 5, 30)
 
 /obj/item/food/cakeslice/bbird
 	name = "Big Bird Cake Slice"
