@@ -55,7 +55,7 @@
 
 // Crumbling Armor - Life for a Daredevil
 /datum/ego_datum/weapon/daredevil
-	item_path = /obj/item/ego_weapon/shield/daredevil
+	item_path = /obj/item/ego_weapon/shield/parry/daredevil
 	cost = 35
 	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
@@ -231,7 +231,7 @@
 	cost = 35
 
 /datum/ego_datum/weapon/maneater
-	item_path = /obj/item/ego_weapon/shield/maneater
+	item_path = /obj/item/ego_weapon/shield/parry/maneater
 	cost = 35
 
 //Pale Horse - Revelation
@@ -269,7 +269,7 @@
 	cost = 35
 
 /datum/ego_datum/weapon/legerdemain
-	item_path = /obj/item/ego_weapon/shield/legerdemain
+	item_path = /obj/item/ego_weapon/shield/parry/legerdemain
 	cost = 35
 	ego_tags = list(EGO_TAG_SUSTAIN)
 

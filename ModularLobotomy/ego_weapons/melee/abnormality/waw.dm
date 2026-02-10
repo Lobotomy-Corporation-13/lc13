@@ -1301,7 +1301,7 @@
 			user.adjustBruteLoss(-heal_amt)
 	..()
 
-/obj/item/ego_weapon/shield/pharaoh
+/obj/item/ego_weapon/shield/parry/pharaoh
 	name = "pharaoh"
 	desc = "Look on my Works, ye Mighty, and despair!"
 	special = "This weapon can remove petrification."
@@ -1326,7 +1326,7 @@
 							PRUDENCE_ATTRIBUTE = 80
 							)
 
-/obj/item/ego_weapon/shield/pharaoh/pre_attack(atom/A, mob/living/user, params)
+/obj/item/ego_weapon/shield/parry/pharaoh/pre_attack(atom/A, mob/living/user, params)
 	if(istype(A, /obj/structure/statue/petrified) && CanUseEgo(user))
 		playsound(A, 'sound/effects/break_stone.ogg', rand(10, 50), TRUE)
 		A.visible_message(span_danger("[A] returns to normal!"), span_userdanger("You break free of the stone!"))
