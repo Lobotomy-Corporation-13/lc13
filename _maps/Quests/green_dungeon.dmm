@@ -86,8 +86,12 @@
 	dir = 1
 	},
 /obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose{
-	pixel_y = 8;
-	pixel_x = -6
+	pixel_y = 6;
+	pixel_x = 7
+	},
+/obj/item/ego_weapon/painprocess{
+	pixel_y = -6;
+	pixel_x = -7
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
