@@ -167,17 +167,19 @@
 
 /obj/item/ego_weapon/ranged/malicedescent/attack_self(mob/user) //Firemode swapping
 	if(gunmode == 1)
-		if(do_after(user, 0.5 SECONDS, src)) //Would have made it faster if the sound effects couldn't be spammed
+		if(do_after(user, 0.65 SECONDS, src)) //Would have made it faster if the sound effects couldn't be spammed
 			playsound(src, 'sound/weapons/gun/rifle/descentswap.ogg', 65, FALSE, 1)
 			gunmode = 2
 			icon_state = "descentmissile"
-			fire_delay = 2 SECONDS
-			autofire = 2 SECONDS
+			fire_delay = 2.2 SECONDS
+			autofire = 2.2 SECONDS
 			projectile_path = /obj/projectile/ego_bullet/smart_missile //Yes, this is probably a shitty and jank way of doing this, but it works
 			fire_sound = 'sound/weapons/ego/cannon.ogg'
+			to_chat(user, span_notice("Smart Missiles selected."))
+			update_projectile_examine()
 			return
 	if(gunmode == 2)
-		if(do_after(user, 0.5 SECONDS, src))
+		if(do_after(user, 0.65 SECONDS, src))
 			playsound(src, 'sound/weapons/gun/rifle/descentswap.ogg', 65, FALSE, 1)
 			gunmode = 1
 			icon_state = "descentvulcan"
@@ -185,3 +187,5 @@
 			autofire = 0.1 SECONDS
 			projectile_path = /obj/projectile/beam/vulcan
 			fire_sound = 'sound/weapons/gun/rifle/gauss.ogg'
+			to_chat(user, span_notice("Vulcan Cannon selected."))
+			update_projectile_examine()
