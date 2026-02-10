@@ -90,7 +90,7 @@
 	pixel_x = 7
 	},
 /obj/item/ego_weapon/painprocess{
-	pixel_y = -6;
+	pixel_y = -5;
 	pixel_x = -7
 	},
 /turf/open/floor/facility/dark,
