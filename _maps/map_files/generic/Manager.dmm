@@ -2228,7 +2228,7 @@
 	},
 /obj/item/ego_weapon/ranged/malicedescent{
 	pixel_x = 4;
-	pixel_y = -6
+	pixel_y = -5
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
