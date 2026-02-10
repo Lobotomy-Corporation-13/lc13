@@ -378,7 +378,7 @@
 	name = "painful process"
 	desc = "When we realized the pointlessness of our existence, we yearned to make everything else suffer as we do."
 	special = "This weapon hits 4 times every swing."
-	icon_state = "animalism"
+	icon_state = "painprocess"
 	force = 30
 	attack_speed = 1.4
 	damtype = RED_DAMAGE
