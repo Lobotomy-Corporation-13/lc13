@@ -59,6 +59,56 @@
 	foodtypes = DAIRY | SUGAR
 	w_class = WEIGHT_CLASS_TINY
 
+/obj/item/food/rcorppudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "rcorppudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/myopudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "myopudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/mattpudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "mattpudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/zilupudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "zilupudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1, /datum/reagent/consumable/hot_coco = 2)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/mumupudding
+	name = "bunny pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "mumupudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
 /////////////
 //SNOWCONES//
 /////////////
