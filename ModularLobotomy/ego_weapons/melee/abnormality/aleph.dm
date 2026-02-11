@@ -2541,6 +2541,8 @@
 	name = "eldtree spike"
 	icon_state = "faelantern_spike_fast"
 
+#define STATUS_EFFECT_GAZE /datum/status_effect/stacking/perversion_weapon_gaze
+#define STATUS_EFFECT_CONTEMPT /datum/status_effect/perversion_weapon_contempt
 /obj/item/ego_weapon/perversion
 	name = "perversion"
 	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
@@ -2551,7 +2553,7 @@
 	On a long cooldown, you may unsheathe the weapon to transform it into the 'Katana' form. The unsheathing has a brief windup and performs 'Cascading Gaze of Awe Underneath Contempt', immobilizing you and boosting your defenses, creating a damaging field that destroys projectiles and ending with burst damage. \n\
 	Enemies will take extra damage from this attack based on Gaze stacks, and enemies with Contempt will, in addition, be rooted for the duration of the attack.\n\
 	\n\
-	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Contempt and gains a 3-hit combo against targets with Gaze, consisting of a dash, cleave and Gaze-consuming finisher."
+	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Gaze/Contempt and gains a 3-hit combo against targets with Gaze/Contempt, consisting of a dash, cleave and Gaze-consuming finisher."
 	icon_state = "sangre"
 	icon = 'icons/obj/limbus_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
@@ -2641,6 +2643,44 @@
 	var/katana_finisher_damage_coeff = 2.5
 
 
+/obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
+	// Pre-attack: if we're in Katana form, adjust force based on enemy Gaze/Contempt
+	if(!sheathed && istype(target) && target.stat < DEAD)
+		force = katana_force
+		var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
+		var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		var/extra_coeff = 1
+
+		if(contempting)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * 7)
+		else if(gazing)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * (gazing.stacks))
+
+		force *= extra_coeff
+
+	. = ..() // Attack
+
+	// Post-attack
+	sheathed ? (force = lance_force) : (force = katana_force) // Reset force to be accurate if we examine the weapon
+	if(.)
+		// If we hit a target in Lance form, apply Gaze
+		if(sheathed && !QDELETED(target) && istype(target) && target.stat < DEAD)
+			ApplyGaze(target, base_gaze_application)
+
+		// If we hit a target in Katana form,
+		else
+			return
+
+/obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
+	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
+	var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+	if(contempting)
+		return
+	else if(gazing)
+		gazing.add_stacks(stacks_to_apply)
+	else
+		target.apply_status_effect(STATUS_EFFECT_GAZE, stacks_to_apply)
+
 /// Gaze stacking status effect: does nothing, the weapon is the one that applies the bonuses. You start with 1 stack, and go up to 6. If you go to 7? Turns into Contempt.
 /datum/status_effect/stacking/perversion_weapon_gaze
 	id = "perversion_weapon_gaze"
@@ -2648,7 +2688,7 @@
 	stacks = 1
 	max_stacks = 7
 	stack_decay = 0
-	duration = 20 SECONDS
+	duration = 30 SECONDS
 	stack_threshold = 7
 	consumed_on_threshold = TRUE
 
@@ -2674,7 +2714,7 @@
 /datum/status_effect/perversion_weapon_contempt
 	id = "perversion_weapon_contempt"
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
-	duration = 8 SECONDS
+	duration = 10 SECONDS
 
 /datum/status_effect/perversion_weapon_contempt/on_apply()
 	. = ..()
