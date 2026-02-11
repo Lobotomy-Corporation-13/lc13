@@ -52,6 +52,7 @@
 /obj/item/food/bnuuypudding
 	name = "bunny pudding"
 	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
 	icon_state = "bnuuypudding"
 	bite_consumption = 1
 	trash_type = /obj/item/trash/plate
