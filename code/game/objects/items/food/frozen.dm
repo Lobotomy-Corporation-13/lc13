@@ -103,7 +103,6 @@
 	name = "mumu pudding"
 	desc = "It is so cute and wobbly, You almost don't want to eat it."
 	icon = 'icons/obj/food/frozen_treats.dmi'
-	bite_consumption = 1
 	icon_state = "mumupudding"
 	trash_type = /obj/item/trash/plate
 	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 3)
