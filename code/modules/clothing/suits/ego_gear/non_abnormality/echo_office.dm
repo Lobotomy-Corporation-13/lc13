@@ -44,7 +44,7 @@
 
 /obj/effect/proc_holder/ability/fated_encounters
 	name = "Fated Encounters"
-	desc = "An ability that allows its user to become incredibly defensive and drawning in aggro of all hostiles, at the cost of SP."
+	desc = "An ability that allows its user to become incredibly defensive and drawing in aggro of all hostiles, at the cost of SP."
 	action_icon = 'icons/mob/actions/actions_items.dmi'
 	action_icon_state = "flight"
 	base_icon_state = "flight"
