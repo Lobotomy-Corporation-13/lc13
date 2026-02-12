@@ -108,7 +108,7 @@
 		/obj/item/portablepredict,
 		/obj/item/agent_preservation_tool,
 		/obj/item/deepscanner/advanced,
-		/obj/item/records_broadcast,
+		//obj/item/records_broadcast,		We'll add this in later.
 	)
 
 //RO passively gives people around him vitals sight
