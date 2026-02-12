@@ -1795,6 +1795,27 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale/fragile, stacks)
 		return
 
+//Defense Level Down - Diminishing returns vulnerability: (stacks / (stacks + 25)) * 100
+/datum/status_effect/stacking/defense_level_up/defense_level_down
+	id = "defense_level_down"
+	protection = -1
+	alert_type = /atom/movable/screen/alert/status_effect/defense_level_down
+	protection_mod = /datum/dc_change/defense_level_down
+
+/atom/movable/screen/alert/status_effect/defense_level_down
+	name = "Defense Level Down"
+	desc = "Your defense is weakened! All damage taken will be increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "fragile"
+
+//Mob Proc
+/mob/living/proc/apply_lc_defense_level_down(stacks)
+	var/datum/status_effect/stacking/defense_level_up/defense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down, stacks)
+		return
+	F.add_stacks(stacks)
+
 //Global Damage Down
 /datum/status_effect/stacking/damage_up/down
 	id = "damage_down"
@@ -1907,3 +1928,23 @@
 		qdel(F)
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale/down, stacks)
 		return
+
+//Offense Level Down - Diminishing returns damage reduction: (stacks / (stacks + 25)) * 100
+/datum/status_effect/stacking/offense_level_up/offense_level_down
+	id = "offense_level_down"
+	damage_mode = -1
+	alert_type = /atom/movable/screen/alert/status_effect/offense_level_down
+
+/atom/movable/screen/alert/status_effect/offense_level_down
+	name = "Offense Level Down"
+	desc = "Your offense is weakened! Your melee damage is decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "feeble"
+
+//Mob Proc
+/mob/living/proc/apply_lc_offense_level_down(stacks)
+	var/datum/status_effect/stacking/offense_level_up/offense_level_down/F = src.has_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down)
+	if(!F)
+		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down, stacks)
+		return
+	F.add_stacks(stacks)

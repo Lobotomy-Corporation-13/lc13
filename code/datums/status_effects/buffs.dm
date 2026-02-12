@@ -862,6 +862,103 @@
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_protection/pale, stacks)
 		return
 
+//Defense Level Up - Diminishing returns defense: (stacks / (stacks + 25)) * 100
+//  1 stack = 3%, 9 = 26%, 20 = 44%, 100 = 80%
+//  Stacks additively, halves every 5 seconds
+/datum/status_effect/stacking/defense_level_up
+	id = "defense_level_up"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 50
+	max_stacks = 100
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/defense_level_up
+	var/protection_mod = /datum/dc_change/defense_level_up
+	var/physiology_mod
+	var/protection = 1
+
+/atom/movable/screen/alert/status_effect/defense_level_up
+	name = "Defense Level Up"
+	desc = "Your defense is enhanced! All damage taken will be decreased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "protection"
+
+/datum/status_effect/stacking/defense_level_up/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	var/mob/living/carbon/human/H = owner
+	physiology_mod = (1 - protection * (stacks / (stacks + 25)))
+	if(ishuman(H))
+		H.physiology.red_mod *= physiology_mod
+		H.physiology.white_mod *= physiology_mod
+		H.physiology.black_mod *= physiology_mod
+		H.physiology.pale_mod *= physiology_mod
+		return
+	if(!isanimal(owner))
+		return
+	var/mob/living/simple_animal/A = owner
+	A.AddModifier(protection_mod)
+	var/datum/dc_change/mod = A.HasDamageMod(protection_mod)
+	mod.potency = 1 - ((stacks / (stacks + 25)) * protection)
+	A.UpdateResistances()
+
+/datum/status_effect/stacking/defense_level_up/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	var/mob/living/carbon/human/H = owner
+	if(ishuman(H))
+		if(physiology_mod)
+			H.physiology.red_mod /= physiology_mod
+			H.physiology.white_mod /= physiology_mod
+			H.physiology.black_mod /= physiology_mod
+			H.physiology.pale_mod /= physiology_mod
+		physiology_mod = (1 - protection * (stacks / (stacks + 25)))
+		H.physiology.red_mod *= physiology_mod
+		H.physiology.white_mod *= physiology_mod
+		H.physiology.black_mod *= physiology_mod
+		H.physiology.pale_mod *= physiology_mod
+		return
+	if(!isanimal(owner))
+		return
+	var/mob/living/simple_animal/A = owner
+	var/datum/dc_change/mod = A.HasDamageMod(protection_mod)
+	mod.potency = 1 - ((stacks / (stacks + 25)) * protection)
+	A.UpdateResistances()
+
+/datum/status_effect/stacking/defense_level_up/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	var/mob/living/carbon/human/H = owner
+	if(ishuman(H))
+		H.physiology.red_mod /= physiology_mod
+		H.physiology.white_mod /= physiology_mod
+		H.physiology.black_mod /= physiology_mod
+		H.physiology.pale_mod /= physiology_mod
+		return
+	var/mob/living/simple_animal/A = owner
+	if(A.HasDamageMod(protection_mod))
+		A.RemoveModifier(protection_mod)
+
+/datum/status_effect/stacking/defense_level_up/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	var/decay = max(1, round(stacks / 2))
+	add_stacks(-decay)
+
+//Mob Proc
+/mob/living/proc/apply_lc_defense_level_up(stacks)
+	var/datum/status_effect/stacking/defense_level_up/P = src.has_status_effect(/datum/status_effect/stacking/defense_level_up)
+	if(!P)
+		src.apply_status_effect(/datum/status_effect/stacking/defense_level_up, stacks)
+		return
+	P.add_stacks(stacks)
+
 //Global Damage Up
 /datum/status_effect/stacking/damage_up
 	id = "damage_up"
@@ -1083,3 +1180,68 @@
 		qdel(S)
 		src.apply_status_effect(/datum/status_effect/stacking/damtype_damage_up/pale, stacks)
 		return
+
+//Offense Level Up - Diminishing returns offense: (stacks / (stacks + 25)) * 100
+//  1 stack = 3%, 9 = 26%, 20 = 44%, 100 = 80%
+//  Stacks additively, halves every 5 seconds
+/datum/status_effect/stacking/offense_level_up
+	id = "offense_level_up"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 50
+	max_stacks = 100
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/offense_level_up
+	var/damage_mode = 1
+	/// Tracks the extra_damage amount currently applied to the owner
+	var/applied_extra_damage = 0
+
+/atom/movable/screen/alert/status_effect/offense_level_up
+	name = "Offense Level Up"
+	desc = "Your offense is enhanced! Your melee damage is increased by "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "strength"
+
+/datum/status_effect/stacking/offense_level_up/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/L = owner
+		applied_extra_damage = (stacks / (stacks + 25)) * 100 * damage_mode
+		L.extra_damage += applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.extra_damage -= applied_extra_damage
+		applied_extra_damage = (stacks / (stacks + 25)) * 100 * damage_mode
+		L.extra_damage += applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/on_remove()
+	. = ..()
+	if(!owner)
+		return
+	if(isliving(owner))
+		var/mob/living/L = owner
+		L.extra_damage -= applied_extra_damage
+
+/datum/status_effect/stacking/offense_level_up/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	var/decay = max(1, round(stacks / 2))
+	add_stacks(-decay)
+
+//Mob Proc
+/mob/living/proc/apply_lc_offense_level_up(stacks)
+	var/datum/status_effect/stacking/offense_level_up/S = src.has_status_effect(/datum/status_effect/stacking/offense_level_up)
+	if(!S)
+		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
+		return
+	S.add_stacks(stacks)
