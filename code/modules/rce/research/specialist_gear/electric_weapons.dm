@@ -14,7 +14,7 @@
 // Thunder Hammer - Basic rush weapon
 /obj/item/ego_weapon/thunder_hammer
 	name = "R-Corp thunder hammer"
-	desc = "An electrified hammer that delivers devastating strikes. Use in hand to toggle power. Right-click to perform a short dash attack when powered on."
+	desc = "An electrified hammer that delivers devastating strikes. Use in hand to toggle power. Click on a faraway target to perform a short dash attack when powered on."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "hammeroff"
 	force = 35  // Higher base damage for melee focus
