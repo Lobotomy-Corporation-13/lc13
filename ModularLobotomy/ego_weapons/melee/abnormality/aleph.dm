@@ -2543,6 +2543,8 @@
 
 #define STATUS_EFFECT_GAZE /datum/status_effect/stacking/perversion_weapon_gaze
 #define STATUS_EFFECT_CONTEMPT /datum/status_effect/perversion_weapon_contempt
+#define COLOR_PERVERSION_LANCE "#e2a91a"
+#define COLOR_PERVERSION_KATANA "#c50e0e"
 /obj/item/ego_weapon/perversion
 	name = "perversion"
 	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
@@ -2554,17 +2556,18 @@
 	Enemies will take extra damage from this attack based on Gaze stacks, and enemies with Contempt will, in addition, be rooted for the duration of the attack.\n\
 	\n\
 	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Gaze/Contempt and gains a 3-hit combo against targets with Gaze/Contempt, consisting of a dash, cleave and Gaze-consuming finisher."
-	icon_state = "sangre"
-	icon = 'icons/obj/limbus_weapons.dmi'
-	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
+	icon_state = "contempt"
+	icon = 'icons/obj/ego_weapons.dmi'
+	lefthand_file = 'icons/mob/inhands/weapons/ego_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/ego_righthand.dmi'
 	force = 100
 	swingstyle = WEAPONSWING_THRUST
+	swingcolor = COLOR_PERVERSION_LANCE
 	damtype = BLACK_DAMAGE
 	attack_speed = 1.4
 	attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
 	attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
-	hitsound = 'sound/abnormalities/spiral_contempt/spiral_hit.ogg'
+	hitsound = 'sound/weapons/ego/perversion_lance_1.ogg'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 100,
 							PRUDENCE_ATTRIBUTE = 80,
@@ -2577,35 +2580,69 @@
 
 	/// Combo hit counter!
 	var/combo = 0
+	/// Keeps track of your last hit mob. Combo requires you to focus on one, like Da Capo (this is actually a buff as it lets you reset)
+	var/last_target_hit
 
 	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
 	var/sheathed = TRUE
 	var/unsheathe_cooldown
 	var/unsheathe_cooldown_duration = 40 SECONDS
 	var/unsheathe_windup = 0.7 SECONDS
+	var/sheathe_sound = 'sound/weapons/ego/perversion_sheathe.ogg'
+	var/unsheathe_sound = 'sound/weapons/ego/perversion_unsheathe.ogg'
 
 	// Cascading Gaze of Awe Underneath Contempt is the attack automatically performed when unsheathing the katana
 
+	var/cascading_gaze_active = FALSE
+	var/cascading_gaze_active_timer
 	var/cascading_gaze_radius = 3
+	var/list/cascading_gaze_affected_turfs = list()
+	var/list/cascading_gaze_vfx = list()
+	var/cascading_gaze_hit_sounds_list = list('sound/weapons/ego/perversion_katana_1.ogg', 'sound/weapons/ego/perversion_katana_2.ogg')
+	var/cascading_gaze_finisher_sound = 'sound/weapons/ego/perversion_draw_finisher.ogg'
+
 	/// Multiplies katana force by this much before Justice for the Finisher
-	var/cascading_gaze_base_damage_coeff = 1.4
-	/// How much damage each tick of being inside the damaging AoE deals
-	var/cascading_gaze_periodic_damage = 20
+	var/cascading_gaze_base_damage_coeff = 1.3
+	/// How much damage each tick of being inside the damaging AoE deals. Modified by Justice
+	var/cascading_gaze_periodic_damage = 15
 	/// How often the damaging AoE ticks
 	var/cascading_gaze_periodic_tick_rate = 0.3 SECONDS
+	/// You'll be locked in place and the projectile deleting area will linger for this many ticks (duration of each determined by previous var).
+	var/cascading_gaze_tick_amount = 8
 	/// Add to the previous coefficient per gaze stacks on the target we're hitting
 	var/cascading_gaze_additive_damage_coeff_per_gaze = 0.4
-	/// You'll be locked in place and the projectile deleting area will linger for this long.
-	var/cascading_gaze_duration = 2.4 SECONDS
+	/// You'll take [this var]x as much damage while channeling the ability.
+	var/cascading_gaze_physiology_coeff = 0.5
+	/// These projectile types will create shrapnel.
+	var/cascading_gaze_shrapnel_sources = list(/obj/projectile/ego_bullet/special_fellbullet, /obj/projectile/ego_bullet/ego_fellbullet)
 
+
+	/* ------------ LANCE VARS ------------ */
+	// Lance template vars. Used to update the weapon's attributes when sheathing the weapon
+
+	// Icon vars
+	var/lance_icon = 'icons/obj/ego_weapons.dmi'
+	var/lance_icon_state = "contempt"
+	var/lance_inhands_list = list("left" = 'icons/mob/inhands/weapons/ego_lefthand.dmi', "right" = 'icons/mob/inhands/weapons/ego_righthand.dmi')
+	var/lance_swingcolor = COLOR_PERVERSION_LANCE
+
+	// Text vars
+	var/lance_desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
+	'Be awed, or be awe-struck.'"
+	var/lance_attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
+	var/lance_attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
+
+	// Sound vars
+	var/lance_basic_hitsound = 'sound/weapons/ego/perversion_lance_1.ogg'
+	var/lance_followup_hitsound = 'sound/weapons/ego/perversion_lance_2.ogg'
+
+	// Combat vars
+	var/lance_force = 100
+	var/lance_attack_speed = 1.6
 	/// The weapon applies this many Gaze stacks per hit in lance form.
 	var/base_gaze_application = 1
 
-	// We leave these two here to make it easier to varedit the weapon if needed and to avoid initial()
-	var/lance_force = 100
-	var/lance_attack_speed = 1.4
-
-	// Similar to Dark Carnival/Crow's Eye View/Thumb East opener. This lets you dash at a faraway target, dealing extra damage and applying more Gaze.
+	// Lance dash. Similar to Dark Carnival/Crow's Eye View/Thumb East opener. This lets you dash at a faraway target, dealing extra damage and applying more Gaze.
 	var/lance_dash_range = 4
 	var/lance_dash_cooldown
 	var/lance_dash_cooldown_duration = 4 SECONDS
@@ -2617,22 +2654,33 @@
 	var/lance_followup_damage_coeff = 1.3
 	var/lance_followup_extra_gaze_stacks = 2
 
-	// Katana form vars
+	/* ------------ KATANA VARS ------------ */
+	// Katana template vars. Used to update the weapon's attributes when drawing the weapon
 
-	var/katana_icon
-	var/katana_icon_state
+	// Icon vars
+	var/katana_icon = 'icons/obj/ego_weapons.dmi'
+	var/katana_icon_state = "daredevil"
+	var/katana_inhands_list = list("left" = 'icons/mob/inhands/weapons/ego_lefthand.dmi', "right" = 'icons/mob/inhands/weapons/ego_righthand.dmi')
+	var/katana_swingcolor = COLOR_PERVERSION_KATANA
+
+	// Text vars
 	var/katana_desc = "A blood-red sword, removed from its gilded armour. \n\
-	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody business is settled."
+	The brittle pride will be gradually chipped away when bereft of the disdain that shielded it, so it would be best to sheathe this once your bloody labours are finished."
 	var/list/katana_attack_verb_continuous = list("slashes", "slices", "cleaves", "sunders", "carves", "disembowels", "eviscerates", "bisects", "splits", "rends", "rips", "anatomizes", "styles on")
 	var/list/katana_attack_verb_simple = list("slash", "slice", "cleave", "sunder", "carve", "disembowel", "eviscerate", "bisect", "split", "rend", "anatomize", "style on")
 
+	// Sound vars
+	var/katana_basic_hitsound = 'sound/weapons/ego/perversion_katana_1.ogg'
+	var/katana_dash_hitsound = 'sound/weapons/ego/perversion_katana_3.ogg'
+	var/katana_cleave_hitsound = 'sound/weapons/ego/perversion_katana_2.ogg'
+	var/katana_finisher_hitsound = 'sound/weapons/ego/perversion_katana_4.ogg'
+
+	// Combat vars
 	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
 	var/katana_force = 60
 	var/katana_attack_speed = 1
 	var/katana_base_damage_coeff = 1
-	var/katana_additive_damage_coeff_per_gaze = 0.15
-
-	var/katana_last_target_hit
+	var/katana_additive_damage_coeff_per_gaze = 0.15 // 0: 1x, 1: 1.15x, 2: 1.3x, 3: 1.45x, 4: 1.6x, 5: 1.75x, 6: 1.9x, Contempt: 2.05x
 
 	var/katana_dash_range = 6
 	var/katana_dash_cooldown
@@ -2642,6 +2690,331 @@
 
 	var/katana_finisher_damage_coeff = 2.5
 
+
+/* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
+
+/obj/item/ego_weapon/perversion/attack_self(mob/living/user)
+	if(!CanUseEgo(user))
+		return FALSE
+	if(cascading_gaze_active)
+		return FALSE
+	// Currently in Lance form. Try to unsheathe.
+	if(sheathed)
+		// On CD. Bounce the attempt and alert the user.
+		if(unsheathe_cooldown > world.time)
+			var/timeleft = (unsheathe_cooldown - world.time) * 0.1
+			to_chat(user, span_danger("You're not ready to draw [src] yet. [timeleft] seconds left."))
+			balloon_alert(user, "Not ready. Current CD: [timeleft] seconds.")
+			return FALSE
+
+		playsound(get_turf(user), unsheathe_sound, 100, vary = FALSE, extrarange = 7)
+		// Not on CD. Try to draw the blade.
+		if(do_after(user, unsheathe_windup, interaction_key = "perversion_unsheathe", max_interact_count = 1))
+			// Set the cooldown and timer for an alert when it refreshes.
+			unsheathe_cooldown = world.time + unsheathe_cooldown_duration
+			addtimer(CALLBACK(src, PROC_REF(UnsheatheRefreshAlert), user), unsheathe_cooldown_duration + 1)
+
+			// Katana stats.
+			Unsheathe(user)
+
+			// Cascading Gaze of Awe Underneath Contempt
+			DrawAttackStart(user)
+		return
+
+	// Currently in Katana form. Sheathe.
+	else
+		playsound(get_turf(user), sheathe_sound, 100, vary = FALSE)
+
+		// Lance stats.
+		Sheathe(user)
+
+		return
+
+/obj/item/ego_weapon/perversion/proc/Sheathe(mob/living/user)
+	if(QDELETED(user))
+		return
+	to_chat(user, span_danger("You sheathe [src]."))
+	sheathed = TRUE
+
+	// Combat vars
+	force = lance_force
+	attack_speed = lance_attack_speed
+	swingstyle = WEAPONSWING_THRUST
+
+	// Appearance
+	icon = lance_icon
+	icon_state = lance_icon_state
+	lefthand_file = lance_inhands_list["left"]
+	righthand_file = lance_inhands_list["right"]
+	swingcolor = lance_swingcolor
+	user.regenerate_icons()
+
+	// Text
+	desc = lance_desc
+	attack_verb_simple = lance_attack_verb_simple
+	attack_verb_continuous = lance_attack_verb_continuous
+
+	// Sounds
+	hitsound = lance_basic_hitsound
+
+/obj/item/ego_weapon/perversion/proc/Unsheathe(mob/living/user)
+	if(QDELETED(user))
+		return
+	to_chat(user, span_danger("You draw [src]."))
+	sheathed = FALSE
+
+	// Combat vars
+	force = katana_force
+	attack_speed = katana_attack_speed
+	swingstyle = WEAPONSWING_LARGESWEEP
+
+	// Appearance
+	icon = katana_icon
+	icon_state = katana_icon_state
+	lefthand_file = katana_inhands_list["left"]
+	righthand_file = katana_inhands_list["right"]
+	swingcolor = katana_swingcolor
+	user.regenerate_icons()
+
+	// Text
+	desc = katana_desc
+	attack_verb_simple = katana_attack_verb_simple
+	attack_verb_continuous = katana_attack_verb_continuous
+
+	// Sounds
+	hitsound = katana_basic_hitsound
+
+/obj/item/ego_weapon/perversion/proc/UnsheatheRefreshAlert(mob/living/user)
+	if(!user)
+		return
+	flash_color(user, COLOR_MOSTLY_PURE_RED, 1 SECONDS)
+	SEND_SOUND(user, sound(('sound/abnormalities/armyinblack/black_heartbeat.ogg')) )
+	to_chat(user, span_nicegreen("You're ready to draw [src] again."))
+
+/* ------------------------ CASCADING GAZE OF AWE UNDERNEATH CONTEMPT (DRAW ATTACK) ------------------------ */
+// Initiating the draw attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackStart(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user) || user.stat >= DEAD || user.get_active_held_item() != src)
+		return
+	cascading_gaze_active = TRUE
+
+	// Ensure we're working with reasonable values here
+	if(cascading_gaze_tick_amount < 1)
+		cascading_gaze_tick_amount = 1
+	cascading_gaze_periodic_tick_rate = clamp(cascading_gaze_periodic_tick_rate, 0.1 SECONDS, 2 SECONDS)
+
+	// This is how long our attack's gonna last.
+	var/final_duration = cascading_gaze_tick_amount * cascading_gaze_periodic_tick_rate
+
+	// We need to apply pacify, immobilize, push resistance, etc onto the user. In case something goes wrong and we can't finish, we'll add a timer to remove them manually.
+	SetDrawAttackTraits(user)
+	cascading_gaze_active_timer = addtimer(CALLBACK(src, PROC_REF(RemoveDrawAttackTraits), user), final_duration + 5, TIMER_STOPPABLE)
+
+	// Clear these lists
+	cascading_gaze_affected_turfs = list()
+	cascading_gaze_vfx = list()
+
+	// These are the turfs we're gonna be working with. Even if we move (somehow???) after the attack begins, these turfs are the ones that will be affected.
+	// Could modify it to change on each iteration of the loop, but shouldn't need to...
+	for(var/turf/T in view(cascading_gaze_radius, user))
+		cascading_gaze_affected_turfs |= T
+		cascading_gaze_vfx |= new /obj/effect/perversion_draw_attack_projectile_destroyer(T, final_duration, src)
+
+	// Enter the draw attack loop.
+	DrawAttackLoop(user, 1)
+
+// This is the core loop that gets run over for our draw attack. It recursively calls itself until we've run through all our ticks, or something happens to cancel the attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackLoop(mob/living/carbon/human/user, iteration = 1)
+	if(QDELETED(src) || QDELETED(user) || user.stat >= DEAD || user.get_active_held_item() != src)
+		DrawAttackEnd(user)
+
+	// Clear the hitlist for every iteration.
+	shared_hitlist = list()
+
+	// If this iteration should be the last, set to TRUE.
+	var/should_end = (iteration >= cascading_gaze_tick_amount)
+
+	// Slash VFX will be bigger if we're on the last iteration
+	var/matrix/vfx_matrix = matrix()
+	if(should_end)
+		vfx_matrix *= 1.8
+
+	// Determine the base damage for this iteration. For the small hits it's the periodic damage, for the finisher it's the katana's force * a certain coeff.
+	// This base damage will be multiplied according to the user's Justice and the weapon's Force Multiplier.
+	// Once we have this base damage; when dealing damage to an enemy, we will also further multiply it for that enemy, based on stacks of Gaze/Contempt they might have.
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	var/base_damage = should_end ? (force * cascading_gaze_base_damage_coeff * justicemod * force_multiplier) : (cascading_gaze_periodic_damage * justicemod * force_multiplier)
+
+	playsound(get_turf(user), (should_end ? cascading_gaze_finisher_sound : pick(cascading_gaze_hit_sounds_list)), 75, vary = !should_end, extrarange = 7)
+
+	for(var/turf/T in cascading_gaze_affected_turfs)
+		// Slash VFX
+		var/obj/effect/temp_visual/slice/temp = new(T)
+		temp.color = swingcolor
+		temp.transform = vfx_matrix
+
+		for(var/mob/living/L in T)
+			if((L in shared_hitlist) || (user.faction_check_mob(L)))
+				continue
+
+			// Calculating damage based on gaze or contempt
+			var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
+			var/datum/status_effect/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			var/extra_coeff = 1
+			if(contempting)
+				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * 7)
+			else if(gazing)
+				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * (gazing.stacks))
+				gazing.refresh()
+
+			// Blood VFX / Gibs on finisher. This has to be done before the damage to avoid issues with qdel'ing mobs.
+			var/obj/effect/temp_visual/dir_setting/bloodsplatter/blood_vfx = new (T, pick(GLOB.alldirs))
+			blood_vfx.transform = vfx_matrix
+			var/victim_is_robotic = L.mob_biotypes & MOB_ROBOTIC
+			if(victim_is_robotic)
+				blood_vfx.color = COLOR_ALMOST_BLACK
+			if(should_end)
+				if(victim_is_robotic)
+					new /obj/effect/gibspawner/scrap_metal(T)
+				else
+					new /obj/effect/gibspawner/generic/trash_disposal(T)
+
+			// Deal the damage
+			var/final_damage = base_damage * extra_coeff
+			L.deal_damage(final_damage, damtype, source = user, flags = (should_end ? null : DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+			// Extra slash VFX
+			var/obj/effect/temp_visual/slice/temp2 = new(T)
+			temp2.transform = matrix(vfx_matrix).Turn(90)
+			temp2.color = swingcolor
+
+
+	// We're done with this iteration. If this wasn't the finisher and we haven't gone over an arbitrary safety limit of iterations, do a do_after. If it succeeds, move to the next iteration.
+	if(!should_end && iteration < 60 && do_after(user, cascading_gaze_periodic_tick_rate, timed_action_flags = (IGNORE_USER_LOC_CHANGE)))
+		INVOKE_ASYNC(src, PROC_REF(DrawAttackLoop), user, iteration + 1)
+	else
+		DrawAttackEnd(user)
+	return
+
+// Clean up residual stuff from our draw attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackEnd(mob/living/carbon/human/user)
+	for(var/atom/any in cascading_gaze_vfx) // I hope you haven't been putting weird stuff in this list
+		qdel(any)
+
+	cascading_gaze_active = FALSE
+
+	RemoveDrawAttackTraits(user)
+
+// Called when some projectile gets intercepted by a projectile blocking effect, or when a projectile somehow hits the user during the attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackProjectileReaction(obj/projectile/gotcha, turf/place_of_intercept, mob/living/carbon/human/owner)
+	if(!istype(gotcha) || !place_of_intercept || !istype(owner))
+		return
+	owner.visible_message(span_danger("[owner.real_name] slices [hitby] in half!"))
+	var/mob/living/carbon/human/fraud
+	if(gotcha.type in cascading_gaze_shrapnel_sources)
+		fraud = gotcha.firer
+	qdel(gotcha)
+
+	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, SOUTH)
+	temp.color = swingcolor
+
+	if(istype(fraud))
+		say("Cascading Gaze of Awe Underneath Contempt: Destroyed a shrapnel source, the firer was [fraud].")
+		return
+	else
+		say("Cascading Gaze of Awe Underneath Contempt: Destroyed a regular projectile.")
+	return
+
+// Stolen and adapted from Elogio Bianco, you'll deflect any projectiles that manage to SOMEHOW slip past your field during the draw attack
+/obj/item/ego_weapon/perversion/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
+	SEND_SIGNAL(src, COMSIG_ITEM_HIT_REACT, args)
+	if((cascading_gaze_active) && (attack_type == PROJECTILE_ATTACK))
+		DrawAttackProjectileReaction(hitby, get_turf(src), owner)
+		return TRUE
+	return FALSE
+
+// Called when successfully starting Cascading Gaze of Awe Underneath Contempt.
+/obj/item/ego_weapon/perversion/proc/SetDrawAttackTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+
+	ADD_TRAIT(user, TRAIT_PACIFISM, "perversion_draw_attack") // Can't hit enemies normally while using this attack.
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "perversion_draw_attack") // Can't move.
+	ADD_TRAIT(user, TRAIT_STUNIMMUNE, "perversion_draw_attack") // Immune to stuns.
+	ADD_TRAIT(user, TRAIT_PUSHIMMUNE, "perversion_draw_attack") // Immune to pushing (I don't think it works on carbon shoves, though).
+	user.move_resist = MOVE_FORCE_OVERPOWERING // Immune to a different kind of pushing.
+	RegisterSignal(user, COMSIG_MOVABLE_PRE_THROW, PROC_REF(HaltThrows)) // Immune to knockback effects or throws.
+
+	// Gain damage resistance.
+	if(ishuman(user))
+		var/mob/living/carbon/human/john_perversion = user
+		john_perversion.physiology.red_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.white_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.black_mod *= cascading_gaze_physiology_coeff
+		john_perversion.physiology.pale_mod *= cascading_gaze_physiology_coeff
+
+// Called when ending Cascading Gaze of Awe Underneath Contempt for any reason.
+/obj/item/ego_weapon/perversion/proc/RemoveDrawAttackTraits(mob/living/carbon/human/user)
+	if(QDELETED(user) || !istype(user))
+		return
+	deltimer(cascading_gaze_active_timer) // Don't double dip on this or we might nuke people's coeffs permanently
+
+	REMOVE_TRAIT(user, TRAIT_PACIFISM, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_STUNIMMUNE, "perversion_draw_attack")
+	REMOVE_TRAIT(user, TRAIT_PUSHIMMUNE, "perversion_draw_attack")
+	user.move_resist = MOVE_FORCE_DEFAULT // I'm making an ASSUMPTION here that you have this as your default move resist, because why would a human NOT have it, right? I can store the original and put it back here if needed...
+	UnregisterSignal(user, COMSIG_MOVABLE_PRE_THROW)
+	if(ishuman(user))
+		var/mob/living/carbon/human/john_perversion = user
+		john_perversion.physiology.red_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.white_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.black_mod /= cascading_gaze_physiology_coeff
+		john_perversion.physiology.pale_mod /= cascading_gaze_physiology_coeff
+
+// Signal handler that stops you from getting knocked back during the draw attack.
+/obj/item/ego_weapon/perversion/proc/HaltThrows()
+	SIGNAL_HANDLER
+	return COMPONENT_CANCEL_THROW
+
+// This is an invisible effect that intercepts projectiles and calls the weapon's DrawAttackProjectileReaction() on them.
+/obj/effect/perversion_draw_attack_projectile_destroyer
+	name = "bleeding space"
+	desc = "A hateful blade is cleaving through this space."
+	alpha = 0
+	icon = null
+	icon_state = null
+	anchored = TRUE
+	layer = POINT_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	var/duration
+	var/randomdir = TRUE
+	var/timerid
+	var/obj/item/ego_weapon/perversion/linked_weapon
+	var/mob/living/carbon/human/user
+
+// Pass necessary arguments to it on Initialize
+/obj/effect/perversion_draw_attack_projectile_destroyer/Initialize(mapload, final_duration = 2.4 SECONDS, obj/item/ego_weapon/perversion/katana, mob/living/carbon/human/owner)
+	. = ..()
+	if(!istype(katana) || !istype(owner))
+		qdel(src)
+		return
+	duration = final_duration
+	user = owner
+	linked_weapon = katana
+	timerid = QDEL_IN(src, duration)
+
+// Prevent projectiles from moving through us. Inform the weapon about the event.
+/obj/effect/perversion_draw_attack_projectile_destroyer/CanAllowThrough(atom/movable/mover, turf/target)
+	. = ..()
+	if(istype(mover, /obj/projectile))
+		if(QDELETED(linked_weapon))
+			return .
+		linked_weapon.DrawAttackProjectileReaction(mover, get_turf(src), user)
+		return FALSE
+
+/* ------------------------ COMBAT ------------------------ */
 
 /obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
 	// Pre-attack: if we're in Katana form, adjust force based on enemy Gaze/Contempt
@@ -2671,6 +3044,7 @@
 		else
 			return
 
+// Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
 /obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
 	var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
@@ -2685,7 +3059,7 @@
 /datum/status_effect/stacking/perversion_weapon_gaze
 	id = "perversion_weapon_gaze"
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_gaze
-	stacks = 1
+	stacks = 0
 	max_stacks = 7
 	stack_decay = 0
 	duration = 30 SECONDS
@@ -2699,7 +3073,6 @@
 /datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
 	refresh()
 	. = ..()
-
 
 /datum/status_effect/stacking/perversion_weapon_gaze/tick()
 	if(!can_have_status())
@@ -2730,3 +3103,5 @@
 
 #undef STATUS_EFFECT_GAZE
 #undef STATUS_EFFECT_CONTEMPT
+#undef COLOR_PERVERSION_LANCE
+#undef COLOR_PERVERSION_KATANA
