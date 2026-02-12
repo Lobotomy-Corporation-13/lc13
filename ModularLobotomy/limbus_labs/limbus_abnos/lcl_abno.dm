@@ -265,9 +265,13 @@
 	. = ..()
 	AbnoEat(A)
 
+//Abnos will revive after 5 minutes of timeout. Using NT egg as placeholder.
 /mob/living/simple_animal/hostile/limbus_abno/death()
-	animate(src, alpha = 0, time = 10 SECONDS)
-	QDEL_IN(src, 10 SECONDS)
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
+	icon_state = "nothing_egg"
+	icon_dead = "nothing_egg"
+	addtimer(CALLBACK(src, PROC_REF(Rebirth)), 5 MINUTES)
+	to_chat(src,span_userdanger("Your shell burst apart at the seams, but you remain. 5 minutes before your return."))
 	..()
 
 //Maybe make it distance related later, but for now I'm just making most base desire on talk really low.
@@ -449,6 +453,17 @@
 	var/counter_req
 	var/starving_req = FALSE
 
+/mob/living/simple_animal/hostile/limbus_abno/proc/Rebirth()
+	grab_ghost()
+	icon = original_abno.icon
+	icon_state = original_abno.icon_state
+	icon_living = original_abno.icon_living
+	icon_dead = original_abno.icon_dead
+	revive(full_heal = TRUE, admin_revive = TRUE)
+	AdjustCounter(max_counter)
+	AdjustHunger(max_hunger)
+	AdjustDesire(max_desire)
+
 ///Checks if the user is a limbus abno, and removes it if not.
 /datum/action/cooldown/limbus_abno_action/Grant(mob/M)
 	..()
@@ -467,6 +482,8 @@
 /datum/action/cooldown/limbus_abno_action/IsAvailable()
 	. = ..()
 	if(isnull(abno_user) || !.)
+		return FALSE
+	if(abno_user.stat >= DEAD)
 		return FALSE
 	if(starving_req && abno_user.starving)
 		return FALSE
