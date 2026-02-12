@@ -192,7 +192,7 @@
 				damage_mult = 1 + (V.stacks * 0.2) // +20% damage per stack
 				to_chat(user, span_nicegreen("Enhanced damage from venom stacks!"))
 
-			L.deal_damage(damage_amount * damage_mult, TOX)
+			L.adjustToxLoss(damage_amount * damage_mult)
 			L.deal_damage(damage_amount * 0.5 * damage_mult, FIRE)
 			// Apply a venom stack
 			L.apply_venom_stacks()
@@ -341,7 +341,7 @@
 		var/mob/living/L = AM
 		if(is_venom_immune(L))
 			return
-		L.deal_damage(25, TOX)
+		L.adjustToxLoss(25)
 		L.apply_venom_stacks(3) // Heavy stacks for crossing
 		to_chat(L, span_userdanger("The toxic miasma burns your lungs!"))
 
@@ -351,7 +351,7 @@
 		var/mob/living/L = AM
 		if(is_venom_immune(L))
 			return
-		L.deal_damage(15, TOX)
+		L.adjustToxLoss(15)
 		L.apply_venom_stacks(2)
 		to_chat(L, span_danger("The toxic miasma stings you!"))
 
@@ -360,7 +360,7 @@
 	if(is_venom_immune(user))
 		to_chat(user, span_notice("The miasma doesn't affect you."))
 		return
-	user.deal_damage(20, TOX)
+	user.adjustToxLoss(20)
 	user.apply_venom_stacks(2)
 	to_chat(user, span_danger("The toxic miasma burns your hand!"))
 
@@ -502,6 +502,10 @@
 			break
 		if(locate(/obj/structure/area_blocker) in next_turf)
 			break
+		if(locate(/obj/structure/resource_gate) in next_turf)
+			break
+		if(locate(/obj/structure/player_blocker) in next_turf)
+			break
 		path += next_turf
 		current_turf = next_turf
 		if(current_turf == target)
@@ -531,7 +535,7 @@
 				if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
 					var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 					damage_mult = 1 + (V.stacks * 0.25) // +25% damage per stack
-				L.deal_damage(dash_damage * damage_mult, TOX)
+				L.adjustToxLoss(dash_damage * damage_mult)
 				L.apply_venom_stacks(2) // Apply 2 stacks
 				new /obj/effect/temp_visual/venom_mark(get_turf(L))
 				been_hit += L
@@ -577,7 +581,7 @@
 			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 			damage = damage_per_second * (1 + V.stacks * 0.1) // +10% per stack
 
-		L.deal_damage(damage, TOX)
+		L.adjustToxLoss(damage)
 
 /obj/effect/acid_pool/Crossed(atom/movable/AM)
 	. = ..()
@@ -708,7 +712,7 @@
 		for(var/mob/living/L in T)
 			if(is_venom_immune(L))
 				continue
-			L.deal_damage(60, TOX)
+			L.adjustToxLoss(60)
 			L.apply_venom_stacks(3) // Apply 3 stacks
 
 	qdel(src)
@@ -741,7 +745,7 @@
 	for(var/mob/living/L in get_turf(src))
 		if(is_venom_immune(L))
 			continue
-		L.deal_damage(8, TOX)
+		L.adjustToxLoss(8)
 		L.apply_venom_stacks()
 		dealt_damage = TRUE
 	if(!dealt_damage)
@@ -791,7 +795,7 @@
 		if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
 			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 			var/bonus_damage = V.stacks * 15 // +15 damage per stack
-			L.deal_damage(bonus_damage, TOX)
+			L.adjustToxLoss(bonus_damage)
 			to_chat(L, span_userdanger("The venom shell reacts violently with your venom marks!"))
 			new /obj/effect/temp_visual/venom_explosion(get_turf(L))
 		else
@@ -879,9 +883,16 @@
 		return FALSE
 	return TRUE
 
-/obj/item/ego_weapon/ranged/plague_mortar/before_firing(atom/target, mob/user)
+/obj/item/ego_weapon/ranged/plague_mortar/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0, temporary_damage_multiplier = 1)
 	if(!is_venom_rattlesnake(user))
 		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return FALSE
+
+	if(!can_shoot())
+		if(!acid_tank)
+			to_chat(user, span_warning("No acid tank connected!"))
+		else
+			to_chat(user, span_warning("Not enough acid!"))
 		return FALSE
 
 	var/distance = get_dist(user, target)
@@ -897,16 +908,6 @@
 		return FALSE
 
 	to_chat(user, span_notice("Mortar ready to fire!"))
-	return TRUE
-
-/obj/item/ego_weapon/ranged/plague_mortar/process_fire(atom/target, mob/living/user, message = TRUE, params = null, zone_override = "", bonus_spread = 0, temporary_damage_multiplier = 1)
-	if(!can_shoot())
-		if(!acid_tank)
-			to_chat(user, span_warning("No acid tank connected!"))
-		else
-			to_chat(user, span_warning("Not enough acid!"))
-		return FALSE
-
 	acid_tank.resource_amount -= acid_per_shot
 	return ..()
 
@@ -935,7 +936,7 @@
 			if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
 				var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 				damage_mult *= (1 + (V.stacks * 0.15))
-			L.deal_damage(40 * damage_mult, TOX)
+			L.adjustToxLoss(40 * damage_mult)
 			L.apply_venom_stacks(3) // Apply 3 stacks
 
 // Long-lasting plague zone
@@ -975,7 +976,7 @@
 		if(L.has_status_effect(/datum/status_effect/stacking/venom_stacks))
 			var/datum/status_effect/stacking/venom_stacks/V = L.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 			damage_mult *= (1 + (V.stacks * 0.15))
-		L.deal_damage(10 * damage_mult, TOX)
+		L.adjustToxLoss(10 * damage_mult)
 		L.apply_venom_stacks()
 		dealt_damage = TRUE
 	if(!dealt_damage)
@@ -1086,7 +1087,7 @@
 			if(target.has_status_effect(/datum/status_effect/stacking/venom_stacks))
 				var/datum/status_effect/stacking/venom_stacks/V = target.has_status_effect(/datum/status_effect/stacking/venom_stacks)
 				damage_mult = 1 + (V.stacks * 0.2)
-			target.deal_damage(toxin_damage_bonus * damage_mult, TOX)
+			target.adjustToxLoss(toxin_damage_bonus * damage_mult)
 
 	if(create_burst)
 		VenomBurst(target, user, toxin_mode)
@@ -1115,7 +1116,7 @@
 			if(is_venom_immune(L))
 				continue
 			var/damage = empowered ? 25 : 10
-			L.deal_damage(damage, TOX)
+			L.adjustToxLoss(damage)
 			L.apply_venom_stacks(empowered ? 2 : 1)
 
 // Status Effects
@@ -1148,7 +1149,7 @@
 	var/damage_mult = 1
 	if(isanimal(owner))
 		damage_mult = 5
-	owner.deal_damage(damage_per_tick * stacks * damage_mult, TOX)
+	owner.adjustToxLoss(damage_per_tick * stacks * damage_mult)
 	if(prob(stacks * 5)) // Higher stacks = more chance to message
 		to_chat(owner, span_danger("The venom courses through your veins!"))
 
@@ -1281,7 +1282,7 @@
 		if(is_venom_immune(L))
 			continue
 
-		L.deal_damage(damage, TOX)
+		L.adjustToxLoss(damage)
 		L.apply_venom_stacks(venom_stacks_applied)
 		to_chat(L, span_danger("You're sprayed with corrosive acid!"))
 

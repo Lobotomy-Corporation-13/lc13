@@ -126,7 +126,7 @@
 	. = ..()
 	// Remove default climbable, add fast version
 	RemoveElement(/datum/element/climbable)
-	AddElement(/datum/element/climbable, climb_time = 5, climb_stun = 0)
+	AddElement(/datum/element/climbable, climb_time = 5, climb_stun = 1)
 
 /obj/structure/barricade/sandbags/update_overlays()
 	. = ..()

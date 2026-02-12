@@ -987,10 +987,8 @@
 	var/damage_per_tick = 45
 	var/fire_chance = 50
 	var/move_dir = NORTH
-	var/move_delay = 10 // Move every 10 ticks (~1 second)
+	var/move_delay = 1 // Move every process tick (SSobj fires every 2 seconds)
 	var/ticks_since_move = 0
-	var/lifetime = 100 // 10 seconds (100 ticks at 0.1s per tick)
-	var/ticks_alive = 0
 
 /obj/effect/inferno_field/Initialize(mapload, direction = NORTH)
 	. = ..()
@@ -1006,7 +1004,6 @@
 	return ..()
 
 /obj/effect/inferno_field/process()
-	ticks_alive++
 	ticks_since_move++
 
 	// Damage everything in range

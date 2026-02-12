@@ -154,7 +154,7 @@
 	desc = "Electromagnetic propulsion system that launches you through enemies, dealing chain damage. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-blue"
-	w_class = WEIGHT_CLASS_SMALL
+	w_class = WEIGHT_CLASS_TINY
 	var/electric_charge_cost = 25
 	var/dash_range = 6
 	var/dash_damage = 40
@@ -254,7 +254,7 @@
 	desc = "Marks your current location. After 8 seconds, teleports you back to the marked position. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "nanite_scanner"
-	w_class = WEIGHT_CLASS_SMALL
+	w_class = WEIGHT_CLASS_TINY
 	var/electric_charge_cost = 20
 	var/recall_delay = 80  // 8 seconds until teleport
 	var/cooldown = 0
@@ -536,6 +536,10 @@
 			break
 		if(locate(/obj/structure/area_blocker) in charge_turf)
 			break
+		if(locate(/obj/structure/resource_gate) in charge_turf)
+			break
+		if(locate(/obj/structure/player_blocker) in charge_turf)
+			break
 		distance++
 
 		// Pass through structures without damaging them
@@ -646,6 +650,10 @@
 		if(dash_turf.density)
 			break
 		if(locate(/obj/structure/area_blocker) in dash_turf)
+			break
+		if(locate(/obj/structure/resource_gate) in dash_turf)
+			break
+		if(locate(/obj/structure/player_blocker) in dash_turf)
 			break
 		destination = dash_turf
 		user.forceMove(dash_turf)
@@ -853,7 +861,7 @@
 	desc = "Creates a mobile electromagnetic barrier that moves with you and damages enemies on contact. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-purple"
-	w_class = WEIGHT_CLASS_NORMAL
+	w_class = WEIGHT_CLASS_TINY
 	var/electric_charge_cost = 30
 	var/barrier_duration = 80  // 8 seconds
 	var/active = FALSE
@@ -919,9 +927,6 @@
 	// Add barrier overlay to user
 	user.add_overlay(barrier_overlay)
 
-	// Register bullet_act for projectile reflection
-	RegisterSignal(user, COMSIG_ATOM_BULLET_ACT, PROC_REF(on_projectile_hit))
-
 	// Start processing for damage/push
 	START_PROCESSING(SSobj, src)
 
@@ -940,9 +945,6 @@
 	if(barrier_user)
 		// Remove overlay
 		barrier_user.cut_overlay(barrier_overlay)
-
-		// Unregister signal
-		UnregisterSignal(barrier_user, COMSIG_ATOM_BULLET_ACT)
 
 		barrier_user.visible_message(span_notice("The storm surge around [barrier_user] dissipates."))
 		barrier_user = null
@@ -969,26 +971,12 @@
 		to_chat(L, span_danger("The storm surge blasts you away!"))
 		playsound(L, 'sound/magic/lightningshock.ogg', 50, TRUE)
 
-/obj/item/storm_surge_barrier/proc/on_projectile_hit(mob/user, obj/projectile/P)
-	SIGNAL_HANDLER
-
-	if(!active || P.reflectable == NONE)
-		return
-
+/// Uses the built-in IsReflect system — check_reflect in human_defense.dm calls this on held items
+/obj/item/storm_surge_barrier/IsReflect(def_zone)
+	if(!active)
+		return FALSE
 	// 50% chance to reflect
-	if(!prob(50))
-		return
-
-	visible_message(span_userdanger("[user]'s storm surge deflects [P]!"))
-
-	// Reflect projectile (based on Black Swan's code)
-	if(P.starting)
-		var/new_x = P.starting.x + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-		var/new_y = P.starting.y + pick(0, 0, 0, 0, 0, -1, 1, -2, 2)
-		P.firer = user  // Remove firer to prevent friendly fire
-		P.preparePixelProjectile(locate(clamp(new_x, 1, world.maxx), clamp(new_y, 1, world.maxy), user.z), user)
-
-	return BULLET_ACT_BLOCK
+	return prob(50)
 
 /obj/item/storm_surge_barrier/dropped(mob/user)
 	. = ..()
@@ -1077,7 +1065,7 @@
 	desc = "Leap into the air and slam down, creating a devastating electric storm around you. The ultimate area denial. Equip to gain an action button to activate."
 	icon = 'icons/obj/device.dmi'
 	icon_state = "gangtool-purple"
-	w_class = WEIGHT_CLASS_NORMAL
+	w_class = WEIGHT_CLASS_TINY
 	var/electric_charge_cost = 80
 	var/slam_damage = 100
 	var/storm_duration = 60  // 6 seconds
