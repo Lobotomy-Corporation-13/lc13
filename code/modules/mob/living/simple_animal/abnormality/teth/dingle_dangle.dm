@@ -57,14 +57,21 @@
 
 	if(fragility_stacks)
 		var/mob/living/carbon/human/Y = pick(targets)
+		if(!targets)
+			return
 		Y.apply_lc_white_fragile(1)
-		balloon_alert(Y, "You feel the tree calling out for your sorrows.")
+		Y.balloon_alert(Y, "You feel the tree calling out for your sorrows.")
 		fragility_stacks--
+
+	SLEEP_CHECK_DEATH(20)
+	//Force a 2 second break between them
 
 	if(empower_stacks)
 		var/mob/living/carbon/human/Y = pick(targets)
+		if(!targets)
+			return
 		Y.apply_lc_white_strength(2)
-		balloon_alert(Y, "You feel the tree whispering in your mind.")
+		Y.balloon_alert(Y, "You feel the tree whispering in your mind.")
 		empower_stacks--
 
 
