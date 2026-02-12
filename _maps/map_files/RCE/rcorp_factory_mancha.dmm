@@ -33,9 +33,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "ag" = (
 /turf/closed/indestructible/necropolis,
@@ -225,9 +223,7 @@
 /obj/structure/limitedresourcepoint/red{
 	amount_left = 10
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "cl" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
@@ -338,8 +334,7 @@
 /area/rce/rcorp_base)
 "cT" = (
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "cX" = (
@@ -441,8 +436,7 @@
 "ea" = (
 /obj/structure/resourcepoint/blue,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "ed" = (
@@ -562,8 +556,7 @@
 "fb" = (
 /mob/living/simple_animal/hostile/bloodfiend_mook/priest,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "fd" = (
@@ -649,8 +642,7 @@
 "fQ" = (
 /mob/living/simple_animal/hostile/bloodfiend_mook/priest,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "fR" = (
@@ -760,9 +752,7 @@
 	},
 /area/rce/xcorp/rce_2_1)
 "gN" = (
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "gP" = (
 /obj/structure/headpike,
@@ -1115,9 +1105,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "ka" = (
 /obj/effect/rune,
@@ -1158,9 +1146,7 @@
 /turf/open/floor/mineral/titanium/tiled/purple,
 /area/rce/xcorp/rce_2_3)
 "km" = (
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "kp" = (
 /obj/structure/table/wood/fancy/purple,
@@ -1246,9 +1232,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "kU" = (
 /obj/effect/landmark/lastwave_gateway/air,
@@ -1460,8 +1444,7 @@
 	density = 1
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "mq" = (
@@ -1555,8 +1538,7 @@
 "mU" = (
 /obj/structure/mineral_door/iron,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "nb" = (
@@ -1580,8 +1562,7 @@
 "ni" = (
 /obj/structure/mineral_door/iron,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "nj" = (
@@ -1613,9 +1594,7 @@
 	area_num = 1;
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "nx" = (
 /obj/structure/window/shuttle/survival_pod,
@@ -1663,9 +1642,7 @@
 	},
 /area/rce/xcorp/rce_2_0)
 "nJ" = (
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "nL" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -1679,9 +1656,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "nR" = (
 /obj/structure/closet/secure_closet{
@@ -1774,9 +1749,7 @@
 /area/rce/xcorp/rce_2_2)
 "oA" = (
 /obj/structure/table/wood/fancy/red,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "oB" = (
 /obj/effect/turf_decal/stripes/line{
@@ -1829,8 +1802,7 @@
 "oW" = (
 /mob/living/simple_animal/hostile/bloodfiend_boss/priest,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "oX" = (
@@ -1866,9 +1838,7 @@
 	id = "leftlow";
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "pi" = (
 /obj/structure/rack,
@@ -1997,8 +1967,7 @@
 /area/rce/xcorp/rce_2_3)
 "qB" = (
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "qL" = (
@@ -2028,8 +1997,7 @@
 /obj/structure/bed,
 /obj/item/bedsheet/chaplain,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "qX" = (
@@ -2078,9 +2046,7 @@
 /area/rce/xcorp/rce_1_0)
 "rn" = (
 /obj/structure/limitedresourcepoint/red,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "rq" = (
 /obj/effect/decal/cleanable/glass,
@@ -2159,9 +2125,7 @@
 /area/rce/xcorp/rce_1_3)
 "rP" = (
 /obj/structure/limitedresourcepoint/purple,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "rR" = (
 /obj/effect/decal/cleanable/glass,
@@ -2189,8 +2153,7 @@
 	density = 1
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "sd" = (
@@ -2217,9 +2180,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "sg" = (
 /obj/structure/mineral_door/sandstone{
@@ -2474,9 +2435,7 @@
 /area/rce/xcorp/rce_1_1)
 "tY" = (
 /obj/structure/limitedresourcepoint/blue,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "ub" = (
 /obj/effect/turf_decal/siding/purple,
@@ -2513,8 +2472,7 @@
 	},
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "up" = (
@@ -2576,9 +2534,7 @@
 /area/rce/rcorp_base)
 "uI" = (
 /obj/structure/table/wood/fancy/red,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "uL" = (
 /obj/structure/bed/pod,
@@ -2714,9 +2670,7 @@
 	area_num = 1;
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "wb" = (
 /obj/effect/landmark/rce_fob,
@@ -2861,9 +2815,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "xl" = (
 /obj/structure/meatfloor{
@@ -3167,9 +3119,7 @@
 	id = "rightlow";
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "zL" = (
 /obj/structure/chair/pew,
@@ -3233,8 +3183,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Ak" = (
@@ -3266,9 +3215,7 @@
 /area/lavaland)
 "Aw" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "AE" = (
 /obj/effect/decal/cleanable/glass,
@@ -3311,9 +3258,7 @@
 /area/rce/xcorp/rce_2_0)
 "Bh" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "Bj" = (
 /obj/structure/closet/secure_closet{
@@ -3471,14 +3416,11 @@
 "Cr" = (
 /obj/effect/decal/cleanable/glass,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Cs" = (
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "Cz" = (
 /obj/effect/decal/cleanable/confetti,
@@ -3494,9 +3436,7 @@
 /area/rce/rcorp_base)
 "CF" = (
 /obj/structure/limitedresourcepoint/purple,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "CG" = (
 /obj/machinery/door/airlock/survival_pod{
@@ -3528,9 +3468,7 @@
 /area/rce/rcorp_base)
 "Dc" = (
 /obj/effect/rune,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "De" = (
 /turf/open/floor/plating/asteroid,
@@ -3589,9 +3527,7 @@
 	area_num = 1;
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "DH" = (
 /turf/open/floor/plasteel/checker{
@@ -3728,9 +3664,7 @@
 /area/rce/rcorp_base)
 "EE" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "EG" = (
 /obj/structure/rack,
@@ -3805,9 +3739,7 @@
 /area/rce/rcorp_base)
 "Fj" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "Fm" = (
 /obj/effect/light_emitter{
@@ -3922,8 +3854,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Ge" = (
@@ -4023,9 +3954,7 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "Hb" = (
 /obj/effect/turf_decal/stripes/line,
@@ -4195,8 +4124,7 @@
 "Iu" = (
 /obj/structure/dresser,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "Iv" = (
@@ -4335,9 +4263,7 @@
 /area/rce/xcorp/rce_1_3)
 "JC" = (
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "JE" = (
 /obj/structure/flora/rock/pile{
@@ -4515,9 +4441,7 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "Lj" = (
 /turf/closed/indestructible/necropolis,
@@ -4543,8 +4467,7 @@
 "Ln" = (
 /obj/structure/kitchenspike,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "Lr" = (
@@ -4651,9 +4574,7 @@
 /area/rce/xcorp)
 "Mw" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "Mx" = (
 /obj/structure/table/reinforced,
@@ -4685,8 +4606,7 @@
 "MI" = (
 /obj/structure/player_blocker,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "MJ" = (
@@ -4703,8 +4623,7 @@
 	max_mobs = 6
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_3)
 "MM" = (
@@ -4767,8 +4686,7 @@
 "Ny" = (
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "NA" = (
@@ -4826,8 +4744,7 @@
 	id = "leftmid"
 	},
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Ob" = (
@@ -4954,9 +4871,7 @@
 /area/rce/rcorp_base)
 "Pc" = (
 /obj/structure/limitedresourcepoint,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "Pd" = (
 /obj/structure/table/wood/fancy/purple,
@@ -5075,8 +4990,7 @@
 "PH" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "PI" = (
@@ -5187,9 +5101,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "QP" = (
 /obj/effect/turf_decal/siding/purple/corner{
@@ -5275,9 +5187,7 @@
 "Rw" = (
 /obj/effect/rune,
 /obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_2)
 "Rx" = (
 /obj/structure/area_blocker,
@@ -5486,9 +5396,7 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "Tm" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5691,8 +5599,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Vg" = (
@@ -5839,9 +5746,7 @@
 	area_num = 1;
 	max_mobs = 4
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "Wx" = (
 /obj/item/clothing/suit/apron/surgical,
@@ -5868,9 +5773,7 @@
 	name = "blood door";
 	desc = "A door made out of blood..."
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "WL" = (
 /obj/structure/stairs/west{
@@ -5902,9 +5805,7 @@
 /area/rce/xcorp/rce_2_3)
 "Xa" = (
 /obj/structure/player_blocker,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_3)
 "Xe" = (
 /obj/effect/decal/cleanable/dirt,
@@ -5931,9 +5832,7 @@
 /area/rce/xcorp/rce_1_1)
 "Xq" = (
 /obj/structure/limitedresourcepoint/blue,
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_0)
 "Xx" = (
 /obj/structure/player_blocker,
@@ -5997,9 +5896,7 @@
 /obj/structure/meatfloor{
 	max_integrity = 50
 	},
-/turf/open/floor/carpet/red{
-	intact = 0
-	},
+/turf/open/floor/carpet/red,
 /area/rce/xcorp/rce_0_1)
 "Yf" = (
 /obj/effect/turf_decal/caution/white,
@@ -6110,8 +6007,7 @@
 "Za" = (
 /obj/structure/player_blocker,
 /turf/open/floor/carpet/black{
-	intact = 0;
-	broken = 1
+	intact = 0
 	},
 /area/rce/xcorp/rce_1_0)
 "Zc" = (

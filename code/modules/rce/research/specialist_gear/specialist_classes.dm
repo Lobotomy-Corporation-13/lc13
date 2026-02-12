@@ -31,8 +31,8 @@
 	var/mob/living/carbon/human/H = M
 
 	// Check if user has a valid role title
-	var/datum/job/user_job = H.mind?.assigned_role
-	if(!user_job || !(user_job.title in usable_roles))
+	var/user_role = H.mind?.assigned_role
+	if(!user_role || !(user_role in usable_roles))
 		to_chat(H, span_warning("This implant is only compatible with R-Corp Rook and Robin personnel."))
 		Remove(H)
 		return
@@ -208,13 +208,13 @@
 // VENOM RATTLESNAKE ARMOR - Immune to own venom/acid
 /obj/item/clothing/suit/armor/ego_gear/venom
 	name = "r-corp venom rattlesnake suit"
-	desc = "Custom armor made for the venom units, providing complete immunity to toxic and acidic damage. Requires Venom Rattlesnake combat implant."
+	desc = "Custom armor made for the venom units, providing complete immunity to acidic damage. Requires Venom Rattlesnake combat implant."
 	slowdown = 0.2
 	icon = 'icons/obj/clothing/suits.dmi'
 	worn_icon = 'icons/mob/clothing/suit.dmi'
 	icon_state = "venom"
 	inhand_icon_state = "hostrench"
-	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 50, PALE_DAMAGE = 30, ACID = 100, TOX = 100)
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 50, PALE_DAMAGE = 30, ACID = 100)
 	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/venom
 	var/venom_immune = TRUE // Flag for venom weapons to check
 
@@ -240,9 +240,9 @@
 // HEAVY VENOM RATTLESNAKE ARMOR - Upgraded version with better resistances
 /obj/item/clothing/suit/armor/ego_gear/venom/heavy
 	name = "r-corp heavy venom suit"
-	desc = "Reinforced armor for veteran venom units. Offers superior protection while maintaining acid and toxin immunity. Requires Venom Rattlesnake combat implant."
+	desc = "Reinforced armor for veteran venom units. Offers superior protection while maintaining acid. Requires Venom Rattlesnake combat implant."
 	color = "#509b50"
-	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 50, BLACK_DAMAGE = 70, PALE_DAMAGE = 50, ACID = 100, TOX = 100)
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 50, BLACK_DAMAGE = 70, PALE_DAMAGE = 50, ACID = 100)
 	hat = /obj/item/clothing/head/ego_hat/flashlight_helmet/venom/heavy
 
 /obj/item/clothing/head/ego_hat/flashlight_helmet/venom/heavy

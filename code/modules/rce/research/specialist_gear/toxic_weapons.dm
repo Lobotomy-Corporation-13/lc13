@@ -107,6 +107,10 @@
 	if(!CanUseEgo(user))
 		return
 
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return
+
 	// Check cooldown
 	if(spray_cooldown > world.time)
 		to_chat(user, span_warning("[src] is still recharging!"))
@@ -265,6 +269,10 @@
 		acid_tank = null
 
 /obj/item/ego_weapon/miasma_barrier/afterattack(atom/target, mob/living/user, proximity_flag, params)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return ..()
+
 	if(wall_cooldown > world.time)
 		to_chat(user, span_warning("Barrier projector is recharging! ([round((wall_cooldown - world.time) / 10)] seconds remaining)"))
 		return ..()
@@ -430,6 +438,9 @@
 		acid_tank = null
 
 /obj/item/ego_weapon/venom_strike/attack(mob/living/target, mob/living/user)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return
 	. = ..()
 	if(!. || !target)
 		return
@@ -438,6 +449,9 @@
 		target.apply_venom_stacks()
 
 /obj/item/ego_weapon/venom_strike/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(!is_venom_rattlesnake(user))
+		return ..()
+
 	// Don't dash if we're already dashing or on cooldown
 	if(dashing || dash_cooldown > world.time)
 		return ..()
@@ -635,6 +649,10 @@
 		acid_tank = null
 
 /obj/item/ego_weapon/blight_sprayer/afterattack(atom/target, mob/living/user, proximity_flag, params)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return ..()
+
 	if(spray_cooldown > world.time)
 		return ..()
 
@@ -744,6 +762,10 @@
 	var/acid_cost = 10
 
 /obj/item/ego_weapon/ranged/venom_launcher/before_firing(atom/target, mob/living/user)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return FALSE
+
 	var/obj/item/rce_resource_tank/acid_backpack/tank = locate(/obj/item/rce_resource_tank/acid_backpack) in user.contents
 	if(!tank)
 		to_chat(user, span_warning("You need an acid tank to use this weapon!"))
@@ -858,6 +880,10 @@
 	return TRUE
 
 /obj/item/ego_weapon/ranged/plague_mortar/before_firing(atom/target, mob/user)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return FALSE
+
 	var/distance = get_dist(user, target)
 	if(distance < min_range)
 		to_chat(user, span_warning("Target is too close! Minimum range is [min_range] tiles."))
@@ -1035,6 +1061,9 @@
 	toxin_mode = FALSE
 
 /obj/item/ego_weapon/corrosive_gauntlets/attack(mob/living/target, mob/living/user)
+	if(!is_venom_rattlesnake(user))
+		to_chat(user, span_warning("You need the Venom Rattlesnake combat implant to use this weapon!"))
+		return
 	. = ..()
 	if(!. || !target)
 		return
