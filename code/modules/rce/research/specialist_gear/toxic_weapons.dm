@@ -368,7 +368,7 @@
 /obj/item/ego_weapon/venom_strike
 	name = "venom strike blade"
 	desc = "A blade coated with corrosive venom that can channel acid for devastating toxic dashes. The blade drips with deadly poison."
-	special = "Use in hand to connect to an acid tank. Click on a far away target to perform a venom dash towrads them. That dash applies stacks to all enemies hit."
+	special = "Use in hand to connect to an acid tank. Click on a far away target to perform a venom dash towards them. That dash applies stacks to all enemies hit."
 	icon = 'icons/obj/items_and_weapons.dmi'
 	icon_state = "contractor_baton_1"
 	inhand_icon_state = "contractor_baton_1"
