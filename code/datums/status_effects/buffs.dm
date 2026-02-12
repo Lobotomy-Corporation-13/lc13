@@ -1245,3 +1245,162 @@
 		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up, stacks)
 		return
 	S.add_stacks(stacks)
+
+//Poise - Crit chance stacking buff
+//  Each attack: (stacks * 2.5)% crit chance
+//  On crit: 25% more damage, send signal, halve stacks (or consume 1 Concentration instead)
+//  Every 10s: if no crit performed and no new poise gained, lose all stacks
+/datum/status_effect/stacking/poise
+	id = "poise"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 10 SECONDS
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/poise
+	/// Whether a crit was performed or new stacks were gained this tick period
+	var/active_this_period = TRUE
+
+/atom/movable/screen/alert/status_effect/poise
+	name = "Poise"
+	desc = "You are poised for a critical strike! Crit chance: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "strength"
+
+/datum/status_effect/stacking/poise/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_attack))
+
+/datum/status_effect/stacking/poise/on_remove()
+	UnregisterSignal(owner, COMSIG_MOB_ITEM_ATTACK)
+	return ..()
+
+/datum/status_effect/stacking/poise/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	if(stacks_added > 0)
+		active_this_period = TRUE
+	linked_alert.desc = initial(linked_alert.desc) + "[round(stacks * 2.5)]%!"
+
+/// Every 10 seconds, check if a crit was performed or new poise was gained. If not, lose all poise.
+/datum/status_effect/stacking/poise/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	if(!active_this_period)
+		qdel(src)
+		return
+	active_this_period = FALSE
+
+/// On melee attack, roll for crit based on poise stacks
+/datum/status_effect/stacking/poise/proc/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/weapon)
+	SIGNAL_HANDLER
+
+	if(!isliving(target) || stacks <= 0)
+		return
+	var/crit_chance = stacks * 2.5
+	if(!prob(crit_chance))
+		return
+
+	// Crit success
+	active_this_period = TRUE
+	INVOKE_ASYNC(src, PROC_REF(do_poise_crit), target, user, weapon)
+
+/// Handles the poise crit effect: bonus damage, signals, stack consumption
+/datum/status_effect/stacking/poise/proc/do_poise_crit(mob/living/target, mob/living/user, obj/item/weapon)
+	if(QDELETED(target) || QDELETED(user))
+		return
+
+	// Deal 25% of the weapon's force as bonus damage
+	var/bonus_damage = 0
+	if(weapon)
+		bonus_damage = weapon.force * 0.25
+		if(istype(weapon, /obj/item/ego_weapon))
+			var/obj/item/ego_weapon/E = weapon
+			bonus_damage = weapon.force * E.force_multiplier * 0.25
+	if(bonus_damage > 0)
+		target.deal_damage(bonus_damage, weapon?.damtype || BRUTE, source = user, attack_type = ATTACK_TYPE_MELEE)
+
+	new /obj/effect/temp_visual/crit(get_turf(user))
+	to_chat(user, span_green("Your poise allows a critical strike!"))
+	to_chat(target, span_userdanger("[user]'s attack finds a critical opening!"))
+
+	// Send signals to both attacker and target
+	SEND_SIGNAL(user, COMSIG_POISE_CRIT_ATTACKER, target, bonus_damage)
+	SEND_SIGNAL(target, COMSIG_POISE_CRIT_TARGET, user, bonus_damage)
+
+	// Check for Concentration: consume 1 stack instead of halving poise
+	var/datum/status_effect/stacking/concentration/C = user.has_status_effect(/datum/status_effect/stacking/concentration)
+	if(C && C.stacks > 0)
+		C.add_stacks(-1)
+		if(C.stacks <= 0)
+			qdel(C)
+	else
+		// Halve poise stacks
+		var/new_stacks = max(0, round(stacks / 2))
+		if(new_stacks <= 0)
+			qdel(src)
+			return
+		stacks = new_stacks
+		linked_alert.desc = initial(linked_alert.desc) + "[round(stacks * 2.5)]%!"
+
+//Mob Proc
+/mob/living/proc/apply_lc_poise(stacks)
+	var/datum/status_effect/stacking/poise/P = src.has_status_effect(/datum/status_effect/stacking/poise)
+	if(!P)
+		src.apply_status_effect(/datum/status_effect/stacking/poise, stacks)
+		return
+	P.add_stacks(stacks)
+
+//Concentration - Poise support buff
+//  Max 20 stacks, decays 1 every 15s
+//  On decay: if no Poise, clear all Concentration
+/datum/status_effect/stacking/concentration
+	id = "concentration"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = 15 SECONDS
+	max_stacks = 20
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/concentration
+
+/atom/movable/screen/alert/status_effect/concentration
+	name = "Concentration"
+	desc = "You are concentrated! Your focus protects your poise. Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "protection"
+
+/datum/status_effect/stacking/concentration/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/// Decay 1 stack every 15 seconds. If owner has no Poise when decaying, clear all Concentration.
+/datum/status_effect/stacking/concentration/tick()
+	if(!can_have_status())
+		qdel(src)
+		return
+	// Check if owner has Poise
+	var/datum/status_effect/stacking/poise/P = owner.has_status_effect(/datum/status_effect/stacking/poise)
+	if(!P)
+		// No Poise - clear all Concentration
+		qdel(src)
+		return
+	// Decay by 1
+	add_stacks(-1)
+	if(stacks <= 0)
+		qdel(src)
+
+//Mob Proc
+/mob/living/proc/apply_lc_concentration(stacks)
+	var/datum/status_effect/stacking/concentration/C = src.has_status_effect(/datum/status_effect/stacking/concentration)
+	if(!C)
+		src.apply_status_effect(/datum/status_effect/stacking/concentration, stacks)
+		return
+	C.add_stacks(stacks)

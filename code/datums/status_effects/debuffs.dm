@@ -1948,3 +1948,202 @@
 		src.apply_status_effect(/datum/status_effect/stacking/offense_level_up/offense_level_down, stacks)
 		return
 	F.add_stacks(stacks)
+
+//Sinking - Delayed WHITE/PALE damage trigger
+//  Stacks up to 50, inactive for first 5 seconds after application
+//  Once activated, when owner takes WHITE or PALE damage: deal SANITY damage = stacks, halve stacks
+//  On simple mobs: deal WHITE damage * 4 instead of sanity damage
+/datum/status_effect/stacking/sinking
+	id = "sinking"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = -1
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/sinking
+	/// Whether the sinking effect is active (FALSE for first 5 seconds)
+	var/activated = FALSE
+	/// Timer ID for the activation delay
+	var/activation_timer
+	/// Prevents re-entry when sinking damage triggers another damage signal
+	var/triggering = FALSE
+
+/atom/movable/screen/alert/status_effect/sinking
+	name = "Sinking"
+	desc = "A sinking feeling weighs on your mind... Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "lacerate"
+
+/datum/status_effect/stacking/sinking/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	// Start inactive, activate after 5 seconds
+	activation_timer = addtimer(CALLBACK(src, PROC_REF(activate)), 5 SECONDS, TIMER_STOPPABLE)
+
+/datum/status_effect/stacking/sinking/on_remove()
+	if(activation_timer)
+		deltimer(activation_timer)
+		activation_timer = null
+	if(activated)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/stacking/sinking/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/// Called after 5 seconds to activate the sinking effect
+/datum/status_effect/stacking/sinking/proc/activate()
+	activation_timer = null
+	activated = TRUE
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+
+/// When taking WHITE or PALE damage while activated, deal sanity/white damage and halve stacks
+/datum/status_effect/stacking/sinking/proc/on_damage_taken(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+
+	if(!activated || stacks <= 0 || triggering)
+		return
+	if(damage_type != WHITE_DAMAGE && damage_type != PALE_DAMAGE)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(trigger_sinking))
+
+/// Deals sinking damage and halves stacks
+/datum/status_effect/stacking/sinking/proc/trigger_sinking()
+	if(QDELETED(owner) || stacks <= 0)
+		return
+
+	triggering = TRUE
+	to_chat(owner, span_warning("The sinking feeling overwhelms you!"))
+	new /obj/effect/temp_visual/damage_effect/sinking(get_turf(owner))
+
+	if(!ishuman(owner))
+		// Simple mobs: deal WHITE damage * 4
+		owner.deal_damage(stacks * 4, WHITE_DAMAGE, attack_type = ATTACK_TYPE_STATUS)
+	else
+		// Humans: deal sanity damage equal to stacks
+		var/mob/living/carbon/human/H = owner
+		H.adjustSanityLoss(stacks)
+
+	triggering = FALSE
+
+	// Halve stacks
+	stacks = max(0, round(stacks / 2))
+	if(stacks <= 0)
+		qdel(src)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+//Mob Proc
+/mob/living/proc/apply_lc_sinking(stacks)
+	var/datum/status_effect/stacking/sinking/S = src.has_status_effect(/datum/status_effect/stacking/sinking)
+	if(!S)
+		src.apply_status_effect(/datum/status_effect/stacking/sinking, stacks)
+		return
+	S.add_stacks(stacks)
+
+//Rupture - Delayed RED/BLACK damage trigger
+//  Stacks up to 50, inactive for first 5 seconds after application
+//  Once activated, when owner takes RED or BLACK damage: deal BRUTE damage = stacks, halve stacks
+//  On simple mobs: deal BRUTE damage * 4
+/datum/status_effect/stacking/rupture
+	id = "rupture"
+	status_type = STATUS_EFFECT_MULTIPLE
+	duration = -1
+	tick_interval = -1
+	max_stacks = 50
+	stacks = 0
+	consumed_on_threshold = FALSE
+	alert_type = /atom/movable/screen/alert/status_effect/rupture
+	/// Whether the rupture effect is active (FALSE for first 5 seconds)
+	var/activated = FALSE
+	/// Timer ID for the activation delay
+	var/activation_timer
+	/// Prevents re-entry when rupture damage triggers another damage signal
+	var/triggering = FALSE
+
+/atom/movable/screen/alert/status_effect/rupture
+	name = "Rupture"
+	desc = "Your body is on the verge of rupturing... Stacks: "
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "lc_bleed"
+
+/datum/status_effect/stacking/rupture/on_apply()
+	. = ..()
+	if(!owner)
+		return
+	// Start inactive, activate after 5 seconds
+	activation_timer = addtimer(CALLBACK(src, PROC_REF(activate)), 5 SECONDS, TIMER_STOPPABLE)
+
+/datum/status_effect/stacking/rupture/on_remove()
+	if(activation_timer)
+		deltimer(activation_timer)
+		activation_timer = null
+	if(activated)
+		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/stacking/rupture/add_stacks(stacks_added)
+	. = ..()
+	if(!owner)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+/// Called after 5 seconds to activate the rupture effect
+/datum/status_effect/stacking/rupture/proc/activate()
+	activation_timer = null
+	activated = TRUE
+	if(!owner)
+		return
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage_taken))
+
+/// When taking RED or BLACK damage while activated, deal BRUTE damage and halve stacks
+/datum/status_effect/stacking/rupture/proc/on_damage_taken(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+
+	if(!activated || stacks <= 0 || triggering)
+		return
+	if(damage_type != RED_DAMAGE && damage_type != BLACK_DAMAGE)
+		return
+
+	INVOKE_ASYNC(src, PROC_REF(trigger_rupture))
+
+/// Deals rupture damage and halves stacks
+/datum/status_effect/stacking/rupture/proc/trigger_rupture()
+	if(QDELETED(owner) || stacks <= 0)
+		return
+
+	triggering = TRUE
+	to_chat(owner, span_userdanger("Your wounds rupture open!"))
+	new /obj/effect/temp_visual/damage_effect/rupture(get_turf(owner))
+
+	if(!ishuman(owner))
+		// Simple mobs: deal BRUTE damage * 4
+		owner.deal_damage(stacks * 4, BRUTE, flags = DAMAGE_FORCED, attack_type = ATTACK_TYPE_STATUS)
+	else
+		// Humans: deal BRUTE damage equal to stacks
+		owner.deal_damage(stacks, BRUTE, flags = DAMAGE_FORCED, attack_type = ATTACK_TYPE_STATUS)
+
+	triggering = FALSE
+
+	// Halve stacks
+	stacks = max(0, round(stacks / 2))
+	if(stacks <= 0)
+		qdel(src)
+		return
+	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
+
+//Mob Proc
+/mob/living/proc/apply_lc_rupture(stacks)
+	var/datum/status_effect/stacking/rupture/R = src.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(!R)
+		src.apply_status_effect(/datum/status_effect/stacking/rupture, stacks)
+		return
+	R.add_stacks(stacks)

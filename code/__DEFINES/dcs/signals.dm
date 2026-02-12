@@ -1085,6 +1085,10 @@
 
 //Status signals
 #define COMSIG_STATUS_BLEED_DAMAGE "bleed_damage"
+/// Sent to the attacker when a Poise crit triggers: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_ATTACKER "poise_crit_attacker"
+/// Sent to the target when hit by a Poise crit: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_TARGET "poise_crit_target"
 
 /// generally called before temporary non-parallel animate()s on the atom (animation_duration)
 #define COMSIG_ATOM_TEMPORARY_ANIMATION_START "atom_temp_animate_start" // LC13 addition: MODULE ID: FISHING
