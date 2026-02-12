@@ -55,7 +55,7 @@
 			continue
 		targets+=H
 	
-	if(!targets)
+	if(!length(targets))
 		return
 
 	if(fragility_stacks)
