@@ -54,11 +54,12 @@
 		if(H.z!=z)
 			continue
 		targets+=H
+	
+	if(!targets)
+		return
 
 	if(fragility_stacks)
 		var/mob/living/carbon/human/Y = pick(targets)
-		if(!targets)
-			return
 		Y.apply_lc_white_fragile(1)
 		Y.balloon_alert(Y, "You feel the tree calling out for your sorrows.")
 		fragility_stacks--
@@ -68,8 +69,6 @@
 
 	if(empower_stacks)
 		var/mob/living/carbon/human/Y = pick(targets)
-		if(!targets)
-			return
 		Y.apply_lc_white_strength(2)
 		Y.balloon_alert(Y, "You feel the tree whispering in your mind.")
 		empower_stacks--
