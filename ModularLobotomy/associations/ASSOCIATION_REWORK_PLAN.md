@@ -108,7 +108,7 @@ Each association has **2-3 branches** (like Ring schools), allowing players to s
 | Association | Branches | Max Invested |
 |---|---|---|
 | Zwei | 3 (Guardian, Territory, Client) | 2 |
-| Seven | TBD (2-3) | 2 |
+| Seven | 3 (Analyst, Coordinator, Operative) | 2 |
 | Dieci | TBD (2-3) | 2 |
 | Cinq | TBD (2-3) | 2 |
 
@@ -1421,22 +1421,274 @@ The 2-branch limit creates natural playstyle combos:
 
 ### Seven (Section 4) - "The Eye"
 
-**Theme:** Reconnaissance, mobility, vulnerability exploitation.
+**Theme:** Intelligence, investigation, and retribution. Seven are professional detectives and private investigators who specialize in solving mysteries and disturbances for the Corporations, namely the Distortion Phenomenon. They have knowledge of nearly everything in the City — any Syndicate, Office, and Incident is known to them. Their HQ is in the Southern Branch.
 
-**Gimmick / EXP Source:**
-<!-- TODO: Define Seven's EXP-earning gimmick -->
-<!-- Examples: scouting enemies, marking targets, intel gathering, using binoculars -->
+Seven's work follows a two-phase approach: **investigation first, retribution second.** Their Fixers are valued for discretion and observation skills. During missions, they are recommended to not rush into combat. Instead, they gather intelligence, build a case, and then — once the perpetrator is identified — they exact punishment with surgical precision. While not a combat Association, members are trained in the minimum required skills to repel any hostiles, using simple weapons of various tech.
 
-**Skill Tree:**
+**Gimmick / EXP Source: Investigation Contracts**
 
-| Tier | Choice A | Choice B |
-|------|----------|----------|
-| T1 | <!-- TODO --> | <!-- TODO --> |
-| T2 | <!-- TODO --> | <!-- TODO --> |
-| T3 | <!-- TODO --> | <!-- TODO --> |
+Seven earn EXP through intelligence gathering. Their investigation tools **only work on carbon mobs** (players with inventories who can speak), emphasizing player interaction over mob farming.
 
-**Design Notes:**
-<!-- TODO -->
+**Investigation Toolkit (items in gear box):**
+
+1. **Seven Recorder** (`/obj/item/seven_recorder`) — A covert listening device disguised as a mundane object ("worn notebook" / "pocket watch"). Records all `Hear()` messages within range. Max 3 active recorders per fixer. EXP is earned based on **lines of conversation recorded**: 1 EXP per 5 lines captured, capped at **5 EXP per minute per recorder** (prevents AFK farming in busy areas).
+
+   **Two deployment modes:**
+
+   - **Floor Placement:** Use the recorder on a floor tile to place it as a hidden object (same pattern as spy bug placement). The recorder sits on the turf disguised as its mundane cover item. Records all `Hear()` messages in range. Can be picked back up by the fixer.
+
+   - **Attachment to Item:** Use the recorder on any `/obj/item` to secretly attach it. The recorder `forceMove()`s into the item's contents and registers `COMSIG_MOVABLE_HEAR` on the item to capture surroundings. Crucially, the recorder **continues to hear even when the item is inside a backpack or container** — it registers `Hear()` on whatever mob is carrying the item (re-registering via `COMSIG_ITEM_PICKUP` / `COMSIG_ITEM_DROPPED` as the item changes hands). This means planting a recorder on someone's pen, then slipping it into their bag, lets the recorder hear everything around that person.
+
+     **Examine Visibility:**
+     - **Placing fixer:** When the Seven member who planted the recorder examines the host item, they always see: `"A Seven Recorder is attached to this item. [Remove]"` — the `[Remove]` is a clickable `href` button.
+     - **Other mobs:** For the first **10 minutes** after placement, the recorder is completely invisible on examine. After 10 minutes, all examiners see: `"There is a small device attached to this item. [Remove]"` — with the same clickable remove button.
+     - **Removal:** Anyone who can see the recorder on examine can click `[Remove]` to detach it, **as long as they are holding the item** (in active hand). The recorder is `forceMove()`'d to the remover's hands. If they aren't holding it, they receive: `"You need to be holding the item to remove the device."`
+
+   **Recorder Storage & Retrieval:**
+   - Floor-placed recorders can be picked up by clicking them.
+   - Item-attached recorders are removed via the examine `[Remove]` button by the placing fixer while holding the host item (see above).
+   - All recorders store their recordings on an internal tape (subtype of `/obj/item/tape`). The tape can be ejected, played back, or printed as a transcript (same as base tape recorder).
+
+   **Implementation Notes:**
+   - Subtype of `/obj/item/taperecorder` for `Hear()` recording.
+   - Floor placement: `forceMove(get_turf(target))`, set `invisibility` to hide, add to `GLOB.seven_active_recorders`.
+   - Item attachment: `forceMove(host_item)`, store `var/obj/item/host_item` and `var/mob/owner` (placing fixer). Register `COMSIG_MOVABLE_HEAR` on the host item. To hear through containers: also register `COMSIG_ITEM_PICKUP` and `COMSIG_ITEM_DROPPED` on the host item — on pickup, register `COMSIG_MOVABLE_HEAR` on the new carrier mob; on drop, unregister from the old carrier. This relay chain ensures the recorder captures speech near whoever is carrying the item.
+   - Examine hook: Override `examine()` on the host item (or use `COMSIG_PARENT_EXAMINE` signal). Check `usr == owner` for always-visible text. For non-owners, check `world.time >= attached_time + 10 MINUTES`. Both cases show the `[Remove]` button: `<a href='?src=\ref[recorder];action=remove'>Remove</a>` with `Topic()` handler that validates `usr.get_active_held_item() == host_item`. Anyone who can see the recorder can remove it.
+   - EXP tracking: `var/lines_recorded_this_minute = 0`, `var/exp_this_minute = 0`. Each `Hear()` increments `lines_recorded_this_minute`. Every 5 lines, grant 1 EXP (if `exp_this_minute < 5`). Reset both counters every 60 seconds via `addtimer`.
+   - Visibility timer: `var/attached_time` set to `world.time` on attachment. Examine check: `world.time >= attached_time + 10 MINUTES` for non-owner visibility.
+
+2. **Seven Camera** (`/obj/item/camera/seven_intel`) — Modified camera (subtype of `/obj/item/camera`) that creates intel snapshots. When a photo is taken, the camera stores a `/datum/seven_intel_snapshot` containing ground truth data: area name (from `get_area_name()`), mob names (from `mobs_seen`), and held items (from target's `held_items`). This snapshot is used to validate reports later.
+
+3. **Intel Report Paper** (`/obj/item/paper/intel_report`) — Pre-formatted paper with form fields (using the existing `form_fields` system on `/obj/item/paper`). Created by using a Seven Camera photo on a blank Intel Report form. The report presents questions the fixer must answer:
+   - "Subject Name:" (text field)
+   - "Area Observed:" (text field)
+   - "Individuals Present:" (text field, comma-separated names)
+   - "Items Carried:" (text field, comma-separated items)
+   The server validates answers against the snapshot data using `findtext()` for case-insensitive fuzzy matching. Filing the report on the dossier awards EXP: **5 base + up to 10 accuracy bonus** per filed report. Cooldown: one report per target per 2 minutes.
+
+4. **Backpack Scanner** (`/obj/item/seven_scanner`) — Handheld device. Use on an adjacent carbon mob to scan their worn backpack/bag contents. Takes 3 seconds (`do_after`) and is visible to the target ("X scans Y's belongings..."). Records actual `contents` list of the target's storage item. The fixer then fills out a **Cargo Report** (variant of Intel Report) listing what the target was carrying. Validation and EXP: **3 base + up to 5 accuracy bonus**. Same 2-minute per-target cooldown.
+
+5. **Seven Spyglass Kit** (`/obj/item/storage/box/seven_spyglass`) — Reuses the existing spy bug + spy glasses system (`code/game/objects/items/devices/spyglasses.dm`) with a Seven aesthetic. While actively observing through the spyglass popup window, the fixer earns **1 EXP per 30 seconds** if on contract.
+
+6. **Investigation Dossier** (`/obj/item/seven_dossier`) — Physical storage item (clipboard/folder) with a TGUI interface (`SevenDossier.js`). Stores filed reports indexed by subject name. Each entry shows: subject name, area, timestamp, accuracy score. Summary statistics: total reports filed, total EXP earned from reports, most-observed subject. Reports are added by using a completed Intel Report or Cargo Report on the dossier.
+
+7. **Recorder Receiver** (`/obj/item/seven_receiver`) — An earpiece/handheld radio that links to deployed Seven Recorders for live listening.
+
+   **Live Listening:** Use the Receiver in-hand (`attack_self()`) to open a TGUI panel listing all of the fixer's active recorders (floor-placed and item-attached). Each entry shows: recorder index, deployment type (floor/item), host item name or turf location, lines recorded, and tape remaining. Select a recorder to **tune in** — while tuned in, the fixer hears everything the recorder's `Hear()` captures in real-time, relayed as `to_chat()` messages prefixed with `[RECORDER #N]:`. Only one recorder can be listened to at a time. The fixer can switch between recorders or stop listening from the panel.
+
+   **Note:** Recorder retrieval is handled directly — floor recorders are picked up by clicking, and item-attached recorders are removed via the `[Remove]` button in the host item's examine text (see item 1).
+
+   **Implementation Notes:**
+   - Stores `var/list/linked_recorders` referencing the fixer's deployed `/obj/item/seven_recorder` instances.
+   - Live listening: When tuned in, registers the receiver as a listener on the recorder's `Hear()` relay. Each message the recorder captures is forwarded via `to_chat(owner, span_notice("[RECORDER #[index]]: [message]"))`.
+   - TGUI panel (`SevenReceiver.js` or simple `ui_interact`): Shows list of recorders with status (floor/item-attached, location/host item name, lines recorded, tape remaining). Toggle buttons for listen/stop.
+
+**Intel Snapshot Validation System:**
+
+```dm
+/// Ground truth captured when a photo is taken or scan is performed
+/datum/seven_intel_snapshot
+	/// Reference to the photo datum
+	var/datum/picture/photo
+	/// Area name where the photo was taken
+	var/area_name
+	/// List of mob names visible in the photo
+	var/list/mob_names = list()
+	/// List of item names held/worn by targets
+	var/list/mob_items = list()
+	/// World.time when snapshot was taken
+	var/timestamp
+
+/// On taking a photo with Seven Camera:
+/obj/item/camera/seven_intel/after_picture(mob/user, datum/picture/picture)
+	var/datum/seven_intel_snapshot/snapshot = new()
+	snapshot.photo = picture
+	snapshot.area_name = get_area_name(get_turf(user))
+	for(var/mob/living/M in picture.mobs_seen)
+		snapshot.mob_names += M.name
+		for(var/obj/item/I in M.held_items)
+			snapshot.mob_items += I.name
+	snapshot.timestamp = world.time
+	// Store snapshot on the camera for later report creation
+	stored_snapshots += snapshot
+```
+
+**Seven-Specific Contract Types:**
+
+- **Investigate Person** (Seven only) — Target a specific carbon player. The fixer must gather intelligence on them using Seven tools and file reports. Duration-based. EXP ticks while on contract and actively observing/investigating the target. Reflects Seven's role as private investigators hired to watch specific individuals.
+
+- **Surveillance Post** (Seven only) — Mark a location on the city map. The fixer must place recording devices, maintain surveillance over the area, and file reports on activity observed there. EXP ticks while recorders are active in the designated area. Reflects Seven's role in monitoring locations for suspicious activity.
+
+**EXP Sources Summary:**
+
+| Activity | EXP Gain | Notes |
+|---|---|---|
+| Passive contract tick | 1 EXP / 10s | While on active contract |
+| Recorder lines captured | 1 EXP per 5 lines recorded | Max 5 EXP/min per recorder, max 3 recorders |
+| Spyglass active observation | 1 EXP / 30s | While popup is open on contract |
+| Filed Intel Report (photo) | 5 base + up to 10 accuracy bonus | 1 per target per 2min |
+| Filed Cargo Report (scan) | 3 base + up to 5 accuracy bonus | 1 per target per 2min |
+| Combat (hitting contracted target) | 1 EXP per hit | Standard combat bonus |
+| Contract completion bonus | 10-30 EXP | Based on duration + success |
+
+**Contract-Specific Behavior:**
+- Seven skill tree abilities **only function while on an active contract**
+- Investigate Person contracts show a subtle indicator pointing to the target's direction
+- Surveillance Post contracts highlight the monitored area boundary
+- Breaking contract parameters (leaving area, losing track of target) starts a warning timer (~15s) before contract fails
+
+**Skill Tree — 3 Branches:**
+
+Seven has 3 branches. Players can invest in a maximum of 2.
+
+**Core Status Effect: Rupture** — Seven skills primarily use the Rupture status effect, a delayed-trigger debuff: stacks build up, remain inactive for 5 seconds after application, then when the target takes RED or BLACK damage, all stacks burst for BRUTE damage (equal to stacks for humans, stacks × 4 for simple mobs). Stacks halve after triggering. This mirrors the investigation→retribution loop perfectly: build intel (stacks), wait for the right moment (activation delay), then strike (trigger).
+
+**Secondary Effects (exploitation hierarchy):**
+- **Rupture** (core payload): Build stacks, trigger for burst BRUTE damage
+- **Fragile** (amplifier): Increases all damage taken, making rupture triggers and subsequent hits hit harder
+- **Defense Level Down** (team enabler): Diminishing returns vulnerability (`stacks/(stacks+25)*100`%) — makes the target easier to kill for everyone
+- **Offense Level Down** (suppression): Reduces the target's damage output, protecting your team while you set up
+
+The branches are designed so that:
+- **Analyst** focuses on Rupture (build + detonate on a single target)
+- **Coordinator** focuses on Defense Level Down + Offense Level Down (team debuffs)
+- **Operative** focuses on Rupture + Fragile (burst damage windows)
+
+Mixing branches gives access to all four effects, rewarding the 2-branch investment limit.
+
+#### Powerful Attack System (T3 Skills)
+
+Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-hit combo following the same pattern as Zwei's powerful attacks (reference: tiantui flurry in `thumb.dm`). All Seven powerful attacks deal **BLACK damage** (matching their weapon damage type). Same shared mechanics apply: weapon-agnostic, DPS-based damage (`force * force_multiplier * 1.25 / attack_speed`), duel component, weapon lock, immobilization, null/distance checks.
+
+---
+
+#### Branch 1: Analyst (Target Elimination)
+
+**Theme:** Mark one target. Build rupture. Execute with precision. The field agent who gathers intel on a single mark, then eliminates them with surgical strikes. Every hit on your mark feeds the dossier — and the dossier feeds the kill.
+
+**Marking System:** T1 in this branch grants the **Mark Target** action (pointed spell pattern, `InterceptClickOn()`). One mark at a time. Re-marking removes old mark. Mark persists until manually removed, re-marked, or target dies. This is **separate** from the Seven weapon's existing "hit 7 times to store target" mechanic — both systems coexist independently.
+
+**T1 (1pt) — Pick one:**
+- **A: Case File** — Mark a target. Your attacks against the marked target apply 2 Rupture stacks. Attacks against non-marked targets apply 0 Rupture. The mark focuses all your investigation on a single subject.
+- **B: Profiling** — Mark a target. While you are within 7 tiles of the marked target, gain 1 Offense Level Up stack every 5 seconds (max 10). All stacks are lost when the mark changes or the target moves out of range for more than 10 seconds. Rewards staying near and observing your target.
+
+**T2 (2pt) — Pick one:**
+- **A: Exploit Weakness** — Your attacks against the marked target also apply 2 Defense Level Down stacks (1s internal CD). Additionally, when the mark's Rupture triggers (burst damage), apply 3 Fragile stacks to them — exposing the wounds you've opened.
+- **B: Patient Hunter** — While your marked target has 10+ Rupture stacks, your attacks against them deal 25% more damage. While they have 20+ stacks, your attacks also deal bonus BLACK damage equal to 15% of your weapon's base force. The longer you observe, the more devastating your strikes.
+
+**T3 (3pt) — Pick one:**
+- **A: Dossier Complete** *(Powerful Attack, 90s CD)* — Can only target your marked target. Requires: target has 10+ Rupture stacks. Dash to target from up to 6 tiles, 4-hit combo (BLACK DPS). All Rupture stacks on the target are consumed before the combo; total damage is multiplied by `1 + (consumed_stacks * 2 / 100)` (20 stacks = +40%, 40 stacks = +80%). Per-hit: applies 2 Offense Level Down. Final hit: knockback 2 tiles + 5 Fragile stacks. The investigation is complete — sentence is carried out.
+- **B: Surveillance Network** *(Passive)* — Gain a secondary mark slot (can mark 2 targets simultaneously). When one marked target takes Rupture trigger damage, the other marked target also takes 50% of that Rupture burst's BRUTE damage as BLACK damage (range: 15 tiles between marks). Killing a marked target immediately grants 5 Rupture stacks to your other mark. Your web of surveillance connects your targets.
+
+**Dossier Complete — Details:**
+- **Opener:** Dash to marked target from up to 6 tiles (same dash pattern as tiantui). Target must be marked and have 10+ Rupture stacks.
+- **Combo:** 4 hits. Precise, clinical strikes.
+- **Pre-combo:** Read and consume all Rupture stacks on target. Calculate damage multiplier: `1 + (consumed_stacks * 2 / 100)`.
+- **Per-hit effect:** Each hit applies 2 Offense Level Down stacks. Damage per hit = `DPS * multiplier / 4`.
+- **Final hit:** Deals 2x base hit damage, knockback 2 tiles, applies 5 Fragile stacks.
+- **Condition:** More Rupture stacks = more damage. At 40 stacks (achievable with focused Case File attacking), the combo gets +80% total damage.
+
+**Implementation Notes:**
+- Case File: `COMSIG_MOB_ITEM_ATTACK` → check if `target == marked_target` → `target.apply_lc_rupture(2)`. No rupture on non-marks.
+- Profiling: Process timer every 5s → range check to marked_target → `human_parent.apply_lc_offense_level_up(1)`. Track `stacks_granted` for cleanup on mark change. 10s out-of-range timer via `addtimer`.
+- Exploit Weakness: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` + CD clear → `target.apply_lc_defense_level_down(2)`. Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on marked target → detect rupture-source damage (`ATTACK_TYPE_STATUS`) → `target.apply_lc_fragile(3)`.
+- Patient Hunter: `COMSIG_MOB_ITEM_ATTACK` → check marked_target rupture stacks → if >= 10: `extra_damage += 25` → if >= 20: `extra_damage_black += 15`. Clean up via `COMSIG_MOB_ITEM_AFTERATTACK`.
+- Dossier Complete: `/datum/action/cooldown/dossier_complete` → toggle targeting → `InterceptClickOn` checks `target == marked_target` and rupture >= 10. Read + clear rupture stacks. Apply duel component + immobilize. 4 hits with `sleep()`, damage = `DPS * (1 + stacks * 2 / 100) / 4`. Per-hit: `target.apply_lc_offense_level_down(2)`. Final hit: 2x, knockback, fragile.
+- Surveillance Network: Extend mark to `marked_target_secondary`. Hook `COMSIG_MOB_AFTER_APPLY_DAMGE` on both marks → detect rupture BRUTE (`ATTACK_TYPE_STATUS`) → deal 50% as BLACK to other mark if in 15 tiles. `COMSIG_MOB_DEATH` on marks → `other_mark.apply_lc_rupture(5)`.
+
+---
+
+#### Branch 2: Coordinator (Debuff Support)
+
+**Theme:** The handler who knows every enemy's weak point and shares that intel with the team. AoE vulnerability debuffs, ally-benefiting effects. Seven doesn't always need to swing the blade themselves — sometimes the most effective retribution comes from telling your allies exactly where to hit.
+
+**T1 (1pt) — Pick one:**
+- **A: Intel Briefing** — Designated allies within 5 tiles of you deal attacks that apply 1 Rupture stack to their targets. 2s internal CD per ally. Your briefings turn every ally into a Seven operative.
+- **B: Weak Point Analysis** — Your attacks apply 2 Defense Level Down stacks to the target (1s internal CD). When you hit a target that already has Defense Level Down, nearby designated allies (5 tiles) gain +10% damage for 3 seconds (refreshing). Your analysis exposes openings for the team.
+
+**T2 (2pt) — Pick one:**
+- **A: Comprehensive Report** — Every 15 seconds, the enemy with the highest Rupture stacks within 8 tiles automatically receives 3 Fragile stacks and 2 Defense Level Down stacks. A brief visual highlight marks the chosen target. Your detailed reports prioritize the most-investigated target.
+- **B: Disinformation** — Your attacks apply 2 Offense Level Down stacks to the target (1.5s internal CD). Targets afflicted with Offense Level Down deal 10% less damage to your designated allies. Your misinformation undermines the enemy's confidence.
+
+**T3 (3pt) — Pick one:**
+- **A: Full Exposure** *(Powerful Attack, 120s CD)* — AoE debuff slam in a 4-tile radius centered on self. All enemies hit receive 5 Fragile + 3 Defense Level Down + 3 Offense Level Down. Then, the closest enemy becomes the main target for a 3-hit combo (BLACK DPS). Per-hit: applies 3 Rupture stacks. For each designated ally within 6 tiles at combo start, all debuff stacks applied by this attack are increased by 1 (up to +3 with 3 allies). Final hit: force-triggers all existing Rupture on the target immediately (bypasses 5s activation delay). You've exposed everything — the enemy has nowhere to hide.
+- **B: Undermining Presence** *(Passive Aura)* — While on contract, enemies within 5 tiles of you lose 1 Defense Level Up stack and 1 Offense Level Up stack every 5 seconds (stripping enemy buffs). Designated allies within 5 tiles who attack targets affected by any debuff (Rupture, Fragile, DLD, OLD) heal for 3% of damage dealt. Your mere presence erodes enemy strength.
+
+**Full Exposure — Details:**
+- **Opener:** AoE ground slam centered on user, 4-tile radius. All enemies in range receive 5 Fragile + 3 DLD + 3 OLD. Closest enemy hit becomes the main target.
+- **Combo:** 3 hits. Each hit deals standard DPS as BLACK damage.
+- **Per-hit effect:** Each hit applies 3 Rupture stacks to the main target.
+- **Condition:** Count designated allies within 6 tiles at combo start. For each ally (up to 3), all debuff stacks from this attack increase by 1 (e.g., with 2 allies: 7 Fragile + 5 DLD + 5 OLD opener, 5 Rupture per hit).
+- **Final hit:** Force-triggers all Rupture on target via `INVOKE_ASYNC` calling the rupture status effect's `trigger_rupture()` proc directly. Bypasses the 5-second activation delay.
+
+**Implementation Notes:**
+- Intel Briefing: Register `COMSIG_MOB_ITEM_ATTACK` on designated allies within range (refresh tracked list every 5s via process). On ally attack, if CD clear: `target.apply_lc_rupture(1)`. Track `ally_cooldowns[ally_ref] = world.time`.
+- Weak Point Analysis: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_defense_level_down(2)` with 1s CD. Check if target had DLD before hit → iterate designated allies in `range(5)` → apply timed `extra_damage += 10` buff via `addtimer` + CALLBACK cleanup (3s).
+- Comprehensive Report: Process timer every 15s → iterate `range(8)` for hostile mobs → find highest rupture stacks → `target.apply_lc_fragile(3)` + `target.apply_lc_defense_level_down(2)`. Brief highlight via `new /obj/effect/temp_visual/` on target turf.
+- Disinformation: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_offense_level_down(2)` with 1.5s CD. For ally protection: register `COMSIG_MOB_APPLY_DAMGE` on designated allies → when ally takes damage, check attacker for OLD stacks → if yes, reduce damage by 10% via multiplier.
+- Full Exposure: `/datum/action/cooldown/full_exposure` → no targeting needed (AoE from self). AoE debuffs in `range(4)`. Count allies via `is_designated_ally()` in `range(6)`. Pick closest hostile → duel component + immobilize → 3 hits. Final hit: find rupture status effect on target → `INVOKE_ASYNC(rupture_effect, PROC_REF(trigger_rupture))`.
+- Undermining Presence: Process timer every 5s → iterate hostiles in `range(5)` → check for DLU/OLU status effects → `add_stacks(-1)`. For ally healing: register `COMSIG_MOB_ITEM_ATTACK` on designated allies → check target for any debuffs → `INVOKE_ASYNC` → `ally.adjustBruteLoss(-damage * 0.03)`.
+
+---
+
+#### Branch 3: Operative (Mobility + Burst)
+
+**Theme:** The direct action specialist. Move fast, hit hard, and exploit every gap in the enemy's defenses. While the Analyst builds a case and the Coordinator briefs the team, the Operative is already behind enemy lines. Evolves the old Quick Getaway and Exploit the Gap skills into a proper mobility/ambush specialization.
+
+**T1 (1pt) — Pick one:**
+- **A: Shadow Step** — After standing still for 2+ seconds, your next attack within 1 second of moving deals 20% bonus damage and applies 2 Rupture stacks. 3s internal CD. Patience rewards the predator.
+- **B: Quick Assessment** — Hitting a new target (different from last hit) applies 3 Rupture stacks. Hitting the same target consecutively increases your attack speed by 10% (stacking up to 3 times / 30%). Switching targets resets the speed bonus. Adapts to whatever the situation demands.
+
+**T2 (2pt) — Pick one:**
+- **A: Smoke and Mirrors** *(Active, 30s CD)* — Dash 4 tiles forward in facing direction, drop a 3-tile smoke cloud at your origin, and gain +25% movement speed for 4 seconds. During the speed buff, your attacks apply 1 additional Rupture stack per hit. Enter fast, leave confusion behind.
+- **B: Pressure Points** — Your attacks against targets with 5+ Rupture stacks have a 30% chance to apply 2 Fragile stacks. Your attacks against targets with Fragile active apply 1 additional Rupture stack. Creates a self-reinforcing feedback loop between Rupture and Fragile — the more you hit, the worse it gets for them.
+
+**T3 (3pt) — Pick one:**
+- **A: Surgical Strike** *(Powerful Attack, 90s CD)* — Requires: target has at least one of Rupture, Fragile, Defense Level Down, or Offense Level Down. Vanish (brief invisibility, 0.5s), then dash to target from up to 5 tiles and deliver a 5-hit combo (BLACK DPS). For each unique debuff type on the target, each hit deals 15% more damage (max +60% with all four debuffs). Per-hit: apply 2 Rupture stacks. First 3 hits: also apply 1 Fragile each. Final hit: 2x DPS, knockback 2 tiles, and if target has 15+ Rupture stacks, instantly trigger all Rupture (bypass 5s activation delay). The investigation's findings dictate the severity of the sentence.
+- **B: Ghost Protocol** *(Passive, 5min CD)* — When you take lethal damage, instead of dying: become invisible and intangible for 3 seconds, heal to 50% max HP, gain +40% movement speed for 6 seconds, and your next 3 attacks within 10 seconds each deal 30% bonus damage and apply 5 Rupture stacks. A good operative always has an exit strategy.
+
+**Surgical Strike — Details:**
+- **Opener:** Brief invisibility (`alpha = 0`, 0.5s), then dash to target from up to 5 tiles. Must have at least one debuff (Rupture/Fragile/DLD/OLD).
+- **Combo:** 5 hits. Fast, precise strikes exploiting every identified weakness.
+- **Per-hit effect:** Each hit applies 2 Rupture stacks. First 3 hits also apply 1 Fragile each.
+- **Condition:** Count unique debuff types on target. Per debuff: +15% damage to all hits. With all 4 debuffs active: +60% total damage. This rewards setting up debuffs before the finisher.
+- **Final hit:** Deals 2x DPS, knockback 2 tiles. If target has 15+ Rupture stacks, force-trigger all Rupture (bypass 5s delay) via `trigger_rupture()`.
+
+**Implementation Notes:**
+- Shadow Step: Track `last_move_time` via `COMSIG_MOVABLE_MOVED`. When `world.time - last_move_time >= 2 SECONDS`, set `ambush_ready = TRUE`. On `COMSIG_MOB_ITEM_ATTACK`, if `ambush_ready` and `world.time - last_move_time <= 1 SECOND`: `extra_damage += 20`, `target.apply_lc_rupture(2)`, reset, 3s CD. Clean via afterattack.
+- Quick Assessment: Track `last_attacked_target`. On `COMSIG_MOB_ITEM_ATTACK`: if different target → `target.apply_lc_rupture(3)`, reset `consecutive_count`. If same → `consecutive_count++`, apply `next_move_modifier` for attack speed. Cap at 3.
+- Smoke and Mirrors: `/datum/action/cooldown/smoke_and_mirrors`. On activate: record origin turf, `forceMove` 4 tiles in facing direction (wall checks), spawn smoke via `datum/effect_system/smoke_spread`. Apply movespeed modifier 4s. Set `bonus_rupture = TRUE` for 4s. `COMSIG_MOB_ITEM_ATTACK` checks flag → `target.apply_lc_rupture(1)`.
+- Pressure Points: `COMSIG_MOB_ITEM_ATTACK` → check rupture stacks >= 5 → `prob(30)` → `target.apply_lc_fragile(2)`. Check fragile → `target.apply_lc_rupture(1)`.
+- Surgical Strike: `/datum/action/cooldown/surgical_strike` → toggle targeting → check any debuff. `alpha = 0` for 0.5s → dash → duel component → immobilize. Count debuff types for multiplier. 5 hits. Final hit: 2x DPS, knockback, conditional `trigger_rupture()`.
+- Ghost Protocol: `COMSIG_MOB_APPLY_DAMGE` → lethal check → `COMPONENT_MOB_DENY_DAMAGE`. Heal to 50%. `alpha = 0`, `TRAIT_NOINTERACT_1` for 3s. Movespeed modifier 6s. `ghost_attacks_remaining = 3`. On `COMSIG_MOB_ITEM_ATTACK` while remaining > 0: `extra_damage += 30`, `target.apply_lc_rupture(5)`, decrement. Timers clean up at 3s/6s/10s.
+
+---
+
+#### Seven Branch Synergies
+
+The 2-branch limit creates natural playstyle combos:
+
+| Combo | Playstyle | Strength |
+|---|---|---|
+| **Analyst + Coordinator** | "The Mastermind" — Mark a target, build rupture personally while exposing them to the whole team's attacks via Intel Briefing. Dossier Complete for solo execution, Full Exposure for team fights. | Best for mixed solo/team play. Maximum debuff stacking on a single priority target. |
+| **Analyst + Operative** | "The Assassin" — Mark, build rupture via mobility and ambush, then cash in with Dossier Complete or Surgical Strike. Pure single-target elimination. | Highest burst damage against one enemy. The quintessential Seven hitman. |
+| **Coordinator + Operative** | "The Saboteur" — Debuff everything in range with team-wide vulnerability, then move fast and create chaos with Surgical Strike. Less focused on one target but more versatile. | Best for disruption and group fights. The Seven field commander who leads from the front. |
+
+---
+
+**Seven Design Notes:**
+- Most skills use **Rupture** stacks as the core mechanic, with Fragile/DLD/OLD as supporting debuffs
+- **Rupture's 5-second activation delay** mechanically enforces the "don't rush into combat" lore — Seven must plan their attacks, not spam them
+- The **Analyst Mark** is independent from the weapon's hit-to-store mechanic — both coexist and can be used on different targets
+- **T3 Powerful Attacks** follow the tiantui flurry pattern (`thumb.dm`): cutscene combo with immobilize, multi-hit DPS-based damage, duel component, conditional bonuses
+- All Seven powerful attacks deal **BLACK damage** (matching their weapon damage type)
+- Each hit deals weapon DPS (`force * force_multiplier * 1.25 / attack_speed`) so all weapons are equally viable
+- Skills **only function while on an active contract** — no contract = no abilities
+- The pointed spell pattern from `thin_line.dm` is used for the Mark Target targeting
+- Ghost Protocol's lethal-save uses `COMSIG_MOB_APPLY_DAMGE` + `COMPONENT_MOB_DENY_DAMAGE` + `INVOKE_ASYNC`
+- Investigation tools only work on `/mob/living/carbon` targets (players with inventories who can speak)
+- Intel Report validation uses `findtext()` fuzzy matching (case-insensitive, partial match)
+- Old skills for reference: Analysis (HUD), Third Eye (x-ray), Quick Getaway (speed+smoke), Weakness Analyzed (1.4x black vuln), Field Command (toggle ally buff), Exploit the Gap (speed + vuln debuff)
 
 ---
 
@@ -1494,7 +1746,14 @@ The 2-branch limit creates natural playstyle combos:
 - `ModularLobotomy/associations/skills/_cutscene_duel.dm` - Shared cutscene duel component (prevents outside damage during powerful attacks)
 - `ModularLobotomy/associations/skills/_designate_ally.dm` - Universal ally designation action (all associations)
 - `ModularLobotomy/associations/skills/zwei/mark_action.dm` - Mark for Protection targeted action (shared by T1a and T1b of Client branch)
-- `ModularLobotomy/associations/skills/seven/` - Seven skill tree branch files (TBD)
+- `ModularLobotomy/associations/skills/seven/analyst.dm` - Seven Analyst branch skills (Case File, Profiling, Exploit Weakness, Patient Hunter, Dossier Complete, Surveillance Network)
+- `ModularLobotomy/associations/skills/seven/coordinator.dm` - Seven Coordinator branch skills (Intel Briefing, Weak Point Analysis, Comprehensive Report, Disinformation, Full Exposure, Undermining Presence)
+- `ModularLobotomy/associations/skills/seven/operative.dm` - Seven Operative branch skills (Shadow Step, Quick Assessment, Smoke and Mirrors, Pressure Points, Surgical Strike, Ghost Protocol)
+- `ModularLobotomy/associations/skills/seven/mark_action.dm` - Mark Target pointed spell action (Analyst branch)
+- `ModularLobotomy/associations/skills/seven/investigation_items.dm` - Seven Recorder, Recorder Receiver, Seven Camera, Backpack Scanner, Seven Spyglass Kit
+- `ModularLobotomy/associations/skills/seven/intel_report.dm` - Intel Report Paper, Cargo Report, `/datum/seven_intel_snapshot`, validation logic
+- `ModularLobotomy/associations/skills/seven/dossier.dm` - Investigation Dossier item + datum
+- `tgui/packages/tgui/interfaces/SevenDossier.js` - Dossier TGUI viewer (report list by subject, stats)
 - `ModularLobotomy/associations/skills/dieci/` - Dieci skill tree branch files (TBD)
 - `ModularLobotomy/associations/skills/cinq/` - Cinq skill tree branch files (TBD)
 - `ModularLobotomy/associations/contracts/contract_datum.dm` - Base contract datum
