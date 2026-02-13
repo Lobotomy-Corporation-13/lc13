@@ -2163,7 +2163,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/max_feeble_stacks = 5
 	var/base_stagger_mult = 0.5
 	var/feeble_stagger_bonus = 0.3
-	var/feeble_decay_time = 10 SECONDS
+	var/feeble_decay_time = 20 SECONDS
 	var/list/feeble_wisps = list()
 
 	// Stagger System
