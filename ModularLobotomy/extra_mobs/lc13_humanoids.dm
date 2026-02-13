@@ -285,8 +285,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/in_combo_attack = FALSE
 	/// World time when combo cooldown expires
 	var/combo_cooldown = 0
-	/// Time between combo attempts (20 seconds default)
-	var/combo_cooldown_time = 20 SECONDS
+	/// Time between combo attempts (15 seconds default)
+	var/combo_cooldown_time = 15 SECONDS
 	// real_name is inherited from /mob - set per subtype for combo voice lines
 	/// Reference to current combo partner
 	var/mob/living/simple_animal/hostile/humanoid/fixer/combo_partner = null
@@ -299,6 +299,8 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	var/mob/living/simple_animal/hostile/humanoid/fixer/pending_combo_partner = null
 	/// The combo type we want to execute when partner is ready
 	var/pending_combo_type = null
+	/// Whether self or partner should call InitiateDuoCombo when wait ends
+	var/pending_self_initiates = TRUE
 	/// Timer ID for waiting loop
 	var/combo_wait_timer = null
 	/// World time when we started waiting (for timeout)
@@ -333,8 +335,6 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/LoseTarget()
 	. = ..()
-	// Stop combo detection when leaving combat
-	StopComboDetection()
 
 // ============================================
 // COMBO ATTACK SYSTEM - Base Procs
@@ -400,6 +400,66 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		partners += F
 	return partners
 
+/// Sets can_act and notifies nearby echo_office fixers when becoming ready
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/SetCanAct(new_value)
+	can_act = new_value
+	if(!new_value || !("echo_office" in faction))
+		return
+	// Check nearby echo_office fixers waiting for combo
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/F in view(7, src))
+		if(F == src)
+			continue
+		if(!("echo_office" in F.faction))
+			continue
+		if(!F.waiting_for_combo)
+			continue
+		// Can they initiate a combo with us?
+		var/combo_type = F.GetComboType(src)
+		if(combo_type && CanCombo())
+			F.CancelComboWait()
+			F.InitiateDuoCombo(src, combo_type)
+			return // We're now in a combo
+		// Can WE initiate a combo with them?
+		combo_type = GetComboType(F)
+		if(combo_type)
+			F.CancelComboWait() // Restores F.can_act = TRUE
+			InitiateDuoCombo(F, combo_type)
+			return // We're now in a combo
+	// Low HP combo priority: automatically try combo when below 50% HP
+	if(health > 0 && health <= (maxHealth * 0.5))
+		TryLowHPCombo()
+
+/// Attempts to initiate a combo with priority (no RNG) when below 50% HP
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/TryLowHPCombo()
+	if(stat == DEAD)
+		return
+	if(!CanCombo())
+		return
+	// Try immediate partners within 7 tiles
+	var/list/partners = FindComboPartners(range = 7)
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in partners)
+		var/combo_type = GetComboType(partner)
+		if(combo_type)
+			InitiateDuoCombo(partner, combo_type)
+			return
+		// Check reverse: can THEY initiate with us?
+		combo_type = partner.GetComboType(src)
+		if(combo_type)
+			partner.InitiateDuoCombo(src, combo_type)
+			return
+	// No immediate partners, wait for potential partners
+	var/list/potential_partners = FindComboPartners(range = 7, potential_only = TRUE)
+	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in potential_partners)
+		var/combo_type = GetComboType(partner)
+		if(combo_type)
+			StartWaitingForCombo(partner, combo_type)
+			return
+		// Check reverse: can THEY initiate with us?
+		combo_type = partner.GetComboType(src)
+		if(combo_type)
+			StartWaitingForCombo(partner, combo_type, self_initiates = FALSE)
+			return
+
 /// Starts the combo detection loop when entering combat
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/StartComboDetection()
 	if(combo_check_timer)
@@ -414,42 +474,41 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 
 /// Called periodically to check if a combo can be initiated
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/CheckForComboOpportunity()
-	if(!target || stat == DEAD)
+	if(stat == DEAD)
+		StopComboDetection()
+		return
+	if(!target)
 		return
 	if(!CanCombo())
 		return
-	// 25% chance to attempt combo when off cooldown
-	if(!prob(25))
+	// Always attempt combo when below 50% HP, otherwise 25% chance
+	var/low_hp = (health > 0 && health <= (maxHealth * 0.5))
+	if(!low_hp && !prob(25))
 		return
 	// First, try to find partners who can combo immediately
 	var/list/partners = FindComboPartners()
-	var/list/available_combos = list()
 	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in partners)
 		var/combo_type = GetComboType(partner)
 		if(combo_type)
-			available_combos[partner] = combo_type
-	if(available_combos.len)
-		// Found immediate partner, initiate combo
-		var/mob/living/simple_animal/hostile/humanoid/fixer/chosen_partner = pick(available_combos)
-		var/chosen_combo = available_combos[chosen_partner]
-		InitiateDuoCombo(chosen_partner, chosen_combo)
-		return
+			InitiateDuoCombo(partner, combo_type)
+			return
+		// Check reverse: can THEY initiate with us?
+		combo_type = partner.GetComboType(src)
+		if(combo_type)
+			partner.InitiateDuoCombo(src, combo_type)
+			return
 	// No immediate partners, check for potential partners (busy but could be free soon)
 	var/list/potential_partners = FindComboPartners(potential_only = TRUE)
-	if(!potential_partners.len)
-		return
-	// Find combos with potential partners
-	var/list/potential_combos = list()
 	for(var/mob/living/simple_animal/hostile/humanoid/fixer/partner in potential_partners)
 		var/combo_type = GetComboType(partner)
 		if(combo_type)
-			potential_combos[partner] = combo_type
-	if(!potential_combos.len)
-		return
-	// Start waiting for one of the potential partners
-	var/mob/living/simple_animal/hostile/humanoid/fixer/chosen_partner = pick(potential_combos)
-	var/chosen_combo = potential_combos[chosen_partner]
-	StartWaitingForCombo(chosen_partner, chosen_combo)
+			StartWaitingForCombo(partner, combo_type)
+			return
+		// Check reverse: can THEY initiate with us?
+		combo_type = partner.GetComboType(src)
+		if(combo_type)
+			StartWaitingForCombo(partner, combo_type, self_initiates = FALSE)
+			return
 
 /// Returns the combo type string for a given partner, or null if no combo exists
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/GetComboType(mob/living/simple_animal/hostile/humanoid/fixer/partner)
@@ -483,7 +542,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 // ============================================
 
 /// Starts waiting for a combo partner to become available
-/mob/living/simple_animal/hostile/humanoid/fixer/proc/StartWaitingForCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type)
+/mob/living/simple_animal/hostile/humanoid/fixer/proc/StartWaitingForCombo(mob/living/simple_animal/hostile/humanoid/fixer/partner, combo_type, self_initiates = TRUE)
 	if(!partner || !combo_type)
 		return
 	waiting_for_combo = TRUE
@@ -491,6 +550,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	stop_automated_movement = TRUE
 	pending_combo_partner = partner
 	pending_combo_type = combo_type
+	pending_self_initiates = self_initiates
 	combo_wait_start = world.time
 	combo_wait_timer = addtimer(CALLBACK(src, PROC_REF(CheckComboPartnerReady)), 5, TIMER_LOOP|TIMER_STOPPABLE)
 
@@ -512,8 +572,12 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	if(pending_combo_partner.CanCombo())
 		var/mob/living/simple_animal/hostile/humanoid/fixer/partner = pending_combo_partner
 		var/combo_type = pending_combo_type
+		var/self_initiates = pending_self_initiates
 		CancelComboWait() // Clear waiting state first
-		InitiateDuoCombo(partner, combo_type)
+		if(self_initiates)
+			InitiateDuoCombo(partner, combo_type)
+		else
+			partner.InitiateDuoCombo(src, combo_type)
 
 /// Cancels the combo wait and restores normal state
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/CancelComboWait()
@@ -522,6 +586,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	stop_automated_movement = FALSE
 	pending_combo_partner = null
 	pending_combo_type = null
+	pending_self_initiates = TRUE
 	if(combo_wait_timer)
 		deltimer(combo_wait_timer)
 		combo_wait_timer = null
@@ -533,25 +598,25 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /// Ends the combo state for this fixer
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/EndCombo(cooldown_override = null)
 	in_combo_attack = FALSE
-	can_act = TRUE
 	stop_automated_movement = FALSE
+	combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
 	if(combo_partner)
 		combo_partner.in_combo_attack = FALSE
-		combo_partner.can_act = TRUE
 		combo_partner.stop_automated_movement = FALSE
 		combo_partner.combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
 		combo_partner.combo_partner = null
-	combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
+		combo_partner.SetCanAct(TRUE)
 	combo_partner = null
+	SetCanAct(TRUE)
 
 /// Ends the combo state for a list of fixers
 /mob/living/simple_animal/hostile/humanoid/fixer/proc/EndComboAll(list/fixers, cooldown_override = null)
 	for(var/mob/living/simple_animal/hostile/humanoid/fixer/F in fixers)
 		F.in_combo_attack = FALSE
-		F.can_act = TRUE
 		F.stop_automated_movement = FALSE
 		F.combo_cooldown = world.time + (cooldown_override || combo_cooldown_time)
 		F.combo_partner = null
+		F.SetCanAct(TRUE)
 
 // ============================================
 // END COMBO ATTACK SYSTEM - Base Procs
@@ -664,7 +729,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		SLEEP_CHECK_DEATH(stun_duration)
 		ChangeResistances(list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 0.4, PALE_DAMAGE = 1.3))
 		cut_overlays()
-	can_act = TRUE
+	SetCanAct(TRUE)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/metal/adjustHealth(amount, updating_health = TRUE, forced = FALSE)
 	var/old_health = health
@@ -732,7 +797,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	adjustHealth(-(P.damage/4))
 	playsound(src, 'sound/abnormalities/voiddream/skill.ogg', 50, TRUE, 2)
 	visible_message(span_warning("[P] contacts with [src] and heals them!"))
-	DamageEffect(P.damage_type)
+	DamageEffect(P.damage, P.damage_type)
 
 /obj/projectile/metal_fixer
 	name ="metal bolt"
@@ -773,6 +838,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "memory_statute"
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.5, WHITE_DAMAGE = 0, BLACK_DAMAGE = 2, PALE_DAMAGE = 2)
+	faction = list("echo_office")
 	health = 100
 	maxHealth = 100
 	speed = 0
@@ -789,7 +855,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	if(!istype(P, /obj/projectile/metal_fixer))
 		return ..()
 
-	DamageEffect(P.damage_type)
+	DamageEffect(P.damage, P.damage_type)
 
 /mob/living/simple_animal/hostile/metal_fixer_statue/Initialize()
 	. = ..()
@@ -1146,7 +1212,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		icon_state = initial(icon_state)
 		last_dash = world.time
 		if (!got_hit)
-			can_act = TRUE
+			SetCanAct(TRUE)
 		got_hit = FALSE
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/proc/Dash(dash_target)
@@ -1228,7 +1294,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		if (counter_timer !=0)
 			deltimer(counter_timer)
 		damage_reflection = FALSE
-		can_act = TRUE
+		SetCanAct(TRUE)
 		icon_state = initial(icon_state)
 		last_counter = world.time
 		counter_cooldown = rand(100, 250)
@@ -1248,12 +1314,18 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 				return BULLET_ACT_BLOCK // Block completely, no damage, no counter
 	..()
 	if(damage_reflection && Proj.firer)
+		if(ismob(Proj.firer))
+			var/mob/living/firer_check = Proj.firer
+			if(faction_check_mob(firer_check))
+				return
 		if(get_dist(Proj.firer, src) < 8)
 			ReflectDamage(Proj.firer, Proj.damage_type, Proj.damage)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/flame/attackby(obj/item/I, mob/living/user, params)
 	..()
 	if(!damage_reflection)
+		return
+	if(faction_check_mob(user))
 		return
 	ReflectDamage(user, I.damtype, I.force)
 
@@ -1347,46 +1419,46 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		new /obj/effect/temp_visual/cult/sparks(T)
 	for(var/turf/T in getline(remus_start, target_turf))
 		new /obj/effect/temp_visual/cult/sparks(T)
-	sleep(10) // 1 second warning
+	sleep(8) // 0.8 second warning (reduced by 25%)
 	// Dash towards target simultaneously
 	var/list/asera_path = getline(asera_start, target_turf)
 	var/list/remus_path = getline(remus_start, target_turf)
 	var/list/asera_hit = list()
 	var/list/remus_hit = list()
-	// Asera dash
-	for(var/turf/T in asera_path)
-		if(QDELETED(src) || stat == DEAD)
-			break
-		forceMove(T)
-		playsound(src, 'sound/weapons/ego/burn_sword.ogg', 20, TRUE)
-		for(var/turf/aoe_turf in range(1, T))
-			new /obj/effect/temp_visual/mech_fire(aoe_turf)
-			for(var/mob/living/L in aoe_turf)
-				if(L == src || ("echo_office" in L.faction) || (L in asera_hit))
-					continue
-				L.deal_damage(30, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
-				L.apply_lc_overheat(5)
-				asera_hit += L
-		sleep(1)
-	// Remus dash (happens simultaneously, but we do it right after for simplicity)
-	for(var/turf/T in remus_path)
-		if(QDELETED(remus) || remus.stat == DEAD)
-			break
-		remus.forceMove(T)
-		playsound(remus, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
-		for(var/turf/aoe_turf in range(1, T))
-			new /obj/effect/temp_visual/justitia_effect(aoe_turf)
-			for(var/mob/living/L in aoe_turf)
-				if(L == remus || ("echo_office" in L.faction) || (L in remus_hit))
-					continue
-				L.deal_damage(30, WHITE_DAMAGE, remus, attack_type = ATTACK_TYPE_MELEE)
-				remus_hit += L
+	var/max_steps = max(asera_path.len, remus_path.len)
+	for(var/i in 1 to max_steps)
+		// Asera step
+		if(i <= asera_path.len && !QDELETED(src) && stat != DEAD)
+			var/turf/T = asera_path[i]
+			forceMove(T)
+			playsound(src, 'sound/weapons/ego/burn_sword.ogg', 20, TRUE)
+			for(var/turf/aoe_turf in range(1, T))
+				new /obj/effect/temp_visual/mech_fire(aoe_turf)
+				for(var/mob/living/L in aoe_turf)
+					if(L == src || ("echo_office" in L.faction) || (L in asera_hit))
+						continue
+					L.deal_damage(30, RED_DAMAGE, src, attack_type = ATTACK_TYPE_MELEE)
+					L.apply_lc_overheat(5)
+					asera_hit += L
+		// Remus step
+		if(i <= remus_path.len && !QDELETED(remus) && remus.stat != DEAD)
+			var/turf/T = remus_path[i]
+			remus.forceMove(T)
+			playsound(remus, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 50, TRUE)
+			for(var/turf/aoe_turf in range(1, T))
+				new /obj/effect/temp_visual/justitia_effect(aoe_turf)
+				for(var/mob/living/L in aoe_turf)
+					if(L == remus || ("echo_office" in L.faction) || (L in remus_hit))
+						continue
+					L.deal_damage(30, WHITE_DAMAGE, remus, attack_type = ATTACK_TYPE_MELEE)
+					remus_hit += L
 		sleep(1)
 	// Intersection explosion
 	playsound(target_turf, 'sound/weapons/fixer/generic/finisher2.ogg', 100, TRUE, 6)
+	new /obj/effect/temp_visual/explosion(target_turf)
 	var/list/been_hit = list()
-	for(var/turf/T in range(1, target_turf)) // 3x3 AoE
-		new /obj/effect/temp_visual/explosion(T)
+	for(var/turf/T in range(3, target_turf)) // 7x7 AoE
+		new /obj/effect/temp_visual/cult/sparks(T)
 		been_hit = HurtInTurf(T, been_hit, 50, RED_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
 		been_hit = HurtInTurf(T, been_hit, 50, WHITE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE)
 	EndCombo()
@@ -1488,7 +1560,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		sleep(stun_duration)
 		F.ChangeResistances(list(RED_DAMAGE = 0.4, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 1, PALE_DAMAGE = 1.3))
 		F.cut_overlays()
-		F.can_act = TRUE
+		F.SetCanAct(TRUE)
 		return BULLET_ACT_BLOCK
 	. = ..()
 
@@ -1697,7 +1769,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 	ChangeResistances(normal_resistances)
 	cut_overlay(stagger_overlay)
 	is_staggered = FALSE
-	can_act = TRUE
+	SetCanAct(TRUE)
 	say("...The colours art returning.")
 	visible_message(span_notice("[src] recovers and rises back up."))
 
@@ -1791,7 +1863,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 			ChangeResistances(normal_resistances)
 	if(stat == DEAD || is_staggered)
 		if(!is_staggered)
-			can_act = TRUE
+			SetCanAct(TRUE)
 		return
 	// First dash to saved position (where warning was shown)
 	if(initial_target)
@@ -1801,7 +1873,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 		DashToTarget()
 	AddRampUp()
 	if(!is_staggered)
-		can_act = TRUE
+		SetCanAct(TRUE)
 
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/DashToTarget()
 	if(!target || stat == DEAD)
@@ -1875,7 +1947,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/ExecuteFantasiaLights(turf/landing_turf)
 	if(stat == DEAD || is_staggered)
 		if(!is_staggered)
-			can_act = TRUE
+			SetCanAct(TRUE)
 		return
 	if(!landing_turf)
 		landing_turf = get_turf(src)
@@ -1896,7 +1968,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 				L.deal_damage(actual_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	AddRampUp()
 	if(!is_staggered)
-		can_act = TRUE
+		SetCanAct(TRUE)
 
 // Ability 3: Amber Circuits (Circle AoE)
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/StartAmberCircuits()
@@ -1932,7 +2004,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/proc/ExecuteAmberCircuits(list/turfs)
 	if(stat == DEAD || is_staggered)
 		if(!is_staggered)
-			can_act = TRUE
+			SetCanAct(TRUE)
 		return
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_charge.ogg', 75, TRUE)
 	for(var/turf/T in turfs)
@@ -1943,7 +2015,7 @@ GLOBAL_LIST_EMPTY(nuke_rats_players)
 				L.deal_damage(actual_damage, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	AddRampUp()
 	if(!is_staggered)
-		can_act = TRUE
+		SetCanAct(TRUE)
 
 // Don't move during abilities or stagger
 /mob/living/simple_animal/hostile/humanoid/fixer/electric/Move()

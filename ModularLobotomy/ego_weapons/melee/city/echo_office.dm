@@ -52,20 +52,13 @@
 				new /obj/effect/temp_visual/cult/sparks(get_turf(M))
 				M.apply_status_effect(/datum/status_effect/rend_white)
 
-/obj/item/ego_weapon/city/echo/twins/afterattack(atom/target, mob/living/user, proximity_flag, click_parameters)
-	. = ..()
-	if(!proximity_flag)
-		return
-	if(!isliving(target))
-		return
-	var/mob/living/living_target = target
-	if(living_target.stat == DEAD)
+	// Dual-strike: attack with the other twin weapon
+	if(target.stat == DEAD)
 		return
 	if(dual_strike_cooldown > world.time)
 		return
 	if(!ishuman(user))
 		return
-	var/mob/living/carbon/human/wielder = user
 	// Check if both twins are equipped
 	if(!((locate(/obj/item/ego_weapon/city/echo/twins/gomorrah) in wielder.held_items) && (locate(/obj/item/ego_weapon/city/echo/twins/sodom) in wielder.held_items)))
 		return
@@ -77,8 +70,8 @@
 			continue
 		dual_strike_cooldown = world.time + dual_strike_cooldown_time
 		playsound(other_twin.loc, other_twin.hitsound)
-		wielder.do_attack_animation(living_target, null, other_twin)
-		living_target.attacked_by(other_twin, wielder)
+		wielder.do_attack_animation(target, null, other_twin)
+		target.attacked_by(other_twin, wielder)
 		log_combat(wielder, target, pick(other_twin.attack_verb_continuous), other_twin.name, "(INTENT: [uppertext(wielder.a_intent)]) (DAMTYPE: [uppertext(other_twin.damtype)])")
 		break
 

@@ -194,7 +194,7 @@
 
 	// Spawn the combat fixer at this fixer's spawn point
 	spawned_fixer = new duel_fixer_type(get_turf(fixer_landmark))
-	spawned_fixer.faction = list("duel_enemy")
+	spawned_fixer.faction = list("duel_enemy", "echo_office")
 	// Prevent loot drops from duel mobs
 	var/mob/living/simple_animal/hostile/humanoid/fixer/F = spawned_fixer
 	if(istype(F))
@@ -343,10 +343,10 @@
 	var/turf/fixer_turf = get_turf(fixer_landmark)
 
 	spawned_fixer = new duel_fixer_type(fixer_turf)
-	spawned_fixer.faction = list("duel_enemy")
+	spawned_fixer.faction = list("duel_enemy", "echo_office")
 
 	spawned_fixer_2 = new partner_type(fixer_turf)
-	spawned_fixer_2.faction = list("duel_enemy")
+	spawned_fixer_2.faction = list("duel_enemy", "echo_office")
 
 	// Prevent loot drops from duel mobs
 	var/mob/living/simple_animal/hostile/humanoid/fixer/F1 = spawned_fixer
@@ -1367,7 +1367,7 @@
 	can_duel = FALSE // Lauel is support, doesn't fight alone
 	can_duo_duel = TRUE // But can participate in duo duels
 	duel_fixer_type = /mob/living/simple_animal/hostile/humanoid/fixer/priest
-	duel_rewards = list()
+	duel_rewards = list(/obj/item/clothing/suit/armor/ego_gear/city/echo/stars)
 	duel_area_id = "lauel"
 	beaten_var_name = "beaten_lauel"
 	random_emotes = "closes his eyes peacefully;clasps his hands gently;takes a slow, calming breath;watches over the area serenely;smiles softly"
