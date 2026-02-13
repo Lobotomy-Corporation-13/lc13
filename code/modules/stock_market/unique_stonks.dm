@@ -54,17 +54,27 @@
 		Rival weapon store to Pams Arsenal."
 	product = "Weapons & Armor"
 
-/datum/stonk_company/fdepot
+//Less Effort More Risk.
+/datum/stonk_company/illigal
+	min_performance = 0
+	maxstock = 1500
+
+/datum/stonk_company/illigal/Bankrupt()
+	maxstock = rand(800,2000)
+	return ..()
+
+/datum/stonk_company/illigal/fdepot
 	name = "Fairy Supply Depot"
 	desc = "\
 		\"Selling the lowest quality fumos in the city!\"<br>\
 		Made taboo by 12 wings. Trading this stock is ill-advised."
 	product = "Illegal Fumos"
 
-/datum/stonk_company/shrimp
+/datum/stonk_company/illigal/shrimp
 	name ="Shrimpcoin"
 	desc = "\
 		\"To the Moon!\"<br>\
 		Likely a scam company. Sells \"cryptocurrency\", whatever that is."
 	product = "Cryptocurrency"
-	fluctuational_coefficient = 1.5
+	fluctuation_rate = 7
+	market_value = 0.25
