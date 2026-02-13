@@ -1457,7 +1457,7 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    - EXP tracking: `var/lines_recorded_this_minute = 0`, `var/exp_this_minute = 0`. Each `Hear()` increments `lines_recorded_this_minute`. Every 5 lines, grant 1 EXP (if `exp_this_minute < 5`). Reset both counters every 60 seconds via `addtimer`.
    - Visibility timer: `var/attached_time` set to `world.time` on attachment. Examine check: `world.time >= attached_time + 10 MINUTES` for non-owner visibility.
 
-2. **Seven Camera** (`/obj/item/camera/seven_intel`) — Modified camera (subtype of `/obj/item/camera`) that creates intel snapshots. When a photo is taken, the camera stores a `/datum/seven_intel_snapshot` containing ground truth data: area name (from `get_area_name()`), mob names (from `mobs_seen`), and held items (from target's `held_items`). This snapshot is used to validate reports later.
+2. **Seven Camera** (`/obj/item/camera/seven_intel`) — A covert camera disguised as a mundane item ("pocket mirror" / "cigarette case"). Subtype of `/obj/item/camera` with stealth modifications: **no flash** (`flash = FALSE`), **no shutter sound** (override `captureimage()` to skip `playsound`), and **no visible message** to subjects (override the "[user] takes a photo" `visible_message` to only show to the user via `to_chat`). The camera silently creates intel snapshots — storing a `/datum/seven_intel_snapshot` containing ground truth data: area name (from `get_area_name()`), mob names (from `mobs_seen`), and held items (from target's `held_items`). This snapshot is used to validate reports later.
 
 3. **Intel Report Paper** (`/obj/item/paper/intel_report`) — Pre-formatted paper with form fields (using the existing `form_fields` system on `/obj/item/paper`). Created by using a Seven Camera photo on a blank Intel Report form. The report presents questions the fixer must answer:
    - "Subject Name:" (text field)
@@ -1466,7 +1466,7 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    - "Items Carried:" (text field, comma-separated items)
    The server validates answers against the snapshot data using `findtext()` for case-insensitive fuzzy matching. Filing the report on the dossier awards EXP: **5 base + up to 10 accuracy bonus** per filed report. Cooldown: one report per target per 2 minutes.
 
-4. **Backpack Scanner** (`/obj/item/seven_scanner`) — Handheld device. Use on an adjacent carbon mob to scan their worn backpack/bag contents. Takes 3 seconds (`do_after`) and is visible to the target ("X scans Y's belongings..."). Records actual `contents` list of the target's storage item. The fixer then fills out a **Cargo Report** (variant of Intel Report) listing what the target was carrying. Validation and EXP: **3 base + up to 5 accuracy bonus**. Same 2-minute per-target cooldown.
+4. **Backpack Scanner** (`/obj/item/seven_scanner`) — A covert scanning device disguised as a mundane handheld item ("worn PDA" / "old phone"). Works at a range of up to **5 tiles** — click on a visible carbon mob to discreetly scan their worn backpack/bag contents. Takes 3 seconds (internal timer, **no `do_after` progress bar**) during which the fixer must maintain line of sight. If line of sight breaks or the target moves out of range, the scan fails silently. **No visible message** is shown to the target or bystanders — only the scanning fixer receives feedback: `"You discreetly scan [target]'s belongings..."` on start and `"Scan complete."` on success. Records actual `contents` list of the target's storage item. The fixer then fills out a **Cargo Report** (variant of Intel Report) listing what the target was carrying. Validation and EXP: **3 base + up to 5 accuracy bonus**. Same 2-minute per-target cooldown.
 
 5. **Seven Spyglass Kit** (`/obj/item/storage/box/seven_spyglass`) — Reuses the existing spy bug + spy glasses system (`code/game/objects/items/devices/spyglasses.dm`) with a Seven aesthetic. While actively observing through the spyglass popup window, the fixer earns **1 EXP per 30 seconds** if on contract.
 
@@ -1482,6 +1482,42 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    - Stores `var/list/linked_recorders` referencing the fixer's deployed `/obj/item/seven_recorder` instances.
    - Live listening: When tuned in, registers the receiver as a listener on the recorder's `Hear()` relay. Each message the recorder captures is forwarded via `to_chat(owner, span_notice("[RECORDER #[index]]: [message]"))`.
    - TGUI panel (`SevenReceiver.js` or simple `ui_interact`): Shows list of recorders with status (floor/item-attached, location/host item name, lines recorded, tape remaining). Toggle buttons for listen/stop.
+
+8. **Seven Requisition Catalog** (`/obj/item/seven_catalog`) — A small handheld device (disguised as a "worn address book") that opens a TGUI shop interface when used in-hand (`attack_self()`). Allows the fixer to purchase replacement gadgets and consumables for ahn. Payment is deducted from the user's ID card bank account.
+
+   **Available Items:**
+
+   | Item | Price (ahn) |
+   |------|-------------|
+   | Seven Recorder | 200 |
+   | Seven Camera | 150 |
+   | Intel Report Paper (x3) | 50 |
+   | Backpack Scanner | 200 |
+   | Seven Spyglass Kit | 300 |
+   | Investigation Dossier | 100 |
+   | Recorder Receiver | 150 |
+
+   **Implementation Notes:**
+   - `/obj/item/seven_catalog` with `attack_self()` → `ui_interact()`.
+   - TGUI panel (`SevenCatalog.js`): Simple list of items with name, description, price, and "Buy" button.
+   - `ui_act("buy", params)` handler: Validates purchase using ID card bank account pattern:
+   ```dm
+   var/obj/item/card/id/C
+   if(isliving(usr))
+       var/mob/living/L = usr
+       C = L.get_idcard(TRUE)
+       if(!C || !C.registered_account)
+           to_chat(L, span_warning("You need a valid ID card with a bank account."))
+           return
+       var/datum/bank_account/account = C.registered_account
+       if(!account.adjust_money(-item_price))
+           to_chat(L, span_warning("Insufficient funds."))
+           return
+       L.playsound_local(get_turf(src), 'sound/effects/cashregister.ogg', 25, 3, 3)
+       var/obj/item/new_item = new item_path(get_turf(L))
+       L.put_in_hands(new_item)
+   ```
+   - `ui_data()` returns list of available items with name, desc, price, and type path.
 
 **Intel Snapshot Validation System:**
 
@@ -1546,31 +1582,26 @@ Seven has 3 branches. Players can invest in a maximum of 2.
 **Secondary Effects (exploitation hierarchy):**
 - **Rupture** (core payload): Build stacks, trigger for burst BRUTE damage
 - **Fragile** (amplifier): Increases all damage taken, making rupture triggers and subsequent hits hit harder
+- **Feeble** (crippling): Reduces the target's melee damage dealt (`apply_lc_feeble`) — cripples the target's ability to fight back while you build your case
 - **Defense Level Down** (team enabler): Diminishing returns vulnerability (`stacks/(stacks+25)*100`%) — makes the target easier to kill for everyone
-- **Offense Level Down** (suppression): Reduces the target's damage output, protecting your team while you set up
+- **Offense Level Down** (suppression): Reduces the target's damage output via diminishing returns, protecting your team while you set up
 
 The branches are designed so that:
 - **Analyst** focuses on Rupture (build + detonate on a single target)
-- **Coordinator** focuses on Defense Level Down + Offense Level Down (team debuffs)
+- **Coordinator** focuses on Defense Level Down + Offense Level Down + Feeble (team debuffs and target suppression)
 - **Operative** focuses on Rupture + Fragile (burst damage windows)
 
-Mixing branches gives access to all four effects, rewarding the 2-branch investment limit.
-
-#### Powerful Attack System (T3 Skills)
-
-Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-hit combo following the same pattern as Zwei's powerful attacks (reference: tiantui flurry in `thumb.dm`). All Seven powerful attacks deal **BLACK damage** (matching their weapon damage type). Same shared mechanics apply: weapon-agnostic, DPS-based damage (`force * force_multiplier * 1.25 / attack_speed`), duel component, weapon lock, immobilization, null/distance checks.
-
----
+Mixing branches gives access to all five effects, rewarding the 2-branch investment limit.
 
 #### Branch 1: Analyst (Target Elimination)
 
-**Theme:** Mark one target. Build rupture. Execute with precision. The field agent who gathers intel on a single mark, then eliminates them with surgical strikes. Every hit on your mark feeds the dossier — and the dossier feeds the kill.
+**Theme:** Mark one target. Build rupture and convert it into devastating single-target damage. The field agent who gathers intel on a single mark, then eliminates them with surgical strikes. Every hit on your mark feeds the dossier — and the dossier feeds the kill. Applies some Rupture, but the Operative builds stacks faster.
 
 **Marking System:** T1 in this branch grants the **Mark Target** action (pointed spell pattern, `InterceptClickOn()`). One mark at a time. Re-marking removes old mark. Mark persists until manually removed, re-marked, or target dies. This is **separate** from the Seven weapon's existing "hit 7 times to store target" mechanic — both systems coexist independently.
 
 **T1 (1pt) — Pick one:**
-- **A: Case File** — Mark a target. Your attacks against the marked target apply 2 Rupture stacks. Attacks against non-marked targets apply 0 Rupture. The mark focuses all your investigation on a single subject.
-- **B: Profiling** — Mark a target. While you are within 7 tiles of the marked target, gain 1 Offense Level Up stack every 5 seconds (max 10). All stacks are lost when the mark changes or the target moves out of range for more than 10 seconds. Rewards staying near and observing your target.
+- **A: Case File** — Mark a target. Your attacks against the marked target apply 2 Rupture stacks and deal bonus BLACK damage equal to 1% of your weapon's base force per Rupture stack on them (max +40% at 40 stacks). The mark focuses your investigation — every piece of evidence builds the case and sharpens the blade.
+- **B: Profiling** — Mark a target. Each time you attack the marked target, gain 2 Offense Level Up stacks (max 10 from this skill). All stacks are lost when the mark changes or the target dies. Each attack deepens your understanding of the subject.
 
 **T2 (2pt) — Pick one:**
 - **A: Exploit Weakness** — Your attacks against the marked target also apply 2 Defense Level Down stacks (1s internal CD). Additionally, when the mark's Rupture triggers (burst damage), apply 3 Fragile stacks to them — exposing the wounds you've opened.
@@ -1589,8 +1620,8 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 - **Condition:** More Rupture stacks = more damage. At 40 stacks (achievable with focused Case File attacking), the combo gets +80% total damage.
 
 **Implementation Notes:**
-- Case File: `COMSIG_MOB_ITEM_ATTACK` → check if `target == marked_target` → `target.apply_lc_rupture(2)`. No rupture on non-marks.
-- Profiling: Process timer every 5s → range check to marked_target → `human_parent.apply_lc_offense_level_up(1)`. Track `stacks_granted` for cleanup on mark change. 10s out-of-range timer via `addtimer`.
+- Case File: `COMSIG_MOB_ITEM_ATTACK` → check if `target == marked_target` → `target.apply_lc_rupture(2)` + get rupture stacks → `bonus_black_damage = min(40, stacks) * 0.01 * weapon.force`. No rupture or bonus on non-marks.
+- Profiling: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` → `human_parent.apply_lc_offense_level_up(2)`. Track `stacks_granted` (cap at 10). On mark change or `COMSIG_MOB_DEATH` of mark → `human_parent.apply_lc_offense_level_up(-stacks_granted)` to remove.
 - Exploit Weakness: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` + CD clear → `target.apply_lc_defense_level_down(2)`. Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on marked target → detect rupture-source damage (`ATTACK_TYPE_STATUS`) → `target.apply_lc_fragile(3)`.
 - Patient Hunter: `COMSIG_MOB_ITEM_ATTACK` → check marked_target rupture stacks → if >= 10: `extra_damage += 25` → if >= 20: `extra_damage_black += 15`. Clean up via `COMSIG_MOB_ITEM_AFTERATTACK`.
 - Dossier Complete: `/datum/action/cooldown/dossier_complete` → toggle targeting → `InterceptClickOn` checks `target == marked_target` and rupture >= 10. Read + clear rupture stacks. Apply duel component + immobilize. 4 hits with `sleep()`, damage = `DPS * (1 + stacks * 2 / 100) / 4`. Per-hit: `target.apply_lc_offense_level_down(2)`. Final hit: 2x, knockback, fragile.
@@ -1603,64 +1634,64 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 **Theme:** The handler who knows every enemy's weak point and shares that intel with the team. AoE vulnerability debuffs, ally-benefiting effects. Seven doesn't always need to swing the blade themselves — sometimes the most effective retribution comes from telling your allies exactly where to hit.
 
 **T1 (1pt) — Pick one:**
-- **A: Intel Briefing** — Designated allies within 5 tiles of you deal attacks that apply 1 Rupture stack to their targets. 2s internal CD per ally. Your briefings turn every ally into a Seven operative.
-- **B: Weak Point Analysis** — Your attacks apply 2 Defense Level Down stacks to the target (1s internal CD). When you hit a target that already has Defense Level Down, nearby designated allies (5 tiles) gain +10% damage for 3 seconds (refreshing). Your analysis exposes openings for the team.
+- **A: Intel Briefing** — When you hit a target that has Rupture, all designated allies within 5 tiles gain 3 Offense Level Up stacks. 1s internal CD. Your briefings empower the team to capitalize on your findings.
+- **B: Weak Point Analysis** — Your attacks apply 3 Defense Level Down stacks to the target (1s internal CD). When you hit a target that has 10+ Defense Level Down stacks, designated allies within 5 tiles gain 3 Offense Level Up stacks. 1s internal CD. Your analysis exposes openings for the team.
 
 **T2 (2pt) — Pick one:**
-- **A: Comprehensive Report** — Every 15 seconds, the enemy with the highest Rupture stacks within 8 tiles automatically receives 3 Fragile stacks and 2 Defense Level Down stacks. A brief visual highlight marks the chosen target. Your detailed reports prioritize the most-investigated target.
-- **B: Disinformation** — Your attacks apply 2 Offense Level Down stacks to the target (1.5s internal CD). Targets afflicted with Offense Level Down deal 10% less damage to your designated allies. Your misinformation undermines the enemy's confidence.
+- **A: Comprehensive Report** — When you hit a target that has 10+ Rupture stacks, apply 3 Fragile stacks and 2 Defense Level Down stacks to them. 10s internal CD per target. A brief visual highlight marks the chosen target. Your detailed reports crack open the most-investigated subjects.
+- **B: Disinformation** — Your attacks apply 2 Offense Level Down stacks and 2 Feeble stacks to the target (1.5s internal CD). Your misinformation undermines the enemy's confidence and cripples their ability to fight.
 
 **T3 (3pt) — Pick one:**
-- **A: Full Exposure** *(Powerful Attack, 120s CD)* — AoE debuff slam in a 4-tile radius centered on self. All enemies hit receive 5 Fragile + 3 Defense Level Down + 3 Offense Level Down. Then, the closest enemy becomes the main target for a 3-hit combo (BLACK DPS). Per-hit: applies 3 Rupture stacks. For each designated ally within 6 tiles at combo start, all debuff stacks applied by this attack are increased by 1 (up to +3 with 3 allies). Final hit: force-triggers all existing Rupture on the target immediately (bypasses 5s activation delay). You've exposed everything — the enemy has nowhere to hide.
-- **B: Undermining Presence** *(Passive Aura)* — While on contract, enemies within 5 tiles of you lose 1 Defense Level Up stack and 1 Offense Level Up stack every 5 seconds (stripping enemy buffs). Designated allies within 5 tiles who attack targets affected by any debuff (Rupture, Fragile, DLD, OLD) heal for 3% of damage dealt. Your mere presence erodes enemy strength.
+- **A: Full Exposure** *(Powerful Attack, 120s CD)* — AoE debuff slam in a 4-tile radius centered on self. All enemies hit receive 5 Fragile + 3 Defense Level Down + 3 Offense Level Down + 3 Feeble. Then, the closest enemy becomes the main target for a 3-hit combo (BLACK DPS). Per-hit: applies 3 Rupture stacks. For each designated ally within 6 tiles at combo start, all debuff stacks applied by this attack are increased by 1 (up to +3 with 3 allies). Final hit: force-triggers all existing Rupture on the target immediately (bypasses 5s activation delay). You've exposed everything — the enemy has nowhere to hide.
+- **B: Undermining Presence** *(Passive)* — When you hit an enemy that has Defense Level Up or Offense Level Up, strip 2 stacks of each. Additionally, designated allies within 5 tiles who attack targets affected by any debuff (Rupture, Fragile, Feeble, DLD, OLD) heal for 3% of damage dealt. Your strikes erode enemy strength.
 
 **Full Exposure — Details:**
-- **Opener:** AoE ground slam centered on user, 4-tile radius. All enemies in range receive 5 Fragile + 3 DLD + 3 OLD. Closest enemy hit becomes the main target.
+- **Opener:** AoE ground slam centered on user, 4-tile radius. All enemies in range receive 5 Fragile + 3 DLD + 3 OLD + 3 Feeble. Closest enemy hit becomes the main target.
 - **Combo:** 3 hits. Each hit deals standard DPS as BLACK damage.
 - **Per-hit effect:** Each hit applies 3 Rupture stacks to the main target.
-- **Condition:** Count designated allies within 6 tiles at combo start. For each ally (up to 3), all debuff stacks from this attack increase by 1 (e.g., with 2 allies: 7 Fragile + 5 DLD + 5 OLD opener, 5 Rupture per hit).
+- **Condition:** Count designated allies within 6 tiles at combo start. For each ally (up to 3), all debuff stacks from this attack increase by 1 (e.g., with 2 allies: 7 Fragile + 5 DLD + 5 OLD + 5 Feeble opener, 5 Rupture per hit).
 - **Final hit:** Force-triggers all Rupture on target via `INVOKE_ASYNC` calling the rupture status effect's `trigger_rupture()` proc directly. Bypasses the 5-second activation delay.
 
 **Implementation Notes:**
-- Intel Briefing: Register `COMSIG_MOB_ITEM_ATTACK` on designated allies within range (refresh tracked list every 5s via process). On ally attack, if CD clear: `target.apply_lc_rupture(1)`. Track `ally_cooldowns[ally_ref] = world.time`.
-- Weak Point Analysis: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_defense_level_down(2)` with 1s CD. Check if target had DLD before hit → iterate designated allies in `range(5)` → apply timed `extra_damage += 10` buff via `addtimer` + CALLBACK cleanup (3s).
-- Comprehensive Report: Process timer every 15s → iterate `range(8)` for hostile mobs → find highest rupture stacks → `target.apply_lc_fragile(3)` + `target.apply_lc_defense_level_down(2)`. Brief highlight via `new /obj/effect/temp_visual/` on target turf.
-- Disinformation: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_offense_level_down(2)` with 1.5s CD. For ally protection: register `COMSIG_MOB_APPLY_DAMGE` on designated allies → when ally takes damage, check attacker for OLD stacks → if yes, reduce damage by 10% via multiplier.
-- Full Exposure: `/datum/action/cooldown/full_exposure` → no targeting needed (AoE from self). AoE debuffs in `range(4)`. Count allies via `is_designated_ally()` in `range(6)`. Pick closest hostile → duel component + immobilize → 3 hits. Final hit: find rupture status effect on target → `INVOKE_ASYNC(rupture_effect, PROC_REF(trigger_rupture))`.
-- Undermining Presence: Process timer every 5s → iterate hostiles in `range(5)` → check for DLU/OLU status effects → `add_stacks(-1)`. For ally healing: register `COMSIG_MOB_ITEM_ATTACK` on designated allies → check target for any debuffs → `INVOKE_ASYNC` → `ally.adjustBruteLoss(-damage * 0.03)`.
+- Intel Briefing: `COMSIG_MOB_ITEM_ATTACK` → check target for Rupture status effect → if present and 1s CD clear → iterate designated allies in `range(5, owner)` → `ally.apply_lc_offense_level_up(3)`. Track `last_briefing = world.time`.
+- Weak Point Analysis: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_defense_level_down(3)` with 1s CD. Check target DLD stacks >= 10 → iterate designated allies in `range(5, owner)` → `ally.apply_lc_offense_level_up(3)`. Same 1s CD shared with the DLD application.
+- Comprehensive Report: `COMSIG_MOB_ITEM_ATTACK` → check target rupture stacks >= 10 → check `target_cooldowns[target_ref]` for 10s CD → `target.apply_lc_fragile(3)` + `target.apply_lc_defense_level_down(2)`. Brief highlight via `new /obj/effect/temp_visual/` on target turf. Track `target_cooldowns[target_ref] = world.time`.
+- Disinformation: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_offense_level_down(2)` + `target.apply_lc_feeble(2)` with 1.5s CD.
+- Full Exposure: `/datum/action/cooldown/full_exposure` → no targeting needed (AoE from self). AoE debuffs in `range(4)`: `apply_lc_fragile(5)` + `apply_lc_defense_level_down(3)` + `apply_lc_offense_level_down(3)` + `apply_lc_feeble(3)`. Count allies via `is_designated_ally()` in `range(6)`. Pick closest hostile → duel component + immobilize → 3 hits. Final hit: find rupture status effect on target → `INVOKE_ASYNC(rupture_effect, PROC_REF(trigger_rupture))`.
+- Undermining Presence: `COMSIG_MOB_ITEM_ATTACK` → check target for DLU/OLU status effects → if present, `add_stacks(-2)` on each. For ally healing: register `COMSIG_MOB_ITEM_ATTACK` on designated allies (via ally designation callback, same as Intel Briefing) → check `get_dist(owner, ally) <= 5` → check target for any debuffs (Rupture/Fragile/Feeble/DLD/OLD) → `INVOKE_ASYNC` → `ally.adjustBruteLoss(-damage * 0.03)`.
 
 ---
 
-#### Branch 3: Operative (Mobility + Burst)
+#### Branch 3: Operative (Rupture Specialist)
 
-**Theme:** The direct action specialist. Move fast, hit hard, and exploit every gap in the enemy's defenses. While the Analyst builds a case and the Coordinator briefs the team, the Operative is already behind enemy lines. Evolves the old Quick Getaway and Exploit the Gap skills into a proper mobility/ambush specialization.
+**Theme:** The Rupture expert. Every skill in this branch builds, amplifies, or detonates Rupture stacks. While the Analyst marks a single target and the Coordinator debuffs the field, the Operative stacks Rupture fast and triggers it hard. The branch rewards aggressive attacking with escalating Rupture payoffs.
 
 **T1 (1pt) — Pick one:**
-- **A: Shadow Step** — After standing still for 2+ seconds, your next attack within 1 second of moving deals 20% bonus damage and applies 2 Rupture stacks. 3s internal CD. Patience rewards the predator.
-- **B: Quick Assessment** — Hitting a new target (different from last hit) applies 3 Rupture stacks. Hitting the same target consecutively increases your attack speed by 10% (stacking up to 3 times / 30%). Switching targets resets the speed bonus. Adapts to whatever the situation demands.
+- **A: Shadow Step** — Your attacks apply Rupture stacks equal to the target's combined Offense Level Down and Defense Level Down stacks divided by 2 (max 8 Rupture per hit). The more exposed the target, the deeper your strikes cut.
+- **B: Quick Assessment** — Hitting a new target (different from last hit) applies 5 Rupture stacks. Consecutive hits on the same target apply diminishing Rupture: 5 → 3 → 1 → 0. Switching targets resets the count. First impressions hit hardest.
 
 **T2 (2pt) — Pick one:**
-- **A: Smoke and Mirrors** *(Active, 30s CD)* — Dash 4 tiles forward in facing direction, drop a 3-tile smoke cloud at your origin, and gain +25% movement speed for 4 seconds. During the speed buff, your attacks apply 1 additional Rupture stack per hit. Enter fast, leave confusion behind.
-- **B: Pressure Points** — Your attacks against targets with 5+ Rupture stacks have a 30% chance to apply 2 Fragile stacks. Your attacks against targets with Fragile active apply 1 additional Rupture stack. Creates a self-reinforcing feedback loop between Rupture and Fragile — the more you hit, the worse it gets for them.
+- **A: Rupture Cascade** — When your attack triggers a target's Rupture burst, apply 5 Rupture stacks to all other enemies within 3 tiles of the target. 5s internal CD. Your interrogations have a way of making everyone nearby nervous.
+- **B: Pressure Points** — Your attacks apply 1 additional Rupture stack for each unique debuff type on the target (Fragile, Feeble, DLD, OLD — max +4 Rupture per hit). The more compromised the target, the faster the case builds.
 
 **T3 (3pt) — Pick one:**
-- **A: Surgical Strike** *(Powerful Attack, 90s CD)* — Requires: target has at least one of Rupture, Fragile, Defense Level Down, or Offense Level Down. Vanish (brief invisibility, 0.5s), then dash to target from up to 5 tiles and deliver a 5-hit combo (BLACK DPS). For each unique debuff type on the target, each hit deals 15% more damage (max +60% with all four debuffs). Per-hit: apply 2 Rupture stacks. First 3 hits: also apply 1 Fragile each. Final hit: 2x DPS, knockback 2 tiles, and if target has 15+ Rupture stacks, instantly trigger all Rupture (bypass 5s activation delay). The investigation's findings dictate the severity of the sentence.
-- **B: Ghost Protocol** *(Passive, 5min CD)* — When you take lethal damage, instead of dying: become invisible and intangible for 3 seconds, heal to 50% max HP, gain +40% movement speed for 6 seconds, and your next 3 attacks within 10 seconds each deal 30% bonus damage and apply 5 Rupture stacks. A good operative always has an exit strategy.
+- **A: Surgical Strike** *(Powerful Attack, 90s CD)* — Requires: target has at least one of Rupture, Fragile, Feeble, Defense Level Down, or Offense Level Down. Vanish (invisibility for 2 seconds). If the target is still within 7 tiles and in line of sight after the 2 seconds, teleport behind them and deliver a 5-hit combo (BLACK DPS). If line of sight is lost, the attack is cancelled (cooldown is refunded). For each unique debuff type on the target, each hit deals 15% more damage (max +75% with all five debuffs). Per-hit: apply 2 Rupture stacks. First hit: apply 3 Fragile. Final hit: 2x DPS, knockback 2 tiles, final hit deals bonus BLACK damage equal to the target's current Rupture stacks. The investigation's findings dictate the severity of the sentence.
+- **B: Detonation Order** *(Passive)* — Your attacks apply 4 Rupture stacks to the target, as long as the target has less than 20 Rupture stacks. Ensures every target you touch reaches critical mass.
 
 **Surgical Strike — Details:**
-- **Opener:** Brief invisibility (`alpha = 0`, 0.5s), then dash to target from up to 5 tiles. Must have at least one debuff (Rupture/Fragile/DLD/OLD).
+- **Opener:** Vanish (`alpha = 0`, immobilize self, 2 seconds). After 2 seconds, check target is within 7 tiles and in LoS (`can_see(owner, target)`). If valid: teleport behind target (`get_step(target, REVERSE_DIR(target.dir))`), begin combo. If invalid: cancel, refund cooldown.
 - **Combo:** 5 hits. Fast, precise strikes exploiting every identified weakness.
-- **Per-hit effect:** Each hit applies 2 Rupture stacks. First 3 hits also apply 1 Fragile each.
-- **Condition:** Count unique debuff types on target. Per debuff: +15% damage to all hits. With all 4 debuffs active: +60% total damage. This rewards setting up debuffs before the finisher.
-- **Final hit:** Deals 2x DPS, knockback 2 tiles. If target has 15+ Rupture stacks, force-trigger all Rupture (bypass 5s delay) via `trigger_rupture()`.
+- **Per-hit effect:** Each hit applies 2 Rupture stacks. First hit applies 3 Fragile.
+- **Condition:** Count unique debuff types on target (Rupture, Fragile, Feeble, DLD, OLD). Per debuff: +15% damage to all hits. With all 5 debuffs active: +75% total damage. This rewards setting up debuffs before the finisher.
+- **Final hit:** Apply zoro overlay on target (`target.add_overlay(icon('icons/effects/effects.dmi', "zoro"))`), brief delay, remove overlay (`target.cut_overlay(...)`), then deal 2x DPS + bonus BLACK damage equal to the target's current Rupture stacks, knockback 2 tiles. Same slash visual pattern as `puss_in_boots.dm`'s `Execute()`.
 
 **Implementation Notes:**
-- Shadow Step: Track `last_move_time` via `COMSIG_MOVABLE_MOVED`. When `world.time - last_move_time >= 2 SECONDS`, set `ambush_ready = TRUE`. On `COMSIG_MOB_ITEM_ATTACK`, if `ambush_ready` and `world.time - last_move_time <= 1 SECOND`: `extra_damage += 20`, `target.apply_lc_rupture(2)`, reset, 3s CD. Clean via afterattack.
-- Quick Assessment: Track `last_attacked_target`. On `COMSIG_MOB_ITEM_ATTACK`: if different target → `target.apply_lc_rupture(3)`, reset `consecutive_count`. If same → `consecutive_count++`, apply `next_move_modifier` for attack speed. Cap at 3.
-- Smoke and Mirrors: `/datum/action/cooldown/smoke_and_mirrors`. On activate: record origin turf, `forceMove` 4 tiles in facing direction (wall checks), spawn smoke via `datum/effect_system/smoke_spread`. Apply movespeed modifier 4s. Set `bonus_rupture = TRUE` for 4s. `COMSIG_MOB_ITEM_ATTACK` checks flag → `target.apply_lc_rupture(1)`.
-- Pressure Points: `COMSIG_MOB_ITEM_ATTACK` → check rupture stacks >= 5 → `prob(30)` → `target.apply_lc_fragile(2)`. Check fragile → `target.apply_lc_rupture(1)`.
-- Surgical Strike: `/datum/action/cooldown/surgical_strike` → toggle targeting → check any debuff. `alpha = 0` for 0.5s → dash → duel component → immobilize. Count debuff types for multiplier. 5 hits. Final hit: 2x DPS, knockback, conditional `trigger_rupture()`.
-- Ghost Protocol: `COMSIG_MOB_APPLY_DAMGE` → lethal check → `COMPONENT_MOB_DENY_DAMAGE`. Heal to 50%. `alpha = 0`, `TRAIT_NOINTERACT_1` for 3s. Movespeed modifier 6s. `ghost_attacks_remaining = 3`. On `COMSIG_MOB_ITEM_ATTACK` while remaining > 0: `extra_damage += 30`, `target.apply_lc_rupture(5)`, decrement. Timers clean up at 3s/6s/10s.
+- Shadow Step: `COMSIG_MOB_ITEM_ATTACK` → get target's OLD stacks + DLD stacks → `rupture_amount = min(8, round((old_stacks + dld_stacks) / 2))` → if > 0: `target.apply_lc_rupture(rupture_amount)`.
+- Quick Assessment: Track `last_attacked_target` and `consecutive_hits`. On `COMSIG_MOB_ITEM_ATTACK`: if different target → reset `consecutive_hits = 0`. Apply rupture based on `consecutive_hits`: 0 → 5, 1 → 3, 2 → 1, 3+ → 0. Then `consecutive_hits++`. Update `last_attacked_target`.
+- Rupture Cascade: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on owner → detect rupture-source burst damage (`ATTACK_TYPE_STATUS`) → if 5s CD clear → iterate enemies in `range(3, target)` excluding target → `enemy.apply_lc_rupture(5)`.
+- Pressure Points: `COMSIG_MOB_ITEM_ATTACK` → count unique debuff types on target (Fragile, Feeble, DLD, OLD — not Rupture itself) → `target.apply_lc_rupture(count)` if count > 0.
+- Surgical Strike: `/datum/action/cooldown/surgical_strike` → toggle targeting → check any debuff on target. `alpha = 0` + immobilize owner for 2s via `addtimer`. After 2s: check `can_see(owner, target)` and `get_dist(owner, target) <= 7` → if fail: `alpha = 255`, unimmobilize, refund CD, return. If pass: `forceMove(get_step(target, REVERSE_DIR(target.dir)))`, `alpha = 255`, duel component → immobilize target. Count debuff types for multiplier. 5 hits. Final hit: `target.add_overlay(icon('icons/effects/effects.dmi', "zoro"))` → `SLEEP_CHECK_DEATH(14)` → `target.cut_overlay(...)` → deal 2x DPS + `target_rupture_stacks` as bonus BLACK damage, knockback 2 tiles. (Zoro slash overlay pattern from `puss_in_boots.dm` Execute).
+- Detonation Order: `COMSIG_MOB_ITEM_ATTACK` → check target rupture stacks < 20 → `target.apply_lc_rupture(4)`.
 
 ---
 
@@ -1671,8 +1702,8 @@ The 2-branch limit creates natural playstyle combos:
 | Combo | Playstyle | Strength |
 |---|---|---|
 | **Analyst + Coordinator** | "The Mastermind" — Mark a target, build rupture personally while exposing them to the whole team's attacks via Intel Briefing. Dossier Complete for solo execution, Full Exposure for team fights. | Best for mixed solo/team play. Maximum debuff stacking on a single priority target. |
-| **Analyst + Operative** | "The Assassin" — Mark, build rupture via mobility and ambush, then cash in with Dossier Complete or Surgical Strike. Pure single-target elimination. | Highest burst damage against one enemy. The quintessential Seven hitman. |
-| **Coordinator + Operative** | "The Saboteur" — Debuff everything in range with team-wide vulnerability, then move fast and create chaos with Surgical Strike. Less focused on one target but more versatile. | Best for disruption and group fights. The Seven field commander who leads from the front. |
+| **Analyst + Operative** | "The Assassin" — Mark a target, stack Rupture fast via Case File + Quick Assessment, then detonate with Detonation Order or finish with Surgical Strike. Pure single-target Rupture execution. | Highest Rupture burst on one enemy. The quintessential Seven hitman. |
+| **Coordinator + Operative** | "The Saboteur" — Debuff with DLD/OLD via Coordinator, then convert those debuffs into Rupture via Shadow Step. Rupture Cascade spreads stacks across groups. Surgical Strike finishes what the debuffs started. | Best for group fights. Coordinator debuffs feed Operative's Rupture engine. |
 
 ---
 
@@ -1692,45 +1723,1305 @@ The 2-branch limit creates natural playstyle combos:
 
 ---
 
-### Dieci (NEW) - "The ???"
+### Dieci (NEW) - "The Scholar"
 
-**Theme:**
-<!-- TODO: Define Dieci's combat/RP theme -->
+**Theme:** Knowledge collection and charity. The Dieci Association specializes in gathering knowledge through helping others — healing the injured, training civilians, hosting community events. They store this knowledge in a sacred tome, then convert it into raw combat power. But knowledge is consumed when used for strength and must be regained through further study and service. To the public, they are the "Association of Charity." To themselves, charity is the method — knowledge is the goal.
 
-**Gimmick / EXP Source:**
-<!-- TODO: Define Dieci's EXP-earning gimmick -->
+Dieci fixers fall into two categories: **Fists** (fight directly using enhanced physical strength) and **Keys** (use specially enlarged keys as weapons). Both draw power from the same knowledge reserves via their golden stoles. The distinction defines their combat branches, not their knowledge-gathering methods.
 
-**Skill Tree:**
+**Core Mechanic: Knowledge Tome & Active Knowledge**
 
-| Tier | Choice A | Choice B |
-|------|----------|----------|
-| T1 | <!-- TODO --> | <!-- TODO --> |
-| T2 | <!-- TODO --> | <!-- TODO --> |
-| T3 | <!-- TODO --> | <!-- TODO --> |
+The Dieci's unique item is the **Knowledge Tome** — a sacred book given on contract start. It serves as their EXP interface, event launcher, knowledge storage, and combat fuel source.
 
-**Design Notes:**
-<!-- TODO -->
+**Active Knowledge** is the Dieci's combat resource. Each time the Dieci performs an Individual Charity activity, they gain an **Active Knowledge entry** — a short piece of information about what they learned, with flavor text:
+
+- **From healing:** `"[target]'s wounds were [deep lacerations across their forearm / severe chemical burns along their chest / ...]"`
+- **From blessed food:** `"[target]'s reaction to the food was [a moment of quiet relief / a grateful sigh of contentment / ...]"`
+- **From examining:** `"[target] exhibited [unusual bone structure suggesting rapid growth / signs of prolonged exposure to enkephalin / ...]"`
+- **From events:** Each completed event tick generates 1 Active Knowledge entry: `"The attendees responded to the [reading/training/sermon] with [rapt attention / visible improvement / ...]"`
+
+**The Knowledge Loop:**
+
+1. **Gain Active Knowledge** — Perform charity activities. Each generates an Active Knowledge entry (viewable via a Dieci action that lists all current entries with their flavor text).
+2. **Record into Tome** — Use the Tome in hand → `do_after` channel → all current Active Knowledge entries are **written into the Tome** as stored knowledge. Active Knowledge is cleared. The Tome now holds these entries.
+3. **Consume in combat** — Dieci combat skills and weapon buffs **consume Active Knowledge entries** to power up. Each skill costs X entries. When Active Knowledge is empty, combat skills stop functioning.
+4. **Re-read the Tome** — Use the Tome in hand → `do_after` channel → **restore Active Knowledge** from stored entries in the Tome. The Dieci re-reads their notes and regains their combat fuel.
+5. **Cycle repeats** — Re-reading restores old knowledge, but doing more charity generates **new** entries (and EXP). The Tome can only restore what was previously recorded.
+
+**Key rules:**
+- **Max Active Knowledge entries:** 20 (can be increased by skill tree)
+- **Recording** transfers Active → Stored (Active is cleared, Stored gains entries)
+- **Re-reading** transfers Stored → Active (Stored is cleared, Active gains entries). 3-second `do_after` channel.
+- **Recording** also requires a 3-second `do_after` channel
+- Active Knowledge entries from charity activities are generated **in addition to** EXP — doing charity gives both EXP (permanent) and Active Knowledge (consumable)
+- **EXP** is still earned separately and used for skill tree progression, event costs, etc.
+
+Creates the loop: **do charity → gain Active Knowledge + EXP → record into Tome → consume knowledge in combat → re-read Tome to restore → eventually run out of stored knowledge → do more charity**
 
 ---
 
-### Cinq (NEW) - "The ???"
+### EXP Sources — Individual Charity
 
-**Theme:**
-<!-- TODO: Define Cinq's combat/RP theme -->
+Dieci earns EXP and **Active Knowledge entries** through acts of service and study. Some activities are free, others require purchasing items from the Tome's shop. Each charity activity grants both EXP (permanent) and 1 Active Knowledge entry (consumable combat fuel).
 
-**Gimmick / EXP Source:**
-<!-- TODO: Define Cinq's EXP-earning gimmick -->
+| Activity | EXP | Active Knowledge | Type | Notes |
+|---|---|---|---|---|
+| Examine living mob type | 1 EXP | +1 entry | Anatomical | Use Tome on mob, first time only per type |
+| Examine dead body | 3 / 5 EXP | +1 entry | Anatomical | 5s do_after. 3 EXP if NPC, 5 EXP if player (has ckey). Once per body until revived. |
+| Observe combat | 1 EXP | +1 entry (chance) | Behavioral | Watch a carbon fight — 20% chance per attack/damage event on observed target |
+| Healing Kit use | 2/3/5 EXP | +1 entry | Medical | 3 tiers: Basic (50 ahn, 20 uses), Standard (100, 40), Advanced (200, 80) |
+| Blessed Food consumed | 2 EXP | +1 entry | Spiritual | Additive applied to food, EXP on eat (must see eater) |
+| Event tick completed | varies | +1 entry | Spiritual | From hosting public events |
+| Passive contract tick | 1 EXP / 10s | — | — | No Active Knowledge |
+| Contract completion | 10-30 EXP | — | — | No Active Knowledge |
 
-**Skill Tree:**
+#### Knowledge Types & Levels
 
-| Tier | Choice A | Choice B |
-|------|----------|----------|
-| T1 | <!-- TODO --> | <!-- TODO --> |
-| T2 | <!-- TODO --> | <!-- TODO --> |
-| T3 | <!-- TODO --> | <!-- TODO --> |
+Active Knowledge entries come in **4 types**, each tied to different skill branches and activities:
 
-**Design Notes:**
-<!-- TODO -->
+| Type | Source Activities | Flavor |
+|---|---|---|
+| **Anatomical** | Examining mobs (living or dead) | Physical structure, biology, weaknesses |
+| **Behavioral** | Observing combat | Fighting patterns, reactions, tendencies |
+| **Medical** | Healing Kit use | Wound treatment, recovery, physiology |
+| **Spiritual** | Sacred Seasoning, Events | Emotional responses, morale, faith |
+
+Each entry also has a **level** (1-5) based on the source or synthesis:
+
+| Level | How to Obtain | Description |
+|---|---|---|
+| **Level 1** | Examine living mob, Observe combat, Healing Kit (Basic), Sacred Seasoning, Events | Common knowledge |
+| **Level 2** | Examine dead NPC body, Healing Kit (Standard), or synthesize 3x Level 1 | Detailed knowledge |
+| **Level 3** | Examine dead player body (has ckey), Healing Kit (Advanced), or synthesize 3x Level 2 | Rare knowledge |
+| **Level 4** | Synthesize 3x Level 3 | Exceptional knowledge |
+| **Level 5** | Synthesize 3x Level 4 | Masterwork knowledge |
+
+**Knowledge Synthesis:**
+
+Combine **3 Active Knowledge entries of the same type and level** to create **1 entry of the next level** (same type). Performed via the Tome's TGUI — select the type and level to synthesize, consumes 3 entries, produces 1 higher-level entry.
+
+- 3x Level 1 Anatomical → 1x Level 2 Anatomical
+- 3x Level 2 Medical → 1x Level 3 Medical
+- 3x Level 4 Spiritual → 1x Level 5 Spiritual
+- Level 5 is the maximum — cannot be synthesized further
+- Types must match — cannot combine Anatomical + Medical
+- Synthesis is instant (no `do_after`) but can only be done through the Tome's TGUI
+
+**Reaching high levels:** Level 4 requires 9x Level 1 entries (3→1→3→1). Level 5 requires 27x Level 1 entries. This makes Level 5 knowledge extremely valuable and time-consuming to produce.
+
+**How types and levels matter for combat:**
+- Different skill branches prefer different knowledge types — one branch might consume Anatomical knowledge for bonus damage, while another consumes Spiritual knowledge for defensive buffs
+- Higher-level knowledge gives **stronger effects** when consumed (e.g., consuming a Level 3 entry gives 3x the buff of a Level 1, Level 5 gives 5x)
+- Skills specify which types they accept and the minimum level — versatile skills accept any type, specialized skills require specific types for full effect
+- This encourages varied charity work rather than spamming one activity
+- The synthesis system rewards stockpiling lower-level knowledge and converting it upward for powerful combat bursts
+
+---
+
+#### Dieci Charity Items (Purchased from Tome Shop)
+
+The Tome's TGUI has a **shop tab** (same pattern as Seven's Requisition Catalog) where the Dieci can buy charity items using ahn from their ID card bank account.
+
+**1. Healing Kits** (`/obj/item/dieci_healing_kit`) — Multiple variants
+
+Medical kits marked with the Dieci's golden stole emblem. Used to heal others in a hands-on, deliberate process. Each use heals 10 brute + 10 burn. Three tiers available:
+
+| Variant | Cost | Uses | EXP per Heal | Total Healing |
+|---|---|---|---|---|
+| **Basic Healing Kit** | 50 ahn | 20 | 2 EXP | 200 brute + 200 burn |
+| **Standard Healing Kit** | 100 ahn | 40 | 3 EXP | 400 brute + 400 burn |
+| **Advanced Healing Kit** | 200 ahn | 80 | 5 EXP | 800 brute + 800 burn |
+
+Higher tiers last longer and award more EXP per heal (Basic = 2, Standard = 3, Advanced = 5).
+
+**Mechanic:**
+1. Dieci attacks a `/mob/living/carbon` with the kit (click on target)
+2. If target is not the user and target has brute or burn damage → begin a **3-second `do_after`** channel
+3. On success: heal 10 brute + 10 burn on the target → visible message: `"[user] carefully tends to [target]'s wounds with practiced hands."` → award **3 EXP** → consume 1 use
+4. After healing, **immediately start another 3-second `do_after`** for the next heal cycle (the Dieci can keep healing the same target in a chain)
+5. Chain breaks if: Dieci moves, target moves, target is fully healed, Dieci is interrupted, or kit runs out of uses
+6. When uses reach 0 → `qdel(src)`, visible message: `"The healing kit crumbles, its supplies spent."`
+
+**Implementation:**
+```dm
+/obj/item/dieci_healing_kit
+	name = "basic Dieci healing kit"
+	desc = "A small medical kit bearing the golden emblem of the Dieci Association."
+	icon_state = "dieci_healkit"
+	var/uses = 20
+	var/max_uses = 20
+	var/heal_amount = 10
+	var/exp_per_heal = 2
+	/// Weakref to the Dieci who purchased this kit (for EXP tracking)
+	var/datum/weakref/owner_ref
+
+/obj/item/dieci_healing_kit/standard
+	name = "standard Dieci healing kit"
+	uses = 40
+	max_uses = 40
+	exp_per_heal = 3
+
+/obj/item/dieci_healing_kit/advanced
+	name = "advanced Dieci healing kit"
+	uses = 80
+	max_uses = 80
+	exp_per_heal = 5
+
+/obj/item/dieci_healing_kit/attack(mob/living/carbon/target, mob/living/user)
+	if(target == user)
+		to_chat(user, span_warning("You can only use this on others."))
+		return
+	if(!target.getBruteLoss() && !target.getFireLoss())
+		to_chat(user, span_notice("[target] has no wounds to treat."))
+		return
+	start_heal_chain(target, user)
+
+/obj/item/dieci_healing_kit/proc/start_heal_chain(mob/living/carbon/target, mob/living/user)
+	if(!do_after(user, 3 SECONDS, target))
+		return
+	if(QDELETED(src) || QDELETED(target) || uses <= 0)
+		return
+	// Heal
+	target.adjustBruteLoss(-heal_amount)
+	target.adjustFireLoss(-heal_amount)
+	user.visible_message(span_notice("[user] carefully tends to [target]'s wounds with practiced hands."))
+	// Award EXP
+	var/mob/living/owner = owner_ref?.resolve()
+	if(owner)
+		var/datum/component/association_exp/exp = owner.GetComponent(/datum/component/association_exp)
+		exp?.modify_exp(exp_per_heal)
+	// Consume use
+	uses--
+	if(uses <= 0)
+		to_chat(user, span_notice("The healing kit crumbles, its supplies spent."))
+		qdel(src)
+		return
+	// Continue chain if target still has damage
+	if(target.getBruteLoss() || target.getFireLoss())
+		start_heal_chain(target, user)
+```
+
+**2. Sacred Seasoning** (`/obj/item/dieci_sacred_seasoning`) — 50 ahn, 3 uses
+
+A small vial of blessed spice. When applied to food, it imbues the food with restorative properties. Anyone who eats the blessed food heals SP, and the Dieci who applied it earns EXP.
+
+**Mechanic:**
+1. Dieci uses the Sacred Seasoning on a `/obj/item/food` (click seasoning on food item)
+2. The food gains a `dieci_blessing` component that stores a weakref to the Dieci owner
+3. Visible message: `"[user] sprinkles sacred seasoning over [food], blessing it with restorative properties."`
+4. Consume 1 use of the seasoning. When uses reach 0 → `qdel(src)`
+5. When anyone eats the blessed food: heal **15 SP** (`adjustSanityLoss(-15)`) → visible message: `"You feel a wave of calm wash over you as you eat the blessed food."` → award **2 EXP** to the Dieci **only if the Dieci can see the eater** (`dieci.can_see(eater)`). The Dieci must witness the act of charity to gain knowledge from it.
+
+**Implementation:**
+```dm
+/obj/item/dieci_sacred_seasoning
+	name = "sacred seasoning"
+	desc = "A vial of blessed spice from the Dieci Association. Apply to food to imbue it with restorative properties."
+	icon_state = "dieci_seasoning"
+	var/uses = 3
+	var/datum/weakref/owner_ref
+
+/obj/item/dieci_sacred_seasoning/afterattack(obj/item/food/target, mob/living/user, proximity_flag)
+	. = ..()
+	if(!proximity_flag || !istype(target))
+		return
+	if(uses <= 0)
+		return
+	target.AddComponent(/datum/component/dieci_blessing, owner_ref)
+	user.visible_message(span_notice("[user] sprinkles sacred seasoning over [target], blessing it with restorative properties."))
+	uses--
+	if(uses <= 0)
+		to_chat(user, span_notice("The seasoning vial is empty."))
+		qdel(src)
+
+/// Component added to blessed food
+/datum/component/dieci_blessing
+	var/datum/weakref/dieci_ref
+
+/datum/component/dieci_blessing/Initialize(datum/weakref/owner)
+	dieci_ref = owner
+	RegisterSignal(parent, COMSIG_FOOD_EATEN, PROC_REF(on_eaten))
+
+/datum/component/dieci_blessing/proc/on_eaten(datum/source, mob/living/eater, mob/living/feeder)
+	SIGNAL_HANDLER
+	// Heal SP
+	INVOKE_ASYNC(src, PROC_REF(apply_blessing), eater)
+
+/datum/component/dieci_blessing/proc/apply_blessing(mob/living/eater)
+	eater.adjustSanityLoss(-15)
+	to_chat(eater, span_notice("You feel a wave of calm wash over you as you eat the blessed food."))
+	// Award EXP to the Dieci — only if they can see the eater
+	var/mob/living/dieci = dieci_ref?.resolve()
+	if(dieci && dieci.can_see(eater))
+		var/datum/component/association_exp/exp = dieci.GetComponent(/datum/component/association_exp)
+		exp?.modify_exp(2)
+```
+
+**3. Examine Living Mob (Bestiary Scan)** — Free, uses the Tome directly:
+
+The Tome has a built-in **Bestiary** — a combat_log_book-style database that stores detailed information about scanned creatures. When the Dieci clicks a `/mob/living/simple_animal/hostile` with the Tome in hand, they scan it and add its full combat data to the Tome's bestiary. This follows the same pattern as `combat_log_book.dm`.
+
+**Scanning behavior:**
+- Click any `/mob/living/simple_animal/hostile` with the Tome via `afterattack()` — no `do_after`, instant scan
+- If the mob's `type` is already in the bestiary → `"This type of [name] is already in your tome."` (no EXP, no duplicate)
+- If new type → extract full creature data, add to bestiary, award **1 EXP**, generate 1 **Anatomical** Active Knowledge entry whose **level depends on the mob's max HP**:
+
+| Max HP | Knowledge Level |
+|---|---|
+| 1 – 399 | Level 1 |
+| 400 – 799 | Level 2 |
+| 800 – 1199 | Level 3 |
+| 1200 – 1599 | Level 4 |
+| 1600+ | Level 5 |
+- Visible message: `"[user] studies [target] carefully, recording observations in their tome."`
+- Sound: `'sound/machines/terminal_prompt_confirm.ogg'`
+
+**Data extracted per mob (same fields as combat_log_book.dm):**
+
+| Field | Source | Notes |
+|---|---|---|
+| `type` | `H.type` | Used for duplicate checking |
+| `name` | `H.name` | Display name |
+| `icon` | `icon2base64(getFlatIcon(H))` | Base64 icon for TGUI display |
+| `health` / `max_health` | `H.health` / `H.maxHealth` | Current and max HP |
+| `move_to_delay` | `H.move_to_delay` | Movement speed |
+| `resistances` | `H.damage_coeff` → `DC.red`, `DC.white`, `DC.black`, `DC.pale` | Damage type multipliers (or "?" if null) |
+| `melee_damage_lower/upper` | `H.melee_damage_lower/upper` | Melee damage range |
+| `melee_damage_type` | `H.melee_damage_type` | RED/WHITE/BLACK/PALE |
+| `rapid_melee` / `attack_cooldown` | `H.rapid_melee` / `H.attack_cooldown` | Attack speed info |
+| `is_ranged` | Check `H.casingtype` or `H.projectiletype` | Whether mob has ranged attacks |
+| `ranged_damage` / `ranged_damage_type` | From instantiated projectile | Ranged damage info (if applicable) |
+| `ranged_cooldown_time` | `H.ranged_cooldown_time` | Ranged fire rate |
+| `rapid` / `rapid_fire_delay` | `H.rapid` / `H.rapid_fire_delay` | Burst fire info (if applicable) |
+| `notes` | `""` (user-editable) | Player can add personal notes |
+
+**TGUI — "DieciTomeBestiary" interface:**
+
+Follows the same layout as `CombatLogBook.js` with page navigation:
+- **Header:** Creature icon (base64) + name
+- **Vital Statistics:** Health, movement speed, melee damage/speed, ranged info (if applicable)
+- **Damage Resistances:** Red/White/Black/Pale with color-coded labels (Resistant/Normal/Weak/Vulnerable/Fatal)
+- **Field Notes:** Editable `TextArea` for user notes (saved via `"update_notes"` action)
+- **Navigation:** Previous/Next page buttons, page counter `"Page X of Y"`
+- **Empty state:** `"No creatures scanned yet. Use the tome on hostile creatures to study them."`
+
+**TGUI Actions:** `"next_page"`, `"prev_page"`, `"update_notes"` — identical to CombatLogBook
+
+The bestiary is accessed via the Tome's `attack_self()` when it contains scanned creatures, or via a dedicated "View Bestiary" button in the Tome's main TGUI.
+
+```dm
+/obj/item/dieci_tome
+	/// Bestiary database — list of assoc lists, one per scanned mob type
+	var/list/bestiary_database = list()
+	/// Current bestiary page for TGUI navigation
+	var/bestiary_page = 1
+
+/obj/item/dieci_tome/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	. = ..()
+	if(!istype(target, /mob/living/simple_animal/hostile))
+		return
+	if(!proximity_flag)
+		return
+
+	var/mob/living/simple_animal/hostile/H = target
+
+	// Check if this type is already scanned
+	var/mob_type = H.type
+	for(var/list/entry in bestiary_database)
+		if(entry["type"] == mob_type)
+			to_chat(user, span_notice("This type of [H.name] is already in your tome."))
+			return
+
+	// Extract creature data — same pattern as combat_log_book.dm
+	var/list/creature_data = list()
+	creature_data["type"] = H.type
+	creature_data["name"] = H.name
+	creature_data["icon"] = icon2base64(getFlatIcon(H))
+	creature_data["notes"] = ""
+
+	// Health
+	creature_data["health"] = H.health
+	creature_data["max_health"] = H.maxHealth
+
+	// Movement speed
+	creature_data["move_to_delay"] = H.move_to_delay
+
+	// Resistances (damage coefficients)
+	var/list/resistances = list()
+	if(H.damage_coeff)
+		var/datum/dam_coeff/DC = H.damage_coeff
+		resistances["red"] = DC.red
+		resistances["white"] = DC.white
+		resistances["black"] = DC.black
+		resistances["pale"] = DC.pale
+	else
+		resistances["red"] = "?"
+		resistances["white"] = "?"
+		resistances["black"] = "?"
+		resistances["pale"] = "?"
+
+	// Melee damage
+	creature_data["melee_damage_lower"] = H.melee_damage_lower
+	creature_data["melee_damage_upper"] = H.melee_damage_upper
+	creature_data["melee_damage_type"] = H.melee_damage_type
+
+	// Melee attack speed
+	if(H.rapid_melee > 1)
+		creature_data["rapid_melee"] = H.rapid_melee
+	else if(H.attack_cooldown > 0)
+		creature_data["attack_cooldown"] = H.attack_cooldown
+	else
+		creature_data["rapid_melee"] = 1
+
+	// Ranged info — check casingtype first, then projectiletype
+	if(H.casingtype)
+		var/obj/item/ammo_casing/casing = new H.casingtype
+		if(casing.projectile_type)
+			var/obj/projectile/P = new casing.projectile_type
+			creature_data["ranged_damage"] = P.damage
+			creature_data["ranged_damage_type"] = P.damage_type
+			qdel(P)
+		qdel(casing)
+		creature_data["is_ranged"] = TRUE
+		creature_data["ranged_cooldown_time"] = H.ranged_cooldown_time
+		if(H.rapid > 0)
+			creature_data["rapid"] = H.rapid
+			creature_data["rapid_fire_delay"] = H.rapid_fire_delay
+	else if(H.projectiletype)
+		var/obj/projectile/P = new H.projectiletype
+		creature_data["ranged_damage"] = P.damage
+		creature_data["ranged_damage_type"] = P.damage_type
+		qdel(P)
+		creature_data["is_ranged"] = TRUE
+		creature_data["ranged_cooldown_time"] = H.ranged_cooldown_time
+		if(H.rapid > 0)
+			creature_data["rapid"] = H.rapid
+			creature_data["rapid_fire_delay"] = H.rapid_fire_delay
+	else
+		creature_data["is_ranged"] = FALSE
+
+	creature_data["resistances"] = resistances
+
+	bestiary_database += list(creature_data)
+	to_chat(user, span_notice("You study [H.name] and record your observations in your tome."))
+	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+
+	// Award EXP
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	exp?.modify_exp(1)
+	// Generate Active Knowledge — level scales with mob max HP (400 HP per tier, cap at 5)
+	var/knowledge_level = clamp(round(H.maxHealth / 400) + 1, 1, 5)
+	add_active_knowledge("Anatomical", knowledge_level, "[H.name] — [pick("exhibits aggressive territorial behavior", "shows signs of heightened predatory instincts", "possesses unusual anatomical features worth documenting")]")
+	user.visible_message(span_notice("[user] studies [target] carefully, recording observations in their tome."))
+```
+
+**Bestiary TGUI data/actions** (on the Tome):
+
+```dm
+/// Bestiary UI data — returned when viewing the bestiary page
+/obj/item/dieci_tome/proc/bestiary_ui_data()
+	var/list/data = list()
+	data["creatures"] = bestiary_database
+	data["current_page"] = bestiary_page
+	data["total_pages"] = length(bestiary_database)
+	if(length(bestiary_database) > 0 && bestiary_page <= length(bestiary_database))
+		data["current_creature"] = bestiary_database[bestiary_page]
+	else
+		data["current_creature"] = null
+	return data
+
+/// Bestiary UI actions — same as CombatLogBook
+/obj/item/dieci_tome/proc/bestiary_ui_act(action, params)
+	switch(action)
+		if("bestiary_next")
+			if(bestiary_page < length(bestiary_database))
+				bestiary_page++
+				return TRUE
+		if("bestiary_prev")
+			if(bestiary_page > 1)
+				bestiary_page--
+				return TRUE
+		if("bestiary_notes")
+			if(length(bestiary_database) > 0 && bestiary_page <= length(bestiary_database))
+				bestiary_database[bestiary_page]["notes"] = params["notes"]
+				return TRUE
+	return FALSE
+```
+
+**New TGUI file:** `tgui/packages/tgui/interfaces/DieciTomeBestiary.js` — largely mirrors `CombatLogBook.js` with the same helper functions (`getDamageTypeColor`, `getHealthDescription`, `getResistanceLabel`, etc.) and layout. Can be embedded as a tab/section within the Tome's main TGUI rather than a separate window.
+
+**4. Examine Dead Body** — Free, uses the Tome on a dead `/mob/living/carbon/human`:
+
+Click a dead human body with the Tome → **5-second `do_after`** channel → on success:
+- If the body has a `ckey` (player-controlled): award **5 EXP**, generate 1 **Anatomical (Level 3)** Active Knowledge entry. Flavor: `"[target]'s cause of death reveals [detailed text about injuries, organ state, etc.]"`
+- If the body has no `ckey` (NPC): award **3 EXP**, generate 1 **Anatomical (Level 2)** Active Knowledge entry. Flavor: `"[target]'s remains show [text about physical structure, abnormalities, etc.]"`
+- Mark the body as examined by adding a `dieci_examined` trait: `ADD_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)`
+- Cannot examine a body that already has `TRAIT_DIECI_EXAMINED`
+- The trait is **removed when the body is revived** via `COMSIG_LIVING_REVIVE`: register `RegisterSignal(target, COMSIG_LIVING_REVIVE, PROC_REF(on_revive))` → in handler: `REMOVE_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)` + `UnregisterSignal(target, COMSIG_LIVING_REVIVE)`
+
+```dm
+/// On the Tome's afterattack when in study mode, targeting a dead human
+/obj/item/dieci_tome/proc/examine_dead_body(mob/living/carbon/human/target, mob/living/user)
+	if(target.stat != DEAD)
+		return
+	if(HAS_TRAIT(target, TRAIT_DIECI_EXAMINED))
+		to_chat(user, span_notice("You have already studied this body."))
+		return
+	to_chat(user, span_notice("You begin examining [target]'s body..."))
+	if(!do_after(user, 5 SECONDS, target))
+		return
+	if(QDELETED(target) || target.stat != DEAD || HAS_TRAIT(target, TRAIT_DIECI_EXAMINED))
+		return
+	ADD_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)
+	RegisterSignal(target, COMSIG_LIVING_REVIVE, PROC_REF(on_target_revive))
+	var/has_ckey = !!target.ckey
+	var/exp_amount = has_ckey ? 5 : 3
+	var/knowledge_level = has_ckey ? 3 : 2
+	// Award EXP
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	exp?.modify_exp(exp_amount)
+	// Generate Active Knowledge
+	var/flavor = has_ckey ? "[target]'s cause of death reveals [pick("severe trauma to the cranium", "multiple lacerations across the torso", "signs of catastrophic organ failure")]" : "[target]'s remains show [pick("unusual bone density", "traces of unknown compounds in the tissue", "evidence of prolonged physical stress")]"
+	add_active_knowledge("Anatomical", knowledge_level, flavor)
+	user.visible_message(span_notice("[user] carefully examines [target]'s body, recording observations in their tome."))
+
+/obj/item/dieci_tome/proc/on_target_revive(datum/source)
+	SIGNAL_HANDLER
+	REMOVE_TRAIT(source, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)
+	UnregisterSignal(source, COMSIG_LIVING_REVIVE)
+```
+
+**5. Observe Combat** — Free action, watch a carbon fight:
+
+The Dieci has an **Observe** action (`/datum/action/cooldown/dieci_observe`) — a pointed spell that targets a `/mob/living/carbon`. While observing:
+- Register `COMSIG_MOB_ITEM_ATTACK` on the observed target (they attack someone) and `COMSIG_MOB_AFTER_APPLY_DAMGE` on the observed target (they take damage)
+- On each signal fire: if the attacker/damage source is NOT the Dieci → **20% chance** to generate 1 **Behavioral (Level 1)** Active Knowledge entry + award 1 EXP
+- Flavor: `"[target] [pick("instinctively guards their left side", "telegraphs strikes with a shoulder drop", "flinches before retaliating")]"`
+- Observation ends if: Dieci uses the action again (toggle off), target dies, target moves more than 7 tiles away from Dieci, or Dieci loses line of sight
+- The Dieci can only observe **one target at a time**
+
+```dm
+/datum/action/cooldown/dieci_observe
+	name = "Observe"
+	desc = "Begin observing a target's combat behavior to gain knowledge."
+	cooldown_time = 5 SECONDS
+	var/mob/living/carbon/observed_target
+	var/datum/weakref/owner_ref
+
+/datum/action/cooldown/dieci_observe/proc/start_observing(mob/living/carbon/target, mob/living/user)
+	if(observed_target)
+		stop_observing()
+	observed_target = target
+	RegisterSignal(target, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_observed_attack))
+	RegisterSignal(target, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_observed_damaged))
+	RegisterSignal(target, COMSIG_LIVING_DEATH, PROC_REF(on_observed_death))
+	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(on_observed_moved))
+	to_chat(user, span_notice("You begin observing [target]'s behavior..."))
+
+/datum/action/cooldown/dieci_observe/proc/on_observed_attack(datum/source, mob/living/target, obj/item/weapon)
+	SIGNAL_HANDLER
+	var/mob/living/user = owner_ref?.resolve()
+	if(!user || source == user) // Don't count if Dieci is the one being attacked
+		return
+	if(prob(20))
+		INVOKE_ASYNC(src, PROC_REF(generate_behavioral_knowledge), source, user)
+
+/datum/action/cooldown/dieci_observe/proc/on_observed_damaged(datum/source, damage, damagetype)
+	SIGNAL_HANDLER
+	var/mob/living/user = owner_ref?.resolve()
+	if(!user)
+		return
+	// Check that the damage source is not the Dieci (attacker info from signal args)
+	if(prob(20))
+		INVOKE_ASYNC(src, PROC_REF(generate_behavioral_knowledge), source, user)
+
+/datum/action/cooldown/dieci_observe/proc/on_observed_moved(datum/source)
+	SIGNAL_HANDLER
+	var/mob/living/user = owner_ref?.resolve()
+	if(!user || get_dist(user, observed_target) > 7 || !user.can_see(observed_target))
+		stop_observing()
+
+/datum/action/cooldown/dieci_observe/proc/stop_observing()
+	if(!observed_target)
+		return
+	UnregisterSignal(observed_target, list(COMSIG_MOB_ITEM_ATTACK, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_LIVING_DEATH, COMSIG_MOVABLE_MOVED))
+	observed_target = null
+```
+
+**6. Tome & Bookcase Interaction:**
+
+Dieci tomes can be **stored in any `/obj/structure/bookcase`** (uses the existing `isbook()` check — the Tome should pass this by being a subtype of `/obj/item/book` or by adding it to the `isbook()` proc).
+
+Additionally, Dieci can **retrieve a new blank tome** from any bookcase:
+- Examine or use the bookcase with an empty hand while having the Dieci association component → option to "Take blank tome" appears
+- Creates a new `/obj/item/dieci_tome` with `owner_ref` set to the Dieci
+- This allows Dieci to store filled tomes (with stored knowledge) in bookcases for safekeeping and grab fresh ones
+- Multiple tomes can exist — but only the one in-hand is used for recording/re-reading
+- Stored tomes in bookcases **retain their stored knowledge entries**, so the Dieci can build a personal library over time
+
+**Implementation:** Make `/obj/item/dieci_tome` a subtype of `/obj/item/book` so it naturally works with bookcases. Add an `attackby` override or `attack_hand` extension on `/obj/structure/bookcase` to offer blank tome generation for Dieci fixers.
+
+**Tome Shop Summary:**
+
+| Item | Cost | Uses | Effect | EXP per Use |
+|---|---|---|---|---|
+| Basic Healing Kit | 50 ahn | 20 | Heal 10 brute + 10 burn per use (3s do_after, chains) | 2 EXP |
+| Standard Healing Kit | 100 ahn | 40 | Same as basic, more uses | 3 EXP |
+| Advanced Healing Kit | 200 ahn | 80 | Same as basic, most uses | 5 EXP |
+| Sacred Seasoning | 50 ahn | 3 | Apply to food → heals 15 SP when eaten | 2 EXP |
+
+---
+
+### EXP Sources — Public Events (Major)
+
+Dieci can use their Tome to **host public events** — extended group activities that benefit attendees and generate large amounts of EXP. Events are the fastest way to earn EXP but require significant time, ahn investment, and active participation.
+
+**How Events Work:**
+
+1. Dieci uses Tome in hand → selects event type from TGUI → ahn cost is deducted from ID card bank account
+2. A **visible event zone** (5-tile radius) is created centered on where they activated the Tome
+3. A visible announcement goes out: `"[user] is hosting a [Event Name]! Gather around!"`
+4. The event consists of **ticks** — periodic check-ins where the Dieci must use their Tome in hand within the zone
+5. Each tick: Dieci uses Tome in hand → **5-second `do_after` channel** → on success, Dieci says a line aloud (visible message) → tick completes → attendees receive benefits
+6. **The Tome can only be activated within the event zone.** Clicking outside does nothing.
+7. **If any tick is missed or the `do_after` is interrupted, the event ends immediately.** No ahn refund.
+8. Between ticks, the Dieci is free to **move around the zone, talk, and RP** with attendees
+9. Cooldown: **5 minutes** between events
+
+**Event 1: Book Reading** (SP Healing)
+
+| | |
+|---|---|
+| **Duration** | ~4 minutes (6 ticks, 40s apart) |
+| **Ahn Cost** | 100 |
+| **Per-tick benefit** | Attendees in zone heal 8 SP |
+| **EXP** | 3 per completed tick + 2 per attendee per tick |
+| **Flavor lines** | `"[user] opens their tome and reads aloud: 'In darkness, the pursuit of understanding is the only true light...'"` |
+
+**Flow:** Dieci sets up zone → uses tome (5s channel) → reads a passage → attendees heal 8 SP → ~35 seconds of free RP time → next tick → repeat 6 times. Total SP healed per attendee: up to 48 SP.
+
+**Event 2: Training Session** (Attribute Boost)
+
+| | |
+|---|---|
+| **Duration** | ~5 minutes (6 ticks, 50s apart) |
+| **Ahn Cost** | 200 |
+| **Per-tick benefit** | All attendees in zone gain +1 to ALL attributes (Fortitude, Prudence, Temperance, Justice) for 5 minutes |
+| **EXP** | 4 per completed tick + 3 per attendee per tick |
+| **Flavor lines** | `"[user] demonstrates a defensive stance and instructs: 'Guard your center — all strength flows from balance.'"` |
+
+**Flow:** Dieci sets up zone → uses tome (5s channel) → demonstrates technique → attendees get +1 all stats → ~45 seconds of free RP time → next tick → repeat 6 times. Attendees who stay for all 6 ticks gain +6 to all attributes for 5 minutes. Attribute bonus duration refreshes per tick (so attending tick 6 gives +6 all stats for 5 more minutes from that point).
+
+**Event 3: Charity Sermon** (Ahn Generation)
+
+| | |
+|---|---|
+| **Duration** | ~7 minutes (7 ticks, 60s apart) |
+| **Ahn Cost** | 300 |
+| **Per-tick benefit** | Each attendee in zone earns 25 ahn (via ID card bank account) |
+| **EXP** | 5 per completed tick + 4 per attendee per tick |
+| **Flavor lines** | `"[user] raises their tome and speaks with conviction: 'To share knowledge freely is the highest form of wealth...'"` |
+
+**Flow:** Dieci sets up zone → uses tome (5s channel) → delivers sermon → attendees each earn 25 ahn → ~55 seconds of free RP time → next tick → repeat 7 times. Total ahn per attendee: up to 175 ahn. The Dieci earns **no ahn** from this event — it is pure charity. Highest EXP reward to compensate.
+
+**Event Summary:**
+
+| Event | Duration | Ahn Cost | Ticks | Tick Interval | Per-Tick Benefit | EXP per Tick |
+|---|---|---|---|---|---|---|
+| Book Reading | ~4 min | 100 | 6 | 40s | 8 SP heal | 3 + 2/attendee |
+| Training Session | ~5 min | 200 | 6 | 50s | +1 all attributes (5min) | 4 + 3/attendee |
+| Charity Sermon | ~7 min | 300 | 7 | 60s | 25 ahn each | 5 + 4/attendee |
+
+**EXP Examples:**
+- Book Reading with 3 attendees: `(3 + 2*3) * 6 = 54 EXP`
+- Training Session with 4 attendees: `(4 + 3*4) * 6 = 96 EXP`
+- Charity Sermon with 5 attendees: `(5 + 4*5) * 7 = 175 EXP`
+
+---
+
+### EXP & Active Knowledge Summary
+
+| Activity | EXP | Knowledge | Type | Level | Notes |
+|---|---|---|---|---|---|
+| Bestiary scan (living mob) | 1 | +1 | Anatomical | 1–5 (by HP) | Click hostile mob with Tome, first time per type. Level scales with maxHealth (400 HP per tier, cap at 5) |
+| Examine dead body (NPC) | 3 | +1 | Anatomical | 2 | 5s do_after, once until revived |
+| Examine dead body (player) | 5 | +1 | Anatomical | 3 | 5s do_after, once until revived |
+| Observe combat | 1 | +1 (20% chance) | Behavioral | 1 | Per attack/damage on observed target |
+| Healing Kit (Basic) | 2 | +1 | Medical | 1 | 50 ahn, 20 uses |
+| Healing Kit (Standard) | 3 | +1 | Medical | 2 | 100 ahn, 40 uses |
+| Healing Kit (Advanced) | 5 | +1 | Medical | 3 | 200 ahn, 80 uses |
+| Sacred Seasoning eaten | 2 | +1 | Spiritual | 1 | Must see eater, 50 ahn for 3 uses |
+| Event tick completed | varies | +1 | Spiritual | 1 | From hosting public events |
+| Passive contract tick | 1 / 10s | — | — | — | No Active Knowledge |
+| Contract completion | 10-30 | — | — | — | No Active Knowledge |
+
+### Design Notes
+
+- **Two resources:** EXP (permanent, for skill tree progression) and Active Knowledge (consumable combat fuel with flavor text, typed and leveled)
+- **4 knowledge types** (Anatomical, Behavioral, Medical, Spiritual) encourage varied charity work and tie into different skill branches
+- **5 knowledge levels** — Levels 1-3 come from activities, Levels 4-5 only from synthesis (3 same-type same-level → 1 higher). Level 5 costs 27x Level 1 entries, making it a major investment
+- **The knowledge loop:** do charity → gain Active Knowledge + EXP → record into Tome → consume in combat → re-read Tome to restore → run out → do more charity
+- Active Knowledge entries have **readable flavor text** (viewable via action), making each piece of knowledge feel tangible
+- **Recording** and **re-reading** both require `do_after` channels — the Dieci must take time to write/study
+- **Dead body examination** uses `TRAIT_DIECI_EXAMINED` + `COMSIG_LIVING_REVIVE` to prevent re-examining until the body is revived
+- **Observe system** creates a passive knowledge gain from watching others fight — rewards positioning near combat without participating
+- **Tomes are `/obj/item/book` subtypes** so they naturally work with bookcases. Dieci can build personal libraries of stored knowledge across multiple tomes
+- **Bestiary system** follows the `combat_log_book.dm` pattern — `afterattack()` on hostile mobs, `icon2base64(getFlatIcon())` for icons, assoc list database, TGUI with page navigation and editable notes. Embedded in the Tome rather than a separate item
+- Events are the **fastest source** of both EXP and Active Knowledge but cost ahn, time (4-7 minutes), and active participation
+- Other players are **incentivized to attend** events (free SP, attributes, ahn), creating natural social gameplay
+- The Dieci is **most useful to the team outside of combat** and **strongest in combat immediately after helping others**
+- Events encourage **RP** by design — long durations with free time between ticks, visible spoken lines, gathering players together
+- The ahn cost means Dieci must earn money from contracts before they can host events, preventing event spam
+
+**Skill Tree — 3 Branches (pick 2):**
+
+**Core Combat Mechanic: Imbue Knowledge** (available to ALL Dieci, not branch-locked)
+
+The Dieci's weapon deals **RED damage** by default. Using the **Imbue Knowledge** action (`/datum/action/cooldown/dieci_imbue`, 5s CD) consumes 1 Active Knowledge entry (lowest level first) and converts weapon damage to **PALE** for `level × 5` seconds (Level 1 = 5s, Level 5 = 25s). While in PALE mode, melee hits apply **2 Sinking stacks** to the target. This is the core damage loop:
+
+1. Hit with RED weapon → build Sinking stacks (from branch skills)
+2. Sinking activates after 5 seconds
+3. Use Imbue Knowledge → weapon becomes PALE
+4. Each PALE hit **triggers** Sinking (SP damage = stacks, halves stacks) AND applies 2 new stacks (which inherit the already-activated state, so the next hit triggers again)
+5. Sustained PALE hitting = repeated Sinking triggers + replenishment
+6. Run out of Active Knowledge → weapon reverts to RED → repeat cycle
+
+Visual: weapon gets a pale glow overlay during PALE mode. Sound: `'sound/machines/terminal_prompt_confirm.ogg'` on activation.
+
+```dm
+/datum/action/cooldown/dieci_imbue
+	name = "Imbue Knowledge"
+	desc = "Consume Active Knowledge to convert your weapon to PALE damage, enabling Sinking triggers."
+	cooldown_time = 5 SECONDS
+	/// Whether PALE mode is currently active
+	var/pale_active = FALSE
+	/// Timer for reverting to RED
+	var/revert_timer
+
+/datum/action/cooldown/dieci_imbue/proc/activate(mob/living/carbon/human/user)
+	var/datum/component/dieci_knowledge/knowledge = user.GetComponent(/datum/component/dieci_knowledge)
+	if(!knowledge)
+		return
+	var/list/consumed = knowledge.consume_lowest_knowledge(1)
+	if(!length(consumed))
+		to_chat(user, span_warning("You have no Active Knowledge to imbue!"))
+		return
+	var/consumed_level = consumed[1]["level"]
+	var/duration = consumed_level * 5 SECONDS
+	pale_active = TRUE
+	// Override weapon damtype to PALE
+	var/obj/item/weapon = user.get_active_held_item()
+	if(weapon)
+		weapon.damtype = PALE_DAMAGE
+	// Register attack signal for Sinking application
+	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_pale_attack))
+	to_chat(user, span_notice("You channel your knowledge into your weapon. It glows with a pale light."))
+	playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+	// Set revert timer
+	if(revert_timer)
+		deltimer(revert_timer)
+	revert_timer = addtimer(CALLBACK(src, PROC_REF(revert_pale), user), duration, TIMER_STOPPABLE)
+	StartCooldown()
+
+/datum/action/cooldown/dieci_imbue/proc/on_pale_attack(datum/source, mob/living/target, obj/item/weapon)
+	SIGNAL_HANDLER
+	if(!pale_active || !istype(target))
+		return
+	target.apply_lc_sinking(2)
+
+/datum/action/cooldown/dieci_imbue/proc/revert_pale(mob/living/carbon/human/user)
+	pale_active = FALSE
+	revert_timer = null
+	UnregisterSignal(user, COMSIG_MOB_ITEM_ATTACK)
+	var/obj/item/weapon = user.get_active_held_item()
+	if(weapon)
+		weapon.damtype = RED_DAMAGE
+	to_chat(user, span_notice("The pale glow fades from your weapon."))
+```
+
+**Sinking Reference:**
+- Max 50 stacks, 5s activation delay on first application
+- Once active: WHITE or PALE damage triggers it → SP damage = stacks (humans) or WHITE × 4 (simple mobs), then halves stacks
+- `apply_lc_sinking(stacks)` — adds to existing (already activated) effect, no new delay
+- Defined in `code/datums/status_effects/debuffs.dm:1956-2051`
+
+**Design Note:** Dieci does NOT use Fragile or Defense Level Down. Their debuff identity is purely **Sinking**.
+
+---
+
+#### `dieci_shield_hp` Component
+
+A flat HP shield that absorbs **raw incoming damage** before the Dieci's real HP. No armor or physiology interaction — the shield simply subtracts the damage value from its pool. If the shield absorbs all damage (reducing the hit to 0 HP damage), it shows the `/obj/effect/temp_visual/shock_shield` effect. If damage exceeds shield HP, the shield breaks and the overflow is dealt normally. Granted by Warden branch T1 skills.
+
+**Shield HP caps at 500**, but the Dieci can only gain it in small amounts through skills (2-3 per melee hit) and by consuming Active Knowledge (10 × level via Tome Shield). Combined with the **halving every 10 seconds** decay, reaching high values requires constant combat activity and knowledge expenditure. The shield starts at 0 and must be built up.
+
+Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds shield to ~40-50 before decay catches up. Using Tome Shield with a Level 3 entry adds +30 instantly. Without sustained input, 50 → 25 → 12 → 6 → 3 → 1 → 0 over a minute.
+
+```dm
+/datum/component/dieci_shield_hp
+	/// Current shield HP — starts at 0, must be built up via skills/knowledge
+	var/shield_health = 0
+	/// Hard cap on shield HP
+	var/max_shield_health = 500
+	/// Callback proc when shield absorbs any damage (partial or full block)
+	var/datum/callback/on_shield_absorb
+	/// Timer for the 10s halving decay
+	var/decay_timer
+
+/datum/component/dieci_shield_hp/Initialize()
+	. = ..()
+	if(!ishuman(parent))
+		return COMPONENT_INCOMPATIBLE
+	shield_health = 0 // Starts empty — must be built up
+	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage))
+	// Start the halving decay timer — repeats every 10 seconds
+	decay_timer = addtimer(CALLBACK(src, PROC_REF(decay_shield)), 10 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+
+/datum/component/dieci_shield_hp/Destroy()
+	on_shield_absorb = null
+	if(decay_timer)
+		deltimer(decay_timer)
+		decay_timer = null
+	return ..()
+
+/// Every 10 seconds, halve the shield HP
+/datum/component/dieci_shield_hp/proc/decay_shield()
+	if(shield_health <= 0)
+		return
+	shield_health = max(0, round(shield_health / 2))
+
+/// Intercept incoming damage — flat shield HP absorbs raw damage values, no armor/physiology interaction
+/datum/component/dieci_shield_hp/proc/on_damage(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
+	SIGNAL_HANDLER
+	if(shield_health <= 0 || damage <= 0)
+		return // Shield is down or no damage, passes through normally
+
+	// Fire absorb callback on ANY shield absorption (used by Reactive Ward, Immovable Library, etc.)
+	on_shield_absorb?.Invoke(parent, attacker, min(damage, shield_health))
+
+	if(damage >= shield_health)
+		// Shield breaks — overflow damage passes through to normal HP
+		var/overflow = damage - shield_health
+		shield_health = 0
+		if(overflow > 0)
+			INVOKE_ASYNC(src, PROC_REF(deal_overflow), parent, overflow, damage_type, def_zone, attacker)
+		return COMPONENT_MOB_DENY_DAMAGE
+	else
+		// Shield absorbs all damage — show shock_shield visual
+		shield_health -= damage
+		var/obj/effect/temp_visual/shock_shield/AT = new /obj/effect/temp_visual/shock_shield(get_turf(parent))
+		AT.transform *= 0.5
+		AT.pixel_x += rand(-8, 8)
+		AT.pixel_y += rand(-12, 12)
+		playsound(get_turf(parent), 'sound/mecha/mech_shield_deflect.ogg', 70)
+		return COMPONENT_MOB_DENY_DAMAGE
+
+/// Deal overflow damage when shield breaks
+/datum/component/dieci_shield_hp/proc/deal_overflow(mob/living/target, damage, damage_type, def_zone, attacker)
+	target.deal_damage(damage, damage_type, attacker)
+
+/// Add shield HP (capped at max_shield_health = 500)
+/datum/component/dieci_shield_hp/proc/restore_shield(amount)
+	shield_health = min(max_shield_health, shield_health + amount)
+```
+
+---
+
+#### Branch 1: Scholar (Sinking Focus)
+
+**Theme:** Apply and exploit Sinking stacks. The Scholar builds Sinking with RED hits and amplifies PALE mode triggers. Deep knowledge of weakness turns every strike into a mounting threat.
+
+**T1 (1pt) — Pick one:**
+- **A: Deep Study** — Each melee attack applies 3 Sinking stacks to the target.
+- **B: Analytical Strike** — Hitting a target with no Sinking applies 8 Sinking stacks. Hitting a target that already has Sinking applies 1 stack instead.
+
+**T2 (2pt) — Pick one:**
+- **A: Drowning Knowledge** — While Imbue Knowledge is active (PALE mode), attacks on targets with 15+ Sinking deal 25% bonus weapon damage.
+- **B: Spreading Decay** — While in PALE mode, hitting a target that has Sinking also applies 2 Sinking to all enemies within 2 tiles of the target. 2s internal CD.
+
+**T3 (3pt) — Pick one:**
+- **A: Abyssal Revelation** *(Powerful Attack, 90s CD)* — Requires Imbue Knowledge to be active. Consume all remaining Imbue duration. Dash to target within 5 tiles, 5-hit PALE combo. Each hit applies 5 Sinking. Final hit: 2x DPS + **immediately triggers all Sinking** on the target (bypasses 5s activation delay). After the combo, grants 10 seconds of fresh PALE mode (no knowledge consumed).
+- **B: Tome of Ruin** *(Passive)* — Every 5th consecutive PALE-mode melee hit on the same target **immediately triggers all Sinking** on the target (bypasses activation delay) and then applies 5 new Sinking stacks. Also, Imbue Knowledge duration is extended by 2 seconds each time Sinking triggers from your attacks.
+
+**Abyssal Revelation — Details:**
+- **Opener:** Dash up to 5 tiles toward target. If target is adjacent, skip the dash.
+- **Combo:** 5 hits, all PALE damage. DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`.
+- **Per-hit effect:** Apply 5 Sinking stacks to target.
+- **Final hit:** 2x DPS. After dealing damage, find the target's Sinking status effect and call `trigger_sinking()` directly — this bypasses the normal 5s activation delay.
+- **After combo:** Grant 10 seconds of PALE mode (same as Imbue Knowledge active state) without consuming Active Knowledge.
+
+**Implementation Notes:**
+- Deep Study: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_sinking(3)`.
+- Analytical Strike: `COMSIG_MOB_ITEM_ATTACK` → check `target.has_status_effect(/datum/status_effect/stacking/sinking)` → if no Sinking: `apply_lc_sinking(8)`, else: `apply_lc_sinking(1)`.
+- Drowning Knowledge: `COMSIG_MOB_ITEM_ATTACK` → check `imbue_action.pale_active` → get target's Sinking stacks via `target.has_status_effect(...)` → if stacks ≥ 15, deal `weapon.force * 0.25` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`.
+- Spreading Decay: `COMSIG_MOB_ITEM_ATTACK` → check `imbue_action.pale_active` → check target has Sinking → 2s CD check → `for(var/mob/living/L in range(2, target))` excluding target and user → `L.apply_lc_sinking(2)`.
+- Abyssal Revelation: `/datum/action/cooldown/dieci_abyssal` → requires `imbue_action.pale_active` → consume remaining timer (`deltimer(revert_timer)`) → cutscene_duel + immobilize → 5 PALE hits → final hit: `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S) S.trigger_sinking()` → grant 10s PALE via `imbue_action.revert_timer = addtimer(..., 10 SECONDS, ...)`.
+- Tome of Ruin: Track `var/pale_combo_count = 0` and `var/datum/weakref/combo_target_ref`. On `COMSIG_MOB_ITEM_ATTACK` → if `imbue_action.pale_active`: if target != last combo target → reset count. Increment count. At 5 → `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S && S.stacks > 0) INVOKE_ASYNC(S, PROC_REF(trigger_sinking))` → then `target.apply_lc_sinking(5)` → reset count. For duration extension: hook into Sinking trigger somehow or simply extend timer by 2s after each 5th-hit trigger.
+
+---
+
+#### Branch 2: Warden (Shield Focus)
+
+**Theme:** The `dieci_shield_hp` component branch. Knowledge becomes a literal barrier. The Warden fights behind a shield of accumulated wisdom, absorbing punishment and retaliating through Sinking applied on blocks.
+
+**T1 (1pt) — Pick one:**
+- **A: Knowledge Barrier** — Gain the `dieci_shield_hp` component (starts at 0, max 500). Landing melee attacks restores **3 shield HP**.
+- **B: Reactive Ward** — Gain the `dieci_shield_hp` component (starts at 0, max 500). Landing melee attacks restores **2 shield HP**. Whenever the shield absorbs any amount of damage (partial or full), apply **5 Sinking** to the attacker.
+
+**T2 (2pt) — Pick one:**
+- **A: Tome Shield** — Action: consume 1 Active Knowledge entry to restore shield HP = **10 × entry level**. 5s CD.
+- **B: Stalwart Presence** — Shield decay is reduced (halves every **15 seconds** instead of 10). While shield HP is above **50**, gain **+15% movement speed**.
+
+**T3 (3pt) — Pick one:**
+- **A: Golden Aegis** *(Powerful Attack, 90s CD)* — Consume all Active Knowledge entries (min 3). Shield set to **100 HP**, cannot break for **8 seconds**. Each time the shield absorbs damage during this period, apply Sinking = damage absorbed / 5 to the attacker. After 8s, release an AoE **PALE shockwave** (3-tile radius) dealing damage = remaining shield HP. Shield resets to base max HP after.
+- **B: Immovable Library** *(Passive)* — Shield passively regenerates **1 HP every 5 seconds**. Whenever the shield absorbs any amount of damage (partial or full), your **next melee attack within 3s deals PALE damage** instead of RED and applies **5 Sinking**. No Active Knowledge cost for this conversion.
+
+**Golden Aegis — Details:**
+- **Activation:** Consume all Active Knowledge (minimum 3 entries required). Shield HP is set to 100 regardless of current value. Shield becomes **unbreakable** for 8 seconds (damage still reduces shield HP, but it cannot go below 1).
+- **During buff:** Each time the shield absorbs damage (on every `on_damage` where shield > 0), apply Sinking stacks = `round(damage_absorbed / 5)` (min 1) to the attacker.
+- **After 8s:** AoE PALE shockwave centered on the Dieci, 3-tile radius. All enemies in range take PALE damage = current shield HP value. Apply 5 Sinking to all enemies hit. Then shield resets to **0** (must rebuild).
+- **Combo with Imbue:** If Imbue Knowledge is also active, the shockwave triggers Sinking on enemies that already had active stacks.
+
+**Implementation Notes:**
+- Knowledge Barrier: On skill registration → `parent.AddComponent(/datum/component/dieci_shield_hp)`. `COMSIG_MOB_ITEM_ATTACK` → `shield_comp.restore_shield(3)`.
+- Reactive Ward: On skill registration → `parent.AddComponent(/datum/component/dieci_shield_hp)`. `COMSIG_MOB_ITEM_ATTACK` → `shield_comp.restore_shield(2)`. Set `shield_comp.on_shield_absorb = CALLBACK(src, PROC_REF(on_shield_hit))` → `on_shield_hit(user, attacker, absorbed)` → `attacker.apply_lc_sinking(5)`.
+- Tome Shield: `/datum/action/cooldown/dieci_tome_shield` with 5s CD → consume 1 Active Knowledge → `shield_comp.restore_shield(10 * level)`.
+- Stalwart Presence: Override `shield_comp.decay_timer` interval to 15s instead of 10s. Track shield HP → `add_movespeed_modifier(/datum/movespeed_modifier/dieci_stalwart)` (multiplicative_slowdown = -0.15, variable = TRUE) when above 50 HP, remove when below.
+- Golden Aegis: `/datum/action/cooldown/dieci_golden_aegis` → consume all knowledge → `shield_comp.shield_health = 100` → set `aegis_active = TRUE` → pause decay timer → register special on_damage handler that applies Sinking → `addtimer(8 SECONDS)` → AoE PALE via `for(var/mob/living/L in range(3, user))` → `L.deal_damage(shield_comp.shield_health, PALE_DAMAGE, user)` + `L.apply_lc_sinking(5)` → `shield_comp.shield_health = 0` → resume decay timer → `aegis_active = FALSE`.
+- Immovable Library: Start a 5s repeating `addtimer` → `shield_comp.restore_shield(1)`. Set `shield_comp.on_shield_absorb = CALLBACK(...)` → on any shield absorption: set `var/pale_counter_active = TRUE` + `addtimer(CALLBACK(reset_pale_counter), 3 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`. On `COMSIG_MOB_ITEM_ATTACK` → if `pale_counter_active`: force this hit to PALE via `INVOKE_ASYNC` → `target.deal_damage(weapon.force, PALE_DAMAGE, user)` + `target.apply_lc_sinking(5)` + reset flag. (Return damage modification signal or deal extra PALE damage separately.)
+
+---
+
+#### Branch 3: Sage (Knowledge Enhancement)
+
+**Theme:** Maximize the Active Knowledge economy. The Sage makes every piece of knowledge count more — longer buffs, cheaper synthesis, stronger consumption effects, and the ability to share knowledge with allies. At peak knowledge reserves, the Sage's weapon permanently channels PALE energy.
+
+**T1 (1pt) — Pick one:**
+- **A: Extensive Notes** — Max Active Knowledge increased from **20 to 30**. Imbue Knowledge duration increased by **50%** (level × 7.5s instead of × 5s).
+- **B: Applied Learning** — Each time Active Knowledge is consumed (for any purpose — Imbue, Tome Shield, skills, etc.), gain **4 Offense Level Up** stacks.
+
+**T2 (2pt) — Pick one:**
+- **A: Shared Wisdom** — Action: target an ally within 5 tiles. Consume 1 Active Knowledge entry → give the ally **+5% damage per knowledge level** for 30s. Also apply Sinking = knowledge level × 2 to all enemies within 3 tiles of the ally. 15s CD.
+- **B: Efficient Research** — Synthesis costs **2 entries instead of 3** to create the next level. Consuming Level 3+ knowledge in combat refunds **1 entry of the same type, one level lower** (partial refund).
+
+**T3 (3pt) — Pick one:**
+- **A: Grand Archive** *(Powerful Attack, 90s CD)* — Consume up to **5 Active Knowledge entries** (min 3). Each consumed entry = 1 hit in the combo. Each hit's damage type depends on knowledge type: **Anatomical/Behavioral = RED**, **Medical = WHITE**, **Spiritual = PALE**. Per-hit: apply Sinking = knowledge level × 2. Final hit: 2x DPS + apply Sinking = total consumed levels × 2.
+- **B: Infinite Library** *(Passive)* — Active Knowledge **has no max cap**. When holding **25+ entries**, weapon passively deals PALE damage (always, no Imbue needed). When holding **35+ entries**, melee attacks also passively apply 2 Sinking per hit. Consuming knowledge at 35+ does not lose the passive until you drop below the threshold.
+
+**Grand Archive — Details:**
+- **Activation:** Consume 3-5 Active Knowledge entries (player chooses via TGUI popup or auto-selects lowest first).
+- **Combo:** Number of hits = number of entries consumed (3 to 5). Each hit uses the consumed entry's type to determine damage type:
+  - Anatomical → RED damage
+  - Behavioral → RED damage
+  - Medical → WHITE damage (can trigger Sinking if stacks are active!)
+  - Spiritual → PALE damage (triggers Sinking)
+- **Per-hit:** DPS damage + apply Sinking stacks = consumed entry's level × 2.
+- **Final hit:** 2x DPS. Apply bonus Sinking = sum of all consumed levels × 2. For example, consuming L2 + L3 + L1 + L4 + L1 = total 11, so final hit applies 22 Sinking.
+- **Strategy:** Consuming Spiritual/Medical entries at the end ensures PALE/WHITE final hits trigger accumulated Sinking.
+
+**Implementation Notes:**
+- Extensive Notes: On skill registration → `knowledge_comp.max_knowledge = 30`. Override Imbue duration calc to multiply by 7.5 instead of 5.
+- Applied Learning: Hook into all knowledge consumption events (track via component signal). On consume → `human_parent.apply_lc_offense_level_up(4)`. OLU naturally halves every 5s so sustained consumption keeps it high.
+- Shared Wisdom: `/datum/action/cooldown/dieci_shared_wisdom` with 15s CD → pointed at ally → consume 1 knowledge → apply `/datum/status_effect/dieci_wisdom_buff` to ally (damage_mult = 1 + 0.05 * level, 30s duration) → `for(var/mob/living/L in range(3, ally))` → check hostile → `L.apply_lc_sinking(level * 2)`.
+- Efficient Research: Modify synthesis logic in Tome TGUI handler → change required count from 3 to 2. On knowledge consumption in combat → if consumed level ≥ 3 → `knowledge_comp.add_knowledge(type, level - 1, "Residual insight from [type] study")`.
+- Grand Archive: `/datum/action/cooldown/dieci_grand_archive` → TGUI popup or auto-select → consume 3-5 entries → store their types/levels → cutscene_duel + immobilize → N hits. Per-hit: determine damtype from entry type, deal DPS damage, `target.apply_lc_sinking(entry_level * 2)`. Final hit: 2x DPS + `target.apply_lc_sinking(total_levels * 2)`.
+- Infinite Library: On skill registration → `knowledge_comp.max_knowledge = INFINITY` (or a very high number like 999). Track threshold via `COMSIG_DIECI_KNOWLEDGE_CHANGED` (new signal on add/remove). At 25+ → override weapon damtype to PALE permanently (register `COMSIG_MOB_ITEM_ATTACK` to set damtype before hit). At 35+ → also `target.apply_lc_sinking(2)` per hit. Check thresholds on every knowledge change.
+
+---
+
+### Branch Synergies
+
+| Combo | Playstyle | Strength |
+|---|---|---|
+| **Scholar + Warden** | "The Fortress Scholar" — Build Sinking aggressively while the shield buys time. Shield blocks with Reactive Ward apply Sinking passively; PALE mode triggers accumulated stacks. | Best sustained 1v1. Shield absorbs punishment while Sinking overwhelms. |
+| **Scholar + Sage** | "The Master Archivist" — Maximum Sinking application with knowledge efficiency. Never run out of knowledge, every piece of knowledge amplifies Sinking. Applied Learning + Deep Study = constant Sinking + damage buffs. | Highest damage output. Knowledge fuels relentless offense. |
+| **Warden + Sage** | "The Living Library" — Shield + knowledge buffs + support. Hard to kill, helps allies, and Infinite Library provides passive PALE without consuming knowledge. | Best support + survivability. Never runs dry. |
+
+### Implementation Notes (General)
+
+- **No Fragile or DLD** — Dieci's debuff identity is purely Sinking
+- Core status effect is **Sinking** (`code/datums/status_effects/debuffs.dm:1956-2051`) — max 50 stacks, 5s activation delay, triggers on WHITE/PALE damage
+- The `dieci_shield_hp` component uses `COMSIG_MOB_APPLY_DAMGE` → flat subtract raw damage from shield HP → `COMPONENT_MOB_DENY_DAMAGE`. No armor/physiology recalculation. Shows `/obj/effect/temp_visual/shock_shield` on full block (0 HP damage to user). Overflow damage dealt normally via `deal_damage()`. Max 500 HP, starts at 0, built up in small amounts via skills (3/hit, 2/hit) and Active Knowledge consumption (10 × level). **Halves every 10 seconds** (15s with Stalwart Presence), creating a "use it or lose it" dynamic
+- **Imbue Knowledge** is the universal RED→PALE conversion action — all Dieci have it regardless of branch
+- Sinking stacks added to an already-activated effect do NOT get a new 5s delay — this makes PALE mode hits trigger + replenish in the same attack
+- `trigger_sinking()` can be called directly on the status effect datum to bypass the 5s activation delay (used by Abyssal Revelation and Tome of Ruin)
+- **Weapon damtype override:** Skills that change damtype (Imbue, Immovable Library counter, Infinite Library passive) modify `weapon.damtype` directly or deal extra damage of the alternate type via `INVOKE_ASYNC` → `target.deal_damage()`
+
+### New Files to Create
+
+- `ModularLobotomy/associations/skills/dieci/scholar.dm`
+- `ModularLobotomy/associations/skills/dieci/warden.dm`
+- `ModularLobotomy/associations/skills/dieci/sage.dm`
+- `ModularLobotomy/associations/skills/dieci/dieci_shield_hp.dm`
+- `ModularLobotomy/associations/skills/dieci/imbue_knowledge.dm`
+- `tgui/packages/tgui/interfaces/DieciTomeBestiary.js`
+
+---
+
+### Cinq (NEW) - "The Blade"
+
+**Theme:** Honor dueling and professional combat. Cinq are elite duelists who hire out their blades for single combat — one-on-one encounters where reputation, money, and sometimes lives are on the line. They view combat as an art form built on composure and discipline. A Cinq fixer does not brawl; they duel. Their work ranges from honorable formal duels (first blood, to incapacitation) to ruthless contracted kills (to the death). Outside of duels, they train obsessively, honing the split-second focus that separates a clean critical strike from a wasted swing.
+
+Cinq's identity is the **duel itself** — an isolated, formal contest between two combatants. Their in-place duel system creates a sealed bubble that prevents outside interference, turning any hallway, street corner, or elevator into an arena. Poise and Concentration are their mechanical language: Poise represents the razor-edge focus that enables devastating criticals, while Concentration represents the deeper discipline that sustains that focus under pressure.
+
+**Gimmick / EXP Source: Dueling**
+
+Cinq earn EXP through winning duels and completing duel contracts. Their duel system **only works on carbon mobs** (players), emphasizing player interaction.
+
+### Duel System
+
+Cinq's core mechanic is the **formal duel** — a structured one-on-one fight that happens in-place with a duel component blocking all outside interference. When a duel begins, a visible ring (range 8 tiles from the duel's center point) is created that only the two duelists can see. If either combatant leaves the ring, they **immediately lose** the duel, take SP damage equal to 75% of their current SP, and are slowed for 5 seconds. Duels are the primary way Cinq earns EXP and the vehicle for their contract work.
+
+**Duel Levels:**
+
+| Level | End Condition | Post-Duel Healing | Risk |
+|-------|--------------|-------------------|------|
+| **Level 1: First Blood** | Either combatant reaches 25% HP | Both fully healed (`fully_heal()`) | Low — training/honor duels |
+| **Level 2: Submission** | Either combatant reaches crit threshold | Both healed to 50% max HP | Medium — serious disputes |
+| **Level 3: To the Death** | One combatant dies (`COMSIG_LIVING_DEATH`) | None | Lethal — contracted kills |
+
+**Duel Types:**
+
+1. **Consensual Duel** — The Cinq fixer uses the **Challenge to Duel** action (`/datum/action/cooldown/cinq_challenge`) on a carbon mob. A TGUI prompt appears for the target: "Accept Duel? Level: [1/2/3]" with Accept/Decline buttons. Target has 30 seconds to respond. On accept, duel begins after a 3-second countdown. Both players can be anyone — Cinq vs Cinq, Cinq vs civilian, etc.
+
+2. **Contracted Duel (Forced)** — The Cinq fixer is hired to duel a specific target. Uses the **Throw the Glove** action (`/datum/action/cooldown/cinq_glove_throw`) — a projectile glove is thrown at the target (3-tile range, same as `throw_at()` pattern). On hit, the target receives a visible message: `"[user] throws a dueling glove at [target]'s feet — a formal challenge!"` After a 5-second delay (during which both parties can prepare), the duel begins automatically with no consent required. Only available while on a Duel Person contract. The glove is a `/obj/item/cinq_glove` that auto-deletes after the duel starts.
+
+**Duel Component (`/datum/component/cinq_duel`):**
+
+Applied to BOTH duelists when a duel begins. Prevents ALL damage from sources other than the other duelist. This is the same pattern as `/datum/component/cutscene_duel` but extended for longer-duration player-vs-player duels.
+
+```dm
+/datum/component/cinq_duel
+	/// The other duelist — only this mob can damage us
+	var/mob/living/opponent
+	/// Duel level (1, 2, or 3)
+	var/duel_level = 1
+	/// Reference to the duel datum managing this fight
+	var/datum/cinq_duel_instance/duel_instance
+
+/datum/component/cinq_duel/Initialize(mob/living/opponent_mob, level, datum/cinq_duel_instance/instance)
+	opponent = opponent_mob
+	duel_level = level
+	duel_instance = instance
+	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage))
+
+/datum/component/cinq_duel/proc/on_damage(datum/source, damage, damagetype, def_zone, blocked, forced, spread_flags, wound_bonus, bare_wound_bonus, sharpness, atom/incoming_attacker)
+	SIGNAL_HANDLER
+	if(incoming_attacker != opponent)
+		return COMPONENT_MOB_DENY_DAMAGE
+	// After damage passes through, check end conditions
+	INVOKE_ASYNC(duel_instance, TYPE_PROC_REF(/datum/cinq_duel_instance, check_end_condition))
+```
+
+**Duel Instance Datum (`/datum/cinq_duel_instance`):**
+
+Manages the lifecycle of a single duel. Created when a duel begins, destroyed when it ends.
+
+```dm
+/datum/cinq_duel_instance
+	var/mob/living/duelist_a
+	var/mob/living/duelist_b
+	var/duel_level = 1
+	var/duel_active = FALSE
+	/// Who initiated (for EXP/ahn tracking — the Cinq fixer)
+	var/mob/living/initiator
+	/// Center turf of the duel ring
+	var/turf/ring_center
+	/// Ring radius in tiles
+	var/ring_range = 8
+	/// Visual ring overlay images (only visible to duelists)
+	var/list/ring_images = list()
+
+/datum/cinq_duel_instance/proc/start_duel()
+	duel_active = TRUE
+	// Create the duel ring centered between the two duelists
+	ring_center = get_turf(duelist_a)
+	create_ring_visuals()
+	duelist_a.AddComponent(/datum/component/cinq_duel, duelist_b, duel_level, src)
+	duelist_b.AddComponent(/datum/component/cinq_duel, duelist_a, duel_level, src)
+	// Track movement for ring boundary
+	RegisterSignal(duelist_a, COMSIG_MOVABLE_MOVED, PROC_REF(on_duelist_moved))
+	RegisterSignal(duelist_b, COMSIG_MOVABLE_MOVED, PROC_REF(on_duelist_moved))
+	if(duel_level == 3)
+		RegisterSignal(duelist_a, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+		RegisterSignal(duelist_b, COMSIG_LIVING_DEATH, PROC_REF(on_death))
+	duelist_a.visible_message(span_boldwarning("A formal duel begins between [duelist_a] and [duelist_b]!"))
+
+/datum/cinq_duel_instance/proc/create_ring_visuals()
+	// Create ring border overlay images visible only to duelists
+	// Use /image objects added to duelist clients so only they can see the ring
+	for(var/turf/T in circle_range(ring_center, ring_range))
+		if(get_dist(T, ring_center) >= ring_range - 1) // Border tiles only
+			var/image/I = image('icons/effects/effects.dmi', T, "yourstate") // placeholder icon
+			I.alpha = 128
+			ring_images += I
+	if(duelist_a.client)
+		duelist_a.client.images += ring_images
+	if(duelist_b.client)
+		duelist_b.client.images += ring_images
+
+/datum/cinq_duel_instance/proc/on_duelist_moved(datum/source)
+	SIGNAL_HANDLER
+	var/mob/living/mover = source
+	if(!duel_active)
+		return
+	if(get_dist(get_turf(mover), ring_center) > ring_range)
+		// Left the ring — immediate loss with penalty
+		INVOKE_ASYNC(src, PROC_REF(ring_forfeit), mover)
+
+/datum/cinq_duel_instance/proc/ring_forfeit(mob/living/deserter)
+	if(!duel_active)
+		return
+	var/mob/living/winner = (deserter == duelist_a) ? duelist_b : duelist_a
+	// SP penalty: 75% of current SP
+	deserter.adjustSanityLoss(deserter.sanityhealth * 0.75)
+	to_chat(deserter, span_userdanger("You fled the dueling ring! You forfeit the duel!"))
+	// Slow for 5 seconds
+	deserter.add_movespeed_modifier(/datum/movespeed_modifier/cinq_forfeit_slow)
+	addtimer(CALLBACK(deserter, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_forfeit_slow), 5 SECONDS)
+	end_duel(winner)
+
+/datum/cinq_duel_instance/proc/check_end_condition()
+	if(!duel_active)
+		return
+	switch(duel_level)
+		if(1) // First Blood: 25% HP
+			if(duelist_a.health <= duelist_a.maxHealth * 0.25)
+				end_duel(duelist_b)
+			else if(duelist_b.health <= duelist_b.maxHealth * 0.25)
+				end_duel(duelist_a)
+		if(2) // Submission: crit threshold
+			if(duelist_a.health <= duelist_a.crit_threshold)
+				end_duel(duelist_b)
+			else if(duelist_b.health <= duelist_b.crit_threshold)
+				end_duel(duelist_a)
+		// Level 3 handled by on_death signal
+
+/datum/cinq_duel_instance/proc/on_death(datum/source)
+	SIGNAL_HANDLER
+	var/mob/living/dead_one = source
+	var/mob/living/winner = (dead_one == duelist_a) ? duelist_b : duelist_a
+	INVOKE_ASYNC(src, PROC_REF(end_duel), winner)
+
+/datum/cinq_duel_instance/proc/end_duel(mob/living/winner)
+	duel_active = FALSE
+	var/mob/living/loser = (winner == duelist_a) ? duelist_b : duelist_a
+	// Remove duel components
+	qdel(duelist_a.GetComponent(/datum/component/cinq_duel))
+	qdel(duelist_b.GetComponent(/datum/component/cinq_duel))
+	// Clean up signals
+	UnregisterSignal(duelist_a, list(COMSIG_LIVING_DEATH, COMSIG_MOVABLE_MOVED))
+	UnregisterSignal(duelist_b, list(COMSIG_LIVING_DEATH, COMSIG_MOVABLE_MOVED))
+	// Remove ring visuals from both clients
+	if(duelist_a.client)
+		duelist_a.client.images -= ring_images
+	if(duelist_b.client)
+		duelist_b.client.images -= ring_images
+	ring_images.Cut()
+	// Announce
+	winner.visible_message(span_boldwarning("[winner] wins the duel against [loser]!"))
+	// Healing (delayed to avoid mid-signal issues, same pattern as lcl_duel.dm)
+	switch(duel_level)
+		if(1) // Full heal both
+			addtimer(CALLBACK(src, PROC_REF(heal_both_full)), 1)
+		if(2) // Heal both to 50%
+			addtimer(CALLBACK(src, PROC_REF(heal_both_half)), 1)
+		// Level 3: no healing
+	// Award ahn to winner via ID card bank account
+	var/ahn_reward = list(1 = 100, 2 = 250, 3 = 500)[duel_level]
+	var/obj/item/card/id/C = winner.get_idcard(TRUE)
+	if(C?.registered_account)
+		C.registered_account.adjust_money(ahn_reward)
+		winner.playsound_local(get_turf(winner), 'sound/effects/cashregister.ogg', 25, 3, 3)
+		to_chat(winner, span_boldnotice("You earned [ahn_reward] ahn for winning the duel!"))
+	// Award EXP to initiator if they won
+	if(winner == initiator)
+		var/datum/component/association_exp/exp = winner.GetComponent(/datum/component/association_exp)
+		if(exp)
+			exp.modify_exp(10 * duel_level) // 10/20/40 EXP
+```
+
+**Cinq-Specific Contract Types:**
+
+- **Duel Person** (Cinq only) — Target a specific carbon player. The Cinq fixer must find and duel the target using the Throw the Glove action (forced, no consent). Contract specifies duel level. Contract completes when the duel ends (win or lose, but winning gives bonus EXP + ahn). Reflects Cinq's role as hired blades.
+
+- **Champion Contract** (Cinq only) — A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. The Cinq fixer must duel the specified target as the client's champion. Works identically to Duel Person mechanically (forced glove throw), but the contract payment comes from the client, not Hana. If the Cinq wins, both the fixer and the client benefit. The client must stay within 10 tiles during the duel to witness it (or contract is downgraded to standard Duel Person payout).
+
+**Contract-Specific Behavior:**
+- Cinq skill tree abilities **only function while on an active contract**
+- Duel Person contracts show a direction indicator pointing toward the target
+- Champion Contracts show indicators for both the client and the target
+- Failing to initiate a duel within the contract duration = contract failure
+
+**Target Grade EXP Bonus:**
+
+When a duel ends in victory, the Cinq fixer earns bonus EXP based on the target's attribute grade. The target's "potential" is calculated from their 4 attributes (Fortitude, Prudence, Temperance, Justice):
+
+```dm
+/// Calculate target grade for EXP bonus
+var/stattotal = 0
+for(var/attribute in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+	stattotal += get_attribute_level(target, attribute)
+stattotal /= 4  // Average of stats
+var/grade = clamp(10 - round(stattotal / 20), 1, 9)  // Grade 1 (strongest) to 9 (weakest)
+var/grade_bonus = max(0, (10 - grade) * 3)  // Grade 1 = 27 bonus EXP, Grade 5 = 15, Grade 9 = 3
+```
+
+Higher-grade (stronger) opponents yield more bonus EXP, rewarding Cinq fixers for taking on challenging duels rather than farming weak targets.
+
+**EXP Sources Summary:**
+
+| Activity | EXP Gain | Notes |
+|---|---|---|
+| Passive contract tick | 1 EXP / 10s | While on active contract |
+| Duel victory (Level 1) | 10 EXP | First blood |
+| Duel victory (Level 2) | 20 EXP | Submission |
+| Duel victory (Level 3) | 40 EXP | To the death |
+| Target grade bonus | 3-27 EXP | Based on target's attribute grade (stronger = more) |
+| Poise crit during duel | 2 EXP per crit | Only while duel component active |
+| Contract completion bonus | 10-30 EXP | Based on duration + outcome |
+
+**Ahn Rewards:**
+
+| Duel Level | Winner Reward |
+|---|---|
+| Level 1 | 500 ahn |
+| Level 2 | 1250 ahn |
+| Level 3 | 2500 ahn |
+
+**Skill Tree — 3 Branches:**
+
+Cinq has 3 branches. Players can invest in a maximum of 2.
+
+**Core Status Effects: Poise and Concentration** — Cinq skills primarily use the Poise and Concentration status effects. Poise (max 50 stacks) grants `stacks * 2.5`% crit chance per melee attack. On crit: 25% weapon force as bonus damage, signals sent (`COMSIG_POISE_CRIT_ATTACKER` to attacker, `COMSIG_POISE_CRIT_TARGET` to target). After crit: if Concentration exists, consume 1 Concentration stack; otherwise halve all Poise stacks. Poise decays completely if no crit or new stacks gained within a 10-second tick. Concentration (max 10 stacks) protects Poise from halving on crit and decays 1 stack per 15 seconds; if no Poise exists, all Concentration is removed.
+
+#### Branch 1: Duelist (Poise Focus)
+
+**Theme:** Build and exploit Poise stacks for devastating criticals. The Duelist lives for the crit — every swing is calibrated to push Poise higher, and every crit lands like a hammer. Skills hook into `COMSIG_POISE_CRIT_ATTACKER` to reward and amplify the crit cycle.
+
+**T1 (1pt) — Pick one:**
+- **A: Keen Edge** — Each melee attack grants 3 Poise stacks. The simplest path to a critical strike: swing often, swing true.
+- **B: Opening Gambit** — The first attack against a new target applies 8 Poise stacks; subsequent attacks on the same target apply 1. Switching targets resets the count. Size up your opponent in a single glance.
+
+**T2 (2pt) — Pick one:**
+- **A: Precision Strike** — On Poise crit, deal an additional 15% of your weapon's force as bonus damage and apply 3 Fragile stacks to the target (replace-if-higher). Your crits expose the flaws in their stance.
+- **B: Momentum** — On Poise crit, regain Poise stacks equal to 50% of the stacks consumed or halved by the crit (minimum 3). Crits fuel crits — each successful strike feeds the next.
+
+**T3 (3pt) — Pick one:**
+- **A: Decisive Blow** *(Powerful Attack, 90s CD)* — Requires: 15+ Poise stacks. Dash forward 4 tiles. 5-hit combo on first enemy hit. Half of your Poise stacks are consumed before the combo; each consumed stack adds 2% to total combo damage (at 30 Poise: consume 15, +30% damage). You also gain Concentration equal to half the consumed stacks (max 5). Per-hit: apply 2 Fragile (replace-if-higher). Final hit: 2x DPS, knockback 3 tiles. Convert your edge into endurance.
+- **B: Ceaseless Pressure** *(Passive)* — Every 5th consecutive melee hit on the same target is an automatic crit (bypassing the probability roll) and grants 5 Poise. Switching targets resets the count. Relentless discipline replaces fleeting focus.
+
+**Decisive Blow — Details:**
+- **Opener:** Dash forward 4 tiles in facing direction. First enemy hit becomes the main target.
+- **Combo:** 5 hits. Rapid precision strikes.
+- **Pre-combo:** Read current Poise stacks. Consume half (rounded down). Calculate damage multiplier: `1 + (consumed_stacks * 2 / 100)`. Grant Concentration = `min(5, round(consumed / 2))`. E.g., at 30 Poise: consume 15, +30% damage, gain 5 Concentration. At 50 Poise: consume 25, +50% damage, gain 5 Concentration.
+- **Per-hit effect:** Each hit applies 2 Fragile (replace-if-higher) via `apply_lc_fragile(2)`.
+- **Final hit:** Deals 2x DPS, knockback 3 tiles.
+- **Condition:** More Poise stacks = more combo damage + more Concentration gained (capped at 5). You keep half your Poise for continued fighting.
+
+**Implementation Notes:**
+- Keen Edge: `COMSIG_MOB_ITEM_ATTACK` → `human_parent.apply_lc_poise(3)`.
+- Opening Gambit: Track `var/mob/living/last_target` and `var/consecutive_count`. On `COMSIG_MOB_ITEM_ATTACK`: if `target != last_target` → `last_target = target`, `consecutive_count = 0`, `human_parent.apply_lc_poise(8)`. Else → `human_parent.apply_lc_poise(1)`, `consecutive_count++`.
+- Precision Strike: `COMSIG_POISE_CRIT_ATTACKER` → `INVOKE_ASYNC` → `target.deal_damage(weapon.force * 0.15, weapon.damtype)` + `target.apply_lc_fragile(3)`.
+- Momentum: Snapshot pre-crit poise stacks on `COMSIG_MOB_ITEM_ATTACK` (store `var/pre_crit_poise`). On `COMSIG_POISE_CRIT_ATTACKER` → calculate `lost = pre_crit_poise - current_poise` → `human_parent.apply_lc_poise(max(3, round(lost / 2)))`.
+- Decisive Blow: `/datum/action/cooldown/decisive_blow` → toggle targeting → `InterceptClickOn` checks Poise >= 15. Read current poise stacks, `var/consumed = round(current_poise / 2)`. Remove `consumed` stacks via `apply_lc_poise(-consumed)`. Multiplier = `1 + (consumed * 2 / 100)`. Grant `human_parent.apply_lc_concentration(min(5, round(consumed / 2)))`. Apply cutscene_duel component + immobilize. 5 hits with `sleep()`. Per-hit: `target.apply_lc_fragile(2)`. Final hit: 2x DPS, `throw_at(target, 3)`.
+- Ceaseless Pressure: Track `var/datum/weakref/combo_target` and `var/combo_hits = 0`. On `COMSIG_MOB_ITEM_ATTACK`: if `WEAKREF(target) != combo_target` → reset `combo_target = WEAKREF(target)`, `combo_hits = 0`. `combo_hits++`. At 5: `INVOKE_ASYNC(poise_effect, PROC_REF(do_poise_crit), target, user, weapon)` + `human_parent.apply_lc_poise(5)`, reset `combo_hits = 0`. No `buffs.dm` edits needed.
+
+---
+
+#### Branch 2: Skirmisher (Speed Focus)
+
+**Theme:** Movement speed, hit-and-run tactics. The Skirmisher fights like quicksilver — closing distance in a flash, landing a burst of strikes, then pulling back before the opponent can react. Skills reward aggressive positioning and punish enemies who cannot keep up.
+
+**T1 (1pt) — Pick one:**
+- **A: Quick Step** — On landing a melee hit, gain +15% movement speed for 4 seconds (refreshes on hit). Also grants Poise stacks equal to your total active Cinq speed bonus / 5 (e.g., 15% speed = 3 Poise, 45% speed = 9 Poise). The faster you move, the sharper your edge.
+- **B: First Strike** — Your first melee hit on a new target deals 20% bonus damage and grants 5 Poise. Only triggers once per target — switching to a different target resets it. The initiative belongs to whoever moves first.
+
+**T2 (2pt) — Pick one:**
+- **A: Flurry** — After landing 3 consecutive melee hits on the same target within 4 seconds, your 4th hit deals 50% bonus damage and grants 3 Poise stacks. Resets after the bonus hit triggers. Sustained aggression overwhelms the opponent's guard.
+- **B: Rush Down** — On Poise crit, gain +30% movement speed for 4 seconds. A perfect strike fuels your momentum.
+
+**T3 (3pt) — Pick one:**
+- **A: Blade Dance** *(Powerful Attack, 90s CD)* — Dash to target from up to 5 tiles. 6-hit rapid combo. Between each hit, the user teleports to a random adjacent tile of the target (creating a "dancing around" visual). Per-hit: gain 2 Poise stacks. If the user has +15% or more speed bonus from Cinq skills when initiating, add 2 bonus hits (8 total). Final hit: 2x DPS, applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds after combo ends. Speed is life.
+- **B: Afterimage** *(Passive)* — Track steps taken. After moving 20+ steps, your next melee attack deals 35% bonus damage, grants 5 Poise, and resets the step counter. Additionally, 20% chance on being hit by melee to dodge the attack entirely (damage negated via `COMPONENT_MOB_DENY_DAMAGE`). You're never where they expect you to be.
+
+**Blade Dance — Details:**
+- **Opener:** Dash to target from up to 5 tiles. Target becomes the main target.
+- **Combo:** 6 hits base (8 if Cinq speed buffs >= 15%). User `forceMove()`'d to `pick(get_adjacent_turfs(target))` between each hit.
+- **Per-hit effect:** Each hit grants user 2 Poise stacks.
+- **Final hit:** Deals 2x DPS, applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds.
+- **Condition:** Speed buffs from Cinq sources (Quick Step, Rush Down) are checked. If active, bonus hits are added.
+
+**Implementation Notes:**
+- Quick Step: `COMSIG_MOB_ITEM_ATTACK` → `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_quick_step)` (multiplicative_slowdown = -0.15, variable = TRUE). Set/refresh timer via `addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_quick_step), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`. Then calculate Poise: sum the absolute `multiplicative_slowdown` values of active Cinq speed modifiers (quick_step = 0.15, disengage = 0.3, blade_dance_finisher = 0.3), multiply by 100, divide by 5 → `human_parent.apply_lc_poise(round(total_speed_percent / 5))`. E.g., Quick Step alone = 3 Poise, Quick Step + Disengage = 9 Poise.
+- First Strike: Track `var/datum/weakref/last_target` and `var/first_strike_used`. On `COMSIG_MOB_ITEM_ATTACK`: if `WEAKREF(target) != last_target` → set `last_target = WEAKREF(target)`, `first_strike_used = FALSE`. If `!first_strike_used` → deal `weapon.force * 0.2` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(5)`, set `first_strike_used = TRUE`.
+- Flurry: Track `var/datum/weakref/combo_target`, `var/combo_count`, `var/combo_last_time`. On `COMSIG_MOB_ITEM_ATTACK`: if same target (weakref match) and `world.time - combo_last_time < 4 SECONDS` → `combo_count++`. At 3: set `var/flurry_ready = TRUE`. On next `COMSIG_MOB_ITEM_ATTACK` while `flurry_ready` and same target → deal `weapon.force * 0.5` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(3)`, set `flurry_ready = FALSE`, reset count. Different target → reset all.
+- Rush Down: `COMSIG_POISE_CRIT_ATTACKER` → `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_rush_down)` (multiplicative_slowdown = -0.3, variable = TRUE). Set/refresh timer via `addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_rush_down), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`.
+- Blade Dance: `/datum/action/cooldown/blade_dance` → toggle targeting → click target within 5 tiles. Apply cutscene_duel + immobilize. Check for Cinq speed modifiers → 6 or 8 hits. Between each hit: `human_parent.forceMove(pick(get_adjacent_turfs(target)))`. Per-hit: `human_parent.apply_lc_poise(2)`. Final hit: 2x DPS, `target.apply_lc_fragile(5)`, `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_blade_dance_finisher)` (multiplicative_slowdown = -0.3) for 5s.
+- Afterimage: Track `var/steps_taken = 0`. On `COMSIG_MOVABLE_MOVED` → `steps_taken++`. On `COMSIG_MOB_ITEM_ATTACK` → if `steps_taken >= 20` → deal `weapon.force * 0.35` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(5)`, reset `steps_taken = 0`. Dodge: `COMSIG_MOB_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → `prob(20)` → `to_chat` message → return `COMPONENT_MOB_DENY_DAMAGE`.
+
+---
+
+#### Branch 3: Fencer (Concentration Focus)
+
+**Theme:** Sustain Poise through Concentration management and defensive counterplay. The Fencer is the patient combatant who builds an unshakeable foundation of Concentration, protecting their Poise stacks through careful timing and reactive techniques. Where the Duelist explodes in criticals and the Skirmisher dances in speed, the Fencer endures — their Poise never faltering because their Concentration never breaks.
+
+**T1 (1pt) — Pick one:**
+- **A: Composed Guard** — On taking melee damage, gain 2 Concentration stacks. 1s internal CD. Every blow absorbed deepens your focus.
+- **B: Measured Response** — On landing a melee hit, gain 2 Poise stacks. Every 3rd hit, also gain 1 Concentration stack. A disciplined rhythm of attack and focus.
+
+**T2 (2pt) — Pick one:**
+- **A: Iron Focus** — Every 2nd Poise crit, gain 2 Concentration stacks. Discipline sharpens through repetition.
+- **B: Riposte** — When hit by a melee attack, you have a `10 * (your Concentration stacks)`% chance to negate the damage entirely, move to a random adjacent tile, and consume 2 Concentration. At 10 Concentration (max) = 100% dodge. Your focus lets you read attacks before they land.
+
+**T3 (3pt) — Pick one:**
+- **A: Fencer's Finale** *(Powerful Attack, 90s CD)* — Requires: 8+ Concentration stacks. Enter a 3-second parry stance (immobilized, visible aura). During the stance, all melee damage against you is negated. If hit during the stance, immediately end the parry and dash to the attacker for the combo. If not hit, after 3 seconds dash to nearest enemy within 5 tiles. Deliver a 4-hit combo. All Concentration stacks are consumed; each consumed stack adds 5% to total combo damage. Per-hit: apply 2 Poise to self and 2 Defense Level Down to target. Final hit: 2x DPS, grants Protection stacks equal to half the consumed Concentration (rounded down). The patience pays off — or is punished.
+- **B: Unshakeable** *(Passive)* — When your Poise stacks are halved by a crit (because you had no Concentration), immediately gain Concentration stacks equal to half the Poise stacks lost (minimum 2). Additionally, taking any damage while you have Poise grants 1 Concentration (2s CD). Your discipline adapts to recover from any setback.
+
+**Fencer's Finale — Details:**
+- **Opener:** Enter parry stance — immobilize self, add visible "guard" overlay. Register `COMSIG_MOB_APPLY_DAMGE` to block incoming melee hits. If hit: immediately cancel the 3s timer, store the attacker as the combo target, and proceed to combo phase. If not hit after 3 seconds: find nearest enemy within 5 tiles as the combo target.
+- **Combo:** 4 hits. Dash to combo target.
+- **Pre-combo:** Read and consume all Concentration stacks. Calculate damage multiplier: `1 + (consumed_stacks * 5 / 100)`. At 5 stacks = +25%, at 10 stacks (max) = +50%.
+- **Per-hit effect:** Each hit grants user 2 Poise stacks and applies 2 Defense Level Down stacks to target.
+- **Final hit:** Deals 2x DPS. Grants user Protection stacks = `round(consumed_concentration / 2)` (e.g., 10 consumed → 5 Protection).
+- **Condition:** More Concentration stacks = more damage and more Protection reward. Getting hit during parry triggers an instant counter — enemies are punished for attacking you.
+
+**Implementation Notes:**
+- Composed Guard: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → 1s CD check → `human_parent.apply_lc_concentration(2)`.
+- Measured Response: Track `var/hit_count = 0`. On `COMSIG_MOB_ITEM_ATTACK` → `human_parent.apply_lc_poise(2)` + `hit_count++`. If `hit_count >= 3` → `human_parent.apply_lc_concentration(1)`, reset `hit_count = 0`.
+- Iron Focus: Track `var/crit_count = 0`. On `COMSIG_POISE_CRIT_ATTACKER` → `crit_count++`. If `crit_count >= 2` → `human_parent.apply_lc_concentration(2)`, reset `crit_count = 0`.
+- Riposte: `COMSIG_MOB_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → get Concentration stacks via `human_parent.get_lc_concentration()` → `prob(10 * stacks)` → consume 2 Concentration via `human_parent.apply_lc_concentration(-2)` → `human_parent.forceMove(pick(get_adjacent_turfs(human_parent)))` → return `COMPONENT_MOB_DENY_DAMAGE`. No CD — Concentration cost is the limiter.
+- Fencer's Finale: `/datum/action/cooldown/fencers_finale` → check Concentration >= 8. Phase 1 (parry): immobilize user, add guard overlay, store `var/parry_timer_id = addtimer(CALLBACK(src, PROC_REF(start_combo), null), 3 SECONDS, TIMER_STOPPABLE)`. Register `COMSIG_MOB_APPLY_DAMGE` → if melee → `COMPONENT_MOB_DENY_DAMAGE` + `deltimer(parry_timer_id)` + `INVOKE_ASYNC(src, PROC_REF(start_combo), attacker)`. `start_combo(target)` proc: remove overlay, unimmobilize, unregister parry signal. If `target` is null → find nearest enemy via `for(var/mob/living/L in range(5))` sorted by `get_dist`. Read + consume all Concentration. Multiplier = `1 + (consumed * 5 / 100)`. Dash to target, apply cutscene_duel + immobilize target. Execute 4 hits. Per-hit: `human_parent.apply_lc_poise(2)` + `target.apply_lc_defense_level_down(2)`. Final hit: 2x DPS, `apply_lc_protection(round(consumed / 2))`.
+- Unshakeable: Two signal hooks. (1) Crit recovery: snapshot pre-crit Poise on `COMSIG_MOB_ITEM_ATTACK` (store `var/pre_crit_poise`). On `COMSIG_POISE_CRIT_ATTACKER` → if no Concentration existed at crit time → calculate `lost = pre_crit_poise - current_poise` → `human_parent.apply_lc_concentration(max(2, round(lost / 2)))`. (2) Damage generation: `COMSIG_MOB_AFTER_APPLY_DAMGE` → 2s CD → check owner has Poise stacks > 0 → `human_parent.apply_lc_concentration(1)`. No buffs.dm edits needed.
+
+---
+
+#### Cinq Branch Synergies
+
+The 2-branch limit creates natural playstyle combos:
+
+| Combo | Playstyle | Strength |
+|---|---|---|
+| **Duelist + Skirmisher** | "The Swashbuckler" — Build Poise rapidly (Keen Edge + Quick Step), explosive crits + speed. Blade Dance builds Poise too, offering two powerful attacks with different timing. | Highest burst damage potential. Aggressive, high-risk with two Powerful Attacks. |
+| **Duelist + Fencer** | "The Master Duelist" — Poise + Concentration synergy. Iron Focus regenerates Concentration through crits. Ceaseless Pressure guarantees crits every 5 hits + restocks Poise. | Most sustainable crit engine. Best for extended 1v1 duels. |
+| **Skirmisher + Fencer** | "The Untouchable" — Speed from Quick Step + Rush Down, dodge from Afterimage, damage negation from Riposte + Composed Guard. Two defensive tools that still build Poise. | Hardest to kill. Defense through mobility and counterplay. |
+
+---
+
+**Cinq Design Notes:**
+- Core status effects are **Poise** (crit chance) and **Concentration** (crit protection), both already implemented in `code/datums/status_effects/buffs.dm:1250-1406`
+- The two key signals `COMSIG_POISE_CRIT_ATTACKER` and `COMSIG_POISE_CRIT_TARGET` (defined in `code/__DEFINES/dcs/signals.dm:1089-1091`) have **no existing handlers** — all Cinq skill hooks are clean additions
+- **Fragile** uses "replace-if-higher" stacking — skills apply specific stack counts, not additive
+- **Speed boosts** use `add_movespeed_modifier()` with negative `multiplicative_slowdown` (-0.15 = 15% faster, -0.3 = 30% faster). New modifier datums needed: `/datum/movespeed_modifier/cinq_quick_step`, `/datum/movespeed_modifier/cinq_rush_down`, `/datum/movespeed_modifier/cinq_blade_dance_finisher`
+- **T3 Powerful Attacks** follow the tiantui flurry pattern (`thumb.dm`): cutscene combo with immobilize, multi-hit DPS-based damage, cutscene_duel component (separate from cinq_duel), conditional bonuses
+- Each hit deals weapon DPS (`force * force_multiplier * 1.25 / attack_speed`) so all weapons are equally viable
+- The **cinq_duel** component is distinct from **cutscene_duel** — cinq_duel is for formal PvP duels (longer, HP thresholds, healing), cutscene_duel is for brief powerful attack animations
+- Skills **only function while on an active contract** — no contract = no abilities
+- The **glove throw** for forced duels uses `throw_at()` pattern with a `/obj/item/cinq_glove` projectile
+- Duel system references `lcl_duel.dm` for the `addtimer(CALLBACK, 1)` heal delay workaround
+- **Concentration max_stacks** must be changed from 20 → 10 in `buffs.dm:1367`
+- **Ceaseless Pressure** and **Unshakeable** are both purely signal-driven — no `buffs.dm` edits needed
+- Poise's `active_this_period` flag (buffs.dm:1263) is the key var for understanding decay behavior
 
 ---
 
@@ -1755,7 +3046,10 @@ The 2-branch limit creates natural playstyle combos:
 - `ModularLobotomy/associations/skills/seven/dossier.dm` - Investigation Dossier item + datum
 - `tgui/packages/tgui/interfaces/SevenDossier.js` - Dossier TGUI viewer (report list by subject, stats)
 - `ModularLobotomy/associations/skills/dieci/` - Dieci skill tree branch files (TBD)
-- `ModularLobotomy/associations/skills/cinq/` - Cinq skill tree branch files (TBD)
+- `ModularLobotomy/associations/skills/cinq/duelist.dm` - Cinq Duelist branch skills (Keen Edge, Opening Gambit, Precision Strike, Momentum, Decisive Blow, Ceaseless Pressure)
+- `ModularLobotomy/associations/skills/cinq/skirmisher.dm` - Cinq Skirmisher branch skills (Quick Step, First Strike, Flurry, Rush Down, Blade Dance, Afterimage)
+- `ModularLobotomy/associations/skills/cinq/fencer.dm` - Cinq Fencer branch skills (Composed Guard, Measured Response, Iron Focus, Riposte, Fencer's Finale, Unshakeable)
+- `ModularLobotomy/associations/skills/cinq/duel_system.dm` - `/datum/cinq_duel_instance`, `/datum/component/cinq_duel`, Challenge to Duel action, Throw the Glove action, `/obj/item/cinq_glove`
 - `ModularLobotomy/associations/contracts/contract_datum.dm` - Base contract datum
 - `ModularLobotomy/associations/contracts/contract_terminal.dm` - Physical terminal + TGUI for Hana
 - `ModularLobotomy/associations/contracts/contract_actions.dm` - Contract actions (civilian offer, fixer accept/decline, view)
