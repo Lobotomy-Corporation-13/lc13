@@ -48,6 +48,17 @@
 	tastes = list("cake" = 1, "vigilance" = 1)
 	foodtypes = GRAIN | DAIRY
 
+/obj/item/food/cake/bbird/MakeProcessable()
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/cakeslice/bbird, 5, 30)
+
+/obj/item/food/cakeslice/bbird
+	name = "Big Bird Cake Slice"
+	desc = "A slice of a cake that seems to be staring at you."
+	icon_state = "bbcakeslice"
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/nutriment/vitamin = 1, /datum/reagent/abnormality/tastesyrup = 1)
+	tastes = list("cake" = 1, "vigilance" = 1)
+	foodtypes = GRAIN | DAIRY
+
 /datum/crafting_recipe/food/cake/bbird
 	name = "Big Bird Cake"
 	reqs = list(

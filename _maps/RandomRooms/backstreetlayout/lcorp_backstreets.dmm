@@ -2675,14 +2675,14 @@
 /area/city/backstreets_room)
 "qB" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/hypospray/medipen/salacid,
 /obj/item/reagent_containers/hypospray/medipen/salacid,
@@ -3864,26 +3864,26 @@
 /area/city/backstreets_room)
 "ym" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /obj/item/paper/fluff/info/refinery,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/halls,
@@ -4542,14 +4542,14 @@
 /area/city/backstreets_alley)
 "Ds" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /obj/item/paper/fluff/info/refinery,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/halls,
@@ -4627,14 +4627,14 @@
 /area/city/backstreets_alley)
 "DM" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/reagent_containers/hypospray/medipen/mental,
 /obj/item/reagent_containers/hypospray/medipen/mental,

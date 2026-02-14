@@ -106,6 +106,12 @@ No Ability	250
 	desc = "One fell down and the rest came tumbling after."
 	icon_state = "brokencrown"
 
+/obj/item/clothing/suit/armor/ego_gear/realization/energyconversion
+	name = "energy conversion"
+	desc = "Just open up the machine, step inside, and press the button to make it shut. Now everything will be just fine."
+	icon_state = "energy_conversion"
+	armor = list(RED_DAMAGE = 90, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 50) //Lower red damage when it gets an ability probably
+
 /* TETH Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/mouth
@@ -278,6 +284,12 @@ or until the damage cap on the debuff is hit. While Fairy Lure is active on your
 	icon_state = "dimension_ripper"
 	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50)		//Melee
 	realized_ability = /obj/effect/proc_holder/ability/rip_space
+
+/obj/item/clothing/suit/armor/ego_gear/realization/gift
+	name = "gift"
+	desc = "Play with me! Join my friends and laugh with us."
+	icon_state = "gift"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 60, BLACK_DAMAGE = 80, PALE_DAMAGE = 50)
 
 /* This Realization has several effects:
 1. Grants an ability: Curl Up. Gives a universal shield (think Manager Shield Bullets) to the user. While it is active, accumulates charge for this armour. If the shield breaks, lose all charge.

@@ -44,7 +44,9 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_galaxy
 	force = 20
 	damtype = BLACK_DAMAGE
-	fire_delay = 15
+	fire_delay = 10
+	shotsleft = 10
+	reloadtime = 2 SECONDS
 	fire_sound = 'sound/magic/wand_teleport.ogg'
 	weapon_weight = WEAPON_MEDIUM
 	fire_sound_volume = 70
@@ -52,6 +54,7 @@
 							TEMPERANCE_ATTRIBUTE = 40
 							)
 	var/homing = FALSE
+	fire_sound = 'sound/weapons/gun/shotgun/shot.ogg'
 
 /obj/item/ego_weapon/ranged/galaxy/attack_self(mob/user)
 	..()

@@ -651,8 +651,8 @@
 /area/facility_hallway/south)
 "eu" = (
 /obj/structure/table/abductor,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/red{
 	pixel_x = 3;
 	pixel_y = -7
 	},
@@ -4907,8 +4907,8 @@
 /obj/effect/turf_decal/siding/purple{
 	dir = 8
 	},
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 2;
 	pixel_y = -8
 	},

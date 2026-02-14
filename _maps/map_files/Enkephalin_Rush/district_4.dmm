@@ -2352,11 +2352,11 @@
 /obj/machinery/light{
 	dir = 4
 	},
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
-/obj/item/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
+/obj/item/stack/refiner_filter/blue,
 /turf/open/floor/pod,
 /area/city/shop)
 "iN" = (
@@ -3202,11 +3202,11 @@
 /area/city/shop)
 "lM" = (
 /obj/structure/rack,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
-/obj/item/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
+/obj/item/stack/refiner_filter/yellow,
 /turf/open/floor/pod,
 /area/city/shop)
 "lN" = (
@@ -6167,11 +6167,11 @@
 /obj/structure/disposalpipe/segment{
 	dir = 4
 	},
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
-/obj/item/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
+/obj/item/stack/refiner_filter/red,
 /turf/open/floor/pod,
 /area/city/shop)
 "ww" = (
@@ -11311,11 +11311,11 @@
 /area/department_main/command)
 "Pc" = (
 /obj/structure/rack,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/green,
 /turf/open/floor/pod,
 /area/city/shop)
 "Pd" = (

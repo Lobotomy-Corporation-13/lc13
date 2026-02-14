@@ -356,4 +356,9 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 	icon_state = "patch"
 	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = -40, BLACK_DAMAGE = 40, PALE_DAMAGE = 0) //20. Made out of flammable cotton so fire resist sucks ass.
 
+/obj/item/clothing/suit/armor/ego_gear/teth/electricscreaming
+	name = "electric screaming"
+	desc = "Made of incredibly comfortable wool. The suit harmlessly shocks you and others in your vicinity often."
+	icon_state = "electric_screaming"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = -40, BLACK_DAMAGE = 50, PALE_DAMAGE = -40)
 

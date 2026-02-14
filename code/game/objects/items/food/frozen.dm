@@ -52,10 +52,60 @@
 /obj/item/food/bnuuypudding
 	name = "bunny pudding"
 	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
 	icon_state = "bnuuypudding"
-	bite_consumption = 1
 	trash_type = /obj/item/trash/plate
-	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 3, /datum/reagent/consumable/sugar = 1, /datum/reagent/consumable/nutriment/vitamin = 1)
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 5, /datum/reagent/consumable/nutriment/vitamin = 2)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/rcorppudding
+	name = "rabbit pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "rcorppudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/medicine/oculine = 2 , /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR | VEGETABLES
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/myopudding
+	name = "myo pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "myopudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/medicine/oculine = 2 , /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1)
+	foodtypes = DAIRY | SUGAR | VEGETABLES
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/mattpudding
+	name = "matt pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "mattpudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 4, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 2)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/zilupudding
+	name = "zilu pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "zilupudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 1, /datum/reagent/consumable/hot_coco = 2)
+	foodtypes = DAIRY | SUGAR
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/food/mumupudding
+	name = "mumu pudding"
+	desc = "It is so cute and wobbly, You almost don't want to eat it."
+	icon = 'icons/obj/food/frozen_treats.dmi'
+	icon_state = "mumupudding"
+	trash_type = /obj/item/trash/plate
+	food_reagents = list(/datum/reagent/consumable/nutriment = 3, /datum/reagent/consumable/sugar = 4, /datum/reagent/consumable/nutriment/vitamin = 3)
 	foodtypes = DAIRY | SUGAR
 	w_class = WEIGHT_CLASS_TINY
 

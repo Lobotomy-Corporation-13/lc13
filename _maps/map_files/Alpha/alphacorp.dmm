@@ -1198,8 +1198,8 @@
 "iP" = (
 /obj/machinery/light,
 /obj/structure/table/glass,
-/obj/item/refiner_filter/green,
-/obj/item/refiner_filter/red{
+/obj/item/stack/refiner_filter/green,
+/obj/item/stack/refiner_filter/red{
 	pixel_x = 3;
 	pixel_y = -7
 	},
@@ -4936,11 +4936,11 @@
 /area/facility_hallway/north)
 "Lz" = (
 /obj/structure/table/glass,
-/obj/item/refiner_filter/blue{
+/obj/item/stack/refiner_filter/blue{
 	pixel_x = 7;
 	pixel_y = 3
 	},
-/obj/item/refiner_filter/yellow{
+/obj/item/stack/refiner_filter/yellow{
 	pixel_x = 1;
 	pixel_y = -4
 	},
