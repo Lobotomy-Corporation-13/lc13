@@ -82,7 +82,7 @@
 /obj/projectile/acid_spray_dummy
 	name = "acid spray"
 	icon_state = "dvirus"
-	damage = 0
+	damage = 5
 	nodamage = TRUE
 
 // Acid Sprayer - Basic toxic spray weapon
@@ -135,20 +135,22 @@
 	var/is_diagonal = (facing & (facing - 1)) // Check if diagonal (has multiple direction bits)
 
 	// Get cone pattern
+	var/list/visible_turfs = view(cone_range, user)
 	for(var/i = 1 to cone_range)
 		var/turf/T = get_step(origin, facing)
-		if(!T)
+		if(!T || T.density)
 			break
 		origin = T
-		affected_turfs |= T
+		if(T in visible_turfs)
+			affected_turfs |= T
 
 		// Add side tiles for cone effect
 		if(i > 1)
 			var/turf/left = get_step(T, turn(facing, 90))
 			var/turf/right = get_step(T, turn(facing, -90))
-			if(left)
+			if(left && !left.density && (left in visible_turfs))
 				affected_turfs |= left
-			if(right)
+			if(right && !right.density && (right in visible_turfs))
 				affected_turfs |= right
 
 			// For diagonal directions, fill in the gaps by adding adjacent cardinal tiles
@@ -159,18 +161,18 @@
 				// Add tiles adjacent to center in cardinal directions
 				var/turf/adj1 = get_step(T, cardinal1)
 				var/turf/adj2 = get_step(T, cardinal2)
-				if(adj1)
+				if(adj1 && !adj1.density && (adj1 in visible_turfs))
 					affected_turfs |= adj1
-				if(adj2)
+				if(adj2 && !adj2.density && (adj2 in visible_turfs))
 					affected_turfs |= adj2
 				// Also fill gaps next to side tiles
-				if(left)
+				if(left && (left in affected_turfs))
 					var/turf/left_fill = get_step(left, cardinal1)
-					if(left_fill)
+					if(left_fill && !left_fill.density && (left_fill in visible_turfs))
 						affected_turfs |= left_fill
-				if(right)
+				if(right && (right in affected_turfs))
 					var/turf/right_fill = get_step(right, cardinal2)
-					if(right_fill)
+					if(right_fill && !right_fill.density && (right_fill in visible_turfs))
 						affected_turfs |= right_fill
 
 	// Apply effects
@@ -557,6 +559,7 @@
 	density = FALSE
 	opacity = FALSE
 	anchored = TRUE
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/damage_per_second = 5
 	var/duration = 150
 

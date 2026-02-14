@@ -82,6 +82,27 @@ SUBSYSTEM_DEF(gamedirector)
 	// RCE Leaderboard tracking
 	var/datum/rce_leaderboard/rce_leaderboard
 
+	// Valid R-Corp factory roles for leaderboard tracking
+	var/list/usable_roles = list(
+		"Operations Commander",
+		"Executive Officer",
+		"Robin Squad Captain",
+		"Robin Section Leader",
+		"Robin Squad Sergeant",
+		"Section A Robin",
+		"Section B Robin",
+		"Section C Robin",
+		"R-Corp Rook",
+		"Rook Squad Captain",
+		"R-Corp Medical Officer",
+		"R-Corp Messenger Raven",
+		"R-Corp Raven MP",
+		"Raven Squad Captain",
+		"R-Corp Production Specialist",
+		"Production Officer",
+		"R-Corp Acquisitions Specialist"
+	)
+
 /datum/controller/subsystem/gamedirector/Initialize()
 	. = ..()
 	if(SSmaptype.maptype != "rcorp_factory")
@@ -279,8 +300,9 @@ SUBSYSTEM_DEF(gamedirector)
 		return
 	if(!joined_mob.mind || !joined_mob.ckey)
 		return
-	var/job_title = rank ? rank : "Unknown"
-	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, job_title)
+	if(!rank || !(rank in usable_roles))
+		return
+	rce_leaderboard.AddParticipant(joined_mob.ckey, joined_mob.real_name, rank)
 
 /// Collect round-start players who spawned before this subsystem initialized
 /datum/controller/subsystem/gamedirector/proc/CollectRoundstartPlayers()
@@ -290,10 +312,9 @@ SUBSYSTEM_DEF(gamedirector)
 	for(var/mob/living/carbon/human/H in GLOB.human_list)
 		if(!H.mind || !H.ckey)
 			continue
-		var/job_title = "Unknown"
-		if(H.mind.assigned_role)
-			var/datum/job/J = H.mind.assigned_role
-			job_title = J.title
+		var/job_title = H.mind.assigned_role
+		if(!job_title || !(job_title in usable_roles))
+			continue
 		// Only show expedition number if this is a new participant (not already tracked)
 		if(rce_leaderboard.AddParticipant(H.ckey, H.real_name, job_title))
 			SSpersistence.ShowExpeditionNumber(H)
