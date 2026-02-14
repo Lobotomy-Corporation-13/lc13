@@ -109,8 +109,284 @@ Each association has **2-3 branches** (like Ring schools), allowing players to s
 |---|---|---|
 | Zwei | 3 (Guardian, Territory, Client) | 2 |
 | Seven | 3 (Analyst, Coordinator, Operative) | 2 |
-| Dieci | TBD (2-3) | 2 |
-| Cinq | TBD (2-3) | 2 |
+| Dieci | 3 (Scholar, Warden, Sage) | 2 |
+| Cinq | 3 (Duelist, Skirmisher, Fencer) | 2 |
+
+---
+
+## Association Setup & Squad Initialization
+
+This section describes how a Director picks their association, how the system propagates to their squad, and how late joiners are handled.
+
+### Current System (Being Reworked)
+
+**Source:** `ModularLobotomy/associations/association_beacon.dm`
+
+The Director spawns with a **Director's Beacon** (`/obj/item/choice_beacon/association`) in their office. Using it presents a list of associations (Zwei, Liu, Seven). Picking one spawns a storage box containing all weapons, armor, and **skill granter items** for the entire squad (Director, Veteran, and Associates). The Director then distributes this gear manually.
+
+Veterans and Associates do not spawn until the Director does — their `total_positions` start at 0, and the Director's `after_spawn()` sets Veteran to 1 and Associate to 3 (`code/modules/jobs/job_types/trusted_players/association/col_association.dm:58-62`).
+
+**Problems with the old system:**
+- Skill granters are static items — no progression, no EXP, no tree
+- If a fixer joins late (after gear is distributed), the Director has to manually find leftover granters
+- No mechanical link between the Director's choice and the squad's capabilities
+- Liu is being removed; Dieci and Cinq are being added
+
+### New System — Beacon + Squad Registration
+
+The beacon is reworked to do two things: spawn the equipment box (weapons + armor, **no more skill granters**) and initialize the **association squad system** that manages EXP and skill trees for all members.
+
+**Step 1: Director Uses Beacon → Picks Association**
+
+The Director uses the beacon and picks from: Zwei, Seven, Dieci, or Cinq (Liu removed). This:
+
+1. **Spawns the equipment box** — contains weapons and armor for the squad, same as before but without skill granter items
+2. **Creates a squad datum** — `/datum/association_squad` stored in a global list, tracks the chosen association type, member list, and distress cooldowns
+3. **Attaches `association_exp` to the Director** — the Director receives their `/datum/component/association_exp` component with `association_type` set to the chosen association
+4. **Spawns the Director's Registration Tool** — `/obj/item/association_registry` (see Step 3), used to initialize all squad members including late joiners
+5. **Spawns the Director's association-specific items** — Knowledge Tome (Dieci), Requisition Catalog (Seven), etc.
+6. **Consumes the beacon** — single-use, cannot re-pick
+
+```dm
+/obj/item/choice_beacon/association/spawn_option(obj/choice, mob/living/M)
+	var/association_type = choice_to_association_type(choice) // e.g., ASSOCIATION_ZWEI
+	// Spawn equipment box (weapons + armor, no skill granters)
+	new choice(get_turf(M))
+	// Create the squad datum
+	var/datum/association_squad/squad = new(association_type, M)
+	GLOB.association_squads += squad
+	// Initialize the Director
+	squad.register_member(M, "director")
+	// Spawn the registration tool
+	var/obj/item/association_registry/tool = new(get_turf(M))
+	tool.squad = squad
+	// Spawn Director's association-specific items
+	squad.spawn_association_items(M, "director")
+	to_chat(M, span_notice("You have aligned your section with [squad.association_name]. Use the Association Registry on your squad members to register them."))
+	qdel(src)
+```
+
+**Step 2: Director Uses Registration Tool on Fixers**
+
+The Director receives an **Association Registry** (`/obj/item/association_registry`) — a physical tool item. The Director hits (clicks on) an association fixer with it to register them with the squad, granting them the skill tree, EXP system, and their association-specific items.
+
+This is the **only way** to register fixers. There is no auto-registration — the Director must physically use the tool on each member. This gives the Director direct control over who gets initialized and when, and works identically for roundstart spawners and late joiners.
+
+```dm
+/obj/item/association_registry
+	name = "association registry"
+	desc = "A Director's logbook used to formally register fixers with the association. Hit a fixer with this to register them."
+	icon = 'icons/obj/bureaucracy.dmi'
+	icon_state = "clipboard"
+	w_class = WEIGHT_CLASS_SMALL
+	/// The squad this tool registers members to
+	var/datum/association_squad/squad
+
+/obj/item/association_registry/examine(mob/user)
+	. = ..()
+	if(squad)
+		. += span_notice("Registered to: [squad.association_name]")
+		. += span_notice("Members registered: [length(squad.members)]")
+
+/obj/item/association_registry/attack(mob/living/target, mob/living/user)
+	if(!squad)
+		to_chat(user, span_warning("This registry is not linked to any squad."))
+		return
+	if(!ishuman(target))
+		return ..()
+	var/mob/living/carbon/human/H = target
+	// Check if they're an association job
+	var/datum/job/target_job = H.mind?.assigned_role
+	if(!istype(target_job, /datum/job/associate) && !istype(target_job, /datum/job/veteran))
+		to_chat(user, span_warning("[H] is not an association fixer."))
+		return
+	// Check if already registered
+	if(H.GetComponent(/datum/component/association_exp))
+		to_chat(user, span_warning("[H] is already registered with the squad."))
+		return
+	// Register them
+	var/rank = istype(target_job, /datum/job/veteran) ? "veteran" : "associate"
+	squad.register_member(H, rank)
+	// Spawn their association-specific items
+	squad.spawn_association_items(H, rank)
+	to_chat(user, span_nicegreen("You have registered [H] with [squad.association_name]."))
+	to_chat(H, span_nicegreen("[user] has registered you with [squad.association_name]. Open your Skill Tree to view your abilities."))
+	playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+```
+
+### Squad Datum
+
+The squad datum is the central tracker for the association. It holds the member list, association type, and distress cooldowns.
+
+```dm
+/datum/association_squad
+	/// The association type (ASSOCIATION_ZWEI, ASSOCIATION_SEVEN, etc.)
+	var/association_type
+	/// Human-readable name
+	var/association_name
+	/// The Director mob
+	var/mob/living/carbon/human/director
+	/// List of all registered members (including Director)
+	var/list/mob/living/members = list()
+	/// Distress cooldowns per-victim (assoc_ref = world.time of last trigger)
+	var/list/distress_cooldowns = list()
+
+/datum/association_squad/New(type, mob/living/carbon/human/dir)
+	association_type = type
+	director = dir
+	association_name = association_type_to_name(type)
+
+/// Register a new member — attaches association_exp, adds to member list, sets up distress signals
+/datum/association_squad/proc/register_member(mob/living/carbon/human/member, rank)
+	if(member in members)
+		return
+	members += member
+	// Attach the EXP component
+	member.AddComponent(/datum/component/association_exp, association_type, rank, src)
+	// Add to ally list automatically
+	for(var/mob/living/M in members)
+		if(M == member)
+			continue
+		var/datum/component/association_exp/exp = M.GetComponent(/datum/component/association_exp)
+		if(exp)
+			exp.designated_allies |= member
+	// Set up the new member's ally list with all existing members
+	var/datum/component/association_exp/new_exp = member.GetComponent(/datum/component/association_exp)
+	if(new_exp)
+		new_exp.designated_allies = members.Copy() - member
+
+/// Spawn association-specific items for a registered member
+/datum/association_squad/proc/spawn_association_items(mob/living/carbon/human/member, rank)
+	switch(association_type)
+		if(ASSOCIATION_SEVEN)
+			// Seven Requisition Catalog — shop for recorders, cameras, scanners, etc.
+			new /obj/item/seven_catalog(get_turf(member))
+		if(ASSOCIATION_DIECI)
+			// Knowledge Tome — EXP interface, event launcher, knowledge storage, shop
+			new /obj/item/dieci_knowledge_tome(get_turf(member))
+		if(ASSOCIATION_CINQ)
+			// Cinq Glove — used for Throw the Glove forced duels
+			new /obj/item/cinq_glove(get_turf(member))
+		// Zwei has no unique tool items — their kit is purely weapons + armor
+```
+
+### Equipment Boxes (Reworked)
+
+The equipment boxes lose their skill granter items (the skill tree replaces them) but keep weapons and armor. Association-specific tool items (Tomes, Catalogs, Gloves) are **not** in the box — they are spawned per-fixer when the Director registers them with the registry tool. This means late joiners get their items too, and there's no risk of running out of tool items.
+
+Dieci and Cinq get new boxes:
+
+```dm
+/obj/item/storage/box/association/zwei/PopulateContents()
+	// Weapons + armor only, no skill granters. All weapons/armor exist.
+	//
+	// === Weapons ===
+	// Associate weapons (80 all attrs)
+	new /obj/item/ego_weapon/city/zweihander(src)       // Associate zweihander x2 — EXISTS (force 55, speed 2, RED, defense buff) — ADJUST attrs to 80 all
+	new /obj/item/ego_weapon/city/zweihander(src)
+	new /obj/item/ego_weapon/city/zweibaton(src)         // Associate baton — EXISTS (force 40, speed 2, RED, stun on humans) — ADJUST attrs to 80 all
+	// Veteran weapon (100 all attrs)
+	new /obj/item/ego_weapon/city/zweihander/vet(src)    // Veteran zweihander — EXISTS (force 80, stronger self-buff) — ADJUST attrs to 100 all
+	// Director weapon (120 all attrs)
+	new /obj/item/ego_weapon/city/zweihander/vet(src)    // Director — uses vet zweihander for now — ADJUST attrs to 120 all
+	//
+	// === Armor ===
+	// Associate armor (80 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)       // Associate standard x2 — EXISTS (40/20/20/0) — ADJUST attrs to 80 all
+	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/zweiriot(src)   // Associate riot — EXISTS (70/40/40/20, +0.7 slowdown) — ADJUST attrs to 80 all
+	// Veteran armor (100 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/zweivet(src)    // Veteran — EXISTS (50/30/30/20) — ADJUST attrs to 100 all
+	// Director armor (120 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/zweileader(src) // Director — EXISTS (70/40/40/20) — ADJUST attrs to 120 all
+
+/obj/item/storage/box/association/seven/PopulateContents()
+	// ALL WEAPONS AND ARMOR HAVE BRAND NEW ITEM PATHS AND SPRITES
+	// Old paths (/city/seven, /city/seven_fencing, /city/sevenrecon, etc.) are replaced
+	//
+	// === Weapons ===
+	// MAIN WEAPONS (seven_blade): BLACK damage. At 10+ Rupture on target, damage type adapts to target's weakest resistance.
+	//   - Carbons: checks worn armor (lowest value). Mobs: checks damage_coeff (highest value).
+	//   - Associate/Veteran: cannot adapt to PALE (picks 2nd best). Director blade/cane: CAN adapt to PALE but -15% force for that hit.
+	// SIDEARMS (seven_foil): BLACK damage. 6 base Rupture per hit, decreasing with target's current stacks. Rupture max: 50.
+	//
+	// Associate weapons (80 all attrs)
+	new /obj/item/ego_weapon/city/seven_blade(src)             // Associate blade x2 — SPRITE "sevenassociation" (force 36, BLACK, adaptive damtype at 10+ Rupture, no PALE)
+	new /obj/item/ego_weapon/city/seven_blade(src)
+	new /obj/item/ego_weapon/city/seven_foil(src)              // Associate foil — SPRITE "sevenfencing" (force 38, BLACK, 6 Rupture/hit, falloff every 5 stacks)
+	// Veteran weapons (100 all attrs)
+	new /obj/item/ego_weapon/city/seven_blade/vet(src)         // Veteran blade — SPRITE "sevenassociation_vet" (force 45, BLACK, adaptive damtype at 10+ Rupture, no PALE)
+	new /obj/item/ego_weapon/city/seven_foil/vet(src)          // Veteran foil — SPRITE "sevenfencing_vet" (force 45, BLACK, 6 Rupture/hit, falloff every 7 stacks)
+	// Director weapons (120 all attrs)
+	new /obj/item/ego_weapon/city/seven_blade/director(src)    // Director blade — SPRITE "sevenassociation_director" (force 63, BLACK, adaptive damtype at 10+ Rupture, CAN adapt PALE at -15% force)
+	new /obj/item/ego_weapon/city/seven_blade/cane(src)        // Director cane — SPRITE "sevenassociation_cane" (force 56, BLACK, adaptive damtype at 10+ Rupture, CAN adapt PALE at -15% force)
+	new /obj/item/ego_weapon/city/seven_foil/dagger(src)       // Director dagger — SPRITE "sevenfencing_dagger" (force 32, 0.5 speed, belt-fit, 6 Rupture/hit, falloff every 10 stacks)
+	//
+	// === Armor ===
+	// Associate armor (80 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor(src)             // Associate standard x2 — SPRITE "seven" (20/20/40/0)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor/scout(src)       // Associate scout — SPRITE "sevenscout" (0/0/30/0, -0.5 slowdown, speed variant)
+	// Veteran armor (100 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor/vet(src)         // Veteran standard — SPRITE "sevenvet" (30/30/50/20)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor/vet/intel(src)   // Veteran intel — SPRITE "sevenintel" (scout variant for vet, same stats)
+	// Director armor (120 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_armor/director(src)    // Director — SPRITE "sevendirector" (40/40/70/20)
+	//
+	// === Misc ===
+	new /obj/item/binoculars(src)                        // Binoculars x2 (kept from original)
+	new /obj/item/binoculars(src)
+
+/obj/item/storage/box/association/dieci/PopulateContents()
+	// NEW WEAPONS — replaces old dieci.dm combat gloves. All share the L/H combo system with empowerment.
+	// FISTS: Defensive empowerment (shield HP on H attacks). Lower force, faster speed.
+	// KEYS: Offensive empowerment (Offense Level Up on H attacks). Higher force, slower speed.
+	// Both: L = free RED attacks. H = empowered PALE + 2 Sinking + weapon bonus (costs 1 Active Knowledge via attack_self).
+	//
+	// === Weapons ===
+	// Associate weapons (80 all attrs)
+	new /obj/item/ego_weapon/city/dieci(src)             // Associate Fists x2 — "Dieci Combat Gloves" (force 20, speed 0.7, 80 all attrs, shield HP on H)
+	new /obj/item/ego_weapon/city/dieci(src)
+	new /obj/item/ego_weapon/city/dieci/key(src)         // Associate Key — "Dieci Ceremonial Key" (force 26, speed 0.9, 80 all attrs, OLU on H)
+	// Veteran weapons (100 all attrs)
+	new /obj/item/ego_weapon/city/dieci/vet(src)         // Veteran Fists — "Dieci Veteran Gloves" (force 28, speed 0.7, 100 all attrs, shield HP on H)
+	new /obj/item/ego_weapon/city/dieci/key/vet(src)     // Veteran Key — "Dieci Veteran Key" (force 35, speed 0.85, 100 all attrs, OLU on H)
+	// Director weapons (120 all attrs)
+	new /obj/item/ego_weapon/city/dieci/director(src)    // Director Fists — "Dieci Director Fists" (force 38, speed 0.6, 120 all attrs, shield HP on H)
+	new /obj/item/ego_weapon/city/dieci/key/director(src) // Director Key — "Dieci Director Key" (force 48, speed 0.8, 120 all attrs, OLU on H)
+	//
+	// === Armor ===
+	// Associate armor (80 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)  // Associate x3 — NEEDS CREATION (80 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)
+	// Veteran armor (100 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)            // Veteran — EXISTS (20/30/30/50) — ADJUST attrs to 100 all
+	// Director armor (120 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/director(src)   // Director — NEEDS CREATION (120 all attrs)
+
+/obj/item/storage/box/association/cinq/PopulateContents()
+	// Rapiers (Associates x3) — base cinq rapier, force 28, 2x multiplier
+	new /obj/item/ego_weapon/city/cinq(src)              // Associate — EXISTS (force 28, 2x backstep) — ADJUST attrs to 80 all
+	new /obj/item/ego_weapon/city/cinq(src)
+	new /obj/item/ego_weapon/city/cinq(src)
+	// Rapier (Veteran) — section 5 rapier, force 40, 3x multiplier, fast (0.72 speed)
+	new /obj/item/ego_weapon/city/cinq/section5(src)     // Veteran — EXISTS (force 40, 3x backstep) — ADJUST attrs to 100 all
+	// Rapier (Director) — section 4 director rapier, force 75, 2x multiplier, slower (1.3 speed)
+	new /obj/item/ego_weapon/city/cinq/section4/director(src) // Director — EXISTS (force 75, 2x backstep) — ADJUST attrs to 120 all
+	// Armor
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)             // Associate x3 — EXISTS (30/30/30/0, no attr req) — ADJUST attrs to 80 all
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/vet(src)         // Veteran — NEEDS CREATION (stronger duelist gear, 100 all attrs) — NEEDS NEW SPRITES
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/director(src)    // Director — NEEDS CREATION (director duelist gear, 120 all attrs) — use cinqwest sprites (icon_state "cinqwest"), include hat (cinqwest hat) and cape (cinqwest cape)
+```
+
+### New Files
+
+- `ModularLobotomy/associations/association_squad.dm` - Squad datum (`/datum/association_squad`), member tracking, registration, distress cooldown tracking, `spawn_association_items()` proc
+- `ModularLobotomy/associations/association_beacon.dm` - Reworked beacon (spawns equipment box + creates squad datum + registers Director + spawns registry tool, removes skill granters from boxes, adds Dieci and Cinq boxes)
+- `ModularLobotomy/associations/association_registry.dm` - Registration tool (`/obj/item/association_registry`) — Director hits fixers with it to register them and spawn their association-specific items
 
 ---
 
@@ -1009,9 +1285,22 @@ Contracts can come from three sources. Anyone can hire the association, but civi
 |---|---|---|
 | **Civilian/other role contract** | **2x EXP** | Any non-association, non-Hana player hires a fixer directly. Most rewarding because it requires real player interaction. |
 | **Hana-issued contract** | **1x EXP** | Hana creates the contract, funds it from their unlimited budget. Baseline steady work to keep fixers busy. |
-| **No active contract** | **0 EXP, no skills** | Skill tree abilities are disabled. Cannot progress. |
+| **No active contract** | **No skills, passive EXP only** | The association has no active contract. All skill tree abilities are disabled. Fixers can still earn EXP through thematic activities (see below) but at a slower rate and without skill tree access. |
 
 **Important: Association fixers CANNOT give themselves contracts.** They must always be hired by someone else - either the Hana or any other non-association role. This enforces the transactional nature of the system: you are a professional being contracted, not a volunteer choosing your own assignments.
+
+**Off-Contract EXP (Thematic Activities):**
+
+Even without a contract, fixers can still earn EXP by performing their association's thematic activities — they just cannot use their skill tree abilities. This ensures fixers are never completely idle and always have a reason to play their role, even between contracts.
+
+| Association | Off-Contract EXP Activities |
+|---|---|
+| **Zwei** | Taking damage while near non-association players (protecting others), engaging hostile targets |
+| **Seven** | Recording people, filing intel reports, using surveillance equipment |
+| **Dieci** | Scanning creatures for knowledge, healing others, gathering knowledge entries |
+| **Cinq** | Dueling other players using Challenge to Duel (consensual — target must accept), winning duels. **Throw the Glove (forced duel) requires an active contract.** |
+
+Off-contract EXP is earned at a **slower rate** than on-contract EXP (no multiplier). Contracts remain the primary way to progress — they grant the EXP multiplier (1x or 2x) and unlock skill tree abilities.
 
 **Why civilians give 2x EXP:** The Hana is the easy, reliable contract source - they're always available and have unlimited money. Civilian contracts require the fixer to actually go out, interact with people, and convince someone to hire them. This harder, more interactive path is rewarded with double EXP, incentivizing fixers to engage with the broader playerbase rather than just camping the Hana terminal.
 
@@ -1019,9 +1308,13 @@ Contracts can come from three sources. Anyone can hire the association, but civi
 
 **Who Can Create Contracts:**
 
-- **Any non-association player (civilians, clinic staff, command, etc.):** Can approach a fixer and offer a contract directly, or post one on a contract board. They pay from their own funds. Gives **2x EXP** - the most rewarding source.
-- **Hana (Administrator / Representative):** Contract dispatcher. Uses a **Contract Terminal** (TGUI interface). Has unlimited funding. Gives 1x EXP - steady baseline work. This is an addition to their existing role, not a replacement.
+All contracts are created through the **Association Contract Terminal** — a physical machine with a TGUI interface located in the Hana's office. Anyone who is **not** an association fixer can use it.
+
+- **Any non-association player (civilians, clinic staff, command, etc.):** Uses the terminal to create a contract. They pay from their own funds upfront. Gives **2x EXP** - the most rewarding source.
+- **Hana (Administrator / Representative):** Uses the same terminal. Has unlimited funding. Gives 1x EXP - steady baseline work. This is an addition to their existing role, not a replacement.
 - **Association fixers:** **Cannot** create contracts for themselves or each other. They must be hired.
+
+The terminal produces a physical **contract item** — a paper document containing the contract type, duration, payment, target/location, and all other details. The contract creator takes this item and **hands it to any association fixer**. The fixer can read the contract, then **accept** or **decline** it.
 
 **Contract Types:**
 
@@ -1031,34 +1324,101 @@ Contracts are split into **universal types** (available to all associations) and
 
 1. **Patrol Route** - Mark two or more waypoints on the city map. Fixer must visit them in order and loop for the contract duration. Available to all associations - the basic "go here, do your thing" contract.
 
+2. **Eliminate Target** - Target a specific human. The fixer must find and kill the target within the contract duration. Contract completes on target death. If the target is not killed within the duration, the contract fails. Payment is only given on success.
+
+3. **Escort Person** - Target a specific carbon. An association member must stay within 7 tiles of the target. The contract timer **only ticks while a fixer is near the target** — if all fixers leave range, the timer pauses until one returns. Functions like a universal bodyguard contract — less specialized than Zwei's Protect Person (no client DR aura or SP stabilization), but available to any association.
+
 *Zwei-Specific:*
 
-2. **Guard Area** (Zwei only) - Designate a zone on the city map to protect. Must stay within the area's radius for the contract duration. Reflects Zwei's area defense specialization.
+4. **Guard Area** (Zwei only) - Designate a zone on the city map to protect. The contract timer **only ticks while at least one association member is inside the zone** — if all fixers leave, the timer pauses until one returns. Reflects Zwei's area defense specialization.
 
-3. **Protect Person** (Zwei only) - Target a specific player. Must stay within 5-7 tiles of the client for the duration. The fixer must **accept** the contract offer. Reflects Zwei's personal bodyguard work.
+5. **Protect Person** (Zwei only) - Target a specific player. The contract timer **only ticks while at least one association member is within 5-7 tiles of the client** — if all fixers leave range, the timer pauses until one returns. Stronger than the universal Escort Person — grants client DR aura and SP stabilization.
 
-*Other associations will have their own specific contract types defined in their sections.*
+*Seven-Specific:*
+
+6. **Investigate Person** (Seven only) - Target a specific carbon player. Gather intelligence using Seven tools (recorder, camera, scanner) and file reports. Duration-based, EXP ticks while on contract and actively investigating.
+
+7. **Surveillance Post** (Seven only) - Mark a location on the city map. Place recording devices, maintain surveillance over the area, and file reports on observed activity. The contract timer **only ticks while at least one association member is in the surveillance area** or recorders are active there.
+
+*Cinq-Specific:*
+
+8. **Duel Person** (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Contract completes when the duel ends; winning gives bonus EXP + ahn.
+
+9. **Champion Contract** (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
+
+*Dieci-Specific:*
+
+10. **Host Event** (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Contract completes when the event finishes all ticks successfully.
+
+11. **Medical Relief** (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Contract completes when the target is met within the duration.
+
+12. **Tend to Person** (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. EXP ticks while near the target and they are above 50% HP. A medical bodyguard contract.
 
 **Contract Parameters:**
 - **Duration:** 3 / 5 / 10 minutes (set by the contract creator)
-- **Funding:** Credit amount offered as payment (Hana has unlimited funds; civilian contracts paid from their own wallet)
+- **Funding:** Credit amount paid **upfront** by the contract creator (Hana has unlimited funds; civilians pay from their own wallet)
 - **Target/Location:** Who or where the contract applies to
 
+**Payment:**
+- Payment is **upfront** — the contract creator pays when the contract is created, not on completion. The fixer receives the funds immediately upon accepting.
+- Hana has unlimited funding. Civilians pay from their own wallet.
+- If the contract fails (e.g., target dies on an Eliminate contract before the fixer can kill them, or an event fails mid-completion), the payment is **not refunded** — the association keeps it. This is a risk the client accepts.
+
+**Association-Level Contracts:**
+- Contracts are tracked at the **association level**, not per individual. When any fixer accepts a contract, the **entire association** is on contract — all squad members gain access to their skill tree abilities and can earn EXP.
+- The association can have **multiple active contracts** at the same time. As long as at least one contract is active, all members are considered on-contract.
+- When the **last** active contract expires, fails, or is completed, the **entire association** loses skill tree access until a new contract is accepted. Fixers can still earn EXP through thematic activities.
+
 **Contract Lifecycle:**
-1. Contract is created (by Hana, civilian, or any non-association role)
-2. Fixer accepts the contract (from a terminal, contract board, or direct offer prompt)
-3. Timer starts, skills activate, EXP begins ticking
-4. Fixer fulfills the contract by staying on task for the duration
-5. **Bonus EXP** accrues from relevant actions during the contract (combat, damage taken, etc. - varies by association)
-6. Contract completes → lump sum EXP payout + payment transfer
-7. Fixer needs a new contract to keep skills active
+1. A non-association player uses the **Association Contract Terminal** to create a contract — **payment is taken upfront from the client**
+2. The terminal produces a physical **contract item** containing all contract details
+3. The contract creator hands the item to an association fixer — the fixer reads it and **accepts** or **declines**
+4. On accept, **payment transfers to the association immediately** and the **entire association activates** — all squad members gain skills and can earn EXP
+5. The squad fulfills the contract by staying on task for the duration
+6. **Bonus EXP** accrues from relevant actions during the contract (combat, damage taken, etc. - varies by association)
+7. Contract completes → lump sum EXP payout
+8. If no other contracts are active, the association loses skill tree access — but can still earn EXP through thematic activities
+
+**The Contract Item (`/obj/item/association_contract`):**
+
+The terminal produces a physical paper item when a contract is created. This item:
+- Can be **used in hand** (`attack_self()`) to open a TGUI showing the full contract details: contract type, duration, payment, target/location, and the **Contract City Map** view if a location was marked (read-only, showing the placed waypoints/zones)
+- Can be **handed to an association fixer** (`attack()` on a registered fixer) — this prompts the fixer with an accept/decline dialog
+- If **accepted**: the contract activates, the item is consumed, and the contract datum is registered with the association squad
+- If **declined**: the contract item remains — it can be offered to another fixer or discarded
+- Anyone can read the contract by using it in hand, but only registered association fixers can accept it
+- If discarded or destroyed without being accepted, the payment is **refunded** to the creator
 
 **Contract Rules:**
-- One active contract per fixer at a time
+- The association can have **multiple active contracts** simultaneously
 - Short cooldown between contracts (~30s, prevents instant re-contracting)
 - Association fixers **cannot** create contracts for themselves or other association members
-- Breaking a contract early (leaving area/client) → contract fails, reduced EXP, cooldown penalty
-- Fixer can **decline** a contract offer (they're professionals, not slaves)
+- For location/proximity contracts, leaving the area or client **pauses the timer** — it resumes when any association member returns. The contract never fails from absence alone
+- Any squad member can **decline** a contract offer (they're professionals, not slaves)
+
+### Emergency Distress — "No Contract" Safety Net
+
+The "no contract = no skills" rule has one exception: **if an association member is attacked by a carbon and drops below 50% HP or dies, the entire association squad is alerted and temporarily gains access to their skills.**
+
+**Trigger Conditions (any one):**
+- An association member takes damage from a `/mob/living/carbon` attacker and their HP drops **below 50%**
+- An association member **dies** from damage dealt by a `/mob/living/carbon` attacker
+
+**Effects:**
+- **Alert:** All association members (Director, Veteran, Associate) receive a visible + audio alert: `"DISTRESS: [victim] is under attack by [attacker] at [area name]!"` with a sound (`'sound/machines/warning-buzzer.ogg'`). A directional indicator arrow points toward the victim's last known location.
+- **Temporary Skill Access:** All association members who are **not on an active contract** gain full access to their skill tree abilities for **60 seconds**. Members already on a contract are unaffected (they already have skills).
+- **No EXP:** The emergency window grants skills but **no EXP gain** — it's a defensive measure, not a way to farm progression without contracts.
+- **Cooldown:** 5 minutes per victim. The same member being attacked again within 5 minutes does not re-trigger the alert. Different members being attacked have separate cooldowns.
+
+**Why this exists:** Without a safety net, an off-contract association squad is completely defenseless — no skills, no way to fight back effectively. This creates a griefing vector where attackers can ambush unarmed fixers between contracts. The distress system ensures that attacking one fixer activates the whole squad, making it dangerous to pick off isolated members. It also creates emergent RP: the squad rallies together in a crisis, even without formal orders.
+
+**Implementation:**
+- Register `COMSIG_MOB_APPLY_DAMGE` on all association members via the `association_exp` component
+- On damage from a carbon attacker: check if HP < 50% max HP (or if the member is dead via `COMSIG_LIVING_DEATH`)
+- If triggered and not on cooldown: iterate `GLOB.association_members` (or a tracked list on the Director's exp component), send alert to each, grant a timed `/datum/status_effect/association_emergency` that enables skills for 60s
+- The status effect hooks into the skill activation check: `can_use_skill()` returns `TRUE` if on contract OR has the emergency status effect
+- Cooldown tracked per-victim via `var/list/distress_cooldowns` on the association squad datum
+- **Directional arrow** follows the `PointToFlower()` pattern from `code/modules/mob/living/simple_animal/abnormality/waw/rose_sign.dm:587-597`. On alert, call `get_path_to(get_turf(squad_member), get_turf(victim), TYPE_PROC_REF(/turf, Distance_cardinal), 100)` and spawn `/obj/effect/temp_visual/cult/sparks` (or a custom association-themed temp visual) along the first 10 tiles of the path. This creates a visible trail of spark effects on the ground pointing from each squad member toward the victim. Re-fire the trail every 5 seconds for the 60s emergency duration so the arrow updates as members move.
 
 ### The Hana's Role (Additions to Existing Job)
 
@@ -1071,14 +1431,17 @@ This is **not** a new role. These are additions to the existing Hana job (`code/
 
 **New Additions - Contract Dispatcher Tools:**
 
-The existing Hana gains a new **Contract Terminal** (TGUI interface) as part of their toolkit, alongside their existing quest and admin tools. This gives them concrete mechanical authority over the fixers they're supposed to be managing.
+The Hana's office gains an **Association Contract Terminal** — a physical machine with a TGUI interface. This is the **same terminal** that civilians can use. It gives the Hana concrete mechanical authority over the fixers they're supposed to be managing.
 
-**Contract Terminal (New TGUI - added to existing Hana abilities):**
+**Association Contract Terminal (Physical Machine + TGUI):**
 - Create contracts with type, duration, funding, and target/location
+- Uses the **Contract City Map** for location-based contracts
+- Produces a physical **contract item** that the creator hands to the association
 - View all active contracts and their status (who's on what job)
 - View completed contracts (history/stats)
-- Only Hana Administrator and Representative can create contracts (not Interns)
-- Interns can view the contract board but not create Hana-tier contracts
+- Any non-association player can use the terminal (civilians, Hana, command, etc.)
+- Only Hana Administrator and Representative have unlimited funding — civilians pay from their own wallet
+- Interns can view the terminal but not create Hana-tier contracts
 
 **Why Fixers Still Need the Hana (Even at 1x EXP):**
 - Hana contracts are **reliable and funded** - civilians may not always have money or be willing to hire
@@ -1093,36 +1456,43 @@ The existing Hana gains a new **Contract Terminal** (TGUI interface) as part of 
 - A Hana who isn't creating contracts is leaving fixers idle with no skills and no EXP
 - Could tie into round-end reports showing Hana effectiveness
 
-**When No Hana is Present:**
-- Fixers rely entirely on civilians and other roles to hire them (2x EXP)
-- This actually gives better EXP per contract, but is less reliable (civilians may not hire)
-- Any non-association player can create contracts, so the system doesn't break
-- Having a Hana is still valuable for the steady funded work between civilian contracts
-
 ### Client Benefits (Why Civilians Accept Contracts)
 
-When a Protect Person contract is active, the client receives benefits while their fixer is nearby:
+Civilians who issue or accept contracts receive tangible benefits, incentivizing the mutual transaction loop:
 
+**Protection Contracts (Escort Person, Protect Person, Tend to Person):**
 - **Damage Reduction Aura:** ~10-15% less damage taken while the contracted fixer is within range
-- **SP Stabilization:** Slower SP decay / minor passive SP regen from the security of having a bodyguard
-- **Visible Protection Status:** Examine text shows "Under [Association] protection" - an RP deterrent
+- **SP Stabilization:** Slower SP decay / minor passive SP regen from having a bodyguard nearby
 - Benefits only active while the fixer is within contract range
 
-These benefits incentivize civilians to **accept** contracts when offered, creating the mutual transaction loop.
+**Investigation Contracts (Investigate Person, Surveillance Post):**
+- **Intel Reports:** Client receives filed reports with useful information about targets or areas
+- **Early Warning:** Surveillance contracts alert the client to threats spotted in monitored zones
+
+**Combat Contracts (Eliminate Target, Duel Person, Champion Contract):**
+- **Problem Solved:** The target threat is dealt with by a professional fixer
+- **Plausible Deniability:** The client didn't do the fighting themselves — the association handled it
+
+**Service Contracts (Host Event, Medical Relief):**
+- **Event Access:** Attendees at hosted events receive the event's benefits (buffs, healing, RP)
+- **Medical Care:** Medical Relief targets receive direct healing from the contracted fixer
+
+**General Benefits (all contracts):**
+- **Association Reputation:** Civilians who regularly contract fixers build informal goodwill with the association
 
 ### Contract System - New Files
 
 - `ModularLobotomy/associations/contracts/contract_datum.dm` - Base contract datum (type, duration, funding, target, status)
-- `ModularLobotomy/associations/contracts/contract_terminal.dm` - Physical terminal object + TGUI for Hana
-- `ModularLobotomy/associations/contracts/contract_actions.dm` - Contract actions (civilian offer, fixer accept/decline, view active contract)
+- `ModularLobotomy/associations/contracts/contract_terminal.dm` - Association Contract Terminal (physical machine + TGUI, used by Hana and civilians)
+- `ModularLobotomy/associations/contracts/contract_actions.dm` - Contract actions (fixer accept/decline) and contract item (`/obj/item/association_contract`)
 - `ModularLobotomy/associations/contracts/contract_citymap.dm` - City map generation datum for contract location picking
-- `tgui/packages/tgui/interfaces/ContractTerminal.js` - Hana's contract creation/management UI (includes city map view)
+- `tgui/packages/tgui/interfaces/ContractTerminal.js` - Association Contract Terminal TGUI (contract creation/management, includes city map view)
 - `tgui/packages/tgui/interfaces/ContractBoard.js` - Fixer's contract browsing/accepting UI (could be same as terminal with reduced permissions)
 - `tgui/packages/tgui/interfaces/ContractCityMap.js` - City map TGUI component (reusable, embedded in ContractTerminal)
 
 ### Contract City Map (Location Picker)
 
-For contracts that require picking locations (Guard Area, Patrol Route), the Contract Terminal displays an **interactive city map** that the contract creator can click on to place waypoints or define zones.
+For contracts that require picking locations (Guard Area, Patrol Route), the Association Contract Terminal displays an **interactive city map** that the contract creator can click on to place waypoints or define zones.
 
 **Reference System:** `code/game/machinery/facility_holomap.dm` + `code/controllers/subsystem/holomap.dm`
 
@@ -1238,9 +1608,8 @@ Zwei earn EXP through the contract system by fulfilling protection duties:
 
 **Contract-Specific Behavior:**
 - Zwei skill tree abilities **only function while on an active contract**
-- Guard Area contracts create a visible zone boundary (so the Zwei knows their post)
-- Protect Person contracts show a tether/indicator to the client
-- Breaking contract range starts a warning timer (~15s grace period) before contract fails
+- Guard Area contracts create a visible zone boundary (so the Zwei knows their post). The contract timer **only ticks while at least one association member is inside the zone** — leaving pauses the timer until someone returns
+- Protect Person contracts show a tether/indicator to the client. The contract timer **only ticks while at least one association member is within range of the client**
 
 **Skill Tree - 3 Branches:**
 
@@ -1571,7 +1940,132 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 - Seven skill tree abilities **only function while on an active contract**
 - Investigate Person contracts show a subtle indicator pointing to the target's direction
 - Surveillance Post contracts highlight the monitored area boundary
-- Breaking contract parameters (leaving area, losing track of target) starts a warning timer (~15s) before contract fails
+- For location/proximity contracts, leaving the area or losing track of the target **pauses the timer** until an association member returns
+
+**Weapon Gimmicks — Rupture and Adaptive Damage:**
+
+Seven's weapons are split into two categories — **sidearms** (fencing foils/dagger) and **main weapons** (blades/cane). Each plays a distinct role in the investigation→retribution loop: sidearms build up Rupture stacks, and main weapons exploit the target's weaknesses once Rupture has done its work.
+
+**Sidearms (`seven_foil` tree) — Rupture Bursters:**
+
+The fencing foils and dagger specialize in inflicting bursts of Rupture. Each hit applies **6 Rupture** at base, but the amount **decreases** based on the target's current Rupture stacks — it's easy to find new intel on a fresh target, but harder to uncover new vulnerabilities the more you already know. This replaces the old "35% more damage when attacking the same target" gimmick.
+
+**Formula:** `rupture_applied = max(1, base_rupture - floor(current_stacks / falloff_rate))`
+
+The **falloff rate** determines how quickly the diminishing returns kick in. Higher-tier sidearms have slower falloff, allowing them to push Rupture stacks higher before bottoming out.
+
+| Weapon | Base Rupture | Falloff Rate | Rupture at 0/10/20/30/50 stacks | Notes |
+|---|---|---|---|---|
+| Associate foil | 6 | every 5 stacks | 6 / 4 / 2 / 1 / 1 | Hits the floor fastest |
+| Veteran foil | 6 | every 7 stacks | 6 / 5 / 3 / 2 / 1 | Slower falloff |
+| Director dagger | 6 | every 10 stacks | 6 / 5 / 4 / 3 / 1 | Slowest falloff, belt-fit, 0.5 attack speed |
+
+Rupture has a **max stack of 50**. Sidearms deal BLACK damage and do **not** have the adaptive damage type gimmick — they are Rupture delivery tools.
+
+```dm
+/obj/item/ego_weapon/city/seven_foil
+	/// Base rupture applied per hit
+	var/base_rupture = 6
+	/// How many existing stacks before rupture applied drops by 1
+	var/falloff_rate = 5
+
+/obj/item/ego_weapon/city/seven_foil/attack(mob/living/target, mob/living/user)
+	. = ..()
+	var/current_stacks = 0
+	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(R)
+		current_stacks = R.stacks
+	var/rupture_amount = max(1, base_rupture - round(current_stacks / falloff_rate))
+	target.apply_lc_rupture(rupture_amount)
+
+/obj/item/ego_weapon/city/seven_foil/vet
+	falloff_rate = 7
+
+/obj/item/ego_weapon/city/seven_foil/dagger
+	falloff_rate = 10
+```
+
+**Main Weapons (`seven_blade` tree) — Adaptive Damage Type:**
+
+When the target has **10 or more Active Rupture stacks**, the blade's damage type **adapts to the target's weakest resistance** for all attacks while Rupture remains at 10+. The old "hit N times to analyze / 50% bonus damage" gimmick is removed — Rupture stacks are the new analysis mechanic.
+
+**How weakest resistance is determined:**
+
+- **For carbons (players):** Check the target's worn armor values. The damage type with the **lowest armor resistance** is chosen. Scans `RED_DAMAGE`, `WHITE_DAMAGE`, `BLACK_DAMAGE` from the target's `getarmor()` or equipped suit armor list.
+- **For simple mobs:** Check the target's `damage_coeff` list. The damage type with the **highest coefficient** (least resisted) is chosen. Scans `RED_DAMAGE`, `WHITE_DAMAGE`, `BLACK_DAMAGE` from `damage_coeff`.
+
+**PALE restriction:** The adaptive damage type **cannot** change to `PALE_DAMAGE` for Associate and Veteran blades — if PALE would be the weakest, it picks the second-weakest type instead.
+
+**Director's blade exception:** The Director's blade (`seven_blade/director`) and cane **can** adapt to `PALE_DAMAGE`, but when they do, force is reduced by 15% for that attack to offset PALE's effectiveness. Force returns to normal after the hit.
+
+| Weapon | Can Adapt to PALE? | PALE Penalty | Notes |
+|---|---|---|---|
+| Associate blade | No (picks 2nd best) | N/A | Standard adaptive |
+| Veteran blade | No (picks 2nd best) | N/A | Higher force |
+| Director blade | **Yes** | -15% force for that hit | Full spectrum analysis |
+| Director cane | **Yes** | -15% force for that hit | Lower force, faster attack speed |
+
+The adaptive damage type reverts to BLACK (default) when the target's Rupture drops below 10 stacks (after triggering or natural decay).
+
+```dm
+/obj/item/ego_weapon/city/seven_blade
+	/// Whether this weapon can adapt to PALE damage
+	var/can_adapt_pale = FALSE
+	/// Force penalty multiplier when adapting to PALE
+	var/pale_penalty = 0.85
+
+/obj/item/ego_weapon/city/seven_blade/attack(mob/living/target, mob/living/user)
+	// Adaptive damage type — requires 10+ Active Rupture on target
+	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(R && R.stacks >= 10)
+		var/best_type = get_weakest_resistance(target)
+		if(best_type)
+			damtype = best_type
+			if(best_type == PALE_DAMAGE)
+				force *= pale_penalty
+
+	. = ..()
+
+	// Reset after attack
+	force = initial(force)
+	damtype = BLACK_DAMAGE
+
+/// Determine the target's weakest damage resistance
+/obj/item/ego_weapon/city/seven_blade/proc/get_weakest_resistance(mob/living/target)
+	var/list/candidates = list(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE)
+	if(can_adapt_pale)
+		candidates += PALE_DAMAGE
+
+	var/best_type = null
+	var/best_value = INFINITY
+
+	if(ishuman(target))
+		// For carbons: check worn armor values (lower = weaker)
+		var/mob/living/carbon/human/H = target
+		for(var/dtype in candidates)
+			var/armor_val = H.getarmor(null, dtype)
+			if(armor_val < best_value)
+				best_value = armor_val
+				best_type = dtype
+	else
+		// For simple mobs: check damage_coeff (higher = weaker)
+		best_value = 0
+		for(var/dtype in candidates)
+			var/coeff = target.damage_coeff[dtype] || 1
+			if(coeff > best_value)
+				best_value = coeff
+				best_type = dtype
+
+	return best_type
+
+/obj/item/ego_weapon/city/seven_blade/director
+	can_adapt_pale = TRUE
+
+/obj/item/ego_weapon/city/seven_blade/cane
+	can_adapt_pale = TRUE
+```
+
+**Design Intent:** Sidearms build Rupture fast, then the fixer swaps to their main blade once the target has 10+ stacks. The blade exploits the target's weakest resistance, dealing damage where it hurts most. This creates a two-weapon playstyle: foil to stack, blade to execute — mirroring Seven's investigate→punish loop. The Director's PALE access (with a force trade-off) rewards skill investment without being strictly better.
 
 **Skill Tree — 3 Branches:**
 
@@ -1597,7 +2091,7 @@ Mixing branches gives access to all five effects, rewarding the 2-branch investm
 
 **Theme:** Mark one target. Build rupture and convert it into devastating single-target damage. The field agent who gathers intel on a single mark, then eliminates them with surgical strikes. Every hit on your mark feeds the dossier — and the dossier feeds the kill. Applies some Rupture, but the Operative builds stacks faster.
 
-**Marking System:** T1 in this branch grants the **Mark Target** action (pointed spell pattern, `InterceptClickOn()`). One mark at a time. Re-marking removes old mark. Mark persists until manually removed, re-marked, or target dies. This is **separate** from the Seven weapon's existing "hit 7 times to store target" mechanic — both systems coexist independently.
+**Marking System:** T1 in this branch grants the **Mark Target** action (pointed spell pattern, `InterceptClickOn()`). One mark at a time. Re-marking removes old mark. Mark persists until manually removed, re-marked, or target dies. This is **separate** from the Seven blade's Rupture-based adaptive damage mechanic — both systems coexist independently.
 
 **T1 (1pt) — Pick one:**
 - **A: Case File** — Mark a target. Your attacks against the marked target apply 2 Rupture stacks and deal bonus BLACK damage equal to 1% of your weapon's base force per Rupture stack on them (max +40% at 40 stacks). The mark focuses your investigation — every piece of evidence builds the case and sharpens the blade.
@@ -2293,7 +2787,7 @@ Dieci can use their Tome to **host public events** — extended group activities
 | | |
 |---|---|
 | **Duration** | ~4 minutes (6 ticks, 40s apart) |
-| **Ahn Cost** | 100 |
+| **Ahn Cost** | 500 |
 | **Per-tick benefit** | Attendees in zone heal 8 SP |
 | **EXP** | 3 per completed tick + 2 per attendee per tick |
 | **Flavor lines** | `"[user] opens their tome and reads aloud: 'In darkness, the pursuit of understanding is the only true light...'"` |
@@ -2305,9 +2799,9 @@ Dieci can use their Tome to **host public events** — extended group activities
 | | |
 |---|---|
 | **Duration** | ~5 minutes (6 ticks, 50s apart) |
-| **Ahn Cost** | 200 |
+| **Ahn Cost** | 1000 |
 | **Per-tick benefit** | All attendees in zone gain +1 to ALL attributes (Fortitude, Prudence, Temperance, Justice) for 5 minutes |
-| **EXP** | 4 per completed tick + 3 per attendee per tick |
+| **EXP** | 7 per completed tick + 4 per attendee per tick |
 | **Flavor lines** | `"[user] demonstrates a defensive stance and instructs: 'Guard your center — all strength flows from balance.'"` |
 
 **Flow:** Dieci sets up zone → uses tome (5s channel) → demonstrates technique → attendees get +1 all stats → ~45 seconds of free RP time → next tick → repeat 6 times. Attendees who stay for all 6 ticks gain +6 to all attributes for 5 minutes. Attribute bonus duration refreshes per tick (so attending tick 6 gives +6 all stats for 5 more minutes from that point).
@@ -2317,9 +2811,9 @@ Dieci can use their Tome to **host public events** — extended group activities
 | | |
 |---|---|
 | **Duration** | ~7 minutes (7 ticks, 60s apart) |
-| **Ahn Cost** | 300 |
+| **Ahn Cost** | 2000 |
 | **Per-tick benefit** | Each attendee in zone earns 25 ahn (via ID card bank account) |
-| **EXP** | 5 per completed tick + 4 per attendee per tick |
+| **EXP** | 16 per completed tick + 10 per attendee per tick |
 | **Flavor lines** | `"[user] raises their tome and speaks with conviction: 'To share knowledge freely is the highest form of wealth...'"` |
 
 **Flow:** Dieci sets up zone → uses tome (5s channel) → delivers sermon → attendees each earn 25 ahn → ~55 seconds of free RP time → next tick → repeat 7 times. Total ahn per attendee: up to 175 ahn. The Dieci earns **no ahn** from this event — it is pure charity. Highest EXP reward to compensate.
@@ -2328,14 +2822,14 @@ Dieci can use their Tome to **host public events** — extended group activities
 
 | Event | Duration | Ahn Cost | Ticks | Tick Interval | Per-Tick Benefit | EXP per Tick |
 |---|---|---|---|---|---|---|
-| Book Reading | ~4 min | 100 | 6 | 40s | 8 SP heal | 3 + 2/attendee |
-| Training Session | ~5 min | 200 | 6 | 50s | +1 all attributes (5min) | 4 + 3/attendee |
-| Charity Sermon | ~7 min | 300 | 7 | 60s | 25 ahn each | 5 + 4/attendee |
+| Book Reading | ~4 min | 500 | 6 | 40s | 8 SP heal | 3 + 2/attendee |
+| Training Session | ~5 min | 1000 | 6 | 50s | +1 all attributes (5min) | 7 + 4/attendee |
+| Charity Sermon | ~7 min | 2000 | 7 | 60s | 25 ahn each | 16 + 10/attendee |
 
 **EXP Examples:**
 - Book Reading with 3 attendees: `(3 + 2*3) * 6 = 54 EXP`
-- Training Session with 4 attendees: `(4 + 3*4) * 6 = 96 EXP`
-- Charity Sermon with 5 attendees: `(5 + 4*5) * 7 = 175 EXP`
+- Training Session with 3 attendees: `(7 + 4*3) * 6 = 114 EXP` (2.1× Book Reading)
+- Charity Sermon with 3 attendees: `(16 + 10*3) * 7 = 322 EXP` (2.8× Training Session)
 
 ---
 
@@ -2373,71 +2867,197 @@ Dieci can use their Tome to **host public events** — extended group activities
 - Events encourage **RP** by design — long durations with free time between ticks, visible spoken lines, gathering players together
 - The ahn cost means Dieci must earn money from contracts before they can host events, preventing event spam
 
-**Skill Tree — 3 Branches (pick 2):**
+### Dieci-Specific Contract Types
 
-**Core Combat Mechanic: Imbue Knowledge** (available to ALL Dieci, not branch-locked)
+Like other associations, Dieci skill tree abilities **only function while on an active contract.** Dieci contracts formalize their charity work into assignable tasks that Hana or civilians can request.
 
-The Dieci's weapon deals **RED damage** by default. Using the **Imbue Knowledge** action (`/datum/action/cooldown/dieci_imbue`, 5s CD) consumes 1 Active Knowledge entry (lowest level first) and converts weapon damage to **PALE** for `level × 5` seconds (Level 1 = 5s, Level 5 = 25s). While in PALE mode, melee hits apply **2 Sinking stacks** to the target. This is the core damage loop:
+- **Host Event** (Dieci only) — A client or Hana requests the Dieci host a specific public event type (**Book Reading**, **Training Session**, or **Charity Sermon**) at a designated location. The contract creator picks the event type and then selects the location using the **Contract City Map** (the same interactive city map used by Zwei's Guard Area and Patrol Route contracts — see "Contract City Map" section). The creator clicks a tile on the map to place a **event marker**; the Dieci must set up their event zone within that area. The Dieci must travel to the marked location, set up their event zone there, and complete the full event (all ticks). Contract **completes when the event finishes all ticks successfully.** If the event is interrupted or fails, the contract fails. The event's own EXP rewards still apply on top of the contract completion bonus.
 
-1. Hit with RED weapon → build Sinking stacks (from branch skills)
-2. Sinking activates after 5 seconds
-3. Use Imbue Knowledge → weapon becomes PALE
-4. Each PALE hit **triggers** Sinking (SP damage = stacks, halves stacks) AND applies 2 new stacks (which inherit the already-activated state, so the next hit triggers again)
-5. Sustained PALE hitting = repeated Sinking triggers + replenishment
-6. Run out of Active Knowledge → weapon reverts to RED → repeat cycle
+- **Medical Relief** (Dieci only) — Heal a specified number of **different people** using Healing Kits. The contract creator sets a target count (e.g., "heal 8 different people"). Each unique carbon mob healed with a Dieci Healing Kit increments the counter (healing the same person twice doesn't count again). Contract **completes when the target count is met** within the duration. This pushes the Dieci to move around the facility and interact with many players rather than camping one injured person.
 
-Visual: weapon gets a pale glow overlay during PALE mode. Sound: `'sound/machines/terminal_prompt_confirm.ogg'` on activation.
+- **Tend to Person** (Dieci only) — Target a specific player (the client, or a person the client designates). The contract timer **only ticks while at least one association member is within 7 tiles of the target**. EXP ticks **while near the target and the target is above 50% HP.** If the target drops below 50%, EXP ticking pauses until the Dieci heals them back up. Healing the target while on this contract gives **+50% bonus EXP** per heal. Sacred Seasoning fed to the target gives **double EXP.** This is the medical bodyguard contract — the Dieci equivalent of Zwei's Protect Person, but focused on keeping the client alive through healing rather than absorbing damage.
+
+**Contract-Specific Behavior:**
+- Dieci skill tree abilities **only function while on an active contract**
+- Host Event contracts use the **Contract City Map** for location selection. The placed event marker is visible on the Dieci's contract HUD, and the Dieci must set up their event zone within the marked area
+- Medical Relief contracts show a counter HUD element: `"Patients healed: 3/8"`
+- Tend to Person contracts show a tether/indicator to the target (same as Zwei's Protect Person)
+- Tend to Person timer **only ticks while at least one association member is within range of the target** — leaving pauses the timer until someone returns
+
+**Contract Summary:**
+
+| Contract | Type | Completion | EXP Bonus |
+|---|---|---|---|
+| **Host Event** | Location + event type | Complete all event ticks at designated area | Event EXP + contract completion bonus |
+| **Medical Relief** | Quantity target | Heal X different people within duration | Standard EXP per heal + contract bonus |
+| **Tend to Person** | Person-targeted | Duration-based, stay near & keep healthy | +50% heal EXP, 2x food EXP, passive ticks |
+
+---
+
+### Dieci Weapons — Fists and Keys
+
+Dieci fixers use two weapon types: **Fists** (combat gloves, existing weapon) and **Keys** (oversized ceremonial keys, new weapon). Both are subtypes of `/obj/item/ego_weapon/city/dieci` and share the same L/H combo system from the existing `dieci.dm`. The weapons differ in their empowerment bonus and stat distribution.
+
+**Empowerment (attack_self) — Replaces the old standalone Imbue Knowledge action:**
+
+The combo system has two attack types: **L (Light)** and **H (Heavy)**. Light attacks are basic RED damage melee swings that cost nothing. Heavy attacks are **empowered** — they deal PALE damage with bonus effects, but require consuming Active Knowledge.
+
+Pressing `attack_self` consumes 1 Active Knowledge entry (**lowest level first** — spend cheap knowledge for empowerment) and **empowers the weapon's next attack**. The next melee hit becomes an H (Heavy) attack:
+- **PALE** damage instead of RED
+- Applies **2 Sinking stacks** to the target
+- **Fists bonus:** Grants the Dieci `empowered_level × 15` shield HP (via `dieci_shield_hp` component)
+- **Keys bonus:** Grants the Dieci `empowered_level × 2` Offense Level Up stacks
+
+If the weapon is not empowered, the melee hit is an L (Light) attack — basic RED damage with no bonus. There is no charge stacking; you empower one attack at a time.
+
+Visual: weapon has a pale glow overlay while empowered. Sound: `'sound/machines/terminal_prompt_confirm.ogg'` on empowerment.
+
+**Interaction with the combo system:**
+- **Outside combo (chain == 0):** `attack_self` empowers the next attack (pre-loading an H before starting the combo).
+- **During combo (chain > 0):** `attack_self` preps a heavy finisher (sets `activated = TRUE`) **AND** consumes knowledge to empower. This means every H input in a combo costs 1 knowledge entry.
+- **L inputs cost nothing** — they are basic RED melee swings that advance the combo chain without consuming any resources.
+- **Combo finisher effects** interact with Sinking, status effects, and knockback — no grabs, stuns, or immobilizes on either party.
+
+This means **H inputs are the only resource cost** during combos. The L inputs are free chain-builders leading up to the empowered finisher.
+
+**Combo Table:**
+
+L hits in a combo are basic RED melee attacks that cost nothing — they just advance the chain. H hits are empowered (PALE + Sinking + weapon bonus), each costing 1 knowledge via `attack_self`. The finisher (triggered on the final input) always deals its base damage hit. However, the finisher's **special effect only triggers if the Dieci has the required knowledge type** — on finisher, the weapon checks for a specific Active Knowledge type and consumes the **highest level** entry of that type. If found, the effect fires and scales with the consumed level. If the Dieci has no knowledge of that type, only the base damage hit happens.
+
+This finisher knowledge consumption is **separate** from the H empowerment cost — the finisher bonus pulls directly from Active Knowledge, not the knowledge spent on `attack_self`.
+
+| Combo | Input | Base Hit | Required Knowledge | Effect (if consumed, scales with level) |
+|---|---|---|---|---|
+| **Quick Strike** | H | `force × 1.3` | **Behavioral** | Apply `level × 3` Sinking to the target. |
+| **Sweeping Blow** | LH | `force × 1.2` | **Medical** | Throw target `2 + level` tiles. Apply `level × 2` Sinking on landing. |
+| **Pressure Combo** | LLH | `force × 1.3` | **Behavioral** | Apply `level × 2` Sinking and `level` Defense Level Down to target. |
+| **Overwhelming Barrage** | LLLH | 20 rapid hits, `force × 1.5` total | **Anatomical** | After the barrage, force-trigger all Sinking on the target (bypass 5s delay). The H input triggers the barrage; the 20 rapid hits are basic RED damage. |
+| **Measured Finisher** | LLLLL | `force × 1.5` | **Anatomical** | Apply Sinking = target's current stacks × `level` (at level 1: doubles stacks, level 5: ×5, max 50). |
+| **Grand Finale** | LLLLH | `force × 1.5` | **Spiritual** | Throw target `3 + level` tiles. On landing, PALE shockwave in `1 + level` tile radius dealing `level × 8` PALE damage and `level × 3` Sinking to all enemies hit. |
+
+**Knowledge cost per combo:** Only H inputs cost knowledge (1 entry each via `attack_self`). L inputs are free.
+
+| Combo | Input | H Inputs | Knowledge Cost | Finisher Consumption |
+|---|---|---|---|---|
+| Quick Strike | H | 1 | 1 entry | + 1 highest of required type |
+| Sweeping Blow | LH | 1 | 1 entry | + 1 highest of required type |
+| Pressure Combo | LLH | 1 | 1 entry | + 1 highest of required type |
+| Overwhelming Barrage | LLLH | 1 | 1 entry | + 1 highest of required type |
+| Measured Finisher | LLLLL | 0 | **0 entries** | + 1 highest of required type |
+| Grand Finale | LLLLH | 1 | 1 entry | + 1 highest of required type |
+
+Note: **LLLLL is completely free** — no H input means no empowerment cost. Its finisher effect still consumes knowledge of the required type if available.
+
+**Resource split:** Low-level knowledge is spent on `attack_self` empowerment (cheap PALE fuel for H attacks). High-level knowledge of specific types is saved for combo finisher effects. The Dieci who diversifies their charity work (healing for Medical, studying for Anatomical, observing for Behavioral, events for Spiritual) has the widest combo toolkit.
+
+---
+
+#### Weapon Type: Fists (`/obj/item/ego_weapon/city/dieci`)
+
+The existing Dieci combat gloves. Defensive empowerment (shield HP on H attacks). Lower base damage, faster attacks.
+
+| Tier | Name | Force | Attack Speed | Attribute Requirements |
+|---|---|---|---|---|
+| **Associate** | Dieci Combat Gloves | 20 | 0.7 | 80 all |
+| **Veteran** | Dieci Veteran Gloves | 28 | 0.7 | 100 all |
+| **Director** | Dieci Director Fists | 38 | 0.6 | 120 all |
+
+---
+
+#### Weapon Type: Keys (`/obj/item/ego_weapon/city/dieci/key`)
+
+Oversized ceremonial keys used as bludgeoning weapons. Offensive empowerment (Offense Level Up on H attacks). Higher base damage, slower attacks.
+
+| Tier | Name | Force | Attack Speed | Attribute Requirements |
+|---|---|---|---|---|
+| **Associate** | Dieci Ceremonial Key | 26 | 0.9 | 80 all |
+| **Veteran** | Dieci Veteran Key | 35 | 0.85 | 100 all |
+| **Director** | Dieci Director Key | 48 | 0.8 | 120 all |
+
+---
+
+#### Combo System (Shared by Both Weapon Types)
+
+The existing L/H combo chain from `dieci.dm` is preserved. Light attacks (L) are basic RED melee swings — free, no knowledge cost. Heavy attacks (H) are prepped via `attack_self`, which consumes 1 knowledge and empowers the next attack. Combos time out after `combo_wait` (10 ticks) of inactivity.
+
+**Implementation:**
 
 ```dm
-/datum/action/cooldown/dieci_imbue
-	name = "Imbue Knowledge"
-	desc = "Consume Active Knowledge to convert your weapon to PALE damage, enabling Sinking triggers."
-	cooldown_time = 5 SECONDS
-	/// Whether PALE mode is currently active
-	var/pale_active = FALSE
-	/// Timer for reverting to RED
-	var/revert_timer
+/obj/item/ego_weapon/city/dieci
+	/// Reference to the owner's knowledge component
+	var/datum/component/dieci_knowledge/knowledge_comp
+	/// Whether the next attack is empowered (H attack)
+	var/empowered = FALSE
+	/// The level of the knowledge consumed for the current empowerment
+	var/empowered_level = 0
 
-/datum/action/cooldown/dieci_imbue/proc/activate(mob/living/carbon/human/user)
-	var/datum/component/dieci_knowledge/knowledge = user.GetComponent(/datum/component/dieci_knowledge)
-	if(!knowledge)
+/obj/item/ego_weapon/city/dieci/attack_self(mob/living/carbon/user)
+	// During combo: also prep heavy finisher input
+	if(chain > 0)
+		if(activated)
+			activated = FALSE
+			to_chat(user, span_danger("You revoke your preparation of a finisher."))
+			return
+		activated = TRUE
+		to_chat(user, span_danger("You prep a finisher!"))
+
+	// Already empowered — don't consume another knowledge entry
+	if(empowered)
+		to_chat(user, span_warning("Your [name] is already empowered!"))
 		return
-	var/list/consumed = knowledge.consume_lowest_knowledge(1)
+
+	// Consume 1 Active Knowledge (lowest level first) to empower
+	if(!knowledge_comp)
+		knowledge_comp = user.GetComponent(/datum/component/dieci_knowledge)
+	if(!knowledge_comp)
+		return
+	var/list/consumed = knowledge_comp.consume_lowest_knowledge(1)
 	if(!length(consumed))
-		to_chat(user, span_warning("You have no Active Knowledge to imbue!"))
+		to_chat(user, span_warning("You have no Active Knowledge to channel!"))
 		return
-	var/consumed_level = consumed[1]["level"]
-	var/duration = consumed_level * 5 SECONDS
-	pale_active = TRUE
-	// Override weapon damtype to PALE
-	var/obj/item/weapon = user.get_active_held_item()
-	if(weapon)
-		weapon.damtype = PALE_DAMAGE
-	// Register attack signal for Sinking application
-	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_pale_attack))
-	to_chat(user, span_notice("You channel your knowledge into your weapon. It glows with a pale light."))
+	empowered_level = consumed[1]["level"]
+	empowered = TRUE
+	to_chat(user, span_notice("You channel knowledge into your [name]."))
 	playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
-	// Set revert timer
-	if(revert_timer)
-		deltimer(revert_timer)
-	revert_timer = addtimer(CALLBACK(src, PROC_REF(revert_pale), user), duration, TIMER_STOPPABLE)
-	StartCooldown()
 
-/datum/action/cooldown/dieci_imbue/proc/on_pale_attack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
-	if(!pale_active || !istype(target))
-		return
-	target.apply_lc_sinking(2)
+/obj/item/ego_weapon/city/dieci/attack(mob/living/target, mob/living/user)
+	// ... existing combo chain logic ...
+	// On each melee hit, check empowerment:
+	if(empowered)
+		// This hit is an H (Heavy) attack
+		damtype = PALE_DAMAGE
+		target.apply_lc_sinking(2)
+		apply_empower_bonus(user, empowered_level)
+		empowered = FALSE
+		empowered_level = 0
+	else
+		// This hit is an L (Light) attack — basic RED
+		damtype = RED_DAMAGE
+	. = ..()
+	// Revert damtype after hit
+	damtype = RED_DAMAGE
 
-/datum/action/cooldown/dieci_imbue/proc/revert_pale(mob/living/carbon/human/user)
-	pale_active = FALSE
-	revert_timer = null
-	UnregisterSignal(user, COMSIG_MOB_ITEM_ATTACK)
-	var/obj/item/weapon = user.get_active_held_item()
-	if(weapon)
-		weapon.damtype = RED_DAMAGE
-	to_chat(user, span_notice("The pale glow fades from your weapon."))
+/// Fists: grant shield HP on empowered H attack
+/obj/item/ego_weapon/city/dieci/proc/apply_empower_bonus(mob/living/carbon/human/user, level)
+	var/datum/component/dieci_shield_hp/shield = user.GetComponent(/datum/component/dieci_shield_hp)
+	if(shield)
+		shield.restore_shield(level * 15)
+
+/// Keys: grant Offense Level Up on empowered H attack
+/obj/item/ego_weapon/city/dieci/key/apply_empower_bonus(mob/living/carbon/human/user, level)
+	user.apply_lc_offense_level_up(level * 2)
 ```
+
+**Core damage loop:**
+
+1. Build Active Knowledge through charity (EXP gimmick). Synthesize low-level entries into high-level ones.
+2. Press `attack_self` to consume 1 **low-level** knowledge (lowest first) → empowers next attack
+3. Next melee hit becomes an H attack — PALE + 2 Sinking + weapon bonus (Fists: shield HP, Keys: OLU)
+4. After the H hit, weapon reverts to L mode — basic RED attacks, free
+5. Execute combo finishers — L inputs advance the chain for free, H inputs cost 1 knowledge each
+6. On finisher completion, the weapon consumes **high-level** knowledge (highest of required type) for a powerful bonus effect
+
+---
 
 **Sinking Reference:**
 - Max 50 stacks, 5s activation delay on first application
@@ -2536,27 +3156,27 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 - **B: Analytical Strike** — Hitting a target with no Sinking applies 8 Sinking stacks. Hitting a target that already has Sinking applies 1 stack instead.
 
 **T2 (2pt) — Pick one:**
-- **A: Drowning Knowledge** — While Imbue Knowledge is active (PALE mode), attacks on targets with 15+ Sinking deal 25% bonus weapon damage.
-- **B: Spreading Decay** — While in PALE mode, hitting a target that has Sinking also applies 2 Sinking to all enemies within 2 tiles of the target. 2s internal CD.
+- **A: Drowning Knowledge** — When an empowered H attack (PALE hit) strikes a target with 15+ Sinking, deal 25% bonus weapon damage.
+- **B: Spreading Decay** — When an empowered H attack strikes a target that has Sinking, also apply 2 Sinking to all enemies within 2 tiles of the target. 2s internal CD.
 
 **T3 (3pt) — Pick one:**
-- **A: Abyssal Revelation** *(Powerful Attack, 90s CD)* — Requires Imbue Knowledge to be active. Consume all remaining Imbue duration. Dash to target within 5 tiles, 5-hit PALE combo. Each hit applies 5 Sinking. Final hit: 2x DPS + **immediately triggers all Sinking** on the target (bypasses 5s activation delay). After the combo, grants 10 seconds of fresh PALE mode (no knowledge consumed).
-- **B: Tome of Ruin** *(Passive)* — Every 5th consecutive PALE-mode melee hit on the same target **immediately triggers all Sinking** on the target (bypasses activation delay) and then applies 5 new Sinking stacks. Also, Imbue Knowledge duration is extended by 2 seconds each time Sinking triggers from your attacks.
+- **A: Abyssal Revelation** *(Powerful Attack, 90s CD)* — Requires at least 3 Active Knowledge entries. Consume up to 5 entries (highest level first). Dash to target within 5 tiles, 5-hit PALE combo (all hits are forced PALE — fueled by the consumed knowledge, not the empowerment system). Each hit applies 5 Sinking. Bonus damage = `+10%` per entry consumed (e.g., 5 entries = +50%). Final hit: 2x DPS + **immediately triggers all Sinking** on the target (bypasses 5s activation delay). After the combo, your next 5 `attack_self` presses empower for free (no knowledge consumed).
+- **B: Tome of Ruin** *(Passive)* — Every 5th consecutive empowered H attack on the same target **immediately triggers all Sinking** on the target (bypasses activation delay) and then applies 5 new Sinking stacks. Also, each Sinking trigger from your attacks grants 1 free empowerment (next `attack_self` costs no knowledge).
 
 **Abyssal Revelation — Details:**
 - **Opener:** Dash up to 5 tiles toward target. If target is adjacent, skip the dash.
-- **Combo:** 5 hits, all PALE damage. DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`.
+- **Combo:** 5 hits, all PALE damage (forced PALE via override, not the empowerment system). DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`.
 - **Per-hit effect:** Apply 5 Sinking stacks to target.
 - **Final hit:** 2x DPS. After dealing damage, find the target's Sinking status effect and call `trigger_sinking()` directly — this bypasses the normal 5s activation delay.
-- **After combo:** Grant 10 seconds of PALE mode (same as Imbue Knowledge active state) without consuming Active Knowledge.
+- **After combo:** Grant 5 free empowerments — the next 5 `attack_self` presses do not consume Active Knowledge. Tracked via `var/free_empowers = 0` on the weapon.
 
 **Implementation Notes:**
 - Deep Study: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_sinking(3)`.
 - Analytical Strike: `COMSIG_MOB_ITEM_ATTACK` → check `target.has_status_effect(/datum/status_effect/stacking/sinking)` → if no Sinking: `apply_lc_sinking(8)`, else: `apply_lc_sinking(1)`.
-- Drowning Knowledge: `COMSIG_MOB_ITEM_ATTACK` → check `imbue_action.pale_active` → get target's Sinking stacks via `target.has_status_effect(...)` → if stacks ≥ 15, deal `weapon.force * 0.25` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`.
-- Spreading Decay: `COMSIG_MOB_ITEM_ATTACK` → check `imbue_action.pale_active` → check target has Sinking → 2s CD check → `for(var/mob/living/L in range(2, target))` excluding target and user → `L.apply_lc_sinking(2)`.
-- Abyssal Revelation: `/datum/action/cooldown/dieci_abyssal` → requires `imbue_action.pale_active` → consume remaining timer (`deltimer(revert_timer)`) → cutscene_duel + immobilize → 5 PALE hits → final hit: `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S) S.trigger_sinking()` → grant 10s PALE via `imbue_action.revert_timer = addtimer(..., 10 SECONDS, ...)`.
-- Tome of Ruin: Track `var/pale_combo_count = 0` and `var/datum/weakref/combo_target_ref`. On `COMSIG_MOB_ITEM_ATTACK` → if `imbue_action.pale_active`: if target != last combo target → reset count. Increment count. At 5 → `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S && S.stacks > 0) INVOKE_ASYNC(S, PROC_REF(trigger_sinking))` → then `target.apply_lc_sinking(5)` → reset count. For duration extension: hook into Sinking trigger somehow or simply extend timer by 2s after each 5th-hit trigger.
+- Drowning Knowledge: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target Sinking stacks ≥ 15 → deal `weapon.force * 0.25` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`.
+- Spreading Decay: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target has Sinking → 2s CD check → `for(var/mob/living/L in range(2, target))` excluding target and user → `L.apply_lc_sinking(2)`.
+- Abyssal Revelation: `/datum/action/cooldown/dieci_abyssal` → check Active Knowledge count ≥ 3. Consume up to 5 entries (highest level first). Store count consumed. Multiplier = `1 + (count * 0.1)`. Cutscene_duel + immobilize → 5 PALE hits (forced PALE via override). Final hit: `trigger_sinking()`. Then `weapon.free_empowers = 5`.
+- Tome of Ruin: Track `var/h_combo_count = 0` and `var/datum/weakref/combo_target_ref`. Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit: if target != last combo target → reset count. Increment count. At 5 → `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S && S.stacks > 0) INVOKE_ASYNC(S, PROC_REF(trigger_sinking))` → then `target.apply_lc_sinking(5)` → reset count. Free empower: `weapon.free_empowers += 1`.
 
 ---
 
@@ -2580,7 +3200,7 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 - **Activation:** Consume all Active Knowledge (minimum 3 entries required). Shield HP is set to 100 regardless of current value. Shield becomes **unbreakable** for 8 seconds (damage still reduces shield HP, but it cannot go below 1).
 - **During buff:** Each time the shield absorbs damage (on every `on_damage` where shield > 0), apply Sinking stacks = `round(damage_absorbed / 5)` (min 1) to the attacker.
 - **After 8s:** AoE PALE shockwave centered on the Dieci, 3-tile radius. All enemies in range take PALE damage = current shield HP value. Apply 5 Sinking to all enemies hit. Then shield resets to **0** (must rebuild).
-- **Combo with Imbue:** If Imbue Knowledge is also active, the shockwave triggers Sinking on enemies that already had active stacks.
+- **Combo with empowerment:** If the Dieci is empowered (has an H attack ready) when the shockwave fires, the shockwave also triggers Sinking on enemies that already had active stacks.
 
 **Implementation Notes:**
 - Knowledge Barrier: On skill registration → `parent.AddComponent(/datum/component/dieci_shield_hp)`. `COMSIG_MOB_ITEM_ATTACK` → `shield_comp.restore_shield(3)`.
@@ -2597,8 +3217,8 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 **Theme:** Maximize the Active Knowledge economy. The Sage makes every piece of knowledge count more — longer buffs, cheaper synthesis, stronger consumption effects, and the ability to share knowledge with allies. At peak knowledge reserves, the Sage's weapon permanently channels PALE energy.
 
 **T1 (1pt) — Pick one:**
-- **A: Extensive Notes** — Max Active Knowledge increased from **20 to 30**. Imbue Knowledge duration increased by **50%** (level × 7.5s instead of × 5s).
-- **B: Applied Learning** — Each time Active Knowledge is consumed (for any purpose — Imbue, Tome Shield, skills, etc.), gain **4 Offense Level Up** stacks.
+- **A: Extensive Notes** — Max Active Knowledge increased from **20 to 30**. Empowered H attacks deal **+15% bonus PALE damage**.
+- **B: Applied Learning** — Each time Active Knowledge is consumed (for any purpose — H attack empowerment, Tome Shield, combo finishers, skills, etc.), gain **4 Offense Level Up** stacks.
 
 **T2 (2pt) — Pick one:**
 - **A: Shared Wisdom** — Action: target an ally within 5 tiles. Consume 1 Active Knowledge entry → give the ally **+5% damage per knowledge level** for 30s. Also apply Sinking = knowledge level × 2 to all enemies within 3 tiles of the ally. 15s CD.
@@ -2606,7 +3226,7 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 
 **T3 (3pt) — Pick one:**
 - **A: Grand Archive** *(Powerful Attack, 90s CD)* — Consume up to **5 Active Knowledge entries** (min 3). Each consumed entry = 1 hit in the combo. Each hit's damage type depends on knowledge type: **Anatomical/Behavioral = RED**, **Medical = WHITE**, **Spiritual = PALE**. Per-hit: apply Sinking = knowledge level × 2. Final hit: 2x DPS + apply Sinking = total consumed levels × 2.
-- **B: Infinite Library** *(Passive)* — Active Knowledge **has no max cap**. When holding **25+ entries**, weapon passively deals PALE damage (always, no Imbue needed). When holding **35+ entries**, melee attacks also passively apply 2 Sinking per hit. Consuming knowledge at 35+ does not lose the passive until you drop below the threshold.
+- **B: Infinite Library** *(Passive)* — Active Knowledge **has no max cap**. When holding **25+ entries**, all L attacks also deal PALE damage (always empowered, no `attack_self` needed). When holding **35+ entries**, all melee attacks (L and H) also passively apply 2 Sinking per hit. Consuming knowledge at 35+ does not lose the passive until you drop below the threshold.
 
 **Grand Archive — Details:**
 - **Activation:** Consume 3-5 Active Knowledge entries (player chooses via TGUI popup or auto-selects lowest first).
@@ -2620,12 +3240,12 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 - **Strategy:** Consuming Spiritual/Medical entries at the end ensures PALE/WHITE final hits trigger accumulated Sinking.
 
 **Implementation Notes:**
-- Extensive Notes: On skill registration → `knowledge_comp.max_knowledge = 30`. Override Imbue duration calc to multiply by 7.5 instead of 5.
+- Extensive Notes: On skill registration → `knowledge_comp.max_knowledge = 30`. Register `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered`: deal `weapon.force * 0.15` bonus PALE damage via `INVOKE_ASYNC`.
 - Applied Learning: Hook into all knowledge consumption events (track via component signal). On consume → `human_parent.apply_lc_offense_level_up(4)`. OLU naturally halves every 5s so sustained consumption keeps it high.
 - Shared Wisdom: `/datum/action/cooldown/dieci_shared_wisdom` with 15s CD → pointed at ally → consume 1 knowledge → apply `/datum/status_effect/dieci_wisdom_buff` to ally (damage_mult = 1 + 0.05 * level, 30s duration) → `for(var/mob/living/L in range(3, ally))` → check hostile → `L.apply_lc_sinking(level * 2)`.
 - Efficient Research: Modify synthesis logic in Tome TGUI handler → change required count from 3 to 2. On knowledge consumption in combat → if consumed level ≥ 3 → `knowledge_comp.add_knowledge(type, level - 1, "Residual insight from [type] study")`.
 - Grand Archive: `/datum/action/cooldown/dieci_grand_archive` → TGUI popup or auto-select → consume 3-5 entries → store their types/levels → cutscene_duel + immobilize → N hits. Per-hit: determine damtype from entry type, deal DPS damage, `target.apply_lc_sinking(entry_level * 2)`. Final hit: 2x DPS + `target.apply_lc_sinking(total_levels * 2)`.
-- Infinite Library: On skill registration → `knowledge_comp.max_knowledge = INFINITY` (or a very high number like 999). Track threshold via `COMSIG_DIECI_KNOWLEDGE_CHANGED` (new signal on add/remove). At 25+ → override weapon damtype to PALE permanently (register `COMSIG_MOB_ITEM_ATTACK` to set damtype before hit). At 35+ → also `target.apply_lc_sinking(2)` per hit. Check thresholds on every knowledge change.
+- Infinite Library: On skill registration → `knowledge_comp.max_knowledge = INFINITY` (or a very high number like 999). Track threshold via `COMSIG_DIECI_KNOWLEDGE_CHANGED` (new signal on add/remove). At 25+ → L attacks also deal PALE damage (register `COMSIG_MOB_ITEM_ATTACK` to override damtype even when not empowered). At 35+ → also `target.apply_lc_sinking(2)` per hit (both L and H). Check thresholds on every knowledge change.
 
 ---
 
@@ -2642,10 +3262,10 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 - **No Fragile or DLD** — Dieci's debuff identity is purely Sinking
 - Core status effect is **Sinking** (`code/datums/status_effects/debuffs.dm:1956-2051`) — max 50 stacks, 5s activation delay, triggers on WHITE/PALE damage
 - The `dieci_shield_hp` component uses `COMSIG_MOB_APPLY_DAMGE` → flat subtract raw damage from shield HP → `COMPONENT_MOB_DENY_DAMAGE`. No armor/physiology recalculation. Shows `/obj/effect/temp_visual/shock_shield` on full block (0 HP damage to user). Overflow damage dealt normally via `deal_damage()`. Max 500 HP, starts at 0, built up in small amounts via skills (3/hit, 2/hit) and Active Knowledge consumption (10 × level). **Halves every 10 seconds** (15s with Stalwart Presence), creating a "use it or lose it" dynamic
-- **Imbue Knowledge** is the universal RED→PALE conversion action — all Dieci have it regardless of branch
-- Sinking stacks added to an already-activated effect do NOT get a new 5s delay — this makes PALE mode hits trigger + replenish in the same attack
+- **Empowerment** (`attack_self` = consume 1 lowest knowledge, empower next attack) is the universal RED→PALE conversion — built into the weapon, not a separate action. One empowerment at a time (no stacking). The empowered H attack deals PALE + 2 Sinking + weapon bonus (Fists: shield HP, Keys: OLU). L attacks are basic RED, free. `var/free_empowers` tracks free empowerments granted by skills (Abyssal Revelation, Tome of Ruin)
+- Sinking stacks added to an already-activated effect do NOT get a new 5s delay — this makes empowered H (PALE) hits trigger + replenish in the same attack
 - `trigger_sinking()` can be called directly on the status effect datum to bypass the 5s activation delay (used by Abyssal Revelation and Tome of Ruin)
-- **Weapon damtype override:** Skills that change damtype (Imbue, Immovable Library counter, Infinite Library passive) modify `weapon.damtype` directly or deal extra damage of the alternate type via `INVOKE_ASYNC` → `target.deal_damage()`
+- **Weapon damtype override:** Empowerment sets `weapon.damtype = PALE_DAMAGE` for the H hit, then reverts to `RED_DAMAGE`. Skills like Immovable Library counter and Infinite Library passive also modify `weapon.damtype` directly or deal extra PALE damage via `INVOKE_ASYNC` → `target.deal_damage()`
 
 ### New Files to Create
 
@@ -2653,7 +3273,7 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 - `ModularLobotomy/associations/skills/dieci/warden.dm`
 - `ModularLobotomy/associations/skills/dieci/sage.dm`
 - `ModularLobotomy/associations/skills/dieci/dieci_shield_hp.dm`
-- `ModularLobotomy/associations/skills/dieci/imbue_knowledge.dm`
+- `ModularLobotomy/ego_weapons/melee/city/dieci.dm` - Updated Dieci weapons (Fists + Keys) with L/H empowerment system and combo knowledge consumption
 - `tgui/packages/tgui/interfaces/DieciTomeBestiary.js`
 
 ---
@@ -3045,7 +3665,12 @@ The 2-branch limit creates natural playstyle combos:
 - `ModularLobotomy/associations/skills/seven/intel_report.dm` - Intel Report Paper, Cargo Report, `/datum/seven_intel_snapshot`, validation logic
 - `ModularLobotomy/associations/skills/seven/dossier.dm` - Investigation Dossier item + datum
 - `tgui/packages/tgui/interfaces/SevenDossier.js` - Dossier TGUI viewer (report list by subject, stats)
-- `ModularLobotomy/associations/skills/dieci/` - Dieci skill tree branch files (TBD)
+- `ModularLobotomy/associations/skills/dieci/scholar.dm` - Dieci Scholar branch skills (Deep Study, Analytical Strike, Drowning Knowledge, Spreading Decay, Abyssal Revelation, Tome of Ruin)
+- `ModularLobotomy/associations/skills/dieci/warden.dm` - Dieci Warden branch skills (Knowledge Barrier, Reactive Ward, Tome Shield, Stalwart Presence, Golden Aegis, Immovable Library)
+- `ModularLobotomy/associations/skills/dieci/sage.dm` - Dieci Sage branch skills (Extensive Notes, Applied Learning, Shared Wisdom, Efficient Research, Grand Archive, Infinite Library)
+- `ModularLobotomy/associations/skills/dieci/dieci_shield_hp.dm` - `dieci_shield_hp` component (flat HP shield, 500 cap, halving decay)
+- `ModularLobotomy/ego_weapons/melee/city/dieci.dm` - Updated Dieci weapons (Fists + Keys) with L/H empowerment system and combo knowledge consumption
+- `tgui/packages/tgui/interfaces/DieciTomeBestiary.js` - Knowledge Tome TGUI (bestiary + knowledge management)
 - `ModularLobotomy/associations/skills/cinq/duelist.dm` - Cinq Duelist branch skills (Keen Edge, Opening Gambit, Precision Strike, Momentum, Decisive Blow, Ceaseless Pressure)
 - `ModularLobotomy/associations/skills/cinq/skirmisher.dm` - Cinq Skirmisher branch skills (Quick Step, First Strike, Flurry, Rush Down, Blade Dance, Afterimage)
 - `ModularLobotomy/associations/skills/cinq/fencer.dm` - Cinq Fencer branch skills (Composed Guard, Measured Response, Iron Focus, Riposte, Fencer's Finale, Unshakeable)
@@ -3055,7 +3680,7 @@ The 2-branch limit creates natural playstyle combos:
 - `ModularLobotomy/associations/contracts/contract_actions.dm` - Contract actions (civilian offer, fixer accept/decline, view)
 - `ModularLobotomy/associations/contracts/contract_citymap.dm` - City map generation datum for location picking
 - `tgui/packages/tgui/interfaces/AssociationSkillTree.js` - Skill tree TGUI interface
-- `tgui/packages/tgui/interfaces/ContractTerminal.js` - Hana contract creation/management TGUI (with embedded city map)
+- `tgui/packages/tgui/interfaces/ContractTerminal.js` - Association Contract Terminal TGUI (with embedded city map)
 - `tgui/packages/tgui/interfaces/ContractBoard.js` - Fixer contract browsing/accepting TGUI
 - `tgui/packages/tgui/interfaces/ContractCityMap.js` - City map TGUI component (reusable)
 
