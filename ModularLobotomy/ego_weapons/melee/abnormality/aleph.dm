@@ -2594,28 +2594,39 @@
 	// Cascading Gaze of Awe Underneath Contempt is the attack automatically performed when unsheathing the katana
 
 	var/cascading_gaze_active = FALSE
+	/// Var used exclusively for insane edge cases of the weapon being deleted mid-draw attack to avoid irreversible effects. Can happen with Broken Crown, I think.
+	var/mob/living/carbon/human/cascading_gaze_last_used_by
+	/// Timer until we forcefully revert changes from Cascading Gaze
 	var/cascading_gaze_active_timer
+	/// Radius in tiles.
 	var/cascading_gaze_radius = 3
+	/// Holds all the turfs that will be hit by Cascading Gaze
 	var/list/cascading_gaze_affected_turfs = list()
-	var/list/cascading_gaze_vfx = list()
+	/// We compare our user's location against this turf to determine whether they have moved during the attack or not (Records core?), if they have, we recalculate the turfs
+	var/turf/cascading_gaze_epicenter
+	/// Holds things that should be deleted after ending Cascading Gaze.
+	var/list/cascading_gaze_residual_datums = list()
 	var/cascading_gaze_hit_sounds_list = list('sound/weapons/ego/perversion_katana_1.ogg', 'sound/weapons/ego/perversion_katana_2.ogg')
 	var/cascading_gaze_finisher_sound = 'sound/weapons/ego/perversion_draw_finisher.ogg'
 
 	/// Multiplies katana force by this much before Justice for the Finisher
-	var/cascading_gaze_base_damage_coeff = 1.3
+	var/cascading_gaze_base_damage_coeff = 1.25
 	/// How much damage each tick of being inside the damaging AoE deals. Modified by Justice
-	var/cascading_gaze_periodic_damage = 15
+	var/cascading_gaze_periodic_damage = 30
 	/// How often the damaging AoE ticks
-	var/cascading_gaze_periodic_tick_rate = 0.3 SECONDS
+	var/cascading_gaze_periodic_tick_rate = 0.6 SECONDS
 	/// You'll be locked in place and the projectile deleting area will linger for this many ticks (duration of each determined by previous var).
-	var/cascading_gaze_tick_amount = 8
+	var/cascading_gaze_tick_amount = 4
 	/// Add to the previous coefficient per gaze stacks on the target we're hitting
 	var/cascading_gaze_additive_damage_coeff_per_gaze = 0.4
 	/// You'll take [this var]x as much damage while channeling the ability.
 	var/cascading_gaze_physiology_coeff = 0.5
 	/// These projectile types will create shrapnel.
 	var/cascading_gaze_shrapnel_sources = list(/obj/projectile/ego_bullet/special_fellbullet, /obj/projectile/ego_bullet/ego_fellbullet)
-
+	/// Shrapnel from the Fell Bullet interaction applies this much Gaze per hit...
+	var/cascading_gaze_shrapnel_gaze_application = 1
+	/// The Fell Bullet interaction will generate [pellets] pieces of shrapnel [repeat] times.
+	var/list/cascading_gaze_shrapnel_amount = list("repeat" = 3, "pellets" = 5)
 
 	/* ------------ LANCE VARS ------------ */
 	// Lance template vars. Used to update the weapon's attributes when sheathing the weapon
@@ -2691,6 +2702,12 @@
 	var/katana_finisher_damage_coeff = 2.5
 
 
+/obj/item/ego_weapon/perversion/Destroy(force)
+	if(cascading_gaze_active)
+		DrawAttackEnd(cascading_gaze_last_used_by)
+	return ..()
+
+
 /* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
 
 /obj/item/ego_weapon/perversion/attack_self(mob/living/user)
@@ -2709,7 +2726,7 @@
 
 		playsound(get_turf(user), unsheathe_sound, 100, vary = FALSE, extrarange = 7)
 		// Not on CD. Try to draw the blade.
-		if(do_after(user, unsheathe_windup, interaction_key = "perversion_unsheathe", max_interact_count = 1))
+		if(do_after(user, unsheathe_windup, timed_action_flags = IGNORE_USER_LOC_CHANGE, interaction_key = "perversion_unsheathe", max_interact_count = 1))
 			// Set the cooldown and timer for an alert when it refreshes.
 			unsheathe_cooldown = world.time + unsheathe_cooldown_duration
 			addtimer(CALLBACK(src, PROC_REF(UnsheatheRefreshAlert), user), unsheathe_cooldown_duration + 1)
@@ -2797,36 +2814,84 @@
 	if(QDELETED(user) || !istype(user) || user.stat >= DEAD || user.get_active_held_item() != src)
 		return
 	cascading_gaze_active = TRUE
+	cascading_gaze_last_used_by = user
+	cascading_gaze_epicenter = null
 
 	// Ensure we're working with reasonable values here
-	if(cascading_gaze_tick_amount < 1)
-		cascading_gaze_tick_amount = 1
+	cascading_gaze_tick_amount = clamp(cascading_gaze_tick_amount, 1, 59)
 	cascading_gaze_periodic_tick_rate = clamp(cascading_gaze_periodic_tick_rate, 0.1 SECONDS, 2 SECONDS)
 
-	// This is how long our attack's gonna last.
+	// This is how long our attack's gonna last... roughly.
 	var/final_duration = cascading_gaze_tick_amount * cascading_gaze_periodic_tick_rate
 
-	// We need to apply pacify, immobilize, push resistance, etc onto the user. In case something goes wrong and we can't finish, we'll add a timer to remove them manually.
+	// We need to apply pacify, immobilize, push resistance, etc onto the user. In case something goes wrong and we can't finish, we'll add a timer to end manually.
 	SetDrawAttackTraits(user)
-	cascading_gaze_active_timer = addtimer(CALLBACK(src, PROC_REF(RemoveDrawAttackTraits), user), final_duration + 5, TIMER_STOPPABLE)
+	cascading_gaze_active_timer = addtimer(CALLBACK(src, PROC_REF(DrawAttackEnd), user), final_duration + 5, TIMER_STOPPABLE)
 
-	// Clear these lists
-	cascading_gaze_affected_turfs = list()
-	cascading_gaze_vfx = list()
-
-	// These are the turfs we're gonna be working with. Even if we move (somehow???) after the attack begins, these turfs are the ones that will be affected.
-	// Could modify it to change on each iteration of the loop, but shouldn't need to...
-	for(var/turf/T in view(cascading_gaze_radius, user))
-		cascading_gaze_affected_turfs |= T
-		cascading_gaze_vfx |= new /obj/effect/perversion_draw_attack_projectile_destroyer(T, final_duration, src)
+	DrawAttackRootContempt(user)
 
 	// Enter the draw attack loop.
 	DrawAttackLoop(user, 1)
 
-// This is the core loop that gets run over for our draw attack. It recursively calls itself until we've run through all our ticks, or something happens to cancel the attack.
+/obj/item/ego_weapon/perversion/proc/DrawAttackRootContempt(mob/living/carbon/human/user)
+	for(var/mob/living/L in viewers(9, user))
+		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)))
+			continue
+		if(user.faction_check_mob(L))
+			continue
+		cascading_gaze_residual_datums |= L.apply_status_effect(/datum/status_effect/perversion_weapon_root)
+
+// Rooting status effect. Infinite duration, has to be cleared by DrawAttackEnd.
+/datum/status_effect/perversion_weapon_root
+	id = "perversion_weapon_root"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_root
+	duration = -1
+	var/obj/item/ego_weapon/perversion/origin_weapon
+
+/datum/status_effect/perversion_weapon_root/on_creation(mob/living/new_owner, obj/item/ego_weapon/perversion/katana)
+	if(!istype(katana))
+		qdel(src)
+		return FALSE
+	origin_weapon = katana
+	. = ..()
+
+
+/datum/status_effect/perversion_weapon_root/on_apply()
+	. = ..()
+
+
+/datum/status_effect/perversion_weapon_root/on_remove()
+	. = ..()
+
+/atom/movable/screen/alert/status_effect/perversion_weapon_root
+	name = "Contempt of the Gaze of Contempt \[Perversion\]"
+	icon_state = "default"
+	desc = "You're being restrained by a pair of giant hands!"
+
+// We run this to figure out what turfs need to be affected by our draw attack. Should only be run once per draw attack unless the user somehow gets moved during it (Records?), in which case
+// it gets called again.
+/obj/item/ego_weapon/perversion/proc/DrawAttackCalculateAffectedTurfs(mob/living/carbon/human/user, blocker_duration = 2.5 SECONDS)
+	// Clear these lists
+	cascading_gaze_affected_turfs = list()
+
+	// Establish the new epicenter (used to check for position changes)
+	cascading_gaze_epicenter = get_turf(user)
+
+	// These are the turfs we're gonna be working with.
+	for(var/turf/T in view(cascading_gaze_radius, user))
+		cascading_gaze_affected_turfs |= T
+		cascading_gaze_residual_datums |= new /obj/effect/perversion_draw_attack_projectile_destroyer(T, blocker_duration, src, user)
+
+// This is the core loop that gets run over and over for our draw attack. It recursively calls itself until we've run through all our ticks, or something happens to cancel the attack.
+// The hit happens instantly when this is called - the delay is actually at the end of this proc, to see whether or not we call the next one.
 /obj/item/ego_weapon/perversion/proc/DrawAttackLoop(mob/living/carbon/human/user, iteration = 1)
 	if(QDELETED(src) || QDELETED(user) || user.stat >= DEAD || user.get_active_held_item() != src)
 		DrawAttackEnd(user)
+		return
+
+	if(cascading_gaze_epicenter != get_turf(user))
+		DrawAttackCalculateAffectedTurfs(user, ((cascading_gaze_tick_amount * cascading_gaze_periodic_tick_rate) - (cascading_gaze_periodic_tick_rate * (iteration - 1))))
 
 	// Clear the hitlist for every iteration.
 	shared_hitlist = list()
@@ -2846,16 +2911,12 @@
 	var/justicemod = 1 + userjust/100
 	var/base_damage = should_end ? (force * cascading_gaze_base_damage_coeff * justicemod * force_multiplier) : (cascading_gaze_periodic_damage * justicemod * force_multiplier)
 
-	playsound(get_turf(user), (should_end ? cascading_gaze_finisher_sound : pick(cascading_gaze_hit_sounds_list)), 75, vary = !should_end, extrarange = 7)
+	playsound(get_turf(user), (should_end ? cascading_gaze_finisher_sound : pick(cascading_gaze_hit_sounds_list)), 70, vary = !should_end, extrarange = 7)
 
 	for(var/turf/T in cascading_gaze_affected_turfs)
-		// Slash VFX
-		var/obj/effect/temp_visual/slice/temp = new(T)
-		temp.color = swingcolor
-		temp.transform = vfx_matrix
-
+		var/sent_visual = FALSE
 		for(var/mob/living/L in T)
-			if((L in shared_hitlist) || (user.faction_check_mob(L)))
+			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
 				continue
 
 			// Calculating damage based on gaze or contempt
@@ -2864,6 +2925,7 @@
 			var/extra_coeff = 1
 			if(contempting)
 				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * 7)
+				contempting.refresh()
 			else if(gazing)
 				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * (gazing.stacks))
 				gazing.refresh()
@@ -2884,11 +2946,9 @@
 			var/final_damage = base_damage * extra_coeff
 			L.deal_damage(final_damage, damtype, source = user, flags = (should_end ? null : DAMAGE_FORCED), attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
-			// Extra slash VFX
-			var/obj/effect/temp_visual/slice/temp2 = new(T)
-			temp2.transform = matrix(vfx_matrix).Turn(90)
-			temp2.color = swingcolor
-
+			if(!sent_visual)
+				SendSlashDecoyVisual(T, user, TRUE, should_end)
+			sent_visual = TRUE
 
 	// We're done with this iteration. If this wasn't the finisher and we haven't gone over an arbitrary safety limit of iterations, do a do_after. If it succeeds, move to the next iteration.
 	if(!should_end && iteration < 60 && do_after(user, cascading_gaze_periodic_tick_rate, timed_action_flags = (IGNORE_USER_LOC_CHANGE)))
@@ -2899,32 +2959,100 @@
 
 // Clean up residual stuff from our draw attack.
 /obj/item/ego_weapon/perversion/proc/DrawAttackEnd(mob/living/carbon/human/user)
-	for(var/atom/any in cascading_gaze_vfx) // I hope you haven't been putting weird stuff in this list
-		qdel(any)
-
+	// Don't double dip on this or we might nuke people's coeffs permanently
+	if(!cascading_gaze_active)
+		return
 	cascading_gaze_active = FALSE
+	cascading_gaze_last_used_by = null
+	deltimer(cascading_gaze_active_timer)
+
+	for(var/datum/any in cascading_gaze_residual_datums) // I hope you haven't been putting weird stuff in this list
+		qdel(any)
+	cascading_gaze_residual_datums = list()
 
 	RemoveDrawAttackTraits(user)
+
+/obj/item/ego_weapon/perversion/proc/SendSlashDecoyVisual(turf/T, mob/living/carbon/human/owner, should_do_slash_visual = TRUE, finisher = FALSE)
+	if(!T || !owner)
+		return
+	var/dir_towards = get_dir(owner, T)
+
+	var/list/turfs_between = getline(owner, T)
+	if(length(turfs_between))
+		for(var/i in 1 to length(turfs_between))
+			var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(turfs_between[i], owner)
+			D.dir = dir_towards
+			D.alpha = min(50 + i*30, 160)
+			animate(D, alpha = 0, time = 3 + i*2)
+
+	if(should_do_slash_visual)
+		var/obj/effect/temp_visual/slice/temp = new(T)
+		temp.color = swingcolor
+		temp.transform *= (finisher ? 2.2 : 1.6)
 
 // Called when some projectile gets intercepted by a projectile blocking effect, or when a projectile somehow hits the user during the attack.
 /obj/item/ego_weapon/perversion/proc/DrawAttackProjectileReaction(obj/projectile/gotcha, turf/place_of_intercept, mob/living/carbon/human/owner)
 	if(!istype(gotcha) || !place_of_intercept || !istype(owner))
 		return
-	owner.visible_message(span_danger("[owner.real_name] slices [hitby] in half!"))
+
+	var/original_proj_damage
+	var/original_proj_damtype
+	var/original_proj_name = gotcha.name
+
 	var/mob/living/carbon/human/fraud
 	if(gotcha.type in cascading_gaze_shrapnel_sources)
 		fraud = gotcha.firer
+		original_proj_damage = gotcha.damage
+		original_proj_damtype = gotcha.damage_type
 	qdel(gotcha)
+	playsound(place_of_intercept, 'sound/weapons/ego/clash1.ogg', 75, TRUE, 8)
 
-	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, SOUTH)
+	SendSlashDecoyVisual(place_of_intercept, owner, FALSE, FALSE)
+
+	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, pick(SOUTH, NORTH))
 	temp.color = swingcolor
+	temp.transform *= 2
+	do_sparks(3, FALSE, place_of_intercept)
 
 	if(istype(fraud))
-		say("Cascading Gaze of Awe Underneath Contempt: Destroyed a shrapnel source, the firer was [fraud].")
+		INVOKE_ASYNC(src, PROC_REF(CreateShrapnelSpray), get_turf(owner), owner, fraud, original_proj_damage, original_proj_damtype)
+		owner.visible_message(span_danger("[owner] expertly tears the [original_proj_name] to shreds, deflecting the shrapnel towards nearby enemies!"))
 		return
 	else
-		say("Cascading Gaze of Awe Underneath Contempt: Destroyed a regular projectile.")
+		owner.visible_message(span_danger("[owner] slices the [original_proj_name] in half!"))
 	return
+
+/obj/item/ego_weapon/perversion/proc/CreateShrapnelSpray(turf/T, mob/living/carbon/human/owner, mob/living/carbon/human/fraud, intended_damage = 25, intended_damtype = RED_DAMAGE)
+	for(var/i in 1 to cascading_gaze_shrapnel_amount["repeat"])
+		playsound(T, 'sound/weapons/ego/perversion_shrapnel_scatter.ogg', 100, TRUE, 8)
+		var/list/new_pellets = list()
+		var/list/targets_list = list()
+		for(var/mob/living/L in viewers(9, T))
+			if(owner.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+			targets_list |= L
+
+		for(var/j in 1 to cascading_gaze_shrapnel_amount["pellets"])
+			new_pellets |= new /obj/projectile/ego_bullet/fell_shrapnel(T, fraud, owner, intended_damtype, intended_damage * 0.5, cascading_gaze_shrapnel_gaze_application)
+
+		for(var/obj/projectile/ego_bullet/fell_shrapnel/P in new_pellets)
+			var/atom/target
+			if(!length(targets_list))
+				target = get_ranged_target_turf(T, pick(GLOB.alldirs), 9)
+			else
+				target = pick_n_take(targets_list)
+			P.starting = T
+			P.firer = fraud
+			P.fired_from = T
+			P.yo = target.y - T.y
+			P.xo = target.x - T.x
+			P.original = target
+			P.preparePixelProjectile(target, T)
+			P.fire()
+
+		sleep(0.4 SECONDS)
 
 // Stolen and adapted from Elogio Bianco, you'll deflect any projectiles that manage to SOMEHOW slip past your field during the draw attack
 /obj/item/ego_weapon/perversion/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
@@ -2958,7 +3086,6 @@
 /obj/item/ego_weapon/perversion/proc/RemoveDrawAttackTraits(mob/living/carbon/human/user)
 	if(QDELETED(user) || !istype(user))
 		return
-	deltimer(cascading_gaze_active_timer) // Don't double dip on this or we might nuke people's coeffs permanently
 
 	REMOVE_TRAIT(user, TRAIT_PACIFISM, "perversion_draw_attack")
 	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "perversion_draw_attack")
@@ -2982,14 +3109,13 @@
 /obj/effect/perversion_draw_attack_projectile_destroyer
 	name = "bleeding space"
 	desc = "A hateful blade is cleaving through this space."
-	alpha = 0
-	icon = null
-	icon_state = null
-	anchored = TRUE
+	alpha = 95
+	icon_state = "zorowarning"
+	color = COLOR_PERVERSION_KATANA
 	layer = POINT_LAYER
+	anchored = TRUE
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	var/duration
-	var/randomdir = TRUE
 	var/timerid
 	var/obj/item/ego_weapon/perversion/linked_weapon
 	var/mob/living/carbon/human/user
@@ -3009,10 +3135,65 @@
 /obj/effect/perversion_draw_attack_projectile_destroyer/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
 	if(istype(mover, /obj/projectile))
-		if(QDELETED(linked_weapon))
+		if(QDELETED(linked_weapon) || istype(mover, /obj/projectile/ego_bullet/fell_shrapnel))
 			return .
 		linked_weapon.DrawAttackProjectileReaction(mover, get_turf(src), user)
 		return FALSE
+
+/obj/projectile/ego_bullet/fell_shrapnel
+	name = "fell shrapnel"
+	icon_state = "bonebullet_long"
+	color = COLOR_PERVERSION_KATANA
+	damage = 25
+	speed = 0.4
+	damage_type = RED_DAMAGE
+	nodamage = TRUE
+	projectile_piercing = PASSMOB
+	var/mob/living/carbon/human/john_fellbullet
+	var/mob/living/carbon/human/jane_perversion
+	var/damage_dealt = FALSE
+	var/gaze_application = 1
+	var/gaze_coeff = 0.15
+
+/obj/projectile/ego_bullet/fell_shrapnel/Initialize(mapload, mob/living/carbon/human/marksman, mob/living/carbon/human/bladesman, intended_damage_type = RED_DAMAGE, intended_damage = 25, intended_gaze_application = 1, intended_gaze_coeff = 0.15)
+	. = ..()
+	if((!istype(marksman)) || (!istype(bladesman)))
+		qdel(src)
+		return
+	john_fellbullet = marksman
+	jane_perversion = bladesman
+	damage_type = intended_damage_type
+	damage = intended_damage
+	gaze_application = intended_gaze_application
+	gaze_coeff = intended_gaze_coeff
+
+/obj/projectile/ego_bullet/fell_shrapnel/on_hit(atom/target, blocked = FALSE)
+	if(damage_dealt)
+		qdel(src)
+		return
+	var/should_impact = isliving(target) && (!john_fellbullet.faction_check_mob(target))
+	if(should_impact)
+		nodamage = FALSE
+		damage_dealt = TRUE
+		var/final_damage_coeff = 1
+		var/mob/living/artwork = target
+		var/datum/status_effect/stacking/perversion_weapon_gaze/lets_take_a_gaze = artwork.has_status_effect(STATUS_EFFECT_GAZE)
+		var/datum/status_effect/perversion_weapon_contempt/uh_oh = artwork.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		if(uh_oh)
+			uh_oh.refresh()
+			final_damage_coeff += (gaze_coeff * 7)
+		else if(lets_take_a_gaze)
+			final_damage_coeff += (gaze_coeff * lets_take_a_gaze.stacks)
+			lets_take_a_gaze.add_stacks(gaze_application)
+		else
+			artwork.apply_status_effect(STATUS_EFFECT_GAZE, gaze_application)
+
+		damage *= final_damage_coeff
+	else
+		return
+	..()
+	if(should_impact)
+		qdel(src)
 
 /* ------------------------ COMBAT ------------------------ */
 
