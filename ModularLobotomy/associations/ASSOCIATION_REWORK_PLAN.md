@@ -104,6 +104,35 @@ Each association has **2-3 branches** (like Ring schools), allowing players to s
 - A branch counts as "invested" once you spend any skill points in it
 - Full investment in one branch costs 6 points (1 + 2 + 3); two branches = 12 points
 
+**Skill Costs Per Tier:**
+
+| Tier | Cost | Cumulative Per Branch |
+|---|---|---|
+| T1 | 1 point | 1 |
+| T2 | 2 points | 3 |
+| T3 | 3 points | 6 |
+
+**EXP Thresholds for Skill Points:**
+
+EXP is cumulative. Each threshold reached grants 1 skill point. The first points come quickly, then slow down:
+
+| Skill Point | EXP Required |
+|---|---|
+| 1st | 30 |
+| 2nd | 70 |
+| 3rd | 120 |
+| 4th | 180 |
+| 5th | 350 |
+| 6th | 600 |
+| 7th | 950 |
+| 8th | 1400 |
+| 9th | 1950 |
+| 10th | 2600 |
+| 11th | 3350 |
+| 12th | 4200 |
+
+Full 2-branch investment requires 12 skill points (4200 total EXP).
+
 **Association Branch Counts:**
 | Association | Branches | Max Invested |
 |---|---|---|
@@ -1277,15 +1306,15 @@ The contract system is the **universal EXP framework** that all associations use
 
 **The Solution:** Association skill tree abilities **only function while on an active contract.** No contract = no skills. Contracts are also the **only way to earn EXP.** This makes contracts mechanically necessary, not optional flavor.
 
-### Contract Sources & EXP Multipliers
+### Contract States & EXP
 
-Contracts can come from three sources. Anyone can hire the association, but civilian contracts are the most rewarding:
+The association is always in one of three states:
 
-| Contract Source | EXP Multiplier | Notes |
-|---|---|---|
-| **Civilian/other role contract** | **2x EXP** | Any non-association, non-Hana player hires a fixer directly. Most rewarding because it requires real player interaction. |
-| **Hana-issued contract** | **1x EXP** | Hana creates the contract, funds it from their unlimited budget. Baseline steady work to keep fixers busy. |
-| **No active contract** | **No skills, passive EXP only** | The association has no active contract. All skill tree abilities are disabled. Fixers can still earn EXP through thematic activities (see below) but at a slower rate and without skill tree access. |
+| State | Skills | EXP | Details |
+|---|---|---|---|
+| **No Active Contract** | Disabled | Thematic activities only, no passive tick | No contract is running. Fixers can earn EXP through thematic activities, but skill tree abilities are **inactive** and the passive EXP tick does not run. |
+| **Hana Contract** | **Active** | Normal rate + passive tick | A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally. |
+| **Civilian Contract** | **Active** | **All EXP doubled** + passive tick | A non-association, non-Hana player hired the association directly. Skills are active and **all incoming EXP is doubled** — the most rewarding state because it requires real player interaction. |
 
 **Important: Association fixers CANNOT give themselves contracts.** They must always be hired by someone else - either the Hana or any other non-association role. This enforces the transactional nature of the system: you are a professional being contracted, not a volunteer choosing your own assignments.
 
@@ -1322,47 +1351,52 @@ Contracts are split into **universal types** (available to all associations) and
 
 *Universal:*
 
-1. **Patrol Route** - Mark two or more waypoints on the city map. Fixer must visit them in order and loop for the contract duration. Available to all associations - the basic "go here, do your thing" contract.
+Contracts are either **duration-based** (3/5/10 minute tiers with tiered pricing) or **objective-based** (flat cost, completes when the objective is met — no timer). Costs vary by contract type. The client pays upfront when creating the contract. Hana has unlimited funds; civilians pay from their own wallet.
 
-2. **Eliminate Target** - Target a specific human. The fixer must find and kill the target within the contract duration. Contract completes on target death. If the target is not killed within the duration, the contract fails. Payment is only given on success.
+*Universal:*
 
-3. **Escort Person** - Target a specific carbon. An association member must stay within 7 tiles of the target. The contract timer **only ticks while a fixer is near the target** — if all fixers leave range, the timer pauses until one returns. Functions like a universal bodyguard contract — less specialized than Zwei's Protect Person (no client DR aura or SP stabilization), but available to any association.
+1. **Patrol Route** — **1500 ahn** (flat) - Mark two or more waypoints on the city map. Fixer must visit them in order and complete the patrol loops. Objective-based — no timer, completes when all loops are done.
+
+2. **Eliminate Target** — **3000 ahn** (flat) - Target a specific human. The fixer must find and kill the target. Objective-based — no timer, completes on target death.
+
+3. **Escort Person** — **1500 / 2500 / 4000 ahn** (3/5/10 min) - Target a specific carbon. An association member must stay within 7 tiles of the target. The contract timer **only ticks while a fixer is near the target** — if all fixers leave range, the timer pauses until one returns. Functions like a universal bodyguard contract — less specialized than Zwei's Protect Person (no client DR aura or SP stabilization), but available to any association.
 
 *Zwei-Specific:*
 
-4. **Guard Area** (Zwei only) - Designate a zone on the city map to protect. The contract timer **only ticks while at least one association member is inside the zone** — if all fixers leave, the timer pauses until one returns. Reflects Zwei's area defense specialization.
+4. **Guard Area** — **2000 / 3500 / 6000 ahn** (3/5/10 min) (Zwei only) - Designate a zone on the city map to protect. The contract timer **only ticks while at least one association member is inside the zone** — if all fixers leave, the timer pauses until one returns. Reflects Zwei's area defense specialization.
 
-5. **Protect Person** (Zwei only) - Target a specific player. The contract timer **only ticks while at least one association member is within 5-7 tiles of the client** — if all fixers leave range, the timer pauses until one returns. Stronger than the universal Escort Person — grants client DR aura and SP stabilization.
+5. **Protect Person** — **2500 / 4000 / 7000 ahn** (3/5/10 min) (Zwei only) - Target a specific player. The contract timer **only ticks while at least one association member is within 5-7 tiles of the client** — if all fixers leave range, the timer pauses until one returns. Stronger than the universal Escort Person — while a Zwei fixer is in range, the client receives **15% damage reduction**.
 
 *Seven-Specific:*
 
-6. **Investigate Person** (Seven only) - Target a specific carbon player. Gather intelligence using Seven tools (recorder, camera, scanner) and file reports. Duration-based, EXP ticks while on contract and actively investigating.
+6. **Investigate Person** — **1500 / 2500 / 4000 ahn** (2/3/5 reports) (Seven only) - Target a specific carbon player. Objective-based (no timer). The fixer must file the required number of correctly filled out Intel Reports about the target, with each report filed at least **2 minutes** after the previous one. EXP ticks while on contract. Reflects Seven's role as private investigators hired to build a case on specific individuals.
 
-7. **Surveillance Post** (Seven only) - Mark a location on the city map. Place recording devices, maintain surveillance over the area, and file reports on observed activity. The contract timer **only ticks while at least one association member is in the surveillance area** or recorders are active there.
+7. **Surveillance Post** — **2000 / 3500 / 6000 ahn** (3/5/10 min) (Seven only) - Mark a location on the city map. Duration-based. The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
 
 *Cinq-Specific:*
 
-8. **Duel Person** (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Contract completes when the duel ends; winning gives bonus EXP + ahn.
+8. **Duel Person** — **2000 ahn** (flat) (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Objective-based — completes when the duel ends; winning gives bonus EXP + ahn.
 
-9. **Champion Contract** (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
+9. **Champion Contract** — **2500 / 4000 / 7000 ahn** (3/5/10 min) (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
 
 *Dieci-Specific:*
 
-10. **Host Event** (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Contract completes when the event finishes all ticks successfully.
+10. **Host Event** — **1500 ahn** (flat) (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Objective-based — completes when the event finishes all ticks successfully.
 
-11. **Medical Relief** (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Contract completes when the target is met within the duration.
+11. **Medical Relief** — **2000 ahn** (flat) (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Objective-based — completes when the target count is met.
 
-12. **Tend to Person** (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. EXP ticks while near the target and they are above 50% HP. A medical bodyguard contract.
+12. **Tend to Person** — **2500 ahn** (flat) (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. Objective-based — ongoing until the fixer dismisses the contract or the target dies. EXP ticks while near the target and they are above 50% HP.
 
 **Contract Parameters:**
-- **Duration:** 3 / 5 / 10 minutes (set by the contract creator)
-- **Funding:** Credit amount paid **upfront** by the contract creator (Hana has unlimited funds; civilians pay from their own wallet)
+- **Type:** Contracts are either **duration-based** (3/5/10 min tiers with tiered pricing) or **objective-based** (flat cost, no timer — completes when the objective is met)
+- **Cost:** Varies by contract type. Duration-based contracts have tiered costs (more time = more expensive). Objective-based contracts have a single flat cost. All costs are at least **1500 ahn**. See the contract list above for exact prices per contract type.
 - **Target/Location:** Who or where the contract applies to
 
 **Payment:**
-- Payment is **upfront** — the contract creator pays when the contract is created, not on completion. The fixer receives the funds immediately upon accepting.
-- Hana has unlimited funding. Civilians pay from their own wallet.
+- Payment is **upfront** — the contract creator pays the full cost when the contract is created, not on completion. The fixer receives the funds immediately upon accepting.
+- Hana has unlimited funding. Civilians pay from their own wallet — they must have at least the full contract cost available.
 - If the contract fails (e.g., target dies on an Eliminate contract before the fixer can kill them, or an event fails mid-completion), the payment is **not refunded** — the association keeps it. This is a risk the client accepts.
+- If the contract is **declined** or **discarded** without being accepted, the payment is **refunded** to the creator.
 
 **Association-Level Contracts:**
 - Contracts are tracked at the **association level**, not per individual. When any fixer accepts a contract, the **entire association** is on contract — all squad members gain access to their skill tree abilities and can earn EXP.
@@ -1370,7 +1404,7 @@ Contracts are split into **universal types** (available to all associations) and
 - When the **last** active contract expires, fails, or is completed, the **entire association** loses skill tree access until a new contract is accepted. Fixers can still earn EXP through thematic activities.
 
 **Contract Lifecycle:**
-1. A non-association player uses the **Association Contract Terminal** to create a contract — **payment is taken upfront from the client**
+1. A non-association player uses the **Association Contract Terminal** to create a contract — **the contract cost is taken upfront from the client** (varies by contract type, see prices above)
 2. The terminal produces a physical **contract item** containing all contract details
 3. The contract creator hands the item to an association fixer — the fixer reads it and **accepts** or **declines**
 4. On accept, **payment transfers to the association immediately** and the **entire association activates** — all squad members gain skills and can earn EXP
@@ -1461,12 +1495,11 @@ The Hana's office gains an **Association Contract Terminal** — a physical mach
 Civilians who issue or accept contracts receive tangible benefits, incentivizing the mutual transaction loop:
 
 **Protection Contracts (Escort Person, Protect Person, Tend to Person):**
-- **Damage Reduction Aura:** ~10-15% less damage taken while the contracted fixer is within range
-- **SP Stabilization:** Slower SP decay / minor passive SP regen from having a bodyguard nearby
-- Benefits only active while the fixer is within contract range
+- **Damage Reduction:** The client takes **15% less damage** while a contracted fixer is within range
+- Benefits only active while the fixer is within contract range — leaving range immediately removes the effect
 
 **Investigation Contracts (Investigate Person, Surveillance Post):**
-- **Intel Reports:** Client receives filed reports with useful information about targets or areas
+- **Intel Reports:** Client is expected to receive all filed reports, recorded tapes, and surveillance findings (not mechanically enforced yet, but part of the contract obligation)
 - **Early Warning:** Surveillance contracts alert the client to threats spotted in monitored zones
 
 **Combat Contracts (Eliminate Target, Duel Person, Champion Contract):**
@@ -1601,10 +1634,10 @@ ui_act() handles:
 
 Zwei earn EXP through the contract system by fulfilling protection duties:
 
-- **Passive EXP tick** while on contract and within range of client/area (~1 EXP per 10s)
-- **Bonus EXP** for taking damage while near the client/in the guarded area (absorbing hits = fulfilling your duty)
-- **Bonus EXP** for engaging hostiles that are within range of the client/area (neutralizing threats)
-- **Contract completion bonus** based on duration and whether the client survived/area was held
+- **Passive EXP** — **1 EXP** every 10s while **on an active contract** and within range of client/area (does not activate off-contract)
+- **Damage absorbed** — **2 EXP** when taking damage near the client/in the guarded area (1s cooldown)
+- **Combat** — **1 EXP** per hit on a mob (2s cooldown), **3 EXP** for killing a mob
+- **Contract completion** — **10 EXP** (3 min contract), **15 EXP** (5 min), or **25 EXP** (10 min)
 
 **Contract-Specific Behavior:**
 - Zwei skill tree abilities **only function while on an active contract**
@@ -1672,25 +1705,25 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 
 **T2 (2pt) — Pick one:**
 - **A: Shieldbreaker** — Your attacks deal bonus RED damage equal to your Defense Level Up percentage of your weapon's base damage.
-- **B: Steady Footing** — While you have any Defense Level Up stacks, gain +15% movement speed.
+- **B: Steady Footing** — While you have 5 or more Defense Level Up stacks, gain +15% movement speed.
 
 **T3 (3pt) — Pick one:**
-- **A: Retaliating Onslaught** *(Powerful Attack, 90s CD)* — Dash forward 3 tiles. Multi-hit combo on first enemy hit. Bonus: each Defense Level Up stack increases total damage by 1%, stacks consumed after. Per-hit: applies 1 Tremor.
+- **A: Retaliating Onslaught** *(Powerful Attack, 90s CD)* — Dash forward 3 tiles. Multi-hit combo on first enemy hit. Bonus: each Defense Level Up stack increases total damage by 1%, stacks consumed at start. Per-hit: grants 2 Defense Level Up to self.
 - **B: Unbreakable** *(Passive)* — On lethal damage, survive at 15% HP, gain 7 Protection stacks + 3s invulnerability. 5min CD.
 
 **Retaliating Onslaught — Details:**
 - **Opener:** Dash forward 3 tiles in facing direction, damaging enemies in the line (like `FlurryDash` with `dash_through = TRUE`). First enemy hit becomes the main target.
 - **Combo:** 5 hits. User dashes to/through target between strikes.
-- **Per-hit effect:** Each hit applies 1 Tremor stack to the target.
-- **Condition:** Before the combo starts, read the user's current Defense Level Up stacks. Total combo damage is multiplied by `1 + (stacks / 100)`. All Defense Level Up stacks are consumed (set to 0) after the combo ends. At 25 stacks = +25% damage, at 50 stacks = +50%.
-- **Final hit:** Deals 2x DPS instead of 1x, applies 3 Tremor, knocks target back 2 tiles.
+- **Per-hit effect:** Each hit grants the user 2 Defense Level Up stacks, rebuilding defense during the combo.
+- **Condition:** Before the combo starts, read the user's current Defense Level Up stacks. Total combo damage is multiplied by `1 + (stacks / 100)`. All Defense Level Up stacks are consumed (set to 0) at the start of the combo — per-hit DLU rebuilds your defense during the fight. At 25 stacks = +25% damage, at 50 stacks = +50%.
+- **Final hit:** Deals 2x DPS instead of 1x, grants 5 Defense Level Up stacks to the user, knocks target back 2 tiles.
 
 **Implementation Notes:**
 - Iron Stance: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check melee → `apply_lc_defense_level_up(3)` with 0.5s cooldown var.
 - Aggressive Guard: `COMSIG_MOB_ITEM_ATTACK` → `apply_lc_defense_level_up(2)` with 1s cooldown var.
 - Shieldbreaker: `COMSIG_MOB_ITEM_ATTACK` → read Defense Level Up percentage → `INVOKE_ASYNC` → `target.deal_damage(weapon_base * def_pct, RED_DAMAGE)`.
-- Steady Footing: Check for Defense Level Up status effect → add/remove movespeed modifier.
-- Retaliating Onslaught: `/datum/action/cooldown/` → toggle targeting → `afterattack` override → `PrepareAttack()` → `InitiateCombo()`. Calc DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`. Read DLU stacks, apply multiplier, execute 5 hits with `sleep()` between each, consume stacks at end.
+- Steady Footing: `COMSIG_LIVING_STATUS_EFFECT_ADDED` (Defense Level Up) → add movespeed modifier. `COMSIG_LIVING_STATUS_EFFECT_REMOVED` (Defense Level Up) → remove movespeed modifier. No process needed — reacts to DLU lifecycle.
+- Retaliating Onslaught: `/datum/action/cooldown/` → toggle targeting → `afterattack` override → `PrepareAttack()` → `InitiateCombo()`. Calc DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`. Read and consume DLU stacks at start, apply multiplier, execute 5 hits with `sleep()` between each, per-hit grants 2 DLU (rebuilds defense).
 - Unbreakable: `COMSIG_MOB_APPLY_DAMGE` → lethal check → `COMPONENT_MOB_DENY_DAMAGE`, heal to 15%, `apply_lc_protection(7)`, 3s invuln.
 
 ---
@@ -1700,12 +1733,12 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 **Theme:** Hold the line, defend the zone. Buff allies, debuff enemies that enter your territory.
 
 **T1 (1pt) — Pick one:**
-- **A: Vigilant Presence** — Allies within 4 tiles gain 2 Defense Level Up stacks every 10s.
-- **B: Warden's Watch** — +15% damage vs mobs in contracted area (+25% if their target is yourself).
+- **A: Vigilant Presence** — When you take damage, allies within 4 tiles also gain 2 Defense Level Up stacks. 1s internal CD.
+- **B: Warden's Watch** — +15% damage vs mobs in contracted area (+25% if their target is yourself). +10% damage vs carbons in contracted area.
 
 **T2 (2pt) — Pick one:**
-- **A: Law and Order** — Hostiles entering within 5 tiles receive 2 Tremor stacks. 15s CD per target.
-- **B: Fortified Position** — While stationary 3s+ in contracted area, gain 5 Defense Level Up stacks every 5s. Moving removes stacks from this skill.
+- **A: Law and Order** — When you take damage, gain Protection stacks scaling with damage received (1 stack per 15 damage, up to 5 at 75+ damage). 12s CD.
+- **B: Fortified Position** — On hitting a target, gain 2 Defense Level Up stacks. If you attack from the same tile as your last attack, gain +3 additional stacks per consecutive hit (1st = 2, 2nd = 5, 3rd = 8, 4th = 11, etc.). Moving to a different tile resets the bonus.
 
 **T3 (3pt) — Pick one:**
 - **A: Earthshatter** *(Powerful Attack, 90s CD)* — AoE slam around self (3-tile radius). Multi-hit combo on closest enemy hit (each hit deals 50% DPS). Bonus: in contracted area, double number of hits. Per-hit: applies 2 Defense Level Down to target and 3 Defense Level Up to self.
@@ -1716,15 +1749,15 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 - **Combo:** 3 hits base (each hit deals 50% of weapon DPS). If used while **in contracted area**, the combo has 6 hits instead (doubled). The reduced per-hit damage is compensated by the high hit count and per-hit effects.
 - **Per-hit effect:** Each hit applies 2 Defense Level Down stacks to the target (weakening their defenses for the team) and 3 Defense Level Up stacks to the user (building your own defense while attacking).
 - **Condition:** For each ally within 5 tiles at the start of the combo, gain 1 additional bonus hit (up to +3). This rewards the Zwei for protecting a group.
-- **Final hit:** Overhead slam that knocks target into the ground — applies 3 Tremor stacks and 1s stun.
+- **Final hit:** Overhead slam that knocks target into the ground — grants 5 Defense Level Up stacks to the user and stuns the target for 1s.
 
 **Implementation Notes:**
-- Vigilant Presence: Process timer every 10s → `for(var/mob/living/L in range(4, human_parent))` → check `is_designated_ally(L)` → `L.apply_lc_defense_level_up(2)`.
-- Warden's Watch: `COMSIG_MOB_ITEM_ATTACK` → contract area check → `extra_damage += 15` (or 25 if target's current target is the user). Clean up via `COMSIG_MOB_ITEM_AFTERATTACK`.
-- Law and Order: Proximity check for hostiles → `target.apply_lc_tremor(2)`. Per-target cooldown tracking.
-- Fortified Position: Track `last_move_time` via `COMSIG_MOVABLE_MOVED` → stationary 3s+ → `apply_lc_defense_level_up(5)` every 5s. On move: remove all stacks gained from this skill.
+- Vigilant Presence: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check 1s cooldown → `for(var/mob/living/L in range(4, human_parent))` → check `is_designated_ally(L)` → `L.apply_lc_defense_level_up(2)`. No process — triggers when the Zwei tanks a hit.
+- Warden's Watch: `COMSIG_MOB_ITEM_ATTACK` → contract area check → if simplemob: `extra_damage += 15` (or 25 if target's current target is the user); if carbon: `extra_damage += 10`. Clean up via `COMSIG_MOB_ITEM_AFTERATTACK`.
+- Law and Order: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check 12s cooldown → calculate Protection stacks: `min(5, CEILING(damage / 15))` → `apply_lc_protection(stacks)`. Scales: 1-15 dmg = 1 stack, 16-30 = 2, 31-45 = 3, 46-60 = 4, 61+ = 5.
+- Fortified Position: `COMSIG_MOB_ITEM_ATTACK` → store `var/turf/last_attack_turf` and `var/consecutive_hits`. If `get_turf(src) == last_attack_turf`, increment `consecutive_hits`, else reset to 1 and update turf. Grant `apply_lc_defense_level_up(2 + (consecutive_hits - 1) * 3)`. Base 2, +3 per consecutive hit from same tile. Pure signal — no process or periodic timer.
 - Earthshatter: `/datum/action/cooldown/` → no targeting needed (AoE from self). On activate: AoE damage (0.5x DPS) in `range(3)` → pick closest hostile → apply duel component → immobilize → execute combo (each hit = 0.5x DPS). Check contract area for hit doubling, count designated allies via `is_designated_ally()` in `range(5)` for bonus hits.
-- Iron Curtain: While in contracted area, register `COMSIG_MOB_AFTER_APPLY_DAMGE` on designated allies (via `is_designated_ally()`) in `range(4)` → redirect 25% of their damage to self at 50% effectiveness (so self takes 12.5% of ally's original damage). Refresh tracked ally list every 5s based on range + designation status.
+- Iron Curtain: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on all designated allies (register/unregister via ally designation signals). In handler: check contract area + `get_dist(ally, src) <= 4` → redirect 25% of damage to self at 50% effectiveness (12.5% of original). Distance check at signal fire time — no periodic ally list refresh needed.
 
 ---
 
@@ -1735,11 +1768,11 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 **Marking System:** T1 in this branch grants the **Mark for Protection** action (pointed spell pattern from `thin_line.dm`). One ward at a time. Re-marking removes old mark. Mark persists until manually removed, re-marked, or ward dies.
 
 **T1 (1pt) — Pick one:**
-- **A: Designated Ward** — Mark a player. While within 7 tiles, they gain 2 Defense Level Up stacks every 10s.
-- **B: Threatening Presence** — Mark a player. Hostiles attacking your ward deal 10% less damage while you're nearby.
+- **A: Designated Ward** — Mark a player. When your ward takes damage while you are within 7 tiles, they gain 2 Defense Level Up stacks and you gain 3. 1s internal CD.
+- **B: Threatening Presence** — Mark a player. Hostiles attacking your ward deal 15% less damage while you're nearby. When your ward takes damage, you gain 2 Defense Level Up stacks. 1s internal CD.
 
 **T2 (2pt) — Pick one:**
-- **A: Bodyguard's Instinct** — When your ward takes damage, gain +30% speed for 2s. Arrow indicator if distant.
+- **A: Bodyguard's Instinct** — When your ward takes damage, gain +30% speed for 2s.
 - **B: Shared Resilience** — When you gain Defense Level Up stacks, your ward also gains half (within 7 tiles).
 
 **T3 (3pt) — Pick one:**
@@ -1751,12 +1784,12 @@ Each branch has one T3 that is a **Powerful Attack** — a cutscene-style multi-
 - **Combo:** 4 hits. Furious close-range strikes defending your ward's honor.
 - **Per-hit effect:** Each hit heals the ward for 5% of damage dealt (if ward is alive and within 10 tiles). This rewards the bodyguard for fighting near their client.
 - **Condition:** If the ward **took any damage in the last 10 seconds**, all combo hits deal **double damage**. The Zwei fights hardest when their client is hurt. Additionally, if the ward is within 5 tiles during the combo, the user gains 2 Protection stacks per hit.
-- **Final hit:** Deals 2x DPS, applies 5 Tremor stacks, knocks target back 3 tiles away from the ward's position.
+- **Final hit:** Deals 2x DPS, grants 5 Defense Level Up stacks to the user, knocks target back 3 tiles away from the ward's position.
 
 **Implementation Notes:**
 - Mark Action: `/datum/action/cooldown/mark_for_protection` using pointed spell pattern (`InterceptClickOn()` + click-to-select). Store `var/mob/living/ward`.
-- Designated Ward: Process timer → if within 7 tiles of ward → `ward.apply_lc_defense_level_up(2)`.
-- Threatening Presence: Register `COMSIG_MOB_APPLY_DAMGE` on ward → check if attacker hostile + Zwei within 7 tiles → damage *= 0.9.
+- Designated Ward: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on ward → check `get_dist(src, ward) <= 7` + 1s cooldown → `ward.apply_lc_defense_level_up(2)` + `src.apply_lc_defense_level_up(3)`. No process — triggers when the ward is hit while bodyguard is nearby.
+- Threatening Presence: Register `COMSIG_MOB_APPLY_DAMGE` on ward → check if attacker hostile + Zwei within 7 tiles → damage *= 0.85. Also register `COMSIG_MOB_AFTER_APPLY_DAMGE` on ward → 1s cooldown → `src.apply_lc_defense_level_up(2)`.
 - Bodyguard's Instinct: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on ward → movespeed modifier on self, 2s timer. Arrow via `client.images`.
 - Shared Resilience: Hook into Defense Level Up stack changes on self → apply half to ward if in range.
 - Guardian's Wrath: `/datum/action/cooldown/` → toggle targeting → click target → leap animation → apply duel component → immobilize → check `ward_last_damage_time` for double damage condition → execute 4 hits. Per-hit: `INVOKE_ASYNC` → `ward.adjustBruteLoss(-damage * 0.05)` if ward in range.
@@ -1800,11 +1833,21 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 
 **Investigation Toolkit (items in gear box):**
 
-1. **Seven Recorder** (`/obj/item/seven_recorder`) — A covert listening device disguised as a mundane object ("worn notebook" / "pocket watch"). Records all `Hear()` messages within range. Max 3 active recorders per fixer. EXP is earned based on **lines of conversation recorded**: 1 EXP per 5 lines captured, capped at **5 EXP per minute per recorder** (prevents AFK farming in busy areas).
+1. **Seven Recorder** (`/obj/item/seven_recorder`) — A covert listening device that can be **disguised as any object**. Records all `Hear()` messages within range. Max 3 active recorders per fixer. EXP is earned based on **lines of conversation recorded**: 1 EXP per 5 lines captured, capped at **5 EXP per minute per recorder** (prevents AFK farming in busy areas).
+
+   **Disguise System:**
+
+   Hit any `/obj/item` with the recorder to copy its name, desc, and icon — the recorder now appears identical to that item (same pattern as `code/game/objects/items/devices/chameleonproj.dm`). Any Seven association member who examines the disguised recorder sees an additional line: `"This is a disguised Seven Recorder."` If the recorder is used to attack a mob (`attack()`), the disguise is removed and it reverts to its true appearance. The fixer can re-disguise it by hitting another item.
+
+   **Implementation Notes (Disguise):**
+   - `var/disguised = FALSE`, `var/original_name`, `var/original_desc`, `var/original_icon_state`.
+   - On `afterattack(target)` where `isitem(target)`: store originals, copy `target.name`, `target.desc`, `target.icon`, `target.icon_state` → set `disguised = TRUE`.
+   - On `attack(mob/living/target)`: if `disguised` → restore originals, set `disguised = FALSE`, `to_chat(user, "The recorder's disguise is revealed!")`.
+   - Examine override: if `disguised` and examiner is Seven association member → append `span_notice("This is a disguised Seven Recorder.")`.
 
    **Two deployment modes:**
 
-   - **Floor Placement:** Use the recorder on a floor tile to place it as a hidden object (same pattern as spy bug placement). The recorder sits on the turf disguised as its mundane cover item. Records all `Hear()` messages in range. Can be picked back up by the fixer.
+   - **Floor Placement:** Use the recorder on a floor tile to place it as a hidden object (same pattern as spy bug placement). The recorder sits on the turf, appearing as its disguised item if disguised. Records all `Hear()` messages in range. Can be picked back up by the fixer.
 
    - **Attachment to Item:** Use the recorder on any `/obj/item` to secretly attach it. The recorder `forceMove()`s into the item's contents and registers `COMSIG_MOVABLE_HEAR` on the item to capture surroundings. Crucially, the recorder **continues to hear even when the item is inside a backpack or container** — it registers `Hear()` on whatever mob is carrying the item (re-registering via `COMSIG_ITEM_PICKUP` / `COMSIG_ITEM_DROPPED` as the item changes hands). This means planting a recorder on someone's pen, then slipping it into their bag, lets the recorder hear everything around that person.
 
@@ -1818,7 +1861,7 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    - Item-attached recorders are removed via the examine `[Remove]` button by the placing fixer while holding the host item (see above).
    - All recorders store their recordings on an internal tape (subtype of `/obj/item/tape`). The tape can be ejected, played back, or printed as a transcript (same as base tape recorder).
 
-   **Implementation Notes:**
+   **Implementation Notes (Deployment):**
    - Subtype of `/obj/item/taperecorder` for `Hear()` recording.
    - Floor placement: `forceMove(get_turf(target))`, set `invisibility` to hide, add to `GLOB.seven_active_recorders`.
    - Item attachment: `forceMove(host_item)`, store `var/obj/item/host_item` and `var/mob/owner` (placing fixer). Register `COMSIG_MOVABLE_HEAR` on the host item. To hear through containers: also register `COMSIG_ITEM_PICKUP` and `COMSIG_ITEM_DROPPED` on the host item — on pickup, register `COMSIG_MOVABLE_HEAR` on the new carrier mob; on drop, unregister from the old carrier. This relay chain ensures the recorder captures speech near whoever is carrying the item.
@@ -1826,20 +1869,42 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    - EXP tracking: `var/lines_recorded_this_minute = 0`, `var/exp_this_minute = 0`. Each `Hear()` increments `lines_recorded_this_minute`. Every 5 lines, grant 1 EXP (if `exp_this_minute < 5`). Reset both counters every 60 seconds via `addtimer`.
    - Visibility timer: `var/attached_time` set to `world.time` on attachment. Examine check: `world.time >= attached_time + 10 MINUTES` for non-owner visibility.
 
-2. **Seven Camera** (`/obj/item/camera/seven_intel`) — A covert camera disguised as a mundane item ("pocket mirror" / "cigarette case"). Subtype of `/obj/item/camera` with stealth modifications: **no flash** (`flash = FALSE`), **no shutter sound** (override `captureimage()` to skip `playsound`), and **no visible message** to subjects (override the "[user] takes a photo" `visible_message` to only show to the user via `to_chat`). The camera silently creates intel snapshots — storing a `/datum/seven_intel_snapshot` containing ground truth data: area name (from `get_area_name()`), mob names (from `mobs_seen`), and held items (from target's `held_items`). This snapshot is used to validate reports later.
+2. **Seven Camera** (`/obj/item/camera/seven_intel`) — A covert camera disguised as a mundane item ("pocket mirror" / "cigarette case"). Subtype of `/obj/item/camera` with stealth modifications: **no flash** (`flash = FALSE`), **no shutter sound** (override `captureimage()` to skip `playsound`), and **no visible message** to subjects (override the "[user] takes a photo" `visible_message` to only show to the user via `to_chat`). The camera silently creates an intel snapshot stored on the resulting photograph — a `/datum/seven_intel_snapshot` containing **all correct answers**: target name (from `mob.name`), role (from mob's job assignment), area name (from `get_area_name()`), and held items (from target's `held_items`). The **round time** is also recorded using `gameTimestamp()` (same format as the tape recorder in `taperecorder.dm`) and added to the photograph's `desc` so the fixer can read it by examining the photo. This snapshot is embedded in the photo and used to validate Intel Reports — when a fixer links a photo to a Blank Intel Report, the report's fields are checked against these recorded answers.
 
-3. **Intel Report Paper** (`/obj/item/paper/intel_report`) — Pre-formatted paper with form fields (using the existing `form_fields` system on `/obj/item/paper`). Created by using a Seven Camera photo on a blank Intel Report form. The report presents questions the fixer must answer:
-   - "Subject Name:" (text field)
-   - "Area Observed:" (text field)
-   - "Individuals Present:" (text field, comma-separated names)
-   - "Items Carried:" (text field, comma-separated items)
-   The server validates answers against the snapshot data using `findtext()` for case-insensitive fuzzy matching. Filing the report on the dossier awards EXP: **5 base + up to 10 accuracy bonus** per filed report. Cooldown: one report per target per 2 minutes.
+3. **Blank Intel Report** (`/obj/item/paper/intel_report`) — Purchased from the Seven Requisition Catalog in packs of 3. A blank report form that must be **linked to a photograph** before it can be filled out. To link: hit a photograph (from the Seven Camera) with the blank report — this attaches the photo's `/datum/seven_intel_snapshot` to the report, establishing the correct answers for validation.
 
-4. **Backpack Scanner** (`/obj/item/seven_scanner`) — A covert scanning device disguised as a mundane handheld item ("worn PDA" / "old phone"). Works at a range of up to **5 tiles** — click on a visible carbon mob to discreetly scan their worn backpack/bag contents. Takes 3 seconds (internal timer, **no `do_after` progress bar**) during which the fixer must maintain line of sight. If line of sight breaks or the target moves out of range, the scan fails silently. **No visible message** is shown to the target or bystanders — only the scanning fixer receives feedback: `"You discreetly scan [target]'s belongings..."` on start and `"Scan complete."` on success. Records actual `contents` list of the target's storage item. The fixer then fills out a **Cargo Report** (variant of Intel Report) listing what the target was carrying. Validation and EXP: **3 base + up to 5 accuracy bonus**. Same 2-minute per-target cooldown.
+   **Filling out the report:** Use the linked report in-hand to open a TGUI form with the following fields:
+   - "Target Name:" (text field) — the subject's name
+   - "Role:" (text field) — their job/role
+   - "Round Time:" (text field) — the round time when the observation was made (recorded on the photo's description via `gameTimestamp()` — the fixer reads it from the photo)
+   - "Held Items:" (text field, comma-separated) — what the target was carrying in their hands
+   - "Backpack Contents:" (text field, manual item name entry) — what items were in their backpack. The fixer must **manually type the name of each item** (use the Backpack Scanner to learn these). Validation uses `findtext()` fuzzy matching and allows a **margin of error** based on the number of items in the backpack — if the target had 10 items, getting 7-8 correct still earns a good accuracy score. This rewards careful scanning without being punishingly exact.
+   - "Extra Notes:" (text field, freeform) — additional notes about the target. This field does **not** affect EXP or accuracy — it is purely for RP and record-keeping.
 
-5. **Seven Spyglass Kit** (`/obj/item/storage/box/seven_spyglass`) — Reuses the existing spy bug + spy glasses system (`code/game/objects/items/devices/spyglasses.dm`) with a Seven aesthetic. While actively observing through the spyglass popup window, the fixer earns **1 EXP per 30 seconds** if on contract.
+   **Filing:** Use the completed report on the Investigation Dossier to file it. The server validates each field against the snapshot data using `findtext()` for case-insensitive fuzzy matching. Filing awards EXP: **5 base + up to 10 accuracy bonus** per filed report. Cooldown: one report per target per 2 minutes.
 
-6. **Investigation Dossier** (`/obj/item/seven_dossier`) — Physical storage item (clipboard/folder) with a TGUI interface (`SevenDossier.js`). Stores filed reports indexed by subject name. Each entry shows: subject name, area, timestamp, accuracy score. Summary statistics: total reports filed, total EXP earned from reports, most-observed subject. Reports are added by using a completed Intel Report or Cargo Report on the dossier.
+4. **Backpack Scanner** (`/obj/item/seven_scanner`) — A covert scanning device disguised as a mundane handheld item ("worn PDA" / "old phone"). Works at a range of up to **5 tiles** — click on a visible carbon mob to discreetly scan their worn backpack/bag contents. Takes 3 seconds (internal timer, **no `do_after` progress bar**) during which the fixer must maintain line of sight. If line of sight breaks or the target moves out of range, the scan fails silently. **No visible message** is shown to the target or bystanders — only the scanning fixer receives feedback: `"You discreetly scan [target]'s belongings..."` on start and `"Scan complete."` on success. On success, displays the list of item names in the target's backpack/bag to the fixer via `to_chat()`. The fixer uses this information to fill out the **Backpack Contents** field on their Intel Report — they must manually type each item name, but the scanner gives them the answers to reference.
+
+5. **Seven Spyglass Kit** (`/obj/item/storage/box/seven_spyglass`) — Reuses the existing spy bug + spy glasses system (`code/game/objects/items/devices/spyglasses.dm`) with a Seven aesthetic. The kit contains two pre-linked items:
+
+   - **Spy Glasses** (`/obj/item/clothing/glasses/sunglasses/spy/seven`) — Subtype of the existing spy glasses. Worn on the eyes slot. Press the "Activate Remote View" action button to open a `map_popup` window (3x3 viewport) showing a live camera feed from the linked pocket protector's location. The popup only works while the glasses are worn (`equipped()` checks slot, `dropped()` closes popup). If the linked pocket protector is destroyed or missing, the glasses emit a shrill beep.
+   - **Pocket Protector** (`/obj/item/spy_bug/seven`) — Subtype of the existing spy bug. A tiny 360-degree camera disguised as a pocket protector. Place it anywhere — the `cam_screen` vis_contents update via `update_view()` shows all turfs within `view(1, get_turf(src))`. The `movement_detector` datum triggers `update_view()` whenever something moves nearby.
+
+   While the popup is open and the fixer is on an active contract, they earn **1 EXP per 30 seconds**.
+
+   **Implementation Notes:**
+   - Subtype `/obj/item/storage/box/seven_spyglass` with `PopulateContents()` mirroring `/obj/item/storage/box/rxglasses/spyglasskit` — creates a `spy_bug/seven` and `spy/seven`, links them via `linked_bug`/`linked_glasses` vars.
+   - EXP tracking: Override `show_to_user()` on the glasses to start a repeating timer (`addtimer(CALLBACK(...), 30 SECONDS, TIMER_LOOP)`) that grants 1 EXP while the popup is open and the fixer is on contract. Cancel the timer when the popup closes.
+
+5b. **Seven Surveillance Glasses** (`/obj/item/clothing/glasses/sunglasses/spy/seven_recorder`) — Functions identically to the spy glasses, but links to **deployed Seven Recorders** instead of pocket protectors. The fixer hits a deployed recorder (floor-placed or item-attached) with the glasses to link them — the recorder's position is used as the camera source instead of a pocket protector.
+
+   - **Linking:** On `afterattack(target)` where `istype(target, /obj/item/seven_recorder)` — set `linked_bug` equivalent to point at the recorder. The recorder needs a `cam_screen` and `cam_plane_masters` setup identical to `/obj/item/spy_bug` (add these vars to the recorder or create a lightweight wrapper). Re-hitting a different recorder re-links.
+   - **Viewing:** Same `show_to_user()` / `map_popup` system as the base spy glasses. The popup shows a live 3x3 feed from the linked recorder's location.
+   - **Re-linking:** Hit a different deployed recorder to switch. Only one recorder linked at a time.
+
+   This provides a **visual** complement to the Recorder Receiver's audio-only live listening. The fixer can watch through one recorder and listen through another for full surveillance coverage.
+
+6. **Investigation Dossier** (`/obj/item/seven_dossier`) — Physical storage item (clipboard/folder) with a TGUI interface (`SevenDossier.js`). Stores filed reports indexed by subject name. Each entry shows: subject name, area, timestamp, accuracy score. Summary statistics: total reports filed, total EXP earned from reports, most-observed subject. Reports are added by using a completed Intel Report on the dossier.
 
 7. **Recorder Receiver** (`/obj/item/seven_receiver`) — An earpiece/handheld radio that links to deployed Seven Recorders for live listening.
 
@@ -1860,9 +1925,10 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
    |------|-------------|
    | Seven Recorder | 200 |
    | Seven Camera | 150 |
-   | Intel Report Paper (x3) | 50 |
+   | Blank Intel Report (x3) | 50 |
    | Backpack Scanner | 200 |
    | Seven Spyglass Kit | 300 |
+   | Seven Surveillance Glasses | 250 |
    | Investigation Dossier | 100 |
    | Recorder Receiver | 150 |
 
@@ -1891,38 +1957,49 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 **Intel Snapshot Validation System:**
 
 ```dm
-/// Ground truth captured when a photo is taken or scan is performed
+/// Ground truth captured when a photo is taken with the Seven Camera
 /datum/seven_intel_snapshot
 	/// Reference to the photo datum
 	var/datum/picture/photo
+	/// Target mob name
+	var/target_name
+	/// Target's job/role assignment
+	var/target_role
 	/// Area name where the photo was taken
 	var/area_name
-	/// List of mob names visible in the photo
-	var/list/mob_names = list()
-	/// List of item names held/worn by targets
-	var/list/mob_items = list()
-	/// World.time when snapshot was taken
-	var/timestamp
+	/// List of item names held by the target
+	var/list/held_items = list()
+	/// Round time string when snapshot was taken (gameTimestamp format)
+	var/round_time
 
 /// On taking a photo with Seven Camera:
 /obj/item/camera/seven_intel/after_picture(mob/user, datum/picture/picture)
 	var/datum/seven_intel_snapshot/snapshot = new()
 	snapshot.photo = picture
 	snapshot.area_name = get_area_name(get_turf(user))
-	for(var/mob/living/M in picture.mobs_seen)
-		snapshot.mob_names += M.name
+	snapshot.round_time = gameTimestamp("hh:mm:ss", world.time)
+	// Add round time to the photo's description so the fixer can read it
+	picture.picture_desc += " Taken at [snapshot.round_time]."
+	// Record ground truth for the primary target (closest mob in frame)
+	for(var/mob/living/carbon/human/M in picture.mobs_seen)
+		snapshot.target_name = M.name
+		var/obj/item/card/id/ID = M.get_idcard(TRUE)
+		if(ID)
+			snapshot.target_role = ID.assignment
 		for(var/obj/item/I in M.held_items)
-			snapshot.mob_items += I.name
-	snapshot.timestamp = world.time
+			snapshot.held_items += I.name
+		break // Only capture the first/closest target
 	// Store snapshot on the camera for later report creation
 	stored_snapshots += snapshot
 ```
 
 **Seven-Specific Contract Types:**
 
-- **Investigate Person** (Seven only) — Target a specific carbon player. The fixer must gather intelligence on them using Seven tools and file reports. Duration-based. EXP ticks while on contract and actively observing/investigating the target. Reflects Seven's role as private investigators hired to watch specific individuals.
+- **Investigate Person** (Seven only) — Target a specific carbon player. **Objective-based** (no timer). The contract specifies a required number of Intel Reports (2, 3, or 5 depending on cost tier), each filed at least **2 minutes** apart. The fixer must photograph the target, fill out reports with sufficient accuracy, and file them on their dossier. The contract completes when enough valid reports have been filed. EXP ticks while on contract. Reflects Seven's role as private investigators hired to build a case on specific individuals.
 
-- **Surveillance Post** (Seven only) — Mark a location on the city map. The fixer must place recording devices, maintain surveillance over the area, and file reports on activity observed there. EXP ticks while recorders are active in the designated area. Reflects Seven's role in monitoring locations for suspicious activity.
+- **Surveillance Post** (Seven only) — Mark a location on the city map. **Duration-based** (3/5/10 min). The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
+
+**Note — Turning Over Information:** While the game mechanically completes contracts when enough reports are filed or enough recording time has passed, Seven fixers are still expected to turn over all collected intelligence (filed reports, recorded tapes, surveillance findings) to the client who hired them. This cannot currently be enforced mechanically in-game, but it is part of the contract's obligations — the client is paying for the information, not just the act of gathering it.
 
 **EXP Sources Summary:**
 
@@ -1931,16 +2008,13 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 | Passive contract tick | 1 EXP / 10s | While on active contract |
 | Recorder lines captured | 1 EXP per 5 lines recorded | Max 5 EXP/min per recorder, max 3 recorders |
 | Spyglass active observation | 1 EXP / 30s | While popup is open on contract |
-| Filed Intel Report (photo) | 5 base + up to 10 accuracy bonus | 1 per target per 2min |
-| Filed Cargo Report (scan) | 3 base + up to 5 accuracy bonus | 1 per target per 2min |
-| Combat (hitting contracted target) | 1 EXP per hit | Standard combat bonus |
+| Filed Intel Report | 5 base + up to 10 accuracy bonus | 1 per target per 2min, includes backpack contents field |
 | Contract completion bonus | 10-30 EXP | Based on duration + success |
 
 **Contract-Specific Behavior:**
 - Seven skill tree abilities **only function while on an active contract**
-- Investigate Person contracts show a subtle indicator pointing to the target's direction
-- Surveillance Post contracts highlight the monitored area boundary
-- For location/proximity contracts, leaving the area or losing track of the target **pauses the timer** until an association member returns
+- Investigate Person contracts show a subtle indicator pointing to the target's direction and track filed reports (X/Y completed)
+- Surveillance Post contracts highlight the monitored area boundary and show the number of active recorders in the zone. Timer ticks as long as recorders are active in the area — pauses only when all recorders are removed/destroyed
 
 **Weapon Gimmicks — Rupture and Adaptive Damage:**
 
@@ -2095,31 +2169,30 @@ Mixing branches gives access to all five effects, rewarding the 2-branch investm
 
 **T1 (1pt) — Pick one:**
 - **A: Case File** — Mark a target. Your attacks against the marked target apply 2 Rupture stacks and deal bonus BLACK damage equal to 1% of your weapon's base force per Rupture stack on them (max +40% at 40 stacks). The mark focuses your investigation — every piece of evidence builds the case and sharpens the blade.
-- **B: Profiling** — Mark a target. Each time you attack the marked target, gain 2 Offense Level Up stacks (max 10 from this skill). All stacks are lost when the mark changes or the target dies. Each attack deepens your understanding of the subject.
+- **B: Profiling** — Mark a target. Each time you attack the marked target, gain 2 Offense Level Up stacks (max 10 from this skill). Each attack deepens your understanding of the subject.
 
 **T2 (2pt) — Pick one:**
-- **A: Exploit Weakness** — Your attacks against the marked target also apply 2 Defense Level Down stacks (1s internal CD). Additionally, when the mark's Rupture triggers (burst damage), apply 3 Fragile stacks to them — exposing the wounds you've opened.
+- **A: Exploit Weakness** — Your attacks against the marked target also apply 2 Defense Level Down stacks (1s internal CD). Additionally, when Rupture triggers on a target with 15+ Rupture stacks, apply 5 Fragile stacks to them — exposing the wounds you've opened.
 - **B: Patient Hunter** — While your marked target has 10+ Rupture stacks, your attacks against them deal 25% more damage. While they have 20+ stacks, your attacks also deal bonus BLACK damage equal to 15% of your weapon's base force. The longer you observe, the more devastating your strikes.
 
 **T3 (3pt) — Pick one:**
-- **A: Dossier Complete** *(Powerful Attack, 90s CD)* — Can only target your marked target. Requires: target has 10+ Rupture stacks. Dash to target from up to 6 tiles, 4-hit combo (BLACK DPS). All Rupture stacks on the target are consumed before the combo; total damage is multiplied by `1 + (consumed_stacks * 2 / 100)` (20 stacks = +40%, 40 stacks = +80%). Per-hit: applies 2 Offense Level Down. Final hit: knockback 2 tiles + 5 Fragile stacks. The investigation is complete — sentence is carried out.
-- **B: Surveillance Network** *(Passive)* — Gain a secondary mark slot (can mark 2 targets simultaneously). When one marked target takes Rupture trigger damage, the other marked target also takes 50% of that Rupture burst's BRUTE damage as BLACK damage (range: 15 tiles between marks). Killing a marked target immediately grants 5 Rupture stacks to your other mark. Your web of surveillance connects your targets.
+- **A: Dossier Complete** *(Powerful Attack, 90s CD)* — Can only target your marked target. Requires: target has 10+ Rupture stacks. Dash to target from up to 6 tiles, 4-hit combo (BLACK DPS). Each hit's damage is multiplied by the target's **current** Rupture stacks: `1 + (current_stacks * 2 / 100)` (20 stacks = +40%, 40 stacks = +80%). Rupture is **not consumed** — but if stacks decrease mid-combo (e.g. from triggering), the bonus decreases too. Per-hit: applies 2 Offense Level Down. Final hit: knockback 2 tiles + 5 Fragile stacks. The investigation is complete — sentence is carried out.
+- **B: Surveillance Network** *(Passive)* — When you trigger Rupture on a target, deal AoE BLACK damage equal to the Rupture stacks to all nearby enemies (x4 damage on mobs). If the target is your marked target, the AoE deals x2 damage. Killing a target inflicts 15 Rupture to all nearby non-ally mobs. Your surveillance network ensures no one escapes the fallout.
 
 **Dossier Complete — Details:**
 - **Opener:** Dash to marked target from up to 6 tiles (same dash pattern as tiantui). Target must be marked and have 10+ Rupture stacks.
 - **Combo:** 4 hits. Precise, clinical strikes.
-- **Pre-combo:** Read and consume all Rupture stacks on target. Calculate damage multiplier: `1 + (consumed_stacks * 2 / 100)`.
-- **Per-hit effect:** Each hit applies 2 Offense Level Down stacks. Damage per hit = `DPS * multiplier / 4`.
+- **Per-hit effect:** Each hit reads the target's **current** Rupture stacks and calculates multiplier: `1 + (current_stacks * 2 / 100)`. Damage per hit = `DPS * multiplier / 4`. Applies 2 Offense Level Down stacks. Rupture is **not consumed**.
 - **Final hit:** Deals 2x base hit damage, knockback 2 tiles, applies 5 Fragile stacks.
-- **Condition:** More Rupture stacks = more damage. At 40 stacks (achievable with focused Case File attacking), the combo gets +80% total damage.
+- **Condition:** More Rupture stacks = more damage. At 40 stacks, each hit gets +80%. If Rupture triggers mid-combo (from the combo's own BLACK damage), stacks halve and the bonus drops for remaining hits.
 
 **Implementation Notes:**
 - Case File: `COMSIG_MOB_ITEM_ATTACK` → check if `target == marked_target` → `target.apply_lc_rupture(2)` + get rupture stacks → `bonus_black_damage = min(40, stacks) * 0.01 * weapon.force`. No rupture or bonus on non-marks.
-- Profiling: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` → `human_parent.apply_lc_offense_level_up(2)`. Track `stacks_granted` (cap at 10). On mark change or `COMSIG_MOB_DEATH` of mark → `human_parent.apply_lc_offense_level_up(-stacks_granted)` to remove.
-- Exploit Weakness: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` + CD clear → `target.apply_lc_defense_level_down(2)`. Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on marked target → detect rupture-source damage (`ATTACK_TYPE_STATUS`) → `target.apply_lc_fragile(3)`.
+- Profiling: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` → `human_parent.apply_lc_offense_level_up(2)`. Track `stacks_granted` (cap at 10).
+- Exploit Weakness: `COMSIG_MOB_ITEM_ATTACK` → if `target == marked_target` + CD clear → `target.apply_lc_defense_level_down(2)`. Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on marked target → detect rupture-source damage (`ATTACK_TYPE_STATUS`) → check if stacks were >= 15 before trigger → `target.apply_lc_fragile(5)`.
 - Patient Hunter: `COMSIG_MOB_ITEM_ATTACK` → check marked_target rupture stacks → if >= 10: `extra_damage += 25` → if >= 20: `extra_damage_black += 15`. Clean up via `COMSIG_MOB_ITEM_AFTERATTACK`.
-- Dossier Complete: `/datum/action/cooldown/dossier_complete` → toggle targeting → `InterceptClickOn` checks `target == marked_target` and rupture >= 10. Read + clear rupture stacks. Apply duel component + immobilize. 4 hits with `sleep()`, damage = `DPS * (1 + stacks * 2 / 100) / 4`. Per-hit: `target.apply_lc_offense_level_down(2)`. Final hit: 2x, knockback, fragile.
-- Surveillance Network: Extend mark to `marked_target_secondary`. Hook `COMSIG_MOB_AFTER_APPLY_DAMGE` on both marks → detect rupture BRUTE (`ATTACK_TYPE_STATUS`) → deal 50% as BLACK to other mark if in 15 tiles. `COMSIG_MOB_DEATH` on marks → `other_mark.apply_lc_rupture(5)`.
+- Dossier Complete: `/datum/action/cooldown/dossier_complete` → toggle targeting → `InterceptClickOn` checks `target == marked_target` and rupture >= 10. Apply duel component + immobilize. 4 hits with `sleep()`, each hit reads target's current rupture stacks for multiplier: damage = `DPS * (1 + current_stacks * 2 / 100) / 4`. Rupture is NOT consumed — stacks may decrease mid-combo if Rupture triggers from the combo's BLACK damage. Per-hit: `target.apply_lc_offense_level_down(2)`. Final hit: 2x, knockback, fragile.
+- Surveillance Network: Hook `COMSIG_MOB_AFTER_APPLY_DAMGE` on owner → detect rupture-source burst damage (`ATTACK_TYPE_STATUS`) → calculate AoE damage = rupture stacks (x2 if `target == marked_target`, x4 for simple mobs via `isanimal()`) → deal BLACK damage to enemies in `range(3, target)` excluding target. Hook `COMSIG_MOB_ITEM_ATTACK` → on target death → iterate non-ally mobs in `range(3, target)` → `enemy.apply_lc_rupture(15)`.
 
 ---
 
@@ -2132,27 +2205,27 @@ Mixing branches gives access to all five effects, rewarding the 2-branch investm
 - **B: Weak Point Analysis** — Your attacks apply 3 Defense Level Down stacks to the target (1s internal CD). When you hit a target that has 10+ Defense Level Down stacks, designated allies within 5 tiles gain 3 Offense Level Up stacks. 1s internal CD. Your analysis exposes openings for the team.
 
 **T2 (2pt) — Pick one:**
-- **A: Comprehensive Report** — When you hit a target that has 10+ Rupture stacks, apply 3 Fragile stacks and 2 Defense Level Down stacks to them. 10s internal CD per target. A brief visual highlight marks the chosen target. Your detailed reports crack open the most-investigated subjects.
+- **A: Comprehensive Report** — When you hit a target that has 15+ active Rupture stacks, grant all designated allies within 5 tiles 2 Strength and apply 4 Offense Level Down to the target. 10s internal CD per target. A brief visual highlight marks the chosen target. Your detailed reports empower the team and cripple the target.
 - **B: Disinformation** — Your attacks apply 2 Offense Level Down stacks and 2 Feeble stacks to the target (1.5s internal CD). Your misinformation undermines the enemy's confidence and cripples their ability to fight.
 
 **T3 (3pt) — Pick one:**
-- **A: Full Exposure** *(Powerful Attack, 120s CD)* — AoE debuff slam in a 4-tile radius centered on self. All enemies hit receive 5 Fragile + 3 Defense Level Down + 3 Offense Level Down + 3 Feeble. Then, the closest enemy becomes the main target for a 3-hit combo (BLACK DPS). Per-hit: applies 3 Rupture stacks. For each designated ally within 6 tiles at combo start, all debuff stacks applied by this attack are increased by 1 (up to +3 with 3 allies). Final hit: force-triggers all existing Rupture on the target immediately (bypasses 5s activation delay). You've exposed everything — the enemy has nowhere to hide.
-- **B: Undermining Presence** *(Passive)* — When you hit an enemy that has Defense Level Up or Offense Level Up, strip 2 stacks of each. Additionally, designated allies within 5 tiles who attack targets affected by any debuff (Rupture, Fragile, Feeble, DLD, OLD) heal for 3% of damage dealt. Your strikes erode enemy strength.
+- **A: Full Exposure** *(Powerful Attack, 120s CD)* — AoE debuff slam in a 4-tile radius centered on self. All enemies hit receive 2 Fragile + 3 Defense Level Down + 3 Offense Level Down + 2 Feeble. Then, the closest enemy becomes the main target for a 3-hit combo (BLACK DPS). Per-hit: applies 3 Rupture stacks + bonus Rupture equal to (sum of all designated allies' OLU stacks + target's OLD stacks) / 5. For each designated ally within 6 tiles at combo start, DLD and OLD from the opener increase by 3 (up to +3 allies); Fragile and Feeble stay at 2. Final hit: force-triggers all existing Rupture on the target immediately (bypasses 5s activation delay). You've exposed everything — the enemy has nowhere to hide.
+- **B: Undermining Presence** *(Passive)* — When you hit an enemy that has any positive stacking buff (Defense Level Up, Offense Level Up, Strength, Protection, or their damage type variants), strip 2 stacks of each. Additionally, designated allies within 5 tiles who attack targets affected by any debuff (Rupture, Fragile, Feeble, DLD, OLD) heal for 3% of damage dealt. Your strikes erode enemy strength.
 
 **Full Exposure — Details:**
-- **Opener:** AoE ground slam centered on user, 4-tile radius. All enemies in range receive 5 Fragile + 3 DLD + 3 OLD + 3 Feeble. Closest enemy hit becomes the main target.
+- **Opener:** AoE ground slam centered on user, 4-tile radius. All enemies in range receive 2 Fragile + 3 DLD + 3 OLD + 2 Feeble. Closest enemy hit becomes the main target.
 - **Combo:** 3 hits. Each hit deals standard DPS as BLACK damage.
-- **Per-hit effect:** Each hit applies 3 Rupture stacks to the main target.
-- **Condition:** Count designated allies within 6 tiles at combo start. For each ally (up to 3), all debuff stacks from this attack increase by 1 (e.g., with 2 allies: 7 Fragile + 5 DLD + 5 OLD + 5 Feeble opener, 5 Rupture per hit).
+- **Per-hit effect:** Each hit applies 3 Rupture stacks + bonus Rupture = `round((total_ally_olu + target_old) / 5)` to the main target.
+- **Condition:** Count designated allies within 6 tiles at combo start. For each ally (up to 3), DLD and OLD from the opener increase by 3 (e.g., with 2 allies: 2 Fragile + 9 DLD + 9 OLD + 2 Feeble). Fragile and Feeble stay fixed at 2.
 - **Final hit:** Force-triggers all Rupture on target via `INVOKE_ASYNC` calling the rupture status effect's `trigger_rupture()` proc directly. Bypasses the 5-second activation delay.
 
 **Implementation Notes:**
 - Intel Briefing: `COMSIG_MOB_ITEM_ATTACK` → check target for Rupture status effect → if present and 1s CD clear → iterate designated allies in `range(5, owner)` → `ally.apply_lc_offense_level_up(3)`. Track `last_briefing = world.time`.
 - Weak Point Analysis: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_defense_level_down(3)` with 1s CD. Check target DLD stacks >= 10 → iterate designated allies in `range(5, owner)` → `ally.apply_lc_offense_level_up(3)`. Same 1s CD shared with the DLD application.
-- Comprehensive Report: `COMSIG_MOB_ITEM_ATTACK` → check target rupture stacks >= 10 → check `target_cooldowns[target_ref]` for 10s CD → `target.apply_lc_fragile(3)` + `target.apply_lc_defense_level_down(2)`. Brief highlight via `new /obj/effect/temp_visual/` on target turf. Track `target_cooldowns[target_ref] = world.time`.
+- Comprehensive Report: `COMSIG_MOB_ITEM_ATTACK` → check target rupture stacks >= 15 (active, past 5s delay) → check `target_cooldowns[target_ref]` for 10s CD → iterate designated allies in `range(5, owner)` → `ally.apply_lc_strength(2)` + `target.apply_lc_offense_level_down(4)`. Brief highlight via `new /obj/effect/temp_visual/` on target turf. Track `target_cooldowns[target_ref] = world.time`.
 - Disinformation: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_offense_level_down(2)` + `target.apply_lc_feeble(2)` with 1.5s CD.
-- Full Exposure: `/datum/action/cooldown/full_exposure` → no targeting needed (AoE from self). AoE debuffs in `range(4)`: `apply_lc_fragile(5)` + `apply_lc_defense_level_down(3)` + `apply_lc_offense_level_down(3)` + `apply_lc_feeble(3)`. Count allies via `is_designated_ally()` in `range(6)`. Pick closest hostile → duel component + immobilize → 3 hits. Final hit: find rupture status effect on target → `INVOKE_ASYNC(rupture_effect, PROC_REF(trigger_rupture))`.
-- Undermining Presence: `COMSIG_MOB_ITEM_ATTACK` → check target for DLU/OLU status effects → if present, `add_stacks(-2)` on each. For ally healing: register `COMSIG_MOB_ITEM_ATTACK` on designated allies (via ally designation callback, same as Intel Briefing) → check `get_dist(owner, ally) <= 5` → check target for any debuffs (Rupture/Fragile/Feeble/DLD/OLD) → `INVOKE_ASYNC` → `ally.adjustBruteLoss(-damage * 0.03)`.
+- Full Exposure: `/datum/action/cooldown/full_exposure` → no targeting needed (AoE from self). Count allies via `is_designated_ally()` in `range(6)` (max 3). Calculate `dld_old_bonus = ally_count * 3`. AoE debuffs in `range(4)`: `apply_lc_fragile(2)` + `apply_lc_defense_level_down(3 + dld_old_bonus)` + `apply_lc_offense_level_down(3 + dld_old_bonus)` + `apply_lc_feeble(2)`. Sum OLU stacks from all designated allies in range. Pick closest hostile → duel component + immobilize → 3 hits. Per-hit: `rupture_amount = 3 + round((total_ally_olu + target_old_stacks) / 5)` → `target.apply_lc_rupture(rupture_amount)`. Final hit: find rupture status effect on target → `INVOKE_ASYNC(rupture_effect, PROC_REF(trigger_rupture))`.
+- Undermining Presence: `COMSIG_MOB_ITEM_ATTACK` → check target for any positive stacking buffs (DLU, OLU, Strength, Protection, and damage type variants) → if present, `add_stacks(-2)` on each. For ally healing: register `COMSIG_MOB_ITEM_ATTACK` on designated allies (via ally designation callback, same as Intel Briefing) → check `get_dist(owner, ally) <= 5` → check target for any debuffs (Rupture/Fragile/Feeble/DLD/OLD) → `INVOKE_ASYNC` → `ally.adjustBruteLoss(-damage * 0.03)`.
 
 ---
 
@@ -2165,7 +2238,7 @@ Mixing branches gives access to all five effects, rewarding the 2-branch investm
 - **B: Quick Assessment** — Hitting a new target (different from last hit) applies 5 Rupture stacks. Consecutive hits on the same target apply diminishing Rupture: 5 → 3 → 1 → 0. Switching targets resets the count. First impressions hit hardest.
 
 **T2 (2pt) — Pick one:**
-- **A: Rupture Cascade** — When your attack triggers a target's Rupture burst, apply 5 Rupture stacks to all other enemies within 3 tiles of the target. 5s internal CD. Your interrogations have a way of making everyone nearby nervous.
+- **A: Rupture Cascade** — When your attack triggers a target's Rupture burst, apply 7 Rupture stacks to all other enemies within 3 tiles of the target. 1s internal CD. Your interrogations have a way of making everyone nearby nervous.
 - **B: Pressure Points** — Your attacks apply 1 additional Rupture stack for each unique debuff type on the target (Fragile, Feeble, DLD, OLD — max +4 Rupture per hit). The more compromised the target, the faster the case builds.
 
 **T3 (3pt) — Pick one:**
@@ -2182,7 +2255,7 @@ Mixing branches gives access to all five effects, rewarding the 2-branch investm
 **Implementation Notes:**
 - Shadow Step: `COMSIG_MOB_ITEM_ATTACK` → get target's OLD stacks + DLD stacks → `rupture_amount = min(8, round((old_stacks + dld_stacks) / 2))` → if > 0: `target.apply_lc_rupture(rupture_amount)`.
 - Quick Assessment: Track `last_attacked_target` and `consecutive_hits`. On `COMSIG_MOB_ITEM_ATTACK`: if different target → reset `consecutive_hits = 0`. Apply rupture based on `consecutive_hits`: 0 → 5, 1 → 3, 2 → 1, 3+ → 0. Then `consecutive_hits++`. Update `last_attacked_target`.
-- Rupture Cascade: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on owner → detect rupture-source burst damage (`ATTACK_TYPE_STATUS`) → if 5s CD clear → iterate enemies in `range(3, target)` excluding target → `enemy.apply_lc_rupture(5)`.
+- Rupture Cascade: Register `COMSIG_MOB_AFTER_APPLY_DAMGE` on owner → detect rupture-source burst damage (`ATTACK_TYPE_STATUS`) → if 1s CD clear → iterate enemies in `range(3, target)` excluding target → `enemy.apply_lc_rupture(7)`.
 - Pressure Points: `COMSIG_MOB_ITEM_ATTACK` → count unique debuff types on target (Fragile, Feeble, DLD, OLD — not Rupture itself) → `target.apply_lc_rupture(count)` if count > 0.
 - Surgical Strike: `/datum/action/cooldown/surgical_strike` → toggle targeting → check any debuff on target. `alpha = 0` + immobilize owner for 2s via `addtimer`. After 2s: check `can_see(owner, target)` and `get_dist(owner, target) <= 7` → if fail: `alpha = 255`, unimmobilize, refund CD, return. If pass: `forceMove(get_step(target, REVERSE_DIR(target.dir)))`, `alpha = 255`, duel component → immobilize target. Count debuff types for multiplier. 5 hits. Final hit: `target.add_overlay(icon('icons/effects/effects.dmi', "zoro"))` → `SLEEP_CHECK_DEATH(14)` → `target.cut_overlay(...)` → deal 2x DPS + `target_rupture_stacks` as bonus BLACK damage, knockback 2 tiles. (Zoro slash overlay pattern from `puss_in_boots.dm` Execute).
 - Detonation Order: `COMSIG_MOB_ITEM_ATTACK` → check target rupture stacks < 20 → `target.apply_lc_rupture(4)`.

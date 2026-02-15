@@ -16,12 +16,12 @@ For general information about the association system (contracts, EXP, setup), se
 
 Zwei earn EXP through protection. Their thematic activities are:
 
-* '''Passive EXP tick''' while on contract and within range of the client or guarded area
-* '''Bonus EXP''' for taking damage while near the client or inside the guarded area — absorbing hits is fulfilling your duty
-* '''Bonus EXP''' for engaging hostiles within range of the client or area
-* '''Contract completion bonus''' based on duration and whether the client survived or the area was held
+* '''Passive EXP''' — '''1 EXP''' every 10s while '''on an active contract''' and within range of the client or guarded area (does not activate off-contract)
+* '''Damage absorbed''' — '''2 EXP''' when taking damage near the client or inside the guarded area (1s cooldown)
+* '''Combat''' — '''1 EXP''' per hit on a mob (2s cooldown), '''3 EXP''' for killing a mob
+* '''Contract completion''' — Duration-based contracts: '''10 EXP''' (3 min), '''15 EXP''' (5 min), or '''25 EXP''' (10 min). Objective-based contracts (Patrol Route, Eliminate Target): '''15 EXP''' on completion
 
-Even without an active contract, Zwei can earn EXP at a slower rate by taking damage while near non-association players and engaging hostile targets.
+Even without an active contract, Zwei can earn EXP at '''half rate''' by taking damage while near non-association players and engaging hostile targets.
 
 === Contract Types ===
 
@@ -29,17 +29,22 @@ In addition to the universal contracts (Patrol Route, Eliminate Target, Escort P
 
 {| class="wikitable"
 !Contract Type
+!Cost
 !Description
 !Completion
 |-
 |Guard Area
+|'''2000 / 3500 / 6000 ahn''' (3/5/10 min)
 |Designate a zone on the '''Contract City Map'''. The contract timer '''only ticks while at least one association member is inside the zone''' — if everyone leaves, the timer pauses until someone returns.
 |Duration expires while association members are present in the zone.
 |-
 |Protect Person
-|Target a specific player. The contract timer '''only ticks while at least one association member is within 5-7 tiles of the client'''. Stronger than the universal Escort Person — grants your client a '''damage reduction aura''' and '''SP stabilization'''.
+|'''2500 / 4000 / 7000 ahn''' (3/5/10 min)
+|Target a specific player. The contract timer '''only ticks while at least one association member is within 5-7 tiles of the client'''. Stronger than the universal Escort Person — while a Zwei fixer is in range, the client receives '''15% damage reduction'''.
 |Duration expires while association members are near the client.
 |}
+
+The client pays upfront when creating the contract. Hana has unlimited funds; civilians pay from their own wallet. If the contract is declined or discarded, the payment is refunded. For universal contract costs, see the [[Updated Zwei Association|main Association page]].
 
 '''Contract Indicators:'''
 * Guard Area contracts create a visible zone boundary so you know your post
@@ -177,7 +182,7 @@ Each branch has 3 tiers with 2 choices per tier (pick one). Tier costs: T1 = 1 p
 |-
 |T2 (2pt)
 |'''Shieldbreaker''' — Your attacks deal bonus RED damage equal to your Defense Level Up percentage of your weapon's base damage.
-|'''Steady Footing''' — While you have any Defense Level Up stacks, gain +15% movement speed.
+|'''Steady Footing''' — While you have 5 or more Defense Level Up stacks, gain +15% movement speed.
 |-
 |T3 (3pt)
 |'''Retaliating Onslaught''' — ''See Powerful Attacks below.''
@@ -194,12 +199,12 @@ Each branch has 3 tiers with 2 choices per tier (pick one). Tier costs: T1 = 1 p
 !Option B
 |-
 |T1 (1pt)
-|'''Vigilant Presence''' — Allies within 4 tiles gain 2 Defense Level Up stacks every 10s.
-|'''Warden's Watch''' — +15% damage vs mobs in contracted area (+25% if their target is you).
+|'''Vigilant Presence''' — When you take damage, allies within 4 tiles also gain 2 Defense Level Up stacks. 1s internal cooldown.
+|'''Warden's Watch''' — +15% damage vs mobs in contracted area (+25% if their target is you). +10% damage vs carbons in contracted area.
 |-
 |T2 (2pt)
-|'''Law and Order''' — Hostiles entering within 5 tiles receive 2 Tremor stacks. 15s cooldown per target.
-|'''Fortified Position''' — While standing still 3s+ in contracted area, gain 5 Defense Level Up stacks every 5s. Moving removes these stacks.
+|'''Law and Order''' — When you take damage, gain Protection stacks scaling with damage received (1 stack per 15 damage, up to 5 at 75+ damage). 12s cooldown.
+|'''Fortified Position''' — On hitting a target, gain 2 Defense Level Up stacks. If you attack from the same tile as your last attack, gain +3 additional stacks per consecutive hit (1st = 2, 2nd = 5, 3rd = 8, 4th = 11, etc.). Moving to a different tile resets the bonus.
 |-
 |T3 (3pt)
 |'''Earthshatter''' — ''See Powerful Attacks below.''
@@ -218,11 +223,11 @@ This branch grants the '''Mark for Protection''' action at T1. Click a player to
 !Option B
 |-
 |T1 (1pt)
-|'''Designated Ward''' — Mark a player. While within 7 tiles, they gain 2 Defense Level Up stacks every 10s.
-|'''Threatening Presence''' — Mark a player. Hostiles attacking your ward deal 10% less damage while you are nearby.
+|'''Designated Ward''' — Mark a player. When your ward takes damage while you are within 7 tiles, they gain 2 Defense Level Up stacks and you gain 3. 1s internal cooldown.
+|'''Threatening Presence''' — Mark a player. Hostiles attacking your ward deal 15% less damage while you are nearby. When your ward takes damage, you gain 2 Defense Level Up stacks. 1s internal cooldown.
 |-
 |T2 (2pt)
-|'''Bodyguard's Instinct''' — When your ward takes damage, gain +30% speed for 2s. Directional arrow indicator if distant.
+|'''Bodyguard's Instinct''' — When your ward takes damage, gain +30% speed for 2s.
 |'''Shared Resilience''' — When you gain Defense Level Up stacks, your ward also gains half (within 7 tiles).
 |-
 |T3 (3pt)
@@ -242,9 +247,9 @@ Each branch has one T3 option that is a '''Powerful Attack''' — a cutscene-sty
 # Dash forward 3 tiles in your facing direction
 # First enemy hit becomes the target
 # 5-hit combo with dashes between strikes
-# Each hit applies 1 '''Tremor''' stack to the target
-# '''Bonus:''' Each Defense Level Up stack you have increases total damage by 1%. All stacks are consumed after the combo
-# '''Final hit:''' 2x damage, applies 3 Tremor, knocks target back 2 tiles
+# Each hit grants the user 2 '''Defense Level Up''' stacks
+# '''Bonus:''' Each Defense Level Up stack you have increases total damage by 1%. All stacks are consumed at the start of the combo — per-hit stacks rebuild your defense
+# '''Final hit:''' 2x damage, grants 5 Defense Level Up stacks, knocks target back 2 tiles
 
 '''Example:''' At 25 Defense Level Up stacks, total damage is +25%. At 50 stacks, +50%. The more you defend, the harder you hit back.
 
@@ -258,7 +263,7 @@ Each branch has one T3 option that is a '''Powerful Attack''' — a cutscene-sty
 # 3-hit combo (each hit deals 50% of weapon DPS). If used '''in your contracted area''', the combo has '''6 hits''' instead
 # Each hit applies 2 '''Defense Level Down''' to the target and 3 '''Defense Level Up''' to you
 # '''Bonus:''' For each ally within 5 tiles at the start, gain 1 extra hit (up to +3)
-# '''Final hit:''' Knocks target down, applies 3 Tremor and 1s stun
+# '''Final hit:''' Knocks target down, grants 5 Defense Level Up stacks to the user and stuns for 1s
 
 ==== Guardian's Wrath (Client T3a) ====
 
@@ -269,7 +274,7 @@ Each branch has one T3 option that is a '''Powerful Attack''' — a cutscene-sty
 # 4-hit combo of furious close-range strikes
 # Each hit '''heals your ward''' for 5% of damage dealt (if ward is alive and within 10 tiles)
 # '''Bonus:''' If your ward took '''any damage in the last 10 seconds''', all hits deal '''double damage'''. If your ward is within 5 tiles during the combo, you gain 2 Protection stacks per hit
-# '''Final hit:''' 2x damage, applies 5 Tremor, knocks target back 3 tiles away from the ward
+# '''Final hit:''' 2x damage, grants 5 Defense Level Up stacks, knocks target back 3 tiles away from the ward
 
 === Branch Synergies ===
 

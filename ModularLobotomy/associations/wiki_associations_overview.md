@@ -90,26 +90,32 @@ The Director distributes gear from the equipment box to the squad. See each asso
 
 Contracts are the core of the association system. Contracts are tracked at the '''association level''', not per individual. When any fixer accepts a contract, '''the entire association accepts it''' — all squad members gain access to their skill tree abilities and can earn EXP. The association can have '''multiple active contracts''' at the same time.
 
-If the association has no active contract, '''nobody''' has skill tree abilities. However, fixers can still earn EXP through their association's thematic activities even without a contract — they just earn it at a slower rate and without access to their skills. Contracts are how you unlock your full power and progress faster. '''Payment is upfront''' — the client pays when the contract is created, and the association receives the funds immediately upon accepting.
+If the association has no active contract, '''nobody''' has skill tree abilities and the passive EXP tick does not run. Fixers can still earn EXP through their association's thematic activities, but contracts are how you unlock your full power and progress faster. '''Payment is upfront''' — the client pays when the contract is created, and the association receives the funds immediately upon accepting.
 
-=== Who Can Give You Contracts? ===
+=== Contract States ===
+
+Your association is always in one of three states:
 
 {| class="wikitable"
-!Contract Source
-!EXP Multiplier
-!Notes
-|-
-|'''Civilian / Other Role'''
-|2x EXP
-|Any non-association, non-Hana player hires you directly. Most rewarding because it requires real interaction.
-|-
-|'''Hana (Administrator / Representative)'''
-|1x EXP
-|Hana creates the contract from the Association Contract Terminal with unlimited funding. Reliable, steady work.
+!State
+!Skills
+!EXP
+!Details
 |-
 |'''No Active Contract'''
-|No Skills, Passive EXP Only
-|The association has no active contract. Skill tree abilities are disabled. Fixers can still earn EXP through thematic activities (see below).
+|Disabled
+|Thematic activities only, no passive tick
+|No contract is running. You can still earn EXP through your association's thematic activities (see below), but skill tree abilities are '''inactive''' and the passive EXP tick does not run.
+|-
+|'''Hana Contract'''
+|'''Active'''
+|Normal rate + passive tick
+|A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally.
+|-
+|'''Civilian Contract'''
+|'''Active'''
+|'''All EXP doubled''' + passive tick
+|A non-association, non-Hana player hired you directly. Skills are active and '''all incoming EXP is doubled''' — the most rewarding state because it requires real player interaction.
 |}
 
 '''Important:''' Association fixers '''cannot''' give themselves contracts. You must always be hired by someone else.
@@ -143,23 +149,27 @@ These contracts are available to all four associations:
 
 {| class="wikitable"
 !Contract Type
+!Cost
 !Description
 !Completion
 |-
 |Patrol Route
-|Mark waypoints on the city map. Visit them in order and loop for the contract duration.
-|Duration expires after completing patrol loops.
+|'''1500 ahn''' (flat)
+|Mark waypoints on the city map. Visit them in order and complete the patrol loops.
+|All waypoints visited and loops completed.
 |-
 |Eliminate Target
-|Kill a specific human target within the contract duration.
-|Target dies. Fails if duration expires first.
+|'''3000 ahn''' (flat)
+|Kill a specific human target.
+|Target dies.
 |-
 |Escort Person
+|'''1500 / 2500 / 4000 ahn''' (3/5/10 min)
 |Stay within 7 tiles of a target, protecting them from harm. Timer '''only ticks''' while at least one association member is near the target — leaving pauses the timer.
 |Duration expires while maintaining proximity.
 |}
 
-Each association also has its own '''unique contract types''' tied to their specialty. See the individual association pages for details.
+Contracts are either '''duration-based''' (3, 5, or 10 minutes with tiered pricing) or '''objective-based''' (flat cost, completes when the objective is met). Each association also has its own '''unique contract types''' tied to their specialty — see the individual association pages for details.
 
 === How Contracts Are Created ===
 
@@ -167,7 +177,7 @@ All contracts are created through the '''Association Contract Terminal''' — a 
 
 # Use the '''Association Contract Terminal'''
 # Select the contract type from the available list
-# Set the duration (3, 5, or 10 minutes) and payment amount — '''payment is taken from your wallet upfront''' (Hana has unlimited funds)
+# For duration-based contracts, set the duration (3, 5, or 10 minutes). Pay the contract fee upfront — '''payment is taken from your wallet immediately''' (Hana has unlimited funds). Costs vary by contract type and duration.
 # For location-based contracts (Patrol Route, Guard Area, Surveillance Post, Host Event), the '''Contract City Map''' opens so you can mark the relevant location or waypoints
 # For target-based contracts (Eliminate Target, Escort Person, Investigate Person, etc.), click the target player to designate them
 # The terminal produces a physical '''contract item''' — a paper document containing all the contract details
@@ -216,13 +226,13 @@ Placed markers appear as '''colored overlays''' on the map tiles, so you can see
 * Short cooldown (~30 seconds) between contracts
 * For location and proximity contracts, leaving the area or client '''pauses the timer''' — it resumes when any association member returns. Contracts never fail from absence alone
 * You can '''decline''' a contract offer — you are a professional, not a slave
-* Contract durations are 3, 5, or 10 minutes, set by the contract creator
+* Contracts are either '''duration-based''' (3/5/10 minute tiers with tiered pricing) or '''objective-based''' (flat cost, no timer). Costs vary by contract type — see the universal and association-specific contract tables for exact prices
 
 === Why Should Civilians Hire You? ===
 
 Clients who hire fixers receive tangible benefits depending on the contract type:
 
-* '''Protection contracts''' grant the client reduced damage and slower SP decay while the fixer is nearby
+* '''Protection contracts''' grant the client '''15% damage reduction''' while the fixer is nearby
 * '''Investigation contracts''' provide the client with filed intel reports and early warnings about threats
 * '''Combat contracts''' get the client's problem dealt with by a professional — no need to get their own hands dirty
 * '''Service contracts''' give attendees direct benefits like healing, buffs, or event participation
@@ -236,7 +246,6 @@ Every association uses the same skill tree structure, but each earns EXP in its 
 * Each association has '''3 branches''' representing different specializations
 * You can invest in a '''maximum of 2 branches''' — you must leave one empty, so choose carefully
 * Each branch has '''3 tiers''' with '''2 choices per tier''' (pick one)
-* Tier costs scale: Tier 1 = 1 point, Tier 2 = 2 points, Tier 3 = 3 points
 * Full investment in one branch costs 6 points. Two branches costs 12 points total
 
 {| class="wikitable"
@@ -267,6 +276,91 @@ Every association uses the same skill tree structure, but each earns EXP in its 
 |}
 
 See each association's page for full details on what each branch and skill does.
+
+==== Skill Costs ====
+
+Each tier costs an increasing number of skill points. You must buy the previous tier in a branch before unlocking the next.
+
+{| class="wikitable"
+!Tier
+!Cost
+!Choices
+|-
+|Tier 1
+|1 point
+|Pick A or B
+|-
+|Tier 2
+|2 points
+|Pick A or B
+|-
+|Tier 3
+|3 points
+|Pick A or B
+|}
+
+One full branch = '''6 points''' (1 + 2 + 3). Two full branches = '''12 points'''.
+
+==== Earning Skill Points ====
+
+You earn '''1 skill point''' each time your total EXP reaches a threshold. The first few points come quickly, then slow down:
+
+{| class="wikitable"
+!Skill Point
+!Total EXP Required
+|-
+|1st
+|30
+|-
+|2nd
+|70
+|-
+|3rd
+|120
+|-
+|4th
+|180
+|-
+|5th
+|350
+|-
+|6th
+|600
+|-
+|7th
+|950
+|-
+|8th
+|1400
+|-
+|9th
+|1950
+|-
+|10th
+|2600
+|-
+|11th
+|3350
+|-
+|12th
+|4200
+|}
+
+Fully investing in 2 branches requires '''12 skill points''' (4200 total EXP).
+
+=== Powerful Attacks (Tier 3) ===
+
+Every association has at least one '''Powerful Attack''' available as a Tier 3 skill choice. These are cutscene-style multi-hit combo attacks with shared mechanics:
+
+* '''Weapon-agnostic''' — works with whatever melee weapon you are holding
+* '''DPS-based damage''' — each hit deals damage based on your weapon's DPS (<code>force × force_multiplier × 1.25 / attack_speed</code>), so all weapons are equally viable
+* '''Target isolation''' — during the combo, the target is isolated and no one else can damage them or steal the kill
+* '''Immobilization''' — both you and the target are immobilized for the combo duration
+* '''Conditional bonuses''' — each attack has unique conditions that increase damage or add extra effects (more hits, bonus stacks, etc.)
+* '''Per-hit effects''' — each individual hit can apply status effects or grant buffs
+* '''Long cooldown''' — typically 90-120 seconds between uses
+
+Each powerful attack has a unique opener (dash, slam, leap, etc.) that hits enemies in an area. The first enemy hit becomes the main target for the combo. See the individual association pages for specific powerful attacks and their effects.
 
 == Ally Designation ==
 
