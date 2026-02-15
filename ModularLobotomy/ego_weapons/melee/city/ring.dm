@@ -983,10 +983,10 @@
 	weapon_ref = null
 	return ..()
 
-// Compel Dash - forces the wielder to dash 5 tiles in their facing direction
+// Compel Dash - forces the wielder to dash 5 tiles in their facing direction, damaging mobs along the path
 /datum/action/cooldown/fascia_compel_dash
 	name = "Compel Dash"
-	desc = "Compel the wielder to dash 5 tiles in their facing direction."
+	desc = "Compel the wielder to dash 5 tiles in their facing direction, dealing 50 RED damage to all in the way."
 	icon_icon = 'icons/effects/cult_effects.dmi'
 	button_icon_state = "pulse"
 	cooldown_time = 5 SECONDS
@@ -994,10 +994,15 @@
 
 	/// Reference to the weapon
 	var/datum/weakref/weapon_ref
+	/// Whether a dash is currently in progress
+	var/is_dashing = FALSE
 
 /datum/action/cooldown/fascia_compel_dash/Trigger(trigger_flags)
 	. = ..(trigger_flags)
 	if(!.)
+		return FALSE
+
+	if(is_dashing)
 		return FALSE
 
 	var/obj/item/weapon = weapon_ref?.resolve()
@@ -1012,28 +1017,53 @@
 		to_chat(owner, span_warning("The blade has no living wielder!"))
 		return FALSE
 
-	// Calculate landing turf in wielder's facing direction
-	var/turf/landing
-	if(wielder.dir == NORTH)
-		landing = locate(wielder.x, wielder.y + 5, wielder.z)
-	if(wielder.dir == SOUTH)
-		landing = locate(wielder.x, wielder.y - 5, wielder.z)
-	if(wielder.dir == EAST)
-		landing = locate(wielder.x + 5, wielder.y, wielder.z)
-	if(wielder.dir == WEST)
-		landing = locate(wielder.x - 5, wielder.y, wielder.z)
+	INVOKE_ASYNC(src, PROC_REF(perform_dash), wielder)
+	StartCooldown()
+	return TRUE
 
-	if(!landing)
-		to_chat(owner, span_warning("Cannot dash in that direction!"))
-		return FALSE
+/// Performs a ScratchDash-style dash, moving tile-by-tile and damaging nearby mobs
+/datum/action/cooldown/fascia_compel_dash/proc/perform_dash(mob/living/wielder)
+	is_dashing = TRUE
+	var/dash_dir = wielder.dir
+	var/list/hit_mob = list()
 
-	// throw_at handles stopping at walls/obstacles automatically
-	wielder.throw_at(landing, 5, 2, spin = TRUE)
 	playsound(wielder, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
 	to_chat(wielder, span_warning("The Fascia compels you forward!"))
 	to_chat(owner, span_nicegreen("You compel the wielder to dash!"))
-	StartCooldown()
-	return TRUE
+
+	var/turf/current_turf = get_turf(wielder)
+	for(var/i = 1 to 5)
+		if(QDELETED(wielder) || wielder.stat == DEAD)
+			break
+		if(get_turf(wielder) != current_turf)
+			break
+		var/turf/next_turf = get_step(wielder, dash_dir)
+		if(!next_turf || isclosedturf(next_turf))
+			break
+		if(locate(/obj/structure/window) in next_turf.contents)
+			break
+		if(locate(/obj/structure/table) in next_turf.contents)
+			break
+		if(locate(/obj/structure/railing) in next_turf.contents)
+			break
+		var/door_blocked = FALSE
+		for(var/obj/machinery/door/D in next_turf.contents)
+			if(D.density)
+				door_blocked = TRUE
+				break
+		if(door_blocked)
+			break
+		sleep(1)
+		wielder.forceMove(next_turf)
+		current_turf = next_turf
+		playsound(next_turf, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
+		for(var/turf/T in orange(get_turf(wielder), 1))
+			if(isclosedturf(T))
+				continue
+			new /obj/effect/temp_visual/slice(T)
+			hit_mob = wielder.HurtInTurf(T, hit_mob, 50, RED_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+	is_dashing = FALSE
 
 /datum/action/cooldown/fascia_compel_dash/Destroy()
 	weapon_ref = null
