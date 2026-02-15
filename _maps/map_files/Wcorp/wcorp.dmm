@@ -126,8 +126,6 @@
 /area/city/outskirts)
 "sy" = (
 /obj/structure/rack,
-/obj/item/storage/firstaid/revival,
-/obj/item/krevive,
 /obj/item/storage/box/pcorp,
 /turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
@@ -214,6 +212,10 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
+"Eq" = (
+/obj/structure/rack,
+/turf/open/indestructible/hotelwood,
+/area/city/outskirts)
 "Es" = (
 /obj/structure/chair/comfy/shuttle{
 	dir = 8
@@ -249,14 +251,6 @@
 "GW" = (
 /obj/effect/decal/cleanable/blood/gibs/bubblegum,
 /turf/open/indestructible/hotelwood,
-/area/city/outskirts)
-"Hg" = (
-/obj/structure/rack,
-/obj/item/storage/firstaid/revival,
-/obj/item/storage/firstaid/revival,
-/obj/item/krevive,
-/obj/item/storage/box/pcorp,
-/turf/open/floor/plasteel/bluespace,
 /area/city/outskirts)
 "Iv" = (
 /obj/effect/turf_decal/bot,
@@ -344,12 +338,6 @@
 	dir = 8
 	},
 /turf/open/floor/plasteel/bluespace,
-/area/city/outskirts)
-"Rv" = (
-/obj/structure/rack,
-/obj/item/storage/firstaid/revival,
-/obj/item/krevive,
-/turf/open/indestructible/hotelwood,
 /area/city/outskirts)
 "Sq" = (
 /obj/structure/chair/greyscale{
@@ -21142,7 +21130,7 @@ Gq
 vW
 UQ
 sy
-Hg
+sy
 sy
 UQ
 vW
@@ -54668,7 +54656,7 @@ We
 UV
 UV
 UV
-MR
+Eq
 iP
 pt
 pt
@@ -54962,7 +54950,7 @@ pt
 pt
 pt
 iP
-Rv
+Eq
 GW
 UV
 UV
@@ -55264,7 +55252,7 @@ pt
 pt
 pt
 iP
-Rv
+Eq
 UV
 GW
 UV
@@ -55566,7 +55554,7 @@ pt
 pt
 pt
 iP
-Rv
+Eq
 UV
 UV
 UV
@@ -55574,7 +55562,7 @@ UV
 UV
 UV
 UV
-MR
+Eq
 iP
 pt
 pt
