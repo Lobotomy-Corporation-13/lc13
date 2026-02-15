@@ -493,14 +493,6 @@
 /obj/structure/spacevine,
 /turf/closed/indestructible/necropolis,
 /area/rce/xcorp/boss)
-"ex" = (
-/obj/structure/rose_work{
-	name = "blood rose";
-	desc = "A blossoming red rose... Is now the time for us to bloom?";
-	pixel_x = 16
-	},
-/turf/open/indestructible/cult,
-/area/rce/xcorp/boss)
 "eA" = (
 /turf/open/floor/plating/ashplanet/ash{
 	color = "#da82ff"
@@ -5521,14 +5513,6 @@
 	light_range = 25;
 	set_cap = 3;
 	set_luminosity = 24
-	},
-/turf/open/indestructible/cult,
-/area/rce/xcorp/boss)
-"Ur" = (
-/obj/structure/rose_work{
-	name = "blood rose";
-	desc = "A blossoming red rose... Is now the time for us to bloom?";
-	pixel_x = -16
 	},
 /turf/open/indestructible/cult,
 /area/rce/xcorp/boss)
@@ -24075,7 +24059,7 @@ md
 md
 UM
 UM
-Ur
+UM
 UM
 QR
 UM
@@ -24089,11 +24073,11 @@ UM
 zD
 UM
 UM
-Ur
 UM
 UM
 UM
-Ur
+UM
+UM
 UM
 UM
 cd
@@ -24412,7 +24396,7 @@ cd
 cd
 UM
 UM
-Ur
+UM
 ts
 md
 gY
@@ -25349,7 +25333,7 @@ pq
 pq
 pq
 UM
-Ur
+UM
 ts
 gY
 xq
@@ -30311,7 +30295,7 @@ xq
 xq
 gY
 ts
-ex
+UM
 UM
 pq
 pq
@@ -31276,7 +31260,7 @@ UM
 UM
 UM
 UM
-ex
+UM
 ts
 md
 gY
@@ -31570,9 +31554,9 @@ UM
 UM
 UM
 UM
-ex
 UM
-ex
+UM
+UM
 UM
 zD
 UM
@@ -31586,7 +31570,7 @@ UM
 UM
 UM
 UM
-ex
+UM
 UM
 ts
 ts

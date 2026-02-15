@@ -10,10 +10,11 @@
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 10
 	active_power_usage = 100
-	var/list/completed_research = list()
+	resistance_flags = INDESTRUCTIBLE
+	var/static/list/completed_research = list()
 	var/datum/rce_research_node/selected_research // Which research to feed parts to
-	var/list/research_progress = list() // Tracks progress for each research project
-	var/list/research_completions = list() // Tracks how many times each research has been completed (for starter kits)
+	var/static/list/research_progress = list() // Tracks progress for each research project
+	var/static/list/research_completions = list() // Tracks how many times each research has been completed (for starter kits)
 	var/list/stored_parts = list() // Body parts waiting to be processed
 	var/processing_part = FALSE
 	var/process_time = 3 SECONDS
@@ -31,9 +32,6 @@
 	// Initialize research tree if not already done
 	if(!length(GLOB.rce_research_nodes))
 		initialize_research_tree()
-		world.log << "RCE Research: Initialized [length(GLOB.rce_research_nodes)] research nodes"
-	else
-		world.log << "RCE Research: Already have [length(GLOB.rce_research_nodes)] research nodes"
 
 /obj/machinery/rce_research/examine(mob/user)
 	. = ..()
@@ -116,7 +114,6 @@
 
 	// Research tree data
 	var/list/tree_data = list()
-	world.log << "RCE Research UI: Building tree data from [length(GLOB.rce_research_nodes)] nodes"
 	for(var/node_id in GLOB.rce_research_nodes)
 		var/datum/rce_research_node/node = GLOB.rce_research_nodes[node_id]
 		var/status = get_node_status(node)
@@ -138,7 +135,6 @@
 			"requiredTraits" = node.required_traits,
 			"branch" = node.branch
 		))
-	world.log << "RCE Research UI: Sending [length(tree_data)] nodes to UI"
 	data["researchTree"] = tree_data
 
 	// Stored parts data with effectiveness calculation
