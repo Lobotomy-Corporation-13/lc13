@@ -356,6 +356,8 @@
 	var/datum/job/J = SSjob.GetJobType(jobtype)
 	if(!J)
 		J = SSjob.GetJob(H.job)
+	// Runtime fix: corpses spawned in backstreet rooms have no valid job datum.
+	// Causes "Cannot execute null.get access()".
 	if(!J)
 		return
 

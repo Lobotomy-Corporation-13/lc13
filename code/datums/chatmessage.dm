@@ -69,6 +69,8 @@
 
 /datum/chatmessage/Destroy()
 	if (owned_by)
+		// Runtime fix: explicitly unregister before nulling owned_by, otherwise parent Destroy()
+		// tries to auto-unregister from null, causing "Unregister Signal called without a target".
 		UnregisterSignal(owned_by, COMSIG_PARENT_QDELETING)
 		if (owned_by.seen_messages)
 			LAZYREMOVEASSOC(owned_by.seen_messages, message_loc, src)
@@ -165,6 +167,8 @@
 	var/complete_text = "<span class='center [extra_classes.Join(" ")]' style='color: [tgt_color]'>[owner.say_emphasis(text)]</span>"
 	if(!owned_by) // The client has been nulled after disconnecting, so we need to stop early.
 		return
+	// Runtime fix: client can disconnect between the null check above and MeasureText().
+	// Using ?. prevents "Cannot execute null.MeasureText()". Early return if mheight is falsy.
 	var/mheight = WXH_TO_HEIGHT(owned_by?.MeasureText(complete_text, null, CHAT_MESSAGE_WIDTH))
 	if(!mheight)
 		return

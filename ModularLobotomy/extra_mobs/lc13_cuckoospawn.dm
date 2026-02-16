@@ -67,6 +67,8 @@
 	if(isanimal(attacked_target))
 		var/mob/living/simple_animal/easy_target = attacked_target
 		easy_target.deal_damage(melee_damage_upper * 3, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE))
+	// Runtime fix: human_target is only set when ishuman(attacked_target). When attacking non-humans
+	// (e.g. runawaybirds), human_target is null, causing "Cannot read null.stat".
 	if(human_target)
 		if(human_target.stat != DEAD && prob(5))
 			var/obj/item/bodypart/chest/LC = human_target.get_bodypart(BODY_ZONE_CHEST)

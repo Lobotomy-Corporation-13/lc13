@@ -52,6 +52,7 @@
 	. = ..()
 	if(!user)
 		return
+	// Runtime fix: override = TRUE prevents "mob_shiftclickon overridden" warning when weapon is re-equipped.
 	RegisterSignal(user, COMSIG_MOB_SHIFTCLICKON, PROC_REF(DoChecks), override = TRUE)
 
 /obj/item/ego_weapon/black_silence_gloves/Destroy(mob/user)
@@ -96,6 +97,8 @@
 		animate(D, alpha = 0, time = 2 + i*2)
 
 /obj/item/ego_weapon/black_silence_gloves/proc/DoChecks(mob/living/user, atom/target)
+	// Runtime fix: shift-click can target turfs/objects. Passing a non-mob to faction_check_mob()
+	// causes "undefined variable /turf/.../var/faction".
 	if(!isliving(target))
 		return
 	var/mob/living/L = target

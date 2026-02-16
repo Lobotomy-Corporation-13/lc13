@@ -33,6 +33,8 @@
 		if(get_dist(T, src) > get_dist(closest_department, src))
 			continue
 		closest_department = T
+	// Runtime fix: closest_department is null when no department centers exist on this z-level
+	// (e.g. backstreet rooms). Accessing null.x causes "Cannot read null.x".
 	if(!closest_department)
 		relative_location = "in an unknown location."
 		return

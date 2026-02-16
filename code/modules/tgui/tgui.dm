@@ -204,6 +204,8 @@
  * return list
  */
 /datum/tgui/proc/get_payload(custom_data, with_data, with_static_data)
+	// Runtime fix: client can disconnect between UI open and get_payload().
+	// Causes "Cannot read null.prefs" on user.client.prefs.tgui_fancy.
 	if(!user?.client)
 		return
 	var/list/json_data = list()

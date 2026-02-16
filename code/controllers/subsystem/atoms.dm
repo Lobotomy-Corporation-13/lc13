@@ -158,7 +158,8 @@ SUBSYSTEM_DEF(atoms)
 	if(!initialized_changed)
 		old_initialized = initialized
 		initialized = value
-	// Nesting is handled by the initialized_changed counter - no warning needed
+	// Runtime fix: removed stack_trace here. All backstreet spawners use rand(600,600) causing
+	// simultaneous LateSpawn() calls. Nesting is handled correctly by the initialized_changed counter.
 	initialized_changed += 1
 
 /datum/controller/subsystem/atoms/proc/clear_tracked_initalize()

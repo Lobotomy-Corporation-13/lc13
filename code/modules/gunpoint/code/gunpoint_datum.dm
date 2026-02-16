@@ -170,6 +170,8 @@
 	var/count = moved_counter
 	sleep(1)
 	if(src && count == moved_counter)
+		// Runtime fix: source can be null after sleep(1) if the gunpoint datum was destroyed.
+		// Causes "Cannot execute null.log message()".
 		if(!source)
 			return
 		source.log_message("[source] shot [target] because they moved", LOG_ATTACK)
