@@ -8,7 +8,10 @@
 	var/room_width = 0
 	var/room_height = 0
 	var/room_type = "maintenance" // Used so we can place landmarks in ruins and such.
-	var/spawn_delay_min = 600
+	// Runtime fix: min and max were both 600, so rand(600, 600) always returned 600.
+	// All spawners fired at the exact same tick, causing nested maploading stack_traces.
+	// Using a range staggers the spawns across different ticks.
+	var/spawn_delay_min = 300
 	var/spawn_delay_max = 600
 
 /obj/effect/spawner/room/Initialize()

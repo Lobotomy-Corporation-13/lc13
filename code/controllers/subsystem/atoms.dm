@@ -153,13 +153,13 @@ SUBSYSTEM_DEF(atoms)
 /datum/controller/subsystem/atoms/proc/map_loader_stop()
 	clear_tracked_initalize()
 
-/// Use this to set initialized to prevent error states where old_initialized is overriden.
+/// Use this to set initialized to prevent error states where old_initialized is overriden. It keeps happening and it's cheesing me off
 /datum/controller/subsystem/atoms/proc/set_tracked_initalized(value)
 	if(!initialized_changed)
 		old_initialized = initialized
 		initialized = value
-	// Runtime fix: removed stack_trace here. All backstreet spawners use rand(600,600) causing
-	// simultaneous LateSpawn() calls. Nesting is handled correctly by the initialized_changed counter.
+	else
+		stack_trace("We started maploading while we were already maploading. You doing something odd?")
 	initialized_changed += 1
 
 /datum/controller/subsystem/atoms/proc/clear_tracked_initalize()
