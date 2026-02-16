@@ -15,6 +15,10 @@
 
 	/// Reference to the human parent
 	var/mob/living/carbon/human/human_parent
+	/// Bleed stacks to apply to target after damage resolves (applied in on_post_attack)
+	var/pending_bleed = 0
+	/// Shared SP heal cooldown - keyed by mob ref, shared across all ring skills on the same mob
+	var/static/list/sp_heal_cooldowns = list()
 
 /datum/component/ring_skill/Initialize()
 	. = ..()
@@ -26,12 +30,14 @@
 	. = ..()
 	// Common signals that most skills will use
 	RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_attack))
+	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_post_attack))
 	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_take_damage))
 	RegisterSignal(parent, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_after_take_damage))
 
 /datum/component/ring_skill/UnregisterFromParent()
 	UnregisterSignal(parent, list(
 		COMSIG_MOB_ITEM_ATTACK,
+		COMSIG_MOB_ITEM_AFTERATTACK,
 		COMSIG_MOB_APPLY_DAMGE,
 		COMSIG_MOB_AFTER_APPLY_DAMGE
 	))
@@ -42,6 +48,13 @@
 /datum/component/ring_skill/proc/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	SIGNAL_HANDLER
 	return
+
+/// Called after the parent's attack resolves - applies deferred bleed
+/datum/component/ring_skill/proc/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
+	SIGNAL_HANDLER
+	if(pending_bleed > 0 && isliving(target) && target.stat != DEAD)
+		target.apply_lc_bleed(pending_bleed)
+		pending_bleed = 0
 
 /// Called when the parent is about to take damage
 /datum/component/ring_skill/proc/on_take_damage(datum/source, damage, damagetype, def_zone)
@@ -86,16 +99,16 @@
 		count++
 	return count
 
-/// Helper to apply random status effect
+/// Helper to apply random status effect (bleed is deferred to on_post_attack)
 /datum/component/ring_skill/proc/apply_random_effect(mob/living/target, stacks = 1)
 	var/effect_type = pick("bleed", "overheat", "tremor", "mental_decay")
 	switch(effect_type)
 		if("bleed")
-			target.apply_lc_bleed(stacks)
+			pending_bleed += stacks
 		if("overheat")
 			target.apply_lc_overheat(stacks)
 		if("tremor")
-			target.apply_lc_tremor(stacks)
+			target.apply_lc_tremor(stacks, 999)
 		if("mental_decay")
 			target.apply_lc_mental_decay(stacks)
 	return effect_type
@@ -123,6 +136,17 @@
 		return
 	var/add_amount = min(stacks_to_add, ring_max - S.stacks)
 	S.add_stacks(add_amount)
+
+/// Checks if SP healing is ready for this mob (shared across all ring skills)
+/datum/component/ring_skill/proc/sp_heal_ready()
+	var/ref = REF(human_parent)
+	if(sp_heal_cooldowns[ref] && world.time < sp_heal_cooldowns[ref])
+		return FALSE
+	return TRUE
+
+/// Sets the shared SP heal cooldown for this mob
+/datum/component/ring_skill/proc/set_sp_heal_cooldown(cooldown = 1 SECONDS)
+	sp_heal_cooldowns[REF(human_parent)] = world.time + cooldown
 
 /// Helper to check if target has a specific effect
 /datum/component/ring_skill/proc/has_effect(mob/living/target, effect_type)

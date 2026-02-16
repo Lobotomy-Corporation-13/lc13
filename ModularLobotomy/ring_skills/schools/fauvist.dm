@@ -22,19 +22,12 @@
 		active_bonus = damage_bonus
 		human_parent.extra_damage += active_bonus
 
-/datum/component/ring_skill/fauvist/predators_scent/RegisterWithParent()
-	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_afterattack))
-
-/datum/component/ring_skill/fauvist/predators_scent/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK)
-	. = ..()
-
-/datum/component/ring_skill/fauvist/predators_scent/proc/on_afterattack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
+/datum/component/ring_skill/fauvist/predators_scent/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(active_bonus > 0)
 		human_parent.extra_damage -= active_bonus
 		active_bonus = 0
+	..()
+
 
 // Maddening Maw: Attacks on bleeding targets deal 15% of melee damage as additional WHITE damage
 /datum/component/ring_skill/fauvist/maddening_maw
@@ -46,26 +39,14 @@
 
 	var/white_damage_percent = 0.15
 
-/datum/component/ring_skill/fauvist/maddening_maw/RegisterWithParent()
-	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_afterattack))
+/datum/component/ring_skill/fauvist/maddening_maw/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
+	if(isliving(target) && target_is_bleeding(target))
+		// Calculate WHITE damage based on weapon force
+		var/white_damage = round(weapon.force * white_damage_percent)
+		if(white_damage > 0)
+			target.deal_damage(white_damage, WHITE_DAMAGE)
+	..()
 
-/datum/component/ring_skill/fauvist/maddening_maw/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK)
-	. = ..()
-
-/datum/component/ring_skill/fauvist/maddening_maw/proc/on_afterattack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
-	if(!isliving(target))
-		return
-
-	if(!target_is_bleeding(target))
-		return
-
-	// Calculate WHITE damage based on weapon force
-	var/white_damage = round(weapon.force * white_damage_percent)
-	if(white_damage > 0)
-		target.deal_damage(white_damage, WHITE_DAMAGE)
 
 // ========== TIER 2 ==========
 
@@ -78,12 +59,16 @@
 	choice = "a"
 
 	var/bleed_stacks = 2
+	var/next_use = 0
 
 /datum/component/ring_skill/fauvist/rending_claws/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
-	target.apply_lc_bleed(bleed_stacks)
+	pending_bleed += bleed_stacks
 
 // Savage Instinct: After hitting a bleeding target, gain +15% damage for 4 seconds
 /datum/component/ring_skill/fauvist/savage_instinct
@@ -142,22 +127,33 @@
 	choice = "a"
 
 	var/spread_stacks = 3
+	var/next_use = 0
+	/// Whether to apply spread bleed in on_post_attack
+	var/do_spread_bleed = FALSE
 
 /datum/component/ring_skill/fauvist/spreading_wounds/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
 
 	if(!target_is_bleeding(target))
 		return
+	next_use = world.time + 1 SECONDS
+	do_spread_bleed = TRUE
 
-	// Apply bleed to adjacent enemies
-	for(var/mob/living/nearby in range(1, target))
-		if(nearby == target || nearby == human_parent)
-			continue
-		if(nearby.stat == DEAD)
-			continue
+/datum/component/ring_skill/fauvist/spreading_wounds/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
+	if(do_spread_bleed)
+		do_spread_bleed = FALSE
+		// Apply bleed to adjacent enemies
+		for(var/mob/living/nearby in range(1, target))
+			if(nearby == target || nearby == human_parent)
+				continue
+			if(nearby.stat == DEAD)
+				continue
+			nearby.apply_lc_bleed(spread_stacks)
+	..()
 
-		nearby.apply_lc_bleed(spread_stacks)
 
 // Primal Terror: Hitting targets with 10+ bleed deals 20 WHITE damage and removes 5 bleed
 /datum/component/ring_skill/fauvist/primal_terror

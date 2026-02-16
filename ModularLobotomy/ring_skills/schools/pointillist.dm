@@ -14,10 +14,14 @@
 	var/stacks_applied = 3
 	var/damage_bonus = 10
 	var/active_bonus = 0
+	var/next_use = 0
 
 /datum/component/ring_skill/pointillist/hematic_coloring/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
 	var/effect_type = pick("bleed", "overheat", "tremor", "mental_decay")
 
@@ -26,30 +30,23 @@
 		active_bonus = damage_bonus
 		human_parent.extra_damage += active_bonus
 	else
-		// Apply the effect
+		// Apply the effect (bleed deferred to on_post_attack)
 		switch(effect_type)
 			if("bleed")
-				target.apply_lc_bleed(stacks_applied)
+				pending_bleed += stacks_applied
 			if("overheat")
 				target.apply_lc_overheat(stacks_applied)
 			if("tremor")
-				target.apply_lc_tremor(stacks_applied)
+				target.apply_lc_tremor(stacks_applied, 999)
 			if("mental_decay")
 				target.apply_lc_mental_decay(stacks_applied)
 
-/datum/component/ring_skill/pointillist/hematic_coloring/RegisterWithParent()
-	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_afterattack))
-
-/datum/component/ring_skill/pointillist/hematic_coloring/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK)
-	. = ..()
-
-/datum/component/ring_skill/pointillist/hematic_coloring/proc/on_afterattack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
+/datum/component/ring_skill/pointillist/hematic_coloring/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(active_bonus > 0)
 		human_parent.extra_damage -= active_bonus
 		active_bonus = 0
+	..()
+
 
 // Sanguine Pointillism: Apply 1 stack of TWO random effects. Heal 2 SP for new effects.
 /datum/component/ring_skill/pointillist/sanguine_pointillism
@@ -60,10 +57,14 @@
 	choice = "b"
 
 	var/sp_heal = 2
+	var/next_use = 0
 
 /datum/component/ring_skill/pointillist/sanguine_pointillism/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
 	var/list/effect_types = list("bleed", "overheat", "tremor", "mental_decay")
 	var/sp_healed = 0
@@ -78,18 +79,19 @@
 
 		switch(effect_type)
 			if("bleed")
-				target.apply_lc_bleed(1)
+				pending_bleed += 1
 			if("overheat")
 				target.apply_lc_overheat(1)
 			if("tremor")
-				target.apply_lc_tremor(1)
+				target.apply_lc_tremor(1, 999)
 			if("mental_decay")
 				target.apply_lc_mental_decay(1)
 
 		if(was_new)
 			sp_healed += sp_heal
 
-	if(sp_healed > 0 && ishuman(human_parent))
+	if(sp_healed > 0 && ishuman(human_parent) && sp_heal_ready())
+		set_sp_heal_cooldown()
 		human_parent.adjustSanityLoss(-sp_healed)
 		to_chat(human_parent, span_nicegreen("Sanguine Pointillism: New colors soothe your mind! (+[sp_healed] SP)"))
 
@@ -109,6 +111,9 @@
 /datum/component/ring_skill/pointillist/assignment_evaluation/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(!sp_heal_ready())
+		return
+	set_sp_heal_cooldown()
 
 	var/effect_count = count_status_effects(target)
 	var/total_heal = base_heal + (effect_count * bonus_per_effect)
@@ -138,19 +143,12 @@
 		active_bonus = min(effect_count * damage_per_effect, max_bonus)
 		human_parent.extra_damage += active_bonus
 
-/datum/component/ring_skill/pointillist/beat_the_brush/RegisterWithParent()
-	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_afterattack))
-
-/datum/component/ring_skill/pointillist/beat_the_brush/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK)
-	. = ..()
-
-/datum/component/ring_skill/pointillist/beat_the_brush/proc/on_afterattack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
+/datum/component/ring_skill/pointillist/beat_the_brush/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(active_bonus > 0)
 		human_parent.extra_damage -= active_bonus
 		active_bonus = 0
+	..()
+
 
 // ========== TIER 3 ==========
 
@@ -163,28 +161,32 @@
 	choice = "a"
 
 	var/all_effects_chance = 10
+	var/next_use = 0
 
 /datum/component/ring_skill/pointillist/paint_over/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
 	if(prob(all_effects_chance))
-		// Apply all four effects!
-		target.apply_lc_bleed(2)
+		// Apply all four effects! (bleed deferred to on_post_attack)
+		pending_bleed += 2
 		target.apply_lc_overheat(2)
-		target.apply_lc_tremor(2)
+		target.apply_lc_tremor(2, 999)
 		target.apply_lc_mental_decay(2)
 		to_chat(human_parent, span_nicegreen("Paint Over: A masterful stroke! All colors applied!"))
 	else
-		// Apply one random effect with 2x stacks
+		// Apply one random effect with 2x stacks (bleed deferred to on_post_attack)
 		var/effect_type = pick("bleed", "overheat", "tremor", "mental_decay")
 		switch(effect_type)
 			if("bleed")
-				target.apply_lc_bleed(2)
+				pending_bleed += 2
 			if("overheat")
 				target.apply_lc_overheat(2)
 			if("tremor")
-				target.apply_lc_tremor(2)
+				target.apply_lc_tremor(2, 999)
 			if("mental_decay")
 				target.apply_lc_mental_decay(2)
 
@@ -199,30 +201,26 @@
 	var/damage_per_effect = 10
 	var/bleed_per_effect = 2
 	var/active_bonus = 0
+	var/next_use = 0
 
 /datum/component/ring_skill/pointillist/practices_on_aesthetics/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
 	var/effect_count = count_status_effects(target)
 	if(effect_count > 0)
 		active_bonus = effect_count * damage_per_effect
 		human_parent.extra_damage += active_bonus
 
-		// Apply bonus bleed
-		var/bonus_bleed = effect_count * bleed_per_effect
-		target.apply_lc_bleed(bonus_bleed)
+		// Apply bonus bleed (deferred to on_post_attack)
+		pending_bleed += effect_count * bleed_per_effect
 
-/datum/component/ring_skill/pointillist/practices_on_aesthetics/RegisterWithParent()
-	. = ..()
-	RegisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK, PROC_REF(on_afterattack))
-
-/datum/component/ring_skill/pointillist/practices_on_aesthetics/UnregisterFromParent()
-	UnregisterSignal(parent, COMSIG_MOB_ITEM_AFTERATTACK)
-	. = ..()
-
-/datum/component/ring_skill/pointillist/practices_on_aesthetics/proc/on_afterattack(datum/source, mob/living/target, obj/item/weapon)
-	SIGNAL_HANDLER
+/datum/component/ring_skill/pointillist/practices_on_aesthetics/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(active_bonus > 0)
 		human_parent.extra_damage -= active_bonus
 		active_bonus = 0
+	..()
+

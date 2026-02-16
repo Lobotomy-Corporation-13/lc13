@@ -66,7 +66,8 @@
 	. = ..()
 	if(slot == ITEM_SLOT_OCLOTHING && ishuman(user))
 		armor_wearer = user
-		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged))
+		// Runtime fix: use override = TRUE to prevent "mob_after_apply_damge overridden" warning on re-equip
+		RegisterSignal(user, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_wearer_damaged), override = TRUE)
 
 /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice/dropped(mob/user)
 	. = ..()

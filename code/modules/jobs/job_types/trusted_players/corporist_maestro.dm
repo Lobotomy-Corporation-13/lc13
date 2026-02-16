@@ -75,53 +75,23 @@
 	uniform = /obj/item/clothing/under/suit/charcoal
 	shoes = /obj/item/clothing/shoes/laceup
 	// l_hand and r_hand are equipped in after_spawn() after set_species()
-	l_pocket = /obj/item/ring_apprentice_recruitment
+	l_pocket = /obj/item/apprentice_recruitment/ring_corporist
 
 // Ring Corporist Apprentice Recruitment Scroll
-/obj/item/ring_apprentice_recruitment
+/obj/item/apprentice_recruitment/ring_corporist
 	name = "corporist apprenticeship contract"
 	desc = "An ornate contract that allows you to recruit an apprentice into the Corporist school of the Ring."
-	icon = 'icons/obj/wizard.dmi'
-	icon_state = "scroll"
-	w_class = WEIGHT_CLASS_TINY
-	/// Whether this contract has been used
-	var/used = FALSE
 
-/obj/item/ring_apprentice_recruitment/attack(mob/living/target, mob/living/user)
-	if(used)
-		to_chat(user, span_warning("This contract has already been used."))
-		return
-	if(!ishuman(target))
-		to_chat(user, span_warning("You can only recruit humans."))
-		return
-	if(target == user)
-		to_chat(user, span_warning("You cannot recruit yourself."))
-		return
+/obj/item/apprentice_recruitment/ring_corporist/get_offer_text(mob/living/user)
+	return "[user] is offering to make you their Corporist Apprentice. Do you accept?"
 
-	var/mob/living/carbon/human/H = target
+/obj/item/apprentice_recruitment/ring_corporist/get_offer_title()
+	return "Apprenticeship Offer"
 
-	// Ask target if they accept
-	var/response = alert(H, "[user] is offering to make you their Corporist Apprentice. Do you accept?", "Apprenticeship Offer", "Accept", "Decline")
-
-	if(response != "Accept")
-		to_chat(user, span_warning("[H] declined your offer."))
-		return
-
-	// Check if user still has the contract and is nearby
-	if(QDELETED(src) || used || !user.is_holding(src))
-		return
-	if(get_dist(user, H) > 2)
-		to_chat(user, span_warning("[H] is too far away now."))
-		return
-
-	// Mark as used
-	used = TRUE
-
+/obj/item/apprentice_recruitment/ring_corporist/recruit_apprentice(mob/living/carbon/human/H, mob/living/user)
 	// Set attributes
-	// First raise the limit, then set the levels
 	H.set_attribute_limit(200)
 
-	// Set FORTITUDE and PRUDENCE to 200
 	var/datum/attribute/fort = H.attributes[FORTITUDE_ATTRIBUTE]
 	var/datum/attribute/prud = H.attributes[PRUDENCE_ATTRIBUTE]
 	var/datum/attribute/temp = H.attributes[TEMPERANCE_ATTRIBUTE]
@@ -144,22 +114,8 @@
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/armor = new(H.loc)
 	H.put_in_hands(armor)
 
-	// Update ID card assignment
-	// Check for ID in hand or worn
-	var/obj/item/card/id/id_card = H.get_idcard(TRUE)
-
-	// If no ID found directly, check PDA
-	if(!id_card)
-		// Check all items for a PDA with an ID
-		for(var/obj/item/pda/P in H.GetAllContents())
-			if(P.id)
-				id_card = P.id
-				break
-
-	if(id_card)
-		id_card.assignment = "Corporist Apprentice"
-		id_card.update_label()
-		id_card.update_icon()
+	// Update ID card
+	update_id_card(H, "Corporist Apprentice")
 
 	// Update mind role and add antagonist datum
 	if(H.mind)
@@ -228,6 +184,3 @@
 		However, all damage you take also inflicts 5% unhealable damage."))
 	to_chat(H, span_boldwarning("Avoid killing other players without artistic purpose. \
 		Your art is your justification."))
-
-	// Consume the contract
-	qdel(src)

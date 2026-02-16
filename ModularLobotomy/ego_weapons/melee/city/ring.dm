@@ -49,13 +49,29 @@
 	/// Timer ID for disgust buildup on non-Maestro holders
 	var/disgust_timer_id
 
+/// Checks if a user is authorized to use the Tibia without triggering the disgust system
+/obj/item/ego_weapon/city/ring/tibia/proc/is_authorized(mob/user)
+	if(!ishuman(user))
+		return TRUE
+	var/mob/living/carbon/human/H = user
+	if(H.mind?.assigned_role in list("Corporist Maestro", "Corporist Apprentice"))
+		return TRUE
+	// Disgust only triggers on city maps
+	if(!(SSmaptype.maptype in SSmaptype.citymaps))
+		return TRUE
+	// Disgust doesn't trigger on the testing range
+	if(is_tutorial_level(H.z))
+		return TRUE
+	return FALSE
+
 /obj/item/ego_weapon/city/ring/tibia/equipped(mob/user, slot)
 	. = ..()
 	if(slot == ITEM_SLOT_HANDS)
-		// Start disgust timer for non-Maestros
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			if(!istype(H.dna?.species, /datum/species/corporist_maestro))
+			if(H.mind?.assigned_role == "Corporist Apprentice")
+				to_chat(H, span_notice("The Tibia's fleshy composition makes you uneasy, but your corporist body suppresses the revulsion."))
+			else if(!is_authorized(user))
 				start_disgust_timer(H)
 
 /obj/item/ego_weapon/city/ring/tibia/dropped(mob/user)
@@ -77,7 +93,7 @@
 		deltimer(disgust_timer_id)
 		disgust_timer_id = null
 
-/// Applies disgust to non-Maestro holders and force drops at 100+
+/// Applies disgust to unauthorized holders and force drops at 100+
 /obj/item/ego_weapon/city/ring/tibia/proc/apply_disgust(mob/living/carbon/human/H)
 	if(QDELETED(H) || QDELETED(src))
 		stop_disgust_timer()
@@ -85,8 +101,8 @@
 	if(!H.is_holding(src))
 		stop_disgust_timer()
 		return
-	// Double-check they're still not a Maestro
-	if(istype(H.dna?.species, /datum/species/corporist_maestro))
+	// Double-check they're still not authorized
+	if(is_authorized(H))
 		stop_disgust_timer()
 		return
 
@@ -523,7 +539,7 @@
 	dash_action.Grant(S)
 
 	// Grant info actions
-	var/datum/action/innate/view_fascia_rules/rules_action = new(S)
+	var/datum/action/innate/view_role_rules/fascia/rules_action = new(S)
 	rules_action.Grant(S)
 
 	var/datum/action/innate/check_fascia_hunger/hunger_action = new(S)

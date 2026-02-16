@@ -32,6 +32,10 @@
 	var/swap_cooldown = 30 SECONDS
 	/// Whether furioso is currently being performed
 	var/furioso_active = FALSE
+	/// Whether the defense system is currently active against unauthorized users
+	var/defense_active = FALSE
+	/// Tracks how many times each mob has triggered the defense system (mob ref → count)
+	var/list/defense_strikes = list()
 	/// Mapping of form names to subtypes
 	var/static/list/weapon_types = list(
 		"index_vial_hatchet" = /obj/item/ego_weapon/index_vial/hatchet,
@@ -57,19 +61,161 @@
 		"index_vial_scythe"
 	)
 
+/obj/item/ego_weapon/index_vial/equip_to_best_slot(mob/M, check_hand = TRUE)
+	if(defense_active)
+		to_chat(M, span_warning("The vial is shifting too wildly to store!"))
+		return FALSE
+	. = ..()
+
+/obj/item/ego_weapon/index_vial/mob_can_equip(mob/living/M, mob/living/equipper, slot, disable_warning = FALSE, bypass_equip_delay_self = FALSE)
+	if(defense_active && slot != ITEM_SLOT_HANDS)
+		to_chat(M, span_warning("The vial is shifting too wildly to store!"))
+		return FALSE
+	. = ..()
+
 /obj/item/ego_weapon/index_vial/equipped(mob/user, slot)
 	. = ..()
 	if(!user)
 		return
 	if(slot == ITEM_SLOT_HANDS)
 		RegisterSignal(user, COMSIG_MOB_SHIFTCLICKON, PROC_REF(try_furioso))
+		// Apprentice recognition message
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			if(H.mind?.assigned_role == "Index Proxy Apprentice")
+				to_chat(H, span_notice("Caduceus begins to shake rapidly as your hands touch its frame; however, it calms down as soon as it recognizes your purpose."))
+		// Defense system: unauthorized users on city maps trigger weapon cycling + scythe attack
+		if(!is_authorized(user))
+			INVOKE_ASYNC(src, PROC_REF(start_defense_system), user)
 
 /obj/item/ego_weapon/index_vial/dropped(mob/user)
 	. = ..()
 	UnregisterSignal(user, COMSIG_MOB_SHIFTCLICKON)
+	stop_defense_system()
+
+/obj/item/ego_weapon/index_vial/Destroy()
+	stop_defense_system()
+	return ..()
+
+/// Checks if a user is authorized to use the weapon without triggering the defense system
+/obj/item/ego_weapon/index_vial/proc/is_authorized(mob/user)
+	if(!ishuman(user))
+		return TRUE
+	var/mob/living/carbon/human/H = user
+	if(H.mind?.assigned_role in list("Oracle Proxy", "Index Proxy Apprentice"))
+		return TRUE
+	// Defense only triggers on city maps
+	if(!(SSmaptype.maptype in SSmaptype.citymaps))
+		return TRUE
+	// Defense doesn't trigger on the testing range
+	if(is_tutorial_level(H.z))
+		return TRUE
+	return FALSE
+
+/// Rapidly cycles weapon forms over ~5 seconds, then attacks with scythe if still held
+/obj/item/ego_weapon/index_vial/proc/start_defense_system(mob/living/user)
+	if(defense_active)
+		return
+	defense_active = TRUE
+	w_class = WEIGHT_CLASS_BULKY
+
+	// Track how many times this mob has triggered the defense system
+	var/user_ref = REF(user)
+	var/strikes = defense_strikes[user_ref] || 0
+	strikes++
+	defense_strikes[user_ref] = strikes
+
+	// 3rd offense — skip the cycling and immediately attack
+	if(strikes >= 3)
+		to_chat(user, span_userdanger("The vial has had enough of you!"))
+		playsound(get_turf(src), 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+		if(!QDELETED(src) && !QDELETED(user) && user.is_holding(src))
+			defense_scythe_attack(user)
+		stop_defense_system()
+		return
+
+	to_chat(user, span_userdanger("The vial rejects your touch! It begins shifting wildly!"))
+	playsound(get_turf(src), 'sound/weapons/black_vial/vial_swap.ogg', 50, TRUE)
+
+	// Cycle through random weapon forms with decreasing intervals (~5 seconds total)
+	var/list/intervals = list(5, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1)
+	for(var/delay in intervals)
+		if(QDELETED(src) || QDELETED(user) || !user.is_holding(src))
+			stop_defense_system()
+			return
+		var/random_form = pick(weapon_forms)
+		icon_state = random_form
+		inhand_icon_state = random_form
+		if(isliving(user))
+			user.update_inv_hands()
+		playsound(get_turf(src), 'sound/weapons/black_vial/vial_swap.ogg', 25, TRUE)
+		sleep(delay)
+
+	// Still holding after ~5 seconds — attack with scythe
+	if(!QDELETED(src) && !QDELETED(user) && user.is_holding(src))
+		defense_scythe_attack(user)
+	stop_defense_system()
+
+/// Transforms to scythe and attacks the unauthorized user
+/obj/item/ego_weapon/index_vial/proc/defense_scythe_attack(mob/living/user)
+	icon_state = "index_vial_scythe"
+	inhand_icon_state = "index_vial_scythe"
+	user.update_inv_hands()
+	to_chat(user, span_userdanger("The vial locks into scythe form and turns on you!"))
+	playsound(get_turf(src), 'sound/weapons/black_vial/index_vial_scythe.ogg', 50, TRUE)
+	user.deal_damage(80, PALE_DAMAGE, src, flags = DAMAGE_FORCED)
+	user.dropItemToGround(src, TRUE)
+
+/// Stops the defense system and resets to the default inactive vial state
+/obj/item/ego_weapon/index_vial/proc/stop_defense_system()
+	defense_active = FALSE
+	w_class = initial(w_class)
+	icon_state = "index_vial_inactive"
+	inhand_icon_state = "index_vial_inactive"
+	unlocked_list = list()
+	unlocked = FALSE
+	swing_count = 0
+	furioso_active = FALSE
+
+/obj/item/ego_weapon/index_vial/attack_hand(mob/user)
+	// If someone unauthorized tries to grab the weapon from another mob, slice them
+	if(ismob(loc) && loc != user && !is_authorized(user))
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			to_chat(H, span_userdanger("The vial slices your hand as you reach for it!"))
+			playsound(get_turf(src), 'sound/weapons/black_vial/index_vial_scythe.ogg', 50, TRUE)
+			H.deal_damage(80, PALE_DAMAGE, src, flags = DAMAGE_FORCED)
+		return
+	return ..()
+
+/obj/item/ego_weapon/index_vial/can_be_pulled(user, grab_state, force)
+	if(iscarbon(user) && !is_authorized(user))
+		var/mob/living/carbon/C = user
+		to_chat(C, span_userdanger("The vial slices your hand as you reach for it!"))
+		playsound(get_turf(src), 'sound/weapons/black_vial/index_vial_scythe.ogg', 50, TRUE)
+		C.deal_damage(80, PALE_DAMAGE, src, flags = DAMAGE_FORCED)
+		return FALSE
+	return ..()
+
+/obj/item/ego_weapon/index_vial/canStrip(mob/who)
+	. = ..()
+	if(!.)
+		return TRUE // Pass through to doStrip for the damage check
+
+/obj/item/ego_weapon/index_vial/doStrip(mob/who)
+	if(!is_authorized(who))
+		if(ishuman(who))
+			var/mob/living/carbon/human/H = who
+			to_chat(H, span_userdanger("The vial slices your hand as you reach for it!"))
+			playsound(get_turf(src), 'sound/weapons/black_vial/index_vial_scythe.ogg', 50, TRUE)
+			H.deal_damage(80, PALE_DAMAGE, src, flags = DAMAGE_FORCED)
+		return FALSE
+	return ..()
 
 /obj/item/ego_weapon/index_vial/attack_self(mob/user)
 	if(!CanUseEgo(user))
+		return
+	if(!is_authorized(user))
 		return
 
 	// Check cooldown
@@ -243,36 +389,41 @@
 		furioso_active = FALSE
 		return
 
-	// Weapon data for Furioso - each weapon has: name, icon, hits, damage, damtype, sound
+	// Weapon data for Furioso - each weapon has: name, icon, hits, damage, damtype, sound, move
 	// Note: damtype uses literal strings ("red", "white", "black", "pale") to ensure proper retrieval from the nested list
 	var/static/list/furioso_weapons = list(
-		list("name" = "hatchet", "icon" = "index_vial_hatchet", "hits" = 5, "damage" = 30, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hatchet.ogg'),
-		list("name" = "stiletto", "icon" = "index_vial_stiletto", "hits" = 4, "damage" = 35, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_stiletto.ogg'),
-		list("name" = "bastard sword", "icon" = "index_vial_bsword", "hits" = 2, "damage" = 75, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_bsword.ogg'),
-		list("name" = "rapier", "icon" = "index_vial_rapier", "hits" = 3, "damage" = 50, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_rapier.ogg'),
-		list("name" = "hammer", "icon" = "index_vial_hammer", "hits" = 2, "damage" = 90, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hammer.ogg'),
-		list("name" = "greatsword", "icon" = "index_vial_gsword", "hits" = 2, "damage" = 100, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_gsword.ogg'),
-		list("name" = "lance", "icon" = "index_vial_lance", "hits" = 2, "damage" = 95, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_lance.ogg'),
-		list("name" = "whip", "icon" = "index_vial_whip", "hits" = 2, "damage" = 60, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_whip.ogg'),
-		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 80, "damtype" = "pale", "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg')
+		list("name" = "hatchet", "icon" = "index_vial_hatchet", "hits" = 5, "damage" = 30, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hatchet.ogg', "move" = "flurry"),
+		list("name" = "stiletto", "icon" = "index_vial_stiletto", "hits" = 4, "damage" = 35, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_stiletto.ogg', "move" = "circle"),
+		list("name" = "bastard sword", "icon" = "index_vial_bsword", "hits" = 2, "damage" = 75, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_bsword.ogg', "move" = "dashthrough"),
+		list("name" = "rapier", "icon" = "index_vial_rapier", "hits" = 3, "damage" = 50, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_rapier.ogg', "move" = "lunge"),
+		list("name" = "hammer", "icon" = "index_vial_hammer", "hits" = 2, "damage" = 90, "damtype" = "red", "sound" = 'sound/weapons/black_vial/index_vial_hammer.ogg', "move" = "leapsmash"),
+		list("name" = "greatsword", "icon" = "index_vial_gsword", "hits" = 2, "damage" = 100, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_gsword.ogg', "move" = "dashthrough_heavy"),
+		list("name" = "lance", "icon" = "index_vial_lance", "hits" = 2, "damage" = 95, "damtype" = "white", "sound" = 'sound/weapons/black_vial/index_vial_lance.ogg', "move" = "charge"),
+		list("name" = "whip", "icon" = "index_vial_whip", "hits" = 2, "damage" = 60, "damtype" = "black", "sound" = 'sound/weapons/black_vial/index_vial_whip.ogg', "move" = "ranged"),
+		list("name" = "scythe", "icon" = "index_vial_scythe", "hits" = 1, "damage" = 80, "damtype" = "pale", "sound" = 'sound/weapons/black_vial/index_vial_scythe.ogg', "move" = "reap")
+	)
+
+	/// Beam trail colors by damage type
+	var/static/list/beam_colors = list(
+		"red" = "#9e1638",
+		"white" = "#a8c8d8",
+		"black" = "#4a0e4e",
+		"pale" = "#d0d0d0"
 	)
 
 	furioso_start(user, targets)
 
+	// Save original target list so furioso_end can clean up all muted targets,
+	// even ones removed from 'targets' during the attack loop due to death
+	var/list/all_targets = targets.Copy()
+
 	for(var/list/weapon_data in furioso_weapons)
-		// Get a valid target
-		var/mob/living/target = pick(targets)
-		if(QDELETED(target) || target.stat == DEAD)
-			targets -= target
-			if(!LAZYLEN(targets))
-				break
-			target = pick(targets)
-			if(QDELETED(target))
-				break
+		var/mob/living/target = furioso_pick_target(targets)
+		if(!target)
+			break
+		furioso_attack(user, target, weapon_data, beam_colors)
 
-		furioso_attack(user, target, weapon_data)
-
-	furioso_end(user, targets)
+	furioso_end(user, all_targets)
 
 /obj/item/ego_weapon/index_vial/proc/furioso_start(mob/living/user, list/targets)
 	ADD_TRAIT(src, TRAIT_NODROP, STICKY_NODROP)
@@ -281,36 +432,248 @@
 	user.anchored = TRUE
 	for(var/mob/living/L in targets)
 		L.Stun(60 SECONDS, ignore_canstun = TRUE)
-		ADD_TRAIT(L, TRAIT_MUTE, TIMESTOP_TRAIT)
+		if(!istype(L, /mob/living/simple_animal/hostile/debugdummy))
+			ADD_TRAIT(L, TRAIT_MUTE, TIMESTOP_TRAIT)
 		walk(L, 0)
 		if(isanimal(L))
 			var/mob/living/simple_animal/S = L
 			S.toggle_ai(AI_OFF)
 
-/obj/item/ego_weapon/index_vial/proc/furioso_attack(mob/living/user, mob/living/target, list/weapon_data)
-	// Update visuals
+/// Picks a valid living target from the list, removing dead/deleted ones. Returns null if none remain.
+/obj/item/ego_weapon/index_vial/proc/furioso_pick_target(list/targets)
+	var/mob/living/target = pick(targets)
+	if(QDELETED(target) || target.stat == DEAD)
+		targets -= target
+		if(!LAZYLEN(targets))
+			return null
+		target = pick(targets)
+		if(QDELETED(target))
+			return null
+	return target
+
+/// Dispatches each furioso weapon attack to its unique movement helper
+/obj/item/ego_weapon/index_vial/proc/furioso_attack(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	if(QDELETED(user) || QDELETED(target))
+		return
+	// Update weapon visuals
 	icon_state = weapon_data["icon"]
 	inhand_icon_state = weapon_data["icon"]
 	user.update_inv_hands()
 
-	// Teleport to target
-	var/turf/tp_loc = get_step(target.loc, pick(GLOB.cardinals))
-	if(!tp_loc)
-		tp_loc = get_turf(target)
-	var/turf/prev_loc = get_turf(user)
-	user.forceMove(tp_loc)
-	user.dir = get_dir(user, target)
-	prev_loc.Beam(tp_loc, "pt_ray", time = 10)
+	var/move_type = weapon_data["move"]
+	switch(move_type)
+		if("flurry")
+			furioso_flurry(user, target, weapon_data, colors)
+		if("circle")
+			furioso_circle(user, target, weapon_data, colors)
+		if("dashthrough")
+			furioso_dashthrough(user, target, weapon_data, colors, FALSE)
+		if("dashthrough_heavy")
+			furioso_dashthrough(user, target, weapon_data, colors, TRUE)
+		if("lunge")
+			furioso_lunge(user, target, weapon_data, colors)
+		if("leapsmash")
+			furioso_leapsmash(user, target, weapon_data, colors)
+		if("charge")
+			furioso_charge(user, target, weapon_data, colors)
+		if("ranged")
+			furioso_ranged(user, target, weapon_data, colors)
+		if("reap")
+			furioso_reap(user, target, weapon_data, colors)
 
-	// Perform hits
-	var/hits = weapon_data["hits"]
-	var/damage = weapon_data["damage"]
-	var/damtype = weapon_data["damtype"]
-	for(var/i in 1 to hits)
-		playsound(user, weapon_data["sound"], 40, TRUE)
-		new /obj/effect/temp_visual/smash_effect(get_turf(target))
-		target.deal_damage(damage, damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+/// Shared dash helper: afterimage at origin, forceMove, colored beam trail, face target
+/obj/item/ego_weapon/index_vial/proc/furioso_dash_to(mob/living/user, turf/destination, mob/living/target, beam_color)
+	var/turf/origin = get_turf(user)
+	new /obj/effect/temp_visual/decoy/fading/halfsecond(origin, user)
+	user.forceMove(destination)
+	user.dir = get_dir(user, target)
+	var/datum/beam/trail = origin.Beam(user, "1-full", time = 2)
+	if(trail && beam_color)
+		trail.visuals.color = beam_color
+
+/// Shared hit helper: sound, visual effect, damage
+/obj/item/ego_weapon/index_vial/proc/furioso_hit(mob/living/user, mob/living/target, list/weapon_data, effect_type)
+	if(QDELETED(user) || QDELETED(target))
+		return
+	playsound(user, weapon_data["sound"], 40, TRUE)
+	user.do_attack_animation(target)
+	if(effect_type)
+		new effect_type(get_turf(target))
+	target.deal_damage(weapon_data["damage"], weapon_data["damtype"], user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+/// Hatchet: rapid repositioning around target between each hit
+/obj/item/ego_weapon/index_vial/proc/furioso_flurry(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	var/beam_color = colors[weapon_data["damtype"]]
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		var/turf/dest = get_step(target.loc, pick(GLOB.cardinals))
+		if(!dest)
+			dest = get_turf(target)
+		furioso_dash_to(user, dest, target, beam_color)
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/smash_effect)
+		sleep(0.15 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Stiletto: orbit target, hitting from each cardinal direction
+/obj/item/ego_weapon/index_vial/proc/furioso_circle(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	var/beam_color = colors[weapon_data["damtype"]]
+	var/list/cardinals = list(NORTH, EAST, SOUTH, WEST)
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		var/dir = cardinals[((i - 1) % 4) + 1]
+		var/turf/dest = get_step(target.loc, dir)
+		if(!dest)
+			dest = get_turf(target)
+		furioso_dash_to(user, dest, target, beam_color)
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/slice)
 		sleep(0.2 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Bastard Sword / Greatsword: dash through target and back. heavy = camera shake + red smash
+/obj/item/ego_weapon/index_vial/proc/furioso_dashthrough(mob/living/user, mob/living/target, list/weapon_data, list/colors, heavy)
+	var/beam_color = colors[weapon_data["damtype"]]
+	var/effect_type = heavy ? /obj/effect/temp_visual/smash_effect/red : /obj/effect/temp_visual/dir_setting/slash
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Dash through target to the other side
+		var/turf/dest = get_ranged_target_turf_direct(user, target, get_dist(user, target) + 2)
+		if(!dest)
+			dest = get_turf(target)
+		furioso_dash_to(user, dest, target, beam_color)
+		furioso_hit(user, target, weapon_data, effect_type)
+		if(heavy)
+			shake_camera(target, 1, 2)
+		sleep(0.3 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Rapier: retreat then lunge from distance for each hit
+/obj/item/ego_weapon/index_vial/proc/furioso_lunge(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	var/beam_color = colors[weapon_data["damtype"]]
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Retreat to 3 tiles away
+		var/turf/retreat = get_ranged_target_turf_direct(target, user, 3)
+		if(retreat)
+			user.forceMove(retreat)
+			user.dir = get_dir(user, target)
+		sleep(0.1 SECONDS)
+		// Lunge in
+		var/turf/dest = get_step(target.loc, get_dir(user, target))
+		if(!dest)
+			dest = get_turf(target)
+		furioso_dash_to(user, dest, target, beam_color)
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/slice)
+		sleep(0.2 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Hammer: leap from above with pixel animation and camera shake
+/obj/item/ego_weapon/index_vial/proc/furioso_leapsmash(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Afterimage + animate upward and fade out
+		new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(user), user)
+		animate(user, 0.3 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y + 16, alpha = 0)
+		sleep(0.3 SECONDS)
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Land next to target
+		var/turf/dest = get_step(target.loc, pick(GLOB.cardinals))
+		if(!dest)
+			dest = get_turf(target)
+		user.forceMove(dest)
+		user.dir = get_dir(user, target)
+		// Slam down from above
+		user.pixel_y = user.base_pixel_y + 16
+		animate(user, 0.15 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y, alpha = 255)
+		sleep(0.15 SECONDS)
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/smash_effect/red)
+		shake_camera(target, 1.5, 3)
+		sleep(0.3 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Lance: charge from distance through target
+/obj/item/ego_weapon/index_vial/proc/furioso_charge(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	var/beam_color = colors[weapon_data["damtype"]]
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Position 4 tiles away
+		var/turf/retreat = get_ranged_target_turf_direct(target, user, 4)
+		if(retreat)
+			user.forceMove(retreat)
+			user.dir = get_dir(user, target)
+		new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(user), user)
+		sleep(0.15 SECONDS)
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Charge through target
+		var/turf/dest = get_ranged_target_turf_direct(user, target, get_dist(user, target) + 2)
+		if(!dest)
+			dest = get_turf(target)
+		furioso_dash_to(user, dest, target, beam_color)
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/smash_effect)
+		sleep(0.3 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Whip: stay at range and lash with beam visuals
+/obj/item/ego_weapon/index_vial/proc/furioso_ranged(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	var/beam_color = colors[weapon_data["damtype"]]
+	// Position at 3 tiles away
+	var/turf/range_pos = get_ranged_target_turf_direct(target, user, 3)
+	if(range_pos && get_dist(user, target) != 3)
+		furioso_dash_to(user, range_pos, target, beam_color)
+	for(var/i in 1 to weapon_data["hits"])
+		if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+			return
+		// Beam lash from user to target represents the whip
+		var/turf/user_turf = get_turf(user)
+		var/datum/beam/lash = user_turf.Beam(target, "1-full", time = 3)
+		if(lash && beam_color)
+			lash.visuals.color = beam_color
+		furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/slice)
+		sleep(0.4 SECONDS)
+	sleep(0.2 SECONDS)
+
+/// Scythe: dramatic finisher leap (thumb-style fade out, teleport, slam in)
+/obj/item/ego_weapon/index_vial/proc/furioso_reap(mob/living/user, mob/living/target, list/weapon_data, list/colors)
+	if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+		return
+	// Afterimage at origin
+	new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(user), user)
+
+	// Fade out with upward arc toward target
+	var/horizontal_difference = target.x - user.x
+	var/x_offset = 0
+	if(horizontal_difference > 0)
+		x_offset = 32
+	else if(horizontal_difference < 0)
+		x_offset = -32
+	animate(user, 0.4 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y + 16, pixel_x = user.base_pixel_x + x_offset, alpha = 0)
+	sleep(0.4 SECONDS)
+	if(QDELETED(src) || QDELETED(user) || QDELETED(target))
+		return
+
+	// Teleport to target
+	var/turf/dest = get_step(target.loc, pick(GLOB.cardinals))
+	if(!dest)
+		dest = get_turf(target)
+	user.forceMove(dest)
+	user.dir = get_dir(user, target)
+
+	// Slam in from opposite direction (appear to come from where we started)
+	user.pixel_x = user.base_pixel_x + (x_offset * -2)
+	user.pixel_y = user.base_pixel_y + 16
+	animate(user, 0.2 SECONDS, easing = QUAD_EASING, pixel_y = user.base_pixel_y, pixel_x = user.base_pixel_x, alpha = 255)
+	sleep(0.2 SECONDS)
+
+	// Final strike
+	furioso_hit(user, target, weapon_data, /obj/effect/temp_visual/smash_effect)
+	shake_camera(target, 2, 4)
 	sleep(0.3 SECONDS)
 
 /obj/item/ego_weapon/index_vial/proc/furioso_end(mob/living/user, list/targets)
@@ -319,6 +682,11 @@
 	user.anchored = FALSE
 	REMOVE_TRAIT(src, TRAIT_NODROP, STICKY_NODROP)
 
+	// Ensure pixel position and alpha are reset (leapsmash/reap use animate())
+	user.pixel_x = user.base_pixel_x
+	user.pixel_y = user.base_pixel_y
+	user.alpha = 255
+
 	for(var/mob/living/L in targets)
 		L.AdjustStun(-60 SECONDS, ignore_canstun = TRUE)
 		REMOVE_TRAIT(L, TRAIT_MUTE, TIMESTOP_TRAIT)
@@ -326,14 +694,12 @@
 			var/mob/living/simple_animal/S = L
 			S.toggle_ai(initial(S.AIStatus))
 
-	// Reset to inactive state
-	icon_state = "index_vial_inactive"
-	inhand_icon_state = "index_vial_inactive"
-	user.update_inv_hands()
-	unlocked = FALSE
-	unlocked_list = list()
-	furioso_active = FALSE
+	// Replace with a fresh base vial to fully reset force/damtype/w_class/etc.
+	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user.drop_location())
+	new_vial.defense_strikes = defense_strikes.Copy()
 	to_chat(user, span_notice("Furioso complete. The vial returns to its inactive state."))
+	qdel(src)
+	user.put_in_hands(new_vial)
 
 // ============================================
 // HATCHET - Small, fast weapon with protection on hit

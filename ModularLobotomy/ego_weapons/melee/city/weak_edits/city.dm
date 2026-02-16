@@ -301,7 +301,7 @@
 /obj/item/ego_weapon/city/index_apprentice_chains
 	name = "index apprentice chains"
 	desc = "Chains granted by the index proxy apprentice armor."
-	special = "Fulfill your prescript by slaying your target 3 times to transform. Use in hand to receive a prescript. Click at range to leap attack (grants 1 prescript completion). Hit the correct bodypart on humans to gain progress. Reaching half health also triggers the transformation."
+	special = "Fulfill your prescript by slaying your target 3 times to transform. Use in hand to receive a prescript. Click at range to leap to a tile — landing creates a 3x3 shockwave that grants prescript progress if it hits someone. Hit the correct bodypart on humans to gain progress. Reaching half health also triggers the transformation."
 	icon = 'icons/obj/index_sora_base.dmi'
 	icon_state = "apprentice_chains"
 	lefthand_file = 'icons/obj/index_sora_worn.dmi'
@@ -442,61 +442,64 @@
 	if(linked_armor && linked_armor.prescript_completions >= 3)
 		linked_armor.transform_to_procuration(user)
 
-// Leap attack - click at range
+// Leap attack - click at range to leap to a tile
 /obj/item/ego_weapon/city/index_apprentice_chains/afterattack(atom/target, mob/living/user, proximity_flag, params)
 	. = ..()
 	if(proximity_flag)
 		return
 	if(!can_attack)
 		return
-	if(!isliving(target))
+	var/turf/target_turf = get_turf(target)
+	if(!target_turf)
 		return
-	var/mob/living/A = target
 	if(leap_cooldown > world.time)
 		to_chat(user, span_warning("Your leap is still recharging!"))
 		return
-	if(!can_see(user, A, leap_range))
+	if(!can_see(user, target_turf, leap_range))
 		to_chat(user, span_warning("Target is too far or out of sight!"))
 		return
-	if(do_after(user, 5, src))
-		leap_cooldown = world.time + leap_cooldown_time
-		playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
-		animate(user, alpha = 1, pixel_x = 0, pixel_z = 16, time = 0.1 SECONDS)
-		user.pixel_z = 16
-		sleep(0.5 SECONDS)
-		if(QDELETED(user))
-			return
-		else if(QDELETED(A) || !can_see(user, A, leap_range))
-			animate(user, alpha = 255, pixel_x = 0, pixel_z = -16, time = 0.1 SECONDS)
-			user.pixel_z = 0
-			return
-		for(var/i in 2 to get_dist(user, A))
-			step_towards(user, A)
-		if(get_dist(user, A) < 2)
-			LeapAttack(A, user)
-		to_chat(user, span_warning("You leap towards [A]!"))
-		animate(user, alpha = 255, pixel_x = 0, pixel_z = -16, time = 0.1 SECONDS)
-		user.pixel_z = 0
+	if(!do_after(user, 5, src))
+		return
 
-/obj/item/ego_weapon/city/index_apprentice_chains/proc/LeapAttack(atom/A, mob/living/user)
-	A.attackby(src, user)
-	can_attack = FALSE
-	addtimer(CALLBACK(src, PROC_REF(LeapReset)), 20)
-	// Grant one prescript completion for leap attack
-	if(linked_armor)
+	// Set cooldown
+	leap_cooldown = world.time + leap_cooldown_time
+
+	// Jump arc animation — afterimage at origin, arc upward
+	playsound(src, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
+	new /obj/effect/temp_visual/decoy/fading/halfsecond(get_turf(user), user)
+	animate(user, alpha = 128, pixel_z = 16, time = 0.2 SECONDS)
+	sleep(0.3 SECONDS)
+	if(QDELETED(user) || QDELETED(src))
+		return
+
+	// Land on target tile
+	user.forceMove(target_turf)
+	animate(user, alpha = 255, pixel_z = 0, time = 0.15 SECONDS)
+	sleep(0.15 SECONDS)
+
+	// 3x3 AoE shockwave on landing
+	to_chat(user, span_warning("You slam into the ground!"))
+	playsound(target_turf, 'sound/weapons/smash.ogg', 50, TRUE)
+	var/list/already_hit = list()
+	for(var/turf/T in range(target_turf, 1))
+		new /obj/effect/temp_visual/smash_effect(T)
+		already_hit = user.HurtInTurf(T, already_hit, force, damtype, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+	// Grant prescript completion if hit at least one mob
+	if(LAZYLEN(already_hit) && linked_armor && linked_armor.prescript_completions < 3)
 		linked_armor.prescript_completions++
-		to_chat(user, span_userdanger("Your leap grants you prescript progress! ([linked_armor.prescript_completions]/3)"))
-	playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
-	check_transform(user)
+		to_chat(user, span_userdanger("Your leap grants prescript progress! ([linked_armor.prescript_completions]/3)"))
+		playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
+		check_transform(user)
 
-/obj/item/ego_weapon/city/index_apprentice_chains/proc/LeapReset()
-	can_attack = TRUE
+	// Safety reset
+	user.pixel_z = 0
 
 //Effloresced E.G.O :: Procuration - upgraded weapon from chains
 /obj/item/ego_weapon/city/index_procuration
 	name = "Effloresced E.G.O :: Procuration"
 	desc = "H-having such an unshakable conviction about what's good and evil is nothing short of amazing, he said..."
-	special = "Click at range to dash attack. Dashing costs 1 charge (regain 1 charge every 10 seconds). Dashing applies a 2 second slowdown. Dashing while slowed resets the slowdown timer."
+	special = "Click at range to dash attack. Every 3 melee hits restores a dash charge. Use in hand to charge up — after a 2 second slowdown, your next dash is empowered, unleashing a 3-wide wave of claws from your origin to your destination."
 	icon = 'icons/obj/index_sora_ego_base.dmi'
 	icon_state = "procuration"
 	lefthand_file = 'icons/obj/index_sora_ego_worn.dmi'
@@ -528,6 +531,14 @@
 	var/is_slowed = FALSE
 	/// Timer ID for slowdown removal
 	var/slowdown_timer_id
+	/// Melee hit counter for charge regen
+	var/melee_hit_counter = 0
+	/// Hits required to regain a charge
+	var/hits_per_charge = 3
+	/// Whether next dash is empowered (triggers claw wave)
+	var/empowered = FALSE
+	/// Whether currently charging empower
+	var/charging_empower = FALSE
 
 /obj/item/ego_weapon/city/index_procuration/Initialize(mapload)
 	. = ..()
@@ -546,6 +557,11 @@
 /obj/item/ego_weapon/city/index_procuration/examine(mob/user)
 	. = ..()
 	. += span_notice("Dash charges: [dash_charges]/[max_dash_charges]")
+	. += span_notice("Hits until charge: [hits_per_charge - melee_hit_counter]/[hits_per_charge]")
+	if(charging_empower)
+		. += span_warning("Focusing energy...")
+	else if(empowered)
+		. += span_warning("Your next dash is empowered!")
 
 /obj/item/ego_weapon/city/index_procuration/AllowDrop()
 	return FALSE
@@ -562,6 +578,48 @@
 
 /obj/item/ego_weapon/city/index_procuration/canStrip(mob/who)
 	return FALSE
+
+// Melee attack — every 3 hits regains a dash charge
+/obj/item/ego_weapon/city/index_procuration/attack(mob/living/target, mob/living/user)
+	. = ..()
+	if(target.stat == DEAD)
+		return
+	melee_hit_counter++
+	if(melee_hit_counter >= hits_per_charge)
+		melee_hit_counter = 0
+		if(dash_charges < max_dash_charges)
+			dash_charges++
+			to_chat(user, span_notice("Your strikes restore a dash charge! ([dash_charges]/[max_dash_charges])"))
+			playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 30, 0, 4)
+
+// Use in hand to begin empowering next dash (2 second charge-up with slowdown)
+/obj/item/ego_weapon/city/index_procuration/attack_self(mob/user)
+	. = ..()
+	if(empowered)
+		to_chat(user, span_warning("Your next dash is already empowered!"))
+		return
+	if(charging_empower)
+		to_chat(user, span_warning("You are already focusing your energy!"))
+		return
+	if(dash_charges <= 0)
+		to_chat(user, span_warning("You need at least 1 dash charge to empower!"))
+		return
+	charging_empower = TRUE
+	to_chat(user, span_warning("You begin focusing your energy..."))
+	playsound(get_turf(user), 'sound/weapons/bladeslice.ogg', 50, TRUE)
+	// Apply slowdown during charge-up
+	user.add_movespeed_modifier(/datum/movespeed_modifier/procuration_empower)
+	addtimer(CALLBACK(src, PROC_REF(finish_empower), user), 2 SECONDS)
+
+/// Called after 2 second charge-up — removes slowdown and empowers next dash
+/obj/item/ego_weapon/city/index_procuration/proc/finish_empower(mob/living/user)
+	charging_empower = FALSE
+	if(QDELETED(src) || QDELETED(user))
+		return
+	user.remove_movespeed_modifier(/datum/movespeed_modifier/procuration_empower)
+	empowered = TRUE
+	to_chat(user, span_userdanger("Your energy is focused! Your next dash will unleash a wave of claws!"))
+	playsound(get_turf(user), 'sound/abnormalities/onesin/bless.ogg', 30, 0, 4)
 
 // Dash attack - click at range
 /obj/item/ego_weapon/city/index_procuration/afterattack(atom/target, mob/living/user, proximity_flag, params)
@@ -585,6 +643,12 @@
 	// Start recharge timer if not already running
 	if(!recharge_timer_id)
 		recharge_timer_id = addtimer(CALLBACK(src, PROC_REF(recharge_dash)), dash_recharge_time, TIMER_STOPPABLE)
+
+	// Save pre-dash position for empowered claw wave
+	var/turf/pre_dash_turf = get_turf(user)
+	var/was_empowered = empowered
+	if(was_empowered)
+		empowered = FALSE
 
 	// Perform dash
 	var/turf/target_turf = get_turf(user)
@@ -628,6 +692,10 @@
 	// Apply slowdown
 	ApplyDashSlowdown(user)
 
+	// Trigger claw wave if dash was empowered
+	if(was_empowered)
+		INVOKE_ASYNC(src, PROC_REF(claw_wave), user, pre_dash_turf, get_turf(user))
+
 /obj/item/ego_weapon/city/index_procuration/proc/ApplyDashSlowdown(mob/living/user)
 	// If already slowed, reset the timer
 	if(is_slowed && slowdown_timer_id)
@@ -657,7 +725,70 @@
 		if(dash_charges < max_dash_charges)
 			recharge_timer_id = addtimer(CALLBACK(src, PROC_REF(recharge_dash)), dash_recharge_time, TIMER_STOPPABLE)
 
+/// Traveling claw wave — spawns after empowered dash with 1 second delay
+/// Wave is 3 tiles wide perpendicular to the dash direction
+/obj/item/ego_weapon/city/index_procuration/proc/claw_wave(mob/living/user, turf/origin, turf/destination)
+	sleep(1 SECONDS)
+	if(QDELETED(src) || QDELETED(user))
+		return
+
+	var/list/wave_turfs = getline(origin, destination)
+	var/list/already_hit = list()
+	var/claw_damage = force * 1.5 // 50% more than weapon force
+
+	// Determine perpendicular direction for 3-wide wave
+	var/dx = destination.x - origin.x
+	var/dy = destination.y - origin.y
+	var/perp_dir1
+	var/perp_dir2
+	if(abs(dx) >= abs(dy))
+		// Primarily horizontal dash — expand vertically
+		perp_dir1 = NORTH
+		perp_dir2 = SOUTH
+	else
+		// Primarily vertical dash — expand horizontally
+		perp_dir1 = EAST
+		perp_dir2 = WEST
+
+	for(var/turf/T in wave_turfs)
+		if(QDELETED(src) || QDELETED(user))
+			return
+
+		// Build 3-wide strip perpendicular to dash direction
+		var/list/strip_turfs = list(T)
+		var/turf/side1 = get_step(T, perp_dir1)
+		var/turf/side2 = get_step(T, perp_dir2)
+		if(side1)
+			strip_turfs += side1
+		if(side2)
+			strip_turfs += side2
+
+		// Visual effects — dark claw marks across the strip
+		for(var/turf/AT in strip_turfs)
+			var/obj/effect/temp_visual/cleave/claw = new(AT)
+			claw.color = "#3a3a3a"
+
+		// Damage across the 3-wide strip
+		for(var/turf/AT in strip_turfs)
+			for(var/mob/living/L in AT)
+				if(L == user)
+					continue
+				if(L in already_hit)
+					continue
+				if(L.status_flags & GODMODE)
+					continue
+				if(L.stat == DEAD)
+					continue
+				already_hit += L
+				L.deal_damage(claw_damage, PALE_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+		playsound(T, 'sound/weapons/bladeslice.ogg', 40, TRUE)
+		sleep(0.1 SECONDS)
+
 /datum/movespeed_modifier/procuration_dash
+	multiplicative_slowdown = 1.5
+
+/datum/movespeed_modifier/procuration_empower
 	multiplicative_slowdown = 1.5
 
 //Ability for summoning chains

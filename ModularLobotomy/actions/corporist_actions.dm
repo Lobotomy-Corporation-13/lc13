@@ -367,20 +367,21 @@
 	return TRUE
 
 // ================== VIEW RING RULES ==================
-// Action to view Ring rules and tenants
+// Action to view Ring rules and tenants (uses general view_role_rules base)
 
-/datum/action/innate/view_ring_rules
+/datum/action/innate/view_role_rules/ring_artist
 	name = "View Ring Rules"
 	desc = "Review your artistic rules and tenants."
-	icon_icon = 'icons/hud/actions.dmi'
-	button_icon_state = "round_end"
-	check_flags = AB_CHECK_CONSCIOUS
+	rules_title = "Ring Artist Rules"
+	accent_color = "#ff6b6b"
+	window_name = "ring_rules"
 
-/datum/action/innate/view_ring_rules/Activate()
+/datum/action/innate/view_role_rules/ring_artist/Activate()
 	var/mob/living/carbon/human/H = owner
 	if(!istype(H) || !H.mind)
 		return
 
+	// Use antag datum's HTML if available, otherwise fall back to base
 	var/datum/antagonist/ring_artist/artist = H.mind.has_antag_datum(/datum/antagonist/ring_artist)
 	if(!artist)
 		to_chat(H, span_warning("You are not a Ring artist."))
@@ -391,67 +392,22 @@
 
 // ================== FASCIA SPIRIT ACTIONS ==================
 
-// View Fascia Rules - explains the spirit's goals
-/datum/action/innate/view_fascia_rules
+// View Fascia Rules - explains the spirit's goals (uses general view_role_rules base)
+/datum/action/innate/view_role_rules/fascia
 	name = "View Fascia Rules"
 	desc = "Review your role as the Fascia's spirit."
-	icon_icon = 'icons/hud/actions.dmi'
-	button_icon_state = "round_end"
-	check_flags = AB_CHECK_CONSCIOUS
+	rules_title = "The Fascia"
+	accent_color = "#8b4513"
+	window_name = "fascia_rules"
+	window_size = "500x550"
 
-/datum/action/innate/view_fascia_rules/Activate()
-	var/mob/living/simple_animal/fascia_spirit/S = owner
-	if(!istype(S))
+/datum/action/innate/view_role_rules/fascia/Activate()
+	if(!istype(owner, /mob/living/simple_animal/fascia_spirit))
 		return
+	..()
 
-	var/html = {"
-<!DOCTYPE html>
-<html>
-<head>
-	<style>
-		body {
-			background-color: #1a1a1a;
-			color: #c0c0c0;
-			font-family: 'Segoe UI', Tahoma, sans-serif;
-			padding: 20px;
-			line-height: 1.6;
-		}
-		h1 {
-			color: #8b4513;
-			border-bottom: 2px solid #8b4513;
-			padding-bottom: 10px;
-		}
-		h2 {
-			color: #d4af37;
-			margin-top: 20px;
-		}
-		.highlight {
-			color: #ff6b6b;
-			font-weight: bold;
-		}
-		.good {
-			color: #7cfc00;
-		}
-		.warning {
-			color: #ffa500;
-		}
-		ul {
-			margin-left: 20px;
-		}
-		li {
-			margin-bottom: 8px;
-		}
-		.section {
-			background-color: #2a2a2a;
-			padding: 15px;
-			margin: 10px 0;
-			border-left: 3px solid #8b4513;
-		}
-	</style>
-</head>
-<body>
-	<h1>The Fascia</h1>
-
+/datum/action/innate/view_role_rules/fascia/get_rules_content()
+	return {"
 	<div class="section">
 		<h2>Your Purpose</h2>
 		<p>You are the Fascia blade given consciousness. Your existence is tied to the weapon and its wielder.</p>
@@ -501,11 +457,7 @@
 		<h2>Remember</h2>
 		<p>You exist to serve, but also to <span class="highlight">feed</span>. A starving blade is a weak blade. Communicate with your wielder and ensure they keep you well-fed.</p>
 	</div>
-</body>
-</html>
 	"}
-
-	S << browse(html, "window=fascia_rules;size=500x550")
 
 // Check Fascia Hunger - shows current hunger status
 /datum/action/innate/check_fascia_hunger

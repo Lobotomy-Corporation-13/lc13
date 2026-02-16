@@ -15,13 +15,13 @@
 	owner.special_role = name
 	// Grant view rules action
 	if(owner.current)
-		var/datum/action/innate/view_ring_rules/action = new(owner.current)
+		var/datum/action/innate/view_role_rules/ring_artist/action = new(owner.current)
 		action.Grant(owner.current)
 
 /datum/antagonist/ring_artist/on_removal()
 	// Remove view rules action
 	if(owner?.current)
-		for(var/datum/action/innate/view_ring_rules/action in owner.current.actions)
+		for(var/datum/action/innate/view_role_rules/ring_artist/action in owner.current.actions)
 			action.Remove(owner.current)
 	. = ..()
 

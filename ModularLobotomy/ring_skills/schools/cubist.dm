@@ -32,19 +32,30 @@
 	choice = "b"
 
 	var/splash_stacks = 5
+	var/next_use = 0
+	/// Whether to apply adjacent bleed in on_post_attack
+	var/do_adjacent_bleed = FALSE
 
 /datum/component/ring_skill/cubist/geometric_reach/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target))
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
+	do_adjacent_bleed = TRUE
 
-	// Apply bleed to adjacent enemies
-	for(var/mob/living/nearby in range(1, target))
-		if(nearby == target || nearby == human_parent)
-			continue
-		if(nearby.stat == DEAD)
-			continue
+/datum/component/ring_skill/cubist/geometric_reach/on_post_attack(datum/source, mob/living/target, obj/item/weapon)
+	if(do_adjacent_bleed)
+		do_adjacent_bleed = FALSE
+		// Apply bleed to adjacent enemies
+		for(var/mob/living/nearby in range(1, target))
+			if(nearby == target || nearby == human_parent)
+				continue
+			if(nearby.stat == DEAD)
+				continue
+			nearby.apply_lc_bleed(splash_stacks)
+	..()
 
-		nearby.apply_lc_bleed(splash_stacks)
 
 // ========== TIER 2 ==========
 
@@ -171,6 +182,8 @@
 /datum/action/cooldown/crimson_dimension_activate/Trigger(trigger_flags)
 	. = ..()
 	if(!.)
+		return FALSE
+	if(owner.stat == DEAD)
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 

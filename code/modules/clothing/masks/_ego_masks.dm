@@ -10,7 +10,10 @@
 /obj/item/clothing/mask/ego_mask/Destroy()
 	if(perma)
 		return ..()
-	dropped()
+	// Runtime fix: pass the wearing mob to dropped() so clothing/dropped() can properly
+	// unregister signals (e.g. COMSIG_MOVABLE_MOVED) instead of skipping cleanup due to null user
+	if(ismob(loc))
+		dropped(loc)
 	return ..()
 
 /obj/item/clothing/mask/ego_mask/equipped(mob/user, slot)

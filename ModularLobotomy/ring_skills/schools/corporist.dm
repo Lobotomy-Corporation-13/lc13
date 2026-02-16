@@ -17,18 +17,25 @@
 	var/bleed_stacks = 2
 	var/protection_stacks = 1
 	var/sp_heal_percent = 0.05
+	var/next_use = 0
 
 /datum/component/ring_skill/corporist/butcher_ribs/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target) || target.stat == DEAD)
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
-	// Inflict negative effect
-	target.apply_lc_bleed(bleed_stacks)
+	// Inflict negative effect (deferred to on_post_attack)
+	pending_bleed += bleed_stacks
 
 	// Gain positive effect
 	add_ring_protection(human_parent, protection_stacks)
 
 	// Artistic Synergy: both occurred simultaneously
+	if(!sp_heal_ready())
+		return
+	set_sp_heal_cooldown()
 	if(human_parent.sanityhealth >= human_parent.maxSanity)
 		// At max SP - gain Damage Up instead
 		add_ring_strength(human_parent, 1)
@@ -50,18 +57,25 @@
 	var/bleed_stacks = 2
 	var/damage_up_stacks = 1
 	var/sp_heal_percent = 0.05
+	var/next_use = 0
 
 /datum/component/ring_skill/corporist/rotator_crush/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!isliving(target) || target.stat == DEAD)
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
-	// Inflict negative effect
-	target.apply_lc_bleed(bleed_stacks)
+	// Inflict negative effect (deferred to on_post_attack)
+	pending_bleed += bleed_stacks
 
 	// Gain positive effect
 	add_ring_strength(human_parent, damage_up_stacks)
 
 	// Artistic Synergy: both occurred simultaneously
+	if(!sp_heal_ready())
+		return
+	set_sp_heal_cooldown()
 	if(human_parent.sanityhealth >= human_parent.maxSanity)
 		// At max SP - gain Protection instead
 		add_ring_protection(human_parent, 1)
@@ -104,7 +118,7 @@
 
 	// Synergy triggered
 	human_parent.adjustBruteLoss(-heal_amount)
-	target.apply_lc_bleed(extra_bleed)
+	pending_bleed += extra_bleed
 	next_use = world.time + cooldown_time
 
 	// Bonus at high bleed
@@ -218,6 +232,7 @@
 	var/buff_duration = 8 SECONDS
 	var/buff_timer_id
 	var/mob/living/last_target
+	var/next_use = 0
 
 /datum/component/ring_skill/corporist/exhibition_arrangements/RegisterWithParent()
 	. = ..()
@@ -268,11 +283,14 @@
 /datum/component/ring_skill/corporist/exhibition_arrangements/on_attack(datum/source, mob/living/target, obj/item/weapon)
 	if(!buff_active || !isliving(target) || target.stat == DEAD)
 		return
+	if(world.time < next_use)
+		return
+	next_use = world.time + 1 SECONDS
 
 	last_target = target
 
-	// Apply negative effects
-	target.apply_lc_bleed(3)
+	// Apply negative effects (bleed deferred to on_post_attack)
+	pending_bleed += 3
 	var/effect_name = apply_random_effect(target, 1) // 1 stack of random negative effect
 
 	// Gain positive effects
@@ -280,6 +298,9 @@
 	add_ring_strength(human_parent, 1)
 
 	// Synergy bonus
+	if(!sp_heal_ready())
+		return
+	set_sp_heal_cooldown()
 	if(human_parent.sanityhealth >= human_parent.maxSanity)
 		add_ring_strength(human_parent, 2)
 		to_chat(human_parent, span_nicegreen("Exhibition Arrangements: Perfect arrangement! (+3 bleed, +[effect_name], +1 Protection, +3 Damage Up)"))
@@ -302,6 +323,8 @@
 /datum/action/cooldown/exhibition_arrangements_activate/Trigger(trigger_flags)
 	. = ..()
 	if(!.)
+		return FALSE
+	if(owner.stat == DEAD)
 		return FALSE
 	var/datum/component/ring_skill/corporist/exhibition_arrangements/skill = skill_ref?.resolve()
 	if(!skill)
