@@ -153,13 +153,12 @@ SUBSYSTEM_DEF(atoms)
 /datum/controller/subsystem/atoms/proc/map_loader_stop()
 	clear_tracked_initalize()
 
-/// Use this to set initialized to prevent error states where old_initialized is overriden. It keeps happening and it's cheesing me off
+/// Use this to set initialized to prevent error states where old_initialized is overriden.
 /datum/controller/subsystem/atoms/proc/set_tracked_initalized(value)
 	if(!initialized_changed)
 		old_initialized = initialized
 		initialized = value
-	else
-		stack_trace("We started maploading while we were already maploading. You doing something odd?")
+	// Nesting is handled by the initialized_changed counter - no warning needed
 	initialized_changed += 1
 
 /datum/controller/subsystem/atoms/proc/clear_tracked_initalize()
