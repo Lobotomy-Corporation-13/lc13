@@ -436,8 +436,19 @@ const HumanCurrentTab = (props, context) => {
         【To {prescript_recipient}】
       </div>
       {prescript_loaded ? (
-        <div style={{ ...textStyle, marginTop: '16px' }}>
-          【{insertBreaks(prescript_text)}】
+        <div>
+          <div style={{ ...textStyle, marginTop: '16px' }}>
+            【{insertBreaks(prescript_text)}】
+          </div>
+          <div style={{ marginTop: '16px',
+            textAlign: 'center' }}>
+            <Button
+              icon="check"
+              color="green"
+              content="Submit Prescript"
+              onClick={() => act('submit_current')}
+            />
+          </div>
         </div>
       ) : prescript_displaying ? (
         <div style={{ marginTop: '16px', overflow: 'hidden' }}>
@@ -447,7 +458,12 @@ const HumanCurrentTab = (props, context) => {
           />
         </div>
       ) : (
-        <div style={{ ...textStyle, color: '#666', marginTop: '16px' }}>
+        <div
+          style={{
+            ...textStyle,
+            color: '#666',
+            marginTop: '16px',
+          }}>
           Loading...
         </div>
       )}

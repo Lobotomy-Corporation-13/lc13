@@ -103,6 +103,13 @@
 		if(viewer.stat != CONSCIOUS)
 			continue
 
+		// Don't inspire trusted roles (too important to be swayed by art)
+		if(viewer.mind)
+			var/datum/job/viewer_job = SSjob.GetJob(viewer.mind.assigned_role)
+			if(viewer_job?.trusted_only)
+				to_chat(viewer, span_notice("The demonstration is technically impressive, but your duties hold your attention elsewhere."))
+				continue
+
 		// Don't inspire those who are already Students or have inspiration
 		if(viewer.GetComponent(/datum/component/corporist_student))
 			to_chat(viewer, span_notice("You appreciate the demonstration, though you've already mastered the basics."))

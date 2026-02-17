@@ -462,6 +462,41 @@
 			PickFromPool(TRUE)
 			return TRUE
 
+		if("submit_current")
+			// Living users can submit their current prescript to complete it and get a new one
+			if(isobserver(user))
+				return
+			if(!prescript_text || !prescript_loaded)
+				to_chat(user, span_warning("There is no loaded prescript to submit."))
+				return
+
+			// Archive current prescript as completed
+			var/new_id = next_prescript_id
+			prescript_history += list(list("id" = new_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = current_prescript_creator, "completed" = TRUE, "judged" = FALSE, "time_received" = world.time))
+			next_prescript_id++
+
+			// Broadcast completion to deadchat
+			deadchat_broadcast("[span_name("[user.real_name]")] has completed a prescript: \"[prescript_text]\"", message_type = DEADCHAT_ANNOUNCEMENT)
+			to_chat(user, span_notice("Prescript submitted successfully."))
+			playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
+
+			// Clear current prescript
+			prescript_text = null
+			prescript_recipient = null
+			prescript_loaded = FALSE
+			prescript_displaying = FALSE
+			current_prescript_creator = null
+			icon_state = "index_beeper"
+
+			// Try to pick a new prescript from the pool immediately
+			if(length(submitted_prescripts))
+				if(pool_timer_id)
+					deltimer(pool_timer_id)
+					pool_timer_id = null
+				PickFromPool()
+
+			return TRUE
+
 		if("turn_in")
 			// Only living users can turn in prescripts
 			if(isobserver(user))
@@ -658,9 +693,11 @@
 
 	switch(reward_type)
 		if("heal")
-			holder.adjustBruteLoss(-50)
-			holder.adjustFireLoss(-50)
-			holder.adjustSanityLoss(-100)
+			var/heal_amount = holder.maxHealth * 0.1
+			holder.adjustBruteLoss(-heal_amount)
+			holder.adjustFireLoss(-heal_amount)
+			var/sp_heal = holder.maxSanity * 0.2
+			holder.adjustSanityLoss(-sp_heal)
 			to_chat(holder, span_notice("The Oracle has blessed you with healing for completing your prescript."))
 			playsound(src, 'sound/abnormalities/onesin/bless.ogg', 50, FALSE)
 			new /obj/effect/temp_visual/onesin_blessing(get_turf(holder))
@@ -680,7 +717,8 @@
 
 	switch(punish_type)
 		if("damage")
-			holder.adjustSanityLoss(100)
+			var/sp_damage = holder.sanityhealth * 0.2
+			holder.adjustSanityLoss(sp_damage)
 			to_chat(holder, span_userdanger("The Oracle is displeased with your execution of the prescript!"))
 			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)
 		if("debuff")
