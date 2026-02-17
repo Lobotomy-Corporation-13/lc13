@@ -20,7 +20,7 @@ Seven earn EXP through intelligence gathering. Their thematic activities are:
 * '''Recorder captures''' — '''1 EXP''' per 5 lines of conversation recorded (max '''5 EXP/min''' per recorder, max 3 active recorders)
 * '''Spyglass observation''' — '''1 EXP''' per 30s while actively observing through the spyglass popup (on contract only)
 * '''Filed Intel Report''' — '''5 EXP''' base + up to '''10 EXP''' accuracy bonus per report (1 per target per 2 min). Accuracy depends on all fields including backpack contents
-* '''Contract completion''' — Duration-based contracts (Surveillance Post, Escort Person): '''10 EXP''' (3 min), '''15 EXP''' (5 min), or '''25 EXP''' (10 min). Objective-based contracts (Patrol Route, Eliminate Target, Investigate Person): '''15 EXP''' on completion
+* '''Contract completion''' — Duration-based contracts (Surveillance Post, Escort Person): '''10 EXP''' (6 min), '''15 EXP''' (10 min), or '''25 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target, Investigate Person): '''15 EXP''' on completion
 
 Even without an active contract, Seven can earn EXP at '''half rate''' by recording people, filing intel reports, and using surveillance equipment.
 
@@ -35,12 +35,12 @@ In addition to the universal contracts (Patrol Route, Eliminate Target, Escort P
 !Completion
 |-
 |Investigate Person
-|'''1500 / 2500 / 4000 ahn''' (2/3/5 reports)
+|'''750 / 1250 / 2000 ahn''' (2/3/5 reports)
 |Target a specific player. Gather intelligence on them using Seven tools (recorder, camera, scanner) and file Intel Reports about the target. This is '''objective-based''' — there is no timer. The contract specifies how many correctly filled out reports are required, and each report must be filed at least '''2 minutes''' after the previous one (you cannot rush them all at once).
 |Required number of reports filed with sufficient accuracy, each at least 2 minutes apart.
 |-
 |Surveillance Post
-|'''2000 / 3500 / 6000 ahn''' (3/5/10 min)
+|'''500 / 875 / 1500 ahn''' (6/10/20 min)
 |Mark a location on the '''Contract City Map'''. Place recording devices and maintain surveillance over the area. The contract timer '''ticks down as long as there are active Seven Recorders deployed in the marked area''' — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed.
 |Duration expires while recorders are active in the surveillance area.
 |}

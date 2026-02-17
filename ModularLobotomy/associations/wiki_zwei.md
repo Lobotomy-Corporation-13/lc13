@@ -19,7 +19,7 @@ Zwei earn EXP through protection. Their thematic activities are:
 * '''Passive EXP''' — '''1 EXP''' every 10s while '''on an active contract''' and within range of the client or guarded area (does not activate off-contract)
 * '''Damage absorbed''' — '''2 EXP''' when taking damage near the client or inside the guarded area (1s cooldown)
 * '''Combat''' — '''1 EXP''' per hit on a mob (2s cooldown), '''3 EXP''' for killing a mob
-* '''Contract completion''' — Duration-based contracts: '''10 EXP''' (3 min), '''15 EXP''' (5 min), or '''25 EXP''' (10 min). Objective-based contracts (Patrol Route, Eliminate Target): '''15 EXP''' on completion
+* '''Contract completion''' — Duration-based contracts: '''10 EXP''' (6 min), '''15 EXP''' (10 min), or '''25 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target): '''15 EXP''' on completion
 
 Even without an active contract, Zwei can earn EXP at '''half rate''' by taking damage while near non-association players and engaging hostile targets.
 
@@ -34,12 +34,12 @@ In addition to the universal contracts (Patrol Route, Eliminate Target, Escort P
 !Completion
 |-
 |Guard Area
-|'''2000 / 3500 / 6000 ahn''' (3/5/10 min)
+|'''500 / 875 / 1500 ahn''' (6/10/20 min)
 |Designate a zone on the '''Contract City Map'''. The contract timer '''only ticks while at least one association member is inside the zone''' — if everyone leaves, the timer pauses until someone returns.
 |Duration expires while association members are present in the zone.
 |-
 |Protect Person
-|'''2500 / 4000 / 7000 ahn''' (3/5/10 min)
+|'''625 / 1000 / 1750 ahn''' (6/10/20 min)
 |Target a specific player. The contract timer '''only ticks while at least one association member is within 5-7 tiles of the client'''. Stronger than the universal Escort Person — while a Zwei fixer is in range, the client receives '''15% damage reduction'''.
 |Duration expires while association members are near the client.
 |}

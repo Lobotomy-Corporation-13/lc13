@@ -1351,45 +1351,45 @@ Contracts are split into **universal types** (available to all associations) and
 
 *Universal:*
 
-Contracts are either **duration-based** (3/5/10 minute tiers with tiered pricing) or **objective-based** (flat cost, completes when the objective is met — no timer). Costs vary by contract type. The client pays upfront when creating the contract. Hana has unlimited funds; civilians pay from their own wallet.
+Contracts are either **duration-based** (6/10/20 minute tiers with tiered pricing) or **objective-based** (flat cost, completes when the objective is met — no timer). Costs vary by contract type. The client pays upfront when creating the contract. Hana has unlimited funds; civilians pay from their own wallet.
 
 *Universal:*
 
-1. **Patrol Route** — **1500 ahn** (flat) - Mark two or more waypoints on the city map. Fixer must visit them in order and complete the patrol loops. Objective-based — no timer, completes when all loops are done.
+1. **Patrol Route** — **750 ahn** (flat) - Mark two or more waypoints on the city map. Fixer must visit them in order and complete the patrol loops. Objective-based — no timer, completes when all loops are done.
 
-2. **Eliminate Target** — **3000 ahn** (flat) - Target a specific human. The fixer must find and kill the target. Objective-based — no timer, completes on target death.
+2. **Eliminate Target** — **1500 ahn** (flat) - Target a specific human. The fixer must find and kill the target. Objective-based — no timer, completes on target death.
 
-3. **Escort Person** — **1500 / 2500 / 4000 ahn** (3/5/10 min) - Target a specific carbon. An association member must stay within 7 tiles of the target. The contract timer **only ticks while a fixer is near the target** — if all fixers leave range, the timer pauses until one returns. Functions like a universal bodyguard contract — less specialized than Zwei's Protect Person (no client DR aura or SP stabilization), but available to any association.
+3. **Escort Person** — **375 / 625 / 1000 ahn** (6/10/20 min) - Target a specific carbon. An association member must stay within 7 tiles of the target. The contract timer **only ticks while a fixer is near the target** — if all fixers leave range, the timer pauses until one returns. Functions like a universal bodyguard contract — less specialized than Zwei's Protect Person (no client DR aura or SP stabilization), but available to any association.
 
 *Zwei-Specific:*
 
-4. **Guard Area** — **2000 / 3500 / 6000 ahn** (3/5/10 min) (Zwei only) - Designate a zone on the city map to protect. The contract timer **only ticks while at least one association member is inside the zone** — if all fixers leave, the timer pauses until one returns. Reflects Zwei's area defense specialization.
+4. **Guard Area** — **500 / 875 / 1500 ahn** (6/10/20 min) (Zwei only) - Designate a zone on the city map to protect. The contract timer **only ticks while at least one association member is inside the zone** — if all fixers leave, the timer pauses until one returns. Reflects Zwei's area defense specialization.
 
-5. **Protect Person** — **2500 / 4000 / 7000 ahn** (3/5/10 min) (Zwei only) - Target a specific player. The contract timer **only ticks while at least one association member is within 5-7 tiles of the client** — if all fixers leave range, the timer pauses until one returns. Stronger than the universal Escort Person — while a Zwei fixer is in range, the client receives **15% damage reduction**.
+5. **Protect Person** — **625 / 1000 / 1750 ahn** (6/10/20 min) (Zwei only) - Target a specific player. The contract timer **only ticks while at least one association member is within 5-7 tiles of the client** — if all fixers leave range, the timer pauses until one returns. Stronger than the universal Escort Person — while a Zwei fixer is in range, the client receives **15% damage reduction**.
 
 *Seven-Specific:*
 
-6. **Investigate Person** — **1500 / 2500 / 4000 ahn** (2/3/5 reports) (Seven only) - Target a specific carbon player. Objective-based (no timer). The fixer must file the required number of correctly filled out Intel Reports about the target, with each report filed at least **2 minutes** after the previous one. EXP ticks while on contract. Reflects Seven's role as private investigators hired to build a case on specific individuals.
+6. **Investigate Person** — **750 / 1250 / 2000 ahn** (2/3/5 reports) (Seven only) - Target a specific carbon player. Objective-based (no timer). The fixer must file the required number of correctly filled out Intel Reports about the target, with each report filed at least **2 minutes** after the previous one. EXP ticks while on contract. Reflects Seven's role as private investigators hired to build a case on specific individuals.
 
-7. **Surveillance Post** — **2000 / 3500 / 6000 ahn** (3/5/10 min) (Seven only) - Mark a location on the city map. Duration-based. The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
+7. **Surveillance Post** — **500 / 875 / 1500 ahn** (6/10/20 min) (Seven only) - Mark a location on the city map. Duration-based. The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
 
 *Cinq-Specific:*
 
-8. **Duel Person** — **2000 ahn** (flat) (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Objective-based — completes when the duel ends; winning gives bonus EXP + ahn.
+8. **Duel Person** — **1000 ahn** (flat) (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Objective-based — completes when the duel ends; winning gives bonus EXP + ahn.
 
-9. **Champion Contract** — **2500 / 4000 / 7000 ahn** (3/5/10 min) (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
+9. **Champion Contract** — **625 / 1000 / 1750 ahn** (6/10/20 min) (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
 
 *Dieci-Specific:*
 
-10. **Host Event** — **1500 ahn** (flat) (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Objective-based — completes when the event finishes all ticks successfully.
+10. **Host Event** — **750 ahn** (flat) (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Objective-based — completes when the event finishes all ticks successfully.
 
-11. **Medical Relief** — **2000 ahn** (flat) (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Objective-based — completes when the target count is met.
+11. **Medical Relief** — **1000 ahn** (flat) (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Objective-based — completes when the target count is met.
 
-12. **Tend to Person** — **2500 ahn** (flat) (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. Objective-based — ongoing until the fixer dismisses the contract or the target dies. EXP ticks while near the target and they are above 50% HP.
+12. **Tend to Person** — **1250 ahn** (flat) (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. Objective-based — ongoing until the fixer dismisses the contract or the target dies. EXP ticks while near the target and they are above 50% HP.
 
 **Contract Parameters:**
-- **Type:** Contracts are either **duration-based** (3/5/10 min tiers with tiered pricing) or **objective-based** (flat cost, no timer — completes when the objective is met)
-- **Cost:** Varies by contract type. Duration-based contracts have tiered costs (more time = more expensive). Objective-based contracts have a single flat cost. All costs are at least **1500 ahn**. See the contract list above for exact prices per contract type.
+- **Type:** Contracts are either **duration-based** (6/10/20 min tiers with tiered pricing) or **objective-based** (flat cost, no timer — completes when the objective is met)
+- **Cost:** Varies by contract type. Duration-based contracts have tiered costs (more time = more expensive). Objective-based contracts have a single flat cost. See the contract list above for exact prices per contract type.
 - **Target/Location:** Who or where the contract applies to
 
 **Payment:**
@@ -1637,7 +1637,7 @@ Zwei earn EXP through the contract system by fulfilling protection duties:
 - **Passive EXP** — **1 EXP** every 10s while **on an active contract** and within range of client/area (does not activate off-contract)
 - **Damage absorbed** — **2 EXP** when taking damage near the client/in the guarded area (1s cooldown)
 - **Combat** — **1 EXP** per hit on a mob (2s cooldown), **3 EXP** for killing a mob
-- **Contract completion** — **10 EXP** (3 min contract), **15 EXP** (5 min), or **25 EXP** (10 min)
+- **Contract completion** — **10 EXP** (6 min contract), **15 EXP** (10 min), or **25 EXP** (20 min)
 
 **Contract-Specific Behavior:**
 - Zwei skill tree abilities **only function while on an active contract**
@@ -1997,7 +1997,7 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 
 - **Investigate Person** (Seven only) — Target a specific carbon player. **Objective-based** (no timer). The contract specifies a required number of Intel Reports (2, 3, or 5 depending on cost tier), each filed at least **2 minutes** apart. The fixer must photograph the target, fill out reports with sufficient accuracy, and file them on their dossier. The contract completes when enough valid reports have been filed. EXP ticks while on contract. Reflects Seven's role as private investigators hired to build a case on specific individuals.
 
-- **Surveillance Post** (Seven only) — Mark a location on the city map. **Duration-based** (3/5/10 min). The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
+- **Surveillance Post** (Seven only) — Mark a location on the city map. **Duration-based** (6/10/20 min). The contract timer **ticks down as long as there are active Seven Recorders deployed in the marked area** — no association member needs to be physically present. If all recorders in the area are removed or destroyed, the timer pauses until a new one is placed. Reflects Seven's role in monitoring locations for suspicious activity.
 
 **Note — Turning Over Information:** While the game mechanically completes contracts when enough reports are filed or enough recording time has passed, Seven fixers are still expected to turn over all collected intelligence (filed reports, recorded tapes, surveillance findings) to the client who hired them. This cannot currently be enforced mechanically in-game, but it is part of the contract's obligations — the client is paying for the information, not just the act of gathering it.
 

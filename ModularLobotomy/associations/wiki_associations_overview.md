@@ -154,22 +154,22 @@ These contracts are available to all four associations:
 !Completion
 |-
 |Patrol Route
-|'''1500 ahn''' (flat)
+|'''750 ahn''' (flat)
 |Mark waypoints on the city map. Visit them in order and complete the patrol loops.
 |All waypoints visited and loops completed.
 |-
 |Eliminate Target
-|'''3000 ahn''' (flat)
+|'''1500 ahn''' (flat)
 |Kill a specific human target.
 |Target dies.
 |-
 |Escort Person
-|'''1500 / 2500 / 4000 ahn''' (3/5/10 min)
+|'''375 / 625 / 1000 ahn''' (6/10/20 min)
 |Stay within 7 tiles of a target, protecting them from harm. Timer '''only ticks''' while at least one association member is near the target — leaving pauses the timer.
 |Duration expires while maintaining proximity.
 |}
 
-Contracts are either '''duration-based''' (3, 5, or 10 minutes with tiered pricing) or '''objective-based''' (flat cost, completes when the objective is met). Each association also has its own '''unique contract types''' tied to their specialty — see the individual association pages for details.
+Contracts are either '''duration-based''' (6, 10, or 20 minutes with tiered pricing) or '''objective-based''' (flat cost, completes when the objective is met). Each association also has its own '''unique contract types''' tied to their specialty — see the individual association pages for details.
 
 === How Contracts Are Created ===
 
@@ -177,7 +177,7 @@ All contracts are created through the '''Association Contract Terminal''' — a 
 
 # Use the '''Association Contract Terminal'''
 # Select the contract type from the available list
-# For duration-based contracts, set the duration (3, 5, or 10 minutes). Pay the contract fee upfront — '''payment is taken from your wallet immediately''' (Hana has unlimited funds). Costs vary by contract type and duration.
+# For duration-based contracts, set the duration (6, 10, or 20 minutes). Pay the contract fee upfront — '''payment is taken from your wallet immediately''' (Hana has unlimited funds). Costs vary by contract type and duration.
 # For location-based contracts (Patrol Route, Guard Area, Surveillance Post, Host Event), the '''Contract City Map''' opens so you can mark the relevant location or waypoints
 # For target-based contracts (Eliminate Target, Escort Person, Investigate Person, etc.), click the target player to designate them
 # The terminal produces a physical '''contract item''' — a paper document containing all the contract details
@@ -226,7 +226,7 @@ Placed markers appear as '''colored overlays''' on the map tiles, so you can see
 * Short cooldown (~30 seconds) between contracts
 * For location and proximity contracts, leaving the area or client '''pauses the timer''' — it resumes when any association member returns. Contracts never fail from absence alone
 * You can '''decline''' a contract offer — you are a professional, not a slave
-* Contracts are either '''duration-based''' (3/5/10 minute tiers with tiered pricing) or '''objective-based''' (flat cost, no timer). Costs vary by contract type — see the universal and association-specific contract tables for exact prices
+* Contracts are either '''duration-based''' (6/10/20 minute tiers with tiered pricing) or '''objective-based''' (flat cost, no timer). Costs vary by contract type — see the universal and association-specific contract tables for exact prices
 
 === Why Should Civilians Hire You? ===
 
