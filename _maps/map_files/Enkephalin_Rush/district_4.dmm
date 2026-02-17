@@ -8370,7 +8370,7 @@
 /turf/open/floor/carpet/red,
 /area/facility_hallway/control)
 "Eq" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/safety)
 "Er" = (

@@ -1837,7 +1837,7 @@
 /turf/closed/indestructible/reinforced,
 /area/facility_hallway/training)
 "MF" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/department_main/command)
 "MK" = (

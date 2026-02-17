@@ -231,7 +231,7 @@
 /turf/open/floor/carpet/black,
 /area/department_main/records)
 "ew" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
 "ez" = (

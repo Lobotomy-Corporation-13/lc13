@@ -78,29 +78,6 @@ No Ability	250
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 80, BLACK_DAMAGE = 50, PALE_DAMAGE = 50)	//Defensive
 	realized_ability = /obj/effect/proc_holder/ability/comatose
 
-/obj/item/clothing/suit/armor/ego_gear/realization/brokencrown
-	name = "broken crown"
-	desc = "Shall we get to work? All we need to do is what we’ve always done."
-	icon_state = "brokencrown"
-	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 60, BLACK_DAMAGE = 50, PALE_DAMAGE = 50)	//Broken Crown
-	realized_ability = /obj/effect/proc_holder/ability/brokencrown
-	hat = /obj/item/clothing/head/ego_hat/brokencrown
-
-/obj/item/clothing/suit/armor/ego_gear/realization/brokencrown/dropped(mob/user) //Reload the item automatically if dropped
-	for(var/datum/action/spell_action/ability/item/theability in actions)
-		if(istype(theability.target, /obj/effect/proc_holder/ability/brokencrown))
-			var/obj/effect/proc_holder/ability/brokencrown/power = theability.target
-			power.Reabsorb()
-	. = ..()
-
-/obj/item/clothing/suit/armor/ego_gear/realization/brokencrown/attackby(obj/item/I, mob/living/user, params) //Reload the item
-	for(var/datum/action/spell_action/ability/item/theability in actions)
-		if(istype(theability.target, /obj/effect/proc_holder/ability/brokencrown))
-			var/obj/effect/proc_holder/ability/brokencrown/power = theability.target
-			if(power.Absorb(I,user))
-				return
-	return ..()
-
 /obj/item/clothing/head/ego_hat/brokencrown
 	name = "broken crown"
 	desc = "One fell down and the rest came tumbling after."

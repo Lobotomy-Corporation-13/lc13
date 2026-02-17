@@ -45,17 +45,6 @@
 	Risk Class : ZAYIN	<br>
 	- DO NOT TOUCH THIS BUTTON UNDER ANY CIRCUMSTANCES."}
 
-//Wishing Well
-/obj/item/paper/fluff/info/tool/wishwell
-	name = "Wishing Well - F-09-34"
-	info = {"<h1><center>F-09-34</center></h1>	<br>
-	Name : Wishing Well<br>
-	Risk Class: ZAYIN <br>
-	- When an employee dropped E.G.O or ahn into Wishing well, they received a random gift. <br>
-	- The greater the employee's sacrifice, the greater the reward will be. <br>
-	- Employees should be careful to make sure that they do not fall inside of the well. <br>
-	- There is no way of knowing what lies at the bottom of Wishing Well."}
-
 //Behavior Adjustment
 /obj/item/paper/fluff/info/tool/behavior
 	name = "Behavior Adjustment - O-09-96"

@@ -6,7 +6,6 @@
 	action_icon_state = ""
 	base_icon_state = "template"
 	var/target_type = /obj/item/ego_weapon/mimicry
-	var/obj/structure/toolabnormality/wishwell/linked_structure
 
 /obj/effect/proc_holder/ability/ego_assimilation/Perform(atom/target, user)
 	..()
@@ -17,17 +16,9 @@
 	if(!istype(target, /obj/item/ego_weapon))
 		to_chat(user, span_notice("That is not an E.G.O weapon."))
 		return
-	if(!linked_structure)//Refer to wishing well for a list of all ALEPH E.G.O
-		linked_structure = GLOB.wishwell
-		if(!linked_structure)
-			to_chat(user, span_notice("This ability is currently unavailable."))
-			return
-	if(target.type in linked_structure.alephitem)//"alephitem" is a list
-		new target_type(get_turf(target))
-		qdel(target)
-		DeleteAbility(user)//Deletes the ability and removes it from the ego suit
-		return
-	to_chat(user, span_notice("Target's risk level is too low."))
+	new target_type(get_turf(target))
+	qdel(target)
+	DeleteAbility(user)//Deletes the ability and removes it from the ego suit
 
 /obj/effect/proc_holder/ability/ego_assimilation/proc/FindItems(user)
 	var/list/stufflist = list()
@@ -1078,84 +1069,6 @@
 	H.physiology.white_mod *= 100
 	H.physiology.black_mod *= 100
 	H.physiology.pale_mod *= 100
-
-/* Wishing Well - Broken Crown */
-/obj/effect/proc_holder/ability/brokencrown
-	name = "Broken Crown"
-	desc = "Extract a random empowered E.G.O. weapon once, return it to the armor to try for a different weapon. The item will automatically be returned if the armor is taken off."
-	action_icon_state = "brokencrown0"
-	base_icon_state = "brokencrown"
-	cooldown_time = 5 MINUTES
-	var/obj/structure/toolabnormality/wishwell/linked_structure
-	var/list/ego_list = list()
-	var/obj/item/ego_weapon/chosenEGO
-	var/obj/item/linkeditem = null
-	var/ready = TRUE
-
-/obj/effect/proc_holder/ability/brokencrown/proc/Absorb(obj/item/I, mob/living/user)
-	if(!ego_list || ready)
-		to_chat(user, span_notice("You need to use this ability before you can recharge it!"))
-		return FALSE
-	if(!is_type_in_list(I, ego_list))
-		return FALSE
-	if(is_ego_melee_weapon(I))
-		if(I.force_multiplier < 1.2)
-			to_chat(user, span_notice("You must use a weapon with a damage multiplier of 20% or higher!"))
-			return FALSE
-		Reload(I, user)
-		return TRUE
-	return FALSE
-
-/obj/effect/proc_holder/ability/brokencrown/proc/Reload(obj/item/I, mob/living/user)
-	to_chat(user, span_nicegreen("The ability has been recharged."))
-	ready = TRUE
-	qdel(I)
-
-/obj/effect/proc_holder/ability/brokencrown/Perform(target, mob/living/carbon/human/user)
-	if(!ready)
-		to_chat(user, span_notice("This ability has been spent and needs to be recharged."))
-		return
-	if(istype(user.get_item_by_slot(ITEM_SLOT_OCLOTHING), /obj/item/clothing/suit/armor/ego_gear/realization/brokencrown))
-		user.playsound_local(get_turf(user), "sound/abnormalities/bloodbath/Bloodbath_EyeOn.ogg", 25, 0)
-		if(!linked_structure)
-			linked_structure = locate(/obj/structure/toolabnormality/wishwell) in world.contents
-			if(!linked_structure) //Somehow you got this ego on a non-facility map
-				ego_list += /obj/item/ego_weapon/mimicry
-				ego_list += /obj/item/ego_weapon/smile
-				ego_list += /obj/item/ego_weapon/da_capo
-				linked_structure = TRUE
-		if(!LAZYLEN(ego_list))
-			for(var/egoitem in linked_structure.alephitem)
-				if(ispath(egoitem, /obj/item/ego_weapon) || ispath(egoitem, /obj/item/ego_weapon/ranged))
-					ego_list += egoitem
-					continue
-		chosenEGO = pick(ego_list)
-		var/obj/item/ego = chosenEGO //Not sure if there is a better way to do this
-		if(ispath(ego, /obj/item/ego_weapon))
-			var/obj/item/ego_weapon/egoweapon = new ego(get_turf(user))
-			egoweapon.force_multiplier = 1.20
-			egoweapon.name = "shimmering [egoweapon.name]"
-			egoweapon.set_light(3, 6, "#D4FAF37")
-			egoweapon.color = "#FFD700"
-			linkeditem = egoweapon
-
-		else if(ispath(ego, /obj/item/ego_weapon/ranged))
-			var/obj/item/ego_weapon/ranged/egogun = new ego(get_turf(user))
-			egogun.force_multiplier = 1.20
-			egogun.projectile_damage_multiplier = 1.20
-			egogun.name = "shimmering [egogun.name]"
-			egogun.set_light(3, 6, "#D4FAF37")
-			egogun.color = "#FFD700"
-			linkeditem = egogun
-		ready = FALSE
-		return ..()
-
-/obj/effect/proc_holder/ability/brokencrown/proc/Reabsorb()
-	if(linkeditem && !ready)
-		linkeditem.visible_message(span_userdanger("<font color='#CECA2B'>[linkeditem] glows brightly for a moment then... fades away without a trace.</font>"))
-		qdel(linkeditem)
-		ready = TRUE
-	return
 
 /* Opened Can of Wellcheers - Wellcheers */
 /obj/effect/proc_holder/ability/wellcheers

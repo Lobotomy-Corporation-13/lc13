@@ -4479,7 +4479,7 @@
 /turf/open/floor/carpet/stellar,
 /area/department_main/command)
 "BW" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/extraction)
 "BZ" = (

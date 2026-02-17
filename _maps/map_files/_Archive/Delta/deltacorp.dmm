@@ -4443,7 +4443,7 @@
 /area/facility_hallway/discipline)
 "kc" = (
 /obj/effect/turf_decal/box/white,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/sepia{
 	color = "#ccc8c0"
 	},

@@ -2412,7 +2412,7 @@
 /area/department_main/information)
 "hr" = (
 /obj/effect/turf_decal/box/red,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/control)
 "hs" = (

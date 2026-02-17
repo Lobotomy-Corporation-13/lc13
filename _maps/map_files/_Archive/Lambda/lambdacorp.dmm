@@ -565,7 +565,7 @@
 /area/facility_hallway/east)
 "dr" = (
 /obj/effect/turf_decal/box,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/pod/dark,
 /area/facility_hallway/command)
 "dt" = (

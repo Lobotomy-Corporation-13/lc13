@@ -6627,7 +6627,7 @@
 /area/space)
 "Fz" = (
 /obj/effect/turf_decal/sand/plating,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel{
 	name = "anomalous floor";
 	slowdown = -0.3
@@ -9516,7 +9516,7 @@
 /obj/effect/turf_decal/stripes/red/line{
 	dir = 1
 	},
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/pod/light,
 /area/department_main/training)
 "TE" = (

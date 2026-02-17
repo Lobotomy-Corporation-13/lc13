@@ -4528,7 +4528,7 @@
 /area/facility_hallway/control)
 "pl" = (
 /obj/effect/turf_decal/box/red,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/sepia,
 /area/department_main/extraction)
 "po" = (

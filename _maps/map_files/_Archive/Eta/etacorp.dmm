@@ -1,6 +1,6 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "aa" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /obj/machinery/camera/xray{
 	alpha = 0;
 	desc = "Say hi, Manager is watching.";

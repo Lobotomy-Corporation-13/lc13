@@ -3563,7 +3563,7 @@
 /turf/open/floor/plasteel/sepia,
 /area/facility_hallway/command)
 "ts" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/department_main/extraction)
 "tw" = (

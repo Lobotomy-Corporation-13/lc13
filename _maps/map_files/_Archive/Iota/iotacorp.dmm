@@ -11114,7 +11114,7 @@
 /area/space)
 "Jn" = (
 /obj/effect/turf_decal/box/red,
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /obj/effect/light_emitter{
 	light_power = 4;
 	light_range = 25;

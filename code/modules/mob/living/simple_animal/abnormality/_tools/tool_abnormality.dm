@@ -27,7 +27,6 @@ GLOBAL_LIST_INIT(unspawned_tools, list(
 	/obj/structure/toolabnormality/promise,
 	/obj/structure/toolabnormality/you_happy,
 //	/obj/structure/toolabnormality/touch,
-//	/obj/structure/toolabnormality/wishwell,
 //	/obj/structure/toolabnormality/realization,
 ))
 

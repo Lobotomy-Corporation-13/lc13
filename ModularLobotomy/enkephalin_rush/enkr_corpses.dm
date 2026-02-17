@@ -63,33 +63,12 @@
 	icon_state = "corpsehuman"
 	outfit = /datum/outfit/job/agent
 	suit = /obj/item/clothing/suit/armor/ego_gear/zayin/penitence
-	var/obj/structure/toolabnormality/wishwell/linked_structure
 	var/list/ego_list = list()
 	var/obj/item/clothing/suit/armor/ego_gear/chosenEGO
 	var/risk_level = 1
 
+	// TODO : Use a global list for possible loot items.
 /obj/effect/mob_spawn/human/agent/randomloot/equip(mob/living/carbon/human/H)
-	if(!linked_structure)
-		linked_structure = locate(/obj/structure/toolabnormality/wishwell) in world.contents
-	var/threat_ref = linked_structure.zayinitem
-	switch(risk_level)
-		if(1)
-		if(2)
-			threat_ref = linked_structure.tethitem
-		if(3)
-			threat_ref = linked_structure.heitem
-		if(4)
-			threat_ref = linked_structure.wawitem
-		if(5)
-			threat_ref = linked_structure.alephitem
-	for(var/egoitem in threat_ref)
-		if(ispath(egoitem, /obj/item/clothing/suit/armor/ego_gear))
-			ego_list += egoitem
-			continue
-	if(!ego_list.len)
-		return ..()
-	chosenEGO = pick(ego_list)
-	suit = chosenEGO
 	..()
 
 /obj/effect/mob_spawn/human/manager

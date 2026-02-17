@@ -425,7 +425,7 @@
 /turf/open/floor/carpet/red,
 /area/department_main/discipline)
 "dn" = (
-/obj/structure/toolabnormality/wishwell,
+/obj/item/toy/plush/nihil,
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
 "do" = (
