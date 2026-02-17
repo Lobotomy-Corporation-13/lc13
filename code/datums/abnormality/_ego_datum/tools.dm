@@ -167,4 +167,3 @@
 /datum/ego_datum/armor/windup
 	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/windup
 	cost = 50
-

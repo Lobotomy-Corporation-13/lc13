@@ -78,11 +78,6 @@ No Ability	250
 	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 80, BLACK_DAMAGE = 50, PALE_DAMAGE = 50)	//Defensive
 	realized_ability = /obj/effect/proc_holder/ability/comatose
 
-/obj/item/clothing/head/ego_hat/brokencrown
-	name = "broken crown"
-	desc = "One fell down and the rest came tumbling after."
-	icon_state = "brokencrown"
-
 /obj/item/clothing/suit/armor/ego_gear/realization/energyconversion
 	name = "energy conversion"
 	desc = "Just open up the machine, step inside, and press the button to make it shut. Now everything will be just fine."

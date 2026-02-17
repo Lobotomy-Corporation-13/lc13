@@ -1,169 +1,132 @@
-/////////////
-//  ZAYIN  //
-/////////////
+//Armor from tool abnormalities
+/obj/item/clothing/suit/armor/ego_gear/tools
+	icon = 'icons/obj/clothing/ego_gear/abnormality/tools.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/abnormality/tools.dmi'
 
-// Don't touch me! - Prohibited
-/datum/ego_datum/weapon/prohibited
-	item_path = /obj/item/ego_weapon/prohibited
-	cost = 12
+//ZAYIN
 
-/datum/ego_datum/armor/prohibited
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/prohibited
-	cost = 12
+/obj/item/clothing/suit/armor/ego_gear/tools/prohibited
+	name = "PROHIBITED!!!"
+	desc = "Why would you even want to touch it?"
+	icon_state = "touch"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 10)
 
-// You must be happy - Plastic Smile
-/datum/ego_datum/weapon/plastic
-	item_path = /obj/item/ego_weapon/plastic
-	cost = 12
-	ego_tags = list(EGO_TAG_SUPPORT)
+/obj/item/clothing/suit/armor/ego_gear/tools/plastic
+	name = "plastic smile"
+	desc = "Do you love your city?"
+	icon_state = "plastic"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
 
-/datum/ego_datum/armor/plastic
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/plastic
-	cost = 12
+/obj/item/clothing/suit/armor/ego_gear/tools/mirror
+	name = "mirror"
+	desc = "The only thing reflected on this mirror is people."
+	icon_state = "mirror"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 0, BLACK_DAMAGE = 10, PALE_DAMAGE = 0)
 
-// Mirror of Adjustment
-/datum/ego_datum/weapon/mirror
-	item_path = /obj/item/ego_weapon/mirror
-	cost = 12
+/obj/item/clothing/suit/armor/ego_gear/tools/promise
+	name = "belief and promise"
+	desc = "However, all that those promises yielded was only hollowness and betrayal."
+	icon_state = "promise"
+	armor = list(RED_DAMAGE = 0, WHITE_DAMAGE = 10, BLACK_DAMAGE = 0, PALE_DAMAGE = 0)
 
-/datum/ego_datum/armor/mirror
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/mirror
-	cost = 12
+//TETH
+/obj/item/clothing/suit/armor/ego_gear/tools/aspiration
+	name = "aspiration"
+	desc = "Excessive aspiration would bring about unwarranted frenzy."
+	icon_state = "aspiration"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 0, BLACK_DAMAGE = 0, PALE_DAMAGE = 0) // 20
 
-// Old Faith and Promise
-/datum/ego_datum/weapon/promise
-	item_path = /obj/item/ego_weapon/promise
-	cost = 12
-	ego_tags = list(EGO_TAG_BOOMERANG)
+/obj/item/clothing/suit/armor/ego_gear/tools/adjustment
+	name = "adjustment"
+	desc = "Armor that protects the psyche by dulling intellect. Just beware of the side effects."
+	icon_state = "adjustment"
+	armor = list(RED_DAMAGE = -10, WHITE_DAMAGE = 40, BLACK_DAMAGE = -10, PALE_DAMAGE = -20) // 20
 
-/datum/ego_datum/armor/promise
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/promise
-	cost = 12
+/obj/item/clothing/suit/armor/ego_gear/tools/philia
+	name = "philia"
+	desc = "A suit that wouldn't be out of place if worn on a stage."
+	icon_state = "philia"
+	armor = list(RED_DAMAGE = -30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 20, PALE_DAMAGE = 0) // 20
 
-////////////
-//  TETH  //
-////////////
+/obj/item/clothing/suit/armor/ego_gear/tools/luminosity
+	name = "luminosity"
+	desc = "Armor that truly shines when born by those in need."
+	icon_state = "luminosity"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = -20, BLACK_DAMAGE = -20, PALE_DAMAGE = 0) // 20
 
-// Heart of Aspiration - Aspiration
-/datum/ego_datum/armor/aspiration
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/aspiration
-	cost = 20
+//HE
+/obj/item/clothing/suit/armor/ego_gear/tools/swindle
+	name = "swindle"
+	desc = "All-natural snake oil! Cleans the skin, removes pimples, impetigo, and other defects!"
+	icon_state = "swindle"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = -20, BLACK_DAMAGE = -20, PALE_DAMAGE = 0) // 20
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 40
+							)
 
-/datum/ego_datum/weapon/aspiration
-	item_path = /obj/item/ego_weapon/ranged/aspiration
-	cost = 20
-	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT)
+/obj/item/clothing/suit/armor/ego_gear/tools/ringing
+	name = "ringing"
+	desc = "An army coat with buttons reminiscent of a keypad. The echoing voices in your head drown out the threats that stand before you."
+	icon_state = "ringing"
+	armor = list(RED_DAMAGE = -30, WHITE_DAMAGE = -20, BLACK_DAMAGE = 60, PALE_DAMAGE = 0) // 10
+	attribute_requirements = list(
+							TEMPERANCE_ATTRIBUTE = 40
+							)
 
-// Behavior Adjustment - Adjustment
-/datum/ego_datum/weapon/adjustment
-	item_path = /obj/item/ego_weapon/ranged/adjustment
-	cost = 20
+/obj/item/clothing/suit/armor/ego_gear/tools/divinity
+	name = "divinity"
+	desc = "The burden of sacrifice is yours alone..."
+	icon_state = "divinity"
+	armor = list(RED_DAMAGE = -20, WHITE_DAMAGE = -20, BLACK_DAMAGE = -20, PALE_DAMAGE = 70) // 10
+	attribute_requirements = list(
+							JUSTICE_ATTRIBUTE = 40
+							)
 
-/datum/ego_datum/armor/adjustment
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/adjustment
-	cost = 20
+/obj/item/clothing/suit/armor/ego_gear/tools/destiny
+	name = "destiny"
+	desc = "The role of the Moirai was to ensure that every being, mortal and divine, lived out their destiny as it was assigned to them by the laws of the universe."
+	icon_state = "destiny"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = -20, PALE_DAMAGE = 20) // 70
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 40
+							)
 
-// Theresia - Philia
-/datum/ego_datum/armor/philia
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/philia
-	cost = 20
+/obj/item/clothing/suit/armor/ego_gear/tools/giant_tree_branch
+	name = "giant tree branch"
+	desc = "The tree simply reaped from what it sowed."
+	icon_state = "sap"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = -20, BLACK_DAMAGE = 30, PALE_DAMAGE = 10) // 70
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 40
+							)
 
-/datum/ego_datum/weapon/philia
-	item_path = /obj/item/ego_weapon/philia
-	cost = 20
-	ego_tags = list(EGO_TAG_SUSTAIN, EGO_TAG_SUPPORT)
+/obj/item/clothing/suit/armor/ego_gear/tools/isolation
+	name = "isolation"
+	desc = "Company P wished to construct the safest place on Earth. However, this shelter, while perfectly safe on the inside, \
+	alters the reality of the outside to be even more hopeless. It literally makes itself into \"the safest place on Earth.\""
+	icon_state = "shelter"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 20, BLACK_DAMAGE = 0, PALE_DAMAGE = 20) // 70
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 40
+							)
 
-// Luminous Bracelet
-/datum/ego_datum/armor/luminosity
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/luminosity
-	cost = 20
+//WAW
+/obj/item/clothing/suit/armor/ego_gear/tools/windup
+	name = "wind-up"
+	desc = "Humanity has conquered disease and nature. Now we have come far enough to harness time itself."
+	icon_state = "windup"
+	//This used to be 1/5/1/7 but it invalidated literally every other waw EGO for pale armor.
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 40, BLACK_DAMAGE = 30, PALE_DAMAGE = 40) // 140
+	attribute_requirements = list(
+							JUSTICE_ATTRIBUTE = 80
+							)
 
-/datum/ego_datum/weapon/luminosity
-	item_path = /obj/item/ego_weapon/luminosity
-	cost = 20
-	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_SUSTAIN, EGO_TAG_SUPPORT)
-
-// TODO: Skin Prophecy - Just uses skin prophet ego for now
-
-//////////
-//  HE  //
-//////////
-
-// All-Natural Snake Oil - Swindle
-/datum/ego_datum/armor/swindle
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/swindle
-	cost = 35
-
-/datum/ego_datum/weapon/swindle
-	item_path = /obj/item/ego_weapon/ranged/pistol/swindle
-	cost = 35
-
-// Viva Voce - Ringing
-/datum/ego_datum/armor/ringing
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/ringing
-	cost = 35
-
-/datum/ego_datum/weapon/ringing
-	item_path = /obj/item/ego_weapon/ranged/ringing
-	cost = 35
-
-// Theonite Slab - Divinity
-/datum/ego_datum/armor/divinity
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/divinity
-	cost = 35
-
-/datum/ego_datum/weapon/divinity
-	item_path = /obj/item/ego_weapon/divinity
-	cost = 35
-	ego_tags = list(EGO_TAG_AOE_RADIAL)
-
-// Third Fate's Loom - Destiny
-/datum/ego_datum/armor/destiny
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/destiny
-	cost = 35
-
-/datum/ego_datum/weapon/destiny
-	item_path = /obj/item/ego_weapon/destiny
-	cost = 35
-
-// Tree Sap - Giant tree branch
-/datum/ego_datum/weapon/giant_tree_branch
-	item_path = /obj/item/ego_weapon/giant_tree_branch
-	cost = 35
-	ego_tags = list(EGO_TAG_SUSTAIN)
-
-/datum/ego_datum/armor/giant_tree_branch
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/giant_tree_branch
-	cost = 35
-
-// Shelter from the 27th of March - Isolation
-/datum/ego_datum/weapon/isolation
-	item_path = /obj/item/ego_weapon/shield/isolation
-	cost = 35
-
-/datum/ego_datum/armor/isolation
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/isolation
-	cost = 35
-
-///////////
-//  WAW  //
-///////////
-
-// Dr.Jekyll's Formula - Hyde
-/datum/ego_datum/armor/hyde
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/hyde
-	cost = 50
-
-/datum/ego_datum/weapon/hyde
-	item_path = /obj/item/ego_weapon/hyde
-	cost = 50
-	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_VERSATILE_DAMAGE)
-
-// Backwards Clock - Wind-up
-/datum/ego_datum/weapon/windup
-	item_path = /obj/item/ego_weapon/windup
-	cost = 50
-
-/datum/ego_datum/armor/windup
-	item_path = /obj/item/clothing/suit/armor/ego_gear/tools/windup
-	cost = 50
+/obj/item/clothing/suit/armor/ego_gear/tools/hyde
+	name = "hyde"
+	desc = "Late one accursed night, I compounded the elements, watched them boil and smoke together in the glass, and when the ebullition had subsided, \
+	with a strong glow of courage, drank off the potion."
+	icon_state = "hyde"
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = 40, PALE_DAMAGE = 30) // 140
+	attribute_requirements = list(
+							PRUDENCE_ATTRIBUTE = 80
+							)

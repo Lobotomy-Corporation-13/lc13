@@ -33,9 +33,6 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 /datum/ego_datum/armor/realized/comatose
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/comatose
 	ego_tags = list(EGO_TAG_HAZARDOUS)
-/// Broken Crown - Bucket (Wishing Well)
-/datum/ego_datum/armor/realized/brokencrown
-	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/brokencrown
 
 /* ------------------ TETH Realizations ------------------*/
 
