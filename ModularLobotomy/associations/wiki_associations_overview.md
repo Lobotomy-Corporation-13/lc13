@@ -109,13 +109,13 @@ Your association is always in one of three states:
 |-
 |'''Hana Contract'''
 |'''Active'''
-|Normal rate + passive tick
-|A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally.
+|Normal rate + passive tick (duration-based only)
+|A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally. The passive EXP tick only runs on '''duration-based''' contracts; objective-based contracts have no passive tick but award higher completion EXP.
 |-
 |'''Civilian Contract'''
 |'''Active'''
-|'''All EXP doubled''' + passive tick
-|A non-association, non-Hana player hired you directly. Skills are active and '''all incoming EXP is doubled''' — the most rewarding state because it requires real player interaction.
+|'''All EXP doubled''' + passive tick (duration-based only)
+|A non-association, non-Hana player hired you directly. Skills are active and '''all incoming EXP is doubled''' — the most rewarding state because it requires real player interaction. The passive EXP tick only runs on '''duration-based''' contracts.
 |}
 
 '''Important:''' Association fixers '''cannot''' give themselves contracts. You must always be hired by someone else.

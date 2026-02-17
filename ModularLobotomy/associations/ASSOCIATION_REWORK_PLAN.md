@@ -386,13 +386,12 @@ Dieci and Cinq get new boxes:
 	//
 	// === Armor ===
 	// Associate armor (80 all attrs)
-	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)  // Associate x3 — NEEDS CREATION (80 all attrs)
-	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)  // Associate x2 — NEEDS CREATION (80 all attrs, armor 30/10/20/20)
 	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/associate(src)
 	// Veteran armor (100 all attrs)
-	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)            // Veteran — EXISTS (20/30/30/50) — ADJUST attrs to 100 all
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)            // Veteran — EXISTS — ADJUST to 100 all attrs, armor 30/10/30/30
 	// Director armor (120 all attrs)
-	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/director(src)   // Director — NEEDS CREATION (120 all attrs)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/director(src)   // Director — NEEDS CREATION (120 all attrs, armor 40/20/30/30)
 
 /obj/item/storage/box/association/cinq/PopulateContents()
 	// Rapiers (Associates x3) — base cinq rapier, force 28, 2x multiplier
@@ -1313,8 +1312,8 @@ The association is always in one of three states:
 | State | Skills | EXP | Details |
 |---|---|---|---|
 | **No Active Contract** | Disabled | Thematic activities only, no passive tick | No contract is running. Fixers can earn EXP through thematic activities, but skill tree abilities are **inactive** and the passive EXP tick does not run. |
-| **Hana Contract** | **Active** | Normal rate + passive tick | A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally. |
-| **Civilian Contract** | **Active** | **All EXP doubled** + passive tick | A non-association, non-Hana player hired the association directly. Skills are active and **all incoming EXP is doubled** — the most rewarding state because it requires real player interaction. |
+| **Hana Contract** | **Active** | Normal rate + passive tick (duration-based only) | A Hana (Administrator or Representative) created the contract from the Association Contract Terminal using unlimited funding. Skills are active and all EXP sources function normally. Passive tick only runs on duration-based contracts; objective-based contracts have no passive tick but award higher completion EXP. |
+| **Civilian Contract** | **Active** | **All EXP doubled** + passive tick (duration-based only) | A non-association, non-Hana player hired the association directly. Skills are active and **all incoming EXP is doubled** — the most rewarding state because it requires real player interaction. Passive tick only runs on duration-based contracts. |
 
 **Important: Association fixers CANNOT give themselves contracts.** They must always be hired by someone else - either the Hana or any other non-association role. This enforces the transactional nature of the system: you are a professional being contracted, not a volunteer choosing your own assignments.
 
@@ -1381,11 +1380,11 @@ Contracts are either **duration-based** (6/10/20 minute tiers with tiered pricin
 
 *Dieci-Specific:*
 
-10. **Host Event** — **750 ahn** (flat) (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon) at a location picked via the Contract City Map. The Dieci must set up and complete the full event there. Objective-based — completes when the event finishes all ticks successfully.
+10. **Host Event** — **1250 ahn** (flat) (Dieci only) - Host a specific public event type (Book Reading, Training Session, or Charity Sermon). The contract marks a location via the Contract City Map, but the Dieci can host the event **anywhere** — hosting at the marked location **doubles all event tick EXP**. Objective-based — completes when the event finishes all ticks successfully.
 
 11. **Medical Relief** — **1000 ahn** (flat) (Dieci only) - Heal a specified number of different people using Healing Kits. The contract sets a target count (e.g., heal 5 different people). Each unique person healed increments the counter. Objective-based — completes when the target count is met.
 
-12. **Tend to Person** — **1250 ahn** (flat) (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. Objective-based — ongoing until the fixer dismisses the contract or the target dies. EXP ticks while near the target and they are above 50% HP.
+12. **Tend to Person** — **500 / 875 / 1500 ahn** (6/10/20 min) (Dieci only) - Target a specific player. The Dieci must keep them healthy — healing them when injured, feeding them Sacred Seasoning. Duration-based — timer only ticks while at least one association member is near the target and they are above 50% HP. Healing the target gives +50% bonus EXP, Sacred Seasoning gives double EXP.
 
 **Contract Parameters:**
 - **Type:** Contracts are either **duration-based** (6/10/20 min tiers with tiered pricing) or **objective-based** (flat cost, no timer — completes when the objective is met)
@@ -1634,15 +1633,15 @@ ui_act() handles:
 
 Zwei earn EXP through the contract system by fulfilling protection duties:
 
-- **Passive EXP** — **1 EXP** every 10s while **on an active contract** and within range of client/area (does not activate off-contract)
+- **Passive EXP** — **1 EXP** every 10s while on a **duration-based contract** and within range of client/area (does not activate off-contract or on objective-based contracts)
 - **Damage absorbed** — **2 EXP** when taking damage near the client/in the guarded area (1s cooldown)
 - **Combat** — **1 EXP** per hit on a mob (2s cooldown), **3 EXP** for killing a mob
-- **Contract completion** — **10 EXP** (6 min contract), **15 EXP** (10 min), or **25 EXP** (20 min)
+- **Contract completion** — Duration-based: **25 EXP** (6 min), **38 EXP** (10 min), or **63 EXP** (20 min). Objective-based: **76 EXP** (no passive tick, higher completion reward)
 
 **Contract-Specific Behavior:**
 - Zwei skill tree abilities **only function while on an active contract**
 - Guard Area contracts create a visible zone boundary (so the Zwei knows their post). The contract timer **only ticks while at least one association member is inside the zone** — leaving pauses the timer until someone returns
-- Protect Person contracts show a tether/indicator to the client. The contract timer **only ticks while at least one association member is within range of the client**
+- Protect Person contracts show the **client's name**. While near the client, fixers receive periodic EXP notifications confirming proximity is being tracked. The contract timer **only ticks while at least one association member is within range of the client**
 
 **Skill Tree - 3 Branches:**
 
@@ -2005,15 +2004,15 @@ Seven earn EXP through intelligence gathering. Their investigation tools **only 
 
 | Activity | EXP Gain | Notes |
 |---|---|---|
-| Passive contract tick | 1 EXP / 10s | While on active contract |
+| Passive contract tick | 1 EXP / 10s | Duration-based contracts only (not objective-based) |
 | Recorder lines captured | 1 EXP per 5 lines recorded | Max 5 EXP/min per recorder, max 3 recorders |
 | Spyglass active observation | 1 EXP / 30s | While popup is open on contract |
 | Filed Intel Report | 5 base + up to 10 accuracy bonus | 1 per target per 2min, includes backpack contents field |
-| Contract completion bonus | 10-30 EXP | Based on duration + success |
+| Contract completion bonus | Duration: 25-63 EXP, Objective: 76 EXP | Objective-based gets higher reward to compensate for no passive tick |
 
 **Contract-Specific Behavior:**
 - Seven skill tree abilities **only function while on an active contract**
-- Investigate Person contracts show a subtle indicator pointing to the target's direction and track filed reports (X/Y completed)
+- Investigate Person contracts show the **target's name** and track filed reports (X/Y completed)
 - Surveillance Post contracts highlight the monitored area boundary and show the number of active recorders in the zone. Timer ticks as long as recorders are active in the area — pauses only when all recorders are removed/destroyed
 
 **Weapon Gimmicks — Rupture and Adaptive Damage:**
@@ -2310,20 +2309,21 @@ The Dieci's unique item is the **Knowledge Tome** — a sacred book given on con
 **The Knowledge Loop:**
 
 1. **Gain Active Knowledge** — Perform charity activities. Each generates an Active Knowledge entry (viewable via a Dieci action that lists all current entries with their flavor text).
-2. **Record into Tome** — Use the Tome in hand → `do_after` channel → all current Active Knowledge entries are **written into the Tome** as stored knowledge. Active Knowledge is cleared. The Tome now holds these entries.
+2. **Record into Tome** — Use the Tome in hand → `do_after` channel → all current Active Knowledge entries are **copied into the Tome** as stored knowledge. **Active Knowledge is kept** — recording is a backup, not a transfer. **Each entry can only be recorded once** — entries already in the Tome are skipped.
 3. **Consume in combat** — Dieci combat skills and weapon buffs **consume Active Knowledge entries** to power up. Each skill costs X entries. When Active Knowledge is empty, combat skills stop functioning.
-4. **Re-read the Tome** — Use the Tome in hand → `do_after` channel → **restore Active Knowledge** from stored entries in the Tome. The Dieci re-reads their notes and regains their combat fuel.
-5. **Cycle repeats** — Re-reading restores old knowledge, but doing more charity generates **new** entries (and EXP). The Tome can only restore what was previously recorded.
+4. **Re-read the Tome** — Use the Tome in hand → `do_after` channel → **restore Active Knowledge** from stored entries in the Tome. Each stored entry can only be re-read a **limited number of times** based on its level (see below). Once an entry's re-reads are exhausted, it is removed from stored knowledge.
+5. **Cycle repeats** — Re-reading restores consumed knowledge, but stored entries eventually run out of re-reads. Doing more charity generates **new** entries (and EXP) to replenish both Active and Stored.
 
 **Key rules:**
 - **Max Active Knowledge entries:** 20 (can be increased by skill tree)
-- **Recording** transfers Active → Stored (Active is cleared, Stored gains entries)
-- **Re-reading** transfers Stored → Active (Stored is cleared, Active gains entries). 3-second `do_after` channel.
-- **Recording** also requires a 3-second `do_after` channel
+- **Recording** copies Active → Stored (**Active is kept**). 3-second `do_after` channel. **Each entry can only be recorded once** — already-stored entries are skipped.
+- **Re-reading** restores Stored → Active (up to max). Each stored entry has **limited re-reads based on level**. 3-second `do_after` channel.
 - Active Knowledge entries from charity activities are generated **in addition to** EXP — doing charity gives both EXP (permanent) and Active Knowledge (consumable)
 - **EXP** is still earned separately and used for skill tree progression, event costs, etc.
 
-Creates the loop: **do charity → gain Active Knowledge + EXP → record into Tome → consume knowledge in combat → re-read Tome to restore → eventually run out of stored knowledge → do more charity**
+**Re-read limits by level:** Level 1 = 6, Level 2 = 5, Level 3 = 4, Level 4 = 3, Level 5 = 2 (formula: `7 - level`). Lower-level knowledge is durable; high-level synthesized knowledge is fragile.
+
+Creates the loop: **do charity → gain Active Knowledge + EXP → record into Tome (backup) → consume knowledge in combat → re-read Tome to restore (limited uses) → stored entries eventually depleted → do more charity**
 
 ---
 
@@ -2333,33 +2333,33 @@ Dieci earns EXP and **Active Knowledge entries** through acts of service and stu
 
 | Activity | EXP | Active Knowledge | Type | Notes |
 |---|---|---|---|---|
-| Examine living mob type | 1 EXP | +1 entry | Anatomical | Use Tome on mob, first time only per type |
-| Examine dead body | 3 / 5 EXP | +1 entry | Anatomical | 5s do_after. 3 EXP if NPC, 5 EXP if player (has ckey). Once per body until revived. |
-| Observe combat | 1 EXP | +1 entry (chance) | Behavioral | Watch a carbon fight — 20% chance per attack/damage event on observed target |
-| Healing Kit use | 2/3/5 EXP | +1 entry | Medical | 3 tiers: Basic (50 ahn, 20 uses), Standard (100, 40), Advanced (200, 80) |
+| Examine living mob type | 1 EXP | +1 entry | Behavioral | Use Tome on mob, first time only per type |
+| Examine dead body (NPC) | 3 EXP | +1 entry | Medical | 5s do_after. Once per body until revived. |
+| Examine dead body (player) | 5 EXP | +1 entry | Spiritual | 5s do_after. Once per body until revived. |
+| Observe combat | 1 EXP | +1 entry (chance) | Behavioral | Use Tome on a carbon within 7 tiles to mark for observation. 20% chance per attack/damage event on observed target |
+| Healing Kit use | 2/3/5 EXP | +1 entry | Medical | 3 tiers: Basic (200 ahn, 20 uses), Standard (400, 40), Advanced (800, 80) |
 | Blessed Food consumed | 2 EXP | +1 entry | Spiritual | Additive applied to food, EXP on eat (must see eater) |
 | Event tick completed | varies | +1 entry | Spiritual | From hosting public events |
-| Passive contract tick | 1 EXP / 10s | — | — | No Active Knowledge |
-| Contract completion | 10-30 EXP | — | — | No Active Knowledge |
+| Passive contract tick | 1 EXP / 10s | — | — | Duration-based contracts only |
+| Contract completion | Duration: 25-63, Objective: 76 EXP | — | — | No Active Knowledge |
 
 #### Knowledge Types & Levels
 
-Active Knowledge entries come in **4 types**, each tied to different skill branches and activities:
+Active Knowledge entries come in **3 types**, each tied to a skill branch and activities:
 
-| Type | Source Activities | Flavor |
-|---|---|---|
-| **Anatomical** | Examining mobs (living or dead) | Physical structure, biology, weaknesses |
-| **Behavioral** | Observing combat | Fighting patterns, reactions, tendencies |
-| **Medical** | Healing Kit use | Wound treatment, recovery, physiology |
-| **Spiritual** | Sacred Seasoning, Events | Emotional responses, morale, faith |
+| Type | Source Activities | Branch | Flavor |
+|---|---|---|---|
+| **Behavioral** | Observing combat, examining living mobs | Scholar | Fighting patterns, reactions, tendencies, biology |
+| **Medical** | Healing Kit use, examining dead NPC bodies | Warden | Wound treatment, recovery, physiology, autopsy |
+| **Spiritual** | Sacred Seasoning, Events, examining dead player bodies | Sage | Emotional responses, morale, faith, mortality |
 
 Each entry also has a **level** (1-5) based on the source or synthesis:
 
 | Level | How to Obtain | Description |
 |---|---|---|
-| **Level 1** | Examine living mob, Observe combat, Healing Kit (Basic), Sacred Seasoning, Events | Common knowledge |
-| **Level 2** | Examine dead NPC body, Healing Kit (Standard), or synthesize 3x Level 1 | Detailed knowledge |
-| **Level 3** | Examine dead player body (has ckey), Healing Kit (Advanced), or synthesize 3x Level 2 | Rare knowledge |
+| **Level 1** | Observe combat, Examine living mob, Healing Kit (Basic), Sacred Seasoning, Events | Common knowledge |
+| **Level 2** | Healing Kit (Standard), Examine dead NPC body, or synthesize 3x Level 1 | Detailed knowledge |
+| **Level 3** | Healing Kit (Advanced), Examine dead player body, or synthesize 3x Level 2 | Rare knowledge |
 | **Level 4** | Synthesize 3x Level 3 | Exceptional knowledge |
 | **Level 5** | Synthesize 3x Level 4 | Masterwork knowledge |
 
@@ -2367,17 +2367,17 @@ Each entry also has a **level** (1-5) based on the source or synthesis:
 
 Combine **3 Active Knowledge entries of the same type and level** to create **1 entry of the next level** (same type). Performed via the Tome's TGUI — select the type and level to synthesize, consumes 3 entries, produces 1 higher-level entry.
 
-- 3x Level 1 Anatomical → 1x Level 2 Anatomical
+- 3x Level 1 Behavioral → 1x Level 2 Behavioral
 - 3x Level 2 Medical → 1x Level 3 Medical
 - 3x Level 4 Spiritual → 1x Level 5 Spiritual
 - Level 5 is the maximum — cannot be synthesized further
-- Types must match — cannot combine Anatomical + Medical
+- Types must match — cannot combine Behavioral + Medical
 - Synthesis is instant (no `do_after`) but can only be done through the Tome's TGUI
 
 **Reaching high levels:** Level 4 requires 9x Level 1 entries (3→1→3→1). Level 5 requires 27x Level 1 entries. This makes Level 5 knowledge extremely valuable and time-consuming to produce.
 
 **How types and levels matter for combat:**
-- Different skill branches prefer different knowledge types — one branch might consume Anatomical knowledge for bonus damage, while another consumes Spiritual knowledge for defensive buffs
+- Each of the 3 knowledge types maps to a skill branch (Behavioral → Scholar, Medical → Warden, Spiritual → Sage) and fuels 2 combo finishers each
 - Higher-level knowledge gives **stronger effects** when consumed (e.g., consuming a Level 3 entry gives 3x the buff of a Level 1, Level 5 gives 5x)
 - Skills specify which types they accept and the minimum level — versatile skills accept any type, specialized skills require specific types for full effect
 - This encourages varied charity work rather than spamming one activity
@@ -2395,16 +2395,16 @@ Medical kits marked with the Dieci's golden stole emblem. Used to heal others in
 
 | Variant | Cost | Uses | EXP per Heal | Total Healing |
 |---|---|---|---|---|
-| **Basic Healing Kit** | 50 ahn | 20 | 2 EXP | 200 brute + 200 burn |
-| **Standard Healing Kit** | 100 ahn | 40 | 3 EXP | 400 brute + 400 burn |
-| **Advanced Healing Kit** | 200 ahn | 80 | 5 EXP | 800 brute + 800 burn |
+| **Basic Healing Kit** | 200 ahn | 20 | 2 EXP | 200 brute + 200 burn |
+| **Standard Healing Kit** | 400 ahn | 40 | 3 EXP | 400 brute + 400 burn |
+| **Advanced Healing Kit** | 800 ahn | 80 | 5 EXP | 800 brute + 800 burn |
 
 Higher tiers last longer and award more EXP per heal (Basic = 2, Standard = 3, Advanced = 5).
 
 **Mechanic:**
 1. Dieci attacks a `/mob/living/carbon` with the kit (click on target)
 2. If target is not the user and target has brute or burn damage → begin a **3-second `do_after`** channel
-3. On success: heal 10 brute + 10 burn on the target → visible message: `"[user] carefully tends to [target]'s wounds with practiced hands."` → award **3 EXP** → consume 1 use
+3. On success: heal 10 brute + 10 burn on the target → visible message: `"[user] carefully tends to [target]'s wounds with practiced hands."` → award EXP → consume 1 use. **No EXP is earned if the target is a Dieci association member.**
 4. After healing, **immediately start another 3-second `do_after`** for the next heal cycle (the Dieci can keep healing the same target in a chain)
 5. Chain breaks if: Dieci moves, target moves, target is fully healed, Dieci is interrupted, or kit runs out of uses
 6. When uses reach 0 → `qdel(src)`, visible message: `"The healing kit crumbles, its supplies spent."`
@@ -2468,7 +2468,7 @@ Higher tiers last longer and award more EXP per heal (Basic = 2, Standard = 3, A
 		start_heal_chain(target, user)
 ```
 
-**2. Sacred Seasoning** (`/obj/item/dieci_sacred_seasoning`) — 50 ahn, 3 uses
+**2. Sacred Seasoning** (`/obj/item/dieci_sacred_seasoning`) — 200 ahn, 3 uses
 
 A small vial of blessed spice. When applied to food, it imbues the food with restorative properties. Anyone who eats the blessed food heals SP, and the Dieci who applied it earns EXP.
 
@@ -2477,7 +2477,7 @@ A small vial of blessed spice. When applied to food, it imbues the food with res
 2. The food gains a `dieci_blessing` component that stores a weakref to the Dieci owner
 3. Visible message: `"[user] sprinkles sacred seasoning over [food], blessing it with restorative properties."`
 4. Consume 1 use of the seasoning. When uses reach 0 → `qdel(src)`
-5. When anyone eats the blessed food: heal **15 SP** (`adjustSanityLoss(-15)`) → visible message: `"You feel a wave of calm wash over you as you eat the blessed food."` → award **2 EXP** to the Dieci **only if the Dieci can see the eater** (`dieci.can_see(eater)`). The Dieci must witness the act of charity to gain knowledge from it.
+5. When anyone eats the blessed food: heal **15 SP** (`adjustSanityLoss(-15)`) → visible message: `"You feel a wave of calm wash over you as you eat the blessed food."` → award **2 EXP** to the Dieci **only if the Dieci can see the eater** (`dieci.can_see(eater)`). The Dieci must witness the act of charity to gain knowledge from it. **No EXP is earned if the eater is a Dieci association member.**
 
 **Implementation:**
 ```dm
@@ -2526,12 +2526,12 @@ A small vial of blessed spice. When applied to food, it imbues the food with res
 
 **3. Examine Living Mob (Bestiary Scan)** — Free, uses the Tome directly:
 
-The Tome has a built-in **Bestiary** — a combat_log_book-style database that stores detailed information about scanned creatures. When the Dieci clicks a `/mob/living/simple_animal/hostile` with the Tome in hand, they scan it and add its full combat data to the Tome's bestiary. This follows the same pattern as `combat_log_book.dm`.
+The Tome has a built-in **Bestiary** — a combat_log_book-style database that stores detailed information about scanned creatures. The Tome's `afterattack()` checks the target type within **7 tiles**: **simple mobs** → bestiary scan, **carbons** → mark for observation (see Observation section below).
 
-**Scanning behavior:**
-- Click any `/mob/living/simple_animal/hostile` with the Tome via `afterattack()` — no `do_after`, instant scan
+**Scanning behavior (simple mobs):**
+- Use Tome on any `/mob/living/simple_animal/hostile` within **7 tiles** via `afterattack()` — no `do_after`, instant scan
 - If the mob's `type` is already in the bestiary → `"This type of [name] is already in your tome."` (no EXP, no duplicate)
-- If new type → extract full creature data, add to bestiary, award **1 EXP**, generate 1 **Anatomical** Active Knowledge entry whose **level depends on the mob's max HP**:
+- If new type → extract full creature data, add to bestiary, award **1 EXP**, generate 1 **Behavioral** Active Knowledge entry whose **level depends on the mob's max HP**:
 
 | Max HP | Knowledge Level |
 |---|---|
@@ -2585,9 +2585,18 @@ The bestiary is accessed via the Tome's `attack_self()` when it contains scanned
 
 /obj/item/dieci_tome/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
-	if(!istype(target, /mob/living/simple_animal/hostile))
+	if(!isliving(target))
 		return
-	if(!proximity_flag)
+	if(get_dist(user, target) > 7)
+		to_chat(user, span_warning("Too far away. Must be within 7 tiles."))
+		return
+	// Simple mobs → bestiary scan
+	if(istype(target, /mob/living/simple_animal/hostile))
+		try_bestiary_scan(target, user)
+		return
+	// Carbons → mark for observation
+	if(iscarbon(target))
+		mark_for_observation(target, user)
 		return
 
 	var/mob/living/simple_animal/hostile/H = target
@@ -2678,7 +2687,7 @@ The bestiary is accessed via the Tome's `attack_self()` when it contains scanned
 	exp?.modify_exp(1)
 	// Generate Active Knowledge — level scales with mob max HP (400 HP per tier, cap at 5)
 	var/knowledge_level = clamp(round(H.maxHealth / 400) + 1, 1, 5)
-	add_active_knowledge("Anatomical", knowledge_level, "[H.name] — [pick("exhibits aggressive territorial behavior", "shows signs of heightened predatory instincts", "possesses unusual anatomical features worth documenting")]")
+	add_active_knowledge("Behavioral", knowledge_level, "[H.name] — [pick("exhibits aggressive territorial behavior", "shows signs of heightened predatory instincts", "displays unusual combat patterns worth documenting")]")
 	user.visible_message(span_notice("[user] studies [target] carefully, recording observations in their tome."))
 ```
 
@@ -2717,11 +2726,61 @@ The bestiary is accessed via the Tome's `attack_self()` when it contains scanned
 
 **New TGUI file:** `tgui/packages/tgui/interfaces/DieciTomeBestiary.js` — largely mirrors `CombatLogBook.js` with the same helper functions (`getDamageTypeColor`, `getHealthDescription`, `getResistanceLabel`, etc.) and layout. Can be embedded as a tab/section within the Tome's main TGUI rather than a separate window.
 
-**4. Examine Dead Body** — Free, uses the Tome on a dead `/mob/living/carbon/human`:
+**4. Observe Combat** — Free, uses the Tome on a living carbon:
+
+Use the Tome on a `/mob/living/carbon` within **7 tiles** to mark them for **observation**. The Tome's `mark_for_observation()` proc registers signals on the target to track their combat activity.
+
+**Observation behavior:**
+- Only **one target** can be observed at a time — marking a new target unregisters signals from the old one
+- Registers `COMSIG_MOB_APPLY_DAMGE` on the observed target (damage only, not attacks)
+- Only triggers when the target takes **more than 10 damage** — minor scratches don't count
+- Each qualifying damage event has a **20% chance** (`prob(20)`) to award **1 EXP** and generate 1 **Behavioral (Level 1)** Active Knowledge entry
+- The owner must have **line of sight** to the observed target (`owner.can_see(target)`) — walls and obstructions block observation
+- **Dieci members cannot observe each other** — `mark_for_observation()` rejects targets who are in the same association
+- No range limit once marked, but the Dieci must be able to see the target to earn EXP
+- Visible message on mark: `"[user] focuses their attention on [target], studying their behavior."`
+
+```dm
+/obj/item/dieci_tome
+	/// Currently observed target weakref
+	var/datum/weakref/observed_target_ref
+
+/obj/item/dieci_tome/proc/mark_for_observation(mob/living/carbon/target, mob/user)
+	// Dieci cannot observe fellow association members
+	if(is_same_association(target, user))
+		to_chat(user, span_warning("You cannot observe a fellow Dieci member."))
+		return
+	// Unregister old target
+	var/mob/living/old_target = observed_target_ref?.resolve()
+	if(old_target)
+		UnregisterSignal(old_target, list(COMSIG_MOB_APPLY_DAMGE))
+	// Register new target
+	observed_target_ref = WEAKREF(target)
+	RegisterSignal(target, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_observed_combat))
+	user.visible_message(span_notice("[user] focuses their attention on [target], studying their behavior."))
+
+/obj/item/dieci_tome/proc/on_observed_combat(datum/source, mob/attacker, damage, ...)
+	if(damage <= 10)
+		return
+	if(!prob(20))
+		return
+	var/mob/living/carbon/human/owner = get_owner()
+	if(!owner)
+		return
+	var/mob/living/target = observed_target_ref?.resolve()
+	if(!target || !owner.can_see(target))
+		return
+	grant_exp(owner, 1)
+	add_active_knowledge("Behavioral", 1, "[source] — [pick("reacts aggressively when cornered", "favors their dominant hand in combat", "shows hesitation before committing to attacks")]")
+```
+
+---
+
+**5. Examine Dead Body** — Free, uses the Tome on a dead `/mob/living/carbon/human`:
 
 Click a dead human body with the Tome → **5-second `do_after`** channel → on success:
-- If the body has a `ckey` (player-controlled): award **5 EXP**, generate 1 **Anatomical (Level 3)** Active Knowledge entry. Flavor: `"[target]'s cause of death reveals [detailed text about injuries, organ state, etc.]"`
-- If the body has no `ckey` (NPC): award **3 EXP**, generate 1 **Anatomical (Level 2)** Active Knowledge entry. Flavor: `"[target]'s remains show [text about physical structure, abnormalities, etc.]"`
+- If the body has a `ckey` (player-controlled): award **5 EXP**, generate 1 **Spiritual (Level 3)** Active Knowledge entry. Flavor: `"[target]'s passing reveals [detailed text about their final moments, the weight of mortality, etc.]"`
+- If the body has no `ckey` (NPC): award **3 EXP**, generate 1 **Medical (Level 2)** Active Knowledge entry. Flavor: `"[target]'s remains show [text about physical structure, cause of death, etc.]"`
 - Mark the body as examined by adding a `dieci_examined` trait: `ADD_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)`
 - Cannot examine a body that already has `TRAIT_DIECI_EXAMINED`
 - The trait is **removed when the body is revived** via `COMSIG_LIVING_REVIVE`: register `RegisterSignal(target, COMSIG_LIVING_REVIVE, PROC_REF(on_revive))` → in handler: `REMOVE_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)` + `UnregisterSignal(target, COMSIG_LIVING_REVIVE)`
@@ -2748,8 +2807,9 @@ Click a dead human body with the Tome → **5-second `do_after`** channel → on
 	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
 	exp?.modify_exp(exp_amount)
 	// Generate Active Knowledge
-	var/flavor = has_ckey ? "[target]'s cause of death reveals [pick("severe trauma to the cranium", "multiple lacerations across the torso", "signs of catastrophic organ failure")]" : "[target]'s remains show [pick("unusual bone density", "traces of unknown compounds in the tissue", "evidence of prolonged physical stress")]"
-	add_active_knowledge("Anatomical", knowledge_level, flavor)
+	var/knowledge_type = has_ckey ? "Spiritual" : "Medical"
+	var/flavor = has_ckey ? "[target]'s passing reveals [pick("the fragility of life in the City", "echoes of their final struggle", "a profound sense of mortality")]" : "[target]'s remains show [pick("unusual bone density", "traces of unknown compounds in the tissue", "evidence of prolonged physical stress")]"
+	add_active_knowledge(knowledge_type, knowledge_level, flavor)
 	user.visible_message(span_notice("[user] carefully examines [target]'s body, recording observations in their tome."))
 
 /obj/item/dieci_tome/proc/on_target_revive(datum/source)
@@ -2832,16 +2892,16 @@ Additionally, Dieci can **retrieve a new blank tome** from any bookcase:
 
 | Item | Cost | Uses | Effect | EXP per Use |
 |---|---|---|---|---|
-| Basic Healing Kit | 50 ahn | 20 | Heal 10 brute + 10 burn per use (3s do_after, chains) | 2 EXP |
-| Standard Healing Kit | 100 ahn | 40 | Same as basic, more uses | 3 EXP |
-| Advanced Healing Kit | 200 ahn | 80 | Same as basic, most uses | 5 EXP |
-| Sacred Seasoning | 50 ahn | 3 | Apply to food → heals 15 SP when eaten | 2 EXP |
+| Basic Healing Kit | 200 ahn | 20 | Heal 10 brute + 10 burn per use (3s do_after, chains) | 2 EXP |
+| Standard Healing Kit | 400 ahn | 40 | Same as basic, more uses | 3 EXP |
+| Advanced Healing Kit | 800 ahn | 80 | Same as basic, most uses | 5 EXP |
+| Sacred Seasoning | 200 ahn | 3 | Apply to food → heals 15 SP when eaten | 2 EXP |
 
 ---
 
 ### EXP Sources — Public Events (Major)
 
-Dieci can use their Tome to **host public events** — extended group activities that benefit attendees and generate large amounts of EXP. Events are the fastest way to earn EXP but require significant time, ahn investment, and active participation.
+The **Dieci Director** can use their Tome to **host public events** — extended group activities that benefit attendees and generate large amounts of EXP. Events are the fastest way to earn EXP but require significant time, ahn investment, and active participation. **Only the Director can create events** — Veterans and Associates cannot.
 
 **How Events Work:**
 
@@ -2854,6 +2914,7 @@ Dieci can use their Tome to **host public events** — extended group activities
 7. **If any tick is missed or the `do_after` is interrupted, the event ends immediately.** No ahn refund.
 8. Between ticks, the Dieci is free to **move around the zone, talk, and RP** with attendees
 9. Cooldown: **5 minutes** between events
+10. **Dieci at events:** Dieci association members present in the event zone **do not count as attendees** — they do not receive per-tick benefits (SP healing, attribute boosts, ahn payouts) and do not increase the attendee count for EXP calculations (`per attendee` bonus). However, all Dieci in the zone still earn the **base EXP per tick** from the event. Implementation: when counting attendees, filter out anyone with the Dieci association component.
 
 **Event 1: Book Reading** (SP Healing)
 
@@ -2861,11 +2922,13 @@ Dieci can use their Tome to **host public events** — extended group activities
 |---|---|
 | **Duration** | ~4 minutes (6 ticks, 40s apart) |
 | **Ahn Cost** | 500 |
-| **Per-tick benefit** | Attendees in zone heal 8 SP |
+| **Per-tick benefit** | Attendees in zone heal 17% of their max SP |
 | **EXP** | 3 per completed tick + 2 per attendee per tick |
 | **Flavor lines** | `"[user] opens their tome and reads aloud: 'In darkness, the pursuit of understanding is the only true light...'"` |
 
-**Flow:** Dieci sets up zone → uses tome (5s channel) → reads a passage → attendees heal 8 SP → ~35 seconds of free RP time → next tick → repeat 6 times. Total SP healed per attendee: up to 48 SP.
+**Flow:** Dieci sets up zone → uses tome (5s channel) → reads a passage → attendees heal 17% max SP → ~35 seconds of free RP time → next tick → repeat 6 times. Attendees who stay for all 6 ticks heal 102% max SP — effectively a full restore.
+
+**Completion bonus:** When the event finishes, all attendees receive the **Spiritual Calm** status effect — passively heals **10 SP every 10 seconds**, lasting for **1 minute per tick attended** (up to 6 minutes for full attendance). Each attendee's tick count is tracked individually via `var/list/attendee_ticks` on the event datum. On event completion, apply `/datum/status_effect/buff/spiritual_calm` with `duration = ticks_attended * 60 SECONDS`.
 
 **Event 2: Training Session** (Attribute Boost)
 
@@ -2873,31 +2936,31 @@ Dieci can use their Tome to **host public events** — extended group activities
 |---|---|
 | **Duration** | ~5 minutes (6 ticks, 50s apart) |
 | **Ahn Cost** | 1000 |
-| **Per-tick benefit** | All attendees in zone gain +1 to ALL attributes (Fortitude, Prudence, Temperance, Justice) for 5 minutes |
+| **Per-tick benefit** | All attendees in zone gain +4 to ALL attributes (Fortitude, Prudence, Temperance, Justice) for 5 minutes. Stacks with previous ticks (timer resets, bonus increases by +4, max +20) |
 | **EXP** | 7 per completed tick + 4 per attendee per tick |
 | **Flavor lines** | `"[user] demonstrates a defensive stance and instructs: 'Guard your center — all strength flows from balance.'"` |
 
-**Flow:** Dieci sets up zone → uses tome (5s channel) → demonstrates technique → attendees get +1 all stats → ~45 seconds of free RP time → next tick → repeat 6 times. Attendees who stay for all 6 ticks gain +6 to all attributes for 5 minutes. Attribute bonus duration refreshes per tick (so attending tick 6 gives +6 all stats for 5 more minutes from that point).
+**Flow:** Dieci sets up zone → uses tome (5s channel) → demonstrates technique → attendees get +4 all stats → ~45 seconds of free RP time → next tick → repeat 6 times. Each tick adds +4 and resets the 5-minute timer. Attendees who stay for all 6 ticks reach the +20 cap by tick 5; tick 6 refreshes the timer. The +20 boost persists for 5 minutes after the last tick attended.
 
 **Event 3: Charity Sermon** (Ahn Generation)
 
 | | |
 |---|---|
 | **Duration** | ~7 minutes (7 ticks, 60s apart) |
-| **Ahn Cost** | 2000 |
-| **Per-tick benefit** | Each attendee in zone earns 25 ahn (via ID card bank account) |
+| **Ahn Cost** | 1800 |
+| **Per-tick benefit** | 255 ahn split among attendees (up to 85 each). With 4+ attendees, per-person payout decreases so total never exceeds event cost |
 | **EXP** | 16 per completed tick + 10 per attendee per tick |
 | **Flavor lines** | `"[user] raises their tome and speaks with conviction: 'To share knowledge freely is the highest form of wealth...'"` |
 
-**Flow:** Dieci sets up zone → uses tome (5s channel) → delivers sermon → attendees each earn 25 ahn → ~55 seconds of free RP time → next tick → repeat 7 times. Total ahn per attendee: up to 175 ahn. The Dieci earns **no ahn** from this event — it is pure charity. Highest EXP reward to compensate.
+**Flow:** Dieci sets up zone → uses tome (5s channel) → delivers sermon → 255 ahn/tick budget splits among attendees (up to 85 each) → ~55 seconds of free RP time → next tick → repeat 7 times. With 3 or fewer attendees, each earns 85 ahn/tick (595 total). With 4+, the budget splits evenly (e.g., 4 = 63 each, 5 = 51 each). Total distributed never exceeds event cost. The Dieci earns **no ahn** from this event — it is pure charity. Highest EXP reward to compensate.
 
 **Event Summary:**
 
 | Event | Duration | Ahn Cost | Ticks | Tick Interval | Per-Tick Benefit | EXP per Tick |
 |---|---|---|---|---|---|---|
-| Book Reading | ~4 min | 500 | 6 | 40s | 8 SP heal | 3 + 2/attendee |
-| Training Session | ~5 min | 1000 | 6 | 50s | +1 all attributes (5min) | 7 + 4/attendee |
-| Charity Sermon | ~7 min | 2000 | 7 | 60s | 25 ahn each | 16 + 10/attendee |
+| Book Reading | ~4 min | 500 | 6 | 40s | 17% max SP heal | 3 + 2/attendee |
+| Training Session | ~5 min | 1000 | 6 | 50s | +4 all attributes (stacks to +20, 5min) | 7 + 4/attendee |
+| Charity Sermon | ~7 min | 1800 | 7 | 60s | 255 ahn split (85 max each) | 16 + 10/attendee |
 
 **EXP Examples:**
 - Book Reading with 3 attendees: `(3 + 2*3) * 6 = 54 EXP`
@@ -2910,26 +2973,26 @@ Dieci can use their Tome to **host public events** — extended group activities
 
 | Activity | EXP | Knowledge | Type | Level | Notes |
 |---|---|---|---|---|---|
-| Bestiary scan (living mob) | 1 | +1 | Anatomical | 1–5 (by HP) | Click hostile mob with Tome, first time per type. Level scales with maxHealth (400 HP per tier, cap at 5) |
-| Examine dead body (NPC) | 3 | +1 | Anatomical | 2 | 5s do_after, once until revived |
-| Examine dead body (player) | 5 | +1 | Anatomical | 3 | 5s do_after, once until revived |
-| Observe combat | 1 | +1 (20% chance) | Behavioral | 1 | Per attack/damage on observed target |
-| Healing Kit (Basic) | 2 | +1 | Medical | 1 | 50 ahn, 20 uses |
-| Healing Kit (Standard) | 3 | +1 | Medical | 2 | 100 ahn, 40 uses |
-| Healing Kit (Advanced) | 5 | +1 | Medical | 3 | 200 ahn, 80 uses |
-| Sacred Seasoning eaten | 2 | +1 | Spiritual | 1 | Must see eater, 50 ahn for 3 uses |
+| Bestiary scan (living mob) | 1 | +1 | Behavioral | 1–5 (by HP) | Click hostile mob with Tome, first time per type. Level scales with maxHealth (400 HP per tier, cap at 5) |
+| Examine dead body (NPC) | 3 | +1 | Medical | 2 | 5s do_after, once until revived |
+| Examine dead body (player) | 5 | +1 | Spiritual | 3 | 5s do_after, once until revived |
+| Observe combat | 1 | +1 (20% chance) | Behavioral | 1 | Use Tome on carbon within 7 tiles to mark. Per attack/damage on observed target |
+| Healing Kit (Basic) | 2 | +1 | Medical | 1 | 200 ahn, 20 uses |
+| Healing Kit (Standard) | 3 | +1 | Medical | 2 | 400 ahn, 40 uses |
+| Healing Kit (Advanced) | 5 | +1 | Medical | 3 | 800 ahn, 80 uses |
+| Sacred Seasoning eaten | 2 | +1 | Spiritual | 1 | Must see eater, 200 ahn for 3 uses |
 | Event tick completed | varies | +1 | Spiritual | 1 | From hosting public events |
-| Passive contract tick | 1 / 10s | — | — | — | No Active Knowledge |
-| Contract completion | 10-30 | — | — | — | No Active Knowledge |
+| Passive contract tick | 1 / 10s | — | — | — | Duration-based contracts only |
+| Contract completion | Dur: 25-63, Obj: 76 | — | — | — | No Active Knowledge |
 
 ### Design Notes
 
 - **Two resources:** EXP (permanent, for skill tree progression) and Active Knowledge (consumable combat fuel with flavor text, typed and leveled)
-- **4 knowledge types** (Anatomical, Behavioral, Medical, Spiritual) encourage varied charity work and tie into different skill branches
+- **3 knowledge types** (Behavioral, Medical, Spiritual) each map to a skill branch and encourage varied charity work
 - **5 knowledge levels** — Levels 1-3 come from activities, Levels 4-5 only from synthesis (3 same-type same-level → 1 higher). Level 5 costs 27x Level 1 entries, making it a major investment
-- **The knowledge loop:** do charity → gain Active Knowledge + EXP → record into Tome → consume in combat → re-read Tome to restore → run out → do more charity
+- **The knowledge loop:** do charity → gain Active Knowledge + EXP → record into Tome (backup, Active kept) → consume in combat → re-read Tome to restore (limited uses by level) → stored entries depleted → do more charity
 - Active Knowledge entries have **readable flavor text** (viewable via action), making each piece of knowledge feel tangible
-- **Recording** and **re-reading** both require `do_after` channels — the Dieci must take time to write/study
+- **Recording** copies to Tome without clearing Active — it's a backup. **Each entry can only be recorded once.** **Re-reading** restores consumed entries but each stored entry has limited re-reads (Level 1: 6, Level 5: 2). Both require `do_after` channels
 - **Dead body examination** uses `TRAIT_DIECI_EXAMINED` + `COMSIG_LIVING_REVIVE` to prevent re-examining until the body is revived
 - **Observe system** creates a passive knowledge gain from watching others fight — rewards positioning near combat without participating
 - **Tomes are `/obj/item/book` subtypes** so they naturally work with bookcases. Dieci can build personal libraries of stored knowledge across multiple tomes
@@ -2952,9 +3015,9 @@ Like other associations, Dieci skill tree abilities **only function while on an 
 
 **Contract-Specific Behavior:**
 - Dieci skill tree abilities **only function while on an active contract**
-- Host Event contracts use the **Contract City Map** for location selection. The placed event marker is visible on the Dieci's contract HUD, and the Dieci must set up their event zone within the marked area
+- Host Event contracts use the **Contract City Map** to mark a location. The event can be hosted **anywhere**, but hosting at the marked location **doubles all event tick EXP**. The marked location is visible on the Dieci's contract HUD
 - Medical Relief contracts show a counter HUD element: `"Patients healed: 3/8"`
-- Tend to Person contracts show a tether/indicator to the target (same as Zwei's Protect Person)
+- Tend to Person contracts show the **target's name**. While near the target, the Dieci receives periodic EXP notifications confirming proximity is being tracked
 - Tend to Person timer **only ticks while at least one association member is within range of the target** — leaving pauses the timer until someone returns
 
 **Contract Summary:**
@@ -2963,7 +3026,7 @@ Like other associations, Dieci skill tree abilities **only function while on an 
 |---|---|---|---|
 | **Host Event** | Location + event type | Complete all event ticks at designated area | Event EXP + contract completion bonus |
 | **Medical Relief** | Quantity target | Heal X different people within duration | Standard EXP per heal + contract bonus |
-| **Tend to Person** | Person-targeted | Duration-based, stay near & keep healthy | +50% heal EXP, 2x food EXP, passive ticks |
+| **Tend to Person** | Person-targeted, duration (6/10/20 min) | Timer ticks while near target & target above 50% HP | +50% heal EXP, 2x food EXP, passive ticks |
 
 ---
 
@@ -2973,15 +3036,15 @@ Dieci fixers use two weapon types: **Fists** (combat gloves, existing weapon) an
 
 **Empowerment (attack_self) — Replaces the old standalone Imbue Knowledge action:**
 
-The combo system has two attack types: **L (Light)** and **H (Heavy)**. Light attacks are basic RED damage melee swings that cost nothing. Heavy attacks are **empowered** — they deal PALE damage with bonus effects, but require consuming Active Knowledge.
+The combo system has two attack types: **L (Light)** and **H (Heavy)**. Light attacks are basic RED damage melee swings that cost nothing but apply **2 Sinking stacks** to the target on hit. Heavy attacks are **empowered** — they deal PALE damage with bonus effects, but require consuming Active Knowledge.
 
-Pressing `attack_self` consumes 1 Active Knowledge entry (**lowest level first** — spend cheap knowledge for empowerment) and **empowers the weapon's next attack**. The next melee hit becomes an H (Heavy) attack:
+Pressing `attack_self` consumes 1 Active Knowledge entry (**minimum level 3**, lowest qualifying level first) and **empowers the weapon's next attack**. The next melee hit becomes an H (Heavy) attack:
 - **PALE** damage instead of RED
-- Applies **2 Sinking stacks** to the target
 - **Fists bonus:** Grants the Dieci `empowered_level × 15` shield HP (via `dieci_shield_hp` component)
 - **Keys bonus:** Grants the Dieci `empowered_level × 2` Offense Level Up stacks
+- **Instant kill** against human targets who are **insane** — `if(ishuman(target)) var/mob/living/carbon/human/H = target; if(H.sanity_lost) H.death()` (same pattern as Liu weapons in `liu.dm`, checked before the attack lands)
 
-If the weapon is not empowered, the melee hit is an L (Light) attack — basic RED damage with no bonus. There is no charge stacking; you empower one attack at a time.
+If the weapon is not empowered, the melee hit is an L (Light) attack — basic RED damage + 2 Sinking stacks. There is no charge stacking; you empower one attack at a time.
 
 Visual: weapon has a pale glow overlay while empowered. Sound: `'sound/machines/terminal_prompt_confirm.ogg'` on empowerment.
 
@@ -3004,8 +3067,8 @@ This finisher knowledge consumption is **separate** from the H empowerment cost 
 | **Quick Strike** | H | `force × 1.3` | **Behavioral** | Apply `level × 3` Sinking to the target. |
 | **Sweeping Blow** | LH | `force × 1.2` | **Medical** | Throw target `2 + level` tiles. Apply `level × 2` Sinking on landing. |
 | **Pressure Combo** | LLH | `force × 1.3` | **Behavioral** | Apply `level × 2` Sinking and `level` Defense Level Down to target. |
-| **Overwhelming Barrage** | LLLH | 20 rapid hits, `force × 1.5` total | **Anatomical** | After the barrage, force-trigger all Sinking on the target (bypass 5s delay). The H input triggers the barrage; the 20 rapid hits are basic RED damage. |
-| **Measured Finisher** | LLLLL | `force × 1.5` | **Anatomical** | Apply Sinking = target's current stacks × `level` (at level 1: doubles stacks, level 5: ×5, max 50). |
+| **Overwhelming Barrage** | LLLH | level × 5 rapid hits (5-25), each hit = `force × 0.08`. Max `force × 2` at L5 | **Medical** | Each hit applies 1 Sinking. Hit count scales with consumed knowledge level (L1=5, L2=10, L3=15, L4=20, L5=25). Total damage scales linearly with hits. |
+| **Measured Finisher** | LLLLL | `force × 1.5` | **Spiritual** | Apply Sinking = target's current stacks × (0.1 × `level`), max 50. Higher level = bigger multiplier (L1: ×0.1, L3: ×0.3, L5: ×0.5). |
 | **Grand Finale** | LLLLH | `force × 1.5` | **Spiritual** | Throw target `3 + level` tiles. On landing, PALE shockwave in `1 + level` tile radius dealing `level × 8` PALE damage and `level × 3` Sinking to all enemies hit. |
 
 **Knowledge cost per combo:** Only H inputs cost knowledge (1 entry each via `attack_self`). L inputs are free.
@@ -3021,7 +3084,7 @@ This finisher knowledge consumption is **separate** from the H empowerment cost 
 
 Note: **LLLLL is completely free** — no H input means no empowerment cost. Its finisher effect still consumes knowledge of the required type if available.
 
-**Resource split:** Low-level knowledge is spent on `attack_self` empowerment (cheap PALE fuel for H attacks). High-level knowledge of specific types is saved for combo finisher effects. The Dieci who diversifies their charity work (healing for Medical, studying for Anatomical, observing for Behavioral, events for Spiritual) has the widest combo toolkit.
+**Resource split:** Low-level knowledge is spent on `attack_self` empowerment (cheap PALE fuel for H attacks). High-level knowledge of specific types is saved for combo finisher effects and branch skill consumption. Each type maps to a branch (Behavioral → Scholar, Medical → Warden, Spiritual → Sage) and fuels 2 combo finishers, creating tension between skill effects and combo finishers for the same resource.
 
 ---
 
@@ -3144,9 +3207,9 @@ The existing L/H combo chain from `dieci.dm` is preserved. Light attacks (L) are
 
 #### `dieci_shield_hp` Component
 
-A flat HP shield that absorbs **raw incoming damage** before the Dieci's real HP. No armor or physiology interaction — the shield simply subtracts the damage value from its pool. If the shield absorbs all damage (reducing the hit to 0 HP damage), it shows the `/obj/effect/temp_visual/shock_shield` effect. If damage exceeds shield HP, the shield breaks and the overflow is dealt normally. Granted by Warden branch T1 skills.
+A flat HP shield that absorbs **raw incoming damage** before the Dieci's real HP. No armor or physiology interaction — the shield simply subtracts the damage value from its pool. If the shield absorbs all damage (reducing the hit to 0 HP damage), it shows the `/obj/effect/temp_visual/shock_shield` effect. If damage exceeds shield HP, the shield breaks and the overflow is dealt normally. Granted by **Fist weapons** when H attacks grant shield HP. **If the shield reaches 0 HP, the component is removed** — the Dieci must land another Fist H attack to recreate it. Warden skills provide additional ways to restore and interact with the shield.
 
-**Shield HP caps at 500**, but the Dieci can only gain it in small amounts through skills (2-3 per melee hit) and by consuming Active Knowledge (10 × level via Tome Shield). Combined with the **halving every 10 seconds** decay, reaching high values requires constant combat activity and knowledge expenditure. The shield starts at 0 and must be built up.
+**Shield HP caps at 500**, but the Dieci can only gain it in small amounts through skills (2-3 per melee hit) and by consuming Active Knowledge (10 × level via Tome Shield). Combined with the **halving every 10 seconds** decay, reaching high values requires constant combat activity and knowledge expenditure. **When the shield reaches 0 HP, the component is removed** — the Dieci must land another Fist H attack to recreate it.
 
 Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds shield to ~40-50 before decay catches up. Using Tome Shield with a Level 3 entry adds +30 instantly. Without sustained input, 50 → 25 → 12 → 6 → 3 → 1 → 0 over a minute.
 
@@ -3177,11 +3240,14 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 		decay_timer = null
 	return ..()
 
-/// Every 10 seconds, halve the shield HP
+/// Every 10 seconds, halve the shield HP. If it reaches 0, remove the component.
 /datum/component/dieci_shield_hp/proc/decay_shield()
 	if(shield_health <= 0)
+		qdel(src)
 		return
 	shield_health = max(0, round(shield_health / 2))
+	if(shield_health <= 0)
+		qdel(src)
 
 /// Intercept incoming damage — flat shield HP absorbs raw damage values, no armor/physiology interaction
 /datum/component/dieci_shield_hp/proc/on_damage(datum/source, damage, damage_type, def_zone, attacker, flags, attack_type)
@@ -3193,11 +3259,12 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 	on_shield_absorb?.Invoke(parent, attacker, min(damage, shield_health))
 
 	if(damage >= shield_health)
-		// Shield breaks — overflow damage passes through to normal HP
+		// Shield breaks — overflow damage passes through to normal HP, component is removed
 		var/overflow = damage - shield_health
 		shield_health = 0
 		if(overflow > 0)
 			INVOKE_ASYNC(src, PROC_REF(deal_overflow), parent, overflow, damage_type, def_zone, attacker)
+		qdel(src) // Component disappears at 0 HP
 		return COMPONENT_MOB_DENY_DAMAGE
 	else
 		// Shield absorbs all damage — show shock_shield visual
@@ -3222,103 +3289,101 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 
 #### Branch 1: Scholar (Sinking Focus)
 
-**Theme:** Apply and exploit Sinking stacks. The Scholar builds Sinking with RED hits and amplifies PALE mode triggers. Deep knowledge of weakness turns every strike into a mounting threat.
+**Theme:** Apply and exploit Sinking stacks. The Scholar builds Sinking with RED hits and amplifies PALE mode triggers. Deep knowledge of weakness turns every strike into a mounting threat. **Preferred type: Behavioral.**
 
 **T1 (1pt) — Pick one:**
-- **A: Deep Study** — Each melee attack applies 3 Sinking stacks to the target.
-- **B: Analytical Strike** — Hitting a target with no Sinking applies 8 Sinking stacks. Hitting a target that already has Sinking applies 1 stack instead.
+- **A: Deep Study** — Each melee attack applies 2 Sinking stacks to the target. Additionally, on hit consume 1 **Behavioral** knowledge → apply extra Sinking = entry level. 5s CD.
+- **B: Analytical Strike** — Hitting a target with no Sinking applies 8 Sinking stacks. Does nothing if the target already has Sinking.
 
 **T2 (2pt) — Pick one:**
-- **A: Drowning Knowledge** — When an empowered H attack (PALE hit) strikes a target with 15+ Sinking, deal 25% bonus weapon damage.
-- **B: Spreading Decay** — When an empowered H attack strikes a target that has Sinking, also apply 2 Sinking to all enemies within 2 tiles of the target. 2s internal CD.
+- **A: Drowning Knowledge** — When an empowered H attack (PALE hit) strikes a target with 15+ **active** Sinking, deal 25% bonus weapon damage. Additionally, consume 1 **Behavioral** knowledge → deal an extra +5% bonus damage per entry level (stacks with the 25%). 5s CD.
+- **B: Spreading Decay** — When an empowered H attack strikes a target that has Sinking (active or inactive), also apply 5 Sinking to all enemies within 2 tiles of the target. 2s internal CD. Additionally, consume 1 **Behavioral** knowledge → also apply Defense Level Down = entry level to all affected targets. 5s CD.
 
 **T3 (3pt) — Pick one:**
-- **A: Abyssal Revelation** *(Powerful Attack, 90s CD)* — Requires at least 3 Active Knowledge entries. Consume up to 5 entries (highest level first). Dash to target within 5 tiles, 5-hit PALE combo (all hits are forced PALE — fueled by the consumed knowledge, not the empowerment system). Each hit applies 5 Sinking. Bonus damage = `+10%` per entry consumed (e.g., 5 entries = +50%). Final hit: 2x DPS + **immediately triggers all Sinking** on the target (bypasses 5s activation delay). After the combo, your next 5 `attack_self` presses empower for free (no knowledge consumed).
-- **B: Tome of Ruin** *(Passive)* — Every 5th consecutive empowered H attack on the same target **immediately triggers all Sinking** on the target (bypasses activation delay) and then applies 5 new Sinking stacks. Also, each Sinking trigger from your attacks grants 1 free empowerment (next `attack_self` costs no knowledge).
+- **A: Abyssal Revelation** *(Powerful Attack, 90s CD)* — Requires at least 3 Active Knowledge entries. Consume up to 5 entries (**lowest level first**). Shoulder-charge forward up to 5 tiles, grabbing the first enemy hit and **slamming them into the ground**. 5-hit RED combo. Each hit applies 5 Sinking. Bonus damage = `+10% per level` of each consumed entry (e.g., L1+L1+L2+L3+L5 = 12 levels = +120%, **capped at 100%**). Final hit: 1.25x DPS, **PALE damage** (only PALE hit), + **immediately triggers all Sinking** on the target (bypasses 5s activation delay). After the combo, gain 2 free empowerments (max 3 stored).
+- **B: Tome of Ruin** *(Passive)* — Every 5th consecutive empowered H attack on the same target consumes **1 Active Knowledge** entry, then **immediately triggers all Sinking** on the target (bypasses activation delay), applies 5 new Sinking stacks, and grants **1 free empowerment** (max 3 stored). If no Active Knowledge is available, the 5th hit proc does not trigger.
 
 **Abyssal Revelation — Details:**
-- **Opener:** Dash up to 5 tiles toward target. If target is adjacent, skip the dash.
-- **Combo:** 5 hits, all PALE damage (forced PALE via override, not the empowerment system). DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`.
+- **Opener:** Shoulder-charge forward up to 5 tiles, grabbing the first enemy hit and slamming them into the ground. If target is adjacent, skip the charge.
+- **Combo:** 5 hits, all **RED damage** except the final hit. DPS = `(weapon.force * weapon.force_multiplier * 1.25) / weapon.attack_speed`.
 - **Per-hit effect:** Apply 5 Sinking stacks to target.
-- **Final hit:** 2x DPS. After dealing damage, find the target's Sinking status effect and call `trigger_sinking()` directly — this bypasses the normal 5s activation delay.
-- **After combo:** Grant 5 free empowerments — the next 5 `attack_self` presses do not consume Active Knowledge. Tracked via `var/free_empowers = 0` on the weapon.
+- **Bonus damage:** +10% per level of each consumed entry. Sum all consumed levels × 10%, capped at 100%. E.g., 5× Level 1 = 50% bonus. 2× L3 + 1× L2 + 2× L1 = 10 levels = 100% bonus (capped).
+- **Final hit:** 1.25x DPS, **PALE damage** (the only PALE hit — triggers Sinking). After dealing damage, find the target's Sinking status effect and call `trigger_sinking()` directly — this bypasses the normal 5s activation delay.
+- **After combo:** Grant 2 free empowerments (capped at 3 max). Tracked via `var/free_empowers = 0` on the weapon (max 3).
 
 **Implementation Notes:**
-- Deep Study: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_sinking(3)`.
-- Analytical Strike: `COMSIG_MOB_ITEM_ATTACK` → check `target.has_status_effect(/datum/status_effect/stacking/sinking)` → if no Sinking: `apply_lc_sinking(8)`, else: `apply_lc_sinking(1)`.
-- Drowning Knowledge: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target Sinking stacks ≥ 15 → deal `weapon.force * 0.25` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`.
-- Spreading Decay: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target has Sinking → 2s CD check → `for(var/mob/living/L in range(2, target))` excluding target and user → `L.apply_lc_sinking(2)`.
-- Abyssal Revelation: `/datum/action/cooldown/dieci_abyssal` → check Active Knowledge count ≥ 3. Consume up to 5 entries (highest level first). Store count consumed. Multiplier = `1 + (count * 0.1)`. Cutscene_duel + immobilize → 5 PALE hits (forced PALE via override). Final hit: `trigger_sinking()`. Then `weapon.free_empowers = 5`.
-- Tome of Ruin: Track `var/h_combo_count = 0` and `var/datum/weakref/combo_target_ref`. Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit: if target != last combo target → reset count. Increment count. At 5 → `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S && S.stacks > 0) INVOKE_ASYNC(S, PROC_REF(trigger_sinking))` → then `target.apply_lc_sinking(5)` → reset count. Free empower: `weapon.free_empowers += 1`.
+- Deep Study: `COMSIG_MOB_ITEM_ATTACK` → `target.apply_lc_sinking(2)`. Additionally, 5s CD check → consume 1 Behavioral knowledge (lowest level) → `target.apply_lc_sinking(entry_level)`.
+- Analytical Strike: `COMSIG_MOB_ITEM_ATTACK` → check `target.has_status_effect(/datum/status_effect/stacking/sinking)` → if no Sinking: `apply_lc_sinking(8)`, else: do nothing.
+- Drowning Knowledge: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target Sinking stacks ≥ 15 → deal `weapon.force * 0.25` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`. Additionally, 5s CD check → consume 1 Behavioral knowledge → deal extra `weapon.force * 0.05 * entry_level` bonus damage.
+- Spreading Decay: Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit AND target has Sinking → 2s CD check → `for(var/mob/living/L in range(2, target))` excluding target and user → `L.apply_lc_sinking(5)`. Additionally, 5s CD check → consume 1 Behavioral knowledge → for all affected targets → `L.apply_lc_defense_level_down(entry_level)`.
+- Abyssal Revelation: `/datum/action/cooldown/dieci_abyssal` → check Active Knowledge count ≥ 3. Consume up to 5 entries (**lowest level first**). Sum all consumed levels → `total_levels`. Multiplier = `1 + min(1.0, total_levels * 0.1)` (capped at 2x). Cutscene_duel + immobilize → 5 RED hits. Final hit: PALE damage + `trigger_sinking()`. Then `weapon.free_empowers = min(3, weapon.free_empowers + 2)`.
+- Tome of Ruin: Track `var/h_combo_count = 0` and `var/datum/weakref/combo_target_ref`. Hook into `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered` was TRUE for this hit: if target != last combo target → reset count. Increment count. At 5 → check Active Knowledge count > 0, if none → do not trigger, do not reset count. If available → consume 1 entry (lowest level) → `var/datum/status_effect/stacking/sinking/S = target.has_status_effect(...)` → `if(S && S.stacks > 0) INVOKE_ASYNC(S, PROC_REF(trigger_sinking))` → then `target.apply_lc_sinking(5)` → `weapon.free_empowers = min(3, weapon.free_empowers + 1)` → reset count.
 
 ---
 
 #### Branch 2: Warden (Shield Focus)
 
-**Theme:** The `dieci_shield_hp` component branch. Knowledge becomes a literal barrier. The Warden fights behind a shield of accumulated wisdom, absorbing punishment and retaliating through Sinking applied on blocks.
+**Theme:** Knowledge becomes a literal barrier. The Warden enhances the shield HP granted by Fist weapons, fighting behind a shield of accumulated wisdom, absorbing punishment and retaliating through Sinking applied on blocks. **Preferred type: Medical.**
 
 **T1 (1pt) — Pick one:**
-- **A: Knowledge Barrier** — Gain the `dieci_shield_hp` component (starts at 0, max 500). Landing melee attacks restores **3 shield HP**.
-- **B: Reactive Ward** — Gain the `dieci_shield_hp` component (starts at 0, max 500). Landing melee attacks restores **2 shield HP**. Whenever the shield absorbs any amount of damage (partial or full), apply **5 Sinking** to the attacker.
+- **A: Knowledge Barrier** — Landing melee attacks restores **3 shield HP**. Additionally, on hit consume 1 **Medical** knowledge → restore extra shield HP = entry level × 5. 5s CD.
+- **B: Reactive Ward** — Landing melee attacks restores **2 shield HP**. Whenever the shield absorbs any amount of damage (partial or full), apply **5 Sinking** to the attacker.
 
 **T2 (2pt) — Pick one:**
-- **A: Tome Shield** — Action: consume 1 Active Knowledge entry to restore shield HP = **10 × entry level**. 5s CD.
-- **B: Stalwart Presence** — Shield decay is reduced (halves every **15 seconds** instead of 10). While shield HP is above **50**, gain **+15% movement speed**.
+- **A: Tome Shield** — Action: consume the **highest level Medical** knowledge entry to restore shield HP = **10 × entry level**. 5s CD. Requires Medical knowledge.
+- **B: Stalwart Presence** — Taking damage while at 50+ shield HP grants **3 Protection** stacks. Additionally, consume 1 **Medical** knowledge → heal self for entry level × 2% max HP. 5s internal CD.
 
 **T3 (3pt) — Pick one:**
-- **A: Golden Aegis** *(Powerful Attack, 90s CD)* — Consume all Active Knowledge entries (min 3). Shield set to **100 HP**, cannot break for **8 seconds**. Each time the shield absorbs damage during this period, apply Sinking = damage absorbed / 5 to the attacker. After 8s, release an AoE **PALE shockwave** (3-tile radius) dealing damage = remaining shield HP. Shield resets to base max HP after.
-- **B: Immovable Library** *(Passive)* — Shield passively regenerates **1 HP every 5 seconds**. Whenever the shield absorbs any amount of damage (partial or full), your **next melee attack within 3s deals PALE damage** instead of RED and applies **5 Sinking**. No Active Knowledge cost for this conversion.
+- **A: Golden Aegis** *(Powerful Attack, 90s CD)* — Requires shield component active and at least **1 Active Knowledge** entry. Heavy **stomp** that cracks the ground in a 2-tile radius — enemies hit are briefly stunned, closest becomes target. 5-hit combo (4 RED + 1 PALE final). Hits 1-4 each try to consume lowest level Active Knowledge → generate shield HP = level × 20. Each hit applies 3 Sinking. Final hit: 1.25x DPS PALE, consumes up to **200 shield HP** → +0.5% bonus damage per shield consumed, throws target shield/40 tiles (up to 5). Triggers all Sinking.
+- **B: Immovable Library** *(Passive)* — On hitting a target with **active Sinking**, consume **1 Active Knowledge** entry and restore shield HP equal to the **target's current Sinking stacks × 2**. 4s internal CD. Requires Active Knowledge to trigger.
 
 **Golden Aegis — Details:**
-- **Activation:** Consume all Active Knowledge (minimum 3 entries required). Shield HP is set to 100 regardless of current value. Shield becomes **unbreakable** for 8 seconds (damage still reduces shield HP, but it cannot go below 1).
-- **During buff:** Each time the shield absorbs damage (on every `on_damage` where shield > 0), apply Sinking stacks = `round(damage_absorbed / 5)` (min 1) to the attacker.
-- **After 8s:** AoE PALE shockwave centered on the Dieci, 3-tile radius. All enemies in range take PALE damage = current shield HP value. Apply 5 Sinking to all enemies hit. Then shield resets to **0** (must rebuild).
-- **Combo with empowerment:** If the Dieci is empowered (has an H attack ready) when the shockwave fires, the shockwave also triggers Sinking on enemies that already had active stacks.
+- **Activation:** Requires shield HP component active (must have shield from a Fist H attack) and at least **1 Active Knowledge** entry. Heavy **stomp** that cracks the ground in a 2-tile radius, stunning enemies hit. Closest enemy hit becomes the target.
+- **Combo:** 5 hits. Hits 1-4 deal RED damage. Final hit deals PALE damage.
+- **Hits 1-4:** Each hit tries to consume the **lowest level** Active Knowledge entry. If consumed, generate shield HP = `knowledge_level × 20` (capped at 500). If no Active Knowledge remains, the hit still deals damage but generates no shield. Each hit applies 3 Sinking stacks.
+- **Final hit:** 1.25x DPS, PALE damage. Consumes up to **200 shield HP**. Deals **+0.5% bonus damage per shield consumed** (up to +100% at 200 shield, effectively 2.5x DPS). Throws target `round(shield_consumed / 40)` tiles (up to 5 at 200). Calls `trigger_sinking()` to immediately trigger all Sinking on the target.
+- **Shield consumed:** If consuming shield brings it to 0, the component is removed (`qdel`).
 
 **Implementation Notes:**
-- Knowledge Barrier: On skill registration → `parent.AddComponent(/datum/component/dieci_shield_hp)`. `COMSIG_MOB_ITEM_ATTACK` → `shield_comp.restore_shield(3)`.
-- Reactive Ward: On skill registration → `parent.AddComponent(/datum/component/dieci_shield_hp)`. `COMSIG_MOB_ITEM_ATTACK` → `shield_comp.restore_shield(2)`. Set `shield_comp.on_shield_absorb = CALLBACK(src, PROC_REF(on_shield_hit))` → `on_shield_hit(user, attacker, absorbed)` → `attacker.apply_lc_sinking(5)`.
-- Tome Shield: `/datum/action/cooldown/dieci_tome_shield` with 5s CD → consume 1 Active Knowledge → `shield_comp.restore_shield(10 * level)`.
-- Stalwart Presence: Override `shield_comp.decay_timer` interval to 15s instead of 10s. Track shield HP → `add_movespeed_modifier(/datum/movespeed_modifier/dieci_stalwart)` (multiplicative_slowdown = -0.15, variable = TRUE) when above 50 HP, remove when below.
-- Golden Aegis: `/datum/action/cooldown/dieci_golden_aegis` → consume all knowledge → `shield_comp.shield_health = 100` → set `aegis_active = TRUE` → pause decay timer → register special on_damage handler that applies Sinking → `addtimer(8 SECONDS)` → AoE PALE via `for(var/mob/living/L in range(3, user))` → `L.deal_damage(shield_comp.shield_health, PALE_DAMAGE, user)` + `L.apply_lc_sinking(5)` → `shield_comp.shield_health = 0` → resume decay timer → `aegis_active = FALSE`.
-- Immovable Library: Start a 5s repeating `addtimer` → `shield_comp.restore_shield(1)`. Set `shield_comp.on_shield_absorb = CALLBACK(...)` → on any shield absorption: set `var/pale_counter_active = TRUE` + `addtimer(CALLBACK(reset_pale_counter), 3 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`. On `COMSIG_MOB_ITEM_ATTACK` → if `pale_counter_active`: force this hit to PALE via `INVOKE_ASYNC` → `target.deal_damage(weapon.force, PALE_DAMAGE, user)` + `target.apply_lc_sinking(5)` + reset flag. (Return damage modification signal or deal extra PALE damage separately.)
+- Knowledge Barrier: `COMSIG_MOB_ITEM_ATTACK` → if shield component exists, `shield_comp.restore_shield(3)`. Additionally, 5s CD check → consume 1 Medical knowledge (lowest level) → `shield_comp.restore_shield(entry_level * 5)`.
+- Reactive Ward: `COMSIG_MOB_ITEM_ATTACK` → if shield component exists, `shield_comp.restore_shield(2)`. Set `shield_comp.on_shield_absorb = CALLBACK(src, PROC_REF(on_shield_hit))` → `on_shield_hit(user, attacker, absorbed)` → `attacker.apply_lc_sinking(5)`. (Re-registers callback whenever a new shield component is created by Fist H attacks.)
+- Tome Shield: `/datum/action/cooldown/dieci_tome_shield` with 5s CD → consume **highest level Medical** knowledge entry → `shield_comp.restore_shield(10 * level)`. If no Medical knowledge available, action is greyed out.
+- Stalwart Presence: `COMSIG_MOB_APPLY_DAMGE` → if shield HP >= 50, 5s CD check → `user.apply_status_effect(/datum/status_effect/buff/lc_protection, 3)`. Additionally, consume 1 Medical knowledge → heal self `entry_level * 0.02 * user.maxHealth`.
+- Golden Aegis: `/datum/action/cooldown/dieci_golden_aegis` → check shield component exists. Cutscene_duel + immobilize → 4 RED hits: each tries to consume lowest level knowledge → `shield_comp.restore_shield(level * 20)` + `target.apply_lc_sinking(3)`. Final hit: `var/consumed = min(200, shield_comp.shield_health)` → `shield_comp.shield_health -= consumed` → deal 1.25x DPS PALE × `(1 + consumed * 0.005)` (up to 2.5x DPS at 200 shield) → throw target `round(consumed / 40)` tiles → `trigger_sinking()`. If shield reaches 0 → `qdel(shield_comp)`.
+- Immovable Library: `COMSIG_MOB_ITEM_ATTACK` → 4s CD check → get target's Sinking status → if not active (past 5s delay), skip → check Active Knowledge count > 0, if none → skip → consume 1 entry (lowest level) → `target.get_lc_sinking_stacks()` → `shield_comp.restore_shield(stacks * 2)`.
 
 ---
 
 #### Branch 3: Sage (Knowledge Enhancement)
 
-**Theme:** Maximize the Active Knowledge economy. The Sage makes every piece of knowledge count more — longer buffs, cheaper synthesis, stronger consumption effects, and the ability to share knowledge with allies. At peak knowledge reserves, the Sage's weapon permanently channels PALE energy.
+**Theme:** Maximize the Active Knowledge economy. The Sage makes every piece of knowledge count more — longer buffs, cheaper synthesis, stronger consumption effects, and the ability to share knowledge with allies. At peak knowledge reserves, the Sage's weapon permanently channels PALE energy. **Preferred type: Spiritual.**
 
 **T1 (1pt) — Pick one:**
-- **A: Extensive Notes** — Max Active Knowledge increased from **20 to 30**. Empowered H attacks deal **+15% bonus PALE damage**.
+- **A: Extensive Notes** — Max Active Knowledge increased from **20 to 30**. Empowered H attacks deal **+15% bonus PALE damage**. Additionally, on empowered H hit consume 1 **Spiritual** knowledge → deal extra damage = entry level × 5% weapon force. 5s CD.
 - **B: Applied Learning** — Each time Active Knowledge is consumed (for any purpose — H attack empowerment, Tome Shield, combo finishers, skills, etc.), gain **4 Offense Level Up** stacks.
 
 **T2 (2pt) — Pick one:**
-- **A: Shared Wisdom** — Action: target an ally within 5 tiles. Consume 1 Active Knowledge entry → give the ally **+5% damage per knowledge level** for 30s. Also apply Sinking = knowledge level × 2 to all enemies within 3 tiles of the ally. 15s CD.
-- **B: Efficient Research** — Synthesis costs **2 entries instead of 3** to create the next level. Consuming Level 3+ knowledge in combat refunds **1 entry of the same type, one level lower** (partial refund).
+- **A: Shared Wisdom** — Action: target an ally within 5 tiles. Consume 1 **Spiritual** knowledge entry → give the ally **Offense Level Up stacks = knowledge level × 2**. 15s CD. Requires Spiritual knowledge.
+- **B: Efficient Research** — Synthesis costs **2 entries instead of 3** to create the next level. Consuming Level 3+ knowledge in combat refunds **1 entry of the same type, one level lower** (partial refund). Additionally, when consuming any knowledge in combat, consume 1 **Spiritual** knowledge → grant 2 OLU to all allies within 3 tiles. 5s CD.
 
 **T3 (3pt) — Pick one:**
-- **A: Grand Archive** *(Powerful Attack, 90s CD)* — Consume up to **5 Active Knowledge entries** (min 3). Each consumed entry = 1 hit in the combo. Each hit's damage type depends on knowledge type: **Anatomical/Behavioral = RED**, **Medical = WHITE**, **Spiritual = PALE**. Per-hit: apply Sinking = knowledge level × 2. Final hit: 2x DPS + apply Sinking = total consumed levels × 2.
-- **B: Infinite Library** *(Passive)* — Active Knowledge **has no max cap**. When holding **25+ entries**, all L attacks also deal PALE damage (always empowered, no `attack_self` needed). When holding **35+ entries**, all melee attacks (L and H) also passively apply 2 Sinking per hit. Consuming knowledge at 35+ does not lose the passive until you drop below the threshold.
+- **A: Grand Archive** *(Powerful Attack, 90s CD)* — Automatically consume up to 5 of your **highest level** Active Knowledge entries. Hurl the Tome at an enemy within 7 tiles, **staggering** them on impact, then rush in to close the distance. Each consumed entry = 1 hit in the combo, sorted **lowest level first, highest level last**. All hits deal **RED damage** except the **final hit** (PALE, triggers Sinking). Per-hit: apply Sinking = consumed entry level × 2. Final hit: 1.25x DPS + Sinking = consumed entry level × 4 (doubled).
+- **B: Infinite Library** *(Passive)* — Active Knowledge cap increased to **50**. L attacks consume the **lowest level** Active Knowledge entry on hit to apply **Sinking stacks equal to the entry's level**. 1s internal CD.
 
 **Grand Archive — Details:**
-- **Activation:** Consume 3-5 Active Knowledge entries (player chooses via TGUI popup or auto-selects lowest first).
-- **Combo:** Number of hits = number of entries consumed (3 to 5). Each hit uses the consumed entry's type to determine damage type:
-  - Anatomical → RED damage
-  - Behavioral → RED damage
-  - Medical → WHITE damage (can trigger Sinking if stacks are active!)
-  - Spiritual → PALE damage (triggers Sinking)
+- **Activation:** Automatically consume up to 5 of the **highest level** Active Knowledge entries (no TGUI selection — always picks the strongest available). Hurl the Tome at an enemy within **7 tiles**, staggering them on impact, then rush in to close the distance.
+- **Sorting:** Consumed entries are sorted lowest level first, highest level last. The strongest hit is always the finisher.
+- **Combo:** Number of hits = number of entries consumed (1 to 5). All hits deal **RED damage** except the **final hit**, which deals **PALE damage** (triggers Sinking).
 - **Per-hit:** DPS damage + apply Sinking stacks = consumed entry's level × 2.
-- **Final hit:** 2x DPS. Apply bonus Sinking = sum of all consumed levels × 2. For example, consuming L2 + L3 + L1 + L4 + L1 = total 11, so final hit applies 22 Sinking.
-- **Strategy:** Consuming Spiritual/Medical entries at the end ensures PALE/WHITE final hits trigger accumulated Sinking.
+- **Final hit:** 1.25x DPS, **PALE damage**. Apply Sinking = consumed entry's level × 4 (doubled). For example, consuming L1 + L2 + L3 = 3 hits sorted L1→L2→L3. Hit 1: 2 Sinking. Hit 2: 4 Sinking. Final (L3): 1.25x DPS PALE + 12 Sinking. Total: 18 Sinking.
 
 **Implementation Notes:**
-- Extensive Notes: On skill registration → `knowledge_comp.max_knowledge = 30`. Register `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered`: deal `weapon.force * 0.15` bonus PALE damage via `INVOKE_ASYNC`.
+- Extensive Notes: On skill registration → `knowledge_comp.max_knowledge = 30`. Register `COMSIG_MOB_ITEM_ATTACK` → if `weapon.empowered`: deal `weapon.force * 0.15` bonus PALE damage via `INVOKE_ASYNC`. Additionally, 5s CD check → consume 1 Spiritual knowledge → deal extra `weapon.force * 0.05 * entry_level` damage.
 - Applied Learning: Hook into all knowledge consumption events (track via component signal). On consume → `human_parent.apply_lc_offense_level_up(4)`. OLU naturally halves every 5s so sustained consumption keeps it high.
-- Shared Wisdom: `/datum/action/cooldown/dieci_shared_wisdom` with 15s CD → pointed at ally → consume 1 knowledge → apply `/datum/status_effect/dieci_wisdom_buff` to ally (damage_mult = 1 + 0.05 * level, 30s duration) → `for(var/mob/living/L in range(3, ally))` → check hostile → `L.apply_lc_sinking(level * 2)`.
-- Efficient Research: Modify synthesis logic in Tome TGUI handler → change required count from 3 to 2. On knowledge consumption in combat → if consumed level ≥ 3 → `knowledge_comp.add_knowledge(type, level - 1, "Residual insight from [type] study")`.
-- Grand Archive: `/datum/action/cooldown/dieci_grand_archive` → TGUI popup or auto-select → consume 3-5 entries → store their types/levels → cutscene_duel + immobilize → N hits. Per-hit: determine damtype from entry type, deal DPS damage, `target.apply_lc_sinking(entry_level * 2)`. Final hit: 2x DPS + `target.apply_lc_sinking(total_levels * 2)`.
-- Infinite Library: On skill registration → `knowledge_comp.max_knowledge = INFINITY` (or a very high number like 999). Track threshold via `COMSIG_DIECI_KNOWLEDGE_CHANGED` (new signal on add/remove). At 25+ → L attacks also deal PALE damage (register `COMSIG_MOB_ITEM_ATTACK` to override damtype even when not empowered). At 35+ → also `target.apply_lc_sinking(2)` per hit (both L and H). Check thresholds on every knowledge change.
+- Shared Wisdom: `/datum/action/cooldown/dieci_shared_wisdom` with 15s CD → pointed at ally → consume 1 **Spiritual** knowledge → `ally.apply_lc_offense_level_up(level * 2)`. If no Spiritual knowledge available, action is greyed out.
+- Efficient Research: Modify synthesis logic in Tome TGUI handler → change required count from 3 to 2. On knowledge consumption in combat → if consumed level ≥ 3 → `knowledge_comp.add_knowledge(type, level - 1, "Residual insight from [type] study")`. Additionally, 5s CD check → consume 1 Spiritual knowledge → for all allies in range(3, user) → `ally.apply_lc_offense_level_up(2)`.
+- Grand Archive: `/datum/action/cooldown/dieci_grand_archive` → auto-consume up to 5 highest level entries → sort by level ascending → store their levels → cutscene_duel + immobilize → N hits. All hits RED damage. Per-hit: deal DPS damage, `target.apply_lc_sinking(entry_level * 2)`. Final hit: 1.25x DPS, PALE damage + `target.apply_lc_sinking(entry_level * 4)` (doubled).
+- Infinite Library: On skill registration → `knowledge_comp.max_knowledge = 50`. `COMSIG_MOB_ITEM_ATTACK` → if not empowered (L attack) and 1s CD check → consume lowest level entry → `target.apply_lc_sinking(entry_level)`.
 
 ---
 
@@ -3328,17 +3393,18 @@ Example: Warden with Knowledge Barrier restoring 3/hit. Rapid attacking builds s
 |---|---|---|
 | **Scholar + Warden** | "The Fortress Scholar" — Build Sinking aggressively while the shield buys time. Shield blocks with Reactive Ward apply Sinking passively; PALE mode triggers accumulated stacks. | Best sustained 1v1. Shield absorbs punishment while Sinking overwhelms. |
 | **Scholar + Sage** | "The Master Archivist" — Maximum Sinking application with knowledge efficiency. Never run out of knowledge, every piece of knowledge amplifies Sinking. Applied Learning + Deep Study = constant Sinking + damage buffs. | Highest damage output. Knowledge fuels relentless offense. |
-| **Warden + Sage** | "The Living Library" — Shield + knowledge buffs + support. Hard to kill, helps allies, and Infinite Library provides passive PALE without consuming knowledge. | Best support + survivability. Never runs dry. |
+| **Warden + Sage** | "The Living Library" — Shield + knowledge buffs + support. Hard to kill, helps allies, and Infinite Library converts L attacks into Sinking applicators by consuming knowledge. | Best support + survivability. |
 
 ### Implementation Notes (General)
 
-- **No Fragile or DLD** — Dieci's debuff identity is purely Sinking
+- **3 knowledge types, 3 branches:** Scholar → **Behavioral**, Warden → **Medical**, Sage → **Spiritual**. Each type fuels 2 combo finishers: Behavioral (Quick Strike, Pressure Combo), Medical (Sweeping Blow, Overwhelming Barrage), Spiritual (Grand Finale, Measured Finisher). T1A + both T2 options per branch consume the preferred type (5s CD each). Since you pick one T1 and one T2, a player has exactly 2 consuming skills active. Branch skills compete with combo finishers for the same type
+- **No Fragile or DLD** — Dieci's debuff identity is purely Sinking (exception: Spreading Decay applies DLD via Behavioral consumption)
 - Core status effect is **Sinking** (`code/datums/status_effects/debuffs.dm:1956-2051`) — max 50 stacks, 5s activation delay, triggers on WHITE/PALE damage
 - The `dieci_shield_hp` component uses `COMSIG_MOB_APPLY_DAMGE` → flat subtract raw damage from shield HP → `COMPONENT_MOB_DENY_DAMAGE`. No armor/physiology recalculation. Shows `/obj/effect/temp_visual/shock_shield` on full block (0 HP damage to user). Overflow damage dealt normally via `deal_damage()`. Max 500 HP, starts at 0, built up in small amounts via skills (3/hit, 2/hit) and Active Knowledge consumption (10 × level). **Halves every 10 seconds** (15s with Stalwart Presence), creating a "use it or lose it" dynamic
-- **Empowerment** (`attack_self` = consume 1 lowest knowledge, empower next attack) is the universal RED→PALE conversion — built into the weapon, not a separate action. One empowerment at a time (no stacking). The empowered H attack deals PALE + 2 Sinking + weapon bonus (Fists: shield HP, Keys: OLU). L attacks are basic RED, free. `var/free_empowers` tracks free empowerments granted by skills (Abyssal Revelation, Tome of Ruin)
-- Sinking stacks added to an already-activated effect do NOT get a new 5s delay — this makes empowered H (PALE) hits trigger + replenish in the same attack
+- **Empowerment** (`attack_self` = consume 1 knowledge, minimum Level 3, lowest qualifying level first, empower next attack) is the universal RED→PALE conversion — built into the weapon, not a separate action. One empowerment at a time (no stacking). The empowered H attack deals PALE + weapon bonus (Fists: shield HP, Keys: OLU). L attacks are basic RED + 2 Sinking stacks per hit. `var/free_empowers` tracks free empowerments granted by skills (Abyssal Revelation grants 2, Tome of Ruin grants 1 per proc). Max 3 stored
+- L attacks build Sinking (RED + 2 stacks), H attacks trigger Sinking (PALE detonates accumulated stacks). Sinking stacks added to an already-activated effect do NOT get a new 5s delay
 - `trigger_sinking()` can be called directly on the status effect datum to bypass the 5s activation delay (used by Abyssal Revelation and Tome of Ruin)
-- **Weapon damtype override:** Empowerment sets `weapon.damtype = PALE_DAMAGE` for the H hit, then reverts to `RED_DAMAGE`. Skills like Immovable Library counter and Infinite Library passive also modify `weapon.damtype` directly or deal extra PALE damage via `INVOKE_ASYNC` → `target.deal_damage()`
+- **Weapon damtype override:** Empowerment sets `weapon.damtype = PALE_DAMAGE` for the H hit, then reverts to `RED_DAMAGE`
 
 ### New Files to Create
 
@@ -3542,8 +3608,8 @@ Manages the lifecycle of a single duel. Created when a duel begins, destroyed wh
 
 **Contract-Specific Behavior:**
 - Cinq skill tree abilities **only function while on an active contract**
-- Duel Person contracts show a direction indicator pointing toward the target
-- Champion Contracts show indicators for both the client and the target
+- Duel Person contracts show the **target's name**
+- Champion Contracts show both the **client's name** and the **target's name**
 - Failing to initiate a duel within the contract duration = contract failure
 
 **Target Grade EXP Bonus:**
@@ -3566,13 +3632,13 @@ Higher-grade (stronger) opponents yield more bonus EXP, rewarding Cinq fixers fo
 
 | Activity | EXP Gain | Notes |
 |---|---|---|
-| Passive contract tick | 1 EXP / 10s | While on active contract |
+| Passive contract tick | 1 EXP / 10s | Duration-based contracts only (not objective-based) |
 | Duel victory (Level 1) | 10 EXP | First blood |
 | Duel victory (Level 2) | 20 EXP | Submission |
 | Duel victory (Level 3) | 40 EXP | To the death |
 | Target grade bonus | 3-27 EXP | Based on target's attribute grade (stronger = more) |
 | Poise crit during duel | 2 EXP per crit | Only while duel component active |
-| Contract completion bonus | 10-30 EXP | Based on duration + outcome |
+| Contract completion bonus | Duration: 25-63 EXP, Objective: 76 EXP | Objective-based gets higher reward, no passive tick |
 
 **Ahn Rewards:**
 

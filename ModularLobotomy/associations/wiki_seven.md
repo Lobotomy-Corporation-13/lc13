@@ -16,11 +16,11 @@ For general information about the association system (contracts, EXP, setup), se
 
 Seven earn EXP through intelligence gathering. Their thematic activities are:
 
-* '''Passive EXP''' — '''1 EXP''' every 10s while '''on an active contract''' (does not activate off-contract)
+* '''Passive EXP''' — '''1 EXP''' every 10s while on a '''duration-based contract''' (does not activate off-contract or on objective-based contracts)
 * '''Recorder captures''' — '''1 EXP''' per 5 lines of conversation recorded (max '''5 EXP/min''' per recorder, max 3 active recorders)
 * '''Spyglass observation''' — '''1 EXP''' per 30s while actively observing through the spyglass popup (on contract only)
 * '''Filed Intel Report''' — '''5 EXP''' base + up to '''10 EXP''' accuracy bonus per report (1 per target per 2 min). Accuracy depends on all fields including backpack contents
-* '''Contract completion''' — Duration-based contracts (Surveillance Post, Escort Person): '''10 EXP''' (6 min), '''15 EXP''' (10 min), or '''25 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target, Investigate Person): '''15 EXP''' on completion
+* '''Contract completion''' — Duration-based contracts (Surveillance Post, Escort Person): '''25 EXP''' (6 min), '''38 EXP''' (10 min), or '''63 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target, Investigate Person): '''76 EXP''' on completion (no passive tick, but higher completion reward)
 
 Even without an active contract, Seven can earn EXP at '''half rate''' by recording people, filing intel reports, and using surveillance equipment.
 
@@ -48,7 +48,7 @@ In addition to the universal contracts (Patrol Route, Eliminate Target, Escort P
 The client pays upfront when creating the contract. Hana has unlimited funds; civilians pay from their own wallet. If the contract is declined or discarded, the payment is refunded. For universal contract costs, see the [[Updated Zwei Association|the main Association page]].
 
 '''Contract Indicators:'''
-* Investigate Person contracts show a subtle indicator pointing to the target's direction
+* Investigate Person contracts show the '''target's name'''. Filed reports are tracked (e.g., ''"Reports filed: 2/5"'')
 * Surveillance Post contracts highlight the monitored area boundary and show the number of active recorders in the zone
 
 '''Important — Turning Over Information:'''

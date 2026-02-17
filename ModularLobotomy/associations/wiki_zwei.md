@@ -16,10 +16,10 @@ For general information about the association system (contracts, EXP, setup), se
 
 Zwei earn EXP through protection. Their thematic activities are:
 
-* '''Passive EXP''' — '''1 EXP''' every 10s while '''on an active contract''' and within range of the client or guarded area (does not activate off-contract)
+* '''Passive EXP''' — '''1 EXP''' every 10s while on a '''duration-based contract''' and within range of the client or guarded area (does not activate off-contract or on objective-based contracts)
 * '''Damage absorbed''' — '''2 EXP''' when taking damage near the client or inside the guarded area (1s cooldown)
 * '''Combat''' — '''1 EXP''' per hit on a mob (2s cooldown), '''3 EXP''' for killing a mob
-* '''Contract completion''' — Duration-based contracts: '''10 EXP''' (6 min), '''15 EXP''' (10 min), or '''25 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target): '''15 EXP''' on completion
+* '''Contract completion''' — Duration-based contracts: '''25 EXP''' (6 min), '''38 EXP''' (10 min), or '''63 EXP''' (20 min). Objective-based contracts (Patrol Route, Eliminate Target): '''76 EXP''' on completion (no passive tick, but higher completion reward)
 
 Even without an active contract, Zwei can earn EXP at '''half rate''' by taking damage while near non-association players and engaging hostile targets.
 
@@ -48,7 +48,7 @@ The client pays upfront when creating the contract. Hana has unlimited funds; ci
 
 '''Contract Indicators:'''
 * Guard Area contracts create a visible zone boundary so you know your post
-* Protect Person contracts show a tether/indicator to the client
+* Protect Person contracts show the '''client's name'''. While near the client, fixers receive periodic EXP notifications confirming proximity is being tracked
 * Leaving the area or client '''pauses the timer''' — it does not fail the contract. The timer resumes when any association member returns
 
 === Weapons and Armor ===
