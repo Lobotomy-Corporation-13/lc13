@@ -6,15 +6,18 @@
 /datum/ego_datum/armor/grinder
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/grinder
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Scarecrow searching for wisdom - Harvest
 /datum/ego_datum/weapon/harvest
 	item_path = /obj/item/ego_weapon/harvest
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/harvest
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/harvest
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 //Red Queen - Blind Fury
 /datum/ego_datum/weapon/fury
@@ -48,11 +51,13 @@
 /datum/ego_datum/armor/magicbullet
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/magicbullet
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Crumbling Armor - Life for a Daredevil
 /datum/ego_datum/weapon/daredevil
 	item_path = /obj/item/ego_weapon/shield/daredevil
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_LOCKED_POTENTIAL)
 
 // Rudolta - Merriment
 /datum/ego_datum/weapon/christmas
@@ -67,10 +72,12 @@
 /datum/ego_datum/weapon/logging
 	item_path = /obj/item/ego_weapon/logging
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/logging
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/logging
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 // Snow Queen - Frost Splinter
 /datum/ego_datum/weapon/frostsplinter
@@ -94,11 +101,13 @@
 /datum/ego_datum/armor/solemnlament
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/solemnlament
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 //Scaredy Cat - Courage
 /datum/ego_datum/armor/courage
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/courage
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/courage
 	item_path = /obj/item/ego_weapon/mini/courage
@@ -116,11 +125,13 @@
 /datum/ego_datum/weapon/pleasure
 	item_path = /obj/item/ego_weapon/pleasure
 	cost = 35
+	ego_tags = list(EGO_TAG_HAZARDOUS)
 
 //Child of the Galaxy - Galaxy
 /datum/ego_datum/armor/galaxy
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/galaxy
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/galaxy
 	item_path = /obj/item/ego_weapon/ranged/galaxy
@@ -130,6 +141,7 @@
 /datum/ego_datum/armor/unrequited
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/unrequited
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/unrequited
 	item_path = /obj/item/ego_weapon/ranged/unrequited
@@ -144,11 +156,13 @@
 	item_category = "Weapon (LMG)"
 	item_path = /obj/item/ego_weapon/ranged/harmony
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_PIERCING, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/weapon/rhythm
 	item_category = "Weapon (Guitar)"
 	item_path = /obj/item/ego_weapon/rhythm
 	cost = 35
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_SUPPORT)
 
 //The Watchman - Alleyway
 /datum/ego_datum/armor/alleyway
@@ -196,6 +210,7 @@
 /datum/ego_datum/armor/homing_instinct
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/homing_instinct
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/homing_instinct
 	item_path = /obj/item/ego_weapon/homing_instinct
@@ -204,6 +219,7 @@
 /datum/ego_datum/weapon/brick_road
 	item_path = /obj/item/ego_weapon/lance/brick_road
 	cost = 35
+	ego_tags = list(EGO_TAG_DEBUFFER)
 
 /datum/ego_datum/armor/homing_instinct_old
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/brick
@@ -222,6 +238,7 @@
 /datum/ego_datum/weapon/revelation
 	item_path = /obj/item/ego_weapon/revelation
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 //Puss in Boots - Inheritance
 /datum/ego_datum/armor/inheritance
@@ -231,6 +248,7 @@
 /datum/ego_datum/weapon/inheritance
 	item_path = /obj/item/ego_weapon/inheritance
 	cost = 35
+	ego_tags = list(EGO_TAG_COMBO)
 
 //Siren - Song of the Past
 /datum/ego_datum/armor/song
@@ -253,16 +271,19 @@
 /datum/ego_datum/weapon/legerdemain
 	item_path = /obj/item/ego_weapon/shield/legerdemain
 	cost = 35
+	ego_tags = list(EGO_TAG_SUSTAIN)
 
 //Lady facing the Wall - Wedge
 /datum/ego_datum/weapon/wedge
 	item_path = /obj/item/ego_weapon/ranged/wedge
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 //You Must Become Strong - Get Strong
 /datum/ego_datum/weapon/get_strong
 	item_path = /obj/item/ego_weapon/get_strong
 	cost = 35
+	ego_tags = list(EGO_TAG_REACH)
 
 /datum/ego_datum/armor/get_strong
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/get_strong
@@ -276,6 +297,7 @@
 /datum/ego_datum/weapon/impending_day
 	item_path = /obj/item/ego_weapon/impending_day
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 //Headless Ichthys - Fluid Sac
 /datum/ego_datum/armor/fluid_sac
@@ -285,6 +307,7 @@
 /datum/ego_datum/weapon/fluid_sac
 	item_path = /obj/item/ego_weapon/fluid_sac
 	cost = 35
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
 
 //Nameless Fetus - Syrinx
 /datum/ego_datum/armor/syrinx
@@ -298,6 +321,7 @@
 /datum/ego_datum/weapon/trachea
 	item_path = /obj/item/ego_weapon/shield/trachea
 	cost = 35
+	ego_tags = list(EGO_TAG_GUARD)
 
 //Red Shoes - Sanguine Desire
 /datum/ego_datum/armor/sanguine
@@ -307,6 +331,7 @@
 /datum/ego_datum/weapon/sanguine
 	item_path = /obj/item/ego_weapon/sanguine
 	cost = 35
+	ego_tags = list(EGO_TAG_HAZARDOUS)
 
 //For Your Eyes Only - Window to the World
 /datum/ego_datum/armor/window
@@ -334,6 +359,7 @@
 /datum/ego_datum/weapon/replica
 	item_path = /obj/item/ego_weapon/replica
 	cost = 35
+	ego_tags = list(EGO_TAG_KNOCKBACK, EGO_TAG_GUNBLADE)
 
 //Wayward Passenger - Dimension Shredder
 /datum/ego_datum/armor/warp
@@ -344,11 +370,13 @@
 	item_category = "Weapon (Knife)"
 	item_path = /obj/item/ego_weapon/warp/knife
 	cost = 35
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/weapon/warp/spear
 	item_category = "Weapon (Spear)"
 	item_path = /obj/item/ego_weapon/warp
 	cost = 35
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 //Missed Reaper - Grasp
 /datum/ego_datum/armor/grasp
@@ -377,10 +405,12 @@
 /datum/ego_datum/armor/aedd
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/aedd
 	cost = 35
+	ego_tags = list(EGO_TAG_REALIZABLE)
 
 /datum/ego_datum/weapon/aedd
 	item_path = /obj/item/ego_weapon/aedd
 	cost = 35
+	ego_tags = list(EGO_TAG_SPLIT_DAMAGE, EGO_TAG_LOCKED_POTENTIAL)
 
 //Norinori - Split
 /datum/ego_datum/armor/split
@@ -400,16 +430,19 @@
 	item_category = "Weapon (Lance)"
 	item_path = /obj/item/ego_weapon/lance/lifestew_lance
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/weapon/lifestew
 	item_category = "Weapon (Mace)"
 	item_path = /obj/item/ego_weapon/lifestew
 	cost = 35
+	ego_tags = list(EGO_TAG_GUNBLADE)
 
 //Faelantern - Midwinter Nightmare
 /datum/ego_datum/weapon/faelantern
 	item_path = /obj/item/ego_weapon/faelantern
 	cost = 35
+	ego_tags = list(EGO_TAG_DOT, EGO_TAG_GUNBLADE, EGO_TAG_RANKBUMP)
 
 //Memories of a Better Time - Morii
 /datum/ego_datum/armor/morii
@@ -428,6 +461,7 @@
 /datum/ego_datum/weapon/gofer
 	item_path = /obj/item/ego_weapon/mini/gofer
 	cost = 35
+	ego_tags = list(EGO_TAG_MULTIHIT)
 
 //Eris - Coiling
 /datum/ego_datum/armor/coiling
@@ -446,6 +480,7 @@
 /datum/ego_datum/weapon/uturn
 	item_path = /obj/item/ego_weapon/uturn
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK)
 
 //Steam Transport Machine - Nixie Divergence (PH)
 /datum/ego_datum/armor/nixie
@@ -464,6 +499,7 @@
 /datum/ego_datum/weapon/sunshower
 	item_path = /obj/item/ego_weapon/sunshower
 	cost = 35
+	ego_tags = list(EGO_TAG_COMBO)
 
 //Ardor Blossom Moth - Ardor Blossom Star
 /datum/ego_datum/armor/ardor_star
@@ -473,6 +509,7 @@
 /datum/ego_datum/weapon/ardor_star
 	item_path = /obj/item/ego_weapon/ranged/ardor_star
 	cost = 35
+	ego_tags = list(EGO_TAG_AOE_PIERCING)
 
 //Alleyway Watchdog - Telepole
 /datum/ego_datum/armor/telepole
@@ -482,26 +519,30 @@
 /datum/ego_datum/weapon/telepole
 	item_path = /obj/item/ego_weapon/telepole
 	cost = 35
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
 
 // Teddy in Pain - Hex Nail
 /datum/ego_datum/weapon/hexnail
 	item_path = /obj/item/ego_weapon/hexnail
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 /datum/ego_datum/armor/hexnail
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/hexnail
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP)
 
 // Sirocco - Desert Wind
 /datum/ego_datum/weapon/desert // rank-bumped
 	item_path = /obj/item/ego_weapon/desert
 	cost = 35
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_COMBO, EGO_TAG_KNOCKBACK)
 
 // Der Fluchutze - Fell Bullet
 /datum/ego_datum/armor/fellbullet //the weapons are WAW
 	item_path = /obj/item/clothing/suit/armor/ego_gear/he/fellbullet
 	cost = 35
-	
+
 // Interdimensional Rubber Duck - Squeaky Toy
 /datum/ego_datum/weapon/squeak
 	item_path = /obj/item/ego_weapon/ranged/squeak

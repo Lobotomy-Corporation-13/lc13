@@ -131,6 +131,12 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 /proc/cmp_mob_realname_dsc(mob/A,mob/B)
 	return sorttext(A.real_name,B.real_name)
 
+/proc/cmp_ego_cost_asc(datum/ego_datum/a, datum/ego_datum/b)
+	return cmp_numeric_asc(a.cost, b.cost)
+
+/proc/cmp_ego_cost_dsc(datum/ego_datum/a, datum/ego_datum/b)
+	return cmp_numeric_dsc(a.cost, b.cost)
+
 /**
  * Sorts crafting recipe requirements before the crafting recipe is inserted into GLOB.crafting_recipes
  *

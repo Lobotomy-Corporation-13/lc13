@@ -9,6 +9,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/mcrib
 	item_path = /obj/item/ego_weapon/ranged/pistol/mcrib
 	cost = 12
+	ego_tags = list(EGO_TAG_SUPPORT)
 
 /datum/ego_datum/armor/mcrib
 	item_path = /obj/item/clothing/suit/armor/ego_gear/zayin/mcrib
@@ -34,6 +35,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/anti_skub
 	item_path = /obj/item/ego_weapon/ranged/anti_skub
 	cost = 50
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_HAZARDOUS)
 
 /datum/ego_datum/armor/pro_skub
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/pro_skub
@@ -57,6 +59,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/chaosdunk
 	item_path = /obj/item/ego_weapon/chaosdunk
 	cost = 100
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/chaosdunk
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/chaosdunk
@@ -66,6 +69,7 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/violet_curse
 	item_path = /obj/item/ego_weapon/violet_curse
 	cost = 100
+	ego_tags = list(EGO_TAG_AOE_RADIAL, EGO_TAG_MOBILITY, EGO_TAG_HAZARDOUS)
 
 //Sukuna - robes
 /datum/ego_datum/armor/sukuna
@@ -75,15 +79,18 @@ Keep things balanced if they aren't going to be admin only.  - Coxswain
 /datum/ego_datum/weapon/sukuna
 	item_path = /obj/item/ego_weapon/sukuna
 	cost = 200
+	ego_tags = list(EGO_TAG_AOE_RADIAL)
 
 /datum/ego_datum/armor/sandals
 	item_path = /obj/item/clothing/shoes/sandal/sukuna
 	cost = 20
+	testrange_blacklisted = TRUE
 
 // The Ride Never Ends - Wild Ride
 /datum/ego_datum/weapon/wild_ride
 	item_path = /obj/item/ego_weapon/lance/wild_ride
 	cost = 250
+	ego_tags = list(EGO_TAG_MOBILITY)
 
 /datum/ego_datum/armor/wild_ride
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/wild_ride
