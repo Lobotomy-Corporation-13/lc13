@@ -12,7 +12,7 @@
 	// All spawners fired at the exact same tick, causing nested maploading stack_traces.
 	// Using a range staggers the spawns across different ticks.
 	var/spawn_delay_min = 300
-	var/spawn_delay_max = 600
+	var/spawn_delay_max = 900
 
 /obj/effect/spawner/room/Initialize()
 	..()/*
