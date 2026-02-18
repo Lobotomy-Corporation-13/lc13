@@ -234,7 +234,7 @@ GLOBAL_LIST_INIT(rce_tactical_map_editors, list(
 		return FALSE
 
 	// Check job title against allowed editors list
-	if(user_job.title in GLOB.rce_tactical_map_editors)
+	if(user_job in GLOB.rce_tactical_map_editors)
 		return TRUE
 
 	return FALSE
