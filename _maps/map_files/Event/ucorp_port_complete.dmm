@@ -42,14 +42,6 @@
 	color = "#c4c4c4"
 	},
 /area/city)
-"ak" = (
-/obj/machinery/door/airlock/wood{
-	name = "workshop"
-	},
-/turf/open/floor/facility{
-	color = "#b5b5b5"
-	},
-/area/city/shop)
 "am" = (
 /obj/structure/flora/ash/garden/seaweed,
 /turf/open/water/deep/saltwater{
@@ -161,6 +153,10 @@
 	},
 /turf/open/floor/plasteel/checker,
 /area/city/house)
+"aW" = (
+/obj/structure/mineral_door/wood,
+/turf/open/floor/carpet/black,
+/area/city)
 "bb" = (
 /obj/machinery/computer/slot_machine,
 /obj/machinery/light/small{
@@ -220,12 +216,6 @@
 /obj/effect/spawner/lootdrop/maintenance,
 /turf/open/floor/wood,
 /area/city/house)
-"bt" = (
-/obj/structure/chair/office/light{
-	dir = 8
-	},
-/turf/open/floor/mineral/titanium/purple,
-/area/city)
 "bu" = (
 /obj/effect/turf_decal/siding/thinplating/light/end{
 	dir = 8
@@ -366,6 +356,13 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"cg" = (
+/obj/structure/forge,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "ch" = (
 /obj/structure/chair/plastic{
 	dir = 1
@@ -413,18 +410,13 @@
 	},
 /obj/machinery/vending/custom/unbreakable,
 /obj/effect/turf_decal/siding/thinplating/corner,
-/turf/open/floor/facility/halls,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "cs" = (
 /turf/open/floor/facility/dark,
 /area/city/house)
-"cu" = (
-/obj/structure/noticeboard,
-/turf/closed/indestructible/opshuttle{
-	color = "#ed592f";
-	name = "shipping container"
-	},
-/area/city/shop)
 "cw" = (
 /turf/open/floor/plasteel/dark,
 /area/city)
@@ -604,12 +596,6 @@
 /obj/machinery/door/window,
 /turf/open/floor/mineral/silver,
 /area/city)
-"dK" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 8
-	},
-/turf/open/floor/facility/halls,
-/area/city/shop)
 "dL" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open,
 /turf/open/floor/facility{
@@ -656,10 +642,10 @@
 /turf/open/floor/wood,
 /area/city/house)
 "dT" = (
-/obj/effect/turf_decal/siding/thinplating/dark{
+/obj/effect/turf_decal/siding/blue{
 	dir = 4
 	},
-/turf/open/floor/stone,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "dV" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -690,25 +676,25 @@
 /turf/open/floor/wood,
 /area/city)
 "ea" = (
-/obj/structure/rack,
-/obj/item/melee/baseball_bat,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/obj/effect/turf_decal/siding/blue,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "eb" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_alley)
-"ef" = (
-/obj/machinery/button/door{
-	id = "outside";
-	name = "prosthetics clinic shutters";
-	pixel_y = 26;
-	req_access_txt = "9"
+"ed" = (
+/obj/structure/table,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
 	},
-/turf/open/floor/mineral/titanium/purple,
-/area/city)
+/obj/item/storage/toolbox/mechanical,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "eg" = (
 /obj/machinery/computer/slot_machine,
 /turf/open/floor/plasteel/vaporwave,
@@ -746,10 +732,6 @@
 /turf/open/floor/facility{
 	color = "#b5b5b5"
 	},
-/area/city)
-"er" = (
-/obj/effect/turf_decal/siding/thinplating/dark/corner,
-/turf/open/water/deep/polluted,
 /area/city)
 "eu" = (
 /obj/structure/delivery_door{
@@ -889,6 +871,16 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"eT" = (
+/obj/structure/toilet{
+	dir = 1;
+	pixel_y = -2
+	},
+/obj/machinery/light/small{
+	dir = 4
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city)
 "eV" = (
 /obj/structure/fluff/big_chain{
 	alpha = 0;
@@ -1039,6 +1031,12 @@
 	color = "#8f8f8f"
 	},
 /area/city)
+"fs" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
 "ft" = (
 /obj/machinery/light,
 /turf/open/floor/light/colour_cycle/dancefloor_b,
@@ -1070,6 +1068,13 @@
 	color = "#8f8f8f"
 	},
 /area/city)
+"fC" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 10
+	},
+/obj/machinery/augment_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "fD" = (
 /obj/machinery/light{
 	dir = 1
@@ -1111,6 +1116,9 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"fM" = (
+/turf/open/floor/carpet/black,
+/area/city)
 "fP" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/trimline/blue/arrow_cw{
@@ -1149,6 +1157,13 @@
 "gd" = (
 /turf/open/floor/carpet/stellar,
 /area/city/shop)
+"gh" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/obj/structure/reagent_dispensers/fueltank/large,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "gi" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 1
@@ -1172,14 +1187,14 @@
 /turf/closed/indestructible/rock,
 /area/city)
 "gm" = (
-/obj/structure/rack,
-/obj/item/tresmetal,
-/obj/item/tresmetal,
-/obj/item/tresmetal,
-/obj/effect/turf_decal/siding/thinplating/dark{
+/obj/structure/table/optable,
+/obj/machinery/light{
 	dir = 1
 	},
-/turf/open/floor/stone,
+/obj/effect/turf_decal/siding/blue{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "gn" = (
 /turf/closed/indestructible/rock,
@@ -1208,6 +1223,13 @@
 "gz" = (
 /turf/open/indestructible/white,
 /area/city/shop)
+"gA" = (
+/obj/structure/table/wood/fancy/cyan,
+/obj/structure/displaycase/forsale,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/shop)
 "gC" = (
 /obj/structure/table/greyscale,
 /obj/item/paper_bin,
@@ -1215,6 +1237,10 @@
 /obj/structure/railing,
 /turf/open/floor/facility/halls,
 /area/city/fixers)
+"gE" = (
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "gF" = (
 /turf/open/water/deep/polluted,
 /area/city/backstreets_alley)
@@ -1243,6 +1269,13 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"gN" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/obj/machinery/vending/prosthetic,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "gO" = (
 /obj/machinery/light{
 	dir = 4
@@ -1309,6 +1342,13 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"hj" = (
+/obj/machinery/door/airlock/wood{
+	name = "workshop fixer access";
+	req_access_txt = "11"
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "hk" = (
 /obj/effect/spawner/room/backstreet_template,
 /turf/closed/indestructible/rock,
@@ -1459,6 +1499,43 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"hX" = (
+/obj/structure/table/wood/bar,
+/obj/item/storage/box/lights/mixed,
+/obj/item/paper_bin{
+	pixel_y = 17;
+	pixel_x = 6
+	},
+/obj/item/pen/fountain,
+/turf/open/floor/wood,
+/area/city)
+"hY" = (
+/obj/machinery/door/airlock/wood{
+	name = "workshop fixer access";
+	req_access_txt = "11"
+	},
+/obj/effect/turf_decal/siding/thinplating/dark/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/thinplating/dark/corner{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/blue/corner,
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile{
+	color = "#333333";
+	dir = 1;
+	alpha = 255
+	},
+/obj/effect/turf_decal/tile{
+	color = "#333333";
+	dir = 4;
+	alpha = 255
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/shop)
 "hZ" = (
 /obj/structure/table,
 /obj/effect/turf_decal/tile/red{
@@ -1603,7 +1680,12 @@
 	},
 /area/city/shop)
 "iz" = (
-/turf/open/floor/stone,
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 1
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "iA" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -1618,6 +1700,17 @@
 /turf/open/floor/facility{
 	color = "#8f8f8f"
 	},
+/area/city)
+"iB" = (
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
+	},
+/area/city)
+"iE" = (
+/obj/structure/table/wood/bar,
+/obj/item/reagent_containers/glass/rag,
+/turf/open/floor/holofloor/dark,
 /area/city)
 "iF" = (
 /obj/structure/chair/sofa/left{
@@ -1674,6 +1767,13 @@
 	name = "shipping container"
 	},
 /area/city/fixers)
+"iU" = (
+/obj/structure/mirror,
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
+	},
+/area/city)
 "iV" = (
 /obj/machinery/vending/dinnerware,
 /obj/effect/turf_decal/tile/red{
@@ -1704,6 +1804,10 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"ja" = (
+/obj/structure/table/wood/bar,
+/turf/open/floor/wood,
+/area/city)
 "jb" = (
 /obj/structure/table/wood/fancy/blue,
 /obj/item/reagent_containers/food/drinks/fairywine,
@@ -1942,10 +2046,13 @@
 	},
 /area/city/backstreets_checkpoint)
 "jV" = (
-/obj/structure/table,
-/obj/item/storage/toolbox/mechanical,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/obj/machinery/light,
+/obj/machinery/light,
+/obj/machinery/light,
+/obj/machinery/light,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "jW" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -2027,6 +2134,30 @@
 	name = "shipping container"
 	},
 /area/city/shop)
+"km" = (
+/obj/item/storage/box/drinkingglasses{
+	pixel_x = -14;
+	pixel_y = 11
+	},
+/obj/item/reagent_containers/borghypo/borgshaker{
+	pixel_x = 7
+	},
+/obj/item/phone{
+	pixel_y = -3
+	},
+/obj/item/storage/box/drinkingglasses{
+	pixel_x = -14
+	},
+/obj/structure/table/wood/bar,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/item/toy/figure/bartender{
+	pixel_x = 17;
+	pixel_y = 2
+	},
+/turf/open/floor/wood,
+/area/city)
 "kq" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4
@@ -2123,12 +2254,6 @@
 	},
 /turf/open/floor/facility/halls,
 /area/city/fixers)
-"kG" = (
-/obj/effect/turf_decal/siding/thinplating/corner{
-	dir = 8
-	},
-/turf/open/floor/facility/halls,
-/area/city/shop)
 "kH" = (
 /obj/item/boat_oar,
 /obj/item/boat_oar,
@@ -2345,6 +2470,10 @@
 "lo" = (
 /turf/open/floor/plasteel/dark,
 /area/city/fixers)
+"lp" = (
+/obj/machinery/jukebox,
+/turf/open/floor/wood,
+/area/city)
 "ls" = (
 /obj/structure/fluff/bus/dense{
 	icon_state = "backwallbottomrear"
@@ -2429,12 +2558,14 @@
 /turf/closed/indestructible/fakeglass,
 /area/city/shop)
 "lQ" = (
-/obj/structure/rack,
-/obj/item/price_tagger,
-/obj/effect/turf_decal/siding/thinplating/dark{
+/obj/structure/table/glass,
+/obj/item/storage/backpack/duffelbag/med/surgery{
+	pixel_y = 5
+	},
+/obj/effect/turf_decal/siding/blue{
 	dir = 6
 	},
-/turf/open/floor/stone,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "lR" = (
 /turf/closed/indestructible/rock,
@@ -2494,6 +2625,13 @@
 /obj/structure/maploader,
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city)
+"ma" = (
+/obj/structure/chair/office{
+	anchored = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "mb" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner,
 /turf/open/water/deep/saltwater{
@@ -2589,12 +2727,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/shop)
-"mD" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 5
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "mF" = (
 /obj/structure/chair/wood/wings{
 	dir = 4;
@@ -2604,6 +2736,15 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/green,
 /area/city)
+"mH" = (
+/obj/structure/table,
+/obj/item/paper_bin,
+/obj/item/pen,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "mK" = (
 /obj/structure/rack,
 /obj/effect/decal/cleanable/dirt,
@@ -2722,13 +2863,6 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
-"nt" = (
-/obj/machinery/vending/prosthetic,
-/obj/effect/turf_decal/siding/purple{
-	dir = 6
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "nu" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 1
@@ -2762,6 +2896,24 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"nF" = (
+/obj/structure/rack,
+/obj/item/clothing/under/rank/cargo/miner{
+	name = "Workshop's jumpsuit"
+	},
+/obj/item/clothing/under/rank/cargo/miner{
+	name = "Workshop's jumpsuit"
+	},
+/obj/item/clothing/under/rank/cargo/miner{
+	name = "Workshop's jumpsuit"
+	},
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/obj/item/forginghammer,
+/obj/item/forginghammer,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "nG" = (
 /obj/structure/reagent_dispensers/water_cooler,
 /turf/open/floor/facility/halls,
@@ -2770,14 +2922,13 @@
 /obj/effect/mob_spawn/human/corpse/assistant,
 /turf/open/floor/plating/dirt/jungle,
 /area/city)
-"nM" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/black,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 1
+"nK" = (
+/obj/structure/sign/departments/restroom,
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
 	},
-/turf/open/floor/stone,
-/area/city/shop)
+/area/city)
 "nQ" = (
 /obj/effect/turf_decal/trimline/red/filled/warning,
 /obj/docking_port/stationary{
@@ -2824,6 +2975,10 @@
 /obj/machinery/griddle,
 /turf/open/floor/oldshuttle,
 /area/city/house)
+"ob" = (
+/obj/machinery/light,
+/turf/open/floor/wood,
+/area/city)
 "oc" = (
 /turf/open/floor/facility{
 	color = "#8f8f8f"
@@ -2863,7 +3018,6 @@
 	},
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
-	melee_damage_upper = 5;
 	is_flying_animal = 0
 	},
 /turf/open/floor/grass/fairy,
@@ -2895,13 +3049,6 @@
 /turf/open/floor/facility{
 	color = "#8f8f8f"
 	},
-/area/city)
-"ot" = (
-/obj/structure/reagent_dispensers/fueltank/large,
-/obj/machinery/light{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city)
 "ou" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -2956,6 +3103,16 @@
 /obj/effect/spawner/lootdrop/garbage_spawner,
 /turf/open/floor/plating/beach/sand,
 /area/city/backstreets_alley)
+"oB" = (
+/obj/machinery/vending/forge,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "oH" = (
 /turf/open/floor/oldshuttle,
 /area/city/house)
@@ -3064,7 +3221,6 @@
 "pg" = (
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
-	melee_damage_upper = 5;
 	is_flying_animal = 0
 	},
 /obj/item/stack/sheet/silk/human_advanced,
@@ -3113,6 +3269,13 @@
 /turf/open/floor/facility{
 	color = "#b5b5b5"
 	},
+/area/city)
+"pn" = (
+/obj/structure/table/wood/bar,
+/obj/item/kirbyplants{
+	pixel_y = 9
+	},
+/turf/open/floor/wood,
 /area/city)
 "po" = (
 /obj/effect/turf_decal/bot,
@@ -3164,8 +3327,9 @@
 	},
 /area/city)
 "pv" = (
+/obj/structure/noticeboard,
 /turf/closed/indestructible/opshuttle{
-	color = "#ed592f";
+	color = "#bc7ad6";
 	name = "shipping container"
 	},
 /area/city/shop)
@@ -3182,6 +3346,12 @@
 /obj/item/bodypart/r_arm,
 /obj/machinery/light/small,
 /turf/open/floor/plasteel/dark,
+/area/city/shop)
+"pz" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 6
+	},
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "pA" = (
 /obj/structure/railing{
@@ -3200,19 +3370,6 @@
 "pC" = (
 /turf/open/floor/plating/dirt/jungle,
 /area/city/backstreets_alley)
-"pD" = (
-/obj/structure/rack,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
-/obj/item/crowbar/red,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 10
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "pJ" = (
 /obj/structure/dresser,
 /obj/machinery/light{
@@ -3229,6 +3386,10 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/backstreets_room)
+"pP" = (
+/obj/item/kirbyplants/random,
+/turf/open/floor/wood,
+/area/city)
 "pQ" = (
 /obj/machinery/vending/coffee,
 /turf/open/floor/facility{
@@ -3340,7 +3501,9 @@
 /obj/item/key/displaycase,
 /obj/item/key/displaycase,
 /obj/effect/turf_decal/siding/thinplating,
-/turf/open/floor/facility/halls,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "qk" = (
 /obj/structure/closet/cabinet,
@@ -3501,7 +3664,9 @@
 /obj/effect/turf_decal/siding/thinplating/corner{
 	dir = 8
 	},
-/turf/open/floor/facility/halls,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "qM" = (
 /obj/structure/sign/poster/lobotomycorp/suckmyenegy,
@@ -3518,6 +3683,17 @@
 /obj/machinery/light/small,
 /turf/open/floor/wood,
 /area/city/shop)
+"qQ" = (
+/obj/effect/turf_decal/siding/thinplating/dark/corner,
+/obj/effect/turf_decal/siding/thinplating/dark/corner{
+	dir = 1
+	},
+/obj/structure/fluff/big_chain{
+	alpha = 0;
+	mouse_opacity = 0
+	},
+/turf/open/water/deep/saltwater,
+/area/city)
 "qR" = (
 /obj/structure/sink{
 	dir = 1;
@@ -3718,13 +3894,6 @@
 /obj/structure/flora/ash/garden/seaweed,
 /turf/open/floor/plating/beach/sand,
 /area/city)
-"rQ" = (
-/obj/machinery/door/airlock/wood{
-	name = "workshop fixer access";
-	req_access_txt = "11"
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "rR" = (
 /obj/effect/mine/shrapnel,
 /obj/structure/barricade/wooden,
@@ -3788,12 +3957,6 @@
 	color = "#f5f5f5"
 	},
 /area/city/backstreets_checkpoint)
-"sd" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "sh" = (
 /obj/structure/itemselling,
 /obj/effect/turf_decal/siding/blue{
@@ -3805,15 +3968,6 @@
 /obj/machinery/photocopier,
 /turf/open/floor/carpet/black,
 /area/city/fixers)
-"sk" = (
-/obj/structure/chair/office{
-	anchored = 1
-	},
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 1
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "sl" = (
 /obj/machinery/vending/coffee,
 /obj/machinery/light,
@@ -3823,13 +3977,13 @@
 /turf/open/floor/carpet/stellar,
 /area/city/shop)
 "sq" = (
-/obj/machinery/computer/operating{
+/obj/structure/chair/sofa/corp{
 	dir = 4
 	},
-/obj/effect/turf_decal/siding/purple{
-	dir = 10
+/obj/machinery/light{
+	dir = 8
 	},
-/turf/open/floor/mineral/titanium/tiled/purple,
+/turf/open/floor/wood,
 /area/city)
 "sr" = (
 /obj/item/bodypart/chest/robot,
@@ -4080,6 +4234,12 @@
 "ti" = (
 /turf/open/indestructible/hoteltile,
 /area/city/house)
+"to" = (
+/obj/machinery/vending/boozeomat{
+	density = 0
+	},
+/turf/closed/indestructible/wood,
+/area/city)
 "tr" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 1
@@ -4093,13 +4253,6 @@
 /turf/open/floor/facility{
 	color = "#c4c4c4"
 	},
-/area/city)
-"tv" = (
-/obj/structure/rack,
-/obj/effect/turf_decal/siding/purple{
-	dir = 1
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city)
 "tx" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -4222,6 +4375,14 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
+"tR" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/storage/toolbox/mechanical,
+/obj/item/clothing/head/fedora/white,
+/obj/item/clothing/accessory/limbusvest,
+/obj/item/ego_weapon/ranged/sodashotty,
+/turf/open/floor/wood,
+/area/city)
 "tS" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/cityloot,
@@ -4337,6 +4498,14 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/carpet/black,
 /area/space)
+"uu" = (
+/obj/structure/rack,
+/obj/item/workshop_mod/regular/red,
+/obj/effect/turf_decal/siding/thinplating/dark,
+/obj/item/workshop_mod/regular/white,
+/obj/item/workshop_mod/regular/black,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "uy" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility{
@@ -4344,9 +4513,15 @@
 	},
 /area/city/backstreets_checkpoint)
 "uE" = (
-/obj/structure/table/wood/fancy/cyan,
-/obj/structure/displaycase/forsale,
-/turf/open/floor/facility/halls,
+/obj/structure/table,
+/obj/item/storage/secure/safe{
+	pixel_x = -22
+	},
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 9
+	},
+/obj/item/storage/toolbox/electrical,
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "uF" = (
 /obj/structure/sign/painting/library{
@@ -4462,11 +4637,6 @@
 /obj/machinery/telecomms/server/presets/common,
 /turf/open/floor/circuit/telecomms/mainframe,
 /area/facility_hallway/north)
-"vr" = (
-/obj/machinery/vending/forge,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
-/area/city/shop)
 "vt" = (
 /obj/machinery/light{
 	dir = 1
@@ -4475,12 +4645,6 @@
 /obj/machinery/microwave,
 /turf/open/floor/mineral/titanium,
 /area/city/house)
-"vv" = (
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 5
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "vB" = (
 /turf/open/floor/plating/ashplanet/rocky,
 /area/city)
@@ -4593,6 +4757,12 @@
 /obj/structure/bed,
 /turf/open/floor/wood,
 /area/city/house)
+"vX" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "wb" = (
 /obj/structure/aquarium,
 /obj/structure/table,
@@ -4673,6 +4843,13 @@
 	color = "#8f8f8f"
 	},
 /area/city/fixers)
+"wl" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/closet/crate/bin,
+/turf/open/floor/carpet/black,
+/area/city)
 "wm" = (
 /obj/effect/turf_decal/trimline/yellow/line,
 /obj/effect/turf_decal/tile/red,
@@ -4715,13 +4892,6 @@
 /obj/effect/turf_decal/siding/thinplating/dark/corner,
 /turf/open/water/deep/saltwater,
 /area/city)
-"wr" = (
-/obj/structure/table/anvil,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 6
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "ws" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -4808,6 +4978,20 @@
 /obj/structure/chair/office,
 /turf/open/floor/facility/halls,
 /area/city/fixers)
+"wO" = (
+/obj/machinery/chem_dispenser/drinks/beer/fullupgrade{
+	dir = 8;
+	pixel_x = 13;
+	pixel_y = 4
+	},
+/obj/structure/table/wood/bar,
+/obj/machinery/chem_dispenser/drinks/fullupgrade{
+	dir = 8;
+	pixel_x = 13;
+	pixel_y = -15
+	},
+/turf/open/floor/holofloor/dark,
+/area/city)
 "wQ" = (
 /obj/structure/sign/poster/lobotomycorp/wellcheers{
 	pixel_y = 32
@@ -4846,7 +5030,9 @@
 	name = "workshop fixer access";
 	req_access_txt = "11"
 	},
-/turf/open/floor/facility/halls,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "xf" = (
 /turf/open/floor/carpet,
@@ -4896,6 +5082,12 @@
 /obj/machinery/light/small,
 /turf/open/floor/plasteel/vaporwave,
 /area/city)
+"xy" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 1
+	},
+/turf/open/floor/wood,
+/area/city)
 "xz" = (
 /obj/structure/table,
 /obj/item/seeds/onion,
@@ -4910,6 +5102,10 @@
 /obj/item/seeds/peas,
 /turf/open/floor/wood,
 /area/city/house)
+"xA" = (
+/obj/structure/table/wood/bar,
+/turf/open/floor/holofloor/dark,
+/area/city)
 "xB" = (
 /obj/effect/turf_decal/siding/thinplating/light/end{
 	dir = 4
@@ -5039,16 +5235,6 @@
 	},
 /turf/open/water/deep/saltwater,
 /area/city/backstreets_checkpoint)
-"xX" = (
-/obj/machinery/light{
-	dir = 1
-	},
-/obj/structure/closet/crate/freezer/surplus_limbs,
-/obj/effect/turf_decal/siding/purple{
-	dir = 5
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "xY" = (
 /obj/structure/table/greyscale,
 /obj/item/paper_bin,
@@ -5101,8 +5287,7 @@
 	},
 /area/city/shop)
 "ym" = (
-/obj/effect/turf_decal/siding/thinplating,
-/turf/open/floor/facility/halls,
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "yn" = (
 /obj/structure/railing{
@@ -5134,11 +5319,22 @@
 /turf/open/floor/carpet/green,
 /area/city)
 "yq" = (
-/obj/structure/rack,
-/obj/item/stack/spacecash/c1000,
-/obj/item/stack/spacecash/c1000,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/obj/structure/table/glass,
+/obj/item/stack/cable_coil{
+	pixel_x = 2;
+	pixel_y = -2
+	},
+/obj/item/stack/cable_coil{
+	pixel_x = 3;
+	pixel_y = 3
+	},
+/obj/item/stack/cable_coil{
+	pixel_x = -3;
+	pixel_y = 3
+	},
+/obj/item/stack/cable_coil,
+/obj/effect/turf_decal/siding/blue,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "yr" = (
 /obj/effect/spawner/room/backstreets/small_east,
@@ -5202,15 +5398,6 @@
 	},
 /turf/open/floor/grass/fairy,
 /area/city)
-"yJ" = (
-/obj/structure/rack,
-/obj/item/weldingtool/experimental,
-/obj/item/screwdriver,
-/obj/effect/turf_decal/siding/purple{
-	dir = 4
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "yK" = (
 /obj/structure/chair/sofa/corner{
 	dir = 1
@@ -5270,6 +5457,22 @@
 /obj/structure/curtain/cloth,
 /turf/closed/indestructible/fakeglass,
 /area/city)
+"zc" = (
+/obj/structure/rack,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/structure/lootcrate/tres,
+/obj/item/crowbar/red,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 9
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "zd" = (
 /obj/structure/chair{
 	dir = 1
@@ -5409,6 +5612,16 @@
 	color = "#8f8f8f"
 	},
 /area/city/fixers)
+"zx" = (
+/obj/structure/toilet{
+	dir = 1;
+	pixel_y = -2
+	},
+/obj/machinery/light/small{
+	dir = 8
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city)
 "zy" = (
 /obj/machinery/light{
 	dir = 1
@@ -5425,10 +5638,6 @@
 	name = "shipping container"
 	},
 /area/city/fixers)
-"zI" = (
-/obj/structure/table/glass,
-/turf/open/floor/mineral/titanium/purple,
-/area/city)
 "zK" = (
 /obj/machinery/telecomms/broadcaster/preset_left,
 /obj/effect/turf_decal/bot,
@@ -5512,6 +5721,12 @@
 	},
 /turf/open/floor/plating/beach/sand,
 /area/city)
+"Aa" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "Ac" = (
 /obj/structure/spacevine,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -5675,6 +5890,10 @@
 	color = "#8f8f8f"
 	},
 /area/city)
+"AN" = (
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "AR" = (
 /obj/structure/table/rolling,
 /obj/item/roller{
@@ -5751,15 +5970,15 @@
 	},
 /area/city/shop)
 "Bf" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/white,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 9
-	},
 /obj/machinery/light{
-	dir = 1
+	dir = 4
 	},
-/turf/open/floor/stone,
+/obj/machinery/body_modification_catalogue{
+	pixel_x = 32
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "Bh" = (
 /obj/effect/decal/cleanable/dirt,
@@ -5942,23 +6161,20 @@
 	},
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
+"BT" = (
+/obj/structure/rack,
+/obj/item/stack/spacecash/c1000,
+/obj/item/stack/spacecash/c1000,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/obj/item/melee/baseball_bat,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "BV" = (
 /obj/effect/spawner/randomsnackvend,
 /turf/open/floor/facility,
 /area/city/shop)
-"BW" = (
-/obj/structure/delivery_door{
-	density = 1;
-	icon = 'icons/obj/votebox.dmi';
-	icon_state = "votebox_maint";
-	name = "mail box";
-	desc = "A mailbox for this house."
-	},
-/turf/closed/indestructible/opshuttle{
-	color = "#6f5985";
-	name = "shipping container"
-	},
-/area/city)
 "BX" = (
 /turf/closed/indestructible/opshuttle{
 	color = "#ed2f5f";
@@ -6023,6 +6239,25 @@
 /obj/structure/mineral_door/wood,
 /turf/open/floor/carpet/black,
 /area/city/house)
+"Cl" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
+"Cm" = (
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 8
+	},
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 1
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
+/area/city/shop)
+"Co" = (
+/obj/structure/chair/sofa/corp,
+/turf/open/floor/wood,
+/area/city)
 "Cq" = (
 /obj/machinery/door/airlock/wood{
 	name = "old warehouse"
@@ -6073,21 +6308,10 @@
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/green,
 /area/city)
-"CD" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	id = "outside"
-	},
-/turf/closed/indestructible/fakeglass,
-/area/city)
 "CE" = (
 /obj/structure/musician/piano,
 /turf/open/floor/plasteel/vaporwave,
 /area/city/shop)
-"CF" = (
-/obj/structure/table/glass,
-/obj/item/paper_bin,
-/turf/open/floor/mineral/titanium/purple,
-/area/city)
 "CG" = (
 /obj/structure/rack,
 /obj/item/stack/spacecash/c100,
@@ -6238,6 +6462,14 @@
 	color = "#8f8f8f"
 	},
 /area/city/backstreets_checkpoint)
+"DD" = (
+/obj/structure/rack,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/item/tresmetal,
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "DE" = (
 /turf/closed/indestructible/reinforced,
 /area/city/house)
@@ -6352,6 +6584,13 @@
 "Ef" = (
 /turf/open/floor/facility,
 /area/city/shop)
+"Eg" = (
+/obj/structure/closet/crate/bin,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "Ej" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4
@@ -6364,15 +6603,6 @@
 /turf/open/water/deep/saltwater{
 	icon_state = "darkbluewater1"
 	},
-/area/city)
-"Ek" = (
-/obj/machinery/door/airlock/public{
-	name = "prosthetic surgery clinic"
-	},
-/obj/machinery/door/poddoor/shutters/indestructible{
-	id = "outside"
-	},
-/turf/open/floor/mineral/titanium/purple,
 /area/city)
 "Em" = (
 /obj/structure/bed/pod,
@@ -6409,11 +6639,6 @@
 	color = "#c4c4c4"
 	},
 /area/city/backstreets_checkpoint)
-"Es" = (
-/obj/structure/table/glass,
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "Eu" = (
 /turf/closed/indestructible/opshuttle{
 	color = "#6ced2f";
@@ -6455,6 +6680,22 @@
 	name = "shipping container"
 	},
 /area/city/shop)
+"EF" = (
+/obj/structure/table/wood/bar,
+/obj/item/book/manual/wiki/barman_recipes{
+	pixel_x = -6;
+	pixel_y = 3
+	},
+/obj/item/toy/cards/deck/syndicate{
+	pixel_x = 6;
+	pixel_y = -1
+	},
+/obj/item/toy/cards/deck{
+	pixel_y = 4;
+	pixel_x = 6
+	},
+/turf/open/floor/wood,
+/area/city)
 "EG" = (
 /obj/structure/sign/painting/library{
 	pixel_x = 32
@@ -6568,13 +6809,6 @@
 	icon_state = "darkbluewater1"
 	},
 /area/city/backstreets_checkpoint)
-"Fd" = (
-/obj/structure/table,
-/obj/item/paper_bin,
-/obj/item/pen,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
-/area/city/shop)
 "Fe" = (
 /obj/structure/sign/poster/lobotomycorp/hhpp,
 /turf/closed/indestructible/opshuttle{
@@ -6609,7 +6843,9 @@
 	id = "extraction"
 	},
 /obj/effect/turf_decal/siding/thinplating,
-/turf/open/floor/facility/halls,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "Fo" = (
 /obj/structure/table,
@@ -6694,6 +6930,9 @@
 /turf/open/floor/facility{
 	color = "#c4c4c4"
 	},
+/area/city)
+"FJ" = (
+/turf/open/floor/holofloor/dark,
 /area/city)
 "FQ" = (
 /obj/structure/railing{
@@ -6814,12 +7053,6 @@
 /area/city/house)
 "Gl" = (
 /obj/effect/mapping_helpers/airlock/abandoned,
-/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden/layer2{
-	dir = 4
-	},
-/obj/machinery/atmospherics/pipe/simple/supply/hidden/layer4{
-	dir = 4
-	},
 /obj/machinery/door/airlock/grunge{
 	name = "Vacant Office A"
 	},
@@ -6854,6 +7087,13 @@
 	color = "#ed2f5f";
 	name = "shipping container"
 	},
+/area/city)
+"Gw" = (
+/obj/structure/table/wood/bar,
+/obj/structure/reagent_dispensers/beerkeg{
+	pixel_y = 4
+	},
+/turf/open/floor/wood,
 /area/city)
 "Gy" = (
 /obj/machinery/door/airlock/grunge{
@@ -6910,6 +7150,16 @@
 "GJ" = (
 /turf/open/floor/carpet,
 /area/city)
+"GK" = (
+/obj/structure/table/wood/bar,
+/obj/structure/closet/mini_fridge,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/food/drinks/beer,
+/obj/item/reagent_containers/glass/bottle/capsaicin,
+/turf/open/floor/wood,
+/area/city)
 "GO" = (
 /obj/machinery/vending/wardrobe/medi_wardrobe,
 /obj/machinery/light{
@@ -6957,24 +7207,6 @@
 "Hg" = (
 /turf/open/floor/carpet/royalblack,
 /area/city/shop)
-"Hj" = (
-/obj/structure/table/glass,
-/obj/item/stack/cable_coil,
-/obj/item/stack/cable_coil{
-	pixel_x = 2;
-	pixel_y = -2
-	},
-/obj/item/stack/cable_coil{
-	pixel_x = 3;
-	pixel_y = 3
-	},
-/obj/item/stack/cable_coil{
-	pixel_x = -3;
-	pixel_y = 3
-	},
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "Hm" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -6997,12 +7229,6 @@
 /turf/open/floor/facility{
 	color = "#b5b5b5"
 	},
-/area/city)
-"Hr" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 9
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
 /area/city)
 "Hu" = (
 /obj/machinery/griddle,
@@ -7030,6 +7256,11 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city)
+"Hz" = (
+/obj/effect/turf_decal/siding/thinplating/dark,
+/obj/machinery/body_modification_fabricator,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "HA" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	dir = 8;
@@ -7117,20 +7348,13 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/facility/white,
 /area/city/shop)
-"HV" = (
-/obj/structure/rack,
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
+"HU" = (
+/obj/structure/sink{
+	pixel_y = 15
 	},
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
-	},
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
-	},
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
-/area/city/shop)
+/obj/machinery/light/small,
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city)
 "HW" = (
 /obj/structure/table/reinforced,
 /obj/item/reagent_containers/food/condiment/enzyme,
@@ -7150,10 +7374,6 @@
 "HY" = (
 /obj/structure/table,
 /turf/open/floor/plasteel/vaporwave,
-/area/city/shop)
-"HZ" = (
-/obj/effect/turf_decal/box/red,
-/turf/open/floor/stone,
 /area/city/shop)
 "Ia" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -7337,6 +7557,13 @@
 "IM" = (
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
+"IO" = (
+/obj/machinery/augment_catalogue,
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
+	},
+/area/city/shop)
 "IQ" = (
 /obj/structure/flora/ash/garden/seaweed,
 /turf/open/water/deep/saltwater{
@@ -7426,6 +7653,15 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"Jg" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
 "Jh" = (
 /obj/machinery/door/airlock/wood{
 	name = "bistro chef entrance";
@@ -7506,11 +7742,13 @@
 	},
 /area/city)
 "JC" = (
-/obj/structure/rack,
-/obj/effect/turf_decal/siding/thinplating/dark{
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
+/obj/effect/turf_decal/siding/blue/corner{
 	dir = 1
 	},
-/turf/open/floor/stone,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "JE" = (
 /obj/effect/turf_decal/siding/thinplating/dark{
@@ -7790,6 +8028,19 @@
 	color = "#b5b5b5"
 	},
 /area/city)
+"KP" = (
+/obj/machinery/door/airlock/wood{
+	name = "workshop fixer access";
+	req_access_txt = "11"
+	},
+/obj/effect/turf_decal/siding/blue/corner,
+/obj/effect/turf_decal/siding/blue/corner{
+	dir = 4
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/shop)
 "KQ" = (
 /obj/structure/rack,
 /obj/item/storage/backpack{
@@ -8080,23 +8331,6 @@
 /obj/structure/bed,
 /turf/open/floor/carpet,
 /area/city/house)
-"LE" = (
-/obj/structure/railing{
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	name = "wing-grade railing";
-	resistance_flags = 115;
-	dir = 1
-	},
-/obj/machinery/button/door{
-	id = "outside";
-	name = "prosthetics clinic shutters";
-	pixel_y = 26;
-	req_access_txt = "9"
-	},
-/turf/open/floor/facility{
-	color = "#c4c4c4"
-	},
-/area/city)
 "LG" = (
 /obj/effect/turf_decal/stripes/line,
 /obj/machinery/computer/shuttle/mining{
@@ -8118,16 +8352,6 @@
 /obj/item/clothing/mask/surgical,
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
-"LJ" = (
-/obj/structure/rack,
-/obj/machinery/light{
-	dir = 1
-	},
-/obj/effect/turf_decal/siding/purple{
-	dir = 9
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "LK" = (
 /obj/structure/dresser,
 /turf/open/floor/carpet/green,
@@ -8288,6 +8512,10 @@
 	color = "#8f8f8f"
 	},
 /area/city/shop)
+"MB" = (
+/obj/structure/chair/stool/bar,
+/turf/open/floor/holofloor/dark,
+/area/city)
 "MC" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner,
 /turf/open/water/deep/saltwater,
@@ -8299,6 +8527,12 @@
 /turf/open/floor/plating/ashplanet{
 	name = "asphalt"
 	},
+/area/city)
+"ME" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 8
+	},
+/turf/open/floor/wood,
 /area/city)
 "MF" = (
 /obj/structure/railing{
@@ -8336,6 +8570,10 @@
 	},
 /turf/open/floor/plasteel/vaporwave,
 /area/city/shop)
+"MS" = (
+/obj/structure/chair/sofa/corp/left,
+/turf/open/floor/wood,
+/area/city)
 "MT" = (
 /obj/structure/railing{
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
@@ -8354,6 +8592,13 @@
 	color = "#c4c4c4"
 	},
 /area/city)
+"MU" = (
+/obj/effect/turf_decal/siding/thinplating/dark/corner,
+/obj/effect/turf_decal/siding/thinplating/dark/corner{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "MW" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 4
@@ -8387,16 +8632,6 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
-"No" = (
-/obj/structure/table/glass,
-/obj/item/storage/backpack/duffelbag/med/surgery{
-	pixel_y = 5
-	},
-/obj/effect/turf_decal/siding/purple{
-	dir = 6
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "Np" = (
 /obj/structure/chair/wood,
 /mob/living/simple_animal/hostile/ui_npc/eric_t,
@@ -8498,10 +8733,9 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "NF" = (
-/obj/structure/table/optable,
-/obj/machinery/light,
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/purple,
+/obj/structure/table/wood/bar,
+/obj/item/instrument/saxophone,
+/turf/open/floor/wood,
 /area/city)
 "NG" = (
 /obj/structure/table,
@@ -8651,6 +8885,15 @@
 /obj/item/potential_tester,
 /turf/open/floor/facility/halls,
 /area/city/fixers)
+"Oq" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/machinery/vending/cigarette{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/city)
 "Or" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 1
@@ -8696,12 +8939,6 @@
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_alley)
-"OB" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 1
-	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
 "OD" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility{
@@ -8732,6 +8969,14 @@
 	density = 1
 	},
 /area/city)
+"OQ" = (
+/obj/machinery/door/airlock/wood{
+	name = "workshop"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/shop)
 "OR" = (
 /obj/structure/delivery_door{
 	density = 1;
@@ -8804,7 +9049,6 @@
 "Pa" = (
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
-	melee_damage_upper = 5;
 	is_flying_animal = 0
 	},
 /turf/open/floor/grass/fairy,
@@ -8824,14 +9068,11 @@
 /turf/open/floor/facility/halls,
 /area/city/fixers)
 "Pg" = (
-/obj/structure/rack,
-/obj/effect/turf_decal/siding/thinplating/dark{
+/obj/effect/turf_decal/siding/blue{
 	dir = 5
 	},
-/obj/machinery/light{
-	dir = 1
-	},
-/turf/open/floor/stone,
+/obj/structure/closet/crate/freezer/surplus_limbs,
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "Pi" = (
 /obj/machinery/vending/hydronutrients,
@@ -8872,9 +9113,9 @@
 /turf/open/floor/plasteel/vaporwave,
 /area/city/shop)
 "Pw" = (
-/obj/structure/forge,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "Py" = (
 /turf/open/floor/facility/dark,
@@ -8907,6 +9148,12 @@
 	color = "#8f8f8f"
 	},
 /area/city/backstreets_checkpoint)
+"PF" = (
+/obj/machinery/door/airlock/wood{
+	name = "fixer office"
+	},
+/turf/open/floor/mineral/titanium/tiled/purple,
+/area/city)
 "PI" = (
 /obj/machinery/door/poddoor{
 	id = "citycheckpoint";
@@ -8931,10 +9178,10 @@
 	},
 /area/city/backstreets_checkpoint)
 "PX" = (
-/obj/effect/turf_decal/siding/thinplating{
-	dir = 4
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 10
 	},
-/turf/open/floor/facility/halls,
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "PZ" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -9030,12 +9277,13 @@
 /turf/closed/indestructible/reinforced,
 /area/city/backstreets_room)
 "Qz" = (
-/obj/structure/rack,
-/obj/item/workshop_mod/regular/red,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 1
+/obj/machinery/computer/operating{
+	dir = 4
 	},
-/turf/open/floor/stone,
+/obj/effect/turf_decal/siding/blue{
+	dir = 9
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "QD" = (
 /obj/structure/chair/office{
@@ -9139,20 +9387,56 @@
 	color = "#8f8f8f"
 	},
 /area/city)
+"Ra" = (
+/obj/structure/rack,
+/obj/item/price_tagger,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 5
+	},
+/obj/item/weldingtool/experimental,
+/obj/item/weldingtool/experimental,
+/obj/item/screwdriver,
+/obj/item/screwdriver,
+/turf/open/floor/facility/dark,
+/area/city/shop)
+"Rd" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 8
+	},
+/turf/open/floor/wood,
+/area/city)
 "Rf" = (
 /obj/structure/flora/ash/fern,
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/house)
 "Ri" = (
-/obj/machinery/door/airlock/medical{
-	hackProof = 1;
-	integrity_failure = 0.1;
-	max_integrity = 1e+009;
-	name = "Secure medical room";
-	normal_integrity = 1e+009;
-	req_access_txt = "9"
+/obj/structure/table/wood/bar,
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 16
 	},
-/turf/open/floor/mineral/titanium/tiled/purple,
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_x = -4;
+	pixel_y = 9
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 9;
+	pixel_x = 4
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_y = 2
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_x = 8;
+	pixel_y = 2
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/shotglass{
+	pixel_x = -8;
+	pixel_y = 2
+	},
+/turf/open/floor/holofloor/dark,
 /area/city)
 "Rm" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -9207,9 +9491,10 @@
 	},
 /area/city)
 "Ru" = (
-/obj/structure/closet/crate/bin,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/obj/machinery/light,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "Rv" = (
 /obj/structure/sink/kitchen{
@@ -9307,6 +9592,13 @@
 "RP" = (
 /turf/open/floor/light/colour_cycle/dancefloor_a,
 /area/city/shop)
+"RQ" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 5
+	},
+/obj/structure/table/anvil,
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "RR" = (
 /obj/structure/curtain/cloth,
 /obj/structure/delivery_door{
@@ -9325,10 +9617,12 @@
 	},
 /area/city/backstreets_checkpoint)
 "RU" = (
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 1
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 8
 	},
-/turf/open/floor/stone,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "RW" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -9350,7 +9644,10 @@
 	},
 /area/city/backstreets_checkpoint)
 "Sc" = (
-/turf/open/floor/mineral/titanium/purple,
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/carpet/black,
 /area/city)
 "Sd" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
@@ -9467,15 +9764,11 @@
 /turf/open/floor/plasteel/dark,
 /area/city)
 "SH" = (
-/obj/machinery/door/airlock/medical{
-	hackProof = 1;
-	integrity_failure = 0.1;
-	max_integrity = 1e+009;
-	name = "Secure medical room";
-	normal_integrity = 1e+009;
-	req_access_txt = "9"
+/obj/structure/noticeboard,
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
 	},
-/turf/open/floor/mineral/titanium/purple,
 /area/city)
 "SN" = (
 /turf/open/floor/plating/dirt/jungle,
@@ -9498,8 +9791,16 @@
 	},
 /area/city)
 "SP" = (
-/obj/effect/turf_decal/siding/thinplating/corner,
-/turf/open/floor/facility/halls,
+/obj/machinery/button/door/indestructible{
+	id = "extraction";
+	name = "Office Access Shutters";
+	pixel_x = -22;
+	pixel_y = 3
+	},
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
+	},
+/turf/open/floor/facility/dark,
 /area/city/shop)
 "SR" = (
 /obj/machinery/door/airlock/wood{
@@ -9536,6 +9837,14 @@
 	icon_state = "darkbluewater1"
 	},
 /area/city)
+"Td" = (
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 1
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/shop)
 "Te" = (
 /obj/effect/turf_decal/siding/thinplating/dark/corner{
 	dir = 1
@@ -9701,12 +10010,21 @@
 	color = "#c4c4c4"
 	},
 /area/city)
-"TQ" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 10
+"TO" = (
+/obj/structure/closet/crate,
+/obj/item/body_modification_battery,
+/obj/item/body_modification_battery,
+/obj/item/body_modification_battery,
+/obj/item/body_modification_battery,
+/obj/item/body_modification_battery/tier2,
+/obj/item/body_modification_battery/tier2,
+/obj/item/body_modification_battery/tier3,
+/obj/item/body_modification_battery/tier4,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 6
 	},
-/turf/open/floor/mineral/titanium/tiled/purple,
-/area/city)
+/turf/open/floor/facility/dark,
+/area/city/shop)
 "TR" = (
 /obj/machinery/vending/cigarette,
 /obj/machinery/light{
@@ -9830,6 +10148,13 @@
 "Up" = (
 /obj/item/toy/plush/rabbit,
 /turf/open/floor/facility/dark,
+/area/city)
+"Us" = (
+/obj/structure/table/wood/bar,
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/holofloor/dark,
 /area/city)
 "Ut" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -10072,7 +10397,6 @@
 /obj/item/stack/spacecash/c100,
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
-	melee_damage_upper = 5;
 	is_flying_animal = 0
 	},
 /obj/item/stack/sheet/silk/human_simple,
@@ -10171,12 +10495,10 @@
 	color = "#b5b5b5"
 	},
 /area/city/backstreets_checkpoint)
-"Wc" = (
-/obj/structure/fluff/big_chain{
-	alpha = 0;
-	mouse_opacity = 0
-	},
-/turf/open/water/deep/polluted,
+"We" = (
+/obj/structure/table/wood/bar,
+/obj/item/flashlight/lamp/green,
+/turf/open/floor/holofloor/dark,
 /area/city)
 "Wf" = (
 /obj/structure/curtain/cloth,
@@ -10304,16 +10626,12 @@
 	},
 /area/city)
 "WK" = (
-/obj/machinery/button/door/indestructible{
-	id = "extraction";
-	name = "Office Access Shutters";
-	pixel_x = -22;
-	pixel_y = 3
+/obj/effect/turf_decal/siding/thinplating/corner{
+	dir = 4
 	},
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 8
+/turf/open/floor/wood{
+	color = "#ccc8c0"
 	},
-/turf/open/floor/stone,
 /area/city/shop)
 "WM" = (
 /obj/effect/turf_decal/stripes/line{
@@ -10341,6 +10659,15 @@
 	dir = 1
 	},
 /turf/open/floor/plating/beach/sand,
+/area/city)
+"WU" = (
+/obj/structure/sign/barsign{
+	icon_state = "maltesefalcon"
+	},
+/turf/closed/indestructible/opshuttle{
+	color = "#bc7ad6";
+	name = "shipping container"
+	},
 /area/city)
 "WV" = (
 /turf/closed/indestructible/opshuttle{
@@ -10416,19 +10743,6 @@
 	color = "#8f8f8f"
 	},
 /area/city)
-"Xn" = (
-/obj/structure/delivery_door{
-	density = 1;
-	icon = 'icons/obj/votebox.dmi';
-	icon_state = "votebox_maint";
-	name = "mail box";
-	desc = "A mailbox for this house."
-	},
-/turf/closed/indestructible/opshuttle{
-	color = "#ed592f";
-	name = "shipping container"
-	},
-/area/city/shop)
 "Xo" = (
 /turf/closed/indestructible/opshuttle{
 	color = "#2fb7ed";
@@ -10517,15 +10831,14 @@
 /turf/open/floor/plasteel/showroomfloor,
 /area/city/shop)
 "XI" = (
-/obj/effect/turf_decal/siding/purple{
-	dir = 8
+/obj/structure/chair/sofa/corp/corner{
+	dir = 4
 	},
-/turf/open/floor/mineral/titanium/tiled/purple,
+/turf/open/floor/wood,
 /area/city)
 "XJ" = (
 /mob/living/simple_animal/hostile/fairyswarm{
 	melee_damage_lower = 4;
-	melee_damage_upper = 5;
 	is_flying_animal = 0
 	},
 /obj/item/stack/sheet/silk/human_simple,
@@ -10597,6 +10910,10 @@
 /obj/structure/table/reinforced,
 /turf/open/floor/plasteel/vaporwave,
 /area/city/shop)
+"XX" = (
+/obj/structure/closet/crate/bin,
+/turf/open/floor/holofloor/dark,
+/area/city)
 "Ye" = (
 /obj/machinery/pdapainter,
 /obj/machinery/light{
@@ -10604,6 +10921,13 @@
 	},
 /turf/open/floor/facility,
 /area/city/shop)
+"Yf" = (
+/obj/structure/chair/sofa/corp{
+	dir = 1
+	},
+/obj/machinery/light,
+/turf/open/floor/wood,
+/area/city)
 "Yg" = (
 /obj/structure/rack,
 /obj/item/ego_weapon/city/yun/fist,
@@ -10694,15 +11018,9 @@
 /obj/structure/closet/crate/bin,
 /turf/open/floor/facility/halls,
 /area/city/fixers)
-"YE" = (
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 8
-	},
-/turf/open/floor/stone,
-/area/city/shop)
 "YH" = (
-/obj/effect/turf_decal/siding/purple,
-/turf/open/floor/mineral/titanium/tiled/purple,
+/obj/item/kirbyplants/random,
+/turf/open/floor/carpet/black,
 /area/city)
 "YK" = (
 /obj/structure/table,
@@ -10770,15 +11088,10 @@
 /turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "YZ" = (
-/obj/structure/table,
-/obj/item/storage/secure/safe{
-	pixel_x = -22
+/obj/machinery/body_modification_fabricator/public,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
 	},
-/obj/item/storage/toolbox/electrical,
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 10
-	},
-/turf/open/floor/stone,
 /area/city/shop)
 "Zf" = (
 /obj/effect/turf_decal/siding/thinplating/dark{
@@ -10888,6 +11201,15 @@
 	icon_state = "wood-broken7"
 	},
 /area/city)
+"Zx" = (
+/obj/structure/chair/sofa/corp/left{
+	dir = 8
+	},
+/obj/machinery/light{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city)
 "Zy" = (
 /obj/effect/turf_decal/stripes/line{
 	dir = 10
@@ -10940,12 +11262,10 @@
 	},
 /area/city)
 "ZI" = (
-/obj/structure/rack,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/stone,
+/obj/effect/turf_decal/siding/blue{
+	dir = 10
+	},
+/turf/open/floor/mineral/titanium/tiled/white,
 /area/city/shop)
 "ZJ" = (
 /obj/structure/table,
@@ -10976,10 +11296,12 @@
 	},
 /area/city/shop)
 "ZT" = (
-/obj/effect/turf_decal/siding/thinplating/dark{
-	dir = 9
+/obj/effect/turf_decal/siding/thinplating{
+	dir = 4
 	},
-/turf/open/floor/stone,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
 /area/city/shop)
 "ZV" = (
 /obj/machinery/vending/cigarette{
@@ -52593,10 +52915,10 @@ vm
 gY
 we
 Oy
-Ds
-Ds
-Ds
-Ds
+rp
+rp
+rp
+rp
 rp
 rp
 rp
@@ -52825,16 +53147,16 @@ zT
 ET
 ET
 KO
-IG
-pv
-pv
+vm
+af
+af
+af
+af
+af
 lN
 lN
-pv
-pv
-pv
-pv
-pv
+af
+af
 vm
 ws
 uT
@@ -53081,9 +53403,9 @@ AF
 ka
 wc
 PP
-AS
-Rm
-lN
+Jw
+vm
+af
 uE
 SP
 PX
@@ -53091,9 +53413,9 @@ cp
 ZT
 WK
 YZ
-pv
-rp
-ws
+lN
+lL
+FH
 PP
 Oy
 rp
@@ -53338,19 +53660,19 @@ vC
 of
 WF
 EB
-PP
-PP
-Xn
-iG
+Jw
+vm
+af
+ed
 ym
-Hg
+AN
 Fm
-RU
+Hg
 iz
 jV
 pv
-vm
-ws
+fn
+CZ
 PP
 UT
 rp
@@ -53595,19 +53917,19 @@ Yz
 WN
 AY
 zT
-Ia
-PP
-ak
-iG
-ym
-Hg
-Fm
-RU
-HZ
-Pw
-pv
+Jw
 vm
-ws
+af
+cg
+gE
+AN
+Fm
+Hg
+iz
+Pw
+OQ
+PP
+PP
 ET
 ew
 rp
@@ -53852,19 +54174,19 @@ VA
 PP
 Qs
 zT
-EB
-PP
-cu
-iG
+Jw
+vm
+af
+Eg
 ym
-Hg
+ma
 Fm
-sk
+Hg
 iz
 Ru
 pv
-rp
-ws
+Xl
+wc
 PP
 pV
 rp
@@ -54109,19 +54431,19 @@ Zk
 PP
 PP
 PP
-uU
-Gf
-lN
-uE
-ym
-Hg
+Jw
+vm
+af
+cg
+gE
+AN
 Fm
-RU
-HZ
-Pw
-pv
-rp
-ws
+Hg
+iz
+gA
+lN
+Mv
+BC
 EU
 Oy
 vC
@@ -54143,7 +54465,7 @@ oc
 oc
 dN
 Eu
-Ds
+rp
 ws
 ET
 AS
@@ -54367,16 +54689,16 @@ PP
 PP
 PP
 Jw
-jT
-lN
-uE
+vm
+af
+mH
 ym
-Hg
+AN
 qj
-RU
+Hg
 iz
-Fd
-pv
+gA
+lN
 rp
 yn
 zT
@@ -54400,7 +54722,7 @@ AC
 jO
 jO
 Eu
-Wc
+eV
 ws
 PP
 PP
@@ -54625,15 +54947,15 @@ wc
 ET
 Oy
 vm
-lN
-uE
-kG
-dK
+af
+oB
+ym
+AN
 qJ
 RU
-iz
-vr
-pv
+Td
+gA
+lN
 rp
 ws
 uT
@@ -54657,7 +54979,7 @@ Qs
 PP
 KO
 IG
-er
+ra
 iA
 PP
 Ia
@@ -54882,15 +55204,15 @@ Fw
 PP
 Oy
 vm
-lN
-uE
-iG
-iG
+af
+RQ
+Aa
+pz
 xb
-vv
-dT
-wr
-pv
+Pw
+Pw
+gA
+lN
 vm
 ta
 zT
@@ -55139,15 +55461,15 @@ ws
 zT
 Oy
 rp
-pv
-pv
-pv
-pv
-pv
-pv
-rQ
-pv
-pv
+af
+af
+hj
+af
+af
+Pw
+Pw
+gA
+lN
 vC
 ws
 ET
@@ -55396,15 +55718,15 @@ ws
 EU
 KO
 Wl
-rp
-vm
-wq
-IG
-pv
+af
+zc
+vX
+fC
+IO
 Bf
-YE
-pD
-pv
+Pw
+Pw
+af
 vC
 ws
 PP
@@ -55653,15 +55975,15 @@ ta
 PP
 AS
 Rm
-BN
-BN
-Vs
-LO
-pv
-nM
-iz
-HV
-pv
+af
+nF
+ym
+Hz
+af
+af
+KP
+kk
+af
 rp
 ws
 PP
@@ -55910,15 +56232,15 @@ ws
 uT
 PP
 ET
-PP
-ET
-Oy
-vC
-pv
+af
+gN
+ym
+uu
+af
 Qz
-iz
+Cm
 ZI
-pv
+af
 rp
 Hm
 PP
@@ -56167,15 +56489,15 @@ ws
 PP
 zT
 zT
-EU
-PP
-Oy
-vC
-pv
+af
+gh
+ym
+DD
+af
 gm
-iz
+IM
 ea
-pv
+af
 rp
 yn
 hQ
@@ -56424,15 +56746,15 @@ ws
 PP
 Qs
 PP
-PP
-EB
-Oy
-vm
-pv
+af
+BT
+ym
+MU
+hY
 JC
-iz
+IM
 yq
-pv
+af
 rp
 yn
 ET
@@ -56681,15 +57003,15 @@ ws
 PP
 hQ
 zT
-uT
-hQ
-Oy
-vm
-pv
+af
+Ra
+Aa
+TO
+af
 Pg
 dT
 lQ
-pv
+af
 vm
 ms
 PP
@@ -56938,15 +57260,15 @@ ws
 PP
 Qs
 zT
-Wq
-zT
-Oy
-vm
-pv
-pv
-pv
-pv
-pv
+af
+af
+af
+af
+af
+af
+af
+af
+af
 vm
 ws
 zT
@@ -61075,15 +61397,15 @@ Lu
 AF
 AF
 AF
-AF
-AF
-AF
 dX
 zT
 nb
+AF
 Qx
 AF
-hF
+AF
+AF
+AF
 AF
 ua
 Ez
@@ -61332,12 +61654,12 @@ qO
 vm
 vm
 vm
-vm
-vm
-rc
-LE
+Hm
 ET
 Oy
+Tp
+vm
+vm
 vm
 vm
 vm
@@ -61585,25 +61907,25 @@ dW
 dW
 dW
 Ja
-rp
-rp
-rp
 vm
 vm
 vm
-rc
-CD
-Ek
-BW
-rc
-rc
-rc
-rc
-rc
 vm
-rp
-vm
-rp
+Hm
+ET
+AS
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+Tp
 vm
 vm
 vm
@@ -61842,26 +62164,26 @@ dW
 dW
 dW
 Ja
-rp
-rp
 vm
-vC
-vC
 vm
-rc
+vm
+vm
+Hm
+ET
+Qs
+Ue
+fM
 Sc
-Sc
-Sc
-SH
-Hr
+pP
+iB
 XI
 sq
-rc
-rp
-rp
-rp
-vm
-vm
+fs
+pP
+fM
+iB
+iB
+iB
 vm
 vm
 vm
@@ -62099,26 +62421,26 @@ dW
 dW
 dW
 Ja
-rp
-rp
 vm
-rp
-vC
 vm
-rc
-CF
-zI
-zI
-rc
-OB
-rA
+vm
+vm
+Hm
+Qs
+ET
+iB
+qm
+fM
+qm
+iB
+Co
 NF
-rc
-vm
-vm
-vm
-vm
-vm
+qm
+qm
+fM
+Cl
+xy
+iB
 vm
 vm
 vm
@@ -62360,22 +62682,22 @@ vm
 vm
 vm
 vm
-rp
-vm
-rc
-Sc
-bt
-Sc
+Hm
+Qs
+ET
+iB
+iB
+aW
 SH
-OB
-rA
-Es
-rc
-vm
-vm
-vm
-vm
-vm
+iB
+MS
+qm
+qm
+lp
+fM
+ja
+Yf
+iB
 vm
 vm
 vm
@@ -62616,23 +62938,23 @@ Ja
 vm
 vm
 vm
-vm
-vm
-vm
-rc
-ef
-Sc
-Sc
-rc
-OB
-rA
-Hj
-rc
-vm
-vm
-vm
-vm
-vm
+wq
+Lu
+dX
+Qs
+iB
+wl
+fM
+fM
+fM
+fM
+fM
+fM
+fM
+fM
+Rd
+ME
+iB
 vm
 vm
 vm
@@ -62873,23 +63195,23 @@ rp
 vm
 vm
 vm
-vm
-vm
-vm
-rc
-rc
-SH
-rc
-rc
-mD
-sd
-No
-rc
-vm
-vm
-vm
-vm
-vm
+gY
+qQ
+Lu
+AF
+WU
+fM
+fM
+FJ
+MB
+MB
+MB
+MB
+FJ
+fM
+ja
+pn
+iB
 vm
 vm
 vm
@@ -63125,28 +63447,28 @@ vm
 vm
 vm
 vm
-rp
-vm
-rp
-rp
-rp
-rp
-vm
-vm
-rc
-LJ
-XI
-TQ
-rc
-rc
-rc
-rc
-rc
 vm
 vm
 vm
 vm
 vm
+vm
+gY
+qO
+vm
+iB
+fM
+fM
+We
+xA
+iE
+xA
+xA
+XX
+fM
+Cl
+xy
+iB
 vm
 vm
 vm
@@ -63390,20 +63712,20 @@ vm
 vm
 vm
 vm
-rc
-tv
-rA
-YH
+vm
+iB
+Oq
+fM
 Ri
-ot
-rc
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+FJ
+FJ
+FJ
+FJ
+FJ
+fM
+ja
+Yf
+iB
 vm
 vm
 vm
@@ -63647,20 +63969,20 @@ vm
 vm
 vm
 vm
-rc
-OB
-rA
+vm
+iB
+iB
 YH
-rc
-rc
-rc
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+Us
+XX
+wO
+xA
+FJ
+FJ
+fM
+Jg
+ME
+iB
 vm
 vm
 vm
@@ -63904,20 +64226,20 @@ vm
 vm
 vm
 vm
-rc
-xX
-yJ
-nt
-rc
 vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+iB
+iB
+iB
+iB
+iB
+iB
+to
+Ue
+iB
+aW
+nK
+iB
+iB
 vm
 vm
 vm
@@ -64161,20 +64483,20 @@ vm
 vm
 vm
 vm
-rc
-rc
-rc
-rc
-rc
 vm
 vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+Tp
+iB
+EF
+qm
+tR
+qm
+qm
+iB
+rA
+PF
+zx
+iB
 vm
 vm
 vm
@@ -64421,17 +64743,17 @@ vm
 vm
 vm
 vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+iB
+km
+qm
+qm
+qm
+ob
+iU
+HU
+iB
+iB
+iB
 vm
 vm
 vm
@@ -64678,17 +65000,17 @@ vm
 vm
 vm
 vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+iB
+GK
+Rd
+Zx
+Gw
+hX
+iB
+rA
+PF
+eT
+iB
 vm
 vm
 vm
@@ -64935,17 +65257,17 @@ vm
 vm
 vm
 vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
-vm
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
+iB
 vm
 vm
 vm
