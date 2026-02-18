@@ -2560,14 +2560,15 @@
 	icon = 'icons/obj/ego_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/weapons/ego_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/ego_righthand.dmi'
-	force = 100
+	force = 89 // Change lance_force too
 	swingstyle = WEAPONSWING_THRUST
 	swingcolor = COLOR_PERVERSION_LANCE
 	damtype = BLACK_DAMAGE
-	attack_speed = 1.4
+	attack_speed = 1.6 // Change lance_attack_speed too
 	attack_verb_continuous = list("pierces", "skewers", "perforates", "impales", "gores")
 	attack_verb_simple = list("pierce", "skewer", "perforate", "impale", "gore")
 	hitsound = 'sound/weapons/ego/perversion_lance_1.ogg'
+	hitsound_vary = FALSE
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 100,
 							PRUDENCE_ATTRIBUTE = 80,
@@ -2580,6 +2581,9 @@
 
 	/// Combo hit counter!
 	var/combo = 0
+	var/combo_timeout_timer
+	var/combo_timeout_duration = 3 SECONDS
+
 	/// Keeps track of your last hit mob. Combo requires you to focus on one, like Da Capo (this is actually a buff as it lets you reset)
 	var/last_target_hit
 
@@ -2648,7 +2652,7 @@
 	var/lance_followup_hitsound = 'sound/weapons/ego/perversion_lance_2.ogg'
 
 	// Combat vars
-	var/lance_force = 100
+	var/lance_force = 89
 	var/lance_attack_speed = 1.6
 	/// The weapon applies this many Gaze stacks per hit in lance form.
 	var/base_gaze_application = 1
@@ -2656,13 +2660,12 @@
 	// Lance dash. Similar to Dark Carnival/Crow's Eye View/Thumb East opener. This lets you dash at a faraway target, dealing extra damage and applying more Gaze.
 	var/lance_dash_range = 4
 	var/lance_dash_cooldown
-	var/lance_dash_cooldown_duration = 4 SECONDS
-	var/lance_dash_damage_coeff = 1.1
+	var/lance_dash_cooldown_duration = 5 SECONDS
 	var/lance_dash_extra_gaze_stacks = 1
 
-	// Immediately after a dash, your next attack will do an AoE thrust through your enemy, dealing extra damage and applying more Gaze.
+	// Immediately after a dash, your next attack will do an AoE thrust through your enemy, dealing damage and applying more Gaze. Also hits the main target.
 	var/lance_followup_range = 2
-	var/lance_followup_damage_coeff = 1.3
+	var/lance_followup_damage_coeff = 0.5
 	var/lance_followup_extra_gaze_stacks = 2
 
 	/* ------------ KATANA VARS ------------ */
@@ -2682,24 +2685,24 @@
 
 	// Sound vars
 	var/katana_basic_hitsound = 'sound/weapons/ego/perversion_katana_1.ogg'
-	var/katana_dash_hitsound = 'sound/weapons/ego/perversion_katana_3.ogg'
 	var/katana_cleave_hitsound = 'sound/weapons/ego/perversion_katana_2.ogg'
 	var/katana_finisher_hitsound = 'sound/weapons/ego/perversion_katana_4.ogg'
 
 	// Combat vars
 	// Katana should have less base DPS than the lance. Sheathe it you aurafarmer
-	var/katana_force = 60
-	var/katana_attack_speed = 1
+	var/katana_force = 65
+	var/katana_attack_speed = 1.4
 	var/katana_base_damage_coeff = 1
 	var/katana_additive_damage_coeff_per_gaze = 0.15 // 0: 1x, 1: 1.15x, 2: 1.3x, 3: 1.45x, 4: 1.6x, 5: 1.75x, 6: 1.9x, Contempt: 2.05x
 
 	var/katana_dash_range = 6
 	var/katana_dash_cooldown
-	var/katana_dash_cooldown_duration = 2 SECONDS
+	var/katana_dash_cooldown_duration = 2.5 SECONDS
 
-	var/katana_aoe_radius = 2
+	var/katana_cleave_range = 3
+	var/katana_cleave_degrees = 90
 
-	var/katana_finisher_damage_coeff = 2.5
+	var/katana_finisher_damage_coeff = 1.6
 
 
 /obj/item/ego_weapon/perversion/Destroy(force)
@@ -2707,6 +2710,10 @@
 		DrawAttackEnd(cascading_gaze_last_used_by)
 	return ..()
 
+/obj/item/ego_weapon/perversion/GetSwingColor()
+	var/color
+	sheathed ? (color = lance_swingcolor) : (color = katana_swingcolor)
+	return color
 
 /* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
 
@@ -2833,36 +2840,69 @@
 	// Enter the draw attack loop.
 	DrawAttackLoop(user, 1)
 
+// Root any nearby enemies with Contempt in sight. We'll store their status effects in a list so we can delete them later.
 /obj/item/ego_weapon/perversion/proc/DrawAttackRootContempt(mob/living/carbon/human/user)
-	for(var/mob/living/L in viewers(9, user))
+	for(var/mob/living/L in viewers(cascading_gaze_radius, user))
 		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)))
 			continue
 		if(user.faction_check_mob(L))
 			continue
-		cascading_gaze_residual_datums |= L.apply_status_effect(/datum/status_effect/perversion_weapon_root)
+		cascading_gaze_residual_datums |= L.apply_status_effect(/datum/status_effect/perversion_weapon_root, src)
 
-// Rooting status effect. Infinite duration, has to be cleared by DrawAttackEnd.
+// Rooting status effect. Duration irrelevant, should be cleared manually by DrawAttackEnd.
 /datum/status_effect/perversion_weapon_root
 	id = "perversion_weapon_root"
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_root
-	duration = -1
+	duration = 10 SECONDS
 	var/obj/item/ego_weapon/perversion/origin_weapon
+	var/obj/effect/perversion_weapon_root_vfx/attached_vfx
 
 /datum/status_effect/perversion_weapon_root/on_creation(mob/living/new_owner, obj/item/ego_weapon/perversion/katana)
-	if(!istype(katana))
+	if(!istype(katana) || !istype(new_owner) || new_owner.stat >= DEAD)
 		qdel(src)
 		return FALSE
 	origin_weapon = katana
 	. = ..()
 
+/// Don't let our victim move.
+/datum/status_effect/perversion_weapon_root/proc/TrapVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_OFF)
+		walk(animal_owner, 0)
+
+	owner.Immobilize(10 SECONDS, TRUE)
+
+/// Let them go now.
+/datum/status_effect/perversion_weapon_root/proc/FreeVictim()
+	var/mob/living/simple_animal/animal_owner = owner
+	if(istype(animal_owner))
+		animal_owner.toggle_ai(AI_ON)
+		walk(animal_owner, 0)
+
+	owner.remove_status_effect(STATUS_EFFECT_IMMOBILIZED)
 
 /datum/status_effect/perversion_weapon_root/on_apply()
 	. = ..()
-
+	TrapVictim()
+	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
+	attached_vfx = new(get_turf(owner))
 
 /datum/status_effect/perversion_weapon_root/on_remove()
 	. = ..()
+	FreeVictim()
+	animate(owner, 0.2 SECONDS, pixel_y = owner.pixel_y - 16)
+	qdel(attached_vfx)
+
+/obj/effect/perversion_weapon_root_vfx
+	name = "clasping hands"
+	desc = "You shall be shunned."
+	icon = 'icons/effects/effects.dmi'
+	icon_state = "malevolent"
+	layer = ABOVE_MOB_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	anchored = TRUE
 
 /atom/movable/screen/alert/status_effect/perversion_weapon_root
 	name = "Contempt of the Gaze of Contempt \[Perversion\]"
@@ -2919,6 +2959,8 @@
 			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
 				continue
 
+			shared_hitlist |= L
+
 			// Calculating damage based on gaze or contempt
 			var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
 			var/datum/status_effect/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
@@ -2972,6 +3014,7 @@
 
 	RemoveDrawAttackTraits(user)
 
+// Used during the draw attack for the attack visuals. Sends an afterimage to the target.
 /obj/item/ego_weapon/perversion/proc/SendSlashDecoyVisual(turf/T, mob/living/carbon/human/owner, should_do_slash_visual = TRUE, finisher = FALSE)
 	if(!T || !owner)
 		return
@@ -2995,25 +3038,30 @@
 	if(!istype(gotcha) || !place_of_intercept || !istype(owner))
 		return
 
+	// It's important to store these vars before we delete the projectile.
 	var/original_proj_damage
 	var/original_proj_damtype
 	var/original_proj_name = gotcha.name
 
+	// If the projectile we're intercepting is a fell bullet / fell slug, we need to save some data here.
 	var/mob/living/carbon/human/fraud
 	if(gotcha.type in cascading_gaze_shrapnel_sources)
 		fraud = gotcha.firer
 		original_proj_damage = gotcha.damage
 		original_proj_damtype = gotcha.damage_type
+
+	// Destroy the projectile.
 	qdel(gotcha)
 	playsound(place_of_intercept, 'sound/weapons/ego/clash1.ogg', 75, TRUE, 8)
 
+	// VFX
 	SendSlashDecoyVisual(place_of_intercept, owner, FALSE, FALSE)
-
 	var/obj/effect/temp_visual/dir_setting/slash/temp = new(place_of_intercept, pick(SOUTH, NORTH))
 	temp.color = swingcolor
 	temp.transform *= 2
 	do_sparks(3, FALSE, place_of_intercept)
 
+	// If we destroyed a fell bullet / fell slug, start a shrapnel spray. I hope I don't have to add a cooldown for this...? I mean, what kind of maniacs would set up a fell bullet firing squad just to abuse this weapon...
 	if(istype(fraud))
 		INVOKE_ASYNC(src, PROC_REF(CreateShrapnelSpray), get_turf(owner), owner, fraud, original_proj_damage, original_proj_damtype)
 		owner.visible_message(span_danger("[owner] expertly tears the [original_proj_name] to shreds, deflecting the shrapnel towards nearby enemies!"))
@@ -3022,11 +3070,15 @@
 		owner.visible_message(span_danger("[owner] slices the [original_proj_name] in half!"))
 	return
 
+// Called when we intercept a fell bullet/fell slug. Sends out some waves of shrapnel towards nearby enemies.
 /obj/item/ego_weapon/perversion/proc/CreateShrapnelSpray(turf/T, mob/living/carbon/human/owner, mob/living/carbon/human/fraud, intended_damage = 25, intended_damtype = RED_DAMAGE)
+	// We'll do this a total of X times...
 	for(var/i in 1 to cascading_gaze_shrapnel_amount["repeat"])
 		playsound(T, 'sound/weapons/ego/perversion_shrapnel_scatter.ogg', 100, TRUE, 8)
 		var/list/new_pellets = list()
 		var/list/targets_list = list()
+
+		// Gather valid targets into the targets_list for each iteration. This means each enemy can only be targeted once per 'wave' of shrapnel, but multiple times per call of this proc.
 		for(var/mob/living/L in viewers(9, T))
 			if(owner.faction_check_mob(L))
 				continue
@@ -3034,9 +3086,11 @@
 				continue
 			targets_list |= L
 
+		// Create Y pellets... their stats will be based on the fell bullet user's. So, if they fire a 2x portal empowered, 20% projectile damage modifier, MOBA ranged bullet, the shrapnel will have accordingly busted damage.
 		for(var/j in 1 to cascading_gaze_shrapnel_amount["pellets"])
 			new_pellets |= new /obj/projectile/ego_bullet/fell_shrapnel(T, fraud, owner, intended_damtype, intended_damage * 0.5, cascading_gaze_shrapnel_gaze_application)
 
+		// For every pellet we created, try to target an enemy with it. If there are no valid enemies left to target, just fire the pellet in a random direction.
 		for(var/obj/projectile/ego_bullet/fell_shrapnel/P in new_pellets)
 			var/atom/target
 			if(!length(targets_list))
@@ -3052,7 +3106,8 @@
 			P.preparePixelProjectile(target, T)
 			P.fire()
 
-		sleep(0.4 SECONDS)
+		// Small delay between waves of shrapnel.
+		sleep(0.3 SECONDS)
 
 // Stolen and adapted from Elogio Bianco, you'll deflect any projectiles that manage to SOMEHOW slip past your field during the draw attack
 /obj/item/ego_weapon/perversion/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
@@ -3140,6 +3195,8 @@
 		linked_weapon.DrawAttackProjectileReaction(mover, get_turf(src), user)
 		return FALSE
 
+// The only projectile able to bypass the draw attack's protective field. Fired by CreateShrapnelSpray.
+// Is passed stats on creation - depends on a few vars from Perversion and some stats from the original projectile.
 /obj/projectile/ego_bullet/fell_shrapnel
 	name = "fell shrapnel"
 	icon_state = "bonebullet_long"
@@ -3151,7 +3208,7 @@
 	projectile_piercing = PASSMOB
 	var/mob/living/carbon/human/john_fellbullet
 	var/mob/living/carbon/human/jane_perversion
-	var/damage_dealt = FALSE
+	var/damage_dealt = FALSE // Used to avoid accidental multihits since this has piercing, but that piercing is only intended for IFF.
 	var/gaze_application = 1
 	var/gaze_coeff = 0.15
 
@@ -3168,13 +3225,17 @@
 	gaze_coeff = intended_gaze_coeff
 
 /obj/projectile/ego_bullet/fell_shrapnel/on_hit(atom/target, blocked = FALSE)
+	// Delete the bullet if it's already dealt its damage once.
 	if(damage_dealt)
 		qdel(src)
 		return
+
+	// Only hit targets hostile to the original firer.
 	var/should_impact = isliving(target) && (!john_fellbullet.faction_check_mob(target))
 	if(should_impact)
 		nodamage = FALSE
 		damage_dealt = TRUE
+		// Apply extra damage based on Gaze/Contempt on target. Also add/refresh Gaze/Contempt.
 		var/final_damage_coeff = 1
 		var/mob/living/artwork = target
 		var/datum/status_effect/stacking/perversion_weapon_gaze/lets_take_a_gaze = artwork.has_status_effect(STATUS_EFFECT_GAZE)
@@ -3196,35 +3257,6 @@
 		qdel(src)
 
 /* ------------------------ COMBAT ------------------------ */
-
-/obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
-	// Pre-attack: if we're in Katana form, adjust force based on enemy Gaze/Contempt
-	if(!sheathed && istype(target) && target.stat < DEAD)
-		force = katana_force
-		var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
-		var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
-		var/extra_coeff = 1
-
-		if(contempting)
-			extra_coeff += (katana_additive_damage_coeff_per_gaze * 7)
-		else if(gazing)
-			extra_coeff += (katana_additive_damage_coeff_per_gaze * (gazing.stacks))
-
-		force *= extra_coeff
-
-	. = ..() // Attack
-
-	// Post-attack
-	sheathed ? (force = lance_force) : (force = katana_force) // Reset force to be accurate if we examine the weapon
-	if(.)
-		// If we hit a target in Lance form, apply Gaze
-		if(sheathed && !QDELETED(target) && istype(target) && target.stat < DEAD)
-			ApplyGaze(target, base_gaze_application)
-
-		// If we hit a target in Katana form,
-		else
-			return
-
 // Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
 /obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
@@ -3235,6 +3267,326 @@
 		gazing.add_stacks(stacks_to_apply)
 	else
 		target.apply_status_effect(STATUS_EFFECT_GAZE, stacks_to_apply)
+
+// Proc used to set combo state, last hit victim, and a timeout timer.
+/obj/item/ego_weapon/perversion/proc/SetComboState(number, mob/living/victim, mob/living/carbon/human/user)
+	deltimer(combo_timeout_timer)
+
+	combo = number
+	if(!QDELETED(victim))
+		last_target_hit = victim
+	else
+		last_target_hit = null
+
+	combo_timeout_timer = addtimer(CALLBACK(src, PROC_REF(ComboTimeout), user), combo_timeout_duration, TIMER_STOPPABLE)
+
+/obj/item/ego_weapon/perversion/proc/ComboTimeout(mob/living/carbon/human/user)
+	deltimer(combo_timeout_timer)
+	if(!user)
+		return
+
+	last_target_hit = null
+	if(combo != 0)
+		to_chat(user, span_danger("The momentum from your attacks fade. Combo reset."))
+		balloon_alert(user, "The momentum from your attacks fades.")
+	combo = 0
+
+/obj/item/ego_weapon/perversion/proc/SetForceFromTargetGaze(mob/living/target)
+	if(sheathed)
+		force = lance_force
+		return
+	else
+		force = katana_force
+		if(!istype(target))
+			return
+
+		var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
+		var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		var/extra_coeff = 1
+
+		if(contempting)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * 7)
+		else if(gazing)
+			extra_coeff += (katana_additive_damage_coeff_per_gaze * (gazing.stacks))
+
+		force *= extra_coeff
+		return
+
+/obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
+	// Setting the correct hitsound before attacking...
+	hitsound_vary = FALSE
+	if(sheathed)
+		if(combo == 2 && last_target_hit == target)
+			hitsound = lance_followup_hitsound
+		else
+			hitsound_vary = TRUE
+			hitsound = lance_basic_hitsound
+	else
+		if(combo == 1 && target == last_target_hit)
+			hitsound = katana_cleave_hitsound
+		else if(combo == 2 && target == last_target_hit)
+			hitsound = katana_finisher_hitsound
+		else
+			hitsound_vary = TRUE
+			hitsound = katana_basic_hitsound
+
+	// Adjust force based on Gaze/Contempt if the weapon's unsheathed. Logic handled in the below proc.
+	SetForceFromTargetGaze(target)
+	// Katana finisher will absolutely nuke someone.
+	if(!sheathed && combo >= 2 && last_target_hit == target)
+		force *= katana_finisher_damage_coeff
+
+	// Save this in case we send whatever we're gonna hit to Sovngarde (nullspace)
+	var/turf/target_turf_before_possibly_obliterated = get_turf(target)
+
+	. = ..() // Attack
+
+	// Post-attack
+	sheathed ? (force = lance_force) : (force = katana_force) // Reset force to be accurate if we examine the weapon
+
+	if(!.)
+		return
+
+	shared_hitlist = list(user)
+
+	if(!istype(target))
+		SetComboState(0, null, user)
+		return
+	if(last_target_hit && (target != last_target_hit))
+		SetComboState(0, target, user)
+
+	// Attacking in Lance form.
+	if(sheathed)
+		if(target.stat < DEAD)
+			ApplyGaze(target, base_gaze_application)
+
+		switch(combo)
+			if(1) // This is our lunge's attack.
+				SetComboState(2, target, user)
+				if(target.stat < DEAD)
+					ApplyGaze(target, lance_dash_extra_gaze_stacks)
+				return
+			if(2) // This is an attack made on the same target after a lunge. Do the followup thrust AoE.
+				SetComboState(0, target, user)
+				LanceFollowupThrust(target_turf_before_possibly_obliterated, user)
+				return
+			else
+				SetComboState(0, target, user)
+				return
+
+	// Attacking in Katana form.
+	else
+		if(!target.has_status_effect(STATUS_EFFECT_CONTEMPT) && !target.has_status_effect(STATUS_EFFECT_GAZE))
+			SetComboState(0, target, user)
+			return
+		switch(combo)
+			if(0) // First hit; either point blank or our dash.
+				SetComboState(1, target, user)
+				return
+			if(1) // Second hit. This should have a cleave on it.
+				SetComboState(2, target, user)
+				shared_hitlist |= target
+				KatanaCleave(target_turf_before_possibly_obliterated, user)
+				return
+			if(2) // Finisher. Remove our statuses from the target.
+				if(!QDELETED(target))
+					target.remove_status_effect(STATUS_EFFECT_CONTEMPT)
+					target.remove_status_effect(STATUS_EFFECT_GAZE)
+					var/obj/effect/temp_visual/slice/temp = new(target_turf_before_possibly_obliterated)
+					temp.color = swingcolor
+					temp.transform *= 2
+				SetComboState(0, target, user)
+				return
+			else
+				SetComboState(0, target, user)
+				return
+
+// Lance Lunge / Katana Dash. Activates only on the first strike against each opponent (Da Capo combo logic: after you trigger it once on a target, you'll need to break the combo to use it again)
+/obj/item/ego_weapon/perversion/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	if(!CanUseEgo(user))
+		return
+	if(!isliving(A))
+		return
+	var/mob/living/victim = A
+	if(victim.stat >= DEAD)
+		return
+
+	if(combo == 0 || last_target_hit != victim)
+		var/distance = get_dist(user, victim)
+		if(sheathed)
+			if(lance_dash_cooldown > world.time)
+				to_chat(user, span_danger("You haven't recovered from your last lunge yet!"))
+				balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]")
+				return
+			if(distance > lance_dash_range)
+				to_chat(user, span_danger("You can't reach your target with your lunge!"))
+				return
+			if((distance < 2) || (!(can_see(user, victim, lance_dash_range))))
+				return
+
+			lance_dash_cooldown = world.time + lance_dash_cooldown_duration
+			for(var/i in 2 to distance)
+				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
+				D.alpha = min(100 + i*25, 200)
+				animate(D, alpha = 0, time = 2 + i*2)
+				step_towards(user, victim)
+			user.visible_message(span_danger("[user] lunges at [victim] with [src]!"))
+			SetComboState(1, victim, user)
+
+			if((get_dist(user, victim) < 2))
+				victim.attackby(src, user)
+
+		else
+			if(!victim.has_status_effect(STATUS_EFFECT_GAZE) && !victim.has_status_effect(STATUS_EFFECT_CONTEMPT))
+				to_chat(user, span_danger("Your target has no Gaze or Contempt!"))
+				balloon_alert(user, "Target has no Gaze/Contempt.")
+				return
+			if(katana_dash_cooldown > world.time)
+				to_chat(user, span_danger("You haven't recovered from your last dash yet!"))
+				balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]")
+				return
+			if(distance > katana_dash_range)
+				to_chat(user, span_danger("You can't reach your target with your dash!"))
+				return
+			if((distance < 2) || (!(can_see(user, victim, katana_dash_range))))
+				return
+
+			katana_dash_cooldown = world.time + katana_dash_cooldown_duration
+			for(var/i in 2 to distance)
+				step_towards(user, victim)
+				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
+				D.alpha = min(100 + i*25, 200)
+				animate(D, alpha = 0, time = 2 + i*2)
+			user.visible_message(span_danger("[user] dashes towards [victim] with [src]!"))
+			if((get_dist(user, victim) < 2))
+				victim.attackby(src, user)
+
+			SetComboState(1, victim, user)
+
+/obj/item/ego_weapon/perversion/proc/LanceFollowupThrust(turf/target, mob/living/carbon/human/user)
+	if(!target || !user)
+		return
+
+	// Assemble turfs to be hit
+	var/turf/endpoint = get_ranged_target_turf_direct(user, target, lance_followup_range)
+	if(!endpoint)
+		return
+	var/list/line = getline(get_step_towards(user, endpoint), endpoint)
+	for(var/turf/T in line)
+		for(var/turf/T2 in view(1, T))
+			if(get_dist(T2, user) <= lance_followup_range)
+				line |= T2
+
+	line -= get_turf(user)
+
+	// Damage calc
+	var/final_damage = force * force_multiplier
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	final_damage*=justicemod
+	final_damage*=lance_followup_damage_coeff
+
+	for(var/turf/T3 in line)
+		new /obj/effect/temp_visual/perversion_thrust_visual(T3)
+
+		for(var/mob/living/L in T3)
+			if(L in shared_hitlist)
+				continue
+			if(user.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+
+			shared_hitlist |= L
+
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
+
+			L.deal_damage(final_damage, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+			if(L && L.health > 0)
+				ApplyGaze(L, lance_followup_extra_gaze_stacks)
+
+/obj/effect/temp_visual/perversion_thrust_visual
+	name = "pierced space"
+	desc = "This space is being pierced by a gilded lance!"
+	icon_state = "kick"
+	layer = POINT_LAYER
+	color = COLOR_PERVERSION_LANCE
+	duration = 5
+
+/obj/item/ego_weapon/perversion/proc/KatanaCleave(turf/target, mob/living/carbon/human/user)
+	if(!target || !user)
+		return
+
+	// Assemble turfs to be hit
+	var/turf/endpoint = get_ranged_target_turf_direct(user, target, lance_followup_range)
+	if(!endpoint)
+		return
+
+	user.face_atom(target)
+
+	var/turf/T = get_turf(user)
+	shared_hitlist |= T
+
+	var/angle_to_target = Get_Angle(T, target)
+	var/angle = angle_to_target + katana_cleave_degrees * -0.5
+	if(angle > 360)
+		angle -= 360
+	else if(angle < 0)
+		angle += 360
+
+	var/turf/T2 = get_turf_in_angle(angle, T, katana_cleave_range)
+	var/list/line = getline(T, T2)
+	INVOKE_ASYNC(src, PROC_REF(KatanaCleaveHit), line, user)
+	for(var/i = 1 to 20)
+		angle += ((katana_cleave_degrees / 20))
+		if(angle > 360)
+			angle -= 360
+		else if(angle < 0)
+			angle += 360
+		T2 = get_turf_in_angle(angle, T, katana_cleave_range)
+		line = getline(T, T2)
+		addtimer(CALLBACK(src, PROC_REF(KatanaCleaveHit), line, user), i * 0.04)
+
+/obj/item/ego_weapon/perversion/proc/KatanaCleaveHit(list/turf_line, mob/living/carbon/human/user)
+	if(!islist(turf_line) || !user)
+		return
+
+	var/base_damage = force * force_multiplier
+	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
+	var/justicemod = 1 + userjust/100
+	base_damage*=justicemod
+
+	for(var/turf/T in turf_line)
+		if(T in shared_hitlist)
+			continue
+		if(!isturf(T))
+			continue
+
+		shared_hitlist |= T
+		var/obj/vfx = new /obj/effect/temp_visual/slice(T)
+		vfx.color = swingcolor
+
+		for(var/mob/living/L in T)
+			if(L in shared_hitlist)
+				continue
+			if(user.faction_check_mob(L))
+				continue
+			if(L.stat >= DEAD)
+				continue
+
+			shared_hitlist |= L
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
+
+			var/final_damage = base_damage
+			var/datum/status_effect/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			if(contempting)
+				final_damage *= (1 + (katana_additive_damage_coeff_per_gaze * 7))
+			else
+				var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
+				if(gazing)
+					final_damage *= (1 + (katana_additive_damage_coeff_per_gaze * gazing.stacks))
+
+			L.deal_damage(final_damage, damtype, source = user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 
 /// Gaze stacking status effect: does nothing, the weapon is the one that applies the bonuses. You start with 1 stack, and go up to 6. If you go to 7? Turns into Contempt.
 /datum/status_effect/stacking/perversion_weapon_gaze
