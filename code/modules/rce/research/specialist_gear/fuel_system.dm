@@ -658,10 +658,11 @@
 	if(!ishuman(user))
 		return FALSE
 	var/mob/living/carbon/human/H = user
-	var/datum/job/user_job = H.mind?.assigned_role
+	var/user_job = H.mind?.assigned_role
 	if(!user_job)
 		return FALSE
-	return istype(user_job, /datum/job/raven) || istype(user_job, /datum/job/raven_messenger) || istype(user_job, /datum/job/raven_mp) || istype(user_job, /datum/job/rcorp_captain/raven)
+	var/list/raven_jobs = list("R-Corp Scout Raven", "R-Corp Support Raven", "R-Corp Messenger Raven", "R-Corp Raven MP", "Raven Squad Captain")
+	return (user_job in raven_jobs)
 
 // BASE RCE CANISTER - Parent type for all portable canisters used by Ravens
 /obj/item/rce_canister
