@@ -294,8 +294,8 @@ The squad datum is the central tracker for the association. It holds the member 
 			// Knowledge Tome — EXP interface, event launcher, knowledge storage, shop
 			new /obj/item/dieci_knowledge_tome(get_turf(member))
 		if(ASSOCIATION_CINQ)
-			// Cinq Glove — used for Throw the Glove forced duels
-			new /obj/item/cinq_glove(get_turf(member))
+			// Cinq has no unique tool items — Throw the Glove and Challenge to Duel are granted as actions
+			pass
 		// Zwei has no unique tool items — their kit is purely weapons + armor
 ```
 
@@ -406,8 +406,8 @@ Dieci and Cinq get new boxes:
 	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)             // Associate x3 — EXISTS (30/30/30/0, no attr req) — ADJUST attrs to 80 all
 	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/cinq(src)
-	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/vet(src)         // Veteran — NEEDS CREATION (stronger duelist gear, 100 all attrs) — NEEDS NEW SPRITES
-	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/director(src)    // Director — NEEDS CREATION (director duelist gear, 120 all attrs) — use cinqwest sprites (icon_state "cinqwest"), include hat (cinqwest hat) and cape (cinqwest cape)
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/vet(src)         // Veteran — NEEDS CREATION (100 all attrs, armor 40/30/40/20 = 130 total) — NEEDS NEW SPRITES
+	new /obj/item/clothing/suit/armor/ego_gear/city/cinq/director(src)    // Director — NEEDS CREATION (120 all attrs, armor 50/40/50/30 = 170 total) — use cinqwest sprites (icon_state "cinqwest"), include hat (cinqwest hat) and cape (cinqwest cape)
 ```
 
 ### New Files
@@ -1376,7 +1376,7 @@ Contracts are either **duration-based** (6/10/20 minute tiers with tiered pricin
 
 8. **Duel Person** — **1000 ahn** (flat) (Cinq only) - Target a specific carbon player. The Cinq fixer must find and duel the target using Throw the Glove (forced, no consent). Objective-based — completes when the duel ends; winning gives bonus EXP + ahn.
 
-9. **Champion Contract** — **625 / 1000 / 1750 ahn** (6/10/20 min) (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Payment comes from the client. The contract timer **only ticks while the client is within 10 tiles** to witness the duel.
+9. **Champion Contract** — **1500 ahn** (flat) (Cinq only) - A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. Objective-based — completes when the Cinq wins a duel against the designated target.
 
 *Dieci-Specific:*
 
@@ -3441,13 +3441,13 @@ Cinq's core mechanic is the **formal duel** — a structured one-on-one fight th
 
 **Duel Types:**
 
-1. **Consensual Duel** — The Cinq fixer uses the **Challenge to Duel** action (`/datum/action/cooldown/cinq_challenge`) on a carbon mob. A TGUI prompt appears for the target: "Accept Duel? Level: [1/2/3]" with Accept/Decline buttons. Target has 30 seconds to respond. On accept, duel begins after a 3-second countdown. Both players can be anyone — Cinq vs Cinq, Cinq vs civilian, etc.
+1. **Consensual Duel** — The Cinq fixer uses the **Challenge to Duel** action (`/datum/action/cooldown/cinq_challenge`) on a carbon mob. A TGUI prompt appears for the target: "Accept Duel? Level: [1/2/3]" with Accept/Decline buttons. Target has 30 seconds to respond. On accept, the duel ring is created immediately — neither party can leave. The duel begins after a 3-second countdown. Both players can be anyone — Cinq vs Cinq, Cinq vs civilian, etc.
 
-2. **Contracted Duel (Forced)** — The Cinq fixer is hired to duel a specific target. Uses the **Throw the Glove** action (`/datum/action/cooldown/cinq_glove_throw`) — a projectile glove is thrown at the target (3-tile range, same as `throw_at()` pattern). On hit, the target receives a visible message: `"[user] throws a dueling glove at [target]'s feet — a formal challenge!"` After a 5-second delay (during which both parties can prepare), the duel begins automatically with no consent required. Only available while on a Duel Person contract. The glove is a `/obj/item/cinq_glove` that auto-deletes after the duel starts.
+2. **Contracted Duel (Forced)** — The Cinq fixer is hired to duel a specific target. Uses the **Throw the Glove** action (`/datum/action/cooldown/cinq_glove_throw`) — a visual glove projectile is thrown at the target (3-tile range). On hit, the target receives a visible message: `"[user] throws a dueling glove at [target]'s feet — a formal challenge!"` The duel ring is created immediately on hit — neither party can leave. After a 3-second countdown, the duel begins automatically with no consent required. Only available while on an active contract. Throw the Glove is granted as an **action**, not a physical item — all Cinq members receive it on registration.
 
 **Duel Component (`/datum/component/cinq_duel`):**
 
-Applied to BOTH duelists when a duel begins. Prevents ALL damage from sources other than the other duelist. This is the same pattern as `/datum/component/cutscene_duel` but extended for longer-duration player-vs-player duels.
+Applied to BOTH duelists when a duel begins. Tracks the duel state (level, ring boundary, end conditions). Extended for longer-duration player-vs-player duels.
 
 ```dm
 /datum/component/cinq_duel
@@ -3466,8 +3466,6 @@ Applied to BOTH duelists when a duel begins. Prevents ALL damage from sources ot
 
 /datum/component/cinq_duel/proc/on_damage(datum/source, damage, damagetype, def_zone, blocked, forced, spread_flags, wound_bonus, bare_wound_bonus, sharpness, atom/incoming_attacker)
 	SIGNAL_HANDLER
-	if(incoming_attacker != opponent)
-		return COMPONENT_MOB_DENY_DAMAGE
 	// After damage passes through, check end conditions
 	INVOKE_ASYNC(duel_instance, TYPE_PROC_REF(/datum/cinq_duel_instance, check_end_condition))
 ```
@@ -3604,13 +3602,12 @@ Manages the lifecycle of a single duel. Created when a duel begins, destroyed wh
 
 - **Duel Person** (Cinq only) — Target a specific carbon player. The Cinq fixer must find and duel the target using the Throw the Glove action (forced, no consent). Contract specifies duel level. Contract completes when the duel ends (win or lose, but winning gives bonus EXP + ahn). Reflects Cinq's role as hired blades.
 
-- **Champion Contract** (Cinq only) — A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. The Cinq fixer must duel the specified target as the client's champion. Works identically to Duel Person mechanically (forced glove throw), but the contract payment comes from the client, not Hana. If the Cinq wins, both the fixer and the client benefit. The client must stay within 10 tiles during the duel to witness it (or contract is downgraded to standard Duel Person payout).
+- **Champion Contract** (Cinq only) — **1500 ahn** (flat). A client hires the Cinq fixer to fight on their behalf. The client designates an opponent. The Cinq must duel and **defeat** the specified target. Objective-based — completes when the Cinq wins a duel against the designated target. If the Cinq wins, both the fixer and the client benefit.
 
 **Contract-Specific Behavior:**
 - Cinq skill tree abilities **only function while on an active contract**
 - Duel Person contracts show the **target's name**
-- Champion Contracts show both the **client's name** and the **target's name**
-- Failing to initiate a duel within the contract duration = contract failure
+- Champion Contracts show the **target's name**
 
 **Target Grade EXP Bonus:**
 
@@ -3664,17 +3661,17 @@ Cinq has 3 branches. Players can invest in a maximum of 2.
 
 **T2 (2pt) — Pick one:**
 - **A: Precision Strike** — On Poise crit, deal an additional 15% of your weapon's force as bonus damage and apply 3 Fragile stacks to the target (replace-if-higher). Your crits expose the flaws in their stance.
-- **B: Momentum** — On Poise crit, regain Poise stacks equal to 50% of the stacks consumed or halved by the crit (minimum 3). Crits fuel crits — each successful strike feeds the next.
+- **B: Momentum** — On Poise crit, if you have **no Concentration**, regain Poise stacks equal to 50% of the stacks halved by the crit (minimum 3). Does not trigger if Concentration absorbed the crit cost. Crits fuel crits — each successful strike feeds the next.
 
 **T3 (3pt) — Pick one:**
-- **A: Decisive Blow** *(Powerful Attack, 90s CD)* — Requires: 15+ Poise stacks. Dash forward 4 tiles. 5-hit combo on first enemy hit. Half of your Poise stacks are consumed before the combo; each consumed stack adds 2% to total combo damage (at 30 Poise: consume 15, +30% damage). You also gain Concentration equal to half the consumed stacks (max 5). Per-hit: apply 2 Fragile (replace-if-higher). Final hit: 2x DPS, knockback 3 tiles. Convert your edge into endurance.
+- **A: Decisive Blow** *(Powerful Attack, 90s CD)* — Requires: 15+ Poise stacks. Dash forward 4 tiles. 5-hit combo on first enemy hit. Half of your Poise stacks are consumed before the combo; each consumed stack adds 2% to total combo damage (at 30 Poise: consume 15, +30% damage). You also gain Concentration equal to half the consumed stacks (max 5). Per-hit: apply 2 Defense Level Down stacks. Final hit: 2x DPS, knockback 3 tiles. Convert your edge into endurance.
 - **B: Ceaseless Pressure** *(Passive)* — Every 5th consecutive melee hit on the same target is an automatic crit (bypassing the probability roll) and grants 5 Poise. Switching targets resets the count. Relentless discipline replaces fleeting focus.
 
 **Decisive Blow — Details:**
 - **Opener:** Dash forward 4 tiles in facing direction. First enemy hit becomes the main target.
 - **Combo:** 5 hits. Rapid precision strikes.
 - **Pre-combo:** Read current Poise stacks. Consume half (rounded down). Calculate damage multiplier: `1 + (consumed_stacks * 2 / 100)`. Grant Concentration = `min(5, round(consumed / 2))`. E.g., at 30 Poise: consume 15, +30% damage, gain 5 Concentration. At 50 Poise: consume 25, +50% damage, gain 5 Concentration.
-- **Per-hit effect:** Each hit applies 2 Fragile (replace-if-higher) via `apply_lc_fragile(2)`.
+- **Per-hit effect:** Each hit applies 2 Defense Level Down stacks via `apply_lc_defense_level_down(2)`.
 - **Final hit:** Deals 2x DPS, knockback 3 tiles.
 - **Condition:** More Poise stacks = more combo damage + more Concentration gained (capped at 5). You keep half your Poise for continued fighting.
 
@@ -3682,7 +3679,7 @@ Cinq has 3 branches. Players can invest in a maximum of 2.
 - Keen Edge: `COMSIG_MOB_ITEM_ATTACK` → `human_parent.apply_lc_poise(3)`.
 - Opening Gambit: Track `var/mob/living/last_target` and `var/consecutive_count`. On `COMSIG_MOB_ITEM_ATTACK`: if `target != last_target` → `last_target = target`, `consecutive_count = 0`, `human_parent.apply_lc_poise(8)`. Else → `human_parent.apply_lc_poise(1)`, `consecutive_count++`.
 - Precision Strike: `COMSIG_POISE_CRIT_ATTACKER` → `INVOKE_ASYNC` → `target.deal_damage(weapon.force * 0.15, weapon.damtype)` + `target.apply_lc_fragile(3)`.
-- Momentum: Snapshot pre-crit poise stacks on `COMSIG_MOB_ITEM_ATTACK` (store `var/pre_crit_poise`). On `COMSIG_POISE_CRIT_ATTACKER` → calculate `lost = pre_crit_poise - current_poise` → `human_parent.apply_lc_poise(max(3, round(lost / 2)))`.
+- Momentum: Snapshot pre-crit poise stacks on `COMSIG_MOB_ITEM_ATTACK` (store `var/pre_crit_poise`). On `COMSIG_POISE_CRIT_ATTACKER` → check if owner had Concentration at crit time → if yes, skip (Concentration absorbed the cost, no Poise was halved). If no Concentration → calculate `lost = pre_crit_poise - current_poise` → `human_parent.apply_lc_poise(max(3, round(lost / 2)))`.
 - Decisive Blow: `/datum/action/cooldown/decisive_blow` → toggle targeting → `InterceptClickOn` checks Poise >= 15. Read current poise stacks, `var/consumed = round(current_poise / 2)`. Remove `consumed` stacks via `apply_lc_poise(-consumed)`. Multiplier = `1 + (consumed * 2 / 100)`. Grant `human_parent.apply_lc_concentration(min(5, round(consumed / 2)))`. Apply cutscene_duel component + immobilize. 5 hits with `sleep()`. Per-hit: `target.apply_lc_fragile(2)`. Final hit: 2x DPS, `throw_at(target, 3)`.
 - Ceaseless Pressure: Track `var/datum/weakref/combo_target` and `var/combo_hits = 0`. On `COMSIG_MOB_ITEM_ATTACK`: if `WEAKREF(target) != combo_target` → reset `combo_target = WEAKREF(target)`, `combo_hits = 0`. `combo_hits++`. At 5: `INVOKE_ASYNC(poise_effect, PROC_REF(do_poise_crit), target, user, weapon)` + `human_parent.apply_lc_poise(5)`, reset `combo_hits = 0`. No `buffs.dm` edits needed.
 
@@ -3693,7 +3690,7 @@ Cinq has 3 branches. Players can invest in a maximum of 2.
 **Theme:** Movement speed, hit-and-run tactics. The Skirmisher fights like quicksilver — closing distance in a flash, landing a burst of strikes, then pulling back before the opponent can react. Skills reward aggressive positioning and punish enemies who cannot keep up.
 
 **T1 (1pt) — Pick one:**
-- **A: Quick Step** — On landing a melee hit, gain +15% movement speed for 4 seconds (refreshes on hit). Also grants Poise stacks equal to your total active Cinq speed bonus / 5 (e.g., 15% speed = 3 Poise, 45% speed = 9 Poise). The faster you move, the sharper your edge.
+- **A: Quick Step** — On landing a melee hit, gain +15% movement speed for 4 seconds. Also grants Poise stacks equal to your total active Cinq speed bonus / 5. 5s internal CD (e.g., 15% speed = 3 Poise, 45% speed = 9 Poise). The faster you move, the sharper your edge.
 - **B: First Strike** — Your first melee hit on a new target deals 20% bonus damage and grants 5 Poise. Only triggers once per target — switching to a different target resets it. The initiative belongs to whoever moves first.
 
 **T2 (2pt) — Pick one:**
@@ -3701,22 +3698,24 @@ Cinq has 3 branches. Players can invest in a maximum of 2.
 - **B: Rush Down** — On Poise crit, gain +30% movement speed for 4 seconds. A perfect strike fuels your momentum.
 
 **T3 (3pt) — Pick one:**
-- **A: Blade Dance** *(Powerful Attack, 90s CD)* — Dash to target from up to 5 tiles. 6-hit rapid combo. Between each hit, the user teleports to a random adjacent tile of the target (creating a "dancing around" visual). Per-hit: gain 2 Poise stacks. If the user has +15% or more speed bonus from Cinq skills when initiating, add 2 bonus hits (8 total). Final hit: 2x DPS, applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds after combo ends. Speed is life.
+- **A: Blade Dance** *(Powerful Attack, 90s CD)* — All hits deal 50% reduced damage. Kick off into a sprint, leaving an afterimage at the starting position, and appear at a random adjacent tile of the target (up to 5 tiles). After 1 second, dash toward the target's last known position, continuing 4 tiles past it — if you move adjacent to any enemy during the dash, the combo begins on them. 4-hit base combo. Between each hit, the user teleports to a random adjacent tile of the target, leaving an afterimage at each previous position (creating a "dancing around" visual). For every +10% movement speed from Cinq skills, add 1 extra hit (e.g., +15% = 5 hits, +30% = 7 hits). Per-hit: gain 2 Poise stacks. Final hit: 2x DPS, applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds after combo ends. Speed is life.
 - **B: Afterimage** *(Passive)* — Track steps taken. After moving 20+ steps, your next melee attack deals 35% bonus damage, grants 5 Poise, and resets the step counter. Additionally, 20% chance on being hit by melee to dodge the attack entirely (damage negated via `COMPONENT_MOB_DENY_DAMAGE`). You're never where they expect you to be.
 
 **Blade Dance — Details:**
-- **Opener:** Dash to target from up to 5 tiles. Target becomes the main target.
-- **Combo:** 6 hits base (8 if Cinq speed buffs >= 15%). User `forceMove()`'d to `pick(get_adjacent_turfs(target))` between each hit.
+- **Opener Phase 1 (Feint):** Leave an afterimage overlay at starting position (`new /obj/effect/temp_visual/afterimage(get_turf(owner), owner)` — a fading copy of the user's sprite), then `forceMove()` to `pick(get_adjacent_turfs(target))` (up to 5 tiles). Store the target's current turf as `target_last_pos`.
+- **Opener Phase 2 (Dash, 1s delay):** After 1 second, calculate dash direction from user toward `target_last_pos`. Step tile-by-tile in that direction, continuing 4 tiles past `target_last_pos`. On each step, check `get_adjacent_turfs(owner)` for any living enemy — first enemy found becomes the combo target. If no enemy found by end of dash, combo fails (cooldown still applies).
+- **Damage:** All hits deal 50% reduced damage (DPS × 0.5).
+- **Combo:** 4 hits base. For every +10% movement speed from Cinq sources, add 1 extra hit. E.g., Quick Step (+15%) = 5 hits, Quick Step + Rush Down (+45%) = 8 hits. Between each hit: leave an afterimage at current position, then `forceMove()` to `pick(get_adjacent_turfs(target))`.
 - **Per-hit effect:** Each hit grants user 2 Poise stacks.
-- **Final hit:** Deals 2x DPS, applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds.
-- **Condition:** Speed buffs from Cinq sources (Quick Step, Rush Down) are checked. If active, bonus hits are added.
+- **Final hit:** Deals 2x DPS (still halved), applies 5 Fragile (replace-if-higher), grants +30% speed for 5 seconds.
+- **Condition:** Speed buffs from Cinq sources (Quick Step, Rush Down) are checked. Each 10% = 1 extra hit.
 
 **Implementation Notes:**
-- Quick Step: `COMSIG_MOB_ITEM_ATTACK` → `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_quick_step)` (multiplicative_slowdown = -0.15, variable = TRUE). Set/refresh timer via `addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_quick_step), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`. Then calculate Poise: sum the absolute `multiplicative_slowdown` values of active Cinq speed modifiers (quick_step = 0.15, disengage = 0.3, blade_dance_finisher = 0.3), multiply by 100, divide by 5 → `human_parent.apply_lc_poise(round(total_speed_percent / 5))`. E.g., Quick Step alone = 3 Poise, Quick Step + Disengage = 9 Poise.
+- Quick Step: `COMSIG_MOB_ITEM_ATTACK` → 5s CD check → `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_quick_step)` (multiplicative_slowdown = -0.15, variable = TRUE). Set timer via `addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_quick_step), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`. Then calculate Poise: sum the absolute `multiplicative_slowdown` values of active Cinq speed modifiers (quick_step = 0.15, disengage = 0.3, blade_dance_finisher = 0.3), multiply by 100, divide by 5 → `human_parent.apply_lc_poise(round(total_speed_percent / 5))`. E.g., Quick Step alone = 3 Poise, Quick Step + Disengage = 9 Poise.
 - First Strike: Track `var/datum/weakref/last_target` and `var/first_strike_used`. On `COMSIG_MOB_ITEM_ATTACK`: if `WEAKREF(target) != last_target` → set `last_target = WEAKREF(target)`, `first_strike_used = FALSE`. If `!first_strike_used` → deal `weapon.force * 0.2` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(5)`, set `first_strike_used = TRUE`.
 - Flurry: Track `var/datum/weakref/combo_target`, `var/combo_count`, `var/combo_last_time`. On `COMSIG_MOB_ITEM_ATTACK`: if same target (weakref match) and `world.time - combo_last_time < 4 SECONDS` → `combo_count++`. At 3: set `var/flurry_ready = TRUE`. On next `COMSIG_MOB_ITEM_ATTACK` while `flurry_ready` and same target → deal `weapon.force * 0.5` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(3)`, set `flurry_ready = FALSE`, reset count. Different target → reset all.
 - Rush Down: `COMSIG_POISE_CRIT_ATTACKER` → `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_rush_down)` (multiplicative_slowdown = -0.3, variable = TRUE). Set/refresh timer via `addtimer(CALLBACK(owner, TYPE_PROC_REF(/mob, remove_movespeed_modifier), /datum/movespeed_modifier/cinq_rush_down), 4 SECONDS, TIMER_UNIQUE | TIMER_OVERRIDE)`.
-- Blade Dance: `/datum/action/cooldown/blade_dance` → toggle targeting → click target within 5 tiles. Apply cutscene_duel + immobilize. Check for Cinq speed modifiers → 6 or 8 hits. Between each hit: `human_parent.forceMove(pick(get_adjacent_turfs(target)))`. Per-hit: `human_parent.apply_lc_poise(2)`. Final hit: 2x DPS, `target.apply_lc_fragile(5)`, `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_blade_dance_finisher)` (multiplicative_slowdown = -0.3) for 5s.
+- Blade Dance: `/datum/action/cooldown/blade_dance` → toggle targeting → click target within 5 tiles. Phase 1 (feint): leave afterimage via `new /obj/effect/temp_visual/afterimage(get_turf(owner), owner)` (~0.5s lifespan), `forceMove(pick(get_adjacent_turfs(target)))`, store `var/turf/target_last_pos = get_turf(target)`. Phase 2 (dash, after `addtimer(1 SECONDS)`): calculate `dir = get_dir(owner, target_last_pos)`, then step tile-by-tile via `get_step(owner, dir)` toward `target_last_pos` and 4 tiles past it. On each step: `for(var/mob/living/L in get_adjacent_turfs(owner))` → if enemy found → set as combo target, break. If no target found by end of dash → cancel (start cooldown). On combo start: apply cutscene_duel + immobilize. Calculate hits: `4 + round(total_cinq_speed_percent / 10)`. All hits deal 50% reduced damage (`dps * 0.5`). Between each hit: leave afterimage at current position, then `human_parent.forceMove(pick(get_adjacent_turfs(target)))`. Per-hit: `human_parent.apply_lc_poise(2)`. Final hit: 2x DPS (still halved), `target.apply_lc_fragile(5)`, `owner.add_movespeed_modifier(/datum/movespeed_modifier/cinq_blade_dance_finisher)` (multiplicative_slowdown = -0.3) for 5s.
 - Afterimage: Track `var/steps_taken = 0`. On `COMSIG_MOVABLE_MOVED` → `steps_taken++`. On `COMSIG_MOB_ITEM_ATTACK` → if `steps_taken >= 20` → deal `weapon.force * 0.35` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()` + `human_parent.apply_lc_poise(5)`, reset `steps_taken = 0`. Dodge: `COMSIG_MOB_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → `prob(20)` → `to_chat` message → return `COMPONENT_MOB_DENY_DAMAGE`.
 
 ---
@@ -3734,24 +3733,24 @@ Cinq has 3 branches. Players can invest in a maximum of 2.
 - **B: Riposte** — When hit by a melee attack, you have a `10 * (your Concentration stacks)`% chance to negate the damage entirely, move to a random adjacent tile, and consume 2 Concentration. At 10 Concentration (max) = 100% dodge. Your focus lets you read attacks before they land.
 
 **T3 (3pt) — Pick one:**
-- **A: Fencer's Finale** *(Powerful Attack, 90s CD)* — Requires: 8+ Concentration stacks. Enter a 3-second parry stance (immobilized, visible aura). During the stance, all melee damage against you is negated. If hit during the stance, immediately end the parry and dash to the attacker for the combo. If not hit, after 3 seconds dash to nearest enemy within 5 tiles. Deliver a 4-hit combo. All Concentration stacks are consumed; each consumed stack adds 5% to total combo damage. Per-hit: apply 2 Poise to self and 2 Defense Level Down to target. Final hit: 2x DPS, grants Protection stacks equal to half the consumed Concentration (rounded down). The patience pays off — or is punished.
-- **B: Unshakeable** *(Passive)* — When your Poise stacks are halved by a crit (because you had no Concentration), immediately gain Concentration stacks equal to half the Poise stacks lost (minimum 2). Additionally, taking any damage while you have Poise grants 1 Concentration (2s CD). Your discipline adapts to recover from any setback.
+- **A: Fencer's Finale** *(Powerful Attack, 90s CD)* — Requires: 5+ Concentration stacks. Enter a 3-second parry stance (immobilized, visible aura). During the stance, all melee damage against you is negated. If hit during the stance, immediately end the parry and dash to the attacker for the combo. If not hit, after 3 seconds dash to nearest enemy within 5 tiles. Deliver a 4-hit combo. All Concentration stacks are consumed; each consumed stack adds 5% to total combo damage. Per-hit: apply 2 Poise to self and 2 Defense Level Down to target. Final hit: 2x DPS, grants Protection stacks equal to half the consumed Concentration (rounded down). The patience pays off — or is punished.
+- **B: Unshakeable** *(Passive)* — When your Poise stacks are halved by a crit (because you had no Concentration), immediately gain **2 Concentration** stacks. Additionally, your melee attacks deal **bonus damage equal to Concentration stacks × 3%** of weapon force (at 10 Concentration = +30%). Concentration becomes both shield and sword.
 
 **Fencer's Finale — Details:**
 - **Opener:** Enter parry stance — immobilize self, add visible "guard" overlay. Register `COMSIG_MOB_APPLY_DAMGE` to block incoming melee hits. If hit: immediately cancel the 3s timer, store the attacker as the combo target, and proceed to combo phase. If not hit after 3 seconds: find nearest enemy within 5 tiles as the combo target.
 - **Combo:** 4 hits. Dash to combo target.
-- **Pre-combo:** Read and consume all Concentration stacks. Calculate damage multiplier: `1 + (consumed_stacks * 5 / 100)`. At 5 stacks = +25%, at 10 stacks (max) = +50%.
+- **Pre-combo:** Read and consume all Concentration stacks. Calculate damage multiplier: `1 + (consumed_stacks * 5 / 100)`. At 5 stacks = +25%, at 10 stacks (max) = +50%. Minimum 5 Concentration required to activate.
 - **Per-hit effect:** Each hit grants user 2 Poise stacks and applies 2 Defense Level Down stacks to target.
 - **Final hit:** Deals 2x DPS. Grants user Protection stacks = `round(consumed_concentration / 2)` (e.g., 10 consumed → 5 Protection).
 - **Condition:** More Concentration stacks = more damage and more Protection reward. Getting hit during parry triggers an instant counter — enemies are punished for attacking you.
 
 **Implementation Notes:**
-- Composed Guard: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → 1s CD check → `human_parent.apply_lc_concentration(2)`.
+- Composed Guard: `COMSIG_MOB_AFTER_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → 3s CD check → `human_parent.apply_lc_concentration(2)`.
 - Measured Response: Track `var/hit_count = 0`. On `COMSIG_MOB_ITEM_ATTACK` → `human_parent.apply_lc_poise(2)` + `hit_count++`. If `hit_count >= 3` → `human_parent.apply_lc_concentration(1)`, reset `hit_count = 0`.
 - Iron Focus: Track `var/crit_count = 0`. On `COMSIG_POISE_CRIT_ATTACKER` → `crit_count++`. If `crit_count >= 2` → `human_parent.apply_lc_concentration(2)`, reset `crit_count = 0`.
 - Riposte: `COMSIG_MOB_APPLY_DAMGE` → check `attack_type & ATTACK_TYPE_MELEE` → get Concentration stacks via `human_parent.get_lc_concentration()` → `prob(10 * stacks)` → consume 2 Concentration via `human_parent.apply_lc_concentration(-2)` → `human_parent.forceMove(pick(get_adjacent_turfs(human_parent)))` → return `COMPONENT_MOB_DENY_DAMAGE`. No CD — Concentration cost is the limiter.
-- Fencer's Finale: `/datum/action/cooldown/fencers_finale` → check Concentration >= 8. Phase 1 (parry): immobilize user, add guard overlay, store `var/parry_timer_id = addtimer(CALLBACK(src, PROC_REF(start_combo), null), 3 SECONDS, TIMER_STOPPABLE)`. Register `COMSIG_MOB_APPLY_DAMGE` → if melee → `COMPONENT_MOB_DENY_DAMAGE` + `deltimer(parry_timer_id)` + `INVOKE_ASYNC(src, PROC_REF(start_combo), attacker)`. `start_combo(target)` proc: remove overlay, unimmobilize, unregister parry signal. If `target` is null → find nearest enemy via `for(var/mob/living/L in range(5))` sorted by `get_dist`. Read + consume all Concentration. Multiplier = `1 + (consumed * 5 / 100)`. Dash to target, apply cutscene_duel + immobilize target. Execute 4 hits. Per-hit: `human_parent.apply_lc_poise(2)` + `target.apply_lc_defense_level_down(2)`. Final hit: 2x DPS, `apply_lc_protection(round(consumed / 2))`.
-- Unshakeable: Two signal hooks. (1) Crit recovery: snapshot pre-crit Poise on `COMSIG_MOB_ITEM_ATTACK` (store `var/pre_crit_poise`). On `COMSIG_POISE_CRIT_ATTACKER` → if no Concentration existed at crit time → calculate `lost = pre_crit_poise - current_poise` → `human_parent.apply_lc_concentration(max(2, round(lost / 2)))`. (2) Damage generation: `COMSIG_MOB_AFTER_APPLY_DAMGE` → 2s CD → check owner has Poise stacks > 0 → `human_parent.apply_lc_concentration(1)`. No buffs.dm edits needed.
+- Fencer's Finale: `/datum/action/cooldown/fencers_finale` → check Concentration >= 5. Phase 1 (parry): immobilize user, add guard overlay, store `var/parry_timer_id = addtimer(CALLBACK(src, PROC_REF(start_combo), null), 3 SECONDS, TIMER_STOPPABLE)`. Register `COMSIG_MOB_APPLY_DAMGE` → if melee → `COMPONENT_MOB_DENY_DAMAGE` + `deltimer(parry_timer_id)` + `INVOKE_ASYNC(src, PROC_REF(start_combo), attacker)`. `start_combo(target)` proc: remove overlay, unimmobilize, unregister parry signal. If `target` is null → find nearest enemy via `for(var/mob/living/L in range(5))` sorted by `get_dist`. Read + consume all Concentration. Multiplier = `1 + (consumed * 5 / 100)`. Dash to target, apply cutscene_duel + immobilize target. Execute 4 hits. Per-hit: `human_parent.apply_lc_poise(2)` + `target.apply_lc_defense_level_down(2)`. Final hit: 2x DPS, `apply_lc_protection(round(consumed / 2))`.
+- Unshakeable: Two signal hooks. (1) Crit recovery: On `COMSIG_POISE_CRIT_ATTACKER` → if no Concentration existed at crit time → `human_parent.apply_lc_concentration(2)`. (2) Damage buff: `COMSIG_MOB_ITEM_ATTACK` → get Concentration stacks → deal `weapon.force * stacks * 0.03` bonus damage via `INVOKE_ASYNC` → `target.deal_damage()`. No buffs.dm edits needed.
 
 ---
 
@@ -3776,7 +3775,7 @@ The 2-branch limit creates natural playstyle combos:
 - Each hit deals weapon DPS (`force * force_multiplier * 1.25 / attack_speed`) so all weapons are equally viable
 - The **cinq_duel** component is distinct from **cutscene_duel** — cinq_duel is for formal PvP duels (longer, HP thresholds, healing), cutscene_duel is for brief powerful attack animations
 - Skills **only function while on an active contract** — no contract = no abilities
-- The **glove throw** for forced duels uses `throw_at()` pattern with a `/obj/item/cinq_glove` projectile
+- **Throw the Glove** is an action (`/datum/action/cooldown/cinq_glove_throw`), not a physical item — granted to all Cinq on registration. The visual glove projectile is cosmetic only
 - Duel system references `lcl_duel.dm` for the `addtimer(CALLBACK, 1)` heal delay workaround
 - **Concentration max_stacks** must be changed from 20 → 10 in `buffs.dm:1367`
 - **Ceaseless Pressure** and **Unshakeable** are both purely signal-driven — no `buffs.dm` edits needed
@@ -3813,7 +3812,7 @@ The 2-branch limit creates natural playstyle combos:
 - `ModularLobotomy/associations/skills/cinq/duelist.dm` - Cinq Duelist branch skills (Keen Edge, Opening Gambit, Precision Strike, Momentum, Decisive Blow, Ceaseless Pressure)
 - `ModularLobotomy/associations/skills/cinq/skirmisher.dm` - Cinq Skirmisher branch skills (Quick Step, First Strike, Flurry, Rush Down, Blade Dance, Afterimage)
 - `ModularLobotomy/associations/skills/cinq/fencer.dm` - Cinq Fencer branch skills (Composed Guard, Measured Response, Iron Focus, Riposte, Fencer's Finale, Unshakeable)
-- `ModularLobotomy/associations/skills/cinq/duel_system.dm` - `/datum/cinq_duel_instance`, `/datum/component/cinq_duel`, Challenge to Duel action, Throw the Glove action, `/obj/item/cinq_glove`
+- `ModularLobotomy/associations/skills/cinq/duel_system.dm` - `/datum/cinq_duel_instance`, `/datum/component/cinq_duel`, Challenge to Duel action, Throw the Glove action
 - `ModularLobotomy/associations/contracts/contract_datum.dm` - Base contract datum
 - `ModularLobotomy/associations/contracts/contract_terminal.dm` - Physical terminal + TGUI for Hana
 - `ModularLobotomy/associations/contracts/contract_actions.dm` - Contract actions (civilian offer, fixer accept/decline, view)

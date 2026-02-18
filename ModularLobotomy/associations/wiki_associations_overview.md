@@ -62,8 +62,8 @@ When a fixer is registered, they receive items unique to their association:
 |EXP interface, event launcher, knowledge storage, bestiary, and item shop
 |-
 |Cinq
-|Cinq Glove
-|Used for Throw the Glove to force duels on targets (only works while on an active contract). Off-contract, use Challenge to Duel (consensual) instead.
+|''(No unique tool item)''
+|Throw the Glove and Challenge to Duel are granted as actions, not physical items
 |}
 
 === Weapons and Armor ===
