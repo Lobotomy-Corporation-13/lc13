@@ -395,6 +395,10 @@
 ///How much a mob's sprite should be moved when they're lying down
 #define PIXEL_Y_OFFSET_LYING -6
 
+///Offset list keys for add_offsets/remove_offsets
+#define PIXEL_X_OFFSET "pixel_x"
+#define PIXEL_Y_OFFSET "pixel_y"
+
 ///Define for spawning megafauna instead of a mob for cave gen
 #define SPAWN_MEGAFAUNA "bluh bluh huge boss"
 
