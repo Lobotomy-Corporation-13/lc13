@@ -696,7 +696,7 @@
 	if(tremor_to_apply >= 1)
 		target.apply_lc_tremor(tremor_to_apply, tremorburst_threshold)
 	if(burn_to_apply >= 1)
-		target.apply_lc_burn(burn_to_apply)
+		target.apply_lc_overheat(burn_to_apply)
 
 /// This proc is just cleanup on the weapon's state, and called whenever a combo ends, is cancelled or times out.
 /// Importantly, it will also apply our overheat bonus to our force, if we have any.
