@@ -229,7 +229,7 @@ GLOBAL_LIST_INIT(rce_tactical_map_editors, list(
 	if(!istype(H))
 		return FALSE
 
-	var/datum/job/user_job = H.mind?.assigned_role
+	var/user_job = H.mind?.assigned_role
 	if(!user_job)
 		return FALSE
 
