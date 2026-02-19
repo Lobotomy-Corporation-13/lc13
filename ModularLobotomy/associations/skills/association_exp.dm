@@ -1,0 +1,144 @@
+/// Component that tracks association EXP, skill points, branch investments, and ally designations.
+/// Attached to each registered association member (Director, Veteran, Associate).
+/// Mirrors the ring skill system's /datum/component/artistic_exp pattern.
+/datum/component/association_exp
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+	/// The association type (ASSOCIATION_ZWEI, ASSOCIATION_SEVEN, etc.)
+	var/association_type
+	/// The member's rank ("director", "veteran", "associate")
+	var/rank
+	/// Reference to the squad datum this member belongs to
+	var/datum/association_squad/squad
+	/// Total cumulative EXP earned
+	var/total_exp = 0
+	/// Number of skill points currently available to spend
+	var/skill_points_available = 0
+	/// Number of skill points already spent
+	var/skill_points_spent = 0
+	/// Total skill points ever earned (available + spent)
+	var/total_skill_points = 0
+	/// List of branch names this player has invested in (max ASSOCIATION_MAX_BRANCHES)
+	var/list/invested_branches = list()
+	/// List of mobs designated as allies (for ally-targeting skills)
+	var/list/mob/living/designated_allies = list()
+	/// Reference to the granted skill tree action
+	var/datum/action/innate/association_skill_tree/tree_action
+	/// Reference to the granted designate ally action
+	var/datum/action/cooldown/designate_ally/ally_action
+
+/datum/component/association_exp/Initialize(assoc_type, _rank, datum/association_squad/_squad)
+	if(!ishuman(parent))
+		return COMPONENT_INCOMPATIBLE
+
+	association_type = assoc_type
+	rank = _rank
+	squad = _squad
+
+	// Grant HUD action buttons
+	tree_action = new()
+	tree_action.Grant(parent)
+	// Only association roles (director, veteran, associate) can designate allies
+	if(rank == "director" || rank == "veteran" || rank == "associate")
+		ally_action = new()
+		ally_action.Grant(parent)
+
+	// Apply the ally indicator display effect (visible only to team members)
+	var/mob/living/L = parent
+	L.apply_status_effect(/datum/status_effect/display/ally_indicator)
+
+	// Register distress check signal
+	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_distress_check))
+
+/datum/component/association_exp/Destroy()
+	UnregisterSignal(parent, COMSIG_MOB_APPLY_DAMGE)
+	if(tree_action)
+		QDEL_NULL(tree_action)
+	if(ally_action)
+		QDEL_NULL(ally_action)
+	squad = null
+	designated_allies.Cut()
+	invested_branches.Cut()
+	return ..()
+
+/// Add EXP and check for skill point thresholds. Returns the number of new skill points earned.
+/datum/component/association_exp/proc/modify_exp(amount)
+	if(amount <= 0)
+		return 0
+
+	var/old_exp = total_exp
+	total_exp += amount
+
+	// Check how many thresholds we've crossed
+	var/new_points = 0
+	var/list/thresholds = GLOB.association_exp_thresholds
+	for(var/i in 1 to length(thresholds))
+		var/threshold = thresholds[i]
+		if(old_exp < threshold && total_exp >= threshold)
+			new_points++
+
+	if(new_points > 0)
+		skill_points_available += new_points
+		total_skill_points += new_points
+		to_chat(parent, span_nicegreen("You have earned [new_points] new skill point[new_points > 1 ? "s" : ""]! Open your Skill Tree to spend [total_skill_points > 1 ? "them" : "it"]."))
+
+	return new_points
+
+/// Spend skill points. Returns TRUE if successful, FALSE if not enough points.
+/datum/component/association_exp/proc/spend_skill_point(cost)
+	if(skill_points_available < cost)
+		return FALSE
+	skill_points_available -= cost
+	skill_points_spent += cost
+	return TRUE
+
+/// Check if the player can invest in a new branch (max ASSOCIATION_MAX_BRANCHES)
+/datum/component/association_exp/proc/can_invest_in_branch(branch_name)
+	if(branch_name in invested_branches)
+		return TRUE // Already invested, can continue
+	if(length(invested_branches) >= ASSOCIATION_MAX_BRANCHES)
+		return FALSE // At capacity
+	return TRUE
+
+/// Mark a branch as invested. Returns TRUE if successful.
+/datum/component/association_exp/proc/invest_in_branch(branch_name)
+	if(branch_name in invested_branches)
+		return TRUE // Already invested
+	if(length(invested_branches) >= ASSOCIATION_MAX_BRANCHES)
+		return FALSE
+	invested_branches += branch_name
+	return TRUE
+
+/// Check if a mob is a designated ally
+/datum/component/association_exp/proc/is_designated_ally(mob/living/L)
+	return (L in designated_allies)
+
+/// Returns the next EXP threshold the player hasn't reached, or 0 if all reached
+/datum/component/association_exp/proc/get_next_threshold()
+	var/list/thresholds = GLOB.association_exp_thresholds
+	for(var/i in 1 to length(thresholds))
+		if(total_exp < thresholds[i])
+			return thresholds[i]
+	return 0
+
+/// Distress check — triggers emergency skill access when a fixer drops below 50% HP from a carbon attacker.
+/datum/component/association_exp/proc/on_distress_check(datum/signal_source, damage, damagetype, def_zone, atom/damage_source)
+	SIGNAL_HANDLER
+	if(!squad)
+		return
+	// Already on contract — skills active, no need for distress
+	if(squad.is_on_contract())
+		return
+	// Check attacker is a carbon (player or humanoid NPC)
+	if(!iscarbon(damage_source))
+		return
+	// Check HP would drop below threshold
+	var/mob/living/L = parent
+	var/projected_hp = L.health - damage
+	if(projected_hp >= L.maxHealth * CONTRACT_DISTRESS_HP_THRESHOLD)
+		return
+	// Check per-victim cooldown
+	var/victim_ref = ref(L)
+	if(squad.distress_cooldowns[victim_ref] && world.time < squad.distress_cooldowns[victim_ref] + CONTRACT_DISTRESS_COOLDOWN)
+		return
+	// Trigger distress for the entire squad
+	squad.trigger_distress(L, damage_source)
