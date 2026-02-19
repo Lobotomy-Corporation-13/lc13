@@ -6,6 +6,13 @@
 	icon_state = "agent"
 	can_adjust = FALSE
 
+/obj/item/clothing/under/suit/lobotomy/skirt
+	name = "agent uniform"
+	desc = "A tailored black suit, used by company security agents."
+	icon = 'icons/obj/clothing/ego_gear/lcuniform.dmi'
+	worn_icon = 'icons/mob/clothing/ego_gear/under.dmi'
+	icon_state = "agentskirt"
+	can_adjust = FALSE
 
 /obj/item/clothing/under/suit/lobotomy/control
 	name = "control department uniform"
