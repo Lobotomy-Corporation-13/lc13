@@ -8,7 +8,7 @@
 	if(!beacon_item_list)
 		beacon_item_list = list(
 			"Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
-			"Seven Association Section 6" = /obj/item/storage/box/association/seven,
+			"Seven Association Section 4" = /obj/item/storage/box/association/seven,
 			"Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
 			"Cinq Association Section 3" = /obj/item/storage/box/association/cinq,
 		)
@@ -101,12 +101,34 @@
 	new /obj/item/assoc_skill_granter/liu/veteran(src)
 	new /obj/item/assoc_skill_granter/liu/director(src)
 
-//Seven Asso
+//Seven Asso — Section 4 (new Rupture + Adaptive weapons)
 /obj/item/storage/box/association/seven
-	name = "Seven Association Section 6"
-	desc = "A kit from Section 1 containing Seven association gear."
+	name = "Seven Association Section 4"
+	desc = "A kit from Section 1 containing Seven Association Section 4 gear."
 
 /obj/item/storage/box/association/seven/PopulateContents()
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/vet(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade/director(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade/cane(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/recon(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/vet(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director(src)
+	new /obj/item/binoculars(src)
+	new /obj/item/binoculars(src)
+
+//Seven Asso — Section 6 (legacy stored-target weapons)
+/obj/item/storage/box/association/seven/section6
+	name = "Seven Association Section 6"
+	desc = "A kit from Section 1 containing Seven Association Section 6 gear."
+
+/obj/item/storage/box/association/seven/section6/PopulateContents()
 	new /obj/item/ego_weapon/city/seven(src)
 	new /obj/item/ego_weapon/city/seven(src)
 	new /obj/item/ego_weapon/city/seven_fencing(src)

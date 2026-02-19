@@ -42,3 +42,4 @@
 
 /proc/init_association_skill_definitions()
 	init_test_association_skills()
+	init_seven_skill_definitions()

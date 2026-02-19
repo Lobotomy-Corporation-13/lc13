@@ -592,6 +592,7 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/protection
+	stacking_display_name = "protection"
 	var/protection_mod = /datum/dc_change/protection
 	var/physiology_mod
 	var/protection = 1
@@ -687,6 +688,7 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection
+	stacking_display_name = "protection_red"
 	var/protection_mod = /datum/dc_change/red_protection
 	var/physiology_mod
 	var/damage_type = RED_DAMAGE
@@ -795,6 +797,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/white
 	protection_mod = /datum/dc_change/white_protection
 	damage_type = WHITE_DAMAGE
+	stacking_display_name = "protection_white"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/white
 	name = "White Protection"
@@ -819,6 +822,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/black
 	protection_mod = /datum/dc_change/black_protection
 	damage_type = BLACK_DAMAGE
+	stacking_display_name = "protection_black"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/black
 	name = "Black Protection"
@@ -843,6 +847,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/damtype_protection/pale
 	protection_mod = /datum/dc_change/pale_protection
 	damage_type = PALE_DAMAGE
+	stacking_display_name = "protection_pale"
 
 /atom/movable/screen/alert/status_effect/damtype_protection/pale
 	name = "Pale Protection"
@@ -873,7 +878,8 @@
 	max_stacks = 100
 	stacks = 0
 	consumed_on_threshold = FALSE
-	alert_type = /atom/movable/screen/alert/status_effect/defense_level_up
+	alert_type = null
+	stacking_display_name = "DLU"
 	var/protection_mod = /datum/dc_change/defense_level_up
 	var/physiology_mod
 	var/protection = 1
@@ -908,7 +914,8 @@
 	. = ..()
 	if(!owner)
 		return
-	linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	if(linked_alert)
+		linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
 	var/mob/living/carbon/human/H = owner
 	if(ishuman(H))
 		if(physiology_mod)
@@ -968,6 +975,7 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/damage_up
+	stacking_display_name = "damage_up"
 	var/damage_mode = 1
 	var/damage_increase = 0
 
@@ -1030,6 +1038,7 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/red_damage_up
+	stacking_display_name = "damage_up_red"
 	var/damage_mode = 1
 	var/damage_increase = 0
 	var/damage_type = RED_DAMAGE
@@ -1116,6 +1125,7 @@
 	id = "white_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/white_damage_up
 	damage_type = WHITE_DAMAGE
+	stacking_display_name = "damage_up_white"
 
 /atom/movable/screen/alert/status_effect/white_damage_up
 	name = "White Damage Up"
@@ -1139,6 +1149,7 @@
 	id = "black_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/black_damage_up
 	damage_type = BLACK_DAMAGE
+	stacking_display_name = "damage_up_black"
 
 /atom/movable/screen/alert/status_effect/black_damage_up
 	name = "Black Damage Up"
@@ -1162,6 +1173,7 @@
 	id = "pale_damage_up"
 	alert_type = /atom/movable/screen/alert/status_effect/pale_damage_up
 	damage_type = PALE_DAMAGE
+	stacking_display_name = "damage_up_pale"
 
 /atom/movable/screen/alert/status_effect/pale_damage_up
 	name = "Pale Damage Up"
@@ -1192,7 +1204,8 @@
 	max_stacks = 100
 	stacks = 0
 	consumed_on_threshold = FALSE
-	alert_type = /atom/movable/screen/alert/status_effect/offense_level_up
+	alert_type = null
+	stacking_display_name = "OLU"
 	var/damage_mode = 1
 	/// Tracks the extra_damage amount currently applied to the owner
 	var/applied_extra_damage = 0
@@ -1216,7 +1229,8 @@
 	. = ..()
 	if(!owner)
 		return
-	linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
+	if(linked_alert)
+		linked_alert.desc = initial(linked_alert.desc)+"[round((stacks / (stacks + 25)) * 100)]%!"
 	if(isliving(owner))
 		var/mob/living/L = owner
 		L.extra_damage -= applied_extra_damage
@@ -1259,6 +1273,7 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/poise
+	stacking_display_name = "poise"
 	/// Whether a crit was performed or new stacks were gained this tick period
 	var/active_this_period = TRUE
 
@@ -1266,7 +1281,7 @@
 	name = "Poise"
 	desc = "You are poised for a critical strike! Crit chance: "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "strength"
+	icon_state = "poise"
 
 /datum/status_effect/stacking/poise/on_apply()
 	. = ..()
@@ -1346,6 +1361,7 @@
 			qdel(src)
 			return
 		stacks = new_stacks
+		update_stacking_number()
 		linked_alert.desc = initial(linked_alert.desc) + "[round(stacks * 2.5)]%!"
 
 //Mob Proc
@@ -1368,12 +1384,13 @@
 	stacks = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/concentration
+	stacking_display_name = "concentration"
 
 /atom/movable/screen/alert/status_effect/concentration
 	name = "Concentration"
 	desc = "You are concentrated! Your focus protects your poise. Stacks: "
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "protection"
+	icon_state = "concentration"
 
 /datum/status_effect/stacking/concentration/add_stacks(stacks_added)
 	. = ..()

@@ -40,6 +40,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/see_chat_non_mob = TRUE
 	///Whether emotes will be displayed on runechat. Requires chat_on_map to have effect. Boolean.
 	var/see_rc_emotes = TRUE
+	/// Status display mode: 0 = Disabled, 1 = Only Effects, 2 = Enabled
+	var/show_status_display = 2
 
 	// Custom Keybindings
 	var/list/key_bindings = list()
@@ -642,6 +644,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<b>Runechat message char limit:</b> <a href='byond://?_src_=prefs;preference=max_chat_length;task=input'>[max_chat_length]</a><br>"
 			dat += "<b>See Runechat for non-mobs:</b> <a href='byond://?_src_=prefs;preference=see_chat_non_mob'>[see_chat_non_mob ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<b>See Runechat emotes:</b> <a href='byond://?_src_=prefs;preference=see_rc_emotes'>[see_rc_emotes ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
+			var/status_display_text
+			switch(show_status_display)
+				if(0) status_display_text = "Disabled"
+				if(1) status_display_text = "Only Effects"
+				if(2) status_display_text = "Enabled"
+			dat += "<b>Show Status Display Icons:</b> <a href='byond://?_src_=prefs;preference=show_status_display'>[TeguTranslate(status_display_text, src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Action Buttons:</b> <a href='byond://?_src_=prefs;preference=action_buttons'>[(buttons_locked) ? "Locked In Place" : "Unlocked"]</a><br>"
 			dat += "<b>Hotkey mode:</b> <a href='byond://?_src_=prefs;preference=hotkeys'>[(hotkeys) ? "Hotkeys" : "Default"]</a><br>"
@@ -1906,6 +1914,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					see_chat_non_mob = !see_chat_non_mob
 				if("see_rc_emotes")
 					see_rc_emotes = !see_rc_emotes
+				if("show_status_display")
+					show_status_display = (show_status_display + 1) % 3
+					if(parent?.mob)
+						parent.mob.refresh_status_display_images()
 
 				if("action_buttons")
 					buttons_locked = !buttons_locked

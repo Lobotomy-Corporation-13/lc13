@@ -408,6 +408,8 @@
 #define COMSIG_MOB_AFTER_APPLY_DAMGE "mob_after_apply_damage"
 /// Blocks the damage from being taken if this is returned in a signal handler
 #define COMPONENT_MOB_DENY_DAMAGE (1<<0)
+///from /datum/status_effect/stacking/rupture/trigger_rupture(): (stacks_before_halving)
+#define COMSIG_RUPTURE_TRIGGERED "rupture_triggered"
 ///from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_THROW "mob_throw"
 ///from base of /mob/verb/examinate(): (atom/target)
