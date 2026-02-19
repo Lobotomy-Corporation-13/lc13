@@ -15,7 +15,7 @@
 /datum/job/limbus_specimen/unique_job_check(client/C)
 	if(!LAZYLEN(return_sec_list(GLOB.low_security.Copy(), C)) && !LAZYLEN(return_sec_list(GLOB.high_security.Copy(), C)))
 		return FALSE
-	return TRUE
+	return attribute_abno(C)
 
 //Checks if any abnos are available for a latejoin.
 /datum/job/limbus_specimen/special_check_latejoin(client/C)
@@ -29,30 +29,28 @@
 	if(!H?.mind || visualsOnly || !preference_source)
 		return FALSE
 
-	var/spawning
+	if(latejoin)
+		attribute_abno(preference_source)
+
+
+	var/abno_path = LAZYACCESS(GLOB.attributed_lcl_abno, preference_source)
 	var/turf/abno_turf
-	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), preference_source)
-	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), preference_source)
 
-	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
-	for(var/obj/effect/landmark/start/limbus_abnospawn/lowsec/LS in GLOB.start_landmarks_list)
-		GLOB.start_landmarks_list -= LS
-		abno_turf = get_turf(LS)
-		qdel(LS)
-		GLOB.available_low_sec_abno -= spawning
-		break
-
-	if(!abno_turf || !spawning) //If no lowsec landmarks/abno are available, we go for highsec.
-		spawning = pick_n_take(high_sec_list)
+	if(LAZYFIND(GLOB.low_security, abno_path))
+		for(var/obj/effect/landmark/start/limbus_abnospawn/lowsec/LS in GLOB.start_landmarks_list)
+			GLOB.start_landmarks_list -= LS
+			abno_turf = get_turf(LS)
+			qdel(LS)
+			break
+	else
 		for(var/obj/effect/landmark/start/limbus_abnospawn/highsec/HS in GLOB.start_landmarks_list)
 			GLOB.start_landmarks_list -= HS
 			abno_turf = get_turf(HS)
 			qdel(HS)
-			GLOB.available_high_sec_abno -= spawning
 			break
 
-	if(!isnull(spawning) && !isnull(abno_turf))
-		var/mob/living/simple_animal/hostile/limbus_abno/LA = new spawning(abno_turf)
+	if(!isnull(abno_path) && !isnull(abno_turf))
+		var/mob/living/simple_animal/hostile/limbus_abno/LA = new abno_path(abno_turf)
 		picked_abno = LA
 		H.mind.transfer_to(picked_abno)
 		qdel(H)
@@ -75,3 +73,25 @@
 		if(LAZYFIND(abno_list, limbus_abno) && !LAZYACCESS(abno_pref_list, limbus_abno))
 			abno_list -= limbus_abno
 	return abno_list
+
+/datum/job/limbus_specimen/proc/attribute_abno(client/C)
+	if(LAZYFIND(GLOB.attributed_lcl_abno, C)) //Note, attributing one abno technically allows a player to just spawn the same abno again if they respawn, I'll fix that later.
+		return TRUE //In that case, they already have an abno assigned to you, so we skip the whole thing.
+	var/spawning
+	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), C)
+	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), C)
+
+	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
+	if(!isnull(spawning))
+		GLOB.available_low_sec_abno -= spawning
+		LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		return TRUE
+
+//If no lowsec landmarks/abno are available, we go for highsec.
+	spawning = pick_n_take(high_sec_list)
+	if(!isnull(spawning))
+		GLOB.available_high_sec_abno -= spawning
+		LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		return TRUE
+
+	return FALSE

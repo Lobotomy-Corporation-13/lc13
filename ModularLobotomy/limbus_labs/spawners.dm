@@ -27,6 +27,8 @@ GLOBAL_LIST_INIT(available_high_sec_abno, list(
 	/mob/living/simple_animal/hostile/limbus_abno/mountain,
 	/mob/living/simple_animal/hostile/limbus_abno/queen_bee))
 
+GLOBAL_LIST_EMPTY(attributed_lcl_abno)
+
 /obj/effect/landmark/start/limbus_abnospawn
 	name = "Limbus abno spawner"
 	desc = "It spawns a limbus abno. Notify a coder. Thanks!"
