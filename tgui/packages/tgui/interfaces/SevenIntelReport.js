@@ -146,14 +146,11 @@ export const SevenIntelReport = (props, context) => {
                         filed
                         || !has_photo
                       }
-                      onChange={
-                        (e, v) => act(
-                          'set_held_item',
-                          {
-                            index: i + 1,
-                            value: v,
-                          }
-                        )
+                      onChange={(e, v) =>
+                        act('set_held_item', {
+                          index: i + 1,
+                          value: v,
+                        })
                       } />
                   </LabeledList.Item>
                 )
@@ -179,14 +176,11 @@ export const SevenIntelReport = (props, context) => {
                         filed
                         || !has_photo
                       }
-                      onChange={
-                        (e, v) => act(
-                          'set_backpack_item',
-                          {
-                            index: i + 1,
-                            value: v,
-                          }
-                        )
+                      onChange={(e, v) =>
+                        act('set_backpack_item', {
+                          index: i + 1,
+                          value: v,
+                        })
                       } />
                   </LabeledList.Item>
                 )
