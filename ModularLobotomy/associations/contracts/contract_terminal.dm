@@ -72,6 +72,32 @@
 			list("tier" = 0, "tier_name" = "Per Waypoint", "cost" = 0),
 		),
 	))
+	contract_type_defs += list(list(
+		"type" = "investigate_person",
+		"name" = "Investigate Person",
+		"desc" = "Hire Seven fixers to investigate a target. Requires filing 2/3/5 intel reports depending on tier.",
+		"category" = CONTRACT_CATEGORY_OBJECTIVE,
+		"needs_target" = TRUE,
+		"tiers" = list(
+			list("tier" = 1, "tier_name" = "Basic (2 Reports)", "cost" = 500),
+			list("tier" = 2, "tier_name" = "Standard (3 Reports)", "cost" = 800),
+			list("tier" = 3, "tier_name" = "Thorough (5 Reports)", "cost" = 1250),
+		),
+	))
+	contract_type_defs += list(list(
+		"type" = "surveillance_post",
+		"name" = "Surveillance Post",
+		"desc" = "Deploy Seven recorders at a location. Timer ticks while a recorder is in range. Place one waypoint on the City Map tab.",
+		"category" = CONTRACT_CATEGORY_DURATION,
+		"needs_target" = FALSE,
+		"uses_waypoints" = TRUE,
+		"single_waypoint" = TRUE,
+		"tiers" = list(
+			list("tier" = CONTRACT_TIER_SHORT, "tier_name" = "Short (6 min)", "cost" = 375),
+			list("tier" = CONTRACT_TIER_MEDIUM, "tier_name" = "Medium (10 min)", "cost" = 625),
+			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1000),
+		),
+	))
 
 /obj/machinery/association_contract_terminal/ui_interact(mob/user, datum/tgui/ui)
 	// Ensure map is generated before opening
@@ -199,6 +225,11 @@
 						return FALSE
 				prev_x = wp["x"]
 				prev_y = wp["y"]
+	// Validate surveillance post: must have exactly 1 waypoint
+	if(contract_type == "surveillance_post")
+		if(length(citymap_waypoints) != 1)
+			to_chat(user, span_warning("Place exactly one waypoint on the City Map tab for the surveillance location."))
+			return FALSE
 	// Payment check
 	var/is_hana = is_hana_role(user)
 	var/datum/bank_account/account = get_user_bank_account(user)
@@ -239,8 +270,8 @@
 	new /obj/item/association_contract_paper(get_turf(src), C)
 	to_chat(user, span_nicegreen("Contract created! Hand the contract paper to an association fixer."))
 	playsound(src, 'sound/machines/twobeep_high.ogg', 50, TRUE)
-	// Clear waypoints after patrol contract creation
-	if(contract_type == "patrol_route")
+	// Clear waypoints after patrol or surveillance contract creation
+	if(contract_type == "patrol_route" || contract_type == "surveillance_post")
 		citymap_waypoints = list()
 	return TRUE
 
@@ -269,6 +300,20 @@
 				PC.waypoint_zlevel = term_turf.z
 			PC.citymap = citymap
 			C = PC
+		if("investigate_person")
+			var/datum/association_contract/investigate_person/IC = new(contract_type, source, cost, issuer)
+			IC.target_mob = target
+			IC.set_report_tier(tier_value)
+			C = IC
+		if("surveillance_post")
+			var/datum/association_contract/surveillance_post/SC = new(contract_type, source, cost, issuer)
+			SC.set_duration_tier(tier_value)
+			SC.surveillance_point = list("x" = citymap_waypoints[1]["x"], "y" = citymap_waypoints[1]["y"])
+			var/turf/term_turf = get_turf(src)
+			if(term_turf)
+				SC.waypoint_zlevel = term_turf.z
+			SC.citymap = citymap
+			C = SC
 		else
 			// Generic fallback
 			C = new(contract_type, source, cost, issuer)
@@ -299,9 +344,9 @@
 /obj/machinery/association_contract_terminal/proc/is_hana_role(mob/living/user)
 	if(!user.mind?.assigned_role)
 		return FALSE
-	var/datum/job/job = user.mind.assigned_role
+	var/role = user.mind.assigned_role
 	// Hana Administrator or Representative — NOT Intern
-	if(istype(job, /datum/job/hana) && !istype(job, /datum/job/hana/intern))
+	if(role == "Hana Administrator" || role == "Hana Representative")
 		return TRUE
 	return FALSE
 

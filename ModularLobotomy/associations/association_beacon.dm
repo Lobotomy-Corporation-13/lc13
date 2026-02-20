@@ -7,10 +7,10 @@
 	var/static/list/beacon_item_list
 	if(!beacon_item_list)
 		beacon_item_list = list(
-			"Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
+			// "Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
 			"Seven Association Section 4" = /obj/item/storage/box/association/seven,
-			"Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
-			"Cinq Association Section 3" = /obj/item/storage/box/association/cinq,
+			// "Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
+			// "Cinq Association Section 3" = /obj/item/storage/box/association/cinq,
 		)
 	return beacon_item_list
 
@@ -109,6 +109,9 @@
 /obj/item/storage/box/association/seven/PopulateContents()
 	new /obj/item/ego_weapon/city/seven_s4_blade(src)
 	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
 	new /obj/item/ego_weapon/city/seven_s4_foil(src)
 	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
 	new /obj/item/ego_weapon/city/seven_s4_foil/vet(src)
@@ -122,6 +125,13 @@
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director(src)
 	new /obj/item/binoculars(src)
 	new /obj/item/binoculars(src)
+	// Investigation toolkit
+	new /obj/item/camera/seven_intel(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/intel_report(src)
+	new /obj/item/seven_dossier(src)
+	new /obj/item/seven_catalog(src)
 
 //Seven Asso — Section 6 (legacy stored-target weapons)
 /obj/item/storage/box/association/seven/section6

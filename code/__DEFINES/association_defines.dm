@@ -70,6 +70,14 @@
 #define CONTRACT_PATROL_COST_PER_POINT 150
 #define CONTRACT_PATROL_EXP_PER_POINT 25
 
+// Investigate Person contract constants
+#define CONTRACT_INVESTIGATE_TIER1_REPORTS 2
+#define CONTRACT_INVESTIGATE_TIER2_REPORTS 3
+#define CONTRACT_INVESTIGATE_TIER3_REPORTS 5
+
+// Surveillance Post contract constants
+#define CONTRACT_SURVEILLANCE_RADIUS 6
+
 // EXP thresholds - cumulative EXP required for each skill point (12 total)
 GLOBAL_LIST_INIT(association_exp_thresholds, list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200))
 

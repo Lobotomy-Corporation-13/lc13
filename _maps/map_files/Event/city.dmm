@@ -162,10 +162,6 @@
 	pixel_y = 2
 	},
 /obj/item/stack/spacecash/c10000,
-/obj/item/stack/spacecash/c10000,
-/obj/item/stack/spacecash/c10000,
-/obj/item/stack/spacecash/c10000,
-/obj/item/stack/spacecash/c10000,
 /turf/open/floor/carpet/black,
 /area/city/fixers)
 "bB" = (
@@ -5590,11 +5586,6 @@
 	},
 /turf/open/floor/facility/dark,
 /area/city/shop)
-"SZ" = (
-/obj/structure/table/wood,
-/obj/item/choice_beacon/association,
-/turf/open/floor/carpet/black,
-/area/city/fixers)
 "Tc" = (
 /obj/structure/fluff/bus/dense{
 	icon_state = "reartire"
@@ -37723,7 +37714,7 @@ lV
 hR
 vE
 zY
-SZ
+Ua
 KL
 hR
 pB

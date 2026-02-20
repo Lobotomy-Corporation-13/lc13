@@ -283,3 +283,136 @@
 	data["statusText"] = get_status_text()
 	return data
 
+// ============================================================
+// Investigate Person — Objective-based, Seven-specific
+// ============================================================
+
+/// Investigate a target person by filing intel reports.
+/// Completes when the required number of reports are filed on the target via the dossier.
+/datum/association_contract/investigate_person
+	contract_name = "Investigate Person"
+	contract_type = "investigate_person"
+	category = CONTRACT_CATEGORY_OBJECTIVE
+	association_type = ASSOCIATION_SEVEN
+	/// Number of reports required for completion
+	var/required_reports = 2
+	/// Number of reports filed so far
+	var/reports_filed = 0
+
+/// Override start_timers to enable passive EXP ticks even for objective contracts.
+/datum/association_contract/investigate_person/start_timers()
+	tick_timer_id = addtimer(CALLBACK(src, PROC_REF(tick)), CONTRACT_PASSIVE_INTERVAL, TIMER_STOPPABLE | TIMER_LOOP)
+
+/// Only awards passive EXP — does not decrement time or auto-complete.
+/// Completion is driven by on_report_filed().
+/datum/association_contract/investigate_person/tick()
+	if(state != CONTRACT_STATE_ACTIVE)
+		stop_timers()
+		return
+	if(squad)
+		var/exp_amount = CONTRACT_PASSIVE_EXP_TICK * get_exp_multiplier()
+		squad.award_exp_to_all(exp_amount)
+		passive_exp_accumulated += exp_amount
+
+/// Set the required report count based on tier (1, 2, or 3).
+/datum/association_contract/investigate_person/proc/set_report_tier(tier_value)
+	switch(tier_value)
+		if(1)
+			required_reports = CONTRACT_INVESTIGATE_TIER1_REPORTS
+		if(2)
+			required_reports = CONTRACT_INVESTIGATE_TIER2_REPORTS
+		if(3)
+			required_reports = CONTRACT_INVESTIGATE_TIER3_REPORTS
+		else
+			required_reports = CONTRACT_INVESTIGATE_TIER1_REPORTS
+
+/// Called by the dossier when a report is filed on this contract's target.
+/datum/association_contract/investigate_person/proc/on_report_filed()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return
+	reports_filed++
+	if(squad)
+		for(var/mob/living/M in squad.members)
+			to_chat(M, span_notice("Investigation progress: [reports_filed]/[required_reports] reports filed."))
+	if(reports_filed >= required_reports)
+		complete()
+
+/datum/association_contract/investigate_person/set_completion_exp()
+	completion_exp = CONTRACT_COMPLETION_OBJECTIVE
+
+/datum/association_contract/investigate_person/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	var/target_text = target_mob ? target_mob.name : "Unknown"
+	return "Investigating [target_text]. [reports_filed]/[required_reports] reports filed"
+
+/datum/association_contract/investigate_person/get_display_data()
+	var/list/data = ..()
+	data["reports_filed"] = reports_filed
+	data["required_reports"] = required_reports
+	return data
+
+// ============================================================
+// Surveillance Post — Duration-based, Seven-specific
+// ============================================================
+
+/// Deploy Seven recorders to surveil a location.
+/// Timer ticks only while at least one active squad recorder is within range of the surveillance point.
+/datum/association_contract/surveillance_post
+	contract_name = "Surveillance Post"
+	contract_type = "surveillance_post"
+	category = CONTRACT_CATEGORY_DURATION
+	association_type = ASSOCIATION_SEVEN
+	/// The single waypoint for this surveillance location
+	var/list/surveillance_point
+	/// Z-level for the waypoint turf
+	var/waypoint_zlevel = 0
+	/// City map reference
+	var/datum/contract_citymap/citymap
+
+/datum/association_contract/surveillance_post/activate(datum/association_squad/_squad)
+	. = ..()
+	if(!.)
+		return
+	// Spawn zone effects around the surveillance point
+	if(surveillance_point && waypoint_zlevel)
+		LAZYINITLIST(zone_effects)
+		var/sp_x = surveillance_point["x"]
+		var/sp_y = surveillance_point["y"]
+		for(var/dx in -CONTRACT_SURVEILLANCE_RADIUS to CONTRACT_SURVEILLANCE_RADIUS)
+			for(var/dy in -CONTRACT_SURVEILLANCE_RADIUS to CONTRACT_SURVEILLANCE_RADIUS)
+				var/turf/T = locate(sp_x + dx, sp_y + dy, waypoint_zlevel)
+				if(T)
+					var/obj/effect/contract_zone/zone = new(T)
+					zone_effects += zone
+					show_zone_to_squad(zone)
+
+/// Pause when no active squad recorder is within range of the surveillance point.
+/datum/association_contract/surveillance_post/should_pause()
+	if(!surveillance_point || !squad)
+		return TRUE
+	var/sp_x = surveillance_point["x"]
+	var/sp_y = surveillance_point["y"]
+	for(var/mob/living/M in squad.members)
+		var/owner_key = ref(M)
+		var/list/recorders = GLOB.seven_active_recorders[owner_key]
+		if(!islist(recorders))
+			continue
+		for(var/obj/item/seven_recorder/R in recorders)
+			if(QDELETED(R) || !R.recording)
+				continue
+			var/turf/rec_turf = get_turf(R)
+			if(!rec_turf || rec_turf.z != waypoint_zlevel)
+				continue
+			if(abs(rec_turf.x - sp_x) <= CONTRACT_SURVEILLANCE_RADIUS && abs(rec_turf.y - sp_y) <= CONTRACT_SURVEILLANCE_RADIUS)
+				return FALSE
+	return TRUE
+
+/datum/association_contract/surveillance_post/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	var/time_text = DisplayTimeText(remaining_time)
+	if(timer_paused)
+		return "Surveillance post. [time_text] remaining (PAUSED \u2014 no recorder in area)"
+	return "Surveillance post. [time_text] remaining"
+

@@ -9,6 +9,31 @@
 		return mark
 	return null
 
+/// Helper: dash user toward/through target with beam trail, smoke, and smooth pixel slide.
+/// dash_through=FALSE stops adjacent, dash_through=TRUE goes 2 tiles past.
+/proc/SevenComboDash(mob/living/user, mob/living/target, dash_through = FALSE, beam_color = "#1a1a3a")
+	var/turf/origin = get_turf(user)
+	var/turf/destination
+	if(dash_through)
+		destination = get_ranged_target_turf_direct(user, target, get_dist(user, target) + 2)
+	else
+		destination = get_step(target, get_dir(target, user))
+		if(!destination || destination.is_blocked_turf(TRUE))
+			destination = get_turf(target)
+	user.forceMove(destination)
+	user.face_atom(target)
+	// Smooth pixel slide from old position to new position
+	var/dx = (origin.x - destination.x) * 32
+	var/dy = (origin.y - destination.y) * 32
+	user.pixel_x = user.base_pixel_x + dx
+	user.pixel_y = user.base_pixel_y + dy
+	animate(user, 0.2 SECONDS, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, easing = QUAD_EASING)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(origin)
+	var/datum/beam/trail = origin.Beam(user, "1-full", time = 2)
+	if(trail)
+		trail.visuals.color = beam_color
+	playsound(user, 'sound/weapons/thudswoosh.ogg', 50, TRUE, 6)
+
 // ============================================================
 // T1a: Case File
 // ============================================================
@@ -252,22 +277,14 @@
 	return TRUE
 
 /datum/action/cooldown/seven_dossier_complete_action/proc/ExecuteCombo(mob/living/target, mob/living/carbon/human/user)
-	// Dash to target
-	var/turf/dest = get_step(target, get_dir(target, user))
-	if(!dest || dest.is_blocked_turf(TRUE))
-		dest = get_turf(target)
-	user.forceMove(dest)
-	user.face_atom(target)
-	playsound(user, 'sound/weapons/thudswoosh.ogg', 60, TRUE, 6)
-
-	// Calculate DPS
+	// DPS + Rupture scaling
 	var/obj/item/weapon = user.get_active_held_item()
 	var/dps = weapon ? (weapon.force * 1.25 / max(weapon.attack_speed, 0.1)) : 30
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
 	var/rupture_stacks = R ? R.stacks : 0
 	var/hit_damage = dps * (1 + rupture_stacks * 2 / 100) / 4
 
-	// Immobilize both
+	// Immobilize both for combo
 	var/combo_duration = 3 SECONDS
 	user.Immobilize(combo_duration)
 	user.changeNext_move(combo_duration)
@@ -279,24 +296,60 @@
 	else if(ishuman(target))
 		target.Immobilize(combo_duration)
 
-	// 4-hit combo
-	for(var/i in 1 to 4)
-		if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
-			break
-		sleep(0.5 SECONDS)
-		if(QDELETED(target) || QDELETED(user))
-			break
-		user.face_atom(target)
-		user.do_attack_animation(target)
-		playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
-		var/this_damage = hit_damage
-		if(i == 4)
-			this_damage *= 2
-		target.deal_damage(this_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-		target.apply_lc_offense_level_down(2)
-		if(i == 4)
-			target.apply_lc_fragile(5)
-			target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	// Hit 1: Dash TO target, opening strike
+	SevenComboDash(user, target, FALSE)
+	sleep(0.3 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_offense_level_down(2)
+
+	// Hit 2: Dash THROUGH target, slash from behind
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_offense_level_down(2)
+
+	// Hit 3: Dash back TO target, heavy strike
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, FALSE)
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_offense_level_down(2)
+
+	// Hit 4 (FINISHER): Dash THROUGH, double damage + Fragile + knockback
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.3 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 80, TRUE, 8)
+	target.deal_damage(hit_damage * 2, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_offense_level_down(2)
+	target.apply_lc_fragile(5)
+	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	shake_camera(target, 3, 3)
+	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	if(!QDELETED(user))
+		user.say(pick("Case closed.", "Every weakness, accounted for.", "Dossier complete."))
 
 // ============================================================
 // T3b: Surveillance Network

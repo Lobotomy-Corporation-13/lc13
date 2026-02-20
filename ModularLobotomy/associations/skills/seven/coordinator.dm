@@ -208,6 +208,7 @@
 
 	// AoE debuff (4-tile radius)
 	playsound(user, 'sound/weapons/thudswoosh.ogg', 80, TRUE, 8)
+	new /obj/effect/temp_visual/smash_effect(get_turf(user))
 	for(var/mob/living/L in range(4, get_turf(user)))
 		if(L == user || skill.is_designated_ally(L))
 			continue
@@ -221,23 +222,12 @@
 	if(QDELETED(target) || target.stat == DEAD)
 		return
 
-	// Phase 2: Move to target + immobilize
-	var/turf/dest = get_step(target, get_dir(target, user))
-	if(!dest || dest.is_blocked_turf(TRUE))
-		dest = get_turf(target)
-	user.forceMove(dest)
-	user.face_atom(target)
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
 
-	var/combo_duration = 2.5 SECONDS
-	user.Immobilize(combo_duration)
-	user.changeNext_move(combo_duration)
-	if(isanimal(target))
-		var/mob/living/simple_animal/hostile/H = target
-		if(istype(H))
-			H.toggle_ai(AI_OFF)
-			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/simple_animal/hostile, toggle_ai), AI_ON), combo_duration)
-	else if(ishuman(target))
-		target.Immobilize(combo_duration)
+	// Phase 2: Combo — dash TO target, immobilize
+	SevenComboDash(user, target, FALSE)
 
 	// Calculate Rupture per hit
 	var/total_ally_olu = 0
@@ -256,23 +246,73 @@
 	var/dps = weapon ? (weapon.force * 1.25 / max(weapon.attack_speed, 0.1)) : 30
 	var/hit_damage = dps / 3
 
-	// 3-hit combo
-	for(var/i in 1 to 3)
-		if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
-			break
-		sleep(0.5 SECONDS)
-		if(QDELETED(target) || QDELETED(user))
-			break
-		user.face_atom(target)
-		user.do_attack_animation(target)
-		playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
-		target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-		target.apply_lc_rupture(rupture_per_hit)
-		// Final hit: force-trigger all Rupture
-		if(i == 3)
-			var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
-			if(R && R.stacks > 0)
-				R.trigger_rupture()
+	var/combo_duration = 2.5 SECONDS
+	user.Immobilize(combo_duration)
+	user.changeNext_move(combo_duration)
+	if(isanimal(target))
+		var/mob/living/simple_animal/hostile/H = target
+		if(istype(H))
+			H.toggle_ai(AI_OFF)
+			addtimer(CALLBACK(H, TYPE_PROC_REF(/mob/living/simple_animal/hostile, toggle_ai), AI_ON), combo_duration)
+	else if(ishuman(target))
+		target.Immobilize(combo_duration)
+
+	// Hit 1: Opening strike + rupture
+	sleep(0.3 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(rupture_per_hit)
+
+	// Hit 2: Reposition to flank (perpendicular), flanking strike
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	var/perp_dir = turn(get_dir(target, user), 90)
+	var/turf/flank = get_step(target, perp_dir)
+	if(!flank || flank.is_blocked_turf(TRUE))
+		flank = get_step(target, turn(perp_dir, 180))
+	if(!flank || flank.is_blocked_turf(TRUE))
+		flank = get_turf(target)
+	var/turf/origin = get_turf(user)
+	user.forceMove(flank)
+	user.face_atom(target)
+	// Smooth pixel slide from old position to flank
+	var/dx = (origin.x - flank.x) * 32
+	var/dy = (origin.y - flank.y) * 32
+	user.pixel_x = user.base_pixel_x + dx
+	user.pixel_y = user.base_pixel_y + dy
+	animate(user, 0.2 SECONDS, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, easing = QUAD_EASING)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(origin)
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(rupture_per_hit)
+
+	// Hit 3 (FINISHER): Dash THROUGH target, force-trigger rupture
+	sleep(0.5 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 80, TRUE, 8)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(rupture_per_hit)
+	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	shake_camera(target, 3, 3)
+	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(R && R.stacks > 0)
+		R.trigger_rupture()
+	if(!QDELETED(user))
+		user.say(pick("Nowhere left to hide.", "All positions compromised.", "Full exposure confirmed."))
 
 // ============================================================
 // T3b: Undermining Presence

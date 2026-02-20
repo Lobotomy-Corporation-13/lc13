@@ -22,6 +22,8 @@ export const ContractPaper = (
     payment = 0,
     issuer = 'Unknown',
     target = 'None',
+    reports_filed = 0,
+    required_reports = 0,
     tier_name = 'N/A',
     status_text = 'Unknown',
     completion_exp = 0,
@@ -77,6 +79,16 @@ export const ContractPaper = (
                 {target}
               </LabeledList.Item>
             )}
+            {contract_type
+              === 'investigate_person'
+              && (
+              <LabeledList.Item
+                label="Reports">
+                {reports_filed
+                  + ' / '
+                  + required_reports}
+              </LabeledList.Item>
+            )}
           </LabeledList>
         </Section>
         <Section title="Rewards">
@@ -86,7 +98,10 @@ export const ContractPaper = (
               {completion_exp
                 * exp_multiplier}
             </LabeledList.Item>
-            {isDuration && (
+            {(isDuration
+              || contract_type
+                === 'investigate_person')
+              && (
               <LabeledList.Item
                 label="Passive EXP">
                 {'1 per 10s'

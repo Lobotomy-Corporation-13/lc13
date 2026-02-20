@@ -137,6 +137,8 @@ const CreatePanel = props => {
     && typeDef.needs_target;
   const isPatrol = typeDef
     && typeDef.uses_waypoints;
+  const isSingleWP = typeDef
+    && typeDef.single_waypoint;
   const tiers = typeDef
     ? typeDef.tiers
     : [];
@@ -245,7 +247,11 @@ const CreatePanel = props => {
           <LabeledList.Item
             label="Waypoints">
             <Box bold>
-              {wpCount + ' placed'}
+              {isSingleWP
+                ? (wpCount >= 1
+                  ? '1 placed'
+                  : '0 (need 1)')
+                : wpCount + ' placed'}
             </Box>
           </LabeledList.Item>
         )}
@@ -282,7 +288,10 @@ const CreatePanel = props => {
             || !canAfford
             || !hasTarget
             || (!hasAccount && !isHana)
-            || (isPatrol && !wpCount)
+            || (isPatrol && isSingleWP
+              && wpCount !== 1)
+            || (isPatrol && !isSingleWP
+              && !wpCount)
           }
           onClick={() => act(
             'create_contract',

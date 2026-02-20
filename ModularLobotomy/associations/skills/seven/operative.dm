@@ -205,23 +205,26 @@
 	return TRUE
 
 /datum/action/cooldown/seven_surgical_strike_action/proc/ExecuteCombo(mob/living/target, mob/living/carbon/human/user, datum/component/association_skill/seven_surgical_strike/skill)
-	// Phase 1: Vanish — make user invisible for 2 seconds
-	user.alpha = 0
+	// Phase 1: Vanish — smooth fade out over 0.5s, then invisible for remainder
+	animate(user, 0.5 SECONDS, alpha = 0, easing = QUAD_EASING)
 	user.Immobilize(2 SECONDS)
 	user.changeNext_move(2 SECONDS)
 	playsound(user, 'sound/weapons/thudswoosh.ogg', 40, TRUE, 4)
 	sleep(2 SECONDS)
 	if(QDELETED(user) || QDELETED(target))
 		if(!QDELETED(user))
-			user.alpha = 255
+			animate(user, 0, alpha = 255)
 		return
-	// Reappear behind target
-	user.alpha = 255
+
+	// Phase 2: Reappear behind target with smooth fade in
 	var/turf/behind = get_step(target, REVERSE_DIR(target.dir))
 	if(!behind || behind.is_blocked_turf(TRUE))
 		behind = get_turf(target)
+	var/turf/vanish_origin = get_turf(user)
 	user.forceMove(behind)
 	user.face_atom(target)
+	new /obj/effect/temp_visual/small_smoke/halfsecond(vanish_origin)
+	animate(user, 0.2 SECONDS, alpha = 255, easing = QUAD_EASING)
 	playsound(user, 'sound/weapons/thudswoosh.ogg', 60, TRUE, 6)
 
 	// Count debuff types on target for damage scaling
@@ -244,7 +247,7 @@
 	var/hit_damage = dps * damage_multiplier / 5
 
 	// Immobilize both for combo
-	var/combo_duration = 3.5 SECONDS
+	var/combo_duration = 3 SECONDS
 	user.Immobilize(combo_duration)
 	user.changeNext_move(combo_duration)
 	if(isanimal(target))
@@ -255,31 +258,75 @@
 	else if(ishuman(target))
 		target.Immobilize(combo_duration)
 
-	// 5-hit combo
-	for(var/i in 1 to 5)
-		if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
-			break
-		sleep(0.5 SECONDS)
-		if(QDELETED(target) || QDELETED(user))
-			break
-		user.face_atom(target)
-		user.do_attack_animation(target)
-		playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
-		var/this_damage = hit_damage
-		// Hit 1: apply 3 Fragile
-		if(i == 1)
-			target.apply_lc_fragile(3)
-		// Final hit: double damage + knockback + bonus BLACK = rupture stacks
-		if(i == 5)
-			this_damage *= 2
-		target.deal_damage(this_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-		target.apply_lc_rupture(2)
-		// Final hit extras
-		if(i == 5)
-			var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
-			if(R && R.stacks > 0)
-				target.deal_damage(R.stacks, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_SPECIAL)
-			target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	// Hit 1: First strike from behind + Fragile
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_fragile(3)
+	target.apply_lc_rupture(2)
+
+	// Hit 2: Dash THROUGH target
+	sleep(0.4 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.1 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(2)
+
+	// Hit 3: Dash THROUGH back
+	sleep(0.4 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.1 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(2)
+
+	// Hit 4: Dash TO target
+	sleep(0.4 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, FALSE)
+	sleep(0.1 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
+	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(2)
+
+	// Hit 5 (FINISHER): Dash THROUGH, double damage + bonus BLACK + knockback
+	sleep(0.4 SECONDS)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
+		return
+	SevenComboDash(user, target, TRUE)
+	sleep(0.2 SECONDS)
+	if(QDELETED(target) || QDELETED(user))
+		return
+	user.do_attack_animation(target)
+	playsound(target, 'sound/weapons/rapierhit.ogg', 80, TRUE, 8)
+	target.deal_damage(hit_damage * 2, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+	target.apply_lc_rupture(2)
+	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
+	if(R && R.stacks > 0)
+		target.deal_damage(R.stacks, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_SPECIAL)
+	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	shake_camera(target, 3, 3)
+	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	if(!QDELETED(user))
+		user.say(pick("Target neutralized.", "Clean cut.", "Surgical precision."))
 
 // ============================================================
 // T3b: Detonation Order

@@ -29,6 +29,11 @@
 	if(!ishuman(user))
 		return
 	var/mob/living/carbon/human/H = user
+	// Only the Association Section Director can self-register as director
+	if(!debug_skip_job_check)
+		if(H.mind?.assigned_role != "Association Section Director")
+			to_chat(user, span_warning("Only an Association Section Director can register as a Director."))
+			return
 	if(H.GetComponent(/datum/component/association_exp))
 		to_chat(user, span_notice("You are already registered as the Director of [squad.association_name]."))
 		return
@@ -43,19 +48,19 @@
 	if(!ishuman(target))
 		return ..()
 	var/mob/living/carbon/human/H = target
-	var/datum/job/target_job = H.mind?.assigned_role
+	var/target_role = H.mind?.assigned_role
 	// Check if they have an association job (skippable via debug var)
 	if(!debug_skip_job_check)
-		if(!istype(target_job, /datum/job/associate) && !istype(target_job, /datum/job/veteran))
+		if(target_role != "Association Fixer" && target_role != "Association Veteran")
 			to_chat(user, span_warning("[H] is not an association fixer."))
 			return
 	// Check if already registered
 	if(H.GetComponent(/datum/component/association_exp))
 		to_chat(user, span_warning("[H] is already registered with a squad."))
 		return
-	// Determine rank from job type
+	// Determine rank from role title
 	var/rank = "associate"
-	if(istype(target_job, /datum/job/veteran))
+	if(target_role == "Association Veteran")
 		rank = "veteran"
 	// Register them
 	squad.register_member(H, rank)
