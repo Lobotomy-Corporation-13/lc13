@@ -4388,6 +4388,7 @@
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_rce_ranged.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_clan_tinkerer.dm"
 #include "ModularLobotomy\extra_mobs\lc13_resurgence_tapes.dm"
+#include "ModularLobotomy\extra_mobs\lc13_sea_terrors.dm"
 #include "ModularLobotomy\extra_mobs\lc13_seed_of_greed.dm"
 #include "ModularLobotomy\extra_mobs\necromancer.dm"
 #include "ModularLobotomy\extra_mobs\necromancer_mobs.dm"

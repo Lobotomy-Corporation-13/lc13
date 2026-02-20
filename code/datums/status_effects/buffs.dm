@@ -1371,6 +1371,7 @@
 		src.apply_status_effect(/datum/status_effect/stacking/poise, stacks)
 		return
 	P.add_stacks(stacks)
+	new /obj/effect/temp_visual/damage_effect/poise(get_turf(src))
 
 //Concentration - Poise support buff
 //  Max 20 stacks, decays 1 every 15s
@@ -1421,3 +1422,4 @@
 		src.apply_status_effect(/datum/status_effect/stacking/concentration, stacks)
 		return
 	C.add_stacks(stacks)
+	new /obj/effect/temp_visual/damage_effect/concentration(get_turf(src))
