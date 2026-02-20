@@ -150,7 +150,7 @@
 	if(squad.distress_cooldowns[victim_ref] && world.time < squad.distress_cooldowns[victim_ref] + CONTRACT_DISTRESS_COOLDOWN)
 		return
 	// Trigger distress for the entire squad
-	squad.trigger_distress(L, damage_source)
+	INVOKE_ASYNC(squad, TYPE_PROC_REF(/datum/association_squad, trigger_distress), L, damage_source)
 
 /// Distress death check — triggers emergency when a fixer dies from a recent carbon attack.
 /datum/component/association_exp/proc/on_distress_death(datum/signal_source, gibbed)
