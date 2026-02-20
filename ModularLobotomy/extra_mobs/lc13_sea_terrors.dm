@@ -48,11 +48,11 @@
 /datum/status_effect/stacking/nervous_impairment/add_stacks(stacks_added)
 	if(stacks_added > 0)
 		gained_stacks = TRUE
+		new /obj/effect/temp_visual/damage_effect/nervous_impairment(get_turf(owner))
 	if(owner && impairment_overlay)
 		owner.cut_overlay(impairment_overlay)
 	. = ..()
 	// After parent add_stacks, status may have been consumed and qdel'd
-	new /obj/effect/temp_visual/damage_effect/nervous_impairment(get_turf(owner))
 	if(owner && impairment_overlay && stacks > 0)
 		var/threshold = max_stacks * 0.875
 		var/level = min(7, round(stacks * 7 / threshold))
