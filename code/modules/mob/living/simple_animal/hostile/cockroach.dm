@@ -43,8 +43,6 @@
 
 /obj/projectile/glockroachbullet
 	damage = 10 //same damage as a hivebot
-	// Runtime fix: was BRUTE ("brute"), but LC13 armor has no "brute" field (uses red/white/black/pale).
-	// Causes "undefined variable /datum/armor/var/brute" in getRating().
 	damage_type = RED_DAMAGE
 
 /obj/item/ammo_casing/glockroach

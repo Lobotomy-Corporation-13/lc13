@@ -1666,7 +1666,7 @@
 	if(bleed_damage_cooldown > world.time)
 		return FALSE
 	var/datum/status_effect/stacking/lc_bleed/B = human_parent.has_status_effect(/datum/status_effect/stacking/lc_bleed)
-	if(!B) // Runtime fix: has_status_effect() returns FALSE (0) when absent. Accessing 0.stacks causes "Cannot read 0.stacks".
+	if(!B)
 		return FALSE
 	if(B.stacks > 4)
 		bleed_damage_cooldown = world.time + bleed_damage_cooldown_time

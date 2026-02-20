@@ -20,8 +20,6 @@
 		C.parallax_layers.len = C.parallax_layers_max
 
 	C.screen |= (C.parallax_layers)
-	// Runtime fix: hud_used or plane_masters can be null when HUD isn't fully initialized during Login().
-	// Causes "Cannot modify null.color". Common when admin ghost-drags into simple_animal mobs.
 	var/atom/movable/screen/plane_master/PM = screenmob.hud_used?.plane_masters["[PLANE_SPACE]"]
 	if(!PM)
 		return
@@ -41,7 +39,6 @@
 	var/mob/screenmob = viewmob || mymob
 	var/client/C = screenmob.client
 	C.screen -= (C.parallax_layers_cached)
-	// Runtime fix: same as create_parallax — null plane_master during incomplete HUD init.
 	var/atom/movable/screen/plane_master/PM = screenmob.hud_used?.plane_masters["[PLANE_SPACE]"]
 	if(!PM)
 		return

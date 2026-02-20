@@ -48,8 +48,6 @@
 			if(owner == M)
 				return
 			Remove(owner)
-		// Runtime fix: button can be null during Login transitions (e.g. vote actions).
-		// Accessing null.id causes "Cannot modify null.id".
 		if(!button)
 			return
 		owner = M
@@ -85,7 +83,6 @@
 		LAZYREMOVE(M.actions, src)
 		M.update_action_buttons()
 	owner = null
-	// Runtime fix: same as Grant — button can be null. Accessing null.moved causes "Cannot modify null.moved".
 	if(!button)
 		return
 	button.moved = FALSE //so the button appears in its normal position when given to another owner.

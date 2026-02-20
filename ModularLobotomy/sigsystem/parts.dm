@@ -249,7 +249,6 @@
 
 	var/projectile_type = /obj/projectile/bullet/shotgun_beanbag
 	var/projectile_sound = 'sound/weapons/sonic_jackhammer.ogg'
-	/// Runtime fix: map DMM files set this var, but it was only defined on /signaller. Causes "Undefined variable" in preloader.
 	var/signaller_code
 
 /obj/structure/sigsystem/projectile_launcher/ReceivePing()

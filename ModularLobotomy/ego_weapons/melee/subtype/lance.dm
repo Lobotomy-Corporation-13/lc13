@@ -42,7 +42,6 @@
 	current_holder = user
 	RaiseLance(current_holder)
 	RegisterSignal(current_holder, COMSIG_MOVABLE_BUMP, PROC_REF(UserBump), override = TRUE)
-	// Runtime fix: override = TRUE prevents "movable_moved overridden" warning when lance is re-equipped.
 	RegisterSignal(current_holder, COMSIG_MOVABLE_MOVED, PROC_REF(UserMoved), override = TRUE)
 	if(!force_cap)
 		force_cap = (initial(force) * 2)

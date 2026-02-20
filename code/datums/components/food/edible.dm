@@ -447,7 +447,6 @@ Behavior that's still missing from this component that original food items had t
 
 	var/datum/component/edible/E = ingredient
 	if (LAZYLEN(E.tastes))
-		// Runtime fix: tastes can be null on some food items. Causes "Cannot execute null.Copy()".
 		if(!tastes)
 			tastes = list()
 		tastes = tastes.Copy()

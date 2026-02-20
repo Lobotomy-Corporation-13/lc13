@@ -174,8 +174,6 @@
 	user.visible_message(detailed_message, self_message, vision_distance = 1, ignored_mobs = target_detailed ? null : target)
 	if(!target_detailed)
 		var/you_feel = pick("a brief pain", "your body tense up", "an unnerving sensation")
-		// Runtime fix: some surgery steps pass "" as vague_message (e.g. incise/success).
-		// show_message("") flows to to_chat("") which rejects empty strings.
 		if(vague_message)
 			target.show_message(vague_message, MSG_VISUAL, "<span class='notice'>You feel [you_feel] as you are operated on.</span>")
 		else

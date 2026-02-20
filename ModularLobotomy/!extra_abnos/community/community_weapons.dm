@@ -335,8 +335,6 @@
 				been_hit += L
 
 	// Remove burn if it's safety is on
-	// Runtime fix: has_status_effect() returns FALSE (0) when effect is absent, not null.
-	// Accessing 0.safety causes "Cannot read 0.safety". Use ?. to safely handle this.
 	var/datum/status_effect/stacking/lc_burn/B = user.has_status_effect(/datum/status_effect/stacking/lc_burn)
 	if(B?.safety)
 		user.remove_status_effect(STATUS_EFFECT_LCBURN)

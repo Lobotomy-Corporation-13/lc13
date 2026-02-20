@@ -22,8 +22,6 @@
 	var/acid
 	var/magic
 	var/wound
-	/// Runtime fix: upstream SS13 code (e.g. tablepush) calls getRating("stamina"), which does vars["stamina"].
-	/// Without this var, it causes "undefined variable /datum/armor/var/stamina".
 	var/stamina
 
 /datum/armor/New(red = 0, white = 0, black = 0, pale = 0, melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0, fire = 0, acid = 0, magic = 0, wound = 0, stamina = 0)

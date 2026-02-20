@@ -1029,8 +1029,6 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return
 	if(stat == DEAD)
 		return
-	// Runtime fix: target can be null when OpenFire() fires via a delayed callback after target is deleted.
-	// Causes "Cannot execute null.Adjacent()".
 	if(!target)
 		return
 	var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
