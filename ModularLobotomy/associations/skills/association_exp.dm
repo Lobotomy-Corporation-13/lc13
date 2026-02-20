@@ -25,6 +25,10 @@
 	var/datum/action/innate/association_skill_tree/tree_action
 	/// Reference to the granted designate ally action
 	var/datum/action/cooldown/designate_ally/ally_action
+	/// Last carbon mob that attacked this member (for death-trigger distress)
+	var/mob/living/carbon/last_carbon_attacker
+	/// world.time of the last carbon attack (for death-trigger distress)
+	var/last_carbon_attack_time = 0
 
 /datum/component/association_exp/Initialize(assoc_type, _rank, datum/association_squad/_squad)
 	if(!ishuman(parent))
@@ -46,11 +50,13 @@
 	var/mob/living/L = parent
 	L.apply_status_effect(/datum/status_effect/display/ally_indicator)
 
-	// Register distress check signal
+	// Register distress check signals (damage + death)
 	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_distress_check))
+	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_distress_death))
 
 /datum/component/association_exp/Destroy()
-	UnregisterSignal(parent, COMSIG_MOB_APPLY_DAMGE)
+	UnregisterSignal(parent, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_LIVING_DEATH))
+	last_carbon_attacker = null
 	if(tree_action)
 		QDEL_NULL(tree_action)
 	if(ally_action)
@@ -125,11 +131,14 @@
 	SIGNAL_HANDLER
 	if(!squad)
 		return
+	// Track last carbon attacker for death-trigger distress
+	if(iscarbon(damage_source))
+		last_carbon_attacker = damage_source
+		last_carbon_attack_time = world.time
+	else
+		return
 	// Already on contract — skills active, no need for distress
 	if(squad.is_on_contract())
-		return
-	// Check attacker is a carbon (player or humanoid NPC)
-	if(!iscarbon(damage_source))
 		return
 	// Check HP would drop below threshold
 	var/mob/living/L = parent
@@ -142,3 +151,21 @@
 		return
 	// Trigger distress for the entire squad
 	squad.trigger_distress(L, damage_source)
+
+/// Distress death check — triggers emergency when a fixer dies from a recent carbon attack.
+/datum/component/association_exp/proc/on_distress_death(datum/signal_source, gibbed)
+	SIGNAL_HANDLER
+	if(!squad)
+		return
+	// Only trigger if recently attacked by a carbon (within 10 seconds)
+	if(!last_carbon_attacker || QDELETED(last_carbon_attacker))
+		return
+	if(world.time > last_carbon_attack_time + 10 SECONDS)
+		return
+	// Check per-victim cooldown
+	var/mob/living/L = parent
+	var/victim_ref = ref(L)
+	if(squad.distress_cooldowns[victim_ref] && world.time < squad.distress_cooldowns[victim_ref] + CONTRACT_DISTRESS_COOLDOWN)
+		return
+	// Trigger distress for the entire squad
+	INVOKE_ASYNC(squad, TYPE_PROC_REF(/datum/association_squad, trigger_distress), L, last_carbon_attacker)

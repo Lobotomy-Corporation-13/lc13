@@ -15,6 +15,10 @@
 	var/list/datum/association_contract/active_contracts = list()
 	/// world.time after which a new contract can be accepted (cooldown after last ends)
 	var/contract_cooldown_until = 0
+	/// Timer ID for the distress directional arrow effect
+	var/distress_arrow_timer
+	/// The current distress victim (for arrow pointing)
+	var/mob/living/distress_victim
 
 /datum/association_squad/New(assoc_type, mob/living/carbon/human/dir)
 	. = ..()
@@ -27,6 +31,11 @@
 	for(var/datum/association_contract/C in active_contracts)
 		C.squad = null
 	active_contracts.Cut()
+	// Clean up distress arrow timer
+	if(distress_arrow_timer)
+		deltimer(distress_arrow_timer)
+		distress_arrow_timer = null
+	distress_victim = null
 	director = null
 	members.Cut()
 	distress_cooldowns.Cut()
@@ -119,3 +128,43 @@
 		// Grant emergency skill access to members NOT on contract
 		if(!is_on_contract() && !M.has_status_effect(/datum/status_effect/association_emergency))
 			M.apply_status_effect(/datum/status_effect/association_emergency)
+	// Start directional arrow effects pointing squad members to victim
+	distress_victim = victim
+	// Cancel any existing arrow timer
+	if(distress_arrow_timer)
+		deltimer(distress_arrow_timer)
+	// Fire arrows immediately then every 5 seconds for 60s
+	fire_distress_arrows()
+	distress_arrow_timer = addtimer(CALLBACK(src, PROC_REF(fire_distress_arrows)), 5 SECONDS, TIMER_STOPPABLE | TIMER_LOOP)
+	// Stop arrows after the emergency duration
+	addtimer(CALLBACK(src, PROC_REF(stop_distress_arrows)), CONTRACT_DISTRESS_DURATION)
+
+/// Spawn spark trail effects from each squad member toward the distress victim.
+/// Uses the PointToFlower pattern from rose_sign.dm — spawns temp_visual sparks along the first 10 tiles of the path.
+/datum/association_squad/proc/fire_distress_arrows()
+	if(!distress_victim || QDELETED(distress_victim))
+		stop_distress_arrows()
+		return
+	var/turf/victim_turf = get_turf(distress_victim)
+	if(!victim_turf)
+		return
+	for(var/mob/living/M in members)
+		if(M == distress_victim)
+			continue
+		var/turf/member_turf = get_turf(M)
+		if(!member_turf || member_turf.z != victim_turf.z)
+			continue
+		var/list/arrow_path = get_path_to(member_turf, victim_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 100)
+		var/i = 0
+		for(var/turf/T in arrow_path)
+			if(i > 10)
+				break
+			new /obj/effect/temp_visual/cult/sparks(T)
+			i++
+
+/// Stop the distress arrow timer and clean up.
+/datum/association_squad/proc/stop_distress_arrows()
+	if(distress_arrow_timer)
+		deltimer(distress_arrow_timer)
+		distress_arrow_timer = null
+	distress_victim = null
