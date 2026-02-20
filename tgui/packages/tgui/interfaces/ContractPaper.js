@@ -82,13 +82,13 @@ export const ContractPaper = (
             {contract_type
               === 'investigate_person'
               && (
-              <LabeledList.Item
-                label="Reports">
-                {reports_filed
-                  + ' / '
-                  + required_reports}
-              </LabeledList.Item>
-            )}
+                <LabeledList.Item
+                  label="Reports">
+                  {reports_filed
+                    + ' / '
+                    + required_reports}
+                </LabeledList.Item>
+              )}
           </LabeledList>
         </Section>
         <Section title="Rewards">
@@ -102,14 +102,14 @@ export const ContractPaper = (
               || contract_type
                 === 'investigate_person')
               && (
-              <LabeledList.Item
-                label="Passive EXP">
-                {'1 per 10s'
-                  + (isCivilian
-                    ? ' (x2)'
-                    : '')}
-              </LabeledList.Item>
-            )}
+                <LabeledList.Item
+                  label="Passive EXP">
+                  {'1 per 10s'
+                    + (isCivilian
+                      ? ' (x2)'
+                      : '')}
+                </LabeledList.Item>
+              )}
             <LabeledList.Item
               label="EXP Multiplier">
               {exp_multiplier + 'x'}

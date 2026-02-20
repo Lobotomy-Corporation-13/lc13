@@ -567,7 +567,7 @@ const CityMapView = props => {
                   world_x: wx,
                   world_y: wy,
                 },
-              )
+            )
             }
           />
         </Box>
