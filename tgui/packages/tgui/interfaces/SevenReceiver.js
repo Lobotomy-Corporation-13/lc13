@@ -134,7 +134,7 @@ export const SevenReceiver = (props, context) => {
                   <Box inline color={
                     distColor(
                       rec.dist_category
-                  )
+                    )
                   }>
                     <Icon
                       name={dirIcon(

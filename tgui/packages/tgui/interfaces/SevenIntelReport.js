@@ -153,7 +153,7 @@ export const SevenIntelReport = (props, context) => {
                             index: i + 1,
                             value: v,
                           }
-                      )
+                        )
                       } />
                   </LabeledList.Item>
                 )
@@ -186,7 +186,7 @@ export const SevenIntelReport = (props, context) => {
                             index: i + 1,
                             value: v,
                           }
-                      )
+                        )
                       } />
                   </LabeledList.Item>
                 )
