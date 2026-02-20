@@ -150,8 +150,7 @@ export const SevenIntelReport = (props, context) => {
                         act('set_held_item', {
                           index: i + 1,
                           value: v,
-                        })
-                      } />
+                        })} />
                   </LabeledList.Item>
                 )
               )}
@@ -180,8 +179,7 @@ export const SevenIntelReport = (props, context) => {
                         act('set_backpack_item', {
                           index: i + 1,
                           value: v,
-                        })
-                      } />
+                        })} />
                   </LabeledList.Item>
                 )
               )}
