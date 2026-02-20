@@ -46,7 +46,14 @@
 /datum/component/pixel_shift/proc/pre_move_check(mob/source, new_loc, direct)
 	SIGNAL_HANDLER
 	if(shifting)
-		pixel_shift(source, direct)
+		// Clear the movement direction queue since we're consuming this move.
+		// Normally client/Move() clears these, but we block that call.
+		// Without this, the direction "sticks" and shifting continues after key release.
+		if(source.client)
+			source.client.next_move_dir_add = 0
+			source.client.next_move_dir_sub = 0
+		if(direct)
+			pixel_shift(source, direct)
 		return COMSIG_MOB_CLIENT_BLOCK_PRE_LIVING_MOVE
 
 /// Checks if the parent is considered passthroughable from a direction. Projectiles will ignore the check and hit.
