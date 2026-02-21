@@ -348,7 +348,9 @@
 	dir = 1
 	},
 /obj/item/melee/baseball_bat,
-/turf/open/floor/facility/dark,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/stack/spacecash/c100,
+/turf/open/space/basic,
 /area/city/house)
 "cG" = (
 /obj/machinery/door/airlock/hatch{
@@ -442,6 +444,10 @@
 	desc = "A mailbox for this house."
 	},
 /turf/closed/indestructible/reinforced,
+/area/city/house)
+"dw" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/turf/open/floor/carpet/black,
 /area/city/house)
 "dx" = (
 /obj/machinery/door/airlock/public{
@@ -675,6 +681,10 @@
 	},
 /turf/open/floor/wood,
 /area/city/fixers)
+"fH" = (
+/obj/structure/fireplace,
+/turf/open/floor/wood,
+/area/city/house)
 "fI" = (
 /obj/effect/turf_decal/trimline/yellow/filled/line{
 	pixel_y = 5
@@ -709,6 +719,14 @@
 	dir = 1
 	},
 /turf/open/floor/wood,
+/area/city/house)
+"fS" = (
+/obj/machinery/door/airlock/wood{
+	name = "workshop fixer access";
+	req_access_txt = "11";
+	resistance_flags = 64
+	},
+/turf/open/floor/facility/dark,
 /area/city/house)
 "fT" = (
 /obj/structure/fluff/bus/dense{
@@ -2292,6 +2310,12 @@
 	},
 /turf/open/floor/wood,
 /area/city/house)
+"sd" = (
+/obj/structure/chair/comfy{
+	dir = 4
+	},
+/turf/open/floor/wood,
+/area/city/house)
 "se" = (
 /obj/machinery/roulette,
 /turf/open/floor/wood,
@@ -2339,6 +2363,13 @@
 	},
 /turf/open/floor/plasteel/showroomfloor,
 /area/city/shop)
+"sR" = (
+/obj/structure/bed,
+/obj/item/bedsheet/rd{
+	name = "director's bedsheet"
+	},
+/turf/open/floor/carpet/black,
+/area/city/house)
 "sT" = (
 /obj/effect/turf_decal/trimline/white/filled/line{
 	pixel_y = 10
@@ -3003,17 +3034,16 @@
 /area/city/fixers)
 "xh" = (
 /obj/structure/rack,
-/obj/item/stack/spacecash/c1000,
-/obj/item/stack/spacecash/c1000,
 /obj/effect/turf_decal/siding/thinplating/dark,
-/obj/item/price_tagger,
-/obj/machinery/light{
-	dir = 1
-	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 5
 	},
-/turf/open/floor/facility/dark,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/workshop_mod/regular/red,
+/obj/machinery/light/broken{
+	dir = 1
+	},
+/turf/open/floor/plating,
 /area/city/house)
 "xj" = (
 /obj/structure/fence{
@@ -3326,14 +3356,13 @@
 /obj/structure/lootcrate/tres,
 /obj/structure/lootcrate/tres,
 /obj/structure/lootcrate/tres,
-/obj/structure/lootcrate/tres,
 /obj/item/crowbar/red,
-/obj/machinery/light{
-	dir = 1
-	},
 /obj/effect/turf_decal/siding/thinplating/dark,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 9
+	},
+/obj/machinery/light/broken{
+	dir = 1
 	},
 /turf/open/floor/facility/dark,
 /area/city/house)
@@ -3772,6 +3801,14 @@
 /obj/effect/turf_decal/siding/thinplating/light/corner,
 /turf/open/indestructible/white,
 /area/city/shop)
+"CD" = (
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/table/wood,
+/obj/item/reagent_containers/food/drinks/drinkingglass/filled/cola,
+/turf/open/floor/wood,
+/area/city/house)
 "CF" = (
 /turf/open/floor/plating/beach/sand,
 /area/city)
@@ -3882,14 +3919,11 @@
 /area/city/house)
 "Dw" = (
 /obj/structure/rack,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
-/turf/open/floor/facility/dark,
+/turf/open/floor/plating,
 /area/city/house)
 "DB" = (
 /obj/structure/dresser,
@@ -3911,7 +3945,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
-/turf/open/floor/facility/dark,
+/turf/open/floor/plating,
 /area/city/house)
 "DR" = (
 /obj/structure/chair/pew/right,
@@ -4396,6 +4430,17 @@
 /obj/structure/table/greyscale,
 /turf/open/floor/facility,
 /area/city/shop)
+"Hh" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/restraints/legcuffs/beartrap{
+	armed = 1;
+	alpha = 100
+	},
+/turf/open/floor/facility/dark,
+/area/city/house)
 "Hj" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
@@ -5301,7 +5346,7 @@
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
-/turf/open/floor/facility/dark,
+/turf/open/floor/plating,
 /area/city/house)
 "OR" = (
 /obj/structure/table/glass,
@@ -5393,6 +5438,13 @@
 /area/city/house)
 "PN" = (
 /turf/open/floor/carpet/royalblack,
+/area/city/house)
+"PQ" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
+/obj/item/reagent_containers/food/drinks/bottle/champagne,
+/obj/item/storage/box/drinkingglasses,
+/obj/item/reagent_containers/food/drinks/bottle/cognac,
+/turf/closed/indestructible/reinforced,
 /area/city/house)
 "PR" = (
 /turf/open/floor/wood,
@@ -5600,6 +5652,13 @@
 "RM" = (
 /obj/effect/spawner/lootdrop/grille_or_trash,
 /turf/open/floor/plating,
+/area/city/house)
+"RN" = (
+/obj/machinery/door/airlock/grunge{
+	name = "association director's overnight office";
+	req_access_txt = "69"
+	},
+/turf/open/floor/wood,
 /area/city/house)
 "RO" = (
 /obj/structure/rack,
@@ -5834,6 +5893,11 @@
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
 /turf/open/floor/facility/dark,
+/area/city/house)
+"TA" = (
+/obj/structure/table/wood,
+/obj/item/flashlight/lamp/green,
+/turf/open/floor/carpet/black,
 /area/city/house)
 "TB" = (
 /obj/effect/turf_decal/box/red,
@@ -6496,23 +6560,13 @@
 /area/city)
 "YS" = (
 /obj/structure/rack,
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
-	},
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
-	},
-/obj/item/clothing/under/rank/cargo/miner{
-	name = "Workshop's jumpsuit"
-	},
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 1
 	},
 /obj/effect/turf_decal/siding/thinplating/dark,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/obj/item/forginghammer,
-/turf/open/floor/facility/dark,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/stack/spacecash/c100,
+/turf/open/floor/plating,
 /area/city/house)
 "YW" = (
 /obj/machinery/door/airlock/centcom{
@@ -31527,7 +31581,7 @@ Na
 Na
 qn
 qn
-ME
+fS
 qn
 qn
 qn
@@ -31784,7 +31838,7 @@ Na
 Na
 qn
 zv
-De
+Hh
 qF
 qn
 VE
@@ -32041,7 +32095,7 @@ Na
 Na
 qn
 YS
-nE
+di
 OL
 qn
 Ec
@@ -32298,7 +32352,7 @@ Na
 Na
 qn
 Dw
-nE
+Dp
 DO
 qn
 MT
@@ -41782,12 +41836,12 @@ FX
 yC
 Zr
 hW
-hW
-hW
-hW
-hW
-hW
-hW
+qn
+qn
+qn
+qn
+qn
+qn
 hW
 hW
 hW
@@ -42039,12 +42093,12 @@ FX
 yC
 Zr
 Na
-hW
-DJ
-hW
-hW
-hW
-hW
+PQ
+sd
+fP
+Rr
+TA
+qn
 hW
 hW
 hW
@@ -42296,12 +42350,12 @@ yC
 iW
 Zr
 Na
-hW
-hW
-hW
-hW
-hW
-hW
+qn
+CD
+fP
+bD
+dw
+qn
 hW
 hW
 hW
@@ -42552,13 +42606,13 @@ Zr
 Zr
 Zr
 Zr
-Na
-Na
-hW
-hW
-hW
-hW
-hW
+DJ
+qn
+fH
+fP
+bD
+sR
+qn
 hW
 hW
 hW
@@ -42812,7 +42866,7 @@ im
 im
 qn
 qn
-qn
+RN
 qn
 qn
 qn
