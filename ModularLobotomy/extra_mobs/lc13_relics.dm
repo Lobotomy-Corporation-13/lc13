@@ -178,7 +178,6 @@
 	attunement_counts[key] = (attunement_counts[key] || 0) + 1
 	playsound(get_turf(src), 'sound/magic/staff_healing.ogg', 30, TRUE)
 	to_chat(user, span_notice("[src] resonates with your essence. You are now attuned."))
-	RegisterSignal(user, COMSIG_LIVING_DEATH, PROC_REF(OnAttunedDeath))
 
 /// Override per relic. Called when attunement fails. Deals damage, gives a hint, and starts cooldown.
 /obj/item/ruin_relic/proc/OnAttuneFail(mob/living/carbon/human/user)
@@ -190,15 +189,9 @@
 /obj/item/ruin_relic/proc/IsAttuned(mob/living/user)
 	return attuned && attuned_mob == user
 
-/// Signal handler: unattune when the attuned mob dies.
-/obj/item/ruin_relic/proc/OnAttunedDeath()
-	SIGNAL_HANDLER
-	Unattune()
-
-/// Clears attunement state, unregisters death signal.
+/// Clears attunement state.
 /obj/item/ruin_relic/proc/Unattune()
 	if(attuned_mob)
-		UnregisterSignal(attuned_mob, COMSIG_LIVING_DEATH)
 		// Decrement attunement count
 		var/key = REF(attuned_mob)
 		if(attunement_counts[key])
@@ -297,6 +290,8 @@
 	var/feed_amount = 0
 	if(istype(I, /obj/item/organ))
 		feed_amount = feed_organ
+	else if(istype(I, /obj/item/bodypart))
+		feed_amount = feed_organ
 	else if(istype(I, /obj/item/food))
 		feed_amount = feed_meat
 	if(feed_amount)
@@ -312,6 +307,9 @@
 		return
 	if(blood >= max_blood)
 		to_chat(user, span_warning("[src] is already full!"))
+		return
+	if(iscarbon(M))
+		to_chat(user, span_warning("[src] has no interest in that."))
 		return
 	if(M.stat == DEAD)
 		FeedCorpse(M, user)
@@ -1100,12 +1098,12 @@
 	return ..()
 
 /obj/item/ruin_relic/effigy_tablet/CheckAttunement(mob/living/carbon/human/user)
-	// Must be holding a knife and have 15+ bleed stacks
+	// Must be holding a knife and have 5+ bleed stacks
 	var/obj/item/held = user.get_inactive_held_item()
 	if(!held || !(held.sharpness & SHARP_EDGED))
 		return FALSE
 	var/datum/status_effect/stacking/lc_bleed/B = user.has_status_effect(/datum/status_effect/stacking/lc_bleed)
-	if(!B || B.stacks < 15)
+	if(!B || B.stacks < 5)
 		return FALSE
 	return TRUE
 
@@ -1379,7 +1377,7 @@
 	scry_start_time = world.time
 	// Store and apply purple screen color
 	initial_color = user.client.color
-	user.client.color = "#2a0040"
+	user.client.color = "#e5b5ff"
 	// Switch perspective to target
 	user.reset_perspective(target)
 	START_PROCESSING(SSobj, src)
@@ -2209,7 +2207,8 @@
 	damage = 15
 	damage_type = RED_DAMAGE
 	speed = 0.8
-	range = 200
+	range = 500
+	nondirectional_sprite = TRUE
 	// Ricochet config — always bounce, ignore flag checks, no decay
 	ricochets_max = 50
 	ricochet_chance = 500
@@ -2227,6 +2226,43 @@
 	var/base_damage = 15
 	/// Whether we're currently exploding (prevents recursive Explode from Destroy)
 	var/exploding = FALSE
+
+/// Use directional sprites instead of transform rotation — set dir from angle.
+/obj/projectile/pulsing_sphere/set_angle(new_angle)
+	. = ..()
+	setDir(angle2dir_cardinal(new_angle))
+
+/// Override Impact to force bounce-back when handle_ricochet fails at steep angles.
+/obj/projectile/pulsing_sphere/Impact(atom/A)
+	if(!trajectory)
+		qdel(src)
+		return FALSE
+	if(impacted[A])
+		return FALSE
+	if(ricochets < ricochets_max && check_ricochet_flag(A) && check_ricochet(A))
+		ricochets++
+		if(A.handle_ricochet(src))
+			on_ricochet(A)
+			impacted = list()
+			ignore_source_check = TRUE
+			decayedRange = max(0, decayedRange - reflect_range_decrease)
+			ricochet_chance *= ricochet_decay_chance
+			damage *= ricochet_decay_damage
+			range = decayedRange
+			return TRUE
+		else
+			// handle_ricochet failed (bad angle) — force a 180 bounce-back
+			set_angle(SIMPLIFY_DEGREES(Angle + 180))
+			on_ricochet(A)
+			impacted = list()
+			ignore_source_check = TRUE
+			return TRUE
+	// Max ricochets reached — explode on next hit
+	return process_hit(get_turf(A), select_target(get_turf(A), A, A), A)
+
+/// Range expiry triggers explosion instead of silent deletion.
+/obj/projectile/pulsing_sphere/on_range()
+	Explode()
 
 /// Damage all living mobs on every turf the sphere passes through.
 /obj/projectile/pulsing_sphere/Moved(atom/OldLoc, Dir)
@@ -2363,6 +2399,7 @@
 	icon_state = "shadebug"
 	icon_living = "shadebug"
 	faction = list("neutral")
+	city_faction = FALSE
 	pass_flags = PASSTABLE | PASSMOB
 	mob_size = MOB_SIZE_TINY
 	density = FALSE
@@ -2682,22 +2719,23 @@
 	if(hp_percent > 0.8)
 		new_face = "cheerful"
 		if(in_combat)
-			holder.apply_lc_offense_level_up(2)
+			holder.apply_lc_offense_level_up(8)
 	else if(hp_percent > 0.6)
 		new_face = "happy"
 		if(in_combat)
-			holder.apply_lc_defense_level_up(2)
+			holder.apply_lc_defense_level_up(8)
 	else if(hp_percent > 0.4)
 		new_face = "neutral"
 	else if(hp_percent > 0.2)
 		new_face = "sad"
 		if(in_combat)
+			holder.apply_lc_defense_level_up(12)
 			holder.apply_lc_fragile(2)
 	else
 		new_face = "angry"
 		if(in_combat)
-			holder.apply_lc_offense_level_up(3)
-			holder.apply_lc_fragile(3)
+			holder.apply_lc_offense_level_up(12)
+			holder.apply_lc_fragile(2)
 	UpdateFace(new_face)
 
 /// Updates the face overlay on the skin.
