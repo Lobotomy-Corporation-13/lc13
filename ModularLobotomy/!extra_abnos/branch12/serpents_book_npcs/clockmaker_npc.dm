@@ -662,4 +662,4 @@
 /mob/living/simple_animal/hostile/ui_npc/serpent_resident/clockmaker/on_player_suspicious(mob/user)
 	. = ..()
 	// The clocks tick faster when confronted
-	playsound(src, 'sound/machines/clockwork/clock_tick.ogg', 50, TRUE)
+	playsound(src, 'sound/machines/clockcult/integration_cog_install.ogg', 50, TRUE)

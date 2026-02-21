@@ -89,8 +89,8 @@
 	var/puzzle_type = null
 
 // -----------------------------------------------------------------------------
-// EXAMPLE CHAPTER DEFINITIONS
-// Add new chapters by creating subtypes like these
+// CHAPTER DEFINITIONS
+// Each chapter maps to a unique DMM file. Add new chapters as you make rooms.
 // -----------------------------------------------------------------------------
 
 // Default chapter used for personal entry rooms and unmapped chapters
@@ -99,7 +99,7 @@
 	mappath = "_maps/templates/serpents_book/serpents_chapter.dmm"
 
 // -----------------------------------------------------------------------------
-// UPPER ZONE - Sparse chapters (every 5)
+// UPPER ZONE - Sparse chapters (every 10)
 // Players start here after being captured
 // -----------------------------------------------------------------------------
 
@@ -107,274 +107,114 @@
 	chapter_number = 180
 	mappath = "_maps/templates/serpents_book/serpents_standard_01.dmm"
 
-/datum/serpent_chapter/chapter_175
-	chapter_number = 175
-	mappath = "_maps/templates/serpents_book/serpents_standard_02.dmm"
-
 /datum/serpent_chapter/chapter_170
 	chapter_number = 170
-	mappath = "_maps/templates/serpents_book/serpents_standard_03.dmm"
-
-/datum/serpent_chapter/chapter_165
-	chapter_number = 165
-	mappath = "_maps/templates/serpents_book/serpents_abno_01.dmm"
+	mappath = "_maps/templates/serpents_book/serpents_standard_02.dmm"
 
 /datum/serpent_chapter/chapter_160
 	chapter_number = 160
-	mappath = "_maps/templates/serpents_book/serpents_abno_02.dmm"
-
-/datum/serpent_chapter/chapter_155
-	chapter_number = 155
-	mappath = "_maps/templates/serpents_book/serpents_abno_03.dmm"
+	mappath = "_maps/templates/serpents_book/serpents_standard_03.dmm"
 
 /datum/serpent_chapter/chapter_150
 	chapter_number = 150
-	mappath = "_maps/templates/serpents_book/serpents_abno_04.dmm"
-
-/datum/serpent_chapter/chapter_145
-	chapter_number = 145
-	mappath = "_maps/templates/serpents_book/serpents_abno_05.dmm"
+	mappath = "_maps/templates/serpents_book/serpents_standard_04.dmm"
 
 /datum/serpent_chapter/chapter_140
 	chapter_number = 140
-	mappath = "_maps/templates/serpents_book/serpents_abno_06.dmm"
-
-/datum/serpent_chapter/chapter_135
-	chapter_number = 135
-	mappath = "_maps/templates/serpents_book/serpents_abno_07.dmm"
+	mappath = "_maps/templates/serpents_book/serpents_standard_05.dmm"
 
 /datum/serpent_chapter/chapter_130
 	chapter_number = 130
-	mappath = "_maps/templates/serpents_book/serpents_abno_08.dmm"
-
-/datum/serpent_chapter/chapter_125
-	chapter_number = 125
-	mappath = "_maps/templates/serpents_book/serpents_abno_09.dmm"
+	mappath = "_maps/templates/serpents_book/serpents_standard_06.dmm"
 
 /datum/serpent_chapter/chapter_120
 	chapter_number = 120
-	mappath = "_maps/templates/serpents_book/serpents_abno_10.dmm"
-
-/datum/serpent_chapter/chapter_115
-	chapter_number = 115
+	mappath = "_maps/templates/serpents_book/serpents_standard_07.dmm"
 
 /datum/serpent_chapter/chapter_110
 	chapter_number = 110
+	mappath = "_maps/templates/serpents_book/serpents_standard_08.dmm"
 
-/datum/serpent_chapter/chapter_105
-	chapter_number = 105
+// -----------------------------------------------------------------------------
+// MID ZONE - Denser chapters (every 10)
+// Abnormality-themed rooms begin appearing
+// -----------------------------------------------------------------------------
 
 /datum/serpent_chapter/chapter_100
 	chapter_number = 100
-
-/datum/serpent_chapter/chapter_95
-	chapter_number = 95
+	mappath = "_maps/templates/serpents_book/serpents_abno_01.dmm"
 
 /datum/serpent_chapter/chapter_90
 	chapter_number = 90
-
-/datum/serpent_chapter/chapter_85
-	chapter_number = 85
-
-// -----------------------------------------------------------------------------
-// MID ZONE - Denser chapters (every 2)
-// Navigation becomes more frequent here
-// -----------------------------------------------------------------------------
+	mappath = "_maps/templates/serpents_book/serpents_abno_02.dmm"
 
 /datum/serpent_chapter/chapter_80
 	chapter_number = 80
-
-/datum/serpent_chapter/chapter_78
-	chapter_number = 78
-
-/datum/serpent_chapter/chapter_76
-	chapter_number = 76
-
-// NPC Chapter - The Clockmaker (Heinrich Valdis)
-/datum/serpent_chapter/chapter_75
-	chapter_number = 75
-	mappath = "_maps/templates/serpents_book/serpents_chapter_75.dmm"
-
-/datum/serpent_chapter/chapter_74
-	chapter_number = 74
-
-/datum/serpent_chapter/chapter_72
-	chapter_number = 72
+	mappath = "_maps/templates/serpents_book/serpents_abno_03.dmm"
 
 /datum/serpent_chapter/chapter_70
 	chapter_number = 70
-
-/datum/serpent_chapter/chapter_68
-	chapter_number = 68
-
-/datum/serpent_chapter/chapter_66
-	chapter_number = 66
-
-/datum/serpent_chapter/chapter_64
-	chapter_number = 64
-
-/datum/serpent_chapter/chapter_62
-	chapter_number = 62
+	mappath = "_maps/templates/serpents_book/serpents_abno_04.dmm"
 
 // Puzzle chapter at 60
 /datum/serpent_chapter/chapter_60
 	chapter_number = 60
+	mappath = "_maps/templates/serpents_book/serpents_puzzle_01.dmm"
 	is_puzzle = TRUE
 	puzzle_type = "levers"
 
-/datum/serpent_chapter/chapter_58
-	chapter_number = 58
-
-/datum/serpent_chapter/chapter_56
-	chapter_number = 56
-
-// NPC Chapter - The Painter (Madame Rosalind)
-/datum/serpent_chapter/chapter_55
-	chapter_number = 55
-	mappath = "_maps/templates/serpents_book/serpents_chapter_55.dmm"
-
-/datum/serpent_chapter/chapter_54
-	chapter_number = 54
-
-/datum/serpent_chapter/chapter_52
-	chapter_number = 52
-
-// Puzzle chapter at 50
 /datum/serpent_chapter/chapter_50
 	chapter_number = 50
-	is_puzzle = TRUE
-	puzzle_type = "levers"
+	mappath = "_maps/templates/serpents_book/serpents_abno_05.dmm"
 
-/datum/serpent_chapter/chapter_48
-	chapter_number = 48
-
-/datum/serpent_chapter/chapter_46
-	chapter_number = 46
-
-/datum/serpent_chapter/chapter_44
-	chapter_number = 44
-
-/datum/serpent_chapter/chapter_42
-	chapter_number = 42
+/datum/serpent_chapter/chapter_45
+	chapter_number = 45
+	mappath = "_maps/templates/serpents_book/serpents_abno_06.dmm"
 
 // Puzzle chapter at 40
 /datum/serpent_chapter/chapter_40
 	chapter_number = 40
+	mappath = "_maps/templates/serpents_book/serpents_puzzle_02.dmm"
 	is_puzzle = TRUE
 	puzzle_type = "levers"
-
-/datum/serpent_chapter/chapter_38
-	chapter_number = 38
-
-/datum/serpent_chapter/chapter_36
-	chapter_number = 36
-
-// NPC Chapter - The Surgeon (Dr. Erasmus Vorn)
-/datum/serpent_chapter/chapter_35
-	chapter_number = 35
-	mappath = "_maps/templates/serpents_book/serpents_chapter_35.dmm"
-
-/datum/serpent_chapter/chapter_34
-	chapter_number = 34
-
-/datum/serpent_chapter/chapter_32
-	chapter_number = 32
-
-// Puzzle chapter at 30
-/datum/serpent_chapter/chapter_30
-	chapter_number = 30
-	is_puzzle = TRUE
-	puzzle_type = "levers"
-
-/datum/serpent_chapter/chapter_28
-	chapter_number = 28
-
-/datum/serpent_chapter/chapter_26
-	chapter_number = 26
-
-/datum/serpent_chapter/chapter_24
-	chapter_number = 24
-
-/datum/serpent_chapter/chapter_22
-	chapter_number = 22
 
 // -----------------------------------------------------------------------------
-// DENSE ZONE - Every chapter (final stretch)
+// LOWER ZONE - Dense chapters (final stretch)
 // Players are close to escape, tension is high
 // -----------------------------------------------------------------------------
 
-// NPC Chapter + Puzzle - The Collector (Lord Aldric Thorne)
+/datum/serpent_chapter/chapter_35
+	chapter_number = 35
+	mappath = "_maps/templates/serpents_book/serpents_abno_07.dmm"
+
+/datum/serpent_chapter/chapter_30
+	chapter_number = 30
+	mappath = "_maps/templates/serpents_book/serpents_abno_08.dmm"
+
+/datum/serpent_chapter/chapter_25
+	chapter_number = 25
+	mappath = "_maps/templates/serpents_book/serpents_abno_09.dmm"
+
 /datum/serpent_chapter/chapter_20
 	chapter_number = 20
-	mappath = "_maps/templates/serpents_book/serpents_chapter_20.dmm"
-	is_puzzle = TRUE
-	puzzle_type = "levers"
+	mappath = "_maps/templates/serpents_book/serpents_abno_10.dmm"
 
-/datum/serpent_chapter/chapter_19
-	chapter_number = 19
-
-/datum/serpent_chapter/chapter_18
-	chapter_number = 18
-
-/datum/serpent_chapter/chapter_17
-	chapter_number = 17
-
-/datum/serpent_chapter/chapter_16
-	chapter_number = 16
-
-// Puzzle chapter at 15
 /datum/serpent_chapter/chapter_15
 	chapter_number = 15
-	is_puzzle = TRUE
-	puzzle_type = "levers"
-
-/datum/serpent_chapter/chapter_14
-	chapter_number = 14
-
-/datum/serpent_chapter/chapter_13
-	chapter_number = 13
+	mappath = "_maps/templates/serpents_book/serpents_standard_09.dmm"
 
 /datum/serpent_chapter/chapter_12
 	chapter_number = 12
+	mappath = "_maps/templates/serpents_book/serpents_standard_10.dmm"
 
-/datum/serpent_chapter/chapter_11
-	chapter_number = 11
-
-// Puzzle chapter at 10
 /datum/serpent_chapter/chapter_10
 	chapter_number = 10
-	is_puzzle = TRUE
-	puzzle_type = "levers"
+	mappath = "_maps/templates/serpents_book/serpents_standard_11.dmm"
 
-/datum/serpent_chapter/chapter_9
-	chapter_number = 9
-
-/datum/serpent_chapter/chapter_8
-	chapter_number = 8
-
-/datum/serpent_chapter/chapter_7
-	chapter_number = 7
-
-/datum/serpent_chapter/chapter_6
-	chapter_number = 6
-
-// Puzzle chapter at 5
+// Exit chapter - the final room before escaping the book
 /datum/serpent_chapter/chapter_5
 	chapter_number = 5
-	is_puzzle = TRUE
-	puzzle_type = "levers"
-
-/datum/serpent_chapter/chapter_4
-	chapter_number = 4
-
-/datum/serpent_chapter/chapter_3
-	chapter_number = 3
-
-/datum/serpent_chapter/chapter_2
-	chapter_number = 2
-
-/datum/serpent_chapter/chapter_1
-	chapter_number = 1
+	mappath = "_maps/templates/serpents_book/serpents_exit.dmm"
 
 // =============================================================================
 // ROOM STATE STORAGE SYSTEM (Phase 4)
@@ -446,6 +286,13 @@
 	/// Chapter number -> puzzle datum (for active puzzles)
 	var/list/active_puzzles = list()
 
+	// ==========================================================================
+	// PHASE 8: THE SERPENT
+	// ==========================================================================
+
+	/// Reference to the active Serpent mob
+	var/mob/living/simple_animal/hostile/serpent_librarian/serpent
+
 /datum/serpent_dimension_manager/New(obj/item/serpents_book/book)
 	. = ..()
 	parent_book = book
@@ -494,6 +341,10 @@
 	return default_chapter
 
 /datum/serpent_dimension_manager/Destroy()
+	// Clean up the serpent first (don't eject it to the real world)
+	if(serpent)
+		player_chapters -= serpent
+		QDEL_NULL(serpent)
 	// Eject all players before destroying
 	eject_all_players()
 	// Clean up reservations
@@ -524,6 +375,7 @@
 	chapter_registry = null
 	visitable_chapters = null
 	default_chapter = null
+	serpent = null
 	parent_book = null
 	return ..()
 
@@ -1162,7 +1014,7 @@
 	name = "Serpent's Book"
 	desc = "An ancient tome bound in scaled leather. Strange whispers emanate from within its pages."
 	icon = 'icons/obj/library.dmi'
-	icon_state = "book"
+	icon_state = "book1"
 	w_class = WEIGHT_CLASS_NORMAL
 	/// Is the book currently pulling players?
 	var/active = FALSE
@@ -1258,6 +1110,8 @@
 		// Teleport captured players into the dimension
 		dimension_manager.capture_players(captured)
 		visible_message(span_danger("[src] swallows [length(captured)] victim\s into its pages!"))
+		// Spawn the Serpent hunter
+		spawn_serpent()
 	else
 		visible_message(span_notice("[src] snaps shut, having captured no one."))
 
@@ -1276,6 +1130,137 @@
 	if(active)
 		to_chat(user, span_warning("The book is active and cannot be picked up!"))
 		return
+	return ..()
+
+// =============================================================================
+// SERPENT SPAWNING (Phase 8)
+// =============================================================================
+
+/// Spawns the Serpent hunter in a random chapter
+/obj/item/serpents_book/proc/spawn_serpent()
+	if(!dimension_manager)
+		return
+	// Don't spawn if one already exists
+	if(dimension_manager.serpent && !QDELETED(dimension_manager.serpent))
+		return
+
+	// Ensure templates are loaded
+	dimension_manager.load_templates()
+
+	// Pick a random visitable chapter between 20 and 80
+	var/target_chapter = rand(20, 80)
+	if(!dimension_manager.is_visitable(target_chapter))
+		target_chapter = dimension_manager.get_next_visitable_chapter(target_chapter, SOUTH)
+	if(!target_chapter)
+		target_chapter = 80  // Fallback
+
+	// Create room for the serpent
+	var/target_key = "[target_chapter]"
+	if(!dimension_manager.active_rooms[target_key])
+		var/datum/turf_reservation/reservation = SSmapping.RequestBlockReservation(20, 20)
+		if(!reservation)
+			return
+		dimension_manager.load_chapter_into_reservation(reservation, target_chapter)
+		dimension_manager.active_rooms[target_key] = reservation
+
+	// Get landing turf
+	var/datum/turf_reservation/res = dimension_manager.active_rooms[target_key]
+	var/turf/landing = dimension_manager.get_landing_turf_for_chapter(res, target_chapter)
+
+	// Spawn the serpent
+	var/mob/living/simple_animal/hostile/serpent_librarian/S = new(landing)
+	S.parent_book = src
+	S.manager = dimension_manager
+	dimension_manager.serpent = S
+
+	// Track in room occupants
+	dimension_manager.player_chapters[S] = target_chapter
+	if(!dimension_manager.room_occupants[target_key])
+		dimension_manager.room_occupants[target_key] = list()
+	dimension_manager.room_occupants[target_key] += S
+
+	// Alert admins with control link, despawn if no one accepts within 60 seconds
+	message_admins("The Serpent has awakened in the Serpent's Book! (<a href='byond://?src=[REF(src)];serpent_control=1'>CONTROL IT</a>) (60s to accept)")
+	addtimer(CALLBACK(src, PROC_REF(check_serpent_claimed)), 60 SECONDS)
+
+/// If no admin has taken control of the serpent, despawn it
+/obj/item/serpents_book/proc/check_serpent_claimed()
+	if(!dimension_manager)
+		return
+	var/mob/living/simple_animal/hostile/serpent_librarian/S = dimension_manager.serpent
+	if(!S || QDELETED(S))
+		return
+	// If an admin took control, keep it
+	if(S.player_controlled)
+		return
+	// No admin claimed it — despawn
+	var/chapter_key = "[dimension_manager.player_chapters[S]]"
+	dimension_manager.player_chapters -= S
+	var/list/occupants = dimension_manager.room_occupants[chapter_key]
+	if(occupants)
+		occupants -= S
+	dimension_manager.serpent = null
+	qdel(S)
+	message_admins("The Serpent was not claimed by any admin and has despawned.")
+
+/// Respawns the Serpent after it dies (called via timer)
+/obj/item/serpents_book/proc/respawn_serpent()
+	if(!dimension_manager)
+		return
+	// Don't respawn if no players remain
+	var/has_players = FALSE
+	for(var/mob/living/carbon/C in dimension_manager.player_chapters)
+		if(C.stat != DEAD)
+			has_players = TRUE
+			break
+	if(!has_players)
+		return
+
+	// Clean up old serpent ref
+	if(dimension_manager.serpent)
+		if(!QDELETED(dimension_manager.serpent))
+			qdel(dimension_manager.serpent)
+		dimension_manager.serpent = null
+
+	// Spawn a new one
+	spawn_serpent()
+
+/// Handle admin control href clicks
+/obj/item/serpents_book/Topic(href, list/href_list)
+	if(href_list["serpent_control"])
+		// Verify admin rights
+		if(!usr || !usr.client || !usr.client.holder)
+			to_chat(usr, span_warning("You do not have permission to do that."))
+			return
+		if(!check_rights(R_ADMIN))
+			return
+
+		// Get the serpent
+		var/mob/living/simple_animal/hostile/serpent_librarian/S = dimension_manager?.serpent
+		if(!S || QDELETED(S) || S.stat == DEAD)
+			to_chat(usr, span_warning("The Serpent is not available right now."))
+			return
+
+		// If serpent already has a player, confirm takeover
+		if(S.client)
+			var/confirm = alert(usr, "The Serpent is already being controlled by [S.client.ckey]. Take over?", "Serpent Control", "Yes", "No")
+			if(confirm != "Yes")
+				return
+
+		// Ghost the admin first
+		var/client/admin_client = usr.client
+		if(!isobserver(usr))
+			if(!admin_client.admin_ghost())
+				to_chat(usr, span_warning("Failed to ghost."))
+				return
+
+		// Transfer control to the serpent
+		if(admin_client.mob)
+			S.key = admin_client.mob.key
+		to_chat(S, span_notice("You have taken control of The Serpent."))
+		message_admins("[key_name_admin(S)] has taken control of the Serpent in the Serpent's Book.")
+		return
+
 	return ..()
 
 // =============================================================================
@@ -1502,7 +1487,9 @@
 		"List Visitable Chapters",
 		"List Chapter Registry",
 		"Solve Current Puzzle",
-		"Jump to Chapter"
+		"Jump to Chapter",
+		"Spawn Serpent",
+		"Control Serpent"
 	)
 
 	switch(choice)
@@ -1652,3 +1639,36 @@
 			// Direct teleport using debug_jump_to_chapter
 			manager.debug_jump_to_chapter(mob, target)
 			to_chat(mob, span_notice("Jumped to Chapter [target]."))
+
+		if("Spawn Serpent")
+			// Find any serpent book - first try from area
+			var/obj/item/serpents_book/book = null
+			var/area/serpents_library/slib = get_area(mob)
+			if(istype(slib) && slib.parent_manager)
+				book = slib.parent_manager.parent_book
+			if(!book)
+				to_chat(mob, span_warning("You must be inside a Serpent's Library to spawn the Serpent!"))
+				return
+			book.spawn_serpent()
+			to_chat(mob, span_notice("Serpent spawned (or already exists). Check admin chat for control link."))
+
+		if("Control Serpent")
+			// Find the serpent from the area
+			var/mob/living/simple_animal/hostile/serpent_librarian/S = null
+			var/area/serpents_library/slib = get_area(mob)
+			if(istype(slib) && slib.parent_manager)
+				S = slib.parent_manager.serpent
+			if(!S || QDELETED(S))
+				// Fallback: search alive mobs
+				for(var/mob/living/simple_animal/hostile/serpent_librarian/found in GLOB.alive_mob_list)
+					S = found
+					break
+			if(!S || QDELETED(S))
+				to_chat(mob, span_warning("No living Serpent found!"))
+				return
+			// Transfer control
+			if(S.client)
+				to_chat(mob, span_warning("The Serpent is already controlled by [S.client.ckey]."))
+				return
+			S.key = mob.key
+			to_chat(S, span_notice("You have taken control of The Serpent via debug."))

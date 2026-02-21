@@ -33,7 +33,7 @@
 	. = ..()
 	if(prob(30))
 		visible_message(span_warning("[src] turns its head toward [user] with a grinding sound."))
-		playsound(src, 'sound/machines/clockwork/clock_tick.ogg', 30, TRUE)
+		playsound(src, 'sound/machines/clockcult/integration_cog_install.ogg', 30, TRUE)
 	else
 		to_chat(user, span_notice("[src] is cold to the touch. You feel gears moving beneath the surface."))
 
