@@ -118,16 +118,23 @@
 /obj/item/ego_weapon/city/seven_s4_blade/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user))
 		return
-	// Adaptive damage type — requires 10+ Active Rupture on target
+	// Adaptive damage type — requires 10+ Active (activated) Rupture on target
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
-	if(R && R.stacks >= 10)
+	var/adapted = FALSE
+	if(R && R.activated && R.stacks >= 10)
 		var/best_type = get_weakest_resistance(target)
 		if(best_type)
 			damtype = best_type
+			adapted = TRUE
 			if(best_type == PALE_DAMAGE)
 				force *= pale_penalty
 
 	. = ..()
+
+	// If we adapted to WHITE/PALE, manually trigger rupture since it only fires on RED/BLACK
+	if(. && adapted && (damtype == WHITE_DAMAGE || damtype == PALE_DAMAGE))
+		if(R && !QDELETED(R) && R.stacks > 0)
+			R.trigger_rupture()
 
 	// Reset after attack
 	force = initial(force)

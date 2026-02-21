@@ -77,6 +77,8 @@
 
 /// Helper proc to apply Nervous Impairment stacks to a mob
 /mob/living/proc/apply_nervous_impairment(stacks_to_add)
+	if(IsStun())
+		return
 	var/datum/status_effect/stacking/nervous_impairment/S = has_status_effect(/datum/status_effect/stacking/nervous_impairment)
 	if(!S)
 		apply_status_effect(/datum/status_effect/stacking/nervous_impairment, stacks_to_add)
@@ -118,10 +120,10 @@
 	name = "nethersea brand"
 	desc = "A dark, pulsing mark left by creatures of the deep sea. It burns to stand on."
 	icon = 'icons/obj/smooth_structures/alien/weeds1.dmi'
-	icon_state = "weeds1-255"
+	icon_state = "weeds1-15"
 	alpha = 120
-	max_integrity = 80
-	expand_cooldown = 0.5 SECONDS
+	max_integrity = 50
+	expand_cooldown = 2 SECONDS
 
 /obj/structure/spreading/nethersea_brand/Initialize()
 	. = ..()
@@ -303,6 +305,13 @@
 /// Spawns a mob from the weighted spawnable_types list with a burrow animation
 /obj/structure/nethersea_crack/proc/spawn_mob()
 	var/mob_type = pickweight(spawnable_types)
+	// Cap founders at 2 alive at a time
+	if(ispath(mob_type, /mob/living/simple_animal/hostile/sea_terror/founder))
+		var/founder_count = 0
+		for(var/mob/living/simple_animal/hostile/sea_terror/founder/F in spawned_mobs)
+			founder_count++
+		if(founder_count >= 2)
+			mob_type = /mob/living/simple_animal/hostile/sea_terror/slider
 	var/turf/T = get_turf(src)
 	var/list/valid_turfs = list(T)
 	for(var/turf/PT in RANGE_TURFS(2, T))
@@ -401,8 +410,8 @@
 	icon_living = "seaslider"
 	maxHealth = 250
 	health = 250
-	melee_damage_lower = 10
-	melee_damage_upper = 15
+	melee_damage_lower = 8
+	melee_damage_upper = 10
 	move_to_delay = 3
 	attack_sound = 'sound/creatures/lc13/sea_terrors/slider_attack.ogg'
 	attack_verb_continuous = "slashes"
@@ -466,8 +475,8 @@
 	maxHealth = 2500
 	health = 2500
 	damage_coeff = list(BRUTE = 1, RED_DAMAGE = 0.8, WHITE_DAMAGE = 0.6, BLACK_DAMAGE = 0.3, PALE_DAMAGE = 1.2)
-	melee_damage_lower = 25
-	melee_damage_upper = 35
+	melee_damage_lower = 20
+	melee_damage_upper = 30
 	move_to_delay = 6
 	attack_sound = 'sound/creatures/lc13/sea_terrors/reaper_attack.ogg'
 	attack_verb_continuous = "cleaves"
@@ -547,10 +556,10 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/sea_terrors32x32.dmi'
 	icon_state = "seafounder"
 	icon_living = "seafounder"
-	maxHealth = 1000
-	health = 1000
-	melee_damage_lower = 18
-	melee_damage_upper = 24
+	maxHealth = 800
+	health = 800
+	melee_damage_lower = 13
+	melee_damage_upper = 16
 	move_to_delay = 3
 	attack_sound = 'sound/creatures/lc13/sea_terrors/founder_attack.ogg'
 	attack_verb_continuous = "slams"
@@ -569,5 +578,6 @@
 		L.apply_nervous_impairment(brand_bonus ? 4 : 2)
 
 /mob/living/simple_animal/hostile/sea_terror/founder/death(gibbed)
-	new /obj/structure/spreading/nethersea_brand/node(get_turf(src))
+	if(!on_nethersea_brand())
+		new /obj/structure/spreading/nethersea_brand/node(get_turf(src))
 	return ..()
