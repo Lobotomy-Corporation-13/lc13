@@ -2549,7 +2549,7 @@
 	name = "perversion"
 	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
 	'Be awed, or be awe-struck.'"
-	special = "This weapon has two forms; in 'Lance' form, it inflicts Gaze on hit, and it is able to perform a basic combo on targets consisting of a lunging thrust followed by an AoE piercing thrust. \n\
+	special = "This weapon has two forms. In 'Lance' form, it inflicts Gaze on hit, and it is able to perform a basic combo on targets consisting of a lunging thrust followed by an AoE piercing thrust. \n\
 	Gaze may be stacked on enemies up to 7 times - once it reaches 7, it becomes Contempt instead. By themselves, neither Gaze nor Contempt do anything. \n\
 	\n\
 	On a long cooldown, you may unsheathe the weapon to transform it into the 'Katana' form. The unsheathing has a brief windup and performs 'Cascading Gaze of Awe Underneath Contempt', immobilizing you and boosting your defenses, creating a damaging field that destroys projectiles and ending with burst damage. \n\
@@ -2592,7 +2592,7 @@
 	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
 	var/sheathed = TRUE
 	var/unsheathe_cooldown
-	var/unsheathe_cooldown_duration = 40 SECONDS
+	var/unsheathe_cooldown_duration = 30 SECONDS
 	var/unsheathe_windup = 0.7 SECONDS
 	var/sheathe_sound = 'sound/weapons/ego/perversion_sheathe.ogg'
 	var/unsheathe_sound = 'sound/weapons/ego/perversion_unsheathe.ogg'
@@ -2725,7 +2725,7 @@
 	. += span_info("")
 	. += span_info("While unsheathed, this weapon loses [lance_force - katana_force] force, but deals (1 + [katana_additive_damage_coeff_per_gaze] * gaze stacks)x damage to enemies. Contempt counts as 7 Gaze stacks.")
 	. += span_info("<b>Katana Dash</b>: Has a range of [katana_dash_range] tiles, cooldown of [katana_dash_cooldown_duration * 0.1] seconds.")
-	. += span_info("<b>Katana Cleave</b>: Deals its damage in a [katana_cleave_degrees] degree wide, [katana_cleave_range] long slash. Original target will not take additional damage.")
+	. += span_info("<b>Katana Cleave</b>: Deals its damage in a [katana_cleave_degrees] degree wide, [katana_cleave_range] tile long slash. Original target will not take additional damage.")
 	. += span_info("<b>Katana Finisher</b>: Clears Gaze/Contempt and deals [katana_finisher_damage_coeff]x damage before Justice, Force Multiplier and Gaze calculations.")
 	. += span_info("")
 	. += span_info("The weapon may be drawn once every [unsheathe_cooldown_duration * 0.1] seconds.")
@@ -2913,11 +2913,15 @@
 /obj/effect/perversion_weapon_root_vfx
 	name = "clasping hands"
 	desc = "You shall be shunned."
-	icon = 'icons/effects/effects.dmi'
-	icon_state = "malevolent"
+	icon = 'ModularLobotomy/_Lobotomyicons/64x64.dmi'
+	icon_state = "spiral_grip"
 	layer = ABOVE_MOB_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	anchored = TRUE
+	pixel_x = -16
+	base_pixel_x = -16
+	pixel_y = -16
+	base_pixel_y = -16
 
 /atom/movable/screen/alert/status_effect/perversion_weapon_root
 	name = "Contempt of the Gaze of Contempt \[Perversion\]"
@@ -2990,7 +2994,7 @@
 			// Blood VFX / Gibs on finisher. This has to be done before the damage to avoid issues with qdel'ing mobs.
 			var/obj/effect/temp_visual/dir_setting/bloodsplatter/blood_vfx = new (T, pick(GLOB.alldirs))
 			blood_vfx.transform = vfx_matrix
-			var/victim_is_robotic = L.mob_biotypes & MOB_ROBOTIC
+			var/victim_is_robotic = (L.mob_biotypes & MOB_ROBOTIC)
 			if(victim_is_robotic)
 				blood_vfx.color = COLOR_ALMOST_BLACK
 			if(should_end)
@@ -3647,7 +3651,16 @@
 	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT)
 	. = ..()
 
+/datum/status_effect/stacking/perversion_weapon_gaze/on_creation(mob/living/new_owner, stacks_to_apply)
+	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
+		qdel(src)
+		return
+	. = ..()
+
 /datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
+	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
+		qdel(src)
+		return
 	refresh()
 	. = ..()
 	GenerateAttachedVisualStatus()
@@ -3681,12 +3694,9 @@
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	duration = 10 SECONDS
 
-/datum/status_effect/perversion_weapon_contempt/on_apply()
-	. = ..()
-
-
-/datum/status_effect/perversion_weapon_contempt/on_remove()
-	. = ..()
+/datum/status_effect/perversion_weapon_contempt/tick()
+	if(!owner || owner.stat >= DEAD)
+		qdel(src)
 
 /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	name = "Contempt \[Perversion\]"
