@@ -3,7 +3,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/paradise
 	cost = 200
 
-// Judgement bird - Justitia
+// Judgement Bird - Justitia
 /datum/ego_datum/weapon/justitia
 	item_path = /obj/item/ego_weapon/justitia
 	cost = 100
@@ -14,7 +14,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_REALIZABLE)
 
-// Blue star - Sound of a Star
+// Blue Star - Sound of a Star
 /datum/ego_datum/weapon/star_sound
 	item_path = /obj/item/ego_weapon/ranged/star
 	cost = 100
@@ -44,7 +44,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_REALIZABLE)
 
-// Nothing there - Mimicry
+// Nothing There - Mimicry
 /datum/ego_datum/weapon/mimicry
 	item_path = /obj/item/ego_weapon/mimicry
 	cost = 100

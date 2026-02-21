@@ -556,10 +556,11 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	layer = POINT_LAYER
 	var/final_radius = 1
 	var/final_windup = 1.2 SECONDS
-	var/fadeout_time = 0.5 SECONDS
+	var/fadeout_time = 0.8 SECONDS
 	var/list/affected_turfs = list()
 	var/list/telegraph_vfx = list()
 	var/mob/living/simple_animal/hostile/abnormality/spiral/caster
+	var/image/cool_animation
 
 /obj/effect/temp_visual/spiral_grip/Initialize(mapload, radius = 1, windup = 1.2 SECONDS, mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref)
 	. = ..()
@@ -579,6 +580,15 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	for(var/turf/T in affected_turfs)
 		new /obj/effect/temp_visual/sparkles/spiral(T, final_windup)
 	addtimer(CALLBACK(src, PROC_REF(Resolve)), final_windup)
+	addtimer(CALLBACK(src, PROC_REF(PlayAnimation)), final_windup - 6) // 6 is a delay chosen based on the length of the animation
+
+/obj/effect/temp_visual/spiral_grip/proc/PlayAnimation()
+	src.alpha = 0
+	cool_animation = image('ModularLobotomy/_Lobotomyicons/64x64.dmi', loc = loc, icon_state = "spiral_grip_animated", layer = layer + 2)
+	cool_animation.transform = transform
+	cool_animation.pixel_x = pixel_x
+	cool_animation.pixel_y = pixel_y
+	flick_overlay_view(cool_animation, src, 0.8 SECONDS)
 
 /// Causes the damage and fades out the effect.
 /obj/effect/temp_visual/spiral_grip/proc/Resolve()
@@ -608,8 +618,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	caster = null
 	affected_turfs = null
 	// Fade out
-	animate(src, fadeout_time, alpha = 0)
+	animate(cool_animation, time = fadeout_time * 0.5, alpha = 255)
+	animate(time = fadeout_time * 0.5, alpha = 0 )
 	QDEL_IN(src, fadeout_time + 1)
+	QDEL_IN(cool_animation, fadeout_time + 1)
 
 // Telegraph sparkles with a customizable duration
 /obj/effect/temp_visual/sparkles/spiral
@@ -935,7 +947,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	// These three values are pulled from the status effect's vars, which in turn come from Spiral's vars.
 	var/final_radius = 2
 	var/final_windup = 0.5 SECONDS
-	var/fadeout_time = 0.5 SECONDS
+	var/fadeout_time = 0.8 SECONDS
 
 	var/list/affected_turfs = list()
 	var/list/telegraph_vfx = list()
@@ -943,6 +955,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/mob/living/victim
 	var/failure_timer
 	var/its_over = FALSE
+
+	var/image/cool_animation
 
 
 /mob/living/simple_animal/spiral_shun/Initialize(mapload, datum/status_effect/display/spiral_contempt/status, mob/living/target)
@@ -1006,7 +1020,16 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	playsound(src, 'sound/weapons/fwoosh.ogg', 100, FALSE, 3)
 	for(var/turf/T in affected_turfs)
 		new /obj/effect/temp_visual/sparkles/spiral(T, final_windup)
+	PlayAnimation()
 	addtimer(CALLBACK(src, PROC_REF(Resolve)), final_windup)
+
+/mob/living/simple_animal/spiral_shun/proc/PlayAnimation()
+	src.alpha = 0
+	cool_animation = image('ModularLobotomy/_Lobotomyicons/64x64.dmi', loc = loc, icon_state = "spiral_grip_animated", layer = layer + 2)
+	cool_animation.transform = transform
+	cool_animation.pixel_x = pixel_x
+	cool_animation.pixel_y = pixel_y
+	flick_overlay_view(cool_animation, src, 0.8 SECONDS)
 
 /// Causes the damage and fades out the mob.
 /mob/living/simple_animal/spiral_shun/proc/Resolve()
@@ -1037,8 +1060,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	QDEL_NULL(contempt_status) // Also frees the victim
 	affected_turfs = null
 	// Fade out
-	animate(src, fadeout_time, alpha = 0)
+	animate(cool_animation, time = fadeout_time * 0.5, alpha = 255)
+	animate(time = fadeout_time * 0.5, alpha = 0)
 	QDEL_IN(src, fadeout_time + 1)
+	QDEL_IN(cool_animation, fadeout_time + 1)
 
 #undef STATUS_EFFECT_GAZE
 #undef STATUS_EFFECT_AWE
