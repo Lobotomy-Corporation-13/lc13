@@ -2542,7 +2542,7 @@
 	icon_state = "faelantern_spike_fast"
 
 #define STATUS_EFFECT_GAZE /datum/status_effect/stacking/perversion_weapon_gaze
-#define STATUS_EFFECT_CONTEMPT /datum/status_effect/perversion_weapon_contempt
+#define STATUS_EFFECT_CONTEMPT /datum/status_effect/display/perversion_weapon_contempt
 #define COLOR_PERVERSION_LANCE "#e2a91a"
 #define COLOR_PERVERSION_KATANA "#c50e0e"
 /obj/item/ego_weapon/perversion
@@ -2555,11 +2555,13 @@
 	On a long cooldown, you may unsheathe the weapon to transform it into the 'Katana' form. The unsheathing has a brief windup and performs 'Cascading Gaze of Awe Underneath Contempt', immobilizing you and boosting your defenses, creating a damaging field that destroys projectiles and ending with burst damage. \n\
 	Enemies will take extra damage from this attack based on Gaze stacks, and enemies with Contempt will, in addition, be rooted for the duration of the attack.\n\
 	\n\
-	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Gaze/Contempt and gains a 3-hit combo against targets with Gaze/Contempt, consisting of a dash, cleave and Gaze-consuming finisher."
-	icon_state = "contempt"
+	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Gaze/Contempt and gains a 3-hit combo against targets with Gaze/Contempt, consisting of a dash or normal slash, a cleave and a Gaze-consuming finisher."
+	icon_state = "perversion_lance"
 	icon = 'icons/obj/ego_weapons.dmi'
-	lefthand_file = 'icons/mob/inhands/weapons/ego_lefthand.dmi'
-	righthand_file = 'icons/mob/inhands/weapons/ego_righthand.dmi'
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
 	force = 89 // Change lance_force too
 	swingstyle = WEAPONSWING_THRUST
 	swingcolor = COLOR_PERVERSION_LANCE
@@ -2637,8 +2639,8 @@
 
 	// Icon vars
 	var/lance_icon = 'icons/obj/ego_weapons.dmi'
-	var/lance_icon_state = "contempt"
-	var/lance_inhands_list = list("left" = 'icons/mob/inhands/weapons/ego_lefthand.dmi', "right" = 'icons/mob/inhands/weapons/ego_righthand.dmi')
+	var/lance_icon_state = "perversion_lance"
+	var/lance_inhands_list = list("left" = 'icons/mob/inhands/64x64_lefthand.dmi', "right" = 'icons/mob/inhands/64x64_righthand.dmi')
 	var/lance_swingcolor = COLOR_PERVERSION_LANCE
 
 	// Text vars
@@ -2673,8 +2675,8 @@
 
 	// Icon vars
 	var/katana_icon = 'icons/obj/ego_weapons.dmi'
-	var/katana_icon_state = "daredevil"
-	var/katana_inhands_list = list("left" = 'icons/mob/inhands/weapons/ego_lefthand.dmi', "right" = 'icons/mob/inhands/weapons/ego_righthand.dmi')
+	var/katana_icon_state = "perversion_katana"
+	var/katana_inhands_list = list("left" = 'icons/mob/inhands/64x64_lefthand.dmi', "right" = 'icons/mob/inhands/64x64_righthand.dmi')
 	var/katana_swingcolor = COLOR_PERVERSION_KATANA
 
 	// Text vars
@@ -2715,6 +2717,19 @@
 	sheathed ? (color = lance_swingcolor) : (color = katana_swingcolor)
 	return color
 
+/obj/item/ego_weapon/perversion/examine(mob/user)
+	. = ..()
+	. += span_info("While sheathed, this weapon inflicts [base_gaze_application] stacks of Gaze on enemies each hit.")
+	. += span_info("<b>Lance Dash</b>: Applies [lance_dash_extra_gaze_stacks] additional Gaze stacks, has a range of [lance_dash_range] tiles, cooldown of [lance_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("<b>Lance Followup</b>: Deals [lance_followup_damage_coeff]x of original damage in a [lance_followup_range] tile long AoE, also applying [lance_followup_extra_gaze_stacks] additional Gaze stacks. Includes the original target.")
+	. += span_info("")
+	. += span_info("While unsheathed, this weapon loses [lance_force - katana_force] force, but deals (1 + [katana_additive_damage_coeff_per_gaze] * gaze stacks)x damage to enemies. Contempt counts as 7 Gaze stacks.")
+	. += span_info("<b>Katana Dash</b>: Has a range of [katana_dash_range] tiles, cooldown of [katana_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("<b>Katana Cleave</b>: Deals its damage in a [katana_cleave_degrees] degree wide, [katana_cleave_range] long slash. Original target will not take additional damage.")
+	. += span_info("<b>Katana Finisher</b>: Clears Gaze/Contempt and deals [katana_finisher_damage_coeff]x damage before Justice, Force Multiplier and Gaze calculations.")
+	. += span_info("")
+	. += span_info("The weapon may be drawn once every [unsheathe_cooldown_duration * 0.1] seconds.")
+	. += span_info("The draw attack will consist of [cascading_gaze_tick_amount - 1] hits dealing [cascading_gaze_periodic_damage] damage, and a finisher hit dealing [katana_force * cascading_gaze_base_damage_coeff] damage. These values are pre-Justice and pre-Gaze scaling.")
 /* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
 
 /obj/item/ego_weapon/perversion/attack_self(mob/living/user)
@@ -2963,7 +2978,7 @@
 
 			// Calculating damage based on gaze or contempt
 			var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = L.has_status_effect(STATUS_EFFECT_GAZE)
-			var/datum/status_effect/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			var/datum/status_effect/display/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
 			var/extra_coeff = 1
 			if(contempting)
 				extra_coeff += (cascading_gaze_additive_damage_coeff_per_gaze * 7)
@@ -3200,7 +3215,7 @@
 /obj/projectile/ego_bullet/fell_shrapnel
 	name = "fell shrapnel"
 	icon_state = "bonebullet_long"
-	color = COLOR_PERVERSION_KATANA
+	color = COLOR_MOSTLY_PURE_PINK
 	damage = 25
 	speed = 0.4
 	damage_type = RED_DAMAGE
@@ -3239,7 +3254,7 @@
 		var/final_damage_coeff = 1
 		var/mob/living/artwork = target
 		var/datum/status_effect/stacking/perversion_weapon_gaze/lets_take_a_gaze = artwork.has_status_effect(STATUS_EFFECT_GAZE)
-		var/datum/status_effect/perversion_weapon_contempt/uh_oh = artwork.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		var/datum/status_effect/display/perversion_weapon_contempt/uh_oh = artwork.has_status_effect(STATUS_EFFECT_CONTEMPT)
 		if(uh_oh)
 			uh_oh.refresh()
 			final_damage_coeff += (gaze_coeff * 7)
@@ -3260,7 +3275,7 @@
 // Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
 /obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
-	var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+	var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
 	if(contempting)
 		return
 	else if(gazing)
@@ -3301,7 +3316,7 @@
 			return
 
 		var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
-		var/datum/status_effect/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
+		var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
 		var/extra_coeff = 1
 
 		if(contempting)
@@ -3411,58 +3426,78 @@
 	if(victim.stat >= DEAD)
 		return
 
+	// Only trigger if we're swapping to a new target or if this is the very first strike in our combo chain
 	if(combo == 0 || last_target_hit != victim)
 		var/distance = get_dist(user, victim)
+
+		// We are currently in Lance form.
 		if(sheathed)
 			if(lance_dash_cooldown > world.time)
 				to_chat(user, span_danger("You haven't recovered from your last lunge yet!"))
-				balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]")
+				balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]s.")
 				return
 			if(distance > lance_dash_range)
 				to_chat(user, span_danger("You can't reach your target with your lunge!"))
 				return
-			if((distance < 2) || (!(can_see(user, victim, lance_dash_range))))
+			if((distance < 2) || (!(can_see(user, victim, lance_dash_range)))) // If this is too janky we can change it for checktoolreach()
 				return
 
 			lance_dash_cooldown = world.time + lance_dash_cooldown_duration
+			playsound(get_turf(src), 'sound/weapons/fixer/generic/dodge2.ogg', 100, FALSE, 5)
+
+			// Actual dash.
 			for(var/i in 2 to distance)
+				// Afterimage VFX
 				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
 				D.alpha = min(100 + i*25, 200)
 				animate(D, alpha = 0, time = 2 + i*2)
+
+				// Movement
 				step_towards(user, victim)
+
 			user.visible_message(span_danger("[user] lunges at [victim] with [src]!"))
 			SetComboState(1, victim, user)
 
 			if((get_dist(user, victim) < 2))
 				victim.attackby(src, user)
 
+		// We are currently in Katana form.
 		else
+			// Only allow us to dash to targets with Gaze/Contempt.
 			if(!victim.has_status_effect(STATUS_EFFECT_GAZE) && !victim.has_status_effect(STATUS_EFFECT_CONTEMPT))
 				to_chat(user, span_danger("Your target has no Gaze or Contempt!"))
 				balloon_alert(user, "Target has no Gaze/Contempt.")
 				return
 			if(katana_dash_cooldown > world.time)
 				to_chat(user, span_danger("You haven't recovered from your last dash yet!"))
-				balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]")
+				balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]s.")
 				return
 			if(distance > katana_dash_range)
 				to_chat(user, span_danger("You can't reach your target with your dash!"))
 				return
-			if((distance < 2) || (!(can_see(user, victim, katana_dash_range))))
+			if((distance < 2) || (!(can_see(user, victim, katana_dash_range)))) // If this is too janky we can change it for checktoolreach()
 				return
 
 			katana_dash_cooldown = world.time + katana_dash_cooldown_duration
+			playsound(get_turf(src), 'sound/weapons/fixer/generic/dodge2.ogg', 100, FALSE, 5)
+
+			// Actual dash
 			for(var/i in 2 to distance)
-				step_towards(user, victim)
+				// Afterimage VFX
 				var/obj/effect/temp_visual/decoy/D = new /obj/effect/temp_visual/decoy(get_turf(user), user)
 				D.alpha = min(100 + i*25, 200)
 				animate(D, alpha = 0, time = 2 + i*2)
+
+				// Movement
+				step_towards(user, victim)
+
 			user.visible_message(span_danger("[user] dashes towards [victim] with [src]!"))
 			if((get_dist(user, victim) < 2))
 				victim.attackby(src, user)
 
 			SetComboState(1, victim, user)
 
+// This is an additional AoE caused when we strike the same target we previously hit with a lance lunge. It will hit in an AoE, including the main target, too. Deals damage and inflicts extra Gaze.
 /obj/item/ego_weapon/perversion/proc/LanceFollowupThrust(turf/target, mob/living/carbon/human/user)
 	if(!target || !user)
 		return
@@ -3513,6 +3548,8 @@
 	color = COLOR_PERVERSION_LANCE
 	duration = 5
 
+// This is an AoE caused as part of our second hit on the same target during Katana form. Only able to be triggered on targets with Gaze/Contempt. It won't hit the main target again.
+// Uses altered Megafauna-Claw Wide Slash code.
 /obj/item/ego_weapon/perversion/proc/KatanaCleave(turf/target, mob/living/carbon/human/user)
 	if(!target || !user)
 		return
@@ -3527,6 +3564,7 @@
 	var/turf/T = get_turf(user)
 	shared_hitlist |= T
 
+	// Actual damage and VFX happens in KatanaCleaveHit(). This proc just calls that proc on the turfs determined by katana_cleave_degrees.
 	var/angle_to_target = Get_Angle(T, target)
 	var/angle = angle_to_target + katana_cleave_degrees * -0.5
 	if(angle > 360)
@@ -3547,10 +3585,12 @@
 		line = getline(T, T2)
 		addtimer(CALLBACK(src, PROC_REF(KatanaCleaveHit), line, user), i * 0.04)
 
+// Receives a line of turfs to hit with a slash. It will add both turfs and mobs into the hitlist to avoid repeating slashes.
 /obj/item/ego_weapon/perversion/proc/KatanaCleaveHit(list/turf_line, mob/living/carbon/human/user)
 	if(!islist(turf_line) || !user)
 		return
 
+	// Damage calc
 	var/base_damage = force * force_multiplier
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
@@ -3577,8 +3617,9 @@
 			shared_hitlist |= L
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T, pick(GLOB.alldirs))
 
+			// We want to deal more damage if the enemy has Gaze or Contempt (7 stacks of Gaze).
 			var/final_damage = base_damage
-			var/datum/status_effect/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
+			var/datum/status_effect/display/perversion_weapon_contempt/contempting = L.has_status_effect(STATUS_EFFECT_CONTEMPT)
 			if(contempting)
 				final_damage *= (1 + (katana_additive_damage_coeff_per_gaze * 7))
 			else
@@ -3598,6 +3639,9 @@
 	duration = 30 SECONDS
 	stack_threshold = 7
 	consumed_on_threshold = TRUE
+	/// We wanna display an overlaid 10x10 icon on the target, status_effect/display has the framework for this but we're in the /stacking subtype...
+	/// ...thus, we're making a dummy status effect just to display the overlay.
+	var/datum/status_effect/display/attached_visual_status
 
 /datum/status_effect/stacking/perversion_weapon_gaze/threshold_cross_effect()
 	owner.apply_status_effect(STATUS_EFFECT_CONTEMPT)
@@ -3606,10 +3650,24 @@
 /datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
 	refresh()
 	. = ..()
+	GenerateAttachedVisualStatus()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/on_remove()
+	. = ..()
+	QDEL_NULL(attached_visual_status)
 
 /datum/status_effect/stacking/perversion_weapon_gaze/tick()
 	if(!can_have_status())
 		qdel(src)
+
+/// Creates a dummy status effect to display our little gaze icon
+/datum/status_effect/stacking/perversion_weapon_gaze/proc/GenerateAttachedVisualStatus()
+	QDEL_NULL(attached_visual_status)
+	if(owner)
+		attached_visual_status = owner.apply_status_effect(/datum/status_effect/display/gaze_display/perversion, stacks)
+
+/datum/status_effect/display/gaze_display/perversion
+	id = "gaze_display_perversion"
 
 /atom/movable/screen/alert/status_effect/perversion_weapon_gaze
 	name = "Gaze \[Perversion\]"
@@ -3617,8 +3675,9 @@
 	desc = "You're entranced by the blood-red blade."
 
 /// Contempt status effect.
-/datum/status_effect/perversion_weapon_contempt
+/datum/status_effect/display/perversion_weapon_contempt
 	id = "perversion_weapon_contempt"
+	display_name = "contempt"
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	duration = 10 SECONDS
 

@@ -32,9 +32,8 @@ if the hands remain alive, the hands close with a huge AOE. (You need allies to 
 
 ----------- EGO -----------
 --- Weapons ---
-> Contempt, Awe: WAW - The current javelin. I might slightly update it
-> Perversion: ALEPH - A rankbump weapon concept. The weapon used in the N. Corp EGO; some sort of spear/lance that works as a sheath for a katana.
-I think another dev wanted to design it, but if they don't wanna I also have ideas for it.
+> Contempt, Awe: WAW - The current javelin.
+> Perversion: ALEPH - A rankbump weapon. It's Huan's/Contemptshu's weapon.
 --- Armour ---
 > Contempt, Awe: WAW - We don't have sprites for this. If I don't see some pop up soon I'll make a codersprite.
 I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE/PALE] but unsure for now.
@@ -98,11 +97,28 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/work_damage_per_awe_stack = 4 // :malkstare: (This can actually be so much worse than an ALEPH if you let it stack)
 	var/work_delay_reduction_per_awe_stack = 1.1 // In deciseconds. Positive: player doesn't need to experience the tedium of works with more boxes than ALEPH abnos. Negative: no time for medipens to save you.
 	work_damage_type = BLACK_DAMAGE
-	chem_type = /datum/reagent/abnormality/sin/pride
+	chem_type = /datum/reagent/abnormality/sin/pride // This is the colour of the egg's gem.
 	ego_list = list(
 		/datum/ego_datum/weapon/contempt,
-		/datum/ego_datum/armor/heaven,
+		/datum/ego_datum/armor/goldrush, // oopsie placeholder
+		/datum/ego_datum/weapon/perversion,
 	)
+
+	generic_bubbles = list(
+		1 = list("%PERSON is evidently not prepared to work with %ABNO...", "%PERSON is anxiously counting the seconds until they're allowed to leave the cell."),
+		2 = list("%PERSON can't muster up the courage to face away from %ABNO, but is starting to crack under the pressure of its gaze...", "%PERSON hurriedly flips through the instruction manual for %ABNO."),
+		3 = list("%PERSON is torn on whether to look at %ABNO or not.", "%PERSON keeps track of %ABNO's floaty movements..."),
+		4 = list("%PERSON knows better than to show any reverence for %ABNO.", "%PERSON acts decisively to keep %ABNO in check."),
+		5 = list("%PERSON is unimpressed by %ABNO.", "%PERSON is unaffected by %ABNO's near-magnetic pull.", "%PERSON is counting the seconds until their busywork is concluded."),
+	)
+
+	work_bubbles = list(
+		ABNORMALITY_WORK_INSTINCT = list("%PERSON polishes %ABNO's golden frame, but the bloodstains are there to stay.", "%PERSON mends some cracks on %ABNO."),
+		ABNORMALITY_WORK_INSIGHT = list("%PERSON cleans up %ABNO's cell. The land of gold must be spotless."),
+		ABNORMALITY_WORK_ATTACHMENT = list("%PERSON seems to think %ABNO cares for conversation. They are wrong.", "%PERSON seems taken by a trance, pleading for %ABNO to acknowledge them. It does not."),
+		ABNORMALITY_WORK_REPRESSION = list("%PERSON averts their gaze from %ABNO.", "%PERSON resists %ABNO's effects and glares back at it with contempt of their own."),
+	)
+
 	//gift_type = /datum/ego_gifts/spiral
 
 	/* --- Breach --- */
@@ -149,9 +165,9 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 
 	/* --- Periodic Damage (It Shall Be Insidious) --- */
 	// BLACK damage
-	var/insidious_damage = 40
+	var/insidious_damage = 30
 	var/insidious_cooldown
-	var/insidious_cooldown_duration = 15 SECONDS
+	var/insidious_cooldown_duration = 9 SECONDS
 
 	/* --- Periodic Telegraphed AoEs (It Shall Grip) --- */
 	// BLACK damage
@@ -174,7 +190,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	// Balance these three variables to ensure that it's a DPS check that can barely be met by 1 WAW agent using the right damage types. Destroying this thing with HE weapons should be EXTREMELY difficult if not impossible.
 	var/shun_hands_hp = 440
 	var/shun_hands_resistances = list(RED_DAMAGE = 0.9, WHITE_DAMAGE = 1.2, BLACK_DAMAGE = 0.7, PALE_DAMAGE = 1.5)
-	var/shun_windup = 6.5 SECONDS // 440/6.5 requires 67.7 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
+	var/shun_windup = 7 SECONDS // 440/7 requires 62.9 true DPS to kill. This is doable for WAW weapons if factoring in Justice.
 	/// Holds a list of the buckling mobs created by this attack, we need to wipe this if we die/get staggered
 	var/list/shun_mobs = list()
 
@@ -740,7 +756,6 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	duration = 20 SECONDS
 	stack_threshold = 7
 	consumed_on_threshold = TRUE
-	var/mutable_appearance/gaze_icon
 	var/mob/living/simple_animal/hostile/abnormality/spiral/spiral_ref
 	var/spiral_outgoing_damage_coeff_additive_per_gaze = 0.25 // At 6 stacks, Spiral deals 2.5x damage to you. A bad time. (Starts at 1x)
 	var/spiral_inbound_damage_coeff_additive_per_gaze = 0.2 // At 6 stacks, Spiral takes up to 1.3x damage from you. (Starts at 0.1x)
@@ -754,18 +769,15 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	if(!istype(spiral_mob))
 		qdel(src)
 		return FALSE
-	gaze_icon = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects.dmi', "guilt", -MUTATIONS_LAYER)
 	spiral_ref = spiral_mob
 	. = ..()
 	playsound(get_turf(owner), 'sound/abnormalities/silentgirl/Guilt_Apply.ogg', 25, 0, 2)
-	owner.add_overlay(gaze_icon)
 	// Set up the desc to explain what this status even does in case people didn't read the book.
 	linked_alert.desc += " Taking [1 + (spiral_outgoing_damage_coeff_additive_per_gaze * stacks)]x damage from Spiral of Contempt, and dealing [0.1 + (spiral_inbound_damage_coeff_additive_per_gaze * stacks)]x damage to it (normal: 0.1x)."
 	return
 
 /datum/status_effect/stacking/spiral_gaze/on_remove()
-	owner.cut_overlay(gaze_icon)
-	QDEL_NULL(gaze_icon)
+
 	if(!spiral_ref)
 		return
 	spiral_ref.gazed_fighters -= owner
@@ -808,6 +820,16 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /datum/status_effect/stacking/spiral_gaze/tick()
 	if(!can_have_status())
 		qdel(src)
+
+/datum/status_effect/display/gaze_display
+	id = "gaze_display_spiral"
+	duration = -1
+	display_name = "gaze"
+
+/datum/status_effect/display/gaze_display/on_creation(mob/living/new_owner, amount)
+	if(isnum(amount) && (amount in 1 to 6))
+		display_name += "_[amount]"
+	. = ..()
 
 /* --------- Contempt/It Shall Shun (Combat) --------- */
 /// Contempt status effect. This spawns a clasped hands mob that must be defeated to pass the DPS check.
