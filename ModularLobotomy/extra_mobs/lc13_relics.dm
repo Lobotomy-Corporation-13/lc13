@@ -33,6 +33,8 @@
 	var/static/max_attunements = 2
 	/// world.time when the attunement cooldown expires (set on fail)
 	var/attunement_cooldown_end = 0
+	/// Debug mode — skips attunement conditions, allowing anyone to attune
+	var/debug_attune = FALSE
 
 /obj/item/ruin_relic/Destroy()
 	Unattune()
@@ -157,7 +159,7 @@
 	if(attunement_counts[key] >= max_attunements)
 		to_chat(user, span_warning("You are already attuned to too many relics. Break an existing attunement first."))
 		return FALSE
-	if(CheckAttunement(user))
+	if(debug_attune || CheckAttunement(user))
 		OnAttuneSuccess(user)
 	else
 		OnAttuneFail(user)
