@@ -74,6 +74,58 @@ Civilian
 /datum/outfit/job/civilian
 	name = "Civilan"
 	jobtype = /datum/job/civilian
-	uniform = /obj/item/clothing/under/suit/charcoal
+	uniform = null
+
+	suit = null
+
 	belt = null
 	ears = null
+
+/datum/outfit/job/civilian/pre_equip(mob/living/carbon/human/H, visualsOnly = FALSE)
+	uniform = pick(/obj/item/clothing/under/shorts/red,
+		/obj/item/clothing/under/shorts/green,
+		/obj/item/clothing/under/shorts/blue,
+		/obj/item/clothing/under/shorts/black,
+		/obj/item/clothing/under/shorts/grey,
+		/obj/item/clothing/under/shorts/purple,
+		/obj/item/clothing/under/shorts/red,
+		/obj/item/clothing/under/pants/mustangjeans,
+		/obj/item/clothing/under/pants/blackjeans,
+		/obj/item/clothing/under/pants/youngfolksjeans,
+		/obj/item/clothing/under/pants/white,
+		/obj/item/clothing/under/pants/red,
+		/obj/item/clothing/under/pants/black,
+		/obj/item/clothing/under/pants/tan,
+		/obj/item/clothing/under/pants/track,
+		/obj/item/clothing/under/pants/jeans,
+		/obj/item/clothing/under/pants/khaki,
+		/obj/item/clothing/under/pants/camo,
+		/obj/item/clothing/under/color/random)
+
+	suit = pick(/obj/item/clothing/suit/armor/vest/alt,
+		/obj/item/clothing/suit/jacket/puffer,
+		/obj/item/clothing/suit/jacket/puffer/vest,
+		/obj/item/clothing/suit/jacket/miljacket,
+		/obj/item/clothing/suit/jacket/letterman,
+		/obj/item/clothing/suit/jacket/letterman_red,
+		/obj/item/clothing/suit/jacket/letterman_syndie,
+		/obj/item/clothing/suit/jacket/letterman_ncorp,
+		/obj/item/clothing/suit/changshan_red,
+		/obj/item/clothing/suit/changshan_blue,
+		/obj/item/clothing/suit/cheongsam_red,
+		/obj/item/clothing/suit/cheongsam_blue,
+		/obj/item/clothing/suit/hooded/wintercoat,
+		/obj/item/clothing/suit/hawaiian,
+		/obj/item/clothing/suit/pirate,
+		/obj/item/clothing/suit/armor/hos,
+		/obj/item/clothing/suit/gothcoat,
+		/obj/item/clothing/suit/armor/vest/russian_coat,
+		/obj/item/clothing/suit/aristocrat,
+		/obj/item/clothing/suit/aristocrat/red,
+		/obj/item/clothing/suit/aristocrat/brown,
+		/obj/item/clothing/suit/aristocrat/blue,
+		/obj/item/clothing/suit/striped_sweater,
+		/obj/item/clothing/suit/jacket,
+		/obj/item/clothing/suit/jacket/leather,
+		/obj/item/clothing/suit/jacket/leather/overcoat)
+	..()
