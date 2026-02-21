@@ -549,3 +549,4 @@
 	name = "gourmand's boots"
 	desc = "Boots worn by someone delving into the culinary world"
 	icon_state = "pierre"
+	inhand_icon_state = "pierre"

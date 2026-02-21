@@ -36,7 +36,7 @@ Backstreets Butcher
 /datum/outfit/job/butcher
 	name = "Backstreets Butcher"
 	jobtype = /datum/job/butcher
-	uniform = /obj/item/clothing/under/rank/civilian/pierre
+	uniform = /obj/item/clothing/under/suit/lobotomy/pierre
 	belt = /obj/item/gun/magic/hook
 	l_pocket = /obj/item/restraints/handcuffs
 	shoes = /obj/item/clothing/shoes/pierre
