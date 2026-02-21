@@ -1028,8 +1028,19 @@
 	// Dimension manager is created here, but templates are loaded lazily
 	// when capture_players() is called to avoid sleeping in Initialize
 	dimension_manager = new /datum/serpent_dimension_manager(src)
+	// Dark pulsing outline
+	add_filter("serpent_glow", 2, list("type" = "outline", "color" = "#00000060", "size" = 2))
+	addtimer(CALLBACK(src, PROC_REF(start_glow_loop)), rand(1, 19))
+
+/// Starts the pulsing dark outline animation loop
+/obj/item/serpents_book/proc/start_glow_loop()
+	var/filter = get_filter("serpent_glow")
+	if(filter)
+		animate(filter, alpha = 200, size = 3, time = 20, loop = -1, easing = SINE_EASING)
+		animate(alpha = 60, size = 1, time = 20, easing = SINE_EASING)
 
 /obj/item/serpents_book/Destroy()
+	remove_filter("serpent_glow")
 	if(dimension_manager)
 		QDEL_NULL(dimension_manager)
 	return ..()
