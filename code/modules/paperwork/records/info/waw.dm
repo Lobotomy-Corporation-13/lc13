@@ -605,7 +605,7 @@
 		"Agent Rogun grew fascinated with T-03-20-04 after completing a work. This phenomenon is referred to as 'Awe'. His next work assignment with the Abnormality had significantly improved performance metrics, including total Enkephalin generation and faster work, but the Agent received significantly more damage. This phenomenon intensified as the Agent was assigned more works with the Abnormality.",
 		"When Agent Mei, who had been affected by Awe, was assigned to work on an Abnormality that wasn't T-03-20-04, Awe's effects vanished and the Qliphoth Counter lowered.",
 		"The Awe phenomenon does not commence or intensify when Repression work is performed, but its effects still apply.",
-		"During the incident on ███████████, during the suppression of T-03-20-04, attacks were shown to be nearly ineffective. When Agent Mirabelle struck the Abnormality's hands, her attacks seemed to become more effective, but T-03-20-04's own attacks also became more lethal against her.",
+		"During the incident on ███████████, throughout the suppression of T-03-20-04, attacks were shown to be nearly ineffective. When Agent Mirabelle struck the Abnormality's hands, her attacks seemed to become more effective, but T-03-20-04's own attacks also became more lethal against her.",
 		"During suppression of T-03-20-04, the Abnormality is known to restrain threats that draw its ire using sub-entities named 'Clasping Hands'. If an Agent is restrained in such a way, it is imperative to destroy these sub-entities immediately. After the 'Clasping Hands' are destroyed, T-03-20-04 is rendered vulnerable for a few seconds."
 		)
 

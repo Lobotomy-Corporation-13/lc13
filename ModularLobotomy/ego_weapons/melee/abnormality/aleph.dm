@@ -2589,6 +2589,8 @@
 	/// Keeps track of your last hit mob. Combo requires you to focus on one, like Da Capo (this is actually a buff as it lets you reset)
 	var/last_target_hit
 
+	/// List of cooldowns for balloon alerts... To avoid spamming the user. Duration for all is 0.5s
+	var/list/balloon_text_cooldowns = list("unsheathe_cd", "combo_timeout", "lance_lunge" = 0, "katana_dash" = 0, "katana_no_gaze" = 0)
 	// You may unsheathe the weapon to turn it from a lance into a katana, the process of unsheathing also does a very strong AOE that gets EXTREMELY powerful on opponents with Gaze stacks.
 	var/sheathed = TRUE
 	var/unsheathe_cooldown
@@ -2710,6 +2712,8 @@
 /obj/item/ego_weapon/perversion/Destroy(force)
 	if(cascading_gaze_active)
 		DrawAttackEnd(cascading_gaze_last_used_by)
+	for(var/anything in cascading_gaze_residual_datums) // I really really hope you didn't put anything weird here.
+		qdel(anything)
 	return ..()
 
 /obj/item/ego_weapon/perversion/GetSwingColor()
@@ -2743,7 +2747,9 @@
 		if(unsheathe_cooldown > world.time)
 			var/timeleft = (unsheathe_cooldown - world.time) * 0.1
 			to_chat(user, span_danger("You're not ready to draw [src] yet. [timeleft] seconds left."))
-			balloon_alert(user, "Not ready. Current CD: [timeleft] seconds.")
+			if(balloon_text_cooldowns["unsheathe_cd"] <= world.time)
+				balloon_alert(user, "Not ready. Current CD: [timeleft] seconds.")
+				balloon_text_cooldowns["unsheathe_cd"] = world.time + 0.5 SECONDS
 			return FALSE
 
 		playsound(get_turf(user), unsheathe_sound, 100, vary = FALSE, extrarange = 7)
@@ -2908,7 +2914,10 @@
 	. = ..()
 	FreeVictim()
 	animate(owner, 0.2 SECONDS, pixel_y = owner.pixel_y - 16)
-	qdel(attached_vfx)
+
+/datum/status_effect/perversion_weapon_root/Destroy(force)
+	QDEL_NULL(attached_vfx) // This must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	return ..()
 
 /obj/effect/perversion_weapon_root_vfx
 	name = "clasping hands"
@@ -3307,7 +3316,9 @@
 	last_target_hit = null
 	if(combo != 0)
 		to_chat(user, span_danger("The momentum from your attacks fade. Combo reset."))
-		balloon_alert(user, "The momentum from your attacks fades.")
+		if(balloon_text_cooldowns["combo_timeout"] <= world.time)
+			balloon_alert(user, "The momentum from your attacks fades.")
+			balloon_text_cooldowns["combo_timeout"] = world.time + 0.5 SECONDS
 	combo = 0
 
 /obj/item/ego_weapon/perversion/proc/SetForceFromTargetGaze(mob/living/target)
@@ -3330,6 +3341,12 @@
 
 		force *= extra_coeff
 		return
+
+/obj/item/ego_weapon/perversion/melee_attack_chain(mob/user, atom/target, params)
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return FALSE
+	. = ..()
+
 
 /obj/item/ego_weapon/perversion/attack(mob/living/target, mob/living/user)
 	// Setting the correct hitsound before attacking...
@@ -3438,7 +3455,9 @@
 		if(sheathed)
 			if(lance_dash_cooldown > world.time)
 				to_chat(user, span_danger("You haven't recovered from your last lunge yet!"))
-				balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]s.")
+				if(balloon_text_cooldowns["lance_lunge"] <= world.time)
+					balloon_alert(user, "Lunge on cooldown. CD: [(lance_dash_cooldown - world.time) * 0.1]s.")
+					balloon_text_cooldowns["lance_lunge"] = world.time + 0.5 SECONDS
 				return
 			if(distance > lance_dash_range)
 				to_chat(user, span_danger("You can't reach your target with your lunge!"))
@@ -3470,11 +3489,15 @@
 			// Only allow us to dash to targets with Gaze/Contempt.
 			if(!victim.has_status_effect(STATUS_EFFECT_GAZE) && !victim.has_status_effect(STATUS_EFFECT_CONTEMPT))
 				to_chat(user, span_danger("Your target has no Gaze or Contempt!"))
-				balloon_alert(user, "Target has no Gaze/Contempt.")
+				if(balloon_text_cooldowns["katana_no_gaze"] <= world.time)
+					balloon_alert(user, "Target has no Gaze/Contempt.")
+					balloon_text_cooldowns["katana_no_gaze"] = world.time + 0.5 SECONDS
 				return
 			if(katana_dash_cooldown > world.time)
 				to_chat(user, span_danger("You haven't recovered from your last dash yet!"))
-				balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]s.")
+				if(balloon_text_cooldowns["katana_dash"] <= world.time)
+					balloon_alert(user, "Dash on cooldown. CD: [(katana_dash_cooldown - world.time) * 0.1]s.")
+					balloon_text_cooldowns["katana_dash"] = world.time + 0.5 SECONDS
 				return
 			if(distance > katana_dash_range)
 				to_chat(user, span_danger("You can't reach your target with your dash!"))
@@ -3655,7 +3678,12 @@
 	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
 		qdel(src)
 		return
+	if(istype(new_owner))
+		RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(VanishIntoTheEther))
 	. = ..()
+
+/datum/status_effect/stacking/perversion_weapon_gaze/proc/VanishIntoTheEther()
+	qdel(src)
 
 /datum/status_effect/stacking/perversion_weapon_gaze/add_stacks(stacks_added)
 	if(owner && owner.has_status_effect(STATUS_EFFECT_CONTEMPT))
@@ -3679,9 +3707,11 @@
 	if(owner)
 		attached_visual_status = owner.apply_status_effect(/datum/status_effect/display/gaze_display/perversion, stacks)
 
+// Dummy status effect with icon overlay
 /datum/status_effect/display/gaze_display/perversion
 	id = "gaze_display_perversion"
 
+// Alert
 /atom/movable/screen/alert/status_effect/perversion_weapon_gaze
 	name = "Gaze \[Perversion\]"
 	icon_state = "gaze"
@@ -3694,9 +3724,14 @@
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	duration = 10 SECONDS
 
-/datum/status_effect/perversion_weapon_contempt/tick()
-	if(!owner || owner.stat >= DEAD)
-		qdel(src)
+/datum/status_effect/display/perversion_weapon_contempt/on_creation(mob/living/new_owner, ...)
+	. = ..()
+	if(istype(new_owner))
+		RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(VanishIntoTheEther))
+
+// There has to be a better way to do this?
+/datum/status_effect/display/perversion_weapon_contempt/proc/VanishIntoTheEther()
+	qdel(src)
 
 /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	name = "Contempt \[Perversion\]"
