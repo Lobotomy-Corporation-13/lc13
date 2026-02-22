@@ -2549,13 +2549,8 @@
 	name = "perversion"
 	desc = "A twisting, ornate polearm. There's a blood-red blade sheathed within it. \n\
 	'Be awed, or be awe-struck.'"
-	special = "This weapon has two forms. In 'Lance' form, it inflicts Gaze on hit, and it is able to perform a basic combo on targets consisting of a lunging thrust followed by an AoE piercing thrust. \n\
-	Gaze may be stacked on enemies up to 7 times - once it reaches 7, it becomes Contempt instead. By themselves, neither Gaze nor Contempt do anything. \n\
-	\n\
-	On a long cooldown, you may unsheathe the weapon to transform it into the 'Katana' form. The unsheathing has a brief windup and performs 'Cascading Gaze of Awe Underneath Contempt', immobilizing you and boosting your defenses, creating a damaging field that destroys projectiles and ending with burst damage. \n\
-	Enemies will take extra damage from this attack based on Gaze stacks, and enemies with Contempt will, in addition, be rooted for the duration of the attack.\n\
-	\n\
-	While in the 'Katana' form, base DPS is lowered, but the weapon benefits from greatly increased damage against targets with Gaze/Contempt and gains a 3-hit combo against targets with Gaze/Contempt, consisting of a dash or normal slash, a cleave and a Gaze-consuming finisher."
+	special = "This weapon has two forms, each with differing special attacks. In its Lance form, it inflicts Gaze on targets, and in its Katana form, it deals additional damage to targets with Gaze. \n\
+	Switching the weapon from Lance to Katana form has a cooldown, and performs a special attack."
 	icon_state = "perversion_lance"
 	icon = 'icons/obj/ego_weapons.dmi'
 	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
@@ -2723,18 +2718,38 @@
 
 /obj/item/ego_weapon/perversion/examine(mob/user)
 	. = ..()
+	. += span_notice("<a href='?src=[REF(src)];action=full_examine'>\[View Expanded Description]</a>")
+
+/obj/item/ego_weapon/perversion/Topic(href, list/href_list)
+	. = ..()
+	if(.)
+		return
+	if(href_list["action"] != "full_examine")
+		return
+	var/mob/user = usr
+	if(!QDELETED(user) && istype(user))
+		on_examine(user, user)
+
+/obj/item/ego_weapon/perversion/proc/on_examine(mob/user)
+	if(QDELETED(user) || !istype(user))
+		return
+	. = list()
 	. += span_info("While sheathed, this weapon inflicts [base_gaze_application] stacks of Gaze on enemies each hit.")
-	. += span_info("<b>Lance Dash</b>: Applies [lance_dash_extra_gaze_stacks] additional Gaze stacks, has a range of [lance_dash_range] tiles, cooldown of [lance_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("<b>Lance Dash</b>: Initiate by attacking at range. Applies [lance_dash_extra_gaze_stacks] additional Gaze stacks, has a range of [lance_dash_range] tiles, cooldown of [lance_dash_cooldown_duration * 0.1] seconds.")
 	. += span_info("<b>Lance Followup</b>: Deals [lance_followup_damage_coeff]x of original damage in a [lance_followup_range] tile long AoE, also applying [lance_followup_extra_gaze_stacks] additional Gaze stacks. Includes the original target.")
 	. += span_info("")
 	. += span_info("While unsheathed, this weapon loses [lance_force - katana_force] force, but deals (1 + [katana_additive_damage_coeff_per_gaze] * gaze stacks)x damage to enemies. Contempt counts as 7 Gaze stacks.")
-	. += span_info("<b>Katana Dash</b>: Has a range of [katana_dash_range] tiles, cooldown of [katana_dash_cooldown_duration * 0.1] seconds.")
+	. += span_info("All Katana special attacks require Gaze/Contempt on your target to work.")
+	. += span_info("<b>Katana Dash</b>: Initiate by attacking at range. Has a range of [katana_dash_range] tiles, cooldown of [katana_dash_cooldown_duration * 0.1] seconds.")
 	. += span_info("<b>Katana Cleave</b>: Deals its damage in a [katana_cleave_degrees] degree wide, [katana_cleave_range] tile long slash. Original target will not take additional damage.")
 	. += span_info("<b>Katana Finisher</b>: Clears Gaze/Contempt and deals [katana_finisher_damage_coeff]x damage before Justice, Force Multiplier and Gaze calculations.")
 	. += span_info("")
 	. += span_info("The weapon may be drawn once every [unsheathe_cooldown_duration * 0.1] seconds.")
 	. += span_info("The draw attack will consist of [cascading_gaze_tick_amount - 1] hits dealing [cascading_gaze_periodic_damage] damage, and a finisher hit dealing [katana_force * cascading_gaze_base_damage_coeff] damage. These values are pre-Justice and pre-Gaze scaling.")
-/* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
+	for(var/line in .)
+		to_chat(user, line)
+
+	/* ------------------------ SHEATHING AND UNSHEATHING ------------------------ */
 
 /obj/item/ego_weapon/perversion/attack_self(mob/living/user)
 	if(!CanUseEgo(user))

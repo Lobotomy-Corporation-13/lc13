@@ -608,7 +608,8 @@
 		"During the incident on ███████████, throughout the suppression of T-03-20-04, attacks were shown to be nearly ineffective. When Agent Mirabelle struck the Abnormality's hands, her attacks seemed to become more effective, but T-03-20-04's own attacks also became more lethal against her.",
 		"During suppression of T-03-20-04, the Abnormality is known to restrain threats that draw its ire using sub-entities named 'Clasping Hands'. If an Agent is restrained in such a way, it is imperative to destroy these sub-entities immediately. After the 'Clasping Hands' are destroyed, T-03-20-04 is rendered vulnerable for a few seconds."
 		)
-
+	abno_breach_damage_type = "RED / BLACK"
+	abno_breach_damage_count = "High"
 	abno_work_rates = list(
 		"Instinct" = "Low | Low | Low | Common | High",
 		"Insight" = "Low | Low | Common | High | High",
