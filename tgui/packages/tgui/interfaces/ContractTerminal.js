@@ -58,6 +58,7 @@ export const ContractTerminal = (
           <CityMapView
             act={act}
             data={data}
+            ctx={context}
           />
         )}
       </Window.Content>
@@ -72,6 +73,7 @@ const ContractsView = props => {
     user_balance = 0,
     is_hana = false,
     has_account = false,
+    can_view_contracts = false,
     contract_types = [],
     active_contracts = [],
     targets = [],
@@ -99,9 +101,11 @@ const ContractsView = props => {
           patrolCost={patrol_cost}
         />
       )}
-      <ActivePanel
-        contracts={active_contracts}
-      />
+      {!!can_view_contracts && (
+        <ActivePanel
+          contracts={active_contracts}
+        />
+      )}
     </>
   );
 };
@@ -472,12 +476,21 @@ class CityMapCanvas extends Component {
       viewWorldX,
       viewWorldY,
       onPlaceWaypoint,
+      disabled,
+      waypoints = [],
     } = this.props;
+    const wx = gx + viewWorldX;
+    const wy = gy + viewWorldY;
+    // Allow removing existing waypoints
+    // even when at limit
+    const isExisting = waypoints.some(
+      wp => wp.x === wx && wp.y === wy,
+    );
+    if (disabled && !isExisting) {
+      return;
+    }
     if (onPlaceWaypoint) {
-      onPlaceWaypoint(
-        gx + viewWorldX,
-        gy + viewWorldY,
-      );
+      onPlaceWaypoint(wx, wy);
     }
   }
 
@@ -497,7 +510,7 @@ class CityMapCanvas extends Component {
 }
 
 const CityMapView = props => {
-  const { act, data } = props;
+  const { act, data, ctx } = props;
   const {
     mapGrid,
     viewWorldX = 0,
@@ -507,7 +520,19 @@ const CityMapView = props => {
     canMoveE = false,
     canMoveW = false,
     waypoints = [],
+    contract_types = [],
   } = data;
+  const [selType] = useSharedState(
+    ctx, 'selType', '',
+  );
+  const typeDef = contract_types.find(
+    t => t.type === selType,
+  );
+  const isSingleWP = typeDef
+    && typeDef.single_waypoint;
+  const maxWP = isSingleWP ? 1 : 10;
+  const atLimit = waypoints.length
+    >= maxWP;
 
   if (!mapGrid) {
     return (
@@ -560,6 +585,7 @@ const CityMapView = props => {
             viewWorldX={viewWorldX}
             viewWorldY={viewWorldY}
             waypoints={waypoints}
+            disabled={atLimit}
             onPlaceWaypoint={
               (wx, wy) =>
                 act('place_waypoint', {
@@ -607,7 +633,7 @@ const CityMapView = props => {
           color="label">
           {'Waypoints: '
             + waypoints.length
-            + ' / 10'}
+            + ' / ' + maxWP}
         </Box>
       </Box>
     </Section>

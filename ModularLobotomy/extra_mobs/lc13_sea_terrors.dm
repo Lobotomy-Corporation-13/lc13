@@ -121,6 +121,8 @@
 	desc = "A dark, pulsing mark left by creatures of the deep sea. It burns to stand on."
 	icon = 'icons/obj/smooth_structures/alien/weeds1.dmi'
 	icon_state = "weeds1-15"
+	pixel_x = -4
+	pixel_y = -4
 	alpha = 120
 	max_integrity = 50
 	expand_cooldown = 2 SECONDS

@@ -35,21 +35,23 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	pictures_left--
 	p.set_picture(picture, TRUE, TRUE)
 
-	// Create intel snapshots from human mobs in the picture and store on the photo
+	// Create intel snapshot for the main target (first human in frame)
 	if(picture && length(picture.mobs_seen))
-		var/list/target_names = list()
+		var/mob/living/carbon/human/main_target
 		for(var/mob/living/carbon/human/M in picture.mobs_seen)
-			var/datum/seven_intel_snapshot/snap = new(M)
-			LAZYADD(p.seven_snapshots, snap)
-			target_names += M.name
-		// Add timestamp to photo desc so fixer can read it
+			main_target = M
+			break
 		var/timestamp = gameTimestamp()
-		picture.picture_desc += " Taken at [timestamp]."
-		p.desc = picture.picture_desc
-		// Tell fixer only the names of targets captured
-		if(length(target_names))
-			to_chat(user, span_notice("Subjects captured: [target_names.Join(", ")]. [pictures_left] photos remaining."))
+		if(main_target)
+			var/datum/seven_intel_snapshot/snap = new(main_target)
+			LAZYADD(p.seven_snapshots, snap)
+			picture.picture_desc += " Subject: [main_target.name]."
+			picture.picture_desc += " Taken at [timestamp]."
+			p.desc = picture.picture_desc
+			to_chat(user, span_notice("Subject captured: [main_target.name]. [pictures_left] photos remaining."))
 		else
+			picture.picture_desc += " Taken at [timestamp]."
+			p.desc = picture.picture_desc
 			to_chat(user, span_notice("No valid subjects in frame. [pictures_left] photos remaining."))
 	else
 		to_chat(user, span_notice("Photo captured. [pictures_left] remaining."))
@@ -136,7 +138,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 /// Can be used in hand, dropped on the ground, or hidden inside items. Supports disguise.
 /obj/item/seven_recorder
 	name = "Seven surveillance recorder"
-	desc = "A miniature recording device. Can be disguised or hidden inside items. Use in hand to toggle recording."
+	desc = "A miniature recording device that captures nearby speech. Use in hand to toggle recording. Hit the recorder with an item to disguise it as that item. Click the recorder on an item to hide it inside."
 	icon = 'icons/obj/assemblies/new_assemblies.dmi'
 	icon_state = "voice"
 	w_class = WEIGHT_CLASS_TINY
@@ -170,6 +172,11 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 		. = ..()
 		if(recording)
 			. += span_notice("It is actively recording.")
+		else
+			. += span_notice("Use in hand to start recording.")
+			if(!disguised)
+				. += span_notice("Hit it with an item to copy that item's appearance as a disguise.")
+			. += span_notice("Click it on an item to hide it inside and begin recording.")
 		if(disguised)
 			. += span_notice("It has been disguised as [disguise_name].")
 		. += span_notice("[length(stored_messages)] messages recorded.")
@@ -700,8 +707,10 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	desc = "Contains Seven Association surveillance glasses and a spy bug."
 
 /obj/item/storage/box/seven_spyglass/PopulateContents()
-	new /obj/item/spy_bug/seven(src)
-	new /obj/item/clothing/glasses/sunglasses/spy/seven(src)
+	var/obj/item/spy_bug/seven/newbug = new(src)
+	var/obj/item/clothing/glasses/sunglasses/spy/seven/newglasses = new(src)
+	newbug.linked_glasses = newglasses
+	newglasses.linked_bug = newbug
 
 /// Seven-branded spy bug
 /obj/item/spy_bug/seven

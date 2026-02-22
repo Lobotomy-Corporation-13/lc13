@@ -205,8 +205,8 @@
 
 /// Ravenous Vessel - A sentient cauldron fed with organic matter to charge blood stacks.
 /// Use in hand with different intents to trigger effects scaled by blood.
-/// GRAB = Bubble (buff), DISARM = Puff (area debuff), HARM = Shock (burst damage).
-/// At max blood, the effect backfires and harms the user as well.
+/// GRAB = Bubble (Offense Level Up), DISARM = Puff (BLACK damage AoE + smoke), HARM = Shock (electrocution over 3s).
+/// Backfire chance scales with blood level (+25% if visibly bloody). Backfire includes the user in the effect.
 /// All blood is consumed on use.
 /obj/item/ruin_relic/ravenous_vessel
 	name = "???"
@@ -511,7 +511,8 @@
 
 /// Golden Locket - Links to a carbon human and tracks their health, sanity, location, and direction.
 /// While open, creates an empathic bond that shares a % of the target's damage as WHITE damage to the holder.
-/// The longer it stays open, the stronger the bond grows. At maximum duration, becomes NODROP and drains sanity.
+/// Bond strength ramps +5% every 60s (cap 50%). After 5 minutes, becomes NODROP and drains sanity.
+/// If the linked target dies while open, kills the holder, fully revives the target, and shatters the locket.
 /obj/item/ruin_relic/golden_locket
 	name = "???"
 	desc = "An ornate golden locket with fine engravings worn smooth by age. It feels warm to the touch, as though something inside is still breathing."
@@ -891,8 +892,8 @@
 // ==========================================================
 
 /// Void Reliquary - A golden geometric box that absorbs damage taken by the holder as charge.
-/// When activated, spawns an anchored structure that grants Defense Level Up to nearby carbons
-/// while also increasing their hallucination. Duration scales with stored charge.
+/// When activated, spawns an anchored structure that grants Defense Level Up, heals 5% max HP
+/// (brute, fire, sanity), and increases hallucination for nearby carbons. Duration scales with stored charge.
 /obj/item/ruin_relic/void_reliquary
 	name = "???"
 	desc = "A golden geometric box with intricate facets. It feels heavier than it should, and staring into its surface makes your thoughts feel distant."
@@ -997,7 +998,7 @@
 // Void Reliquary Structure - Hovering area effect
 // ==========================================================
 
-/// The deployed void reliquary structure. Grants Defense Level Up and hallucination to nearby carbons.
+/// The deployed void reliquary structure. Grants Defense Level Up, heals 5% max HP, and adds hallucination to nearby carbons.
 /obj/structure/void_reliquary
 	name = "void reliquary"
 	desc = "A golden box hovering in place, filled with an abyssal void. The air around it shimmers."
@@ -1079,9 +1080,9 @@
 // ==========================================================
 
 /// Effigy Tablet - A stone tablet that can be engraved with a person's likeness using a sharp weapon.
-/// The engraved person can perform a blood sacrifice (below 50% HP) to fill the engraving with gold.
-/// The golden figure can then be extracted and used by another person to fully heal themselves,
-/// at the cost of the engraved person taking equivalent damage.
+/// The engraved person can perform a blood sacrifice (below 50% HP, costs 25% maxHP) to fill it with gold.
+/// The golden figure can then be extracted and used by another person to heal their brute, burn, and toxin damage,
+/// at the cost of the engraved person taking equivalent BRUTE damage.
 /obj/item/ruin_relic/effigy_tablet
 	name = "???"
 	desc = "A smooth stone tablet covered in faint, worn carvings. Running your fingers across it fills you with an inexplicable sense of obligation."
@@ -1221,7 +1222,7 @@
 // ==========================================================
 
 /// A golden humanoid figure extracted from the effigy tablet.
-/// Using it fully heals the user, but the engraved person takes equivalent damage.
+/// Using it heals the user's brute, burn, and toxin damage. The engraved person takes equivalent BRUTE damage.
 /obj/item/ruin_relic/golden_figure
 	name = "???"
 	desc = "A small golden humanoid figure, still warm to the touch. It pulses faintly, as though a heartbeat is trapped inside the metal."
@@ -1454,9 +1455,10 @@
 
 // ==================== CORRUPTED SKULL ====================
 
-/// Corrupted Skull - Drains life from nearby mobs via beams, building corruption.
-/// Ages the user over time — older users drain harder.
-/// At max corruption (150), transforms into a hostile mob that attacks the user.
+/// Corrupted Skull - Drains BLACK damage from nearby mobs via beams, building corruption. Heals the holder per target.
+/// Deals 5x damage to non-human mobs. At 75+ corruption, tethers drained targets to the holder.
+/// Ages the user over time (gray hair, nearsightedness, dust at age 969). Older users drain harder.
+/// After 200 drain ticks, permanently applies rotten skin. At max corruption (150), transforms into a hostile mob.
 /// When killed, reverts to an item with corruption reset.
 /obj/item/ruin_relic/corrupted_skull
 	name = "???"
@@ -1991,7 +1993,7 @@
 
 // ==================== TESU DOLL ====================
 
-/// Tesu Doll - Grants Poise while held. Inflicts Tremor when dropped. Whispers eerie phrases.
+/// Tesu Doll - Use in hand to apply a 100 HP mental shield (absorbs WHITE damage). 60-second cooldown. Whispers eerie phrases.
 /obj/item/ruin_relic/tesu_doll
 	name = "???"
 	desc = "A small white figure dangling from a frayed string. Its hollow eyes stare ahead with unsettling calm."
@@ -2152,10 +2154,10 @@
 
 // ==================== PULSING SPHERE ====================
 
-/// Pulsing Sphere - Hitting a mob applies Burn to both target and user.
 /// Pulsing Sphere - Throw to launch a bouncing projectile that ricochets up to 50 times.
-/// Pierces mobs, bounces off walls and structures. Gains speed and damage every 5 bounces.
-/// Explodes on the 50th wall hit for 100 RED damage in a 5x5 area, then drops to the ground.
+/// Passes through mobs dealing RED damage + Overheat. Bounces off walls and structures.
+/// Gains speed and damage every 5 bounces. Explodes for 100 RED damage + Overheat in a 5x5 area,
+/// leaves flame tiles, and drops the relic at the explosion site.
 /obj/item/ruin_relic/pulsing_sphere
 	name = "???"
 	desc = "A smooth sphere that shifts between dull pink and angry red. It radiates faint warmth that prickles your skin."
@@ -2502,7 +2504,7 @@
 
 // ==================== CREEPY DOLL ====================
 
-/// Creepy Doll - Applies Sinking to nearby mobs. Use in hand to learn info about a chosen person at the cost of Mental Decay.
+/// Creepy Doll - While in combat, applies Sinking to nearby mobs. Use in hand to learn random info about a chosen player at the cost of 5 Mental Decay.
 /obj/item/ruin_relic/creepy_doll
 	name = "???"
 	desc = "A small stitched doll with uneven button eyes. You feel a chill when it faces you, as if something behind those buttons is looking back."
@@ -2660,7 +2662,8 @@
 
 // ==================== FLAYED SKIN ====================
 
-/// Flayed Skin - Changes face overlay and applies buffs/debuffs based on holder's HP.
+/// Flayed Skin - Changes face overlay based on holder's HP. While in combat, grants Offense Level Up at high/low HP
+/// and Defense Level Up at mid HP. Below 20% HP, also applies Fragile.
 /obj/item/ruin_relic/flayed_skin
 	name = "???"
 	desc = "A taut piece of skin-like material stretched over a thin frame. A face is visible on its surface, its expression shifting when you aren't looking."
@@ -2881,7 +2884,7 @@
 
 // ==================== STRANGE BOX ====================
 
-/// Strange Box - Shake it to produce random grown food at the cost of hunger. 60-second cooldown.
+/// Strange Box - Shake it to produce 1-5 random grown food at the cost of 30 hunger per item. 60-second cooldown.
 /obj/item/ruin_relic/strange_box
 	name = "???"
 	desc = "A small, dark, featureless box. It doesn't open, but something inside shifts when you tilt it."

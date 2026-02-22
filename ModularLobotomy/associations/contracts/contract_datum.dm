@@ -23,6 +23,8 @@
 	var/datum/bank_account/issuer_account
 	/// Reference to the mob who created the contract
 	var/mob/living/issuer_mob
+	/// Reference to the mob who accepted the contract (for payment on completion)
+	var/mob/living/acceptor_mob
 
 	// --- Target ---
 	/// Target mob (for person-targeting contracts)
@@ -98,6 +100,7 @@
 			squad.remove_contract(src)
 	issuer_account = null
 	issuer_mob = null
+	acceptor_mob = null
 	target_mob = null
 	target_location = null
 	squad = null
@@ -184,7 +187,7 @@
 /datum/association_contract/proc/should_pause()
 	return FALSE
 
-/// Complete the contract — award completion EXP, clean up.
+/// Complete the contract — award completion EXP, pay the acceptor, clean up.
 /datum/association_contract/proc/complete()
 	if(state != CONTRACT_STATE_ACTIVE)
 		return
@@ -192,6 +195,8 @@
 	complete_time = world.time
 	stop_timers()
 	cleanup_zones()
+	// Pay the fixer who accepted the contract
+	pay_acceptor()
 	// Award completion EXP bonus
 	if(squad)
 		var/bonus = completion_exp * get_exp_multiplier()
@@ -199,6 +204,21 @@
 		for(var/mob/living/M in squad.members)
 			to_chat(M, span_nicegreen("Contract \"[contract_name]\" completed! +[bonus] EXP bonus."))
 		squad.remove_contract(src)
+
+/// Pay the contract payment to the acceptor's bank account via their ID card.
+/datum/association_contract/proc/pay_acceptor()
+	if(!acceptor_mob || QDELETED(acceptor_mob) || payment_amount <= 0)
+		return
+	if(!ishuman(acceptor_mob))
+		return
+	var/mob/living/carbon/human/H = acceptor_mob
+	var/obj/item/card/id/ID = H.get_idcard(TRUE)
+	if(!ID?.registered_account)
+		to_chat(acceptor_mob, span_warning("Payment of [payment_amount] Ahn could not be deposited — no bank account found on your ID."))
+		return
+	ID.registered_account.adjust_money(payment_amount)
+	to_chat(acceptor_mob, span_nicegreen("[payment_amount] Ahn deposited to your account for completing \"[contract_name]\"."))
+
 
 /// Fail the contract — no EXP, no refund.
 /datum/association_contract/proc/fail()

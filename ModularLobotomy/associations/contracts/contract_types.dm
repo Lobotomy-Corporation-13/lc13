@@ -416,3 +416,38 @@
 		return "Surveillance post. [time_text] remaining (PAUSED \u2014 no recorder in area)"
 	return "Surveillance post. [time_text] remaining"
 
+// --- Surveillance Post Map Viewer (TGUI) ---
+
+/datum/association_contract/surveillance_post/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PatrolRouteMap")
+		ui.open()
+
+/datum/association_contract/surveillance_post/ui_state()
+	return GLOB.always_state
+
+/// Static data: full city map grid and surveillance point as a single waypoint.
+/datum/association_contract/surveillance_post/ui_static_data(mob/user)
+	var/list/data = list()
+	if(citymap?.generated)
+		data["mapGrid"] = citymap.cached_map_grid
+		data["gridWidth"] = citymap.grid_width
+		data["gridHeight"] = citymap.grid_height
+		data["offsetX"] = citymap.offset_x
+		data["offsetY"] = citymap.offset_y
+	if(surveillance_point)
+		data["waypoints"] = list(surveillance_point)
+	else
+		data["waypoints"] = list()
+	return data
+
+/// Dynamic data: current progress.
+/datum/association_contract/surveillance_post/ui_data(mob/user)
+	var/list/data = list()
+	data["currentWaypoint"] = 1
+	data["stayProgress"] = 0
+	data["stayRequired"] = 0
+	data["statusText"] = get_status_text()
+	return data
+

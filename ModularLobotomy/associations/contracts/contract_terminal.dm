@@ -132,6 +132,9 @@
 	data["is_hana"] = is_hana
 	data["is_fixer"] = debug_mode ? FALSE : is_fixer
 	data["has_account"] = !!account
+	// Check if user can view active contracts (observers, hana, and association fixers only)
+	var/can_view_contracts = isobserver(user) || is_hana || is_fixer
+	data["can_view_contracts"] = can_view_contracts
 	// Available contract types
 	data["contract_types"] = contract_type_defs
 	// Valid targets: living human players on the same Z-level
@@ -146,11 +149,12 @@
 				continue
 			targets += list(list("name" = H.name, "ref" = ref(H)))
 	data["targets"] = targets
-	// Active contracts across all squads
+	// Active contracts across all squads (only for authorized viewers)
 	var/list/active = list()
-	for(var/datum/association_squad/squad in GLOB.association_squads)
-		for(var/datum/association_contract/C in squad.active_contracts)
-			active += list(C.get_display_data())
+	if(can_view_contracts)
+		for(var/datum/association_squad/squad in GLOB.association_squads)
+			for(var/datum/association_contract/C in squad.active_contracts)
+				active += list(C.get_display_data())
 	data["active_contracts"] = active
 	// Waypoints (dynamic — changes with user interaction)
 	data["waypoints"] = citymap_waypoints

@@ -136,8 +136,14 @@
 		to_chat(buyer, span_warning("Insufficient funds. Need [cost] Ahn."))
 		return
 	id.registered_account.adjust_money(-cost)
+	var/spawned = 0
 	for(var/i in 1 to amount)
 		var/obj/item/new_item = new path(get_turf(buyer))
-		buyer.put_in_hands(new_item)
-	to_chat(buyer, span_notice("Purchased [entry["name"]] for [cost] Ahn."))
+		if(new_item)
+			buyer.put_in_hands(new_item)
+			spawned++
+	if(spawned > 1)
+		to_chat(buyer, span_notice("Purchased [spawned]x [entry["name"]] for [cost] Ahn."))
+	else
+		to_chat(buyer, span_notice("Purchased [entry["name"]] for [cost] Ahn."))
 	. = TRUE

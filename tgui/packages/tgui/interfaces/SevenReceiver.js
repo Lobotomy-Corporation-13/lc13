@@ -109,7 +109,7 @@ export const SevenReceiver = (props, context) => {
                       { ref: rec.ref }
                     )} />
                   <Button
-                    content="Retrieve"
+                    content="Retrieve (2000 Ahn)"
                     icon="hand-paper"
                     color="bad"
                     onClick={() => act(

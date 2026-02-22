@@ -41,15 +41,16 @@
 	if(contract.source == CONTRACT_SOURCE_CIVILIAN)
 		. += span_nicegreen("Civilian contract — 2x EXP bonus!")
 
-/// Use in hand to read contract details, accept contracts, or view patrol route.
+/// Use in hand to read contract details, accept contracts, or view route/location map.
 /obj/item/association_contract_paper/attack_self(mob/user)
 	if(!contract)
 		to_chat(user, span_warning("This contract paper is blank."))
 		return
-	// If contract is active and is a patrol route, show the route map
-	if(contract.state == CONTRACT_STATE_ACTIVE && istype(contract, /datum/association_contract/patrol_route))
-		contract.ui_interact(user)
-		return
+	// If contract is active and has a map viewer, show the route/location map
+	if(contract.state == CONTRACT_STATE_ACTIVE)
+		if(istype(contract, /datum/association_contract/patrol_route) || istype(contract, /datum/association_contract/surveillance_post))
+			contract.ui_interact(user)
+			return
 	// Show the contract paper TGUI (includes Accept button when applicable)
 	ui_interact(user)
 
@@ -67,7 +68,9 @@
 		to_chat(fixer, span_notice("You declined the contract."))
 		return
 	// Activate the contract
+	contract.acceptor_mob = fixer
 	if(!contract.activate(exp.squad))
+		contract.acceptor_mob = null
 		to_chat(fixer, span_warning("Failed to activate contract."))
 		return
 	to_chat(fixer, span_nicegreen("You accepted the [contract.contract_name] contract. Skills are now active!"))
@@ -114,7 +117,9 @@
 			if(!exp.squad.can_accept_contract())
 				to_chat(user, span_warning("Your squad is on contract cooldown. Please wait."))
 				return
+			contract.acceptor_mob = user
 			if(!contract.activate(exp.squad))
+				contract.acceptor_mob = null
 				to_chat(user, span_warning("Failed to activate contract."))
 				return
 			to_chat(user, span_nicegreen("You accepted the [contract.contract_name] contract. Skills are now active!"))
@@ -157,7 +162,9 @@
 		to_chat(target, span_notice("You declined the contract."))
 		return
 	// Activate the contract
+	contract.acceptor_mob = target
 	if(!contract.activate(exp.squad))
+		contract.acceptor_mob = null
 		to_chat(user, span_warning("Failed to activate contract."))
 		return
 	to_chat(user, span_nicegreen("[target] accepted the [contract.contract_name] contract!"))
