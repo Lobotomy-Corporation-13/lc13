@@ -47,8 +47,9 @@
 	user.status_flags |= GODMODE // Make invulnerable during leap
 	user.invisibility = 0 // Make invisible but still controllable
 
-	// Add flying trait and speed boost
+	// Add flying trait, block hands, and speed boost
 	ADD_TRAIT(user, TRAIT_MOVE_FLYING, SPECIES_FLIGHT_TRAIT)
+	ADD_TRAIT(user, TRAIT_HANDS_BLOCKED, "great_leap")
 	user.add_movespeed_modifier(/datum/movespeed_modifier/great_leap_flying)
 
 	// Schedule automatic landing after duration
@@ -98,8 +99,9 @@
 	if(warning_effect)
 		QDEL_NULL(warning_effect)
 
-	// Remove flying trait and all speed modifiers
+	// Remove flying trait, hands blocked, and all speed modifiers
 	REMOVE_TRAIT(leaper, TRAIT_MOVE_FLYING, SPECIES_FLIGHT_TRAIT)
+	REMOVE_TRAIT(leaper, TRAIT_HANDS_BLOCKED, "great_leap")
 	leaper.remove_movespeed_modifier(/datum/movespeed_modifier/great_leap_flying)
 	leaper.remove_movespeed_modifier(/datum/movespeed_modifier/great_leap_landing)
 
