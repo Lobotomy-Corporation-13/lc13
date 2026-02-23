@@ -269,8 +269,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	for(var/mob/living/awestruck in awed_workers)
 		awestruck.remove_status_effect(STATUS_EFFECT_AWE)
 		awed_workers -= awestruck
-	Teleport() // Z-level safe
 	. = ..()
+	Teleport() // Z-level safe
 
 // No regular movement for Spiral. Being able to flee from it is part of the balance.
 /mob/living/simple_animal/hostile/abnormality/spiral/Move(turf/newloc, dir, step_x, step_y)
@@ -709,6 +709,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /datum/status_effect/stacking/spiral_awe/on_creation(mob/living/new_owner, stacks_to_apply, datum/abnormality/spiral_datum)
 	if(istype(spiral_datum))
 		spiral_abno_datum = spiral_datum
+		if(!(spiral_abno_datum.current.status_flags & GODMODE)) // Breached???
+			spiral_abno_datum = null
+			qdel(src)
+			return FALSE
 		return ..()
 	else
 		qdel(src)
