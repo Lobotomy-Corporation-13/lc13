@@ -3305,6 +3305,7 @@
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
 	var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
 	if(contempting)
+		contempting.refresh()
 		return
 	else if(gazing)
 		gazing.add_stacks(stacks_to_apply)
@@ -3737,7 +3738,7 @@
 	id = "perversion_weapon_contempt"
 	display_name = "contempt"
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
-	duration = 10 SECONDS
+	duration = 20 SECONDS
 
 /datum/status_effect/display/perversion_weapon_contempt/on_creation(mob/living/new_owner, ...)
 	. = ..()
