@@ -130,12 +130,13 @@ export const DieciKnowledge = (props, context) => {
                             < synthesis_cost
                           || g.level >= 5
                         }
-                        onClick={() =>
-                          act('synthesize', {
+                        onClick={() => act(
+                          'synthesize',
+                          {
                             type: g.type,
                             level: g.level,
-                          })
-                        }
+                          }
+                        )}
                       />
                     </Stack.Item>
                   ))}
