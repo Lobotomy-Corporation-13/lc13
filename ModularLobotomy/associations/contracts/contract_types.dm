@@ -643,3 +643,328 @@
 		return "Protecting [target_text]. [time_text] remaining (PAUSED \u2014 no fixer nearby)"
 	return "Protecting [target_text]. [time_text] remaining"
 
+// ============================================================
+// Host Event — Objective-based, Dieci-specific
+// ============================================================
+
+/// Hire Dieci fixers to host a public event at a designated location.
+/// Completes when the Director finishes hosting the required event type.
+/// Hosting at the marked waypoint location doubles event tick EXP.
+/datum/association_contract/host_event
+	contract_name = "Host Event"
+	contract_type = "host_event"
+	category = CONTRACT_CATEGORY_OBJECTIVE
+	association_type = ASSOCIATION_DIECI
+	/// Required event type key (e.g., "book_reading", "training_session", "charity_sermon")
+	var/required_event_type = ""
+	/// Human-readable event type name
+	var/required_event_name = ""
+	/// The single waypoint for the event location
+	var/list/event_waypoint
+	/// Z-level for the waypoint turf
+	var/waypoint_zlevel = 0
+	/// City map reference
+	var/datum/contract_citymap/citymap
+
+/// Override start_timers to enable passive EXP ticks even for objective contracts.
+/datum/association_contract/host_event/start_timers()
+	tick_timer_id = addtimer(CALLBACK(src, PROC_REF(tick)), CONTRACT_PASSIVE_INTERVAL, TIMER_STOPPABLE | TIMER_LOOP)
+
+/// Only awards passive EXP — completion is driven by on_event_complete().
+/datum/association_contract/host_event/tick()
+	if(state != CONTRACT_STATE_ACTIVE)
+		stop_timers()
+		return
+	if(squad)
+		var/exp_amount = CONTRACT_PASSIVE_EXP_TICK * get_exp_multiplier()
+		squad.award_exp_to_all(exp_amount)
+		passive_exp_accumulated += exp_amount
+
+/datum/association_contract/host_event/activate(datum/association_squad/_squad)
+	. = ..()
+	if(!.)
+		return
+	// Spawn zone effects around the event waypoint
+	if(event_waypoint && waypoint_zlevel)
+		LAZYINITLIST(zone_effects)
+		var/wp_x = event_waypoint["x"]
+		var/wp_y = event_waypoint["y"]
+		for(var/dx in -CONTRACT_HOST_EVENT_WAYPOINT_RANGE to CONTRACT_HOST_EVENT_WAYPOINT_RANGE)
+			for(var/dy in -CONTRACT_HOST_EVENT_WAYPOINT_RANGE to CONTRACT_HOST_EVENT_WAYPOINT_RANGE)
+				var/turf/T = locate(wp_x + dx, wp_y + dy, waypoint_zlevel)
+				if(T)
+					var/obj/effect/contract_zone/zone = new(T)
+					zone_effects += zone
+					show_zone_to_squad(zone)
+
+/// Set the required event type based on tier value. 1=Book Reading, 2=Training Session, 3=Charity Sermon.
+/datum/association_contract/host_event/proc/set_event_tier(tier_value)
+	switch(tier_value)
+		if(1)
+			required_event_type = "book_reading"
+			required_event_name = "Book Reading"
+		if(2)
+			required_event_type = "training_session"
+			required_event_name = "Training Session"
+		if(3)
+			required_event_type = "charity_sermon"
+			required_event_name = "Charity Sermon"
+		else
+			required_event_type = "book_reading"
+			required_event_name = "Book Reading"
+
+/// Check if a turf is within the waypoint proximity range.
+/datum/association_contract/host_event/proc/is_near_waypoint(turf/T)
+	if(!event_waypoint || !T)
+		return FALSE
+	if(T.z != waypoint_zlevel)
+		return FALSE
+	return (abs(T.x - event_waypoint["x"]) <= CONTRACT_HOST_EVENT_WAYPOINT_RANGE && abs(T.y - event_waypoint["y"]) <= CONTRACT_HOST_EVENT_WAYPOINT_RANGE)
+
+/// Called by the event system when the matching event type completes.
+/datum/association_contract/host_event/proc/on_event_complete()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return
+	complete()
+
+/datum/association_contract/host_event/set_completion_exp()
+	completion_exp = CONTRACT_COMPLETION_OBJECTIVE
+
+/datum/association_contract/host_event/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	return "Host [required_event_name]. Awaiting event completion"
+
+/datum/association_contract/host_event/get_display_data()
+	var/list/data = ..()
+	data["required_event_type"] = required_event_type
+	data["required_event_name"] = required_event_name
+	return data
+
+// --- Host Event Map Viewer (TGUI) ---
+
+/datum/association_contract/host_event/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PatrolRouteMap")
+		ui.open()
+
+/datum/association_contract/host_event/ui_state()
+	return GLOB.always_state
+
+/// Static data: full city map grid and event waypoint.
+/datum/association_contract/host_event/ui_static_data(mob/user)
+	var/list/data = list()
+	if(citymap?.generated)
+		data["mapGrid"] = citymap.cached_map_grid
+		data["gridWidth"] = citymap.grid_width
+		data["gridHeight"] = citymap.grid_height
+		data["offsetX"] = citymap.offset_x
+		data["offsetY"] = citymap.offset_y
+	if(event_waypoint)
+		data["waypoints"] = list(event_waypoint)
+	else
+		data["waypoints"] = list()
+	return data
+
+/// Dynamic data: current status.
+/datum/association_contract/host_event/ui_data(mob/user)
+	var/list/data = list()
+	data["currentWaypoint"] = 1
+	data["stayProgress"] = 0
+	data["stayRequired"] = 0
+	data["statusText"] = get_status_text()
+	return data
+
+// ============================================================
+// Medical Relief — Objective-based, Dieci-specific
+// ============================================================
+
+/// Provide medical aid to unique patients. Completes when the required number of different people are healed.
+/datum/association_contract/medical_relief
+	contract_name = "Medical Relief"
+	contract_type = "medical_relief"
+	category = CONTRACT_CATEGORY_OBJECTIVE
+	association_type = ASSOCIATION_DIECI
+	/// Number of unique patients required for completion
+	var/required_patients = 5
+	/// List of weakrefs to unique carbons healed so far
+	var/list/healed_refs = list()
+
+/// Override start_timers to enable passive EXP ticks even for objective contracts.
+/datum/association_contract/medical_relief/start_timers()
+	tick_timer_id = addtimer(CALLBACK(src, PROC_REF(tick)), CONTRACT_PASSIVE_INTERVAL, TIMER_STOPPABLE | TIMER_LOOP)
+
+/// Only awards passive EXP — completion is driven by on_heal().
+/datum/association_contract/medical_relief/tick()
+	if(state != CONTRACT_STATE_ACTIVE)
+		stop_timers()
+		return
+	if(squad)
+		var/exp_amount = CONTRACT_PASSIVE_EXP_TICK * get_exp_multiplier()
+		squad.award_exp_to_all(exp_amount)
+		passive_exp_accumulated += exp_amount
+
+/// Set the required patient count based on tier.
+/datum/association_contract/medical_relief/proc/set_patient_tier(tier_value)
+	switch(tier_value)
+		if(1)
+			required_patients = CONTRACT_MEDICAL_RELIEF_TIER1_PATIENTS
+		if(2)
+			required_patients = CONTRACT_MEDICAL_RELIEF_TIER2_PATIENTS
+		if(3)
+			required_patients = CONTRACT_MEDICAL_RELIEF_TIER3_PATIENTS
+		else
+			required_patients = CONTRACT_MEDICAL_RELIEF_TIER1_PATIENTS
+
+/// Called by the healing kit when a patient is healed. Tracks unique patients.
+/datum/association_contract/medical_relief/proc/on_heal(mob/living/carbon/target)
+	if(state != CONTRACT_STATE_ACTIVE)
+		return
+	if(!target || QDELETED(target))
+		return
+	// Check if this target is already tracked
+	var/target_ref = ref(target)
+	if(target_ref in healed_refs)
+		return
+	healed_refs += target_ref
+	// Notify squad of progress
+	if(squad)
+		for(var/mob/living/M in squad.members)
+			to_chat(M, span_notice("Medical relief progress: [length(healed_refs)]/[required_patients] patients treated."))
+	// Check completion
+	if(length(healed_refs) >= required_patients)
+		complete()
+
+/datum/association_contract/medical_relief/set_completion_exp()
+	completion_exp = CONTRACT_COMPLETION_OBJECTIVE
+
+/datum/association_contract/medical_relief/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	return "[length(healed_refs)]/[required_patients] patients treated"
+
+/datum/association_contract/medical_relief/get_display_data()
+	var/list/data = ..()
+	data["healed_count"] = length(healed_refs)
+	data["required_patients"] = required_patients
+	return data
+
+// ============================================================
+// Tend to Person — Duration-based, Dieci-specific
+// ============================================================
+
+/// Tend to a target person. Timer ticks while a squad member is within 7 tiles and target is above 50% HP.
+/// Healing the target grants +50% bonus EXP per tick.
+/datum/association_contract/tend_to_person
+	contract_name = "Tend to Person"
+	contract_type = "tend_to_person"
+	category = CONTRACT_CATEGORY_DURATION
+	association_type = ASSOCIATION_DIECI
+	/// Whether a squad member healed the target since the last tick (for bonus EXP)
+	var/healed_recently = FALSE
+
+/datum/association_contract/tend_to_person/activate(datum/association_squad/_squad)
+	. = ..()
+	if(!.)
+		return
+	if(target_mob)
+		var/turf/T = get_turf(target_mob)
+		if(T)
+			var/obj/effect/contract_zone/zone = new(T)
+			LAZYINITLIST(zone_effects)
+			zone_effects += zone
+			show_zone_to_squad(zone)
+			RegisterSignal(target_mob, COMSIG_MOVABLE_MOVED, PROC_REF(on_target_moved))
+
+/// Move the zone effect when the target moves.
+/datum/association_contract/tend_to_person/proc/on_target_moved(datum/source)
+	SIGNAL_HANDLER
+	var/turf/T = get_turf(target_mob)
+	for(var/obj/effect/contract_zone/zone in zone_effects)
+		zone.forceMove(T)
+
+/datum/association_contract/tend_to_person/cleanup_zones()
+	cleanup_target_signals()
+	..()
+
+/datum/association_contract/tend_to_person/complete()
+	cleanup_target_signals()
+	return ..()
+
+/datum/association_contract/tend_to_person/fail()
+	cleanup_target_signals()
+	return ..()
+
+/datum/association_contract/tend_to_person/Destroy()
+	cleanup_target_signals()
+	return ..()
+
+/// Unregister signals from the target mob.
+/datum/association_contract/tend_to_person/proc/cleanup_target_signals()
+	if(target_mob && !QDELETED(target_mob))
+		UnregisterSignal(target_mob, COMSIG_MOVABLE_MOVED)
+
+/// Pause when no fixer is within range OR target is below 50% HP.
+/datum/association_contract/tend_to_person/should_pause()
+	if(!target_mob || QDELETED(target_mob))
+		return FALSE // Target gone — don't pause, let it tick down
+	if(target_mob.stat == DEAD)
+		return FALSE
+	// Check HP threshold
+	if(target_mob.health / target_mob.maxHealth < CONTRACT_TEND_PERSON_HP_THRESHOLD)
+		return TRUE
+	// Check if any squad member is within range
+	if(!squad)
+		return TRUE
+	var/turf/target_turf = get_turf(target_mob)
+	if(!target_turf)
+		return TRUE
+	for(var/mob/living/M in squad.members)
+		if(get_dist(get_turf(M), target_turf) <= CONTRACT_TEND_PERSON_RANGE)
+			return FALSE // At least one fixer is near
+	return TRUE // No fixer in range — pause
+
+/// Custom tick that applies heal bonus EXP when the target was recently healed.
+/datum/association_contract/tend_to_person/tick()
+	if(state != CONTRACT_STATE_ACTIVE)
+		stop_timers()
+		return
+	// Check pause condition
+	if(should_pause())
+		timer_paused = TRUE
+		healed_recently = FALSE
+		return
+	timer_paused = FALSE
+	// Decrement remaining time
+	remaining_time -= CONTRACT_PASSIVE_INTERVAL
+	// Calculate EXP with optional heal bonus
+	var/exp_mult = get_exp_multiplier()
+	if(healed_recently)
+		exp_mult *= CONTRACT_TEND_PERSON_HEAL_EXP_BONUS
+	healed_recently = FALSE
+	// Award passive EXP
+	if(squad)
+		var/exp_amount = CONTRACT_PASSIVE_EXP_TICK * exp_mult
+		squad.award_exp_to_all(exp_amount)
+		passive_exp_accumulated += exp_amount
+	// Check completion
+	if(remaining_time <= 0)
+		remaining_time = 0
+		complete()
+
+/datum/association_contract/tend_to_person/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	var/time_text = DisplayTimeText(remaining_time)
+	var/target_text = target_mob ? target_mob.name : "Unknown"
+	if(timer_paused)
+		// Determine reason for pause
+		if(target_mob && !QDELETED(target_mob) && target_mob.stat != DEAD)
+			if(target_mob.health / target_mob.maxHealth < CONTRACT_TEND_PERSON_HP_THRESHOLD)
+				return "Tending to [target_text]. [time_text] remaining (PAUSED \u2014 target below 50% HP)"
+		return "Tending to [target_text]. [time_text] remaining (PAUSED \u2014 no fixer nearby)"
+	if(healed_recently)
+		return "Tending to [target_text]. [time_text] remaining (healing bonus active)"
+	return "Tending to [target_text]. [time_text] remaining"
+

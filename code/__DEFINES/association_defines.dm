@@ -90,6 +90,35 @@
 #define ZWEI_EXP_COMBAT_HIT 1
 #define ZWEI_EXP_KILL 3
 
+// Dieci Knowledge
+#define DIECI_MAX_KNOWLEDGE 20
+#define DIECI_KNOWLEDGE_TYPE_BEHAVIORAL "Behavioral"
+#define DIECI_KNOWLEDGE_TYPE_MEDICAL "Medical"
+#define DIECI_KNOWLEDGE_TYPE_SPIRITUAL "Spiritual"
+#define DIECI_RECORD_TIME (3 SECONDS)
+#define DIECI_REREAD_TIME (3 SECONDS)
+
+// Dieci Contracts
+#define CONTRACT_TEND_PERSON_RANGE 7
+#define CONTRACT_TEND_PERSON_HP_THRESHOLD 0.5
+#define CONTRACT_TEND_PERSON_HEAL_EXP_BONUS 1.5
+#define CONTRACT_MEDICAL_RELIEF_HEAL_VALUE 10
+
+// Dieci — Medical Relief tiers (unique patients healed)
+#define CONTRACT_MEDICAL_RELIEF_TIER1_PATIENTS 5
+#define CONTRACT_MEDICAL_RELIEF_TIER2_PATIENTS 8
+#define CONTRACT_MEDICAL_RELIEF_TIER3_PATIENTS 12
+
+// Dieci — Host Event waypoint proximity range
+#define CONTRACT_HOST_EVENT_WAYPOINT_RANGE 5
+
+// Dieci — Event cooldown between hosted events
+#define DIECI_EVENT_COOLDOWN (5 MINUTES)
+
+/// Prevents Dieci members from re-examining a dead body until it is revived
+#define TRAIT_DIECI_EXAMINED "dieci_examined"
+#define DIECI_TRAIT "dieci_trait"
+
 // EXP thresholds - cumulative EXP required for each skill point (12 total)
 GLOBAL_LIST_INIT(association_exp_thresholds, list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200))
 

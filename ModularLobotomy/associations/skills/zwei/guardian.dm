@@ -179,8 +179,8 @@
 /datum/action/cooldown/zwei_retaliating_onslaught_action
 	name = "Retaliating Onslaught"
 	desc = "Consume your Defense Level Up stacks for +1% damage per stack, then dash to the nearest enemy for a devastating 5-hit combo."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "quickslash"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "zwei_t3"
 	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/zwei_retaliating_onslaught_action/Trigger()

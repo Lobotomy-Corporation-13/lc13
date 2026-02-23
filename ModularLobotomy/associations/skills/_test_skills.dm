@@ -4,3 +4,4 @@
 /proc/init_association_skill_definitions()
 	init_seven_skill_definitions()
 	init_zwei_skill_definitions()
+	init_dieci_skill_definitions()

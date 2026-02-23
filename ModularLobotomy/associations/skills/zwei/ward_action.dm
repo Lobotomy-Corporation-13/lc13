@@ -4,8 +4,8 @@
 /datum/action/cooldown/zwei_mark_for_protection
 	name = "Mark for Protection"
 	desc = "Select a player to designate as your ward. Your Client Protection skills will focus on protecting them."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "warcry"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "zwei_protect"
 	cooldown_time = 1 SECONDS
 	/// Currently designated ward
 	var/mob/living/ward

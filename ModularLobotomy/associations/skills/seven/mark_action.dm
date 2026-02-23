@@ -4,8 +4,8 @@
 /datum/action/cooldown/seven_mark_target
 	name = "Mark Target"
 	desc = "Select a target to mark for investigation. Marked targets interact with your Analyst skills."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "mark"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "seven_mark"
 	cooldown_time = 1 SECONDS
 	/// Currently marked target
 	var/mob/living/marked_target

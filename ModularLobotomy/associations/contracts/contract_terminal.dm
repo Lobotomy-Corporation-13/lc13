@@ -128,6 +128,48 @@
 			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1750),
 		),
 	))
+	// -- Dieci Contracts --
+	contract_type_defs += list(list(
+		"type" = "host_event",
+		"name" = "Host Event",
+		"desc" = "Hire Dieci fixers to host a public event. Pick an event type and location. Hosting at the marked location doubles event EXP.",
+		"category" = CONTRACT_CATEGORY_OBJECTIVE,
+		"needs_target" = FALSE,
+		"association_type" = ASSOCIATION_DIECI,
+		"uses_waypoints" = TRUE,
+		"single_waypoint" = TRUE,
+		"tiers" = list(
+			list("tier" = 1, "tier_name" = "Book Reading", "cost" = 500),
+			list("tier" = 2, "tier_name" = "Training Session", "cost" = 1000),
+			list("tier" = 3, "tier_name" = "Charity Sermon", "cost" = 1800),
+		),
+	))
+	contract_type_defs += list(list(
+		"type" = "medical_relief",
+		"name" = "Medical Relief",
+		"desc" = "Hire Dieci fixers to provide medical aid. Completes when the required number of unique patients are healed.",
+		"category" = CONTRACT_CATEGORY_OBJECTIVE,
+		"needs_target" = FALSE,
+		"association_type" = ASSOCIATION_DIECI,
+		"tiers" = list(
+			list("tier" = 1, "tier_name" = "Basic (5 Patients)", "cost" = 400),
+			list("tier" = 2, "tier_name" = "Standard (8 Patients)", "cost" = 700),
+			list("tier" = 3, "tier_name" = "Thorough (12 Patients)", "cost" = 1100),
+		),
+	))
+	contract_type_defs += list(list(
+		"type" = "tend_to_person",
+		"name" = "Tend to Person",
+		"desc" = "Hire Dieci fixers to care for a target. Timer ticks while a fixer is within 7 tiles and target is above 50% HP. Healing the target grants +50% bonus EXP.",
+		"category" = CONTRACT_CATEGORY_DURATION,
+		"needs_target" = TRUE,
+		"association_type" = ASSOCIATION_DIECI,
+		"tiers" = list(
+			list("tier" = CONTRACT_TIER_SHORT, "tier_name" = "Short (6 min)", "cost" = 500),
+			list("tier" = CONTRACT_TIER_MEDIUM, "tier_name" = "Medium (10 min)", "cost" = 875),
+			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1500),
+		),
+	))
 
 /obj/machinery/association_contract_terminal/ui_interact(mob/user, datum/tgui/ui)
 	// Ensure map is generated before opening
@@ -269,6 +311,11 @@
 		if(length(citymap_waypoints) != 1)
 			to_chat(user, span_warning("Place exactly one waypoint on the City Map tab for the guard zone center."))
 			return FALSE
+	// Validate host event: must have exactly 1 waypoint
+	if(contract_type == "host_event")
+		if(length(citymap_waypoints) != 1)
+			to_chat(user, span_warning("Place exactly one waypoint on the City Map tab for the event location."))
+			return FALSE
 	// Payment check
 	var/is_hana = is_hana_role(user)
 	var/datum/bank_account/account = get_user_bank_account(user)
@@ -310,7 +357,7 @@
 	to_chat(user, span_nicegreen("Contract created! Hand the contract paper to an association fixer."))
 	playsound(src, 'sound/machines/twobeep_high.ogg', 50, TRUE)
 	// Clear waypoints after waypoint-based contract creation
-	if(contract_type == "patrol_route" || contract_type == "surveillance_post" || contract_type == "guard_area")
+	if(contract_type == "patrol_route" || contract_type == "surveillance_post" || contract_type == "guard_area" || contract_type == "host_event")
 		citymap_waypoints = list()
 	return TRUE
 
@@ -364,6 +411,23 @@
 			C = GC
 		if("protect_person")
 			C = new /datum/association_contract/protect_person(contract_type, source, cost, issuer)
+			C.target_mob = target
+			C.set_duration_tier(tier_value)
+		if("host_event")
+			var/datum/association_contract/host_event/HEC = new(contract_type, source, cost, issuer)
+			HEC.set_event_tier(tier_value)
+			HEC.event_waypoint = list("x" = citymap_waypoints[1]["x"], "y" = citymap_waypoints[1]["y"])
+			var/turf/term_turf = get_turf(src)
+			if(term_turf)
+				HEC.waypoint_zlevel = term_turf.z
+			HEC.citymap = citymap
+			C = HEC
+		if("medical_relief")
+			var/datum/association_contract/medical_relief/MRC = new(contract_type, source, cost, issuer)
+			MRC.set_patient_tier(tier_value)
+			C = MRC
+		if("tend_to_person")
+			C = new /datum/association_contract/tend_to_person(contract_type, source, cost, issuer)
 			C.target_mob = target
 			C.set_duration_tier(tier_value)
 		else

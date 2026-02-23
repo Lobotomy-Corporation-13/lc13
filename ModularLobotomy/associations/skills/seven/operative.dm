@@ -170,8 +170,8 @@
 /datum/action/cooldown/seven_surgical_strike_action
 	name = "Surgical Strike"
 	desc = "Vanish for 2 seconds, then teleport behind the target for a 5-hit combo. Damage scales with debuffs."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "skulk"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "seven_t3"
 	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/seven_surgical_strike_action/Trigger()

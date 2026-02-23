@@ -156,8 +156,8 @@
 /datum/action/cooldown/zwei_earthshatter_action
 	name = "Earthshatter"
 	desc = "AoE ground slam in a 3-tile radius, then combo the closest enemy. More hits in contracted area. Allies grant bonus hits."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "quickslash"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "zwei_t3"
 	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/zwei_earthshatter_action/Trigger()

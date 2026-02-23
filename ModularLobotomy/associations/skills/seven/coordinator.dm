@@ -160,8 +160,8 @@
 /datum/action/cooldown/seven_full_exposure_action
 	name = "Full Exposure"
 	desc = "AoE debuff opener scaling with ally count, then a 3-hit combo that applies Rupture. Final hit force-triggers all Rupture."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "shockwave"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "seven_t3"
 	cooldown_time = 120 SECONDS
 
 /datum/action/cooldown/seven_full_exposure_action/Trigger()

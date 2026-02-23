@@ -239,8 +239,8 @@
 /datum/action/cooldown/seven_dossier_complete_action
 	name = "Dossier Complete"
 	desc = "Dash to your marked target and deliver a 4-hit combo scaling with Rupture. Requires a marked target with 10+ Rupture."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "quickslash"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "seven_t3"
 	cooldown_time = 90 SECONDS
 
 /datum/action/cooldown/seven_dossier_complete_action/Trigger()

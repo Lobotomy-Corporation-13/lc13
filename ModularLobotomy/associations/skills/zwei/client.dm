@@ -383,8 +383,8 @@
 /datum/action/cooldown/zwei_guardians_wrath_action
 	name = "Guardian's Wrath"
 	desc = "Leap to a target from up to 7 tiles. 4-hit combo. If your ward was hurt in the last 10 seconds, damage is doubled."
-	icon_icon = 'icons/hud/screen_skills.dmi'
-	button_icon_state = "quickslash"
+	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
+	button_icon_state = "zwei_t3"
 	cooldown_time = 120 SECONDS
 
 /datum/action/cooldown/zwei_guardians_wrath_action/Trigger()

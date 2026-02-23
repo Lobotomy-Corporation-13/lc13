@@ -68,9 +68,15 @@
 	return TRUE
 
 /// Spawn association-specific items for a registered member.
-/// Override per-association in later steps. For now this is a stub.
 /datum/association_squad/proc/spawn_association_items(mob/living/carbon/human/member, rank)
-	return
+	switch(association_type)
+		if(ASSOCIATION_SEVEN)
+			var/obj/item/seven_catalog/catalog = new(get_turf(member))
+			member.put_in_hands(catalog)
+		if(ASSOCIATION_DIECI)
+			var/obj/item/dieci_tome/tome = new(get_turf(member))
+			tome.owner_ref = WEAKREF(member)
+			member.put_in_hands(tome)
 
 // ============================================================
 // Contract Management

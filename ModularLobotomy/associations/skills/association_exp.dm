@@ -33,6 +33,8 @@
 	var/zwei_damage_exp_time = 0
 	/// Zwei combat EXP: last time combat-hit EXP was awarded
 	var/zwei_hit_exp_time = 0
+	/// Reference to the Dieci knowledge viewer action
+	var/datum/action/innate/dieci_knowledge_viewer/knowledge_action
 
 /datum/component/association_exp/Initialize(assoc_type, _rank, datum/association_squad/_squad)
 	if(!ishuman(parent))
@@ -63,6 +65,12 @@
 		RegisterSignal(parent, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_zwei_damage_taken))
 		RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_zwei_combat_hit))
 
+	// Dieci knowledge component + viewer action
+	if(association_type == ASSOCIATION_DIECI)
+		parent.AddComponent(/datum/component/dieci_knowledge)
+		knowledge_action = new()
+		knowledge_action.Grant(parent)
+
 /datum/component/association_exp/Destroy()
 	UnregisterSignal(parent, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_LIVING_DEATH, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_MOB_ITEM_ATTACK))
 	last_carbon_attacker = null
@@ -70,6 +78,8 @@
 		QDEL_NULL(tree_action)
 	if(ally_action)
 		QDEL_NULL(ally_action)
+	if(knowledge_action)
+		QDEL_NULL(knowledge_action)
 	squad = null
 	designated_allies.Cut()
 	invested_branches.Cut()

@@ -9,7 +9,7 @@
 		beacon_item_list = list(
 			"Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
 			"Seven Association Section 4" = /obj/item/storage/box/association/seven,
-			// "Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
+			"Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
 			// "Cinq Association Section 3" = /obj/item/storage/box/association/cinq,
 		)
 	return beacon_item_list
@@ -49,15 +49,21 @@
 	desc = "A kit from Section 1 containing Zwei association gear."
 
 /obj/item/storage/box/association/zwei/PopulateContents()
+	// Associate weapons (3)
 	new /obj/item/ego_weapon/city/zweihander(src)
 	new /obj/item/ego_weapon/city/zweihander(src)
 	new /obj/item/ego_weapon/city/zweibaton(src)
+	// Veteran weapon (1)
 	new /obj/item/ego_weapon/city/zweihander/vet(src)
+	// Director weapon (1)
 	new /obj/item/ego_weapon/city/zweihander/vet(src)
+	// Associate armor (3)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zwei(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweiriot(src)
+	// Veteran armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweivet(src)
+	// Director armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/zweileader(src)
 
 
@@ -67,8 +73,26 @@
 	desc = "A kit from Section 1 containing Dieci association gear."
 
 /obj/item/storage/box/association/dieci/PopulateContents()
-	// Stub - Dieci gear will be added in a future update
-	return
+	// Associate weapons (3) — fists + key mix
+	new /obj/item/ego_weapon/city/dieci(src)
+	new /obj/item/ego_weapon/city/dieci(src)
+	new /obj/item/ego_weapon/city/dieci/key(src)
+	// Veteran weapon (1) + key option
+	new /obj/item/ego_weapon/city/dieci/vet(src)
+	new /obj/item/ego_weapon/city/dieci/key/vet(src)
+	// Director weapon (1) + key option
+	new /obj/item/ego_weapon/city/dieci/director(src)
+	new /obj/item/ego_weapon/city/dieci/key/director(src)
+	// Associate armor (3)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci(src)
+	// Veteran armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/vet(src)
+	// Director armor (1)
+	new /obj/item/clothing/suit/armor/ego_gear/city/dieci/director(src)
+	// Knowledge Tome (one per squad)
+	new /obj/item/dieci_tome(src)
 
 //Cinq Asso
 /obj/item/storage/box/association/cinq
@@ -107,22 +131,30 @@
 	desc = "A kit from Section 1 containing Seven Association Section 4 gear."
 
 /obj/item/storage/box/association/seven/PopulateContents()
-	new /obj/item/ego_weapon/city/seven_s4_blade(src)
-	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	// Associate weapons (3)
 	new /obj/item/ego_weapon/city/seven_s4_blade(src)
 	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_blade(src)
+	// Associate sidearms (3)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	// Veteran weapon (1) + sidearm
 	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil/vet(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	// Director weapons (blade + cane choice) + sidearm
 	new /obj/item/ego_weapon/city/seven_s4_blade/director(src)
 	new /obj/item/ego_weapon/city/seven_s4_blade/cane(src)
 	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	// Associate armor (3)
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4(src)
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/recon(src)
+	// Veteran armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/vet(src)
+	// Director armor (1)
 	new /obj/item/clothing/suit/armor/ego_gear/city/seven_s4/director(src)
+	// Equipment
 	new /obj/item/binoculars(src)
 	new /obj/item/binoculars(src)
 	// Investigation toolkit
