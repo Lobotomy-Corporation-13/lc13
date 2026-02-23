@@ -58,6 +58,9 @@
 			if(existing_exp)
 				existing_exp.designated_allies |= member
 			new_exp.designated_allies |= M
+	// Show existing contract zone effects to the new member
+	for(var/datum/association_contract/C in active_contracts)
+		C.show_existing_zones_to_mob(member)
 	// Refresh ally indicators and View Allies action for all members
 	for(var/mob/living/M in members)
 		refresh_ally_indicators(M)

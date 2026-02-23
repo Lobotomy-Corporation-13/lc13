@@ -451,3 +451,195 @@
 	data["statusText"] = get_status_text()
 	return data
 
+// ============================================================
+// Guard Area — Duration-based, Zwei-specific
+// ============================================================
+
+/// Guard a designated area. Timer ticks while at least one squad member is inside the zone.
+/datum/association_contract/guard_area
+	contract_name = "Guard Area"
+	contract_type = "guard_area"
+	category = CONTRACT_CATEGORY_DURATION
+	association_type = ASSOCIATION_ZWEI
+	/// The center waypoint for the guard zone
+	var/list/guard_point
+	/// Z-level for the waypoint turf
+	var/waypoint_zlevel = 0
+	/// City map reference
+	var/datum/contract_citymap/citymap
+
+/datum/association_contract/guard_area/activate(datum/association_squad/_squad)
+	. = ..()
+	if(!.)
+		return
+	// Spawn zone effects around the guard point
+	if(guard_point && waypoint_zlevel)
+		LAZYINITLIST(zone_effects)
+		var/gp_x = guard_point["x"]
+		var/gp_y = guard_point["y"]
+		for(var/dx in -CONTRACT_GUARD_AREA_RADIUS to CONTRACT_GUARD_AREA_RADIUS)
+			for(var/dy in -CONTRACT_GUARD_AREA_RADIUS to CONTRACT_GUARD_AREA_RADIUS)
+				var/turf/T = locate(gp_x + dx, gp_y + dy, waypoint_zlevel)
+				if(T)
+					var/obj/effect/contract_zone/zone = new(T)
+					zone_effects += zone
+					show_zone_to_squad(zone)
+
+/// Pause when no squad member is inside the guard zone.
+/datum/association_contract/guard_area/should_pause()
+	if(!guard_point || !squad)
+		return TRUE
+	var/gp_x = guard_point["x"]
+	var/gp_y = guard_point["y"]
+	for(var/mob/living/M in squad.members)
+		var/turf/T = get_turf(M)
+		if(!T || T.z != waypoint_zlevel)
+			continue
+		if(abs(T.x - gp_x) <= CONTRACT_GUARD_AREA_RADIUS && abs(T.y - gp_y) <= CONTRACT_GUARD_AREA_RADIUS)
+			return FALSE
+	return TRUE
+
+/datum/association_contract/guard_area/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	var/time_text = DisplayTimeText(remaining_time)
+	if(timer_paused)
+		return "Guarding area. [time_text] remaining (PAUSED \u2014 no fixer in zone)"
+	return "Guarding area. [time_text] remaining"
+
+// --- Guard Area Map Viewer (TGUI) ---
+
+/datum/association_contract/guard_area/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "PatrolRouteMap")
+		ui.open()
+
+/datum/association_contract/guard_area/ui_state()
+	return GLOB.always_state
+
+/// Static data: full city map grid and guard point as a single waypoint.
+/datum/association_contract/guard_area/ui_static_data(mob/user)
+	var/list/data = list()
+	if(citymap?.generated)
+		data["mapGrid"] = citymap.cached_map_grid
+		data["gridWidth"] = citymap.grid_width
+		data["gridHeight"] = citymap.grid_height
+		data["offsetX"] = citymap.offset_x
+		data["offsetY"] = citymap.offset_y
+	if(guard_point)
+		data["waypoints"] = list(guard_point)
+	else
+		data["waypoints"] = list()
+	return data
+
+/// Dynamic data: current progress.
+/datum/association_contract/guard_area/ui_data(mob/user)
+	var/list/data = list()
+	data["currentWaypoint"] = 1
+	data["stayProgress"] = 0
+	data["stayRequired"] = 0
+	data["statusText"] = get_status_text()
+	return data
+
+// ============================================================
+// Protect Person — Duration-based, Zwei-specific
+// ============================================================
+
+/// Bodyguard a target person. Timer ticks while a squad member is within 7 tiles.
+/// Client receives 15% damage reduction (post-hoc heal) while a fixer is nearby.
+/datum/association_contract/protect_person
+	contract_name = "Protect Person"
+	contract_type = "protect_person"
+	category = CONTRACT_CATEGORY_DURATION
+	association_type = ASSOCIATION_ZWEI
+
+/datum/association_contract/protect_person/activate(datum/association_squad/_squad)
+	. = ..()
+	if(!.)
+		return
+	if(target_mob)
+		var/turf/T = get_turf(target_mob)
+		if(T)
+			var/obj/effect/contract_zone/zone = new(T)
+			LAZYINITLIST(zone_effects)
+			zone_effects += zone
+			show_zone_to_squad(zone)
+			RegisterSignal(target_mob, COMSIG_MOVABLE_MOVED, PROC_REF(on_target_moved))
+		// Register damage reduction signal
+		RegisterSignal(target_mob, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_client_damaged))
+
+/// Move the zone effect when the protected target moves.
+/datum/association_contract/protect_person/proc/on_target_moved(datum/source)
+	SIGNAL_HANDLER
+	var/turf/T = get_turf(target_mob)
+	for(var/obj/effect/contract_zone/zone in zone_effects)
+		zone.forceMove(T)
+
+/// Post-hoc damage reduction: heal 15% of damage when a fixer is nearby.
+/datum/association_contract/protect_person/proc/on_client_damaged(datum/source, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+	if(state != CONTRACT_STATE_ACTIVE || !squad)
+		return
+	if(!target_mob || QDELETED(target_mob))
+		return
+	// Check if any squad member is within range
+	var/turf/target_turf = get_turf(target_mob)
+	if(!target_turf)
+		return
+	var/fixer_nearby = FALSE
+	for(var/mob/living/M in squad.members)
+		if(get_dist(get_turf(M), target_turf) <= CONTRACT_PROTECT_PERSON_RANGE)
+			fixer_nearby = TRUE
+			break
+	if(!fixer_nearby)
+		return
+	// Heal the target for 15% of damage taken
+	var/heal_amount = damage * CONTRACT_PROTECT_PERSON_DR_HEAL
+	if(heal_amount > 0)
+		INVOKE_ASYNC(target_mob, TYPE_PROC_REF(/mob/living, adjustBruteLoss), -heal_amount)
+
+/datum/association_contract/protect_person/cleanup_zones()
+	cleanup_target_signals()
+	..()
+
+/datum/association_contract/protect_person/complete()
+	cleanup_target_signals()
+	return ..()
+
+/datum/association_contract/protect_person/fail()
+	cleanup_target_signals()
+	return ..()
+
+/datum/association_contract/protect_person/Destroy()
+	cleanup_target_signals()
+	return ..()
+
+/// Unregister all signals from the target mob.
+/datum/association_contract/protect_person/proc/cleanup_target_signals()
+	if(target_mob && !QDELETED(target_mob))
+		UnregisterSignal(target_mob, list(COMSIG_MOVABLE_MOVED, COMSIG_MOB_AFTER_APPLY_DAMGE))
+
+/datum/association_contract/protect_person/should_pause()
+	if(!target_mob || QDELETED(target_mob))
+		return FALSE // Target gone — don't pause, let it tick down
+	if(!squad)
+		return TRUE
+	// Check if any squad member is within range of the target
+	var/turf/target_turf = get_turf(target_mob)
+	if(!target_turf)
+		return TRUE
+	for(var/mob/living/M in squad.members)
+		if(get_dist(get_turf(M), target_turf) <= CONTRACT_PROTECT_PERSON_RANGE)
+			return FALSE
+	return TRUE
+
+/datum/association_contract/protect_person/get_status_text()
+	if(state != CONTRACT_STATE_ACTIVE)
+		return ..()
+	var/time_text = DisplayTimeText(remaining_time)
+	var/target_text = target_mob ? target_mob.name : "Unknown"
+	if(timer_paused)
+		return "Protecting [target_text]. [time_text] remaining (PAUSED \u2014 no fixer nearby)"
+	return "Protecting [target_text]. [time_text] remaining"
+

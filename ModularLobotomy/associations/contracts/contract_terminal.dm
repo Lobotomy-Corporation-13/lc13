@@ -78,6 +78,7 @@
 		"desc" = "Hire Seven fixers to investigate a target. Requires filing 2/3/5 intel reports depending on tier.",
 		"category" = CONTRACT_CATEGORY_OBJECTIVE,
 		"needs_target" = TRUE,
+		"association_type" = ASSOCIATION_SEVEN,
 		"tiers" = list(
 			list("tier" = 1, "tier_name" = "Basic (2 Reports)", "cost" = 500),
 			list("tier" = 2, "tier_name" = "Standard (3 Reports)", "cost" = 800),
@@ -90,12 +91,41 @@
 		"desc" = "Deploy Seven recorders at a location. Timer ticks while a recorder is in range. Place one waypoint on the City Map tab.",
 		"category" = CONTRACT_CATEGORY_DURATION,
 		"needs_target" = FALSE,
+		"association_type" = ASSOCIATION_SEVEN,
 		"uses_waypoints" = TRUE,
 		"single_waypoint" = TRUE,
 		"tiers" = list(
 			list("tier" = CONTRACT_TIER_SHORT, "tier_name" = "Short (6 min)", "cost" = 375),
 			list("tier" = CONTRACT_TIER_MEDIUM, "tier_name" = "Medium (10 min)", "cost" = 625),
 			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1000),
+		),
+	))
+	contract_type_defs += list(list(
+		"type" = "guard_area",
+		"name" = "Guard Area",
+		"desc" = "Hire Zwei fixers to guard a location. Timer ticks while a fixer is inside the zone. Place one waypoint on the City Map tab.",
+		"category" = CONTRACT_CATEGORY_DURATION,
+		"needs_target" = FALSE,
+		"association_type" = ASSOCIATION_ZWEI,
+		"uses_waypoints" = TRUE,
+		"single_waypoint" = TRUE,
+		"tiers" = list(
+			list("tier" = CONTRACT_TIER_SHORT, "tier_name" = "Short (6 min)", "cost" = 500),
+			list("tier" = CONTRACT_TIER_MEDIUM, "tier_name" = "Medium (10 min)", "cost" = 875),
+			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1500),
+		),
+	))
+	contract_type_defs += list(list(
+		"type" = "protect_person",
+		"name" = "Protect Person",
+		"desc" = "Hire Zwei fixers to bodyguard a target. Timer ticks while a fixer is within 7 tiles. Client receives 15% damage reduction.",
+		"category" = CONTRACT_CATEGORY_DURATION,
+		"needs_target" = TRUE,
+		"association_type" = ASSOCIATION_ZWEI,
+		"tiers" = list(
+			list("tier" = CONTRACT_TIER_SHORT, "tier_name" = "Short (6 min)", "cost" = 625),
+			list("tier" = CONTRACT_TIER_MEDIUM, "tier_name" = "Medium (10 min)", "cost" = 1000),
+			list("tier" = CONTRACT_TIER_LONG, "tier_name" = "Long (20 min)", "cost" = 1750),
 		),
 	))
 
@@ -135,8 +165,8 @@
 	// Check if user can view active contracts (observers, hana, and association fixers only)
 	var/can_view_contracts = isobserver(user) || is_hana || is_fixer
 	data["can_view_contracts"] = can_view_contracts
-	// Available contract types
-	data["contract_types"] = contract_type_defs
+	// Available contract types (filtered by active associations)
+	data["contract_types"] = get_available_contract_types()
 	// Valid targets: living human players on the same Z-level
 	var/list/targets = list()
 	var/turf/our_turf = get_turf(src)
@@ -234,6 +264,11 @@
 		if(length(citymap_waypoints) != 1)
 			to_chat(user, span_warning("Place exactly one waypoint on the City Map tab for the surveillance location."))
 			return FALSE
+	// Validate guard area: must have exactly 1 waypoint
+	if(contract_type == "guard_area")
+		if(length(citymap_waypoints) != 1)
+			to_chat(user, span_warning("Place exactly one waypoint on the City Map tab for the guard zone center."))
+			return FALSE
 	// Payment check
 	var/is_hana = is_hana_role(user)
 	var/datum/bank_account/account = get_user_bank_account(user)
@@ -274,8 +309,8 @@
 	new /obj/item/association_contract_paper(get_turf(src), C)
 	to_chat(user, span_nicegreen("Contract created! Hand the contract paper to an association fixer."))
 	playsound(src, 'sound/machines/twobeep_high.ogg', 50, TRUE)
-	// Clear waypoints after patrol or surveillance contract creation
-	if(contract_type == "patrol_route" || contract_type == "surveillance_post")
+	// Clear waypoints after waypoint-based contract creation
+	if(contract_type == "patrol_route" || contract_type == "surveillance_post" || contract_type == "guard_area")
 		citymap_waypoints = list()
 	return TRUE
 
@@ -318,6 +353,19 @@
 				SC.waypoint_zlevel = term_turf.z
 			SC.citymap = citymap
 			C = SC
+		if("guard_area")
+			var/datum/association_contract/guard_area/GC = new(contract_type, source, cost, issuer)
+			GC.set_duration_tier(tier_value)
+			GC.guard_point = list("x" = citymap_waypoints[1]["x"], "y" = citymap_waypoints[1]["y"])
+			var/turf/term_turf = get_turf(src)
+			if(term_turf)
+				GC.waypoint_zlevel = term_turf.z
+			GC.citymap = citymap
+			C = GC
+		if("protect_person")
+			C = new /datum/association_contract/protect_person(contract_type, source, cost, issuer)
+			C.target_mob = target
+			C.set_duration_tier(tier_value)
 		else
 			// Generic fallback
 			C = new(contract_type, source, cost, issuer)
@@ -353,6 +401,22 @@
 	if(role == "Hana Administrator" || role == "Hana Representative")
 		return TRUE
 	return FALSE
+
+/// Returns the contract type defs filtered by which associations are currently active.
+/// Universal contracts (no association_type) always show. Association-specific ones only show
+/// when a squad of that type exists in GLOB.association_squads.
+/obj/machinery/association_contract_terminal/proc/get_available_contract_types()
+	var/list/available = list()
+	for(var/list/def in contract_type_defs)
+		var/assoc_type = def["association_type"]
+		if(!assoc_type)
+			available += list(def)
+			continue
+		for(var/datum/association_squad/squad in GLOB.association_squads)
+			if(squad.association_type == assoc_type)
+				available += list(def)
+				break
+	return available
 
 // ============================================================
 // City Map Handlers

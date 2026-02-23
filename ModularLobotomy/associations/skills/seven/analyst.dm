@@ -296,6 +296,9 @@
 	else if(ishuman(target))
 		target.Immobilize(combo_duration)
 
+	// Cutscene duel — block outside damage during combo
+	target.AddComponent(/datum/component/cutscene_duel, user)
+
 	// Hit 1: Dash TO target, opening strike
 	SevenComboDash(user, target, FALSE)
 	sleep(0.3 SECONDS)
@@ -348,6 +351,8 @@
 	new /obj/effect/temp_visual/smash_effect(get_turf(target))
 	shake_camera(target, 3, 3)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
+	// Clean up cutscene duel
+	qdel(target.GetComponent(/datum/component/cutscene_duel))
 	if(!QDELETED(user))
 		user.say(pick("Case closed.", "Every weakness, accounted for.", "Dossier complete."))
 

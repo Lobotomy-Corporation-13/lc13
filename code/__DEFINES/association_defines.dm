@@ -78,6 +78,18 @@
 // Surveillance Post contract constants
 #define CONTRACT_SURVEILLANCE_RADIUS 6
 
+// Guard Area contract constants (Zwei)
+#define CONTRACT_GUARD_AREA_RADIUS 5
+
+// Protect Person contract constants (Zwei)
+#define CONTRACT_PROTECT_PERSON_RANGE 7
+#define CONTRACT_PROTECT_PERSON_DR_HEAL 0.15
+
+// Zwei combat EXP
+#define ZWEI_EXP_DAMAGE_ABSORBED 2
+#define ZWEI_EXP_COMBAT_HIT 1
+#define ZWEI_EXP_KILL 3
+
 // EXP thresholds - cumulative EXP required for each skill point (12 total)
 GLOBAL_LIST_INIT(association_exp_thresholds, list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200))
 

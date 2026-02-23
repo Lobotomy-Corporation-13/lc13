@@ -257,6 +257,9 @@
 	else if(ishuman(target))
 		target.Immobilize(combo_duration)
 
+	// Cutscene duel — block outside damage during combo
+	target.AddComponent(/datum/component/cutscene_duel, user)
+
 	// Hit 1: Opening strike + rupture
 	sleep(0.3 SECONDS)
 	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD)
@@ -311,6 +314,8 @@
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
 	if(R && R.stacks > 0)
 		R.trigger_rupture()
+	// Clean up cutscene duel
+	qdel(target.GetComponent(/datum/component/cutscene_duel))
 	if(!QDELETED(user))
 		user.say(pick("Nowhere left to hide.", "All positions compromised.", "Full exposure confirmed."))
 

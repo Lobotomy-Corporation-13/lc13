@@ -7,7 +7,7 @@
 	var/static/list/beacon_item_list
 	if(!beacon_item_list)
 		beacon_item_list = list(
-			// "Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
+			"Zwei Association Section 6" = /obj/item/storage/box/association/zwei,
 			"Seven Association Section 4" = /obj/item/storage/box/association/seven,
 			// "Dieci Association Section 4" = /obj/item/storage/box/association/dieci,
 			// "Cinq Association Section 3" = /obj/item/storage/box/association/cinq,

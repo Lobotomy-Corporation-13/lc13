@@ -38,6 +38,19 @@
 		return FALSE
 	if(QDELETED(target))
 		return FALSE
+	// If target is an unregistered association fixer/veteran, register them with our squad
+	if(!(target in exp.designated_allies) && exp.squad && ishuman(target) && !target.GetComponent(/datum/component/association_exp))
+		var/mob/living/carbon/human/target_human = target
+		var/target_role = target_human.mind?.assigned_role
+		if(target_role == "Association Fixer" || target_role == "Association Veteran")
+			var/rank = (target_role == "Association Veteran") ? "veteran" : "associate"
+			exp.squad.register_member(target_human, rank)
+			exp.squad.spawn_association_items(target_human, rank)
+			to_chat(H, span_nicegreen("You have registered [target_human] with [exp.squad.association_name]."))
+			to_chat(target_human, span_nicegreen("[H] has registered you with [exp.squad.association_name]. Open your Skill Tree to view your abilities."))
+			playsound(get_turf(H), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+			StartCooldown()
+			return TRUE
 	if(target in exp.designated_allies)
 		exp.designated_allies -= target
 		to_chat(H, span_warning("[target] removed from your ally list."))

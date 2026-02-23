@@ -291,6 +291,18 @@
 		M.client.images |= I
 		zone_images += I
 
+/// Show all existing zone effects to a single mob (for late-joining squad members).
+/datum/association_contract/proc/show_existing_zones_to_mob(mob/living/M)
+	if(!M?.client)
+		return
+	if(!LAZYLEN(zone_effects))
+		return
+	LAZYINITLIST(zone_images)
+	for(var/obj/effect/contract_zone/zone in zone_effects)
+		var/image/I = image(zone.icon, zone, zone.icon_state, zone.layer)
+		M.client.images |= I
+		zone_images += I
+
 /// Remove all zone images from squad clients and delete zone effects.
 /datum/association_contract/proc/cleanup_zones()
 	if(squad)

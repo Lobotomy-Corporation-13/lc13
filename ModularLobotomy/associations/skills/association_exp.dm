@@ -29,6 +29,10 @@
 	var/mob/living/carbon/last_carbon_attacker
 	/// world.time of the last carbon attack (for death-trigger distress)
 	var/last_carbon_attack_time = 0
+	/// Zwei combat EXP: last time damage-absorbed EXP was awarded
+	var/zwei_damage_exp_time = 0
+	/// Zwei combat EXP: last time combat-hit EXP was awarded
+	var/zwei_hit_exp_time = 0
 
 /datum/component/association_exp/Initialize(assoc_type, _rank, datum/association_squad/_squad)
 	if(!ishuman(parent))
@@ -54,8 +58,13 @@
 	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_distress_check))
 	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_distress_death))
 
+	// Zwei combat EXP hooks
+	if(association_type == ASSOCIATION_ZWEI)
+		RegisterSignal(parent, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_zwei_damage_taken))
+		RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_zwei_combat_hit))
+
 /datum/component/association_exp/Destroy()
-	UnregisterSignal(parent, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_LIVING_DEATH))
+	UnregisterSignal(parent, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_LIVING_DEATH, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_MOB_ITEM_ATTACK))
 	last_carbon_attacker = null
 	if(tree_action)
 		QDEL_NULL(tree_action)
@@ -169,3 +178,37 @@
 		return
 	// Trigger distress for the entire squad
 	INVOKE_ASYNC(squad, TYPE_PROC_REF(/datum/association_squad, trigger_distress), L, last_carbon_attacker)
+
+// ============================================================
+// Zwei Combat EXP Hooks
+// ============================================================
+
+/// Zwei: Award EXP when taking damage while on contract. 1 second cooldown.
+/datum/component/association_exp/proc/on_zwei_damage_taken(datum/source, damage, damagetype, def_zone)
+	SIGNAL_HANDLER
+	if(!squad || !squad.is_on_contract())
+		return
+	if(world.time < zwei_damage_exp_time + 1 SECONDS)
+		return
+	zwei_damage_exp_time = world.time
+	INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_DAMAGE_ABSORBED)
+
+/// Zwei: Award EXP on combat hits and kills while on contract. 2 second hit cooldown, no kill cooldown.
+/datum/component/association_exp/proc/on_zwei_combat_hit(datum/source, mob/living/target, mob/living/user, obj/item/item)
+	SIGNAL_HANDLER
+	if(!squad || !squad.is_on_contract())
+		return
+	if(!isliving(target) || target == parent)
+		return
+	// Check if target is an ally — don't award EXP for hitting allies
+	if(is_designated_ally(target))
+		return
+	// Kill check — target died from this hit
+	if(target.stat == DEAD)
+		INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_KILL)
+		return
+	// Combat hit EXP with cooldown
+	if(world.time < zwei_hit_exp_time + 2 SECONDS)
+		return
+	zwei_hit_exp_time = world.time
+	INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_COMBAT_HIT)

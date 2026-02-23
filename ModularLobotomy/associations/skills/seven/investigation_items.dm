@@ -712,17 +712,56 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	newbug.linked_glasses = newglasses
 	newglasses.linked_bug = newbug
 
-/// Seven-branded spy bug
+/// Seven-branded spy bug with 5x5 view and speech relay
 /obj/item/spy_bug/seven
 	name = "Seven surveillance bug"
-	desc = "A miniature camera bug used by Seven Association investigators."
+	desc = "A miniature camera bug used by Seven Association investigators. Enhanced with a wider camera and built-in microphone."
 
-/// Seven-branded spy glasses with EXP generation
+/obj/item/spy_bug/seven/Initialize()
+	. = ..()
+	flags_1 |= HEAR_1
+
+/// Override to use 5x5 view (range 2) instead of the default 3x3
+/obj/item/spy_bug/seven/update_view()
+	cam_screen.vis_contents.Cut()
+	for(var/turf/visible_turf in view(2, get_turf(src)))
+		cam_screen.vis_contents += visible_turf
+
+/// Relay overheard speech to whoever is wearing the linked glasses
+/obj/item/spy_bug/seven/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, spans, list/message_mods = list())
+	. = ..()
+	if(!linked_glasses)
+		return
+	if(!ishuman(linked_glasses.loc))
+		return
+	var/mob/living/carbon/human/wearer = linked_glasses.loc
+	if(wearer.get_item_by_slot(ITEM_SLOT_EYES) != linked_glasses)
+		return
+	var/display_message = raw_message || message
+	to_chat(wearer, span_notice("\[Bug\] [speaker?.name || "Unknown"]: [display_message]"))
+
+/// Seven-branded spy glasses with 5x5 view and EXP generation
 /obj/item/clothing/glasses/sunglasses/spy/seven
 	name = "Seven surveillance glasses"
 	desc = "Modified glasses that display a live feed from a paired Seven surveillance bug. Generates investigation EXP while the bug is deployed."
 	/// Timer for EXP ticks
 	var/datum/timerid
+
+/// Override to use 5x5 popup (matching the bug's 5x5 view range)
+/obj/item/clothing/glasses/sunglasses/spy/seven/show_to_user(mob/user)
+	if(!user)
+		return
+	if(!user.client)
+		return
+	if(!linked_bug)
+		user.audible_message(span_warning("[src] lets off a shrill beep!"))
+	if("spypopup_map" in user.client.screen_maps)
+		return
+	user.client.setup_popup("spypopup", 5, 5, 2)
+	user.client.register_map_obj(linked_bug.cam_screen)
+	for(var/plane in linked_bug.cam_plane_masters)
+		user.client.register_map_obj(plane)
+	linked_bug.update_view()
 
 /obj/item/clothing/glasses/sunglasses/spy/seven/equipped(mob/user, slot)
 	. = ..()
