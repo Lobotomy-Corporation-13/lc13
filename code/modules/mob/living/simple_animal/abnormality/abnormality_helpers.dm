@@ -46,6 +46,34 @@
 		return TRUE
 
 /*
+* Returns a list of 8 turfs surrounding the target
+*/
+/mob/living/simple_animal/hostile/proc/SurroundTarget(mob/living/L, distance = 4)
+	. = list()
+	var/diagonal_dist = max(1,distance - 1)
+	var/turf/enemy_turf = get_turf(L)
+	//Four Tiles North
+	. += locate(enemy_turf.x ,enemy_turf.y + distance,enemy_turf.z)
+	//Four Tiles South
+	. += locate(enemy_turf.x ,enemy_turf.y - distance,enemy_turf.z)
+	//Four Tiles East
+	. += locate(enemy_turf.x + distance ,enemy_turf.y,enemy_turf.z)
+	//Four Tiles West
+	. += locate(enemy_turf.x - distance ,enemy_turf.y,enemy_turf.z)
+	//Four Tiles Northeast
+	. += locate(enemy_turf.x + distance ,enemy_turf.y + diagonal_dist,enemy_turf.z)
+	//Four Tiles Southeast
+	. += locate(enemy_turf.x + distance,enemy_turf.y - diagonal_dist,enemy_turf.z)
+	//Four Tiles Northwest
+	. += locate(enemy_turf.x - distance ,enemy_turf.y + diagonal_dist,enemy_turf.z)
+	//Four Tiles Southwest
+	. += locate(enemy_turf.x - distance ,enemy_turf.y - diagonal_dist,enemy_turf.z)
+	//Double check that all areas are nondense
+	for(var/turf/good_area in .)
+		if(!isfloorturf(good_area) || !can_see(src, good_area))
+			. -= good_area
+
+/*
 * Moves all things that are considered hard clothing.
 */
 /mob/living/simple_animal/hostile/proc/dropHardClothing(mob/living/carbon/C, turf/our_stuff)

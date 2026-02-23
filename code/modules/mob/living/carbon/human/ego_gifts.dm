@@ -1680,6 +1680,13 @@
 	user.physiology.burn_mod /= 0.8
 	return ..()
 
+/datum/ego_gifts/recollection
+	name = "Recollection"
+	icon_state = "recollection"
+	temperance_bonus = -4
+	prudence_bonus = 2
+	slot = BROOCH
+
 /datum/ego_gifts/caterpillar
 	name = "Havana"
 	icon_state = "havana"

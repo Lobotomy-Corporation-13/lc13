@@ -458,31 +458,6 @@
 		if(isfloorturf(T))
 			. += T
 
-//Collects 8 turfs surrounding the target.
-/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/SurroundTarget(mob/living/L)
-	. = list()
-	var/turf/enemy_turf = get_turf(L)
-	//Four Tiles North
-	. += locate(enemy_turf.x ,enemy_turf.y +4,enemy_turf.z)
-	//Four Tiles South
-	. += locate(enemy_turf.x ,enemy_turf.y -4,enemy_turf.z)
-	//Four Tiles East
-	. += locate(enemy_turf.x +4 ,enemy_turf.y,enemy_turf.z)
-	//Four Tiles West
-	. += locate(enemy_turf.x -4 ,enemy_turf.y,enemy_turf.z)
-	//Four Tiles Northeast
-	. += locate(enemy_turf.x +4 ,enemy_turf.y +3,enemy_turf.z)
-	//Four Tiles Southeast
-	. += locate(enemy_turf.x +4,enemy_turf.y -3,enemy_turf.z)
-	//Four Tiles Northwest
-	. += locate(enemy_turf.x -4 ,enemy_turf.y +3,enemy_turf.z)
-	//Four Tiles Southwest
-	. += locate(enemy_turf.x -4 ,enemy_turf.y -3,enemy_turf.z)
-	//Double check that all areas are nondense
-	for(var/turf/good_area in .)
-		if(!isfloorturf(good_area))
-			. -= good_area
-
 //Combines two parts of the arena without having overlap.
 /mob/living/simple_animal/hostile/abnormality/snow_queen/proc/ReturnNoOverlap(list/area_one, list/area_two)
 	var/list/unique_list = area_one + area_two

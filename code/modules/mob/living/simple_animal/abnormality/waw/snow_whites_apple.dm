@@ -422,6 +422,7 @@
 /obj/structure/spreading/apple_vine/Destroy()
 	if(connected_abno)
 		connected_abno.vine_list -= src
+		connected_abno = null
 	return ..()
 
 /* Only allows the user to pass if the proc returns TRUE.
@@ -541,19 +542,13 @@
 	var/dir1
 	var/dir2
 	var/enemy_cardinal_dir = angle2dir_cardinal(vine_angle)
-	switch(enemy_cardinal_dir)
-		if(NORTH)
-			dir1 = EAST
-			dir2 = WEST
-		if(SOUTH)
-			dir1 = EAST
-			dir2 = WEST
-		if(EAST)
-			dir1 = NORTH
-			dir2 = SOUTH
-		if(WEST)
-			dir1 = NORTH
-			dir2 = SOUTH
+
+	if(enemy_cardinal_dir == NORTH || enemy_cardinal_dir == SOUTH)
+		dir1 = EAST
+		dir2 = WEST
+	if(enemy_cardinal_dir == EAST || enemy_cardinal_dir == WEST)
+		dir1 = NORTH
+		dir2 = SOUTH
 
 	//Additional Barriers. Barrier wont be placed if there isnt required weeds.
 	var/turf/target_turf = get_step(src, dir1)

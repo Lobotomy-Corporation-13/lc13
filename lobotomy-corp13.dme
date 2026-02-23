@@ -2974,6 +2974,7 @@
 #include "code\modules\mob\living\simple_animal\abnormality\teth\old_lady.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\teth\pale_horse.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\teth\penitent_girl.dm"
+#include "code\modules\mob\living\simple_animal\abnormality\teth\portrait_certain.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\teth\ppodae.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\teth\punishing_bird.dm"
 #include "code\modules\mob\living\simple_animal\abnormality\teth\redblooded.dm"
