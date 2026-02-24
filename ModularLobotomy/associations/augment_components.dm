@@ -1228,7 +1228,7 @@
 				return FALSE
 			inflict_cooldown = world.time + inflict_cooldown_time
 			TT.TremorBurst()
-			TT.stacks = round(TT.stacks * 0.5)
+			TT.stacks = floor(TT.stacks * 0.5)
 			new /obj/effect/timestop(get_turf(target), 2, 20, list(human_parent))
 
 //Tremor Everlasting
