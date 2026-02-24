@@ -74,10 +74,10 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	max_boxes = 22
 	var/boxes_per_awe = 3
 	var/success_box_percent_required = 0.8 // Standard is 0.7
-	var/neutral_box_percent_required = 0.6 // Standard is 0.4
+	var/neutral_box_percent_required = 0.5 // Standard is 0.4
 
 	start_qliphoth = 3
-	neutral_droprate = 50 // You are going to be getting a lot of neutrals
+	neutral_droprate = 40 // You are going to be getting a lot of neutrals
 	bad_droprate = 100
 	var/repression_qlipraise_chance = list("I" = 0, "II" = 0, "III" = 33, "IV" = 66, "V" = 90, "EX" = 100) // !WARNING! Based on Temperance, not Justice.
 
@@ -95,12 +95,13 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	)
 	work_damage_amount = 10 // Wow! Only 10 damage for a WAW+ abnormality? That's so generous!
 	var/work_damage_per_awe_stack = 4 // :malkstare: (This can actually be so much worse than an ALEPH if you let it stack)
-	var/work_delay_reduction_per_awe_stack = 1.1 // In deciseconds. Positive: player doesn't need to experience the tedium of works with more boxes than ALEPH abnos. Negative: no time for medipens to save you.
+	var/work_delay_reduction_per_awe_stack = 1.3 // In deciseconds. Positive: player doesn't need to experience the tedium of works with more boxes than ALEPH abnos. Negative: no time for medipens to save you.
+	var/work_chance_per_awe_stack = 2 // Awe was too harsh in testing, this should help counteract Qlip Overload a little.
 	work_damage_type = BLACK_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/pride // This is the colour of the egg's gem.
 	ego_list = list(
 		/datum/ego_datum/weapon/contempt,
-		/datum/ego_datum/armor/goldrush, // oopsie placeholder
+		/datum/ego_datum/armor/contempt,
 		/datum/ego_datum/weapon/perversion,
 	)
 
@@ -215,6 +216,15 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/datum/status_effect/stacking/spiral_awe/awe = user.has_status_effect(STATUS_EFFECT_AWE)
 	if(awe)
 		return init_work_speed -= (awe.stacks * work_delay_reduction_per_awe_stack)
+
+// Increase work chance based on Awe stacks. This is a slight countermeasure to getting your rates nuked by Qliphoth Overload.
+/mob/living/simple_animal/hostile/abnormality/spiral/WorkChance(mob/living/carbon/human/user, chance, work_type)
+	. = ..()
+	if(!istype(user))
+		return
+	var/datum/status_effect/stacking/spiral_awe/awestruck = user.has_status_effect(STATUS_EFFECT_AWE)
+	if(awestruck)
+		return (. + (work_chance_per_awe_stack * awestruck.stacks))
 
 // Before working: Adjust Max PE boxes, Success PE boxes, Neutral PE boxes and Work Damage based on Awe stacks of the worker.
 /mob/living/simple_animal/hostile/abnormality/spiral/AttemptWork(mob/living/carbon/human/user, work_type)
