@@ -3459,6 +3459,8 @@
 		return
 	if(!isliving(A))
 		return
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return
 	var/mob/living/victim = A
 	if(victim.stat >= DEAD)
 		return
