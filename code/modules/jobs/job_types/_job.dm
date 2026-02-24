@@ -349,6 +349,14 @@
 		holder = "[uniform]"
 	uniform = text2path(holder)
 
+	if(!(H.beret_enabled) && (ispath(head, /obj/item/clothing/head/beret) || ispath(head, /obj/item/clothing/head/hos/beret)))
+		head = null
+
+	// This check is a bit questionable; it's == instead of ispath because I don't want to nuke roles that spawn with HUDglasses.
+	// This pref is only intended to nuke the basic cosmetic sunglasses.
+	if(!(H.sunglasses_enabled) && ((glasses == /obj/item/clothing/glasses/sunglasses) || (glasses == /obj/item/clothing/glasses/middle_sunglasses)))
+		glasses = null
+
 /datum/outfit/job/post_equip(mob/living/carbon/human/H, visualsOnly = FALSE, client/preference_source = null) // Tegu alt job titles
 	if(visualsOnly)
 		return

@@ -47,6 +47,8 @@
 	var/socks = "Nude" //Which socks the player wants
 	var/backpack = DBACKPACK		//Which backpack type the player has chosen.
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
+	var/beret_enabled = TRUE // Should this character start with a beret, if available for their job?
+	var/sunglasses_enabled = TRUE // Should this character start with sunglasses, if available for their job?
 
 	//Equipment slots
 	var/obj/item/clothing/wear_suit = null

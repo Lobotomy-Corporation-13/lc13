@@ -33,21 +33,26 @@
 	verbs += /obj/item/storage/backpack/proc/AdjustVisibility // Iunno a better way to do this, something tells me setting the verbs list manually is a bad idea
 
 
-// Extremely suspicious way of making the worn overlay on a backpack invisible, blame whoever did the overlay system for carbons instead of me please. Did you know that backpacks DO have a worn_icon but don't use it at all? Nope, their worn icon states are all the way in a back.dmi file for mobs that is referenced 8 times in the entire codebase.
+// This is a simpler way to interface with the Preference that hides your backpack sprite. But like, you don't have to
 /obj/item/storage/backpack/proc/AdjustVisibility()
 	set name = "Adjust Backpack Visibility"
 	set category = "Object"
 	set src in view(0)
 	if(ishuman(usr))
 		var/mob/living/carbon/human/our_wearer = usr
+		if(!our_wearer || !istype(our_wearer))
+			return
+		var/client/john_backpacker = our_wearer.client
+		if(!john_backpacker || !john_backpacker.prefs)
+			return
 		var/obj/item/storage/backpack/us = our_wearer.get_item_by_slot(ITEM_SLOT_BACK)
 		if(istype(us) && us == src) // If we're wearing this backpack on our back, proceed
-			var/user_choice = input(our_wearer, "Do you want your [name] to be visible on your person? This is only a cosmetic change, and can be undone.", "Backpack Visibility") as null|anything in list("Visible" , "Invisible")
+			var/user_choice = input(our_wearer, "Do you want your [name] to be visible on your person? You may also change this setting from your preferences.", "Backpack Visibility") as null|anything in list("Visible" , "Invisible")
 			switch(user_choice)
 				if("Invisible")
-					our_wearer.disabled_backpack_visibility = TRUE
+					john_backpacker.prefs.backpack_visibility = FALSE
 				if("Visible")
-					our_wearer.disabled_backpack_visibility = FALSE
+					john_backpacker.prefs.backpack_visibility = TRUE
 			our_wearer.update_inv_back()
 
 /*

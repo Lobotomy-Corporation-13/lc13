@@ -145,7 +145,7 @@
 	if(back)
 		overlays_standing[BACK_LAYER] = back.build_worn_icon(default_layer = BACK_LAYER, default_icon_file = 'icons/mob/clothing/back.dmi')
 		update_hud_back(back)
-		if(istype(back, /obj/item/storage/backpack) && disabled_backpack_visibility)
+		if(istype(back, /obj/item/storage/backpack) && client && !(client.prefs?.backpack_visibility))
 			return
 
 	apply_overlay(BACK_LAYER)
