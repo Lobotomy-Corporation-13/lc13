@@ -90,3 +90,36 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat_capo"
+
+/obj/item/storage/belt/bandolier/thumb_east
+	name = "thumb east ammo bandolier"
+	desc = "A bandolier used for holding Thumb East propellant ammunition. \n\
+	Thumb Soldatos are often made to bear ammunition for their superiors. It is perhaps less of a practical matter, and more akin to a ritual for the Syndicate."
+	icon_state = "bandolier"
+	inhand_icon_state = "bandolier"
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
+	worn_icon_state = "thumb_east_bandolier"
+	w_class = WEIGHT_CLASS_BULKY
+
+/obj/item/storage/belt/bandolier/thumb_east/examine(mob/user)
+	. = ..()
+	. += span_info("Able to hold up to 5 handfuls of any propellant ammunition.")
+
+/obj/item/storage/belt/bandolier/thumb_east/ComponentInitialize()
+	. = ..()
+	var/datum/component/storage/STR = GetComponent(/datum/component/storage)
+	STR.max_items = 5
+	STR.max_w_class = WEIGHT_CLASS_BULKY
+	STR.max_combined_w_class = 20
+	STR.set_holdable(list(
+		/obj/item/stack/thumb_east_ammo,
+		/obj/item/stack/thumb_east_ammo/facility,
+		/obj/item/stack/thumb_east_ammo/inferno,
+		/obj/item/stack/thumb_east_ammo/quake,
+		/obj/item/stack/thumb_east_ammo/tigermark,
+		/obj/item/stack/thumb_east_ammo/tigermark/facility,
+		/obj/item/stack/thumb_east_ammo/tigermark/savage,
+		/obj/item/stack/thumb_east_ammo/spent,
+		/obj/item/stack/thumb_east_ammo/spent/tigermark,
+		/obj/item/stack/thumb_east_ammo/spent/tigermark/savage,
+		))
