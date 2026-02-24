@@ -1221,15 +1221,15 @@
 	. = ..()
 	var/datum/status_effect/stacking/lc_tremor/TT = target.has_status_effect(/datum/status_effect/stacking/lc_tremor)
 	if(TT)
-		if(TT.stacks >= 15)
+		if(TT.stacks >= 40)
 			if(inflict_cooldown > world.time)
 				return FALSE
 			if(item.force <= 0 || target.stat == DEAD)
 				return FALSE
 			inflict_cooldown = world.time + inflict_cooldown_time
 			TT.TremorBurst()
-			TT.stacks -= 10
-			new /obj/effect/timestop(get_turf(target), 2, 40, list(human_parent))
+			TT.stacks = round(TT.stacks * 0.5)
+			new /obj/effect/timestop(get_turf(target), 2, 20, list(human_parent))
 
 //Tremor Everlasting
 /datum/component/augment/tremor_everlasting
