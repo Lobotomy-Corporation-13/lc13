@@ -21,6 +21,8 @@
 	var/efficient_refund = FALSE
 	/// Optional callback invoked when knowledge is consumed. Called with (list/consumed_entry)
 	var/datum/callback/on_knowledge_consumed
+	/// When TRUE, passive skills skip knowledge consumption (conserve for combo finishers)
+	var/conserve_knowledge = FALSE
 
 /datum/component/dieci_knowledge/Initialize()
 	if(!ishuman(parent))
@@ -146,11 +148,10 @@
 // Tome Recording + Re-reading
 // ============================================================
 
-/// Move all unrecorded Active entries to Stored Knowledge.
-/// Removes recorded entries from active_knowledge. Stored entries get rereads_remaining = 7 - level.
+/// Copy all unrecorded Active entries to Stored Knowledge.
+/// Active entries are KEPT — recording is a backup, not a transfer. Stored entries get rereads_remaining = 7 - level.
 /datum/component/dieci_knowledge/proc/record_to_tome()
 	var/recorded_count = 0
-	var/list/to_remove = list()
 	for(var/i in 1 to length(active_knowledge))
 		var/list/entry = active_knowledge[i]
 		if(entry["recorded"])
@@ -163,12 +164,8 @@
 			"rereads_remaining" = max(1, 7 - entry["level"])
 		)
 		stored_knowledge += list(stored_entry)
-		to_remove += i
+		entry["recorded"] = TRUE
 		recorded_count++
-	// Remove recorded entries from active (iterate backwards to preserve indices)
-	for(var/i in length(to_remove) to 1 step -1)
-		var/index = to_remove[i]
-		active_knowledge.Cut(index, index + 1)
 	return recorded_count
 
 /// Restore Active Knowledge from Stored entries. Each stored entry decrements its rereads, removed at 0.

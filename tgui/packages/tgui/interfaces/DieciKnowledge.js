@@ -20,6 +20,7 @@ export const DieciKnowledge = (props, context) => {
     active_knowledge = [],
     max_knowledge = 20,
     synthesis_cost = 3,
+    conserve_knowledge = false,
   } = data;
 
   const groups = {};
@@ -46,6 +47,34 @@ export const DieciKnowledge = (props, context) => {
                 {'Entries: '}
                 {active_knowledge.length}
                 {'/' + max_knowledge}
+                <Button
+                  ml={2}
+                  icon={
+                    conserve_knowledge
+                      ? 'lock'
+                      : 'lock-open'
+                  }
+                  color={
+                    conserve_knowledge
+                      ? 'caution'
+                      : 'default'
+                  }
+                  content={
+                    conserve_knowledge
+                      ? 'Conserving'
+                      : 'Consuming'
+                  }
+                  tooltip={
+                    conserve_knowledge
+                      ? 'Skills will NOT'
+                        + ' consume knowledge'
+                      : 'Skills will consume'
+                        + ' knowledge on hit'
+                  }
+                  onClick={() => act(
+                    'toggle_conserve'
+                  )}
+                />
               </Box>
               {active_knowledge.length === 0 && (
                 <Box color="label" italic>

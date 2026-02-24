@@ -694,6 +694,7 @@
 				var/turf/T = locate(wp_x + dx, wp_y + dy, waypoint_zlevel)
 				if(T)
 					var/obj/effect/contract_zone/zone = new(T)
+					zone.color = "#FFD700"
 					zone_effects += zone
 					show_zone_to_squad(zone)
 

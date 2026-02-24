@@ -34,10 +34,12 @@
 		data["active_knowledge"] = dk.active_knowledge
 		data["max_knowledge"] = dk.max_knowledge
 		data["synthesis_cost"] = dk.synthesis_cost
+		data["conserve_knowledge"] = dk.conserve_knowledge
 	else
 		data["active_knowledge"] = list()
 		data["max_knowledge"] = DIECI_MAX_KNOWLEDGE
 		data["synthesis_cost"] = 3
+		data["conserve_knowledge"] = FALSE
 	return data
 
 /datum/action/innate/dieci_knowledge_viewer/ui_act(action, params)
@@ -57,4 +59,11 @@
 			if(!synth_type || !synth_level)
 				return
 			dk.synthesize(synth_type, synth_level)
+			return TRUE
+		if("toggle_conserve")
+			dk.conserve_knowledge = !dk.conserve_knowledge
+			if(dk.conserve_knowledge)
+				to_chat(owner, span_notice("Knowledge conservation enabled. Passive skills will not consume knowledge."))
+			else
+				to_chat(owner, span_notice("Knowledge conservation disabled. Passive skills will consume knowledge normally."))
 			return TRUE

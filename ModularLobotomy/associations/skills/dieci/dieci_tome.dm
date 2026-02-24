@@ -115,7 +115,11 @@
 		return
 	// Route based on target type
 	if(istype(target, /mob/living/simple_animal/hostile))
-		scan_hostile(target, H)
+		var/mob/living/simple_animal/hostile/hostile_mob = target
+		if(hostile_mob.stat == DEAD)
+			examine_dead_hostile(hostile_mob, H)
+		else
+			scan_hostile(hostile_mob, H)
 		return
 	if(iscarbon(target))
 		var/mob/living/carbon/C = target
@@ -278,6 +282,37 @@
 	var/mob/living/target = source
 	REMOVE_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)
 	UnregisterSignal(target, COMSIG_LIVING_REVIVE)
+
+/// Examine a dead hostile mob body. 5s do_after. Awards 3 EXP + Medical L2 knowledge.
+/obj/item/dieci_tome/proc/examine_dead_hostile(mob/living/simple_animal/hostile/target, mob/living/carbon/human/user)
+	// Check if already examined
+	if(HAS_TRAIT(target, TRAIT_DIECI_EXAMINED))
+		to_chat(user, span_warning("This body has already been examined by a Dieci member."))
+		return
+	to_chat(user, span_notice("You begin examining the remains of [target]..."))
+	if(!do_after(user, 5 SECONDS, target))
+		to_chat(user, span_warning("Examination interrupted."))
+		return
+	// Double-check state after do_after
+	if(target.stat != DEAD)
+		to_chat(user, span_warning("[target] is no longer dead."))
+		return
+	if(HAS_TRAIT(target, TRAIT_DIECI_EXAMINED))
+		to_chat(user, span_warning("Someone else already examined this body."))
+		return
+	// Apply trait to prevent re-examination
+	ADD_TRAIT(target, TRAIT_DIECI_EXAMINED, DIECI_TRAIT)
+	// Register for revive to clear the trait
+	RegisterSignal(target, COMSIG_LIVING_REVIVE, PROC_REF(on_body_revived))
+	// Award 3 EXP + Medical L2
+	var/datum/component/association_exp/exp = get_exp_comp()
+	if(exp)
+		exp.modify_exp(3)
+	var/datum/component/dieci_knowledge/dk = get_knowledge_comp()
+	if(dk)
+		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_MEDICAL, 2, null, "Body Exam: [target.name]")
+	to_chat(user, span_nicegreen("Examination complete. Medical L2 knowledge gained. (+3 EXP)"))
+	playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 30, TRUE)
 
 // ============================================================
 // Shop System

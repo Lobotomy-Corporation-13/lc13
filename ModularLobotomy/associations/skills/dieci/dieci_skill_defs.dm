@@ -13,7 +13,7 @@
 	scholar["tier1"] = list()
 	scholar["tier1"]["a"] = list(\
 		"name" = "Deep Study", \
-		"desc" = "Melee attacks apply 2 Sinking to the target. Every 5 seconds, consumes 1 Behavioral knowledge to apply bonus Sinking equal to the consumed level.", \
+		"desc" = "Melee attacks apply 2 Sinking to the target. On hit, can consume 1 Behavioral knowledge for bonus Sinking equal to the consumed level (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_deep_study)
 	scholar["tier1"]["b"] = list(\
 		"name" = "Analytical Strike", \
@@ -23,11 +23,11 @@
 	scholar["tier2"] = list()
 	scholar["tier2"]["a"] = list(\
 		"name" = "Drowning Knowledge", \
-		"desc" = "Heavy attacks against targets with 15+ Sinking deal 25% bonus damage. Every 5 seconds, consumes 1 Behavioral knowledge for an additional 5% bonus per level.", \
+		"desc" = "Heavy attacks against targets with 15+ Sinking deal 25% bonus damage. On heavy hit, can consume 1 Behavioral knowledge for an additional 5% bonus per level (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_drowning_knowledge)
 	scholar["tier2"]["b"] = list(\
 		"name" = "Spreading Decay", \
-		"desc" = "Heavy attacks against targets with Sinking apply 5 Sinking to nearby enemies within 2 tiles (2s cooldown). Every 5 seconds, consumes 1 Behavioral knowledge to also apply Defense Level Down equal to the consumed level.", \
+		"desc" = "Heavy attacks against targets with Sinking apply 5 Sinking to nearby enemies within 2 tiles (2s cooldown). On spread, can consume 1 Behavioral knowledge to also apply Defense Level Down equal to the consumed level (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_spreading_decay)
 
 	scholar["tier3"] = list()
@@ -49,7 +49,7 @@
 	warden["tier1"] = list()
 	warden["tier1"]["a"] = list(\
 		"name" = "Knowledge Barrier", \
-		"desc" = "Melee attacks grant 3 shield HP. Every 5 seconds, consumes 1 Medical knowledge to grant bonus shield HP equal to the consumed level times 5.", \
+		"desc" = "Melee attacks grant 3 shield HP. On hit, can consume 1 Medical knowledge for bonus shield HP equal to the consumed level times 5 (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_knowledge_barrier)
 	warden["tier1"]["b"] = list(\
 		"name" = "Reactive Ward", \
@@ -63,7 +63,7 @@
 		"type" = /datum/component/association_skill/dieci_tome_shield)
 	warden["tier2"]["b"] = list(\
 		"name" = "Stalwart Presence", \
-		"desc" = "Taking damage while at 50+ shield HP grants 3 Defense Level Up. Every 5 seconds, consumes 1 Medical knowledge to heal yourself for the consumed level times 2% of max HP.", \
+		"desc" = "Taking damage while at 50+ shield HP grants 3 Protection. On damage taken, can consume 1 Medical knowledge to heal yourself for the consumed level times 2% of max HP (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_stalwart_presence)
 
 	warden["tier3"] = list()
@@ -85,7 +85,7 @@
 	sage["tier1"] = list()
 	sage["tier1"]["a"] = list(\
 		"name" = "Extensive Notes", \
-		"desc" = "Increases max knowledge to 30. Heavy attacks deal 15% bonus PALE damage. Every 5 seconds, consumes 1 Spiritual knowledge for an additional 5% bonus per level.", \
+		"desc" = "Increases max knowledge to 30. Heavy attacks deal 15% bonus PALE damage. On heavy hit, can consume 1 Spiritual knowledge for an additional 5% bonus per level (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_extensive_notes)
 	sage["tier1"]["b"] = list(\
 		"name" = "Applied Learning", \
@@ -99,7 +99,7 @@
 		"type" = /datum/component/association_skill/dieci_shared_wisdom)
 	sage["tier2"]["b"] = list(\
 		"name" = "Efficient Research", \
-		"desc" = "Synthesis costs 2 entries instead of 3. Consuming L3+ knowledge refunds 1 entry of the same type at level minus 1. Every 5 seconds, consumes 1 Spiritual knowledge to grant 2 Offense Level Up to nearby allies.", \
+		"desc" = "Synthesis costs 2 entries instead of 3. Consuming L3+ knowledge refunds 1 entry of the same type at level minus 1. On attack, can consume 1 Spiritual knowledge to grant 2 Offense Level Up to nearby allies (5s cooldown).", \
 		"type" = /datum/component/association_skill/dieci_efficient_research)
 
 	sage["tier3"] = list()

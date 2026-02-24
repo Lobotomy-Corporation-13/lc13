@@ -57,7 +57,7 @@
 	if(world.time < last_consume + 5 SECONDS)
 		return
 	var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-	if(!kc)
+	if(!kc || kc.conserve_knowledge)
 		return
 	var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
 	if(!consumed)
@@ -125,7 +125,7 @@
 	// 5s CD: consume 1 Behavioral for +5%/level
 	if(world.time >= last_consume + 5 SECONDS)
 		var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-		if(kc)
+		if(kc && !kc.conserve_knowledge)
 			var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
 			if(consumed)
 				last_consume = world.time
@@ -175,7 +175,7 @@
 	var/consume_level = 0
 	if(world.time >= last_consume + 5 SECONDS)
 		var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-		if(kc)
+		if(kc && !kc.conserve_knowledge)
 			var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
 			if(consumed)
 				last_consume = world.time
@@ -320,11 +320,11 @@
 		if(hit < 5)
 			sleep(0.5 SECONDS)
 
-	// Grant 2 free empowers
+	// Grant 2 free empowers (max 3 stored)
 	if(!QDELETED(user))
 		var/obj/item/ego_weapon/city/dieci/W = user.get_active_held_item()
 		if(istype(W))
-			W.free_empowers += 2
+			W.free_empowers = min(W.free_empowers + 2, 3)
 
 	// Clean up
 	if(!QDELETED(target))
@@ -393,9 +393,9 @@
 	// Apply 5 new Sinking
 	if(!QDELETED(target))
 		target.apply_lc_sinking(5)
-	// Grant 1 free empower
+	// Grant 1 free empower (max 3 stored)
 	if(!QDELETED(user))
 		var/obj/item/ego_weapon/city/dieci/W = user.get_active_held_item()
 		if(istype(W))
-			W.free_empowers += 1
+			W.free_empowers = min(W.free_empowers + 1, 3)
 		to_chat(user, span_danger("Tome of Ruin! Sinking triggered and renewed!"))

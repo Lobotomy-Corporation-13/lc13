@@ -33,7 +33,7 @@
 	if(world.time < last_consume + 5 SECONDS)
 		return
 	var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-	if(!kc)
+	if(!kc || kc.conserve_knowledge)
 		return
 	var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_MEDICAL)
 	if(!consumed)
@@ -163,12 +163,12 @@
 // ============================================================
 // T2b: Stalwart Presence
 // ============================================================
-// Take damage at 50+ shield: 3 DLU. 5s CD: consume 1 Medical → heal level*2% maxHP.
+// Take damage at 50+ shield: 3 Protection. 5s CD: consume 1 Medical → heal level*2% maxHP.
 
 /// Warden T2b — Taking damage while shielded grants Defense Level Up and periodic Medical knowledge heals.
 /datum/component/association_skill/dieci_stalwart_presence
 	skill_name = "Stalwart Presence"
-	skill_desc = "Taking damage with 50+ shield HP grants 3 Defense Level Up. On damage taken, can also consume 1 Medical to heal level x2% of max HP (5s cooldown)."
+	skill_desc = "Taking damage with 50+ shield HP grants 3 Protection. On damage taken, can also consume 1 Medical to heal level x2% of max HP (5s cooldown)."
 	branch = "Warden"
 	tier = 2
 	choice = "b"
@@ -183,12 +183,12 @@
 	if(!shield || shield.shield_health < 50)
 		return
 	// Grant 3 Defense Level Up
-	INVOKE_ASYNC(human_parent, TYPE_PROC_REF(/mob/living, apply_lc_defense_level_up), 3)
+	INVOKE_ASYNC(human_parent, TYPE_PROC_REF(/mob/living, apply_lc_protection), 3)
 	// 5s CD: consume 1 Medical for heal
 	if(world.time < last_consume + 5 SECONDS)
 		return
 	var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-	if(!kc)
+	if(!kc || kc.conserve_knowledge)
 		return
 	var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_MEDICAL)
 	if(!consumed)

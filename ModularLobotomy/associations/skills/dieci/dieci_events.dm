@@ -72,6 +72,7 @@
 	for(var/turf/T in view(zone_radius, center_turf))
 		var/obj/effect/contract_zone/Z = new(T)
 		Z.invisibility = 0 // Events are public — visible to all
+		Z.color = "#FFD700"
 		zone_effects += Z
 
 /// Perform a single event tick. Called by the Director via the Tome TGUI.
@@ -230,7 +231,8 @@
 	)
 
 /datum/dieci_event/book_reading/apply_tick_benefits(list/all_in_zone)
-	for(var/mob/living/L in all_in_zone)
+	var/list/non_dieci = get_non_dieci(all_in_zone)
+	for(var/mob/living/L in non_dieci)
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
 			var/heal_amount = H.maxSanity * 0.17
@@ -276,7 +278,8 @@
 	)
 
 /datum/dieci_event/training_session/apply_tick_benefits(list/all_in_zone)
-	for(var/mob/living/L in all_in_zone)
+	var/list/non_dieci = get_non_dieci(all_in_zone)
+	for(var/mob/living/L in non_dieci)
 		if(!ishuman(L))
 			continue
 		// Apply or stack the training buff
@@ -289,7 +292,7 @@
 /datum/dieci_event/training_session/award_tick_knowledge()
 	var/datum/component/dieci_knowledge/dk = host.GetComponent(/datum/component/dieci_knowledge)
 	if(dk)
-		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, 1, null, "Training Session")
+		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_SPIRITUAL, 1, null, "Training Session")
 
 // ============================================================
 // Charity Sermon — 1800 ahn, 7 ticks, 60s interval
@@ -336,7 +339,7 @@
 /datum/dieci_event/charity_sermon/award_tick_knowledge()
 	var/datum/component/dieci_knowledge/dk = host.GetComponent(/datum/component/dieci_knowledge)
 	if(dk)
-		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_SPIRITUAL, 2, null, "Charity Sermon")
+		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_SPIRITUAL, 1, null, "Charity Sermon")
 
 // ============================================================
 // Status Effects

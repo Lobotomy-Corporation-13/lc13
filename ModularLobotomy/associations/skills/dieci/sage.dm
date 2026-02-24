@@ -53,7 +53,7 @@
 	// 5s CD: consume 1 Spiritual for +5%/level
 	if(world.time >= last_consume + 5 SECONDS)
 		var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-		if(kc)
+		if(kc && !kc.conserve_knowledge)
 			var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
 			if(consumed)
 				last_consume = world.time
@@ -106,7 +106,7 @@
 /// Sage T2a — Grants a targeted action that buffs allies with Offense Level Up via Spiritual knowledge.
 /datum/component/association_skill/dieci_shared_wisdom
 	skill_name = "Shared Wisdom"
-	skill_desc = "Action (15s CD): click an ally within 7 tiles. Consumes highest Spiritual knowledge, granting them level x2 Offense Level Up."
+	skill_desc = "Action (15s CD): click an ally within 5 tiles. Consumes highest Spiritual knowledge, granting them level x2 Offense Level Up."
 	branch = "Sage"
 	tier = 2
 	choice = "a"
@@ -136,7 +136,7 @@
 	/// Whether we are in targeting mode
 	var/targeting = FALSE
 	/// Targeting range
-	var/target_range = 7
+	var/target_range = 5
 
 /datum/action/cooldown/dieci_shared_wisdom_action/Trigger()
 	. = ..()
@@ -251,7 +251,7 @@
 	if(world.time < last_consume + 5 SECONDS)
 		return
 	var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-	if(!kc)
+	if(!kc || kc.conserve_knowledge)
 		return
 	var/list/consumed = kc.consume_lowest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
 	if(!consumed)
@@ -465,7 +465,7 @@
 		return
 	// Consume 1 lowest knowledge (any type)
 	var/datum/component/dieci_knowledge/kc = human_parent.GetComponent(/datum/component/dieci_knowledge)
-	if(!kc)
+	if(!kc || kc.conserve_knowledge)
 		return
 	var/list/consumed = kc.consume_lowest_knowledge(1)
 	if(!length(consumed))

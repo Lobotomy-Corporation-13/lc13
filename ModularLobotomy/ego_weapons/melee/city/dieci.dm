@@ -38,7 +38,7 @@
 	/// World.time when combo chain expires
 	var/combo_time = 0
 	/// Deciseconds before combo resets
-	var/combo_wait = 10
+	var/combo_wait = 50
 	/// Whether a multi-hit finisher sequence is in progress
 	var/in_sequence = FALSE
 
@@ -116,6 +116,12 @@
 
 	var/is_heavy = activated
 
+	// Instant kill: empowered H attacks kill insane (0 SP) carbon targets
+	if(is_heavy && ishuman(target))
+		var/mob/living/carbon/human/HT = target
+		if(HT.sanity_lost)
+			HT.death()
+
 	// Set damage type: H = PALE, L = RED
 	if(is_heavy)
 		damtype = PALE_DAMAGE
@@ -171,42 +177,42 @@
 // Combo Finishers
 // ============================================================
 
-/// H — Quick Strike: Single PALE hit + Sinking burst from Behavioral knowledge.
+/// H — Quick Strike: force x1.3 PALE hit. Behavioral knowledge bonus: level x3 Sinking.
 /obj/item/ego_weapon/city/dieci/proc/quick_strike(mob/living/target, mob/living/user)
-	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
-	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
-	if(!consumed)
-		return FALSE
-	var/level = consumed["level"]
-
+	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
+	force = round(initial(force) * 1.3)
+	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
 	in_sequence = FALSE
 	force = initial(force)
-
 	apply_empower_bonus(user)
-	if(!QDELETED(target))
+	// Bonus: consume Behavioral knowledge for Sinking burst
+	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
+	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
+	if(consumed && !QDELETED(target))
+		var/level = consumed["level"]
 		target.apply_lc_sinking(level * 3)
 		to_chat(user, span_danger("Quick Strike! [level * 3] Sinking!"))
 	return TRUE
 
-/// LH — Sweeping Blow: Hit + throw + Sinking from Medical knowledge.
+/// LH — Sweeping Blow: force x1.2 PALE hit. Medical knowledge bonus: throw + Sinking.
 /obj/item/ego_weapon/city/dieci/proc/sweeping_blow(mob/living/target, mob/living/user)
-	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
-	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_MEDICAL)
-	if(!consumed)
-		return FALSE
-	var/level = consumed["level"]
-
+	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
+	force = round(initial(force) * 1.2)
+	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
 	in_sequence = FALSE
 	force = initial(force)
-
 	apply_empower_bonus(user)
-	if(!QDELETED(target))
+	// Bonus: consume Medical knowledge for throw + Sinking
+	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
+	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_MEDICAL)
+	if(consumed && !QDELETED(target))
+		var/level = consumed["level"]
 		target.apply_lc_sinking(level * 2)
 		if(!target.anchored)
 			var/throw_dist = 2 + level
@@ -215,49 +221,48 @@
 		to_chat(user, span_danger("Sweeping Blow! Thrown [2 + level] tiles!"))
 	return TRUE
 
-/// LLH — Pressure Combo: Grab + 5-hit beatdown + Sinking + DLD from Behavioral knowledge.
+/// LLH — Pressure Combo: force x1.3 PALE hit. Behavioral knowledge bonus: Sinking + DLD.
 /obj/item/ego_weapon/city/dieci/proc/pressure_combo(mob/living/target, mob/living/user)
-	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
-	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
-	if(!consumed)
-		return FALSE
-	var/level = consumed["level"]
-
-	user.Immobilize(10)
-	target.Immobilize(10)
-
-	force = round(initial(force) * 0.4)
-	damtype = RED_DAMAGE
+	// Base hit always happens
+	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
+	force = round(initial(force) * 1.3)
+	damtype = PALE_DAMAGE
 	in_sequence = TRUE
-	for(var/i in 1 to 5)
-		if(QDELETED(target) || QDELETED(user))
-			break
-		attack(target, user)
-		sleep(1)
+	attack(target, user)
 	in_sequence = FALSE
 	force = initial(force)
-
 	apply_empower_bonus(user)
-	if(!QDELETED(target))
+	// Bonus: consume Behavioral knowledge for Sinking + DLD
+	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
+	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL)
+	if(consumed && !QDELETED(target))
+		var/level = consumed["level"]
 		target.apply_lc_sinking(level * 2)
 		target.apply_lc_defense_level_down(level)
 		to_chat(user, span_danger("Pressure Combo! [level * 2] Sinking + [level] DLD!"))
 	return TRUE
 
-/// LLLH — Overwhelming Barrage: level*5 rapid hits, 1 Sinking each, from Medical knowledge.
+/// LLLH — Overwhelming Barrage: level*5 rapid hits at force x0.08, 1 Sinking each. Requires Medical knowledge.
 /obj/item/ego_weapon/city/dieci/proc/overwhelming_barrage(mob/living/target, mob/living/user)
+	// This finisher requires Medical knowledge to determine hit count
 	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
 	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_MEDICAL)
 	if(!consumed)
-		return FALSE
+		// No knowledge — single base hit at force x1 (fallback)
+		hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
+		damtype = PALE_DAMAGE
+		in_sequence = TRUE
+		attack(target, user)
+		in_sequence = FALSE
+		force = initial(force)
+		apply_empower_bonus(user)
+		return TRUE
 	var/level = consumed["level"]
-
 	var/hits = level * 5
 	var/immobilize_time = hits + 5
 	target.Immobilize(immobilize_time)
 	user.Immobilize(immobilize_time)
-
-	force = round(initial(force) * 0.1)
+	force = round(initial(force) * 0.08)
 	damtype = RED_DAMAGE
 	in_sequence = TRUE
 	for(var/i in 1 to hits)
@@ -269,31 +274,25 @@
 		sleep(0.5)
 	in_sequence = FALSE
 	force = initial(force)
-
 	apply_empower_bonus(user)
 	to_chat(user, span_danger("Overwhelming Barrage! [hits] hits!"))
 	return TRUE
 
-/// LLLLL — Measured Finisher: Single PALE hit + amplify target Sinking from Spiritual knowledge.
+/// LLLLL — Measured Finisher: force x1.5 PALE hit. Spiritual knowledge bonus: amplify target Sinking.
 /obj/item/ego_weapon/city/dieci/proc/measured_finisher(mob/living/target, mob/living/user)
-	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
-	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
-	if(!consumed)
-		return FALSE
-	var/level = consumed["level"]
-
+	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
 	damtype = PALE_DAMAGE
 	force = round(initial(force) * 1.5)
-	user.Immobilize(10)
-	target.Immobilize(10)
-
 	in_sequence = TRUE
 	attack(target, user)
 	in_sequence = FALSE
 	force = initial(force)
-
-	if(!QDELETED(target))
+	// Bonus: consume Spiritual knowledge for Sinking amplification
+	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
+	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
+	if(consumed && !QDELETED(target))
+		var/level = consumed["level"]
 		var/datum/status_effect/stacking/sinking/S = target.has_status_effect(/datum/status_effect/stacking/sinking)
 		var/current_stacks = S ? S.stacks : 0
 		var/bonus_sinking = min(round(current_stacks * 0.1 * level), 50)
@@ -302,40 +301,38 @@
 		to_chat(user, span_danger("Measured Finisher! +[bonus_sinking] Sinking!"))
 	return TRUE
 
-/// LLLLH — Grand Finale: PALE hit + throw target + PALE shockwave from Spiritual knowledge.
+/// LLLLH — Grand Finale: force x1.5 PALE hit. Spiritual knowledge bonus: throw + PALE shockwave.
 /obj/item/ego_weapon/city/dieci/proc/grand_finale(mob/living/target, mob/living/user)
-	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
-	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
-	if(!consumed)
-		return FALSE
-	var/level = consumed["level"]
-
+	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
 	target.Immobilize(25)
 	user.Immobilize(25)
-
-	// Initial PALE hit
-	force = round(initial(force) * 0.5)
+	force = round(initial(force) * 1.5)
 	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
 	in_sequence = FALSE
 	force = initial(force)
-
 	apply_empower_bonus(user)
-	if(!QDELETED(target))
+	// Bonus: consume Spiritual knowledge for throw + shockwave
+	var/datum/component/dieci_knowledge/kc = get_knowledge_comp(user)
+	var/list/consumed = kc?.consume_highest_of_type(DIECI_KNOWLEDGE_TYPE_SPIRITUAL)
+	if(consumed && !QDELETED(target))
+		var/level = consumed["level"]
 		// Throw target
 		var/throw_dist = 3 + level
 		if(!target.anchored)
 			var/atom/throw_target = get_edge_target_turf(target, user.dir)
 			target.throw_at(throw_target, throw_dist, 4, user)
 		sleep(3)
-		// PALE shockwave around impact point
+		// PALE shockwave around impact point: level x8 damage + level x3 Sinking
 		var/shockwave_radius = 1 + level
-		var/shockwave_damage = initial(force)
-		var/list/been_hit = list(user)
-		for(var/turf/T in range(shockwave_radius, get_turf(target)))
-			been_hit = user.HurtInTurf(T, been_hit, shockwave_damage, PALE_DAMAGE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/shockwave_damage = level * 8
+		for(var/mob/living/L in range(shockwave_radius, get_turf(target)))
+			if(L == user || L.stat == DEAD)
+				continue
+			L.deal_damage(shockwave_damage, PALE_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
+			L.apply_lc_sinking(level * 3)
 		to_chat(user, span_danger("Grand Finale! Shockwave radius [shockwave_radius]!"))
 	return TRUE
 
