@@ -3447,6 +3447,7 @@
 					var/obj/effect/temp_visual/slice/temp = new(target_turf_before_possibly_obliterated)
 					temp.color = swingcolor
 					temp.transform *= 2
+					temp.layer = POINT_LAYER
 				SetComboState(0, target, user)
 				return
 			else
