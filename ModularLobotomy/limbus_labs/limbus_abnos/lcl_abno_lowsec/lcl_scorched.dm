@@ -99,7 +99,7 @@
 		if(!do_after(src, 1.5 SECONDS, target = src))
 			return FALSE
 	else
-		to_chat(src, "<span class='userdanger'>The heat becomes too much to bear!</span>")
+		to_chat(src, "<span class='userdanger'>The heat is becoming too much to bear.</span>")
 	icon = 'ModularLobotomy/_Lobotomyicons/tegumobs.dmi'
 	icon_state = "scorched"
 	AddBreachEffect()

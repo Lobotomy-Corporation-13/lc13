@@ -12,13 +12,16 @@
 	var/mob/living/picked_abno
 
 //This should stop someone to spawn as an abno if none of their preferences are available at round start.
-/datum/job/limbus_specimen/unique_job_check(client/C)
+/datum/job/limbus_specimen/unique_job_check(client/C, occupation_divide)
 	if(!LAZYLEN(return_sec_list(GLOB.low_security.Copy(), C)) && !LAZYLEN(return_sec_list(GLOB.high_security.Copy(), C)))
 		return FALSE
-	return attribute_abno(C)
+	return attribute_abno(C, occupation_divide)
 
 //Checks if any abnos are available for a latejoin.
 /datum/job/limbus_specimen/special_check_latejoin(client/C)
+	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again.
+		return FALSE
 	for(var/obj/effect/landmark/start/limbus_abnospawn/LAS in GLOB.start_landmarks_list)
 		if(LAZYLEN(return_sec_list(GLOB.available_low_sec_abno.Copy(), C)) || LAZYLEN(return_sec_list(GLOB.available_high_sec_abno.Copy(), C)))
 			return TRUE
@@ -31,7 +34,6 @@
 
 	if(latejoin)
 		attribute_abno(preference_source)
-
 
 	var/abno_path = LAZYACCESS(GLOB.attributed_lcl_abno, preference_source)
 	var/turf/abno_turf
@@ -54,6 +56,7 @@
 		picked_abno = LA
 		H.mind.transfer_to(picked_abno)
 		qdel(H)
+		GLOB.lcl_spawned_abno += abno_path
 		return picked_abno
 	return FALSE
 
@@ -74,24 +77,28 @@
 			abno_list -= limbus_abno
 	return abno_list
 
-/datum/job/limbus_specimen/proc/attribute_abno(client/C)
-	if(LAZYFIND(GLOB.attributed_lcl_abno, C)) //Note, attributing one abno technically allows a player to just spawn the same abno again if they respawn, I'll fix that later.
-		return TRUE //In that case, they already have an abno assigned to you, so we skip the whole thing.
+/datum/job/limbus_specimen/proc/attribute_abno(client/C, occupation_divide = FALSE)
+	var/found_abno = LAZYACCESS(GLOB.attributed_lcl_abno, C)
+	if(LAZYFIND(GLOB.lcl_spawned_abno, found_abno)) //The player's attributed abno has already been spawned, not allowed to try again. Pick another job jackass.
+		return FALSE
+	if(LAZYFIND(GLOB.attributed_lcl_abno, C))
+		return TRUE //In that case, they already have an abno assigned to you, but it hasn't been spawned so we skip the selection process.
 	var/spawning
 	var/list/low_sec_list = return_sec_list(GLOB.available_low_sec_abno.Copy(), C)
 	var/list/high_sec_list = return_sec_list(GLOB.available_high_sec_abno.Copy(), C)
 
 	spawning = pick_n_take(low_sec_list) //Prioritize lowsec spawns first.
 	if(!isnull(spawning))
-		GLOB.available_low_sec_abno -= spawning
-		LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		if(!occupation_divide)
+			GLOB.available_low_sec_abno -= spawning
+			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
 		return TRUE
 
 //If no lowsec landmarks/abno are available, we go for highsec.
 	spawning = pick_n_take(high_sec_list)
 	if(!isnull(spawning))
-		GLOB.available_high_sec_abno -= spawning
-		LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
+		if(!occupation_divide)
+			GLOB.available_high_sec_abno -= spawning
+			LAZYSET(GLOB.attributed_lcl_abno, C, spawning)
 		return TRUE
-
 	return FALSE
