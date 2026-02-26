@@ -434,6 +434,8 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	var/list/targets_found = list()
 	for(var/key, value in where_am_i.area_living)
 		for(var/mob/living/victim in value)
+			if(victim.z != src.z) // On second thought, maybe it SHOULD have a Z level check.
+				continue
 			if((victim.stat < DEAD) && !(faction_check_mob(victim))) // Skip corpses and friendlies
 				// If they're working we won't target them out of courtesy
 				if(ishuman(victim))
