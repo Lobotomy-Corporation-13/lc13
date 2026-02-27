@@ -470,6 +470,10 @@
 	desc = "A knife used to administer 'disciplinary action' by the Thumb. Use this on a still target to remove one of their limbs. Can also be used on their tongue or eyes."
 	icon = 'icons/obj/kitchen.dmi'
 	icon_state = "buckknife"
+	inhand_icon_state = "knife"
+	lefthand_file = 'icons/mob/inhands/equipment/kitchen_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/equipment/kitchen_righthand.dmi'
+	hitsound = 'sound/weapons/bladeslice.ogg'
 	prepare_amputation_sound = 'sound/effects/butcher.ogg'
 	target_title = "victim"
 	// Goofy force values for the sake of it.

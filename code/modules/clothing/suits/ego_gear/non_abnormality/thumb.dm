@@ -46,7 +46,7 @@
 	desc = "Armor worn by thumb grunts in eastern parts of the City."
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
-	/// East Soldato armour sprites by Deadkung
+	/// Prior East Soldato armour sprites by Deadkung, current by Zeratino
 	icon_state = "thumb_east_soldato"
 	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = 40, PALE_DAMAGE = 30) // 140 points.
 	attribute_requirements = list(
@@ -59,7 +59,7 @@
 /obj/item/clothing/suit/armor/ego_gear/city/thumb_east/capo
 	name = "thumb east capo armor"
 	desc = "Armor worn by thumb capos in eastern parts of the City. This one looks like it belongs to a particularly high rank Capo."
-	/// East Capo armour sprites by Potassium_19
+	/// Prior East Capo armour sprites by Potassium_19, current by Zeratino
 	icon_state = "thumb_east_capo"
 	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 50, BLACK_DAMAGE = 60, PALE_DAMAGE = 50) // 220 points.
 	attribute_requirements = list(
@@ -74,7 +74,7 @@
 /obj/item/clothing/head/thumb_east_hat
 	name = "thumb east soldato hat"
 	desc = "Looking snazzy is part of your duties as a Soldato."
-	// Sprites by Deadkung
+	// Prior Sprites by Deadkung, current by Zeratino
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat"
@@ -86,7 +86,7 @@
 /obj/item/clothing/head/thumb_east_hat/capo
 	name = "thumb east capo hat"
 	desc = "Procuring these hats takes up a substantial part of your budget, since they seem to keep mysteriously melting off during combat. At least it looks nice."
-	// Sprites by Deadkung
+	// Prior Sprites by Deadkung, current by Zeratino
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	worn_icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_worn.dmi'
 	icon_state = "thumb_east_hat_capo"
