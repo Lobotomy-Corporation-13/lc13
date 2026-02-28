@@ -861,6 +861,7 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 /datum/status_effect/display/gaze_display
 	id = "gaze_display_spiral"
 	duration = -1
+	display_icon = 'ModularLobotomy/_Lobotomyicons/status_icons_10x10.dmi'
 	display_name = "gaze"
 	alert_type = null
 

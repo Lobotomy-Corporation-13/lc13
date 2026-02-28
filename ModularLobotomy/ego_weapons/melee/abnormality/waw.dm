@@ -507,6 +507,7 @@
 	duration = 10 SECONDS
 	tick_interval = -1 // We don't need to tick
 	alert_type = null
+	display_icon = 'ModularLobotomy/_Lobotomyicons/status_icons_10x10.dmi'
 	display_name = "hemorrhage" // I "borrowed" and resized the 32x32 bleed status icon.
 
 	var/mob/living/carbon/human/crimlust_user

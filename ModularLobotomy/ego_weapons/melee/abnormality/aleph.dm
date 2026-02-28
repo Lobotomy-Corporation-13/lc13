@@ -3739,6 +3739,7 @@
 /// Contempt status effect.
 /datum/status_effect/display/perversion_weapon_contempt
 	id = "perversion_weapon_contempt"
+	display_icon = 'ModularLobotomy/_Lobotomyicons/status_icons_10x10.dmi'
 	display_name = "contempt"
 	alert_type = /atom/movable/screen/alert/status_effect/perversion_weapon_contempt
 	duration = 20 SECONDS
