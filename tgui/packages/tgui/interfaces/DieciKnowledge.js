@@ -19,23 +19,8 @@ export const DieciKnowledge = (props, context) => {
   const {
     active_knowledge = [],
     max_knowledge = 20,
-    synthesis_cost = 3,
     conserve_knowledge = false,
   } = data;
-
-  const groups = {};
-  active_knowledge.forEach(entry => {
-    const key = entry.type + '_' + entry.level;
-    if (!groups[key]) {
-      groups[key] = {
-        type: entry.type,
-        level: entry.level,
-        count: 0,
-      };
-    }
-    groups[key].count++;
-  });
-  const groupList = Object.values(groups);
 
   return (
     <Window width={440} height={420}>
@@ -129,50 +114,6 @@ export const DieciKnowledge = (props, context) => {
               )}
             </Section>
           </Stack.Item>
-          {groupList.length > 0 && (
-            <Stack.Item>
-              <Section title="Synthesis">
-                <Box color="label" mb={1}>
-                  {'Combine '}
-                  {synthesis_cost}
-                  {' same type+level entries'}
-                  {' into 1 higher level.'}
-                </Box>
-                <Stack wrap>
-                  {groupList.map((g, i) => (
-                    <Stack.Item
-                      key={i}
-                      mr={1}
-                      mb={1}
-                    >
-                      <Button
-                        content={
-                          g.type
-                          + ' L'
-                          + g.level
-                          + ' ('
-                          + g.count
-                          + ')'
-                        }
-                        disabled={
-                          g.count
-                            < synthesis_cost
-                          || g.level >= 5
-                        }
-                        onClick={() => act(
-                          'synthesize',
-                          {
-                            type: g.type,
-                            level: g.level,
-                          }
-                        )}
-                      />
-                    </Stack.Item>
-                  ))}
-                </Stack>
-              </Section>
-            </Stack.Item>
-          )}
         </Stack>
       </Window.Content>
     </Window>

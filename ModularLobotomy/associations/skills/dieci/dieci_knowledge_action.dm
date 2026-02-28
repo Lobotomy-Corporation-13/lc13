@@ -53,13 +53,6 @@
 		return
 
 	switch(action)
-		if("synthesize")
-			var/synth_type = params["type"]
-			var/synth_level = text2num(params["level"])
-			if(!synth_type || !synth_level)
-				return
-			dk.synthesize(synth_type, synth_level)
-			return TRUE
 		if("toggle_conserve")
 			dk.conserve_knowledge = !dk.conserve_knowledge
 			if(dk.conserve_knowledge)

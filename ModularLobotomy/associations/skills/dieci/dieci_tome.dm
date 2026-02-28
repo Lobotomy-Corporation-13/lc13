@@ -32,6 +32,8 @@
 	var/datum/dieci_event/active_event
 	/// world.time after which a new event can be started
 	var/event_cooldown_until = 0
+	/// Tome Studies — permanent knowledge sources that can be re-learned unlimited times
+	var/list/tome_studies
 
 /obj/item/dieci_tome/Destroy()
 	stop_observation()
@@ -98,6 +100,7 @@
 		to_chat(H, span_warning("This tome is attuned to someone else."))
 		return
 	init_shop()
+	init_studies()
 	ui_interact(H)
 
 /obj/item/dieci_tome/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
@@ -354,6 +357,83 @@
 	)
 
 // ============================================================
+// Tome Studies — Permanent Knowledge Sources
+// ============================================================
+
+/// Initialize the tome studies catalog. 15 entries: 6 L1, 6 L2, 3 L3.
+/obj/item/dieci_tome/proc/init_studies()
+	if(tome_studies)
+		return
+	tome_studies = list(
+		// L1 — V1 (free)
+		list("id" = 1, "type" = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, "level" = 1, "source" = "Study: Ruins Fauna", "flavor" = "Field observations of Ruins-dwelling creatures and their territorial instincts.", "cost" = 0, "unlocked" = TRUE),
+		list("id" = 2, "type" = DIECI_KNOWLEDGE_TYPE_MEDICAL, "level" = 1, "source" = "Study: Relic Trauma Care", "flavor" = "A primer on treating wounds sustained from Relic exposure and E.G.O. manifestation.", "cost" = 0, "unlocked" = TRUE),
+		list("id" = 3, "type" = DIECI_KNOWLEDGE_TYPE_SPIRITUAL, "level" = 1, "source" = "Study: Charity Doctrine", "flavor" = "Reflections on Dieci's founding principles of charity and community.", "cost" = 0, "unlocked" = TRUE),
+		// L1 — V2 (1800 Ahn)
+		list("id" = 4, "type" = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, "level" = 1, "source" = "Study: Backstreet Predators", "flavor" = "Documented behaviors of gangs and Syndicates operating in the Backstreets.", "cost" = 1800, "unlocked" = FALSE),
+		list("id" = 5, "type" = DIECI_KNOWLEDGE_TYPE_MEDICAL, "level" = 1, "source" = "Study: Battlefield Triage", "flavor" = "Emergency medical procedures developed for combat zone casualties.", "cost" = 1800, "unlocked" = FALSE),
+		list("id" = 6, "type" = DIECI_KNOWLEDGE_TYPE_SPIRITUAL, "level" = 1, "source" = "Study: Orphan's Parable", "flavor" = "A collection of parables told to orphans raised under Dieci's care.", "cost" = 1800, "unlocked" = FALSE),
+		// L2 — V1 (2000 Ahn)
+		list("id" = 7, "type" = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, "level" = 2, "source" = "Study: Distortion Analysis", "flavor" = "Comprehensive analysis of Distortion behavioral patterns and pre-manifestation signs.", "cost" = 2000, "unlocked" = FALSE),
+		list("id" = 8, "type" = DIECI_KNOWLEDGE_TYPE_MEDICAL, "level" = 2, "source" = "Study: Advanced Triage", "flavor" = "Advanced surgical techniques adapted from K Corp. ampule therapy research.", "cost" = 2000, "unlocked" = FALSE),
+		list("id" = 9, "type" = DIECI_KNOWLEDGE_TYPE_SPIRITUAL, "level" = 2, "source" = "Study: Saints and Relics", "flavor" = "Theological writings on the Saints and their Holy Relics, compiled across branches.", "cost" = 2000, "unlocked" = FALSE),
+		// L2 — V2 (2500 Ahn)
+		list("id" = 10, "type" = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, "level" = 2, "source" = "Study: Abnormality Protocols", "flavor" = "Behavioral analysis of Abnormalities documented from L Corp. facility records.", "cost" = 2500, "unlocked" = FALSE),
+		list("id" = 11, "type" = DIECI_KNOWLEDGE_TYPE_MEDICAL, "level" = 2, "source" = "Study: Prosthetic Anatomy", "flavor" = "Detailed diagrams of prosthetic integration points, sourced from Calw's medical archives.", "cost" = 2500, "unlocked" = FALSE),
+		list("id" = 12, "type" = DIECI_KNOWLEDGE_TYPE_SPIRITUAL, "level" = 2, "source" = "Study: The Smoke War", "flavor" = "First-hand spiritual accounts of the Smoke War and its impact on the City's soul.", "cost" = 2500, "unlocked" = FALSE),
+		// L3 (3000 Ahn each)
+		list("id" = 13, "type" = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, "level" = 3, "source" = "Study: Sweeper Autopsy", "flavor" = "Dissection notes on Sweeper anatomy, detailing the melted-down human core within.", "cost" = 3000, "unlocked" = FALSE),
+		list("id" = 14, "type" = DIECI_KNOWLEDGE_TYPE_MEDICAL, "level" = 3, "source" = "Study: E.G.O. Manifestation", "flavor" = "Clinical records of E.G.O. emergence, documenting the boundary between mind and weapon.", "cost" = 3000, "unlocked" = FALSE),
+		list("id" = 15, "type" = DIECI_KNOWLEDGE_TYPE_SPIRITUAL, "level" = 3, "source" = "Study: Forbidden Chronicle", "flavor" = "A forbidden account of the White Nights and Dark Days, and the Light that touched the City.", "cost" = 3000, "unlocked" = FALSE)
+	)
+
+/// Study a tome entry, adding permanent knowledge to Active Knowledge. Can be repeated unlimited times.
+/obj/item/dieci_tome/proc/study_knowledge(study_id, mob/living/carbon/human/user)
+	init_studies()
+	var/list/study
+	for(var/list/s in tome_studies)
+		if(s["id"] == study_id)
+			study = s
+			break
+	if(!study)
+		return
+	if(!study["unlocked"])
+		to_chat(user, span_warning("This study has not been unlocked yet."))
+		return
+	var/datum/component/dieci_knowledge/dk = get_knowledge_comp()
+	if(!dk)
+		return
+	if(length(dk.active_knowledge) >= dk.max_knowledge)
+		to_chat(user, span_warning("Your Active Knowledge is full."))
+		return
+	// Check for active duplicate (same type + level + source)
+	for(var/list/entry in dk.active_knowledge)
+		if(entry["type"] == study["type"] && entry["level"] == study["level"] && entry["source"] == study["source"])
+			to_chat(user, span_warning("You already have this knowledge active. Consume it first."))
+			return
+	to_chat(user, span_notice("You study the tome entry..."))
+	if(!do_after(user, 3 SECONDS, src))
+		to_chat(user, span_warning("Study interrupted."))
+		return
+	if(dk.add_active_knowledge(study["type"], study["level"], study["flavor"], study["source"], TRUE))
+		// Add to stored knowledge as unlimited reread entry
+		var/list/stored_entry = list(
+			"type" = study["type"],
+			"level" = study["level"],
+			"flavor" = study["flavor"],
+			"source" = study["source"],
+			"rereads_remaining" = -1,
+			"permanent" = TRUE
+		)
+		dk.stored_knowledge += list(stored_entry)
+		// Hide from Studies tab
+		study["studied"] = TRUE
+		to_chat(user, span_nicegreen("[study["source"]]: [study["type"]] L[study["level"]] knowledge gained and stored permanently."))
+		playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 30, TRUE)
+	else
+		to_chat(user, span_warning("Failed to add knowledge. Capacity may be full."))
+
+// ============================================================
 // TGUI Interface
 // ============================================================
 
@@ -375,9 +455,15 @@
 	if(dk)
 		data["stored_knowledge"] = dk.stored_knowledge
 		data["stored_count"] = length(dk.stored_knowledge)
+		data["synthesis_cost"] = dk.synthesis_cost
 	else
 		data["stored_knowledge"] = list()
 		data["stored_count"] = 0
+		data["synthesis_cost"] = 3
+
+	// Tome Studies data
+	init_studies()
+	data["tome_studies"] = tome_studies
 
 	// Observation data
 	var/mob/living/observed = observed_target_ref?.resolve()
@@ -461,6 +547,59 @@
 				to_chat(owner_mob, span_nicegreen("[count] knowledge entries recorded to the tome."))
 			else
 				to_chat(owner_mob, span_warning("No new entries to record."))
+			return TRUE
+
+		// Synthesize stored knowledge
+		if("synthesize")
+			var/datum/component/dieci_knowledge/synth_dk = get_knowledge_comp()
+			if(!synth_dk)
+				return
+			var/synth_type = params["type"]
+			var/synth_level = text2num(params["level"])
+			if(!synth_type || !synth_level)
+				return
+			synth_dk.synthesize(synth_type, synth_level)
+			return TRUE
+
+		// Purchase a tome study unlock
+		if("purchase_study")
+			var/study_id = text2num(params["study_id"])
+			if(!study_id)
+				return
+			init_studies()
+			var/list/study
+			for(var/list/s in tome_studies)
+				if(s["id"] == study_id)
+					study = s
+					break
+			if(!study || study["unlocked"])
+				return
+			var/cost = study["cost"]
+			if(!ishuman(usr))
+				return
+			var/mob/living/carbon/human/buyer = usr
+			var/obj/item/card/id/id = buyer.get_idcard(TRUE)
+			if(!id?.registered_account)
+				to_chat(buyer, span_warning("No registered bank account found."))
+				return
+			if(!id.registered_account.has_money(cost))
+				to_chat(buyer, span_warning("Insufficient funds. Need [cost] Ahn."))
+				return
+			id.registered_account.adjust_money(-cost)
+			study["unlocked"] = TRUE
+			to_chat(buyer, span_nicegreen("Unlocked [study["source"]] for [cost] Ahn."))
+			playsound(get_turf(buyer), 'sound/machines/terminal_prompt_confirm.ogg', 30, TRUE)
+			return TRUE
+
+		// Study a tome entry for permanent knowledge
+		if("study")
+			var/study_id = text2num(params["study_id"])
+			if(!study_id)
+				return
+			var/mob/living/owner_mob = get_owner_mob()
+			if(!owner_mob || !ishuman(owner_mob))
+				return
+			study_knowledge(study_id, owner_mob)
 			return TRUE
 
 		// Re-read stored knowledge from tome

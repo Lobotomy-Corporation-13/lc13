@@ -39,7 +39,8 @@
 // ============================================================
 
 /// Add a new Active Knowledge entry. Returns TRUE if added, FALSE if at capacity or duplicate exists.
-/datum/component/dieci_knowledge/proc/add_active_knowledge(type, level, flavor, source)
+/// If permanent is TRUE, the entry cannot be used as a synthesis ingredient but can be consumed in combat.
+/datum/component/dieci_knowledge/proc/add_active_knowledge(type, level, flavor, source, permanent = FALSE)
 	if(length(active_knowledge) >= max_knowledge)
 		to_chat(parent, span_warning("Your Active Knowledge is full ([max_knowledge]/[max_knowledge]). Consume or record entries to make space."))
 		return FALSE
@@ -53,6 +54,8 @@
 	if(!flavor)
 		flavor = generate_flavor(type, level)
 	var/list/entry = list("type" = type, "level" = level, "flavor" = flavor, "recorded" = FALSE, "source" = source)
+	if(permanent)
+		entry["permanent"] = TRUE
 	active_knowledge += list(entry)
 	return TRUE
 
@@ -169,6 +172,7 @@
 	return recorded_count
 
 /// Restore Active Knowledge from Stored entries. Each stored entry decrements its rereads, removed at 0.
+/// Unlimited entries (rereads_remaining = -1) are never decremented or removed. They restore as permanent.
 /// Only restores up to available capacity. Skips entries that already have an active copy (must spend it first).
 /datum/component/dieci_knowledge/proc/reread_from_tome()
 	var/restored_count = 0
@@ -181,6 +185,7 @@
 		if(has_active_copy(stored_entry))
 			continue
 		// Add back as active knowledge (marked as already recorded)
+		var/is_permanent = stored_entry["permanent"]
 		var/list/new_entry = list(
 			"type" = stored_entry["type"],
 			"level" = stored_entry["level"],
@@ -188,10 +193,14 @@
 			"source" = stored_entry["source"],
 			"recorded" = TRUE
 		)
+		if(is_permanent)
+			new_entry["permanent"] = TRUE
 		active_knowledge += list(new_entry)
-		stored_entry["rereads_remaining"]--
-		if(stored_entry["rereads_remaining"] <= 0)
-			to_remove += i
+		// Unlimited entries (-1) are never decremented or removed
+		if(stored_entry["rereads_remaining"] != -1)
+			stored_entry["rereads_remaining"]--
+			if(stored_entry["rereads_remaining"] <= 0)
+				to_remove += i
 		restored_count++
 	// Remove depleted stored entries (iterate backwards to preserve indices)
 	for(var/i in length(to_remove) to 1 step -1)
@@ -210,29 +219,42 @@
 // Synthesis
 // ============================================================
 
-/// Consume N entries of same type+level and produce 1 of level+1. Returns TRUE on success.
+/// Consume N stored entries of same type+level and produce 1 stored entry of level+1. Returns TRUE on success.
+/// Permanent (study) entries cannot be used as synthesis ingredients. Operates on stored_knowledge only.
 /datum/component/dieci_knowledge/proc/synthesize(type, level)
 	if(level >= 5)
 		to_chat(parent, span_warning("Cannot synthesize beyond level 5."))
 		return FALSE
-	var/count = get_count_by_type_and_level(type, level)
+	// Count non-permanent stored entries matching type+level
+	var/count = 0
+	for(var/list/entry in stored_knowledge)
+		if(entry["type"] == type && entry["level"] == level && !entry["permanent"])
+			count++
 	if(count < synthesis_cost)
-		to_chat(parent, span_warning("Need [synthesis_cost] [type] L[level] entries to synthesize. You have [count]."))
+		to_chat(parent, span_warning("Need [synthesis_cost] [type] L[level] stored entries to synthesize. You have [count]."))
 		return FALSE
-	// Check capacity for the new entry (we'll consume N and gain 1, net change = 1 - N)
-	// Since we're removing entries first, capacity should be fine
+	// Consume from stored_knowledge
 	var/consumed = 0
-	for(var/i in length(active_knowledge) to 1 step -1)
+	for(var/i in length(stored_knowledge) to 1 step -1)
 		if(consumed >= synthesis_cost)
 			break
-		var/list/entry = active_knowledge[i]
-		if(entry["type"] == type && entry["level"] == level)
-			active_knowledge.Cut(i, i + 1)
+		var/list/entry = stored_knowledge[i]
+		if(entry["type"] == type && entry["level"] == level && !entry["permanent"])
+			stored_knowledge.Cut(i, i + 1)
 			consumed++
 	if(consumed < synthesis_cost)
 		return FALSE
-	add_active_knowledge(type, level + 1, null, "Synthesis")
-	to_chat(parent, span_nicegreen("Synthesized [consumed] [type] L[level] entries into 1 [type] L[level + 1] entry!"))
+	// Add result to stored_knowledge
+	var/new_level = level + 1
+	var/list/new_entry = list(
+		"type" = type,
+		"level" = new_level,
+		"flavor" = generate_flavor(type, new_level),
+		"source" = "Synthesis",
+		"rereads_remaining" = max(1, 7 - new_level)
+	)
+	stored_knowledge += list(new_entry)
+	to_chat(parent, span_nicegreen("Synthesized [consumed] [type] L[level] stored entries into 1 [type] L[new_level] stored entry!"))
 	return TRUE
 
 // ============================================================
@@ -251,11 +273,13 @@
 			count++
 	return count
 
-/// Returns count of entries matching both type and level.
-/datum/component/dieci_knowledge/proc/get_count_by_type_and_level(type, level)
+/// Returns count of entries matching both type and level. If exclude_permanent is TRUE, skips permanent (study) entries.
+/datum/component/dieci_knowledge/proc/get_count_by_type_and_level(type, level, exclude_permanent = FALSE)
 	var/count = 0
 	for(var/list/entry in active_knowledge)
 		if(entry["type"] == type && entry["level"] == level)
+			if(exclude_permanent && entry["permanent"])
+				continue
 			count++
 	return count
 

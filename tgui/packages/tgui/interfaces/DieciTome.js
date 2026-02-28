@@ -9,10 +9,17 @@ import {
 import { formatMoney } from '../format';
 import { Window } from '../layouts';
 
-const TABS = ['knowledge', 'bestiary', 'shop', 'events'];
+const TABS = [
+  'knowledge',
+  'studies',
+  'bestiary',
+  'shop',
+  'events',
+];
 
 const TAB_LABELS = {
   knowledge: 'Knowledge',
+  studies: 'Studies',
   bestiary: 'Bestiary',
   shop: 'Shop',
   events: 'Events',
@@ -47,6 +54,9 @@ export const DieciTome = (props, context) => {
             {tab === 'knowledge' && (
               <KnowledgeTab />
             )}
+            {tab === 'studies' && (
+              <StudiesTab />
+            )}
             {tab === 'bestiary' && (
               <BestiaryTab />
             )}
@@ -71,7 +81,28 @@ const KnowledgeTab = (props, context) => {
     observed_target = null,
     total_exp = 0,
     skill_points = 0,
+    synthesis_cost = 3,
   } = data;
+
+  // Group non-permanent stored entries
+  // for synthesis buttons
+  const groups = {};
+  stored_knowledge.forEach(entry => {
+    if (entry.permanent) {
+      return;
+    }
+    const key = entry.type
+      + '_' + entry.level;
+    if (!groups[key]) {
+      groups[key] = {
+        type: entry.type,
+        level: entry.level,
+        count: 0,
+      };
+    }
+    groups[key].count++;
+  });
+  const groupList = Object.values(groups);
 
   return (
     <Stack vertical fill>
@@ -159,11 +190,20 @@ const KnowledgeTab = (props, context) => {
                     </Table.Cell>
                     <Table.Cell>
                       <Box
-                        color="label"
+                        color={
+                          entry
+                            .rereads_remaining
+                            === -1
+                            ? 'good' : 'label'
+                        }
                         fontSize="11px"
                       >
                         {entry
-                          .rereads_remaining}
+                          .rereads_remaining
+                          === -1
+                          ? 'Unlimited'
+                          : entry
+                            .rereads_remaining}
                       </Box>
                     </Table.Cell>
                   </Table.Row>
@@ -173,6 +213,51 @@ const KnowledgeTab = (props, context) => {
           )}
         </Section>
       </Stack.Item>
+      {groupList.length > 0 && (
+        <Stack.Item>
+          <Section title="Synthesis">
+            <Box color="label" mb={1}>
+              {'Combine '}
+              {synthesis_cost}
+              {' stored entries of same'}
+              {' type+level into 1'}
+              {' higher level.'}
+            </Box>
+            <Stack wrap>
+              {groupList.map((g, i) => (
+                <Stack.Item
+                  key={i}
+                  mr={1}
+                  mb={1}
+                >
+                  <Button
+                    content={
+                      g.type
+                      + ' L'
+                      + g.level
+                      + ' ('
+                      + g.count
+                      + ')'
+                    }
+                    disabled={
+                      g.count
+                        < synthesis_cost
+                      || g.level >= 5
+                    }
+                    onClick={() => act(
+                      'synthesize',
+                      {
+                        type: g.type,
+                        level: g.level,
+                      }
+                    )}
+                  />
+                </Stack.Item>
+              ))}
+            </Stack>
+          </Section>
+        </Stack.Item>
+      )}
       {observed_target && (
         <Stack.Item>
           <Section title="Observation">
@@ -191,6 +276,112 @@ const KnowledgeTab = (props, context) => {
         </Stack.Item>
       )}
     </Stack>
+  );
+};
+
+const LEVEL_COLORS = {
+  1: 'label',
+  2: 'average',
+  3: 'good',
+};
+
+const StudiesTab = (props, context) => {
+  const { act, data } = useBackend(context);
+  const {
+    tome_studies = [],
+    balance = 0,
+  } = data;
+
+  const available = tome_studies.filter(
+    s => !s.studied
+  );
+
+  return (
+    <Section title="Tome Studies">
+      <Box mb={1} bold>
+        {'Balance: '}
+        {formatMoney(balance) + ' Ahn'}
+      </Box>
+      <Box color="label" mb={1}>
+        Permanent knowledge sources.
+        Studied entries move to
+        Stored Knowledge as unlimited.
+        Cannot be used in synthesis.
+      </Box>
+      {available.length === 0 && (
+        <Box color="label" italic>
+          All studies have been learned.
+          Check Stored Knowledge.
+        </Box>
+      )}
+      {available.length > 0 && (
+        <Table>
+          <Table.Row header>
+            <Table.Cell>Entry</Table.Cell>
+            <Table.Cell>Info</Table.Cell>
+            <Table.Cell />
+          </Table.Row>
+          {available.map(study => (
+            <Table.Row key={study.id}>
+              <Table.Cell>
+                <Box
+                  bold
+                  color={
+                    LEVEL_COLORS[study.level]
+                    || 'label'
+                  }
+                >
+                  {study.type
+                    + ' L' + study.level}
+                </Box>
+                <Box
+                  color="label"
+                  fontSize="11px"
+                >
+                  {study.source}
+                </Box>
+              </Table.Cell>
+              <Table.Cell>
+                <Box
+                  color="label"
+                  fontSize="11px"
+                  italic
+                >
+                  {study.flavor}
+                </Box>
+              </Table.Cell>
+              <Table.Cell>
+                {study.unlocked ? (
+                  <Button
+                    content="Study"
+                    icon="book-open"
+                    onClick={() => act(
+                      'study',
+                      { study_id: study.id }
+                    )}
+                  />
+                ) : (
+                  <Button
+                    content={
+                      formatMoney(study.cost)
+                      + ' Ahn'
+                    }
+                    icon="lock"
+                    disabled={
+                      balance < study.cost
+                    }
+                    onClick={() => act(
+                      'purchase_study',
+                      { study_id: study.id }
+                    )}
+                  />
+                )}
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table>
+      )}
+    </Section>
   );
 };
 
