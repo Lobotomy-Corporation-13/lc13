@@ -744,6 +744,11 @@
 /obj/machinery/light{
 	pixel_y = -8
 	},
+/obj/machinery/vending/cigarette{
+	density = 0;
+	pixel_y = 16;
+	desc = "The cornerstone of any self-respecting Thumb outpost. If this vendor is destroyed, you will have to begin a full retreat from the Nest."
+	},
 /turf/open/floor/wood{
 	color = "#ccc8c0"
 	},
