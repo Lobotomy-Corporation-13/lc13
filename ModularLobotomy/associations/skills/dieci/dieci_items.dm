@@ -216,3 +216,80 @@
 	if(dk)
 		dk.add_active_knowledge(DIECI_KNOWLEDGE_TYPE_SPIRITUAL, 1, null, "Blessing")
 	to_chat(dieci_mob, span_nicegreen("Someone ate your blessed food. Spiritual L1 knowledge gained."))
+
+// ============================================================
+// Knowledge Books (Consumable — grant random Active Knowledge)
+// ============================================================
+
+/// A consumable book that grants a random level of Active Knowledge of a specific type when used in hand.
+/obj/item/dieci_knowledge_book
+	name = "Behavioral Knowledge Book"
+	desc = "A worn book of behavioral observations. Reading it grants a random level of Behavioral knowledge."
+	icon = 'icons/obj/library.dmi'
+	icon_state = "book"
+	w_class = WEIGHT_CLASS_SMALL
+	/// The knowledge type this book grants
+	var/knowledge_type = DIECI_KNOWLEDGE_TYPE_BEHAVIORAL
+
+/obj/item/dieci_knowledge_book/attack_self(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/datum/component/dieci_knowledge/dk = H.GetComponent(/datum/component/dieci_knowledge)
+	if(!dk)
+		to_chat(H, span_warning("You lack the training to understand this book."))
+		return
+	to_chat(H, span_notice("You begin reading the book..."))
+	if(!do_after(H, 1 SECONDS, src))
+		to_chat(H, span_warning("Reading interrupted."))
+		return
+	// Weighted random level: L1=50%, L2=25%, L3=15%, L4=7%, L5=3%
+	var/level = pickweight(list(1 = 50, 2 = 25, 3 = 15, 4 = 7, 5 = 3))
+	if(!dk.add_active_knowledge(knowledge_type, level, null, "Knowledge Book"))
+		to_chat(H, span_warning("Failed to gain knowledge. Your Active Knowledge may be full."))
+		return
+	to_chat(H, span_nicegreen("You read the book and gain [knowledge_type] L[level] knowledge."))
+	playsound(get_turf(H), 'sound/machines/terminal_prompt_confirm.ogg', 30, TRUE)
+	qdel(src)
+
+/// Medical Knowledge Book — grants random Medical knowledge.
+/obj/item/dieci_knowledge_book/medical
+	name = "Medical Knowledge Book"
+	desc = "A medical reference text. Reading it grants a random level of Medical knowledge."
+	knowledge_type = DIECI_KNOWLEDGE_TYPE_MEDICAL
+
+/// Spiritual Knowledge Book — grants random Spiritual knowledge.
+/obj/item/dieci_knowledge_book/spiritual
+	name = "Spiritual Knowledge Book"
+	desc = "A book of spiritual writings. Reading it grants a random level of Spiritual knowledge."
+	knowledge_type = DIECI_KNOWLEDGE_TYPE_SPIRITUAL
+
+// ============================================================
+// Debug Knowledge Book (Unlimited — pick any type and level)
+// ============================================================
+
+/// Debug tool that grants any chosen knowledge type and level on demand. Unlimited uses, no delay.
+/obj/item/dieci_knowledge_book/debug
+	name = "Debug Knowledge Book"
+	desc = "A debug tool. Grants any knowledge type and level on demand. Unlimited uses."
+
+/obj/item/dieci_knowledge_book/debug/attack_self(mob/user)
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/datum/component/dieci_knowledge/dk = H.GetComponent(/datum/component/dieci_knowledge)
+	if(!dk)
+		dk = H.AddComponent(/datum/component/dieci_knowledge)
+	var/chosen_type = tgui_input_list(H, "Select knowledge type:", "Debug Knowledge", list(DIECI_KNOWLEDGE_TYPE_BEHAVIORAL, DIECI_KNOWLEDGE_TYPE_MEDICAL, DIECI_KNOWLEDGE_TYPE_SPIRITUAL))
+	if(!chosen_type)
+		return
+	var/chosen_level = tgui_input_list(H, "Select knowledge level:", "Debug Knowledge", list("1", "2", "3", "4", "5"))
+	if(!chosen_level)
+		return
+	var/level = text2num(chosen_level)
+	if(!level || level < 1 || level > 5)
+		return
+	if(dk.add_active_knowledge(chosen_type, level, null, "Debug"))
+		to_chat(H, span_nicegreen("Debug: Added [chosen_type] L[level] knowledge."))
+	else
+		to_chat(H, span_warning("Debug: Failed to add knowledge (full or duplicate)."))
