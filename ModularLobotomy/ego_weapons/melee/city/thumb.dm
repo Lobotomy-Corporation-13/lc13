@@ -192,6 +192,8 @@
 	var/finisher_windup = 1.6 SECONDS
 	/// Are we currently performing a channeled action like leaping or reloading?
 	var/busy = FALSE
+	/// Cooldown for balloon alerts to avoid spamming the user
+	var/balloon_alert_cooldown
 
 	// Ammo variables.
 	/// Maximum ammo capacity that this weapon can hold.
@@ -438,6 +440,9 @@
 				return
 	else
 		to_chat(user, span_userdanger("Combo attacks with this weapon are currently disabled, use it in-hand to re-enable them."))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "Combo attacks disabled. Use in-hand to re-enable.")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		playsound(src, dryfire_sound, 65)
 	return
 
@@ -740,8 +745,10 @@
 	lunge_cooldown_timer = null
 	if(combo_stage == COMBO_NO_AMMO)
 		to_chat(user, span_nicegreen("You're ready to lunge and begin a new combo again."))
+		user.balloon_alert(user, "You're ready to lunge again.")
 	else
 		to_chat(user, span_nicegreen("You're ready to lunge again, once your current combo is finished."))
+		user.balloon_alert(user, "You're ready to lunge again.")
 
 /// This proc is our opener attack. We try to lunge at people from range by spending a round. It is actual stepping, not teleporting.
 /// If we reach our target with it, we automatically hit them. If we don't, we can still benefit from the fired round's bonuses if we land a hit before the combo times out.
@@ -749,9 +756,15 @@
 	// This will not stop you from trying to lunge through transparent objects, but if they are dense, you will not reach your target.
 	if(!(can_see(user, target, lunge_range)))
 		to_chat(user, span_warning("You can't reach your target!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You can't reach your target!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		return FALSE
 	if(!lunge_ready)
 		to_chat(user, span_warning("You're not ready to lunge yet!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You're not ready to lunge yet!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		return FALSE
 
 	combo_stage = COMBO_LUNGE
