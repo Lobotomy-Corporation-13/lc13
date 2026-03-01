@@ -105,7 +105,7 @@ const KnowledgeTab = (props, context) => {
   const groupList = Object.values(groups);
 
   return (
-    <Stack vertical fill>
+    <Stack vertical>
       <Stack.Item>
         <Section title="Status">
           <Box>
@@ -146,14 +146,12 @@ const KnowledgeTab = (props, context) => {
           </Stack>
         </Section>
       </Stack.Item>
-      <Stack.Item grow>
+      <Stack.Item>
         <Section
           title={
             'Stored Knowledge ('
             + stored_count + ')'
           }
-          scrollable
-          fill
         >
           {stored_count === 0 && (
             <Box color="label" italic>
@@ -168,6 +166,7 @@ const KnowledgeTab = (props, context) => {
                 <Table.Cell>Entry</Table.Cell>
                 <Table.Cell>Source</Table.Cell>
                 <Table.Cell>Reads</Table.Cell>
+                <Table.Cell />
               </Table.Row>
               {stored_knowledge.map(
                 (entry, i) => (
@@ -205,6 +204,19 @@ const KnowledgeTab = (props, context) => {
                           : entry
                             .rereads_remaining}
                       </Box>
+                    </Table.Cell>
+                    <Table.Cell
+                      collapsing
+                    >
+                      <Button
+                        icon="times"
+                        color="bad"
+                        onClick={() =>
+                          act(
+                            'remove_stored',
+                            { index: i + 1 }
+                          )}
+                      />
                     </Table.Cell>
                   </Table.Row>
                 )

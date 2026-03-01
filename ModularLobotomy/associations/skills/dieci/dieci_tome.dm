@@ -553,6 +553,21 @@
 				to_chat(owner_mob, span_warning("No new entries to record."))
 			return TRUE
 
+		// Remove a stored knowledge entry
+		if("remove_stored")
+			var/datum/component/dieci_knowledge/rm_dk = get_knowledge_comp()
+			if(!rm_dk)
+				return
+			var/rm_index = text2num(params["index"])
+			if(!rm_index || rm_index < 1 || rm_index > length(rm_dk.stored_knowledge))
+				return
+			var/list/entry = rm_dk.stored_knowledge[rm_index]
+			rm_dk.stored_knowledge.Cut(rm_index, rm_index + 1)
+			var/mob/living/owner_mob = get_owner_mob()
+			if(owner_mob)
+				to_chat(owner_mob, span_notice("Removed [entry["type"]] L[entry["level"]] from stored knowledge."))
+			return TRUE
+
 		// Synthesize stored knowledge
 		if("synthesize")
 			var/datum/component/dieci_knowledge/synth_dk = get_knowledge_comp()
