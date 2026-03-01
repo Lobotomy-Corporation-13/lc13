@@ -379,7 +379,7 @@
 	desc = "When we realized the pointlessness of our existence, we yearned to make everything else suffer as we do."
 	special = "This weapon hits 4 times every swing."
 	icon_state = "painprocess"
-	force = 30
+	force = 35
 	attack_speed = 1.4
 	damtype = RED_DAMAGE
 	attack_verb_continuous = list("slices", "saws", "rips")
