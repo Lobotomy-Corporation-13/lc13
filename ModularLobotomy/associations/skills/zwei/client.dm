@@ -429,7 +429,7 @@
 /datum/action/cooldown/zwei_guardians_wrath_action/proc/ExecuteCombo(mob/living/target, mob/living/carbon/human/user, datum/component/association_skill/zwei_guardians_wrath/skill)
 	// DPS calculation
 	var/obj/item/weapon = user.get_active_held_item()
-	var/dps = weapon ? (weapon.force * 1.25 / max(weapon.attack_speed, 0.1)) : 30
+	var/dps = weapon ? (weapon.force * 0.625 / max(weapon.attack_speed, 0.1)) : 15
 
 	// Check if ward was hurt in last 10 seconds for damage doubling
 	var/ward_hurt = (skill.ward_last_damage_time > 0 && (world.time - skill.ward_last_damage_time) <= 10 SECONDS)
