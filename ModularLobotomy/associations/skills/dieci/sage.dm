@@ -312,7 +312,7 @@
 	var/mob/living/carbon/human/user = owner
 	// Find target in view
 	var/mob/living/target
-	for(var/mob/living/L in range(1, get_turf(user)))
+	for(var/mob/living/L in range(3, get_turf(user)))
 		if(L == user || L.stat == DEAD)
 			continue
 		target = L

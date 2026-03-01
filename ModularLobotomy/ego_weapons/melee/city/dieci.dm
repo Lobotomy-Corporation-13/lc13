@@ -217,7 +217,7 @@
 		if(!target.anchored)
 			var/throw_dist = 2 + level
 			var/atom/throw_target = get_edge_target_turf(target, user.dir)
-			target.throw_at(throw_target, throw_dist, 4, user)
+			target.throw_at(throw_target, throw_dist, 4, user, gentle = TRUE)
 		to_chat(user, span_danger("Sweeping Blow! Thrown [2 + level] tiles!"))
 	return TRUE
 

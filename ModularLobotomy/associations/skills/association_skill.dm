@@ -74,3 +74,18 @@
 /// Helper: Get the parent's association_exp component
 /datum/component/association_skill/proc/get_exp_component()
 	return human_parent.GetComponent(/datum/component/association_exp)
+
+/// Helper: Check if a mob is in the same association as the skill owner.
+/// Used to prevent buffs from self-hits, allied attacks, and allied damage.
+/datum/component/association_skill/proc/is_association_member(mob/living/L)
+	if(!L || !isliving(L))
+		return FALSE
+	if(L == human_parent)
+		return TRUE
+	var/datum/component/association_exp/our_exp = human_parent.GetComponent(/datum/component/association_exp)
+	if(!our_exp)
+		return FALSE
+	var/datum/component/association_exp/their_exp = L.GetComponent(/datum/component/association_exp)
+	if(!their_exp)
+		return FALSE
+	return our_exp.association_type == their_exp.association_type

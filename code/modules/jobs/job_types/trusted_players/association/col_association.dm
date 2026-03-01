@@ -35,7 +35,7 @@ GLOBAL_LIST_INIT(association_jobs, list(
 		/datum/job/messenger,
 		// /datum/job/cutthroat,
 		/datum/job/sottocapo,
-		/datum/job/grandinquis,
+		// /datum/job/grandinquis,
 		// /datum/job/kurocaptain,
 		/datum/job/east_capo,
 		/datum/job/big_brother,

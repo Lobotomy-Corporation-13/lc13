@@ -187,7 +187,7 @@
 /datum/association_contract/proc/should_pause()
 	return FALSE
 
-/// Complete the contract — award completion EXP, pay the acceptor, clean up.
+/// Complete the contract — award completion EXP, pay the squad, clean up.
 /datum/association_contract/proc/complete()
 	if(state != CONTRACT_STATE_ACTIVE)
 		return
@@ -195,8 +195,8 @@
 	complete_time = world.time
 	stop_timers()
 	cleanup_zones()
-	// Pay the fixer who accepted the contract
-	pay_acceptor()
+	// Pay all squad members evenly
+	pay_squad()
 	// Award completion EXP bonus
 	if(squad)
 		var/bonus = completion_exp * get_exp_multiplier()
@@ -205,19 +205,21 @@
 			to_chat(M, span_nicegreen("Contract \"[contract_name]\" completed! +[bonus] EXP bonus."))
 		squad.remove_contract(src)
 
-/// Pay the contract payment to the acceptor's bank account via their ID card.
-/datum/association_contract/proc/pay_acceptor()
-	if(!acceptor_mob || QDELETED(acceptor_mob) || payment_amount <= 0)
+/// Pay the contract payment evenly to all squad members' bank accounts.
+/datum/association_contract/proc/pay_squad()
+	if(!squad || payment_amount <= 0)
 		return
-	if(!ishuman(acceptor_mob))
+	var/member_count = max(length(squad.members), 1)
+	var/split = round(payment_amount / member_count)
+	if(split <= 0)
 		return
-	var/mob/living/carbon/human/H = acceptor_mob
-	var/obj/item/card/id/ID = H.get_idcard(TRUE)
-	if(!ID?.registered_account)
-		to_chat(acceptor_mob, span_warning("Payment of [payment_amount] Ahn could not be deposited — no bank account found on your ID."))
-		return
-	ID.registered_account.adjust_money(payment_amount)
-	to_chat(acceptor_mob, span_nicegreen("[payment_amount] Ahn deposited to your account for completing \"[contract_name]\"."))
+	for(var/mob/living/carbon/human/H in squad.members)
+		var/obj/item/card/id/ID = H.get_idcard(TRUE)
+		if(!ID?.registered_account)
+			to_chat(H, span_warning("Payment could not be deposited — no bank account found on your ID."))
+			continue
+		ID.registered_account.adjust_money(split)
+		to_chat(H, span_nicegreen("[split] Ahn deposited (split [member_count] ways) for completing \"[contract_name]\"."))
 
 
 /// Fail the contract — no EXP, no refund.

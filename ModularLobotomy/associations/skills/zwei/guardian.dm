@@ -47,8 +47,10 @@
 	/// Internal cooldown tracker
 	var/last_trigger = 0
 
-/datum/component/association_skill/zwei_iron_stance/on_after_take_damage(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_iron_stance/on_after_take_damage(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 0.5 SECONDS)
 		return
@@ -71,6 +73,8 @@
 /datum/component/association_skill/zwei_aggressive_guard/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/item)
 	if(!can_use_skill())
 		return
+	if(is_association_member(target))
+		return
 	if(world.time < last_trigger + 1 SECONDS)
 		return
 	last_trigger = world.time
@@ -89,6 +93,8 @@
 
 /datum/component/association_skill/zwei_shieldbreaker/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/item)
 	if(!can_use_skill())
+		return
+	if(is_association_member(target))
 		return
 	if(!item)
 		return

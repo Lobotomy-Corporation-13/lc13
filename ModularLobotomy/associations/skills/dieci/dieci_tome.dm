@@ -138,6 +138,10 @@
 
 /// Scan a hostile mob for bestiary data. Awards 1 EXP and Behavioral knowledge.
 /obj/item/dieci_tome/proc/scan_hostile(mob/living/simple_animal/hostile/target, mob/living/carbon/human/user)
+	// Skip NPC dialogue mobs — they're not valid research subjects
+	if(istype(target, /mob/living/simple_animal/hostile/ui_npc))
+		to_chat(user, span_warning("This individual is not a valid research subject."))
+		return
 	// Check if already scanned this species
 	var/target_type = target.type
 	for(var/list/entry in bestiary_database)

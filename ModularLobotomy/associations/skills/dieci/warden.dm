@@ -7,12 +7,12 @@
 // ============================================================
 // T1a: Knowledge Barrier
 // ============================================================
-// Melee +3 shield HP. 5s CD: consume 1 Medical → +level*5 shield.
+// Melee +10 shield HP. 5s CD: consume 1 Medical → +level*8 shield.
 
 /// Warden T1a — Melee attacks build shield HP, enhanced by Medical knowledge consumption.
 /datum/component/association_skill/dieci_knowledge_barrier
 	skill_name = "Knowledge Barrier"
-	skill_desc = "Melee attacks grant +3 shield HP. On hit, can also consume 1 lowest Medical for +level x5 bonus shield (5s cooldown)."
+	skill_desc = "Melee attacks grant +10 shield HP. On hit, can also consume 1 lowest Medical for +level x8 bonus shield (5s cooldown)."
 	branch = "Warden"
 	tier = 1
 	choice = "a"
@@ -24,11 +24,11 @@
 		return
 	if(!istype(target) || QDELETED(target))
 		return
-	// Always grant 3 shield HP
+	// Always grant 10 shield HP
 	var/datum/component/dieci_shield_hp/shield = human_parent.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = human_parent.AddComponent(/datum/component/dieci_shield_hp)
-	shield.add_shield(3)
+	shield.add_shield(10)
 	// 5s CD: consume 1 lowest Medical for bonus shield
 	if(world.time < last_consume + 5 SECONDS)
 		return
@@ -39,17 +39,17 @@
 	if(!consumed)
 		return
 	last_consume = world.time
-	shield.add_shield(consumed["level"] * 5)
+	shield.add_shield(consumed["level"] * 8)
 
 // ============================================================
 // T1b: Reactive Ward
 // ============================================================
-// Melee +2 shield HP. Shield absorb → 5 Sinking to attacker.
+// Melee +8 shield HP. Shield absorb → 5 Sinking to attacker.
 
 /// Warden T1b — Melee attacks build shield HP. Shield absorption retaliates with Sinking.
 /datum/component/association_skill/dieci_reactive_ward
 	skill_name = "Reactive Ward"
-	skill_desc = "Melee attacks grant +2 shield HP. When your shield absorbs damage, applies 5 Sinking to the attacker."
+	skill_desc = "Melee attacks grant +8 shield HP. When your shield absorbs damage, applies 5 Sinking to the attacker."
 	branch = "Warden"
 	tier = 1
 	choice = "b"
@@ -75,11 +75,11 @@
 		return
 	if(!istype(target) || QDELETED(target))
 		return
-	// Grant 2 shield HP
+	// Grant 8 shield HP
 	var/datum/component/dieci_shield_hp/shield = human_parent.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = human_parent.AddComponent(/datum/component/dieci_shield_hp)
-	shield.add_shield(2)
+	shield.add_shield(8)
 
 /// Called when the shield absorbs damage. Applies Sinking to the attacker.
 /datum/component/association_skill/dieci_reactive_ward/proc/on_shield_hit(damage_absorbed, atom/damage_source)
@@ -253,7 +253,7 @@
 	var/mob/living/carbon/human/user = owner
 	// Find target in melee range
 	var/mob/living/target
-	for(var/mob/living/L in range(1, get_turf(user)))
+	for(var/mob/living/L in range(3, get_turf(user)))
 		if(L == user || L.stat == DEAD)
 			continue
 		target = L

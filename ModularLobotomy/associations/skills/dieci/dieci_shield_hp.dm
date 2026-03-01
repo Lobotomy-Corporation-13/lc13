@@ -36,6 +36,10 @@
 		deltimer(decay_timer_id)
 		decay_timer_id = null
 	on_shield_absorb = null
+	// Remove shield visual on cleanup
+	var/mob/living/owner = parent
+	if(owner && !QDELETED(owner))
+		owner.remove_filter("dieci_shield")
 	return ..()
 
 // ============================================================
@@ -49,6 +53,7 @@
 	shield_health = min(shield_health + amount, max_shield_health)
 	if(shield_health > 0 && !decay_timer_id)
 		start_decay()
+	update_shield_visual()
 
 /// Start the looping 10-second decay timer.
 /datum/component/dieci_shield_hp/proc/start_decay()
@@ -62,6 +67,7 @@
 	if(shield_health <= 0)
 		shield_health = 0
 		stop_decay()
+	update_shield_visual()
 
 /// Stop the decay timer.
 /datum/component/dieci_shield_hp/proc/stop_decay()
@@ -90,12 +96,14 @@
 			on_shield_absorb.Invoke(damage, damage_source)
 		if(shield_health <= 0)
 			stop_decay()
+			update_shield_visual()
 		return COMPONENT_MOB_DENY_DAMAGE
 	// Partial absorption — shield breaks, overflow dealt as forced damage
 	var/overflow = damage - shield_health
 	shield_health = 0
 	stop_decay()
 	spawn_shield_visual()
+	update_shield_visual()
 	if(on_shield_absorb)
 		on_shield_absorb.Invoke(damage - overflow, damage_source)
 	// Deal overflow via INVOKE_ASYNC with DAMAGE_FORCED to skip our handler
@@ -113,3 +121,16 @@
 	var/obj/effect/temp_visual/shock_shield/effect = new(get_turf(owner))
 	effect.transform *= 0.5
 	effect.pixel_x += rand(-8, 8)
+
+/// Update the persistent shield outline visual based on current shield HP.
+/datum/component/dieci_shield_hp/proc/update_shield_visual()
+	var/mob/living/owner = parent
+	if(!owner || QDELETED(owner))
+		return
+	if(shield_health > 0)
+		// Gold outline, intensity scales with shield amount
+		var/intensity = clamp(shield_health / max_shield_health, 0.3, 1.0)
+		var/size_val = round(1 + intensity)
+		owner.add_filter("dieci_shield", 5, list("type" = "outline", "color" = "#FFD70080", "size" = size_val))
+	else
+		owner.remove_filter("dieci_shield")

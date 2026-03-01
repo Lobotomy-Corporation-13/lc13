@@ -66,9 +66,11 @@
 		RegisterSignal(current_ward, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_ward_damaged))
 
 /// Signal handler: ward took damage.
-/datum/component/association_skill/zwei_designated_ward/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_designated_ward/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	SIGNAL_HANDLER
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 1 SECONDS)
 		return
@@ -199,9 +201,11 @@
 	mod_active = FALSE
 
 /// Signal handler: ward took damage.
-/datum/component/association_skill/zwei_threatening_presence/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_threatening_presence/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	SIGNAL_HANDLER
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 1 SECONDS)
 		return
@@ -255,9 +259,11 @@
 		RegisterSignal(current_ward, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_ward_damaged))
 
 /// Signal handler: ward took damage.
-/datum/component/association_skill/zwei_bodyguards_instinct/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_bodyguards_instinct/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	SIGNAL_HANDLER
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	INVOKE_ASYNC(src, PROC_REF(apply_speed_boost))
 
@@ -375,8 +381,10 @@
 		RegisterSignal(current_ward, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_ward_damaged))
 
 /// Signal handler: ward took damage — track timing.
-/datum/component/association_skill/zwei_guardians_wrath/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_guardians_wrath/proc/on_ward_damaged(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	SIGNAL_HANDLER
+	if(isliving(attacker) && is_association_member(attacker))
+		return
 	ward_last_damage_time = world.time
 
 /// Guardian's Wrath action — 120s cooldown powerful attack.
@@ -608,9 +616,11 @@
 		RegisterSignal(current_ward, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_ward_pre_damage))
 
 /// Signal handler: ward is about to take damage — intercept and redirect.
-/datum/component/association_skill/zwei_lifelink/proc/on_ward_pre_damage(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_lifelink/proc/on_ward_pre_damage(datum/source, damage, damagetype, def_zone, attacker)
 	SIGNAL_HANDLER
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 5 SECONDS)
 		return

@@ -25,8 +25,10 @@
 	/// Internal cooldown tracker
 	var/last_trigger = 0
 
-/datum/component/association_skill/zwei_vigilant_presence/on_after_take_damage(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_vigilant_presence/on_after_take_damage(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 1 SECONDS)
 		return
@@ -55,6 +57,8 @@
 
 /datum/component/association_skill/zwei_wardens_watch/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/item)
 	if(!can_use_skill())
+		return
+	if(is_association_member(target))
 		return
 	if(!item)
 		return
@@ -88,8 +92,10 @@
 	/// Internal cooldown tracker
 	var/last_trigger = 0
 
-/datum/component/association_skill/zwei_law_and_order/on_after_take_damage(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_law_and_order/on_after_take_damage(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	if(world.time < last_trigger + 12 SECONDS)
 		return
@@ -115,6 +121,8 @@
 
 /datum/component/association_skill/zwei_fortified_position/on_attack(datum/source, mob/living/target, mob/living/user, obj/item/item)
 	if(!can_use_skill())
+		return
+	if(is_association_member(target))
 		return
 	var/turf/current_turf = get_turf(human_parent)
 	if(current_turf == last_attack_turf)
@@ -324,9 +332,11 @@
 	watching_allies.Cut()
 
 /// Signal handler: an ally took damage.
-/datum/component/association_skill/zwei_iron_curtain/proc/on_ally_damaged(datum/source, damage, damagetype, def_zone)
+/datum/component/association_skill/zwei_iron_curtain/proc/on_ally_damaged(datum/source, damage, damagetype, def_zone, wound_bonus, bare_wound_bonus, sharpness, attacker)
 	SIGNAL_HANDLER
 	if(!can_use_skill())
+		return
+	if(isliving(attacker) && is_association_member(attacker))
 		return
 	var/mob/living/ally = source
 	if(!ally || QDELETED(ally))

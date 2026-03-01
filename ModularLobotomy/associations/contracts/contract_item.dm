@@ -117,6 +117,11 @@
 			if(!exp.squad.can_accept_contract())
 				to_chat(user, span_warning("Your squad is on contract cooldown. Please wait."))
 				return
+			// Host Event contracts can only be accepted by the Director
+			if(contract.contract_type == "host_event")
+				if(exp.squad.director != user)
+					to_chat(user, span_warning("Only the Director can accept Host Event contracts."))
+					return
 			contract.acceptor_mob = user
 			if(!contract.activate(exp.squad))
 				contract.acceptor_mob = null
