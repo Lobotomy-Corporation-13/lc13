@@ -701,3 +701,253 @@
 		if(O.real_name == real_name)
 			return O
 	return null
+
+
+
+/*--------------------------\
+|League of Nine ID Imprinter|
+\--------------------------*/
+// heavily based off of hypnochair.dm - look in tgui/packages/tgui/interfaces/idimprinter.js for the ui code
+/obj/machinery/idimprinter
+	name = "identity imprinter"
+	desc = "A recent development by the New League of Nine Littérateurs, this machine extracts an Identity from the Mirror and forces it onto the person. Simply force a person inside and turn it on. Interrupting impritation is ill-advised."
+	icon = 'icons/obj/machines/sleeper.dmi'
+	icon_state = "sleeper" //temporary
+	verb_say = "dictates"
+	verb_ask = "inquiries"
+	verb_exclaim = "dictates"
+	density = TRUE
+	opacity = FALSE
+	use_power = NO_POWER_USE
+
+	var/imprinting = FALSE ///Is the machine imprinting an identity right now?
+	var/start_time = 0 ///Time when the imprinting was started, to calculate effect in case of interruption
+	var/trigger_phrase = "" ///Trigger phrase to implant
+	var/timerid = 0 ///Timer ID for imprinting
+	var/message_cooldown = 0 ///Cooldown for breakout message
+	var/enter_message = "<span class='notice'><b>You feel dosens of pricks pierce your skin, holding you in place. Was this really a good idea?</b></span>"
+	var/identitylevel = 5 /*this decides what "tier" of identity you get. you gotta have a minimum # in each virtue to meet tier requirements cuz of gear & balance
+1 - urban legend (mariachi, ting-tang, base fixer gear) - no stats lol
+2 - urban plague (low-tier kk, bl, mariachi/tingtang boss, middle young sib, kcorp L1, warp crew, fullstop) 60-stats
+3 - urban nightmare (grade 6-5 fixers - molars, normal & east soldatos, mittlehammers, index proselytes, middle young sib, assoc fixer, kcorp3, warp modified/type C) 80-stats
+4 - urban nightmare but better (assoc fixers ala cinq west, devyat, liu2, capos (not east), index proxies, middle big sib, assoc vet, r-corp..? check with maintainer) 100-stats
+5 - star of the city (eastern capos, sottocapo, messenger, grand inq, directors) 120 stats - literally the only case of you ever getting this is if you sacrifice the assoc director/your boss/a second syndicate leader
+*/
+
+/obj/machinery/idimprinter/Initialize()
+	. = ..()
+	open_machine()
+	update_icon()
+
+/obj/machinery/idimprinter/container_resist_act(mob/living/user) //how the imprinter reacts to the occupant trying to break free
+	if(!locked)
+		open_machine()
+		return
+	user.changeNext_move(CLICK_CD_BREAKOUT)
+	user.last_special = world.time + CLICK_CD_BREAKOUT
+	user.visible_message(span_notice("You hear some kind of horrible, scraping sound coming from [src]!"), \
+		span_notice("You lean on the back of [src] and start pushing the door open... (this will take about [DisplayTimeText(600)].)"), \
+		span_hear("You hear a metallic creaking from [src]."))
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny.ogg', 25, TRUE)
+		say("WARNING! The subject is attempting to disrupt the imprinting process!")
+	if(do_after(user,(600), target = src))
+		if(!user || user.stat != CONSCIOUS || user.loc != src || state_open || !locked)
+			return
+		locked = FALSE
+		user.visible_message(span_warning("[user] successfully broke out of [src]!"), \
+			span_notice("You successfully break out of [src]!"))
+		open_machine()
+
+/obj/machinery/idimprinter/relaymove(mob/living/user, direction)
+	if(message_cooldown <= world.time)
+		message_cooldown = world.time + 50
+		to_chat(user, "<span class='warning'>[src]'s seal won't budge!</span>")
+
+/obj/machinery/idimprinter/ui_state(mob/user)
+	return GLOB.notcontained_state
+
+/obj/machinery/idimprinter/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "IDImprinter", name)
+		ui.open()
+
+/obj/machinery/idimprinter/ui_data()
+	var/list/data = list()
+	var/mob/living/mob_occupant = occupant
+
+	data["occupied"] = mob_occupant ? 1 : 0
+	data["open"] = state_open
+	data["imprinting"] = imprinting
+
+	data["occupant"] = list()
+	if(mob_occupant)
+		data["occupant"]["name"] = mob_occupant.name
+		data["occupant"]["stat"] = mob_occupant.stat
+
+	return data
+
+/obj/machinery/idimprinter/ui_act(action, params) //this is just what interacting with the ui does for the machine. hit door? open/close door.
+	. = ..()
+	if(.)
+		return
+
+	switch(action)
+		if("door")
+			if(state_open)
+				close_machine()
+			else
+				if(!imprinting)
+					open_machine()
+			. = TRUE
+		if("imprint")
+			if(!imprinting)
+				imprint()
+			else
+				interrupt_imprinting()
+			. = TRUE
+
+/obj/machinery/idimprinter/proc/imprint() //the proc that handles imprinting the victim and applying the effects
+	var/mob/living/carbon/human/H = occupant
+	if(!istype(C))
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny.ogg', 25, TRUE)
+		say("Specimens such as Gene Corp Remnants, animals, and most beings from the Ruins cannot be imprinted.")
+		return
+	if(var/obj/item/I in H.held_items + H.get_equipped_items()) //marked for destgrok review
+		if(!HAS_TRAIT(I, TRAIT_NODROP))
+			playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny.ogg', 25, TRUE)
+			say("Please remove all non-organic items such as radios, uniforms, and shoes, before using the imprinter.")
+			return
+	victim = H
+	to_chat(H, "<span class='warning'>You can feel those pricks turn into nails, searing past your skin!</span>")
+	playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/print1.ogg', 25, TRUE)
+	say("Nagel und Hammer thanks you for your dedication to the new ideal.")
+	H.become_blind("idimprinter")
+	ADD_TRAIT(H, TRAIT_DEAF, "idimprinter")
+	imprinting = TRUE
+	START_PROCESSING(SSobj, src)
+	start_time = world.time
+	update_icon()
+	timerid = addtimer(CALLBACK(src, PROC_REF(finish_imprinting)), 450, TIMER_STOPPABLE)
+
+/obj/machinery/idimprinter/process(delta_time) //flavorstuff while imprinting, along with deciding what requirements the victim meets
+	var/mob/living/carbon/human/H = occupant
+	if(!istype(H) || H != victim)
+		interrupt_imprinting()
+		return
+	if(1)
+	if(DT_PROB(5, delta_time))
+		to_chat(H, "Infinite possibilities...>[pick(\
+			"...My memories - they're being replaced. Is this what I really want..?",\
+			"...I feel myself bleeding out...",\
+			"...Everything's so violent, so bloody-...",\
+			"...I see myself. Why do I look so different..?",\
+			"...A whole entire world, shattered before my eyes..."\
+		)]</span>")
+	var/offset = prob(50) ? -2 : 2
+	animate(src, pixel_x = pixel_x + offset, time = 0.2, loop = 450) //start shaking
+
+	var/list/occupant_attributes = H.attributes //ok! lets begin deciding what requirements the victim meets!
+	if(!occupant_attributes || !LAZYLEN(occupant_attributes))
+		return FALSE // crazy error
+	for(var/attr_name in occupant_attributes)
+		var/datum/attribute/attr_datum = occupant_attributes[attr_name]
+		var/attribute_level = attr_datum.get_raw_level() //raw cuz temporary buffs = bugs
+		switch(attribute_level)
+		if(120 to INFINITY) //identity level remains as 5 if it already was
+			continue
+		if(100 to 199)  //identity level set to 4 if it wasnt already lower
+			identitylevel = min(identitylevel, 4)
+		if(80 to 99) //so on, so forth
+			identitylevel = min(identitylevel, 3)
+		if(60 to 79)
+			identitylevel = min(identitylevel, 2)
+		else
+			identitylevel = 1
+
+/obj/machinery/idimprinter/proc/finish_imprinting() // this is what happens after succesful imprinting, and when the gear is applied
+	var/mob/living/carbon/human/H = occupant
+	//write gear shit here
+
+	imprinting = FALSE
+	STOP_PROCESSING(SSobj, src)
+	update_icon()
+	audible_message("<span class='notice'>[src] pings!</span>")
+	playsound(src, 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/print2.ogg', 30, TRUE)
+	say("A new era is upon us. Imprinting complete.")
+
+	if(QDELETED(victim) || victim != occupant)
+		victim = null
+		return
+	victim.cure_blind("idimprinter")
+	REMOVE_TRAIT(victim, TRAIT_DEAF, "idimprinter")
+	victim = null
+
+/obj/machinery/idimprinter/proc/interrupt_imprinting()
+	deltimer(timerid)
+	imprinting = FALSE
+	STOP_PROCESSING(SSobj, src)
+	update_icon()
+
+	if(QDELETED(victim))
+		victim = null
+		return
+	victim.cure_blind("hypnochair")
+	REMOVE_TRAIT(victim, TRAIT_DEAF, "hypnochair")
+	if(!(victim.get_eye_protection() > 0))
+		var/time_diff = world.time - start_time
+		switch(time_diff)
+			if(0 to 100)
+				victim.add_confusion(10)
+				victim.Dizzy(100)
+				victim.blur_eyes(5)
+			if(101 to 200)
+				victim.add_confusion(15)
+				victim.Dizzy(200)
+				victim.blur_eyes(10)
+				if(prob(25))
+					victim.apply_status_effect(/datum/status_effect/trance, rand(50,150), FALSE)
+			if(201 to INFINITY)
+				victim.add_confusion(20)
+				victim.Dizzy(300)
+				victim.blur_eyes(15)
+				if(prob(65))
+					victim.apply_status_effect(/datum/status_effect/trance, rand(50,150), FALSE)
+	victim = null
+
+/obj/machinery/hypnochair/update_icon_state()
+	icon_state = initial(icon_state)
+	if(state_open)
+		icon_state += "_open"
+	if(occupant)
+		if(interrogating)
+			icon_state += "_active"
+		else
+			icon_state += "_occupied"
+
+/obj/machinery/hypnochair/container_resist_act(mob/living/user)
+	user.changeNext_move(CLICK_CD_BREAKOUT)
+	user.last_special = world.time + CLICK_CD_BREAKOUT
+	user.visible_message("<span class='notice'>You see [user] kicking against the door of [src]!</span>", \
+		"<span class='notice'>You lean on the back of [src] and start pushing the door open... (this will take about [DisplayTimeText(600)].)</span>", \
+		"<span class='hear'>You hear a metallic creaking from [src].</span>")
+	if(do_after(user,(600), target = src))
+		if(!user || user.stat != CONSCIOUS || user.loc != src || state_open)
+			return
+		user.visible_message("<span class='warning'>[user] successfully broke out of [src]!</span>", \
+			"<span class='notice'>You successfully break out of [src]!</span>")
+		open_machine()
+
+/obj/machinery/hypnochair/relaymove(mob/living/user, direction)
+	if(message_cooldown <= world.time)
+		message_cooldown = world.time + 50
+		to_chat(user, "<span class='warning'>[src]'s door won't budge!</span>")
+
+
+/obj/machinery/hypnochair/MouseDrop_T(mob/target, mob/user)
+	if(HAS_TRAIT(user, TRAIT_UI_BLOCKED) || !Adjacent(user) || !user.Adjacent(target) || !isliving(target) || !ISADVANCEDTOOLUSER(user))
+		return
+
+	close_machine(target)
+
+
