@@ -273,7 +273,7 @@
 
 	// Calculate DPS and damage multiplier
 	var/obj/item/weapon = user.get_active_held_item()
-	var/dps = weapon ? (weapon.force * 0.625 / max(weapon.attack_speed, 0.1)) : 15
+	var/dps = weapon ? (weapon.force * 1.25 / max(weapon.attack_speed, 0.1)) : 30
 	var/multiplier = min(2.0, 1 + total_levels * 0.1)
 	var/hit_damage = dps * multiplier / 5
 

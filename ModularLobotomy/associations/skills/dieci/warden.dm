@@ -7,12 +7,12 @@
 // ============================================================
 // T1a: Knowledge Barrier
 // ============================================================
-// Melee +5 shield HP. 5s CD: consume 1 Medical → +level*4 shield.
+// Melee +10 shield HP. 5s CD: consume 1 Medical → +level*8 shield.
 
 /// Warden T1a — Melee attacks build shield HP, enhanced by Medical knowledge consumption.
 /datum/component/association_skill/dieci_knowledge_barrier
 	skill_name = "Knowledge Barrier"
-	skill_desc = "Melee attacks grant +5 shield HP. On hit, can also consume 1 lowest Medical for +level x4 bonus shield (5s cooldown)."
+	skill_desc = "Melee attacks grant +10 shield HP. On hit, can also consume 1 lowest Medical for +level x8 bonus shield (5s cooldown)."
 	branch = "Warden"
 	tier = 1
 	choice = "a"
@@ -24,11 +24,11 @@
 		return
 	if(!istype(target) || QDELETED(target))
 		return
-	// Always grant 5 shield HP
+	// Always grant 10 shield HP
 	var/datum/component/dieci_shield_hp/shield = human_parent.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = human_parent.AddComponent(/datum/component/dieci_shield_hp)
-	shield.add_shield(5)
+	shield.add_shield(10)
 	// 5s CD: consume 1 lowest Medical for bonus shield
 	if(world.time < last_consume + 5 SECONDS)
 		return
@@ -39,17 +39,17 @@
 	if(!consumed)
 		return
 	last_consume = world.time
-	shield.add_shield(consumed["level"] * 4)
+	shield.add_shield(consumed["level"] * 8)
 
 // ============================================================
 // T1b: Reactive Ward
 // ============================================================
-// Melee +4 shield HP. Shield absorb → 5 Sinking to attacker.
+// Melee +8 shield HP. Shield absorb → 5 Sinking to attacker.
 
 /// Warden T1b — Melee attacks build shield HP. Shield absorption retaliates with Sinking.
 /datum/component/association_skill/dieci_reactive_ward
 	skill_name = "Reactive Ward"
-	skill_desc = "Melee attacks grant +4 shield HP. When your shield absorbs damage, applies 5 Sinking to the attacker."
+	skill_desc = "Melee attacks grant +8 shield HP. When your shield absorbs damage, applies 5 Sinking to the attacker."
 	branch = "Warden"
 	tier = 1
 	choice = "b"
@@ -75,11 +75,11 @@
 		return
 	if(!istype(target) || QDELETED(target))
 		return
-	// Grant 4 shield HP
+	// Grant 8 shield HP
 	var/datum/component/dieci_shield_hp/shield = human_parent.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = human_parent.AddComponent(/datum/component/dieci_shield_hp)
-	shield.add_shield(4)
+	shield.add_shield(8)
 
 /// Called when the shield absorbs damage. Applies Sinking to the attacker.
 /datum/component/association_skill/dieci_reactive_ward/proc/on_shield_hit(damage_absorbed, atom/damage_source)
@@ -95,12 +95,12 @@
 // ============================================================
 // T2a: Tome Shield
 // ============================================================
-// Action (5s CD): consume highest Medical → shield HP = 5*level.
+// Action (5s CD): consume highest Medical → shield HP = 10*level.
 
 /// Warden T2a — Grants an action that converts Medical knowledge into shield HP.
 /datum/component/association_skill/dieci_tome_shield
 	skill_name = "Tome Shield"
-	skill_desc = "Action (5s CD): consumes highest Medical knowledge, granting level x5 shield HP."
+	skill_desc = "Action (5s CD): consumes highest Medical knowledge, granting level x10 shield HP."
 	branch = "Warden"
 	tier = 2
 	choice = "a"
@@ -123,7 +123,7 @@
 /// Action for Tome Shield — 5s cooldown knowledge-to-shield conversion.
 /datum/action/cooldown/dieci_tome_shield_action
 	name = "Tome Shield"
-	desc = "Consume your highest Medical knowledge to gain shield HP equal to 5 times the consumed level."
+	desc = "Consume your highest Medical knowledge to gain shield HP equal to 10 times the consumed level."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "spend_knowledge"
 	cooldown_time = 5 SECONDS
@@ -150,7 +150,7 @@
 		to_chat(user, span_warning("No Medical knowledge available."))
 		return FALSE
 	// Grant shield HP
-	var/shield_amount = consumed["level"] * 5
+	var/shield_amount = consumed["level"] * 10
 	var/datum/component/dieci_shield_hp/shield = user.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = user.AddComponent(/datum/component/dieci_shield_hp)
@@ -210,13 +210,13 @@
 // T3a: Golden Aegis
 // ============================================================
 // 90s CD action. Stomp AoE → 5-hit combo.
-// Hits 1-4: consume knowledge → shield = level*10.
+// Hits 1-4: consume knowledge → shield = level*20.
 // Hit 5: consume up to 200 shield → +0.5%/shield dmg, throw, trigger Sinking.
 
 /// Warden T3a — Grants a powerful shield-building attack that converts shield HP into a devastating finisher.
 /datum/component/association_skill/dieci_golden_aegis
 	skill_name = "Golden Aegis"
-	skill_desc = "Action (90s CD): stomp to apply 5 Sinking in 3 tiles. 5-hit combo: hits 1-4 deal RED and consume knowledge for level x10 shield. Hit 5: consumes up to 200 shield for +0.5%/point bonus damage, throws target, triggers Sinking."
+	skill_desc = "Action (90s CD): stomp to apply 5 Sinking in 3 tiles. 5-hit combo: hits 1-4 deal RED and consume knowledge for level x20 shield. Hit 5: consumes up to 200 shield for +0.5%/point bonus damage, throws target, triggers Sinking."
 	branch = "Warden"
 	tier = 3
 	choice = "a"
@@ -274,7 +274,7 @@
 /datum/action/cooldown/dieci_golden_aegis_action/proc/ExecuteCombo(mob/living/target, mob/living/carbon/human/user)
 	// DPS calculation
 	var/obj/item/weapon = user.get_active_held_item()
-	var/dps = weapon ? (weapon.force * 0.625 / max(weapon.attack_speed, 0.1)) : 15
+	var/dps = weapon ? (weapon.force * 1.25 / max(weapon.attack_speed, 0.1)) : 30
 	var/hit_damage = dps / 5
 
 	// Stomp AoE: 5 Sinking to enemies in 3-tile radius
@@ -321,7 +321,7 @@
 		if(kc)
 			var/list/consumed = kc.consume_highest_knowledge()
 			if(consumed)
-				shield.add_shield(consumed["level"] * 10)
+				shield.add_shield(consumed["level"] * 20)
 		sleep(0.5 SECONDS)
 
 	// Hit 5 (finisher): consume up to 200 shield for bonus damage
@@ -364,12 +364,12 @@
 // ============================================================
 // T3b: Immovable Library
 // ============================================================
-// Passive. Attack target with Sinking: consume 1 knowledge → shield = stacks. 4s CD.
+// Passive. Attack target with Sinking: consume 1 knowledge → shield = stacks * 2. 4s CD.
 
 /// Warden T3b — Converts target's Sinking into shield HP on hit.
 /datum/component/association_skill/dieci_immovable_library
 	skill_name = "Immovable Library"
-	skill_desc = "On attack (4s CD): if target has Sinking, consumes 1 lowest knowledge and gains shield HP = target's Sinking stacks."
+	skill_desc = "On attack (4s CD): if target has Sinking, consumes 1 lowest knowledge and gains shield HP = target's Sinking stacks x2."
 	branch = "Warden"
 	tier = 3
 	choice = "b"
@@ -396,8 +396,8 @@
 	if(!length(consumed))
 		return
 	last_trigger = world.time
-	// Grant shield HP = target's Sinking stacks
-	var/shield_amount = S.stacks
+	// Grant shield HP = target's Sinking stacks * 2
+	var/shield_amount = S.stacks * 2
 	var/datum/component/dieci_shield_hp/shield = human_parent.GetComponent(/datum/component/dieci_shield_hp)
 	if(!shield)
 		shield = human_parent.AddComponent(/datum/component/dieci_shield_hp)
