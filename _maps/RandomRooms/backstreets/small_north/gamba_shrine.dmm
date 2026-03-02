@@ -18,7 +18,7 @@
 /area/city/backstreets_room)
 "D" = (
 /obj/structure/table/wood/poker,
-/obj/item/ego_weapon/ranged/pistol/deathdealer,
+/obj/item/gun/ballistic/revolver/russian,
 /turf/open/floor/carpet/red,
 /area/city/backstreets_room)
 "E" = (
