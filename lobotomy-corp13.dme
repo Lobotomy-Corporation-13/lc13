@@ -4073,6 +4073,7 @@
 #include "ModularLobotomy\lc13_damage_type_shuffler.dm"
 #include "ModularLobotomy\lc13_effects.dm"
 #include "ModularLobotomy\lc13_ids.dm"
+#include "ModularLobotomy\lc13_leagueofnine.dm"
 #include "ModularLobotomy\lc13_machinery.dm"
 #include "ModularLobotomy\lc13_spawners.dm"
 #include "ModularLobotomy\lc13_structures.dm"
