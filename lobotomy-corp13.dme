@@ -4196,6 +4196,7 @@
 #include "ModularLobotomy\associations\tinkerer_npc.dm"
 #include "ModularLobotomy\associations\tutorial_tapes.dm"
 #include "ModularLobotomy\associations\vending.dm"
+#include "ModularLobotomy\associations\contracts\city_map_display.dm"
 #include "ModularLobotomy\associations\contracts\contract_citymap.dm"
 #include "ModularLobotomy\associations\contracts\contract_datum.dm"
 #include "ModularLobotomy\associations\contracts\contract_item.dm"

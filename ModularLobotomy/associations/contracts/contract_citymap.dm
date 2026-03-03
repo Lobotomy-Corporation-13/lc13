@@ -1,4 +1,4 @@
-/// Shared city map data for the contract terminal.
+/// Shared city map data for the contract terminal and city map display.
 /// Generated once per round by iterating city turfs.
 /// Stores a 2D grid of hex color strings cropped to city bounds,
 /// following the same pattern as facility_tactical_map.
@@ -16,10 +16,12 @@
 	var/offset_y = 0
 	/// Whether generation has completed successfully
 	var/generated = FALSE
+	/// Legend data: list of list("color" = hex, "name" = area_name) for all area types on the map
+	var/list/cached_legend
 
 /// Generate the city map by iterating all turfs on the given z-level.
 /// Only records turfs in /area/city where in_city == TRUE.
-/// Produces a cropped 2D grid of hex color strings.
+/// Produces a cropped 2D grid of hex color strings, color-coded by area type.
 /datum/contract_citymap/proc/GenerateCityMap(zlevel)
 	// First pass: find bounding box of city content
 	var/min_x = world.maxx
@@ -62,6 +64,8 @@
 	var/list/path_tcache = typecacheof(list(
 		/turf/open/floor,
 	)) - typecacheof(/turf/open/floor/plating/asteroid)
+	// Track unique area types for the legend
+	var/list/seen_areas = list()
 	// Second pass: generate cropped grid
 	cached_map_grid = list()
 	for(var/gx in 1 to grid_width)
@@ -70,33 +74,41 @@
 			var/tx = min_x + gx - 1
 			var/ty = min_y + gy - 1
 			var/turf/T = locate(tx, ty, zlevel)
-			var/color = "#000000" // Default: void
+			var/color = CITYMAP_COLOR_VOID
 			if(T)
 				var/area/A = T.loc
 				if(istype(A, /area/city))
 					var/area/city/CA = A
 					if(CA.in_city)
 						if(obstacle_tcache[T.type] || (T.contents.len && (locate(/obj/structure/grille) in T)))
-							color = "#444444" // Wall
+							color = CITYMAP_COLOR_WALL
 						else if(T.density)
-							color = "#444444" // Dense turf (blocked)
+							color = CITYMAP_COLOR_WALL
 						else if(path_tcache[T.type] || (T.contents.len && (locate(/obj/structure/lattice/catwalk) in T)))
-							color = "#888888" // Floor
+							color = CA.map_color
+							if(!seen_areas["[CA.type]"])
+								seen_areas["[CA.type]"] = list("color" = CA.map_color, "name" = CA.name)
 						else
-							color = "#888888" // Unknown city turf = floor
+							color = CA.map_color
+							if(!seen_areas["[CA.type]"])
+								seen_areas["[CA.type]"] = list("color" = CA.map_color, "name" = CA.name)
 			column += color
 		cached_map_grid += list(column)
 		CHECK_TICK
+	// Build legend from seen area types
+	cached_legend = list()
+	for(var/key in seen_areas)
+		cached_legend += list(seen_areas[key])
 	generated = TRUE
 
-/// Check if a world coordinate is a walkable floor tile.
+/// Check if a world coordinate is a walkable floor tile (any color that isn't wall or void).
 /datum/contract_citymap/proc/IsFloorTile(world_x, world_y)
 	var/gx = world_x - offset_x + 1
 	var/gy = world_y - offset_y + 1
 	if(gx < 1 || gx > grid_width || gy < 1 || gy > grid_height)
 		return FALSE
 	var/color = cached_map_grid[gx][gy]
-	return color == "#888888"
+	return color != CITYMAP_COLOR_WALL && color != CITYMAP_COLOR_VOID
 
 /// Extract a viewport-sized chunk from the cached grid.
 /// view_gx and view_gy are 1-indexed grid coordinates of the chunk origin.
@@ -110,9 +122,13 @@
 			if(gx >= 1 && gx <= grid_width && gy >= 1 && gy <= grid_height)
 				column += cached_map_grid[gx][gy]
 			else
-				column += "#000000"
+				column += CITYMAP_COLOR_VOID
 		chunk += list(column)
 	return chunk
+
+/// Return the full cached map grid for full-map rendering.
+/datum/contract_citymap/proc/GetFullMap()
+	return cached_map_grid
 
 /// Check if two world coordinates are connected via walkable tiles.
 /// Uses BFS on the cached grid. Returns TRUE if a path exists.
@@ -128,10 +144,10 @@
 		return FALSE
 	if(end_gx < 1 || end_gx > grid_width || end_gy < 1 || end_gy > grid_height)
 		return FALSE
-	// Both endpoints must be walkable
-	if(cached_map_grid[start_gx][start_gy] != "#888888")
+	// Both endpoints must be walkable (not wall or void)
+	if(!IsFloorTile(from_wx, from_wy))
 		return FALSE
-	if(cached_map_grid[end_gx][end_gy] != "#888888")
+	if(!IsFloorTile(to_wx, to_wy))
 		return FALSE
 	// Same tile
 	if(start_gx == end_gx && start_gy == end_gy)
@@ -156,7 +172,8 @@
 			var/key = "[nx],[ny]"
 			if(visited[key])
 				continue
-			if(cached_map_grid[nx][ny] != "#888888")
+			var/ncolor = cached_map_grid[nx][ny]
+			if(ncolor == CITYMAP_COLOR_WALL || ncolor == CITYMAP_COLOR_VOID)
 				continue
 			if(nx == end_gx && ny == end_gy)
 				return TRUE

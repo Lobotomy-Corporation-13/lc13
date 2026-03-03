@@ -46,12 +46,7 @@
 	if(!contract)
 		to_chat(user, span_warning("This contract paper is blank."))
 		return
-	// If contract is active and has a map viewer, show the route/location map
-	if(contract.state == CONTRACT_STATE_ACTIVE)
-		if(istype(contract, /datum/association_contract/patrol_route) || istype(contract, /datum/association_contract/surveillance_post))
-			contract.ui_interact(user)
-			return
-	// Show the contract paper TGUI (includes Accept button when applicable)
+	// Always show the contract paper TGUI (has tabs for details and map)
 	ui_interact(user)
 
 /// Offer a pending contract directly to a fixer using the paper in hand.
@@ -85,6 +80,23 @@
 /obj/item/association_contract_paper/ui_state()
 	return GLOB.physical_state
 
+/// Static data sent once on UI open — includes map grid for map-based contracts.
+/obj/item/association_contract_paper/ui_static_data(mob/user)
+	var/list/data = list()
+	if(!contract)
+		return data
+	var/has_map = is_map_contract()
+	data["has_map"] = has_map
+	if(has_map)
+		var/list/map_static = contract.ui_static_data(user)
+		if(map_static)
+			data += map_static
+		// Include legend from the citymap
+		var/datum/contract_citymap/cm = get_contract_citymap()
+		if(cm?.cached_legend)
+			data["map_legend"] = cm.cached_legend
+	return data
+
 /obj/item/association_contract_paper/ui_data(mob/user)
 	if(!contract)
 		return list()
@@ -94,7 +106,39 @@
 		var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
 		if(exp && exp.squad && exp.squad.can_accept_contract())
 			data["can_accept"] = TRUE
+	// Include map dynamic data for map-based active contracts
+	if(is_map_contract() && contract.state == CONTRACT_STATE_ACTIVE)
+		var/list/map_data = contract.ui_data(user)
+		if(map_data)
+			data += map_data
 	return data
+
+/// Check if this contract type supports a map viewer.
+/obj/item/association_contract_paper/proc/is_map_contract()
+	if(!contract)
+		return FALSE
+	return istype(contract, /datum/association_contract/patrol_route) \
+		|| istype(contract, /datum/association_contract/surveillance_post) \
+		|| istype(contract, /datum/association_contract/guard_area) \
+		|| istype(contract, /datum/association_contract/host_event)
+
+/// Get the citymap reference from the contract (if any).
+/obj/item/association_contract_paper/proc/get_contract_citymap()
+	if(!contract)
+		return null
+	if(istype(contract, /datum/association_contract/patrol_route))
+		var/datum/association_contract/patrol_route/PC = contract
+		return PC.citymap
+	if(istype(contract, /datum/association_contract/surveillance_post))
+		var/datum/association_contract/surveillance_post/SC = contract
+		return SC.citymap
+	if(istype(contract, /datum/association_contract/guard_area))
+		var/datum/association_contract/guard_area/GC = contract
+		return GC.citymap
+	if(istype(contract, /datum/association_contract/host_event))
+		var/datum/association_contract/host_event/HEC = contract
+		return HEC.citymap
+	return null
 
 /obj/item/association_contract_paper/ui_act(action, list/params)
 	. = ..()
@@ -103,6 +147,15 @@
 	if(!contract)
 		return
 	switch(action)
+		if("make_copy")
+			if(contract.state != CONTRACT_STATE_ACTIVE)
+				return
+			var/mob/living/copy_user = usr
+			var/obj/item/association_contract_paper/copy = new(get_turf(copy_user), contract)
+			copy.name = "[contract.contract_name] contract (copy)"
+			copy_user.put_in_hands(copy)
+			to_chat(copy_user, span_notice("You made a copy of the contract."))
+			return TRUE
 		if("accept")
 			if(contract.state != CONTRACT_STATE_PENDING)
 				return

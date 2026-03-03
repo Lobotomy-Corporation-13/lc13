@@ -32,7 +32,7 @@ export const ContractTerminal = (
   return (
     <Window
       title="Contract Terminal"
-      width={640}
+      width={780}
       height={680}>
       <Window.Content scrollable>
         <Tabs>
@@ -521,6 +521,7 @@ const CityMapView = props => {
     canMoveW = false,
     waypoints = [],
     contract_types = [],
+    map_legend = [],
   } = data;
   const [selType] = useSharedState(
     ctx, 'selType', '',
@@ -550,92 +551,154 @@ const CityMapView = props => {
 
   return (
     <Section title="City Map">
-      <Box textAlign="center">
-        <Button
-          icon="arrow-up"
-          disabled={!canMoveN}
-          onClick={
-            () => move('north')
-          }
-        />
-      </Box>
-      <Box textAlign="center">
-        <Box
-          inline
-          style={{
-            verticalAlign: 'middle',
-          }}>
-          <Button
-            icon="arrow-left"
-            disabled={!canMoveW}
-            onClick={
-              () => move('west')
-            }
-          />
+      <Box
+        style={{
+          display: 'flex',
+          gap: '8px',
+        }}>
+        <Box>
+          <Box textAlign="center">
+            <Button
+              icon="arrow-up"
+              disabled={!canMoveN}
+              onClick={
+                () => move('north')
+              }
+            />
+          </Box>
+          <Box textAlign="center">
+            <Box
+              inline
+              style={{
+                verticalAlign:
+                  'middle',
+              }}>
+              <Button
+                icon="arrow-left"
+                disabled={!canMoveW}
+                onClick={
+                  () => move('west')
+                }
+              />
+            </Box>
+            <Box
+              inline
+              mx={0.5}
+              style={{
+                border:
+                  '1px solid #444',
+                verticalAlign:
+                  'middle',
+              }}>
+              <CityMapCanvas
+                mapGrid={mapGrid}
+                viewWorldX={
+                  viewWorldX
+                }
+                viewWorldY={
+                  viewWorldY
+                }
+                waypoints={waypoints}
+                disabled={atLimit}
+                onPlaceWaypoint={
+                  (wx, wy) =>
+                    act(
+                      'place_waypoint',
+                      {
+                        world_x: wx,
+                        world_y: wy,
+                      },
+                    )
+                }
+              />
+            </Box>
+            <Box
+              inline
+              style={{
+                verticalAlign:
+                  'middle',
+              }}>
+              <Button
+                icon="arrow-right"
+                disabled={!canMoveE}
+                onClick={
+                  () => move('east')
+                }
+              />
+            </Box>
+          </Box>
+          <Box textAlign="center">
+            <Button
+              icon="arrow-down"
+              disabled={!canMoveS}
+              onClick={
+                () => move('south')
+              }
+            />
+          </Box>
+          <Box
+            mt={1}
+            textAlign="center">
+            <Button
+              icon="trash"
+              color="bad"
+              onClick={() => act(
+                'clear_waypoints',
+              )}>
+              Clear All
+            </Button>
+            <Box
+              inline
+              ml={1}
+              color="label">
+              {'Waypoints: '
+                + waypoints.length
+                + ' / ' + maxWP}
+            </Box>
+          </Box>
         </Box>
         <Box
-          inline
-          mx={0.5}
           style={{
-            border: '1px solid #444',
-            verticalAlign: 'middle',
+            flexShrink: 0,
+            minWidth: '130px',
           }}>
-          <CityMapCanvas
-            mapGrid={mapGrid}
-            viewWorldX={viewWorldX}
-            viewWorldY={viewWorldY}
-            waypoints={waypoints}
-            disabled={atLimit}
-            onPlaceWaypoint={
-              (wx, wy) =>
-                act('place_waypoint', {
-                  world_x: wx,
-                  world_y: wy,
-                })
-            }
-          />
-        </Box>
-        <Box
-          inline
-          style={{
-            verticalAlign: 'middle',
-          }}>
-          <Button
-            icon="arrow-right"
-            disabled={!canMoveE}
-            onClick={
-              () => move('east')
-            }
+          <MapLegend
+            legend={map_legend}
           />
         </Box>
       </Box>
-      <Box textAlign="center">
-        <Button
-          icon="arrow-down"
-          disabled={!canMoveS}
-          onClick={
-            () => move('south')
-          }
-        />
-      </Box>
-      <Box mt={1} textAlign="center">
-        <Button
-          icon="trash"
-          color="bad"
-          onClick={() => act(
-            'clear_waypoints',
-          )}>
-          Clear All
-        </Button>
+    </Section>
+  );
+};
+
+const MapLegend = props => {
+  const { legend = [] } = props;
+  if (!legend.length) return null;
+  return (
+    <Section title="Legend">
+      {legend.map(entry => (
         <Box
-          inline
-          ml={1}
+          key={entry.color}
+          mb={0.5}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}
+          fontSize="11px"
           color="label">
-          {'Waypoints: '
-            + waypoints.length
-            + ' / ' + maxWP}
+          <Box
+            inline
+            style={{
+              width: '10px',
+              height: '10px',
+              background: entry.color,
+              flexShrink: 0,
+            }}
+          />
+          {entry.name}
         </Box>
-      </Box>
+      ))}
     </Section>
   );
 };

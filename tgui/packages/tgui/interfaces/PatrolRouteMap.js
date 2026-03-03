@@ -42,7 +42,8 @@ export const PatrolRouteMap = (
   );
 };
 
-class PatrolRouteCanvas extends Component {
+export class PatrolRouteCanvas
+  extends Component {
   constructor(props) {
     super(props);
     this.canvasRef = createRef();

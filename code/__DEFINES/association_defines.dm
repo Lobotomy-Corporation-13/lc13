@@ -54,6 +54,10 @@
 #define CITYMAP_WALL 1
 #define CITYMAP_FLOOR 2
 
+// City map hex color constants
+#define CITYMAP_COLOR_WALL "#444444"
+#define CITYMAP_COLOR_VOID "#000000"
+
 // City map viewport size (tiles shown at once)
 #define CITYMAP_VIEWPORT_SIZE 20
 

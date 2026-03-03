@@ -32,7 +32,7 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	)
 
 	var/list/antagroles = list(
-		/datum/job/messenger,
+		// /datum/job/messenger,
 		// /datum/job/cutthroat,
 		/datum/job/sottocapo,
 		// /datum/job/grandinquis,

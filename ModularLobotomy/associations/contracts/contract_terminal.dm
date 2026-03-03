@@ -246,6 +246,7 @@
 		data["canMoveS"] = view_gy > 1
 		data["canMoveE"] = view_gx < max_gx
 		data["canMoveW"] = view_gx > 1
+		data["map_legend"] = citymap.cached_legend
 	return data
 
 /obj/machinery/association_contract_terminal/ui_act(action, params)
