@@ -95,7 +95,7 @@
 	name = "anti-abnormality red grenade"
 	desc = "A modified version of the grenades used by R-Corp's packs, it features a qliphoth deterrance after effect as well as making the abnormalities fragile against their respect damage types."
 	explosion_damage_type = RED_DAMAGE
-	explosion_damage = 100
+	explosion_damage = 50
 	icon_state = "r_corp"
 
 /obj/item/grenade/r_corp/detonate(mob/living/lanced_by) //does not do dmg to humans, there's a lot of weird gimmick stuff that relates to taking dmg in facility
@@ -108,13 +108,13 @@
 		H.deal_damage(explosion_damage, explosion_damage_type, aThrower, attack_type = (ATTACK_TYPE_SPECIAL))
 		switch(explosion_damage_type)
 			if(RED_DAMAGE)
-				H.apply_lc_red_fragile(1)
+				H.apply_lc_red_fragile(5)
 			if(WHITE_DAMAGE)
-				H.apply_lc_white_fragile(1)
+				H.apply_lc_white_fragile(5)
 			if(BLACK_DAMAGE)
-				H.apply_lc_black_fragile(1)
+				H.apply_lc_black_fragile(5)
 			if(PALE_DAMAGE)
-				H.apply_lc_pale_fragile(1)
+				H.apply_lc_pale_fragile(5)
 		H.apply_status_effect(/datum/status_effect/qliphothoverload)
 	qdel(src)
 
