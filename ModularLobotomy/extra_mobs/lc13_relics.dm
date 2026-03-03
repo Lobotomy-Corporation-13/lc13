@@ -38,7 +38,8 @@
 
 /obj/item/ruin_relic/Destroy()
 	Unattune()
-	QDEL_NULL(attached_note)
+	if(attached_note)
+		QDEL_NULL(attached_note)
 	return ..()
 
 /obj/item/ruin_relic/Initialize()

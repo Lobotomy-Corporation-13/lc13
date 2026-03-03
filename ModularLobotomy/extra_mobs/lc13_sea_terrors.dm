@@ -221,7 +221,10 @@
 	/// List of currently tracked spawned mobs
 	var/list/spawned_mobs = list()
 	/// Weighted list of mob types to spawn
-	var/list/spawnable_types
+	var/list/spawnable_types = list(
+		/mob/living/simple_animal/hostile/sea_terror/slider = 3,
+		/mob/living/simple_animal/hostile/sea_terror/runner = 2,
+	)
 	/// Cooldown tracker for mob spawning
 	var/spawn_cooldown = 0
 	/// Time between spawns
@@ -237,11 +240,6 @@
 
 /obj/structure/nethersea_crack/Initialize()
 	. = ..()
-	if(!spawnable_types)
-		spawnable_types = list(
-			/mob/living/simple_animal/hostile/sea_terror/slider = 3,
-			/mob/living/simple_animal/hostile/sea_terror/runner = 2,
-		)
 	emerge()
 	spawn_cooldown = world.time + 3 SECONDS
 	brand_cooldown = world.time + 2 SECONDS
@@ -346,14 +344,11 @@
 	max_alive = 5
 	brand_range = 5
 	spawn_cooldown_time = 12 SECONDS
-
-/obj/structure/nethersea_crack/medium/Initialize()
 	spawnable_types = list(
 		/mob/living/simple_animal/hostile/sea_terror/slider = 3,
 		/mob/living/simple_animal/hostile/sea_terror/runner = 2,
 		/mob/living/simple_animal/hostile/sea_terror/founder = 1,
 	)
-	return ..()
 
 // --- Level 3: Deep Nethersea Crack ---
 /obj/structure/nethersea_crack/large
@@ -363,15 +358,12 @@
 	max_alive = 8
 	brand_range = 7
 	spawn_cooldown_time = 10 SECONDS
-
-/obj/structure/nethersea_crack/large/Initialize()
 	spawnable_types = list(
 		/mob/living/simple_animal/hostile/sea_terror/slider = 3,
 		/mob/living/simple_animal/hostile/sea_terror/runner = 3,
 		/mob/living/simple_animal/hostile/sea_terror/founder = 2,
 		/mob/living/simple_animal/hostile/sea_terror/reaper = 1,
 	)
-	return ..()
 
 // ==================== BASE MOB ====================
 

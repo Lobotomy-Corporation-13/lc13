@@ -11,6 +11,10 @@
 	/// DEBUG: When TRUE, skips the association job check so anyone can be registered. Set via VV for testing.
 	var/debug_skip_job_check = FALSE
 
+/obj/item/association_registry/Destroy()
+	squad = null
+	return ..()
+
 /obj/item/association_registry/examine(mob/user)
 	. = ..()
 	if(squad)
