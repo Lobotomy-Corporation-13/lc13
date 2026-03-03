@@ -261,7 +261,7 @@
 		if("place_waypoint")
 			return handle_place_waypoint(usr, params)
 		if("clear_waypoints")
-			citymap_waypoints = list()
+			citymap_waypoints.Cut()
 			return TRUE
 
 /// Handle contract creation from the TGUI.
