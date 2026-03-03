@@ -158,13 +158,8 @@
 	var/obj/item/I = H.get_equipped_items()
 	if(!H || !istype(H))
 		interrupt_imprinting()
-	if(I in H.get_all_gear()) //marked for destgrok review
-		if(!HAS_TRAIT(I, TRAIT_NODROP))
-			playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
-			say("Please remove all non-organic items such as radios, uniforms, and shoes, before using the imprinter.")
-			return
 	to_chat(H, "<span class='warning'>You can feel those pricks turn into nails, searing past your skin!</span>")
-	say("Nagel und Hammer thanks you for your dedication to the new ideal.")
+	say("Nagel und Hammer is deeply grateful for your service.")
 	playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
 	H.become_blind("idimprinter")
 	ADD_TRAIT(H, TRAIT_DEAF, "idimprinter")
@@ -270,7 +265,7 @@
 	update_icon()
 	audible_message("<span class='notice'>[src] pings!</span>")
 	playsound(src, 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/print2.ogg', 30, TRUE)
-	say("A new era is upon us. Imprinting complete.")
+	say("Let us greet the new era with open arms. Imprinting complete.")
 
 	if(QDELETED(H) || H != occupant)
 		occupant = null
