@@ -359,7 +359,7 @@
 	playsound(src, 'sound/machines/twobeep_high.ogg', 50, TRUE)
 	// Clear waypoints after waypoint-based contract creation
 	if(contract_type == "patrol_route" || contract_type == "surveillance_post" || contract_type == "guard_area" || contract_type == "host_event")
-		citymap_waypoints = list()
+		citymap_waypoints.Cut()
 	return TRUE
 
 /// Create the appropriate contract datum subtype based on contract_type string.
