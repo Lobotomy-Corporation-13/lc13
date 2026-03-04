@@ -7,7 +7,7 @@
 // heavily based off of hypnochair.dm - look in tgui/packages/tgui/interfaces/idimprinter.js for the ui code
 /obj/machinery/idimprinter
 	name = "identity imprinter"
-	desc = "A recent development by the New League of Nine Littérateurs, this machine extracts an Identity from the Mirror and forces it onto the person. Simply force a person inside and turn it on. Interrupting impritation is ill-advised."
+	desc = "A recent development by the New League of Nine Littérateurs, this machine extracts an Identity from the Mirror and forces it onto the person. Simply force a person inside and turn it on. Interrupting the process is ill-advised."
 	icon = 'icons/obj/machines/implantchair.dmi'
 	icon_state = "hypnochair" //temporary
 	verb_say = "dictates"
@@ -22,15 +22,10 @@
 	var/trigger_phrase = "" ///Trigger phrase to implant
 	var/timerid = 0 ///Timer ID for imprinting
 	var/message_cooldown = 0 ///Cooldown for breakout message
-	var/enter_message = "<span class='notice'><b>You feel dosens of pricks pierce your skin, holding you in place. Was this really a good idea?</b></span>"
-	var/identitylevel = 5 /*this decides what "tier" of identity you get. you gotta have a minimum # in each virtue to meet tier requirements cuz of gear & balance
-1 - urban legend (mariachi, ting-tang, base fixer gear) - no stats lol
-2 - urban plague (mariachi/tingtang boss, middle little sib, kcorp L1, warp baton, fullstop) 60-stats
-3 - urban nightmare (grade 6-5 fixers - molars, south & east soldatos, mittlehammers, index proselytes, assoc fixer, kcorp L3, warp L3/modified/type C) 80-stats
-4 - urban nightmare but better (roaming assoc fixers ala cinq west, devyat, liu2, capos (not east), index proxies, r-corp..? check with maintainer) 100-stats
-5 - star of the city (eastern capos, sottocapo, messenger, grand inq, directors) 120 stats - literally the only case of you ever getting this is if you sacrifice the assoc director/your boss/a second syndicate leader
-*/
+	var/enter_message = "<span class='notice'><b>You feel dozens of pricks pierce your skin, holding you in place. Was this really a good idea?</b></span>"
+	var/list/users = list() //used to prevent ID rerolling
 
+//todo: change all of this shit into datums probably??? i mean it works - this uses hypnochair.dm as a basis and modifies the shit out of it
 	var/alist/identities = alist(
 		1 = list(
 			"mariachimarraca" = list("weapon" = /obj/item/ego_weapon/city/mariachi, "armor" = /obj/item/clothing/suit/armor/ego_gear/city/mariachi),
@@ -155,14 +150,27 @@
 
 /obj/machinery/idimprinter/proc/imprint() //the proc that handles imprinting the victim and applying the effects
 	var/mob/living/carbon/human/H = occupant
-	var/obj/item/I = H.get_equipped_items()
 	if(!H || !istype(H))
+		say("Patient must be human.")
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
 		interrupt_imprinting()
+		return
+	if(H.ckey == null)
+		say("Patient must be sentient.")
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
+		interrupt_imprinting()
+		return
+	else if(H.ckey in users)
+		say("Patient may not be a previous user.")
+		playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
+		interrupt_imprinting()
+		return
 	to_chat(H, "<span class='warning'>You can feel those pricks turn into nails, searing past your skin!</span>")
-	say("Nagel und Hammer is deeply grateful for your service.")
+	say("Protocol initiated. Preparing for Identity Imprinting.")
 	playsound(get_turf(src), 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/deny1.ogg', 25, TRUE)
-	H.become_blind("idimprinter")
-	ADD_TRAIT(H, TRAIT_DEAF, "idimprinter")
+	if(H && istype(H))
+		H.become_blind("idimprinter")
+		ADD_TRAIT(H, TRAIT_DEAF, "idimprinter")
 	imprinting = TRUE
 	START_PROCESSING(SSobj, src)
 	start_time = world.time
@@ -174,14 +182,7 @@
 	if(!istype(H) || H != occupant)
 		interrupt_imprinting()
 		return
-	if(DT_PROB(5, delta_time))
-		to_chat(H, "Infinite possibilities... [pick(\
-			"My memories - they're being replaced. Is this what I really want..?",\
-			"I feel myself bleeding out...",\
-			"Everything's so violent, so bloody-...",\
-			"I see myself. Why do I look so different..?",\
-			"A whole entire world, shattered before my eyes..."\
-		)]</span>")
+
 
 /obj/machinery/idimprinter/proc/finish_imprinting() // this is what happens after succesful imprinting, and when the gear is applied
 	var/mob/living/carbon/human/H = occupant
@@ -192,87 +193,77 @@
 	var/list/occupant_attributes = H.attributes //ok! lets begin deciding what requirements the victim meets!
 	if(!occupant_attributes || !LAZYLEN(occupant_attributes))
 		return FALSE // crazy error
+
+	var/identitylevel = 5 /*this decides what "tier" of identity you get. you gotta have a minimum # in each virtue to meet tier requirements cuz of gear & balance
+1 - urban legend (mariachi, ting-tang, base fixer gear) - no stats lol
+2 - urban plague (mariachi/tingtang boss, middle little sib, kcorp L1, warp baton, fullstop) 60-stats
+3 - urban nightmare (grade 6-5 fixers - molars, south & east soldatos, mittlehammers, index proselytes, assoc fixer, kcorp L3, warp L3/modified/type C) 80-stats
+4 - urban nightmare but better (roaming assoc fixers ala cinq west, devyat, liu2, capos (not east), index proxies, r-corp..? check with maintainer) 100-stats
+5 - star of the city (eastern capos, sottocapo, messenger, grand inq, directors) 120 stats - literally the only case of you ever getting this is if you sacrifice the assoc director/your boss/a second syndicate leader
+*/
+
 	for(var/attr_name in H.attributes)
 		var/datum/attribute/attr = H.attributes[attr_name]
-		if(attr.get_raw_level() >= 119)
+		if(attr.get_raw_level() >= 120)
 			identitylevel = min(identitylevel, 5)
-		else if(attr.get_raw_level() >= 99)
+		else if(attr.get_raw_level() >= 100)
 			identitylevel = min(identitylevel, 4)
-		else if(attr.get_raw_level() >= 79)
+		else if(attr.get_raw_level() >= 80)
 			identitylevel = min(identitylevel, 3)
-		else if(attr.get_raw_level() >= 59)
+		else if(attr.get_raw_level() >= 60)
 			identitylevel = min(identitylevel, 2)
 		else
 			identitylevel = 1
 
-	var/chosen_identity = pick(identities[identitylevel]) //roll the dice from the selected identity level
 
-//hold your horses, let's define these real quick
-	var/obj/item/identity_weapon = identities[identitylevel][chosen_identity]["weapon"] //just an item cuz of boxes
-	var/obj/item/clothing/suit/armor/ego_gear/identity_armor = identities[identitylevel][chosen_identity]["armor"]
+	var/chosen_identity = pick(identities[identitylevel]) //roll the dice to pick IDs from
+
+	//hold your horses, let's define these real quick
+	var/obj/item/weapon_path = identities[identitylevel][chosen_identity]["weapon"] //put the identities alist into variables
+	var/obj/item/clothing/suit/armor/ego_gear/armor_path = identities[identitylevel][chosen_identity]["armor"]
 
 //time to equip armor!
 	var/obj/item/are_we_wearing_something = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-
 	if(isnull(are_we_wearing_something))
-		identity_armor = new(src)
-		if(H.can_equip(identity_armor, ITEM_SLOT_OCLOTHING, disable_warning = TRUE)) //equip away, no delay!
-			H.equip_to_slot(identity_armor, ITEM_SLOT_OCLOTHING)
-		else
-			interrupt_imprinting()
-			identity_armor.forceMove(get_turf(src)) //drop new ID armor onto imprinter turf
-
+		armor_path = new armor_path(src)
+		H.equip_to_slot_if_possible(armor_path, ITEM_SLOT_OCLOTHING, bypass_equip_delay_self = TRUE)
 	else if(HAS_TRAIT(are_we_wearing_something, TRAIT_NODROP))
 		interrupt_imprinting()
 		return
-
 	else
-		identity_armor = new(src)
-		H.dropItemToGround(are_we_wearing_something) //this literally should never happen cuz of previous checks- but just in case
-		if(H.can_equip(identity_armor, ITEM_SLOT_OCLOTHING, disable_warning = TRUE)) //equip away, no delay!
-			H.equip_to_slot(identity_armor, ITEM_SLOT_OCLOTHING)
-		else
-			interrupt_imprinting()
-			identity_armor.forceMove(get_turf(src)) //drops new ID armor onto the turf the machine is on
+		armor_path = new armor_path(src)
+		H.dropItemToGround(are_we_wearing_something)
+		H.equip_to_slot_if_possible(armor_path, ITEM_SLOT_OCLOTHING, bypass_equip_delay_self = TRUE)
 
 //weapon time!
 	var/obj/item/are_we_holding_something = H.get_active_held_item()
-
 	if(isnull(are_we_holding_something))
-		identity_weapon = new(src)
-		if(H.can_equip(identity_weapon, ITEM_SLOT_HANDS, disable_warning = TRUE)) //equip w/ delay
-			H.put_in_r_hand(identity_weapon)
-		else
-			interrupt_imprinting()
-			identity_weapon.forceMove(get_turf(src)) //drop new ID weapon onto imprinter turf
-
+		weapon_path = new weapon_path(src)
+		H.put_in_active_hand(weapon_path, forced = TRUE)
 	else if(HAS_TRAIT(are_we_holding_something, TRAIT_NODROP))
 		interrupt_imprinting()
 		return
-
 	else
-		identity_weapon = new(src)
+		weapon_path = new weapon_path(src)
 		H.dropItemToGround(are_we_holding_something) //this literally should never happen cuz of previous checks- but just in case
-		if(H.can_equip(identity_weapon, ITEM_SLOT_HANDS, disable_warning = TRUE)) //equip w/ no delay
-			H.put_in_r_hand(identity_weapon)
-		else
-			interrupt_imprinting()
-			identity_weapon.forceMove(get_turf(src)) //drops new ID weapon onto the turf the machine is on
+		H.put_in_active_hand(weapon_path, forced = TRUE)
 
 //this what happens after everything goes right and the occupant is released - still apart of finish_imprinting proc
 	imprinting = FALSE
 	STOP_PROCESSING(SSobj, src)
 	update_icon()
 	audible_message("<span class='notice'>[src] pings!</span>")
-	playsound(src, 'ModularLobotomy/_Lobotomysounds/id_imprinter_sounds/print2.ogg', 30, TRUE)
-	say("Let us greet the new era with open arms. Imprinting complete.")
-
+	playsound(src, 'sound/effects/ordeals/brown_end.ogg', 30, TRUE) //id shatter sound
+	say("Imprinting complete. Please extract both the subject and your rewarded ahn at your earliest convenience.")
+	to_chat(H, span_alertwarning("Your alliegence has been changed. You are now beholden to the ideals and relations of your selected Identity, not whatever role you previously were. You may remember people previously met, and your former coworkers - yet your relationships are now strained at best."))
 	if(QDELETED(H) || H != occupant)
 		occupant = null
 		return
 	H.cure_blind("idimprinter")
 	REMOVE_TRAIT(occupant, TRAIT_DEAF, "idimprinter")
+	users += H.ckey
 	occupant = null
+	new /obj/item/stack/spacecash/c1000(src) //up to maintainer discussion! this is supposed to encourage the league kidnapping/accepting people for identity imprinting
 
 /obj/machinery/idimprinter/proc/interrupt_imprinting() // what happens if imprinting is interrupted
 	var/mob/living/carbon/human/H = occupant

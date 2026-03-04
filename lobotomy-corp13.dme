@@ -2461,6 +2461,8 @@
 #include "code\modules\jobs\job_types\city\syndicate\kurokumo\captain.dm"
 #include "code\modules\jobs\job_types\city\syndicate\kurokumo\enforcer.dm"
 #include "code\modules\jobs\job_types\city\syndicate\kurokumo\wakashu.dm"
+#include "code\modules\jobs\job_types\city\syndicate\league_of_nine\ncorpcontemptawe.dm"
+#include "code\modules\jobs\job_types\city\syndicate\league_of_nine\ncorpfellbullet.dm"
 #include "code\modules\jobs\job_types\city\syndicate\middle\big_brother.dm"
 #include "code\modules\jobs\job_types\city\syndicate\middle\little_brother.dm"
 #include "code\modules\jobs\job_types\city\syndicate\middle\younger_brother.dm"
