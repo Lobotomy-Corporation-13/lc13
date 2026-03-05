@@ -151,7 +151,7 @@
 	fire_delay = 1 //Many dakka for the hitscan mode
 	autofire = 0.1 SECONDS
 	special = "This weapon can swap modes by using it inhand, with the Vulcan Cannon firing hitscan bullets and the Smart Missiles firing rockets which burst into homing projectiles."
-	force = 30
+	force = 35
 	damtype = RED_DAMAGE
 	weapon_weight = WEAPON_HEAVY
 	vary_fire_sound = FALSE
