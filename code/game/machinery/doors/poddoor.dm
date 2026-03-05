@@ -144,6 +144,9 @@
 	else
 		return ..()
 
+/obj/machinery/door/poddoor/bumpopen()
+	return
+
 /obj/machinery/door/poddoor/shutters/bumpopen()
 	return
 

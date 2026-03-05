@@ -1,0 +1,7 @@
+author: "EnderMage99"
+delete-after: True
+changes:
+  - rscdel: "Removed the crafting recipe for bolas"
+  - rscdel: "Remove skulk from the augment fabricator"
+  - rscadd: "Added a new var to doors which makes them immune to the lockpick skill"
+  - balance: "nerfed the teleport distance of Echo Step from 2 to 1."

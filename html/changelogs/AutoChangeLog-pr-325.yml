@@ -1,0 +1,15 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - rscadd: "Spiral of Contempt abnormality"
+  - rscadd: "Perversion E.G.O. weapon as a rankbump WAW->ALEPH."
+  - rscadd: "Contempt, Awe E.G.O. armour"
+  - rscadd: "Awe Realization armour (for now it is a stat-stick, will have ability in the future)"
+  - bugfix: "Fixed a wrong order in a check for bitflags in _abnormality.dm, so abnos can have work type specific bubbles now"
+  - refactor: "Items now have a var that determines whether or not their hitsound should vary in pitch when it is played"
+  - imageadd: "Spiral of Contempt idle and casting sprites, as well as VFX for its hand attacks. Animation by amanitaspooder."
+  - imageadd: "Perversion E.G.O. weapon object and inhand sprites by Zeratino."
+  - imageadd: "N. Corp. E.G.O. Contempt, Awe armour object and worn sprites by Zeratino."
+  - imageadd: "LCB E.G.O. Contempt, Awe armour object and worn sprites by insiteparaful."
+  - imageadd: "10x10 display icons for Gaze and Contempt."
+  - imageadd: "Spiral of Contempt portrait from Limbus Company."

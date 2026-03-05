@@ -1,9 +1,9 @@
-// White night - Paradise lost
+// White Night - Paradise Lost
 /datum/ego_datum/armor/paradise
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/paradise
 	cost = 200
 
-// Judgement bird - Justitia
+// Judgement Bird - Justitia
 /datum/ego_datum/weapon/justitia
 	item_path = /obj/item/ego_weapon/justitia
 	cost = 100
@@ -14,7 +14,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_REALIZABLE)
 
-// Blue star - Sound of a star
+// Blue Star - Sound of a Star
 /datum/ego_datum/weapon/star_sound
 	item_path = /obj/item/ego_weapon/ranged/star
 	cost = 100
@@ -33,7 +33,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/faith
 	cost = 100
 
-// Silent orchestra - Da capo
+// Silent Orchestra - Da Capo
 /datum/ego_datum/weapon/da_capo
 	item_path = /obj/item/ego_weapon/da_capo
 	cost = 100
@@ -44,7 +44,7 @@
 	cost = 100
 	ego_tags = list(EGO_TAG_REALIZABLE)
 
-// Nothing there - Mimicry
+// Nothing There - Mimicry
 /datum/ego_datum/weapon/mimicry
 	item_path = /obj/item/ego_weapon/mimicry
 	cost = 100
@@ -65,7 +65,7 @@
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/adoration
 	cost = 100
 
-// Mountain of smiling bodies - Smile
+// Mountain of Smiling Bodies - Smile
 /datum/ego_datum/weapon/smile
 	item_path = /obj/item/ego_weapon/smile
 	cost = 100
@@ -88,7 +88,7 @@
 
 /datum/ego_datum/armor/flowering
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/flowering
-	cost = 250	//You have to constantly be working on this, I'll reward you by letting you buy a much better armor
+	cost = 250	// You have to constantly be working on this, I'll reward you by letting you buy a much better armor
 
 // CENSORED - CENSORED
 /datum/ego_datum/weapon/censored
@@ -227,7 +227,7 @@
 	cost = 100//appears in wishing well
 	ego_tags = list(EGO_TAG_GUARD, EGO_TAG_GUNBLADE, EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_ASSIMILATION)
 
-//The Giant Atop the Beanstalk - Giant
+// The Giant Atop the Beanstalk - Giant
 /datum/ego_datum/armor/giant
 	item_path = /obj/item/clothing/suit/armor/ego_gear/aleph/giant
 	cost = 100
@@ -238,7 +238,7 @@
 	cost = 100 //This weapon is normally a result of fusion but is treated as ALEPH for certain purposes
 	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_VERSATILE_DAMAGE, EGO_TAG_MOBILITY)
 
-//Hookah Caterpillar - Havana
+// Hookah Caterpillar - Havana
 /datum/ego_datum/weapon/havana
 	item_path = /obj/item/ego_weapon/ranged/havana
 	cost = 100
@@ -255,3 +255,10 @@
 	item_path = /obj/item/ego_weapon/wield/eldtree
 	cost = 100
 	ego_tags = list(EGO_TAG_ASSIMILATION, EGO_TAG_VERSATILE_DAMAGE, EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK, EGO_TAG_LOCKED_POTENTIAL, EGO_TAG_SUSTAIN)
+
+// Perversion - Spiral of Contempt
+// This is a rankbump alt-weapon. Spiral is a WAW and its normal weapon (Contempt, Awe) is also a WAW.
+/datum/ego_datum/weapon/perversion
+	item_path = /obj/item/ego_weapon/perversion
+	cost = 100
+	ego_tags = list(EGO_TAG_RANKBUMP, EGO_TAG_MOBILITY, EGO_TAG_COMBO, EGO_TAG_AOE_RADIAL, EGO_TAG_AOE_PIERCING)

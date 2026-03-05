@@ -511,3 +511,9 @@ Any attempt to code risk class armor will result in a 10 day Github ban.*/
 							JUSTICE_ATTRIBUTE = 60
 							)
 
+/obj/item/clothing/suit/armor/ego_gear/waw/contempt
+	name = "contempt, awe"
+	desc = "Reverence for a being of no significance is followed by a slight self-contempt."
+	icon_state = "contempt"
+	armor = list(RED_DAMAGE = 50, WHITE_DAMAGE = 20, BLACK_DAMAGE = 60, PALE_DAMAGE = 10) // 140
+	attribute_requirements = list(FORTITUDE_ATTRIBUTE = 60, TEMPERANCE_ATTRIBUTE = 60)
