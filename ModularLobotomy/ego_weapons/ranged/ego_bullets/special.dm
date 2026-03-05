@@ -104,7 +104,7 @@
 	name = "vulcan"
 	icon_state = "omnilaser"
 	hitsound = null
-	damage = 15
+	damage = 20
 	damage_type = RED_DAMAGE
 	hitscan = TRUE
 	muzzle_type = /obj/effect/projectile/muzzle/laser/vulcan
@@ -153,7 +153,7 @@
 /obj/projectile/ego_bullet/smart_plasma
 	name = "plasma"
 	icon_state = "green_laser"
-	damage = 30
+	damage = 40
 	damage_type = BLACK_DAMAGE
 	speed = 5
 	homing = TRUE
