@@ -369,6 +369,16 @@
 	icon_state = "vacant_room"
 	map_color = "#888899"
 
+/area/city/lake
+	name = "Water"
+	icon_state = "awaycontent16"
+	map_color = "#1872cc"
+
+/area/city/bus_stop
+	name = "Bus Stop"
+	icon_state = "gateway"
+	map_color = "#cccc18"
+
 //Areas for ruins
 
 /area/city/backstreets_checkpoint
