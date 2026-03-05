@@ -52,7 +52,6 @@ I'm feeling [strong BLACK/PALE, weak RED/WHITE] or [strong RED/BLACK, weak WHITE
 	The upper half is vaguely shaped like a human torso with both arms outstretched towards the sky and sharp 'wings' protruding from the back. \
 	Black hands drip with blood, and its 'head' glowers down at you."
 	portrait = "spiral_of_contempt"
-	being_tested = TRUE // !! REMOVE BEFORE MERGE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	/* --- Appearance --- */
 	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
