@@ -91,14 +91,15 @@
 			/obj/item/grenade/r_corp/pale = 1,
 		)
 
-/obj/item/grenade/r_corp/lobotomy
+/obj/item/grenade/lobotomy
 	name = "anti-abnormality red grenade"
 	desc = "A modified version of the grenades used by R-Corp's packs, it features a qliphoth deterrance after effect as well as making the abnormalities fragile against their respect damage types."
-	explosion_damage_type = RED_DAMAGE
-	explosion_damage = 50
+	var/explosion_damage_type = RED_DAMAGE
+	var/explosion_damage = 50
+	var/explosion_range = 2
 	icon_state = "r_corp"
 
-/obj/item/grenade/r_corp/detonate(mob/living/lanced_by) //does not do dmg to humans, there's a lot of weird gimmick stuff that relates to taking dmg in facility
+/obj/item/grenade/lobotomy/detonate(mob/living/lanced_by) //does not do dmg to humans, there's a lot of weird gimmick stuff that relates to taking dmg in facility
 	var/aThrower = thrower
 	. = ..()
 	update_mob()
@@ -118,17 +119,17 @@
 		H.apply_status_effect(/datum/status_effect/qliphothoverload)
 	qdel(src)
 
-/obj/item/grenade/r_corp/lobotomy/white
+/obj/item/grenade/lobotomy/white
 	name = "anti-abnormality white grenade"
 	icon_state = "r_corp_white"
 	explosion_damage_type = WHITE_DAMAGE
 
-/obj/item/grenade/r_corp/lobotomy/black
+/obj/item/grenade/lobotomy/black
 	name = "anti-abnormality black grenade"
 	icon_state = "r_corp_black"
 	explosion_damage_type = BLACK_DAMAGE
 
-/obj/item/grenade/r_corp/lobotomy/pale
+/obj/item/grenade/lobotomy/pale
 	name = "anti-abnormality pale grenade"
 	icon_state = "r_corp_pale"
 	explosion_damage_type = PALE_DAMAGE
@@ -139,8 +140,8 @@
 
 /obj/item/storage/box/lobotomygrenades/PopulateContents()
 	var/static/items_inside = list(
-		/obj/item/grenade/r_corp/lobotomy = 3,
-		/obj/item/grenade/r_corp/lobotomy/white = 3,
-		/obj/item/grenade/r_corp/lobotomy/black = 3,
-		/obj/item/grenade/r_corp/lobotomy/pale = 2)
+		/obj/item/grenade/lobotomy = 3,
+		/obj/item/grenade/lobotomy/white = 3,
+		/obj/item/grenade/lobotomy/black = 3,
+		/obj/item/grenade/lobotomy/pale = 2)
 	generate_items_inside(items_inside,src)
