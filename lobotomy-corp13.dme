@@ -454,6 +454,7 @@
 #include "code\datums\abnormality\_ego_datum\_ego_datum.dm"
 #include "code\datums\abnormality\_ego_datum\aleph.dm"
 #include "code\datums\abnormality\_ego_datum\auxiliary.dm"
+#include "code\datums\abnormality\_ego_datum\dungeons.dm"
 #include "code\datums\abnormality\_ego_datum\he.dm"
 #include "code\datums\abnormality\_ego_datum\ordeal.dm"
 #include "code\datums\abnormality\_ego_datum\realized.dm"
