@@ -166,3 +166,10 @@
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
 	if(pierces >= 2)
 		qdel(src)
+
+/obj/projectile/ego_bullet/black
+	name = "black"
+	icon_state = "atrocket"
+	speed = 0.6
+	damage = 80
+	damage_type = BLACK_DAMAGE

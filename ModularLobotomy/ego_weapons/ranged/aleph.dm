@@ -353,12 +353,12 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
-	special = "Reload this weapon by <b>alt-clicking</b> it.\n\
-	You can <b>use this weapon in-hand</b> to spend health to enter the <b>Inexorable</b> state after a brief wind-up, \
+	special = "Reload this weapon by alt-clicking it.\n\
+	You can use this weapon in-hand to spend health to enter the Inexorable state after a brief wind-up, \
 	during which you will gain a slight slowdown, damage resistance, stun immunity, resistance to being pushed, and an unlimited amount of higher caliber bullets.\n\
-	After 7 seconds of being in the Inexorable state, you will enter the <b>Entrenched</b> state, which increases damage resistance further \
+	After 7 seconds of being in the Inexorable state, you will enter the Entrenched state, which increases damage resistance further \
 	and empowers the bullets to deal more damage and pierce through a single target.\n\
-	<b>If you move while Entrenched, you will exit the state</b>. \n\
+	If you move while Entrenched, you will exit the state. \n\
 	You can also cancel the process of activating Inexorable by swapping hands, or dropping or storing the weapon. \
 	Once you've entered Inexorable or Entrenched, you cannot drop or store the weapon."
 
@@ -605,3 +605,34 @@
 #undef STATUS_EFFECT_ENTRENCHED_INITIAL
 #undef STATUS_EFFECT_ENTRENCHED_FINAL
 
+// AiB's alternate ranged weapon. This one deals BLACK damage.
+/obj/item/ego_weapon/ranged/black
+	name = "black"
+	desc = "PLACEHOLDER."
+	lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
+	inhand_x_dimension = 64
+	inhand_y_dimension = 64
+	icon_state = "black"
+	inhand_icon_state = "black"
+	damtype = BLACK_DAMAGE
+	force = 55
+	attack_speed = 1.8
+	weapon_weight = WEAPON_HEAVY
+	hitsound = 'sound/weapons/fast_slam.ogg'
+
+	fire_sound = 'sound/weapons/ego/willing_fire1.ogg'
+	fire_sound_volume = 40
+	projectile_path = /obj/projectile/ego_bullet/willing
+	shotsleft = 100
+	reloadtime = 3 SECONDS
+	autofire = 1.4
+	spread = 25
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 100
+							)
+	special = "Placeholder..."
