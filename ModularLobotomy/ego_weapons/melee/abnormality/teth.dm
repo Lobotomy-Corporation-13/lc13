@@ -598,7 +598,7 @@
 	lefthand_file = 'icons/mob/inhands/96x96_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/96x96_righthand.dmi'
 	damtype = WHITE_DAMAGE
-	force = 18
+	force = 29 // Significantly higher than Curfew due to hitting less times on a charge, being slower and having less reach.
 	inhand_x_dimension = 96
 	inhand_y_dimension = 96
 	attack_speed = 2
@@ -711,7 +711,7 @@
 /obj/item/ego_weapon/luminosity
 	name = "luminosity"
 	desc = "A weapon that is hard to use even in the best of circumstances."
-	special = "This weapon has a combo system. To turn off this combo system, use in hand. \
+	special = "This weapon has a combo system. To turn off this combo system, use in-hand. \
 			This weapon has a fast attack speed. The combo finisher heals humans in a small area."
 	icon_state = "luminosity"
 	force = 12

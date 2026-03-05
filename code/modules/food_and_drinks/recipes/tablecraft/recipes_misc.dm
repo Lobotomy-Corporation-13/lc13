@@ -324,6 +324,59 @@
 	result = /obj/item/food/bnuuypudding
 	subcategory = CAT_MISCFOOD
 
+/datum/crafting_recipe/food/rcorppudding
+	name = "Rabbit pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/obj/item/food/grown/carrot = 1,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/rcorppudding
+	subcategory = CAT_MISCFOOD
+
+/datum/crafting_recipe/food/myopudding
+	name = "Myo pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/obj/item/food/grown/carrot = 1,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/myopudding
+	subcategory = CAT_MISCFOOD
+
+/datum/crafting_recipe/food/mattpudding
+	name = "Matt pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/mattpudding
+	subcategory = CAT_MISCFOOD
+
+/datum/crafting_recipe/food/zilupudding
+	name = "Zilu pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/obj/item/food/chocolatebar = 1,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/zilupudding
+	subcategory = CAT_MISCFOOD
+
+/datum/crafting_recipe/food/mumupudding
+	name = "Mumu pudding"
+	reqs = list(
+		/datum/reagent/consumable/milk = 10,
+		/datum/reagent/consumable/cream = 5,
+		/datum/reagent/consumable/sugar = 10
+	)
+	result = /obj/item/food/mumupudding
+	subcategory = CAT_MISCFOOD
+
 /datum/crafting_recipe/food/icecreamsandwich
 	name = "Icecream sandwich"
 	reqs = list(

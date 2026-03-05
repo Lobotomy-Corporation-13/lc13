@@ -160,8 +160,8 @@
 			return TRUE
 
 	if(href_list["debug_process"])
-		trader_program.ProcessCompanies(4)
-		to_chat(usr, span_notice("STONK PROGRAM PROCESSED 4 CYCLES"))
+		trader_program.ProcessCompanies(1)
+		to_chat(usr, span_notice("STONK PROGRAM PROCESSED"))
 		updateUsrDialog()
 		return TRUE
 

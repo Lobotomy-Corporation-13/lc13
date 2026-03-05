@@ -887,7 +887,7 @@
 	if(isliving(owner))
 		var/mob/living/L = owner
 		damage_increase = ((stacks * 10) * damage_mode)
-		L.extra_damage /= damage_increase
+		L.extra_damage += damage_increase
 
 /datum/status_effect/stacking/damage_up/add_stacks(stacks_added)//update your weaknesses
 	. = ..()
@@ -896,9 +896,9 @@
 	linked_alert.desc = initial(linked_alert.desc)+"[stacks*10]%!"
 	if(isliving(owner))
 		var/mob/living/L = owner
-		L.extra_damage *= damage_increase
+		L.extra_damage -= damage_increase
 		damage_increase = ((stacks * 10) * damage_mode)
-		L.extra_damage /= damage_increase
+		L.extra_damage += damage_increase
 
 /datum/status_effect/stacking/damage_up/on_remove()
 	. = ..()
@@ -906,7 +906,7 @@
 		return
 	if(isliving(owner))
 		var/mob/living/L = owner
-		L.extra_damage *= damage_increase
+		L.extra_damage -= damage_increase
 
 /datum/status_effect/stacking/damage_up/tick()
 	if(!can_have_status())
@@ -951,13 +951,13 @@
 		var/mob/living/L = owner
 		damage_increase = ((stacks * 10) * damage_mode)
 		if(damage_type == RED_DAMAGE)
-			L.extra_damage_red /= damage_increase
+			L.extra_damage_red += damage_increase
 		if(damage_type == WHITE_DAMAGE)
-			L.extra_damage_white /= damage_increase
+			L.extra_damage_white += damage_increase
 		if(damage_type == BLACK_DAMAGE)
-			L.extra_damage_black /= damage_increase
+			L.extra_damage_black += damage_increase
 		if(damage_type == PALE_DAMAGE)
-			L.extra_damage_pale /= damage_increase
+			L.extra_damage_pale += damage_increase
 
 /datum/status_effect/stacking/damtype_damage_up/add_stacks(stacks_added)
 	. = ..()
@@ -967,22 +967,22 @@
 	if(isliving(owner))
 		var/mob/living/L = owner
 		if(damage_type == RED_DAMAGE)
-			L.extra_damage_red *= damage_increase
+			L.extra_damage_red -= damage_increase
 		if(damage_type == WHITE_DAMAGE)
-			L.extra_damage_white *= damage_increase
+			L.extra_damage_white -= damage_increase
 		if(damage_type == BLACK_DAMAGE)
-			L.extra_damage_black *= damage_increase
+			L.extra_damage_black -= damage_increase
 		if(damage_type == PALE_DAMAGE)
-			L.extra_damage_pale *= damage_increase
+			L.extra_damage_pale -= damage_increase
 		damage_increase = ((stacks * 10) * damage_mode)
 		if(damage_type == RED_DAMAGE)
-			L.extra_damage_red /= damage_increase
+			L.extra_damage_red += damage_increase
 		if(damage_type == WHITE_DAMAGE)
-			L.extra_damage_white /= damage_increase
+			L.extra_damage_white += damage_increase
 		if(damage_type == BLACK_DAMAGE)
-			L.extra_damage_black /= damage_increase
+			L.extra_damage_black += damage_increase
 		if(damage_type == PALE_DAMAGE)
-			L.extra_damage_pale /= damage_increase
+			L.extra_damage_pale += damage_increase
 
 /datum/status_effect/stacking/damtype_damage_up/on_remove()
 	. = ..()
@@ -991,13 +991,13 @@
 	if(isliving(owner))
 		var/mob/living/L = owner
 		if(damage_type == RED_DAMAGE)
-			L.extra_damage_red *= damage_increase
+			L.extra_damage_red -= damage_increase
 		if(damage_type == WHITE_DAMAGE)
-			L.extra_damage_white *= damage_increase
+			L.extra_damage_white -= damage_increase
 		if(damage_type == BLACK_DAMAGE)
-			L.extra_damage_black *= damage_increase
+			L.extra_damage_black -= damage_increase
 		if(damage_type == PALE_DAMAGE)
-			L.extra_damage_pale *= damage_increase
+			L.extra_damage_pale -= damage_increase
 
 /datum/status_effect/stacking/damtype_damage_up/tick()
 	if(!can_have_status())

@@ -10,7 +10,7 @@
 /obj/machinery/computer/ego_purchase/examine(mob/user)
 	. = ..()
 	if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
-		if(user.mind.assigned_role == "Extraction Officer")
+		if(user.mind?.assigned_role == "Extraction Officer")
 			. += span_notice("This console seems to be upgraded, reducing the cost needed to extract by 15%.")
 		else
 			. += span_notice("This console seems to be upgraded, cutting the shipment time in half.")
@@ -30,7 +30,7 @@
 			continue
 		dat += "[A.name] ([A.stored_boxes] PE):<br>"
 		var/mult = 1
-		if(user.mind.assigned_role == "Extraction Officer")
+		if(user.mind?.assigned_role == "Extraction Officer")
 			if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
 				mult *= 0.85
 		for(var/datum/ego_datum/E in A.ego_datums)

@@ -1,0 +1,4 @@
+author: "Deadkung"
+delete-after: True
+changes:
+  - bugfix: "lobotomy grenade's detonation proc"

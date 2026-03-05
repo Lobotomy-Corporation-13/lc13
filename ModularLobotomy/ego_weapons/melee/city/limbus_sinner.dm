@@ -198,7 +198,7 @@
 	lefthand_file = 'icons/mob/inhands/weapons/limbus_lefthand.dmi'
 	righthand_file = 'icons/mob/inhands/weapons/limbus_righthand.dmi'
 	force = 22
-	throwforce = 50
+	throwforce = 30
 	throw_speed = 1
 	throw_range = 7
 	damtype = RED_DAMAGE
