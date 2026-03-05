@@ -50,19 +50,13 @@
 	SIGNAL_HANDLER
 
 /// Helper: Check if this skill can be used right now.
-/// Returns TRUE if the owner's squad is on contract OR has emergency distress status.
+/// Returns TRUE if the owner has a squad (skills are always available).
 /// All skill subtypes should call this at the start of their on_attack/on_take_damage/on_after_take_damage.
 /datum/component/association_skill/proc/can_use_skill()
 	var/datum/component/association_exp/exp = human_parent.GetComponent(/datum/component/association_exp)
 	if(!exp || !exp.squad)
 		return FALSE
-	// On contract — skills active
-	if(exp.squad.is_on_contract())
-		return TRUE
-	// Distress emergency — skills temporarily active
-	if(human_parent.has_status_effect(/datum/status_effect/association_emergency))
-		return TRUE
-	return FALSE
+	return TRUE
 
 /// Helper: Check if a mob is a designated ally of the skill owner
 /datum/component/association_skill/proc/is_designated_ally(mob/living/L)

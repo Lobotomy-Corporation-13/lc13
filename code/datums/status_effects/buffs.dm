@@ -586,7 +586,7 @@
 //Global Damage Type Protections
 /datum/status_effect/stacking/protection
 	id = "protection"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 9
 	stacks = 0
@@ -682,7 +682,7 @@
 //Specific Damage Type Protections
 /datum/status_effect/stacking/damtype_protection
 	id = "red_protection"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 9
 	stacks = 0
@@ -969,7 +969,7 @@
 //Global Damage Up
 /datum/status_effect/stacking/damage_up
 	id = "damage_up"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 10
 	stacks = 0
@@ -1032,7 +1032,7 @@
 //Specific Damage Up
 /datum/status_effect/stacking/damtype_damage_up
 	id = "red_damage_up"
-	status_type = STATUS_EFFECT_MULTIPLE
+	status_type = STATUS_EFFECT_UNIQUE
 	duration = 100
 	max_stacks = 10
 	stacks = 0

@@ -149,13 +149,20 @@
 	addtimer(CALLBACK(src, PROC_REF(stop_distress_arrows)), CONTRACT_DISTRESS_DURATION)
 
 /// Spawn spark trail effects from each squad member toward the distress victim.
-/// Uses the PointToFlower pattern from rose_sign.dm — spawns temp_visual sparks along the first 10 tiles of the path.
+/// Uses client images so only squad members can see the arrows.
 /datum/association_squad/proc/fire_distress_arrows()
 	if(!distress_victim || QDELETED(distress_victim))
 		stop_distress_arrows()
 		return
 	var/turf/victim_turf = get_turf(distress_victim)
 	if(!victim_turf)
+		return
+	// Collect squad clients for squad-only visibility
+	var/list/squad_clients = list()
+	for(var/mob/living/M in members)
+		if(M.client)
+			squad_clients += M.client
+	if(!length(squad_clients))
 		return
 	for(var/mob/living/M in members)
 		if(M == distress_victim)
@@ -168,8 +175,17 @@
 		for(var/turf/T in arrow_path)
 			if(i > 10)
 				break
-			new /obj/effect/temp_visual/cult/sparks(T)
+			var/image/I = image('icons/effects/cult_effects.dmi', T, "bloodsparkles", ABOVE_MOB_LAYER)
+			I.dir = pick(GLOB.cardinals)
+			for(var/client/C in squad_clients)
+				C.images += I
+			addtimer(CALLBACK(src, PROC_REF(remove_distress_image), I, squad_clients), 10)
 			i++
+
+/// Remove a distress arrow image from squad clients after its duration expires.
+/datum/association_squad/proc/remove_distress_image(image/I, list/clients)
+	for(var/client/C in clients)
+		C.images -= I
 
 /// Stop the distress arrow timer and clean up.
 /datum/association_squad/proc/stop_distress_arrows()
