@@ -17,7 +17,7 @@ Feel free to add your weapons if you make new dungeons with unique gear. -Xeros
 	well_enabled = FALSE
 	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_KNOCKBACK)
 
-datum/ego_datum/weapon/malicedescent
+/datum/ego_datum/weapon/malicedescent
 	item_path = /obj/item/ego_weapon/ranged/malicedescent
 	cost = 100
 	well_enabled = FALSE
