@@ -176,13 +176,15 @@
 /area/city/outskirtsfactory)
 "eB" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryvault"
+	id = "factoryvault";
+	lockpickable = 0
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "eH" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
@@ -264,7 +266,8 @@
 /area/city/outskirtsfactory)
 "gS" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 8
@@ -285,7 +288,8 @@
 "gX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1070,7 +1074,8 @@
 /area/city/outskirtsfactory)
 "Hm" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector/split{
 	dir = 4
@@ -1130,7 +1135,8 @@
 /area/city/outskirtsfactory)
 "It" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1278,7 +1284,9 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "Ol" = (
-/obj/machinery/door/poddoor/shutters/indestructible,
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "Op" = (
@@ -1307,7 +1315,8 @@
 /area/city/outskirtsfactory)
 "PZ" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "foundryaccess"
+	id = "foundryaccess";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -1404,7 +1413,8 @@
 /area/city/outskirtsfactory)
 "Tj" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -1441,7 +1451,8 @@
 "TI" = (
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)

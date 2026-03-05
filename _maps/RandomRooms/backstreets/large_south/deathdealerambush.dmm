@@ -17,7 +17,8 @@
 /area/city/backstreets_room)
 "d" = (
 /obj/machinery/door/poddoor/shutters{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /obj/structure/sigsystem/connector{
@@ -72,7 +73,8 @@
 "j" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "deathdealer2";
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	delay_time = 500
@@ -92,7 +94,8 @@
 /area/city/backstreets_room)
 "l" = (
 /obj/machinery/door/poddoor/shutters{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /obj/structure/sigsystem/connector,
@@ -101,7 +104,8 @@
 "m" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "deathdealer2";
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -112,7 +116,8 @@
 /area/city/backstreets_room)
 "n" = (
 /obj/machinery/door/poddoor/shutters{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -140,7 +145,8 @@
 "r" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "deathdealer1";
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -181,7 +187,8 @@
 /area/city/backstreets_room)
 "y" = (
 /obj/machinery/door/poddoor/shutters{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /obj/structure/sigsystem/connector{
@@ -209,7 +216,8 @@
 /area/city/backstreets_room)
 "C" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /obj/effect/decal/cleanable/blood/tracks{
@@ -223,7 +231,8 @@
 /area/city/backstreets_room)
 "E" = (
 /obj/machinery/door/poddoor/shutters{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /obj/structure/sigsystem/activator,
@@ -320,7 +329,8 @@
 "U" = (
 /obj/machinery/door/poddoor/shutters/preopen{
 	id = "deathdealer1";
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
