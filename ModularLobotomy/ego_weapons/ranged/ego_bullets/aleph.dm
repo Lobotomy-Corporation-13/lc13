@@ -171,16 +171,16 @@
 	name = "black"
 	icon_state = "atrocket"
 	speed = 0.6
-	damage = 35
+	damage = 50
 	damage_type = BLACK_DAMAGE
-	var/base_explosion_damage = 140
-	var/base_explosion_falloff_per_tile = 30
+	var/base_explosion_damage = 160
+	var/base_explosion_falloff_per_tile = 35
 	var/explosion_radius = 3
 	var/iff_coeff = 0.33
 	var/datum/status_effect/status_type = /datum/status_effect/display/black_weapon_shellshock
 	var/resonance = FALSE
 	var/resonance_radius_increase = 1
-	var/resonance_damage_increase = 35
+	var/resonance_damage_increase = 60
 	var/resonance_iff_coeff = 0.20
 
 /obj/projectile/ego_bullet/black/on_hit(atom/target, blocked, pierce_hit)
@@ -322,6 +322,6 @@
 
 /atom/movable/screen/alert/status_effect/black_weapon_rocketjump
 	name = "Rocket Jump...!?"
-	desc = "Are you insane!? Your next hit will deal double damage."
+	desc = "Are you insane!? Your attacks will deal double damage as your momentum carries you."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "strength"
