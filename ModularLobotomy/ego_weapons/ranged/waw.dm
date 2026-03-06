@@ -203,9 +203,7 @@
 /obj/item/ego_weapon/ranged/loyalty
 	name = "loyalty"
 	desc = "Courtesy of the 16th Ego Rifleman's Brigade."
-	special = "This weapon has IFF capabilities. \n\
-	This rifle has an underslung grenade launcher. Grenades fired from this rifle also have IFF, and knock back enemies while dealing AoE RED damage. \n\
-	The underslung grenade launcher may only be fired once per magazine."
+	special = "This weapon has IFF capabilities."
 	icon_state = "loyalty"
 	inhand_icon_state = "loyalty"
 	force = 28
@@ -220,6 +218,7 @@
 							FORTITUDE_ATTRIBUTE = 80
 	)
 	alternate_fire_name = "Underslung Grenade Launcher"
+	alternate_info = "This rifle has an underslung grenade launcher. Grenades fired from this rifle also have IFF, and knock back enemies while dealing AoE RED damage."
 	alternate_shotsleft = 1
 	alternate_pellets = 1
 	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD

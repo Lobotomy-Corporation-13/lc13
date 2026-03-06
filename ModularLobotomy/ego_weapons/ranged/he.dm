@@ -151,8 +151,7 @@
 	desc = "A massive blocky launcher with some suspicious stains on it."
 	icon_state = "harmony"
 	inhand_icon_state = "harmony"
-	special = "This weapon fires bouncing, piercing shots. On hitting an insane person, deals 4x damage and stops bouncing.\
-		Alt Fire - This weapon fires fast piercing shots."
+	special = "This weapon fires bouncing, piercing shots. On hitting an insane person, deals 4x damage and stops bouncing."
 
 	force = 25
 	damtype = WHITE_DAMAGE
@@ -171,9 +170,9 @@
 							)
 
 	alternate_fire_name = "Musical Addiction"
-	alternate_shotsleft = 10
 	alternate_pellets = 1
-	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_info = "This weapon fires fast piercing shots"
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_MAGAZINE
 	alternate_projectile_path = /obj/projectile/ego_bullet/ego_harmonyfast
 	alternate_fire_sound = 'sound/weapons/ego/harmony1.ogg'
 	alternate_fire_sound_volume = 70
@@ -334,7 +333,6 @@
 /obj/item/ego_weapon/ranged/ardor_star
 	name = "ardor blossom star"
 	desc = "Though I can't guide you... I can offer a warm embrace."
-	special = "Alt Fire - Ardor Blossom Star fires an explosive round."
 	icon_state = "ardor_star"
 	inhand_icon_state = "ardor_star"
 	force = 30
@@ -343,16 +341,17 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
 	fire_delay = 15
-	shotsleft = 3
+	shotsleft = 4
 	reloadtime = 3.5 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
 
 	alternate_fire_name = "Hellterfly’s Dream"
-	alternate_shotsleft = 1
+	alternate_shotsleft = 4
 	alternate_pellets = 1
-	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_info = "Ardor Blossom Star fires an explosive round"
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG
 	alternate_projectile_path = /obj/projectile/ego_bullet/ego_match/hellterfly
 	alternate_fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
 	alternate_fire_sound_volume = 70

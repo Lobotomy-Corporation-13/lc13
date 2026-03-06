@@ -80,7 +80,7 @@
 
 /obj/projectile/ego_bullet/ego_harmonyfast
 	name = "Musical Addiction"
-	icon_state = "harmonyfast"
+	icon_state = "harmony_fast"
 	damage = 16
 	damage_type = WHITE_DAMAGE
 	speed = 0.5
@@ -178,7 +178,7 @@
 	name = "Hellterfly’s Dream"
 	icon_state = "atrocket"
 	damage = 10 // Direct hit
-	aoedamage = 80 // Direct hit
+	aoedamage = 60
 
 /obj/projectile/ego_bullet/ego_squeak
 	name = "squeak"

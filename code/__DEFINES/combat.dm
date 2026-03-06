@@ -315,3 +315,7 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 #define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD "altfire_reload_shared"
 /// Reloading the E.G.O. will reload the magazine for the currently selected fire type.
 #define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_INDIVIDUAL_RELOAD "altfire_reload_individual"
+/// The Weapon has to be unloaded before reloading alternate rounds
+#define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG "altfire_reload_empty_mag"
+/// The Weapon has one ammo pool.
+#define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_MAGAZINE "altfire_reload_shared_mag"
