@@ -612,7 +612,7 @@
 
 	if(fired_round)
 		shake_camera(user, 1.5, 3)
-		INVOKE_ASYNC(src, PROC_REF(PropulsionVisual), get_turf(user), fired_round.aesthetic_shockwave_distance)
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RadialShockwaveVisual), get_turf(user), fired_round.aesthetic_shockwave_distance, /obj/effect/temp_visual/small_smoke/halfsecond, 2)
 		CreateSpentCartridge(fired_round, user)
 		// This proc is the one that actually adds the bonuses to our weapon from the round that we fired.
 		ApplyAmmoBonuses(fired_round, user)

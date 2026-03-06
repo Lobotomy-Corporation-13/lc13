@@ -43,6 +43,7 @@ GLOBAL_LIST_EMPTY(army)
 	//E.G.O list
 	ego_list = list(
 		/datum/ego_datum/weapon/pink,
+		/datum/ego_datum/weapon/black,
 		/datum/ego_datum/armor/pink,
 	)
 	gift_type =  /datum/ego_gifts/pink
