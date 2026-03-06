@@ -178,8 +178,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/client_language = CLIENT_LANGUAGE_ENGLISH
 
 	// Lore Stuff - Currently unused...
-	///What does the player think of TerraGov.
+	///I don't wanna gigafuck the Prefs file.
 	var/terragov_relation = RELATION_NEUTRAL
+
+	//What District do you come from?
+	var/district_origin = WING_UNKNOWN
+
+	//And which Zone did you come from?
+	var/zone_origin = WING_UNKNOWN
 
 	/// Preference about the user's prefered auxiliary console TGUI
 	var/auxiliary_console_tgui = TRUE
@@ -333,7 +339,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<br>"
 
 			dat += "<h2>Background Information:</h2>"
-			dat += "<a href='byond://?_src_=prefs;preference=govrelation;task=input'><b>Government Relation:</b> [terragov_relation]</a><BR></td>"
+			dat += "<a href='byond://?_src_=prefs;preference=wingselect;task=input'><b>District Origin:</b> [district_origin]</a><BR>"
+			dat += "<a href='byond://?_src_=prefs;preference=zoneselect;task=input'><b>Zone Origin:</b> [zone_origin]</a><BR></td>"
 
 			dat += "</tr></table>"
 
@@ -1755,6 +1762,21 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					if(!new_relation)
 						return
 					terragov_relation = new_relation
+
+
+				// District Origin
+				if("wingselect")
+					var/new_district = input(user, "Which district do you come from?", "District Selection") as null|anything in GLOB.district_prefs
+					if(!new_district)
+						return
+					district_origin = new_district
+
+				// District Origin
+				if("zoneselect")
+					var/new_zone = input(user, "Do you come from the Backstreets or Nest?", "Zone Selection") as null|anything in GLOB.wing_section_prefs
+					if(!new_zone)
+						return
+					zone_origin = new_zone
 
 				if ("preferred_map")
 					var/maplist = list()
