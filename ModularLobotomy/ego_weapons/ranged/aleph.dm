@@ -842,6 +842,8 @@
 /obj/effect/black_weapon_airstrike_missile/proc/PlayEntryAnimation(travel_time)
 	alpha = 255
 	var/rotation = Get_Pixel_Angle(src.pixel_z, src.pixel_x)
-	src.transform = matrix().Turn(rotation).Turn(180)
+	var/matrix/M = matrix().Turn(rotation)
+	M.Turn(180)
+	src.transform = M
 	animate(src.get_filter("motionblur"), y = 0, time = travel_time, flags = ANIMATION_PARALLEL)
 	animate(src, pixel_z = -1 * abs(sin(rotation))*4, pixel_x = (sin(rotation) * 20), time = travel_time, easing = LINEAR_EASING, flags = ANIMATION_PARALLEL)

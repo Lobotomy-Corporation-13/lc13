@@ -159,7 +159,7 @@
 	playsound(impact_turf, 'sound/abnormalities/armyinblack/black_explosion.ogg', 60, FALSE, 5, ignore_walls = TRUE)
 	var/atom/vfx = new /obj/effect/temp_visual/black_explosion(impact_turf)
 	vfx.transform *= 0.6
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RadialShockwaveVisual), impact_turf, tile_radius, /obj/effect/temp_visual/small_smoke/halfsecond, 2)
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RadialShockwaveVisual), impact_turf, tile_radius, 2, /obj/effect/temp_visual/small_smoke/halfsecond)
 
 	// Shake the screen of the firer
 	var/dist_from_epicenter = get_dist(nadeslinger, impact_turf)
