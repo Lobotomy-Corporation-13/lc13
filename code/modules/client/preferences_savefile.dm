@@ -539,8 +539,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Lore
 	terragov_relation = sanitize_inlist(terragov_relation, GLOB.relationship_prefs, initial(terragov_relation))
-	district_origin = sanitize_inlist(district_o, GLOB.district_prefs, initial(district_origin))
-	zone_origin = sanitize_inlist(zone_o, GLOB.wing_section_prefs, initial(zone_origin))
+	district_origin = sanitize_inlist(district_origin, GLOB.district_prefs, initial(district_origin))
+	zone_origin = sanitize_inlist(zone_origin, GLOB.wing_section_prefs, initial(zone_origin))
 
 	joblessrole	= sanitize_integer(joblessrole, 1, 3, initial(joblessrole))
 	//Validate job prefs
