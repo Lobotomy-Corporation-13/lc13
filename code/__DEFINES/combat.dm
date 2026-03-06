@@ -309,3 +309,9 @@ GLOBAL_LIST_INIT(shove_disarming_types, typecacheof(list(
 	#define COMPONENT_AUTOFIRE_ONMOUSEDOWN_BYPASS (1<<0)
 #define COMSIG_AUTOFIRE_SHOT "autofire_shot"
 	#define COMPONENT_AUTOFIRE_SHOT_SUCCESS (1<<0)
+
+// Ranged E.G.O. weapons MAY have an alternate fire type. If they do, this define is used for reloading behaviour for their alternate fire.
+/// Reloading the E.G.O. will reload both the primary and alternate magazines.
+#define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD "altfire_reload_shared"
+/// Reloading the E.G.O. will reload the magazine for the currently selected fire type.
+#define RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_INDIVIDUAL_RELOAD "altfire_reload_individual"

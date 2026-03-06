@@ -428,3 +428,13 @@
 /datum/ego_datum/armor/patch
 	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/patch
 	cost = 20
+
+// Dreaming Electric Sheep - Electric Screaming
+// This abnormality is currently not in the game. SoonTM?
+/datum/ego_datum/weapon/electricscreaming
+	item_path = /obj/item/ego_weapon/electricscreaming
+	cost = 20
+
+/datum/ego_datum/armor/electricscreaming
+	item_path = /obj/item/clothing/suit/armor/ego_gear/teth/electricscreaming
+	cost = 20

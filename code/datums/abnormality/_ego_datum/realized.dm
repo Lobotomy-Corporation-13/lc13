@@ -171,6 +171,10 @@ Note: I chose to tag these Realizations based on their own active and passive ab
 	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/nest
 	ego_tags = list(EGO_TAG_SUMMONER, EGO_TAG_DEBUFFER)
 
+/// Awe - Contempt, Awe (Spiral of Contempt)
+/datum/ego_datum/armor/realized/awe
+	item_path = /obj/item/clothing/suit/armor/ego_gear/realization/awe
+
 /* ------------------ ALEPH Realizations ------------------*/
 
 /// Al Coda - Da Capo (The Silent Orchestra)

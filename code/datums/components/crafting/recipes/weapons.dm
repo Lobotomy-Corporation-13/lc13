@@ -149,34 +149,36 @@
 	category = CAT_WEAPONRY
 	subcategory = CAT_WEAPON
 
-/datum/crafting_recipe/bola
-	name = "Bola"
-	result = /obj/item/restraints/legcuffs/bola
-	reqs = list(/obj/item/restraints/handcuffs/cable = 1,
-				/obj/item/stack/sheet/metal = 6)
-	time = 20//15 faster than crafting them by hand!
-	category= CAT_WEAPONRY
-	subcategory = CAT_WEAPON
+// LC13 Removal: Currently in CoL, they are too overpowered, and ruins all PvP by reducing the movement speed of the target by so much, and it being as see as landing one bola.
 
-/datum/crafting_recipe/watcherbola
-	name = "Watcher Bola"
-	result = /obj/item/restraints/legcuffs/bola/watcher
-	time = 30
-	reqs = list(/obj/item/stack/sheet/animalhide/goliath_hide = 2,
-				/obj/item/restraints/handcuffs/cable/sinew = 1)
-	category = CAT_WEAPONRY
-	subcategory = CAT_WEAPON
+// /datum/crafting_recipe/bola
+// 	name = "Bola"
+// 	result = /obj/item/restraints/legcuffs/bola
+// 	reqs = list(/obj/item/restraints/handcuffs/cable = 1,
+// 				/obj/item/stack/sheet/metal = 6)
+// 	time = 20//15 faster than crafting them by hand!
+// 	category= CAT_WEAPONRY
+// 	subcategory = CAT_WEAPON
 
-/datum/crafting_recipe/gonbola
-	name = "Gonbola"
-	result = /obj/item/restraints/legcuffs/bola/gonbola
-	reqs = list(/obj/item/restraints/handcuffs/cable = 1,
-				/obj/item/stack/sheet/metal = 6,
-				/obj/item/stack/sheet/animalhide/gondola = 1)
-	time = 40
-	category= CAT_WEAPONRY
-	subcategory = CAT_WEAPON
-	always_available = FALSE
+// /datum/crafting_recipe/watcherbola
+// 	name = "Watcher Bola"
+// 	result = /obj/item/restraints/legcuffs/bola/watcher
+// 	time = 30
+// 	reqs = list(/obj/item/stack/sheet/animalhide/goliath_hide = 2,
+// 				/obj/item/restraints/handcuffs/cable/sinew = 1)
+// 	category = CAT_WEAPONRY
+// 	subcategory = CAT_WEAPON
+
+// /datum/crafting_recipe/gonbola
+// 	name = "Gonbola"
+// 	result = /obj/item/restraints/legcuffs/bola/gonbola
+// 	reqs = list(/obj/item/restraints/handcuffs/cable = 1,
+// 				/obj/item/stack/sheet/metal = 6,
+// 				/obj/item/stack/sheet/animalhide/gondola = 1)
+// 	time = 40
+// 	category= CAT_WEAPONRY
+// 	subcategory = CAT_WEAPON
+// 	always_available = FALSE
 
 /////Shield
 /datum/crafting_recipe/goliathshield

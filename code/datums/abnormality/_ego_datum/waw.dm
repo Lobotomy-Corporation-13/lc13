@@ -585,6 +585,10 @@
 	cost = 50
 	ego_tags = list(EGO_TAG_HAZARDOUS)
 
+/datum/ego_datum/armor/contempt
+	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/contempt
+	cost = 50
+
 // Unknown Little Prince Aberration - Tiara
 /datum/ego_datum/armor/tiara
 	item_path = /obj/item/clothing/suit/armor/ego_gear/waw/tiara
@@ -598,4 +602,3 @@
 /datum/ego_datum/weapon/encompassing
 	item_path = /obj/item/ego_weapon/encompassing
 	cost = 50
-

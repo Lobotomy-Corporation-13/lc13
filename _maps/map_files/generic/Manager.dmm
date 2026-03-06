@@ -64,15 +64,6 @@
 /obj/item/toy/plush/melt,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
-"bs" = (
-/obj/structure/railing{
-	dir = 1
-	},
-/obj/structure/railing{
-	dir = 7
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "bv" = (
 /obj/machinery/cryopod{
 	dir = 1
@@ -209,12 +200,6 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
-"cP" = (
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "cQ" = (
 /obj/structure/sigsystem/tower{
 	signal_code = 33
@@ -245,7 +230,7 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 600
+	delay_time = 500
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
@@ -606,15 +591,6 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
-"gF" = (
-/obj/structure/railing/corner{
-	dir = 1
-	},
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "gL" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot/syringe,
 /turf/open/floor/pod/light,
@@ -1391,15 +1367,6 @@
 	},
 /turf/open/floor/wood,
 /area/facility_hallway/manager)
-"op" = (
-/obj/structure/railing{
-	dir = 7
-	},
-/obj/structure/railing{
-	dir = 1
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "oq" = (
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -1645,12 +1612,6 @@
 /obj/machinery/vending/boozeomat/all_access,
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
-"qH" = (
-/obj/structure/railing/corner{
-	dir = 1
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "qI" = (
 /obj/effect/turf_decal/tile{
 	color = "#111111";
@@ -2261,7 +2222,14 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose,
+/obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose{
+	pixel_x = 10;
+	pixel_y = 8
+	},
+/obj/item/ego_weapon/ranged/malicedescent{
+	pixel_y = -5;
+	pixel_x = -7
+	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "wq" = (
@@ -2522,13 +2490,6 @@
 	},
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
-"ys" = (
-/obj/structure/railing/corner{
-	dir = 4
-	},
-/obj/structure/railing/corner,
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "yu" = (
 /obj/effect/turf_decal/tile{
 	color = "#111111";
@@ -3561,12 +3522,6 @@
 /obj/structure/table/wood/fancy/black,
 /turf/open/floor/carpet/green,
 /area/facility_hallway/manager)
-"IJ" = (
-/obj/structure/railing{
-	dir = 7
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "IK" = (
 /obj/structure/filingcabinet/wawinfo{
 	pixel_x = -10
@@ -3717,12 +3672,6 @@
 	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"KI" = (
-/obj/structure/railing{
-	dir = 8
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "KR" = (
 /obj/machinery/light/small/red{
@@ -4035,12 +3984,6 @@
 /obj/effect/turf_decal,
 /turf/open/floor/plasteel/dark,
 /area/facility_hallway/manager)
-"OR" = (
-/obj/structure/railing{
-	dir = 4
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "OV" = (
 /obj/machinery/conveyor/auto{
 	dir = 9;
@@ -4260,10 +4203,6 @@
 	},
 /turf/open/floor/plasteel/white,
 /area/facility_hallway/manager)
-"QV" = (
-/obj/structure/railing/corner,
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "QW" = (
 /obj/machinery/light/red{
 	dir = 8
@@ -4882,12 +4821,6 @@
 /obj/effect/turf_decal/siding/white,
 /turf/open/floor/carpet/black,
 /area/facility_hallway/manager)
-"Yp" = (
-/obj/structure/railing/corner{
-	dir = 4
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "Yq" = (
 /obj/effect/turf_decal/siding/wood/corner,
 /turf/open/floor/wood,
@@ -5031,12 +4964,6 @@
 "Zi" = (
 /turf/open/floor/facility/dark,
 /area/facility_hallway/manager)
-"Zo" = (
-/obj/structure/railing{
-	dir = 1
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "Zr" = (
 /obj/structure/railing{
 	resistance_flags = 115;
@@ -13912,17 +13839,17 @@ BW
 Nm
 no
 Ly
-IJ
+LG
+LG
 ZH
-bs
+LG
 ZH
-op
+LG
 ZH
-op
+LG
 ZH
-op
-ZH
-Zo
+LG
+LG
 JV
 XO
 XO
@@ -14169,17 +14096,17 @@ BW
 oq
 pB
 Ly
-cP
-KI
-gF
-KI
-gF
-KI
-gF
-KI
-gF
-KI
-qH
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
 JV
 XO
 XO
@@ -16739,17 +16666,17 @@ Kx
 oq
 Nm
 dF
-QV
-OR
-ys
-OR
-ys
-OR
-ys
-OR
-ys
-OR
-Yp
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
+LG
 dF
 XO
 XO
@@ -16996,17 +16923,17 @@ Kx
 Nm
 no
 dF
-IJ
+LG
+LG
 ZH
-op
+LG
 ZH
-op
+LG
 ZH
-op
+LG
 ZH
-op
-ZH
-Zo
+LG
+LG
 dF
 XO
 XO

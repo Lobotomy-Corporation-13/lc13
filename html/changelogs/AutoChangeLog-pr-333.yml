@@ -1,0 +1,4 @@
+author: "Destrok171"
+delete-after: True
+changes:
+  - rscadd: "Preferences for Backpack Visibility, starting without Beret and starting without Sunglasses."
