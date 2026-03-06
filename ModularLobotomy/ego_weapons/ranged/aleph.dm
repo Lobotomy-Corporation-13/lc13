@@ -613,6 +613,7 @@
 	righthand_file = 'icons/mob/inhands/64x64_righthand.dmi'
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
+	// Sprites by amanitaspooder
 	icon_state = "black"
 	inhand_icon_state = "black"
 	damtype = BLACK_DAMAGE
