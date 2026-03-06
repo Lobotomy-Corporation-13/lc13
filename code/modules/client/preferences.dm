@@ -1771,7 +1771,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						return
 					district_origin = new_district
 
-				// District Origin
+				// Zone Origin
 				if("zoneselect")
 					var/new_zone = input(user, "Do you come from the Backstreets or Nest?", "Zone Selection") as null|anything in GLOB.wing_section_prefs
 					if(!new_zone)
