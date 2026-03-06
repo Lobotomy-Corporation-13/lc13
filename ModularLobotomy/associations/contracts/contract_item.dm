@@ -106,8 +106,8 @@
 		var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
 		if(exp && exp.squad && exp.squad.can_accept_contract())
 			data["can_accept"] = TRUE
-	// Include map dynamic data for map-based active contracts
-	if(is_map_contract() && contract.state == CONTRACT_STATE_ACTIVE)
+	// Include map dynamic data for map-based contracts (active or pending)
+	if(is_map_contract() && (contract.state == CONTRACT_STATE_ACTIVE || contract.state == CONTRACT_STATE_PENDING))
 		var/list/map_data = contract.ui_data(user)
 		if(map_data)
 			data += map_data

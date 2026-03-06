@@ -284,7 +284,7 @@
 /area/city/hhpp)
 "ce" = (
 /obj/structure/potential,
-/turf/closed/indestructible/reinforced,
+/turf/closed/indestructible/reinforced/cheap/cream,
 /area/city/hana)
 "cg" = (
 /obj/structure/table/wood/bar,
@@ -1423,7 +1423,7 @@
 /area/city/hana)
 "lp" = (
 /turf/open/water/deep/freshwater,
-/area/city/alleyways)
+/area/city/lake)
 "ls" = (
 /obj/machinery/vending/city,
 /turf/open/floor/facility,
@@ -2733,6 +2733,15 @@
 	},
 /turf/open/floor/wood,
 /area/city/hhpp)
+"vE" = (
+/obj/machinery/vending/city_clothing{
+	pixel_x = 16;
+	density = 0
+	},
+/turf/open/floor/plating/ashplanet/rocky{
+	layer = 1.98
+	},
+/area/city)
 "vG" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/cityloot,
@@ -6007,9 +6016,6 @@
 /obj/structure/fluff/street_light,
 /turf/closed/indestructible/reinforced/cheap/cream,
 /area/city/hana)
-"Va" = (
-/turf/closed/indestructible/reinforced,
-/area/city/assoc_base)
 "Ve" = (
 /obj/structure/table/wood,
 /obj/structure/railing{
@@ -24056,7 +24062,7 @@ DI
 Ig
 eO
 sx
-lT
+YS
 OD
 ww
 np
@@ -24313,7 +24319,7 @@ jw
 jw
 eO
 sx
-lT
+YS
 OD
 ly
 xE
@@ -24570,7 +24576,7 @@ jw
 jw
 eO
 OC
-lT
+YS
 OD
 vo
 vo
@@ -24827,7 +24833,7 @@ eO
 eO
 eO
 Wf
-lT
+YS
 er
 lT
 lT
@@ -25084,7 +25090,7 @@ Eh
 hq
 hq
 sx
-lT
+YS
 OD
 ww
 ly
@@ -25341,7 +25347,7 @@ vt
 WW
 jS
 sx
-lT
+YS
 OD
 ly
 vo
@@ -25598,7 +25604,7 @@ Fm
 TC
 bI
 sx
-lT
+YS
 OD
 ly
 ly
@@ -26637,7 +26643,7 @@ Sv
 Sv
 Dy
 lT
-lT
+vE
 ud
 oT
 UR
@@ -38163,7 +38169,7 @@ io
 qK
 io
 wL
-Va
+nn
 gR
 io
 nd
@@ -38420,7 +38426,7 @@ io
 qK
 io
 Yc
-Va
+nn
 mu
 io
 aa
@@ -38934,7 +38940,7 @@ io
 qK
 io
 qp
-Va
+nn
 CD
 io
 FS

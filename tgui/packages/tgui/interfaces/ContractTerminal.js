@@ -103,7 +103,9 @@ const ContractsView = props => {
       )}
       {!!can_view_contracts && (
         <ActivePanel
+          act={act}
           contracts={active_contracts}
+          isFixer={is_fixer}
         />
       )}
     </>
@@ -313,7 +315,7 @@ const CreatePanel = props => {
 };
 
 const ActivePanel = props => {
-  const { contracts } = props;
+  const { act, contracts, isFixer } = props;
   return (
     <Section title="Active Contracts">
       {contracts.length === 0 && (
@@ -333,6 +335,9 @@ const ActivePanel = props => {
             <Table.Cell>
               Status
             </Table.Cell>
+            {!!isFixer && (
+              <Table.Cell />
+            )}
           </Table.Row>
           {contracts.map(c => (
             <Table.Row
@@ -348,6 +353,21 @@ const ActivePanel = props => {
               <Table.Cell>
                 {c.status_text}
               </Table.Cell>
+              {!!isFixer && (
+                <Table.Cell>
+                  <Button
+                    icon="times"
+                    color="bad"
+                    onClick={() => act(
+                      'cancel_contract',
+                      {
+                        contract_id:
+                          c.contract_id,
+                      }
+                    )}
+                  />
+                </Table.Cell>
+              )}
             </Table.Row>
           ))}
         </Table>

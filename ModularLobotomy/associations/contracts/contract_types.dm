@@ -239,7 +239,10 @@
 	var/wp_count = length(patrol_waypoints)
 	if(!wp_count)
 		wp_count = 1
-	completion_exp = CONTRACT_PATROL_EXP_PER_POINT * wp_count
+	// Base EXP per waypoint, plus a scaling bonus for longer routes
+	// Bonus: +10% per waypoint beyond the first (e.g. 5 waypoints = 1.4x multiplier)
+	var/scaling = 1 + (wp_count - 1) * 0.1
+	completion_exp = round(CONTRACT_PATROL_EXP_PER_POINT * wp_count * scaling)
 
 /datum/association_contract/patrol_route/get_status_text()
 	if(state != CONTRACT_STATE_ACTIVE)

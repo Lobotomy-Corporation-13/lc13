@@ -30,9 +30,7 @@ export const ContractPaper = (
   const [tab, setTab] = useSharedState(
     context, 'paperTab', 0,
   );
-  const showTabs
-    = has_map
-    && state === 'active';
+  const showTabs = has_map;
   return (
     <Window
       title={contract_name}

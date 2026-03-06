@@ -235,16 +235,25 @@
 			to_chat(M, span_warning("Contract \"[contract_name]\" has failed."))
 		squad.remove_contract(src)
 
-/// Cancel/refund a pending contract. Only works if not yet accepted.
+/// Cancel and refund a contract. Works on both pending and active contracts.
 /datum/association_contract/proc/cancel()
-	if(state != CONTRACT_STATE_PENDING)
+	if(state != CONTRACT_STATE_PENDING && state != CONTRACT_STATE_ACTIVE)
 		return FALSE
+	var/was_active = (state == CONTRACT_STATE_ACTIVE)
+	state = CONTRACT_STATE_FAILED
 	// Refund issuer
 	if(issuer_account && payment_amount > 0)
 		issuer_account.adjust_money(payment_amount)
 		if(issuer_mob)
-			to_chat(issuer_mob, span_notice("[payment_amount] Ahn refunded for cancelled contract."))
-	state = CONTRACT_STATE_FAILED
+			to_chat(issuer_mob, span_notice("[payment_amount] Ahn refunded for cancelled contract \"[contract_name]\"."))
+	// Clean up active contract state
+	if(was_active)
+		stop_timers()
+		cleanup_zones()
+		if(squad)
+			for(var/mob/living/M in squad.members)
+				to_chat(M, span_warning("Contract \"[contract_name]\" has been cancelled. The issuer has been refunded."))
+			squad.remove_contract(src)
 	qdel(src)
 	return TRUE
 

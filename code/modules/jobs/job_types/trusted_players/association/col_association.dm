@@ -80,10 +80,6 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	shoes = /obj/item/clothing/shoes/laceup
 	id = /obj/item/card/id/association
 
-	backpack_contents = list(
-		/obj/item/choice_beacon/association = 1,
-	)
-
 //Veteran
 /datum/job/veteran
 	title = "Association Veteran"

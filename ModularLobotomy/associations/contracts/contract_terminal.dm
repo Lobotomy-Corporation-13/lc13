@@ -263,6 +263,8 @@
 		if("clear_waypoints")
 			citymap_waypoints.Cut()
 			return TRUE
+		if("cancel_contract")
+			return handle_cancel_contract(usr, params)
 
 /// Handle contract creation from the TGUI.
 /obj/machinery/association_contract_terminal/proc/handle_create_contract(mob/living/user, list/params)
@@ -509,7 +511,7 @@
 
 /// Handle waypoint placement or removal. Takes world coordinates from TGUI canvas click.
 /obj/machinery/association_contract_terminal/proc/handle_place_waypoint(mob/user, list/params)
-	if(!citymap?.generated)
+	if(!citymap || !citymap.generated)
 		return FALSE
 	var/world_x = text2num(params["world_x"])
 	var/world_y = text2num(params["world_y"])
@@ -518,6 +520,21 @@
 	// Must be a floor tile
 	if(!citymap.IsFloorTile(world_x, world_y))
 		return FALSE
+	// Cannot place waypoints on water turfs or lake areas
+	var/turf/src_turf = get_turf(src)
+	if(!src_turf)
+		return FALSE
+	var/turf/target_turf = locate(world_x, world_y, src_turf.z)
+	if(target_turf)
+		if(istype(target_turf, /turf/open/water/deep))
+			if(user)
+				to_chat(user, span_warning("Cannot place a waypoint on water."))
+			return FALSE
+		var/area/target_area = get_area(target_turf)
+		if(istype(target_area, /area/city/lake))
+			if(user)
+				to_chat(user, span_warning("Cannot place a waypoint on water."))
+			return FALSE
 	// Check for existing waypoint at this location — toggle off
 	for(var/list/wp in citymap_waypoints)
 		if(wp["x"] == world_x && wp["y"] == world_y)
@@ -545,6 +562,27 @@
 			return FALSE
 	citymap_waypoints += list(list("x" = world_x, "y" = world_y, "order" = length(citymap_waypoints) + 1))
 	return TRUE
+
+/// Handle contract cancellation by a fixer. Refunds the issuer.
+/obj/machinery/association_contract_terminal/proc/handle_cancel_contract(mob/living/user, list/params)
+	if(!user)
+		return FALSE
+	// Only fixers can cancel contracts
+	if(!user.GetComponent(/datum/component/association_exp))
+		to_chat(user, span_warning("Only association members can cancel contracts."))
+		return FALSE
+	var/contract_id = text2num(params["contract_id"])
+	if(!contract_id)
+		return FALSE
+	// Find the contract across all squads
+	for(var/datum/association_squad/squad in GLOB.association_squads)
+		for(var/datum/association_contract/C in squad.active_contracts)
+			if(C.contract_id == contract_id)
+				to_chat(user, span_notice("Cancelling contract \"[C.contract_name]\"."))
+				C.cancel()
+				return TRUE
+	to_chat(user, span_warning("Contract not found."))
+	return FALSE
 
 /// Renumber waypoints sequentially after removal.
 /obj/machinery/association_contract_terminal/proc/renumber_waypoints()

@@ -100,3 +100,51 @@
 		icon_state = "station_map0"
 	else
 		icon_state = "station_map"
+
+/// Handheld city map device. Use in hand to open the city holomap.
+/obj/item/city_map
+	name = "portable city map"
+	desc = "A handheld holographic device displaying a detailed map of the city."
+	icon = 'icons/obj/telescience.dmi'
+	icon_state = "gps-c"
+	inhand_icon_state = "electronic"
+	w_class = WEIGHT_CLASS_SMALL
+	/// Shared city map data singleton (same as the wall-mounted version)
+	var/static/datum/contract_citymap/citymap
+
+/obj/item/city_map/attack_self(mob/user)
+	. = ..()
+	ui_interact(user)
+
+/obj/item/city_map/ui_interact(mob/user, datum/tgui/ui)
+	if(!citymap)
+		citymap = new /datum/contract_citymap()
+		var/turf/our_turf = get_turf(src)
+		if(our_turf)
+			citymap.GenerateCityMap(our_turf.z)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "CityMapDisplay")
+		ui.open()
+
+/obj/item/city_map/ui_state()
+	return GLOB.default_state
+
+/obj/item/city_map/ui_static_data(mob/user)
+	var/list/data = list()
+	if(citymap?.generated)
+		data["mapGrid"] = citymap.GetFullMap()
+		data["gridWidth"] = citymap.grid_width
+		data["gridHeight"] = citymap.grid_height
+		data["offsetX"] = citymap.offset_x
+		data["offsetY"] = citymap.offset_y
+		data["map_legend"] = citymap.cached_legend
+	return data
+
+/obj/item/city_map/ui_data(mob/user)
+	var/list/data = list()
+	var/turf/T = get_turf(user)
+	if(T)
+		data["player_x"] = T.x
+		data["player_y"] = T.y
+	return data

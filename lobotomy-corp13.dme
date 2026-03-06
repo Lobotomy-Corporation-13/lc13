@@ -4179,6 +4179,7 @@
 #include "ModularLobotomy\associations\augment_ui.dm"
 #include "ModularLobotomy\associations\augments.dm"
 #include "ModularLobotomy\associations\augments_insurgence.dm"
+#include "ModularLobotomy\associations\city_law_book.dm"
 #include "ModularLobotomy\associations\cityspawners.dm"
 #include "ModularLobotomy\associations\converted_mob.dm"
 #include "ModularLobotomy\associations\corroded_cassowary.dm"
