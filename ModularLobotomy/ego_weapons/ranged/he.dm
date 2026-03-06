@@ -151,8 +151,10 @@
 	desc = "A massive blocky launcher with some suspicious stains on it."
 	icon_state = "harmony"
 	inhand_icon_state = "harmony"
-	special = "This weapon fires bouncing, piercing shots. On hitting an insane person, deals 4x damage and stops bouncing."
-	force = 30
+	special = "This weapon fires bouncing, piercing shots. On hitting an insane person, deals 4x damage and stops bouncing.\
+		Alt Fire - This weapon fires fast piercing shots."
+
+	force = 25
 	damtype = WHITE_DAMAGE
 	attack_speed = 1.8
 	projectile_path = /obj/projectile/ego_bullet/ego_harmony
@@ -167,6 +169,19 @@
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
+
+	alternate_fire_name = "Musical Addiction"
+	alternate_shotsleft = 10
+	alternate_pellets = 1
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_harmonyfast
+	alternate_fire_sound = 'sound/weapons/ego/harmony1.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to piercing rounds.")
+	alternate_toggle_disabled_message = span_notice("You switch to bouncing rounds.")
+
 
 /obj/item/ego_weapon/ranged/transmission
 	name = "broken transmission"
@@ -319,6 +334,7 @@
 /obj/item/ego_weapon/ranged/ardor_star
 	name = "ardor blossom star"
 	desc = "Though I can't guide you... I can offer a warm embrace."
+	special = "Alt Fire - Ardor Blossom Star fires an explosive round."
 	icon_state = "ardor_star"
 	inhand_icon_state = "ardor_star"
 	force = 30
@@ -327,11 +343,23 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
 	fire_delay = 15
-	shotsleft = 4
+	shotsleft = 3
 	reloadtime = 3.5 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
+
+	alternate_fire_name = "Hellterfly’s Dream"
+	alternate_shotsleft = 1
+	alternate_pellets = 1
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_match/hellterfly
+	alternate_fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You prepare to fire your explosive round.")
+	alternate_toggle_disabled_message = span_notice("You unprepare your explosive round.")
 
 /obj/item/ego_weapon/ranged/pistol/deathdealer
 	name = "death dealer"
