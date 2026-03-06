@@ -405,8 +405,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	READ_FILE(S["uplink_loc"], uplink_spawn_loc)
 	READ_FILE(S["playtime_reward_cloak"], playtime_reward_cloak)
 	READ_FILE(S["phobia"], phobia)
-	READ_FILE(S["district_o"], district_o)
-	READ_FILE(S["zone_o"], zone_o)
+	READ_FILE(S["district_origin"], district_origin)
+	READ_FILE(S["zone_origin"], zone_origin)
 	READ_FILE(S["randomise"],  randomise)
 	READ_FILE(S["feature_mcolor"], features["mcolor"])
 	READ_FILE(S["feature_ethcolor"], features["ethcolor"])
@@ -539,8 +539,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Lore
 	terragov_relation = sanitize_inlist(terragov_relation, GLOB.relationship_prefs, initial(terragov_relation))
-	district_origin = sanitize_inlist(district_o, GLOB.district_prefs, initial(district_o))
-	zone_origin = sanitize_inlist(zone_o, GLOB.wing_section_prefs, initial(zone_o))
+	district_origin = sanitize_inlist(district_o, GLOB.district_prefs, initial(district_origin))
+	zone_origin = sanitize_inlist(zone_o, GLOB.wing_section_prefs, initial(zone_origin))
 
 	joblessrole	= sanitize_integer(joblessrole, 1, 3, initial(joblessrole))
 	//Validate job prefs
@@ -590,8 +590,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	WRITE_FILE(S["randomise"]		, randomise)
 	WRITE_FILE(S["species"]			, pref_species.id)
 	WRITE_FILE(S["phobia"], phobia)
-	WRITE_FILE(S["district_o"], district_o)
-	WRITE_FILE(S["zone_o"], zone_o)
+	WRITE_FILE(S["district_origin"], district_origin)
+	WRITE_FILE(S["zone_origin"], zone_origin)
 	WRITE_FILE(S["feature_mcolor"]					, features["mcolor"])
 	WRITE_FILE(S["feature_ethcolor"]					, features["ethcolor"])
 	WRITE_FILE(S["feature_lizard_tail"]			, features["tail_lizard"])
