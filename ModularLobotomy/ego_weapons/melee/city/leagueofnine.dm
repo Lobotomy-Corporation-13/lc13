@@ -6,7 +6,7 @@
 	force = 46
 	attack_speed = 1.2
 	icon_state = "sticking"
-	attributes_requirements = list(
+	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
 							PRUDENCE_ATTRIBUTE = 80,
 							TEMPERANCE_ATTRIBUTE = 80,

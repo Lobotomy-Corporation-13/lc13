@@ -160,6 +160,26 @@
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
+"qI" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/item/clothing/suit/armor/ego_gear/city/fellbullet,
+/obj/item/ego_weapon/ranged/fellbullet,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
 "ro" = (
 /obj/machinery/factory_machine/artillery{
 	pixel_y = 32;
@@ -578,6 +598,8 @@
 	pixel_y = 8
 	},
 /obj/effect/turf_decal/bot_red,
+/obj/item/clothing/suit/armor/ego_gear/city/sticking,
+/obj/item/ego_weapon/mini/fourleaf_clover/city,
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "RW" = (
@@ -594,6 +616,8 @@
 /obj/effect/turf_decal/tile/bar{
 	dir = 1
 	},
+/obj/item/clothing/suit/armor/ego_gear/city/sticking,
+/obj/item/ego_weapon/mini/fourleaf_clover/city,
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "Tb" = (
@@ -691,6 +715,8 @@
 	pixel_y = 8
 	},
 /obj/effect/turf_decal/bot_red,
+/obj/item/ego_weapon/perversion/weak,
+/obj/item/clothing/suit/armor/ego_gear/city/contempt,
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "XP" = (
@@ -863,5 +889,5 @@ zE
 KG
 Qv
 UV
-QS
+qI
 "}
