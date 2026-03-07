@@ -873,7 +873,8 @@
 "gK" = (
 /obj/machinery/door/airlock/wood{
 	name = "Association Office Cells";
-	req_access_txt = "67"
+	req_access_txt = "67";
+	id_tag = "1"
 	},
 /turf/open/floor/stone,
 /area/city/assoc_base)
@@ -1536,6 +1537,12 @@
 "mi" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
+/area/city/assoc_base)
+"mk" = (
+/obj/machinery/status_display/door_lock{
+	id_tag = "3"
+	},
+/turf/closed/indestructible/brick,
 /area/city/assoc_base)
 "mm" = (
 /obj/effect/turf_decal/trimline/yellow/line,
@@ -4234,6 +4241,12 @@
 	},
 /turf/open/indestructible/white,
 /area/city/clinic)
+"Fu" = (
+/obj/machinery/status_display/door_lock{
+	id_tag = "2"
+	},
+/turf/closed/indestructible/brick,
+/area/city/assoc_base)
 "Fy" = (
 /obj/structure/statue/sandstone/venus{
 	anchored = 1;
@@ -4758,6 +4771,14 @@
 	},
 /turf/open/floor/wood,
 /area/city/assoc_base)
+"JZ" = (
+/obj/machinery/door/airlock/wood{
+	name = "Association Office Cells";
+	req_access_txt = "67";
+	id_tag = "2"
+	},
+/turf/open/floor/stone,
+/area/city/assoc_base)
 "Kd" = (
 /obj/structure/closet/secure_closet/freezer/fridge/open,
 /turf/open/floor/facility,
@@ -4800,6 +4821,12 @@
 /obj/machinery/vending/fixer,
 /turf/open/floor/facility,
 /area/city/shop)
+"KC" = (
+/obj/machinery/status_display/door_lock{
+	id_tag = "1"
+	},
+/turf/closed/indestructible/brick,
+/area/city/assoc_base)
 "KE" = (
 /turf/closed/indestructible/fakeglass,
 /area/city/hhpp)
@@ -7003,8 +7030,9 @@
 /area/city/clinic)
 "ZM" = (
 /obj/machinery/door/airlock/wood{
-	name = s;
-	req_access_txt = "67"
+	name = "Association Office Cells";
+	req_access_txt = "67";
+	id_tag = "3"
 	},
 /turf/open/floor/stone,
 /area/city/assoc_base)
@@ -38242,7 +38270,7 @@ lV
 nn
 cM
 mi
-nn
+KC
 Kn
 VK
 nn
@@ -38756,7 +38784,7 @@ lV
 nn
 Ca
 ze
-gK
+JZ
 mV
 iN
 nn
@@ -39013,7 +39041,7 @@ lV
 nn
 cM
 mi
-nn
+Fu
 Kn
 VK
 nn
@@ -39784,7 +39812,7 @@ lV
 nn
 cM
 ze
-nn
+mk
 Kn
 VK
 nn

@@ -16,7 +16,8 @@
 	name = "dieci combat gloves"
 	icon_state = "dieci_glove"
 	inhand_icon_state = "yun_fist"
-	desc = "A gauntlet used by Dieci Association. Light attacks deal RED damage with Sinking. Use in hand to empower with knowledge for PALE heavy attacks."
+	desc = "Heavy gauntlets issued to Dieci Association members. The reinforced plating channels accumulated knowledge into a protective barrier around the wearer."
+	special = "Defensive weapon. Light attacks deal RED damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks. Empowering grants shield HP (level x15)."
 	force = 20
 	damtype = RED_DAMAGE
 	attack_speed = 0.7
@@ -343,7 +344,7 @@
 /// Veteran-tier Dieci fists. Higher force for experienced members.
 /obj/item/ego_weapon/city/dieci/vet
 	name = "dieci veteran gloves"
-	desc = "Reinforced gauntlets worn by veteran members of Dieci Association."
+	desc = "Reinforced gauntlets worn by veteran members of Dieci Association. The extra plating generates a stronger barrier on empowerment."
 	force = 28
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 100,
@@ -355,7 +356,7 @@
 /// Director-tier Dieci fists. The finest martial weapons for the section leader.
 /obj/item/ego_weapon/city/dieci/director
 	name = "dieci director fists"
-	desc = "Ornate golden gauntlets worn by the Director of Dieci Association."
+	desc = "Ornate golden gauntlets worn by the Director of Dieci Association. They radiate an unmistakable authority."
 	force = 38
 	attack_speed = 0.6
 	attribute_requirements = list(
@@ -375,7 +376,8 @@
 /// Starts retracted — small enough for pockets and neck. Deploy to fight.
 /obj/item/ego_weapon/city/dieci/key
 	name = "dieci ceremonial key"
-	desc = "A ceremonial key carried by Dieci Association. Use in hand to deploy for combat. Grants Offense Level Up on empowerment instead of shield HP."
+	desc = "A ceremonial key carried by Dieci Association members. Its intricate engravings hum with latent energy, sharpening the wielder's focus when activated."
+	special = "Offensive weapon. Shares the same combo system as fists, but empowering grants Offense Level Up (level x2) instead of shield HP. Use in hand to deploy for combat."
 	icon = 'icons/obj/clothing/ego_gear/dieci_icon.dmi'
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/dieci_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/dieci_right.dmi'
@@ -459,7 +461,7 @@
 /// Veteran-tier Dieci key.
 /obj/item/ego_weapon/city/dieci/key/vet
 	name = "dieci veteran key"
-	desc = "A finely crafted ceremonial key wielded by veteran members of Dieci Association. Deploy to fight."
+	desc = "A finely crafted ceremonial key wielded by veteran members of Dieci Association. Its polished surface thrums with sharpened intent."
 	force = 35
 	attack_speed = 0.85
 	attribute_requirements = list(
@@ -472,7 +474,7 @@
 /// Director-tier Dieci key.
 /obj/item/ego_weapon/city/dieci/key/director
 	name = "dieci director key"
-	desc = "An ornate golden key carried by the Director of Dieci Association. A symbol of absolute authority. Deploy to fight."
+	desc = "An ornate golden key carried by the Director of Dieci Association. A symbol of absolute authority that hums with devastating focus."
 	force = 48
 	attack_speed = 0.8
 	attribute_requirements = list(
