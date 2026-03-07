@@ -44,6 +44,12 @@
 	name = "insurgence base capsule"
 	desc = "Contains equipment for establishing an Insurgence Clan outpost."
 	template_id = "insurgence_base"
+
+/obj/item/structurecapsule/syndicate/leagueofnine
+	name = "League of Nine Capsule"
+	desc = "Contains equipment for establishing a New League of Nine Littérateurs outpost."
+	template_id = "leagueofnine_base"
+
 //Office templates
 /datum/map_template/shelter/index
 	name = "Index Base"

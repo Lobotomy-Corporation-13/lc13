@@ -1,164 +1,760 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
+/turf/closed/indestructible/syndicate,
+/area/city/backstreets_room)
+"b" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/structure/table/reinforced,
+/obj/machinery/microwave{
+	pixel_y = 5
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"c" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4;
+	pixel_x = -6
+	},
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "d" = (
-/obj/machinery/light{
-	dir = 1;
-	pixel_y = 19
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/effect/turf_decal/tile/bar,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"e" = (
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 8;
+	pixel_x = 32
+	},
+/obj/machinery/light/floor{
+	pixel_y = 3;
+	layer = 3;
+	name = "floodlight";
+	pixel_x = 25
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"f" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"g" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/potential_tester{
+	name = "Reconfigured Potential Tester";
+	desc = "A modified Nagel und Hammer device meant to figure out subject potentials."
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "h" = (
-/obj/machinery/door/airlock/grunge{
-	name = "ID Imprintation Matrix"
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 1;
+	pixel_y = -32
 	},
-/turf/open/floor/pod/dark,
-/area/city/backstreets_room)
-"l" = (
-/obj/machinery/light{
-	dir = 8;
-	pixel_x = -9;
+/obj/machinery/light/floor{
+	pixel_y = -25;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/structure/table/reinforced,
+/obj/item/folder{
+	pixel_x = -10;
+	pixel_y = -1;
+	icon_state = "folder_syndie";
+	name = "ID-Imprint";
+	desc = "Store your observations here."
+	},
+/obj/item/pen{
+	pixel_x = -6;
+	pixel_y = 9
+	},
+/obj/item/paper_bin/carbon{
+	pixel_x = 8;
 	pixel_y = 4
 	},
-/turf/closed/indestructible/syndicate,
+/turf/open/floor/plasteel/dark,
 /area/city/backstreets_room)
-"m" = (
-/obj/machinery/door/airlock/survival_pod{
-	name = "entrance";
-	req_access_txt = "150"
+"i" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/item/ncorp_augment_tester{
+	pixel_y = 5;
+	pixel_x = 5
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
-"F" = (
-/obj/machinery/light{
+"j" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/chair/comfy/black{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"k" = (
+/obj/machinery/modular_computer/console{
+	dir = 4;
+	name = "matrix monitor";
+	desc = "Dysfunctional. This used to enable imprinting from a distance - but. Such a time has passed.";
+	pixel_x = -6
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"l" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"n" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/item/storage/box/donkpockets{
+	pixel_x = -6
+	},
+/obj/item/storage/box/donkpockets{
+	pixel_x = -3;
+	pixel_y = 7
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"o" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4;
+	pixel_x = -6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"p" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 8;
-	pixel_x = -9;
+	pixel_x = 6
+	},
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"q" = (
+/obj/item/modular_computer/laptop{
+	pixel_x = 11;
+	pixel_y = 7
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 3;
+	pixel_y = -1
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 7;
+	pixel_y = -2
+	},
+/obj/item/flashlight/lamp{
+	pixel_x = -4;
+	pixel_y = 10
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 3;
+	pixel_y = -1
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 7;
+	pixel_y = -2
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/table/wood,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"r" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/machinery/light/floor{
+	pixel_x = -11;
+	pixel_y = -11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"s" = (
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 8;
+	pixel_x = 6
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"t" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/machinery/light/floor{
+	pixel_x = 11;
+	pixel_y = -11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"u" = (
+/obj/machinery/door/airlock/grunge{
+	name = "ID Imprintation Matrix"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"w" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/item/ego_weapon/city/zweibaton/protection{
+	pixel_x = 6
+	},
+/obj/item/restraints/handcuffs,
+/obj/item/restraints/handcuffs,
+/obj/item/ego_weapon/city/zweibaton/protection{
+	pixel_x = 6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"z" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"A" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"B" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"C" = (
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
+	dir = 4;
+	pixel_x = -6
+	},
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"D" = (
+/obj/machinery/door/airlock/grunge{
+	name = "ID Matrix Monitoring"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"F" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/machinery/light/floor{
+	pixel_y = 11;
+	pixel_x = 11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"G" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"H" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/item/paper_bin/carbon{
+	pixel_x = 8;
 	pixel_y = 4
 	},
-/obj/machinery/light/broken{
-	dir = 1;
-	pixel_y = 19
+/obj/item/pen{
+	pixel_x = -6;
+	pixel_y = 9
+	},
+/obj/item/folder{
+	pixel_x = -10;
+	pixel_y = -1;
+	icon_state = "folder_syndie";
+	name = "ID-Imprint";
+	desc = "Store your observations here."
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "I" = (
-/obj/machinery/light/broken{
+/obj/machinery/door/airlock/grunge{
+	name = "N. Corp League of Nine Quarters"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"J" = (
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/effect/turf_decal/trimline/red/filled/warning{
 	dir = 8;
-	pixel_y = 4;
-	pixel_x = -9
+	pixel_x = 6
+	},
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "K" = (
-/obj/machinery/idimprinter,
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "L" = (
-/turf/closed/indestructible/syndicate,
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/chair/comfy/black{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"M" = (
+/obj/machinery/door/airlock/grunge{
+	name = "N. Corp Employee Quarters"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"N" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "O" = (
-/obj/structure/window/reinforced/fulltile{
-	max_integrity = 500;
-	armor = list("melee" = 30, "bullet" = 30, "laser" = 20, "energy" = 20, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 80, "acid" = 70)
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
 	},
-/turf/open/floor/stone,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 "P" = (
-/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Q" = (
+/obj/machinery/idimprinter,
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"R" = (
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"S" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"T" = (
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"U" = (
+/obj/structure/table/reinforced,
+/obj/item/storage/fancy/cigarettes/cigpack_robust{
+	pixel_x = 9;
+	pixel_y = 7
+	},
+/obj/item/lighter/greyscale{
+	pixel_x = -1;
+	pixel_y = 6
+	},
+/obj/item/toy/cards/deck/kotahi{
+	pixel_y = -1;
+	pixel_x = -4
+	},
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 1;
+	pixel_y = -32
+	},
+/obj/machinery/light/floor{
+	pixel_y = -25;
+	layer = 3;
+	name = "floodlight"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"V" = (
+/obj/structure/window/shuttle/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"W" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"X" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Y" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/chair/comfy/black{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Z" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/machinery/light/floor{
+	pixel_y = 11;
+	pixel_x = -11
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/backstreets_room)
 
 (1,1,1) = {"
-F
+J
+p
+p
+s
 a
+f
 a
-I
-L
-P
-l
-a
-a
-a
-a
+B
+X
+T
+z
 "}
 (2,1,1) = {"
-K
+Q
+T
+T
+T
+u
+T
 a
-a
-a
-h
-a
-L
-a
-a
-a
-a
+R
+T
+T
+W
 "}
 (3,1,1) = {"
-d
+C
+o
+c
+c
 a
+T
 a
-a
-L
-a
-L
-a
-a
-a
-a
+P
+S
+T
+G
 "}
 (4,1,1) = {"
-L
-O
-O
-L
-L
-m
-L
+a
+V
+V
+a
+a
+T
 a
 a
 a
+M
 a
 "}
 (5,1,1) = {"
+H
+k
+k
 a
+Z
+T
+r
 a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+n
+T
+Y
 "}
 (6,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+R
+T
+T
+D
+T
+T
+T
+M
+T
+T
+U
 "}
 (7,1,1) = {"
+g
+i
+w
 a
+F
+T
+t
 a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+b
+T
+j
 "}
 (8,1,1) = {"
 a
@@ -166,7 +762,7 @@ a
 a
 a
 a
-a
+M
 a
 a
 a
@@ -174,41 +770,41 @@ a
 a
 "}
 (9,1,1) = {"
+N
+T
+q
 a
+X
+T
+A
 a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+N
+T
+L
 "}
 (10,1,1) = {"
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+R
+T
+T
+I
+T
+T
+T
+I
+T
+T
+h
 "}
 (11,1,1) = {"
+O
+T
+l
 a
+K
+e
+l
 a
-a
-a
-a
-a
-a
-a
-a
-a
-a
+d
+T
+l
 "}
