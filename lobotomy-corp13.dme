@@ -4284,6 +4284,7 @@
 #include "ModularLobotomy\ego_weapons\melee\city\lcorp_melee.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\lcorp_ranged.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\leaflet.dm"
+#include "ModularLobotomy\ego_weapons\melee\city\leagueofnine.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\limbus_ego.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\limbus_labs.dm"
 #include "ModularLobotomy\ego_weapons\melee\city\limbus_sinner.dm"
