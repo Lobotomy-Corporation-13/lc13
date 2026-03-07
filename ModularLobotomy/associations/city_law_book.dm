@@ -877,9 +877,8 @@ pursuant to &sect;3.6.</p>
 <h2 class='section-header grand-header'>&sect;7 &mdash; Grand Felonies</h2>
 <p class='note'>
 Offenses hereunder are punishable by permanent imprisonment, exile to the
-Outskirts, a fine not exceeding fifty thousand (50,000) Ahn with the
-mandatory installation of tracking implants, or such other penalty as the
-Presiding Authority deems appropriate, up to and including execution where
+Outskirts, a fine not exceeding fifty thousand (50,000) Ahn with many other penalties
+as the Presiding Authority deems appropriate, up to and including execution where
 the offender is determined, in the sole judgment of the Presiding
 Authority, to be uncontainable. Notwithstanding the sentencing guidelines
 herein, the Presiding Authority retains discretion to impose lesser
@@ -890,22 +889,6 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 <tr><th width='40'>Code</th><th width='150'>Crime</th><th>Description</th><th width='200'>Notes</th></tr>
 <tr>
 	<td>401</td>
-	<td>Attempted Murder</td>
-	<td>To use, apply, or direct lethal force against a Person,
-	particularly one already in a critical or incapacitated state, with
-	the apparent intent to cause, occasion, or otherwise bring about
-	the death of said Person, where death did not in fact result.</td>
-	<td>If the accused attempted first aid, medical intervention, or
-	other restorative measures after the victim reached a critical
-	state, said actions may be considered in determining whether
-	intent to kill was present. The Presiding Authority should consider
-	the totality of the circumstances, the standing of the victim,
-	and whether prosecution serves the City's interests. Cf. Code 301
-	for assault with a deadly weapon (&sect;6); cf. Code 405 for
-	completed murder.</td>
-</tr>
-<tr>
-	<td>402</td>
 	<td>Grand Sabotage</td>
 	<td>To engage in, facilitate, or otherwise participate in destructive
 	actions, operations, or schemes that seriously threaten, endanger,
@@ -921,7 +904,7 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	&sect;6.</td>
 </tr>
 <tr>
-	<td>403</td>
+	<td>402</td>
 	<td>Grand Theft</td>
 	<td>To take, remove, appropriate, or otherwise deprive the rightful
 	owner or custodian of items, materials, or information of extreme
@@ -936,7 +919,7 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	cf. Code 306 for theft of restricted items (&sect;6).</td>
 </tr>
 <tr>
-	<td>404</td>
+	<td>403</td>
 	<td>Espionage</td>
 	<td>To act, operate, or conspire against the interests of the
 	established order of the City, whether on behalf of an outside
@@ -957,7 +940,7 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	provision.</td>
 </tr>
 <tr>
-	<td>405</td>
+	<td>404</td>
 	<td>Murder</td>
 	<td>To deliberately, maliciously, and with premeditation cause,
 	occasion, or otherwise bring about the death of another
@@ -995,7 +978,7 @@ Notwithstanding any other provision herein, including but not limited to
 &sect;&sect;10-11, Taboo Violations are not subject to the modifiers,
 special situations, or court proceedings described elsewhere in this
 Code. All Persons are directed to report suspected violations to the
-nearest Hana or Zwei Officer forthwith.
+nearest Hana or Local Assocation forthwith.
 </p>
 <table class='tier-taboo'>
 <tr><th width='40'>Code</th><th width='150'>Crime</th><th>Description</th><th width='200'>Notes</th></tr>
@@ -1463,7 +1446,7 @@ by extraordinary circumstances. The Presiding Authority shall state the
 basis for the sentence, though the level of detail required is within
 the Presiding Authority's discretion.<br><br>
 
-<b>&sect;11.5 Enforcement of Sentences:</b> The Zwei Association and
+<b>&sect;11.5 Enforcement of Sentences:</b> The Local Assocation and
 its peacekeepers are responsible for the execution and enforcement of
 sentences imposed hereunder. The Oufi Association retains jurisdiction
 over disputes arising from contractual obligations, commercial

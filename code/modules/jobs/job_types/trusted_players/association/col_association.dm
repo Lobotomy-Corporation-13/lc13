@@ -17,8 +17,8 @@ GLOBAL_LIST_INIT(association_jobs, list(
 	spawn_positions = 1
 	display_order = JOB_DISPLAY_ORDER_DIRECTOR
 	trusted_only = TRUE
-	access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE) // I want to use the number 69.
-	minimal_access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE)
+	access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE, ACCESS_SECURITY) // I want to use the number 69.
+	minimal_access = list(ACCESS_PHARMACY, ACCESS_NETWORK, ACCESS_RC_ANNOUNCE, ACCESS_SECURITY)
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_ASSOCIATION
 	paycheck = 700
 	maptype = list("wonderlabs", "city")
