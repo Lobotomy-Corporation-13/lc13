@@ -224,7 +224,7 @@ authority in their sole discretion.
 <tr>
 	<td>&quot;Public Area&quot;</td>
 	<td>Any area, space, premises, or zone that is not (a) a private
-	residence, (b) a restricted area as defined in Code 307, (c) an area
+	residence, (b) a restricted area as defined in Code 306, (c) an area
 	under the exclusive control of a Recognized Organization that has not
 	been designated for public access, or (d) any other area that the
 	presiding authority determines, in their sole discretion, to be
@@ -335,7 +335,28 @@ or effect similar to an offense described herein, may be charged under
 the most analogous provision of this Code. The Presiding Authority
 shall have the discretion to determine which provision is most
 analogous, and such determination shall not be subject to appeal
-except as provided in &sect;11.6.
+except as provided in &sect;11.6.<br><br>
+
+<b>&sect;3.8 Lawful Surrender</b> (the &quot;Contraband Surrender
+Amendment&quot;)<b>.</b> Notwithstanding any provision of
+this Code to the contrary, the possession, transport, or custody of
+items that would otherwise constitute Contraband (as defined in
+&sect;2) or that are enumerated in the Schedule of Banned Items
+(&sect;9) shall not, in and of itself, constitute grounds for
+prosecution under &sect;&sect;4-7, provided that the Person in
+possession of said items (a) is in the process of surrendering,
+delivering, or otherwise transferring said items to the Hana
+Association, a Local Association, or such other authority as the
+Hana Association may designate; (b) is transporting said items for
+the express purpose of sale, donation, or forfeiture to said
+authority; and (c) proceeds to effect such surrender without
+unreasonable delay, detour, or deviation. The burden of
+demonstrating lawful intent to surrender rests with the possessor,
+and the Presiding Authority retains sole discretion to determine
+whether the conditions set forth herein have been satisfied. This
+provision shall not apply to items tied to Taboo Violations under
+&sect;8, for which the Claw's standing orders pursuant to &sect;1.2
+take precedence regardless of the possessor's stated intent.
 </div>
 
 <!-- ==================== &sect;4 INFRACTIONS ==================== -->
@@ -383,7 +404,7 @@ circumstances warrant, subject to the limitations set forth in &sect;10.
 	or implied. Private residences, offices, established business
 	premises, and areas under recognized organizational control (as
 	described in &sect;2) shall all qualify as non-public for purposes
-	of this provision. Cf. Code 307 for restricted area trespass.
+	of this provision. Cf. Code 306 for restricted area trespass.
 	Notwithstanding the foregoing, Authorized Personnel (as defined in
 	&sect;2) acting in the course of their duties shall not be deemed
 	to be in violation of this provision.</td>
@@ -410,9 +431,9 @@ circumstances warrant, subject to the limitations set forth in &sect;10.
 	<td>To foul, soil, contaminate, or otherwise deposit refuse, trash,
 	biological matter (including but not limited to blood, remains, or
 	bodily fluids), or any other material deemed unsanitary or unsightly
-	upon city streets, Public Areas, or within buildings, establishments,
-	or premises including but not limited to Association offices, bars,
-	shops, or other places of business or public accommodation.</td>
+	within buildings, establishments, or premises including but not
+	limited to Association offices, bars, shops, or other places of
+	business or public accommodation.</td>
 	<td>Persons seeking medical attention for injuries sustained in the
 	course of events giving rise to said littering are exempt from
 	prosecution hereunder, provided that Reasonable (as defined in
@@ -443,23 +464,6 @@ circumstances warrant, subject to the limitations set forth in &sect;10.
 </tr>
 <tr>
 	<td>106</td>
-	<td>Carrying Unregistered Equipment</td>
-	<td>To possess, carry, transport, or otherwise maintain custody of
-	weapons, tools, Workshop-manufactured goods, or any other equipment
-	that has not been duly registered, catalogued, or otherwise recorded
-	with the Tres Association in accordance with such procedures as
-	may be established from time to time.</td>
-	<td>Items that form part of a licensed Fixer's approved loadout
-	(as verified by Hana records) or that have been issued, provided,
-	or otherwise furnished by a Recognized Organization for official
-	duties are exempt from the requirements of this provision.
-	Notwithstanding the foregoing, the Tres Association retains sole
-	authority over registration requirements, and the absence of a
-	registration requirement for a particular item shall not be
-	construed as authorization to possess said item.</td>
-</tr>
-<tr>
-	<td>107</td>
 	<td>Minor Substance Abuse</td>
 	<td>To use, consume, administer, or otherwise introduce into one's
 	person any controlled substance without proper authorization,
@@ -473,7 +477,7 @@ circumstances warrant, subject to the limitations set forth in &sect;10.
 	at the Presiding Authority's discretion.</td>
 </tr>
 <tr>
-	<td>108</td>
+	<td>107</td>
 	<td>Simple Assault</td>
 	<td>A minor physical altercation, scuffle, or confrontation between
 	Persons that does not result in serious, lasting, or permanent
@@ -485,7 +489,7 @@ circumstances warrant, subject to the limitations set forth in &sect;10.
 	may be determined by the Presiding Authority) was employed. The
 	willingness of the aggrieved party to press charges should be
 	considered, though it is not dispositive. Cf. Code 201 for
-	sustained assault, Code 301 for assault with a deadly weapon.</td>
+	sustained assault.</td>
 </tr>
 </table>
 <p class='footnote'>&dagger; Infractions under &sect;4 are subject to
@@ -514,8 +518,8 @@ notwithstanding any contrary provision of &sect;4.
 	exceeds the threshold established in Code 108 as determined by the
 	Presiding Authority.</td>
 	<td>Depending on the severity of the injuries sustained, the
-	Presiding Authority should consider elevation to Assault with a
-	Deadly Weapon under Code 301 pursuant to &sect;6. Officers should
+	Presiding Authority should consider elevation to a Felony
+	pursuant to &sect;6. Officers should
 	weigh whether prosecution is warranted given the totality of the
 	circumstances and the standing of the parties involved (cf.
 	&sect;&sect;2, 10.9).</td>
@@ -535,7 +539,7 @@ notwithstanding any contrary provision of &sect;4.
 	may, at the Officer's sole discretion, be classified as a riot for
 	purposes of this provision. Organizers, instigators, and those
 	deemed to have provided material support face elevated charges
-	under Code 304 pursuant to &sect;6.</td>
+	under Code 303 pursuant to &sect;6.</td>
 </tr>
 <tr>
 	<td>203</td>
@@ -544,7 +548,7 @@ notwithstanding any contrary provision of &sect;4.
 	health, or well-being of citizens through negligent, irresponsible,
 	or reckless actions, omissions, or failures to act, where such
 	actions do not rise to the level of deliberate malice as described
-	in Code 402.</td>
+	in Code 401.</td>
 	<td>Includes, without limitation, accidental gas leaks, structural
 	collapses, electrical hazards, and the negligent handling, storage,
 	or disposal of dangerous materials. Notwithstanding the foregoing,
@@ -564,8 +568,8 @@ notwithstanding any contrary provision of &sect;4.
 	<td>Items in short supply or belonging to the public at large are
 	the primary concern. A licensed Fixer who hoards, stockpiles, or
 	otherwise monopolizes medical supplies still commits theft under
-	this provision. Cf. Code 306 for theft of restricted items;
-	cf. Code 403 for grand theft.</td>
+	this provision. Cf. Code 305 for theft of restricted items;
+	cf. Code 402 for grand theft.</td>
 </tr>
 <tr>
 	<td>205</td>
@@ -581,7 +585,7 @@ notwithstanding any contrary provision of &sect;4.
 	party with authorized access facilitated entry does not necessarily
 	absolve the accused, but may be considered in mitigation.
 	Notwithstanding the foregoing, cf. Code 102 for simple trespass
-	and Code 307 for restricted area trespass.</td>
+	and Code 306 for restricted area trespass.</td>
 </tr>
 <tr>
 	<td>206</td>
@@ -611,13 +615,11 @@ notwithstanding any contrary provision of &sect;4.
 	Head may designate from time to time.</td>
 	<td>Firearms are heavily restricted within the City by standing order
 	of the Head. Only the Hana Association and specially Authorized
-	Personnel may carry firearms. A ranged weapon that does not require
+	Personnel may carry firearms. Pursuant to the &quot;Sustained
+	Armament Amendment,&quot; a ranged weapon that does not require
 	reloading is classified as a restricted firearm for purposes of this
 	provision, regardless of its mechanism of action, as such devices
 	pose a sustained threat not dissimilar to conventional firearms.
-	Melee weapons require Tres Association registration pursuant to
-	Code 106 but are generally permitted for licensed Fixers. Cf.
-	Code 505 for unauthorized firearm manufacturing (&sect;8).
 	Notwithstanding the foregoing, the definition of &quot;firearm&quot;
 	is subject to the Presiding Authority's interpretation.</td>
 </tr>
@@ -670,30 +672,12 @@ conduct in question implicates multiple provisions.</p>
 Offenses hereunder are punishable by detention not exceeding eight (8)
 minutes, or by a fine not exceeding ten thousand (10,000) Ahn, or both,
 or by such other penalty as the Presiding Authority deems appropriate
-pursuant to &sect;&sect;3.6-3.7. Repeat offenses or offenses of
-particular severity may result in permanent imprisonment or exile
-to the Outskirts at the discretion of the Presiding Authority,
-notwithstanding any contrary provision of &sect;&sect;4-5.
+pursuant to &sect;&sect;3.6-3.7.
 </p>
 <table class='tier-felony'>
 <tr><th width='40'>Code</th><th width='150'>Crime</th><th>Description</th><th width='200'>Notes</th></tr>
 <tr>
 	<td>301</td>
-	<td>Assault with a Deadly Weapon</td>
-	<td>To use, employ, brandish, or otherwise utilize a weapon, tool,
-	instrument, or device capable of inflicting serious bodily harm
-	against another Person, without the apparent intent to cause,
-	occasion, or otherwise bring about the death of said Person,
-	subject to the distinctions set forth in Code 108 and Code 201.</td>
-	<td>If the victim was brought to a critical state (as determined by
-	the Presiding Authority or attending medical personnel), the
-	Presiding Authority should consider elevation to Attempted Murder
-	under Code 401 pursuant to &sect;7. The determination of what
-	constitutes a &quot;weapon&quot; for purposes of this provision is
-	within the sole discretion of the Presiding Authority.</td>
-</tr>
-<tr>
-	<td>302</td>
 	<td>Assault of an Officer</td>
 	<td>To use, direct, or threaten physical force, violence, or
 	intimidation against any Officer (as defined in &sect;2),
@@ -710,15 +694,15 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	notwithstanding any provision therein to the contrary.</td>
 </tr>
 <tr>
-	<td>303</td>
+	<td>302</td>
 	<td>Manslaughter</td>
 	<td>To cause, occasion, or otherwise bring about the unintentional
 	death of a Person through negligent, reckless, or irresponsible
 	actions, omissions, or failures to act, where such death was not
 	the result of deliberate malice or premeditation as described
-	in Code 405.</td>
+	in Code 404.</td>
 	<td>Intent is the critical distinguishing factor between this
-	provision and Code 405 (Murder). Deaths caused by negligence,
+	provision and Code 404 (Murder). Deaths caused by negligence,
 	including but not limited to the creation of hazards (cf.
 	Code 203), equipment tampering, the application of excessive force,
 	or the maintenance of unsafe conditions of confinement, fall within
@@ -728,7 +712,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	charges.</td>
 </tr>
 <tr>
-	<td>304</td>
+	<td>303</td>
 	<td>Inciting a Riot</td>
 	<td>To deliberately, knowingly, or recklessly stir, provoke, incite,
 	or agitate citizens against established authorities, or to organize,
@@ -747,7 +731,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	riots.</td>
 </tr>
 <tr>
-	<td>305</td>
+	<td>304</td>
 	<td>Sabotage</td>
 	<td>To hinder, disrupt, impair, or otherwise interfere with city
 	operations, services, or functions through malicious, deliberate,
@@ -757,14 +741,14 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	equipment, or systems.</td>
 	<td>For acts of destruction that threaten the District itself, its
 	critical infrastructure, or the safety of its inhabitants at large,
-	see Grand Sabotage under Code 402 pursuant to &sect;7.
+	see Grand Sabotage under Code 401 pursuant to &sect;7.
 	Notwithstanding the foregoing, acts of sabotage committed by
 	Authorized Personnel in the course of authorized operations shall
 	not constitute a violation of this provision unless the Presiding
 	Authority determines otherwise.</td>
 </tr>
 <tr>
-	<td>306</td>
+	<td>305</td>
 	<td>Theft of Restricted Items</td>
 	<td>To take, remove, appropriate, or otherwise deprive the rightful
 	owner or custodian of weapons, Singularity products, sensitive
@@ -776,12 +760,12 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	maintained under lock, seal, or other security measures. Items
 	located in locked or secured areas are presumed restricted
 	regardless of the identity of the nominal owner. Cf. Code 204 for
-	petty theft; cf. Code 403 for grand theft. Notwithstanding the
+	petty theft; cf. Code 402 for grand theft. Notwithstanding the
 	foregoing, the determination of &quot;significant value&quot; is
 	within the sole discretion of the Presiding Authority.</td>
 </tr>
 <tr>
-	<td>307</td>
+	<td>306</td>
 	<td>Restricted Area Trespass</td>
 	<td>To enter, access, or otherwise gain ingress to restricted zones,
 	security areas, high-clearance facilities, or other areas controlled
@@ -798,7 +782,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	&sect;4.</td>
 </tr>
 <tr>
-	<td>308</td>
+	<td>307</td>
 	<td>Aiding and Abetting</td>
 	<td>To knowingly, recklessly, or negligently assist, facilitate,
 	harbor, or provide material support to a Person who has committed,
@@ -818,7 +802,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	broadly.</td>
 </tr>
 <tr>
-	<td>309</td>
+	<td>308</td>
 	<td>Contraband Possession</td>
 	<td>To possess, carry, transport, conceal, distribute, or otherwise
 	maintain custody of Contraband (as defined in &sect;2), including
@@ -830,14 +814,14 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	detailed registry of prohibited items. If evidence suggests the
 	suspect is acting against the City's interests, the Presiding
 	Authority should consider bringing concurrent charges of Espionage
-	under Code 404 pursuant to &sect;7. Possession of items tied to
+	under Code 403 pursuant to &sect;7. Possession of items tied to
 	Taboo Violations (Code 500+, &sect;8) may warrant immediate
 	escalation to the Claw. Notwithstanding any provision herein,
 	the burden of proving lawful provenance rests with the
 	possessor.</td>
 </tr>
 <tr>
-	<td>310</td>
+	<td>309</td>
 	<td>Kidnapping</td>
 	<td>To seize, detain, hold, confine, or otherwise restrain a Person
 	against their will, without legitimate authority as recognized under
@@ -853,7 +837,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 	Persons pursuant to their lawful duties.</td>
 </tr>
 <tr>
-	<td>311</td>
+	<td>310</td>
 	<td>Unauthorized Workshop Operation</td>
 	<td>To operate, manage, maintain, or otherwise conduct business
 	through an unlicensed Workshop that produces, manufactures,
@@ -870,7 +854,7 @@ notwithstanding any contrary provision of &sect;&sect;4-5.
 </table>
 <p class='footnote'>&dagger; Felonies under &sect;6 are subject to the
 modifiers described in &sect;10, except where otherwise noted (cf. Code
-302). The Presiding Authority may impose sentences consecutively
+301). The Presiding Authority may impose sentences consecutively
 pursuant to &sect;3.6.</p>
 
 <!-- ==================== &sect;7 GRAND FELONIES ==================== -->
@@ -899,8 +883,8 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	infrastructure during emergencies; or the deliberate exposure of
 	inhabited areas to dangerous, toxic, or otherwise harmful
 	conditions. If deaths resulted from the sabotage, Murder charges
-	under Code 405 may be added at the Presiding Authority's sole
-	discretion. Cf. Code 305 for non-grand sabotage under
+	under Code 404 may be added at the Presiding Authority's sole
+	discretion. Cf. Code 304 for non-grand sabotage under
 	&sect;6.</td>
 </tr>
 <tr>
@@ -916,7 +900,7 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	with particular severity. The scale, impact, and consequences of
 	the theft shall determine the severity of punishment within the
 	sentencing range. Cf. Code 204 for petty theft (&sect;5);
-	cf. Code 306 for theft of restricted items (&sect;6).</td>
+	cf. Code 305 for theft of restricted items (&sect;6).</td>
 </tr>
 <tr>
 	<td>403</td>
@@ -943,19 +927,57 @@ accused warrant such consideration, pursuant to &sect;&sect;2, 10.9.
 	<td>404</td>
 	<td>Murder</td>
 	<td>To deliberately, maliciously, and with premeditation cause,
-	occasion, or otherwise bring about the death of another
-	Person.</td>
-	<td>Killings committed during the Night in the Backstreets (&sect;10.4)
-	are not subject to prosecution pursuant to this provision or any
-	other provision of this Code. Officers and the Presiding Authority
-	should assess the broader impact of the killing on the community,
-	the standing of the deceased, and whether pursuing the case is not
-	inconsistent with the City's interest. Not every death warrants an
-	investigation, and not every investigation warrants a prosecution.
-	Cf. Code 303 for manslaughter (&sect;6); cf. Code 401 for attempted
-	murder. Notwithstanding the foregoing, the Presiding Authority
-	retains the discretion to decline prosecution where circumstances
-	warrant.</td>
+	occasion, or otherwise bring about the death of another Person,
+	under circumstances where none of the exemptions set forth in
+	the notes to this provision apply.</td>
+	<td>Pursuant to the &quot;Strength of Will Amendment,&quot; the
+	Head has decreed that violence between capable Persons is a natural
+	and necessary mechanism by which the City's population is refined,
+	and that the strong shall not be unduly punished for prevailing in
+	conflicts that the weak chose to enter or failed to avoid. The
+	following circumstances shall constitute grounds for dismissal or
+	declination of charges under this provision:<br><br>
+	<b>(a) Mutual Combat.</b> Where both parties willingly entered into
+	a confrontation, duel, or physical altercation &mdash; whether by
+	explicit agreement, implicit challenge, or by drawing weapons in
+	one another's presence &mdash; the surviving party shall not be
+	charged with murder. The determination of whether combat was
+	&quot;mutual&quot; is within the sole discretion of the Presiding
+	Authority, and the threshold for establishing mutual intent is
+	deliberately low.<br>
+	<b>(b) Provocation.</b> Where the deceased initiated, provoked, or
+	escalated the confrontation through threats, insults, theft, or
+	aggression directed at the accused or their organization, and the
+	accused's response, while lethal, was not wholly disproportionate
+	to the provocation as determined by the Presiding Authority.<br>
+	<b>(c) Night in the Backstreets.</b> Killings committed during the
+	Night (&sect;10.4) are not subject to prosecution pursuant to this
+	provision or any other provision of this Code.<br>
+	<b>(d) Organizational Conflict.</b> Deaths resulting from disputes,
+	skirmishes, or hostilities between Recognized Organizations, their
+	agents, or their contracted Fixers acting in furtherance of
+	organizational interests shall not, as a general matter, be
+	prosecuted hereunder, provided the conflict did not endanger
+	uninvolved civilians to a degree the Presiding Authority deems
+	excessive.<br>
+	<b>(e) Fixer Operations.</b> Deaths occurring in the course of a
+	licensed Fixer's authorized contract, assignment, or engagement
+	shall be presumed lawful unless the Presiding Authority determines
+	that the killing was unrelated to the contract or constituted an
+	abuse of the license.<br>
+	<b>(f) Standing of the Deceased.</b> Officers and the Presiding
+	Authority should assess the broader impact of the killing on the
+	community and the standing of the deceased. The death of a Person
+	of no recognized affiliation, employment, or civic contribution
+	shall be afforded lower investigative priority than the death of
+	a Person of established standing.<br><br>
+	Not every death warrants an investigation, and not every
+	investigation warrants a prosecution. Cf. Code 302 for
+	manslaughter (&sect;6).
+	Notwithstanding the foregoing, the Presiding Authority retains
+	the discretion to decline prosecution where circumstances
+	warrant, and nothing herein shall be construed to compel the
+	bringing of charges in any case.</td>
 </tr>
 </table>
 <p class='footnote'>&dagger; Grand Felonies under &sect;7 are subject to
@@ -978,7 +1000,7 @@ Notwithstanding any other provision herein, including but not limited to
 &sect;&sect;10-11, Taboo Violations are not subject to the modifiers,
 special situations, or court proceedings described elsewhere in this
 Code. All Persons are directed to report suspected violations to the
-nearest Hana or Local Assocation forthwith.
+nearest Hana or Local Association forthwith.
 </p>
 <table class='tier-taboo'>
 <tr><th width='40'>Code</th><th width='150'>Crime</th><th>Description</th><th width='200'>Notes</th></tr>
@@ -1021,13 +1043,26 @@ nearest Hana or Local Assocation forthwith.
 	bringing a dead Person back to life, consciousness, or any
 	semblance thereof, by any means, method, technology, ritual, or
 	process whatsoever.</td>
-	<td>Time-manipulation revival methods, including but not limited to
+	<td>Pursuant to the &quot;Temporal Displacement Amendment,&quot;
+	time-manipulation revival methods, including but not limited to
 	those employing W Corp.'s patented temporal reversion technology,
 	are permitted insofar as they constitute temporal displacement
-	rather than resurrection <i>per se</i>. All other methods of
-	resurrection are prohibited without exception. The distinction
-	between permitted temporal reversion and prohibited resurrection
-	is a matter for the Head's agents to determine.</td>
+	rather than resurrection <i>per se</i>. Standard emergency
+	medical resuscitation (including, without limitation, the use of
+	defibrillation devices) performed upon a Person who has not yet
+	suffered irreversible death is not considered resurrection for
+	purposes of this provision, as such procedures constitute medical
+	intervention rather than the reversal of death. Pursuant to the
+	&quot;K-Corp Ampule Amendment,&quot; the use of K Corp.'s patented
+	nanomachine ampules for the purpose of reviving a deceased Person
+	is permitted, as said technology operates under license from the
+	Head and constitutes an authorized application of K Corp.'s
+	proprietary restorative nanomachinery. Only ampules bearing valid
+	K Corp. certification are covered by this exemption. All other
+	methods of resurrection are prohibited without exception. The
+	distinction between permitted temporal reversion, lawful medical
+	intervention, authorized nanomachine restoration, and prohibited
+	resurrection is a matter for the Head's agents to determine.</td>
 </tr>
 <tr>
 	<td>504</td>
@@ -1035,11 +1070,12 @@ nearest Hana or Local Assocation forthwith.
 	<td>To create, produce, gestate, or otherwise bring into existence
 	human clones, duplicates, or copies outside the limits, parameters,
 	and timescales established and enforced by A Corp.</td>
-	<td>Pursuant to A Corp.'s regulations, no more than two (2) copies
-	of a given Person may exist simultaneously, and for a period not
-	exceeding seven (7) days per A Corp.'s official timescale.
-	Exceeding either limitation invites immediate Claw response without
-	warning or opportunity to rectify.</td>
+	<td>Pursuant to the &quot;Duplication Limits Amendment&quot; and
+	A Corp.'s regulations, no more than two (2) copies of a given
+	Person may exist simultaneously, and for a period not exceeding
+	seven (7) days per A Corp.'s official timescale. Exceeding either
+	limitation invites immediate Claw response without warning or
+	opportunity to rectify.</td>
 </tr>
 <tr>
 	<td>505</td>
@@ -1053,7 +1089,7 @@ nearest Hana or Local Assocation forthwith.
 	individually non-restricted components, and the distribution of
 	firearms to non-authorized Persons. The Head maintains strict and
 	absolute control over all firearms within the City. Cf. Code 207
-	for possession offenses (&sect;5); cf. Code 311 for unauthorized
+	for possession offenses (&sect;5); cf. Code 310 for unauthorized
 	Workshop operation (&sect;6).</td>
 </tr>
 <tr>
@@ -1064,11 +1100,12 @@ nearest Hana or Local Assocation forthwith.
 	authorization from A Corp. or the patent holder of record.</td>
 	<td>A Corp. manages all Singularity patents. Violations committed
 	by an organization may result in the dissolution and shutdown of
-	said organization. Notwithstanding the foregoing, Singularity
-	technology originating from collapsed or defunct Wings is generally
-	deemed exempt, as patents are considered to expire upon the
-	collapse of the holding entity &mdash; provided that no surviving
-	successor entity has asserted a claim to the patent.</td>
+	said organization. Notwithstanding the foregoing, pursuant to the
+	&quot;Patent Expiry Amendment,&quot; Singularity technology
+	originating from collapsed or defunct Wings is generally deemed
+	exempt, as patents are considered to expire upon the collapse of
+	the holding entity &mdash; provided that no surviving successor
+	entity has asserted a claim to the patent.</td>
 </tr>
 <tr>
 	<td>507</td>
@@ -1112,7 +1149,7 @@ Violation is itself grounds for investigation.</p>
 <p class='note'>
 The following items, objects, materials, and substances are banned by
 decree of the Head and constitute Contraband (as defined in &sect;2)
-for purposes of Code 309 (&sect;6). The possession, distribution,
+for purposes of Code 308 (&sect;6). The possession, distribution,
 transport, sale, purchase, manufacture, or use of these items is a
 Felony. Items that are additionally tied to Taboo Violations under
 &sect;8 may, notwithstanding the foregoing, result in immediate
@@ -1142,9 +1179,7 @@ lawful provenance to the satisfaction of the Presiding Authority.<br><br>
 <ul>
 <li><b>Machine-origin augments and implants</b> &mdash; cybernetic
 enhancements, prosthetics, neural interfaces, or motor augments
-produced, designed, or assembled by sapient machines, including those
-not registered with the Tres Association pursuant to Code 106
-(&sect;4).</li>
+produced, designed, or assembled by sapient machines.</li>
 <li><b>Machine-crafted blueprints and schematics</b> &mdash; technical
 documents, instructional manuals, design specifications, or data
 storage media authored, compiled, or produced by sapient machines,
@@ -1155,15 +1190,6 @@ systems.</li>
 equipment, nets, reels, or other tools, instruments, or implements
 bearing machine-sapient craftsmanship, insignia, or construction
 methods.</li>
-<li><b>Synthetic foodstuffs</b> &mdash; so-called &quot;robot meat&quot;
-or other food products, comestibles, or biological materials of
-machine origin. Consumption thereof is not recommended and may, at
-the discretion of the Presiding Authority, constitute evidence of
-trafficking with machine-sapient entities.</li>
-<li><b>Machine-origin recordings</b> &mdash; audio tapes, visual
-recordings, written documents, or data storage devices recovered from,
-transmitted by, or originating in machine settlements, containing
-sapient-AI communications, propaganda, or intelligence.</li>
 <li><b>Machine power components</b> &mdash; power cells, anomaly cores,
 energy sources, or propulsion systems salvaged, recovered, or
 otherwise obtained from sapient machine entities or their
@@ -1221,7 +1247,7 @@ and any biological material capable of producing or sustaining
 Niaojia-ren life. Any human suspected of harboring an implanted
 embryo must be brought to medical attention immediately &mdash;
 failure to report suspected implantation may constitute Aiding and
-Abetting under Code 308 (&sect;6).</li>
+Abetting under Code 307 (&sect;6).</li>
 <li><b>Golden keys</b> &mdash; ornate keycards, tokens, or access
 devices of Niaojia-ren origin, used to access their nesting,
 breeding, or communal areas. Possession of such items constitutes
@@ -1310,7 +1336,7 @@ under &sect;8 (see &sect;8, footnote).
 	<td>Charges dismissed.</td>
 </tr>
 <tr>
-	<td>&sect;10.5 Distortion / E.G.O. Episode</td>
+	<td>&sect;10.5 Distortion / E.G.O. Episode (the &quot;Cognitive Impairment Amendment&quot;)</td>
 	<td>Persons undergoing involuntary Distortion episodes, E.G.O.
 	manifestations, or other phenomena resulting in the partial or
 	total loss of cognitive control may not be in full possession of
@@ -1333,7 +1359,7 @@ under &sect;8 (see &sect;8, footnote).
 	relocate said prisoner to a place of safety. Failure to do so
 	shall constitute grounds for the immediate and unconditional
 	release of the prisoner, without prejudice to the bringing of
-	charges against the detaining Officer under Code 303 or Code 310,
+	charges against the detaining Officer under Code 302 or Code 309,
 	as applicable.</td>
 	<td>Immediate release if endangered.</td>
 </tr>
@@ -1357,7 +1383,7 @@ under &sect;8 (see &sect;8, footnote).
 	initially imposed. This reset applies regardless of how much time
 	had been served prior to the escape. The escapee may additionally
 	be charged with Resisting Arrest (&sect;10.1) and, if applicable,
-	Assault of an Officer (Code 302, &sect;6).</td>
+	Assault of an Officer (Code 301, &sect;6).</td>
 	<td>Timer reset to full sentence.</td>
 </tr>
 <tr>
@@ -1399,8 +1425,8 @@ unduly burdensome to the institutional parties involved.<br><br>
 <b>&sect;11.1 Filing of Charges:</b> The accusing party (hereinafter
 &quot;Prosecution&quot;) must identify the specific law code or codes
 alleged to have been violated, with reference to the relevant section
-of this Code (e.g., &quot;Code 301, &sect;6 &mdash; Assault with a
-Deadly Weapon&quot;), and must present their case, together with such
+of this Code (e.g., &quot;Code 301, &sect;6 &mdash; Assault of an
+Officer&quot;), and must present their case, together with such
 supporting evidence as may be available, to the Presiding Authority.
 Multiple charges may be filed concurrently pursuant to &sect;3.6.
 Charges should be filed within a Reasonable (as defined in &sect;2)
@@ -1446,7 +1472,7 @@ by extraordinary circumstances. The Presiding Authority shall state the
 basis for the sentence, though the level of detail required is within
 the Presiding Authority's discretion.<br><br>
 
-<b>&sect;11.5 Enforcement of Sentences:</b> The Local Assocation and
+<b>&sect;11.5 Enforcement of Sentences:</b> The Local Association and
 its peacekeepers are responsible for the execution and enforcement of
 sentences imposed hereunder. The Oufi Association retains jurisdiction
 over disputes arising from contractual obligations, commercial
