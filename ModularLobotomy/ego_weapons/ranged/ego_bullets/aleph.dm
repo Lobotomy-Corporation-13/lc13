@@ -176,7 +176,7 @@
 	var/base_explosion_damage = 160
 	var/base_explosion_falloff_per_tile = 35
 	var/explosion_radius = 3
-	var/iff_coeff = 0.33
+	var/iff_coeff = 0.40
 	var/datum/status_effect/status_type = /datum/status_effect/display/black_weapon_shellshock
 	var/resonance = FALSE
 	var/resonance_radius_increase = 1
@@ -243,7 +243,7 @@
 					L.safe_throw_at(target = get_ranged_target_turf(epicenter, throw_dir, explosion_radius + distance_from_epicenter), range = max(1, (explosion_radius - distance_from_epicenter) + 1), speed = 5, spin = TRUE, gentle = TRUE)
 				else
 					L.apply_status_effect(/datum/status_effect/black_weapon_rocketjump)
-					L.safe_throw_at(target = get_ranged_target_turf(epicenter, throw_dir, 10), range = (10 - distance_from_epicenter), speed = (13 - distance_from_epicenter * 2), spin = FALSE, gentle = TRUE)
+					L.safe_throw_at(target = get_ranged_target_turf(epicenter, throw_dir, 10), range = (10 - distance_from_epicenter * 2), speed = (13 - distance_from_epicenter * 2), spin = FALSE, gentle = TRUE)
 
 /datum/status_effect/display/black_weapon_shellshock
 	id = "black_weapon_shellshock"
@@ -322,6 +322,6 @@
 
 /atom/movable/screen/alert/status_effect/black_weapon_rocketjump
 	name = "Rocket Jump...!?"
-	desc = "Are you insane!? Your attacks will deal double damage as your momentum carries you."
+	desc = "Are you insane!? Your momentum carries you, increasing your Power Modifier by 100."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "strength"

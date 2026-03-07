@@ -679,7 +679,7 @@
 	. += span_info("<b>Direct-fire Missile Damage</b>: [our_projectile.damage]")
 	. += span_info("<b>Direct-fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage]")
 	. += span_info("<b>Direct-fire Missile Explosion Radius</b>: [our_projectile.explosion_radius]")
-	. += span_info("<b>Direct-fire Missile IFF Modifier</b>: [our_projectile.iff_coeff]x damage to friendlies.")
+	. += span_info("<b>Direct-fire Missile IFF Modifier</b>: [our_projectile.iff_coeff]x explosion damage to friendlies.")
 	. += span_info("\n")
 	. += span_info("You may toggle this weapon by alt-clicking it, or using its special action, to activate Resonance. This allows you to use indirect-fire for your missiles, increasing their damage and radius, as well as applying a debuff called Shellshock.")
 	. += span_info("Missiles fired in this manner have a brief wind-up before firing (though you may queue several shots at once), and a longer delay before landing.")
@@ -687,7 +687,7 @@
 	. += span_info("<b>Indirect Fire Missile Flight Time</b>: [resonance_landing_delay * 0.1]s")
 	. += span_info("<b>Indirect Fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage + our_projectile.resonance_damage_increase]")
 	. += span_info("<b>Indirect Fire Missile Explosion Radius</b>: [our_projectile.explosion_radius + our_projectile.resonance_radius_increase]")
-	. += span_info("<b>Indirect Fire Missile IFF Modifier</b>: [our_projectile.resonance_iff_coeff]x damage to friendlies.")
+	. += span_info("<b>Indirect Fire Missile IFF Modifier</b>: [our_projectile.resonance_iff_coeff]x explosion damage to friendlies.")
 	. += span_info("\n")
 	// I can't be bothered to pull the actual datums and link to them. Hardcoding (hard-writing?) this.
 	. += span_info("<b>Shellshock Duration</b>: 10s")
@@ -793,12 +793,18 @@
 	// Spawn backblast smoke behind us it's funny
 	var/opposite_direction = turn(just_fired.dir, 180)
 	var/turf/behind_us = get_ranged_target_turf(just_fired, opposite_direction, 2)
+	var/list/backblast_tiles = list(behind_us)
+	for(var/turf/open/T in view(1, behind_us))
+		backblast_tiles |= T
+
 	var/datum/effect_system/smoke_spread/transparent/backblast = new
 	backblast.set_up(1, behind_us)
 	backblast.start()
-	for(var/mob/living/L in behind_us)
-		L.deal_damage(backblast_damage, FIRE, just_fired, attack_type = (ATTACK_TYPE_SPECIAL))
-		L.visible_message(span_danger("[L] is scorched by the backblast from [just_fired]'s [src.name] E.G.O.!"))
+
+	for(var/turf/T2 in backblast_tiles)
+		for(var/mob/living/L in T2)
+			L.deal_damage(backblast_damage, FIRE, just_fired, attack_type = (ATTACK_TYPE_SPECIAL))
+			L.visible_message(span_danger("[L] is scorched by the backblast from [just_fired]'s [src.name] E.G.O.!"))
 
 /obj/effect/black_weapon_airstrike_marker
 	name = "danger close"
