@@ -92,3 +92,9 @@
 	shelter_id = "insurgence_base"
 	description = "A place for the Insurgence Clan."
 	mappath = "_maps/templates/syndicate_office/insurgence_clan.dmm"
+
+/datum/map_template/shelter/leagueofnine
+	name = "League of Nine Base"
+	shelter_id = "leagueofnine_base"
+	description = "A place for the New League of Nine Littérateurs."
+	mappath = "_maps/templates/syndicate_office/leagueofnine.dmm"
