@@ -676,8 +676,8 @@
 
 	. = list()
 	. += span_info("In its normal fire-mode, this weapon directly fires [our_projectile.damage_type] damage missiles.")
-	. += span_info("<b>Direct-fire Missile Damage</b>: [our_projectile.damage]")
-	. += span_info("<b>Direct-fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage]")
+	. += span_info("<b>Direct-fire Missile Damage</b>: [our_projectile.damage * projectile_damage_multiplier]")
+	. += span_info("<b>Direct-fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage * projectile_damage_multiplier]")
 	. += span_info("<b>Direct-fire Missile Explosion Radius</b>: [our_projectile.explosion_radius]")
 	. += span_info("<b>Direct-fire Missile IFF Modifier</b>: [our_projectile.iff_coeff]x explosion damage to friendlies.")
 	. += span_info("\n")
@@ -685,7 +685,7 @@
 	. += span_info("Missiles fired in this manner have a brief wind-up before firing (though you may queue several shots at once), and a longer delay before landing.")
 	. += span_info("<b>Indirect Fire Missile Windup</b>: [resonance_fire_delay * 0.1]s")
 	. += span_info("<b>Indirect Fire Missile Flight Time</b>: [resonance_landing_delay * 0.1]s")
-	. += span_info("<b>Indirect Fire Missile Explosion Damage</b>: [our_projectile.base_explosion_damage + our_projectile.resonance_damage_increase]")
+	. += span_info("<b>Indirect Fire Missile Explosion Damage</b>: [(our_projectile.base_explosion_damage + our_projectile.resonance_damage_increase) * projectile_damage_multiplier]")
 	. += span_info("<b>Indirect Fire Missile Explosion Radius</b>: [our_projectile.explosion_radius + our_projectile.resonance_radius_increase]")
 	. += span_info("<b>Indirect Fire Missile IFF Modifier</b>: [our_projectile.resonance_iff_coeff]x explosion damage to friendlies.")
 	. += span_info("\n")
@@ -774,6 +774,7 @@
 	var/obj/projectile/ego_bullet/black/resonant_shot = new(null) // We're literally just using the existing projectile...
 	resonant_shot.firer = user
 	resonant_shot.resonance = TRUE // ...but we flip this var to indicate it's an empowered shot.
+	resonant_shot.damage *= projectile_damage_multiplier
 
 	// Telegraph the danger zone.
 	for(var/turf/T in view((resonant_shot.explosion_radius + resonant_shot.resonance_radius_increase), target))

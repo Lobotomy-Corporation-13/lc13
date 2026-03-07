@@ -173,6 +173,7 @@
 	speed = 0.6
 	damage = 50
 	damage_type = BLACK_DAMAGE
+	var/projectile_damage_multiplier = 1
 	var/base_explosion_damage = 160
 	var/base_explosion_falloff_per_tile = 35
 	var/explosion_radius = 3
@@ -193,6 +194,10 @@
 		base_explosion_damage += resonance_damage_increase
 		iff_coeff = resonance_iff_coeff
 
+	projectile_damage_multiplier = (damage / initial(damage)) // Calculate our projectile damage modifier (Faith & Promise, Broken Crown Shimmering, etc...)
+
+	base_explosion_damage *= projectile_damage_multiplier
+
 	// Establish what turfs are to be hit.
 	var/turf/epicenter = (QDELETED(target) || !istype(target)) ? get_turf(src) : get_turf(target)
 	var/list/affected_turfs = list()
@@ -200,7 +205,7 @@
 		affected_turfs |= T
 
 	// Explosion aesthetics.
-	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RadialShockwaveVisual), epicenter, explosion_radius)
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(RadialShockwaveVisual), epicenter, explosion_radius, 1)
 	playsound(epicenter, 'sound/abnormalities/armyinblack/black_explosion.ogg', 60, TRUE, 5, ignore_walls = TRUE)
 	var/atom/vfx = new /obj/effect/temp_visual/black_explosion(epicenter)
 	vfx.transform *= 0.85
@@ -211,7 +216,7 @@
 
 	for(var/turf/T2 in affected_turfs)
 		// Calculate the distance only once for each turf
-		var/distance_from_epicenter = get_dist(T2, epicenter)
+		var/distance_from_epicenter = max(get_dist(T2, epicenter), 0) // get_dist gives you -1 if it's the same turf
 		for(var/mob/living/L in T2)
 			if(L in hitlist)
 				continue
@@ -221,7 +226,7 @@
 
 			// Calculate if we should apply IFF to this mob, and calculate final damage
 			var/please_have_mercy = (should_do_iff && (john_aib.faction_check_mob(L))) // && stops us from doing a faction check with a null john_aib
-			var/final_damage = base_explosion_damage - (distance_from_epicenter * base_explosion_falloff_per_tile)
+			var/final_damage = max(base_explosion_damage - (distance_from_epicenter * base_explosion_falloff_per_tile), 0) // We don't wanna go into the negatives here
 
 			if(please_have_mercy)
 				final_damage *= iff_coeff
