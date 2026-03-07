@@ -264,13 +264,14 @@
 			combo_target.apply_lc_defense_level_down(2)
 			user.apply_lc_defense_level_up(5)
 			combo_target.Knockdown(1 SECONDS)
-			new /obj/effect/temp_visual/smash_effect(get_turf(combo_target))
+			new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 			shake_camera(combo_target, 3, 3)
 		else
 			// Regular hit: 0.5x DPS, 2 DLD to target, 3 DLU to self
 			combo_target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 			combo_target.apply_lc_defense_level_down(2)
 			user.apply_lc_defense_level_up(3)
+			new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 
 	// Clean up cutscene duel
 	qdel(combo_target.GetComponent(/datum/component/cutscene_duel))

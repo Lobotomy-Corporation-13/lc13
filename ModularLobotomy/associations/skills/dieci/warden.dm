@@ -91,6 +91,7 @@
 	if(QDELETED(attacker) || attacker.stat == DEAD)
 		return
 	attacker.apply_lc_sinking(5)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(human_parent), human_parent.dir)
 
 // ============================================================
 // T2a: Tome Shield
@@ -322,6 +323,7 @@
 			var/list/consumed = kc.consume_highest_knowledge()
 			if(consumed)
 				shield.add_shield(consumed["level"] * 20)
+		new /obj/effect/temp_visual/dir_setting/gray_cube_v1/dieci(get_turf(user), user.dir)
 		sleep(0.5 SECONDS)
 
 	// Hit 5 (finisher): consume up to 200 shield for bonus damage
@@ -342,7 +344,7 @@
 	user.do_attack_animation(target)
 	playsound(target, 'sound/weapons/fixer/generic/finisher2.ogg', 80, TRUE, 8)
 	target.deal_damage(finisher_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/dieci(get_turf(user), user.dir)
 	shake_camera(target, 3, 3)
 
 	// Throw target

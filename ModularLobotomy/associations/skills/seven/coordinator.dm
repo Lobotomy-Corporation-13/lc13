@@ -61,6 +61,7 @@
 /// Apply DLD and check for ally buff trigger.
 /datum/component/association_skill/seven_weak_point_analysis/proc/apply_weak_point(mob/living/target)
 	target.apply_lc_defense_level_down(3)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(human_parent), human_parent.dir)
 	// Check if target now has 10+ DLD
 	var/datum/status_effect/stacking/defense_level_up/defense_level_down/D = target.has_status_effect(/datum/status_effect/stacking/defense_level_up/defense_level_down)
 	if(D && D.stacks >= 10)
@@ -268,6 +269,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(rupture_per_hit)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 2: Reposition to flank (perpendicular), flanking strike
 	sleep(0.5 SECONDS)
@@ -296,6 +298,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(rupture_per_hit)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 3 (FINISHER): Dash THROUGH target, force-trigger rupture
 	sleep(0.5 SECONDS)
@@ -309,7 +312,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 80, TRUE, 8)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(rupture_per_hit)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
 	if(R && R.stacks > 0)

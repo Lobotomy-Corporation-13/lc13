@@ -108,6 +108,7 @@
 	var/bonus = item.force * def_pct
 	if(bonus > 0)
 		INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, deal_damage), bonus, RED_DAMAGE, human_parent, DAMAGE_FORCED)
+		new /obj/effect/temp_visual/dir_setting/gray_edge/zwei(get_turf(user), user.dir)
 
 // ============================================================
 // T2b: Steady Footing
@@ -259,6 +260,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	user.apply_lc_defense_level_up(2)
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 
 	// Hit 2: Dash THROUGH target
 	sleep(0.5 SECONDS)
@@ -274,6 +276,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	user.apply_lc_defense_level_up(2)
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei/passthrough(get_turf(target), user.dir)
 
 	// Hit 3: Dash TO target
 	sleep(0.5 SECONDS)
@@ -289,6 +292,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	user.apply_lc_defense_level_up(2)
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 
 	// Hit 4: Dash THROUGH target
 	sleep(0.5 SECONDS)
@@ -304,6 +308,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	user.apply_lc_defense_level_up(2)
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei/passthrough(get_turf(target), user.dir)
 
 	// Hit 5 (FINISHER): Dash TO target, double damage + 5 DLU + knockback
 	sleep(0.5 SECONDS)
@@ -319,7 +324,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 80, TRUE, 8)
 	target.deal_damage(hit_damage * 2, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	user.apply_lc_defense_level_up(5)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 	shake_camera(target, 3, 3)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	// Clean up cutscene duel

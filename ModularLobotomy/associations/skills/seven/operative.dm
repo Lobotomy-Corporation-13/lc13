@@ -33,6 +33,7 @@
 	if(rupture_amount <= 0)
 		return
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, apply_lc_rupture), rupture_amount)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 // ============================================================
 // T1b: Quick Assessment
@@ -67,6 +68,7 @@
 	hit_count++
 	if(rupture_amount > 0)
 		INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, apply_lc_rupture), rupture_amount)
+		new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 // ============================================================
 // T2a: Rupture Cascade
@@ -270,6 +272,7 @@
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_fragile(3)
 	target.apply_lc_rupture(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 2: Dash THROUGH target
 	sleep(0.4 SECONDS)
@@ -283,6 +286,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 
 	// Hit 3: Dash THROUGH back
 	sleep(0.4 SECONDS)
@@ -296,6 +300,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 
 	// Hit 4: Dash TO target
 	sleep(0.4 SECONDS)
@@ -309,6 +314,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_rupture(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 5 (FINISHER): Dash THROUGH, double damage + bonus BLACK + knockback
 	sleep(0.4 SECONDS)
@@ -325,7 +331,7 @@
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
 	if(R && R.stacks > 0)
 		target.deal_damage(R.stacks, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_SPECIAL)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	// Clean up cutscene duel

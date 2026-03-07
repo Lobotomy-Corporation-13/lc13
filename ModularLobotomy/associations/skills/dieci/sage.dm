@@ -396,7 +396,7 @@
 			target.deal_damage(hit_damage * 1.25, PALE_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 			if(!QDELETED(target))
 				target.apply_lc_sinking(entry_level * 4)
-			new /obj/effect/temp_visual/smash_effect(get_turf(target))
+			new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 			shake_camera(target, 3, 3)
 		else
 			// Normal hits: RED + Sinking = level*2
@@ -404,6 +404,7 @@
 			target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 			if(!QDELETED(target))
 				target.apply_lc_sinking(entry_level * 2)
+			new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 
 		if(!is_final)
 			sleep(0.5 SECONDS)

@@ -498,6 +498,7 @@
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	heal_ward(ward, hit_damage, user)
 	grant_ward_proximity_protection(ward, user, 2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/zwei(get_turf(user), user.dir)
 
 	// Hit 2
 	sleep(0.5 SECONDS)
@@ -514,6 +515,7 @@
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	heal_ward(ward, hit_damage, user)
 	grant_ward_proximity_protection(ward, user, 2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/zwei/passthrough(get_turf(target), user.dir)
 
 	// Hit 3
 	sleep(0.5 SECONDS)
@@ -530,6 +532,7 @@
 	target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	heal_ward(ward, hit_damage, user)
 	grant_ward_proximity_protection(ward, user, 2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/zwei(get_turf(user), user.dir)
 
 	// Hit 4 (FINISHER): 2x damage, 5 DLU, knockback away from ward
 	sleep(0.5 SECONDS)
@@ -546,7 +549,7 @@
 	target.deal_damage(hit_damage * 2, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	heal_ward(ward, hit_damage * 2, user)
 	user.apply_lc_defense_level_up(5)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_edge/zwei/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
 	// Knockback away from ward if ward exists, otherwise away from user
 	var/atom/knockback_from = ward && !QDELETED(ward) ? ward : user

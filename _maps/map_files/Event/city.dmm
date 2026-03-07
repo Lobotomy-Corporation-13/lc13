@@ -6021,7 +6021,7 @@
 /area/city/hhpp)
 "Tu" = (
 /obj/structure/falsewall/wood,
-/turf/closed/indestructible/brick,
+/turf/open/floor/wood,
 /area/city/assoc_base)
 "Tv" = (
 /obj/structure/table/glass,

@@ -53,6 +53,7 @@
 		return
 	// Always apply 2 Sinking
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, apply_lc_sinking), 2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 	// 5s CD: consume 1 lowest Behavioral for bonus Sinking
 	if(world.time < last_consume + 5 SECONDS)
 		return
@@ -88,6 +89,7 @@
 	if(S && S.stacks > 0)
 		return
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, apply_lc_sinking), 8)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 
 // ============================================================
 // T2a: Drowning Knowledge
@@ -307,10 +309,11 @@
 			target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 			if(!QDELETED(target))
 				target.apply_lc_sinking(2)
+			new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 		else
 			// Hit 5 (finisher): PALE damage + trigger Sinking
 			target.deal_damage(hit_damage * 1.5, PALE_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-			new /obj/effect/temp_visual/smash_effect(get_turf(target))
+			new /obj/effect/temp_visual/dir_setting/gray_edge/dieci(get_turf(user), user.dir)
 			shake_camera(target, 3, 3)
 			// Trigger Sinking
 			if(!QDELETED(target))

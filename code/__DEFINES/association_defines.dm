@@ -124,7 +124,7 @@
 #define DIECI_TRAIT "dieci_trait"
 
 // EXP thresholds - cumulative EXP required for each skill point (12 total)
-GLOBAL_LIST_INIT(association_exp_thresholds, list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2600, 3350, 4200))
+GLOBAL_LIST_INIT(association_exp_thresholds, list(30, 70, 120, 180, 350, 600, 950, 1400, 1950, 2500, 3150, 3600))
 
 // Global list of all active squads
 GLOBAL_LIST_EMPTY(association_squads)

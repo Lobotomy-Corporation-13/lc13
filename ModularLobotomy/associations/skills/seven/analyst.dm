@@ -75,6 +75,7 @@
 		return
 	// Apply 2 Rupture
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living, apply_lc_rupture), 2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 	// Bonus BLACK damage = min(40, rupture_stacks) * 0.01 * weapon force
 	var/datum/status_effect/stacking/rupture/R = target.has_status_effect(/datum/status_effect/stacking/rupture)
 	if(R && R.stacks > 0)
@@ -308,6 +309,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_offense_level_down(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 2: Dash THROUGH target, slash from behind
 	sleep(0.5 SECONDS)
@@ -321,6 +323,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_offense_level_down(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 
 	// Hit 3: Dash back TO target, heavy strike
 	sleep(0.5 SECONDS)
@@ -334,6 +337,7 @@
 	playsound(target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 	target.deal_damage(hit_damage, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_offense_level_down(2)
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven(get_turf(user), user.dir)
 
 	// Hit 4 (FINISHER): Dash THROUGH, double damage + Fragile + knockback
 	sleep(0.5 SECONDS)
@@ -348,7 +352,7 @@
 	target.deal_damage(hit_damage * 2, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	target.apply_lc_offense_level_down(2)
 	target.apply_lc_fragile(5)
-	new /obj/effect/temp_visual/smash_effect(get_turf(target))
+	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	// Clean up cutscene duel
