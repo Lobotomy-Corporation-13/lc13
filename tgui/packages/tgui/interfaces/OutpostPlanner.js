@@ -584,7 +584,7 @@ const RoomTab = (props, context) => {
 };
 
 // ===== Beauty Breakdown Component =====
-const BeautyBreakdown = (props) => {
+const BeautyBreakdown = props => {
   const { breakdown = [] } = props;
 
   if (breakdown.length === 0) {
@@ -619,7 +619,7 @@ const BeautyBreakdown = (props) => {
   );
 
   // Get icon for source type
-  const getIcon = (type) => {
+  const getIcon = type => {
     switch (type) {
       case 'turf':
         return 'square';
