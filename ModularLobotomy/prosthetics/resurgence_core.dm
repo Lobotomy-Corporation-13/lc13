@@ -6,7 +6,7 @@
 	implant_overlay = "chest_resurgence_core"
 
 /datum/action/item_action/organ_action/use/resurgence_core
-	var/tp_distance = 2
+	var/tp_distance = 1
 
 /datum/action/item_action/organ_action/use/resurgence_core/Trigger()
 	if(!IsAvailable())

@@ -88,6 +88,7 @@
 
 /datum/status_effect/display
 	var/display_name
+	var/display_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi'
 	var/mutable_appearance/icon_overlay
 
 /datum/status_effect/display/on_apply()
@@ -116,7 +117,7 @@
 
 	//This is the code that UpdateStatusDisplay calls for each display status effect every time a display status effect is added. -IP
 /datum/status_effect/display/proc/AddDisplayIcon(position)
-	icon_overlay = mutable_appearance('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', display_name, -MUTATIONS_LAYER)
+	icon_overlay = mutable_appearance(display_icon, display_name, -MUTATIONS_LAYER)
 	TweakDisplayIcon(position)
 	owner.add_overlay(icon_overlay)
 

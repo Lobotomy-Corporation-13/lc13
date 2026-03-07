@@ -36,7 +36,7 @@
 			var/rate = (all_abnos[i] * -1) + highest * 2	//Weight counts for half of the abno chance, the other half is guaranteed.
 			if(abno.being_tested) // Abnormalities that are being tested will be nearly guaranteed to spawn
 				SSpersistence.tested_abno_old_rates[abno.type] = all_abnos[i]
-				rate *= 5
+				rate *= 6
 			gamemode_abnos[initial(abno.threat_level)][abno] = rate
 
 	SSabnormality_queue.possible_abnormalities = list()

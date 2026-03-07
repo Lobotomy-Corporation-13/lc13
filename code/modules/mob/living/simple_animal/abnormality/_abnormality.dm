@@ -488,7 +488,7 @@ The variable's key needs to be non-numerical.*/
 	if(!datum_reference.console)
 		stack_trace("[src] tried to work without a console? user = [user]")
 		return
-	if(ABNO_BALLOON_OFF & bubble_type)
+	if(bubble_type & ABNO_BALLOON_OFF)
 		return
 	if(prob(20-(3*(threat_level-1))))
 		var/list/output_string_list = GetBubbleText(get_user_level(user), bubble_type, work_type)
@@ -510,9 +510,9 @@ The variable's key needs to be non-numerical.*/
  */
 /mob/living/simple_animal/hostile/abnormality/proc/GetBubbleText(user_level, bubble_type, work_type)
 	var/list/potential_output = list()
-	if(ABNO_BALLOON_WORK & bubble_type && !isnull(work_type))
+	if(bubble_type & ABNO_BALLOON_WORK && !isnull(work_type))
 		potential_output += work_bubbles[work_type]
-	if(ABNO_BALLOON_GENERIC & bubble_type)
+	if(bubble_type & ABNO_BALLOON_GENERIC)
 		potential_output += generic_bubbles[user_level]
 	. = potential_output
 

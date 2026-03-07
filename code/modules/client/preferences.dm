@@ -41,6 +41,9 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	///Whether emotes will be displayed on runechat. Requires chat_on_map to have effect. Boolean.
 	var/see_rc_emotes = TRUE
 
+	/// On-Mob Backpack Visibility default
+	var/backpack_visibility = TRUE
+
 	// Custom Keybindings
 	var/list/key_bindings = list()
 
@@ -74,6 +77,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/socks = "Nude"					//socks type
 	var/backpack = DBACKPACK				//backpack type
 	var/jumpsuit_style = PREF_SUIT		//suit/skirt
+	var/beret_enabled = TRUE // Spawns with a Beret on roles which have it available
+	var/sunglasses_enabled = TRUE // Spawns with Sunglasses on roles which have them available
 	var/hairstyle = "Bald"				//Hair type
 	var/hair_color = "000"				//Hair color
 	var/gradient_color = "000"			//Hair gradient color
@@ -359,6 +364,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 			dat += "<br><b>Jumpsuit Style:</b><BR><a href ='byond://?_src_=prefs;preference=suit;task=input'>[jumpsuit_style]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_JUMPSUIT_STYLE]'>[(randomise[RANDOM_JUMPSUIT_STYLE]) ? "Lock" : "Unlock"]</A>"
+
+			dat += "<br><b>Beret (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=beret_enabled;task=input'>[(beret_enabled ? "Yes" : "No")]</a>"
+
+			dat += "<br><b>Sunglasses (On Applicable Jobs):</b><BR><a href ='byond://?_src_=prefs;preference=sunglasses_enabled;task=input'>[(sunglasses_enabled ? "Yes" : "No")]</a>"
 
 			dat += "<br><b>Backpack:</b><BR><a href ='byond://?_src_=prefs;preference=bag;task=input'>[backpack]</a>"
 			dat += "<a href='byond://?_src_=prefs;preference=toggle_random;random_type=[RANDOM_BACKPACK]'>[(randomise[RANDOM_BACKPACK]) ? "Lock" : "Unlock"]</A>"
@@ -648,6 +657,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<br>"
 			dat += "<b>PDA Color:</b> <span style='border:1px solid #161616; background-color: [pda_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='byond://?_src_=prefs;preference=pda_color;task=input'>Change</a><BR>"
 			dat += "<b>PDA Style:</b> <a href='byond://?_src_=prefs;task=input;preference=pda_style'>[pda_style]</a><br>"
+			dat += "<b>[TeguTranslate("On-Mob Backpack Visibility", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=backpack_visibility'>[(backpack_visibility) ? TeguTranslate("Enabled", src): TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Ghost Ears:</b> <a href='byond://?_src_=prefs;preference=ghost_ears'>[(chat_toggles & CHAT_GHOSTEARS) ? "All Speech" : "Nearest Creatures"]</a><br>"
 			dat += "<b>Ghost Radio:</b> <a href='byond://?_src_=prefs;preference=ghost_radio'>[(chat_toggles & CHAT_GHOSTRADIO) ? "All Messages":"No Messages"]</a><br>"
@@ -765,7 +775,7 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						dat += "<b>Be [capitalize(special_role)]:</b> <a href='byond://?_src_=prefs;preference=be_special;be_special_type=[special_role]'>[(special_role in be_special) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Midround Antagonist:</b> <a href='byond://?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
-			dat += "<b>[TeguTranslate("LCL spcimen preferences", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=lcl_abno'>LCL ABNO LIST</a><br>"
+			dat += "<b>[TeguTranslate("LCL Specimen Preferences", src)]:</b> <a href='byond://?_src_=prefs;task=input;preference=lcl_abno'>LCL ABNO LIST</a><br>"
 			dat += "</td></tr></table>"
 		if(2) //OOC Preferences
 			dat += "<table><tr><td width='340px' height='300px' valign='top'>"
@@ -1342,6 +1352,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					backpack = pick(GLOB.backpacklist)
 				if("suit")
 					jumpsuit_style = pick(GLOB.jumpsuitlist)
+				if("beret_enabled")
+					beret_enabled = !beret_enabled
+				if("sunglasses_enabled")
+					sunglasses_enabled = !sunglasses_enabled
 				if("all")
 					random_character(gender)
 
@@ -1665,6 +1679,11 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						jumpsuit_style = PREF_SKIRT
 					else
 						jumpsuit_style = PREF_SUIT
+				if("beret_enabled")
+					beret_enabled = !beret_enabled
+
+				if("sunglasses_enabled")
+					sunglasses_enabled = !sunglasses_enabled
 
 				if("uplink_loc")
 					var/new_loc = input(user, "Choose your character's traitor uplink spawn location:", "Character Preference") as null|anything in GLOB.uplink_spawn_loc_list
@@ -1808,6 +1827,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					var/input_abno = input(user, "Add or remove an abnormality you want to play.", "Character Preference", lcl_abno_pref)  as null|anything in sortList(abno_names)
 					input_abno = LAZYACCESS(abno_names, input_abno)
 					LAZYSET(lcl_abno_pref, input_abno, !LAZYACCESS(lcl_abno_pref, input_abno))
+
+				if("backpack_visibility")
+					backpack_visibility = !backpack_visibility
+					if(ishuman(user) && user.client)
+						var/mob/living/carbon/human/i_guess_we_can_hot_update_this = user
+						i_guess_we_can_hot_update_this.update_inv_back()
 		else
 			switch(href_list["preference"])
 				if("publicity")
@@ -2153,6 +2178,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	character.backpack = backpack
 
 	character.jumpsuit_style = jumpsuit_style
+	character.beret_enabled = beret_enabled
+	character.sunglasses_enabled = sunglasses_enabled
 
 	character.flavor_text = features["flavor_text"] //Let's update their flavor_text at least initially
 

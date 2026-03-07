@@ -63,6 +63,8 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 
 	///Sound played when you hit something with the item
 	var/hitsound
+	/// Should sounds played when hitting something with the item vary in pitch?
+	var/hitsound_vary = TRUE
 	///Played when the item is used, for example tools
 	var/usesound
 	///Used when yate into a mob

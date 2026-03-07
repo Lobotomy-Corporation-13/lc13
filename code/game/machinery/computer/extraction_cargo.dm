@@ -33,6 +33,7 @@
 		new /datum/data/extraction_cargo("EMAIS	Autoinjector ",			/obj/item/reagent_containers/hypospray/emais,						300, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("W-Corp Teleporter ",			/obj/item/powered_gadget/teleporter,								300, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Officer Upgrade Injector ",	/obj/item/trait_injector/officer_upgrade_injector,					400, CAT_GADGET) = 1,
+		new /datum/data/extraction_cargo("Anti-Abnormality Grenade Box ",/obj/item/storage/box/lobotomygrenades,							500, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Meson Scanner Goggles ",		/obj/item/clothing/glasses/meson,									500, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Gar Meson Scanner Goggles ",	/obj/item/clothing/glasses/meson/gar,								600, CAT_GADGET) = 1,
 		new /datum/data/extraction_cargo("Agent Work Chance Injector ",	/obj/item/trait_injector/agent_workchance_trait_injector,			700, CAT_GADGET) = 1,
