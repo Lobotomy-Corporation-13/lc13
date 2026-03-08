@@ -637,6 +637,9 @@
 	special = "This weapon fires missiles that deal AoE BLACK damage indiscriminately, and also cause knockback. \n\
 	You may resonate with it to fire the missiles in an arc instead, causing a delay in their launch and arrival, but increasing the damage, radius and applying Shellshock to enemies hit."
 	actions_types = list(/datum/action/item_action/black_weapon_resonance)
+	zoomable = TRUE
+	zoom_amt = 0
+	zoom_out_amt = 8
 	/// Alternate fire mode, basically. I don't wanna use the altfire framework for this, don't think there's a point to it
 	var/resonance_enabled = FALSE
 	/// Spam prevention
@@ -650,6 +653,34 @@
 	var/resonance_landing_delay = 1.6 SECONDS
 	/// Deal burn damage to people behind you when firing this, because it's funny
 	var/backblast_damage = 10
+
+// Full override; we don't need rotation behaviour, and we want it to cancel as soon as the user moves because having a permanently better viewport is not ideal
+/obj/item/ego_weapon/ranged/black/zoom(mob/living/user, direc, forced_zoom)
+	if(!user || !user.client)
+		return
+
+	if(isnull(forced_zoom))
+		zoomed = !zoomed
+	else
+		zoomed = forced_zoom
+
+	if(zoomed)
+		RegisterSignal(user, COMSIG_MOVABLE_MOVED, PROC_REF(BreakZoom))
+		user.client.view_size.zoomOut(zoom_out_amt, zoom_amt, direc)
+	else
+		UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+		user.client.view_size.zoomIn()
+	return zoomed
+
+/obj/item/ego_weapon/ranged/black/proc/BreakZoom(mob/living/user)
+	SIGNAL_HANDLER
+	UnregisterSignal(user, COMSIG_MOVABLE_MOVED)
+	if(!istype(user))
+		return
+	if(!user.client)
+		return
+	zoomed = FALSE
+	user.client.view_size.zoomIn()
 
 // Expanded description stuff
 /obj/item/ego_weapon/ranged/black/examine(mob/user)
@@ -747,6 +778,14 @@
 		if(resonance_queue_shot_cd > world.time) // Chill a little bit
 			return
 		resonance_queue_shot_cd = world.time + resonance_queue_shot_delay
+		if(!can_see(user, target, 16)) // This check is unreliable, because it literally tries to walk, which isn't the same path that light follows
+			var/list/viewable_things = view(16, user) // I don't know a better way to do this.
+			if(!(target in viewable_things))
+				to_chat(user, span_danger("You can't fire your [src.name] E.G.O. weapon in that trajectory, there's an obstacle in the way!"))
+				balloon_alert(user, "Trajectory obstructed.")
+				return FALSE
+
+
 		if(!do_after(user, resonance_fire_delay)) // Windup for firing the missile. Hold still!
 			return FALSE
 		else // Windup concluded successfully.
