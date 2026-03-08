@@ -137,7 +137,7 @@
 /// Grants a powerful AoE debuff + combo attack action.
 /datum/component/association_skill/seven_full_exposure
 	skill_name = "Full Exposure"
-	skill_desc = "Grants a powerful AoE debuff attack that scales with ally count."
+	skill_desc = "Grants a powerful AoE debuff attack that scales with ally count (costs Adrenaline)."
 	branch = "Coordinator"
 	tier = 3
 	choice = "a"
@@ -157,13 +157,13 @@
 	combo_action = null
 	return ..()
 
-/// Full Exposure action — 120s cooldown powerful attack.
+/// Full Exposure action — adrenaline-powered powerful attack.
 /datum/action/cooldown/seven_full_exposure_action
 	name = "Full Exposure"
-	desc = "AoE debuff opener scaling with ally count, then a 3-hit combo that applies Rupture. Final hit force-triggers all Rupture."
+	desc = "AoE debuff opener scaling with ally count, then a 3-hit combo that applies Rupture. Final hit force-triggers all Rupture. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "seven_t3"
-	cooldown_time = 120 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/seven_full_exposure_action/Trigger()
 	. = ..()
@@ -192,7 +192,12 @@
 	if(!combo_target)
 		to_chat(user, span_warning("No hostile targets nearby."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), combo_target, user, skill)
 	return TRUE
 

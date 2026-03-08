@@ -140,7 +140,7 @@
 /// Grants a powerful attack action. AoE slam + combo on closest enemy.
 /datum/component/association_skill/zwei_earthshatter
 	skill_name = "Earthshatter"
-	skill_desc = "Grants a powerful attack action (90s cooldown). AoE ground slam, then combo on closest enemy."
+	skill_desc = "Grants a powerful attack action (costs Adrenaline). AoE ground slam, then combo on closest enemy."
 	branch = "Territory Protection"
 	tier = 3
 	choice = "a"
@@ -160,13 +160,13 @@
 	combo_action = null
 	return ..()
 
-/// Earthshatter action — 90s cooldown AoE powerful attack.
+/// Earthshatter action — adrenaline-powered AoE powerful attack.
 /datum/action/cooldown/zwei_earthshatter_action
 	name = "Earthshatter"
-	desc = "AoE ground slam in a 3-tile radius, then combo the closest enemy. More hits in contracted area. Allies grant bonus hits."
+	desc = "AoE ground slam in a 3-tile radius, then combo the closest enemy. More hits in contracted area. Allies grant bonus hits. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "zwei_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/zwei_earthshatter_action/Trigger()
 	. = ..()
@@ -180,7 +180,12 @@
 	if(!skill || !skill.can_use_skill())
 		to_chat(user, span_warning("You cannot use this skill right now."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), user, skill)
 	return TRUE
 
@@ -201,9 +206,8 @@
 			continue
 		if(L.stat == DEAD)
 			continue
-		// AoE damage + brief stun
+		// AoE damage
 		L.deal_damage(dps * 0.5, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
-		L.Knockdown(0.5 SECONDS)
 		// Track closest for combo target
 		var/d = get_dist(user, L)
 		if(d < closest_dist)
@@ -259,11 +263,10 @@
 		user.do_attack_animation(combo_target)
 		playsound(combo_target, 'sound/weapons/rapierhit.ogg', 60, TRUE, 6)
 		if(i == total_hits)
-			// Final hit: 5 DLU to self, 1s Knockdown to target
+			// Final hit: 5 DLU to self
 			combo_target.deal_damage(hit_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 			combo_target.apply_lc_defense_level_down(2)
 			user.apply_lc_defense_level_up(5)
-			combo_target.Knockdown(1 SECONDS)
 			new /obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei(get_turf(user), user.dir)
 			shake_camera(combo_target, 3, 3)
 		else

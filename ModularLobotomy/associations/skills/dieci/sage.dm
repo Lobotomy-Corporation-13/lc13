@@ -275,7 +275,7 @@
 /// Sage T3a — Grants a powerful attack action that hurls knowledge at the target for a scaling multi-hit combo.
 /datum/component/association_skill/dieci_grand_archive
 	skill_name = "Grand Archive"
-	skill_desc = "Action (90s CD): consume up to 5 highest knowledge. Dash to target for N-hit combo (sorted low to high). Hits deal RED + Sinking = level x2. Final hit: PALE at 1.25x + Sinking = level x4."
+	skill_desc = "Action (costs Adrenaline): consume up to 5 highest knowledge. Dash to target for N-hit combo (sorted low to high). Hits deal RED + Sinking = level x2. Final hit: PALE at 1.25x + Sinking = level x4."
 	branch = "Sage"
 	tier = 3
 	choice = "a"
@@ -295,13 +295,13 @@
 	combo_action = null
 	return ..()
 
-/// Action for Grand Archive — 90s cooldown powerful attack.
+/// Action for Grand Archive — adrenaline-powered powerful attack.
 /datum/action/cooldown/dieci_grand_archive_action
 	name = "Grand Archive"
-	desc = "Consume up to 5 highest knowledge entries, then rush the target for a multi-hit combo scaling with consumed levels."
+	desc = "Consume up to 5 highest knowledge entries, then rush the target for a multi-hit combo scaling with consumed levels. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "dieci_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/dieci_grand_archive_action/Trigger()
 	. = ..()
@@ -330,7 +330,12 @@
 	if(!kc || kc.get_knowledge_count() <= 0)
 		to_chat(user, span_warning("No knowledge available to consume."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user)
 	return TRUE
 

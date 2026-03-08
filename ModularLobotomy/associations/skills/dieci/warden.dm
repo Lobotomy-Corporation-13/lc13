@@ -217,7 +217,7 @@
 /// Warden T3a — Grants a powerful shield-building attack that converts shield HP into a devastating finisher.
 /datum/component/association_skill/dieci_golden_aegis
 	skill_name = "Golden Aegis"
-	skill_desc = "Action (90s CD): stomp to apply 5 Sinking in 3 tiles. 5-hit combo: hits 1-4 deal RED and consume knowledge for level x20 shield. Hit 5: consumes up to 200 shield for +0.5%/point bonus damage, throws target, triggers Sinking."
+	skill_desc = "Action (costs Adrenaline): stomp to apply 5 Sinking in 3 tiles. 5-hit combo: hits 1-4 deal RED and consume knowledge for level x20 shield. Hit 5: consumes up to 200 shield for +0.5%/point bonus damage, triggers Sinking."
 	branch = "Warden"
 	tier = 3
 	choice = "a"
@@ -237,13 +237,13 @@
 	combo_action = null
 	return ..()
 
-/// Action for Golden Aegis — 90s cooldown powerful attack.
+/// Action for Golden Aegis — adrenaline-powered powerful attack.
 /datum/action/cooldown/dieci_golden_aegis_action
 	name = "Golden Aegis"
-	desc = "Stomp to apply Sinking, then deliver a 5-hit combo that builds and consumes shield HP for massive damage."
+	desc = "Stomp to apply Sinking, then deliver a 5-hit combo that builds and consumes shield HP for massive damage. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "dieci_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/dieci_golden_aegis_action/Trigger()
 	. = ..()
@@ -267,7 +267,12 @@
 	if(!skill || !skill.can_use_skill())
 		to_chat(user, span_warning("You cannot use this skill right now."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user)
 	return TRUE
 
@@ -339,17 +344,11 @@
 
 	var/bonus_multiplier = 1 + consumed_shield * 0.005
 	var/finisher_damage = hit_damage * 2 * bonus_multiplier
-	var/throw_dist = max(1, round(consumed_shield / 40))
-
 	user.do_attack_animation(target)
 	playsound(target, 'sound/weapons/fixer/generic/finisher2.ogg', 80, TRUE, 8)
 	target.deal_damage(finisher_damage, RED_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)
 	new /obj/effect/temp_visual/dir_setting/gray_cube_v1/dieci(get_turf(user), user.dir)
 	shake_camera(target, 3, 3)
-
-	// Throw target
-	if(!QDELETED(target) && !target.anchored)
-		target.throw_at(get_ranged_target_turf_direct(user, target, throw_dist), throw_dist, 4, user, TRUE)
 
 	// Trigger Sinking
 	if(!QDELETED(target))

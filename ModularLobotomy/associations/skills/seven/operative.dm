@@ -148,7 +148,7 @@
 /// Grants a powerful attack action. Vanish + teleport + 5-hit combo.
 /datum/component/association_skill/seven_surgical_strike
 	skill_name = "Surgical Strike"
-	skill_desc = "Grants a powerful attack action. Vanish, teleport behind the target, and deliver a devastating combo."
+	skill_desc = "Grants a powerful attack action (costs Adrenaline). Vanish, teleport behind the target, and deliver a devastating combo."
 	branch = "Operative"
 	tier = 3
 	choice = "a"
@@ -168,13 +168,13 @@
 	combo_action = null
 	return ..()
 
-/// Surgical Strike action — 90s cooldown powerful attack.
+/// Surgical Strike action — adrenaline-powered powerful attack.
 /datum/action/cooldown/seven_surgical_strike_action
 	name = "Surgical Strike"
-	desc = "Vanish for 2 seconds, then teleport behind the target for a 5-hit combo. Damage scales with debuffs."
+	desc = "Vanish for 2 seconds, then teleport behind the target for a 5-hit combo. Damage scales with debuffs. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "seven_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/seven_surgical_strike_action/Trigger()
 	. = ..()
@@ -202,7 +202,12 @@
 	if(!target)
 		to_chat(user, span_warning("No hostile targets nearby."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user, skill)
 	return TRUE
 
@@ -333,7 +338,6 @@
 		target.deal_damage(R.stacks, BLACK_DAMAGE, user, DAMAGE_FORCED, ATTACK_TYPE_SPECIAL)
 	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
-	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	// Clean up cutscene duel
 	qdel(target.GetComponent(/datum/component/cutscene_duel))
 	if(!QDELETED(user))

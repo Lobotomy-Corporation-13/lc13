@@ -35,6 +35,18 @@
 	var/zwei_hit_exp_time = 0
 	/// Reference to the Dieci knowledge viewer action
 	var/datum/action/innate/dieci_knowledge_viewer/knowledge_action
+	/// Current adrenaline for T3a skill activation
+	var/adrenaline = 0
+	/// Maximum adrenaline (threshold for T3a activation)
+	var/max_adrenaline = 100
+	/// world.time of last adrenaline gain (for decay timer)
+	var/last_adrenaline_gain_time = 0
+	/// Whether we are currently processing adrenaline decay
+	var/adrenaline_processing = FALSE
+	/// How many seconds of no adrenaline gain before decay starts
+	var/adrenaline_decay_delay = 10 SECONDS
+	/// Adrenaline lost per second during decay
+	var/adrenaline_decay_rate = 10
 
 /datum/component/association_exp/Initialize(assoc_type, _rank, datum/association_squad/_squad)
 	if(!ishuman(parent))
@@ -60,10 +72,12 @@
 	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_distress_check))
 	RegisterSignal(parent, COMSIG_LIVING_DEATH, PROC_REF(on_distress_death))
 
-	// Zwei combat EXP hooks
+	// Combat hit handler for adrenaline building (all) and Zwei EXP
+	RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_combat_hit))
+
+	// Zwei combat EXP hooks (damage taken)
 	if(association_type == ASSOCIATION_ZWEI)
 		RegisterSignal(parent, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(on_zwei_damage_taken))
-		RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_zwei_combat_hit))
 
 	// Dieci knowledge component + viewer action
 	if(association_type == ASSOCIATION_DIECI)
@@ -72,8 +86,14 @@
 		knowledge_action.Grant(parent)
 
 /datum/component/association_exp/Destroy()
+	if(adrenaline_processing)
+		STOP_PROCESSING(SSobj, src)
+		adrenaline_processing = FALSE
 	UnregisterSignal(parent, list(COMSIG_MOB_APPLY_DAMGE, COMSIG_LIVING_DEATH, COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_MOB_ITEM_ATTACK))
 	last_carbon_attacker = null
+	var/mob/living/L = parent
+	if(L)
+		L.clear_alert("adrenaline")
 	if(tree_action)
 		QDEL_NULL(tree_action)
 	if(ally_action)
@@ -203,22 +223,93 @@
 	zwei_damage_exp_time = world.time
 	INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_DAMAGE_ABSORBED)
 
-/// Zwei: Award EXP on combat hits and kills while on contract. 2 second hit cooldown, no kill cooldown.
-/datum/component/association_exp/proc/on_zwei_combat_hit(datum/source, mob/living/target, mob/living/user, obj/item/item)
+/// Unified combat hit handler: builds adrenaline for all associations, awards Zwei combat EXP.
+/datum/component/association_exp/proc/on_combat_hit(datum/source, mob/living/target, mob/living/user, obj/item/item)
 	SIGNAL_HANDLER
+	// Build adrenaline from weapon attacks (all associations)
+	if(item && isliving(target) && target != parent)
+		var/old_adrenaline = adrenaline
+		var/gain = item.attack_speed * 20
+		adrenaline = min(adrenaline + gain, max_adrenaline)
+		last_adrenaline_gain_time = world.time
+		// Start processing for decay if not already
+		if(!adrenaline_processing && adrenaline > 0)
+			START_PROCESSING(SSobj, src)
+			adrenaline_processing = TRUE
+		if(old_adrenaline < max_adrenaline && adrenaline >= max_adrenaline)
+			to_chat(parent, span_nicegreen("Adrenaline full! Your powerful attack is ready!"))
+		INVOKE_ASYNC(src, PROC_REF(update_adrenaline_display))
+	// Zwei combat EXP
+	if(association_type != ASSOCIATION_ZWEI)
+		return
 	if(!squad || !squad.is_on_contract())
 		return
 	if(!isliving(target) || target == parent)
 		return
-	// Check if target is an ally — don't award EXP for hitting allies
 	if(is_designated_ally(target))
 		return
-	// Kill check — target died from this hit
 	if(target.stat == DEAD)
 		INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_KILL)
 		return
-	// Combat hit EXP with cooldown
 	if(world.time < zwei_hit_exp_time + 2 SECONDS)
 		return
 	zwei_hit_exp_time = world.time
 	INVOKE_ASYNC(src, PROC_REF(modify_exp), ZWEI_EXP_COMBAT_HIT)
+
+/// Check if enough adrenaline is available for a T3a skill.
+/datum/component/association_exp/proc/has_enough_adrenaline()
+	return adrenaline >= max_adrenaline
+
+/// Consume adrenaline for a T3a skill. Returns TRUE if successful.
+/datum/component/association_exp/proc/consume_adrenaline()
+	if(adrenaline < max_adrenaline)
+		return FALSE
+	adrenaline = 0
+	update_adrenaline_display()
+	return TRUE
+
+/// Process tick — handles adrenaline decay after inactivity.
+/datum/component/association_exp/process(seconds_per_tick)
+	if(adrenaline <= 0)
+		adrenaline = 0
+		STOP_PROCESSING(SSobj, src)
+		adrenaline_processing = FALSE
+		update_adrenaline_display()
+		return
+	// Only decay after the delay period with no gains
+	if(world.time < last_adrenaline_gain_time + adrenaline_decay_delay)
+		return
+	// Decay adrenaline
+	var/decay = adrenaline_decay_rate * seconds_per_tick
+	adrenaline = max(0, adrenaline - decay)
+	update_adrenaline_display()
+	if(adrenaline <= 0)
+		adrenaline = 0
+		STOP_PROCESSING(SSobj, src)
+		adrenaline_processing = FALSE
+
+/// Update the adrenaline HUD alert for the player.
+/datum/component/association_exp/proc/update_adrenaline_display()
+	var/mob/living/L = parent
+	if(!L || QDELETED(L))
+		return
+	if(adrenaline <= 0)
+		L.clear_alert("adrenaline")
+		return
+	// Throw the alert (creates it if new, returns 0 if exists)
+	L.throw_alert("adrenaline", /atom/movable/screen/alert/adrenaline)
+	// Access the alert directly to update its text
+	var/atom/movable/screen/alert/alert = L.alerts["adrenaline"]
+	if(alert)
+		var/pct = round(adrenaline / max_adrenaline * 100)
+		alert.desc = "Adrenaline: [round(adrenaline)]/[max_adrenaline] ([pct]%)\nBuild adrenaline by attacking with weapons. Slower weapons build more.\nAt full adrenaline, activate your Powerful Attack skill.\nDecays after [adrenaline_decay_delay / 10] seconds of not attacking."
+		alert.name = "Adrenaline ([round(adrenaline)]/[max_adrenaline])"
+
+// ============================================================
+// Adrenaline Screen Alert
+// ============================================================
+/atom/movable/screen/alert/adrenaline
+	name = "Adrenaline"
+	desc = "Build adrenaline by attacking with weapons."
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "champion"

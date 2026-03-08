@@ -336,7 +336,7 @@
 /// Grants a powerful attack action. Leap to target, 4-hit combo. Ward damage doubles damage.
 /datum/component/association_skill/zwei_guardians_wrath
 	skill_name = "Guardian's Wrath"
-	skill_desc = "Grants a powerful attack action (120s cooldown). Leap to a target for a 4-hit combo. If your ward was hurt recently, damage is doubled."
+	skill_desc = "Grants a powerful attack action (costs Adrenaline). Leap to a target for a 4-hit combo. If your ward was hurt recently, damage is doubled."
 	branch = "Client Protection"
 	tier = 3
 	choice = "a"
@@ -387,13 +387,13 @@
 		return
 	ward_last_damage_time = world.time
 
-/// Guardian's Wrath action — 120s cooldown powerful attack.
+/// Guardian's Wrath action — adrenaline-powered powerful attack.
 /datum/action/cooldown/zwei_guardians_wrath_action
 	name = "Guardian's Wrath"
-	desc = "Leap to a target from up to 7 tiles. 4-hit combo. If your ward was hurt in the last 10 seconds, damage is doubled."
+	desc = "Leap to a target from up to 7 tiles. 4-hit combo. If your ward was hurt in the last 10 seconds, damage is doubled. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "zwei_t3"
-	cooldown_time = 120 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/zwei_guardians_wrath_action/Trigger()
 	. = ..()
@@ -422,7 +422,12 @@
 	if(!target)
 		to_chat(user, span_warning("No hostile targets nearby."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user, skill)
 	return TRUE
 
@@ -551,9 +556,6 @@
 	user.apply_lc_defense_level_up(5)
 	new /obj/effect/temp_visual/dir_setting/gray_edge/zwei/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
-	// Knockback away from ward if ward exists, otherwise away from user
-	var/atom/knockback_from = ward && !QDELETED(ward) ? ward : user
-	target.throw_at(get_ranged_target_turf_direct(knockback_from, target, 3), 3, 4, user, TRUE)
 	// Clean up cutscene duel
 	qdel(target.GetComponent(/datum/component/cutscene_duel))
 	if(!QDELETED(user))

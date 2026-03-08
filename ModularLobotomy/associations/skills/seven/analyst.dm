@@ -216,7 +216,7 @@
 /// Grants a powerful attack action. Dash + 4-hit combo on marked target.
 /datum/component/association_skill/seven_dossier_complete
 	skill_name = "Dossier Complete"
-	skill_desc = "Grants a powerful attack action. Dash to your marked target and deliver a devastating combo."
+	skill_desc = "Grants a powerful attack action (costs Adrenaline). Dash to your marked target and deliver a devastating combo."
 	branch = "Analyst"
 	tier = 3
 	choice = "a"
@@ -236,13 +236,13 @@
 	combo_action = null
 	return ..()
 
-/// Dossier Complete action — 90s cooldown powerful attack.
+/// Dossier Complete action — adrenaline-powered powerful attack.
 /datum/action/cooldown/seven_dossier_complete_action
 	name = "Dossier Complete"
-	desc = "Dash to your marked target and deliver a 4-hit combo scaling with Rupture. Requires a marked target with 10+ Rupture."
+	desc = "Dash to your marked target and deliver a 4-hit combo scaling with Rupture. Requires a marked target with 10+ Rupture. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "seven_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/seven_dossier_complete_action/Trigger()
 	. = ..()
@@ -273,7 +273,12 @@
 	if(!skill || !skill.can_use_skill())
 		to_chat(user, span_warning("You cannot use this skill right now."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user)
 	return TRUE
 
@@ -354,7 +359,6 @@
 	target.apply_lc_fragile(5)
 	new /obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough(get_turf(target), user.dir)
 	shake_camera(target, 3, 3)
-	target.throw_at(get_ranged_target_turf_direct(user, target, 2), 2, 4, user, TRUE)
 	// Clean up cutscene duel
 	qdel(target.GetComponent(/datum/component/cutscene_duel))
 	if(!QDELETED(user))

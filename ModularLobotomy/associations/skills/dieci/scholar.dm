@@ -205,7 +205,7 @@
 /// Scholar T3a — Grants a powerful attack action that consumes knowledge for a devastating Sinking combo.
 /datum/component/association_skill/dieci_abyssal_revelation
 	skill_name = "Abyssal Revelation"
-	skill_desc = "Action (90s CD): consume up to 5 highest knowledge (+10%/level damage, max +100%). 5-hit combo: hits 1-4 deal RED + 2 Sinking. Hit 5: PALE at 1.5x, triggers Sinking. Grants 2 free empowers."
+	skill_desc = "Action (costs Adrenaline): consume up to 5 highest knowledge (+10%/level damage, max +100%). 5-hit combo: hits 1-4 deal RED + 2 Sinking. Hit 5: PALE at 1.5x, triggers Sinking. Grants 2 free empowers."
 	branch = "Scholar"
 	tier = 3
 	choice = "a"
@@ -225,13 +225,13 @@
 	combo_action = null
 	return ..()
 
-/// Action for Abyssal Revelation — 90s cooldown powerful attack.
+/// Action for Abyssal Revelation — adrenaline-powered powerful attack.
 /datum/action/cooldown/dieci_abyssal_revelation_action
 	name = "Abyssal Revelation"
-	desc = "Consume up to 5 knowledge, then shoulder-charge the target for a devastating 5-hit combo that triggers Sinking."
+	desc = "Consume up to 5 knowledge, then shoulder-charge the target for a devastating 5-hit combo that triggers Sinking. Costs 100 Adrenaline."
 	icon_icon = 'icons/hud/screen_assoc_trees.dmi'
 	button_icon_state = "dieci_t3"
-	cooldown_time = 90 SECONDS
+	cooldown_time = 0
 
 /datum/action/cooldown/dieci_abyssal_revelation_action/Trigger()
 	. = ..()
@@ -257,7 +257,12 @@
 	if(!skill || !skill.can_use_skill())
 		to_chat(user, span_warning("You cannot use this skill right now."))
 		return FALSE
-	StartCooldown()
+	// Check adrenaline
+	var/datum/component/association_exp/exp = user.GetComponent(/datum/component/association_exp)
+	if(!exp || !exp.has_enough_adrenaline())
+		to_chat(user, span_warning("Not enough adrenaline! ([exp ? exp.adrenaline : 0]/[exp ? exp.max_adrenaline : 100])"))
+		return FALSE
+	exp.consume_adrenaline()
 	INVOKE_ASYNC(src, PROC_REF(ExecuteCombo), target, user)
 	return TRUE
 
