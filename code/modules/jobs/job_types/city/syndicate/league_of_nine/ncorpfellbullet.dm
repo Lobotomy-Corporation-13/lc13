@@ -1,6 +1,6 @@
 //gubo
 /datum/job/leagueofninefellbullet
-	title = "New League of Nine Member"
+	title = "Member of the New League of Nine"
 	outfit = /datum/outfit/job/leagueofninefellbullet
 	department_head = list("the project supervisor.")
 	faction = "Station"
