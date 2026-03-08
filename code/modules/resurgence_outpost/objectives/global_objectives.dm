@@ -18,6 +18,12 @@ GLOBAL_LIST_EMPTY(resurgence_exported_totals)
 /// Total completed expeditions counter
 GLOBAL_VAR_INIT(resurgence_completed_expeditions, 0)
 
+/// Total weapons crafted via grid crafting
+GLOBAL_VAR_INIT(resurgence_weapons_crafted, 0)
+
+/// Total custom outfits crafted via loom
+GLOBAL_VAR_INIT(resurgence_outfits_crafted, 0)
+
 /// Total faction hubs visited
 GLOBAL_LIST_EMPTY(resurgence_visited_faction_hubs)
 
@@ -223,6 +229,64 @@ GLOBAL_VAR_INIT(resurgence_caravan_trades, 0)
 
 /datum/resurgence_objective/building/export_warehouse/check_progress()
 	current_progress = count_rooms_of_type(ROOM_TYPE_EXPORT_WAREHOUSE)
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+// ============================================
+// RESEARCH & CRAFTING OBJECTIVES (Phase 1)
+// ============================================
+
+/// Research Grid Crafting
+/datum/resurgence_objective/building/research_grid_crafting
+	name = "Research Grid Crafting"
+	description = "Research Weapon Grid Navigation at the Research Station."
+	required_progress = 1
+	sort_order = 6
+
+/datum/resurgence_objective/building/research_grid_crafting/check_progress()
+	if(GLOB.resurgence_research?.is_researched("grid_crafting"))
+		current_progress = 1
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Research Faith Weaving
+/datum/resurgence_objective/building/research_faith_weaving
+	name = "Research Faith Weaving"
+	description = "Research Faith Weaving at the Research Station."
+	required_progress = 1
+	sort_order = 7
+
+/datum/resurgence_objective/building/research_faith_weaving/check_progress()
+	if(GLOB.resurgence_research?.is_researched("faith_weaving"))
+		current_progress = 1
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Craft 4 weapons via grid crafting
+/datum/resurgence_objective/building/craft_weapons
+	name = "Craft 4 Weapons"
+	description = "Use the Grid Crafting Station to craft 4 city weapons."
+	required_progress = 4
+	sort_order = 8
+
+/datum/resurgence_objective/building/craft_weapons/check_progress()
+	current_progress = GLOB.resurgence_weapons_crafted
+	if(current_progress >= required_progress && !completed)
+		on_complete()
+	return ..()
+
+/// Craft 4 custom outfits via loom
+/datum/resurgence_objective/building/craft_outfits
+	name = "Craft 4 Custom Outfits"
+	description = "Use the Loom to craft 4 custom clothing items."
+	required_progress = 4
+	sort_order = 9
+
+/datum/resurgence_objective/building/craft_outfits/check_progress()
+	current_progress = GLOB.resurgence_outfits_crafted
 	if(current_progress >= required_progress && !completed)
 		on_complete()
 	return ..()
@@ -505,6 +569,8 @@ GLOBAL_VAR_INIT(resurgence_caravan_trades, 0)
 	GLOB.resurgence_visited_faction_hubs.Cut()
 	GLOB.resurgence_caravan_encounters = 0
 	GLOB.resurgence_caravan_trades = 0
+	GLOB.resurgence_weapons_crafted = 0
+	GLOB.resurgence_outfits_crafted = 0
 
 	// Create building objectives (Phase 1)
 	new /datum/resurgence_objective/building/living_quarters()
@@ -512,6 +578,10 @@ GLOBAL_VAR_INIT(resurgence_caravan_trades, 0)
 	new /datum/resurgence_objective/building/kitchen()
 	new /datum/resurgence_objective/building/farming_zones()
 	new /datum/resurgence_objective/building/export_warehouse()
+	new /datum/resurgence_objective/building/research_grid_crafting()
+	new /datum/resurgence_objective/building/research_faith_weaving()
+	new /datum/resurgence_objective/building/craft_weapons()
+	new /datum/resurgence_objective/building/craft_outfits()
 
 	// Create exploration objectives (Phase 2)
 	new /datum/resurgence_objective/exploration/discover_map()

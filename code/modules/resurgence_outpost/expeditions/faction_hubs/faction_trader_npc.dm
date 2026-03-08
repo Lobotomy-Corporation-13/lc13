@@ -148,11 +148,10 @@
 		say(trading_faction.get_dialogue("low_rep"))
 		return
 
-	// Greet the player on first interaction
-	say(trading_faction.get_dialogue("greeting"))
-
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
+		// Greet the player on first interaction (new UI only)
+		say(trading_faction.get_dialogue("greeting"))
 		ui = new(user, src, "FactionTrader", "[name] - Trading")
 		ui.open()
 

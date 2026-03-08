@@ -213,7 +213,11 @@
 /obj/item/scythe/wooden
 	name = "wooden scythe"
 	desc = "A crude scythe with a wooden handle and a dull blade. Better than nothing for harvesting."
+	icon = 'icons/obj/hydroponics/equipment.dmi'
 	icon_state = "scythe_wooden"
+	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
+	righthand_file = 'icons/mob/inhands/weapons/polearms_righthand.dmi'
+	inhand_icon_state = "scythe0"
 	force = 8
 	flags_1 = NONE
 	// Wood tier durability

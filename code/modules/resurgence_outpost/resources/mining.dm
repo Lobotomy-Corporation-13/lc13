@@ -172,7 +172,8 @@
 
 	// Drop ore
 	if(mineralType && final_amount > 0)
-		new mineralType(src, final_amount)
+		var/obj/item/stack/dropped_ore = new mineralType(src, final_amount)
+		dropped_ore.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Remove scanner overlay if present
 	for(var/obj/effect/temp_visual/mining_overlay/M in src)

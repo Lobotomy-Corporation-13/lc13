@@ -182,6 +182,12 @@
 		to_chat(user, span_warning("You're not close enough to craft [item.name]!"))
 		return FALSE
 
+	// Check if the item is locked behind research
+	var/max_tier = get_max_revealed_tier()
+	if(item.tier > max_tier)
+		to_chat(user, span_warning("[item.name] requires further grid crafting research!"))
+		return FALSE
+
 	// Create the result
 	if(item.result_type)
 		var/obj/item/crafted = new item.result_type(get_turf(src))
@@ -194,8 +200,14 @@
 	// Track crafted items so they can be highlighted later
 	if(!(item.item_id in crafted_item_ids))
 		crafted_item_ids += item.item_id
+	// Track for objectives
+	GLOB.resurgence_weapons_crafted++
+	update_all_objectives()
 	to_chat(user, span_notice("<b>Crafted:</b> [item.name]!"))
 	playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
+
+	// Add shuffle points based on crafted weapon tier
+	grid_manager.add_shuffle_points(item.tier)
 
 	// Reset focus point after crafting
 	grid_manager.reset_focus()
@@ -289,13 +301,14 @@
 	data["max_revealed_tier"] = max_tier
 	data["debug_mode"] = debug_mode
 
-	// Nearby items (filtered by research tier)
+	// Shuffle system data
+	data["shuffle_counter"] = grid_manager.shuffle_counter
+	data["shuffle_threshold"] = grid_manager.shuffle_threshold
+
+	// Nearby items (all items, with locked field)
 	var/list/nearby = grid_manager.get_nearby_items(50)
 	var/list/item_data = list()
 	for(var/datum/grid_craft_item/item in nearby)
-		// Filter by revealed tier
-		if(item.tier > max_tier)
-			continue
 		var/dist = item.distance_from(grid_manager.focus_x, grid_manager.focus_y)
 		var/in_range = item.is_in_range(grid_manager.focus_x, grid_manager.focus_y)
 		item_data += list(list(
@@ -307,22 +320,21 @@
 			"radius" = item.craft_radius,
 			"tier" = item.tier,
 			"distance" = round(dist, 0.1),
-			"in_range" = in_range
+			"in_range" = in_range,
+			"locked" = (item.tier > max_tier)
 		))
 	data["nearby_items"] = item_data
 
-	// Craftable items at current position (filtered by research tier)
+	// Craftable items at current position (all, with locked field)
 	var/list/craftable = grid_manager.get_craftable_items()
 	var/list/craftable_data = list()
 	for(var/datum/grid_craft_item/item in craftable)
-		// Filter by revealed tier
-		if(item.tier > max_tier)
-			continue
 		craftable_data += list(list(
 			"id" = item.item_id,
 			"name" = item.name,
 			"desc" = item.desc,
-			"tier" = item.tier
+			"tier" = item.tier,
+			"locked" = (item.tier > max_tier)
 		))
 	data["craftable_items"] = craftable_data
 

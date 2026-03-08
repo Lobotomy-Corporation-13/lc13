@@ -26,6 +26,8 @@
 	var/ui_x = 0
 	/// UI Y position (for tech tree display)
 	var/ui_y = 0
+	/// Branch categories for UI filtering (node can belong to multiple)
+	var/list/branch_types = list("production")
 
 // ==================== TIER 1 - Foundation ====================
 
@@ -39,6 +41,7 @@
 	unlocks_desc = "Crafting: Wooden Scythe. Blueprints: Crafting table, furniture, storage."
 	ui_x = 20
 	ui_y = 80
+	branch_types = list("production", "decor")
 
 /datum/resurgence_research_node/metallurgy
 	id = "metallurgy"
@@ -50,6 +53,7 @@
 	unlocks_desc = "Forge: Iron tools. Blueprints: Forge, iron walls/doors."
 	ui_x = 20
 	ui_y = 320
+	branch_types = list("production", "armor", "weapons")
 
 /datum/resurgence_research_node/textiles
 	id = "textiles"
@@ -61,6 +65,7 @@
 	unlocks_desc = "Loom: Backpack, Satchel. Blueprints: Loom."
 	ui_x = 20
 	ui_y = 560
+	branch_types = list("production", "clothing")
 
 // ==================== TIER 2 - Specialization ====================
 
@@ -74,6 +79,7 @@
 	unlocks_desc = "Blueprints: Seed extractor."
 	ui_x = 180
 	ui_y = 0
+	branch_types = list("production", "food")
 
 /datum/resurgence_research_node/artistry
 	id = "artistry"
@@ -85,6 +91,7 @@
 	unlocks_desc = "Crafting: Canvas sizes, Painting Frame. Blueprints: Sign, Noticeboard."
 	ui_x = 180
 	ui_y = 80
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/harvesting_tech
 	id = "harvesting_tech"
@@ -96,6 +103,7 @@
 	unlocks_desc = "Crafting: Simple Harvester."
 	ui_x = 180
 	ui_y = 160
+	branch_types = list("production", "food")
 
 /datum/resurgence_research_node/expedition_logistics
 	id = "expedition_logistics"
@@ -107,6 +115,7 @@
 	unlocks_desc = "Blueprints: Expedition Crate. Allows hauling goods on expeditions for trade."
 	ui_x = 180
 	ui_y = 240
+	branch_types = list("utility", "production")
 
 /datum/resurgence_research_node/papercraft
 	id = "papercraft"
@@ -118,6 +127,7 @@
 	unlocks_desc = "Crafting: Paper, Pens, Folders, Clipboard, etc. Blueprints: Filing cabinet."
 	ui_x = 180
 	ui_y = 480
+	branch_types = list("utility")
 
 /datum/resurgence_research_node/flooring
 	id = "flooring"
@@ -129,6 +139,7 @@
 	unlocks_desc = "Crafting: All carpet tiles."
 	ui_x = 180
 	ui_y = 560
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/culinary
 	id = "culinary"
@@ -140,6 +151,7 @@
 	unlocks_desc = "Forge: Beakers, Bowl, Kitchen Knife, Universal Enzyme. Blueprints: Kitchen equipment."
 	ui_x = 180
 	ui_y = 640
+	branch_types = list("food", "production")
 
 /datum/resurgence_research_node/machine_fabrication
 	id = "machine_fabrication"
@@ -151,6 +163,7 @@
 	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder."
 	ui_x = 180
 	ui_y = 720
+	branch_types = list("production", "utility")
 
 /datum/resurgence_research_node/cleaning
 	id = "cleaning"
@@ -162,6 +175,7 @@
 	unlocks_desc = "Crafting: Push Broom, Spray Can, Trash Bag. Blueprints: Trash bin, cart."
 	ui_x = 180
 	ui_y = 800
+	branch_types = list("utility")
 
 // ==================== TIER 3 - Advanced ====================
 
@@ -175,6 +189,7 @@
 	unlocks_desc = "Crafting: Recorder, Harmonica, Banjo, Bike Horn."
 	ui_x = 340
 	ui_y = 80
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/advanced_metallurgy
 	id = "advanced_metallurgy"
@@ -186,6 +201,7 @@
 	unlocks_desc = "Forge: Plasteel, Silver Pickaxe, Ash Plating. Blueprints: Reinforced wall."
 	ui_x = 340
 	ui_y = 320
+	branch_types = list("armor", "production")
 
 /datum/resurgence_research_node/faith_weaving
 	id = "faith_weaving"
@@ -194,9 +210,10 @@
 	tier = 3
 	total_work = 400
 	prerequisites = list("textiles")
-	unlocks_desc = "Loom: Simple Azure Faith Fabric."
+	unlocks_desc = "Loom: Simple Azure Faith Fabric, All custom clothing."
 	ui_x = 340
 	ui_y = 480
+	branch_types = list("clothing")
 
 /datum/resurgence_research_node/acceleration_protocol
 	id = "acceleration_protocol"
@@ -208,6 +225,7 @@
 	unlocks_desc = "Grants Accelerated Crafting action (2x crafting speed, 3x faith drain)."
 	ui_x = 340
 	ui_y = 720
+	branch_types = list("production", "utility")
 
 // ==================== TIER 4 - Expert ====================
 
@@ -221,6 +239,7 @@
 	unlocks_desc = "Crafting: Violin, Guitar, Accordion, Trumpet, Saxophone, Glockenspiel."
 	ui_x = 500
 	ui_y = 0
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/fine_furniture
 	id = "fine_furniture"
@@ -232,6 +251,7 @@
 	unlocks_desc = "Blueprints: Comfy chair, Office chair, Sofa variants, Bar stool."
 	ui_x = 500
 	ui_y = 160
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/advanced_weaving
 	id = "advanced_weaving"
@@ -243,6 +263,7 @@
 	unlocks_desc = "Loom: Advanced Faith Fabric, Duffel Bag, Explorer Backpack, Leather Satchel."
 	ui_x = 500
 	ui_y = 480
+	branch_types = list("clothing", "utility")
 
 /datum/resurgence_research_node/luxury_decor
 	id = "luxury_decor"
@@ -254,6 +275,7 @@
 	unlocks_desc = "Crafting: Royal Carpets. Blueprints: Gold/Silver walls and doors."
 	ui_x = 500
 	ui_y = 320
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/advanced_cleaning
 	id = "advanced_cleaning"
@@ -265,6 +287,7 @@
 	unlocks_desc = "Crafting: Infinite Spray Can, Trash Bag of Holding, Janitor Chem Sprayer."
 	ui_x = 500
 	ui_y = 800
+	branch_types = list("utility")
 
 /datum/resurgence_research_node/communications
 	id = "communications"
@@ -276,6 +299,7 @@
 	unlocks_desc = "Crafting: All Radio Headsets."
 	ui_x = 500
 	ui_y = 640
+	branch_types = list("utility", "production")
 
 /datum/resurgence_research_node/storage_tech
 	id = "storage_tech"
@@ -287,6 +311,7 @@
 	unlocks_desc = "Blueprints: Freezer, Fridge, Shower frame."
 	ui_x = 500
 	ui_y = 560
+	branch_types = list("utility", "food")
 
 /datum/resurgence_research_node/grid_crafting
 	id = "grid_crafting"
@@ -298,6 +323,7 @@
 	unlocks_desc = "Blueprints: Ore Refiner, Grid Crafting Station. Reveals: Common city weapons (gray/green zones)."
 	ui_x = 180
 	ui_y = 320
+	branch_types = list("weapons")
 
 /datum/resurgence_research_node/advanced_grid_crafting
 	id = "advanced_grid_crafting"
@@ -309,6 +335,7 @@
 	unlocks_desc = "Reveals: Association-grade weapons (blue zones)."
 	ui_x = 340
 	ui_y = 240
+	branch_types = list("weapons")
 
 /datum/resurgence_research_node/expert_grid_crafting
 	id = "expert_grid_crafting"
@@ -320,6 +347,7 @@
 	unlocks_desc = "Reveals: Corporate-grade weapons (purple zones)."
 	ui_x = 500
 	ui_y = 240
+	branch_types = list("weapons")
 
 /datum/resurgence_research_node/master_grid_crafting
 	id = "master_grid_crafting"
@@ -331,6 +359,7 @@
 	unlocks_desc = "Reveals: Color-grade weapons (gold zones)."
 	ui_x = 660
 	ui_y = 240
+	branch_types = list("weapons")
 
 // ==================== TIER 5 - Master ====================
 
@@ -344,6 +373,7 @@
 	unlocks_desc = "Crafting: Golden Violin, Synthesizer, Synthesizer Headphones."
 	ui_x = 660
 	ui_y = 0
+	branch_types = list("decor")
 
 /datum/resurgence_research_node/industrial
 	id = "industrial"
@@ -355,6 +385,7 @@
 	unlocks_desc = "Forge: Advanced Harvester."
 	ui_x = 660
 	ui_y = 160
+	branch_types = list("production", "food")
 
 /datum/resurgence_research_node/master_weaving
 	id = "master_weaving"
@@ -363,9 +394,10 @@
 	tier = 5
 	total_work = 700  // Important production - increased cost
 	prerequisites = list("advanced_weaving")
-	unlocks_desc = "Loom: Elegant Faith Fabric, All dynamic clothing."
+	unlocks_desc = "Loom: Elegant Faith Fabric."
 	ui_x = 660
 	ui_y = 480
+	branch_types = list("clothing")
 
 /datum/resurgence_research_node/remote_trading
 	id = "remote_trading"
@@ -377,6 +409,7 @@
 	unlocks_desc = "Blueprints: Communications Console. Enables remote trading with visited factions."
 	ui_x = 660
 	ui_y = 640
+	branch_types = list("utility")
 
 // ==================== CLOTHING PLATING ====================
 
@@ -390,6 +423,7 @@
 	unlocks_desc = "Forge: Tier 1 Clothing Plating (20 armor)."
 	ui_x = 180
 	ui_y = 400
+	branch_types = list("armor", "clothing")
 
 /datum/resurgence_research_node/plating_tier2
 	id = "plating_tier2"
@@ -401,6 +435,7 @@
 	unlocks_desc = "Forge: Tier 2 Clothing Plating (40 armor). Requires Tier 1 on garment."
 	ui_x = 340
 	ui_y = 400
+	branch_types = list("armor")
 
 /datum/resurgence_research_node/plating_tier3
 	id = "plating_tier3"
@@ -412,6 +447,7 @@
 	unlocks_desc = "Forge: Tier 3 Clothing Plating (60 armor). Requires Tier 2 on garment."
 	ui_x = 500
 	ui_y = 400
+	branch_types = list("armor")
 
 /datum/resurgence_research_node/plating_tier4
 	id = "plating_tier4"
@@ -423,3 +459,4 @@
 	unlocks_desc = "Forge: Tier 4 Clothing Plating (80 armor). Requires Tier 3 on garment."
 	ui_x = 660
 	ui_y = 400
+	branch_types = list("armor")

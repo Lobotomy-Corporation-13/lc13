@@ -259,13 +259,38 @@
 	return FALSE
 
 /**
+ * Get the current raid tier based on round time.
+ * Returns RAID_TIER_MILITIA through RAID_TIER_ELITE.
+ */
+/datum/resurgence_raid/proc/get_current_raid_tier()
+	if(world.time >= RAID_ELITE_THRESHOLD)
+		return RAID_TIER_ELITE
+	if(world.time >= RAID_VETERAN_THRESHOLD)
+		return RAID_TIER_VETERAN
+	if(world.time >= RAID_REGULAR_THRESHOLD)
+		return RAID_TIER_REGULAR
+	return RAID_TIER_MILITIA
+
+/**
  * Get the mob composition for this raid.
+ * Selects from 4 tier-specific composition lists based on round time.
  */
 /datum/resurgence_raid/proc/get_raid_composition()
-	// Get base composition from global list
-	var/list/base_comp = GLOB.insurgence_raid_compositions[raid_type]
+	var/tier = get_current_raid_tier()
+	var/list/comp_list
+	switch(tier)
+		if(RAID_TIER_MILITIA)
+			comp_list = GLOB.insurgence_raid_compositions_early
+		if(RAID_TIER_REGULAR)
+			comp_list = GLOB.insurgence_raid_compositions
+		if(RAID_TIER_VETERAN)
+			comp_list = GLOB.insurgence_raid_compositions_veteran
+		if(RAID_TIER_ELITE)
+			comp_list = GLOB.insurgence_raid_compositions_elite
+
+	var/list/base_comp = comp_list[raid_type]
 	if(!base_comp)
-		base_comp = GLOB.insurgence_raid_compositions[RAID_TYPE_BASIC]
+		base_comp = comp_list[RAID_TYPE_BASIC]
 
 	return base_comp.Copy()
 

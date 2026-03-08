@@ -108,11 +108,11 @@ SUBSYSTEM_DEF(resurgence_raids)
 		raid_type = pick_raid_type(faction_id)
 
 	// Use caravan system if enabled
-	if(RAID_USE_CARAVAN_SYSTEM)
-		return spawn_raid_caravan(faction_id, raid_type)
-
-	// Fallback: Immediate raid (original behavior)
+#if RAID_USE_CARAVAN_SYSTEM
+	return spawn_raid_caravan(faction_id, raid_type)
+#else
 	return trigger_immediate_raid(faction_id, raid_type)
+#endif
 
 /**
  * Spawn a raid caravan that travels to the outpost.

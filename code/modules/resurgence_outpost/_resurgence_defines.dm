@@ -127,3 +127,36 @@
 #define CORE_MOVEMENT_DIAGONAL 2   // NE/NW/SE/SW (Silver)
 #define CORE_MOVEMENT_OCTAGONAL 3  // All 8 directions (Alloy)
 #define CORE_MOVEMENT_TELEPORT 4   // Any point within range (Gold)
+
+/// Weapon placement distance ranges per tier
+#define WEAPON_DIST_TIER_0_MIN 10
+#define WEAPON_DIST_TIER_0_MAX 40
+#define WEAPON_DIST_TIER_1_MIN 60
+#define WEAPON_DIST_TIER_1_MAX 100
+#define WEAPON_DIST_TIER_2_MIN 120
+#define WEAPON_DIST_TIER_2_MAX 180
+#define WEAPON_DIST_TIER_3_MIN 200
+#define WEAPON_DIST_TIER_3_MAX 280
+#define WEAPON_DIST_TIER_4_MIN 320
+#define WEAPON_DIST_TIER_4_MAX 420
+
+/// Weapon placement craft radius ranges per tier
+#define WEAPON_RADIUS_TIER_0_MIN 6
+#define WEAPON_RADIUS_TIER_0_MAX 14
+#define WEAPON_RADIUS_TIER_1_MIN 5
+#define WEAPON_RADIUS_TIER_1_MAX 12
+#define WEAPON_RADIUS_TIER_2_MIN 4
+#define WEAPON_RADIUS_TIER_2_MAX 10
+#define WEAPON_RADIUS_TIER_3_MIN 4
+#define WEAPON_RADIUS_TIER_3_MAX 9
+#define WEAPON_RADIUS_TIER_4_MIN 3
+#define WEAPON_RADIUS_TIER_4_MAX 8
+
+/// Shuffle system defines
+#define SHUFFLE_THRESHOLD_MIN 8
+#define SHUFFLE_THRESHOLD_MAX 15
+#define SHUFFLE_POINTS_TIER_0 1
+#define SHUFFLE_POINTS_TIER_1 2
+#define SHUFFLE_POINTS_TIER_2 3
+#define SHUFFLE_POINTS_TIER_3 5
+#define SHUFFLE_POINTS_TIER_4 999

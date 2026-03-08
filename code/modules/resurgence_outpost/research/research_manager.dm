@@ -21,9 +21,6 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 	/// Current research progress by node ID: list("woodworking" = 15, ...)
 	var/list/research_progress = list()
 
-	/// Currently active research node ID (global, shared research)
-	var/current_research_node = null
-
 /datum/resurgence_research_manager/New()
 	. = ..()
 	init_all_nodes()
@@ -95,52 +92,23 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 		return 0
 	return research_progress[node_id] || 0
 
-/// Start researching a node (sets it as the current research)
-/datum/resurgence_research_manager/proc/start_research(node_id, mob/user)
-	if(!can_research(node_id))
-		to_chat(user, span_warning("Cannot research this node!"))
+/// Add work to a research node - returns TRUE if research completed
+/datum/resurgence_research_manager/proc/add_research_work(node_id, amount, mob/user)
+	if(!node_id)
 		return FALSE
 
 	var/datum/resurgence_research_node/node = all_nodes[node_id]
 	if(!node)
 		return FALSE
 
-	current_research_node = node_id
+	// Add work
 	if(!research_progress[node_id])
 		research_progress[node_id] = 0
-
-	to_chat(user, span_notice("Started researching [node.name]."))
-	return TRUE
-
-/// Cancel current research (progress is saved)
-/datum/resurgence_research_manager/proc/cancel_research(mob/user)
-	if(!current_research_node)
-		return FALSE
-
-	var/datum/resurgence_research_node/node = all_nodes[current_research_node]
-	if(node)
-		to_chat(user, span_notice("Stopped researching [node.name]. Progress saved."))
-
-	current_research_node = null
-	return TRUE
-
-/// Add work to current research - returns TRUE if research completed
-/datum/resurgence_research_manager/proc/add_research_work(amount, mob/user)
-	if(!current_research_node)
-		return FALSE
-
-	var/datum/resurgence_research_node/node = all_nodes[current_research_node]
-	if(!node)
-		return FALSE
-
-	// Add work
-	if(!research_progress[current_research_node])
-		research_progress[current_research_node] = 0
-	research_progress[current_research_node] += amount
+	research_progress[node_id] += amount
 
 	// Check if complete
-	if(research_progress[current_research_node] >= node.total_work)
-		complete_research(current_research_node)
+	if(research_progress[node_id] >= node.total_work)
+		complete_research(node_id)
 		return TRUE
 
 	return FALSE
@@ -156,8 +124,9 @@ GLOBAL_DATUM_INIT(resurgence_research, /datum/resurgence_research_manager, new)
 
 	// Clear progress
 	research_progress[node_id] = 0
-	if(current_research_node == node_id)
-		current_research_node = null
+
+	// Update objectives (for research-gated objectives)
+	update_all_objectives()
 
 	// Announce to all players
 	for(var/mob/living/carbon/human/player in GLOB.player_list)

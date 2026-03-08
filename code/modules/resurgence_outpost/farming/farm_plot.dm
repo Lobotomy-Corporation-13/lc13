@@ -75,7 +75,13 @@
 
 	// Advance age (apply global growth modifier from events)
 	// Higher modifier = faster growth
-	age += GLOB.resurgence_growth_modifier
+	var/growth_amount = GLOB.resurgence_growth_modifier
+	// Check for UV light growth boost (range 5, 2.5x multiplier — see uv_light.dm)
+	for(var/obj/structure/uv_light/light in range(5, src))
+		if(light.consume_fuel())
+			growth_amount *= 2.5
+			break // Only one UV light can boost a plot
+	age += growth_amount
 
 	// Check if ready to harvest (based on maturation * growth multiplier)
 	if(age >= myseed.maturation * FARM_GROWTH_MULTIPLIER)
@@ -336,6 +342,11 @@
 			. += span_warning("Needs water to grow!")
 	else
 		. += span_notice("Ready for planting.")
+	// Check for nearby active UV light
+	for(var/obj/structure/uv_light/light in range(5, src))
+		if(light.active)
+			. += span_notice("A nearby UV light is boosting growth.")
+			break
 	if(parent_zone)
 		. += span_notice("Part of farm zone: [parent_zone.name]")
 

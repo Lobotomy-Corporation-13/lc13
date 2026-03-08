@@ -28,6 +28,8 @@
 
 	/// Whether someone is currently researching
 	var/busy = FALSE
+	/// The node ID this station is currently targeting
+	var/target_node_id = null
 	/// Whether this station requires a workshop for full efficiency
 	var/requires_workshop = TRUE
 	/// Time multiplier when outside a workshop
@@ -114,15 +116,14 @@
 	data["reduced_efficiency"] = is_at_reduced_efficiency()
 	data["outdoor_penalty"] = outdoor_penalty
 
-	// Current research in progress
-	var/current_node_id = GLOB.resurgence_research.current_research_node
-	data["has_research_in_progress"] = !!current_node_id
+	// Current research target for this station
+	data["has_research_in_progress"] = !!target_node_id
 
-	if(current_node_id)
-		var/datum/resurgence_research_node/current = GLOB.resurgence_research.all_nodes[current_node_id]
+	if(target_node_id)
+		var/datum/resurgence_research_node/current = GLOB.resurgence_research.all_nodes[target_node_id]
 		if(current)
-			var/current_progress = GLOB.resurgence_research.get_progress(current_node_id)
-			data["current_research_id"] = current_node_id
+			var/current_progress = GLOB.resurgence_research.get_progress(target_node_id)
+			data["current_research_id"] = target_node_id
 			data["current_research_name"] = current.name
 			data["current_work"] = current_progress
 			data["total_work"] = current.total_work
@@ -156,7 +157,8 @@
 			"y" = node.ui_y,
 			"is_researched" = is_researched,
 			"can_research" = can_research,
-			"can_afford" = (current_faith >= RESEARCH_FAITH_PER_SESSION)
+			"can_afford" = (current_faith >= RESEARCH_FAITH_PER_SESSION),
+			"branch_types" = node.branch_types
 		))
 	data["nodes"] = nodes
 
@@ -183,17 +185,27 @@
 			if(!node_id)
 				return FALSE
 
-			if(GLOB.resurgence_research.start_research(node_id, usr))
-				return TRUE
-			return FALSE
+			if(!GLOB.resurgence_research.can_research(node_id))
+				to_chat(usr, span_warning("Cannot research this node!"))
+				return FALSE
+
+			var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[node_id]
+			if(!node)
+				return FALSE
+
+			target_node_id = node_id
+			if(!GLOB.resurgence_research.research_progress[node_id])
+				GLOB.resurgence_research.research_progress[node_id] = 0
+			to_chat(usr, span_notice("This station is now targeting [node.name]."))
+			return TRUE
 
 		if("continue_research")
 			if(busy)
 				to_chat(usr, span_warning("Already researching!"))
 				return FALSE
 
-			if(!GLOB.resurgence_research.current_research_node)
-				to_chat(usr, span_warning("No research in progress!"))
+			if(!target_node_id)
+				to_chat(usr, span_warning("No research target set!"))
 				return FALSE
 
 			do_research_work(usr)
@@ -204,7 +216,11 @@
 				to_chat(usr, span_warning("Wait for current session to finish!"))
 				return FALSE
 
-			GLOB.resurgence_research.cancel_research(usr)
+			if(target_node_id)
+				var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[target_node_id]
+				if(node)
+					to_chat(usr, span_notice("Stopped targeting [node.name]. Progress saved."))
+				target_node_id = null
 			return TRUE
 
 	return FALSE
@@ -214,8 +230,8 @@
 	if(busy)
 		return
 
-	if(!GLOB.resurgence_research.current_research_node)
-		to_chat(user, span_warning("No research selected!"))
+	if(!target_node_id)
+		to_chat(user, span_warning("No research target set!"))
 		return
 
 	// Check if user has a resurgence core
@@ -231,14 +247,20 @@
 	busy = TRUE
 
 	// Research loop - continues until complete, out of faith, or interrupted
-	while(GLOB.resurgence_research.current_research_node)
+	while(target_node_id)
+		// Check if already completed by another station
+		if(GLOB.resurgence_research.is_researched(target_node_id))
+			to_chat(user, span_notice("This research has already been completed!"))
+			target_node_id = null
+			break
+
 		// Check faith
 		if(core.faith < RESEARCH_FAITH_PER_SESSION)
 			to_chat(user, span_warning("Not enough faith! Need [RESEARCH_FAITH_PER_SESSION] faith per session."))
 			break
 
 		// Get current node info for messages
-		var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[GLOB.resurgence_research.current_research_node]
+		var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[target_node_id]
 		if(!node)
 			break
 
@@ -258,10 +280,11 @@
 		core.award_xp("analysis", RESEARCH_XP_PER_SESSION)
 
 		// Add work
-		var/completed = GLOB.resurgence_research.add_research_work(work_amount, user)
+		var/completed = GLOB.resurgence_research.add_research_work(target_node_id, work_amount, user)
 
 		if(completed)
 			playsound(src, 'sound/effects/magic.ogg', 50, TRUE)
+			target_node_id = null
 			break
 		else
 			// Play work sound
@@ -288,11 +311,11 @@
 	var/total_count = length(GLOB.resurgence_research.all_nodes)
 	. += span_notice("[researched_count]/[total_count] technologies researched.")
 
-	if(GLOB.resurgence_research.current_research_node)
-		var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[GLOB.resurgence_research.current_research_node]
+	if(target_node_id)
+		var/datum/resurgence_research_node/node = GLOB.resurgence_research.all_nodes[target_node_id]
 		if(node)
 			var/progress = GLOB.resurgence_research.get_progress(node.id)
-			. += span_notice("Currently researching: [node.name] ([progress]/[node.total_work] work)")
+			. += span_notice("Targeting: [node.name] ([progress]/[node.total_work] work)")
 
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user

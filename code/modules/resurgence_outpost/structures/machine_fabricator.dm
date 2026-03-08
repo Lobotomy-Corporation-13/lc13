@@ -4,12 +4,13 @@
  * A specialized pod for resurgence machines that can:
  * - Display health, faith, and faith events for occupants
  * - Accept food to extract protein for storage
- * - Revive dead machines at the cost of 50 protein
+ * - Accept metal sheets for revival material
+ * - Revive dead machines at the cost of 50 metal
  * - Purge chemicals at the cost of 5 faith
  */
 
-/// Cost in protein to revive a dead machine
-#define FABRICATOR_REVIVE_COST 50
+/// Cost in metal sheets to revive a dead machine
+#define FABRICATOR_METAL_COST 50
 /// Cost in faith to purge chemicals
 #define FABRICATOR_PURGE_COST 5
 /// Animation duration for opening/closing
@@ -37,6 +38,10 @@
 	var/stored_protein = 0
 	/// Maximum protein storage
 	var/max_protein = 200
+	/// Stored metal sheets for revival
+	var/stored_metal = 0
+	/// Maximum metal storage
+	var/max_metal = 50
 	/// Whether an animation is currently playing
 	var/animating = FALSE
 	/// List of stored bodyparts for transplanting
@@ -62,6 +67,7 @@
 /obj/structure/resurgence_fabricator/examine(mob/user)
 	. = ..()
 	. += span_notice("Stored protein: [stored_protein]/[max_protein]")
+	. += span_notice("Stored metal: [stored_metal]/[max_metal]")
 	if(state_open)
 		. += span_notice("Alt-click to close. Click to enter.")
 	else
@@ -120,11 +126,16 @@
 	var/mob/living/carbon/human/H = target
 	enter_pod(H)
 
-/// Feed food to the fabricator to add protein
+/// Feed food to the fabricator to add protein, or metal sheets for revival
 /obj/structure/resurgence_fabricator/attackby(obj/item/I, mob/living/user, params)
 	// Accept food items
 	if(istype(I, /obj/item/food))
 		feed_protein(I, user)
+		return
+
+	// Accept metal sheets
+	if(istype(I, /obj/item/stack/sheet/metal))
+		feed_metal(I, user)
 		return
 
 	// Accept bodyparts for storage
@@ -325,6 +336,21 @@
 	playsound(src, 'sound/machines/closet_open.ogg', 50, TRUE)
 	qdel(F)
 
+/// Feed metal sheets to the fabricator for revival material
+/obj/structure/resurgence_fabricator/proc/feed_metal(obj/item/stack/sheet/metal/M, mob/user)
+	if(stored_metal >= max_metal)
+		to_chat(user, span_warning("The fabricator's metal storage is full."))
+		return
+
+	var/space = max_metal - stored_metal
+	var/to_add = min(M.amount, space)
+
+	M.use(to_add)
+	stored_metal += to_add
+
+	to_chat(user, span_notice("You insert [to_add] metal sheet\s into the fabricator."))
+	playsound(src, 'sound/machines/closet_open.ogg', 50, TRUE)
+
 /obj/structure/resurgence_fabricator/proc/enter_pod(mob/living/carbon/human/M)
 	if(!state_open || occupant || animating)
 		return
@@ -409,7 +435,9 @@
 	data["animating"] = animating
 	data["stored_protein"] = stored_protein
 	data["max_protein"] = max_protein
-	data["revive_cost"] = FABRICATOR_REVIVE_COST
+	data["stored_metal"] = stored_metal
+	data["max_metal"] = max_metal
+	data["metal_cost"] = FABRICATOR_METAL_COST
 	data["purge_cost"] = FABRICATOR_PURGE_COST
 
 	data["has_occupant"] = !!occupant
@@ -490,7 +518,7 @@
 		data["stomach_reagents"] = stomach_reagents
 
 		// Can we revive?
-		data["can_revive"] = (occupant.stat == DEAD && stored_protein >= FABRICATOR_REVIVE_COST && data["is_resurgence_machine"])
+		data["can_revive"] = (occupant.stat == DEAD && stored_metal >= FABRICATOR_METAL_COST && data["is_resurgence_machine"])
 		// Can we purge?
 		var/has_reagents = (length(reagents) > 0 || length(stomach_reagents) > 0)
 		data["can_purge"] = has_reagents && data["is_resurgence_machine"]
@@ -595,21 +623,40 @@
 		to_chat(user, span_warning("This fabricator can only revive resurgence machines."))
 		return
 
-	if(stored_protein < FABRICATOR_REVIVE_COST)
-		to_chat(user, span_warning("Insufficient protein. Need [FABRICATOR_REVIVE_COST], have [stored_protein]."))
+	if(stored_metal < FABRICATOR_METAL_COST)
+		to_chat(user, span_warning("Insufficient metal. Need [FABRICATOR_METAL_COST], have [stored_metal]."))
 		return
 
-	// Consume protein
-	stored_protein -= FABRICATOR_REVIVE_COST
+	// Consume metal
+	stored_metal -= FABRICATOR_METAL_COST
 
-	// Revive the occupant
+	// Save the core before revival to preserve traits, stats, and passions
+	// revive() with admin_revive calls regenerate_organs() which replaces the core
+	var/obj/item/organ/resurgence_core/saved_core = occupant.getorganslot(ORGAN_SLOT_HEART)
+	if(saved_core)
+		saved_core.Remove(occupant, TRUE)
+
+	// Revive the occupant (will create a new blank core via regenerate_organs)
 	if(occupant.revive(full_heal = TRUE, admin_revive = TRUE))
 		occupant.grab_ghost(force = TRUE) // Even suicides
 
-		// Get their core and set faith to 25
-		var/obj/item/organ/resurgence_core/core = occupant.getorganslot(ORGAN_SLOT_HEART)
-		if(core)
-			core.faith = 25
+		// Remove the blank core that regenerate_organs created
+		var/obj/item/organ/resurgence_core/blank_core = occupant.getorganslot(ORGAN_SLOT_HEART)
+		if(blank_core && blank_core != saved_core)
+			blank_core.Remove(occupant, TRUE)
+			qdel(blank_core)
+
+		// Reinsert the original core with all traits, stats, and passions preserved
+		if(saved_core)
+			saved_core.Insert(occupant, TRUE, FALSE)
+			saved_core.faith = 25
+
+			// Re-apply trait effects that modify the mob directly
+			// Call remove() first to clean up stale effects (e.g., bodypart reductions),
+			// then apply() to reapply cleanly to current bodyparts
+			for(var/datum/resurgence_trait/T in saved_core.applied_traits)
+				T.remove()
+				T.apply(occupant)
 
 			// Add negative faith event for 5 minutes
 			var/datum/faith_event/revival_trauma = new(
@@ -618,7 +665,7 @@
 				5 MINUTES,
 				"revival_trauma"
 			)
-			core.add_faith_event("revival_trauma", revival_trauma)
+			saved_core.add_faith_event("revival_trauma", revival_trauma)
 
 		visible_message(span_notice("[src] hums loudly as it reconstructs [occupant]!"))
 		playsound(src, 'sound/machines/ping.ogg', 50, TRUE)
@@ -627,7 +674,10 @@
 		log_game("[key_name(user)] revived [key_name(occupant)] using the resurgence fabricator.")
 	else
 		// Refund if revive failed
-		stored_protein += FABRICATOR_REVIVE_COST
+		stored_metal += FABRICATOR_METAL_COST
+		// Reinsert saved core even on failure
+		if(saved_core)
+			saved_core.Insert(occupant, TRUE, FALSE)
 		to_chat(user, span_warning("Revival failed. The occupant cannot be revived."))
 
 /// Attempt to purge all chemicals from occupant
@@ -687,7 +737,7 @@
 /datum/faith_event/revival_trauma
 	category = "revival_trauma"
 
-#undef FABRICATOR_REVIVE_COST
+#undef FABRICATOR_METAL_COST
 #undef FABRICATOR_PURGE_COST
 #undef FABRICATOR_ANIM_TIME
 #undef FABRICATOR_LIMB_ATTACH_TIME

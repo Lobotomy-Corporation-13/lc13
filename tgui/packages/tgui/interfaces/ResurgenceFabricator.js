@@ -11,7 +11,9 @@ export const ResurgenceFabricator = (props, context) => {
     animating,
     stored_protein,
     max_protein,
-    revive_cost,
+    stored_metal,
+    max_metal,
+    metal_cost,
     purge_cost,
     has_occupant,
     is_resurgence_machine,
@@ -74,13 +76,25 @@ export const ResurgenceFabricator = (props, context) => {
                     <Box
                       inline
                       color={
-                        stored_protein >= revive_cost
+                        stored_protein > 0
                           ? "good"
-                          : stored_protein > 0
+                          : "bad"
+                      }>
+                      {stored_protein}/{max_protein}
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box inline bold mr={1}>Metal:</Box>
+                    <Box
+                      inline
+                      color={
+                        stored_metal >= metal_cost
+                          ? "good"
+                          : stored_metal > 0
                             ? "average"
                             : "bad"
                       }>
-                      {stored_protein}/{max_protein}
+                      {stored_metal}/{max_metal}
                     </Box>
                   </Box>
                 </Flex.Item>
@@ -245,12 +259,12 @@ export const ResurgenceFabricator = (props, context) => {
                       tooltip={
                         occupant_stat !== "Dead"
                           ? "Occupant is not dead"
-                          : stored_protein < revive_cost
-                            ? `Need ${revive_cost} protein`
-                            : `Revive (costs ${revive_cost} protein)`
+                          : stored_metal < metal_cost
+                            ? `Need ${metal_cost} metal`
+                            : "Revive occupant"
                       }
                       onClick={() => act('revive')}>
-                      Revive ({revive_cost} Protein)
+                      Revive ({metal_cost} Metal)
                     </Button>
                   </Stack.Item>
                   <Stack.Item grow>
@@ -368,7 +382,7 @@ export const ResurgenceFabricator = (props, context) => {
             <Section>
               <Box color="label" fontSize="11px">
                 <Icon name="info-circle" mr={1} />
-                Feed protein-rich food to the fabricator to charge it.
+                Feed protein-rich food and metal sheets to the fabricator.
                 Revival sets faith to 25 and causes temporary existential dread.
               </Box>
             </Section>

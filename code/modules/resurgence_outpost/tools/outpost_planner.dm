@@ -116,7 +116,10 @@
 		"Shower Frame" = /obj/structure/resurgence_blueprint/shower,
 		"Resources Recorder" = /obj/structure/resurgence_blueprint/resources_recorder,
 		"Comms Console" = /obj/structure/resurgence_blueprint/comms_console,
-		"Machine Fabricator" = /obj/structure/resurgence_blueprint/machine_fabricator
+		"Machine Fabricator" = /obj/structure/resurgence_blueprint/machine_fabricator,
+		"Ore Refiner" = /obj/structure/resurgence_blueprint/ore_refiner,
+		"Grid Crafting Station" = /obj/structure/resurgence_blueprint/grid_crafting_station,
+		"Expedition Planning Console" = /obj/structure/resurgence_blueprint/world_map_console
 	)
 
 	// Furniture category - beds, chairs, tables, seating

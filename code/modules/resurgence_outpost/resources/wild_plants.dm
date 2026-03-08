@@ -220,7 +220,8 @@ GLOBAL_LIST_EMPTY(wild_plant_claimed_seeds)
 		yield += 1
 
 	for(var/i in 1 to yield)
-		new product_type(get_turf(src), myseed)
+		var/obj/item/dropped_produce = new product_type(get_turf(src), myseed)
+		dropped_produce.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Apply faith drain
 	apply_work_faith_drain(user, 5)

@@ -47,9 +47,16 @@
 		return FALSE  // Too big
 	resurgence_beauty = total_resurgence_beauty / areasize
 
-/// Outdoor/undesignated outpost area
+/// Outdoor/undesignated outpost area - procedurally generated wilderness
 /area/resurgence_outpost/outdoors
 	name = "Outskirts"
+	outdoors = TRUE
+	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
+	map_generator = /datum/map_generator/resurgence_generator
+
+/// Central settlement area - static layout, excluded from terrain generation and ruin seeding
+/area/resurgence_outpost/settlement
+	name = "Settlement"
 	outdoors = TRUE
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
 

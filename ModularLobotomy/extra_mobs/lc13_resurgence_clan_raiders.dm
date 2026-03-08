@@ -698,6 +698,112 @@ GLOBAL_LIST_EMPTY(raid_dismembering_bodies)
 		)
 		say(pick(tinkerer_lines))
 
+// ==================== MILITIA VARIANTS ====================
+// Weaker early-game raiders used in raids before 45 minutes.
+// Half the HP, reduced damage, no special abilities.
+
+/// Militia Scout - weaker scout for early raids
+/mob/living/simple_animal/hostile/clan/raider/scout/militia
+	name = "Militia Scout"
+	desc = "A hastily assembled scout from the Insurgence Clan. Its construction is crude and unfinished."
+	maxHealth = 250
+	health = 250
+	melee_damage_lower = 3
+	melee_damage_upper = 5
+	max_stolen = 3
+
+/// Militia scouts cannot dismember corpses — override to no-op
+/mob/living/simple_animal/hostile/clan/raider/scout/militia/start_dismemberment(mob/living/carbon/human/victim)
+	return
+
+/// Militia Pillager - weaker pillager for early raids
+/mob/living/simple_animal/hostile/clan/raider/scout/pillager/militia
+	name = "Militia Pillager"
+	desc = "A crude scavenging unit thrown together from spare parts. It focuses on grabbing whatever it can."
+	maxHealth = 250
+	health = 250
+	melee_damage_lower = 3
+	melee_damage_upper = 5
+	max_stolen = 4
+
+/// Militia Defender - weaker defender for early raids, no devastating strike
+/mob/living/simple_animal/hostile/clan/raider/defender/militia
+	name = "Militia Defender"
+	desc = "A bulky but poorly armored unit. It lacks the power systems for devastating attacks."
+	health = 600
+	maxHealth = 600
+	melee_damage_lower = 10
+	melee_damage_upper = 15
+	max_stolen = 5
+
+/// Militia defenders have no devastating strike — override to no-op
+/mob/living/simple_animal/hostile/clan/raider/defender/militia/devastating_strike(mob/living/carbon/human/victim)
+	return
+
+// ==================== VETERAN VARIANTS ====================
+// Stronger raiders for mid-late game (60-90 minutes).
+// Higher HP and damage, full abilities enabled.
+
+/// Veteran Scout - tougher scout for veteran raids
+/mob/living/simple_animal/hostile/clan/raider/scout/veteran
+	name = "Veteran Scout"
+	desc = "A battle-hardened scout from the Insurgence Clan. Its movements are precise and practiced."
+	maxHealth = 750
+	health = 750
+	melee_damage_lower = 8
+	melee_damage_upper = 12
+
+/// Veteran Pillager - tougher pillager for veteran raids
+/mob/living/simple_animal/hostile/clan/raider/scout/pillager/veteran
+	name = "Veteran Pillager"
+	desc = "An experienced scavenger unit. It knows exactly where the valuables are."
+	maxHealth = 750
+	health = 750
+	melee_damage_lower = 8
+	melee_damage_upper = 12
+	max_stolen = 9
+
+/// Veteran Defender - tougher defender for veteran raids
+/mob/living/simple_animal/hostile/clan/raider/defender/veteran
+	name = "Veteran Defender"
+	desc = "A seasoned heavy unit with reinforced plating and brutal striking power."
+	health = 1800
+	maxHealth = 1800
+	melee_damage_lower = 30
+	melee_damage_upper = 40
+
+// ==================== ELITE VARIANTS ====================
+// Endgame raiders for 90+ minutes.
+// Highest HP and damage. Full abilities.
+
+/// Elite Scout - endgame scout
+/mob/living/simple_animal/hostile/clan/raider/scout/elite
+	name = "Elite Scout"
+	desc = "A masterwork assault unit from the Insurgence Clan. Every component has been optimized for lethality."
+	maxHealth = 1000
+	health = 1000
+	melee_damage_lower = 12
+	melee_damage_upper = 18
+
+/// Elite Pillager - endgame pillager
+/mob/living/simple_animal/hostile/clan/raider/scout/pillager/elite
+	name = "Elite Pillager"
+	desc = "A devastatingly efficient looting machine. It strips entire rooms bare in seconds."
+	maxHealth = 1000
+	health = 1000
+	melee_damage_lower = 12
+	melee_damage_upper = 18
+	max_stolen = 11
+
+/// Elite Defender - endgame defender
+/mob/living/simple_animal/hostile/clan/raider/defender/elite
+	name = "Elite Defender"
+	desc = "The Tinkerer's masterpiece. Layers of armor plate and overcharged servos make it a walking siege engine."
+	health = 2500
+	maxHealth = 2500
+	melee_damage_lower = 40
+	melee_damage_upper = 55
+
 #undef RAIDER_MIN_ITEM_VALUE
 #undef RAIDER_MAX_STOLEN_ITEMS
 #undef RAIDER_TRAMPLE_DAMAGE

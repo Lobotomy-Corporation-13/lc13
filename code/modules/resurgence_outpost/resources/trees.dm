@@ -164,11 +164,13 @@
 	playsound(src, 'sound/effects/meteorimpact.ogg', 80, TRUE)
 
 	// Drop wood
-	new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
+	var/obj/item/stack/dropped_wood = new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
+	dropped_wood.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Drop vines (roughly 1 vine per 5 wood)
 	var/vine_yield = max(1, round(yield / 5))
-	new /obj/item/stack/resurgence_vines(get_turf(src), vine_yield)
+	var/obj/item/stack/dropped_vines = new /obj/item/stack/resurgence_vines(get_turf(src), vine_yield)
+	dropped_vines.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Create stump that will regrow
 	var/obj/structure/resurgence_tree_stump/stump = new(loc)
@@ -369,7 +371,8 @@
 
 	// Drop wood
 	if(yield > 0)
-		new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
+		var/obj/item/stack/dropped_wood = new /obj/item/stack/sheet/mineral/wood(get_turf(src), yield)
+		dropped_wood.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	qdel(src)
 

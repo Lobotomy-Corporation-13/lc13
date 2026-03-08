@@ -60,7 +60,7 @@ Machine Civilian - Base role for Resurgence Clan gamemode
 		var/datum/faith_event/newcomer/event = new(
 			"Recently awakened - finding your place.",
 			1.5, // +1.5 per tick to offset homeless penalty and give buffer
-			10 MINUTES,
+			15 MINUTES,
 			"newcomer"
 		)
 		core.add_faith_event("newcomer", event)

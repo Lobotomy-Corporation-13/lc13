@@ -17,12 +17,10 @@
 	if(!isatom(parent) || isarea(parent))
 		return COMPONENT_INCOMPATIBLE
 
-	// Don't attach beauty to stacks - they merge and cause accumulation bugs
-	if(istype(parent, /obj/item/stack))
-		return COMPONENT_INCOMPATIBLE
-
 	beauty = beauty_amount
 
+	// Stacks with beauty won't accumulate on merge - merging qdels one stack,
+	// and the remaining stack keeps its original component unchanged
 	if(ismovable(parent))
 		RegisterSignal(parent, COMSIG_ENTER_AREA, PROC_REF(enter_area))
 		RegisterSignal(parent, COMSIG_EXIT_AREA, PROC_REF(exit_area))

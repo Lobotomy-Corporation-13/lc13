@@ -28,6 +28,7 @@
 		"Set Insurgence Rep to 50",
 		"Toggle Raid System",
 		"Show Debug Info",
+		"Show Current Tier",
 		"Spawn Test Raider"
 	)
 
@@ -58,6 +59,8 @@
 			toggle_raid_system(user)
 		if("Show Debug Info")
 			show_debug_info(user)
+		if("Show Current Tier")
+			show_current_tier(user)
 		if("Spawn Test Raider")
 			spawn_test_raider(user)
 
@@ -139,6 +142,25 @@
 			room_count++
 	to_chat(user, span_notice("Resurgence rooms: [room_count]"))
 
+/obj/item/raid_debug_tool/proc/show_current_tier(mob/user)
+	// Create a temporary raid datum to check tier
+	var/datum/resurgence_raid/temp = new()
+	var/tier = temp.get_current_raid_tier()
+	qdel(temp)
+	var/tier_name
+	switch(tier)
+		if(RAID_TIER_MILITIA)
+			tier_name = "Tier 1 - Militia"
+		if(RAID_TIER_REGULAR)
+			tier_name = "Tier 2 - Regular"
+		if(RAID_TIER_VETERAN)
+			tier_name = "Tier 3 - Veteran"
+		if(RAID_TIER_ELITE)
+			tier_name = "Tier 4 - Elite"
+	to_chat(user, span_notice("Current Raid Tier: [tier_name]"))
+	to_chat(user, span_notice("Round time: [round(world.time / (1 MINUTES))] minutes"))
+	to_chat(user, span_notice("Regular at [RAID_REGULAR_THRESHOLD / (1 MINUTES)] min, Veteran at [RAID_VETERAN_THRESHOLD / (1 MINUTES)] min, Elite at [RAID_ELITE_THRESHOLD / (1 MINUTES)] min"))
+
 /obj/item/raid_debug_tool/proc/spawn_test_raider(mob/user)
 	var/turf/T = get_turf(user)
 	if(!T)
@@ -184,7 +206,8 @@
 		"Trigger Overwhelming Raid",
 		"End All Raids",
 		"Toggle Raid System",
-		"Show Debug Info"
+		"Show Debug Info",
+		"Show Current Tier"
 	)
 
 	var/choice = input(usr, "Select raid action", "Raid Debug") as null|anything in options
@@ -211,3 +234,9 @@
 		if("Show Debug Info")
 			var/list/info = SSresurgence_raids.get_debug_info()
 			to_chat(usr, span_notice("Raids enabled: [info["raids_enabled"]], Active: [info["active_raids"]], Cooldown: [info["cooldown_remaining"]/10]s"))
+		if("Show Current Tier")
+			var/datum/resurgence_raid/temp = new()
+			var/tier = temp.get_current_raid_tier()
+			qdel(temp)
+			var/tier_names = list("Militia", "Regular", "Veteran", "Elite")
+			to_chat(usr, span_notice("Current Raid Tier: [tier] - [tier_names[tier]] (Round: [round(world.time / (1 MINUTES))] min)"))

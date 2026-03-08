@@ -478,11 +478,6 @@
 		to_chat(user, span_warning("[C] already has tier [current_tier] plating attached!"))
 		return null
 
-	// Check if we need a previous tier first
-	if(P.plating_tier > 1 && current_tier != (P.plating_tier - 1))
-		to_chat(user, span_warning("[C] needs tier [P.plating_tier - 1] plating before you can attach tier [P.plating_tier]!"))
-		return null
-
 	// Apply the plating
 	C.armor = list(RED_DAMAGE = P.armor_value, WHITE_DAMAGE = P.armor_value, BLACK_DAMAGE = P.armor_value, PALE_DAMAGE = P.armor_value)
 

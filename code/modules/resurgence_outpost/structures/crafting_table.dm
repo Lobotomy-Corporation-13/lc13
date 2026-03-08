@@ -1663,7 +1663,7 @@
 	target_copies = 1
 	completed_copies = 0
 
-/// Cancel the current craft (materials for current copy are lost)
+/// Cancel the current craft and refund materials for the current unfinished copy
 /obj/structure/resurgence_crafting_table/proc/cancel_craft(mob/user)
 	if(busy)
 		to_chat(user, span_warning("Someone is currently working. Wait for them to stop first."))
@@ -1673,10 +1673,16 @@
 		to_chat(user, span_warning("There's nothing being crafted here."))
 		return FALSE
 
+	// Refund materials for the current unfinished copy
+	if(current_recipe_data)
+		var/list/materials = current_recipe_data["materials"]
+		if(materials)
+			refund_materials(materials)
+
 	if(completed_copies > 0)
-		to_chat(user, span_warning("You cancel the [current_recipe_name]. [completed_copies] copies were completed. Materials for the current copy are lost."))
+		to_chat(user, span_warning("You cancel the [current_recipe_name]. [completed_copies] copies were completed. Materials for the current copy have been returned."))
 	else
-		to_chat(user, span_warning("You cancel the [current_recipe_name]. The materials are lost."))
+		to_chat(user, span_warning("You cancel the [current_recipe_name]. Materials have been returned."))
 	playsound(src, 'sound/items/deconstruct.ogg', 30, TRUE)
 
 	reset_craft_state()
@@ -1684,6 +1690,18 @@
 
 	SStgui.update_uis(src)
 	return TRUE
+
+/// Refund materials by spawning them at the crafting table
+/obj/structure/resurgence_crafting_table/proc/refund_materials(list/materials)
+	for(var/material_type in materials)
+		var/amount = materials[material_type]
+		if(amount <= 0)
+			continue
+		if(ispath(material_type, /obj/item/stack))
+			new material_type(drop_location(), amount)
+		else
+			for(var/i in 1 to amount)
+				new material_type(drop_location())
 
 /// Called when crafting starts - override for visual effects (e.g., forge lights up)
 /obj/structure/resurgence_crafting_table/proc/on_craft_start()

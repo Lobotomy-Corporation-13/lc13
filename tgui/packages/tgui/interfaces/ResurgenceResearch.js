@@ -4,6 +4,17 @@ import {
 } from '../components';
 import { Window } from '../layouts';
 
+const BRANCHES = [
+  { key: null, label: 'All', icon: 'list' },
+  { key: 'production', label: 'Production', icon: 'industry' },
+  { key: 'armor', label: 'Armor', icon: 'shield-alt' },
+  { key: 'weapons', label: 'Weapons', icon: 'crosshairs' },
+  { key: 'clothing', label: 'Clothing', icon: 'tshirt' },
+  { key: 'food', label: 'Food', icon: 'utensils' },
+  { key: 'decor', label: 'Decor', icon: 'paint-brush' },
+  { key: 'utility', label: 'Utility', icon: 'wrench' },
+];
+
 export const ResurgenceResearch = (props, context) => {
   const { act, data } = useBackend(context);
   const {
@@ -27,6 +38,12 @@ export const ResurgenceResearch = (props, context) => {
   const [selectedNode, setSelectedNode] = useLocalState(
     context,
     'selectedNode',
+    null
+  );
+
+  const [branchFilter, setBranchFilter] = useLocalState(
+    context,
+    'branchFilter',
     null
   );
 
@@ -84,6 +101,17 @@ export const ResurgenceResearch = (props, context) => {
     }
   }
 
+  // Branch filter: dim nodes not in selected branch
+  const filteredOut = new Set();
+  if (branchFilter) {
+    for (const node of nodes) {
+      const types = node.branch_types || [];
+      if (!types.includes(branchFilter)) {
+        filteredOut.add(node.id);
+      }
+    }
+  }
+
   return (
     <Window
       width={920}
@@ -113,6 +141,24 @@ export const ResurgenceResearch = (props, context) => {
                 </Flex.Item>
               </Flex>
             </Section>
+          </Stack.Item>
+
+          {/* Branch Filter */}
+          <Stack.Item>
+            <Flex wrap="wrap" align="center" ml={1}>
+              {BRANCHES.map(b => (
+                <Flex.Item key={b.label} mr={0.5} mb={0.5}>
+                  <Button
+                    icon={b.icon}
+                    selected={branchFilter === b.key}
+                    content={b.label}
+                    onClick={() => setBranchFilter(
+                      branchFilter === b.key ? null : b.key
+                    )}
+                  />
+                </Flex.Item>
+              ))}
+            </Flex>
           </Stack.Item>
 
           {/* Research In Progress */}
@@ -202,6 +248,10 @@ export const ResurgenceResearch = (props, context) => {
                       const bothResearched = node.is_researched
                         && prereq.is_researched;
 
+                      const eitherFiltered
+                        = filteredOut.has(node.id)
+                        || filteredOut.has(prereqId);
+
                       return (
                         <PrerequisiteLine
                           key={lineKey}
@@ -212,6 +262,7 @@ export const ResurgenceResearch = (props, context) => {
                           isResearched={bothResearched}
                           isHighlighted={isHighlighted}
                           hasSelection={!!selectedNode}
+                          isFilteredOut={eitherFiltered}
                         />
                       );
                     })
@@ -229,6 +280,7 @@ export const ResurgenceResearch = (props, context) => {
                     isHighlighted={highlightedNodes.has(node.id)}
                     hasSelection={!!selectedNode}
                     isCurrentResearch={current_research_id === node.id}
+                    isFilteredOut={filteredOut.has(node.id)}
                     onSelect={() => setSelectedNode(
                       selectedNode === node.id ? null : node.id
                     )}
@@ -393,6 +445,7 @@ const PrerequisiteLine = props => {
     isResearched,
     isHighlighted,
     hasSelection,
+    isFilteredOut,
   } = props;
 
   // Calculate control points for smooth S-curve
@@ -401,7 +454,8 @@ const PrerequisiteLine = props => {
   // Determine line style based on state
   let strokeColor = '#444';
   let strokeWidth = 2;
-  let opacity = hasSelection ? 0.2 : 0.6;
+  let opacity = isFilteredOut ? 0.15
+    : hasSelection ? 0.2 : 0.6;
 
   if (isHighlighted) {
     strokeColor = isResearched ? '#4a4' : '#fa0';
@@ -466,6 +520,7 @@ const ResearchNode = props => {
     isHighlighted,
     hasSelection,
     isCurrentResearch,
+    isFilteredOut,
     onSelect,
   } = props;
 
@@ -502,7 +557,8 @@ const ResearchNode = props => {
   }
 
   // Dim non-highlighted nodes when something is selected
-  const dimmed = hasSelection && !isHighlighted && !isSelected;
+  const dimmed = isFilteredOut
+    || (hasSelection && !isHighlighted && !isSelected);
 
   // Calculate progress percentage for display
   const progressPct = node.total_work > 0

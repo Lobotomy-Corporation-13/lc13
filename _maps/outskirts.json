@@ -9,6 +9,7 @@
 		{
 			"Station": true,
 			"Resurgence": true,
+			"Resurgence Ruins": true,
 			"Baseturf": "/turf/open/floor/plating/ironsand"
 		}
 	],

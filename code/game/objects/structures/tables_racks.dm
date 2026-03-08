@@ -240,7 +240,11 @@
 				var/datum/material/M = i
 				new M.sheet_type(T, FLOOR(custom_materials[M] / MINERAL_MATERIAL_AMOUNT, 1))
 		if(!wrench_disassembly)
-			new frame(T)
+			var/obj/structure/table_frame/new_frame = new frame(T)
+			// Transfer resurgence beauty component to the frame
+			var/datum/component/resurgence_beauty/beauty_comp = GetComponent(/datum/component/resurgence_beauty)
+			if(beauty_comp)
+				new_frame.AddComponent(/datum/component/resurgence_beauty, beauty_comp.beauty)
 		else
 			new framestack(T, framestackamount)
 	qdel(src)

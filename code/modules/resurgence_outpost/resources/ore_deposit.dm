@@ -311,7 +311,8 @@ GLOBAL_LIST_EMPTY(resurgence_spawned_ore_types)
 
 	// Drop ore
 	if(ore_drop_type && final_amount > 0)
-		new ore_drop_type(get_turf(src), final_amount)
+		var/obj/item/stack/dropped_ore = new ore_drop_type(get_turf(src), final_amount)
+		dropped_ore.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Deplete the deposit
 	deplete()

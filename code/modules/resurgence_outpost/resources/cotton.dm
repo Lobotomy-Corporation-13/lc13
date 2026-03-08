@@ -194,7 +194,8 @@
 		yield = round(yield * get_trait_harvest_modifier(user))
 
 	// Drop cotton
-	new /obj/item/stack/sheet/cotton(get_turf(src), yield)
+	var/obj/item/stack/sheet/cotton/dropped_cotton = new(get_turf(src), yield)
+	dropped_cotton.AddComponent(/datum/component/resurgence_beauty, -1)
 
 	// Start regrowth from seedling stage
 	growth_stage = COTTON_STAGE_SEEDLING

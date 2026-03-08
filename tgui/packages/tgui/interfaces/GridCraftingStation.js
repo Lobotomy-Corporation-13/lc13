@@ -1,6 +1,7 @@
 import { useBackend, useLocalState } from '../backend';
 import {
-  Box, Button, Flex, Icon, Section, Stack,
+  Box, Button, Flex, Icon, ProgressBar,
+  Section, Stack,
 } from '../components';
 import { Window } from '../layouts';
 
@@ -23,29 +24,32 @@ export const GridCraftingStation = (props, context) => {
     debug_mode,
     highlighted_item_id,
     crafted_item_ids = [],
+    shuffle_counter = 0,
+    shuffle_threshold = 10,
   } = data;
 
-  // Zoom level: 1 = far out, 5 = close up
-  const [zoom, setZoom] = useLocalState(context, 'zoom', 2);
+  const [zoom, setZoom] = useLocalState(
+    context, 'zoom', 2
+  );
 
   const zoomIn = () => setZoom(Math.min(zoom + 1, 5));
   const zoomOut = () => setZoom(Math.max(zoom - 1, 1));
 
-  // Find highlighted item data
   const highlightedItem = highlighted_item_id
-    ? nearby_items.find(item => item.id === highlighted_item_id)
+    ? nearby_items.find(
+      item => item.id === highlighted_item_id
+    )
     : null;
 
   return (
     <Window
-      width={700}
-      height={650}>
+      width={750}
+      height={700}>
       <Window.Content>
         <Stack fill>
           {/* Left Side - Map */}
           <Stack.Item basis="320px">
             <Stack vertical fill>
-              {/* Map Display */}
               <Stack.Item grow>
                 <Section
                   fill
@@ -71,7 +75,8 @@ export const GridCraftingStation = (props, context) => {
                         <Button
                           icon="undo"
                           content="Reset"
-                          onClick={() => act('reset')} />
+                          onClick={() => act('reset')}
+                        />
                       )}
                     </Box>
                   )}>
@@ -83,7 +88,30 @@ export const GridCraftingStation = (props, context) => {
                     zoom={zoom}
                     max_revealed_tier={max_revealed_tier}
                     debug_mode={debug_mode}
-                    highlightedItem={highlightedItem} />
+                    highlightedItem={highlightedItem}
+                  />
+                </Section>
+              </Stack.Item>
+
+              {/* Shuffle Progress */}
+              <Stack.Item>
+                <Section title="Grid Stability">
+                  <ProgressBar
+                    value={shuffle_counter}
+                    maxValue={shuffle_threshold}
+                    ranges={{
+                      good: [0, shuffle_threshold * 0.5],
+                      average: [
+                        shuffle_threshold * 0.5,
+                        shuffle_threshold * 0.8,
+                      ],
+                      bad: [
+                        shuffle_threshold * 0.8,
+                        shuffle_threshold,
+                      ],
+                    }}>
+                    {shuffle_counter} / {shuffle_threshold}
+                  </ProgressBar>
                 </Section>
               </Stack.Item>
 
@@ -109,29 +137,22 @@ export const GridCraftingStation = (props, context) => {
                   <Section
                     title={(
                       <Box color="good">
-                        <Icon name="check-circle" mr={1} />
+                        <Icon
+                          name="check-circle"
+                          mr={1} />
                         Weapons In Range!
                       </Box>
                     )}>
                     <Stack vertical>
-                      {craftable_items.map((item, index) => (
-                        <Stack.Item key={index}>
-                          <Flex align="center">
-                            <Flex.Item grow>
-                              <Box bold>
-                                {getTierIcon(item.tier)} {item.name}
-                              </Box>
-                            </Flex.Item>
-                            <Flex.Item>
-                              <Button
-                                icon="hammer"
-                                color="good"
-                                content="Craft"
-                                onClick={() => act('craft', { id: item.id })} />
-                            </Flex.Item>
-                          </Flex>
-                        </Stack.Item>
-                      ))}
+                      {craftable_items.map(
+                        (item, index) => (
+                          <Stack.Item key={index}>
+                            <CraftableRow
+                              item={item}
+                              act={act} />
+                          </Stack.Item>
+                        )
+                      )}
                     </Stack>
                   </Section>
                 </Stack.Item>
@@ -145,7 +166,8 @@ export const GridCraftingStation = (props, context) => {
                   title={(
                     <Box>
                       <Icon name="gem" mr={1} />
-                      Stored Cores ({stored_count}/{max_stored})
+                      Stored Cores
+                      ({stored_count}/{max_stored})
                     </Box>
                   )}>
                   <CoresSection
@@ -162,7 +184,9 @@ export const GridCraftingStation = (props, context) => {
                   scrollable
                   title={(
                     <Box>
-                      <Icon name="crosshairs" mr={1} />
+                      <Icon
+                        name="crosshairs"
+                        mr={1} />
                       Nearby Weapons
                       {highlighted_item_id && (
                         <Button
@@ -170,14 +194,20 @@ export const GridCraftingStation = (props, context) => {
                           icon="times"
                           color="transparent"
                           tooltip="Clear highlight"
-                          onClick={() => act('clear_highlight')} />
+                          onClick={() => act(
+                            'clear_highlight'
+                          )} />
                       )}
                     </Box>
                   )}>
                   <NearbyItems
                     items={nearby_items}
-                    highlighted_item_id={highlighted_item_id}
-                    crafted_item_ids={crafted_item_ids}
+                    highlighted_item_id={
+                      highlighted_item_id
+                    }
+                    crafted_item_ids={
+                      crafted_item_ids
+                    }
                     act={act} />
                 </Section>
               </Stack.Item>
@@ -185,7 +215,10 @@ export const GridCraftingStation = (props, context) => {
               {/* Last Crafted */}
               {last_crafted && (
                 <Stack.Item>
-                  <Box color="good" textAlign="center" py={1}>
+                  <Box
+                    color="good"
+                    textAlign="center"
+                    py={1}>
                     <Icon name="check" mr={1} />
                     Last Crafted: {last_crafted}
                   </Box>
@@ -196,6 +229,35 @@ export const GridCraftingStation = (props, context) => {
         </Stack>
       </Window.Content>
     </Window>
+  );
+};
+
+const CraftableRow = props => {
+  const { item, act } = props;
+  const isLocked = item.locked;
+  return (
+    <Flex align="center">
+      <Flex.Item grow>
+        <Box
+          bold
+          color={isLocked ? 'gray' : 'default'}>
+          {isLocked && (
+            <Icon name="lock" color="bad" mr={1} />
+          )}
+          {getTierIcon(item.tier)} {item.name}
+        </Box>
+      </Flex.Item>
+      <Flex.Item>
+        <Button
+          icon={isLocked ? 'lock' : 'hammer'}
+          color={isLocked ? 'default' : 'good'}
+          disabled={isLocked}
+          content={isLocked ? 'Locked' : 'Craft'}
+          onClick={() => act('craft', {
+            id: item.id,
+          })} />
+      </Flex.Item>
+    </Flex>
   );
 };
 
@@ -210,23 +272,26 @@ const GridMap = props => {
     highlightedItem,
   } = props;
 
-  // Zoom scales: 1=0.5, 2=1.0, 3=2.0, 4=3.0, 5=5.0 pixels per unit
-  const zoomScales = { 1: 0.5, 2: 1.0, 3: 2.0, 4: 3.0, 5: 5.0 };
+  const zoomScales = {
+    1: 0.5, 2: 1.0, 3: 2.0, 4: 3.0, 5: 5.0,
+  };
   const MAP_SCALE = zoomScales[zoom] || 1.0;
 
-  // Calculate view radius based on zoom (how far we can see)
   const viewRadius = (MAP_SIZE / 2) / MAP_SCALE + 20;
   const centerX = MAP_SIZE / 2;
   const centerY = MAP_SIZE / 2;
 
-  // Convert world coords to screen coords
-  const toScreenX = x => centerX + (x - focus_x) * MAP_SCALE;
-  const toScreenY = y => centerY - (y - focus_y) * MAP_SCALE;
+  const toScreenX = x => (
+    centerX + (x - focus_x) * MAP_SCALE
+  );
+  const toScreenY = y => (
+    centerY - (y - focus_y) * MAP_SCALE
+  );
 
-  // Filter items to show (within view radius)
   const visibleItems = items.filter(item => {
     const dist = Math.sqrt(
-      Math.pow(item.x - focus_x, 2) + Math.pow(item.y - focus_y, 2)
+      Math.pow(item.x - focus_x, 2)
+      + Math.pow(item.y - focus_y, 2)
     );
     return dist < viewRadius + item.radius;
   });
@@ -242,24 +307,31 @@ const GridMap = props => {
         borderRadius: '4px',
         overflow: 'hidden',
       }}>
-      {/* Grid lines */}
       <svg
         width={MAP_SIZE}
         height={MAP_SIZE}
-        style={{ position: 'absolute', top: 0, left: 0 }}>
-        {/* Grid spacing varies with zoom */}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        }}>
         {(() => {
-          // Adjust grid spacing based on zoom level
-          const gridSpacing = zoom <= 2 ? 50 : (zoom <= 3 ? 25 : 10);
-          const gridCount = Math.ceil(viewRadius / gridSpacing) * 2 + 2;
+          const gridSpacing = zoom <= 2
+            ? 50 : (zoom <= 3 ? 25 : 10);
+          const gridCount = Math.ceil(
+            viewRadius / gridSpacing
+          ) * 2 + 2;
           const lines = [];
 
-          // Vertical grid lines
           for (let i = 0; i < gridCount; i++) {
-            const worldX = Math.round(focus_x / gridSpacing) * gridSpacing
-              + (i - Math.floor(gridCount / 2)) * gridSpacing;
+            const worldX = Math.round(
+              focus_x / gridSpacing
+            ) * gridSpacing
+              + (i - Math.floor(gridCount / 2))
+              * gridSpacing;
             const screenX = toScreenX(worldX);
-            if (screenX >= -10 && screenX <= MAP_SIZE + 10) {
+            if (screenX >= -10
+              && screenX <= MAP_SIZE + 10) {
               lines.push(
                 <line
                   key={`v${i}`}
@@ -267,18 +339,25 @@ const GridMap = props => {
                   y1={0}
                   x2={screenX}
                   y2={MAP_SIZE}
-                  stroke={worldX === 0 ? '#555' : '#333'}
-                  strokeWidth={worldX === 0 ? 2 : 1} />
+                  stroke={
+                    worldX === 0 ? '#555' : '#333'
+                  }
+                  strokeWidth={
+                    worldX === 0 ? 2 : 1
+                  } />
               );
             }
           }
 
-          // Horizontal grid lines
           for (let i = 0; i < gridCount; i++) {
-            const worldY = Math.round(focus_y / gridSpacing) * gridSpacing
-              + (i - Math.floor(gridCount / 2)) * gridSpacing;
+            const worldY = Math.round(
+              focus_y / gridSpacing
+            ) * gridSpacing
+              + (i - Math.floor(gridCount / 2))
+              * gridSpacing;
             const screenY = toScreenY(worldY);
-            if (screenY >= -10 && screenY <= MAP_SIZE + 10) {
+            if (screenY >= -10
+              && screenY <= MAP_SIZE + 10) {
               lines.push(
                 <line
                   key={`h${i}`}
@@ -286,8 +365,12 @@ const GridMap = props => {
                   y1={screenY}
                   x2={MAP_SIZE}
                   y2={screenY}
-                  stroke={worldY === 0 ? '#555' : '#333'}
-                  strokeWidth={worldY === 0 ? 2 : 1} />
+                  stroke={
+                    worldY === 0 ? '#555' : '#333'
+                  }
+                  strokeWidth={
+                    worldY === 0 ? 2 : 1
+                  } />
               );
             }
           }
@@ -295,7 +378,6 @@ const GridMap = props => {
           return lines;
         })()}
 
-        {/* Highlight line from center to highlighted item */}
         {highlightedItem && (
           <line
             x1={centerX}
@@ -307,41 +389,54 @@ const GridMap = props => {
             strokeDasharray="5,3" />
         )}
 
-        {/* Weapon zones */}
         {visibleItems.map((item, index) => {
           const screenX = toScreenX(item.x);
           const screenY = toScreenY(item.y);
-          const screenRadius = item.radius * MAP_SCALE;
+          const screenRadius = (
+            item.radius * MAP_SCALE
+          );
           const isInRange = item.in_range;
-          const isHighlighted = highlightedItem
+          const isLocked = item.locked;
+          const isHL = highlightedItem
             && highlightedItem.id === item.id;
-          const tierColor = getTierColor(item.tier);
-          const strokeColor = isHighlighted
+          const tierColor = isLocked
+            ? '#444444'
+            : getTierColor(item.tier);
+          const strokeColor = isHL
             ? '#ffcc00'
-            : (isInRange ? '#00ff00' : tierColor);
+            : (isInRange
+              ? '#00ff00'
+              : tierColor);
 
           return (
             <g key={index}>
-              {/* Craft radius circle */}
               <circle
                 cx={screenX}
                 cy={screenY}
                 r={screenRadius}
-                fill={isInRange ? tierColor + '40' : tierColor + '20'}
+                fill={
+                  isInRange
+                    ? tierColor + '40'
+                    : tierColor + '20'
+                }
                 stroke={strokeColor}
-                strokeWidth={isHighlighted ? 3 : (isInRange ? 2 : 1)}
-                strokeDasharray={isInRange ? '' : '4,4'} />
-              {/* Center point */}
+                strokeWidth={
+                  isHL ? 3 : (isInRange ? 2 : 1)
+                }
+                strokeDasharray={
+                  isInRange ? '' : '4,4'
+                } />
               <circle
                 cx={screenX}
                 cy={screenY}
-                r={isHighlighted ? 5 : 3}
-                fill={isHighlighted ? '#ffcc00' : tierColor} />
+                r={isHL ? 5 : 3}
+                fill={
+                  isHL ? '#ffcc00' : tierColor
+                } />
             </g>
           );
         })}
 
-        {/* Focus point (player position) */}
         <circle
           cx={centerX}
           cy={centerY}
@@ -359,8 +454,8 @@ const GridMap = props => {
           strokeDasharray="2,2" />
       </svg>
 
-      {/* Origin indicator */}
-      {Math.abs(focus_x) < viewRadius && Math.abs(focus_y) < viewRadius && (
+      {Math.abs(focus_x) < viewRadius
+        && Math.abs(focus_y) < viewRadius && (
         <Box
           style={{
             position: 'absolute',
@@ -373,7 +468,6 @@ const GridMap = props => {
         </Box>
       )}
 
-      {/* Legend */}
       <Box
         style={{
           position: 'absolute',
@@ -382,14 +476,10 @@ const GridMap = props => {
           fontSize: '9px',
           color: '#888',
         }}>
-        <Icon name="circle" color="#00ff00" /> You
-        {' | '}
-        Zoom: {zoom}x
+        <Icon name="circle" color="#00ff00" />
+        {' You | Zoom: '}{zoom}x
         {max_revealed_tier > 0 && (
-          <>
-            {' | '}
-            Tier: {max_revealed_tier}
-          </>
+          <>{' | Tier: '}{max_revealed_tier}</>
         )}
         {debug_mode && ' (DEBUG)'}
       </Box>
@@ -423,44 +513,64 @@ const MovementControls = props => {
   if (!selected_core) {
     return (
       <Box color="label" textAlign="center">
-        <Icon name="exclamation-triangle" mr={1} />
+        <Icon
+          name="exclamation-triangle"
+          mr={1} />
         Select a core to move
       </Box>
     );
   }
 
-  // Teleport controls for gold cores
   if (selected_core.movement_type === 4) {
     return (
       <TeleportControls
-        max_range={selected_core.distance_range[1]}
+        max_range={
+          selected_core.distance_range[1]
+        }
         act={act} />
     );
   }
 
-  // Direction buttons for other cores
   return (
     <Box>
       <Box fontSize="11px" color="label" mb={1}>
-        {selected_core.movement_desc} | Range:{' '}
-        {selected_core.distance_range[0]}-{selected_core.distance_range[1]}
+        {selected_core.movement_desc}
+        {' | Range: '}
+        {selected_core.distance_range[0]}
+        -{selected_core.distance_range[1]}
       </Box>
       <Box textAlign="center">
-        <DirBtn dir="NW" dx={-1} dy={1} enabled={canMove(-1, 1)} act={act} />
-        <DirBtn dir="N" dx={0} dy={1} enabled={canMove(0, 1)} act={act} />
-        <DirBtn dir="NE" dx={1} dy={1} enabled={canMove(1, 1)} act={act} />
+        <DirBtn
+          dir="NW" dx={-1} dy={1}
+          enabled={canMove(-1, 1)} act={act} />
+        <DirBtn
+          dir="N" dx={0} dy={1}
+          enabled={canMove(0, 1)} act={act} />
+        <DirBtn
+          dir="NE" dx={1} dy={1}
+          enabled={canMove(1, 1)} act={act} />
       </Box>
       <Box textAlign="center">
-        <DirBtn dir="W" dx={-1} dy={0} enabled={canMove(-1, 0)} act={act} />
+        <DirBtn
+          dir="W" dx={-1} dy={0}
+          enabled={canMove(-1, 0)} act={act} />
         <Button width="50px" height="32px" disabled>
           <Icon name="crosshairs" />
         </Button>
-        <DirBtn dir="E" dx={1} dy={0} enabled={canMove(1, 0)} act={act} />
+        <DirBtn
+          dir="E" dx={1} dy={0}
+          enabled={canMove(1, 0)} act={act} />
       </Box>
       <Box textAlign="center">
-        <DirBtn dir="SW" dx={-1} dy={-1} enabled={canMove(-1, -1)} act={act} />
-        <DirBtn dir="S" dx={0} dy={-1} enabled={canMove(0, -1)} act={act} />
-        <DirBtn dir="SE" dx={1} dy={-1} enabled={canMove(1, -1)} act={act} />
+        <DirBtn
+          dir="SW" dx={-1} dy={-1}
+          enabled={canMove(-1, -1)} act={act} />
+        <DirBtn
+          dir="S" dx={0} dy={-1}
+          enabled={canMove(0, -1)} act={act} />
+        <DirBtn
+          dir="SE" dx={1} dy={-1}
+          enabled={canMove(1, -1)} act={act} />
       </Box>
     </Box>
   );
@@ -469,8 +579,14 @@ const MovementControls = props => {
 const DirBtn = props => {
   const { dir, dx, dy, enabled, act } = props;
   const arrows = {
-    N: 'arrow-up', S: 'arrow-down', E: 'arrow-right', W: 'arrow-left',
-    NE: 'arrow-up', NW: 'arrow-up', SE: 'arrow-down', SW: 'arrow-down',
+    N: 'arrow-up',
+    S: 'arrow-down',
+    E: 'arrow-right',
+    W: 'arrow-left',
+    NE: 'arrow-up',
+    NW: 'arrow-up',
+    SE: 'arrow-down',
+    SW: 'arrow-down',
   };
 
   return (
@@ -478,7 +594,9 @@ const DirBtn = props => {
       width="50px"
       height="32px"
       disabled={!enabled}
-      onClick={() => act('move', { x: dx, y: dy })}>
+      onClick={() => act('move', {
+        x: dx, y: dy,
+      })}>
       <Icon name={arrows[dir]} />
     </Button>
   );
@@ -488,11 +606,16 @@ const TeleportControls = (props, context) => {
   const { max_range, act } = props;
   const { data } = useBackend(context);
   const { focus_x, focus_y } = data;
-  const [targetX, setTargetX] = useLocalState(context, 'teleportX', focus_x);
-  const [targetY, setTargetY] = useLocalState(context, 'teleportY', focus_y);
+  const [targetX, setTargetX] = useLocalState(
+    context, 'teleportX', focus_x
+  );
+  const [targetY, setTargetY] = useLocalState(
+    context, 'teleportY', focus_y
+  );
 
   const distance = Math.sqrt(
-    Math.pow(targetX - focus_x, 2) + Math.pow(targetY - focus_y, 2)
+    Math.pow(targetX - focus_x, 2)
+    + Math.pow(targetY - focus_y, 2)
   );
   const inRange = distance <= max_range;
 
@@ -504,20 +627,40 @@ const TeleportControls = (props, context) => {
       <Flex mb={1}>
         <Flex.Item basis="30px">X:</Flex.Item>
         <Flex.Item>
-          <Button icon="minus" onClick={() => setTargetX(targetX - 5)} />
+          <Button
+            icon="minus"
+            onClick={() => setTargetX(
+              targetX - 5
+            )} />
         </Flex.Item>
-        <Flex.Item basis="40px" textAlign="center">{targetX}</Flex.Item>
+        <Flex.Item basis="40px" textAlign="center">
+          {targetX}
+        </Flex.Item>
         <Flex.Item>
-          <Button icon="plus" onClick={() => setTargetX(targetX + 5)} />
+          <Button
+            icon="plus"
+            onClick={() => setTargetX(
+              targetX + 5
+            )} />
         </Flex.Item>
         <Flex.Item grow />
         <Flex.Item basis="30px">Y:</Flex.Item>
         <Flex.Item>
-          <Button icon="minus" onClick={() => setTargetY(targetY - 5)} />
+          <Button
+            icon="minus"
+            onClick={() => setTargetY(
+              targetY - 5
+            )} />
         </Flex.Item>
-        <Flex.Item basis="40px" textAlign="center">{targetY}</Flex.Item>
+        <Flex.Item basis="40px" textAlign="center">
+          {targetY}
+        </Flex.Item>
         <Flex.Item>
-          <Button icon="plus" onClick={() => setTargetY(targetY + 5)} />
+          <Button
+            icon="plus"
+            onClick={() => setTargetY(
+              targetY + 5
+            )} />
         </Flex.Item>
       </Flex>
       <Button
@@ -525,8 +668,14 @@ const TeleportControls = (props, context) => {
         icon="bolt"
         color={inRange ? 'good' : 'bad'}
         disabled={!inRange}
-        content={`Teleport (${Math.round(distance)}/${max_range})`}
-        onClick={() => act('teleport', { x: targetX, y: targetY })} />
+        content={
+          'Teleport ('
+          + Math.round(distance)
+          + '/' + max_range + ')'
+        }
+        onClick={() => act('teleport', {
+          x: targetX, y: targetY,
+        })} />
     </Box>
   );
 };
@@ -539,7 +688,10 @@ const CoresSection = props => {
       <Box textAlign="center" color="label">
         <Icon name="gem" size={2} mb={1} />
         <Box>No cores in storage</Box>
-        <Box fontSize="11px">Insert cores by using them on the machine</Box>
+        <Box fontSize="11px">
+          Insert cores by using them
+          on the machine
+        </Box>
       </Box>
     );
   }
@@ -547,7 +699,8 @@ const CoresSection = props => {
   return (
     <Stack vertical>
       {cores.map((core, index) => {
-        const isSelected = selected_core && selected_core.name === core.name;
+        const isSelected = selected_core
+          && selected_core.name === core.name;
         return (
           <Stack.Item key={index}>
             <Flex align="center">
@@ -555,21 +708,34 @@ const CoresSection = props => {
                 <Button
                   fluid
                   selected={isSelected}
-                  onClick={() => act('select_core', { ref: core.ref })}>
+                  onClick={() => act(
+                    'select_core',
+                    { ref: core.ref }
+                  )}>
                   <Flex align="center">
                     <Flex.Item>
                       <Icon
                         name="gem"
-                        color={getCoreColor(core.ore_type)}
+                        color={getCoreColor(
+                          core.ore_type
+                        )}
                         mr={1} />
                     </Flex.Item>
                     <Flex.Item grow>
-                      {core.gilded
-                        && <Icon name="star" color="gold" mr={1} />}
+                      {core.gilded && (
+                        <Icon
+                          name="star"
+                          color="gold"
+                          mr={1} />
+                      )}
                       {core.name}
                     </Flex.Item>
-                    <Flex.Item color="label" fontSize="11px">
-                      {getMovementShort(core.movement_type)}
+                    <Flex.Item
+                      color="label"
+                      fontSize="11px">
+                      {getMovementShort(
+                        core.movement_type
+                      )}
                     </Flex.Item>
                   </Flex>
                 </Button>
@@ -578,7 +744,10 @@ const CoresSection = props => {
                 <Button
                   icon="eject"
                   tooltip="Retrieve"
-                  onClick={() => act('retrieve_core', { ref: core.ref })} />
+                  onClick={() => act(
+                    'retrieve_core',
+                    { ref: core.ref }
+                  )} />
               </Flex.Item>
             </Flex>
           </Stack.Item>
@@ -589,7 +758,12 @@ const CoresSection = props => {
 };
 
 const NearbyItems = props => {
-  const { items, highlighted_item_id, crafted_item_ids, act } = props;
+  const {
+    items,
+    highlighted_item_id,
+    crafted_item_ids,
+    act,
+  } = props;
 
   if (items.length === 0) {
     return (
@@ -601,30 +775,69 @@ const NearbyItems = props => {
 
   return (
     <Stack vertical>
-      {items.slice(0, 8).map((item, index) => {
-        const isHighlighted = highlighted_item_id === item.id;
-        const isCrafted = crafted_item_ids.includes(item.id);
+      {items.slice(0, 10).map((item, index) => {
+        const isHL = (
+          highlighted_item_id === item.id
+        );
+        const isCrafted = (
+          crafted_item_ids.includes(item.id)
+        );
+        const isLocked = item.locked;
         return (
           <Stack.Item key={index}>
             <Flex align="center">
               <Flex.Item grow>
                 <Button
                   fluid
-                  color={isHighlighted ? 'yellow' : 'transparent'}
-                  onClick={() => act('highlight_item', { id: item.id })}>
+                  color={
+                    isHL
+                      ? 'yellow'
+                      : 'transparent'
+                  }
+                  onClick={() => act(
+                    'highlight_item',
+                    { id: item.id }
+                  )}>
                   <Box
                     inline
-                    bold={item.in_range}
-                    color={item.in_range ? 'good' : 'default'}>
+                    bold={
+                      item.in_range && !isLocked
+                    }
+                    color={
+                      isLocked
+                        ? 'gray'
+                        : (item.in_range
+                          ? 'good'
+                          : 'default')
+                    }>
+                    {isLocked && (
+                      <Icon
+                        name="lock"
+                        color="bad"
+                        mr={1} />
+                    )}
                     {getTierIcon(item.tier)}
-                    {isCrafted && <Icon name="check" color="good" mr={1} />}
+                    {isCrafted && (
+                      <Icon
+                        name="check"
+                        color="good"
+                        mr={1} />
+                    )}
                     {item.name}
                   </Box>
                 </Button>
               </Flex.Item>
-              <Flex.Item color="label" fontSize="11px" ml={1}>
+              <Flex.Item
+                color="label"
+                fontSize="11px"
+                ml={1}>
                 {Math.round(item.distance)}u
-                {item.in_range && <Icon name="check" color="good" ml={1} />}
+                {item.in_range && !isLocked && (
+                  <Icon
+                    name="check"
+                    color="good"
+                    ml={1} />
+                )}
               </Flex.Item>
             </Flex>
           </Stack.Item>
@@ -645,19 +858,30 @@ const getCoreColor = oreType => {
 };
 
 const getTierColor = tier => {
-  // Tier colors: 0=gray, 1=green, 2=blue, 3=purple, 4=gold
-  const colors = ['#666666', '#22cc44', '#4488ff', '#cc44ff', '#ffcc00'];
+  const colors = [
+    '#666666', '#22cc44', '#4488ff',
+    '#cc44ff', '#ffcc00',
+  ];
   return colors[tier] || '#666666';
 };
 
 const getMovementShort = movementType => {
-  const names = { 1: 'Cardinal', 2: 'Diagonal', 3: '8-Dir', 4: 'Teleport' };
+  const names = {
+    1: 'Cardinal',
+    2: 'Diagonal',
+    3: '8-Dir',
+    4: 'Teleport',
+  };
   return names[movementType] || '?';
 };
 
 const getTierIcon = tier => {
-  const icons = ['circle', 'star', 'star', 'crown', 'crown'];
-  const colors = ['label', 'average', 'good', 'blue', 'gold'];
+  const icons = [
+    'circle', 'star', 'star', 'crown', 'crown',
+  ];
+  const colors = [
+    'label', 'average', 'good', 'blue', 'gold',
+  ];
   return (
     <Icon
       name={icons[tier] || 'circle'}

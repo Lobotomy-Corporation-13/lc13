@@ -272,7 +272,7 @@
 			"category" = category,
 			"is_clothing" = TRUE,
 			"source_type" = source_type,
-			"research_required" = "master_weaving"
+			"research_required" = "faith_weaving"
 		)
 
 /// Override create_result to handle clothing visual copying
@@ -293,6 +293,7 @@
 	C.desc = "[initial(source.desc)] This garment was lovingly crafted by the Resurgence Clan."
 	C.icon = initial(source.icon)
 	C.icon_state = initial(source.icon_state)
+	C.allowed = list(/obj/item/gun, /obj/item/ego_weapon, /obj/item/melee)
 
 	// Copy optional visual properties if they exist
 	var/inhand = initial(source.inhand_icon_state)
@@ -306,6 +307,10 @@
 	var/worn_state = initial(source.worn_icon_state)
 	if(worn_state)
 		C.worn_icon_state = worn_state
+
+	// Track for objectives
+	GLOB.resurgence_outfits_crafted++
+	update_all_objectives()
 
 // ===== Portable Loom =====
 // Does not require a workshop - works at full speed anywhere

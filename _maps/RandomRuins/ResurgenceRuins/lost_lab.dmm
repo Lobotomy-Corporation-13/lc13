@@ -1,0 +1,764 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aM" = (
+/obj/effect/decal/cleanable/garbage,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"bn" = (
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"bo" = (
+/obj/structure/closet/crate/large,
+/obj/item/stack/ore/gold{
+	amount = 32
+	},
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"bI" = (
+/obj/effect/decal/cleanable/garbage,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"dI" = (
+/turf/closed/wall/mineral/iron,
+/area/ruin/resurgence)
+"ej" = (
+/obj/machinery/light/dim,
+/obj/structure/window/reinforced/spawner/west,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"ek" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"ey" = (
+/obj/machinery/light/dim,
+/obj/structure/window/reinforced/spawner/east,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"fE" = (
+/obj/structure/table/glass,
+/obj/item/khpboost,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"gm" = (
+/obj/structure/showcase/horrific_experiment,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"gK" = (
+/obj/structure/showcase/machinery/cloning_pod,
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"hz" = (
+/obj/structure/showcase/machinery/cloning_pod,
+/obj/effect/decal/cleanable/greenglow/ecto,
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"hX" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"ii" = (
+/obj/effect/decal/cleanable/cobweb,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"iq" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/gibs/old,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"iW" = (
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"jl" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"jS" = (
+/obj/structure/showcase/machinery/cloning_pod,
+/obj/machinery/light/dim,
+/obj/effect/decal/cleanable/greenglow/ecto,
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"kr" = (
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"kP" = (
+/obj/machinery/light/dim{
+	dir = 1
+	},
+/obj/structure/window/reinforced/spawner/east,
+/obj/effect/decal/cleanable/blood/gibs/down,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"lR" = (
+/obj/structure/fluff/paper/stack,
+/obj/effect/decal/cleanable/blood/gibs/body,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"mh" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/showcase/machinery/cloning_pod,
+/obj/machinery/light/dim,
+/obj/effect/turf_decal/box/red,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"mC" = (
+/obj/machinery/door/airlock/hatch,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"nP" = (
+/obj/structure/window/reinforced/spawner/east,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"oV" = (
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/ksyringe,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"oZ" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/paper/stack,
+/obj/effect/decal/cleanable/blood/gibs/down,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"pc" = (
+/obj/structure/table/glass,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/khpboost,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"pT" = (
+/obj/effect/decal/cleanable/blood/gibs/down,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"qo" = (
+/obj/structure/sign/departments/medbay/alt,
+/turf/closed/wall/mineral/iron,
+/area/ruin/resurgence)
+"qs" = (
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/food/meat/slab/sweeper,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"sv" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/mob/living/simple_animal/hostile/sweeper,
+/obj/effect/decal/cleanable/blood/gibs/body,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"sY" = (
+/obj/structure/table/glass,
+/obj/item/ksyringe,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"uW" = (
+/obj/effect/decal/cleanable/blood/gibs/down,
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/food/meat/slab/sweeper,
+/obj/machinery/light/dim{
+	dir = 8;
+	pixel_x = null;
+	pixel_y = null
+	},
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"vo" = (
+/obj/effect/decal/cleanable/garbage,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"vW" = (
+/obj/effect/gibspawner/human/bodypartless,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"xI" = (
+/obj/structure/window/reinforced/spawner/west,
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"yr" = (
+/obj/effect/decal/cleanable/blood,
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/food/meat/slab/sweeper,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"yG" = (
+/obj/structure/table/wood/fancy/cyan,
+/obj/item/paper/pamphlet/ruin/originalcontent/yelling,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"yP" = (
+/obj/structure/window/reinforced/spawner/west,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/landmark/cratespawn/corpo,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"yR" = (
+/obj/structure/window/reinforced/spawner/east,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"zc" = (
+/obj/structure/filingcabinet,
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 10
+	},
+/obj/effect/decal/cleanable/cobweb/cobweb2,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Ae" = (
+/turf/template_noop,
+/area/template_noop)
+"AI" = (
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"AV" = (
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"BU" = (
+/obj/structure/fluff/paper/stack,
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"BV" = (
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Cc" = (
+/obj/machinery/light/dim{
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/gibspawner/human/bodypartless,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Dg" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Ef" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/gibspawner/human/bodypartless,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 9
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Ek" = (
+/obj/structure/table/glass,
+/obj/item/ksyringe,
+/obj/item/ksyringe,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"EU" = (
+/obj/structure/fluff/paper/stack,
+/obj/effect/decal/cleanable/blood/splatter,
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Fu" = (
+/obj/structure/table/wood/fancy/cyan,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"FB" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/gibspawner/human/bodypartless,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 6
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"GX" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/gibspawner/human/bodypartless,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/obj/item/food/meat/slab/sweeper,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"HY" = (
+/obj/effect/decal/cleanable/blood,
+/obj/effect/decal/cleanable/blood/footprints{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Ja" = (
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/ksyringe,
+/obj/item/ksyringe,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Jc" = (
+/mob/living/simple_animal/hostile/sweeper,
+/obj/structure/fluff/paper/stack,
+/obj/effect/decal/cleanable/blood/gibs/body,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"JS" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn,
+/obj/structure/fluff/paper/stack,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 1
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Ko" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/blood/splatter,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Le" = (
+/obj/machinery/door/airlock/hatch,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"LG" = (
+/obj/structure/sign/poster/contraband/starkist,
+/turf/closed/wall/mineral/iron,
+/area/ruin/resurgence)
+"Ng" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 5
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Nm" = (
+/obj/structure/closet/crate/large,
+/obj/item/stack/ore/silver{
+	amount = 23
+	},
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Ny" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Oj" = (
+/obj/machinery/light/dim{
+	dir = 1
+	},
+/obj/structure/window/reinforced/spawner/west,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Pu" = (
+/obj/structure/table/abductor{
+	name = "strange table"
+	},
+/obj/item/ksyringe,
+/obj/item/ksyringe,
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Qw" = (
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 10
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"WW" = (
+/mob/living/simple_animal/hostile/sweeper,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 4
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"Xe" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/fluff/paper/stack,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"XL" = (
+/obj/structure/filingcabinet,
+/obj/structure/filingcabinet{
+	pixel_x = -9
+	},
+/obj/structure/filingcabinet{
+	pixel_x = 10
+	},
+/obj/structure/fluff/paper/corner,
+/turf/open/floor/stone,
+/area/ruin/resurgence)
+"Zo" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/siding/thinplating/dark{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+"ZY" = (
+/mob/living/simple_animal/hostile/ordeal/indigo_dawn,
+/obj/effect/turf_decal/siding/thinplating/dark,
+/turf/open/floor/carpet/royalblack,
+/area/ruin/resurgence)
+
+(1,1,1) = {"
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+"}
+(2,1,1) = {"
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+"}
+(3,1,1) = {"
+Ae
+Ae
+dI
+dI
+dI
+dI
+LG
+dI
+dI
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(4,1,1) = {"
+Ae
+Ae
+dI
+hz
+uW
+yr
+oV
+Pu
+mh
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(5,1,1) = {"
+Ae
+Ae
+dI
+Ja
+Ny
+vW
+BV
+pT
+bI
+mC
+AV
+AV
+Ae
+AV
+"}
+(6,1,1) = {"
+Ae
+Ae
+dI
+qs
+Ny
+HY
+AI
+AI
+iW
+mC
+AV
+AV
+AV
+Ae
+"}
+(7,1,1) = {"
+Ae
+Ae
+dI
+gK
+Cc
+vo
+BV
+GX
+jS
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(8,1,1) = {"
+Ae
+Ae
+dI
+dI
+qo
+Le
+Le
+qo
+dI
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(9,1,1) = {"
+Ae
+Ae
+dI
+ii
+hX
+Ny
+BV
+Ko
+ek
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(10,1,1) = {"
+Ae
+Ae
+dI
+kP
+aM
+sv
+BV
+jl
+ey
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(11,1,1) = {"
+Ae
+Ae
+dI
+hz
+Ef
+BU
+Zo
+Qw
+hz
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(12,1,1) = {"
+Ae
+Ae
+dI
+yP
+Jc
+bn
+oZ
+kr
+xI
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(13,1,1) = {"
+Ae
+Ae
+dI
+Nm
+JS
+Fu
+yG
+ZY
+bo
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(14,1,1) = {"
+Ae
+Ae
+dI
+nP
+Dg
+BV
+Xe
+EU
+yR
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(15,1,1) = {"
+Ae
+Ae
+dI
+gm
+Ng
+lR
+WW
+FB
+hz
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(16,1,1) = {"
+Ae
+Ae
+dI
+Oj
+ek
+BV
+iq
+hX
+ej
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(17,1,1) = {"
+Ae
+Ae
+dI
+zc
+fE
+Ek
+sY
+pc
+XL
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(18,1,1) = {"
+Ae
+Ae
+dI
+dI
+dI
+dI
+dI
+dI
+dI
+dI
+Ae
+Ae
+Ae
+Ae
+"}
+(19,1,1) = {"
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+"}
+(20,1,1) = {"
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+Ae
+"}

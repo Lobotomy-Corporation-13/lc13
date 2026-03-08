@@ -90,6 +90,41 @@ GLOBAL_LIST_INIT(raid_type_room_preferences, list(
 	RAID_TYPE_BASIC = list()
 ))
 
+// ==================== Raid Tier Defines ====================
+
+/// Tier numbers for raid difficulty scaling
+#define RAID_TIER_MILITIA 1
+#define RAID_TIER_REGULAR 2
+#define RAID_TIER_VETERAN 3
+#define RAID_TIER_ELITE 4
+
+/// Round time thresholds for tier transitions
+#define RAID_REGULAR_THRESHOLD (45 MINUTES)
+#define RAID_VETERAN_THRESHOLD (60 MINUTES)
+#define RAID_ELITE_THRESHOLD (120 MINUTES)
+
+/// Early-game (militia) raid compositions — melee only, no ranged units
+GLOBAL_LIST_INIT(insurgence_raid_compositions_early, list(
+	RAID_TYPE_BASIC = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/militia = 4,
+		/mob/living/simple_animal/hostile/clan/raider/defender/militia = 1
+	),
+	RAID_TYPE_PILLAGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/pillager/militia = 4,
+		/mob/living/simple_animal/hostile/clan/raider/defender/militia = 2
+	),
+	RAID_TYPE_SIEGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/defender/militia = 3,
+		/mob/living/simple_animal/hostile/clan/raider/scout/militia = 3
+	),
+	RAID_TYPE_ASSASSINATION = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/militia = 4
+	),
+	RAID_TYPE_OVERWHELMING = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/militia = 8
+	)
+))
+
 /// Insurgence Clan raid compositions by raid type
 /// Uses raider variants with stealing/trampling/looting abilities
 /// Ranged units use normal clan mobs (they provide cover fire, not looting)
@@ -116,6 +151,66 @@ GLOBAL_LIST_INIT(insurgence_raid_compositions, list(
 	RAID_TYPE_OVERWHELMING = list(
 		/mob/living/simple_animal/hostile/clan/raider/scout = 5,
 		/mob/living/simple_animal/hostile/clan/ranged/rapid = 3
+	)
+))
+
+/// Veteran raid compositions — stronger units for raids after 60 minutes
+GLOBAL_LIST_INIT(insurgence_raid_compositions_veteran, list(
+	RAID_TYPE_BASIC = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/veteran = 3,
+		/mob/living/simple_animal/hostile/clan/raider/defender/veteran = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/veteran = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/veteran = 1
+	),
+	RAID_TYPE_PILLAGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/pillager/veteran = 4,
+		/mob/living/simple_animal/hostile/clan/raider/defender/veteran = 2
+	),
+	RAID_TYPE_SIEGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/defender/veteran = 2,
+		/mob/living/simple_animal/hostile/clan/raider/scout/veteran = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/veteran = 2
+	),
+	RAID_TYPE_ASSASSINATION = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/veteran = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper/veteran = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/veteran = 1
+	),
+	RAID_TYPE_OVERWHELMING = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/veteran = 5,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/veteran = 3
+	)
+))
+
+/// Elite raid compositions — endgame units for raids after 90 minutes
+GLOBAL_LIST_INIT(insurgence_raid_compositions_elite, list(
+	RAID_TYPE_BASIC = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/elite = 3,
+		/mob/living/simple_animal/hostile/clan/raider/defender/elite = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/elite = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/elite = 1
+	),
+	RAID_TYPE_PILLAGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/pillager/elite = 4,
+		/mob/living/simple_animal/hostile/clan/raider/defender/elite = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/warper/elite = 1
+	),
+	RAID_TYPE_SIEGE = list(
+		/mob/living/simple_animal/hostile/clan/raider/defender/elite = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/elite = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper/elite = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/warper/elite = 1
+	),
+	RAID_TYPE_ASSASSINATION = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/elite = 2,
+		/mob/living/simple_animal/hostile/clan/ranged/sniper/elite = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/harpooner/elite = 1,
+		/mob/living/simple_animal/hostile/clan/ranged/warper/elite = 1
+	),
+	RAID_TYPE_OVERWHELMING = list(
+		/mob/living/simple_animal/hostile/clan/raider/scout/elite = 6,
+		/mob/living/simple_animal/hostile/clan/ranged/rapid/elite = 3,
+		/mob/living/simple_animal/hostile/clan/ranged/gunner/elite = 1
 	)
 ))
 
