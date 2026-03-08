@@ -2922,16 +2922,23 @@
 /datum/status_effect/perversion_weapon_root/on_apply()
 	. = ..()
 	TrapVictim()
-	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
 	attached_vfx = new(get_turf(owner))
+	// We buckle to stop mobs from running away like rats because their AI gets toggled on randomly for whatever reason. It also stops them from getting knocked out of our reach.
+	attached_vfx.buckle_mob(owner, force = TRUE, check_loc = FALSE)
+	// Animating them being lifted up
+	animate(owner, 0.3 SECONDS, pixel_y = owner.pixel_y + 16)
 
 /datum/status_effect/perversion_weapon_root/on_remove()
 	. = ..()
 	FreeVictim()
-	animate(owner, 0.2 SECONDS, pixel_y = owner.pixel_y - 16)
+	animate(owner, 0.2 SECONDS, pixel_y = owner.base_pixel_y)
 
 /datum/status_effect/perversion_weapon_root/Destroy(force)
-	QDEL_NULL(attached_vfx) // This must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	// These things must be here and not on_remove because on_remove is not called if the owner is qdeleted on death
+	attached_vfx.unbuckle_all_mobs(force = TRUE)
+	if(owner && !ishuman(owner))
+		owner.set_glide_size() // ... Buckling, unbuckling mobs changes their glide size.
+	QDEL_NULL(attached_vfx)
 	return ..()
 
 /obj/effect/perversion_weapon_root_vfx
@@ -3094,6 +3101,7 @@
 		original_proj_damtype = gotcha.damage_type
 
 	// Destroy the projectile.
+	gotcha.on_hit(place_of_intercept) // Give certain things a chance to set off AoEs...
 	qdel(gotcha)
 	playsound(place_of_intercept, 'sound/weapons/ego/clash1.ogg', 75, TRUE, 8)
 
