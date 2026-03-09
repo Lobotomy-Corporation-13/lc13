@@ -1426,7 +1426,7 @@
 	name = "fell scatter"
 	desc = "A bolt-action rifle fitted with a wider barrel. It fires cursed shells."
 	icon_state = "fell_scatter"
-	//TODO: inhands
+	inhand_icon_state = "fell_scatter"
 	special = "Activate in your hand to load a magical slug. \
 	The slug will penetrate most targets. Shooting a human will deal half damage and produce a special effect. \
 	You can manually reload this weapon by pressing ALT + left mouse button."
