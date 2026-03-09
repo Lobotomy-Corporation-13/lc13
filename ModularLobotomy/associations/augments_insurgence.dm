@@ -439,7 +439,7 @@
 			"name" = "Time Moratorium",
 			"ahn_cost" = 50,
 			"ep_cost" = 4,
-			"desc" = "On hit against a target with 15+ TREMOR, consume 10 TREMOR from the target to trigger the timestop effect around them, with an AoE of 2 and duration of 4 seconds. (Has a cooldown of 30 seconds.)",
+			"desc" = "On hit against a target with 40+ TREMOR, consume 50% of current TREMOR from the target to trigger the timestop effect around them, with an AoE of 2 and duration of 2 seconds. (Has a cooldown of 30 seconds.)",
 			"component" = /datum/component/augment/time_moratorium
 		),
 		list(

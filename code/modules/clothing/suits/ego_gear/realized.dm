@@ -1024,6 +1024,12 @@ If you land the killing blow on that enemy, you get a buff and a heal.
 	var/mob/living/simple_animal/hostile/naked_nest_serpent_friend/W = new(get_turf(user))
 	W.origin_nest = user
 
+/obj/item/clothing/suit/armor/ego_gear/realization/awe
+	name = "awe"
+	desc = "Scatter. Every gaze shall be drawn to this squalidity."
+	icon_state = "contempt" // Sprite by insiteparaful
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 40, BLACK_DAMAGE = 80, PALE_DAMAGE = 60) // No Ability (For now. Until then it just gets a suspiciously alright statline (I didn't dare add a red 8/black 8 armour))
+
 /* ALEPH Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/alcoda

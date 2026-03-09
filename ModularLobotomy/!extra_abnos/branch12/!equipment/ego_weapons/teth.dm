@@ -197,3 +197,25 @@
 	hitsound = 'sound/weapons/slashmiss.ogg'
 	attack_verb_continuous = list("pokes", "jabs", "tears", "lacerates", "gores")
 	attack_verb_simple = list("poke", "jab", "tear", "lacerate", "gore")
+
+
+//Iai
+/obj/item/ego_weapon/branch12/mini/iai
+	name = "Iai"
+	desc = "A small kunai likely used by a ninja."
+	special = "Throwing this weapon at an enemy causes 5 Tremor. Deal a tremor burst at 15 Tremor."
+	icon_state = "iai"
+	force = 16
+	damtype = BLACK_DAMAGE
+	throwforce = 20
+	throw_speed = 1
+	throw_range = 7
+	attack_verb_continuous = list("slams", "strikes", "smashes")
+	attack_verb_simple = list("slam", "strike", "smash")
+
+/obj/item/ego_weapon/branch12/mini/iai/throw_impact(atom/hit_atom, datum/thrownthing/throwingdatum)
+	..()
+	if(!isliving(hit_atom))
+		return
+	var/mob/living/L = hit_atom
+	L.apply_lc_tremor(5,15)

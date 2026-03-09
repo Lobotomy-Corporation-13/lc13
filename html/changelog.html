@@ -51,6 +51,89 @@
 		
 		-->
 		<div class="commit sansserif">
+			<h2 class="date">09 March 2026</h2>
+			<h3 class="author">Kitsunemitsu updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="balance">1.76MHz always calls it's weather effects.</li>
+				<li class="balance">Lunar Rabbit breaches less over time</li>
+			</ul>
+
+			<h2 class="date">08 March 2026</h2>
+			<h3 class="author">EnderMage99 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added pixel shifting - hold N and press movement keys to shift your sprite within a tile for RP positioning. Moving normally resets the shift.</li>
+				<li class="code_imp">Added add_offsets/remove_offsets system for managing pixel offsets on living mobs.</li>
+				<li class="bugfix">Players can no longer use items while airborne during Great Leap.</li>
+				<li class="bugfix">Disciplinary Officers and Combat Research Agents now get a -20 stat requirement reduction when equipping Middle chain weapons.</li>
+				<li class="bugfix">Fixed Augment Catalogue allowing two simultaneous users to create tickets with double the augments by making design state per-user.</li>
+				<li class="bugfix">Fixed augment tickets being processable multiple times during fabrication via rapid clicking.</li>
+				<li class="balance">Time Moratorium now requires 40 TREMOR (up from 15), consumes 50% of current TREMOR instead of a flat 10, and lasts 2 seconds instead of 4.</li>
+				<li class="code_imp">Debug Augment Fabricator now creates augments usable by anyone regardless of role.</li>
+				<li class="code_imp">Augment Catalogue no longer displays forced effects like Mental Corrosion.</li>
+				<li class="bugfix">Fixed ~463 runtime errors across 22 error types (null references, missing variables, signal overrides, race conditions)</li>
+				<li class="code_imp">Added stamina field to armor datum for upstream SS13 compatibility</li>
+				<li class="code_imp">Deep water no longer tries to damage mobs that haven't finished initializing</li>
+			</ul>
+			<h3 class="author">Kitsunemitsu updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Added EO and RO to B12</li>
+			</ul>
+
+			<h2 class="date">07 March 2026</h2>
+			<h3 class="author">Destrok171 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Preferences for Backpack Visibility, starting without Beret and starting without Sunglasses.</li>
+			</ul>
+			<h3 class="author">Kitsunemitsu updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">One line fix for runtime</li>
+				<li class="rscadd">Added Carmen UI</li>
+			</ul>
+			<h3 class="author">X3ros updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscdel">Removed Death Dealer ambush</li>
+			</ul>
+
+			<h2 class="date">06 March 2026</h2>
+			<h3 class="author">Deadkung updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="bugfix">lobotomy grenade's detonation proc</li>
+			</ul>
+			<h3 class="author">Destrok171 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">Spiral of Contempt abnormality</li>
+				<li class="rscadd">Perversion E.G.O. weapon as a rankbump WAW->ALEPH.</li>
+				<li class="rscadd">Contempt, Awe E.G.O. armour</li>
+				<li class="rscadd">Awe Realization armour (for now it is a stat-stick, will have ability in the future)</li>
+				<li class="bugfix">Fixed a wrong order in a check for bitflags in _abnormality.dm, so abnos can have work type specific bubbles now</li>
+				<li class="refactor">Items now have a var that determines whether or not their hitsound should vary in pitch when it is played</li>
+				<li class="imageadd">Spiral of Contempt idle and casting sprites, as well as VFX for its hand attacks. Animation by amanitaspooder.</li>
+				<li class="imageadd">Perversion E.G.O. weapon object and inhand sprites by Zeratino.</li>
+				<li class="imageadd">N. Corp. E.G.O. Contempt, Awe armour object and worn sprites by Zeratino.</li>
+				<li class="imageadd">LCB E.G.O. Contempt, Awe armour object and worn sprites by insiteparaful.</li>
+				<li class="imageadd">10x10 display icons for Gaze and Contempt.</li>
+				<li class="imageadd">Spiral of Contempt portrait from Limbus Company.</li>
+			</ul>
+			<h3 class="author">EnderMage99 updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscdel">Removed the crafting recipe for bolas</li>
+				<li class="rscdel">Remove skulk from the augment fabricator</li>
+				<li class="rscadd">Added a new var to doors which makes them immune to the lockpick skill</li>
+				<li class="balance">nerfed the teleport distance of Echo Step from 2 to 1.</li>
+			</ul>
+
+			<h2 class="date">04 March 2026</h2>
+			<h3 class="author">Deadkung updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscadd">/obj/item/grenade/r_corp/lobotomy</li>
+				<li class="rscadd">/obj/item/storage/box/lobotomygrenades</li>
+			</ul>
+			<h3 class="author">RayAleciana updated:</h3>
+			<ul class="changes bgimages16">
+				<li class="rscdel">spawner in wall
+:cl:</li>
+			</ul>
+
 			<h2 class="date">27 February 2026</h2>
 			<h3 class="author">SumirekoFan updated:</h3>
 			<ul class="changes bgimages16">
@@ -234,55 +317,6 @@
 			<h3 class="author">Kitsunemitsu updated:</h3>
 			<ul class="changes bgimages16">
 				<li class="rscadd">EGO bullets now have different colors according to their damtypes.</li>
-			</ul>
-
-			<h2 class="date">04 January 2026</h2>
-			<h3 class="author">Cupax3 updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="bugfix">We now tell byond.com who we are when we "spam" it with download requests</li>
-				<li class="bugfix">Simple Simplemobs no longer cause meltdown runtimes.</li>
-			</ul>
-			<h3 class="author">Deadkung updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="code_imp">CHANGEME</li>
-			</ul>
-			<h3 class="author">EnderMage99 updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="rscadd">Added new violet pet.</li>
-			</ul>
-			<h3 class="author">InsightfulParasite updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="rscadd">grey sandbags</li>
-				<li class="code_imp">CHANGEME</li>
-				<li class="refactor">Mob Shooting</li>
-			</ul>
-			<h3 class="author">Kitsunemitsu updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="code_imp">CHANGEME</li>
-				<li class="rscadd">New Chemistry system!</li>
-				<li class="rscadd">Replaced the dogshit comms on alpha with the chad comms from Beta</li>
-			</ul>
-			<h3 class="author">SumirekoFan updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="code_imp">CHANGEME</li>
-			</ul>
-
-			<h2 class="date">03 January 2026</h2>
-			<h3 class="author">Destrok171 updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="code_imp">Adds Extraction and Records frequencies</li>
-				<li class="imageadd">Sprites for Records and Extraction encryption keys</li>
-			</ul>
-			<h3 class="author">EnderMage99 updated:</h3>
-			<ul class="changes bgimages16">
-				<li class="rscadd">Added Skill Augment Fabricator system - create cybernetic implants containing multiple Fixer skills</li>
-				<li class="rscadd">Added 5 ranks of skill augment templates with varying slot counts, charge capacity, and stat requirements</li>
-				<li class="rscadd">Added skill augment tester device to check compatibility and current augment status</li>
-				<li class="rscadd">Added 4 tiers of skill augment batteries for charge restoration (available from prosthetic vending)</li>
-				<li class="rscadd">Added complete TGUI interface for skill augment design and fabrication</li>
-				<li class="rscadd">Added overcharge penalty system - insufficient charge causes BURN damage instead of blocking skills</li>
-				<li class="balance">Skill augments require average stat levels of 20-100 depending on rank</li>
-				<li class="code_imp">Integrated 49 existing Fixer skills into the skill augment system with slot costs and charge consumption</li>
 			</ul>
 		</div>
 

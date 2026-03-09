@@ -30,7 +30,8 @@
 		if(istype(door, /obj/machinery/door/airlock))
 			var/obj/machinery/door/airlock/A = door
 			A.locked = FALSE
-		door.open()
+		if(door.lockpickable)
+			door.open()
 
 	StartCooldown()
 

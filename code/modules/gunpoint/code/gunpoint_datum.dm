@@ -170,6 +170,8 @@
 	var/count = moved_counter
 	sleep(1)
 	if(src && count == moved_counter)
+		if(!source)
+			return
 		source.log_message("[source] shot [target] because they moved", LOG_ATTACK)
 		ShootTarget()
 

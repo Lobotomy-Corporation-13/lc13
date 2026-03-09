@@ -223,3 +223,26 @@
 	attack_verb_continuous = list("slams", "strikes", "smashes")
 	attack_verb_simple = list("slam", "strike", "smash")
 
+
+//Relic of Virtue
+/obj/item/ego_weapon/branch12/mini/virtue
+	name = "virtue's reward"
+	desc = "A black blade with an odd silver handle.."
+	special = "Attacking yourself with this weapon will apply bleed to it's next attack, scaling with your level."
+	icon_state = "virtue"
+	force = 14
+	damtype = RED_DAMAGE
+	swingstyle = WEAPONSWING_LARGESWEEP
+	attack_verb_continuous = list("slices", "slashes")
+	attack_verb_simple = list("slice", "slash")
+	hitsound = 'sound/weapons/fixer/generic/knife3.ogg'
+	var/blade_level
+
+/obj/item/ego_weapon/branch12/mini/virtue/attack(mob/living/target, mob/living/carbon/human/user)
+	..()
+	if(blade_level)
+		target.apply_lc_bleed(blade_level**2)
+		blade_level = 0
+
+	if(target == user)
+		blade_level = get_user_level(user)

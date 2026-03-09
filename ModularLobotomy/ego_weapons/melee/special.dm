@@ -373,3 +373,62 @@
 	name = "freshman dagger"
 	icon_state = "freshman"
 	damtype = PALE_DAMAGE
+
+/obj/item/ego_weapon/painprocess
+	name = "painful process"
+	desc = "When we realized the pointlessness of our existence, we yearned to make everything else suffer as we do."
+	special = "This weapon hits 4 times every swing."
+	icon_state = "painprocess"
+	force = 35
+	attack_speed = 1.4
+	damtype = RED_DAMAGE
+	attack_verb_continuous = list("slices", "saws", "rips")
+	attack_verb_simple = list("slice", "saw", "rip")
+	hitsound = 'sound/abnormalities/helper/attack.ogg'
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)
+	charge = TRUE
+	charge_cost = 12
+	charge_cap = 12
+	allow_ability_cancel = TRUE
+	charge_effect = "release an AoE which deals BURN damage and knocks enemies back."
+	successfull_activation = "You open the steam vents, ready to knock your enemies back!"
+	failed_activation = "You try to open the steam vents, but the weapon is not full."
+	var/aoe_damage = 10
+
+/obj/item/ego_weapon/painprocess/attack(mob/living/target, mob/living/user)
+	if(!..())
+		return
+	for(var/i = 1 to 3)
+		sleep(2)
+		if(target in view(reach,user))
+			playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
+			user.do_attack_animation(target)
+			target.attacked_by(src, user)   //Yes, the way I add the charge is jank and probably shitty. But if it works, then hey.
+			if(charge_amount < charge_cap)
+				charge_amount += 1
+				new /obj/effect/temp_visual/healing/charge(get_turf(src))
+			log_combat(user, target, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
+
+/obj/item/ego_weapon/painprocess/melee_attack_chain(mob/living/user, atom/target, params)
+	..()
+	if(isliving(target))
+		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(target), pick(GLOB.alldirs))
+
+/obj/item/ego_weapon/painprocess/ChargeAttack(mob/living/M, mob/living/user)
+	. = ..()
+	playsound(src, 'sound/machines/clockcult/steam_whoosh.ogg', 100, FALSE, 4)
+	for(var/turf/T in orange(1, user))
+		new /obj/effect/temp_visual/smash_effect(T)
+	for(var/mob/living/L in range(1, user)) //knocks enemies away from you
+		if(L == user)
+			continue
+		L.deal_damage(aoe_damage, FIRE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/throw_target = get_edge_target_turf(L, get_dir(L, get_step_away(L, src)))
+		if(!L.anchored)
+			var/whack_speed = 4
+			L.throw_at(throw_target, 5, whack_speed, user, gentle = TRUE) //sends enemies FLYING

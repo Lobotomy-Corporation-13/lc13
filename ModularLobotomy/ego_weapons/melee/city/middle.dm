@@ -43,6 +43,20 @@
 	var/counter_damage_multiplier = 1.4 // 40% bonus damage on counter-attacks
 	var/countering = FALSE
 
+/obj/item/ego_weapon/shield/middle_chain/examine(mob/user)
+	. = ..()
+	if(user.mind)
+		if(user.mind.assigned_role in list("Disciplinary Officer", "Combat Research Agent"))
+			. += span_notice("Due to your abilities, you get a -20 reduction to stat requirements when equipping this weapon.")
+
+/obj/item/ego_weapon/shield/middle_chain/CanUseEgo(mob/living/user)
+	if(user.mind)
+		if(user.mind.assigned_role in list("Disciplinary Officer", "Combat Research Agent"))
+			equip_bonus = 20
+		else
+			equip_bonus = 0
+	. = ..()
+
 /obj/item/ego_weapon/shield/middle_chain/attack_self(mob/user)//FIXME: Find a better way to use this override!
 	if(block == 0) //Extra check because shields returns nothing on 1
 		if(..())

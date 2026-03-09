@@ -249,6 +249,7 @@
 
 	var/projectile_type = /obj/projectile/bullet/shotgun_beanbag
 	var/projectile_sound = 'sound/weapons/sonic_jackhammer.ogg'
+	var/signaller_code
 
 /obj/structure/sigsystem/projectile_launcher/ReceivePing()
 	var/obj/projectile/P = new projectile_type(get_step(get_turf(src), dir))

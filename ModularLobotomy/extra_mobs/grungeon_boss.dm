@@ -28,7 +28,7 @@
 	death_sound = 'sound/effects/ordeals/green/midnight_dead.ogg'
 	offsets_pixel_x = list("south" = -96, "north" = -96, "west" = -96, "east" = -96)
 	damage_effect_scale = 1.25
-	rapid = 50
+	rapid = 40
 	rapid_fire_delay = 0.4
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
@@ -54,9 +54,9 @@
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_boss/proc/PrepareToFire(atom/A) //Copypasted code from TTLS snipers. Intended to serve as the "warning" for the minigun.
 	var/turf/my_turf = get_turf(src) //Slight alteration so there isn't any visual bugs. Many thanks to Eidos on the discord for helping me with this.
-	current_beam = my_turf.Beam(A, icon_state="blood", time = 2.2 SECONDS)
+	current_beam = my_turf.Beam(A, icon_state="blood", time = 2.3 SECONDS)
 	can_act = FALSE
-	SLEEP_CHECK_DEATH(2.6 SECONDS)
+	SLEEP_CHECK_DEATH(2.5 SECONDS)
 	can_act = TRUE
 	return TRUE
 
@@ -91,7 +91,7 @@
 		return FALSE
 	playsound(src, 'sound/magic/clockwork/invoke_general.ogg', 200, TRUE, 2)
 	napalm_cooldown = (world.time+napalm_cd_duration)
-	SLEEP_CHECK_DEATH(10)
+	SLEEP_CHECK_DEATH(12)
 	dir_shots(GLOB.cardinals)
 	dir_shots(GLOB.diagonals)
 	return TRUE

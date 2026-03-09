@@ -131,8 +131,9 @@
 	. = ..()
 	if(ishuman(AM))
 		var/mob/living/carbon/human/H = AM
-		H.deal_damage(18, WHITE_DAMAGE, source = connected_abno, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
+		H.deal_damage(12, WHITE_DAMAGE, source = connected_abno, flags = (DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_ENVIRONMENT))
 		H.set_blurriness(4)
+		H.apply_lc_fragile(2)
 
 
 //innocence status effect

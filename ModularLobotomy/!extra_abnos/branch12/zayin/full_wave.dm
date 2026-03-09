@@ -42,7 +42,14 @@
 				if(M.z == z && M.client)
 					to_chat(M, span_warning("What is that noise?"))
 			addtimer(CALLBACK(src, PROC_REF(WhitePulse)), 15)
+			addtimer(CALLBACK(src, PROC_REF(StopPulse)), 3 MINUTES)
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/wave/proc/StopPulse()
+	temperance_work = 0
+	for(var/mob/M in GLOB.player_list)
+		if(M.z == z && M.client)
+			to_chat(M, span_nicegreen("The horrors have stopped."))
 
 /mob/living/simple_animal/hostile/abnormality/branch12/wave/proc/WhitePulse()
 	if(temperance_work>=2)
@@ -75,16 +82,15 @@
 
 
 //Visuals
-/mob/living/simple_animal/hostile/abnormality/branch12/wave/Initialize()
+/mob/living/simple_animal/hostile/abnormality/branch12/wave/PostSpawn()
 	. = ..()
-	/*			//This causes shit to spawn on records cabinets. Fixing it now
 	for(var/i = 1 to 3)
 		var/turf/dispense_turf = get_step(src, pick(1,2,4,5,6,8,9,10))
 		var/obj/effect/wave_shadow/V = new (dispense_turf)
 		structures+=V
 	var/obj/effect/radio/V = new (get_turf(src))
 	structures+=V
-	return*/
+	return
 
 /obj/effect/wave_shadow
 	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'

@@ -52,7 +52,7 @@
 	. = ..()
 	if(!user)
 		return
-	RegisterSignal(user, COMSIG_MOB_SHIFTCLICKON, PROC_REF(DoChecks))
+	RegisterSignal(user, COMSIG_MOB_SHIFTCLICKON, PROC_REF(DoChecks), override = TRUE)
 
 /obj/item/ego_weapon/black_silence_gloves/Destroy(mob/user)
 	UnregisterSignal(user, COMSIG_MOB_SHIFTCLICKON)
@@ -96,6 +96,8 @@
 		animate(D, alpha = 0, time = 2 + i*2)
 
 /obj/item/ego_weapon/black_silence_gloves/proc/DoChecks(mob/living/user, atom/target)
+	if(!isliving(target))
+		return
 	var/mob/living/L = target
 	if(!CanUseEgo(user))
 		return

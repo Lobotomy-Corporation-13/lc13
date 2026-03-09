@@ -85,7 +85,14 @@
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose,
+/obj/item/clothing/suit/armor/ego_gear/ordeal/painful_purpose{
+	pixel_x = 9;
+	pixel_y = 8
+	},
+/obj/item/ego_weapon/painprocess{
+	pixel_y = -5;
+	pixel_x = -6
+	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "cw" = (
@@ -169,13 +176,15 @@
 /area/city/outskirtsfactory)
 "eB" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryvault"
+	id = "factoryvault";
+	lockpickable = 0
 	},
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "eH" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/activator,
 /turf/open/floor/facility/dark,
@@ -257,7 +266,8 @@
 /area/city/outskirtsfactory)
 "gS" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 8
@@ -271,18 +281,15 @@
 	},
 /obj/structure/sigsystem/connector{
 	dir = 1;
-	delay_time = 600
+	delay_time = 500
 	},
 /turf/open/floor/facility/dark,
-/area/city/outskirtsfactory)
-"gW" = (
-/obj/structure/railing/corner,
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "gX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -389,15 +396,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"jZ" = (
-/obj/structure/railing/corner{
-	dir = 1
-	},
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "kt" = (
 /obj/structure/destructible/cult/forge{
 	resistance_flags = 64
@@ -411,12 +409,6 @@
 	tamperproof = 1
 	},
 /turf/open/lava,
-/area/city/outskirtsfactory)
-"kD" = (
-/obj/structure/railing/corner{
-	dir = 8
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "kX" = (
 /obj/effect/decal/cleanable/blood/gibs/limb,
@@ -554,6 +546,7 @@
 	dir = 1;
 	happens_once = 1
 	},
+/obj/machinery/light/small/red,
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
 "pY" = (
@@ -561,15 +554,6 @@
 	dir = 8
 	},
 /turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"qi" = (
-/obj/structure/railing{
-	dir = 7
-	},
-/obj/structure/railing{
-	dir = 1
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "qr" = (
 /obj/structure/sigsystem/tower,
@@ -748,12 +732,6 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
-"xD" = (
-/obj/structure/railing/corner{
-	dir = 1
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "xE" = (
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
@@ -812,12 +790,6 @@
 	dir = 4
 	},
 /turf/open/floor/plating/asteroid/basalt,
-/area/city/outskirtsfactory)
-"zX" = (
-/obj/structure/railing{
-	dir = 7
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "Ar" = (
 /obj/effect/decal/cleanable/dirt/dust,
@@ -893,6 +865,9 @@
 /area/city/outskirtsfactory)
 "BX" = (
 /obj/effect/turf_decal/siding/red{
+	dir = 1
+	},
+/obj/machinery/light/small/red{
 	dir = 1
 	},
 /turf/open/floor/circuit/red,
@@ -1099,7 +1074,8 @@
 /area/city/outskirtsfactory)
 "Hm" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector/split{
 	dir = 4
@@ -1131,12 +1107,6 @@
 /obj/effect/decal/cleanable/blood/gibs/limb,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"HK" = (
-/obj/structure/railing{
-	dir = 4
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "HN" = (
 /obj/effect/turf_decal/siding/thinplating/light{
 	dir = 10
@@ -1165,7 +1135,8 @@
 /area/city/outskirtsfactory)
 "It" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1174,12 +1145,6 @@
 	signal_code = 55
 	},
 /turf/closed/indestructible/syndicate,
-/area/city/outskirtsfactory)
-"Jq" = (
-/obj/structure/railing{
-	dir = 8
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "Jy" = (
 /obj/structure/sigsystem/pressure_plate{
@@ -1287,12 +1252,6 @@
 	},
 /turf/open/lava,
 /area/city/outskirtsfactory)
-"MA" = (
-/obj/structure/railing/corner{
-	dir = 4
-	},
-/turf/open/chasm,
-/area/city/outskirtsfactory)
 "MH" = (
 /obj/structure/sigsystem/tower{
 	dir = 1;
@@ -1306,15 +1265,6 @@
 /obj/item/forginghammer,
 /obj/structure/rack,
 /turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"Nw" = (
-/obj/structure/railing{
-	dir = 1
-	},
-/obj/structure/railing{
-	dir = 7
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "Nx" = (
 /obj/machinery/light/small/red{
@@ -1334,7 +1284,9 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "Ol" = (
-/obj/machinery/door/poddoor/shutters/indestructible,
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0
+	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "Op" = (
@@ -1363,7 +1315,8 @@
 /area/city/outskirtsfactory)
 "PZ" = (
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "foundryaccess"
+	id = "foundryaccess";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
@@ -1460,7 +1413,8 @@
 /area/city/outskirtsfactory)
 "Tj" = (
 /obj/machinery/door/poddoor/shutters/preopen{
-	resistance_flags = 64
+	resistance_flags = 64;
+	lockpickable = 0
 	},
 /obj/structure/sigsystem/connector{
 	dir = 4
@@ -1497,7 +1451,8 @@
 "TI" = (
 /obj/effect/decal/cleanable/blood/footprints,
 /obj/machinery/door/poddoor/shutters/indestructible{
-	id = "factoryentrance"
+	id = "factoryentrance";
+	lockpickable = 0
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
@@ -1520,13 +1475,6 @@
 	},
 /obj/effect/decal/cleanable/blood/gibs/limb,
 /turf/open/floor/facility/dark,
-/area/city/outskirtsfactory)
-"Uc" = (
-/obj/structure/railing/corner{
-	dir = 4
-	},
-/obj/structure/railing/corner,
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "Uh" = (
 /obj/machinery/conveyor/auto{
@@ -1664,12 +1612,6 @@
 	dir = 4
 	},
 /turf/open/floor/pod/light,
-/area/city/outskirtsfactory)
-"Yc" = (
-/obj/structure/railing{
-	dir = 1
-	},
-/turf/open/chasm,
 /area/city/outskirtsfactory)
 "YB" = (
 /obj/machinery/light,
@@ -4522,17 +4464,17 @@ pY
 fT
 CZ
 DP
-zX
+Qt
+Qt
 dy
-Nw
+Qt
 dy
-qi
+Qt
 dy
-qi
+Qt
 dy
-qi
-dy
-Yc
+Qt
+Qt
 xI
 Pn
 Pn
@@ -4624,17 +4566,17 @@ pY
 sJ
 Ka
 DP
-kD
-Jq
-jZ
-Jq
-jZ
-Jq
-jZ
-Jq
-jZ
-Jq
-xD
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
 xI
 Pn
 Pn
@@ -5644,17 +5586,17 @@ XC
 sJ
 fT
 xE
-gW
-HK
-Uc
-HK
-Uc
-HK
-Uc
-HK
-Uc
-HK
-MA
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
+Qt
 xE
 Pn
 Pn
@@ -5746,17 +5688,17 @@ XC
 fT
 CZ
 xE
-zX
+Qt
+Qt
 dy
-qi
+Qt
 dy
-qi
+Qt
 dy
-qi
+Qt
 dy
-qi
-dy
-Yc
+Qt
+Qt
 xE
 Pn
 Pn

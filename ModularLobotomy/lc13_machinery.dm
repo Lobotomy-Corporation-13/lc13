@@ -33,6 +33,9 @@
 		if(get_dist(T, src) > get_dist(closest_department, src))
 			continue
 		closest_department = T
+	if(!closest_department)
+		relative_location = "in an unknown location."
+		return
 	var/direction = "in an unknown direction"
 	var/xdif = closest_department.x - src.x
 	var/ydif = closest_department.y - src.y

@@ -127,6 +127,10 @@
 /obj/effect/turf_decal/siding/thinplating{
 	dir = 10
 	},
+/obj/item/quest_ticket/grungeon{
+	pixel_x = -7;
+	pixel_y = 4
+	},
 /turf/open/floor/carpet/black,
 /area/city/backstreets_room)
 "r" = (

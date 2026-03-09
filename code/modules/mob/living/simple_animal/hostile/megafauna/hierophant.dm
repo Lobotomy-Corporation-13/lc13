@@ -606,6 +606,7 @@ Difficulty: Hard
 				moving--
 				sleep(speed)
 			targetturf = get_turf(target)
+
 /obj/effect/temp_visual/hierophant/chaser/proc/make_blast()
 	var/obj/effect/temp_visual/hierophant/blast/damaging/B = new(loc, caster, friendly_fire_check)
 	B.damage = damage
@@ -646,6 +647,7 @@ Difficulty: Hard
 	var/list/hit_things = list() //we hit these already, ignore them
 	var/friendly_fire_check = FALSE
 	var/bursting = FALSE //if we're bursting and need to hit anyone crossing us
+	damtype = RED_DAMAGE
 
 /obj/effect/temp_visual/hierophant/blast/damaging/Initialize(mapload, new_caster, friendly_fire)
 	. = ..()
@@ -686,7 +688,7 @@ Difficulty: Hard
 		to_chat(L, span_userdanger("You're struck by a [name]!"))
 		var/limb_to_hit = L.get_bodypart(pick(BODY_ZONE_HEAD, BODY_ZONE_CHEST, BODY_ZONE_R_ARM, BODY_ZONE_L_ARM, BODY_ZONE_R_LEG, BODY_ZONE_L_LEG))
 		var/armor = L.run_armor_check(limb_to_hit, MELEE, "Your armor absorbs [src]!", "Your armor blocks part of [src]!", FALSE, 50, "Your armor was penetrated by [src]!")
-		L.deal_damage(damage, FIRE, caster, def_zone = limb_to_hit, blocked = armor, wound_bonus = CANT_WOUND)
+		L.deal_damage(damage, damtype, caster, def_zone = limb_to_hit, blocked = armor, wound_bonus = CANT_WOUND)
 		if(ishostile(L))
 			var/mob/living/simple_animal/hostile/H = L //mobs find and damage you...
 			if(H.stat == CONSCIOUS && !H.target && H.AIStatus != AI_OFF && !H.client)
@@ -707,7 +709,7 @@ Difficulty: Hard
 				continue
 			to_chat(occupant, span_userdanger("Your [M.name] is struck by a [name]!"))
 			playsound(M,'sound/weapons/sear.ogg', 50, TRUE, -4)
-			M.take_damage(damage, FIRE, 0)
+			M.take_damage(damage, damtype, 0)
 
 /obj/effect/temp_visual/hierophant/blast/visual
 	icon_state = "hierophant_blast"

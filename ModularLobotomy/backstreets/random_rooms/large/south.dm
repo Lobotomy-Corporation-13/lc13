@@ -58,9 +58,3 @@
 	room_id = "bongy"
 	mappath = "_maps/RandomRooms/backstreets/large_south/bongy.dmm"
 	stock = 1	//There can only be one papa bongy's chicken
-
-/datum/map_template/random_room/backstreets/large_south/deathdealerambush
-	name = "Death Dealer Ambush"
-	room_id = "deathdealerambush"
-	mappath = "_maps/RandomRooms/backstreets/large_south/deathdealerambush.dmm"
-	stock = 1	//Only one Death Dealer allowed

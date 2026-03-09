@@ -53,11 +53,15 @@
 	abno_type = /mob/living/simple_animal/hostile/abnormality/dingledangle
 	abno_code = "T-04-111"
 	abno_info = list(
-		"When the work result was Bad, the employee was immediately consumed by Dingle-Dangle with a normal probability.",
-		"When employees with Prudence Level 3 or higher completed their work, they were consumed by Dingle-Dangle unless their Fortitude was Level 4 or higher.",
-		"When employees with Prudence Level 2 or lower completed their work with Dingle-Dangle, the Qliphoth Counter decreased.",
-		"These employees reported a sense of confusion as well heightened combat capabilities.",
-		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium.")
+		"T-04-111 was capable of holding both Fragility and Strength 'stacks', that it would release over time.",
+		"When the work result was Bad, T-04-111 gained many 'stacks' of fragility.",
+		"When work was completed, T-04-111 gains a few 'stacks' of strength.",
+		"When employees with Prudence Level 3 or higher completed their work, they were consumed by T-04-111 unless their Fortitude was Level 4 or higher.",
+		"The above action generates many 'stacks' of Strength.",
+		"When employees with Prudence Level 1 completed their work with T-04-111, the Qliphoth Counter decreased.",
+		"The above action generates 'stacks' of Strength.",
+		"These employees reported a sense of confusion.",
+		"When the Qliphoth Counter reached 0, everyone in the facility was afflicted with delirium, and T-04-111 gained 'stacks' of Fragility.")
 
 //Beauty and the Beast
 /obj/item/paper/fluff/info/teth/beauty

@@ -1,4 +1,6 @@
 //Very simple, funny little guy.
+
+//The transferable_simple in this abnormality stores it's amount of breaches
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit
 	name = "Lunar Physician"
 	desc = "A little rabbit girl in a nurse outfit."
@@ -61,10 +63,11 @@
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/Initialize(atom/attacked_target)
 	.=..()
-	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES)
+	var/breachtime = 5 MINUTES + rand(1, 10 MINUTES) + datum_reference.transferable_simple * 3 MINUTES
 	addtimer(CALLBACK(src, PROC_REF(BreachMe)), breachtime)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/proc/BreachMe(atom/attacked_target)
+	datum_reference.transferable_simple++
 	datum_reference.qliphoth_change(-99)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/AttackingTarget(atom/attacked_target)

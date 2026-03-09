@@ -47,6 +47,15 @@
 	cost = 10
 
 
+// I Can Make Anything - making
+/datum/ego_datum/weapon/branch12/making
+	item_path = /obj/item/ego_weapon/branch12/making
+	cost = 10
+
+/*/datum/ego_datum/armor/branch12/making
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/making
+	cost = 10*/
+
 // Saga of Man - Age of Man
 /datum/ego_datum/weapon/branch12/age
 	item_path = /obj/item/ego_weapon/branch12/age
@@ -55,6 +64,16 @@
 /datum/ego_datum/armor/branch12/age
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/age
 	cost = 10
+
+// Relic of Virtue - Virtue's Reward
+/datum/ego_datum/weapon/branch12/virtue
+	item_path = /obj/item/ego_weapon/branch12/mini/virtue
+	cost = 10
+
+/*/datum/ego_datum/armor/branch12/virtue
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/virtue
+	cost = 10*/
+
 
 
 // --------TETH---------
@@ -134,6 +153,15 @@
 	cost = 20
 
 
+// The Stagehand - Iai
+/datum/ego_datum/weapon/branch12/iai
+	item_path = /obj/item/ego_weapon/branch12/mini/iai
+	cost = 20
+
+/*/datum/ego_datum/armor/branch12/iai
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/iai
+	cost = 20*/
+
 // --------HE---------
 // The Show Goes On - Perfectionist
 /datum/ego_datum/weapon/branch12/perfectionist
@@ -163,6 +191,10 @@
 //Long Bird - Egoification!
 /datum/ego_datum/weapon/branch12/egoification
 	item_path = /obj/item/ego_weapon/branch12/egoification
+	cost = 35
+
+/datum/ego_datum/armor/branch12/egoification
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/egoification
 	cost = 35
 
 // Velvet Horizon - Something Memorable & A Big Day
@@ -352,4 +384,14 @@
 // Sage of the World - XXI
 /datum/ego_datum/armor/branch12/XXI
 	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/XXI
+	cost = 100
+
+
+// Seer Bird - Prognostica
+/datum/ego_datum/weapon/branch12/prognostica
+	item_path = /obj/item/ego_weapon/branch12/prognostica
+	cost = 100
+
+/datum/ego_datum/armor/branch12/prognostica
+	item_path = /obj/item/clothing/suit/armor/ego_gear/branch12/prognostica
 	cost = 100

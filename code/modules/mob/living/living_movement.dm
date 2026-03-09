@@ -7,6 +7,8 @@
 	. = ..()
 	if(.)
 		return
+	if(SEND_SIGNAL(src, COMSIG_LIVING_CAN_ALLOW_THROUGH, mover, get_dir(src, mover)) & COMPONENT_LIVING_PASSABLE)
+		return TRUE
 	if(mover.throwing)
 		return (!density || (body_position == LYING_DOWN) || (mover.throwing.thrower == src && !ismob(mover)))
 	if(buckled == mover)
