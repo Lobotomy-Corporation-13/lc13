@@ -195,7 +195,7 @@
 	ranged_cooldown = world.time + ranged_cooldown_time
 	var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
 	if(T.density == FALSE)
-		ProjectSplinter(target, T, 8)
+		DeferProjectile(/obj/projectile/frost_splinter, target, T, 8)
 		SLEEP_CHECK_DEATH(3)
 		playsound(get_turf(src), 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)
 		return
@@ -256,6 +256,10 @@
 		ReleasePrisoners()
 	ClearEffects()
 	QDEL_NULL(RVP)
+	kissed = null
+	snow_prison = null
+	storybook_hero = null
+	frozen_employee = null
 	return ..()
 
 		/*---------------------\
@@ -329,21 +333,6 @@
 
 	SLEEP_CHECK_DEATH(0.5 SECONDS)
 	can_act = TRUE
-
-//Quick proc for spawning and launching a frost splinter projectile.
-/mob/living/simple_animal/hostile/abnormality/snow_queen/proc/ProjectSplinter(mob/living/L, turf/T, projectile_telegraph_delay = 3)
-	if(!L || !T)
-		return
-	var/obj/projectile/frost_splinter/P
-	P = new(T)
-	P.starting = T
-	P.firer = src
-	P.fired_from = T
-	P.yo = L.y - T.y
-	P.xo = L.x - T.x
-	P.original = L
-	P.preparePixelProjectile(L, T)
-	addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), projectile_telegraph_delay)
 
 		/*--------\
 		|WORK KISS|
@@ -585,7 +574,7 @@
 			break
 		if(!do_after(src, 2, target = src) && get_health > health)
 			break
-		ProjectSplinter(L, get_turf(src), 3)
+		DeferProjectile(/obj/projectile/frost_splinter, L, get_turf(src), 3)
 		playsound(get_turf(src), 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)
 
 //At half health a healing patch of roses spawn to assist the player.
@@ -662,7 +651,7 @@
 			break
 		if(shootems == get_turf(src))
 			continue
-		ProjectSplinter(L, shootems, 3)
+		DeferProjectile(/obj/projectile/frost_splinter, L, shootems, 3)
 		playsound(shootems, 'sound/abnormalities/despairknight/attack.ogg', 50, 0, 4)
 
 //Determines if the effect on a AOE area is telegraphed or actually harmful.

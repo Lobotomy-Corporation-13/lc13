@@ -81,20 +81,16 @@
 	if(ranged_cooldown > world.time)
 		return FALSE
 	ranged_cooldown = world.time + ranged_cooldown_time
+	var/tries = 8
 	for(var/i = 1 to 4)
+		if(tries < 1)
+			break
 		var/turf/T = get_step(get_turf(src), pick(1,2,4,5,6,8,9,10))
 		if(T.density)
 			i -= 1
+			tries--
 			continue
-		var/obj/projectile/P = sculptor ?  new /obj/projectile/bride_bolts/(T) : new /obj/projectile/bride_bolts_enraged/(T)
-		P.starting = T
-		P.firer = src
-		P.fired_from = T
-		P.yo = target.y - T.y
-		P.xo = target.x - T.x
-		P.original = target
-		P.preparePixelProjectile(target, T)
-		addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), 3)
+		DeferProjectile(sculptor ? /obj/projectile/bride_bolts : /obj/projectile/bride_bolts_enraged, target, T, 3)
 	return
 
 

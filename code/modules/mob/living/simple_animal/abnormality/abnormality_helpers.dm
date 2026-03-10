@@ -1,4 +1,21 @@
 /*
+* For projectiles that dont originate from
+* a creatures position
+*/
+/mob/living/simple_animal/hostile/proc/DeferProjectile(projectile_type, mob/living/target_shoot, turf/T, projectile_telegraph_delay = 3)
+	if(!target_shoot || !T)
+		return
+	var/obj/projectile/P = new projectile_type(T)
+	P.starting = T
+	P.firer = src
+	P.fired_from = T
+	P.yo = target_shoot.y - T.y
+	P.xo = target_shoot.x - T.x
+	P.original = target_shoot
+	P.preparePixelProjectile(target_shoot, T)
+	addtimer(CALLBACK (P, TYPE_PROC_REF(/obj/projectile, fire)), projectile_telegraph_delay)
+
+/*
 * This Proc converts armor values into
 * mob defense values
 */

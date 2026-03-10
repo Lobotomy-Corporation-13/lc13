@@ -575,7 +575,9 @@
  * Used to not even attempt to Bump() or fail to Cross() anything we already hit.
  */
 /obj/projectile/CanPassThrough(atom/blocker, turf/target, blocker_opinion)
-	return impacted[blocker]? TRUE : ..()
+	if(!(blocker in impacted))
+		return ..()
+	return impacted[blocker] ? TRUE : ..()
 
 /**
  * Projectile moved:
