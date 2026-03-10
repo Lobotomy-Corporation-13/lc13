@@ -40,7 +40,7 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 
 	var/angy = FALSE
-	var/calm_down_time = 600
+	var/calm_down_time = 30 SECONDS
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Initialize(mapload) //Code shamelessly yoinked from Nosferatu
 	. = ..()
@@ -48,30 +48,24 @@
 
 /mob/living/simple_animal/hostile/abnormality/gossypium/Life()
 	. = ..()
-	if(!.)
-		return
-	var/datum/component/bloodfeast/bloodfeast = GetComponent(/datum/component/bloodfeast)
-	if(!bloodfeast) // This could potentially happen with admins playing around or something
-		return
-	if(bloodfeast.blood_amount > 1500) // If we have over 1500 blood saved up, we get angy
-		bloodfeast.blood_amount = 0 //So it doesn't just end up perma-pissed after getting enraged
-		Berzerk()
+	var/datum/component/bloodfeast/gathered_blood = GetComponent(/datum/component/bloodfeast)
+	if(!angy && gathered_blood)
+		if(gathered_blood.blood_amount > 500)
+			Enrage(gathered_blood)
 		return
 
-/mob/living/simple_animal/hostile/abnormality/gossypium/proc/Berzerk()
-	if(angy || IsContained()) // No bricking the mob by Berzerking when we aren't supposed to.
+/mob/living/simple_animal/hostile/abnormality/gossypium/proc/Enrage(datum/component/bloodfeast/bloodfeast_component)
+	if(IsContained()) // No bricking the mob by Berzerking when we aren't supposed to.
 		return
-	playsound(get_turf(src), 'sound/abnormalities/nosferatu/transform.ogg', 35, 8)
 	angy = TRUE
-	move_to_delay -= 1
-	update_icon()
-	retreat_distance = 0
-	minimum_distance = 0
-	calm_down_time = (world.time+calm_down_time) //Calms down after a bit
-	if(calm_down_time>world.time) //No need to calm down if you're not pissed off
-		angy = FALSE
-		move_to_delay = 3 //resets the movespeed so stacks don't result in permanent zoomies
-		return
-	//if(napalm_cooldown>world.time)
-	//	return FALSE
-	//napalm_cooldown = (world.time+napalm_cd_duration)
+	playsound(get_turf(src), 'sound/abnormalities/nosferatu/transform.ogg', 35, 8)
+	animate(src, 1 SECONDS, color = "#882020", transform = matrix()*1.10)
+	ChangeMoveToDelay(move_to_delay - 0.5)
+	rapid_melee += 0.5
+
+//fuck's sake man, how do I get this numbskull to calm down without breaking everything...
+//	calm_down_time = (world.time+calm_down_time) //Calms down after a bit
+//	if(calm_down_time>world.time)
+//		angy = FALSE
+//		ChangeMoveToDelayBy(move_to_delay + 0.5) //resets the movespeed so stacks don't result in permanent zoomies
+//		return
