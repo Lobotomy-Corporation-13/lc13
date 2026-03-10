@@ -1349,21 +1349,22 @@
 				var/userjust = (get_attribute_level(user, JUSTICE_ATTRIBUTE))
 				var/justicemod = 1 + userjust/100
 				var/current_damage = force
+				current_damage*=justicemod
+				var/healing = force
 				interrupt_loop = TRUE
 				SetCrescendoTraits(user)
 				addtimer(CALLBACK(src, PROC_REF(RemoveCrescendoTraits), user), 15, TIMER_STOPPABLE)
 				if(do_after(user, 10, src))
 					playsound(src, 'sound/weapons/ego/rhythm_crescendo.ogg', 100, FALSE, 9)
-					user.adjustBruteLoss(-current_damage/2)
-					user.adjustSanityLoss(-current_damage/2)
+					user.adjustBruteLoss(-healing/2)
+					user.adjustSanityLoss(-healing/2)
 					RemoveCrescendoTraits(user)
 					for(var/mob/living/carbon/human/L in range(9, get_turf(user))) // Heals based on var/current_damage
 						if(user.faction_check_mob(L))
-							L.adjustSanityLoss(-current_damage/2)
-							for(var/mob/living/H in range(6, get_turf(user))) // Does 1.5x damage based on var/current_damage
-								if(!user.faction_check_mob(H))
-									current_damage*=justicemod
-									H.deal_damage(current_damage*1.5, WHITE_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
+							L.adjustSanityLoss(-healing/2)
+					for(var/mob/living/H in range(6, get_turf(user))) // Does 1.5x damage based on var/current_damage
+						if(!user.faction_check_mob(H))
+							H.deal_damage(current_damage*1.5, WHITE_DAMAGE, src, attack_type = ATTACK_TYPE_SPECIAL)
 			else
 				to_chat(user, span_danger("You cannot understand true harmony!"))// For naughty naughty people trying to use the chainsaw without wearing the realization
 				user.adjustSanityLoss(500)
@@ -1399,6 +1400,11 @@
 	// If we ARE currently sawing you don't get to hit anything
 	else
 		return FALSE
+
+/obj/item/ego_weapon/rhythm/melee_attack_chain(mob/user, atom/target, params)
+	if(HAS_TRAIT(user, TRAIT_PACIFISM)) // For some god forsaken reason I have to manually check this here.
+		return FALSE
+	. = ..()
 
 // Called when hitting a mob or structure or machine with this weapon
 /obj/item/ego_weapon/rhythm/proc/BeginSawLoop(atom/target, mob/living/user)
