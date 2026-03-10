@@ -1501,6 +1501,12 @@
 	SIGNAL_HANDLER
 	return COMPONENT_CANCEL_THROW
 
+/obj/item/ego_weapon/rhythm/Destroy()
+	saw_loop_delay = null
+	saw_target = null
+	return ..()
+
+
 /obj/effect/temp_visual/rhythm_melodies
 	name = "rhythm_melodies"
 	icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects.dmi'
