@@ -1372,7 +1372,7 @@
 		if(do_after(user, 10, src))	//Just a second to heal people around you, but it also harms you
 			if(ishuman(user))
 				if(istype(our_suit))
-					playsound(src, 'sound/weapons/ego/rhythm_activation.ogg', 100, FALSE, 9)
+					playsound(src, 'sound/weapons/ego/rhythm_activation.ogg', 50, FALSE, 9)
 					revved_up = TRUE
 					hitsound = 'sound/weapons/ego/empowered_rhythm_attack.ogg'
 					icon_state = "empowered_rhythm"
@@ -1385,6 +1385,13 @@
 
 /obj/item/ego_weapon/rhythm/get_clamped_volume()
 	return 35
+
+/obj/item/ego_weapon/rhythm/examine(mob/user)
+	. = ..()
+	if(ishuman(user))
+		var/obj/item/clothing/suit/armor/ego_gear/realization/rhythm/our_suit = user.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(our_suit))
+			. += span_nicegreen("Due to wearing [our_suit] E.G.O. armour, you now understand the true meaning of Harmony. Activating this will allow you to protrude and rev the hidden blades within the weapon. Attacking while the blades are out will allow you to saw into the enemy, <b>as you saw into the enemy you will begin taking damage and the weapon will ramp up in damage. Activating the weapon while sawing into an enemy will allow you to perform a Crescendo</b>, healing your health and sanity while your allies gains sanity and also dealing massive white damage to enemies around you.")
 
 /obj/item/ego_weapon/rhythm/attack(mob/living/target, mob/living/user)
 	if(!CanUseEgo(user)) // I keep forgetting this check teehee
