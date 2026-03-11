@@ -336,7 +336,7 @@
 
 	// Remove burn if it's safety is on
 	var/datum/status_effect/stacking/lc_burn/B = user.has_status_effect(/datum/status_effect/stacking/lc_burn)
-	if(B.safety)
+	if(B?.safety)
 		user.remove_status_effect(STATUS_EFFECT_LCBURN)
 
 /obj/item/ego_weapon/wield/ochre

@@ -447,6 +447,8 @@ Behavior that's still missing from this component that original food items had t
 
 	var/datum/component/edible/E = ingredient
 	if (LAZYLEN(E.tastes))
+		if(!tastes)
+			tastes = list()
 		tastes = tastes.Copy()
 		for (var/t in E.tastes)
 			tastes[t] += E.tastes[t]

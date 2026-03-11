@@ -34,7 +34,7 @@
 		return
 
 	icon_state = "saga_inert"
-	current_saga = pick("Ice Age", "Plague", "Famine", "Golden Age", "All Saint's Day", "Industrial Age")
+	current_saga = pick("Ice Age", "Plague", "Famine", "Golden Age", "All Saint's Day", "Industrial Age", "Medical Age")
 	sound_to_playing_players_on_level('sound/abnormalities/silence/church.ogg', 50, zlevel = z)
 	for(var/mob/H in GLOB.player_list)
 		to_chat(H, span_spider("The Saga has been read! The new age for humanity is [current_saga]!"))
@@ -101,10 +101,9 @@
 					to_chat(H, span_warning("Prosperitas!"))
 
 
-		//Not
 		if("Medical Age")
 			for(var/mob/living/carbon/human/H in GLOB.mob_list)
 				if(prob(5))
 					if(H.z!=z)
 						continue
-					H.adjustBruteLoss(3)
+					H.adjustBruteLoss(-3)

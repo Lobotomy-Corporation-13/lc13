@@ -8,8 +8,8 @@
 	var/room_width = 0
 	var/room_height = 0
 	var/room_type = "maintenance" // Used so we can place landmarks in ruins and such.
-	var/spawn_delay_min = 600
-	var/spawn_delay_max = 600
+	var/spawn_delay_min = 300
+	var/spawn_delay_max = 900
 
 /obj/effect/spawner/room/Initialize()
 	..()/*

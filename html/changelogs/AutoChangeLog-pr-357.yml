@@ -1,0 +1,5 @@
+author: "InsightfulParasite"
+delete-after: True
+changes:
+  - refactor: " Projectile shooting in Snow Queen, Nihil, Pygmalion, and  Despair Knight."
+  - bugfix: "Bad Index runtime that occurred when despair knight  shot projectiles."

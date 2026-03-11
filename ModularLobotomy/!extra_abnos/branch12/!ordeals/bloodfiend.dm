@@ -8,8 +8,8 @@
 	end_sound = 'sound/effects/ordeals/crimson_end.ogg'
 	level = 1
 	reward_percent = 0.10
-	spawn_places = 6
-	spawn_amount = 4
+	spawn_places = 3
+	spawn_amount = 3
 	spawn_type = list(
 		/mob/living/simple_animal/hostile/humanoid/blood/bag,
 		)
@@ -39,7 +39,7 @@
 	level = 2
 	reward_percent = 0.15
 	boss_amount = 3
-	grunt_amount = 6
+	grunt_amount = 3
 	boss_player_multiplicator = 0.03
 	grunt_player_multiplicator = 0.05
 
@@ -64,7 +64,7 @@
 	level = 3
 	reward_percent = 0.20
 	boss_amount = 2
-	grunt_amount = 6
+	grunt_amount = 4
 	boss_player_multiplicator = 0.03
 	grunt_player_multiplicator = 0.05
 

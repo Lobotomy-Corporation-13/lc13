@@ -65,6 +65,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/central)
+"dc" = (
+/obj/structure/table/bronze,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "dg" = (
 /obj/structure/table/glass,
 /obj/machinery/computer/libraryconsole{
@@ -881,6 +885,12 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/north)
+"lS" = (
+/obj/machinery/computer/extraction_cargo{
+	dir = 8
+	},
+/turf/open/floor/carpet/royalblack,
+/area/department_main/extraction)
 "lY" = (
 /obj/effect/turf_decal/stripes/line,
 /turf/open/floor/plasteel/dark,
@@ -1016,6 +1026,14 @@
 /obj/item/reagent_containers/hypospray/medipen/mental,
 /turf/open/floor/carpet/green,
 /area/department_main/safety)
+"nz" = (
+/obj/machinery/camera/autoname,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/structure/chair/sofa/corp/left,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "nI" = (
 /obj/structure/chair/stool/bar,
 /turf/open/floor/carpet/orange,
@@ -2040,6 +2058,12 @@
 /obj/machinery/camera/autoname,
 /turf/open/floor/wood,
 /area/department_main/command)
+"zV" = (
+/obj/structure/chair/sofa/corp/corner{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "zW" = (
 /turf/closed/indestructible/reinforced,
 /area/department_main/training)
@@ -2575,6 +2599,10 @@
 "Iq" = (
 /turf/open/floor/plasteel/dark,
 /area/department_main/control)
+"Is" = (
+/obj/structure/closet/secure_closet/record,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/records)
 "It" = (
 /obj/effect/turf_decal/siding/yellow{
 	dir = 8
@@ -2634,6 +2662,10 @@
 	},
 /turf/open/floor/plasteel,
 /area/facility_hallway/command)
+"Jl" = (
+/obj/structure/chair/sofa/corp,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "Jm" = (
 /obj/structure/table/reinforced,
 /turf/open/floor/carpet/orange,
@@ -2654,9 +2686,6 @@
 /obj/machinery/computer/ego_purchase{
 	dir = 8
 	},
-/obj/machinery/camera/autoname{
-	dir = 9
-	},
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "JF" = (
@@ -2671,8 +2700,7 @@
 /turf/open/floor/plasteel/white,
 /area/department_main/safety)
 "JI" = (
-/obj/structure/chair/comfy/black,
-/turf/open/floor/carpet/royalblack,
+/turf/closed/indestructible/rock,
 /area/department_main/extraction)
 "JR" = (
 /obj/machinery/holopad,
@@ -2693,6 +2721,9 @@
 "JX" = (
 /obj/machinery/computer/abnormality_logs{
 	dir = 8
+	},
+/obj/machinery/camera/autoname{
+	dir = 9
 	},
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
@@ -2771,7 +2802,7 @@
 /area/facility_hallway/control)
 "KX" = (
 /obj/machinery/light,
-/obj/machinery/text_adventure_console,
+/obj/effect/landmark/refinerspawn,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "KZ" = (
@@ -2807,9 +2838,6 @@
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
 "Lr" = (
-/obj/machinery/computer/extraction_cargo{
-	dir = 8
-	},
 /obj/machinery/light,
 /turf/open/floor/carpet/royalblack,
 /area/department_main/extraction)
@@ -3142,6 +3170,14 @@
 /obj/machinery/regenerator,
 /turf/open/floor/carpet/purple,
 /area/department_main/information)
+"PB" = (
+/obj/machinery/text_adventure_console,
+/turf/open/floor/carpet/royalblack,
+/area/department_main/extraction)
+"PH" = (
+/obj/effect/landmark/xeno_spawn,
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "PI" = (
 /obj/machinery/camera/autoname{
 	dir = 1
@@ -3639,6 +3675,9 @@
 /obj/effect/landmark/xeno_spawn,
 /turf/open/floor/plasteel,
 /area/facility_hallway/south)
+"Vf" = (
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "Vg" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/wood,
@@ -3705,6 +3744,12 @@
 "VK" = (
 /turf/open/floor/plating,
 /area/facility_hallway/safety)
+"VL" = (
+/obj/structure/chair/sofa/corp/right{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/facility_hallway/central)
 "VQ" = (
 /obj/effect/turf_decal/bot,
 /obj/effect/decal/cleanable/dirt,
@@ -35602,14 +35647,14 @@ ZU
 ZU
 ZU
 Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
+Kn
 ZL
 ZL
 ZL
@@ -35858,15 +35903,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36115,15 +36160,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+Ve
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36372,15 +36417,15 @@ ZU
 ZU
 ZU
 ZU
-Vi
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ZU
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+QJ
+Kn
 ZL
 ZL
 ZL
@@ -36634,9 +36679,9 @@ Kn
 Kn
 Kn
 Th
-Kn
-Kn
-Kn
+QJ
+QJ
+QJ
 Kn
 ZL
 ZL
@@ -37149,7 +37194,7 @@ vg
 vg
 Kn
 QJ
-Ve
+QJ
 QJ
 Kn
 ZL
@@ -40976,7 +41021,7 @@ Gt
 Gt
 IH
 Jp
-JI
+Jr
 KX
 GN
 tN
@@ -41746,8 +41791,8 @@ EI
 Gt
 Gt
 IV
-Jr
 JT
+Jr
 Jr
 GN
 LQ
@@ -42004,7 +42049,7 @@ GC
 Ik
 IY
 JB
-JX
+Jr
 Lr
 GN
 LV
@@ -42260,9 +42305,9 @@ FX
 GN
 GN
 GN
-GN
-GN
-GN
+IV
+JT
+Jr
 GN
 LV
 tN
@@ -42516,11 +42561,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-RV
+GN
+lS
+JX
+PB
+GN
 RV
 Mf
 tN
@@ -42773,11 +42818,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+GN
+GN
+GN
+GN
+GN
 ZL
 Mi
 tN
@@ -43030,11 +43075,11 @@ Xw
 EI
 YO
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+JI
+JI
+JI
+JI
+JI
 ZL
 Ms
 tN
@@ -43287,7 +43332,7 @@ Xw
 EM
 YO
 ZL
-ZL
+JI
 RV
 RV
 RV
@@ -46864,7 +46909,7 @@ ZK
 uY
 ZK
 ve
-wg
+Is
 ww
 pC
 ve
@@ -47374,17 +47419,17 @@ Hv
 Hv
 Hv
 Hv
-Hv
-Hv
-Hv
+ZK
+ZK
+ZK
 ve
 ve
 ve
 ve
 ve
-Hv
-Hv
-Hv
+ZK
+ZK
+ZK
 Hv
 ZL
 ZL
@@ -47630,19 +47675,19 @@ ZA
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+ZK
+ZK
+ZK
+ZK
+WW
+ZK
+ZK
+ZK
+ZK
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -47887,19 +47932,19 @@ ZA
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+uY
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -48144,19 +48189,19 @@ ZA
 ZA
 ZA
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+ZK
+qz
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+ZK
+qz
+ZK
+Hv
 ZL
 ZL
 ZL
@@ -48401,19 +48446,19 @@ sF
 tp
 ZA
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Hv
+Hv
+Hv
+Hv
+zV
+VL
+Vf
+Hv
+Hv
+Hv
+Hv
+Hv
 ZL
 ZL
 ZL
@@ -48662,11 +48707,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Jl
+dc
+Vf
+Hv
 ZL
 ZL
 ZL
@@ -48919,11 +48964,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+nz
+Vf
+PH
+Hv
 ZL
 ZL
 ZL
@@ -49176,11 +49221,11 @@ ZL
 ZL
 ZL
 ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Hv
+Hv
+Hv
+Hv
+Hv
 ZL
 ZL
 ZL

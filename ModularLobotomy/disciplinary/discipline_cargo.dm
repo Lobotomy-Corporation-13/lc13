@@ -32,6 +32,8 @@
 		new /datum/data/extraction_cargo("L-Corp Pistol Template ",			/obj/item/ego_weapon/ranged/city/lcorp/pistol,						100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Machinepistol Template ",	/obj/item/ego_weapon/ranged/city/lcorp/automatic_pistol,			100, CAT_EQUIP) = 1,
 		new /datum/data/extraction_cargo("L-Corp Armored Vest Template ",	/obj/item/clothing/suit/armor/ego_gear/city/lcorp_vest,				100, CAT_EQUIP) = 1,
+		new /datum/data/extraction_cargo("Anti-Abnormality Grenade Box ",	/obj/item/storage/box/lobotomygrenades,								300, CAT_GADGET) = 1,
+		new /datum/data/extraction_cargo("Grenade Launcher ",				/obj/item/gun/grenadelauncher,										500, CAT_GADGET) = 1,
 
 		//Medical
 		new /datum/data/extraction_cargo("Epinepherine Medi-Pen ",		/obj/item/reagent_containers/hypospray/medipen,						40, CAT_MEDICAL) = 1,

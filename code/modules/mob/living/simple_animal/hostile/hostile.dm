@@ -1029,6 +1029,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return
 	if(stat == DEAD)
 		return
+	if(!target)
+		return
 	var/in_range = melee_reach > 1 ? target.Adjacent(targets_from) || (get_dist(src, A) <= melee_reach && (target in view(src, melee_reach))) : target.Adjacent(targets_from)
 	if(in_range)
 		return

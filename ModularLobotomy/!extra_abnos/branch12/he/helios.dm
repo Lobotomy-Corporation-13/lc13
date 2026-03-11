@@ -60,6 +60,9 @@
 	for(var/mob/living/L in GLOB.mob_list)
 		if(L.z != z)
 			continue
+		if(L == src)
+			continue
+		L.apply_lc_fragile(3)
 		if(faction_check_mob(L))
 			continue
 		L.deal_damage((10), WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE), attack_type = (ATTACK_TYPE_SPECIAL))

@@ -24,6 +24,9 @@
 	..()
 //	new /obj/effect/spawner/bundle/combat_pages(src)
 	new /obj/item/clothing/suit/armor/ego_gear/disc_off(src)
+	new /obj/item/storage/box/lobotomygrenades(src)
+	new /obj/item/storage/box/lobotomygrenades(src)
+	new /obj/item/gun/grenadelauncher(src)
 
 
 

@@ -42,7 +42,7 @@
 /obj/effect/turf_decal/tile/blue{
 	color = "#3234B9"
 	},
-/obj/machinery/computer/abnormality_queue,
+/obj/machinery/computer/communications,
 /turf/open/floor/plasteel/sepia,
 /area/department_main/manager)
 "at" = (
@@ -89,7 +89,7 @@
 /obj/effect/turf_decal/tile/blue{
 	color = "#3234B9"
 	},
-/obj/machinery/computer/communications,
+/obj/machinery/computer/abnormality_queue,
 /turf/open/floor/plasteel/sepia,
 /area/department_main/manager)
 "aw" = (
@@ -248,6 +248,12 @@
 	dir = 5
 	},
 /turf/open/floor/carpet/cyan,
+/area/department_main/manager)
+"bK" = (
+/obj/machinery/computer/camera_advanced/manager/sephirah{
+	name = "command camera console"
+	},
+/turf/open/floor/carpet/black,
 /area/department_main/manager)
 "cd" = (
 /obj/effect/turf_decal/caution/stand_clear/red{
@@ -427,6 +433,9 @@
 /obj/item/reagent_containers/food/drinks/bottle/champagne,
 /turf/open/floor/wood,
 /area/department_main/manager)
+"jB" = (
+/turf/closed/indestructible/rock,
+/area/department_main/manager)
 "jC" = (
 /obj/structure/table/wood,
 /obj/machinery/chem_dispenser/drinks{
@@ -458,9 +467,13 @@
 /area/department_main/manager)
 "ld" = (
 /obj/machinery/door/airlock/grunge{
-	name = "manager's private quarters";
-	req_access_txt = "20"
+	name = "officer quarters";
+	req_access_txt = "19"
 	},
+/turf/open/floor/wood,
+/area/department_main/manager)
+"nF" = (
+/obj/structure/closet/secure_closet/personal/cabinet,
 /turf/open/floor/wood,
 /area/department_main/manager)
 "oB" = (
@@ -471,8 +484,13 @@
 /turf/open/floor/wood,
 /area/department_main/manager)
 "pE" = (
-/obj/machinery/vending/cigarette,
-/turf/open/floor/plasteel,
+/obj/structure/curtain/cloth,
+/obj/effect/turf_decal/siding/wood/end,
+/turf/open/floor/wood,
+/area/department_main/manager)
+"qH" = (
+/obj/item/kirbyplants/random,
+/turf/open/floor/plasteel/dark,
 /area/department_main/manager)
 "qP" = (
 /turf/open/space/basic,
@@ -482,12 +500,19 @@
 /obj/machinery/vending/snack/green,
 /turf/open/floor/plasteel,
 /area/department_main/manager)
+"uk" = (
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/plasteel/dark,
+/area/department_main/manager)
 "ux" = (
 /turf/open/floor/carpet/royalblack,
 /area/department_main/manager)
 "vI" = (
 /obj/machinery/computer/camera_advanced/manager/sephirah{
-	dir = 1
+	dir = 1;
+	name = "command camera console"
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
@@ -495,6 +520,16 @@
 /obj/structure/table/wood,
 /obj/effect/spawner/lootdrop/three_course_meal,
 /turf/open/floor/wood,
+/area/department_main/manager)
+"wz" = (
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
+"wP" = (
+/obj/machinery/light{
+	dir = 4;
+	light_color = "#e8eaff"
+	},
+/turf/open/floor/plasteel/dark,
 /area/department_main/manager)
 "wR" = (
 /obj/item/bedsheet/dorms,
@@ -504,12 +539,31 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
+"wY" = (
+/obj/structure/chair/office{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
+"xa" = (
+/obj/machinery/computer/abnormality_archive,
+/obj/machinery/light{
+	dir = 1
+	},
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
 "xB" = (
 /obj/machinery/light,
 /obj/structure/table/wood,
 /obj/machinery/computer/security/wooden_tv,
 /obj/machinery/light,
 /turf/open/floor/wood,
+/area/department_main/manager)
+"yW" = (
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
 /area/department_main/manager)
 "zG" = (
 /obj/docking_port/stationary{
@@ -541,6 +595,9 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
+"CT" = (
+/turf/open/floor/plasteel/dark,
+/area/department_main/manager)
 "FH" = (
 /obj/structure/chair/comfy/black{
 	dir = 4
@@ -549,6 +606,22 @@
 /area/department_main/manager)
 "Gy" = (
 /obj/structure/curtain/bounty,
+/turf/open/floor/wood,
+/area/department_main/manager)
+"Ho" = (
+/obj/structure/table/wood,
+/obj/item/paper_bin,
+/obj/item/pen/fourcolor,
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
+"Ir" = (
+/obj/structure/bed/pod{
+	dir = 6
+	},
+/obj/item/bedsheet,
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/wood,
 /area/department_main/manager)
 "It" = (
@@ -562,6 +635,7 @@
 /area/department_main/manager)
 "Jl" = (
 /obj/machinery/light,
+/obj/machinery/vending/cigarette,
 /turf/open/floor/plasteel,
 /area/department_main/manager)
 "Kx" = (
@@ -581,6 +655,16 @@
 	},
 /turf/open/floor/wood,
 /area/department_main/manager)
+"Mx" = (
+/obj/machinery/computer/crew,
+/obj/machinery/light{
+	dir = 1
+	},
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
 "NB" = (
 /obj/machinery/door/airlock/grunge{
 	name = "manager's study";
@@ -599,6 +683,25 @@
 "SI" = (
 /turf/open/floor/wood,
 /area/department_main/manager)
+"SP" = (
+/obj/structure/curtain/bounty,
+/obj/effect/turf_decal/siding/wood/end,
+/turf/open/floor/wood,
+/area/department_main/manager)
+"TW" = (
+/obj/machinery/photocopier,
+/obj/effect/turf_decal/siding/white{
+	dir = 4
+	},
+/turf/open/floor/carpet/black,
+/area/department_main/manager)
+"UW" = (
+/obj/machinery/door/airlock/grunge{
+	name = "officer quarters";
+	req_access_txt = "19"
+	},
+/turf/open/floor/plasteel,
+/area/department_main/manager)
 "Vf" = (
 /obj/effect/turf_decal/siding/blue,
 /obj/machinery/button/door/indestructible{
@@ -613,6 +716,14 @@
 	dir = 4
 	},
 /obj/machinery/light,
+/turf/open/floor/wood,
+/area/department_main/manager)
+"WX" = (
+/obj/structure/bed/pod,
+/obj/item/bedsheet/black,
+/obj/machinery/light{
+	dir = 1
+	},
 /turf/open/floor/wood,
 /area/department_main/manager)
 "ZJ" = (
@@ -24319,7 +24430,7 @@ ZL
 ZL
 ZL
 ZL
-ZL
+jB
 ZL
 ZL
 ZL
@@ -27164,13 +27275,13 @@ af
 af
 af
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+ae
+ae
+ae
+ae
+ae
+ae
+ae
 ZL
 ZL
 ZL
@@ -27421,13 +27532,13 @@ af
 af
 af
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+xa
+wz
+Ho
+ae
+nF
+SI
+ae
 ZL
 ZL
 ZL
@@ -27678,13 +27789,13 @@ cd
 aU
 cP
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+bK
+wY
+wz
+ae
+WX
+SI
+ae
 ZL
 ZL
 ZL
@@ -27935,13 +28046,13 @@ cg
 ae
 ae
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+Mx
+yW
+TW
+ae
+ae
+SP
+ae
 ZL
 ZL
 ZL
@@ -28192,13 +28303,13 @@ cW
 cW
 Jl
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+CT
+CT
+CT
+uk
+CT
+CT
+ae
 ZL
 ZL
 ZL
@@ -28447,15 +28558,15 @@ cW
 cW
 cW
 cW
-pE
+cW
+UW
+CT
+CT
+CT
+CT
+CT
+CT
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
 ZL
 ZL
 ZL
@@ -28706,13 +28817,13 @@ cW
 cW
 sl
 ae
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
-ZL
+qH
+CT
+CT
+wP
+CT
+CT
+ae
 ZL
 ZL
 ZL
@@ -28967,9 +29078,9 @@ ae
 ae
 ae
 ae
-ZL
-ZL
-ZL
+ae
+pE
+ae
 ZL
 ZL
 ZL
@@ -29224,9 +29335,9 @@ It
 SI
 Wb
 ae
-ZL
-ZL
-ZL
+SI
+SI
+ae
 ZL
 ZL
 ZL
@@ -29481,9 +29592,9 @@ SI
 SI
 NP
 ae
-ZL
-ZL
-ZL
+Ir
+SI
+ae
 ZL
 ZL
 ZL
@@ -29738,9 +29849,9 @@ kh
 SI
 zP
 ae
-ZL
-ZL
-ZL
+ae
+ae
+ae
 ZL
 ZL
 ZL

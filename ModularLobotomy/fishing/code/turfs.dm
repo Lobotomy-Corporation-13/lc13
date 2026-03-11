@@ -173,6 +173,8 @@
 /turf/open/water/deep/proc/MobSink(mob/living/drowner)
 	//Deal light initial damage - the drowning effect will be the main threat
 	if(drowner.stat != DEAD)
+		if(!(drowner.flags_1 & INITIALIZED_1))
+			return
 		if(ishuman(drowner))
 			var/mob/living/carbon/human/H = drowner
 			H.adjustOxyLoss(5)

@@ -1,7 +1,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/long_bird
 	name = "Long Bird"
-	desc = "Jesus what the fuck man, how did it's legs get so big?"
+	desc = "Jesus what the fuck man, how did its legs get so big?"
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/32x64.dmi'
 	icon_state = "long_bird"
 	icon_living = "long_bird"
@@ -36,7 +36,7 @@
 
 	ego_list = list(
 		/datum/ego_datum/weapon/branch12/egoification,
-	//	/datum/ego_datum/armor/legs
+		/datum/ego_datum/armor/branch12/egoification
 	)
 	//gift_type =  /datum/ego_gifts/departure
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12

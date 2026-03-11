@@ -40,7 +40,7 @@
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 12 SECONDS
 	var/pulse_damage = 150
-	var/weak_pulse_damage = 20
+	var/weak_pulse_damage = 40
 
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Move()
 	return FALSE
@@ -86,6 +86,7 @@
 	for(var/mob/living/L in GLOB.mob_list)
 		if(L.z != z)
 			continue
+		L.apply_lc_fragile(3)
 		if(faction_check_mob(L))
 			continue
 		L.deal_damage((pulse_damage), WHITE_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
@@ -99,6 +100,7 @@
 	for(var/mob/living/L in GLOB.mob_list)
 		if(L.z != z)
 			continue
+		L.apply_lc_strength(3)
 		if(faction_check_mob(L))
 			continue
 		L.deal_damage((weak_pulse_damage), BLACK_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))

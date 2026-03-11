@@ -111,6 +111,27 @@
 		"After an employee was destroyed by T-05-12-113, all the agents in the facility got a bit stronger.",
 	)
 
+// I can Make Anything
+/obj/item/paper/fluff/info/branch12/make_anything
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/make_anything
+	abno_code = "O-04-12-533"
+	abno_info = list(
+		"O-04-12-533 seemed to occasionally gift the player with gadgets wearing the XX-Corp label after a good work result.",
+	)
+
+// Relic of Virtue
+/obj/item/paper/fluff/info/branch12/relic
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/relic_of_virtue
+	abno_code = "O-03-12-442"
+	abno_info = list(
+		"Over time, the risk class of 06-12-442 would change to match what the facility had.",
+		"The success rate of 06-12-442, work damage and PE boxes of 06-12-442 would increase to match.",
+		"Performing a bad work on 06-12-442 would reset the employee's stats to 0.",
+		"Due to a previous incident (Incident O-03-12-442-B), the Safety Department would like remind all employees that consuming the relic is ill advised. \
+			Employees that desecrate the shrine in this way should be aware that the consequences of doing so is unknown.",
+	)
+
+
 
 //	-------------TETH-------------
 // Remnant of the Forest
@@ -321,7 +342,7 @@
 		"When the work result was bad, the Qliphoth counter decreased.",
 		"When the work result was good, the Qliphoth counter decreased.",
 		"When the work result was neutral, the Qliphoth counter increased.",
-		"When O-01-111’s Qliphoth counter reached 0, A copy of O-01-12-111 appeared in multiple hallways of the facility",
+		"When O-01-12-111’s Qliphoth counter reached 0, A copy of O-01-12-111 appeared in multiple hallways of the facility",
 	)
 
 // Passion of Love in Death
@@ -331,7 +352,8 @@
 	abno_info = list(
 		"When the work result was bad, the Qliphoth counter decreased with a high probability.",
 		"When repression work was performed with T-01-244, the Qliphoth counter lowered at a high probability.",
-		"When an employee with level 3 justice or higher completed their work, the Qliphoth counter lowered. The same phenomenon occurred when temperance was above level 4.",
+		"When an employee with level 3 justice or higher completed their work, the Qliphoth counter lowered. The same phenomenon occurred at a low rate when temperance was above level 4.",
+		"When the work result was good and the employee had level 4 temperance or higher, the Qliphoth Counter increased."
 	)
 
 // Hand of Babel
@@ -481,3 +503,18 @@
 		"After some time, Waxing of The Black Sun will soak the floor of the facility with blood, causing employees to be filled with rage.",
 		"After The Black Sun reaches the zenith, all abnormalities will breach"
 		)
+
+// SS13
+/obj/item/paper/fluff/info/branch12/ss13
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/ss13
+	abno_code = "O-04-12-13"
+	abno_info = list(
+		"O-04-12-13 is currently in orbit above Branch 12, performing research.",
+		"When O-04-12-13 has completed substantial research, it will cause PE gain to rapidly improve.",
+		"O-04-12-13 can be resupplied by bringing both fuel and supplies to the terminal.",
+		"Working on O-04-12-13 sent a message to the staff aboard it, telling them how to manage their station.",
+		"Completing an Instinct work will submit a message for engineers to repair the station, using more supplies.",
+		"Completing an Insight work will allocate funding to the research staff; speeding up research but causing more hull damage.",
+		"Completing an Attachment work will issue extra rations to the staff aboard, reducing the amount of tensions aboard.",
+		"Completing a Repression work will initiate martial law, increasing security.",
+	)

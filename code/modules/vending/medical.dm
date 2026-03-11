@@ -24,6 +24,8 @@
 					/obj/item/reagent_containers/hypospray/medipen/l_burn = 6,
 					/obj/item/reagent_containers/hypospray/medipen/purgeall = 3,
 					/obj/item/reagent_containers/hypospray/medipen/antitoxin = 1,
+					/obj/item/storage/pill_bottle/mannitol = 10,
+					/obj/item/storage/pill_bottle/iron = 10,
 					/obj/item/storage/box/bodybags = 4,
 					/obj/item/storage/box/masks = 1)
 	contraband = list(/obj/item/storage/box/gum/happiness = 3,
@@ -65,6 +67,8 @@
 					/obj/item/reagent_containers/glass/bottle/syriniver = 2,
 					/obj/item/reagent_containers/glass/bottle/epinephrine = 3,
 					/obj/item/reagent_containers/hypospray/medipen/salbutamol = 10, // LOBOTOMYCORPORATION ADDITION
+					/obj/item/storage/pill_bottle/mannitol = 10,
+					/obj/item/storage/pill_bottle/iron = 10,
 					/obj/item/reagent_containers/glass/bottle/morphine = 4,
 					/obj/item/reagent_containers/glass/bottle/potass_iodide = 1,
 					/obj/item/reagent_containers/glass/bottle/salglu_solution = 3,
