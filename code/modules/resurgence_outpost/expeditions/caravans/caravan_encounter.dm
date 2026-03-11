@@ -628,8 +628,10 @@ h3 {
 /datum/caravan_encounter_controller/proc/end_encounter_success()
 	resolved = TRUE
 
-	// Resume caravan travel
-	caravan.resume_travel()
+	// Don't resume immediately - give players time to return
+	// Caravan waits 2-3 minutes before resuming travel
+	caravan.state = CARAVAN_WAITING
+	caravan.wait_timer_id = addtimer(CALLBACK(caravan, TYPE_PROC_REF(/datum/faction_caravan, resume_travel)), rand(1200, 1800), TIMER_STOPPABLE)
 
 	// Clear global encounter
 	GLOB.current_caravan_encounter = null

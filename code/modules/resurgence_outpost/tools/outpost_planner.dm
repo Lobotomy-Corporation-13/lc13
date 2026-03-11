@@ -106,6 +106,7 @@
 		"Primitive Loom" = /obj/structure/resurgence_blueprint/loom/primitive,
 		"Loom" = /obj/structure/resurgence_blueprint/loom,
 		"Seed Extractor" = /obj/structure/resurgence_blueprint/seed_extractor,
+		"UV Growth Light" = /obj/structure/resurgence_blueprint/uv_light,
 		"Condiment Station" = /obj/structure/resurgence_blueprint/condiment_station,
 		"Meat Grinder" = /obj/structure/resurgence_blueprint/meat_grinder,
 		"Food Processor" = /obj/structure/resurgence_blueprint/food_processor,
@@ -498,6 +499,11 @@
 
 /// Check if a turf is valid for blueprint placement
 /obj/item/resurgence_outpost_planner/proc/is_valid_placement(turf/T, mob/user)
+	// Can't build during raids
+	if(SSresurgence_raids.active_raids.len)
+		to_chat(user, span_warning("You can't place blueprints during a raid!"))
+		return FALSE
+
 	// Can't place on space
 	if(isspaceturf(T))
 		to_chat(user, span_warning("You can't build in space!"))

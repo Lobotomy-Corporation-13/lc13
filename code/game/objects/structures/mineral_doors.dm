@@ -28,11 +28,14 @@
 	var/sheetType = /obj/item/stack/sheet/metal //what we're made of
 	var/sheetAmount = 7 //how much we drop when deconstructed
 
-/* /obj/structure/mineral_door/Initialize()
+/obj/structure/mineral_door/Initialize()
 	. = ..()
-	air_update_turf(TRUE, TRUE)
+	// Register with day/night subsystem for sunlight bleed if on a resurgence z-level
+	var/turf/T = get_turf(src)
+	if(T && SSday_night.active && is_resurgence_level(T.z))
+		SSday_night.register_door(src)
 
-/obj/structure/mineral_door/Destroy()
+/* /obj/structure/mineral_door/Destroy()
 	if(!door_opened)
 		air_update_turf(TRUE, FALSE)
 	. = ..()
@@ -104,6 +107,7 @@
 	// air_update_turf(TRUE, FALSE)
 	update_icon()
 	isSwitchingStates = FALSE
+	SEND_SIGNAL(src, COMSIG_MINERAL_DOOR_OPEN)
 
 	if(close_delay != -1)
 		addtimer(CALLBACK(src, PROC_REF(Close)), close_delay)
@@ -128,6 +132,7 @@
 	// air_update_turf(TRUE, TRUE)
 	update_icon()
 	isSwitchingStates = FALSE
+	SEND_SIGNAL(src, COMSIG_MINERAL_DOOR_CLOSE)
 
 /**
  * Jam the door open, preventing it from closing.

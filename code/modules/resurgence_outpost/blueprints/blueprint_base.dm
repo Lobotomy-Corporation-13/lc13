@@ -187,6 +187,11 @@
 		remove_blueprint_with_planner(user)
 		return
 
+	// Can't build during raids
+	if(SSresurgence_raids.active_raids.len)
+		to_chat(user, span_warning("You can't build during a raid!"))
+		return
+
 	// Check if this material is needed
 	var/matching_type = needs_material(I.type)
 	if(!matching_type)

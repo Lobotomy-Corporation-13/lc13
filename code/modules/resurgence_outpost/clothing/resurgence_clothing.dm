@@ -53,11 +53,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/under/resurgence/AltClick(mob/user)
@@ -126,11 +123,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/suit/resurgence/AltClick(mob/user)
@@ -197,11 +191,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/head/resurgence/AltClick(mob/user)
@@ -264,11 +255,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/mask/resurgence/AltClick(mob/user)
@@ -331,11 +319,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/gloves/resurgence/AltClick(mob/user)
@@ -398,11 +383,8 @@
 	if(FC)
 		qdel(FC)
 
-	attached_fabric.forceMove(get_turf(src))
-	if(user)
-		user.put_in_hands(attached_fabric)
-		to_chat(user, span_notice("You detach [attached_fabric] from [src]."))
-	attached_fabric = null
+	to_chat(user, span_notice("You rip [attached_fabric] from [src], destroying it in the process."))
+	QDEL_NULL(attached_fabric)
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
 
 /obj/item/clothing/shoes/resurgence/AltClick(mob/user)
@@ -480,6 +462,7 @@
 
 	// Apply the plating
 	C.armor = list(RED_DAMAGE = P.armor_value, WHITE_DAMAGE = P.armor_value, BLACK_DAMAGE = P.armor_value, PALE_DAMAGE = P.armor_value)
+	C.body_parts_covered = CHEST|GROIN|LEGS|FEET|ARMS
 
 	to_chat(user, span_notice("You attach [P] to [C], setting armor to [P.armor_value]."))
 	playsound(C, 'sound/items/Screwdriver.ogg', 50, TRUE)

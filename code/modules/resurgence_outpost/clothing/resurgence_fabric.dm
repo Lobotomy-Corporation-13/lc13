@@ -2,8 +2,8 @@
  * Resurgence Outpost - Faith Fabrics
  *
  * Three tiers of special fabrics that can be attached to resurgence clothing
- * to grant passive faith bonuses. Fabrics are reversible - they can be
- * detached and reused on different clothing items.
+ * to grant passive faith bonuses. Fabrics are consumed on detach — attaching
+ * is a permanent commitment.
  */
 
 /obj/item/resurgence_fabric
@@ -21,7 +21,7 @@
 /obj/item/resurgence_fabric/examine(mob/user)
 	. = ..()
 	. += span_notice("This [tier_name] fabric grants +[faith_bonus] faith when attached to clan-woven clothing.")
-	. += span_notice("Use it on resurgence clothing to attach. Alt-click the clothing to detach.")
+	. += span_notice("Use it on resurgence clothing to attach. Warning: detaching destroys the fabric!")
 
 // === SIMPLE TIER (Weakest - 0.1 faith) ===
 

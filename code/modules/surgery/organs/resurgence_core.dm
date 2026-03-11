@@ -467,7 +467,7 @@
 			// Living quarters gives faith bonus
 			var/datum/faith_event/room_ownership/event = new(
 				"You have a personal sleeper.",
-				0.025, // +0.025 per tick
+				0.5, // +0.5 per tick (must match bed.dm update_owner_faith_event)
 				null,
 				"room_ownership"
 			)

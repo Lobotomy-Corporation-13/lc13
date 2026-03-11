@@ -6,21 +6,21 @@
 /turf/closed/mineral/resurgence/random/any{
 	color = "#FF4444"
 	},
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "g" = (
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "k" = (
 /turf/closed/mineral/resurgence,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "z" = (
 /obj/structure/resurgence_ore_deposit/blank,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "N" = (
 /obj/structure/resurgence_ore_deposit,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 
 (1,1,1) = {"
 a

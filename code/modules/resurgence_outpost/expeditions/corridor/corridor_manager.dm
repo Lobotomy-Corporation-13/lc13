@@ -277,6 +277,8 @@
 /datum/expedition_corridor_manager/proc/begin_transition()
 	if(transitioning)
 		return
+	if(expedition?.state == EXPEDITION_STOPPED)
+		return
 	transitioning = TRUE
 
 	// Advance route index
@@ -333,8 +335,8 @@
 	// Get the next tile for caravan check
 	var/datum/world_tile/next_tile = expedition.route[route_index + 2]
 
-	// Check for caravan on next tile BEFORE normal transition
-	if(next_tile?.caravan)
+	// Check for caravan on next tile BEFORE normal transition (including waiting caravans)
+	if(next_tile?.caravan && next_tile.caravan.state != CARAVAN_DESTROYED && next_tile.caravan.state != CARAVAN_COMPLETE)
 		start_caravan_encounter(next_tile.caravan)
 		return
 
@@ -391,6 +393,19 @@
 		update_all_world_map_uis()
 
 	transitioning = FALSE
+
+/**
+ * Stop the expedition mid-travel at the current tile
+ * Called from the portable map device when the player wants to halt
+ */
+/datum/expedition_corridor_manager/proc/stop_expedition()
+	if(!expedition || transitioning)
+		return FALSE
+	expedition.state = EXPEDITION_STOPPED
+	// expedition.current_tile is already updated each transition
+	for(var/mob/living/M in expedition.members)
+		to_chat(M, span_notice("The expedition has stopped. Use the map device to plan a new route."))
+	return TRUE
 
 /**
  * Start a caravan encounter

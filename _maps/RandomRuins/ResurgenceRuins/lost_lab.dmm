@@ -3,97 +3,97 @@
 /obj/effect/decal/cleanable/garbage,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "bn" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "bo" = (
 /obj/structure/closet/crate/large,
 /obj/item/stack/ore/gold{
 	amount = 32
 	},
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "bI" = (
 /obj/effect/decal/cleanable/garbage,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "dI" = (
 /turf/closed/wall/mineral/iron,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "ej" = (
 /obj/machinery/light/dim,
 /obj/structure/window/reinforced/spawner/west,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "ek" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "ey" = (
 /obj/machinery/light/dim,
 /obj/structure/window/reinforced/spawner/east,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "fE" = (
 /obj/structure/table/glass,
 /obj/item/khpboost,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "gm" = (
 /obj/structure/showcase/horrific_experiment,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "gK" = (
 /obj/structure/showcase/machinery/cloning_pod,
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "hz" = (
 /obj/structure/showcase/machinery/cloning_pod,
 /obj/effect/decal/cleanable/greenglow/ecto,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "hX" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "ii" = (
 /obj/effect/decal/cleanable/cobweb,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "iq" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood/gibs/old,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "iW" = (
 /obj/effect/decal/cleanable/blood/footprints{
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "jl" = (
 /mob/living/simple_animal/hostile/ordeal/indigo_dawn,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "jS" = (
 /obj/structure/showcase/machinery/cloning_pod,
 /obj/machinery/light/dim,
 /obj/effect/decal/cleanable/greenglow/ecto,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "kr" = (
 /obj/effect/turf_decal/siding/thinplating/dark,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "kP" = (
 /obj/machinery/light/dim{
 	dir = 1
@@ -101,7 +101,7 @@
 /obj/structure/window/reinforced/spawner/east,
 /obj/effect/decal/cleanable/blood/gibs/down,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "lR" = (
 /obj/structure/fluff/paper/stack,
 /obj/effect/decal/cleanable/blood/gibs/body,
@@ -109,70 +109,70 @@
 	dir = 4
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "mh" = (
 /obj/effect/decal/cleanable/blood,
 /obj/structure/showcase/machinery/cloning_pod,
 /obj/machinery/light/dim,
 /obj/effect/turf_decal/box/red,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "mC" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "nP" = (
 /obj/structure/window/reinforced/spawner/east,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/cratespawn/corpo,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "oV" = (
 /obj/structure/table/abductor{
 	name = "strange table"
 	},
 /obj/item/ksyringe,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "oZ" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /obj/effect/decal/cleanable/blood/gibs/down,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "pc" = (
 /obj/structure/table/glass,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/item/khpboost,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "pT" = (
 /obj/effect/decal/cleanable/blood/gibs/down,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "qo" = (
 /obj/structure/sign/departments/medbay/alt,
 /turf/closed/wall/mineral/iron,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "qs" = (
 /obj/structure/table/abductor{
 	name = "strange table"
 	},
 /obj/item/food/meat/slab/sweeper,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "sv" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /mob/living/simple_animal/hostile/sweeper,
 /obj/effect/decal/cleanable/blood/gibs/body,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "sY" = (
 /obj/structure/table/glass,
 /obj/item/ksyringe,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "uW" = (
 /obj/effect/decal/cleanable/blood/gibs/down,
 /obj/structure/table/abductor{
@@ -185,24 +185,24 @@
 	pixel_y = null
 	},
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "vo" = (
 /obj/effect/decal/cleanable/garbage,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "vW" = (
 /obj/effect/gibspawner/human/bodypartless,
 /obj/item/food/meat/slab/sweeper,
 /obj/item/food/meat/slab/sweeper,
 /obj/item/food/meat/slab/sweeper,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "xI" = (
 /obj/structure/window/reinforced/spawner/west,
 /obj/effect/landmark/cratespawn/corpo,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "yr" = (
 /obj/effect/decal/cleanable/blood,
 /obj/structure/table/abductor{
@@ -210,22 +210,22 @@
 	},
 /obj/item/food/meat/slab/sweeper,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "yG" = (
 /obj/structure/table/wood/fancy/cyan,
 /obj/item/paper/pamphlet/ruin/originalcontent/yelling,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "yP" = (
 /obj/structure/window/reinforced/spawner/west,
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/landmark/cratespawn/corpo,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "yR" = (
 /obj/structure/window/reinforced/spawner/east,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "zc" = (
 /obj/structure/filingcabinet,
 /obj/structure/filingcabinet{
@@ -236,7 +236,7 @@
 	},
 /obj/effect/decal/cleanable/cobweb/cobweb2,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ae" = (
 /turf/template_noop,
 /area/template_noop)
@@ -246,10 +246,10 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "AV" = (
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "BU" = (
 /obj/structure/fluff/paper/stack,
 /obj/effect/decal/cleanable/blood/splatter,
@@ -257,10 +257,10 @@
 	dir = 8
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "BV" = (
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Cc" = (
 /obj/machinery/light/dim{
 	dir = 4
@@ -271,7 +271,7 @@
 /obj/item/food/meat/slab/sweeper,
 /obj/item/food/meat/slab/sweeper,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Dg" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
@@ -280,7 +280,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ef" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/gibspawner/human/bodypartless,
@@ -288,23 +288,23 @@
 	dir = 9
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ek" = (
 /obj/structure/table/glass,
 /obj/item/ksyringe,
 /obj/item/ksyringe,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "EU" = (
 /obj/structure/fluff/paper/stack,
 /obj/effect/decal/cleanable/blood/splatter,
 /obj/effect/turf_decal/siding/thinplating/dark,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Fu" = (
 /obj/structure/table/wood/fancy/cyan,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "FB" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/gibspawner/human/bodypartless,
@@ -312,7 +312,7 @@
 	dir = 6
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "GX" = (
 /obj/effect/decal/cleanable/blood,
 /obj/effect/gibspawner/human/bodypartless,
@@ -320,7 +320,7 @@
 /obj/item/food/meat/slab/sweeper,
 /obj/item/food/meat/slab/sweeper,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "HY" = (
 /obj/effect/decal/cleanable/blood,
 /obj/effect/decal/cleanable/blood/footprints{
@@ -328,7 +328,7 @@
 	},
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ja" = (
 /obj/structure/table/abductor{
 	name = "strange table"
@@ -336,7 +336,7 @@
 /obj/item/ksyringe,
 /obj/item/ksyringe,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Jc" = (
 /mob/living/simple_animal/hostile/sweeper,
 /obj/structure/fluff/paper/stack,
@@ -345,7 +345,7 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "JS" = (
 /mob/living/simple_animal/hostile/ordeal/indigo_dawn,
 /obj/structure/fluff/paper/stack,
@@ -353,44 +353,44 @@
 	dir = 1
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ko" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/blood/splatter,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Le" = (
 /obj/machinery/door/airlock/hatch,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "LG" = (
 /obj/structure/sign/poster/contraband/starkist,
 /turf/closed/wall/mineral/iron,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ng" = (
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 5
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Nm" = (
 /obj/structure/closet/crate/large,
 /obj/item/stack/ore/silver{
 	amount = 23
 	},
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Ny" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Oj" = (
 /obj/machinery/light/dim{
 	dir = 1
 	},
 /obj/structure/window/reinforced/spawner/west,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Pu" = (
 /obj/structure/table/abductor{
 	name = "strange table"
@@ -399,25 +399,25 @@
 /obj/item/ksyringe,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Qw" = (
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 10
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "WW" = (
 /mob/living/simple_animal/hostile/sweeper,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 4
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Xe" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/fluff/paper/stack,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "XL" = (
 /obj/structure/filingcabinet,
 /obj/structure/filingcabinet{
@@ -428,19 +428,19 @@
 	},
 /obj/structure/fluff/paper/corner,
 /turf/open/floor/stone,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "Zo" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/turf_decal/siding/thinplating/dark{
 	dir = 8
 	},
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "ZY" = (
 /mob/living/simple_animal/hostile/ordeal/indigo_dawn,
 /obj/effect/turf_decal/siding/thinplating/dark,
 /turf/open/floor/carpet/royalblack,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 
 (1,1,1) = {"
 Ae

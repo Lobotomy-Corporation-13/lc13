@@ -61,11 +61,14 @@
 	dynamic_lighting = DYNAMIC_LIGHTING_DISABLED
 
 /// Base room area (enclosed but unspecialized)
+/// Uses DYNAMIC_LIGHTING_FORCED so rooms are dark by default.
+/// Light enters only through MOVABLE_LIGHT sources (sunlight bleed from open doors, torches, etc.)
 /area/resurgence_outpost/room
 	name = "Clan Room"
 	outdoors = FALSE
 	room_type = ROOM_TYPE_BASIC
 	icon_state = "blue"
+	dynamic_lighting = DYNAMIC_LIGHTING_FORCED
 
 	/// List of wall turfs that form the room boundary
 	var/list/boundary_walls = list()

@@ -134,10 +134,12 @@ GLOBAL_VAR_INIT(caravan_id_counter, 0)
 		for(var/i in 1 to items_to_take)
 			if(!length(available))
 				break
-			var/item = pick(available)
-			available -= item
-			// Give generous quantities (5-20 of each item)
-			stock[item] = rand(5, 20)
+			var/list/stock_entry = pick(available)
+			available -= stock_entry
+			// Extract type path from faction stock entry (which is a list/dict)
+			var/item_type = stock_entry["type"]
+			if(item_type)
+				stock[item_type] = rand(5, 20)
 
 	// Set caravan cash - caravans carry significant funds for buying
 	caravan_cash = rand(2000, 5000)

@@ -4,23 +4,23 @@
 /area/template_noop)
 "e" = (
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "m" = (
 /turf/closed/mineral/resurgence,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "u" = (
 /obj/structure/resurgence_ore_deposit/blank,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "L" = (
 /turf/closed/mineral/resurgence/random/any{
 	color = "#FF4444"
 	},
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "X" = (
 /obj/structure/resurgence_ore_deposit,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 
 (1,1,1) = {"
 a

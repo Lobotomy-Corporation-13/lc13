@@ -109,6 +109,17 @@
 	// Check if corridor is loaded
 	data["corridor_loaded"] = GLOB.expedition_corridor_loaded
 
+	// Active expedition positions for map markers
+	var/list/expedition_markers = list()
+	for(var/datum/expedition_party/E in GLOB.active_expeditions)
+		if(E.current_tile)
+			expedition_markers += list(list(
+				"x" = E.current_tile.x_coord,
+				"y" = E.current_tile.y_coord,
+				"leader" = E.leader?.name || "Unknown"
+			))
+	data["expedition_markers"] = expedition_markers
+
 	return data
 
 /obj/structure/world_map_console/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)

@@ -33,6 +33,8 @@ export const ResurgenceWorldMap = (props, context) => {
     expedition_state = '',
     current_x = 0,
     current_y = 0,
+    // Console expedition markers
+    expedition_markers = [],
   } = data;
 
   const hasRaidCaravans = raid_caravans.length > 0;
@@ -103,6 +105,7 @@ export const ResurgenceWorldMap = (props, context) => {
                   current_x={current_x}
                   current_y={current_y}
                   is_portable={is_portable}
+                  expedition_markers={expedition_markers}
                 />
               ) : (
                 <Box textAlign="center" color="label" p={4}>
@@ -272,6 +275,7 @@ const WorldMapGrid = props => {
     current_x = 0,
     current_y = 0,
     is_portable = false,
+    expedition_markers = [],
   } = props;
 
   const mapPixelWidth = width * TILE_SIZE + MAP_PADDING * 2;
@@ -327,10 +331,13 @@ const WorldMapGrid = props => {
           const isSelected = tile.x === selected_x && tile.y === selected_y;
           const isOnRoute = routeSet.has(`${tile.x},${tile.y}`);
           const isOutpost = tile.x === outpost_x && tile.y === outpost_y;
-          const isCurrent = is_portable
+          const isCurrent = (is_portable
             && current_x > 0
             && tile.x === current_x
-            && tile.y === current_y;
+            && tile.y === current_y)
+            || expedition_markers.some(
+              m => m.x === tile.x && m.y === tile.y
+            );
 
           return (
             <g
@@ -732,10 +739,11 @@ const RouteInfo = props => {
   const minutes = Math.floor(travelTime / 60);
   const seconds = travelTime % 60;
 
-  // Portable device can only set destination when at a location
+  // Portable device can set destination when stopped or at location
   const canSetDestination = isPortable
     && onExpedition
-    && expeditionState === 'at_destination';
+    && (expeditionState === 'at_destination'
+      || expeditionState === 'stopped');
 
   return (
     <Stack vertical>
@@ -797,12 +805,15 @@ const PortableStatus = props => {
     departing: 'Departing',
     traveling: 'Traveling',
     at_destination: 'At Destination',
+    stopped: 'Stopped',
     returning: 'Returning',
     complete: 'Complete',
     failed: 'Failed',
   };
 
-  const canReturn = expeditionState === 'at_destination';
+  const canReturn = expeditionState === 'at_destination'
+    || expeditionState === 'stopped';
+  const canStop = expeditionState === 'traveling';
 
   return (
     <Stack vertical>
@@ -842,12 +853,15 @@ const PortableStatus = props => {
           />
         </Stack.Item>
       )}
-      {expeditionState === 'traveling' && (
+      {canStop && (
         <Stack.Item mt={1}>
-          <Box color="label" fontSize="11px" textAlign="center">
-            <Icon name="info-circle" mr={1} />
-            Reach destination to change route
-          </Box>
+          <Button
+            fluid
+            icon="hand-paper"
+            color="caution"
+            content="Stop Here"
+            onClick={() => act('stop_travel')}
+          />
         </Stack.Item>
       )}
     </Stack>

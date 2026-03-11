@@ -102,6 +102,9 @@
 	else
 		data["selected_tile"] = null
 
+	// Can stop mid-travel?
+	data["can_stop"] = tracked_expedition?.state == EXPEDITION_TRAVELING
+
 	// No expedition management from portable - just navigation
 	data["has_expedition"] = FALSE
 	data["expedition"] = null
@@ -134,6 +137,9 @@
 
 		if("set_new_destination")
 			return set_expedition_destination(usr)
+
+		if("stop_travel")
+			return stop_travel(usr)
 
 		if("return_to_outpost")
 			return start_return_journey(usr)
@@ -172,8 +178,8 @@
 		to_chat(user, span_warning("You are not on an expedition."))
 		return FALSE
 
-	if(tracked_expedition.state != EXPEDITION_AT_DESTINATION)
-		to_chat(user, span_warning("You can only change destination when at a location."))
+	if(tracked_expedition.state != EXPEDITION_AT_DESTINATION && tracked_expedition.state != EXPEDITION_STOPPED)
+		to_chat(user, span_warning("You can only change destination when stopped or at a location."))
 		return FALSE
 
 	if(selected_x <= 0 || selected_y <= 0)
@@ -214,6 +220,24 @@
 	return TRUE
 
 /**
+ * Stop the expedition mid-travel at the current tile
+ */
+/obj/item/expedition_map/proc/stop_travel(mob/user)
+	if(!tracked_expedition)
+		to_chat(user, span_warning("You are not on an expedition."))
+		return FALSE
+
+	if(tracked_expedition.state != EXPEDITION_TRAVELING)
+		to_chat(user, span_warning("You can only stop while traveling."))
+		return FALSE
+
+	if(!GLOB.expedition_corridor)
+		to_chat(user, span_warning("No corridor found."))
+		return FALSE
+
+	return GLOB.expedition_corridor.stop_expedition()
+
+/**
  * Start the journey back to the outpost
  */
 /obj/item/expedition_map/proc/start_return_journey(mob/user)
@@ -221,8 +245,8 @@
 		to_chat(user, span_warning("You are not on an expedition."))
 		return FALSE
 
-	if(tracked_expedition.state != EXPEDITION_AT_DESTINATION)
-		to_chat(user, span_warning("You can only return when at a location."))
+	if(tracked_expedition.state != EXPEDITION_AT_DESTINATION && tracked_expedition.state != EXPEDITION_STOPPED)
+		to_chat(user, span_warning("You can only return when stopped or at a location."))
 		return FALSE
 
 	var/datum/world_tile/outpost = GLOB.resurgence_world_map?.outpost_tile

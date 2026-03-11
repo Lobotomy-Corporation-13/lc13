@@ -1,11 +1,11 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
 "a" = (
 /turf/closed/mineral/resurgence,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "v" = (
 /obj/structure/resurgence_ore_deposit/blank,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "F" = (
 /turf/template_noop,
 /area/template_noop)
@@ -13,14 +13,14 @@
 /turf/closed/mineral/resurgence/random/any{
 	color = "#FF4444"
 	},
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "J" = (
 /obj/structure/resurgence_ore_deposit,
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "M" = (
 /turf/open/floor/plating/ashplanet/rocky,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 
 (1,1,1) = {"
 F

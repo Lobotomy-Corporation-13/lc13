@@ -399,6 +399,20 @@
 		/obj/item/stack/sheet/metal = 2
 	)
 
+/obj/structure/resurgence_blueprint/uv_light
+	name = "UV growth light blueprint"
+	result_name = "UV growth light"
+	icon = 'icons/obj/lighting.dmi'
+	icon_state = "floodlight"
+	result_type = /obj/structure/uv_light
+	research_required = "agriculture"
+
+/obj/structure/resurgence_blueprint/uv_light/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 10,
+		/obj/item/stack/sheet/glass = 5
+	)
+
 /obj/structure/resurgence_blueprint/condiment_station
 	name = "condiment station blueprint"
 	result_name = "condiment station"

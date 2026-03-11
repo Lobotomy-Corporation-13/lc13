@@ -720,6 +720,11 @@
 // /obj/item signals for economy
 ///called when an item is sold by the exports subsystem
 #define COMSIG_ITEM_SOLD "item_sold"
+///called when a mineral door finishes opening
+#define COMSIG_MINERAL_DOOR_OPEN "mineral_door_open"
+///called when a mineral door finishes closing
+#define COMSIG_MINERAL_DOOR_CLOSE "mineral_door_close"
+
 ///called when a wrapped up structure is opened by hand
 #define COMSIG_STRUCTURE_UNWRAPPED "structure_unwrapped"
 ///called when a wrapped up item is opened by hand

@@ -28,34 +28,39 @@
 	suffix = "mountain_v1.dmm"
 	name = "Mountain 1"
 	cost = 4
+	placement_weight = 5
 
 /datum/map_template/ruin/resurgence/mountain_v2
 	id = "mountain_2"
 	suffix = "mountain_v2.dmm"
 	name = "Mountain 2"
 	cost = 6
+	placement_weight = 5
 
 /datum/map_template/ruin/resurgence/mountain_v3
 	id = "mountain_3"
 	suffix = "mountain_v3.dmm"
 	name = "Mountain 3"
 	cost = 6
+	placement_weight = 5
 
 /datum/map_template/ruin/resurgence/mountain_v4
 	id = "mountain_4"
 	suffix = "mountain_v4.dmm"
 	name = "Mountain 4"
 	cost = 6
+	placement_weight = 5
 
 /datum/map_template/ruin/resurgence/mountain_v5
 	id = "mountain_5"
 	suffix = "mountain_v5.dmm"
 	name = "Mountain 5"
 	cost = 8
+	placement_weight = 5
 
 /datum/map_template/ruin/resurgence/pond_v1
 	id = "pond_v1"
-	suffix = "pond_b1.dmm"
+	suffix = "pond_v1.dmm"
 	name = "Pond 5"
 	cost = 2
 

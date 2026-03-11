@@ -19,6 +19,8 @@
 #define EXPEDITION_COMPLETE "complete"
 /// Expedition failed (party wipe, etc.)
 #define EXPEDITION_FAILED "failed"
+/// Party stopped mid-travel (can plan new route from current position)
+#define EXPEDITION_STOPPED "stopped"
 
 // ============================================
 // CORRIDOR CONFIGURATION

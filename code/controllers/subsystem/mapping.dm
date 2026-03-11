@@ -121,7 +121,7 @@ SUBSYSTEM_DEF(mapping)
 	// Generate resurgence ruins
 	var/list/resurgence_ruins = levels_by_trait(ZTRAIT_RESURGENCE_RUINS)
 	if(resurgence_ruins.len)
-		seedRuins(resurgence_ruins, 60, list(/area/resurgence_outpost/outdoors), resurgence_ruins_templates)
+		seedRuins(resurgence_ruins, 200, list(/area/resurgence_outpost/outdoors), resurgence_ruins_templates)
 
 	// Generate deep space ruins
 	var/list/space_ruins = levels_by_trait(ZTRAIT_SPACE_RUINS)

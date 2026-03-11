@@ -62,7 +62,7 @@
 	tier = 1
 	total_work = 100
 	prerequisites = list()
-	unlocks_desc = "Loom: Backpack, Satchel. Blueprints: Loom."
+	unlocks_desc = "Loom: Backpack, Satchel, Plant Bag, Mining Satchel. Blueprints: Loom."
 	ui_x = 20
 	ui_y = 560
 	branch_types = list("production", "clothing")

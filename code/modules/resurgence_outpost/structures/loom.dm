@@ -168,6 +168,26 @@
 		"research_required" = "advanced_weaving"
 	)
 
+	recipes["Plant Bag"] = list(
+		"result" = /obj/item/storage/bag/plants,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
+		"total_work" = 15,
+		"desc" = "4 Cloth -> Plant Bag",
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "textiles"
+	)
+
+	recipes["Mining Satchel"] = list(
+		"result" = /obj/item/storage/bag/ore,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton/cloth = 4),
+		"total_work" = 15,
+		"desc" = "4 Cloth -> Mining Satchel",
+		"category" = CRAFT_CAT_STORAGE,
+		"research_required" = "textiles"
+	)
+
 	// === DYNAMIC CLOTHING ===
 	// Build cache if not already done, then add clothing recipes
 	build_clothing_cache()

@@ -6,57 +6,57 @@
 /obj/structure/table/wood/poker,
 /obj/item/coin/iron,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "f" = (
 /obj/structure/table/wood/poker,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "g" = (
 /obj/item/coin/gold,
 /turf/template_noop,
 /area/template_noop)
 "o" = (
 /turf/closed/indestructible/riveted/plastinum,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "r" = (
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "t" = (
 /obj/structure/cursed_slot_machine,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "D" = (
 /turf/closed/mineral/resurgence,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "E" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "F" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "G" = (
 /turf/closed/mineral/resurgence/random/any{
 	color = "#FF4444"
 	},
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "M" = (
 /obj/structure/mineral_door/gold,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "P" = (
 /obj/structure/table/wood/poker,
 /obj/item/toy/cards/deck/syndicate,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 "W" = (
 /obj/structure/table/wood/poker,
 /obj/item/ego_weapon/ranged/pistol/deathdealer,
 /turf/open/floor/carpet/red,
-/area/ruin/resurgence)
+/area/resurgence_outpost/outdoors)
 
 (1,1,1) = {"
 a
