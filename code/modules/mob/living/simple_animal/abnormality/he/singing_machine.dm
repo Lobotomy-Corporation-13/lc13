@@ -47,6 +47,8 @@ Finally, an abnormality that DOESN'T have to do any fancy movement shit. It's a 
 		"Listen to the music" = list(FALSE, "Aah. The music gives you sense of warm coziness and relaxation."),
 	)
 
+	being_tested = TRUE /// For Testing! Remove once it's ready to be merged.
+
 	var/cleanliness = "clean"
 	var/statChecked = 0
 	var/bonusRed = 0
