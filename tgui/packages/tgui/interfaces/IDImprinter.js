@@ -12,13 +12,15 @@ export const IDImprinter = (props, context) => {
         <Section
           title="Information"
           backgroundColor="#261A2E">
-          The New League of Nine Littérateurs' Identity Imprintation Matrix
-          is a machine built to draw from the Mirror and pull Identities from Mirror Worlds,
-          permanently forcing an Identity onto a person, and disrupting the Mirror World
-          in the process. Identities pulled are random, though power levels are not changed.
-          They are merely modified - such as an Association Veteran becoming a Young Brother.
-          To operate - simply insert the person, close the door, and operate. Do note that
-          the process causes extreme mental and physical harm to the subject.
+          The New League of Nine Littérateurs Identity Imprintation Matrix
+          is a machine built to draw from the Mirror and pull Identities from 
+          Mirror Worlds, permanently forcing an Identity onto a person, 
+          and disrupting the Mirror World in the process. 
+          Identities pulled are random, though power levels are not changed.
+          They are merely modified - such as an Association Veteran becoming 
+          a Young Brother. To begin - simply insert the person, close the door, 
+          and operate. Do note that interruption causes extreme mental and 
+          physical harm to the subject.
         </Section>
         <Section
           title="Occupant Information"
