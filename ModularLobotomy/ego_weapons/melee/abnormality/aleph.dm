@@ -2630,6 +2630,10 @@
 	var/cascading_gaze_shrapnel_gaze_application = 1
 	/// The Fell Bullet interaction will generate [pellets] pieces of shrapnel [repeat] times.
 	var/list/cascading_gaze_shrapnel_amount = list("repeat" = 3, "pellets" = 5)
+	/// decides whenever or not we kill people that arent in the same faction as us. true = kill, false = dont kill
+	var/friendlyfire = FALSE
+	/// decides whenever or not the weapon scales w/ justice. true = scales. false = doesnt scale
+	var/justicescale = TRUE
 
 	/* ------------ LANCE VARS ------------ */
 	// Lance template vars. Used to update the weapon's attributes when sheathing the weapon
@@ -2881,8 +2885,9 @@
 	for(var/mob/living/L in viewers(cascading_gaze_radius, user))
 		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)))
 			continue
-		if(user.faction_check_mob(L))
-			continue
+		if(!friendlyfire)
+			if(user.faction_check_mob(L))
+				continue
 		cascading_gaze_residual_datums |= L.apply_status_effect(/datum/status_effect/perversion_weapon_root, src)
 
 // Rooting status effect. Duration irrelevant, should be cleared manually by DrawAttackEnd.
@@ -2992,6 +2997,8 @@
 	// Once we have this base damage; when dealing damage to an enemy, we will also further multiply it for that enemy, based on stacks of Gaze/Contempt they might have.
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
+	if(!justicescale)
+		justicemod = 1
 	var/base_damage = should_end ? (force * cascading_gaze_base_damage_coeff * justicemod * force_multiplier) : (cascading_gaze_periodic_damage * justicemod * force_multiplier)
 
 	playsound(get_turf(user), (should_end ? cascading_gaze_finisher_sound : pick(cascading_gaze_hit_sounds_list)), 70, vary = !should_end, extrarange = 7)
@@ -2999,8 +3006,12 @@
 	for(var/turf/T in cascading_gaze_affected_turfs)
 		var/sent_visual = FALSE
 		for(var/mob/living/L in T)
-			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
-				continue
+			if(friendlyfire)
+				if((L in shared_hitlist) || (L.stat >= DEAD))
+					continue
+			else
+				if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
+					continue
 
 			shared_hitlist |= L
 
@@ -3123,8 +3134,9 @@
 
 		// Gather valid targets into the targets_list for each iteration. This means each enemy can only be targeted once per 'wave' of shrapnel, but multiple times per call of this proc.
 		for(var/mob/living/L in viewers(9, T))
-			if(owner.faction_check_mob(L))
-				continue
+			if(!friendlyfire)
+				if(owner.faction_check_mob(L))
+					continue
 			if(L.stat >= DEAD)
 				continue
 			targets_list |= L
@@ -3564,6 +3576,8 @@
 	var/final_damage = force * force_multiplier
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
+	if(!justicescale)
+		justicemod = 1
 	final_damage*=justicemod
 	final_damage*=lance_followup_damage_coeff
 
@@ -3573,8 +3587,9 @@
 		for(var/mob/living/L in T3)
 			if(L in shared_hitlist)
 				continue
-			if(user.faction_check_mob(L))
-				continue
+			if(!friendlyfire)
+				if(user.faction_check_mob(L))
+					continue
 			if(L.stat >= DEAD)
 				continue
 
@@ -3640,6 +3655,8 @@
 	var/base_damage = force * force_multiplier
 	var/userjust = (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE))
 	var/justicemod = 1 + userjust/100
+	if(!justicescale)
+		justicemod = 1
 	base_damage*=justicemod
 
 	for(var/turf/T in turf_line)
@@ -3655,8 +3672,9 @@
 		for(var/mob/living/L in T)
 			if(L in shared_hitlist)
 				continue
-			if(user.faction_check_mob(L))
-				continue
+			if(!friendlyfire)
+				if(user.faction_check_mob(L))
+					continue
 			if(L.stat >= DEAD)
 				continue
 

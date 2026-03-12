@@ -34,7 +34,7 @@
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	//Don't spawn these goobers without a director.
 	for(var/datum/job/processing in SSjob.occupations)
-		if(istype(processing, /datum/job/ncorpfellbullet))
+		if(istype(processing, /datum/job/leagueofninefellbullet))
 			processing.total_positions = 1
 
 		if(istype(processing, /datum/job/)) //change me 2 fairy
