@@ -9,6 +9,8 @@
 #define DAMAGE_WHITE_HEALABLE (1 << 3)
 /// Set this bitflag to ignore the armour check and godmode (yes, for some reason you can ignore godmode. do not blame this on me)
 #define DAMAGE_PIERCING (1 << 4)
+/// Set this bitflag to prevent this damage from triggering active Sinking (WHITE/PALE trigger)
+#define DAMAGE_NO_SINKING (1 << 5)
 
 /*
 These flags are for the "attack_type" argument in deal_damage, so you can discern and act upon the difference between damage incoming from a melee hit or from a bullet and so on.

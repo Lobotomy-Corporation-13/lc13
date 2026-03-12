@@ -3,7 +3,7 @@
 // ============================================================
 // Two weapon types: Fists (defensive, shield HP) and Keys (offensive, OLU).
 // Both share the same combo system with knowledge-powered finishers.
-// L attacks: RED damage + 2 Sinking.
+// L attacks: WHITE damage (no sinking trigger) + 2 Sinking.
 // H attacks: Empower via attack_self (consume L3+ knowledge) → PALE damage + weapon bonus.
 // 6 combo finishers consume specific knowledge types for scaled effects.
 
@@ -17,9 +17,10 @@
 	icon_state = "dieci_glove"
 	inhand_icon_state = "yun_fist"
 	desc = "Heavy gauntlets issued to Dieci Association members. The reinforced plating channels accumulated knowledge into a protective barrier around the wearer."
-	special = "Defensive weapon. Light attacks deal RED damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks. Empowering grants shield HP (level x15)."
+	special = "Defensive weapon. Light attacks deal WHITE damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks. Empowering grants shield HP (level x15)."
 	force = 20
-	damtype = RED_DAMAGE
+	damtype = WHITE_DAMAGE
+	extra_damage_flags = DAMAGE_NO_SINKING
 	attack_speed = 0.7
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80,
@@ -45,7 +46,7 @@
 
 /obj/item/ego_weapon/city/dieci/examine(mob/user)
 	. = ..()
-	. += span_notice("Light attacks deal RED damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks.")
+	. += span_notice("Light attacks deal WHITE damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks.")
 	. += span_notice("H - Quick Strike (Behavioral): Sinking burst")
 	. += span_notice("LH - Sweeping Blow (Medical): Throw + Sinking")
 	. += span_notice("LLH - Pressure Combo (Behavioral): Grab + beatdown + DLD")
@@ -123,11 +124,13 @@
 		if(HT.sanity_lost)
 			HT.death()
 
-	// Set damage type: H = PALE, L = RED
+	// Set damage type: H = PALE (can trigger sinking), L = WHITE (no sinking trigger)
 	if(is_heavy)
 		damtype = PALE_DAMAGE
+		extra_damage_flags = 0
 	else
-		damtype = RED_DAMAGE
+		damtype = WHITE_DAMAGE
+		extra_damage_flags = DAMAGE_NO_SINKING
 
 	// Check for finisher at current chain position
 	var/finisher_handled = FALSE
@@ -172,6 +175,7 @@
 	if(!in_sequence)
 		force = initial(force)
 		damtype = initial(damtype)
+		extra_damage_flags = initial(extra_damage_flags)
 	hitsound = initial(hitsound)
 
 // ============================================================
@@ -264,7 +268,8 @@
 	target.Immobilize(immobilize_time)
 	user.Immobilize(immobilize_time)
 	force = round(initial(force) * 0.08)
-	damtype = RED_DAMAGE
+	damtype = WHITE_DAMAGE
+	extra_damage_flags = DAMAGE_NO_SINKING
 	in_sequence = TRUE
 	for(var/i in 1 to hits)
 		if(QDELETED(target) || QDELETED(user))

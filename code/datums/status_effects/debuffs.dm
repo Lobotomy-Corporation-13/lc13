@@ -2048,6 +2048,8 @@
 		return
 	if(damage_type != WHITE_DAMAGE && damage_type != PALE_DAMAGE)
 		return
+	if(flags & DAMAGE_NO_SINKING)
+		return
 
 	INVOKE_ASYNC(src, PROC_REF(trigger_sinking))
 

@@ -311,5 +311,5 @@
 /atom/movable/screen/alert/adrenaline
 	name = "Adrenaline"
 	desc = "Build adrenaline by attacking with weapons."
-	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
-	icon_state = "champion"
+	icon = 'icons/mob/actions/actions_changeling.dmi'
+	icon_state = "adrenaline"

@@ -1506,10 +1506,12 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/damage = I.force
 	if(!(SSmaptype.maptype in SSmaptype.citymaps))
 		damage *= justice_mod
+	var/extra_flags = 0
 	if(istype(I, /obj/item/ego_weapon))
 		var/obj/item/ego_weapon/theweapon = I
 		damage *= theweapon.force_multiplier
-	apply_damage(H, (damage * weakness), I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE), attack_type = (ATTACK_TYPE_MELEE), def_zone = def_zone, wound_bonus = Iwound_bonus, bare_wound_bonus = I.bare_wound_bonus, sharpness = I.get_sharpness())
+		extra_flags = theweapon.extra_damage_flags
+	apply_damage(H, (damage * weakness), I.damtype, source = user, flags = (DAMAGE_WHITE_HEALABLE | extra_flags), attack_type = (ATTACK_TYPE_MELEE), def_zone = def_zone, wound_bonus = Iwound_bonus, bare_wound_bonus = I.bare_wound_bonus, sharpness = I.get_sharpness())
 	if(!I.force)
 		return FALSE //item force is zero
 
