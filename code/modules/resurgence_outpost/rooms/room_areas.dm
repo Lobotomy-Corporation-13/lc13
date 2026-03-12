@@ -138,6 +138,13 @@
 	// Unregister signals first
 	unregister_boundary_signals()
 
+	// Unregister boundary doors and windows from day/night sunlight bleed
+	if(SSday_night.active && boundary_doors?.len)
+		for(var/obj/structure/mineral_door/D in boundary_doors)
+			SSday_night.unregister_door(D)
+		for(var/obj/structure/window/W in boundary_doors)
+			SSday_night.unregister_window(W)
+
 	// Get or create the outdoors area
 	var/area/resurgence_outpost/outdoors/outdoor_area = locate() in GLOB.sortedAreas
 	if(!outdoor_area)
@@ -281,6 +288,14 @@
 		var/area/old_area = T.loc
 		new_area.contents += T
 		T.change_area(old_area, new_area)
+
+	// Register boundary doors with day/night subsystem for sunlight bleed
+	if(SSday_night.active && boundary_doors?.len)
+		for(var/obj/structure/mineral_door/D in boundary_doors)
+			SSday_night.register_door(D)
+		// Register boundary windows for always-on sunlight bleed (transparent)
+		for(var/obj/structure/window/W in boundary_doors)
+			SSday_night.register_window(W)
 
 	// Register the area with the mapping subsystem
 	new_area.reg_in_areas_in_z()

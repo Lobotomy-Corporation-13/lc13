@@ -30,10 +30,6 @@
 
 /obj/structure/mineral_door/Initialize()
 	. = ..()
-	// Register with day/night subsystem for sunlight bleed if on a resurgence z-level
-	var/turf/T = get_turf(src)
-	if(T && SSday_night.active && is_resurgence_level(T.z))
-		SSday_night.register_door(src)
 
 /* /obj/structure/mineral_door/Destroy()
 	if(!door_opened)

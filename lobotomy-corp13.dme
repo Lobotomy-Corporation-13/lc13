@@ -3783,6 +3783,7 @@
 #include "code\modules\resurgence_outpost\farming\farm_plot.dm"
 #include "code\modules\resurgence_outpost\farming\farm_zone.dm"
 #include "code\modules\resurgence_outpost\farming\uv_light.dm"
+#include "code\modules\resurgence_outpost\items\lights.dm"
 #include "code\modules\resurgence_outpost\food\food_quality.dm"
 #include "code\modules\resurgence_outpost\grid_crafting\grid_crafting_station.dm"
 #include "code\modules\resurgence_outpost\grid_crafting\grid_system.dm"

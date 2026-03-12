@@ -62,6 +62,16 @@
 			boundary_doors += found_door
 			continue
 
+		// Fulltile windows act as room boundaries (transparent walls)
+		var/obj/structure/window/found_window = null
+		for(var/obj/structure/window/W in T)
+			if(W.fulltile)
+				found_window = W
+				break
+		if(found_window)
+			boundary_doors += found_window
+			continue
+
 		// NOTE: Dense structures (crafting tables, etc.) do NOT block room detection
 		// Only closed turfs and doors count as room boundaries
 

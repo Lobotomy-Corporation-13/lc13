@@ -128,6 +128,7 @@
 	clear_faith_event("room_quality")
 	clear_faith_event("room_cramped")
 	clear_faith_event("room_dirt_floor")
+	clear_faith_event("darkness")
 	return ..()
 
 /obj/item/organ/resurgence_core/on_life()
@@ -154,6 +155,7 @@
 	if(companion_tick_counter >= 5)
 		companion_tick_counter = 0
 		check_nearby_companions()
+		check_darkness()
 
 	// Room quality is now checked via area enter/exit signals, not periodic ticks
 
@@ -646,6 +648,26 @@
 		add_faith_event("community", event)
 	else
 		clear_faith_event("community")
+
+/// Check if the owner is standing in darkness and apply faith penalty
+/obj/item/organ/resurgence_core/proc/check_darkness()
+	if(!owner)
+		return
+
+	var/turf/T = get_turf(owner)
+	if(!T)
+		return
+
+	if(T.get_lumcount() <= 0.2)
+		var/datum/faith_event/darkness/event = new(
+			"Surrounded by darkness.",
+			-1,
+			null,
+			"darkness"
+		)
+		add_faith_event("darkness", event)
+	else
+		clear_faith_event("darkness")
 
 // DISABLED - Charge decay modifier (preserved for future use)
 // /obj/item/organ/resurgence_core/proc/get_faith_decay_modifier()

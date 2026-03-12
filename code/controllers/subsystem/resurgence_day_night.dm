@@ -26,10 +26,14 @@ SUBSYSTEM_DEF(day_night)
 	var/previous_time_name = ""
 	/// Assoc list of door ref → sunlight_bleed effect for open doors
 	var/list/open_door_effects = list()
+	/// Assoc list of window ref → sunlight_bleed effect (always on, windows are transparent)
+	var/list/open_window_effects = list()
 	/// Maximum light range for sunlight bleed at noon
-	var/max_sunlight_range = 3
+	var/max_sunlight_range = 6
 	/// Current computed sunlight range based on time of day
 	var/current_sunlight_range = 0
+	/// Current computed sunlight color based on time of day
+	var/current_sunlight_color = "#FFFFEE"
 
 /datum/controller/subsystem/day_night/Initialize(start_timeofday)
 	if(SSmaptype.maptype != "outpost")
@@ -37,12 +41,13 @@ SUBSYSTEM_DEF(day_night)
 		return ..()
 
 	active = TRUE
-	// Start at dawn (0.25)
-	cycle_time = 0.25
+	// Start at noon (0.5) for bright white start
+	cycle_time = 0.5
 	darkness_alpha = calculate_darkness(cycle_time)
 	sky_tint = calculate_sky_tint(cycle_time)
 	previous_time_name = get_time_name()
 	current_sunlight_range = calculate_sunlight_range()
+	current_sunlight_color = calculate_sunlight_color()
 	return ..()
 
 /datum/controller/subsystem/day_night/fire(resumed)
@@ -75,6 +80,7 @@ SUBSYSTEM_DEF(day_night)
 
 	// Update sunlight bleed through open doors
 	current_sunlight_range = calculate_sunlight_range()
+	current_sunlight_color = calculate_sunlight_color()
 	update_sunlight_ranges()
 
 /// Calculate darkness alpha (0-200) from cycle_time using keyframe interpolation
@@ -180,6 +186,7 @@ SUBSYSTEM_DEF(day_night)
 		update_mob_darkness(L)
 	update_area_tint()
 	current_sunlight_range = calculate_sunlight_range()
+	current_sunlight_color = calculate_sunlight_color()
 	update_sunlight_ranges()
 
 /// Set cycle time and immediately apply. Used by debug tools.
@@ -196,6 +203,32 @@ SUBSYSTEM_DEF(day_night)
 /datum/controller/subsystem/day_night/proc/calculate_sunlight_range()
 	return round(max_sunlight_range * (1 - darkness_alpha / 180), 0.1)
 
+/// Calculate sunlight color based on time of day
+/// Warm white (#FFFFEE) that darkens as night approaches
+/datum/controller/subsystem/day_night/proc/calculate_sunlight_color()
+	if(darkness_alpha >= 180)
+		return "#000000"
+	// Darken warm white based on how much sunlight remains
+	var/brightness = clamp(1 - darkness_alpha / 180, 0, 1)
+	var/r = round(255 * brightness)
+	var/g = round(255 * brightness)
+	var/b = round(238 * brightness)
+	return rgb(r, g, b)
+
+/// Check if a door has an adjacent outdoor resurgence area
+/datum/controller/subsystem/day_night/proc/door_adjacent_to_outdoors(obj/structure/mineral_door/D)
+	var/turf/door_turf = get_turf(D)
+	if(!door_turf)
+		return FALSE
+	for(var/dir in GLOB.cardinals)
+		var/turf/T = get_step(door_turf, dir)
+		if(!T)
+			continue
+		var/area/A = T.loc
+		if(A?.outdoors)
+			return TRUE
+	return FALSE
+
 /// Register a mineral door for sunlight bleed tracking
 /datum/controller/subsystem/day_night/proc/register_door(obj/structure/mineral_door/D)
 	RegisterSignal(D, COMSIG_MINERAL_DOOR_OPEN, PROC_REF(on_door_opened))
@@ -204,6 +237,11 @@ SUBSYSTEM_DEF(day_night)
 	// If door is already open at round start, create the effect now
 	if(D.door_opened && initial(D.opacity))
 		create_sunlight_effect(D)
+
+/// Unregister a mineral door from sunlight bleed tracking
+/datum/controller/subsystem/day_night/proc/unregister_door(obj/structure/mineral_door/D)
+	UnregisterSignal(D, list(COMSIG_MINERAL_DOOR_OPEN, COMSIG_MINERAL_DOOR_CLOSE, COMSIG_PARENT_QDELETING))
+	remove_sunlight_effect(D)
 
 /// Signal handler: mineral door opened
 /datum/controller/subsystem/day_night/proc/on_door_opened(obj/structure/mineral_door/source)
@@ -227,9 +265,15 @@ SUBSYSTEM_DEF(day_night)
 /datum/controller/subsystem/day_night/proc/create_sunlight_effect(obj/structure/mineral_door/D)
 	if(open_door_effects[D])
 		return // Already has an effect
+	// Only create sunlight for doors adjacent to outdoor areas
+	if(!door_adjacent_to_outdoors(D))
+		return
 	var/obj/effect/sunlight_bleed/S = new(get_turf(D))
 	if(current_sunlight_range > 0)
-		S.set_light(current_sunlight_range, 0.8, "#FFFFEE")
+		S.set_light_range(current_sunlight_range)
+		S.set_light_power(1)
+		S.set_light_color(current_sunlight_color)
+		S.set_light_on(TRUE)
 	open_door_effects[D] = S
 
 /// Remove a sunlight bleed effect from a door
@@ -239,26 +283,86 @@ SUBSYSTEM_DEF(day_night)
 		qdel(S)
 	open_door_effects -= D
 
-/// Update light range on all active sunlight bleed effects
+/// Update light range on all active sunlight bleed effects (doors and windows)
 /datum/controller/subsystem/day_night/proc/update_sunlight_ranges()
 	for(var/door in open_door_effects)
 		var/obj/effect/sunlight_bleed/S = open_door_effects[door]
 		if(!S)
 			continue
 		if(current_sunlight_range <= 0)
-			S.set_light(0)
+			S.set_light_on(FALSE)
 		else
-			S.set_light(current_sunlight_range, 0.8, "#FFFFEE")
+			S.set_light_range(current_sunlight_range)
+			S.set_light_color(current_sunlight_color)
+			S.set_light_on(TRUE)
+	for(var/window in open_window_effects)
+		var/obj/effect/sunlight_bleed/S = open_window_effects[window]
+		if(!S)
+			continue
+		if(current_sunlight_range <= 0)
+			S.set_light_on(FALSE)
+		else
+			S.set_light_range(current_sunlight_range)
+			S.set_light_color(current_sunlight_color)
+			S.set_light_on(TRUE)
+
+// ---- Sunlight bleed through windows (always on) ----
+
+/// Check if a window has an adjacent outdoor resurgence area
+/datum/controller/subsystem/day_night/proc/window_adjacent_to_outdoors(obj/structure/window/W)
+	var/turf/window_turf = get_turf(W)
+	if(!window_turf)
+		return FALSE
+	for(var/dir in GLOB.cardinals)
+		var/turf/T = get_step(window_turf, dir)
+		if(!T)
+			continue
+		var/area/A = T.loc
+		if(A?.outdoors)
+			return TRUE
+	return FALSE
+
+/// Register a window for always-on sunlight bleed tracking
+/datum/controller/subsystem/day_night/proc/register_window(obj/structure/window/W)
+	RegisterSignal(W, COMSIG_PARENT_QDELETING, PROC_REF(on_window_deleted))
+	// Windows are always transparent - create sunlight effect immediately
+	if(!window_adjacent_to_outdoors(W))
+		return
+	var/obj/effect/sunlight_bleed/S = new(get_turf(W))
+	if(current_sunlight_range > 0)
+		S.set_light_range(current_sunlight_range)
+		S.set_light_power(1)
+		S.set_light_color(current_sunlight_color)
+		S.set_light_on(TRUE)
+	open_window_effects[W] = S
+
+/// Unregister a window from sunlight bleed tracking
+/datum/controller/subsystem/day_night/proc/unregister_window(obj/structure/window/W)
+	UnregisterSignal(W, COMSIG_PARENT_QDELETING)
+	var/obj/effect/sunlight_bleed/S = open_window_effects[W]
+	if(S)
+		qdel(S)
+	open_window_effects -= W
+
+/// Signal handler: window deleted
+/datum/controller/subsystem/day_night/proc/on_window_deleted(obj/structure/window/source)
+	SIGNAL_HANDLER
+	var/obj/effect/sunlight_bleed/S = open_window_effects[source]
+	if(S)
+		qdel(S)
+	open_window_effects -= source
 
 /// Invisible light-emitting effect for sunlight bleeding through open doors
+/// Uses MOVABLE_LIGHT matching lantern setup for proper light rendering
 /obj/effect/sunlight_bleed
 	name = "sunlight"
+	icon_state = "" // No visible sprite
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	invisibility = INVISIBILITY_ABSTRACT
 	light_system = MOVABLE_LIGHT
-	light_range = 0
-	light_power = 0.8
+	light_range = 6
+	light_power = 1
 	light_color = "#FFFFEE"
+	light_on = FALSE
 
 // ---- Debug item ----
 

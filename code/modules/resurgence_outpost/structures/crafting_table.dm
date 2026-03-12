@@ -31,6 +31,7 @@
 #define CRAFT_CAT_CLEANING "Cleaning"
 #define CRAFT_CAT_MUSIC "Music"
 #define CRAFT_CAT_ELECTRONICS "Electronics"
+#define CRAFT_CAT_LIGHTING "Lighting"
 
 /obj/structure/resurgence_crafting_table
 	name = "crafting table"
@@ -1266,6 +1267,120 @@
 		"research_required" = "communications"
 	)
 
+	// ===== Lighting =====
+
+	recipes["Crude Torch"] = list(
+		"result" = /obj/item/flashlight/flare/torch/resurgence,
+		"result_amount" = 2,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/stack/sheet/mineral/coal = 1,
+			/obj/item/stack/resurgence_rope = 1
+		),
+		"total_work" = 10,
+		"desc" = "2 Wood + 1 Coal + 1 Rope -> 2 Crude Torches",
+		"category" = CRAFT_CAT_LIGHTING
+	)
+
+	recipes["Long Torch"] = list(
+		"result" = /obj/item/flashlight/flare/torch/resurgence/long,
+		"result_amount" = 2,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 3,
+			/obj/item/stack/sheet/mineral/coal = 2,
+			/obj/item/stack/sheet/cotton/cloth = 1,
+			/obj/item/stack/resurgence_rope = 1
+		),
+		"total_work" = 15,
+		"desc" = "3 Wood + 2 Coal + 1 Cloth + 1 Rope -> 2 Long Torches",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "basic_lighting"
+	)
+
+	recipes["Campfire"] = list(
+		"result" = /obj/structure/bonfire/resurgence,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/mineral/wood = 5,
+			/obj/item/stack/resurgence_rope = 1
+		),
+		"total_work" = 10,
+		"desc" = "5 Wood + 1 Rope -> Campfire",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "basic_lighting"
+	)
+
+	recipes["Oil Lantern"] = list(
+		"result" = /obj/item/flashlight/lantern/resurgence,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 4,
+			/obj/item/stack/sheet/glass = 2,
+			/obj/item/stack/sheet/mineral/coal = 3
+		),
+		"total_work" = 25,
+		"desc" = "4 Metal + 2 Glass + 3 Coal -> Oil Lantern",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "advanced_lighting"
+	)
+
+	recipes["Glass Lantern"] = list(
+		"result" = /obj/item/flashlight/lantern/resurgence/glass,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 6,
+			/obj/item/stack/sheet/glass = 5,
+			/obj/item/stack/sheet/mineral/coal = 3,
+			/obj/item/stack/resurgence_rope = 1
+		),
+		"total_work" = 35,
+		"desc" = "6 Metal + 5 Glass + 3 Coal + 1 Rope -> Glass Lantern",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "advanced_lighting"
+	)
+
+	recipes["Stone Fireplace"] = list(
+		"result" = /obj/structure/fireplace/resurgence,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 10,
+			/obj/item/stack/sheet/mineral/wood = 5
+		),
+		"total_work" = 30,
+		"desc" = "10 Metal + 5 Wood -> Stone Fireplace",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "advanced_lighting"
+	)
+
+	recipes["Hand Light"] = list(
+		"result" = /obj/item/flashlight/resurgence,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/glass = 3,
+			/obj/item/stack/cable_coil = 10
+		),
+		"total_work" = 30,
+		"desc" = "5 Metal + 3 Glass + 10 Cable -> Hand Light",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "electric_lighting"
+	)
+
+	recipes["Spotlight"] = list(
+		"result" = /obj/item/flashlight/resurgence/bright,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 8,
+			/obj/item/stack/sheet/glass = 5,
+			/obj/item/stack/cable_coil = 15,
+			/obj/item/stack/sheet/mineral/silver = 1
+		),
+		"total_work" = 40,
+		"desc" = "8 Metal + 5 Glass + 15 Cable + 1 Silver -> Spotlight",
+		"category" = CRAFT_CAT_LIGHTING,
+		"research_required" = "electric_lighting"
+	)
+
 /obj/structure/resurgence_crafting_table/attack_hand(mob/user)
 	. = ..()
 	if(.)
@@ -2014,3 +2129,4 @@
 #undef CRAFT_CAT_CLEANING
 #undef CRAFT_CAT_MUSIC
 #undef CRAFT_CAT_ELECTRONICS
+#undef CRAFT_CAT_LIGHTING

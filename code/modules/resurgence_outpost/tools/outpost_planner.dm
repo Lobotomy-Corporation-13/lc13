@@ -73,6 +73,8 @@
 		"Silver Door" = /obj/structure/resurgence_blueprint/silver_door,
 		"Gold Door" = /obj/structure/resurgence_blueprint/gold_door,
 		"Sandstone Door" = /obj/structure/resurgence_blueprint/sandstone_door,
+		"Window" = /obj/structure/resurgence_blueprint/window,
+		"Reinforced Window" = /obj/structure/resurgence_blueprint/reinforced_window,
 		"Wood Floor" = /obj/structure/resurgence_blueprint/wood_floor,
 		"Iron Floor" = /obj/structure/resurgence_blueprint/iron_floor,
 		"Sandstone Floor" = /obj/structure/resurgence_blueprint/sandstone_floor

@@ -61,6 +61,32 @@
 		/obj/item/stack/sheet/metal = 8
 	)
 
+/obj/structure/resurgence_blueprint/window
+	name = "window blueprint"
+	result_name = "window"
+	icon = 'icons/obj/smooth_structures/window.dmi'
+	icon_state = "window-0"
+	result_type = /obj/structure/window/fulltile
+
+/obj/structure/resurgence_blueprint/window/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/glass = 4
+	)
+
+/obj/structure/resurgence_blueprint/reinforced_window
+	name = "reinforced window blueprint"
+	result_name = "reinforced window"
+	icon = 'icons/obj/smooth_structures/reinforced_window.dmi'
+	icon_state = "reinforced_window-0"
+	result_type = /obj/structure/window/reinforced/fulltile
+	research_required = "metallurgy"
+
+/obj/structure/resurgence_blueprint/reinforced_window/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 8,
+		/obj/item/stack/sheet/glass = 5
+	)
+
 /obj/structure/resurgence_blueprint/silver_door
 	name = "silver door blueprint"
 	result_name = "silver door"

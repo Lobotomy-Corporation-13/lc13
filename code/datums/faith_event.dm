@@ -136,3 +136,7 @@
 /// Faith events from being revived in a fabricator (existential dread)
 /datum/faith_event/revival_trauma
 	category = "revival_trauma"
+
+/// Faith events from standing in darkness
+/datum/faith_event/darkness
+	category = "darkness"

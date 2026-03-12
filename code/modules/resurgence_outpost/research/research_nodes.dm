@@ -50,7 +50,7 @@
 	tier = 1
 	total_work = 100
 	prerequisites = list()
-	unlocks_desc = "Forge: Iron tools. Blueprints: Forge, iron walls/doors."
+	unlocks_desc = "Forge: Iron tools. Blueprints: Forge, iron walls/doors, reinforced window."
 	ui_x = 20
 	ui_y = 320
 	branch_types = list("production", "armor", "weapons")
@@ -460,3 +460,41 @@
 	ui_x = 660
 	ui_y = 400
 	branch_types = list("armor")
+
+// ==================== LIGHTING ====================
+
+/datum/resurgence_research_node/basic_lighting
+	id = "basic_lighting"
+	name = "Basic Lighting"
+	desc = "Simple fire-based light sources to push back the darkness."
+	tier = 1
+	total_work = 100
+	prerequisites = list()
+	unlocks_desc = "Crafting: Long Torch, Campfire."
+	ui_x = 20
+	ui_y = 880
+	branch_types = list("utility", "production")
+
+/datum/resurgence_research_node/advanced_lighting
+	id = "advanced_lighting"
+	name = "Advanced Lighting"
+	desc = "Enclosed flame designs for longer-lasting, refuelable light sources."
+	tier = 2
+	total_work = 200
+	prerequisites = list("basic_lighting", "metallurgy")
+	unlocks_desc = "Crafting: Oil Lantern, Glass Lantern, Stone Fireplace."
+	ui_x = 180
+	ui_y = 880
+	branch_types = list("utility", "production")
+
+/datum/resurgence_research_node/electric_lighting
+	id = "electric_lighting"
+	name = "Electric Lighting"
+	desc = "Harnessing electrical power for reliable, bright illumination."
+	tier = 3
+	total_work = 350
+	prerequisites = list("advanced_lighting")
+	unlocks_desc = "Crafting: Hand Light, Spotlight."
+	ui_x = 340
+	ui_y = 880
+	branch_types = list("utility", "production")
