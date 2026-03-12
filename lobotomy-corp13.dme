@@ -4411,6 +4411,7 @@
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\teth.dm"
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\waw.dm"
 #include "ModularLobotomy\ego_weapons\ranged\ego_bullets\zayin.dm"
+#include "ModularLobotomy\enders_gimmicks\elation\sparkle_gear.dm"
 #include "ModularLobotomy\enders_gimmicks\serpents_book\_base_resident.dm"
 #include "ModularLobotomy\enders_gimmicks\serpents_book\clockmaker_npc.dm"
 #include "ModularLobotomy\enders_gimmicks\serpents_book\collector_npc.dm"
