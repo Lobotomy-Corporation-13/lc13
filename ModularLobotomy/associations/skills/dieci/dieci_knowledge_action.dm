@@ -53,6 +53,14 @@
 		return
 
 	switch(action)
+		if("remove_active")
+			var/index = text2num(params["index"])
+			if(!index || index < 1 || index > length(dk.active_knowledge))
+				return
+			var/list/entry = dk.active_knowledge[index]
+			dk.active_knowledge.Cut(index, index + 1)
+			to_chat(owner, span_notice("Removed [entry["type"]] L[entry["level"]] knowledge."))
+			return TRUE
 		if("toggle_conserve")
 			dk.conserve_knowledge = !dk.conserve_knowledge
 			if(dk.conserve_knowledge)
