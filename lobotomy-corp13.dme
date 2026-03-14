@@ -4145,6 +4145,7 @@
 #include "ModularLobotomy\!extra_abnos\branch12\waw\passion.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\waw\pentacles_genie.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\waw\queen_keres.dm"
+#include "ModularLobotomy\!extra_abnos\branch12\waw\veil.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\waw\wands_enchantress.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\zayin\forgiveness.dm"
 #include "ModularLobotomy\!extra_abnos\branch12\zayin\full_wave.dm"
