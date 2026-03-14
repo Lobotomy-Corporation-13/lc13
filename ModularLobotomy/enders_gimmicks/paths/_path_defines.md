@@ -36,6 +36,23 @@ Central file for all constants, defines, and signal strings used by the path sys
 | `PATH_ELEMENT_QUANTUM` | `"quantum"` |
 | `PATH_ELEMENT_IMAGINARY` | `"imaginary"` |
 
+### Speed & Turn System
+| Define | Value | Description |
+|--------|-------|-------------|
+| `PATH_BASE_SPEED` | 100 | Default base SPD for all paths |
+| `PATH_TURN_BASE` | `5 SECONDS` | Base turn duration at 100 SPD |
+| `PATH_TURN_READY` | 0 | Turn state: can attack or use skill |
+| `PATH_TURN_ATTACKED` | 1 | Turn state: already attacked, skill locked |
+| `PATH_TURN_SKILLED` | 2 | Turn state: already used skill, AP/energy locked |
+
+### DoT Types
+| Define | Value | Description |
+|--------|-------|-------------|
+| `PATH_DOT_BLEED` | `"bleed"` | Physical DoT, scales off target maxHP |
+| `PATH_DOT_BURN` | `"burn"` | Fire DoT, scales off attacker ATK |
+| `PATH_DOT_SHOCK` | `"shock"` | Lightning DoT, 2x Burn damage |
+| `PATH_DOT_WIND_SHEAR` | `"wind_shear"` | Wind DoT, stacks up to 5 |
+
 ### RES Defaults
 | Define | Value | Description |
 |--------|-------|-------------|

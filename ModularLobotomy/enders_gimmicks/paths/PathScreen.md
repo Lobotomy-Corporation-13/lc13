@@ -32,7 +32,7 @@ Shows character stats, abilities, and resources.
 | Abilities                   | Stats           ||
 |                             |                 ||
 | [icon] Basic Attack  Lv.2  | HP:   163       ||
-| [icon] Burst Action  Lv.1  | ATK:  94        ||
+| [icon] Skill (Z key) Lv.1  | ATK:  94        ||
 | [icon] Ultimate      Lv.1  | DEF:  62        ||
 | [icon] Passive       Lv.1  | CRIT Rate: 5%   ||
 |                             | CRIT DMG: 50%   ||

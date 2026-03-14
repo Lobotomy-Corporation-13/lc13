@@ -1,7 +1,9 @@
 # _path_actions.dm - Action Button Datums
 
 ## Purpose
-Defines the 3 action buttons granted to a mob when they have a path: Burst, Ultimate, and Path Screen opener.
+Defines the 2 action buttons granted to a mob when they have a path: Ultimate and Path Screen opener.
+
+*(Burst/Skill is no longer an action button — it is triggered via the path weapon's `attack_self()`. See `_path_weapon.md`.)*
 
 ## Codebase Pattern Reference
 Actions follow the `/datum/action` pattern from `code/datums/action.dm`:
@@ -9,39 +11,6 @@ Actions follow the `/datum/action` pattern from `code/datums/action.dm`:
 - Override `Grant(mob)` / `Remove(mob)` for setup/cleanup
 - Set `icon_icon`, `button_icon_state` for the HUD button appearance
 - Call `UpdateButtonIcon()` to refresh visuals
-
----
-
-## Datum: `/datum/action/path_burst`
-
-### Variables
-```
-name = "Burst Action"
-desc = "Spend an Action Point to perform your path's Burst ability."
-icon_icon = 'icons/hud/actions.dmi'  // Or a custom path icons file
-button_icon_state = "path_burst"
-var/datum/path/linked_path
-```
-
-### Procs
-
-#### `Trigger()`
-```
-. = ..()
-if(!.)
-    return
-if(!linked_path || !linked_path.burst_action)
-    return
-if(linked_path.action_points < linked_path.burst_action.ap_cost)
-    to_chat(owner, span_warning("Not enough Action Points!"))
-    return
-linked_path.SpendActionPoint()
-linked_path.GainEnergy(linked_path.burst_action.energy_gain)
-linked_path.burst_action.Activate(owner)
-```
-
-#### `UpdateButtonIcon()`
-Could show AP count on the button or gray out if insufficient AP.
 
 ---
 
@@ -101,7 +70,7 @@ linked_path.ui_interact(owner)
 ---
 
 ## Notes
-- All three actions store a `linked_path` reference set during `AssignTo()`.
+- Both actions store a `linked_path` reference set during `AssignTo()`.
 - Actions are granted via `action.Grant(owner)` and removed via `action.Remove(owner)`.
 - Button icons will need sprites added to an icon file (can use placeholder states initially).
-- The burst/ultimate buttons should call `UpdateButtonIcon()` whenever energy/AP changes (triggered by the path's `GainEnergy`/`SpendEnergy`/etc. procs).
+- The ultimate button should call `UpdateButtonIcon()` whenever energy changes (triggered by the path's `GainEnergy`/`SpendEnergy` procs).

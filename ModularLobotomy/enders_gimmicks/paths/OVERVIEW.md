@@ -72,24 +72,24 @@ This system is inspired by Honkai: Star Rail's Path/Traces system. Each Path giv
 
 #### Abilities
 
-**Basic ATK: Farewell Hit** | Single Target | Energy Generation: 20 | Physical
-Deals RED DMG (Physical) equal to **50%—110%** of the USER's ATK to a single enemy.
+**Basic ATK: Farewell Hit** | Melee Hit | Energy Generation: 20 | Physical
+Deals Physical DMG equal to **50%—110%** of the USER's ATK to the target hit by the path weapon.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |-------|-----|-----|-----|-----|-----|-----|-----|
 | ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
 
-**Skill: RIP Home Run** | Blast | Energy Generation: 30 | Physical
-Deals RED DMG (Physical) equal to **62.5%—137.5%** of the USER's ATK to a single enemy and enemies adjacent to it.
+**Skill: RIP Home Run** | 1-tile AoE | Energy Generation: 30 | Physical
+Deals Physical DMG equal to **62.5%—137.5%** of the USER's ATK to all enemies within 1 tile of the user.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|------|------|-----|------|------|------|--------|--------|--------|------|--------|--------|
 | ATK % | 62.5% | 68.75% | 75% | 81.25% | 87.5% | 93.75% | 101.56% | 109.38% | 117.19% | 125% | 131.25% | 137.5% |
 
-**Ultimate: Stardust Ace** | Enhance | Energy Cost: 120 | Physical
+**Ultimate: Stardust Ace** | Empowered Strike | Energy Cost: 120 | Physical
 Choose between two attack modes to deliver a full strike.
-- **Blowout: Farewell Hit** — Deals RED DMG (Physical) equal to **300%—480%** of ATK to a single enemy.
-- **Blowout: RIP Home Run** — Deals RED DMG (Physical) equal to **180%—288%** of ATK to a single enemy, and RED DMG (Physical) equal to **108%—172.8%** of ATK to enemies adjacent to it.
+- **Blowout: Farewell Hit** — Deals Physical DMG equal to **300%—480%** of ATK to the target in front of the user.
+- **Blowout: RIP Home Run** — Deals Physical DMG equal to **180%—288%** of ATK to the target in front of the user, and Physical DMG equal to **108%—172.8%** of ATK to enemies within 1 tile of the target.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|------|------|------|------|------|------|--------|--------|--------|------|------|------|
@@ -97,8 +97,8 @@ Choose between two attack modes to deliver a full strike.
 | Blowout: RIP (main) | 180% | 189% | 198% | 207% | 216% | 225% | 236.25% | 247.5% | 258.75% | 270% | 279% | 288% |
 | Blowout: RIP (adj) | 108% | 113.4% | 118.8% | 124.2% | 129.6% | 135% | 141.75% | 148.5% | 155.25% | 162% | 167.4% | 172.8% |
 
-**Passive: Perfect Pickoff** | Enhance
-Each time after this character kills an enemy, ATK increases by **10%—22%**. Stacks up to **2** times.
+**Passive: Perfect Pickoff** | On Kill
+Each time the user kills an enemy, ATK increases by **10%—22%** for 30 seconds. Stacks up to **2** times.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|-----|-----|-----|-----|-----|-----|-------|-------|-------|-----|-----|-----|
@@ -107,7 +107,7 @@ Each time after this character kills an enemy, ATK increases by **10%—22%**. S
 #### Scaling Notes
 - Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
 - All damage uses **avg coeff** (average of all 4 damage coefficients) with **Physical** elemental type
-- Ultimate enhances the next Basic ATK or Skill rather than being a standalone attack
+- Ultimate empowers the next Basic ATK or Skill rather than being a standalone attack
 - Ultimate costs **120 energy** and generates **0 energy**
 - Basic ATK generates **20 energy**, Skill generates **30 energy**
 
@@ -220,7 +220,7 @@ How many hits to kill common mobs (Basic ATK, no passive, avg coeff + RES applie
 **Gameplay Role:** Deals extraordinary amounts of single-target damage. The main damage dealer against Elite Enemies.
 
 - **Archetype:** Single-target assassin / Boss killer
-- **Strengths:** Highest single-target burst, DEF shred on crit, conditional Ult bonus, RES PEN from ally support
+- **Strengths:** Highest single-target burst, SPD debuff on crit (slows target), conditional Ult bonus on slowed targets, RES PEN from ally support
 
 #### Base Stats (by Ascension Phase & Level)
 
@@ -241,77 +241,78 @@ How many hits to kill common mobs (Basic ATK, no passive, avg coeff + RES applie
 | 6 | 70 | 822 | 509 | 369 |
 | 6 | 80 | 882 | 546 | 396 |
 
-**Stat Comparison vs Destruction at Lv80:** ATK 546 vs 620 (-12%), DEF 396 vs 460 (-14%), HP 882 vs 1203 (-27%). The Hunt has lower raw stats but compensates with much higher ability multipliers and DEF shred.
+**Stat Comparison vs Destruction at Lv80:** ATK 546 vs 620 (-12%), DEF 396 vs 460 (-14%), HP 882 vs 1203 (-27%). The Hunt has lower raw stats but compensates with much higher ability multipliers and SPD debuff → Ult bonus combo.
 
 #### Abilities
 
-**Basic ATK: Cloudlancer Art: North Wind** | Single Target | Energy Generation: 20 | Wind
-Deals RED DMG (Wind) equal to **50%—110%** of the USER's ATK to a single enemy.
+**Basic ATK: Cloudlancer Art: North Wind** | Melee Hit | Energy Generation: 20 | Wind
+Deals Wind DMG equal to **50%—110%** of the USER's ATK to the target hit by the path weapon.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |-------|-----|-----|-----|-----|-----|-----|-----|
 | ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
 
-**Skill: Cloudlancer Art: Torrent** | Single Target | Energy Generation: 30 | Wind
-Deals RED DMG (Wind) equal to **130%—286%** of the USER's ATK to a single enemy.
-When DMG dealt by Skill triggers a **CRIT Hit**, there is a **100% base chance** to reduce the target's DEF by **12%** for **2 turns**.
+**Skill: Cloudlancer Art: Torrent** | Melee Lunge | Energy Generation: 30 | Wind
+Deals Wind DMG equal to **130%—286%** of the USER's ATK to the target in front of the user (2-tile range lunge).
+When DMG dealt by Skill triggers a **CRIT Hit**, there is a **100% base chance** to apply a **SPD debuff** (slowing the target's movement by **12%**) for **20 seconds**.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|------|------|------|------|------|------|--------|--------|--------|------|------|------|
 | ATK % | 130% | 143% | 156% | 169% | 182% | 195% | 211.25% | 227.5% | 243.75% | 260% | 273% | 286% |
 
-**Ultimate: Ethereal Dream** | Single Target | Energy Cost: 100 | Energy Generation: 5 | Wind
-Deals RED DMG (Wind) equal to **240%—432%** of the USER's ATK to a single target enemy.
-If the attacked enemy has their **DEF reduced**, the multiplier for DMG dealt by Ultimate increases by **72%—129.6%**.
+**Ultimate: Ethereal Dream** | Targeted Strike | Energy Cost: 100 | Energy Generation: 5 | Wind
+Deals Wind DMG equal to **240%—432%** of the USER's ATK to the nearest enemy within 3 tiles in the user's facing direction.
+If the attacked enemy has an active **SPD debuff**, the multiplier for DMG dealt by Ultimate increases by **72%—129.6%**.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|------|------|------|------|------|------|------|------|------|------|------|------|
 | Base ATK % | 240% | 256% | 272% | 288% | 304% | 320% | 340% | 360% | 380% | 400% | 416% | 432% |
-| DEF-down bonus | 72% | 76.8% | 81.6% | 86.4% | 91.2% | 96% | 102% | 108% | 114% | 120% | 124.8% | 129.6% |
+| SPD-debuff bonus | 72% | 76.8% | 81.6% | 86.4% | 91.2% | 96% | 102% | 108% | 114% | 120% | 124.8% | 129.6% |
 
-*With DEF-down active, Ultimate multiplier = Base + Bonus (e.g. Lv1: 240% + 72% = 312%, Lv12: 432% + 129.6% = 561.6%)*
+*With SPD-debuff active on target, Ultimate multiplier = Base + Bonus (e.g. Lv1: 240% + 72% = 312%, Lv12: 432% + 129.6% = 561.6%)*
 
-**Talent: Superiority of Reach** | Enhance
-When the user becomes the target of an ally's ability, their next attack's **Wind RES PEN** increases by **18%—39.6%**. This effect can be triggered again after **2 turns**.
+**Passive: Superiority of Reach** | On Ally Buff
+When an ally uses a supportive ability on the user, their next attack's **Wind RES PEN** increases by **18%—39.6%**. This effect can be triggered again after **20 seconds**.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|-----|------|------|------|------|-----|-------|-------|-------|-----|------|------|
 | RES PEN | 18% | 19.8% | 21.6% | 23.4% | 25.2% | 27% | 29.25% | 31.5% | 33.75% | 36% | 37.8% | 39.6% |
 
 #### Scaling Notes
-- Basic ATK has **7 levels**, Skill/Ultimate/Talent have **12 levels**
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
 - All damage uses **avg coeff** (average of all 4 damage coefficients) with **Wind** elemental type
-- Skill's DEF shred only triggers on **CRIT hits** — CRIT Rate is essential for this path
-- Ultimate has a huge conditional bonus when target has DEF reduced (Skill crit -> Ult combo)
-- Talent introduces **Wind RES PEN** — reduces enemy's Wind resistance (elemental layer, not LC13 avg coeff)
+- Skill's **SPD debuff** only triggers on **CRIT hits** — CRIT Rate is essential for this path
+- Ultimate has a huge conditional bonus when target is **SPD-debuffed** (Skill crit -> Ult combo)
+- Passive introduces **Wind RES PEN** — reduces enemy's Wind resistance (elemental layer, not LC13 avg coeff)
 - Ultimate generates **5 energy** (unlike Destruction's 0), giving slight energy cycling
 - Energy cost is **100** (vs Destruction's 120), so Ult charges faster
+- SPD debuff slows movement on regular mobs/carbons, slows turn cycle on path holders
 
 #### Gameplay Loop
 ```
-1. Ally buffs/targets the Hunt user -> Talent triggers (Wind RES PEN on next attack)
-2. Use Skill (Cloudlancer Art: Torrent) on boss
-   -> If CRIT: applies 12% DEF reduction for 2 turns
-   -> RES PEN from Talent applied on this hit
+1. Ally buffs the Hunt user -> Passive triggers (Wind RES PEN on next attack, 20s cooldown)
+2. Use Skill (Cloudlancer Art: Torrent) on boss — lunge 2 tiles
+   -> If CRIT: applies 12% SPD debuff (movement slow) for 20 seconds
+   -> RES PEN from Passive applied on this hit
 3. Build to 100 energy via Basic ATK (20) + Skill (30) hits
-4. Use Ultimate (Ethereal Dream) on DEF-reduced boss
+4. Use Ultimate (Ethereal Dream) on SPD-debuffed boss
    -> Base 432% + 129.6% bonus = 561.6% ATK at max level
-   -> Massively amplified single-target nuke
-5. Repeat: Skill to maintain DEF shred, Ult when ready
+   -> Massively amplified focused strike on slowed target
+5. Repeat: Skill to maintain SPD debuff, Ult when ready
 ```
 
 #### Key Differences from Destruction
 | Aspect | Destruction | The Hunt |
 |--------|-------------|---------|
 | Element Type | Physical | Wind |
-| Target Profile | Flexible (AoE Skill, single Ult) | Pure single-target specialist |
-| Skill Scaling | 62.5%—137.5% (Blast/AoE) | 130%—286% (Single, 2x+ higher) |
-| Ult Scaling | 300%—480% (Enhance, buffs next attack) | 240%—432% base, up to 561.6% conditional |
+| Target Profile | Flexible (AoE Skill, focused Ult) | Pure focused-target specialist |
+| Skill Scaling | 62.5%—137.5% (1-tile AoE) | 130%—286% (2-tile lunge, 2x+ higher) |
+| Ult Scaling | 300%—480% (Empowered strike) | 240%—432% base, up to 561.6% conditional |
 | Ult Energy Cost | 120 | 100 |
 | Ult Energy Gen | 0 | 5 |
-| Passive/Talent | Kill-stacking ATK buff (self-reliant) | Ally-dependent Wind RES PEN (team synergy) |
-| DEF Interaction | None | Skill crits shred DEF, Ult punishes DEF-down |
-| Best Against | Groups, RED-weak mobs | Single bosses, Wind-weak mobs |
+| Passive | Kill-stacking ATK buff (self-reliant) | Ally-dependent Wind RES PEN (team synergy) |
+| SPD Interaction | None | Skill crits apply SPD debuff, Ult punishes slowed targets |
+| Best Against | Groups, Physical-weak mobs | Bosses, Wind-weak mobs |
 
 ---
 
@@ -321,7 +322,7 @@ When the user becomes the target of an ally's ability, their next attack's **Win
 **Gameplay Role:** Deals remarkable amounts of multi-target damage. The main damage dealer against groups of enemies.
 
 - **Archetype:** AoE specialist / Execute finisher
-- **Strengths:** AoE damage on every ability, execute mechanic on low-HP enemies, follow-up ATK on HP threshold triggers, self-ATK buff from Ultimate
+- **Strengths:** Area damage on every ability, execute mechanic on low-HP enemies, triggered bonus hit on HP threshold, self-ATK buff from Ultimate
 - **Element:** Ice
 
 #### Base Stats (by Ascension Phase & Level)
@@ -350,12 +351,12 @@ When the user becomes the target of an ally's ability, their next attack's **Win
 | The Hunt | 882 | 546 | 396 |
 | Erudition | 952 | 582 | 396 |
 
-Erudition has moderate stats — higher ATK than Hunt but lower than Destruction. DEF matches Hunt. HP sits between the two. Compensated by AoE on every ability and execute/follow-up mechanics.
+Erudition has moderate stats — higher ATK than Hunt but lower than Destruction. DEF matches Hunt. HP sits between the two. Compensated by area damage on every ability and execute/triggered bonus mechanics.
 
 #### Abilities
 
-**Basic ATK: What Are You Looking At?** | Single Target | Energy Generation: 20 | Ice
-Deals Ice DMG equal to **50%—110%** of USER's ATK to a single enemy. If the enemy's HP is at **50% or less**, deals additional Ice DMG equal to **40%** of USER's ATK. This bonus also triggers if the Basic ATK causes the enemy's HP to fall to 50% or lower.
+**Basic ATK: What Are You Looking At?** | Melee Hit | Energy Generation: 20 | Ice
+Deals Ice DMG equal to **50%—110%** of USER's ATK to the target hit by the path weapon. If the enemy's HP is at **50% or less**, deals additional Ice DMG equal to **40%** of USER's ATK. This bonus also triggers if the Basic ATK causes the enemy's HP to fall to 50% or lower.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |-------|-----|-----|-----|-----|-----|-----|-----|
@@ -364,8 +365,8 @@ Deals Ice DMG equal to **50%—110%** of USER's ATK to a single enemy. If the en
 
 *Execute bonus is flat 40% ATK at all levels. Effective scaling when triggered: 90%—150% ATK.*
 
-**Skill: One-Time Offer** | AoE | Energy Generation: 30 | Ice
-Deals Ice DMG equal to **50%—110%** of USER's ATK to **all enemies**. If the enemy's HP is at **50% or higher**, DMG dealt to that target increases by **25%**.
+**Skill: One-Time Offer** | 3-tile AoE | Energy Generation: 30 | Ice
+Deals Ice DMG equal to **50%—110%** of USER's ATK to all enemies within 3 tiles of the user. If the enemy's HP is at **50% or higher**, DMG dealt to that target increases by **25%**.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|-----|-----|-----|------|------|------|--------|--------|--------|------|------|------|
@@ -373,53 +374,53 @@ Deals Ice DMG equal to **50%—110%** of USER's ATK to **all enemies**. If the e
 
 *With 25% high-HP bonus active: 62.5%—137.5% effective.*
 
-**Ultimate: It's Magic, I Added Some Magic** | AoE | Energy Cost: 110 | Energy Generation: 5 | Ice
-Deals Ice DMG equal to **120%—216%** of USER's ATK to **all enemies**. After using the Ultimate, increases USER's ATK by **25%** for 1 turn.
+**Ultimate: It's Magic, I Added Some Magic** | 5-tile AoE | Energy Cost: 110 | Energy Generation: 5 | Ice
+Deals Ice DMG equal to **120%—216%** of USER's ATK to all enemies within 5 tiles of the user. After using the Ultimate, increases USER's ATK by **25%** for 10 seconds.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|------|------|------|------|------|------|------|------|------|------|------|------|
 | ATK % | 120% | 128% | 136% | 144% | 152% | 160% | 170% | 180% | 190% | 200% | 208% | 216% |
 
-*ATK buff (25%) applies after the Ultimate's damage, boosting subsequent attacks for 1 turn.*
+*ATK buff (25%) applies after the Ultimate's damage, boosting subsequent attacks for 10 seconds.*
 
-**Talent: Fine, I'll Do It Myself** | AoE Follow-up | Energy Generation: 5
-When **any ally's or the user's** attack causes an enemy's HP to fall to **50% or lower**, USER launches a Follow-up ATK dealing Ice DMG equal to **25%—43%** of USER's ATK to **all enemies**.
+**Passive: Fine, I'll Do It Myself** | On HP Threshold | Energy Generation: 5
+When **any ally's or the user's** attack causes an enemy's HP to fall to **50% or lower**, USER launches a triggered bonus hit dealing Ice DMG equal to **25%—43%** of USER's ATK to all enemies within 3 tiles of the user.
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
 |-------|-----|------|-----|------|-----|------|--------|--------|--------|-----|------|-----|
 | ATK % | 25% | 26.5% | 28% | 29.5% | 31% | 32.5% | 34.375% | 36.25% | 38.125% | 40% | 41.5% | 43% |
 
-*Triggers on ANY ally hitting the HP threshold, not just the user. AoE follow-up hits all enemies, not just the trigger target. Generates 5 energy per trigger.*
+*Triggers on ANY ally hitting the HP threshold within 7 tiles, not just the user. Bonus hit damages enemies within 3 tiles of the user. Generates 5 energy per trigger.*
 
 #### Scaling Notes
-- Basic ATK has **7 levels**, Skill/Ultimate/Talent have **12 levels**
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
 - All damage uses **avg coeff** (average of all 4 damage coefficients) with **Ice** elemental type
 - Basic ATK has a built-in **execute mechanic** — flat +40% ATK bonus damage when target is at or drops to ≤50% HP
 - Skill has the **opposite** conditional — +25% DMG when target is ≥50% HP (anti-synergy with Basic, encourages alternating)
-- Talent triggers off **any ally's** attacks, not just the user's — scales with team size and AoE attacks
-- Talent follow-up is AoE, hitting all enemies — powerful in multi-target fights
+- Passive triggers off **any ally's** attacks within 7 tiles, not just the user's — scales with team size and nearby allies
+- Passive bonus hit is a 3-tile AoE around the user — powerful in multi-target fights
 - Ultimate costs **110 energy** (highest so far: Destruction 120, Hunt 100)
-- Ultimate generates **5 energy** and grants a **25% ATK self-buff** for 1 turn after use
-- No RES PEN in kit — relies on raw AoE volume and execute damage
+- Ultimate generates **5 energy** and grants a **25% ATK self-buff** for 10 seconds after use
+- No RES PEN in kit — relies on raw area damage volume and execute damage
 
 #### Gameplay Loop
 ```
-1. Open with Skill (One-Time Offer) on full-HP group
-   -> 50%-110% ATK to ALL enemies
+1. Open with Skill (One-Time Offer) in a group of enemies
+   -> 50%-110% ATK to all enemies within 3 tiles
    -> +25% bonus since enemies are above 50% HP
-   -> Effective: 62.5%-137.5% ATK to all
+   -> Effective: 62.5%-137.5% ATK to nearby enemies
 2. Basic ATK weaker enemies to push them below 50% HP
    -> Execute bonus: +40% ATK on targets at/below 50%
-   -> Each threshold cross triggers Talent follow-up
-3. Talent (Fine, I'll Do It Myself) auto-triggers:
-   -> 25%-43% ATK AoE to ALL enemies per trigger
-   -> Can chain: if follow-up pushes another enemy to 50%,
+   -> Each threshold cross triggers Passive bonus hit
+3. Passive (Fine, I'll Do It Myself) auto-triggers:
+   -> 25%-43% ATK to all enemies within 3 tiles per trigger
+   -> Can chain: if bonus hit pushes another enemy to 50%,
       does NOT re-trigger (prevents infinite loops)
-4. Build to 110 energy via Basic (20) + Skill (30) + Talent (5)
-5. Ultimate (It's Magic) on all enemies
-   -> 120%-216% ATK AoE nuke
-   -> Grants 25% ATK buff for 1 turn
-   -> Follow-up attacks in that turn are boosted
+4. Build to 110 energy via Basic (20) + Skill (30) + Passive (5)
+5. Ultimate (It's Magic) — 5-tile AoE nuke
+   -> 120%-216% ATK to all nearby enemies
+   -> Grants 25% ATK buff for 10 seconds
+   -> Subsequent attacks during buff window are boosted
 6. Repeat: Skill (high HP enemies) -> Basic (low HP) -> Ult
 ```
 
@@ -427,15 +428,15 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 | Aspect | Destruction | The Hunt | Erudition |
 |--------|-------------|----------|-----------|
 | Element | Physical | Wind | Ice |
-| Target Profile | Flexible | Single-target | AoE specialist |
-| Basic ATK | 50-110% single | 50-110% single | 50-110% single + 40% execute |
-| Skill | 62.5-137.5% Blast | 130-286% single | 50-110% AoE (all enemies) |
-| Ult Scaling | 300-480% (Enhance) | 240-432% (+129.6% conditional) | 120-216% AoE (all enemies) |
+| Target Profile | Flexible | Focused-target | Area specialist |
+| Basic ATK | 50-110% melee hit | 50-110% melee hit | 50-110% melee hit + 40% execute |
+| Skill | 62.5-137.5% (1-tile AoE) | 130-286% (2-tile lunge) | 50-110% (3-tile AoE) |
+| Ult Scaling | 300-480% (Empowered strike) | 240-432% (+129.6% conditional) | 120-216% (5-tile AoE) |
 | Ult Energy Cost | 120 | 100 | 110 |
 | Ult Energy Gen | 0 | 5 | 5 |
-| Passive/Talent | Kill-stacking ATK | Ally-triggered RES PEN | HP-threshold AoE follow-up |
-| Unique Mechanic | Enhance next attack | DEF shred on crit | Execute + anti-execute conditionals |
-| Best Against | Groups + RED-weak | Bosses + Wind-weak | Large groups + Ice-weak |
+| Passive | Kill-stacking ATK | Ally-triggered RES PEN | HP-threshold AoE bonus hit |
+| Unique Mechanic | Empowered next attack | SPD debuff on crit, Ult bonus on slowed | Execute + anti-execute conditionals |
+| Best Against | Groups + Physical-weak | Bosses + Wind-weak | Large groups + Ice-weak |
 
 ---
 
@@ -445,11 +446,118 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 **Gameplay Role:** Applies buffs to allies to improve the team's combat capacities.
 
 - **Archetype:** Buffer / Force multiplier
-- **Strengths:** Empowering allies, stat boosts, team synergy
-- **Basic Attack:** Hits grant a small ATK buff to the user and nearby allies
-- **Burst:** Apply a significant buff (ATK up, CRIT up, or damage bonus) to allies in range
-- **Ultimate:** Team-wide empowerment granting multiple stat boosts and temporary ability enhancement
-- **Passive:** Nearby allies passively gain a small stat bonus (aura effect)
+- **Strengths:** Empowering a designated ally, ATK boost + bonus Lightning DMG on ally attacks, energy battery for allies, DMG amplification via Ultimate
+- **Element:** Lightning
+
+#### Base Stats (by Ascension Phase & Level)
+
+| Phase | Level | HP | ATK | DEF | SPD |
+|-------|-------|----|-----|-----|-----|
+| 0 | 1 | 115 | 72 | 54 | 112 |
+| 0 | 20 | 224 | 140 | 105 | 112 |
+| 1 | 20 | 270 | 169 | 126 | 112 |
+| 1 | 30 | 328 | 205 | 153 | 112 |
+| 2 | 30 | 374 | 234 | 175 | 112 |
+| 2 | 40 | 432 | 270 | 202 | 112 |
+| 3 | 40 | 478 | 298 | 224 | 112 |
+| 3 | 50 | 535 | 334 | 251 | 112 |
+| 4 | 50 | 581 | 363 | 272 | 112 |
+| 4 | 60 | 639 | 399 | 299 | 112 |
+| 5 | 60 | 685 | 428 | 321 | 112 |
+| 5 | 70 | 743 | 464 | 348 | 112 |
+| 6 | 70 | 789 | 493 | 369 | 112 |
+| 6 | 80 | 846 | 529 | 396 | 112 |
+
+**Stat Comparison at Lv80:**
+| Path | HP | ATK | DEF | SPD |
+|------|----|-----|-----|-----|
+| Destruction | 1,203 | 620 | 460 | 100 |
+| The Hunt | 882 | 546 | 396 | 100 |
+| Erudition | 952 | 582 | 396 | 100 |
+| Harmony | 846 | 529 | 396 | 112 |
+
+Harmony has the lowest HP and ATK of all paths but the highest base SPD (112), giving faster turn cycling (4.46s turns vs 5s). This supports its role as a buffer — more turns = more Skill uses to maintain Benediction uptime.
+
+#### Abilities
+
+**Basic ATK: Dislodged** | Melee Hit | Energy Generation: 20 | Lightning
+Deals Lightning DMG equal to **50%—110%** of the USER's ATK to the target hit by the path weapon.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|-------|-----|-----|-----|-----|-----|-----|-----|
+| ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
+
+**Skill: Soothing Melody** | Ally Buff | Energy Generation: 30 | Lightning
+Grants the nearest designated ally within 7 tiles the **Benediction** buff:
+- Increases the ally's ATK by **25%—55%**, capped at **15%—27%** of USER's current ATK.
+- When the Benediction'd ally next attacks, they deal bonus Lightning DMG equal to **20%—44%** of that ally's ATK (1 time, consumed on attack).
+- Benediction lasts for **30 seconds** (3 turns) and only applies to the most recent Skill target (reapplying moves it).
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|-----|------|-----|------|--------|--------|--------|-----|------|-----|
+| ATK buff % | 25% | 27.5% | 30% | 32.5% | 35% | 37.5% | 40.63% | 43.75% | 46.88% | 50% | 52.5% | 55% |
+| ATK cap (% of USER ATK) | 15% | 16% | 17% | 18% | 19% | 20% | 21.25% | 22.5% | 23.75% | 25% | 26% | 27% |
+| Bonus Lightning DMG (% ally ATK) | 20% | 22% | 24% | 26% | 28% | 30% | 32.5% | 35% | 37.5% | 40% | 42% | 44% |
+
+**Ultimate: Amidst the Rejoicing Clouds** | Ally Empower | Energy Cost: 130 | Energy Generation: 5 | Lightning
+Regenerates **50 Energy** for the nearest designated ally within 7 tiles (who has a path) and increases that ally's DMG by **20%—56%** for **20 seconds** (2 turns).
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|-----|-----|-----|-----|-----|--------|--------|--------|-----|-----|-----|
+| DMG buff % | 20% | 23% | 26% | 29% | 32% | 35% | 38.75% | 42.5% | 46.25% | 50% | 53% | 56% |
+
+*Energy restore only works on allies who have the path system (they have an energy meter). DMG buff works on any designated ally.*
+
+**Passive: Violet Sparknado** | On User Attack | Lightning
+When the USER attacks an enemy, the ally with **Benediction** immediately deals bonus Lightning DMG equal to **30%—66%** of that ally's ATK to the same enemy. Triggers on every hit by the USER (not gated by turns).
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|-----|------|-----|------|--------|--------|--------|-----|------|-----|
+| Bonus DMG (% ally ATK) | 30% | 33% | 36% | 39% | 42% | 45% | 48.75% | 52.5% | 56.25% | 60% | 63% | 66% |
+
+*This is separate from Benediction's one-time attack bonus. The Passive triggers every time the USER hits, while Benediction's bonus triggers when the ALLY attacks.*
+
+#### Scaling Notes
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
+- All damage uses **avg coeff** with **Lightning** elemental type
+- Harmony is a **pure support** path — personal damage is low, but ally empowerment is massive
+- Skill's ATK buff has a **cap** based on USER's ATK — prevents abuse with low-ATK Harmony users buffing high-ATK allies beyond reason
+- Benediction only exists on **one ally at a time** — reapplying the Skill moves it to the new target
+- Passive (Violet Sparknado) triggers on **every USER hit**, not per turn — faster weapons = more Passive procs
+- Ultimate costs **130 energy** (highest of all paths) but gives **50 energy to an ally** — functions as an energy battery
+- Ultimate's DMG buff stacks with Benediction's ATK buff for massive ally burst windows
+- SPD 112 (base) gives 4.46s turns — more turns means more Skill uses to refresh Benediction and build energy
+
+#### Gameplay Loop
+```
+1. Designate your primary DPS ally via the Designate Ally action
+2. Use Skill (Soothing Melody) to apply Benediction to your DPS ally
+   -> Ally gains 25%-55% ATK buff (capped by your ATK)
+   -> Ally's next attack deals 20%-44% bonus Lightning DMG
+3. Attack enemies with Basic ATK
+   -> Each hit triggers Passive: Benediction'd ally deals 30%-66%
+      of their ATK as Lightning DMG to the same target
+   -> First hit per turn grants you 1 AP + energy
+4. Alternate attack turns and Skill turns to maintain Benediction
+   -> Benediction lasts 30s, Skill costs 1 AP + turn
+5. Build to 130 energy, then Ultimate on your DPS ally
+   -> Ally gets 50 energy (accelerates THEIR Ultimate)
+   -> Ally gets 20%-56% DMG buff for 20 seconds
+   -> During this window, ally has ATK buff + DMG buff = massive burst
+6. Repeat: maintain Benediction, battery ally with Ult
+```
+
+#### Key Differences from Other Paths
+| Aspect | Destruction | The Hunt | Erudition | Harmony |
+|--------|-------------|----------|-----------|---------|
+| Element | Physical | Wind | Ice | Lightning |
+| Role | DPS | Focused DPS | AoE DPS | Buffer |
+| Basic ATK | 50-110% melee | 50-110% melee | 50-110% + execute | 50-110% + Passive proc |
+| Skill | 1-tile AoE | 2-tile lunge | 3-tile AoE | Ally Benediction buff |
+| Ult | Empowered strike | Conditional nuke | 5-tile AoE | Ally energy + DMG buff |
+| Ult Energy | 120 | 100 | 110 | 130 |
+| Passive | Kill ATK stacking | Ally RES PEN | HP-threshold AoE | Ally bonus Lightning DMG |
+| Best Against | Groups | Bosses | Large groups | Empowering a carry ally |
 
 ---
 
@@ -458,12 +566,122 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 
 **Gameplay Role:** Applies debuffs to enemies to reduce their combat capacities.
 
-- **Archetype:** Debuffer / Crowd control specialist
-- **Strengths:** Weakening enemies, reducing defenses, applying status effects
-- **Basic Attack:** Hits apply a stacking debuff (DEF down, slow, or damage vulnerability)
-- **Burst:** Apply a significant debuff to enemies in range (e.g. reduce all stats, apply weakness)
-- **Ultimate:** Devastating debuff field that cripples all enemies in a large area
-- **Passive:** Enemies near the user have reduced stats (oppressive aura)
+- **Archetype:** Debuffer / DoT specialist / Damage amplifier
+- **Strengths:** Burn DoT application, Burn detonation via Ultimate, stacking damage vulnerability (Firekiss), strong AoE through DoT spread
+- **Element:** Fire
+
+#### Base Stats (by Ascension Phase & Level)
+
+| Phase | Level | HP | ATK | DEF | SPD |
+|-------|-------|----|-----|-----|-----|
+| 0 | 1 | 120 | 79 | 60 | 106 |
+| 0 | 20 | 234 | 154 | 117 | 106 |
+| 1 | 20 | 282 | 186 | 141 | 106 |
+| 1 | 30 | 342 | 225 | 171 | 106 |
+| 2 | 30 | 390 | 257 | 195 | 106 |
+| 2 | 40 | 450 | 297 | 225 | 106 |
+| 3 | 40 | 498 | 328 | 249 | 106 |
+| 3 | 50 | 558 | 368 | 279 | 106 |
+| 4 | 50 | 606 | 399 | 303 | 106 |
+| 4 | 60 | 666 | 439 | 333 | 106 |
+| 5 | 60 | 714 | 471 | 357 | 106 |
+| 5 | 70 | 774 | 510 | 387 | 106 |
+| 6 | 70 | 822 | 542 | 411 | 106 |
+| 6 | 80 | 882 | 582 | 441 | 106 |
+
+**Stat Comparison at Lv80:**
+| Path | HP | ATK | DEF | SPD |
+|------|----|-----|-----|-----|
+| Destruction | 1,203 | 620 | 460 | 100 |
+| The Hunt | 882 | 546 | 396 | 100 |
+| Erudition | 952 | 582 | 396 | 100 |
+| Harmony | 846 | 529 | 396 | 112 |
+| Nihility | 882 | 582 | 441 | 106 |
+
+Nihility has the highest DEF of all paths (441) and moderate ATK matching Erudition. SPD 106 gives slightly faster turns (4.72s). Compensated by powerful DoT and damage amplification rather than raw burst.
+
+#### Abilities
+
+**Basic ATK: Standing Ovation** | Melee Hit | Energy Generation: 20 | Fire
+Deals Fire DMG equal to **50%—110%** of USER's ATK to the target hit by the path weapon.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|-------|-----|-----|-----|-----|-----|-----|-----|
+| ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
+
+**Skill: Blazing Welcome** | 1-tile AoE | Energy Generation: 30 | Fire
+Deals Fire DMG equal to **60%—132%** of USER's ATK to the target in front of the user, and Fire DMG equal to **20%—44%** of USER's ATK to enemies within 1 tile of the target. Has a **100% base chance** to apply **Burn** to the primary target and all hit enemies.
+When Burned, enemies take a Fire DoT equal to **83.9%—240%** of USER's ATK per tick, lasting **20 seconds** (2 turns).
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|------|------|------|------|------|------|--------|--------|--------|------|--------|--------|
+| Main ATK % | 60% | 66% | 72% | 78% | 84% | 90% | 97.5% | 105% | 112.5% | 120% | 126% | 132% |
+| Adjacent ATK % | 20% | 22% | 24% | 26% | 28% | 30% | 32.5% | 35% | 37.5% | 40% | 42% | 44% |
+| Burn DoT % | 83.9% | 92.3% | 100.7% | 109.1% | 117.5% | 130.1% | 146.9% | 167.8% | 193% | 218.2% | 229.1% | 240% |
+
+*Note: This Skill's Burn DoT is much stronger than the standard Burn DoT (100% ATK). It uses a custom scaling that increases sharply at higher levels.*
+
+**Ultimate: Watch This Showstopper** | 3-tile AoE | Energy Cost: 120 | Energy Generation: 5 | Fire
+Deals Fire DMG equal to **72%—129.6%** of USER's ATK to all enemies within 3 tiles. If a hit enemy is currently **Burned**, their Burn DoT immediately ticks, dealing **72%—96%** of the Burn's original damage as instant DMG.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|------|------|------|------|------|------|------|------|------|------|--------|--------|
+| AoE ATK % | 72% | 76.8% | 81.6% | 86.4% | 91.2% | 96% | 102% | 108% | 114% | 120% | 124.8% | 129.6% |
+| Burn detonate % | 72% | 74% | 76% | 78% | 80% | 82% | 84.5% | 87% | 89.5% | 92% | 94% | 96% |
+
+*Burn detonation: triggers an instant partial tick of the target's active Burn, dealing (Burn base DMG * detonate%). This does NOT remove the Burn — it continues ticking normally.*
+
+**Passive: PatrAeon Benefits** | On Burn Tick | Fire
+When USER is alive, there is a **100% base chance** to apply **Firekiss** to an enemy after their Burn DoT deals damage. While inflicted with Firekiss, the enemy receives **4%—7.6% increased DMG** from all sources. Firekiss lasts **30 seconds** (3 turns) and can stack up to **3 times**.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|------|------|------|------|--------|--------|--------|-----|------|------|
+| DMG increase % | 4% | 4.3% | 4.6% | 4.9% | 5.2% | 5.5% | 5.875% | 6.25% | 6.625% | 7% | 7.3% | 7.6% |
+
+*At max stacks (3x Lv12): 22.8% increased DMG taken. This benefits ALL damage sources — path damage, DoT ticks, ally attacks, even normal EGO weapon damage. Firekiss is a `/datum/status_effect` on the target that modifies incoming damage.*
+
+#### Scaling Notes
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
+- All damage uses **avg coeff** with **Fire** elemental type
+- Nihility is a **DoT-focused debuffer** — personal burst is moderate but sustained damage through Burn is very high
+- Skill applies a **custom Burn** with much higher scaling than the standard Burn DoT (240% ATK vs 100% ATK at max level)
+- Ultimate **detonates** existing Burns for instant burst — the combo is Skill (apply Burn) → Ultimate (detonate + AoE)
+- Passive (Firekiss) makes Burn a team-wide DPS amplifier — after Burn ticks, the enemy takes more damage from ALL sources
+- Firekiss stacks multiplicatively with other damage bonuses
+- Ultimate costs **120 energy** (same as Destruction) and generates **5 energy**
+- SPD 106 gives 4.72s turns — slightly faster than base 100 but slower than Harmony's 112
+
+#### Gameplay Loop
+```
+1. Use Skill (Blazing Welcome) on enemy group
+   -> Deals Fire DMG to main target + 1-tile AoE
+   -> 100% chance to apply Burn to all hit enemies
+   -> Burn deals 83.9%-240% ATK per tick for 20 seconds
+2. Attack Burned enemies with Basic ATK
+   -> Each hit deals Fire DMG normally
+   -> Burn ticks trigger Passive: applies Firekiss (DMG vulnerability)
+   -> Firekiss stacks up to 3x on each Burned enemy
+3. Continue attacking — Firekiss amplifies ALL damage on Burned targets
+   -> Allies also deal more damage to Firekiss'd enemies
+4. Build to 120 energy, then Ultimate (Watch This Showstopper)
+   -> 3-tile AoE Fire DMG to all enemies
+   -> All Burned enemies get their Burn detonated for 72%-96% extra
+   -> Massive burst when many enemies are Burned simultaneously
+5. Reapply Burn with Skill, maintain Firekiss stacks
+```
+
+#### Key Differences from Other Paths
+| Aspect | Destruction | The Hunt | Erudition | Harmony | Nihility |
+|--------|-------------|----------|-----------|---------|----------|
+| Element | Physical | Wind | Ice | Lightning | Fire |
+| Role | DPS | Focused DPS | AoE DPS | Buffer | Debuffer/DoT |
+| Basic ATK | 50-110% | 50-110% | 50-110% + execute | 50-110% + Passive | 50-110% |
+| Skill | 1-tile AoE | 2-tile lunge | 3-tile AoE | Ally buff | 1-tile AoE + Burn |
+| Ult | Empowered strike | Conditional nuke | 5-tile AoE | Ally energy/DMG | 3-tile AoE + Burn detonate |
+| Ult Energy | 120 | 100 | 110 | 130 | 120 |
+| Passive | Kill ATK stacking | Ally RES PEN | HP-threshold AoE | Ally Lightning DMG | Firekiss (DMG vulnerability) |
+| Unique Mechanic | Empowered next attack | SPD debuff + conditional Ult | Execute conditionals | Benediction | Burn DoT + detonate + Firekiss |
+| Best Against | Groups | Bosses | Large groups | Carry ally | Sustained fights, tanky enemies |
 
 ---
 
@@ -472,12 +690,139 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 
 **Gameplay Role:** Possesses powerful defensive abilities to protect allies in various ways.
 
-- **Archetype:** Tank / Shielder / Protector
-- **Strengths:** Damage mitigation, shielding allies, aggro management
-- **Basic Attack:** Hits generate a small shield on the user
-- **Burst:** Create a barrier/shield on the user and nearby allies absorbing incoming damage
-- **Ultimate:** Massive shield on all allies + damage reduction for a duration
-- **Passive:** When an ally nearby takes lethal damage, redirect a portion to the user instead (guardian instinct)
+- **Archetype:** Tank / Shielder / Aggro magnet
+- **Strengths:** Highest HP and DEF, Magma Will stacking for enhanced attacks, team shielding on every action, taunt to draw aggro, DEF-scaling Ultimate
+- **Element:** Fire
+
+#### Base Stats (by Ascension Phase & Level)
+
+| Phase | Level | HP | ATK | DEF | SPD |
+|-------|-------|----|-----|-----|-----|
+| 0 | 1 | 168 | 81 | 82 | 95 |
+| 0 | 20 | 329 | 159 | 160 | 95 |
+| 1 | 20 | 397 | 192 | 193 | 95 |
+| 1 | 30 | 481 | 233 | 235 | 95 |
+| 2 | 30 | 549 | 265 | 268 | 95 |
+| 2 | 40 | 633 | 306 | 309 | 95 |
+| 3 | 40 | 701 | 339 | 342 | 95 |
+| 3 | 50 | 785 | 380 | 383 | 95 |
+| 4 | 50 | 853 | 413 | 416 | 95 |
+| 4 | 60 | 937 | 454 | 457 | 95 |
+| 5 | 60 | 1,005 | 486 | 490 | 95 |
+| 5 | 70 | 1,089 | 527 | 532 | 95 |
+| 6 | 70 | 1,157 | 560 | 565 | 95 |
+| 6 | 80 | 1,241 | 601 | 606 | 95 |
+
+**Stat Comparison at Lv80:**
+| Path | HP | ATK | DEF | SPD |
+|------|----|-----|-----|-----|
+| Destruction | 1,203 | 620 | 460 | 100 |
+| The Hunt | 882 | 546 | 396 | 100 |
+| Erudition | 952 | 582 | 396 | 100 |
+| Harmony | 846 | 529 | 396 | 112 |
+| Nihility | 882 | 582 | 441 | 106 |
+| Preservation | 1,241 | 601 | 606 | 95 |
+
+Preservation has the **highest HP** (1,241) and **highest DEF** (606) of all paths, but the **lowest SPD** (95 = 5.26s turns). ATK is moderate (601). This path is built to absorb damage and protect allies, not deal it — though the DEF-scaling Ultimate and enhanced Basic ATK provide meaningful damage output.
+
+#### Abilities
+
+**Basic ATK: Ice-Breaking Light** | Melee Hit | Energy Generation: 20 | Fire
+Deals Fire DMG equal to **50%—110%** of USER's ATK to the target hit by the path weapon. Gains **1 stack of Magma Will**.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|-------|-----|-----|-----|-----|-----|-----|-----|
+| ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
+
+**Enhanced Basic ATK: Ice-Breaking Light** | 1-tile AoE | Energy Generation: 30 | Fire
+When the USER has **4+ stacks of Magma Will**, their Basic ATK becomes enhanced. Consumes 4 stacks to deal Fire DMG equal to **90%—146.25%** of USER's ATK to the primary target, and Fire DMG equal to **36%—58.5%** of USER's ATK to enemies within 1 tile of the target.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|-------|-----|------|------|------|------|------|--------|
+| Main ATK % | 90% | 99% | 108% | 117% | 126% | 135% | 146.25% |
+| Adjacent ATK % | 36% | 39.6% | 43.2% | 46.8% | 50.4% | 54% | 58.5% |
+
+*The enhanced attack generates 30 energy instead of 20. The weapon automatically uses the enhanced version when at 4+ stacks.*
+
+**Skill: Ever-Burning Amber** | Self Buff | Energy Generation: 30 | Fire
+Increases the USER's **DMG Reduction by 40%—52%** for 10 seconds (1 turn) and gains **1 stack of Magma Will**. Has a **100% base chance** to **Taunt** all enemies within 5 tiles for 10 seconds (1 turn), forcing them to target the USER.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|-----|-----|-----|-----|-----|--------|--------|--------|-----|-----|-----|
+| DMG Reduction % | 40% | 41% | 42% | 43% | 44% | 45% | 46.25% | 47.5% | 48.75% | 50% | 51% | 52% |
+
+*Taunt on simple mobs: sets their `target_mob` to the USER, forcing them to walk toward and attack the USER. On path holders/carbons: no forced targeting (PvP aggro not forced).*
+
+**Ultimate: War-Flaming Lance** | 3-tile AoE | Energy Cost: 120 | Energy Generation: 5 | Fire
+Deals Fire DMG equal to **50%—110%** of USER's ATK **plus 75%—165%** of USER's DEF to all enemies within 3 tiles. The next Basic ATK is automatically enhanced and does **not** consume Magma Will stacks.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|------|------|------|------|--------|--------|--------|------|--------|--------|
+| ATK % | 50% | 55% | 60% | 65% | 70% | 75% | 81.25% | 87.5% | 93.75% | 100% | 105% | 110% |
+| DEF % | 75% | 82.5% | 90% | 97.5% | 105% | 112.5% | 121.88% | 131.25% | 140.63% | 150% | 157.5% | 165% |
+
+*At Lv80 with 606 DEF and 601 ATK: Ult deals (601 * 1.10) + (606 * 1.65) = 661 + 1000 = **1,661 base DMG** per enemy. The DEF scaling makes this path's Ultimate hit surprisingly hard.*
+
+**Passive: Magma Will & Shield** | On Action | Fire
+The USER has a persistent **Magma Will** resource (0 to 8 stacks max):
+- **Gaining stacks:** +1 per normal Basic ATK hit (first hit per attack turn only), +1 per Skill use, +1 per time the USER is hit by an enemy.
+- **Spending stacks:** Enhanced Basic ATK consumes 4 stacks (unless the free enhanced attack from Ultimate is active).
+- **At 4+ stacks:** Basic ATK automatically becomes the enhanced 1-tile AoE version.
+
+**Team Shield:** Every time the USER uses a Basic ATK, Skill, or Ultimate, a Shield is applied to all **designated allies within 5 tiles** that absorbs DMG equal to **4%—6.4%** of the USER's DEF plus a flat **20—89**. The Shield lasts for **20 seconds** (2 turns).
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|------|------|------|------|--------|--------|--------|------|------|------|
+| Shield DEF % | 4% | 4.2% | 4.4% | 4.6% | 4.8% | 5% | 5.25% | 5.5% | 5.75% | 6% | 6.2% | 6.4% |
+| Shield flat | 20 | 26 | 32 | 38 | 44 | 50 | 57.5 | 65 | 72.5 | 80 | 84.5 | 89 |
+
+*At Lv80 with 606 DEF, Lv12 Passive: Shield = (606 * 0.064) + 89 = 38.8 + 89 = **~128 DMG absorbed** per action. This adds up quickly since the USER generates shields on every Basic ATK, Skill, and Ultimate.*
+
+#### Scaling Notes
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
+- All damage uses **avg coeff** with **Fire** elemental type
+- Preservation is a **tank/protector** — low SPD (95 = 5.26s turns) but massive HP/DEF
+- **Magma Will** is a unique resource: gained from attacking, using Skill, and being hit. At 4+ stacks, Basic ATK upgrades to enhanced AoE
+- **Being hit = Magma Will stacks** — this means tanking damage is rewarded, synergizing with the Taunt from Skill
+- Ultimate **scales off DEF** (75%-165% DEF), making DEF double as an offensive AND defensive stat
+- Ultimate grants a **free enhanced Basic ATK** that doesn't consume stacks — guaranteed burst follow-up
+- **Team Shield** on every action creates persistent damage absorption for allies, scaling with DEF
+- SPD 95 is the **slowest** of all paths — fewer turns, but each turn is impactful (shield refresh, Magma Will)
+
+#### Gameplay Loop
+```
+1. Use Skill (Ever-Burning Amber) to Taunt enemies within 5 tiles
+   -> Gain 40%-52% DMG Reduction for 10 seconds
+   -> Gain 1 Magma Will stack
+   -> All nearby enemies forced to attack you
+   -> Shield applied to all allies (DEF-based)
+2. Tank enemy hits — each hit grants +1 Magma Will
+   -> With Taunt active, enemies swarm you
+   -> Rapidly build to 4+ stacks
+3. At 4+ Magma Will, Basic ATK upgrades to enhanced AoE
+   -> Deals 90%-146.25% ATK to main + 36%-58.5% to adjacent
+   -> Consumes 4 stacks, gains 30 energy
+   -> Shield refreshed for all allies
+4. Continue tanking + attacking to rebuild stacks
+5. Build to 120 energy, then Ultimate (War-Flaming Lance)
+   -> 3-tile AoE dealing ATK% + DEF% (massive with high DEF)
+   -> Next Basic ATK is auto-enhanced and FREE (no stack cost)
+   -> Shield refreshed for all allies
+6. Repeat: Skill (taunt + DR) -> tank hits -> enhanced ATK -> Ult
+```
+
+#### Key Differences from Other Paths
+| Aspect | Destruction | Hunt | Erudition | Harmony | Nihility | Preservation |
+|--------|-------------|------|-----------|---------|----------|-------------|
+| Element | Physical | Wind | Ice | Lightning | Fire | Fire |
+| Role | DPS | Focused DPS | AoE DPS | Buffer | Debuffer/DoT | Tank/Shielder |
+| Basic ATK | 50-110% | 50-110% | 50-110% + exec | 50-110% + Passive | 50-110% | 50-110% + Magma Will |
+| Enhanced ATK | — | — | — | — | — | 90-146% + 1-tile AoE (4 stacks) |
+| Skill | 1-tile AoE | 2-tile lunge | 3-tile AoE | Ally buff | 1-tile AoE + Burn | Self DMG Red + Taunt |
+| Ult | Empowered | Conditional | 5-tile AoE | Ally energy | 3-tile + detonate | 3-tile ATK+DEF |
+| Ult Energy | 120 | 100 | 110 | 130 | 120 | 120 |
+| Passive | Kill ATK | Ally RES PEN | HP-threshold | Ally Lightning | Firekiss | Magma Will + Team Shield |
+| Best Against | Groups | Bosses | Large groups | Carry ally | Tanky enemies | Protecting team |
 
 ---
 
@@ -487,32 +832,191 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 **Gameplay Role:** Heals allies and restores HP to the team.
 
 - **Archetype:** Healer / Sustain support
-- **Strengths:** HP restoration, cleansing, keeping the team alive
-- **Basic Attack:** Hits heal the user for a small amount
-- **Burst:** Heal a nearby ally (or self) for a significant amount
-- **Ultimate:** Full team heal restoring a large percentage of max HP to all nearby allies
-- **Passive:** Allies near the user passively regenerate HP over time (rejuvenating aura)
+- **Strengths:** Powerful single-target and team heals scaling off USER's max HP, heal-over-time on Skill, emergency healing boost for low-HP allies, lowest Ultimate energy cost (90)
+- **Element:** Physical
+
+#### Base Stats (by Ascension Phase & Level)
+
+| Phase | Level | HP | ATK | DEF | SPD |
+|-------|-------|----|-----|-----|-----|
+| 0 | 1 | 158 | 64 | 69 | 98 |
+| 0 | 20 | 308 | 126 | 134 | 98 |
+| 1 | 20 | 372 | 152 | 162 | 98 |
+| 1 | 30 | 451 | 184 | 196 | 98 |
+| 2 | 30 | 514 | 210 | 224 | 98 |
+| 2 | 40 | 594 | 243 | 258 | 98 |
+| 3 | 40 | 657 | 268 | 286 | 98 |
+| 3 | 50 | 736 | 301 | 320 | 98 |
+| 4 | 50 | 799 | 327 | 348 | 98 |
+| 4 | 60 | 879 | 359 | 382 | 98 |
+| 5 | 60 | 942 | 385 | 410 | 98 |
+| 5 | 70 | 1,021 | 417 | 445 | 98 |
+| 6 | 70 | 1,085 | 443 | 472 | 98 |
+| 6 | 80 | 1,164 | 476 | 507 | 98 |
+
+**Stat Comparison at Lv80:**
+| Path | HP | ATK | DEF | SPD |
+|------|----|-----|-----|-----|
+| Destruction | 1,203 | 620 | 460 | 100 |
+| The Hunt | 882 | 546 | 396 | 100 |
+| Erudition | 952 | 582 | 396 | 100 |
+| Harmony | 846 | 529 | 396 | 112 |
+| Nihility | 882 | 582 | 441 | 106 |
+| Preservation | 1,241 | 601 | 606 | 95 |
+| Abundance | 1,164 | 476 | 507 | 98 |
+
+Abundance has the **second-highest HP** (1,164) and second-highest DEF (507), but the **lowest ATK** (476) of all paths. SPD 98 is slightly below base. This path is built entirely around healing — high HP means high healing output since heals scale off USER's max HP.
+
+#### Abilities
+
+**Basic ATK: Behind the Kindness** | Melee Hit | Energy Generation: 20 | Physical
+Deals Physical DMG equal to **50%—110%** of USER's ATK to the target hit by the path weapon.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|-------|-----|-----|-----|-----|-----|-----|-----|
+| ATK % | 50% | 60% | 70% | 80% | 90% | 100% | 110% |
+
+*Abundance's Basic ATK is the weakest in practice due to lowest ATK stat. The path's value comes from healing, not damage.*
+
+**Skill: Love, Heal, and Choose** | Ally Heal | Energy Generation: 30
+Restores HP to the nearest designated ally within 7 tiles (or self if no ally in range):
+- **Instant heal:** **7%—11.2%** of USER's Max HP plus **70—311.5** flat.
+- **Heal over time:** Restores **4.8%—7.68%** of USER's Max HP plus **48—213.6** flat at the start of the target's next 2 turns (20 seconds). If the target is a non-path mob or carbon, the HoT ticks every 10 seconds instead.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|--------|--------|--------|--------|------|------|------|-------|------|-------|-------|
+| Instant HP% | 7% | 7.44% | 7.88% | 8.31% | 8.75% | 9.1% | 9.45% | 9.8% | 10.15% | 10.5% | 10.85% | 11.2% |
+| Instant flat | 70 | 112 | 143.5 | 175 | 196 | 217 | 232.75 | 248.5 | 264.25 | 280 | 295.75 | 311.5 |
+| HoT HP% | 4.8% | 5.1% | 5.4% | 5.7% | 6% | 6.24% | 6.48% | 6.72% | 6.96% | 7.2% | 7.44% | 7.68% |
+| HoT flat | 48 | 76.8 | 98.4 | 120 | 134.4 | 148.8 | 159.6 | 170.4 | 181.2 | 192 | 202.8 | 213.6 |
+
+*At Lv80 with 1,164 max HP, Lv12 Skill: Instant = (1164 * 0.112) + 311.5 = **442 HP**. HoT per tick = (1164 * 0.0768) + 213.6 = **303 HP** per tick for 2 ticks. Total healing: 442 + 606 = **~1,048 HP** over 20 seconds.*
+
+**Ultimate: Gift of Rebirth** | Team Heal | Energy Cost: 90 | Energy Generation: 5
+Heals **all designated allies within 7 tiles** (and self) for **9.2%—14.72%** of USER's Max HP plus **92—409.4** flat.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|------|--------|-------|--------|-------|-------|-------|-------|-------|------|-------|--------|
+| HP% | 9.2% | 9.78% | 10.35% | 10.93% | 11.5% | 11.96% | 12.42% | 12.88% | 13.34% | 13.8% | 14.26% | 14.72% |
+| Flat | 92 | 147.2 | 188.6 | 230 | 257.6 | 285.2 | 305.9 | 326.6 | 347.3 | 368 | 388.7 | 409.4 |
+
+*At Lv80 with 1,164 max HP, Lv12 Ult: (1164 * 0.1472) + 409.4 = 171.3 + 409.4 = **~581 HP** to all allies. Costs only **90 energy** — the lowest Ultimate cost of any path, allowing frequent team heals.*
+
+**Passive: Innervation** | On Heal
+When healing an ally whose HP is at **30% or lower**, the USER's outgoing healing is increased by **25%—55%**. This bonus applies to both instant heals and heal-over-time ticks.
+
+| Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 |
+|-------|-----|------|-----|------|-----|------|--------|--------|--------|-----|------|-----|
+| Healing boost % | 25% | 27.5% | 30% | 32.5% | 35% | 37.5% | 40.63% | 43.75% | 46.88% | 50% | 52.5% | 55% |
+
+*At Lv12, healing a critically injured ally (<30% HP) boosts healing by 55%. The Lv12 Skill on a low-HP ally: 442 * 1.55 = **685 instant HP** + 303 * 1.55 = **470 per HoT tick**. Total: ~1,625 HP — a massive emergency heal.*
+
+#### Scaling Notes
+- Basic ATK has **7 levels**, Skill/Ultimate/Passive have **12 levels**
+- All damage uses **avg coeff** with **Physical** elemental type
+- Abundance is a **pure healer** — lowest ATK, highest healing output
+- Heals scale off **USER's max HP** (not ATK), so HP stat nodes in the skill tree directly increase healing power
+- Skill provides both **instant healing** and a **HoT** (heal over time) component lasting 20 seconds
+- Ultimate costs only **90 energy** — charges fastest of all paths, enabling frequent team heals
+- Passive (Innervation) provides a massive healing boost for critically injured allies (<30% HP)
+- The HoT from Skill ticks at the ally's turn start if they have a path, or every 10 seconds otherwise
+- SPD 98 gives 5.1s turns — slightly slower than base, but heals don't benefit much from speed since they're reactive
+
+#### Gameplay Loop
+```
+1. Designate allies via Designate Ally action
+2. Stay near allies (within 7 tiles) for healing range
+3. Attack enemies with Basic ATK to build energy + AP
+   -> Damage is low but energy generation is the priority
+4. Use Skill (Love, Heal, and Choose) on injured allies
+   -> Instant heal + HoT for 20 seconds
+   -> Targets nearest designated ally in range
+   -> If ally is below 30% HP, Passive boosts healing by 25%-55%
+5. Build to 90 energy (lowest Ult cost — charges fast)
+6. Ultimate (Gift of Rebirth) when multiple allies need healing
+   -> Heals ALL designated allies within 7 tiles
+   -> Emergency team-wide heal
+7. Repeat: attack for energy, Skill for single-target sustain,
+   Ult for team-wide burst healing
+```
+
+#### Key Differences from All Paths
+| Aspect | Destruction | Hunt | Erudition | Harmony | Nihility | Preservation | Abundance |
+|--------|-------------|------|-----------|---------|----------|-------------|-----------|
+| Element | Physical | Wind | Ice | Lightning | Fire | Fire | Physical |
+| Role | DPS | Focused DPS | AoE DPS | Buffer | Debuffer | Tank | Healer |
+| Basic ATK | 50-110% | 50-110% | +execute | +Passive | 50-110% | +Magma Will | 50-110% |
+| Skill | 1-tile AoE | Lunge | 3-tile AoE | Ally buff | AoE+Burn | DMG Red+Taunt | Ally Heal+HoT |
+| Ult | Empowered | Conditional | 5-tile AoE | Ally energy | Detonate | ATK+DEF AoE | Team Heal |
+| Ult Cost | 120 | 100 | 110 | 130 | 120 | 120 | **90** |
+| Passive | Kill ATK | RES PEN | HP-trigger | Ally DMG | Firekiss | Shield+Magma | Heal boost |
+| Best For | Killing | Bosses | Groups | Carry | DoT/debuff | Tanking | Sustain |
 
 ---
 
 ## Core Mechanics
 
+### Turn System (SPD)
+Each pathstrider has a **turn cycle** — a recurring timer controlled by their SPD stat. Each turn, the player can do ONE of:
+- **Attack turn:** Swing weapon freely (dealing damage each hit), but only the **first hit** grants 1 AP + energy. Subsequent hits deal damage but give no resources.
+- **Skill turn:** Use a Skill (Z key), which costs AP + consumes the turn.
+
+You **cannot do both in the same turn**. Ultimate is NOT gated by turns — it uses energy and can be activated at any time.
+
+**Turn duration formula:**
+```
+turn_duration = 5 SECONDS * PATH_BASE_SPEED / current_SPD
+
+Base SPD 100 → 5.0s turns
+SPD 120      → 4.17s turns
+SPD 80       → 6.25s turns
+```
+
+**DPS normalization:** Ability scaling (e.g. "50% of ATK") represents total damage for one attack turn, divided across all swings in that turn. Faster weapons swing more for less per hit; slower weapons swing less for more per hit. Total damage per turn is always the listed scaling.
+
 ### Energy System
 - Every path has an **Energy** meter (0 to `max_energy`, default 100)
 - Energy is gained by:
-  - Landing melee hits (Basic Attack): +10 energy per hit (default)
-  - Using Burst Action: +20 energy per use (default)
+  - First melee hit of an **attack turn**: +energy (default 20, varies by path)
+  - Using Skill (consumes a **skill turn**): +energy (default 30, varies by path)
 - Energy is spent by:
   - Ultimate Action: requires `energy >= max_energy`, resets energy to 0
-- Energy amounts vary by path (some have higher max energy, different gain rates)
+- Energy gain is **gated by the turn system** — only 1 energy gain event per turn
 
 ### Action Points (AP)
 - Every path has **Action Points** (0 to `max_action_points`, default 5)
 - AP is gained by:
-  - Landing melee hits: +1 AP per hit
+  - First melee hit of an **attack turn**: +1 AP
 - AP is spent by:
-  - Burst Action: costs 1 AP per use (default)
+  - Skill: costs 1 AP per use (default) + consumes the turn
+- AP gain is **gated by the turn system** — max 1 AP per turn
 - AP has a hard cap and does not exceed `max_action_points`
+
+### SPD Debuffs on Non-Path Targets
+Path abilities can apply SPD debuffs. The effect depends on the target type:
+- **Path holder** (human with path): slows their turn cycle (longer between turns)
+- **Simple mob** (ordeal, hostile): slows their **movement speed** via `set_varspeed()`
+- **Non-path carbon** (human without path): slows their **movement speed** via movespeed modifier
+
+All SPD debuffs apply a `/datum/status_effect/path_spd_debuff` so abilities can check `has_path_spd_debuff(target)` for conditional effects (e.g. Hunt's Ultimate bonus damage on slowed targets).
+
+### Damage Over Time (DoT)
+Path abilities can apply elemental DoTs to targets. DoTs tick periodically, cannot crit, and are not affected by DMG boost effects.
+
+**The 4 DoT Types:**
+| DoT | Element | Base DMG per Tick | Duration | Notes |
+|-----|---------|-------------------|----------|-------|
+| Bleed | Physical | 16% target maxHP (7% for bosses) | 20s (2 turns) | Capped at 2x attacker ATK |
+| Burn | Fire | 100% attacker ATK | 20s (2 turns) | Flat scaling |
+| Shock | Lightning | 200% attacker ATK | 20s (2 turns) | 2x Burn |
+| Wind Shear | Wind | 100% attacker ATK * stacks | 20s (2 turns) | Up to 5 stacks |
+
+**Tick timing:**
+- Path holders: DoTs tick at the start of each turn (in `OnTurnReset()`)
+- Regular mobs: DoTs tick every 5 seconds via timer
+- DoT formula: `Base DoT DMG * DEF Multiplier * RES Multiplier * avg_coeff`
+
+**Applied via:** `apply_path_dot(target, dot_type, source_path, duration)` — see `_path_dots.md` for details.
 
 ### Damage Type System
 Path abilities bypass LC13's per-color damage routing. Instead of using a single `damage_coeff` color, path damage calculates the **average of all 4 damage coefficients** (red, white, black, pale) as a unified resistance multiplier. Each path also has a **secondary elemental type** used for path-specific mechanics (RES PEN, elemental weaknesses, effect interactions).
@@ -534,10 +1038,10 @@ Path abilities bypass LC13's per-color damage routing. Instead of using a single
 | Destruction | Physical |
 | The Hunt | Wind |
 | Erudition | Ice |
-| Harmony | TBD |
-| Nihility | TBD |
-| Preservation | TBD |
-| Abundance | TBD |
+| Harmony | Lightning |
+| Nihility | Fire |
+| Preservation | Fire |
+| Abundance | Physical |
 
 **How it works:**
 - Path damage **ignores individual damage type resistances** — it does NOT use a single `damage_coeff` color
@@ -558,6 +1062,7 @@ Path stats are **completely separate** from LC13's attribute system (Fortitude/P
 | HP | Hit points added by the path (path-specific pool or additive to mob HP) |
 | ATK | Attack power, scales damage abilities |
 | DEF | Defense, scales defensive abilities and damage reduction |
+| SPD | Speed, determines turn cycle duration (base 100, higher = faster turns) |
 | CRIT Rate | Chance of critical hit (percentage) |
 | CRIT DMG | Critical hit damage multiplier (percentage) |
 | Max Energy | Maximum energy capacity |
@@ -582,12 +1087,61 @@ Stats are determined by the path's **level** and **ascension phase**, not set as
 | 6 | 70 - 80 |
 
 - Stats at a given level are **interpolated** between the floor and ceiling values of the current ascension phase (each path defines its own stat table)
-- Ascension requires materials and credits (costs TBD per path)
-- Leveling source TBD (EXP from combat, quest rewards, etc.)
 
-### Skill Points
+### Path Leveling (Ahn Cost)
+
+Paths are leveled by purchasing **Path EXP** from the fixer equipment vendor using ahn. Each purchase grants EXP toward the next path level.
+
+**Design goal:** Total ahn cost to reach level 80 = **2.5x** the current attribute system. Current system: fixers start at 20 stats, max 130 = 85 ampules × 300 ahn = ~25,500 ahn. Target: **~63,750 ahn** for path leveling.
+
+**Cost per level (by phase):**
+
+| Phase | Levels | # Levels | Ahn per Level | Phase Subtotal | Running Total |
+|-------|--------|----------|---------------|----------------|---------------|
+| 0 | 1→20 | 19 | 250 | 4,750 | 4,750 |
+| 1 | 20→30 | 10 | 350 | 3,500 | 8,250 |
+| 2 | 30→40 | 10 | 500 | 5,000 | 13,250 |
+| 3 | 40→50 | 10 | 650 | 6,500 | 19,750 |
+| 4 | 50→60 | 10 | 900 | 9,000 | 28,750 |
+| 5 | 60→70 | 10 | 1,200 | 12,000 | 40,750 |
+| 6 | 70→80 | 10 | 1,700 | 17,000 | 57,750 |
+
+**Leveling subtotal: 57,750 ahn** (79 levels).
+
+**Ascension costs** (paid once at each phase gate):
+
+| Ascension | Ahn Cost |
+|-----------|----------|
+| 0 → 1 | 500 |
+| 1 → 2 | 750 |
+| 2 → 3 | 1,000 |
+| 3 → 4 | 1,250 |
+| 4 → 5 | 1,500 |
+| 5 → 6 | 2,000 |
+
+**Ascension subtotal: 7,000 ahn.**
+
+**Grand total: 64,750 ahn** (~2.54x the current system's 25,500 ahn).
+
+**How it works:**
+- The vendor sells a **"Path EXP Crystal"** item (like the training accelerator)
+- Using it in hand grants 1 level to the player's active path and costs ahn based on current phase
+- At the level cap for the current ascension phase (e.g. level 20 at phase 0), leveling is blocked until ascension
+- Ascension is purchased separately (flat ahn cost per phase)
+
+**Vendor item:**
+```dm
+/obj/item/path_exp_crystal
+    name = "Path EXP Crystal"
+    desc = "A crystal of concentrated imaginary energy. Use in hand to grant EXP to your active path."
+    icon_state = "yourstate"
+    // Grants a fixed amount of path EXP when used
+    var/exp_amount = 100
+```
+
+**Skill Points** are granted on level-up:
+- **1 Skill Point** per level (80 total at max level)
 - Used to unlock nodes in the skill tree
-- Source of skill points TBD (could be from leveling, quest rewards, etc.)
 - Each node costs a set number of SP (default 1)
 
 ---
@@ -611,9 +1165,11 @@ Player Mob
               +-- /datum/path_ability/ultimate/destruction
               +-- /datum/path_ability/passive/destruction
               |
-              +-- /datum/action/path_burst     (HUD button)
-              +-- /datum/action/path_ultimate  (HUD button)
-              +-- /datum/action/path_screen    (HUD button -> TGUI)
+              +-- /obj/item/ego_weapon/path_weapon  (Basic ATK = attack(), Skill = attack_self())
+              +-- /datum/action/path_ultimate       (HUD button)
+              +-- /datum/action/path_screen          (HUD button -> TGUI)
+              +-- /datum/action/path_designate_ally  (HUD button -> ally list)
+              +-- GLOB.path_ally_lists[owner]        (designated allies)
 ```
 
 ---
@@ -625,7 +1181,10 @@ Player Mob
 | `_path_defines.md` | `_path_defines.dm` | Constants, signal defines |
 | `_path_datum.md` | `_path_datum.dm` | `/datum/path` + `/datum/path_ability` hierarchy |
 | `_path_node.md` | `_path_node.dm` | `/datum/path_node` skill tree nodes |
-| `_path_actions.md` | `_path_actions.dm` | Action button datums (Burst, Ultimate, Screen) |
+| `_path_weapon.md` | `_path_weapon.dm` | Path weapon (Basic ATK + Skill) + disguise system |
+| `_path_allies.md` | `_path_allies.dm` | Ally designation system + helper procs |
+| `_path_dots.md` | `_path_dots.dm` | DoT status effects (Bleed, Burn, Shock, Wind Shear) |
+| `_path_actions.md` | `_path_actions.dm` | Action button datums (Ultimate, Screen) |
 | `_path_component.md` | `_path_component.dm` | Component for mob attachment + helper procs |
 | `_path_ui.md` | `_path_ui.dm` | DM-side TGUI procs (ui_interact/ui_data/ui_act) |
 | `PathScreen.md` | `PathScreen.js` | React TGUI interface (Details + Skill Tree tabs) |
@@ -681,8 +1240,16 @@ var/datum/path_ability/burst/burst_action
 var/datum/path_ability/ultimate/ultimate_action
 var/datum/path_ability/passive/passive_effect
 
+// Turn System
+var/turn_state = PATH_TURN_READY    // READY, ATTACKED, or SKILLED
+var/next_turn_time = 0              // world.time when next turn starts
+var/swings_per_turn = 6             // How many weapon swings fit in one turn
+
+// Weapon
+var/obj/item/ego_weapon/path_weapon/weapon
+var/path_weapon_type = /obj/item/ego_weapon/path_weapon  // Subtypes override
+
 // Action Button References
-var/datum/action/path_burst/burst_action_button
 var/datum/action/path_ultimate/ultimate_action_button
 var/datum/action/path_screen/screen_action_button
 ```
@@ -692,8 +1259,8 @@ var/datum/action/path_screen/screen_action_button
 |------|-------------|
 | `New()` | Calls `InitNodes()` to set up the skill tree |
 | `InitNodes()` | Virtual. Subtypes populate `nodes` list |
-| `AssignTo(mob/living/carbon/human/user)` | Attach path to mob, instantiate abilities, register signals, grant actions |
-| `Remove()` | Detach path, unregister signals, remove actions, clean up |
+| `AssignTo(mob/living/carbon/human/user)` | Attach path to mob, instantiate abilities, create weapon, grant actions |
+| `Remove()` | Detach path, qdel weapon, remove actions, clean up |
 | `GainEnergy(amount)` | +energy clamped to max, signal + button update |
 | `SpendEnergy(amount)` | -energy clamped to 0, signal + button update |
 | `GainActionPoint()` | +1 AP clamped to max, signal + button update |
@@ -703,8 +1270,11 @@ var/datum/action/path_screen/screen_action_button
 | `Ascend()` | Increase ascension phase, raise level cap |
 | `RecalculateStats()` | Interpolate stats from stat_table based on level/phase |
 | `UnlockNode(node_id)` | Unlock a skill tree node if prereqs met and SP available |
-| `OnMeleeAttack(source, target, user)` | `SIGNAL_HANDLER` for `COMSIG_MOB_ITEM_ATTACK` |
-| `ProcessMeleeHit(target, user)` | Timer callback that invokes `basic_attack.OnHit()` |
+| `OnWeaponHit(target, user)` | Called by path weapon's `attack()`. Deals per-swing damage, gates AP/energy by turn state |
+| `GetTurnDuration()` | Returns turn duration in deciseconds based on SPD |
+| `StartTurnCycle()` | Starts the recurring turn timer (called from AssignTo) |
+| `OnTurnReset()` | Timer callback: resets turn_state to READY, queues next turn |
+| `RecalcSwingsPerTurn()` | Recalculates swings_per_turn from turn duration and attack_speed |
 | `deal_path_damage(mob/living/target, amount)` | Applies elemental RES multiplier (using `element_type` and `res_pen`), then avg of all 4 `damage_coeff` values. Calls `target.adjustHealth()` directly |
 
 ---
@@ -724,7 +1294,7 @@ var/max_level = 7              // Default; subtypes override (Basic=7, Skill/Ult
 Scaling is stored as a `var/list/` on each ability subtype, indexed by level. This gives exact control per level rather than using a formula.
 
 ### `/datum/path_ability/basic`
-Triggered on melee hit via signal handler. Tags: Single Target, Blast, etc.
+Triggered when the path weapon hits a target (via `OnWeaponHit()`). Damage is applied to the hit target.
 ```
 var/energy_gain = 20           // Energy generated per hit (varies by path)
 proc/OnHit(mob/living/target, mob/living/user)  // Virtual
@@ -732,7 +1302,7 @@ proc/OnHit(mob/living/target, mob/living/user)  // Virtual
 Typical max_level: **7**
 
 ### `/datum/path_ability/burst` (Skill)
-Activated via action button. Costs AP, grants energy. Tags: Blast, Bounce, Imprison, etc.
+Activated via path weapon's `attack_self()`. Costs AP, grants energy. 5-second cooldown. Effects vary: AoE around user, lunge, targeted strike, etc.
 ```
 var/energy_gain = 30           // Energy generated on use (varies by path)
 var/ap_cost = 1
@@ -741,13 +1311,13 @@ proc/Activate(mob/living/user) // Virtual
 Typical max_level: **12**
 
 ### `/datum/path_ability/ultimate`
-Activated via action button. Requires full energy, resets to 0. Can be standalone damage OR an **Enhance** that buffs the next Basic/Skill.
+Activated via HUD action button. Requires full energy, resets to 0. Can be standalone damage OR an **Empowered** mode that buffs the next Basic/Skill.
 ```
 proc/Activate(mob/living/user) // Virtual, calls SpendEnergy in base
 ```
 Typical max_level: **12**. Energy cost varies by path (e.g. Destruction = 120).
 
-**Enhance-type Ultimates:** Instead of dealing damage directly, they set an `enhanced` flag on the path. The next Basic ATK or Skill checks this flag and uses the Ultimate's scaling instead of its own. After one enhanced attack, the flag resets.
+**Empowered-type Ultimates:** Instead of dealing damage directly, they set an `enhanced` flag on the path. The next Basic ATK or Skill checks this flag and uses the Ultimate's scaling instead of its own. After one empowered attack, the flag resets.
 
 ### `/datum/path_ability/passive`
 Registers signals for conditional triggers. Always-on effect.
@@ -793,12 +1363,25 @@ var/list/connections = list()   // Visual connections to other node IDs
 
 ---
 
-## Action Buttons
+## Path Weapon
 
-### `/datum/action/path_burst`
-- Trigger checks `AP >= ap_cost`
-- Calls `SpendActionPoint()`, `GainEnergy()`, then `burst_action.Activate()`
-- Shows AP count or grays out when insufficient
+### `/obj/item/ego_weapon/path_weapon`
+Custom EGO weapon subtype that serves as the conduit for Basic Attack and Skill:
+- `attack()` = Basic Attack (calls `linked_path.OnWeaponHit()`, path damage only, force=0 means no LC13 damage)
+- `attack_self()` = Burst/Skill (5s cooldown, AP cost, calls `burst_action.Activate()`)
+- `TRAIT_NODROP` prevents dropping/trading
+- Each path defines its own weapon subtype via `path_weapon_type`
+
+### Appearance Disguise System
+Players can copy the appearance of any EGO weapon onto their path weapon:
+- HUD action button opens selection list of all EGO weapon types
+- Copies: name, desc, icon, sprites, hitsound, swingstyle, reach, attack_speed
+- Does NOT copy: force, damtype, knockback, attribute_requirements, special procs
+- DPS stays constant regardless of attack_speed (damage per hit is normalized)
+
+See `_path_weapon.md` for full details.
+
+## Action Buttons
 
 ### `/datum/action/path_ultimate`
 - Trigger checks `energy >= max_energy`
@@ -808,7 +1391,9 @@ var/list/connections = list()   // Visual connections to other node IDs
 ### `/datum/action/path_screen`
 - Trigger calls `linked_path.ui_interact(owner)` to open the TGUI
 
-All three store a `var/datum/path/linked_path` reference set during `AssignTo()`.
+Both store a `var/datum/path/linked_path` reference set during `AssignTo()`.
+
+*(Burst/Skill is no longer an action button — it is the path weapon's `attack_self()`.)*
 
 ---
 
@@ -945,26 +1530,40 @@ Two tabs:
 ## Signal Flow
 
 ```
-MELEE HIT:
-  Player hits mob with weapon
-  -> COMSIG_MOB_ITEM_ATTACK fires
-  -> /datum/path/OnMeleeAttack() [SIGNAL_HANDLER]
-     -> addtimer(CALLBACK -> ProcessMeleeHit) [escapes sleep restriction]
-     -> GainEnergy(basic_attack.energy_gain)   [+10 default]
-     -> GainActionPoint()                      [+1]
-  -> ProcessMeleeHit()
-     -> basic_attack.OnHit(target, user)       [subtype deals bonus damage]
+TURN CYCLE:
+  Every GetTurnDuration() seconds (5s at base 100 SPD):
+  -> OnTurnReset()
+     -> turn_state = PATH_TURN_READY
+     -> Queue next turn timer via addtimer()
 
-BURST ACTION:
-  Player clicks Burst button
-  -> /datum/action/path_burst/Trigger()
+BASIC ATTACK (Path Weapon melee hit):
+  Player clicks mob with path weapon
+  -> /obj/item/ego_weapon/path_weapon/attack()
+     -> Plays hitsound (force=0 would play tap.ogg otherwise)
+     -> ..() [parent handles animation, sweep, signals — attacked_by() does nothing since force=0]
+     -> linked_path.OnWeaponHit(target, user)
+        -> basic_attack.OnHit(target, user, swings_per_turn)  [damage / swings_per_turn per hit]
+        -> IF turn_state == TURN_READY:
+              GainEnergy(basic_attack.energy_gain) [+20 default, first hit only]
+              GainActionPoint()                    [+1, first hit only]
+              turn_state = TURN_ATTACKED           [skill locked this turn]
+        -> IF turn_state == TURN_ATTACKED:
+              Deal damage only, no AP/energy
+        -> IF turn_state == TURN_SKILLED:
+              Deal damage only, no AP/energy
+
+SKILL (Path Weapon attack_self / Z key):
+  Player uses weapon in hand
+  -> /obj/item/ego_weapon/path_weapon/attack_self()
+  -> Check: turn_state == PATH_TURN_READY      [not already attacked or skilled]
   -> Check: AP >= burst_action.ap_cost
   -> SpendActionPoint()                        [-1]
-  -> GainEnergy(burst_action.energy_gain)      [+20 default]
+  -> GainEnergy(burst_action.energy_gain)      [+30 default]
   -> burst_action.Activate(user)               [subtype does unique action]
+  -> turn_state = PATH_TURN_SKILLED            [attack AP/energy locked this turn]
 
-ULTIMATE ACTION:
-  Player clicks Ultimate button
+ULTIMATE ACTION (not gated by turns):
+  Player clicks Ultimate HUD button
   -> /datum/action/path_ultimate/Trigger()
   -> Check: energy >= max_energy
   -> ultimate_action.Activate(user)            [subtype does powerful action]
@@ -1269,13 +1868,12 @@ Final = 394 * 0.50 = 197
 
 | System | How It Integrates |
 |--------|-------------------|
-| **Signals** | Uses existing `COMSIG_MOB_ITEM_ATTACK` and `COMSIG_MOB_APPLY_DAMGE` (note: existing typo in codebase) |
+| **EGO Weapons** | Path provides its own `/obj/item/ego_weapon/path_weapon` subtype. `force=0` ensures no LC13 damage; path damage is applied directly via `OnWeaponHit()`. Appearance can be copied from any EGO weapon via disguise system |
+| **Signals** | Passive abilities use existing signals like `COMSIG_MOB_APPLY_DAMGE` (note: existing typo in codebase). Basic Attack no longer uses `COMSIG_MOB_ITEM_ATTACK` — it's driven directly by the path weapon's `attack()` |
 | **Damage** | Path damage bypasses per-color routing; uses average of all 4 `damage_coeff` values as resistance. Elemental type (Physical/Wind/etc.) is a separate layer for path effects |
 | **LC13 Attributes** | Path stats are SEPARATE. LC13 attributes (Fortitude/Prudence/Temperance/Justice) displayed in UI for reference and can optionally be read via `get_modified_attribute_level()` for hybrid scaling |
-| **EGO Weapons** | Path basic attack triggers on ANY melee weapon hit, including EGO weapons |
-| **Actions** | Standard `/datum/action` system for HUD buttons |
+| **Actions** | Standard `/datum/action` system for Ultimate and Screen HUD buttons. Burst/Skill lives on the weapon's `attack_self()` |
 | **TGUI** | Standard `SStgui` pattern |
-| **Timer** | Uses `addtimer(CALLBACK(...), 0)` to escape `SIGNAL_HANDLER` sleep restrictions |
 | **Components** | Uses `/datum/component` for clean mob attachment/detachment |
 
 ---
@@ -1286,6 +1884,19 @@ Final = 394 * 0.50 = 197
 // Resource defaults
 #define PATH_MAX_ENERGY_DEFAULT 100
 #define PATH_MAX_AP_DEFAULT     5
+
+// Speed & Turn system
+#define PATH_BASE_SPEED        100
+#define PATH_TURN_BASE         5 SECONDS
+#define PATH_TURN_READY        0   // Can attack or skill
+#define PATH_TURN_ATTACKED     1   // Already attacked, skill locked
+#define PATH_TURN_SKILLED      2   // Already skilled, AP/energy locked
+
+// DoT types
+#define PATH_DOT_BLEED       "bleed"
+#define PATH_DOT_BURN        "burn"
+#define PATH_DOT_SHOCK       "shock"
+#define PATH_DOT_WIND_SHEAR  "wind_shear"
 
 // Node types
 #define PATH_NODE_STAT    "stat"
@@ -1329,6 +1940,9 @@ Add to `lobotomy-corp13.dme` in the `ModularLobotomy\enders_gimmicks` section:
 #include "ModularLobotomy\enders_gimmicks\paths\_path_defines.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_node.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_datum.dm"
+#include "ModularLobotomy\enders_gimmicks\paths\_path_weapon.dm"
+#include "ModularLobotomy\enders_gimmicks\paths\_path_allies.dm"
+#include "ModularLobotomy\enders_gimmicks\paths\_path_dots.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_actions.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_component.dm"
 #include "ModularLobotomy\enders_gimmicks\paths\_path_ui.dm"
@@ -1342,12 +1956,15 @@ Add to `lobotomy-corp13.dme` in the `ModularLobotomy\enders_gimmicks` section:
 1. `_path_defines.dm` - Constants and signal strings
 2. `_path_node.dm` - Skill tree node datum
 3. `_path_datum.dm` - Base `/datum/path` + `/datum/path_ability` hierarchy
-4. `_path_actions.dm` - Action button datums
-5. `_path_component.dm` - Component + helper procs on mob
-6. `_path_ui.dm` - DM-side TGUI procs
-7. `PathScreen.js` - React TGUI interface
-8. DME includes
-9. Example path subtype for end-to-end testing
+4. `_path_weapon.dm` - Path weapon (Basic ATK + Skill) + disguise system
+5. `_path_allies.dm` - Ally designation system + helper procs
+6. `_path_dots.dm` - DoT status effects (Bleed, Burn, Shock, Wind Shear)
+7. `_path_actions.dm` - Action button datums (Ultimate, Screen)
+8. `_path_component.dm` - Component + helper procs on mob
+9. `_path_ui.dm` - DM-side TGUI procs
+10. `PathScreen.js` - React TGUI interface
+11. DME includes
+12. Example path subtype for end-to-end testing
 
 ---
 
@@ -1363,6 +1980,7 @@ To add a new path (e.g. Destruction), create a new `.dm` file and define:
     icon_state = "destruction"
     element_type = PATH_ELEMENT_PHYSICAL
     max_energy = 120
+    path_weapon_type = /obj/item/ego_weapon/path_weapon/destruction
     basic_attack_type = /datum/path_ability/basic/destruction
     burst_action_type = /datum/path_ability/burst/destruction
     ultimate_type = /datum/path_ability/ultimate/destruction
@@ -1431,9 +2049,9 @@ To add a new path (e.g. Destruction), create a new `.dm` file and define:
 
 /datum/path_ability/ultimate/destruction
     name = "Stardust Ace"
-    desc = "Choose between two enhanced attack modes."
+    desc = "Choose between two empowered attack modes."
     max_level = 12
-    /// Blowout: Farewell Hit scaling (single target)
+    /// Blowout: Farewell Hit scaling (focused strike)
     var/list/blowout_fh = list(300, 315, 330, 345, 360, 375, 393.75, 412.5, 431.25, 450, 465, 480)
     /// Blowout: RIP Home Run main target scaling
     var/list/blowout_rip_main = list(180, 189, 198, 207, 216, 225, 236.25, 247.5, 258.75, 270, 279, 288)
@@ -1447,12 +2065,12 @@ To add a new path (e.g. Destruction), create a new `.dm` file and define:
     var/atk = parent_path.GetStat("ATK")
     switch(active_mode)
         if("farewell")
-            // Enhanced single-target Farewell Hit
+            // Empowered Farewell Hit — focused strike on target in front
             var/damage = atk * (blowout_fh[level] / 100)
             // Deal to target in front of user
             // ...
         if("rip")
-            // Enhanced RIP Home Run (main + adjacent)
+            // Empowered RIP Home Run (main target + 1-tile AoE)
             var/main_damage = atk * (blowout_rip_main[level] / 100)
             var/adj_damage = atk * (blowout_rip_adj[level] / 100)
             // Deal main_damage to primary, adj_damage to adjacent
@@ -1491,7 +2109,7 @@ H.RemovePath()
 ```
 
 ### Key Implementation Details for Destruction
-- **Ultimate is an Enhance** — it buffs the NEXT Basic ATK or Skill, not a standalone attack. The path needs to track an `enhanced` state that the basic/burst abilities check.
+- **Ultimate is Empowered** — it buffs the NEXT Basic ATK or Skill, not a standalone attack. The path needs to track an `enhanced` state that the basic/skill abilities check.
 - **Basic ATK has 7 max levels**, Skill/Ultimate/Passive have **12 max levels**
 - **All damage uses avg coeff** (average of all 4 LC13 damage coefficients)
 - **Passive stacks reset** on path removal or death

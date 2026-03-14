@@ -85,3 +85,4 @@ return TRUE
 ## Notes
 - The component approach is the idiomatic SS13 way to attach behaviors to mobs.
 - If the component is skipped, the path datum handles everything itself and the mob just stores a `var/datum/path/active_path` reference somewhere (e.g. on a species var or a global tracking list).
+- The path weapon lifecycle (creation, equipping, deletion) is managed by the path datum's `AssignTo()`/`Remove()` procs — the component does not need to handle weapon logic directly.
