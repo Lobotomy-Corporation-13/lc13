@@ -1525,7 +1525,8 @@ GLOBAL_DATUM_INIT(dview_mob, /mob/dview, new)
 /proc/fade_blurb(client/C, obj/T, fade_time = 5)
 	animate(T, alpha = 0, time = fade_time)
 	sleep(fade_time)
-	C.screen -= T
+	if(C)
+		C.screen -= T
 	qdel(T)
 
 /proc/show_letterbox(client/C, duration)

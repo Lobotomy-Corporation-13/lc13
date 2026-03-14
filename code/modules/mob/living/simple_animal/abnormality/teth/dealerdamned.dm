@@ -17,7 +17,6 @@
 	work_damage_type = BLACK_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/gluttony
 	speak_emote = list("states")
-	pet_bonus = "waves"
 
 	ego_list = list(
 		/datum/ego_datum/weapon/luckdraw,
@@ -38,18 +37,23 @@
 		"Fold" = list(FALSE, "You fold, wishing to cling to what little remains of your wealth. Despite lacking any facial features, you can feel the Dealer's disappointment..."),
 	)
 
-//Coinflip V1; Expect Jank
-/mob/living/simple_animal/hostile/abnormality/dealerdamned/funpet(mob/petter)
-	..()
-	if(!isliving(petter))
+//Coinflip V2; Expect Jank
+/mob/living/simple_animal/hostile/abnormality/dealerdamned/attack_hand(mob/user)
+	. = ..()
+	if(.)
 		return
+	if(!isliving(user))
+		return
+	if(user.a_intent != INTENT_HELP)
+		return
+	user.changeNext_move(CLICK_CD_MELEE)
 	if(has_flipped)
 		say("Woah there, hotshot. We've already had a game recently!")
 		return
 	var/flip_modifier = 0
 	has_flipped = TRUE
-	var/mob/living/user = petter
-	user.deal_damage(user.maxHealth*0.2, RED_DAMAGE, flags = (DAMAGE_FORCED))
+	var/mob/living/gambler = user
+	gambler.deal_damage(gambler.maxHealth*0.2, RED_DAMAGE, flags = (DAMAGE_FORCED))
 	icon_state = "dealerflip"
 	manual_emote("flips a gold coin.")
 	SLEEP_CHECK_DEATH(10)
@@ -60,7 +64,7 @@
 	if(prob(35)+flip_modifier)
 		say("Heads, huh? Looks like you win this one.")
 		coin_status = TRUE
-		user.adjustBruteLoss(-user.maxHealth*0.2)
+		gambler.adjustBruteLoss(-gambler.maxHealth*0.2)
 	else
 		say("Tails. Sorry, high roller, but a deal's a deal.")
 	return
@@ -103,7 +107,7 @@
 				playsound(user, 'sound/weapons/gun/revolver/shot_alt.ogg', 100, FALSE)
 				russian_roulette = FALSE
 				if(player_shot)
-					user.gib()
+					user.gib(FALSE,FALSE,TRUE)
 					say("Shame. Was quite fun havin' ya here, but you know how it is.")
 				else
 					new /obj/item/ego_weapon/ranged/pistol/deathdealer(get_turf(user))
