@@ -88,7 +88,7 @@
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/branch12/pentacle_genie/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(prob(50))
+	if(prob(15))
 		datum_reference.qliphoth_change(-1)
 	return
 

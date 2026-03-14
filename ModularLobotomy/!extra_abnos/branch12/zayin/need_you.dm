@@ -36,7 +36,7 @@
 				continue
 
 			to_chat(H, span_notice("You feel the strength of comrades lost."))
-			H.adjust_all_attribute_levels(get_user_level(user)*get_user_level(user))
+			H.adjust_all_attribute_levels(get_user_level(user)*2)
 		return FALSE
 
 	else if(user.ckey in nerds)
