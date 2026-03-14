@@ -398,16 +398,18 @@
 	user.real_name = target.real_name
 	user.name = target.real_name
 	user.gender = target.gender
+	user.eye_color = target.eye_color
+	user.underwear = target.underwear
+	user.underwear_color = target.underwear_color
+	user.updateappearance()
+
+	// Set hair after updateappearance so DNA does not override
 	user.hairstyle = target.hairstyle
 	user.hair_color = target.hair_color
 	user.facial_hairstyle = target.facial_hairstyle
 	user.facial_hair_color = target.facial_hair_color
-	user.eye_color = target.eye_color
 	user.gradient_style = target.gradient_style
 	user.gradient_color = target.gradient_color
-	user.underwear = target.underwear
-	user.underwear_color = target.underwear_color
-	user.updateappearance()
 	user.update_hair()
 
 	// Copy armor visuals and flags from target's suit
@@ -419,6 +421,11 @@
 		worn_icon = target_suit.worn_icon
 		icon_state = target_suit.icon_state
 		flags_inv = target_suit.flags_inv
+		update_slot_icon()
+	else
+		// Target has no armor — hide outfit visually
+		icon_state = ""
+		flags_inv = NONE
 		update_slot_icon()
 
 	// Copy under clothing visuals
@@ -466,14 +473,19 @@
 			else
 				user.dropItemToGround(our_mask, TRUE)
 
-	// Copy ID/PDA data
+	// Copy ID/PDA data — disguise even if target has no ID/PDA
 	var/obj/item/card/id/user_id = user.get_idcard(TRUE)
-	var/obj/item/card/id/target_id = target.get_idcard(TRUE)
-	if(user_id && target_id)
-		user_id.registered_name = target_id.registered_name
-		user_id.assignment = target_id.assignment
-		if(target_id.registered_account)
-			user_id.registered_account = target_id.registered_account
+	if(user_id)
+		var/obj/item/card/id/target_id = target.get_idcard(TRUE)
+		if(target_id)
+			user_id.registered_name = target_id.registered_name
+			user_id.assignment = target_id.assignment
+			if(target_id.registered_account)
+				user_id.registered_account = target_id.registered_account
+		else
+			// Target has no ID — use target's name so user's real identity is hidden
+			user_id.registered_name = target.real_name
+			user_id.assignment = "Civilian"
 		user_id.update_label()
 
 	var/obj/item/pda/user_pda = user.get_item_by_slot(ITEM_SLOT_ID)
@@ -482,7 +494,11 @@
 		if(istype(target_pda))
 			user_pda.owner = target_pda.owner
 			user_pda.ownjob = target_pda.ownjob
-			user_pda.update_label()
+		else
+			// Target has no PDA — use target's name so user's real identity is hidden
+			user_pda.owner = target.real_name
+			user_pda.ownjob = "Civilian"
+		user_pda.update_label()
 
 	// Create fake pocket items
 	disguise_items = list()
