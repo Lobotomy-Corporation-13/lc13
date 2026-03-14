@@ -188,6 +188,9 @@
 	/// Timer for objective navigation refresh
 	var/nav_refresh_timer
 
+	/// Consecutive pathfinding failures — triggers room switch when too high
+	var/path_fail_count = 0
+
 	/// Whether the raider is currently retreating
 	var/retreating = FALSE
 
@@ -308,6 +311,7 @@
 /datum/component/raider/proc/on_moved(datum/source, atom/old_loc, dir, forced)
 	SIGNAL_HANDLER
 	stuck_counter = 0
+	path_fail_count = 0
 
 	// Check if we've reached our retreat point (teleport away within 3 tiles)
 	if(retreating && retreat_point)
@@ -357,17 +361,27 @@
 				stuck_counter = 0
 				return
 
-			// Try to step around obstacles
-			if(stuck_counter >= 3)
-				log_admin("RAID DEBUG: [H.type] stuck at [AREACOORD(H)] for [stuck_counter * 2]+ seconds - trying to step around")
-				try_step_around_obstacle()
-				stuck_counter = 0
+			// Wall-smashers attack blocking walls directly
+			if(H.environment_smash & ENVIRONMENT_SMASH_WALLS)
+				var/turf/closed/wall/blocking_wall = find_blocking_wall()
+				if(blocking_wall)
+					log_admin("RAID DEBUG: [H.type] smashing through wall at [AREACOORD(blocking_wall)]")
+					attack_wall(blocking_wall)
+					return
 
-			// After many attempts, try smashing
-			if(stuck_counter >= 5)
-				log_admin("RAID DEBUG: [H.type] still stuck - attempting to smash obstacles")
-				H.DestroyPathToTarget()
-				stuck_counter = 0
+		if(stuck_counter >= 4) // Stuck for 8+ seconds
+			// Try to step around obstacles
+			log_admin("RAID DEBUG: [H.type] stuck at [AREACOORD(H)] for [stuck_counter * 2]+ seconds - trying to step around")
+			try_step_around_obstacle()
+
+		if(stuck_counter >= 8) // Stuck for 16+ seconds
+			log_admin("RAID DEBUG: [H.type] still stuck - attempting to smash obstacles")
+			H.DestroyPathToTarget()
+
+		if(stuck_counter >= 12) // Stuck for 24+ seconds — give up on this room
+			log_admin("RAID DEBUG: [H.type] giving up on current objective - switching rooms")
+			stuck_counter = 0
+			switch_to_new_room()
 	else
 		stuck_counter = 0
 
@@ -453,6 +467,48 @@
 						return door
 
 	return null
+
+/**
+ * Find a wall blocking the raider's path toward the objective.
+ */
+/datum/component/raider/proc/find_blocking_wall()
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H)
+		return null
+
+	// Check the turf toward our objective first
+	if(current_objective)
+		var/turf/obj_turf = get_turf(current_objective)
+		if(obj_turf)
+			var/turf/next_step = get_step_towards(H, obj_turf)
+			if(istype(next_step, /turf/closed/wall))
+				return next_step
+
+	// Check adjacent tiles for walls
+	for(var/dir in GLOB.cardinals)
+		var/turf/T = get_step(H, dir)
+		if(istype(T, /turf/closed/wall))
+			return T
+
+	return null
+
+/**
+ * Attack a wall to break through it.
+ * Deals the raider's melee damage to the wall each tick.
+ */
+/datum/component/raider/proc/attack_wall(turf/closed/wall/W)
+	var/mob/living/simple_animal/hostile/H = parent
+	if(!H || H.stat == DEAD || !W)
+		return
+
+	// Attack the wall — chance to break scales with melee damage
+	var/damage = rand(H.melee_damage_lower, H.melee_damage_upper)
+	playsound(W, 'sound/effects/bang.ogg', 50, TRUE)
+	H.do_attack_animation(W)
+	W.add_dent(WALL_DENT_HIT)
+	if(prob(damage))
+		W.dismantle_wall()
+	// Don't reset stuck_counter — keep attacking until wall breaks or we move
 
 /// How long doors stay jammed open (in deciseconds)
 #define DOOR_JAM_DURATION 15 SECONDS
@@ -590,10 +646,11 @@
 
 	// Only re-navigate if we seem stuck (same position as last check)
 	// This prevents constant walk_to() calls which can reset movement
+	// Don't re-navigate if very stuck — check_stuck handles escalation
 	var/turf/current = get_turf(H)
 	if(current_objective && !retreating)
-		if(current == last_position && stuck_counter >= 1)
-			// We're stuck, try navigating again
+		if(current == last_position && stuck_counter >= 1 && stuck_counter <= 4)
+			// We're stuck but not hopelessly — try navigating again
 			navigate_to_objective()
 		else if(!last_position)
 			// First navigation
@@ -650,9 +707,9 @@
 	room_crates.Cut()
 	current_objective = null
 
-	// Get all accessible rooms
+	// Get all accessible rooms — non-wall-smashers must only target rooms they can reach
 	var/can_smash_walls = (H.environment_smash & ENVIRONMENT_SMASH_WALLS)
-	var/list/all_rooms = get_resurgence_room_areas(FALSE, can_smash_walls) // FALSE = don't require open access, raiders can smash doors
+	var/list/all_rooms = get_resurgence_room_areas(!can_smash_walls, can_smash_walls)
 
 	// Filter out visited rooms
 	var/list/unvisited_rooms = list()
@@ -666,15 +723,19 @@
 		H.FindTarget()
 		return
 
-	// Pick a random unvisited room
-	var/area/resurgence_outpost/room/new_room = pick(unvisited_rooms)
-	log_admin("RAID DEBUG: [H.type] switching to new room: [new_room.name] ([unvisited_rooms.len] unvisited rooms remaining)")
+	// Try unvisited rooms until we find one we can actually reach
+	var/list/shuffled = shuffle(unvisited_rooms)
+	for(var/area/resurgence_outpost/room/new_room in shuffled)
+		log_admin("RAID DEBUG: [H.type] trying room: [new_room.name] ([shuffled.len] unvisited rooms remaining)")
+		room_clear_time = 0
+		if(assign_room_target(new_room))
+			return
+		// Couldn't assign — mark as visited so we don't retry
+		visited_rooms += new_room
 
-	// Reset room clear time
-	room_clear_time = 0
-
-	// Assign the new room
-	assign_room_target(new_room)
+	// No reachable rooms left — just fight nearby targets
+	log_admin("RAID DEBUG: [H.type] no reachable rooms - switching to FindTarget()")
+	H.FindTarget()
 
 // ==================== CRATE LOOTING ====================
 
@@ -971,11 +1032,19 @@
 	)
 
 	if(!path?.len)
-		log_admin("RAID DEBUG: [H.type] A* pathfinding failed (no path found) - falling back to direct walk_to")
-		// Fallback to direct walk_to if A* fails
+		path_fail_count++
+		log_admin("RAID DEBUG: [H.type] A* pathfinding failed (no path found) - fail count: [path_fail_count]")
+		if(path_fail_count >= 2)
+			// Objective is unreachable — give up and try a different room
+			log_admin("RAID DEBUG: [H.type] giving up on unreachable objective after [path_fail_count] A* failures - switching rooms")
+			path_fail_count = 0
+			switch_to_new_room()
+			return
+		// First failure — try direct walk_to once as fallback
 		walk_to(H, target_turf, 1, H.move_to_delay)
 		return
 
+	path_fail_count = 0
 	log_admin("RAID DEBUG: [H.type] A* path calculated with [path.len] steps from [AREACOORD(H)] to [AREACOORD(target_turf)]")
 
 	// Create commander at raider's position with arrival/failure callbacks
@@ -1004,10 +1073,21 @@
 /datum/component/raider/proc/on_commander_failed()
 	log_admin("RAID DEBUG: [parent?.type] commander failed to reach destination")
 	current_commander = null
+	path_fail_count++
 
-	// Try direct walk_to as fallback
 	var/mob/living/simple_animal/hostile/H = parent
-	if(H && H.stat != DEAD && current_objective)
+	if(!H || H.stat == DEAD)
+		return
+
+	if(path_fail_count >= 2)
+		// Multiple failures — objective is likely unreachable, switch rooms
+		log_admin("RAID DEBUG: [H.type] commander failed [path_fail_count] times - switching rooms")
+		path_fail_count = 0
+		switch_to_new_room()
+		return
+
+	// First failure — try direct walk_to once as fallback
+	if(current_objective)
 		var/turf/target_turf = get_turf(current_objective)
 		if(target_turf)
 			log_admin("RAID DEBUG: [H.type] falling back to direct walk_to")

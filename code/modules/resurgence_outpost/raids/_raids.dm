@@ -51,10 +51,10 @@
 #define RAID_REPUTATION_THRESHOLD 20
 
 /// Base chance per subsystem tick when reputation is below threshold (0-100)
-#define RAID_BASE_CHANCE 15
+#define RAID_BASE_CHANCE 5
 
 /// Minimum cooldown between raids (in deciseconds)
-#define RAID_MINIMUM_COOLDOWN (10 MINUTES)
+#define RAID_MINIMUM_COOLDOWN (30 MINUTES)
 
 /// Warning time before raid spawns (in deciseconds)
 #define RAID_WARNING_TIME (1 MINUTES)

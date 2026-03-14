@@ -599,6 +599,7 @@ GLOBAL_LIST_EMPTY(raid_dismembering_bodies)
 	melee_damage_upper = 25
 	max_stolen = RAIDER_MAX_STOLEN_ITEMS + 3
 	crate_breaker = TRUE
+	environment_smash = ENVIRONMENT_SMASH_STRUCTURES | ENVIRONMENT_SMASH_WALLS
 
 	var/max_speed = 1.5
 	var/normal_speed = 3

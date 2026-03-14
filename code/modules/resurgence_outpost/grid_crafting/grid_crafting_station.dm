@@ -228,7 +228,7 @@
 /// Get the maximum weapon tier revealed by research
 /obj/structure/grid_crafting_station/proc/get_max_revealed_tier()
 	if(debug_mode)
-		return 4  // Show all tiers in debug mode
+		return 3  // Show all tiers in debug mode
 
 	if(!GLOB.resurgence_research)
 		return 1  // Default to tier 0-1 if no research system
@@ -236,13 +236,10 @@
 	var/datum/resurgence_research_manager/research = GLOB.resurgence_research
 
 	// Check research nodes to determine max revealed tier
-	// master_grid_crafting -> Tier 4
 	// expert_grid_crafting -> Tier 3
 	// advanced_grid_crafting -> Tier 2
 	// grid_crafting -> Tier 1
 	// No research -> Tier 0 only (but we give 1 as base)
-	if(research.is_researched("master_grid_crafting"))
-		return 4
 	if(research.is_researched("expert_grid_crafting"))
 		return 3
 	if(research.is_researched("advanced_grid_crafting"))

@@ -160,3 +160,13 @@
 #define SHUFFLE_POINTS_TIER_2 3
 #define SHUFFLE_POINTS_TIER_3 5
 #define SHUFFLE_POINTS_TIER_4 999
+
+// ============================================
+// CLAN WEAPON RARITY DEFINES
+// ============================================
+
+/// Clan weapon rarity tiers
+#define CLAN_RARITY_MILITIA  1
+#define CLAN_RARITY_REGULAR  2
+#define CLAN_RARITY_VETERAN  3
+#define CLAN_RARITY_ELITE    4

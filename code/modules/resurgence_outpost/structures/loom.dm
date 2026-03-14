@@ -66,6 +66,24 @@
 		"category" = CRAFT_CAT_MATERIALS
 	)
 
+	recipes["Rope"] = list(
+		"result" = /obj/item/stack/resurgence_rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/sheet/cotton = 3),
+		"total_work" = 8,
+		"desc" = "3 Cotton -> 1 Rope",
+		"category" = CRAFT_CAT_MATERIALS
+	)
+
+	recipes["Rope (Vines)"] = list(
+		"result" = /obj/item/stack/resurgence_rope,
+		"result_amount" = 1,
+		"materials" = list(/obj/item/stack/resurgence_vines = 2),
+		"total_work" = 5,
+		"desc" = "2 Vines -> 1 Rope",
+		"category" = CRAFT_CAT_MATERIALS
+	)
+
 	// === FAITH FABRICS ===
 	// Higher tier fabrics require durathread cotton instead of massive cloth costs
 

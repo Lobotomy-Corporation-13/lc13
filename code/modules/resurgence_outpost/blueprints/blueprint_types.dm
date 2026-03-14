@@ -1158,7 +1158,7 @@
 	name = "grid crafting station blueprint"
 	result_name = "grid crafting station"
 	icon = 'icons/obj/machines/research.dmi'
-	icon_state = "dvir"
+	icon_state = "tdoppler"
 	result_type = /obj/structure/grid_crafting_station
 	research_required = "grid_crafting"
 
@@ -1168,6 +1168,20 @@
 		/obj/item/stack/sheet/mineral/silver = 10,
 		/obj/item/stack/sheet/mineral/gold = 5,
 		/obj/item/stack/sheet/glass = 10
+	)
+
+/obj/structure/resurgence_blueprint/weapons_bench
+	name = "weapons bench blueprint"
+	result_name = "weapons bench"
+	icon = 'ModularLobotomy/_Lobotomyicons/workshop.dmi'
+	icon_state = "anvil"
+	result_type = /obj/structure/resurgence_crafting_table/weapons_bench
+
+/obj/structure/resurgence_blueprint/weapons_bench/init_materials()
+	required_materials = list(
+		/obj/item/stack/sheet/metal = 15,
+		/obj/item/stack/sheet/mineral/wood = 5,
+		/obj/item/stack/resurgence_rope = 2
 	)
 
 // ===========================================

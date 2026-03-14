@@ -15,7 +15,7 @@ SUBSYSTEM_DEF(day_night)
 	/// Current cycle time (0.0=midnight, 0.5=noon, 1.0=midnight)
 	var/cycle_time = 0.25
 	/// Speed: how much cycle_time advances per fire()
-	var/cycle_speed = 0.015
+	var/cycle_speed = 0.0015
 	/// Current darkness alpha (0=bright day, 200=dark night)
 	var/darkness_alpha = 0
 	/// Whether cycle is active (only on outpost maptype)

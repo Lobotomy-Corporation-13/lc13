@@ -317,23 +317,23 @@
 	id = "grid_crafting"
 	name = "Weapon Grid Navigation"
 	desc = "Learn to use navigation cores to traverse the weapon crafting grid. Unlocks visibility of common city weapon blueprints scattered in nearby zones."
-	tier = 2
+	tier = 3
 	total_work = 250
-	prerequisites = list("metallurgy")
+	prerequisites = list("metallurgy", "advanced_metallurgy")
 	unlocks_desc = "Blueprints: Ore Refiner, Grid Crafting Station. Reveals: Common city weapons (gray/green zones)."
-	ui_x = 180
-	ui_y = 320
+	ui_x = 340
+	ui_y = 240
 	branch_types = list("weapons")
 
 /datum/resurgence_research_node/advanced_grid_crafting
 	id = "advanced_grid_crafting"
 	name = "Association Weapon Patterns"
 	desc = "Study the weapon patterns used by city associations. Reveals mid-tier association weapon blueprints hidden in distant grid coordinates."
-	tier = 3
+	tier = 4
 	total_work = 400
-	prerequisites = list("grid_crafting", "advanced_metallurgy")
+	prerequisites = list("grid_crafting")
 	unlocks_desc = "Reveals: Association-grade weapons (blue zones)."
-	ui_x = 340
+	ui_x = 500
 	ui_y = 240
 	branch_types = list("weapons")
 
@@ -341,22 +341,10 @@
 	id = "expert_grid_crafting"
 	name = "Corporate Weapon Schematics"
 	desc = "Decode the manufacturing secrets of corporate weapon designs. Reveals powerful corporate weapon blueprints in the far reaches of the grid."
-	tier = 4
+	tier = 5
 	total_work = 600
 	prerequisites = list("advanced_grid_crafting")
 	unlocks_desc = "Reveals: Corporate-grade weapons (purple zones)."
-	ui_x = 500
-	ui_y = 240
-	branch_types = list("weapons")
-
-/datum/resurgence_research_node/master_grid_crafting
-	id = "master_grid_crafting"
-	name = "Legendary Armaments"
-	desc = "Master the art of legendary weapon crafting. Reveals the most powerful director-grade weapon blueprints hidden at the furthest reaches of the grid."
-	tier = 5
-	total_work = 800
-	prerequisites = list("expert_grid_crafting")
-	unlocks_desc = "Reveals: Color-grade weapons (gold zones)."
 	ui_x = 660
 	ui_y = 240
 	branch_types = list("weapons")
@@ -498,3 +486,53 @@
 	ui_x = 340
 	ui_y = 880
 	branch_types = list("utility", "production")
+
+// ==================== CLAN ARMAMENTS ====================
+
+/datum/resurgence_research_node/clan_arms
+	id = "clan_arms"
+	name = "Clan Armaments"
+	desc = "Study the weapons used by rival clan raiders and learn to forge your own. Unlocks basic clan weapons and ammunition."
+	tier = 2
+	total_work = 150
+	prerequisites = list("metallurgy")
+	unlocks_desc = "Blueprints: Weapons Bench. Crafting: Militia weapons, ammunition, magazines."
+	ui_x = 180
+	ui_y = 320
+	branch_types = list("weapons")
+
+/datum/resurgence_research_node/improved_clan_arms
+	id = "improved_clan_arms"
+	name = "Improved Clan Arms"
+	desc = "Refine clan weapon designs with better materials and construction techniques."
+	tier = 3
+	total_work = 300
+	prerequisites = list("clan_arms", "advanced_metallurgy")
+	unlocks_desc = "Crafting: Standard-tier clan weapons and ammunition."
+	ui_x = 340
+	ui_y = 320
+	branch_types = list("weapons")
+
+/datum/resurgence_research_node/veteran_clan_arms
+	id = "veteran_clan_arms"
+	name = "Veteran Clan Arms"
+	desc = "Master advanced weapon forging techniques using precious metals. Unlock faith-channeling weaponry."
+	tier = 4
+	total_work = 500
+	prerequisites = list("improved_clan_arms")
+	unlocks_desc = "Crafting: Veteran weapons, Void Caster (BLACK damage faith gun)."
+	ui_x = 500
+	ui_y = 320
+	branch_types = list("weapons")
+
+/datum/resurgence_research_node/elite_clan_arms
+	id = "elite_clan_arms"
+	name = "Elite Clan Arms"
+	desc = "The pinnacle of clan weaponsmithing. Forge devastating weapons from the rarest materials."
+	tier = 5
+	total_work = 700
+	prerequisites = list("veteran_clan_arms")
+	unlocks_desc = "Crafting: Elite weapons, Pale Lance (PALE damage faith gun)."
+	ui_x = 660
+	ui_y = 320
+	branch_types = list("weapons")
