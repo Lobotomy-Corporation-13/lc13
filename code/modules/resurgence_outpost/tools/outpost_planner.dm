@@ -122,7 +122,8 @@
 		"Machine Fabricator" = /obj/structure/resurgence_blueprint/machine_fabricator,
 		"Ore Refiner" = /obj/structure/resurgence_blueprint/ore_refiner,
 		"Grid Crafting Station" = /obj/structure/resurgence_blueprint/grid_crafting_station,
-		"Expedition Planning Console" = /obj/structure/resurgence_blueprint/world_map_console
+		"Expedition Planning Console" = /obj/structure/resurgence_blueprint/world_map_console,
+		"Weapons Bench" = /obj/structure/resurgence_blueprint/weapons_bench
 	)
 
 	// Furniture category - beds, chairs, tables, seating
