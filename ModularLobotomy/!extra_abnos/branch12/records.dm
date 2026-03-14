@@ -222,6 +222,14 @@
 		"This capsule could be used to heal the SP of the person that used it.",
 	)
 
+// Stagehand
+/obj/item/paper/fluff/info/branch12/ninja
+	abno_type = /mob/living/simple_animal/hostile/abnormality/branch12/ninja
+	abno_code = "O-01-12-72"
+	abno_info = list(
+		"When an employee died, the Qliphoth Counter Decreased.",
+	)
+
 //	-------------HE-------------
 // The Show Goes On
 /obj/item/paper/fluff/info/branch12/show_goes_on
