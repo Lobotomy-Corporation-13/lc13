@@ -1157,7 +1157,7 @@
 
 	if(collected)
 		to_chat(user, span_notice("You sweep up [collected] spent casing\s. ([stored_casings]/[max_casings])"))
-		playsound(src, 'sound/items/pickaxe.ogg', 30, TRUE)
+		playsound(src, 'sound/items/handling/ammobox_pickup.ogg', 30, TRUE)
 	else
 		to_chat(user, span_notice("No spent casings nearby."))
 
