@@ -59,46 +59,54 @@ Shows character stats, abilities, and resources.
 
 ---
 
-## Tab 2: Skill Tree
+## Tab 2: Traces (Skill Tree)
 
-Visual node graph for unlocking nodes.
+Visual node graph with branching diamond pattern. Nodes are unlocked with ahn.
 
 ### Layout
+Mimics HSR's Traces layout — center column shows core abilities, branching lines connect stat boosts and bonus abilities on the sides.
 ```
 +-----------------------------------------------+
-| [Details] [Skill Tree]          <- Tab bar     |
+| [Details] [Traces]            <- Tab bar       |
 +-----------------------------------------------+
-| Skill Points: 3                                |
+| Ahn: 5,000                                    |
 +-----------------------------------------------+
 |                                                |
-|        [ATK+10]---[ATK+20]                     |
-|            |                                   |
-|       [Basic Lv2]---[Basic Lv3]                |
-|            |                                   |
-|        [DEF+5]    [CRT+2]---[CRT+3]           |
-|            |          |                        |
-|       [Burst Lv2] [Passive Lv2]               |
+|    [ATK+4%]----------[HP+4%]                   |
+|       /                     \                  |
+| [ReadyBattle]  [Basic Lv1]  [ATK+4%]          |
+|       \        [Skill Lv1]  /                  |
+|    [DEF+5%]----------[ATK+6%]                  |
+|       /                     \                  |
+| [Tenacity]     [Ult Lv1]    [HP+6%]           |
+|       \        [Pass Lv1]   /                  |
+|    [ATK+6%]----------[DEF+7.5%]               |
+|       /                     \                  |
+| [FightWill]                 [HP+8%]            |
+|       \                     /                  |
+|    [ATK+8%]                                    |
 |                                                |
 +-----------------------------------------------+
-| Selected: ATK +20                              |
-| "Increases ATK by 20."                         |
-| Cost: 1 SP | Requires: ATK +10                |
+| Selected: ATK Boost                            |
+| "ATK increases by 4%."                         |
+| Cost: 200 Ahn | Requires: Ascension 2         |
 | [Unlock]                                       |
 +-----------------------------------------------+
 ```
 
 ### Implementation Approach
-- Nodes positioned on a grid using `tree_x` and `tree_y` values
-- Render nodes in a container with relative positioning
-- Each node is a `Button` with conditional styling:
+- Nodes positioned on a grid using `tree_x` and `tree_y`
+- Render nodes with relative positioning in a container
+- **Connection lines** drawn between nodes following the `connections` list:
+  - Lines are thin styled divs or SVG paths connecting node centers
+  - Lines follow the branching diamond pattern
+- Core abilities shown in center column (non-interactive, just display level)
+- Node styling:
   - **Unlocked**: highlighted color (green/gold)
-  - **Available** (prereqs met, has SP): normal color
-  - **Locked** (prereqs not met): grayed out, dimmed
-- Connections drawn between nodes using a simple approach:
-  - For each node's `connections` list, draw a line element
-  - Use CSS borders or a simple `Box` with background color
-  - Alternatively, render connection lines as thin styled divs
-- Selected node details shown in a panel below the tree
+  - **Available** (prereqs + ascension/level met, has ahn): normal color
+  - **Locked** (prereqs not met or gate not reached): grayed out
+  - **Bonus abilities**: larger icons than stat boosts
+- Selected node details shown in panel below
 - `useLocalState` for `selectedNode` tracking
 
 ### Node Rendering (pseudo-JSX)
@@ -110,8 +118,13 @@ Visual node graph for unlocking nodes.
       position: 'absolute',
       left: (node.tree_x * GRID_SIZE) + 'px',
       top: (node.tree_y * GRID_SIZE) + 'px',
+      width: node.node_type === 'passive'
+        ? LARGE_NODE + 'px' : SMALL_NODE + 'px',
     }}
-    color={node.unlocked ? 'green' : canUnlock(node) ? '' : 'grey'}
+    color={
+      node.unlocked ? 'green'
+        : canUnlock(node) ? '' : 'grey'
+    }
     selected={selectedNode === node.id}
     onClick={() => setSelectedNode(node.id)}
   >
@@ -125,9 +138,16 @@ Visual node graph for unlocking nodes.
 {selectedNodeData && (
   <Section title={selectedNodeData.name}>
     <Box>{selectedNodeData.desc}</Box>
-    <Box>Cost: {selectedNodeData.cost} SP</Box>
-    {selectedNodeData.prerequisites.length > 0 && (
-      <Box>Requires: {prereqNames.join(', ')}</Box>
+    <Box>Cost: {selectedNodeData.ahn_cost} Ahn</Box>
+    {selectedNodeData.required_ascension > 0 && (
+      <Box>
+        Requires: Ascension {selectedNodeData.required_ascension}
+      </Box>
+    )}
+    {selectedNodeData.required_level > 0 && (
+      <Box>
+        Requires: Level {selectedNodeData.required_level}
+      </Box>
     )}
     <Button
       content="Unlock"

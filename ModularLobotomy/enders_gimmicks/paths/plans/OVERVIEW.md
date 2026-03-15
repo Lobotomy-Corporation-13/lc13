@@ -1139,10 +1139,54 @@ Paths are leveled by purchasing **Path EXP** from the fixer equipment vendor usi
     var/exp_amount = 100
 ```
 
-**Skill Points** are granted on level-up:
-- **1 Skill Point** per level (80 total at max level)
-- Used to unlock nodes in the skill tree
-- Each node costs a set number of SP (default 1)
+### Traces (Skill Tree)
+
+The skill tree is unlocked by spending **ahn** (not skill points). Each node has an ahn cost, and nodes must be unlocked along connected branches.
+
+**Layout** (mimics HSR's branching diamond pattern around a central column):
+```
+            [Stat]---[Stat]
+           /                \
+    [Bonus A2]    [Basic Lv1]    [Bonus A2 stat]
+           \      [Skill Lv1]   /
+            [Stat]---[Stat]
+           /                \
+    [Bonus A4]    [Ult Lv1]     [Bonus A4 stat]
+           \      [Passive Lv1] /
+            [Stat]---[Stat]
+           /                \
+    [Bonus A6]              [Bonus A6 stat]
+           \                /
+            [Stat]---[Stat]
+```
+
+**Center column:** 4 core abilities (Basic ATK, Skill, Ultimate, Passive). Leveled via ability materials (TBD). Displayed in center for reference.
+
+**Left/right branches:** Stat boosts and bonus abilities connected by lines. You follow branches outward from the center. Each branch has a bonus ability node with stat boosts on either side.
+
+**3 types of Trace nodes:**
+
+| Type | Count | Ahn Cost Each | Gating | Description |
+|------|-------|---------------|--------|-------------|
+| Stat Boost | 10 | 200-800 (scales with gate) | Ascension phase or path level | Percentage stat increase (e.g. ATK +4%) |
+| Bonus Ability | 3 | 1,000 each | Ascension 2, 4, 6 | Unique passive effect |
+| Ability Level | — | TBD | — | Core ability upgrades (separate system) |
+
+**Stat boost ahn costs by gate:**
+| Gate | Cost per Node |
+|------|---------------|
+| No gate | 200 |
+| Ascension 2 | 300 |
+| Ascension 3 | 400 |
+| Ascension 4 | 500 |
+| Ascension 5 | 600 |
+| Ascension 6 | 700 |
+| Level 75 | 750 |
+| Level 80 | 800 |
+
+**Total Trace ahn cost:** 10 stat boosts (~4,750 ahn) + 3 bonus abilities (3,000 ahn) = **~7,750 ahn** for all traces.
+
+**Combined with leveling + ascension:** 64,750 + 7,750 = **~72,500 ahn** total to fully max a path.
 
 ---
 

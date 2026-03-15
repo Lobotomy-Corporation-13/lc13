@@ -15,7 +15,7 @@
 	name = "Path Weapon"
 	desc = "A weapon manifested from your chosen path."
 	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "yourdefaultstate"
+	icon_state = "penitence"
 	force = 0
 	damtype = RED_DAMAGE
 	attribute_requirements = list()
@@ -34,7 +34,6 @@
 
 /obj/item/ego_weapon/path_weapon/Initialize()
 	. = ..()
-	ADD_TRAIT(src, TRAIT_NODROP, ABSTRACT_ITEM_TRAIT)
 	base_attack_speed = attack_speed
 
 // ---- Core Attack Procs ----
@@ -97,7 +96,6 @@
 	if(linked_path.basic_attack)
 		. += span_notice("<b>Basic:</b> [linked_path.basic_attack.name] (Lv.[linked_path.basic_attack.level])")
 	if(linked_path.burst_action)
-		var/turn_dur = round(linked_path.GetTurnDuration() / 10, 0.1)
 		. += span_notice("<b>Skill:</b> [linked_path.burst_action.name] (Lv.[linked_path.burst_action.level]) — Z key, [linked_path.burst_action.ap_cost] AP, costs 1 turn")
 	if(linked_path.ultimate_action)
 		. += span_notice("<b>Ultimate:</b> [linked_path.ultimate_action.name] (Lv.[linked_path.ultimate_action.level])")

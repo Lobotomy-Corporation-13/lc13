@@ -91,27 +91,30 @@ Returns all data needed by both tabs of the UI:
         }
     ],
 
-    // Skill tree nodes
+    // Skill tree nodes (Traces)
     "nodes": [
         {
             "id": "atk1",
-            "name": "ATK +10",
-            "desc": "Increases ATK by 10.",
+            "name": "ATK Boost",
+            "desc": "ATK increases by 4%.",
             "icon_state": "",
-            "cost": 1,
+            "ahn_cost": 200,
             "node_type": "stat",
-            "tree_x": 2,
+            "tree_x": 1,
             "tree_y": 0,
-            "connections": ["atk2"],
+            "connections": ["hp1", "bonus_a2"],
             "prerequisites": [],
+            "required_ascension": 0,
+            "required_level": 0,
             "unlocked": true,
-            "stat_bonuses": {"ATK": 10}
+            "stat_bonuses": {"ATK": 4},
+            "stat_percent": true
         },
         // ... more nodes
     ],
 
-    // Skill points
-    "skill_points": 3,
+    // Player's current ahn balance (for UI display)
+    "player_ahn": 5000,
 
     // LC13 attributes (for reference display)
     "lc13_attributes": {

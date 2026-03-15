@@ -31,10 +31,10 @@ var/turn_state = PATH_TURN_READY    // Current turn state (READY/ATTACKED/SKILLE
 var/next_turn_time = 0              // world.time when next turn starts
 var/swings_per_turn = 6             // Calculated: how many weapon swings fit in one turn
 
-// --- Skill Tree ---
+// --- Skill Tree (Traces) ---
 var/list/nodes = list()         // List of /datum/path_node
 var/list/unlocked_nodes = list()// Node IDs that have been unlocked
-var/skill_points = 0            // Points available to spend
+// Traces are unlocked by spending ahn (no skill points)
 
 // --- Ability Type References (set by subtypes) ---
 var/basic_attack_type = /datum/path_ability/basic
@@ -167,13 +167,14 @@ Returns the base stat from `path_stats[stat_name]` plus the sum of all `stat_bon
 
 #### `UnlockNode(node_id) -> boolean`
 1. Finds node by ID in `nodes` list
-2. Checks `node.CanUnlock(unlocked_nodes)` and `skill_points >= node.cost`
-3. If valid: deducts skill points, adds ID to `unlocked_nodes`
-4. Applies node effect based on `node_type`:
-   - `PATH_NODE_STAT`: bonuses applied via `GetStat()` dynamically (no action needed here)
+2. Checks `node.CanUnlock(unlocked_nodes, ascension_phase, path_level)`
+3. Checks owner has enough ahn: `owner.bank_account.has_money(node.ahn_cost)`
+4. If valid: deducts ahn via `owner.bank_account.adjust_money(-node.ahn_cost)`, adds ID to `unlocked_nodes`
+5. Applies node effect based on `node_type`:
+   - `PATH_NODE_STAT`: bonuses applied via `GetStat()` dynamically (percentage or flat based on `stat_percent`)
    - `PATH_NODE_ABILITY`: increases the target ability's `level` by `node.level_increase`
-   - `PATH_NODE_PASSIVE`: could call a proc on the passive ability
-5. Returns TRUE on success
+   - `PATH_NODE_PASSIVE`: activates the bonus ability effect
+6. Returns TRUE on success
 
 *(Signal-based OnMeleeAttack/ProcessMeleeHit removed — replaced by weapon-driven `OnWeaponHit()` above.)*
 
