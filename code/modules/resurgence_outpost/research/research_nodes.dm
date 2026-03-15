@@ -64,7 +64,7 @@
 	prerequisites = list()
 	unlocks_desc = "Loom: Backpack, Satchel, Plant Bag, Mining Satchel. Blueprints: Loom."
 	ui_x = 20
-	ui_y = 560
+	ui_y = 580
 	branch_types = list("production", "clothing")
 
 // ==================== TIER 2 - Specialization ====================
@@ -126,7 +126,7 @@
 	prerequisites = list("textiles")
 	unlocks_desc = "Crafting: Paper, Pens, Folders, Clipboard, etc. Blueprints: Filing cabinet."
 	ui_x = 180
-	ui_y = 480
+	ui_y = 500
 	branch_types = list("utility")
 
 /datum/resurgence_research_node/flooring
@@ -138,7 +138,7 @@
 	prerequisites = list("textiles")
 	unlocks_desc = "Crafting: All carpet tiles."
 	ui_x = 180
-	ui_y = 560
+	ui_y = 580
 	branch_types = list("decor")
 
 /datum/resurgence_research_node/culinary
@@ -150,7 +150,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Forge: Beakers, Bowl, Kitchen Knife, Universal Enzyme. Blueprints: Kitchen equipment."
 	ui_x = 180
-	ui_y = 640
+	ui_y = 660
 	branch_types = list("food", "production")
 
 /datum/resurgence_research_node/machine_fabrication
@@ -162,7 +162,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Blueprints: Machine fabricator, Resources recorder."
 	ui_x = 180
-	ui_y = 720
+	ui_y = 740
 	branch_types = list("production", "utility")
 
 /datum/resurgence_research_node/cleaning
@@ -174,7 +174,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Crafting: Push Broom, Spray Can, Trash Bag. Blueprints: Trash bin, cart."
 	ui_x = 180
-	ui_y = 800
+	ui_y = 820
 	branch_types = list("utility")
 
 // ==================== TIER 3 - Advanced ====================
@@ -200,7 +200,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Forge: Plasteel, Silver Pickaxe, Ash Plating. Blueprints: Reinforced wall."
 	ui_x = 340
-	ui_y = 320
+	ui_y = 340
 	branch_types = list("armor", "production")
 
 /datum/resurgence_research_node/faith_weaving
@@ -212,7 +212,7 @@
 	prerequisites = list("textiles")
 	unlocks_desc = "Loom: Simple Azure Faith Fabric, All custom clothing."
 	ui_x = 340
-	ui_y = 480
+	ui_y = 500
 	branch_types = list("clothing")
 
 /datum/resurgence_research_node/acceleration_protocol
@@ -224,7 +224,7 @@
 	prerequisites = list("machine_fabrication")
 	unlocks_desc = "Grants Accelerated Crafting action (2x crafting speed, 3x faith drain)."
 	ui_x = 340
-	ui_y = 720
+	ui_y = 740
 	branch_types = list("production", "utility")
 
 // ==================== TIER 4 - Expert ====================
@@ -262,7 +262,7 @@
 	prerequisites = list("faith_weaving")
 	unlocks_desc = "Loom: Advanced Faith Fabric, Duffel Bag, Explorer Backpack, Leather Satchel."
 	ui_x = 500
-	ui_y = 480
+	ui_y = 500
 	branch_types = list("clothing", "utility")
 
 /datum/resurgence_research_node/luxury_decor
@@ -274,7 +274,7 @@
 	prerequisites = list("advanced_metallurgy")
 	unlocks_desc = "Crafting: Royal Carpets. Blueprints: Gold/Silver walls and doors."
 	ui_x = 500
-	ui_y = 320
+	ui_y = 340
 	branch_types = list("decor")
 
 /datum/resurgence_research_node/advanced_cleaning
@@ -286,7 +286,7 @@
 	prerequisites = list("cleaning")
 	unlocks_desc = "Crafting: Infinite Spray Can, Trash Bag of Holding, Janitor Chem Sprayer."
 	ui_x = 500
-	ui_y = 800
+	ui_y = 820
 	branch_types = list("utility")
 
 /datum/resurgence_research_node/communications
@@ -298,7 +298,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Crafting: All Radio Headsets."
 	ui_x = 500
-	ui_y = 640
+	ui_y = 660
 	branch_types = list("utility", "production")
 
 /datum/resurgence_research_node/storage_tech
@@ -310,7 +310,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Blueprints: Freezer, Fridge, Shower frame."
 	ui_x = 500
-	ui_y = 560
+	ui_y = 580
 	branch_types = list("utility", "food")
 
 /datum/resurgence_research_node/grid_crafting
@@ -384,7 +384,7 @@
 	prerequisites = list("advanced_weaving")
 	unlocks_desc = "Loom: Elegant Faith Fabric."
 	ui_x = 660
-	ui_y = 480
+	ui_y = 500
 	branch_types = list("clothing")
 
 /datum/resurgence_research_node/remote_trading
@@ -396,7 +396,7 @@
 	prerequisites = list("communications", "storage_tech")
 	unlocks_desc = "Blueprints: Communications Console. Enables remote trading with visited factions."
 	ui_x = 660
-	ui_y = 640
+	ui_y = 660
 	branch_types = list("utility")
 
 // ==================== CLOTHING PLATING ====================
@@ -410,7 +410,7 @@
 	prerequisites = list("metallurgy", "textiles")
 	unlocks_desc = "Forge: Tier 1 Clothing Plating (20 armor)."
 	ui_x = 180
-	ui_y = 400
+	ui_y = 420
 	branch_types = list("armor", "clothing")
 
 /datum/resurgence_research_node/plating_tier2
@@ -422,7 +422,7 @@
 	prerequisites = list("plating_tier1", "advanced_metallurgy")
 	unlocks_desc = "Forge: Tier 2 Clothing Plating (40 armor). Requires Tier 1 on garment."
 	ui_x = 340
-	ui_y = 400
+	ui_y = 420
 	branch_types = list("armor")
 
 /datum/resurgence_research_node/plating_tier3
@@ -434,7 +434,7 @@
 	prerequisites = list("plating_tier2")
 	unlocks_desc = "Forge: Tier 3 Clothing Plating (60 armor). Requires Tier 2 on garment."
 	ui_x = 500
-	ui_y = 400
+	ui_y = 420
 	branch_types = list("armor")
 
 /datum/resurgence_research_node/plating_tier4
@@ -446,7 +446,7 @@
 	prerequisites = list("plating_tier3")
 	unlocks_desc = "Forge: Tier 4 Clothing Plating (80 armor). Requires Tier 3 on garment."
 	ui_x = 660
-	ui_y = 400
+	ui_y = 420
 	branch_types = list("armor")
 
 // ==================== LIGHTING ====================
@@ -460,7 +460,7 @@
 	prerequisites = list()
 	unlocks_desc = "Crafting: Long Torch, Campfire."
 	ui_x = 20
-	ui_y = 880
+	ui_y = 900
 	branch_types = list("utility", "production")
 
 /datum/resurgence_research_node/advanced_lighting
@@ -472,7 +472,7 @@
 	prerequisites = list("basic_lighting", "metallurgy")
 	unlocks_desc = "Crafting: Oil Lantern, Glass Lantern, Stone Fireplace."
 	ui_x = 180
-	ui_y = 880
+	ui_y = 900
 	branch_types = list("utility", "production")
 
 /datum/resurgence_research_node/electric_lighting
@@ -484,7 +484,7 @@
 	prerequisites = list("advanced_lighting")
 	unlocks_desc = "Crafting: Hand Light, Spotlight."
 	ui_x = 340
-	ui_y = 880
+	ui_y = 900
 	branch_types = list("utility", "production")
 
 // ==================== CLAN ARMAMENTS ====================
@@ -498,7 +498,7 @@
 	prerequisites = list("metallurgy")
 	unlocks_desc = "Blueprints: Weapons Bench. Crafting: Militia weapons, ammunition, magazines."
 	ui_x = 180
-	ui_y = 320
+	ui_y = 980
 	branch_types = list("weapons")
 
 /datum/resurgence_research_node/improved_clan_arms
@@ -510,7 +510,7 @@
 	prerequisites = list("clan_arms", "advanced_metallurgy")
 	unlocks_desc = "Crafting: Standard-tier clan weapons and ammunition."
 	ui_x = 340
-	ui_y = 320
+	ui_y = 980
 	branch_types = list("weapons")
 
 /datum/resurgence_research_node/veteran_clan_arms
@@ -522,7 +522,7 @@
 	prerequisites = list("improved_clan_arms")
 	unlocks_desc = "Crafting: Veteran weapons, Void Caster (BLACK damage faith gun)."
 	ui_x = 500
-	ui_y = 320
+	ui_y = 980
 	branch_types = list("weapons")
 
 /datum/resurgence_research_node/elite_clan_arms
@@ -534,5 +534,5 @@
 	prerequisites = list("veteran_clan_arms")
 	unlocks_desc = "Crafting: Elite weapons, Pale Lance (PALE damage faith gun)."
 	ui_x = 660
-	ui_y = 320
+	ui_y = 980
 	branch_types = list("weapons")

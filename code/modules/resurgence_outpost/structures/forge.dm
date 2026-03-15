@@ -136,6 +136,20 @@
 		"research_required" = "metallurgy"
 	)
 
+	recipes["Silver Hatchet"] = list(
+		"result" = /obj/item/hatchet/silver,
+		"result_amount" = 1,
+		"materials" = list(
+			/obj/item/stack/sheet/metal = 5,
+			/obj/item/stack/sheet/mineral/silver = 5,
+			/obj/item/stack/sheet/mineral/wood = 2,
+			/obj/item/stack/resurgence_rope = 2
+		),
+		"total_work" = 40,
+		"desc" = "5 Metal + 5 Silver + 2 Wood + 2 Rope -> Silver Hatchet (faster, more durable)",
+		"research_required" = "advanced_metallurgy"
+	)
+
 	recipes["Pickaxe"] = list(
 		"result" = /obj/item/pickaxe,
 		"result_amount" = 1,

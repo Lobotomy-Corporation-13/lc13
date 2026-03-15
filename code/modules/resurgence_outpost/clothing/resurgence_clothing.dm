@@ -43,6 +43,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/under/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)
@@ -113,6 +118,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/suit/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)
@@ -181,6 +191,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/head/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)
@@ -245,6 +260,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/mask/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)
@@ -309,6 +329,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/gloves/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)
@@ -373,6 +398,11 @@
 	AddComponent(/datum/component/faith_clothing, F.faith_bonus)
 	to_chat(user, span_notice("You attach [F] to [src]. (+[F.faith_bonus] faith when worn)"))
 	playsound(src, 'sound/items/Wirecutter.ogg', 50, TRUE)
+	// Hot-update: if the clothing is currently worn, apply the faith bonus immediately
+	if(ishuman(user))
+		var/datum/component/faith_clothing/FC = GetComponent(/datum/component/faith_clothing)
+		if(FC)
+			FC.apply_faith_bonus(user)
 
 /obj/item/clothing/shoes/resurgence/proc/detach_fabric(mob/user)
 	if(!attached_fabric)

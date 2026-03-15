@@ -156,6 +156,14 @@
 	resurgence_durability = 100
 	resurgence_max_durability = 100
 
+/obj/item/hatchet/silver
+	name = "silver hatchet"
+	desc = "A sharp axe blade reinforced with silver on a sturdy handle. Chops faster and lasts longer."
+	force = 15
+	// Silver tier durability
+	resurgence_durability = 400
+	resurgence_max_durability = 400
+
 /obj/item/scythe
 	icon_state = "scythe0"
 	lefthand_file = 'icons/mob/inhands/weapons/polearms_lefthand.dmi'
