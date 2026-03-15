@@ -4,7 +4,7 @@
 // Two weapon types: Fists (defensive, shield HP) and Keys (offensive, OLU).
 // Both share the same combo system with knowledge-powered finishers.
 // L attacks: WHITE damage (no sinking trigger) + 2 Sinking.
-// H attacks: Empower via attack_self (consume L3+ knowledge) → PALE damage + weapon bonus.
+// H attacks: Empower via attack_self (consume knowledge) → PALE damage (50% reduced) + weapon bonus.
 // 6 combo finishers consume specific knowledge types for scaled effects.
 
 // ============================================================
@@ -17,7 +17,7 @@
 	icon_state = "dieci_glove"
 	inhand_icon_state = "yun_fist"
 	desc = "Heavy gauntlets issued to Dieci Association members. The reinforced plating channels accumulated knowledge into a protective barrier around the wearer."
-	special = "Defensive weapon. Light attacks deal WHITE damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks. Empowering grants shield HP (level x15)."
+	special = "Defensive weapon. Light attacks deal WHITE damage + Sinking. Use in hand to empower (knowledge) for PALE heavy attacks. Empowering grants shield HP (level x15)."
 	force = 20
 	damtype = WHITE_DAMAGE
 	extra_damage_flags = DAMAGE_NO_SINKING
@@ -46,7 +46,7 @@
 
 /obj/item/ego_weapon/city/dieci/examine(mob/user)
 	. = ..()
-	. += span_notice("Light attacks deal WHITE damage + Sinking. Use in hand to empower (L3+ knowledge) for PALE heavy attacks.")
+	. += span_notice("Light attacks deal WHITE damage + Sinking. Use in hand to empower (knowledge) for PALE heavy attacks.")
 	. += span_notice("H - Quick Strike (Behavioral): Sinking burst")
 	. += span_notice("LH - Sweeping Blow (Medical): Throw + Sinking")
 	. += span_notice("LLH - Pressure Combo (Behavioral): Grab + beatdown + DLD")
@@ -62,7 +62,7 @@
 // Empowerment System
 // ============================================================
 
-/// Empower next attack by consuming knowledge (L3+) or using free empowers.
+/// Empower next attack by consuming knowledge or using free empowers.
 /obj/item/ego_weapon/city/dieci/attack_self(mob/living/carbon/user)
 	if(activated)
 		activated = FALSE
@@ -81,9 +81,9 @@
 	if(!kc)
 		to_chat(user, span_warning("You lack the knowledge to empower your attacks."))
 		return
-	var/list/consumed = kc.consume_lowest_knowledge(1, 3)
+	var/list/consumed = kc.consume_lowest_knowledge(1, 1)
 	if(!length(consumed))
-		to_chat(user, span_warning("No knowledge at L3+ available to empower."))
+		to_chat(user, span_warning("No knowledge available to empower."))
 		return
 	var/list/entry = consumed[1]
 	empowered_level = entry["level"]
@@ -115,6 +115,8 @@
 	chain++
 	attack_speed = initial(attack_speed)
 	force = initial(force)
+	if(activated)
+		force = round(force * 0.5)
 
 	var/is_heavy = activated
 
@@ -186,7 +188,7 @@
 /obj/item/ego_weapon/city/dieci/proc/quick_strike(mob/living/target, mob/living/user)
 	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
-	force = round(initial(force) * 1.3)
+	force = round(force * 1.3)
 	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
@@ -206,7 +208,7 @@
 /obj/item/ego_weapon/city/dieci/proc/sweeping_blow(mob/living/target, mob/living/user)
 	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
-	force = round(initial(force) * 1.2)
+	force = round(force * 1.2)
 	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
@@ -230,7 +232,7 @@
 /obj/item/ego_weapon/city/dieci/proc/pressure_combo(mob/living/target, mob/living/user)
 	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
-	force = round(initial(force) * 1.3)
+	force = round(force * 1.3)
 	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
@@ -267,7 +269,7 @@
 	var/immobilize_time = hits + 5
 	target.Immobilize(immobilize_time)
 	user.Immobilize(immobilize_time)
-	force = round(initial(force) * 0.08)
+	force = round(force * 0.08)
 	damtype = WHITE_DAMAGE
 	extra_damage_flags = DAMAGE_NO_SINKING
 	in_sequence = TRUE
@@ -289,7 +291,7 @@
 	// Base hit always happens
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
 	damtype = PALE_DAMAGE
-	force = round(initial(force) * 1.5)
+	force = round(force * 1.5)
 	in_sequence = TRUE
 	attack(target, user)
 	in_sequence = FALSE
@@ -313,7 +315,7 @@
 	hitsound = 'sound/weapons/fixer/generic/finisher2.ogg'
 	target.Immobilize(25)
 	user.Immobilize(25)
-	force = round(initial(force) * 1.5)
+	force = round(force * 1.5)
 	damtype = PALE_DAMAGE
 	in_sequence = TRUE
 	attack(target, user)
