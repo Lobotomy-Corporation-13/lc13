@@ -38,3 +38,8 @@
 	name = "long flesh head"
 	desc = "A distorted head from a flesh abomination. This could be sold for good cash."
 	icon_state = "flesh_head"
+
+/obj/item/head_trophy/grungeon_cell
+	name = "cell of concept"
+	desc = "A power cell, formerly used to power a massive engine of war. This could be sold for good cash."
+	icon_state = "grungeon_cell"
