@@ -35,7 +35,7 @@
 	var/stunning = TRUE
 
 /obj/item/food/pie/cream/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/cream, 5, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/cream, 4, 30)
 
 /obj/item/food/pieslice/cream
 	name = "banana cream pie slice"
@@ -96,7 +96,7 @@
 	foodtypes = GRAIN | MEAT
 
 /obj/item/food/pie/meatpie/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/meatpie, 5, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/meatpie, 4, 30)
 
 /obj/item/food/pieslice/meatpie
 	name = "meat-pie slice"
@@ -156,7 +156,7 @@
 	foodtypes = GRAIN | FRUIT | SUGAR
 
 /obj/item/food/pie/applepie/MakeProcessable()
-	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/applepie, 5, 30)
+	AddElement(/datum/element/processable, TOOL_KNIFE, /obj/item/food/pieslice/applepie, 4, 30)
 
 /obj/item/food/pieslice/applepie
 	name = "apple pie slice"
