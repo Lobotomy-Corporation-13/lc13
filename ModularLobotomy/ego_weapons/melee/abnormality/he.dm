@@ -1334,9 +1334,6 @@
 	var/original_damage = 25
 	/// How much is added per attack
 	var/damage_ramp = 5
-	icon = 'icons/obj/temp_rhythm.dmi'
-	lefthand_file = 'icons/mob/inhands/weapons/temp_rhythmlefthand.dmi'
-	righthand_file = 'icons/mob/inhands/weapons/temp_rhythmrighthand.dmi'
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 40
 							)
