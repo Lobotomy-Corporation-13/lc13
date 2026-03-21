@@ -139,7 +139,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/NeutralEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	. = ..()
-	datum_reference.qliphoth_change(1)
+	datum_reference.qliphoth_change(2)
 
 /mob/living/simple_animal/hostile/abnormality/sirocco/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
