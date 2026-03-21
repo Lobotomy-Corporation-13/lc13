@@ -457,7 +457,7 @@
 	abno_info = list(
 		"Once the Qliphoth Counter reaches 0, Sirocco leaves her containment cell to play.",
 		"Every two minutes, the Qliphoth Counter lowered by one.",
-		"When the work result was Normal, the Qliphoth Counter raised.",
+		"When the work result was Normal or Good, the Qliphoth Counter raised.",
 		"When the work result was Good, Sirocco was quicker to return to her cell in a later breach."
 	)
 
