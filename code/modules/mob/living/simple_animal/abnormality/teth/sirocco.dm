@@ -19,7 +19,7 @@
 	stat_attack = HARD_CRIT
 	can_breach = TRUE
 	threat_level = TETH_LEVEL
-	start_qliphoth = 5
+	start_qliphoth = 4
 	del_on_death = FALSE
 	move_to_delay = 6
 
