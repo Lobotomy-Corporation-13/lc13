@@ -13,68 +13,66 @@ import {
 import { Window } from '../layouts';
 
 // Tree dimensions
-const TREE_W = 400;
-const TREE_H = 500;
-const CX = TREE_W / 2; // center X = 200
+const TREE_W = 550;
+const TREE_H = 530;
+const CX = TREE_W / 2;
 
-// Node sizes
-const SM = 22;  // small stat circles
-const MED = 32; // bonus ability circles
-const CORE = 48; // core ability icons
+// Node sizes (circles — equal width and height)
+const STAT_W = 30;
+const STAT_H = 30;
+const BONUS_W = 36;
+const BONUS_H = 36;
+const CORE_W = 44;
+const CORE_H = 44;
 
-// Positions match HSR's vertical oval:
+// Layout matches 3-branch tree:
 //
-//       (s)-------(s)
-//      / |         | \
-//   (B1) |  [Pass] | (s)
-//      \ |         | /
-//       (s) [Ult][Skl] (s)
-//      / |         | \
-//   (B2) |         | (s)
-//      \ | [Basic] | /
-//       (s)-------(s)
-//      / |           \
-//   (B3) |           (s)
-//        (s)
-//
-// Core = large rounded rect in center
-// s = small stat circle on oval ring
-// B = bonus ability (medium circle)
+//  [s]       [s]  [s]       [s]
+//   |         \  /           |
+//  [s]       [Bonus]       [s]
+//   |           |           |
+//  [s]       [Ult]        [s]
+//   |           |           |
+// [Bonus]   [Pass]      [Bonus]
+//     \      / | \       /
+//    [Basic]  [s] [Skill]
 //
 const NODE_POS = {
-  // Core abilities (vertical stack, center)
-  'core_passive':  { x: CX, y: 100 },
-  'core_ultimate': { x: CX - 55, y: 200 },
-  'core_burst':    { x: CX + 55, y: 200 },
-  'core_basic':    { x: CX, y: 310 },
+  // Bottom stat (below Passive)
+  'atk1': { x: CX, y: 490 },
 
-  // Stat + bonus nodes on oval ring
-  // -- Top pair --
-  'atk1': { x: CX - 70, y: 35 },
-  'hp1':  { x: CX + 70, y: 35 },
+  // Core abilities (bottom row)
+  'core_basic':
+    { x: 155, y: 400 },
+  'core_passive':
+    { x: CX, y: 400 },
+  'core_burst':
+    { x: 395, y: 400 },
 
-  // -- Upper sides --
-  'bonus_a2': { x: 30,         y: 115 },
-  'atk2':     { x: TREE_W - 30, y: 115 },
+  // Middle row
+  'bonus_a6':
+    { x: 68, y: 325 },
+  'core_ultimate':
+    { x: CX, y: 290 },
+  'bonus_a4':
+    { x: 478, y: 325 },
 
-  // -- Mid sides (widest point) --
-  'def1': { x: 25,          y: 210 },
-  'atk3': { x: TREE_W - 25, y: 210 },
+  // Left branch (up from bonus_a6)
+  'atk3': { x: 55, y: 248 },
+  'def2': { x: 48, y: 175 },
+  'atk5': { x: 68, y: 78 },
 
-  // -- Lower sides --
-  'bonus_a4': { x: 30,         y: 305 },
-  'hp2':      { x: TREE_W - 30, y: 305 },
+  // Center branch (up from bonus_a2)
+  'bonus_a2':
+    { x: CX, y: 195 },
+  'def1': { x: CX, y: 115 },
+  'hp1':  { x: 210, y: 40 },
+  'atk2': { x: 340, y: 40 },
 
-  // -- Bottom pair --
-  'atk4': { x: CX - 70, y: 395 },
-  'def2': { x: CX + 70, y: 395 },
-
-  // -- Lower outer --
-  'bonus_a6': { x: 50,          y: 405 },
-  'hp3':      { x: TREE_W - 50, y: 405 },
-
-  // -- Very bottom --
-  'atk5': { x: CX, y: 470 },
+  // Right branch (up from bonus_a4)
+  'hp2':  { x: 462, y: 248 },
+  'atk4': { x: 468, y: 175 },
+  'hp3':  { x: 478, y: 78 },
 };
 
 export const PathScreen = (props, context) => {
@@ -85,8 +83,8 @@ export const PathScreen = (props, context) => {
   return (
     <Window
       title={data.path_name || 'Path Screen'}
-      width={700}
-      height={650}>
+      width={820}
+      height={680}>
       <Window.Content scrollable>
         <Tabs fluid>
           <Tabs.Tab
@@ -120,6 +118,8 @@ const DetailsTab = (props, context) => {
     action_points = 0,
     max_action_points = 5,
     path_level = 1, ascension_phase = 0,
+    path_exp = 0,
+    exp_at_level = 0, exp_to_next = 0,
     turn_state = 0,
     turn_duration = 5,
     turn_remaining = 0,
@@ -137,6 +137,7 @@ const DetailsTab = (props, context) => {
   const primary = ['HP', 'ATK', 'DEF', 'SPD'];
   const secondary = Object.keys(stats).filter(
     s => !primary.includes(s)
+      && s !== 'DMG Reduction'
   );
   return (
     <Stack vertical>
@@ -150,7 +151,7 @@ const DetailsTab = (props, context) => {
               <Box color="label" mt={0.5}>
                 Lv. {path_level}
                 {' / A'}{ascension_phase}
-                {' \u2022 '}{element_type}
+                {' - '}{element_type}
               </Box>
             </Stack.Item>
             <Stack.Item>
@@ -160,6 +161,31 @@ const DetailsTab = (props, context) => {
               </Box>
             </Stack.Item>
           </Stack>
+          {path_level < 80 ? (
+            <Box mt={0.5}>
+              <ProgressBar
+                value={
+                  path_exp - exp_at_level
+                }
+                maxValue={
+                  exp_to_next || 1
+                }
+                color="purple">
+                EXP{' '}
+                {path_exp - exp_at_level}
+                /{exp_to_next}
+              </ProgressBar>
+            </Box>
+          ) : (
+            <Box mt={0.5}>
+              <ProgressBar
+                value={1}
+                maxValue={1}
+                color="gold">
+                MAX LEVEL
+              </ProgressBar>
+            </Box>
+          )}
         </Section>
       </Stack.Item>
       <Stack.Item>
@@ -186,6 +212,16 @@ const DetailsTab = (props, context) => {
                   <Box inline bold>
                     {stats[s] || 0}
                   </Box>
+                  {s === 'DEF'
+                    && stats['DMG Reduction']
+                    !== undefined && (
+                    <Box inline color="label"
+                      ml={1}
+                      fontSize="12px">
+                      ({stats['DMG Reduction']}
+                      % reduction)
+                    </Box>
+                  )}
                 </LabeledList.Item>
               ))}
             </LabeledList>
@@ -211,18 +247,47 @@ const DetailsTab = (props, context) => {
         <Stack.Item>
           <Section>
             {abilities.map(a => (
-              <Box key={a.type} mb={1}>
+              <Box key={a.type} mb={1.5}>
                 <Box bold>
                   {a.name}
                   <Box inline color="label"
                     ml={1}>
-                    Lv.{a.level}/{a.max_level}
+                    Lv.{a.level}
+                    /{a.max_level}
                   </Box>
                 </Box>
                 <Box color="grey"
                   fontSize="12px" mt={0.3}>
                   {a.desc}
                 </Box>
+                {a.scaling
+                  && Object.keys(
+                    a.scaling
+                  ).length > 0 && (
+                  <Box mt={0.5}
+                    fontSize="12px"
+                    style={{
+                      background:
+                        'rgba(0,0,0,0.15)',
+                      padding: '4px 6px',
+                      borderRadius: '4px',
+                    }}>
+                    {Object.keys(
+                      a.scaling
+                    ).map(k => (
+                      <Box key={k}>
+                        <Box inline
+                          color="label">
+                          {k}:
+                        </Box>
+                        {' '}
+                        <Box inline bold>
+                          {a.scaling[k]}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
               </Box>
             ))}
           </Section>
@@ -351,7 +416,6 @@ const TracesTab = (props, context) => {
                 style={{
                   width: TREE_W + 'px',
                   height: TREE_H + 'px',
-                  margin: '0 auto',
                 }}>
                 <TreeLines nodes={nodes} />
                 {nodes.map(n => {
@@ -405,8 +469,10 @@ const TraceNode = props => {
   } = props;
   const isBonus = node.node_type === 'passive';
   const isCore = node.node_type === 'ability';
-  const sz = isCore ? CORE
-    : (isBonus ? MED : SM);
+  const nw = isCore ? CORE_W
+    : (isBonus ? BONUS_W : STAT_W);
+  const nh = isCore ? CORE_H
+    : (isBonus ? BONUS_H : STAT_H);
   const unlockable = canUnlock(node, data);
 
   // Styling by type
@@ -420,70 +486,100 @@ const TraceNode = props => {
   } else if (unlockable) {
     bg = 'rgba(50,50,70,0.9)';
     brd = '2px solid rgba(120,160,255,0.7)';
+  } else if (isBonus) {
+    bg = 'rgba(70,60,30,0.8)';
+    brd = '2px solid rgba(220,180,60,0.8)';
   } else {
-    bg = isBonus
-      ? 'rgba(70,70,70,0.7)'
-      : 'rgba(90,90,90,0.6)';
+    bg = 'rgba(90,90,90,0.6)';
     brd = '2px solid rgba(100,100,100,0.5)';
   }
   if (selected) {
     brd = '2px solid rgba(255,220,60,1)';
   }
 
-  // Label by type
-  let label = '';
-  let fontSize = '7px';
+  // Find the right base64 icon + tint
+  let iconB64 = null;
+  let levelText = null;
+  let tintColor = null;
+  const imgSz = Math.min(nw, nh) - 6;
+
   if (isCore) {
-    // Find matching ability for level
     const ab = (data.abilities || []).find(
       a => node.ability_target === a.type
     );
-    label = node.name.length > 11
-      ? node.name.substring(0, 10) + '.'
-      : node.name;
     if (ab) {
-      label += '\nLv.' + ab.level;
+      levelText = 'Lv.' + ab.level;
+      iconB64 = ab.icon_base64;
     }
-    fontSize = '9px';
-  } else if (isBonus) {
-    label = node.name.length > 8
-      ? node.name.substring(0, 7) + '.'
-      : node.name;
-    fontSize = '8px';
   } else if (node.stat_bonuses) {
     const k = Object.keys(
       node.stat_bonuses
     );
-    if (k.length > 0) {
-      label = k[0].substring(0, 3);
+    if (k.length > 0 && data.stat_icons) {
+      iconB64 = data.stat_icons[k[0]];
+      if (data.stat_colors
+        && data.stat_colors[k[0]]) {
+        tintColor = data.stat_colors[k[0]];
+      }
     }
+  }
+  // Bonus abilities: use ATK icon
+  if (isBonus && data.stat_icons) {
+    iconB64 = data.stat_icons['ATK'];
   }
 
   return (
     <Box
       style={{
         position: 'absolute',
-        left: (x - sz / 2) + 'px',
-        top: (y - sz / 2) + 'px',
-        width: sz + 'px',
-        height: sz + 'px',
-        background: bg,
-        border: brd,
-        borderRadius: isCore
-          ? '12px' : '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        fontSize: fontSize,
-        color: 'white',
-        textAlign: 'center',
-        lineHeight: '1.2',
+        left: (x - nw / 2) + 'px',
+        top: (y - nh / 2) + 'px',
+        width: nw + 'px',
         userSelect: 'none',
-        whiteSpace: 'pre-line',
+        textAlign: 'center',
       }}
       onClick={onSelect}>
-      {label}
+      <Box
+        style={{
+          width: nw + 'px',
+          height: nh + 'px',
+          background: bg,
+          border: tintColor
+            ? ('2px solid ' + tintColor)
+            : brd,
+          borderRadius: '50%',
+          cursor: 'pointer',
+          overflow: 'hidden',
+          boxShadow: tintColor
+            ? ('inset 0 0 8px '
+              + tintColor + '88')
+            : 'none',
+        }}>
+        {iconB64 && (
+          <img
+            src={
+              'data:image/png;base64,'
+              + iconB64
+            }
+            style={{
+              width: imgSz + 'px',
+              height: imgSz + 'px',
+              imageRendering: 'pixelated',
+              marginTop:
+                ((nh - imgSz) / 2)
+                + 'px',
+            }}
+          />
+        )}
+      </Box>
+      {levelText && (
+        <Box
+          fontSize="8px"
+          color="label"
+          mt={0.2}>
+          {levelText}
+        </Box>
+      )}
     </Box>
   );
 };
@@ -564,19 +660,47 @@ const NodeDetail = props => {
     }
   }
 
-  // Effect text
+  // Effect text + stat preview
   let effectText = node.desc;
+  let statPreview = null;
   if (node.node_type === 'stat'
     && node.stat_bonuses) {
     const parts = [];
+    const previews = [];
     for (const s in node.stat_bonuses) {
       const v = node.stat_bonuses[s];
-      parts.push(
-        s + ' +'
-        + v + (node.stat_percent ? '%' : '')
-      );
+      const pct = node.stat_percent
+        ? '%' : '';
+      parts.push(s + ' +' + v + pct);
+      const cur = data.stats[s] || 0;
+      if (node.stat_percent) {
+        const base = Math.round(
+          cur / (1 + v / 100)
+        );
+        const added = cur - base;
+        const newVal = cur
+          + Math.round(base * v / 100);
+        previews.push({
+          stat: s,
+          current: cur,
+          next: node.unlocked
+            ? cur : newVal,
+          bonus: '+' + v + pct,
+        });
+      } else {
+        previews.push({
+          stat: s,
+          current: cur,
+          next: node.unlocked
+            ? cur : cur + v,
+          bonus: '+' + v,
+        });
+      }
     }
     effectText = parts.join(', ');
+    if (!node.unlocked) {
+      statPreview = previews;
+    }
   }
 
   // Requirements
@@ -623,7 +747,7 @@ const NodeDetail = props => {
             fontSize="11px" mb={1}>
             {typeLabel}
             {isRepeatable
-              && ' \u2022 Repeatable'}
+              && ' - Repeatable'}
           </Box>
           {abilityInfo && (
             <Box mb={1}>
@@ -650,6 +774,65 @@ const NodeDetail = props => {
           <Box fontSize="13px">
             {effectText}
           </Box>
+          {statPreview && (
+            <Box mt={0.5}
+              fontSize="12px"
+              style={{
+                background:
+                  'rgba(0,0,0,0.15)',
+                padding: '4px 6px',
+                borderRadius: '4px',
+              }}>
+              {statPreview.map(p => (
+                <Box key={p.stat}>
+                  <Box inline
+                    color="label">
+                    {p.stat}:
+                  </Box>
+                  {' '}
+                  {p.current}
+                  {' \u2192 '}
+                  <Box inline bold
+                    color="green">
+                    {p.next}
+                  </Box>
+                  <Box inline color="label"
+                    ml={0.5}>
+                    ({p.bonus})
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          )}
+          {abilityInfo
+            && abilityInfo.scaling
+            && Object.keys(
+              abilityInfo.scaling
+            ).length > 0 && (
+            <Box mt={0.5}
+              fontSize="12px"
+              style={{
+                background:
+                  'rgba(0,0,0,0.15)',
+                padding: '4px 6px',
+                borderRadius: '4px',
+              }}>
+              {Object.keys(
+                abilityInfo.scaling
+              ).map(k => (
+                <Box key={k}>
+                  <Box inline
+                    color="label">
+                    {k}:
+                  </Box>
+                  {' '}
+                  <Box inline bold>
+                    {abilityInfo.scaling[k]}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          )}
         </Stack.Item>
         <Stack.Item mt={1}>
           <Box bold mb={0.5}>Cost</Box>
@@ -673,7 +856,7 @@ const NodeDetail = props => {
             {reqs.map((r, i) => (
               <Box key={i} color="label"
                 fontSize="12px">
-                \u2022 {r}
+                - {r}
               </Box>
             ))}
           </Stack.Item>

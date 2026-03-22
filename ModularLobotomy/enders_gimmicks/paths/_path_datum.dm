@@ -40,6 +40,10 @@
 	var/swings_per_turn = 6
 	/// Timer ID for the turn cycle
 	var/turn_timer_id
+	/// Grace period end time — attacks during this window don't grant AP
+	var/turn_grace_end = 0
+	/// Whether the next basic attack is the first hit of the turn
+	var/first_hit_this_turn = TRUE
 
 	// --- Skill Tree (Traces) ---
 	var/list/nodes = list()
@@ -56,6 +60,10 @@
 	var/datum/path_ability/burst/burst_action
 	var/datum/path_ability/ultimate/ultimate_action
 	var/datum/path_ability/passive/passive_effect
+
+	// --- Defense ---
+	/// Stored original damage_resistance before path override
+	var/original_damage_resistance = 0
 
 	// --- Weapon ---
 	var/obj/item/ego_weapon/path_weapon/weapon
@@ -112,9 +120,21 @@
 	ally_action_button.linked_path = src
 	ally_action_button.Grant(owner)
 
+	// Mark as path holder — armor gives no protection, but can be worn cosmetically
+	ADD_TRAIT(owner, TRAIT_NO_EGO_ARMOR, "path")
+
+	// Auto-level from LC13 attributes
+	CalculateLevelFromStats()
+
 	// Calculate initial stats
 	RecalculateStats()
 	RecalcSwingsPerTurn()
+
+	// Apply DEF as damage resistance
+	ApplyDefense()
+
+	// Update HP from path stats
+	owner.updatehealth()
 
 	// Start turn cycle
 	StartTurnCycle()
@@ -126,6 +146,12 @@
 /datum/path/proc/Remove()
 	if(!owner)
 		return
+
+	// Remove EGO armor restriction
+	REMOVE_TRAIT(owner, TRAIT_NO_EGO_ARMOR, "path")
+
+	// Restore original damage resistance
+	RemoveDefense()
 
 	// Unapply passive
 	if(passive_effect)
@@ -158,6 +184,9 @@
 	// Signal
 	SEND_SIGNAL(owner, COMSIG_MOB_PATH_REMOVED, src)
 
+	// Restore Fortitude-based HP
+	owner.updatehealth()
+
 	// Delete abilities
 	QDEL_NULL(basic_attack)
 	QDEL_NULL(burst_action)
@@ -180,6 +209,9 @@
 /// Starts the recurring turn cycle timer
 /datum/path/proc/StartTurnCycle()
 	turn_state = PATH_TURN_READY
+	first_hit_this_turn = TRUE
+	if(weapon)
+		weapon.ShowTurnReady()
 	var/duration = GetTurnDuration()
 	next_turn_time = world.time + duration
 	turn_timer_id = addtimer(CALLBACK(src, PROC_REF(OnTurnReset)), duration, TIMER_STOPPABLE)
@@ -193,8 +225,14 @@
 	for(var/datum/status_effect/path_dot/dot in owner.status_effects)
 		dot.DoTick()
 
-	// Reset turn state
+	// Reset turn state with 1.5s grace period for skill use
 	turn_state = PATH_TURN_READY
+	turn_grace_end = world.time + 1.5 SECONDS
+	first_hit_this_turn = TRUE
+
+	// Golden glow on weapon to show turn is ready
+	if(weapon)
+		weapon.ShowTurnReady()
 
 	// Queue next turn
 	var/duration = GetTurnDuration()
@@ -297,6 +335,37 @@
 	else
 		path_stats["SPD"] = PATH_BASE_SPEED
 
+	// Base CRIT stats (all paths)
+	path_stats["CRIT Rate"] = 5
+	path_stats["CRIT DMG"] = 50
+
+	// Refresh defense and HP on the owner if assigned
+	if(owner)
+		ApplyDefense()
+		owner.updatehealth()
+
+// ============================================================
+// Defense System
+// ============================================================
+
+/// Applies DEF stat as damage_resistance on the owner
+/// Formula: reduction% = DEF / (DEF + 200) * 100
+/datum/path/proc/ApplyDefense()
+	if(!owner?.physiology)
+		return
+	// Store original value on first call
+	if(!original_damage_resistance)
+		original_damage_resistance = owner.physiology.damage_resistance
+	var/def = GetStat("DEF")
+	var/reduction = (def / (def + 300)) * 100
+	owner.physiology.damage_resistance = reduction
+
+/// Restores the owner's original damage_resistance
+/datum/path/proc/RemoveDefense()
+	if(!owner?.physiology)
+		return
+	owner.physiology.damage_resistance = original_damage_resistance
+
 // ============================================================
 // Leveling & Ascension
 // ============================================================
@@ -313,6 +382,85 @@
 		return FALSE
 	ascension_phase++
 	return TRUE
+
+/// EXP required to reach each level (index = level, value = total EXP at that level)
+/datum/path/proc/GetExpTable()
+	return list(0, 200, 500, 1000, 1600, 2650, 4320, 6640, 9700, 13560, 18300, 24010, 30740, 38570, 47570, 57810, 69360, 82280, 96640, 112510, 129090, 145930, 163030, 180400, 198040, 215950, 234140, 252620, 271380, 290420, 309760, 329390, 349320, 369540, 390070, 410910, 432050, 453500, 475260, 497340, 519730, 545280, 574420, 607250, 643850, 684320, 728750, 777230, 829860, 886730, 947920, 1013540, 1083670, 1158410, 1237860, 1322100, 1411220, 1505330, 1604520, 1708870, 1815110, 1926940, 2044470, 2167790, 2297000, 2432200, 2573490, 2720970, 2874750, 3034010, 3214180, 3414100, 3635020, 3877280, 4141210, 4427160, 4735460, 5066460, 5420500, 5797920)
+
+/// Returns EXP needed for the next level (0 if at max)
+/datum/path/proc/GetExpToNext()
+	var/list/table = GetExpTable()
+	if(path_level >= 80)
+		return 0
+	return table[path_level + 1] - table[path_level]
+
+/// Returns total EXP at current level start
+/datum/path/proc/GetExpAtLevel()
+	var/list/table = GetExpTable()
+	return table[path_level]
+
+/// Grants EXP and handles leveling up.
+/// Stops at ascension cap — use an Ascension Crystal to break through.
+/datum/path/proc/GainExp(amount)
+	if(path_level >= 80)
+		return
+	// Find the level cap for current ascension
+	var/cap = 80
+	if(ascension_phase < length(level_caps))
+		cap = level_caps[ascension_phase + 1]
+	// If already at cap, EXP is wasted — warn player
+	if(path_level >= cap)
+		if(owner)
+			to_chat(owner, span_warning("You are at the level cap ([cap]) for ascension [ascension_phase]. Use an Ascension Crystal to continue!"))
+		return
+	path_exp += amount
+	var/list/table = GetExpTable()
+	var/leveled = FALSE
+	while(path_level < 80 && path_level < cap)
+		var/needed = table[path_level + 1]
+		if(path_exp < needed)
+			break
+		path_level = min(path_level + 1, 80)
+		leveled = TRUE
+	// Cap EXP at the next level threshold to prevent waste
+	if(path_level >= cap && path_level < 80)
+		var/cap_exp = table[cap]
+		if(path_exp > cap_exp)
+			path_exp = cap_exp
+		if(owner)
+			to_chat(owner, span_warning("Reached level cap [cap]! Use an Ascension Crystal to ascend."))
+	if(leveled)
+		RecalculateStats()
+		RecalcSwingsPerTurn()
+		if(owner)
+			to_chat(owner, span_nicegreen("Path level up! Now level [path_level]."))
+
+/// Auto-levels the path based on the owner's LC13 attribute average.
+/// 0 avg = level 1 A0, 120 avg = level 80 A6.
+/datum/path/proc/CalculateLevelFromStats()
+	if(!owner)
+		return
+	var/fort = get_attribute_level(owner, FORTITUDE_ATTRIBUTE)
+	var/prud = get_attribute_level(owner, PRUDENCE_ATTRIBUTE)
+	var/temp = get_attribute_level(owner, TEMPERANCE_ATTRIBUTE)
+	var/just = get_attribute_level(owner, JUSTICE_ATTRIBUTE)
+	var/avg = (fort + prud + temp + just) / 4
+
+	// Map 0-120 avg to level 1-80
+	var/calc_level = clamp(round(1 + (avg / 120) * 79), 1, 80)
+
+	// Determine ascension phase from level
+	ascension_phase = 0
+	for(var/i in 1 to length(level_caps))
+		if(calc_level >= level_caps[i])
+			ascension_phase = i
+		else
+			break
+
+	path_level = calc_level
+	// Set EXP to match the calculated level
+	var/list/table = GetExpTable()
+	path_exp = table[path_level]
 
 // ============================================================
 // Skill Tree (Traces)
@@ -394,15 +542,31 @@
 		return
 	if(!basic_attack)
 		return
+	// Don't interact with dead targets
+	if(target.stat == DEAD)
+		return
 
-	// Always deal damage (scaled per-swing)
-	basic_attack.OnHit(target, user, swings_per_turn)
+	// During grace period, attacks deal reduced damage (10%)
+	// and don't grant AP/energy — preserving the skill window
+	var/is_grace = (turn_state == PATH_TURN_READY && world.time < turn_grace_end)
+	var/hit_is_first = first_hit_this_turn && !is_grace
+
+	// Deal path damage via basic attack
+	basic_attack.OnHit(target, user, hit_is_first)
+	if(hit_is_first)
+		first_hit_this_turn = FALSE
 
 	// Only grant resources on first hit of an attack turn
+	// Skip during grace period so players can use skills
 	if(turn_state == PATH_TURN_READY)
+		if(is_grace)
+			return // Grace period — no AP/energy
 		GainEnergy(basic_attack.energy_gain)
 		GainActionPoint()
 		turn_state = PATH_TURN_ATTACKED
+		// Clear golden glow — turn consumed by attack
+		if(weapon)
+			weapon.ClearTurnReady()
 
 // ============================================================
 // Combat — Path Damage
@@ -415,6 +579,12 @@
 		return 0
 	var/damage = amount
 
+	// Elemental DMG bonus (e.g. "Wind DMG", "Fire DMG")
+	var/elem_stat = "[element_type] DMG"
+	var/elem_bonus = GetStat(elem_stat)
+	if(elem_bonus)
+		damage *= (1 + elem_bonus / 100)
+
 	// CRIT check
 	if(do_crit)
 		var/crit_rate = GetStat("CRIT Rate")
@@ -422,9 +592,8 @@
 			var/crit_dmg = GetStat("CRIT DMG")
 			damage *= (1 + crit_dmg / 100)
 
-	// DEF Multiplier (level-based)
-	// Formula: attacker_factor / (attacker_factor + enemy_factor)
-	// At equal levels this gives 0.5x, scaling smoothly
+	// Level difference multiplier
+	// Equal levels = 1.0x, clamped to 0.8x—1.2x range
 	var/enemy_level = 20
 	if(isanimal(target))
 		var/mob/living/simple_animal/SA = target
@@ -441,8 +610,10 @@
 		else
 			enemy_level = 10
 	else if(ishuman(target))
-		enemy_level = path_level // Mirror match = 0.5x
-	var/def_mult = (path_level + 20) / ((enemy_level + 20) + (path_level + 20))
+		enemy_level = path_level // Mirror match = 1.0x
+	var/level_diff = path_level - enemy_level
+	// Scale by 0.5% per level difference, clamp to +/-20%
+	var/def_mult = clamp(1 + (level_diff * 0.005), 0.8, 1.2)
 	damage *= def_mult
 
 	// Elemental RES Multiplier
@@ -465,7 +636,29 @@
 	// This also makes the debug dummy report damage.
 	if(damage > 0)
 		target.adjustBruteLoss(damage, forced = TRUE)
+		// Spawn path damage visual
+		new /obj/effect/temp_visual/path_damage(get_turf(target), element_type)
 	return damage
+
+// ============================================================
+// Path Damage Visual Effect
+// ============================================================
+
+/obj/effect/temp_visual/path_damage
+	icon = 'ModularLobotomy/_Lobotomyicons/enders_sprites_32x32.dmi'
+	icon_state = "physical"
+	layer = ABOVE_ALL_MOB_LAYER
+	duration = 7 // 0.7 seconds
+	randomdir = FALSE
+
+/obj/effect/temp_visual/path_damage/Initialize(mapload, element)
+	if(element)
+		icon_state = element
+	pixel_x = rand(-12, 12)
+	pixel_y = rand(-6, 6)
+	. = ..()
+	// Drift up 7px and fade out over 0.7 seconds
+	animate(src, pixel_y = pixel_y + 7, alpha = 0, time = 7)
 
 // ============================================================
 // SPD Debuff System (global procs)
@@ -527,6 +720,11 @@
 	parent_path = null
 	return ..()
 
+/// Returns list of scaling info for TGUI display.
+/// Subtypes override to provide ability-specific data.
+/datum/path_ability/proc/GetScalingData()
+	return list()
+
 // --- Basic Attack ---
 /// Triggered when the path weapon hits a target
 /datum/path_ability/basic
@@ -535,7 +733,7 @@
 
 /// Virtual proc. Subtypes deal damage, apply effects, etc.
 /// swings_per_turn is used to divide total scaling across hits.
-/datum/path_ability/basic/proc/OnHit(mob/living/target, mob/living/user, swings_per_turn = 1)
+/datum/path_ability/basic/proc/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	return
 
 // --- Burst / Skill ---

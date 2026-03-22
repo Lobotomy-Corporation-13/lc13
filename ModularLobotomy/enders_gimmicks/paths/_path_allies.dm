@@ -18,8 +18,8 @@ GLOBAL_LIST_EMPTY(path_ally_lists)
 /datum/action/cooldown/path_designate_ally
 	name = "Designate Ally"
 	desc = "Select a nearby player to add or remove from your ally list. Allies benefit from your supportive path abilities."
-	icon_icon = 'icons/hud/actions.dmi'
-	button_icon_state = "yourstate"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/enders_sprites_32x32.dmi'
+	button_icon_state = "pick_allies"
 	cooldown_time = 1 SECONDS
 	/// Reference to the owning path datum
 	var/datum/path/linked_path

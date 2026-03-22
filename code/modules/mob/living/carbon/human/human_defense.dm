@@ -1,4 +1,7 @@
 /mob/living/carbon/human/getarmor(def_zone, type)
+	// Path holders gain no benefit from armor — DEF handles reduction
+	if(HAS_TRAIT(src, TRAIT_NO_EGO_ARMOR))
+		return 0
 	var/armorval = 0
 	var/organnum = 0
 	if(GLOB.damage_type_shuffler?.is_enabled && IsColorDamageType(type))

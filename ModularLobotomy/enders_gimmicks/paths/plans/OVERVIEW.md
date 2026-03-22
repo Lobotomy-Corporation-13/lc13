@@ -212,6 +212,60 @@ How many hits to kill common mobs (Basic ATK, no passive, avg coeff + RES applie
 - Skill (RIP Home Run) is better for groups, Ultimate for single-target burst
 - With 2 passive stacks, Ult FH at Lv80 = 4,393 raw — still strong boss damage before mitigations
 
+#### Trace Nodes (Skill Tree)
+
+Destruction's trace tree has **3 independent branches** radiating upward from the core abilities, plus **1 ungated bottom node**. Each branch starts with a Bonus Ability and chains into stat boosts.
+
+**Layout:**
+```
+ [ATK+8%]   [HP+4%] [ATK+4%]   [HP+8%]
+    |           \   /             |
+ [DEF+7.5%]  [DEF+5%]         [ATK+6%]
+    |            |                |
+ [ATK+6%]    [Bonus A2]       [HP+6%]
+    |            |                |
+ [Bonus A6]  [Ultimate]       [Bonus A4]
+      \          |              /
+   [Basic]   [Passive]    [Skill]
+                 |
+             [ATK+4%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| ATK Boost | ATK +4% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Ready for Battle | Regenerate 15 Energy at combat start | A2 | 1,000 | — |
+| DEF Boost | DEF +5% | A2 | 400 | Ready for Battle |
+| HP Boost | HP +4% | A3 | 300 | DEF Boost |
+| ATK Boost | ATK +4% | A3 | 300 | DEF Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Tenacity | Each Perfect Pickoff stack also grants +10% DEF | A4 | 1,000 | — |
+| HP Boost | HP +6% | A4 | 500 | Tenacity |
+| ATK Boost | ATK +6% | A5 | 600 | HP Boost |
+| HP Boost | HP +8% | Lv75 | 750 | ATK Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Fighting Will | Skill and Ult RIP Home Run deal +25% DMG to primary target | A6 | 1,000 | — |
+| ATK Boost | ATK +6% | A6 | 500 | Fighting Will |
+| DEF Boost | DEF +7.5% | A6 | 700 | ATK Boost |
+| ATK Boost | ATK +8% | Lv80 | 800 | DEF Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- ATK: +4% +4% +6% +6% +8% = **+28%**
+- HP: +4% +6% +8% = **+18%**
+- DEF: +5% +7.5% = **+12.5%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
+
 ---
 
 ### The Hunt (Aeon: Lan)
@@ -313,6 +367,60 @@ When an ally uses a supportive ability on the user, their next attack's **Wind R
 | Passive | Kill-stacking ATK buff (self-reliant) | Ally-dependent Wind RES PEN (team synergy) |
 | SPD Interaction | None | Skill crits apply SPD debuff, Ult punishes slowed targets |
 | Best Against | Groups, Physical-weak mobs | Bosses, Wind-weak mobs |
+
+#### Trace Nodes (Skill Tree)
+
+The Hunt's trace tree follows the same 3-branch layout as Destruction, with **1 ungated bottom node** and **3 independent branches**.
+
+**Layout:**
+```
+ [Wind+6.4%]  [ATK+4%] [Wind+3.2%]  [ATK+8%]
+     |            \   /                |
+ [DEF+7.5%]    [DEF+5%]            [ATK+6%]
+     |             |                   |
+ [Wind+4.8%]  [Hidden Dragon]    [Wind+4.8%]
+     |             |                   |
+ [High Gale]  [Ultimate]      [Faster Than Light]
+      \            |               /
+   [Basic]     [Passive]     [Skill]
+                   |
+              [Wind+3.2%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| Wind DMG Boost | Wind DMG +3.2% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Hidden Dragon | When HP is 50% or lower, hostile mobs targeting you have a 50% chance to switch to a different target when re-evaluating aggro. No effect if you are the only target. | A2 | 1,000 | — |
+| DEF Boost | DEF +5% | A2 | 400 | Hidden Dragon |
+| ATK Boost | ATK +4% | A3 | 300 | DEF Boost |
+| Wind DMG Boost | Wind DMG +3.2% | A3 | 300 | DEF Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Faster Than Light | After attacking, 50% chance to increase SPD by 20% for 2 turns (20s) | A4 | 1,000 | — |
+| Wind DMG Boost | Wind DMG +4.8% | A4 | 500 | Faster Than Light |
+| ATK Boost | ATK +6% | A5 | 600 | Wind DMG Boost |
+| ATK Boost | ATK +8% | Lv75 | 750 | ATK Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| High Gale | Basic ATK deals 40% more DMG to Slowed enemies | A6 | 1,000 | — |
+| Wind DMG Boost | Wind DMG +4.8% | A6 | 500 | High Gale |
+| DEF Boost | DEF +7.5% | A6 | 700 | Wind DMG Boost |
+| Wind DMG Boost | Wind DMG +6.4% | Lv80 | 800 | DEF Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- ATK: +4% +6% +8% = **+18%**
+- DEF: +5% +7.5% = **+12.5%**
+- Wind DMG: +3.2% +3.2% +4.8% +4.8% +6.4% = **+22.4%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
 
 ---
 
@@ -438,6 +546,60 @@ When **any ally's or the user's** attack causes an enemy's HP to fall to **50% o
 | Unique Mechanic | Empowered next attack | SPD debuff on crit, Ult bonus on slowed | Execute + anti-execute conditionals |
 | Best Against | Groups + Physical-weak | Bosses + Wind-weak | Large groups + Ice-weak |
 
+#### Trace Nodes (Skill Tree)
+
+Erudition's trace tree follows the same 3-branch layout, with **1 ungated bottom node** and **3 independent branches**.
+
+**Layout:**
+```
+ [Ice+6.4%]   [DEF+5%] [Ice+3.2%]   [DEF+10%]
+     |            \   /                 |
+ [CRIT+4%]     [CRIT+2.7%]          [DEF+7.5%]
+     |              |                   |
+ [Ice+4.8%]    [Efficiency]         [Ice+4.8%]
+     |              |                   |
+ [Icing]       [Ultimate]           [Puppet]
+      \             |                /
+    [Basic]     [Passive]      [Skill]
+                    |
+               [Ice+3.2%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| Ice DMG Boost | Ice DMG +3.2% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Efficiency | When Skill is used, the DMG Boost effect on target enemies increases by an extra 25% | A2 | 1,000 | — |
+| CRIT Rate Boost | CRIT Rate +2.7% | A2 | 400 | Efficiency |
+| DEF Boost | DEF +5% | A3 | 300 | CRIT Rate Boost |
+| Ice DMG Boost | Ice DMG +3.2% | A3 | 300 | CRIT Rate Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Puppet | Immune to knockback effects while below 70% HP | A4 | 1,000 | — |
+| Ice DMG Boost | Ice DMG +4.8% | A4 | 500 | Puppet |
+| DEF Boost | DEF +7.5% | A5 | 600 | Ice DMG Boost |
+| DEF Boost | DEF +10% | Lv75 | 750 | DEF Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Icing | Ultimate deals 20% more DMG to enemies below 50% HP | A6 | 1,000 | — |
+| Ice DMG Boost | Ice DMG +4.8% | A6 | 500 | Icing |
+| CRIT Rate Boost | CRIT Rate +4% | A6 | 700 | Ice DMG Boost |
+| Ice DMG Boost | Ice DMG +6.4% | Lv80 | 800 | CRIT Rate Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- DEF: +5% +7.5% +10% = **+22.5%**
+- CRIT Rate: +2.7% +4% = **+6.7%**
+- Ice DMG: +3.2% +3.2% +4.8% +4.8% +6.4% = **+22.4%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
+
 ---
 
 ### Harmony (Aeon: Xipe)
@@ -558,6 +720,60 @@ When the USER attacks an enemy, the ally with **Benediction** immediately deals 
 | Ult Energy | 120 | 100 | 110 | 130 |
 | Passive | Kill ATK stacking | Ally RES PEN | HP-threshold AoE | Ally bonus Lightning DMG |
 | Best Against | Groups | Bosses | Large groups | Empowering a carry ally |
+
+#### Trace Nodes (Skill Tree)
+
+Harmony's trace tree follows the same 3-branch layout, with **1 ungated bottom node** and **3 independent branches**.
+
+**Layout:**
+```
+ [ATK+8%]    [ATK+4%] [Ltn+3.2%]   [DEF+10%]
+     |           \   /                  |
+ [ATK+6%]     [DEF+5%]             [DEF+7.5%]
+     |            |                     |
+ [Ltn+4.8%]  [Nourished Jov.]       [ATK+6%]
+     |            |                     |
+ [Jubilant]   [Ultimate]         [Knell Subdual]
+      \           |                  /
+    [Basic]   [Passive]        [Skill]
+                  |
+              [ATK+4%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| ATK Boost | ATK +4% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Nourished Joviality | SPD increases by 20% for 1 turn (10s) after using Skill | A2 | 1,000 | — |
+| DEF Boost | DEF +5% | A2 | 400 | Nourished Joviality |
+| ATK Boost | ATK +4% | A3 | 300 | DEF Boost |
+| Lightning DMG Boost | Lightning DMG +3.2% | A3 | 300 | DEF Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Knell Subdual | DMG dealt by Basic ATK increases by 40% | A4 | 1,000 | — |
+| ATK Boost | ATK +6% | A4 | 500 | Knell Subdual |
+| DEF Boost | DEF +7.5% | A5 | 600 | ATK Boost |
+| DEF Boost | DEF +10% | Lv75 | 750 | DEF Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Jubilant Passage | Regenerate 5 Energy at the start of each turn | A6 | 1,000 | — |
+| Lightning DMG Boost | Lightning DMG +4.8% | A6 | 500 | Jubilant Passage |
+| ATK Boost | ATK +6% | A6 | 700 | Lightning DMG Boost |
+| ATK Boost | ATK +8% | Lv80 | 800 | ATK Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- ATK: +4% +4% +6% +6% +8% = **+28%**
+- DEF: +5% +7.5% +10% = **+22.5%**
+- Lightning DMG: +3.2% +4.8% = **+8%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
 
 ---
 
@@ -682,6 +898,65 @@ When USER is alive, there is a **100% base chance** to apply **Firekiss** to an 
 | Passive | Kill ATK stacking | Ally RES PEN | HP-threshold AoE | Ally Lightning DMG | Firekiss (DMG vulnerability) |
 | Unique Mechanic | Empowered next attack | SPD debuff + conditional Ult | Execute conditionals | Benediction | Burn DoT + detonate + Firekiss |
 | Best Against | Groups | Bosses | Large groups | Carry ally | Sustained fights, tanky enemies |
+
+#### Trace Nodes (Skill Tree)
+
+Nihility's trace tree follows the same 3-branch layout, with **1 ungated bottom node** and **3 independent branches**.
+
+**Effect Hit Rate** is a new stat for Nihility. It increases the chance of applying debuffs (Burn, Firekiss). The formula is:
+```
+Real Chance = Base Chance * (1 + Effect Hit Rate) * (1 - Enemy Effect RES)
+```
+Enemies gain 0.8% Effect RES per level from level 51-100 (max 40%).
+
+**Layout:**
+```
+ [Fire+6.4%]  [Fire+3.2%] [EHR+4%]   [EHR+10.7%]
+     |             \   /                  |
+ [EHR+6%]       [EHR+5.3%]            [EHR+8%]
+     |               |                    |
+ [Fire+4.8%]     [High Poles]         [Fire+4.8%]
+     |               |                    |
+ [Walking]       [Ultimate]          [Bladed Hoop]
+      \              |                 /
+    [Basic]      [Passive]       [Skill]
+                     |
+                [Fire+3.2%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| Fire DMG Boost | Fire DMG +3.2% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| High Poles | Basic ATK has an 80% base chance of inflicting Burn equivalent to Skill | A2 | 1,000 | — |
+| Effect Hit Rate Boost | Effect Hit Rate +5.3% | A2 | 400 | High Poles |
+| Fire DMG Boost | Fire DMG +3.2% | A3 | 300 | Effect Hit Rate Boost |
+| Effect Hit Rate Boost | Effect Hit Rate +4% | A3 | 300 | Effect Hit Rate Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Bladed Hoop | At the start of combat, action advances by 25% (first turn comes 25% sooner) | A4 | 1,000 | — |
+| Fire DMG Boost | Fire DMG +4.8% | A4 | 500 | Bladed Hoop |
+| Effect Hit Rate Boost | Effect Hit Rate +8% | A5 | 600 | Fire DMG Boost |
+| Effect Hit Rate Boost | Effect Hit Rate +10.7% | Lv75 | 750 | Effect Hit Rate Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Walking on Knives | Deals 20% more DMG to Burned enemies | A6 | 1,000 | — |
+| Fire DMG Boost | Fire DMG +4.8% | A6 | 500 | Walking on Knives |
+| Effect Hit Rate Boost | Effect Hit Rate +6% | A6 | 700 | Fire DMG Boost |
+| Fire DMG Boost | Fire DMG +6.4% | Lv80 | 800 | Effect Hit Rate Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- Fire DMG: +3.2% +3.2% +4.8% +4.8% +6.4% = **+22.4%**
+- Effect Hit Rate: +5.3% +4% +8% +10.7% +6% = **+34%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
 
 ---
 
@@ -824,6 +1099,60 @@ The USER has a persistent **Magma Will** resource (0 to 8 stacks max):
 | Passive | Kill ATK | Ally RES PEN | HP-threshold | Ally Lightning | Firekiss | Magma Will + Team Shield |
 | Best Against | Groups | Bosses | Large groups | Carry ally | Tanky enemies | Protecting team |
 
+#### Trace Nodes (Skill Tree)
+
+Preservation's trace tree follows the same 3-branch layout, with **1 ungated bottom node** and **3 independent branches**.
+
+**Layout:**
+```
+ [DEF+10%]   [DEF+5%] [HP+4%]      [ATK+8%]
+     |           \   /                  |
+ [DEF+5%]     [ATK+4%]              [ATK+6%]
+     |            |                     |
+ [HP+6%]    [Strong Defend]         [DEF+7.5%]
+     |            |                     |
+ [Action BO]  [Ultimate]          [Unwavering]
+      \           |                  /
+    [Basic]   [Passive]        [Skill]
+                  |
+              [DEF+5%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| DEF Boost | DEF +5% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| The Strong Defend the Weak | After using Skill, all allies take 15% less DMG for 1 turn (10s) | A2 | 1,000 | — |
+| ATK Boost | ATK +4% | A2 | 400 | The Strong Defend the Weak |
+| DEF Boost | DEF +5% | A3 | 300 | ATK Boost |
+| HP Boost | HP +4% | A3 | 300 | ATK Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Unwavering Gallantry | Enhanced Basic ATK restores 5% of Max HP | A4 | 1,000 | — |
+| DEF Boost | DEF +7.5% | A4 | 500 | Unwavering Gallantry |
+| ATK Boost | ATK +6% | A5 | 600 | DEF Boost |
+| ATK Boost | ATK +8% | Lv75 | 750 | ATK Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Action Beats Overthinking | When protected by a Shield at turn start, ATK +15% and regenerate 5 Energy for that turn | A6 | 1,000 | — |
+| HP Boost | HP +6% | A6 | 500 | Action Beats Overthinking |
+| DEF Boost | DEF +5% | A6 | 700 | HP Boost |
+| DEF Boost | DEF +10% | Lv80 | 800 | DEF Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- DEF: +5% +5% +7.5% +5% +10% = **+32.5%**
+- ATK: +4% +6% +8% = **+18%**
+- HP: +4% +6% = **+10%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
+
 ---
 
 ### Abundance (Aeon: Yaoshi)
@@ -951,6 +1280,70 @@ When healing an ally whose HP is at **30% or lower**, the USER's outgoing healin
 | Ult Cost | 120 | 100 | 110 | 130 | 120 | 120 | **90** |
 | Passive | Kill ATK | RES PEN | HP-trigger | Ally DMG | Firekiss | Shield+Magma | Heal boost |
 | Best For | Killing | Bosses | Groups | Carry | DoT/debuff | Tanking | Sustain |
+
+#### Trace Nodes (Skill Tree)
+
+Abundance's trace tree follows the same 3-branch layout, with **1 ungated bottom node** and **3 independent branches**.
+
+**Healing Boost** is a stat for Abundance. It increases all outgoing healing by a percentage.
+
+**Layout:**
+```
+ [HP+8%]     [HP+4%] [DEF+5%]     [DEF+7.5%]
+     |           \   /                  |
+ [HP+6%]     [Heal+4%]            [Heal+6%]
+     |            |                     |
+ [Heal+6%]    [Soothe]              [HP+6%]
+     |            |                     |
+ [Recuper.]   [Ultimate]           [Healer]
+      \           |                  /
+    [Basic]   [Passive]        [Skill]
+                  |
+              [HP+4%]
+```
+
+**Bottom (No Gate):**
+| Node | Stat | Ahn Cost |
+|------|------|----------|
+| HP Boost | HP +4% | 200 |
+
+**Center Branch (Ascension 2+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Soothe | When using Skill, dispels 1 debuff from the designated ally (see implementation notes below) | A2 | 1,000 | — |
+
+**Soothe Implementation Notes:**
+Cleansable debuffs (checked in priority order — first found is removed):
+1. DoTs: `lc_burn`, `dark_flame`, `lc_bleed`, `lc_mental_decay`, `lc_tremor`, `lc_overheat`, `pallid_noise`
+2. Fragile (increased DMG taken): `fragile`, `red_fragile`, `white_fragile`, `black_fragile`, `pale_fragile`
+3. Damage Down (reduced DMG dealt): `damage_down`, `red_damage_down`, `white_damage_down`, `black_damage_down`, `pale_damage_down`
+
+All are `/datum/status_effect/stacking` subtypes in `code/datums/status_effects/debuffs.dm`. Use `target.has_status_effect(type)` to check, `qdel(effect)` to remove. Create a shared `/proc/cleanse_debuff(mob/living/target)` that iterates the list and removes the first match.
+| Healing Boost | Healing Boost +4% | A2 | 400 | Soothe |
+| HP Boost | HP +4% | A3 | 300 | Healing Boost |
+| DEF Boost | DEF +5% | A3 | 300 | Healing Boost |
+
+**Right Branch (Ascension 4+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Healer | Outgoing Healing increases by 10% | A4 | 1,000 | — |
+| HP Boost | HP +6% | A4 | 500 | Healer |
+| Healing Boost | Healing Boost +6% | A5 | 600 | HP Boost |
+| DEF Boost | DEF +7.5% | Lv75 | 750 | Healing Boost |
+
+**Left Branch (Ascension 6+):**
+| Node | Stat/Effect | Gate | Ahn Cost | Prerequisites |
+|------|-------------|------|----------|---------------|
+| Recuperation | Increases duration of Skill's continuous healing by 1 turn (10s) | A6 | 1,000 | — |
+| Healing Boost | Healing Boost +6% | A6 | 500 | Recuperation |
+| HP Boost | HP +6% | A6 | 700 | Healing Boost |
+| HP Boost | HP +8% | Lv80 | 800 | HP Boost |
+
+**Total Trace Stats (all nodes unlocked):**
+- HP: +4% +4% +6% +6% +8% = **+28%**
+- DEF: +5% +7.5% = **+12.5%**
+- Healing Boost: +4% +6% +6% = **+16%**
+- Total ahn: 200 + 3,000 (bonuses) + 4,050 (stats) = **7,250 ahn**
 
 ---
 

@@ -11,8 +11,8 @@
 /datum/action/path_ultimate
 	name = "Ultimate Action"
 	desc = "At maximum energy, unleash your path's Ultimate ability."
-	icon_icon = 'icons/hud/actions.dmi'
-	button_icon_state = "yourstate"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/enders_sprites_32x32.dmi'
+	button_icon_state = "stardust_ace"
 	/// Reference to the owning path datum
 	var/datum/path/linked_path
 
@@ -43,8 +43,8 @@
 /datum/action/path_screen
 	name = "Path Screen"
 	desc = "Open your Path details and skill tree."
-	icon_icon = 'icons/hud/actions.dmi'
-	button_icon_state = "yourstate"
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/enders_sprites_32x32.dmi'
+	button_icon_state = "path_icon"
 	/// Reference to the owning path datum
 	var/datum/path/linked_path
 

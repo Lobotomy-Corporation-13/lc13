@@ -1324,7 +1324,11 @@
 
 /mob/living/carbon/human/updatehealth()
 	if(LAZYLEN(attributes))
-		maxHealth = max(1, get_attribute_printed_level_bonus(src, FORTITUDE_ATTRIBUTE) + round(get_stat_bonus(src, FORTITUDE_ATTRIBUTE, no_neg = FALSE)))
+		var/datum/path/active_path = GetPath()
+		if(active_path)
+			maxHealth = max(1, active_path.GetStat("HP"))
+		else
+			maxHealth = max(1, get_attribute_printed_level_bonus(src, FORTITUDE_ATTRIBUTE) + round(get_stat_bonus(src, FORTITUDE_ATTRIBUTE, no_neg = FALSE)))
 		maxSanity = max(1, get_attribute_printed_level_bonus(src, PRUDENCE_ATTRIBUTE) + round(get_stat_bonus(src, PRUDENCE_ATTRIBUTE, no_neg = FALSE)))
 	. = ..()
 	dna?.species.spec_updatehealth(src)

@@ -36,6 +36,22 @@
 	. = ..()
 	base_attack_speed = attack_speed
 
+// ---- Turn Ready Visual ----
+
+/// Adds a golden tint to indicate the turn is ready
+/obj/item/ego_weapon/path_weapon/proc/ShowTurnReady()
+	add_atom_colour("#FFD700", TEMPORARY_COLOUR_PRIORITY)
+	if(ismob(loc))
+		var/mob/M = loc
+		M.update_inv_hands()
+
+/// Removes the golden tint when AP is gained or skill used
+/obj/item/ego_weapon/path_weapon/proc/ClearTurnReady()
+	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
+	if(ismob(loc))
+		var/mob/M = loc
+		M.update_inv_hands()
+
 // ---- Core Attack Procs ----
 
 /// Override attack to deal path damage instead of LC13 damage
@@ -55,6 +71,18 @@
 	// OnWeaponHit handles per-swing damage scaling and turn-based AP/energy gating
 	linked_path.OnWeaponHit(target, user)
 
+/// Clicking an EGO weapon with this will mimic its appearance
+/obj/item/ego_weapon/path_weapon/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
+	. = ..()
+	if(!proximity_flag)
+		return
+	if(!istype(target, /obj/item/ego_weapon))
+		return
+	if(istype(target, /obj/item/ego_weapon/path_weapon))
+		return
+	ApplyDisguise(target.type)
+	to_chat(user, span_notice("Your path weapon now resembles [target]."))
+
 /// Override attack_self for Burst/Skill activation (consumes the current turn)
 /obj/item/ego_weapon/path_weapon/attack_self(mob/living/user)
 	if(!linked_path || !linked_path.burst_action)
@@ -70,6 +98,10 @@
 	linked_path.GainEnergy(linked_path.burst_action.energy_gain)
 	linked_path.burst_action.Activate(user)
 	linked_path.turn_state = PATH_TURN_SKILLED
+	// Skill counts as the first hit — subsequent attacks deal 10%
+	linked_path.first_hit_this_turn = FALSE
+	// Clear golden glow — turn consumed by skill
+	ClearTurnReady()
 
 /// Path weapons are always usable if linked to a valid path
 /obj/item/ego_weapon/path_weapon/CanUseEgo(mob/living/user)
@@ -175,7 +207,7 @@
 	// Mechanical feel (does NOT affect path damage)
 	swingstyle = initial(E.swingstyle)
 	reach = initial(E.reach)
-	attack_speed = initial(E.attack_speed)
+	// attack_speed is NOT copied — stays fixed
 
 	// Validate swingstyle/reach combo
 	if(swingstyle == WEAPONSWING_SMALLSWEEP && reach > 1)
