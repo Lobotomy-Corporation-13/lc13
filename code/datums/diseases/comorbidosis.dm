@@ -30,7 +30,7 @@
 		return
 
 	if(prob(5))
-		to_chat(M, "<span class='notice'>You feel your wounds close into soggy purple scars.</span>")
+		to_chat(M, span_notice("You feel your wounds close into soggy purple scars."))
 
 	for(var/obj/item/bodypart/L in parts)
 		if(L.heal_damage(heal_amt/parts.len * 0.5, heal_amt/parts.len, null, BODYPART_ORGANIC))

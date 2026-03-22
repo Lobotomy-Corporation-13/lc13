@@ -35,6 +35,6 @@
 		if(100 to 150)
 			if(prob(10))
 				if(prob(30))
-					to_chat(H, "<span class='notice'>You feel moisturized and in your element!</span>")
+					to_chat(H, span_notice("You feel moisturized and in your element!"))
 				H.adjustStaminaLoss(-5)
 				H.adjustSanityLoss(-4)
