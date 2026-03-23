@@ -18,6 +18,8 @@
 	var/list/available_paths = list(
 		"Destruction" = /datum/path/destruction,
 		"The Hunt" = /datum/path/hunt,
+		"Erudition" = /datum/path/erudition,
+		"Nihility" = /datum/path/nihility,
 	)
 
 /obj/item/path_crystal/attack_self(mob/living/carbon/human/user)
@@ -29,16 +31,41 @@
 		to_chat(user, span_warning("You already walk a Path. You cannot choose another."))
 		return
 
-	// Build choice list with descriptions
+	if(GLOB.path_realm_active)
+		to_chat(user, span_warning("The Path Realm is already open. Please wait."))
+		return
+
+	// Start the Path Realm experience
+	var/datum/path_realm/realm = new(user)
+	realm.Start()
+	playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+	qdel(src)
+
+/obj/item/path_crystal/examine(mob/user)
+	. = ..()
+	. += span_notice("Use in hand to choose a Path.")
+
+// ---- Direct Path Selection (Debug/Admin) ----
+
+/// Simplified path selection item that skips the realm experience
+/obj/item/path_crystal/direct
+	name = "Stellaron Fragment (Direct)"
+	desc = "A fragment of crystallized imaginary energy. Use in hand to directly choose your Path."
+
+/obj/item/path_crystal/direct/attack_self(mob/living/carbon/human/user)
+	if(!ishuman(user))
+		to_chat(user, span_warning("Only humans can awaken a Path."))
+		return
+	if(user.HasPath())
+		to_chat(user, span_warning("You already walk a Path. You cannot choose another."))
+		return
 	var/list/choices = list()
 	for(var/path_name in available_paths)
 		choices += path_name
-
 	if(!length(choices))
 		to_chat(user, span_warning("No paths are available."))
 		return
-
-	var/choice = tgui_input_list(user, "Choose your Path. This decision shapes your combat abilities.", "Awaken Your Path", choices)
+	var/choice = tgui_input_list(user, "Choose your Path.", "Awaken Your Path", choices)
 	if(!choice)
 		return
 	if(QDELETED(src) || QDELETED(user))
@@ -47,22 +74,15 @@
 		return
 	if(user.HasPath())
 		return
-
 	var/path_type = available_paths[choice]
 	if(!path_type)
 		return
-
-	// Grant the path
 	if(user.GrantPath(path_type))
-		to_chat(user, span_nicegreen("You have awakened the Path of [choice]. The imaginary energy flows through you."))
+		to_chat(user, span_nicegreen("You have awakened the Path of [choice]."))
 		playsound(get_turf(user), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
 		qdel(src)
 	else
 		to_chat(user, span_warning("Failed to awaken your Path."))
-
-/obj/item/path_crystal/examine(mob/user)
-	. = ..()
-	. += span_notice("Use in hand to choose a Path.")
 	. += span_notice("Available paths:")
 	for(var/path_name in available_paths)
 		. += span_notice("  - [path_name]")
@@ -79,7 +99,7 @@
 	w_class = WEIGHT_CLASS_SMALL
 	max_amount = 50
 	novariants = TRUE
-	custom_price = 4
+	custom_price = 2
 	merge_type = /obj/item/stack/path_exp_crystal
 	/// EXP granted per crystal
 	var/exp_per = 1000
@@ -127,7 +147,7 @@
 	name = "Path EXP Crystal (Medium)"
 	singular_name = "Path EXP Crystal (Medium)"
 	desc = "A crystal of imaginary energy. Grants 5,000 Character EXP per crystal to your active path."
-	custom_price = 20
+	custom_price = 10
 	merge_type = /obj/item/stack/path_exp_crystal/medium
 	exp_per = 5000
 
@@ -136,7 +156,7 @@
 	name = "Path EXP Crystal (Large)"
 	singular_name = "Path EXP Crystal (Large)"
 	desc = "A dense crystal of imaginary energy. Grants 20,000 Character EXP per crystal to your active path."
-	custom_price = 80
+	custom_price = 42
 	merge_type = /obj/item/stack/path_exp_crystal/large
 	exp_per = 20000
 
@@ -150,7 +170,7 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/teguitems.dmi'
 	icon_state = "tcorp_syringe"
 	w_class = WEIGHT_CLASS_SMALL
-	custom_price = 200
+	custom_price = 100
 
 /obj/item/path_ascension_crystal/attack_self(mob/living/carbon/human/user)
 	if(!ishuman(user))

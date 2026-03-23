@@ -50,7 +50,6 @@
 /obj/item/ego_weapon/path_weapon/hunt
 	name = "Hunt Blade"
 	desc = "A weapon honed by the wind itself."
-	icon_state = "penitence"
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_THRUST
 
@@ -436,12 +435,12 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "wind1")
+	N.connections = list("core_basic", "core_burst", "atk1")
 	nodes += N
 
 	// --- Bottom stat (below Passive, no gate) ---
-	N = new /datum/path_node("wind1", "Wind DMG Boost", "Wind DMG increases by 3.2%.")
-	N.stat_bonuses = list("wind DMG" = 3.2)
+	N = new /datum/path_node("atk1", "CRIT Rate Boost", "CRIT Rate increases by 3.2%.")
+	N.stat_bonuses = list("CRIT Rate" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
 	N.tree_x = 2
@@ -465,11 +464,11 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("atk1", "wind2")
+	N.connections = list("hp1", "atk2")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("atk1", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("hp1", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
@@ -479,8 +478,8 @@
 	N.prerequisites = list("def1")
 	nodes += N
 
-	N = new /datum/path_node("wind2", "Wind DMG Boost", "Wind DMG increases by 3.2%.")
-	N.stat_bonuses = list("wind DMG" = 3.2)
+	N = new /datum/path_node("atk2", "CRIT Rate Boost", "CRIT Rate increases by 3.2%.")
+	N.stat_bonuses = list("CRIT Rate" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
@@ -496,39 +495,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("wind3")
+	N.connections = list("hp2")
 	nodes += N
 
-	N = new /datum/path_node("wind3", "Wind DMG Boost", "Wind DMG increases by 4.8%.")
-	N.stat_bonuses = list("wind DMG" = 4.8)
+	N = new /datum/path_node("hp2", "CRIT Rate Boost", "CRIT Rate increases by 4.8%.")
+	N.stat_bonuses = list("CRIT Rate" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("atk2")
+	N.connections = list("atk4")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("atk4", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("atk3")
-	N.prerequisites = list("wind3")
+	N.connections = list("hp3")
+	N.prerequisites = list("hp2")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "ATK Boost", "ATK increases by 8%.")
+	N = new /datum/path_node("hp3", "ATK Boost", "ATK increases by 8%.")
 	N.stat_bonuses = list("ATK" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("atk2")
+	N.prerequisites = list("atk4")
 	nodes += N
 
 	// --- Left branch (A6 gate, from Basic ATK) ---
@@ -538,11 +537,11 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("wind4")
+	N.connections = list("atk3")
 	nodes += N
 
-	N = new /datum/path_node("wind4", "Wind DMG Boost", "Wind DMG increases by 4.8%.")
-	N.stat_bonuses = list("wind DMG" = 4.8)
+	N = new /datum/path_node("atk3", "CRIT Rate Boost", "CRIT Rate increases by 4.8%.")
+	N.stat_bonuses = list("CRIT Rate" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
@@ -559,12 +558,12 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("wind5")
-	N.prerequisites = list("wind4")
+	N.connections = list("atk5")
+	N.prerequisites = list("atk3")
 	nodes += N
 
-	N = new /datum/path_node("wind5", "Wind DMG Boost", "Wind DMG increases by 6.4%.")
-	N.stat_bonuses = list("wind DMG" = 6.4)
+	N = new /datum/path_node("atk5", "CRIT Rate Boost", "CRIT Rate increases by 6.4%.")
+	N.stat_bonuses = list("CRIT Rate" = 6.4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80

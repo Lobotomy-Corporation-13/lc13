@@ -62,8 +62,8 @@
 	var/datum/path_ability/passive/passive_effect
 
 	// --- Defense ---
-	/// Stored original damage_resistance before path override
-	var/original_damage_resistance = 0
+	/// How much damage_resistance we've added (for clean removal)
+	var/applied_resistance = 0
 
 	// --- Weapon ---
 	var/obj/item/ego_weapon/path_weapon/weapon
@@ -136,6 +136,11 @@
 	// Update HP from path stats
 	owner.updatehealth()
 
+	// Pathstrider traits
+	ADD_TRAIT(owner, TRAIT_SANITYIMMUNE, "Path")
+	ADD_TRAIT(owner, TRAIT_BRUTEPALE, "Path")
+	ADD_TRAIT(owner, TRAIT_BRUTESANITY, "Path")
+
 	// Start turn cycle
 	StartTurnCycle()
 
@@ -149,6 +154,11 @@
 
 	// Remove EGO armor restriction
 	REMOVE_TRAIT(owner, TRAIT_NO_EGO_ARMOR, "path")
+
+	// Remove pathstrider traits
+	REMOVE_TRAIT(owner, TRAIT_SANITYIMMUNE, "Path")
+	REMOVE_TRAIT(owner, TRAIT_BRUTEPALE, "Path")
+	REMOVE_TRAIT(owner, TRAIT_BRUTESANITY, "Path")
 
 	// Restore original damage resistance
 	RemoveDefense()
@@ -349,22 +359,32 @@
 // ============================================================
 
 /// Applies DEF stat as damage_resistance on the owner
-/// Formula: reduction% = DEF / (DEF + 200) * 100
+/// Formula: reduction% = DEF / (DEF + 300) * 100
+/// Uses multiplicative stacking — divides out old factor, multiplies new
 /datum/path/proc/ApplyDefense()
 	if(!owner?.physiology)
 		return
-	// Store original value on first call
-	if(!original_damage_resistance)
-		original_damage_resistance = owner.physiology.damage_resistance
+	// Remove previous multiplier (divide it out)
+	if(applied_resistance > 0)
+		var/old_keep = (100 - applied_resistance) / 100
+		if(old_keep > 0)
+			owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) / old_keep)
+	// Calculate new reduction
 	var/def = GetStat("DEF")
-	var/reduction = (def / (def + 300)) * 100
-	owner.physiology.damage_resistance = reduction
+	applied_resistance = (def / (def + 300)) * 100
+	// Apply new multiplier
+	var/new_keep = (100 - applied_resistance) / 100
+	owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) * new_keep)
 
-/// Restores the owner's original damage_resistance
+/// Removes the path's damage_resistance contribution
 /datum/path/proc/RemoveDefense()
 	if(!owner?.physiology)
 		return
-	owner.physiology.damage_resistance = original_damage_resistance
+	if(applied_resistance > 0)
+		var/old_keep = (100 - applied_resistance) / 100
+		if(old_keep > 0)
+			owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) / old_keep)
+	applied_resistance = 0
 
 // ============================================================
 // Leveling & Ascension
@@ -629,6 +649,23 @@
 		if(SA.damage_coeff)
 			var/avg_coeff = (SA.damage_coeff.red + SA.damage_coeff.white + SA.damage_coeff.black + SA.damage_coeff.pale) / 4
 			damage *= avg_coeff
+
+	// PvP balance: HP-ratio scaling + armor average vs humans
+	if(ishuman(target) && owner)
+		var/mob/living/carbon/human/H = target
+		// HP-ratio: path damage scales down vs lower-HP targets
+		damage *= H.maxHealth / max(owner.maxHealth, 1)
+		// Average armor reduction from worn EGO gear
+		var/obj/item/clothing/suit/armor/ego_gear/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		if(istype(suit) && islist(suit.armor))
+			var/total_armor = 0
+			var/armor_count = 0
+			for(var/atype in suit.armor)
+				total_armor += suit.armor[atype]
+				armor_count++
+			if(armor_count > 0)
+				var/avg_armor = total_armor / armor_count
+				damage *= (100 - avg_armor) / 100
 
 	// Apply damage
 	// We already applied avg_coeff, so use forced=TRUE

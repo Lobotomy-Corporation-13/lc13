@@ -1590,6 +1590,12 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	if(signal_return & COMPONENT_MOB_DENY_DAMAGE)
 		return FALSE
 
+	// PvP HP-ratio scaling: human attacking path user
+	// Boosts incoming damage so fights are fair despite HP difference
+	if(ishuman(source) && H.HasPath())
+		var/mob/living/carbon/human/attacker = source
+		damage_amount *= H.maxHealth / max(attacker.maxHealth, 1)
+
 	// Automatically run an armour check for the provided damage type if we weren't already provided with a blocked value, and if we aren't taking BRUTE damage.
 	if((isnull(blocked)) && (damage_type != BRUTE))
 		blocked = H.run_armor_check(def_zone, damage_type)

@@ -12,10 +12,14 @@
 // ============================================================
 
 /obj/item/ego_weapon/path_weapon
-	name = "Path Weapon"
-	desc = "A weapon manifested from your chosen path."
-	icon = 'icons/obj/ego_weapons.dmi'
-	icon_state = "penitence"
+	name = "Path Blade"
+	desc = "A blade manifested from your chosen path. It pulses with imaginary energy."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left.dmi'
+	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right.dmi'
+	icon_state = "philip"
+	inhand_icon_state = "philip"
+	hitsound = 'sound/weapons/bladeslice.ogg'
 	force = 0
 	damtype = RED_DAMAGE
 	attribute_requirements = list()

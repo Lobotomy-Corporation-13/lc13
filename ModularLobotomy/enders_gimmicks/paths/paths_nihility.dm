@@ -1,0 +1,573 @@
+// ============================================================
+// Path of Nihility (Aeon: IX)
+// ============================================================
+// DoT-focused debuffer. Fire element.
+// Burn DoT application, Burn detonation on Ult,
+// Firekiss vulnerability debuff from Burn ticks.
+// ============================================================
+
+/datum/path/nihility
+	name = "Nihility"
+	desc = "Applies debuffs to enemies to reduce their combat capacities."
+	icon_state = "destruction"
+	element_type = PATH_ELEMENT_FIRE
+	max_energy = 120
+	path_weapon_type = /obj/item/ego_weapon/path_weapon/nihility
+	basic_attack_type = /datum/path_ability/basic/nihility
+	burst_action_type = /datum/path_ability/burst/nihility
+	ultimate_type = /datum/path_ability/ultimate/nihility
+	passive_type = /datum/path_ability/passive/nihility
+
+	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
+	stat_table = list(
+		list(0, 1,   120, 79,  60,  106),
+		list(0, 20,  234, 154, 117, 106),
+		list(1, 20,  282, 186, 141, 106),
+		list(1, 30,  342, 225, 171, 106),
+		list(2, 30,  390, 257, 195, 106),
+		list(2, 40,  450, 297, 225, 106),
+		list(3, 40,  498, 328, 249, 106),
+		list(3, 50,  558, 368, 279, 106),
+		list(4, 50,  606, 399, 303, 106),
+		list(4, 60,  666, 439, 333, 106),
+		list(5, 60,  714, 471, 357, 106),
+		list(5, 70,  774, 510, 387, 106),
+		list(6, 70,  822, 542, 411, 106),
+		list(6, 80,  882, 582, 441, 106)
+	)
+
+// ============================================================
+// Nihility Weapon
+// ============================================================
+
+/obj/item/ego_weapon/path_weapon/nihility
+	name = "Nihility Blade"
+	desc = "A weapon wreathed in flickering flame."
+	hitsound = 'sound/weapons/bladeslice.ogg'
+	swingstyle = WEAPONSWING_SMALLSWEEP
+
+// ============================================================
+// Basic ATK: Standing Ovation
+// ============================================================
+
+/datum/path_ability/basic/nihility
+	name = "Standing Ovation"
+	desc = "Deals Fire DMG to the target hit."
+	icon_state = "farewell_hit"
+	energy_gain = 20
+	max_level = 7
+	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+
+/datum/path_ability/basic/nihility/GetScalingData()
+	var/list/data = list()
+	data["ATK Scaling"] = "[atk_scaling[level]]%"
+	if(parent_path)
+		var/atk = parent_path.GetStat("ATK")
+		var/dmg = round(atk * atk_scaling[level] / 100, 1)
+		data["Damage"] = "[dmg]"
+	data["Energy Gain"] = "[energy_gain]"
+	return data
+
+/datum/path_ability/basic/nihility/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
+	if(!parent_path)
+		return
+	var/multiplier = atk_scaling[level] / 100
+
+	// Walking on Knives (A6 bonus): +20% DMG to Burned
+	var/datum/path/nihility/N = parent_path
+	if(istype(N) && N.HasBonus("bonus_a6"))
+		if(target.has_status_effect(/datum/status_effect/nihility_burn))
+			multiplier *= 1.2
+
+	var/total_damage = parent_path.GetStat("ATK") * multiplier
+	if(!first_hit)
+		total_damage *= 0.1
+	parent_path.deal_path_damage(target, total_damage)
+
+	// High Poles (A2 bonus): 80% chance to apply Burn
+	if(istype(N) && N.HasBonus("bonus_a2") && first_hit)
+		if(prob(80))
+			var/datum/path_ability/burst/nihility/skill = parent_path.burst_action
+			if(istype(skill))
+				var/burn_atk = parent_path.GetStat("ATK") * (skill.burn_scaling[skill.level] / 100)
+				ApplyNihilityBurn(target, burn_atk, parent_path)
+
+// ============================================================
+// Skill: Blazing Welcome
+// ============================================================
+
+/datum/path_ability/burst/nihility
+	name = "Blazing Welcome"
+	desc = "Deals Fire DMG to target + 1-tile AoE. Applies Burn."
+	icon_state = "rip_home_run"
+	energy_gain = 30
+	ap_cost = 1
+	max_level = 12
+	var/list/main_scaling = list(60, 66, 72, 78, 84, 90, 97.5, 105, 112.5, 120, 126, 132)
+	var/list/adj_scaling = list(20, 22, 24, 26, 28, 30, 32.5, 35, 37.5, 40, 42, 44)
+	var/list/burn_scaling = list(83.9, 92.3, 100.7, 109.1, 117.5, 130.1, 146.9, 167.8, 193, 218.2, 229.1, 240)
+
+/datum/path_ability/burst/nihility/GetScalingData()
+	var/list/data = list()
+	if(parent_path)
+		var/atk = parent_path.GetStat("ATK")
+		data["Main DMG"] = "[main_scaling[level]]% ([round(atk * main_scaling[level] / 100, 1)])"
+		data["Adjacent DMG"] = "[adj_scaling[level]]% ([round(atk * adj_scaling[level] / 100, 1)])"
+		data["Burn DoT"] = "[burn_scaling[level]]% ATK/tick"
+	data["Energy Gain"] = "[energy_gain]"
+	data["AP Cost"] = "[ap_cost]"
+	return data
+
+/datum/path_ability/burst/nihility/Activate(mob/living/user)
+	if(!parent_path)
+		return
+
+	var/atk = parent_path.GetStat("ATK")
+	var/main_mult = main_scaling[level] / 100
+	var/adj_mult = adj_scaling[level] / 100
+
+	// Find primary target in front (1 tile)
+	var/mob/living/primary
+	var/turf/T = get_step(user, user.dir)
+	if(T)
+		for(var/mob/living/L in T)
+			if(L == user || L.stat == DEAD)
+				continue
+			primary = L
+			break
+
+	if(!primary)
+		to_chat(user, span_warning("Blazing Welcome - no enemy in front!"))
+		return
+
+	// Deal main damage to primary
+	var/main_dmg = atk * main_mult
+	parent_path.deal_path_damage(primary, main_dmg)
+
+	// Apply Burn to primary
+	var/burn_atk = atk * (burn_scaling[level] / 100)
+	ApplyNihilityBurn(primary, burn_atk, parent_path)
+
+	// Deal adjacent damage + apply Burn
+	var/hit_count = 1
+	for(var/mob/living/L in range(1, primary))
+		if(L == primary || L == user || L.stat == DEAD)
+			continue
+		parent_path.deal_path_damage(L, atk * adj_mult)
+		ApplyNihilityBurn(L, burn_atk, parent_path)
+		hit_count++
+
+	// VFX
+	for(var/turf/aoe_turf in range(1, primary))
+		if(prob(50))
+			new /obj/effect/temp_visual/smash_effect(aoe_turf)
+	playsound(get_turf(primary), 'sound/weapons/smash.ogg', 50, TRUE)
+	for(var/mob/living/M in view(7, user))
+		if(M.client)
+			shake_camera(M, 2, 1)
+	user.visible_message(span_danger("[user] unleashes Blazing Welcome, hitting [hit_count] target\s!"))
+
+// ============================================================
+// Ultimate: Watch This Showstopper
+// ============================================================
+
+/datum/path_ability/ultimate/nihility
+	name = "Watch This Showstopper"
+	desc = "3-tile AoE Fire DMG. Detonates Burns on hit enemies."
+	icon_state = "stardust_ace"
+	max_level = 12
+	var/list/aoe_scaling = list(72, 76.8, 81.6, 86.4, 91.2, 96, 102, 108, 114, 120, 124.8, 129.6)
+	var/list/detonate_scaling = list(72, 74, 76, 78, 80, 82, 84.5, 87, 89.5, 92, 94, 96)
+
+/datum/path_ability/ultimate/nihility/GetScalingData()
+	var/list/data = list()
+	if(parent_path)
+		var/atk = parent_path.GetStat("ATK")
+		data["AoE DMG"] = "[aoe_scaling[level]]% ([round(atk * aoe_scaling[level] / 100, 1)])"
+		data["Burn Detonate"] = "[detonate_scaling[level]]% of Burn DMG"
+		data["Energy Cost"] = "[parent_path.max_energy]"
+		data["Energy Gen"] = "5"
+	return data
+
+/datum/path_ability/ultimate/nihility/Activate(mob/living/user)
+	if(!parent_path)
+		return
+	..()
+
+	var/atk = parent_path.GetStat("ATK")
+	var/mult = aoe_scaling[level] / 100
+	var/detonate_pct = detonate_scaling[level] / 100
+
+	var/hit_count = 0
+	for(var/mob/living/L in range(3, user))
+		if(L == user || L.stat == DEAD)
+			continue
+		// AoE damage
+		parent_path.deal_path_damage(L, atk * mult)
+		hit_count++
+		// Detonate existing Burns
+		var/datum/status_effect/nihility_burn/burn = L.has_status_effect(/datum/status_effect/nihility_burn)
+		if(burn)
+			var/detonate_dmg = burn.burn_damage * detonate_pct
+			parent_path.deal_path_damage(L, detonate_dmg, do_crit = FALSE)
+
+	// Grant 5 energy
+	parent_path.GainEnergy(5)
+
+	// VFX
+	for(var/turf/aoe_turf in range(3, user))
+		new /obj/effect/temp_visual/smash_effect(aoe_turf)
+	playsound(get_turf(user), 'sound/weapons/saberon.ogg', 70, TRUE, 5)
+	for(var/mob/living/M in view(7, user))
+		if(M.client)
+			shake_camera(M, 4, 3)
+	if(hit_count > 0)
+		user.visible_message(span_danger("[user] unleashes Watch This Showstopper, hitting [hit_count] target\s!"))
+	else
+		user.visible_message(span_danger("[user] unleashes Watch This Showstopper, but hits nothing!"))
+
+// ============================================================
+// Passive: PatrAeon Benefits
+// ============================================================
+
+/datum/path_ability/passive/nihility
+	name = "PatrAeon Benefits"
+	desc = "When Burn ticks, apply Firekiss to the target. Firekiss increases DMG taken."
+	icon_state = "perfect_pickoff"
+	max_level = 12
+	var/list/firekiss_scaling = list(4, 4.3, 4.6, 4.9, 5.2, 5.5, 5.875, 6.25, 6.625, 7, 7.3, 7.6)
+
+/datum/path_ability/passive/nihility/GetScalingData()
+	var/list/data = list()
+	data["DMG Increase/Stack"] = "[firekiss_scaling[level]]%"
+	data["Max Stacks"] = "3"
+	data["Duration"] = "30s"
+	return data
+
+/datum/path_ability/passive/nihility/Apply(mob/living/user)
+	return
+
+/datum/path_ability/passive/nihility/Unapply(mob/living/user)
+	return
+
+// ============================================================
+// Nihility Burn — Custom DoT
+// ============================================================
+
+/datum/status_effect/nihility_burn
+	id = "nihility_burn"
+	duration = 20 SECONDS
+	tick_interval = 5 SECONDS
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = null
+
+	/// Damage per tick (snapshotted ATK * burn scaling)
+	var/burn_damage = 0
+	/// Reference to the attacker's path
+	var/datum/path/attacker_path
+
+/datum/status_effect/nihility_burn/on_apply()
+	. = ..()
+	if(!.)
+		return
+	to_chat(owner, span_danger("You are burning!"))
+
+/datum/status_effect/nihility_burn/tick()
+	if(!owner || owner.stat == DEAD)
+		return
+	// Deal burn damage
+	if(attacker_path && !QDELETED(attacker_path))
+		attacker_path.deal_path_damage(owner, burn_damage, do_crit = FALSE)
+	else
+		owner.adjustFireLoss(burn_damage)
+	// Passive: apply Firekiss on burn tick
+	if(attacker_path?.passive_effect)
+		var/datum/path_ability/passive/nihility/pp = attacker_path.passive_effect
+		if(istype(pp))
+			var/firekiss_pct = pp.firekiss_scaling[pp.level]
+			ApplyFirekiss(owner, firekiss_pct)
+	to_chat(owner, span_warning("The flames sear your flesh!"))
+
+/datum/status_effect/nihility_burn/on_remove()
+	to_chat(owner, span_notice("The flames fade."))
+	return ..()
+
+/// Global proc to apply Nihility Burn
+/proc/ApplyNihilityBurn(mob/living/target, burn_dmg, datum/path/source_path)
+	var/datum/status_effect/nihility_burn/existing = target.has_status_effect(/datum/status_effect/nihility_burn)
+	if(existing)
+		// Refresh duration and update damage if higher
+		existing.burn_damage = max(existing.burn_damage, burn_dmg)
+		existing.attacker_path = source_path
+		existing.duration = 20 SECONDS
+		return
+	var/datum/status_effect/nihility_burn/NB = target.apply_status_effect(/datum/status_effect/nihility_burn)
+	if(NB)
+		NB.burn_damage = burn_dmg
+		NB.attacker_path = source_path
+
+// ============================================================
+// Firekiss — Vulnerability Debuff
+// ============================================================
+
+/datum/status_effect/firekiss
+	id = "firekiss"
+	duration = 30 SECONDS
+	tick_interval = 0
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+
+	/// DMG increase percentage per stack
+	var/dmg_increase = 4
+	/// Current stacks
+	var/stacks = 0
+	/// Max stacks
+	var/max_stacks = 3
+	/// Tracked multiplier we've applied (e.g. 1.12 for 12% increase)
+	var/applied_multiplier = 1
+
+/datum/status_effect/firekiss/on_apply()
+	. = ..()
+	if(!.)
+		return
+	stacks = 1
+
+/datum/status_effect/firekiss/on_remove()
+	RemoveDamageMods()
+	return ..()
+
+/// Add a stack of Firekiss
+/datum/status_effect/firekiss/proc/AddStack(new_pct)
+	if(stacks < max_stacks)
+		stacks++
+	dmg_increase = new_pct
+	// Refresh duration
+	duration = 30 SECONDS
+	UpdateDamageIncrease()
+
+/datum/status_effect/firekiss/proc/UpdateDamageIncrease()
+	if(!owner?.physiology)
+		return
+	// Divide out old multiplier
+	if(applied_multiplier != 1)
+		owner.physiology.brute_mod /= applied_multiplier
+		owner.physiology.burn_mod /= applied_multiplier
+	// Calculate and apply new multiplier
+	applied_multiplier = 1 + (dmg_increase * stacks) / 100
+	owner.physiology.brute_mod *= applied_multiplier
+	owner.physiology.burn_mod *= applied_multiplier
+
+/datum/status_effect/firekiss/proc/RemoveDamageMods()
+	if(!owner?.physiology)
+		return
+	if(applied_multiplier != 1)
+		owner.physiology.brute_mod /= applied_multiplier
+		owner.physiology.burn_mod /= applied_multiplier
+	applied_multiplier = 1
+
+/// Global proc to apply or stack Firekiss
+/proc/ApplyFirekiss(mob/living/target, dmg_pct)
+	var/datum/status_effect/firekiss/existing = target.has_status_effect(/datum/status_effect/firekiss)
+	if(existing)
+		existing.AddStack(dmg_pct)
+		return
+	var/datum/status_effect/firekiss/FK = target.apply_status_effect(/datum/status_effect/firekiss)
+	if(FK)
+		FK.dmg_increase = dmg_pct
+		FK.UpdateDamageIncrease()
+
+// ============================================================
+// Trace Nodes (Skill Tree)
+// ============================================================
+
+/datum/path/nihility/InitNodes()
+	var/datum/path_node/N
+
+	// --- Core Ability Upgrades ---
+	N = new /datum/path_node("core_basic", "Standing Ovation", "Level up Basic ATK.")
+	N.node_type = PATH_NODE_ABILITY
+	N.ability_target = PATH_ABILITY_BASIC
+	N.level_increase = 1
+	N.ahn_cost = 500
+	N.connections = list("bonus_a6")
+	nodes += N
+
+	N = new /datum/path_node("core_burst", "Blazing Welcome", "Level up Skill.")
+	N.node_type = PATH_NODE_ABILITY
+	N.ability_target = PATH_ABILITY_BURST
+	N.level_increase = 1
+	N.ahn_cost = 800
+	N.connections = list("bonus_a4")
+	nodes += N
+
+	N = new /datum/path_node("core_ultimate", "Watch This Showstopper", "Level up Ultimate.")
+	N.node_type = PATH_NODE_ABILITY
+	N.ability_target = PATH_ABILITY_ULTIMATE
+	N.level_increase = 1
+	N.ahn_cost = 800
+	N.connections = list("core_passive", "bonus_a2")
+	nodes += N
+
+	N = new /datum/path_node("core_passive", "PatrAeon Benefits", "Level up Passive.")
+	N.node_type = PATH_NODE_ABILITY
+	N.ability_target = PATH_ABILITY_PASSIVE
+	N.level_increase = 1
+	N.ahn_cost = 800
+	N.connections = list("core_basic", "core_burst", "atk1")
+	nodes += N
+
+	// --- Bottom stat (no gate) ---
+	N = new /datum/path_node("atk1", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
+	N.stat_bonuses = list("fire DMG" = 3.2)
+	N.stat_percent = TRUE
+	N.ahn_cost = 200
+	N.tree_x = 2
+	N.tree_y = 6
+	nodes += N
+
+	// --- Center branch (A2 gate) ---
+	N = new /datum/path_node("bonus_a2", "High Poles", "Basic ATK has 80% chance to inflict Burn equivalent to Skill.")
+	N.node_type = PATH_NODE_PASSIVE
+	N.ahn_cost = 1000
+	N.required_ascension = 2
+	N.tree_x = 2
+	N.tree_y = 2
+	N.connections = list("def1")
+	nodes += N
+
+	N = new /datum/path_node("def1", "Effect Hit Rate Boost", "Effect Hit Rate increases by 5.3%.")
+	N.stat_bonuses = list("Effect Hit Rate" = 5.3)
+	N.stat_percent = TRUE
+	N.ahn_cost = 400
+	N.required_ascension = 2
+	N.tree_x = 2
+	N.tree_y = 1
+	N.connections = list("hp1", "atk2")
+	N.prerequisites = list("bonus_a2")
+	nodes += N
+
+	N = new /datum/path_node("hp1", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
+	N.stat_bonuses = list("fire DMG" = 3.2)
+	N.stat_percent = TRUE
+	N.ahn_cost = 300
+	N.required_ascension = 3
+	N.tree_x = 1
+	N.tree_y = 0
+	N.prerequisites = list("def1")
+	nodes += N
+
+	N = new /datum/path_node("atk2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 4%.")
+	N.stat_bonuses = list("Effect Hit Rate" = 4)
+	N.stat_percent = TRUE
+	N.ahn_cost = 300
+	N.required_ascension = 3
+	N.tree_x = 3
+	N.tree_y = 0
+	N.prerequisites = list("def1")
+	nodes += N
+
+	// --- Right branch (A4 gate) ---
+	N = new /datum/path_node("bonus_a4", "Bladed Hoop", "First turn comes 25% sooner at combat start.")
+	N.node_type = PATH_NODE_PASSIVE
+	N.ahn_cost = 1000
+	N.required_ascension = 4
+	N.tree_x = 4
+	N.tree_y = 3
+	N.connections = list("hp2")
+	nodes += N
+
+	N = new /datum/path_node("hp2", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
+	N.stat_bonuses = list("fire DMG" = 4.8)
+	N.stat_percent = TRUE
+	N.ahn_cost = 500
+	N.required_ascension = 4
+	N.tree_x = 4
+	N.tree_y = 2
+	N.connections = list("atk4")
+	N.prerequisites = list("bonus_a4")
+	nodes += N
+
+	N = new /datum/path_node("atk4", "Effect Hit Rate Boost", "Effect Hit Rate increases by 8%.")
+	N.stat_bonuses = list("Effect Hit Rate" = 8)
+	N.stat_percent = TRUE
+	N.ahn_cost = 600
+	N.required_ascension = 5
+	N.tree_x = 4
+	N.tree_y = 1
+	N.connections = list("hp3")
+	N.prerequisites = list("hp2")
+	nodes += N
+
+	N = new /datum/path_node("hp3", "Effect Hit Rate Boost", "Effect Hit Rate increases by 10.7%.")
+	N.stat_bonuses = list("Effect Hit Rate" = 10.7)
+	N.stat_percent = TRUE
+	N.ahn_cost = 750
+	N.required_level = 75
+	N.tree_x = 4
+	N.tree_y = 0
+	N.prerequisites = list("atk4")
+	nodes += N
+
+	// --- Left branch (A6 gate) ---
+	N = new /datum/path_node("bonus_a6", "Walking on Knives", "Deals 20% more DMG to Burned enemies.")
+	N.node_type = PATH_NODE_PASSIVE
+	N.ahn_cost = 1000
+	N.required_ascension = 6
+	N.tree_x = 0
+	N.tree_y = 3
+	N.connections = list("atk3")
+	nodes += N
+
+	N = new /datum/path_node("atk3", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
+	N.stat_bonuses = list("fire DMG" = 4.8)
+	N.stat_percent = TRUE
+	N.ahn_cost = 500
+	N.required_ascension = 6
+	N.tree_x = 0
+	N.tree_y = 2
+	N.connections = list("def2")
+	N.prerequisites = list("bonus_a6")
+	nodes += N
+
+	N = new /datum/path_node("def2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 6%.")
+	N.stat_bonuses = list("Effect Hit Rate" = 6)
+	N.stat_percent = TRUE
+	N.ahn_cost = 700
+	N.required_ascension = 6
+	N.tree_x = 0
+	N.tree_y = 1
+	N.connections = list("atk5")
+	N.prerequisites = list("atk3")
+	nodes += N
+
+	N = new /datum/path_node("atk5", "Fire DMG Boost", "Fire DMG increases by 6.4%.")
+	N.stat_bonuses = list("fire DMG" = 6.4)
+	N.stat_percent = TRUE
+	N.ahn_cost = 800
+	N.required_level = 80
+	N.tree_x = 0
+	N.tree_y = 0
+	N.prerequisites = list("def2")
+	nodes += N
+
+// ============================================================
+// Bonus Ability Effects
+// ============================================================
+
+/datum/path/nihility/proc/HasBonus(node_id)
+	return (node_id in unlocked_nodes)
+
+/datum/path/nihility/GetStat(stat_name)
+	return ..()
+
+/datum/path/nihility/OnBonusAbilityUnlocked(node_id)
+	switch(node_id)
+		if("bonus_a2")
+			// High Poles: checked in Basic OnHit
+			return
+		if("bonus_a4")
+			// Bladed Hoop: first turn comes sooner
+			return
+		if("bonus_a6")
+			// Walking on Knives: checked in Basic OnHit
+			return

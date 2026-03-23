@@ -45,7 +45,6 @@
 /obj/item/ego_weapon/path_weapon/destruction
 	name = "Destruction Blade"
 	desc = "A weapon crackling with destructive energy."
-	icon_state = "penitence"
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	swingstyle = WEAPONSWING_LARGESWEEP
 
