@@ -346,23 +346,29 @@
 	UpdateDamageIncrease()
 
 /datum/status_effect/firekiss/proc/UpdateDamageIncrease()
-	if(!owner?.physiology)
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	if(!H.physiology)
 		return
 	// Divide out old multiplier
 	if(applied_multiplier != 1)
-		owner.physiology.brute_mod /= applied_multiplier
-		owner.physiology.burn_mod /= applied_multiplier
+		H.physiology.brute_mod /= applied_multiplier
+		H.physiology.burn_mod /= applied_multiplier
 	// Calculate and apply new multiplier
 	applied_multiplier = 1 + (dmg_increase * stacks) / 100
-	owner.physiology.brute_mod *= applied_multiplier
-	owner.physiology.burn_mod *= applied_multiplier
+	H.physiology.brute_mod *= applied_multiplier
+	H.physiology.burn_mod *= applied_multiplier
 
 /datum/status_effect/firekiss/proc/RemoveDamageMods()
-	if(!owner?.physiology)
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+	if(!H.physiology)
 		return
 	if(applied_multiplier != 1)
-		owner.physiology.brute_mod /= applied_multiplier
-		owner.physiology.burn_mod /= applied_multiplier
+		H.physiology.brute_mod /= applied_multiplier
+		H.physiology.burn_mod /= applied_multiplier
 	applied_multiplier = 1
 
 /// Global proc to apply or stack Firekiss

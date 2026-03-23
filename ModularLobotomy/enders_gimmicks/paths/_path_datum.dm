@@ -657,15 +657,10 @@
 		damage *= H.maxHealth / max(owner.maxHealth, 1)
 		// Average armor reduction from worn EGO gear
 		var/obj/item/clothing/suit/armor/ego_gear/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-		if(istype(suit) && islist(suit.armor))
-			var/total_armor = 0
-			var/armor_count = 0
-			for(var/atype in suit.armor)
-				total_armor += suit.armor[atype]
-				armor_count++
-			if(armor_count > 0)
-				var/avg_armor = total_armor / armor_count
-				damage *= (100 - avg_armor) / 100
+		if(istype(suit) && suit.armor)
+			var/datum/armor/A = suit.armor
+			var/avg_armor = (A.red + A.white + A.black + A.pale) / 4
+			damage *= (100 - avg_armor) / 100
 
 	// Apply damage
 	// We already applied avg_coeff, so use forced=TRUE
