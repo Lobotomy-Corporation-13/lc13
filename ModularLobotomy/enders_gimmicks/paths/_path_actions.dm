@@ -55,3 +55,43 @@
 	if(!linked_path)
 		return
 	linked_path.ui_interact(owner)
+
+// ---- Recall Weapon Action ----
+
+/// HUD button for recalling the path weapon to the user's hands
+/datum/action/path_recall_weapon
+	name = "Recall Weapon"
+	desc = "Recall your path weapon to your hands."
+	icon_icon = 'ModularLobotomy/_Lobotomyicons/enders_sprites_32x32.dmi'
+	button_icon_state = "recall_weapon"
+	/// Reference to the owning path datum
+	var/datum/path/linked_path
+
+/datum/action/path_recall_weapon/Trigger()
+	. = ..()
+	if(!.)
+		return
+	if(!linked_path)
+		return
+	if(!ishuman(owner))
+		return
+	var/mob/living/carbon/human/H = owner
+
+	// Check if weapon still exists
+	if(linked_path.weapon && !QDELETED(linked_path.weapon))
+		// Already in our hands
+		if(linked_path.weapon.loc == H)
+			to_chat(H, span_warning("Your path weapon is already in your hands."))
+			return
+		// Teleport it back
+		linked_path.weapon.forceMove(H)
+		H.put_in_hands(linked_path.weapon)
+		to_chat(H, span_nicegreen("Your path weapon materializes in your hands!"))
+	else
+		// Weapon was deleted — create a new one
+		linked_path.weapon = new linked_path.path_weapon_type()
+		linked_path.weapon.linked_path = linked_path
+		H.put_in_hands(linked_path.weapon)
+		to_chat(H, span_nicegreen("A new path weapon manifests in your hands!"))
+
+	playsound(get_turf(H), 'sound/weapons/saberon.ogg', 40, TRUE)

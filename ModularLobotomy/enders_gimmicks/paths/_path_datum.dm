@@ -15,6 +15,12 @@
 	var/element_type = PATH_ELEMENT_PHYSICAL
 	/// RES PEN % for this path's element (from buffs/abilities)
 	var/res_pen = 0
+	/// External ATK bonus % (from Harmony Benediction, etc.)
+	var/external_atk_bonus = 0
+	/// External DEF bonus % (from Preservation ally DR, etc.)
+	var/external_def_bonus = 0
+	/// External DMG multiplier (from Harmony Ultimate, etc.) — 1.0 = no bonus
+	var/external_dmg_mult = 1
 
 	// --- Resources ---
 	var/energy = 0
@@ -73,6 +79,7 @@
 	var/datum/action/path_ultimate/ultimate_action_button
 	var/datum/action/path_screen/screen_action_button
 	var/datum/action/cooldown/path_designate_ally/ally_action_button
+	var/datum/action/path_recall_weapon/recall_action_button
 
 /datum/path/New()
 	InitNodes()
@@ -119,6 +126,10 @@
 	ally_action_button = new()
 	ally_action_button.linked_path = src
 	ally_action_button.Grant(owner)
+
+	recall_action_button = new()
+	recall_action_button.linked_path = src
+	recall_action_button.Grant(owner)
 
 	// Mark as path holder — armor gives no protection, but can be worn cosmetically
 	ADD_TRAIT(owner, TRAIT_NO_EGO_ARMOR, "path")
@@ -177,6 +188,9 @@
 	if(ally_action_button)
 		ally_action_button.Remove(owner)
 		QDEL_NULL(ally_action_button)
+	if(recall_action_button)
+		recall_action_button.Remove(owner)
+		QDEL_NULL(recall_action_button)
 
 	// Remove weapon
 	if(weapon)
@@ -313,7 +327,15 @@
 		else
 			flat_bonus += node.stat_bonuses[stat_name]
 
-	return base_val * (1 + percent_bonus / 100) + flat_bonus
+	var/result = base_val * (1 + percent_bonus / 100) + flat_bonus
+
+	// External buffs (from Harmony Benediction, Preservation DR, etc.)
+	if(stat_name == "ATK" && external_atk_bonus != 0)
+		result *= (1 + external_atk_bonus / 100)
+	if(stat_name == "DEF" && external_def_bonus != 0)
+		result *= (1 + external_def_bonus / 100)
+
+	return result
 
 /// Recalculates path_stats from stat_table based on level/phase
 /datum/path/proc/RecalculateStats()
@@ -598,6 +620,10 @@
 	if(!target || QDELETED(target))
 		return 0
 	var/damage = amount
+
+	// External DMG multiplier (from Harmony Ultimate, etc.)
+	if(external_dmg_mult != 1)
+		damage *= external_dmg_mult
 
 	// Elemental DMG bonus (e.g. "Wind DMG", "Fire DMG")
 	var/elem_stat = "[element_type] DMG"

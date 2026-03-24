@@ -152,6 +152,8 @@
 			for(var/mob/living/L in CT)
 				if(L == user || L.stat == DEAD)
 					continue
+				if(IsPathAlly(user, L))
+					continue
 				target = L
 				break
 			if(target)
@@ -274,6 +276,8 @@
 			for(var/mob/living/L in CT)
 				if(L == user || L.stat == DEAD)
 					continue
+				if(IsPathAlly(user, L))
+					continue
 				target = L
 				break
 			if(target)
@@ -391,12 +395,26 @@
 	return data
 
 /datum/path_ability/passive/hunt/Apply(mob/living/user)
-	// Passive triggers when allies use supportive abilities
-	// For now, register on the ally signal system
-	return
+	RegisterSignal(user, COMSIG_MOB_PATH_ALLY_BUFFED, PROC_REF(OnAllyBuff))
 
 /datum/path_ability/passive/hunt/Unapply(mob/living/user)
-	return
+	UnregisterSignal(user, COMSIG_MOB_PATH_ALLY_BUFFED)
+
+/// Signal handler: when an ally path user buffs us
+/datum/path_ability/passive/hunt/proc/OnAllyBuff(datum/source, datum/path/source_path, buff_type)
+	SIGNAL_HANDLER
+	if(!parent_path)
+		return
+	var/datum/path/hunt/H = parent_path
+	if(!istype(H))
+		return
+	// 20s cooldown
+	if(world.time < H.passive_res_pen_cd)
+		return
+	H.passive_res_pen_cd = world.time + 20 SECONDS
+	H.passive_res_pen_active = TRUE
+	if(H.owner)
+		to_chat(H.owner, span_nicegreen("Superiority of Reach! Next attack gains Wind RES PEN!"))
 
 // ============================================================
 // Trace Nodes (Skill Tree)

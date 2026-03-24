@@ -153,6 +153,8 @@
 			continue
 		if(L.stat == DEAD)
 			continue
+		if(IsPathAlly(user, L))
+			continue
 		var/dmg = atk * multiplier
 		// +25% DMG to targets above 50% HP
 		if(L.health > L.maxHealth * 0.5)
@@ -259,6 +261,8 @@
 		if(L == user)
 			continue
 		if(L.stat == DEAD)
+			continue
+		if(IsPathAlly(user, L))
 			continue
 		var/dmg = atk * multiplier
 		if(has_icing && L.health <= L.maxHealth * 0.5)
@@ -410,6 +414,8 @@
 	// Deal damage to all in range 3
 	for(var/mob/living/L in range(3, user))
 		if(L == user || L.stat == DEAD)
+			continue
+		if(IsPathAlly(user, L))
 			continue
 		parent_path.deal_path_damage(L, per_tick_dmg)
 	playsound(get_turf(user), 'sound/weapons/bladeslice.ogg', 30, TRUE)

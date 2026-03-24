@@ -33,6 +33,20 @@ GLOBAL_LIST_EMPTY(path_ally_lists)
 	var/mob/living/carbon/human/H = owner
 	var/list/allies = GetAllyList(H)
 
+	// Show current allies
+	if(length(allies))
+		var/list/ally_names = list()
+		for(var/mob/living/ally in allies)
+			if(QDELETED(ally))
+				continue
+			ally_names += ally.name
+		if(length(ally_names))
+			to_chat(H, span_notice("<b>Current allies:</b> [ally_names.Join(", ")]"))
+		else
+			to_chat(H, span_notice("<b>Current allies:</b> None"))
+	else
+		to_chat(H, span_notice("<b>Current allies:</b> None"))
+
 	// Build list of nearby living humans
 	var/list/nearby = list()
 	for(var/mob/living/carbon/human/L in view(7, get_turf(H)))

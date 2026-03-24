@@ -122,50 +122,90 @@
 	if(!parent_path)
 		return
 
-	var/atk = parent_path.GetStat("ATK")
-	var/main_mult = main_scaling[level] / 100
-	var/adj_mult = adj_scaling[level] / 100
-
-	// Find primary target in front (1 tile)
-	var/mob/living/primary
-	var/turf/T = get_step(user, user.dir)
-	if(T)
-		for(var/mob/living/L in T)
-			if(L == user || L.stat == DEAD)
-				continue
-			primary = L
-			break
-
-	if(!primary)
-		to_chat(user, span_warning("Blazing Welcome - no enemy in front!"))
+	// Fire projectile in the direction the user is facing
+	var/turf/start_turf = get_turf(user)
+	var/turf/target_turf = get_ranged_target_turf(start_turf, user.dir, 7)
+	if(!target_turf)
+		to_chat(user, span_warning("Blazing Welcome - cannot fire!"))
 		return
 
-	// Deal main damage to primary
-	var/main_dmg = atk * main_mult
-	parent_path.deal_path_damage(primary, main_dmg)
+	var/obj/projectile/ego_bullet/nihility_burst/P = new(start_turf)
+	P.firer = user
+	P.fired_from = user
+	P.source_path = parent_path
+	P.main_mult = main_scaling[level] / 100
+	P.adj_mult = adj_scaling[level] / 100
+	P.burn_mult = burn_scaling[level] / 100
+	P.preparePixelProjectile(target_turf, start_turf)
+	P.fire()
 
-	// Apply Burn to primary
-	var/burn_atk = atk * (burn_scaling[level] / 100)
-	ApplyNihilityBurn(primary, burn_atk, parent_path)
+	playsound(start_turf, 'sound/weapons/resonator_blast.ogg', 50, TRUE)
+	user.visible_message(span_danger("[user] hurls a blazing projectile!"))
 
-	// Deal adjacent damage + apply Burn
-	var/hit_count = 1
-	for(var/mob/living/L in range(1, primary))
-		if(L == primary || L == user || L.stat == DEAD)
+// ============================================================
+// Blazing Welcome Projectile
+// ============================================================
+
+/obj/projectile/ego_bullet/nihility_burst
+	name = "blazing welcome"
+	icon = 'icons/obj/grenade.dmi'
+	icon_state = "pipebomb_gift"
+	damage = 0
+	nodamage = TRUE
+	speed = 1
+	range = 7
+
+	/// Reference to the firer's path datum
+	var/datum/path/source_path
+	/// Main target ATK% multiplier
+	var/main_mult = 0.6
+	/// Adjacent target ATK% multiplier
+	var/adj_mult = 0.2
+	/// Burn DoT ATK% multiplier
+	var/burn_mult = 0.839
+
+/obj/projectile/ego_bullet/nihility_burst/on_hit(atom/target, blocked = FALSE)
+	..()
+	if(!source_path || QDELETED(source_path))
+		return BULLET_ACT_HIT
+
+	var/atk = source_path.GetStat("ATK")
+	var/turf/impact_turf = get_turf(target)
+	if(!impact_turf)
+		return BULLET_ACT_HIT
+
+	// Deal main damage to the direct hit target
+	if(isliving(target))
+		var/mob/living/primary = target
+		if(primary.stat != DEAD && !IsPathAlly(firer, primary))
+			source_path.deal_path_damage(primary, atk * main_mult)
+			ApplyNihilityBurn(primary, atk * burn_mult, source_path)
+
+	// AoE detonation — deal adjacent damage + Burn to nearby targets
+	var/hit_count = 0
+	for(var/mob/living/L in range(1, impact_turf))
+		if(L == firer || L == target || L.stat == DEAD)
 			continue
-		parent_path.deal_path_damage(L, atk * adj_mult)
-		ApplyNihilityBurn(L, burn_atk, parent_path)
+		if(IsPathAlly(firer, L))
+			continue
+		source_path.deal_path_damage(L, atk * adj_mult)
+		ApplyNihilityBurn(L, atk * burn_mult, source_path)
 		hit_count++
 
-	// VFX
-	for(var/turf/aoe_turf in range(1, primary))
-		if(prob(50))
-			new /obj/effect/temp_visual/smash_effect(aoe_turf)
-	playsound(get_turf(primary), 'sound/weapons/smash.ogg', 50, TRUE)
-	for(var/mob/living/M in view(7, user))
+	// VFX — fire explosion style detonation
+	playsound(impact_turf, 'sound/abnormalities/scorchedgirl/explosion.ogg', 60, FALSE, 4)
+	for(var/turf/aoe_turf in range(1, impact_turf))
+		new /obj/effect/temp_visual/fire(aoe_turf)
+	for(var/mob/living/L2 in range(1, impact_turf))
+		if(L2.stat != DEAD)
+			playsound(get_turf(L2), 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
+	for(var/mob/living/M in view(7, impact_turf))
 		if(M.client)
-			shake_camera(M, 2, 1)
-	user.visible_message(span_danger("[user] unleashes Blazing Welcome, hitting [hit_count] target\s!"))
+			shake_camera(M, 3, 2)
+	if(firer)
+		firer.visible_message(span_danger("Blazing Welcome detonates, hitting [hit_count + (isliving(target) ? 1 : 0)] target\s!"))
+
+	return BULLET_ACT_HIT
 
 // ============================================================
 // Ultimate: Watch This Showstopper
@@ -198,29 +238,59 @@
 	var/mult = aoe_scaling[level] / 100
 	var/detonate_pct = detonate_scaling[level] / 100
 
+	// Pre-explosion fire buildup VFX
+	var/turf/center = get_turf(user)
+	playsound(center, 'sound/abnormalities/scorchedgirl/pre_ability.ogg', 50, FALSE, 2)
+	var/obj/effect/temp_visual/human_fire/F = new(center)
+	F.alpha = 0
+	F.dir = user.dir
+	animate(F, alpha = 255, time = 5)
+
+	// Immobilize during buildup
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "nihility_ult")
+
+	// Delayed explosion after 0.5s
+	var/datum/path/path_ref = parent_path
+	addtimer(CALLBACK(src, PROC_REF(UltExplosion), user, center, atk, mult, detonate_pct, path_ref), 5)
+
+/// Performs the fire explosion AoE for the Ultimate
+/datum/path_ability/ultimate/nihility/proc/UltExplosion(mob/living/user, turf/center, atk, mult, detonate_pct, datum/path/path_ref)
+	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "nihility_ult")
+
+	if(QDELETED(user))
+		return
+
+	// Fire explosion sound
+	playsound(center, 'sound/abnormalities/scorchedgirl/explosion.ogg', 125, FALSE, 8)
+
+	// Expanding fire ring VFX + damage
 	var/hit_count = 0
-	for(var/mob/living/L in range(3, user))
-		if(L == user || L.stat == DEAD)
-			continue
-		// AoE damage
-		parent_path.deal_path_damage(L, atk * mult)
-		hit_count++
-		// Detonate existing Burns
-		var/datum/status_effect/nihility_burn/burn = L.has_status_effect(/datum/status_effect/nihility_burn)
-		if(burn)
-			var/detonate_dmg = burn.burn_damage * detonate_pct
-			parent_path.deal_path_damage(L, detonate_dmg, do_crit = FALSE)
+	for(var/i in 1 to 3)
+		for(var/turf/TT in spiral_range_turfs(i, center) - spiral_range_turfs(i - 1, center))
+			new /obj/effect/temp_visual/fire(TT)
+			for(var/mob/living/L in TT)
+				if(L == user || L.stat == DEAD)
+					continue
+				if(IsPathAlly(user, L))
+					continue
+				// AoE damage
+				path_ref.deal_path_damage(L, atk * mult)
+				hit_count++
+				playsound(get_turf(L), 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
+				// Detonate existing Burns
+				var/datum/status_effect/nihility_burn/burn = L.has_status_effect(/datum/status_effect/nihility_burn)
+				if(burn)
+					var/detonate_dmg = burn.burn_damage * detonate_pct
+					path_ref.deal_path_damage(L, detonate_dmg, do_crit = FALSE)
+		sleep(1)
 
 	// Grant 5 energy
-	parent_path.GainEnergy(5)
+	path_ref.GainEnergy(5)
 
-	// VFX
-	for(var/turf/aoe_turf in range(3, user))
-		new /obj/effect/temp_visual/smash_effect(aoe_turf)
-	playsound(get_turf(user), 'sound/weapons/saberon.ogg', 70, TRUE, 5)
+	// Camera shake
 	for(var/mob/living/M in view(7, user))
 		if(M.client)
-			shake_camera(M, 4, 3)
+			shake_camera(M, 5, 4)
 	if(hit_count > 0)
 		user.visible_message(span_danger("[user] unleashes Watch This Showstopper, hitting [hit_count] target\s!"))
 	else

@@ -66,3 +66,10 @@
 #define COMSIG_PATH_ENERGY_CHANGED "path_energy_changed"
 /// Sent when path action points change. Args: (new_ap, max_ap)
 #define COMSIG_PATH_AP_CHANGED     "path_ap_changed"
+/// Sent on the TARGET mob when an ally path user buffs them. Args: (datum/path/source_path, buff_type)
+#define COMSIG_MOB_PATH_ALLY_BUFFED "mob_path_ally_buffed"
+/// Buff type strings for COMSIG_MOB_PATH_ALLY_BUFFED
+#define PATH_BUFF_BENEDICTION "benediction"
+#define PATH_BUFF_DMG_UP      "dmg_buff"
+#define PATH_BUFF_HEAL        "heal"
+#define PATH_BUFF_SHIELD      "shield"

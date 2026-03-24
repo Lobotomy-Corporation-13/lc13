@@ -571,6 +571,9 @@ GLOBAL_VAR(path_realm_active)
 		"The Hunt" = /datum/path/hunt,
 		"Erudition" = /datum/path/erudition,
 		"Nihility" = /datum/path/nihility,
+		"Abundance" = /datum/path/abundance,
+		"Harmony" = /datum/path/harmony,
+		"Preservation" = /datum/path/preservation,
 	)
 	var/path_type = path_map[determined_path]
 	if(path_type)

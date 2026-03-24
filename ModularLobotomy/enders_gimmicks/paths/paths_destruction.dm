@@ -185,6 +185,8 @@
 				continue
 			if(L.stat == DEAD)
 				continue
+			if(IsPathAlly(user, L))
+				continue
 			parent_path.deal_path_damage(L, adj_damage)
 			hit_count++
 	else
@@ -193,6 +195,8 @@
 			if(L == user)
 				continue
 			if(L.stat == DEAD)
+				continue
+			if(IsPathAlly(user, L))
 				continue
 			var/dmg = main_damage
 			// First target hit is "primary" for Fighting Will
