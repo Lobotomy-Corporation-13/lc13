@@ -20,6 +20,9 @@
 		"The Hunt" = /datum/path/hunt,
 		"Erudition" = /datum/path/erudition,
 		"Nihility" = /datum/path/nihility,
+		"Harmony" = /datum/path/harmony,
+		"Preservation" = /datum/path/preservation,
+		"Abundance" = /datum/path/abundance,
 	)
 
 /obj/item/path_crystal/attack_self(mob/living/carbon/human/user)

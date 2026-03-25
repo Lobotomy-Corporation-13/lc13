@@ -52,6 +52,18 @@
 	// DEF reduction percentage for display
 	var/def_val = GetStat("DEF")
 	stats["DMG Reduction"] = round((def_val / (def_val + 300)) * 100, 0.1)
+	// Unique stats — only include if non-zero
+	var/ehr = GetStat("Effect Hit Rate")
+	if(ehr)
+		stats["Effect Hit Rate"] = ehr
+	var/heal = GetStat("Healing Boost")
+	if(heal)
+		stats["Healing Boost"] = heal
+	// Elemental DMG bonus
+	var/elem_stat = "[element_type] DMG"
+	var/elem_val = GetStat(elem_stat)
+	if(elem_val)
+		stats[elem_stat] = elem_val
 	data["stats"] = stats
 
 	// Abilities (4 entries)
@@ -134,7 +146,7 @@
 			"quantum DMG" = "atk",
 			"imaginary DMG" = "atk",
 			"Effect Hit Rate" = "effect_hit",
-			"Healing Boost" = "hp"
+			"Healing Boost" = "heal_rate"
 		)
 		for(var/sname in stat_icons)
 			var/sstate = stat_icons[sname]

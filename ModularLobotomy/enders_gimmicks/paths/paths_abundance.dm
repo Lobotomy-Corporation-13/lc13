@@ -10,6 +10,8 @@
 	name = "Abundance"
 	desc = "Heals allies and restores HP to the team."
 	icon_state = "destruction"
+	path_screen_icon = "abundance_path"
+	path_ultimate_icon = "gift_rebirth"
 	element_type = PATH_ELEMENT_PHYSICAL
 	max_energy = 90
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/abundance
@@ -56,7 +58,7 @@
 /datum/path_ability/basic/abundance
 	name = "Behind the Kindness"
 	desc = "Deals Physical DMG to the target hit."
-	icon_state = "farewell_hit"
+	icon_state = "behind_kindness"
 	energy_gain = 20
 	max_level = 7
 	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
@@ -91,7 +93,7 @@
 /datum/path_ability/burst/abundance
 	name = "Love, Heal, and Choose"
 	desc = "Heals nearest ally. Instant heal + HoT for 20s."
-	icon_state = "rip_home_run"
+	icon_state = "love_heal_choose"
 	energy_gain = 30
 	ap_cost = 1
 	max_level = 12
@@ -198,7 +200,7 @@
 /datum/path_ability/ultimate/abundance
 	name = "Gift of Rebirth"
 	desc = "Heals all designated allies within 7 tiles."
-	icon_state = "stardust_ace"
+	icon_state = "gift_rebirth"
 	max_level = 12
 	/// Heal: % of USER's Max HP
 	var/list/heal_hp_pct = list(9.2, 9.78, 10.35, 10.93, 11.5, 11.96, 12.42, 12.88, 13.34, 13.8, 14.26, 14.72)
@@ -220,17 +222,68 @@
 		return
 	..()
 
-	var/max_hp = parent_path.GetStat("HP")
+	// Pick a random plush type and spawn it
+	var/list/plush_types = subtypesof(/obj/item/toy/plush)
+	var/plush_type = pick(plush_types)
+	var/turf/start_turf = get_turf(user)
+
+	// Create the plush visual
+	var/obj/item/plush_visual = new plush_type(start_turf)
+	plush_visual.anchored = TRUE
+	plush_visual.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+
+	// Shadow on the ground
+	new /obj/effect/temp_visual/erudition_shadow(start_turf)
+
+	// Animate plush flying up
+	playsound(start_turf, 'sound/weapons/resonator_blast.ogg', 60, TRUE)
+	animate(plush_visual, pixel_y = plush_visual.pixel_y + 64, alpha = 200, time = 5)
+
+	// After 0.5s — plush at peak, start falling
+	var/datum/path/path_ref = parent_path
+	addtimer(CALLBACK(src, PROC_REF(UltPlushFall), user, plush_visual, start_turf, path_ref), 5)
+
+/// Plush starts falling, then explodes with healing
+/datum/path_ability/ultimate/abundance/proc/UltPlushFall(mob/living/user, obj/item/plush_visual, turf/start_turf, datum/path/path_ref)
+	if(QDELETED(plush_visual))
+		UltHeal(user, start_turf, path_ref)
+		return
+	// Animate falling back down
+	animate(plush_visual, pixel_y = initial(plush_visual.pixel_y), alpha = 255, time = 3)
+	// After 0.3s — explode and heal
+	addtimer(CALLBACK(src, PROC_REF(UltPlushExplode), user, plush_visual, start_turf, path_ref), 3)
+
+/// Plush explodes with area_heal VFX, then heals everyone
+/datum/path_ability/ultimate/abundance/proc/UltPlushExplode(mob/living/user, obj/item/plush_visual, turf/start_turf, datum/path/path_ref)
+	// Delete the plush
+	if(!QDELETED(plush_visual))
+		qdel(plush_visual)
+	// Area heal VFX on the landing spot
+	new /obj/effect/temp_visual/area_heal(start_turf)
+	playsound(start_turf, 'sound/effects/podwoosh.ogg', 60, TRUE)
+	for(var/mob/living/M in view(7, start_turf))
+		if(M.client)
+			shake_camera(M, 2, 1)
+	// Do the actual healing
+	UltHeal(user, start_turf, path_ref)
+
+/// Performs the actual healing from Gift of Rebirth
+/datum/path_ability/ultimate/abundance/proc/UltHeal(mob/living/user, turf/start_turf, datum/path/path_ref)
+	if(!path_ref || QDELETED(path_ref))
+		return
+	var/max_hp = path_ref.GetStat("HP")
 	var/heal_amount = max_hp * heal_hp_pct[level] / 100 + heal_flat[level]
 
-	var/datum/path/abundance/A = parent_path
+	var/datum/path/abundance/A = path_ref
 
 	// Heal self
-	var/self_heal = heal_amount
-	if(istype(A))
-		self_heal *= A.GetHealingMultiplier(user)
-	user.adjustBruteLoss(-self_heal, forced = TRUE)
-	user.adjustFireLoss(-self_heal * 0.5, forced = TRUE)
+	if(!QDELETED(user))
+		var/self_heal = heal_amount
+		if(istype(A))
+			self_heal *= A.GetHealingMultiplier(user)
+		user.adjustBruteLoss(-self_heal, forced = TRUE)
+		user.adjustFireLoss(-self_heal * 0.5, forced = TRUE)
+		new /obj/effect/temp_visual/heal_effect(get_turf(user))
 
 	// Heal all designated allies within 7 tiles
 	var/heal_count = 1
@@ -238,28 +291,23 @@
 	for(var/mob/living/ally in allies)
 		if(QDELETED(ally) || ally.stat == DEAD)
 			continue
-		if(get_dist(user, ally) > 7)
+		if(get_dist(start_turf, ally) > 7)
 			continue
 		var/ally_heal = heal_amount
 		if(istype(A))
 			ally_heal *= A.GetHealingMultiplier(ally)
 		ally.adjustBruteLoss(-ally_heal, forced = TRUE)
 		ally.adjustFireLoss(-ally_heal * 0.5, forced = TRUE)
-		SEND_SIGNAL(ally, COMSIG_MOB_PATH_ALLY_BUFFED, parent_path, PATH_BUFF_HEAL)
+		SEND_SIGNAL(ally, COMSIG_MOB_PATH_ALLY_BUFFED, path_ref, PATH_BUFF_HEAL)
 		new /obj/effect/temp_visual/heal_effect(get_turf(ally))
 		to_chat(ally, span_nicegreen("[user] heals you with Gift of Rebirth!"))
 		heal_count++
 
 	// Grant 5 energy
-	parent_path.GainEnergy(5)
+	path_ref.GainEnergy(5)
 
-	// VFX
-	new /obj/effect/temp_visual/heal_effect(get_turf(user))
-	playsound(get_turf(user), 'sound/weapons/resonator_blast.ogg', 60, TRUE)
-	for(var/mob/living/M in view(7, user))
-		if(M.client)
-			shake_camera(M, 2, 1)
-	user.visible_message(span_nicegreen("[user] unleashes Gift of Rebirth, healing [heal_count] target\s!"))
+	if(!QDELETED(user))
+		user.visible_message(span_nicegreen("[user] unleashes Gift of Rebirth, healing [heal_count] target\s!"))
 
 // ============================================================
 // Passive: Innervation
@@ -272,7 +320,7 @@
 /datum/path_ability/passive/abundance
 	name = "Innervation"
 	desc = "When healing an ally at or below 30% HP, healing is increased."
-	icon_state = "perfect_pickoff"
+	icon_state = "innervation"
 	max_level = 12
 	/// Healing boost % when target is at or below 30% HP
 	var/list/heal_boost = list(25, 27.5, 30, 32.5, 35, 37.5, 40.63, 43.75, 46.88, 50, 52.5, 55)
@@ -411,11 +459,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "hp1_bottom")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (no gate) ---
-	N = new /datum/path_node("hp1_bottom", "HP Boost", "HP increases by 4%.")
+	N = new /datum/path_node("stat_bottom", "HP Boost", "HP increases by 4%.")
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -430,38 +478,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("heal1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("heal1", "Healing Boost", "Healing Boost increases by 4%.")
+	N = new /datum/path_node("stat_c1", "Healing Boost", "Healing Boost increases by 4%.")
 	N.stat_bonuses = list("Healing Boost" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("hp2", "def1")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("hp2", "HP Boost", "HP increases by 4%.")
+	N = new /datum/path_node("stat_c2", "HP Boost", "HP increases by 4%.")
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("heal1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("def1", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_c3", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("heal1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Right branch (A4 gate) ---
@@ -471,39 +519,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("hp3")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp3", "HP Boost", "HP increases by 6%.")
+	N = new /datum/path_node("stat_r1", "HP Boost", "HP increases by 6%.")
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("heal2")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("heal2", "Healing Boost", "Healing Boost increases by 6%.")
+	N = new /datum/path_node("stat_r2", "Healing Boost", "Healing Boost increases by 6%.")
 	N.stat_bonuses = list("Healing Boost" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("def2")
-	N.prerequisites = list("hp3")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("def2", "DEF Boost", "DEF increases by 7.5%.")
+	N = new /datum/path_node("stat_r3", "DEF Boost", "DEF increases by 7.5%.")
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("heal2")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 	// --- Left branch (A6 gate) ---
@@ -513,39 +561,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("heal3")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("heal3", "Healing Boost", "Healing Boost increases by 6%.")
+	N = new /datum/path_node("stat_l1", "Healing Boost", "Healing Boost increases by 6%.")
 	N.stat_bonuses = list("Healing Boost" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("hp4")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("hp4", "HP Boost", "HP increases by 6%.")
+	N = new /datum/path_node("stat_l2", "HP Boost", "HP increases by 6%.")
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("hp5")
-	N.prerequisites = list("heal3")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("hp5", "HP Boost", "HP increases by 8%.")
+	N = new /datum/path_node("stat_l3", "HP Boost", "HP increases by 8%.")
 	N.stat_bonuses = list("HP" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("hp4")
+	N.prerequisites = list("stat_l2")
 	nodes += N
 
 // ============================================================

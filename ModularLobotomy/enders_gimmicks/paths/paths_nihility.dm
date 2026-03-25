@@ -10,6 +10,8 @@
 	name = "Nihility"
 	desc = "Applies debuffs to enemies to reduce their combat capacities."
 	icon_state = "destruction"
+	path_screen_icon = "nihility_path"
+	path_ultimate_icon = "showstopper"
 	element_type = PATH_ELEMENT_FIRE
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/nihility
@@ -53,7 +55,7 @@
 /datum/path_ability/basic/nihility
 	name = "Standing Ovation"
 	desc = "Deals Fire DMG to the target hit."
-	icon_state = "farewell_hit"
+	icon_state = "standing_ovation"
 	energy_gain = 20
 	max_level = 7
 	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
@@ -99,7 +101,7 @@
 /datum/path_ability/burst/nihility
 	name = "Blazing Welcome"
 	desc = "Deals Fire DMG to target + 1-tile AoE. Applies Burn."
-	icon_state = "rip_home_run"
+	icon_state = "blazing_welcome"
 	energy_gain = 30
 	ap_cost = 1
 	max_level = 12
@@ -214,7 +216,7 @@
 /datum/path_ability/ultimate/nihility
 	name = "Watch This Showstopper"
 	desc = "3-tile AoE Fire DMG. Detonates Burns on hit enemies."
-	icon_state = "stardust_ace"
+	icon_state = "showstopper"
 	max_level = 12
 	var/list/aoe_scaling = list(72, 76.8, 81.6, 86.4, 91.2, 96, 102, 108, 114, 120, 124.8, 129.6)
 	var/list/detonate_scaling = list(72, 74, 76, 78, 80, 82, 84.5, 87, 89.5, 92, 94, 96)
@@ -303,7 +305,7 @@
 /datum/path_ability/passive/nihility
 	name = "PatrAeon Benefits"
 	desc = "When Burn ticks, apply Firekiss to the target. Firekiss increases DMG taken."
-	icon_state = "perfect_pickoff"
+	icon_state = "patraeon_benefits"
 	max_level = 12
 	var/list/firekiss_scaling = list(4, 4.3, 4.6, 4.9, 5.2, 5.5, 5.875, 6.25, 6.625, 7, 7.3, 7.6)
 
@@ -489,11 +491,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "atk1")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (no gate) ---
-	N = new /datum/path_node("atk1", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
+	N = new /datum/path_node("stat_bottom", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
 	N.stat_bonuses = list("fire DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -508,38 +510,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("def1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("def1", "Effect Hit Rate Boost", "Effect Hit Rate increases by 5.3%.")
+	N = new /datum/path_node("stat_c1", "Effect Hit Rate Boost", "Effect Hit Rate increases by 5.3%.")
 	N.stat_bonuses = list("Effect Hit Rate" = 5.3)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("hp1", "atk2")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("hp1", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
+	N = new /datum/path_node("stat_c2", "Fire DMG Boost", "Fire DMG increases by 3.2%.")
 	N.stat_bonuses = list("fire DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 4%.")
+	N = new /datum/path_node("stat_c3", "Effect Hit Rate Boost", "Effect Hit Rate increases by 4%.")
 	N.stat_bonuses = list("Effect Hit Rate" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Right branch (A4 gate) ---
@@ -549,39 +551,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("hp2")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp2", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
+	N = new /datum/path_node("stat_r1", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
 	N.stat_bonuses = list("fire DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("atk4")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("atk4", "Effect Hit Rate Boost", "Effect Hit Rate increases by 8%.")
+	N = new /datum/path_node("stat_r2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 8%.")
 	N.stat_bonuses = list("Effect Hit Rate" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("hp3")
-	N.prerequisites = list("hp2")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp3", "Effect Hit Rate Boost", "Effect Hit Rate increases by 10.7%.")
+	N = new /datum/path_node("stat_r3", "Effect Hit Rate Boost", "Effect Hit Rate increases by 10.7%.")
 	N.stat_bonuses = list("Effect Hit Rate" = 10.7)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("atk4")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 	// --- Left branch (A6 gate) ---
@@ -591,39 +593,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("atk3")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
+	N = new /datum/path_node("stat_l1", "Fire DMG Boost", "Fire DMG increases by 4.8%.")
 	N.stat_bonuses = list("fire DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("def2")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("def2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 6%.")
+	N = new /datum/path_node("stat_l2", "Effect Hit Rate Boost", "Effect Hit Rate increases by 6%.")
 	N.stat_bonuses = list("Effect Hit Rate" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("atk5")
-	N.prerequisites = list("atk3")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk5", "Fire DMG Boost", "Fire DMG increases by 6.4%.")
+	N = new /datum/path_node("stat_l3", "Fire DMG Boost", "Fire DMG increases by 6.4%.")
 	N.stat_bonuses = list("fire DMG" = 6.4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("def2")
+	N.prerequisites = list("stat_l2")
 	nodes += N
 
 // ============================================================

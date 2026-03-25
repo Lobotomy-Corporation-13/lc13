@@ -39,7 +39,7 @@ const CORE_H = 44;
 //
 const NODE_POS = {
   // Bottom stat (below Passive)
-  'atk1': { x: CX, y: 490 },
+  'stat_bottom': { x: CX, y: 490 },
 
   // Core abilities (bottom row)
   'core_basic':
@@ -58,21 +58,21 @@ const NODE_POS = {
     { x: 478, y: 325 },
 
   // Left branch (up from bonus_a6)
-  'atk3': { x: 55, y: 248 },
-  'def2': { x: 48, y: 175 },
-  'atk5': { x: 68, y: 78 },
+  'stat_l1': { x: 55, y: 248 },
+  'stat_l2': { x: 48, y: 175 },
+  'stat_l3': { x: 68, y: 78 },
 
   // Center branch (up from bonus_a2)
   'bonus_a2':
     { x: CX, y: 195 },
-  'def1': { x: CX, y: 115 },
-  'hp1':  { x: 210, y: 40 },
-  'atk2': { x: 340, y: 40 },
+  'stat_c1': { x: CX, y: 115 },
+  'stat_c2': { x: 210, y: 40 },
+  'stat_c3': { x: 340, y: 40 },
 
   // Right branch (up from bonus_a4)
-  'hp2':  { x: 462, y: 248 },
-  'atk4': { x: 468, y: 175 },
-  'hp3':  { x: 478, y: 78 },
+  'stat_r1': { x: 462, y: 248 },
+  'stat_r2': { x: 468, y: 175 },
+  'stat_r3': { x: 478, y: 78 },
 };
 
 export const PathScreen = (props, context) => {
@@ -233,7 +233,8 @@ const DetailsTab = (props, context) => {
                       key={s} label={s}>
                       {stats[s] || 0}
                       {(s.includes('Rate')
-                        || s.includes('DMG'))
+                        || s.includes('DMG')
+                        || s.includes('Boost'))
                         ? '%' : ''}
                     </LabeledList.Item>
                   ))}

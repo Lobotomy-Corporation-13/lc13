@@ -10,6 +10,8 @@
 	name = "Preservation"
 	desc = "Possesses powerful defensive abilities to protect allies in various ways."
 	icon_state = "destruction"
+	path_screen_icon = "preservation_path"
+	path_ultimate_icon = "war_flaming_lance"
 	element_type = PATH_ELEMENT_FIRE
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/preservation
@@ -82,8 +84,6 @@
 		return
 	var/list/allies_in_range = GetPathAlliesInRange(owner, 5)
 	for(var/mob/living/ally in allies_in_range)
-		if(ally == owner)
-			continue
 		if(ally.stat == DEAD)
 			continue
 		// PvP scaling: reduce shield for non-path carbons
@@ -93,17 +93,16 @@
 			var/datum/component/path_holder/holder = AH.GetComponent(/datum/component/path_holder)
 			if(!holder || !holder.active_path)
 				ally_shield *= AH.maxHealth / max(owner.maxHealth, 1)
-		// Apply or refresh shield
+		// Apply or refresh shield — remove old and reapply to reset timer
 		var/datum/status_effect/preservation_shield/existing = ally.has_status_effect(/datum/status_effect/preservation_shield)
+		var/old_hp = 0
 		if(existing)
-			existing.shield_hp = max(existing.shield_hp, ally_shield)
-			existing.duration = 20 SECONDS
-			existing.update_shield_visual()
-		else
-			var/datum/status_effect/preservation_shield/S = ally.apply_status_effect(/datum/status_effect/preservation_shield)
-			if(S)
-				S.shield_hp = ally_shield
-				S.update_shield_visual()
+			old_hp = existing.shield_hp
+			qdel(existing)
+		var/datum/status_effect/preservation_shield/S = ally.apply_status_effect(/datum/status_effect/preservation_shield)
+		if(S)
+			S.shield_hp = max(old_hp, ally_shield)
+			S.update_shield_visual()
 		SEND_SIGNAL(ally, COMSIG_MOB_PATH_ALLY_BUFFED, src, PATH_BUFF_SHIELD)
 
 // ============================================================
@@ -118,7 +117,7 @@
 /datum/path_ability/basic/preservation
 	name = "Ice-Breaking Light"
 	desc = "Deals Fire DMG. At 4+ Magma Will, becomes an enhanced AoE."
-	icon_state = "farewell_hit"
+	icon_state = "ice_breaking_light"
 	energy_gain = 20
 	max_level = 7
 	/// Normal ATK% scaling
@@ -223,7 +222,7 @@
 /datum/path_ability/burst/preservation
 	name = "Ever-Burning Amber"
 	desc = "DMG Reduction + Taunt. Gains Magma Will."
-	icon_state = "rip_home_run"
+	icon_state = "ever_burning_amber"
 	energy_gain = 30
 	ap_cost = 1
 	max_level = 12
@@ -302,7 +301,7 @@
 /datum/path_ability/ultimate/preservation
 	name = "War-Flaming Lance"
 	desc = "Dash forward dealing ATK + DEF scaling, then explosions along the trail."
-	icon_state = "stardust_ace"
+	icon_state = "war_flaming_lance"
 	max_level = 12
 	/// ATK% scaling
 	var/list/atk_scaling = list(50, 55, 60, 65, 70, 75, 81.25, 87.5, 93.75, 100, 105, 110)
@@ -480,12 +479,14 @@
 /datum/path_ability/passive/preservation
 	name = "Magma Will & Shield"
 	desc = "Build Magma Will to enhance attacks. Shield allies on every action."
-	icon_state = "perfect_pickoff"
+	icon_state = "architects_treasure"
 	max_level = 12
 	/// Shield: % of USER's DEF
 	var/list/shield_def_pct = list(4, 4.2, 4.4, 4.6, 4.8, 5, 5.25, 5.5, 5.75, 6, 6.2, 6.4)
 	/// Shield: flat amount
 	var/list/shield_flat = list(20, 26, 32, 38, 44, 50, 57.5, 65, 72.5, 80, 84.5, 89)
+	/// Cooldown for gaining Magma Will from damage
+	var/damage_mw_cooldown = 0
 
 /datum/path_ability/passive/preservation/GetScalingData()
 	var/list/data = list()
@@ -508,11 +509,14 @@
 /datum/path_ability/passive/preservation/Unapply(mob/living/user)
 	UnregisterSignal(user, COMSIG_MOB_APPLY_DAMGE)
 
-/// Signal handler: gain Magma Will when hit
+/// Signal handler: gain Magma Will when hit (1.5s cooldown)
 /datum/path_ability/passive/preservation/proc/OnTakeDamage(datum/source)
 	SIGNAL_HANDLER
 	if(!parent_path)
 		return
+	if(world.time < damage_mw_cooldown)
+		return
+	damage_mw_cooldown = world.time + 1.5 SECONDS
 	var/datum/path/preservation/P = parent_path
 	if(istype(P))
 		P.GainMagmaWill(1)
@@ -761,11 +765,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "def1_bottom")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (no gate) ---
-	N = new /datum/path_node("def1_bottom", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_bottom", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -780,38 +784,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("atk1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("atk1", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("stat_c1", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("def2", "hp1")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("def2", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_c2", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("atk1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("hp1", "HP Boost", "HP increases by 4%.")
+	N = new /datum/path_node("stat_c3", "HP Boost", "HP increases by 4%.")
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("atk1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Right branch (A4 gate) ---
@@ -821,39 +825,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("def3")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("def3", "DEF Boost", "DEF increases by 7.5%.")
+	N = new /datum/path_node("stat_r1", "DEF Boost", "DEF increases by 7.5%.")
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("atk2")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("stat_r2", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("atk3")
-	N.prerequisites = list("def3")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "ATK Boost", "ATK increases by 8%.")
+	N = new /datum/path_node("stat_r3", "ATK Boost", "ATK increases by 8%.")
 	N.stat_bonuses = list("ATK" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("atk2")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 	// --- Left branch (A6 gate) ---
@@ -863,39 +867,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("hp2")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("hp2", "HP Boost", "HP increases by 6%.")
+	N = new /datum/path_node("stat_l1", "HP Boost", "HP increases by 6%.")
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("def4")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("def4", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_l2", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("def5")
-	N.prerequisites = list("hp2")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("def5", "DEF Boost", "DEF increases by 10%.")
+	N = new /datum/path_node("stat_l3", "DEF Boost", "DEF increases by 10%.")
 	N.stat_bonuses = list("DEF" = 10)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("def4")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
 // ============================================================

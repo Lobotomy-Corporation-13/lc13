@@ -9,6 +9,10 @@
 	var/name = "Path"
 	var/desc = ""
 	var/icon_state = ""
+	/// Icon state for the path screen action button
+	var/path_screen_icon = "path_icon"
+	/// Icon state for the ultimate action button
+	var/path_ultimate_icon = "stardust_ace"
 	var/mob/living/carbon/human/owner
 
 	/// Elemental typing (set by subtypes)
@@ -117,10 +121,12 @@
 	// Create and grant action buttons
 	ultimate_action_button = new()
 	ultimate_action_button.linked_path = src
+	ultimate_action_button.button_icon_state = path_ultimate_icon
 	ultimate_action_button.Grant(owner)
 
 	screen_action_button = new()
 	screen_action_button.linked_path = src
+	screen_action_button.button_icon_state = path_screen_icon
 	screen_action_button.Grant(owner)
 
 	ally_action_button = new()

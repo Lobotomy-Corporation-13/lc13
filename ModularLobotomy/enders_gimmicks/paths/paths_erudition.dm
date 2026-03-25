@@ -10,6 +10,8 @@
 	name = "Erudition"
 	desc = "Deals remarkable amounts of multi-target damage. The main damage dealer against groups of enemies."
 	icon_state = "destruction"
+	path_screen_icon = "erudition_path"
+	path_ultimate_icon = "it's_magic"
 	element_type = PATH_ELEMENT_ICE
 	max_energy = 110
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/erudition
@@ -61,7 +63,7 @@
 /datum/path_ability/basic/erudition
 	name = "What Are You Looking At?"
 	desc = "Deals Ice DMG. +40% ATK bonus vs targets at or below 50% HP."
-	icon_state = "farewell_hit"
+	icon_state = "looking_at"
 	energy_gain = 20
 	max_level = 7
 	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
@@ -110,7 +112,7 @@
 /datum/path_ability/burst/erudition
 	name = "One-Time Offer"
 	desc = "Deals Ice DMG to all enemies within 3 tiles. +25% vs targets above 50% HP."
-	icon_state = "rip_home_run"
+	icon_state = "one_time_offer"
 	energy_gain = 30
 	ap_cost = 1
 	max_level = 12
@@ -187,7 +189,7 @@
 /datum/path_ability/ultimate/erudition
 	name = "It's Magic, I Added Some Magic"
 	desc = "Deals Ice DMG to all enemies within 5 tiles. Grants 25% ATK buff for 10s."
-	icon_state = "stardust_ace"
+	icon_state = "it's_magic"
 	max_level = 12
 	var/list/atk_scaling = list(120, 128, 136, 144, 152, 160, 170, 180, 190, 200, 208, 216)
 
@@ -311,7 +313,7 @@
 /datum/path_ability/passive/erudition
 	name = "Fine, I'll Do It Myself"
 	desc = "When you or an ally's attack drops an enemy to 50% HP, deal AoE Ice DMG around you."
-	icon_state = "perfect_pickoff"
+	icon_state = "fine_myself"
 	max_level = 12
 	var/list/atk_scaling = list(25, 26.5, 28, 29.5, 31, 32.5, 34.375, 36.25, 38.125, 40, 41.5, 43)
 	/// Cooldown to prevent chain triggers
@@ -462,11 +464,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "atk1")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (no gate) ---
-	N = new /datum/path_node("atk1", "Ice DMG Boost", "Ice DMG increases by 3.2%.")
+	N = new /datum/path_node("stat_bottom", "Ice DMG Boost", "Ice DMG increases by 3.2%.")
 	N.stat_bonuses = list("ice DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -481,38 +483,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("def1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("def1", "CRIT Rate Boost", "CRIT Rate increases by 2.7%.")
+	N = new /datum/path_node("stat_c1", "CRIT Rate Boost", "CRIT Rate increases by 2.7%.")
 	N.stat_bonuses = list("CRIT Rate" = 2.7)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("hp1", "atk2")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("hp1", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_c2", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "Ice DMG Boost", "Ice DMG increases by 3.2%.")
+	N = new /datum/path_node("stat_c3", "Ice DMG Boost", "Ice DMG increases by 3.2%.")
 	N.stat_bonuses = list("ice DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Right branch (A4 gate) ---
@@ -522,39 +524,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("hp2")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp2", "Ice DMG Boost", "Ice DMG increases by 4.8%.")
+	N = new /datum/path_node("stat_r1", "Ice DMG Boost", "Ice DMG increases by 4.8%.")
 	N.stat_bonuses = list("ice DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("atk4")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("atk4", "DEF Boost", "DEF increases by 7.5%.")
+	N = new /datum/path_node("stat_r2", "DEF Boost", "DEF increases by 7.5%.")
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("hp3")
-	N.prerequisites = list("hp2")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp3", "DEF Boost", "DEF increases by 10%.")
+	N = new /datum/path_node("stat_r3", "DEF Boost", "DEF increases by 10%.")
 	N.stat_bonuses = list("DEF" = 10)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("atk4")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 	// --- Left branch (A6 gate) ---
@@ -564,39 +566,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("atk3")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "Ice DMG Boost", "Ice DMG increases by 4.8%.")
+	N = new /datum/path_node("stat_l1", "Ice DMG Boost", "Ice DMG increases by 4.8%.")
 	N.stat_bonuses = list("ice DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("def2")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("def2", "CRIT Rate Boost", "CRIT Rate increases by 4%.")
+	N = new /datum/path_node("stat_l2", "CRIT Rate Boost", "CRIT Rate increases by 4%.")
 	N.stat_bonuses = list("CRIT Rate" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("atk5")
-	N.prerequisites = list("atk3")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk5", "Ice DMG Boost", "Ice DMG increases by 6.4%.")
+	N = new /datum/path_node("stat_l3", "Ice DMG Boost", "Ice DMG increases by 6.4%.")
 	N.stat_bonuses = list("ice DMG" = 6.4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("def2")
+	N.prerequisites = list("stat_l2")
 	nodes += N
 
 // ============================================================

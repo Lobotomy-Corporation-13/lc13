@@ -10,6 +10,8 @@
 	name = "Harmony"
 	desc = "Applies buffs to allies to improve the team's combat capacities."
 	icon_state = "destruction"
+	path_screen_icon = "harmony_path"
+	path_ultimate_icon = "rejoicing_clouds"
 	element_type = PATH_ELEMENT_LIGHTNING
 	max_energy = 130
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/harmony
@@ -61,7 +63,7 @@
 /datum/path_ability/basic/harmony
 	name = "Dislodged"
 	desc = "Deals Lightning DMG to the target hit."
-	icon_state = "farewell_hit"
+	icon_state = "dislodged"
 	energy_gain = 20
 	max_level = 7
 	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
@@ -107,7 +109,7 @@
 /datum/path_ability/burst/harmony
 	name = "Soothing Melody"
 	desc = "Grants Benediction to nearest ally. ATK buff + bonus Lightning DMG."
-	icon_state = "rip_home_run"
+	icon_state = "soothing_melody"
 	energy_gain = 30
 	ap_cost = 1
 	max_level = 12
@@ -204,7 +206,7 @@
 /datum/path_ability/ultimate/harmony
 	name = "Amidst the Rejoicing Clouds"
 	desc = "Grants 50 Energy to an ally and increases their DMG for 20s."
-	icon_state = "stardust_ace"
+	icon_state = "rejoicing_clouds"
 	max_level = 12
 	/// DMG buff % for the ally
 	var/list/dmg_buff_pct = list(20, 23, 26, 29, 32, 35, 38.75, 42.5, 46.25, 50, 53, 56)
@@ -288,7 +290,7 @@
 /datum/path_ability/passive/harmony
 	name = "Violet Sparknado"
 	desc = "When you attack, your Benediction'd ally deals bonus Lightning DMG to the same target."
-	icon_state = "perfect_pickoff"
+	icon_state = "violet_sparknado"
 	max_level = 12
 	/// Bonus DMG: % of ally's ATK
 	var/list/bonus_dmg_pct = list(30, 33, 36, 39, 42, 45, 48.75, 52.5, 56.25, 60, 63, 66)
@@ -534,11 +536,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "atk1")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (no gate) ---
-	N = new /datum/path_node("atk1", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("stat_bottom", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -553,38 +555,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("def1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("def1", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_c1", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("atk2", "ltn1")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("stat_c2", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("ltn1", "Lightning DMG Boost", "Lightning DMG increases by 3.2%.")
-	N.stat_bonuses = list("Lightning DMG" = 3.2)
+	N = new /datum/path_node("stat_c3", "Lightning DMG Boost", "Lightning DMG increases by 3.2%.")
+	N.stat_bonuses = list("lightning DMG" = 3.2)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Right branch (A4 gate) ---
@@ -594,39 +596,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("atk3")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("stat_r1", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("def2")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("def2", "DEF Boost", "DEF increases by 7.5%.")
+	N = new /datum/path_node("stat_r2", "DEF Boost", "DEF increases by 7.5%.")
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("def3")
-	N.prerequisites = list("atk3")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("def3", "DEF Boost", "DEF increases by 10%.")
+	N = new /datum/path_node("stat_r3", "DEF Boost", "DEF increases by 10%.")
 	N.stat_bonuses = list("DEF" = 10)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("def2")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 	// --- Left branch (A6 gate) ---
@@ -636,39 +638,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("ltn2")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("ltn2", "Lightning DMG Boost", "Lightning DMG increases by 4.8%.")
-	N.stat_bonuses = list("Lightning DMG" = 4.8)
+	N = new /datum/path_node("stat_l1", "Lightning DMG Boost", "Lightning DMG increases by 4.8%.")
+	N.stat_bonuses = list("lightning DMG" = 4.8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("atk4")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("atk4", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("stat_l2", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("atk5")
-	N.prerequisites = list("ltn2")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk5", "ATK Boost", "ATK increases by 8%.")
+	N = new /datum/path_node("stat_l3", "ATK Boost", "ATK increases by 8%.")
 	N.stat_bonuses = list("ATK" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("atk4")
+	N.prerequisites = list("stat_l2")
 	nodes += N
 
 // ============================================================

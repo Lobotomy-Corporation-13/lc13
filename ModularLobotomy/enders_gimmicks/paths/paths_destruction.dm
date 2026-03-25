@@ -9,6 +9,8 @@
 	name = "Destruction"
 	desc = "Deals outstanding amounts of damage with great survivability."
 	icon_state = "destruction"
+	path_screen_icon = "destruction_path"
+	path_ultimate_icon = "stardust_ace"
 	element_type = PATH_ELEMENT_PHYSICAL
 	max_energy = 120
 	path_weapon_type = /obj/item/ego_weapon/path_weapon/destruction
@@ -386,11 +388,11 @@
 	N.ability_target = PATH_ABILITY_PASSIVE
 	N.level_increase = 1
 	N.ahn_cost = 800
-	N.connections = list("core_basic", "core_burst", "atk1")
+	N.connections = list("core_basic", "core_burst", "stat_bottom")
 	nodes += N
 
 	// --- Bottom stat (below Passive, no gate) ---
-	N = new /datum/path_node("atk1", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("stat_bottom", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 200
@@ -405,38 +407,38 @@
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 2
-	N.connections = list("def1")
+	N.connections = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("def1", "DEF Boost", "DEF increases by 5%.")
+	N = new /datum/path_node("stat_c1", "DEF Boost", "DEF increases by 5%.")
 	N.stat_bonuses = list("DEF" = 5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 400
 	N.required_ascension = 2
 	N.tree_x = 2
 	N.tree_y = 1
-	N.connections = list("hp1", "atk2")
+	N.connections = list("stat_c2", "stat_c3")
 	N.prerequisites = list("bonus_a2")
 	nodes += N
 
-	N = new /datum/path_node("hp1", "HP Boost", "Max HP increases by 4%.")
+	N = new /datum/path_node("stat_c2", "HP Boost", "Max HP increases by 4%.")
 	N.stat_bonuses = list("HP" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 1
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
-	N = new /datum/path_node("atk2", "ATK Boost", "ATK increases by 4%.")
+	N = new /datum/path_node("stat_c3", "ATK Boost", "ATK increases by 4%.")
 	N.stat_bonuses = list("ATK" = 4)
 	N.stat_percent = TRUE
 	N.ahn_cost = 300
 	N.required_ascension = 3
 	N.tree_x = 3
 	N.tree_y = 0
-	N.prerequisites = list("def1")
+	N.prerequisites = list("stat_c1")
 	nodes += N
 
 	// --- Left branch (A6 gate, from Basic ATK) ---
@@ -446,39 +448,39 @@
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 3
-	N.connections = list("atk3")
+	N.connections = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk3", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("stat_l1", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 2
-	N.connections = list("def2")
+	N.connections = list("stat_l2")
 	N.prerequisites = list("bonus_a6")
 	nodes += N
 
-	N = new /datum/path_node("def2", "DEF Boost", "DEF increases by 7.5%.")
+	N = new /datum/path_node("stat_l2", "DEF Boost", "DEF increases by 7.5%.")
 	N.stat_bonuses = list("DEF" = 7.5)
 	N.stat_percent = TRUE
 	N.ahn_cost = 700
 	N.required_ascension = 6
 	N.tree_x = 0
 	N.tree_y = 1
-	N.connections = list("atk5")
-	N.prerequisites = list("atk3")
+	N.connections = list("stat_l3")
+	N.prerequisites = list("stat_l1")
 	nodes += N
 
-	N = new /datum/path_node("atk5", "ATK Boost", "ATK increases by 8%.")
+	N = new /datum/path_node("stat_l3", "ATK Boost", "ATK increases by 8%.")
 	N.stat_bonuses = list("ATK" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 800
 	N.required_level = 80
 	N.tree_x = 0
 	N.tree_y = 0
-	N.prerequisites = list("def2")
+	N.prerequisites = list("stat_l2")
 	nodes += N
 
 	// --- Right branch (A4 gate, from Skill) ---
@@ -488,39 +490,39 @@
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 3
-	N.connections = list("hp2")
+	N.connections = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp2", "HP Boost", "Max HP increases by 6%.")
+	N = new /datum/path_node("stat_r1", "HP Boost", "Max HP increases by 6%.")
 	N.stat_bonuses = list("HP" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 500
 	N.required_ascension = 4
 	N.tree_x = 4
 	N.tree_y = 2
-	N.connections = list("atk4")
+	N.connections = list("stat_r2")
 	N.prerequisites = list("bonus_a4")
 	nodes += N
 
-	N = new /datum/path_node("atk4", "ATK Boost", "ATK increases by 6%.")
+	N = new /datum/path_node("stat_r2", "ATK Boost", "ATK increases by 6%.")
 	N.stat_bonuses = list("ATK" = 6)
 	N.stat_percent = TRUE
 	N.ahn_cost = 600
 	N.required_ascension = 5
 	N.tree_x = 4
 	N.tree_y = 1
-	N.connections = list("hp3")
-	N.prerequisites = list("hp2")
+	N.connections = list("stat_r3")
+	N.prerequisites = list("stat_r1")
 	nodes += N
 
-	N = new /datum/path_node("hp3", "HP Boost", "Max HP increases by 8%.")
+	N = new /datum/path_node("stat_r3", "HP Boost", "Max HP increases by 8%.")
 	N.stat_bonuses = list("HP" = 8)
 	N.stat_percent = TRUE
 	N.ahn_cost = 750
 	N.required_level = 75
 	N.tree_x = 4
 	N.tree_y = 0
-	N.prerequisites = list("atk4")
+	N.prerequisites = list("stat_r2")
 	nodes += N
 
 // ============================================================
