@@ -64,7 +64,7 @@
 
 /datum/path_ability/basic/hunt
 	name = "Cloudlancer Art: North Wind"
-	desc = "Deals Wind DMG to the target hit."
+	desc = "Deals Wind DMG scaling off ATK to the target. High Gale bonus: +40% DMG to slowed enemies. First hit full, follow-ups 10%."
 	icon_state = "north_wind"
 	energy_gain = 20
 	max_level = 7
@@ -106,7 +106,7 @@
 
 /datum/path_ability/burst/hunt
 	name = "Cloudlancer Art: Torrent"
-	desc = "Lunges 2 tiles, dealing Wind DMG. Crits apply SPD debuff."
+	desc = "Dashes through a target in a 4-tile deep, 3-wide cone, dealing Wind DMG scaling off ATK. On CRIT: applies 12% SPD debuff for 20s. Costs 1 AP."
 	icon_state = "torrent"
 	energy_gain = 30
 	ap_cost = 1
@@ -229,7 +229,7 @@
 
 /datum/path_ability/ultimate/hunt
 	name = "Ethereal Dream"
-	desc = "Deals massive Wind DMG. Bonus damage to slowed targets."
+	desc = "Targets nearest enemy in a 5-tile deep, 3-wide cone. Pause, dash through for 10% DMG, then delayed 90% hit. Bonus damage if target is SPD-debuffed."
 	icon_state = "ethereal_dream"
 	max_level = 12
 	/// Base ATK% scaling
@@ -381,7 +381,7 @@
 
 /datum/path_ability/passive/hunt
 	name = "Superiority of Reach"
-	desc = "Ally support grants Wind RES PEN on your next attack."
+	desc = "When a path ally buffs you, your next attack gains Wind RES PEN%. 20 second cooldown between triggers."
 	icon_state = "superiority_reach"
 	max_level = 12
 	/// RES PEN % per level

@@ -54,6 +54,8 @@
 	var/turn_grace_end = 0
 	/// Whether the next basic attack is the first hit of the turn
 	var/first_hit_this_turn = TRUE
+	/// Toughness reduction for the current attack (set before deal_path_damage)
+	var/current_toughness_reduction = 0
 
 	// --- Skill Tree (Traces) ---
 	var/list/nodes = list()
@@ -257,7 +259,7 @@
 
 	// Reset turn state with 1.5s grace period for skill use
 	turn_state = PATH_TURN_READY
-	turn_grace_end = world.time + 1.5 SECONDS
+	turn_grace_end = world.time + 0.75 SECONDS
 	first_hit_this_turn = TRUE
 
 	// Golden glow on weapon to show turn is ready
@@ -599,8 +601,12 @@
 	var/is_grace = (turn_state == PATH_TURN_READY && world.time < turn_grace_end)
 	var/hit_is_first = first_hit_this_turn && !is_grace
 
+	// Set toughness reduction: 10 for first hit basic attacks
+	current_toughness_reduction = hit_is_first ? 10 : 0
+
 	// Deal path damage via basic attack
 	basic_attack.OnHit(target, user, hit_is_first)
+	current_toughness_reduction = 0
 	if(hit_is_first)
 		first_hit_this_turn = FALSE
 
@@ -622,7 +628,8 @@
 
 /// Deals path damage to a target, applying the full damage pipeline.
 /// Pass do_crit=FALSE to skip crit rolls (used by DoTs).
-/datum/path/proc/deal_path_damage(mob/living/target, amount, do_crit = TRUE)
+/// toughness_reduction: points of toughness to remove (10=basic, 20=skill, 30=ult, 0=none)
+/datum/path/proc/deal_path_damage(mob/living/target, amount, do_crit = TRUE, toughness_reduction = 0)
 	if(!target || QDELETED(target))
 		return 0
 	var/damage = amount
@@ -669,7 +676,6 @@
 	damage *= def_mult
 
 	// Elemental RES Multiplier
-	// TODO: check target's element_res when implemented
 	var/target_res = PATH_RES_DEFAULT / 100
 	var/effective_res = clamp(target_res - (res_pen / 100), PATH_RES_MIN / 100, PATH_RES_MAX / 100)
 	var/res_mult = 1 - effective_res

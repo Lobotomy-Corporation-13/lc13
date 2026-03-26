@@ -25,7 +25,9 @@
 	if(linked_path.energy < linked_path.max_energy)
 		to_chat(owner, span_warning("Not enough Energy! ([linked_path.energy]/[linked_path.max_energy])"))
 		return
+	linked_path.current_toughness_reduction = 30
 	linked_path.ultimate_action.Activate(owner)
+	linked_path.current_toughness_reduction = 0
 
 /datum/action/path_ultimate/UpdateButtonIcon(status_only, force)
 	. = ..()

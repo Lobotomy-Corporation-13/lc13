@@ -54,7 +54,7 @@
 
 /datum/path_ability/basic/nihility
 	name = "Standing Ovation"
-	desc = "Deals Fire DMG to the target hit."
+	desc = "Deals Fire DMG scaling off ATK to the target. Walking on Knives bonus: +20% DMG to Burned enemies. High Poles bonus: 80% chance to apply Burn."
 	icon_state = "standing_ovation"
 	energy_gain = 20
 	max_level = 7
@@ -100,7 +100,7 @@
 
 /datum/path_ability/burst/nihility
 	name = "Blazing Welcome"
-	desc = "Deals Fire DMG to target + 1-tile AoE. Applies Burn."
+	desc = "Fires a blazing projectile that scales off ATK, dealing Fire DMG to the target and Fire DMG to adjacent enemies. Applies a powerful Burn DoT to all hit. Costs 1 AP."
 	icon_state = "blazing_welcome"
 	energy_gain = 30
 	ap_cost = 1
@@ -215,7 +215,7 @@
 
 /datum/path_ability/ultimate/nihility
 	name = "Watch This Showstopper"
-	desc = "3-tile AoE Fire DMG. Detonates Burns on hit enemies."
+	desc = "Expanding fire ring scales off ATK, dealing Fire DMG to all enemies within 3 tiles. Detonates active Burns for bonus instant damage based on the Burn tick damage."
 	icon_state = "showstopper"
 	max_level = 12
 	var/list/aoe_scaling = list(72, 76.8, 81.6, 86.4, 91.2, 96, 102, 108, 114, 120, 124.8, 129.6)
@@ -304,7 +304,7 @@
 
 /datum/path_ability/passive/nihility
 	name = "PatrAeon Benefits"
-	desc = "When Burn ticks, apply Firekiss to the target. Firekiss increases DMG taken."
+	desc = "When your Burn DoT ticks on an enemy, applies Firekiss. Firekiss increases all DMG taken by the target per stack (max 3 stacks, 30s duration)."
 	icon_state = "patraeon_benefits"
 	max_level = 12
 	var/list/firekiss_scaling = list(4, 4.3, 4.6, 4.9, 5.2, 5.5, 5.875, 6.25, 6.625, 7, 7.3, 7.6)

@@ -62,7 +62,7 @@
 
 /datum/path_ability/basic/harmony
 	name = "Dislodged"
-	desc = "Deals Lightning DMG to the target hit."
+	desc = "Deals Lightning DMG scaling off ATK to the target. Knell Subdual bonus: +40% Basic ATK DMG. First hit full, follow-ups 10%."
 	icon_state = "dislodged"
 	energy_gain = 20
 	max_level = 7
@@ -108,7 +108,7 @@
 
 /datum/path_ability/burst/harmony
 	name = "Soothing Melody"
-	desc = "Grants Benediction to nearest ally. ATK buff + bonus Lightning DMG."
+	desc = "Grants Benediction to nearest path ally within 5 tiles for 20s. Benediction boosts their ATK and primes a bonus Lightning DMG hit on their next attack. Costs 1 AP."
 	icon_state = "soothing_melody"
 	energy_gain = 30
 	ap_cost = 1
@@ -205,7 +205,7 @@
 
 /datum/path_ability/ultimate/harmony
 	name = "Amidst the Rejoicing Clouds"
-	desc = "Grants 50 Energy to an ally and increases their DMG for 20s."
+	desc = "Grants 50 Energy to the nearest path ally and increases all DMG they deal by a multiplier for 20s. Costs all Energy."
 	icon_state = "rejoicing_clouds"
 	max_level = 12
 	/// DMG buff % for the ally
@@ -289,7 +289,7 @@
 
 /datum/path_ability/passive/harmony
 	name = "Violet Sparknado"
-	desc = "When you attack, your Benediction'd ally deals bonus Lightning DMG to the same target."
+	desc = "When you hit a target, your Benediction-buffed ally automatically deals bonus Lightning DMG equal to a % of their ATK to the same target."
 	icon_state = "violet_sparknado"
 	max_level = 12
 	/// Bonus DMG: % of ally's ATK
@@ -402,7 +402,7 @@
 	if(!isliving(target))
 		return
 	if(has_bonus_attack)
-		ConsumeBonusAttack(target)
+		INVOKE_ASYNC(src, PROC_REF(ConsumeBonusAttack), target)
 
 /// Called when the Benediction'd ally attacks — consumes the bonus Lightning DMG
 /datum/status_effect/benediction/proc/ConsumeBonusAttack(mob/living/target)

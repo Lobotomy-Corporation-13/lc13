@@ -57,7 +57,7 @@
 
 /datum/path_ability/basic/abundance
 	name = "Behind the Kindness"
-	desc = "Deals Physical DMG to the target hit."
+	desc = "Deals Physical DMG scaling off ATK to the target. Heals the lowest HP ally within 3 tiles for a portion of damage dealt. First hit full, follow-ups 10%."
 	icon_state = "behind_kindness"
 	energy_gain = 20
 	max_level = 7
@@ -92,7 +92,7 @@
 
 /datum/path_ability/burst/abundance
 	name = "Love, Heal, and Choose"
-	desc = "Heals nearest ally. Instant heal + HoT for 20s."
+	desc = "Heals the nearest designated ally with an instant HP% heal + continuous healing over 20s. Soothe bonus: dispels 1 debuff. Recuperation bonus: +10s HoT duration. Costs 1 AP."
 	icon_state = "love_heal_choose"
 	energy_gain = 30
 	ap_cost = 1
@@ -199,7 +199,7 @@
 
 /datum/path_ability/ultimate/abundance
 	name = "Gift of Rebirth"
-	desc = "Heals all designated allies within 7 tiles."
+	desc = "A random plush flies into the air and explodes, healing you and all designated allies within 7 tiles based on HP% + flat amount. Grants 25% ATK buff for 10s after. Costs all Energy."
 	icon_state = "gift_rebirth"
 	max_level = 12
 	/// Heal: % of USER's Max HP
@@ -319,7 +319,7 @@
 
 /datum/path_ability/passive/abundance
 	name = "Innervation"
-	desc = "When healing an ally at or below 30% HP, healing is increased."
+	desc = "When healing an ally who is at or below 30% HP, all healing done to them is increased by a percentage. Healer bonus: +10% outgoing healing at all times."
 	icon_state = "innervation"
 	max_level = 12
 	/// Healing boost % when target is at or below 30% HP

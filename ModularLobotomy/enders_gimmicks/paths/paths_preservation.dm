@@ -116,7 +116,7 @@
 
 /datum/path_ability/basic/preservation
 	name = "Ice-Breaking Light"
-	desc = "Deals Fire DMG. At 4+ Magma Will, becomes an enhanced AoE."
+	desc = "Deals Fire DMG scaling off ATK. At 4+ Magma Will stacks, becomes an enhanced AoE that hits primary + adjacent targets, consuming 4 stacks. Gains 1 Magma Will on first hit."
 	icon_state = "ice_breaking_light"
 	energy_gain = 20
 	max_level = 7
@@ -221,7 +221,7 @@
 
 /datum/path_ability/burst/preservation
 	name = "Ever-Burning Amber"
-	desc = "DMG Reduction + Taunt. Gains Magma Will."
+	desc = "Grants DMG Reduction% for 10s and taunts all enemies within 5 tiles to attack you. Gains 1 Magma Will stack. Costs 1 AP."
 	icon_state = "ever_burning_amber"
 	energy_gain = 30
 	ap_cost = 1
@@ -300,7 +300,7 @@
 
 /datum/path_ability/ultimate/preservation
 	name = "War-Flaming Lance"
-	desc = "Dash forward dealing ATK + DEF scaling, then explosions along the trail."
+	desc = "Dash forward dealing Fire DMG scaling off ATK + DEF to all enemies along the path, then fire explosions erupt on each tile. Costs all Energy."
 	icon_state = "war_flaming_lance"
 	max_level = 12
 	/// ATK% scaling
@@ -478,7 +478,7 @@
 
 /datum/path_ability/passive/preservation
 	name = "Magma Will & Shield"
-	desc = "Build Magma Will to enhance attacks. Shield allies on every action."
+	desc = "Magma Will (0-8 stacks): gained from attacks, Skill use, and taking damage (1.5s cooldown). At 4+ stacks, Basic ATK becomes enhanced AoE. On every attack and Skill, shields you and all allies within 5 tiles based on DEF%."
 	icon_state = "architects_treasure"
 	max_level = 12
 	/// Shield: % of USER's DEF

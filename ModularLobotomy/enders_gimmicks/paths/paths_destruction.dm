@@ -59,7 +59,7 @@
 
 /datum/path_ability/basic/destruction
 	name = "Farewell Hit"
-	desc = "Deals Physical DMG to the target hit."
+	desc = "Deals Physical DMG scaling off ATK to the target. First hit per turn deals full damage, follow-ups deal 10%."
 	icon_state = "farewell_hit"
 	energy_gain = 20
 	max_level = 7
@@ -110,7 +110,7 @@
 
 /datum/path_ability/burst/destruction
 	name = "RIP Home Run"
-	desc = "Deals Physical DMG to all enemies within 1 tile."
+	desc = "Deals Physical DMG scaling off ATK to all enemies within 1 tile. Costs 1 AP. Fighting Will bonus: +25% to primary target."
 	icon_state = "rip_home_run"
 	energy_gain = 30
 	ap_cost = 1
@@ -237,7 +237,7 @@
 
 /datum/path_ability/ultimate/destruction
 	name = "Stardust Ace"
-	desc = "Empowers your next Basic ATK or Skill with devastating scaling."
+	desc = "Costs all Energy. Empowers your next Basic ATK or Skill with massively increased scaling. Does not deal direct damage."
 	icon_state = "stardust_ace"
 	max_level = 12
 	/// Blowout: Farewell Hit scaling (for enhanced Basic ATK)
@@ -286,7 +286,7 @@
 
 /datum/path_ability/passive/destruction
 	name = "Perfect Pickoff"
-	desc = "Each kill increases ATK. Stacks up to 2 times."
+	desc = "On kill: gain an ATK buff for 30 seconds, stacking up to 2 times. Tenacity bonus: each stack also grants +10% DEF."
 	icon_state = "perfect_pickoff"
 	max_level = 12
 	/// ATK buff % per stack

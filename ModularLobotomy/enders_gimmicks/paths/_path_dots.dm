@@ -180,3 +180,152 @@
 		effect.attacker_path = source_path
 		effect.attacker_atk = atk_snapshot
 	return effect
+
+// ============================================================
+// Path Debuffs (non-DoT status effects)
+// ============================================================
+
+// ---- Entanglement (Quantum) ----
+// Delays action by 20% (movement slow).
+// Gains 1 stack when hit (max 5).
+// On expire: deals 0.6 * stacks * level_mult Quantum DMG.
+
+/datum/status_effect/path_entanglement
+	id = "path_entanglement"
+	duration = 20 SECONDS
+	tick_interval = 0
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+
+	var/stacks = 1
+	var/max_stacks = 5
+	/// Reference to the mob that applied this
+	var/mob/living/source_mob
+
+/datum/status_effect/path_entanglement/on_apply()
+	. = ..()
+	if(!.)
+		return
+	// Slow action/turn speed by 20% (affects path turn cycle and path mob skill cooldown)
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/H = owner
+		H.move_to_delay = round(H.move_to_delay * 0.8)
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnHit))
+	owner.add_filter("path_entanglement", 5, list("type" = "outline", "color" = "#6666FF80", "size" = 1))
+	to_chat(owner, span_danger("You are Entangled!"))
+
+/datum/status_effect/path_entanglement/on_remove()
+	// Restore SPD
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/H = owner
+		H.move_to_delay = round(H.move_to_delay / 0.8)
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	owner.remove_filter("path_entanglement")
+	// On expire: deal damage based on stacks
+	if(owner && owner.stat != DEAD)
+		var/atk = 0
+		var/level_mult = 1
+		if(source_mob && !QDELETED(source_mob))
+			if(istype(source_mob, /mob/living/simple_animal/hostile))
+				var/mob/living/simple_animal/hostile/SM = source_mob
+				atk = SM.melee_damage_upper
+				level_mult = 1
+		var/expire_damage = 0.6 * stacks * level_mult * max(atk, 50)
+		if(expire_damage > 0)
+			owner.adjustBruteLoss(expire_damage, forced = TRUE)
+			to_chat(owner, span_danger("Entanglement bursts! [stacks] stacks detonate!"))
+			playsound(get_turf(owner), 'sound/effects/glass_step.ogg', 40, TRUE)
+	return ..()
+
+/datum/status_effect/path_entanglement/proc/OnHit(datum/source)
+	SIGNAL_HANDLER
+	if(stacks < max_stacks)
+		stacks++
+
+// Entanglement affects path SPD stat, not movement speed
+
+/// Global proc to apply path Entanglement
+/proc/ApplyPathEntanglement(mob/living/target, mob/living/source)
+	var/datum/status_effect/path_entanglement/existing = target.has_status_effect(/datum/status_effect/path_entanglement)
+	if(existing)
+		if(existing.stacks < existing.max_stacks)
+			existing.stacks++
+		var/saved_stacks = existing.stacks
+		var/saved_source = existing.source_mob
+		qdel(existing)
+		var/datum/status_effect/path_entanglement/E = target.apply_status_effect(/datum/status_effect/path_entanglement)
+		if(E)
+			E.stacks = saved_stacks
+			E.source_mob = saved_source
+		return
+	var/datum/status_effect/path_entanglement/E = target.apply_status_effect(/datum/status_effect/path_entanglement)
+	if(E)
+		E.source_mob = source
+
+// ---- Freeze (Ice) ----
+// Prevents action for duration. Works on both humans and simple mobs.
+
+/datum/status_effect/path_freeze
+	id = "path_freeze"
+	duration = 10 SECONDS
+	tick_interval = 0
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = null
+
+/datum/status_effect/path_freeze/on_apply()
+	. = ..()
+	if(!.)
+		return
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		// Simple mobs: disable AI
+		var/mob/living/simple_animal/hostile/SA = owner
+		SA.toggle_ai(AI_OFF)
+	else if(ishuman(owner))
+		// Path users: consume their current turn (skip it)
+		var/mob/living/carbon/human/H = owner
+		var/datum/path/P = H.GetPath()
+		if(P)
+			P.turn_state = PATH_TURN_SKILLED
+			P.first_hit_this_turn = FALSE
+			if(P.weapon)
+				P.weapon.ClearTurnReady()
+	owner.add_filter("path_freeze", 5, list("type" = "outline", "color" = "#66BBFF80", "size" = 2))
+	to_chat(owner, span_danger("You are frozen solid!"))
+
+/datum/status_effect/path_freeze/on_remove()
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/SA = owner
+		SA.toggle_ai(AI_ON)
+	owner.remove_filter("path_freeze")
+	to_chat(owner, span_notice("The ice thaws."))
+	return ..()
+
+// ---- Imprisonment (Imaginary) ----
+// Slows movement and delays action for duration.
+
+/datum/status_effect/path_imprisonment
+	id = "path_imprisonment"
+	duration = 10 SECONDS
+	tick_interval = 0
+	status_type = STATUS_EFFECT_REPLACE
+	alert_type = null
+
+/datum/status_effect/path_imprisonment/on_apply()
+	. = ..()
+	if(!.)
+		return
+	// Reduce action/turn speed (affects path turn cycle and path mob skill cooldown)
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/H = owner
+		H.move_to_delay = round(H.move_to_delay * 0.5)
+	owner.add_filter("path_imprisonment", 5, list("type" = "outline", "color" = "#FFCC3380", "size" = 1))
+	to_chat(owner, span_danger("You are imprisoned! Action speed reduced."))
+
+/datum/status_effect/path_imprisonment/on_remove()
+	// Restore SPD
+	if(istype(owner, /mob/living/simple_animal/hostile))
+		var/mob/living/simple_animal/hostile/H = owner
+		H.move_to_delay = round(H.move_to_delay / 0.5)
+	owner.remove_filter("path_imprisonment")
+	to_chat(owner, span_notice("The imprisonment fades."))
+	return ..()

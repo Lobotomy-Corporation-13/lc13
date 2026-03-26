@@ -100,7 +100,9 @@
 		return
 	linked_path.SpendActionPoint()
 	linked_path.GainEnergy(linked_path.burst_action.energy_gain)
+	linked_path.current_toughness_reduction = 20
 	linked_path.burst_action.Activate(user)
+	linked_path.current_toughness_reduction = 0
 	linked_path.turn_state = PATH_TURN_SKILLED
 	// Skill counts as the first hit — subsequent attacks deal 10%
 	linked_path.first_hit_this_turn = FALSE

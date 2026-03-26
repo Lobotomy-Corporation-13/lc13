@@ -62,7 +62,7 @@
 
 /datum/path_ability/basic/erudition
 	name = "What Are You Looking At?"
-	desc = "Deals Ice DMG. +40% ATK bonus vs targets at or below 50% HP."
+	desc = "Deals Ice DMG scaling off ATK to the target. If the target is at or drops to 50% HP or below, deals an additional 40% of ATK as bonus Ice DMG."
 	icon_state = "looking_at"
 	energy_gain = 20
 	max_level = 7
@@ -111,7 +111,7 @@
 
 /datum/path_ability/burst/erudition
 	name = "One-Time Offer"
-	desc = "Deals Ice DMG to all enemies within 3 tiles. +25% vs targets above 50% HP."
+	desc = "Scales off ATK, dealing Ice DMG to all enemies within 3 tiles. +25% DMG to targets above 50% HP. Costs 1 AP. Efficiency bonus: extra +25%."
 	icon_state = "one_time_offer"
 	energy_gain = 30
 	ap_cost = 1
@@ -188,7 +188,7 @@
 
 /datum/path_ability/ultimate/erudition
 	name = "It's Magic, I Added Some Magic"
-	desc = "Deals Ice DMG to all enemies within 5 tiles. Grants 25% ATK buff for 10s."
+	desc = "Leaps into the air, then slams down dealing Ice DMG scaling off ATK to all enemies within 5 tiles. Icing bonus: +20% vs targets below 50% HP. Grants 25% ATK buff for 10s after."
 	icon_state = "it's_magic"
 	max_level = 12
 	var/list/atk_scaling = list(120, 128, 136, 144, 152, 160, 170, 180, 190, 200, 208, 216)
@@ -312,7 +312,7 @@
 
 /datum/path_ability/passive/erudition
 	name = "Fine, I'll Do It Myself"
-	desc = "When you or an ally's attack drops an enemy to 50% HP, deal AoE Ice DMG around you."
+	desc = "When you or a designated ally drops an enemy from above 50% to at or below 50% HP, teleport to the target and spin attack dealing AoE Ice DMG in 5 hits over 1 second."
 	icon_state = "fine_myself"
 	max_level = 12
 	var/list/atk_scaling = list(25, 26.5, 28, 29.5, 31, 32.5, 34.375, 36.25, 38.125, 40, 41.5, 43)
