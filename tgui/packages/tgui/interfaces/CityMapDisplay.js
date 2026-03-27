@@ -50,7 +50,7 @@ const holoTint = function (hex) {
     + ng.toString(16).padStart(2, '0')
     + nb.toString(16).padStart(2, '0')
   );
-}
+};
 
 export const CityMapDisplay = (
   props,

@@ -620,8 +620,7 @@ const CityMapView = props => {
                   act('place_waypoint', {
                     world_x: wx,
                     world_y: wy,
-                  })
-                }
+                  })}
               />
             </Box>
             <Box
