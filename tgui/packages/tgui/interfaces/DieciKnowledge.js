@@ -114,10 +114,8 @@ export const DieciKnowledge = (props, context) => {
                             icon="times"
                             color="bad"
                             onClick={() =>
-                              act(
-                                'remove_active',
-                                { index: i + 1 }
-                              )}
+                              act('remove_active',
+                                { index: i + 1 })}
                           />
                         </Table.Cell>
                       </Table.Row>

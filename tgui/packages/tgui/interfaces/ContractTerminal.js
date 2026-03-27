@@ -612,23 +612,15 @@ const CityMapView = props => {
               }}>
               <CityMapCanvas
                 mapGrid={mapGrid}
-                viewWorldX={
-                  viewWorldX
-                }
-                viewWorldY={
-                  viewWorldY
-                }
+                viewWorldX={viewWorldX}
+                viewWorldY={viewWorldY}
                 waypoints={waypoints}
                 disabled={atLimit}
-                onPlaceWaypoint={
-                  (wx, wy) =>
-                    act(
-                      'place_waypoint',
-                      {
-                        world_x: wx,
-                        world_y: wy,
-                      },
-                    )
+                onPlaceWaypoint={(wx, wy) =>
+                  act('place_waypoint', {
+                    world_x: wx,
+                    world_y: wy,
+                  })
                 }
               />
             </Box>

@@ -29,9 +29,9 @@ const DIM_OVERLAY = 'rgba(0,0,0,0.5)';
 const FOCUS_COLOR = '#ffff44';
 const ZOOM_STEPS = [1, 2, 4];
 
-/// Apply holomap green tint by
-/// multiplying RGB with #79ff79.
-function holoTint(hex) {
+// Apply holomap green tint by
+// multiplying RGB with #79ff79.
+const holoTint = function (hex) {
   const r = parseInt(
     hex.slice(1, 3), 16,
   );
@@ -142,9 +142,7 @@ export const CityMapDisplay = (
               <CityMapCanvas
                 data={data}
                 selectedColor={selColor}
-                onSelectColor={
-                  toggleColor
-                }
+                onSelectColor={toggleColor}
                 zoomLevel={zoom}
                 focusX={focusX}
                 focusY={focusY}
@@ -180,9 +178,7 @@ export const CityMapDisplay = (
               <MapLegend
                 legend={map_legend}
                 selectedColor={selColor}
-                onSelectColor={
-                  toggleColor
-                }
+                onSelectColor={toggleColor}
               />
             </Box>
           </Box>
@@ -603,10 +599,7 @@ const MapLegend = props => {
           fontSize="11px"
           color="label"
           onClick={() =>
-            onSelectColor(
-              entry.color,
-            )
-          }>
+            onSelectColor(entry.color)}>
           <Box
             inline
             style={{

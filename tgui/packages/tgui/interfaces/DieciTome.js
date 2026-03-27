@@ -212,10 +212,8 @@ const KnowledgeTab = (props, context) => {
                         icon="times"
                         color="bad"
                         onClick={() =>
-                          act(
-                            'remove_stored',
-                            { index: i + 1 }
-                          )}
+                          act('remove_stored',
+                            { index: i + 1 })}
                       />
                     </Table.Cell>
                   </Table.Row>

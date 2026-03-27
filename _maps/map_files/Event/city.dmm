@@ -1643,7 +1643,7 @@
 "mP" = (
 /obj/machinery/door/airlock/grunge{
 	name = "association jail";
-	req_access_txt = s
+	req_access_txt = "67"
 	},
 /turf/open/floor/plasteel/dark,
 /area/city/assoc_base)
@@ -5411,7 +5411,7 @@
 "Oo" = (
 /obj/machinery/door/airlock/grunge{
 	name = "association jail";
-	req_access_txt = s
+	req_access_txt = "67"
 	},
 /turf/open/floor/wood,
 /area/city/assoc_base)
