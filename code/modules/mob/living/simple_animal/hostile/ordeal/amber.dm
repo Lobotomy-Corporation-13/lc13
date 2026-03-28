@@ -282,6 +282,10 @@
 	var/feeding_interval = 1.5 MINUTES
 	var/spawn_amount = 2 //How many extra bugs spawn per feeding stage.
 
+/obj/item/organ/amber_bug/Destroy()
+	ordeal_reference = null
+	return ..()
+
 /obj/item/organ/amber_bug/Initialize()
 	. = ..()
 	if(ishuman(loc))

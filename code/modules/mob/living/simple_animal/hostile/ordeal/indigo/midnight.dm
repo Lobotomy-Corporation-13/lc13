@@ -8,6 +8,14 @@
 #define SUPPORT_ABILITY_PERSISTENCE "persistence"
 #define SUPPORT_ABILITY_SUMMON "summon"
 
+//For readability
+#define ALLIEDSWEEP_LIST 1
+#define DEPLOYEDGRUNT_LIST 2
+#define DEPLOYEDCOMMAND_LIST 3
+#define NITBCOMMAND_LIST 4
+
+//Because i need to quickly change all the sleeps if theres a optimization. -IP
+#define INDIGO_DELAY(B) SLEEP_CHECK_DEATH(B)
 
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight
 	name = "Matriarch"
@@ -60,42 +68,8 @@
 	// The sweepers spawned by this won't automatically come to the Matriarch's aid, they patrol with their own commanders.
 	var/player_scaling_nitb_threshold = 4
 
-	/// Holds the commanders we've deployed as part of the NitB
-	var/list/nitb_deployed_commanders = list()
-
 	var/nitb_cooldown = INFINITY
 	var/nitb_cooldown_duration = 5 MINUTES
-
-	/// List of all bound, spawned sweepers in our retinue
-	var/list/allied_sweepers = list()
-	/// List of just the bound retinue commanders
-	var/list/deployed_commanders = list()
-	/// List of just the bound retinue grunts
-	var/list/deployed_grunts = list()
-
-	/// Types of available commanders to spawn for our retinue. We will pick n take out of this list to avoid duplicates, we will replenish it when they die.
-	var/list/retinue_commander_types = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue,
-	)
-	/// Types of available grunts to spawn for our retinue.
-	var/list/retinue_grunt_types = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue,
-		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue,
-	)
-	// Technically, we could get away with just using 1 list here and deriving how many commanders/grunts there are with a for loop and istype check, but I'd rather not?
-
-	/// Types of commanders that can be spawned for the NitB player scaling mechanic. We are also gonna pick n take out of this one to avoid duplicates...
-	// Mainly to avoid a situation where 3 Marias spawn and give the sweepers 0 move delay (lol)
-	var/list/nitb_commander_types = list(
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
-		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,
-	)
 
 	/* ABILITY VARIABLES SECTION
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -262,6 +236,11 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/Destroy()
+	dash_hitlist = null
+	dash_hitlist_turfs = null
+	return ..()
+
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/Initialize(mapload)
 	. = ..()
 	// Follow me if you want to live. All Sweeper types will be included in our Leadership component.
@@ -342,7 +321,7 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/FindTarget(list/possible_targets, HasTargetsList)
 	if(!CanAct())
 		return null
-	. = ..()
+	return ..()
 
 //Remind me to return to this and make complex targeting a option for all creatures. I may make it a TRUE FALSE var.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/ValueTarget(atom/target_thing)
@@ -406,10 +385,13 @@ Some other overrides like AttackingTarget() are in the Combat section instead.
 
 	if(istype(target_turf))
 		patrol_path = get_path_to(src, target_turf, TYPE_PROC_REF(/turf, Distance_cardinal), 0, 200)
-		var/turf/the_promised_land = patrol_path[patrol_path.len] // Yes yes I know .len is bad but if I use length(patrol_path) here it runtimes. For some reason...?
-		if(istype(the_promised_land))
-			SEND_SIGNAL(src, COMSIG_PATROL_START, the_promised_land) // LET'S FUCKING GOOOOOOOOOOOOOO (this makes our leadership component tell our goons to come with us)
-		return TRUE
+		var/dest_distance = length(patrol_path)
+		if(dest_distance)
+			var/our_destination = patrol_path[dest_distance]
+			var/turf/the_promised_land =  our_destination// Yes yes I know .len is bad but if I use length(patrol_path) here it runtimes. For some reason...?
+			if(istype(the_promised_land))
+				SEND_SIGNAL(src, COMSIG_PATROL_START, the_promised_land) // LET'S FUCKING GOOOOOOOOOOOOOO (this makes our leadership component tell our goons to come with us)
+			return TRUE
 	//unsure if this patrol reset will cause the patrol cooldown even if there is not patrol path.
 	patrol_reset()
 	return FALSE
@@ -480,7 +462,7 @@ This is all code relating to handling incoming damage.
 		for(var/j in 1 to 3)
 			phases_squad_size_commanders[j] += 1 // We won't ever have more than 4 Commanders, since each one is unique. Well, we could, if I wanted to... but it feels weird.
 
-	SLEEP_CHECK_DEATH(0.5 SECONDS)
+	INDIGO_DELAY(0.5 SECONDS)
 
 	if(CanAct() && istype(firer) && (available_abilities[COMBAT_ABILITY_DASH] != null))
 		INVOKE_ASYNC(src, PROC_REF(SweepTheBackstreets), firer) // If we have our dash unlocked, use it immediately regardless of cooldown. This will only happen if we're not busy doing something else.
@@ -497,7 +479,7 @@ This is all code relating to handling phase changes.
 	preparing = TRUE
 	// Warn players of the phase change.
 	icon_state = "phasechange"
-	SLEEP_CHECK_DEATH(5)
+	INDIGO_DELAY(5)
 
 	// Our max hp is now capped at the max health threshold that got passed to enter this phase.
 	phase++
@@ -680,16 +662,17 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	/// This section is for telegraphing the attack.
 	face_atom(prospective_fuel)
 	say("+2653 753 842396.+")
+	// Hard deletes this telegraph for some reason.
 	var/obj/effect/temp_visual/dragon_swoop/bubblegum/matriarch/telegraph = new(dash_start_turf)
 	walk_towards(telegraph, dash_target_turf, 0.1 SECONDS)
-	SLEEP_CHECK_DEATH(phases_dash_windup[phase])
+	INDIGO_DELAY(phases_dash_windup[phase])
 	/// We're now dashing.
 	BeginDash()
 	walk_towards(src, dash_target_turf, 0.2)
-	SLEEP_CHECK_DEATH(get_dist(src, dash_target_turf) * 0.2)
+	INDIGO_DELAY(get_dist(src, dash_target_turf) * 0.2)
 
 	/// Yes it needs to get slept for 0.2 seconds here because... it hasn't finished moving or something. I've tested it. Trust me.
-	SLEEP_CHECK_DEATH(0.2 SECONDS)
+	INDIGO_DELAY(0.2 SECONDS)
 	CancelDash()
 
 	walk(src, 0)
@@ -697,7 +680,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	// Followup slam on phase 2 and after.
 	if(phase >= 2)
 		var/list/followup_hitlist = list()
-		SLEEP_CHECK_DEATH(0.1 SECONDS)
+		INDIGO_DELAY(0.1 SECONDS)
 		for(var/turf/T in view(2, src))
 			playsound(T,'sound/effects/tableslam.ogg', 100, TRUE, 10)
 			new /obj/effect/temp_visual/smash_effect(T)
@@ -712,13 +695,13 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 				shake_camera(L, 2, 1)
 
 	/// Give the players a tiny bit of time to not instantly get auto hit by the Matriarch after she dashes.
-	SLEEP_CHECK_DEATH(0.2 SECONDS)
+	INDIGO_DELAY(0.2 SECONDS)
 
 	preparing = FALSE
 	return TRUE
 
 /obj/effect/temp_visual/dragon_swoop/bubblegum/matriarch
-	duration = 0.9 SECONDS
+	duration = 0.91 SECONDS
 	layer = POINT_LAYER
 	movement_type = FLYING | PHASING
 
@@ -728,6 +711,11 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		for(var/mob/living/hit_mob in HurtInTurf(impacted, dash_hitlist, phases_dash_damage[phase], melee_damage_type, check_faction = TRUE, exact_faction_match = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE))
 			if(hit_mob.stat >= DEAD)
 				continue
+			var/hit_id = AddIdentifier(hit_mob)
+			if(hit_id in dash_hitlist)
+				continue
+			dash_hitlist += hit_id
+
 			to_chat(hit_mob, span_userdanger("[src] viciously slashes you as she dashes past!"))
 			playsound(hit_mob, attack_sound, 100)
 
@@ -874,7 +862,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		new /obj/effect/temp_visual/sparkles/matriarch(T)
 
 	visible_message(span_danger("[src] raises her claws...!"))
-	SLEEP_CHECK_DEATH(0.8 SECONDS)
+	INDIGO_DELAY(0.8 SECONDS)
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/blade3.ogg', 100, 0, 5)
 	for(var/turf/T in area_of_effect)
 		var/obj/effect/temp_visual/slice/pretty_sliced_up = new(T)
@@ -895,7 +883,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 			playsound(T, attack_sound, 100, FALSE)
 			SweeperHealing(phases_slash_healing[phase])
 
-	SLEEP_CHECK_DEATH(0.2 SECONDS)
+	INDIGO_DELAY(0.2 SECONDS)
 	preparing = FALSE
 
 	var/old_length = slash_length
@@ -934,7 +922,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 		temp.transform *= 1.5
 		playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 3)
 		animate(src, 0.4 SECONDS, color = COLOR_RED)
-		SLEEP_CHECK_DEATH(0.7 SECONDS)
+		INDIGO_DELAY(0.7 SECONDS)
 		// Now we actually enter our parry stance.
 		parrying = TRUE
 		preparing = FALSE
@@ -971,7 +959,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	if(istype(victim, /mob/living/simple_animal/hostile))
 		riposte_damage *= 3 // Triple damage if we're riposting an ordeal, distortion or abno.
 
-	SLEEP_CHECK_DEATH(0.2 SECONDS)
+	INDIGO_DELAY(0.2 SECONDS)
 
 	// Teleport to the target and add a visual demonstrating it.
 	var/turf/destination_turf = get_ranged_target_turf_direct(src, victim, get_dist(src, victim) + 1)
@@ -1018,7 +1006,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	user.visible_message(span_userdanger("[user] prepares to leap...!"))
 	playsound(src, 'sound/abnormalities/crumbling/warning.ogg', 50, FALSE, 5)
 
-	SLEEP_CHECK_DEATH(2.4 SECONDS) // You should run
+	INDIGO_DELAY(2.4 SECONDS) // You should run
 
 	lunging = TRUE // While this is active, anyone we get thrown into is fair game for Trash Disposal.
 	preparing = FALSE
@@ -1126,7 +1114,7 @@ This is all code relating to Matriarch's combat abilities and auxiliary stuff fo
 	lunging = FALSE
 	toggle_ai(AI_ON)
 	disposing = FALSE
-	. = ..()
+	return ..()
 
 /// Failsafe proc in case we miss our throw entirely.
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/StopLunging()
@@ -1147,14 +1135,14 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 		return FALSE
 
 	// First, figure out how many sweepers we have and how many we /could/ have.
-	var/amount_grunts = length(deployed_grunts)
-	var/amount_commanders = length(deployed_commanders)
+	var/amount_grunts = length(ReturnComponentList(DEPLOYEDGRUNT_LIST))
+	var/amount_commanders = length(ReturnComponentList(DEPLOYEDCOMMAND_LIST))
 
 	var/missing_grunts = phases_squad_size_grunts[phase] - amount_grunts
 	var/missing_commanders = phases_squad_size_commanders[phase] - amount_commanders
 
 	// This will be TRUE if we're missing a commander or if we're missing four grunts. In that case, we'll try to summon some allies.
-	var/really_oughta_get_some_goons = ((missing_grunts >= 4) || ((missing_commanders >= 1) && length(retinue_commander_types) > 0)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
+	var/really_oughta_get_some_goons = ((missing_grunts >= 4) || ((missing_commanders >= 1) && length(ReturnTypeList(DEPLOYEDCOMMAND_LIST)) > 0)) // Summon sweepers only if missing >=1 Commander or >=4 Grunts
 
 	if(really_oughta_get_some_goons && (available_abilities[SUPPORT_ABILITY_SUMMON] != null) && available_abilities[SUPPORT_ABILITY_SUMMON] <= world.time)
 		available_abilities[SUPPORT_ABILITY_SUMMON] = world.time + ability_cooldown_durations[SUPPORT_ABILITY_SUMMON]
@@ -1211,7 +1199,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			if(!final_deployment_turf)
 				final_deployment_turf = prospective_turf
 
-			var/commander_type = pick_n_take(retinue_commander_types) // We will place their type back into the available pool once they die
+			var/commander_type = pick_n_take(ReturnTypeList(DEPLOYEDCOMMAND_LIST)) // We will place their type back into the available pool once they die
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, commander_type, src)
 
 	if(amount_grunts > 0)
@@ -1220,7 +1208,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			if(!final_deployment_turf)
 				final_deployment_turf = prospective_turf
 
-			var/grunt_type = pick(retinue_grunt_types)
+			var/grunt_type = pick(ReturnTypeList(DEPLOYEDGRUNT_LIST))
 			new /obj/effect/specific_sweeper_spawn(final_deployment_turf, grunt_type, src)
 
 
@@ -1239,7 +1227,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	// No limit on how many grunts there could be, by the way. As long as we need to spawn a NITB Commander, we spawn 'em.
 
 	var/required_amount_nitb_commanders = clamp(floor(player_scaling * player_scaling_commanders_per_player), 0, 4)
-	var/missing_commanders = required_amount_nitb_commanders - length(nitb_deployed_commanders)
+	var/missing_commanders = required_amount_nitb_commanders - length(ReturnComponentList(NITBCOMMAND_LIST))
 	if(missing_commanders < 1)
 		return
 
@@ -1248,7 +1236,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	var/list/cloned_dept_centers = GLOB.department_centers.Copy()
 
 	for(var/i in 1 to missing_commanders)
-		var/nitb_commander_type = pick_n_take(nitb_commander_types)
+		var/nitb_commander_type = pick_n_take(ReturnTypeList(NITBCOMMAND_LIST))
 		if(!nitb_commander_type)
 			return // yeowch! out of commanders! we'd have to dupe one... nuh uh
 
@@ -1277,22 +1265,6 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			new /obj/effect/specific_sweeper_spawn(final_nitb_deploy_turf, nitb_grunt_type, src, FALSE)
 
 		new /obj/effect/specific_sweeper_spawn(dept_center, nitb_commander_type, src, FALSE)
-
-/// Signal handler that will remove the dead sweeper from our lists, and also place a dead commander's type back into the available pool.
-/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/RegisterSweeperDeath(mob/living/dead_neighbor)
-	SIGNAL_HANDLER
-	var/dead_type = dead_neighbor.type
-	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
-		if(!(dead_neighbor in nitb_deployed_commanders))
-			retinue_commander_types |= dead_type
-		else
-			nitb_commander_types |= dead_type
-
-	deployed_commanders -= dead_neighbor
-	nitb_deployed_commanders -= dead_neighbor
-	deployed_grunts -= dead_neighbor
-	allied_sweepers -= dead_neighbor
-
 
 // !!! Support abilities: Frenzy / Persistence !!!
 /mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/ActivateBuff(buff_type = null)
@@ -1348,6 +1320,37 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	neighbor.melee_damage_lower -= buff_melee_bonus
 	neighbor.melee_damage_upper -= buff_melee_bonus
 
+//Returns lists from the leadership component
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/ReturnComponentList(list_type)
+	//Return a empty list if failed
+	. = list()
+	var/datum/component/ai_leadership/matriarch/M = GetComponent(/datum/component/ai_leadership/matriarch)
+	if(!M)
+		return
+	switch(list_type)
+		if(ALLIEDSWEEP_LIST)
+			. = M.allied_sweepers
+		if(DEPLOYEDGRUNT_LIST)
+			. = M.deployed_grunts
+		if(DEPLOYEDCOMMAND_LIST)
+			. = M.deployed_commanders
+		if(NITBCOMMAND_LIST)
+			. = M.nitb_deployed_commanders
+
+//Returns lists from the leadership component
+/mob/living/simple_animal/hostile/ordeal/indigo_midnight/proc/ReturnTypeList(list_type)
+	//Return a empty list if failed
+	. = list()
+	var/datum/component/ai_leadership/matriarch/M = GetComponent(/datum/component/ai_leadership/matriarch)
+	if(!M)
+		return
+	switch(list_type)
+		if(DEPLOYEDGRUNT_LIST)
+			. = M.retinue_grunt_types
+		if(DEPLOYEDCOMMAND_LIST)
+			. = M.retinue_commander_types
+		if(NITBCOMMAND_LIST)
+			. = M.nitb_commander_types
 
 /obj/effect/temp_visual/sweeper_squad_warning
 	name = "ominous warning"
@@ -1379,7 +1382,7 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 
 /obj/effect/sweeperspawn/proc/spawnscout()
 	new /mob/living/simple_animal/hostile/ordeal/indigo_spawn(get_turf(src))
-	qdel(src)
+	QDEL_IN(src,1)
 
 /obj/effect/specific_sweeper_spawn
 	name = "bloodpool"
@@ -1392,7 +1395,8 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 	movement_type = PHASING | FLYING
 	layer = POINT_LAYER
 	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
-	var/mob/living/simple_animal/hostile/ordeal/indigo_midnight/matriarch
+	//The matriarch packaged in a weakref should prevent harddels.
+	var/datum/weakref/memory_of_a_matriarch
 	var/datum/component/ai_leadership/matriarch/her_divine_right_to_rule_all_sweepers
 	var/datum/ordeal/matriarch_ordeal_reference
 	var/should_bind_to_matriarch = TRUE
@@ -1403,12 +1407,22 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 		qdel(src)
 		return
 	if(istype(mother, /mob/living/simple_animal/hostile/ordeal/indigo_midnight))
-		matriarch = mother
+		memory_of_a_matriarch = WEAKREF(mother)
+		var/mob/living/simple_animal/hostile/ordeal/indigo_midnight/matriarch = ReturnMatriarch()
 		her_divine_right_to_rule_all_sweepers = matriarch.GetComponent(/datum/component/ai_leadership/matriarch)
 		if(matriarch.ordeal_reference)
 			matriarch_ordeal_reference = matriarch.ordeal_reference
 		should_bind_to_matriarch = retinue
 	addtimer(CALLBACK(src, PROC_REF(SpawnSweeper), type), 1 SECONDS)
+
+/obj/effect/specific_sweeper_spawn/Destroy()
+	her_divine_right_to_rule_all_sweepers = null
+	matriarch_ordeal_reference = null
+	return ..()
+
+/obj/effect/specific_sweeper_spawn/proc/ReturnMatriarch()
+	if(memory_of_a_matriarch)
+		return memory_of_a_matriarch.resolve()
 
 /obj/effect/specific_sweeper_spawn/proc/SpawnSweeper(type)
 	if(!ispath(type, /mob/living/simple_animal/hostile/ordeal))
@@ -1416,17 +1430,15 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 		return
 
 	var/mob/living/simple_animal/hostile/ordeal/new_neighbor = new type(get_turf(src))
-
+	var/mob/living/simple_animal/hostile/ordeal/indigo_midnight/matriarch = ReturnMatriarch()
 	if(matriarch)
 		if(matriarch_ordeal_reference) // Add 'em to our ordeal reference
 			new_neighbor.ordeal_reference = matriarch_ordeal_reference
-			matriarch_ordeal_reference.ordeal_mobs |= new_neighbor
+			LAZYOR(matriarch_ordeal_reference.ordeal_mobs, new_neighbor)
 
 		if(should_bind_to_matriarch)
-			matriarch.RegisterSignal(new_neighbor, COMSIG_LIVING_DEATH, TYPE_PROC_REF(/mob/living/simple_animal/hostile/ordeal/indigo_midnight, RegisterSweeperDeath))
-			matriarch.allied_sweepers |= new_neighbor
+			LAZYOR(her_divine_right_to_rule_all_sweepers.allied_sweepers, new_neighbor)
 			her_divine_right_to_rule_all_sweepers.Recruit(new_neighbor) // Add to our Leadership component followers
-			her_divine_right_to_rule_all_sweepers.FollowLeader(new_neighbor) // Get over here.
 
 		if(istype(new_neighbor, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
 			var/mob/living/simple_animal/hostile/ordeal/indigo_dusk/favourite_child = new_neighbor
@@ -1434,16 +1446,16 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			favourite_child.stat_attack = HARD_CRIT // They will go sicko mode on corpses they can't devour if we don't set this
 
 			if(should_bind_to_matriarch)
-				matriarch.deployed_commanders |= new_neighbor
+				LAZYOR(her_divine_right_to_rule_all_sweepers.deployed_commanders, new_neighbor)
 			else
-				matriarch.nitb_deployed_commanders |= new_neighbor
+				LAZYOR(her_divine_right_to_rule_all_sweepers.nitb_deployed_commanders, new_neighbor)
 		else
 			var/mob/living/simple_animal/hostile/ordeal/indigo_noon/less_favourite_child = new_neighbor
 			if(istype(less_favourite_child))
 				less_favourite_child.permitted_to_feast = FALSE // Disallow from eating human corpses, those are for the Matriarch
 				less_favourite_child.stat_attack = HARD_CRIT // They will go sicko mode on corpses they can't devour if we don't set this
 			if(should_bind_to_matriarch)
-				matriarch.deployed_grunts |= new_neighbor
+				LAZYOR(her_divine_right_to_rule_all_sweepers.deployed_grunts, new_neighbor)
 
 	qdel(src)
 
@@ -1493,6 +1505,40 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 
 // A component subtype for some special behaviour I want in these Sweepers, since I'd rather not mess with the actual component itself.
 /datum/component/ai_leadership/matriarch
+	/// Holds the commanders we've deployed as part of the NitB
+	var/list/nitb_deployed_commanders = list()
+	/// List of all bound, spawned sweepers in our retinue
+	var/list/allied_sweepers = list()
+	/// List of just the bound retinue commanders
+	var/list/deployed_commanders = list()
+	/// List of just the bound retinue grunts
+	var/list/deployed_grunts = list()
+	//Things we applied signals to
+	var/list/signal_holders = list()
+	/// Types of available commanders to spawn for our retinue. We will pick n take out of this list to avoid duplicates, we will replenish it when they die.
+	var/list/retinue_commander_types = list(
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale/retinue,
+	)
+	/// Types of available grunts to spawn for our retinue.
+	var/list/retinue_grunt_types = list(
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/lanky/retinue,
+		/mob/living/simple_animal/hostile/ordeal/indigo_noon/chunky/retinue,
+	)
+	// Technically, we could get away with just using 1 list here and deriving how many commanders/grunts there are with a for loop and istype check, but I'd rather not?
+
+	/// Types of commanders that can be spawned for the NitB player scaling mechanic. We are also gonna pick n take out of this one to avoid duplicates...
+	// Mainly to avoid a situation where 3 Marias spawn and give the sweepers 0 move delay (lol)
+	var/list/nitb_commander_types = list(
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/red,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/white,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/black,
+		/mob/living/simple_animal/hostile/ordeal/indigo_dusk/pale,
+	)
+
 
 // No longer disbands absent troops, just makes them meet up with the Matriarch. Everyone who doesn't have a target, actually.
 /datum/component/ai_leadership/matriarch/HeadCount(atom/U)
@@ -1518,6 +1564,44 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 			var/turf/matriarch_turf = get_turf(parent)
 			neighbor.patrol_to(matriarch_turf) // Dear god, they have to use A* (walk_to will just make them bang their head on a wall in some cases)
 
+/datum/component/ai_leadership/matriarch/Destroy()
+	UnregisterAllMob()
+	return ..()
+
+//Marking
+/datum/component/ai_leadership/matriarch/Recruit(mob/living/L)
+	if(!L || (L in signal_holders))
+		return
+	LAZYADD(signal_holders, L)
+	return ..()
+
+//Releases the recruit from our command
+/datum/component/ai_leadership/matriarch/Disband(mob/living/L)
+	if(!L)
+		return
+	var/dead_type = L.type
+	if(ispath(dead_type, /mob/living/simple_animal/hostile/ordeal/indigo_dusk))
+		if(!(dead_type in nitb_deployed_commanders))
+			LAZYOR(retinue_commander_types, dead_type)
+		else
+			LAZYOR(nitb_commander_types, dead_type)
+	signal_holders -= L
+	nitb_deployed_commanders -= L
+	allied_sweepers -= L
+	deployed_commanders -= L
+	deployed_grunts -= L
+	return ..()
+
+/datum/component/ai_leadership/matriarch/proc/UnregisterAllMob()
+	for(var/mob/living/L in signal_holders)
+		Disband(L)
+	//Redundant but failsafe
+	LAZYCLEARLIST(signal_holders)
+	LAZYCLEARLIST(nitb_deployed_commanders)
+	LAZYCLEARLIST(allied_sweepers)
+	LAZYCLEARLIST(deployed_commanders)
+	LAZYCLEARLIST(deployed_grunts)
+
 
 #undef COMBAT_ABILITY_DASH
 #undef COMBAT_ABILITY_SLAM
@@ -1528,3 +1612,10 @@ This is all code relating to Matriarch's support abilities and sweeper summoning
 #undef SUPPORT_ABILITY_OFFENSIVE
 #undef SUPPORT_ABILITY_PERSISTENCE
 #undef SUPPORT_ABILITY_SUMMON
+
+#undef ALLIEDSWEEP_LIST
+#undef DEPLOYEDGRUNT_LIST
+#undef DEPLOYEDCOMMAND_LIST
+#undef NITBCOMMAND_LIST
+
+#undef INDIGO_DELAY

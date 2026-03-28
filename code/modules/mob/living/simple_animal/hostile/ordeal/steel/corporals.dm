@@ -30,7 +30,7 @@
 	//Time shot, self-explanatory.
 	var/timesShot = 0
 	//Times shot required before activating the speed up.
-	var/shotRequirement = 5
+	var/shot_requirement = 5
 	//This is to activate the speed up through shots.
 	var/shotActive = FALSE
 
@@ -61,7 +61,7 @@
 //Measures how many times the Steel Noon was shot.
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/bullet_act()
 	timesShot++
-	if(timesShot >= shotRequirement)
+	if(timesShot >= shot_requirement)
 		shotActive = TRUE
 		timesShot = 0
 	..()
@@ -129,7 +129,7 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/CanAllowThrough(atom/movable/mover, turf/target)
 	if(charging && isliving(mover))
 		return TRUE
-	. = ..()
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/flying/Shoot(atom/A)
 	if(buffed || !isliving(A))
@@ -207,4 +207,4 @@
 /mob/living/simple_animal/hostile/ordeal/steel_dawn/steel_noon/stalker/attacked_by(obj/item/I, mob/living/user)
 	alpha = 255
 	density = TRUE
-	..()
+	return ..()

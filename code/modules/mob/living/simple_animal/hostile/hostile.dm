@@ -196,7 +196,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/Destroy()
 	target = null
 	targets_from = null
-	target_memory = null
+	target_memory = list()
 	friends = null
 	patrol_path = null
 	if(mark_once_attacked)
@@ -781,9 +781,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. -= 60
 
 	//up to 25 points for damage taken from target_thing
-	if(target_memory[target_tag])
-		var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
-		. += fraction_hp_lost_to_thing * 25
+	if(target_tag in target_memory)
+		if(target_memory[target_tag])
+			var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
+			. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
 	if(!QDELETED(new_target))
@@ -954,7 +955,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 		return FALSE
 
 	//Smashing code
-	if(environment_smash)
+	if(environment_smash && !isnull(target))
 		if(target.loc != null && get_dist(targets_from, target.loc) <= vision_range) //We can't see our target, but he's in our vision range still
 			if(ranged_ignores_vision && ranged_cooldown <= world.time) //we can't see our target... but we can fire at them!
 				OpenFire(target)

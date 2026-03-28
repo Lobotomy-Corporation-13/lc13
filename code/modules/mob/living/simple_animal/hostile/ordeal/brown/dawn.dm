@@ -342,7 +342,7 @@
 	for(var/mob/living/L in range(dash_range, T))//damage applied to targets in range
 		if(faction_check_mob(L))
 			continue
-		if(L in been_hit)
+		if(L.tag in been_hit)
 			continue
 		if(L.z != z)
 			continue
@@ -350,7 +350,7 @@
 		var/turf/LT = get_turf(L)
 		new /obj/effect/temp_visual/kinetic_blast(LT)
 		L.deal_damage(dash_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-		been_hit += L
+		been_hit += L.tag
 		playsound(L, 'sound/weapons/fixer/generic/sword4.ogg', 75, 1)
 		if(!ishuman(L))
 			continue

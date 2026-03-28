@@ -80,10 +80,9 @@
 	QDEL_NULL(left_shell)
 	QDEL_NULL(right_shell)
 	QDEL_NULL(laserloop)
-	for(var/atom/A in lasers)
-		QDEL_NULL(A)
-	for(var/datum/beam/B in beams)
-		QDEL_NULL(B)
+	QDEL_LIST(lasers)
+	QDEL_LIST(beams)
+	hit_line = null
 	/// Apparently these lists need to be set to null to avoid hard deletes later on, since they are referencing existing turfs
 	microbarrage_threatened_turfs = null
 	macrolaser_threatened_turfs = null
@@ -96,10 +95,8 @@
 	QDEL_NULL(left_shell)
 	QDEL_NULL(right_shell)
 	QDEL_NULL(laserloop)
-	for(var/atom/A in lasers)
-		QDEL_NULL(A)
-	for(var/datum/beam/B in beams)
-		QDEL_NULL(B)
+	QDEL_LIST(lasers)
+	QDEL_LIST(beams)
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/green_midnight/PostDamageReaction(damage_amount, damage_type, source, attack_type)
