@@ -317,6 +317,10 @@
 	var/burst_cooldown
 	var/burst_cooldown_time = 5 SECONDS
 
+/obj/item/ego_weapon/lantern/Destroy()
+	QDEL_LIST(traps)
+	return ..()
+
 /obj/item/ego_weapon/lantern/attack_self(mob/user)
 	if(mode == LANTERN_MODE_REMOTE)
 		to_chat(user, span_info("You adjust any newly-placed traps to be set off by motion."))

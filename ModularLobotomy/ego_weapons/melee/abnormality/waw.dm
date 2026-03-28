@@ -200,15 +200,15 @@
 		return
 
 	if(!mode)
-		if(!(M in targets))
-			targets+= M
+		if(!(M.tag in targets))
+			targets += M.tag
 
 	if(mode)
 		if(M in targets)
 			playsound(M, 'sound/weapons/fixer/generic/nail1.ogg', 100, FALSE, 4)
 			M.deal_damage(ranged_damage, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			new /obj/effect/temp_visual/remorse(get_turf(M))
-			targets -= M
+			targets -= M.tag
 	..()
 
 /obj/item/ego_weapon/remorse/attack_self(mob/user)
@@ -513,6 +513,10 @@
 	var/mob/living/carbon/human/crimlust_user
 	var/consume_damage
 
+/datum/status_effect/display/crimlust_hemorrhage/Destroy()
+	crimlust_user = null
+	return ..()
+
 /datum/status_effect/display/crimlust_hemorrhage/on_creation(mob/living/new_owner, mob/living/carbon/human/supercool_mercenary, hemorrhage_final_damage)
 	if(!(..()))
 		return FALSE
@@ -525,7 +529,7 @@
 		qdel(src)
 	crimlust_user = supercool_mercenary
 	consume_damage = hemorrhage_final_damage
-	RegisterSignal(new_owner, COMSIG_LIVING_DEATH, PROC_REF(Consume))
+	RegisterSignal(new_owner, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH), PROC_REF(Consume))
 	return TRUE
 
 /datum/status_effect/display/crimlust_hemorrhage/be_replaced()
@@ -536,7 +540,7 @@
 /// Called when the mob dies or when it's hit by a Hollowpoint Shell
 /datum/status_effect/display/crimlust_hemorrhage/proc/Consume()
 	if(!QDELETED(owner))
-		UnregisterSignal(owner, COMSIG_LIVING_DEATH)
+		UnregisterSignal(owner, list(COMSIG_PARENT_QDELETING, COMSIG_LIVING_DEATH))
 		owner.deal_damage(consume_damage, RED_DAMAGE, source = crimlust_user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
 		var/turf/owner_turf = get_turf(owner)
 		var/owner_is_robot = FALSE
@@ -752,6 +756,10 @@
 	var/special_cooldown = 3
 	var/specialing = FALSE
 	var/list/hit_turfs = list()
+
+/obj/item/ego_weapon/wings/Destroy()
+	hit_turfs = null
+	return ..()
 
 /obj/item/ego_weapon/wings/attack(mob/living/M, mob/living/user) // This part's simple, basically Oppression but with decay.
 	if(!CanUseEgo(user))
@@ -1761,7 +1769,7 @@
 	/// Delay inbetween chainsaw autohits.
 	var/saw_loop_delay = 0.4 SECONDS
 	/// Target we're currently sawing. Change it if we click on something else.
-	var/atom/saw_target
+	var/datum/weakref/saw_target
 	/// Are we currently sawing something?
 	var/currently_sawing = FALSE
 	/// Should we interrupt the saw loop?
@@ -1774,7 +1782,7 @@
 	if(!CanUseEgo(user)) // I keep forgetting this check teehee
 		return FALSE
 	// Try to start a chainsaw loop on living mobs that aren't us
-	if(isliving(target) && (target != user))
+	if(isliving(target) && (target.tag != user.tag))
 		BeginSawLoop(target, user)
 		user.changeNext_move(CLICK_CD_MELEE * attack_speed)
 	// If we're not currently sawing and we couldn't start a chainsaw loop, do a regular hit
@@ -1807,7 +1815,7 @@
 	if(QDELETED(user) || user.stat >= DEAD)
 		return
 	// Set the sawing target to the new target
-	saw_target = target
+	saw_target = WEAKREF(target)
 	interrupt_loop = FALSE
 	// If we weren't already sawing, start the chainsaw loop
 	if(!currently_sawing)
@@ -1815,18 +1823,19 @@
 
 // Hit the target. Hit them again if we haven't broken the conditions in a certain timespan. This is a recursive proc.
 /obj/item/ego_weapon/animalism/proc/SawLoop(mob/living/user)
-	if(QDELETED(saw_target) || QDELETED(user))
+	var/atom/sawing_guy = saw_target ? saw_target.resolve() : null
+	if(QDELETED(sawing_guy) || QDELETED(user))
 		return FALSE
 
 	currently_sawing = TRUE
 
-	user.face_atom(saw_target)
-	user.do_attack_animation(saw_target)
+	user.face_atom(sawing_guy)
+	user.do_attack_animation(sawing_guy)
 	playsound(loc, hitsound, get_clamped_volume(), TRUE, extrarange = stealthy_audio ? SILENCED_SOUND_EXTRARANGE : -1, falloff_distance = 0)
 
 	// If it's a mob...
-	if(isliving(saw_target))
-		var/mob/living/victim = saw_target
+	if(isliving(sawing_guy))
+		var/mob/living/victim = sawing_guy
 		victim.attacked_by(src, user)
 		log_combat(user, victim, pick(attack_verb_continuous), src.name, "(INTENT: [uppertext(user.a_intent)]) (DAMTYPE: [uppertext(damtype)])")
 		// Stop the loop if they're dead.
@@ -1840,10 +1849,10 @@
 
 	// It's a machine or a structure.
 	else
-		var/obj/structure/inanimate_victim = saw_target
+		var/obj/structure/inanimate_victim = sawing_guy
 		inanimate_victim.attacked_by(src, user)
 
-	if(do_after(user, saw_loop_delay, timed_action_flags = (IGNORE_TARGET_LOC_CHANGE | IGNORE_USER_LOC_CHANGE), extra_checks = CALLBACK(src, PROC_REF(SawLoopChecks), saw_target, user), interaction_key = "animalism_saw_loop", max_interact_count = 1))
+	if(do_after(user, saw_loop_delay, timed_action_flags = (IGNORE_TARGET_LOC_CHANGE | IGNORE_USER_LOC_CHANGE), extra_checks = CALLBACK(src, PROC_REF(SawLoopChecks), sawing_guy, user), interaction_key = "animalism_saw_loop", max_interact_count = 1))
 		SawLoop(user)
 	else
 		// We failed our checks or interrupted the do_after, funtime's over, reset
@@ -2735,6 +2744,10 @@
 	var/obj/effect/myform_staff/sunyata/staff_vfx
 	var/spin_vfx_fade_time = 0.4 SECONDS
 
+/obj/item/ego_weapon/sunyata/Destroy()
+	if(staff_vfx)
+		QDEL_NULL(staff_vfx)
+	return ..()
 
 /obj/item/ego_weapon/sunyata/attack_self(mob/user)
 	if(!CanUseEgo(user))
@@ -2771,7 +2784,7 @@
 					L.deal_damage(aoe, WHITE_DAMAGE, user, attack_type = (ATTACK_TYPE_SPECIAL))
 			sleep(1.5)
 	else
-		qdel(staff_vfx)
+		QDEL_NULL(staff_vfx)
 	spinning = FALSE
 
 /obj/item/ego_weapon/sunyata/get_clamped_volume()

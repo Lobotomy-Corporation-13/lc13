@@ -14,6 +14,10 @@
 	var/max_fuel = 1000
 	var/obj/item/ego_weapon/ranged/heavy_flamethrower/linked_weapon
 
+/obj/item/fuel_tank_backpack/Destroy()
+	Unlink()
+	return ..()
+
 /obj/item/fuel_tank_backpack/examine(mob/user)
 	. = ..()
 	. += span_notice("Fuel: [fuel_amount]/[max_fuel]")
@@ -24,8 +28,7 @@
 	. = ..()
 	if(linked_weapon)
 		to_chat(user, span_warning("The flamethrower's fuel line disconnects!"))
-		linked_weapon.fuel_tank = null
-		linked_weapon = null
+		Unlink()
 
 /obj/item/fuel_tank_backpack/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/fuel_tank_backpack))
@@ -66,6 +69,18 @@
 		user.visible_message(span_notice("[user] refills [src] from [F]."), span_notice("You refill [src] from [F]."))
 		playsound(src, 'sound/effects/refill.ogg', 50, TRUE)
 
+/obj/item/fuel_tank_backpack/proc/Link(atom/linkee)
+	if(linked_weapon)
+		Unlink(linked_weapon)
+	RegisterSignal(linkee, COMSIG_PARENT_QDELETING, PROC_REF(Unlink))
+	linked_weapon = linkee
+
+/obj/item/fuel_tank_backpack/proc/Unlink()
+	if(linked_weapon)
+		UnregisterSignal(linked_weapon, COMSIG_PARENT_QDELETING)
+		linked_weapon.fuel_tank = null
+		linked_weapon = null
+
 // Heavy Flamethrower Weapon
 /obj/item/ego_weapon/ranged/heavy_flamethrower
 	name = "heavy flamethrower"
@@ -85,6 +100,11 @@
 	var/fuel_per_shot = 5
 	var/obj/item/fuel_tank_backpack/fuel_tank
 
+/obj/item/ego_weapon/ranged/heavy_flamethrower/Destroy()
+	if(fuel_tank)
+		Disconnect()
+	return ..()
+
 /obj/item/ego_weapon/ranged/heavy_flamethrower/examine(mob/user)
 	. = ..()
 	if(fuel_tank)
@@ -96,9 +116,9 @@
 	if(!ishuman(user))
 		to_chat(user, span_warning("You can't use this!"))
 		return FALSE
-	
+
 	var/mob/living/carbon/human/H = user
-	
+
 	// Check if already connected
 	if(fuel_tank)
 		// Disconnect current tank
@@ -106,17 +126,17 @@
 		to_chat(user, span_notice("You disconnect [fuel_tank] from [src]."))
 		fuel_tank = null
 		return TRUE
-	
+
 	// Try to connect to worn tank
 	var/obj/item/fuel_tank_backpack/tank = H.back
 	if(!istype(tank))
 		to_chat(user, span_warning("You need to wear a fuel tank backpack first!"))
 		return FALSE
-	
+
 	if(tank.linked_weapon && tank.linked_weapon != src)
 		to_chat(user, span_warning("[tank] is already connected to another weapon!"))
 		return FALSE
-	
+
 	// Connect to tank
 	fuel_tank = tank
 	tank.linked_weapon = src
@@ -136,9 +156,9 @@
 /obj/item/ego_weapon/ranged/heavy_flamethrower/dropped(mob/user)
 	. = ..()
 	if(fuel_tank)
-		fuel_tank.linked_weapon = null
+		Disconnect()
 		to_chat(user, span_warning("The flamethrower's fuel line disconnects!"))
-		fuel_tank = null
+
 
 /obj/item/ego_weapon/ranged/heavy_flamethrower/can_shoot()
 	if(!fuel_tank)
@@ -157,6 +177,10 @@
 
 	fuel_tank.fuel_amount -= fuel_per_shot
 	return ..()
+
+/obj/item/ego_weapon/ranged/heavy_flamethrower/proc/Disconnect()
+	if(fuel_tank)
+		fuel_tank.Unlink()
 
 // Heavy Flame Projectile
 /obj/projectile/ego_bullet/heavy_flame

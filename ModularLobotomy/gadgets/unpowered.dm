@@ -111,6 +111,11 @@
 	var/mob/living/carbon/human/target_agent
 	var/print_charges = 1
 
+/obj/item/portablepredict/Destroy()
+	target_abno = null
+	target_agent = null
+	return ..()
+
 /obj/item/portablepredict/afterattack(atom/target, mob/user, proximity_flag)
 	. = ..()
 	// Adjacent thing.
@@ -597,6 +602,10 @@
 	icon_state = "lobotomizer"
 	var/lobotomizing = FALSE
 	var/datum/looping_sound/lobotomizer/soundloop
+
+/obj/item/lobotomizer/Destroy()
+	QDEL_NULL(soundloop)
+	return ..()
 
 /obj/item/lobotomizer/attack_self(mob/living/carbon/human/user)
 	if(!(user.has_quirk(/datum/quirk/brainproblems)) || !(istype(user)) || lobotomizing)

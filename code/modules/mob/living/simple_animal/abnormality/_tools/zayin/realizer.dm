@@ -92,6 +92,8 @@
 
 /obj/structure/toolabnormality/realization/Destroy()
 	qdel(bough)
+	QDEL_NULL(f1)
+	QDEL_NULL(f2)
 	return ..()
 
 /obj/structure/toolabnormality/realization/proc/FilterLoop(loop_stage) //Takes a numeric argument for advancing the loop's stage in a cycle (1 > 2 > 3 > 1 > ...)

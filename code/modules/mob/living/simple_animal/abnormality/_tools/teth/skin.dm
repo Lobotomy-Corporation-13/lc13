@@ -18,7 +18,7 @@
 	if(!.)
 		return
 
-	if(used_by[user] != 1) // Not their first use
+	if(used_by[user.tag] != 1) // Not their first use
 		user.physiology.white_mod *= 1.10
 
 // Status Effect

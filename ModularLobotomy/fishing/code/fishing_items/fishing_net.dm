@@ -26,6 +26,10 @@
 	var/enemy_chance = 15 //chance of getting enemies
 	var/capacity = 5
 
+/obj/structure/destructible/fishing_net/Destroy()
+	open_waters = null
+	return ..()
+
 /obj/structure/destructible/fishing_net/Initialize()
 	. = ..()
 	open_waters = get_turf(src)

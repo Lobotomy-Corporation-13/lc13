@@ -19,6 +19,10 @@
 	var/work
 	var/relative_location
 
+/obj/machinery/containment_panel/Destroy()
+	linked_console = null
+	return ..()
+
 /obj/machinery/containment_panel/Initialize()
 	. = ..()
 	var/turf/closest_department
@@ -169,6 +173,12 @@
 	var/prosthetic_cost = 0
 	var/organic_cost = 800
 	var/obj/item/organ/brain/slotted_brain
+
+/obj/machinery/body_fabricator/Destroy()
+	if(slotted_brain)
+		slotted_brain.forceMove(get_turf(src))
+		slotted_brain = null
+	return ..()
 
 /obj/machinery/body_fabricator/attackby(obj/item/I, mob/user)
 	if(istype(I, /obj/item/holochip))
@@ -384,6 +394,10 @@
 	var/cost_multiplier = 5
 	resistance_flags = INDESTRUCTIBLE
 	max_integrity = 1000000
+
+/obj/machinery/body_preservation_unit/Destroy()
+	stored_bodies = null
+	return ..()
 
 /obj/machinery/body_preservation_unit/Initialize()
 	. = ..()

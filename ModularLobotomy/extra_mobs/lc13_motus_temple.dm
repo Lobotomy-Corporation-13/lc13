@@ -209,6 +209,12 @@
 	var/devouring_cooldown
 	var/devouring_cooldown_time = 2 SECONDS
 
+/mob/living/simple_animal/hostile/mad_fly_swarm/Destroy()
+	if(nesting_target)
+		UnregisterSignal(nesting_target, COMSIG_LIVING_DEATH)
+	nesting_target = null
+	return ..()
+
 /mob/living/simple_animal/hostile/mad_fly_swarm/Initialize()
 	. = ..()
 	var/matrix/init_transform = transform

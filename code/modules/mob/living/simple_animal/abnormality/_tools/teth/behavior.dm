@@ -3,7 +3,7 @@
 	name = "behavior adjustment"
 	desc = "A floating disk."
 	icon_state = "behavior"
-	var/list/active_users = list()
+	operators = list()
 
 	ego_list = list(
 		/datum/ego_datum/weapon/adjustment,
@@ -14,12 +14,10 @@
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+	if(user.has_status_effect(STATUS_EFFECT_BEHAVIOR))
 		user.remove_status_effect(STATUS_EFFECT_BEHAVIOR)
 		to_chat(user, span_userdanger("You feel your intellect returning."))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_BEHAVIOR)
 		to_chat(user, span_userdanger("You feel as though you've been adjusted to become righteous."))
 

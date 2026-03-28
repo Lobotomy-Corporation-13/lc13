@@ -2388,6 +2388,10 @@
 	var/leap_count = 0
 	var/list/hit_turfs = list()
 
+/obj/item/ego_weapon/telepole/Destroy()
+	hit_turfs = null
+	return ..()
+
 /obj/item/ego_weapon/telepole/afterattack(atom/target, mob/living/user, proximity_flag, clickparams)
 	if(!CanUseEgo(user))
 		return

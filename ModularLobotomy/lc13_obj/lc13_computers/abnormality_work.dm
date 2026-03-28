@@ -42,7 +42,10 @@
 
 /obj/machinery/computer/abnormality/Destroy()
 	GLOB.lobotomy_devices -= src
-	..()
+	EOTool = null
+	linked_panel = null
+	datum_reference = null
+	return ..()
 
 /obj/machinery/computer/abnormality/update_overlays()
 	. = ..()

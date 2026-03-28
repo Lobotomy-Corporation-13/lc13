@@ -91,6 +91,11 @@
 	var/list/moblist = list()
 	var/target
 
+
+/obj/structure/den/tunnel/Destroy()
+	target = null
+	return ..()
+
 /obj/structure/den/tunnel/Initialize(mapload)
 	. = ..()
 	if(!target)

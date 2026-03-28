@@ -24,6 +24,7 @@
 /obj/item/extraction/key/Destroy()
 	if(archived_console)
 		archived_console.ApplyEOTool(passed_variable, TRUE)
+		archived_console = null
 	if(stored_user)
 		UnregisterSignal(stored_user, COMSIG_LIVING_DEATH)
 	return ..()

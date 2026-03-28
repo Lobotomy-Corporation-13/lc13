@@ -8,6 +8,11 @@
 	var/obj/stored_item = null
 	var/obj/structure/extraction_belt/linked_structure
 
+/obj/item/extraction/delivery/Destroy()
+	stored_item = null
+	linked_structure = null
+	return ..()
+
 /obj/item/extraction/delivery/examine(mob/user)
 	. = ..()
 	if(user.mind.assigned_role == "Extraction Officer")
