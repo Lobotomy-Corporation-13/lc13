@@ -45,6 +45,10 @@
 	var/no_knights = FALSE
 	var/current_qliphoth
 
+/mob/living/simple_animal/hostile/abnormality/branch12/queen_keres/Destroy()
+	UnregisterKnightAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/queen_keres/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	if(get_attribute_level(user, TEMPERANCE_ATTRIBUTE) < 60)
 		datum_reference.qliphoth_change(-1)
@@ -127,7 +131,7 @@
 		potential_knights+=H
 
 	var/mob/living/carbon/human/new_knight = pick(potential_knights)
-	knights += new_knight
+	RegisterKnight(new_knight)
 
 	to_chat(new_knight, span_notice("You heed the call to arms."))
 	new_knight.physiology.red_mod *= 0.8
@@ -149,6 +153,20 @@
 
 	if(length(knights) == 0)
 		death()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/queen_keres/proc/RegisterKnight(mob/living/user)
+	knights += user
+	RegisterSignal(user, COMSIG_PARENT_QDELETING, PROC_REF(UnregisterKnight))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/queen_keres/proc/UnregisterKnight(mob/living/user)
+	SIGNAL_HANDLER
+
+	knights -= user
+	UnregisterSignal(user, COMSIG_PARENT_QDELETING)
+
+/mob/living/simple_animal/hostile/abnormality/branch12/queen_keres/proc/UnregisterKnightAll()
+	for(var/mob/living/interactor in knights)
+		UnregisterKnight(interactor)
 
 /datum/ai_controller/insane/murder/queen_keres
 	lines_type = /datum/ai_behavior/say_line/insanity_keres

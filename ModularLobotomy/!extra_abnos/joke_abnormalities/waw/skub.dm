@@ -30,13 +30,19 @@
 	)
 	//gift_type =  /datum/ego_gifts/skub
 	abnormality_origin = ABNORMALITY_ORIGIN_JOKE
+	//Im not sure where this is used?
 	var/list/currently_insane = list()
 	var/insanity_counter
 	var/riot_cooldown
 	var/riot_cooldown_time = 60 SECONDS
-	var/list/skub_list = list("PRO_SKUB" = list(), "ANTI_SKUB" = list())
+	var/list/pro_list = list()
+	var/list/con_list = list()
 	var/skub_type = "skub"
 	var/riot_time = 30 SECONDS
+
+/mob/living/simple_animal/hostile/abnormality/skub/Destroy()
+	UnregisterAll()
+	return ..()
 
 //work stuff
 /mob/living/simple_animal/hostile/abnormality/skub/PostWorkEffect(mob/living/carbon/human/user, work_type, pe)
@@ -45,16 +51,16 @@
 			continue
 		if(H.stat == DEAD)
 			continue
-		UpdateSkub(H)
+		Skubification(H)
 
 /mob/living/simple_animal/hostile/abnormality/skub/WorkChance(mob/living/carbon/human/user, chance, work_type)//set the new work chances
 	var/chance_mod = 0
 	switch(work_type)
 		if(ABNORMALITY_WORK_INSIGHT)
-			if(IsProSkub(user))
+			if(user in pro_list)
 				chance_mod += 25
 		if(ABNORMALITY_WORK_REPRESSION)
-			if(IsProSkub(user))
+			if(user in pro_list)
 				chance_mod -= 35
 	say(chance)
 	say(chance + chance_mod)
@@ -81,53 +87,100 @@
 		if(H.stat == DEAD)
 			continue
 		target_list += H
-		UpdateSkub(H)
-		if(IsProSkub(H))
+		if(H in pro_list)
 			to_chat(H, span_boldwarning("Your dedication to [skub_type] reaches a fever pitch!"))
 		else
+			Skubification(H, "ANTI_SKUB")
 			to_chat(H, span_boldwarning("You can't stop thinking about how much you hate [skub_type]!"))
-	sleep(3 SECONDS)
-	for(var/mob/living/carbon/human/H in target_list)
-		H.adjustSanityLoss(500)
-		QDEL_NULL(H.ai_controller)
-		if(IsProSkub(H))
-			H.ai_controller = /datum/ai_controller/insane/murder/skub
-			H.apply_status_effect(/datum/status_effect/panicked_type/skub)
-		else
-			H.ai_controller = /datum/ai_controller/insane/murder/anti_skub
-			H.apply_status_effect(/datum/status_effect/panicked_type/anti_skub)
+	addtimer(CALLBACK(src, PROC_REF(Skubageddon), target_list), 3 SECONDS)
 
-		H.InitializeAIController()
+/mob/living/simple_animal/hostile/abnormality/skub/proc/Skubageddon(list/victems)
+	for(var/mob/living/carbon/human/H in victems)
+		ActivateSleeperAgent(H)
+
 	addtimer(CALLBACK(src, PROC_REF(StopRiot)), riot_time)
 
-/mob/living/simple_animal/hostile/abnormality/skub/proc/UpdateSkub(mob/living/carbon/human/skubber)
-	if(!skubber)
-		return
-	if(skubber in skub_list["PRO_SKUB"])
-		return
-	if(skubber in skub_list["ANTI_SKUB"])
-		return
-	if(LAZYLEN(skub_list["PRO_SKUB"]) <= LAZYLEN(skub_list["ANTI_SKUB"]))
-		skub_list["PRO_SKUB"] |= skubber
-		to_chat(skubber, span_boldwarning("You've become pro-[skub_type]!"))
-	else
-		skub_list["ANTI_SKUB"] |= skubber
-		to_chat(skubber, span_boldwarning("You've become anti-[skub_type]!"))
-		return
-
-/mob/living/simple_animal/hostile/abnormality/skub/proc/IsProSkub(mob/living/skubber)
-	if(!(skubber in skub_list))
-		UpdateSkub(skubber)
-	if(skubber in skub_list["PRO_SKUB"])
-		return TRUE
-	return FALSE
-
 /mob/living/simple_animal/hostile/abnormality/skub/proc/StopRiot()
-	for(var/mob/living/carbon/human/H in skub_list["PRO_SKUB"])
+	var/list/skub_list = pro_list + con_list
+	for(var/mob/living/carbon/human/H in skub_list)
 		H.adjustSanityLoss(-500)
-	for(var/mob/living/carbon/human/H in skub_list["ANTI_SKUB"])
-		H.adjustSanityLoss(-500)
+	UnregisterAll()
 	datum_reference.qliphoth_change(3)
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/ActivateSleeperAgent(mob/living/carbon/human/H)
+	if(!H)
+		return
+	H.adjustSanityLoss(500)
+	if(H in pro_list && !has_status_effect(/datum/status_effect/panicked_type/skub))
+		QDEL_NULL(H.ai_controller)
+		H.ai_controller = /datum/ai_controller/insane/murder/skub
+		H.apply_status_effect(/datum/status_effect/panicked_type/skub)
+	if(H in con_list && !has_status_effect(/datum/status_effect/panicked_type/anti_skub))
+		QDEL_NULL(H.ai_controller)
+		H.ai_controller = /datum/ai_controller/insane/murder/anti_skub
+		H.apply_status_effect(/datum/status_effect/panicked_type/anti_skub)
+	H.InitializeAIController()
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/Skubification(new_link, demonination = "PRO_SKUB")
+	if(!new_link)
+		return
+	if((new_link in pro_list) || (new_link in con_list))
+		return
+	RegisterMob(new_link)
+	if(demonination == "PRO_SKUB" && length(pro_list) <= length(con_list))
+		pro_list += new_link
+		return
+	con_list += new_link
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/SwapSkub(mob/living/skubber)
+	if(skubber in pro_list)
+		pro_list -= skubber
+		con_list += skubber
+		to_chat(skubber, span_boldwarning("Maybe [skub_type] is cool afterall."))
+		return
+	con_list -= skubber
+	pro_list += skubber
+	to_chat(skubber, span_boldwarning("Maybe [skub_type] isnt cool afterall?"))
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/BalancedSkub()
+	var/pro_num = length(pro_list)
+	var/con_num = length(con_list)
+	var/total_num = pro_num + con_num
+	var/diff_num = abs(pro_num - con_num)
+	var/list/greater_skub = pro_list
+	if(total_num <= 1 || diff_num == 0)
+		return
+
+	if(greater_skub < con_list)
+		greater_skub = con_list
+	if(diff_num == total_num)
+		diff_num = round(diff_num/2)
+
+	var/iteration = 1
+	for(var/i in greater_skub)
+		if(iteration == diff_num)
+			break
+		SwapSkub(i)
+		iteration++
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/RegisterMob(mob/living/skubbite)
+	if(!skubbite)
+		return
+	RegisterSignal(skubbite, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/UnregisterMob(mob/living/skubbite)
+	if(!skubbite)
+		return
+	UnregisterSignal(skubbite, list(COMSIG_PARENT_QDELETING))
+	pro_list -= skubbite
+	con_list -= skubbite
+
+/mob/living/simple_animal/hostile/abnormality/skub/proc/UnregisterAll()
+	var/list/total = con_list + pro_list
+	for(var/i in total)
+		UnregisterMob(i)
+	pro_list.Cut()
+	con_list.Cut()
 
 /datum/status_effect/panicked_type/skub
 	icon = "murder"
@@ -157,7 +210,7 @@
 		var/mob/living/carbon/human/H = AM
 		if(HAS_AI_CONTROLLER_TYPE(H, src))
 			return
-	..()
+	return ..()
 
 /datum/status_effect/panicked_type/anti_skub
 	icon = "murder"
@@ -187,4 +240,4 @@
 		var/mob/living/carbon/human/H = AM
 		if(HAS_AI_CONTROLLER_TYPE(H, src))
 			return
-	..()
+	return ..()

@@ -3,7 +3,6 @@
 	name = "the dragon skull"
 	desc = "A formation of wood twisted into the shape of a skull. It feels oddly warm to the touch."
 	icon_state = "dragon_skull"
-	var/list/active_users = list()
 
 	ego_list = list(
 		/obj/item/ego_weapon/support/dragon_staff,
@@ -14,12 +13,10 @@
 	. = ..()
 	if(!do_after(user, 6))
 		return
-	if(user in active_users)
-		active_users -= user
+	if(user.has_status_effect(STATUS_EFFECT_DRAGON_COURAGE))
 		user.remove_status_effect(STATUS_EFFECT_DRAGON_COURAGE)
 		to_chat(user, span_userdanger("Your greatest fears return to the fringes of your mind."))
 	else
-		active_users += user
 		user.apply_status_effect(STATUS_EFFECT_DRAGON_COURAGE)
 		to_chat(user, span_userdanger("You tap [src] and peer into the dark eyes that litter its surface. Fascinated, you experience a childlike desire for adventure."))
 

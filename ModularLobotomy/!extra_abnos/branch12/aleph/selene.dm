@@ -42,11 +42,26 @@
 	var/pulse_damage = 150
 	var/weak_pulse_damage = 40
 
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Initialize()
+	. = ..()
+	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death)) // Hell
+
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Destroy()
+	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
+	UnregisterAll()
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Move()
 	return FALSE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/CanAttack(atom/the_target)
 	return FALSE
+
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/BreachEffect(mob/living/carbon/human/user, breach_type)
+	. = ..()
+	var/turf/T = pick(GLOB.department_centers)
+	forceMove(T)
+	return
 
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Life()
 	. = ..()
@@ -72,12 +87,12 @@
 
 		if(H.sanity_lost)
 			insanity_counter++
-			currently_insane|=H
+			RegisterMob(H)
 
 	//Remove sane people from the insanity list so we can re-count them.
 	for(var/mob/living/carbon/human/H in currently_insane)
 		if(!H.sanity_lost)
-			currently_insane -= H
+			UnregisterMob(H)
 
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/proc/WhitePulse()
 	for(var/mob/M in GLOB.player_list)
@@ -106,21 +121,6 @@
 		L.deal_damage((weak_pulse_damage), BLACK_DAMAGE, source = src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 	SLEEP_CHECK_DEATH(3)
 
-/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/BreachEffect(mob/living/carbon/human/user, breach_type)
-	. = ..()
-	var/turf/T = pick(GLOB.department_centers)
-	forceMove(T)
-	return
-
-
-/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Initialize()
-	. = ..()
-	RegisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH, PROC_REF(on_mob_death)) // Hell
-
-/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/Destroy()
-	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
-	return ..()
-
 /mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/proc/on_mob_death(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
 	if(!IsContained()) // If it's breaching right now
@@ -133,3 +133,21 @@
 		return FALSE
 	datum_reference.qliphoth_change(-1) // One death reduces it
 	return TRUE
+
+//Hard Delete Prevention
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/proc/RegisterMob(mob/living/L)
+	if(!L || (L in currently_insane))
+		return
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	currently_insane += L
+
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/proc/UnregisterMob(mob/living/L)
+	if(!L)
+		return
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	currently_insane -= L
+
+/mob/living/simple_animal/hostile/abnormality/branch12/fly_moon/proc/UnregisterAll()
+	for(var/i in currently_insane)
+		UnregisterMob(i)
+	currently_insane.Cut()

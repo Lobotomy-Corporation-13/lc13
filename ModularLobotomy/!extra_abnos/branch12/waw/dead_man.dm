@@ -44,6 +44,7 @@
 	//gift_type =  /datum/ego_gifts/departure
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 	var/mob/living/carbon/human/marked_man
+	//Checks mob tags
 	var/list/nearby_players = list()
 
 	patrol_cooldown_time = 5 SECONDS	//Needs to be super common
@@ -52,18 +53,20 @@
 //Attacking stuff
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/CanAttack(atom/the_target)
 	if(ismob(the_target))
-		if(the_target!=marked_man)
+		if(the_target != marked_man)
 			return FALSE
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/AttackingTarget(atom/attacked_target)
 	. = ..()
 	if(ishuman(attacked_target))
-		if(attacked_target==marked_man)	//Instantly kill our man.
-			to_chat(marked_man, span_userdanger("Your sins have caught up to you."), confidential = TRUE)
-			new /obj/effect/temp_visual/human_horizontal_bisect(get_turf(marked_man))
-			marked_man.set_lying_angle(NORTH)
-			marked_man.gib()
+		if(marked_man && attacked_target==marked_man)	//Instantly kill our man.
+			var/mob/living/carbon/human/H = attacked_target
+			to_chat(H, span_userdanger("Your sins have caught up to you."), confidential = TRUE)
+			new /obj/effect/temp_visual/human_horizontal_bisect(get_turf(H))
+			H.set_lying_angle(NORTH)
+			UnregisterSoul()
+			H.gib()
 
 			say("My job here is done.")
 			death()
@@ -75,6 +78,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/Destroy()
 	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
+	UnregisterSoul()
+	nearby_players = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/proc/on_mob_death(datum/source, mob/living/died, gibbed)
@@ -90,26 +95,26 @@
 	var/look_for_ckey = died.lastattackerckey
 	for(var/mob/living/carbon/human/H in GLOB.player_list)
 		if(H.ckey == look_for_ckey)
-			marked_man = H
+			marked_man = RegisterSoul(H)
 	datum_reference.qliphoth_change(-1) // One death reduces it, but it has to be killed by a player
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/Life(mob/living/carbon/human/user, work_type, pe, work_time)
-	..()
+	. = ..()
 	if(IsContained())
 		return
 
 	if(prob(20))//Low-effort, low processing way to check if people are constantly around him, to reduce bodyblocking.
 		//I won't be emptying this list, so you can't keep pestering him and then running away.
 		for(var/mob/living/carbon/human/H in range(2,src))
-			if(H in nearby_players)	//If you try to bodyblock him in a door, stun and bleed.
+			if(H.tag in nearby_players)	//If you try to bodyblock him in a door, stun and bleed.
 				H.Stun(20)
 				H.Knockdown(20)
 				H.apply_lc_bleed(15)
 				say("Begone. I quarrel not with you, fool.")
-				nearby_players -= H
+				nearby_players -= H.tag
 			else
-				nearby_players|=H
+				nearby_players|=H.tag
 
 	//Kill them if they run to the manager's floor.
 	if(marked_man.z!=z)
@@ -135,7 +140,7 @@
 	sound_to_playing_players_on_level('sound/abnormalities/silence/bong.ogg', 50, zlevel = z)
 	for(var/mob/H in GLOB.player_list)
 		to_chat(H, span_userdanger("You. [marked_man]. You will be slain for your sins."))
-	..()
+	return ..()
 
 //Patrol stuff
 
@@ -151,7 +156,10 @@
 		say("My job here is done.")
 		death()
 
+
 /mob/living/simple_animal/hostile/abnormality/branch12/deadman/SelectPatrolLocation()
+	if(!marked_man)
+		return
 	var/patrol_turf = get_turf(marked_man)
 
 	var/turf/target_turf = get_closest_atom(/turf/open, patrol_turf, src)
@@ -159,3 +167,14 @@
 	if(istype(target_turf))
 		return target_turf
 	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/branch12/deadman/proc/RegisterSoul(new_link)
+	if(!new_link)
+		return
+	marked_man = new_link
+	RegisterSignal(new_link, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterSoul))
+
+/mob/living/simple_animal/hostile/abnormality/branch12/deadman/proc/UnregisterSoul()
+	if(marked_man)
+		UnregisterSignal(marked_man, list(COMSIG_PARENT_QDELETING))
+	marked_man = null
