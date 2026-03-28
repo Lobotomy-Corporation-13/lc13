@@ -17,6 +17,9 @@
 /datum/component/cognitohazard_visual/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_PARENT_EXAMINE, PROC_REF(Examine))
 
+/datum/component/cognitohazard_visual/UnregisterFromParent()
+	UnregisterSignal(parent, COMSIG_PARENT_EXAMINE)
+
 /**
 	This proc will trigger when someone examines the parent.
 	It will attach the text found in the body of the proc to the `examine_list` and display it to the player examining the parent.

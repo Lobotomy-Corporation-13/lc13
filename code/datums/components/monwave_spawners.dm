@@ -64,6 +64,15 @@
 
 	addtimer(CALLBACK(src, PROC_REF(LateInitialize)))
 
+/datum/component/monwave_spawner/Destroy()
+	assult_path = null
+	current_wave = null
+	existing_mobs = null
+	last_wave = null
+	wave_leader = null
+	assault_target = null
+	return ..()
+
 /datum/component/monwave_spawner/proc/LateInitialize()
 	GeneratePath()
 	BeginProcessing()
@@ -106,7 +115,7 @@
 	var/mob/living/simple_animal/hostile/spawned_mob = new mobtype(pick(get_adjacent_open_turfs(parent)))
 	if(!wave_leader && LeaderQualifications(spawned_mob))
 		wave_leader = spawned_mob
-	current_wave += spawned_mob
+	LAZYADD(current_wave, spawned_mob)
 	current_existing_mobs += 1
 	spawned_mob.faction = faction.Copy()
 	RegisterSignal(spawned_mob, COMSIG_LIVING_DEATH, PROC_REF(MinionSlain))
@@ -179,6 +188,10 @@
 	. = ..()
 	AddElement(/datum/element/point_of_interest)
 
+/obj/effect/wave_commander/Destroy()
+	our_path = null
+	return ..()
+
 /obj/effect/wave_commander/proc/DoPath(list/assault_path)
 	our_path = assault_path.Copy()
 	if(length(our_path) <= 0)
@@ -227,4 +240,3 @@
 	if(patrol_move_timer)
 		deltimer(patrol_move_timer)
 	QDEL_IN(src, 5)
-

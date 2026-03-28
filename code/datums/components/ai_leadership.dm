@@ -37,6 +37,10 @@
 	ScanLocation()
 	START_PROCESSING(SSdcs, src)
 
+/datum/component/ai_leadership/Destroy()
+	followers = null
+	return ..()
+
 /datum/component/ai_leadership/RegisterWithParent()
 	if(isliving(parent))
 		RegisterSignal(parent, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(RemoveLeader))
@@ -174,12 +178,14 @@
 //Register recruit with the system
 /datum/component/ai_leadership/proc/Recruit(mob/living/L)
 	followers += L
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(Disband))
 	SSmobcommander.RecruitFollower(L)
 	FollowLeader(L)
 
 //Releases the recruit from our command
 /datum/component/ai_leadership/proc/Disband(mob/living/L)
 	followers -= L
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
 	SSmobcommander.DismissFollower(L)
 
 //Is the recruit already recruited in the system?

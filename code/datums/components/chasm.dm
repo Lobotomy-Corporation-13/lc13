@@ -26,6 +26,10 @@
 		/obj/effect/wisp,
 	))
 
+/datum/component/chasm/Destroy()
+	target_turf = null
+	return ..()
+
 /datum/component/chasm/Initialize(turf/target)
 	RegisterSignal(parent, list(COMSIG_MOVABLE_CROSSED, COMSIG_ATOM_ENTERED), PROC_REF(Entered))
 	target_turf = target
