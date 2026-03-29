@@ -15,7 +15,7 @@ Additionally, the Ten-Lords Commission operates outside the Six Commissions and 
 The Sky-Faring Commission is in charge of all matters related to flight, navigation, and trade. On the Luofu, it is headquartered in the Palace of Astrum under the oversight of Helm Master Yukong. Starskiff Haven, the official entrance of the Luofu and its largest port, is also governed by this Commission. The Xianzhou Alliance communicates between ships via the Yellowbell system, and resonances are received by each ship's Sky-Faring Commission. On the Luofu, Yellowbell resonances are personally reviewed by Helm-Master Yukong and her secretary Xikui.
 
 ### Trade Guilds
-There are seven trade guilds affiliated with the Luofu Sky-Faring Commission: testing
+There are seven trade guilds affiliated with the Luofu Sky-Faring Commission:
 
 | Guild | Amicassador | Scope of Trade |
 |-------|-------------|----------------|
