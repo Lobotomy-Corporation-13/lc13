@@ -326,6 +326,7 @@
 	EndWeather()
 	for(var/obj/effect/season_turf/newturf in spawned_turfs)
 		newturf.DoDelete()
+	spawned_turfs = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/seasons/BreachEffect(mob/living/carbon/human/user, breach_type)

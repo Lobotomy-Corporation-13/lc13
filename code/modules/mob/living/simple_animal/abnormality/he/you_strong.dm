@@ -69,6 +69,11 @@
 	var/summon_cooldown_time = 120 SECONDS
 	var/summon_count = 0
 
+/mob/living/simple_animal/hostile/abnormality/you_strong/Destroy()
+	if(soundloop)
+		QDEL_NULL(soundloop)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/you_strong/Initialize(mapload)
 	. = ..()
 	soundloop = new(list(src), FALSE)

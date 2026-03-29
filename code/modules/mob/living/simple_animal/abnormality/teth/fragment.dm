@@ -87,7 +87,8 @@
 	return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/fragment/Destroy()
-	QDEL_NULL(legs)
+	if(legs)
+		QDEL_NULL(legs)
 	if(!particle_note)
 		return ..()
 	particle_note.fadeout()

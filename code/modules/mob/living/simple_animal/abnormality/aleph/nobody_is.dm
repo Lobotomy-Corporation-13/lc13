@@ -57,7 +57,8 @@
 	//Contained Variables
 	var/reflect_timer
 	var/shelled = FALSE
-	var/mob/living/carbon/human/chosen = null
+	var/datum/weakref/chosen_memory
+	can_act = TRUE
 	var/current_stage = 1
 	var/next_transform = null
 	var/list/longhair = list( // EXTREMELY TEMPORARY but easier to do than figuring out complex image manipulation
@@ -81,7 +82,7 @@
 	var/grab_windup_time = 16
 	var/grab_damage = 200 //The amount dealt when grabbing someone, twice if they aren't grabbed for whatever reason
 	var/strangle_damage = 50 //dealt over time to whoever is grabbed
-	var/mob/living/carbon/human/grab_victim = null
+	var/datum/weakref/grab_memory
 	var/release_threshold = 500 //Total raw damage needed to break a player out of a grab (from any source)
 	var/release_damage = 0
 	var/last_heal_time = 0
@@ -95,7 +96,7 @@
 	var/grab_damage_oberon = 140
 	var/strangle_damage_oberon = 35
 	var/melee_damage_oberon = 15
-	var/mob/living/simple_animal/hostile/abnormality/titania/abno_host
+	var/datum/weakref/host_memory
 	var/obj/effect/titania_aura/fairy_aura
 
 	//PLAYABLES ATTACKS
@@ -134,6 +135,11 @@
 	toggle_message = span_colossus("You will now shoot out tendrils.")
 	button_icon_toggle_deactivated = "nt_toggle0"
 
+/mob/living/simple_animal/hostile/abnormality/nobody_is/Destroy()
+	QDEL_NULL(fairy_aura)
+	QDEL_NULL(headicon)
+	return ..()
+
 //Spawning
 /mob/living/simple_animal/hostile/abnormality/nobody_is/PostSpawn()
 	. = ..()
@@ -154,6 +160,7 @@
 	reflect_timer = addtimer(CALLBACK(src, PROC_REF(ReflectionCheck)), 3 MINUTES, TIMER_STOPPABLE)
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/ChangeReflection()
+	var/mob/living/carbon/chosen = chosen_memory ? chosen_memory.resolve() : null
 	var/list/potentialmarked = list()
 	for(var/mob/living/carbon/human/L in GLOB.player_list)
 		if(L.stat >= HARD_CRIT || L.sanity_lost || z != L.z) // Dead or in hard crit, insane, or on a different Z level.
@@ -173,7 +180,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/ReflectChosen(mob/living/carbon/human/reflect_target)
 	CheckMirrorIcon()
-	chosen = reflect_target
+	chosen_memory = WEAKREF(reflect_target)
+	var/mob/living/carbon/human/chosen = chosen_memory ? chosen_memory.resolve() : null
 	if(!chosen || !IsContained())
 		return
 	var/obj/item/bodypart/HD = chosen.get_bodypart("head")
@@ -225,7 +233,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
-	if(user == chosen) //It makes more sense to just check for a disguise, but this is called before PostWorkEffect()
+	if(user == chosen_memory ? chosen_memory.resolve() : null) //It makes more sense to just check for a disguise, but this is called before PostWorkEffect()
 		return
 	datum_reference.qliphoth_change(-1)
 
@@ -290,6 +298,7 @@
 	. = ..()
 	if(. < 10)
 		return
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
 	if(grab_victim)
 		release_damage = clamp(release_damage + ., 0, release_threshold)
 		if(release_damage >= release_threshold)
@@ -307,6 +316,7 @@
 	. = ..()
 	if(!.)
 		return
+	var/mob/living/simple_animal/hostile/abnormality/titania/abno_host = host_memory ? host_memory.resolve() : null
 	if(!oberon_mode)
 		if((last_heal_time + 1 SECONDS) < world.time) // One Second between heals guaranteed
 			var/heal_amount = ((world.time - last_heal_time)/10)*heal_percent_per_second*maxHealth
@@ -375,7 +385,7 @@
 		Oberon_Fusion(T)
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/Oberon_Fusion(mob/living/simple_animal/hostile/abnormality/titania/T)
-	abno_host = T
+	host_memory = WEAKREF(T)
 	T.pass_flags = PASSTABLE | PASSMOB
 	T.is_flying_animal = FALSE
 	T.density = FALSE
@@ -422,6 +432,8 @@
 		fairy_aura.dir = dir
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/death(gibbed)
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
+	var/mob/living/simple_animal/hostile/abnormality/titania/abno_host = host_memory ? host_memory.resolve() : null
 	if(headicon) //Gets rid of the reflection if they died in containtment for any reason
 		qdel(headicon)
 		headicon = null
@@ -497,6 +509,7 @@
 	grab_cooldown = world.time + grab_cooldown_time
 	can_act = FALSE
 	playsound(get_turf(src), 'sound/abnormalities/woodsman/woodsman_prepare.ogg', 75, 0, 5)
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
 	if(shelled)
 		add_overlay(icon('icons/effects/effects.dmi', "lovetown_shapes"))
 	else
@@ -519,9 +532,9 @@
 					if(faction_check_mob(H, FALSE) || H.z != z)
 						continue
 					if(!shelled) //If we don't have a shell, we can't grab just anyone. Only the chosen one.
-						if(H != chosen)
+						if(H != chosen_memory ? chosen_memory.resolve() : null)
 							continue
-					grab_victim = H
+					grab_memory = WEAKREF(H)
 					Strangle()
 			else //deal the damage twice if we already have someone grabbed
 				L.deal_damage(grab_damage, BLACK_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -538,6 +551,7 @@
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/Strangle()
 	set waitfor = FALSE
 	release_damage = 0
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
 	grab_victim.Immobilize(10)
 	if(grab_victim.sanity_lost)
 		grab_victim.Stun(10) //Immobilize does not stop AI controllers from moving, for some reason.
@@ -553,6 +567,7 @@
 	StrangleHit(1)
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/StrangleHit(count)
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
 	if(!grab_victim)
 		ReleaseGrab()
 		return
@@ -588,10 +603,11 @@
 	StrangleHit(count)
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/ReleaseGrab()
+	var/mob/living/carbon/human/grab_victim = grab_memory ? grab_memory.resolve() : null
 	if(grab_victim)
 		animate(grab_victim, pixel_y = 0, time = 5)
 		grab_victim.pixel_y = 0
-	grab_victim = null
+	grab_memory = null
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/OpenFire()
@@ -611,7 +627,7 @@
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/Finisher(mob/living/carbon/human/H) //return TRUE to prevent attacking, as attacking causes runtimes if the target is gibbed.
 	if(shelled)
 		return FALSE //We don't want it repeatedly turning into different people
-	else if(H == chosen) // Uh oh
+	else if(H == chosen_memory ? chosen_memory.resolve() : null) // Uh oh
 		disguise_as(H)
 		return TRUE
 	return FALSE
@@ -649,6 +665,7 @@
 /mob/living/simple_animal/hostile/abnormality/nobody_is/patrol_select() //Hunt down the chosen one
 	if(shelled) // We don't need a chosen anymore, or any special pathfinding behavior
 		return ..()
+	var/mob/living/carbon/chosen = chosen_memory ? chosen_memory.resolve() : null
 	if(chosen) //YOU'RE MINE
 		SEND_SIGNAL(src, COMSIG_PATROL_START, src, get_turf(chosen)) //Overrides the usual proc to target a specific tile
 		SEND_GLOBAL_SIGNAL(src, COMSIG_GLOB_PATROL_START, src, get_turf(chosen))
@@ -665,7 +682,7 @@
 			continue
 		if(ishuman(L))
 			var/mob/living/carbon/human/H = L
-			if(H == chosen)
+			if(H == chosen_memory ? chosen_memory.resolve() : null)
 				return H //YOU'RE MINE
 		if(L.health <= 0) //ignore the dead
 			continue
@@ -751,7 +768,7 @@
 	if(!ishuman(speaker))
 		return
 	var/mob/living/carbon/human/talker = speaker
-	if(talker != chosen) // Only copies the person it has chosen
+	if(talker != chosen_memory ? chosen_memory.resolve() : null) // Only copies the person it has chosen
 		return
 	if((findtext(message, "uwu") || findtext(message, "owo") || findtext(message, "daddy") || findtext(message, "what the dog doin")) && !isnull(talker) && talker.stat != DEAD)
 		if(status_flags & GODMODE) //if contained
@@ -770,11 +787,13 @@
 //Allow for titana's laws to exist for nobody is I think
 /mob/living/simple_animal/hostile/abnormality/nobody_is/bullet_act(obj/projectile/Proj)
 	if(oberon_mode)
+		var/mob/living/simple_animal/hostile/abnormality/titania/abno_host = host_memory ? host_memory.resolve() : null
 		abno_host.bullet_act(Proj)
 	..()
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/attacked_by(obj/item/I, mob/living/user)
 	if(oberon_mode)
+		var/mob/living/simple_animal/hostile/abnormality/titania/abno_host = host_memory ? host_memory.resolve() : null
 		abno_host.attacked_by(I, user)
 	..()
 
@@ -812,6 +831,7 @@
 		ZeroQliphoth()
 
 /mob/living/simple_animal/hostile/abnormality/nobody_is/proc/QuickOberonSpawn()
+	var/mob/living/carbon/chosen = chosen_memory ? chosen_memory.resolve() : null
 	if(!chosen || oberon_mode)//makes sure it doesn't continue if its already oberon or if there's no chosen.)
 		return
 	TransformNoKill(chosen)

@@ -125,7 +125,6 @@
 	var/jump_ready = FALSE
 	var/special_attack = null
 	var/special_attack_cooldown
-	var/list/been_hit = list()
 	var/list/time_stopped = list()
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/Initialize()
@@ -323,7 +322,7 @@
 			to_chat(M, span_userdanger("Horrifying screams come from out of the darkness!"))
 			flash_color(M, flash_color = COLOR_ALMOST_BLACK, flash_time = 80)
 		if(M.stat != DEAD && ishuman(M) && M.ckey)
-			survivors += M
+			RegisterMob(M,survivors)
 	can_act = FALSE
 	addtimer(CALLBACK(src, PROC_REF(GoActive)), 50)
 	addtimer(CALLBACK(src, PROC_REF(BreachAudioFX)), 45)
@@ -369,6 +368,15 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/Destroy()
 	for(var/mob/living/L in time_stopped)
 		UnFreezeMob(L)
+	if(soundloop)
+		QDEL_NULL(soundloop)
+	if(current_effect)
+		QDEL_NULL(current_effect)
+	UnregisterAll(survivors)
+	meltdowns = null
+	connected_door = null
+	connected_panel = null
+	time_stopped = null
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/Move()
@@ -834,8 +842,8 @@
 	// Close range gives you more time to dodge
 	var/hello_delay = (get_dist(src, target) <= 2) ? (1 SECONDS) : (0.5 SECONDS)
 	SLEEP_CHECK_DEATH(hello_delay)
-	var/list/been_hit = list()
 	var/broken = FALSE
+	var/list/hit_guys = list()
 	for(var/turf/T in getline(get_turf(src), target_turf))
 		if(T.density)
 			if(broken)
@@ -845,8 +853,8 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/smash_effect(TF)
-			been_hit = HurtInTurf(TF, been_hit, 120, RED_DAMAGE, null, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
-	for(var/mob/living/L in been_hit)
+			hit_guys = HurtInTurf(TF, list(), 120, RED_DAMAGE, null, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
+	for(var/mob/living/L in hit_guys)
 		if(L.health < 0)
 			L.gib()
 	playsound(get_turf(src), 'sound/abnormalities/nothingthere/hello_bam.ogg', 100, 0, 7)
@@ -1100,41 +1108,10 @@
 	SLEEP_CHECK_DEATH(5)
 	can_act = TRUE
 
+//I hate this abno since its just entirely copied unoptimized code.
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/SpearAttack(target)
 	special_attack_cooldown = world.time + 10 SECONDS
 	ourdash.Perform(target, src)
-
-/mob/living/simple_animal/hostile/abnormality/distortedform/proc/do_dash(move_dir, times_ran)
-	var/stop_charge = FALSE
-	if(times_ran >= 50)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		transform_cooldown += 1 SECONDS
-		can_act = TRUE
-		addtimer(CALLBACK(src, PROC_REF(ScytheAttack)), 5)
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		W.obj_destruction("holy spear")
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			addtimer(CALLBACK (D, TYPE_PROC_REF(/obj/machinery/door, open)))
-	if(stop_charge)
-		transform_cooldown += 1 SECONDS
-		can_act = TRUE
-		addtimer(CALLBACK(src, PROC_REF(ScytheAttack)), 5)
-		return
-	forceMove(T)
-	for(var/turf/TF in view(1, T))
-		new /obj/effect/temp_visual/small_smoke/halfsecond(TF)
-		var/list/new_hits = HurtInTurf(T, been_hit, 250, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - been_hit
-		been_hit += new_hits
-		for(var/mob/living/L in new_hits)
-			visible_message(span_boldwarning("[src] runs through [L]!"), span_nicegreen("You impaled heretic [L]!"))
-			new /obj/effect/temp_visual/cleave(get_turf(L))
-	addtimer(CALLBACK(src, PROC_REF(do_dash), move_dir, (times_ran + 1)), 0.5) // SPEED
 
 //Red Queen
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/ChangeQueen()
@@ -1168,7 +1145,7 @@
 	// Close range gives you more time to dodge
 	var/slash_delay = (get_dist(src, target) <= 2) ? (1.5 SECONDS) : (1 SECONDS)
 	SLEEP_CHECK_DEATH(slash_delay)
-	var/list/been_hit = list()
+	var/list/hittins = list()
 	var/broken = FALSE
 	for(var/turf/T in getline(get_turf(src), target_turf))
 		if(T.density)
@@ -1179,8 +1156,8 @@
 			if(TF.density)
 				continue
 			new /obj/effect/temp_visual/smash_effect(TF)
-			been_hit = HurtInTurf(TF, been_hit, 80, RED_DAMAGE, null, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-	for(var/mob/living/L in been_hit)
+			hittins = HurtInTurf(TF, hittins, 80, RED_DAMAGE, null, null, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	for(var/mob/living/L in hittins)
 		if(L.health < 0)
 			if(!ishuman(L))
 				L.gib()
@@ -1423,7 +1400,7 @@
 	target.add_overlay(icon('icons/effects/effects.dmi', "chronofield"))
 	addtimer(CALLBACK(target, TYPE_PROC_REF(/atom, cut_overlay), \
 							icon('icons/effects/effects.dmi', "chronofield")), 40)
-	time_stopped += target
+	RegisterMob(target,time_stopped)
 	addtimer(CALLBACK(src, PROC_REF(FreezeMob), target), 40)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/FreezeMob(mob/living/H)
@@ -1447,7 +1424,7 @@
 	H.AdjustStun(-20, ignore_canstun = TRUE)
 	REMOVE_TRAIT(H, TRAIT_MUTE, TIMESTOP_TRAIT)
 	H.remove_atom_colour(TEMPORARY_COLOUR_PRIORITY)
-	time_stopped -= H
+	UnregisterMob(H,time_stopped)
 
 
 //You're Bald...
@@ -1525,10 +1502,10 @@
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/CalanderAttack(faction_check = "hostile")
 	icon_state = "doomsday_universe"
-	been_hit = list()
 	playsound(src, 'sound/abnormalities/doomsdaycalendar/Doomsday_Universe.ogg', 50, FALSE, 50)
 	var/turf/target_c = get_turf(src)
 	var/list/turf_list = list()
+	var/got_hit = list()
 	for(var/i = 1 to 48)
 		turf_list = spiral_range_turfs(i, target_c) - spiral_range_turfs(i-1, target_c)
 		for(var/turf/open/T in turf_list)
@@ -1536,13 +1513,14 @@
 			S.color = "#003FFF"
 			for(var/mob/living/L in T)
 				new /obj/effect/temp_visual/dir_setting/cult/phase(T, L.dir)
-				addtimer(CALLBACK(src, PROC_REF(CalanderAttackHit), L, i, faction_check))
+				if(L in got_hit)
+					continue
+				got_hit += L
+				//Why is it a callback, why is it a callback? -IP
+				addtimer(CALLBACK(src, PROC_REF(CalanderAttackHit), L, i, faction_check, got_hit))
 		SLEEP_CHECK_DEATH(1.5)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/CalanderAttackHit(mob/living/L, attack_range = 1, faction_check = "hostile")
-	if(L in been_hit)
-		return
-	been_hit += L
 	if(!(faction_check in L.faction))
 		playsound(L.loc, 'sound/effects/burn.ogg', 50 - attack_range, TRUE, -1)
 		var/dealt_damage = max(5, 75 - (attack_range))
@@ -1815,7 +1793,7 @@
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), 100, RED_DAMAGE, null, null, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			if(H.health <= 0)
-				H.gib()
+				H.gib(TRUE,TRUE,TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/MediumJump(turf/target_turf)
 	name = "grant us love"
@@ -1835,7 +1813,7 @@
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
 		for(var/mob/living/carbon/human/H in HurtInTurf(T, list(), 150, BLACK_DAMAGE, null, null, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)))
 			if(H.health <= 0)
-				H.gib()
+				H.gib(TRUE,TRUE,TRUE)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/HeavyJump(turf/target_turf)
 	name = "Baba Yaga"
@@ -1867,8 +1845,7 @@
 		else
 			L.deal_damage(600 - ((dist > 2 ? dist : 0 )* 75), RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) //0-600 damage scaling on distance, we don't want it oneshotting mobs
 		if(L.health < 0)
-			L.gib()
-
+			L.gib(TRUE, TRUE, TRUE)
 
 //Miscellaneous random sprites - does nothing. Very low chance. This where you put the silly meme stuff.
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/Pause()
@@ -1885,6 +1862,23 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/PickForm()
 	name = pick("bill", "cube", "fairies", "shadow")
 	icon_state = name
+
+/mob/living/simple_animal/hostile/abnormality/distortedform/proc/RegisterMob(mob/living/L, list/record)
+	RegisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(ForceUnregisterMob))
+	record += L
+
+/mob/living/simple_animal/hostile/abnormality/distortedform/proc/UnregisterMob(mob/living/L, list/record)
+	record -= L
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+
+/mob/living/simple_animal/hostile/abnormality/distortedform/proc/ForceUnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING))
+	time_stopped -= L
+
+/mob/living/simple_animal/hostile/abnormality/distortedform/proc/UnregisterAll(list/emptying)
+	for(var/mob/living/L in emptying)
+		UnregisterMob(L, emptying)
+	emptying.Cut()
 
 //Misc Objects
 /obj/effect/temp_visual/jumpwarning
@@ -1960,96 +1954,19 @@
 	duration = 40
 	layer = RIPPLE_LAYER	//We want this HIGH. SUPER HIGH. We want it so that you can absolutely, guaranteed, see exactly what is about to hit you.
 	var/damage = 45 //Pale Damage
-	var/mob/living/caster
+	var/datum/weakref/castor_memory
 	var/slash_width = 2
 	var/slash_length = 5
 
 /obj/effect/temp_visual/remnant_of_time/Initialize(mapload, new_caster)
 	. = ..()
 	if(new_caster)
-		caster = new_caster
+		castor_memory = WEAKREF(new_caster)
 	addtimer(CALLBACK(src, PROC_REF(explode)), 2 SECONDS)
 
 /obj/effect/temp_visual/remnant_of_time/proc/explode()
-	var/turf/source_turf = get_turf(src)
-	var/turf/area_of_effect = list()
-	var/turf/middle_line = list()
-	switch(dir)
-		if(EAST)
-			middle_line = getline(source_turf, get_ranged_target_turf(source_turf, EAST, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, slash_width)))
-					if (Y.density)
-						break
-					if (Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, slash_width)))
-					if (U.density)
-						break
-					if (U in area_of_effect)
-						continue
-					area_of_effect += U
-		if(WEST)
-			middle_line = getline(source_turf, get_ranged_target_turf(source_turf, WEST, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, slash_width)))
-					if (Y.density)
-						break
-					if (Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, slash_width)))
-					if (U.density)
-						break
-					if (U in area_of_effect)
-						continue
-					area_of_effect += U
-		if(SOUTH)
-			middle_line = getline(source_turf, get_ranged_target_turf(source_turf, SOUTH, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, slash_width)))
-					if (Y.density)
-						break
-					if (Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, slash_width)))
-					if (U.density)
-						break
-					if (U in area_of_effect)
-						continue
-					area_of_effect += U
-		if(NORTH)
-			middle_line = getline(source_turf, get_ranged_target_turf(source_turf, NORTH, slash_length))
-			for(var/turf/T in middle_line)
-				if(T.density)
-					break
-				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, slash_width)))
-					if (Y.density)
-						break
-					if (Y in area_of_effect)
-						continue
-					area_of_effect += Y
-				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, slash_width)))
-					if (U.density)
-						break
-					if (U in area_of_effect)
-						continue
-					area_of_effect += U
-		else
-			for(var/turf/T in view(1, src))
-				if (T.density)
-					break
-				if (T in area_of_effect)
-					continue
-				area_of_effect |= T
+	var/turf/area_of_effect = FormulateExplode(dir)
+	var/mob/living/caster = castor_memory?.resolve()
 	if (!LAZYLEN(area_of_effect))
 		return
 	playsound(get_turf(src), 'sound/weapons/fixer/generic/sheath2.ogg', 75, 0, 5)
@@ -2063,3 +1980,40 @@
 			if(L == caster)
 				continue
 			caster.HurtInTurf(T, list(), damage, PALE_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+/obj/effect/temp_visual/remnant_of_time/proc/FormulateExplode(dir_to_target)
+	. = list()
+	var/turf/source_turf = get_turf(src)
+	var/list/middle_line = list()
+	var/list/directional_list  = list(NORTH,SOUTH,EAST,WEST)
+	//Default is North/South
+	var/right_dir = EAST
+	var/left_dir = WEST
+	if(dir_to_target ==  EAST || dir_to_target == WEST)
+		right_dir =  NORTH
+		left_dir = SOUTH
+
+	if(dir_to_target in directional_list)
+		middle_line = getline(source_turf, get_ranged_target_turf(source_turf, NORTH, slash_length))
+		for(var/turf/T in middle_line)
+			if(T.density)
+				break
+			for(var/turf/Y in getline(T, get_ranged_target_turf(T, right_dir, slash_width)))
+				if (Y.density)
+					break
+				if (Y in .)
+					continue
+				. += Y
+			for(var/turf/U in getline(T, get_ranged_target_turf(T, left_dir, slash_width)))
+				if (U.density)
+					break
+				if (U in .)
+					continue
+				. += U
+	else
+		for(var/turf/T in view(1, src))
+			if (T.density)
+				break
+			if (T in .)
+				continue
+			. |= T

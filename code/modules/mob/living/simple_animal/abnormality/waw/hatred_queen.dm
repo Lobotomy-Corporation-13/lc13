@@ -186,6 +186,18 @@
 	chosen_message = span_colossus("You will now use normal attacks.")
 	chosen_attack_num = 5
 
+/mob/living/simple_animal/hostile/abnormality/hatred_queen/Destroy()
+	spawned_effects.Cut()
+	beats_hit = null
+	if(current_beam)
+		QDEL_NULL(current_beam)
+	if(beamloop)
+		QDEL_NULL(beamloop)
+	if(wand)
+		QDEL_NULL(wand)
+	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/hatred_queen/Initialize()
 	. = ..()
 	beamloop = new(list(src), FALSE)
@@ -217,11 +229,8 @@
 	var/obj/effect/qoh_sygil/S = new(get_turf(src))
 	S.icon_state = "qoh2"
 	addtimer(CALLBACK(S, TYPE_PROC_REF(/obj/effect/qoh_sygil, fade_out)), 5 SECONDS)
-	UnregisterSignal(SSdcs, COMSIG_GLOB_MOB_DEATH)
 	if(friendly)
 		src.say("I swore I would protect everyone to the end…")
-	if(wand)
-		qdel(wand)
 	..()
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)

@@ -66,10 +66,12 @@ GLOBAL_LIST_EMPTY(apostles)
 	var/holy_revival_damage = 80 // Pale damage, scales with distance
 	var/holy_revival_range = 80
 	/// List of mobs that have been hit by the revival field to avoid double effect
+	//Uses Tags
 	var/list/been_hit = list()
 	/// Currently spawned apostles by this mob
 	var/list/apostles = list()
 	/// List of Living People on Breach
+	// Uses tags
 	var/list/heretics = list()
 
 	var/datum/reusable_visual_pool/RVP = new(500)
@@ -119,8 +121,8 @@ GLOBAL_LIST_EMPTY(apostles)
 			for(var/mob/living/carbon/human/H in GLOB.player_list)
 				if(H.stat != DEAD && H.client && H.z == z)
 					H.client.give_award(/datum/award/achievement/abno/kill_wn_pink_midnight, H)
-	for(var/mob/living/carbon/human/heretic in heretics)
-		if(heretic.stat == DEAD || !heretic.ckey)
+	for(var/mob/living/carbon/human/heretic in GLOB.player_list)
+		if(heretic.stat == DEAD || !heretic.ckey || !(heretic.tag in heretics))
 			continue
 		heretic.Apply_Gift(new /datum/ego_gifts/blessing)
 		heretic.playsound_local(get_turf(heretic), 'sound/abnormalities/whitenight/apostle_bell.ogg', 50)
@@ -129,11 +131,10 @@ GLOBAL_LIST_EMPTY(apostles)
 
 /mob/living/simple_animal/hostile/abnormality/white_night/Destroy()
 	for(var/mob/living/simple_animal/hostile/apostle/A in apostles)
+		UnregisterMob(A)
 		A.death()
 		QDEL_IN(A, 1.5 SECONDS)
-	apostles = null
 	QDEL_NULL(particles)
-	particles = null
 	QDEL_NULL(RVP)
 	return ..()
 
@@ -164,9 +165,9 @@ GLOBAL_LIST_EMPTY(apostles)
 		SLEEP_CHECK_DEATH(1.5)
 
 /mob/living/simple_animal/hostile/abnormality/white_night/proc/revive_target(mob/living/L, attack_range = 1, faction_check = "apostle")
-	if(L in been_hit)
+	if(L.tag in been_hit)
 		return
-	been_hit += L
+	been_hit += L.tag
 	if(!(faction_check in L.faction))
 		playsound(L.loc, 'sound/machines/clockcult/ark_damage.ogg', 50 - attack_range, TRUE, -1)
 		// The farther you are from white night - the less damage it deals
@@ -198,7 +199,8 @@ GLOBAL_LIST_EMPTY(apostles)
 			apostle_type = /mob/living/simple_animal/hostile/apostle/staff
 		if(i in list(7,8,9,10))
 			apostle_type = /mob/living/simple_animal/hostile/apostle/spear
-		apostles += new apostle_type(get_turf(src))
+		var/new_apostle = new apostle_type(get_turf(src))
+		RegisterMob(new_apostle)
 		var/list/possible_locs = GLOB.xeno_spawn.Copy()
 		for(var/mob/living/simple_animal/hostile/apostle/A in apostles)
 			if(istype(A, /mob/living/simple_animal/hostile/apostle/scythe/guardian))
@@ -243,7 +245,7 @@ GLOBAL_LIST_EMPTY(apostles)
 	. = ..()
 	for(var/mob/M in GLOB.player_list)
 		if(M.stat != DEAD && ishuman(M) && M.ckey)
-			heretics += M
+			heretics += M.tag
 		flash_color(M, flash_color = COLOR_RED, flash_time = 100)
 	sound_to_playing_players('sound/abnormalities/whitenight/apostle_bell.ogg')
 	add_filter("apostle", 1, rays_filter(size = 64, color = "#FFFF00", offset = 6, density = 16, threshold = 0.05))
@@ -263,6 +265,19 @@ GLOBAL_LIST_EMPTY(apostles)
 			if(L.stat || !L.client)
 				continue
 			L.client.give_award(/datum/award/achievement/abno/white_night, L)
+
+/mob/living/simple_animal/hostile/abnormality/white_night/proc/RegisterMob(mob/living/L)
+	RegisterSignal(L, list(COMSIG_PARENT_QDELETING), PROC_REF(UnregisterMob))
+	apostles += L
+
+/mob/living/simple_animal/hostile/abnormality/white_night/proc/UnregisterMob(mob/living/L)
+	UnregisterSignal(L, list(COMSIG_PARENT_QDELETING))
+	apostles -= L
+
+/mob/living/simple_animal/hostile/abnormality/white_night/proc/UnregisterAll()
+	for(var/mob/living/L in apostles)
+		UnregisterMob(L)
+	apostles.Cut()
 
 /* Apostles */
 

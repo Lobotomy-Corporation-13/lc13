@@ -35,7 +35,7 @@
 	var/good_droprate = 0
 	var/neutral_droprate = 0
 	var/bad_droprate = 0
-	/// List of humans that witnessed the abnormality breaching
+	/// List of humans that witnessed the abnormality breaching, uses tags
 	var/list/breach_affected = list()
 	/// Copy-pasted from megafauna.dm: This allows player controlled mobs to use abilities
 	var/chosen_attack = 1
@@ -231,6 +231,8 @@
 
 /mob/living/simple_animal/hostile/abnormality/Destroy()
 	SHOULD_CALL_PARENT(TRUE)
+	breach_affected = null
+	attack_action_types = null
 	if(istype(datum_reference)) // Respawn the mob on death
 		datum_reference.current = null
 		addtimer(CALLBACK (datum_reference, TYPE_PROC_REF(/datum/abnormality, RespawnAbno)), 30 SECONDS)
@@ -316,11 +318,11 @@
 	if(fear_level <= 0)
 		return
 	for(var/mob/living/carbon/human/H in ohearers(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(H.stat == DEAD)
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			to_chat(H, span_notice("This again...?"))
 			H.apply_status_effect(/datum/status_effect/panicked_lvl_0)

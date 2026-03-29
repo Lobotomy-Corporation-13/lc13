@@ -66,6 +66,11 @@
 	user.physiology.repression_success_mod -= src.repression_mod
 	QDEL_NULL(src)
 
+/datum/ego_gifts/Destroy()
+	owner = null
+	datum_reference = null
+	return ..()
+
 /datum/ego_gifts/Topic(href, list/href_list)
 	switch(href_list["choice"])
 		if("lock")

@@ -309,11 +309,11 @@
 // Applies fear damage to everyone in range, copied from abnormalities
 /mob/living/simple_animal/hostile/mini_censored/proc/FearEffect()
 	for(var/mob/living/carbon/human/H in view(7, src))
-		if(H in breach_affected)
+		if(H.tag in breach_affected)
 			continue
 		if(HAS_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE))
 			continue
-		breach_affected += H
+		breach_affected += H.tag
 		H.adjustSanityLoss(20)
 		if(H.sanity_lost)
 			continue
