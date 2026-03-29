@@ -12,7 +12,7 @@ This document maps traditional SS13 department structures to Xianzhou Alliance C
 |----------------|---------------|------------|---------|
 | **Command** | Captain | HoP, HoS, CE, RD, CMO, QM | Station leadership and oversight |
 | **Security** | Head of Security | Warden, Security Officer, Detective | Law enforcement, brig, investigations |
-| **Engineering** | Chief Engineer | Station Engineer, Atmospheric Tech | Power, hull repair, atmospherics, construction |
+| **Engineering** | Chief Engineer | Station Engineer | Power, hull repair, construction |
 | **Science** | Research Director | Scientist, Geneticist, Roboticist | R&D, xenobiology, ordnance, tech upgrades |
 | **Medical** | Chief Medical Officer | Medical Doctor, Paramedic, Chemist, Coroner | Healing, chemistry, surgery, morgue |
 | **Supply/Cargo** | Quartermaster | Cargo Tech, Shaft Miner, Bitrunner | Ordering supplies, mining, exports, economy |
@@ -88,7 +88,7 @@ Where raw materials become sellable products. Also keeps the ship running.
 | Role | SS13 Equivalent | Responsibilities |
 |------|-----------------|------------------|
 | **Furnace Master** (Head) | Chief Engineer | Oversees all crafting and ship maintenance. Can produce masterwork items (higher value). Manages the Creation Furnace (heliobi-powered engine). Has access to advanced recipes. |
-| **Craftsman** | Station Engineer | General manufacturing — weapons, ship parts, tools, jade carvings, porcelain, trade goods. Also handles ship repairs, hull maintenance, furnace upkeep, and atmospherics. |
+| **Craftsman** | Station Engineer | General manufacturing — weapons, ship parts, tools, jade carvings, porcelain, trade goods. Also handles ship repairs, hull maintenance, and furnace upkeep. |
 
 **Key Area:** The Creation Furnace & Forges — heliobi-powered furnace, smelting equipment, workbenches, jade carving stations, Sapientia Academe (R&D for new schematics).
 
@@ -100,7 +100,7 @@ Where raw materials become sellable products. Also keeps the ship running.
 5. Deliver finished goods to Sky-Faring for trade
 6. Maintain the ship — keep the furnace running, repair damage, build upgrades
 
-**Future roles to add:** Apprentice (entry-level), Furnace Technician (atmospherics specialist), Master Artisan (senior crafter)
+**Future roles to add:** Apprentice (entry-level), Master Artisan (senior crafter)
 
 ---
 

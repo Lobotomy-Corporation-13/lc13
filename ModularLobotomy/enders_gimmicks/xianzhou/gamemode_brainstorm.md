@@ -78,7 +78,6 @@ The Artisanship Commission is where raw materials become valuable trade goods. T
 **Also responsible for:**
 - Ship hull repairs and construction (like Engineers patching breaches)
 - Maintaining the Creation Furnace (like Engineers running the engine)
-- Atmospheric systems and environmental controls
 - Building facility upgrades purchased with trade profits
 
 ### 3. Alchemy & Medicine (Alchemy — like Medbay + Chemistry + Botany)
