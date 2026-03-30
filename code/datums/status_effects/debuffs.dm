@@ -1973,7 +1973,7 @@
 	id = "sinking"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = -1
-	tick_interval = 10 SECONDS
+	tick_interval = 5 SECONDS
 	stack_decay = 0
 	max_stacks = 50
 	stacks = 0
@@ -1982,8 +1982,8 @@
 	stacking_display_name = "sinking_inactive"
 	/// Whether the sinking effect is active (FALSE for first 5 seconds)
 	var/activated = FALSE
-	/// Timer ID for the activation delay
-	var/activation_timer
+	/// World time at which the effect activates
+	var/activate_at
 	/// Prevents re-entry when sinking damage triggers another damage signal
 	var/triggering = FALSE
 	/// Tracks whether new stacks were added or effect triggered since last decay check
@@ -2000,12 +2000,9 @@
 	if(!owner)
 		return
 	// Start inactive, activate after 5 seconds
-	activation_timer = addtimer(CALLBACK(src, PROC_REF(activate)), 5 SECONDS, TIMER_STOPPABLE)
+	activate_at = world.time + 5 SECONDS
 
 /datum/status_effect/stacking/sinking/on_remove()
-	if(activation_timer)
-		deltimer(activation_timer)
-		activation_timer = null
 	if(activated)
 		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
 	return ..()
@@ -2019,6 +2016,8 @@
 	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
 
 /datum/status_effect/stacking/sinking/tick()
+	if(!activated && world.time >= activate_at)
+		activate()
 	if(!can_have_status())
 		qdel(src)
 		return
@@ -2029,7 +2028,6 @@
 
 /// Called after 5 seconds to activate the sinking effect
 /datum/status_effect/stacking/sinking/proc/activate()
-	activation_timer = null
 	activated = TRUE
 	if(!owner)
 		return
@@ -2097,7 +2095,7 @@
 	id = "rupture"
 	status_type = STATUS_EFFECT_MULTIPLE
 	duration = -1
-	tick_interval = 10 SECONDS
+	tick_interval = 5 SECONDS
 	stack_decay = 0
 	max_stacks = 50
 	stacks = 0
@@ -2106,8 +2104,8 @@
 	stacking_display_name = "rupture_inactive"
 	/// Whether the rupture effect is active (FALSE for first 5 seconds)
 	var/activated = FALSE
-	/// Timer ID for the activation delay
-	var/activation_timer
+	/// World time at which the effect activates
+	var/activate_at
 	/// Prevents re-entry when rupture damage triggers another damage signal
 	var/triggering = FALSE
 	/// Tracks whether new stacks were added or effect triggered since last decay check
@@ -2124,12 +2122,9 @@
 	if(!owner)
 		return
 	// Start inactive, activate after 5 seconds
-	activation_timer = addtimer(CALLBACK(src, PROC_REF(activate)), 5 SECONDS, TIMER_STOPPABLE)
+	activate_at = world.time + 5 SECONDS
 
 /datum/status_effect/stacking/rupture/on_remove()
-	if(activation_timer)
-		deltimer(activation_timer)
-		activation_timer = null
 	if(activated)
 		UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
 	return ..()
@@ -2143,6 +2138,8 @@
 	linked_alert.desc = initial(linked_alert.desc) + "[stacks]"
 
 /datum/status_effect/stacking/rupture/tick()
+	if(!activated && world.time >= activate_at)
+		activate()
 	if(!can_have_status())
 		qdel(src)
 		return
@@ -2153,7 +2150,6 @@
 
 /// Called after 5 seconds to activate the rupture effect
 /datum/status_effect/stacking/rupture/proc/activate()
-	activation_timer = null
 	activated = TRUE
 	if(!owner)
 		return

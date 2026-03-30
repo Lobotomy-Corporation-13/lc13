@@ -77,6 +77,11 @@
 	/// Accuracy feedback shown after filing
 	var/list/accuracy_feedback = list()
 
+/obj/item/intel_report/Destroy()
+	QDEL_NULL(attached_photo)
+	QDEL_NULL(linked_snapshot)
+	return ..()
+
 /obj/item/intel_report/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/photo))
 		if(filed)

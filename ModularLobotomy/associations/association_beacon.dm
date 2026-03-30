@@ -136,9 +136,9 @@
 	new /obj/item/ego_weapon/city/seven_s4_foil(src)
 	new /obj/item/ego_weapon/city/seven_s4_blade(src)
 	// Associate sidearms (3)
-	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
-	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
+	new /obj/item/ego_weapon/city/seven_s4_foil(src)
 	// Veteran weapon (1) + sidearm
 	new /obj/item/ego_weapon/city/seven_s4_blade/vet(src)
 	new /obj/item/ego_weapon/city/seven_s4_foil/dagger(src)

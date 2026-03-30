@@ -21,13 +21,15 @@
 	var/obj/item/paper/attached_note
 	/// Cached note overlay for removal
 	var/mutable_appearance/note_overlay
-	/// The mob attuned to this relic (only they can use its powers)
-	var/mob/living/attuned_mob
+	/// The mob attuned to this relic, identified by tag (only they can use its powers)
+	var/attuned_mob_tag
 	/// Quick check flag for attunement
 	var/attuned = FALSE
+	/// Generic tracked mob tag — subtypes can use this for their primary tracked human
+	var/tracked_mob_tag
 	/// WHITE damage dealt on failed attunement attempt (overridden per relic)
 	var/attunement_fail_damage = 5
-	/// Global tracker: how many relics each mob is attuned to (mob ref -> count)
+	/// Global tracker: how many relics each mob is attuned to (mob tag -> count)
 	var/static/list/attunement_counts = list()
 	/// Maximum number of relics a single person can be attuned to
 	var/static/max_attunements = 2
@@ -68,7 +70,7 @@
 	// Attunement status
 	if(!attuned)
 		. += span_notice("It hums with dormant energy. Use it in your hand to attempt attunement.")
-	else if(attuned_mob == user)
+	else if(attuned_mob_tag == user.tag)
 		. += span_notice("It resonates with your essence. <a href='?src=[REF(src)];break_attune=1'>Break Attunement</a>")
 	else
 		. += span_warning("It is bound to another. It will not respond to you.")
@@ -109,7 +111,7 @@
 	if(.)
 		return
 	if(href_list["break_attune"])
-		if(!attuned || attuned_mob != usr)
+		if(!attuned || attuned_mob_tag != usr.tag)
 			return
 		if(!ishuman(usr) || !Adjacent(usr))
 			return
@@ -146,7 +148,7 @@
 /// Attempt to attune a user to this relic. Returns TRUE only if already attuned to this user (proceed with power).
 /obj/item/ruin_relic/proc/TryAttune(mob/living/carbon/human/user)
 	if(attuned)
-		if(attuned_mob == user)
+		if(attuned_mob_tag == user.tag)
 			return TRUE
 		to_chat(user, span_warning("[src] is bound to another. It will not respond to you."))
 		return FALSE
@@ -156,7 +158,7 @@
 		to_chat(user, span_warning("[src] is still rejecting you. Wait [remaining] seconds."))
 		return FALSE
 	// Check attunement cap
-	var/key = REF(user)
+	var/key = user.tag
 	if(attunement_counts[key] >= max_attunements)
 		to_chat(user, span_warning("You are already attuned to too many relics. Break an existing attunement first."))
 		return FALSE
@@ -173,9 +175,9 @@
 /// Called when attunement succeeds. Sets vars, plays sound, registers death signal.
 /obj/item/ruin_relic/proc/OnAttuneSuccess(mob/living/carbon/human/user)
 	attuned = TRUE
-	attuned_mob = user
+	attuned_mob_tag = user.tag
 	// Track attunement count
-	var/key = REF(user)
+	var/key = user.tag
 	attunement_counts[key] = (attunement_counts[key] || 0) + 1
 	playsound(get_turf(src), 'sound/magic/staff_healing.ogg', 30, TRUE)
 	to_chat(user, span_notice("[src] resonates with your essence. You are now attuned."))
@@ -188,19 +190,18 @@
 
 /// Returns TRUE if the given mob is attuned to this relic.
 /obj/item/ruin_relic/proc/IsAttuned(mob/living/user)
-	return attuned && attuned_mob == user
+	return attuned && attuned_mob_tag == user.tag
 
 /// Clears attunement state.
 /obj/item/ruin_relic/proc/Unattune()
-	if(attuned_mob)
+	if(attuned_mob_tag)
 		// Decrement attunement count
-		var/key = REF(attuned_mob)
-		if(attunement_counts[key])
-			attunement_counts[key]--
-			if(attunement_counts[key] <= 0)
-				attunement_counts -= key
+		if(attunement_counts[attuned_mob_tag])
+			attunement_counts[attuned_mob_tag]--
+			if(attunement_counts[attuned_mob_tag] <= 0)
+				attunement_counts -= attuned_mob_tag
 	attuned = FALSE
-	attuned_mob = null
+	attuned_mob_tag = null
 
 // ==================== RAVENOUS VESSEL ====================
 
@@ -912,7 +913,7 @@
 
 /obj/item/ruin_relic/void_reliquary/Destroy()
 	if(holder_ref)
-		UnregisterSignal(holder_ref, COMSIG_MOB_AFTER_APPLY_DAMGE)
+		UnregisterSignal(holder_ref, list(COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
 		holder_ref = null
 	return ..()
 
@@ -949,14 +950,15 @@
 		return
 	// Unregister from previous holder if any
 	if(holder_ref)
-		UnregisterSignal(holder_ref, COMSIG_MOB_AFTER_APPLY_DAMGE)
+		UnregisterSignal(holder_ref, list(COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
 	holder_ref = user
 	RegisterSignal(holder_ref, COMSIG_MOB_AFTER_APPLY_DAMGE, PROC_REF(OnHolderDamaged))
+	RegisterSignal(holder_ref, COMSIG_PARENT_QDELETING, PROC_REF(OnHolderDeleted))
 
 /obj/item/ruin_relic/void_reliquary/dropped(mob/user)
 	. = ..()
 	if(holder_ref)
-		UnregisterSignal(holder_ref, COMSIG_MOB_AFTER_APPLY_DAMGE)
+		UnregisterSignal(holder_ref, list(COMSIG_MOB_AFTER_APPLY_DAMGE, COMSIG_PARENT_QDELETING))
 		holder_ref = null
 
 /// Signal handler: absorb a portion of the holder's damage as charge
@@ -971,6 +973,11 @@
 	// Dark sparkles on the relic
 	var/obj/effect/temp_visual/sparkles/S = new /obj/effect/temp_visual/sparkles(get_turf(src))
 	S.color = "#1a1a2e"
+
+/// Signal handler: cleans up when the holder mob is deleted
+/obj/item/ruin_relic/void_reliquary/proc/OnHolderDeleted(datum/source)
+	SIGNAL_HANDLER
+	holder_ref = null
 
 // ==================== ACTIVATION ====================
 
@@ -1090,13 +1097,15 @@
 	icon_state = "oddity4"
 	rarity = 4
 	attunement_fail_damage = 20
-	/// The person whose likeness is engraved
-	var/mob/living/carbon/human/engraved_human
+	/// Tag of the person whose likeness is engraved
+	var/engraved_human_tag
+	/// Display name of the engraved person
+	var/engraved_human_name
 	/// Current state: "blank", "engraved", "filling", "gold_filled"
 	var/state = "blank"
 
 /obj/item/ruin_relic/effigy_tablet/Destroy()
-	engraved_human = null
+	engraved_human_tag = null
 	return ..()
 
 /obj/item/ruin_relic/effigy_tablet/CheckAttunement(mob/living/carbon/human/user)
@@ -1123,7 +1132,7 @@
 		if("blank")
 			. += span_notice("The tablet is blank and unmarked. Perhaps a sharp edge could carve something into it.")
 		if("engraved")
-			. += span_notice("A humanoid figure is carved into its surface. It resembles [engraved_human].")
+			. += span_notice("A humanoid figure is carved into its surface. It resembles [engraved_human_name].")
 			. += span_warning("The engraved person must sacrifice their blood to fill it with gold.")
 		if("filling")
 			. += span_warning("Gold flows into the carved channels...")
@@ -1143,7 +1152,8 @@
 		to_chat(user, span_warning("[src] doesn't respond to you."))
 		return
 	// Engrave the user's likeness
-	engraved_human = user
+	engraved_human_tag = user.tag
+	engraved_human_name = user.real_name
 	state = "engraved"
 	icon_state = "oddity4_humanoid"
 	user.visible_message(
@@ -1173,14 +1183,13 @@
 /// The engraved person sacrifices blood to fill the engraving with gold
 /obj/item/ruin_relic/effigy_tablet/proc/BloodSacrifice(mob/living/user)
 	// Check engraved person still exists
-	if(!engraved_human || QDELETED(engraved_human))
+	if(!engraved_human_tag)
 		to_chat(user, span_warning("The engraving has faded. The tablet is blank once more."))
-		engraved_human = null
 		state = "blank"
 		icon_state = "oddity4"
 		return
 	// Must be the engraved person
-	if(user != engraved_human)
+	if(user.tag != engraved_human_tag)
 		to_chat(user, span_warning("[src] doesn't respond to you. Only the engraved can offer blood."))
 		return
 	// Must be below 50% HP
@@ -1208,7 +1217,7 @@
 
 /// Extract the golden figure from the tablet
 /obj/item/ruin_relic/effigy_tablet/proc/ExtractFigure(mob/living/user)
-	var/obj/item/ruin_relic/golden_figure/figure = new(get_turf(user), engraved_human)
+	var/obj/item/ruin_relic/golden_figure/figure = new(get_turf(user), engraved_human_tag, engraved_human_name)
 	user.put_in_hands(figure)
 	state = "engraved"
 	icon_state = "oddity4_humanoid"
@@ -1230,30 +1239,38 @@
 	icon_state = "oddity4_raw_goldhumanoid"
 	w_class = WEIGHT_CLASS_SMALL
 	rarity = 4
-	/// The person whose likeness this figure represents
-	var/mob/living/carbon/human/engraved_human
+	/// Weakref to the person whose likeness this figure represents
+	var/datum/weakref/engraved_human_ref
+	/// Display name of the engraved person
+	var/engraved_human_name
 
-/obj/item/ruin_relic/golden_figure/Initialize(mapload, mob/living/carbon/human/engraved)
+/obj/item/ruin_relic/golden_figure/Initialize(mapload, engraved_tag, engraved_name)
 	. = ..()
-	engraved_human = engraved
+	if(engraved_tag)
+		var/mob/living/carbon/human/engraved = locate(engraved_tag)
+		if(engraved)
+			engraved_human_ref = WEAKREF(engraved)
+	engraved_human_name = engraved_name
 
 /obj/item/ruin_relic/golden_figure/Destroy()
-	engraved_human = null
+	engraved_human_ref = null
 	return ..()
 
 /obj/item/ruin_relic/golden_figure/examine(mob/user)
 	. = ..()
-	if(!engraved_human || QDELETED(engraved_human))
+	var/mob/living/carbon/human/engraved_human = engraved_human_ref?.resolve()
+	if(!engraved_human)
 		. += span_warning("The figure has lost its connection. It's just gold now.")
 	else
-		. += span_notice("A golden figure in the shape of [engraved_human].")
+		. += span_notice("A golden figure in the shape of [engraved_human_name].")
 		. += span_warning("Using it will fully heal you at their expense.")
 
 /obj/item/ruin_relic/golden_figure/attack_self(mob/living/user)
 	if(!iscarbon(user))
 		return
 	// Require a valid, living engraved person
-	if(!engraved_human || QDELETED(engraved_human))
+	var/mob/living/carbon/human/engraved_human = engraved_human_ref?.resolve()
+	if(!engraved_human)
 		to_chat(user, span_warning("The figure has lost its connection. It's just gold now."))
 		return
 	if(engraved_human.stat == DEAD)
@@ -1498,6 +1515,33 @@
 	/// Number of drain ticks before rotten skin is permanently applied to the holder
 	var/rotten_skin_threshold = 200
 
+/// Cleans up beam and tether for a single target.
+/obj/item/ruin_relic/corrupted_skull/proc/CleanupTarget(mob/living/target)
+	if(target in drain_beams)
+		qdel(drain_beams[target])
+		drain_beams -= target
+	if(target in tethered_mobs)
+		var/datum/component/tether/T = target.GetComponent(/datum/component/tether)
+		if(T)
+			qdel(T)
+		tethered_mobs -= target
+	UnregisterSignal(target, COMSIG_PARENT_QDELETING)
+
+/// Cleans up all tracked targets' beams and tethers.
+/obj/item/ruin_relic/corrupted_skull/proc/CleanupAllTargets()
+	var/list/all_targets = drain_beams.Copy()
+	for(var/mob/living/L in tethered_mobs)
+		all_targets[L] = TRUE
+	for(var/mob/living/L in all_targets)
+		CleanupTarget(L)
+
+/// Signal handler: called when a tethered/beamed mob is deleted.
+/obj/item/ruin_relic/corrupted_skull/proc/OnTargetDeleted(datum/source)
+	SIGNAL_HANDLER
+	var/mob/living/L = source
+	drain_beams -= L
+	tethered_mobs -= L
+
 /obj/item/ruin_relic/corrupted_skull/Initialize()
 	. = ..()
 	drain_action = new(src)
@@ -1605,6 +1649,7 @@
 		// Manage beam
 		if(!(L in drain_beams))
 			drain_beams[L] = holder.Beam(L, icon_state = "drain_life")
+			RegisterSignal(L, COMSIG_PARENT_QDELETING, PROC_REF(OnTargetDeleted))
 		// Heal user per target
 		holder.adjustBruteLoss(-1)
 		holder.adjustSanityLoss(-1)
@@ -1628,14 +1673,7 @@
 	// Clean up beams for targets no longer in range
 	for(var/mob/living/L in drain_beams)
 		if(!(L in current_targets) || QDELETED(L) || L.stat == DEAD)
-			qdel(drain_beams[L])
-			drain_beams -= L
-			// Remove tether too
-			if(L in tethered_mobs)
-				var/datum/component/tether/T = L.GetComponent(/datum/component/tether)
-				if(T)
-					qdel(T)
-				tethered_mobs -= L
+			CleanupTarget(L)
 	// Update corruption stage
 	UpdateCorruption(holder)
 	// Check max corruption
@@ -1739,16 +1777,7 @@
 	if(!is_draining)
 		return
 	is_draining = FALSE
-	// Clean up all beams
-	for(var/key in drain_beams)
-		qdel(drain_beams[key])
-	drain_beams.Cut()
-	// Remove all tethers
-	for(var/mob/living/L in tethered_mobs)
-		var/datum/component/tether/T = L.GetComponent(/datum/component/tether)
-		if(T)
-			qdel(T)
-	tethered_mobs.Cut()
+	CleanupAllTargets()
 	// Keep processing for passive corruption decay, or stop if already at 0
 	if(corruption <= 0)
 		STOP_PROCESSING(SSobj, src)
@@ -1908,6 +1937,33 @@
 	/// List of mobs currently tethered
 	var/list/tethered_mobs = list()
 
+/// Cleans up beam and tether for a single target.
+/mob/living/simple_animal/hostile/corrupted_skull_mob/proc/CleanupTarget(mob/living/target)
+	if(target in drain_beams)
+		qdel(drain_beams[target])
+		drain_beams -= target
+	if(target in tethered_mobs)
+		var/datum/component/tether/T = target.GetComponent(/datum/component/tether)
+		if(T)
+			qdel(T)
+		tethered_mobs -= target
+	UnregisterSignal(target, COMSIG_PARENT_QDELETING)
+
+/// Cleans up all tracked targets' beams and tethers.
+/mob/living/simple_animal/hostile/corrupted_skull_mob/proc/CleanupAllTargets()
+	var/list/all_targets = drain_beams.Copy()
+	for(var/mob/living/L in tethered_mobs)
+		all_targets[L] = TRUE
+	for(var/mob/living/L in all_targets)
+		CleanupTarget(L)
+
+/// Signal handler: called when a tethered/beamed mob is deleted.
+/mob/living/simple_animal/hostile/corrupted_skull_mob/proc/OnTargetDeleted(datum/source)
+	SIGNAL_HANDLER
+	var/mob/living/L = source
+	drain_beams -= L
+	tethered_mobs -= L
+
 /mob/living/simple_animal/hostile/corrupted_skull_mob/Initialize(mapload, obj/item/ruin_relic/corrupted_skull/skull_item)
 	. = ..()
 	stored_item = skull_item
@@ -1944,33 +2000,26 @@
 		if(!(L in tethered_mobs))
 			L.AddComponent(/datum/component/tether, src, tether_range, src)
 			tethered_mobs += L
+			RegisterSignal(L, COMSIG_PARENT_QDELETING, PROC_REF(OnTargetDeleted))
 	// Clean up tethers for targets no longer in range
 	for(var/mob/living/L in tethered_mobs)
 		if(!(L in current_targets) || QDELETED(L) || L.stat == DEAD)
-			var/datum/component/tether/T = L.GetComponent(/datum/component/tether)
-			if(T)
-				qdel(T)
-			tethered_mobs -= L
+			CleanupTarget(L)
 	visible_message(span_warning("Dark tendrils lash out from [src], draining the life of those nearby!"))
 
 /mob/living/simple_animal/hostile/corrupted_skull_mob/death(gibbed)
 	// Clean up beams and tethers
-	for(var/key in drain_beams)
-		qdel(drain_beams[key])
-	drain_beams.Cut()
-	for(var/mob/living/L in tethered_mobs)
-		var/datum/component/tether/T = L.GetComponent(/datum/component/tether)
-		if(T)
-			qdel(T)
-	tethered_mobs.Cut()
-	// Drop the skull item with corruption reset
+	CleanupAllTargets()
+	// Reset the skull item's corruption state
 	if(stored_item && !QDELETED(stored_item))
 		stored_item.corruption = 0
 		stored_item.icon_state = "skull"
 		stored_item.drain_damage = 3
 		stored_item.is_draining = FALSE
-		stored_item.forceMove(get_turf(src))
 		stored_item = null
+	// Dump all contents to the ground (like mimic)
+	for(var/atom/movable/M in src)
+		M.forceMove(get_turf(src))
 	visible_message(span_notice("The living skull crumbles, leaving behind the ancient relic..."))
 	return ..()
 
@@ -1978,14 +2027,7 @@
 	if(stored_item && !QDELETED(stored_item))
 		stored_item.forceMove(get_turf(src))
 		stored_item = null
-	for(var/key in drain_beams)
-		qdel(drain_beams[key])
-	drain_beams.Cut()
-	for(var/mob/living/L in tethered_mobs)
-		var/datum/component/tether/T = L.GetComponent(/datum/component/tether)
-		if(T)
-			qdel(T)
-	tethered_mobs.Cut()
+	CleanupAllTargets()
 	return ..()
 
 // ==========================================================
@@ -2774,8 +2816,8 @@
 	var/on_cooldown = FALSE
 	/// Whether the user is currently disguised
 	var/is_disguised = FALSE
-	/// The mob currently disguised by this device
-	var/mob/living/carbon/human/disguised_mob
+	/// Weakref to the mob currently disguised by this device
+	var/datum/weakref/disguised_mob_ref
 	/// Stored original appearance values
 	var/original_name
 	var/original_hairstyle
@@ -2834,7 +2876,7 @@
 	H.update_hair()
 	H.update_body()
 	is_disguised = TRUE
-	disguised_mob = H
+	disguised_mob_ref = WEAKREF(H)
 	to_chat(H, span_notice("Your features shift and blur. You feel like someone else."))
 	H.visible_message(span_warning("[original_name]'s features ripple and change before your eyes."))
 	playsound(src, 'sound/magic/lightningshock.ogg', 30, TRUE)
@@ -2843,25 +2885,25 @@
 
 /// Reverts the disguised mob back to their original appearance.
 /obj/item/ruin_relic/purple_device/proc/RevertDisguise()
-	if(!is_disguised || !disguised_mob || QDELETED(disguised_mob))
+	var/mob/living/carbon/human/disguised_mob = disguised_mob_ref?.resolve()
+	if(!is_disguised || !disguised_mob)
 		is_disguised = FALSE
-		disguised_mob = null
+		disguised_mob_ref = null
 		StartCooldown()
 		return
-	var/mob/living/carbon/human/H = disguised_mob
-	H.real_name = original_name
-	H.name = original_name
-	H.hairstyle = original_hairstyle
-	H.facial_hairstyle = original_facial_hairstyle
-	H.hair_color = original_hair_color
-	H.facial_hair_color = original_facial_hair_color
-	H.skin_tone = original_skin_tone
-	H.update_hair()
-	H.update_body()
-	to_chat(H, span_notice("Your features snap back to normal. The device goes dim."))
+	disguised_mob.real_name = original_name
+	disguised_mob.name = original_name
+	disguised_mob.hairstyle = original_hairstyle
+	disguised_mob.facial_hairstyle = original_facial_hairstyle
+	disguised_mob.hair_color = original_hair_color
+	disguised_mob.facial_hair_color = original_facial_hair_color
+	disguised_mob.skin_tone = original_skin_tone
+	disguised_mob.update_hair()
+	disguised_mob.update_body()
+	to_chat(disguised_mob, span_notice("Your features snap back to normal. The device goes dim."))
 	playsound(src, 'sound/machines/click.ogg', 20, TRUE)
 	is_disguised = FALSE
-	disguised_mob = null
+	disguised_mob_ref = null
 	StartCooldown()
 
 /// Starts the 90-second use cooldown.

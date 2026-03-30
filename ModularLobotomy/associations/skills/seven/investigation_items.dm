@@ -146,8 +146,8 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	var/recording = FALSE
 	/// Stored messages: list(list("time" = X, "speaker" = Y, "message" = Z))
 	var/list/stored_messages = list()
-	/// Owner mob reference (for EXP tracking and removal permissions)
-	var/mob/living/owner_mob
+	/// Owner mob weakref (for EXP tracking and removal permissions)
+	var/datum/weakref/owner_weakref
 	/// EXP tracking: messages recorded since last EXP tick
 	var/messages_since_exp = 0
 	/// EXP cooldown
@@ -168,6 +168,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 
 /obj/item/seven_recorder/examine(mob/user)
 	// Owner always sees full info
+	var/mob/living/owner_mob = owner_weakref?.resolve()
 	if(user == owner_mob)
 		. = ..()
 		if(recording)
@@ -257,7 +258,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 /// Begin recording
 /obj/item/seven_recorder/proc/start_recording(mob/user)
 	recording = TRUE
-	owner_mob = user
+	owner_weakref = WEAKREF(user)
 	flags_1 |= HEAR_1
 	var/owner_key = ref(user)
 	if(!GLOB.seven_active_recorders[owner_key])
@@ -271,6 +272,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	if(attached_to)
 		UnregisterSignal(attached_to, COMSIG_PARENT_EXAMINE)
 		attached_to = null
+	var/mob/living/owner_mob = owner_weakref?.resolve()
 	if(owner_mob)
 		var/owner_key = ref(owner_mob)
 		if(GLOB.seven_active_recorders[owner_key])
@@ -279,6 +281,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 /// Signal handler: when someone examines the host item this recorder is hidden inside
 /obj/item/seven_recorder/proc/on_host_examined(datum/source, mob/user, list/examine_list)
 	SIGNAL_HANDLER
+	var/mob/living/owner_mob = owner_weakref?.resolve()
 	if(user == owner_mob)
 		examine_list += span_notice("A Seven recorder is attached. <a href='?src=[REF(src)];action=remove_recorder'>\[Remove\]</a>")
 	else if(stealth_until <= world.time || isobserver(user))
@@ -296,6 +299,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 		return
 	if(!user.can_interact_with(attached_to))
 		return
+	var/mob/living/owner_mob = owner_weakref?.resolve()
 	if(user == owner_mob)
 		remove_from_host(user)
 	else if(stealth_until <= world.time)
@@ -333,6 +337,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	if(messages_since_exp >= 5 && world.time >= next_exp_time)
 		messages_since_exp = 0
 		next_exp_time = world.time + 1 MINUTES
+		var/mob/living/owner_mob = owner_weakref?.resolve()
 		if(owner_mob)
 			var/datum/component/association_exp/exp = owner_mob.GetComponent(/datum/component/association_exp)
 			if(exp && exp.association_type == ASSOCIATION_SEVEN)
@@ -356,6 +361,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	if(messages_since_exp >= 5 && world.time >= next_exp_time)
 		messages_since_exp = 0
 		next_exp_time = world.time + 1 MINUTES
+		var/mob/living/owner_mob = owner_weakref?.resolve()
 		if(owner_mob)
 			var/datum/component/association_exp/exp = owner_mob.GetComponent(/datum/component/association_exp)
 			if(exp && exp.association_type == ASSOCIATION_SEVEN)
@@ -371,7 +377,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 /obj/item/seven_recorder/Destroy()
 	if(recording)
 		stop_recording()
-	owner_mob = null
+	owner_weakref = null
 	attached_to = null
 	return ..()
 
@@ -386,8 +392,8 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	icon = 'icons/obj/device.dmi'
 	icon_state = "spectrometer"
 	w_class = WEIGHT_CLASS_SMALL
-	/// Owner mob
-	var/mob/living/owner_mob
+	/// Owner mob weakref
+	var/datum/weakref/owner_weakref
 	/// Currently tuned recorder
 	var/obj/item/seven_recorder/tuned_recorder
 	/// Last message index we've displayed (for live feed)
@@ -396,7 +402,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	var/canprint = TRUE
 
 /obj/item/seven_receiver/attack_self(mob/user)
-	owner_mob = user
+	owner_weakref = WEAKREF(user)
 	ui_interact(user)
 
 /obj/item/seven_receiver/ui_interact(mob/user, datum/tgui/ui)
@@ -509,7 +515,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 			if(!istype(R) || QDELETED(R))
 				to_chat(usr, span_warning("That recorder no longer exists."))
 				return
-			if(R.owner_mob != usr)
+			if(R.owner_weakref?.resolve() != usr)
 				to_chat(usr, span_warning("That is not your recorder."))
 				return
 			// Charge 2000 ahn for remote retrieval
@@ -537,7 +543,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 			var/obj/item/seven_recorder/R = locate(target_ref)
 			if(!istype(R) || QDELETED(R))
 				return
-			if(R.owner_mob != usr)
+			if(R.owner_weakref?.resolve() != usr)
 				return
 			R.stored_messages = list()
 			R.messages_since_exp = 0
@@ -554,7 +560,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 			if(!istype(R) || QDELETED(R))
 				to_chat(usr, span_warning("That recorder no longer exists."))
 				return
-			if(R.owner_mob != usr)
+			if(R.owner_weakref?.resolve() != usr)
 				return
 			if(!length(R.stored_messages))
 				to_chat(usr, span_warning("No messages to print."))
@@ -594,11 +600,11 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 	var/list/identity_map = list()
 	/// Max stored messages
 	var/max_messages = 300
-	/// Owner mob
-	var/mob/living/owner_mob
+	/// Owner mob weakref
+	var/datum/weakref/owner_weakref
 
 /obj/item/seven_pda_interceptor/attack_self(mob/user)
-	owner_mob = user
+	owner_weakref = WEAKREF(user)
 	ui_interact(user)
 
 /obj/item/seven_pda_interceptor/ui_interact(mob/user, datum/tgui/ui)
@@ -688,6 +694,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 		"message" = signal.data["message"]
 	))
 	// Grant 10 EXP per 10 intercepted messages
+	var/mob/living/owner_mob = owner_weakref?.resolve()
 	if(owner_mob && length(intercepted_messages) % 10 == 0)
 		var/datum/component/association_exp/exp = owner_mob.GetComponent(/datum/component/association_exp)
 		if(exp && exp.association_type == ASSOCIATION_SEVEN)
@@ -695,7 +702,7 @@ GLOBAL_LIST_EMPTY(seven_pda_interceptors)
 
 /obj/item/seven_pda_interceptor/Destroy()
 	GLOB.seven_pda_interceptors -= src
-	owner_mob = null
+	owner_weakref = null
 	return ..()
 
 // ============================================================
