@@ -393,6 +393,7 @@
 	attack_verb_simple = list("slash", "cut", "cleave")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attribute_requirements = list()
+	actions_types = list(/datum/action/item_action/fascia_heartbeat_surge)
 
 	/// Linked armor reference
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/linked_armor
@@ -408,6 +409,14 @@
 	var/empower_bonus = 30
 	/// Timer ID for empower expiry
 	var/empower_timer_id
+	/// Heartbeat Surge cooldown tracker (world.time)
+	var/heartbeat_surge_cooldown
+	/// Whether Heartbeat Surge targeting is active
+	var/special_ability_targeting = FALSE
+	/// Whether a surge is currently in progress
+	var/is_surging = FALSE
+	/// Reference to the planted sword visual
+	var/obj/structure/fascia_planted/planted_visual
 
 /obj/item/ego_weapon/city/ring/fascia/Initialize(mapload)
 	. = ..()
@@ -562,6 +571,8 @@
 	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, "#FFD700")
 
 /obj/item/ego_weapon/city/ring/fascia/attack(mob/living/target, mob/living/user)
+	if(is_surging)
+		return FALSE
 	// Cannot attack while Iron Curtain is active
 	if(linked_armor?.iron_curtain)
 		to_chat(user, span_warning("You cannot attack while Iron Curtain is active!"))
@@ -589,6 +600,14 @@
 		if(empower_timer_id)
 			deltimer(empower_timer_id)
 			empower_timer_id = null
+
+/// Heartbeat Surge targeting - click at range after activating the action
+/obj/item/ego_weapon/city/ring/fascia/afterattack(atom/target, mob/living/user, proximity_flag, params)
+	if(special_ability_targeting && !proximity_flag && isliving(user))
+		special_ability_targeting = FALSE
+		INVOKE_ASYNC(src, PROC_REF(perform_heartbeat_surge), user, get_dir(user, target))
+		return
+	return ..()
 
 /// Iron Curtain activation - use in hand to enter defensive stance
 /obj/item/ego_weapon/city/ring/fascia/attack_self(mob/user)
@@ -626,6 +645,7 @@
 	attack_verb_simple = list("rend", "tear", "rip")
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attribute_requirements = list()
+	actions_types = list(/datum/action/item_action/fascia_heartbeat_surge)
 
 	/// Linked armor reference
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/linked_armor
@@ -647,6 +667,14 @@
 	var/empower_bonus = 30
 	/// Timer ID for empower expiry
 	var/empower_timer_id
+	/// Heartbeat Surge cooldown tracker (world.time)
+	var/heartbeat_surge_cooldown
+	/// Whether Heartbeat Surge targeting is active
+	var/special_ability_targeting = FALSE
+	/// Whether a surge is currently in progress
+	var/is_surging = FALSE
+	/// Reference to the planted sword visual
+	var/obj/structure/fascia_planted/planted_visual
 
 /obj/item/ego_weapon/city/ring/fascia_unleashed/Initialize(mapload)
 	. = ..()
@@ -687,6 +715,8 @@
 	return FALSE
 
 /obj/item/ego_weapon/city/ring/fascia_unleashed/attack(mob/living/target, mob/living/user)
+	if(is_surging)
+		return FALSE
 	// Apply hunger damage multiplier from spirit
 	var/original_force = force
 	if(possessed && bound_spirit)
@@ -723,12 +753,17 @@
 		return loc
 	return null
 
-/// Leap attack - click at range to leap to a target turf
+/// Leap attack or Heartbeat Surge - click at range
 /obj/item/ego_weapon/city/ring/fascia_unleashed/afterattack(atom/target, mob/living/user, proximity_flag, params)
+	// Heartbeat Surge targeting takes priority
+	if(special_ability_targeting && !proximity_flag && isliving(user))
+		special_ability_targeting = FALSE
+		INVOKE_ASYNC(src, PROC_REF(perform_heartbeat_surge), user, get_dir(user, target))
+		return
 	. = ..()
 	if(proximity_flag)
 		return
-	if(is_leaping)
+	if(is_leaping || is_surging)
 		return
 	if(!isliving(user))
 		return
@@ -1084,3 +1119,452 @@
 /datum/action/cooldown/fascia_compel_dash/Destroy()
 	weapon_ref = null
 	return ..()
+
+// ========== HEARTBEAT SURGE ==========
+// Action that lets the wielder plant their blade, dash forward, and claw at the first living target hit.
+// Available on both Fascia phases.
+
+/// Planted sword visual - cannot be interacted with
+/obj/structure/fascia_planted
+	name = "planted Fascia"
+	desc = "The Fascia, driven into the ground."
+	icon = 'ModularLobotomy/_Lobotomyicons/lc13_weapons.dmi'
+	icon_state = "planted_fascia"
+	anchored = TRUE
+	density = FALSE
+	resistance_flags = INDESTRUCTIBLE
+
+/obj/structure/fascia_planted/attack_hand(mob/living/user, list/modifiers)
+	to_chat(user, span_warning("The blade is firmly planted and will not budge."))
+	return TRUE
+
+/obj/structure/fascia_planted/attackby(obj/item/I, mob/user, params)
+	return TRUE
+
+/// Heartbeat Surge action button - toggles targeting mode
+/datum/action/item_action/fascia_heartbeat_surge
+	name = "Heartbeat Surge"
+	desc = "Plant your blade and dash forward, clawing at the first target you hit. Click a direction after activating."
+	icon_icon = 'icons/obj/ring_icons.dmi'
+	button_icon_state = "fascia"
+
+/datum/action/item_action/fascia_heartbeat_surge/Trigger()
+	var/obj/item/ego_weapon/city/ring/fascia/F1 = owner.get_active_held_item()
+	var/obj/item/ego_weapon/city/ring/fascia_unleashed/F2 = owner.get_active_held_item()
+	if(istype(F1))
+		if(F1.is_surging)
+			return
+		if(F1.heartbeat_surge_cooldown > world.time)
+			var/remaining = round((F1.heartbeat_surge_cooldown - world.time) / 10)
+			to_chat(owner, span_warning("Heartbeat Surge is recharging! ([remaining] seconds remaining)"))
+			return
+		F1.special_ability_targeting = !F1.special_ability_targeting
+		if(F1.special_ability_targeting)
+			to_chat(owner, span_colossus("Let the cadence of your heartbeat surge, Fascia..."))
+		else
+			to_chat(owner, span_notice("You lower your stance."))
+	else if(istype(F2))
+		if(F2.is_surging)
+			return
+		if(F2.heartbeat_surge_cooldown > world.time)
+			var/remaining = round((F2.heartbeat_surge_cooldown - world.time) / 10)
+			to_chat(owner, span_warning("Heartbeat Surge is recharging! ([remaining] seconds remaining)"))
+			return
+		F2.special_ability_targeting = !F2.special_ability_targeting
+		if(F2.special_ability_targeting)
+			to_chat(owner, span_colossus("Let the cadence of your heartbeat surge, Fascia..."))
+		else
+			to_chat(owner, span_notice("You lower your stance."))
+
+// ========== HEARTBEAT SURGE PROCS (Phase 1) ==========
+
+/// Performs the full Heartbeat Surge sequence for Phase 1 Fascia
+/obj/item/ego_weapon/city/ring/fascia/proc/perform_heartbeat_surge(mob/living/user, dash_dir)
+	if(is_surging || QDELETED(user) || user.stat == DEAD)
+		return
+
+	// Cannot use while Iron Curtain is active
+	if(linked_armor?.iron_curtain)
+		to_chat(user, span_warning("You cannot use Heartbeat Surge while Iron Curtain is active!"))
+		return
+
+	is_surging = TRUE
+	heartbeat_surge_cooldown = world.time + 15 SECONDS
+
+	var/turf/sword_turf = get_turf(user)
+	var/saved_inhand = inhand_icon_state
+	var/saved_lefthand = lefthand_file
+	var/saved_righthand = righthand_file
+
+	// Plant the sword visual
+	planted_visual = new /obj/structure/fascia_planted(sword_turf)
+	planted_visual.icon_state = "planted_fascia"
+
+	// Hide the weapon's inhand sprite
+	inhand_icon_state = null
+	lefthand_file = null
+	righthand_file = null
+	user.update_inv_hands()
+
+	playsound(user, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
+
+	// Lift user off the ground and add shadow
+	var/lift_amount = 8
+	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/ring_icons.dmi', "shadow")
+	shadow_overlay.pixel_y = -lift_amount
+	shadow_overlay.alpha = 125
+	user.add_overlay(shadow_overlay)
+	animate(user, pixel_y = user.base_pixel_y + lift_amount, time = 2, easing = QUAD_EASING)
+	sleep(2)
+
+	// Dash tile-by-tile, stopping one tile before the first living mob
+	var/mob/living/victim
+	for(var/i = 1 to 5)
+		if(QDELETED(user) || user.stat == DEAD)
+			break
+		var/turf/next_turf = get_step(user, dash_dir)
+		if(!next_turf || isclosedturf(next_turf))
+			break
+		if(locate(/obj/structure/window) in next_turf.contents)
+			break
+		if(locate(/obj/structure/table) in next_turf.contents)
+			break
+		if(locate(/obj/structure/railing) in next_turf.contents)
+			break
+		var/door_blocked = FALSE
+		for(var/obj/machinery/door/D in next_turf.contents)
+			if(D.density)
+				door_blocked = TRUE
+				break
+		if(door_blocked)
+			break
+
+		// Check for a living mob on the next tile before moving there
+		for(var/mob/living/L in next_turf)
+			if(L == user || L.stat == DEAD)
+				continue
+			victim = L
+			break
+		if(victim)
+			break
+
+		sleep(1)
+		user.forceMove(next_turf)
+		playsound(next_turf, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
+
+	// Remove shadow and lower user back to ground
+	user.cut_overlay(shadow_overlay)
+	animate(user, pixel_y = user.base_pixel_y, time = 2, easing = QUAD_EASING)
+	sleep(2)
+
+	if(victim && !QDELETED(victim) && victim.stat != DEAD)
+		perform_claw_combo(user, victim, sword_turf, saved_inhand, saved_lefthand, saved_righthand, dash_dir)
+	else
+		// No target hit — walk back to sword
+		return_to_sword(user, sword_turf)
+		cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+
+/// Performs the 8-hit claw combo with pixel pushback
+/obj/item/ego_weapon/city/ring/fascia/proc/perform_claw_combo(mob/living/user, mob/living/target, turf/sword_turf, saved_inhand, saved_lefthand, saved_righthand, direction)
+	var/dx = 0
+	var/dy = 0
+	if(direction & EAST)
+		dx = 1
+	if(direction & WEST)
+		dx = -1
+	if(direction & NORTH)
+		dy = 1
+	if(direction & SOUTH)
+		dy = -1
+
+	// Lock both in place
+	var/combo_duration = 2.5 SECONDS
+	user.Immobilize(combo_duration)
+	user.changeNext_move(combo_duration)
+	target.Immobilize(combo_duration)
+
+	// Handle simple mobs
+	var/mob/living/simple_animal/hostile/simple_target
+	if(istype(target, /mob/living/simple_animal/hostile))
+		simple_target = target
+		simple_target.toggle_ai(AI_OFF)
+
+	// Justice scaling for damage against simple mobs
+	var/hit_damage = 10
+	if(simple_target)
+		var/justice_mod = 1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) / 100)
+		hit_damage = round(hit_damage * justice_mod)
+
+	var/accumulated_px = 0
+
+	for(var/i = 1 to 8)
+		if(QDELETED(target) || target.stat == DEAD || QDELETED(user) || user.stat == DEAD)
+			break
+		user.do_attack_animation(target, ATTACK_EFFECT_CLAW)
+		playsound(user, 'sound/weapons/slice.ogg', 50, TRUE)
+		target.deal_damage(hit_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+		// Pixel nudge - push target back 12px, user follows
+		accumulated_px += 12
+		animate(target, pixel_x = target.base_pixel_x + (dx * accumulated_px), pixel_y = target.base_pixel_y + (dy * accumulated_px), time = 1, easing = QUAD_EASING)
+		animate(user, pixel_x = user.base_pixel_x + (dx * accumulated_px), pixel_y = user.base_pixel_y + (dy * accumulated_px), time = 1, easing = QUAD_EASING)
+
+		// Step to next tile when accumulated pushback crosses a tile boundary
+		if(accumulated_px >= 32)
+			var/turf/next = get_step(target, direction)
+			if(next && !isclosedturf(next))
+				target.forceMove(next)
+				user.forceMove(get_turf(target))
+			accumulated_px -= 32
+			target.pixel_x = target.base_pixel_x + (dx * accumulated_px)
+			target.pixel_y = target.base_pixel_y + (dy * accumulated_px)
+			user.pixel_x = user.base_pixel_x + (dx * accumulated_px)
+			user.pixel_y = user.base_pixel_y + (dy * accumulated_px)
+
+		sleep(2)
+
+	// Reset pixel offsets
+	if(!QDELETED(target))
+		animate(target, pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 2)
+	if(!QDELETED(user))
+		animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 2)
+
+	// Reactivate simple mob AI
+	if(simple_target && !QDELETED(simple_target))
+		simple_target.toggle_ai(AI_ON)
+
+	sleep(3)
+	// Walk back to sword
+	return_to_sword(user, sword_turf)
+	// Restore weapon and feed spirit
+	cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+	if(possessed && bound_spirit)
+		bound_spirit.hunger = clamp(bound_spirit.hunger + 15, 0, bound_spirit.max_hunger)
+		to_chat(user, span_notice("The Fascia hungrily consumes the blood from your claws."))
+		to_chat(bound_spirit, span_nicegreen("You feast on the blood... Hunger: [round(bound_spirit.hunger)]/[bound_spirit.max_hunger]"))
+
+/// Walks the user back to the sword tile-by-tile
+/obj/item/ego_weapon/city/ring/fascia/proc/return_to_sword(mob/living/user, turf/sword_turf)
+	if(QDELETED(user) || !sword_turf)
+		return
+	// Face toward the sword
+	var/return_dir = get_dir(user, sword_turf)
+	if(return_dir)
+		user.setDir(return_dir)
+	// Walk back tile-by-tile
+	for(var/i = 1 to 7)
+		if(QDELETED(user) || get_turf(user) == sword_turf)
+			break
+		step_towards(user, sword_turf)
+		sleep(2)
+	// Ensure we end up on the sword turf
+	if(!QDELETED(user) && get_turf(user) != sword_turf)
+		user.forceMove(sword_turf)
+
+/// Cleans up the surge state - restores weapon visuals
+/obj/item/ego_weapon/city/ring/fascia/proc/cleanup_surge(mob/living/user, turf/sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+	if(!QDELETED(user))
+		user.pixel_x = user.base_pixel_x
+		user.pixel_y = user.base_pixel_y
+	inhand_icon_state = saved_inhand
+	lefthand_file = saved_lefthand
+	righthand_file = saved_righthand
+	if(!QDELETED(user))
+		user.update_inv_hands()
+	if(planted_visual)
+		QDEL_NULL(planted_visual)
+	is_surging = FALSE
+
+// ========== HEARTBEAT SURGE PROCS (Phase 2) ==========
+
+/// Performs the full Heartbeat Surge sequence for Phase 2 Fascia
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/perform_heartbeat_surge(mob/living/user, dash_dir)
+	if(is_surging || QDELETED(user) || user.stat == DEAD)
+		return
+	is_surging = TRUE
+	heartbeat_surge_cooldown = world.time + 15 SECONDS
+
+	var/turf/sword_turf = get_turf(user)
+	var/saved_inhand = inhand_icon_state
+	var/saved_lefthand = lefthand_file
+	var/saved_righthand = righthand_file
+
+	// Plant the sword visual
+	planted_visual = new /obj/structure/fascia_planted(sword_turf)
+	planted_visual.icon_state = "planted_fascia_unleashed"
+
+	// Hide the weapon's inhand sprite
+	inhand_icon_state = null
+	lefthand_file = null
+	righthand_file = null
+	user.update_inv_hands()
+
+	playsound(user, 'sound/abnormalities/ichthys/jump.ogg', 50, FALSE, -1)
+
+	// Backflip — lift higher and spin 360 degrees
+	var/lift_amount = 20
+	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/ring_icons.dmi', "shadow")
+	shadow_overlay.pixel_y = -lift_amount
+	shadow_overlay.alpha = 125
+	user.add_overlay(shadow_overlay)
+	animate(user, pixel_y = user.base_pixel_y + lift_amount, time = 3, easing = QUAD_EASING)
+	user.SpinAnimation(speed = 5, loops = 1)
+	sleep(5)
+
+	// Dash tile-by-tile, stopping one tile before the first living mob
+	var/mob/living/victim
+	for(var/i = 1 to 5)
+		if(QDELETED(user) || user.stat == DEAD)
+			break
+		var/turf/next_turf = get_step(user, dash_dir)
+		if(!next_turf || isclosedturf(next_turf))
+			break
+		if(locate(/obj/structure/window) in next_turf.contents)
+			break
+		if(locate(/obj/structure/table) in next_turf.contents)
+			break
+		if(locate(/obj/structure/railing) in next_turf.contents)
+			break
+		var/door_blocked = FALSE
+		for(var/obj/machinery/door/D in next_turf.contents)
+			if(D.density)
+				door_blocked = TRUE
+				break
+		if(door_blocked)
+			break
+
+		// Check for a living mob on the next tile before moving there
+		for(var/mob/living/L in next_turf)
+			if(L == user || L.stat == DEAD)
+				continue
+			victim = L
+			break
+		if(victim)
+			break
+
+		sleep(1)
+		user.forceMove(next_turf)
+		playsound(next_turf, 'sound/abnormalities/doomsdaycalendar/Lor_Slash_Generic.ogg', 20, 0, 4)
+
+	// Remove shadow and lower user back to ground
+	user.cut_overlay(shadow_overlay)
+	animate(user, pixel_y = user.base_pixel_y, time = 3, easing = QUAD_EASING)
+	sleep(3)
+
+	if(victim && !QDELETED(victim) && victim.stat != DEAD)
+		perform_claw_combo(user, victim, sword_turf, saved_inhand, saved_lefthand, saved_righthand, dash_dir)
+	else
+		// No target hit — walk back to sword
+		return_to_sword(user, sword_turf)
+		cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+
+/// Performs the 8-hit slash combo with pixel pushback for Phase 2
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/perform_claw_combo(mob/living/user, mob/living/target, turf/sword_turf, saved_inhand, saved_lefthand, saved_righthand, direction)
+	var/dx = 0
+	var/dy = 0
+	if(direction & EAST)
+		dx = 1
+	if(direction & WEST)
+		dx = -1
+	if(direction & NORTH)
+		dy = 1
+	if(direction & SOUTH)
+		dy = -1
+
+	// Lock both in place
+	var/combo_duration = 2.5 SECONDS
+	user.Immobilize(combo_duration)
+	user.changeNext_move(combo_duration)
+	target.Immobilize(combo_duration)
+
+	// Handle simple mobs
+	var/mob/living/simple_animal/hostile/simple_target
+	if(istype(target, /mob/living/simple_animal/hostile))
+		simple_target = target
+		simple_target.toggle_ai(AI_OFF)
+
+	// Justice scaling for damage against simple mobs
+	var/hit_damage = 10
+	if(simple_target)
+		var/justice_mod = 1 + (get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) / 100)
+		hit_damage = round(hit_damage * justice_mod)
+
+	var/accumulated_px = 0
+
+	for(var/i = 1 to 8)
+		if(QDELETED(target) || target.stat == DEAD || QDELETED(user) || user.stat == DEAD)
+			break
+		user.do_attack_animation(target, ATTACK_EFFECT_SLASH)
+		playsound(user, 'sound/weapons/slice.ogg', 50, TRUE)
+		target.deal_damage(hit_damage, RED_DAMAGE, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+		// Pixel nudge - push target back 12px, user follows
+		accumulated_px += 12
+		animate(target, pixel_x = target.base_pixel_x + (dx * accumulated_px), pixel_y = target.base_pixel_y + (dy * accumulated_px), time = 1, easing = QUAD_EASING)
+		animate(user, pixel_x = user.base_pixel_x + (dx * accumulated_px), pixel_y = user.base_pixel_y + (dy * accumulated_px), time = 1, easing = QUAD_EASING)
+
+		// Step to next tile when accumulated pushback crosses a tile boundary
+		if(accumulated_px >= 32)
+			var/turf/next = get_step(target, direction)
+			if(next && !isclosedturf(next))
+				target.forceMove(next)
+				user.forceMove(get_turf(target))
+			accumulated_px -= 32
+			target.pixel_x = target.base_pixel_x + (dx * accumulated_px)
+			target.pixel_y = target.base_pixel_y + (dy * accumulated_px)
+			user.pixel_x = user.base_pixel_x + (dx * accumulated_px)
+			user.pixel_y = user.base_pixel_y + (dy * accumulated_px)
+
+		sleep(2)
+
+	// Reset pixel offsets
+	if(!QDELETED(target))
+		animate(target, pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 2)
+	if(!QDELETED(user))
+		animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 2)
+
+	// Reactivate simple mob AI
+	if(simple_target && !QDELETED(simple_target))
+		simple_target.toggle_ai(AI_ON)
+
+	sleep(3)
+	// Walk back to sword
+	return_to_sword(user, sword_turf)
+	// Restore weapon and feed spirit
+	cleanup_surge(user, sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+	if(possessed && bound_spirit)
+		bound_spirit.hunger = clamp(bound_spirit.hunger + 15, 0, bound_spirit.max_hunger)
+		to_chat(user, span_notice("The Fascia hungrily consumes the blood from your claws."))
+		to_chat(bound_spirit, span_nicegreen("You feast on the blood... Hunger: [round(bound_spirit.hunger)]/[bound_spirit.max_hunger]"))
+
+/// Walks the user back to the sword tile-by-tile
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/return_to_sword(mob/living/user, turf/sword_turf)
+	if(QDELETED(user) || !sword_turf)
+		return
+	// Face toward the sword
+	var/return_dir = get_dir(user, sword_turf)
+	if(return_dir)
+		user.setDir(return_dir)
+	// Walk back tile-by-tile
+	for(var/i = 1 to 7)
+		if(QDELETED(user) || get_turf(user) == sword_turf)
+			break
+		step_towards(user, sword_turf)
+		sleep(2)
+	// Ensure we end up on the sword turf
+	if(!QDELETED(user) && get_turf(user) != sword_turf)
+		user.forceMove(sword_turf)
+
+/// Cleans up the surge state for Phase 2
+/obj/item/ego_weapon/city/ring/fascia_unleashed/proc/cleanup_surge(mob/living/user, turf/sword_turf, saved_inhand, saved_lefthand, saved_righthand)
+	if(!QDELETED(user))
+		user.pixel_x = user.base_pixel_x
+		user.pixel_y = user.base_pixel_y
+	inhand_icon_state = saved_inhand
+	lefthand_file = saved_lefthand
+	righthand_file = saved_righthand
+	if(!QDELETED(user))
+		user.update_inv_hands()
+	if(planted_visual)
+		QDEL_NULL(planted_visual)
+	is_surging = FALSE

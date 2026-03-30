@@ -176,6 +176,8 @@
 	var/next_prescript_id = 1
 	/// Timer IDs for auto turn-in (prescript_id -> timer_id)
 	var/list/auto_turnin_timers = list()
+	/// Timer IDs for judgment window expiry (prescript_id -> timer_id)
+	var/list/judgment_timers = list()
 	/// The ckey of the ghost who created the current prescript
 	var/current_prescript_creator
 
@@ -312,7 +314,16 @@
 		var/list/pending_judgments = list()
 		for(var/list/entry in prescript_history)
 			if(entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
-				pending_judgments += list(entry)
+				var/list/entry_copy = entry.Copy()
+				// Calculate judgment time remaining
+				var/timer_key = "[entry["id"]]"
+				if(judgment_timers[timer_key])
+					var/remaining = timeleft(judgment_timers[timer_key])
+					if(remaining > 0)
+						var/mins = round(remaining / (1 MINUTES))
+						var/secs = round((remaining % (1 MINUTES)) / 10)
+						entry_copy["judgment_time_remaining"] = "[mins]m [secs]s"
+				pending_judgments += list(entry_copy)
 		data["pending_judgments"] = pending_judgments
 
 	return data
@@ -474,6 +485,8 @@
 			var/new_id = next_prescript_id
 			prescript_history += list(list("id" = new_id, "text" = prescript_text, "recipient" = prescript_recipient, "creator_ckey" = current_prescript_creator, "completed" = TRUE, "judged" = FALSE, "time_received" = world.time))
 			next_prescript_id++
+			// Start 2.5-minute judgment window
+			judgment_timers["[new_id]"] = addtimer(CALLBACK(src, PROC_REF(expire_judgment), new_id), 2.5 MINUTES, TIMER_STOPPABLE)
 
 			// Broadcast completion to deadchat
 			deadchat_broadcast("[span_name("[user.real_name]")] has completed a prescript: \"[prescript_text]\"", message_type = DEADCHAT_ANNOUNCEMENT)
@@ -515,6 +528,8 @@
 					if(auto_turnin_timers[timer_key])
 						deltimer(auto_turnin_timers[timer_key])
 						auto_turnin_timers -= timer_key
+					// Start 2.5-minute judgment window
+					judgment_timers[timer_key] = addtimer(CALLBACK(src, PROC_REF(expire_judgment), prescript_id), 2.5 MINUTES, TIMER_STOPPABLE)
 					// Broadcast to ghosts
 					deadchat_broadcast("[span_name("[user.real_name]")] has completed a prescript: \"[entry["text"]]\"", message_type = DEADCHAT_ANNOUNCEMENT)
 					to_chat(user, span_notice("Prescript turned in successfully."))
@@ -539,6 +554,11 @@
 				if(entry["id"] == prescript_id && entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
 					if(apply_reward(reward_type))
 						entry["judged"] = TRUE
+						// Cancel judgment expiry timer
+						var/timer_key = "[prescript_id]"
+						if(judgment_timers[timer_key])
+							deltimer(judgment_timers[timer_key])
+							judgment_timers -= timer_key
 						to_chat(user, span_notice("You have rewarded the proxy for completing your prescript."))
 						deadchat_broadcast("[user.ckey] has rewarded [entry["recipient"]] for completing their prescript.", message_type = DEADCHAT_ANNOUNCEMENT)
 					return TRUE
@@ -561,6 +581,11 @@
 				if(entry["id"] == prescript_id && entry["creator_ckey"] == user.ckey && entry["completed"] && !entry["judged"])
 					if(apply_punishment(punish_type))
 						entry["judged"] = TRUE
+						// Cancel judgment expiry timer
+						var/timer_key = "[prescript_id]"
+						if(judgment_timers[timer_key])
+							deltimer(judgment_timers[timer_key])
+							judgment_timers -= timer_key
 						to_chat(user, span_notice("You have punished the proxy for their execution of your prescript."))
 						deadchat_broadcast("[user.ckey] has punished [entry["recipient"]] for their execution of their prescript.", message_type = DEADCHAT_ANNOUNCEMENT)
 					return TRUE
@@ -675,6 +700,8 @@
 	for(var/list/entry in prescript_history)
 		if(entry["id"] == prescript_id && !entry["completed"])
 			entry["completed"] = TRUE
+			// Start 2.5-minute judgment window
+			judgment_timers["[prescript_id]"] = addtimer(CALLBACK(src, PROC_REF(expire_judgment), prescript_id), 2.5 MINUTES, TIMER_STOPPABLE)
 			// Broadcast to ghosts
 			var/recipient_name = entry["recipient"] || "Unknown"
 			deadchat_broadcast("[span_name("[recipient_name]")]'s prescript was auto-completed: \"[entry["text"]]\"", message_type = DEADCHAT_ANNOUNCEMENT)
@@ -683,6 +710,14 @@
 			if(holder)
 				to_chat(holder, span_notice("A prescript has been automatically turned in after 10 minutes."))
 				playsound(src, 'sound/items/index_beeper_prescript.ogg', 50, FALSE)
+			return
+
+/// Called after 2.5 minutes to expire the judgment window on a completed prescript
+/obj/item/clothing/accessory/index_pager/proc/expire_judgment(prescript_id)
+	judgment_timers -= "[prescript_id]"
+	for(var/list/entry in prescript_history)
+		if(entry["id"] == prescript_id && entry["completed"] && !entry["judged"])
+			entry["judged"] = TRUE
 			return
 
 /// Applies a reward to the pager holder
@@ -696,7 +731,7 @@
 			var/heal_amount = holder.maxHealth * 0.1
 			holder.adjustBruteLoss(-heal_amount)
 			holder.adjustFireLoss(-heal_amount)
-			var/sp_heal = holder.maxSanity * 0.2
+			var/sp_heal = holder.maxSanity * 0.05
 			holder.adjustSanityLoss(-sp_heal)
 			to_chat(holder, span_notice("The Oracle has blessed you with healing for completing your prescript."))
 			playsound(src, 'sound/abnormalities/onesin/bless.ogg', 50, FALSE)
@@ -717,7 +752,7 @@
 
 	switch(punish_type)
 		if("damage")
-			var/sp_damage = holder.sanityhealth * 0.2
+			var/sp_damage = holder.maxSanity * 0.05
 			holder.adjustSanityLoss(sp_damage)
 			to_chat(holder, span_userdanger("The Oracle is displeased with your execution of the prescript!"))
 			playsound(src, 'sound/effects/sanity_damage.ogg', 50, FALSE)

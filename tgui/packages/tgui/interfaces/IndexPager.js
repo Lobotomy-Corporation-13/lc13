@@ -234,6 +234,11 @@ const JudgmentTab = (props, context) => {
           <Box mt={1} style={{ fontStyle: 'italic' }} fontSize="12px">
             &quot;{entry.text}&quot;
           </Box>
+          {entry.judgment_time_remaining && (
+            <Box color="label" fontSize="10px" mt={1}>
+              Time to judge: {entry.judgment_time_remaining}
+            </Box>
+          )}
           <Box mt={1}>
             <Button
               icon="heart"
