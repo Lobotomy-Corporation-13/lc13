@@ -5,11 +5,11 @@
 /obj/item/ego_weapon/index_vial
 	name = "caduceus"
 	desc = "A vial containing a strange liquid that can transform into various weapons."
-	icon = 'icons/obj/index_vial_icon.dmi'
+	icon = 'icons/obj/spider_house/index/index_vial_icon.dmi'
 	icon_state = "index_vial_inactive"
 	inhand_icon_state = "index_vial_inactive"
-	lefthand_file = 'icons/obj/index_vial_32x32_left.dmi'
-	righthand_file = 'icons/obj/index_vial_32x32_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_32x32_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_32x32_right.dmi'
 	force = 0
 	w_class = WEIGHT_CLASS_SMALL
 	attribute_requirements = list(
@@ -710,8 +710,8 @@
 	special = "On hit, gain protection."
 	icon_state = "index_vial_hatchet"
 	inhand_icon_state = "index_vial_hatchet"
-	lefthand_file = 'icons/obj/index_vial_32x32_left.dmi'
-	righthand_file = 'icons/obj/index_vial_32x32_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_32x32_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_32x32_right.dmi'
 	hitsound = 'sound/weapons/black_vial/index_vial_hatchet.ogg'
 	force = 30
 	damtype = RED_DAMAGE
@@ -737,8 +737,8 @@
 	special = "On hit, inflict mental decay on the target."
 	icon_state = "index_vial_stiletto"
 	inhand_icon_state = "index_vial_stiletto"
-	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
-	righthand_file = 'icons/obj/index_vial_48x48_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_48x48_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_48x48_right.dmi'
 	inhand_x_dimension = 48
 	inhand_y_dimension = 48
 	hitsound = 'sound/weapons/black_vial/index_vial_stiletto.ogg'
@@ -766,8 +766,8 @@
 	special = "On hit, inflict 5 Overheat."
 	icon_state = "index_vial_bsword"
 	inhand_icon_state = "index_vial_bsword"
-	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
-	righthand_file = 'icons/obj/index_vial_48x48_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_48x48_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_48x48_right.dmi'
 	inhand_x_dimension = 48
 	inhand_y_dimension = 48
 	hitsound = 'sound/weapons/black_vial/index_vial_bsword.ogg'
@@ -796,8 +796,8 @@
 	special = "On hit, inflict white fragility on the target."
 	icon_state = "index_vial_rapier"
 	inhand_icon_state = "index_vial_rapier"
-	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
-	righthand_file = 'icons/obj/index_vial_48x48_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_48x48_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_48x48_right.dmi'
 	inhand_x_dimension = 48
 	inhand_y_dimension = 48
 	hitsound = 'sound/weapons/black_vial/index_vial_rapier.ogg'
@@ -825,8 +825,8 @@
 	special = "On hit, deal stamina damage to the target."
 	icon_state = "index_vial_hammer"
 	inhand_icon_state = "index_vial_hammer"
-	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
-	righthand_file = 'icons/obj/index_vial_48x48_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_48x48_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_48x48_right.dmi'
 	inhand_x_dimension = 48
 	inhand_y_dimension = 48
 	hitsound = 'sound/weapons/black_vial/index_vial_hammer.ogg'
@@ -854,8 +854,8 @@
 	special = "On hit, inflict red fragility on the target."
 	icon_state = "index_vial_gsword"
 	inhand_icon_state = "index_vial_gsword"
-	lefthand_file = 'icons/obj/index_vial_64x64_left.dmi'
-	righthand_file = 'icons/obj/index_vial_64x64_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_64x64_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_64x64_right.dmi'
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	hitsound = 'sound/weapons/black_vial/index_vial_gsword.ogg'
@@ -883,8 +883,8 @@
 	special = "On hit, inflict white fragility on the target. Has extended reach."
 	icon_state = "index_vial_lance"
 	inhand_icon_state = "index_vial_lance"
-	lefthand_file = 'icons/obj/index_vial_64x64_left.dmi'
-	righthand_file = 'icons/obj/index_vial_64x64_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_64x64_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_64x64_right.dmi'
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	hitsound = 'sound/weapons/black_vial/index_vial_lance.ogg'
@@ -914,8 +914,8 @@
 	special = "On hit, inflict black fragility on the target. Has extended reach."
 	icon_state = "index_vial_whip"
 	inhand_icon_state = "index_vial_whip"
-	lefthand_file = 'icons/obj/index_vial_48x48_left.dmi'
-	righthand_file = 'icons/obj/index_vial_48x48_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_48x48_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_48x48_right.dmi'
 	inhand_x_dimension = 48
 	inhand_y_dimension = 48
 	hitsound = 'sound/weapons/black_vial/index_vial_whip.ogg'
@@ -945,8 +945,8 @@
 	special = "Deals high pale damage. No special effect needed."
 	icon_state = "index_vial_scythe"
 	inhand_icon_state = "index_vial_scythe"
-	lefthand_file = 'icons/obj/index_vial_64x64_left.dmi'
-	righthand_file = 'icons/obj/index_vial_64x64_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_64x64_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_64x64_right.dmi'
 	inhand_x_dimension = 64
 	inhand_y_dimension = 64
 	hitsound = 'sound/weapons/black_vial/index_vial_scythe.ogg'
@@ -967,8 +967,8 @@
 	special = "Attack yourself to end it all with a fpoon. How embarrassing."
 	icon_state = "index_vial_fpoon"
 	inhand_icon_state = "index_vial_fpoon"
-	lefthand_file = 'icons/obj/index_vial_32x32_left.dmi'
-	righthand_file = 'icons/obj/index_vial_32x32_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_vial_32x32_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_vial_32x32_right.dmi'
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	force = 5
 	damtype = PALE_DAMAGE

@@ -302,10 +302,10 @@
 	name = "index apprentice chains"
 	desc = "Chains granted by the index proxy apprentice armor."
 	special = "Fulfill your prescript by slaying your target 3 times to transform. Use in hand to receive a prescript. Click at range to leap to a tile — landing creates a 3x3 shockwave that grants prescript progress if it hits someone. Hit the correct bodypart on humans to gain progress. Reaching half health also triggers the transformation."
-	icon = 'icons/obj/index_sora_base.dmi'
+	icon = 'icons/obj/spider_house/index/index_sora_base.dmi'
 	icon_state = "apprentice_chains"
-	lefthand_file = 'icons/obj/index_sora_worn.dmi'
-	righthand_file = 'icons/obj/index_sora_worn.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_sora_worn.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_sora_worn.dmi'
 	inhand_icon_state = "apprentice_chains"
 	force = 50
 	damtype = RED_DAMAGE
@@ -500,10 +500,10 @@
 	name = "Effloresced E.G.O :: Procuration"
 	desc = "H-having such an unshakable conviction about what's good and evil is nothing short of amazing, he said..."
 	special = "Click at range to dash attack. Every 3 melee hits restores a dash charge. Use in hand to charge up — after a 2 second slowdown, your next dash is empowered, unleashing a 3-wide wave of claws from your origin to your destination."
-	icon = 'icons/obj/index_sora_ego_base.dmi'
+	icon = 'icons/obj/spider_house/index/index_sora_ego_base.dmi'
 	icon_state = "procuration"
-	lefthand_file = 'icons/obj/index_sora_ego_worn.dmi'
-	righthand_file = 'icons/obj/index_sora_ego_worn.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_sora_ego_worn.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_sora_ego_worn.dmi'
 	inhand_icon_state = "procuration"
 	force = 30
 	damtype = PALE_DAMAGE

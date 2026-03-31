@@ -313,7 +313,7 @@
 /datum/action/cooldown/exhibition_arrangements_activate
 	name = "Exhibition Arrangements"
 	desc = "Begin arranging your exhibition - a masterpiece of destruction."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "exhibition_arrangements"
 	cooldown_time = 30 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS

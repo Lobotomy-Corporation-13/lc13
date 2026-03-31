@@ -172,7 +172,7 @@
 /datum/action/cooldown/crimson_dimension_activate
 	name = "Crimson Dimension"
 	desc = "Create a 3x3 bleed zone. Gain Protection while inside."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "crimson_dimension"
 	cooldown_time = 30 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS

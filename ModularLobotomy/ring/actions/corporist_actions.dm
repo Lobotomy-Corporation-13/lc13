@@ -61,7 +61,7 @@
 /datum/action/cooldown/demonstrate_artistry
 	name = "Demonstrate Artistry"
 	desc = "Perform an artistic demonstration on a corpse, inspiring all who witness it."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "demonstration"
 	cooldown_time = 5 MINUTES
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS
@@ -143,7 +143,7 @@
 /datum/action/cooldown/judge_artwork
 	name = "Judge Artwork"
 	desc = "Evaluate an artwork and assign a final grade."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "judgement"
 	cooldown_time = 5 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
@@ -288,7 +288,7 @@
 /datum/action/innate/ring_skill_tree
 	name = "Ring Skill Tree"
 	desc = "Open the Ring Skill Tree to spend your skill points on artistic abilities."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "skill_tree"
 	check_flags = AB_CHECK_CONSCIOUS
 
@@ -322,7 +322,7 @@
 /datum/action/cooldown/reset_artistry
 	name = "Reset Artistry"
 	desc = "Reset a student's skill tree, refunding all their skill points."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "reset_artistry"
 	cooldown_time = 30 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS

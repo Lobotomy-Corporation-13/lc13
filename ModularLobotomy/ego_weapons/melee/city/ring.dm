@@ -11,7 +11,7 @@
 	special = "Collects Corpus Ingredients on hit. Stuns targets for half your recovery time. Use in hand to toggle ranged mode. Click at range to fire."
 	icon_state = "tibia"
 	inhand_icon_state = "tibia"
-	icon = 'icons/obj/ring_icons.dmi'
+	icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left_64x64.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right_64x64.dmi'
 	inhand_x_dimension = 64
@@ -981,7 +981,7 @@
 /datum/action/cooldown/fascia_empower_strike
 	name = "Empower Strike"
 	desc = "Empower the wielder's next attack within 1.5 seconds, dealing +30 bonus RED damage."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "fascia"
 	cooldown_time = 7 SECONDS
 	check_flags = AB_CHECK_CONSCIOUS
@@ -1145,7 +1145,7 @@
 /datum/action/item_action/fascia_heartbeat_surge
 	name = "Heartbeat Surge"
 	desc = "Plant your blade and dash forward, clawing at the first target you hit. Click a direction after activating."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "fascia"
 
 /datum/action/item_action/fascia_heartbeat_surge/Trigger()
@@ -1210,7 +1210,7 @@
 
 	// Lift user off the ground and add shadow
 	var/lift_amount = 8
-	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/ring_icons.dmi', "shadow")
+	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/spider_house/ring/ring_icons.dmi', "shadow")
 	shadow_overlay.pixel_y = -lift_amount
 	shadow_overlay.alpha = 125
 	user.add_overlay(shadow_overlay)
@@ -1403,7 +1403,7 @@
 
 	// Backflip — lift higher and spin 360 degrees
 	var/lift_amount = 20
-	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/ring_icons.dmi', "shadow")
+	var/mutable_appearance/shadow_overlay = mutable_appearance('icons/obj/spider_house/ring/ring_icons.dmi', "shadow")
 	shadow_overlay.pixel_y = -lift_amount
 	shadow_overlay.alpha = 125
 	user.add_overlay(shadow_overlay)

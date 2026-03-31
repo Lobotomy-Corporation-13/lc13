@@ -5,8 +5,8 @@
 /obj/item/clothing/suit/armor/ego_gear/city/ring_maestro
 	name = "corporist maestro garb"
 	desc = "Draped white robes with a gilded trim worn by a Maestro of the Corporist school."
-	icon = 'icons/obj/ring_icons.dmi'
-	worn_icon = 'icons/obj/ring_maestro_worn.dmi'
+	icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
+	worn_icon = 'icons/obj/spider_house/ring/ring_maestro_worn.dmi'
 	icon_state = "ring_maestro"
 	worn_x_dimension = 48
 	worn_y_dimension = 48
@@ -23,8 +23,8 @@
 /obj/item/clothing/head/ego_hat/ring_maestro
 	name = "corporist maestro hat"
 	desc = "A large-brimmed hat featuring a litany of holes through its brim. A signature piece of a Corporist Maestro's attire."
-	icon = 'icons/obj/ring_icons.dmi'
-	worn_icon = 'icons/obj/ring_maestro_worn.dmi'
+	icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
+	worn_icon = 'icons/obj/spider_house/ring/ring_maestro_worn.dmi'
 	icon_state = "ring_maestro_hat"
 	worn_x_dimension = 48
 	worn_y_dimension = 48
@@ -393,8 +393,8 @@
 /obj/item/clothing/head/ego_hat/helmet/ring_apprentice
 	name = "iron maiden helmet"
 	desc = "A helmet with sharp golden eyes painted on and two white spikes on each side. Part of the Corporist apprentice's ensemble."
-	icon = 'icons/obj/ring_mask.dmi'
-	worn_icon = 'icons/obj/ring_mask_worn.dmi'
+	icon = 'icons/obj/spider_house/ring/ring_mask.dmi'
+	worn_icon = 'icons/obj/spider_house/ring/ring_mask_worn.dmi'
 	icon_state = "ring_apprentice_mask"
 
 /// Prevents equipping the helmet while the linked armor is in phase 2
@@ -445,7 +445,7 @@
 /datum/action/cooldown/reforge_iron_maiden
 	name = "Reforge Iron Maiden"
 	desc = "Channel your will to reforge the fractured Iron Maiden armor, returning to the defensive phase."
-	icon_icon = 'icons/obj/ring_icons.dmi'
+	icon_icon = 'icons/obj/spider_house/ring/ring_icons.dmi'
 	button_icon_state = "reforge_maiden"
 	cooldown_time = 0
 	check_flags = AB_CHECK_HANDS_BLOCKED | AB_CHECK_CONSCIOUS

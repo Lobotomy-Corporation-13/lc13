@@ -137,11 +137,11 @@
 /obj/item/clothing/accessory/index_pager
 	name = "index pager"
 	desc = "A small pager which the index use to get their prescripts remotely."
-	icon = 'icons/obj/index_pager.dmi'
+	icon = 'icons/obj/spider_house/index/index_pager.dmi'
 	icon_state = "index_beeper"
 	worn_icon_state = "index_beeper"
-	lefthand_file = 'icons/obj/index_pager_worn_left.dmi'
-	righthand_file = 'icons/obj/index_pager_worn_right.dmi'
+	lefthand_file = 'icons/obj/spider_house/index/index_pager_worn_left.dmi'
+	righthand_file = 'icons/obj/spider_house/index/index_pager_worn_right.dmi'
 	above_suit = FALSE
 	minimize_when_attached = TRUE
 	attachment_slot = CHEST
