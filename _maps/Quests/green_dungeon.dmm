@@ -65,9 +65,6 @@
 	resistance_flags = 64;
 	tamperproof = 1
 	},
-/obj/structure/plasticflaps/opaque{
-	resistance_flags = 64
-	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "aZ" = (
@@ -177,12 +174,14 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "dt" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
-	resistance_flags = 64
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
 	},
-/obj/structure/sigsystem/activator,
-/turf/open/space/basic,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "dy" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot_big,
@@ -210,6 +209,14 @@
 "et" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
+"ey" = (
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "eA" = (
 /obj/effect/decal/cleanable/blood/gibs,
@@ -297,10 +304,17 @@
 	},
 /area/city/outskirtsfactory)
 "gE" = (
-/obj/machinery/door/poddoor/shutters/indestructible{
-	lockpickable = 0;
+/obj/machinery/conveyor/auto{
+	dir = 4;
 	resistance_flags = 64;
-	id = "furnaceaccess"
+	tamperproof = 1
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -356,7 +370,6 @@
 /obj/effect/turf_decal/siding/thinplating/light{
 	dir = 1
 	},
-/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
@@ -383,15 +396,6 @@
 "io" = (
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
-"ir" = (
-/obj/machinery/light/red{
-	dir = 1
-	},
-/obj/effect/turf_decal/stripes{
-	dir = 1
-	},
-/turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
 "is" = (
 /obj/machinery/conveyor/auto{
 	dir = 8;
@@ -401,9 +405,12 @@
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "iA" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red,
-/turf/open/floor/facility/dark,
+/obj/machinery/button/door{
+	id = "furnaceaccess";
+	resistance_flags = 64;
+	pixel_x = -3
+	},
+/turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
 "iE" = (
 /obj/effect/turf_decal/siding/thinplating/light,
@@ -411,9 +418,15 @@
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "iZ" = (
-/obj/machinery/light/small{
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
 	dir = 8
 	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "je" = (
@@ -443,6 +456,17 @@
 	density = 1
 	},
 /area/city/outskirtsfactory)
+"jF" = (
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 4
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "jY" = (
 /obj/effect/decal/cleanable/blood/gibs/old,
 /obj/machinery/light/small/red{
@@ -451,24 +475,20 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "kt" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/light_emitter{
+	light_power = 4;
+	light_range = 25;
+	set_cap = 3;
+	set_luminosity = 24
 	},
-/obj/structure/plasticflaps/opaque{
-	resistance_flags = 64
-	},
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "ky" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0
+/obj/effect/turf_decal/stripes{
+	dir = 1
 	},
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "kX" = (
 /obj/effect/decal/cleanable/blood/gibs/limb,
@@ -497,8 +517,8 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
-"lU" = (
-/obj/structure/closet/crate,
+"lQ" = (
+/obj/machinery/light/floor,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "lW" = (
@@ -592,6 +612,10 @@
 	},
 /turf/closed/indestructible/syndicate,
 /area/city/outskirtsfactory)
+"oz" = (
+/obj/effect/mob_spawn/human/corpse/charredskeleton,
+/turf/open/lava,
+/area/city/outskirtsfactory)
 "pe" = (
 /obj/effect/turf_decal/siding/thinplating/light{
 	dir = 8
@@ -631,18 +655,6 @@
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"ql" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "qr" = (
@@ -700,6 +712,13 @@
 "rr" = (
 /mob/living/simple_animal/hostile/ordeal/grungeon_boss,
 /turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"sh" = (
+/obj/effect/turf_decal/stripes/corner{
+	dir = 1
+	},
+/obj/effect/decal/cleanable/blood/old,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "sk" = (
 /obj/effect/turf_decal/trimline/red/filled/warning{
@@ -817,9 +836,12 @@
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "wh" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red,
-/turf/open/floor/pod/dark,
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64;
+	id = "furnaceaccess"
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "wm" = (
 /obj/structure/railing{
@@ -886,12 +908,6 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
-"yg" = (
-/obj/effect/turf_decal/stripes/corner{
-	dir = 1
-	},
-/turf/open/floor/pod/dark,
-/area/city/outskirtsfactory)
 "yh" = (
 /obj/machinery/light/small/red,
 /turf/open/floor/pod/dark,
@@ -922,12 +938,23 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
-"yO" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/turf_decal/stripes{
-	dir = 1
+"yT" = (
+/obj/structure/sign/warning/fire{
+	desc = "A warning sign which reads 'DANGER: FIRE'. A small inscription beneath it says, 'Do not attempt to crawl under the flaps'.";
+	resistance_flags = 64
 	},
-/turf/open/floor/pod/dark,
+/turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"za" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "zF" = (
 /obj/structure/sigsystem/tower{
@@ -947,27 +974,30 @@
 	name = "asphalt"
 	},
 /area/city/outskirtsfactory)
+"zR" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red,
+/turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
 "Ar" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "Av" = (
-/obj/effect/turf_decal/siding/green/corner{
+/obj/machinery/light/small{
 	dir = 4
 	},
-/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
-/turf/open/floor/pod/light,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "AE" = (
-/obj/machinery/conveyor/auto{
-	dir = 8;
-	resistance_flags = 64;
-	tamperproof = 1
+/obj/structure/sigsystem/connector{
+	dir = 4
 	},
-/obj/structure/plasticflaps/opaque{
-	resistance_flags = 64
+/obj/machinery/light/red{
+	dir = 8
 	},
-/turf/open/floor/mineral/plastitanium,
+/obj/structure/closet/crate,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "AX" = (
 /obj/structure/sigsystem/connector,
@@ -1093,20 +1123,15 @@
 	},
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
-"DM" = (
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
-/obj/machinery/light,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "DP" = (
 /obj/structure/sigsystem/connector{
 	dir = 8
 	},
 /turf/closed/indestructible/syndicate,
+/area/city/outskirtsfactory)
+"DQ" = (
+/obj/structure/headpike,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "DU" = (
 /obj/effect/landmark/cratespawn,
@@ -1152,6 +1177,15 @@
 	},
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
+"EG" = (
+/obj/machinery/light/red{
+	dir = 1
+	},
+/obj/effect/turf_decal/stripes{
+	dir = 1
+	},
+/turf/open/floor/pod/dark,
+/area/city/outskirtsfactory)
 "EO" = (
 /obj/effect/turf_decal/siding/green/corner{
 	dir = 8
@@ -1159,12 +1193,11 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "EQ" = (
-/obj/machinery/conveyor/auto{
-	dir = 1;
-	resistance_flags = 64;
-	tamperproof = 1
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red{
+	dir = 1
 	},
-/turf/open/floor/mineral/plastitanium,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "ER" = (
 /obj/effect/decal/cleanable/blood/footprints,
@@ -1188,14 +1221,12 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "FF" = (
-/obj/effect/turf_decal/siding/thinplating/light{
-	dir = 4
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
 	},
-/obj/machinery/recharge_station{
-	resistance_flags = 64
-	},
-/mob/living/simple_animal/hostile/ordeal/green_bot,
-/turf/open/floor/facility,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "FX" = (
 /obj/effect/decal/cleanable/blood/tracks{
@@ -1236,16 +1267,7 @@
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "Hf" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
+/obj/structure/closet/crate,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Hg" = (
@@ -1291,6 +1313,7 @@
 /area/city/outskirtsfactory)
 "HH" = (
 /obj/effect/decal/cleanable/blood/gibs/limb,
+/obj/structure/headpike,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "HN" = (
@@ -1353,24 +1376,28 @@
 /obj/structure/sigsystem/connector,
 /turf/open/floor/mineral/plastitanium/red,
 /area/city/outskirtsfactory)
+"Ke" = (
+/obj/effect/turf_decal/siding/green/corner{
+	dir = 4
+	},
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/pod/light,
+/area/city/outskirtsfactory)
 "Kj" = (
 /obj/effect/decal/cleanable/dirt/dust,
 /obj/structure/lootcrate/syndicate,
 /turf/open/floor/facility/dark,
 /area/city/outskirtsfactory)
 "Kk" = (
-/obj/machinery/conveyor/auto{
-	dir = 4;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
 /obj/structure/railing{
 	resistance_flags = 115;
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 8
+	dir = 4
 	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/decal/cleanable/oil/slippery,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Kl" = (
@@ -1412,26 +1439,11 @@
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
 "KR" = (
-/obj/machinery/conveyor/auto{
-	dir = 1;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 8
-	},
-/turf/open/floor/mineral/plastitanium,
+/mob/living/simple_animal/hostile/ordeal/green_bot_rocket,
+/turf/open/floor/plating,
 /area/city/outskirtsfactory)
 "KU" = (
-/obj/structure/destructible/cult/forge{
-	resistance_flags = 64;
-	desc = "A forge used in crafting various parts.";
-	name = "forge"
-	},
+/obj/effect/mob_spawn/human/corpse/charredskeleton,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "La" = (
@@ -1461,16 +1473,6 @@
 	},
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
-"LR" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "LZ" = (
 /obj/effect/light_emitter{
 	light_power = 4;
@@ -1499,12 +1501,15 @@
 /turf/open/floor/circuit/red,
 /area/city/outskirtsfactory)
 "Nt" = (
-/obj/machinery/button/door{
-	id = "furnaceaccess";
+/obj/machinery/conveyor/auto{
+	dir = 4;
 	resistance_flags = 64;
-	pixel_x = -3
+	tamperproof = 1
 	},
-/turf/closed/indestructible/syndicate,
+/obj/structure/plasticflaps/opaque{
+	resistance_flags = 64
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Nx" = (
 /obj/machinery/light/small/red{
@@ -1541,6 +1546,12 @@
 /area/city/outskirtsfactory)
 "Pb" = (
 /mob/living/simple_animal/hostile/ordeal/green_bot,
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
+"Pc" = (
+/obj/machinery/light/small{
+	dir = 8
+	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Pi" = (
@@ -1642,6 +1653,7 @@
 /obj/machinery/light{
 	dir = 1
 	},
+/mob/living/simple_animal/hostile/ordeal/green_bot,
 /turf/open/floor/facility,
 /area/city/outskirtsfactory)
 "SZ" = (
@@ -1650,14 +1662,6 @@
 	resistance_flags = 64
 	},
 /obj/structure/sigsystem/activator,
-/obj/machinery/conveyor/auto{
-	dir = 1;
-	resistance_flags = 64;
-	tamperproof = 1
-	},
-/obj/structure/plasticflaps/opaque{
-	resistance_flags = 64
-	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Tc" = (
@@ -1753,18 +1757,6 @@
 	},
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
-"Ut" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
-	},
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/effect/decal/cleanable/oil/slippery,
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
 "Uv" = (
 /obj/effect/turf_decal/trimline/blue/filled/line{
 	dir = 4
@@ -1772,14 +1764,18 @@
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
 "Uw" = (
+/obj/machinery/conveyor/auto{
+	dir = 8;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
 /obj/structure/railing{
 	resistance_flags = 115;
 	name = "wing-grade railing";
 	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
 	mouse_opacity = 0;
-	dir = 4
+	dir = 1
 	},
-/obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "UC" = (
@@ -1805,19 +1801,10 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "UM" = (
-/obj/machinery/light/small{
-	dir = 4
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/effect/turf_decal/stripes{
+	dir = 1
 	},
-/turf/open/floor/mineral/plastitanium,
-/area/city/outskirtsfactory)
-"UO" = (
-/obj/structure/sigsystem/connector{
-	dir = 4
-	},
-/obj/machinery/light/red{
-	dir = 8
-	},
-/obj/structure/closet/crate,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "US" = (
@@ -1854,12 +1841,18 @@
 	density = 1
 	},
 /area/city/outskirtsfactory)
-"VC" = (
-/obj/structure/rack,
-/obj/machinery/light{
-	dir = 1
+"VB" = (
+/obj/machinery/door/poddoor/shutters/indestructible{
+	lockpickable = 0;
+	resistance_flags = 64
 	},
-/turf/open/floor/mineral/plastitanium,
+/obj/structure/sigsystem/activator,
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "VL" = (
 /obj/structure/fence,
@@ -1873,6 +1866,21 @@
 /obj/structure/lootcrate/tres,
 /obj/effect/decal/cleanable/dirt/dust,
 /turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"Wo" = (
+/obj/machinery/conveyor/auto{
+	dir = 1;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/structure/railing{
+	resistance_flags = 115;
+	name = "wing-grade railing";
+	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
+	mouse_opacity = 0;
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "Wt" = (
 /obj/structure/sigsystem/connector/split{
@@ -1890,12 +1898,9 @@
 /turf/open/floor/plating/asteroid/basalt,
 /area/city/outskirtsfactory)
 "WH" = (
-/obj/structure/railing{
-	resistance_flags = 115;
-	name = "wing-grade railing";
-	desc = "Indestructible railing created in a vain attempt of fool-proofing the wing's workplace.";
-	mouse_opacity = 0;
-	dir = 4
+/obj/structure/rack,
+/obj/machinery/light{
+	dir = 1
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
@@ -1919,6 +1924,19 @@
 	},
 /turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
+"XP" = (
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/obj/machinery/conveyor/auto{
+	dir = 4;
+	resistance_flags = 64;
+	tamperproof = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/outskirtsfactory)
 "XW" = (
 /obj/structure/table/reinforced,
 /obj/structure/lootcrate/hana,
@@ -1931,9 +1949,8 @@
 /turf/open/floor/pod/light,
 /area/city/outskirtsfactory)
 "YB" = (
-/obj/effect/turf_decal/stripes{
-	dir = 1
-	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/machinery/light/small/red,
 /turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "YJ" = (
@@ -1943,6 +1960,15 @@
 /obj/structure/table/reinforced,
 /obj/structure/lootcrate/money,
 /turf/open/floor/facility/dark,
+/area/city/outskirtsfactory)
+"YQ" = (
+/obj/structure/destructible/cult/forge{
+	resistance_flags = 64;
+	desc = "A forge used in crafting various parts.";
+	name = "forge"
+	},
+/obj/machinery/light,
+/turf/open/floor/mineral/plastitanium,
 /area/city/outskirtsfactory)
 "YV" = (
 /obj/structure/sigsystem/connector{
@@ -1962,13 +1988,6 @@
 /area/city/outskirtsfactory)
 "Zj" = (
 /turf/open/floor/circuit,
-/area/city/outskirtsfactory)
-"Zk" = (
-/obj/effect/decal/cleanable/dirt/dust,
-/obj/machinery/light/small/red{
-	dir = 1
-	},
-/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "Zt" = (
 /obj/effect/decal/cleanable/blood/splatter,
@@ -1992,7 +2011,7 @@
 	},
 /obj/structure/sigsystem/connector/split,
 /obj/structure/sigsystem/activator,
-/turf/open/space/basic,
+/turf/open/floor/pod/dark,
 /area/city/outskirtsfactory)
 "ZQ" = (
 /obj/effect/turf_decal/siding/thinplating/light{
@@ -5425,13 +5444,13 @@ Pn
 Pn
 Pn
 xE
-Hf
-EQ
-EQ
-EQ
-EQ
-EQ
-EQ
+XP
+FF
+FF
+FF
+FF
+FF
+FF
 xE
 Pn
 Pn
@@ -5635,7 +5654,7 @@ Pn
 Pn
 Pn
 xE
-AE
+za
 xE
 xE
 xE
@@ -5731,7 +5750,7 @@ Pn
 Pn
 Pn
 xE
-kt
+Nt
 xE
 Pn
 Pn
@@ -5833,7 +5852,7 @@ Pn
 xE
 xE
 xE
-kt
+Nt
 xE
 xE
 Pn
@@ -5933,7 +5952,7 @@ Pn
 Pn
 Pn
 xE
-sJ
+KU
 RK
 UC
 RK
@@ -6036,9 +6055,9 @@ Pn
 Pn
 xE
 RK
-KU
+ey
 UC
-DM
+YQ
 xE
 xE
 xE
@@ -6139,21 +6158,21 @@ Pn
 xE
 sJ
 Pb
-UC
+sJ
 Pb
-gE
+wh
 RK
+Pc
+sJ
+Uw
 iZ
-ky
-is
-ql
 wm
-ql
+iZ
 wm
-Kk
-KR
-KR
-KR
+gE
+Wo
+Wo
+Wo
 lW
 gl
 Uh
@@ -6239,21 +6258,21 @@ Pn
 Pn
 Pn
 xE
-VC
+WH
 sJ
 sJ
 RK
-gE
+wh
 sJ
 RK
 RK
 is
 sJ
 RK
-sJ
+lQ
 RK
 UC
-sJ
+lQ
 RK
 sJ
 xE
@@ -6265,14 +6284,14 @@ xE
 hK
 af
 De
-UO
+AE
 qs
 QF
 xE
 Wb
 KJ
 GV
-Qi
+kt
 GV
 Kj
 io
@@ -6345,19 +6364,19 @@ ef
 Pz
 RK
 RK
-gE
+wh
 RK
-UM
-LR
-is
-WH
-Ut
-WH
-WH
-UC
-WH
-WH
+Av
+RK
 Uw
+dt
+Kk
+dt
+dt
+UC
+dt
+dt
+jF
 xE
 xE
 je
@@ -6443,17 +6462,17 @@ Pn
 Pn
 Pn
 xE
-lU
+Hf
 RK
 sJ
 sJ
-xE
-Nt
+yT
+iA
 xE
 xE
 Mx
 TT
-TT
+oz
 TT
 TT
 DV
@@ -6464,10 +6483,10 @@ xE
 xE
 je
 Uh
-Uh
+gl
 gl
 aR
-YB
+ky
 et
 YV
 et
@@ -6569,8 +6588,8 @@ xE
 xE
 xE
 pM
-ir
-tQ
+EG
+KH
 YV
 et
 yh
@@ -6660,7 +6679,7 @@ TT
 fR
 TT
 TT
-TT
+oz
 TT
 TT
 TT
@@ -6668,10 +6687,10 @@ xE
 xE
 je
 Uh
-Uh
 gl
-SZ
-yO
+gl
+VB
+UM
 et
 YV
 tQ
@@ -6758,6 +6777,11 @@ Pn
 Pn
 xE
 xE
+yT
+xE
+xE
+xE
+yT
 xE
 xE
 xE
@@ -6768,18 +6792,13 @@ xE
 xE
 xE
 xE
-xE
-xE
-xE
-xE
-xE
-yg
+sh
 tQ
 Rk
 Rk
 Rk
 ZA
-iA
+zR
 xE
 io
 io
@@ -6876,9 +6895,9 @@ Pn
 IU
 Pi
 xE
-dt
+SZ
 ZD
-dt
+SZ
 xE
 xE
 xE
@@ -7082,7 +7101,7 @@ sw
 xE
 Nx
 tQ
-wh
+YB
 xE
 xE
 xE
@@ -7246,11 +7265,11 @@ CZ
 DP
 Qt
 Qt
-dy
+KR
 Qt
 dy
 Qt
-dy
+KR
 Qt
 dy
 Qt
@@ -7296,7 +7315,7 @@ io
 io
 Kq
 io
-io
+CD
 io
 io
 io
@@ -7386,9 +7405,9 @@ Pn
 Pn
 Pn
 xE
-Zk
+EQ
 KH
-wh
+YB
 xE
 io
 io
@@ -7664,14 +7683,14 @@ Qt
 Qt
 Qt
 xI
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
+xE
+bl
+xE
+yj
+tQ
+tQ
+tQ
+xE
 Pn
 Pn
 Pn
@@ -7766,14 +7785,14 @@ Vf
 Ua
 Ls
 Tj
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
+tQ
+tQ
+tQ
+et
+tQ
+tQ
+tQ
+xE
 Pn
 Pn
 Pn
@@ -7868,14 +7887,14 @@ dU
 dU
 dU
 Tj
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
+tQ
+tQ
+tQ
+tQ
+tQ
+et
+yh
+xE
 Pn
 Pn
 Pn
@@ -7970,14 +7989,14 @@ HA
 if
 if
 Tj
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
+tQ
+tQ
+tQ
+tQ
+tQ
+tQ
+tQ
+xE
 Pn
 Pn
 Pn
@@ -8072,14 +8091,14 @@ Qt
 Qt
 Qt
 xE
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
-Pn
+xE
+bl
+xE
+oy
+tQ
+tQ
+et
+vd
 Pn
 Pn
 Pn
@@ -8405,7 +8424,7 @@ Fm
 UH
 WU
 CN
-Av
+Ke
 Tm
 Tm
 vb
@@ -8416,7 +8435,7 @@ Ya
 Tm
 xE
 Ei
-tQ
+DQ
 bv
 jY
 tQ
@@ -8472,11 +8491,11 @@ Qt
 Qt
 dy
 Qt
-dy
+KR
 Qt
 dy
 Qt
-dy
+KR
 Qt
 Qt
 xE
@@ -9133,7 +9152,7 @@ io
 io
 io
 io
-io
+CD
 io
 io
 io
@@ -9936,14 +9955,14 @@ Pn
 xE
 pz
 sB
-FF
+sB
 mL
 sB
 sB
 ZQ
 xE
 io
-io
+CD
 io
 io
 io

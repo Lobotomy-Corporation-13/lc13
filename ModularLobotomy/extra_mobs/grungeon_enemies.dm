@@ -71,9 +71,9 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket/proc/PrepareToFire(atom/A) //Copypasted code from TTLS snipers. Intended to serve as the "warning" for the minigun.
-	current_beam = Beam(A, icon_state="blood", time = .7 SECONDS)
+	current_beam = Beam(A, icon_state="blood", time = 0.7 SECONDS)
 	can_act = FALSE
-	SLEEP_CHECK_DEATH(8)
+	SLEEP_CHECK_DEATH(9)
 	if(!(A in view(9, src)))
 		can_act = TRUE
 		return FALSE
