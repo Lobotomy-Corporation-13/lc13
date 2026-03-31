@@ -123,3 +123,34 @@
 		/obj/item/stack/thumb_east_ammo/spent/tigermark,
 		/obj/item/stack/thumb_east_ammo/spent/tigermark/savage,
 		))
+
+////////////////////////////////////////////////////////////
+// THUMB SPIDER ARMOR SECTION.
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider
+	flags_inv = HIDEJUMPSUIT | HIDEGLOVES
+	icon = 'icons/obj/spider_house/thumb/thumb_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/thumb/thumb_spider_worn.dmi'
+
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/ex_sottocapo
+	name = "thumb ex-sottocapo armor"
+	desc = "Armor once worn by a sottocapo of the Thumb. It has been repurposed for a new owner."
+	icon_state = "thumb_ex_sottocapo"
+	armor = list(RED_DAMAGE = 60, WHITE_DAMAGE = 40, BLACK_DAMAGE = 50, PALE_DAMAGE = 60)
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 100,
+							PRUDENCE_ATTRIBUTE = 100,
+							TEMPERANCE_ATTRIBUTE = 100,
+							JUSTICE_ATTRIBUTE = 100
+							)
+
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice
+	name = "thumb apprentice armor"
+	desc = "Armor worn by an apprentice of the Thumb."
+	icon_state = "thumb_apprentice"
+	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 40)
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 80,
+							PRUDENCE_ATTRIBUTE = 80,
+							TEMPERANCE_ATTRIBUTE = 80,
+							JUSTICE_ATTRIBUTE = 80
+							)

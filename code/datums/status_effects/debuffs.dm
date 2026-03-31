@@ -2067,7 +2067,7 @@
 	else
 		// Humans: deal sanity damage equal to stacks
 		var/mob/living/carbon/human/H = owner
-		if(!H.TRAIT_BRUTESANITY)
+		if(!HAS_TRAIT(H, TRAIT_BRUTESANITY))
 			H.adjustSanityLoss(stacks)
 		else
 			H.adjustBruteLoss(stacks)
