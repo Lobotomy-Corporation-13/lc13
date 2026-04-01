@@ -6,46 +6,65 @@
 // THUMB NURSEFATHER WEAPON SYSTEM
 //
 // The Thumbfather Rapier and Katana are a dual-wield pair designed around the Poise/Concentration system.
-// They use a unique ammo type called Acceleration Rounds (stacks to 12, double normal).
+// They use a unique ammo type called Acceleration Rounds (stacks to 12, double normal capacity).
 //
 // === CORE LOOP ===
-// Only dual-wield follow-ups and combo actions spend Acceleration Rounds. Basic attacks do not.
+// Acceleration Rounds are spent by dual-wield follow-ups and combo actions. Basic attacks do not spend ammo.
+// Every time a round is spent, a detonation sound plays and the camera shakes.
 // When a round is spent:
 //   - Rapier: grants 5 Poise to user + applies 4 Overheat to target
 //   - Katana: grants 1 Concentration to user + applies 3 Tremor to target (no burst)
-// Poise crits outside the combo also boost status effects:
+// Poise crits also passively boost status effects regardless of combo state:
 //   - Rapier crit: +2 Overheat to target
 //   - Katana crit: +2 Tremor to target (no burst)
 //
 // === DUAL-WIELD ===
-// Every 2nd hit with one weapon triggers the partner weapon at 25% damage.
-// The follow-up still spends ammo and grants buffs, but does NOT advance the cross-combo.
+// Every 2nd non-combo hit with one weapon triggers the partner weapon at 25% damage.
+// The follow-up spends ammo from the partner and grants its buffs/debuffs.
+// Dual-wield follow-ups do NOT advance, trigger, or interact with the combo in any way.
+// The swing counter only increments on non-combo hits.
 //
-// === CROSS-COMBO (3 stages, costs 4 rounds total) ===
-// 1. OPENER: Click a target from range with either weapon (costs 1 round). Records which weapon started.
-// 2. SWITCH: Hit the target in melee with the OTHER weapon (costs 1 round). Must swap active hand.
-//    - Hitting with the same weapon as the opener BREAKS the combo.
-// 3. FINISHER: Hit the target in melee with the STARTING weapon (costs 2 rounds). Must swap back.
-//    - Hitting with the wrong weapon BREAKS the combo.
-//    - The finisher rolls for a Poise crit. If it crits:
-//      a) Reads the target's current Tremor + Overheat stacks
-//      b) Forces a Tremor Burst (knockdown)
-//      c) Deals bonus RED damage equal to (tremor stacks + overheat stacks)
-// The combo resets after 5 seconds of inactivity.
+// === COMBO (3 stages, costs 4 rounds total, requires weapon swapping) ===
+// The combo uses a lunge -> AoE sweep -> finisher pattern, similar to Thumb East weapons,
+// but requires swapping between the rapier and katana between each stage.
 //
-// Example: Rapier (range) -> Katana (melee) -> Rapier (melee, finisher)
-//      or: Katana (range) -> Rapier (melee) -> Katana (melee, finisher)
+// 1. LUNGE: Click a target from range with either weapon (costs 1 round).
+//    Dashes to the target and auto-attacks if in range. 13 second lunge cooldown.
+//    If the lunge falls short, you can still land a melee hit with the SAME weapon to continue.
+// 2. AoE SWEEP: Hit the target in melee with the OTHER weapon (costs 1 round).
+//    Deals the weapon hit + AoE damage (50% of weapon force) in a radius around the user.
+//    Hitting with the same weapon as the lunge BREAKS the combo.
+// 3. FINISHER: Hit the target in melee with the STARTING weapon (costs 2 rounds).
+//    Deals 150% weapon force, then Tremor Bursts the target and deals bonus RED damage
+//    equal to (target's Tremor stacks + Overheat stacks).
+//    Hitting with the wrong weapon BREAKS the combo.
+//
+// The combo resets after 5 seconds of inactivity (7 seconds during the finisher window).
+// Combo state is synced between both weapons so either can be used at the correct stage.
+//
+// Example: Rapier (lunge) -> Katana (AoE sweep) -> Rapier (finisher)
+//      or: Katana (lunge) -> Rapier (AoE sweep) -> Katana (finisher)
 //
 // === RELOAD ===
-// - Hit weapon with ammo OR hit ammo with weapon to reload (reverse reload)
-// - Loading Acceleration Rounds into one weapon also loads 1 round into the partner (linked reload)
-// - Reload is instant (no channeling)
+// - Channeled reload: 0.6s start + 0.4s per round loaded. Can be interrupted (fumble).
+// - Hit weapon with ammo OR hit ammo with weapon to reload (reverse reload).
+// - Loading Acceleration Rounds into one weapon also loads 1 round into the partner (linked reload).
+// - Reload start resets the combo and plays sound effects.
+// - Alt-click to manually unload a single round.
+//
+// === SOUNDS ===
+// - Rapier hitsound: thumb_east_rifle_attack.ogg
+// - Katana hitsound: thumb_east_podao_attack.ogg
+// - Detonation (on every ammo spend): weapon's detonation_sound
+// - Combo stages use lunge/sweep/finisher sounds from the Thumb East weapon set.
+// - Reload uses rifle reload start/load/end/fail sounds.
 ////////////////////////////////////////////////////////////
 
-// Cross-combo stages
-#define CROSS_NONE 0
-#define CROSS_OPENED 1
-#define CROSS_SWITCHED 2
+// Combo stages
+#define NURSEFATHER_COMBO_NONE 0
+#define NURSEFATHER_COMBO_LUNGE 1
+#define NURSEFATHER_COMBO_ATTACK2 2
+#define NURSEFATHER_COMBO_FINISHER 3
 
 ////////////////////////////////////////////////////////////
 // THUMBFATHER SHARED PROCS
@@ -66,8 +85,9 @@
 	return istype(weapon, /obj/item/ego_weapon/city/thumbfather_rapier)
 
 /// Spends one acceleration round from the weapon if available. Returns TRUE if spent, FALSE otherwise.
-/// Also creates the spent cartridge and applies weapon-specific buffs/debuffs.
-/proc/spend_acceleration_round(obj/item/ego_weapon/city/weapon, mob/living/user, mob/living/target)
+/// Also creates the spent cartridge, plays a detonation sound, and applies weapon-specific buffs/debuffs.
+/// volume: controls the detonation sound volume (default 90, use lower for dual-wield follow-ups)
+/proc/spend_acceleration_round(obj/item/ego_weapon/city/weapon, mob/living/user, mob/living/target, volume = 90)
 	// Access ammo list via the thumbfather vars
 	var/list/ammo_list
 	if(is_thumbfather_rapier(weapon))
@@ -96,6 +116,15 @@
 			K.current_ammo_name = ""
 	var/obj/item/stack/thumb_east_ammo/spent/new_spent = new accel_round.spent_type(weapon)
 	new_spent.forceMove(get_turf(weapon))
+	// Play detonation sound on every ammo spend
+	var/detonation_sfx
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		detonation_sfx = R.detonation_sound
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		detonation_sfx = K.detonation_sound
+	playsound(weapon, detonation_sfx, volume, FALSE, 10)
 	if(is_thumbfather_rapier(weapon))
 		user.apply_lc_poise(accel_round.poise_base)
 		if(isliving(target))
@@ -107,8 +136,8 @@
 	qdel(accel_round)
 	return TRUE
 
-/// Cross-combo finisher: tremor burst the target and deal bonus RED damage equal to (tremor + overheat stacks)
-/proc/thumbfather_cross_finisher(mob/living/target, mob/living/user)
+/// Combo finisher: tremor burst the target and deal bonus RED damage equal to (tremor + overheat stacks)
+/proc/thumbfather_finisher(mob/living/target, mob/living/user)
 	var/tremor_stacks = 0
 	var/overheat_stacks = 0
 	var/datum/status_effect/stacking/lc_tremor/T = target.has_status_effect(/datum/status_effect/stacking/lc_tremor)
@@ -125,111 +154,185 @@
 		to_chat(user, span_green("Your finishing strike detonates for [bonus_damage] bonus damage!"))
 	to_chat(target, span_userdanger("[user]'s finishing strike detonates the built-up tremor and heat!"))
 
-/// Syncs cross-combo state to both weapons
-/proc/sync_cross_combo(obj/item/ego_weapon/city/weapon, obj/item/ego_weapon/city/partner, new_stage, new_starter_is_rapier)
+/// Hits all living mobs in a radius around the user, excluding user and primary target. Used for the AoE sweep.
+/proc/thumbfather_radius_aoe(obj/item/ego_weapon/city/weapon, mob/living/user, mob/living/target, radius)
+	var/aoe_damage = round(initial(weapon.force) * 0.5)
+	for(var/turf/T in orange(radius, user))
+		new /obj/effect/temp_visual/thumb_east_aoe_impact(T)
+		for(var/mob/living/L in T)
+			if(L == user || L == target)
+				continue
+			L.deal_damage(aoe_damage, weapon.damtype, user, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+
+/// Syncs combo state to both weapons. Sets combo_stage and combo_starter_is_rapier on each.
+/proc/sync_nursefather_combo(obj/item/ego_weapon/city/weapon, mob/living/user, new_stage, new_starter_is_rapier)
+	var/obj/item/ego_weapon/city/partner = find_thumbfather_partner(weapon, user)
 	var/list/weapons = list(weapon)
 	if(partner)
 		weapons += partner
 	for(var/obj/item/ego_weapon/city/W in weapons)
 		if(is_thumbfather_rapier(W))
 			var/obj/item/ego_weapon/city/thumbfather_rapier/R = W
-			deltimer(R.cross_combo_timer)
-			R.cross_combo_stage = new_stage
-			R.cross_combo_starter_is_rapier = new_starter_is_rapier
-			if(new_stage != CROSS_NONE)
-				R.cross_combo_timer = addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reset_cross_combo), weapon, partner), 5 SECONDS, TIMER_STOPPABLE)
+			deltimer(R.combo_reset_timer)
+			R.combo_stage = new_stage
+			R.combo_starter_is_rapier = new_starter_is_rapier
 		else
 			var/obj/item/ego_weapon/city/thumbfather_katana/K = W
-			deltimer(K.cross_combo_timer)
-			K.cross_combo_stage = new_stage
-			K.cross_combo_starter_is_rapier = new_starter_is_rapier
-			if(new_stage != CROSS_NONE)
-				K.cross_combo_timer = addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reset_cross_combo), weapon, partner), 5 SECONDS, TIMER_STOPPABLE)
+			deltimer(K.combo_reset_timer)
+			K.combo_stage = new_stage
+			K.combo_starter_is_rapier = new_starter_is_rapier
 
-/// Resets cross-combo on timeout
-/proc/reset_cross_combo(obj/item/ego_weapon/city/weapon, obj/item/ego_weapon/city/partner)
-	sync_cross_combo(weapon, partner, CROSS_NONE, FALSE)
-	if(ismob(weapon?.loc))
-		to_chat(weapon.loc, span_warning("Your cross-combo has expired."))
+/// Resets combo state on both weapons. Shows a warning message if the combo was in progress.
+/proc/reset_nursefather_combo(obj/item/ego_weapon/city/weapon, mob/living/user, show_message = TRUE)
+	// Check if we should show a reset message (only if combo was in progress past lunge)
+	var/was_in_combo = FALSE
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		was_in_combo = (R.combo_stage != NURSEFATHER_COMBO_NONE && R.combo_stage != NURSEFATHER_COMBO_LUNGE)
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		was_in_combo = (K.combo_stage != NURSEFATHER_COMBO_NONE && K.combo_stage != NURSEFATHER_COMBO_LUNGE)
+	if(show_message && was_in_combo)
+		to_chat(user, span_warning("Your combo resets!"))
+	sync_nursefather_combo(weapon, user, NURSEFATHER_COMBO_NONE, FALSE)
 
-/// Handles melee hit cross-combo logic. Returns TRUE if finisher should trigger.
-/proc/handle_cross_combo_melee(obj/item/ego_weapon/city/weapon, mob/living/carbon/human/user, cross_stage, starter_is_rapier)
-	if(cross_stage == CROSS_NONE)
-		return FALSE
+/// Starts a combo expiry timer on the active weapon. Resets combo on both weapons when it fires.
+/proc/start_nursefather_combo_timer(obj/item/ego_weapon/city/weapon, mob/living/user, extra_time = 0)
+	var/duration
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		deltimer(R.combo_reset_timer)
+		duration = R.combo_reset_duration + extra_time
+		R.combo_reset_timer = addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reset_nursefather_combo), weapon, user, TRUE), duration, TIMER_STOPPABLE)
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		deltimer(K.combo_reset_timer)
+		duration = K.combo_reset_duration + extra_time
+		K.combo_reset_timer = addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(reset_nursefather_combo), weapon, user, TRUE), duration, TIMER_STOPPABLE)
+	// Also cancel any existing timer on the partner so we don't double-reset
 	var/obj/item/ego_weapon/city/partner = find_thumbfather_partner(weapon, user)
-	var/weapon_is_rapier = is_thumbfather_rapier(weapon)
-	if(cross_stage == CROSS_OPENED)
-		if(weapon_is_rapier != starter_is_rapier)
-			sync_cross_combo(weapon, partner, CROSS_SWITCHED, starter_is_rapier)
-			to_chat(user, span_info("Cross-combo: weapon switch! Finish with your starting weapon!"))
-			return FALSE
+	if(partner)
+		if(is_thumbfather_rapier(partner))
+			var/obj/item/ego_weapon/city/thumbfather_rapier/R = partner
+			deltimer(R.combo_reset_timer)
 		else
-			sync_cross_combo(weapon, partner, CROSS_NONE, FALSE)
-			to_chat(user, span_warning("Cross-combo broken! You needed to switch weapons."))
-			return FALSE
-	if(cross_stage == CROSS_SWITCHED)
-		if(weapon_is_rapier == starter_is_rapier)
-			sync_cross_combo(weapon, partner, CROSS_NONE, FALSE)
-			return TRUE
-		else
-			sync_cross_combo(weapon, partner, CROSS_NONE, FALSE)
-			to_chat(user, span_warning("Cross-combo broken! You needed to finish with your starting weapon."))
-			return FALSE
-	return FALSE
+			var/obj/item/ego_weapon/city/thumbfather_katana/K = partner
+			deltimer(K.combo_reset_timer)
 
-/// Synchronous reload proc for thumbfather weapons. Loads rounds from ammo stack into weapon, with linked reload for partner.
+/// Channeled reload proc for thumbfather weapons. Loads rounds with do_after, with linked reload for partner.
 /proc/thumbfather_reload(obj/item/ego_weapon/city/weapon, obj/item/stack/thumb_east_ammo/ammo, mob/living/user, list/current_ammo, max_ammo, list/accepted_ammo_table)
 	if(!(ammo.type in accepted_ammo_table))
 		to_chat(user, span_warning("The [ammo.name] are incompatible with the [weapon.name]."))
 		return
+	var/bullets_in_gun = length(current_ammo)
+	if(bullets_in_gun >= max_ammo)
+		to_chat(user, span_warning("The [weapon.name] cannot fit any more ammunition - it is fully loaded."))
+		return
 	var/obj/item/ego_weapon/city/partner = find_thumbfather_partner(weapon, user)
 	var/is_acceleration = istype(ammo, /obj/item/stack/thumb_east_ammo/acceleration)
-	// Load rounds into this weapon up to capacity
-	while(length(current_ammo) < max_ammo && ammo && !QDELETED(ammo) && ammo.amount >= 1)
-		var/obj/item/stack/thumb_east_ammo/bullet = ammo.split_stack(user, 1)
-		if(!bullet)
-			break
-		bullet.forceMove(weapon)
-		current_ammo += bullet
-		// Update ammo type tracking
-		if(is_thumbfather_rapier(weapon))
-			var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
-			R.current_ammo_type = ammo.type
-			R.current_ammo_name = ammo.name
-		else
-			var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
-			K.current_ammo_type = ammo.type
-			K.current_ammo_name = ammo.name
-		to_chat(user, span_info("You load a [ammo.singular_name] into the [weapon.name]."))
-		// Linked reload: also load 1 into partner for each round loaded
-		if(is_acceleration && partner)
-			var/list/partner_ammo
-			var/partner_max
-			var/list/partner_accepted
-			if(is_thumbfather_rapier(partner))
-				var/obj/item/ego_weapon/city/thumbfather_rapier/R = partner
-				partner_ammo = R.current_ammo
-				partner_max = R.max_ammo
-				partner_accepted = R.accepted_ammo_table
-			else
-				var/obj/item/ego_weapon/city/thumbfather_katana/K = partner
-				partner_ammo = K.current_ammo
-				partner_max = K.max_ammo
-				partner_accepted = K.accepted_ammo_table
-			if((ammo.type in partner_accepted) && length(partner_ammo) < partner_max && ammo && !QDELETED(ammo) && ammo.amount >= 1)
-				var/obj/item/stack/thumb_east_ammo/partner_bullet = ammo.split_stack(user, 1)
-				if(partner_bullet)
-					partner_bullet.forceMove(partner)
-					partner_ammo += partner_bullet
+	var/remaining_capacity = max_ammo - bullets_in_gun
+	var/amount_to_load = min(ammo.amount, remaining_capacity)
+
+	// Reload start: reset combo and play start sound
+	playsound(weapon, 'sound/weapons/ego/thumb_east_rifle_reload_start.ogg', 90, FALSE, 10)
+	to_chat(user, span_info("You begin loading your [weapon.name]..."))
+
+	// Set busy on the weapon and reset combo
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		R.busy = TRUE
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		K.busy = TRUE
+	reset_nursefather_combo(weapon, user)
+
+	// Calculate how many channeling steps we need - we load 2 rounds per step
+	var/load_steps = CEILING(amount_to_load / 2, 1)
+
+	if(do_after(user, 0.6 SECONDS, weapon, progress = TRUE, interaction_key = "thumbfather_reload", max_interact_count = 1))
+		// Load 2 rounds per channeling step
+		for(var/i in 1 to load_steps)
+			if(do_after(user, 0.4 SECONDS, weapon, progress = TRUE, interaction_key = "thumbfather_reload", max_interact_count = 1))
+				var/rounds_this_step = min(2, max_ammo - length(current_ammo))
+				var/loaded_this_step = 0
+				for(var/j in 1 to rounds_this_step)
+					if(!ammo || QDELETED(ammo) || ammo.amount < 1)
+						break
+					var/obj/item/stack/thumb_east_ammo/bullet = ammo.split_stack(user, 1)
+					if(!bullet)
+						break
+					bullet.forceMove(weapon)
+					current_ammo += bullet
+					loaded_this_step++
+				if(!loaded_this_step)
+					break
+				if(is_thumbfather_rapier(weapon))
+					var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+					R.current_ammo_type = ammo.type
+					R.current_ammo_name = ammo.name
+				else
+					var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+					K.current_ammo_type = ammo.type
+					K.current_ammo_name = ammo.name
+				playsound(weapon, 'sound/weapons/ego/thumb_east_rifle_reload_load.ogg', 90, FALSE, 8)
+				to_chat(user, span_info("You load [loaded_this_step] round\s into the [weapon.name]."))
+				// Linked reload: also load 2 into partner per step
+				if(is_acceleration && partner)
+					var/list/partner_ammo
+					var/partner_max
+					var/list/partner_accepted
 					if(is_thumbfather_rapier(partner))
 						var/obj/item/ego_weapon/city/thumbfather_rapier/R = partner
-						R.current_ammo_type = ammo.type
-						R.current_ammo_name = ammo.name
+						partner_ammo = R.current_ammo
+						partner_max = R.max_ammo
+						partner_accepted = R.accepted_ammo_table
 					else
 						var/obj/item/ego_weapon/city/thumbfather_katana/K = partner
-						K.current_ammo_type = ammo.type
-						K.current_ammo_name = ammo.name
-					to_chat(user, span_info("A round is also loaded into your [partner.name]."))
+						partner_ammo = K.current_ammo
+						partner_max = K.max_ammo
+						partner_accepted = K.accepted_ammo_table
+					var/partner_loaded = 0
+					for(var/k in 1 to 2)
+						if(!((ammo.type in partner_accepted) && length(partner_ammo) < partner_max && ammo && !QDELETED(ammo) && ammo.amount >= 1))
+							break
+						var/obj/item/stack/thumb_east_ammo/partner_bullet = ammo.split_stack(user, 1)
+						if(partner_bullet)
+							partner_bullet.forceMove(partner)
+							partner_ammo += partner_bullet
+							partner_loaded++
+					if(partner_loaded)
+						if(is_thumbfather_rapier(partner))
+							var/obj/item/ego_weapon/city/thumbfather_rapier/R = partner
+							R.current_ammo_type = ammo.type
+							R.current_ammo_name = ammo.name
+						else
+							var/obj/item/ego_weapon/city/thumbfather_katana/K = partner
+							K.current_ammo_type = ammo.type
+							K.current_ammo_name = ammo.name
+						to_chat(user, span_info("[partner_loaded] round\s also loaded into your [partner.name]."))
+			else
+				// Reload interrupted mid-loading
+				playsound(weapon, 'sound/weapons/ego/thumb_east_rifle_reload_fail.ogg', 100, FALSE, 6)
+				user.visible_message(span_danger("[user] fumbles while reloading!"), span_danger("Your reload is interrupted!"))
+				if(is_thumbfather_rapier(weapon))
+					var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+					R.busy = FALSE
+				else
+					var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+					K.busy = FALSE
+				return
+		// Reload complete
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound), weapon, 'sound/weapons/ego/thumb_east_rifle_reload_end.ogg', 90, FALSE, 10), 0.2 SECONDS)
+	else
+		to_chat(user, span_danger("You abort your reload!"))
+
+	// Clear busy
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		R.busy = FALSE
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		K.busy = FALSE
 
 ////////////////////////////////////////////////////////////
 // THUMBFATHER RAPIER
@@ -243,6 +346,7 @@
 	inhand_y_dimension = 48
 	icon_state = "thumbfather_rapier"
 	inhand_icon_state = "thumbfather_rapier"
+	hitsound = 'sound/weapons/ego/thumb_east_rifle_attack.ogg'
 	base_pixel_x = 8
 	base_pixel_y = 8
 	force = 45
@@ -256,6 +360,13 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special = "This is a Thumbfather dual-wield weapon. <b>Load it with acceleration propellant ammunition</b> and dual-wield it with its partner to unlock its full potential."
+	/// Detailed combo description shown on examine
+	var/combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by an <b>AoE sweep with the other weapon</b>, and ends with a powerful <b>finisher that detonates Tremor and Overheat</b>.\n"+\
+	"<b>Lunge</b>: Attack a target from range to dash at them (costs 1 round).\n"+\
+	"<b>AoE Sweep</b>: Swap to your other weapon and hit the target (costs 1 round). Deals AoE damage around you.\n"+\
+	"<b>Finisher</b>: Swap back to your starting weapon and hit the target (costs 2 rounds). Tremor Bursts and deals bonus RED damage equal to built-up Tremor + Overheat stacks.\n"+\
+	"Hitting with the wrong weapon at any stage <b>breaks the combo</b>. The combo expires after 5 seconds of inactivity."
 	/// Ammo types this weapon can load
 	var/list/accepted_ammo_table = list(
 		/obj/item/stack/thumb_east_ammo/acceleration,
@@ -272,14 +383,35 @@
 	var/busy_dual_strike = FALSE
 	/// Tracks hits for dual-wield (triggers on every 2nd hit)
 	var/swing_count = 0
-	/// Cross-combo stage: CROSS_NONE, CROSS_OPENED, CROSS_SWITCHED
-	var/cross_combo_stage = CROSS_NONE
-	/// Whether the combo was started by the rapier (TRUE) or katana (FALSE)
-	var/cross_combo_starter_is_rapier = FALSE
-	/// Timer ID for cross-combo reset
-	var/cross_combo_timer
-	/// Whether we're currently in a finisher
-	var/in_finisher = FALSE
+	/// Current combo stage (synced between both weapons)
+	var/combo_stage = NURSEFATHER_COMBO_NONE
+	/// Whether the combo was started by the rapier (TRUE) or katana (FALSE) (synced between both weapons)
+	var/combo_starter_is_rapier = FALSE
+	/// Timer for combo reset
+	var/combo_reset_timer
+	/// Duration before combo resets from inactivity
+	var/combo_reset_duration = 5 SECONDS
+	/// Whether we can lunge
+	var/lunge_ready = TRUE
+	/// Lunge distance in tiles
+	var/lunge_range = 3
+	/// Cooldown between lunges
+	var/lunge_cooldown_duration = 13 SECONDS
+	/// Timer for lunge cooldown
+	var/lunge_cooldown_timer
+	/// Base radius for AoE sweep
+	var/attack2_aoe_radius = 1
+	/// Are we currently performing a channeled action (reloading)?
+	var/busy = FALSE
+	/// Cooldown for balloon alerts
+	var/balloon_alert_cooldown
+
+	// Sound variables
+	var/lunge_sound = 'sound/weapons/ego/thumb_east_rifle_boostedlunge.ogg'
+	var/sweep_sound = 'sound/weapons/ego/thumb_east_rifle_boostedsweep.ogg'
+	var/finisher_sound = 'sound/weapons/ego/thumb_east_rifle_boostedfinisher.ogg'
+	var/detonation_sound = 'sound/weapons/ego/thumb_east_rifle_detonation.ogg'
+	var/dryfire_sound = 'sound/weapons/gun/general/dry_fire.ogg'
 
 /obj/item/ego_weapon/city/thumbfather_rapier/Initialize(mapload)
 	. = ..()
@@ -289,6 +421,8 @@
 	for(var/obj/item/stack/thumb_east_ammo/leftover in current_ammo)
 		leftover.forceMove(get_turf(src))
 	current_ammo = null
+	deltimer(combo_reset_timer)
+	deltimer(lunge_cooldown_timer)
 	return ..()
 
 /obj/item/ego_weapon/city/thumbfather_rapier/equipped(mob/user, slot)
@@ -302,81 +436,207 @@
 /obj/item/ego_weapon/city/thumbfather_rapier/examine(mob/user)
 	. = ..()
 	. += span_danger("There are [length(current_ammo)]/[max_ammo] rounds of [length(current_ammo) > 0 ? current_ammo_name : "ammunition"] currently loaded.")
-	if(cross_combo_stage == CROSS_OPENED)
-		. += span_info("Cross-combo: waiting for weapon switch.")
-	else if(cross_combo_stage == CROSS_SWITCHED)
-		. += span_info("Cross-combo: finisher ready!")
+	. += span_info(combo_description)
+	. += span_notice("Every 2nd non-combo hit triggers a <b>dual-wield follow-up</b> from your partner weapon at 25% damage, spending a round from it.")
+	. += span_notice("Spending a round from this rapier grants <b>5 Poise</b> to you and applies <b>4 Overheat</b> to the target. Poise crits also apply +2 Overheat.")
+	. += span_notice("<b>Hit the weapon with ammunition</b> to reload (channeled). <b>Alt-click</b> to unload a round.")
+	if(combo_stage == NURSEFATHER_COMBO_LUNGE)
+		. += span_green("Combo active: lunge landed! [combo_starter_is_rapier ? "Switch to katana" : "Hit with rapier"] for the AoE sweep!")
+	else if(combo_stage == NURSEFATHER_COMBO_ATTACK2)
+		. += span_green("Combo active: AoE sweep ready! [combo_starter_is_rapier != is_thumbfather_rapier(src) ? "Hit with this weapon!" : "Switch to your other weapon!"]")
+	else if(combo_stage == NURSEFATHER_COMBO_FINISHER)
+		. += span_green("Combo active: finisher ready! [combo_starter_is_rapier == is_thumbfather_rapier(src) ? "Hit with this weapon!" : "Switch to your other weapon!"]")
+	. += span_danger("This weapon's AoE is indiscriminate. <b>Watch out for friendly fire</b>.")
 
-/// On Poise crit: if finisher, detonate. Otherwise, boost overheat by 2.
+/// On Poise crit: boost overheat by 2
 /obj/item/ego_weapon/city/thumbfather_rapier/proc/on_poise_crit(datum/source, mob/living/target, bonus_damage)
 	SIGNAL_HANDLER
 	if(!isliving(target))
 		return
-	if(in_finisher)
-		in_finisher = FALSE
-		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_cross_finisher), target, source)
-	else
-		target.apply_lc_overheat(2)
+	target.apply_lc_overheat(2)
 
+/// Called when the lunge cooldown expires
+/obj/item/ego_weapon/city/thumbfather_rapier/proc/ReadyToLunge(mob/user)
+	lunge_ready = TRUE
+	lunge_cooldown_timer = null
+	if(combo_stage == NURSEFATHER_COMBO_NONE)
+		to_chat(user, span_nicegreen("You're ready to lunge and begin a new combo again."))
+		user.balloon_alert(user, "You're ready to lunge again.")
+	else
+		to_chat(user, span_nicegreen("You're ready to lunge again, once your current combo is finished."))
+		user.balloon_alert(user, "You're ready to lunge again.")
+
+/// Lunge opener: dash towards the target from range and auto-attack if we reach them
+/obj/item/ego_weapon/city/thumbfather_rapier/proc/Lunge(mob/living/target, mob/living/user)
+	if(!can_see(user, target, lunge_range))
+		to_chat(user, span_warning("You can't reach your target!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You can't reach your target!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
+		return FALSE
+	if(!lunge_ready)
+		to_chat(user, span_warning("You're not ready to lunge yet!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You're not ready to lunge yet!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
+		return FALSE
+
+	// Set combo stage on both weapons
+	sync_nursefather_combo(src, user, NURSEFATHER_COMBO_LUNGE, TRUE)
+	if(spend_acceleration_round(src, user, target))
+		lunge_ready = FALSE
+		lunge_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(ReadyToLunge), user), lunge_cooldown_duration)
+		shake_camera(user, 1.5, 3)
+		to_chat(user, span_danger("You lunge at [target] using the propulsion from your [src.name]!"))
+		var/turf/takeoff_turf = get_turf(user)
+		new /obj/effect/temp_visual/thumb_east_aoe_impact(takeoff_turf)
+		for(var/i in 2 to get_dist(user, target))
+			step_towards(user, target)
+		if(get_dist(user, target) < 2)
+			hitsound = lunge_sound
+			target.attackby(src, user)
+		else
+			to_chat(user, span_warning("Your lunge falls short of hitting your target!"))
+		start_nursefather_combo_timer(src, user)
+		return TRUE
+	else
+		to_chat(user, span_warning("You pull the trigger to lunge at [target], but you have no ammo left."))
+		playsound(src, dryfire_sound, 65)
+		sync_nursefather_combo(src, user, NURSEFATHER_COMBO_NONE, FALSE)
+		return FALSE
+
+/// Main attack proc with combo handling and weapon-swap enforcement
 /obj/item/ego_weapon/city/thumbfather_rapier/attack(mob/living/target, mob/living/carbon/human/user)
-	// Cross-combo melee: advance or break based on weapon order
-	var/is_finisher = FALSE
-	if(!busy_dual_strike && cross_combo_stage != CROSS_NONE)
-		is_finisher = handle_cross_combo_melee(src, user, cross_combo_stage, cross_combo_starter_is_rapier)
-	if(is_finisher)
-		in_finisher = TRUE
-		// Finisher spends 2 rounds
-		spend_acceleration_round(src, user, target)
-		spend_acceleration_round(src, user, target)
-	. = ..()
-	in_finisher = FALSE
+	if(busy)
+		return
+	var/weapon_is_rapier = TRUE
+	switch(combo_stage)
+		if(NURSEFATHER_COMBO_NONE)
+			. = ..()
+		if(NURSEFATHER_COMBO_LUNGE)
+			// Lunge hit must be with the starting weapon
+			if(weapon_is_rapier != combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to land the lunge hit with your starting weapon."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				. = ..()
+				hitsound = initial(hitsound)
+				user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.1)
+				sync_nursefather_combo(src, user, NURSEFATHER_COMBO_ATTACK2, combo_starter_is_rapier)
+				start_nursefather_combo_timer(src, user)
+				to_chat(user, span_info("Combo: switch to your [combo_starter_is_rapier ? "katana" : "rapier"] and hit!"))
+		if(NURSEFATHER_COMBO_ATTACK2)
+			// AoE sweep must be with the OTHER weapon from the starter
+			if(weapon_is_rapier == combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to switch weapons."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				if(spend_acceleration_round(src, user, target))
+					shake_camera(user, 1.5, 3)
+					hitsound = null
+					. = ..()
+					playsound(src, sweep_sound, 90, FALSE, 10)
+					hitsound = initial(hitsound)
+					user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.3)
+					thumbfather_radius_aoe(src, user, target, attack2_aoe_radius)
+					sync_nursefather_combo(src, user, NURSEFATHER_COMBO_FINISHER, combo_starter_is_rapier)
+					start_nursefather_combo_timer(src, user, 2 SECONDS)
+					to_chat(user, span_info("Combo: switch back to your [combo_starter_is_rapier ? "rapier" : "katana"] for the finisher!"))
+				else
+					reset_nursefather_combo(src, user)
+					playsound(src, dryfire_sound, 65)
+					. = ..()
+		if(NURSEFATHER_COMBO_FINISHER)
+			// Finisher must be with the STARTING weapon
+			if(weapon_is_rapier != combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to finish with your starting weapon."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				var/spent1 = spend_acceleration_round(src, user, target)
+				var/spent2 = spend_acceleration_round(src, user, target)
+				if(spent1 || spent2)
+					shake_camera(user, 2, 4)
+					var/original_force = force
+					force = round(force * 1.5)
+					hitsound = null
+					. = ..()
+					playsound(src, finisher_sound, 90, FALSE, 10)
+					hitsound = initial(hitsound)
+					force = original_force
+					user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.2)
+					thumbfather_finisher(target, user)
+				else
+					playsound(src, dryfire_sound, 65)
+					. = ..()
+				reset_nursefather_combo(src, user, FALSE)
 	// Dual-wield: trigger partner every 2nd hit, spending ammo for poise/concentration/effects
-	if(!busy_dual_strike)
+	// Only triggers on non-combo hits - combo attacks do NOT count towards or trigger dual-wield follow-ups
+	if(!busy_dual_strike && combo_stage == NURSEFATHER_COMBO_NONE)
 		swing_count++
 		if(swing_count >= 2)
 			swing_count = 0
 			var/obj/item/ego_weapon/city/thumbfather_katana/partner = find_thumbfather_partner(src, user)
 			if(partner && !partner.busy_dual_strike && (target in view(partner.reach, user)))
-				// Spend ammo on the dual-wield follow-up (this is where buffs/debuffs come from)
-				spend_acceleration_round(partner, user, target)
-				partner.busy_dual_strike = TRUE
-				var/original_force = partner.force
-				partner.force = round(original_force * 0.25)
-				playsound(partner.loc, partner.hitsound, 50, FALSE)
-				user.do_attack_animation(target, null, partner)
-				target.attacked_by(partner, user)
-				partner.force = original_force
-				partner.busy_dual_strike = FALSE
+				INVOKE_ASYNC(src, PROC_REF(DualWieldFollowUp), partner, user, target)
 
-/// Reverse reload + cross-combo opener from range
+/// Delayed dual-wield follow-up attack with the partner weapon
+/obj/item/ego_weapon/city/thumbfather_rapier/proc/DualWieldFollowUp(obj/item/ego_weapon/city/thumbfather_katana/partner, mob/living/carbon/human/user, mob/living/target)
+	sleep(0.2 SECONDS)
+	if(QDELETED(partner) || QDELETED(user) || QDELETED(target))
+		return
+	if(!(target in view(partner.reach, user)))
+		return
+	spend_acceleration_round(partner, user, target, 50)
+	partner.busy_dual_strike = TRUE
+	var/original_force = partner.force
+	partner.force = round(original_force * 0.25)
+	user.do_attack_animation(target, null, partner)
+	target.attacked_by(partner, user)
+	partner.force = original_force
+	partner.busy_dual_strike = FALSE
+
+/// Lunge from range + reverse reload
 /obj/item/ego_weapon/city/thumbfather_rapier/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	// Reverse reload: clicking ammo with the weapon
 	if(istype(target, /obj/item/stack/thumb_east_ammo))
 		var/obj/item/stack/thumb_east_ammo/ammo = target
-		thumbfather_reload(src, ammo, user, current_ammo, max_ammo, accepted_ammo_table)
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_reload), src, ammo, user, current_ammo, max_ammo, accepted_ammo_table)
 		return TRUE
-	// Cross-combo opener from range (spends 1 round)
-	if(isliving(target) && !proximity_flag && cross_combo_stage == CROSS_NONE)
-		if(spend_acceleration_round(src, user, target))
-			var/obj/item/ego_weapon/city/partner = find_thumbfather_partner(src, user)
-			sync_cross_combo(src, partner, CROSS_OPENED, TRUE)
-			to_chat(user, span_info("Cross-combo started with rapier! Switch to katana and hit!"))
-			return TRUE
+	if(!isliving(target))
+		return TRUE
+	if(busy)
+		return TRUE
+	// Lunge from range
+	if(!proximity_flag && combo_stage == NURSEFATHER_COMBO_NONE)
+		Lunge(target, user)
+		return TRUE
 
 /// Load ammo by hitting the weapon with it
 /obj/item/ego_weapon/city/thumbfather_rapier/attackby(obj/item/stack/thumb_east_ammo/I, mob/living/user, params)
 	if(!istype(I))
 		return ..()
-	thumbfather_reload(src, I, user, current_ammo, max_ammo, accepted_ammo_table)
+	if(busy)
+		return
+	if(!(I.type in accepted_ammo_table))
+		to_chat(user, span_warning("The [I.name] are incompatible with the [src.name]."))
+		return
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_reload), src, I, user, current_ammo, max_ammo, accepted_ammo_table)
 
-/// Unload a round by using in-hand
+/// Unload a round by alt-clicking
 /obj/item/ego_weapon/city/thumbfather_rapier/AltClick(mob/user)
 	. = ..()
+	if(busy)
+		return
 	if(length(current_ammo))
 		var/obj/item/stack/thumb_east_ammo/round = current_ammo[length(current_ammo)]
 		current_ammo -= round
 		round.forceMove(get_turf(src))
 		to_chat(user, span_info("You unload a round from the [src.name]."))
+		playsound(src, 'sound/weapons/gun/pistol/drop_small.ogg', 90, FALSE)
+		reset_nursefather_combo(src, user)
 		if(!length(current_ammo))
 			current_ammo_type = null
 			current_ammo_name = ""
@@ -395,6 +655,7 @@
 	inhand_y_dimension = 48
 	icon_state = "thumbfather_katana"
 	inhand_icon_state = "thumbfather_katana"
+	hitsound = 'sound/weapons/ego/thumb_east_podao_attack.ogg'
 	base_pixel_x = 8
 	base_pixel_y = 8
 	force = 55
@@ -408,6 +669,13 @@
 							TEMPERANCE_ATTRIBUTE = 80,
 							JUSTICE_ATTRIBUTE = 80
 							)
+	special = "This is a Thumbfather dual-wield weapon. <b>Load it with acceleration propellant ammunition</b> and dual-wield it with its partner to unlock its full potential."
+	/// Detailed combo description shown on examine
+	var/combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by an <b>AoE sweep with the other weapon</b>, and ends with a powerful <b>finisher that detonates Tremor and Overheat</b>.\n"+\
+	"<b>Lunge</b>: Attack a target from range to dash at them (costs 1 round).\n"+\
+	"<b>AoE Sweep</b>: Swap to your other weapon and hit the target (costs 1 round). Deals AoE damage around you.\n"+\
+	"<b>Finisher</b>: Swap back to your starting weapon and hit the target (costs 2 rounds). Tremor Bursts and deals bonus RED damage equal to built-up Tremor + Overheat stacks.\n"+\
+	"Hitting with the wrong weapon at any stage <b>breaks the combo</b>. The combo expires after 5 seconds of inactivity."
 	/// Ammo types this weapon can load
 	var/list/accepted_ammo_table = list(
 		/obj/item/stack/thumb_east_ammo/acceleration,
@@ -424,14 +692,35 @@
 	var/busy_dual_strike = FALSE
 	/// Tracks hits for dual-wield (triggers on every 2nd hit)
 	var/swing_count = 0
-	/// Cross-combo stage: CROSS_NONE, CROSS_OPENED, CROSS_SWITCHED
-	var/cross_combo_stage = CROSS_NONE
-	/// Whether the combo was started by the rapier (TRUE) or katana (FALSE)
-	var/cross_combo_starter_is_rapier = FALSE
-	/// Timer ID for cross-combo reset
-	var/cross_combo_timer
-	/// Whether we're currently in a finisher
-	var/in_finisher = FALSE
+	/// Current combo stage (synced between both weapons)
+	var/combo_stage = NURSEFATHER_COMBO_NONE
+	/// Whether the combo was started by the rapier (TRUE) or katana (FALSE) (synced between both weapons)
+	var/combo_starter_is_rapier = FALSE
+	/// Timer for combo reset
+	var/combo_reset_timer
+	/// Duration before combo resets from inactivity
+	var/combo_reset_duration = 5 SECONDS
+	/// Whether we can lunge
+	var/lunge_ready = TRUE
+	/// Lunge distance in tiles
+	var/lunge_range = 3
+	/// Cooldown between lunges
+	var/lunge_cooldown_duration = 13 SECONDS
+	/// Timer for lunge cooldown
+	var/lunge_cooldown_timer
+	/// Base radius for AoE sweep
+	var/attack2_aoe_radius = 1
+	/// Are we currently performing a channeled action (reloading)?
+	var/busy = FALSE
+	/// Cooldown for balloon alerts
+	var/balloon_alert_cooldown
+
+	// Sound variables
+	var/lunge_sound = 'sound/weapons/ego/thumb_east_podao_boostedlunge.ogg'
+	var/sweep_sound = 'sound/weapons/ego/thumb_east_podao_boostedsweep.ogg'
+	var/finisher_sound = 'sound/weapons/ego/thumb_east_rifle_boostedfinisher.ogg'
+	var/detonation_sound = 'sound/weapons/ego/thumb_east_podao_detonation.ogg'
+	var/dryfire_sound = 'sound/weapons/gun/general/dry_fire.ogg'
 
 /obj/item/ego_weapon/city/thumbfather_katana/Initialize(mapload)
 	. = ..()
@@ -441,6 +730,8 @@
 	for(var/obj/item/stack/thumb_east_ammo/leftover in current_ammo)
 		leftover.forceMove(get_turf(src))
 	current_ammo = null
+	deltimer(combo_reset_timer)
+	deltimer(lunge_cooldown_timer)
 	return ..()
 
 /obj/item/ego_weapon/city/thumbfather_katana/equipped(mob/user, slot)
@@ -454,79 +745,207 @@
 /obj/item/ego_weapon/city/thumbfather_katana/examine(mob/user)
 	. = ..()
 	. += span_danger("There are [length(current_ammo)]/[max_ammo] rounds of [length(current_ammo) > 0 ? current_ammo_name : "ammunition"] currently loaded.")
-	if(cross_combo_stage == CROSS_OPENED)
-		. += span_info("Cross-combo: waiting for weapon switch.")
-	else if(cross_combo_stage == CROSS_SWITCHED)
-		. += span_info("Cross-combo: finisher ready!")
+	. += span_info(combo_description)
+	. += span_notice("Every 2nd non-combo hit triggers a <b>dual-wield follow-up</b> from your partner weapon at 25% damage, spending a round from it.")
+	. += span_notice("Spending a round from this katana grants <b>1 Concentration</b> to you and applies <b>3 Tremor</b> to the target. Poise crits also apply +2 Tremor.")
+	. += span_notice("<b>Hit the weapon with ammunition</b> to reload (channeled). <b>Alt-click</b> to unload a round.")
+	if(combo_stage == NURSEFATHER_COMBO_LUNGE)
+		. += span_green("Combo active: lunge landed! [combo_starter_is_rapier ? "Switch to katana" : "Hit with rapier"] for the AoE sweep!")
+	else if(combo_stage == NURSEFATHER_COMBO_ATTACK2)
+		. += span_green("Combo active: AoE sweep ready! [combo_starter_is_rapier != is_thumbfather_rapier(src) ? "Hit with this weapon!" : "Switch to your other weapon!"]")
+	else if(combo_stage == NURSEFATHER_COMBO_FINISHER)
+		. += span_green("Combo active: finisher ready! [combo_starter_is_rapier == is_thumbfather_rapier(src) ? "Hit with this weapon!" : "Switch to your other weapon!"]")
+	. += span_danger("This weapon's AoE is indiscriminate. <b>Watch out for friendly fire</b>.")
 
-/// On Poise crit: if finisher, detonate. Otherwise, boost tremor by 2.
+/// On Poise crit: boost tremor by 2
 /obj/item/ego_weapon/city/thumbfather_katana/proc/on_poise_crit(datum/source, mob/living/target, bonus_damage)
 	SIGNAL_HANDLER
 	if(!isliving(target))
 		return
-	if(in_finisher)
-		in_finisher = FALSE
-		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_cross_finisher), target, source)
-	else
-		target.apply_lc_tremor(2, INFINITY)
+	target.apply_lc_tremor(2, INFINITY)
 
+/// Called when the lunge cooldown expires
+/obj/item/ego_weapon/city/thumbfather_katana/proc/ReadyToLunge(mob/user)
+	lunge_ready = TRUE
+	lunge_cooldown_timer = null
+	if(combo_stage == NURSEFATHER_COMBO_NONE)
+		to_chat(user, span_nicegreen("You're ready to lunge and begin a new combo again."))
+		user.balloon_alert(user, "You're ready to lunge again.")
+	else
+		to_chat(user, span_nicegreen("You're ready to lunge again, once your current combo is finished."))
+		user.balloon_alert(user, "You're ready to lunge again.")
+
+/// Lunge opener: dash towards the target from range and auto-attack if we reach them
+/obj/item/ego_weapon/city/thumbfather_katana/proc/Lunge(mob/living/target, mob/living/user)
+	if(!can_see(user, target, lunge_range))
+		to_chat(user, span_warning("You can't reach your target!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You can't reach your target!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
+		return FALSE
+	if(!lunge_ready)
+		to_chat(user, span_warning("You're not ready to lunge yet!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You're not ready to lunge yet!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
+		return FALSE
+
+	// Set combo stage on both weapons - katana is the starter
+	sync_nursefather_combo(src, user, NURSEFATHER_COMBO_LUNGE, FALSE)
+	if(spend_acceleration_round(src, user, target))
+		lunge_ready = FALSE
+		lunge_cooldown_timer = addtimer(CALLBACK(src, PROC_REF(ReadyToLunge), user), lunge_cooldown_duration)
+		shake_camera(user, 1.5, 3)
+		to_chat(user, span_danger("You lunge at [target] using the propulsion from your [src.name]!"))
+		var/turf/takeoff_turf = get_turf(user)
+		new /obj/effect/temp_visual/thumb_east_aoe_impact(takeoff_turf)
+		for(var/i in 2 to get_dist(user, target))
+			step_towards(user, target)
+		if(get_dist(user, target) < 2)
+			hitsound = lunge_sound
+			target.attackby(src, user)
+		else
+			to_chat(user, span_warning("Your lunge falls short of hitting your target!"))
+		start_nursefather_combo_timer(src, user)
+		return TRUE
+	else
+		to_chat(user, span_warning("You pull the trigger to lunge at [target], but you have no ammo left."))
+		playsound(src, dryfire_sound, 65)
+		sync_nursefather_combo(src, user, NURSEFATHER_COMBO_NONE, FALSE)
+		return FALSE
+
+/// Main attack proc with combo handling and weapon-swap enforcement
 /obj/item/ego_weapon/city/thumbfather_katana/attack(mob/living/target, mob/living/carbon/human/user)
-	var/is_finisher = FALSE
-	if(!busy_dual_strike && cross_combo_stage != CROSS_NONE)
-		is_finisher = handle_cross_combo_melee(src, user, cross_combo_stage, cross_combo_starter_is_rapier)
-	if(is_finisher)
-		in_finisher = TRUE
-		// Finisher spends 2 rounds
-		spend_acceleration_round(src, user, target)
-		spend_acceleration_round(src, user, target)
-	. = ..()
-	in_finisher = FALSE
+	if(busy)
+		return
+	var/weapon_is_rapier = FALSE
+	switch(combo_stage)
+		if(NURSEFATHER_COMBO_NONE)
+			. = ..()
+		if(NURSEFATHER_COMBO_LUNGE)
+			// Lunge hit must be with the starting weapon
+			if(weapon_is_rapier != combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to land the lunge hit with your starting weapon."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				. = ..()
+				hitsound = initial(hitsound)
+				user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.1)
+				sync_nursefather_combo(src, user, NURSEFATHER_COMBO_ATTACK2, combo_starter_is_rapier)
+				start_nursefather_combo_timer(src, user)
+				to_chat(user, span_info("Combo: switch to your [combo_starter_is_rapier ? "katana" : "rapier"] and hit!"))
+		if(NURSEFATHER_COMBO_ATTACK2)
+			// AoE sweep must be with the OTHER weapon from the starter
+			if(weapon_is_rapier == combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to switch weapons."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				if(spend_acceleration_round(src, user, target))
+					shake_camera(user, 1.5, 3)
+					hitsound = null
+					. = ..()
+					playsound(src, sweep_sound, 90, FALSE, 10)
+					hitsound = initial(hitsound)
+					user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.3)
+					thumbfather_radius_aoe(src, user, target, attack2_aoe_radius)
+					sync_nursefather_combo(src, user, NURSEFATHER_COMBO_FINISHER, combo_starter_is_rapier)
+					start_nursefather_combo_timer(src, user, 2 SECONDS)
+					to_chat(user, span_info("Combo: switch back to your [combo_starter_is_rapier ? "rapier" : "katana"] for the finisher!"))
+				else
+					reset_nursefather_combo(src, user)
+					playsound(src, dryfire_sound, 65)
+					. = ..()
+		if(NURSEFATHER_COMBO_FINISHER)
+			// Finisher must be with the STARTING weapon
+			if(weapon_is_rapier != combo_starter_is_rapier)
+				to_chat(user, span_warning("Combo broken! You needed to finish with your starting weapon."))
+				reset_nursefather_combo(src, user, FALSE)
+				. = ..()
+			else
+				var/spent1 = spend_acceleration_round(src, user, target)
+				var/spent2 = spend_acceleration_round(src, user, target)
+				if(spent1 || spent2)
+					shake_camera(user, 2, 4)
+					var/original_force = force
+					force = round(force * 1.5)
+					hitsound = null
+					. = ..()
+					playsound(src, finisher_sound, 90, FALSE, 10)
+					hitsound = initial(hitsound)
+					force = original_force
+					user.changeNext_move(CLICK_CD_MELEE * attack_speed * 1.2)
+					thumbfather_finisher(target, user)
+				else
+					playsound(src, dryfire_sound, 65)
+					. = ..()
+				reset_nursefather_combo(src, user, FALSE)
 	// Dual-wield: trigger partner every 2nd hit, spending ammo for poise/concentration/effects
-	if(!busy_dual_strike)
+	// Only triggers on non-combo hits - combo attacks do NOT count towards or trigger dual-wield follow-ups
+	if(!busy_dual_strike && combo_stage == NURSEFATHER_COMBO_NONE)
 		swing_count++
 		if(swing_count >= 2)
 			swing_count = 0
 			var/obj/item/ego_weapon/city/thumbfather_rapier/partner = find_thumbfather_partner(src, user)
 			if(partner && !partner.busy_dual_strike && (target in view(partner.reach, user)))
-				// Spend ammo on the dual-wield follow-up (this is where buffs/debuffs come from)
-				spend_acceleration_round(partner, user, target)
-				partner.busy_dual_strike = TRUE
-				var/original_force = partner.force
-				partner.force = round(original_force * 0.25)
-				playsound(partner.loc, partner.hitsound, 50, FALSE)
-				user.do_attack_animation(target, null, partner)
-				target.attacked_by(partner, user)
-				partner.force = original_force
-				partner.busy_dual_strike = FALSE
+				INVOKE_ASYNC(src, PROC_REF(DualWieldFollowUp), partner, user, target)
 
-/// Reverse reload + cross-combo opener from range
+/// Delayed dual-wield follow-up attack with the partner weapon
+/obj/item/ego_weapon/city/thumbfather_katana/proc/DualWieldFollowUp(obj/item/ego_weapon/city/thumbfather_rapier/partner, mob/living/carbon/human/user, mob/living/target)
+	sleep(0.2 SECONDS)
+	if(QDELETED(partner) || QDELETED(user) || QDELETED(target))
+		return
+	if(!(target in view(partner.reach, user)))
+		return
+	spend_acceleration_round(partner, user, target, 50)
+	partner.busy_dual_strike = TRUE
+	var/original_force = partner.force
+	partner.force = round(original_force * 0.25)
+	user.do_attack_animation(target, null, partner)
+	target.attacked_by(partner, user)
+	partner.force = original_force
+	partner.busy_dual_strike = FALSE
+
+/// Lunge from range + reverse reload
 /obj/item/ego_weapon/city/thumbfather_katana/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
+	// Reverse reload: clicking ammo with the weapon
 	if(istype(target, /obj/item/stack/thumb_east_ammo))
 		var/obj/item/stack/thumb_east_ammo/ammo = target
-		thumbfather_reload(src, ammo, user, current_ammo, max_ammo, accepted_ammo_table)
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_reload), src, ammo, user, current_ammo, max_ammo, accepted_ammo_table)
 		return TRUE
-	// Cross-combo opener from range (spends 1 round)
-	if(isliving(target) && !proximity_flag && cross_combo_stage == CROSS_NONE)
-		if(spend_acceleration_round(src, user, target))
-			var/obj/item/ego_weapon/city/partner = find_thumbfather_partner(src, user)
-			sync_cross_combo(src, partner, CROSS_OPENED, FALSE)
-			to_chat(user, span_info("Cross-combo started with katana! Switch to rapier and hit!"))
-			return TRUE
+	if(!isliving(target))
+		return TRUE
+	if(busy)
+		return TRUE
+	// Lunge from range
+	if(!proximity_flag && combo_stage == NURSEFATHER_COMBO_NONE)
+		Lunge(target, user)
+		return TRUE
 
 /// Load ammo by hitting the weapon with it
 /obj/item/ego_weapon/city/thumbfather_katana/attackby(obj/item/stack/thumb_east_ammo/I, mob/living/user, params)
 	if(!istype(I))
 		return ..()
-	thumbfather_reload(src, I, user, current_ammo, max_ammo, accepted_ammo_table)
+	if(busy)
+		return
+	if(!(I.type in accepted_ammo_table))
+		to_chat(user, span_warning("The [I.name] are incompatible with the [src.name]."))
+		return
+	INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_reload), src, I, user, current_ammo, max_ammo, accepted_ammo_table)
 
 /// Unload a round by alt-clicking
 /obj/item/ego_weapon/city/thumbfather_katana/AltClick(mob/user)
 	. = ..()
+	if(busy)
+		return
 	if(length(current_ammo))
 		var/obj/item/stack/thumb_east_ammo/round = current_ammo[length(current_ammo)]
 		current_ammo -= round
 		round.forceMove(get_turf(src))
 		to_chat(user, span_info("You unload a round from the [src.name]."))
+		playsound(src, 'sound/weapons/gun/pistol/drop_small.ogg', 90, FALSE)
+		reset_nursefather_combo(src, user)
 		if(!length(current_ammo))
 			current_ammo_type = null
 			current_ammo_name = ""
@@ -601,7 +1020,9 @@
 	singular_name = "acceleration propellant round"
 	max_amount = 12
 	merge_type = /obj/item/stack/thumb_east_ammo/acceleration
-	icon_state = "thumb_east"
+	icon_state = "thumb_east_acceleration"
+	w_class = WEIGHT_CLASS_SMALL
+	slot_flags = ITEM_SLOT_POCKETS
 	spent_type = /obj/item/stack/thumb_east_ammo/spent/acceleration
 	tremor_base = 0
 	burn_base = 0
@@ -622,4 +1043,11 @@
 	name = "spent acceleration propellant casings"
 	desc = "A spent cartridge of acceleration propellant ammunition. The residual energy has been fully expended."
 	singular_name = "spent acceleration propellant casing"
+	icon_state = "thumb_east_acceleration_spent"
+	max_amount = 12
 	merge_type = /obj/item/stack/thumb_east_ammo/spent/acceleration
+
+#undef NURSEFATHER_COMBO_NONE
+#undef NURSEFATHER_COMBO_LUNGE
+#undef NURSEFATHER_COMBO_ATTACK2
+#undef NURSEFATHER_COMBO_FINISHER

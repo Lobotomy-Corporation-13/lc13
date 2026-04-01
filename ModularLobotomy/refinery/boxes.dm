@@ -174,3 +174,20 @@
 /obj/item/storage/box/thumb_east_ammo/tigermark/PopulateContents()
 	for(var/i = 1 to 6)
 		new /obj/item/stack/thumb_east_ammo/tigermark(src)
+
+// Storage datum for acceleration propellant ammo boxes
+/datum/component/storage/concrete/thumb_east_acceleration
+	can_hold = list(/obj/item/stack/thumb_east_ammo/acceleration = TRUE)
+	exception_hold = list(/obj/item/stack/thumb_east_ammo/acceleration = TRUE)
+
+/// Acceleration propellant ammo box for Thumbfather weapons. 12x Acceleration Rounds.
+/obj/item/storage/box/thumb_east_ammo/acceleration
+	name = "acceleration propellant ammo box (x12)"
+	desc = "A compact box containing twelve acceleration propellant rounds designed for Thumbfather dual-wield weapons. When spent, these rounds grant Poise from a rapier or Concentration from a katana."
+	icon_state = "thumb_east_box_acceleration"
+	w_class = WEIGHT_CLASS_BULKY
+	component_type = /datum/component/storage/concrete/thumb_east_acceleration
+
+/obj/item/storage/box/thumb_east_ammo/acceleration/PopulateContents()
+	for(var/i = 1 to 12)
+		new /obj/item/stack/thumb_east_ammo/acceleration(src)
