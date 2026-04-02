@@ -1,21 +1,28 @@
-/// Space Slayer - A DOOM-like first person shooter arcade minigame.
+/// Leaderboard sort comparator (descending by score)
+/proc/cmp_leaderboard_desc(list/a, list/b)
+	return b["score"] - a["score"]
+
+/// R Corp Hatchery - A DOOM-like first person shooter arcade minigame.
+/// R Corp rabbit combat training simulation.
 /// The game engine runs entirely client-side in JavaScript;
 /// the DM backend only provides map data and tracks high scores.
 
 /obj/machinery/computer/arcade/fps
-	name = "Space Slayer Arcade"
-	desc = "A retro first-person shooter arcade cabinet. Rip and tear!"
+	name = "R Corp Hatchery Arcade"
+	desc = "R Corp combat training sim. Clear hostiles. Prove your worth, rabbit."
 	icon_state = "arcade"
 	icon_keyboard = "no_keyboard"
 	icon_screen = "invaders"
-	light_color = LIGHT_COLOR_GREEN
+	light_color = "#ff6633"
 	circuit = /obj/item/circuitboard/computer/arcade/fps
 	/// The current level
 	var/current_level = 1
 	/// Max level for this machine
-	var/max_level = 7
-	/// Persistent high score for this machine
-	var/high_score = 0
+	var/max_level = 8
+	/// Leaderboard: list of list("name","score")
+	var/list/leaderboard = list()
+	/// Throttle for sound effects (world.time)
+	var/last_sfx_time = 0
 
 /obj/machinery/computer/arcade/fps/ui_interact(mob/user, datum/tgui/ui)
 	ui = SStgui.try_update_ui(user, src, ui)
@@ -30,11 +37,13 @@
 	data["player_start"] = generate_player_start(current_level)
 	data["level"] = current_level
 	data["maxLevel"] = max_level
+	data["needsKey"] = level_needs_key(current_level)
+	data["isBossLevel"] = (current_level == max_level)
 	return data
 
 /obj/machinery/computer/arcade/fps/ui_data(mob/user)
 	var/list/data = list()
-	data["high_score"] = high_score
+	data["leaderboard"] = leaderboard
 	return data
 
 /obj/machinery/computer/arcade/fps/ui_act(action, params)
@@ -45,8 +54,12 @@
 	switch(action)
 		if("submit_score")
 			var/score = text2num(params["score"])
-			if(score > high_score)
-				high_score = score
+			var/pname = usr?.name || "Unknown"
+			leaderboard += list(list("name" = pname, "score" = score))
+			// Sort descending, keep top 10
+			leaderboard = sortTim(leaderboard, /proc/cmp_leaderboard_desc)
+			if(length(leaderboard) > 10)
+				leaderboard.Cut(11)
 			prizevend(usr)
 			playsound(loc, 'sound/arcade/win.ogg', 50, TRUE)
 			. = TRUE
@@ -62,6 +75,23 @@
 			playsound(loc, 'sound/arcade/lose.ogg', 50, TRUE)
 			current_level = 1
 			update_static_data(usr)
+			. = TRUE
+		if("sfx")
+			var/snd = params["s"]
+			if(world.time - last_sfx_time < 3)
+				return
+			last_sfx_time = world.time
+			switch(snd)
+				if("shoot")
+					playsound(loc, 'sound/arcade/hit.ogg', 30, TRUE)
+				if("shotgun")
+					playsound(loc, 'sound/arcade/boom.ogg', 40, TRUE)
+				if("kill")
+					playsound(loc, 'sound/arcade/steal.ogg', 35, TRUE)
+				if("pickup")
+					playsound(loc, 'sound/arcade/heal.ogg', 35, TRUE)
+				if("explode")
+					playsound(loc, 'sound/arcade/boom.ogg', 50, TRUE)
 			. = TRUE
 
 /// Builds a multi-story map from stacked floor grids.
@@ -344,6 +374,13 @@
 		data["slopes"] = slopes
 	return data
 
+/// Whether this level requires a key to exit
+/obj/machinery/computer/arcade/fps/proc/level_needs_key(level)
+	switch(level)
+		if(3, 5, 7)
+			return TRUE
+	return FALSE
+
 /// Generates a 24x24 map grid as a flat list.
 /// 0 = empty, 1-4 = wall texture types, 5 = exit door
 /obj/machinery/computer/arcade/fps/proc/generate_map(level)
@@ -362,9 +399,11 @@
 			return generate_level_6()
 		if(7)
 			return generate_level_7()
+		if(8)
+			return generate_level_8()
 	return generate_level_1()
 
-/// Level 1: Simple corridors, teaches movement
+/// Sector 1: Basic training, teaches movement
 /obj/machinery/computer/arcade/fps/proc/generate_level_1()
 	var/list/data = list()
 	data["width"] = 24
@@ -404,7 +443,7 @@
 	data["cells"] = cells
 	return data
 
-/// Level 2: Rooms and corridors, more complex
+/// Sector 2: Intermediate training
 /obj/machinery/computer/arcade/fps/proc/generate_level_2()
 	var/list/data = list()
 	data["width"] = 24
@@ -442,7 +481,7 @@
 	data["cells"] = cells
 	return data
 
-/// Level 3: Maze with cult theme, hardest
+/// Sector 3: Advanced training, dangerous
 /obj/machinery/computer/arcade/fps/proc/generate_level_3()
 	var/list/data = list()
 	data["width"] = 24
@@ -480,363 +519,320 @@
 	data["cells"] = cells
 	return data
 
-/// Level 4: Multi-height level using extended tile chars
+/// Sector 4: Hive simulation
+/// Organic environment, swarm hostiles
+/// Wall type 6 = amber/chitin
 /obj/machinery/computer/arcade/fps/proc/generate_level_4()
-	var/list/data = parse_map_string(list(
-		"111111111111111111111111",
-		"1PPPJ001000000010000001",
-		"1PPPJ001000000010000001",
-		"1PPPJ001000000000000001",
-		"100000000000000000000001",
-		"100000000000000000000001",
-		"100000001000000010000001",
-		"100000001000000010000001",
-		"111100111100001111001111",
-		"1UUUJ001000000010000001",
-		"1UUUJ001000000010000001",
-		"1UUUJ0000LLLLLL00000001",
-		"100000000LLLLLL00000001",
-		"100000000LLLLLL00000001",
-		"100000001000000010000001",
-		"111100111KKKKKK011100111",
-		"100000001DDDDDD010000001",
-		"100000001DDDDDD010000001",
-		"100000000DDDDDD000000001",
-		"1000000000000000IIIIIII1",
-		"10000000100000000PPPPP01",
-		"10000000100000000PPPPP51",
-		"10000000100000000PPPPP01",
-		"111111111111111111111111"
-	))
-
-	// Elevators (still need separate definition)
-	data["elevators"] = list(
-		list("x" = 5, "y" = 4, "minH" = 0, "maxH" = 0.5, "speed" = 0.2),
-		list("x" = 5, "y" = 18, "minH" = -0.3, "maxH" = 0, "speed" = 0.15)
+	var/list/data = list()
+	data["width"] = 24
+	data["height"] = 24
+	var/list/cells = list()
+	var/list/rows = list(
+		"666666666666666666666666",
+		"600000006000000060000006",
+		"600000006000000060000006",
+		"600000006000000000000006",
+		"600000000000000000000006",
+		"600000000000006660000006",
+		"666606666000006000000006",
+		"600000006000006000066666",
+		"600000006000006000000006",
+		"600000000000000000000006",
+		"600000000000000000000006",
+		"666660666066660660006006",
+		"600000000060000000006006",
+		"600000000060000000006006",
+		"600000000000000000000006",
+		"666060666000000066606666",
+		"600060006000000060000006",
+		"600000006000000060000006",
+		"600000000000006000000006",
+		"600000000000006000000006",
+		"666606666000006066606666",
+		"600000006000000000000006",
+		"600000006000000000000056",
+		"666666666666666666666666"
 	)
-
+	for(var/row in rows)
+		for(var/i in 1 to length(row))
+			cells += text2num(copytext(row, i, i + 1))
+	data["cells"] = cells
 	return data
 
-/// Level 5: Two-story intro
-/// Floor 1 = ground, Floor 2 = upper walkways
-/// 6 = floor tile, 0 = empty/open
+/// Sector 5: Open combat arena
+/// Explosive hostiles, no cover
+/// Wall type 4 = crimson
 /obj/machinery/computer/arcade/fps/proc/generate_level_5()
-	return build_multistory(list(
-		// Floor 1 (ground, y=0)
-		list(
-			"111111111111111111111111",
-			"166666616666666166666S1",
-			"166666616666666166666661",
-			"166666616666666166666661",
-			"166666606666666066666661",
-			"166666606666666066666661",
-			"166666616666666166666661",
-			"111101111111111111101111",
-			"166666666666666666666661",
-			"166666666666666666666661",
-			"166666661111111166666661",
-			"166666661000000166666661",
-			"166666661000000166666661",
-			"166666661000000166666661",
-			"166666661000000166666661",
-			"166666661111011166666661",
-			"166666666666666666666661",
-			"166666666666666666666661",
-			"111101111111111111101111",
-			"166666606666666066666661",
-			"166666606666666066666661",
-			"166666606666666066666651",
-			"166666616666666166666661",
-			"111111111111111111111111"
-		),
-		// Floor 2 (upper, height=1.0)
-		list(
-			"111111111111111111111111",
-			"100000010000000100000001",
-			"100000010000000100000001",
-			"100000010000000100000001",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"100000010000000100000001",
-			"111101111111111111101111",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"100000001111111100000001",
-			"100000001666666100000001",
-			"100000001666666100000001",
-			"100000001666666100000001",
-			"100000001666666100000001",
-			"100000001111011100000001",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"111101111111111111101111",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"100000010000000100000001",
-			"111111111111111111111111"
-		)
-	))
+	var/list/data = list()
+	data["width"] = 24
+	data["height"] = 24
+	var/list/cells = list()
+	var/list/rows = list(
+		"444444444444444444444444",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400044400004440004440004",
+		"400040000000400000400004",
+		"400040000000400000400004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400044000004440004400004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000000044440000000004",
+		"400000000044440000000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400044000004440004400004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400040000000400000400004",
+		"400040000000400000400004",
+		"400044400004440004440004",
+		"400000000000000000000004",
+		"400000000000000000000054",
+		"444444444444444444444444"
+	)
+	for(var/row in rows)
+		for(var/i in 1 to length(row))
+			cells += text2num(copytext(row, i, i + 1))
+	data["cells"] = cells
+	return data
 
-/// Level 6: Complex two-story with ramps
+/// Sector 6: Defense grid simulation
+/// Grid corridors, automated ranged hostiles
+/// Wall type 7 = green/tech
 /obj/machinery/computer/arcade/fps/proc/generate_level_6()
-	return build_multistory(list(
-		// Floor 1 (ground)
-		list(
-			"111111111111111111111111",
-			"166666616666666166666661",
-			"166666616666666166666661",
-			"166666616666666166666661",
-			"16666S616666666166666661",
-			"166666616666666166666661",
-			"166666611111111166666661",
-			"166666666666666666666661",
-			"166666666666666666666661",
-			"111111116666666611111111",
-			"166666666666666666666661",
-			"166666666666666666666661",
-			"166666666000000066666661",
-			"166666666000000066666S61",
-			"166666666000000066666661",
-			"111111116666666611111111",
-			"166666666666666666666661",
-			"166666666666666666666661",
-			"166666S11111111166666661",
-			"166666616666666166666661",
-			"166666616666666166666661",
-			"166666616666666166666651",
-			"166666616666666166666661",
-			"111111111111111111111111"
-		),
-		// Floor 2 (upper)
-		list(
-			"111111111111111111111111",
-			"166666610000000100000001",
-			"166666610000000100000001",
-			"166666610000000100000001",
-			"100000010000000100000001",
-			"100000010000000166666661",
-			"100000011111111100000001",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"111111110000000011111111",
-			"100000000000000016666661",
-			"100000000000000016666661",
-			"100000000666666016666661",
-			"100000000666666000000001",
-			"100000000666666000000001",
-			"111111110000000011111111",
-			"100000000000000000000001",
-			"100000000000000000000001",
-			"100000001111111100000001",
-			"166666610000000166666661",
-			"166666610000000166666661",
-			"166666610000000166666661",
-			"166666610000000166666661",
-			"111111111111111111111111"
-		)
-	))
+	var/list/data = list()
+	data["width"] = 24
+	data["height"] = 24
+	var/list/cells = list()
+	var/list/rows = list(
+		"777777777777777777777777",
+		"700000007000000070000007",
+		"700000007000000070000007",
+		"700000007000000070000007",
+		"700000000000000000000007",
+		"700000000000000000000007",
+		"777707777000000077707777",
+		"700000007000000070000007",
+		"700000007000000070000007",
+		"700000000000000000000007",
+		"777707777077770777707777",
+		"700000000070000000000007",
+		"700000000070000000000007",
+		"700000000000000000000007",
+		"777707777077770777707777",
+		"700000000000000000000007",
+		"700000007000000070000007",
+		"700000007000000070000007",
+		"777707777000000077707777",
+		"700000000000000000000007",
+		"700000000000000000000007",
+		"700000007000000070000007",
+		"700000007000000070000057",
+		"777777777777777777777777"
+	)
+	for(var/row in rows)
+		for(var/i in 1 to length(row))
+			cells += text2num(copytext(row, i, i + 1))
+	data["cells"] = cells
+	return data
 
-/// Level 7: Three-story gauntlet
+/// Sector 7: Stealth maze
+/// Dark corridors, cloaked hostiles
+/// Wall type 8 = violet/eldritch
 /obj/machinery/computer/arcade/fps/proc/generate_level_7()
-	return build_multistory(list(
-		// Floor 1 (ground)
-		list(
-			"444444444444444444444444",
-			"466666646666666466666664",
-			"466666646666666466666664",
-			"466666646666666466666664",
-			"46666S646666666466666664",
-			"466666646666666466666664",
-			"466666644444444466666664",
-			"466666666666666666666664",
-			"444404446666666644404444",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666664444444466666664",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"444404444444444444404444",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666666666666666666664",
-			"466666666666666666666654",
-			"466666666666666666666664",
-			"444444444444444444444444"
-		),
-		// Floor 2 (upper)
-		list(
-			"444444444444444444444444",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000466666664",
-			"400000044444444400000004",
-			"400000000000000000000004",
-			"444404440000000044404444",
-			"466666660000000000000004",
-			"466666660000000000000004",
-			"466666660000000000000004",
-			"466666660000000000000004",
-			"46666S660000000000000004",
-			"466666664444444400000004",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"444404444444444444404444",
-			"400000000000000046666664",
-			"400000000000000046666664",
-			"400000000000000046666664",
-			"400000000000000046666664",
-			"400000000000000046666664",
-			"444444444444444444444444"
-		),
-		// Floor 3 (top)
-		list(
-			"444444444444444444444444",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000040000000400000004",
-			"400000044444444400000004",
-			"400000000000000000000004",
-			"444404440000000044404444",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"400000004444444400000004",
-			"400000000000000000000004",
-			"400000000000000000000004",
-			"444404444444444444404444",
-			"400000000000000400000004",
-			"400000000000000400000004",
-			"400000000000000400000004",
-			"400000000000000400000004",
-			"400000000000000400000004",
-			"444444444444444444444444"
-		)
-	))
+	var/list/data = list()
+	data["width"] = 24
+	data["height"] = 24
+	var/list/cells = list()
+	var/list/rows = list(
+		"888888888888888888888888",
+		"800000008000000080000008",
+		"808880008080000080888008",
+		"800080008080000080800008",
+		"800080000080888080800008",
+		"800080008000000000800008",
+		"800080008088880880000008",
+		"800000008080000080000008",
+		"888808888080000088808888",
+		"800000000080000000000008",
+		"800000000088880000000008",
+		"808888808000000088888008",
+		"800000008000000080000008",
+		"800000008088880080000008",
+		"808880008080000080880008",
+		"800080008000000000080008",
+		"800080008000008880080008",
+		"800000000000008000000008",
+		"888808888088808088808888",
+		"800000008000000080000008",
+		"800000000000000080000008",
+		"800888008088880000000008",
+		"800000008000000000000058",
+		"888888888888888888888888"
+	)
+	for(var/row in rows)
+		for(var/i in 1 to length(row))
+			cells += text2num(copytext(row, i, i + 1))
+	data["cells"] = cells
+	return data
+
+/// Sector 8: Final combat exam
+/// One high-value target, open arena
+/obj/machinery/computer/arcade/fps/proc/generate_level_8()
+	var/list/data = list()
+	data["width"] = 24
+	data["height"] = 24
+	var/list/cells = list()
+	var/list/rows = list(
+		"444444444444444444444444",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400044000000000000440004",
+		"400044000000000000440004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000004400004400000004",
+		"400000004400004400000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400000004400004400000004",
+		"400000004400004400000004",
+		"400000000000000000000004",
+		"400000000000000000000004",
+		"400044000000000000440004",
+		"400044000000000000440004",
+		"400000000000000000000004",
+		"400000000000000000000054",
+		"444444444444444444444444"
+	)
+	for(var/row in rows)
+		for(var/i in 1 to length(row))
+			cells += text2num(copytext(row, i, i + 1))
+	data["cells"] = cells
+	return data
 
 /// Generates entity spawn data for a level
 /obj/machinery/computer/arcade/fps/proc/generate_entities(level)
 	var/list/ents = list()
 	switch(level)
 		if(1)
-			// 4 blob enemies, some pickups
+			// Sector 1: basic targets
 			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 3.5))
 			ents += list(list("type" = "enemy_blob", "x" = 14.5, "y" = 5.5))
 			ents += list(list("type" = "enemy_blob", "x" = 20.5, "y" = 3.5))
-			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 16.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 5.5, "y" = 16.5))
 			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 7.5))
 			ents += list(list("type" = "pickup_ammo", "x" = 3.5, "y" = 13.5))
 			ents += list(list("type" = "pickup_health", "x" = 18.5, "y" = 18.5))
 		if(2)
-			// 8 mixed enemies
+			// Sector 2: mixed hostiles
 			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 2.5))
 			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 9.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 16.5))
-			ents += list(list("type" = "enemy_alien", "x" = 10.5, "y" = 16.5))
+			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 10.5))
 			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 14.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_charger", "x" = 3.5, "y" = 16.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 10.5, "y" = 16.5))
+			ents += list(list("type" = "enemy_alien", "x" = 20.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 9.5))
 			ents += list(list("type" = "pickup_health", "x" = 7.5, "y" = 10.5))
 			ents += list(list("type" = "pickup_ammo", "x" = 15.5, "y" = 6.5))
 			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 20.5))
 			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 9.5))
 		if(3)
-			// 12 enemies including tough cultists
+			// Sector 3: all hostile types
 			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 2.5))
+			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 2.5))
 			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 9.5))
-			ents += list(list("type" = "enemy_alien", "x" = 8.5, "y" = 13.5))
+			ents += list(list("type" = "enemy_charger", "x" = 2.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_stealth", "x" = 8.5, "y" = 13.5))
 			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_blob", "x" = 20.5, "y" = 9.5))
-			ents += list(list("type" = "enemy_alien", "x" = 2.5, "y" = 17.5))
-			ents += list(list("type" = "enemy_cult", "x" = 8.5, "y" = 20.5))
-			ents += list(list("type" = "enemy_cult", "x" = 18.5, "y" = 17.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 20.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 20.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_charger", "x" = 2.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_alien", "x" = 8.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_stealth", "x" = 18.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 14.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_alien", "x" = 20.5, "y" = 20.5))
 			ents += list(list("type" = "pickup_health", "x" = 2.5, "y" = 6.5))
 			ents += list(list("type" = "pickup_ammo", "x" = 10.5, "y" = 6.5))
 			ents += list(list("type" = "pickup_health", "x" = 2.5, "y" = 14.5))
 			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 14.5))
 			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_key", "x" = 8.5, "y" = 13.5))
 		if(4)
-			// Multi-height level enemies
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 3.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_alien", "x" = 11.5, "y" = 12.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 18.5))
-			ents += list(list("type" = "enemy_alien", "x" = 11.5, "y" = 18.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 17.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 21.5))
-			ents += list(list("type" = "pickup_health", "x" = 2.5, "y" = 6.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 14.5, "y" = 6.5))
-			ents += list(list("type" = "pickup_health", "x" = 6.5, "y" = 14.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 14.5))
-			ents += list(list("type" = "pickup_health", "x" = 11.5, "y" = 20.5))
+			// Sector 4: swarm hostiles
+			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 2.5))
+			ents += list(list("type" = "enemy_blob", "x" = 14.5, "y" = 3.5))
+			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_blob", "x" = 20.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 14.5, "y" = 10.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 3.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 20.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_alien", "x" = 10.5, "y" = 14.5))
+			ents += list(list("type" = "pickup_health", "x" = 5.5, "y" = 7.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 14.5, "y" = 7.5))
+			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 14.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 20.5))
 		if(5)
-			// Two-layer level enemies (on upper floor)
-			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 5.5))
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_blob", "x" = 2.5, "y" = 18.5))
-			ents += list(list("type" = "enemy_alien", "x" = 10.5, "y" = 18.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 18.5))
-			ents += list(list("type" = "enemy_cult", "x" = 10.5, "y" = 13.5))
-			ents += list(list("type" = "pickup_health", "x" = 2.5, "y" = 5.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 14.5, "y" = 6.5))
-			ents += list(list("type" = "pickup_health", "x" = 5.5, "y" = 14.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 14.5))
-			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 20.5))
+			// Sector 5: explosive combat
+			ents += list(list("type" = "enemy_charger", "x" = 10.5, "y" = 1.5))
+			ents += list(list("type" = "enemy_charger", "x" = 20.5, "y" = 6.5))
+			ents += list(list("type" = "enemy_charger", "x" = 3.5, "y" = 13.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 15.5, "y" = 4.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 5.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 18.5, "y" = 16.5))
+			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 4.5))
+			ents += list(list("type" = "enemy_blob", "x" = 20.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 9.5))
+			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 16.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 3.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 13.5))
+			ents += list(list("type" = "pickup_key", "x" = 5.5, "y" = 11.5))
 		if(6)
-			// Two-story level enemies
-			// Ground floor enemies
-			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 9.5))
-			ents += list(list("type" = "enemy_alien", "x" = 18.5, "y" = 9.5))
-			ents += list(list("type" = "enemy_cult", "x" = 10.5, "y" = 16.5))
-			ents += list(list("type" = "enemy_blob", "x" = 5.5, "y" = 16.5))
-			ents += list(list("type" = "enemy_alien", "x" = 18.5, "y" = 16.5))
-			// Upper floor enemies
-			ents += list(list("type" = "enemy_cult", "x" = 18.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_cult", "x" = 3.5, "y" = 20.5))
-			ents += list(list("type" = "enemy_alien", "x" = 14.5, "y" = 12.5))
-			ents += list(list("type" = "enemy_blob", "x" = 10.5, "y" = 12.5))
-			// Pickups
-			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 9.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 9.5))
-			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 16.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 14.5, "y" = 20.5))
+			// Sector 6: ranged defense grid
+			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 2.5))
+			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 2.5))
+			ents += list(list("type" = "enemy_cult", "x" = 5.5, "y" = 8.5))
+			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 12.5))
+			ents += list(list("type" = "enemy_cult", "x" = 3.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_alien", "x" = 20.5, "y" = 8.5))
+			ents += list(list("type" = "enemy_alien", "x" = 3.5, "y" = 12.5))
+			ents += list(list("type" = "enemy_charger", "x" = 20.5, "y" = 19.5))
+			ents += list(list("type" = "pickup_health", "x" = 5.5, "y" = 4.5))
+			ents += list(list("type" = "pickup_health", "x" = 14.5, "y" = 15.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 4.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 5.5, "y" = 19.5))
 		if(7)
-			// Multi-story gauntlet enemies
-			ents += list(list("type" = "enemy_cult", "x" = 3.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_blob", "x" = 18.5, "y" = 2.5))
-			ents += list(list("type" = "enemy_alien", "x" = 10.5, "y" = 7.5))
-			ents += list(list("type" = "enemy_cult", "x" = 3.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_cult", "x" = 20.5, "y" = 10.5))
-			ents += list(list("type" = "enemy_alien", "x" = 10.5, "y" = 11.5))
-			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 16.5))
-			ents += list(list("type" = "enemy_alien", "x" = 20.5, "y" = 16.5))
-			ents += list(list("type" = "enemy_cult", "x" = 3.5, "y" = 20.5))
-			ents += list(list("type" = "enemy_cult", "x" = 18.5, "y" = 20.5))
-			ents += list(list("type" = "pickup_health", "x" = 10.5, "y" = 3.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 10.5, "y" = 16.5))
-			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 7.5))
-			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 7.5))
+			// Sector 7: cloaked hostiles
+			ents += list(list("type" = "enemy_stealth", "x" = 5.5, "y" = 2.5))
+			ents += list(list("type" = "enemy_stealth", "x" = 14.5, "y" = 5.5))
+			ents += list(list("type" = "enemy_stealth", "x" = 20.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_stealth", "x" = 3.5, "y" = 14.5))
+			ents += list(list("type" = "enemy_cult", "x" = 14.5, "y" = 12.5))
+			ents += list(list("type" = "enemy_cult", "x" = 5.5, "y" = 9.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 20.5, "y" = 17.5))
+			ents += list(list("type" = "enemy_exploder", "x" = 10.5, "y" = 20.5))
+			ents += list(list("type" = "enemy_blob", "x" = 3.5, "y" = 7.5))
+			ents += list(list("type" = "enemy_blob", "x" = 18.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_health", "x" = 5.5, "y" = 7.5))
+			ents += list(list("type" = "pickup_health", "x" = 14.5, "y" = 17.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 5.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 3.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_key", "x" = 14.5, "y" = 9.5))
+		if(8)
+			// Final exam: one HVT
+			ents += list(list("type" = "enemy_boss", "x" = 12.5, "y" = 5.5))
+			ents += list(list("type" = "pickup_health", "x" = 3.5, "y" = 3.5))
+			ents += list(list("type" = "pickup_health", "x" = 20.5, "y" = 3.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 3.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_ammo", "x" = 20.5, "y" = 20.5))
+			ents += list(list("type" = "pickup_health", "x" = 12.5, "y" = 20.5))
 	return ents
 
 /// Returns the player start position for a level
@@ -849,58 +845,65 @@
 		if(3)
 			return list("x" = 1.5, "y" = 1.5, "angle" = 0)
 		if(4)
-			return list("x" = 6.5, "y" = 5.5, "angle" = 0)
+			return list("x" = 1.5, "y" = 1.5, "angle" = 0)
 		if(5)
-			return list("x" = 3.5, "y" = 8.5, "angle" = 0)
+			return list("x" = 1.5, "y" = 1.5, "angle" = 0)
 		if(6)
-			return list("x" = 3.5, "y" = 7.5, "angle" = 0)
+			return list("x" = 1.5, "y" = 1.5, "angle" = 0)
 		if(7)
-			return list("x" = 10.5, "y" = 7.5, "angle" = 0)
+			return list("x" = 1.5, "y" = 1.5, "angle" = 0)
+		if(8)
+			return list("x" = 12.5, "y" = 21.5, "angle" = -1.5708)
 	return list("x" = 1.5, "y" = 1.5, "angle" = 0)
 
 // Subtypes that start on specific levels for testing
 /obj/machinery/computer/arcade/fps/level4
-	name = "Space Slayer Arcade (Level 4)"
-	desc = "Pre-loaded to the multi-height level."
+	name = "R Corp Hatchery (Sector 4: Hive)"
+	desc = "Training sector with organic hostiles."
 	current_level = 4
 
 /obj/machinery/computer/arcade/fps/level5
-	name = "Space Slayer Arcade (Level 5)"
-	desc = "Pre-loaded to the multi-Z level."
+	name = "R Corp Hatchery (Sector 5: Arena)"
+	desc = "Open combat arena. Explosives expected."
 	current_level = 5
 
 /obj/machinery/computer/arcade/fps/level6
-	name = "Space Slayer Arcade (Two-Story)"
-	desc = "A two-story building. Look up!"
+	name = "R Corp Hatchery (Sector 6: Facility)"
+	desc = "Automated defense grid. Watch for turrets."
 	current_level = 6
 
-/// Dedicated multi-story arcade - 3 levels of
-/// two-story buildings (levels 5, 6, 7)
-/obj/machinery/computer/arcade/fps/multistory
-	name = "Space Slayer: Vertical Ops"
-	desc = "Multi-story combat. Watch your head... and the floor beneath your feet."
-	current_level = 5
+/obj/machinery/computer/arcade/fps/level8
+	name = "R Corp Hatchery (Final Exam)"
+	desc = "The final combat evaluation. One target."
+	current_level = 8
+
+/// Advanced training arcade - plays sectors 4-7
+/// (the four advanced training sectors)
+/obj/machinery/computer/arcade/fps/ordeals
+	name = "R Corp Hatchery: Advanced Training"
+	desc = "Four advanced training sectors. Each one harder than the last."
+	current_level = 4
 	max_level = 7
 
-/obj/machinery/computer/arcade/fps/multistory/ui_act(action, params)
+/obj/machinery/computer/arcade/fps/ordeals/ui_act(action, params)
 	. = ..()
 	if(.)
 		return
-	// Override restart/died to reset to level 5
+	// Override restart/died to reset to level 4
 	switch(action)
 		if("restart")
-			current_level = 5
+			current_level = 4
 			update_static_data(usr)
 			return TRUE
 		if("died")
 			playsound(loc, 'sound/arcade/lose.ogg', 50, TRUE)
-			current_level = 5
+			current_level = 4
 			update_static_data(usr)
 			return TRUE
 
 // Circuit board
 /obj/item/circuitboard/computer/arcade/fps
-	name = "Space Slayer Arcade (Computer Board)"
+	name = "R Corp Hatchery Arcade (Computer Board)"
 	icon_state = "generic"
 	build_path = /obj/machinery/computer/arcade/fps
 
@@ -914,8 +917,8 @@
 #define STATION_FPS_CHUNK 48
 
 /obj/machinery/computer/arcade/fps/station
-	name = "Space Slayer Arcade (Station Map)"
-	desc = "A retro FPS arcade that scans the surrounding facility. Looks familiar..."
+	name = "R Corp Hatchery (Local Scan)"
+	desc = "Scans the local facility for training. These halls look familiar..."
 	/// Cached floor tile positions for entity placement
 	var/list/floor_tiles
 
@@ -1069,7 +1072,7 @@
 
 // Circuit board for station variant
 /obj/item/circuitboard/computer/arcade/fps/station
-	name = "Space Slayer Arcade - Station Map (Computer Board)"
+	name = "R Corp Hatchery - Local Branch (Computer Board)"
 	icon_state = "generic"
 	build_path = /obj/machinery/computer/arcade/fps/station
 

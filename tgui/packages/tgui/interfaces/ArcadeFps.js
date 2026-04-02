@@ -3,9 +3,10 @@
  * @copyright 2024
  * @license MIT
  *
- * Space Slayer - A DOOM-like FPS arcade minigame.
- * Wolfenstein 3D-style raycasting engine running
- * entirely client-side for 60fps gameplay.
+ * R Corp Hatchery - A DOOM-like FPS arcade
+ * minigame. R Corp rabbit combat training.
+ * Raycasting engine running
+ * client-side for 60fps gameplay.
  */
 
 import { Component, createRef } from 'inferno';
@@ -51,15 +52,23 @@ const PLAYER_RADIUS = 0.2;
 
 // Weapon defs: [name, damage, cooldown, ammoCost, spread]
 const WEAPONS = [
-  ['Pistol', 1, 0.4, 1, 0],
-  ['Shotgun', 3, 0.8, 2, 0.1],
+  ['RC Pistol', 1, 0.4, 1, 0],
+  ['RC Scatter', 1, 0.8, 4, 0.1],
 ];
 
 // Enemy defs: [hp, speed, damage, attackRange, color]
 const ENEMY_DEFS = {
-  enemy_blob: [4, 1.0, 8, 1.5, '#44cc44'],
-  enemy_alien: [2, 2.5, 5, 1.2, '#cc44cc'],
+  enemy_blob: [5, 1.0, 8, 1.5, '#44cc44'],
+  enemy_alien: [3, 2.5, 5, 1.2, '#cc44cc'],
   enemy_cult: [3, 1.5, 10, 8.0, '#cc4444'],
+  // Crimson Clown: rushes and detonates
+  enemy_exploder: [3, 2.5, 35, 2.0, '#ff8800'],
+  // Crimson Dusk: charges in a line
+  enemy_charger: [8, 1.2, 12, 8.0, '#aa2222'],
+  // Steel Stalker: nearly invisible
+  enemy_stealth: [4, 1.8, 8, 1.5, '#8888aa'],
+  // Boss: powerful, multi-phase
+  enemy_boss: [50, 1.0, 15, 8.0, '#ddaa00'],
 };
 
 // Game states
@@ -192,6 +201,111 @@ const generateTextures = () => {
           r = 20; g = 140; b = 20;
         }
         setPixel(d, s, x, y, r, g, b);
+      }
+    }
+  });
+
+  // Wall 9: Locked door (red frame)
+  textures[9] = makeTexture(S, (d, s) => {
+    for (let y = 0; y < s; y++) {
+      for (let x = 0; x < s; x++) {
+        let r = 40;
+        let g = 40;
+        let b = 40;
+        if (x < 3 || x >= s - 3 || y < 3) {
+          r = 180; g = 30; b = 30;
+        }
+        if (x >= 22 && x <= 24
+          && y >= 14 && y <= 16) {
+          r = 200; g = 200; b = 50;
+        }
+        if (y >= 6 && y <= 9
+          && x >= 6 && x <= 25) {
+          r = 140; g = 20; b = 20;
+        }
+        setPixel(d, s, x, y, r, g, b);
+      }
+    }
+  });
+
+  // Wall 6: Amber/chitin (organic hive)
+  textures[6] = makeTexture(S, (d, s) => {
+    for (let y = 0; y < s; y++) {
+      for (let x = 0; x < s; x++) {
+        let r = 180;
+        let g = 130;
+        let b = 50;
+        // Organic vein patterns
+        const vx = (x * 5 + y * 3) % 17;
+        const vy = (x * 3 + y * 7) % 13;
+        if (vx < 2 || vy < 2) {
+          r = 200; g = 150; b = 40;
+        }
+        // Chitin highlight bands
+        if ((x + y) % 8 === 0) {
+          r += 30; g += 20;
+        }
+        const n = (
+          (x * 11 + y * 7) % 9
+        ) - 4;
+        setPixel(
+          d, s, x, y,
+          r + n, g + n, b + n
+        );
+      }
+    }
+  });
+
+  // Wall 7: Green/tech (circuit board)
+  textures[7] = makeTexture(S, (d, s) => {
+    for (let y = 0; y < s; y++) {
+      for (let x = 0; x < s; x++) {
+        let r = 30;
+        let g = 100;
+        let b = 50;
+        // Circuit traces
+        if (x % 8 === 0 || y % 8 === 0) {
+          r = 50; g = 180; b = 80;
+        }
+        // Solder points
+        if (x % 8 < 2 && y % 8 < 2) {
+          r = 80; g = 200; b = 100;
+        }
+        const n = (
+          (x * 3 + y * 5) % 7
+        ) - 3;
+        setPixel(
+          d, s, x, y,
+          r + n, g + n, b + n
+        );
+      }
+    }
+  });
+
+  // Wall 8: Violet/eldritch (dark purple)
+  textures[8] = makeTexture(S, (d, s) => {
+    for (let y = 0; y < s; y++) {
+      for (let x = 0; x < s; x++) {
+        let r = 60;
+        let g = 20;
+        let b = 80;
+        // Glowing rune lines
+        const rx = Math.abs(x - 16);
+        const ry = Math.abs(y - 16);
+        if ((rx + ry) % 10 < 2) {
+          r = 120; g = 50; b = 180;
+        }
+        // Pulsing center rune
+        if (rx < 3 && ry < 3) {
+          r = 140; g = 60; b = 200;
+        }
+        const n = (
+          (x * 7 + y * 11) % 9
+        ) - 4;
+        setPixel(
+          d, s, x, y,
+          r + n, g + n, b + n
+        );
       }
     }
   });
@@ -385,14 +499,96 @@ class Entity {
       this.state = 'idle';
       this.attackCooldown = 0;
       this.seesPlayer = false;
+      // Ranged telegraph
+      this.windupTimer = 0;
+      this.fireFlash = 0;
+      // Exploder countdown
+      this.detonateTimer = -1;
+      // Charger dash
+      this.chargeDir = null;
+      this.chargeTimer = 0;
+      this.recoveryTimer = 0;
+      // Stealth visibility (0..1)
+      this.visibility = 1;
+      // Boss phases
+      if (type === 'enemy_boss') {
+        this.bossPhase = 'chase';
+        this.phaseTimer = 3.0;
+        this.chargesLeft = 0;
+      }
+    } else if (type === 'projectile_fireball') {
+      this.isEnemy = false;
+      this.isFireball = true;
+      this.lifetime = 8;
+      this.fbSpeed = 2.0;
+      this.color = '#ff8800';
+      this.damage = 15;
     } else {
       this.isEnemy = false;
     }
   }
 
-  update(dt, player, map) {
+  update(dt, player, map, engine) {
     if (!this.alive) return;
     if (this.hurtTimer > 0) this.hurtTimer -= dt;
+    if (this.fireFlash > 0) this.fireFlash -= dt;
+
+    // Fireball homing projectile
+    if (this.isFireball) {
+      this.lifetime -= dt;
+      if (this.lifetime <= 0) {
+        this.alive = false;
+        return;
+      }
+      const fdx = player.x - this.x;
+      const fdy = player.y - this.y;
+      const fd = Math.sqrt(
+        fdx * fdx + fdy * fdy
+      );
+      if (fd > 0.1) {
+        const mx = (fdx / fd)
+          * this.fbSpeed * dt;
+        const my = (fdy / fd)
+          * this.fbSpeed * dt;
+        this.x += mx;
+        this.y += my;
+      }
+      // Hit player
+      if (fd < 0.6) {
+        player.takeDamage(this.damage);
+        this.alive = false;
+        if (engine) {
+          engine.addEffect(
+            'explosion',
+            this.x, this.y, 0.3
+          );
+        }
+        return;
+      }
+      // Hit boss (damages boss)
+      if (engine) {
+        for (let bi = 0;
+          bi < engine.entities.length;
+          bi++) {
+          const b = engine.entities[bi];
+          if (b.type !== 'enemy_boss'
+            || !b.alive) continue;
+          const bdx = b.x - this.x;
+          const bdy = b.y - this.y;
+          if (bdx * bdx + bdy * bdy
+            < 1.0) {
+            b.takeDamage(10);
+            this.alive = false;
+            engine.addEffect(
+              'explosion',
+              this.x, this.y, 0.3
+            );
+            return;
+          }
+        }
+      }
+      return;
+    }
 
     if (!this.isEnemy) return;
     if (this.attackCooldown > 0) {
@@ -403,12 +599,238 @@ class Entity {
     const dy = player.y - this.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
 
-    // Simple LOS check
     this.seesPlayer = this.hasLOS(
       player.x, player.y, map
     );
 
-    if (this.state === 'idle' && this.seesPlayer) {
+    // Stealth visibility
+    if (this.type === 'enemy_stealth') {
+      if (this.hurtTimer > 0) {
+        this.visibility = 1;
+      } else if (dist < 3) {
+        this.visibility = Math.max(
+          0.08, 1 - dist / 3
+        );
+      } else {
+        this.visibility = 0.03;
+      }
+    }
+
+    // Exploder detonation countdown
+    if (this.type === 'enemy_exploder'
+      && this.detonateTimer >= 0) {
+      this.detonateTimer -= dt;
+      if (this.detonateTimer <= 0) {
+        this.alive = false;
+        if (engine) {
+          engine.addEffect(
+            'explosion', this.x, this.y, 0.5
+          );
+          engine.triggerSound('explode');
+          if (dist < 4) {
+            const dmg = Math.floor(
+              this.damage * (1 - dist / 4)
+            );
+            player.takeDamage(dmg);
+          }
+        }
+      }
+      return;
+    }
+
+    // Charger special states
+    if (this.type === 'enemy_charger') {
+      if (this.state === 'windup') {
+        this.windupTimer -= dt;
+        if (this.windupTimer <= 0) {
+          this.state = 'charging';
+          this.chargeTimer = 0.8;
+        }
+        return;
+      }
+      if (this.state === 'charging') {
+        this.chargeTimer -= dt;
+        const spd = 8 * dt;
+        const nx = this.x
+          + this.chargeDir.x * spd;
+        const ny = this.y
+          + this.chargeDir.y * spd;
+        if (map.canMove(nx, ny)) {
+          this.x = nx;
+          this.y = ny;
+        } else {
+          this.chargeTimer = 0;
+        }
+        const cd = player.x - this.x;
+        const cdy = player.y - this.y;
+        if (cd * cd + cdy * cdy < 0.8) {
+          player.takeDamage(this.damage);
+          this.chargeTimer = 0;
+        }
+        if (this.chargeTimer <= 0) {
+          this.state = 'recovery';
+          this.recoveryTimer = 1.5;
+        }
+        return;
+      }
+      if (this.state === 'recovery') {
+        this.recoveryTimer -= dt;
+        if (this.recoveryTimer <= 0) {
+          this.state = 'chase';
+        }
+        return;
+      }
+    }
+
+    // Boss AI
+    if (this.type === 'enemy_boss') {
+      this.phaseTimer -= dt;
+
+      if (this.bossPhase === 'chase') {
+        if (this.seesPlayer && dist > 3) {
+          const mx = (dx / dist)
+            * this.speed * dt;
+          const my = (dy / dist)
+            * this.speed * dt;
+          if (map.canMove(
+            this.x + mx, this.y
+          )) {
+            this.x += mx;
+          }
+          if (map.canMove(
+            this.x, this.y + my
+          )) {
+            this.y += my;
+          }
+        }
+        if (this.phaseTimer <= 0) {
+          const roll = Math.random();
+          if (roll < 0.4) {
+            this.bossPhase = 'charge_combo';
+            this.chargesLeft = 3;
+            this.windupTimer = 0.5;
+            const d2 = Math.max(dist, 0.1);
+            this.chargeDir = {
+              x: dx / d2, y: dy / d2,
+            };
+          } else if (roll < 0.7) {
+            this.bossPhase = 'summon';
+            this.windupTimer = 0.5;
+          } else {
+            this.bossPhase = 'fireball';
+            this.windupTimer = 0.8;
+          }
+        }
+        return;
+      }
+
+      if (this.bossPhase === 'charge_combo') {
+        if (this.windupTimer > 0) {
+          this.windupTimer -= dt;
+          return;
+        }
+        if (this.chargeTimer <= 0
+          && this.chargesLeft > 0) {
+          this.chargeTimer = 0.8;
+        }
+        if (this.chargeTimer > 0) {
+          this.chargeTimer -= dt;
+          const spd = 8 * dt;
+          const nx = this.x
+            + this.chargeDir.x * spd;
+          const ny = this.y
+            + this.chargeDir.y * spd;
+          if (map.canMove(nx, ny)) {
+            this.x = nx;
+            this.y = ny;
+          } else {
+            // Hit wall: re-target
+            this.chargeTimer = 0;
+          }
+          const cd = player.x - this.x;
+          const cdy = player.y - this.y;
+          if (cd * cd + cdy * cdy < 1.0) {
+            player.takeDamage(this.damage);
+            this.chargeTimer = 0;
+          }
+          if (this.chargeTimer <= 0) {
+            this.chargesLeft--;
+            if (this.chargesLeft > 0) {
+              this.windupTimer = 0.3;
+              const d3 = Math.max(
+                Math.sqrt(
+                  (player.x - this.x) ** 2
+                  + (player.y - this.y) ** 2
+                ), 0.1
+              );
+              this.chargeDir = {
+                x: (player.x - this.x)
+                  / d3,
+                y: (player.y - this.y)
+                  / d3,
+              };
+            } else {
+              this.bossPhase = 'chase';
+              this.phaseTimer = 3
+                + Math.random() * 2;
+            }
+          }
+        }
+        return;
+      }
+
+      if (this.bossPhase === 'summon') {
+        this.windupTimer -= dt;
+        if (this.windupTimer <= 0 && engine) {
+          const types = [
+            'enemy_blob',
+            'enemy_exploder',
+          ];
+          for (let si = 0; si < 2; si++) {
+            const st = types[si];
+            const sx = this.x
+              + (Math.random() - 0.5) * 3;
+            const sy = this.y
+              + (Math.random() - 0.5) * 3;
+            engine.entities.push(
+              new Entity(st, sx, sy)
+            );
+          }
+          this.bossPhase = 'chase';
+          this.phaseTimer = 4
+            + Math.random() * 2;
+        }
+        return;
+      }
+
+      if (this.bossPhase === 'fireball') {
+        this.windupTimer -= dt;
+        if (this.windupTimer <= 0 && engine) {
+          for (let fi = 0; fi < 2; fi++) {
+            const fx = this.x
+              + (Math.random() - 0.5) * 2;
+            const fy = this.y
+              + (Math.random() - 0.5) * 2;
+            engine.entities.push(
+              new Entity(
+                'projectile_fireball',
+                fx, fy
+              )
+            );
+          }
+          engine.triggerSound('explode');
+          this.bossPhase = 'chase';
+          this.phaseTimer = 3
+            + Math.random() * 2;
+        }
+        return;
+      }
+      return;
+    }
+
+    // Standard AI: idle/chase/attack
+    if (this.state === 'idle'
+      && this.seesPlayer) {
       this.state = 'chase';
     }
 
@@ -420,13 +842,18 @@ class Entity {
       if (dist <= this.attackRange) {
         this.state = 'attack';
       } else {
-        // Move toward player
-        const mx = (dx / dist) * this.speed * dt;
-        const my = (dy / dist) * this.speed * dt;
-        if (map.canMove(this.x + mx, this.y)) {
+        const mx = (dx / dist)
+          * this.speed * dt;
+        const my = (dy / dist)
+          * this.speed * dt;
+        if (map.canMove(
+          this.x + mx, this.y
+        )) {
           this.x += mx;
         }
-        if (map.canMove(this.x, this.y + my)) {
+        if (map.canMove(
+          this.x, this.y + my
+        )) {
           this.y += my;
         }
       }
@@ -438,8 +865,61 @@ class Entity {
         return;
       }
       if (this.attackCooldown <= 0) {
-        player.takeDamage(this.damage);
-        this.attackCooldown = 1.0;
+        if (this.type === 'enemy_cult') {
+          // Ranged: windup then fire
+          if (this.windupTimer > 0) {
+            this.windupTimer -= dt;
+            if (this.windupTimer <= 0) {
+              player.takeDamage(this.damage);
+              this.fireFlash = 0.25;
+              this.attackCooldown = 1.5;
+              if (engine) {
+                engine.triggerSound('shoot');
+              }
+            }
+          } else if (this.fireFlash <= 0) {
+            this.windupTimer = 0.6;
+          }
+        } else if (
+          this.type === 'enemy_exploder'
+        ) {
+          this.detonateTimer = 0.8;
+        } else if (
+          this.type === 'enemy_charger'
+        ) {
+          this.windupTimer = 0.5;
+          this.state = 'windup';
+          const d = Math.max(dist, 0.1);
+          this.chargeDir = {
+            x: dx / d, y: dy / d,
+          };
+          this.attackCooldown = 3.0;
+        } else {
+          // Default melee attack
+          player.takeDamage(this.damage);
+          this.attackCooldown = 1.0;
+        }
+      }
+    }
+
+    // Keep minimum distance from player
+    // so enemies stay visible on screen
+    if (this.state !== 'charging') {
+      const ex = this.x - player.x;
+      const ey = this.y - player.y;
+      const ed = Math.sqrt(
+        ex * ex + ey * ey
+      );
+      if (ed < 0.8 && ed > 0.01) {
+        const push = 0.8 - ed;
+        const nx = this.x
+          + (ex / ed) * push;
+        const ny = this.y
+          + (ey / ed) * push;
+        if (map.canMove(nx, ny)) {
+          this.x = nx;
+          this.y = ny;
+        }
       }
     }
   }
@@ -496,6 +976,7 @@ class Player {
     this.z = 0;
     this.vz = 0;
     this.eyeHeight = 0.6;
+    this.hasKey = false;
   }
 
   takeDamage(dmg) {
@@ -525,7 +1006,7 @@ class Renderer {
     this.textures = generateTextures();
   }
 
-  render(player, map, entities) {
+  render(player, map, entities, effects) {
     const d = this.imgData.data;
     const horizon = Math.floor(
       SCREEN_H / 2 + player.pitch
@@ -535,14 +1016,16 @@ class Renderer {
       for (let x = 0; x < SCREEN_W; x++) {
         const i = (y * SCREEN_W + x) * 4;
         if (y < horizon) {
-          // Ceiling: dark blue-grey
           const h = Math.max(horizon, 1);
           const f = y / h;
           d[i] = Math.floor(20 + 20 * f);
-          d[i + 1] = Math.floor(20 + 25 * f);
-          d[i + 2] = Math.floor(40 + 30 * f);
+          d[i + 1] = Math.floor(
+            20 + 25 * f
+          );
+          d[i + 2] = Math.floor(
+            40 + 30 * f
+          );
         } else {
-          // Floor: dark grey
           const floorH = SCREEN_H - horizon;
           const fh = Math.max(floorH, 1);
           const f = (y - horizon) / fh;
@@ -559,25 +1042,22 @@ class Renderer {
     for (let col = 0; col < SCREEN_W; col++) {
       const rayAngle = player.angle - HALF_FOV
         + (col / SCREEN_W) * FOV;
-      this.castRay(col, player, map, rayAngle, d);
+      this.castRay(
+        col, player, map, rayAngle, d
+      );
     }
 
-    // Put the pixel data
     this.bctx.putImageData(this.imgData, 0, 0);
-
-    // Draw sprites (on the buffer context)
     this.drawSprites(player, entities);
-
-    // Draw HUD on buffer
+    this.drawEffects(player, effects || []);
     this.drawHUD(player);
-
-    // Draw weapon
     this.drawWeapon(player);
 
     // Hurt flash overlay
     if (player.hurtFlash > 0) {
       this.bctx.fillStyle = 'rgba(255,0,0,'
-        + (player.hurtFlash * 0.6).toFixed(2) + ')';
+        + (player.hurtFlash * 0.6).toFixed(2)
+        + ')';
       this.bctx.fillRect(
         0, 0, SCREEN_W, SCREEN_H
       );
@@ -710,12 +1190,17 @@ class Renderer {
         // Draw full wall and stop
         const wTop = hToY(cellCeilH);
         const wBot = hToY(cellFloorH);
+        // Red door when locked
+        const drawType = (
+          cellType === 5
+          && this.needsKeyDoor
+        ) ? 9 : cellType;
         this.drawWallSlice(
           col, d, wallX,
           Math.max(wTop, yTop),
           Math.min(wBot, yBot),
           wTop, wBot - wTop,
-          cellType, shade, fog
+          drawType, shade, fog
         );
         this.depthBuf[col] = perpDist;
         return;
@@ -878,8 +1363,14 @@ class Renderer {
       const screenX = Math.floor(
         (0.5 + relAngle / FOV) * SCREEN_W
       );
+      let spScale = 0.8;
+      if (e.type === 'enemy_boss') {
+        spScale = 1.4;
+      } else if (e.isFireball) {
+        spScale = 0.4;
+      }
       const spriteH = Math.floor(
-        SCREEN_H / dist * 0.8
+        SCREEN_H / dist * spScale
       );
       const spriteW = spriteH;
       const sx = screenX - spriteW / 2;
@@ -887,19 +1378,25 @@ class Renderer {
       const sy = (SCREEN_H - spriteH) / 2
         + pitchY;
 
-      // Determine color
+      // Determine color and alpha
       let color;
+      let alpha = 1;
       if (e.isEnemy) {
         color = e.hurtTimer > 0
           ? '#ffffff' : e.color;
+        if (e.type === 'enemy_stealth') {
+          alpha = e.visibility;
+        }
+      } else if (e.isFireball) {
+        color = '#ff8800';
+      } else if (e.type === 'pickup_key') {
+        color = '#ffdd00';
       } else if (e.type === 'pickup_health') {
         color = '#44ff44';
       } else {
         color = '#ffff44';
       }
 
-      // Draw sprite column by column
-      // checking depth buffer
       const colStart = Math.max(
         0, Math.floor(sx)
       );
@@ -908,55 +1405,312 @@ class Renderer {
         Math.floor(sx + spriteW)
       );
 
+      // Set alpha for stealth
+      const prevAlpha = ctx.globalAlpha;
+      ctx.globalAlpha = alpha;
       ctx.fillStyle = color;
+
       for (let c = colStart; c <= colEnd; c++) {
         if (this.depthBuf[c] < dist) continue;
-        // Draw this column of the sprite
         const sprFrac = (c - sx) / spriteW;
-        // Simple shape: enemy = circle, pickup = diamond
+
         if (e.isEnemy) {
-          const cx = sprFrac - 0.5;
-          const h = Math.sqrt(
-            Math.max(0, 0.25 - cx * cx)
-          );
-          const y1 = Math.floor(
-            sy + spriteH * (0.5 - h)
-          );
-          const y2 = Math.floor(
-            sy + spriteH * (0.5 + h)
-          );
-          ctx.fillRect(c, y1, 1, y2 - y1);
-          // Eyes
-          if (sprFrac > 0.3 && sprFrac < 0.45) {
-            ctx.fillStyle = '#ff0000';
+          if (e.type === 'enemy_exploder') {
+            // Spiky star shape
+            const cx2 = sprFrac - 0.5;
+            const ang = Math.abs(cx2) * 12;
+            const spike = 0.3 + Math.abs(
+              Math.sin(ang)
+            ) * 0.2;
+            const y1 = Math.floor(
+              sy + spriteH * (0.5 - spike)
+            );
+            const y2 = Math.floor(
+              sy + spriteH * (0.5 + spike)
+            );
+            // Pulse when detonating
+            if (e.detonateTimer >= 0) {
+              const pulse = Math.sin(
+                e.detonateTimer * 20
+              );
+              ctx.fillStyle = pulse > 0
+                ? '#ffff00' : '#ff4400';
+            }
+            ctx.fillRect(c, y1, 1, y2 - y1);
+            ctx.fillStyle = color;
+          } else if (
+            e.type === 'enemy_charger'
+          ) {
+            // Arrow/wedge shape
+            const cx2 = sprFrac - 0.5;
+            let h2;
+            if (e.state === 'charging') {
+              // Stretched during charge
+              h2 = Math.max(
+                0, 0.4 - Math.abs(cx2) * 1.2
+              );
+            } else {
+              h2 = Math.max(
+                0, 0.35 - Math.abs(cx2)
+              );
+            }
+            const y1 = Math.floor(
+              sy + spriteH * (0.5 - h2)
+            );
+            const y2 = Math.floor(
+              sy + spriteH * (0.5 + h2)
+            );
+            ctx.fillRect(c, y1, 1, y2 - y1);
+            // Horns on front
+            if (sprFrac > 0.4
+              && sprFrac < 0.6) {
+              ctx.fillStyle = '#ff4444';
+              ctx.fillRect(
+                c,
+                Math.floor(
+                  sy + spriteH * 0.15
+                ),
+                1,
+                Math.max(1, spriteH / 8)
+              );
+              ctx.fillStyle = color;
+            }
+          } else if (
+            e.type === 'enemy_boss'
+          ) {
+            // Boss: large circle + crown
+            const cx2 = sprFrac - 0.5;
+            const h2 = Math.sqrt(
+              Math.max(0, 0.25 - cx2 * cx2)
+            );
+            const y1 = Math.floor(
+              sy + spriteH * (0.5 - h2)
+            );
+            const y2 = Math.floor(
+              sy + spriteH * (0.5 + h2)
+            );
             ctx.fillRect(
-              c,
-              Math.floor(sy + spriteH * 0.35),
-              1, Math.max(1, spriteH / 10)
+              c, y1, 1, y2 - y1
+            );
+            // Crown spikes
+            if (Math.abs(cx2) < 0.4) {
+              const spike = Math.sin(
+                cx2 * 20
+              ) * 0.08;
+              ctx.fillStyle = '#ffcc00';
+              ctx.fillRect(
+                c,
+                Math.floor(
+                  sy + spriteH
+                    * (0.15 + spike)
+                ),
+                1,
+                Math.max(1, spriteH / 6)
+              );
+              ctx.fillStyle = color;
+            }
+            // Glowing eyes
+            if ((sprFrac > 0.3
+              && sprFrac < 0.42)
+              || (sprFrac > 0.58
+              && sprFrac < 0.7)) {
+              ctx.fillStyle = '#ff0000';
+              ctx.fillRect(
+                c,
+                Math.floor(
+                  sy + spriteH * 0.38
+                ),
+                1,
+                Math.max(2, spriteH / 8)
+              );
+              ctx.fillStyle = color;
+            }
+          } else {
+            // Standard circle shape
+            const cx2 = sprFrac - 0.5;
+            const h2 = Math.sqrt(
+              Math.max(0, 0.25 - cx2 * cx2)
+            );
+            const y1 = Math.floor(
+              sy + spriteH * (0.5 - h2)
+            );
+            const y2 = Math.floor(
+              sy + spriteH * (0.5 + h2)
+            );
+            ctx.fillRect(c, y1, 1, y2 - y1);
+            // Eyes
+            if (sprFrac > 0.3
+              && sprFrac < 0.45) {
+              ctx.fillStyle = '#ff0000';
+              ctx.fillRect(
+                c,
+                Math.floor(
+                  sy + spriteH * 0.35
+                ),
+                1,
+                Math.max(1, spriteH / 10)
+              );
+              ctx.fillStyle = color;
+            }
+            if (sprFrac > 0.55
+              && sprFrac < 0.7) {
+              ctx.fillStyle = '#ff0000';
+              ctx.fillRect(
+                c,
+                Math.floor(
+                  sy + spriteH * 0.35
+                ),
+                1,
+                Math.max(1, spriteH / 10)
+              );
+              ctx.fillStyle = color;
+            }
+          }
+        } else if (e.isFireball) {
+          // Pulsing fireball orb
+          const cx2 = sprFrac - 0.5;
+          const pulse = Math.sin(
+            performance.now() * 0.01
+          );
+          const r2 = 0.2 + pulse * 0.05;
+          if (cx2 * cx2 < r2 * r2) {
+            const fh = Math.sqrt(
+              r2 * r2 - cx2 * cx2
+            );
+            const y1 = Math.floor(
+              sy + spriteH * (0.5 - fh)
+            );
+            const y2 = Math.floor(
+              sy + spriteH * (0.5 + fh)
+            );
+            ctx.fillStyle = pulse > 0
+              ? '#ffaa00' : '#ff6600';
+            ctx.fillRect(
+              c, y1, 1, y2 - y1
             );
             ctx.fillStyle = color;
           }
-          if (sprFrac > 0.55 && sprFrac < 0.7) {
-            ctx.fillStyle = '#ff0000';
-            ctx.fillRect(
-              c,
-              Math.floor(sy + spriteH * 0.35),
-              1, Math.max(1, spriteH / 10)
+        } else if (e.type === 'pickup_key') {
+          // Cross shape for key
+          const kx = sprFrac - 0.5;
+          if (Math.abs(kx) < 0.15) {
+            const y1 = Math.floor(
+              sy + spriteH * 0.2
             );
-            ctx.fillStyle = color;
+            const y2 = Math.floor(
+              sy + spriteH * 0.8
+            );
+            ctx.fillRect(
+              c, y1, 1, y2 - y1
+            );
+          } else if (Math.abs(kx) < 0.35) {
+            const y1 = Math.floor(
+              sy + spriteH * 0.35
+            );
+            const y2 = Math.floor(
+              sy + spriteH * 0.65
+            );
+            ctx.fillRect(
+              c, y1, 1, y2 - y1
+            );
           }
         } else {
           // Diamond shape for pickups
-          const cx = Math.abs(sprFrac - 0.5) * 2;
-          const h = (1 - cx) * 0.5;
+          const cx2 = Math.abs(
+            sprFrac - 0.5
+          ) * 2;
+          const h2 = (1 - cx2) * 0.5;
           const y1 = Math.floor(
-            sy + spriteH * (0.5 - h)
+            sy + spriteH * (0.5 - h2)
           );
           const y2 = Math.floor(
-            sy + spriteH * (0.5 + h)
+            sy + spriteH * (0.5 + h2)
           );
           ctx.fillRect(c, y1, 1, y2 - y1);
         }
+      }
+
+      ctx.globalAlpha = 1;
+
+      // Cult ranged: windup glow + fire beam
+      if (e.type === 'enemy_cult'
+        && e.windupTimer > 0) {
+        // Pulsing red glow around sprite
+        const glowR = spriteW * 0.8;
+        const pulse = Math.sin(
+          e.windupTimer * 15
+        );
+        const ga = 0.2 + pulse * 0.15;
+        ctx.fillStyle = 'rgba(255,60,60,'
+          + ga.toFixed(2) + ')';
+        ctx.beginPath();
+        ctx.arc(
+          screenX,
+          sy + spriteH / 2,
+          glowR, 0, Math.PI * 2
+        );
+        ctx.fill();
+        // Targeting line to crosshair
+        const crossY = Math.floor(
+          SCREEN_H / 2 + player.pitch
+        );
+        ctx.strokeStyle = 'rgba(255,80,80,'
+          + (0.3 + pulse * 0.2).toFixed(2)
+          + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(
+          screenX, sy + spriteH / 2
+        );
+        ctx.lineTo(
+          SCREEN_W / 2, crossY
+        );
+        ctx.stroke();
+      }
+      if (e.type === 'enemy_cult'
+        && e.fireFlash > 0) {
+        // Bright beam from enemy to player
+        const crossY = Math.floor(
+          SCREEN_H / 2 + player.pitch
+        );
+        const fa = (
+          e.fireFlash / 0.25
+        ).toFixed(2);
+        ctx.strokeStyle = 'rgba(255,200,50,'
+          + fa + ')';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(
+          screenX, sy + spriteH / 2
+        );
+        ctx.lineTo(
+          SCREEN_W / 2, crossY
+        );
+        ctx.stroke();
+        ctx.lineWidth = 1;
+      }
+
+      // Boss windup glow
+      if (e.type === 'enemy_boss'
+        && e.windupTimer > 0) {
+        const glowR = spriteW;
+        const pulse = Math.sin(
+          e.windupTimer * 12
+        );
+        const bClr = (
+          e.bossPhase === 'charge_combo'
+        ) ? '255,50,50' : '255,180,0';
+        const ga = (
+          0.3 + pulse * 0.2
+        ).toFixed(2);
+        ctx.fillStyle = 'rgba('
+          + bClr + ',' + ga + ')';
+        ctx.beginPath();
+        ctx.arc(
+          screenX, sy + spriteH / 2,
+          glowR, 0, Math.PI * 2
+        );
+        ctx.fill();
       }
 
       // Health bar for enemies
@@ -1079,6 +1833,42 @@ class Renderer {
       SCREEN_W - 70, 12
     );
 
+    // Key indicator
+    if (this.engine && this.engine.levelNeedsKey) {
+      ctx.fillStyle = player.hasKey
+        ? '#ffdd00' : '#553300';
+      ctx.fillText(
+        'KEY:' + (player.hasKey
+          ? 'YES' : 'NO'),
+        SCREEN_W / 2 - 15, 12
+      );
+    }
+
+    // Boss HP bar
+    if (this.engine
+      && this.engine.isBossLevel) {
+      const boss = this.engine.entities.find(
+        e => e.type === 'enemy_boss'
+          && e.alive
+      );
+      if (boss) {
+        const bW = SCREEN_W * 0.6;
+        const bX = (SCREEN_W - bW) / 2;
+        ctx.fillStyle = '#333';
+        ctx.fillRect(bX, 20, bW, 6);
+        ctx.fillStyle = '#dd8800';
+        ctx.fillRect(
+          bX, 20,
+          bW * (boss.hp / boss.maxHp), 6
+        );
+        ctx.fillStyle = '#ffdd00';
+        ctx.font = '7px monospace';
+        ctx.fillText(
+          'BOSS', bX + bW / 2 - 10, 18
+        );
+      }
+    }
+
     // Crosshair (follows pitch)
     const crossY = Math.floor(
       SCREEN_H / 2 + player.pitch
@@ -1114,8 +1904,15 @@ class Renderer {
         const sy = oy + (dy + range) * size;
         const cell = this.map.get(mx, my);
         if (cell !== 0) {
-          ctx.fillStyle = cell === 5
-            ? '#00ff00' : '#555';
+          if (cell === 5) {
+            ctx.fillStyle = (
+              this.engine
+              && this.engine.levelNeedsKey
+              && !player.hasKey
+            ) ? '#ff0000' : '#00ff00';
+          } else {
+            ctx.fillStyle = '#555';
+          }
         } else if (this.map.isHole(mx, my)) {
           ctx.fillStyle = '#880000';
         } else {
@@ -1132,14 +1929,80 @@ class Renderer {
       size, size
     );
     // Direction indicator
-    const dirX = Math.cos(player.angle) * size * 2;
-    const dirY = Math.sin(player.angle) * size * 2;
+    const dirX = Math.cos(player.angle)
+      * size * 2;
+    const dirY = Math.sin(player.angle)
+      * size * 2;
     ctx.fillStyle = '#ff0';
     ctx.fillRect(
       ox + range * size + dirX,
       oy + range * size + dirY,
       2, 2
     );
+  }
+
+  drawEffects(player, effects) {
+    const ctx = this.bctx;
+    for (let i = 0; i < effects.length; i++) {
+      const fx = effects[i];
+      const dx = fx.x - player.x;
+      const dy = fx.y - player.y;
+      const dist = Math.sqrt(
+        dx * dx + dy * dy
+      );
+      if (dist > MAX_DEPTH || dist < 0.2) {
+        continue;
+      }
+
+      // Project to screen
+      const angle = Math.atan2(dy, dx);
+      let relA = angle - player.angle;
+      while (relA > Math.PI) {
+        relA -= 2 * Math.PI;
+      }
+      while (relA < -Math.PI) {
+        relA += 2 * Math.PI;
+      }
+      if (Math.abs(relA) > HALF_FOV + 0.3) {
+        continue;
+      }
+
+      const scrX = Math.floor(
+        (0.5 + relA / FOV) * SCREEN_W
+      );
+      const scrY = Math.floor(
+        SCREEN_H / 2 + player.pitch
+      );
+
+      if (fx.type === 'explosion') {
+        const prog = 1 - fx.timer
+          / fx.maxTimer;
+        const radius = Math.floor(
+          (30 + 60 * prog) / dist
+        );
+        const a = (1 - prog).toFixed(2);
+        // Outer ring
+        ctx.strokeStyle = 'rgba(255,150,0,'
+          + a + ')';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(
+          scrX, scrY,
+          radius, 0, Math.PI * 2
+        );
+        ctx.stroke();
+        // Inner flash
+        ctx.fillStyle = 'rgba(255,255,100,'
+          + (a * 0.6).toFixed(2) + ')';
+        ctx.beginPath();
+        ctx.arc(
+          scrX, scrY,
+          radius * 0.5, 0, Math.PI * 2
+        );
+        ctx.fill();
+        ctx.lineWidth = 1;
+      }
+    }
   }
 }
 
@@ -1166,14 +2029,45 @@ class GameEngine {
     this.mouseSensX = 0.003;
     this.mouseSensY = 1.5;
     this.pointerLocked = false;
+    this.effects = [];
+    this.sfxThrottle = {};
+    this.levelNeedsKey = false;
+    this.isBossLevel = false;
+    this.doorMessage = 0;
+    this.doorMessageText = '';
+    this.renderer.engine = this;
+  }
+
+  addEffect(type, x, y, duration) {
+    this.effects.push({
+      type, x, y,
+      timer: duration,
+      maxTimer: duration,
+    });
+  }
+
+  triggerSound(snd) {
+    const now = performance.now();
+    const last = this.sfxThrottle[snd] || 0;
+    if (now - last < 150) return;
+    this.sfxThrottle[snd] = now;
+    this.act('sfx', { s: snd });
   }
 
   loadLevel(staticData) {
+    const newLvl = staticData.level || 1;
+    // Preserve score when advancing
+    const prevScore = (
+      this.player
+      && newLvl > this.level
+    ) ? this.player.score : 0;
+
     this.map = new GameMap(staticData.map);
     this.renderer.map = this.map;
     this.player = new Player(
       staticData.player_start
     );
+    this.player.score = prevScore;
     // Snap player Z to floor at spawn point
     if (this.map.floorH) {
       const sp = staticData.player_start;
@@ -1185,8 +2079,10 @@ class GameEngine {
         );
     }
     this.entities = [];
+    this.effects = [];
     if (staticData.entities) {
-      for (let i = 0; i < staticData.entities.length;
+      for (let i = 0;
+        i < staticData.entities.length;
         i++) {
         const ed = staticData.entities[i];
         this.entities.push(
@@ -1194,10 +2090,13 @@ class GameEngine {
         );
       }
     }
-    this.level = staticData.level || 1;
+    this.level = newLvl;
     if (staticData.maxLevel) {
       this.maxLevel = staticData.maxLevel;
     }
+    this.levelNeedsKey = !!staticData.needsKey;
+    this.isBossLevel = !!staticData.isBossLevel;
+    this.doorMessage = 0;
   }
 
   start() {
@@ -1350,6 +2249,10 @@ class GameEngine {
     if (p.hurtFlash > 0) {
       p.hurtFlash -= dt;
     }
+    // Door message decay
+    if (this.doorMessage > 0) {
+      this.doorMessage -= dt;
+    }
 
     // Weapon switch
     if (this.keys[KEY_1]) p.weapon = 0;
@@ -1362,24 +2265,43 @@ class GameEngine {
     }
 
     // Update entities
-    for (let i = 0; i < this.entities.length; i++) {
-      this.entities[i].update(dt, p, this.map);
+    for (let i = 0; i < this.entities.length;
+      i++) {
+      this.entities[i].update(
+        dt, p, this.map, this
+      );
+    }
+
+    // Update effects
+    for (let i = this.effects.length - 1;
+      i >= 0; i--) {
+      this.effects[i].timer -= dt;
+      if (this.effects[i].timer <= 0) {
+        this.effects.splice(i, 1);
+      }
     }
 
     // Check pickup collisions
-    for (let i = 0; i < this.entities.length; i++) {
+    for (let i = 0; i < this.entities.length;
+      i++) {
       const e = this.entities[i];
       if (e.isEnemy || !e.alive) continue;
       const dx = e.x - p.x;
       const dy = e.y - p.y;
       if (dx * dx + dy * dy < 0.5) {
         e.alive = false;
+        this.triggerSound('pickup');
         if (e.type === 'pickup_health') {
-          p.hp = Math.min(p.hp + 25, p.maxHp);
+          p.hp = Math.min(
+            p.hp + 25, p.maxHp
+          );
           p.score += 50;
         } else if (e.type === 'pickup_ammo') {
           p.ammo += 15;
           p.score += 25;
+        } else if (e.type === 'pickup_key') {
+          p.hasKey = true;
+          p.score += 100;
         }
       }
     }
@@ -1407,7 +2329,6 @@ class GameEngine {
   }
 
   isNearExit(p) {
-    // Check cells around the player for exit
     const r = 0.6;
     const checks = [
       [Math.floor(p.x + r), Math.floor(p.y)],
@@ -1419,6 +2340,26 @@ class GameEngine {
       if (this.map.get(
         checks[i][0], checks[i][1]
       ) === 5) {
+        // Key lock check
+        if (this.levelNeedsKey
+          && !p.hasKey) {
+          this.doorMessage = 1.5;
+          this.doorMessageText
+            = 'FIND THE KEY!';
+          return false;
+        }
+        // Boss lock check
+        if (this.isBossLevel) {
+          const alive = this.entities.some(
+            e => e.isEnemy && e.alive
+          );
+          if (alive) {
+            this.doorMessage = 1.5;
+            this.doorMessageText
+              = 'DEFEAT THE BOSS!';
+            return false;
+          }
+        }
         return true;
       }
     }
@@ -1464,6 +2405,9 @@ class GameEngine {
 
     // Hitscan - cast ray and check enemies
     const spread = w[4];
+    this.triggerSound(
+      spread > 0 ? 'shotgun' : 'shoot'
+    );
     const shots = spread > 0 ? 5 : 1;
     const dmgPer = spread > 0
       ? w[1] : w[1];
@@ -1518,6 +2462,7 @@ class GameEngine {
         bestEnemy.takeDamage(dmgPer);
         if (!bestEnemy.alive) {
           p.score += 100;
+          this.triggerSound('kill');
         }
       }
     }
@@ -1539,9 +2484,32 @@ class GameEngine {
     }
 
     if (this.player && this.map) {
-      this.renderer.render(
-        this.player, this.map, this.entities
+      this.renderer.needsKeyDoor = (
+        this.levelNeedsKey
+        && !this.player.hasKey
       );
+      this.renderer.render(
+        this.player, this.map,
+        this.entities, this.effects
+      );
+      // Door locked message on screen
+      if (this.doorMessage > 0) {
+        const a = Math.min(
+          1, this.doorMessage
+        ).toFixed(2);
+        this.drawCenterText(
+          this.doorMessageText,
+          'rgba(255,60,60,' + a + ')',
+          12, -50
+        );
+        // Re-scale after overlay text
+        this.renderer.ctx
+          .imageSmoothingEnabled = false;
+        this.renderer.ctx.drawImage(
+          this.renderer.buf,
+          0, 0, CANVAS_W, CANVAS_H
+        );
+      }
     }
 
     // Overlay for non-playing states
@@ -1578,7 +2546,7 @@ class GameEngine {
         0, 0, SCREEN_W, SCREEN_H
       );
       this.drawCenterText(
-        'LEVEL ' + this.level + ' COMPLETE!',
+        'SECTOR ' + this.level + ' CLEARED!',
         '#44ff44', 14
       );
       this.drawCenterText(
@@ -1586,7 +2554,7 @@ class GameEngine {
         '#ffffff', 8, 20
       );
       this.drawCenterText(
-        'Press ENTER for next level',
+        'Press ENTER for next sector',
         '#aaaaaa', 8, 36
       );
       this.renderer.ctx.imageSmoothingEnabled
@@ -1604,7 +2572,8 @@ class GameEngine {
         0, 0, SCREEN_W, SCREEN_H
       );
       this.drawCenterText(
-        'YOU WIN!', '#ffff00', 18
+        'TRAINING COMPLETE!',
+        '#ffff00', 14
       );
       this.drawCenterText(
         'Final Score: ' + this.player.score,
@@ -1635,10 +2604,11 @@ class GameEngine {
       SCREEN_W - 20, SCREEN_H - 20);
 
     this.drawCenterText(
-      'SPACE SLAYER', '#cc4444', 20, -30
+      'R CORP HATCHERY',
+      '#ff6633', 18, -30
     );
     this.drawCenterText(
-      'A Nanotrasen Arcade Classic',
+      'Combat Training Simulation',
       '#888888', 7, -5
     );
     this.drawCenterText(
@@ -1657,11 +2627,29 @@ class GameEngine {
       'Press ENTER to Start',
       '#44ff44', 10, 63
     );
+    // Leaderboard
     this.drawCenterText(
-      'High Score: '
-        + (this.highScore || 0),
-      '#ffff44', 8, 80
+      '-- LEADERBOARD --',
+      '#ffaa44', 8, 72
     );
+    const lb = this.leaderboard || [];
+    if (lb.length === 0) {
+      this.drawCenterText(
+        'No scores yet',
+        '#666666', 7, 84
+      );
+    }
+    for (let i = 0; i < lb.length
+      && i < 5; i++) {
+      const e = lb[i];
+      const n = e.name || '???';
+      const s = e.score || 0;
+      const t = (i + 1) + '. '
+        + n.substring(0, 10) + ' ' + s;
+      this.drawCenterText(
+        t, '#ffff44', 7, 84 + i * 10
+      );
+    }
   }
 
   drawCenterText(text, color, size, yOff) {
@@ -1682,7 +2670,6 @@ class GameEngine {
     if (this.gameState === STATE_TITLE
       && code === KEY_ENTER) {
       this.gameState = STATE_PLAYING;
-      this.act('restart');
     }
 
     if (this.gameState === STATE_DEAD
@@ -1767,7 +2754,7 @@ class ArcadeFpsGame extends Component {
       canvas, this.props.act
     );
     this.engine.highScore
-      = this.props.data.high_score || 0;
+      = this.props.data.leaderboard || [];
 
     // Load level from static data
     const sd = this.props.data;
@@ -1804,7 +2791,7 @@ class ArcadeFpsGame extends Component {
     }
     if (sd) {
       this.engine.highScore
-        = sd.high_score || 0;
+        = sd.leaderboard || [];
     }
   }
 
