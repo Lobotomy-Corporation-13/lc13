@@ -127,7 +127,6 @@
 ////////////////////////////////////////////////////////////
 // THUMB SPIDER ARMOR SECTION.
 /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider
-	flags_inv = HIDEJUMPSUIT | HIDEGLOVES
 	icon = 'icons/obj/spider_house/thumb/thumb_spider_icon.dmi'
 	worn_icon = 'icons/obj/spider_house/thumb/thumb_spider_worn.dmi'
 
