@@ -953,7 +953,22 @@
 		to_chat(user, span_warning("The [src.name] is empty."))
 
 ////////////////////////////////////////////////////////////
-// THUMBAPPRENTICE WEAPONS - Subtypes of /obj/item/ego_weapon/city
+// THUMBAPPRENTICE WEAPONS
+// Both weapons have 4 evolution tiers. Attack speed is fixed; only force changes.
+// Katana: attack_speed = 1.0 | Greatsword: attack_speed = 1.5
+// DPS targets per tier: 22, 32, 44, 65
+
+/// Helper proc to find the partner apprentice weapon in the user's other hand
+/proc/find_apprentice_partner(obj/item/ego_weapon/city/source, mob/living/carbon/human/user)
+	if(!istype(user))
+		return null
+	for(var/obj/item/ego_weapon/city/W in user.held_items)
+		if(W == source)
+			continue
+		if(istype(W, /obj/item/ego_weapon/city/thumbapprentice_katana) || istype(W, /obj/item/ego_weapon/city/thumbapprentice_greatsword))
+			return W
+	return null
+
 /obj/item/ego_weapon/city/thumbapprentice_katana
 	name = "thumb apprentice katana"
 	desc = "A standard-issue katana given to apprentices of the Thumb. Simple but effective."
@@ -966,21 +981,77 @@
 	inhand_icon_state = "thumbapprentice_katana"
 	base_pixel_x = 8
 	base_pixel_y = 8
-	force = 40
+	force = 22
 	damtype = RED_DAMAGE
 	attack_speed = 1
 	attack_verb_continuous = list("slashes", "cuts", "strikes")
 	attack_verb_simple = list("slash", "cut", "strike")
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 80,
-							PRUDENCE_ATTRIBUTE = 60,
-							TEMPERANCE_ATTRIBUTE = 60,
-							JUSTICE_ATTRIBUTE = 60
+							FORTITUDE_ATTRIBUTE = 40,
+							PRUDENCE_ATTRIBUTE = 40,
+							TEMPERANCE_ATTRIBUTE = 40,
+							JUSTICE_ATTRIBUTE = 40
 							)
+	/// Current evolution tier (1-4)
+	var/tier = 1
+	/// Dual-wield: 0 = disabled, 1 = every hit, 2 = every 2nd hit
+	var/swing_threshold = 0
+	/// Tracks hits for dual-wield trigger
+	var/swing_count = 0
+	/// Whether this weapon is currently performing a dual-wield follow-up
+	var/busy_dual_strike = FALSE
 
 /obj/item/ego_weapon/city/thumbapprentice_katana/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/item_scaling, 1, 0.8, -12, -12)
+
+/obj/item/ego_weapon/city/thumbapprentice_katana/attack(mob/living/target, mob/living/carbon/human/user)
+	. = ..()
+	// Dual-wield follow-up
+	if(busy_dual_strike || !swing_threshold)
+		return
+	swing_count++
+	if(swing_count >= swing_threshold)
+		swing_count = 0
+		var/obj/item/ego_weapon/city/partner = find_apprentice_partner(src, user)
+		if(partner)
+			var/obj/item/ego_weapon/city/thumbapprentice_greatsword/gs = partner
+			if(istype(gs) && !gs.busy_dual_strike && (target in view(partner.reach, user)))
+				gs.busy_dual_strike = TRUE
+				var/original_force = gs.force
+				gs.force = round(original_force * 0.25)
+				playsound(gs.loc, gs.hitsound, 50, FALSE)
+				user.do_attack_animation(target, null, gs)
+				target.attacked_by(gs, user)
+				gs.force = original_force
+				gs.busy_dual_strike = FALSE
+				// Inflict 1 Duel Escalates on the follow-up hit
+				target.apply_duel_escalates(1, user)
+
+/// Sets the katana to a specific evolution tier. Updates force, requirements, and dual-wield threshold.
+/obj/item/ego_weapon/city/thumbapprentice_katana/proc/set_tier(new_tier)
+	tier = clamp(new_tier, 1, 4)
+	switch(tier)
+		if(1)
+			force = 22
+			desc = "A standard-issue katana given to apprentices of the Thumb. Simple but effective."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 40, PRUDENCE_ATTRIBUTE = 40, TEMPERANCE_ATTRIBUTE = 40, JUSTICE_ATTRIBUTE = 40)
+			swing_threshold = 0
+		if(2)
+			force = 32
+			desc = "A katana that has been honed through combat. Its edge grows sharper."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 60, PRUDENCE_ATTRIBUTE = 60, TEMPERANCE_ATTRIBUTE = 60, JUSTICE_ATTRIBUTE = 60)
+			swing_threshold = 2
+		if(3)
+			force = 44
+			desc = "A battle-tested katana. Its blade carries the weight of experience."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80, PRUDENCE_ATTRIBUTE = 80, TEMPERANCE_ATTRIBUTE = 80, JUSTICE_ATTRIBUTE = 80)
+			swing_threshold = 2
+		if(4)
+			force = 65
+			desc = "A katana that has reached its full potential. A weapon worthy of the Thumb."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 100, PRUDENCE_ATTRIBUTE = 100, TEMPERANCE_ATTRIBUTE = 100, JUSTICE_ATTRIBUTE = 100)
+			swing_threshold = 1
 
 /obj/item/ego_weapon/city/thumbapprentice_greatsword
 	name = "thumb apprentice greatsword"
@@ -994,21 +1065,77 @@
 	inhand_icon_state = "thumbapprentice_greatsword"
 	base_pixel_x = 8
 	base_pixel_y = 8
-	force = 55
+	force = 33
 	damtype = RED_DAMAGE
 	attack_speed = 1.5
 	attack_verb_continuous = list("cleaves", "smashes", "crushes")
 	attack_verb_simple = list("cleave", "smash", "crush")
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 80,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 60,
-							JUSTICE_ATTRIBUTE = 60
+							FORTITUDE_ATTRIBUTE = 40,
+							PRUDENCE_ATTRIBUTE = 40,
+							TEMPERANCE_ATTRIBUTE = 40,
+							JUSTICE_ATTRIBUTE = 40
 							)
+	/// Current evolution tier (1-4)
+	var/tier = 1
+	/// Dual-wield: 0 = disabled, 1 = every hit, 2 = every 2nd hit
+	var/swing_threshold = 0
+	/// Tracks hits for dual-wield trigger
+	var/swing_count = 0
+	/// Whether this weapon is currently performing a dual-wield follow-up
+	var/busy_dual_strike = FALSE
 
 /obj/item/ego_weapon/city/thumbapprentice_greatsword/Initialize(mapload)
 	. = ..()
 	AddElement(/datum/element/item_scaling, 1, 0.8, -12, -12)
+
+/obj/item/ego_weapon/city/thumbapprentice_greatsword/attack(mob/living/target, mob/living/carbon/human/user)
+	. = ..()
+	// Dual-wield follow-up
+	if(busy_dual_strike || !swing_threshold)
+		return
+	swing_count++
+	if(swing_count >= swing_threshold)
+		swing_count = 0
+		var/obj/item/ego_weapon/city/partner = find_apprentice_partner(src, user)
+		if(partner)
+			var/obj/item/ego_weapon/city/thumbapprentice_katana/kat = partner
+			if(istype(kat) && !kat.busy_dual_strike && (target in view(partner.reach, user)))
+				kat.busy_dual_strike = TRUE
+				var/original_force = kat.force
+				kat.force = round(original_force * 0.25)
+				playsound(kat.loc, kat.hitsound, 50, FALSE)
+				user.do_attack_animation(target, null, kat)
+				target.attacked_by(kat, user)
+				kat.force = original_force
+				kat.busy_dual_strike = FALSE
+				// Inflict 1 Duel Escalates on the follow-up hit
+				target.apply_duel_escalates(1, user)
+
+/// Sets the greatsword to a specific evolution tier. Updates force, requirements, and dual-wield threshold.
+/obj/item/ego_weapon/city/thumbapprentice_greatsword/proc/set_tier(new_tier)
+	tier = clamp(new_tier, 1, 4)
+	switch(tier)
+		if(1)
+			force = 33
+			desc = "A heavy greatsword entrusted to apprentices of the Thumb. What it lacks in speed, it makes up for in raw power."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 40, PRUDENCE_ATTRIBUTE = 40, TEMPERANCE_ATTRIBUTE = 40, JUSTICE_ATTRIBUTE = 40)
+			swing_threshold = 0
+		if(2)
+			force = 48
+			desc = "A greatsword that has been tempered through combat. Its weight feels more natural."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 60, PRUDENCE_ATTRIBUTE = 60, TEMPERANCE_ATTRIBUTE = 60, JUSTICE_ATTRIBUTE = 60)
+			swing_threshold = 2
+		if(3)
+			force = 66
+			desc = "A battle-tested greatsword. Each swing carries devastating force."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80, PRUDENCE_ATTRIBUTE = 80, TEMPERANCE_ATTRIBUTE = 80, JUSTICE_ATTRIBUTE = 80)
+			swing_threshold = 2
+		if(4)
+			force = 98
+			desc = "A greatsword that has reached its full potential. A weapon worthy of the Thumb."
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 100, PRUDENCE_ATTRIBUTE = 100, TEMPERANCE_ATTRIBUTE = 100, JUSTICE_ATTRIBUTE = 100)
+			swing_threshold = 1
 
 ////////////////////////////////////////////////////////////
 // ACCELERATION ROUNDS - Unique ammo for thumbfather weapons

@@ -4672,6 +4672,8 @@
 #include "ModularLobotomy\ring\ring_skills\schools\fauvist.dm"
 #include "ModularLobotomy\ring\ring_skills\schools\pointillist.dm"
 #include "ModularLobotomy\ring\structures\corporist_artwork.dm"
+#include "ModularLobotomy\thumb_spider\palermitan_base.dm"
+#include "ModularLobotomy\thumb_spider\palermitan_debug.dm"
 #include "ModularLobotomy\sigsystem\activators.dm"
 #include "ModularLobotomy\sigsystem\parts.dm"
 #include "ModularLobotomy\sigsystem\towers.dm"

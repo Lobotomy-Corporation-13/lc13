@@ -145,12 +145,39 @@
 
 /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice
 	name = "thumb apprentice armor"
-	desc = "Armor worn by an apprentice of the Thumb."
+	desc = "Armor worn by an apprentice of the Thumb. It seems to have room to grow."
 	icon_state = "thumb_apprentice"
-	armor = list(RED_DAMAGE = 30, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 40)
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 20)
 	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 80,
-							PRUDENCE_ATTRIBUTE = 80,
-							TEMPERANCE_ATTRIBUTE = 80,
-							JUSTICE_ATTRIBUTE = 80
+							FORTITUDE_ATTRIBUTE = 40,
+							PRUDENCE_ATTRIBUTE = 40,
+							TEMPERANCE_ATTRIBUTE = 40,
+							JUSTICE_ATTRIBUTE = 40
 							)
+	/// Current evolution tier (1-4)
+	var/tier = 1
+
+/// Sets the armor to a specific evolution tier. Updates armor values, requirements, name, and desc.
+/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/proc/set_tier(new_tier)
+	tier = clamp(new_tier, 1, 4)
+	switch(tier)
+		if(1) // 60 total, below soldato tier
+			name = "thumb apprentice armor"
+			desc = "Armor worn by an apprentice of the Thumb. It seems to have room to grow."
+			armor = getArmor(red = 20, white = 10, black = 10, pale = 20)
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 40, PRUDENCE_ATTRIBUTE = 40, TEMPERANCE_ATTRIBUTE = 40, JUSTICE_ATTRIBUTE = 40)
+		if(2) // 90 total, soldato tier
+			name = "thumb apprentice armor"
+			desc = "Armor worn by an apprentice of the Thumb. It has been tempered through experience."
+			armor = getArmor(red = 30, white = 20, black = 20, pale = 20)
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 60, PRUDENCE_ATTRIBUTE = 60, TEMPERANCE_ATTRIBUTE = 60, JUSTICE_ATTRIBUTE = 60)
+		if(3) // 130 total, capo tier
+			name = "thumb apprentice armor"
+			desc = "Armor worn by an apprentice of the Thumb. It has been battle-hardened."
+			armor = getArmor(red = 40, white = 30, black = 30, pale = 30)
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 80, PRUDENCE_ATTRIBUTE = 80, TEMPERANCE_ATTRIBUTE = 80, JUSTICE_ATTRIBUTE = 80)
+		if(4) // 210 total, sottocapo tier
+			name = "thumb apprentice armor"
+			desc = "Armor worn by an apprentice of the Thumb. It has reached its full potential."
+			armor = getArmor(red = 60, white = 50, black = 50, pale = 50)
+			attribute_requirements = list(FORTITUDE_ATTRIBUTE = 100, PRUDENCE_ATTRIBUTE = 100, TEMPERANCE_ATTRIBUTE = 100, JUSTICE_ATTRIBUTE = 100)

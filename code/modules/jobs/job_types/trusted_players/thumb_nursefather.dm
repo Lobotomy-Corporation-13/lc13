@@ -68,6 +68,7 @@
 	uniform = /obj/item/clothing/under/suit/charcoal
 	shoes = /obj/item/clothing/shoes/laceup
 	r_pocket = /obj/item/nursefather_phone
+	l_pocket = /obj/item/apprentice_recruitment/thumb_nursefather
 
 ////////////////////////////////////////////////////////////
 // NURSEFATHER PHONE - Ammo requisition device
@@ -126,3 +127,68 @@
 /obj/item/nursefather_phone/examine(mob/user)
 	. = ..()
 	. += span_notice("Use in-hand to order a box of acceleration propellant ammunition for <b>1500 ahn</b>.")
+
+////////////////////////////////////////////////////////////
+// THUMB APPRENTICE RECRUITMENT SCROLL
+/obj/item/apprentice_recruitment/thumb_nursefather
+	name = "thumb apprenticeship scroll"
+	desc = "A scroll that allows you to recruit an apprentice into the Thumb's spider house."
+
+/obj/item/apprentice_recruitment/thumb_nursefather/get_offer_text(mob/living/user)
+	return "[user] is offering to make you their Thumb Apprentice. Do you accept?"
+
+/obj/item/apprentice_recruitment/thumb_nursefather/get_offer_title()
+	return "Apprenticeship Offer"
+
+/obj/item/apprentice_recruitment/thumb_nursefather/recruit_apprentice(mob/living/carbon/human/H, mob/living/user)
+	// Set attributes to 40 all
+	H.set_attribute_limit(200)
+
+	var/datum/attribute/fort = H.attributes[FORTITUDE_ATTRIBUTE]
+	var/datum/attribute/prud = H.attributes[PRUDENCE_ATTRIBUTE]
+	var/datum/attribute/temp = H.attributes[TEMPERANCE_ATTRIBUTE]
+	var/datum/attribute/just = H.attributes[JUSTICE_ATTRIBUTE]
+
+	if(fort)
+		fort.level = 40
+		fort.on_update(H)
+	if(prud)
+		prud.level = 40
+		prud.on_update(H)
+	if(temp)
+		temp.level = 40
+		temp.on_update(H)
+	if(just)
+		just.level = 40
+		just.on_update(H)
+
+	// Give armor (tier 1)
+	var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/armor = new(H.loc)
+	H.put_in_hands(armor)
+
+	// Give weapons (tier 1)
+	var/obj/item/ego_weapon/city/thumbapprentice_katana/katana = new(H.loc)
+	H.put_in_hands(katana)
+	var/obj/item/ego_weapon/city/thumbapprentice_greatsword/greatsword = new(H.loc)
+	H.put_in_hands(greatsword)
+
+	// Update ID card
+	update_id_card(H, "Thumb Apprentice")
+
+	// Update mind role
+	if(H.mind)
+		H.mind.assigned_role = "Thumb Apprentice"
+
+	// Add traits
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, "thumb_apprentice")
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, "thumb_apprentice")
+
+	// Feedback
+	to_chat(user, span_notice("You have recruited [H] as your apprentice."))
+	playsound(get_turf(H), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
+
+	to_chat(H, span_userdanger("You have become a Thumb Apprentice!"))
+	to_chat(H, span_boldnotice("You are now an apprentice of [user], a former Sottocapo of the Thumb's spider house. \
+		You have been given a katana and greatsword, along with apprentice armor. \
+		Your gear will grow stronger as you do."))
+	to_chat(H, span_boldwarning("Follow the orders of your mentor. Act in the Thumb's interest."))
