@@ -121,13 +121,18 @@ GLOBAL_LIST_INIT(checkpoint_eyes, list(
 	day["timeLimit"] = 180
 
 	// Rules for display
-	var/list/rules = list("Check passport expiry")
+	var/list/rules = list(
+		"Check passport expiry date",
+		"Valid districts: 1-26 only",
+		"Today is 984-03-15"
+	)
 	var/list/banned = list()
 	var/list/stolen = list()
 	var/list/dupes = list()
 
 	if(day_num >= 2)
 		rules += "Visa required for all"
+		rules += "Visa name must match passport"
 	if(day_num >= 3)
 		rules += "Fixers need Hana license"
 		rules += "Fixer minimum age: 20"
@@ -188,7 +193,7 @@ GLOBAL_LIST_INIT(checkpoint_eyes, list(
 	)
 
 	// Decide if valid or has discrepancy
-	var/valid = prob(55 + (7 - day_num) * 3)
+	var/valid = prob(45 + (7 - day_num) * 2)
 	var/list/reasons = list()
 
 	// Build documents based on day
@@ -196,41 +201,45 @@ GLOBAL_LIST_INIT(checkpoint_eyes, list(
 
 	// Passport (always present)
 	var/passport_num = "NEP-[rand(100000, 999999)]"
-	var/passport_exp = valid ? "985-[rand(1,12)]-[rand(1,28)]" : null
+	var/passport_exp = "985-[rand(1,12)]-[rand(1,28)]"
 	var/p_name = full_name
 	var/p_district = district
 	var/p_hair = hair
 	var/p_eyes = eyes
 	var/p_prosth = prosth
 
-	if(!valid && !length(reasons))
-		var/disc = rand(1, 5)
+	if(!valid)
+		// Build list of possible discrepancies
+		var/list/possible = list("expired", "bad_district")
+		if(length(banned))
+			possible += "banned"
+		if(length(stolen) && day_num >= 5)
+			possible += "stolen"
+		if(day_num >= 6)
+			possible += "photo"
+		if(day_num >= 2)
+			possible += "visa_name"
+
+		var/disc = pick(possible)
 		switch(disc)
-			if(1)
-				// Expired passport
+			if("expired")
 				passport_exp = "983-[rand(1,12)]-[rand(1,28)]"
 				reasons += "Passport expired"
-			if(2)
-				// Banned district
-				if(length(banned))
-					p_district = pick(banned)
-					reasons += "Banned district"
-			if(3)
-				// Stolen passport
-				if(length(stolen) && day_num >= 5)
-					passport_num = pick(stolen)
-					reasons += "Stolen passport"
-			if(4)
-				// Photo mismatch
-				if(day_num >= 6)
-					p_hair = pick(GLOB.checkpoint_hair - hair)
-					reasons += "Photo mismatch"
-			if(5)
-				// Name mismatch on later doc
-				// handled below
-
-	if(!passport_exp)
-		passport_exp = "985-[rand(1,12)]-[rand(1,28)]"
+			if("bad_district")
+				p_district = pick(0, 27, 28, 30, 99)
+				reasons += "Invalid district"
+			if("banned")
+				p_district = pick(banned)
+				reasons += "Banned district"
+			if("stolen")
+				passport_num = pick(stolen)
+				reasons += "Stolen passport"
+			if("photo")
+				p_hair = pick(GLOB.checkpoint_hair - hair)
+				reasons += "Photo mismatch"
+			if("visa_name")
+				// handled in visa section below
+				valid = FALSE
 
 	docs += list(list(
 		"type" = "passport",

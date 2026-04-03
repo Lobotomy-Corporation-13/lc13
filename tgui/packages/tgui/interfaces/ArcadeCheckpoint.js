@@ -20,13 +20,13 @@ import {
 // Constants
 // =========================================
 
-const CW = 600;
-const CH = 400;
-const HUD_H = 24;
-const ACT_H = 40;
-const PAN_APP = 120;
-const PAN_DOC = 280;
-const PAN_RULE = 200;
+const CW = 780;
+const CH = 500;
+const HUD_H = 28;
+const ACT_H = 44;
+const PAN_APP = 150;
+const PAN_DOC = 350;
+const PAN_RULE = 280;
 
 const KEY_1 = 49;
 const KEY_2 = 50;
@@ -373,7 +373,7 @@ class CheckpointEngine {
     ctx.fillRect(0, 0, CW, HUD_H);
 
     ctx.fillStyle = '#fff';
-    ctx.font = '9px monospace';
+    ctx.font = '10px monospace';
     const d = this.days[this.currentDay];
     ctx.fillText(
       'DAY ' + d.day, 6, 15
@@ -493,7 +493,7 @@ class CheckpointEngine {
 
     // Gender label
     ctx.fillStyle = '#aaa';
-    ctx.font = '8px monospace';
+    ctx.font = '10px monospace';
     ctx.fillText(
       ap.gender === 'M' ? 'Male' : 'Female',
       x + 6, y + h - 20
@@ -501,7 +501,7 @@ class CheckpointEngine {
 
     // Name below
     ctx.fillStyle = '#ddd';
-    ctx.font = '8px monospace';
+    ctx.font = '10px monospace';
     const nm = this.currentApp.name;
     if (nm.length > 14) {
       ctx.fillText(
@@ -561,10 +561,10 @@ class CheckpointEngine {
     );
 
     // Render fields
-    ctx.font = '8px monospace';
+    ctx.font = '10px monospace';
     let ly = py + 32;
     const lx = px + 8;
-    const lh = 13;
+    const lh = 16;
 
     const field = (label, val) => {
       ctx.fillStyle = '#666';
@@ -626,7 +626,7 @@ class CheckpointEngine {
           lx, ly, 80, 16
         );
         ctx.fillStyle = '#fff';
-        ctx.font = '7px monospace';
+        ctx.font = '10px monospace';
         ctx.fillText(
           'K CORP APPROVED', lx + 4, ly + 11
         );
@@ -643,7 +643,7 @@ class CheckpointEngine {
         ctx.fillStyle = '#cc8844';
         ctx.fillRect(lx, ly, 90, 16);
         ctx.fillStyle = '#fff';
-        ctx.font = '7px monospace';
+        ctx.font = '10px monospace';
         ctx.fillText(
           'HANA ASSOCIATION', lx + 4,
           ly + 11
@@ -693,7 +693,7 @@ class CheckpointEngine {
         ctx.fillStyle = '#886644';
         ctx.fillRect(lx, ly, 80, 16);
         ctx.fillStyle = '#fff';
-        ctx.font = '7px monospace';
+        ctx.font = '10px monospace';
         ctx.fillText(
           'TRANSIT STAMP', lx + 6, ly + 11
         );
@@ -704,7 +704,7 @@ class CheckpointEngine {
 
     // Doc tabs at bottom of doc panel
     const tabY = y + h - 28;
-    ctx.font = '8px monospace';
+    ctx.font = '10px monospace';
     for (let i = 0; i < docs.length; i++) {
       const tx = x + 12 + i * 54;
       const sel = i === di;
@@ -741,10 +741,10 @@ class CheckpointEngine {
       x + 6, y + 13
     );
 
-    ctx.font = '7px monospace';
+    ctx.font = '10px monospace';
     let ly = y + 32;
     const lx = x + 8;
-    const lh = 11;
+    const lh = 14;
 
     const line = (text, color) => {
       ctx.fillStyle = color || '#ccc';
@@ -815,10 +815,10 @@ class CheckpointEngine {
     const d = this.days[this.currentDay];
     if (!d) return;
 
-    ctx.font = '7px monospace';
+    ctx.font = '10px monospace';
     let ly = y + 32;
     const lx = x + 6;
-    const lh = 11;
+    const lh = 14;
     const maxY = y + h - 8;
 
     // Rules
@@ -830,18 +830,18 @@ class CheckpointEngine {
       if (ly > maxY) break;
       ctx.fillStyle = '#ccc';
       const r = rules[i];
-      // Wrap long rules
-      if (r.length > 24) {
-        ctx.fillText(
-          r.substring(0, 24), lx, ly
-        );
-        ly += lh;
+      // Word-wrap to fit panel
+      const maxCh = Math.floor(
+        (w - 16) / 6
+      );
+      const lines = this.wordWrap(
+        r, maxCh
+      );
+      for (let li = 0;
+        li < lines.length; li++) {
         if (ly > maxY) break;
-        ctx.fillText(
-          ' ' + r.substring(24), lx, ly
-        );
-      } else {
-        ctx.fillText(r, lx, ly);
+        ctx.fillText(lines[li], lx, ly);
+        ly += lh;
       }
       ly += lh;
     }
@@ -928,7 +928,7 @@ class CheckpointEngine {
 
     // Doc nav + reference hint
     ctx.fillStyle = '#555';
-    ctx.font = '8px monospace';
+    ctx.font = '10px monospace';
     ctx.fillText(
       '[1-5] Docs [<>] Nav',
       280, y + 24
@@ -1064,6 +1064,28 @@ class CheckpointEngine {
       (CW - w) / 2,
       CH / 2 + (yOff || 0)
     );
+  }
+
+  wordWrap(text, maxCh) {
+    if (text.length <= maxCh) {
+      return [text];
+    }
+    const words = text.split(' ');
+    const lines = [];
+    let cur = '';
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      if (cur.length + w.length + 1
+        > maxCh && cur.length > 0) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = cur
+          ? cur + ' ' + w : w;
+      }
+    }
+    if (cur) lines.push(cur);
+    return lines;
   }
 
   fmtAhn(n) {
@@ -1270,6 +1292,8 @@ class ArcadeCheckpointGame extends Component {
           display: 'block',
           outline: 'none',
           cursor: 'default',
+          width: '100%',
+          height: '100%',
         }}
       />
     );
@@ -1283,7 +1307,8 @@ export const ArcadeCheckpoint = (
   return (
     <Window
       width={CW + 30}
-      height={CH + 50}>
+      height={CH + 50}
+      resizable>
       <Window.Content>
         <ArcadeCheckpointGame
           act={act}
