@@ -208,11 +208,11 @@
 	if(patrol_path.len)
 		if(!H.is_working)
 			return FALSE
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 	if(H.has_status_effect(MEMORY_DEBUFF))
 		//You have inflicted 100 damage to us. Get jabbed.
-		if(target_memory[the_target] <= 100)
+		if(target_memory[AddIdentifier(H)] <= 100)
 			return FALSE
 
 /mob/living/simple_animal/hostile/better_memories_minion/AttackingTarget(atom/attacked_target)
@@ -296,10 +296,12 @@
 			if(!P.firer)
 				if(target_memory["nobuddy"] > 100)
 					patrol_reset()
-			//If our damage value for that person exceeds this number then we consider targeting them.
-			if(target_memory[P.firer] > 100)
-				FindTarget(list(P.firer), 1)
-		return second_on_hit_state
+			if(isliving(P.firer))
+				var/mob/living/L = P.firer
+				//If our damage value for that person exceeds this number then we consider targeting them.
+				if(target_memory[AddIdentifier(L)] > 100)
+					FindTarget(list(L), 1)
+			return second_on_hit_state
 	return ..()
 
 /mob/living/simple_animal/hostile/better_memories_minion/attacked_by(obj/item/I, mob/living/L)

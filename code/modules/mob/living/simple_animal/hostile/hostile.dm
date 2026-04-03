@@ -21,6 +21,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/projectilesound
 	var/casingtype		//set ONLY it and NULLIFY projectiletype, if we have projectile IN CASING
 	var/move_to_delay = 3 //delay for the automated movement.
+	//Uses tags. If you respawn or change bodies who even are you?
 	var/list/friends = list()
 	var/list/emote_taunt = list()
 	var/taunt_chance = 0
@@ -145,8 +146,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 	SIGNAL_HANDLER
 	if (check_visible(user, crate) && stat != DEAD && !target)
 		addtimer(CALLBACK(src, PROC_REF(Theif_Talk)), 0)
-		if (!(user in glob_faction))
-			glob_faction += user
+		if (!(user.tag in glob_faction))
+			glob_faction += user.tag
 
 /mob/living/simple_animal/hostile/proc/Talk()
 	say(starting_looting_line)
@@ -163,36 +164,41 @@ GLOBAL_LIST_EMPTY(marked_players)
 	. = ..()
 	if(mark_once_attacked)
 		if(P.firer && get_dist(src, P.firer) <= aggro_vision_range)
-			if(!ishostile(P.firer))
-				if (!(P.firer in glob_faction))
-					glob_faction += P.firer
+			if(iscarbon(P.firer))
+				var/mob/living/carbon/C = P.firer
+				if (!(C.tag in glob_faction))
+					glob_faction += C.tag
 					say(attacked_line)
 
 	// Track damage for nuke rats achievement
 	if(glob_faction == GLOB.nuke_rats_players && P.firer && isliving(P.firer))
 		var/mob/living/L = P.firer
-		if(L.client && !(L in GLOB.nuke_rats_killers))
-			GLOB.nuke_rats_killers += L
+		if(L.client && !(L.tag in GLOB.nuke_rats_killers))
+			GLOB.nuke_rats_killers += L.tag
 
 /mob/living/simple_animal/hostile/attackby(obj/item/O, mob/user, params)
 	. = ..()
 	if(mark_once_attacked)
 		if(ishuman(user))
 			if (O.force > 0)
-				if (!(user in glob_faction ))
-					glob_faction += user
+				if (!(user.tag in glob_faction ))
+					glob_faction += user.tag
 					say(attacked_line)
 		else
-			if (!(user in glob_faction ))
-				glob_faction += user
+			if (!(user.tag in glob_faction ))
+				glob_faction += user.tag
 				say(attacked_line)
 
 	// Track damage for nuke rats achievement
-	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user in GLOB.nuke_rats_killers))
-		GLOB.nuke_rats_killers += user
+	if(glob_faction == GLOB.nuke_rats_players && user && user.client && !(user.tag in GLOB.nuke_rats_killers))
+		GLOB.nuke_rats_killers += user.tag
 
 /mob/living/simple_animal/hostile/Destroy()
+	target = null
 	targets_from = null
+	target_memory = null
+	friends = null
+	patrol_path = null
 	if(mark_once_attacked)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_STARTED)
 		UnregisterSignal(SSdcs, COMSIG_CRATE_LOOTING_ENDED)
@@ -210,9 +216,9 @@ GLOBAL_LIST_EMPTY(marked_players)
 
 		if(all_dead && GLOB.nuke_rats_killers.len)
 			// Award achievement to all players who participated in killing nuke rats
-			for(var/mob/living/L in GLOB.nuke_rats_killers)
-				if(L.client)
-					L.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, L)
+			for(var/mob/living/carbon/human/slayer in GLOB.player_list)
+				if(slayer.tag in GLOB.nuke_rats_killers && slayer.client)
+					slayer.client.give_award(/datum/award/achievement/lc13/city/nuke_rats_genocide, slayer)
 			// Clear the killers list after awarding
 			GLOB.nuke_rats_killers.Cut()
 
@@ -634,7 +640,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 				return FALSE
 
 			if(mark_once_attacked)
-				if (the_target in glob_faction)
+				if (L.tag in glob_faction)
 					return TRUE
 
 			var/faction_check = faction_check_mob(L)
@@ -643,7 +649,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 					return FALSE
 				if(L.stat > stat_attack)
 					return FALSE
-				if(L in friends)
+				if(AddIdentifier(L) in friends)
 					return FALSE
 			else
 				if((faction_check && !attack_same) || L.stat)
@@ -714,8 +720,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 /mob/living/simple_animal/hostile/proc/RegisterAggroValue(atom/remembered_target, value, damage_type)
 	if(!remembered_target || !damage_type)
 		return FALSE
-	if(!isnum(target_memory[remembered_target]))
-		target_memory += remembered_target
+	var/trg_tag = AddIdentifier(remembered_target)
+	if(!trg_tag)
+		return FALSE
+	if(!isnum(target_memory[trg_tag]))
+		target_memory += trg_tag
 
 	//could potentially add aggro as a mob armor type to also apply aggro damage coeff
 	//also could potentially check for remembered_target's aggro modifiers here such as from armor or status effects
@@ -726,11 +735,11 @@ GLOBAL_LIST_EMPTY(marked_players)
 			value *= aggro_stat_modifier
 	else
 		value *= damage_coeff.getCoeff(damage_type)
-	target_memory[remembered_target] += value
+	target_memory[trg_tag] += value
 
-	if(!QDELETED(target) && remembered_target != target && target_memory[remembered_target] > target_memory[target] + target_switch_resistance && CanAttack(remembered_target))
+	if(!QDELETED(target) && remembered_target != target && target_memory[trg_tag] > target_memory[AddIdentifier(target)] + target_switch_resistance && CanAttack(remembered_target))
 		GiveTarget(remembered_target)
-		target_memory[remembered_target] += value
+		target_memory[trg_tag] += value
 	return TRUE
 
 /*-------------------\
@@ -745,8 +754,10 @@ GLOBAL_LIST_EMPTY(marked_players)
 |Damage dealt +0 to +25
 \-------------------*/
 /mob/living/simple_animal/hostile/proc/ValueTarget(atom/target_thing)
-	if(!target_thing)
-		return
+	var/target_tag = AddIdentifier(target_thing)
+	if(!target_thing || !target_tag)
+		return 0
+
 	//This is a safety net just in the case that no value is returned.
 	. = 0
 
@@ -770,8 +781,8 @@ GLOBAL_LIST_EMPTY(marked_players)
 		. -= 60
 
 	//up to 25 points for damage taken from target_thing
-	if(target_memory[target_thing])
-		var/fraction_hp_lost_to_thing = min(target_memory[target_thing] / maxHealth, 1)
+	if(target_memory[target_tag])
+		var/fraction_hp_lost_to_thing = min(target_memory[target_tag] / maxHealth, 1)
 		. += fraction_hp_lost_to_thing * 25
 
 /mob/living/simple_animal/hostile/proc/GiveTarget(atom/new_target)
@@ -781,7 +792,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 			return
 		target_memory.Cut()
 		target = new_target
-		target_memory[target] = 0
+		target_memory[AddIdentifier(target)] = 0
 		GainPatience()
 		Aggro()
 		Goto(target, move_to_delay, minimum_distance)
@@ -1240,11 +1251,12 @@ GLOBAL_LIST_EMPTY(marked_players)
 	|UNCATAGORIZED PROCS|
 	\------------------*/
 
-/mob/living/simple_animal/hostile/tamed(whomst)
+/mob/living/simple_animal/hostile/tamed(mob/living/whomst)
 	. = ..()
-	if(isliving(whomst) && !locate(whomst) in friends)
+	var/tamed_tag = AddIdentifier(whomst)
+	if(isliving(whomst) && !(tamed_tag in friends))
 		var/mob/living/fren = whomst
-		friends += fren
+		LAZYOR(friends, tamed_tag)
 		faction = fren.faction.Copy()
 
 /mob/living/simple_animal/hostile/proc/summon_backup(distance, exact_faction_match)
