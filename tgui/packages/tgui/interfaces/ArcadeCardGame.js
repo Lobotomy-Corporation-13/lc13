@@ -90,6 +90,152 @@ const UPGRADES = {
     poisonAll: 6,
     desc: 'Apply 6 Poison to all.',
   },
+  // Liu upgrades
+  flame_slash: {
+    dmg: 10, desc: 'Deal 10 damage.',
+  },
+  liu_guard: {
+    blk: 8, desc: 'Gain 8 block.',
+  },
+  ignite: {
+    dmg: 5, burn: 4,
+    desc: 'Deal 5. Apply 4 Burn.',
+  },
+  inferno_swing: {
+    dmg: 16, burn: 3,
+    desc: 'Deal 16. Apply 3 Burn.',
+  },
+  blazing_rush: {
+    dmg: 7, desc: 'Deal 7 damage twice.',
+  },
+  flame_wall: {
+    blk: 14, burnAll: 3,
+    desc: 'Gain 14 block.\nBurn all 3.',
+  },
+  scorched_earth: {
+    burnAll: 6,
+    desc: 'Apply 6 Burn to all.',
+  },
+  war_cry: {
+    str: 3, desc: 'Gain 3 Strength.',
+  },
+  molten_armor: {
+    blk: 12, desc: 'Gain 12 block.',
+  },
+  eruption: {
+    dmg: 28, burn: 7,
+    desc: 'Deal 28. Apply 7 Burn.',
+  },
+  forge: {
+    blk: 5, str: 1,
+    desc: 'Gain 5 block, 1 Str.',
+  },
+  wildfire: {
+    dmg: 12, burnAll: 5,
+    desc: 'Deal 12. Burn all 5.',
+  },
+  // Shi upgrades
+  silent_blade: {
+    dmg: 8, desc: 'Deal 8 damage.',
+  },
+  fade: {
+    blk: 8, desc: 'Gain 8 block.',
+  },
+  needle_throw: {
+    needles: 3,
+    desc: 'Add 3 Needles to hand.',
+  },
+  mark_target: {
+    dmg: 4, poison: 5,
+    desc: 'Deal 4. Apply 5 Poison.',
+  },
+  throat_slit: {
+    dmg: 20, desc: 'Deal 20 damage.',
+  },
+  shadow_step: {
+    blk: 9, needles: 2,
+    desc: 'Gain 9 block.\nAdd 2 Needles.',
+  },
+  poison_vial: {
+    poisonAll: 5,
+    desc: 'Apply 5 Poison to all.',
+  },
+  fan_needles: {
+    needles: 6,
+    desc: 'Add 6 Needles to hand.',
+  },
+  vanish: {
+    blk: 18, desc: 'Gain 18 block.',
+  },
+  death_mark: {
+    dmg: 6, poison: 6,
+    desc: 'Deal 6. Apply 6 Poison.',
+  },
+  backstab: {
+    dmg: 12,
+    desc: 'Deal 12. Exhaust.',
+  },
+  envenom: {
+    poisonAll: 9,
+    desc: 'Apply 9 Poison to all.',
+  },
+  blade_flurry: {
+    dmg: 4, hits: 5,
+    desc: 'Deal 4 damage 5 times.',
+  },
+  // Blade Lineage upgrades
+  sword_draw: {
+    dmg: 9, desc: 'Deal 9 damage.',
+  },
+  deflect: {
+    blk: 8, desc: 'Gain 8 block.',
+  },
+  enter_striking: {
+    cost: 0,
+    desc: 'Enter Striking. (0 cost)',
+  },
+  enter_guarding: {
+    cost: 0,
+    desc: 'Enter Guarding. (0 cost)',
+  },
+  moonlight_slash: {
+    dmg: 22, desc: 'Deal 22 damage.',
+  },
+  cloud_step: {
+    blk: 11,
+    desc: 'Gain 11 block.\nEnter Flowing.',
+  },
+  blade_dance: {
+    dmg: 5, hits: 4,
+    desc: 'Deal 5 damage 4 times.',
+  },
+  whirlwind_cut: {
+    dmg: 12,
+    desc: 'Deal 12 to ALL enemies.',
+  },
+  meditation: {
+    blk: 7,
+    desc: 'Gain 7 block.\nEnter Guarding.',
+  },
+  focused_strike: {
+    dmg: 14,
+    desc: 'Deal 14. +6 in Striking.',
+  },
+  swift_blade: {
+    dmg: 7, desc: 'Deal 7 damage.',
+  },
+  inner_peace: {
+    light: 2,
+    desc: 'Enter Flowing.\nGain 2 Light.',
+  },
+  lotus_strike: {
+    dmg: 18,
+    desc: 'Deal 18.\nEnter Flowing.',
+  },
+  resolve: {
+    str: 3,
+    desc: 'Gain 3 Str.\nEnter Striking.',
+  },
 };
 
 // Event definitions
@@ -2002,10 +2148,25 @@ class CardEngine {
       ctx.fillStyle = bgClr;
       ctx.fillRect(dx, dy, w, h);
 
-      // Border
+      // Border (upgraded = gold shimmer)
+      const isUpg = key.indexOf('+') >= 0;
+      if (isUpg) {
+        // Gold double border for upgraded
+        const shimmer = Math.sin(
+          performance.now() * 0.003
+        );
+        const ga = 0.6 + shimmer * 0.4;
+        ctx.strokeStyle = 'rgba(255,204,68,'
+          + ga.toFixed(2) + ')';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(
+          dx - 1, dy - 1, w + 2, h + 2
+        );
+      }
       ctx.strokeStyle = sel
         ? '#ffcc44' : hov
-          ? '#ffffff' : '#555';
+          ? '#ffffff' : isUpg
+            ? '#aa8833' : '#555';
       ctx.lineWidth = sel || hov ? 2 : 1;
       ctx.strokeRect(dx, dy, w, h);
       ctx.lineWidth = 1;
