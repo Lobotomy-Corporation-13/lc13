@@ -17,11 +17,12 @@ GLOBAL_LIST_INIT(dungeon_enemy_sprites, list(
 	"steel_dawn" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "steel_dawn"),
 	"green_bot_big" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "green_bot_big"),
 	"indigo_noon" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "indigo_noon"),
-	"steel_noon" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "steel_noon")))
+	"steel_noon" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "steel_noon"),
+	"spider_minion" = list('ModularLobotomy/_Lobotomyicons/64x64.dmi', "spider_minion")))
 
 // Boss sprite definitions
 GLOBAL_LIST_INIT(dungeon_boss_sprites, list(
-	"pbird" = list('ModularLobotomy/_Lobotomyicons/32x32.dmi', "pbird_breach"),
+	"spider_bud" = list('ModularLobotomy/_Lobotomyicons/64x64.dmi', "spider_active"),
 	"big_bird" = list('ModularLobotomy/_Lobotomyicons/64x64.dmi', "big_bird"),
 	"nosferatu" = list('ModularLobotomy/_Lobotomyicons/32x48.dmi', "nosferatu")))
 
@@ -46,7 +47,7 @@ GLOBAL_LIST_INIT(dungeon_encounters_hard, list(
 
 // Miniboss pool (TETH/HE abnormalities)
 GLOBAL_LIST_INIT(dungeon_miniboss_pool, list(
-	"pbird"))
+	"spider_bud"))
 
 // Final boss pool (WAW abnormalities)
 GLOBAL_LIST_INIT(dungeon_boss_pool, list(

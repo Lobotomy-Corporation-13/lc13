@@ -462,165 +462,228 @@ const CHARACTERS = {
 // Enemy definitions
 // ==============================
 const ENEMIES = {
-  // --- Ordeal enemies ---
+  // --- Easy tier (Dawn ordeals) ---
   amber_bug: {
-    name: 'Amber Worm',
-    hp: 20,
-    speed: 3,
-    color: '#ccaa33',
+    name: 'Complete Food',
+    hp: 20, speed: 3, color: '#ccaa33',
     intents: [
-      { t: 'atk', v: 4 },
-      { t: 'atk', v: 4 },
-      { t: 'atk', v: 6 },
+      { t: 'atk', v: 4, name: 'Claw' },
+      { t: 'blk', v: 5, name: 'Burrow',
+        selfHeal: 3 },
+      { t: 'atk', v: 6, name: 'Emerge',
+        bleed: 2 },
     ],
     spriteKey: 'amber_bug',
   },
   crimson_clown: {
-    name: 'Crimson Clown',
-    hp: 28,
-    speed: 4,
-    color: '#cc3333',
+    name: 'Cheers for the Start',
+    hp: 28, speed: 4, color: '#cc3333',
     intents: [
-      { t: 'atk', v: 6 },
-      { t: 'blk', v: 5 },
-      { t: 'atk', v: 8 },
+      { t: 'atk', v: 6, name: 'Juggle' },
+      { t: 'debuf', v: 1,
+        name: 'Prank', stun: true },
+      { t: 'atk', v: 8, name: 'Finale' },
     ],
+    onDeath: { stressAll: 5 },
     spriteKey: 'crimson_clown',
   },
   green_bot: {
-    name: 'Green Bot',
-    hp: 24,
-    speed: 3,
-    color: '#33aa55',
+    name: 'Doubt',
+    hp: 24, speed: 3, color: '#33aa55',
     intents: [
-      { t: 'atk', v: 5 },
-      { t: 'heal', v: 6 },
-      { t: 'atk', v: 5 },
+      { t: 'atk', v: 5, name: 'Stab',
+        bleed: 1 },
+      { t: 'atk', v: 7,
+        name: 'Finish Off',
+        bonusLowHp: 4 },
+      { t: 'buff', v: 1, name: 'Scan' },
     ],
     spriteKey: 'green_bot',
   },
+  // --- Medium tier (Noon ordeals) ---
   crimson_noon: {
-    name: 'Crimson Noon',
-    hp: 40,
-    speed: 5,
-    color: '#aa2222',
+    name: 'Harmony of Skin',
+    hp: 40, speed: 5, color: '#aa2222',
     intents: [
-      { t: 'atk', v: 9 },
-      { t: 'atk', v: 9 },
-      { t: 'blk', v: 8 },
-      { t: 'atk', v: 12 },
+      { t: 'atk', v: 9, name: 'Slam' },
+      { t: 'atk', v: 9,
+        name: 'Tumorous Grip',
+        stress: 3 },
+      { t: 'blk', v: 8,
+        name: 'Shield Wall' },
+      { t: 'atk', v: 12, name: 'Frenzy',
+        vuln: 1 },
     ],
+    onDeath: { stressAll: 5 },
     spriteKey: 'crimson_noon',
   },
   indigo_dawn: {
     name: 'Indigo Scout',
-    hp: 35,
-    speed: 6,
-    color: '#4444bb',
+    hp: 35, speed: 6, color: '#4444bb',
     intents: [
-      { t: 'atk', v: 7 },
-      { t: 'atk', v: 7 },
-      { t: 'atk', v: 10 },
+      { t: 'atk', v: 7,
+        name: 'Quick Strike' },
+      { t: 'atk', v: 7, name: 'Devour',
+        selfHeal: 4 },
+      { t: 'atk', v: 10, name: 'Lunge',
+        mark: 1 },
     ],
     spriteKey: 'indigo_dawn',
   },
   steel_dawn: {
-    name: 'Steel Grunt',
-    hp: 38,
-    speed: 3,
-    color: '#888899',
+    name: 'G Corp Remnant',
+    hp: 38, speed: 3, color: '#888899',
     intents: [
-      { t: 'atk', v: 8 },
-      { t: 'blk', v: 10 },
-      { t: 'atk', v: 8 },
-      { t: 'buff', v: 2 },
+      { t: 'atk', v: 8,
+        name: 'Rifle Bash' },
+      { t: 'blk', v: 10,
+        name: 'Entrench', buff: 1 },
+      { t: 'atk', v: 6,
+        name: 'Suppressing Fire',
+        weak: 1 },
     ],
     spriteKey: 'steel_dawn',
   },
+  // --- Hard tier ---
   green_bot_big: {
-    name: 'Green Nurse',
-    hp: 45,
-    speed: 4,
-    color: '#22cc55',
+    name: 'Process of Understanding',
+    hp: 45, speed: 4, color: '#22cc55',
     intents: [
-      { t: 'heal', v: 10 },
-      { t: 'atk', v: 7 },
-      { t: 'heal', v: 8 },
+      { t: 'atk', v: 7,
+        name: 'Sawblade', bleed: 2 },
+      { t: 'atk', v: 4,
+        name: 'Rapid Fire', hits: 3 },
+      { t: 'heal', v: 10,
+        name: 'Field Repair' },
+      { t: 'blk', v: 6, name: 'Reload' },
     ],
     spriteKey: 'green_bot_big',
   },
   indigo_noon: {
-    name: 'Indigo Heavy',
-    hp: 50,
-    speed: 4,
-    color: '#3333aa',
+    name: 'Indigo Sweeper',
+    hp: 50, speed: 4, color: '#3333aa',
     intents: [
-      { t: 'atk', v: 10 },
-      { t: 'blk', v: 12 },
-      { t: 'atk', v: 14 },
-      { t: 'buff', v: 3 },
+      { t: 'atk', v: 10, name: 'Sweep',
+        stress: 2 },
+      { t: 'atk', v: 14, name: 'Consume',
+        selfHeal: 6 },
+      { t: 'blk', v: 12,
+        name: 'Armored Shell', buff: 2 },
+      { t: 'atk', v: 8, name: 'Extract',
+        mark: 1, stress: 3 },
     ],
     spriteKey: 'indigo_noon',
   },
   steel_noon: {
-    name: 'Steel Captain',
-    hp: 55,
-    speed: 5,
-    color: '#6677aa',
+    name: 'G Corp Corporal',
+    hp: 55, speed: 5, color: '#6677aa',
     intents: [
-      { t: 'atk', v: 12 },
-      { t: 'buff', v: 3 },
-      { t: 'atk', v: 15 },
-      { t: 'blk', v: 10 },
+      { t: 'atk', v: 12,
+        name: 'Power Strike' },
+      { t: 'buff', v: 3, name: 'Rally',
+        selfHeal: 5 },
+      { t: 'atk', v: 15,
+        name: 'Overcharge', stress: 2 },
+      { t: 'blk', v: 10,
+        name: 'Fortify' },
     ],
     spriteKey: 'steel_noon',
   },
-  // --- Boss enemies ---
-  pbird: {
-    name: 'Punishing Bird',
-    hp: 80,
-    speed: 8,
-    color: '#ff4444',
+  // --- Summoned minions ---
+  spiderling: {
+    name: 'Spiderling',
+    hp: 10, speed: 5, color: '#886644',
     intents: [
-      { t: 'atk', v: 8 },
-      { t: 'atk', v: 12 },
-      { t: 'atk', v: 8 },
-      { t: 'atk', v: 20 },
+      { t: 'atk', v: 3, name: 'Bite' },
+      { t: 'atk', v: 4, name: 'Bite' },
+    ],
+    summoned: true,
+    spriteKey: 'spider_minion',
+  },
+  bat: {
+    name: 'Vampire Bat',
+    hp: 8, speed: 6, color: '#553344',
+    intents: [
+      { t: 'atk', v: 3, name: 'Nibble' },
+      { t: 'atk', v: 4, name: 'Drain',
+        bleed: 1 },
+    ],
+    summoned: true,
+    spriteKey: null,
+  },
+  // --- Miniboss ---
+  spider_bud: {
+    name: 'Spider Bud',
+    hp: 80, speed: 3, color: '#886633',
+    intents: [
+      { t: 'debuf', v: 1,
+        name: 'Web Shot', stun: true },
+      { t: 'atk', v: 6,
+        name: 'Poison Fang', poison: 2 },
+      { t: 'summon', v: 0,
+        name: 'Spawn Brood',
+        summonKey: 'spiderling',
+        summonCount: 2 },
+      { t: 'blk', v: 10,
+        name: 'Cocoon' },
+    ],
+    spriteKey: 'spider_bud',
+  },
+  // --- Final bosses ---
+  big_bird: {
+    name: 'Big Bird',
+    hp: 120, speed: 5, color: '#ddaa22',
+    intents: [
+      { t: 'atk', v: 12, name: 'Peck' },
+      { t: 'atk', v: 8,
+        name: 'Wing Buffet',
+        weakAll: 1 },
+      { t: 'atk', v: 18,
+        name: 'Judgement', stress: 5 },
+      { t: 'special', v: 0,
+        name: 'Lamp Hypnosis',
+        stunCount: 2, stressV: 8 },
     ],
     phase2: {
       hpThreshold: 0.4,
       intents: [
-        { t: 'atk', v: 15 },
-        { t: 'atk', v: 20 },
-        { t: 'atk', v: 25 },
+        { t: 'atk', v: 16,
+          name: 'Frenzy Peck' },
+        { t: 'atk', v: 22,
+          name: 'Devour',
+          selfHeal: 10 },
+        { t: 'special', v: 0,
+          name: 'Lamp Hypnosis',
+          stunCount: 2, stressV: 10 },
+        { t: 'atk', v: 25,
+          name: 'Crushing Blow' },
       ],
     },
-    spriteKey: 'pbird',
-  },
-  big_bird: {
-    name: 'Big Bird',
-    hp: 120,
-    speed: 5,
-    color: '#ddaa22',
-    intents: [
-      { t: 'atk', v: 12 },
-      { t: 'blk', v: 15 },
-      { t: 'atk', v: 18 },
-      { t: 'special', v: 0 },
-    ],
     spriteKey: 'big_bird',
   },
   nosferatu: {
     name: 'Nosferatu',
-    hp: 110,
-    speed: 6,
-    color: '#882244',
+    hp: 110, speed: 6, color: '#882244',
+    bloodlust: true,
     intents: [
-      { t: 'atk', v: 10 },
-      { t: 'atk', v: 14 },
-      { t: 'heal', v: 12 },
-      { t: 'atk', v: 18 },
+      { t: 'atk', v: 10,
+        name: 'Blood Drain',
+        selfHeal: 5 },
+      { t: 'atk', v: 14,
+        name: 'Shadow Claw', bleed: 1 },
+      { t: 'summon', v: 0,
+        name: 'Summon Bats',
+        summonKey: 'bat',
+        summonCount: 1 },
+      { t: 'blk', v: 8,
+        name: 'Mist Form',
+        cleanse: true },
     ],
+    banquet: {
+      t: 'atk', v: 12,
+      name: 'Banquet',
+      hitAll: true, stress: 6,
+    },
     spriteKey: 'nosferatu',
   },
 };
@@ -1049,6 +1112,7 @@ class DungeonEngine {
       const e = fd[i];
       const def = ENEMIES[e.type];
       if (!def) continue;
+      const p2 = def.phase2 || null;
       this.enemies.push({
         type: e.type,
         name: def.name,
@@ -1058,17 +1122,21 @@ class DungeonEngine {
         str: 0,
         speed: def.speed,
         color: def.color,
-        intents: def.intents,
+        intents: def.intents.slice(),
         intIdx: 0,
         pos: i + 1,
         statuses: {},
         alive: true,
         isBoss: !!e.boss,
-        phase2: def.phase2 || null,
-        phase2hp: def.phase2hp || 0,
+        phase2: p2,
+        phase2hp: p2
+          ? p2.hpThreshold : 0,
         inPhase2: false,
         spriteKey: def.spriteKey
           || e.type,
+        spriteImg: null,
+        bloodlust: def.bloodlust
+          ? 0 : undefined,
       });
     }
     // Reset party block
@@ -1503,13 +1571,14 @@ class DungeonEngine {
         return;
       }
       if (eff.heal) {
-        const amt = this.rollDmg(
-          eff.heal.min || eff.heal,
-          eff.heal.max || eff.heal
-        );
-        ally.hp = Math.min(
-          ally.maxHp, ally.hp + amt
-        );
+        const hv = typeof eff.heal === 'object'
+          ? (eff.heal.v || 0) : eff.heal;
+        const amt = this.rollDmg(hv, hv);
+        if (ally.alive) {
+          ally.hp = Math.min(
+            ally.maxHp, ally.hp + amt
+          );
+        }
       }
       if (eff.healStress) {
         ally.stress = Math.max(
@@ -1571,59 +1640,197 @@ class DungeonEngine {
       this.nextTurn();
       return;
     }
-    const intent = e.intents[
-      e.intIdx % e.intents.length
-    ];
-    e.intIdx++;
+
+    // Nosferatu bloodlust check
+    let intent;
+    if (e.bloodlust !== undefined
+      && e.bloodlust >= 4
+      && ENEMIES[e.type]
+      && ENEMIES[e.type].banquet) {
+      intent = ENEMIES[e.type].banquet;
+      e.bloodlust = 0;
+    } else {
+      intent = e.intents[
+        e.intIdx % e.intents.length
+      ];
+      e.intIdx++;
+    }
+    // Increment bloodlust
+    if (e.bloodlust !== undefined) {
+      e.bloodlust++;
+    }
+
     this.state = GS_ANIM;
 
-    // Find target (alive party member)
-    let ti = -1;
+    // Show attack name bubble
+    if (intent.name) {
+      const bClr = {
+        atk: '#ff4444', blk: '#4488cc',
+        heal: '#44cc44', buff: '#ccaa44',
+        special: '#cc44cc',
+        debuf: '#cc44cc',
+        summon: '#cc8844',
+      };
+      this.atkBubble = {
+        text: intent.name,
+        clr: bClr[intent.t] || '#aaa',
+        t: 0, dur: 1.0,
+      };
+    }
+
+    // Find alive party members
+    const alive = [];
     for (let i = 0;
       i < this.party.length; i++) {
       if (this.party[i].alive) {
-        ti = i;
-        break;
+        alive.push(i);
       }
     }
-    if (ti < 0) {
+    if (!alive.length) {
       this.state = GS_DEFEAT;
       this.act('died');
       return;
     }
+    const ti = alive[
+      Math.floor(
+        Math.random() * alive.length
+      )
+    ];
 
     switch (intent.t) {
       case 'atk': {
-        // Pick random alive target
-        const alive = [];
-        for (let i = 0;
-          i < this.party.length; i++) {
-          if (this.party[i].alive) {
-            alive.push(i);
-          }
+        if (intent.hitAll) {
+          // AoE attack (Banquet)
+          this.startAttackAnim(
+            'enemy', ei, ti,
+            () => {
+              for (let i = 0;
+                i < this.party.length;
+                i++) {
+                if (this.party[i].alive) {
+                  this.resolveEnemyAtk(
+                    ei, i, intent.v
+                  );
+                  if (intent.stress) {
+                    this.addStress(
+                      this.party[i],
+                      intent.stress
+                    );
+                  }
+                }
+              }
+            }
+          );
+        } else {
+          const hits = intent.hits || 1;
+          this.startAttackAnim(
+            'enemy', ei, ti,
+            () => {
+              for (let h = 0;
+                h < hits; h++) {
+                let v = intent.v;
+                if (intent.bonusLowHp
+                  && this.party[ti].hp
+                  < this.party[ti].maxHp
+                    * 0.5) {
+                  v += intent.bonusLowHp;
+                }
+                this.resolveEnemyAtk(
+                  ei, ti, v
+                );
+              }
+              // Post-attack effects
+              const p = this.party[ti];
+              if (intent.bleed && p.alive) {
+                p.statuses.bleed
+                  = (p.statuses.bleed || 0)
+                    + intent.bleed;
+                if (!p.statuses.bleedV) {
+                  p.statuses.bleedV
+                    = intent.bleed;
+                }
+              }
+              if (intent.stress && p.alive) {
+                this.addStress(
+                  p, intent.stress
+                );
+              }
+              if (intent.mark && p.alive) {
+                p.statuses.mark
+                  = (p.statuses.mark || 0)
+                    + intent.mark;
+              }
+              if (intent.vuln && p.alive) {
+                p.statuses.vuln
+                  = (p.statuses.vuln || 0)
+                    + intent.vuln;
+              }
+              if (intent.weak && p.alive) {
+                p.statuses.weak
+                  = (p.statuses.weak || 0)
+                    + intent.weak;
+                p.statuses.weakV = 2;
+              }
+              if (intent.poison
+                && p.alive) {
+                p.statuses.poison
+                  = (p.statuses.poison || 0)
+                    + intent.poison;
+                p.statuses.poisonV
+                  = intent.poison;
+              }
+              if (intent.selfHeal) {
+                e.hp = Math.min(
+                  e.maxHp,
+                  e.hp + intent.selfHeal
+                );
+              }
+              // weakAll
+              if (intent.weakAll) {
+                for (let i = 0;
+                  i < this.party.length;
+                  i++) {
+                  if (this.party[i].alive) {
+                    this.party[i]
+                      .statuses.weak
+                      = (this.party[i]
+                        .statuses.weak
+                        || 0)
+                        + intent.weakAll;
+                    this.party[i]
+                      .statuses.weakV = 2;
+                  }
+                }
+              }
+            }
+          );
         }
-        ti = alive[
-          Math.floor(
-            Math.random() * alive.length
-          )
-        ];
-        this.startAttackAnim(
-          'enemy', ei, ti,
-          () => this.resolveEnemyAtk(
-            ei, ti, intent.v
-          )
-        );
         return;
       }
       case 'blk':
         e.block += intent.v;
+        if (intent.buff) e.str += intent.buff;
+        if (intent.selfHeal) {
+          e.hp = Math.min(
+            e.maxHp,
+            e.hp + intent.selfHeal
+          );
+        }
         this.act('sfx', { s: 'block' });
         break;
       case 'buff':
         e.str += intent.v;
+        if (intent.selfHeal) {
+          e.hp = Math.min(
+            e.maxHp,
+            e.hp + intent.selfHeal
+          );
+        }
         break;
       case 'heal': {
-        // Heal self or lowest HP ally
+        const hv = typeof intent.v
+          === 'object'
+          ? (intent.v.v || 0) : intent.v;
         let target = e;
         for (let i = 0;
           i < this.enemies.length; i++) {
@@ -1635,23 +1842,92 @@ class DungeonEngine {
         }
         target.hp = Math.min(
           target.maxHp,
-          target.hp + intent.v
+          target.hp + hv
         );
+        this.act('sfx', { s: 'heal' });
         break;
       }
-      case 'special':
-        // Boss special: dazzle all
-        for (let i = 0;
-          i < this.party.length; i++) {
-          if (this.party[i].alive) {
-            this.party[i].statuses.blind
-              = 2;
-            this.addStress(
-              this.party[i], 10
-            );
-          }
+      case 'debuf': {
+        // Apply debuff to random target
+        const p = this.party[ti];
+        if (intent.stun && p.alive) {
+          p.statuses.stun
+            = (p.statuses.stun || 0) + 1;
+        }
+        if (intent.stress && p.alive) {
+          this.addStress(
+            p, intent.stress
+          );
         }
         break;
+      }
+      case 'summon': {
+        // Spawn minions
+        const maxE = 4;
+        const aliveE = this.enemies
+          .filter(en => en.alive).length;
+        const count = Math.min(
+          intent.summonCount || 1,
+          maxE - aliveE
+        );
+        for (let s = 0; s < count; s++) {
+          const def = ENEMIES[
+            intent.summonKey
+          ];
+          if (!def) continue;
+          this.enemies.push({
+            type: intent.summonKey,
+            name: def.name,
+            hp: def.hp,
+            maxHp: def.hp,
+            alive: true,
+            block: 0,
+            str: 0,
+            speed: def.speed,
+            intents: def.intents,
+            intIdx: 0,
+            color: def.color,
+            spriteKey: def.spriteKey,
+            spriteImg: null,
+            statuses: {},
+            summoned: true,
+          });
+        }
+        this.act('sfx', { s: 'heal' });
+        break;
+      }
+      case 'special': {
+        // Boss specials
+        if (intent.stunCount) {
+          // Lamp Hypnosis
+          const targets = alive.slice();
+          for (let s = 0;
+            s < intent.stunCount
+            && targets.length > 0; s++) {
+            const ri = Math.floor(
+              Math.random()
+              * targets.length
+            );
+            const pi = targets.splice(
+              ri, 1
+            )[0];
+            this.party[pi].statuses.stun
+              = (this.party[pi]
+                .statuses.stun || 0) + 1;
+            if (intent.stressV) {
+              this.addStress(
+                this.party[pi],
+                intent.stressV
+              );
+            }
+          }
+        }
+        // Cleanse (Mist Form)
+        if (intent.cleanse) {
+          e.statuses = {};
+        }
+        break;
+      }
       default: break;
     }
 
@@ -1733,6 +2009,21 @@ class DungeonEngine {
       unit.hp = 0;
       unit.alive = false;
       this.score += 5;
+      // On-death effects
+      const def = ENEMIES[unit.type];
+      if (def && def.onDeath) {
+        if (def.onDeath.stressAll) {
+          for (let i = 0;
+            i < this.party.length; i++) {
+            if (this.party[i].alive) {
+              this.addStress(
+                this.party[i],
+                def.onDeath.stressAll
+              );
+            }
+          }
+        }
+      }
     }
   }
 
@@ -1896,6 +2187,14 @@ class DungeonEngine {
         this.floats.splice(i, 1);
       }
     }
+    // Attack name bubble decay
+    if (this.atkBubble) {
+      this.atkBubble.t += dt;
+      if (this.atkBubble.t
+        >= this.atkBubble.dur) {
+        this.atkBubble = null;
+      }
+    }
   }
 
   // ==================
@@ -1906,6 +2205,7 @@ class DungeonEngine {
     this.lastTime = performance.now();
     this.running = true;
     this.floats = [];
+    this.atkBubble = null;
     this.loop(this.lastTime);
   }
 
@@ -2509,6 +2809,35 @@ class DungeonEngine {
       10, 15
     );
 
+    // Attack name bubble
+    if (this.atkBubble) {
+      const ab = this.atkBubble;
+      const prog = ab.t / ab.dur;
+      let alpha = 1;
+      if (prog < 0.15) {
+        alpha = prog / 0.15;
+      } else if (prog > 0.8) {
+        alpha = (1 - prog) / 0.2;
+      }
+      ctx.globalAlpha = Math.max(
+        0, alpha
+      );
+      ctx.fillStyle = '#111';
+      ctx.fillRect(
+        CW / 2 - 80, 26, 160, 22
+      );
+      ctx.fillStyle = ab.clr;
+      ctx.font = 'bold 12px monospace';
+      const tw = ctx.measureText(
+        ab.text
+      ).width;
+      ctx.fillText(
+        ab.text,
+        CW / 2 - tw / 2, 42
+      );
+      ctx.globalAlpha = 1;
+    }
+
     // === HORIZONTAL LAYOUT ===
     // Party on left, enemies on right
     const rowY = 170;
@@ -2631,8 +2960,11 @@ class DungeonEngine {
       }
 
       // Sprite body
+      if (!p.alive) {
+        ctx.globalAlpha = 0.4;
+      }
       ctx.fillStyle = p.alive
-        ? p.color : '#333';
+        ? p.color : '#444';
       // Head
       ctx.beginPath();
       ctx.arc(
@@ -2654,6 +2986,9 @@ class DungeonEngine {
         ux + unitW / 2 + 1,
         uy + 38, 5, 12
       );
+      if (!p.alive) {
+        ctx.globalAlpha = 1;
+      }
 
       // Active turn glow
       if (this.activeUnit
@@ -2694,21 +3029,56 @@ class DungeonEngine {
         uy + 62
       );
 
-      // HP bar
+      // HP bar / downed indicator
       const barW = unitW - 4;
-      ctx.fillStyle = '#333';
-      ctx.fillRect(
-        ux + 2, uy + 66, barW, 5
-      );
-      const hpF = p.hp / p.maxHp;
-      ctx.fillStyle = hpF > 0.5
-        ? '#44aa44' : '#cc4444';
-      ctx.fillRect(
-        ux + 2, uy + 66,
-        barW * hpF, 5
-      );
+      if (!p.alive) {
+        // DOWNED overlay
+        ctx.fillStyle = '#cc2222';
+        ctx.font = 'bold 9px monospace';
+        const dw = ctx.measureText(
+          'DOWNED'
+        ).width;
+        ctx.fillText(
+          'DOWNED',
+          ux + (unitW - dw) / 2,
+          uy + 70
+        );
+        // Red X over sprite
+        ctx.strokeStyle = '#cc2222';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(
+          ux + unitW / 2 - 12, uy + 2
+        );
+        ctx.lineTo(
+          ux + unitW / 2 + 12, uy + 46
+        );
+        ctx.moveTo(
+          ux + unitW / 2 + 12, uy + 2
+        );
+        ctx.lineTo(
+          ux + unitW / 2 - 12, uy + 46
+        );
+        ctx.stroke();
+        ctx.lineWidth = 1;
+      } else {
+        ctx.fillStyle = '#333';
+        ctx.fillRect(
+          ux + 2, uy + 66, barW, 5
+        );
+        const hpF = p.hp / p.maxHp;
+        ctx.fillStyle = hpF > 0.5
+          ? '#44aa44' : '#cc4444';
+        ctx.fillRect(
+          ux + 2, uy + 66,
+          barW * hpF, 5
+        );
+      }
 
-      // Stress bar
+      // Stress bar (alive only)
+      if (!p.alive) {
+        // skip stress bar for downed
+      } else {
       ctx.fillStyle = '#222';
       ctx.fillRect(
         ux + 2, uy + 72, barW, 3
@@ -2722,6 +3092,7 @@ class DungeonEngine {
         ux + 2, uy + 72,
         barW * stF, 3
       );
+      } // end alive else block
 
       // Block
       if (p.block > 0) {
@@ -2899,9 +3270,17 @@ class DungeonEngine {
       );
 
       // Intent below
-      const intent = e.intents[
-        e.intIdx % e.intents.length
-      ];
+      let intent;
+      if (e.bloodlust !== undefined
+        && e.bloodlust >= 4
+        && ENEMIES[e.type]
+        && ENEMIES[e.type].banquet) {
+        intent = ENEMIES[e.type].banquet;
+      } else {
+        intent = e.intents[
+          e.intIdx % e.intents.length
+        ];
+      }
       this.renderIntent(
         ux + 4, uy + 74, intent, e
       );
@@ -2927,6 +3306,17 @@ class DungeonEngine {
         ctx.fillStyle = '#ff44ff';
         ctx.fillText(
           'MRK', stx2, uy + 82
+        );
+      }
+
+      // Bloodlust counter (Nosferatu)
+      if (e.bloodlust !== undefined) {
+        ctx.fillStyle = '#aa2244';
+        ctx.font = '6px monospace';
+        ctx.fillText(
+          'Blood: '
+            + e.bloodlust + '/4',
+          ux, uy + 88
         );
       }
 
@@ -2993,37 +3383,58 @@ class DungeonEngine {
     const ctx = this.ctx;
     ctx.font = '7px monospace';
     if (!intent) return;
+    const nm = intent.name || '';
+    const clrs = {
+      atk: '#ff4444', blk: '#4488cc',
+      buff: '#ffaa44', heal: '#44cc44',
+      special: '#cc44cc',
+      debuf: '#cc44cc',
+      summon: '#cc8844',
+    };
+    ctx.fillStyle = clrs[intent.t]
+      || '#aaa';
     switch (intent.t) {
       case 'atk': {
         let d = intent.v + (e.str || 0);
-        ctx.fillStyle = '#ff4444';
+        const h = intent.hits
+          ? 'x' + intent.hits : '';
         ctx.fillText(
-          'ATK ' + d, x, y
+          (nm || 'ATK') + ' '
+            + d + h, x, y
         );
         break;
       }
       case 'blk':
-        ctx.fillStyle = '#4488cc';
         ctx.fillText(
-          'SHIELD ' + intent.v, x, y
+          (nm || 'SHIELD') + ' '
+            + intent.v, x, y
         );
         break;
       case 'buff':
-        ctx.fillStyle = '#ffaa44';
         ctx.fillText(
-          'BUFF +' + intent.v, x, y
+          (nm || 'BUFF') + ' +'
+            + intent.v, x, y
         );
         break;
       case 'heal':
-        ctx.fillStyle = '#44cc44';
         ctx.fillText(
-          'HEAL ' + intent.v, x, y
+          (nm || 'HEAL') + ' '
+            + intent.v, x, y
+        );
+        break;
+      case 'debuf':
+        ctx.fillText(
+          nm || 'DEBUFF', x, y
+        );
+        break;
+      case 'summon':
+        ctx.fillText(
+          nm || 'SUMMON', x, y
         );
         break;
       case 'special':
-        ctx.fillStyle = '#cc44cc';
         ctx.fillText(
-          'SPECIAL', x, y
+          nm || 'SPECIAL', x, y
         );
         break;
       default: break;
