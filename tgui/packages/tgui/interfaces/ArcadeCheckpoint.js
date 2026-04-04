@@ -48,6 +48,7 @@ const GS_RESULT = 3;
 const GS_DAY_END = 4;
 const GS_GAMEOVER = 5;
 const GS_WIN = 6;
+const GS_NAMEENTRY = 7;
 
 // Economy
 const PAY_CORRECT = 50000;
@@ -110,6 +111,8 @@ class CheckpointEngine {
     this.correct = 0;
     this.totalProcessed = 0;
     this.leaderboard = 0;
+    this.entryName = '';
+    this.nameDone = false;
     this.resultTimer = 0;
     this.resultText = '';
     this.resultColor = '';
@@ -274,6 +277,9 @@ class CheckpointEngine {
       case GS_WIN:
         this.renderWin();
         break;
+      case GS_NAMEENTRY:
+        this.renderNameEntry();
+        break;
       default:
         break;
     }
@@ -282,53 +288,53 @@ class CheckpointEngine {
   renderTitle() {
     const ctx = this.ctx;
     ctx.strokeStyle = CE;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(10, 10, CW - 20, CH - 20);
 
     this.cText(
-      'K CORP CHECKPOINT', CE, 18, -70
+      'K CORP CHECKPOINT', CE, 36, -130
     );
     this.cText(
       'District 11 Immigration',
-      '#888', 9, -46
+      '#888', 16, -94
     );
     this.cText(
       'Process documents.',
-      '#aaa', 9, -20
+      '#aaa', 16, -56
     );
     this.cText(
       'Spot discrepancies.',
-      '#aaa', 9, -8
+      '#aaa', 16, -34
     );
     this.cText(
       'Stamp APPROVED or DENIED.',
-      '#aaa', 9, 4
+      '#aaa', 16, -12
     );
     this.cText(
       'A = Approve  D = Deny',
-      '#ccc', 8, 28
+      '#ccc', 14, 22
     );
     this.cText(
       '1-5 = Switch docs',
-      '#ccc', 8, 40
+      '#ccc', 14, 44
     );
     this.cText(
       'Earn Ahn. Pay rent. Survive.',
-      '#ffcc44', 8, 60
+      '#ffcc44', 14, 74
     );
     this.cText(
       'Press ENTER to Start',
-      '#44ff44', 10, 90
+      '#44ff44', 20, 110
     );
     // Leaderboard
     this.cText(
       '-- LEADERBOARD --',
-      '#ffaa44', 8, 104
+      '#ffaa44', 14, 140
     );
     const lb = this.leaderboard || [];
     if (lb.length === 0) {
       this.cText(
-        'No scores yet', '#666', 7, 116
+        'No scores yet', '#666', 12, 162
       );
     }
     for (let i = 0; i < lb.length
@@ -340,7 +346,7 @@ class CheckpointEngine {
       const t = (i + 1) + '. '
         + n + ' ' + s;
       this.cText(
-        t, '#ffff44', 7, 116 + i * 10
+        t, '#ffff44', 12, 162 + i * 17
       );
     }
   }
@@ -1054,6 +1060,79 @@ class CheckpointEngine {
     );
   }
 
+  renderNameEntry() {
+    const ctx = this.ctx;
+    this.cText(
+      'YOU WIN!', '#ffcc44', 20, -100
+    );
+    this.cText(
+      'Score: '
+        + this.fmtAhn(this.ahn) + ' Ahn',
+      '#fff', 14, -70
+    );
+    this.cText(
+      'ENTER YOUR NAME',
+      '#aaa', 12, -30
+    );
+    const boxW = 28;
+    const boxH = 32;
+    const gap = 6;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (CW - totalW) / 2;
+    const sy = CH / 2 - 4;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 22
+        );
+      }
+    }
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 8, sy + boxH - 4, 12, 2
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.cText(
+        'Press R to play again',
+        '#aaa', 9, 60
+      );
+    } else {
+      this.cText(
+        'Type A-Z then ENTER',
+        '#888', 9, 60
+      );
+    }
+  }
+
   cText(text, color, size, yOff) {
     const ctx = this.ctx;
     ctx.fillStyle = color;
@@ -1152,13 +1231,44 @@ class CheckpointEngine {
         this.currentDay
         >= this.days.length - 1
       ) {
-        this.state = GS_WIN;
-        this.act('submit_score', {
-          score: Math.max(0, this.ahn),
-        });
+        this.entryName = '';
+        this.nameDone = false;
+        this.state = GS_NAMEENTRY;
       } else {
         this.startDay(this.currentDay + 1);
       }
+    }
+
+    // Name entry input
+    if (this.state === GS_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.state = GS_TITLE;
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.nameDone = true;
+        this.act('submit_score', {
+          score: Math.max(0, this.ahn),
+          name: this.entryName || 'ANON',
+        });
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
     }
 
     if ((this.state === GS_GAMEOVER

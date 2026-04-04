@@ -48,6 +48,7 @@ const GS_PLAYING = 1;
 const GS_DEAD = 2;
 const GS_WIN = 3;
 const GS_ROUND_CLEAR = 4;
+const GS_NAMEENTRY = 5;
 
 const BASE_SPEED = 90;
 const PLAYER_R = 6;
@@ -111,6 +112,10 @@ class DeliveryEngine {
 
     // High score
     this.leaderboard = 0;
+
+    // Name entry
+    this.entryName = '';
+    this.nameDone = false;
 
     // Bonus pickups (Ahn on the ground)
     this.bonuses = [];
@@ -779,6 +784,10 @@ class DeliveryEngine {
         '#aaaaaa', 9, 40
       );
     }
+
+    if (this.state === GS_NAMEENTRY) {
+      this.renderNameEntry();
+    }
   }
 
   renderHUD() {
@@ -846,58 +855,58 @@ class DeliveryEngine {
     const ctx = this.ctx;
 
     ctx.strokeStyle = '#aa44ff';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(
       10, 10, CANVAS_W - 20, CANVAS_H - 20
     );
 
     this.centerText(
-      'DELIVERY DASH', '#aa44ff', 16, -60
+      'DELIVERY DASH', '#aa44ff', 28, -90
     );
     this.centerText(
       'Devyat\' Association',
-      '#888888', 9, -38
+      '#888888', 14, -60
     );
     this.centerText(
       'Deliver packages before',
-      '#aaaaaa', 9, -14
+      '#aaaaaa', 13, -32
     );
     this.centerText(
       'the Poludnitsa trunk',
-      '#aaaaaa', 9, -2
+      '#aaaaaa', 13, -16
     );
     this.centerText(
-      'explodes!', '#ff6644', 9, 10
+      'explodes!', '#ff6644', 13, 0
     );
     this.centerText(
       'Low time = faster speed',
-      '#ffaa44', 8, 30
+      '#ffaa44', 12, 24
     );
     this.centerText(
       'Avoid Syndicate thugs',
-      '#cc4444', 8, 42
+      '#cc4444', 12, 40
     );
     this.centerText(
       'Collect Ahn for bonus',
-      '#ffcc00', 8, 54
+      '#ffcc00', 12, 56
     );
     this.centerText(
       'WASD/Arrows to move',
-      '#aaaaaa', 8, 74
+      '#aaaaaa', 12, 78
     );
     this.centerText(
       'Press ENTER to Start',
-      '#44ff44', 10, 96
+      '#44ff44', 17, 102
     );
     // Leaderboard
     this.centerText(
       '-- LEADERBOARD --',
-      '#ffaa44', 8, 108
+      '#ffaa44', 12, 122
     );
     const lb = this.leaderboard || [];
     if (lb.length === 0) {
       this.centerText(
-        'No scores yet', '#666', 7, 120
+        'No scores yet', '#666', 11, 140
       );
     }
     for (let i = 0; i < lb.length
@@ -908,7 +917,81 @@ class DeliveryEngine {
       const t = (i + 1) + '. '
         + n + ' ' + (e.score || 0);
       this.centerText(
-        t, '#ffff44', 7, 120 + i * 10
+        t, '#ffff44', 11, 140 + i * 15
+      );
+    }
+  }
+
+  renderNameEntry() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+    this.centerText(
+      'YOU WIN!', '#ffcc44', 20, -80
+    );
+    this.centerText(
+      'Score: ' + this.score,
+      '#fff', 14, -52
+    );
+    this.centerText(
+      'ENTER YOUR NAME',
+      '#aaa', 12, -20
+    );
+    const boxW = 28;
+    const boxH = 32;
+    const gap = 6;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (CANVAS_W - totalW) / 2;
+    const sy = CANVAS_H / 2 + 4;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 22
+        );
+      }
+    }
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 8, sy + boxH - 4, 12, 2
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.centerText(
+        'Press R to play again',
+        '#aaa', 9, 60
+      );
+    } else {
+      this.centerText(
+        'Type A-Z then ENTER',
+        '#888', 9, 60
       );
     }
   }
@@ -940,15 +1023,46 @@ class DeliveryEngine {
       const nextRound = this.round + 1;
       if (nextRound >= this.maps.length * 2) {
         // Beat all rounds
-        this.state = GS_WIN;
         this.score += 500;
-        this.act('submit_score', {
-          score: this.score,
-        });
+        this.entryName = '';
+        this.nameDone = false;
+        this.state = GS_NAMEENTRY;
       } else {
         this.state = GS_PLAYING;
         this.startRound(nextRound);
       }
+    }
+
+    // Name entry input
+    if (this.state === GS_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.state = GS_TITLE;
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.nameDone = true;
+        this.act('submit_score', {
+          score: this.score,
+          name: this.entryName || 'ANON',
+        });
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
     }
 
     if ((this.state === GS_DEAD

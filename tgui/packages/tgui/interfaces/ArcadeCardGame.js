@@ -41,6 +41,7 @@ const GS_REST = 9;
 const GS_SHOP = 10;
 const GS_EVENT = 11;
 const GS_CHARSEL = 12;
+const GS_NAMEENTRY = 13;
 const NUM_ROWS = 12;
 
 // Card upgrade bonuses
@@ -282,6 +283,7 @@ const EVENTS = {
 const KEY_ENTER = 13;
 const KEY_R = 82;
 const KEY_ESC = 27;
+const KEY_D = 68;
 
 // Card definitions: key -> data
 const CARDS = {
@@ -872,9 +874,15 @@ class CardEngine {
     this.eventSel = 0;
     this.upgradeSel = 0;
     this.upgradeMode = false;
+    this.shopRemoveMode = false;
+    this.shopRemoveScroll = 0;
 
     // Leaderboard
     this.leaderboard = [];
+
+    // Name entry
+    this.entryName = '';
+    this.nameDone = false;
 
     // Mouse
     this.mx = 0;
@@ -950,6 +958,8 @@ class CardEngine {
       this.state = GS_REST;
     } else if (ntype === 'shop') {
       this.shopSel = 0;
+      this.shopRemoveMode = false;
+      this.shopRemoveScroll = 0;
       this.state = GS_SHOP;
     } else if (ntype === 'event') {
       this.eventSel = -1;
@@ -993,6 +1003,7 @@ class CardEngine {
     this.discardPile = [];
     this.hand = [];
     this.firstCard = true;
+    this.turnStance = this.stance;
     this.startTurn();
   }
 
@@ -1011,78 +1022,12 @@ class CardEngine {
       if (this.vuln > 0) this.vuln--;
       else if (this.weak > 0) this.weak--;
     }
-    // Tick enemy statuses
-    for (let i = 0;
-      i < this.enemies.length; i++) {
-      const e = this.enemies[i];
-      if (e.hp <= 0) continue;
-      if (e.poison > 0) {
-        e.hp -= e.poison;
-        e.poison--;
-        this.addAnim(
-          'dmg', this.enemyX(i),
-          100, e.poison + 1, '#44cc44'
-        );
-        if (e.hp <= 0) {
-          this.score += 20;
-        }
-      }
-      if (e.vuln > 0) e.vuln--;
-      if (e.weak > 0) e.weak--;
-      e.block = 0;
-      // Boss phase check
-      if (e.phase2 && !e.inPhase2
-        && e.hp <= e.maxHp * e.phase2hp) {
-        e.inPhase2 = true;
-        e.intents = e.phase2;
-        e.intIdx = 0;
-      }
-    }
-    // Check if poison killed all enemies
-    const allDead = !this.enemies.some(
-      e => e.hp > 0
-    );
-    if (allDead) {
-      this.checkCombatEnd();
-      return;
-    }
-    // Burn ticking (like poison)
-    for (let i = 0;
-      i < this.enemies.length; i++) {
-      const e = this.enemies[i];
-      if (e.hp <= 0) continue;
-      if (e.burn > 0) {
-        e.hp -= e.burn;
-        e.burn--;
-        this.addAnim(
-          'dmg', this.enemyX(i),
-          100, e.burn + 1, '#ff6633'
-        );
-        if (e.hp <= 0) this.score += 20;
-      }
-    }
-    // Liu burn self-damage
-    if (this.charKey === 'liu') {
-      const totalBurn = this.enemies
-        .reduce(
-          (s, e) => s + (e.burn || 0), 0
-        );
-      if (totalBurn > 0) {
-        this.hp -= 1;
-      }
-    }
-    // Re-check deaths after burn
-    const allDead2 = !this.enemies.some(
-      e => e.hp > 0
-    );
-    if (allDead2) {
-      this.checkCombatEnd();
-      return;
-    }
     // Blade Lineage: guarding gives block
     if (this.stance === 'guarding') {
       this.block += 4;
     }
+    // Lock stance for incoming damage calc
+    this.turnStance = this.stance;
     this.turnNum++;
     this.firstCard = true;
     // Draw cards
@@ -1187,27 +1132,32 @@ class CardEngine {
         if (!target
           || target.hp <= 0) return;
         const hits = card.hits || 1;
-        for (let h = 0; h < hits; h++) {
-          let dmg = card.dmg + this.str;
-          if (this.hasAug('prosth_arm')) {
-            dmg += 2;
-          }
-          // Stance bonus
-          if (card.stanceBonus
-            && this.stance === 'striking') {
-            dmg += 6;
-          }
-          dmg = Math.floor(
-            dmg * stanceDmgMult
+        if (hits > 1) {
+          // Multi-hit: sequential delay
+          this.doMultiHit(
+            ti, card, stanceDmgMult,
+            hits, 0
           );
-          if (this.weak > 0) {
-            dmg = Math.floor(dmg * 0.75);
-          }
-          if (target.vuln > 0) {
-            dmg = Math.floor(dmg * 1.5);
-          }
-          this.damageEnemy(ti, dmg);
+          return;
         }
+        let dmg = card.dmg + this.str;
+        if (this.hasAug('prosth_arm')) {
+          dmg += 2;
+        }
+        if (card.stanceBonus
+          && this.stance === 'striking') {
+          dmg += 6;
+        }
+        dmg = Math.floor(
+          dmg * stanceDmgMult
+        );
+        if (this.weak > 0) {
+          dmg = Math.floor(dmg * 0.75);
+        }
+        if (target.vuln > 0) {
+          dmg = Math.floor(dmg * 1.5);
+        }
+        this.damageEnemy(ti, dmg);
         if (card.vuln) {
           target.vuln += card.vuln;
         }
@@ -1248,6 +1198,15 @@ class CardEngine {
     }
 
     // Common effects for all card types
+    // Skill-type cards with blk
+    if (card.blk && card.type !== 'blk') {
+      this.block += card.blk;
+      this.act('sfx', { s: 'block' });
+      this.addAnim(
+        'shield', CW / 2, 210,
+        card.blk, CLR_BLK
+      );
+    }
     if (card.light) {
       this.light += card.light;
     }
@@ -1304,6 +1263,58 @@ class CardEngine {
     this.checkCombatEnd();
   }
 
+  doMultiHit(ti, card, sMult, total, h) {
+    const target = this.enemies[ti];
+    if (!target || target.hp <= 0
+      || h >= total) {
+      // Apply statuses after all hits
+      if (target && target.hp > 0) {
+        if (card.vuln) {
+          target.vuln += card.vuln;
+        }
+        if (card.weak) {
+          target.weak += card.weak;
+        }
+        if (card.poison) {
+          target.poison += card.poison;
+        }
+        if (card.burn) {
+          target.burn += card.burn;
+        }
+      }
+      this.selectedCard = -1;
+      this.checkCombatEnd();
+      return;
+    }
+    let dmg = card.dmg + this.str;
+    if (this.hasAug('prosth_arm')) {
+      dmg += 2;
+    }
+    if (card.stanceBonus
+      && this.stance === 'striking') {
+      dmg += 6;
+    }
+    dmg = Math.floor(dmg * sMult);
+    if (this.weak > 0) {
+      dmg = Math.floor(dmg * 0.75);
+    }
+    if (target.vuln > 0) {
+      dmg = Math.floor(dmg * 1.5);
+    }
+    this.damageEnemy(ti, dmg);
+    this.act('sfx', { s: 'hit' });
+    this.addAnim(
+      'slash', this.enemyX(ti),
+      90, 0, CLR_ATK
+    );
+    setTimeout(
+      () => this.doMultiHit(
+        ti, card, sMult, total, h + 1
+      ),
+      200
+    );
+  }
+
   endTurn() {
     // Discard hand
     for (let i = 0;
@@ -1312,7 +1323,52 @@ class CardEngine {
     }
     this.hand = [];
 
-    // Check if all enemies already dead
+    // Tick enemy statuses (DoTs, debuffs)
+    // Done here so player benefits from
+    // debuffs they applied this turn.
+    for (let i = 0;
+      i < this.enemies.length; i++) {
+      const e = this.enemies[i];
+      if (e.hp <= 0) continue;
+      if (e.poison > 0) {
+        e.hp -= e.poison;
+        e.poison--;
+        this.addAnim(
+          'dmg', this.enemyX(i),
+          100, e.poison + 1, '#44cc44'
+        );
+        if (e.hp <= 0) this.score += 20;
+      }
+      if (e.burn > 0) {
+        e.hp -= e.burn;
+        e.burn--;
+        this.addAnim(
+          'dmg', this.enemyX(i),
+          100, e.burn + 1, '#ff6633'
+        );
+        if (e.hp <= 0) this.score += 20;
+      }
+      // Liu burn self-damage
+      if (this.charKey === 'liu'
+        && e.burn > 0) {
+        this.hp -= 1;
+      }
+      // Tick debuffs down
+      if (e.vuln > 0) e.vuln--;
+      if (e.weak > 0) e.weak--;
+      // Reset block
+      e.block = 0;
+      // Boss phase check
+      if (e.phase2 && !e.inPhase2
+        && e.hp <= e.maxHp
+          * e.phase2hp) {
+        e.inPhase2 = true;
+        e.intents = e.phase2;
+        e.intIdx = 0;
+      }
+    }
+
+    // Check if DoTs killed all enemies
     const allDead = !this.enemies.some(
       e => e.hp > 0
     );
@@ -1356,7 +1412,11 @@ class CardEngine {
           dmg = Math.floor(dmg * 1.5);
         }
         // Striking: take 1.5x damage
-        if (this.stance === 'striking') {
+        // Uses turnStance (locked at turn
+        // start) so mid-turn stance swap
+        // doesn't reduce incoming damage.
+        if (this.turnStance
+          === 'striking') {
           dmg = Math.floor(dmg * 1.5);
         }
         if (this.hasAug('subdermal')) {
@@ -1385,12 +1445,27 @@ class CardEngine {
       }
       case 'blk':
         e.block += intent.v;
+        this.addAnim(
+          'shield', this.enemyX(idx),
+          80, intent.v, '#4488cc'
+        );
+        this.act('sfx', { s: 'block' });
         break;
       case 'buff':
         e.str += intent.v;
+        this.addAnim(
+          'dmg', this.enemyX(idx),
+          80, '+' + intent.v + 'Str',
+          '#ffaa44'
+        );
         break;
       case 'debuf':
         this.vuln += intent.v;
+        this.shake = 0.15;
+        this.addAnim(
+          'dmg', CW / 2, 210,
+          'Vuln!', '#ff6644'
+        );
         break;
       default: break;
     }
@@ -1452,10 +1527,7 @@ class CardEngine {
         && this.curNode.type === 'boss') {
         this.score += 200
           + this.hp * 2;
-        this.state = GS_VICTORY;
-        this.act('submit_score', {
-          score: this.score,
-        });
+        this.enterNameEntry();
       } else {
         this.showReward();
       }
@@ -1500,10 +1572,7 @@ class CardEngine {
     this.mapRow++;
     if (this.mapRow >= NUM_ROWS) {
       this.score += 200 + this.hp * 2;
-      this.state = GS_VICTORY;
-      this.act('submit_score', {
-        score: this.score,
-      });
+      this.enterNameEntry();
     } else {
       this.state = GS_MAP;
     }
@@ -1640,6 +1709,13 @@ class CardEngine {
 
     ctx.restore();
 
+    // Deck overlay in combat
+    if ((this.state === GS_COMBAT
+      || this.state === GS_TARGETING)
+      && this.showDeck) {
+      this.renderDeckView();
+    }
+
     if (this.state === GS_MAP) {
       this.renderMap();
     }
@@ -1664,6 +1740,9 @@ class CardEngine {
     if (this.state === GS_DEFEAT) {
       this.renderDefeat();
     }
+    if (this.state === GS_NAMEENTRY) {
+      this.renderNameEntry();
+    }
 
     // Floating anims
     this.renderAnims();
@@ -1672,51 +1751,51 @@ class CardEngine {
   renderTitle() {
     const ctx = this.ctx;
     ctx.strokeStyle = '#aa6633';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(
       10, 10, CW - 20, CH - 20
     );
     this.cText(
       "FIXER'S GAMBIT",
-      '#aa6633', 18, -90
+      '#aa6633', 30, -140
     );
     this.cText(
       'Syndicate Hideout Raid',
-      '#777', 9, -66
+      '#777', 15, -108
     );
     this.cText(
       '8 floors. Build your deck.',
-      '#aaa', 8, -42
+      '#aaa', 14, -72
     );
     this.cText(
       'Play cards with Light.',
-      '#aaa', 8, -30
+      '#aaa', 14, -50
     );
     this.cText(
       'Defeat all enemies.',
-      '#aaa', 8, -18
+      '#aaa', 14, -28
     );
     this.cText(
       'Click cards to play.',
-      '#ccc', 8, 4
+      '#ccc', 14, 4
     );
     this.cText(
       'Click enemies to target.',
-      '#ccc', 8, 16
+      '#ccc', 14, 26
     );
     this.cText(
       'Press ENTER to Start',
-      '#44ff44', 10, 44
+      '#44ff44', 18, 64
     );
     // Leaderboard
     this.cText(
       '-- LEADERBOARD --',
-      '#ffaa44', 8, 68
+      '#ffaa44', 14, 100
     );
     const lb = this.leaderboard || [];
     if (!lb.length) {
       this.cText(
-        'No scores yet', '#666', 7, 80
+        'No scores yet', '#666', 12, 120
       );
     }
     for (let i = 0; i < lb.length
@@ -1727,7 +1806,7 @@ class CardEngine {
       this.cText(
         (i + 1) + '. ' + n
           + ' ' + (e.score || 0),
-        '#ffff44', 7, 80 + i * 11
+        '#ffff44', 12, 120 + i * 17
       );
     }
   }
@@ -1935,24 +2014,50 @@ class CardEngine {
       }
       case 'blk':
         ctx.fillStyle = '#4488cc';
-        ctx.fillRect(
-          x - 6, y - 6, 12, 12
-        );
+        // Shield icon
+        ctx.beginPath();
+        ctx.moveTo(x, y - 7);
+        ctx.lineTo(x - 6, y - 4);
+        ctx.lineTo(x - 6, y + 2);
+        ctx.lineTo(x, y + 7);
+        ctx.lineTo(x + 6, y + 2);
+        ctx.lineTo(x + 6, y - 4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#fff';
         ctx.fillText(
-          String(intent.v), x + 10, y + 4
+          'Shield ' + intent.v,
+          x + 10, y + 4
         );
         break;
       case 'buff':
         ctx.fillStyle = '#ffaa44';
+        // Up arrow
+        ctx.beginPath();
+        ctx.moveTo(x, y - 7);
+        ctx.lineTo(x - 5, y);
+        ctx.lineTo(x + 5, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillRect(x - 2, y, 4, 5);
         ctx.fillText(
           '+' + intent.v + ' Str',
-          x - 12, y + 4
+          x + 10, y + 4
         );
         break;
       case 'debuf':
         ctx.fillStyle = '#ff6644';
+        // Debuff down arrow
+        ctx.beginPath();
+        ctx.moveTo(x, y + 7);
+        ctx.lineTo(x - 5, y);
+        ctx.lineTo(x + 5, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillRect(x - 2, y - 5, 4, 5);
         ctx.fillText(
-          'Vuln', x - 10, y + 4
+          'Vuln +' + intent.v,
+          x + 10, y + 4
         );
         break;
       default: break;
@@ -2009,20 +2114,55 @@ class CardEngine {
         'Str:' + this.str, 310, y + 14
       );
     }
-    // Vuln/Weak
+    // Vuln/Weak - prominent display
+    let debX = 370;
     if (this.vuln > 0) {
+      // Flashing background
+      const pulse = Math.sin(
+        performance.now() * 0.005
+      );
+      ctx.fillStyle = 'rgba(255,80,40,'
+        + (0.15 + pulse * 0.1)
+          .toFixed(2) + ')';
+      ctx.fillRect(
+        debX - 2, y + 4, 68, 14
+      );
       ctx.fillStyle = '#ff6644';
       ctx.fillText(
-        'Vuln:' + this.vuln,
-        370, y + 14
+        'VULN:' + this.vuln,
+        debX, y + 14
       );
+      ctx.fillStyle = '#cc5533';
+      ctx.font = '6px monospace';
+      ctx.fillText(
+        '+50% dmg taken',
+        debX, y + 22
+      );
+      ctx.font = '8px monospace';
+      debX += 74;
     }
     if (this.weak > 0) {
+      const pulse = Math.sin(
+        performance.now() * 0.005
+      );
+      ctx.fillStyle = 'rgba(180,80,180,'
+        + (0.15 + pulse * 0.1)
+          .toFixed(2) + ')';
+      ctx.fillRect(
+        debX - 2, y + 4, 68, 14
+      );
       ctx.fillStyle = '#cc66cc';
       ctx.fillText(
-        'Weak:' + this.weak,
-        430, y + 14
+        'WEAK:' + this.weak,
+        debX, y + 14
       );
+      ctx.fillStyle = '#aa55aa';
+      ctx.font = '6px monospace';
+      ctx.fillText(
+        '-25% dmg dealt',
+        debX, y + 22
+      );
+      ctx.font = '8px monospace';
     }
 
     // Stance (Blade Lineage)
@@ -2427,6 +2567,97 @@ class CardEngine {
     );
   }
 
+  enterNameEntry() {
+    this.entryName = '';
+    this.nameDone = false;
+    this.state = GS_NAMEENTRY;
+  }
+
+  renderNameEntry() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(0, 0, CW, CH);
+    this.cText(
+      'YOU WIN!', '#ffcc44', 20, -100
+    );
+    this.cText(
+      'Score: ' + this.score,
+      '#fff', 14, -70
+    );
+    this.cText(
+      'ENTER YOUR NAME',
+      '#aaa', 12, -30
+    );
+    // Draw 6 character boxes
+    const boxW = 28;
+    const boxH = 32;
+    const gap = 6;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (CW - totalW) / 2;
+    const sy = CH / 2 - 4;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 22
+        );
+      }
+    }
+    // Blinking cursor
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 8, sy + boxH - 4, 12, 2
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.cText(
+        'Press R to play again',
+        '#aaa', 9, 60
+      );
+    } else {
+      this.cText(
+        'Type A-Z then ENTER',
+        '#888', 9, 60
+      );
+    }
+  }
+
+  submitNameScore() {
+    this.nameDone = true;
+    const nm = this.entryName || 'ANON';
+    this.act('submit_score', {
+      score: this.score,
+      name: nm,
+    });
+  }
+
   renderAnims() {
     const ctx = this.ctx;
     for (let i = 0;
@@ -2439,8 +2670,10 @@ class CardEngine {
         ctx.fillStyle = a.clr;
         ctx.globalAlpha = alpha;
         ctx.font = '14px monospace';
+        const txt = typeof a.val === 'string'
+          ? a.val : '-' + a.val;
         ctx.fillText(
-          '-' + a.val,
+          txt,
           a.x - 10,
           a.y - prog * 30
         );
@@ -2951,8 +3184,8 @@ class CardEngine {
     ctx.fillText(
       'Page ' + (this.deckScroll + 1)
         + '/' + Math.max(1, pages)
-        + '  [ESC] close  [<>] page',
-      CW / 2 - 90, CH - 12
+        + '  [D/ESC] close  [<>] page',
+      CW / 2 - 100, CH - 12
     );
   }
 
@@ -3004,10 +3237,11 @@ class CardEngine {
     } else {
       // Scrollable card upgrade list
       this.cText(
-        'Click a card to upgrade',
-        '#ffcc44', 10, -50
+        'Click a card to upgrade'
+          + '  [</>: page]',
+        '#ffcc44', 10, -60
       );
-      const perPage = 10;
+      const perPage = 7;
       const start = this.deckScroll
         * perPage;
       for (let i = 0;
@@ -3021,34 +3255,58 @@ class CardEngine {
         if (!card) continue;
         const upg = UPGRADES[base];
         const bx = 30;
-        const by = CH / 2 - 60 + i * 22;
+        const by = CH / 2 - 50 + i * 32;
         const hov = this.mx >= bx
           && this.mx <= bx + CW - 60
           && this.my >= by
-          && this.my <= by + 18;
+          && this.my <= by + 28;
         ctx.fillStyle = hov
           ? '#2a2a1a' : '#1a1a12';
         ctx.fillRect(
-          bx, by, CW - 60, 18
+          bx, by, CW - 60, 28
         );
         ctx.fillStyle = hov
           ? '#ffcc44' : '#888';
         ctx.font = '9px monospace';
         const alreadyUp =
           key.indexOf('+') >= 0;
-        const upTxt = alreadyUp
-          ? ' (upgraded)'
-          : upg
-            ? ' -> ' + upg.desc
-            : '';
+        let clr = '#cc4444';
+        if (card.type === 'blk') {
+          clr = '#4488cc';
+        }
+        if (card.type === 'skill') {
+          clr = '#44aa66';
+        }
+        ctx.fillStyle = hov
+          ? clr : '#888';
         ctx.fillText(
-          card.name + upTxt,
+          card.name
+            + ' (' + card.cost + ')',
           bx + 4, by + 13
         );
+        if (alreadyUp) {
+          ctx.fillStyle = '#666';
+          ctx.fillText(
+            '  (already upgraded)',
+            bx + ctx.measureText(
+              card.name
+                + ' (' + card.cost + ')'
+            ).width + 8, by + 13
+          );
+        } else if (upg) {
+          ctx.fillStyle = '#ffcc44';
+          ctx.font = '8px monospace';
+          ctx.fillText(
+            card.desc.split('\n')[0]
+              + '  =>  ' + upg.desc
+                .split('\n')[0],
+            bx + 4, by + 24
+          );
+        }
         if (!alreadyUp && upg) {
           this.restRects.push({
             x: bx, y: by,
-            w: CW - 60, h: 18,
+            w: CW - 60, h: 28,
             action: 'pick',
             deckIdx: di,
           });
@@ -3094,14 +3352,21 @@ class CardEngine {
     const ctx = this.ctx;
     ctx.fillStyle = 'rgba(0,0,0,0.85)';
     ctx.fillRect(0, 0, CW, CH);
+
+    // Card removal selection mode
+    if (this.shopRemoveMode) {
+      this.renderShopRemove();
+      return;
+    }
+
     this.cText(
-      'BACKSTREET SHOP', '#cccc44', 14, -120
+      'BACKSTREET SHOP', '#cccc44', 14, -140
     );
     ctx.fillStyle = '#ffcc44';
     ctx.font = '9px monospace';
     ctx.fillText(
       'Ahn: ' + this.ahn, CW / 2 - 25,
-      CH / 2 - 96
+      CH / 2 - 116
     );
 
     const items = [];
@@ -3113,6 +3378,7 @@ class CardEngine {
       if (c) {
         items.push({
           label: c.name + ' (50 Ahn)',
+          sub: c.desc.split('\n')[0],
           action: 'card',
           key: sc[i],
           cost: 50,
@@ -3125,6 +3391,7 @@ class CardEngine {
     items.push({
       label: 'Remove a card ('
         + rmCost + ' Ahn)',
+      sub: 'Choose a card to remove',
       action: 'remove', cost: rmCost,
     });
     // Augment
@@ -3134,6 +3401,7 @@ class CardEngine {
       if (a) {
         items.push({
           label: a.name + ' (100 Ahn)',
+          sub: a.desc,
           action: 'aug',
           key: this.curNode.shopAug,
           cost: 100,
@@ -3142,6 +3410,7 @@ class CardEngine {
     }
     items.push({
       label: 'Leave', action: 'leave',
+      sub: '',
       cost: 0,
     });
     this.shopItems = items;
@@ -3150,37 +3419,136 @@ class CardEngine {
     ctx.font = '9px monospace';
     for (let i = 0; i < items.length; i++) {
       const bx = 60;
-      const by = CH / 2 - 60 + i * 28;
+      const by = CH / 2 - 80 + i * 36;
       const hov = this.mx >= bx
         && this.mx <= bx + 400
         && this.my >= by
-        && this.my <= by + 22;
+        && this.my <= by + 30;
       const afford = !items[i].cost
         || this.ahn >= items[i].cost;
       ctx.fillStyle = hov && afford
         ? '#2a2a1a' : '#1a1a12';
-      ctx.fillRect(bx, by, 400, 22);
+      ctx.fillRect(bx, by, 400, 30);
       ctx.strokeStyle = hov && afford
         ? '#cccc44' : '#333';
-      ctx.strokeRect(bx, by, 400, 22);
+      ctx.strokeRect(bx, by, 400, 30);
       ctx.fillStyle = !afford
         ? '#555' : hov
           ? '#cccc44' : '#999';
+      ctx.font = '9px monospace';
       ctx.fillText(
-        items[i].label, bx + 8, by + 15
+        items[i].label, bx + 8, by + 14
       );
+      if (items[i].sub) {
+        ctx.fillStyle = '#777';
+        ctx.font = '7px monospace';
+        ctx.fillText(
+          items[i].sub, bx + 12, by + 26
+        );
+      }
       this.shopRects.push({
-        x: bx, y: by, w: 400, h: 22,
+        x: bx, y: by, w: 400, h: 30,
         idx: i,
       });
     }
-    ctx.fillStyle = '#555';
+  }
+
+  renderShopRemove() {
+    const ctx = this.ctx;
+    this.cText(
+      'REMOVE A CARD', '#cccc44', 14, -160
+    );
+    this.cText(
+      'Click a card to remove'
+        + '  [</>: page  ESC: back]',
+      '#aaa', 8, -140
+    );
+
+    this.shopRects = [];
+    const perPage = 7;
+    const start = this.shopRemoveScroll
+      * perPage;
+    for (let i = 0;
+      i < perPage
+      && start + i < this.deck.length;
+      i++) {
+      const di = start + i;
+      const key = this.deck[di];
+      const card = this.getCard(key);
+      if (!card) continue;
+      const bx = 30;
+      const by = CH / 2 - 80 + i * 32;
+      const hov = this.mx >= bx
+        && this.mx <= bx + CW - 60
+        && this.my >= by
+        && this.my <= by + 28;
+      ctx.fillStyle = hov
+        ? '#3a1a1a' : '#1a1a12';
+      ctx.fillRect(
+        bx, by, CW - 60, 28
+      );
+      let clr = '#cc4444';
+      if (card.type === 'blk') {
+        clr = '#4488cc';
+      }
+      if (card.type === 'skill') {
+        clr = '#44aa66';
+      }
+      ctx.fillStyle = hov
+        ? '#ff6644' : clr;
+      ctx.font = '9px monospace';
+      ctx.fillText(
+        card.name
+          + ' (' + card.cost + ')',
+        bx + 4, by + 13
+      );
+      ctx.fillStyle = '#777';
+      ctx.font = '8px monospace';
+      ctx.fillText(
+        card.desc.split('\n')[0],
+        bx + 4, by + 24
+      );
+      this.shopRects.push({
+        x: bx, y: by,
+        w: CW - 60, h: 28,
+        action: 'removePick',
+        deckIdx: di,
+      });
+    }
+    // Page nav
+    const pages = Math.ceil(
+      this.deck.length / perPage
+    );
+    ctx.fillStyle = '#444';
+    ctx.fillRect(
+      CW / 2 - 80, CH - 28, 40, 18
+    );
+    ctx.fillRect(
+      CW / 2 + 40, CH - 28, 40, 18
+    );
+    ctx.fillStyle = '#ccc';
     ctx.font = '8px monospace';
     ctx.fillText(
-      'Click to select',
-      CW / 2 - 40,
-      CH / 2 + items.length * 28 - 40
+      '< Prev', CW / 2 - 76, CH - 14
     );
+    ctx.fillText(
+      'Next >', CW / 2 + 44, CH - 14
+    );
+    ctx.fillStyle = '#555';
+    ctx.fillText(
+      'Page '
+        + (this.shopRemoveScroll + 1)
+        + '/' + Math.max(1, pages),
+      CW / 2 - 20, CH - 14
+    );
+    this.shopRects.push({
+      x: CW / 2 - 80, y: CH - 28,
+      w: 40, h: 18, action: 'rmPrev',
+    });
+    this.shopRects.push({
+      x: CW / 2 + 40, y: CH - 28,
+      w: 40, h: 18, action: 'rmNext',
+    });
   }
 
   renderEvent() {
@@ -3562,6 +3930,39 @@ class CardEngine {
         if (mx >= r.x && mx <= r.x + r.w
           && my >= r.y
           && my <= r.y + r.h) {
+          // Card removal selection mode
+          if (this.shopRemoveMode) {
+            if (r.action === 'removePick') {
+              if (this.deck.length > 3) {
+                const rm = this.deck[
+                  r.deckIdx
+                ];
+                const rc = this.getCard(rm);
+                this.deck.splice(
+                  r.deckIdx, 1
+                );
+                if (rc) {
+                  this.msg = 'Removed: '
+                    + rc.name;
+                  this.msgTimer = 1.5;
+                }
+                this.shopRemoveMode = false;
+              }
+            } else if (
+              r.action === 'rmPrev'
+            ) {
+              this.shopRemoveScroll
+                = Math.max(
+                  0,
+                  this.shopRemoveScroll - 1
+                );
+            } else if (
+              r.action === 'rmNext'
+            ) {
+              this.shopRemoveScroll++;
+            }
+            return;
+          }
           const item = this.shopItems
             ? this.shopItems[r.idx] : null;
           if (!item) return;
@@ -3580,18 +3981,8 @@ class CardEngine {
           ) {
             this.ahn -= item.cost;
             this.removeCount++;
-            const ri = Math.floor(
-              Math.random()
-              * this.deck.length
-            );
-            const rm = this.deck[ri];
-            const rc = this.getCard(rm);
-            this.deck.splice(ri, 1);
-            if (rc) {
-              this.msg = 'Removed: '
-                + rc.name;
-              this.msgTimer = 1.5;
-            }
+            this.shopRemoveMode = true;
+            this.shopRemoveScroll = 0;
           } else if (
             item.action === 'aug'
             && this.ahn >= item.cost
@@ -3746,6 +4137,33 @@ class CardEngine {
       && code === KEY_ENTER) {
       this.state = GS_CHARSEL;
     }
+    // Name entry input
+    if (this.state === GS_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.state = GS_TITLE;
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.submitNameScore();
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
+    }
     if ((this.state === GS_VICTORY
       || this.state === GS_DEFEAT)
       && code === KEY_R) {
@@ -3757,9 +4175,19 @@ class CardEngine {
       this.state = GS_COMBAT;
     }
 
+    // D key: toggle deck viewer
+    if (code === KEY_D
+      && (this.state === GS_MAP
+        || this.state === GS_COMBAT)) {
+      this.showDeck = !this.showDeck;
+      this.deckScroll = 0;
+      return;
+    }
+
     // Deck viewer navigation
-    if (this.state === GS_MAP
-      && this.showDeck) {
+    if (this.showDeck
+      && (this.state === GS_MAP
+        || this.state === GS_COMBAT)) {
       if (code === KEY_ESC) {
         this.showDeck = false;
       }
@@ -3774,8 +4202,52 @@ class CardEngine {
       return;
     }
 
-    // All rest/shop/event interactions
-    // are now mouse-only (see handleClick)
+    // Rest upgrade page navigation
+    if (this.state === GS_REST
+      && this.upgradeMode) {
+      const perPage = 7;
+      const pages = Math.ceil(
+        this.deck.length / perPage
+      );
+      if (code === 39) {
+        this.deckScroll = Math.min(
+          pages - 1, this.deckScroll + 1
+        );
+      }
+      if (code === 37) {
+        this.deckScroll = Math.max(
+          0, this.deckScroll - 1
+        );
+      }
+      if (code === KEY_ESC) {
+        this.upgradeMode = false;
+      }
+      return;
+    }
+
+    // Shop remove page navigation
+    if (this.state === GS_SHOP
+      && this.shopRemoveMode) {
+      const perPage = 7;
+      const pages = Math.ceil(
+        this.deck.length / perPage
+      );
+      if (code === 39) {
+        this.shopRemoveScroll = Math.min(
+          pages - 1,
+          this.shopRemoveScroll + 1
+        );
+      }
+      if (code === 37) {
+        this.shopRemoveScroll = Math.max(
+          0, this.shopRemoveScroll - 1
+        );
+      }
+      if (code === KEY_ESC) {
+        this.shopRemoveMode = false;
+      }
+      return;
+    }
   }
 }
 
@@ -3783,7 +4255,9 @@ class CardEngine {
 // TGUI Component
 // =========================================
 
-const ACQUIRED_KEYS = [KEY_R, KEY_ESC];
+const ACQUIRED_KEYS = [
+  KEY_R, KEY_ESC, KEY_D,
+];
 
 class ArcadeCardGameComp extends Component {
   constructor(props) {

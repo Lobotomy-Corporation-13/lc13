@@ -54,7 +54,10 @@
 	switch(action)
 		if("submit_score")
 			var/score = text2num(params["score"])
-			var/pname = usr?.name || "Unknown"
+			var/pname = params["name"]
+			if(!pname || length(pname) < 1)
+				pname = usr?.name || "???"
+			pname = copytext(pname, 1, 7)
 			leaderboard += list(list("name" = pname, "score" = score))
 			// Sort descending, keep top 10
 			leaderboard = sortTim(leaderboard, /proc/cmp_leaderboard_desc)

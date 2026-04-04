@@ -77,6 +77,7 @@ const STATE_PLAYING = 1;
 const STATE_DEAD = 2;
 const STATE_LEVEL_COMPLETE = 3;
 const STATE_WIN = 4;
+const STATE_NAMEENTRY = 5;
 
 // =========================================
 // Procedural Texture Generator
@@ -2031,6 +2032,8 @@ class GameEngine {
     this.pointerLocked = false;
     this.effects = [];
     this.sfxThrottle = {};
+    this.entryName = '';
+    this.nameDone = false;
     this.levelNeedsKey = false;
     this.isBossLevel = false;
     this.doorMessage = 0;
@@ -2310,11 +2313,10 @@ class GameEngine {
     const nearExit = this.isNearExit(p);
     if (nearExit) {
       if (this.level >= this.maxLevel) {
-        this.gameState = STATE_WIN;
         p.score += 500;
-        this.act('submit_score', {
-          score: p.score,
-        });
+        this.entryName = '';
+        this.nameDone = false;
+        this.gameState = STATE_NAMEENTRY;
       } else {
         this.gameState = STATE_LEVEL_COMPLETE;
         p.score += 200;
@@ -2590,6 +2592,94 @@ class GameEngine {
         0, 0, CANVAS_W, CANVAS_H
       );
     }
+
+    if (this.gameState
+      === STATE_NAMEENTRY) {
+      this.renderNameEntry();
+    }
+  }
+
+  renderNameEntry() {
+    const ctx = this.renderer.bctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(
+      0, 0, SCREEN_W, SCREEN_H
+    );
+    this.drawCenterText(
+      'YOU WIN!', '#ffcc44', 14, -50
+    );
+    this.drawCenterText(
+      'Score: ' + this.player.score,
+      '#fff', 9, -32
+    );
+    this.drawCenterText(
+      'ENTER YOUR NAME',
+      '#aaa', 7, -12
+    );
+    const boxW = 14;
+    const boxH = 16;
+    const gap = 3;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (SCREEN_W - totalW) / 2;
+    const sy = SCREEN_H / 2 + 2;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 12
+        );
+      }
+    }
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 4, sy + boxH - 2, 6, 1
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.drawCenterText(
+        'Press R to play again',
+        '#aaa', 7, 30
+      );
+    } else {
+      this.drawCenterText(
+        'Type A-Z then ENTER',
+        '#888', 7, 30
+      );
+    }
+    // Scale up
+    this.renderer.ctx.imageSmoothingEnabled
+      = false;
+    this.renderer.ctx.drawImage(
+      this.renderer.buf,
+      0, 0, CANVAS_W, CANVAS_H
+    );
   }
 
   renderTitle() {
@@ -2685,6 +2775,39 @@ class GameEngine {
     if (this.gameState === STATE_WIN
       && code === KEY_R) {
       this.act('restart');
+    }
+
+    // Name entry input
+    if (this.gameState
+      === STATE_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.act('restart');
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.nameDone = true;
+        this.act('submit_score', {
+          score: this.player.score,
+          name: this.entryName || 'ANON',
+        });
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
     }
   }
 

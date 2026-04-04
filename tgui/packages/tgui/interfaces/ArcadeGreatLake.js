@@ -55,6 +55,7 @@ const GS_CARGO = 3;
 const GS_PORT = 4;
 const GS_DEAD = 5;
 const GS_WIN = 6;
+const GS_NAMEENTRY = 7;
 
 const DAY_LEN = 90;
 const NIGHT_LEN = 30;
@@ -289,6 +290,10 @@ class GreatLakeEngine {
     // Leaderboard
     this.leaderboard = [];
 
+    // Name entry
+    this.entryName = '';
+    this.nameDone = false;
+
     // Message
     this.msg = '';
     this.msgTimer = 0;
@@ -428,10 +433,9 @@ class GreatLakeEngine {
           this.day++;
           if (this.day >= NUM_DAYS) {
             this.ahn += 200;
-            this.state = GS_WIN;
-            this.act('submit_score', {
-              score: this.ahn,
-            });
+            this.entryName = '';
+            this.nameDone = false;
+            this.state = GS_NAMEENTRY;
             return;
           }
           this.startDay();
@@ -1052,6 +1056,83 @@ class GreatLakeEngine {
         '#aaa', 8, 42
       );
     }
+    if (this.state === GS_NAMEENTRY) {
+      this.renderNameEntry();
+    }
+  }
+
+  renderNameEntry() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(0, 0, CW, CH);
+    this.cText(
+      'YOU WIN!', '#ffcc44', 20, -90
+    );
+    this.cText(
+      'Score: ' + this.ahn + ' Ahn',
+      '#fff', 14, -60
+    );
+    this.cText(
+      'ENTER YOUR NAME',
+      '#aaa', 12, -24
+    );
+    const boxW = 28;
+    const boxH = 32;
+    const gap = 6;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (CW - totalW) / 2;
+    const sy = CH / 2 + 2;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 22
+        );
+      }
+    }
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 8, sy + boxH - 4, 12, 2
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.cText(
+        'Press R to play again',
+        '#aaa', 9, 60
+      );
+    } else {
+      this.cText(
+        'Type A-Z then ENTER',
+        '#888', 9, 60
+      );
+    }
   }
 
   renderHUD() {
@@ -1378,50 +1459,54 @@ class GreatLakeEngine {
   renderTitle() {
     const ctx = this.ctx;
     ctx.strokeStyle = '#2266aa';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(10, 10, CW - 20, CH - 20);
 
     this.cText(
       'GREAT LAKE TRAWLER',
-      '#2266aa', 16, -80
+      '#2266aa', 26, -130
     );
     this.cText(
       'U Corp. District 21',
-      '#666', 8, -58
+      '#666', 13, -100
     );
     this.cText(
-      'Fish the Great Lake.', '#aaa', 8, -34
+      'Fish the Great Lake.',
+      '#aaa', 13, -68
     );
     this.cText(
-      'Manage your cargo hold.', '#aaa', 8, -22
+      'Manage your cargo hold.',
+      '#aaa', 13, -50
     );
     this.cText(
-      'Sell at port for Ahn.', '#aaa', 8, -10
+      'Sell at port for Ahn.',
+      '#aaa', 13, -32
     );
     this.cText(
-      'Survive 3 nights.', '#ff6644', 9, 8
+      'Survive 3 nights.',
+      '#ff6644', 14, -6
     );
     this.cText(
       'WASD:sail SPACE:interact',
-      '#ccc', 8, 30
+      '#ccc', 13, 22
     );
     this.cText(
       'Beware the Calamity Whale.',
-      '#aa4466', 8, 48
+      '#aa4466', 13, 46
     );
     this.cText(
       'Press ENTER to Start',
-      '#44ff44', 10, 72
+      '#44ff44', 17, 80
     );
     // Leaderboard
     this.cText(
       '-- LEADERBOARD --',
-      '#ffaa44', 8, 92
+      '#ffaa44', 13, 110
     );
     const lb = this.leaderboard || [];
     if (lb.length === 0) {
       this.cText(
-        'No scores yet', '#666', 7, 104
+        'No scores yet', '#666', 11, 130
       );
     }
     for (let i = 0; i < lb.length
@@ -1432,7 +1517,7 @@ class GreatLakeEngine {
       const t = (i + 1) + '. '
         + n + ' ' + (e.score || 0);
       this.cText(
-        t, '#ffff44', 7, 104 + i * 10
+        t, '#ffff44', 11, 130 + i * 16
       );
     }
   }
@@ -1547,6 +1632,38 @@ class GreatLakeEngine {
       if (code === KEY_ESC) {
         this.state = GS_PLAY;
       }
+    }
+
+    // Name entry input
+    if (this.state === GS_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.state = GS_TITLE;
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.nameDone = true;
+        this.act('submit_score', {
+          score: this.ahn,
+          name: this.entryName || 'ANON',
+        });
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
     }
 
     if ((this.state === GS_DEAD

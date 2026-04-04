@@ -52,6 +52,7 @@ const GS_TITLE = 0;
 const GS_PLAYING = 1;
 const GS_DEAD = 2;
 const GS_WIN = 3;
+const GS_NAMEENTRY = 4;
 
 // Game duration (81 seconds)
 const GAME_TIME = 81;
@@ -114,6 +115,10 @@ class SweeperEngine {
 
     // High score
     this.leaderboard = 0;
+
+    // Name entry
+    this.entryName = '';
+    this.nameDone = false;
 
     // Powerups
     this.powerups = [];
@@ -272,11 +277,10 @@ class SweeperEngine {
     // Check win
     if (this.timer >= GAME_TIME
       && !this.waveActive) {
-      this.state = GS_WIN;
       this.score += 200;
-      this.act('submit_score', {
-        score: this.score,
-      });
+      this.entryName = '';
+      this.nameDone = false;
+      this.state = GS_NAMEENTRY;
       return;
     }
 
@@ -778,6 +782,10 @@ class SweeperEngine {
         '#aaaaaa', 9, 40
       );
     }
+
+    if (this.state === GS_NAMEENTRY) {
+      this.renderNameEntry();
+    }
   }
 
   renderHUD() {
@@ -857,59 +865,59 @@ class SweeperEngine {
     const ctx = this.ctx;
 
     ctx.strokeStyle = '#cc4444';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 3;
     ctx.strokeRect(
       10, 10, CANVAS_W - 20, CANVAS_H - 20
     );
 
     this.centerText(
-      'SWEEPER SURVIVAL', '#cc4444', 16, -50
+      'SWEEPER SURVIVAL', '#cc4444', 24, -100
     );
     this.centerText(
       'The Night in the Backstreets',
-      '#888888', 9, -28
+      '#888888', 12, -74
     );
     this.centerText(
       'Survive 81 seconds.',
-      '#aaaaaa', 9, -8
+      '#aaaaaa', 12, -48
     );
     this.centerText(
       '3 Sweeper waves will march',
-      '#aaaaaa', 8, 8
+      '#aaaaaa', 11, -26
     );
     this.centerText(
       'across the streets.',
-      '#aaaaaa', 8, 20
+      '#aaaaaa', 11, -10
     );
     this.centerText(
       'Hide inside buildings',
-      '#ffdd00', 8, 38
+      '#ffdd00', 11, 12
     );
     this.centerText(
       '(enter through doors)',
-      '#ffdd00', 8, 50
+      '#ffdd00', 11, 28
     );
     this.centerText(
       'Collect Ahn for points',
-      '#aaaaaa', 8, 66
+      '#aaaaaa', 11, 50
     );
     this.centerText(
       'WASD/Arrows to move',
-      '#aaaaaa', 8, 84
+      '#aaaaaa', 11, 68
     );
     this.centerText(
       'Press ENTER to Start',
-      '#44ff44', 10, 108
+      '#44ff44', 16, 96
     );
     // Leaderboard
     this.centerText(
       '-- LEADERBOARD --',
-      '#ffaa44', 8, 120
+      '#ffaa44', 12, 118
     );
     const lb = this.leaderboard || [];
     if (lb.length === 0) {
       this.centerText(
-        'No scores yet', '#666', 7, 132
+        'No scores yet', '#666', 11, 136
       );
     }
     for (let i = 0; i < lb.length
@@ -920,7 +928,83 @@ class SweeperEngine {
       const t = (i + 1) + '. '
         + n + ' ' + (e.score || 0);
       this.centerText(
-        t, '#ffff44', 7, 132 + i * 10
+        t, '#ffff44', 11, 136 + i * 14
+      );
+    }
+  }
+
+  renderNameEntry() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(
+      0, 0, CANVAS_W, CANVAS_H
+    );
+    this.centerText(
+      'YOU WIN!', '#ffcc44', 20, -80
+    );
+    this.centerText(
+      'Score: ' + this.score,
+      '#fff', 14, -52
+    );
+    this.centerText(
+      'ENTER YOUR NAME',
+      '#aaa', 12, -20
+    );
+    const boxW = 28;
+    const boxH = 32;
+    const gap = 6;
+    const totalW = 6 * boxW + 5 * gap;
+    const sx = (CANVAS_W - totalW) / 2;
+    const sy = CANVAS_H / 2 + 4;
+    for (let i = 0; i < 6; i++) {
+      const bx = sx + i * (boxW + gap);
+      ctx.fillStyle = '#1a1a2a';
+      ctx.fillRect(bx, sy, boxW, boxH);
+      ctx.strokeStyle = i
+          === this.entryName.length
+        ? '#ffcc44' : '#555';
+      ctx.lineWidth = i
+          === this.entryName.length
+        ? 2 : 1;
+      ctx.strokeRect(bx, sy, boxW, boxH);
+      ctx.lineWidth = 1;
+      if (i < this.entryName.length) {
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px monospace';
+        const ch = this.entryName[i];
+        const cw2 = ctx.measureText(
+          ch
+        ).width;
+        ctx.fillText(
+          ch,
+          bx + (boxW - cw2) / 2,
+          sy + 22
+        );
+      }
+    }
+    if (!this.nameDone
+      && this.entryName.length < 6) {
+      const ci = this.entryName.length;
+      const cx = sx + ci * (boxW + gap);
+      const blink = Math.sin(
+        performance.now() * 0.006
+      );
+      if (blink > 0) {
+        ctx.fillStyle = '#ffcc44';
+        ctx.fillRect(
+          cx + 8, sy + boxH - 4, 12, 2
+        );
+      }
+    }
+    if (this.nameDone) {
+      this.centerText(
+        'Press R to play again',
+        '#aaa', 9, 60
+      );
+    } else {
+      this.centerText(
+        'Type A-Z then ENTER',
+        '#888', 9, 60
       );
     }
   }
@@ -943,6 +1027,38 @@ class SweeperEngine {
     if (this.state === GS_TITLE
       && code === KEY_ENTER) {
       this.state = GS_PLAYING;
+    }
+
+    // Name entry input
+    if (this.state === GS_NAMEENTRY) {
+      if (this.nameDone) {
+        if (code === KEY_R) {
+          this.state = GS_TITLE;
+        }
+        return;
+      }
+      if (code === KEY_ENTER
+        && this.entryName.length > 0) {
+        this.nameDone = true;
+        this.act('submit_score', {
+          score: this.score,
+          name: this.entryName || 'ANON',
+        });
+        return;
+      }
+      if (code === 8
+        && this.entryName.length > 0) {
+        this.entryName = this.entryName
+          .slice(0, -1);
+        return;
+      }
+      if (code >= 65 && code <= 90
+        && this.entryName.length < 6) {
+        this.entryName += String
+          .fromCharCode(code);
+        return;
+      }
+      return;
     }
 
     if (this.state === GS_DEAD

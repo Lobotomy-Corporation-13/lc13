@@ -1029,6 +1029,7 @@
 #include "code\game\machinery\computer\arcade_cardgame.dm"
 #include "code\game\machinery\computer\arcade_checkpoint.dm"
 #include "code\game\machinery\computer\arcade_delivery.dm"
+#include "code\game\machinery\computer\arcade_dungeon.dm"
 #include "code\game\machinery\computer\arcade_fps.dm"
 #include "code\game\machinery\computer\arcade_greatlake.dm"
 #include "code\game\machinery\computer\arcade_sweeper.dm"

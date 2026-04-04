@@ -102,7 +102,10 @@ GLOBAL_LIST_INIT(cardgame_events, list(
 	switch(action)
 		if("submit_score")
 			var/score = text2num(params["score"])
-			var/pname = usr?.name || "Unknown"
+			var/pname = params["name"]
+			if(!pname || length(pname) < 1)
+				pname = usr?.name || "???"
+			pname = copytext(pname, 1, 7)
 			leaderboard += list(list("name" = pname, "score" = score))
 			leaderboard = sortTim(leaderboard, /proc/cmp_leaderboard_desc)
 			if(length(leaderboard) > 10)
