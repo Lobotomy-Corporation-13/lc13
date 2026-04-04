@@ -3,23 +3,30 @@
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder //Enemy which makes other simplemobs around it invulnerable
 	name = "aegis of answers"
 	desc = "A robot rooted to the ground by a teeming mass of cables. The antenna at the top of its frame beeps occasionally, as if sending out some kind of signal."
-	icon = 'ModularLobotomy/_Lobotomyicons/32x32.dmi'
-	icon_state = "grungeon_shielder"
-	icon_living = "grungeon_shielder"
-	icon_dead = "grungeon_shielder"
+	icon = 'ModularLobotomy/_Lobotomyicons/48x48.dmi'
+	icon_state = "green_shielder"
+	icon_living = "green_shielder"
+	icon_dead = "green_shielder"
 	faction = list("green_ordeal")
 	gender = NEUTER
+	pixel_x = -8
+	base_pixel_x = -8
 	mob_biotypes = MOB_ROBOTIC
-	maxHealth = 1000
-	health = 1000
-	melee_damage_lower = 0
-	melee_damage_upper = 0
+	maxHealth = 500
+	health = 500
+	melee_damage_lower = 5
+	melee_damage_upper = 10
+	melee_damage_type = RED_DAMAGE
+	attack_verb_continuous = "lashes"
+	attack_verb_simple = "lash"
 	damage_coeff = list(RED_DAMAGE = 0.7, WHITE_DAMAGE = 0.8, BLACK_DAMAGE = 1.4, PALE_DAMAGE = 1.2)
 	butcher_results = list(/obj/item/food/meat/slab/robot = 6)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 4)
 	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
 						/obj/item/stack/sheet/silk/green_simple = 3)
 
+/mob/living/simple_animal/hostile/ordeal/grungeon_boss/Move()
+	return FALSE
 
 
 
@@ -52,7 +59,7 @@
 	attack_vis_effect = ATTACK_EFFECT_CLAW
 	ranged = 1
 	ranged_cooldown_time = 15
-	projectiletype = /obj/projectile/ego_bullet/ego_match
+	projectiletype = /obj/projectile/ego_bullet/grungeon_rocket
 	projectilesound = 'sound/weapons/ego/cannon.ogg'
 	death_sound = 'sound/effects/ordeals/green/noon_dead.ogg'
 	damage_coeff = list(RED_DAMAGE = 0.6, WHITE_DAMAGE = 1, BLACK_DAMAGE = 1.8, PALE_DAMAGE = 1)
@@ -100,3 +107,16 @@
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket/spawn_dust()
 	return
+
+/obj/projectile/ego_bullet/grungeon_rocket
+	name = "rocket"
+	icon_state = "pulse0"
+	damage = 28 // Direct hit
+	damage_type = RED_DAMAGE
+
+/obj/projectile/ego_bullet/rocket/on_hit(atom/target, blocked = FALSE)
+	..()
+	for(var/mob/living/L in view(1, target))
+		new /obj/effect/temp_visual/fire/fast(get_turf(L))
+		L.deal_damage(12, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
+	return BULLET_ACT_HIT
