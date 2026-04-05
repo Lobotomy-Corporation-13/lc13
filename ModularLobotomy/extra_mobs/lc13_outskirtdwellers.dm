@@ -310,7 +310,6 @@
 	mob_size = MOB_SIZE_SMALL
 	tame = TRUE
 	buffed = 0
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/smallchuckles/examine(mob/user)
 	. = ..()
@@ -430,7 +429,6 @@
 	search_objects = 1
 	del_on_death = TRUE
 
-	var/can_act = TRUE //If flashing, turns FALSE so we don't attack/move
 	var/flash_cooldown
 	var/flash_cooldown_time = 10 SECONDS
 	var/flash_range = 5 //Range that the flash hits
@@ -537,7 +535,7 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	if(mob_spawn_amount > 0)
 		animate(src, transform = matrix()*1.2, color = "#FF0000", time = 5)
 		addtimer(CALLBACK(src, PROC_REF(SpawnSuicidal)), 5)
-	..()
+	return ..()
 
 //Love Town Suicidal - Weak, screams around itself occasionally, spawned by other enemies on death.
 /mob/living/simple_animal/hostile/lovetown/suicidal
@@ -552,7 +550,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	mob_spawn_amount = 0 //so we dont recursively spawn more
 	silk_results = list(/obj/item/stack/sheet/silk/human_simple = 1)
 
-	var/can_act = TRUE
 	var/scream_cooldown
 	var/scream_cooldown_time = 6 SECONDS
 
@@ -653,7 +650,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 
 	var/scream_cooldown
 	var/scream_cooldown_time = 7 SECONDS
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/lovetown/shambler/AttackingTarget()
 	return OpenFire()
@@ -791,7 +787,6 @@ Mobs that mostly focus on dealing RED damage, they are all a bit more frail than
 	mob_spawn_amount = 2 //:(
 	spawn_prob = 0 //100%, always spawn them
 
-	var/can_act = TRUE
 	var/current_stage = 1 //changes behaviour slightly on phase 2
 	var/stage_threshold = 3000 // enters stage 2 at or below this threshold
 	var/attack_delay = 0.5 SECONDS //0.5 seconds at stage 1, 1 second at stage 2

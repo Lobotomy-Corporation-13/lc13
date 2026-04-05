@@ -38,8 +38,6 @@
 	//Delay on general commands
 	var/command_cooldown = 0
 	var/command_delay = 18 SECONDS
-	//If this creature can act.
-	var/can_act = TRUE
 
 /mob/living/simple_animal/hostile/ordeal/steel_dusk/Initialize(mapload)
 	. = ..()

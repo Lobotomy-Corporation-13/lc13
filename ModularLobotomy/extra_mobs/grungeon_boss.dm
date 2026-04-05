@@ -33,7 +33,6 @@
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null
-	var/can_act = TRUE
 	var/napalm_cooldown
 	var/napalm_cd_duration = 60 SECONDS
 	melee_reach = 0

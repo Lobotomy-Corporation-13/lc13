@@ -230,7 +230,6 @@ GLOBAL_LIST_EMPTY(meat_list)
 	GLOB.meat_list += src
 
 /obj/structure/barricade/meatbags/CanAllowThrough(atom/movable/mover, turf/target)
-	. = ..()
 	if(ishuman(mover))
 		return FALSE
 	if(ismecha(mover))
@@ -312,7 +311,6 @@ GLOBAL_LIST_EMPTY(meat_list)
 	projectilesound = 'sound/weapons/gun/rifle/shot_alt.ogg'
 	can_patrol = FALSE //They're sent out in waves
 	var/guntimer //takes time to reload after 20 shots
-	var/can_act = TRUE
 	var/reload_time = 15
 	var/remaining_bullets = 20
 	var/maximum_bullets = 20

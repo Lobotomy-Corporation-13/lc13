@@ -78,14 +78,12 @@
 	//teleport vars
 	var/teleport_cooldown
 	var/teleport_cooldown_time = 10 SECONDS
-	var/can_act = TRUE
 	//dash vars
 	var/charging = FALSE
 	var/can_dash = FALSE
-	var/dash_num = 6
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 4 SECONDS
-	var/list/been_hit = list() // Don't get hit twice.
+	var/obj/effect/proc_holder/ability/aimed/dash/wayward/ourdash
 
 /datum/action/innate/abnormality_attack/wayward_tele
 	name = "Teleport"
@@ -109,7 +107,11 @@
 	density = FALSE
 	animate(src, alpha = 0, time = 10 SECONDS)
 	QDEL_IN(src, 10 SECONDS)
-	..()
+	return ..()
+
+/mob/living/simple_animal/hostile/abnormality/wayward/Initialize()
+	. = ..()
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/wayward/Life()
 	. = ..()
@@ -171,7 +173,7 @@
 /mob/living/simple_animal/hostile/abnormality/wayward/BreachEffect(mob/living/carbon/human/user, breach_type)
 	icon_state = "wayward_breach"
 	playsound(src, 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)//this is the sound effect used for Tomerry in the lovetown reception
-	. = ..()
+	return ..()
 
 //*** Teleport code ***//
 /mob/living/simple_animal/hostile/abnormality/wayward/proc/TryTeleport(turf/teleport_target)//argument is used when the proc is called with a client
@@ -227,68 +229,20 @@
 		return
 	if(!can_act)
 		return
-	can_act = FALSE
 	can_dash = FALSE
 	update_icon()//TODO: dash sprite
 	dash_cooldown = world.time + dash_cooldown_time
 	charging = TRUE
-	var/dir_to_target = get_dir(get_turf(src), get_turf(target))
-	been_hit = list()
-	addtimer(CALLBACK(src, PROC_REF(Do_Dash), dir_to_target, 0), 2 SECONDS)//how long it takes for the dash to initiate.
 	playsound(src, 'sound/abnormalities/wayward_passenger/attack1.ogg', 300, 1)
 	icon_state = "wayward_charge"
+	ourdash.Perform(target,src)
 
-/mob/living/simple_animal/hostile/abnormality/wayward/proc/Do_Dash(move_dir, times_ran)
-	can_act = TRUE
-	var/stop_charge = FALSE
-	if(times_ran >= dash_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		charging = FALSE
-		icon_state = "wayward_breach"
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		stop_charge = TRUE
-		break
-	for(var/obj/machinery/door/D in T.contents)
-		if(!D.CanAStarPass(null))
-			stop_charge = TRUE
-			break
-		if(D.density)
-			INVOKE_ASYNC(D, TYPE_PROC_REF(/obj/machinery/door, open), 2)
-	if(stop_charge)
-		playsound(src, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 75, 1)
-		charging = FALSE
-		icon_state = "wayward_breach"
-		return
-	forceMove(T)
-	playsound(src,"sound/abnormalities/thunderbird/tbird_peck.ogg", rand(50, 70), 1)
-	var/list/turfs_to_hit = range(1, T)
-	for(var/turf/TF in turfs_to_hit)//Smash AOE visual
-		new /obj/effect/temp_visual/smash_effect(TF)
-	for(var/mob/living/L in turfs_to_hit)//damage applied to targets in range
-		if(!faction_check_mob(L))
-			if(L in been_hit)
-				continue
-			L.visible_message(span_boldwarning("[src] slices through [L]!"), span_userdanger("[src] rushes past you, searing you with its blades!"))
-			playsound(L, attack_sound, 75, 1)
-			var/turf/LT = get_turf(L)
-			new /obj/effect/temp_visual/kinetic_blast(LT)
-			L.deal_damage(60, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			been_hit += L
-	for(var/obj/vehicle/sealed/mecha/V in turfs_to_hit)
-		if(V in been_hit)
-			continue
-		V.visible_message(span_boldwarning("[src] slices through [V]!"))
-		to_chat(V.occupants, span_userdanger("[src] rushes past you, searing your mech with its blades!"))
-		playsound(V, attack_sound, 75, 1)
-		new /obj/effect/temp_visual/kinetic_blast(get_turf(V))
-		V.take_damage(60, RED_DAMAGE, attack_dir = get_dir(V, src))
-		been_hit += V
-	addtimer(CALLBACK(src, PROC_REF(Do_Dash), move_dir, (times_ran + 1)), 1)
+/mob/living/simple_animal/hostile/abnormality/wayward/proc/endCharge()
+	playsound(src, 'sound/abnormalities/thunderbird/tbird_bolt.ogg', 75, 1)
+	charging = FALSE
+	icon_state = "wayward_breach"
+	can_dash = TRUE
+	update_icon()
 
 /obj/effect/portal/abno_warp
 	name = "dimensional rift"
@@ -303,7 +257,7 @@
 	if(istype(AM, /mob/living/simple_animal/hostile/abnormality/wayward))
 		return
 	playsound(src, 'sound/abnormalities/wayward_passenger/teleport2.ogg', 50, TRUE)
-	..()
+	return ..()
 
 /obj/effect/portal/abno_warp/Initialize()
 	QDEL_IN(src, 3 SECONDS)

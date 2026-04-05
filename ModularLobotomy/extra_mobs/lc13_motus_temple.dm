@@ -80,7 +80,6 @@
 	max_charge = 20
 	clan_charge_cooldown = 1 SECONDS
 	var/attack_tremor = 3
-	var/can_act = TRUE
 	var/ability_damage = 25
 	var/ability_cooldown
 	var/ability_cooldown_time = 10 SECONDS
@@ -646,7 +645,6 @@
 	alpha = 0
 	max_charge = 20
 	clan_charge_cooldown = 30 SECONDS
-	var/can_act = TRUE
 	var/shield_ready = FALSE
 	var/annihilation_ready = FALSE
 	var/attack_delay = 8

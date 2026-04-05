@@ -166,7 +166,6 @@
 	projectiletype = null
 	simple_mob_flags = SILENCE_RANGED_MESSAGE
 	var/can_move = TRUE
-	var/can_act = TRUE
 	/// A failsafe timer in case we miss our lunge, resets it.
 	var/lunge_reset_timer
 	/// How many deciseconds between trash disposal hits? Reduced by 1 decisecond on each hit.

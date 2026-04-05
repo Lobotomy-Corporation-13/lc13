@@ -25,7 +25,6 @@
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/human = 1)
 	move_to_delay = 5
 	ranged = TRUE
-	var/can_act = TRUE
 	/// When this reaches 400 - begins reflecting damage
 	var/damage_taken = 0
 	var/damage_reflection = FALSE
@@ -173,7 +172,6 @@
 	var/poison_damage = 20
 	var/applied_venom = 3
 	var/poison_range = 3
-	var/can_act = TRUE
 	var/guntimer
 
 	ranged = TRUE
@@ -344,18 +342,17 @@
 	ranged = TRUE
 	var/charging = FALSE
 	var/charge_ready = FALSE
-	var/dash_num = 25
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 4 SECONDS
-	var/dash_count = 2
-	var/current_dash = 1
-	var/list/been_hit = list() // Don't get hit twice.
-	var/heal_amount = 250
 	var/damage_taken
 	var/damage_threshold = 450
-	var/dash_damage = 80
 	var/charge_sound = 'sound/effects/ordeals/gold/growl1.ogg'
 	var/gibbing = TRUE
+	var/obj/effect/proc_holder/ability/aimed/dash/corroded/ourdash
+
+/mob/living/simple_animal/hostile/ordeal/dog_corrosion/Initialize()
+	. = ..()
+	grantAbilities()
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/Move()
 	if(charging)
@@ -382,7 +379,7 @@
 		visible_message(span_userdanger("[src] swiftly avoids \the [P]!"))
 		P.Destroy()
 		return
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/AttackingTarget(atom/attacked_target)
 	if(charging)
@@ -397,7 +394,7 @@
 	if(H.health < 0 && gibbing)
 		H.gib()
 		playsound(src, "sound/abnormalities/clouded_monk/eat.ogg", 75, 1)
-		adjustBruteLoss(-heal_amount)
+		adjustBruteLoss(-250)
 	return
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/OpenFire()
@@ -415,66 +412,18 @@
 	new /obj/effect/temp_visual/distortedform_shift(get_turf(src))
 	dash_cooldown = world.time + dash_cooldown_time
 	charging = TRUE
-	var/dir_to_target = get_dir(get_turf(src), get_turf(target))
-	been_hit = list()
-	dash_num = (get_dist(src, target) + 3)
-	addtimer(CALLBACK(src, PROC_REF(Charge), dir_to_target, 0), 8)
 	charge_ready = FALSE
+	ourdash.Perform(target,src)
 	playsound(src, charge_sound, 100, 1)
 
-/mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/Charge(move_dir, times_ran)
-	var/stop_charge = FALSE
-	if(times_ran >= dash_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T || stat == DEAD)
-		charging = FALSE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		stop_charge = TRUE
-	for(var/obj/machinery/door/poddoor/P in T.contents)//FIXME: Still opens the "poddoor" secure shutters
-		stop_charge = TRUE
-		continue
-	if(stop_charge)
-		if((current_dash < dash_count) && target)
-			current_dash += 1
-			addtimer(CALLBACK(src, PROC_REF(PrepCharge), target, TRUE), 2)
-		else
-			current_dash = 1
-		charging = FALSE
-		icon_state = icon_aggro
-		return
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			D.open(2)
-	forceMove(T)
-	for(var/turf/TF in range(1, T))//Smash AOE visual
-		new /obj/effect/temp_visual/smash_effect(TF)
-	for(var/mob/living/L in range(1, T))//damage applied to targets in range
-		if(faction_check_mob(L))
-			continue
-		if(L in been_hit)
-			continue
-		if(L.z != z)
-			continue
-		visible_message(span_boldwarning("[src] bites [L]!"))
-		to_chat(L, span_userdanger("[src] takes a bite out of you!"))
-		var/turf/LT = get_turf(L)
-		new /obj/effect/temp_visual/kinetic_blast(LT)
-		L.deal_damage(dash_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-		been_hit += L
-		playsound(L, 'sound/effects/ordeals/brown/cromer_stab.ogg', 75, 1)
-		if(!ishuman(L))
-			continue
-		var/mob/living/carbon/human/H = L
-		if(H.health < 0 && gibbing)
-			H.gib()
-			playsound(src, "sound/abnormalities/clouded_monk/eat.ogg", 75, 1)
-			adjustBruteLoss(-heal_amount)
-			times_ran = dash_num //stop the charge, we got them!
-	addtimer(CALLBACK(src, PROC_REF(Charge), move_dir, (times_ran + 1)), 0.5)
+/mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/endCharge()
+	charging = FALSE
+	icon_state = icon_aggro
+	update_icon()
+
+/mob/living/simple_animal/hostile/ordeal/dog_corrosion/proc/grantAbilities()
+	ourdash = new()
+	ourdash.gibbing = gibbing
 
 /mob/living/simple_animal/hostile/ordeal/dog_corrosion/strong
 	name = "four-legged beast"
@@ -489,11 +438,12 @@
 	damage_coeff = list(RED_DAMAGE = 1, WHITE_DAMAGE = 0.5, BLACK_DAMAGE = 0.5, PALE_DAMAGE = 1.3)
 	butcher_results = list(/obj/item/food/meat/slab/human = 3)
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/human = 1)
-	dash_num = 30
 	dash_cooldown_time = 3 SECONDS
-	dash_damage = 100
-	dash_count = 3
 	charge_sound = 'sound/effects/ordeals/gold/growl2.ogg'
+
+/mob/living/simple_animal/hostile/ordeal/dog_corrosion/strong/grantAbilities()
+	ourdash = new /obj/effect/proc_holder/ability/aimed/dash/corroded/strong()
+	ourdash.gibbing = gibbing
 
 #undef STATUS_EFFECT_VENOM
 

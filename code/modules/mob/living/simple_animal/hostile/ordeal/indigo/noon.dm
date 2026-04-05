@@ -114,8 +114,6 @@
 	/// I want it to be ranged so it'll use OpenFire() on targets it's not in melee with, which I am overriding with an attempt to use the dash attack. That being said it isn't a real ranged unit.
 	ranged = TRUE
 	projectiletype = null
-	/// Placeholder here until the main PR for can_act and can_move is merged.
-	var/can_act = TRUE
 	/// Holds the next moment that this mob will be allowed to dash.
 	var/dash_cooldown
 	/// This is the amount of time added by its dash attack (Sweep the Backstreets) on use onto its cooldown.

@@ -35,11 +35,6 @@
 						)
 	work_damage_amount = 7
 	work_damage_type = RED_DAMAGE
-	var/dash_num = 50
-	var/list/been_hit = list()
-	var/busy = FALSE
-	var/can_move = TRUE
-	var/can_act = TRUE
 	ego_list = list(
 		/datum/ego_datum/weapon/capote,
 		/datum/ego_datum/armor/capote
@@ -47,6 +42,12 @@
 	gift_type = /datum/ego_gifts/capote
 
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
+
+	var/obj/effect/proc_holder/ability/aimed/dash/brazen_bull/ourdash
+
+/mob/living/simple_animal/hostile/abnormality/brazen_bull/Initialize()
+	. = ..()
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/brazen_bull/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -57,24 +58,9 @@
 	if(prob(60))
 		datum_reference.qliphoth_change(-1)
 
-/mob/living/simple_animal/hostile/abnormality/brazen_bull/Move()
-	if(!can_move)
-		return FALSE
-	return ..()
-
-/// I need to add this check here or it'll smack people while charging.
-/mob/living/simple_animal/hostile/abnormality/brazen_bull/AttackingTarget(atom/attacked_target)
-	if(!can_act)
-		return FALSE
+/mob/living/simple_animal/hostile/abnormality/brazen_bull/handle_automated_action()
 	. = ..()
-
-/mob/living/simple_animal/hostile/abnormality/brazen_bull/Life()
-	. = ..()
-	if(!.)
-		return FALSE
-	if(status_flags & GODMODE)
-		return
-	if(busy)
+	if(!can_act || IsContained() || stat == DEAD)
 		return
 	charge_check()
 
@@ -86,64 +72,11 @@
 		FindTarget(list(pick(possible_targets)), TRUE) // The list(pick()) here makes it equally likely for anyone to be targeted. If you removed it, it'd be based on individual threat level
 		var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
 		if(dir_to_target)
-			can_move = FALSE
-			busy = TRUE
-			can_act = FALSE
-			addtimer(CALLBACK(src, PROC_REF(Charge), dir_to_target, 0, target), 2 SECONDS)
+			ourdash.Perform(target, src)
 			return
 	return
 
-
-/mob/living/simple_animal/hostile/abnormality/brazen_bull/proc/Charge(move_dir, times_ran, target)
-	setDir(move_dir)
-	var/stop_charge = FALSE
-	if(times_ran >= dash_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		stop_charge = TRUE
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		W.obj_destruction()
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			stop_charge = TRUE
-	for(var/mob/living/simple_animal/hostile/abnormality/D in T.contents)
-		if(D.density)
-			stop_charge = TRUE
-
-	if(stop_charge)
-		can_move = TRUE
-		can_act = TRUE
-		busy = TRUE
-		addtimer(CALLBACK(src, PROC_REF(EndCharge)), 7 SECONDS) // This lets us start a new charge.
-		been_hit = list()
-		return
-	forceMove(T)
-
-	for(var/turf/U in range(1, T))
-		var/list/new_hits = HurtInTurf(U, been_hit, 0, RED_DAMAGE, hurt_mechs = TRUE) - been_hit
-		been_hit += new_hits
-		for(var/mob/living/L in new_hits)
-			L.visible_message(span_boldwarning("[src] rams [L]!"), span_userdanger("[src] impales you with its horns!"))
-			playsound(L, attack_sound, 75, 1)
-			new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-			L.deal_damage(40, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-			if(L.stat >= HARD_CRIT)
-				L.gib()
-		for(var/obj/vehicle/V in new_hits)
-			V.take_damage(10, RED_DAMAGE, attack_sound)
-			V.visible_message(span_boldwarning("[src] rams [V]!"))
-	playsound(src,'sound/effects/bamf.ogg', 70, TRUE, 20)
-	for(var/turf/open/R in range(1, src))
-		new /obj/effect/temp_visual/small_smoke/halfsecond(R)
-	addtimer(CALLBACK(src, PROC_REF(Charge), move_dir, (times_ran + 1)), 2)
-
-/// Despite the name, what this proc actually does is allow the Bull to charge again.
-/mob/living/simple_animal/hostile/abnormality/brazen_bull/proc/EndCharge()
-	busy = FALSE
-
 /mob/living/simple_animal/hostile/abnormality/brazen_bull/BreachEffect(mob/living/carbon/human/user)
-		.=..()
+	.=..()
+	if(user)
 		GiveTarget(user)

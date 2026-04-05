@@ -303,7 +303,6 @@ GLOBAL_LIST_EMPTY(apostles)
 	mob_size = MOB_SIZE_HUGE
 	blood_volume = BLOOD_VOLUME_NORMAL
 	can_patrol = TRUE // You have legs, use them.
-	var/can_act = TRUE
 	var/death_counter = 0
 
 /mob/living/simple_animal/hostile/apostle/Move()
@@ -447,11 +446,16 @@ GLOBAL_LIST_EMPTY(apostles)
 	var/spear_cooldown_time = 10 SECONDS
 	var/spear_max = 50
 	var/spear_damage = 300
-	var/list/been_hit = list()
+	var/obj/effect/proc_holder/ability/aimed/dash/spear_apostle/ourdash
+
+
+/mob/living/simple_animal/hostile/apostle/spear/Initialize()
+	.  = ..()
+	ourdash = new()
+	src.AddSpell(ourdash)
 
 /mob/living/simple_animal/hostile/apostle/spear/OpenFire()
 	if(client)
-		SpearAttack(target)
 		return
 
 	if(spear_cooldown <= world.time)
@@ -465,51 +469,8 @@ GLOBAL_LIST_EMPTY(apostles)
 /mob/living/simple_animal/hostile/apostle/spear/proc/SpearAttack(target)
 	if(spear_cooldown > world.time)
 		return
-	can_act = FALSE
-	var/dir_to_target = get_dir(src, target)
-	var/turf/T = get_turf(src)
-	for(var/i = 1 to spear_max)
-		T = get_step(T, dir_to_target)
-		if(T.density)
-			if(i < 4) // Mob attempted to dash into a wall too close, stop it
-				can_act = TRUE
-				return
-			break
-		new /obj/effect/temp_visual/cult/sparks(T)
 	spear_cooldown = world.time + spear_cooldown_time
-	playsound(get_turf(src), 'sound/abnormalities/whitenight/spear_charge.ogg', 75, 0, 5)
-	SLEEP_CHECK_DEATH(22)
-	been_hit = list()
-	playsound(get_turf(src), 'sound/abnormalities/whitenight/spear_dash.ogg', 100, 0, 20)
-	do_dash(dir_to_target, 0)
-
-/mob/living/simple_animal/hostile/apostle/spear/proc/do_dash(move_dir, times_ran)
-	var/stop_charge = FALSE
-	if(times_ran >= spear_max)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		can_act = TRUE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		W.obj_destruction("holy spear")
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			addtimer(CALLBACK (D, TYPE_PROC_REF(/obj/machinery/door, open)))
-	if(stop_charge)
-		can_act = TRUE
-		return
-	forceMove(T)
-	for(var/turf/TF in view(1, T))
-		new /obj/effect/temp_visual/small_smoke/halfsecond(TF)
-		var/list/new_hits = HurtInTurf(T, been_hit, spear_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL)) - been_hit
-		been_hit += new_hits
-		for(var/mob/living/L in new_hits)
-			visible_message(span_boldwarning("[src] runs through [L]!"), span_nicegreen("You impaled heretic [L]!"))
-			new /obj/effect/temp_visual/cleave(get_turf(L))
-	addtimer(CALLBACK(src, PROC_REF(do_dash), move_dir, (times_ran + 1)), 0.5) // SPEED
+	ourdash.Perform(target, src)
 
 /mob/living/simple_animal/hostile/apostle/staff
 	name = "staff apostle"

@@ -40,7 +40,6 @@
 	egoist_attributes = 100
 	loot = list(/obj/item/documents/ncorporation, /obj/item/documents/ncorporation) //Placeholder, we need more loot items
 
-	var/can_act = TRUE
 	var/current_stage = 1 //changes behaviour slightly on phase 2
 	var/stage_threshold = 3000 // enters stage 2 at or below this threshold
 	var/countering = FALSE //are we

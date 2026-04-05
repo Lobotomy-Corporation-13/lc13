@@ -52,11 +52,8 @@
 	//Some Variables cannibalized from helper
 	var/charge_check_time = 1 SECONDS
 	var/teleport_cooldown
-	var/dash_num = 100000	//Mostly a safeguard
-	var/list/been_hit = list()
-	var/can_act = TRUE
-	var/initial_charge_damage = 800
-	var/growing_charge_damage = 0
+
+	var/obj/effect/proc_holder/ability/aimed/dash/kog/ourdash
 
 	var/nihil_present = FALSE
 
@@ -105,6 +102,10 @@
 /datum/action/innate/abnormality_attack/kog_teleport/Activate()
 	addtimer(CALLBACK(A, TYPE_PROC_REF(/mob/living/simple_animal/hostile/abnormality/greed_king, startTeleport)), 1)
 	to_chat(A, chosen_message)
+
+/mob/living/simple_animal/hostile/abnormality/greed_king/Initialize()
+	.  = ..()
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/Life()
 	. = ..()
@@ -168,99 +169,20 @@
 		possible_targets += H
 	if(LAZYLEN(possible_targets))
 		FindTarget(list(pick(possible_targets)), TRUE) // The list(pick()) here makes it equally likely for anyone to be targeted. If you removed it, it'd be based on individual threat level
-		//Start charge
-		var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
-		if(dir_to_target)
-			can_act = FALSE
-			addtimer(CALLBACK(src, PROC_REF(charge), dir_to_target, 0, initial_charge_damage), 2 SECONDS)
+		if(target)
+			ourdash.Perform(target, src)
 			return
 	return
-
 
 /mob/living/simple_animal/hostile/abnormality/greed_king/OpenFire() // This exists so players can manually charge during playable abnormalities.
 	if(!can_act || (!client && !nihil_present))
 		return
 	switch(chosen_attack)
 		if(1)
-			var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
-			can_act = FALSE
-			// do particle effect
-			charge(dir_to_target, 0, initial_charge_damage)
+			ourdash.Perform(target, src)
 	return
 
-/mob/living/simple_animal/hostile/abnormality/greed_king/proc/charge(move_dir, times_ran, charge_damage)
-	setDir(move_dir)
-	var/stop_charge = FALSE
-	if(times_ran >= dash_num)
-		stop_charge = TRUE
-	var/turf/T = get_step(get_turf(src), move_dir)
-	if(!T)
-		been_hit = list()
-		stop_charge = TRUE
-		return
-	if(T.density)
-		stop_charge = TRUE
-	for(var/obj/structure/window/W in T.contents)
-		W.obj_destruction()
-	for(var/obj/machinery/door/D in T.contents)
-		if(D.density)
-			stop_charge = TRUE
-	for(var/mob/living/simple_animal/hostile/abnormality/D in T.contents)	//This caused issues earlier
-		if(D.density)
-			stop_charge = TRUE
-
-	//Stop charging
-	if(stop_charge)
-		can_act = FALSE
-		addtimer(CALLBACK(src, PROC_REF(endCharge)), 7 SECONDS)
-		been_hit = list()
-		return
-	forceMove(T)
-
-	//Hiteffect stuff
-
-	for(var/turf/U in range(1, T))
-		var/list/new_hits = HurtInTurf(U, been_hit, 0, RED_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE)) - been_hit
-		been_hit += new_hits
-		for(var/mob/living/L in new_hits)
-			if(!nihil_present)
-				L.visible_message(span_boldwarning("[src] crunches [L]!"), span_userdanger("[src] rends you with its teeth!"))
-				playsound(L, attack_sound, 75, 1)
-				new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-				if(ishuman(L))
-					L.deal_damage(charge_damage, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
-				else
-					L.adjustRedLoss(80)
-				if(L.stat >= HARD_CRIT)
-					L.gib()
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 20, 1)
-				playsound(L, 'sound/abnormalities/kog/GreedHit2.ogg', 50, 1)
-				for(var/obj/vehicle/V in new_hits)
-					V.take_damage(80, RED_DAMAGE, attack_sound)
-					V.visible_message(span_boldwarning("[src] crunches [V]!"))
-					playsound(V, 'sound/abnormalities/kog/GreedHit1.ogg', 40, 1)
-					playsound(V, 'sound/abnormalities/kog/GreedHit2.ogg', 30, 1)
-				continue
-
-			if(!ishuman(L))
-				L.visible_message(span_boldwarning("[src] smashes [L]!"), span_userdanger("[src] smashes you with her massive fist!"))
-				playsound(L, attack_sound, 75, 1)
-				new /obj/effect/temp_visual/kinetic_blast(get_turf(L))
-				L.adjustRedLoss(80)
-				if(L.stat >= HARD_CRIT)
-					L.gib()
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 20, 1)
-				playsound(L, 'sound/abnormalities/kog/GreedHit2.ogg', 50, 1)
-
-	playsound(src,'sound/effects/bamf.ogg', 70, TRUE, 20)
-	for(var/turf/open/R in range(1, src))
-		new /obj/effect/temp_visual/small_smoke/halfsecond(R)
-	if (IsCombatMap())
-		charge_damage = charge_damage + growing_charge_damage
-	addtimer(CALLBACK(src, PROC_REF(charge), move_dir, (times_ran + 1), charge_damage), 2)
-
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/endCharge()
-	can_act = TRUE
 	if(!client)
 		startTeleport()
 
@@ -295,6 +217,7 @@
 /mob/living/simple_animal/hostile/abnormality/greed_king/proc/NihilModeEnable()
 	NihilIconUpdate()
 	nihil_present = TRUE
+	ourdash.nihil_present = nihil_present
 	fear_level = ZAYIN_LEVEL
 	faction = list("neutral")
 

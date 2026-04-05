@@ -64,7 +64,6 @@
 	var/return_timer
 	var/finisher_cooldown = 0
 	var/finisher_cooldown_time = 60 SECONDS
-	var/can_act = TRUE
 	var/finishing = FALSE
 
 	//PLAYABLES ATTACKS

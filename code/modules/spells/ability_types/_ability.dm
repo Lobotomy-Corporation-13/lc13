@@ -17,6 +17,11 @@
 	var/cooldown = 0
 	/// Time added to cooldown on use.
 	var/cooldown_time = 0
+	//How many charges of this ability we have that dont require cooldown
+	// null means we dont use this mechanic.
+	var/abil_charges = 0
+	//Only contains tags or text identifiers
+	var/list/hit_identifiers = list()
 
 /obj/effect/proc_holder/ability/Initialize()
 	. = ..()
@@ -45,7 +50,7 @@
 	action.UpdateButtonIcon()
 
 /obj/effect/proc_holder/ability/proc/can_cast(mob/user = usr)
-	if(cooldown > world.time)
+	if(cooldown > world.time &&  abil_charges < 1)
 		return FALSE
 
 	if(!action || action.owner != user)
@@ -61,6 +66,12 @@
 
 /obj/effect/proc_holder/ability/proc/Perform(target, user)
 	cooldown = world.time + cooldown_time
+
+	if(abil_charges != null && abil_charges > 0)
+		cooldown = 0
+		abil_charges--
+		update_icon()
+
 	if(cooldown_time > 0)
 		remove_ranged_ability()
 	update_icon()
@@ -88,6 +99,56 @@
 
 /obj/effect/proc_holder/ability/aimed/proc/on_deactivation(mob/user)
 	return
+
+//Easy way of handling immobalization for humans and mobs.
+/obj/effect/proc_holder/ability/proc/ToggleAct(mob/living/dude, status = FALSE)
+	if(ishostile(dude))
+		var/mob/living/simple_animal/hostile/hos = dude
+		hos.can_act = status
+
+//Flicks a overlay on a object. Seemed like a cheaper option for stationary effects.
+/obj/effect/proc_holder/ability/proc/FlickOnAtom(atom/A, icon_file, icon_file_state, flicktime = 10)
+	var/image/effect_flick = image(icon_file,A,icon_file_state,CLOSED_FIREDOOR_LAYER)
+	effect_flick.plane = GAME_PLANE
+	effect_flick.appearance_flags = APPEARANCE_UI_IGNORE_ALPHA
+	flick_overlay_view(effect_flick, A, flicktime)
+	return effect_flick
+
+//Returns true if the identifier is in the list, false if not and automatically adds.
+/obj/effect/proc_holder/ability/proc/HasIdentList(atom/curwibble)
+	var/identifer = AddIdentifier(curwibble)
+	if(identifer in hit_identifiers)
+		return TRUE
+	hit_identifiers += identifer
+	return FALSE
+
+/obj/effect/proc_holder/ability/proc/AddIdentifier(atom/whazzit)
+	if(isturf(whazzit))
+		var/turf/U = whazzit
+		return "[U.x],[U.y],[U.z]"
+	if(isliving(whazzit))
+		var/mob/living/dude = whazzit
+		return dude.tag
+	if(isvehicle(whazzit))
+		var/obj/vehicle/ride = whazzit
+		var/following_ident = "[ride.x],[ride.y],[ride.z]"
+		var/driver = ride.return_drivers()
+		if(isliving(driver))
+			var/mob/living/guy = driver
+			following_ident = "[guy.tag]"
+
+		//Only identify by the driver
+		return "[ride]:[following_ident]"
+
+//Unique interactions with simplemobs such as var alterations
+/obj/effect/proc_holder/ability/proc/AbnoInteraction(mob/living/user)
+	return
+
+/obj/effect/proc_holder/ability/proc/AlterCharge(amt)
+	if(abil_charges == -1)
+		return
+	cooldown = 0
+	abil_charges += amt
 
 /obj/effect/proc_holder/ability/aimed/update_icon()
 	if(!action)

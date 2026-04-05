@@ -68,6 +68,8 @@
 			I am a monster. <br>"),
 	)
 
+	var/obj/effect/proc_holder/ability/aimed/dash/spear_apostle/ourdash
+
 //Work vars
 	var/transform_timer
 	var/list/transform_blacklist = list(
@@ -97,8 +99,6 @@
 	var/breached // what it says on the tin
 	/// List of Living People on Breach
 	var/list/survivors = list()
-	/// Can it perform Another Attack?
-	var/can_act = TRUE
 	var/can_move = FALSE
 	var/can_attack = TRUE
 	var/changed = FALSE
@@ -131,6 +131,7 @@
 /mob/living/simple_animal/hostile/abnormality/distortedform/Initialize()
 	. = ..()
 	soundloop = new(list(src), TRUE)
+	ourdash = new()
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/PostSpawn()
 	..()
@@ -1100,23 +1101,8 @@
 	can_act = TRUE
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/SpearAttack(target)
-	can_act = FALSE
-	var/dir_to_target = get_dir(src, target)
-	var/turf/T = get_turf(src)
-	for(var/i = 1 to 50)
-		T = get_step(T, dir_to_target)
-		if(T.density)
-			if(i < 4) // Mob attempted to dash into a wall too close, stop it
-				can_act = TRUE
-				return
-			break
-		new /obj/effect/temp_visual/cult/sparks(T)
 	special_attack_cooldown = world.time + 10 SECONDS
-	playsound(get_turf(src), 'sound/abnormalities/whitenight/spear_charge.ogg', 75, FALSE, 5)
-	SLEEP_CHECK_DEATH(22)
-	been_hit = list()
-	playsound(get_turf(src), 'sound/abnormalities/whitenight/spear_dash.ogg', 100, FALSE, 20)
-	do_dash(dir_to_target, 0)
+	ourdash.Perform(target, src)
 
 /mob/living/simple_animal/hostile/abnormality/distortedform/proc/do_dash(move_dir, times_ran)
 	var/stop_charge = FALSE
