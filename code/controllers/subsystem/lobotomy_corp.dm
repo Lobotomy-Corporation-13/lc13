@@ -71,7 +71,8 @@ SUBSYSTEM_DEF(lobotomy_corp)
 	var/list/work_stats = list()
 	// List of facility upgrade datums
 	var/list/upgrades = list()
-
+	// Logs of EGO purchased throughout the round
+	var/list/ego_purchase_logs = list()
 	// PE available to be spent
 	var/available_box = 0
 	// PE specifically for PE Quota
