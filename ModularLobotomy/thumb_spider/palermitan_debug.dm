@@ -8,6 +8,8 @@
 	icon_state = "hypertool"
 	w_class = WEIGHT_CLASS_TINY
 	slot_flags = ITEM_SLOT_LPOCKET | ITEM_SLOT_RPOCKET | ITEM_SLOT_BELT
+	/// Reference to an active duel started by this debug kit
+	var/datum/thumb_duel/active_debug_duel
 
 /obj/item/palermitan_debug_kit/attack_self(mob/living/user)
 	. = ..()
@@ -26,15 +28,24 @@
 		"Full Setup",
 		"Grant Base Passives",
 		"Remove Base Passives",
+		"Grant EXP Component",
+		"Add EXP",
+		"Grant Duel Action",
 		"Spawn Gear Set",
 		"Set Weapon Tier",
 		"Set Armor Tier",
 		"Set Attribute Level",
-		"--- (separator) ---",
+		"--- Duel Testing ---",
+		"Spawn Duel Dummy",
+		"Force Start Duel vs Dummy",
+		"Simulate Duel Win",
+		"Simulate Duel Loss",
+		"--- Reset ---",
+		"Reset All",
 	)
 
 	var/choice = tgui_input_list(H, "Palermitan Debug Kit", "Debug Menu", options)
-	if(!choice || choice == "--- (separator) ---")
+	if(!choice || findtext(choice, "---"))
 		return
 
 	switch(choice)
@@ -44,6 +55,12 @@
 			debug_grant_passives(H)
 		if("Remove Base Passives")
 			debug_remove_passives(H)
+		if("Grant EXP Component")
+			debug_grant_exp(H)
+		if("Add EXP")
+			debug_add_exp(H)
+		if("Grant Duel Action")
+			debug_grant_duel_action(H)
 		if("Spawn Gear Set")
 			debug_spawn_gear(H)
 		if("Set Weapon Tier")
@@ -52,15 +69,24 @@
 			debug_set_armor_tier(H)
 		if("Set Attribute Level")
 			debug_set_attributes(H)
+		if("Spawn Duel Dummy")
+			debug_spawn_dummy(H)
+		if("Force Start Duel vs Dummy")
+			debug_force_duel(H)
+		if("Simulate Duel Win")
+			debug_simulate_duel(H, TRUE)
+		if("Simulate Duel Loss")
+			debug_simulate_duel(H, FALSE)
+		if("Reset All")
+			debug_reset_all(H)
 
 /obj/item/palermitan_debug_kit/proc/debug_full_setup(mob/living/carbon/human/H)
-	// Grant base passives
 	debug_grant_passives(H)
-	// Set attributes to 40
+	debug_grant_exp(H)
+	debug_grant_duel_action(H)
 	debug_set_attributes_value(H, 40)
-	// Spawn gear
 	debug_spawn_gear(H)
-	to_chat(H, span_boldnotice("Palermitan Debug: Full setup complete. Attributes set to 40, gear spawned, base passives granted."))
+	to_chat(H, span_boldnotice("Palermitan Debug: Full setup complete. Passives, EXP, duel action, gear, and 40 attributes."))
 
 /obj/item/palermitan_debug_kit/proc/debug_grant_passives(mob/living/carbon/human/H)
 	if(H.GetComponent(/datum/component/palermitan_apprentice))
@@ -136,3 +162,96 @@
 	if(just)
 		just.level = value
 		just.on_update(H)
+
+/obj/item/palermitan_debug_kit/proc/debug_grant_exp(mob/living/carbon/human/H)
+	if(H.GetComponent(/datum/component/palermitan_exp))
+		to_chat(H, span_warning("Already has EXP component."))
+		return
+	H.AddComponent(/datum/component/palermitan_exp)
+	to_chat(H, span_notice("Palermitan Debug: EXP component granted."))
+
+/obj/item/palermitan_debug_kit/proc/debug_add_exp(mob/living/carbon/human/H)
+	var/datum/component/palermitan_exp/exp_comp = H.GetComponent(/datum/component/palermitan_exp)
+	if(!exp_comp)
+		to_chat(H, span_warning("No EXP component. Grant it first."))
+		return
+	var/amount = tgui_input_list(H, "Add how much EXP?", "Add EXP", list("10", "20", "50", "100", "200", "500", "900"))
+	if(!amount)
+		return
+	exp_comp.modify_exp(text2num(amount))
+
+/obj/item/palermitan_debug_kit/proc/debug_grant_duel_action(mob/living/carbon/human/H)
+	// Check if already has the action
+	for(var/datum/action/innate/thumb_duel_challenge/existing in H.actions)
+		to_chat(H, span_warning("Already has duel action."))
+		return
+	var/datum/action/innate/thumb_duel_challenge/duel_action = new()
+	duel_action.Grant(H)
+	to_chat(H, span_notice("Palermitan Debug: Duel challenge action granted."))
+
+/obj/item/palermitan_debug_kit/proc/debug_spawn_dummy(mob/living/carbon/human/H)
+	var/turf/T = get_step(H, H.dir)
+	if(!T)
+		T = get_turf(H)
+	var/mob/living/simple_animal/hostile/palermitan_dummy/D = new(T)
+	var/attr_str = tgui_input_list(H, "Dummy attribute level?", "Dummy Attributes", list("40", "60", "80", "100", "150", "200"))
+	if(attr_str)
+		D.fake_attributes = text2num(attr_str)
+	to_chat(H, span_notice("Palermitan Debug: Duel dummy spawned with [D.fake_attributes] fake attributes."))
+
+/obj/item/palermitan_debug_kit/proc/debug_force_duel(mob/living/carbon/human/H)
+	// End any existing active duel first
+	if(active_debug_duel?.active)
+		active_debug_duel.end_duel(null, null, "cancelled by debug kit")
+		active_debug_duel = null
+	// Spawn a dummy and immediately start a duel
+	var/turf/T = get_step(H, H.dir)
+	if(!T)
+		T = get_turf(H)
+	var/mob/living/simple_animal/hostile/palermitan_dummy/D = new(T)
+	// Make sure the apprentice has the base component
+	if(!H.GetComponent(/datum/component/palermitan_apprentice))
+		H.AddComponent(/datum/component/palermitan_apprentice)
+	if(!H.GetComponent(/datum/component/palermitan_exp))
+		H.AddComponent(/datum/component/palermitan_exp)
+	active_debug_duel = new /datum/thumb_duel(H, D)
+	active_debug_duel.start_duel()
+	to_chat(H, span_notice("Palermitan Debug: Duel started vs dummy (attrs: [D.fake_attributes])."))
+
+/obj/item/palermitan_debug_kit/proc/debug_simulate_duel(mob/living/carbon/human/H, won)
+	// End any existing active duel first (cleans up walls, signals, etc.)
+	if(active_debug_duel?.active)
+		active_debug_duel.cleanup()
+		QDEL_NULL(active_debug_duel)
+	// Make sure the apprentice has components
+	if(!H.GetComponent(/datum/component/palermitan_apprentice))
+		H.AddComponent(/datum/component/palermitan_apprentice)
+	if(!H.GetComponent(/datum/component/palermitan_exp))
+		H.AddComponent(/datum/component/palermitan_exp)
+	// Create a temporary dummy for reward calculation (doesn't start a real duel)
+	var/turf/T = get_turf(H)
+	var/mob/living/simple_animal/hostile/palermitan_dummy/D = new(T)
+	// Use the reward proc directly without starting a duel
+	var/datum/thumb_duel/temp_duel = new(H, D)
+	if(won)
+		temp_duel.grant_duel_rewards(H, D)
+		to_chat(H, span_boldnotice("Palermitan Debug: Simulated duel WIN vs [D.fake_attributes]-attr opponent."))
+	else
+		temp_duel.grant_duel_rewards(D, H)
+		to_chat(H, span_boldwarning("Palermitan Debug: Simulated duel LOSS vs [D.fake_attributes]-attr opponent."))
+	// Clean up temp objects (temp_duel was never started so no walls/signals to clean)
+	qdel(temp_duel)
+	qdel(D)
+
+/obj/item/palermitan_debug_kit/proc/debug_reset_all(mob/living/carbon/human/H)
+	// Remove components
+	var/datum/component/palermitan_apprentice/pal = H.GetComponent(/datum/component/palermitan_apprentice)
+	if(pal)
+		qdel(pal)
+	var/datum/component/palermitan_exp/exp = H.GetComponent(/datum/component/palermitan_exp)
+	if(exp)
+		qdel(exp)
+	// Remove duel action
+	for(var/datum/action/innate/thumb_duel_challenge/act in H.actions)
+		qdel(act)
+	to_chat(H, span_notice("Palermitan Debug: All components and actions removed."))

@@ -67,7 +67,7 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 4: Palermitan EXP + Skill Point Component
+## Step 4: Palermitan EXP + Skill Point Component [CODED]
 **Files to create:**
 - `ModularLobotomy/thumb_spider/palermitan_exp.dm` — EXP tracking component
 
@@ -86,7 +86,7 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 5: Duel System — Core Datum + Arena + Win/Loss
+## Step 5: Duel System — Core Datum + Arena + Win/Loss [CODED]
 **Files to create:**
 - `ModularLobotomy/thumb_spider/palermitan_duel.dm` — duel datum, wall effect, challenge action
 
@@ -112,7 +112,7 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 6: Duel Rewards — Attributes + EXP + Role Tracking
+## Step 6: Duel Rewards — Attributes + EXP + Role Tracking [CODED]
 **Files to modify:**
 - `ModularLobotomy/thumb_spider/palermitan_duel.dm` — add `grant_duel_rewards()` implementation
 

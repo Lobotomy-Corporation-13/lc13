@@ -4674,6 +4674,8 @@
 #include "ModularLobotomy\ring\structures\corporist_artwork.dm"
 #include "ModularLobotomy\thumb_spider\palermitan_base.dm"
 #include "ModularLobotomy\thumb_spider\palermitan_debug.dm"
+#include "ModularLobotomy\thumb_spider\palermitan_duel.dm"
+#include "ModularLobotomy\thumb_spider\palermitan_exp.dm"
 #include "ModularLobotomy\sigsystem\activators.dm"
 #include "ModularLobotomy\sigsystem\parts.dm"
 #include "ModularLobotomy\sigsystem\towers.dm"
