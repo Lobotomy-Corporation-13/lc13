@@ -30,6 +30,7 @@
 	damage_effect_scale = 1.25
 	rapid = 40
 	rapid_fire_delay = 0.4
+	ranged_cooldown_time = 15
 	projectilesound = 'sound/weapons/gun/smg/shot.ogg'
 	casingtype = /obj/item/ammo_casing/caseless/soda_mini
 	var/datum/beam/current_beam = null

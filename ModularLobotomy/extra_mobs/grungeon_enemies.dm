@@ -24,12 +24,41 @@
 	guaranteed_butcher_results = list(/obj/item/food/meat/slab/robot = 4)
 	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
 						/obj/item/stack/sheet/silk/green_simple = 3)
+	var/shieldable = FALSE
+	var/can_protect = FALSE
+	var/shielded_list = list()
 
-/mob/living/simple_animal/hostile/ordeal/grungeon_boss/Move()
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Move()
 	return FALSE
 
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Life()
+	. = ..()
+	for(var/turf/T in range(4, src))
+		for(var/mob/living/simple_animal/L in T) //Simplemobs only
+			return
+			ApplyShield(L)
 
-
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/proc/ApplyShield(mob/living/L)
+	if(!can_protect)
+		if(!faction_check_mob(L, FALSE))
+			// apply status effect
+			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
+			if(!S)
+				S = L.apply_status_effect(/datum/status_effect/locked)
+			if (!S.list_of_defenders.Find(src))
+				S.list_of_defenders += src
+				shielded_list += L
+			// keep a list of everyone locked
+	else
+		if(!faction_check_mob(L, TRUE))
+			// apply status effect
+			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
+			if(!S)
+				S = L.apply_status_effect(/datum/status_effect/locked)
+			if (!S.list_of_defenders.Find(src))
+				S.list_of_defenders += src
+				shielded_list += L
+			// keep a list of everyone locked
 
 
 
@@ -78,10 +107,10 @@
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/green_bot_rocket/proc/PrepareToFire(atom/A) //Copypasted code from TTLS snipers. Intended to serve as the "warning" for the minigun.
-	current_beam = Beam(A, icon_state="blood", time = 0.7 SECONDS)
+	current_beam = Beam(A, icon_state="blood", time = 0.9 SECONDS)
 	can_act = FALSE
-	SLEEP_CHECK_DEATH(9)
-	if(!(A in view(9, src)))
+	SLEEP_CHECK_DEATH(10)
+	if(!(A in view(10, src)))
 		can_act = TRUE
 		return FALSE
 	can_act = TRUE
@@ -111,12 +140,12 @@
 /obj/projectile/ego_bullet/grungeon_rocket
 	name = "rocket"
 	icon_state = "pulse0"
-	damage = 28 // Direct hit
+	damage = 25 // Direct hit
 	damage_type = RED_DAMAGE
 
-/obj/projectile/ego_bullet/rocket/on_hit(atom/target, blocked = FALSE)
+/obj/projectile/ego_bullet/grungeon_rocket/on_hit(atom/target, blocked = FALSE)
 	..()
 	for(var/mob/living/L in view(1, target))
 		new /obj/effect/temp_visual/fire/fast(get_turf(L))
-		L.deal_damage(12, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
+		L.deal_damage(10, RED_DAMAGE, firer, attack_type = (ATTACK_TYPE_RANGED))
 	return BULLET_ACT_HIT
