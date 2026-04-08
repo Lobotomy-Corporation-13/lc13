@@ -1,5 +1,6 @@
+import { resolveAsset } from '../assets';
 import { useBackend, useLocalState } from '../backend';
-import { Box, Button, Flex, Section, Divider, Tab, Tabs, Input, Table, Slider, LabeledControls, BlockQuote, Stack } from '../components';
+import { Box, Button, Flex, Section, Divider, Tab, Tabs, Input, Table, Slider, LabeledControls, BlockQuote, Stack, Collapsible } from '../components';
 import { ButtonCheckbox } from '../components/Button';
 import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
@@ -14,7 +15,7 @@ export const EgoPurchaseConsole = (props, context) => {
   /* ------------ React Hooks ------------*/
 
   const [tab, setTab] = useLocalState(context, 'tab', 1);
-  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", "");
+  const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", null);
   const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 });
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags);
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null);
@@ -38,6 +39,49 @@ export const EgoPurchaseConsole = (props, context) => {
 
   /* ------------ Functions ------------*/
 
+
+  const IsArmorFiltersActive = () => {
+    for(let armor_filter in armorResistanceFilters) {
+      if(armorResistanceFilters[armor_filter] !== -10)
+        return true;
+    }
+    return false;
+  }
+
+  const ActiveFilters = () => {
+    if(nameSearchText !== null && nameSearchText !== "") {
+      return true;
+    }
+
+    if(IsArmorFiltersActive()) {
+      return true;
+    }
+
+    for(let ego_tag of egoTagList){
+      if (ego_tag.tag_checked) {
+        return true;
+      }
+    }
+
+    if(currentWeaponDamtypeFilter !== null){
+      return true;
+    }
+
+    return false;
+  }
+
+
+  const PassesFilters = (abno_datum) => {
+    let has_relevant_ego = false;
+    for(let ego_datum of abno_datum.ego) {
+      if(RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum), abno_datum.name)){
+        has_relevant_ego = true;
+        break;
+      }
+    }
+    return has_relevant_ego;
+  }
+
   const RunThroughFilters = (ego_datum, type, abno_name) => {
     if(!CheckNameSearchFilter(ego_datum, abno_name)) {
       return false;
@@ -45,15 +89,15 @@ export const EgoPurchaseConsole = (props, context) => {
     if(!CheckTagFilters(ego_datum)) {
       return false;
     }
-    if(type === "weapon") {
-      if(!CheckWeaponDamtypeFilters(ego_datum)) {
-        return false;
-      }
-    } else if(type === "armor") {
-        if(!CheckArmorResistanceFilters(ego_datum)) {
-          return false;
-        }
+
+    if(!CheckWeaponDamtypeFilters(ego_datum)) {
+      return false;
     }
+
+    if(!CheckArmorResistanceFilters(ego_datum)) {
+      return false;
+    }
+
     return true;
   };
 
@@ -72,6 +116,10 @@ export const EgoPurchaseConsole = (props, context) => {
   };
 
   const CheckArmorResistanceFilters = datum => {
+    if(IsArmorFiltersActive() && GetEgoDatumType(datum) !== "armor") {
+      return false;
+    }
+
     const decodedProtectionClasses
     = DecodeProtectionClasses(datum.information.armor);
     for (let string in armorResistanceFilters) {
@@ -98,6 +146,10 @@ export const EgoPurchaseConsole = (props, context) => {
   const CheckWeaponDamtypeFilters = datum => {
     if (!currentWeaponDamtypeFilter) {
       return true;
+    }
+
+    if(GetEgoDatumType(datum) != "weapon") {
+      return false;
     }
 
     if (datum.information.damtype_ranged
@@ -436,7 +488,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Stack.Item>
-        <Section title={datum.name}>
+        <Collapsible title={datum.name} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"}>
             <Flex direction="column" align="center">
               <FlexItem
                   as="img"
@@ -462,7 +514,7 @@ export const EgoPurchaseConsole = (props, context) => {
               {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name}/>)}
             </Flex>
 
-          </Section>
+          </Collapsible>
       </Stack.Item>
     );
   };

@@ -31,6 +31,7 @@
 		ui = SStgui.try_update_ui(user, src, ui)
 		if(!ui)
 			ui = new(user, src, "EgoPurchaseConsole", "E.G.O. Purchase Console")
+			ui.set_autoupdate(FALSE)
 			ui.open()
 		return
 
@@ -161,17 +162,30 @@
 	new /obj/effect/pod_landingzone(T, pod)
 	stoplag(2)
 
-// Using this to get a preview icon for Abnormalities. Code 'borrowed' from the RCE Research Machine's bestiary entries
-/obj/machinery/computer/ego_purchase/proc/GetAbnoPreviewIcon(datum/abnormality/abno_datum)
+/obj/machinery/computer/ego_purchase/proc/GetPortraitOrPreview(datum/abnormality/abno_datum)
 	if(!istype(abno_datum))
 		return
-
 	var/wait_did_we_already_do_this = abno_preview_icon_cache[abno_datum.abno_path]
 	if(wait_did_we_already_do_this)
 		return wait_did_we_already_do_this
 
 	var/mob/living/simple_animal/hostile/abnormality/our_critter = abno_datum.abno_path
 	if(!ispath(our_critter, /mob/living/simple_animal/hostile/abnormality))
+		return null
+
+	if(abno_datum.GetPortrait() == "UNKNOWN")
+		var/base64icon = GetAbnoPreviewIcon(abno_datum)
+		abno_preview_icon_cache[abno_datum.abno_path] = base64icon
+		return base64icon
+
+	var/icon/lets_see = icon(file("icons/UI_Icons/abnormality_portraits/[abno_datum.GetPortrait()].png"))
+	var/base64icon = icon2base64(lets_see)
+	return base64icon
+
+// Using this to get a preview icon for Abnormalities. Code 'borrowed' from the RCE Research Machine's bestiary entries
+/obj/machinery/computer/ego_purchase/proc/GetAbnoPreviewIcon(datum/abnormality/abno_datum)
+	var/mob/living/simple_animal/hostile/abnormality/our_critter = abno_datum.abno_path
+	if(!our_critter)
 		return null
 
 	var/icon_file = initial(our_critter.icon)
@@ -181,7 +195,6 @@
 
 	var/icon/I = icon(icon_file, icon_state_name, SOUTH, 1)
 	var/base64icon = icon2base64(I)
-	abno_preview_icon_cache[abno_datum.abno_path] = base64icon
 	return base64icon
 
 // !!!!!!!!!!! Updated TGUI Interface Section !!!!!!!!!!!
@@ -223,7 +236,7 @@
 			"boxes" = AD.stored_boxes,
 			"ego" = ego_list,
 			"reference" = REF(AD),
-			"icon" = GetAbnoPreviewIcon(AD)
+			"icon" = GetPortraitOrPreview(AD)
 		)
 
 		data["abnormalities"] |= list(abno_data)
