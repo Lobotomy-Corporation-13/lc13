@@ -7,6 +7,10 @@
 	var/selected_level = ZAYIN_LEVEL
 	var/delay = 15 SECONDS
 	var/static/list/abno_preview_icon_cache = list()
+	/// This variable allows us to choose a delivery target when it's turned on. A special version of this machine used by the EO's tablet will be able to use it.
+	var/requires_delivery_choice = FALSE
+	/// Related to above. An arrival belt that can be delivered to by the EO's tablet.
+	var/obj/structure/extraction_belt/linked_structure
 
 /obj/machinery/computer/ego_purchase/Initialize()
 	. = ..()
@@ -81,6 +85,7 @@
 	// Pull the abno datum from the ego datum
 	var/datum/abnormality/abno_datum = chosen_datum?.linked_abno
 	var/ego_path = chosen_datum.item_path
+	var/ego_name = chosen_datum.item_path.name
 
 	// If we're missing the abno datum, ego datum or the ego datum doesn't have an item path, stop
 	if(!abno_datum || !chosen_datum || !ispath(ego_path))
@@ -100,8 +105,53 @@
 		playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 50, TRUE)
 		return FALSE
 
+	// Stop if we're doing something weird by moving away from the console
+	var/turf/adjacency_check_turf = get_turf(src)
+	if(!user.Adjacent(adjacency_check_turf))
+		return
+
+	// This following section is used primarily by the version of this computer that the EO's tablet uses. It determines a destination for EGO delivery.
+	var/turf/target = get_turf(src)
+
+	if(requires_delivery_choice)
+		switch(tgui_alert(user,"Where will you send this [ego_name]?", "E.G.O. Delivery Prompt", list("Here","An Agent","Arrival", "Cancel")))
+			// No change in target is required.
+			if("Here")
+				target = get_turf(src) // Redundant
+
+			// Set target to the Agent's turf.
+			if("An Agent")
+				user.playsound_local(user, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
+				var/M = input(user,"To whom would you like to send the E.G.O.?","Select Someone") as null|anything in AllLivingAgents()
+
+				if(!M) // Actually, cancel it
+					user.playsound_local(user, 'sound/machines/terminal_error.ogg', 50, FALSE)
+					to_chat(user, span_warning("Nobody was specified."))
+					return
+
+				target = get_turf(M)
+
+			// Set target to the arrival belt's turf.
+			if("Arrival")
+				if(!linked_structure) // nevermind
+					user.playsound_local(user, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
+					to_chat(user, span_warning("ERROR - E.G.O. ARRIVAL BELT UNLINKED"))
+					return
+
+				target = get_turf(linked_structure)
+
+			// Back out!
+			if("Cancel")
+				user.playsound_local(user, 'sound/machines/terminal_prompt_deny.ogg', 50, FALSE)
+				return
+
+	// Check adjacency again (someone could keep the input open for a while)
+	adjacency_check_turf = get_turf(src)
+	if(!user.Adjacent(adjacency_check_turf))
+		return
+
 	// DeliverEgo will handle logic for instant spawn/drop pod/conveyor belt arrival.
-	INVOKE_ASYNC(src, PROC_REF(DeliverEgo), ego_path, user)
+	INVOKE_ASYNC(src, PROC_REF(DeliverEgo), ego_path, user, target)
 
 	// Take away PE spent and log the purchase.
 	var/list/new_log = list()
@@ -123,21 +173,30 @@
 
 	SSlobotomy_corp.ego_purchase_logs += list(new_log)
 
-// Handles actually delivering purchased E.G.O. - EOs get it immediately at the console, everyone else has to wait a while and then it'll use ShipOut to determine where it lands.
-/obj/machinery/computer/ego_purchase/proc/DeliverEgo(ego_path, mob/living/user, turf/delivery_target_override)
+// Handles actually delivering purchased E.G.O. - EOs get it immediately, everyone else has to wait a while and then it'll use ShipOut to determine where it lands.
+/obj/machinery/computer/ego_purchase/proc/DeliverEgo(ego_path, mob/living/user, turf/delivery_target)
 	if(!ispath(ego_path))
 		return
 	if(!istype(user) || !user.mind)
 		return
 	var/atom/ego
+	var/tablet_delivery = istype(src.loc, /obj/item/extraction/delivery)
+
+	if(tablet_delivery) // If we're delivering E.G.O. from an EO tablet, spawn visual sparks.
+		var/datum/effect_system/spark_spread/sparks = new
+		sparks.set_up(5, 1, delivery_target)
+		sparks.start()
+
+	// If we have a linked arrival belt and our delivery target ISN'T the arrival belt, add a return pad.
+	if(linked_structure && !(delivery_target == get_turf(linked_structure)))
+		var/obj/structure/return_pad/THEPAD = new(delivery_target)
+		THEPAD.linked_structure = linked_structure
 
 	if(user.mind.assigned_role == "Extraction Officer")
-		if(!delivery_target_override) // No target override.
-			ego = new ego_path(get_turf(src))
-			audible_message(span_notice("[usr.name] dispenses a [ego.name] from [src]."))
-			return TRUE
-		else // EO tablet targeted this delivery elsewhere.
-			return TRUE // WIP
+		ego = new ego_path(delivery_target)
+		ego.visible_message(tablet_delivery ? span_notice("Sparks fly as [ego.name] E.G.O. is shipped in by the Extraction Officer!") : span_notice("[user.name] dispenses [ego] E.G.O. from [src]."))
+		return TRUE
+
 	else
 		if(GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
 			delay = initial(delay)/2
@@ -277,9 +336,7 @@
 	data["abnormality_portraits"] = list()
 
 	for(var/datum/abnormality/AD in SSlobotomy_corp.all_abnormality_datums)
-		var/list/abno_data = list(
-			REF(AD) = GetPortraitOrPreview(AD)
-			)
+		var/list/abno_data = list(REF(AD) = GetPortraitOrPreview(AD))
 
 		data["abnormality_portraits"] += abno_data
 
