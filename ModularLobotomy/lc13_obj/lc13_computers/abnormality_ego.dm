@@ -202,7 +202,7 @@
 			delay = initial(delay)/2
 		addtimer(CALLBACK(src, PROC_REF(ShipOut), ego_path), delay)
 		ego = ego_path
-		audible_message(span_notice("[usr.name] has ordered a [ego.name] from [src]. ETA: [delay * 0.1] seconds."))
+		audible_message(span_notice("[usr.name] has ordered [ego.name] E.G.O. from [src]. ETA: [delay * 0.1] seconds."))
 		return TRUE
 
 /obj/machinery/computer/ego_purchase/proc/ShipOut(shipped)

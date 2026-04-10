@@ -101,7 +101,7 @@ export const EgoPurchaseConsole = (props, context) => {
     let has_relevant_ego = false;
     for (let ego_datum of abno_datum.ego) {
       if (RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum),
-      abno_datum.name)) {
+        abno_datum.name)) {
         has_relevant_ego = true;
         break;
       }
@@ -544,7 +544,9 @@ export const EgoPurchaseConsole = (props, context) => {
           </Flex>
 
           <Flex direction="column">
-            {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name} />)}
+            {datum.ego?.map(ego_datum =>
+              <EgoDatumEntry key={ego_datum.reference} datum={ego_datum}
+                available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name} />)}
           </Flex>
 
         </Collapsible>
@@ -1042,8 +1044,8 @@ export const EgoPurchaseConsole = (props, context) => {
               : currentlyDetailedEgoDatum === null
                 ? (
                   <AbnormalitySection />)
-                    : (
-                      <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
+                : (
+                  <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
