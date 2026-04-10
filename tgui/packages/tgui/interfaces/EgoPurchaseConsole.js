@@ -6,11 +6,15 @@ import { FlexItem } from '../components/Flex';
 import { TableCell, TableRow } from '../components/Table';
 import { Window } from '../layouts';
 
-// This interface is primarily based off of the Test Range interface and adapted to resemble the classic E.G.O. purchase console, grouping the E.G.O. by Abnormality and the Abnormalities by Threat Class.
+/* This interface is primarily based off of the Test Range
+interface and adapted to resemble the classic E.G.O. purchase console,
+grouping the E.G.O. by Abnormality and the Abnormalities by Threat Class.
+*/
 
 export const EgoPurchaseConsole = (props, context) => {
   const { act, data } = useBackend(context);
-  const { abnormalities, abnormality_portraits, all_tags, log, user_price_multiplier} = data;
+  const { abnormalities, abnormality_portraits,
+  all_tags, log, user_price_multiplier } = data;
 
   /* ------------ React Hooks ------------*/
 
@@ -21,7 +25,7 @@ export const EgoPurchaseConsole = (props, context) => {
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null);
   const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null);
   const [viewingPurchaseLog, setViewingPurchaseLog] = useLocalState(context, "viewingPurchaseLog", false);
-  const [collapsiblesStateList, setCollapsiblesStateList] = useLocalState(context, "collapsiblesStateList", {})
+  const [collapsiblesStateList, setCollapsiblesStateList] = useLocalState(context, "collapsiblesStateList", {});
 
   /* ------------ Other Variables ------------*/
 
@@ -42,45 +46,45 @@ export const EgoPurchaseConsole = (props, context) => {
   /* ------------ Functions ------------*/
 
 
-  const UpdateCollapsibleStatesList = (key) => {
+  const UpdateCollapsibleStatesList = key => {
 
     let newStateList = { ...collapsiblesStateList };
     newStateList[key] = !newStateList[key];
     setCollapsiblesStateList(newStateList);
-    console.log("test")
   }
 
   const IsArmorFiltersActive = () => {
-    for(let armor_filter in armorResistanceFilters) {
-      if(armorResistanceFilters[armor_filter] !== -10)
+    for (let armor_filter in armorResistanceFilters) {
+      if (armorResistanceFilters[armor_filter] !== -10) {
         return true;
+      }
     }
     return false;
-  }
+  };
 
   const ActiveFilters = () => {
-    if(nameSearchText !== null && nameSearchText !== "") {
+    if (nameSearchText !== null && nameSearchText !== "") {
       return true;
     }
 
-    if(IsArmorFiltersActive()) {
+    if (IsArmorFiltersActive()) {
       return true;
     }
 
-    for(let ego_tag of egoTagList){
+    for (let ego_tag of egoTagList){
       if (ego_tag.tag_checked) {
         return true;
       }
     }
 
-    if(currentWeaponDamtypeFilter !== null){
+    if (currentWeaponDamtypeFilter !== null){
       return true;
     }
 
     return false;
-  }
+  };
 
-  const CheckNameFilterForLogs = (log_entry) => {
+  const CheckNameFilterForLogs = log_entry => {
     if (!nameSearchText) {
       return true;
     }
@@ -89,33 +93,34 @@ export const EgoPurchaseConsole = (props, context) => {
     const log_entry_ego_name = log_entry.ego_name.toLowerCase();
     const comparing = nameSearchText.toLowerCase();
     return (log_entry_abno_name
-      .includes(comparing) || log_entry_ego_name.includes(comparing) || log_entry_buyer_name.includes(comparing));
+      .includes(comparing) || log_entry_ego_name.includes(comparing)
+      || log_entry_buyer_name.includes(comparing));
   }
 
-  const PassesFilters = (abno_datum) => {
+  const PassesFilters = abno_datum => {
     let has_relevant_ego = false;
-    for(let ego_datum of abno_datum.ego) {
-      if(RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum), abno_datum.name)){
+    for (let ego_datum of abno_datum.ego) {
+      if (RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum), abno_datum.name)){
         has_relevant_ego = true;
         break;
       }
     }
     return has_relevant_ego;
-  }
+  };
 
   const RunThroughFilters = (ego_datum, type, abno_name) => {
-    if(!CheckNameSearchFilter(ego_datum, abno_name)) {
+    if (!CheckNameSearchFilter(ego_datum, abno_name)) {
       return false;
     }
-    if(!CheckTagFilters(ego_datum)) {
-      return false;
-    }
-
-    if(!CheckWeaponDamtypeFilters(ego_datum)) {
+    if (!CheckTagFilters(ego_datum)) {
       return false;
     }
 
-    if(!CheckArmorResistanceFilters(ego_datum)) {
+    if (!CheckWeaponDamtypeFilters(ego_datum)) {
+      return false;
+    }
+
+    if (!CheckArmorResistanceFilters(ego_datum)) {
       return false;
     }
 
@@ -137,7 +142,7 @@ export const EgoPurchaseConsole = (props, context) => {
   };
 
   const CheckArmorResistanceFilters = datum => {
-    if(IsArmorFiltersActive() && GetEgoDatumType(datum) !== "armor") {
+    if (IsArmorFiltersActive() && GetEgoDatumType(datum) !== "armor") {
       return false;
     }
 
@@ -156,7 +161,8 @@ export const EgoPurchaseConsole = (props, context) => {
       return true;
     }
     return (datum.information.name.toLowerCase()
-      .includes(nameSearchText.toLowerCase()) || abno_name.toLowerCase().includes(nameSearchText.toLowerCase()));
+      .includes(nameSearchText.toLowerCase())
+      || abno_name.toLowerCase().includes(nameSearchText.toLowerCase()));
   };
 
   const ChangeWeaponDamtypeFilter = color => {
@@ -169,7 +175,7 @@ export const EgoPurchaseConsole = (props, context) => {
       return true;
     }
 
-    if(GetEgoDatumType(datum) != "weapon") {
+    if (GetEgoDatumType(datum) != "weapon") {
       return false;
     }
 
@@ -213,7 +219,7 @@ export const EgoPurchaseConsole = (props, context) => {
     return ((regex_for_armor.test(common_path_eliminated_string) ? "armor"
       : regex_for_melee.test(common_path_eliminated_string) ? "weapon"
         : "auxiliary"));
-  }
+  };
 
   /* ------------ Functional Components ------------*/
 
@@ -259,8 +265,8 @@ export const EgoPurchaseConsole = (props, context) => {
   const EgoDatumEntry = (props, context) => {
     const { datum, available, abno_name } = props;
 
-    const type = GetEgoDatumType(datum)
-    const filtered = !RunThroughFilters(datum, type, abno_name)
+    const type = GetEgoDatumType(datum);
+    const filtered = !RunThroughFilters(datum, type, abno_name);
 
     return (
       <Box>
@@ -312,9 +318,9 @@ export const EgoPurchaseConsole = (props, context) => {
 
         </Flex>
 
-         <FlexItem minWidth="100%">
-            <Divider/>
-          </FlexItem>
+        <FlexItem minWidth="100%">
+          <Divider/>
+        </FlexItem>
       </Box>
     );
   };
@@ -470,7 +476,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}
-      buttons={<RefreshButton/>}>
+        buttons={<RefreshButton/>}>
         <Tabs align="center">
           <Tabs.Tab selected={tab === 1} onClick={() => setTab(1)}>
             {threatclass_names[1]}
@@ -499,7 +505,8 @@ export const EgoPurchaseConsole = (props, context) => {
     return (
       <Stack vertical fill>
         <Stack.Item fill>
-          {abnormalities?.map(abno => (abno.threatclass === tab) && <AbnormalityEntry datum={abno}/>)}
+          {abnormalities?.map(abno => (abno.threatclass === tab)
+          && <AbnormalityEntry datum={abno}/>)}
         </Stack.Item>
       </Stack>
     );
@@ -511,31 +518,32 @@ export const EgoPurchaseConsole = (props, context) => {
     return (
       <Stack.Item>
         <Collapsible title={datum.name + " - " + datum.boxes + " PE"} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"} key={datum.name} open={collapsiblesStateList[datum.name]}
-        onClick={() => UpdateCollapsibleStatesList(datum.name)}>
-            <Flex direction="column" align="center">
-              <FlexItem
-                  as="img"
-                  m={2}
-                  src={`data:image/jpeg;base64,${abnormality_portraits[datum.reference]}`}
-                  height="64px"
-                  width="64px"
-                  style={{
-                    '-ms-interpolation-mode': 'nearest-neighbor',
-                  }}/>
+          onClick={ () => UpdateCollapsibleStatesList(datum.name) }>
+          <Flex direction="column" align="center">
+            <FlexItem
+              as="img"
+              m={2}
+              src={`data:image/jpeg;base64,${abnormality_portraits[datum.reference]}`}
+              height="64px"
+              width="64px"
+              style={{
+                '-ms-interpolation-mode': 'nearest-neighbor',
+              }}/>
 
-              <FlexItem>
-                {datum.boxes} PE
-              </FlexItem>
+            <FlexItem>
+              {datum.boxes} PE
+            </FlexItem>
 
-              <FlexItem minWidth={"100%"}>
-                <Divider  />
-              </FlexItem>
+            <FlexItem minWidth={"100%"}>
+              <Divider/>
+            </FlexItem>
 
 
-            </Flex>
-            <Flex direction="column">
-              {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name}/>)}
-            </Flex>
+          </Flex>
+
+          <Flex direction="column">
+            {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name}/>)}
+          </Flex>
 
           </Collapsible>
       </Stack.Item>
@@ -547,39 +555,40 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Section scrollable fill title="E.G.O. Extraction Log" buttons={<RefreshButton/>}>
-      <Flex direction="column">
-        <FlexItem mb={2}>
-          You may search by Abnormality, user or E.G.O. name using the search bar in the Filters section.
-        </FlexItem>
-        <Table>
-          <TableRow bold>
-                <TableCell textAlign="center">Time</TableCell>
-                <TableCell textAlign="center">User</TableCell>
-                <TableCell textAlign="center">E.G.O.</TableCell>
-                <TableCell textAlign="center">Abnormality</TableCell>
-                <TableCell textAlign="center">Cost</TableCell>
-                <TableCell textAlign="center">PE Balance</TableCell>
-          </TableRow>
-          {log.map(log_entry => CheckNameFilterForLogs(log_entry) &&
-          <TableRow style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>
-            <TableCell>{log_entry.time}</TableCell>
-            <TableCell backgroundColor="#1a1919">{log_entry.buyer_role + " " + log_entry.buyer_name}</TableCell>
-            <TableCell>{log_entry.ego_name + " (" + log_entry.ego_type + ")"}</TableCell>
-            <TableCell backgroundColor="#1a1919">{log_entry.abno_name}</TableCell>
-            <TableCell textAlign="center">{log_entry.ego_final_cost + (log_entry.ego_discount_percent != 0 ? " PE (" + log_entry.ego_discount_percent + "% discount)" : " PE")}</TableCell>
-            <TableCell textAlign="center" backgroundColor="#1a1919">{log_entry.abno_previous_balance + " PE -> " + (log_entry.abno_previous_balance - log_entry.ego_final_cost)} PE</TableCell>
-          </TableRow>
-          )}
-        </Table>
-      </Flex>
+        <Flex direction="column">
+          <FlexItem mb={2}>
+            You may search by Abnormality, user or E.G.O. name using the search bar in the Filters section.
+          </FlexItem>
+          <Table>
+            <TableRow bold>
+              <TableCell textAlign="center">Time</TableCell>
+              <TableCell textAlign="center">User</TableCell>
+              <TableCell textAlign="center">E.G.O.</TableCell>
+              <TableCell textAlign="center">Abnormality</TableCell>
+              <TableCell textAlign="center">Cost</TableCell>
+              <TableCell textAlign="center">PE Balance</TableCell>
+            </TableRow>
+            {log.map(log_entry => CheckNameFilterForLogs(log_entry)
+            && (
+            <TableRow style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>
+              <TableCell>{log_entry.time}</TableCell>
+              <TableCell backgroundColor="#1a1919">{log_entry.buyer_role + " " + log_entry.buyer_name}</TableCell>
+              <TableCell>{log_entry.ego_name + " (" + log_entry.ego_type + ")"}</TableCell>
+              <TableCell backgroundColor="#1a1919">{log_entry.abno_name}</TableCell>
+              <TableCell textAlign="center">{log_entry.ego_final_cost + (log_entry.ego_discount_percent !== 0 ? " PE (" + log_entry.ego_discount_percent + "% discount)" : " PE")}</TableCell>
+              <TableCell textAlign="center" backgroundColor="#1a1919">{log_entry.abno_previous_balance + " PE -> " + (log_entry.abno_previous_balance - log_entry.ego_final_cost)} PE</TableCell>
+            </TableRow>
+            ))}
+          </Table>
+        </Flex>
       </Section>
 
-    )
-  }
+    );
+  };
 
   const RefreshButton = (props, context) => {
-    return (<Button content="Refresh" icon="sync" onClick={() => act('refresh')}/>)
-  }
+    return (<Button content="Refresh" icon="sync" onClick={() => act('refresh')} />)
+  };
 
   /* One of the big components of this interface.
   This is a detailed view of an EGO's properties, it should appear in place of
@@ -1026,10 +1035,10 @@ export const EgoPurchaseConsole = (props, context) => {
       <Window.Content scrollable>
         <Flex fill height={"100%"}>
           <FlexItem grow={3}>
-            {viewingPurchaseLog ? (<PurchaseLog log={log}/>) :
-              currentlyDetailedEgoDatum === null
-                ? (
-                  <AbnormalitySection />)
+            {viewingPurchaseLog ? (<PurchaseLog log={log} />)
+            : currentlyDetailedEgoDatum === null
+              ? (
+                <AbnormalitySection />)
                 : (
                   <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
@@ -1037,7 +1046,7 @@ export const EgoPurchaseConsole = (props, context) => {
             <Divider vertical />
           </Flex.Item>
           <FlexItem >
-            <Button textAlign="center" mb={2} fluid icon={viewingPurchaseLog ? "arrow-left" : "search"} content={viewingPurchaseLog ? "Back" : "View Purchase Log"} color={viewingPurchaseLog ? "red" : "default"} onClick={() => { setViewingPurchaseLog(!viewingPurchaseLog); }}/>
+            <Button textAlign="center" mb={2} fluid icon={viewingPurchaseLog ? "arrow-left" : "search"} content={viewingPurchaseLog ? "Back" : "View Purchase Log"} color={viewingPurchaseLog ? "red" : "default"} onClick={() => { setViewingPurchaseLog(!viewingPurchaseLog); }} />
             <Section title="Filters">
               <Flex direction="column">
                 <FlexItem>
@@ -1093,7 +1102,7 @@ export const EgoPurchaseConsole = (props, context) => {
                 {(
                   <FlexItem mt={2}>
                     E.G.O. Armour Resistance Filters
-                    <Flex direction="row"  maxWidth="24rem" mt={1}>
+                    <Flex direction="row" maxWidth="24rem" mt={1}>
                       <LabeledControls>
                         <LabeledControls.Item label="Min. RED" ml={1}>
                           <ArmorResistanceFilterSlider color="red" resistance_color="red" />
@@ -1108,9 +1117,9 @@ export const EgoPurchaseConsole = (props, context) => {
                           <ArmorResistanceFilterSlider color="teal" resistance_color="pale" />
                         </LabeledControls.Item>
                       </LabeledControls>
-                       <FlexItem align="center" ml={2} mb={4}>
-                          <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
-                        </FlexItem>
+                      <FlexItem align="center" ml={2} mb={4}>
+                        <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
+                      </FlexItem>
                     </Flex>
                   </FlexItem>)}
 
