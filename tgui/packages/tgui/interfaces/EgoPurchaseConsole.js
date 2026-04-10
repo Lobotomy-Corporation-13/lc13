@@ -10,7 +10,7 @@ import { Window } from '../layouts';
 
 export const EgoPurchaseConsole = (props, context) => {
   const { act, data } = useBackend(context);
-  const { abnormalities, all_tags } = data;
+  const { abnormalities, abnormality_portraits, all_tags, log, user_price_multiplier} = data;
 
   /* ------------ React Hooks ------------*/
 
@@ -20,6 +20,8 @@ export const EgoPurchaseConsole = (props, context) => {
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags);
   const [currentWeaponDamtypeFilter, setCurrentWeaponDamtypeFilter] = useLocalState(context, "currentWeaponDamtypeFilter", null);
   const [currentlyDetailedEgoDatum, setCurrentlyDetailedEgoDatum] = useLocalState(context, "currentlyDetailedEgoDatum", null);
+  const [viewingPurchaseLog, setViewingPurchaseLog] = useLocalState(context, "viewingPurchaseLog", false);
+  const [collapsiblesStateList, setCollapsiblesStateList] = useLocalState(context, "collapsiblesStateList", {})
 
   /* ------------ Other Variables ------------*/
 
@@ -39,6 +41,14 @@ export const EgoPurchaseConsole = (props, context) => {
 
   /* ------------ Functions ------------*/
 
+
+  const UpdateCollapsibleStatesList = (key) => {
+
+    let newStateList = { ...collapsiblesStateList };
+    newStateList[key] = !newStateList[key];
+    setCollapsiblesStateList(newStateList);
+    console.log("test")
+  }
 
   const IsArmorFiltersActive = () => {
     for(let armor_filter in armorResistanceFilters) {
@@ -70,6 +80,17 @@ export const EgoPurchaseConsole = (props, context) => {
     return false;
   }
 
+  const CheckNameFilterForLogs = (log_entry) => {
+    if (!nameSearchText) {
+      return true;
+    }
+    const log_entry_buyer_name = log_entry.buyer_name.toLowerCase();
+    const log_entry_abno_name = log_entry.abno_name.toLowerCase();
+    const log_entry_ego_name = log_entry.ego_name.toLowerCase();
+    const comparing = nameSearchText.toLowerCase();
+    return (log_entry_abno_name
+      .includes(comparing) || log_entry_ego_name.includes(comparing) || log_entry_buyer_name.includes(comparing));
+  }
 
   const PassesFilters = (abno_datum) => {
     let has_relevant_ego = false;
@@ -243,7 +264,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Box>
-        <Flex opacity={filtered ? 0.1 : 1}>
+        <Flex opacity={filtered ? 0.2 : 1}>
           <FlexItem>
             <Flex wrap direction="column" align="center">
               <FlexItem>
@@ -269,7 +290,7 @@ export const EgoPurchaseConsole = (props, context) => {
                 <Divider />
               </FlexItem>
               <FlexItem my={1}>
-                Cost: {datum.cost} PE
+                Cost: {datum.cost * user_price_multiplier} PE
               </FlexItem>
               <FlexItem flex>
                 <Button
@@ -448,7 +469,8 @@ export const EgoPurchaseConsole = (props, context) => {
   const AbnormalitySection = (props, context) => {
 
     return (
-      <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}>
+      <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}
+      buttons={<RefreshButton/>}>
         <Tabs align="center">
           <Tabs.Tab selected={tab === 1} onClick={() => setTab(1)}>
             {threatclass_names[1]}
@@ -476,7 +498,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Stack vertical fill>
-        <Stack.Item>
+        <Stack.Item fill>
           {abnormalities?.map(abno => (abno.threatclass === tab) && <AbnormalityEntry datum={abno}/>)}
         </Stack.Item>
       </Stack>
@@ -488,12 +510,13 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Stack.Item>
-        <Collapsible title={datum.name} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"}>
+        <Collapsible title={datum.name + " - " + datum.boxes + " PE"} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"} key={datum.name} open={collapsiblesStateList[datum.name]}
+        onClick={() => UpdateCollapsibleStatesList(datum.name)}>
             <Flex direction="column" align="center">
               <FlexItem
                   as="img"
                   m={2}
-                  src={`data:image/jpeg;base64,${datum.icon}`}
+                  src={`data:image/jpeg;base64,${abnormality_portraits[datum.reference]}`}
                   height="64px"
                   width="64px"
                   style={{
@@ -519,6 +542,45 @@ export const EgoPurchaseConsole = (props, context) => {
     );
   };
 
+  const PurchaseLog = (props, context) => {
+    const { log } = props;
+
+    return (
+      <Section scrollable fill title="E.G.O. Extraction Log" buttons={<RefreshButton/>}>
+      <Flex direction="column">
+        <FlexItem mb={2}>
+          You may search by Abnormality, user or E.G.O. name using the search bar in the Filters section.
+        </FlexItem>
+        <Table>
+          <TableRow bold>
+                <TableCell textAlign="center">Time</TableCell>
+                <TableCell textAlign="center">User</TableCell>
+                <TableCell textAlign="center">E.G.O.</TableCell>
+                <TableCell textAlign="center">Abnormality</TableCell>
+                <TableCell textAlign="center">Cost</TableCell>
+                <TableCell textAlign="center">PE Balance</TableCell>
+          </TableRow>
+          {log.map(log_entry => CheckNameFilterForLogs(log_entry) &&
+          <TableRow style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>
+            <TableCell>{log_entry.time}</TableCell>
+            <TableCell backgroundColor="#1a1919">{log_entry.buyer_role + " " + log_entry.buyer_name}</TableCell>
+            <TableCell>{log_entry.ego_name + " (" + log_entry.ego_type + ")"}</TableCell>
+            <TableCell backgroundColor="#1a1919">{log_entry.abno_name}</TableCell>
+            <TableCell textAlign="center">{log_entry.ego_final_cost + (log_entry.ego_discount_percent != 0 ? " PE (" + log_entry.ego_discount_percent + "% discount)" : " PE")}</TableCell>
+            <TableCell textAlign="center" backgroundColor="#1a1919">{log_entry.abno_previous_balance + " PE -> " + (log_entry.abno_previous_balance - log_entry.ego_final_cost)} PE</TableCell>
+          </TableRow>
+          )}
+        </Table>
+      </Flex>
+      </Section>
+
+    )
+  }
+
+  const RefreshButton = (props, context) => {
+    return (<Button content="Refresh" icon="sync" onClick={() => act('refresh')}/>)
+  }
+
   /* One of the big components of this interface.
   This is a detailed view of an EGO's properties, it should appear in place of
   the EGO list. It's a section + a details component based on the datum type.
@@ -541,13 +603,7 @@ export const EgoPurchaseConsole = (props, context) => {
             : "auxiliary");
 
     return (
-      <Section scrollable fill title={section_title} buttons={[<Button
-        content="Extract"
-        color="green"
-        key="print"
-        onClick={() => act('print_ego', {
-          chosen_ego: detailed_datum.reference,
-        })} />, <ExitDetailsButton key="exit" />]}>
+      <Section scrollable fill title={section_title} buttons={<ExitDetailsButton key="exit" />}>
         {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} />
           : what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} />
             : what_are_we_dealing_with === "shield" ? <ShieldDetails datum={detailed_datum} />
@@ -592,7 +648,7 @@ export const EgoPurchaseConsole = (props, context) => {
         </FlexItem>
 
         <FlexItem>
-          <b>Cost</b>: {(detailed_datum.origin === "LC13" || detailed_datum.origin === "Branch 12") ? detailed_datum.cost + " Unique PE Boxes" : "???"}
+          <b>Cost</b>: {(detailed_datum.origin === "LC13" || detailed_datum.origin === "Branch 12") ? (detailed_datum.cost * user_price_multiplier) + " Unique PE Boxes" : "???"}
         </FlexItem>
 
         <FlexItem>
@@ -968,18 +1024,20 @@ export const EgoPurchaseConsole = (props, context) => {
       height={900}
     >
       <Window.Content scrollable>
-        <Flex>
+        <Flex fill height={"100%"}>
           <FlexItem grow={3}>
-            {currentlyDetailedEgoDatum === null
-              ? (
-                <AbnormalitySection />)
-              : (
-                <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
+            {viewingPurchaseLog ? (<PurchaseLog log={log}/>) :
+              currentlyDetailedEgoDatum === null
+                ? (
+                  <AbnormalitySection />)
+                : (
+                  <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
           </Flex.Item>
           <FlexItem >
+            <Button textAlign="center" mb={2} fluid icon={viewingPurchaseLog ? "arrow-left" : "search"} content={viewingPurchaseLog ? "Back" : "View Purchase Log"} color={viewingPurchaseLog ? "red" : "default"} onClick={() => { setViewingPurchaseLog(!viewingPurchaseLog); }}/>
             <Section title="Filters">
               <Flex direction="column">
                 <FlexItem>
@@ -1057,10 +1115,11 @@ export const EgoPurchaseConsole = (props, context) => {
                   </FlexItem>)}
 
                 <FlexItem my={2}>
-                  E.G.O. Tag Filters
-                  <Flex nowrap direction="column" maxWidth="18rem">
-                    <AllEgoTagCheckboxes />
-                  </Flex>
+                  <Collapsible content="E.G.O. Tag Filters">
+                    <Flex nowrap direction="column" maxWidth="18rem">
+                      <AllEgoTagCheckboxes />
+                    </Flex>
+                  </Collapsible>
                 </FlexItem>
 
               </Flex>
