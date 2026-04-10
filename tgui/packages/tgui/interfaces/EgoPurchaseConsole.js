@@ -544,9 +544,10 @@ export const EgoPurchaseConsole = (props, context) => {
           </Flex>
 
           <Flex direction="column">
-            {datum.ego?.map(ego_datum =>
+            {datum.ego?.map(ego_datum => (
               <EgoDatumEntry key={ego_datum.reference} datum={ego_datum}
-                available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name} />)}
+                available={(ego_datum.cost <= datum.boxes)}
+                  abno_name={datum.name} />))}
           </Flex>
 
         </Collapsible>
