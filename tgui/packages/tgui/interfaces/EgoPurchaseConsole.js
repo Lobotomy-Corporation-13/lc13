@@ -14,7 +14,7 @@ grouping the E.G.O. by Abnormality and the Abnormalities by Threat Class.
 export const EgoPurchaseConsole = (props, context) => {
   const { act, data } = useBackend(context);
   const { abnormalities, abnormality_portraits,
-  all_tags, log, user_price_multiplier } = data;
+    all_tags, log, user_price_multiplier } = data;
 
   /* ------------ React Hooks ------------*/
 
@@ -51,7 +51,7 @@ export const EgoPurchaseConsole = (props, context) => {
     let newStateList = { ...collapsiblesStateList };
     newStateList[key] = !newStateList[key];
     setCollapsiblesStateList(newStateList);
-  }
+  };
 
   const IsArmorFiltersActive = () => {
     for (let armor_filter in armorResistanceFilters) {
@@ -71,13 +71,13 @@ export const EgoPurchaseConsole = (props, context) => {
       return true;
     }
 
-    for (let ego_tag of egoTagList){
+    for (let ego_tag of egoTagList) {
       if (ego_tag.tag_checked) {
         return true;
       }
     }
 
-    if (currentWeaponDamtypeFilter !== null){
+    if (currentWeaponDamtypeFilter !== null) {
       return true;
     }
 
@@ -95,12 +95,13 @@ export const EgoPurchaseConsole = (props, context) => {
     return (log_entry_abno_name
       .includes(comparing) || log_entry_ego_name.includes(comparing)
       || log_entry_buyer_name.includes(comparing));
-  }
+  };
 
   const PassesFilters = abno_datum => {
     let has_relevant_ego = false;
     for (let ego_datum of abno_datum.ego) {
-      if (RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum), abno_datum.name)){
+      if (RunThroughFilters(ego_datum, GetEgoDatumType(ego_datum),
+      abno_datum.name)) {
         has_relevant_ego = true;
         break;
       }
@@ -175,7 +176,7 @@ export const EgoPurchaseConsole = (props, context) => {
       return true;
     }
 
-    if (GetEgoDatumType(datum) != "weapon") {
+    if (GetEgoDatumType(datum) !== "weapon") {
       return false;
     }
 
@@ -319,7 +320,7 @@ export const EgoPurchaseConsole = (props, context) => {
         </Flex>
 
         <FlexItem minWidth="100%">
-          <Divider/>
+          <Divider />
         </FlexItem>
       </Box>
     );
@@ -476,7 +477,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
     return (
       <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}
-        buttons={<RefreshButton/>}>
+        buttons={<RefreshButton />}>
         <Tabs align="center">
           <Tabs.Tab selected={tab === 1} onClick={() => setTab(1)}>
             {threatclass_names[1]}
@@ -506,7 +507,7 @@ export const EgoPurchaseConsole = (props, context) => {
       <Stack vertical fill>
         <Stack.Item fill>
           {abnormalities?.map(abno => (abno.threatclass === tab)
-          && <AbnormalityEntry datum={abno}/>)}
+          && <AbnormalityEntry datum={abno} />)}
         </Stack.Item>
       </Stack>
     );
@@ -518,34 +519,35 @@ export const EgoPurchaseConsole = (props, context) => {
     return (
       <Stack.Item>
         <Collapsible title={datum.name + " - " + datum.boxes + " PE"} color={ActiveFilters() && PassesFilters(datum) ? "green" : "default"} key={datum.name} open={collapsiblesStateList[datum.name]}
-          onClick={ () => UpdateCollapsibleStatesList(datum.name) }>
+          onClick={() => UpdateCollapsibleStatesList(datum.name)}>
           <Flex direction="column" align="center">
             <FlexItem
               as="img"
               m={2}
-              src={`data:image/jpeg;base64,${abnormality_portraits[datum.reference]}`}
+              src={`data:image/jpeg;base64,
+                ${abnormality_portraits[datum.reference]}`}
               height="64px"
               width="64px"
               style={{
                 '-ms-interpolation-mode': 'nearest-neighbor',
-              }}/>
+              }} />
 
             <FlexItem>
               {datum.boxes} PE
             </FlexItem>
 
             <FlexItem minWidth={"100%"}>
-              <Divider/>
+              <Divider />
             </FlexItem>
 
 
           </Flex>
 
           <Flex direction="column">
-            {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name}/>)}
+            {datum.ego?.map(ego_datum => <EgoDatumEntry datum={ego_datum} available={(ego_datum.cost <= datum.boxes)} abno_name={datum.name} />)}
           </Flex>
 
-          </Collapsible>
+        </Collapsible>
       </Stack.Item>
     );
   };
@@ -554,10 +556,11 @@ export const EgoPurchaseConsole = (props, context) => {
     const { log } = props;
 
     return (
-      <Section scrollable fill title="E.G.O. Extraction Log" buttons={<RefreshButton/>}>
+      <Section scrollable fill title="E.G.O. Extraction Log" buttons={<RefreshButton />}>
         <Flex direction="column">
           <FlexItem mb={2}>
-            You may search by Abnormality, user or E.G.O. name using the search bar in the Filters section.
+            You may search by Abnormality, user or E.G.O.
+            name using the search bar in the Filters section.
           </FlexItem>
           <Table>
             <TableRow bold>
@@ -570,14 +573,14 @@ export const EgoPurchaseConsole = (props, context) => {
             </TableRow>
             {log.map(log_entry => CheckNameFilterForLogs(log_entry)
             && (
-            <TableRow style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>
-              <TableCell>{log_entry.time}</TableCell>
-              <TableCell backgroundColor="#1a1919">{log_entry.buyer_role + " " + log_entry.buyer_name}</TableCell>
-              <TableCell>{log_entry.ego_name + " (" + log_entry.ego_type + ")"}</TableCell>
-              <TableCell backgroundColor="#1a1919">{log_entry.abno_name}</TableCell>
-              <TableCell textAlign="center">{log_entry.ego_final_cost + (log_entry.ego_discount_percent !== 0 ? " PE (" + log_entry.ego_discount_percent + "% discount)" : " PE")}</TableCell>
-              <TableCell textAlign="center" backgroundColor="#1a1919">{log_entry.abno_previous_balance + " PE -> " + (log_entry.abno_previous_balance - log_entry.ego_final_cost)} PE</TableCell>
-            </TableRow>
+              <TableRow style={{ border: '2px solid rgb(8, 8, 8)' }} backgroundColor="#111111" textAlign="center" px={1}>
+                <TableCell>{log_entry.time}</TableCell>
+                <TableCell backgroundColor="#1a1919">{log_entry.buyer_role + " " + log_entry.buyer_name}</TableCell>
+                <TableCell>{log_entry.ego_name + " (" + log_entry.ego_type + ")"}</TableCell>
+                <TableCell backgroundColor="#1a1919">{log_entry.abno_name}</TableCell>
+                <TableCell textAlign="center">{log_entry.ego_final_cost + (log_entry.ego_discount_percent !== 0 ? " PE (" + log_entry.ego_discount_percent + "% discount)" : " PE")}</TableCell>
+                <TableCell textAlign="center" backgroundColor="#1a1919">{log_entry.abno_previous_balance + " PE -> " + (log_entry.abno_previous_balance - log_entry.ego_final_cost)} PE</TableCell>
+              </TableRow>
             ))}
           </Table>
         </Flex>
@@ -587,7 +590,7 @@ export const EgoPurchaseConsole = (props, context) => {
   };
 
   const RefreshButton = (props, context) => {
-    return (<Button content="Refresh" icon="sync" onClick={() => act('refresh')} />)
+    return (<Button content="Refresh" icon="sync" onClick={() => act('refresh')} />);
   };
 
   /* One of the big components of this interface.
@@ -1036,11 +1039,11 @@ export const EgoPurchaseConsole = (props, context) => {
         <Flex fill height={"100%"}>
           <FlexItem grow={3}>
             {viewingPurchaseLog ? (<PurchaseLog log={log} />)
-            : currentlyDetailedEgoDatum === null
-              ? (
-                <AbnormalitySection />)
-                : (
-                  <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
+              : currentlyDetailedEgoDatum === null
+                ? (
+                  <AbnormalitySection />)
+                    : (
+                      <EGODetails detailed_datum={currentlyDetailedEgoDatum} />)}
           </FlexItem>
           <Flex.Item>
             <Divider vertical />
