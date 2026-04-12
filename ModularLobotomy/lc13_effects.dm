@@ -62,6 +62,91 @@
 	animate(src, alpha = 100, time = 30)
 	addtimer(CALLBACK(src, PROC_REF(StartAnimation)),30)
 
+// BDragon1727 temp visual effects
+/obj/effect/temp_visual/dir_setting/gray_edge
+	name = "gray edge"
+	icon = 'icons/effects/BDragon1727_effects/48x48.dmi'
+	icon_state = "gray_edge"
+	pixel_x = -8
+	pixel_y = -8
+	duration = 5
+	/// Whether to shift 10 pixels toward the facing direction
+	var/directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/Initialize(mapload, set_dir)
+	. = ..()
+	if(!directional_shift)
+		return
+	switch(dir)
+		if(NORTH)
+			pixel_y += 10
+		if(SOUTH)
+			pixel_y -= 10
+		if(EAST)
+			pixel_x += 10
+		if(WEST)
+			pixel_x -= 10
+
+/obj/effect/temp_visual/dir_setting/gray_edge/seven
+	color = "#00CC00"
+	directional_shift = TRUE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/seven/passthrough
+	directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/zwei
+	color = "#4444FF"
+	directional_shift = TRUE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/zwei/passthrough
+	directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/dieci
+	color = "#FFD700"
+	directional_shift = TRUE
+
+/obj/effect/temp_visual/dir_setting/gray_edge/dieci/passthrough
+	directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1
+	name = "gray cube"
+	icon = 'icons/effects/BDragon1727_effects/48x48.dmi'
+	icon_state = "gray_cube_v1"
+	pixel_x = -8
+	pixel_y = -8
+	duration = 5
+	/// Whether to shift 10 pixels toward the facing direction
+	var/directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1/Initialize(mapload, set_dir)
+	. = ..()
+	if(!directional_shift)
+		return
+	switch(dir)
+		if(NORTH)
+			pixel_y += 10
+		if(SOUTH)
+			pixel_y -= 10
+		if(EAST)
+			pixel_x += 10
+		if(WEST)
+			pixel_x -= 10
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1/seven
+	color = "#00CC00"
+	directional_shift = TRUE
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei
+	color = "#4444FF"
+	directional_shift = TRUE
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1/zwei/passthrough
+	directional_shift = FALSE
+
+/obj/effect/temp_visual/dir_setting/gray_cube_v1/dieci
+	color = "#FFD700"
+	directional_shift = TRUE
+
 //Kikimora Graffiti
 /obj/effect/decal/cleanable/crayon/cognito
 	name = "graffiti"

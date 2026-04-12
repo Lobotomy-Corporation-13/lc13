@@ -408,6 +408,8 @@
 #define COMSIG_MOB_AFTER_APPLY_DAMGE "mob_after_apply_damage"
 /// Blocks the damage from being taken if this is returned in a signal handler
 #define COMPONENT_MOB_DENY_DAMAGE (1<<0)
+///from /datum/status_effect/stacking/rupture/trigger_rupture(): (stacks_before_halving)
+#define COMSIG_RUPTURE_TRIGGERED "rupture_triggered"
 ///from base of /mob/throw_item(): (atom/target)
 #define COMSIG_MOB_THROW "mob_throw"
 ///from base of /mob/verb/examinate(): (atom/target)
@@ -1093,6 +1095,10 @@
 
 //Status signals
 #define COMSIG_STATUS_BLEED_DAMAGE "bleed_damage"
+/// Sent to the attacker when a Poise crit triggers: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_ATTACKER "poise_crit_attacker"
+/// Sent to the target when hit by a Poise crit: (mob/living/target, damage_dealt)
+#define COMSIG_POISE_CRIT_TARGET "poise_crit_target"
 
 /// generally called before temporary non-parallel animate()s on the atom (animation_duration)
 #define COMSIG_ATOM_TEMPORARY_ANIMATION_START "atom_temp_animate_start" // LC13 addition: MODULE ID: FISHING

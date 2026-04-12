@@ -97,6 +97,7 @@
 	exception_hold = list(/obj/item/stack/thumb_east_ammo/inferno = TRUE)
 
 /// Thumb East's propellant ammo box for Thumb Crate. 9x basic propellant and 6x tigermark. These should be the /facility versions so they don't get status effects.
+/// Now also comes with a bandolier. But you're not really gonna give up your belt slot to carry ammo in Facility mode, are you?
 /obj/item/storage/box/thumb_east_ammo
 	name = "thumb east surplus ammo box"
 	desc = "A small, worn box of propellant ammunition that can be loaded into Thumb East weaponry. Judging by its condition... not a very high quality batch of rounds - probably used for training."
@@ -107,6 +108,7 @@
 	component_type = /datum/component/storage/concrete/thumb_east_surplus
 
 /obj/item/storage/box/thumb_east_ammo/PopulateContents()
+	new /obj/item/storage/belt/bandolier/thumb_east(src)
 	// I could put these both in the same for loop but I want them to be in order.
 	for(var/i = 1 to 9)
 		new /obj/item/stack/thumb_east_ammo/facility(src)

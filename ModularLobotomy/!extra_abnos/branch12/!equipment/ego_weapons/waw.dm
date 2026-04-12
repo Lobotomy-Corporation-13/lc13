@@ -5,9 +5,7 @@
 /obj/item/ego_weapon/branch12/plagiarism
 	name = "plagiarism"
 	desc = "This is my, my work!."
-	special = "This weapon has a random damage type, also you are able to turn on 'Idea Theift'. Which causes this weapon to consume 8 Mental Decay from the target, to inflict Mental Detonation. <br><br>\
-	(Mental Detonation: Does nothing until it is 'Shattered.' Once it is 'Shattered,' it will cause Mental Decay to trigger without reducing it's stack. Weapons that cause 'Shatter' gain other benefits as well.) <br>\
-	(Mental Decay: Deals White damage every 5 seconds, equal to its stack, and then halves it. If it is on a mob, then it deals *4 more damage.)"
+	special = "This weapon has a random damage type."
 	icon_state = "plagiarism"
 	force = 60
 	swingstyle = WEAPONSWING_LARGESWEEP
@@ -38,11 +36,14 @@
 	if(!CanUseEgo(user))
 		return
 	damtype = pick(RED_DAMAGE, WHITE_DAMAGE, BLACK_DAMAGE, PALE_DAMAGE)
-	var/datum/status_effect/stacking/lc_mental_decay/D = target.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
+	/*var/datum/status_effect/stacking/lc_mental_decay/D = target.has_status_effect(/datum/status_effect/stacking/lc_mental_decay)
 	if(D.stacks >= detonation_breakpoint)
 		D.stacks -= detonation_breakpoint
-		target.apply_status_effect(/datum/status_effect/mental_detonate)
+		target.apply_status_effect(/datum/status_effect/mental_detonate)*/
+		//Bugged for now. Runtimes when it reads 0
 	..()
+
+
 
 //Degrading Honor
 /obj/item/ego_weapon/branch12/honor

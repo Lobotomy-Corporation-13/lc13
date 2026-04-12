@@ -4,6 +4,8 @@
 	icon = 'ModularLobotomy/_Lobotomyicons/branch12/48x64.dmi'
 	icon_state = "ollie"
 	icon_living = "ollie"
+	pixel_x = -8
+	base_pixel_x = -8
 	del_on_death = TRUE
 	abnormality_origin = ABNORMALITY_ORIGIN_BRANCH12
 

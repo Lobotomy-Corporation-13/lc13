@@ -475,6 +475,12 @@ This empowered state makes them arc lightning to all nearby foes when taking dam
 	sleep(0.2 SECONDS)
 	ArcLightningScan(target_turf, chains + 1)
 
+/obj/item/clothing/suit/armor/ego_gear/realization/rhythm
+	name = "rhythm"
+	desc = "To satisfy people, a product of despair and suffering of someone else is needed."
+	icon_state = "rhythm"
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 70, BLACK_DAMAGE = 40, PALE_DAMAGE = 40)          //Empowers EGO Weapon Rhythm
+
 /* WAW Realizations */
 
 /obj/item/clothing/suit/armor/ego_gear/realization/goldexperience

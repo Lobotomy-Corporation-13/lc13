@@ -3,6 +3,7 @@
 	if(!. || !client)
 		return FALSE
 
+	refresh_status_display_images()
 	ghost_accs = client.prefs.ghost_accs
 	ghost_others = client.prefs.ghost_others
 	var/preferred_form = null

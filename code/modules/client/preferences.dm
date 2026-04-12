@@ -40,6 +40,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/see_chat_non_mob = TRUE
 	///Whether emotes will be displayed on runechat. Requires chat_on_map to have effect. Boolean.
 	var/see_rc_emotes = TRUE
+	/// Status display mode: 0 = Disabled, 1 = Only Effects, 2 = Enabled
+	var/show_status_display = 2
 
 	/// On-Mob Backpack Visibility default
 	var/backpack_visibility = TRUE
@@ -178,8 +180,14 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 	var/client_language = CLIENT_LANGUAGE_ENGLISH
 
 	// Lore Stuff - Currently unused...
-	///What does the player think of TerraGov.
+	///I don't wanna gigafuck the Prefs file.
 	var/terragov_relation = RELATION_NEUTRAL
+
+	//What District do you come from?
+	var/district_origin = WING_UNKNOWN
+
+	//And which Zone did you come from?
+	var/zone_origin = WING_UNKNOWN
 
 	/// Preference about the user's prefered auxiliary console TGUI
 	var/auxiliary_console_tgui = TRUE
@@ -333,7 +341,8 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<br>"
 
 			dat += "<h2>Background Information:</h2>"
-			dat += "<a href='byond://?_src_=prefs;preference=govrelation;task=input'><b>Government Relation:</b> [terragov_relation]</a><BR></td>"
+			dat += "<a href='byond://?_src_=prefs;preference=wingselect;task=input'><b>District Origin:</b> [district_origin]</a><BR>"
+			dat += "<a href='byond://?_src_=prefs;preference=zoneselect;task=input'><b>Zone Origin:</b> [zone_origin]</a><BR></td>"
 
 			dat += "</tr></table>"
 
@@ -651,6 +660,12 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			dat += "<b>Runechat message char limit:</b> <a href='byond://?_src_=prefs;preference=max_chat_length;task=input'>[max_chat_length]</a><br>"
 			dat += "<b>See Runechat for non-mobs:</b> <a href='byond://?_src_=prefs;preference=see_chat_non_mob'>[see_chat_non_mob ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
 			dat += "<b>See Runechat emotes:</b> <a href='byond://?_src_=prefs;preference=see_rc_emotes'>[see_rc_emotes ? TeguTranslate("Enabled", src) : TeguTranslate("Disabled", src)]</a><br>"
+			var/status_display_text
+			switch(show_status_display)
+				if(0) status_display_text = "Disabled"
+				if(1) status_display_text = "Only Effects"
+				if(2) status_display_text = "Enabled"
+			dat += "<b>Show Status Display Icons:</b> <a href='byond://?_src_=prefs;preference=show_status_display'>[TeguTranslate(status_display_text, src)]</a><br>"
 			dat += "<br>"
 			dat += "<b>Action Buttons:</b> <a href='byond://?_src_=prefs;preference=action_buttons'>[(buttons_locked) ? "Locked In Place" : "Unlocked"]</a><br>"
 			dat += "<b>Hotkey mode:</b> <a href='byond://?_src_=prefs;preference=hotkeys'>[(hotkeys) ? "Hotkeys" : "Default"]</a><br>"
@@ -1756,6 +1771,21 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 						return
 					terragov_relation = new_relation
 
+
+				// District Origin
+				if("wingselect")
+					var/new_district = input(user, "Which district do you come from?", "District Selection") as null|anything in GLOB.district_prefs
+					if(!new_district)
+						return
+					district_origin = new_district
+
+				// Zone Origin
+				if("zoneselect")
+					var/new_zone = input(user, "Do you come from the Backstreets or Nest?", "Zone Selection") as null|anything in GLOB.wing_section_prefs
+					if(!new_zone)
+						return
+					zone_origin = new_zone
+
 				if ("preferred_map")
 					var/maplist = list()
 					var/default = "Default"
@@ -1931,6 +1961,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 					see_chat_non_mob = !see_chat_non_mob
 				if("see_rc_emotes")
 					see_rc_emotes = !see_rc_emotes
+				if("show_status_display")
+					show_status_display = (show_status_display + 1) % 3
+					if(parent?.mob)
+						parent.mob.refresh_status_display_images()
 
 				if("action_buttons")
 					buttons_locked = !buttons_locked

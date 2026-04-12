@@ -37,6 +37,7 @@
 		/obj/item/clothing/suit/armor/ego_gear/he/warp   			= /obj/item/clothing/suit/armor/ego_gear/realization/dimension_ripper,
 		/obj/item/clothing/suit/armor/ego_gear/he/aedd				= /obj/item/clothing/suit/armor/ego_gear/realization/experimentation,
 		/obj/item/clothing/suit/armor/ego_gear/he/prank				= /obj/item/clothing/suit/armor/ego_gear/realization/gift,
+		/obj/item/clothing/suit/armor/ego_gear/he/harmony			= /obj/item/clothing/suit/armor/ego_gear/realization/rhythm,
 		// WAW
 		/obj/item/clothing/suit/armor/ego_gear/waw/goldrush 		= /obj/item/clothing/suit/armor/ego_gear/realization/goldexperience,
 		/obj/item/clothing/suit/armor/ego_gear/waw/despair 			= /obj/item/clothing/suit/armor/ego_gear/realization/quenchedblood,

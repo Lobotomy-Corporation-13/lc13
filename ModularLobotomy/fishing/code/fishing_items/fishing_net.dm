@@ -203,6 +203,6 @@
 	icon_state_fished = "trawling_net_clan_full"
 	debris = list(/obj/item/fishing_net/resurgence = 1)
 	net_type = /obj/item/fishing_net/resurgence
-	fishin_cooldown = 30 SECONDS
-	fishin_power = 1
-	enemy_chance = 25
+	fishin_cooldown = 15 SECONDS
+	fishin_power = 1.75
+	enemy_chance = 10

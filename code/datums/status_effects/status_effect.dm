@@ -86,10 +86,30 @@
 //X axis offset for status effect icon, changing this to negative makes the icon appear farther to the left.
 #define STATUS_ICON_OFFSET -5
 
+GLOBAL_LIST_EMPTY(status_display_icons)
+GLOBAL_LIST_EMPTY(status_display_numbers)
+
+/// Add a display ICON image to clients with pref >= 1 (Only Effects or Enabled). Observers always see.
+/proc/add_display_icon_to_clients(image/img)
+	for(var/client/C in GLOB.clients)
+		if(isobserver(C.mob) || C.prefs?.show_status_display >= 1)
+			C.images |= img
+
+/// Add a display NUMBER image to clients with pref >= 2 (Enabled only). Observers always see.
+/proc/add_display_number_to_clients(image/img)
+	for(var/client/C in GLOB.clients)
+		if(isobserver(C.mob) || C.prefs?.show_status_display >= 2)
+			C.images |= img
+
+/// Remove a display image from all clients.
+/proc/remove_image_from_clients(image/img)
+	for(var/client/C in GLOB.clients)
+		C.images -= img
+
 /datum/status_effect/display
 	var/display_name
 	var/display_icon = 'ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi'
-	var/mutable_appearance/icon_overlay
+	var/image/icon_overlay
 
 /datum/status_effect/display/on_apply()
 	. = ..()
@@ -98,7 +118,9 @@
 
 /datum/status_effect/display/on_remove()
 	if(icon_overlay)
-		owner.cut_overlay(icon_overlay)
+		remove_image_from_clients(icon_overlay)
+		GLOB.status_display_icons -= icon_overlay
+		icon_overlay = null
 	..()
 
 	//This is the system for sorting the buff/debuff icons for display status effects.-IP
@@ -110,16 +132,26 @@
 	var/tally = 0
 	for(var/datum/status_effect/display/SE in owner.status_effects)
 		if(SE.icon_overlay)
-			owner.cut_overlay(SE.icon_overlay)
+			remove_image_from_clients(SE.icon_overlay)
+			GLOB.status_display_icons -= SE.icon_overlay
 			SE.icon_overlay = null
 		SE.AddDisplayIcon(tally)
+		tally++
+	// Also handle stacking effects with display icons
+	for(var/datum/status_effect/stacking/SE in owner.status_effects)
+		if(!SE.stacking_display_name)
+			continue
+		SE.remove_stacking_display_overlays()
+		SE.add_stacking_display_icon((WRAP(tally, MINIMUM_ROW_NUMBER, MAXIMUM_ROW_NUMBER) * STATUS_ICON_WIDTH) + STATUS_ICON_OFFSET, 33 + (round(tally * (1 / MAXIMUM_ROW_NUMBER)) * STATUS_ICON_HEIGHT))
 		tally++
 
 	//This is the code that UpdateStatusDisplay calls for each display status effect every time a display status effect is added. -IP
 /datum/status_effect/display/proc/AddDisplayIcon(position)
-	icon_overlay = mutable_appearance(display_icon, display_name, -MUTATIONS_LAYER)
+	icon_overlay = image(display_icon, owner, display_name, -MUTATIONS_LAYER)
+	icon_overlay.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
 	TweakDisplayIcon(position)
-	owner.add_overlay(icon_overlay)
+	GLOB.status_display_icons += icon_overlay
+	add_display_icon_to_clients(icon_overlay)
 
 	//This is for altering the display icon. If you want the icon to be different color you would add onto this like in parasite tree. -IP
 /datum/status_effect/display/proc/TweakDisplayIcon(our_slot)
@@ -217,6 +249,34 @@
 			if(our_id == S.id)
 				. += S
 
+/// Adds or removes status display images from this mob's client based on their preference.
+/// Pref 0 = Disabled, 1 = Only Effects (icons), 2 = Enabled (icons + numbers)
+/mob/proc/refresh_status_display_images()
+	if(!client)
+		return
+	var/pref_level = client.prefs?.show_status_display || 0
+	// Icons: visible at pref >= 1
+	for(var/image/img in GLOB.status_display_icons)
+		if(pref_level >= 1)
+			client.images |= img
+		else
+			client.images -= img
+	// Numbers: visible at pref >= 2
+	for(var/image/img in GLOB.status_display_numbers)
+		if(pref_level >= 2)
+			client.images |= img
+		else
+			client.images -= img
+
+/// Observers always see all status display images.
+/mob/dead/observer/refresh_status_display_images()
+	if(!client)
+		return
+	for(var/image/img in GLOB.status_display_icons)
+		client.images |= img
+	for(var/image/img in GLOB.status_display_numbers)
+		client.images |= img
+
 //////////////////////
 // STACKING EFFECTS //
 //////////////////////
@@ -239,6 +299,18 @@
 	var/underlay_state // the number is concatonated onto the string based on the number of stacks to get the correct state name
 	var/mutable_appearance/status_overlay
 	var/mutable_appearance/status_underlay
+	/// If set, this stacking effect shows a small 10x10 display icon on the mob in the same grid as /datum/status_effect/display
+	var/stacking_display_name
+	/// The display icon image (client-side)
+	var/image/display_icon
+	/// Ones digit number image (client-side)
+	var/image/ones_overlay
+	/// Tens digit number image (client-side)
+	var/image/tens_overlay
+	/// Cached display grid X position
+	var/display_pixel_x = 0
+	/// Cached display grid Y position
+	var/display_pixel_y = 0
 
 /datum/status_effect/stacking/proc/threshold_cross_effect() //what happens when threshold is crossed
 
@@ -247,6 +319,87 @@
 /datum/status_effect/stacking/proc/fadeout_effect() //runs if status is deleted due to being under one stack
 
 /datum/status_effect/stacking/proc/stack_decay_effect() //runs every time tick() causes stacks to decay
+
+/// Creates the stacking display icon at the given pixel position.
+/datum/status_effect/stacking/proc/add_stacking_display_icon(px, py)
+	display_pixel_x = px
+	display_pixel_y = py
+	display_icon = image('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', owner, stacking_display_name, -MUTATIONS_LAYER)
+	display_icon.pixel_x = px
+	display_icon.pixel_y = py
+	display_icon.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	GLOB.status_display_icons += display_icon
+	add_display_icon_to_clients(display_icon)
+	update_stacking_number()
+
+/// Removes all display images (icon + number digits) from all clients.
+/datum/status_effect/stacking/proc/remove_stacking_display_overlays()
+	if(display_icon)
+		remove_image_from_clients(display_icon)
+		GLOB.status_display_icons -= display_icon
+		display_icon = null
+	if(ones_overlay)
+		remove_image_from_clients(ones_overlay)
+		GLOB.status_display_numbers -= ones_overlay
+		ones_overlay = null
+	if(tens_overlay)
+		remove_image_from_clients(tens_overlay)
+		GLOB.status_display_numbers -= tens_overlay
+		tens_overlay = null
+
+/// Updates the number images to reflect current stacks.
+/datum/status_effect/stacking/proc/update_stacking_number()
+	if(!display_icon || !owner)
+		return
+	var/static/list/digit_names = list("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+	// Clear old numbers
+	if(ones_overlay)
+		remove_image_from_clients(ones_overlay)
+		GLOB.status_display_numbers -= ones_overlay
+		ones_overlay = null
+	if(tens_overlay)
+		remove_image_from_clients(tens_overlay)
+		GLOB.status_display_numbers -= tens_overlay
+		tens_overlay = null
+	if(stacks <= 0)
+		return
+	var/clamped = min(stacks, 99)
+	var/ones_digit = clamped % 10
+	var/tens_digit = round(clamped / 10)
+	// Ones digit at icon position
+	ones_overlay = image('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', owner, digit_names[ones_digit + 1], -MUTATIONS_LAYER + 1)
+	ones_overlay.pixel_x = display_pixel_x
+	ones_overlay.pixel_y = display_pixel_y
+	ones_overlay.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	ones_overlay.filters += filter(type = "outline", color = "#ffffff87", size = 1)
+	GLOB.status_display_numbers += ones_overlay
+	add_display_number_to_clients(ones_overlay)
+	// Tens digit shifted 6px left (only if >= 10)
+	if(tens_digit > 0)
+		tens_overlay = image('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', owner, digit_names[tens_digit + 1], -MUTATIONS_LAYER + 1)
+		tens_overlay.pixel_x = display_pixel_x - 6
+		tens_overlay.pixel_y = display_pixel_y
+		tens_overlay.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+		tens_overlay.filters += filter(type = "outline", color = "#ffffff87", size = 1)
+		GLOB.status_display_numbers += tens_overlay
+		add_display_number_to_clients(tens_overlay)
+
+/// Triggers a full re-layout of all display icons (display effects + stacking effects with display).
+/datum/status_effect/stacking/proc/trigger_display_refresh()
+	// If any display effect exists, delegate to its UpdateStatusDisplay which handles both types
+	for(var/datum/status_effect/display/D in owner.status_effects)
+		D.UpdateStatusDisplay()
+		return
+	// No display effects — reposition stacking effects ourselves
+	var/tally = 0
+	for(var/datum/status_effect/stacking/SE in owner.status_effects)
+		if(!SE.stacking_display_name)
+			continue
+		SE.remove_stacking_display_overlays()
+		var/column = (WRAP(tally, 0, 4) * 10) + (-5)
+		var/row = 33 + (round(tally * 0.25) * 10)
+		SE.add_stacking_display_icon(column, row)
+		tally++
 
 /datum/status_effect/stacking/proc/on_threshold_cross()
 	threshold_cross_effect()
@@ -291,6 +444,8 @@
 		status_underlay.icon_state = "[underlay_state][stacks]"
 		owner.add_overlay(status_overlay)
 		owner.underlays += status_underlay
+		if(stacking_display_name)
+			update_stacking_number()
 	else
 		fadeout_effect()
 		qdel(src) //deletes status if stacks fall under one
@@ -315,6 +470,25 @@
 	status_underlay.alpha = 40
 	owner.add_overlay(status_overlay)
 	owner.underlays += status_underlay
+	if(stacking_display_name)
+		trigger_display_refresh()
+	return ..()
+
+/datum/status_effect/stacking/on_remove()
+	// Display cleanup happens here (after LAZYREMOVE from status_effects) to match
+	// how /datum/status_effect/display handles it in on_remove(). This ensures the
+	// dying effect is no longer in the status_effects list when a refresh is triggered.
+	if(stacking_display_name)
+		remove_stacking_display_overlays()
+		// Trigger refresh on remaining effects so the grid re-layouts
+		for(var/datum/status_effect/display/D in owner.status_effects)
+			D.UpdateStatusDisplay()
+			return ..()
+		for(var/datum/status_effect/stacking/SE in owner.status_effects)
+			if(!SE.stacking_display_name)
+				continue
+			SE.trigger_display_refresh()
+			break
 	return ..()
 
 /datum/status_effect/stacking/Destroy()

@@ -1865,6 +1865,12 @@
 		return FALSE
 	return TRUE
 
+/obj/item/ego_weapon/animalism/Destroy()
+	saw_loop_delay = null
+	saw_target = null
+	return ..()
+
+
 /obj/item/ego_weapon/psychic
 	name = "psychic dagger"
 	desc = "A saber from the deepest sea, meant for a groom's mortality."

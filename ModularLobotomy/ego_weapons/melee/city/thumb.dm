@@ -120,7 +120,7 @@
 	name = "thumb east soldato rifle"
 	desc = "A rifle used by the rank and file of the Thumb in the eastern parts of the City. There is a sharp bayonet built into the front.\n"+\
 	"Despite its name and appearance, it is used exclusively for melee combat. Soldatos load these rifles with a special type of propellant ammunition which enhances their strikes."
-	// Rifle sprites by Yumi
+	// Prior Rifle sprites by Yumi, current Rifle sprites by Zeratino
 	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/thumb_east_held_left.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/thumb_east_held_right.dmi'
@@ -192,6 +192,8 @@
 	var/finisher_windup = 1.6 SECONDS
 	/// Are we currently performing a channeled action like leaping or reloading?
 	var/busy = FALSE
+	/// Cooldown for balloon alerts to avoid spamming the user
+	var/balloon_alert_cooldown
 
 	// Ammo variables.
 	/// Maximum ammo capacity that this weapon can hold.
@@ -438,6 +440,9 @@
 				return
 	else
 		to_chat(user, span_userdanger("Combo attacks with this weapon are currently disabled, use it in-hand to re-enable them."))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "Combo attacks disabled. Use in-hand to re-enable.")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		playsound(src, dryfire_sound, 65)
 	return
 
@@ -523,6 +528,14 @@
 	VentHeat(user)
 	ReturnToNormal(user)
 	busy = TRUE
+
+	// Inhand reload animation if you're using the default sprites
+	var/our_original_icon_state = initial(icon_state)
+	var/should_return_to_closed_state = FALSE
+	if((our_original_icon_state == "thumb_east_podao_closed") || our_original_icon_state == "thumb_east_podao_silver_closed")
+		should_return_to_closed_state = TRUE
+		icon_state = splicetext(our_original_icon_state, -6, 0, "open")
+
 	if(do_after(user, reload_start_windup, src, progress = TRUE, interaction_key = "thumb_east_reload", max_interact_count = 1))
 		// If we reached this line, we've started the reload properly now. Being interrupted at this point causes a ReloadFailure(), you will spill the ammo you're loading.
 		// This first block will eject all our spent and unspent ammo if we're using a weapon with SPENT_RELOADEJECT behaviour (the podao).
@@ -552,11 +565,17 @@
 			else
 				INVOKE_ASYNC(src, PROC_REF(ReloadFailure), ammo_item, user)
 				busy = FALSE
+				if(should_return_to_closed_state)
+					icon_state = our_original_icon_state
 				return FALSE
 		busy = FALSE
+		if(should_return_to_closed_state)
+			icon_state = our_original_icon_state
 	else
 		busy = FALSE
 		to_chat(user, span_danger("You abort your reload!"))
+		if(should_return_to_closed_state)
+			icon_state = our_original_icon_state
 		return FALSE
 
 	// We only reach this part if we successfully loaded the rounds we wanted to load. Play the reload_end_sound with a small delay so it sounds nicer.
@@ -648,6 +667,7 @@
 		if(istype(unfortunate_hat) && overheat >= 6)
 			to_chat(user, span_danger("Your [unfortunate_hat.name] burns up from the heat being vented out of your weapon!"))
 			// Placeholder. This animate doesn't actually do anything because the user's icon overlays need to actually get updated... Manually update_body() and update_inv_head() don't seem to work.
+			// Update: I got amanitaspooder to make an animation for this, I just gotta adjust it a bit now since the OG sprite changed so I'll do that soonTM
 			animate(unfortunate_hat, 1 SECONDS, alpha = 0, color = COLOR_VIVID_RED, pixel_x = 2, pixel_y = 2, easing = CUBIC_EASING)
 			QDEL_IN(unfortunate_hat, 1.1 SECONDS)
 	overheat = 0
@@ -725,8 +745,10 @@
 	lunge_cooldown_timer = null
 	if(combo_stage == COMBO_NO_AMMO)
 		to_chat(user, span_nicegreen("You're ready to lunge and begin a new combo again."))
+		user.balloon_alert(user, "You're ready to lunge again.")
 	else
 		to_chat(user, span_nicegreen("You're ready to lunge again, once your current combo is finished."))
+		user.balloon_alert(user, "You're ready to lunge again.")
 
 /// This proc is our opener attack. We try to lunge at people from range by spending a round. It is actual stepping, not teleporting.
 /// If we reach our target with it, we automatically hit them. If we don't, we can still benefit from the fired round's bonuses if we land a hit before the combo times out.
@@ -734,9 +756,15 @@
 	// This will not stop you from trying to lunge through transparent objects, but if they are dense, you will not reach your target.
 	if(!(can_see(user, target, lunge_range)))
 		to_chat(user, span_warning("You can't reach your target!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You can't reach your target!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		return FALSE
 	if(!lunge_ready)
 		to_chat(user, span_warning("You're not ready to lunge yet!"))
+		if(balloon_alert_cooldown < world.time)
+			user.balloon_alert(user, "You're not ready to lunge yet!")
+			balloon_alert_cooldown = world.time + 0.4 SECONDS
 		return FALSE
 
 	combo_stage = COMBO_LUNGE
@@ -908,7 +936,11 @@
 /obj/item/ego_weapon/city/thumb_east/podao
 	name = "thumb east podao"
 	desc = "A traditional podao fitted with a system to load specialized propellant ammunition. Even Thumb Capos can struggle to handle the impressive thrust generated by this blade."
-	icon_state = "thumb_east_podao"
+	// Sprite by Zeratino
+	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj_64x64.dmi'
+	icon_state = "thumb_east_podao_closed"
+	base_pixel_x = 8
+	base_pixel_y = 8
 	inhand_icon_state = "thumb_east_podao"
 	hitsound = 'sound/weapons/ego/thumb_east_podao_attack.ogg'
 	reload_start_sound = 'sound/weapons/ego/thumb_east_podao_reload_start.ogg'
@@ -944,6 +976,14 @@
 	combo_description = "This weapon's combo consists of a <b>long-range lunge</b>, followed by a <b>circular AoE sweep</b> around the user, and ends with a devastating but telegraphed <b>ranged AoE leap</b> on the target. This leap can be triggered in melee or at range. This finisher will Tremor Burst the target if it has 30 stacks of Tremor.\n"+\
 	"If you trigger but miss your lunge, you can still continue the combo by landing a regular hit on-target."
 	motion_values = list(COMBO_NO_AMMO = 1, COMBO_LUNGE = 1, COMBO_ATTACK2 = 1.3, COMBO_FINISHER = 2, COMBO_ATTACK2_AOE = 1, COMBO_FINISHER_AOE = 1.2)
+	var/datum/element/item_scaling/scaling_element
+	var/needs_scaling = TRUE
+
+/obj/item/ego_weapon/city/thumb_east/podao/Initialize(mapload)
+	. = ..()
+	if(needs_scaling)
+		scaling_element = new(src)
+		scaling_element.Attach(src, 1, 0.8, -20, -20)
 
 /// Lei Heng's Podao. Players should never ever be given this, it's for staff. Couldn't let the really cool sprite by DWK and Potassium_19 go to waste.
 /// It will have a special ability that lets it fire off 6 bullets in a special attack like Furioso or Mirage Storm, but I haven't coded it yet.
@@ -951,8 +991,10 @@
 	name = "tiantui star's blade"
 	desc = "A traditional podao fitted with a system to load specialized propellant ammunition. It inspires awe - this isn't a normal blade, is it...?"
 	// Tiantui Star's Blade obj sprite by Potassium_19 and inhand sprites by DWK
-	icon_state = "thumb_east_tiantuistarblade"
-	inhand_icon_state = "thumb_east_tiantuistarblade"
+	icon = 'ModularLobotomy/_Lobotomyicons/thumb_east_obj.dmi'
+	icon_state = "thumb_east_podao_tiantui"
+	inhand_icon_state = "thumb_east_podao_tiantui"
+	needs_scaling = FALSE
 	force = 92
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 130,

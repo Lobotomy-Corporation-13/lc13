@@ -95,7 +95,8 @@
 				if (3 to INFINITY)
 					if (i == ingredients.len - 1)
 						ending = ", and "
-			ingredients_listed += "\a [ingredient.name][ending]"
+			if(ingredient)
+				ingredients_listed += "\a [ingredient.name][ending]"
 	examine_list += "It contains [LAZYLEN(ingredients) ? "[ingredients_listed]" : " no ingredients, "]making a [custom_adjective()]-sized [initial(atom_parent.name)]."
 
 
