@@ -25,18 +25,23 @@
 	silk_results = list(/obj/item/stack/sheet/silk/green_advanced = 2,
 						/obj/item/stack/sheet/silk/green_simple = 3)
 	var/shieldable = FALSE
-	var/can_protect = FALSE
+	var/can_protect = TRUE
 	var/shielded_list = list()
+	var/shielded_tiles_list = list()
+	can_protect = FALSE
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Move()
 	return FALSE
 
-/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Life()
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Initialize()
 	. = ..()
 	for(var/turf/T in range(4, src))
-		for(var/mob/living/simple_animal/L in T) //Simplemobs only
-			return
+		var/obj/effect/shielder_field/DF = new(T)
+		shielded_tiles_list += DF
+		DF.shielder = src
+		for(var/mob/living/simple_animal/L in T)
 			ApplyShield(L)
+			return
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/proc/ApplyShield(mob/living/L)
 	if(!can_protect)
@@ -48,7 +53,7 @@
 			if (!S.list_of_defenders.Find(src))
 				S.list_of_defenders += src
 				shielded_list += L
-			// keep a list of everyone locked
+			// keep a list of everyone shielded
 	else
 		if(!faction_check_mob(L, TRUE))
 			// apply status effect
@@ -58,9 +63,43 @@
 			if (!S.list_of_defenders.Find(src))
 				S.list_of_defenders += src
 				shielded_list += L
-			// keep a list of everyone locked
+			// keep a list of everyone shielded
+
+/obj/effect/shielder_field
+	name = "Shielded"
+	icon = 'icons/turf/floors.dmi'
+	icon_state = "binary_tsp"
+	anchored = TRUE
+	var/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/shielder
+
+/obj/effect/defender_field/Initialize()
+	. = ..()
+	animate(src, alpha = 255, time = 0.5 SECONDS)
+
+// /obj/effect/defender_field/Crossed(atom/movable/AM)
+// 	. = ..()
+// 	if (isliving(AM))
+// 		var/mob/living/L = AM
+// 		shielder.ApplyShield(L)
+// 		if(ishuman(L))
+// 			var/mob/living/carbon/human/H = L
+// 			H.deal_damage(10, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
+// 			to_chat(H, span_warning("You get shocked by the electic fields"))
+
+// In case I need it back
+
+/datum/status_effect/grungeon_shield
+	id = "grungeon_shield"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = /atom/movable/screen/alert/status_effect/grungeon_shield
+	var/list/list_of_defenders = list()
 
 
+/atom/movable/screen/alert/status_effect/grungeon_shield
+	name = "Shielded"
+	desc = "You are being shielded by a nearby aegis of answers!"
+	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
+	icon_state = "protection"
 
 
 
