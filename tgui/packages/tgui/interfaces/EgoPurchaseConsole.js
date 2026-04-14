@@ -115,7 +115,9 @@ export const EgoPurchaseConsole = (props, context) => {
       || log_entry_buyer_name.includes(comparing));
   };
 
-  // Checks whether an Abnormality Datum or any of its EGO passes current filters.
+  /* Checks whether an Abnormality Datum
+  or any of its EGO passes current filters.
+  */
   const PassesFilters = abno_datum => {
     let has_relevant_ego = false;
     for (let ego_datum of abno_datum.ego) {
@@ -385,7 +387,7 @@ export const EgoPurchaseConsole = (props, context) => {
           <FlexItem mt={3}>
             <Button
               content="View Details"
-              onClick={() => {setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx });}} />
+              onClick={() => { setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx }); }} />
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -415,7 +417,7 @@ export const EgoPurchaseConsole = (props, context) => {
           <FlexItem mt={3}>
             <Button
               content="View Details"
-              onClick={() => setCurrentlyDetailedEgoDatum(datum)} />
+              onClick={() => { setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx }); }} />
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -439,7 +441,7 @@ export const EgoPurchaseConsole = (props, context) => {
           <FlexItem mt={3}>
             <Button
               content="View Details"
-              onClick={() => setCurrentlyDetailedEgoDatum(datum)} />
+              onClick={() => { setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx }); }} />
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -459,7 +461,7 @@ export const EgoPurchaseConsole = (props, context) => {
           <FlexItem mt={3}>
             <Button
               content="View Details"
-              onClick={() => setCurrentlyDetailedEgoDatum(datum)} />
+              onClick={() => { setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx }); }} />
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -1050,7 +1052,7 @@ export const EgoPurchaseConsole = (props, context) => {
   // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
     return (<Button mx={1} icon="arrow-left" color="red" content="Back"
-      onClick={() => { OpenDetails(null); }} />);
+      onClick={() => { setCurrentlyDetailedEgoDatum(null); act('noise', { "sfx": confirm_sfx }); }} />);
   };
 
   // The actual EgoPurchaseConsole interface component.
@@ -1084,7 +1086,7 @@ export const EgoPurchaseConsole = (props, context) => {
                         placeholder="Search..."
                         autoFocus
                         value={nameSearchText}
-                        onInput={(_, value) => {setNameSearchText(value); act('type');}}
+                        onInput={(_, value) => { setNameSearchText(value); act('type'); }}
                         fluid
                       />
                     </Flex.Item>
@@ -1145,7 +1147,7 @@ export const EgoPurchaseConsole = (props, context) => {
                         </LabeledControls.Item>
                       </LabeledControls>
                       <FlexItem align="center" ml={2} mb={4}>
-                        <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); act('noise', { "sfx": deny_sfx });}} />
+                        <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); act('noise', { "sfx": deny_sfx }); }} />
                       </FlexItem>
                     </Flex>
                   </FlexItem>)}
