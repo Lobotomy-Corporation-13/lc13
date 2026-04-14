@@ -84,6 +84,110 @@
 /proc/is_thumbfather_rapier(obj/item/ego_weapon/city/weapon)
 	return istype(weapon, /obj/item/ego_weapon/city/thumbfather_rapier)
 
+/// Returns TRUE if the user is permitted to wield thumbfather weapons without triggering the discipline system.
+/// Only the Ex Thumb Sottocapo and their Apprentice are authorized. Bypassed on non-city maps and the tutorial level.
+/proc/thumbfather_is_authorized(mob/user)
+	if(!ishuman(user))
+		return TRUE
+	var/mob/living/carbon/human/H = user
+	if(H.mind?.assigned_role in list("Ex Thumb Sottocapo", "Thumb Apprentice"))
+		return TRUE
+	if(!(SSmaptype.maptype in SSmaptype.citymaps))
+		return TRUE
+	if(is_tutorial_level(H.z))
+		return TRUE
+	return FALSE
+
+/// Beeps three times, fires an acceleration round into a random limb of the holder,
+/// then force-drops itself. On the 3rd+ offense against the same mob, the limb is dismembered.
+/proc/thumbfather_discipline_sequence(obj/item/ego_weapon/city/weapon, mob/living/carbon/human/user)
+	if(!istype(weapon) || !istype(user))
+		return
+	var/defense_active
+	var/list/defense_strikes
+	var/detonation_sfx
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		defense_active = R.defense_active
+		defense_strikes = R.defense_strikes
+		detonation_sfx = R.detonation_sound
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		defense_active = K.defense_active
+		defense_strikes = K.defense_strikes
+		detonation_sfx = K.detonation_sound
+	if(defense_active)
+		return
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		R.defense_active = TRUE
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		K.defense_active = TRUE
+
+	var/user_ref = REF(user)
+	var/strikes = defense_strikes[user_ref] || 0
+	strikes++
+	defense_strikes[user_ref] = strikes
+
+	to_chat(user, span_userdanger("\The [weapon] recognizes you as an inferior. It begins to beep ominously!"))
+	user.visible_message(span_warning("\The [weapon] in [user]'s hand starts beeping loudly!"))
+
+	// Three warning beeps over ~2 seconds — dropping the weapon cancels the discipline.
+	for(var/i in 1 to 3)
+		if(QDELETED(weapon) || QDELETED(user) || !user.is_holding(weapon))
+			thumbfather_clear_defense_active(weapon)
+			return
+		playsound(get_turf(weapon), 'sound/machines/triple_beep.ogg', 60, FALSE)
+		sleep(7)
+
+	if(QDELETED(weapon) || QDELETED(user) || !user.is_holding(weapon))
+		thumbfather_clear_defense_active(weapon)
+		return
+
+	// Pick a limb to fire into. Arms and legs are the Thumb's preferred punishment zones.
+	var/list/preferred_zones = list(BODY_ZONE_L_ARM, BODY_ZONE_R_ARM, BODY_ZONE_L_LEG, BODY_ZONE_R_LEG)
+	var/obj/item/bodypart/BP
+	var/target_zone
+	for(var/zone in shuffle(preferred_zones))
+		var/obj/item/bodypart/candidate = user.get_bodypart(zone)
+		if(candidate)
+			BP = candidate
+			target_zone = zone
+			break
+	if(!BP && length(user.bodyparts))
+		BP = pick(user.bodyparts)
+		target_zone = BP.body_zone
+
+	playsound(get_turf(weapon), detonation_sfx, 90, FALSE, 10)
+	if(BP)
+		user.visible_message(span_danger("\The [weapon] discharges an acceleration round into [user]'s [BP.name]!"),
+			span_userdanger("\The [weapon] fires an acceleration round into your own [BP.name]!"))
+	else
+		user.visible_message(span_danger("\The [weapon] discharges an acceleration round into [user]!"),
+			span_userdanger("\The [weapon] fires an acceleration round into you!"))
+
+	if(strikes >= 3)
+		to_chat(user, span_userdanger("The Thumb does not tolerate repeat disrespect!"))
+		user.deal_damage(60, BRUTE, weapon, flags = DAMAGE_FORCED, def_zone = target_zone)
+		if(BP && !QDELETED(BP))
+			BP.dismember(BRUTE, FALSE)
+	else
+		user.deal_damage(35, BRUTE, weapon, flags = DAMAGE_FORCED, def_zone = target_zone)
+
+	if(!QDELETED(user) && !QDELETED(weapon))
+		user.dropItemToGround(weapon, TRUE)
+	thumbfather_clear_defense_active(weapon)
+
+/// Clears the defense_active flag on a thumbfather weapon regardless of type.
+/proc/thumbfather_clear_defense_active(obj/item/ego_weapon/city/weapon)
+	if(is_thumbfather_rapier(weapon))
+		var/obj/item/ego_weapon/city/thumbfather_rapier/R = weapon
+		R.defense_active = FALSE
+	else
+		var/obj/item/ego_weapon/city/thumbfather_katana/K = weapon
+		K.defense_active = FALSE
+
 /// Spends one acceleration round from the weapon if available. Returns TRUE if spent, FALSE otherwise.
 /// Also creates the spent cartridge, plays a detonation sound, and applies weapon-specific buffs/debuffs.
 /// volume: controls the detonation sound volume (default 90, use lower for dual-wield follow-ups)
@@ -405,6 +509,10 @@
 	var/busy = FALSE
 	/// Cooldown for balloon alerts
 	var/balloon_alert_cooldown
+	/// TRUE while the discipline sequence is running on an unauthorized holder
+	var/defense_active = FALSE
+	/// Tracks how many times each unauthorized mob has picked this weapon up, by REF
+	var/list/defense_strikes = list()
 
 	// Sound variables
 	var/lunge_sound = 'sound/weapons/ego/thumb_east_rifle_boostedlunge.ogg'
@@ -428,6 +536,8 @@
 /obj/item/ego_weapon/city/thumbfather_rapier/equipped(mob/user, slot)
 	. = ..()
 	RegisterSignal(user, COMSIG_POISE_CRIT_ATTACKER, PROC_REF(on_poise_crit), override = TRUE)
+	if(slot == ITEM_SLOT_HANDS && !thumbfather_is_authorized(user))
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_discipline_sequence), src, user)
 
 /obj/item/ego_weapon/city/thumbfather_rapier/dropped(mob/user)
 	UnregisterSignal(user, COMSIG_POISE_CRIT_ATTACKER)
@@ -643,6 +753,13 @@
 	else
 		to_chat(user, span_warning("The [src.name] is empty."))
 
+/// Light cigars with the rapier by spending a round
+/obj/item/ego_weapon/city/thumbfather_rapier/ignition_effect(atom/A, mob/user)
+	. = ""
+	if(spend_acceleration_round(src, user, null))
+		. = span_danger("[user] fires their [src.name], using the exhaust to nonchalantly light [A]. They don't even flinch from the recoil.")
+		playsound(src, 'sound/weapons/ego/thumb_east_rifle_detonation.ogg', 90, FALSE, 10)
+
 ////////////////////////////////////////////////////////////
 // THUMBFATHER KATANA
 /obj/item/ego_weapon/city/thumbfather_katana
@@ -714,6 +831,10 @@
 	var/busy = FALSE
 	/// Cooldown for balloon alerts
 	var/balloon_alert_cooldown
+	/// TRUE while the discipline sequence is running on an unauthorized holder
+	var/defense_active = FALSE
+	/// Tracks how many times each unauthorized mob has picked this weapon up, by REF
+	var/list/defense_strikes = list()
 
 	// Sound variables
 	var/lunge_sound = 'sound/weapons/ego/thumb_east_podao_boostedlunge.ogg'
@@ -737,6 +858,8 @@
 /obj/item/ego_weapon/city/thumbfather_katana/equipped(mob/user, slot)
 	. = ..()
 	RegisterSignal(user, COMSIG_POISE_CRIT_ATTACKER, PROC_REF(on_poise_crit), override = TRUE)
+	if(slot == ITEM_SLOT_HANDS && !thumbfather_is_authorized(user))
+		INVOKE_ASYNC(GLOBAL_PROC, GLOBAL_PROC_REF(thumbfather_discipline_sequence), src, user)
 
 /obj/item/ego_weapon/city/thumbfather_katana/dropped(mob/user)
 	UnregisterSignal(user, COMSIG_POISE_CRIT_ATTACKER)
@@ -951,6 +1074,13 @@
 			current_ammo_name = ""
 	else
 		to_chat(user, span_warning("The [src.name] is empty."))
+
+/// Light cigars with the katana by spending a round
+/obj/item/ego_weapon/city/thumbfather_katana/ignition_effect(atom/A, mob/user)
+	. = ""
+	if(spend_acceleration_round(src, user, null))
+		. = span_danger("[user] fires their [src.name], using the exhaust to nonchalantly light [A]. They don't even flinch from the recoil.")
+		playsound(src, 'sound/weapons/ego/thumb_east_rifle_detonation.ogg', 90, FALSE, 10)
 
 ////////////////////////////////////////////////////////////
 // THUMBAPPRENTICE WEAPONS

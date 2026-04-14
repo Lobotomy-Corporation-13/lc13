@@ -141,7 +141,7 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 7: Nursefather Interactions — Drinks, Glass, Correction
+## Step 7: Nursefather Interactions — Drinks, Glass, Correction [CODED]
 **Files to modify:**
 - `ModularLobotomy/thumb_spider/palermitan_base.dm` — add signal handlers for interactions
 
@@ -164,79 +164,114 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 8: Skill Tree — Definitions + TGUI
-**Files to create:**
-- `ModularLobotomy/thumb_spider/palermitan_tree.dm` — TGUI datum + skill definitions
-- `tgui/packages/tgui/interfaces/PalermitanSkillTree.js` — React UI
+## Step 8: Skill Tree — Definitions + TGUI [CODED]
+**Status:** Previously coded for 5-tier single-school. Needs full rewrite for 4-school system.
+
+**Files to modify:**
+- `ModularLobotomy/thumb_spider/palermitan_tree.dm` — rewrite TGUI datum + skill definitions for 4 schools
+- `tgui/packages/tgui/interfaces/PalermitanSkillTree.js` — rewrite React UI with school tabs
 
 **What to implement:**
-- `/datum/palermitan_skill_tree` — TGUI datum
-  - `GLOB.palermitan_skill_definitions` — 5 tiers, 2 choices each (10 skills total)
-  - `ui_data()` — serves tier data with availability/lock/selected flags
-  - `ui_act("select_skill")` — validates and grants skill component
-- React UI based on `RingSkillTree.js` but single-school, 5 tiers, dark red theme
-- `/datum/action/innate/palermitan_tree` — opens the tree UI
+- `/datum/palermitan_skill_tree` — TGUI datum (mirrors Ring's `ring_skill_tree` exactly)
+  - `GLOB.palermitan_skill_definitions` — 4 schools, 3 tiers each, 2 choices per tier (24 skills total)
+  - `ui_data()` — serves school data with tabs, tier data with availability/lock/selected flags
+  - `ui_act("select_skill")` — validates school investment limit (max 2), tier prerequisites, point cost
+  - School investment tracking via `palermitan_exp` component (add `schools_invested`, `max_schools` vars)
+- React UI based on `RingSkillTree.js` with 4 school tabs:
+  - Terremoto (amber `#8b6914`), Incendio (red `#c44536`), Eleganza (blue `#5b7c99`), Fondamenti (grey `#8b8b8b`)
+- `/datum/action/innate/palermitan_tree` — opens the tree UI (already exists, keep)
+
+**What to update on palermitan_exp.dm:**
+- Add `var/list/schools_invested = list()` — tracks which schools player has invested in
+- Add `var/max_schools = 2` — max schools allowed
+- Add `proc/can_invest_in_school(school_id)` — checks if max not reached or already invested
+- Add `proc/invest_in_school(school_id)` — registers investment
 
 **How to test:**
 - Use debug kit → "Grant Skill Tree Action" + "Grant EXP Component"
-- Use debug kit → "Add EXP → 900" (grants all 15 skill points for testing)
-- Click the "Palermitan Skill Tree" action button — verify the TGUI window opens
-- Verify all 5 tiers display with a/b choices, dark red theme
-- Verify tier 2+ are locked until tier 1 is completed
-- Click "Learn Skill" on tier 1a — verify it highlights green and tier 1b becomes excluded (red)
-- Verify tier 2 is now unlocked
-- Continue selecting skills through all 5 tiers
-- Use debug kit → "Reset All" and reopen — verify tree is blank again
+- Use debug kit → "Add EXP → 500" (grants all 10 skill points for testing)
+- Click "Palermitan Skill Tree" action — verify TGUI opens with 4 school tabs
+- Select Terremoto tab — verify 3 tiers display with a/b choices
+- Select Terremoto 1a — verify it highlights green, 1b becomes excluded
+- Select Terremoto 2a — verify it unlocks (previous tier completed)
+- Switch to Incendio tab — select 1a — verify it works (2nd school)
+- Try to select Eleganza 1a — verify it's blocked ("max 2 schools")
+- Use debug kit → "Reset All" and reopen — verify tree is blank
 
 ---
 
-## Step 9: Skill Tree — Skill Components (Tiers 1-3)
-**Files to create:**
-- `ModularLobotomy/thumb_spider/palermitan_skills.dm` — skill components
+## Step 9: Skill Components — Terremoto + Incendio Schools [CODED]
+**Status:** Previously coded for old tier 1-3 skills. Needs full rewrite for new school skills.
 
-**What to implement:**
-- `/datum/component/palermitan_skill` — base component (same pattern as ring_skill)
-- **1a: Severed Tendon** — On Hit vs 3+ Duel Escalates: inflict 2 OLD (3 OLD at 7+)
-- **1b: Relentless Pursuit** — On Hit vs Duel Escalates target: gain 1 Poise (2 at 5+)
-- **2a: Il Cacciatore** — On Hit: inflict 2 Tremor. Vs Duel Escalates: gain 1 OLU
-- **2b: Colpi Sottani** — On Hit: inflict 2 Overheat. Vs Duel Escalates: also 1 Tremor. At 7+: gain 2 OLU
-- **3a: Palermitan Rapier** — On Tremor Burst: gain 5 OLU
-- **3b: Duello Feroce** — On Hit vs Duel Escalates: heal 2 HP/stack (max 10). At 10+: gain 3 DLU
-
-**How to test:**
-- Use debug kit → "Grant Base Passives" + "Grant Skill Tree Action" + "Grant EXP Component" + "Add EXP → 900"
-- Open skill tree, select **1a: Severed Tendon**
-- Attack a mob until it has 3+ Duel Escalates stacks — verify 2 Offense Level Down appears on target. At 7+ stacks, verify 3 OLD.
-- Use debug kit → "Reset All", re-grant, select **1b: Relentless Pursuit** instead
-- Attack a mob with Duel Escalates — verify you gain 1 Poise per hit. At 5+ stacks, verify 2 Poise per hit.
-- Repeat for tier 2 and 3 skills:
-  - **2a Il Cacciatore:** Attack mob, verify 2 Tremor inflicted. Hit target with Duel Escalates, verify 1 OLU gained.
-  - **2b Colpi Sottani:** Verify 2 Overheat inflicted. Vs Duel Escalates target: also 1 Tremor. At 7+ stacks: verify 2 OLU gained.
-  - **3a Palermitan Rapier:** Build tremor on a target until it bursts, verify you gain 5 OLU.
-  - **3b Duello Feroce:** Attack mob with Duel Escalates, verify HP heals (2 per stack, max 10). At 10+ stacks: verify 3 DLU gained.
-
----
-
-## Step 10: Skill Tree — Skill Components (Tiers 4-5)
 **Files to modify:**
-- `ModularLobotomy/thumb_spider/palermitan_skills.dm` — add remaining skills
+- `ModularLobotomy/thumb_spider/palermitan_skills.dm` — rewrite all skill components
 
 **What to implement:**
-- **4a: Sezionatura di Cervo** — Activated ability (60s CD). Next hit: 4 Overheat + 4 Tremor + Tremor Burst + bonus RED = (Duel Escalates * 5). Consumes all stacks.
-- **4b: La Spada di Palermo** — On Hit vs 10+ Duel Escalates (30s CD): gain 5 OLU + 3 Damage Up, consume 5 stacks
-- **5a: Valencina's Legacy** — On Hit: spread 1 Duel Escalates to enemies within 2 tiles. At 10+: inflict 2 Tremor + 2 Overheat to nearby
-- **5b: The Famiglia's Honor** — Max Duel Escalates → 30. At 15+: gain 3 OLU + inflict 2 DLD. At 25+: also inflict 3 Fragile
+- `/datum/component/palermitan_skill` — base component (keep existing pattern)
+- Add `var/tremor_burst_threshold = INFINITY` tracking on the base component or apprentice component
+  - Terremoto T2 skills modify this to 15 or 25
+
+**Terremoto school (6 skills):**
+- **T1a Il Cacciatore:** On Hit: 2 Tremor (INFINITY). Vs DE: +1 OLU
+- **T1b Destabilizing Strikes:** On Hit: 1/2/3 Tremor scaling with DE stacks
+- **T2a Palermitan Rapier:** Unlocks burst at 15. On burst: +5 OLU +2 Poise
+- **T2b Aftershock:** Unlocks burst at 25. On Hit vs 10+ Tremor: 2 OLD. Vs 20+: 3 OLD
+- **T3a Sezionatura:** Activated (60s CD). 4 Tremor + 4 Overheat + force burst + RED = (DE*5). Consume 50% DE
+- **T3b Tectonic Collapse:** On burst: 3 Fragile + 3 DLD + 2 Overheat
+
+**Incendio school (6 skills):**
+- **T1a Colpi Sottani:** On Hit: 2 Overheat. Vs DE: 3 Overheat instead
+- **T1b Scorching Pursuit:** On Hit: 1 Overheat (2 at 5+ DE). Vs Overheat target: +1 OLU
+- **T2a Firestorm:** On Hit vs 10+ Overheat: +3 OLU +1 Poise +1 Fragile
+- **T2b Smoldering Wounds:** On Hit: 1 DLD per 5 Overheat on target (max 3)
+- **T3a La Spada:** On Hit vs 10+ DE (30s CD): +5 OLU +3 Damage Up, consume 5 DE, inflict 3 Tremor
+- **T3b Conflagration:** On Hit vs 15+ Overheat: bonus RED = Overheat stacks, reduce by 5, inflict 2 Tremor
 
 **How to test:**
-- Use debug kit → full setup (base passives + EXP + tree + 900 EXP), select skills through to tier 4/5
-- **4a Sezionatura:** Select the skill, verify a new action button appears ("Sezionatura di Cervo"). Attack a mob until 10+ Duel Escalates. Activate the ability, then hit the mob — verify 4 Overheat + 4 Tremor + Tremor Burst + bonus RED damage. Verify all Duel Escalates consumed. Verify 60s cooldown on the ability.
-- **4b La Spada:** Reset and select 4b instead. Attack a mob until 10+ Duel Escalates. Verify you gain 5 OLU + 3 Damage Up and 5 stacks are consumed. Verify 30s world.time cooldown.
-- **5a Valencina:** Select 5a. Attack a mob near other mobs. Verify Duel Escalates spreads to mobs within 2 tiles. Build to 10+ stacks, verify 2 Tremor + 2 Overheat hit nearby enemies.
-- **5b Famiglia:** Select 5b. Verify Duel Escalates now caps at 30 instead of 20. Build to 15+ stacks, verify 3 OLU gained + 2 DLD on target. Build to 25+, verify 3 Fragile also inflicted.
+- Use debug kit → full setup + "Add EXP → 500"
+- Open tree, select Terremoto 1a → attack mob, verify 2 Tremor applied (no burst)
+- Select Terremoto 2a → attack mob, verify tremor now bursts at 15 stacks. Verify +5 OLU +2 Poise on burst
+- Reset, select Terremoto 2b → verify burst at 25 stacks. Verify OLD on 10+/20+ Tremor targets
+- Select Terremoto 3a → verify Sezionatura action button appears. Use it, verify force burst + effects
+- Reset, test Incendio school similarly
+- Test cross-school: Terremoto T3b (Tectonic Collapse) procs Overheat on burst
 
 ---
 
-## Step 11: Role-Specific Passives
+## Step 10: Skill Components — Eleganza + Fondamenti Schools [CODED]
+**Files to modify:**
+- `ModularLobotomy/thumb_spider/palermitan_skills.dm` — add remaining school skills
+
+**What to implement:**
+
+**Eleganza school (6 skills):**
+- **T1a Relentless Pursuit:** Under 5 DE: +1 Concentration (10s CD). 5+ DE: +3 Poise instead
+- **T1b Focused Mind:** Under 5 DE: +1 Poise +1 Concentration (10s CD). 5+ DE: +3 Poise instead
+- **T2a Duello Feroce:** On Hit vs DE: +1 Poise per 3 stacks (max 3) + heal 2 HP/stack (max 10). Halving crit: +1 Concentration
+- **T2b Severed Tendon:** On crit: 3 OLD + 1 Fragile. Halving crit: +1 Poise back
+- **T3a Valencina's Legacy:** On crit: 3 Tremor + 3 Overheat + DE spread 2 tiles. On crit (15s CD): +1 Concentration
+- **T3b Famiglia's Honor:** DE max → 30. At 15+ DE: +2 Poise. Halving crit at 15+ DE: +1 Concentration. Crit at 20+ DE: 3 Fragile + 3 DLD
+
+**Fondamenti school (6 skills):**
+- **T1a Iron Constitution:** On taking damage: +2 DLU
+- **T1b Aggressive Footwork:** On Hit: +1 OLU. On taking melee damage: +1 OLU
+- **T2a Predator's Instinct:** On Hit vs <50% HP: 2 Fragile +1 Poise. Vs <25%: +2 OLU
+- **T2b Enduring Spirit:** On Hit vs DE target: heal 1 HP/stack (max 5). On taking damage near DE target: +1 DLU
+- **T3a Coup de Grâce:** On Hit vs <20% HP with 5+ DE: bonus RED = (DE*3), consume 50% DE stacks
+- **T3b Unbreakable Will:** On entering soft crit (60s CD): +5 DLU +3 Protection +heal 10% max HP
+
+**How to test:**
+- Use debug kit → full setup + "Add EXP → 500"
+- **Eleganza T1a:** Select, attack mob. Under 5 DE: verify Concentration gain (check cooldown). At 5+ DE: verify 3 Poise, no Concentration
+- **Eleganza T2a:** Verify Poise gain scales with DE stacks. Trigger a crit that halves Poise: verify +1 Concentration. Trigger a crit where Concentration was consumed: verify NO Concentration gained
+- **Eleganza T3a Valencina:** Trigger Poise crit, verify 3 Tremor + 3 Overheat on target. Verify DE spreads to nearby mobs
+- **Fondamenti T1a:** Take damage, verify +2 DLU
+- **Fondamenti T3a Coup de Grâce:** Attack low HP mob with 5+ DE, verify bonus RED damage and 50% stack consumption
+- **Fondamenti T3b Unbreakable Will:** Get hit until soft crit, verify +5 DLU +3 Protection +heal
+
+---
+
+## Step 11: Role-Specific Passives [CODED]
 **Files to create:**
 - `ModularLobotomy/thumb_spider/palermitan_role_passives.dm` — all role passive components
 
@@ -261,7 +296,7 @@ Each step produces working, testable code. Later steps build on earlier ones but
 
 ---
 
-## Step 12: Recruitment Integration + DME
+## Step 12: Recruitment Integration + DME [CODED]
 **Files to modify:**
 - `code/modules/jobs/job_types/trusted_players/thumb_nursefather.dm` — update recruitment to grant all systems
 - `lobotomy-corp13.dme` — add all new files
@@ -321,7 +356,7 @@ A spawnable item (`/obj/item/palermitan_debug_kit`) that opens a TGUI menu on us
 - **Simulate Duel Loss + Correction** — simulates a loss AND immediately performs the nursefather correction (deals damage, grants bonus attrs, escalates correction_count). Tests the full correction flow without needing a second player as nursefather.
 - **Set Correction Eligible** — makes you eligible for nursefather correction right now (in case you want to test correction separately)
 - **Add Role Duel Count** (pick role from list, input count) — sets duel count for a specific role and grants/upgrades the passive
-- **Grant All Skills** — unlocks all 5 tiers (picks 'a' choice for each)
+- **Grant All Skills** — unlocks all tier 1a + 2a + 3a in the first 2 schools (Terremoto + Incendio)
 - **Reset All** — removes all components, actions, resets everything
 - **Spawn Gear Set** — creates tier 1 apprentice armor + katana + greatsword at your feet
 - **Spawn Acceleration Ammo** — creates a stack of 12 acceleration rounds
@@ -369,20 +404,19 @@ This debug kit is added in **Step 1** and updated with new options as each step 
 
 ## File Summary (all new files to create)
 ```
-ModularLobotomy/thumb_spider/palermitan_debug.dm          — spawnable debug kit item + TGUI
-ModularLobotomy/thumb_spider/palermitan_base.dm          — base passives component
-ModularLobotomy/thumb_spider/palermitan_exp.dm            — EXP + skill point tracking
-ModularLobotomy/thumb_spider/palermitan_duel.dm           — duel system + arena + challenge action
-ModularLobotomy/thumb_spider/palermitan_tree.dm           — skill tree TGUI datum + definitions
-ModularLobotomy/thumb_spider/palermitan_skills.dm         — skill node components (tiers 1-5)
-ModularLobotomy/thumb_spider/palermitan_role_passives.dm  — role-specific passive components
-ModularLobotomy/thumb_spider/palermitan_actions.dm        — action buttons (tree, duel, sezionatura)
-tgui/packages/tgui/interfaces/PalermitanSkillTree.js      — React skill tree UI
+ModularLobotomy/thumb_spider/palermitan_debug.dm          — spawnable debug kit item
+ModularLobotomy/thumb_spider/palermitan_base.dm           — base passives component (Duello + Palermitan Style + nursefather interactions)
+ModularLobotomy/thumb_spider/palermitan_exp.dm            — EXP + skill point + school investment tracking
+ModularLobotomy/thumb_spider/palermitan_duel.dm           — duel system + arena + challenge action + rewards
+ModularLobotomy/thumb_spider/palermitan_tree.dm           — skill tree TGUI datum + 4 school definitions (24 skills)
+ModularLobotomy/thumb_spider/palermitan_skills.dm         — skill node components (4 schools x 3 tiers x 2 choices)
+ModularLobotomy/thumb_spider/palermitan_role_passives.dm  — role-specific passive components (18 roles)
+tgui/packages/tgui/interfaces/PalermitanSkillTree.js      — React skill tree UI (4 school tabs)
 ```
 
 ## Existing files to modify
 ```
-code/datums/status_effects/debuffs.dm                                       — new status effects
+code/datums/status_effects/debuffs.dm                                       — Duel Escalates + Severed Tendon status effects
 ModularLobotomy/ego_weapons/melee/city/thumb_spider.dm                      — weapon dual-wield by tier
 code/modules/jobs/job_types/trusted_players/thumb_nursefather.dm             — recruitment integration
 code/modules/clothing/suits/ego_gear/non_abnormality/thumb.dm               — (already done, set_tier exists)

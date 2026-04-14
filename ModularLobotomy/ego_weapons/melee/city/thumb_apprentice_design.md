@@ -98,12 +98,13 @@
 **Core mechanic: "The Duel Escalates"** — a stacking status effect inflicted on the target.
 The more you fight a single target, the stronger you become against them.
 
-### System Architecture (mirrors Ring skill tree)
+### System Architecture (mirrors Ring skill tree exactly)
 - Uses the same pattern as `/datum/ring_skill_tree` + `/datum/component/ring_skill`
-- **5 tiers, 2 mutually exclusive choices per tier** (a/b) — expanded from Ring's 3 since this is a single combat style
-- Tier costs: 1, 2, 3, 4, 5 skill points (15 total to max out)
-- Must complete tier N before accessing tier N+1
-- TGUI interface similar to `RingSkillTree.js`
+- **4 schools**, each with **3 tiers** and **2 mutually exclusive choices per tier** (a/b)
+- Tier costs: 1, 2, 3 skill points per tier
+- Must complete tier N before accessing tier N+1 within a school
+- Max schools: **2** (same as Ring default — can invest in 2 of the 4 schools)
+- TGUI interface reuses `RingSkillTree.js` pattern with tabs per school
 - Skills are components registered via signals (`COMSIG_MOB_ITEM_ATTACK`, etc.)
 
 ### New Status Effect: "The Duel Escalates"
@@ -112,7 +113,6 @@ The more you fight a single target, the stronger you become against them.
   id = "duel_escalates"
   max_stacks = 20
   tick_interval = 10 SECONDS
-  /// Which mob inflicted this (tracks the apprentice)
   var/mob/living/duelist
 ```
 - Gained by the TARGET when the apprentice hits them (1 stack per hit via "Duello" passive)
@@ -122,74 +122,199 @@ The more you fight a single target, the stronger you become against them.
 ### Base Passive: "Duello" (always active, not a tree skill)
 - **On Hit**: Inflict 1 "The Duel Escalates" on target
 - **On Hit vs target with Duel Escalates**: Heal 3 sanity per stack (max 15 sanity per hit)
-- This is the foundation — tree skills enhance what Duel Escalates does
+- This is the foundation — tree schools enhance what Duel Escalates does
 
 ### Base Passive: "Palermitan Style" (always active, scales with Duel Escalates)
 Per stack of Duel Escalates on target:
-- Deal **+5% damage** against that target (Limbus = +10%, halved for SS13 balance)
+- Deal **+5% damage** against that target
 - Take **-5% damage** from that target
-- At **5+ stacks**: gain **+5 force** on attacks against that target
-- At **10+ stacks**: gain **+10 force** on attacks against that target
+- At **5+ stacks**: +5 force bonus
+- At **10+ stacks**: +10 force bonus
 
-### Skill Tree Nodes
+---
 
-**Color theme**: `#8b0000` (dark red, Thumb theming)
+### Skill Tree — 4 Schools
 
-#### Tier 1 (cost: 1 point) — Core Enhancement
-**1a: "Severed Tendon"**
-- On Hit vs target with 3+ Duel Escalates: inflict 2 Offense Level Down (`apply_lc_offense_level_down`) on target
-- At 7+ Duel Escalates: inflict 3 Offense Level Down instead
-- *Weakens the target the longer you duel them*
+#### School 1: "Terremoto" (Earthquake) — Tremor Focus
+**Color**: `#8b6914` (amber/brown)
+**Theme**: Destabilize the target with tremor, culminating in devastating tremor bursts.
+**Cross-school overlap**: Tier 3 options interact with Overheat (triggering tremor burst also applies burn effects).
 
-**1b: "Relentless Pursuit"**
-- On Hit vs target with Duel Escalates: gain 1 Poise (`apply_lc_poise`)
-- At 5+ Duel Escalates: gain 2 Poise instead
-- *Ties into the thumbfather poise system for synergy if fighting alongside mentor*
+**Tremor Burst Progression:**
+- Base passives and Tier 1 skills apply tremor with `INFINITY` burst threshold (no burst).
+- Tier 2 **unlocks tremor bursting** — skills change the burst threshold to a reachable value (e.g., 15 or 20 stacks), or provide ways to force-trigger bursts.
+- Tier 3 provides powerful payoffs that proc on tremor burst, rewarding the investment.
+- Without investing in Terremoto tier 2+, tremor stacks just slow the target but never burst.
 
-#### Tier 2 (cost: 2 points) — Status Buildup
-**2a: "Il Cacciatore" (The Hunter)**
-- On Hit: inflict 2 Tremor (`apply_lc_tremor`, INFINITY burst threshold) on target
-- On Hit vs target with Duel Escalates: also gain 1 Offense Level Up (`apply_lc_offense_level_up`)
-- *Tremor buildup + self-buffing against your marked prey*
+##### Tier 1 (cost: 1)
+**1a: "Il Cacciatore" (The Hunter)**
+- On Hit: inflict 2 Tremor (`apply_lc_tremor`, INFINITY burst — no burst yet)
+- On Hit vs target with Duel Escalates: also gain 1 Offense Level Up
+- *Builds tremor stacks for slowdown. Burst unlocked at tier 2.*
 
-**2b: "Colpi Sottani" (Low Blows)**
-- On Hit: inflict 2 Overheat (`apply_lc_overheat`) on target
-- On Hit vs target with Duel Escalates: also inflict 1 Tremor (`apply_lc_tremor`, INFINITY burst threshold)
-- At 7+ Duel Escalates: also gain 2 Offense Level Up (`apply_lc_offense_level_up`)
-- *Burn/tremor buildup for the finisher, with OLU reward at high stacks*
+**1b: "Destabilizing Strikes"**
+- On Hit: inflict 1 Tremor (INFINITY burst). On Hit vs target with 3+ Duel Escalates: inflict 2 Tremor instead
+- At 7+ Duel Escalates: inflict 3 Tremor instead
+- *Slower tremor buildup that scales heavily with Duel Escalates commitment*
 
-#### Tier 3 (cost: 3 points) — Offensive Mastery
-**3a: "Palermitan Rapier" (The Cleaving Blade)**
-- When your attacks trigger a Tremor Burst (from any source): gain 5 Offense Level Up (`apply_lc_offense_level_up`)
-- *Rewards detonating tremor stacks with a burst of offensive power*
+##### Tier 2 (cost: 2)
+**2a: "Palermitan Rapier" (The Cleaving Blade)**
+- **Unlocks tremor bursting:** Your tremor applications now use a burst threshold of **15** instead of INFINITY
+- When your attacks trigger a Tremor Burst: gain 5 Offense Level Up and 5 Poise
+- *The key unlock — tremor now detonates at 15 stacks, rewarding you with OLU and Poise on burst*
 
-**3b: "Duello Feroce" (Fierce Duel)**
-- On Hit vs target with Duel Escalates: heal 2 HP per stack (max 10 HP per hit)
-- At 10+ Duel Escalates: also gain 3 Defense Level Up (`apply_lc_defense_level_up`)
-- *Sustain option — rewards prolonged fights with self-healing and defense*
+**2b: "Aftershock"**
+- **Unlocks tremor bursting:** Your tremor applications now use a burst threshold of **25** instead of INFINITY (higher threshold = more buildup before burst, but bigger tremor burst effect since stacks are higher)
+- On Hit vs target with 10+ Tremor: inflict 2 Offense Level Down on target
+- On Hit vs target with 20+ Tremor: inflict 3 Offense Level Down instead
+- *Higher burst threshold for bigger knockdowns, plus debuffs while building*
 
-#### Tier 4 (cost: 4 points) — Coup de Grâce
-**4a: "Sezionatura di Cervo" (Butchering the Deer)**
-- Grants an activated ability (cooldown: 60 seconds)
-- On activation: next melee hit within 5 seconds inflicts 4 Overheat + 4 Tremor, triggers Tremor Burst, and deals additional RED damage equal to (Duel Escalates stacks * 5)
-- After the hit: consume all Duel Escalates stacks on the target
-- *The grand dissection finisher — consumes all your buildup for one devastating strike*
+##### Tier 3 (cost: 3)
+**3a: "Sezionatura di Cervo" (Butchering the Deer)**
+- Activated ability (60s CD). Next hit: inflict 4 Tremor + 4 Overheat, **force trigger Tremor Burst** (regardless of threshold), deal bonus RED = (Duel Escalates * 5). Consume 50% of Duel Escalates stacks (rounded down).
+- *Cross-school: Overheat application on the finisher. Guaranteed burst even if below threshold.*
 
-**4b: "La Spada di Palermo" (The Sword of Palermo)**
-- On Hit vs target with 10+ Duel Escalates (world.time cooldown, 30 sec): gain 5 Offense Level Up (`apply_lc_offense_level_up`) and 3 Damage Up (`apply_lc_strength`), then consume 5 Duel Escalates stacks
-- *Converts Duel Escalates stacks into a powerful self-buff rather than a finisher burst*
+**3b: "Tectonic Collapse"**
+- On Tremor Burst: inflict 3 Fragile on the target and 3 Defense Level Down
+- Also inflict 2 Overheat on the target when tremor bursts
+- *Turns tremor bursts into a massive debuff window + cross-school overheat*
 
-#### Tier 5 (cost: 5 points) — Mastery / Pinnacle
-**5a: "Valencina's Legacy" (The War Hero)**
-- Passive: Duel Escalates stacks now also apply to nearby enemies within 2 tiles of your target (1 stack per hit, AoE spread)
-- On Hit vs target with 10+ Duel Escalates: inflict 2 Tremor and 2 Overheat on all enemies within 2 tiles of target
-- *The spectacular style — put the execution on display for all to behold. Multi-target pressure.*
+---
 
-**5b: "The Famiglia's Honor" (Bognatelli Perfection)**
-- Passive: Duel Escalates max stacks increased to 30 (from 20)
-- On Hit vs target with 15+ Duel Escalates: gain 3 Offense Level Up (`apply_lc_offense_level_up`) and inflict 2 Defense Level Down (`apply_lc_defense_level_down`) on target
-- On Hit vs target with 25+ Duel Escalates: also inflict 3 Fragile (`apply_lc_fragile`) on target
-- *Single-target specialist — the longer the hunt, the more certain the kill.*
+#### School 2: "Incendio" (Inferno) — Overheat Focus
+**Color**: `#c44536` (red/flame)
+**Theme**: Burn the target down with escalating overheat, using Duel Escalates to accelerate the burn.
+**Cross-school overlap**: Tier 3 options interact with Tremor (burn detonation also applies tremor).
+
+##### Tier 1 (cost: 1)
+**1a: "Colpi Sottani" (Low Blows)**
+- On Hit: inflict 2 Overheat (`apply_lc_overheat`)
+- On Hit vs target with Duel Escalates: inflict 3 Overheat instead
+
+**1b: "Scorching Pursuit"**
+- On Hit: inflict 1 Overheat. At 5+ Duel Escalates: inflict 2 Overheat instead
+- On Hit vs target with Overheat: gain 1 Offense Level Up
+
+##### Tier 2 (cost: 2)
+**2a: "Firestorm"**
+- On Hit vs target with 10+ Overheat: gain 3 Offense Level Up, 3 Poise
+- *Reward for sustained burn buildup — also feeds into Poise for crit potential*
+
+**2b: "Smoldering Wounds"**
+- On Hit vs target with Overheat: inflict 1 Defense Level Down per 5 Overheat stacks on target (max 3 DLD)
+- *Overheat weakens the target's defenses*
+
+##### Tier 3 (cost: 3)
+**3a: "La Spada di Palermo" (The Sword of Palermo)**
+- On Hit vs target with 10+ Duel Escalates (30s CD): gain 5 Offense Level Up + 3 Damage Up, consume 5 Duel Escalates
+- On activation: also inflict 3 Tremor on the target
+- *Cross-school: Tremor application on the power spike*
+
+**3b: "Conflagration"**
+- On Hit vs target with 15+ Overheat: deal bonus RED damage equal to (Overheat stacks), then reduce Overheat by 5
+- Also inflict 2 Tremor on detonation
+- *Consume burn stacks for burst damage + cross-school tremor*
+
+---
+
+#### School 3: "Eleganza" (Elegance) — Poise & Concentration Focus
+**Color**: `#5b7c99` (steel blue)
+**Theme**: Build Poise for critical strikes and Concentration to sustain momentum. The refined swordsman's path.
+**Cross-school overlap**: Tier 3 options enhance crits to apply Tremor or Overheat.
+
+##### Tier 1 (cost: 1)
+**1a: "Relentless Pursuit"**
+- On Hit vs target with **under 5** Duel Escalates: gain 1 Concentration (world.time CD, 10 sec)
+- On Hit vs target with **5+** Duel Escalates: gain 3 Poise instead (replaces the Concentration effect)
+- *Early duel: build Concentration as a safety net. Once the duel heats up (5+ stacks): shift to aggressive Poise building*
+
+**1b: "Focused Mind"**
+- On Hit vs target with **under 5** Duel Escalates: gain 1 Poise and 1 Concentration (world.time CD, 10 sec for the Concentration)
+- On Hit vs target with **5+** Duel Escalates: gain 3 Poise instead (replaces both effects)
+- *Early duel: balanced Poise + Concentration. Once committed (5+ stacks): pure Poise aggression. Concentration only comes from the opening exchanges*
+
+##### Tier 2 (cost: 2)
+**2a: "Duello Feroce" (Fierce Duel)**
+- On Hit vs target with Duel Escalates: gain 1 Poise per 3 stacks (max 3 Poise) and heal 2 HP per stack (max 10)
+- On Poise crit that **halved your Poise** (i.e., no Concentration was consumed to preserve it): gain 1 Concentration
+- *Crits that cost you Poise reward you with Concentration for next time. But if Concentration saved your Poise, you don't gain more — preventing infinite loops*
+
+**2b: "Severed Tendon"**
+- On Poise crit: inflict 3 Offense Level Down and 1 Fragile on the crit target
+- On Poise crit that **halved your Poise** (same condition as 2a): gain 1 Poise back (softens the halving, but doesn't prevent it)
+- *Crits devastate the target's offense. The Poise recovery on halving crits reduces the sting but doesn't create infinite loops since Poise is still halved*
+
+##### Tier 3 (cost: 3)
+**3a: "Valencina's Legacy" (The War Hero)**
+- On Poise crit: inflict 3 Tremor and 3 Overheat on the target
+- On Poise crit: Duel Escalates spread to enemies within 2 tiles
+- On Poise crit (world.time CD, 15 sec): gain 1 Concentration
+- *Cross-school: Crits feed both Tremor and Overheat schools. Concentration gain is cooldown-gated*
+
+**3b: "The Famiglia's Honor" (Bognatelli Perfection)**
+- Duel Escalates max stacks increased to 30
+- On Hit vs target with 15+ Duel Escalates: gain 2 Poise
+- On Poise crit that **halved your Poise** vs target with 15+ Duel Escalates: gain 1 Concentration
+- On Poise crit vs target with 20+ Duel Escalates: inflict 3 Fragile and 3 Defense Level Down on target
+- *Single-target mastery — extreme DE commitment feeds Poise. Concentration only from paid crits, preventing infinite loops*
+
+---
+
+#### School 4: "Fondamenti" (Fundamentals) — General Passives
+**Color**: `#8b8b8b` (grey/steel)
+**Theme**: Core combat improvements that benefit any build. No status effect specialization — pure fighting fundamentals.
+
+##### Tier 1 (cost: 1)
+**1a: "Iron Constitution"**
+- On taking damage: gain 2 Defense Level Up
+- *Simple survivability*
+
+**1b: "Aggressive Footwork"**
+- On Hit: gain 1 Offense Level Up
+- On taking melee damage: gain 1 Offense Level Up
+- *Reward both offense and defense with power*
+
+##### Tier 2 (cost: 2)
+**2a: "Predator's Instinct"**
+- On Hit vs target below 50% HP: inflict 2 Fragile and gain 2 Poise
+- On Hit vs target below 25% HP: also gain 5 Offense Level Up and 2 Poise
+- *Execute weakened prey — finishing blows build Poise for crits*
+
+**2b: "Enduring Spirit"**
+- On Hit vs target with Duel Escalates: heal 1 HP per stack (max 5)
+- On taking damage while Duel Escalates is active on any nearby target: gain 1 Defense Level Up
+- *Sustain while dueling*
+
+##### Tier 3 (cost: 3)
+**3a: "Coup de Grâce"**
+- On Hit vs target below 20% HP with 5+ Duel Escalates: deal bonus RED damage = (Duel Escalates * 3), consume 50% of stacks (rounded down)
+- *Universal finisher — works regardless of which status school you chose*
+
+**3b: "Unbreakable Will"**
+- When entering soft crit (world.time CD, 60 sec): gain 5 Defense Level Up + 3 Protection + heal 10% max HP
+- *Emergency survival tool*
+
+---
+
+### School Investment Rules
+- Max **3 schools** invested
+- Each school: 3 tiers, costs 1+2+3 = **6 points per school**
+- Full 2-school investment = **12 points**
+- 10 base skill points available from EXP thresholds
+- Remaining 2 points need bonus sources (nursefather mentor, completing role passives, etc.)
+
+### Cross-School Synergies
+The schools are designed so that picking one status school (Tremor OR Overheat) pairs well with either Elegance (Poise crits apply your chosen status) or Fundamentals (general power). Some tier 3 skills explicitly bridge between schools:
+- **Sezionatura** (Tremor T3a): also applies Overheat
+- **La Spada** (Overheat T3a): also applies Tremor
+- **Valencina** (Elegance T3a): crits apply both Tremor + Overheat
+- **Conflagration** (Overheat T3b): detonation also applies Tremor
+
+This encourages builds like:
+- **Tremor + Elegance**: Build tremor, use poise crits to detonate + spread
+- **Overheat + Fundamentals**: Burn them down, use general passives for survivability
+- **Tremor + Overheat**: Maximum status pressure, tier 3 finishers bridge both
+- **Elegance + Fundamentals**: Pure combat mastery without status specialization
 
 ---
 
@@ -294,9 +419,9 @@ These are separate from the main Palermitan tree — earned purely through dueli
 
 #### Cinq — "Duelist's Finesse"
 *Learned from fighting refined duelists with precise swordwork. (Roaming fixer only)*
-- **Tier 1 (1 duel):** On Hit: gain 1 Poise (`apply_lc_poise`) and 1 Concentration (`apply_lc_concentration`)
-- **Tier 2 (3 duels):** On Hit: gain 2 Poise and 1 Concentration
-- **Tier 3 (5 duels):** On Hit: gain 2 Poise and 1 Concentration. On Poise crit: inflict 2 Tremor on target
+- **Tier 1 (1 duel):** On Hit: gain 2 Poise (`apply_lc_poise`)
+- **Tier 2 (3 duels):** On Hit: gain 3 Poise
+- **Tier 3 (5 duels):** On Hit: gain 3 Poise. On Poise crit that **halved your Poise**: gain 1 Concentration
 
 #### — ROAMING FIXER (passive depends on which association variant spawned) —
 *Roaming fixers spawn as a random association variant. The passive granted matches the association they represent.*

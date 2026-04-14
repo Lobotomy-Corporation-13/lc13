@@ -8,6 +8,10 @@
 	var/skill_points_spent = 0
 	/// Associative list: role name -> duel count (e.g. "Butcher" = 3)
 	var/list/role_duel_counts = list()
+	/// List of school IDs the player has invested points in
+	var/list/schools_invested = list()
+	/// Maximum number of schools that can be invested in
+	var/max_schools = 3
 
 	/// EXP thresholds for earning skill points
 	var/static/list/exp_thresholds = list(
@@ -94,3 +98,14 @@
 	if(!(role_name in role_duel_counts))
 		return 0
 	return role_duel_counts[role_name]
+
+/// Check if the player can invest in a new school (hasn't hit max, or already invested in this one).
+/datum/component/palermitan_exp/proc/can_invest_in_school(school_id)
+	if(school_id in schools_invested)
+		return TRUE
+	return length(schools_invested) < max_schools
+
+/// Register that the player has invested in a school.
+/datum/component/palermitan_exp/proc/invest_in_school(school_id)
+	if(!(school_id in schools_invested))
+		schools_invested += school_id

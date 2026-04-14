@@ -695,11 +695,11 @@
 			S.toggle_ai(initial(S.AIStatus))
 
 	// Replace with a fresh base vial to fully reset force/damtype/w_class/etc.
-	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user.drop_location())
+	var/obj/item/ego_weapon/index_vial/new_vial = new /obj/item/ego_weapon/index_vial(user)
 	new_vial.defense_strikes = defense_strikes.Copy()
-	to_chat(user, span_notice("Furioso complete. The vial returns to its inactive state."))
-	qdel(src)
+	to_chat(user, span_notice("Furioso-Replica complete. The vial returns to its inactive state."))
 	user.put_in_hands(new_vial)
+	qdel(src)
 
 // ============================================
 // HATCHET - Small, fast weapon with protection on hit

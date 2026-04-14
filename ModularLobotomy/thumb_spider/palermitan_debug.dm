@@ -31,6 +31,7 @@
 		"Grant EXP Component",
 		"Add EXP",
 		"Grant Duel Action",
+		"Grant Skill Tree Action",
 		"Spawn Gear Set",
 		"Set Weapon Tier",
 		"Set Armor Tier",
@@ -40,6 +41,12 @@
 		"Force Start Duel vs Dummy",
 		"Simulate Duel Win",
 		"Simulate Duel Loss",
+		"Simulate Loss + Correction",
+		"--- Role Passives ---",
+		"Add Role Passive",
+		"--- Nursefather ---",
+		"Simulate Drink EXP",
+		"Simulate Glass Bottle EXP",
 		"--- Reset ---",
 		"Reset All",
 	)
@@ -61,6 +68,8 @@
 			debug_add_exp(H)
 		if("Grant Duel Action")
 			debug_grant_duel_action(H)
+		if("Grant Skill Tree Action")
+			debug_grant_tree_action(H)
 		if("Spawn Gear Set")
 			debug_spawn_gear(H)
 		if("Set Weapon Tier")
@@ -77,6 +86,14 @@
 			debug_simulate_duel(H, TRUE)
 		if("Simulate Duel Loss")
 			debug_simulate_duel(H, FALSE)
+		if("Add Role Passive")
+			debug_add_role_passive(H)
+		if("Simulate Loss + Correction")
+			debug_simulate_correction(H)
+		if("Simulate Drink EXP")
+			debug_simulate_drink(H)
+		if("Simulate Glass Bottle EXP")
+			debug_simulate_glass(H)
 		if("Reset All")
 			debug_reset_all(H)
 
@@ -84,9 +101,10 @@
 	debug_grant_passives(H)
 	debug_grant_exp(H)
 	debug_grant_duel_action(H)
+	debug_grant_tree_action(H)
 	debug_set_attributes_value(H, 40)
 	debug_spawn_gear(H)
-	to_chat(H, span_boldnotice("Palermitan Debug: Full setup complete. Passives, EXP, duel action, gear, and 40 attributes."))
+	to_chat(H, span_boldnotice("Palermitan Debug: Full setup complete. Passives, EXP, duel action, skill tree, gear, and 40 attributes."))
 
 /obj/item/palermitan_debug_kit/proc/debug_grant_passives(mob/living/carbon/human/H)
 	if(H.GetComponent(/datum/component/palermitan_apprentice))
@@ -243,6 +261,123 @@
 	qdel(temp_duel)
 	qdel(D)
 
+/obj/item/palermitan_debug_kit/proc/debug_grant_tree_action(mob/living/carbon/human/H)
+	for(var/datum/action/innate/palermitan_tree/existing in H.actions)
+		to_chat(H, span_warning("Already has skill tree action."))
+		return
+	var/datum/action/innate/palermitan_tree/tree_action = new()
+	tree_action.Grant(H)
+	to_chat(H, span_notice("Palermitan Debug: Skill tree action granted."))
+
+/obj/item/palermitan_debug_kit/proc/debug_simulate_correction(mob/living/carbon/human/H)
+	// Ensure components exist
+	if(!H.GetComponent(/datum/component/palermitan_apprentice))
+		H.AddComponent(/datum/component/palermitan_apprentice)
+	if(!H.GetComponent(/datum/component/palermitan_exp))
+		H.AddComponent(/datum/component/palermitan_exp)
+	// Simulate a duel loss first (for attribute calculation)
+	var/turf/T = get_turf(H)
+	var/mob/living/simple_animal/hostile/palermitan_dummy/D = new(T)
+	var/datum/thumb_duel/temp_duel = new(H, D)
+	temp_duel.grant_duel_rewards(D, H)
+	qdel(temp_duel)
+	qdel(D)
+	// Now spawn a nursefather dummy and perform the correction
+	var/datum/component/palermitan_apprentice/pal = H.GetComponent(/datum/component/palermitan_apprentice)
+	if(!pal)
+		return
+	// Force correction eligibility
+	pal.correction_eligible = TRUE
+	pal.correction_deadline = world.time + 5 MINUTES
+	if(pal.potential_correction_attrs <= 0)
+		pal.potential_correction_attrs = 3
+	// Spawn nursefather dummy adjacent
+	var/turf/nurse_turf = get_step(H, H.dir)
+	if(!nurse_turf)
+		nurse_turf = get_turf(H)
+	var/mob/living/simple_animal/hostile/palermitan_dummy/nurse = new(nurse_turf)
+	nurse.name = "Ex Thumb Sottocapo"
+	nurse.maxHealth = 9999
+	nurse.health = 9999
+	// Run correction animation
+	pal.perform_correction(nurse)
+	// Clean up dummy after animation
+	QDEL_IN(nurse, 6 SECONDS)
+	to_chat(H, span_boldwarning("Palermitan Debug: Simulated duel loss + correction (count: [pal.correction_count])."))
+
+/obj/item/palermitan_debug_kit/proc/debug_simulate_drink(mob/living/carbon/human/H)
+	var/datum/component/palermitan_apprentice/pal = H.GetComponent(/datum/component/palermitan_apprentice)
+	if(!pal)
+		to_chat(H, span_warning("No base passives component. Grant it first."))
+		return
+	pal.grant_drink_exp()
+
+/obj/item/palermitan_debug_kit/proc/debug_simulate_glass(mob/living/carbon/human/H)
+	var/datum/component/palermitan_apprentice/pal = H.GetComponent(/datum/component/palermitan_apprentice)
+	if(!pal)
+		to_chat(H, span_warning("No base passives component. Grant it first."))
+		return
+	if(!H.GetComponent(/datum/component/palermitan_exp))
+		H.AddComponent(/datum/component/palermitan_exp)
+	if(world.time < pal.last_glass_exp_time + 30 SECONDS)
+		to_chat(H, span_warning("Glass bottle EXP is on cooldown."))
+		return
+	pal.last_glass_exp_time = world.time
+	var/datum/component/palermitan_exp/exp_comp = H.GetComponent(/datum/component/palermitan_exp)
+	if(exp_comp)
+		exp_comp.modify_exp(3)
+	to_chat(H, span_notice("Palermitan Debug: Simulated glass bottle impact. (+3 EXP)"))
+
+/// Role name -> passive component type path mapping
+/obj/item/palermitan_debug_kit/proc/get_role_passive_types()
+	return list(
+		"Butcher" = /datum/component/palermitan_role_passive/butcher,
+		"Blade Lineage" = /datum/component/palermitan_role_passive/blade_lineage,
+		"Thumb" = /datum/component/palermitan_role_passive/thumb,
+		"Kurokumo" = /datum/component/palermitan_role_passive/kurokumo,
+		"Index" = /datum/component/palermitan_role_passive/index,
+		"Insurgence" = /datum/component/palermitan_role_passive/insurgence,
+		"Middle" = /datum/component/palermitan_role_passive/middle,
+		"N-Corp" = /datum/component/palermitan_role_passive/ncorp,
+		"Rat" = /datum/component/palermitan_role_passive/rat,
+		"Carnival" = /datum/component/palermitan_role_passive/carnival,
+		"Zwei" = /datum/component/palermitan_role_passive/zwei,
+		"Seven" = /datum/component/palermitan_role_passive/seven,
+		"Dieci" = /datum/component/palermitan_role_passive/dieci,
+		"Cinq" = /datum/component/palermitan_role_passive/cinq,
+		"Shi" = /datum/component/palermitan_role_passive/shi,
+		"Liu" = /datum/component/palermitan_role_passive/liu,
+		"Devyat" = /datum/component/palermitan_role_passive/devyat,
+		"Hana" = /datum/component/palermitan_role_passive/hana,
+	)
+
+/obj/item/palermitan_debug_kit/proc/debug_add_role_passive(mob/living/carbon/human/H)
+	var/list/role_types = get_role_passive_types()
+	var/role_name = tgui_input_list(H, "Which role passive?", "Role Passive", role_types)
+	if(!role_name)
+		return
+	var/tier_str = tgui_input_list(H, "Set tier:", "Passive Tier", list("1", "2", "3"))
+	if(!tier_str)
+		return
+	var/new_tier = text2num(tier_str)
+	var/passive_type = role_types[role_name]
+	// Remove existing passive of this type if any
+	var/datum/component/palermitan_role_passive/existing = locate(passive_type) in H.GetComponents(/datum/component/palermitan_role_passive)
+	if(existing)
+		qdel(existing)
+	// Add new passive at the selected tier
+	H.AddComponent(passive_type, new_tier)
+	// Also update the EXP component's duel count to match
+	var/datum/component/palermitan_exp/exp_comp = H.GetComponent(/datum/component/palermitan_exp)
+	if(exp_comp)
+		var/required_duels = 1
+		if(new_tier >= 3)
+			required_duels = 5
+		else if(new_tier >= 2)
+			required_duels = 3
+		exp_comp.role_duel_counts[role_name] = required_duels
+	to_chat(H, span_notice("Palermitan Debug: [role_name] passive granted at tier [new_tier]."))
+
 /obj/item/palermitan_debug_kit/proc/debug_reset_all(mob/living/carbon/human/H)
 	// Remove components
 	var/datum/component/palermitan_apprentice/pal = H.GetComponent(/datum/component/palermitan_apprentice)
@@ -251,7 +386,21 @@
 	var/datum/component/palermitan_exp/exp = H.GetComponent(/datum/component/palermitan_exp)
 	if(exp)
 		qdel(exp)
-	// Remove duel action
+	// Remove all palermitan skill components
+	for(var/datum/component/palermitan_skill/skill in H.GetComponents(/datum/component/palermitan_skill))
+		qdel(skill)
+	// Remove all role passive components
+	for(var/datum/component/palermitan_role_passive/passive in H.GetComponents(/datum/component/palermitan_role_passive))
+		qdel(passive)
+	// Remove actions
 	for(var/datum/action/innate/thumb_duel_challenge/act in H.actions)
 		qdel(act)
-	to_chat(H, span_notice("Palermitan Debug: All components and actions removed."))
+	for(var/datum/action/innate/palermitan_tree/act in H.actions)
+		qdel(act)
+	for(var/datum/action/innate/sezionatura_activate/act in H.actions)
+		qdel(act)
+	// End any active debug duel
+	if(active_debug_duel?.active)
+		active_debug_duel.cleanup()
+		QDEL_NULL(active_debug_duel)
+	to_chat(H, span_notice("Palermitan Debug: All components, skills, passives, and actions removed."))

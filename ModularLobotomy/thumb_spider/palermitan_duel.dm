@@ -4,6 +4,9 @@
 // Creates an arena ring, detects win/loss, grants rewards.
 ////////////////////////////////////////////////////////////
 
+/// Tracks total Fortitude gained from dueling, keyed by ckey. Caps at 20.
+GLOBAL_LIST_INIT(duel_fort_rewards, list())
+
 /// Training dummy for solo duel testing
 /mob/living/simple_animal/hostile/palermitan_dummy
 	name = "training dummy"
@@ -254,9 +257,23 @@
 	if(exp_comp && exp_gained > 0)
 		exp_comp.modify_exp(exp_gained)
 
-	// === ROLE TRACKING ===
-	if(exp_comp && opponent_mob?.mind)
-		exp_comp.increment_role_duel(opponent_mob.mind.assigned_role)
+	// === ROLE TRACKING + PASSIVE GRANTING ===
+	if(exp_comp)
+		var/role_name
+		// Check for association component first (regular association members have generic assigned_role)
+		if(ishuman(opponent_mob))
+			var/mob/living/carbon/human/HO = opponent_mob
+			var/datum/component/association_exp_comp = HO.GetComponent(/datum/component/association_exp)
+			if(association_exp_comp)
+				var/asso_type = association_exp_comp.vars["association_type"]
+				if(asso_type)
+					role_name = asso_type
+		// Fall back to assigned_role (works for roaming fixers with variant in name, and all other roles)
+		if(!role_name && opponent_mob?.mind)
+			role_name = opponent_mob.mind.assigned_role
+		if(role_name)
+			exp_comp.increment_role_duel(role_name)
+			grant_role_passive(apprentice, role_name, exp_comp.get_role_duel_count(role_name))
 
 	// === GEAR TIER-UP CHECK ===
 	check_gear_tierup(apprentice)
@@ -271,6 +288,71 @@
 			var/correction_gain = round(base_gain * ratio * 0.25)
 			pal.potential_correction_attrs = correction_gain
 			to_chat(apprentice, span_info("Your mentor can correct you within 1.5 minutes for additional attribute growth."))
+
+	// === OPPONENT REWARDS ===
+	// Non-apprentice opponent gets Ahn + Fortitude for participating
+	if(ishuman(opponent_mob) && !istype(opponent_mob, /mob/living/simple_animal/hostile/palermitan_dummy))
+		var/mob/living/carbon/human/opp = opponent_mob
+		var/opponent_won = (winner == opponent_mob)
+
+		// Determine apprentice gear tier for scaling
+		var/app_tier = 1
+		for(var/obj/item/ego_weapon/city/thumbapprentice_katana/K in apprentice.GetAllContents())
+			app_tier = K.tier
+			break
+
+		// Ahn reward
+		var/ahn_reward = 0
+		if(opponent_won)
+			ahn_reward = 500 + (app_tier * 125)
+		else
+			ahn_reward = 100 + (app_tier * 37)
+		if(ahn_reward > 0)
+			var/obj/item/card/id/C = opp.get_idcard(TRUE)
+			if(C?.registered_account)
+				C.registered_account.adjust_money(ahn_reward)
+				to_chat(opp, span_notice("You earned [ahn_reward] ahn from the duel."))
+
+		// Fortitude reward (capped at +20 total from dueling)
+		var/fort_gain = opponent_won ? 3 : 1
+		var/opp_ckey = opp.ckey
+		if(opp_ckey)
+			if(!(opp_ckey in GLOB.duel_fort_rewards))
+				GLOB.duel_fort_rewards[opp_ckey] = 0
+			var/current_total = GLOB.duel_fort_rewards[opp_ckey]
+			if(current_total < 20)
+				fort_gain = min(fort_gain, 20 - current_total)
+				if(fort_gain > 0)
+					// Check if opponent is a civilian — if so, boost all 4 attributes
+					var/is_civilian = FALSE
+					if(opp.mind?.assigned_role && findtext(opp.mind.assigned_role, "Civilian"))
+						is_civilian = TRUE
+					if(is_civilian)
+						for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+							var/datum/attribute/A = opp.attributes[attr_name]
+							if(A)
+								A.level += fort_gain
+								A.on_update(opp)
+						to_chat(opp, span_boldnotice("The duel sharpened all of your abilities! (+[fort_gain] to all attributes)"))
+					else
+						var/datum/attribute/fort_attr = opp.attributes[FORTITUDE_ATTRIBUTE]
+						if(fort_attr)
+							fort_attr.level += fort_gain
+							fort_attr.on_update(opp)
+						to_chat(opp, span_boldnotice("The duel toughened you up! (+[fort_gain] Fortitude)"))
+					GLOB.duel_fort_rewards[opp_ckey] += fort_gain
+
+		// Ring student EXP reward — mirrors apprentice's EXP gain
+		var/datum/component/artistic_exp/ring_exp = opp.GetComponent(/datum/component/artistic_exp)
+		if(ring_exp && exp_gained > 0)
+			ring_exp.modify_exp(exp_gained)
+			to_chat(opp, span_notice("The duel inspired your artistry! (+[exp_gained] Artistic EXP)"))
+
+		// Association EXP reward — mirrors apprentice's EXP gain
+		var/datum/component/association_exp/asso_exp = opp.GetComponent(/datum/component/association_exp)
+		if(asso_exp && exp_gained > 0)
+			asso_exp.modify_exp(exp_gained)
+			to_chat(opp, span_notice("The duel honed your skills! (+[exp_gained] Association EXP)"))
 
 /// Checks if the apprentice's attributes warrant a gear tier-up
 /proc/check_gear_tierup(mob/living/carbon/human/apprentice)
@@ -312,6 +394,80 @@
 	for(var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/A in apprentice.GetAllContents())
 		if(A.tier < new_tier)
 			A.set_tier(new_tier)
+
+	// At 150+ attributes: grant Oracle Proxy Passive (evasion from endured pain)
+	if(min_attr >= 150 && !apprentice.GetComponent(/datum/component/oracle_proxy_passive))
+		apprentice.AddComponent(/datum/component/oracle_proxy_passive)
+		to_chat(apprentice, span_boldnotice("The pain you've endured has sharpened your instincts. You gain precognitive evasion!"))
+		to_chat(apprentice, span_notice("You now automatically dodge the first attack every 30 seconds, and have a 50% chance to dodge when unarmed. However, all damage you take inflicts 5% unhealable damage."))
+
+////////////////////////////////////////////////////////////
+// ROLE PASSIVE GRANTING
+
+/// Maps role names to passive component type paths
+/proc/get_role_passive_type(role_name)
+	// Map common role names/variants to passive types
+	// Syndicate factions
+	if(findtext(role_name, "Thumb") || findtext(role_name, "Soldato") || findtext(role_name, "Capo") || findtext(role_name, "Sottocapo"))
+		return /datum/component/palermitan_role_passive/thumb
+	if(findtext(role_name, "Kurokumo") || findtext(role_name, "Wakashu") || findtext(role_name, "Hosa") || findtext(role_name, "Kashira"))
+		return /datum/component/palermitan_role_passive/kurokumo
+	if(findtext(role_name, "Index") || findtext(role_name, "Proxy") || findtext(role_name, "Proselyte") || findtext(role_name, "Messenger"))
+		return /datum/component/palermitan_role_passive/index
+	if(findtext(role_name, "Insurgence") || findtext(role_name, "Nightwatch") || findtext(role_name, "Transport"))
+		return /datum/component/palermitan_role_passive/insurgence
+	if(findtext(role_name, "Brother") || findtext(role_name, "Middle"))
+		return /datum/component/palermitan_role_passive/middle
+	if(findtext(role_name, "N-Corp") || findtext(role_name, "Hammer") || findtext(role_name, "Inquisitor") || findtext(role_name, "Nagel"))
+		return /datum/component/palermitan_role_passive/ncorp
+	if(findtext(role_name, "Blade Lineage") || findtext(role_name, "Salsu") || findtext(role_name, "Cutthroat"))
+		return /datum/component/palermitan_role_passive/blade_lineage
+	// City roles
+	if(findtext(role_name, "Butcher"))
+		return /datum/component/palermitan_role_passive/butcher
+	if(findtext(role_name, "Rat"))
+		return /datum/component/palermitan_role_passive/rat
+	if(findtext(role_name, "Carnival"))
+		return /datum/component/palermitan_role_passive/carnival
+	// Association roles
+	if(findtext(role_name, "Zwei"))
+		return /datum/component/palermitan_role_passive/zwei
+	if(findtext(role_name, "Seven"))
+		return /datum/component/palermitan_role_passive/seven
+	if(findtext(role_name, "Dieci"))
+		return /datum/component/palermitan_role_passive/dieci
+	if(findtext(role_name, "Cinq"))
+		return /datum/component/palermitan_role_passive/cinq
+	if(findtext(role_name, "Shi"))
+		return /datum/component/palermitan_role_passive/shi
+	if(findtext(role_name, "Liu"))
+		return /datum/component/palermitan_role_passive/liu
+	if(findtext(role_name, "Devyat"))
+		return /datum/component/palermitan_role_passive/devyat
+	if(findtext(role_name, "Hana"))
+		return /datum/component/palermitan_role_passive/hana
+	return null
+
+/// Grants or upgrades a role passive based on duel count
+/proc/grant_role_passive(mob/living/carbon/human/apprentice, role_name, duel_count)
+	var/passive_type = get_role_passive_type(role_name)
+	if(!passive_type)
+		return
+	// Determine tier from duel count
+	var/new_tier = 1
+	if(duel_count >= 5)
+		new_tier = 3
+	else if(duel_count >= 3)
+		new_tier = 2
+	// Check if we already have this passive
+	var/datum/component/palermitan_role_passive/existing = locate(passive_type) in apprentice.GetComponents(/datum/component/palermitan_role_passive)
+	if(existing)
+		if(existing.tier >= new_tier)
+			return
+		// Upgrade: remove old, add new at higher tier
+		qdel(existing)
+	apprentice.AddComponent(passive_type, new_tier)
+	to_chat(apprentice, span_boldnotice("Role passive unlocked/upgraded! (Tier [new_tier])"))
 
 ////////////////////////////////////////////////////////////
 // DUEL WALL EFFECT
