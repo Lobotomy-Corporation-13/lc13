@@ -11,6 +11,10 @@
 	var/requires_delivery_choice = FALSE
 	/// Related to above. An arrival belt that can be delivered to by the EO's tablet.
 	var/obj/structure/extraction_belt/linked_structure
+	/// To prevent spamming sfx on the console
+	var/list/noise_cooldowns = list()
+	var/list/type_cooldowns = list()
+	var/list/valid_sfx = list("terminal_select", "terminal_success", "terminal_prompt_confirm", "terminal_prompt_deny", "terminal_prompt")
 
 /obj/machinery/computer/ego_purchase/Initialize()
 	. = ..()
@@ -24,6 +28,14 @@
 		. += span_notice("This console seems to be upgraded. <b>Trained Extraction Officers</b> can extract E.G.O. with greater efficiency, <b>reducing the PE cost by 15%</b>. \
 		Untrained personnel will also be shipped E.G.O. at twice the usual speed.")
 
+/obj/machinery/computer/ego_purchase/proc/MakeNoise(mob/user, noise)
+	if(!noise || !istype(user) || !user.mind)
+		return
+	if(!(noise in valid_sfx))
+		return
+	playsound(get_turf(src), "sound/machines/[noise].ogg", 50, TRUE)
+	noise_cooldowns[usr] = world.time + 0.2 SECONDS
+
 /// When interacted with...
 /obj/machinery/computer/ego_purchase/ui_interact(mob/user, datum/tgui/ui)
 	var/client/user_client = user?.client
@@ -34,6 +46,8 @@
 	if(user_client.prefs.tgui_fancy)
 		ui = SStgui.try_update_ui(user, src, ui)
 		if(!ui)
+			if(isliving(user))
+				MakeNoise(user, "terminal_on")
 			ui = new(user, src, "EgoPurchaseConsole", "E.G.O. Purchase Console")
 			ui.set_autoupdate(FALSE) // Every update flickers tooltips and resets scrolling position.
 			ui.open()
@@ -166,7 +180,7 @@
 	new_log["abno_previous_balance"] = abno_datum.stored_boxes
 
 	abno_datum.stored_boxes -= ego_cost
-	playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+	playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 50, TRUE)
 	log_game("[key_name(user)] purchased [ego_path].")
 	message_admins("[key_name(user)] purchased [ego_path].")
 	updateUsrDialog()
@@ -361,8 +375,20 @@
 		update_icon()
 		return FALSE // I know this looks EXTREMELY suspect but I don't want the UI to update when you do this. Else, it resets the scrolling position on the ego list.
 	else if(action == "refresh")
-		playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
+		playsound(get_turf(src), 'sound/machines/terminal_processing.ogg', 50, TRUE)
 		return TRUE
+	else if(action == "noise")
+		if(noise_cooldowns[usr] > world.time)
+			return FALSE
+		var/chosen_noise = params["sfx"]
+		MakeNoise(usr, chosen_noise)
+		return FALSE
+	else if(action == "type")
+		if(type_cooldowns[usr] > world.time)
+			return FALSE
+		playsound(get_turf(src), "sound/machines/terminal_button0[rand(1, 8)].ogg", 50, FALSE)
+		type_cooldowns[usr] = world.time + 0.1 SECONDS
+		return FALSE
 
 // !!!!!!!!!!! Old Functionality !!!!!!!!!!!
 /obj/machinery/computer/ego_purchase/Topic(href, href_list)

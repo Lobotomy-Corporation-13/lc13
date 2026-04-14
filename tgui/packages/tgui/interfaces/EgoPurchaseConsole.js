@@ -42,17 +42,31 @@ export const EgoPurchaseConsole = (props, context) => {
   const regex_for_guns = /ego_weapon\/ranged\//;
   const regex_for_shields = /ego_weapon\/shield\//;
   const regex_for_armor = /clothing\/suit\/armor\/ego_gear\//;
+  // SFX to play when operating the machine
+  const select_sfx = "terminal_select";
+  const success_sfx = "terminal_success";
+  const confirm_sfx = "terminal_prompt_confirm";
+  const deny_sfx = "terminal_prompt_deny";
+  const prompt_sfx = "terminal_prompt";
 
   /* ------------ Functions ------------*/
 
-
-  const UpdateCollapsibleStatesList = key => {
-
-    let newStateList = { ...collapsiblesStateList };
-    newStateList[key] = !newStateList[key];
-    setCollapsiblesStateList(newStateList);
+  // Changes ZAYIN/TETH/etc. tabs.
+  const ChangeTab = tab => {
+    setTab(tab);
+    act('noise', { "sfx": select_sfx });
   };
 
+  // Called to fold/unfold an Abnormality's collapsible.
+  const UpdateCollapsibleStatesList = key => {
+    let newStateList = { ...collapsiblesStateList };
+    let newState = !newStateList[key];
+    newStateList[key] = newState;
+    setCollapsiblesStateList(newStateList);
+    act('noise', { "sfx": !newState ? deny_sfx : prompt_sfx });
+  };
+
+  // Returns TRUE if any of the minimum resistance sliders are above -10.
   const IsArmorFiltersActive = () => {
     for (let armor_filter in armorResistanceFilters) {
       if (armorResistanceFilters[armor_filter] !== -10) {
@@ -62,6 +76,7 @@ export const EgoPurchaseConsole = (props, context) => {
     return false;
   };
 
+  // Returns TRUE if there are any filters currently active.
   const ActiveFilters = () => {
     if (nameSearchText !== null && nameSearchText !== "") {
       return true;
@@ -84,6 +99,9 @@ export const EgoPurchaseConsole = (props, context) => {
     return false;
   };
 
+  /* Checks Abnormality names, E.G.O. names and buyer names
+  in the purchase log vs. the name search filter.
+  */
   const CheckNameFilterForLogs = log_entry => {
     if (!nameSearchText) {
       return true;
@@ -97,6 +115,7 @@ export const EgoPurchaseConsole = (props, context) => {
       || log_entry_buyer_name.includes(comparing));
   };
 
+  // Checks whether an Abnormality Datum or any of its EGO passes current filters.
   const PassesFilters = abno_datum => {
     let has_relevant_ego = false;
     for (let ego_datum of abno_datum.ego) {
@@ -169,6 +188,7 @@ export const EgoPurchaseConsole = (props, context) => {
   const ChangeWeaponDamtypeFilter = color => {
     color === currentWeaponDamtypeFilter ? setCurrentWeaponDamtypeFilter(null)
       : setCurrentWeaponDamtypeFilter(color);
+    act('noise', { "sfx": select_sfx });
   };
 
   const CheckWeaponDamtypeFilters = datum => {
@@ -237,6 +257,7 @@ export const EgoPurchaseConsole = (props, context) => {
         }
       });
       setEgoTagList(newEgoTagList);
+      act('noise', { "sfx": select_sfx });
     };
 
     return (
@@ -364,7 +385,7 @@ export const EgoPurchaseConsole = (props, context) => {
           <FlexItem mt={3}>
             <Button
               content="View Details"
-              onClick={() => setCurrentlyDetailedEgoDatum(datum)} />
+              onClick={() => {setCurrentlyDetailedEgoDatum(datum); act('noise', { "sfx": confirm_sfx });}} />
           </FlexItem>
         </Flex>
       </FlexItem>
@@ -479,19 +500,19 @@ export const EgoPurchaseConsole = (props, context) => {
       <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}
         buttons={<RefreshButton />}>
         <Tabs align="center">
-          <Tabs.Tab selected={tab === 1} onClick={() => setTab(1)}>
+          <Tabs.Tab selected={tab === 1} onClick={() => ChangeTab(1)}>
             {threatclass_names[1]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 2} onClick={() => setTab(2)}>
+          <Tabs.Tab selected={tab === 2} onClick={() => ChangeTab(2)}>
             {threatclass_names[2]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 3} onClick={() => setTab(3)}>
+          <Tabs.Tab selected={tab === 3} onClick={() => ChangeTab(3)}>
             {threatclass_names[3]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 4} onClick={() => setTab(4)}>
+          <Tabs.Tab selected={tab === 4} onClick={() => ChangeTab(4)}>
             {threatclass_names[4]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 5} onClick={() => setTab(5)}>
+          <Tabs.Tab selected={tab === 5} onClick={() => ChangeTab(5)}>
             {threatclass_names[5]}
           </Tabs.Tab>
         </Tabs>
@@ -1029,7 +1050,7 @@ export const EgoPurchaseConsole = (props, context) => {
   // A button that exits out of the EGO details view.
   const ExitDetailsButton = (props, context) => {
     return (<Button mx={1} icon="arrow-left" color="red" content="Back"
-      onClick={() => { setCurrentlyDetailedEgoDatum(null); }} />);
+      onClick={() => { OpenDetails(null); }} />);
   };
 
   // The actual EgoPurchaseConsole interface component.
@@ -1052,7 +1073,7 @@ export const EgoPurchaseConsole = (props, context) => {
             <Divider vertical />
           </Flex.Item>
           <FlexItem >
-            <Button textAlign="center" mb={2} fluid icon={viewingPurchaseLog ? "arrow-left" : "search"} content={viewingPurchaseLog ? "Back" : "View Purchase Log"} color={viewingPurchaseLog ? "red" : "default"} onClick={() => { setViewingPurchaseLog(!viewingPurchaseLog); }} />
+            <Button textAlign="center" mb={2} fluid icon={viewingPurchaseLog ? "arrow-left" : "search"} content={viewingPurchaseLog ? "Back" : "View Purchase Log"} color={viewingPurchaseLog ? "red" : "default"} onClick={() => { setViewingPurchaseLog(!viewingPurchaseLog); act('noise', { "sfx": select_sfx }); }} />
             <Section title="Filters">
               <Flex direction="column">
                 <FlexItem>
@@ -1063,13 +1084,13 @@ export const EgoPurchaseConsole = (props, context) => {
                         placeholder="Search..."
                         autoFocus
                         value={nameSearchText}
-                        onInput={(_, value) => setNameSearchText(value)}
+                        onInput={(_, value) => {setNameSearchText(value); act('type');}}
                         fluid
                       />
                     </Flex.Item>
                     <FlexItem align="end" ml={1} mb={2}>
                       <Button icon="trash" color="red" content="Clear"
-                        onClick={() => { setNameSearchText(null); }} />
+                        onClick={() => { setNameSearchText(null); act('noise', { "sfx": deny_sfx }); }} />
                     </FlexItem>
                   </Flex>
                 </FlexItem>
@@ -1124,13 +1145,13 @@ export const EgoPurchaseConsole = (props, context) => {
                         </LabeledControls.Item>
                       </LabeledControls>
                       <FlexItem align="center" ml={2} mb={4}>
-                        <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); }} />
+                        <Button icon="sync" color="red" onClick={() => { setArmorResistanceFilters({ "red": -10, "white": -10, "black": -10, "pale": -10 }); act('noise', { "sfx": deny_sfx });}} />
                       </FlexItem>
                     </Flex>
                   </FlexItem>)}
 
                 <FlexItem my={2}>
-                  <Collapsible content="E.G.O. Tag Filters">
+                  <Collapsible title="E.G.O. Tag Filters">
                     <Flex nowrap direction="column" maxWidth="18rem">
                       <AllEgoTagCheckboxes />
                     </Flex>
