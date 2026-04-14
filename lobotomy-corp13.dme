@@ -1033,6 +1033,7 @@
 #include "code\game\machinery\computer\arcade_fps.dm"
 #include "code\game\machinery\computer\arcade_greatlake.dm"
 #include "code\game\machinery\computer\arcade_lcovertime.dm"
+#include "code\game\machinery\computer\arcade_pmttrpg.dm"
 #include "code\game\machinery\computer\arcade_sweeper.dm"
 #include "code\game\machinery\computer\arena.dm"
 #include "code\game\machinery\computer\atmos_alert.dm"
