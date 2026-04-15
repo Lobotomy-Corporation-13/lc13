@@ -36,6 +36,7 @@
 	RegisterSignal(parent, COMSIG_MOB_ITEM_ATTACK, PROC_REF(on_attack))
 	RegisterSignal(parent, COMSIG_ATOM_HITBY, PROC_REF(on_hitby))
 	RegisterSignal(parent, COMSIG_PARENT_ATTACKBY, PROC_REF(on_attackby))
+	RegisterSignal(parent, COMSIG_ATOM_ATTACK_HAND, PROC_REF(on_attack_hand))
 	RegisterSignal(parent, COMSIG_MOB_EMOTE, PROC_REF(on_emote))
 
 /datum/component/palermitan_apprentice/UnregisterFromParent()
@@ -43,6 +44,7 @@
 		COMSIG_MOB_ITEM_ATTACK,
 		COMSIG_ATOM_HITBY,
 		COMSIG_PARENT_ATTACKBY,
+		COMSIG_ATOM_ATTACK_HAND,
 		COMSIG_MOB_EMOTE,
 	))
 
@@ -188,11 +190,20 @@
 			if(exp_comp)
 				exp_comp.modify_exp(2)
 			to_chat(apprentice, span_notice("Your mentor's training strike sharpens your resolve. (+2 EXP)"))
-	// Check for nursefather unarmed correction
-	if(!W && is_nursefather(user))
-		// Unarmed attack from nursefather — check correction eligibility
-		if(correction_eligible && world.time < correction_deadline)
-			INVOKE_ASYNC(src, PROC_REF(perform_correction), user)
+
+/// Unarmed attack on the apprentice — nursefather harm-intent hand triggers correction.
+/// COMSIG_PARENT_ATTACKBY only fires for item attacks, so unarmed punches need this signal instead.
+/datum/component/palermitan_apprentice/proc/on_attack_hand(datum/source, mob/living/user)
+	SIGNAL_HANDLER
+	if(!isliving(user))
+		return
+	if(!is_nursefather(user))
+		return
+	if(user.a_intent != INTENT_HARM)
+		return
+	if(!correction_eligible || world.time >= correction_deadline)
+		return
+	INVOKE_ASYNC(src, PROC_REF(perform_correction), user)
 
 /// Grants drink-sharing EXP. Called externally (from debug kit or give/take signal).
 /datum/component/palermitan_apprentice/proc/grant_drink_exp()

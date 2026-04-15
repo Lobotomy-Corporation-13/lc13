@@ -13,18 +13,29 @@
 	/// Maximum number of schools that can be invested in
 	var/max_schools = 3
 
-	/// EXP thresholds for earning skill points
+	/// EXP thresholds for earning skill points. 18 entries = enough for 3 full
+	/// schools (1+2+3 = 6 SP per school x 3 schools = 18 SP).
+	/// Pacing: 1 school by ~duel 6, 2 schools by ~duel 13 (at 200 attrs),
+	/// 3 schools by ~duel 26. See duel reward math in palermitan_duel.dm.
 	var/static/list/exp_thresholds = list(
-		20,
-		50,
-		80,
-		120,
+		25,
+		55,
+		90,
+		130,
 		170,
-		220,
+		210,
+		245,
 		280,
-		350,
+		315,
+		345,
+		375,
+		400,
 		430,
-		500,
+		460,
+		490,
+		520,
+		560,
+		600,
 	)
 
 /datum/component/palermitan_exp/Initialize()

@@ -236,12 +236,18 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	// Calculate ratio and modifiers
 	var/ratio = 1.0
 	if(apprentice_avg > 0)
-		ratio = clamp(opponent_avg / apprentice_avg, 0.25, 2.0)
-	var/win_modifier = player_won ? 1.0 : 0.25
+		ratio = clamp(opponent_avg / apprentice_avg, 0.5, 2.5)
+	// Losses still give a meaningful chunk — early apprentices are expected to
+	// lose, so half-rewards keep progression flowing instead of stalling.
+	var/win_modifier = player_won ? 1.0 : 0.5
+	// Underleveled catch-up multiplier: stays active all the way to the 200
+	// cap so late stages still feel rewarding. 1.75x at 40 attrs, scales
+	// linearly down to 1.0x at 200 attrs.
+	var/underleveled_mult = clamp(1 + (200 - apprentice_avg) / 80, 1.0, 1.75)
 
 	// === ATTRIBUTE GROWTH ===
-	var/base_gain = 6
-	var/gain_per_attr = round(base_gain * ratio * win_modifier)
+	var/base_gain = 16
+	var/gain_per_attr = round(base_gain * ratio * underleveled_mult * win_modifier)
 	if(gain_per_attr > 0)
 		for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
 			var/datum/attribute/A = apprentice.attributes[attr_name]
@@ -251,8 +257,8 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 		to_chat(apprentice, span_notice("You gained [gain_per_attr] to each attribute from the duel."))
 
 	// === EXP GROWTH ===
-	var/base_exp = 20
-	var/exp_gained = round(base_exp * ratio * win_modifier)
+	var/base_exp = 40
+	var/exp_gained = round(base_exp * ratio * underleveled_mult * win_modifier)
 	var/datum/component/palermitan_exp/exp_comp = apprentice.GetComponent(/datum/component/palermitan_exp)
 	if(exp_comp && exp_gained > 0)
 		exp_comp.modify_exp(exp_gained)
@@ -284,8 +290,9 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 		if(pal)
 			pal.correction_eligible = TRUE
 			pal.correction_deadline = world.time + 1.5 MINUTES
-			// Store what a correction would grant (0.25x of win value)
-			var/correction_gain = round(base_gain * ratio * 0.25)
+			// Store what a correction would grant (0.25x of win value, also
+			// benefits from the underleveled catch-up multiplier)
+			var/correction_gain = round(base_gain * ratio * underleveled_mult * 0.25)
 			pal.potential_correction_attrs = correction_gain
 			to_chat(apprentice, span_info("Your mentor can correct you within 1.5 minutes for additional attribute growth."))
 
@@ -297,7 +304,8 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 
 		// Determine apprentice gear tier for scaling
 		var/app_tier = 1
-		for(var/obj/item/ego_weapon/city/thumbapprentice_katana/K in apprentice.GetAllContents())
+		var/list/found_katanas = _find_apprentice_gear(apprentice, /obj/item/ego_weapon/city/thumbapprentice_katana)
+		for(var/obj/item/ego_weapon/city/thumbapprentice_katana/K in found_katanas)
 			app_tier = K.tier
 			break
 
@@ -354,6 +362,22 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 			asso_exp.modify_exp(exp_gained)
 			to_chat(opp, span_notice("The duel honed your skills! (+[exp_gained] Association EXP)"))
 
+/// Finds apprentice gear of the given type in the apprentice's inventory or
+/// dropped on nearby turfs (range 3). Dropped-on-crit gear would otherwise be
+/// missed by a plain GetAllContents() walk.
+/proc/_find_apprentice_gear(mob/living/carbon/human/apprentice, gear_type)
+	. = list()
+	if(!istype(apprentice))
+		return
+	for(var/obj/item/I in apprentice.GetAllContents())
+		if(istype(I, gear_type))
+			. += I
+	var/turf/T = get_turf(apprentice)
+	if(T)
+		for(var/obj/item/I in range(3, T))
+			if(istype(I, gear_type) && !(I in .))
+				. += I
+
 /// Checks if the apprentice's attributes warrant a gear tier-up
 /proc/check_gear_tierup(mob/living/carbon/human/apprentice)
 	if(!istype(apprentice))
@@ -377,23 +401,23 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	else if(effective >= 60)
 		new_tier = 2
 
-	// Update weapons
-	for(var/obj/item/ego_weapon/city/thumbapprentice_katana/K in apprentice.GetAllContents())
+	// Update weapons (inventory or dropped nearby)
+	for(var/obj/item/ego_weapon/city/thumbapprentice_katana/K in _find_apprentice_gear(apprentice, /obj/item/ego_weapon/city/thumbapprentice_katana))
 		if(K.tier < new_tier)
 			K.set_tier(new_tier)
 			to_chat(apprentice, span_boldnotice("Your katana has evolved to tier [new_tier]!"))
-	for(var/obj/item/ego_weapon/city/thumbapprentice_greatsword/G in apprentice.GetAllContents())
+	for(var/obj/item/ego_weapon/city/thumbapprentice_greatsword/G in _find_apprentice_gear(apprentice, /obj/item/ego_weapon/city/thumbapprentice_greatsword))
 		if(G.tier < new_tier)
 			G.set_tier(new_tier)
 			to_chat(apprentice, span_boldnotice("Your greatsword has evolved to tier [new_tier]!"))
-	// Update armor (worn or carried)
-	var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/worn = apprentice.get_item_by_slot(ITEM_SLOT_OCLOTHING)
-	if(istype(worn) && worn.tier < new_tier)
-		worn.set_tier(new_tier)
-		to_chat(apprentice, span_boldnotice("Your armor has evolved to tier [new_tier]!"))
-	for(var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/A in apprentice.GetAllContents())
+	// Update armor (worn, carried, or dropped nearby)
+	var/armor_announced = FALSE
+	for(var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice/A in _find_apprentice_gear(apprentice, /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice))
 		if(A.tier < new_tier)
 			A.set_tier(new_tier)
+			if(!armor_announced)
+				to_chat(apprentice, span_boldnotice("Your armor has evolved to tier [new_tier]!"))
+				armor_announced = TRUE
 
 	// At 150+ attributes: grant Oracle Proxy Passive (evasion from endured pain)
 	if(min_attr >= 150 && !apprentice.GetComponent(/datum/component/oracle_proxy_passive))
