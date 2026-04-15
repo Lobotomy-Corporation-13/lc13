@@ -10,7 +10,8 @@
 /obj/item/clothing/mask/ego_mask/Destroy()
 	if(perma)
 		return ..()
-	dropped()
+	if(ismob(loc))
+		dropped(loc)
 	return ..()
 
 /obj/item/clothing/mask/ego_mask/equipped(mob/user, slot)
