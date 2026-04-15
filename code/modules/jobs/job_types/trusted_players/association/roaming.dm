@@ -107,3 +107,7 @@
 
 	H.equip_to_slot_or_del(new armor(H),ITEM_SLOT_HANDS)
 	H.equip_to_slot_or_del(new weapon(H),ITEM_SLOT_HANDS)
+	// Store the chosen association variant in the assigned role for identification
+	if(H.mind)
+		var/capitalized_asso = uppertext(copytext(chosen_asso, 1, 2)) + copytext(chosen_asso, 2)
+		H.mind.assigned_role = "Roaming [capitalized_asso] Fixer"
