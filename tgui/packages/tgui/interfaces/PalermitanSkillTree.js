@@ -129,7 +129,7 @@ export const PalermitanSkillTree = (props, context) => {
                 school={currentSchool}
                 canInvest={canInvest}
                 schoolsInvested={
-                  schools_invested
+                schools_invested
                 }
                 act={act}
                 skillPoints={skill_points}
@@ -145,7 +145,7 @@ export const PalermitanSkillTree = (props, context) => {
   );
 };
 
-const SchoolDisplay = (props) => {
+const SchoolDisplay = props => {
   const {
     school,
     canInvest,
@@ -196,7 +196,7 @@ const SchoolDisplay = (props) => {
   );
 };
 
-const TierDisplay = (props) => {
+const TierDisplay = props => {
   const { tier, school, act, skillPoints }
     = props;
   const { choices = [] } = tier;
@@ -271,7 +271,7 @@ const TierDisplay = (props) => {
   );
 };
 
-const SkillChoice = (props) => {
+const SkillChoice = props => {
   const { choice, tier, school, act } = props;
   const schoolColor
     = SCHOOL_COLORS[school.id] || '#888';
@@ -358,17 +358,17 @@ const SkillChoice = (props) => {
   );
 };
 
-const LessonsDisplay = (props) => {
+const LessonsDisplay = props => {
   const { passives = [] } = props;
 
-  const getNextTier = (duels) => {
+  const getNextTier = duels => {
     if (duels < 1) return '1';
     if (duels < 3) return '3';
     if (duels < 5) return '5';
     return 'MAX';
   };
 
-  const getTierColor = (tier) => {
+  const getTierColor = tier => {
     if (tier >= 3) return '#c4a000';
     if (tier >= 2) return '#8ba86e';
     if (tier >= 1) return '#6e8ba8';
