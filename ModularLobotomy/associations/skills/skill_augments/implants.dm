@@ -35,6 +35,12 @@
 /obj/item/organ/cyberimp/chest/body_modification/Insert(mob/living/carbon/M, special = FALSE, drop_if_replaced = TRUE)
 	. = ..()
 
+	// Ring artists cannot use skill augments
+	if(HAS_TRAIT(M, TRAIT_RING_ARTIST))
+		to_chat(M, span_warning("Your Ring artistry rejects the skill modification!"))
+		Remove(M)
+		return FALSE
+
 	// Check stat requirements
 	if(ishuman(M))
 		var/mob/living/carbon/human/H = M
@@ -178,6 +184,11 @@
 		return
 
 	var/mob/living/carbon/human/H = target
+
+	// Ring artists cannot use skill augments
+	if(HAS_TRAIT(H, TRAIT_RING_ARTIST))
+		to_chat(user, span_warning("[H] is a Ring artist and cannot receive skill modifications!"))
+		return
 
 	// Check if target already has a skill modification
 	var/obj/item/organ/cyberimp/chest/body_modification/existing_SA = H.getorganslot(ORGAN_SLOT_HEART_AID)
