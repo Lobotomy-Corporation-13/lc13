@@ -251,6 +251,7 @@ GLOBAL_LIST_INIT(association_positions, list(
 ))
 
 GLOBAL_LIST_INIT(city_antagonist_positions, list(
+	"Oracle Proxy",
 	"Index Messenger",
 	"Index Proxy",
 	"Index Proselyte",
@@ -282,6 +283,9 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Insurgence Nightwatch Agent",
 	"Insurgence Transport Agent",
+
+	"Corporist Maestro",
+	"Ex Thumb Sottocapo",
 ))
 
 
