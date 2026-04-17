@@ -254,3 +254,58 @@
 		<p>The Index Syndicate being active in the area is not of your concern -- you work independently of them. You can choose to help them if you so desire, but it should not be your priority. After all, whatever happens to them is likely the Prescript's Will.</p>
 	</div>
 	"}
+
+////////////////////////////////////////////////////////////
+// DEBUG TRANSFORM ITEM
+// Use in hand to become the Oracle Proxy with full loadout.
+
+/obj/item/oracle_proxy_debug
+	name = "oracle's seal"
+	desc = "A debug item. Use in hand to transform into the Oracle Proxy with full gear and abilities."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "hypertool"
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/oracle_proxy_debug/attack_self(mob/living/user)
+	. = ..()
+	if(!ishuman(user))
+		to_chat(user, span_warning("Only humans can use this."))
+		return
+	var/mob/living/carbon/human/H = user
+
+	to_chat(H, span_boldnotice("Transforming into Oracle Proxy..."))
+
+	// Set attributes
+	H.set_attribute_limit(300)
+	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+		var/datum/attribute/A = H.attributes[attr_name]
+		if(A)
+			if(attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE))
+				A.level = 300
+			else
+				A.level = 100
+			A.on_update(H)
+
+	// Set role
+	if(H.mind)
+		H.mind.assigned_role = "Oracle Proxy"
+
+	// Add traits
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+
+	// Add nursefather passive
+	H.AddComponent(/datum/component/nursefather_passive)
+
+	// Equip outfit (includes Caduceus in l_hand, armor in r_hand, pager as accessory, scroll in pocket)
+	var/datum/outfit/job/oracles_proxy/outfit = new()
+	outfit.equip(H)
+
+	// Grant rules action
+	var/datum/action/innate/view_role_rules/index_oracle/rules_action = new
+	rules_action.Grant(H)
+
+	to_chat(H, span_boldnotice("You are now the Oracle Proxy. Caduceus and armor are in your hands, pager is on your suit."))
+
+	// Consume the debug item
+	qdel(src)
