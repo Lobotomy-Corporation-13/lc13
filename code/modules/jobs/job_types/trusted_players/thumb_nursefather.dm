@@ -367,3 +367,74 @@
 		</ul>
 	</div>
 	"}
+
+////////////////////////////////////////////////////////////
+// DEBUG TRANSFORM ITEM
+// Use in hand to become the Ex Thumb Sottocapo with full loadout.
+
+/obj/item/thumb_nursefather_debug
+	name = "thumbfather signet ring"
+	desc = "A debug item. Use in hand to transform into the Ex Thumb Sottocapo with full gear and abilities."
+	icon = 'icons/obj/device.dmi'
+	icon_state = "hypertool"
+	w_class = WEIGHT_CLASS_TINY
+
+/obj/item/thumb_nursefather_debug/attack_self(mob/living/user)
+	. = ..()
+	if(!ishuman(user))
+		to_chat(user, span_warning("Only humans can use this."))
+		return
+	var/mob/living/carbon/human/H = user
+
+	to_chat(H, span_boldnotice("Transforming into Ex Thumb Sottocapo..."))
+
+	// Set attributes
+	H.set_attribute_limit(200)
+	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+		var/datum/attribute/A = H.attributes[attr_name]
+		if(A)
+			if(attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE))
+				A.level = 150
+			else
+				A.level = 100
+			A.on_update(H)
+
+	// Set role
+	if(H.mind)
+		H.mind.assigned_role = "Ex Thumb Sottocapo"
+
+	// Add traits
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+
+	// Insert Eye of Odin
+	var/obj/item/organ/eyes/robotic/odin_eye/eye = new()
+	eye.Insert(H)
+
+	// Add nursefather passive
+	H.AddComponent(/datum/component/nursefather_passive)
+
+	// Equip outfit basics
+	var/datum/outfit/job/ex_thumb_sottocapo/outfit = new()
+	outfit.equip(H)
+
+	// Spawn armor into hand
+	var/obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/ex_sottocapo/armor = new(H)
+	H.put_in_hands(armor)
+
+	// Spawn weapons and ammo into backpack
+	var/obj/item/storage/backpack/BP = locate() in H.contents
+	if(BP)
+		new /obj/item/ego_weapon/city/thumbfather_rapier(BP)
+		new /obj/item/ego_weapon/city/thumbfather_katana(BP)
+		new /obj/item/storage/box/thumb_east_ammo/acceleration(BP)
+		new /obj/item/storage/box/thumb_east_ammo/acceleration(BP)
+
+	// Grant rules action
+	var/datum/action/innate/view_role_rules/thumb_nursefather/rules = new
+	rules.Grant(H)
+
+	to_chat(H, span_boldnotice("You are now the Ex Thumb Sottocapo. Check your backpack for weapons and ammo."))
+
+	// Consume the debug item
+	qdel(src)
