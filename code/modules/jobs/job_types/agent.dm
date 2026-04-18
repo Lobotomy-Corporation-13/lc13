@@ -32,7 +32,7 @@
 	// Assign department security
 	job_attribute_limit = 130		//Have to set because it's a datum and may be changed later
 
-	var/datum/action/G = new /datum/action/cooldown/dash/back
+	var/datum/action/G = new /datum/action/cooldown/dash
 	G.Grant(outfit_owner)
 
 
