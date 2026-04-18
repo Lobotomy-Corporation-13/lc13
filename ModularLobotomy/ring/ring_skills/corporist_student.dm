@@ -136,25 +136,27 @@
 		to_chat(H, span_warning("You need to be next to a dead creature to sculpt it."))
 		return FALSE
 
+	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Create Artwork", list("Basic Sculpture", "Custom Artwork"))
+	if(!choice)
+		return FALSE
+
 	to_chat(H, span_notice("You begin sculpting [corpse] into artwork..."))
 
-	if(!do_after(H, 7 SECONDS, corpse)) // Faster than inspired
+	if(!do_after(H, 7 SECONDS, corpse))
 		to_chat(H, span_warning("You were interrupted!"))
 		return FALSE
 
-	// Create the artwork
-	var/obj/structure/corporist_artwork/artwork = new(get_turf(corpse), H)
+	if(choice == "Custom Artwork")
+		new /obj/structure/custom_corporist_artwork(get_turf(corpse), H)
+		to_chat(H, span_nicegreen("You create a custom artwork pedestal from [corpse]'s remains."))
+	else
+		var/obj/structure/corporist_artwork/artwork = new(get_turf(corpse), H)
+		artwork.simple_creatures_used[corpse.name] = 1
+		to_chat(H, span_nicegreen("You create a crude sculpture from [corpse]'s remains."))
 
-	// Track the simple creature used (not as bodyparts)
-	artwork.simple_creatures_used[corpse.name] = 1
-
-	to_chat(H, span_nicegreen("You create a crude sculpture from [corpse]'s remains."))
 	playsound(H, 'sound/effects/splat.ogg', 50, TRUE)
-
-	// Gib the corpse
 	corpse.gib()
 
-	// Add EXP
 	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
 	if(exp_comp)
 		exp_comp.add_activity_exp("create_artwork")
