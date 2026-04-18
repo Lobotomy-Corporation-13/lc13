@@ -12,7 +12,10 @@
 	projectile.original = target
 	projectile.firer = user
 	projectile.fired_from = fired_from
-	distro += variance
+	if(alternate_selected)
+		distro += alternate_variance
+	else
+		distro += variance
 	if(projectile.icon_state == "bullet")
 		switch(projectile.damage_type)
 			if(RED_DAMAGE)

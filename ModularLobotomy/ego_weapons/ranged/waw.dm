@@ -16,6 +16,18 @@
 	roundsreload = TRUE
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 
+	alternate_fire_name = "warden"
+	alternate_pellets = 1
+	alternate_info = "This weapon fires a heavy slug."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_correctionalslug
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to slug rounds.")
+	alternate_toggle_disabled_message = span_notice("You switch to buckshot rounds.")
+
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
@@ -34,11 +46,29 @@
 	projectile_path = /obj/projectile/ego_bullet/ego_hornet
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
-	fire_delay = 2
+	fire_delay = 5
 	shotsleft = 10
-	reloadtime = 1.4 SECONDS
+	reloadtime = 1.7 SECONDS
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
+							)
+
+	alternate_fire_name = "dust spark"
+	alternate_pellets = 3
+	alternate_variance = 20
+	alternate_info = "This weapon fires a spread of bullets."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_MAGAZINE
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_hornetshotty
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You toggle into buckshot mode.")
+	alternate_toggle_disabled_message = span_notice("You switch to rifle rounds.")
+
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
 							)
 
 /obj/item/ego_weapon/ranged/hornet/attack(mob/living/target, mob/living/carbon/human/user)

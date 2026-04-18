@@ -22,6 +22,12 @@
 	damage = 10
 	damage_type = WHITE_DAMAGE
 
+/obj/projectile/ego_bullet/ego_noiseslug
+	name = "callsign"
+	damage = 30
+	damage_type = WHITE_DAMAGE
+
+
 /obj/projectile/ego_bullet/ego_solitude
 	name = "solitude"
 	damage = 40	//Slow as balls

@@ -108,6 +108,7 @@
 	var/alternate_reload_time = 0
 	var/alternate_projectile_path = /obj/projectile/ego_bullet/ego_knade
 	var/alternate_pellets = 1
+	var/alternate_variance = 0
 	var/alternate_fire_sound = 'sound/weapons/gun/general/grenade_launch.ogg'
 	var/alternate_fire_sound_volume = 50
 	var/alternate_toggle_sound = 'sound/machines/click.ogg'

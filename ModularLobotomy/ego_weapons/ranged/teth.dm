@@ -67,6 +67,19 @@
 	fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 	roundsreload = TRUE
 
+	alternate_fire_name = "Callsign"
+	alternate_pellets = 1
+	alternate_info = "This weapon fires a heavy slug."
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_EMPTY_MAG
+	alternate_projectile_path = /obj/projectile/ego_bullet/ego_noiseslug
+	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
+	alternate_fire_sound_volume = 70
+	alternate_toggle_sound = 'sound/machines/click.ogg'
+	alternate_toggle_sound_volume = 65
+	alternate_toggle_enabled_message = span_notice("You switch to slug rounds.")
+	alternate_toggle_disabled_message = span_notice("You switch to buckshot rounds.")
+
+
 /obj/item/ego_weapon/ranged/pistol/solitude
 	name = "solitude"
 	desc = "A classic blue revolver, that gives you feelings of loneliness."

@@ -3,10 +3,22 @@
 	damage = 10
 	damage_type = BLACK_DAMAGE
 
+/obj/projectile/ego_bullet/ego_correctionalslug
+	name = "warden"
+	damage = 60
+	damage_type = BLACK_DAMAGE
+
 /obj/projectile/ego_bullet/ego_hornet
 	name = "hornet"
 	damage = 55
 	damage_type = RED_DAMAGE
+
+/obj/projectile/ego_bullet/ego_hornetshotty
+	name = "dust spark"
+	damage = 25
+	damage_type = RED_DAMAGE
+	range = 3
+
 
 /obj/projectile/ego_bullet/ego_hatred
 	name = "magic beam"
