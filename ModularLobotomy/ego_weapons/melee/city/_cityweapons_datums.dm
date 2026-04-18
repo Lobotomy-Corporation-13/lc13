@@ -784,7 +784,7 @@ Feel free to add them here if you disagree though.
 	ego_tags = list(EGO_TAG_MOBILITY)
 /// Walpurgisnacht - Faust
 /datum/ego_datum/weapon/city/lcb_walpurgisnacht
-	item_path = /obj/item/ego_weapon/shield/parry/walpurgisnacht
+	item_path = /obj/item/ego_weapon/shield/walpurgisnacht
 	cost = 25
 /// Sueño Imposible - Don Quixote
 /datum/ego_datum/weapon/city/lcb_suenoimposible
@@ -797,7 +797,7 @@ Feel free to add them here if you disagree though.
 /// S.A.N.G.R.I.A. - Ryoshu
 // Yeah yeah we know the actual name
 /datum/ego_datum/weapon/city/lcb_sangria
-	item_path = /obj/item/ego_weapon/shield/parry/sangria
+	item_path = /obj/item/ego_weapon/shield/sangria
 	cost = 25
 /// Soleil - Meursault
 /datum/ego_datum/weapon/city/lcb_soleil
