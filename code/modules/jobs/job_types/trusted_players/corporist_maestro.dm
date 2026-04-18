@@ -76,6 +76,7 @@
 	shoes = /obj/item/clothing/shoes/laceup
 	// l_hand and r_hand are equipped in after_spawn() after set_species()
 	l_pocket = /obj/item/apprentice_recruitment/ring_corporist
+	r_pocket = /obj/item/storage/box/corporist_toolkit
 
 // Ring Corporist Apprentice Recruitment Scroll
 /obj/item/apprentice_recruitment/ring_corporist
@@ -110,9 +111,11 @@
 		just.level = 100
 		just.on_update(H)
 
-	// Give armor (mask auto-equips when worn, weapon is summoned from armor via ability)
+	// Give armor and toolkit
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/armor = new(H.loc)
 	H.put_in_hands(armor)
+	var/obj/item/storage/box/corporist_toolkit/toolkit = new(H.loc)
+	H.put_in_hands(toolkit)
 
 	// Update ID card
 	update_id_card(H, "Corporist Apprentice")

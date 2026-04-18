@@ -1,6 +1,21 @@
 // Corporist Artwork System
 // Artworks created by The Ring's Corporist school from flesh and bone
 
+// ================== ARTIST'S TOOLKIT ==================
+
+/obj/item/storage/box/corporist_toolkit
+	name = "artist's toolkit"
+	desc = "A box containing the essential tools of the Corporist trade."
+	icon_state = "secbox"
+	illustration = null
+
+/obj/item/storage/box/corporist_toolkit/PopulateContents()
+	new /obj/item/shears(src)
+	new /obj/item/reagent_containers/syringe(src)
+	new /obj/item/reagent_containers/blood(src)
+	new /obj/item/reagent_containers/blood(src)
+	new /obj/item/wrench(src)
+
 /obj/structure/corporist_artwork
 	name = "crude sculpture"
 	desc = "A basic arrangement of flesh and bone. The artist's vision is barely visible."
@@ -198,18 +213,23 @@
 /// Adding bodyparts by hitting the artwork
 /obj/structure/corporist_artwork/attackby(obj/item/I, mob/living/user, params)
 	// Check if it's a spray bottle - vandalism!
-	if(istype(I, /obj/item/reagent_containers/spray))
+	if(istype(I, /obj/item/reagent_containers/spray) || istype(I, /obj/item/toy/crayon))
 		if(vandalized)
 			to_chat(user, span_warning("This artwork has already been vandalized."))
 			return
 
-		to_chat(user, span_warning("You begin spraying black paint over the artwork..."))
+		if(istype(I, /obj/item/toy/crayon/spraycan))
+			to_chat(user, span_warning("You begin spraying graffiti over the artwork..."))
+		else if(istype(I, /obj/item/reagent_containers/spray))
+			to_chat(user, span_warning("You begin spraying paint over the artwork..."))
+		else
+			to_chat(user, span_warning("You begin scrawling over the artwork..."))
 
 		if(!do_after(user, 3 SECONDS, src))
 			to_chat(user, span_warning("You were interrupted!"))
 			return
 
-		vandalize_artwork(user)
+		vandalize_artwork(user, I)
 		return
 
 	// Check if it's a bodypart
@@ -229,25 +249,27 @@
 	return ..()
 
 /// Vandalize the artwork with spray paint - ruins technique and turns it black
-/obj/structure/corporist_artwork/proc/vandalize_artwork(mob/user)
+/obj/structure/corporist_artwork/proc/vandalize_artwork(mob/user, obj/item/tool)
 	vandalized = TRUE
 
-	// Ruin the technique grade
 	technique_grade = "F"
-	technique_scores = list(1) // Reset to just an F score
+	technique_scores = list(1)
 
-	// Turn the artwork black
 	add_atom_colour("#1a1a1a", FIXED_COLOUR_PRIORITY)
-
-	// Update description to reflect vandalism
-	desc = "This artwork has been defaced with black spray paint. The original craftsmanship is ruined."
-
 	playsound(src, 'sound/effects/spray.ogg', 50, TRUE)
-	to_chat(user, span_boldwarning("You vandalize the artwork, ruining its technique!"))
 
-	// Visible message for others
-	if(user)
-		visible_message(span_warning("[user] sprays black paint all over [src]!"), ignored_mobs = list(user))
+	if(istype(tool, /obj/item/toy/crayon/spraycan))
+		desc = "This artwork has been covered in spray-painted graffiti. The original craftsmanship is ruined."
+		to_chat(user, span_boldwarning("You tag the artwork with graffiti, ruining its technique!"))
+		visible_message(span_warning("[user] sprays graffiti all over [src]!"), ignored_mobs = list(user))
+	else if(istype(tool, /obj/item/toy/crayon))
+		desc = "This artwork has been scrawled over with crayon. The original craftsmanship is ruined."
+		to_chat(user, span_boldwarning("You deface the artwork with crayon, ruining its technique!"))
+		visible_message(span_warning("[user] scrawls all over [src] with a crayon!"), ignored_mobs = list(user))
+	else
+		desc = "This artwork has been defaced with spray paint. The original craftsmanship is ruined."
+		to_chat(user, span_boldwarning("You vandalize the artwork, ruining its technique!"))
+		visible_message(span_warning("[user] sprays paint all over [src]!"), ignored_mobs = list(user))
 
 /// Wrench to anchor/unanchor the artwork
 /obj/structure/corporist_artwork/wrench_act(mob/living/user, obj/item/I)
@@ -700,12 +722,17 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	return TRUE
 
 /obj/structure/custom_corporist_artwork/attackby(obj/item/I, mob/living/user, params)
-	if(istype(I, /obj/item/reagent_containers/spray))
+	if(istype(I, /obj/item/reagent_containers/spray) || istype(I, /obj/item/toy/crayon))
 		if(vandalized)
 			to_chat(user, span_warning("This artwork has already been vandalized."))
 			return
 
-		to_chat(user, span_warning("You begin spraying black paint over the artwork..."))
+		if(istype(I, /obj/item/toy/crayon/spraycan))
+			to_chat(user, span_warning("You begin spraying graffiti over the artwork..."))
+		else if(istype(I, /obj/item/reagent_containers/spray))
+			to_chat(user, span_warning("You begin spraying paint over the artwork..."))
+		else
+			to_chat(user, span_warning("You begin scrawling over the artwork..."))
 
 		if(!do_after(user, 3 SECONDS, src))
 			to_chat(user, span_warning("You were interrupted!"))
@@ -713,10 +740,19 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 
 		vandalized = TRUE
 		add_atom_colour("#1a1a1a", FIXED_COLOUR_PRIORITY)
-		desc = "This artwork has been defaced with black spray paint."
+		if(istype(I, /obj/item/toy/crayon/spraycan))
+			desc = "This artwork has been covered in spray-painted graffiti."
+			to_chat(user, span_boldwarning("You tag the artwork with graffiti!"))
+			visible_message(span_warning("[user] sprays graffiti all over [src]!"), ignored_mobs = list(user))
+		else if(istype(I, /obj/item/reagent_containers/spray))
+			desc = "This artwork has been defaced with spray paint."
+			to_chat(user, span_boldwarning("You vandalize the artwork!"))
+			visible_message(span_warning("[user] sprays paint all over [src]!"), ignored_mobs = list(user))
+		else
+			desc = "This artwork has been scrawled over with crayon."
+			to_chat(user, span_boldwarning("You deface the artwork with crayon!"))
+			visible_message(span_warning("[user] scrawls all over [src] with a crayon!"), ignored_mobs = list(user))
 		playsound(src, 'sound/effects/spray.ogg', 50, TRUE)
-		to_chat(user, span_boldwarning("You vandalize the artwork!"))
-		visible_message(span_warning("[user] sprays black paint all over [src]!"), ignored_mobs = list(user))
 		return
 
 	if(istype(I, /obj/item/reagent_containers))
@@ -751,6 +787,15 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 
 		var/obj/item/carved_piece/CP = I
 		add_carved_piece(CP, user)
+		return
+
+	if(istype(I, /obj/item/organ))
+		if(!is_corporist_artist(user))
+			to_chat(user, span_warning("You have no idea how to incorporate this into the artwork."))
+			return
+
+		var/obj/item/organ/O = I
+		add_organ_custom(O, user)
 		return
 
 	return ..()
@@ -817,6 +862,40 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		CP.forceMove(src)
 	else
 		CP.forceMove(src)
+
+	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
+	if(exp_comp)
+		exp_comp.add_activity_exp("add_body")
+
+	if(editor)
+		SStgui.update_static_data(user, editor)
+
+/// Add an organ to the custom artwork's storage
+/obj/structure/custom_corporist_artwork/proc/add_organ_custom(obj/item/organ/O, mob/user)
+	var/part_id = "[next_part_id]"
+	next_part_id++
+
+	var/use_icon = "[initial(O.icon)]"
+	var/use_state = O.icon_state || initial(O.icon_state)
+	var/list/crop = get_icon_crop_bounds(file(use_icon), use_state)
+	stored_parts[part_id] = list(
+		"body_zone" = "organ_[O.name]",
+		"icon_file" = use_icon,
+		"icon_state" = use_state,
+		"crop_ox" = crop["ox"],
+		"crop_oy" = crop["oy"],
+		"crop_w" = crop["w"],
+		"crop_h" = crop["h"]
+	)
+
+	body_part_count++
+	to_chat(user, span_nicegreen("You incorporate the [O.name] into the artwork's collection."))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+	if(user.transferItemToLoc(O, src))
+		O.forceMove(src)
+	else
+		O.forceMove(src)
 
 	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
 	if(exp_comp)

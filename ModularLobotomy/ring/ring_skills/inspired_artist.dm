@@ -84,6 +84,10 @@
 	if(!exp_comp)
 		exp_comp = H.AddComponent(/datum/component/artistic_exp)
 
+	// Give toolkit
+	var/obj/item/storage/box/corporist_toolkit/toolkit = new(get_turf(H))
+	H.put_in_hands(toolkit)
+
 	qdel(src)
 
 // Action for inspired players to create basic artwork

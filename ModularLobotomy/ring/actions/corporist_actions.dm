@@ -237,7 +237,7 @@
 		return FALSE
 
 	// Optional critique
-	var/critique = stripped_input(H, "Add a critique (optional):", "Critique", "", 100)
+	var/critique = stripped_input(H, "Add a critique (optional):", "Critique", "", 250)
 
 	// Assign the grade
 	if(artwork)
@@ -300,16 +300,28 @@
 		to_chat(H, span_warning("You can only describe artwork you created."))
 		return FALSE
 
-	var/current_desc = artwork ? (artwork.custom_desc || "") : (custom_artwork.custom_desc || "")
-	var/new_desc = stripped_input(H, "Write your description (max 300 characters):", "Describe Artwork", current_desc, 300)
-	if(!new_desc)
+	var/target = artwork ? artwork : custom_artwork
+	var/choice = tgui_input_list(H, "What would you like to edit?", "Describe Artwork", list("Artist's Note", "Description"))
+	if(!choice)
 		return FALSE
 
-	if(artwork)
-		artwork.custom_desc = new_desc
+	if(choice == "Artist's Note")
+		var/current_note = artwork ? (artwork.custom_desc || "") : (custom_artwork.custom_desc || "")
+		var/new_note = stripped_input(H, "Write your artist's note (max 300 characters):", "Artist's Note", current_note, 300)
+		if(!new_note)
+			return FALSE
+		if(artwork)
+			artwork.custom_desc = new_note
+		else
+			custom_artwork.custom_desc = new_note
+		to_chat(H, span_nicegreen("You have set an artist's note for the artwork."))
 	else
-		custom_artwork.custom_desc = new_desc
-	to_chat(H, span_nicegreen("You have set a custom description for the artwork."))
+		var/current_desc = target.desc || ""
+		var/new_desc = stripped_input(H, "Write a description (max 300 characters):", "Description", current_desc, 300)
+		if(!new_desc)
+			return FALSE
+		target.desc = new_desc
+		to_chat(H, span_nicegreen("You have set a new description for the artwork."))
 
 	StartCooldown()
 	return TRUE
