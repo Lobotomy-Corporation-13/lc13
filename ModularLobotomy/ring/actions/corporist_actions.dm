@@ -29,7 +29,7 @@
 		to_chat(H, span_warning("You need to be next to a dead creature to sculpt it."))
 		return FALSE
 
-	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Sculpt", list("Basic Sculpture", "Custom Artwork"))
+	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Sculpt", list("Basic Sculpture", "Custom Artwork", "Carve Body"))
 	if(!choice)
 		return FALSE
 
@@ -38,6 +38,12 @@
 	if(!do_after(H, 5 SECONDS, corpse))
 		to_chat(H, span_warning("You were interrupted!"))
 		return FALSE
+
+	if(choice == "Carve Body")
+		var/datum/carve_body_editor/editor = new(corpse, H)
+		editor.ui_interact(H)
+		StartCooldown()
+		return TRUE
 
 	if(choice == "Custom Artwork")
 		new /obj/structure/custom_corporist_artwork(get_turf(corpse), H)
@@ -105,10 +111,15 @@
 		if(viewer.stat != CONSCIOUS)
 			continue
 
-		// Don't inspire trusted roles (too important to be swayed by art)
 		if(viewer.mind)
-			var/datum/job/viewer_job = SSjob.GetJob(viewer.mind.assigned_role)
-			if(viewer_job?.trusted_only)
+			var/role = viewer.mind.assigned_role
+			// Block association members (but allow roaming fixers)
+			if(findtext(role, "Association") && !findtext(role, "Roaming"))
+				to_chat(viewer, span_notice("The demonstration is technically impressive, but your association duties hold your attention elsewhere."))
+				continue
+			// Block other trusted roles, except roaming fixers
+			var/datum/job/viewer_job = SSjob.GetJob(role)
+			if(viewer_job?.trusted_only && !findtext(role, "Roaming"))
 				to_chat(viewer, span_notice("The demonstration is technically impressive, but your duties hold your attention elsewhere."))
 				continue
 

@@ -517,6 +517,38 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	GLOB.bodypart_icon_cache[key] = base64
 	return base64
 
+/// Calculate non-transparent bounding box of an icon (returns list("ox", "oy", "w", "h"))
+/proc/get_icon_crop_bounds(icon_file, icon_state_name, dir = SOUTH, rotation = 0)
+	var/icon/I = icon(icon_file, icon_state_name, dir)
+	if(rotation)
+		I.Turn(rotation)
+	return get_icon_crop_bounds_from_icon(I)
+
+/// Calculate non-transparent bounding box from a pre-built icon object
+/proc/get_icon_crop_bounds_from_icon(icon/I)
+	var/iw = I.Width()
+	var/ih = I.Height()
+	var/min_x = iw
+	var/min_y = ih
+	var/max_x = -1
+	var/max_y = -1
+	for(var/y in 1 to ih)
+		for(var/x in 1 to iw)
+			var/pixel = I.GetPixel(x, y)
+			if(pixel)
+				if(x - 1 < min_x)
+					min_x = x - 1
+				if(x - 1 > max_x)
+					max_x = x - 1
+				var/ty = ih - y
+				if(ty < min_y)
+					min_y = ty
+				if(ty > max_y)
+					max_y = ty
+	if(max_x == -1)
+		return list("ox" = 0, "oy" = 0, "w" = iw, "h" = ih)
+	return list("ox" = min_x, "oy" = min_y, "w" = max_x - min_x + 1, "h" = max_y - min_y + 1)
+
 /// Helper: check if a mob can create/interact with corporist art
 /proc/is_corporist_artist(mob/user)
 	if(!ishuman(user))
@@ -536,6 +568,8 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	anchored = TRUE
 	density = TRUE
 	max_integrity = 200
+	/// Whether the artwork has been vandalized with spray paint
+	var/vandalized = FALSE
 
 	/// Stored body parts: id -> list("body_zone", "icon_file", "icon_state")
 	var/list/stored_parts = list()
@@ -543,6 +577,10 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	var/list/placed_parts = list()
 	/// Vein pixels: keyed as "x,y" -> TRUE, representing painted cells
 	var/list/vein_pixels = list()
+	/// Number of vein pixels that have been paid for (from last submit)
+	var/submitted_vein_count = 0
+	/// Blood cost per vein pixel
+	var/blood_per_vein = 1
 	/// Next unique ID for stored parts
 	var/next_part_id = 1
 	/// Active TGUI editor datum
@@ -568,6 +606,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 
 /obj/structure/custom_corporist_artwork/Initialize(mapload, mob/creator)
 	. = ..()
+	create_reagents(500)
 	if(creator)
 		creator_ref = WEAKREF(creator)
 
@@ -594,6 +633,13 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	else
 		. += span_purple("Awaiting judgment.")
 
+	var/stored_blood = reagents?.get_reagent_amount(/datum/reagent/blood) || 0
+	if(stored_blood > 0)
+		. += span_notice("It has [stored_blood]u of blood stored.")
+
+	if(vandalized)
+		. += span_boldwarning("This artwork has been vandalized! It has been ruined.")
+
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(is_corporist_artist(H))
@@ -612,6 +658,19 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		to_chat(H, span_notice("You examine the disturbing artwork..."))
 		return
 
+	var/list/choices = list("Arrange Parts", "Rename Artwork")
+	var/choice = tgui_input_list(H, "What would you like to do?", "Custom Artwork", choices)
+	if(!choice)
+		return
+
+	if(choice == "Rename Artwork")
+		var/new_name = stripped_input(H, "Name your artwork (max 60 characters):", "Rename Artwork", name, 60)
+		if(!new_name)
+			return
+		name = new_name
+		to_chat(H, span_nicegreen("You rename the artwork to '[new_name]'."))
+		return
+
 	if(!length(stored_parts))
 		to_chat(H, span_warning("The artwork has no body parts to arrange. Hit it with body parts first."))
 		return
@@ -621,7 +680,61 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		editor = new(src)
 	editor.ui_interact(H)
 
+/obj/structure/custom_corporist_artwork/wrench_act(mob/living/user, obj/item/I)
+	. = ..()
+	if(anchored)
+		to_chat(user, span_notice("You begin loosening the bolts on [src]..."))
+	else
+		to_chat(user, span_notice("You begin securing [src] to the floor..."))
+
+	if(!do_after(user, 2 SECONDS, src))
+		to_chat(user, span_warning("You were interrupted!"))
+		return TRUE
+
+	anchored = !anchored
+	if(anchored)
+		to_chat(user, span_notice("You secure [src] to the floor."))
+	else
+		to_chat(user, span_notice("You unanchor [src] from the floor."))
+	playsound(src, 'sound/items/ratchet.ogg', 50, TRUE)
+	return TRUE
+
 /obj/structure/custom_corporist_artwork/attackby(obj/item/I, mob/living/user, params)
+	if(istype(I, /obj/item/reagent_containers/spray))
+		if(vandalized)
+			to_chat(user, span_warning("This artwork has already been vandalized."))
+			return
+
+		to_chat(user, span_warning("You begin spraying black paint over the artwork..."))
+
+		if(!do_after(user, 3 SECONDS, src))
+			to_chat(user, span_warning("You were interrupted!"))
+			return
+
+		vandalized = TRUE
+		add_atom_colour("#1a1a1a", FIXED_COLOUR_PRIORITY)
+		desc = "This artwork has been defaced with black spray paint."
+		playsound(src, 'sound/effects/spray.ogg', 50, TRUE)
+		to_chat(user, span_boldwarning("You vandalize the artwork!"))
+		visible_message(span_warning("[user] sprays black paint all over [src]!"), ignored_mobs = list(user))
+		return
+
+	if(istype(I, /obj/item/reagent_containers))
+		if(!is_corporist_artist(user))
+			to_chat(user, span_warning("You have no idea how to use this on the artwork."))
+			return
+		var/obj/item/reagent_containers/RC = I
+		if(!RC.reagents?.has_reagent(/datum/reagent/blood))
+			to_chat(user, span_warning("The container has no blood in it."))
+			return
+		var/transferred = RC.reagents.trans_id_to(src, /datum/reagent/blood, RC.amount_per_transfer_from_this)
+		if(transferred > 0)
+			to_chat(user, span_nicegreen("You add [transferred]u of blood to [src]. ([reagents.get_reagent_amount(/datum/reagent/blood)]u stored)"))
+			playsound(src, 'sound/effects/splat.ogg', 30, TRUE)
+		else
+			to_chat(user, span_warning("You couldn't transfer any blood."))
+		return
+
 	if(istype(I, /obj/item/bodypart))
 		if(!is_corporist_artist(user))
 			to_chat(user, span_warning("You have no idea how to incorporate this into the artwork."))
@@ -631,6 +744,15 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		add_bodypart_custom(BP, user)
 		return
 
+	if(istype(I, /obj/item/carved_piece))
+		if(!is_corporist_artist(user))
+			to_chat(user, span_warning("You have no idea how to incorporate this into the artwork."))
+			return
+
+		var/obj/item/carved_piece/CP = I
+		add_carved_piece(CP, user)
+		return
+
 	return ..()
 
 /// Add a bodypart to the custom artwork's storage
@@ -638,10 +760,18 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	var/part_id = "[next_part_id]"
 	next_part_id++
 
+	// BP.icon_state is "" after dismemberment (get_limb_icon clears it), use initial values
+	var/use_icon = "[initial(BP.icon)]"
+	var/use_state = initial(BP.icon_state)
+	var/list/crop = get_icon_crop_bounds(file(use_icon), use_state)
 	stored_parts[part_id] = list(
 		"body_zone" = BP.body_zone,
-		"icon_file" = "[BP.icon]",
-		"icon_state" = BP.icon_state
+		"icon_file" = use_icon,
+		"icon_state" = use_state,
+		"crop_ox" = crop["ox"],
+		"crop_oy" = crop["oy"],
+		"crop_w" = crop["w"],
+		"crop_h" = crop["h"]
 	)
 
 	body_part_count++
@@ -653,6 +783,40 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		BP.forceMove(src)
 	else
 		BP.forceMove(src)
+
+	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
+	if(exp_comp)
+		exp_comp.add_activity_exp("add_body")
+
+	if(editor)
+		SStgui.update_static_data(user, editor)
+
+/// Add a carved piece to the custom artwork's storage
+/obj/structure/custom_corporist_artwork/proc/add_carved_piece(obj/item/carved_piece/CP, mob/user)
+	var/part_id = "[next_part_id]"
+	next_part_id++
+
+	stored_parts[part_id] = list(
+		"body_zone" = "carved_[CP.source_mob_name]",
+		"icon_file" = null,
+		"icon_state" = null,
+		"is_carved" = TRUE,
+		"carved_base64" = CP.carved_base64,
+		"carved_icon" = CP.carved_icon,
+		"crop_ox" = CP.crop_ox,
+		"crop_oy" = CP.crop_oy,
+		"crop_w" = CP.crop_w,
+		"crop_h" = CP.crop_h
+	)
+
+	body_part_count++
+	to_chat(user, span_nicegreen("You incorporate the [CP.name] into the artwork's collection."))
+	playsound(src, 'sound/effects/splat.ogg', 50, TRUE)
+
+	if(user.transferItemToLoc(CP, src))
+		CP.forceMove(src)
+	else
+		CP.forceMove(src)
 
 	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
 	if(exp_comp)
@@ -713,7 +877,14 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 		if(!part_data || !placement)
 			continue
 
-		var/icon/part_icon = icon(file(part_data["icon_file"]), part_data["icon_state"], SOUTH)
+		var/icon/part_icon
+		if(part_data["is_carved"])
+			part_icon = icon(part_data["carved_icon"])
+		else
+			var/icon_state_name = part_data["icon_state"]
+			if(!icon_state_name || icon_state_name == "")
+				icon_state_name = "default_human_[part_data["body_zone"]]"
+			part_icon = icon(file(part_data["icon_file"]), icon_state_name, SOUTH)
 		var/rotation = placement["rotation"]
 		if(rotation)
 			part_icon.Turn(rotation)
@@ -722,8 +893,8 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			part_icon.Blend(tint, ICON_MULTIPLY)
 
 		var/mutable_appearance/MA = mutable_appearance(part_icon)
-		MA.pixel_x = placement["grid_x"] - 24
-		MA.pixel_y = 23 - placement["grid_y"]
+		MA.pixel_x = placement["grid_x"] - 8
+		MA.pixel_y = 8 - placement["grid_y"]
 		. += MA
 
 	if(veins_above)
@@ -734,43 +905,85 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	if(!length(vein_pixels))
 		return list()
 
-	// Build 48x48 color grid: transparent by default, dark red where veins painted
-	var/list/data = list()
-	for(var/y in 1 to 48)
-		for(var/x in 1 to 48)
-			if(vein_pixels["[x],[y]"])
-				data += "#8b0000ff"
-			else
-				data += "#00000000"
+	var/icon/vein_icon = icon('icons/effects/effects.dmi', "nothing")
+	vein_icon.Scale(48, 48)
 
-	var/data_string = data.Join("")
-	var/png_path = "data/tmp/custom_artwork_[REF(src)].png"
-	var/result = rustg_dmi_create_png(png_path, "48", "48", data_string)
-	if(result)
-		return list()
+	for(var/key in vein_pixels)
+		var/list/coords = splittext(key, ",")
+		var/vx = text2num(coords[1])
+		var/vy = text2num(coords[2])
+		// Vein y=1 is top-down, BYOND y=1 is bottom
+		vein_icon.DrawBox("#8b0000", vx, 49 - vy)
 
-	var/icon/vein_icon = new(png_path)
 	var/mutable_appearance/MA = mutable_appearance(vein_icon)
 	MA.pixel_x = -8
 	MA.pixel_y = -8
 	return list(MA)
 
-/// Check if all placed parts form a connected, grounded structure
-/obj/structure/custom_corporist_artwork/proc/validate_placement()
-	if(!length(placed_parts))
-		return TRUE
+/// Count cardinal (4-dir) vein neighbors at a position
+/obj/structure/custom_corporist_artwork/proc/count_vein_neighbors(cx, cy)
+	var/n = 0
+	if(vein_pixels["[cx-1],[cy]"])
+		n++
+	if(vein_pixels["[cx+1],[cy]"])
+		n++
+	if(vein_pixels["[cx],[cy-1]"])
+		n++
+	if(vein_pixels["[cx],[cy+1]"])
+		n++
+	return n
 
-	var/has_grounded = FALSE
+/// Check if a vein cell can be placed without making any cell exceed 2 cardinal neighbors
+/obj/structure/custom_corporist_artwork/proc/can_place_vein(cx, cy)
+	if(vein_pixels["[cx],[cy]"])
+		return FALSE
+	var/my_neighbors = 0
+	var/list/dirs = list(list(-1, 0), list(1, 0), list(0, -1), list(0, 1))
+	for(var/list/d in dirs)
+		var/nx = cx + d[1]
+		var/ny = cy + d[2]
+		if(vein_pixels["[nx],[ny]"])
+			my_neighbors++
+			if(count_vein_neighbors(nx, ny) >= 2)
+				return FALSE
+	if(my_neighbors > 2)
+		return FALSE
+	return TRUE
+
+/// Check if any bodypart or vein touches the pedestal area (grid x:14-33, y:36-39)
+/obj/structure/custom_corporist_artwork/proc/touches_pedestal()
+	// Pedestal bounds (matching statue.dmi "base" in the 48-cell grid)
+	var/ped_x1 = 14
+	var/ped_y1 = 36
+	var/ped_x2 = 33
+	var/ped_y2 = 39
+
+	// Check body parts (using crop bounds, adjacent = touching within 1px)
 	for(var/part_id in placed_parts)
 		var/list/placement = placed_parts[part_id]
-		if(placement["grid_y"] + 32 >= 48)
-			has_grounded = TRUE
-			break
+		var/list/part_data = stored_parts[part_id]
+		var/c_ox = part_data ? part_data["crop_ox"] : 0
+		var/c_oy = part_data ? part_data["crop_oy"] : 0
+		var/c_w = part_data ? part_data["crop_w"] : 32
+		var/c_h = part_data ? part_data["crop_h"] : 32
 
-	if(!has_grounded)
-		return FALSE
+		var/px1 = placement["grid_x"] + c_ox
+		var/py1 = placement["grid_y"] + c_oy
+		var/px2 = px1 + c_w - 1
+		var/py2 = py1 + c_h - 1
 
-	return check_connectivity()
+		if(px1 <= ped_x2 + 1 && px2 >= ped_x1 - 1 && py1 <= ped_y2 + 1 && py2 >= ped_y1 - 1)
+			return TRUE
+
+	// Check veins
+	for(var/key in vein_pixels)
+		var/list/coords = splittext(key, ",")
+		var/vx = text2num(coords[1])
+		var/vy = text2num(coords[2])
+		if(vx >= ped_x1 - 1 && vx <= ped_x2 + 1 && vy >= ped_y1 - 1 && vy <= ped_y2 + 1)
+			return TRUE
+
+	return FALSE
 
 /// BFS connectivity check - all placed parts must be reachable from a grounded part
 /obj/structure/custom_corporist_artwork/proc/check_connectivity()
@@ -798,24 +1011,36 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 
 	return length(visited) == length(nodes)
 
-/// Check if two placed parts are adjacent (bounding boxes overlap or touch within 1px)
+/// Check if two placed parts are adjacent (content bounding boxes overlap or touch within 1px)
 /obj/structure/custom_corporist_artwork/proc/parts_adjacent(part_id_a, part_id_b)
 	var/list/a = placed_parts[part_id_a]
 	var/list/b = placed_parts[part_id_b]
 	if(!a || !b)
 		return FALSE
 
-	var/ax1 = a["grid_x"]
-	var/ay1 = a["grid_y"]
-	var/ax2 = ax1 + 31
-	var/ay2 = ay1 + 31
+	var/list/da = stored_parts[part_id_a]
+	var/list/db = stored_parts[part_id_b]
 
-	var/bx1 = b["grid_x"]
-	var/by1 = b["grid_y"]
-	var/bx2 = bx1 + 31
-	var/by2 = by1 + 31
+	var/a_ox = da ? da["crop_ox"] : 0
+	var/a_oy = da ? da["crop_oy"] : 0
+	var/a_w = da ? da["crop_w"] : 32
+	var/a_h = da ? da["crop_h"] : 32
 
-	// Check if bounding boxes overlap or are within 1px
+	var/b_ox = db ? db["crop_ox"] : 0
+	var/b_oy = db ? db["crop_oy"] : 0
+	var/b_w = db ? db["crop_w"] : 32
+	var/b_h = db ? db["crop_h"] : 32
+
+	var/ax1 = a["grid_x"] + a_ox
+	var/ay1 = a["grid_y"] + a_oy
+	var/ax2 = ax1 + a_w - 1
+	var/ay2 = ay1 + a_h - 1
+
+	var/bx1 = b["grid_x"] + b_ox
+	var/by1 = b["grid_y"] + b_oy
+	var/bx2 = bx1 + b_w - 1
+	var/by2 = by1 + b_h - 1
+
 	if(ax1 > bx2 + 1 || bx1 > ax2 + 1)
 		return FALSE
 	if(ay1 > by2 + 1 || by1 > ay2 + 1)
@@ -829,12 +1054,17 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	if(!placement)
 		return FALSE
 
-	var/px1 = placement["grid_x"]
-	var/py1 = placement["grid_y"]
-	var/px2 = px1 + 31
-	var/py2 = py1 + 31
+	var/list/part_data = stored_parts[part_id]
+	var/c_ox = part_data ? part_data["crop_ox"] : 0
+	var/c_oy = part_data ? part_data["crop_oy"] : 0
+	var/c_w = part_data ? part_data["crop_w"] : 32
+	var/c_h = part_data ? part_data["crop_h"] : 32
 
-	// Expand by 1 for adjacency
+	var/px1 = placement["grid_x"] + c_ox
+	var/py1 = placement["grid_y"] + c_oy
+	var/px2 = px1 + c_w - 1
+	var/py2 = py1 + c_h - 1
+
 	for(var/key in vein_pixels)
 		var/list/coords = splittext(key, ",")
 		var/vx = text2num(coords[1])
@@ -912,15 +1142,51 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	for(var/part_id in artwork.stored_parts)
 		var/list/part_data = artwork.stored_parts[part_id]
 		var/list/rotations = list()
-		for(var/rot in list(0, 90, 180, 270))
-			rotations["[rot]"] = get_bodypart_base64(
-				file(part_data["icon_file"]),
-				part_data["icon_state"],
-				SOUTH,
-				rot
-			)
+		if(part_data["is_carved"])
+			var/icon/carved = part_data["carved_icon"]
+			rotations["0"] = part_data["carved_base64"]
+			for(var/rot in list(90, 180, 270))
+				var/icon/rotated = icon(carved)
+				rotated.Turn(rot)
+				rotations["[rot]"] = icon2base64(rotated)
+		else
+			var/icon_state_name = part_data["icon_state"]
+			if(!icon_state_name || icon_state_name == "")
+				icon_state_name = "default_human_[part_data["body_zone"]]"
+			for(var/rot in list(0, 90, 180, 270))
+				rotations["[rot]"] = get_bodypart_base64(
+					file(part_data["icon_file"]),
+					icon_state_name,
+					SOUTH,
+					rot
+				)
 		part_icons[part_id] = rotations
 	data["partIcons"] = part_icons
+
+	var/list/crop_data = list()
+	for(var/part_id in artwork.stored_parts)
+		var/list/part_data = artwork.stored_parts[part_id]
+		var/list/rot_crops = list()
+		if(part_data["is_carved"])
+			var/icon/carved = part_data["carved_icon"]
+			rot_crops["0"] = list("ox" = part_data["crop_ox"], "oy" = part_data["crop_oy"], "w" = part_data["crop_w"], "h" = part_data["crop_h"])
+			for(var/rot in list(90, 180, 270))
+				var/icon/rotated = icon(carved)
+				rotated.Turn(rot)
+				rot_crops["[rot]"] = get_icon_crop_bounds_from_icon(rotated)
+		else
+			var/use_state = part_data["icon_state"]
+			if(!use_state || use_state == "")
+				use_state = "default_human_[part_data["body_zone"]]"
+			for(var/rot in list(0, 90, 180, 270))
+				rot_crops["[rot]"] = get_icon_crop_bounds(
+					file(part_data["icon_file"]),
+					use_state,
+					SOUTH,
+					rot
+				)
+		crop_data[part_id] = rot_crops
+	data["cropData"] = crop_data
 
 	return data
 
@@ -960,6 +1226,13 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	data["veinPixels"] = vein_list
 	data["veinsAbove"] = artwork.veins_above
 
+	var/current_veins = length(artwork.vein_pixels)
+	var/vein_diff = current_veins - artwork.submitted_vein_count
+	var/stored_blood = artwork.reagents?.get_reagent_amount(/datum/reagent/blood) || 0
+	data["storedBlood"] = stored_blood
+	data["bloodCost"] = max(0, vein_diff) * artwork.blood_per_vein
+	data["bloodRefund"] = max(0, -vein_diff) * artwork.blood_per_vein
+
 	return data
 
 /datum/custom_artwork_editor/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
@@ -974,8 +1247,8 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	switch(action)
 		if("place_part")
 			var/part_id = params["id"]
-			var/grid_x = clamp(text2num(params["x"]), 0, 16)
-			var/grid_y = clamp(text2num(params["y"]), 0, 16)
+			var/grid_x = clamp(text2num(params["x"]), -32, 47)
+			var/grid_y = clamp(text2num(params["y"]), -32, 47)
 			if(!artwork.stored_parts[part_id])
 				return
 			if(artwork.placed_parts[part_id])
@@ -988,30 +1261,17 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 				"tint" = "#ffffff"
 			)
 
-			if(!artwork.validate_placement())
-				artwork.placed_parts -= part_id
-				return
-
-			grant_arrange_exp(user)
 			. = TRUE
 
 		if("move_part")
 			var/part_id = params["id"]
-			var/grid_x = clamp(text2num(params["x"]), 0, 16)
-			var/grid_y = clamp(text2num(params["y"]), 0, 16)
+			var/grid_x = clamp(text2num(params["x"]), -32, 47)
+			var/grid_y = clamp(text2num(params["y"]), -32, 47)
 			if(!artwork.placed_parts[part_id])
 				return
 
-			var/list/current = artwork.placed_parts[part_id]
-			var/list/old_placement = current.Copy()
 			artwork.placed_parts[part_id]["grid_x"] = grid_x
 			artwork.placed_parts[part_id]["grid_y"] = grid_y
-
-			if(!artwork.validate_placement())
-				artwork.placed_parts[part_id] = old_placement
-				return
-
-			grant_arrange_exp(user)
 			. = TRUE
 
 		if("rotate_part")
@@ -1019,14 +1279,7 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			if(!artwork.placed_parts[part_id])
 				return
 
-			var/old_rotation = artwork.placed_parts[part_id]["rotation"]
-			artwork.placed_parts[part_id]["rotation"] = (old_rotation + 90) % 360
-
-			if(!artwork.validate_placement())
-				artwork.placed_parts[part_id]["rotation"] = old_rotation
-				return
-
-			grant_arrange_exp(user)
+			artwork.placed_parts[part_id]["rotation"] = (artwork.placed_parts[part_id]["rotation"] + 90) % 360
 			. = TRUE
 
 		if("set_tint")
@@ -1047,24 +1300,20 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			if(!artwork.placed_parts[part_id])
 				return
 
-			var/list/current_place = artwork.placed_parts[part_id]
-			var/list/old_placement = current_place.Copy()
 			artwork.placed_parts -= part_id
-
-			if(length(artwork.placed_parts) && !artwork.validate_placement())
-				artwork.placed_parts[part_id] = old_placement
-				return
-
 			. = TRUE
 
 		if("paint_veins")
-			// Params: list of cells to paint
 			var/list/cells = params["cells"]
 			if(!islist(cells))
 				return
 			for(var/list/cell in cells)
 				var/cx = clamp(text2num(cell["x"]), 1, 48)
 				var/cy = clamp(text2num(cell["y"]), 1, 48)
+				if(artwork.vein_pixels["[cx],[cy]"])
+					continue
+				if(!artwork.can_place_vein(cx, cy))
+					continue
 				artwork.vein_pixels["[cx],[cy]"] = TRUE
 			. = TRUE
 
@@ -1072,29 +1321,16 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			var/list/cells = params["cells"]
 			if(!islist(cells))
 				return
-			var/list/old_pixels = artwork.vein_pixels.Copy()
 			for(var/list/cell in cells)
 				var/cx = clamp(text2num(cell["x"]), 1, 48)
 				var/cy = clamp(text2num(cell["y"]), 1, 48)
 				artwork.vein_pixels -= "[cx],[cy]"
-
-			if(length(artwork.placed_parts) > 1 && !artwork.check_full_connectivity())
-				artwork.vein_pixels = old_pixels
-				return
-
 			. = TRUE
 
 		if("clear_veins")
 			if(!length(artwork.vein_pixels))
 				return
-
-			var/list/old_pixels = artwork.vein_pixels.Copy()
 			artwork.vein_pixels = list()
-
-			if(length(artwork.placed_parts) > 1 && !artwork.check_full_connectivity())
-				artwork.vein_pixels = old_pixels
-				return
-
 			. = TRUE
 
 		if("toggle_veins_layer")
@@ -1102,15 +1338,38 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 			. = TRUE
 
 		if("submit")
-			if(!artwork.validate_placement())
-				to_chat(user, span_warning("The artwork's structure is invalid. Ensure parts are connected and grounded."))
+			if(!length(artwork.placed_parts))
+				to_chat(user, span_warning("Place at least one body part before submitting."))
 				return
 
-			artwork.update_icon()
+			if(length(artwork.placed_parts) > 1 && !artwork.check_full_connectivity())
+				to_chat(user, span_warning("All body parts must be connected to each other, either directly or through veins."))
+				return
 
-			var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
-			if(exp_comp)
-				exp_comp.add_activity_exp("submit_custom")
+			if(!artwork.touches_pedestal())
+				to_chat(user, span_warning("At least one body part or vein must touch the pedestal."))
+				return
+
+			// Calculate blood cost for vein changes
+			var/current_veins = length(artwork.vein_pixels)
+			var/vein_diff = current_veins - artwork.submitted_vein_count
+			if(vein_diff > 0)
+				// Need to pay for new veins
+				var/blood_cost = vein_diff * artwork.blood_per_vein
+				var/stored_blood = artwork.reagents?.get_reagent_amount(/datum/reagent/blood) || 0
+				if(stored_blood < blood_cost)
+					to_chat(user, span_warning("Not enough blood stored! Need [blood_cost]u but only [stored_blood]u available. ([vein_diff] new vein pixels)"))
+					return
+				artwork.reagents.remove_reagent(/datum/reagent/blood, blood_cost)
+				to_chat(user, span_notice("Used [blood_cost]u of blood for [vein_diff] new vein pixels."))
+			else if(vein_diff < 0)
+				// Refund blood for removed veins
+				var/refund = -vein_diff * artwork.blood_per_vein
+				artwork.reagents.add_reagent(/datum/reagent/blood, refund)
+				to_chat(user, span_notice("Recovered [refund]u of blood from [abs(vein_diff)] removed vein pixels."))
+
+			artwork.submitted_vein_count = current_veins
+			artwork.update_icon()
 
 			to_chat(user, span_nicegreen("You finalize the arrangement of your custom artwork."))
 			playsound(artwork, 'sound/effects/splat.ogg', 50, TRUE)
@@ -1124,4 +1383,308 @@ GLOBAL_LIST_EMPTY(bodypart_icon_cache)
 	var/datum/component/artistic_exp/exp_comp = user.GetComponent(/datum/component/artistic_exp)
 	if(exp_comp)
 		exp_comp.add_activity_exp("arrange_part")
+
+// ================== CARVED PIECE ITEM ==================
+
+/obj/item/carved_piece
+	name = "carved flesh piece"
+	desc = "A piece of flesh carefully carved from a creature's body."
+	icon = 'icons/obj/surgery.dmi'
+	icon_state = "yourorgans"
+	w_class = WEIGHT_CLASS_SMALL
+	/// The dynamically generated icon of the carved pixels
+	var/icon/carved_icon
+	/// Pre-computed base64 of the carved icon
+	var/carved_base64
+	/// Width of the source mob sprite
+	var/source_width = 32
+	/// Height of the source mob sprite
+	var/source_height = 32
+	/// Name of the source mob
+	var/source_mob_name
+	/// Crop bounds (top-down coordinates)
+	var/crop_ox = 0
+	var/crop_oy = 0
+	var/crop_w = 32
+	var/crop_h = 32
+
+/// Build the carved icon from selected pixel coordinates
+/obj/item/carved_piece/proc/setup_from_pixels(icon/source_icon, list/pixels, mob_name)
+	source_mob_name = mob_name
+	source_width = source_icon.Width()
+	source_height = source_icon.Height()
+	name = "carved [mob_name] piece"
+
+	// Copy source icon and blank it, preserving icon metadata
+	carved_icon = icon(source_icon)
+	carved_icon.DrawBox(null, 1, 1, source_width, source_height)
+
+	// Build a set of selected pixel keys for fast lookup
+	var/list/selected_set = list()
+	var/min_x = source_width
+	var/min_y = source_height
+	var/max_x = -1
+	var/max_y = -1
+
+	for(var/list/px in pixels)
+		var/tx = px["x"]
+		var/ty = px["y"]
+		var/bx = tx + 1
+		var/by = source_height - ty
+		selected_set["[bx],[by]"] = TRUE
+		if(tx < min_x)
+			min_x = tx
+		if(tx > max_x)
+			max_x = tx
+		if(ty < min_y)
+			min_y = ty
+		if(ty > max_y)
+			max_y = ty
+
+	// Draw only selected pixels from the source
+	for(var/key in selected_set)
+		var/list/coords = splittext(key, ",")
+		var/bx = text2num(coords[1])
+		var/by = text2num(coords[2])
+		var/color = source_icon.GetPixel(bx, by)
+		if(color)
+			carved_icon.DrawBox(color, bx, by)
+
+	if(max_x >= 0)
+		crop_ox = min_x
+		crop_oy = min_y
+		crop_w = max_x - min_x + 1
+		crop_h = max_y - min_y + 1
+
+	carved_base64 = icon2base64(carved_icon)
+	src.icon = carved_icon
+
+// ================== CARVE BODY EDITOR ==================
+
+/datum/carve_body_editor
+	/// The target dead mob
+	var/mob/living/simple_animal/target_mob
+	/// The artist using the editor
+	var/mob/living/carbon/human/artist
+	/// South-facing source icon (current selection)
+	var/icon/source_icon
+	/// Icon dimensions
+	var/source_width = 32
+	var/source_height = 32
+	/// Base64 of the source icon for TGUI
+	var/source_base64
+	/// List of opaque pixel coords (top-down, 0-indexed)
+	var/list/opaque_pixels
+	/// Set of opaque pixel keys for fast lookup
+	var/list/opaque_set
+	/// Selected pixels: "x,y" -> TRUE
+	var/list/selected_pixels
+	/// Whether using the living sprite (TRUE) or dead (FALSE)
+	var/using_living = FALSE
+	/// Living sprite icon
+	var/icon/living_icon
+	/// Dead sprite icon
+	var/icon/dead_icon
+	/// Living sprite base64
+	var/living_base64
+	/// Dead sprite base64
+	var/dead_base64
+	/// Whether the mob has distinct living/dead sprites
+	var/has_both_sprites = FALSE
+
+/datum/carve_body_editor/New(mob/living/simple_animal/target, mob/living/carbon/human/user)
+	target_mob = target
+	artist = user
+	selected_pixels = list()
+
+	// Build both living and dead icons
+	var/dead_state = target.icon_dead || target.icon_state
+	var/living_state = target.icon_living || target.icon_state
+	dead_icon = icon(target.icon, dead_state, SOUTH)
+	living_icon = icon(target.icon, living_state, SOUTH)
+	dead_base64 = icon2base64(dead_icon)
+	living_base64 = icon2base64(living_icon)
+	has_both_sprites = (dead_state != living_state)
+
+	// Default to dead sprite
+	set_source_icon(dead_icon, dead_base64)
+
+/// Rebuild opaque pixel data from the given icon
+/datum/carve_body_editor/proc/set_source_icon(icon/I, base64)
+	source_icon = I
+	source_width = I.Width()
+	source_height = I.Height()
+	source_base64 = base64
+
+	opaque_pixels = list()
+	opaque_set = list()
+	for(var/by in 1 to source_height)
+		for(var/bx in 1 to source_width)
+			if(I.GetPixel(bx, by))
+				var/tx = bx - 1
+				var/ty = source_height - by
+				opaque_pixels += list(list("x" = tx, "y" = ty))
+				opaque_set["[tx],[ty]"] = TRUE
+
+/datum/carve_body_editor/Destroy()
+	target_mob = null
+	artist = null
+	source_icon = null
+	living_icon = null
+	dead_icon = null
+	return ..()
+
+/datum/carve_body_editor/ui_state(mob/user)
+	return GLOB.conscious_state
+
+/datum/carve_body_editor/ui_interact(mob/user, datum/tgui/ui)
+	ui = SStgui.try_update_ui(user, src, ui)
+	if(!ui)
+		ui = new(user, src, "CarveBodyEditor")
+		ui.open()
+
+/datum/carve_body_editor/ui_static_data(mob/user)
+	var/list/data = list()
+	data["mobName"] = target_mob.name
+	data["hasBothSprites"] = has_both_sprites
+	return data
+
+/datum/carve_body_editor/ui_data(mob/user)
+	var/list/data = list()
+	data["sourceBase64"] = source_base64
+	data["sourceWidth"] = source_width
+	data["sourceHeight"] = source_height
+	data["opaquePixels"] = opaque_pixels
+	data["usingLiving"] = using_living
+
+	var/list/sel_list = list()
+	for(var/key in selected_pixels)
+		var/list/coords = splittext(key, ",")
+		sel_list += list(list(
+			"x" = text2num(coords[1]),
+			"y" = text2num(coords[2])
+		))
+	data["selectedPixels"] = sel_list
+	data["sections"] = get_sections()
+	return data
+
+/datum/carve_body_editor/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+
+	switch(action)
+		if("toggle_pixels")
+			var/list/pixels = params["pixels"]
+			var/mode = params["mode"]
+			if(!islist(pixels))
+				return
+			for(var/list/px in pixels)
+				var/x = text2num(px["x"])
+				var/y = text2num(px["y"])
+				if(!isnum(x) || !isnum(y))
+					continue
+				var/key = "[x],[y]"
+				if(!opaque_set[key])
+					continue
+				if(mode == "select")
+					selected_pixels[key] = TRUE
+				else
+					selected_pixels -= key
+			. = TRUE
+
+		if("clear_selection")
+			selected_pixels = list()
+			. = TRUE
+
+		if("switch_sprite")
+			using_living = !using_living
+			selected_pixels = list()
+			if(using_living)
+				set_source_icon(living_icon, living_base64)
+			else
+				set_source_icon(dead_icon, dead_base64)
+			. = TRUE
+
+		if("carve_out")
+			do_carve()
+			. = TRUE
+
+/// BFS flood fill to find contiguous groups of selected pixels
+/datum/carve_body_editor/proc/get_sections()
+	var/list/sections = list()
+	var/list/visited = list()
+	var/list/dirs = list(list(1, 0), list(-1, 0), list(0, 1), list(0, -1))
+
+	for(var/key in selected_pixels)
+		if(visited[key])
+			continue
+
+		var/list/section_pixels = list()
+		var/list/queue = list(key)
+		visited[key] = TRUE
+
+		while(length(queue))
+			var/current = queue[1]
+			queue.Cut(1, 2)
+			var/list/coords = splittext(current, ",")
+			var/cx = text2num(coords[1])
+			var/cy = text2num(coords[2])
+			section_pixels += list(list("x" = cx, "y" = cy))
+
+			for(var/list/d in dirs)
+				var/nkey = "[cx + d[1]],[cy + d[2]]"
+				if(selected_pixels[nkey] && !visited[nkey])
+					visited[nkey] = TRUE
+					queue += nkey
+
+		sections += list(list(
+			"pixels" = section_pixels,
+			"size" = length(section_pixels),
+			"valid" = length(section_pixels) >= 8
+		))
+
+	return sections
+
+/// Create carved pieces from valid sections and gib the mob
+/datum/carve_body_editor/proc/do_carve()
+	var/list/sections = get_sections()
+	var/has_valid = FALSE
+	for(var/list/section in sections)
+		if(section["valid"])
+			has_valid = TRUE
+			break
+
+	if(!has_valid)
+		to_chat(artist, span_warning("You need at least one group of 8 or more connected pixels to carve."))
+		return
+
+	if(!target_mob || target_mob.stat != DEAD)
+		to_chat(artist, span_warning("The creature is no longer available."))
+		return
+
+	if(!do_after(artist, 3 SECONDS, target_mob))
+		to_chat(artist, span_warning("You were interrupted!"))
+		return
+
+	var/target_turf = get_turf(target_mob)
+	var/carved_count = 0
+
+	for(var/list/section in sections)
+		if(!section["valid"])
+			continue
+		var/obj/item/carved_piece/piece = new(target_turf)
+		piece.setup_from_pixels(source_icon, section["pixels"], target_mob.name)
+		carved_count++
+
+	to_chat(artist, span_nicegreen("You carefully carve [carved_count] piece\s from [target_mob]."))
+	playsound(target_mob, 'sound/effects/splat.ogg', 50, TRUE)
+
+	var/datum/component/artistic_exp/exp_comp = artist.GetComponent(/datum/component/artistic_exp)
+	if(exp_comp)
+		exp_comp.add_activity_exp("create_artwork")
+
+	target_mob.gib()
+	SStgui.close_uis(src)
+	qdel(src)
 
