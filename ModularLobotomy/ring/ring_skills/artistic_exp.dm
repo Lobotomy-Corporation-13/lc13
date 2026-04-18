@@ -113,6 +113,10 @@
 			exp_gain = 5
 		if("add_body")
 			exp_gain = 3
+		if("arrange_part")
+			exp_gain = 2
+		if("submit_custom")
+			exp_gain = 5
 
 	if(exp_gain > 0)
 		modify_exp(exp_gain)

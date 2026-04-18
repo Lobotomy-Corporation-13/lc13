@@ -29,25 +29,27 @@
 		to_chat(H, span_warning("You need to be next to a dead creature to sculpt it."))
 		return FALSE
 
+	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Sculpt", list("Basic Sculpture", "Custom Artwork"))
+	if(!choice)
+		return FALSE
+
 	to_chat(H, span_notice("You begin sculpting [corpse] into a work of art..."))
 
 	if(!do_after(H, 5 SECONDS, corpse))
 		to_chat(H, span_warning("You were interrupted!"))
 		return FALSE
 
-	// Create the artwork
-	var/obj/structure/corporist_artwork/artwork = new(get_turf(corpse), H)
+	if(choice == "Custom Artwork")
+		new /obj/structure/custom_corporist_artwork(get_turf(corpse), H)
+	else
+		var/obj/structure/corporist_artwork/artwork = new(get_turf(corpse), H)
+		artwork.simple_creatures_used[corpse.name] = 1
 
-	// Track the simple creature used (not as bodyparts)
-	artwork.simple_creatures_used[corpse.name] = 1
-
-	to_chat(H, span_nicegreen("You create a crude sculpture from [corpse]'s remains."))
+	to_chat(H, span_nicegreen("You create a [choice == "Custom Artwork" ? "custom artwork pedestal" : "crude sculpture"] from [corpse]'s remains."))
 	playsound(H, 'sound/effects/splat.ogg', 50, TRUE)
 
-	// Gib the corpse
 	corpse.gib()
 
-	// Add EXP
 	var/datum/component/artistic_exp/exp_comp = H.GetComponent(/datum/component/artistic_exp)
 	if(exp_comp)
 		exp_comp.add_activity_exp("create_artwork")
@@ -163,22 +165,29 @@
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 
-	// Find an artwork nearby
+	// Find an artwork nearby (either type)
 	var/obj/structure/corporist_artwork/artwork = null
+	var/obj/structure/custom_corporist_artwork/custom_artwork = null
 	for(var/obj/structure/corporist_artwork/A in range(1, H))
 		artwork = A
 		break
-
 	if(!artwork)
+		for(var/obj/structure/custom_corporist_artwork/A in range(1, H))
+			custom_artwork = A
+			break
+
+	if(!artwork && !custom_artwork)
 		to_chat(H, span_warning("You need to be next to an artwork to judge it."))
 		return FALSE
 
-	if(artwork.final_grade)
+	var/already_graded = artwork ? artwork.final_grade : custom_artwork.final_grade
+	if(already_graded)
 		to_chat(H, span_warning("This artwork has already been judged."))
 		return FALSE
 
 	// Check if this is the Maestro's own artwork
-	var/mob/creator = artwork.creator_ref?.resolve()
+	var/datum/weakref/creator_ref_use = artwork ? artwork.creator_ref : custom_artwork.creator_ref
+	var/mob/creator = creator_ref_use?.resolve()
 	if(creator == H)
 		to_chat(H, span_warning("You cannot judge your own artwork. A true artist seeks the judgment of others."))
 		return FALSE
@@ -220,7 +229,10 @@
 	var/critique = stripped_input(H, "Add a critique (optional):", "Critique", "", 100)
 
 	// Assign the grade
-	artwork.assign_final_grade(H, grade, critique)
+	if(artwork)
+		artwork.assign_final_grade(H, grade, critique)
+	else
+		custom_artwork.assign_final_grade(H, grade, critique)
 
 	to_chat(H, span_nicegreen("You have judged the artwork: Grade [grade]"))
 	H.visible_message(span_notice("[H] has judged an artwork, assigning it a grade of [grade]."))
@@ -253,30 +265,39 @@
 		return FALSE
 	var/mob/living/carbon/human/H = owner
 
-	// Find an artwork nearby
+	// Find an artwork nearby (either type)
 	var/obj/structure/corporist_artwork/artwork = null
+	var/obj/structure/custom_corporist_artwork/custom_artwork = null
 	for(var/obj/structure/corporist_artwork/A in range(1, H))
 		artwork = A
 		break
-
 	if(!artwork)
+		for(var/obj/structure/custom_corporist_artwork/A in range(1, H))
+			custom_artwork = A
+			break
+
+	if(!artwork && !custom_artwork)
 		to_chat(H, span_warning("You need to be next to an artwork to describe it."))
 		return FALSE
 
 	// Check permissions
 	var/is_maestro = istype(H.dna?.species, /datum/species/corporist_maestro)
-	var/mob/creator = artwork.creator_ref?.resolve()
+	var/datum/weakref/creator_ref_use = artwork ? artwork.creator_ref : custom_artwork.creator_ref
+	var/mob/creator = creator_ref_use?.resolve()
 
 	if(!is_maestro && creator != H)
 		to_chat(H, span_warning("You can only describe artwork you created."))
 		return FALSE
 
-	// Get description
-	var/new_desc = stripped_input(H, "Write your description (max 300 characters):", "Describe Artwork", artwork.custom_desc || "", 300)
+	var/current_desc = artwork ? (artwork.custom_desc || "") : (custom_artwork.custom_desc || "")
+	var/new_desc = stripped_input(H, "Write your description (max 300 characters):", "Describe Artwork", current_desc, 300)
 	if(!new_desc)
 		return FALSE
 
-	artwork.custom_desc = new_desc
+	if(artwork)
+		artwork.custom_desc = new_desc
+	else
+		custom_artwork.custom_desc = new_desc
 	to_chat(H, span_nicegreen("You have set a custom description for the artwork."))
 
 	StartCooldown()
