@@ -1015,7 +1015,7 @@ GLOBAL_LIST_EMPTY(marked_players)
 	var/stupidly_complicated_cooldown_calc = world.time - ranged_cooldown
 	if(stupidly_complicated_cooldown_calc > -SSnpcpool.wait)
 		//Our cooldown is less than the next check.
-		if(stupidly_complicated_cooldown_calc < 0)
+		if(stupidly_complicated_cooldown_calc < 0 && !QDELETED(src))
 			// Try to call this before our next check in 2 SECONDS
 			addtimer(CALLBACK(src, PROC_REF(OpenFire), shootem), clamp(abs(stupidly_complicated_cooldown_calc) + rand(-1,5), 1, 1.99 SECONDS), TIMER_STOPPABLE)
 		else
