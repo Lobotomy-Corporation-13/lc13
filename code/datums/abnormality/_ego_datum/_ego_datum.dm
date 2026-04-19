@@ -26,6 +26,8 @@ GLOBAL_LIST_EMPTY(ego_datums)
 	var/list/ego_tags = list()
 	/// The origin of this EGO. Could basically only possibly be "LC13" (basegame EGO, even community EGO), "City" (CoL and input gear) or "Branch 12"
 	var/origin = "LC13"
+	/// If set, the printer dispenses this path instead of item_path (for weapons summoned from armor)
+	var/obj/item/dispense_path
 
 /datum/ego_datum/New(datum/abnormality/DA)
 	if(!name && item_path)
