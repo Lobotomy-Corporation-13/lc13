@@ -37,7 +37,6 @@
 	name = "hornet"
 	desc = "The kingdom needed to stay prosperous, and more bees were required for that task. \
 	The projectiles relive the legacy of the kingdom as they travel toward the target."
-	special = "Attack an enemy with your bayonet to reload."
 	icon_state = "hornet"
 	inhand_icon_state = "hornet"
 	force = 41
@@ -47,17 +46,18 @@
 	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/leveraction.ogg'
 	fire_delay = 5
-	shotsleft = 10
-	reloadtime = 1.7 SECONDS
+	shotsleft = 10	//Hornet has 10 bullets
+	reloadtime = 2.3 SECONDS	//You gotta load both shells and bullets
 	attribute_requirements = list(
 							FORTITUDE_ATTRIBUTE = 80
 							)
 
 	alternate_fire_name = "dust spark"
+	alternate_shotsleft = 6	// And 6 shells
 	alternate_pellets = 3
 	alternate_variance = 20
 	alternate_info = "This weapon fires a spread of bullets."
-	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_MAGAZINE
+	alternate_reload_type = RANGEDEGO_ALTERNATEFIRE_RELOADTYPE_SHARED_RELOAD
 	alternate_projectile_path = /obj/projectile/ego_bullet/ego_hornetshotty
 	alternate_fire_sound = 'sound/weapons/gun/shotgun/shot_auto.ogg'
 	alternate_fire_sound_volume = 70
@@ -70,11 +70,6 @@
 							FORTITUDE_ATTRIBUTE = 60,
 							JUSTICE_ATTRIBUTE = 60
 							)
-
-/obj/item/ego_weapon/ranged/hornet/attack(mob/living/target, mob/living/carbon/human/user)
-	..()
-	if(shotsleft < initial(shotsleft))
-		shotsleft = initial(shotsleft)
 
 
 /obj/item/ego_weapon/ranged/hatred
