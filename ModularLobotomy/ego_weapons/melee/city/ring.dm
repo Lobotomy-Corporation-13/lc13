@@ -1568,3 +1568,38 @@
 	if(planted_visual)
 		QDEL_NULL(planted_visual)
 	is_surging = FALSE
+
+// ================== RING EGO DATUMS ==================
+// Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
+// to prevent DM merge conflicts with other sub-PRs that modify those shared files.
+
+/// Tibia (Maestro Weapon)
+/datum/ego_datum/weapon/city/ring_tibia
+	item_path = /obj/item/ego_weapon/city/ring/tibia
+	cost = 100
+	ego_tags = list(EGO_TAG_REACH, EGO_TAG_SPECIAL_RANGED, EGO_TAG_AOE_RADIAL, EGO_TAG_AOE_PIERCING, EGO_TAG_DOT)
+
+/// Fascia (Apprentice Weapon — reads stats from weapon, dispenses Iron Maiden armor)
+/datum/ego_datum/weapon/city/ring_fascia
+	item_path = /obj/item/ego_weapon/city/ring/fascia
+	dispense_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice
+	cost = 90
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_DOT)
+
+/// Corporist Maestro Garb
+/datum/ego_datum/armor/city/ring_maestro
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_maestro
+	cost = 100
+
+/// Fascia Unleashed (Phase 2 — also dispenses Iron Maiden armor)
+/datum/ego_datum/weapon/city/ring_fascia_unleashed
+	item_path = /obj/item/ego_weapon/city/ring/fascia_unleashed
+	dispense_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice
+	cost = 90
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_DOT)
+
+/// Iron Maiden Armour (Apprentice)
+/datum/ego_datum/armor/city/ring_apprentice
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice
+	cost = 90
+	ego_tags = list(EGO_TAG_MOBILITY)
