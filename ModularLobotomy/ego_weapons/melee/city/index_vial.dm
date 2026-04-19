@@ -996,3 +996,104 @@
 	// Inflict 5 bleed on hit
 	if(isliving(M))
 		M.apply_lc_bleed(5)
+
+// ================== INDEX EGO DATUMS ==================
+// Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
+// to prevent DM merge conflicts with other sub-PRs that modify those shared files.
+
+/* --- Index Caduceus (Maestro Weapon) --- */
+
+/// Caduceus (Base/Inactive)
+/datum/ego_datum/weapon/city/index_vial
+	item_path = /obj/item/ego_weapon/index_vial
+	cost = 100
+	ego_tags = list(EGO_TAG_VERSATILE_DAMAGE, EGO_TAG_HAZARDOUS)
+
+/// Caduceus - Hatchet
+/datum/ego_datum/weapon/city/index_vial/hatchet
+	item_path = /obj/item/ego_weapon/index_vial/hatchet
+	cost = 30
+	ego_tags = list(EGO_TAG_SUSTAIN)
+
+/// Caduceus - Stiletto
+/datum/ego_datum/weapon/city/index_vial/stiletto
+	item_path = /obj/item/ego_weapon/index_vial/stiletto
+	cost = 35
+	ego_tags = list(EGO_TAG_DOT)
+
+/// Caduceus - Bastard Sword
+/datum/ego_datum/weapon/city/index_vial/bsword
+	item_path = /obj/item/ego_weapon/index_vial/bsword
+	cost = 60
+	ego_tags = list(EGO_TAG_DOT)
+
+/// Caduceus - Rapier
+/datum/ego_datum/weapon/city/index_vial/rapier
+	item_path = /obj/item/ego_weapon/index_vial/rapier
+	cost = 50
+	ego_tags = list(EGO_TAG_DEBUFFER)
+
+/// Caduceus - Hammer
+/datum/ego_datum/weapon/city/index_vial/hammer
+	item_path = /obj/item/ego_weapon/index_vial/hammer
+	cost = 70
+	ego_tags = list(EGO_TAG_DEBUFFER)
+
+/// Caduceus - Greatsword
+/datum/ego_datum/weapon/city/index_vial/gsword
+	item_path = /obj/item/ego_weapon/index_vial/gsword
+	cost = 80
+	ego_tags = list(EGO_TAG_DEBUFFER)
+
+/// Caduceus - Lance
+/datum/ego_datum/weapon/city/index_vial/lance
+	item_path = /obj/item/ego_weapon/index_vial/lance
+	cost = 80
+	ego_tags = list(EGO_TAG_REACH, EGO_TAG_DEBUFFER)
+
+/// Caduceus - Whip
+/datum/ego_datum/weapon/city/index_vial/whip
+	item_path = /obj/item/ego_weapon/index_vial/whip
+	cost = 60
+	ego_tags = list(EGO_TAG_REACH, EGO_TAG_DEBUFFER)
+
+/// Caduceus - Scythe
+/datum/ego_datum/weapon/city/index_vial/scythe
+	item_path = /obj/item/ego_weapon/index_vial/scythe
+	cost = 70
+	ego_tags = list()
+
+/// Caduceus - Fpoon
+/datum/ego_datum/weapon/city/index_vial/fpoon
+	item_path = /obj/item/ego_weapon/index_vial/fpoon
+	cost = 5
+	ego_tags = list(EGO_TAG_HAZARDOUS, EGO_TAG_DOT)
+
+/* --- Index Apprentice (Chains/Procuration — dispense armor) --- */
+
+/// Index Apprentice Chains (dispenses apprentice armor)
+/datum/ego_datum/weapon/city/index_chains
+	item_path = /obj/item/ego_weapon/city/index_apprentice_chains
+	dispense_path = /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice
+	cost = 50
+	ego_tags = list(EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL)
+
+/// Effloresced E.G.O :: Procuration (dispenses apprentice armor)
+/datum/ego_datum/weapon/city/index_procuration
+	item_path = /obj/item/ego_weapon/city/index_procuration
+	dispense_path = /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice
+	cost = 70
+	ego_tags = list(EGO_TAG_MOBILITY)
+
+/* --- Index Armor --- */
+
+/// Index Proxy Apprentice Armor
+/datum/ego_datum/armor/city/index_apprentice
+	item_path = /obj/item/clothing/suit/armor/ego_gear/index_proxy/apprentice
+	cost = 70
+	ego_tags = list(EGO_TAG_MOBILITY)
+
+/// Wandering Index Proxy Armor
+/datum/ego_datum/armor/city/index_wanderer
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/index_proxy_wanderer
+	cost = 100
