@@ -245,9 +245,16 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	// linearly down to 1.0x at 200 attrs.
 	var/underleveled_mult = clamp(1 + (200 - apprentice_avg) / 80, 1.0, 1.75)
 
+	// Dueling the nursefather gives severely reduced rewards (training, not real combat)
+	var/is_nursefather_duel = FALSE
+	if(opponent_mob?.mind?.assigned_role == "Ex Thumb Sottocapo")
+		is_nursefather_duel = TRUE
+
 	// === ATTRIBUTE GROWTH ===
 	var/base_gain = 16
 	var/gain_per_attr = round(base_gain * ratio * underleveled_mult * win_modifier)
+	if(is_nursefather_duel)
+		gain_per_attr = round(gain_per_attr * 0.2)
 	if(gain_per_attr > 0)
 		for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
 			var/datum/attribute/A = apprentice.attributes[attr_name]
@@ -297,6 +304,9 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 			to_chat(apprentice, span_info("Your mentor can correct you within 1.5 minutes for additional attribute growth."))
 
 	// === OPPONENT REWARDS ===
+	// Nursefather gets no rewards for dueling their own apprentice
+	if(is_nursefather_duel)
+		return
 	// Non-apprentice opponent gets Ahn + Fortitude for participating
 	if(ishuman(opponent_mob) && !istype(opponent_mob, /mob/living/simple_animal/hostile/palermitan_dummy))
 		var/mob/living/carbon/human/opp = opponent_mob
@@ -385,14 +395,13 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 	if(min_attr == INFINITY)
 		return
 
-	// Determine what tier the attributes support: (attrs / 2) >= requirement
-	var/effective = round(min_attr / 2)
+	// Determine what tier the attributes support (raw values, matching armor requirements)
 	var/new_tier = 1
-	if(effective >= 100)
+	if(min_attr >= 100)
 		new_tier = 4
-	else if(effective >= 80)
+	else if(min_attr >= 80)
 		new_tier = 3
-	else if(effective >= 60)
+	else if(min_attr >= 60)
 		new_tier = 2
 
 	// Update weapons (inventory or dropped nearby)
@@ -412,12 +421,6 @@ GLOBAL_LIST_INIT(duel_fort_rewards, list())
 			if(!armor_announced)
 				to_chat(apprentice, span_boldnotice("Your armor has evolved to tier [new_tier]!"))
 				armor_announced = TRUE
-
-	// At 150+ attributes: grant Nursefather Passive (evasion from endured pain)
-	if(min_attr >= 150 && !apprentice.GetComponent(/datum/component/nursefather_passive))
-		apprentice.AddComponent(/datum/component/nursefather_passive)
-		to_chat(apprentice, span_boldnotice("The pain you've endured has sharpened your instincts. You gain precognitive evasion!"))
-		to_chat(apprentice, span_notice("You now automatically dodge the first attack every 30 seconds, and have a 50% chance to dodge when unarmed. However, all damage you take inflicts 5% unhealable damage."))
 
 ////////////////////////////////////////////////////////////
 // ROLE PASSIVE GRANTING
