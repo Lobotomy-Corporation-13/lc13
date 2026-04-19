@@ -1304,6 +1304,42 @@
 	max_amount = 12
 	merge_type = /obj/item/stack/thumb_east_ammo/spent/acceleration
 
+// ================== THUMBFATHER EGO DATUMS ==================
+// Placed here rather than in _cityweapons_datums.dm / _cityarmor_datums.dm
+// to prevent DM merge conflicts with other sub-PRs that modify those shared files.
+
+// Thumbfather Acceleration Propellant Ammo Box
+// Holds ammo used by Thumbfather dual-wield weapons (rapier/katana).
+/datum/ego_datum/auxiliary/thumb_acceleration_ammobox
+	name = "Acceleration Propellant Ammo Box"
+	origin = "City"
+	item_category = "Ammo"
+	item_path = /obj/item/storage/box/thumb_east_ammo/acceleration
+	cost = 50
+	well_enabled = FALSE
+
+/// Thumbfather Rapier
+/datum/ego_datum/weapon/city/thumbfather_rapier
+	item_path = /obj/item/ego_weapon/city/thumbfather_rapier
+	cost = 90
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_MOBILITY, EGO_TAG_DOT, EGO_TAG_DEBUFFER)
+
+/// Thumbfather Katana
+/datum/ego_datum/weapon/city/thumbfather_katana
+	item_path = /obj/item/ego_weapon/city/thumbfather_katana
+	cost = 90
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_MOBILITY, EGO_TAG_AOE_RADIAL, EGO_TAG_DEBUFFER)
+
+/// Thumb Ex-Sottocapo Armor (Thumbfather)
+/datum/ego_datum/armor/city/thumb_spider_ex_sottocapo
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/ex_sottocapo
+	cost = 100
+
+/// Thumb Apprentice Armor (starts at tier 1, evolves)
+/datum/ego_datum/armor/city/thumb_spider_apprentice
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/thumb_spider/apprentice
+	cost = 25
+
 #undef NURSEFATHER_COMBO_NONE
 #undef NURSEFATHER_COMBO_LUNGE
 #undef NURSEFATHER_COMBO_ATTACK2
