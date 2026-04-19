@@ -32,7 +32,7 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	H.set_species(/datum/species/synth/carnival)
 	job_important = "You are a Carnival member. Your goal is to gather silk by using the silkweaver on mobs and humans, then sell your woven armors.\n\
-			You MAY enter the Ruins to hunt mobs for silk, but you must NOT loot any weapons, armor, or ahn from the Backstreets.\n\
+			You MAY enter the Ruins to hunt mobs for silk, but you must NOT loot any weapons, armor, or ahn from the Ruins. You also must NOT loot or use gear from other roles.\n\
 			While wearing your Carnival Robes, you do NOT need to escalate — you may freely hunt and silk other players. Other players may also attack you without escalation.\n\
 			You must NOT kill other players before the 10 minute mark, to give them time to ready up.\n\
 			You must NEVER remove someone from the round. Do NOT throw away, eat, or otherwise destroy a player's head."
@@ -129,8 +129,10 @@
 	<div class='section'>
 		<h2>Ruins &amp; Looting</h2>
 		<p>You <span class='good'>ARE allowed</span> to enter the Ruins for the purpose of hunting down mobs for silk.</p>
-		<p>You are <span class='highlight'>NOT allowed</span> to loot any <span class='highlight'>weapons, armor, or ahn</span> from the Backstreets.
+		<p>You are <span class='highlight'>NOT allowed</span> to loot any <span class='highlight'>weapons, armor, or ahn</span> from the Ruins.
 		You are there to hunt, not to scavenge.</p>
+		<p>You are also <span class='highlight'>NOT allowed</span> to loot or use <span class='highlight'>gear from other roles</span>.
+		Stick to your own Carnival equipment.</p>
 	</div>
 
 	<div class='section'>
