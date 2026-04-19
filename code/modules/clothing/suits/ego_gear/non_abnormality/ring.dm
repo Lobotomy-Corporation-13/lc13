@@ -95,11 +95,9 @@
 		if(phase == 2)
 			armor_wearer.remove_movespeed_modifier(/datum/movespeed_modifier/iron_maiden_fractured)
 		remove_reforge_action()
-		// Clean up spirit when armor is removed
+		// Spirit is already sheltered by remove_phase1/2_weapon — keep it safe in the armor
 		if(bound_spirit)
-			to_chat(bound_spirit, span_userdanger("The armor is removed! You are cast out!"))
-			QDEL_NULL(bound_spirit)
-			possessed = FALSE
+			to_chat(bound_spirit, span_notice("The armor is removed. You remain sheltered within, waiting..."))
 		armor_wearer = null
 		// Reset to phase 1
 		phase = 1
