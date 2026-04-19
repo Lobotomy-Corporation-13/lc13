@@ -147,8 +147,6 @@
 
 	if(SSmaptype.maptype in SSmaptype.citymaps)
 		ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, CITY_TRAIT)
-		ADD_TRAIT(H, TRAIT_BRUTEPALE, CITY_TRAIT)
-		ADD_TRAIT(H, TRAIT_BRUTESANITY, CITY_TRAIT)
 
 	if(!config)	//Needed for robots.
 		roundstart_experience = minimal_skills
