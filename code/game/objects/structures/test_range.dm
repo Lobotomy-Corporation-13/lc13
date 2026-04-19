@@ -160,11 +160,12 @@
 			ego_tags = list(ego_tags)
 
 		var/list/datum_data = list(
-			"path" = ED.dispense_path || ED.item_path,
+			"path" = ED.item_path,
+			"dispense_path" = ED.dispense_path || ED.item_path,
 			"cost" = ED.cost,
 			"information" = ED.information,
 			"tags" = ED.ego_tags,
-			"icon" = SStestrange.GenerateEgoPreviewIcon(ED.dispense_path || ED.item_path),
+			"icon" = SStestrange.GenerateEgoPreviewIcon(ED.item_path),
 			"threatclass" = ego_threatclass,
 			"origin" = ED.origin
 		)

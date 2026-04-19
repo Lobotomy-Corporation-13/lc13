@@ -250,7 +250,7 @@ export const TestRangeEgoPrinter = (props, context) => {
                   content="Print E.G.O."
                   color="green"
                   onClick={() => act('print_ego', {
-                    chosen_ego: datum.path,
+                    chosen_ego: datum.dispense_path,
                   })} />
               </FlexItem>
 
@@ -467,7 +467,7 @@ export const TestRangeEgoPrinter = (props, context) => {
         color="green"
         key="print"
         onClick={() => act('print_ego', {
-          chosen_ego: detailed_datum.path,
+          chosen_ego: detailed_datum.dispense_path,
         })} />, <ExitDetailsButton key="exit" />]}>
         {what_are_we_dealing_with === "armor" ? <ArmorDetails datum={detailed_datum} />
           : what_are_we_dealing_with === "gun" ? <GunDetails datum={detailed_datum} />
