@@ -394,6 +394,11 @@
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attribute_requirements = list()
 	actions_types = list(/datum/action/item_action/fascia_heartbeat_surge)
+	special = "Phase 1 (Defensive). Summoned from the Iron Maiden armor. Inflicts 3 bleed on hit. \
+		Use in hand to activate Iron Curtain (5s, 25s CD) — massively boosts armor reflect but slows movement. \
+		Heartbeat Surge: plant blade, dash up to 5 tiles, perform an 8-hit combo on the first target hit (15s CD). \
+		A ghost can possess this weapon for Empower Strike (+30 RED) and Compel Dash (forced 5-tile dash) abilities. \
+		The spirit has a hunger system that scales weapon damage from -25% (starving) to +10% (gorged)."
 
 	/// Linked armor reference
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/linked_armor
@@ -633,7 +638,7 @@
 // Summoned when the Iron Maiden armor transitions to phase 2 at 50% HP.
 // Click at range to leap to a target turf. Deals damage to adjacent mobs on landing.
 /obj/item/ego_weapon/city/ring/fascia_unleashed
-	name = "Fascia"
+	name = "Fascia Unleashed"
 	desc = "The Fascia's panel has been torn away, revealing the dark skeletal frame beneath. Viscera and ribs pulse with violent energy, freed from their confines."
 	icon_state = "fascia_unleashed"
 	inhand_icon_state = "fascia_unleashed"
@@ -646,6 +651,11 @@
 	hitsound = 'sound/weapons/bladeslice.ogg'
 	attribute_requirements = list()
 	actions_types = list(/datum/action/item_action/fascia_heartbeat_surge)
+	special = "Phase 2 (Offensive). Triggers when the Iron Maiden wearer drops below 50% HP. Armor becomes invisible, grants +1.25 speed. \
+		Click at range to Leap up to 7 tiles, dealing 15 RED to all adjacent targets on landing (1.5s CD). Missed leaps inflict a slowdown (10s CD). \
+		Heartbeat Surge: plant blade, dash up to 5 tiles, perform an 8-hit slash combo on the first target hit (15s CD). \
+		A ghost can possess this weapon for Empower Strike (+30 RED) and Compel Dash (forced 5-tile dash) abilities. \
+		Use Reforge Iron Maiden (5s channel, 30s CD) to return to Phase 1."
 
 	/// Linked armor reference
 	var/obj/item/clothing/suit/armor/ego_gear/city/ring_apprentice/linked_armor
