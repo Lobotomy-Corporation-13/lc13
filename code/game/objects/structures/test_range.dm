@@ -365,7 +365,7 @@
 		var/datum/test_range_threat/found_datum = locate(chosen_threat) in SStestrange.test_range_threat_datums
 		if(found_datum && istype(found_datum))
 			SpawnThreat(found_datum, SStestrange.test_range_arenas[current_arena], tuning)
-		return TRUE
+		return FALSE
 
 	if(action == "change_camera")
 		var/chosen_arena = params["arena"]

@@ -56,6 +56,11 @@ Oh please give these a nice name by the way
 	item_path = /obj/item/lc_debug/attribute_injector
 	well_enabled = FALSE
 
+/datum/ego_datum/auxiliary/augment_remover
+	item_category = "Debug"
+	item_path = /obj/item/augment_remover/debug
+	well_enabled = FALSE
+
 // Naked Nest - Cure (Can also be bought from the Cargo Console)
 /datum/ego_datum/auxiliary/exuviae
 	name = "Naked Nest Cure"
@@ -98,7 +103,7 @@ Oh please give these a nice name by the way
 // Thumb South Grenade Kit
 
 // Thumb South Capo Grenadier Belt
-/datum/ego_datum/auxiliary/grenade_belt
+/datum/ego_datum/auxiliary/thumb_south_grenade_belt
 	name = "Thumb South Grenadier Belt"
 	origin = "City"
 	item_category = "Belt"
@@ -107,6 +112,7 @@ Oh please give these a nice name by the way
 	well_enabled = FALSE
 
 // Thumb South Capo Fragmentation Grenades
+/datum/ego_datum/auxiliary/thumb_south_grenade
 	name = "Thumb South Fragmentation Grenade"
 	origin = "City"
 	item_category = "Ordnance"
