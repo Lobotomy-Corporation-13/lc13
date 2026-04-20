@@ -37,7 +37,6 @@ SUBSYSTEM_DEF(testrange)
 	INVOKE_ASYNC(src, PROC_REF(InitializeEgoDatums))
 
 	threat_datums_initializing = TRUE
-	INVOKE_ASYNC(src, PROC_REF(InitializeThreatDatums))
 
 	// This is expensive (I think), but I'd rather do this once on initialize than many times per round.
 	for(var/area/A in world)
@@ -60,6 +59,7 @@ SUBSYSTEM_DEF(testrange)
 		for(var/obj/machinery/quantumpad/warp/lobby_telepad in T2)
 			test_range_telepads["lobby"] = lobby_telepad
 
+	INVOKE_ASYNC(src, PROC_REF(InitializeThreatDatums))
 	return ..()
 
 // Evil proc that generates an ego datum for every EGO that isn't test range blacklisted and has a path, also generating a preview icon WHICH IS A BIT HEAVY ON DISK USAGE ! ! !

@@ -1197,7 +1197,7 @@
 // 	return mutable_appearance(src.icon, src.overlay_icon_state, src.overlay_layer)
 
 /obj/item/augment/proc/CanUseAugment(mob/user)
-	if(user?.mind?.assigned_role in roles || SSmaptype.maptype == "office" || debug_use)
+	if((user?.mind?.assigned_role in roles) || (SSmaptype.maptype == "office") || (debug_use))
 		return TRUE
 	return FALSE
 

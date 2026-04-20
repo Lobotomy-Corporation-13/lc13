@@ -23,6 +23,17 @@ Oh please give these a nice name by the way
 	information["name"] = src.name ? src.name : E.name // Use datum name where possible, otherwise use item's name
 	information["description"] = E.desc
 
+// Test Range Utilities - the ones that usually spawn on the table, in case we run out
+/datum/ego_datum/auxiliary/scrying
+	item_category = "Debug"
+	item_path = /obj/item/scrying
+	well_enabled = FALSE
+
+/datum/ego_datum/auxiliary/attributes
+	item_category = "Debug"
+	item_path = /obj/item/lc_debug/attribute_injector
+	well_enabled = FALSE
+
 // Naked Nest - Cure (Can also be bought from the Cargo Console)
 /datum/ego_datum/auxiliary/exuviae
 	name = "Naked Nest Cure"

@@ -19,10 +19,8 @@
 	/// Holds ckeys that have disabled the new TGUI version of the interface.
 	var/list/disabled_tgui = list()
 	/// Anything in this list will be rejected if you try to shred it in the EGO printer.
-	var/static/blacklisted_shred_items = list(
-		/obj/item/lc_debug/attribute_injector,
-		/obj/item/scrying,
-	)
+	// As of Test Range Update 2, you can now print Attribute Injectors & Scrying Orbs, so there's nothing to put in this blacklist ATM
+	var/static/blacklisted_shred_items = list()
 
 /* ---------- Shared TGUI/Old EGO printer stuff ---------- */
 
@@ -296,6 +294,8 @@
 	if(!CheckInitializedDatums(user))
 		return
 
+	UpdateCameraView()
+
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
 		user.client.register_map_obj(cam_screen)
@@ -393,10 +393,10 @@
 		var/datum/test_range_threat/found_datum = locate(chosen_threat) in SStestrange.test_range_threat_datums
 		if(found_datum && istype(found_datum))
 			if(found_datum.DespawnOne())
-				say("[user] ([user.ckey]) despawned 1 instance of [most_perilous_challenge.name].")
+				say("[user] ([user.ckey]) despawned 1 instance of [found_datum.name].")
 				playsound(get_turf(src), 'sound/machines/terminal_success.ogg', 40, FALSE)
 			else
-				say("Error: there are no instances of [most_perilous_challenge.name] to despawn.")
+				say("Error: there are no instances of [found_datum.name] to despawn.")
 				playsound(get_turf(src), 'sound/machines/terminal_prompt_deny.ogg', 40, FALSE)
 		return TRUE
 
@@ -405,7 +405,7 @@
 		var/datum/test_range_threat/found_datum = locate(chosen_threat) in SStestrange.test_range_threat_datums
 		if(found_datum && istype(found_datum))
 			found_datum.DespawnAll()
-			say("[user] ([user.ckey]) despawned ALL [most_perilous_challenge.name] instances.")
+			say("[user] ([user.ckey]) despawned ALL [found_datum.name] instances.")
 			playsound(get_turf(src), 'sound/machines/triple_beep.ogg', 40, FALSE)
 		return TRUE
 
@@ -414,6 +414,7 @@
 	if(!istype(most_perilous_challenge) || !istype(arena))
 		return
 	var/turf/T = get_turf(arena)
+	var/mob/living/user = usr
 
 	if(most_perilous_challenge.Start(T, tuning))
 		say("[user] ([user.ckey]) spawned [most_perilous_challenge.name] in the [arena.arena_name] Arena.")
@@ -440,7 +441,7 @@
 // Might as well put the signal handler procs here for clarity.
 /obj/effect/mob_spawn/human/testrange/proc/ProcessAgentDeath(mob/living/carbon/human/dead_test_range_agent)
 	SIGNAL_HANDLER
-	UnregisterSignal(dead_test_range_agent, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING, COMSIG_HUMAN_INSANE))
+	UnregisterSignal(dead_test_range_agent, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING, COMSIG_HUMAN_INSANE, COMSIG_ENTER_AREA))
 	SStestrange.test_range_agents -= dead_test_range_agent
 	SStestrange.CleanupCheck() // Check to see if this was the last living Test Range Agent.
 
@@ -452,9 +453,9 @@
 	var/area/agent_area = get_area(insane_agent)
 	if(!istype(agent_area, /area/test_range_arena))
 		QDEL_NULL(insane_agent.ai_controller)
-		SStestrange.Despawn(insane_agent)
+		addtimer(CALLBACK(SStestrange, TYPE_PROC_REF(/datum/controller/subsystem/testrange, Despawn), insane_agent), rand(5, 10))
 	else
-		RegisterSignal(insane_agent, COMSIG_AREA_ENTERED, PROC_REF(AreaCheck))
+		RegisterSignal(insane_agent, COMSIG_ENTER_AREA, PROC_REF(AreaCheck))
 
 // Kills the insane person we're listening to if they enter the test range lobby.
 /obj/effect/mob_spawn/human/testrange/proc/AreaCheck(mob/living/soon_to_be_ded, area/entered_area)

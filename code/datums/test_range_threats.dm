@@ -77,7 +77,7 @@
 	currently_spawned |= our_guy
 	SStestrange.test_range_living_threats |= our_guy
 	RegisterSignal(our_guy, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING), PROC_REF(OnDeath))
-	RegisterSignal(our_guy, COMSIG_AREA_ENTERED, PROC_REF(AreaCheck))
+	RegisterSignal(our_guy, COMSIG_ENTER_AREA, PROC_REF(AreaCheck))
 
 	// Disable core drops for any Abnormality that spawns.
 	if(isabnormalitymob(our_guy))
@@ -99,7 +99,7 @@
 
 /datum/test_range_threat/proc/OnDeath(mob/living/ded)
 	SIGNAL_HANDLER
-	UnregisterSignal(ded, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING, COMSIG_AREA_ENTERED))
+	UnregisterSignal(ded, list(COMSIG_LIVING_DEATH, COMSIG_PARENT_QDELETING, COMSIG_ENTER_AREA))
 	currently_spawned -= ded
 	SStestrange.test_range_living_threats -= ded
 
