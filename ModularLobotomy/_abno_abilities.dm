@@ -51,7 +51,7 @@
 		Finalize(target, user, ourpath)
 
 //Returns a list of the turfs we are dashing. See spear apostle dash for actual telegraphing.
-/obj/effect/proc_holder/ability/aimed/dash/proc/Telegraph(target, mob/living/user)
+/obj/effect/proc_holder/ability/aimed/dash/proc/Telegraph(atom/target, mob/living/user)
 	. = list()
 	if(!target || !user)
 		stack_trace("Dash Skill Telegraph was called without a target or user.")
@@ -75,12 +75,13 @@
 /obj/effect/proc_holder/ability/aimed/dash/proc/Finalize(target, mob/living/user, list/path_list)
 	if(windup_delay)
 		if(!do_after(user, windup_delay, target = user))
+			EndCharge(user)
 			return
 
 	if(!path_list)
 		var/dir_to_target = get_dir(user, target)
 		if(!dir_to_target)
-			ToggleAct(user,TRUE)
+			EndCharge(user)
 			return
 		var/somehowloc = get_ranged_target_turf(user, dir_to_target, dash_range)
 		path_list = get_ranged_target_turf_direct(user, somehowloc, dash_range)
@@ -192,6 +193,7 @@
 		FlickOnAtom(T,'icons/effects/cult_effects.dmi',"bloodsparkles",5)
 	playsound(get_turf(user), 'sound/abnormalities/whitenight/spear_charge.ogg', 75, 0, 5)
 	if(!do_after(user, 2.2 SECONDS, target = user))
+		EndCharge(user)
 		return
 	playsound(get_turf(user), 'sound/abnormalities/whitenight/spear_dash.ogg', 100, 0, 20)
 	return ..()
@@ -200,8 +202,6 @@
 	for(var/turf/TF in GetRange(T, 1))
 		if(!TF)
 			break
-		if(HasIdentList(TF))
-			continue
 		if(isclosedturf(TF))
 			continue
 		FlickOnAtom(TF,'icons/effects/effects.dmi',"smoke",5)
@@ -254,6 +254,7 @@
 
 /obj/effect/proc_holder/ability/aimed/dash/big_wolf/snowqueen/Finalize(target, mob/living/user, list/path_list)
 	if(!do_after(user, 1 SECONDS, target = user))
+		EndCharge(user)
 		return
 	if(istype(user, /mob/living/simple_animal/hostile/abnormality/snow_queen))
 		var/mob/living/simple_animal/hostile/abnormality/snow_queen/abno = user
@@ -597,6 +598,7 @@
 		FlickOnAtom(T,'icons/effects/effects.dmi',"smoke",5)
 	playsound(get_turf(user), 'sound/abnormalities/firebird/Firebird_Hit.ogg', 100, 0, 20) //TEMPORARY
 	if(!do_after(user, 11, target = user))
+		EndCharge(user)
 		return
 	return ..()
 
@@ -638,6 +640,7 @@
 /obj/effect/proc_holder/ability/aimed/dash/bloodfiend/Finalize(target, mob/living/user, list/path_list)
 	user.do_shaky_animation(1)
 	if(!do_after(user, 0.5, target = user))
+		EndCharge(user)
 		return
 	return ..()
 
@@ -689,6 +692,7 @@
 		FlickOnAtom(T,'icons/effects/eldritch.dmi',"blood_cloud_swirl",15)
 
 	if(!do_after(user, 15, target = user))
+		EndCharge(user)
 		return
 
 	. = ..()
