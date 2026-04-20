@@ -31,7 +31,7 @@ export const TestRangeThreatSimulator = (props, context) => {
         step={1}
         stepPixelSize={(250 / datum.tuning_limit)}
         onChange={(e, value) => { SetDatumTuning(datum.reference, value); }} />
-      );
+    );
   };
 
   // 1-5 star icons to denote difficulty, colour depends on how many.
@@ -80,33 +80,36 @@ export const TestRangeThreatSimulator = (props, context) => {
           Currently spawned: {datum.max_spawns ? datum.current_spawns + "/" + datum.max_spawns : datum.current_spawns}
         </Flex.Item>
 
-        {datum.tuning_name && (<Flex.Item my={3}>
+        {datum.tuning_name &&
+        (<Flex.Item my={3}>
           <Section title="Tuning">
             {datum.tuning_name + ":"}
             {GetDatumTuningSlider(datum)}
 
           </Section>
-        </Flex.Item>)
-        }
+        </Flex.Item>)}
 
         <Flex.Item mt={2}>
           <Button color="green"
             onClick={() => act('spawn_threat',
               { chosen_threat: datum.reference,
-              tuning: tuningSliders[datum.reference]
-              })}>Spawn</Button>
+              tuning: tuningSliders[datum.reference],
+              })}>Spawn
+            </Button>
         </Flex.Item>
         <Flex.Item mt={2}>
           <Button color="red"
             onClick={() => act('despawn_one',
-              { chosen_threat: datum.reference
-              })}>Despawn One</Button>
+              { chosen_threat: datum.reference,
+              })}>Despawn One
+              </Button>
         </Flex.Item>
         <Flex.Item mt={1}>
-         <Button color="red"
+          <Button color="red"
             onClick={() => act('despawn_all',
-              { chosen_threat: datum.reference
-              })}>Despawn All</Button>
+              { chosen_threat: datum.reference,
+              })}>Despawn All
+              </Button>
         </Flex.Item>
       </Flex>
 
@@ -134,8 +137,8 @@ export const TestRangeThreatSimulator = (props, context) => {
     return (
       <Section scrollable fill title="Threat Details">
         {currentlyDetailedThreat !== null
-        ? <SelectedThreatDetails datum={currentlyDetailedThreat} />
-        : <EmptyThreatDetails />}
+          ? <SelectedThreatDetails datum={currentlyDetailedThreat} />
+          : <EmptyThreatDetails />}
       </Section>
     );
 
@@ -212,9 +215,10 @@ export const TestRangeThreatSimulator = (props, context) => {
   const ThreatsList = (props, context) => {
 
     return (
-        <Flex direction="column">
-          {threats?.map(threat => <ThreatDatumEntry datum={threat} key={threat.reference} />)}
-        </Flex>
+      <Flex direction="column">
+        {threats?.map(threat =>
+        <ThreatDatumEntry datum={threat} key={threat.reference} />)}
+      </Flex>
 
     );
 
@@ -256,7 +260,7 @@ export const TestRangeThreatSimulator = (props, context) => {
       <Flex direction="column" fill>
         <Section title="Available Arenas" fill>
 
-          {arenas.map(string => (<Flex.Item key={string} my={1}><Button align="center" fluid content={string} onClick={() => {act('change_camera', { arena: string, })} }></Button></Flex.Item>) )}
+          {arenas.map(string => (<Button key={string} align="center" fluid content={string} onClick={() => { act('change_camera', { arena: string }); } }></Button>))}
 
         </Section>
       </Flex>
