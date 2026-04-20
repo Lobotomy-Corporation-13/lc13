@@ -33,6 +33,7 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_INDEX)
 	var/datum/action/innate/view_role_rules/index_oracle/rules_action = new
 	rules_action.Grant(H)
 	. = ..()
@@ -275,6 +276,11 @@
 
 	to_chat(H, span_boldnotice("Transforming into Oracle Proxy..."))
 
+	// Drop all held and worn items
+	H.drop_all_held_items()
+	for(var/obj/item/I in H.get_equipped_items())
+		H.dropItemToGround(I, TRUE)
+
 	// Set attributes
 	H.set_attribute_limit(300)
 	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
@@ -296,6 +302,7 @@
 
 	// Add nursefather passive
 	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_INDEX)
 
 	// Equip outfit (includes Caduceus in l_hand, armor in r_hand, pager as accessory, scroll in pocket)
 	var/datum/outfit/job/oracles_proxy/outfit = new()
@@ -308,4 +315,93 @@
 	to_chat(H, span_boldnotice("You are now the Oracle Proxy. Caduceus and armor are in your hands, pager is on your suit."))
 
 	// Consume the debug item
+	qdel(src)
+
+////////////////////////////////////////////////////////////
+// GHOST POLL SPAWN ITEM
+// Use in hand to poll trusted ghosts, then spawn the selected one as Oracle Proxy.
+
+/obj/item/oracle_proxy_ghost_spawn
+	name = "oracle's calling stone"
+	desc = "A debug item. Use in hand to poll trusted ghosts for an Oracle Proxy player."
+	icon = 'icons/obj/radio.dmi'
+	icon_state = "radio"
+	w_class = WEIGHT_CLASS_TINY
+	/// Whether a poll is currently active
+	var/polling = FALSE
+
+/obj/item/oracle_proxy_ghost_spawn/attack_self(mob/living/user)
+	if(!ishuman(user))
+		to_chat(user, span_warning("Only humans can use this."))
+		return
+	if(polling)
+		to_chat(user, span_warning("A poll is already in progress!"))
+		return
+
+	polling = TRUE
+	to_chat(user, span_notice("Polling ghosts for an Oracle Proxy candidate..."))
+
+	var/turf/spawn_loc = get_turf(src)
+
+	var/list/candidates = pollGhostCandidates("Do you wish to become the Oracle Proxy?", ROLE_TRAITOR, poll_time = 300)
+
+	if(QDELETED(src))
+		return
+
+	// Filter for trusted players
+	var/list/trusted_candidates = list()
+	for(var/mob/dead/observer/candidate in candidates)
+		if(candidate.client && is_trusted_player(candidate.client))
+			trusted_candidates += candidate
+		else if(candidate.client)
+			to_chat(candidate, span_warning("You were not selected because this role requires trusted player status."))
+
+	if(!length(trusted_candidates))
+		to_chat(user, span_warning("No trusted candidates accepted the poll."))
+		polling = FALSE
+		return
+
+	var/mob/dead/observer/chosen = pick(trusted_candidates)
+	var/mob/living/carbon/human/H = makeBody(chosen)
+	if(!H)
+		to_chat(user, span_warning("Failed to create a body for the candidate."))
+		polling = FALSE
+		return
+
+	H.forceMove(spawn_loc)
+
+	// Set attributes
+	H.set_attribute_limit(300)
+	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+		var/datum/attribute/A = H.attributes[attr_name]
+		if(A)
+			if(attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE))
+				A.level = 300
+			else
+				A.level = 100
+			A.on_update(H)
+
+	// Set role
+	if(H.mind)
+		H.mind.assigned_role = "Oracle Proxy"
+
+	// Add traits
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+
+	// Add nursefather components
+	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_INDEX)
+
+	// Equip outfit
+	var/datum/outfit/job/oracles_proxy/outfit = new()
+	outfit.equip(H)
+
+	// Grant rules action
+	var/datum/action/innate/view_role_rules/index_oracle/rules_action = new
+	rules_action.Grant(H)
+
+	to_chat(H, span_boldnotice("You are the Oracle Proxy. Caduceus and armor are in your hands, pager is on your suit."))
+
+	// Consume the item
 	qdel(src)
