@@ -34,6 +34,7 @@
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_RING_ARTIST, JOB_TRAIT)
 	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_RING)
 	H.set_species(/datum/species/corporist_maestro)
 
 	// Re-equip hand items after species change (set_species can drop held items)
@@ -208,6 +209,11 @@
 
 	to_chat(H, span_boldnotice("Transforming into Corporist Maestro..."))
 
+	// Drop all held and worn items
+	H.drop_all_held_items()
+	for(var/obj/item/I in H.get_equipped_items())
+		H.dropItemToGround(I, TRUE)
+
 	// Set attributes
 	H.set_attribute_limit(300)
 	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
@@ -230,6 +236,7 @@
 
 	// Add nursefather passive
 	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_RING)
 
 	// Set species to corporist maestro prosthetics
 	H.set_species(/datum/species/corporist_maestro)
