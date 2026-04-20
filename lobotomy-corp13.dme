@@ -569,6 +569,8 @@
 #include "code\datums\components\monwave_spawners.dm"
 #include "code\datums\components\nanites.dm"
 #include "code\datums\components\ntnet_interface.dm"
+#include "code\datums\components\nursefather_music.dm"
+#include "code\datums\components\nursefather_music_debug.dm"
 #include "code\datums\components\nursefather_passive.dm"
 #include "code\datums\components\omen.dm"
 #include "code\datums\components\orbiter.dm"

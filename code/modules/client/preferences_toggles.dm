@@ -268,6 +268,18 @@ TOGGLE_CHECKBOX(/datum/verbs/menu/settings/sound, toggle_announcement_sound)()
 	SSblackbox.record_feedback("nested tally", "preferences_verb", 1, list("Stop Self Sounds")) //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
 
+/datum/verbs/menu/settings/sound/verb/set_player_ambience_volume()
+	set name = "Set Player Ambience Volume"
+	set category = "Preferences"
+	set desc = "Adjust the volume of player-sourced ambience music (0-100)"
+	var/new_vol = input(usr, "Set player ambience volume (0-100):", "Player Ambience Volume", usr.client.prefs.player_ambience_volume) as null|num
+	if(isnull(new_vol))
+		return
+	usr.client.prefs.player_ambience_volume = clamp(new_vol, 0, 100)
+	usr.client.prefs.save_preferences()
+	to_chat(usr, "Player ambience volume set to [usr.client.prefs.player_ambience_volume]%.")
+
+
 TOGGLE_CHECKBOX(/datum/verbs/menu/settings, listen_ooc)()
 	set name = "Show/Hide OOC"
 	set category = "Preferences"
