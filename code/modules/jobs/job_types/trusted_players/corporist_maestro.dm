@@ -277,3 +277,120 @@
 
 	// Consume the debug item
 	qdel(src)
+
+////////////////////////////////////////////////////////////
+// GHOST POLL SPAWN ITEM
+// Use in hand to poll trusted ghosts, then spawn the selected one as Corporist Maestro.
+
+/obj/item/corporist_maestro_ghost_spawn
+	name = "maestro's tuning fork"
+	desc = "A debug item. Use in hand to poll trusted ghosts for a Corporist Maestro player."
+	icon = 'icons/obj/radio.dmi'
+	icon_state = "radio"
+	w_class = WEIGHT_CLASS_TINY
+	/// Whether a poll is currently active
+	var/polling = FALSE
+
+/obj/item/corporist_maestro_ghost_spawn/attack_self(mob/living/user)
+	if(!ishuman(user))
+		to_chat(user, span_warning("Only humans can use this."))
+		return
+	if(polling)
+		to_chat(user, span_warning("A poll is already in progress!"))
+		return
+
+	polling = TRUE
+	to_chat(user, span_notice("Polling ghosts for a Corporist Maestro candidate..."))
+
+	var/turf/spawn_loc = get_turf(src)
+
+	var/list/candidates = pollGhostCandidates("Do you wish to become the Corporist Maestro?", ROLE_TRAITOR, poll_time = 300)
+
+	if(QDELETED(src))
+		return
+
+	// Filter for trusted players
+	var/list/trusted_candidates = list()
+	for(var/mob/dead/observer/candidate in candidates)
+		if(candidate.client && is_trusted_player(candidate.client))
+			trusted_candidates += candidate
+		else if(candidate.client)
+			to_chat(candidate, span_warning("You were not selected because this role requires trusted player status."))
+
+	if(!length(trusted_candidates))
+		to_chat(user, span_warning("No trusted candidates accepted the poll."))
+		polling = FALSE
+		return
+
+	var/mob/dead/observer/chosen = pick(trusted_candidates)
+	var/mob/living/carbon/human/H = makeBody(chosen)
+	if(!H)
+		to_chat(user, span_warning("Failed to create a body for the candidate."))
+		polling = FALSE
+		return
+
+	H.forceMove(spawn_loc)
+
+	// Set attributes
+	H.set_attribute_limit(300)
+	for(var/attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE, TEMPERANCE_ATTRIBUTE, JUSTICE_ATTRIBUTE))
+		var/datum/attribute/A = H.attributes[attr_name]
+		if(A)
+			if(attr_name in list(FORTITUDE_ATTRIBUTE, PRUDENCE_ATTRIBUTE))
+				A.level = 300
+			else
+				A.level = 100
+			A.on_update(H)
+
+	// Set role
+	if(H.mind)
+		H.mind.assigned_role = "Corporist Maestro"
+
+	// Add traits
+	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_RING_ARTIST, JOB_TRAIT)
+
+	// Add nursefather components
+	H.AddComponent(/datum/component/nursefather_passive)
+	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_RING)
+
+	// Set species
+	H.set_species(/datum/species/corporist_maestro)
+
+	// Equip outfit
+	var/datum/outfit/job/corporist_maestro/outfit = new()
+	outfit.equip(H)
+
+	// Spawn weapon and armor into hands (after species change)
+	var/obj/item/ego_weapon/city/ring/tibia/weapon = new(H)
+	H.put_in_hands(weapon)
+	var/obj/item/clothing/suit/armor/ego_gear/city/ring_maestro/armor = new(H)
+	H.put_in_hands(armor)
+
+	// Add artistic EXP component with maestro starting bonus
+	var/datum/component/artistic_exp/exp_comp = H.AddComponent(/datum/component/artistic_exp)
+	exp_comp.grant_starting_points("maestro")
+
+	// Grant Maestro actions
+	var/datum/action/cooldown/sculpt_corpse/sculpt = new(H)
+	sculpt.Grant(H)
+	var/datum/action/cooldown/demonstrate_artistry/demo = new(H)
+	demo.Grant(H)
+	var/datum/action/cooldown/judge_artwork/judge = new(H)
+	judge.Grant(H)
+	var/datum/action/cooldown/describe_artwork/describe = new(H)
+	describe.Grant(H)
+	var/datum/action/cooldown/reset_artistry/reset = new(H)
+	reset.Grant(H)
+	var/datum/action/innate/ring_skill_tree/tree = new(H)
+	tree.Grant(H)
+
+	// Add antagonist datum
+	if(H.mind)
+		H.mind.add_antag_datum(/datum/antagonist/ring_artist/maestro)
+
+	to_chat(H, span_boldnotice("You are the Corporist Maestro. Tibia and armor are in your hands."))
+
+	// Consume the item
+	qdel(src)
