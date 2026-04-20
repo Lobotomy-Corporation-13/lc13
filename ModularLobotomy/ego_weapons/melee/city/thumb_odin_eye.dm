@@ -27,6 +27,7 @@
 	icon = 'icons/obj/spider_house/thumb/thumb_spider_icon.dmi'
 	icon_state = "odin_eye"
 	eye_color = "FF0000"
+	organ_flags = ORGAN_UNREMOVABLE
 	/// Current precognition stacks
 	var/precognition_stacks = 30
 	/// Maximum precognition stacks
