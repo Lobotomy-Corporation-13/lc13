@@ -1,0 +1,893 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"bJ" = (
+/obj/item/modular_computer/laptop{
+	pixel_x = 11;
+	pixel_y = 7
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 3;
+	pixel_y = -1
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 7;
+	pixel_y = -2
+	},
+/obj/item/flashlight/lamp{
+	pixel_x = -4;
+	pixel_y = 10
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 3;
+	pixel_y = -1
+	},
+/obj/item/stack/spacecash/c1000{
+	pixel_x = 7;
+	pixel_y = -2
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"cB" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/table/reinforced,
+/obj/item/potential_tester{
+	name = "Reconfigured Potential Tester";
+	desc = "A modified Nagel und Hammer device meant to figure out subject potentials."
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"df" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/chair/comfy/black{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"dw" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"fw" = (
+/obj/structure/window/shuttle/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"gh" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/item/ncorp_augment_tester{
+	pixel_y = 5;
+	pixel_x = 5
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"ji" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"jX" = (
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/backstreets_room)
+"mA" = (
+/obj/machinery/door/airlock/grunge{
+	name = "N. Corp League of Nine Quarters"
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/backstreets_room)
+"oB" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/machinery/light/floor{
+	pixel_x = -11;
+	pixel_y = -11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"oK" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"oZ" = (
+/obj/machinery/door/airlock/grunge{
+	name = "ID Imprintation Matrix"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"qI" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/item/clothing/suit/armor/ego_gear/city/fellbullet,
+/obj/item/ego_weapon/ranged/fellbullet,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"ro" = (
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"sj" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"sI" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/chair/comfy/black{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"tg" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 8;
+	pixel_x = 6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"tR" = (
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 4;
+	pixel_x = -6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"ur" = (
+/obj/machinery/door/airlock/grunge{
+	name = "N. Corp Employee Quarters"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"uK" = (
+/obj/machinery/door/airlock/grunge{
+	name = "ID Matrix Monitoring"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"zE" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Af" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/structure/table/reinforced,
+/obj/item/ego_weapon/city/zweibaton/protection{
+	pixel_x = 6
+	},
+/obj/item/restraints/handcuffs,
+/obj/item/restraints/handcuffs,
+/obj/item/ego_weapon/city/zweibaton/protection{
+	pixel_x = 6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Al" = (
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/backstreets_room)
+"Ao" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/machinery/light/floor{
+	pixel_x = 11;
+	pixel_y = -11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Bd" = (
+/obj/machinery/idimprinter,
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"Bn" = (
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 8;
+	pixel_x = 6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Dl" = (
+/obj/machinery/modular_computer/console{
+	dir = 4;
+	name = "matrix monitor";
+	desc = "Dysfunctional. This used to enable imprinting from a distance - but. Such a time has passed.";
+	pixel_x = -6
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Gd" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"GH" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/machinery/light/floor{
+	pixel_y = 11;
+	pixel_x = -11
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Il" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/machinery/light/floor{
+	pixel_y = 11;
+	pixel_x = 11
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Jf" = (
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 4;
+	pixel_x = -6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Ka" = (
+/obj/item/kirbyplants{
+	icon_state = "plant-10";
+	pixel_y = 16;
+	pixel_x = -9;
+	anchored = 1
+	},
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/backstreets_room)
+"Kk" = (
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 1;
+	pixel_y = -32
+	},
+/obj/machinery/light/floor{
+	pixel_y = -25;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/item/pen{
+	pixel_x = -6;
+	pixel_y = 9
+	},
+/obj/item/paper_bin/carbon{
+	pixel_x = 8;
+	pixel_y = 4
+	},
+/obj/item/documents/ncorporation,
+/obj/structure/table/survival_pod,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"KG" = (
+/turf/closed/indestructible/syndicate,
+/area/city/backstreets_room)
+"KY" = (
+/obj/machinery/light/floor{
+	pixel_y = 26;
+	layer = 3;
+	name = "floodlight"
+	},
+/obj/machinery/factory_machine/artillery{
+	pixel_y = 32;
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0
+	},
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 8;
+	pixel_x = 6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"LP" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"NB" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/structure/railing{
+	pixel_y = 1;
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/trimline/blue/filled/warning{
+	color = "#3234B9";
+	dir = 4;
+	pixel_x = -6
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Or" = (
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 8;
+	pixel_x = 32
+	},
+/obj/machinery/light/floor{
+	pixel_y = 3;
+	layer = 3;
+	name = "floodlight";
+	pixel_x = 25
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"OH" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/table/wood,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Qh" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/obj/item/paper_bin/carbon{
+	pixel_x = 8;
+	pixel_y = 4
+	},
+/obj/item/pen{
+	pixel_x = -6;
+	pixel_y = 9
+	},
+/obj/item/folder{
+	pixel_x = -10;
+	pixel_y = -1;
+	icon_state = "folder_syndie";
+	name = "ID-Imprint";
+	desc = "Store your observations here."
+	},
+/obj/structure/table/reinforced,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Qv" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/machinery/smartfridge/survival_pod{
+	pixel_y = 28
+	},
+/obj/effect/turf_decal/bot_red,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"QS" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/item/clothing/suit/armor/ego_gear/city/sticking,
+/obj/item/ego_weapon/mini/fourleaf_clover/city,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"RW" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/item/clothing/suit/armor/ego_gear/city/sticking,
+/obj/item/ego_weapon/mini/fourleaf_clover/city,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"Tb" = (
+/obj/structure/chair/wood,
+/turf/open/floor/wood{
+	color = "#ccc8c0"
+	},
+/area/city/backstreets_room)
+"Uf" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/structure/table/reinforced,
+/obj/item/storage/box/pcorp{
+	pixel_x = -10
+	},
+/obj/item/storage/box/pcorp{
+	pixel_y = 9;
+	pixel_x = 5
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"UM" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/structure/chair/comfy/black{
+	dir = 8
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"UV" = (
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"VM" = (
+/obj/effect/turf_decal/tile/bar,
+/obj/effect/turf_decal/tile/bar{
+	dir = 4
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/machinery/stasis/survival_pod,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"WY" = (
+/obj/effect/decal/cleanable/dirt/dust,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"Xa" = (
+/obj/machinery/door/airlock/grunge{
+	name = "N. Corp League of Nine Quarters"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"Xe" = (
+/obj/structure/table/reinforced,
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+"Xg" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/structure/table/reinforced,
+/obj/machinery/microwave{
+	pixel_y = 5
+	},
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"XE" = (
+/obj/effect/turf_decal/tile/bar{
+	dir = 8
+	},
+/obj/effect/turf_decal/tile/bar{
+	dir = 1
+	},
+/obj/effect/turf_decal/tile/bar,
+/obj/structure/closet/abductor{
+	desc = "In short - E.G.O. storage.";
+	name = "E.G.O. Preservation Unit";
+	pixel_y = 8
+	},
+/obj/effect/turf_decal/bot_red,
+/obj/item/ego_weapon/perversion/weak,
+/obj/item/clothing/suit/armor/ego_gear/city/contempt,
+/turf/open/floor/mineral/plastitanium,
+/area/city/backstreets_room)
+"XP" = (
+/obj/structure/table/reinforced,
+/obj/item/storage/fancy/cigarettes/cigpack_robust{
+	pixel_x = 9;
+	pixel_y = 7
+	},
+/obj/item/lighter/greyscale{
+	pixel_x = -1;
+	pixel_y = 6
+	},
+/obj/item/toy/cards/deck/kotahi{
+	pixel_y = -1;
+	pixel_x = -4
+	},
+/obj/machinery/factory_machine/artillery{
+	name = "light mount";
+	desc = "A mount for a floodlight.";
+	density = 0;
+	dir = 1;
+	pixel_y = -32
+	},
+/obj/machinery/light/floor{
+	pixel_y = -25;
+	layer = 3;
+	name = "floodlight"
+	},
+/turf/open/floor/plasteel/dark,
+/area/city/backstreets_room)
+
+(1,1,1) = {"
+KY
+Bn
+Bn
+tg
+KG
+WY
+KG
+RW
+Gd
+UV
+VM
+"}
+(2,1,1) = {"
+Bd
+UV
+UV
+UV
+oZ
+UV
+KG
+ro
+UV
+UV
+Xe
+"}
+(3,1,1) = {"
+Jf
+NB
+tR
+tR
+KG
+UV
+KG
+QS
+ji
+UV
+oK
+"}
+(4,1,1) = {"
+KG
+fw
+fw
+KG
+KG
+UV
+KG
+KG
+KG
+ur
+KG
+"}
+(5,1,1) = {"
+Qh
+Dl
+Dl
+KG
+GH
+UV
+oB
+KG
+Uf
+UV
+df
+"}
+(6,1,1) = {"
+ro
+UV
+UV
+uK
+UV
+UV
+UV
+ur
+UV
+UV
+XP
+"}
+(7,1,1) = {"
+cB
+gh
+Af
+KG
+Il
+UV
+Ao
+KG
+Xg
+UV
+UM
+"}
+(8,1,1) = {"
+KG
+KG
+KG
+KG
+KG
+ur
+KG
+KG
+KG
+KG
+KG
+"}
+(9,1,1) = {"
+dw
+Ka
+bJ
+KG
+Gd
+UV
+sj
+KG
+dw
+UV
+sI
+"}
+(10,1,1) = {"
+jX
+Al
+Al
+mA
+UV
+UV
+UV
+Xa
+UV
+UV
+Kk
+"}
+(11,1,1) = {"
+XE
+Tb
+OH
+KG
+LP
+Or
+zE
+KG
+Qv
+UV
+qI
+"}

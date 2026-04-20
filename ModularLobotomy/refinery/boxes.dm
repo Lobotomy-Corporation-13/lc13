@@ -174,3 +174,150 @@
 /obj/item/storage/box/thumb_east_ammo/tigermark/PopulateContents()
 	for(var/i = 1 to 6)
 		new /obj/item/stack/thumb_east_ammo/tigermark(src)
+
+
+// storage datums for the league of nine boxes, which are detailed below - follows theast ammo box rules
+/datum/component/storage/concrete/littlesibling
+	can_hold = list(/obj/item/ego_weapon/shield/middle_chain = TRUE, /obj/item/storage/book/middle = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/shield/middle_chain = TRUE, /obj/item/storage/book/middle = TRUE)
+
+
+/datum/component/storage/concrete/eastsoldato //NOT to be confused with the boxes above
+	can_hold = list(/obj/item/ego_weapon/city/thumb_east = TRUE, /obj/item/stack/thumb_east_ammo = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/thumb_east = TRUE, /obj/item/stack/thumb_east_ammo = TRUE)
+
+/datum/component/storage/concrete/mittelhammer
+	can_hold = list(/obj/item/ego_weapon/city/ncorp_nail/big = TRUE, /obj/item/ego_weapon/city/ncorp_hammer/big = TRUE, /obj/item/ego_weapon/city/ncorp_mark/white = TRUE, /obj/item/ego_weapon/city/ncorp_mark/black = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/ncorp_nail/big = TRUE, /obj/item/ego_weapon/city/ncorp_hammer/big = TRUE, /obj/item/ego_weapon/city/ncorp_mark/white = TRUE, /obj/item/ego_weapon/city/ncorp_mark/black = TRUE)
+
+/datum/component/storage/concrete/kcorp_l3_spear
+	can_hold = list(/obj/item/ego_weapon/city/kcorp/spear = TRUE, /obj/item/ksyringe = TRUE) //giving free revive ampules is bad actually
+	exception_hold = list(/obj/item/ego_weapon/city/kcorp/spear = TRUE, /obj/item/ksyringe = TRUE)
+
+/datum/component/storage/concrete/kcorp_l3_blastspear
+	can_hold = list(/obj/item/ego_weapon/city/kcorp/dspear = TRUE, /obj/item/ksyringe = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/kcorp/dspear = TRUE, /obj/item/ksyringe = TRUE)
+
+/datum/component/storage/concrete/cinqwest
+	can_hold = list(/obj/item/ego_weapon/city/cinqwest_selfiestick = TRUE, /obj/item/ego_weapon/city/cinq/section4/west = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/cinqwest_selfiestick = TRUE, /obj/item/ego_weapon/city/cinq/section4/west = TRUE)
+
+/datum/component/storage/concrete/eastcapo //NOT to be confused with the boxes above
+	can_hold = list(/obj/item/clothing/suit/armor/ego_gear/city/thumb_capo = TRUE, /obj/item/stack/thumb_east_ammo/tigermark = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/thumb_east/podao = TRUE, /obj/item/stack/thumb_east_ammo/tigermark = TRUE)
+
+/datum/component/storage/concrete/sottocapo
+	can_hold = list(/obj/item/ego_weapon/ranged/city/thumb/sottocapo = TRUE, /obj/item/ego_weapon/city/thumbcane = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/ranged/city/thumb/sottocapo = TRUE, /obj/item/ego_weapon/city/thumbcane = TRUE)
+
+/datum/component/storage/concrete/indexmessenger
+	can_hold = list(/obj/item/scrying = TRUE, /obj/item/ego_weapon/city/index/yan = TRUE)
+	exception_hold = list(/obj/item/scrying = TRUE, /obj/item/ego_weapon/city/index/yan = TRUE)
+
+/datum/component/storage/concrete/grandinquisitor
+	can_hold = list(/obj/item/ego_weapon/city/ncorp_mark/black = TRUE, /obj/item/ego_weapon/city/ncorp_mark = TRUE, /obj/item/ego_weapon/city/ncorp_brassnail/rose = TRUE, /obj/item/ego_weapon/city/ncorp_hammer/grippy = TRUE)
+	exception_hold = list(/obj/item/ego_weapon/city/ncorp_mark/black = TRUE, /obj/item/ego_weapon/city/ncorp_mark = TRUE, /obj/item/ego_weapon/city/ncorp_brassnail/rose = TRUE, /obj/item/ego_weapon/city/ncorp_hammer/grippy = TRUE)
+
+//league of nine boxes, which contain misc items/weapons for their identities (e.g. nagel nails, hammers, and seals) - no particular order, outside of ID level
+/obj/item/storage/box/league_of_nine
+	name = "League of Nine box"
+	desc = "You really shouldn't be seeing this!"
+	w_class = WEIGHT_CLASS_BULKY
+
+/obj/item/storage/box/league_of_nine/littlesibling
+	name = "Compacted Form of a Little Sibling"
+	desc = "A small box containing things related to the concept of a Little Sibling."
+	component_type = /datum/component/storage/concrete/littlesibling
+
+/obj/item/storage/box/league_of_nine/littlesibling/PopulateContents()
+	new /obj/item/storage/book/middle(src)
+	new /obj/item/ego_weapon/shield/middle_chain(src)
+
+/obj/item/storage/box/league_of_nine/eastsoldato //NOT to be confused with the ammo boxes above!!!
+	name = "Compacted Form of an Eastern Thumb Soldato"
+	desc = "A small box containing things related to the concept of an Eastern Thumb Soldato."
+	component_type = /datum/component/storage/concrete/eastsoldato
+
+/obj/item/storage/box/league_of_nine/eastsoldato/PopulateContents()
+	new /obj/item/ego_weapon/city/thumb_east(src)
+	for(var/i = 1 to 6)
+		new /obj/item/stack/thumb_east_ammo(src)
+
+/obj/item/storage/box/league_of_nine/mittelhammer
+	name = "Compacted Form of a Mittelhammer"
+	desc = "A small box containing things related to the concept of a Mittelhammer."
+	component_type = /datum/component/storage/concrete/mittelhammer
+
+/obj/item/storage/box/league_of_nine/mittelhammer/PopulateContents()
+	new /obj/item/ego_weapon/city/ncorp_nail/big(src)
+	new /obj/item/ego_weapon/city/ncorp_hammer/big(src)
+	new /obj/item/ego_weapon/city/ncorp_mark/black(src)
+	new /obj/item/ego_weapon/city/ncorp_mark/white(src)
+
+/obj/item/storage/box/league_of_nine/kcorpl3spear
+	name = "Compacted Form of a K Corp Asset Protection Team Member"
+	desc = "A small box containing things related to the concept of an L3 K Corp security agent."
+	component_type = /datum/component/storage/concrete/kcorp_l3_spear
+
+/obj/item/storage/box/league_of_nine/kcorpl3spear/PopulateContents()
+	new /obj/item/ego_weapon/city/kcorp/spear(src)
+	new /obj/item/ksyringe(src)
+
+/obj/item/storage/box/league_of_nine/kcorpl3blastspear
+	name = "Compacted Form of a K Corp Asset Protection Team Member"
+	desc = "A small box containing things related to the concept of an L3 K Corp security agent."
+	component_type = /datum/component/storage/concrete/kcorp_l3_blastspear
+
+/obj/item/storage/box/league_of_nine/kcorpl3blastspear/PopulateContents()
+	new /obj/item/ego_weapon/city/kcorp/dspear(src)
+	new /obj/item/ksyringe(src)
+
+/obj/item/storage/box/league_of_nine/cinqwest
+	name = "Compacted Form of a Cinq West Fixer"
+	desc = "A small box containing things related to the concept of a Cinq West Fixer."
+	component_type = /datum/component/storage/concrete/cinqwest
+
+/obj/item/storage/box/league_of_nine/cinqwest/PopulateContents()
+	new /obj/item/ego_weapon/city/cinq/section4/west(src)
+	new /obj/item/ego_weapon/city/cinqwest_selfiestick(src)
+
+/obj/item/storage/box/league_of_nine/eastcapo //NOT to be confused with the ammo boxes above!!!
+	name = "Compacted Form of an Eastern Thumb Capo"
+	desc = "A small box containing things related to the concept of an Eastern Thumb Capo."
+	component_type = /datum/component/storage/concrete/eastcapo
+
+/obj/item/storage/box/league_of_nine/eastcapo/PopulateContents()
+	new /obj/item/ego_weapon/city/thumb_east/podao(src)
+	for(var/i = 1 to 6)
+		new /obj/item/stack/thumb_east_ammo/tigermark(src)
+	for(var/i = 1 to 6)
+		new /obj/item/stack/thumb_east_ammo/tigermark(src)
+
+/obj/item/storage/box/league_of_nine/sottocapo
+	name = "Compacted Form of a Sottocapo"
+	desc = "A small box containing things related to the concept of a Sottocapo."
+	component_type = /datum/component/storage/concrete/sottocapo
+
+/obj/item/storage/box/league_of_nine/sottocapo/PopulateContents()
+	new /obj/item/ego_weapon/ranged/city/thumb/sottocapo(src)
+	new /obj/item/ego_weapon/city/thumbcane(src)
+
+/obj/item/storage/box/league_of_nine/messenger
+	name = "Compacted Form of an Index Messenger"
+	desc = "A small box containing things related to the concept of an Index Messenger."
+	component_type = /datum/component/storage/concrete/indexmessenger
+
+/obj/item/storage/box/league_of_nine/messenger/PopulateContents()
+	new /obj/item/scrying(src)
+	new /obj/item/ego_weapon/city/index/yan(src)
+
+/obj/item/storage/box/league_of_nine/grandinquisitor
+	name = "Compacted Form of a Grand Inquisitor"
+	desc = "A small box containing things related to the concept of a Nagel und Hammer's Grand Inquisitor."
+	component_type = /datum/component/storage/concrete/grandinquisitor
+
+/obj/item/storage/box/league_of_nine/grandinquisitor/PopulateContents()
+	new /obj/item/ego_weapon/city/ncorp_mark/black(src)
+	new /obj/item/ego_weapon/city/ncorp_mark(src)
+	new /obj/item/ego_weapon/city/ncorp_brassnail/rose(src)
+	new /obj/item/ego_weapon/city/ncorp_hammer/grippy(src)
