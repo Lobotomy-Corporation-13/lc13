@@ -175,6 +175,20 @@
 	turfs_to_hit -= T
 	return turfs_to_hit
 
+/*
+* Requires a mob/living to call HurtInTurf
+* Uses HasIdentList to sort out the things we have already hit.
+*/
+/obj/effect/proc_holder/ability/aimed/dash/proc/HurtInTurf(mob/living/ourmob, turf/trg, list/hitlist = list(), dam = 0, damage_type = RED_DAMAGE, def_zone = null, check_fact = FALSE, exact_faction_match = FALSE, mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, flags = null, attack_type = null)
+	var/list/do_not_hitlist = list()
+	for(var/obj/thing in trg)
+		if(HasIdentList(thing))
+			do_not_hitlist += thing
+	for(var/mob/living/L in trg)
+		if(HasIdentList(L))
+			do_not_hitlist += L
+	return ourmob.HurtInTurf(trg, do_not_hitlist, dam, damage_type, def_zone, check_fact, exact_faction_match, mechs, mech_damage, hurt_hidden, hurt_structure, break_not_destroy, attack_direction, flags, attack_type) - do_not_hitlist
+
 /*----------\
 |Abnormality|
 \----------*/
@@ -204,8 +218,9 @@
 			break
 		if(isclosedturf(TF))
 			continue
-		FlickOnAtom(TF,'icons/effects/effects.dmi',"smoke",5)
-		var/list/new_hits = ourthing.HurtInTurf(T, list(), dash_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		if(!HasIdentList(TF))
+			FlickOnAtom(TF,'icons/effects/effects.dmi',"smoke",5)
+		var/list/new_hits = HurtInTurf(ourthing, T, list(), dash_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)
 			visible_message(span_boldwarning("[ourthing] runs through [L]!"), span_nicegreen("You impaled heretic [L]!"))
@@ -233,12 +248,12 @@
 	for(var/turf/TF in GetRange(T, 1))
 		if(!TF)
 			break
-		if(HasIdentList(TF))
-			continue
 		if(isclosedturf(TF))
 			continue
+		if(!HasIdentList(TF))
+			FlickOnAtom(TF,'icons/effects/effects.dmi',"smoke",5)
 		FlickOnAtom(TF,'icons/effects/effects.dmi',"slice",4)
-		hit_mob = ourthing.HurtInTurf(TF, hit_mob, dash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		hit_mob = HurtInTurf(ourthing, TF, hit_mob, dash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if(!istype(ourthing,/mob/living/simple_animal/hostile/abnormality/big_wolf))
 			continue
 		for(var/mob/living/simple_animal/hostile/abnormality/red_hood/mercenary in hit_mob)
@@ -279,11 +294,9 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smoke")
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), 0, BLACK_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), 0, BLACK_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)
 			var/atom/throw_target = get_edge_target_turf(L, get_dir(L, get_step_away(L, get_turf(ourthing))))
@@ -319,15 +332,11 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smoke")
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), 0, RED_DAMAGE, hurt_mechs = TRUE)
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), 0, RED_DAMAGE, hurt_mechs = TRUE)
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)
-			if(HasIdentList(L))
-				continue
 			L.visible_message(span_boldwarning("[ourthing] rams [L]!"), span_userdanger("[ourthing] impales you with its horns!"))
 			playsound(L, 'sound/weapons/fast_slam.ogg', 75, 1)
 			if(!flicks)
@@ -377,15 +386,11 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smoke",5)
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), 0, RED_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), 0, RED_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)
-			if(HasIdentList(L))
-				continue
 			if(!nihil_present)
 				L.visible_message(span_boldwarning("[ourthing] crunches [L]!"), span_userdanger("[ourthing] rends you with its teeth!"))
 				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 75, 1)
@@ -426,6 +431,7 @@
 		charge_damage = charge_damage + growing_charge_damage
 	return ..()
 
+
 /obj/effect/proc_holder/ability/aimed/dash/kog/AbnoInteraction(mob/living/user)
 	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/greed_king))
 		return
@@ -445,15 +451,11 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), dash_damage, BLACK_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, BLACK_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
-			if(HasIdentList(L))
-				continue
 			if(!ourthing.faction_check_mob(L))
 				visible_message(span_boldwarning("[ourthing] runs through [L]!"))
 				to_chat(L, span_userdanger("[ourthing] rushes past you, arcing electricity throughout the way!"))
@@ -465,8 +467,6 @@
 					var/mob/living/carbon/human/H = L
 					H.electrocute_act(1, ourthing, flags = SHOCK_NOSTUN)
 		for(var/obj/vehicle/sealed/mecha/V in new_hits)
-			if(HasIdentList(V))
-				continue
 			visible_message(span_boldwarning("[ourthing] runs through [V]!"))
 			to_chat(V.occupants, span_userdanger("[ourthing] rushes past you, arcing electricity throughout the way!"))
 			playsound(U, 'sound/abnormalities/thunderbird/tbird_peck.ogg', 75, 1)
@@ -493,15 +493,11 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), dash_damage, RED_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
-			if(HasIdentList(L))
-				continue
 			if(!ourthing.faction_check_mob(L))
 				L.visible_message(span_boldwarning("[ourthing] slices through [L]!"), span_userdanger("[ourthing] rushes past you, searing you with its blades!"))
 				playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
@@ -509,8 +505,6 @@
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 					flicks = TRUE
 		for(var/obj/vehicle/sealed/mecha/V in new_hits)
-			if(HasIdentList(V))
-				continue
 			V.visible_message(span_boldwarning("[ourthing] slices through [V]!"))
 			to_chat(V.occupants, span_userdanger("[ourthing] rushes past you, searing your mech with its blades!"))
 			playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
@@ -541,15 +535,11 @@
 	var/turf/U = T
 	if(!U)
 		return
-	if(HasIdentList(U))
-		return
-	if(isopenturf(U))
+	if(isopenturf(U) && !HasIdentList(U))
 		FlickOnAtom(U,'icons/effects/effects.dmi',"smash",5)
-	var/list/new_hits = ourthing.HurtInTurf(U, list(), dash_damage, RED_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	var/flicks = FALSE
 	for(var/mob/living/L in new_hits)//damage applied to targets in range
-		if(HasIdentList(L))
-			continue
 		if(!ourthing.faction_check_mob(L))
 			ourthing.visible_message(span_boldwarning("[ourthing] bites [L]!"))
 			to_chat(L, span_userdanger("[ourthing] takes a bite out of you!"))
@@ -565,8 +555,6 @@
 				FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 				flicks = TRUE
 	for(var/obj/vehicle/sealed/mecha/V in new_hits)
-		if(HasIdentList(V))
-			continue
 		if(!flicks)
 			FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 			flicks = TRUE
@@ -606,16 +594,12 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			//Real effect since fire produces light
 			new /obj/effect/temp_visual/fire/fast(U)
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), dash_damage, WHITE_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, WHITE_DAMAGE, hurt_mechs = TRUE, flags = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
-			if(HasIdentList(L))
-				continue
 			visible_message(span_boldwarning("[src] blazes through [L]!"))
 			L.deal_damage(dash_damage * 0.1, FIRE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 			if(ishuman(L))
@@ -657,12 +641,10 @@
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			var/obj/effect/temp_visual/slice/blood = new(U)
 			blood.color = "#b52e19"
-		ourthing.HurtInTurf(U, list(), dash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/dash/bloodboss
@@ -703,17 +685,13 @@
 	for(var/turf/U in GetRange(T, 2))
 		if(!U)
 			break
-		if(HasIdentList(U))
-			continue
-		if(isopenturf(U))
+		if(isopenturf(U) && !HasIdentList(U))
 			if(AddIdentifier(U) == safe_tag)
 				continue
 			var/obj/effect/temp_visual/slice/blood = new(U)
 			blood.color = "#b52e19"
-		var/list/new_hits = ourthing.HurtInTurf(U, list(), dash_damage, RED_DAMAGE, null, TRUE, TRUE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+		var/list/new_hits = HurtInTurf(ourthing, U, list(), dash_damage, RED_DAMAGE, null, TRUE, TRUE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
-			if(HasIdentList(L))
-				continue
 			cutter_hit = TRUE
 			L.apply_lc_bleed(15)
 	return ..()
