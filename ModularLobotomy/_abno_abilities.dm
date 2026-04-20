@@ -49,13 +49,15 @@
 
 	if(length(ourpath))
 		Finalize(target, user, ourpath)
+		return
+	EndCharge(user)
 
 //Returns a list of the turfs we are dashing. See spear apostle dash for actual telegraphing.
 /obj/effect/proc_holder/ability/aimed/dash/proc/Telegraph(atom/target, mob/living/user)
 	. = list()
 	if(!target || !user)
 		stack_trace("Dash Skill Telegraph was called without a target or user.")
-		return
+		return list()
 	var/dir_to_target
 	if(cardinal_only && !QDELETED(target))
 		dir_to_target = get_cardinal_dir(get_turf(user), get_turf(target))
@@ -251,8 +253,7 @@
 		if(isclosedturf(TF))
 			continue
 		if(!HasIdentList(TF))
-			FlickOnAtom(TF,'icons/effects/effects.dmi',"smoke",5)
-		FlickOnAtom(TF,'icons/effects/effects.dmi',"slice",4)
+			FlickOnAtom(TF,'icons/effects/effects.dmi',"slice",4)
 		hit_mob = HurtInTurf(ourthing, TF, hit_mob, dash_damage, RED_DAMAGE, null, TRUE, FALSE, TRUE, hurt_structure = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
 		if(!istype(ourthing,/mob/living/simple_animal/hostile/abnormality/big_wolf))
 			continue
@@ -338,8 +339,8 @@
 		var/flicks = FALSE
 		for(var/mob/living/L in new_hits)
 			L.visible_message(span_boldwarning("[ourthing] rams [L]!"), span_userdanger("[ourthing] impales you with its horns!"))
-			playsound(L, 'sound/weapons/fast_slam.ogg', 75, 1)
 			if(!flicks)
+				playsound(L, 'sound/weapons/fast_slam.ogg', 75, 1)
 				FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 				flicks = TRUE
 			L.deal_damage(dash_damage, RED_DAMAGE, ourthing, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
@@ -383,6 +384,7 @@
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/dash/kog/TurfEffects(turf/T, mob/living/ourthing)
+	var/turf_flicks = FALSE
 	for(var/turf/U in GetRange(T, 1))
 		if(!U)
 			break
@@ -390,11 +392,19 @@
 			FlickOnAtom(U,'icons/effects/effects.dmi',"smoke",5)
 		var/list/new_hits = HurtInTurf(ourthing, U, list(), 0, RED_DAMAGE, hurt_mechs = TRUE, flags = (DAMAGE_FORCED | DAMAGE_UNTRACKABLE))
 		var/flicks = FALSE
+		for(var/obj/vehicle/V in new_hits)
+			if(nihil_present)
+				break
+			turf_flicks = TRUE
+			V.take_damage(80, RED_DAMAGE)
+			V.visible_message(span_boldwarning("[ourthing] crunches [V]!"))
+
 		for(var/mob/living/L in new_hits)
+			turf_flicks = TRUE
 			if(!nihil_present)
 				L.visible_message(span_boldwarning("[ourthing] crunches [L]!"), span_userdanger("[ourthing] rends you with its teeth!"))
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 75, 1)
 				if(!flicks)
+					playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 75, 1)
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 					flicks = TRUE
 				if(ishuman(L))
@@ -403,28 +413,23 @@
 					L.adjustRedLoss(80)
 				if(L.stat >= HARD_CRIT)
 					L.gib(TRUE,TRUE,TRUE)
-					continue
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 20, 1)
-				playsound(L, 'sound/abnormalities/kog/GreedHit2.ogg', 50, 1)
-				for(var/obj/vehicle/V in new_hits)
-					V.take_damage(80, RED_DAMAGE, 'sound/abnormalities/kog/GreedHit1.ogg')
-					V.visible_message(span_boldwarning("[ourthing] crunches [V]!"))
-					playsound(V, 'sound/abnormalities/kog/GreedHit1.ogg', 40, 1)
-					playsound(V, 'sound/abnormalities/kog/GreedHit2.ogg', 30, 1)
 				continue
 
 			if(!ishuman(L))
 				L.visible_message(span_boldwarning("[ourthing] smashes [L]!"), span_userdanger("[ourthing] smashes you with her massive fist!"))
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 75, 1)
 				if(!flicks)
+					playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 75, 1)
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast", 4)
 					flicks = TRUE
 				L.adjustRedLoss(80)
 				if(L.stat >= HARD_CRIT)
 					L.gib(TRUE,TRUE,TRUE)
 					continue
-				playsound(L, 'sound/abnormalities/kog/GreedHit1.ogg', 20, 1)
-				playsound(L, 'sound/abnormalities/kog/GreedHit2.ogg', 50, 1)
+
+
+	if(turf_flicks)
+		playsound(T, 'sound/abnormalities/kog/GreedHit1.ogg', 20, 1)
+		playsound(T, 'sound/abnormalities/kog/GreedHit2.ogg', 50, 1)
 
 	playsound(ourthing,'sound/effects/bamf.ogg', 70, TRUE, 20)
 	if(combat_map)
@@ -459,8 +464,8 @@
 			if(!ourthing.faction_check_mob(L))
 				visible_message(span_boldwarning("[ourthing] runs through [L]!"))
 				to_chat(L, span_userdanger("[ourthing] rushes past you, arcing electricity throughout the way!"))
-				playsound(L, 'sound/abnormalities/thunderbird/tbird_peck.ogg', 75, 1)
 				if(!flicks)
+					playsound(U, 'sound/abnormalities/thunderbird/tbird_peck.ogg', 75, 1)
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 					flicks = TRUE
 				if(ishuman(L))
@@ -469,7 +474,9 @@
 		for(var/obj/vehicle/sealed/mecha/V in new_hits)
 			visible_message(span_boldwarning("[ourthing] runs through [V]!"))
 			to_chat(V.occupants, span_userdanger("[ourthing] rushes past you, arcing electricity throughout the way!"))
-			playsound(U, 'sound/abnormalities/thunderbird/tbird_peck.ogg', 75, 1)
+			if(!flicks)
+				playsound(U, 'sound/abnormalities/thunderbird/tbird_peck.ogg', 75, 1)
+				flicks = TRUE
 	return ..()
 
 /obj/effect/proc_holder/ability/aimed/dash/thunderbird/AbnoInteraction(mob/living/user)
@@ -500,8 +507,8 @@
 		for(var/mob/living/L in new_hits)//damage applied to targets in range
 			if(!ourthing.faction_check_mob(L))
 				L.visible_message(span_boldwarning("[ourthing] slices through [L]!"), span_userdanger("[ourthing] rushes past you, searing you with its blades!"))
-				playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
 				if(!flicks)
+					playsound(U, 'sound/abnormalities/wayward_passenger/attack2.ogg', 75, 1)
 					FlickOnAtom(U,'icons/obj/projectiles.dmi',"kinetic_blast",4)
 					flicks = TRUE
 		for(var/obj/vehicle/sealed/mecha/V in new_hits)
