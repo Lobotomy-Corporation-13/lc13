@@ -64,3 +64,20 @@
 	if(QDELETED(L) || L.stat == DEAD)
 		return
 	L.adjustCloneLoss(damage)
+
+/// Middle Nursefather variant: no dodge, 2.5% clone damage instead of 5%
+/datum/component/nursefather_passive/middle
+
+/datum/component/nursefather_passive/middle/on_damage_taken(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
+	SIGNAL_HANDLER
+	if(!damage || damage <= 0)
+		return
+
+	var/mob/living/carbon/human/H = parent
+	if(!istype(H))
+		return
+
+	if(!istype(attack_source, /mob/living/simple_animal))
+		var/clone_damage = damage * 0.025
+		if(clone_damage > 0)
+			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
