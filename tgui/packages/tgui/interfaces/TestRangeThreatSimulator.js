@@ -82,13 +82,13 @@ export const TestRangeThreatSimulator = (props, context) => {
 
         {datum.tuning_name
         && (
-        <Flex.Item my={3}>
-          <Section title="Tuning">
-            {datum.tuning_name + ":"}
-            {GetDatumTuningSlider(datum)}
+          <Flex.Item my={3}>
+            <Section title="Tuning">
+              {datum.tuning_name + ":"}
+              {GetDatumTuningSlider(datum)}
 
-          </Section>
-        </Flex.Item>
+            </Section>
+          </Flex.Item>
         )}
 
         <Flex.Item mt={2}>
