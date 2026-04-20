@@ -537,6 +537,7 @@
 		/obj/item/radio,
 		/obj/item/pda,
 		/obj/item/stack/thumb_east_ammo,
+		/obj/item/storage/box,
 		/obj/item/ammo_casing,
 		/obj/structure/abno_core,
 		/obj/structure/meatfloor,

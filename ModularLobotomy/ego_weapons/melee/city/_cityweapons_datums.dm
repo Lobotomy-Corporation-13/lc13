@@ -178,7 +178,7 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 
 /* ------------------ 7 - Seven ------------------*/
 
-// | Seven South |
+// | Seven South Section 6: Old Gear |
 //
 // 'Analysis' weapons (need to hit the same target X amount of times to be able to view their health and gain extra damage against them)
 /// Seven South Blade
@@ -212,6 +212,42 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/ego_weapon/city/seven_fencing/dagger
 	cost = 90
 
+// | Seven South Section 4: Reworked Gear |
+//
+// 'Sidearm' weapons - used to build Rupture.
+/// Seven South Section 4 Fencing Foil
+/datum/ego_datum/weapon/city/seven_south_s4_foil
+	item_path = /obj/item/ego_weapon/city/seven_s4_foil
+	cost = 60
+	ego_tags = (EGO_TAG_DEBUFFER)
+/// Seven South Section 4 Veteran Fencing Foil
+/datum/ego_datum/weapon/city/seven_south_s4_foil/vet
+	item_path = /obj/item/ego_weapon/city/seven_s4_foil/vet
+	cost = 75
+/// Seven South Section 4 Fencing Dagger
+/datum/ego_datum/weapon/city/seven_south_s4_foil/dagger
+	item_path = /obj/item/ego_weapon/city/seven_s4_foil/dagger
+	cost = 90
+
+// 'Adaptive' weapons - change damtype to lowest resistance, but only if the target has enough Rupture.
+/// Seven South Section 4 Blade
+/datum/ego_datum/weapon/city/seven_south_s4_adaptive
+	item_path = /obj/item/ego_weapon/city/seven_s4_blade
+	cost = 60
+	ego_tags = (EGO_TAG_VERSATILE_DAMAGE)
+/// Seven South Section 4 Veteran Blade
+/datum/ego_datum/weapon/city/seven_south_s4_adaptive/vet
+	item_path = /obj/item/ego_weapon/city/seven_s4_blade/vet
+	cost = 75
+/// Seven South Section 4 Director Blade
+/datum/ego_datum/weapon/city/seven_south_s4_adaptive/director
+	item_path = /obj/item/ego_weapon/city/seven_s4_blade/director
+	cost = 90
+/// Seven South Section 4 Director Cane
+/datum/ego_datum/weapon/city/seven_south_s4_adaptive/cane
+	item_path = /obj/item/ego_weapon/city/seven_s4_blade/cane
+	cost = 90
+
 /* ------------------ 9 - Devyat ------------------*/
 
 // | Devyat North |
@@ -229,13 +265,37 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 
 /* ------------------ 10 - Dieci ------------------*/
 
-// 'Combo' weapons (similar to Liu combo gloves, can do a very funny 20 hit combo)
-/// Dieci Gloves
-/datum/ego_datum/weapon/city/dieci_south
+// | Dieci South |
+//
+// 'Fist' weapons (WHITE damage, apply sinking, empower for self-shield + PALE damage attacks). They have different combos!
+/// Dieci Combat Gloves
+/datum/ego_datum/weapon/city/dieci_south_fist
 	item_path = /obj/item/ego_weapon/city/dieci
-	cost = 40
-	testrange_blacklisted = TRUE // This thing doesn't runtime or anything but the LLLH bug is still there and I don't think anyone should ever get to see or use this weapon while that bug exists
-	ego_tags = list(EGO_TAG_COMBO)
+	cost = 60
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_SUSTAIN, EGO_TAG_DEBUFFER, EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK)
+/// Dieci Veteran Gloves
+/datum/ego_datum/weapon/city/dieci_south_fist/vet
+	item_path = /obj/item/ego_weapon/city/dieci/vet
+	cost = 75
+/// Dieci Director Fists
+/datum/ego_datum/weapon/city/dieci_south_fist/director
+	item_path = /obj/item/ego_weapon/city/dieci/director
+	cost = 90
+
+// 'Key' weapons. Exact same as fists with the difference of you having to deploy them first + offense level instead of shields. Also just cooler tbh
+/// Dieci Ceremonial Key
+/datum/ego_datum/weapon/city/dieci_south_key
+	item_path = /obj/item/ego_weapon/city/dieci/key
+	cost = 60
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_DEBUFFER, EGO_TAG_AOE_RADIAL, EGO_TAG_KNOCKBACK)
+/// Dieci Veteran Key
+/datum/ego_datum/weapon/city/dieci_south_key/vet
+	item_path = /obj/item/ego_weapon/city/dieci/key/vet
+	cost = 75
+/// Dieci Director Key
+/datum/ego_datum/weapon/city/dieci_south_key/director
+	item_path = /obj/item/ego_weapon/city/dieci/key/director
+	cost = 90
 /*
 ------------------ Fixers & Workshops ------------------
 */
