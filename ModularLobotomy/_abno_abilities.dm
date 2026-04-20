@@ -179,15 +179,15 @@
 * Requires a mob/living to call HurtInTurf
 * Uses HasIdentList to sort out the things we have already hit.
 */
-/obj/effect/proc_holder/ability/aimed/dash/proc/HurtInTurf(mob/living/ourmob, turf/trg, list/hitlist = list(), dam = 0, damage_type = RED_DAMAGE, def_zone = null, check_fact = FALSE, exact_faction_match = FALSE, mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, flags = null, attack_type = null)
+/obj/effect/proc_holder/ability/aimed/dash/proc/HurtInTurf(mob/living/ourmob, turf/target, list/hit_list = list(), damage = 0, damage_type = RED_DAMAGE, def_zone = null, check_faction = FALSE, exact_faction_match = FALSE, hurt_mechs = FALSE, mech_damage = 0, hurt_hidden = FALSE, hurt_structure = FALSE, break_not_destroy = FALSE, attack_direction = null, flags = null, attack_type = null)
 	var/list/do_not_hitlist = list()
-	for(var/obj/thing in trg)
+	for(var/obj/thing in target)
 		if(HasIdentList(thing))
 			do_not_hitlist += thing
-	for(var/mob/living/L in trg)
+	for(var/mob/living/L in target)
 		if(HasIdentList(L))
 			do_not_hitlist += L
-	return ourmob.HurtInTurf(trg, do_not_hitlist, dam, damage_type, def_zone, check_fact, exact_faction_match, mechs, mech_damage, hurt_hidden, hurt_structure, break_not_destroy, attack_direction, flags, attack_type) - do_not_hitlist
+	return ourmob.HurtInTurf(target, hit_list, damage, damage_type, def_zone, check_faction, exact_faction_match, hurt_mechs, mech_damage, hurt_hidden, hurt_structure, break_not_destroy, attack_direction, flags, attack_type) - do_not_hitlist
 
 /*----------\
 |Abnormality|
