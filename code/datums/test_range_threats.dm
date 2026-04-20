@@ -51,6 +51,7 @@
 		if(desc == "Placeholder description.")
 			desc = L.desc
 
+/// Calls PreSpawn to check if we can spawn it; if we can, it calls Spawn then PostSpawn afterwards. The Test Range Threat Simulator will use this proc to spawn mobs.
 /datum/test_range_threat/proc/Start(turf/spawnpoint, tuning)
 	if(!PreSpawn(spawnpoint, tuning))
 		return FALSE
@@ -58,15 +59,18 @@
 	PostSpawn(L, tuning)
 	return TRUE
 
+/// Pre-spawn checks. You can put side effects here too I guess
 /datum/test_range_threat/proc/PreSpawn(turf/spawnpoint, tuning)
 	if(max_spawns && ((length(currently_spawned) + 1) > max_spawns))
 		to_chat(usr, span_warning("Maximum spawns for [src.name] already reached. Despawn or kill one."))
 		return FALSE
 	return TRUE
 
+/// Must create and return the threat's mob
 /datum/test_range_threat/proc/Spawn(turf/spawnpoint, tuning)
 	return new mob_path(spawnpoint)
 
+/// Sets important signals and adds the mob to the lists it should be in.
 // Always call ..() when overriding this. You'll probably need to override it in some cases that require BreachEffect or similar things.
 /datum/test_range_threat/proc/PostSpawn(mob/living/just_spawned, tuning)
 	SHOULD_CALL_PARENT(TRUE)
@@ -113,8 +117,6 @@
 /// Subtype for Abnormalities that should have BreachEffect called on them when spawned in the Test Range. Do not include Abnos which cause global effects, etc in their breach.
 // NOTE: If BreachEffect sleeps then spawning these threats will also be delayed. Maybe we can invoke async? I dunno, it should be fine
 /datum/test_range_threat/breacher
-	name = "Unknown Breaching Threat"
-
 /datum/test_range_threat/breacher/PostSpawn(mob/living/just_spawned, tuning)
 	. = ..()
 	var/mob/living/simple_animal/hostile/abnormality/breachy_guy = just_spawned
@@ -401,6 +403,7 @@
 	origin_detailed = D_ORIGIN_ABNORMALITY
 	estimated_difficulty = 4
 	mob_path = /mob/living/simple_animal/hostile/abnormality/nothing_there
+	max_spawns = 3
 	tuning_name = "Phase"
 	tuning_min = 1
 	tuning_limit = 3
@@ -429,6 +432,7 @@
 	origin_detailed = D_ORIGIN_ABNORMALITY
 	estimated_difficulty = 2
 	mob_path = /mob/living/simple_animal/hostile/abnormality/silentorchestra
+	max_spawns = 3
 
 /datum/test_range_threat/last_shot
 	name = "Til the Last Shot"
@@ -439,6 +443,7 @@
 	origin_detailed = D_ORIGIN_ABNORMALITY
 	estimated_difficulty = 3
 	mob_path = /mob/living/simple_animal/hostile/abnormality/last_shot
+	max_spawns = 3
 
 /datum/test_range_threat/distortedform
 	name = "Distorted Form"
@@ -452,6 +457,7 @@
 	origin_detailed = D_ORIGIN_ABNORMALITY
 	estimated_difficulty = 5
 	mob_path = /mob/living/simple_animal/hostile/abnormality/distortedform
+	max_spawns = 3
 
 
 #undef ORIGIN_LC13
