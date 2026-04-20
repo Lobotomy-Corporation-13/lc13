@@ -64,7 +64,7 @@
 	/// This variable holds the last location of the Helix. It's so we can check if it has moved since the last time it fired its lasers and update target turfs if so.
 	var/entrenched_at
 
-/mob/living/simple_animal/hostile/ordeal/green_midnight/Initialize()
+/mob/living/simple_animal/hostile/ordeal/green_midnight/Initialize(mapload, scaling_override)
 	. = ..()
 	left_shell = new(get_turf(src))
 	right_shell = new(get_turf(src))
@@ -72,7 +72,7 @@
 	next_health_mark = maxHealth * 0.9
 	laserloop = new(list(src), FALSE)
 	addtimer(CALLBACK(src, PROC_REF(OpenShell)), 5 SECONDS)
-	HandleScaling()
+	HandleScaling(scaling_override)
 	/// The below proc populates those turf lists in lines 59-62.
 	CheckIfMoved()
 
@@ -410,11 +410,13 @@
 
 // This proc handles the scaling for this mob according to active agent+suppression agent count. The normal methods for handling scaling don't really work here
 // AND Ordeals normally scale off of GLOB.clients which is... unideal
-/mob/living/simple_animal/hostile/ordeal/green_midnight/proc/HandleScaling()
+/mob/living/simple_animal/hostile/ordeal/green_midnight/proc/HandleScaling(scaling_override)
+
 	//This list should count all living Agents and ERAs + DO. This will need to be changed when CRAs are added, probably.
 	//This also doesn't account for nefarious RO/EO/Clerks that might want to "help", but I don't consider it a huge issue. AvailableAgentCount() is an alternative that
 	//counts dead Agents as well.
-	var/list/meaningful_enemies = AllLivingAgents(TRUE)
+	var/list/important_people = AllLivingAgents(TRUE)
+	var/meaningful_enemies = (scaling_override && scaling_override > 0) ? scaling_override : length(important_people)
 	//These are our "base values" but bear in mind that, if we have any agents alive as it initializes, which we should have at least 1, it will apply scaling to it.
 	base_squad_size = 4
 	maximum_squad_size = 9
@@ -429,12 +431,11 @@
 	/// 4 Agents: 10 initial bots / 20 maximum bots / +2 bots per 10% hp missing / 21s laser CD
 	/// Do remember that not all bots spawned are Noons.
 
-	if(meaningful_enemies)
-		for(var/gremlin in meaningful_enemies)
-			base_squad_size += 2
-			maximum_squad_size += 3
-			squad_size_increase_step += 0.34
-			laser_cooldown_time -= 1 SECONDS
+	for(var/i in 1 to meaningful_enemies)
+		base_squad_size += 2
+		maximum_squad_size += 3
+		squad_size_increase_step += 0.34
+		laser_cooldown_time -= 1 SECONDS
 
 		base_squad_size = min(base_squad_size, 10)
 		maximum_squad_size = min(maximum_squad_size, 20)

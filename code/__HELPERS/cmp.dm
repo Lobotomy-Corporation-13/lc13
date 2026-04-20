@@ -137,6 +137,11 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 /proc/cmp_ego_cost_dsc(datum/ego_datum/a, datum/ego_datum/b)
 	return cmp_numeric_dsc(a.cost, b.cost)
 
+/proc/cmp_threat_difficulty_asc(datum/test_range_threat/a, datum/test_range_threat/b)
+	return cmp_numeric_asc(a.estimated_difficulty, b.estimated_difficulty)
+
+/proc/cmp_threat_difficulty_dsc(datum/test_range_threat/a, datum/test_range_threat/b)
+	return cmp_numeric_dsc(a.estimated_difficulty, b.estimated_difficulty)
 /**
  * Sorts crafting recipe requirements before the crafting recipe is inserted into GLOB.crafting_recipes
  *
