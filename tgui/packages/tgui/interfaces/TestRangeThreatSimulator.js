@@ -80,36 +80,38 @@ export const TestRangeThreatSimulator = (props, context) => {
           Currently spawned: {datum.max_spawns ? datum.current_spawns + "/" + datum.max_spawns : datum.current_spawns}
         </Flex.Item>
 
-        {datum.tuning_name &&
-        (<Flex.Item my={3}>
+        {datum.tuning_name
+        && (
+        <Flex.Item my={3}>
           <Section title="Tuning">
             {datum.tuning_name + ":"}
             {GetDatumTuningSlider(datum)}
 
           </Section>
-        </Flex.Item>)}
+        </Flex.Item>
+        )}
 
         <Flex.Item mt={2}>
           <Button color="green"
             onClick={() => act('spawn_threat',
               { chosen_threat: datum.reference,
-              tuning: tuningSliders[datum.reference],
+                tuning: tuningSliders[datum.reference],
               })}>Spawn
-            </Button>
+          </Button>
         </Flex.Item>
         <Flex.Item mt={2}>
           <Button color="red"
             onClick={() => act('despawn_one',
               { chosen_threat: datum.reference,
               })}>Despawn One
-              </Button>
+          </Button>
         </Flex.Item>
         <Flex.Item mt={1}>
           <Button color="red"
             onClick={() => act('despawn_all',
               { chosen_threat: datum.reference,
               })}>Despawn All
-              </Button>
+          </Button>
         </Flex.Item>
       </Flex>
 
@@ -217,7 +219,7 @@ export const TestRangeThreatSimulator = (props, context) => {
     return (
       <Flex direction="column">
         {threats?.map(threat =>
-        <ThreatDatumEntry datum={threat} key={threat.reference} />)}
+          <ThreatDatumEntry datum={threat} key={threat.reference} />)}
       </Flex>
 
     );
@@ -260,7 +262,7 @@ export const TestRangeThreatSimulator = (props, context) => {
       <Flex direction="column" fill>
         <Section title="Available Arenas" fill>
 
-          {arenas.map(string => (<Button key={string} align="center" fluid content={string} onClick={() => { act('change_camera', { arena: string }); } }></Button>))}
+          {arenas.map(string => (<Button key={string} align="center" fluid content={string} onClick={() => { act('change_camera', { arena: string }); }} />))}
 
         </Section>
       </Flex>
