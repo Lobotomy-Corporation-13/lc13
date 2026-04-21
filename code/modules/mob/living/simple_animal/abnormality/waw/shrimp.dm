@@ -10,6 +10,7 @@
 	faction = list("shrimp")
 	speak_emote = list("burbles")
 	threat_level = WAW_LEVEL
+	can_breach = TRUE
 	start_qliphoth = 1
 	work_chances = list(
 		ABNORMALITY_WORK_INSTINCT = 30,
@@ -19,6 +20,8 @@
 	)
 	retreat_distance = 3
 	minimum_distance = 4
+	maxHealth = 700
+	health = 700
 	work_damage_amount = 11
 	work_damage_type = WHITE_DAMAGE	//He insults you
 	chem_type = /datum/reagent/abnormality/sin/pride
@@ -101,6 +104,8 @@
 	)
 
 	var/obj/effect/proc_holder/ability/aimed/firingsquad/shootems
+	var/fire_squad_cd = 0
+	var/fire_squad_delay = 15 SECONDS
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/Initialize(mapload)
 	. = ..()
@@ -117,7 +122,13 @@
 	if(IsContained() || stat == DEAD || client)
 		return
 	if(target)
-		if(shootems.can_cast(src))
+		/*
+		* Okay so follow me here. The absolute of
+		* their x minus their enemies x would be 1
+		* if they are south of eachother.
+		*/
+		if(fire_squad_cd < world.time && (abs(x - target.x) < 2 || abs(y - target.y) < 2))
+			fire_squad_cd = world.time + fire_squad_delay
 			shootems.Perform(target,src)
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/WorkChance(mob/living/carbon/human/user, chance)
@@ -139,14 +150,12 @@
 	return
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/ZeroQliphoth(mob/living/carbon/human/user)
-	pissed()
 	datum_reference.qliphoth_change(1)
-	return
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/BreachEffect(mob/living/carbon/human/user, breach_type)
-	if(breach_type == BREACH_MINING)
-		pissed()
-		addtimer(CALLBACK(src, PROC_REF(pissed)), 20 SECONDS)
+	pissed()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == liked || !liked)
@@ -168,13 +177,17 @@
 
 /mob/living/simple_animal/hostile/abnormality/shrimp_exec/proc/pissed()
 	var/turf/W = pick(GLOB.department_centers)
-	for(var/turf/T in orange(1, W))
+	forceMove(W)
+	var/iter = 1
+	var/list/landing_area = block(W.x-1,W.y-1,W.z,W.x+1,W.y+1,W.z) - W
+	for(var/turf/T in landing_area)
 		var/obj/structure/closet/supplypod/extractionpod/pod = new()
 		pod.explosionSize = list(0,0,0,0)
-		if(prob(70))
+		if(iter > 5)
 			new /mob/living/simple_animal/hostile/shrimp(pod)
 		else
 			new /mob/living/simple_animal/hostile/shrimp_soldier(pod)
+		iter++
 
 		new /obj/effect/pod_landingzone(T, pod)
 		stoplag(2)
@@ -301,7 +314,6 @@
 
 /obj/effect/proc_holder/ability/aimed/firingsquad/Perform(target, user)
 	. = ..()
-
 	//Turf Handling
 	var/our_turf = get_turf(user)
 	var/trg_turf = get_turf(target)
@@ -344,7 +356,7 @@
 		return
 
 	for(var/mob/living/simple_animal/hostile/shrimp_soldier/srimp in orange(6,get_turf(user)))
-		if(srimp.client)
+		if(srimp.client || srimp.AIStatus != AI_ON)
 			//I take orders from a higher authority.
 			continue
 		if(length(soldiers) > line_length)
@@ -369,13 +381,18 @@
 		var/turf/T = pop(temp_firing)
 		walk_to(srimple,T)
 
-
+	if(ishostile(caster) && !caster.client)
+		var/mob/living/simple_animal/hostile/H = caster
+		walk(caster,0)
+		H.toggle_ai(AI_OFF)
 	caster.say("Ready...")
 	if(do_after(caster, 2 SECONDS, target = caster) && !QDELETED(caster))
 		caster.say("FIRE!")
 		if(do_after(caster, 1, target = caster) && !QDELETED(caster))
 			Shootems(direct, firing_line)
-
+	if(ishostile(caster) && !caster.client && !QDELETED(caster))
+		var/mob/living/simple_animal/hostile/H = caster
+		H.toggle_ai(AI_ON)
 	UnregisterAll()
 
 /obj/effect/proc_holder/ability/aimed/firingsquad/Destroy()
