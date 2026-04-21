@@ -12,7 +12,7 @@
 	outfit = /datum/outfit/job/middle_nursefather
 	department_head = list("the Middle")
 	faction = "Station"
-	supervisors = "sibling bonds and vengeance"
+	supervisors = "the house of spiders"
 	selection_color = "#9932CC"
 	total_positions = 0
 	spawn_positions = 0
@@ -23,11 +23,15 @@
 	departments = DEPARTMENT_COMMAND | DEPARTMENT_CITY_ANTAGONIST
 	paycheck = 1000
 	maptype = list("city", "fixers")
-	job_important = "You are a former Great Brother of the Middle — the tankiest of the Nursefathers. \
-		You wield Laevateinn, a sealed burning relic sword that grows stronger as you take damage. \
-		Your fighting style revolves around punching to weaken targets, then grabbing them to unleash devastating combos. \
-		You are missing your right arm. You do not dodge like other Nursefathers, but take reduced clone damage (2.5%)."
-	job_notice = "You are a Syndicate operative. Protect your siblings and enact vengeance on those who wrong the Middle."
+	job_important = "You are a former Great Brother of the Middle, stripped of your rank but not your strength. \
+		You wield Laevateinn, a stolen burning Relic sealed by three layers of chains. You are NOT its rightful owner — it burns you each time you draw it. \
+		As you take damage, seals break (at 75%, 50%, 25% HP), increasing your power and converting damage to armor-piercing fire. \
+		Attacking and taking hits builds Grudge. Use the sword in-hand with 5+ Grudge to activate Enhancement Tattoos, buffing your damage. \
+		Click a target at range to dash and unleash a combo — empowered by your Tattoos and seal stage. \
+		You are missing your right arm. You do not dodge like other Nursefathers, but take reduced clone damage (2.5%). \
+		You can recruit one apprentice using your recruitment scroll."
+	job_notice = "You are a member of the Middle. Protect your siblings, spoil your apprentice, and write down anyone who wrongs you in the Book of Vengeance. \
+		Those who slight the Middle will face summary execution."
 
 	roundstart_attributes = list(
 		FORTITUDE_ATTRIBUTE = 500,
@@ -47,17 +51,10 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 
-	// Add nursefather components (middle variant — no dodge, 2.5% clone)
+	// Permanent components — not tied to weapon
 	H.AddComponent(/datum/component/nursefather_passive/middle)
 	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_MIDDLE)
-
-	// Add Middle-specific systems
-	H.AddComponent(/datum/component/middle_grudge_gain)
-
-	// Find the Laevateinn (equipped via outfit to s_store) and attach seal system
-	var/obj/item/ego_weapon/city/laevateinn/sword = H.s_store
-	if(istype(sword))
-		H.AddComponent(/datum/component/laevateinn_seal, sword)
+	// Other weapon-related components (grudge, seal) are granted by Laevateinn on pickup
 
 	. = ..()
 
@@ -75,6 +72,9 @@
 	gloves = /obj/item/clothing/gloves/color/white
 	l_pocket = /obj/item/apprentice_recruitment/middle_nursefather
 	r_pocket = /obj/item/pda/security
+	backpack_contents = list(\
+		/obj/item/middle_car_phone = 1\
+	)
 
 ////////////////////////////////////////////////////////////
 // APPRENTICE RECRUITMENT SCROLL
@@ -111,6 +111,14 @@
 		just.level = 100
 		just.on_update(H)
 
+	// Give armor (hood is attached as ego hat) and thermal blades
+	var/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/armor = new(H.loc)
+	H.put_in_hands(armor)
+	var/obj/item/ego_weapon/city/thermal_blade/blade1 = new(H.loc)
+	H.put_in_hands(blade1)
+	var/obj/item/ego_weapon/city/thermal_blade/blade2 = new(H.loc)
+	H.put_in_hands(blade2)
+
 	// Update ID card
 	update_id_card(H, "Middle Apprentice")
 
@@ -118,10 +126,9 @@
 	if(H.mind)
 		H.mind.assigned_role = "Middle Apprentice"
 
-	// Add traits
+	// Add traits — weapon-related components (passive, grudge) are granted by thermal blades on pickup
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, "middle_apprentice")
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, "middle_apprentice")
-	H.AddComponent(/datum/component/nursefather_passive)
 
 	// Feedback
 	to_chat(user, span_notice("You have recruited [H] as your apprentice."))
@@ -129,8 +136,10 @@
 
 	to_chat(H, span_userdanger("You have become a Middle Apprentice!"))
 	to_chat(H, span_boldnotice("You are now an apprentice of [user], a former Great Brother of the Middle. \
-		You must follow the Middle's creed and assist your mentor."))
-	to_chat(H, span_boldnotice("You have buffed stats. You automatically dodge the first attack every 30 seconds, \
+		You wield dual Thermal Blades — attack with one to trigger a follow-up strike from the other. \
+		Taking damage builds Grudge. Use a blade in-hand with 5+ Grudge to activate your Enhancement Tattoos. \
+		While Tattoos are active, your blades inflict Overheat instead of Bleed."))
+	to_chat(H, span_boldnotice("You automatically dodge the first attack every 30 seconds, \
 		and have a 50% chance to dodge attacks when not holding a weapon. \
 		However, all damage you take also inflicts 5% unhealable damage."))
 	to_chat(H, span_boldwarning("Protect your siblings. Enact vengeance on those who wrong the Middle."))
@@ -183,18 +192,13 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 
-	// Add nursefather components
+	// Permanent components
 	H.AddComponent(/datum/component/nursefather_passive/middle)
 	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_MIDDLE)
-	H.AddComponent(/datum/component/middle_grudge_gain)
-	// Equip outfit
+
+	// Equip outfit — other weapon-related components (grudge, seal) are granted by Laevateinn on pickup
 	var/datum/outfit/job/middle_nursefather/outfit = new()
 	outfit.equip(H)
-
-	// Attach seal system to Laevateinn
-	var/obj/item/ego_weapon/city/laevateinn/sword = H.s_store
-	if(istype(sword))
-		H.AddComponent(/datum/component/laevateinn_seal, sword)
 
 	to_chat(H, span_boldnotice("You are now the Middle Ex-Great Brother. Laevateinn is on your back."))
 
@@ -278,19 +282,13 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
 
-	// Add nursefather components
+	// Permanent components
 	H.AddComponent(/datum/component/nursefather_passive/middle)
 	H.AddComponent(/datum/component/nursefather_music, NURSEFATHER_FINGER_MIDDLE)
-	H.AddComponent(/datum/component/middle_grudge_gain)
 
-	// Equip outfit
+	// Equip outfit — other weapon-related components (grudge, seal) are granted by Laevateinn on pickup
 	var/datum/outfit/job/middle_nursefather/outfit = new()
 	outfit.equip(H)
-
-	// Attach seal system to Laevateinn
-	var/obj/item/ego_weapon/city/laevateinn/sword = H.s_store
-	if(istype(sword))
-		H.AddComponent(/datum/component/laevateinn_seal, sword)
 
 	to_chat(H, span_boldnotice("You are the Middle Ex-Great Brother. Laevateinn is on your back."))
 

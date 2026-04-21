@@ -230,3 +230,34 @@
 	icon_state = "middlefather_vengeance"
 	worn_icon_state = "middlefather_vengeance"
 	vengeance_mark_stacks = 3
+
+////////////////////////////////////////////////////////////
+// MIDDLE APPRENTICE (KIRA) GEAR
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice
+	name = "apprentice's coat"
+	desc = "A coat bearing the colors and pattern of the Middle, tailored for a young apprentice. Warmth and protection for the newest sibling."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "kira"
+	hat = /obj/item/clothing/head/ego_hat/middle_apprentice_hood
+	equip_delay_self = 0
+	armor = list(RED_DAMAGE = 40, WHITE_DAMAGE = 30, BLACK_DAMAGE = 30, PALE_DAMAGE = 30)
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 80,
+		PRUDENCE_ATTRIBUTE = 80,
+		TEMPERANCE_ATTRIBUTE = 80,
+		JUSTICE_ATTRIBUTE = 80
+	)
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/CanUseEgo(mob/living/carbon/human/user)
+	if(user?.mind?.assigned_role == "Middle Apprentice")
+		return TRUE
+	return ..()
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood
+	name = "apprentice's hood"
+	desc = "A hood worn by the Middle's newest apprentice."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "kirahood"

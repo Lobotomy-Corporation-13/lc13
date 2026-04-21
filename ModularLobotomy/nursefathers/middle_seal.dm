@@ -95,7 +95,8 @@
 		if(gates_triggered[i])
 			continue
 		var/gate_hp = gate_thresholds[i]
-		if(current_hp > gate_hp && projected_hp <= gate_hp)
+		// Trigger if damage crosses the gate OR if HP is already below the gate (e.g. after resealing)
+		if((current_hp > gate_hp && projected_hp <= gate_hp) || (current_hp <= gate_hp))
 			gates_triggered[i] = TRUE
 			INVOKE_ASYNC(src, PROC_REF(trigger_unseal), i)
 			return

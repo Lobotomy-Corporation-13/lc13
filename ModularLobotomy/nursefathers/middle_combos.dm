@@ -6,6 +6,35 @@
 /// All damage has justice scaling + 2x multiplier vs simple mobs (converted to BRUTE).
 /// FIRE damage pierces armor on humans, converted to BRUTE for simple mobs.
 
+/// Checks if a combo should abort (target dead/deleted, user dead/softcrit/deleted).
+/// If aborting, resets combo_in_progress on the user's Laevateinn and frees the user.
+#define MIDDLE_COMBO_CHECK(target, user) middle_combo_should_abort(target, user)
+
+/// Tracks the current impale overlay on a combo target for cleanup on abort.
+GLOBAL_VAR(middle_combo_impale_overlay)
+GLOBAL_VAR(middle_combo_impale_target)
+
+/proc/middle_combo_should_abort(mob/living/target, mob/living/carbon/human/user)
+	if(QDELETED(target) || QDELETED(user) || target.stat == DEAD || user.stat == DEAD || user.stat == SOFT_CRIT)
+		// Reset combo state
+		if(!QDELETED(user))
+			user.SetImmobilized(0)
+			var/obj/item/ego_weapon/city/laevateinn/sword = locate() in user.contents
+			if(!sword && ishuman(user))
+				sword = user.s_store
+			if(istype(sword))
+				sword.combo_in_progress = FALSE
+			animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
+		// Clean up impale overlay and pixel offsets on the target
+		if(!QDELETED(target))
+			if(GLOB.middle_combo_impale_overlay && GLOB.middle_combo_impale_target == target)
+				target.cut_overlay(GLOB.middle_combo_impale_overlay)
+				GLOB.middle_combo_impale_overlay = null
+				GLOB.middle_combo_impale_target = null
+			animate(target, pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, transform = null, time = 0.1 SECONDS)
+		return TRUE
+	return FALSE
+
 /// Deals combo damage with justice scaling and 2x simple mob multiplier.
 /// FIRE damage is applied with DAMAGE_PIERCING to bypass armor on humans.
 /// Simple mobs are immune to FIRE, so FIRE damage is converted to RED_DAMAGE for them.
@@ -22,11 +51,11 @@
 		// Convert all damage to BRUTE for simple mobs — bypasses damage_coeff, always hits weakness
 		final_type = BRUTE
 	if(final_type == FIRE)
-		target.deal_damage(final_damage, FIRE, flags = DAMAGE_PIERCING)
+		target.deal_damage(final_damage, FIRE, source = user, flags = DAMAGE_PIERCING)
 	else if(def_zone)
-		target.deal_damage(final_damage, final_type, def_zone = def_zone)
+		target.deal_damage(final_damage, final_type, source = user, def_zone = def_zone)
 	else
-		target.deal_damage(final_damage, final_type)
+		target.deal_damage(final_damage, final_type, source = user)
 
 /// Immobilizes a target for a combo. Handles both carbons (Immobilize) and simple mobs (AI off).
 /proc/middle_combo_lock_target(mob/living/target, duration)
@@ -77,6 +106,8 @@
 	animate(pixel_x = target.base_pixel_x, time = 0.3 SECONDS, easing = QUAD_EASING)
 	playsound(user, 'sound/weapons/punch1.ogg', 60, TRUE)
 	sleep(0.8 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 2: Purple blast
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
@@ -84,6 +115,8 @@
 	animate(pixel_x = target.base_pixel_x - 3, time = 0.05 SECONDS)
 	animate(pixel_x = target.base_pixel_x, time = 0.05 SECONDS)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 3: Punch — 25 RED
 	animate(user, pixel_x = user.base_pixel_x + (get_dir(user, target) & EAST ? 8 : -8), time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -96,6 +129,8 @@
 	playsound(target, 'sound/weapons/punch1.ogg', 50, TRUE)
 	animate(user, pixel_x = user.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 4: Wide slash — 30 RED + bleed
 	animate(user, transform = matrix(45, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
@@ -109,6 +144,8 @@
 	shake_camera(target, 2, 3)
 	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
 	sleep(0.4 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 5: Reverse slash — 35 RED
 	animate(user, transform = matrix(-60, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
@@ -121,10 +158,14 @@
 	shake_camera(target, 2, 3)
 	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 6: Finisher — 40 + grudge RED, knockback
 	user.SpinAnimation(3, 1)
 	sleep(0.2 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	user.visible_message(span_userdanger("[user] sends [target] flying!"))
 	middle_combo_damage(target, user, 40 + tattoo_bonus, RED_DAMAGE)
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
@@ -156,6 +197,8 @@
 	user.visible_message(span_danger("[user] pins [target] underfoot!"))
 	playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
 	sleep(0.3 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// 5 base stomps — 20 RED each = 100
 	var/total_stomps = 5 + extra_stomps
@@ -181,10 +224,14 @@
 				new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(L))
 			playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
 		sleep(0.4 SECONDS)
+		if(MIDDLE_COMBO_CHECK(target, user))
+			return
 
 	// Final stomp — 25 + grudge RED + bleed
 	animate(user, pixel_y = user.base_pixel_y + 16, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.2 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	animate(user, pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = BOUNCE_EASING)
 	user.visible_message(span_userdanger("[user] delivers a devastating final stomp!"))
 	middle_combo_damage(target, user, 25 + tattoo_bonus, RED_DAMAGE)
@@ -217,6 +264,8 @@
 	user.say("I'll Gut Ya Like a Fish!")
 	playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
 	sleep(0.3 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// 3 rapid punches — 15 RED each = 45
 	for(var/i in 1 to 3)
@@ -231,12 +280,16 @@
 		playsound(target, pick('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg'), 50, TRUE)
 		animate(user, pixel_x = user.base_pixel_x, time = 0.1 SECONDS, easing = QUAD_EASING)
 		sleep(0.3 SECONDS)
+		if(MIDDLE_COMBO_CHECK(target, user))
+			return
 
 	// Ground fire (cosmetic)
 	for(var/turf/T in orange(2, user))
 		if(prob(40))
 			new /obj/effect/temp_visual/fire(T)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// 4 burning slashes — 20 RED + 5 FIRE each = 80 RED + 20 FIRE
 	for(var/i in 1 to 4)
@@ -254,10 +307,14 @@
 		shake_camera(target, 2, 3)
 		playsound(target, 'sound/weapons/bladeslice.ogg', 55, TRUE)
 		sleep(0.35 SECONDS)
+		if(MIDDLE_COMBO_CHECK(target, user))
+			return
 
 	// Fire cleave finisher — 20 + grudge RED
 	animate(user, pixel_y = user.base_pixel_y + 20, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.2 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	animate(user, pixel_y = user.base_pixel_y, transform = matrix(180, MATRIX_ROTATE), time = 0.15 SECONDS, easing = BOUNCE_EASING)
 	animate(transform = null, time = 0.1 SECONDS)
 	user.visible_message(span_userdanger("[user] brings Laevateinn down in a blazing cleave!"))
@@ -311,10 +368,14 @@
 	playsound(target, 'sound/weapons/bladeslice.ogg', 65, TRUE)
 	shake_camera(target, 2, 3)
 	sleep(0.6 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Warning
 	user.say("Be warned, it's gonna be hot.")
 	sleep(0.8 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// 8 stabs — 10 RED + 3 FIRE each = 80 RED + 24 FIRE
 	for(var/i in 1 to 8)
@@ -340,10 +401,14 @@
 			var/obj/effect/temp_visual/sparks/petal = new(get_turf(target))
 			petal.color = pick("#4169E1", "#FF8C00")
 		sleep(0.4 SECONDS)
+		if(MIDDLE_COMBO_CHECK(target, user))
+			return
 
 	// Final twist — 30 + grudge RED + 4 FIRE
 	user.SpinAnimation(3, 1)
 	sleep(0.2 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	user.visible_message(span_userdanger("[user] twists Laevateinn and rips it free in a burst of flame!"))
 	middle_combo_damage(target, user, 30 + tattoo_bonus, RED_DAMAGE)
 	middle_combo_damage(target, user, 4, FIRE)
@@ -396,6 +461,8 @@
 		sword_beam.visuals.color = "#FF4500"
 	playsound(user, 'sound/weapons/bladeslice.ogg', 70, TRUE)
 	sleep(0.3 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	// Impale overlay on target
 	var/obj/item/held = user.get_active_held_item()
 	var/mutable_appearance/throw_impale
@@ -404,16 +471,24 @@
 		throw_impale.pixel_x = -16
 		throw_impale.pixel_y = -16
 		target.add_overlay(throw_impale)
+		GLOB.middle_combo_impale_overlay = throw_impale
+		GLOB.middle_combo_impale_target = target
 	middle_combo_damage(target, user, 30, RED_DAMAGE)
 	middle_combo_damage(target, user, 5, FIRE)
 	target.apply_lc_overheat(5)
 	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(target))
 	shake_camera(target, 3, 4)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	// Remove throw impale before dash
 	if(throw_impale)
 		target.cut_overlay(throw_impale)
+		GLOB.middle_combo_impale_overlay = null
+		GLOB.middle_combo_impale_target = null
 	sleep(0.1 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 2: Dash + slam — 30 RED
 	var/turf/dash_origin = get_turf(user)
@@ -428,6 +503,8 @@
 			trailsmoke.color = "#D8B4FE"
 	animate(user, alpha = 0, pixel_y = user.base_pixel_y + 16, time = 0.15 SECONDS, easing = QUAD_EASING)
 	sleep(0.15 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	user.forceMove(get_turf(target))
 	user.pixel_y = user.base_pixel_y + 20
 	animate(user, alpha = 255, pixel_y = user.base_pixel_y, time = 0.15 SECONDS, easing = BOUNCE_EASING)
@@ -441,6 +518,8 @@
 	shake_camera(target, 3, 5)
 	playsound(target, 'sound/weapons/punch1.ogg', 65, TRUE)
 	sleep(0.5 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 3: Fire dome — 25 RED + 5 FIRE + AoE fire
 	middle_combo_damage(target, user, 25, RED_DAMAGE)
@@ -459,6 +538,8 @@
 		shake_camera(M, 3, 5)
 	playsound(target, 'sound/effects/explosion1.ogg', 70, TRUE)
 	sleep(0.7 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 4: Sword sweep — 25 RED + 5 FIRE, launch again
 	animate(user, transform = matrix(90, MATRIX_ROTATE), time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -473,6 +554,8 @@
 	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 4), 4, 4, user, TRUE)
 	sleep(0.6 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 5: Dash to target + drag back
 	var/turf/dash5_origin = get_turf(user)
@@ -481,13 +564,19 @@
 	aftersmoke5.color = "#D8B4FE"
 	animate(user, alpha = 0, time = 0.1 SECONDS)
 	sleep(0.1 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	user.forceMove(get_turf(target))
 	animate(user, alpha = 255, time = 0.1 SECONDS)
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
 	playsound(target, 'sound/weapons/punch1.ogg', 60, TRUE)
 	sleep(0.3 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	target.forceMove(get_step(user, get_dir(user, target)))
 	sleep(0.3 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 6: 4 rapid slashes — 15 RED + 2 FIRE each = 60 RED + 8 FIRE
 	for(var/i in 1 to 4)
@@ -505,6 +594,8 @@
 		shake_camera(target, 2, 3)
 		playsound(target, 'sound/weapons/bladeslice.ogg', 50, TRUE)
 		sleep(0.3 SECONDS)
+		if(MIDDLE_COMBO_CHECK(target, user))
+			return
 
 	// Step 7: Impale — 30 RED + 2 FIRE
 	animate(user, pixel_x = user.base_pixel_x - 6, time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -520,12 +611,16 @@
 		impale_overlay.pixel_x = -16
 		impale_overlay.pixel_y = -16
 		target.add_overlay(impale_overlay)
+		GLOB.middle_combo_impale_overlay = impale_overlay
+		GLOB.middle_combo_impale_target = target
 	animate(target, pixel_x = target.base_pixel_x + (get_dir(user, target) & EAST ? 6 : -6), time = 0.08 SECONDS, easing = QUAD_EASING)
 	animate(pixel_x = target.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	animate(user, pixel_x = user.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	shake_camera(target, 3, 4)
 	playsound(target, 'sound/weapons/bladeslice.ogg', 70, TRUE)
 	sleep(0.6 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 8: Kick while impaled — 25 RED
 	animate(user, pixel_y = user.base_pixel_y + 4, time = 0.1 SECONDS, easing = QUAD_EASING)
@@ -538,6 +633,8 @@
 	shake_camera(target, 2, 3)
 	playsound(target, 'sound/weapons/punch1.ogg', 55, TRUE)
 	sleep(0.4 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 9: Final stab — 40 + grudge RED + 3 FIRE
 	animate(user, pixel_x = user.base_pixel_x + (get_dir(user, target) & EAST ? 12 : -12), transform = matrix(15, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
@@ -560,12 +657,18 @@
 		shake_camera(M, 4, 6)
 	playsound(target, 'sound/effects/explosion1.ogg', 75, TRUE)
 	sleep(0.8 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 
 	// Step 10: Rip blade + knockback — 30 RED
 	user.SpinAnimation(3, 1)
 	if(impale_overlay)
 		target.cut_overlay(impale_overlay)
+		GLOB.middle_combo_impale_overlay = null
+		GLOB.middle_combo_impale_target = null
 	sleep(0.2 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
 	user.say("Hah! Bullseye!")
 	middle_combo_damage(target, user, 30, RED_DAMAGE)
 	var/obj/effect/temp_visual/explosion/emblem = new(get_turf(target))

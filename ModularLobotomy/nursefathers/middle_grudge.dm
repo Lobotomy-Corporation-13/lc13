@@ -50,8 +50,15 @@
 	if(!can_have_status())
 		qdel(src)
 
-/// Helper proc to add Grudge stacks to a mob
+/// Helper proc to add Grudge stacks to a mob. Blocked during combos.
 /mob/living/proc/AddGrudge(amount)
+	// Block grudge gain during combos
+	var/obj/item/ego_weapon/city/laevateinn/sword = locate() in contents
+	if(!sword && ishuman(src))
+		var/mob/living/carbon/human/H = src
+		sword = H.s_store
+	if(istype(sword) && sword.combo_in_progress)
+		return
 	var/datum/status_effect/stacking/middle_grudge/G = has_status_effect(/datum/status_effect/stacking/middle_grudge)
 	if(!G)
 		apply_status_effect(/datum/status_effect/stacking/middle_grudge, amount)

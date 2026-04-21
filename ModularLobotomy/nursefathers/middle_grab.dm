@@ -79,11 +79,18 @@
 /// Removes the tattoo visual and outline filter.
 /datum/status_effect/middle_tattoos/proc/RemoveTattooVisual()
 	flickering = FALSE
-	if(tattoo_overlay && owner && !QDELETED(owner))
-		owner.cut_overlay(tattoo_overlay)
+	var/mutable_appearance/old_overlay = tattoo_overlay
 	tattoo_overlay = null
 	if(owner && !QDELETED(owner))
+		if(old_overlay)
+			owner.cut_overlay(old_overlay)
 		owner.remove_filter("middle_tattoo_outline")
+		// Delayed cleanup in case the flicker loop re-added the overlay
+		addtimer(CALLBACK(src, PROC_REF(FinalCleanupOverlay), old_overlay), 0.5 SECONDS)
+
+/datum/status_effect/middle_tattoos/proc/FinalCleanupOverlay(mutable_appearance/old_overlay)
+	if(old_overlay && owner && !QDELETED(owner))
+		owner.cut_overlay(old_overlay)
 
 /// Flickers the tattoo overlay alpha based on tier.
 /datum/status_effect/middle_tattoos/proc/FlickerTattoo()
@@ -140,3 +147,53 @@
 	var/consumed_tier = T.tier
 	qdel(T)
 	return consumed_tier
+
+/// Combo protection — reduces all incoming damage to 1 during combo animations.
+/// Does NOT deny damage (mobs keep aggro). Auto-removes after duration.
+/datum/status_effect/middle_combo_protection
+	id = "middle_combo_protection"
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+	/// Component that intercepts damage
+	var/datum/component/middle_combo_shield/shield_comp
+
+/datum/status_effect/middle_combo_protection/on_creation(mob/living/new_owner, duration_override)
+	if(duration_override)
+		src.duration = duration_override
+	return ..()
+
+/datum/status_effect/middle_combo_protection/on_apply()
+	. = ..()
+	shield_comp = owner.AddComponent(/datum/component/middle_combo_shield)
+
+/datum/status_effect/middle_combo_protection/on_remove()
+	if(shield_comp && !QDELETED(shield_comp))
+		qdel(shield_comp)
+	shield_comp = null
+	. = ..()
+
+/// Component that reduces outside damage to 1 during combos.
+/// Uses the Dieci shield pattern — denies original damage, deals 1 as forced.
+/datum/component/middle_combo_shield
+	dupe_mode = COMPONENT_DUPE_UNIQUE
+
+/datum/component/middle_combo_shield/Initialize()
+	if(!isliving(parent))
+		return COMPONENT_INCOMPATIBLE
+
+/datum/component/middle_combo_shield/RegisterWithParent()
+	RegisterSignal(parent, COMSIG_MOB_APPLY_DAMGE, PROC_REF(on_damage))
+
+/datum/component/middle_combo_shield/UnregisterFromParent()
+	UnregisterSignal(parent, COMSIG_MOB_APPLY_DAMGE)
+
+/datum/component/middle_combo_shield/proc/on_damage(datum/source, damage, damagetype, def_zone, atom/damage_source, flags, attack_type)
+	SIGNAL_HANDLER
+	if(flags & DAMAGE_FORCED)
+		return
+	if(!damage || damage <= 1)
+		return
+	// Reduce to 1 damage — deal it as forced so we don't recurse
+	var/mob/living/owner = parent
+	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, deal_damage), 1, damagetype, damage_source, DAMAGE_FORCED, null, null, def_zone)
+	return COMPONENT_MOB_DENY_DAMAGE
