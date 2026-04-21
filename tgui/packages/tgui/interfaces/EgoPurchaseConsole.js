@@ -14,11 +14,10 @@ grouping the E.G.O. by Abnormality and the Abnormalities by Threat Class.
 export const EgoPurchaseConsole = (props, context) => {
   const { act, data } = useBackend(context);
   const { abnormalities, abnormality_portraits,
-    all_tags, log, user_price_multiplier } = data;
+    all_tags, log, user_price_multiplier, selected_level } = data;
 
   /* ------------ React Hooks ------------*/
 
-  const [tab, setTab] = useLocalState(context, 'tab', 1);
   const [nameSearchText, setNameSearchText] = useLocalState(context, "nameSearchText", null);
   const [armorResistanceFilters, setArmorResistanceFilters] = useLocalState(context, "armorResistanceFilters", { "red": -10, "white": -10, "black": -10, "pale": -10 });
   const [egoTagList, setEgoTagList] = useLocalState(context, "egoTagList", all_tags);
@@ -53,8 +52,7 @@ export const EgoPurchaseConsole = (props, context) => {
 
   // Changes ZAYIN/TETH/etc. tabs.
   const ChangeTab = tab => {
-    setTab(tab);
-    act('noise', { "sfx": select_sfx });
+    act('set_level', { "selected_level": tab });
   };
 
   // Called to fold/unfold an Abnormality's collapsible.
@@ -499,22 +497,22 @@ export const EgoPurchaseConsole = (props, context) => {
   const AbnormalitySection = (props, context) => {
 
     return (
-      <Section scrollable fill title={(threatclass_names[tab]?? "UNKNOWN") + "-Class Abnormalities"}
+      <Section scrollable fill title={(threatclass_names[selected_level]?? "UNKNOWN") + "-Class Abnormalities"}
         buttons={<RefreshButton />}>
         <Tabs align="center">
-          <Tabs.Tab selected={tab === 1} onClick={() => ChangeTab(1)}>
+          <Tabs.Tab selected={selected_level === 1} onClick={() => ChangeTab(1)}>
             {threatclass_names[1]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 2} onClick={() => ChangeTab(2)}>
+          <Tabs.Tab selected={selected_level === 2} onClick={() => ChangeTab(2)}>
             {threatclass_names[2]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 3} onClick={() => ChangeTab(3)}>
+          <Tabs.Tab selected={selected_level === 3} onClick={() => ChangeTab(3)}>
             {threatclass_names[3]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 4} onClick={() => ChangeTab(4)}>
+          <Tabs.Tab selected={selected_level === 4} onClick={() => ChangeTab(4)}>
             {threatclass_names[4]}
           </Tabs.Tab>
-          <Tabs.Tab selected={tab === 5} onClick={() => ChangeTab(5)}>
+          <Tabs.Tab selected={selected_level === 5} onClick={() => ChangeTab(5)}>
             {threatclass_names[5]}
           </Tabs.Tab>
         </Tabs>
@@ -529,7 +527,7 @@ export const EgoPurchaseConsole = (props, context) => {
     return (
       <Stack vertical fill>
         <Stack.Item fill>
-          {abnormalities?.map(abno => (abno.threatclass === tab)
+          {abnormalities?.map(abno => (abno.threatclass === selected_level)
           && <AbnormalityEntry datum={abno} />)}
         </Stack.Item>
       </Stack>

@@ -4,7 +4,7 @@
 	icon_screen = "extraction_ego"
 	resistance_flags = INDESTRUCTIBLE
 	/// Currently selected(shown) level of abnormalities whose EGO will be on the interface
-	var/selected_level = ZAYIN_LEVEL
+	var/list/selected_level = list()
 	var/delay = 15 SECONDS
 	var/static/list/abno_preview_icon_cache = list()
 	/// This variable allows us to choose a delivery target when it's turned on. A special version of this machine used by the EO's tablet will be able to use it.
@@ -34,13 +34,16 @@
 	if(!(noise in valid_sfx))
 		return
 	playsound(get_turf(src), "sound/machines/[noise].ogg", 50, TRUE)
-	noise_cooldowns[usr] = world.time + 0.2 SECONDS
+	noise_cooldowns[usr.ckey] = world.time + 0.2 SECONDS
 
 /// When interacted with...
 /obj/machinery/computer/ego_purchase/ui_interact(mob/user, datum/tgui/ui)
 	var/client/user_client = user?.client
 	if(!user_client || !user_client.prefs)
 		return
+
+	if(!selected_level[user.ckey])
+		selected_level[user.ckey] = ZAYIN_LEVEL
 
 	// If the user has tgui_fancy as their preference (the default), show the updated TGUI interface
 	if(user_client.prefs.tgui_fancy)
@@ -60,12 +63,12 @@
 			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, FALSE)
 		var/dat
 		for(var/level = ZAYIN_LEVEL to ALEPH_LEVEL)
-			dat += "<A href='byond://?src=[REF(src)];set_level=[level]'>[level == selected_level ? "<b><u>[THREAT_TO_NAME[level]]</u></b>" : "[THREAT_TO_NAME[level]]"]</A>"
+			dat += "<A href='byond://?src=[REF(src)];set_level=[level]'>[level == selected_level[user.ckey] ? "<b><u>[THREAT_TO_NAME[level]]</u></b>" : "[THREAT_TO_NAME[level]]"]</A>"
 		dat += "<hr>"
 		for(var/datum/abnormality/A in SSlobotomy_corp.all_abnormality_datums)
 			if(!LAZYLEN(A.ego_datums))
 				continue
-			if(A.threat_level != selected_level)
+			if(A.threat_level != selected_level[user.ckey])
 				continue
 			dat += "[A.name] ([A.stored_boxes] PE):<br>"
 			var/mult = 1
@@ -299,6 +302,7 @@
 	var/list/data = list()
 	data["abnormalities"] = list() // List of Abnormalities, including some basic info and their E.G.O.
 	data["log"] = list() // List of E.G.O. purchase logs, for *accountability* (see: lynching).
+	data["selected_level"] = selected_level[user.ckey]
 	data["user_price_multiplier"] = 1 // Change E.G.O. display prices based on this value.
 	if(user.mind?.assigned_role == "Extraction Officer" && GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2)) // This is kinda sloppy, we should probably have a helper proc that gets discount values for an user, no?
 		data["user_price_multiplier"] = UPGRADE_EXTRACTION_2_PRICE_MULT
@@ -378,17 +382,29 @@
 		playsound(get_turf(src), 'sound/machines/terminal_processing.ogg', 50, TRUE)
 		return TRUE
 	else if(action == "noise")
-		if(noise_cooldowns[usr] > world.time)
+		if(noise_cooldowns[usr.ckey] > world.time)
 			return FALSE
 		var/chosen_noise = params["sfx"]
 		MakeNoise(usr, chosen_noise)
 		return FALSE
 	else if(action == "type")
-		if(type_cooldowns[usr] > world.time)
+		if(type_cooldowns[usr.ckey] > world.time)
 			return FALSE
 		playsound(get_turf(src), "sound/machines/terminal_button0[rand(1, 8)].ogg", 50, FALSE)
-		type_cooldowns[usr] = world.time + 0.1 SECONDS
+		type_cooldowns[usr.ckey] = world.time + 0.1 SECONDS
 		return FALSE
+	else if(action == "set_level")
+		var/new_level = clamp(params["selected_level"], ZAYIN_LEVEL, ALEPH_LEVEL)
+		selected_level[usr.ckey] = new_level
+		if(noise_cooldowns[usr.ckey] > world.time)
+			return FALSE
+		MakeNoise(usr, "terminal_select")
+		return TRUE
+
+
+/obj/machinery/computer/ego_purchase/ui_close(mob/user)
+	user.unset_machine()
+
 
 // !!!!!!!!!!! Old Functionality !!!!!!!!!!!
 /obj/machinery/computer/ego_purchase/Topic(href, href_list)
@@ -400,8 +416,8 @@
 		add_fingerprint(usr)
 		if(href_list["set_level"])
 			var/level = text2num(href_list["set_level"])
-			if(!(level < ZAYIN_LEVEL || level > ALEPH_LEVEL) && level != selected_level)
-				selected_level = level
+			if(!(level < ZAYIN_LEVEL || level > ALEPH_LEVEL) && level != selected_level[usr.ckey])
+				selected_level[usr.ckey] = level
 				playsound(get_turf(src), 'sound/machines/terminal_prompt_confirm.ogg', 50, TRUE)
 				updateUsrDialog()
 				return TRUE
