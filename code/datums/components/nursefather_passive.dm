@@ -69,7 +69,6 @@
 /datum/component/nursefather_passive/middle
 
 /datum/component/nursefather_passive/middle/on_damage_taken(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
-	SIGNAL_HANDLER
 	if(!damage || damage <= 0)
 		return
 
@@ -81,3 +80,8 @@
 		var/clone_damage = damage * 0.025
 		if(clone_damage > 0)
 			INVOKE_ASYNC(src, PROC_REF(apply_clone_damage), clone_damage)
+
+	// Check seal healthgates
+	var/datum/component/laevateinn_seal/seal = H.GetComponent(/datum/component/laevateinn_seal)
+	if(seal)
+		seal.CheckHealthgate(damage)

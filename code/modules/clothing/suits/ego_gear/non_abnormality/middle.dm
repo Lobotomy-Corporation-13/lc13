@@ -182,3 +182,51 @@
 	desc = "A sacred text of the Middle, its pages filled with records of grudges and retribution. The Big Brothers have mastered its teachings."
 	worn_icon_state = "big_book"
 	icon_state = "big_book"
+
+////////////////////////////////////////////////////////////
+// MIDDLE NURSEFATHER (EX-GREAT BROTHER) GEAR
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather
+	name = "ex-great brother's coat"
+	desc = "A massive coat bearing the colors and pattern of the Middle, worn over the shoulders. Its former owner was stripped of his rank but not his pride."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_outfit"
+	neck = /obj/item/clothing/neck/ego_neck/middle_cape/nursefather
+	flags_inv = HIDEJUMPSUIT
+	equip_delay_self = 0
+	armor = list(RED_DAMAGE = 70, WHITE_DAMAGE = 60, BLACK_DAMAGE = 60, PALE_DAMAGE = 60)
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 100,
+		PRUDENCE_ATTRIBUTE = 100,
+		TEMPERANCE_ATTRIBUTE = 100,
+		JUSTICE_ATTRIBUTE = 100
+	)
+
+/obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather/CanUseEgo(mob/living/carbon/human/user)
+	if(user?.mind?.assigned_role == "Middle Ex-Great Brother")
+		return TRUE
+	return ..()
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather
+	name = "ex-great brother's cloak"
+	desc = "A heavy cloak worn by a former Great Brother of the Middle."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_cloak"
+
+/obj/item/clothing/glasses/middle_sunglasses/nursefather
+	name = "gold-bridge sunglasses"
+	desc = "Thick sunglasses with a gold bridge between the lenses. A signature accessory of the Middle's former Great Brother."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_sunglasses"
+
+/obj/item/storage/book/middle/nursefather
+	name = "the great book of vengeance"
+	desc = "A sacred text of the Middle, its pages filled with a lifetime of grudges and retribution. This one belongs to a former Great Brother — its pages are extensive."
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	icon_state = "middlefather_vengeance"
+	worn_icon_state = "middlefather_vengeance"
+	vengeance_mark_stacks = 3
