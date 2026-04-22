@@ -52,9 +52,10 @@
 	for(var/datum/action/cooldown/create_basic_artwork/action in H.actions)
 		action.Remove(H)
 
-	// Remove describe artwork action
-	for(var/datum/action/cooldown/describe_artwork/action in H.actions)
-		action.Remove(H)
+	// Only remove describe artwork if they haven't become a Student (Student grants its own)
+	if(!H.GetComponent(/datum/component/corporist_student))
+		for(var/datum/action/cooldown/describe_artwork/action in H.actions)
+			action.Remove(H)
 
 	return ..()
 

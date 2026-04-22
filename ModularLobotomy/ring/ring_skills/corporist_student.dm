@@ -24,6 +24,11 @@
 	if(H.mind)
 		H.mind.add_antag_datum(/datum/antagonist/ring_artist/student)
 
+	// Give toolkit if they don't already have one
+	if(!locate(/obj/item/storage/box/corporist_toolkit) in H.contents)
+		var/obj/item/storage/box/corporist_toolkit/toolkit = new(get_turf(H))
+		H.put_in_hands(toolkit)
+
 	to_chat(H, span_nicegreen("You are now a Student of The Ring's artistic schools."))
 
 /datum/component/corporist_student/RegisterWithParent()
@@ -136,7 +141,7 @@
 		to_chat(H, span_warning("You need to be next to a dead creature to sculpt it."))
 		return FALSE
 
-	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Create Artwork", list("Basic Sculpture", "Custom Artwork"))
+	var/choice = tgui_input_list(H, "What type of artwork will you create?", "Create Artwork", list("Basic Sculpture", "Custom Artwork", "Carve Body"))
 	if(!choice)
 		return FALSE
 
@@ -145,6 +150,12 @@
 	if(!do_after(H, 7 SECONDS, corpse))
 		to_chat(H, span_warning("You were interrupted!"))
 		return FALSE
+
+	if(choice == "Carve Body")
+		var/datum/carve_body_editor/editor = new(corpse, H)
+		editor.ui_interact(H)
+		StartCooldown()
+		return TRUE
 
 	if(choice == "Custom Artwork")
 		new /obj/structure/custom_corporist_artwork(get_turf(corpse), H)
