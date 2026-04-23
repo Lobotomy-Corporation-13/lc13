@@ -130,16 +130,32 @@
 
 	// Check tier access
 	var/max_tier_needed = 0
-	for(var/datum/grid_craft_item/item in grid_manager.items)
+	for(var/datum/grid_craft_item/item in grid_manager.GetActiveItems())
 		if(item.tier > max_tier_needed)
 			max_tier_needed = item.tier
 
 	var/old_x = grid_manager.focus_x
 	var/old_y = grid_manager.focus_y
 
+	// Check zones at departure point for messaging
+	var/list/departure_zones = grid_manager.GetZonesAtPosition(old_x, old_y)
+
 	if(!grid_manager.UseCore(selected_core, user, dir_x, dir_y, target_x, target_y))
-		to_chat(user, span_warning("Invalid movement for this core type!"))
+		if(grid_manager.last_blocked_by_exclusion)
+			to_chat(user, span_warning("This movement type is blocked by an Exclusion Zone!"))
+		else
+			to_chat(user, span_warning("Invalid movement for this core type!"))
 		return FALSE
+
+	// Zone effect messages
+	for(var/datum/grid_zone/zone in departure_zones)
+		switch(zone.zone_type)
+			if(GRID_ZONE_TAILWIND)
+				to_chat(user, span_notice("Tailwind Zone: +50% distance!"))
+			if(GRID_ZONE_DRAG)
+				to_chat(user, span_warning("Drag Zone: -50% distance!"))
+			if(GRID_ZONE_RESONANCE)
+				to_chat(user, span_notice("Resonance Zone: Diminishing returns cleared!"))
 
 	// Core was used successfully
 	to_chat(user, span_notice("You use the [selected_core.name] to move from ([old_x], [old_y]) to ([grid_manager.focus_x], [grid_manager.focus_y])."))
@@ -163,11 +179,12 @@
 	if(!length(craftable))
 		return
 
+	var/item_type_name = grid_manager.viewing_armor ? "armor" : "weapon"
 	if(length(craftable) == 1)
 		var/datum/grid_craft_item/first_item = craftable[1]
 		to_chat(user, span_notice("You are in range of [first_item.name]! Use the UI to craft it."))
 	else
-		to_chat(user, span_notice("[length(craftable)] weapons available! Use the UI to craft one."))
+		to_chat(user, span_notice("[length(craftable)] [item_type_name]\s available! Use the UI to craft one."))
 
 /// Craft a specific item
 /obj/structure/grid_crafting_station/proc/CraftItem(mob/user, datum/grid_craft_item/item)
@@ -239,6 +256,7 @@
 	data["focus_x"] = grid_manager.focus_x
 	data["focus_y"] = grid_manager.focus_y
 	data["cores_used"] = grid_manager.cores_used
+	data["viewing_armor"] = grid_manager.viewing_armor
 
 	// Shuffle info
 	data["shuffle_counter"] = grid_manager.shuffle_counter
@@ -334,6 +352,29 @@
 	// Crafted items
 	data["crafted_item_ids"] = crafted_item_ids
 
+	// Zone data
+	var/list/zone_data = list()
+	for(var/datum/grid_zone/zone in grid_manager.zones)
+		zone_data += list(list(
+			"id" = zone.zone_id,
+			"type" = zone.zone_type,
+			"name" = zone.GetZoneName(),
+			"cells" = zone.GetCellCoords(),
+			"blocked_movements" = zone.GetBlockedMovementNames()
+		))
+	data["zones"] = zone_data
+
+	// Current zones at player position
+	var/list/current_zone_data = list()
+	var/list/current_zones = grid_manager.GetZonesAtPosition(grid_manager.focus_x, grid_manager.focus_y)
+	for(var/datum/grid_zone/zone in current_zones)
+		current_zone_data += list(list(
+			"name" = zone.GetZoneName(),
+			"type" = zone.zone_type,
+			"blocked_movements" = zone.GetBlockedMovementNames()
+		))
+	data["current_zones"] = current_zone_data
+
 	return data
 
 /obj/structure/grid_crafting_station/ui_act(action, params)
@@ -370,10 +411,15 @@
 
 		if("craft")
 			var/item_id = params["id"]
-			for(var/datum/grid_craft_item/item in grid_manager.items)
+			for(var/datum/grid_craft_item/item in grid_manager.GetActiveItems())
 				if(item.item_id == item_id)
 					CraftItem(usr, item)
 					break
+			return TRUE
+
+		if("flip")
+			grid_manager.FlipGrid()
+			highlighted_item_id = null
 			return TRUE
 
 		if("reset")
@@ -403,7 +449,8 @@
 	. += span_notice("Shuffle progress: [grid_manager.shuffle_counter]/[grid_manager.shuffle_threshold]")
 	if(grid_manager.cores_used > 0)
 		. += span_notice("Cores used this session: [grid_manager.cores_used]")
-	. += span_notice("Weapon tier access: [GLOB.grid_craft_ordeal_tier] (from ordeals)")
+	. += span_notice("Viewing: [grid_manager.viewing_armor ? "Armor" : "Weapons"]")
+	. += span_notice("Tier access: [GLOB.grid_craft_ordeal_tier] (from ordeals)")
 	if(last_crafted)
 		. += span_notice("Last crafted: [last_crafted]")
 	if(debug_mode)

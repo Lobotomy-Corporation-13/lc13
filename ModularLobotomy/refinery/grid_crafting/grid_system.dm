@@ -44,6 +44,111 @@
 /datum/grid_craft_item/proc/IsInRange(x, y)
 	return DistanceFrom(x, y) <= craft_radius
 
+// ===== Grid Zone Datum =====
+
+/// Represents a zone area on the grid made of discrete cells
+/datum/grid_zone
+	/// Zone type (GRID_ZONE_TAILWIND, etc.)
+	var/zone_type = GRID_ZONE_TAILWIND
+	/// Unique identifier
+	var/zone_id = ""
+	/// Assoc list of cell keys ("x,y" -> TRUE) for fast lookup
+	var/list/cells = list()
+	/// Blocked movement types (EXCLUSION only)
+	var/list/blocked_movements = list()
+
+/// Check if a world coordinate is inside this zone
+/datum/grid_zone/proc/IsInZone(world_x, world_y)
+	var/cell_x = round(world_x / GRID_ZONE_CELL_SIZE) * GRID_ZONE_CELL_SIZE
+	var/cell_y = round(world_y / GRID_ZONE_CELL_SIZE) * GRID_ZONE_CELL_SIZE
+	var/key = "[cell_x],[cell_y]"
+	return cells[key]
+
+/// Get display name for this zone type
+/datum/grid_zone/proc/GetZoneName()
+	switch(zone_type)
+		if(GRID_ZONE_TAILWIND)
+			return "Tailwind Zone"
+		if(GRID_ZONE_DRAG)
+			return "Drag Zone"
+		if(GRID_ZONE_RESONANCE)
+			return "Resonance Zone"
+		if(GRID_ZONE_EXCLUSION)
+			return "Exclusion Zone"
+	return "Unknown Zone"
+
+/// Get readable names of blocked movement types (EXCLUSION only)
+/datum/grid_zone/proc/GetBlockedMovementNames()
+	var/list/names = list()
+	for(var/movement_type in blocked_movements)
+		names += GetMovementTypeName(movement_type)
+	return names
+
+/// Get cell world coordinates as list of [x, y] pairs for TGUI
+/datum/grid_zone/proc/GetCellCoords()
+	var/list/coords = list()
+	for(var/key in cells)
+		var/list/parts = splittext(key, ",")
+		if(length(parts) == 2)
+			coords += list(list(text2num(parts[1]), text2num(parts[2])))
+	return coords
+
+/// Generate an irregular blob of cells via random flood-fill
+/// occupied_cells is an assoc list of all cells already used by other zones
+/datum/grid_zone/proc/GenerateBlob(center_x, center_y, cell_count, list/occupied_cells)
+	var/snap_x = round(center_x / GRID_ZONE_CELL_SIZE) * GRID_ZONE_CELL_SIZE
+	var/snap_y = round(center_y / GRID_ZONE_CELL_SIZE) * GRID_ZONE_CELL_SIZE
+
+	var/seed_key = "[snap_x],[snap_y]"
+	if(occupied_cells[seed_key])
+		return FALSE
+	cells[seed_key] = TRUE
+	occupied_cells[seed_key] = TRUE
+
+	var/list/frontier = list()
+	var/list/offsets = list(
+		list(GRID_ZONE_CELL_SIZE, 0),
+		list(-GRID_ZONE_CELL_SIZE, 0),
+		list(0, GRID_ZONE_CELL_SIZE),
+		list(0, -GRID_ZONE_CELL_SIZE)
+	)
+
+	var/nx
+	var/ny
+	var/nkey
+	for(var/list/offset in offsets)
+		nx = snap_x + offset[1]
+		ny = snap_y + offset[2]
+		nkey = "[nx],[ny]"
+		if(!cells[nkey] && !occupied_cells[nkey])
+			frontier[nkey] = TRUE
+
+	var/placed = 1
+	while(placed < cell_count && length(frontier))
+		var/idx = rand(1, length(frontier))
+		var/picked_key = frontier[idx]
+		frontier -= picked_key
+
+		if(occupied_cells[picked_key])
+			continue
+
+		cells[picked_key] = TRUE
+		occupied_cells[picked_key] = TRUE
+		placed++
+
+		var/list/parts = splittext(picked_key, ",")
+		var/px = text2num(parts[1])
+		var/py = text2num(parts[2])
+
+		for(var/list/dir_offset in offsets)
+			nx = px + dir_offset[1]
+			ny = py + dir_offset[2]
+			nkey = "[nx],[ny]"
+			if(!cells[nkey] && !frontier[nkey] && !occupied_cells[nkey])
+				frontier[nkey] = TRUE
+
+	return TRUE
+
 // ===== Grid Craft Manager Datum =====
 
 /// Manages the grid state for a crafting station
@@ -52,8 +157,12 @@
 	var/focus_x = 0
 	/// Current focus point Y coordinate
 	var/focus_y = 0
-	/// List of all craftable items on the grid
+	/// List of all craftable weapon items on the grid
 	var/list/datum/grid_craft_item/items = list()
+	/// List of all craftable armor items on the grid
+	var/list/datum/grid_craft_item/armor_items = list()
+	/// Whether the player is viewing the armor side of the grid
+	var/viewing_armor = FALSE
 	/// Number of cores used this session
 	var/cores_used = 0
 	/// Reference to the owning crafting station
@@ -77,12 +186,17 @@
 	/// Last teleport target for Mirror
 	var/last_target_x = 0
 	var/last_target_y = 0
+	/// Grid zones (shared across weapon/armor, persist across shuffles)
+	var/list/datum/grid_zone/zones = list()
+	/// Whether last UseCore failure was due to exclusion zone
+	var/last_blocked_by_exclusion = FALSE
 
 /datum/grid_craft_manager/New(obj/structure/grid_crafting_station/station)
 	owner = station
 	placement_seed = rand(1, 999999)
 	shuffle_threshold = rand(SHUFFLE_THRESHOLD_MIN, SHUFFLE_THRESHOLD_MAX)
 	GenerateItemPositions()
+	GenerateZones()
 
 /// Reset the focus point to origin
 /datum/grid_craft_manager/proc/ResetFocus()
@@ -90,7 +204,68 @@
 	focus_y = 0
 	cores_used = 0
 
-/// Shuffle all weapon positions
+/// Get the active item list based on current viewing mode
+/datum/grid_craft_manager/proc/GetActiveItems()
+	if(viewing_armor)
+		return armor_items
+	return items
+
+/// Toggle between weapon and armor sides of the grid
+/datum/grid_craft_manager/proc/FlipGrid()
+	viewing_armor = !viewing_armor
+
+// ===== Zone System =====
+
+/// Generate all grid zones (called once, persists across shuffles)
+/datum/grid_craft_manager/proc/GenerateZones()
+	zones = list()
+	var/zone_count = rand(GRID_ZONE_COUNT_MIN, GRID_ZONE_COUNT_MAX)
+	var/list/zone_types = list(GRID_ZONE_TAILWIND, GRID_ZONE_DRAG, GRID_ZONE_RESONANCE, GRID_ZONE_EXCLUSION)
+	var/list/all_movements = list(CORE_MOVEMENT_CHARGE, CORE_MOVEMENT_ATTRACT, CORE_MOVEMENT_SHUFFLE, CORE_MOVEMENT_EXPAND, CORE_MOVEMENT_DRIFT, CORE_MOVEMENT_TELEPORT, CORE_MOVEMENT_MIRROR)
+	var/list/occupied_cells = list()
+
+	for(var/i in 1 to zone_count)
+		var/datum/grid_zone/zone = new()
+		zone.zone_type = pick(zone_types)
+		zone.zone_id = "zone_[i]"
+
+		var/angle = rand(0, 359)
+		var/dist = rand(GRID_ZONE_DIST_MIN, GRID_ZONE_DIST_MAX)
+		var/center_x = round(cos(angle) * dist, 1)
+		var/center_y = round(sin(angle) * dist, 1)
+
+		var/cell_count = rand(GRID_ZONE_CELLS_MIN, GRID_ZONE_CELLS_MAX)
+		if(!zone.GenerateBlob(center_x, center_y, cell_count, occupied_cells))
+			qdel(zone)
+			continue
+
+		if(zone.zone_type == GRID_ZONE_EXCLUSION)
+			var/list/shuffled = all_movements.Copy()
+			var/block_count = rand(GRID_ZONE_EXCLUSION_BLOCK_MIN, GRID_ZONE_EXCLUSION_BLOCK_MAX)
+			for(var/j in 1 to block_count)
+				if(!length(shuffled))
+					break
+				var/picked = pick(shuffled)
+				zone.blocked_movements += picked
+				shuffled -= picked
+
+		zones += zone
+
+/// Get all zones at a given position
+/datum/grid_craft_manager/proc/GetZonesAtPosition(x, y)
+	var/list/result = list()
+	for(var/datum/grid_zone/zone in zones)
+		if(zone.IsInZone(x, y))
+			result += zone
+	return result
+
+/// Clear all diminishing return stacks on the station
+/datum/grid_craft_manager/proc/ClearDiminishingReturns()
+	if(!owner)
+		return
+	owner.sin_overuse_counts = list()
+
+/// Shuffle all item positions (both weapons and armor)
 /datum/grid_craft_manager/proc/ShuffleWeapons()
 	placement_seed = rand(1, 999999)
 	shuffle_counter = 0
@@ -98,7 +273,7 @@
 	GenerateItemPositions()
 
 	if(owner)
-		owner.visible_message(span_boldwarning("The grid crafting station hums loudly as weapon positions shift!"))
+		owner.visible_message(span_boldwarning("The grid crafting station hums loudly as item positions shift!"))
 		playsound(owner, 'sound/machines/engine_alert2.ogg', 50, TRUE)
 
 /// Add shuffle points for a crafted weapon tier
@@ -133,6 +308,25 @@
 	var/distance = core.GetFinalDistance(owner)
 	var/result_x = focus_x
 	var/result_y = focus_y
+
+	// Zone effects (departure-based: apply from current position)
+	last_blocked_by_exclusion = FALSE
+	var/zone_distance_mult = 1.0
+	var/list/active_zones = GetZonesAtPosition(focus_x, focus_y)
+	for(var/datum/grid_zone/zone in active_zones)
+		switch(zone.zone_type)
+			if(GRID_ZONE_EXCLUSION)
+				if(core.nav_movement_type in zone.blocked_movements)
+					last_blocked_by_exclusion = TRUE
+					return FALSE
+			if(GRID_ZONE_TAILWIND)
+				zone_distance_mult *= GRID_ZONE_TAILWIND_MULT
+			if(GRID_ZONE_DRAG)
+				zone_distance_mult *= GRID_ZONE_DRAG_MULT
+			if(GRID_ZONE_RESONANCE)
+				ClearDiminishingReturns()
+
+	distance = round(distance * zone_distance_mult, 0.1)
 
 	switch(core.nav_movement_type)
 		if(CORE_MOVEMENT_CHARGE)
@@ -169,10 +363,9 @@
 			result_y = result[2]
 
 		if(CORE_MOVEMENT_TELEPORT)
-			// Teleport uses max possible distance, not rolled distance
 			var/max_teleport_range = core.GetMaxPossibleDistance()
 			var/diminishing = GetDiminishingModifier(owner, core.sin_type)
-			max_teleport_range = round(max_teleport_range * diminishing, 0.1)
+			max_teleport_range = round(max_teleport_range * diminishing * zone_distance_mult, 0.1)
 			var/list/result = ExecuteTeleport(target_x, target_y, max_teleport_range)
 			if(!result)
 				return FALSE
@@ -223,12 +416,12 @@
 		round(focus_y + norm_y * distance, 1)
 	)
 
-/// Attract: Move toward nearest weapon
+/// Attract: Move toward nearest item on active side
 /datum/grid_craft_manager/proc/ExecuteAttract(distance)
 	var/datum/grid_craft_item/nearest = null
 	var/nearest_dist = INFINITY
 
-	for(var/datum/grid_craft_item/item in items)
+	for(var/datum/grid_craft_item/item in GetActiveItems())
 		var/dist = item.DistanceFrom(focus_x, focus_y)
 		if(dist < nearest_dist && dist > 0)
 			nearest_dist = dist
@@ -361,19 +554,19 @@
 
 // ===== Item Queries =====
 
-/// Get all items within crafting range of the focus point
+/// Get all items within crafting range of the focus point (on active side)
 /datum/grid_craft_manager/proc/GetCraftableItems()
 	var/list/craftable = list()
-	for(var/datum/grid_craft_item/item in items)
+	for(var/datum/grid_craft_item/item in GetActiveItems())
 		if(item.IsInRange(focus_x, focus_y))
 			craftable += item
 	return craftable
 
-/// Get items sorted by distance from focus point
+/// Get items sorted by distance from focus point (on active side)
 /datum/grid_craft_manager/proc/GetNearbyItems(max_count = 10)
 	var/list/nearby = list()
 
-	for(var/datum/grid_craft_item/item in items)
+	for(var/datum/grid_craft_item/item in GetActiveItems())
 		var/dist = item.DistanceFrom(focus_x, focus_y)
 		nearby += list(list("item" = item, "distance" = dist))
 
@@ -389,56 +582,42 @@
 
 // ===== Weapon Placement =====
 
-/// Generate weapon positions based on expected Ahn cost
-/datum/grid_craft_manager/proc/GenerateItemPositions()
-	items = list()
-
-	// Auto-discover all city weapons
-	var/list/all_weapons = GetCityWeapons()
-
+/// Place items from a cache list into a target list using tier-based distances
+/datum/grid_craft_manager/proc/PlaceItemsFromCache(list/cache_data, list/target_list)
 	// Tier placement config: based on expected Ahn investment
 	var/list/tier_config = list(
-		// Tier 0: 2-4 Basic cores (100-200 Ahn expected)
 		list("min_dist" = WEAPON_DIST_TIER_0_MIN, "max_dist" = WEAPON_DIST_TIER_0_MAX,
 		     "min_rad" = WEAPON_RADIUS_TIER_0_MIN, "max_rad" = WEAPON_RADIUS_TIER_0_MAX),
-		// Tier 1: 2-4 Standard cores (300-600 Ahn expected)
 		list("min_dist" = WEAPON_DIST_TIER_1_MIN, "max_dist" = WEAPON_DIST_TIER_1_MAX,
 		     "min_rad" = WEAPON_RADIUS_TIER_1_MIN, "max_rad" = WEAPON_RADIUS_TIER_1_MAX),
-		// Tier 2: 2-4 Quality cores (800-1600 Ahn expected)
 		list("min_dist" = WEAPON_DIST_TIER_2_MIN, "max_dist" = WEAPON_DIST_TIER_2_MAX,
 		     "min_rad" = WEAPON_RADIUS_TIER_2_MIN, "max_rad" = WEAPON_RADIUS_TIER_2_MAX),
-		// Tier 3: 5-10 Quality/Superior cores (2000-4000 Ahn expected)
 		list("min_dist" = WEAPON_DIST_TIER_3_MIN, "max_dist" = WEAPON_DIST_TIER_3_MAX,
 		     "min_rad" = WEAPON_RADIUS_TIER_3_MIN, "max_rad" = WEAPON_RADIUS_TIER_3_MAX),
-		// Tier 4: 6-12 Superior cores (6000-12000 Ahn expected)
 		list("min_dist" = WEAPON_DIST_TIER_4_MIN, "max_dist" = WEAPON_DIST_TIER_4_MAX,
 		     "min_rad" = WEAPON_RADIUS_TIER_4_MIN, "max_rad" = WEAPON_RADIUS_TIER_4_MAX)
 	)
 
-	// Count weapons per tier for radius adjustment
 	var/list/tier_counts = list(0, 0, 0, 0, 0)
-	for(var/list/weapon_data in all_weapons)
-		var/tier = weapon_data["tier"]
+	for(var/list/item_data in cache_data)
+		var/tier = item_data["tier"]
 		if(tier >= 0 && tier <= 4)
 			tier_counts[tier + 1]++
 
-	// Place each weapon
-	for(var/list/weapon_data in all_weapons)
-		var/tier = weapon_data["tier"]
+	for(var/list/item_data in cache_data)
+		var/tier = item_data["tier"]
 		if(tier < 0 || tier > 4)
 			continue
 
 		var/list/config = tier_config[tier + 1]
 		var/count = tier_counts[tier + 1]
 
-		// Generate position
 		var/angle_degrees = rand(0, 359)
 		var/dist = rand(config["min_dist"], config["max_dist"])
 
 		var/x = round(cos(angle_degrees) * dist, 1)
 		var/y = round(sin(angle_degrees) * dist, 1)
 
-		// Dynamic radius based on weapon count
 		var/count_modifier = 1.0
 		if(count <= 5)
 			count_modifier = 1.5
@@ -456,15 +635,23 @@
 		var/radius = rand(max(adjusted_min, 2), max(adjusted_max, 3))
 
 		var/datum/grid_craft_item/item = new(
-			weapon_data["name"],
-			weapon_data["desc"],
+			item_data["name"],
+			item_data["desc"],
 			x,
 			y,
 			radius,
 			tier,
-			weapon_data["type"]
+			item_data["type"]
 		)
-		items += item
+		target_list += item
+
+/// Generate item positions for both weapons and armor
+/datum/grid_craft_manager/proc/GenerateItemPositions()
+	items = list()
+	armor_items = list()
+
+	PlaceItemsFromCache(GetCityWeapons(), items)
+	PlaceItemsFromCache(GetCityArmors(), armor_items)
 
 // ===== Weapon Discovery =====
 
@@ -481,21 +668,22 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 	GLOB.grid_craft_cache_initialized = TRUE
 	GLOB.grid_craft_weapon_cache = GenerateWeaponCache()
 
-/// Generate the weapon cache list (expensive, only call once)
+/// Generate the weapon cache list from EGO datums with City origin (expensive, only call once)
 /proc/GenerateWeaponCache()
 	var/list/weapons = list()
 
-	var/list/weapon_types = subtypesof(/obj/item/ego_weapon/city)
-	weapon_types += subtypesof(/obj/item/ego_weapon/ranged/city)
-	// The Middle chain weapons
-	weapon_types += /obj/item/ego_weapon/shield/middle_chain
-	weapon_types += subtypesof(/obj/item/ego_weapon/shield/middle_chain)
-
-	for(var/weapon_type in weapon_types)
-		if(IsWeaponTypeBlacklisted(weapon_type))
+	for(var/datumpath in subtypesof(/datum/ego_datum))
+		var/datum/ego_datum/ED = new datumpath
+		if(!ED.item_path || ED.origin != "City" || ED.item_category != "Weapon" || ED.testrange_blacklisted)
+			qdel(ED)
 			continue
 
-		var/obj/item/ego_weapon/temp_weapon = new weapon_type(null)
+		if(IsWeaponTypeBlacklisted(ED.item_path))
+			qdel(ED)
+			continue
+
+		var/obj/item/ego_weapon/temp_weapon = new ED.item_path(null)
+		qdel(ED)
 
 		// Check name-based blacklist
 		if(temp_weapon.name in GLOB.grid_craft_blacklist_names)
@@ -523,6 +711,7 @@ GLOBAL_VAR_INIT(grid_craft_cache_initialized, FALSE)
 		else
 			tier = 0
 
+		var/weapon_type = temp_weapon.type
 		var/desc = "A city weapon."
 		if(temp_weapon.damtype)
 			desc = "[temp_weapon.damtype] damage"
@@ -602,11 +791,76 @@ GLOBAL_LIST_INIT(grid_craft_blacklist_names, list(
 
 /// Get city weapons from the global cache (fast, no instantiation)
 /datum/grid_craft_manager/proc/GetCityWeapons()
-	// Ensure cache is initialized
 	if(!GLOB.grid_craft_cache_initialized)
 		InitializeGridCraftWeaponCache()
-	// Return a copy of the cached list
 	return GLOB.grid_craft_weapon_cache.Copy()
+
+// ===== Armor Cache =====
+
+/// Cached list of all city armors with their data (populated once at first access)
+GLOBAL_LIST_EMPTY(grid_craft_armor_cache)
+
+/// Whether the armor cache has been initialized
+GLOBAL_VAR_INIT(grid_craft_armor_cache_initialized, FALSE)
+
+/// Initialize the global armor cache (call once, typically at world start or first use)
+/proc/InitializeGridCraftArmorCache()
+	if(GLOB.grid_craft_armor_cache_initialized)
+		return
+	GLOB.grid_craft_armor_cache_initialized = TRUE
+	GLOB.grid_craft_armor_cache = GenerateArmorCache()
+
+/// Generate the armor cache list from EGO datums with City origin
+/proc/GenerateArmorCache()
+	var/list/armors = list()
+
+	for(var/datumpath in subtypesof(/datum/ego_datum))
+		var/datum/ego_datum/ED = new datumpath
+		if(!ED.item_path || ED.origin != "City" || ED.item_category != "Armor" || ED.testrange_blacklisted)
+			qdel(ED)
+			continue
+
+		var/obj/item/clothing/suit/armor/ego_gear/temp_armor = new ED.item_path(null)
+		qdel(ED)
+
+		var/max_req = 0
+		if(LAZYLEN(temp_armor.attribute_requirements))
+			for(var/attr in temp_armor.attribute_requirements)
+				var/req_value = temp_armor.attribute_requirements[attr]
+				if(req_value > max_req)
+					max_req = req_value
+
+		var/tier = 0
+		if(max_req >= 120)
+			tier = 4
+		else if(max_req >= 100)
+			tier = 3
+		else if(max_req >= 80)
+			tier = 2
+		else if(max_req >= 60)
+			tier = 1
+		else
+			tier = 0
+
+		var/armor_type = temp_armor.type
+		var/desc = "A city armor."
+
+		armors += list(list(
+			"name" = temp_armor.name,
+			"desc" = desc,
+			"type" = armor_type,
+			"tier" = tier
+		))
+
+		qdel(temp_armor)
+
+	return armors
+
+/// Get city armors from the global cache (fast, no instantiation)
+/datum/grid_craft_manager/proc/GetCityArmors()
+	if(!GLOB.grid_craft_armor_cache_initialized)
+		InitializeGridCraftArmorCache()
+	return GLOB.grid_craft_armor_cache.Copy()
 
 /// Comparison proc for sorting grid items by distance
 /proc/cmp_grid_item_distance(list/a, list/b)

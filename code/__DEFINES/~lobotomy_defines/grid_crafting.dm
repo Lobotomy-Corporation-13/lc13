@@ -146,3 +146,34 @@ GLOBAL_VAR_INIT(grid_craft_ordeal_initialized, FALSE)
 #define MOVEMENT_MOD_TELEPORT 0.5
 /// Mirror (Envy) - Medium accuracy, +10%
 #define MOVEMENT_MOD_MIRROR   1.1
+
+// ===== Grid Zone Types =====
+
+#define GRID_ZONE_TAILWIND   1
+#define GRID_ZONE_DRAG       2
+#define GRID_ZONE_RESONANCE  3
+#define GRID_ZONE_EXCLUSION  4
+
+// ===== Grid Zone Balance =====
+
+#define GRID_ZONE_COUNT_MIN  12
+#define GRID_ZONE_COUNT_MAX  18
+
+/// Each cell is 10x10 grid units
+#define GRID_ZONE_CELL_SIZE  10
+/// Cells per zone (blob size)
+#define GRID_ZONE_CELLS_MIN  10
+#define GRID_ZONE_CELLS_MAX  20
+
+/// Zone center placement distance from origin
+#define GRID_ZONE_DIST_MIN   30
+#define GRID_ZONE_DIST_MAX   350
+
+/// Tailwind zone distance multiplier
+#define GRID_ZONE_TAILWIND_MULT  1.5
+/// Drag zone distance multiplier
+#define GRID_ZONE_DRAG_MULT      0.5
+
+/// Exclusion zone blocked movement type count
+#define GRID_ZONE_EXCLUSION_BLOCK_MIN 2
+#define GRID_ZONE_EXCLUSION_BLOCK_MAX 3

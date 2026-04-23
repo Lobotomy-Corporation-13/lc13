@@ -5,6 +5,7 @@ import {
 import { Window } from '../layouts';
 
 const MAP_SIZE = 300;
+const GRID_ZONE_CELL_SIZE = 10;
 
 export const EnkephalinGridStation = (props, context) => {
   const { act, data } = useBackend(context);
@@ -25,6 +26,9 @@ export const EnkephalinGridStation = (props, context) => {
     crafted_item_ids = [],
     max_accessible_tier = 0,
     ordeal_tier = 0,
+    viewing_armor = false,
+    zones = [],
+    current_zones = [],
     last_movement_type = 3,
     last_dir_x = 0,
     last_dir_y = 0,
@@ -46,6 +50,24 @@ export const EnkephalinGridStation = (props, context) => {
   const shuffleProgress = shuffle_threshold > 0
     ? shuffle_counter / shuffle_threshold
     : 0;
+
+  let zoneDistMult = 1.0;
+  const blockedMovements = [];
+  current_zones.forEach(zone => {
+    if (zone.type === 1) {
+      zoneDistMult *= 1.5;
+    }
+    if (zone.type === 2) {
+      zoneDistMult *= 0.5;
+    }
+    if (zone.type === 4 && zone.blocked_movements) {
+      zone.blocked_movements.forEach(name => {
+        if (!blockedMovements.includes(name)) {
+          blockedMovements.push(name);
+        }
+      });
+    }
+  });
 
   return (
     <Window
@@ -82,11 +104,13 @@ export const EnkephalinGridStation = (props, context) => {
                     focus_x={focus_x}
                     focus_y={focus_y}
                     items={nearby_items}
+                    zones={zones}
                     zoom={zoom}
                     debug_mode={debug_mode}
                     highlightedItem={highlightedItem}
                     selected_core={selected_core}
                     hoveredDir={hoveredDir}
+                    zoneDistMult={zoneDistMult}
                     last_movement_type={last_movement_type}
                     last_dir_x={last_dir_x}
                     last_dir_y={last_dir_y}
@@ -102,10 +126,41 @@ export const EnkephalinGridStation = (props, context) => {
                     {shuffle_counter} / {shuffle_threshold} crafts
                   </ProgressBar>
                   <Box fontSize="11px" color="label" mt={1}>
-                    Weapon positions shuffle after threshold
+                    Item positions shuffle after threshold
                   </Box>
                 </Section>
               </Stack.Item>
+
+              {current_zones.length > 0 && (
+                <Stack.Item>
+                  <Section title="Active Zones">
+                    {current_zones.map((zone, i) => (
+                      <Box key={i} mb={0.5}>
+                        <Icon
+                          name="square"
+                          color={getZoneColor(zone.type)}
+                          mr={1} />
+                        <Box inline bold>
+                          {zone.name}
+                        </Box>
+                        {zone.blocked_movements
+                          && zone.blocked_movements.length > 0
+                          && (
+                          <Box
+                            fontSize="10px"
+                            color="bad"
+                            ml={2}>
+                            Blocked:{' '}
+                            {zone.blocked_movements.join(
+                              ', '
+                            )}
+                          </Box>
+                        )}
+                      </Box>
+                    ))}
+                  </Section>
+                </Stack.Item>
+              )}
 
               <Stack.Item>
                 <Section title="Tier Access (Ordeals)">
@@ -137,6 +192,7 @@ export const EnkephalinGridStation = (props, context) => {
                     selected_core={selected_core}
                     focus_x={focus_x}
                     focus_y={focus_y}
+                    zoneDistMult={zoneDistMult}
                     act={act}
                     context={context}
                     setHoveredDir={setHoveredDir} />
@@ -147,13 +203,47 @@ export const EnkephalinGridStation = (props, context) => {
 
           <Stack.Item grow>
             <Stack vertical fill>
+              <Stack.Item>
+                <Section>
+                  <Flex align="center" justify="center">
+                    <Flex.Item>
+                      <Box
+                        bold
+                        color={!viewing_armor
+                          ? 'good' : 'label'}
+                        mr={1}>
+                        Weapons
+                      </Box>
+                    </Flex.Item>
+                    <Flex.Item>
+                      <Button
+                        icon="sync-alt"
+                        content="Flip"
+                        color="average"
+                        onClick={() => act('flip')} />
+                    </Flex.Item>
+                    <Flex.Item>
+                      <Box
+                        bold
+                        color={viewing_armor
+                          ? 'good' : 'label'}
+                        ml={1}>
+                        Armor
+                      </Box>
+                    </Flex.Item>
+                  </Flex>
+                </Section>
+              </Stack.Item>
+
               {craftable_items.length > 0 && (
                 <Stack.Item>
                   <Section
                     title={(
                       <Box color="good">
                         <Icon name="check-circle" mr={1} />
-                        Weapons In Range!
+                        {viewing_armor
+                          ? 'Armor' : 'Weapons'}
+                        {' In Range!'}
                       </Box>
                     )}>
                     <Stack vertical>
@@ -212,6 +302,9 @@ export const EnkephalinGridStation = (props, context) => {
                   <CoresSection
                     cores={available_cores}
                     selected_core={selected_core}
+                    blockedMovements={blockedMovements}
+                    zoneDistMult={zoneDistMult}
+                    current_zones={current_zones}
                     act={act} />
                 </Section>
               </Stack.Item>
@@ -223,7 +316,8 @@ export const EnkephalinGridStation = (props, context) => {
                   title={(
                     <Box>
                       <Icon name="crosshairs" mr={1} />
-                      Nearby Weapons
+                      Nearby {viewing_armor
+                        ? 'Armor' : 'Weapons'}
                       {highlighted_item_id && (
                         <Button
                           ml={1}
@@ -263,8 +357,10 @@ const GridMap = props => {
     focus_x,
     focus_y,
     items,
+    zones = [],
     zoom = 2,
     debug_mode,
+    zoneDistMult = 1.0,
     highlightedItem,
     selected_core,
     hoveredDir,
@@ -363,6 +459,34 @@ const GridMap = props => {
           return lines;
         })()}
 
+        {zones.map((zone, zi) => {
+          const color = getZoneColor(zone.type);
+          return (zone.cells || []).map((cell, ci) => {
+            const sx = toScreenX(cell[0]);
+            const sy = toScreenY(
+              cell[1] + GRID_ZONE_CELL_SIZE
+            );
+            const size = GRID_ZONE_CELL_SIZE * MAP_SCALE;
+            if (sx + size < 0 || sx > MAP_SIZE
+              || sy + size < 0 || sy > MAP_SIZE) {
+              return null;
+            }
+            return (
+              <rect
+                key={`z${zi}c${ci}`}
+                x={sx}
+                y={sy}
+                width={size}
+                height={size}
+                fill={color}
+                fillOpacity={0.15}
+                stroke={color}
+                strokeOpacity={0.3}
+                strokeWidth={0.5} />
+            );
+          });
+        })}
+
         <MovementPrediction
           selected_core={selected_core}
           hoveredDir={hoveredDir}
@@ -374,6 +498,7 @@ const GridMap = props => {
           focus_y={focus_y}
           toScreenX={toScreenX}
           toScreenY={toScreenY}
+          zoneDistMult={zoneDistMult}
           last_movement_type={last_movement_type}
           last_dir_x={last_dir_x}
           last_dir_y={last_dir_y}
@@ -463,6 +588,14 @@ const GridMap = props => {
         {' | '}
         Zoom: {zoom}x
         {debug_mode && ' (DEBUG)'}
+        <br />
+        <Icon name="square" color="#4488ff" /> Tailwind
+        {' '}
+        <Icon name="square" color="#ff4444" /> Drag
+        {' '}
+        <Icon name="square" color="#44cc44" /> Resonance
+        {' '}
+        <Icon name="square" color="#ff8800" /> Exclusion
       </Box>
     </Box>
   );
@@ -480,6 +613,7 @@ const MovementPrediction = props => {
     focus_y,
     toScreenX,
     toScreenY,
+    zoneDistMult = 1.0,
     last_movement_type,
     last_dir_x,
     last_dir_y,
@@ -491,8 +625,8 @@ const MovementPrediction = props => {
   }
 
   const mt = selected_core.movement_type;
-  const minDist = selected_core.min_distance;
-  const maxDist = selected_core.max_distance;
+  const minDist = selected_core.min_distance * zoneDistMult;
+  const maxDist = selected_core.max_distance * zoneDistMult;
   const color = getSinColor(mt);
   const { dx, dy } = hoveredDir;
 
@@ -933,7 +1067,8 @@ const MovementPrediction = props => {
 
 const MovementControls = props => {
   const {
-    selected_core, focus_x, focus_y, act, context, setHoveredDir,
+    selected_core, focus_x, focus_y, zoneDistMult = 1.0,
+    act, context, setHoveredDir,
   } = props;
 
   if (!selected_core) {
@@ -966,7 +1101,8 @@ const MovementControls = props => {
       {mt === 6 ? (
         <TeleportControls
           max_range={selected_core.max_distance
-            * selected_core.diminishing_mod / 100}
+            * selected_core.diminishing_mod / 100
+            * zoneDistMult}
           focus_x={focus_x}
           focus_y={focus_y}
           act={act}
@@ -1179,23 +1315,94 @@ const TeleportControls = props => {
 };
 
 const CoresSection = props => {
-  const { cores, selected_core, act } = props;
+  const {
+    cores,
+    selected_core,
+    blockedMovements = [],
+    zoneDistMult = 1.0,
+    current_zones = [],
+    act,
+  } = props;
 
   if (cores.length === 0) {
     return (
       <Box textAlign="center" color="label">
         <Icon name="gem" size={2} mb={1} />
         <Box>No cores in storage</Box>
-        <Box fontSize="11px">Insert cores by using them on the machine</Box>
+        <Box fontSize="11px">
+          Insert cores by using them on the machine
+        </Box>
       </Box>
     );
   }
+
+  const inResonance = current_zones.some(
+    z => z.type === 3
+  );
 
   return (
     <Stack vertical>
       {cores.map((core, index) => {
         const isSelected = selected_core
-          && selected_core.movement_type === core.movement_type;
+          && selected_core.movement_type
+            === core.movement_type;
+        const isBlocked = blockedMovements.includes(
+          core.movement_name
+        );
+        const isBoosted = zoneDistMult > 1.0;
+        const isSlowed = zoneDistMult < 1.0;
+
+        let zoneTag = null;
+        if (isBlocked) {
+          zoneTag = (
+            <Box
+              inline
+              color="bad"
+              fontSize="10px"
+              ml={1}>
+              <Icon name="ban" mr={0.5} />
+              Blocked
+            </Box>
+          );
+        } else if (isBoosted) {
+          zoneTag = (
+            <Box
+              inline
+              color="#4488ff"
+              fontSize="10px"
+              ml={1}>
+              <Icon name="arrow-up" mr={0.5} />
+              +{Math.round((zoneDistMult - 1) * 100)}%
+            </Box>
+          );
+        } else if (isSlowed) {
+          zoneTag = (
+            <Box
+              inline
+              color="bad"
+              fontSize="10px"
+              ml={1}>
+              <Icon name="arrow-down" mr={0.5} />
+              {Math.round((1 - zoneDistMult) * 100)}%
+            </Box>
+          );
+        }
+        if (!isBlocked && inResonance) {
+          zoneTag = (
+            <Box inline>
+              {zoneTag}
+              <Box
+                inline
+                color="#44cc44"
+                fontSize="10px"
+                ml={1}>
+                <Icon name="sync" mr={0.5} />
+                Reset
+              </Box>
+            </Box>
+          );
+        }
+
         return (
           <Stack.Item key={index}>
             <Flex align="center">
@@ -1203,18 +1410,32 @@ const CoresSection = props => {
                 <Button
                   fluid
                   selected={isSelected}
-                  onClick={() => act('select_core', { ref: core.ref })}>
+                  disabled={isBlocked}
+                  color={isBlocked
+                    ? 'bad' : undefined}
+                  onClick={() => act(
+                    'select_core',
+                    { ref: core.ref }
+                  )}>
                   <Flex align="center">
                     <Flex.Item>
                       <Icon
-                        name="gem"
-                        color={getSinColor(core.movement_type)}
+                        name={isBlocked
+                          ? 'ban' : 'gem'}
+                        color={isBlocked
+                          ? 'bad'
+                          : getSinColor(
+                            core.movement_type
+                          )}
                         mr={1} />
                     </Flex.Item>
                     <Flex.Item grow>
                       {core.name}
+                      {zoneTag}
                     </Flex.Item>
-                    <Flex.Item color="label" fontSize="11px">
+                    <Flex.Item
+                      color="label"
+                      fontSize="11px">
                       T{core.max_tier}
                     </Flex.Item>
                   </Flex>
@@ -1224,7 +1445,10 @@ const CoresSection = props => {
                 <Button
                   icon="eject"
                   tooltip="Retrieve"
-                  onClick={() => act('retrieve_core', { ref: core.ref })} />
+                  onClick={() => act(
+                    'retrieve_core',
+                    { ref: core.ref }
+                  )} />
               </Flex.Item>
             </Flex>
           </Stack.Item>
@@ -1318,6 +1542,29 @@ const getTierIcon = tier => {
       color={colors[tier] || 'label'}
       mr={1} />
   );
+};
+
+const getZoneColor = type => {
+  const colors = {
+    1: '#4488ff',
+    2: '#ff4444',
+    3: '#44cc44',
+    4: '#ff8800',
+  };
+  return colors[type] || '#888888';
+};
+
+const getMovementName = mt => {
+  const names = {
+    1: 'Charge',
+    2: 'Attract',
+    3: 'Shuffle',
+    4: 'Expand',
+    5: 'Drift',
+    6: 'Teleport',
+    7: 'Mirror',
+  };
+  return names[mt] || 'Unknown';
 };
 
 const getMovementButtonText = mt => {
