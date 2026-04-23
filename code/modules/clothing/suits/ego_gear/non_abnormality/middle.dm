@@ -204,7 +204,7 @@
 	)
 
 /obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather/CanUseEgo(mob/living/carbon/human/user)
-	if(user?.mind?.assigned_role == "Middle Ex-Great Brother")
+	if(user?.mind?.assigned_role == "Ex Great Brother")
 		return TRUE
 	return ..()
 

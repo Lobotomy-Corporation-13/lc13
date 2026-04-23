@@ -74,18 +74,18 @@ During combos, the target is shielded from outside damage, and damage to you is 
 /obj/item/ego_weapon/city/laevateinn/CanUseEgo(mob/living/user)
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
-		if(H.mind?.assigned_role == "Middle Ex-Great Brother")
+		if(H.mind?.assigned_role == "Ex Great Brother")
 			return TRUE
 		if(!(SSmaptype.maptype in SSmaptype.citymaps))
 			return TRUE
 	return ..()
 
-/// Checks if the user is the rightful wielder (Middle Ex-Great Brother).
+/// Checks if the user is the rightful wielder (Ex Great Brother).
 /obj/item/ego_weapon/city/laevateinn/proc/IsRightfulWielder(mob/living/user)
 	if(!ishuman(user))
 		return FALSE
 	var/mob/living/carbon/human/H = user
-	if(H.mind?.assigned_role == "Middle Ex-Great Brother")
+	if(H.mind?.assigned_role == "Ex Great Brother")
 		return TRUE
 	return FALSE
 

@@ -77,7 +77,7 @@
 		return
 
 	// Clone damage only applies to the Ex-Great Brother
-	if(H.mind?.assigned_role == "Middle Ex-Great Brother")
+	if(H.mind?.assigned_role == "Ex Great Brother")
 		if(!istype(attack_source, /mob/living/simple_animal))
 			var/clone_damage = damage * 0.025
 			if(clone_damage > 0)

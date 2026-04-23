@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////
 
 /datum/job/middle_nursefather
-	title = "Middle Ex-Great Brother"
+	title = "Ex Great Brother"
 	outfit = /datum/outfit/job/middle_nursefather
 	department_head = list("the Middle")
 	faction = "Station"
@@ -59,7 +59,7 @@
 	. = ..()
 
 /datum/outfit/job/middle_nursefather
-	name = "Middle Ex-Great Brother"
+	name = "Ex Great Brother"
 	jobtype = /datum/job/middle_nursefather
 
 	id = /obj/item/card/id/silver/plastic
@@ -149,7 +149,7 @@
 
 /obj/item/middle_nursefather_debug
 	name = "ex-great brother's signet"
-	desc = "A debug item. Use in hand to transform into the Middle Ex-Great Brother with full gear and abilities."
+	desc = "A debug item. Use in hand to transform into the Ex Great Brother with full gear and abilities."
 	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
 	icon_state = "middle_grudge"
 	w_class = WEIGHT_CLASS_TINY
@@ -160,7 +160,7 @@
 		return
 	var/mob/living/carbon/human/H = user
 
-	to_chat(H, span_boldnotice("Transforming into Middle Ex-Great Brother..."))
+	to_chat(H, span_boldnotice("Transforming into Ex Great Brother..."))
 
 	// Drop all held and worn items
 	H.drop_all_held_items()
@@ -186,7 +186,7 @@
 
 	// Set role
 	if(H.mind)
-		H.mind.assigned_role = "Middle Ex-Great Brother"
+		H.mind.assigned_role = "Ex Great Brother"
 
 	// Add traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
@@ -200,7 +200,7 @@
 	var/datum/outfit/job/middle_nursefather/outfit = new()
 	outfit.equip(H)
 
-	to_chat(H, span_boldnotice("You are now the Middle Ex-Great Brother. Laevateinn is on your back."))
+	to_chat(H, span_boldnotice("You are now the Ex Great Brother. Laevateinn is on your back."))
 
 	// Consume the debug item
 	qdel(src)
@@ -210,7 +210,7 @@
 
 /obj/item/middle_nursefather_ghost_spawn
 	name = "ex-great brother's calling"
-	desc = "A debug item. Use in hand to poll trusted ghosts for a Middle Ex-Great Brother player."
+	desc = "A debug item. Use in hand to poll trusted ghosts for a Ex Great Brother player."
 	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
 	icon_state = "middle_grudge"
 	w_class = WEIGHT_CLASS_TINY
@@ -226,11 +226,11 @@
 		return
 
 	polling = TRUE
-	to_chat(user, span_notice("Polling ghosts for a Middle Ex-Great Brother candidate..."))
+	to_chat(user, span_notice("Polling ghosts for a Ex Great Brother candidate..."))
 
 	var/turf/spawn_loc = get_turf(src)
 
-	var/list/candidates = pollGhostCandidates("Do you wish to become the Middle Ex-Great Brother?", ROLE_TRAITOR, poll_time = 300)
+	var/list/candidates = pollGhostCandidates("Do you wish to become the Ex Great Brother?", ROLE_TRAITOR, poll_time = 300)
 
 	if(QDELETED(src))
 		return
@@ -276,7 +276,7 @@
 
 	// Set role
 	if(H.mind)
-		H.mind.assigned_role = "Middle Ex-Great Brother"
+		H.mind.assigned_role = "Ex Great Brother"
 
 	// Add traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
@@ -290,7 +290,7 @@
 	var/datum/outfit/job/middle_nursefather/outfit = new()
 	outfit.equip(H)
 
-	to_chat(H, span_boldnotice("You are the Middle Ex-Great Brother. Laevateinn is on your back."))
+	to_chat(H, span_boldnotice("You are the Ex Great Brother. Laevateinn is on your back."))
 
 	// Consume the item
 	qdel(src)
