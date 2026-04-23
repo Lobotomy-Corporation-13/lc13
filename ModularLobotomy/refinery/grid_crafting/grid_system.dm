@@ -337,7 +337,8 @@
 			result_y = result[2]
 
 		if(CORE_MOVEMENT_ATTRACT)
-			var/list/result = ExecuteAttract(distance)
+			var/target_id = owner ? owner.highlighted_item_id : null
+			var/list/result = ExecuteAttract(distance, target_id)
 			if(!result)
 				return FALSE
 			result_x = result[1]
@@ -416,31 +417,40 @@
 		round(focus_y + norm_y * distance, 1)
 	)
 
-/// Attract: Move toward nearest item on active side
-/datum/grid_craft_manager/proc/ExecuteAttract(distance)
-	var/datum/grid_craft_item/nearest = null
-	var/nearest_dist = INFINITY
+/// Attract: Move toward a targeted item (or nearest if none selected)
+/datum/grid_craft_manager/proc/ExecuteAttract(distance, target_item_id)
+	// 40% distance penalty
+	distance *= 0.6
 
-	for(var/datum/grid_craft_item/item in GetActiveItems())
-		var/dist = item.DistanceFrom(focus_x, focus_y)
-		if(dist < nearest_dist && dist > 0)
-			nearest_dist = dist
-			nearest = item
+	var/datum/grid_craft_item/target = null
 
-	if(!nearest)
-		// No weapons found, act like shuffle
+	// Try to find the highlighted/targeted item first
+	if(target_item_id)
+		for(var/datum/grid_craft_item/item in GetActiveItems())
+			if(item.item_id == target_item_id)
+				target = item
+				break
+
+	// Fall back to nearest item
+	if(!target)
+		var/nearest_dist = INFINITY
+		for(var/datum/grid_craft_item/item in GetActiveItems())
+			var/dist = item.DistanceFrom(focus_x, focus_y)
+			if(dist < nearest_dist && dist > 0)
+				nearest_dist = dist
+				target = item
+
+	if(!target)
 		return ExecuteShuffle(distance)
 
-	// Calculate direction to nearest weapon
-	var/dx = nearest.coord_x - focus_x
-	var/dy = nearest.coord_y - focus_y
+	var/dx = target.coord_x - focus_x
+	var/dy = target.coord_y - focus_y
 	var/total_dist = sqrt(dx * dx + dy * dy)
 
 	if(total_dist <= 0)
 		return list(focus_x, focus_y)
 
-	// Normalize and apply distance
-	var/move_dist = min(distance, total_dist)  // Don't overshoot
+	var/move_dist = min(distance, total_dist)
 	var/norm_x = dx / total_dist
 	var/norm_y = dy / total_dist
 

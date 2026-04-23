@@ -155,7 +155,14 @@
 
 /// Roll the actual distance for this core (before diminishing returns)
 /obj/item/navigation_core/proc/RollDistance()
-	var/base_dist = rand(min_distance * 10, max_distance * 10) / 10  // Decimal precision
+	var/base_dist
+	if(nav_movement_type == CORE_MOVEMENT_CHARGE)
+		// Charge favors high end: take the max of two rolls
+		var/roll1 = rand(min_distance * 10, max_distance * 10) / 10
+		var/roll2 = rand(min_distance * 10, max_distance * 10) / 10
+		base_dist = max(roll1, roll2)
+	else
+		base_dist = rand(min_distance * 10, max_distance * 10) / 10
 	var/movement_mod = GetMovementDistanceModifier(nav_movement_type)
 	return base_dist * movement_mod * quantity_modifier
 

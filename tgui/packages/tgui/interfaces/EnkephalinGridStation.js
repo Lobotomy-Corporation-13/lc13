@@ -494,6 +494,7 @@ const GridMap = props => {
           centerY={centerY}
           MAP_SCALE={MAP_SCALE}
           items={items}
+          highlightedItem={highlightedItem}
           focus_x={focus_x}
           focus_y={focus_y}
           toScreenX={toScreenX}
@@ -609,6 +610,7 @@ const MovementPrediction = props => {
     centerY,
     MAP_SCALE,
     items,
+    highlightedItem,
     focus_x,
     focus_y,
     toScreenX,
@@ -676,25 +678,45 @@ const MovementPrediction = props => {
     );
   }
 
-  // Attract (2): Arrow toward nearest weapon
+  // Attract (2): Arrow toward highlighted or nearest item
   if (mt === 2) {
-    const nearest = items.reduce((best, item) => {
-      const dist = Math.sqrt(
-        Math.pow(item.x - focus_x, 2) + Math.pow(item.y - focus_y, 2)
-      );
-      if (!best || (dist > 0 && dist < best.dist)) {
-        return { item, dist };
-      }
-      return best;
-    }, null);
+    const attractDist = maxDist * 0.6;
+    let target = null;
 
-    if (nearest && nearest.dist > 0) {
-      const targetX = toScreenX(nearest.item.x);
-      const targetY = toScreenY(nearest.item.y);
-      const moveDist = Math.min(maxDist, nearest.dist);
-      const ratio = moveDist / nearest.dist;
-      const endX = centerX + (targetX - centerX) * ratio;
-      const endY = centerY + (targetY - centerY) * ratio;
+    if (highlightedItem) {
+      const dist = Math.sqrt(
+        Math.pow(highlightedItem.x - focus_x, 2)
+        + Math.pow(highlightedItem.y - focus_y, 2)
+      );
+      if (dist > 0) {
+        target = { item: highlightedItem, dist };
+      }
+    }
+
+    if (!target) {
+      target = items.reduce((best, item) => {
+        const dist = Math.sqrt(
+          Math.pow(item.x - focus_x, 2)
+          + Math.pow(item.y - focus_y, 2)
+        );
+        if (!best || (dist > 0 && dist < best.dist)) {
+          return { item, dist };
+        }
+        return best;
+      }, null);
+    }
+
+    if (target && target.dist > 0) {
+      const tX = toScreenX(target.item.x);
+      const tY = toScreenY(target.item.y);
+      const moveDist = Math.min(
+        attractDist, target.dist
+      );
+      const ratio = moveDist / target.dist;
+      const endX = centerX
+        + (tX - centerX) * ratio;
+      const endY = centerY
+        + (tY - centerY) * ratio;
 
       return (
         <g>
