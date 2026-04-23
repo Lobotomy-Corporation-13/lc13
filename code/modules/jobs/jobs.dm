@@ -286,7 +286,7 @@ GLOBAL_LIST_INIT(city_antagonist_positions, list(
 
 	"Corporist Maestro",
 	"Ex Thumb Sottocapo",
-	"Middle Ex-Great Brother",
+	"Ex Great Brother",
 ))
 
 
