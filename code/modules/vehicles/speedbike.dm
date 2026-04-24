@@ -163,9 +163,18 @@
 	attack_verb_simple = list("dump")
 	/// The car linked to this phone
 	var/obj/vehicle/ridden/speedwagon/middle/car
+	/// Total ahn withdrawn via favors this round
+	var/total_favors_withdrawn = 0
 	COOLDOWN_DECLARE(phone_cooldown)
+	COOLDOWN_DECLARE(favor_cooldown)
 
 /obj/item/middle_car_phone/attack_self(mob/living/user)
+	var/choice = tgui_alert(user, "What do you need?", "Car Phone", list("Call Car", "Call in a Favor"))
+	if(!choice || QDELETED(src) || QDELETED(user) || !user.is_holding(src))
+		return
+	if(choice == "Call in a Favor")
+		call_favor(user)
+		return
 	if(!COOLDOWN_FINISHED(src, phone_cooldown))
 		to_chat(user, span_warning("The phone is still on cooldown."))
 		return
@@ -216,3 +225,46 @@
 		var/atom/throw_target = get_edge_target_turf(L, get_dir(T, L))
 		L.throw_at(throw_target, 3, 2)
 		visible_message("<span class='danger'>[L] is knocked back by [car]'s arrival!</span>")
+
+/// Call in a favor — request ahn from siblings via the phone.
+/obj/item/middle_car_phone/proc/call_favor(mob/living/user)
+	if(!COOLDOWN_FINISHED(src, favor_cooldown))
+		var/time_left = DisplayTimeText(COOLDOWN_TIMELEFT(src, favor_cooldown))
+		to_chat(user, span_warning("Your contact isn't picking up. Try again in [time_left]."))
+		return
+	var/datum/bank_account/account = user.get_bank_account()
+	if(!account)
+		to_chat(user, span_warning("You don't have a bank account to wire to."))
+		return
+	var/amount = input(user, "How much ahn do you need wired? (1-1500)", "Call in a Favor") as null|num
+	if(isnull(amount) || QDELETED(src) || QDELETED(user) || !user.is_holding(src))
+		return
+	amount = clamp(round(amount), 1, 1500)
+	if(amount <= 0)
+		return
+	to_chat(user, span_notice("You dial a number..."))
+	playsound(user, 'sound/machines/twobeep_high.ogg', 30, TRUE)
+	if(!do_after(user, 20, src))
+		return
+	var/list/flavor_lines = list(
+		"Hey, it's me. Wire me something, yeah? ...Good lookin' out.",
+		"Brother, I need a favor. The usual. ...You're the best.",
+		"Listen, I'm throwin' a little get-together. Need some funds. ...Appreciate it.",
+		"It's your favorite sibling. Cash me out, I'll owe you one. ...Heh, another one.",
+		"I need ahn. Don't ask. ...Thanks, you're a real one.",
+	)
+	to_chat(user, span_notice("\"[pick(flavor_lines)]\""))
+	COOLDOWN_START(src, favor_cooldown, 2 MINUTES)
+	total_favors_withdrawn += amount
+	if(total_favors_withdrawn > 8000)
+		to_chat(user, span_warning("Your contact sounds hesitant. \"You're racking up quite a tab, brother...\""))
+		message_admins("[ADMIN_LOOKUPFLW(user)] (Middle Nursefather) has called in [total_favors_withdrawn] ahn in favors this round.")
+	addtimer(CALLBACK(src, PROC_REF(favor_arrival), user, account, amount), rand(3 SECONDS, 5 SECONDS))
+
+/// Deposit the favor ahn into the user's bank account.
+/obj/item/middle_car_phone/proc/favor_arrival(mob/living/user, datum/bank_account/account, amount)
+	if(QDELETED(user) || QDELETED(account))
+		return
+	account.adjust_money(amount)
+	if(!QDELETED(user))
+		to_chat(user, span_notice("Your phone buzzes. [amount] ahn has been wired to your account."))

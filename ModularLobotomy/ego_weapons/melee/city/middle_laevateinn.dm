@@ -315,13 +315,40 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	H.visible_message(span_danger("[H]'s enhancement tattoos flare with power!"))
 	to_chat(H, span_notice("Tattoos activated (Tier [tattoo_tier])!"))
 
-/// afterattack — click a target at range (3-7 tiles) to dash and trigger a combo.
-/// Also checks for mirror_weakened targets for the free execution dash.
+/// pre_attack — door forcing intercepts the attack chain before attackby/Sweep.
+/obj/item/ego_weapon/city/laevateinn/pre_attack(atom/A, mob/living/user, params)
+	if(!combo_in_progress && ishuman(user) && istype(A, /obj/machinery/door/airlock))
+		var/obj/machinery/door/airlock/door = A
+		if(door.density)
+			if(door.seal)
+				to_chat(user, span_warning("The door is sealed shut!"))
+				return TRUE
+			if(door.locked)
+				to_chat(user, span_warning("The door's bolts prevent it from being forced!"))
+				return TRUE
+			if(door.welded)
+				to_chat(user, span_warning("The door is welded shut!"))
+				return TRUE
+			user.visible_message(span_warning("[user] jams [src] into the door and starts prying it open!"))
+			playsound(A, 'sound/weapons/middle_nursefather/middlefather_blunt2.ogg', 80, TRUE)
+			if(!do_after(user, 30, A))
+				return TRUE
+			if(QDELETED(door) || !door.density)
+				return TRUE
+			door.open(2)
+			user.visible_message(span_danger("[user] wrenches the door open with brute force!"))
+			return TRUE
+	return ..()
+
+/// afterattack — range dash and mirror execution.
 /obj/item/ego_weapon/city/laevateinn/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
 	if(combo_in_progress)
 		return
-	if(!isliving(target) || !ishuman(user))
+	if(!ishuman(user))
+		return
+
+	if(!isliving(target))
 		return
 	var/mob/living/L = target
 	var/mob/living/carbon/human/H = user

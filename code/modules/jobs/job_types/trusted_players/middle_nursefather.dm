@@ -73,7 +73,8 @@
 	l_pocket = /obj/item/apprentice_recruitment/middle_nursefather
 	r_pocket = /obj/item/pda/security
 	backpack_contents = list(\
-		/obj/item/middle_car_phone = 1\
+		/obj/item/middle_car_phone = 1,\
+		/obj/item/middle_stamp_card = 1\
 	)
 
 ////////////////////////////////////////////////////////////
