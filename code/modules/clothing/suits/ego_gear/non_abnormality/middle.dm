@@ -261,3 +261,4 @@
 	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
 	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
 	icon_state = "kirahood"
+	flags_inv = HIDEMASK|HIDEHAIR

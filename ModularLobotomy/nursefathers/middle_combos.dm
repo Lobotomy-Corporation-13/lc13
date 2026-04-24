@@ -104,7 +104,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(target))
 	animate(target, pixel_x = target.base_pixel_x + (get_dir(target, user) & EAST ? 6 : -6), time = 0.2 SECONDS, easing = BACK_EASING)
 	animate(pixel_x = target.base_pixel_x, time = 0.3 SECONDS, easing = QUAD_EASING)
-	playsound(user, 'sound/weapons/punch1.ogg', 60, TRUE)
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 60, TRUE)
 	sleep(0.8 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -126,7 +126,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(target, pixel_x = target.base_pixel_x + (get_dir(user, target) & EAST ? 4 : -4), time = 0.1 SECONDS, easing = QUAD_EASING)
 	animate(target, pixel_x = target.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	shake_camera(target, 2, 2)
-	playsound(target, 'sound/weapons/punch1.ogg', 50, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
 	animate(user, pixel_x = user.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.5 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -142,7 +142,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(target, pixel_x = target.base_pixel_x + 6, pixel_y = target.base_pixel_y - 3, time = 0.1 SECONDS, easing = QUAD_EASING)
 	animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 0.2 SECONDS, easing = QUAD_EASING)
 	shake_camera(target, 2, 3)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 60, TRUE)
 	sleep(0.4 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -156,7 +156,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(target, pixel_x = target.base_pixel_x - 6, pixel_y = target.base_pixel_y - 2, time = 0.1 SECONDS, easing = QUAD_EASING)
 	animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 0.2 SECONDS, easing = QUAD_EASING)
 	shake_camera(target, 2, 3)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 60, TRUE)
 	sleep(0.5 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -170,7 +170,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_damage(target, user, 40 + tattoo_bonus, RED_DAMAGE)
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
 	shake_camera(target, 3, 5)
-	playsound(target, 'sound/weapons/punch1.ogg', 70, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt2.ogg', 70, TRUE)
 
 	wall_breaking_knockback(target, user, get_dir(user, target), 5)
 
@@ -194,25 +194,43 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_lock_target(target, 6 SECONDS)
 	target.Knockdown(6 SECONDS)
 
-	user.visible_message(span_danger("[user] pins [target] underfoot!"))
-	playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
-	sleep(0.3 SECONDS)
+	// Remember original positions + direction for knockback
+	var/stomp_dir = get_dir(user, target)
+	if(!stomp_dir)
+		stomp_dir = user.dir
+
+	// Grab and shove target down — user moves onto target's tile
+	user.visible_message(span_danger("[user] seizes [target] and slams them to the ground!"))
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
+	user.forceMove(get_turf(target))
+	// Target visually pinned below user — shifted down and tilted
+	animate(target, pixel_y = target.base_pixel_y - 8, transform = matrix(25, MATRIX_ROTATE), time = 0.2 SECONDS, easing = BOUNCE_EASING)
+	// User stands over them
+	animate(user, pixel_y = user.base_pixel_y + 6, time = 0.15 SECONDS, easing = QUAD_EASING)
+	animate(pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = BOUNCE_EASING)
+	sleep(0.4 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
 	// 5 base stomps — 20 RED each = 100
+	// User stomps while shifting weight side to side, target jolts with each hit
 	var/total_stomps = 5 + extra_stomps
 	for(var/i in 1 to total_stomps)
-		animate(user, pixel_y = user.base_pixel_y + 4, time = 0.1 SECONDS, easing = QUAD_EASING)
+		// User lifts foot and shifts weight
+		var/side_offset = (i % 2 == 1) ? 4 : -4
+		animate(user, pixel_y = user.base_pixel_y + 8, pixel_x = user.base_pixel_x + side_offset, time = 0.1 SECONDS, easing = QUAD_EASING)
+		// Stomp down
 		animate(pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = BOUNCE_EASING)
 		user.do_attack_animation(target, no_effect = TRUE)
 		middle_combo_damage(target, user, 20, RED_DAMAGE, BODY_ZONE_CHEST)
 		new /obj/effect/temp_visual/middle_slam(get_turf(target))
 		new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
-		animate(target, pixel_x = target.base_pixel_x + rand(-4, 4), pixel_y = target.base_pixel_y - 2, time = 0.05 SECONDS)
-		animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 0.15 SECONDS, easing = QUAD_EASING)
+		// Target jolts and rotates slightly more with each stomp
+		var/jolt_rotation = 25 + (i * 3)
+		animate(target, pixel_x = target.base_pixel_x + rand(-6, 6), pixel_y = target.base_pixel_y - 8 - (i), transform = matrix(jolt_rotation, MATRIX_ROTATE), time = 0.05 SECONDS)
+		animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y - 8, transform = matrix(25, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
 		shake_camera(target, 2, 2)
-		playsound(target, pick('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg'), 55, TRUE)
+		playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 55, TRUE)
 
 		// AoE shockwave on 3rd stomp — 10 RED to nearby
 		if(i == 3)
@@ -222,13 +240,23 @@ GLOBAL_VAR(middle_combo_impale_target)
 					continue
 				middle_combo_damage(L, user, 10, RED_DAMAGE)
 				new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(L))
-			playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
+			playsound(user, 'sound/weapons/middle_nursefather/middlefather_heavy_impact.ogg', 50, TRUE)
 		sleep(0.4 SECONDS)
 		if(MIDDLE_COMBO_CHECK(target, user))
 			return
 
-	// Final stomp — 25 + grudge RED + bleed
-	animate(user, pixel_y = user.base_pixel_y + 16, time = 0.2 SECONDS, easing = QUAD_EASING)
+	// Step back off the target before the final stomp
+	var/turf/stepback = get_step(get_turf(target), turn(stomp_dir, 180))
+	if(stepback && !stepback.density)
+		user.forceMove(stepback)
+	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 0.1 SECONDS)
+	user.setDir(stomp_dir)
+	sleep(0.15 SECONDS)
+	if(MIDDLE_COMBO_CHECK(target, user))
+		return
+
+	// Final stomp — 25 + grudge RED + bleed — big jump onto target
+	animate(user, pixel_y = user.base_pixel_y + 20, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -236,10 +264,13 @@ GLOBAL_VAR(middle_combo_impale_target)
 	user.visible_message(span_userdanger("[user] delivers a devastating final stomp!"))
 	middle_combo_damage(target, user, 25 + tattoo_bonus, RED_DAMAGE)
 	target.apply_lc_bleed(5)
+	// Reset target rotation before knockback
+	animate(target, pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	new /obj/effect/temp_visual/middle_slam(get_turf(target))
 	shake_camera(target, 3, 4)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_impact.ogg', 65, TRUE)
 
-	wall_breaking_knockback(target, user, get_dir(user, target), 3)
+	wall_breaking_knockback(target, user, stomp_dir, 3)
 
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)
@@ -262,7 +293,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 
 	// Grab + shout
 	user.say("I'll Gut Ya Like a Fish!")
-	playsound(user, 'sound/weapons/punch1.ogg', 50, TRUE)
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
 	sleep(0.3 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -277,7 +308,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		animate(pixel_x = target.base_pixel_x, time = 0.15 SECONDS, easing = QUAD_EASING)
 		new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
 		shake_camera(target, 1, 2)
-		playsound(target, pick('sound/weapons/punch1.ogg', 'sound/weapons/punch2.ogg', 'sound/weapons/punch3.ogg', 'sound/weapons/punch4.ogg'), 50, TRUE)
+		playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
 		animate(user, pixel_x = user.base_pixel_x, time = 0.1 SECONDS, easing = QUAD_EASING)
 		sleep(0.3 SECONDS)
 		if(MIDDLE_COMBO_CHECK(target, user))
@@ -305,7 +336,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		animate(target, pixel_y = target.base_pixel_y - 3, pixel_x = target.base_pixel_x + rand(-3, 3), time = 0.08 SECONDS)
 		animate(pixel_y = target.base_pixel_y, pixel_x = target.base_pixel_x, time = 0.15 SECONDS, easing = QUAD_EASING)
 		shake_camera(target, 2, 3)
-		playsound(target, 'sound/weapons/bladeslice.ogg', 55, TRUE)
+		playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 55, TRUE)
 		sleep(0.35 SECONDS)
 		if(MIDDLE_COMBO_CHECK(target, user))
 			return
@@ -329,7 +360,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_aoe(target, user, 15, FIRE, 2, 3)
 	for(var/mob/M in viewers(7, get_turf(user)))
 		shake_camera(M, 3, 5)
-	playsound(target, 'sound/effects/explosion1.ogg', 60, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_impact.ogg', 60, TRUE)
 
 	// Knockback
 	wall_breaking_knockback(target, user, get_dir(user, target), 4)
@@ -365,7 +396,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	user.visible_message(span_danger("[user] drives Laevateinn through [target]'s gut!"))
 	middle_combo_damage(target, user, 20, RED_DAMAGE, BODY_ZONE_CHEST)
 	new /obj/effect/temp_visual/dir_setting/laevateinn_stab(get_turf(target), EAST)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 65, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg', 65, TRUE)
 	shake_camera(target, 2, 3)
 	sleep(0.6 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -395,7 +426,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 		animate(target, pixel_x = target.base_pixel_x + rand(-2 - i, 2 + i), pixel_y = target.base_pixel_y + rand(-1, 1), time = 0.05 SECONDS)
 		animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 0.1 SECONDS, easing = QUAD_EASING)
 		shake_camera(target, 1, 2)
-		playsound(target, 'sound/weapons/bladeslice.ogg', 45, TRUE)
+		playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 45, TRUE)
 
 		if(i >= 5)
 			var/obj/effect/temp_visual/sparks/petal = new(get_turf(target))
@@ -424,7 +455,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_aoe(target, user, 20, FIRE, 2, 5)
 	for(var/mob/M in viewers(7, get_turf(user)))
 		shake_camera(M, 3, 5)
-	playsound(target, 'sound/effects/explosion1.ogg', 65, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_impact.ogg', 65, TRUE)
 
 	user.say("Hot as hell!")
 
@@ -459,7 +490,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	var/datum/beam/sword_beam = throw_origin.Beam(target, "1-full", time = 5)
 	if(sword_beam)
 		sword_beam.visuals.color = "#FF4500"
-	playsound(user, 'sound/weapons/bladeslice.ogg', 70, TRUE)
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg', 70, TRUE)
 	sleep(0.3 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -516,7 +547,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	new /obj/effect/temp_visual/middle_slam(get_turf(target))
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
 	shake_camera(target, 3, 5)
-	playsound(target, 'sound/weapons/punch1.ogg', 65, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt2.ogg', 65, TRUE)
 	sleep(0.5 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -536,7 +567,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	animate(pixel_x = target.base_pixel_x, time = 0.05 SECONDS)
 	for(var/mob/M in viewers(7, get_turf(user)))
 		shake_camera(M, 3, 5)
-	playsound(target, 'sound/effects/explosion1.ogg', 70, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_impact.ogg', 70, TRUE)
 	sleep(0.7 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -551,7 +582,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	new /obj/effect/temp_visual/fire/fast(get_turf(target))
 	target.SpinAnimation(5, 1)
 	shake_camera(target, 2, 4)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 60, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 60, TRUE)
 	target.throw_at(get_ranged_target_turf_direct(user, target, 4), 4, 4, user, TRUE)
 	sleep(0.6 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
@@ -569,7 +600,7 @@ GLOBAL_VAR(middle_combo_impale_target)
 	user.forceMove(get_turf(target))
 	animate(user, alpha = 255, time = 0.1 SECONDS)
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
-	playsound(target, 'sound/weapons/punch1.ogg', 60, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt2.ogg', 60, TRUE)
 	sleep(0.3 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -579,9 +610,13 @@ GLOBAL_VAR(middle_combo_impale_target)
 		return
 
 	// Step 6: 4 rapid slashes — 15 RED + 2 FIRE each = 60 RED + 8 FIRE
+	// User circles around the target, slashing from alternating sides
+	var/list/circle_offsets = list(list(-10, 0), list(0, 8), list(10, 0), list(0, -8))
 	for(var/i in 1 to 4)
 		var/swing_angle = (i % 2 == 1) ? 60 : -60
-		animate(user, transform = matrix(swing_angle, MATRIX_ROTATE), time = 0.08 SECONDS, easing = QUAD_EASING)
+		var/list/offset = circle_offsets[i]
+		// User shifts around target
+		animate(user, pixel_x = user.base_pixel_x + offset[1], pixel_y = user.base_pixel_y + offset[2], transform = matrix(swing_angle, MATRIX_ROTATE), time = 0.08 SECONDS, easing = QUAD_EASING)
 		animate(transform = null, time = 0.12 SECONDS, easing = QUAD_EASING)
 		user.do_attack_animation(target, no_effect = TRUE)
 		middle_combo_damage(target, user, 15, RED_DAMAGE)
@@ -589,16 +624,21 @@ GLOBAL_VAR(middle_combo_impale_target)
 		target.apply_lc_overheat(3)
 		new /obj/effect/temp_visual/fire/fast(get_turf(target))
 		new /obj/effect/temp_visual/dir_setting/middle_slash(get_turf(target), user.dir)
-		animate(target, pixel_x = target.base_pixel_x + (swing_angle > 0 ? 4 : -4), time = 0.05 SECONDS)
-		animate(pixel_x = target.base_pixel_x, time = 0.1 SECONDS, easing = QUAD_EASING)
+		// Target recoils away from the slash direction
+		animate(target, pixel_x = target.base_pixel_x - offset[1] / 2, pixel_y = target.base_pixel_y - offset[2] / 2, time = 0.05 SECONDS)
+		animate(pixel_x = target.base_pixel_x, pixel_y = target.base_pixel_y, time = 0.1 SECONDS, easing = QUAD_EASING)
 		shake_camera(target, 2, 3)
-		playsound(target, 'sound/weapons/bladeslice.ogg', 50, TRUE)
+		playsound(target, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 50, TRUE)
 		sleep(0.3 SECONDS)
 		if(MIDDLE_COMBO_CHECK(target, user))
 			return
+	// Reset user position after circling
+	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = QUAD_EASING)
 
 	// Step 7: Impale — 30 RED + 2 FIRE
-	animate(user, pixel_x = user.base_pixel_x - 6, time = 0.1 SECONDS, easing = QUAD_EASING)
+	// User lunges forward into the target
+	var/lunge_dir_x = (get_dir(user, target) & EAST) ? 10 : ((get_dir(user, target) & WEST) ? -10 : 0)
+	animate(user, pixel_x = user.base_pixel_x + lunge_dir_x, pixel_y = user.base_pixel_y - 2, time = 0.1 SECONDS, easing = QUAD_EASING)
 	user.visible_message(span_danger("[user] drives Laevateinn through [target]!"))
 	user.do_attack_animation(target, no_effect = TRUE)
 	middle_combo_damage(target, user, 30, RED_DAMAGE)
@@ -613,37 +653,42 @@ GLOBAL_VAR(middle_combo_impale_target)
 		target.add_overlay(impale_overlay)
 		GLOB.middle_combo_impale_overlay = impale_overlay
 		GLOB.middle_combo_impale_target = target
-	animate(target, pixel_x = target.base_pixel_x + (get_dir(user, target) & EAST ? 6 : -6), time = 0.08 SECONDS, easing = QUAD_EASING)
+	// Target jolts from impale and tilts
+	animate(target, pixel_x = target.base_pixel_x + (lunge_dir_x > 0 ? 8 : -8), transform = matrix(-10, MATRIX_ROTATE), time = 0.08 SECONDS, easing = QUAD_EASING)
 	animate(pixel_x = target.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
-	animate(user, pixel_x = user.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
 	shake_camera(target, 3, 4)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 70, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg', 70, TRUE)
 	sleep(0.6 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
 	// Step 8: Kick while impaled — 25 RED
-	animate(user, pixel_y = user.base_pixel_y + 4, time = 0.1 SECONDS, easing = QUAD_EASING)
-	animate(pixel_y = user.base_pixel_y, time = 0.08 SECONDS, easing = BOUNCE_EASING)
+	// User lifts and drives a knee/kick into the impaled target
+	animate(user, pixel_y = user.base_pixel_y + 6, pixel_x = user.base_pixel_x, time = 0.08 SECONDS, easing = QUAD_EASING)
+	animate(pixel_y = user.base_pixel_y - 2, time = 0.08 SECONDS, easing = BOUNCE_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
 	middle_combo_damage(target, user, 25, RED_DAMAGE)
-	animate(target, pixel_y = target.base_pixel_y - 4, pixel_x = target.base_pixel_x + rand(-3, 3), time = 0.05 SECONDS)
-	animate(pixel_y = target.base_pixel_y, pixel_x = target.base_pixel_x, time = 0.2 SECONDS, easing = QUAD_EASING)
+	// Target buckles from the kick, rotating further
+	animate(target, pixel_y = target.base_pixel_y - 6, pixel_x = target.base_pixel_x + rand(-5, 5), transform = matrix(-15, MATRIX_ROTATE), time = 0.05 SECONDS)
+	animate(pixel_y = target.base_pixel_y, pixel_x = target.base_pixel_x, transform = matrix(-10, MATRIX_ROTATE), time = 0.2 SECONDS, easing = QUAD_EASING)
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(target))
 	shake_camera(target, 2, 3)
-	playsound(target, 'sound/weapons/punch1.ogg', 55, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_blunt2.ogg', 55, TRUE)
+	animate(user, pixel_y = user.base_pixel_y, time = 0.1 SECONDS, easing = QUAD_EASING)
 	sleep(0.4 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
 	// Step 9: Final stab — 40 + grudge RED + 3 FIRE
-	animate(user, pixel_x = user.base_pixel_x + (get_dir(user, target) & EAST ? 12 : -12), transform = matrix(15, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
-	animate(pixel_x = user.base_pixel_x, transform = null, time = 0.2 SECONDS, easing = QUAD_EASING)
+	// User winds up with a big lunge, then drives the blade through
+	animate(user, pixel_x = user.base_pixel_x - 8, pixel_y = user.base_pixel_y + 4, transform = matrix(15, MATRIX_ROTATE), time = 0.15 SECONDS, easing = QUAD_EASING)
+	animate(pixel_x = user.base_pixel_x + 6, pixel_y = user.base_pixel_y, transform = null, time = 0.12 SECONDS, easing = QUAD_EASING)
 	user.do_attack_animation(target, no_effect = TRUE)
 	middle_combo_damage(target, user, 40 + tattoo_bonus, RED_DAMAGE)
 	middle_combo_damage(target, user, 3, FIRE)
 	target.apply_lc_overheat(10)
-	animate(target, pixel_x = target.base_pixel_x + 6, time = 0.03 SECONDS)
+	// Target convulses from the final stab — reset their tilt
+	animate(target, pixel_x = target.base_pixel_x + 6, transform = null, time = 0.03 SECONDS)
 	animate(pixel_x = target.base_pixel_x - 6, time = 0.03 SECONDS)
 	animate(pixel_x = target.base_pixel_x + 5, time = 0.03 SECONDS)
 	animate(pixel_x = target.base_pixel_x - 5, time = 0.03 SECONDS)
@@ -655,17 +700,29 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_aoe(target, user, 30, FIRE, 3, 8)
 	for(var/mob/M in viewers(10, get_turf(user)))
 		shake_camera(M, 4, 6)
-	playsound(target, 'sound/effects/explosion1.ogg', 75, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_ring.ogg', 75, TRUE)
+	// Reset user pixels after the lunge
+	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, time = 0.2 SECONDS, easing = QUAD_EASING)
 	sleep(0.8 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
 
-	// Step 10: Rip blade + knockback — 30 RED
-	user.SpinAnimation(3, 1)
+	// Step 10: Rip blade + step back + knockback — 30 RED
+	// Remove impale overlay first
 	if(impale_overlay)
 		target.cut_overlay(impale_overlay)
 		GLOB.middle_combo_impale_overlay = null
 		GLOB.middle_combo_impale_target = null
+	// Step back off the target so knockback has a direction
+	var/ext_dir = get_dir(user, target)
+	if(!ext_dir)
+		ext_dir = user.dir
+	var/turf/stepback_turf = get_step(get_turf(target), turn(ext_dir, 180))
+	if(stepback_turf && !stepback_turf.density)
+		user.forceMove(stepback_turf)
+	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
+	user.setDir(ext_dir)
+	user.SpinAnimation(3, 1)
 	sleep(0.2 SECONDS)
 	if(MIDDLE_COMBO_CHECK(target, user))
 		return
@@ -673,8 +730,10 @@ GLOBAL_VAR(middle_combo_impale_target)
 	middle_combo_damage(target, user, 30, RED_DAMAGE)
 	var/obj/effect/temp_visual/explosion/emblem = new(get_turf(target))
 	emblem.color = "#9932CC"
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_heavy_ring.ogg', 80, TRUE)
+	shake_camera(target, 4, 6)
 
-	wall_breaking_knockback(target, user, get_dir(user, target), 8)
+	wall_breaking_knockback(target, user, ext_dir, 8)
 
 	animate(user, pixel_x = user.base_pixel_x, pixel_y = user.base_pixel_y, transform = null, time = 0.1 SECONDS)
 	user.SetImmobilized(0)

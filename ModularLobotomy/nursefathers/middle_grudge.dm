@@ -6,9 +6,11 @@
 	alert_type = /atom/movable/screen/alert/status_effect/middle_grudge
 	stacking_display_name = "middle_grudge"
 	max_stacks = 20
-	tick_interval = 30 SECONDS
+	tick_interval = 5 SECONDS
 	stack_decay = 0
 	consumed_on_threshold = FALSE
+	/// world.time when the owner last took damage
+	var/last_damage_time = 0
 
 /atom/movable/screen/alert/status_effect/middle_grudge
 	name = "The Middle - Grudge"
@@ -46,9 +48,19 @@
 /datum/status_effect/stacking/middle_grudge/can_have_status()
 	return (owner.stat != DEAD)
 
+/// Refreshes the damage timer, preventing decay for another 30 seconds.
+/datum/status_effect/stacking/middle_grudge/proc/RefreshDamageTimer()
+	last_damage_time = world.time
+
 /datum/status_effect/stacking/middle_grudge/tick()
 	if(!can_have_status())
 		qdel(src)
+		return
+	if(world.time >= last_damage_time + 30 SECONDS)
+		add_stacks(-1)
+		UpdateGrudgeOutline()
+		if(stacks <= 0)
+			qdel(src)
 
 /// Helper proc to add Grudge stacks to a mob. Blocked during combos.
 /mob/living/proc/AddGrudge(amount)
@@ -61,9 +73,11 @@
 		return
 	var/datum/status_effect/stacking/middle_grudge/G = has_status_effect(/datum/status_effect/stacking/middle_grudge)
 	if(!G)
-		apply_status_effect(/datum/status_effect/stacking/middle_grudge, amount)
+		G = apply_status_effect(/datum/status_effect/stacking/middle_grudge, amount)
 	else
 		G.add_stacks(amount)
+	if(G)
+		G.RefreshDamageTimer()
 
 /// Helper proc to consume Grudge stacks, returns amount actually consumed
 /mob/living/proc/ConsumeGrudge(amount)
@@ -124,3 +138,7 @@
 		stacks_to_add = 1
 
 	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, AddGrudge), stacks_to_add)
+	// Refresh decay timer on damage taken
+	var/datum/status_effect/stacking/middle_grudge/G = owner.has_status_effect(/datum/status_effect/stacking/middle_grudge)
+	if(G)
+		G.RefreshDamageTimer()

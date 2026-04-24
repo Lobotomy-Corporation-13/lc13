@@ -130,6 +130,10 @@
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, "middle_apprentice")
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, "middle_apprentice")
 
+	// Give mirror shard relic
+	var/obj/item/ruin_relic/mirror_shard/shard = new(H.loc)
+	H.put_in_hands(shard)
+
 	// Feedback
 	to_chat(user, span_notice("You have recruited [H] as your apprentice."))
 	playsound(get_turf(H), 'sound/abnormalities/onesin/bless.ogg', 50, 0, 4)
@@ -142,6 +146,8 @@
 	to_chat(H, span_boldnotice("You automatically dodge the first attack every 30 seconds, \
 		and have a 50% chance to dodge attacks when not holding a weapon. \
 		However, all damage you take also inflicts 5% unhealable damage."))
+	to_chat(H, span_boldnotice("You carry a strange mirror shard. Find a quiet moment alone to attune to it. \
+		Once attuned, use it in hand to cloak yourself. Your first attack while cloaked will pin the target down."))
 	to_chat(H, span_boldwarning("Protect your siblings. Enact vengeance on those who wrong the Middle."))
 
 ////////////////////////////////////////////////////////////

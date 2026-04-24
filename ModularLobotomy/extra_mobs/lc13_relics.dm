@@ -3004,6 +3004,156 @@
 /obj/item/ruin_relic/strange_box/proc/ResetCooldown()
 	on_cooldown = FALSE
 
+// ==================== MIRROR SHARD ====================
+
+/// Mirror Shard — a dark glass shard that resonates with isolation.
+/// Attunes only when the holder is alone (no living humans within 7 tiles).
+/// Active: cloak for 10 seconds (doesn't break on damage). First attack on a carbon target
+/// pins them both down (3s immobilize), then applies mirror_weakened (RED flash, breakable by damage).
+/// Laevateinn can trigger a free execution dash on weakened targets.
+/obj/item/ruin_relic/mirror_shard
+	name = "???"
+	desc = "A shard of dark glass, cold to the touch. Your reflection stares back — but a half-beat too late, as though it were watching you first."
+	icon_state = "oddity8"
+	rarity = 3
+	attunement_fail_damage = 10
+	/// Whether the ability is on cooldown
+	var/on_cooldown = FALSE
+	/// Whether the holder is currently cloaked
+	var/cloaked = FALSE
+	/// Timer ID for auto-decloak
+	var/cloak_timer
+	/// The mob currently cloaked (for cleanup)
+	var/mob/living/carbon/human/cloak_user
+
+/obj/item/ruin_relic/mirror_shard/CheckAttunement(mob/living/carbon/human/user)
+	var/list/nearby = list()
+	for(var/mob/living/carbon/human/H in range(7, user))
+		if(H == user)
+			continue
+		if(H.stat == DEAD)
+			continue
+		nearby += H
+	if(nearby.len > 0)
+		to_chat(user, span_warning("The shard goes cold. Your reflection looks past you — at the others."))
+		return FALSE
+	return TRUE
+
+/obj/item/ruin_relic/mirror_shard/OnAttuneSuccess(mob/living/carbon/human/user)
+	. = ..()
+	to_chat(user, span_notice("The glass warms in your hands. For a moment, your reflection smiles — like it's glad someone finally noticed."))
+	name = "mirror shard"
+
+/obj/item/ruin_relic/mirror_shard/equipped(mob/user, slot, initial)
+	. = ..()
+	RegisterSignal(user, COMSIG_MOB_ITEM_ATTACK, PROC_REF(OnCloakedAttack))
+
+/obj/item/ruin_relic/mirror_shard/dropped(mob/user)
+	if(cloaked && user == cloak_user)
+		DeactivateCloak()
+	. = ..()
+
+/obj/item/ruin_relic/mirror_shard/attack_self(mob/living/user)
+	if(!ishuman(user))
+		return
+	if(!IsAttuned(user))
+		TryAttune(user)
+		return
+	if(on_cooldown)
+		to_chat(user, span_warning("The shard's surface is dull and unresponsive."))
+		return
+	if(cloaked)
+		to_chat(user, span_warning("You are already cloaked."))
+		return
+	INVOKE_ASYNC(src, PROC_REF(ActivateCloak), user)
+
+/// Activates the mirror cloak — fades the user to invisibility over 1 second.
+/obj/item/ruin_relic/mirror_shard/proc/ActivateCloak(mob/living/carbon/human/user)
+	cloaked = TRUE
+	cloak_user = user
+	to_chat(user, span_notice("You hold the shard up. The world forgets you were here."))
+	playsound(user, 'sound/effects/stealthoff.ogg', 30, TRUE)
+	animate(user, alpha = 0, time = 1 SECONDS)
+	cloak_timer = addtimer(CALLBACK(src, PROC_REF(DeactivateCloak)), 10 SECONDS, TIMER_STOPPABLE)
+
+/// Deactivates the mirror cloak and restores visibility.
+/obj/item/ruin_relic/mirror_shard/proc/DeactivateCloak()
+	if(!cloaked)
+		return
+	cloaked = FALSE
+	if(cloak_timer)
+		deltimer(cloak_timer)
+		cloak_timer = null
+	if(cloak_user && !QDELETED(cloak_user))
+		animate(cloak_user, alpha = 255, time = 0.5 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(ForceAlpha), cloak_user), 0.5 SECONDS)
+		to_chat(cloak_user, span_warning("The mirror's veil fades."))
+	cloak_user = null
+
+/// Signal handler for attacks while cloaked. Always tracks combat; triggers grab if cloaked.
+/obj/item/ruin_relic/mirror_shard/proc/OnCloakedAttack(mob/living/source, mob/living/target)
+	SIGNAL_HANDLER
+	ActivateCombat()
+	if(!cloaked)
+		return
+	if(!iscarbon(target))
+		return
+	if(target.stat == DEAD)
+		return
+	INVOKE_ASYNC(src, PROC_REF(MirrorGrab), source, target)
+
+/// Pins the target down after a cloaked ambush. Both are immobilized for 3 seconds,
+/// then both receive mirror_weakened (RED flash, breakable by damage after immobilize ends).
+/// Forces alpha back to 255 in case animate didn't complete.
+/obj/item/ruin_relic/mirror_shard/proc/ForceAlpha(mob/living/M)
+	if(M && !QDELETED(M))
+		M.alpha = 255
+
+/obj/item/ruin_relic/mirror_shard/proc/MirrorGrab(mob/living/carbon/human/user, mob/living/carbon/target)
+	DeactivateCloak()
+	user.alpha = 255
+	animate(user, alpha = 255, time = 0.1 SECONDS)
+
+	// Pin both down
+	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "mirror_shard")
+	ADD_TRAIT(target, TRAIT_IMMOBILIZED, "mirror_shard")
+
+	// Apply mirror_weakened to both, cross-link partners
+	var/datum/status_effect/mirror_weakened/user_effect = user.apply_status_effect(/datum/status_effect/mirror_weakened)
+	var/datum/status_effect/mirror_weakened/target_effect = target.apply_status_effect(/datum/status_effect/mirror_weakened)
+	if(user_effect && target_effect)
+		user_effect.partner = target
+		user_effect.is_relic_user = TRUE
+		target_effect.partner = user
+
+	// Visual feedback
+	user.visible_message(span_danger("[user] lunges from thin air and pins [target] to the ground!"))
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
+
+	// Remove immobilize after 3 seconds, make weakened breakable by damage
+	addtimer(CALLBACK(src, PROC_REF(RemoveImmobilize), user, target), 3 SECONDS)
+
+	// Cooldown
+	on_cooldown = TRUE
+	addtimer(CALLBACK(src, PROC_REF(ResetCooldown)), 45 SECONDS)
+
+/// Removes immobilize from both and makes the weakened effect breakable by damage.
+/obj/item/ruin_relic/mirror_shard/proc/RemoveImmobilize(mob/living/user, mob/living/target)
+	if(user && !QDELETED(user))
+		REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "mirror_shard")
+		var/datum/status_effect/mirror_weakened/ue = user.has_status_effect(/datum/status_effect/mirror_weakened)
+		if(ue)
+			ue.breakable = TRUE
+	if(target && !QDELETED(target))
+		REMOVE_TRAIT(target, TRAIT_IMMOBILIZED, "mirror_shard")
+		var/datum/status_effect/mirror_weakened/te = target.has_status_effect(/datum/status_effect/mirror_weakened)
+		if(te)
+			te.breakable = TRUE
+
+/// Resets the ability cooldown.
+/obj/item/ruin_relic/mirror_shard/proc/ResetCooldown()
+	on_cooldown = FALSE
+
 // ==================== RELIC SPAWN LANDMARK ====================
 
 /// Landmark that spawns a random ruin relic weighted by rarity, then deletes itself.

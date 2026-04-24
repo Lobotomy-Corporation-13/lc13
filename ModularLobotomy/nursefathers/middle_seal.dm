@@ -83,6 +83,8 @@
 /datum/component/laevateinn_seal/proc/CheckHealthgate(damage)
 	if(unsealing || !damage || damage <= 0)
 		return
+	if(weapon && !COOLDOWN_FINISHED(weapon, reseal_cd))
+		return
 
 	if(!thresholds_initialized)
 		InitThresholds()
@@ -128,7 +130,7 @@
 			H.set_light(5, 3, LIGHT_COLOR_FIRE)
 
 	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(H))
-	playsound(H, 'sound/effects/explosion1.ogg', 50, TRUE)
+	playsound(H, 'sound/weapons/middle_nursefather/middlefather_break_seal.ogg', 50, TRUE)
 	for(var/mob/M in viewers(7, get_turf(H)))
 		shake_camera(M, 3, 4)
 
@@ -191,5 +193,5 @@
 	seal.pixel_x = seal.base_pixel_x + start_x
 	seal.pixel_y = seal.base_pixel_y + start_y
 	animate(seal, pixel_x = seal.base_pixel_x, pixel_y = seal.base_pixel_y, alpha = 255, time = 0.5 SECONDS, easing = BOUNCE_EASING)
-	playsound(T, 'sound/effects/meteorimpact.ogg', 40, TRUE)
+	playsound(T, 'sound/weapons/middle_nursefather/middlefather_break_seal2.ogg', 40, TRUE)
 	new /obj/effect/temp_visual/middle_slam(T)

@@ -17,6 +17,7 @@
 	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_SUITSTORE
 	var/datum/element/item_scaling/scaling_element
 	force = 20
+	hitsound = 'sound/weapons/middle_nursefather/middlefather_melee_sealed.ogg'
 	damtype = RED_DAMAGE
 	attack_speed = 1.5
 	w_class = WEIGHT_CLASS_BULKY
@@ -58,6 +59,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	/// Whether a combo is currently in progress
 	var/combo_in_progress = FALSE
 	COOLDOWN_DECLARE(dash_cd)
+	COOLDOWN_DECLARE(reseal_cd)
 
 /obj/item/ego_weapon/city/laevateinn/Initialize(mapload)
 	. = ..()
@@ -75,8 +77,6 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.mind?.assigned_role == "Ex Great Brother")
-			return TRUE
-		if(!(SSmaptype.maptype in SSmaptype.citymaps))
 			return TRUE
 	return ..()
 
@@ -162,6 +162,9 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		var/mob/living/carbon/human/user = usr
 		if(!istype(user))
 			return
+		if(!(src in user.held_items))
+			to_chat(user, span_warning("You need to be holding Laevateinn to reseal it."))
+			return
 		if(seal_stage <= 0)
 			to_chat(user, span_warning("Laevateinn is already fully sealed."))
 			return
@@ -179,6 +182,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	// Reset seal stage
 	SetSealStage(0)
 	user.set_light(0)
+	COOLDOWN_START(src, reseal_cd, 10 SECONDS)
 
 	// Reset the seal component gates
 	var/datum/component/laevateinn_seal/seal_comp = user.GetComponent(/datum/component/laevateinn_seal)
@@ -191,7 +195,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	// Visual feedback
 	new /obj/effect/temp_visual/dir_setting/middle_blast(get_turf(user))
-	playsound(user, 'sound/weapons/bladeslice.ogg', 50, TRUE)
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_break_seal.ogg', 50, TRUE)
 	user.visible_message(span_notice("[user] rebinds the chain seals on Laevateinn."))
 	to_chat(user, span_notice("Laevateinn has been resealed."))
 
@@ -215,12 +219,16 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	switch(seal_stage)
 		if(0)
 			force = 20
+			hitsound = 'sound/weapons/middle_nursefather/middlefather_melee_sealed.ogg'
 		if(1)
 			force = 32
+			hitsound = 'sound/weapons/middle_nursefather/middlefather_blunt.ogg'
 		if(2)
 			force = 40
+			hitsound = 'sound/weapons/middle_nursefather/middlefather_slash.ogg'
 		if(3)
 			force = 33
+			hitsound = 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg'
 	UpdateSealVisuals()
 
 /// Returns the FIRE bypass damage for the current seal stage.
@@ -303,15 +311,14 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	// Visual/audio feedback
 	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(H))
-	playsound(H, 'sound/weapons/bladeslice.ogg', 50, TRUE)
+	playsound(H, 'sound/weapons/middle_nursefather/middlefather_dash.ogg', 50, TRUE)
 	H.visible_message(span_danger("[H]'s enhancement tattoos flare with power!"))
 	to_chat(H, span_notice("Tattoos activated (Tier [tattoo_tier])!"))
 
 /// afterattack — click a target at range (3-7 tiles) to dash and trigger a combo.
+/// Also checks for mirror_weakened targets for the free execution dash.
 /obj/item/ego_weapon/city/laevateinn/afterattack(atom/target, mob/user, proximity_flag, click_parameters)
 	. = ..()
-	if(proximity_flag)
-		return
 	if(combo_in_progress)
 		return
 	if(!isliving(target) || !ishuman(user))
@@ -319,6 +326,15 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	var/mob/living/L = target
 	var/mob/living/carbon/human/H = user
 	if(L.stat == DEAD || L == H)
+		return
+
+	// Mirror shard execution — free dash to mirror_weakened targets at any range
+	var/datum/status_effect/mirror_weakened/weakened = L.has_status_effect(/datum/status_effect/mirror_weakened)
+	if(weakened)
+		INVOKE_ASYNC(src, PROC_REF(MirrorExecution), L, H, weakened)
+		return
+
+	if(proximity_flag)
 		return
 
 	var/dist = get_dist(H, L)
@@ -411,6 +427,89 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		var/mob/living/user = loc.loc
 		user.remove_status_effect(/datum/status_effect/middle_combo_protection)
 
+/// Mirror Shard execution — free dash to a mirror_weakened target, then gib the relic user
+/// and deal 200 RED to the held target. No grudge cost, ignores cooldown.
+/// Works regardless of whether the clicked target is the relic user or the pinned victim.
+/obj/item/ego_weapon/city/laevateinn/proc/MirrorExecution(mob/living/clicked, mob/living/carbon/human/user, datum/status_effect/mirror_weakened/weakened)
+	combo_in_progress = TRUE
+
+	// Resolve who is the relic user (gets gibbed) and who is the pinned target (takes 200 RED)
+	var/mob/living/relic_user
+	var/mob/living/pinned_target
+	if(weakened.is_relic_user)
+		relic_user = clicked
+		pinned_target = weakened.partner
+	else
+		pinned_target = clicked
+		relic_user = weakened.partner
+
+	// Lock both victims in place for the entire execution
+	if(relic_user && !QDELETED(relic_user))
+		ADD_TRAIT(relic_user, TRAIT_IMMOBILIZED, "mirror_execution")
+	if(pinned_target && !QDELETED(pinned_target))
+		ADD_TRAIT(pinned_target, TRAIT_IMMOBILIZED, "mirror_execution")
+
+	// Dash animation — dash to whichever was clicked
+	var/turf/origin = get_turf(user)
+	var/turf/dest = get_turf(clicked)
+	var/dash_dir = get_dir(user, clicked)
+
+	var/obj/effect/temp_visual/dir_setting/smoke_afterdash/aftersmoke = new(origin, dash_dir)
+	aftersmoke.color = "#D8B4FE"
+	var/list/line_turfs = getline(origin, dest)
+	for(var/turf/T in line_turfs)
+		if(T == origin || T == dest)
+			continue
+		var/obj/effect/temp_visual/dir_setting/smoke_dash/trailsmoke = new(T, dash_dir)
+		trailsmoke.color = "#D8B4FE"
+
+	animate(user, alpha = 0, pixel_y = user.base_pixel_y + 16, time = 0.15 SECONDS)
+	sleep(0.15 SECONDS)
+	user.forceMove(get_step(clicked, get_dir(clicked, user)))
+	user.pixel_y = user.base_pixel_y + 12
+	animate(user, alpha = 255, pixel_y = user.base_pixel_y, time = 0.15 SECONDS, easing = BOUNCE_EASING)
+	user.setDir(get_dir(user, clicked))
+
+	// Say the line based on relic user's gender
+	var/gendered_word = "boy"
+	if(relic_user && !QDELETED(relic_user))
+		if(relic_user.gender == FEMALE)
+			gendered_word = "girl"
+	user.say("Good [gendered_word]...")
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 50, TRUE)
+
+	// Build tension — camera shake and blade charge
+	sleep(1 SECONDS)
+	if(relic_user && !QDELETED(relic_user))
+		shake_camera(relic_user, 2, 2)
+	if(pinned_target && !QDELETED(pinned_target))
+		shake_camera(pinned_target, 2, 2)
+	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(user))
+	playsound(user, 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg', 60, TRUE)
+
+	sleep(1 SECONDS)
+
+	// Execute — gib the relic user, devastate the pinned target
+	var/turf/execution_turf = get_turf(user)
+	if(relic_user && !QDELETED(relic_user))
+		relic_user.visible_message(span_userdanger("[user] cleaves through [relic_user] and [pinned_target] in a single, devastating arc!"))
+		shake_camera(relic_user, 3, 5)
+		relic_user.gib()
+	if(pinned_target && !QDELETED(pinned_target))
+		shake_camera(pinned_target, 3, 5)
+		pinned_target.deal_damage(200, RED_DAMAGE)
+		pinned_target.remove_status_effect(/datum/status_effect/mirror_weakened)
+		REMOVE_TRAIT(pinned_target, TRAIT_IMMOBILIZED, "mirror_execution")
+
+	// Explosive finish
+	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(execution_turf)
+	new /obj/effect/temp_visual/dir_setting/middle_blast(execution_turf)
+	playsound(execution_turf, 'sound/weapons/middle_nursefather/middlefather_heavy_ring.ogg', 75, TRUE)
+	playsound(execution_turf, 'sound/weapons/middle_nursefather/middlefather_slash.ogg', 80, TRUE)
+	shake_camera(user, 3, 5)
+
+	combo_in_progress = FALSE
+
 ////////////////////////////////////////////////////////////
 // MIDDLE APPRENTICE — THERMAL BLADES
 // Dual-wield pair. Attacking with one triggers a follow-up hit from the other.
@@ -420,7 +519,10 @@ During combos, the target is shielded from outside damage, and damage to you is 
 /obj/item/ego_weapon/city/thermal_blade
 	name = "thermal blade"
 	desc = "A short blade infused with thermal energy. Designed to be wielded in pairs by the Middle's apprentices."
-	icon_state = "sodom"
+	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
+	lefthand_file = 'icons/obj/spider_house/middle/middle_spider_left.dmi'
+	righthand_file = 'icons/obj/spider_house/middle/middle_spider_right.dmi'
+	icon_state = "thermalblade_1"
 	force = 22
 	damtype = RED_DAMAGE
 	attack_speed = 1.0
@@ -439,6 +541,18 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		landing a few tiles past. Consumes the Tattoo buff and deactivates the blades."
 	/// Whether this blade is currently doing a follow-up (prevents infinite loops)
 	var/following_up = FALSE
+	base_icon_state = "thermalblade_1"
+
+/// Updates icon_state to active or inactive variant.
+/obj/item/ego_weapon/city/thermal_blade/proc/UpdateActiveVisuals(active)
+	if(active)
+		icon_state = "[base_icon_state]_active"
+	else
+		icon_state = base_icon_state
+	update_icon()
+	if(ismob(loc))
+		var/mob/M = loc
+		M.update_inv_hands()
 
 /// Grants weapon-related components when picked up.
 /obj/item/ego_weapon/city/thermal_blade/pickup(mob/user)
@@ -474,8 +588,6 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(H.mind?.assigned_role == "Middle Apprentice")
-			return TRUE
-		if(!(SSmaptype.maptype in SSmaptype.citymaps))
 			return TRUE
 	return ..()
 
@@ -520,7 +632,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	other_blade.following_up = TRUE
 	user.do_attack_animation(target, no_effect = TRUE)
 	target.deal_damage(other_blade.force, RED_DAMAGE)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 50, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_melee_sealed.ogg', 50, TRUE)
 
 	// Apply Bleed, and Overheat if Tattoos active
 	target.apply_lc_bleed(2)
@@ -552,8 +664,12 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	H.ApplyMiddleTattoos(tattoo_tier)
 
+	// Switch both blades to active sprites
+	for(var/obj/item/ego_weapon/city/thermal_blade/blade in H.held_items)
+		blade.UpdateActiveVisuals(TRUE)
+
 	new /obj/effect/temp_visual/dir_setting/laevateinn_blast(get_turf(H))
-	playsound(H, 'sound/weapons/bladeslice.ogg', 50, TRUE)
+	playsound(H, 'sound/weapons/middle_nursefather/middlefather_dash.ogg', 50, TRUE)
 	H.visible_message(span_danger("[H]'s enhancement tattoos flare with power!"))
 	to_chat(H, span_notice("Tattoos activated (Tier [tattoo_tier])!"))
 
@@ -579,8 +695,10 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 /// Dashes through the target, landing a few tiles past them. Consumes Tattoos.
 /obj/item/ego_weapon/city/thermal_blade/proc/ThermalDash(mob/living/target, mob/living/carbon/human/user)
-	// Consume tattoos
+	// Consume tattoos and deactivate blade sprites
 	user.ConsumeMiddleTattoos()
+	for(var/obj/item/ego_weapon/city/thermal_blade/blade in user.held_items)
+		blade.UpdateActiveVisuals(FALSE)
 
 	var/dash_dir = get_dir(user, target)
 	var/turf/target_turf = get_turf(target)
@@ -590,7 +708,7 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	target.deal_damage(force, RED_DAMAGE, source = user)
 	target.apply_lc_bleed(3)
 	new /obj/effect/temp_visual/dir_setting/middle_slash(get_turf(target), dash_dir)
-	playsound(target, 'sound/weapons/bladeslice.ogg', 55, TRUE)
+	playsound(target, 'sound/weapons/middle_nursefather/middlefather_scorch_slash.ogg', 55, TRUE)
 
 	// Move to target's tile first
 	user.forceMove(target_turf)
@@ -616,3 +734,6 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	user.forceMove(current)
 	user.setDir(dash_dir)
 
+/obj/item/ego_weapon/city/thermal_blade/offhand
+	icon_state = "thermalblade_2"
+	base_icon_state = "thermalblade_2"

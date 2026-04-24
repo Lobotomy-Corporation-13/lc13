@@ -25,6 +25,11 @@
 
 /datum/status_effect/middle_tattoos/on_remove()
 	RemoveTattooVisual()
+	// Deactivate thermal blade active sprites
+	if(ishuman(owner))
+		var/mob/living/carbon/human/H = owner
+		for(var/obj/item/ego_weapon/city/thermal_blade/blade in H.held_items)
+			blade.UpdateActiveVisuals(FALSE)
 	. = ..()
 
 /// Returns the passive damage bonus based on tier.
@@ -85,12 +90,16 @@
 		if(old_overlay)
 			owner.cut_overlay(old_overlay)
 		owner.remove_filter("middle_tattoo_outline")
-		// Delayed cleanup in case the flicker loop re-added the overlay
-		addtimer(CALLBACK(src, PROC_REF(FinalCleanupOverlay), old_overlay), 0.5 SECONDS)
+		// Multiple delayed cleanups to catch the flicker loop re-adding the overlay between sleeps
+		addtimer(CALLBACK(src, PROC_REF(FinalCleanupOverlay), old_overlay), 0.3 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(FinalCleanupOverlay), old_overlay), 0.7 SECONDS)
+		addtimer(CALLBACK(src, PROC_REF(FinalCleanupOverlay), old_overlay), 1.2 SECONDS)
 
 /datum/status_effect/middle_tattoos/proc/FinalCleanupOverlay(mutable_appearance/old_overlay)
-	if(old_overlay && owner && !QDELETED(owner))
-		owner.cut_overlay(old_overlay)
+	if(owner && !QDELETED(owner))
+		if(old_overlay)
+			owner.cut_overlay(old_overlay)
+		owner.remove_filter("middle_tattoo_outline")
 
 /// Flickers the tattoo overlay alpha based on tier.
 /datum/status_effect/middle_tattoos/proc/FlickerTattoo()
@@ -111,12 +120,16 @@
 			high_alpha = 255
 	while(flickering && owner && !QDELETED(src) && !QDELETED(owner) && tattoo_overlay)
 		owner.cut_overlay(tattoo_overlay)
+		if(!flickering || !tattoo_overlay)
+			return
 		tattoo_overlay.alpha = high_alpha
 		owner.add_overlay(tattoo_overlay)
 		sleep(0.5 SECONDS)
 		if(!flickering || QDELETED(src) || !owner || QDELETED(owner) || !tattoo_overlay)
 			return
 		owner.cut_overlay(tattoo_overlay)
+		if(!flickering || !tattoo_overlay)
+			return
 		tattoo_overlay.alpha = low_alpha
 		owner.add_overlay(tattoo_overlay)
 		sleep(0.5 SECONDS)
@@ -197,3 +210,72 @@
 	var/mob/living/owner = parent
 	INVOKE_ASYNC(owner, TYPE_PROC_REF(/mob/living, deal_damage), 1, damagetype, damage_source, DAMAGE_FORCED, null, null, def_zone)
 	return COMPONENT_MOB_DENY_DAMAGE
+
+// ==================== MIRROR WEAKENED ====================
+
+/// Applied to both the mirror shard user and their grab target.
+/// Both flash RED. After the 3s immobilize ends, damage to either breaks both.
+/// Laevateinn can trigger a free execution dash on weakened targets.
+/datum/status_effect/mirror_weakened
+	id = "mirror_weakened"
+	duration = 8 SECONDS
+	status_type = STATUS_EFFECT_UNIQUE
+	alert_type = null
+	/// The linked partner (relic user <-> grab target)
+	var/mob/living/partner
+	/// Whether this effect is on the relic user (TRUE) or the pinned target (FALSE)
+	var/is_relic_user = FALSE
+	/// Whether damage can break this effect (set TRUE after 3s immobilize ends)
+	var/breakable = FALSE
+	/// Whether we're currently removing the partner's effect (prevents infinite loop)
+	var/removing_partner = FALSE
+
+/datum/status_effect/mirror_weakened/on_apply()
+	. = ..()
+	if(!.)
+		return
+	owner.color = "#ff0000"
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(OnWeakenedDamage))
+	INVOKE_ASYNC(src, PROC_REF(PulseRed))
+
+/datum/status_effect/mirror_weakened/on_remove()
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	if(owner && !QDELETED(owner))
+		owner.alpha = 255
+		animate(owner, color = null, time = 0.5 SECONDS)
+		addtimer(CALLBACK(owner, TYPE_PROC_REF(/atom, update_atom_colour)), 0.5 SECONDS)
+	if(partner && !QDELETED(partner) && !removing_partner)
+		var/datum/status_effect/mirror_weakened/partner_effect = partner.has_status_effect(/datum/status_effect/mirror_weakened)
+		if(partner_effect)
+			partner_effect.removing_partner = TRUE
+			qdel(partner_effect)
+	partner = null
+	. = ..()
+
+/datum/status_effect/mirror_weakened/Destroy()
+	partner = null
+	return ..()
+
+/// Damage breaks the effect once the immobilize ends.
+/datum/status_effect/mirror_weakened/proc/OnWeakenedDamage(datum/source, damage, damagetype)
+	SIGNAL_HANDLER
+	if(!breakable)
+		return
+	if(!damage || damage <= 0)
+		return
+	INVOKE_ASYNC(src, PROC_REF(BreakWeakened))
+
+/datum/status_effect/mirror_weakened/proc/BreakWeakened()
+	if(owner && !QDELETED(owner))
+		to_chat(owner, span_warning("The mirror's grip shatters!"))
+	qdel(src)
+
+/// Pulses the owner's color between bright and dim red.
+/datum/status_effect/mirror_weakened/proc/PulseRed()
+	while(!QDELETED(src) && !QDELETED(owner))
+		animate(owner, color = "#ff0000", time = 0.5 SECONDS)
+		sleep(0.5 SECONDS)
+		if(QDELETED(src) || QDELETED(owner))
+			return
+		animate(owner, color = "#cc000080", time = 0.5 SECONDS)
+		sleep(0.5 SECONDS)
