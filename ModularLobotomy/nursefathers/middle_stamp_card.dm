@@ -53,7 +53,7 @@
 	flavor = "Party among the shelves."
 	buff_type = /datum/status_effect/party_buff/retail_therapy
 	buff_name = "Retail Therapy"
-	buff_desc = "+10 Temperance, +10 Prudence."
+	buff_desc = "+10 Fortitude, +10 Prudence."
 
 /datum/party_location/bar
 	name = "The Alibi"
@@ -77,7 +77,7 @@
 	flavor = "Wine, food, and good company."
 	buff_type = /datum/status_effect/party_buff/well_fed
 	buff_name = "Well Fed"
-	buff_desc = "+10 Fortitude, +10 Temperance, passive HP regen."
+	buff_desc = "+10 Fortitude, +10 Prudence, passive HP regen."
 
 /datum/party_location/carnival
 	name = "Carnival Base"
@@ -101,7 +101,7 @@
 	flavor = "The arcade deserves a proper party."
 	buff_type = /datum/status_effect/party_buff/masterwork_cooking
 	buff_name = "Masterwork Cooking"
-	buff_desc = "+15 Fortitude, +10 Temperance, inflict Bleed on hit."
+	buff_desc = "+15 Fortitude, +10 Justice, inflict Bleed on hit."
 
 
 // Tier 2
@@ -131,7 +131,7 @@
 	tier = 3
 	buff_type = /datum/status_effect/party_buff/corporate_raid
 	buff_name = "Corporate Raid"
-	buff_desc = "+10 all stats, 5% lifesteal on hit."
+	buff_desc = "+10 Fort/Prud/Just, 5% lifesteal on hit."
 
 /datum/party_location/assoc_base
 	name = "Association Office"
@@ -140,7 +140,7 @@
 	tier = 3
 	buff_type = /datum/status_effect/party_buff/syndicate_bonds
 	buff_name = "Syndicate Bonds"
-	buff_desc = "+10 all stats, inflict Overheat on hit."
+	buff_desc = "+10 Fort/Prud/Just, inflict Overheat on hit."
 
 /datum/party_location/antag_base
 	name = "Abandoned Hideout"

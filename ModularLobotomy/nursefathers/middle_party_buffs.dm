@@ -114,13 +114,13 @@
 	var/bonus = 3
 	target.deal_damage(bonus, RED_DAMAGE)
 
-/// Shop — "Retail Therapy": +10 Temperance, +10 Prudence
+/// Shop — "Retail Therapy": +10 Fortitude, +10 Prudence
 /datum/status_effect/party_buff/retail_therapy
 	id = "party_buff_retail_therapy"
-	temp_buff = 10
+	fort_buff = 10
 	prud_buff = 10
 	buff_name = "Retail Therapy"
-	buff_desc = "+10 Temperance, +10 Prudence. Passive sanity healing."
+	buff_desc = "+10 Fortitude, +10 Prudence. Passive sanity healing."
 
 /// Library — "Studied Mind": +10 Prudence, +10 Justice, 10% less BLACK damage
 /datum/status_effect/party_buff/studied_mind
@@ -143,13 +143,13 @@
 		H.physiology.black_mod /= 0.9
 	return ..()
 
-/// The Bistro — "Well Fed": +10 Fortitude, +10 Temperance, passive HP regen
+/// The Bistro — "Well Fed": +10 Fortitude, +10 Prudence, passive HP regen
 /datum/status_effect/party_buff/well_fed
 	id = "party_buff_well_fed"
 	fort_buff = 10
-	temp_buff = 10
+	prud_buff = 10
 	buff_name = "Well Fed"
-	buff_desc = "+10 Fortitude, +10 Temperance, passive HP regen. Passive sanity healing."
+	buff_desc = "+10 Fortitude, +10 Prudence, passive HP regen. Passive sanity healing."
 
 /datum/status_effect/party_buff/well_fed/tick()
 	..()
@@ -198,13 +198,13 @@
 
 // ==================== TIER 2 — Moderate Risk ====================
 
-/// HamHamPangPang — "Masterwork Cooking": +15 Fortitude, +10 Temperance, inflict 2 Bleed on hit (10s cooldown)
+/// HamHamPangPang — "Masterwork Cooking": +15 Fortitude, +10 Justice, inflict 2 Bleed on hit (10s cooldown)
 /datum/status_effect/party_buff/masterwork_cooking
 	id = "party_buff_masterwork_cooking"
 	fort_buff = 15
-	temp_buff = 10
+	just_buff = 10
 	buff_name = "Masterwork Cooking"
-	buff_desc = "+15 Fortitude, +10 Temperance, inflict 2 Bleed on hit (10s cooldown). Passive sanity healing."
+	buff_desc = "+15 Fortitude, +10 Justice, inflict 2 Bleed on hit (10s cooldown). Passive sanity healing."
 	COOLDOWN_DECLARE(bleed_cd)
 
 /datum/status_effect/party_buff/masterwork_cooking/on_apply()
@@ -274,15 +274,14 @@
 
 // ==================== TIER 3 — High Risk ====================
 
-/// Hana Office — "Corporate Raid": +10 all stats, 5% lifesteal on hit
+/// Hana Office — "Corporate Raid": +10 Fort/Prud/Just, 5% lifesteal on hit
 /datum/status_effect/party_buff/corporate_raid
 	id = "party_buff_corporate_raid"
 	fort_buff = 10
 	prud_buff = 10
-	temp_buff = 10
 	just_buff = 10
 	buff_name = "Corporate Raid"
-	buff_desc = "+10 all stats, 5% lifesteal on hit. Passive sanity healing."
+	buff_desc = "+10 Fortitude, +10 Prudence, +10 Justice, 5% lifesteal on hit. Passive sanity healing."
 
 /datum/status_effect/party_buff/corporate_raid/on_apply()
 	. = ..()
@@ -301,15 +300,14 @@
 	var/damage_dealt = 5
 	owner.adjustBruteLoss(-max(1, round(damage_dealt * 0.05)))
 
-/// Association Office — "Syndicate Bonds": +10 all stats, inflict 2 Overheat on hit (10s cooldown)
+/// Association Office — "Syndicate Bonds": +10 Fort/Prud/Just, inflict 2 Overheat on hit (10s cooldown)
 /datum/status_effect/party_buff/syndicate_bonds
 	id = "party_buff_syndicate_bonds"
 	fort_buff = 10
 	prud_buff = 10
-	temp_buff = 10
 	just_buff = 10
 	buff_name = "Syndicate Bonds"
-	buff_desc = "+10 all stats, inflict 2 Overheat on hit (10s cooldown). Passive sanity healing."
+	buff_desc = "+10 Fortitude, +10 Prudence, +10 Justice, inflict 2 Overheat on hit (10s cooldown). Passive sanity healing."
 	COOLDOWN_DECLARE(overheat_cd)
 
 /datum/status_effect/party_buff/syndicate_bonds/on_apply()
