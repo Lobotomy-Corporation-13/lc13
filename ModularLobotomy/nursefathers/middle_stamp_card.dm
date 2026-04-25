@@ -439,6 +439,63 @@
 /datum/party_item/wrench/spawn_items(turf/T)
 	new /obj/item/wrench(T)
 
+// ----- Arcade Machines -----
+// Arcade party items track their spawned machine. Buying again teleports it instead of duplicating.
+/datum/party_item/arcade
+	category = "Arcade"
+	/// The arcade machine type to spawn
+	var/arcade_type
+	/// Reference to the spawned machine
+	var/obj/machinery/computer/arcade/spawned_machine
+
+/datum/party_item/arcade/spawn_items(turf/T)
+	if(spawned_machine && !QDELETED(spawned_machine))
+		spawned_machine.forceMove(T)
+		return
+	var/obj/machinery/computer/arcade/machine = new arcade_type(T)
+	machine.name = "Middle's [machine.name]"
+	machine.density = FALSE
+	machine.color = "#9b30ff"
+	machine.resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
+	machine.flags_1 |= NODECONSTRUCT_1
+	spawned_machine = machine
+
+/datum/party_item/arcade/cardgame
+	name = "Card Game Arcade"
+	cost = 200
+	desc = "A card game machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/cardgame
+
+/datum/party_item/arcade/checkpoint
+	name = "Checkpoint Arcade"
+	cost = 200
+	desc = "A checkpoint racing machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/checkpoint
+
+/datum/party_item/arcade/delivery
+	name = "Delivery Arcade"
+	cost = 200
+	desc = "A delivery game machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/delivery
+
+/datum/party_item/arcade/fps
+	name = "FPS Arcade"
+	cost = 200
+	desc = "A first-person shooter machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/fps
+
+/datum/party_item/arcade/greatlake
+	name = "Great Lake Arcade"
+	cost = 200
+	desc = "A fishing game machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/greatlake
+
+/datum/party_item/arcade/sweeper
+	name = "Sweeper Arcade"
+	cost = 200
+	desc = "A minesweeper machine. Teleports to you if already placed."
+	arcade_type = /obj/machinery/computer/arcade/sweeper
+
 /datum/party_item/toy_box
 	name = "Toy Box"
 	cost = 100
@@ -930,6 +987,13 @@ GLOBAL_LIST_INIT(party_items, init_party_items())
 		return
 	if(!account.has_money(target_item.cost))
 		to_chat(user, span_warning("Not enough ahn! Need [target_item.cost], have [account.account_balance]."))
+		return
+
+	// Arcade machines teleport for free if already spawned
+	var/datum/party_item/arcade/arcade_item = target_item
+	if(istype(arcade_item) && arcade_item.spawned_machine && !QDELETED(arcade_item.spawned_machine))
+		arcade_item.spawn_items(get_turf(user))
+		to_chat(user, span_notice("[target_item.name] teleported to you!"))
 		return
 
 	account.adjust_money(-target_item.cost)
