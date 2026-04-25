@@ -78,7 +78,10 @@
 	desc = "A vehicle claimed by the Middle. Seats four — perfect for a family outing with your siblings."
 	icon_state = "middle_car"
 	key_type = /obj/item/key/middle_car
-	COOLDOWN_DECLARE(bump_cooldown)
+	/// Per-target bump cooldown tracking (mob ref -> world.time when cooldown expires)
+	var/list/bump_cooldowns = list()
+	/// Whether the car is stopped (hit a 300+ FOR target)
+	var/stopped = FALSE
 
 /obj/vehicle/ridden/speedwagon/middle/Initialize()
 	. = ..()
@@ -88,6 +91,8 @@
 	AddElement(/datum/element/ridable, /datum/component/riding/vehicle/speedwagon)
 
 /obj/vehicle/ridden/speedwagon/middle/Move(newloc, move_dir)
+	if(stopped)
+		return FALSE
 	if(!isturf(newloc))
 		return ..()
 	if(!check_corridor_width(newloc, move_dir))
@@ -123,20 +128,46 @@
 /obj/vehicle/ridden/speedwagon/middle/Bump(atom/A)
 	if(!A.density || !has_buckled_mobs())
 		return
-	if(!COOLDOWN_FINISHED(src, bump_cooldown))
-		return
 	if(isliving(A))
 		var/mob/living/L = A
-		var/atom/throw_target = get_edge_target_turf(L, dir)
-		L.throw_at(throw_target, 3, 2)
-		visible_message("<span class='danger'>[src] shoves [L] out of the way!</span>")
-		playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
-		COOLDOWN_START(src, bump_cooldown, 3 SECONDS)
-		movedelay = 6
-		addtimer(CALLBACK(src, PROC_REF(reset_speed)), 2 SECONDS)
+		var/ref_key = REF(L)
+		if(bump_cooldowns[ref_key] && world.time < bump_cooldowns[ref_key])
+			return
+		bump_cooldowns[ref_key] = world.time + 3 SECONDS
+
+		var/fort_level = 0
+		if(ishuman(L))
+			var/mob/living/carbon/human/H = L
+			fort_level = get_attribute_level(H, FORTITUDE_ATTRIBUTE)
+
+		if(fort_level >= 300)
+			// 300+ FOR: stops the car completely for 3 seconds
+			visible_message("<span class='danger'>[L] stands firm and stops [src] in its tracks!</span>")
+			playsound(src, 'sound/effects/bang.ogg', 70, TRUE)
+			stopped = TRUE
+			addtimer(CALLBACK(src, PROC_REF(unstop)), 3 SECONDS)
+			return
+		else if(fort_level >= 200)
+			// 200+ FOR: lightly pushed, no damage
+			var/atom/throw_target = get_edge_target_turf(L, dir)
+			L.throw_at(throw_target, 1, 1)
+			visible_message("<span class='danger'>[src] bumps into [L], nudging them aside!</span>")
+			playsound(src, 'sound/effects/bang.ogg', 30, TRUE)
+		else
+			// Normal: full knockback + damage
+			var/atom/throw_target = get_edge_target_turf(L, dir)
+			L.throw_at(throw_target, 3, 2)
+			L.deal_damage(rand(20, 35), BRUTE, attack_type = (ATTACK_TYPE_MELEE))
+			visible_message("<span class='danger'>[src] crashes into [L]!</span>")
+			playsound(src, 'sound/effects/bang.ogg', 50, TRUE)
+			movedelay = 6
+			addtimer(CALLBACK(src, PROC_REF(reset_speed)), 2 SECONDS)
 
 /obj/vehicle/ridden/speedwagon/middle/proc/reset_speed()
 	movedelay = 2
+
+/obj/vehicle/ridden/speedwagon/middle/proc/unstop()
+	stopped = FALSE
 
 /obj/vehicle/ridden/speedwagon/middle/attackby(obj/item/I, mob/user, params)
 	if(is_key(I))
