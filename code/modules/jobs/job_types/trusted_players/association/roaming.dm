@@ -208,6 +208,8 @@
 	probably_a_fixer.equip_to_slot_if_possible(armor, ITEM_SLOT_OCLOTHING, qdel_on_fail = FALSE, disable_warning = FALSE, bypass_equip_delay_self = TRUE)
 	probably_a_fixer.equip_to_slot_if_possible(weapon, ITEM_SLOT_HANDS, qdel_on_fail = FALSE, disable_warning = FALSE, bypass_equip_delay_self = TRUE)
 
+	probably_a_fixer.mind.assigned_role = what_did_they_choose
+
 	// Update their ID and PDA to reflect their new role.
 	var/list/their_belongings = probably_a_fixer.get_all_gear()
 	var/found_id = FALSE
