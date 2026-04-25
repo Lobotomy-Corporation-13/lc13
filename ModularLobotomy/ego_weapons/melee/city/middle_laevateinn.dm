@@ -308,6 +308,10 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		return
 	var/mob/living/carbon/human/H = user
 
+	if(H.has_status_effect(/datum/status_effect/middle_tattoos))
+		to_chat(H, span_warning("Your Tattoos are already active!"))
+		return
+
 	if(H.GetGrudge() < 5)
 		to_chat(H, span_warning("Not enough Grudge! ([H.GetGrudge()]/5)"))
 		return
@@ -711,6 +715,10 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	if(!ishuman(user))
 		return ..()
 	var/mob/living/carbon/human/H = user
+
+	if(H.has_status_effect(/datum/status_effect/middle_tattoos))
+		to_chat(H, span_warning("Your Tattoos are already active!"))
+		return
 
 	if(H.GetGrudge() < 5)
 		to_chat(H, span_warning("Not enough Grudge! ([H.GetGrudge()]/5)"))

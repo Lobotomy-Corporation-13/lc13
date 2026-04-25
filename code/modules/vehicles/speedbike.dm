@@ -133,7 +133,7 @@
 		var/ref_key = REF(L)
 		if(bump_cooldowns[ref_key] && world.time < bump_cooldowns[ref_key])
 			return
-		bump_cooldowns[ref_key] = world.time + 3 SECONDS
+		bump_cooldowns[ref_key] = world.time + 5 SECONDS
 
 		var/fort_level = 0
 		if(ishuman(L))
@@ -200,12 +200,17 @@
 	COOLDOWN_DECLARE(favor_cooldown)
 
 /obj/item/middle_car_phone/attack_self(mob/living/user)
+	call_favor(user)
+	return
+	// Car summoning disabled for now
+	/*
 	var/choice = tgui_alert(user, "What do you need?", "Car Phone", list("Call Car", "Call in a Favor"))
 	if(!choice || QDELETED(src) || QDELETED(user) || !user.is_holding(src))
 		return
 	if(choice == "Call in a Favor")
 		call_favor(user)
 		return
+	*/
 	if(!COOLDOWN_FINISHED(src, phone_cooldown))
 		to_chat(user, span_warning("The phone is still on cooldown."))
 		return
