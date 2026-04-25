@@ -34,7 +34,7 @@
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)	//My guy you aren't even from this corporation
 	H.set_attribute_limit(100)
 	. = ..()
-	var/selector = new /obj/item/roamer_kit_selector(get_turf(H))
+	var/selector = new /obj/item/roamer_kit_selector(get_turf(H), src)
 	H.equip_to_slot_if_possible(selector, ITEM_SLOT_HANDS)
 	temporary_bans += H.client
 
@@ -76,10 +76,17 @@
 	// These get set on Initialize for each individual instance of this item.
 	var/choice_slot_1 // Always Common!
 	var/choice_slot_2 // Common, Uncommon or Rare
+	/// Need this for adjusting positions if our options are refused.
+	var/datum/job/associateroaming/roamer_job_reference
 
 // On Initialize, load our choice_slot_x vars with the Association choices we get from the common_associations, uncommon_associations and rare_associations lists, while avoiding duplicates.
-/obj/item/roamer_kit_selector/Initialize(mapload)
+/obj/item/roamer_kit_selector/Initialize(mapload, datum/job/associateroaming/job_reference)
 	. = ..()
+	if(job_reference)
+		roamer_job_reference = job_reference
+	else
+		say("WARNING: Initialized without a reference to the Roamer job datum. Refusal of options will not free up a job slot.")
+
 	var/list/common_pool = common_associations.Copy()
 	var/list/uncommon_pool = uncommon_associations.Copy()
 	var/list/rare_pool = rare_associations.Copy()
@@ -93,6 +100,10 @@
 		choice_slot_2 = pick_n_take(uncommon_pool)
 	if(prob(rare_chance))
 		choice_slot_2 = pick_n_take(rare_pool)
+
+/obj/item/roamer_kit_selector/Destroy(force)
+	roamer_job_reference = null
+	return ..()
 
 /obj/item/roamer_kit_selector/attack_self(mob/user)
 	. = ..()
@@ -126,6 +137,7 @@
 			new /obj/effect/temp_visual/dir_setting/claw_appears(T)
 			break
 		new /obj/effect/temp_visual/justitia_effect(origin)
+		roamer_job_reference.current_positions -= 1
 		qdel(probably_a_fixer)
 		qdel(src)
 		return FALSE
