@@ -91,6 +91,12 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 /// Grants weapon-related components when picked up.
 /// In city mode, burns non-rightful wielders.
+/// Updates worn sprite when placed in belt or suit storage.
+/obj/item/ego_weapon/city/laevateinn/equipped(mob/user, slot)
+	. = ..()
+	if(slot & (ITEM_SLOT_BELT | ITEM_SLOT_SUITSTORE))
+		UpdateSealVisuals()
+
 /obj/item/ego_weapon/city/laevateinn/pickup(mob/user)
 	. = ..()
 	if(!ishuman(user))
@@ -199,13 +205,28 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	user.visible_message(span_notice("[user] rebinds the chain seals on Laevateinn."))
 	to_chat(user, span_notice("Laevateinn has been resealed."))
 
-/// Updates icon state to match current seal stage
+/// Returns TRUE if the wearer has the nursefather cape equipped.
+/obj/item/ego_weapon/city/laevateinn/proc/WearerHasCape()
+	var/mob/living/carbon/human/H
+	if(ishuman(loc))
+		H = loc
+	else if(loc && ishuman(loc.loc))
+		H = loc.loc
+	if(!H)
+		return FALSE
+	var/obj/item/neck_item = H.get_item_by_slot(ITEM_SLOT_NECK)
+	return istype(neck_item, /obj/item/clothing/neck/ego_neck/middle_cape/nursefather)
+
+/// Updates icon state to match current seal stage and cape presence.
 /obj/item/ego_weapon/city/laevateinn/proc/UpdateSealVisuals()
 	var/list/seal_states = list("laevateinn_fullseal", "laevateinn_unseal1", "laevateinn_unseal2", "laevateinn_fullpower")
 	var/new_state = seal_states[seal_stage + 1]
 	icon_state = new_state
 	inhand_icon_state = new_state
-	worn_icon_state = new_state
+	if(WearerHasCape())
+		worn_icon_state = new_state
+	else
+		worn_icon_state = "[new_state]_nocape"
 	update_icon()
 	if(ismob(loc))
 		var/mob/M = loc
@@ -565,10 +586,22 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		Use in-hand with 5+ Grudge to activate Tattoos (capped at Tier 2, +5/10 bonus damage, 30 seconds). \
 		While Tattoos are active, blades also inflict 2 Overheat on top of the Bleed. \
 		Click a target at range (3-7 tiles) while Tattoos are active to dash through them, \
-		landing a few tiles past. Consumes the Tattoo buff and deactivates the blades."
+		landing a few tiles past. Consumes the Tattoo buff and deactivates the blades.\n\
+		<b>Combine</b>: Hit one blade with the other to combine them into a single, larger weapon. \
+		<b>Swap Buff</b>: Combining or splitting grants a 25% damage buff for 10 seconds."
 	/// Whether this blade is currently doing a follow-up (prevents infinite loops)
 	var/following_up = FALSE
 	base_icon_state = "thermalblade_1"
+	/// Whether the swap damage buff is active (25% bonus for 10s after combining/splitting)
+	var/swap_buff = FALSE
+
+/// Activates the 25% swap damage buff for 10 seconds.
+/obj/item/ego_weapon/city/thermal_blade/proc/ActivateSwapBuff()
+	swap_buff = TRUE
+	addtimer(CALLBACK(src, PROC_REF(DeactivateSwapBuff)), 10 SECONDS)
+
+/obj/item/ego_weapon/city/thermal_blade/proc/DeactivateSwapBuff()
+	swap_buff = FALSE
 
 /// Updates icon_state to active or inactive variant.
 /obj/item/ego_weapon/city/thermal_blade/proc/UpdateActiveVisuals(active)
@@ -625,6 +658,10 @@ During combos, the target is shielded from outside damage, and damage to you is 
 
 	. = ..()
 	H.AddGrudge(1)
+
+	// Swap buff: 25% bonus damage
+	if(swap_buff)
+		middle_combo_damage(target, H, round(force * 0.25), RED_DAMAGE)
 
 	// Apply Bleed, and Overheat if Tattoos active
 	target.apply_lc_bleed(2)
@@ -728,7 +765,18 @@ During combos, the target is shielded from outside damage, and damage to you is 
 		blade.UpdateActiveVisuals(FALSE)
 
 	var/dash_dir = get_dir(user, target)
+	var/turf/origin = get_turf(user)
 	var/turf/target_turf = get_turf(target)
+
+	// Smoke trail from origin to target
+	var/obj/effect/temp_visual/dir_setting/smoke_afterdash/aftersmoke = new(origin, dash_dir)
+	aftersmoke.color = "#D8B4FE"
+	var/list/line_turfs = getline(origin, target_turf)
+	for(var/turf/T in line_turfs)
+		if(T == origin || T == target_turf)
+			continue
+		var/obj/effect/temp_visual/dir_setting/smoke_dash/trailsmoke = new(T, dash_dir)
+		trailsmoke.color = "#D8B4FE"
 
 	// Deal a slash as we pass through
 	user.do_attack_animation(target, no_effect = TRUE)
@@ -761,6 +809,111 @@ During combos, the target is shielded from outside damage, and damage to you is 
 	user.forceMove(current)
 	user.setDir(dash_dir)
 
+/// Combine two thermal blades by hitting one with the other.
+/obj/item/ego_weapon/city/thermal_blade/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/ego_weapon/city/thermal_blade))
+		if(!ishuman(user))
+			return ..()
+		var/mob/living/carbon/human/H = user
+		var/obj/item/ego_weapon/city/thermal_blade/other = I
+		if(istype(src, /obj/item/ego_weapon/city/thermal_blade/combined) || istype(other, /obj/item/ego_weapon/city/thermal_blade/combined))
+			return ..()
+		to_chat(H, span_notice("You lock the two thermal blades together into a single weapon."))
+		playsound(H, 'sound/weapons/middle_nursefather/middlefather_melee_sealed.ogg', 50, TRUE)
+		var/turf/T = get_turf(H)
+		qdel(other)
+		var/obj/item/ego_weapon/city/thermal_blade/combined/big = new(T)
+		big.ActivateSwapBuff()
+		H.put_in_hands(big)
+		qdel(src)
+		return
+	return ..()
+
 /obj/item/ego_weapon/city/thermal_blade/offhand
 	icon_state = "thermalblade_2"
 	base_icon_state = "thermalblade_2"
+
+/// Combined thermal blade — a single larger weapon formed from two thermal blades.
+/// Alt-click while holding to split back into two blades (other hand must be free).
+/obj/item/ego_weapon/city/thermal_blade/combined
+	name = "combined thermal blade"
+	desc = "Two thermal blades locked together into a single, larger weapon. The thermal energy resonates between them. Alt-click to split."
+	icon_state = "bigthermalblade"
+	base_icon_state = "bigthermalblade"
+	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
+	worn_icon_state = "bigthermalblade"
+	slot_flags = ITEM_SLOT_BELT | ITEM_SLOT_SUITSTORE
+	force = 40
+	attack_speed = 1.4
+	w_class = WEIGHT_CLASS_BULKY
+	attribute_requirements = list(
+		FORTITUDE_ATTRIBUTE = 80,
+		PRUDENCE_ATTRIBUTE = 80,
+		TEMPERANCE_ATTRIBUTE = 80,
+		JUSTICE_ATTRIBUTE = 80
+	)
+	special = "A combined thermal blade. Hits harder and slower than the individual blades. \
+		Each hit inflicts 3 Bleed (+ 3 Overheat while Tattoos active). No dual-wield follow-up. \
+		Use in-hand with 5+ Grudge to activate Tattoos (capped at Tier 2). \
+		<b>Split</b>: Alt-click while holding to split back into two thermal blades (other hand must be free). \
+		<b>Swap Buff</b>: Combining or splitting grants a 25% damage buff for 10 seconds."
+
+/obj/item/ego_weapon/city/thermal_blade/combined/attack(mob/living/target, mob/living/user)
+	if(!ishuman(user))
+		return ..()
+	var/mob/living/carbon/human/H = user
+
+	. = ..()
+	// Override parent: 3 Bleed/Overheat instead of 2, no follow-up (already skipped since no second blade)
+	target.apply_lc_bleed(1)
+	var/has_tattoos = H.has_status_effect(/datum/status_effect/middle_tattoos)
+	if(has_tattoos)
+		target.apply_lc_overheat(1)
+
+/obj/item/ego_weapon/city/thermal_blade/combined/AltClick(mob/user)
+	. = ..()
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(!(src in H.held_items))
+		return
+	// Check that the other hand is free
+	var/obj/item/other_hand = H.get_inactive_held_item()
+	if(other_hand)
+		to_chat(H, span_warning("Your other hand must be free to split the blade."))
+		return
+	to_chat(H, span_notice("You split the combined blade back into two thermal blades."))
+	playsound(H, 'sound/weapons/middle_nursefather/middlefather_melee_sealed.ogg', 50, TRUE)
+	var/turf/T = get_turf(H)
+	H.dropItemToGround(src, TRUE)
+	var/obj/item/ego_weapon/city/thermal_blade/blade1 = new(T)
+	var/obj/item/ego_weapon/city/thermal_blade/offhand/blade2 = new(T)
+	blade1.ActivateSwapBuff()
+	blade2.ActivateSwapBuff()
+	H.put_in_hands(blade1)
+	H.put_in_hands(blade2)
+	qdel(src)
+
+////////////////////////////////////////////////////////////
+// EGO DATUMS — Middle Nursefather & Apprentice Weapons
+
+/// Laevateinn — Middle Nursefather sealed relic sword
+/datum/ego_datum/weapon/city/middle_nursefather
+	item_path = /obj/item/ego_weapon/city/laevateinn
+	cost = 100
+	ego_tags = list(EGO_TAG_COMBO, EGO_TAG_KNOCKBACK, EGO_TAG_MOBILITY, EGO_TAG_SPLIT_DAMAGE, EGO_TAG_DOT, EGO_TAG_HAZARDOUS)
+/// Thermal Blade — Middle Apprentice dual-wield blade
+/datum/ego_datum/weapon/city/middle_nursefather/thermal_blade
+	item_path = /obj/item/ego_weapon/city/thermal_blade
+	cost = 40
+	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_MOBILITY, EGO_TAG_DOT)
+/// Thermal Blade (Offhand)
+/datum/ego_datum/weapon/city/middle_nursefather/thermal_blade_offhand
+	item_path = /obj/item/ego_weapon/city/thermal_blade/offhand
+	cost = 40
+	ego_tags = list(EGO_TAG_MULTIHIT, EGO_TAG_MOBILITY, EGO_TAG_DOT)
+/// Combined Thermal Blade — merged form of dual thermal blades
+/datum/ego_datum/weapon/city/middle_nursefather/thermal_blade_combined
+	item_path = /obj/item/ego_weapon/city/thermal_blade/combined
+	cost = 60
+	ego_tags = list(EGO_TAG_DOT)

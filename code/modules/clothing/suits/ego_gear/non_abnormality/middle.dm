@@ -215,6 +215,25 @@
 	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
 	icon_state = "middlefather_cloak"
 
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/equipped(mob/user, slot)
+	. = ..()
+	if(slot == ITEM_SLOT_NECK && ishuman(user))
+		UpdateLaevateinnWorn(user)
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/dropped(mob/user)
+	. = ..()
+	if(ishuman(user))
+		UpdateLaevateinnWorn(user)
+
+/obj/item/clothing/neck/ego_neck/middle_cape/nursefather/proc/UpdateLaevateinnWorn(mob/user)
+	var/mob/living/carbon/human/H = user
+	var/obj/item/sword = H.get_item_by_slot(ITEM_SLOT_SUITSTORE)
+	if(!istype(sword, /obj/item/ego_weapon/city/laevateinn))
+		sword = H.get_item_by_slot(ITEM_SLOT_BELT)
+	if(istype(sword, /obj/item/ego_weapon/city/laevateinn))
+		var/obj/item/ego_weapon/city/laevateinn/L = sword
+		L.UpdateSealVisuals()
+
 /obj/item/clothing/glasses/middle_sunglasses/nursefather
 	name = "gold-bridge sunglasses"
 	desc = "Thick sunglasses with a gold bridge between the lenses. A signature accessory of the Middle's former Great Brother."
@@ -249,6 +268,8 @@
 		TEMPERANCE_ATTRIBUTE = 80,
 		JUSTICE_ATTRIBUTE = 80
 	)
+	/// Whether the hood should show hair (persists across hat toggles)
+	var/hood_show_hair = FALSE
 
 /obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/CanUseEgo(mob/living/carbon/human/user)
 	if(user?.mind?.assigned_role == "Middle Apprentice")
@@ -257,8 +278,48 @@
 
 /obj/item/clothing/head/ego_hat/middle_apprentice_hood
 	name = "apprentice's hood"
-	desc = "A hood worn by the Middle's newest apprentice."
+	desc = "A hood worn by the Middle's newest apprentice. Alt-click to toggle hair visibility."
 	icon = 'icons/obj/spider_house/middle/middle_spider_icon.dmi'
 	worn_icon = 'icons/obj/spider_house/middle/middle_spider_worn.dmi'
 	icon_state = "kirahood"
 	flags_inv = HIDEMASK|HIDEHAIR
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood/equipped(mob/user, slot)
+	. = ..()
+	if(slot != ITEM_SLOT_HEAD || !ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	var/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/coat = H.wear_suit
+	if(istype(coat) && coat.hood_show_hair)
+		flags_inv &= ~HIDEHAIR
+
+/obj/item/clothing/head/ego_hat/middle_apprentice_hood/AltClick(mob/user)
+	. = ..()
+	if(!ishuman(user))
+		return
+	var/mob/living/carbon/human/H = user
+	if(H.head != src)
+		return
+	if(flags_inv & HIDEHAIR)
+		flags_inv &= ~HIDEHAIR
+		to_chat(H, span_notice("You adjust the hood to show your hair."))
+	else
+		flags_inv |= HIDEHAIR
+		to_chat(H, span_notice("You pull the hood over your hair."))
+	// Save preference to the suit so it persists across hat toggles
+	var/obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice/coat = H.wear_suit
+	if(istype(coat))
+		coat.hood_show_hair = !(flags_inv & HIDEHAIR)
+	H.regenerate_icons()
+
+////////////////////////////////////////////////////////////
+// EGO DATUMS — Middle Nursefather & Apprentice Armor
+
+/// Ex-Great Brother's Coat — Middle Nursefather armor
+/datum/ego_datum/armor/city/middle_nursefather
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_nursefather
+	cost = 100
+/// Apprentice's Coat — Middle Apprentice armor
+/datum/ego_datum/armor/city/middle_nursefather/apprentice
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/middle_apprentice
+	cost = 40
