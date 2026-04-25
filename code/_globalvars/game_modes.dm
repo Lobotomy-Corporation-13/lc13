@@ -19,7 +19,7 @@ GLOBAL_DATUM_INIT(map_config_global, /datum/map_config, HACK_load_map_config())
 
 /proc/HACK_load_map_config()
 #ifdef FORCE_MAP
-        . = load_map_config(FORCE_MAP)
+	. = load_map_config(FORCE_MAP)
 #else
-        . = load_map_config(error_if_missing = FALSE)
+	. = load_map_config(error_if_missing = FALSE)
 #endif
