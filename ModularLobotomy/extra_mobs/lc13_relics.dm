@@ -3102,8 +3102,8 @@
 		return
 	INVOKE_ASYNC(src, PROC_REF(MirrorGrab), source, target)
 
-/// Pins the target down after a cloaked ambush. Both are immobilized for 3 seconds,
-/// then both receive mirror_weakened (RED flash, breakable by damage after immobilize ends).
+/// Pins the target down after a cloaked ambush. Both are immobilized and receive
+/// mirror_weakened immediately. After 3s, the pin becomes breakable by damage.
 /// Forces alpha back to 255 in case animate didn't complete.
 /obj/item/ruin_relic/mirror_shard/proc/ForceAlpha(mob/living/M)
 	if(M && !QDELETED(M))
@@ -3130,22 +3130,21 @@
 	user.visible_message(span_danger("[user] lunges from thin air and pins [target] to the ground!"))
 	playsound(user, 'sound/weapons/middle_nursefather/middlefather_blunt.ogg', 50, TRUE)
 
-	// Remove immobilize after 3 seconds, make weakened breakable by damage
-	addtimer(CALLBACK(src, PROC_REF(RemoveImmobilize), user, target), 3 SECONDS)
+	// After 3 seconds, allow damage to break the pin and weakened effect
+	addtimer(CALLBACK(src, PROC_REF(MakeBreakable), user, target), 3 SECONDS)
 
 	// Cooldown
 	on_cooldown = TRUE
 	addtimer(CALLBACK(src, PROC_REF(ResetCooldown)), 45 SECONDS)
 
-/// Removes immobilize from both and makes the weakened effect breakable by damage.
-/obj/item/ruin_relic/mirror_shard/proc/RemoveImmobilize(mob/living/user, mob/living/target)
+/// Makes the mirror weakened effect breakable by damage after the 3s grace period.
+/// The pin and weakened effect are removed together when damage breaks them.
+/obj/item/ruin_relic/mirror_shard/proc/MakeBreakable(mob/living/user, mob/living/target)
 	if(user && !QDELETED(user))
-		REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "mirror_shard")
 		var/datum/status_effect/mirror_weakened/ue = user.has_status_effect(/datum/status_effect/mirror_weakened)
 		if(ue)
 			ue.breakable = TRUE
 	if(target && !QDELETED(target))
-		REMOVE_TRAIT(target, TRAIT_IMMOBILIZED, "mirror_shard")
 		var/datum/status_effect/mirror_weakened/te = target.has_status_effect(/datum/status_effect/mirror_weakened)
 		if(te)
 			te.breakable = TRUE

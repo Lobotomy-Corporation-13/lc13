@@ -214,18 +214,18 @@
 // ==================== MIRROR WEAKENED ====================
 
 /// Applied to both the mirror shard user and their grab target.
-/// Both flash RED. After the 3s immobilize ends, damage to either breaks both.
+/// Both are pinned (immobilized) and flash RED. After 3s, damage to either breaks the pin and the effect.
 /// Laevateinn can trigger a free execution dash on weakened targets.
 /datum/status_effect/mirror_weakened
 	id = "mirror_weakened"
-	duration = 8 SECONDS
+	duration = -1
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = null
 	/// The linked partner (relic user <-> grab target)
 	var/mob/living/partner
 	/// Whether this effect is on the relic user (TRUE) or the pinned target (FALSE)
 	var/is_relic_user = FALSE
-	/// Whether damage can break this effect (set TRUE after 3s immobilize ends)
+	/// Whether damage can break this effect (set TRUE after 3s pin grace period)
 	var/breakable = FALSE
 	/// Whether we're currently removing the partner's effect (prevents infinite loop)
 	var/removing_partner = FALSE
@@ -241,6 +241,7 @@
 /datum/status_effect/mirror_weakened/on_remove()
 	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
 	if(owner && !QDELETED(owner))
+		REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, "mirror_shard")
 		owner.alpha = 255
 		animate(owner, color = null, time = 0.5 SECONDS)
 		addtimer(CALLBACK(owner, TYPE_PROC_REF(/atom, update_atom_colour)), 0.5 SECONDS)
