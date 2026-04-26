@@ -50,6 +50,7 @@
 	// Add traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_STUNIMMUNE, JOB_TRAIT)
 
 	// Permanent components — not tied to weapon
 	H.AddComponent(/datum/component/nursefather_passive/middle)
@@ -198,6 +199,7 @@
 	// Add traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_STUNIMMUNE, JOB_TRAIT)
 
 	// Permanent components
 	H.AddComponent(/datum/component/nursefather_passive/middle)
@@ -288,6 +290,7 @@
 	// Add traits
 	ADD_TRAIT(H, TRAIT_COMBATFEAR_IMMUNE, JOB_TRAIT)
 	ADD_TRAIT(H, TRAIT_WORK_FORBIDDEN, JOB_TRAIT)
+	ADD_TRAIT(H, TRAIT_STUNIMMUNE, JOB_TRAIT)
 
 	// Permanent components
 	H.AddComponent(/datum/component/nursefather_passive/middle)
