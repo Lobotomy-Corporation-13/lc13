@@ -679,8 +679,6 @@
 
 	// Damage mobs in path
 	for(var/mob/living/L in mobs_to_hit)
-		if(user.faction_check_mob(L))
-			continue
 		if(L.status_flags & GODMODE)
 			continue
 		visible_message(span_boldwarning("[user] slashes through [L]!"))
