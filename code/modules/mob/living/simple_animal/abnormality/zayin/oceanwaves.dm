@@ -73,12 +73,13 @@
 /mob/living/simple_animal/hostile/abnormality/oceanicwaves/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(work_type == "Purchase EGO Gift")
 		//Get a random EGO gift, but lower your maximum stats
-		var/list/gifts = subtypesof(/datum/ego_gift)
+		var/list/gifts = subtypesof(/datum/ego_gifts)
 		var/chosen_type = pick(gifts)
-		var/datum/ego_gift/new_gift = new chosen_type()
+		var/datum/ego_gifts/new_gift = new chosen_type()
+		manual_emote("hums and distributes an EGO gift...")
 
 		user.adjust_attribute_limit(-4)
-		user.Apply_Gift(new new_gifts)
+		user.Apply_Gift(new new_gift)
 		return FALSE
 
 	return TRUE
