@@ -210,6 +210,8 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	var/force_multiplier = 1
 	/// Default sweep animation sprite, change this var to use different sweep sprites.
 	var/base_sweep_state = "swipe_"
+	/// Default thrust animation sprite, change this var to use different thrust sprites.
+	var/base_thrust_state = "thrust"
 
 /obj/item/Initialize()
 

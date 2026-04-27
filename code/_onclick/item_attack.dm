@@ -149,7 +149,7 @@
 /obj/item/proc/get_sweep_turfs(atom/target, mob/user)
 	var/target_turf = get_step_towards(user, target)
 	// Icon Setup
-	var/swipe_icon = base_sweep_state
+	var/swipe_icon = "swipe_"
 	if(user.active_hand_index % 2 == 0)
 		swipe_icon += "r"
 	else
@@ -384,7 +384,7 @@
 	return 1
 
 /obj/effect/temp_visual/swipe
-	icon = 'ModularLobotomy/_Lobotomyicons/96x96.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_96x96.dmi'
 	duration = 4
 	randomdir = FALSE
 	alpha = 200
@@ -397,7 +397,7 @@
 	flick(args[4], src) // if this isn't used, it synchronizes all swipe animations.
 
 /obj/effect/temp_visual/thrust
-	icon = 'ModularLobotomy/_Lobotomyicons/64x32.dmi'
+	icon = 'ModularLobotomy/_Lobotomyicons/weaponanim_64x32.dmi'
 	duration = 4
 	randomdir = FALSE
 	pixel_x = -16
@@ -407,4 +407,4 @@
 	. = ..()
 	if(args[2])
 		color = args[2]
-	flick("thrust", src)
+	flick("base_thrust_state", src)
