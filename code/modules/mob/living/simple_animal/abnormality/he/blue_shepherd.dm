@@ -68,6 +68,15 @@
 	var/slash_damage = 40
 	var/slashing = FALSE
 	var/range = 2
+
+	//Here's for the large slash
+	var/cleave_width = 2
+	var/cleave_length = 3
+	var/cleave_damage = 60
+	var/cleave_delay = 6
+	var/cleave_pause = 5
+
+
 	var/hired = FALSE
 	var/lie_chance = 30 // % chance to lie
 	var/datum/abnormality/buddy //the red buddy datum linked to this shepherd
@@ -84,6 +93,11 @@
 		"I'll kill you!",
 		"This is for locking me up!",
 		"Die!",
+		"I'll cut you down!",
+		"Get out of my way!",
+		"Try and stop me!",
+		"You can't keep me here forever!",
+		"You'll regret this!"
 	)
 	//lines shepperd say when someone's dead
 	var/list/people_dead_lines = list(
@@ -353,18 +367,35 @@
 	slash_current-=1
 	if(slash_current == 0)
 		slash_current = slash_cooldown
-		say(pick(combat_lines))
 		slashing = TRUE
-		slash()
+		switch(rand(1,3))
+			if(1)
+				say(pick(combat_lines))
+				slash()
+			if(2)
+				say(pick(combat_lines))
+				cleave(target)
+			if(3)
+				TriggerCounter()
+
 	if(awakened_buddy)
 		awakened_buddy.GiveTarget(attacked_target)
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/OpenFire()
+	if(prob(10))
+		TriggerDodge()
 	if(slash_current == 0)
 		slash_current = slash_cooldown
-		say(pick(combat_lines))
 		slashing = TRUE
-		slash()
+		switch(rand(1,3))
+			if(1)
+				say(pick(combat_lines))
+				slash()
+			if(2)
+				say(pick(combat_lines))
+				cleave(target)
+			if(3)
+				TriggerCounter()
 	..()
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/death(gibbed)
@@ -425,8 +456,8 @@
 		buddy.qliphoth_change(-1) //buddy can hear it fight
 	var/turf/orgin = get_turf(src)
 	var/list/all_turfs = RANGE_TURFS(range, orgin)
+	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
 	for(var/i = 0 to range)
-		playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
 		for(var/turf/T in all_turfs)
 			if(get_dist(orgin, T) > i)
 				continue
@@ -453,6 +484,103 @@
 	if(slash_count >= range)
 		buddy_hit = FALSE
 		slashing = FALSE
+		range = 2
+
+
+/mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/cleave(target)
+	if (get_dist(src, target) > 3)
+		return
+	var/dir_to_target = get_cardinal_dir(get_turf(src), get_turf(target))
+	var/turf/source_turf = get_turf(src)
+	var/turf/area_of_effect = list()
+	var/turf/middle_line = list()
+	switch(dir_to_target)
+		if(EAST)
+			middle_line = getline(get_step(source_turf, EAST), get_ranged_target_turf(source_turf, EAST, cleave_length))
+			for(var/turf/T in middle_line)
+				if(T.density)
+					break
+				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, cleave_width)))
+					if (Y.density)
+						break
+					if (Y in area_of_effect)
+						continue
+					area_of_effect += Y
+				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, cleave_width)))
+					if (U.density)
+						break
+					if (U in area_of_effect)
+						continue
+					area_of_effect += U
+		if(WEST)
+			middle_line = getline(get_step(source_turf, WEST), get_ranged_target_turf(source_turf, WEST, cleave_length))
+			for(var/turf/T in middle_line)
+				if(T.density)
+					break
+				for(var/turf/Y in getline(T, get_ranged_target_turf(T, NORTH, cleave_width)))
+					if (Y.density)
+						break
+					if (Y in area_of_effect)
+						continue
+					area_of_effect += Y
+				for(var/turf/U in getline(T, get_ranged_target_turf(T, SOUTH, cleave_width)))
+					if (U.density)
+						break
+					if (U in area_of_effect)
+						continue
+					area_of_effect += U
+		if(SOUTH)
+			middle_line = getline(get_step(source_turf, SOUTH), get_ranged_target_turf(source_turf, SOUTH, cleave_length))
+			for(var/turf/T in middle_line)
+				if(T.density)
+					break
+				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, cleave_width)))
+					if (Y.density)
+						break
+					if (Y in area_of_effect)
+						continue
+					area_of_effect += Y
+				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, cleave_width)))
+					if (U.density)
+						break
+					if (U in area_of_effect)
+						continue
+					area_of_effect += U
+		if(NORTH)
+			middle_line = getline(get_step(source_turf, NORTH), get_ranged_target_turf(source_turf, NORTH, cleave_length))
+			for(var/turf/T in middle_line)
+				if(T.density)
+					break
+				for(var/turf/Y in getline(T, get_ranged_target_turf(T, EAST, cleave_width)))
+					if (Y.density)
+						break
+					if (Y in area_of_effect)
+						continue
+					area_of_effect += Y
+				for(var/turf/U in getline(T, get_ranged_target_turf(T, WEST, cleave_width)))
+					if (U.density)
+						break
+					if (U in area_of_effect)
+						continue
+					area_of_effect += U
+		else
+			return
+	if (!LAZYLEN(area_of_effect))
+		return
+	dir = dir_to_target
+	playsound(src, 'sound/weapons/etherealmiss.ogg', 100, FALSE, 4)
+	SLEEP_CHECK_DEATH(cleave_delay)
+	icon_state = icon_living
+	var/list/been_hit = list()
+	for(var/turf/T in area_of_effect)
+		new /obj/effect/temp_visual/smash_effect(T)
+		been_hit = HurtInTurf(T, been_hit, cleave_damage, BLACK_DAMAGE, check_faction = TRUE, hurt_mechs = TRUE, attack_type = (ATTACK_TYPE_MELEE | ATTACK_TYPE_SPECIAL))
+	playsound(src, 'sound/weapons/slice.ogg', 75, FALSE, 4)
+	SLEEP_CHECK_DEATH(cleave_pause)
+	slashing = FALSE
+
+
+
 
 /mob/living/simple_animal/hostile/abnormality/blue_shepherd/proc/OnMobDeath(datum/source, mob/living/died, gibbed)
 	SIGNAL_HANDLER
