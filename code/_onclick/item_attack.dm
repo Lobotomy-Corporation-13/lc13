@@ -149,7 +149,7 @@
 /obj/item/proc/get_sweep_turfs(atom/target, mob/user)
 	var/target_turf = get_step_towards(user, target)
 	// Icon Setup
-	var/swipe_icon = "swipe_"
+	var/swipe_icon = base_sweep_state
 	if(user.active_hand_index % 2 == 0)
 		swipe_icon += "r"
 	else

@@ -208,6 +208,8 @@ GLOBAL_VAR_INIT(embedpocalypse, FALSE) // if true, all items will be able to emb
 	var/attack_speed = 1
 	/// A multiplier added to force through various means. Used primarily for weapon upgrades.
 	var/force_multiplier = 1
+	/// Default sweep animation sprite, change this var to use different sweep sprites.
+	var/base_sweep_state = "swipe_"
 
 /obj/item/Initialize()
 
