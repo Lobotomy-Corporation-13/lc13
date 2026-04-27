@@ -92,6 +92,7 @@
 				L.adjust_blindness(5)
 			if(4)
 				return
+	SLEEP_CHECK_DEATH(7)
 
 /mob/living/simple_animal/hostile/abnormality/lunar_rabbit/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	..()
