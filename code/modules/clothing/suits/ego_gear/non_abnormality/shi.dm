@@ -74,3 +74,15 @@
 							JUSTICE_ATTRIBUTE = 100
 							)
 
+/obj/item/clothing/suit/armor/ego_gear/city/shi_east
+	name = "Shi association eastern branch jacket"
+	desc = "Armour worn by the fixers of the Shi Association's eastern branch. Designed for mobility and stealth, it increases your movement speed by 20%."
+	icon_state = "shi_east"
+	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 20)
+	slowdown = -0.2
+	attribute_requirements = list(
+							FORTITUDE_ATTRIBUTE = 60,
+							PRUDENCE_ATTRIBUTE = 60,
+							TEMPERANCE_ATTRIBUTE = 60,
+							JUSTICE_ATTRIBUTE = 60
+							)

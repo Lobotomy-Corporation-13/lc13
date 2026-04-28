@@ -86,6 +86,8 @@
 		user.changeNext_move(CLICK_CD_RANGE)
 	user.newtonian_move(get_dir(target, user))
 
+	return projectile
+
 /obj/item/ego_weapon/ranged/proc/throw_proj(atom/target, turf/targloc, mob/living/user, params, spread, obj/projectile/projectile)
 	var/turf/curloc = get_turf(user)
 	if(!istype(targloc) || !istype(curloc))
