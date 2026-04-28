@@ -79,7 +79,7 @@
 		manual_emote("hums and distributes an EGO gift...")
 
 		user.adjust_attribute_limit(-4)
-		user.Apply_Gift(new new_gift)
+		user.Apply_Gift(new_gift)
 		return FALSE
 
 	return TRUE
