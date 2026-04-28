@@ -15,7 +15,7 @@
 	work_damage_amount = 16
 	work_damage_type = RED_DAMAGE
 	chem_type = /datum/reagent/abnormality/sin/sloth
-	start_qliphoth = 3
+	start_qliphoth = 2
 
 	ego_list = list(
 		/datum/ego_datum/weapon/arcadia,
@@ -51,9 +51,9 @@
 			affected_players += L
 
 	for(var/mob/living/carbon/human/L in affected_players)
-		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, 10)
-		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, 10)
-		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 10)
+		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, 5)
+		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, 5)
+		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, 5)
 
 	switch(stage)
 		if(1)
@@ -61,10 +61,10 @@
 			nextstage = world.time + 2 MINUTES
 		if(2)
 			to_chat(GLOB.clients,span_danger("The Black Sun clears the horizon, filling you with it's warmth."))
-			nextstage = world.time + 4 MINUTES
+			nextstage = world.time + 3 MINUTES
 		if(3)
 			to_chat(GLOB.clients,span_userdanger("The Black sun is halfway to it's zenith. Dread fills you. You must hurry."))
-			nextstage = world.time + 4 MINUTES
+			nextstage = world.time + 3 MINUTES
 		if(4)
 			to_chat(GLOB.clients,span_danger("YOUR TIME IS LIMITED. THE SUN IS NEAR IT'S ZENITH."))
 			SSweather.run_weather(/datum/weather/bloody_water)
@@ -72,23 +72,35 @@
 				flash_color(L, flash_color = COLOR_RED, flash_time = 150)
 			nextstage = world.time + 2 MINUTES
 		if(5)
-			datum_reference.qliphoth_change(-3)
+			datum_reference.qliphoth_change(-2)
+
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/ZeroQliphoth()
-	datum_reference.qliphoth_change(3)
+	datum_reference.qliphoth_change(2)
 
 	to_chat(GLOB.clients,"<span class='colossus'>THE BLACK SUN HAS RISEN.</span>")
 	//Also remove your stats
-	var/removestats = stage*10
+	var/removestats = stage*5
 	for(var/mob/living/carbon/human/L in affected_players)
 		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, -removestats)
 		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -removestats)
 		L.adjust_attribute_buff(JUSTICE_ATTRIBUTE, -removestats)
 	stage = 0
-	for(var/i = 0 to 2)
-		var/X = pick(GLOB.department_centers)
-		var/turf/T = get_turf(X)
-		new /mob/living/simple_animal/hostile/sun_pillar(T)
+	//Okay we're gonna make everyone go murder insane
+	for(var/mob/living/carbon/human/H in GLOB.player_list)
+		if(!H.sanity_lost)
+			H.adjustSanityLoss(500)
+		QDEL_NULL(H.ai_controller)
+		H.ai_controller = /datum/ai_controller/insane/murder
+		H.InitializeAIController()
+
+	addtimer(CALLBACK(src, PROC_REF(resane_everyone)), 10 SECONDS)
+
+
+/mob/living/simple_animal/hostile/abnormality/branch12/passion/proc/resane_everyone()
+	for(var/mob/living/carbon/human/H in GLOB.mob_list)
+		if(H.sanity_lost)
+			H.adjustSanityLoss(-500)
 
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/proc/on_mob_death(datum/source, mob/living/died, gibbed)
@@ -110,7 +122,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/black_sun/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time)
 	to_chat(GLOB.clients, span_warning("The Black Sun fades from the sky. You are safe for now."))
-	var/removestats = stage*10
+	var/removestats = stage*5
 	for(var/mob/living/carbon/human/L in affected_players)
 		L.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, -removestats)
 		L.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, -removestats)
@@ -142,6 +154,7 @@
 
 
 //Pillars. Do minor white damage, and fire projectiles
+//This is the old breach. No Longer applicable.
 /mob/living/simple_animal/hostile/sun_pillar
 	name = "pillar of the black sun"
 	desc = "A glowing pillar."
