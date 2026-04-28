@@ -122,7 +122,8 @@
 		"Soda cans dispensed by O-05-181 usually contained chemicals with anomalous properties.",
 		"The chances of recieving a soda with healing properties increased the better the work result.",
 		"When the work result was bad, soda cans were violently ejected at nearby employees.",
-		"This machine also has the ability to dispense EGO gifts, however it lowers the employee's potential.",)
+		"This machine also has the ability to dispense EGO gifts, however it lowers the employee's potential.",
+	)
 
 //Sunset Traveller
 /obj/item/paper/fluff/info/zayin/sunset_traveller
