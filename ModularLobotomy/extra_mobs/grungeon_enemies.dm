@@ -14,8 +14,6 @@
 	mob_biotypes = MOB_ROBOTIC
 	maxHealth = 500
 	health = 500
-	melee_damage_lower = 5
-	melee_damage_upper = 10
 	melee_damage_type = RED_DAMAGE
 	attack_verb_continuous = "lashes"
 	attack_verb_simple = "lash"
@@ -28,9 +26,11 @@
 	var/can_protect = TRUE
 	var/shielded_list = list()
 	var/shielded_tiles_list = list()
-	can_protect = FALSE
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Move()
+	return FALSE
+
+/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/AttackingTarget()
 	return FALSE
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/Initialize()
@@ -39,52 +39,36 @@
 		var/obj/effect/shielder_field/DF = new(T)
 		shielded_tiles_list += DF
 		DF.shielder = src
-		for(var/mob/living/simple_animal/L in T)
-			ApplyShield(L)
-			return
 
 /mob/living/simple_animal/hostile/ordeal/grungeon_shielder/proc/ApplyShield(mob/living/L)
-	if(!can_protect)
-		if(!faction_check_mob(L, FALSE))
+	if(can_protect)
+		if(faction_check_mob(L, FALSE))
 			// apply status effect
-			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
+			var/datum/status_effect/grungeon_shield/S = L.has_status_effect(/datum/status_effect/grungeon_shield)
 			if(!S)
-				S = L.apply_status_effect(/datum/status_effect/locked)
-			if (!S.list_of_defenders.Find(src))
-				S.list_of_defenders += src
-				shielded_list += L
-			// keep a list of everyone shielded
-	else
-		if(!faction_check_mob(L, TRUE))
-			// apply status effect
-			var/datum/status_effect/locked/S = L.has_status_effect(/datum/status_effect/locked)
-			if(!S)
-				S = L.apply_status_effect(/datum/status_effect/locked)
-			if (!S.list_of_defenders.Find(src))
-				S.list_of_defenders += src
+				S = L.apply_status_effect(/datum/status_effect/grungeon_shield)
+			if (!S.list_of_shielders.Find(src))
+				S.list_of_shielders += src
 				shielded_list += L
 			// keep a list of everyone shielded
 
 /obj/effect/shielder_field
-	name = "Shielded"
+	name = "Shield"
 	icon = 'icons/turf/floors.dmi'
 	icon_state = "binary_tsp"
 	anchored = TRUE
 	var/mob/living/simple_animal/hostile/ordeal/grungeon_shielder/shielder
+	mouse_opacity = 0
 
-/obj/effect/defender_field/Initialize()
+/obj/effect/shielder_field/Initialize()
 	. = ..()
-	animate(src, alpha = 255, time = 0.5 SECONDS)
+	animate(src, alpha = 255, time = 0.3 SECONDS)
 
-// /obj/effect/defender_field/Crossed(atom/movable/AM)
-// 	. = ..()
-// 	if (isliving(AM))
-// 		var/mob/living/L = AM
-// 		shielder.ApplyShield(L)
-// 		if(ishuman(L))
-// 			var/mob/living/carbon/human/H = L
-// 			H.deal_damage(10, BLACK_DAMAGE, attack_type = (ATTACK_TYPE_ENVIRONMENT))
-// 			to_chat(H, span_warning("You get shocked by the electic fields"))
+/obj/effect/shielder_field/Crossed(atom/movable/AM)
+	. = ..()
+	if(isanimal(AM))
+		var/mob/living/L = AM
+		shielder.ApplyShield(L)
 
 // In case I need it back
 
@@ -92,7 +76,7 @@
 	id = "grungeon_shield"
 	status_type = STATUS_EFFECT_UNIQUE
 	alert_type = /atom/movable/screen/alert/status_effect/grungeon_shield
-	var/list/list_of_defenders = list()
+	var/list/list_of_shielders = list()
 
 
 /atom/movable/screen/alert/status_effect/grungeon_shield
@@ -100,6 +84,39 @@
 	desc = "You are being shielded by a nearby aegis of answers!"
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "protection"
+
+/datum/status_effect/grungeon_shield/on_apply()
+	. = ..()
+	RegisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE, PROC_REF(Moved))
+	RegisterSignal(owner, COMSIG_MOB_APPLY_DAMGE, PROC_REF(Damaged))
+
+/datum/status_effect/grungeon_shield/proc/Moved(mob/user, atom/new_location)
+	SIGNAL_HANDLER
+	var/turf/newloc_turf = get_turf(new_location)
+	var/turf/oldloc_turf = get_turf(user)
+	var/valid_tile = FALSE
+	var/standing_on_shielded = FALSE
+
+	for(var/obj/effect/shielder_field/GR in oldloc_turf.contents)
+		standing_on_shielded = TRUE
+
+	if (!standing_on_shielded)
+		qdel(src)
+
+	for(var/obj/effect/shielder_field/GR in newloc_turf.contents)
+		valid_tile = TRUE
+
+	if(!valid_tile)
+		qdel(src)
+
+/datum/status_effect/grungeon_shield/on_remove()
+	UnregisterSignal(owner, COMSIG_MOVABLE_PRE_MOVE)
+	UnregisterSignal(owner, COMSIG_MOB_APPLY_DAMGE)
+	return ..()
+
+/datum/status_effect/grungeon_shield/proc/Damaged(datum/source, damage, damagetype, def_zone, atom/damage_source, flags, attack_type)
+	SIGNAL_HANDLER
+	return COMPONENT_MOB_DENY_DAMAGE
 
 
 
