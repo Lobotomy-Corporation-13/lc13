@@ -21,6 +21,7 @@
 	damtype = RED_DAMAGE
 	attack_speed = 1.5
 	w_class = WEIGHT_CLASS_BULKY
+	swingstyle = WEAPONSWING_LARGESWEEP
 	attribute_requirements = list(
 		FORTITUDE_ATTRIBUTE = 100,
 		PRUDENCE_ATTRIBUTE = 100,
