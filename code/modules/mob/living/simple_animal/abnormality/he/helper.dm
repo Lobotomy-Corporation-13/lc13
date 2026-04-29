@@ -294,6 +294,7 @@
 			continue
 		visible_message("[src] tosses [H] out of the way!")
 		H.deal_damage(dash_damage, RED_DAMAGE, src)
+		H.apply_lc_bleed(7)
 
 		var/rand_dir = pick(NORTH, SOUTH, EAST, WEST)
 		var/atom/throw_target = get_edge_target_turf(H, rand_dir)
@@ -302,7 +303,6 @@
 
 		if(H.stat == DEAD)
 			H.gib(FALSE, FALSE, FALSE)
-		H.apply_lc_bleed(7)
 	SLEEP_CHECK_DEATH(5)
 	charging = FALSE
 	dash_cooldown = world.time + dash_cooldown_time
