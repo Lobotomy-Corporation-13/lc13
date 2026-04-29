@@ -121,11 +121,6 @@
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/spawn_gibs()
 	return new /obj/effect/decal/cleanable/ash(drop_location(), src)
 
-/mob/living/simple_animal/hostile/abnormality/ardor_moth/CanAttack(atom/the_target)
-	..()
-	if(prepping_fire)
-		return FALSE
-
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/OpenFire()
 	..()
 	if(prepping_fire)
