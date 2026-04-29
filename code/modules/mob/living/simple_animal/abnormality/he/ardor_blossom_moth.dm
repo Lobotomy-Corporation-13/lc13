@@ -148,9 +148,12 @@
 
 
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/proc/SpitFire()
-	var/turf/T = get_ranged_target_turf_direct(src, target, 6)
-	var/list/burn_turfs = getline(src, T) - get_turf(src)
-	dragon_fire_line(src, burn_turfs)
+	for(var/i = 1 to 3)
+		var/turf/T = get_ranged_target_turf_direct(src, target, 6)
+		var/list/burn_turfs = getline(src, T) - get_turf(src)
+		dragon_fire_line(src, burn_turfs)
+		SLEEP_CHECK_DEATH(5)
+
 	prepping_fire = FALSE
 
 /mob/living/simple_animal/hostile/abnormality/ardor_moth/proc/BurnAll()
