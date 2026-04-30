@@ -102,6 +102,15 @@
 	if((buff_cooldown < world.time) && (status_flags & GODMODE))
 		work_damage_amount = initial(work_damage_amount)
 
+	//If you have a supplies crate nearby, delete it, spawn a new one, and set the things proper
+	for(var/obj/structure/blue_core/Y in range(2, src))
+		qdel(Y)
+		buff_cooldown = world.time + buff_cooldown_time
+		work_damage_amount = 16
+		pulse_damage = initial(pulse_damage)
+		var/turf/W = pick(GLOB.xeno_spawn)
+		new /obj/structure/blue_core (get_turf(W))
+
 /mob/living/simple_animal/hostile/abnormality/bluestar/CanAttack(atom/the_target)
 	return FALSE
 
@@ -174,14 +183,3 @@
 	anchored = FALSE
 	density = TRUE
 
-
-/mob/living/simple_animal/hostile/abnormality/bluestar/Life()
-	..()
-	//If you have a supplies crate nearby, delete it, spawn a new one, and set the things proper
-	for(var/obj/structure/blue_core/Y in range(2, src))
-		qdel(Y)
-		buff_cooldown = world.time + buff_cooldown_time
-		work_damage_amount = 16
-		pulse_damage = initial(pulse_damage)
-		var/turf/W = pick(GLOB.xeno_spawn)
-		new /obj/structure/blue_core (get_turf(W))
