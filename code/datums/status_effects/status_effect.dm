@@ -292,6 +292,10 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 	var/stack_decay = 1 //how many stacks are lost per tick (decay trigger)
 	var/stack_threshold //special effects trigger when stacks reach this amount
 	var/max_stacks //stacks cannot exceed this amount
+	/// These stacks are not factored into decay calculations, and have to be manually increased/decreased. !!! Use add_undecaying_stacks(num) to modify this! !!!
+	var/undecaying_stacks = 0
+	/// Used to bypass the if() that deletes the status if it falls to/beneath 0 stacks in add_stacks, since add_stacks is called in on_creation() which leads to newly created statuses with 0 stacks to be deleted immediately.
+	var/initialized_stacks = FALSE
 	var/consumed_on_threshold = TRUE //if status should be removed once threshold is crossed
 	var/threshold_crossed = FALSE //set to true once the threshold is crossed, false once it falls back below
 	var/overlay_file
@@ -440,21 +444,34 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 			on_threshold_drop()
 		if(stacks_added > 0)
 			tick_interval += delay_before_decay //refreshes time until decay
-		stacks = min(stacks, max_stacks)
+		stacks = clamp(stacks, undecaying_stacks, (max_stacks ? max_stacks : INFINITY))
 		status_overlay.icon_state = "[overlay_state][stacks]"
 		status_underlay.icon_state = "[underlay_state][stacks]"
 		owner.add_overlay(status_overlay)
 		owner.underlays += status_underlay
 		if(stacking_display_name)
 			update_stacking_number()
-	else
+	else if(initialized_stacks)
 		fadeout_effect()
 		qdel(src) //deletes status if stacks fall under one
+
+/// Used to add/subtract a certain amount of stacks that the status effect will treat as a minimum amount of stacks. Still subject to max_stacks
+/datum/status_effect/stacking/proc/add_undecaying_stacks(amount)
+	if(!amount)
+		return
+	var/maximum = max_stacks ? max_stacks : INFINITY // What's our maximum amount of stacks?
+
+	var/old_undecaying_stack_number = undecaying_stacks
+	undecaying_stacks = clamp(old_undecaying_stack_number + amount, 0, maximum)
+
+	var/actually_added = (undecaying_stacks - old_undecaying_stack_number) // How many stacks do we actually get to add?
+	add_stacks(actually_added)
 
 /datum/status_effect/stacking/on_creation(mob/living/new_owner, stacks_to_apply)
 	. = ..()
 	if(.)
 		add_stacks(stacks_to_apply)
+		initialized_stacks = TRUE
 
 /datum/status_effect/stacking/on_apply()
 	if(!can_have_status())

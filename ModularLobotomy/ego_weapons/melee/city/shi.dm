@@ -150,19 +150,18 @@
 Shi East Weaponry
 They use bowblades!
 The bowblade acts as a decent melee weapon, with a large sweep style.
-Ready the bowblade to prep it as a ranged weapon. It will then need to be loaded with a physical Shi East arrow; then, you're ready to fire.
+Nock the bowblade with a Shi East Arrow to turn it into a ranged weapon - gain Target Aim stacks to empower your shot.
 
 Firing normally will result in a weak shot.
 To empower your shots, you will have to increase your Target Aim.
 Target Aim starts at 0 and goes up to 4. You can increase it by landing melee attacks with your bowblade, which will raise it by 1 on each hit to a certain maximum.
-You can also assume a stance and hold your breath to increase your Target Aim with do_afters. The first one will hinder your movement, and all successive ones will soft-root you
-(very short immobilize at the start of the first, then you will break the stance if you move).
+You can also assume a stance and hold your breath to increase your Target Aim with do_afters. This impairs your mobility.
 
 An empowered shot will deal more damage and have higher projectile speed based on the amount of Focus.
 At 2 Target Aim, your arrow will embed into the target and cause a strong, stackable debuff. They can remove the arrow, but it comes at a cost.
 At 4 Target Aim, you will no longer fire a projectile - it turns into a point-and-click mini cutscene instead.
 
-Arrows will never be deleted when used, they'll either embed into their target/get stuck into the wall/fall onto the floor.
+Arrows will never be deleted when used (unless something goes horribly wrong), they'll either embed into their target/fall onto the floor.
 */
 #define SHI_EAST_UNLOAD_FIRED_SHOT "unload_fired_shot"
 #define SHI_EAST_UNLOAD_MANUAL "unload_manual"
@@ -175,7 +174,8 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	special = "This weapon functions as a hybrid melee-ranged weapon. When unloaded, use as a common melee weapon. To load this weapon, hit it with a Shi East Arrow. You will be slowed if moving with a loaded arrow. To unload, alt-click. \n\
 	After loading, you may fire the weapon. Normal shots will be ineffective - you must gain and stack the \"Target Aim\" status effect to unlock the full potential of this weapon. Do this by using the weapon in-hand with a loaded arrow - melee strikes will also stack it to a lower maximum."
 
-	item_flags = SLOWS_WHILE_IN_HAND
+	item_flags = SLOWS_WHILE_IN_HAND // This weapon only has slowdown when loaded.
+	weapon_weight = WEAPON_HEAVY
 	lefthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_left_64x64.dmi'
 	righthand_file = 'ModularLobotomy/_Lobotomyicons/lc13_right_64x64.dmi'
 	inhand_x_dimension = 64
@@ -186,27 +186,25 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	forced_melee = TRUE
 
 	// Melee
-	force = 44
+	force = 50
 	damtype = RED_DAMAGE
-	attack_speed = 1.5
+	attack_speed = 1.6
 	swingstyle = WEAPONSWING_LARGESWEEP
 	var/max_target_aim_stacks_from_melee = 2
 
 	// Ranged
 	projectile_path = /obj/projectile/ego_bullet/shi_east_arrow
-	weapon_weight = WEAPON_HEAVY
 	fire_sound = 'sound/weapons/gun/rifle/shot_alt.ogg'
-	special = "PLACEHOLDER"
 	fire_delay = 20
 	shotsleft = 0
 	reloadtime = 0
 	var/ranged_slowdown = 0.6
 	var/obj/item/shi_east_arrow/loaded_arrow
-	var/hold_breath_cycle_duration = 1.8 SECONDS
+	var/hold_breath_cycle_duration = 2.2 SECONDS
 	var/hold_breath_active = FALSE
 	var/glimmer_ready = FALSE
-	var/glimmer_windup = 0.5 SECONDS
-	var/glimmer_travel_time = 0.3 SECONDS
+	var/glimmer_windup = 1 SECONDS
+	var/glimmer_travel_time = 0.6 SECONDS
 
 /* -------------------- DESCRIPTION STUFF -------------------- */
 /obj/item/ego_weapon/ranged/city/shi_east/examine(mob/user)
@@ -228,17 +226,17 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 		return
 	. = list()
 	. += span_info("This weapon has two modes: melee, and ranged. They aren't compatible with eachother - load a Shi East Arrow to enable ranged mode, then unload or fire it to enter melee mode again. Unload by alt-clicking.")
-	. += span_info("Hitting an enemy in melee while in ranged mode will automatically unload the arrow and swap to melee mode - you will strike the enemy as normal.")
-	. += span_info("<br />")
+	. += span_info("Hitting an enemy in melee while in ranged mode will automatically unload the arrow and swap to melee mode - you will strike the enemy as normal. <br />")
+
 	. += span_info("The arrows used by this weapon are physical objects - as such, your ammo is limited. However, these arrows are not lost when fired - they will fall to the ground or become embedded on impact. Thus, you can recover them.")
-	. += span_info("The arrows fired by this weapon may cause status effects on-hit - if so, they will be detailed in those arrows' description.")
-	. += span_info("<br />")
+	. += span_info("The arrows fired by this weapon may cause status effects on-hit - if so, they will be detailed in those arrows' description. <br />")
+
 	. += span_info("This weapon is able to generate stacks of the <b>Target Aim</b> status effect, up to 4. This status effect empowers the next fired Shi East Arrow.")
 	. += span_info("<b>Target Aim</b> has a limited duration, and a maximum of 4 stacks. You may generate it in one of two ways:")
 	. += span_info("1. Land melee strikes with this weapon. This can stack Target Aim up to [max_target_aim_stacks_from_melee] stacks.")
 	. += span_info("2. Hold your breath. Use the weapon in-hand while an arrow is nocked. This will begin a series of channeled windups, each lasting [hold_breath_cycle_duration * 0.1]s. While holding your breath, you will be <b>pacified</b>. \
-	Each finished cycle will give you one Target Aim stack. While holding your breath with 0 or 1 Target Aim stacks, you will be slowed. With any more, moving during these cycles will break your concentration and reset your Target Aim stacks.")
-	. += span_info("<br />")
+	Each finished cycle will give you one Target Aim stack. While holding your breath with 0 or 1 Target Aim stacks, you will be slowed. With any more, moving during these cycles will break your concentration and reset your Target Aim stacks. <br />")
+
 	. += span_info("Each stack of <b>Target Aim</b> will increase projectile velocity and damage for your arrows, as well as <b>unlock special effects</b> on certain thresholds.")
 	. += span_info("<b>2 Target Aim:</b> Arrows <b>embed</b> on targets. Embedding causes special effects based on the arrow embedded - read their description for details.")
 	. += span_info("<b>4 Target Aim:</b> Your focus heightens, and your shot becomes a certainty. Projectile damage type overridden to PALE, and instead of firing a projectile, you will be <b>guaranteed to land a hit</b> on the next mob you click.")
@@ -360,6 +358,7 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	else
 		user.remove_movespeed_modifier(/datum/movespeed_modifier/shi_east_hold_breath)
 
+	// Here's the actual windup...
 	if(do_after(user, hold_breath_cycle_duration, timed_action_flags = do_after_flags, extra_checks = CALLBACK(src, PROC_REF(HoldBreathExtraChecks)), interaction_key = "shi_east_target_aim", max_interact_count = 1))
 		// If the do_after succeeds, either apply the new status effect or increase the existing status' stacks by 1.
 		if(focus)
@@ -392,7 +391,7 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 
 /obj/item/ego_weapon/ranged/city/shi_east/proc/HoldBreathRoot(mob/living/user)
 	user.Immobilize(0.8 SECONDS)
-	user.balloon_alert(user, "Stop.")
+	SEND_SOUND(user, sound(('sound/abnormalities/armyinblack/black_heartbeat.ogg')))
 
 /obj/item/ego_weapon/ranged/city/shi_east/proc/FullDraw(mob/living/carbon/human/user)
 	ADD_TRAIT(user, TRAIT_IMMOBILIZED, "shi_east_full_draw")
@@ -406,7 +405,7 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 /// Stops the Hold Breath cycles by flipping the hold_breath_active var.
 /obj/item/ego_weapon/ranged/city/shi_east/proc/EndHoldBreath(mob/living/carbon/human/user, success = TRUE)
 	if(!success)
-		user.balloon_alert(user, "Lost concentration.")
+		user.balloon_alert(user, "Lost concentration. Target Aim reset.")
 		user.remove_status_effect(/datum/status_effect/stacking/shi_east_target_aim)
 	user.remove_movespeed_modifier(/datum/movespeed_modifier/shi_east_hold_breath)
 	hold_breath_active = FALSE
@@ -435,9 +434,12 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	var/datum/status_effect/stacking/how_much_target_aim_did_we_fire_with = user.has_status_effect(/datum/status_effect/stacking/shi_east_target_aim)
 	if(how_much_target_aim_did_we_fire_with)
 		target_aim_stacks_used = how_much_target_aim_did_we_fire_with.stacks
-		if(target_aim_stacks_used >= 4)
+
+		if(target_aim_stacks_used >= 4) // We shouldn't need this; it's a failsafe
 			FullDrawExpire(how_much_target_aim_did_we_fire_with)
+
 		qdel(how_much_target_aim_did_we_fire_with)
+
 	fired_arrow_proj.LinkToArrowItem(loaded_arrow, target_aim_stacks_used)
 	UnloadArrow(user, SHI_EAST_UNLOAD_FIRED_SHOT)
 
@@ -450,7 +452,10 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	INVOKE_ASYNC(src, PROC_REF(GlimmerAttack), target, user)
 
 /obj/item/ego_weapon/ranged/city/shi_east/proc/GlimmerAttack(mob/living/target, mob/living/carbon/human/user)
-	if(!target || !user || !loaded_arrow)
+	if(!target || !user)
+		return
+	if(!loaded_arrow)
+		to_chat(user, span_warning("There is no arrow nocked in [src]!"))
 		return
 	if(!do_after(user, glimmer_windup, target, timed_action_flags = IGNORE_TARGET_LOC_CHANGE, interaction_key = "shi_east_glimmer", max_interact_count = 1))
 		return
@@ -465,6 +470,7 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	target.deal_damage(arrow.damage_per_target_aim[4], PALE_DAMAGE, source = user, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED | ATTACK_TYPE_SPECIAL))
 	if(!(arrow.Embed(user, target, 4)))
 		arrow.forceMove(get_turf(target))
+	log_combat(user, target, "shot (Bow's Glimmer)", src)
 
 /* -------------------- COMBAT: MELEE -------------------- */
 
@@ -495,8 +501,8 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 
 // Item
 /obj/item/shi_east_arrow
-	name = "shi east arrow"
-	desc = "PLACEHOLDER"
+	name = "shi east liferender arrow"
+	desc = "A bowblade arrow used by the Shi Association's eastern branch. This one is specialized to deal heavy damage to internal organs and cause bleeding."
 	icon_state = "skub"
 	damtype = RED_DAMAGE
 	var/projectile_path = /obj/projectile/ego_bullet/shi_east_arrow
@@ -507,15 +513,33 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	// Unimplemented, but I'm sure you can guess what this is meant to be. Maybe someday? For now, I think it's overkill.
 	//var/list/embed_chemicals
 
-	var/alist/embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 4, 3 = 6, 4 = 8)
-	var/embed_procced_organ_damage = 1
-	var/embed_procced_bleed_stacks = 2
+	var/alist/embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 7, 3 = 12, 4 = 18)
+	var/embed_organ_damage_simplemob_conversion_coeff = 10
+	var/embed_procced_organ_damage = 2
+
+	var/embed_periodic_offense_down = 0
+	var/embed_periodic_defense_down = 3
+	var/embed_periodic_bleed = 4
 
 	var/removal_delay = 1.3 SECONDS
 	var/removal_bleed_stacks = 25
-	var/removal_damage
+	var/removal_damage = 20
 
 	var/list/current_embed_data = list()
+
+/obj/item/shi_east_arrow/withering
+	name = "shi east withering arrow"
+	desc = "A bowblade arrow used by the Shi Association's eastern branch. This one is coated with a neurotoxin that saps the target's strength and reflexes, weakening their offensive and defensive capabilities."
+
+	embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 0, 3 = 2, 4 = 4)
+	embed_procced_organ_damage = 0
+
+	embed_periodic_offense_down = 5
+	embed_periodic_defense_down = 6
+	embed_periodic_bleed = 0
+
+	removal_bleed_stacks = 20
+	removal_damage = 10
 
 /// Called by the projectile to embed the arrow item into the victim, applying the status effect.
 /obj/item/shi_east_arrow/proc/Embed(mob/living/shi_assassin, mob/living/victim, target_aim_stacks = 2)
@@ -553,6 +577,41 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 		forceMove(get_turf(thingy))
 
 	current_embed_data = list()
+
+/obj/item/shi_east_arrow/proc/EmbedEffect(mob/living/victim)
+	if(!istype(victim))
+		return
+	if(embed_periodic_offense_down > 0)
+		victim.apply_lc_offense_level_down(embed_periodic_offense_down)
+	if(embed_periodic_defense_down > 0)
+		victim.apply_lc_defense_level_down(embed_periodic_offense_down)
+	if(embed_periodic_bleed > 0)
+		victim.apply_lc_bleed(embed_periodic_bleed)
+
+/obj/item/shi_east_arrow/proc/UnembedEffect(mob/living/victim, brutal = FALSE)
+	if(!istype(victim))
+		return
+	// When I add skills, brutal == TRUE will increase the effects from unembedding.
+	victim.apply_lc_bleed(removal_bleed_stacks)
+	victim.deal_damage(removal_damage, damtype, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
+
+/obj/item/shi_east_arrow/proc/EmbedMovementProc(mob/living/victim)
+	if(!istype(victim))
+		return
+	if(ishuman(victim) && current_embed_data["target_organ"])
+		var/mob/living/carbon/human/human_victim = victim
+		var/list/valid_organs = human_victim.getorganslot(current_embed_data["target_organ"])
+		if(!length(valid_organs))
+			return
+		var/obj/item/organ/unfortunate_organ = pick(valid_organs)
+		unfortunate_organ.applyOrganDamage(embed_procced_organ_damage)
+	else if(isanimal(victim))
+		victim.deal_damage(embed_procced_organ_damage * embed_organ_damage_simplemob_conversion_coeff, BRUTE, source = current_embed_data["firer"], flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_STATUS))
+
+/obj/item/shi_east_arrow/proc/EmbedPeriodicProc(mob/living/victim)
+	if(!istype(victim))
+		return
+
 
 // Projectile
 /obj/projectile/ego_bullet/shi_east_arrow
@@ -637,14 +696,22 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	id = "shi_east_lodged_arrow"
 	status_type = STATUS_EFFECT_UNIQUE
 	duration = -1
-	tick_interval = -1
+	tick_interval = 51
 	max_stacks = 4
 	stacks = 1
+	stack_decay = 0
 	consumed_on_threshold = FALSE
 	alert_type = /atom/movable/screen/alert/status_effect/shi_east_lodged_arrow
 	stacking_display_name = "concentration"
 	var/list/lodged_arrows = list()
 	var/duration_on_simplemobs = 20 SECONDS
+	var/list/permitted_organ_targets = list(
+		ORGAN_SLOT_HEART,
+		ORGAN_SLOT_LUNGS,
+		ORGAN_SLOT_LIVER,
+		ORGAN_SLOT_STOMACH,
+		ORGAN_SLOT_APPENDIX,
+		)
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/on_creation(mob/living/new_owner, stacks_to_apply, obj/item/shi_east_arrow/source_arrow)
 	if(!istype(new_owner) || !istype(source_arrow))
@@ -654,6 +721,7 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	if(!.)
 		return FALSE
 	AddArrow(source_arrow)
+	RegisterSignal(owner, COMSIG_PARENT_EXAMINE, PROC_REF(WhenOwnerExamined))
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/on_apply()
 	. = ..()
@@ -664,7 +732,15 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/on_remove()
 	. = ..()
-	UnregisterSignal(owner, COMSIG_PARENT_QDELETING)
+	UnregisterSignal(owner, list(COMSIG_PARENT_QDELETING, COMSIG_PARENT_EXAMINE))
+
+/datum/status_effect/stacking/shi_east_lodged_arrow/tick()
+	if(!can_have_status())
+		qdel(src)
+	else
+		for(var/arrow in lodged_arrows) // No need to do an implicit istype here, we're pretty sure these are arrows
+			var/obj/item/shi_east_arrow/cool_arrow = arrow
+			cool_arrow.EmbedPeriodicProc(owner)
 
 /datum/status_effect/stacking/shi_east_lodged_arrow/proc/AddArrow(obj/item/shi_east_arrow/embedding_arrow)
 	if(!istype(embedding_arrow))
@@ -675,14 +751,29 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 	lodged_arrows |= embedding_arrow
 	stacks = length(lodged_arrows)
 	update_stacking_number()
+
+	var/target_aim_stacks_used = embedding_arrow.current_embed_data["target_aim_stacks_used"]
+	// For animals, remove the arrow on a timer.
 	if(istype(owner, /mob/living/simple_animal))
 		addtimer(CALLBACK(src, PROC_REF(RemoveArrow), owner), duration_on_simplemobs)
+		owner.deal_damage((embedding_arrow.embed_organ_damage_per_target_aim[target_aim_stacks_used] * embedding_arrow.embed_organ_damage_simplemob_conversion_coeff), BRUTE, source = embedding_arrow.current_embed_data["firer"], flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_RANGED))
+	else if(istype(owner, /mob/living/carbon/human))
+		// Tell the arrow what organ slot it should deal its damage to
+		var/mob/living/carbon/human/human_owner = owner
+		var/targeted_organ_slot = pick(permitted_organ_targets)
+		embedding_arrow.current_embed_data["target_organ"] = targeted_organ_slot
+
+		// Deal the initial burst of organ damage from the embed
+		var/list/valid_organs = human_owner.getorganslot(targeted_organ_slot)
+		var/obj/item/organ/unfortunate_organ = pick(valid_organs)
+		unfortunate_organ.applyOrganDamage(embedding_arrow.embed_organ_damage_per_target_aim[target_aim_stacks_used])
 	return TRUE
 
-/datum/status_effect/stacking/shi_east_lodged_arrow/proc/RemoveArrow(mob/living/removing)
+/datum/status_effect/stacking/shi_east_lodged_arrow/proc/RemoveArrow(mob/living/removing, brutal = FALSE)
 	if(EmptyCheck())
 		return
 	var/obj/item/shi_east_arrow/arrow = pick(lodged_arrows)
+	arrow.UnembedEffect(owner, brutal)
 	arrow.Unembed(removing)
 	lodged_arrows -= arrow
 	add_stacks(-1)
@@ -702,11 +793,43 @@ Arrows will never be deleted when used, they'll either embed into their target/g
 		return TRUE
 	return FALSE
 
+/datum/status_effect/stacking/shi_east_lodged_arrow/proc/WhenOwnerExamined(mob/living/our_owner, mob/examiner, list/examine_list)
+	SIGNAL_HANDLER
+	examine_list += span_notice("There's [stacks] arrow(s) stuck in [our_owner.p_them()]. <a href='?src=[REF(src)];action=remove_arrow'>\[Remove Arrow (HARMFUL)]</a>")
+
+/datum/status_effect/stacking/shi_east_lodged_arrow/proc/AttemptManualRemoval(mob/living/remover)
+	if(!QDELETED(remover) && istype(remover) && remover.Adjacent(owner))
+		var/message = (remover == owner) ? "[remover] begins pulling an arrow out from [remover.p_their()] own chest...!" : "[remover] begins pulling an arrow out from [owner]'s chest...!"
+		remover.visible_message(span_danger(message))
+		if(do_after(remover, 1.4 SECONDS, owner))
+			RemoveArrow(remover)
+
+/datum/status_effect/stacking/shi_east_lodged_arrow/Topic(href, list/href_list)
+	. = ..()
+	if(.)
+		return
+	if(href_list["action"] != "remove_arrow")
+		return
+	var/mob/user = usr
+	AttemptManualRemoval(user)
+
 /atom/movable/screen/alert/status_effect/shi_east_lodged_arrow
 	name = "Lodged Arrow"
-	desc = "AIEEEEEEEE!!!"
+	desc = "A large arrow is stuck in your chest! Click this alert to begin removing it (will cause damage)."
 	icon = 'ModularLobotomy/_Lobotomyicons/status_sprites.dmi'
 	icon_state = "concentration"
+
+/atom/movable/screen/alert/status_effect/shi_east_lodged_arrow/Click(location, control, params)
+	. = ..()
+	var/mob/living/L = usr
+	if(!istype(L) || L != owner)
+		return
+	var/datum/status_effect/stacking/shi_east_lodged_arrow/the_status = attached_effect
+	if(!istype(the_status))
+		return
+	L.changeNext_move(CLICK_CD_RAPID)
+	return the_status.AttemptManualRemoval(L)
+
 
 #undef SHI_EAST_UNLOAD_FIRED_SHOT
 #undef SHI_EAST_UNLOAD_MANUAL
