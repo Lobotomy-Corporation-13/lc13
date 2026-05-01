@@ -371,6 +371,7 @@
 	var/charge_damage = 800
 	var/growing_charge_damage = 0
 	var/nihil_present = FALSE
+	var/finish_pause = 7 SECONDS
 
 /obj/effect/proc_holder/ability/aimed/dash/kog/Initialize()
 	.  = ..()
@@ -436,6 +437,9 @@
 		charge_damage = charge_damage + growing_charge_damage
 	return ..()
 
+/obj/effect/proc_holder/ability/aimed/dash/kog/EndCharge(mob/living/user)
+	do_after(user, finish_pause, timed_action_flags = IGNORE_USER_LOC_CHANGE, target = user)
+	return ..()
 
 /obj/effect/proc_holder/ability/aimed/dash/kog/AbnoInteraction(mob/living/user)
 	if(!istype(user, /mob/living/simple_animal/hostile/abnormality/greed_king))
