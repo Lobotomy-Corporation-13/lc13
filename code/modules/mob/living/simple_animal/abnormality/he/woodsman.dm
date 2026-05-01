@@ -427,7 +427,12 @@
 
 	if(flurry_cooldown <= world.time)
 		if(prob(75))
-			Woodsman_Flurry(target)
+			switch(rand(1,2))
+				if(1)
+					Woodsman_Flurry(target)
+				if(2)
+					begin_chain_pull(target)
+
 
 /mob/living/simple_animal/hostile/abnormality/woodsman/proc/Woodsman_Flurry(target)
 	if(flurry_cooldown > world.time)
