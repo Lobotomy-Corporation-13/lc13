@@ -66,12 +66,6 @@
 	alternate_toggle_enabled_message = span_notice("You toggle into buckshot mode.")
 	alternate_toggle_disabled_message = span_notice("You switch to rifle rounds.")
 
-	attribute_requirements = list(
-							FORTITUDE_ATTRIBUTE = 60,
-							JUSTICE_ATTRIBUTE = 60
-							)
-
-
 /obj/item/ego_weapon/ranged/hatred
 	name = "in the name of love and hate"
 	desc = "A magic wand surging with the lovely energy of a magical girl. \
