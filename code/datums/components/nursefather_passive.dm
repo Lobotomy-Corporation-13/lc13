@@ -69,7 +69,6 @@
 /datum/component/nursefather_passive/middle
 
 /datum/component/nursefather_passive/middle/on_damage_taken(datum/source, damage, damagetype, def_zone, attack_source, flags, attack_type)
-	SIGNAL_HANDLER
 	if(!damage || damage <= 0)
 		return
 

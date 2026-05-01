@@ -48,6 +48,20 @@ sharpness - Irrelevant in most cases.
 	if(signal_return & COMPONENT_MOB_DENY_DAMAGE)
 		return FALSE
 
+	// Arayashiki 支離滅裂 passive: while the receiver has Muga 無我, scale incoming damage down by
+	// (Muga on self + Sever the Thread 切絲 on attacker)%, capped at 90%.
+	var/datum/status_effect/muga/_aya_muga = has_status_effect(/datum/status_effect/muga)
+	if(_aya_muga && _aya_muga.muga > 0)
+		var/_aya_reduction = _aya_muga.muga
+		if(isliving(source))
+			var/mob/living/_aya_atk = source
+			var/datum/status_effect/stacking/sever_the_thread/_aya_st = _aya_atk.has_status_effect(/datum/status_effect/stacking/sever_the_thread)
+			if(_aya_st)
+				_aya_reduction += _aya_st.stacks
+		_aya_reduction = min(90, _aya_reduction)
+		if(_aya_reduction > 0)
+			damage_amount = damage_amount * (1 - _aya_reduction / 100)
+
 	// Automatically run an armour check for the provided damage type if we weren't already provided with a blocked value, and if we aren't taking BRUTE damage.
 	if((isnull(blocked)) && (damage_type != BRUTE))
 		blocked = run_armor_check(null, damage_type)

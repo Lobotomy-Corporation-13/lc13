@@ -134,6 +134,10 @@ export const chatMiddleware = store => {
       chatRenderer.saveToDisk();
       return;
     }
+    if (type === 'chat/pruneOldestPercent') {
+      chatRenderer.pruneOldestPercent(payload);
+      return;
+    }
     return next(action);
   };
 };
