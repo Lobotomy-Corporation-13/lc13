@@ -2879,7 +2879,7 @@
 // Root any nearby enemies with Contempt in sight. We'll store their status effects in a list so we can delete them later.
 /obj/item/ego_weapon/perversion/proc/DrawAttackRootContempt(mob/living/carbon/human/user)
 	for(var/mob/living/L in viewers(cascading_gaze_radius, user))
-		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)))
+		if(!(L.has_status_effect(STATUS_EFFECT_CONTEMPT)) || L.status_flags & GODMODE)
 			continue
 		if(user.faction_check_mob(L))
 			continue
@@ -3006,7 +3006,7 @@
 	for(var/turf/T in cascading_gaze_affected_turfs)
 		var/sent_visual = FALSE
 		for(var/mob/living/L in T)
-			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD))
+			if((L in shared_hitlist) || (user.faction_check_mob(L)) || (L.stat >= DEAD) || (L.status_flags & GODMODE))
 				continue
 
 			shared_hitlist |= L
@@ -3310,6 +3310,8 @@
 /* ------------------------ COMBAT ------------------------ */
 // Basic proc used to apply this weapon's version of Gaze. Will not apply Gaze if they already have Contempt.
 /obj/item/ego_weapon/perversion/proc/ApplyGaze(mob/living/target, stacks_to_apply)
+	if(!target || !isliving(target) || target.status_flags & GODMODE)
+		return
 	var/datum/status_effect/stacking/perversion_weapon_gaze/gazing = target.has_status_effect(STATUS_EFFECT_GAZE)
 	var/datum/status_effect/display/perversion_weapon_contempt/contempting = target.has_status_effect(STATUS_EFFECT_CONTEMPT)
 	if(contempting)
@@ -3585,7 +3587,8 @@
 				continue
 			if(L.stat >= DEAD)
 				continue
-
+			if(L.status_flags & GODMODE)
+				continue
 			shared_hitlist |= L
 
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(T3, pick(GLOB.alldirs))
@@ -3666,6 +3669,8 @@
 			if(user.faction_check_mob(L))
 				continue
 			if(L.stat >= DEAD)
+				continue
+			if(L.status_flags & GODMODE)
 				continue
 
 			shared_hitlist |= L
