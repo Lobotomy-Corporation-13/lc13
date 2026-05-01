@@ -93,6 +93,138 @@
 	block_message = "You prepare to strike those around you..."
 	hit_message = "prepares to strike!"
 	block_cooldown_message = "You rearm your blade."
+	/// Map of finger key -> broken bool. Set TRUE as each Finger role breaks their seal.
+	var/list/seals_broken = list("pinky" = FALSE, "ring" = FALSE, "middle" = FALSE, "thumb" = FALSE, "index" = FALSE)
+	/// Latches TRUE when all five seals are broken; unlocks the dash + examine buttons.
+	var/awakened = FALSE
+	/// Wielder toggle for the awakened-form dash afterattack.
+	var/dash_enabled = TRUE
+	/// The total amount of lines you need within your chat to do the dash attack.
+	var/lines_needed = 25
+
+// Five-Seal system: each Finger role can break their corresponding seal. Once all 5 are broken,
+// the blade awakens — gains a chat-consuming ranged dash-afterattack and two examine buttons
+// (toggle the dash, fully unsheathe into Arayashiki).
+GLOBAL_LIST_INIT(sangria_finger_roles, list(
+	"pinky" = list("Dihui Star"),
+	"ring" = list("Corporist Maestro"),
+	"middle" = list("Ex Great Brother"),
+	"thumb" = list("Ex Thumb Sottocapo"),
+	"index" = list("Oracle Proxy"),
+))
+
+/obj/item/ego_weapon/shield/sangria/examine(mob/user)
+	. = ..()
+	. += span_notice("The blade bears five seals:")
+	for(var/finger in seals_broken)
+		var/state = seals_broken[finger] ? span_nicegreen("broken") : span_warning("sealed")
+		var/line = "- [capitalize(finger)]: [state]"
+		if(!seals_broken[finger] && user.mind && (user.mind.assigned_role in GLOB.sangria_finger_roles[finger]))
+			line += " <a href='byond://?src=[REF(src)];sangria_break_seal=[finger]'>\[Break the [capitalize(finger)] seal\]</a>"
+		. += line
+	if(awakened && (user == loc || (ismob(loc) && (src in user.held_items))))
+		. += span_warning("The blade hungers. The seals are gone.")
+		. += "<a href='byond://?src=[REF(src)];sangria_toggle_dash=1'>\[Toggle dash afterattack: [dash_enabled ? "ON" : "OFF"]\]</a>"
+		. += "<a href='byond://?src=[REF(src)];sangria_unsheathe=1'>\[Fully unsheathe the blade\]</a>"
+
+/obj/item/ego_weapon/shield/sangria/Topic(href, list/href_list)
+	. = ..()
+	if(href_list["sangria_break_seal"])
+		var/finger = href_list["sangria_break_seal"]
+		if(!(finger in seals_broken) || seals_broken[finger])
+			return
+		var/list/eligible = GLOB.sangria_finger_roles[finger]
+		if(!length(eligible) || !usr.mind || !(usr.mind.assigned_role in eligible))
+			return
+		seals_broken[finger] = TRUE
+		visible_message(span_userdanger("[usr] presses their authority into the Sangria - the [finger] seal cracks."), \
+			span_userdanger("You break the [finger] seal. The blade trembles in your hand."))
+		playsound(src, 'sound/weapons/parry.ogg', 60, TRUE)
+		CheckAwaken()
+		return
+	if(href_list["sangria_toggle_dash"])
+		if(!awakened || usr.get_active_held_item() != src)
+			return
+		dash_enabled = !dash_enabled
+		to_chat(usr, span_notice("Sangria's dash afterattack is now [dash_enabled ? "ENABLED" : "DISABLED"]."))
+		return
+	if(href_list["sangria_unsheathe"])
+		if(!awakened || usr.get_active_held_item() != src)
+			return
+		UnsheatheToArayashiki(usr)
+		return
+
+/obj/item/ego_weapon/shield/sangria/proc/CheckAwaken()
+	if(awakened)
+		return
+	for(var/seal in seals_broken)
+		if(!seals_broken[seal])
+			return
+	awakened = TRUE
+	name = "S.A.N.G.R.I.A. (Awakened)"
+	desc += " All five seals are broken; the blade hungers."
+	visible_message(span_userdanger("Sangria's seals are all broken. The blade hums with newfound hunger."))
+
+/obj/item/ego_weapon/shield/sangria/proc/UnsheatheToArayashiki(mob/user)
+	if(!user || !ismob(user))
+		return
+	var/turf/T = get_turf(user)
+	if(!T)
+		return
+	var/obj/item/ego_weapon/city/arayashiki/A = new(T)
+	user.visible_message(span_userdanger("Sangria slips from its sheath. Arayashiki \u963F\u983C\u8036\u8B58 stands revealed."), \
+		span_userdanger("You draw the true blade."))
+	user.dropItemToGround(src, force = TRUE, silent = TRUE)
+	user.put_in_active_hand(A)
+	qdel(src)
+
+/obj/item/ego_weapon/shield/sangria/afterattack(atom/A, mob/living/user, proximity_flag, params)
+	. = ..()
+	if(!awakened || !dash_enabled)
+		return
+	if(!CanUseEgo(user))
+		return
+	if(!isliving(A))
+		return
+	if(proximity_flag)
+		return
+	if(!can_see(user, A, 7))
+		to_chat(user, span_warning("You cannot see your target."))
+		return
+	if(get_dist(user, A) < 2)
+		return
+
+	// Chat threshold: server-side counter of dispatched chat lines. 50% must be >= 100, so total >= 200.
+	var/lines = user.client?.chat_message_count
+	if(!lines || lines < lines_needed)
+		to_chat(user, span_warning("Sangria stirs but finds no memory worth devouring."))
+		return
+
+	arayashiki_prune_chat(user.client, 50)
+
+	for(var/i in 2 to get_dist(user, A))
+		step_towards(user, A)
+	playsound(get_turf(src), 'sound/weapons/fwoosh.ogg', 300, FALSE, 9)
+	to_chat(user, span_warning("Sangria devours your memory and pulls you to [A]!"))
+
+	if(get_dist(user, A) >= 2)
+		return
+	var/mob/living/L = A
+	var/justmod = ishuman(user) ? (1 + get_modified_attribute_level(user, JUSTICE_ATTRIBUTE) / 100) : 1
+	var/dmg = 55 * justmod
+	if(istype(L, /mob/living/simple_animal))
+		dmg *= 5
+	L.deal_damage(dmg, PALE_DAMAGE, source = user, attack_type = ATTACK_TYPE_MELEE)
+
+	if(iscarbon(L))
+		var/datum/status_effect/stacking/sever_the_thread/S = L.has_status_effect(/datum/status_effect/stacking/sever_the_thread)
+		if(!S)
+			L.apply_status_effect(/datum/status_effect/stacking/sever_the_thread, 10)
+		else
+			S.add_stacks(10)
+		if(!L.GetComponent(/datum/component/tiansha_bladewound))
+			L.AddComponent(/datum/component/tiansha_bladewound)
+
 
 /obj/item/ego_weapon/mini/soleil
 	name = "soleil"

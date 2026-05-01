@@ -9,6 +9,10 @@
 		////////////////
 	/// hides the byond verb panel as we use our own custom version
 	show_verb_panel = FALSE
+	/// Approximate count of chat lines this client has received this round.
+	/// Used by Arayashiki/Sangria to gate chat-consuming abilities. Server-side
+	/// approximation - increments per dispatched message, decrements on prune.
+	var/chat_message_count = 0
 	///Contains admin info. Null if client is not an admin.
 	var/datum/admins/holder = null
 	///Needs to implement InterceptClickOn(user,params,atom) proc
