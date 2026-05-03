@@ -108,7 +108,7 @@
 		return EndCharge(user)
 	if(emergency_stop || user.stat == DEAD)
 		return EndCharge(user)
-	if(!PassCriteria(T))
+	if(!PassCriteria(T, user))
 		return EndCharge(user)
 	user.forceMove(T)
 	last_turf = T
@@ -129,7 +129,7 @@
 * If this returns false then the attack stops.
 * Scans each turf during Telegraph.
 */
-/obj/effect/proc_holder/ability/aimed/dash/proc/PassCriteria(turf/T)
+/obj/effect/proc_holder/ability/aimed/dash/proc/PassCriteria(turf/T, mob/living/user)
 	if(dash_ignore_walls)
 		return TRUE
 	if(T.density)
@@ -145,7 +145,7 @@
 		if(MD.density)
 			INVOKE_ASYNC(MD, TYPE_PROC_REF(/obj/machinery/door, open), 2)
 	for(var/mob/living/simple_animal/hostile/abnormality/D in T.contents)	//This caused issues earlier
-		if(D.density)
+		if(D.density && D != user)
 			return FALSE
 	return TRUE
 
@@ -239,6 +239,7 @@
 	dash_range =  7
 	windup_delay = 1 SECONDS
 	cooldown_time = 30 SECONDS
+	env_breaking = TRUE
 
 /obj/effect/proc_holder/ability/aimed/dash/big_wolf/Finalize(target, mob/living/user, list/path_list)
 	user.do_shaky_animation(2)
