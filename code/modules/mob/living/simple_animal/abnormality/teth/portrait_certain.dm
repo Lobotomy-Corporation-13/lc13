@@ -43,7 +43,6 @@
 		"I cant" = list(FALSE, "That cannot be, not after so much."),
 	)
 
-	var/can_act = TRUE
 	//Amount of humans who can be marked
 	var/marked_interloper_limit = 0
 	//Amount of workticks
@@ -133,6 +132,7 @@
 	DetonatePortraits(TRUE)
 	interlopers.Cut()
 	portraits.Cut()
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/portrait_certain/death(gibbed)
 	update_icon()
