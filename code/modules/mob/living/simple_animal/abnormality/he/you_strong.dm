@@ -307,6 +307,38 @@
 	ChangeMoveToDelayBy(-gear_speed)
 	rapid_melee = gear > 7 ? 2 : 1
 
+//Attacks
+/mob/living/simple_animal/hostile/grown_strong/AttackingTarget()
+	. = ..()
+	if(prob(10))
+		SpinAttack()	//Give them some love
+
+/mob/living/simple_animal/hostile/grown_strong/proc/SpinAttack()
+	manual_emote("makes a whirring sound...")
+	SLEEP_CHECK_DEATH(10)
+
+	//Do the thing!
+	spin(15, 2)
+	for(var/i = 1 to 5)
+		YMBS_AOE(1)
+		SLEEP_CHECK_DEATH(3)
+	SLEEP_CHECK_DEATH(10)
+
+//Generic AOE code. We use this twice
+/mob/living/simple_animal/hostile/grown_strong/proc/YMBS_AOE(aoe_range)
+	playsound(get_turf(src), 'sound/abnormalities/mountain/slam.ogg', 40, 1)
+	for(var/turf/T in range(aoe_range, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T)
+			if(L==src)
+				continue
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
+			L.deal_damage(melee_damage_upper*2, RED_DAMAGE)
+
 /mob/living/simple_animal/hostile/grown_strong/Life()
 	. = ..()
 	if(!COOLDOWN_FINISHED(src, gear_shift) || (status_flags & GODMODE))
@@ -335,6 +367,8 @@
 	src.adjustBruteLoss(-9999)
 	gear = clamp(gear + 2, 1, 10)
 	manual_emote("shudders back to life!")
+	//People love to bodyblock you, throw them away.
+	YMBS_AOE(2)
 	UpdateGear()
 
 ////// Parts! //////
