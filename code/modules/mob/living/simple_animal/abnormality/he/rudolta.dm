@@ -55,6 +55,11 @@
 	var/pulse_cooldown
 	var/pulse_cooldown_time = 1.8 SECONDS
 	var/pulse_damage = 20
+	var/turf/same_turf
+
+/mob/living/simple_animal/hostile/abnormality/rudolta/Initialize()
+	..()
+	same_turf = get_turf(src)
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/NeutralEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -73,9 +78,24 @@
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/Life()
 	. = ..()
+	if(IsContained())
+		return
 	if(!.) // Dead
 		return FALSE
-	if((pulse_cooldown < world.time) && !(status_flags & GODMODE))
+
+	//The various attack stuff
+	if(same_turf != get_turf(src))
+		same_turf = get_turf(src)
+		pulse_damage = initial(pulse_damage)
+	else
+		if(pulse_damage <= 60)	//A 70 damage pulse is so mean
+			pulse_damage += 5	//If they try to lock you down, start ramping, also if you are in the same area for too long
+			manual_emote("eye's gleam.")
+
+	//Sometimes drop a bomb present, it's funny, trust
+	if(prob(10))
+		new /obj/item/bomb_present(get_turf(src))
+	if((pulse_cooldown < world.time))
 		WhitePulse()
 
 /mob/living/simple_animal/hostile/abnormality/rudolta/AttackingTarget()
@@ -90,3 +110,35 @@
 		L.deal_damage(pulse_damage, WHITE_DAMAGE, src, flags = (DAMAGE_FORCED), attack_type = (ATTACK_TYPE_SPECIAL))
 		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
 
+
+/obj/item/bomb_present
+	name = "present bomb"
+	desc = "It's ticking."
+	icon = 'icons/obj/storage.dmi'
+	icon_state = "giftdeliverypackage5"
+	density = FALSE
+	alpha = 30
+	var/lifetime = 3 MINUTES
+
+/obj/item/bomb_present/Initialize()
+	..()
+	QDEL_IN(src, lifetime)
+
+/obj/item/bomb_present/Crossed(atom/movable/AM)	//Keeping it crossed in case
+	. = ..()
+	if(!isliving(AM))
+		return
+	explode()
+
+/obj/item/bomb_present/proc/explode()
+	playsound(get_turf(src), 'sound/effects/explosion2.ogg', 50, 0, 8)
+	for(var/turf/T in range(1, src))
+		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
+		for(var/mob/living/L in T)
+			var/throw_dir = get_dir(src, L)
+			if(!throw_dir)
+				throw_dir = pick(NORTH, SOUTH, EAST, WEST) // random dir if on same tile
+			var/throw_target = get_edge_target_turf(L, throw_dir)
+			L.throw_at(throw_target, 4, 2)
+			L.deal_damage(100, WHITE_DAMAGE)	//Fuck man, You're the one stepping on the present.
+	qdel(src)
