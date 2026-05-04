@@ -848,7 +848,7 @@
 
 	// --- Access Check ---
 	if(!(user?.mind?.assigned_role in roles))
-		if(SSmaptype.maptype != "office")
+		if(SSmaptype.maptype != "office" && SSmaptype.maptype != "lc13")
 			to_chat(user, "<span class='notice'>You need to be a surgeon to use this machine!</span>")
 			return TRUE
 

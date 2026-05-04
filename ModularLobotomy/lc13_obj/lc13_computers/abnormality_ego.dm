@@ -7,6 +7,12 @@
 	var/selected_level = ZAYIN_LEVEL
 	var/delay = 15 SECONDS
 
+/obj/machinery/computer/ego_purchase/Initialize()
+	. = ..()
+	if(SSmaptype.chosen_trait == FACILITY_TRAIT_NO_EGO)
+		qdel(src)
+		return INITIALIZE_HINT_QDEL
+
 /obj/machinery/computer/ego_purchase/examine(mob/user)
 	. = ..()
 	if (GetFacilityUpgradeValue(UPGRADE_EXTRACTION_2))
