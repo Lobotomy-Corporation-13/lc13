@@ -436,7 +436,8 @@
 	abno_code = "F-01-191"
 	abno_info = list(
 		"Tangle had a bad reaction when working on a random EMPLOYEE, and their Qliphoth Counter lowered.",
-		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",)
+		"Working large amounts of instinct works on tangle ended in it's Qliphoth Counter being lowered.",
+		"When assaulted by an employee with Instict of 2 or lower, F-01-191 could overpower them.",)
 
 //Generic Brand Modelling Clay
 /obj/item/paper/fluff/info/teth/clayman
