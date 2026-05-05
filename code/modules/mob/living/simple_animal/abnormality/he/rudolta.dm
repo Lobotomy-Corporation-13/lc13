@@ -121,7 +121,7 @@
 	var/lifetime = 3 MINUTES
 
 /obj/item/bomb_present/Initialize()
-	..()
+	. = ..()
 	QDEL_IN(src, lifetime)
 
 /obj/item/bomb_present/Crossed(atom/movable/AM)	//Keeping it crossed in case
