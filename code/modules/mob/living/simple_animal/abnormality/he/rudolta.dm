@@ -76,6 +76,10 @@
 /mob/living/simple_animal/hostile/abnormality/rudolta/PickTarget(list/Targets)
 	return
 
+/mob/living/simple_animal/hostile/abnormality/rudolta/Destroy(list/Targets)
+	same_turf = null
+	..()
+
 /mob/living/simple_animal/hostile/abnormality/rudolta/Life()
 	. = ..()
 	if(IsContained())
