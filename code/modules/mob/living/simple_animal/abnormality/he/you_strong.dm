@@ -320,12 +320,12 @@
 	//Do the thing!
 	spin(15, 2)
 	for(var/i = 1 to 5)
-		YMBS_AOE(1)
+		ymbs_aoe(1)
 		SLEEP_CHECK_DEATH(3)
 	SLEEP_CHECK_DEATH(10)
 
 //Generic AOE code. We use this twice
-/mob/living/simple_animal/hostile/grown_strong/proc/YMBS_AOE(aoe_range)
+/mob/living/simple_animal/hostile/grown_strong/proc/ymbs_aoe(aoe_range)
 	playsound(get_turf(src), 'sound/abnormalities/mountain/slam.ogg', 40, 1)
 	for(var/turf/T in range(aoe_range, src))
 		new /obj/effect/temp_visual/small_smoke/halfsecond(T)
@@ -368,7 +368,7 @@
 	gear = clamp(gear + 2, 1, 10)
 	manual_emote("shudders back to life!")
 	//People love to bodyblock you, throw them away.
-	YMBS_AOE(2)
+	ymbs_aoe(2)
 	UpdateGear()
 
 ////// Parts! //////
