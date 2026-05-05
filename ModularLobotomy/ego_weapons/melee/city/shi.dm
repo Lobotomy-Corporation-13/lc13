@@ -705,8 +705,14 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	icon_state = "shi_east_arrow_liferender"
 	damtype = RED_DAMAGE
 	w_class = WEIGHT_CLASS_BULKY
-	force = 20
+	force = 30
+	throwforce = 20
+	attack_speed = 2
 	resistance_flags = INDESTRUCTIBLE
+
+	hitsound = 'sound/weapons/fixer/generic/knife2.ogg'
+	attack_verb_continuous = list("pokes", "jabs", "stabs", "skewers")
+	attack_verb_simple = list("poke", "jab", "stab", "skewer")
 
 	var/projectile_path = /obj/projectile/ego_bullet/shi_east_arrow
 	var/mutable_appearance/embedded_overlay
@@ -742,7 +748,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	name = "shi east withering arrow"
 	desc = "A bowblade arrow used by the Shi Association's eastern branch. This one is coated with a neurotoxin that saps the target's strength and reflexes, weakening their offensive and defensive capabilities."
 	icon_state = "shi_east_arrow_withering"
-	force = 17
+	force = 26
 
 	embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 4, 3 = 9, 4 = 13)
 	embed_procced_organ_damage = 1
@@ -757,6 +763,7 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 /obj/item/shi_east_arrow/facility
 	name = "shi east training arrow"
 	desc = "A bowblade arrow used by Shi Association trainees learning how to use a bowblade. This one has seen its fair share of use. Try to take better care of it than its previous owners."
+	force = 22
 
 	damage_per_target_aim = alist(0 = 44, 1 = 66, 2 = 88, 3 = 100, 4 = 70)
 	embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 10, 3 = 14, 4 = 21)
