@@ -758,9 +758,10 @@ Arrows will never be deleted when used (unless something goes horribly wrong), t
 	name = "shi east training arrow"
 	desc = "A bowblade arrow used by Shi Association trainees learning how to use a bowblade. This one has seen its fair share of use. Try to take better care of it than its previous owners."
 
-	damage_per_target_aim = alist(0 = 44, 1 = 80, 2 = 100, 3 = 144, 4 = 144) // Please ignore the fact these deal more than the CoL arrows, it's for facility balancing you feel me?
-	embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 8, 3 = 12, 4 = 18)
+	damage_per_target_aim = alist(0 = 44, 1 = 66, 2 = 88, 3 = 100, 4 = 70)
+	embed_organ_damage_per_target_aim = alist(0 = 0, 1 = 0, 2 = 10, 3 = 14, 4 = 21)
 	embed_procced_organ_damage = 3
+	embed_organ_damage_simplemob_conversion_coeff = 16
 
 	embed_offense_level_down = 2
 	embed_defense_level_down = 3
