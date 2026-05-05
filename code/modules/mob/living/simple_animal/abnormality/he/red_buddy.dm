@@ -316,10 +316,10 @@
 			SLEEP_CHECK_DEATH(2)
 		L.deal_damage(50, RED_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
-		new /obj/effect/temp_visual/smash_effect(get_turf(L))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
-		new /obj/effect/temp_visual/dir_setting/bloodsplatter(get_turf(L), pick(GLOB.alldirs))
+		var/turf/target_turf = get_turf(L)
+		new /obj/effect/temp_visual/smash_effect(target_turf)
+		for(var/i in 1 to 3)
+			new /obj/effect/temp_visual/dir_setting/bloodsplatter(target_turf, pick(GLOB.alldirs))
 	mauling = FALSE
 	SLEEP_CHECK_DEATH(10)
 
