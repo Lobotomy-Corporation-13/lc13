@@ -318,7 +318,7 @@
 
 		var/turf/target_turf = get_turf(L)
 		new /obj/effect/temp_visual/smash_effect(target_turf)
-		for(var/i in 1 to 3)
+		for(var/j in 1 to 3)
 			new /obj/effect/temp_visual/dir_setting/bloodsplatter(target_turf, pick(GLOB.alldirs))
 	mauling = FALSE
 	SLEEP_CHECK_DEATH(10)
