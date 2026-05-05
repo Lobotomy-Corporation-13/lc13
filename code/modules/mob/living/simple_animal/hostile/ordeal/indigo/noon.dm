@@ -426,7 +426,9 @@
 		LastStand()
 		return
 	if(extract_fuel_cooldown <= world.time && prob(60) && (get_dist(source, src) < 3))
-		PrepareExtractFuel()
+		/// Go on cooldown.
+		extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
+		INVOKE_ASYNC(src, PROC_REF(PrepareExtractFuel))
 		return
 
 /// This ability is basically "333... 1973". It gives the chunky sweeper 3 persistence stacks, that's all.
@@ -462,8 +464,6 @@
 		return FALSE
 	if(stat >= DEAD)
 		return FALSE
-	/// Go on cooldown.
-	extract_fuel_cooldown = world.time + extract_fuel_cooldown_time
 	/// Warn the players so they can back off or get ready to parry.
 	say("+38725 619.+")
 	animate(src, 2 SECONDS, color = "#FE5343")
@@ -471,6 +471,8 @@
 	/// We're gonna sleep them because otherwise someone could hit the sweeper the DECISECOND before it's gonna attack and get slapped by a huge hit
 	/// This gives them enough margin to run away or parry
 	SLEEP_CHECK_DEATH(0.6 SECONDS)
+	attack_cooldown = max(SSnpcpool.wait / rapid_melee, 1)
+	changeNext_move(attack_cooldown)
 	/// Make our attack scary.
 	melee_damage_lower += extract_fuel_extra_damage
 	melee_damage_upper += extract_fuel_extra_damage

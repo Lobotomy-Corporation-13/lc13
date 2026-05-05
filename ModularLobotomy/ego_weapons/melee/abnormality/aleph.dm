@@ -501,6 +501,7 @@
 	pixel_x = -16
 	base_pixel_y = -16
 	pixel_y = -16
+	anchored = TRUE
 	var/mob/living/carbon/human/bound_to
 	var/client/user_client
 	/// How long it lasts before vanishing.
