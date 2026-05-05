@@ -611,10 +611,10 @@
 		else
 			HandleFrustration(rand(3, 7)) // More RNG = Funny.
 
-/mob/living/simple_animal/hostile/abnormality/warden/apply_damage(damage, damagetype, def_zone, blocked, forced, spread_damage, wound_bonus, bare_wound_bonus, sharpness, white_healable)
+/mob/living/simple_animal/hostile/abnormality/warden/PostDamageReaction(damage_amount, damage_type, source, attack_type)
 	. = ..()
 	if(weakjail)
-		release_damage += damage
+		release_damage += damage_amount
 		if(release_damage >= jailbreak_threshold)
 			Jailbreak()
 
