@@ -188,3 +188,31 @@ Oh please give these a nice name by the way
 	name = "Great Book of Vengeance"
 	item_path = /obj/item/storage/book/middle/big
 	cost = 70
+
+// Shi East Quiver
+// Holds bowblade arrows!
+/datum/ego_datum/auxiliary/shi_east_quiver
+	name = "Shi East Quiver"
+	origin = "City"
+	item_category = "Belt"
+	item_path = /obj/item/storage/belt/shi_east_quiver
+	cost = 35
+	well_enabled = FALSE
+
+// Shi East Arrows
+/datum/ego_datum/auxiliary/shi_east_arrow
+	name = "Shi East Arrow: Liferender"
+	origin = "City"
+	item_category = "Ammo"
+	item_path = /obj/item/shi_east_arrow
+	cost = 40
+	well_enabled = FALSE
+
+/datum/ego_datum/auxiliary/shi_east_arrow/withering
+	name = "Shi East Arrow: Withering"
+	item_path = /obj/item/shi_east_arrow/withering
+
+/datum/ego_datum/auxiliary/shi_east_arrow/facility
+	name = "Shi East Arrow: Training"
+	item_path = /obj/item/shi_east_arrow/facility
+	cost = 25

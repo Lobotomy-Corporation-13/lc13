@@ -111,6 +111,13 @@ Association gear is mostly HE for grunts, low WAW for veterans and high WAW for 
 	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus/director
 	cost = 75
 
+// | Shi East |
+//
+/// Shi East Section 3 Jacket
+/datum/ego_datum/armor/city/shi_east
+	item_path = /obj/item/clothing/suit/armor/ego_gear/city/shi_east
+	cost = 40
+
 /* ------------------ 5 - Cinq ------------------*/
 
 // | Cinq South |

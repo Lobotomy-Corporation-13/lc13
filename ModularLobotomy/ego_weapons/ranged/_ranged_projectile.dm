@@ -46,6 +46,8 @@
 	last_projectile_damage = projectile.damage
 	last_projectile_type = projectile.damage_type
 
+	projectile = ProjectileAdjustment(projectile, targloc, target, user)
+
 	if(final_pellets == 1)
 		if(distro) //We have to spread a pixel-precision bullet. throw_proj was called before so angles should exist by now...
 			if(random_spread)
@@ -93,3 +95,7 @@
 		projectile.preparePixelProjectile(target, user, params, spread)
 	projectile.fire(null, direct_target)
 	return TRUE
+
+/// This proc gives us a chance to adjust stuff on the projectile we're firing before we actually throw it anywhere. Just remember to return the projectile once we're done.
+/obj/item/ego_weapon/ranged/proc/ProjectileAdjustment(obj/projectile/proj, turf/targloc, atom/target, mob/living/user)
+	return proj

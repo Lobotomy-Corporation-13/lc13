@@ -36,10 +36,10 @@
 	. = ..()
 	var/selector = new /obj/item/roamer_kit_selector(get_turf(H), src)
 	H.equip_to_slot_if_possible(selector, ITEM_SLOT_HANDS)
-	temporary_bans += H.client
+	temporary_bans += H.ckey
 
 /datum/job/associateroaming/special_check_latejoin(client/C)
-	if(C in temporary_bans)
+	if(C.ckey in temporary_bans)
 		return FALSE
 	return TRUE
 
@@ -52,8 +52,10 @@
 	icon_state = "gangtool-green"
 	inhand_icon_state = "radio"
 	var/static/list/common_associations = list("zwei", "shi5", "liu5", "seven6")
-	var/static/list/uncommon_associations = list("zweiw", "shi2", "cinq", "cinq4", "cinqwest", "liu1", "devyat", "dieci")
+	var/static/list/uncommon_associations = list("zweiw", "shi2", "shieast", "cinq", "cinq4", "cinqwest", "liu1", "devyat", "dieci")
 	var/static/list/rare_associations = list("hana", "liu2")
+	var/static/forced_for_testing = "shieast" // Only ever one, it'll go in the guaranteed common slot
+
 	/// List matching the short little assoc names used previously to a full name that can be used on an ID/selection screen. I had to guess the sections for some of these since it's not included on the gear, went off the Limbus IDs
 	var/static/list/pretty_names = list(
 		"zwei" = "Zwei South Section 6 Fixer", // If local Assoc is Zwei and you need to find some justification for not being part of them despite being the same section... idk lol figure it out
@@ -62,6 +64,7 @@
 		"seven6" = "Seven South Section 6 Fixer",
 		"zweiw" = "Zwei West Section 3 Fixer",
 		"shi2" = "Shi South Section 2 Fixer",
+		"shieast" = "Shi East Section 3 Fixer",
 		"cinq" = "Cinq South Section 5 Fixer",
 		"cinq4" = "Cinq South Section 4 Fixer",
 		"cinqwest" = "Cinq West Section 3 Fixer",
@@ -78,6 +81,7 @@
 	var/choice_slot_2 // Common, Uncommon or Rare
 	/// Need this for adjusting positions if our options are refused.
 	var/datum/job/associateroaming/roamer_job_reference
+	var/already_used = FALSE
 
 // On Initialize, load our choice_slot_x vars with the Association choices we get from the common_associations, uncommon_associations and rare_associations lists, while avoiding duplicates.
 /obj/item/roamer_kit_selector/Initialize(mapload, datum/job/associateroaming/job_reference)
@@ -88,11 +92,14 @@
 		say("WARNING: Initialized without a reference to the Roamer job datum. Refusal of options will not free up a job slot.")
 
 	var/list/common_pool = common_associations.Copy()
+	common_pool -= forced_for_testing
 	var/list/uncommon_pool = uncommon_associations.Copy()
+	uncommon_pool -= forced_for_testing
 	var/list/rare_pool = rare_associations.Copy()
+	rare_pool -= forced_for_testing
 
-	// Choice Slot 1: Always a Common choice.
-	choice_slot_1 = pick_n_take(common_pool)
+	// Choice Slot 1: Always a Common choice OR if there's a roamer being tested, it'll be that.
+	choice_slot_1 = (forced_for_testing) ? forced_for_testing : pick_n_take(common_pool)
 
 	// Choice Slot 2: Roll for Common; then roll to see if we replace with Uncommon; then roll to see if we replace with Rare.
 	choice_slot_2 = pick_n_take(common_pool)
@@ -129,17 +136,18 @@
 
 	// Claw kills you for tax evasion or something. There's no immersion-friendly way to do this unless you want me to script, like, a train ride coming for you and taking you elsewhere?
 	if(chosen_asso == "uh_oh")
-		var/turf/origin = get_turf(probably_a_fixer)
-		var/list/all_turfs = origin.reachableAdjacentTurfs()
-		for(var/turf/T in all_turfs)
-			if(T == origin)
-				continue
-			new /obj/effect/temp_visual/dir_setting/claw_appears(T)
-			break
-		new /obj/effect/temp_visual/justitia_effect(origin)
-		roamer_job_reference.current_positions -= 1
-		qdel(probably_a_fixer)
-		qdel(src)
+		if(!already_used)
+			var/turf/origin = get_turf(probably_a_fixer)
+			var/list/all_turfs = origin.reachableAdjacentTurfs()
+			for(var/turf/T in all_turfs)
+				if(T == origin)
+					continue
+				new /obj/effect/temp_visual/dir_setting/claw_appears(T)
+				break
+			new /obj/effect/temp_visual/justitia_effect(origin)
+			roamer_job_reference.current_positions -= 1
+			qdel(probably_a_fixer)
+			qdel(src)
 		return FALSE
 
 	var/armor
@@ -166,6 +174,10 @@
 		if("shi5")
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/shilimbus
 			weapon = /obj/item/ego_weapon/city/shi_assassin
+
+		if("shieast")
+			armor = /obj/item/clothing/suit/armor/ego_gear/city/shi_east
+			weapon = /obj/item/storage/box/shi_east_kit // Bowblade, Quiver & Arrows
 
 		if("cinq")
 			armor = /obj/item/clothing/suit/armor/ego_gear/city/cinq
@@ -213,6 +225,17 @@
 		to_chat(probably_a_fixer, span_warning("Failed to deliver equipment for the '[chosen_asso]' selection. Contact someone responsible for this."))
 		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
 		return FALSE
+
+	if(already_used)
+		to_chat(probably_a_fixer, span_warning("This beacon is already used up. I hope you didn't think you could get more than a single kit."))
+		playsound(src, 'sound/machines/triple_beep.ogg', 50, FALSE)
+		return FALSE
+
+	// Disable further usage of this beacon instance.
+	already_used = TRUE
+	// If we successfully picked the roamer being tested, we can null it now (static var, so it nulls it for everyone.)
+	if(forced_for_testing == chosen_asso)
+		forced_for_testing = null
 
 	// Spawn and try to equip them with their gear. It'll fall on the floor if they have no room for it.
 	armor = new armor(T)

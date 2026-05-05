@@ -77,7 +77,9 @@
 /obj/item/clothing/suit/armor/ego_gear/city/shi_east
 	name = "Shi association eastern branch jacket"
 	desc = "Armour worn by the fixers of the Shi Association's eastern branch. Designed for mobility and stealth, it increases your movement speed by 20%."
-	icon_state = "shi_east"
+	icon = 'ModularLobotomy/_Lobotomyicons/shi_east_obj.dmi'
+	worn_icon = 'ModularLobotomy/_Lobotomyicons/shi_east_worn.dmi'
+	icon_state = "shi_east_jacket"
 	armor = list(RED_DAMAGE = 20, WHITE_DAMAGE = 10, BLACK_DAMAGE = 10, PALE_DAMAGE = 20)
 	slowdown = -0.2
 	attribute_requirements = list(

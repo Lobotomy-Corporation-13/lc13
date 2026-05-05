@@ -306,6 +306,8 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 	var/mutable_appearance/status_underlay
 	/// If set, this stacking effect shows a small 10x10 display icon on the mob in the same grid as /datum/status_effect/display
 	var/stacking_display_name
+	/// DMI from which we're getting our display icon
+	var/display_icon_file = 'ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi'
 	/// The display icon image (client-side)
 	var/image/display_icon
 	/// Ones digit number image (client-side)
@@ -329,7 +331,7 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 /datum/status_effect/stacking/proc/add_stacking_display_icon(px, py)
 	display_pixel_x = px
 	display_pixel_y = py
-	display_icon = image('ModularLobotomy/_Lobotomyicons/tegu_effects10x10.dmi', owner, stacking_display_name, -MUTATIONS_LAYER)
+	display_icon = image(display_icon_file, owner, stacking_display_name, -MUTATIONS_LAYER)
 	display_icon.pixel_x = px
 	display_icon.pixel_y = py
 	display_icon.mouse_opacity = MOUSE_OPACITY_TRANSPARENT
@@ -428,6 +430,8 @@ GLOBAL_LIST_EMPTY(status_display_numbers)
 		stack_decay_effect()
 
 /datum/status_effect/stacking/proc/add_stacks(stacks_added)
+	if(QDELETED(owner))
+		return FALSE
 	if(stacks_added > 0 && !can_gain_stacks())
 		return FALSE
 	owner.cut_overlay(status_overlay)
