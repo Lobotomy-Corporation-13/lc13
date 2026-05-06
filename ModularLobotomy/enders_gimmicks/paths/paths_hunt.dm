@@ -30,19 +30,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   120, 74,  54,  100),
-		list(0, 20,  234, 145, 105, 100),
-		list(1, 20,  282, 174, 126, 100),
-		list(1, 30,  342, 212, 153, 100),
-		list(2, 30,  390, 241, 175, 100),
-		list(2, 40,  450, 279, 202, 100),
-		list(3, 40,  498, 308, 224, 100),
-		list(3, 50,  558, 345, 251, 100),
-		list(4, 50,  606, 375, 272, 100),
-		list(4, 60,  666, 412, 299, 100),
-		list(5, 60,  714, 442, 321, 100),
-		list(5, 70,  774, 479, 348, 100),
-		list(6, 70,  822, 509, 369, 100),
-		list(6, 80,  882, 546, 396, 100)
+		list(0, 20,  191, 119, 86,  100),
+		list(1, 20,  222, 137, 99,  100),
+		list(1, 30,  259, 161, 116, 100),
+		list(2, 30,  289, 179, 130, 100),
+		list(2, 40,  327, 203, 147, 100),
+		list(3, 40,  357, 221, 161, 100),
+		list(3, 50,  395, 244, 178, 100),
+		list(4, 50,  425, 263, 191, 100),
+		list(4, 60,  462, 286, 208, 100),
+		list(5, 60,  492, 305, 221, 100),
+		list(5, 70,  530, 328, 238, 100),
+		list(6, 70,  560, 347, 252, 100),
+		list(6, 80,  598, 370, 268, 100)
 	)
 
 // ============================================================
@@ -68,8 +68,8 @@
 	icon_state = "north_wind"
 	energy_gain = 20
 	max_level = 7
-	/// ATK% scaling per level
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 
 /datum/path_ability/basic/hunt/GetScalingData()
 	var/list/data = list()
@@ -80,6 +80,9 @@
 		data["Damage"] = "[dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
+
+/datum/path_ability/basic/hunt/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/basic/hunt/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
@@ -95,7 +98,8 @@
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
 		total_damage *= 0.1
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 // ============================================================
 // Skill: Cloudlancer Art: Torrent
@@ -125,6 +129,9 @@
 	data["AP Cost"] = "[ap_cost]"
 	data["On CRIT"] = "12% SPD debuff (20s)"
 	return data
+
+/datum/path_ability/burst/hunt/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/burst/hunt/Activate(mob/living/user)
 	if(!parent_path)
@@ -183,7 +190,8 @@
 	parent_path.res_pen += temp_res_pen
 
 	// Deal damage (deal_path_damage handles crit)
-	parent_path.deal_path_damage(target, damage)
+	var/skill_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_SKILL)
+	parent_path.deal_path_damage(target, damage, pvp_factor = skill_factor)
 
 	// Restore RES PEN
 	parent_path.res_pen = old_res_pen
@@ -250,6 +258,9 @@
 		data["Energy Gen"] = "5"
 	return data
 
+/datum/path_ability/ultimate/hunt/GetRawScaling()
+	return base_scaling
+
 /datum/path_ability/ultimate/hunt/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -295,11 +306,22 @@
 
 	// Calculate total damage
 	var/multiplier = base_scaling[level]
-	if(has_path_spd_debuff(target))
+	var/slowed = has_path_spd_debuff(target)
+	if(slowed)
 		multiplier += spd_bonus[level]
 		to_chat(user, span_nicegreen("Ethereal Dream bonus: target is slowed!"))
 
 	var/total_damage = atk * multiplier / 100
+
+	// PvP factor: target curve is base+spd_bonus when slowed, else just base.
+	// Build the summed scaling table when slowed so target vs actual is
+	// computed against the same combined curve.
+	var/list/factor_table = base_scaling
+	if(slowed)
+		factor_table = list()
+		for(var/i in 1 to length(base_scaling))
+			factor_table += list(base_scaling[i] + spd_bonus[i])
+	var/ult_factor = parent_path.PvPScalingFactor(level, factor_table, PATH_TARGET_TRACE_ULT)
 
 	// Phase 1: Pause — user draws weapon
 	user.visible_message(span_danger("[user] focuses intently on [target]..."))
@@ -310,17 +332,17 @@
 
 	// Phase 2: After 0.5s, dash through + 10% damage
 	var/datum/path/path_ref = parent_path
-	addtimer(CALLBACK(src, PROC_REF(UltDash), user, target, total_damage, path_ref), 5)
+	addtimer(CALLBACK(src, PROC_REF(UltDash), user, target, total_damage, path_ref, ult_factor), 5)
 
 /// Phase 2: Dash through the target, deal 10% damage
-/datum/path_ability/ultimate/hunt/proc/UltDash(mob/living/user, mob/living/target, total_damage, datum/path/path_ref)
+/datum/path_ability/ultimate/hunt/proc/UltDash(mob/living/user, mob/living/target, total_damage, datum/path/path_ref, pvp_factor = 1)
 	if(QDELETED(user) || QDELETED(target))
 		REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "ethereal_dream")
 		return
 
 	// Deal 10% on the pass-through
 	var/slash_dmg = total_damage * 0.1
-	path_ref.deal_path_damage(target, slash_dmg, do_crit = FALSE)
+	path_ref.deal_path_damage(target, slash_dmg, do_crit = FALSE, pvp_factor = pvp_factor)
 
 	// Dash through to opposite side
 	var/turf/target_turf = get_turf(target)
@@ -345,10 +367,10 @@
 	playsound(target_turf, 'sound/weapons/bladeslice.ogg', 60, TRUE)
 
 	// Phase 3: After 1s, delayed hit for 90%
-	addtimer(CALLBACK(src, PROC_REF(UltDelayedHit), user, target, total_damage, path_ref), 10)
+	addtimer(CALLBACK(src, PROC_REF(UltDelayedHit), user, target, total_damage, path_ref, pvp_factor), 10)
 
 /// Phase 3: Delayed damage hit with VFX
-/datum/path_ability/ultimate/hunt/proc/UltDelayedHit(mob/living/user, mob/living/target, total_damage, datum/path/path_ref)
+/datum/path_ability/ultimate/hunt/proc/UltDelayedHit(mob/living/user, mob/living/target, total_damage, datum/path/path_ref, pvp_factor = 1)
 	// Free the user
 	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "ethereal_dream")
 
@@ -357,7 +379,7 @@
 
 	// Deal remaining 90%
 	var/delayed_dmg = total_damage * 0.9
-	path_ref.deal_path_damage(target, delayed_dmg, do_crit = FALSE)
+	path_ref.deal_path_damage(target, delayed_dmg, do_crit = FALSE, pvp_factor = pvp_factor)
 
 	// Grant 5 energy
 	path_ref.GainEnergy(5)
@@ -395,6 +417,9 @@
 	if(istype(H))
 		data["Status"] = H.passive_res_pen_active ? "ACTIVE" : "Ready"
 	return data
+
+/datum/path_ability/passive/hunt/GetRawScaling()
+	return res_pen_scaling
 
 /datum/path_ability/passive/hunt/Apply(mob/living/user)
 	RegisterSignal(user, COMSIG_MOB_PATH_ALLY_BUFFED, PROC_REF(OnAllyBuff))

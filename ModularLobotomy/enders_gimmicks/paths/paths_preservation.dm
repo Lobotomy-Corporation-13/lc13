@@ -32,19 +32,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   168, 81,  82,  95),
-		list(0, 20,  329, 159, 160, 95),
-		list(1, 20,  397, 192, 193, 95),
-		list(1, 30,  481, 233, 235, 95),
-		list(2, 30,  549, 265, 268, 95),
-		list(2, 40,  633, 306, 309, 95),
-		list(3, 40,  701, 339, 342, 95),
-		list(3, 50,  785, 380, 383, 95),
-		list(4, 50,  853, 413, 416, 95),
-		list(4, 60,  937, 454, 457, 95),
-		list(5, 60,  1005, 486, 490, 95),
-		list(5, 70,  1089, 527, 532, 95),
-		list(6, 70,  1157, 560, 565, 95),
-		list(6, 80,  1241, 601, 606, 95)
+		list(0, 20,  269, 130, 131, 95),
+		list(1, 20,  312, 151, 152, 95),
+		list(1, 30,  364, 176, 178, 95),
+		list(2, 30,  407, 196, 199, 95),
+		list(2, 40,  460, 222, 224, 95),
+		list(3, 40,  502, 243, 245, 95),
+		list(3, 50,  555, 268, 271, 95),
+		list(4, 50,  597, 289, 291, 95),
+		list(4, 60,  650, 315, 317, 95),
+		list(5, 60,  693, 335, 338, 95),
+		list(5, 70,  745, 361, 364, 95),
+		list(6, 70,  788, 381, 385, 95),
+		list(6, 80,  841, 407, 411, 95)
 	)
 
 // ============================================================
@@ -120,8 +120,8 @@
 	icon_state = "ice_breaking_light"
 	energy_gain = 20
 	max_level = 7
-	/// Normal ATK% scaling
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// Normal ATK% scaling: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 	/// Enhanced main ATK% scaling
 	var/list/enhanced_main = list(90, 99, 108, 117, 126, 135, 146.25)
 	/// Enhanced adjacent ATK% scaling
@@ -143,6 +143,9 @@
 		data["Magma Will"] = "[P.magma_will]/[P.max_magma_will]"
 	return data
 
+/datum/path_ability/basic/preservation/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/basic/preservation/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
 		return
@@ -157,9 +160,11 @@
 		var/atk = parent_path.GetStat("ATK")
 		var/main_mult = enhanced_main[level] / 100
 		var/adj_mult = enhanced_adj[level] / 100
+		var/main_factor = parent_path.PvPScalingFactor(level, enhanced_main, PATH_TARGET_TRACE_BASIC)
+		var/adj_factor = parent_path.PvPScalingFactor(level, enhanced_adj, PATH_TARGET_TRACE_BASIC)
 
 		// Main target damage
-		parent_path.deal_path_damage(target, atk * main_mult)
+		parent_path.deal_path_damage(target, atk * main_mult, pvp_factor = main_factor)
 
 		// Adjacent targets
 		for(var/mob/living/L in range(1, target))
@@ -167,7 +172,7 @@
 				continue
 			if(IsPathAlly(user, L))
 				continue
-			parent_path.deal_path_damage(L, atk * adj_mult)
+			parent_path.deal_path_damage(L, atk * adj_mult, pvp_factor = adj_factor)
 
 		// Consume stacks (unless free from Ultimate)
 		if(P.free_enhanced)
@@ -200,7 +205,8 @@
 		var/total_damage = parent_path.GetStat("ATK") * multiplier
 		if(!first_hit)
 			total_damage *= 0.1
-		parent_path.deal_path_damage(target, total_damage)
+		var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+		parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 		energy_gain = 20
 
 	// Gain 1 Magma Will on first hit per turn
@@ -237,6 +243,9 @@
 	data["Energy Gain"] = "[energy_gain]"
 	data["AP Cost"] = "[ap_cost]"
 	return data
+
+/datum/path_ability/burst/preservation/GetRawScaling()
+	return dmg_red_pct
 
 /datum/path_ability/burst/preservation/Activate(mob/living/user)
 	if(!parent_path)
@@ -324,6 +333,9 @@
 		data["Energy Gen"] = "5"
 	return data
 
+/datum/path_ability/ultimate/preservation/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/ultimate/preservation/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -379,6 +391,11 @@
 	if(current != start_turf)
 		user.forceMove(current)
 
+	// PvP factor for the Ultimate's combined ATK+DEF damage. ATK scaling
+	// is the reference; DEF scaling grows at the same rate so a single
+	// factor is correct for the total.
+	var/ult_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_ULT)
+
 	// Phase 1: Deal 20% damage to all enemies in the 3-wide sweep + sparks VFX
 	var/dash_dmg = total_dmg * 0.2
 	var/list/hit_mobs = list()
@@ -391,7 +408,7 @@
 				continue
 			if(L in hit_mobs)
 				continue
-			parent_path.deal_path_damage(L, dash_dmg, do_crit = FALSE)
+			parent_path.deal_path_damage(L, dash_dmg, do_crit = FALSE, pvp_factor = ult_factor)
 			hit_mobs += L
 
 	// Beam VFX along the center line
@@ -404,10 +421,10 @@
 
 	// Phase 2: After 1 second, explosions across the entire sweep area
 	var/datum/path/path_ref = parent_path
-	addtimer(CALLBACK(src, PROC_REF(UltExplosions), user, sweep_turfs, center_turfs, total_dmg, path_ref, P), 10)
+	addtimer(CALLBACK(src, PROC_REF(UltExplosions), user, sweep_turfs, center_turfs, total_dmg, path_ref, P, ult_factor), 10)
 
 /// Phase 2: Fire explosions across the sweep area, dealing 80% damage
-/datum/path_ability/ultimate/preservation/proc/UltExplosions(mob/living/user, list/sweep_turfs, list/center_turfs, total_dmg, datum/path/path_ref, datum/path/preservation/P)
+/datum/path_ability/ultimate/preservation/proc/UltExplosions(mob/living/user, list/sweep_turfs, list/center_turfs, total_dmg, datum/path/path_ref, datum/path/preservation/P, pvp_factor = 1)
 	REMOVE_TRAIT(user, TRAIT_IMMOBILIZED, "preservation_ult")
 
 	if(QDELETED(user))
@@ -426,7 +443,7 @@
 			if(L in already_hit)
 				continue
 			already_hit += L
-			path_ref.deal_path_damage(L, explosion_dmg, do_crit = FALSE)
+			path_ref.deal_path_damage(L, explosion_dmg, do_crit = FALSE, pvp_factor = pvp_factor)
 
 	// VFX: place 3x3 explosion effects spaced along the center line
 	// Every 3 tiles so they don't overlap visually
@@ -501,6 +518,9 @@
 	if(istype(P))
 		data["Magma Will"] = "[P.magma_will]/[P.max_magma_will]"
 	return data
+
+/datum/path_ability/passive/preservation/GetRawScaling()
+	return shield_def_pct
 
 /datum/path_ability/passive/preservation/Apply(mob/living/user)
 	// Register to gain Magma Will when hit

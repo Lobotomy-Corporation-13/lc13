@@ -300,15 +300,24 @@
 	if(ultimate_action_button)
 		ultimate_action_button.UpdateButtonIcon()
 
-/// +1 AP, clamped to max
-/datum/path/proc/GainActionPoint()
+/// +1 AP, clamped to max. If propagate is TRUE and the owner has mutual
+/// path-allies, they each gain 1 AP too (the recursive call passes
+/// propagate=FALSE to prevent loops).
+/datum/path/proc/GainActionPoint(propagate = TRUE)
 	action_points = min(action_points + 1, max_action_points)
 	SEND_SIGNAL(src, COMSIG_PATH_AP_CHANGED, action_points, max_action_points)
+	if(propagate && owner)
+		for(var/datum/path/ally_path as anything in GetMutualPathAllies(owner))
+			ally_path.GainActionPoint(propagate = FALSE)
 
-/// -1 AP, clamped to 0
-/datum/path/proc/SpendActionPoint()
+/// -1 AP, clamped to 0. Mutual path-allies also lose 1 AP when propagate
+/// is TRUE.
+/datum/path/proc/SpendActionPoint(propagate = TRUE)
 	action_points = max(action_points - 1, 0)
 	SEND_SIGNAL(src, COMSIG_PATH_AP_CHANGED, action_points, max_action_points)
+	if(propagate && owner)
+		for(var/datum/path/ally_path as anything in GetMutualPathAllies(owner))
+			ally_path.SpendActionPoint(propagate = FALSE)
 
 // ============================================================
 // Stats
@@ -389,7 +398,7 @@
 // ============================================================
 
 /// Applies DEF stat as damage_resistance on the owner
-/// Formula: reduction% = DEF / (DEF + 300) * 100
+/// Formula: reduction% = DEF / (DEF + 800) * 100
 /// Uses multiplicative stacking — divides out old factor, multiplies new
 /datum/path/proc/ApplyDefense()
 	if(!owner?.physiology)
@@ -401,7 +410,7 @@
 			owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) / old_keep)
 	// Calculate new reduction
 	var/def = GetStat("DEF")
-	applied_resistance = (def / (def + 300)) * 100
+	applied_resistance = (def / (def + 800)) * 100
 	// Apply new multiplier
 	var/new_keep = (100 - applied_resistance) / 100
 	owner.physiology.damage_resistance = 100 - ((100 - owner.physiology.damage_resistance) * new_keep)
@@ -626,10 +635,28 @@
 // Combat — Path Damage
 // ============================================================
 
+/// PvP scaling multiplier for one ability call. Returns
+/// scaling_table[actual_level] / scaling_table[target_level]:
+///   below target  -> < 1 (default-trace players hit softer)
+///   at target     -> = 1 (matches the original pvp_balance.md baseline)
+///   above target  -> slightly > 1 (small reward for L11/L12)
+/// Returns 1 (no effect) if the table is empty or the target scaling is 0.
+/datum/path/proc/PvPScalingFactor(actual_level, list/scaling_table, target_level)
+	if(!islist(scaling_table) || !length(scaling_table))
+		return 1
+	var/max_lv = length(scaling_table)
+	target_level = clamp(target_level, 1, max_lv)
+	actual_level = clamp(actual_level, 1, max_lv)
+	var/target_s = scaling_table[target_level]
+	if(target_s <= 0)
+		return 1
+	return scaling_table[actual_level] / target_s
+
 /// Deals path damage to a target, applying the full damage pipeline.
 /// Pass do_crit=FALSE to skip crit rolls (used by DoTs).
 /// toughness_reduction: points of toughness to remove (10=basic, 20=skill, 30=ult, 0=none)
-/datum/path/proc/deal_path_damage(mob/living/target, amount, do_crit = TRUE, toughness_reduction = 0)
+/// pvp_factor: per-ability multiplier applied only against non-path human targets.
+/datum/path/proc/deal_path_damage(mob/living/target, amount, do_crit = TRUE, toughness_reduction = 0, pvp_factor = 1)
 	if(!target || QDELETED(target))
 		return 0
 	var/damage = amount
@@ -691,10 +718,16 @@
 	// PvP balance: HP-ratio scaling + armor average vs humans
 	if(ishuman(target) && owner)
 		var/mob/living/carbon/human/H = target
+		// Trace-progression PvP scaling — only against non-path humans.
+		// Default-trace players land below baseline, target-trace players
+		// match the original pvp_balance.md numbers, max-trace players
+		// land slightly above.
+		if(!H.HasPath() && pvp_factor != 1)
+			damage *= pvp_factor
 		// HP-ratio: path damage scales down vs lower-HP targets
 		damage *= H.maxHealth / max(owner.maxHealth, 1)
-		// Average armor reduction from worn EGO gear
-		var/obj/item/clothing/suit/armor/ego_gear/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
+		// Average armor reduction from any worn armor suit
+		var/obj/item/clothing/suit/armor/suit = H.get_item_by_slot(ITEM_SLOT_OCLOTHING)
 		if(istype(suit) && suit.armor)
 			var/datum/armor/A = suit.armor
 			var/avg_armor = (A.red + A.white + A.black + A.pale) / 4
@@ -794,6 +827,12 @@
 /// Subtypes override to provide ability-specific data.
 /datum/path_ability/proc/GetScalingData()
 	return list()
+
+/// Returns the raw scaling list (e.g. atk_scaling) used for the PvP
+/// scaling factor preview in the trace UI. Subtypes override; default null
+/// means "no PvP-relevant scaling for this ability".
+/datum/path_ability/proc/GetRawScaling()
+	return null
 
 // --- Basic Attack ---
 /// Triggered when the path weapon hits a target

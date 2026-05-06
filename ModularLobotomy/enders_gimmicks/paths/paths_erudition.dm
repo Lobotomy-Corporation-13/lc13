@@ -28,19 +28,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   129, 79,  54,  100),
-		list(0, 20,  252, 154, 105, 100),
-		list(1, 20,  304, 186, 126, 100),
-		list(1, 30,  369, 225, 153, 100),
-		list(2, 30,  421, 257, 175, 100),
-		list(2, 40,  486, 297, 202, 100),
-		list(3, 40,  537, 328, 224, 100),
-		list(3, 50,  602, 368, 251, 100),
-		list(4, 50,  654, 399, 272, 100),
-		list(4, 60,  719, 439, 299, 100),
-		list(5, 60,  771, 471, 321, 100),
-		list(5, 70,  835, 510, 348, 100),
-		list(6, 70,  887, 542, 369, 100),
-		list(6, 80,  952, 582, 396, 100)
+		list(0, 20,  206, 126, 86,  100),
+		list(1, 20,  239, 146, 99,  100),
+		list(1, 30,  279, 171, 116, 100),
+		list(2, 30,  312, 191, 130, 100),
+		list(2, 40,  353, 216, 147, 100),
+		list(3, 40,  385, 235, 161, 100),
+		list(3, 50,  426, 260, 178, 100),
+		list(4, 50,  458, 280, 191, 100),
+		list(4, 60,  499, 305, 208, 100),
+		list(5, 60,  532, 325, 221, 100),
+		list(5, 70,  572, 349, 238, 100),
+		list(6, 70,  604, 369, 252, 100),
+		list(6, 80,  645, 394, 268, 100)
 	)
 
 // ============================================================
@@ -66,7 +66,8 @@
 	icon_state = "looking_at"
 	energy_gain = 20
 	max_level = 7
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 	/// Execute bonus (flat 40% ATK at all levels)
 	var/execute_bonus = 40
 
@@ -82,6 +83,9 @@
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
+/datum/path_ability/basic/erudition/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/basic/erudition/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
 		return
@@ -91,7 +95,8 @@
 		total_damage *= 0.1
 
 	// Deal base damage first
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 	// Execute check: if target is now at or below 50% HP
 	if(!QDELETED(target) && target.stat != DEAD)
@@ -99,7 +104,8 @@
 			var/exec_dmg = parent_path.GetStat("ATK") * (execute_bonus / 100)
 			if(!first_hit)
 				exec_dmg *= 0.1
-			parent_path.deal_path_damage(target, exec_dmg)
+			// Execute bonus rides on the basic ability's scaling channel
+			parent_path.deal_path_damage(target, exec_dmg, pvp_factor = basic_factor)
 
 // ============================================================
 // Skill: One-Time Offer
@@ -136,6 +142,9 @@
 	data["AP Cost"] = "[ap_cost]"
 	return data
 
+/datum/path_ability/burst/erudition/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/burst/erudition/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -149,6 +158,7 @@
 	if(istype(E) && E.HasBonus("bonus_a2"))
 		efficiency_bonus = 0.25
 
+	var/skill_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_SKILL)
 	var/hit_count = 0
 	for(var/mob/living/L in range(3, user))
 		if(L == user)
@@ -161,7 +171,7 @@
 		// +25% DMG to targets above 50% HP
 		if(L.health > L.maxHealth * 0.5)
 			dmg *= (1.25 + efficiency_bonus)
-		parent_path.deal_path_damage(L, dmg)
+		parent_path.deal_path_damage(L, dmg, pvp_factor = skill_factor)
 		hit_count++
 
 	// VFX: ice effects on tiles in range
@@ -209,6 +219,9 @@
 		data["Energy Cost"] = "[parent_path.max_energy]"
 		data["Energy Gen"] = "5"
 	return data
+
+/datum/path_ability/ultimate/erudition/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/ultimate/erudition/Activate(mob/living/user)
 	if(!parent_path)
@@ -258,6 +271,7 @@
 	var/datum/path/erudition/E = path_ref
 	var/has_icing = istype(E) && E.HasBonus("bonus_a6")
 
+	var/ult_factor = path_ref.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_ULT)
 	var/hit_count = 0
 	for(var/mob/living/L in range(5, user))
 		if(L == user)
@@ -269,7 +283,7 @@
 		var/dmg = atk * multiplier
 		if(has_icing && L.health <= L.maxHealth * 0.5)
 			dmg *= 1.2
-		path_ref.deal_path_damage(L, dmg)
+		path_ref.deal_path_damage(L, dmg, pvp_factor = ult_factor)
 		hit_count++
 
 	// Grant 5 energy
@@ -331,6 +345,9 @@
 	data["Energy Gen"] = "5"
 	data["Trigger"] = "You or ally drops enemy to 50% HP"
 	return data
+
+/datum/path_ability/passive/erudition/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/passive/erudition/Apply(mob/living/user)
 	return
@@ -414,12 +431,13 @@
 		if(prob(30))
 			new /obj/effect/temp_visual/ice_spikes(T)
 	// Deal damage to all in range 3
+	var/passive_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_PASSIVE)
 	for(var/mob/living/L in range(3, user))
 		if(L == user || L.stat == DEAD)
 			continue
 		if(IsPathAlly(user, L))
 			continue
-		parent_path.deal_path_damage(L, per_tick_dmg)
+		parent_path.deal_path_damage(L, per_tick_dmg, pvp_factor = passive_factor)
 	playsound(get_turf(user), 'sound/weapons/bladeslice.ogg', 30, TRUE)
 	// Next tick in 0.2s, or free on last tick
 	if(ticks_left > 1)

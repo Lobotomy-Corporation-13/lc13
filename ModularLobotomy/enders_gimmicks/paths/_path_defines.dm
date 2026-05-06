@@ -8,6 +8,16 @@
 #define PATH_MAX_ENERGY_DEFAULT 100
 #define PATH_MAX_AP_DEFAULT     5
 
+// --- PvP Trace Scaling Targets ---
+// Trace level at which PvP damage matches the original pvp_balance.md baseline.
+// Below target: PvP damage is reduced (default-trace players hit softer).
+// At target: PvP damage matches baseline.
+// Above target: PvP damage is slightly higher (small reward for L11/L12).
+#define PATH_TARGET_TRACE_BASIC    6
+#define PATH_TARGET_TRACE_SKILL    10
+#define PATH_TARGET_TRACE_ULT      10
+#define PATH_TARGET_TRACE_PASSIVE  10
+
 // --- Skill Tree Node Types ---
 #define PATH_NODE_STAT    "stat"
 #define PATH_NODE_ABILITY "ability"

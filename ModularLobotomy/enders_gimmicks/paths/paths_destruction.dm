@@ -25,19 +25,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   163, 84,  62,  100),
-		list(0, 20,  319, 164, 122, 100),
-		list(1, 20,  384, 198, 147, 100),
-		list(1, 30,  466, 240, 178, 100),
-		list(2, 30,  531, 274, 203, 100),
-		list(2, 40,  613, 316, 235, 100),
-		list(3, 40,  679, 350, 260, 100),
-		list(3, 50,  761, 392, 291, 100),
-		list(4, 50,  826, 426, 316, 100),
-		list(4, 60,  908, 468, 347, 100),
-		list(5, 60,  973, 502, 373, 100),
-		list(5, 70,  1055, 544, 404, 100),
-		list(6, 70,  1121, 578, 429, 100),
-		list(6, 80,  1203, 620, 460, 100)
+		list(0, 20,  261, 134, 100, 100),
+		list(1, 20,  302, 155, 115, 100),
+		list(1, 30,  353, 182, 135, 100),
+		list(2, 30,  394, 203, 150, 100),
+		list(2, 40,  445, 229, 170, 100),
+		list(3, 40,  487, 251, 186, 100),
+		list(3, 50,  538, 277, 206, 100),
+		list(4, 50,  579, 298, 221, 100),
+		list(4, 60,  630, 325, 241, 100),
+		list(5, 60,  671, 346, 257, 100),
+		list(5, 70,  722, 372, 276, 100),
+		list(6, 70,  764, 394, 292, 100),
+		list(6, 80,  815, 420, 312, 100)
 	)
 
 // ============================================================
@@ -63,8 +63,8 @@
 	icon_state = "farewell_hit"
 	energy_gain = 20
 	max_level = 7
-	/// ATK% scaling per level: 50% at lv1 to 110% at lv7
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 
 /datum/path_ability/basic/destruction/GetScalingData()
 	var/list/data = list()
@@ -76,6 +76,9 @@
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
+/datum/path_ability/basic/destruction/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/basic/destruction/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
 		return
@@ -84,7 +87,8 @@
 	if(istype(ult) && ult.enhanced)
 		// Empowered Farewell Hit — use Ultimate scaling, single massive hit
 		var/damage = parent_path.GetStat("ATK") * (ult.blowout_fh[ult.level] / 100)
-		parent_path.deal_path_damage(target, damage)
+		var/empowered_factor = parent_path.PvPScalingFactor(ult.level, ult.blowout_fh, PATH_TARGET_TRACE_ULT)
+		parent_path.deal_path_damage(target, damage, pvp_factor = empowered_factor)
 		ult.enhanced = FALSE
 		// VFX: big impact on target
 		new /obj/effect/temp_visual/smash_effect(get_turf(target))
@@ -99,7 +103,8 @@
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
 		total_damage *= 0.1
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 // ============================================================
 // Skill: RIP Home Run
@@ -129,6 +134,9 @@
 	data["AP Cost"] = "[ap_cost]"
 	return data
 
+/datum/path_ability/burst/destruction/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/burst/destruction/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -136,6 +144,8 @@
 	var/atk = parent_path.GetStat("ATK")
 	var/main_damage
 	var/adj_damage
+	var/main_factor
+	var/adj_factor
 	var/is_enhanced = FALSE
 
 	// Check if Ultimate enhanced this skill
@@ -144,6 +154,8 @@
 		// Empowered RIP Home Run — use Ultimate scaling
 		main_damage = atk * (ult.blowout_rip_main[ult.level] / 100)
 		adj_damage = atk * (ult.blowout_rip_adj[ult.level] / 100)
+		main_factor = parent_path.PvPScalingFactor(ult.level, ult.blowout_rip_main, PATH_TARGET_TRACE_ULT)
+		adj_factor = parent_path.PvPScalingFactor(ult.level, ult.blowout_rip_adj, PATH_TARGET_TRACE_ULT)
 		ult.enhanced = FALSE
 		is_enhanced = TRUE
 	else
@@ -151,6 +163,8 @@
 		var/multiplier = atk_scaling[level] / 100
 		main_damage = atk * multiplier
 		adj_damage = main_damage
+		main_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_SKILL)
+		adj_factor = main_factor
 
 	// Fighting Will (A6 bonus): +25% DMG to primary target
 	var/fighting_will = FALSE
@@ -179,7 +193,7 @@
 		var/primary_dmg = main_damage
 		if(fighting_will)
 			primary_dmg *= 1.25
-		parent_path.deal_path_damage(primary, primary_dmg)
+		parent_path.deal_path_damage(primary, primary_dmg, pvp_factor = main_factor)
 		hit_count++
 		// Adjacent enemies get lower damage
 		for(var/mob/living/L in range(1, primary))
@@ -189,7 +203,7 @@
 				continue
 			if(IsPathAlly(user, L))
 				continue
-			parent_path.deal_path_damage(L, adj_damage)
+			parent_path.deal_path_damage(L, adj_damage, pvp_factor = adj_factor)
 			hit_count++
 	else
 		// Normal: AoE around user, primary gets bonus
@@ -204,7 +218,7 @@
 			// First target hit is "primary" for Fighting Will
 			if(fighting_will && hit_count == 0)
 				dmg *= 1.25
-			parent_path.deal_path_damage(L, dmg)
+			parent_path.deal_path_damage(L, dmg, pvp_factor = main_factor)
 			hit_count++
 
 	// VFX: smash effect on all tiles in AoE range
@@ -259,6 +273,9 @@
 		data["Energy Cost"] = "[parent_path.max_energy]"
 	return data
 
+/datum/path_ability/ultimate/destruction/GetRawScaling()
+	return blowout_fh
+
 /datum/path_ability/ultimate/destruction/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -307,6 +324,9 @@
 	data["Duration"] = "30s"
 	data["Current Stacks"] = "[current_stacks]"
 	return data
+
+/datum/path_ability/passive/destruction/GetRawScaling()
+	return atk_buff_scaling
 
 /datum/path_ability/passive/destruction/Apply(mob/living/user)
 	return

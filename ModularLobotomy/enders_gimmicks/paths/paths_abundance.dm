@@ -23,19 +23,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   158, 64,  69,  98),
-		list(0, 20,  308, 126, 134, 98),
-		list(1, 20,  372, 152, 162, 98),
-		list(1, 30,  451, 184, 196, 98),
-		list(2, 30,  514, 210, 224, 98),
-		list(2, 40,  594, 243, 258, 98),
-		list(3, 40,  657, 268, 286, 98),
-		list(3, 50,  736, 301, 320, 98),
-		list(4, 50,  799, 327, 348, 98),
-		list(4, 60,  879, 359, 382, 98),
-		list(5, 60,  942, 385, 410, 98),
-		list(5, 70,  1021, 417, 445, 98),
-		list(6, 70,  1085, 443, 472, 98),
-		list(6, 80,  1164, 476, 507, 98)
+		list(0, 20,  252, 103, 110, 98),
+		list(1, 20,  292, 119, 127, 98),
+		list(1, 30,  342, 139, 149, 98),
+		list(2, 30,  381, 156, 166, 98),
+		list(2, 40,  431, 176, 188, 98),
+		list(3, 40,  471, 192, 205, 98),
+		list(3, 50,  520, 213, 226, 98),
+		list(4, 50,  560, 229, 244, 98),
+		list(4, 60,  610, 249, 265, 98),
+		list(5, 60,  650, 265, 283, 98),
+		list(5, 70,  699, 285, 305, 98),
+		list(6, 70,  739, 302, 322, 98),
+		list(6, 80,  789, 322, 344, 98)
 	)
 
 // ============================================================
@@ -61,7 +61,8 @@
 	icon_state = "behind_kindness"
 	energy_gain = 20
 	max_level = 7
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 
 /datum/path_ability/basic/abundance/GetScalingData()
 	var/list/data = list()
@@ -73,6 +74,9 @@
 	data["Energy Gain"] = "[energy_gain]"
 	return data
 
+/datum/path_ability/basic/abundance/GetRawScaling()
+	return atk_scaling
+
 /datum/path_ability/basic/abundance/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
 		return
@@ -80,7 +84,8 @@
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
 		total_damage *= 0.1
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 // ============================================================
 // Skill: Love, Heal, and Choose

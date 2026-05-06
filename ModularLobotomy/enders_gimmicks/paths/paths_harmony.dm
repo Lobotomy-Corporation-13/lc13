@@ -28,19 +28,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   115, 72,  54,  112),
-		list(0, 20,  224, 140, 105, 112),
-		list(1, 20,  270, 169, 126, 112),
-		list(1, 30,  328, 205, 153, 112),
-		list(2, 30,  374, 234, 175, 112),
-		list(2, 40,  432, 270, 202, 112),
-		list(3, 40,  478, 298, 224, 112),
-		list(3, 50,  535, 334, 251, 112),
-		list(4, 50,  581, 363, 272, 112),
-		list(4, 60,  639, 399, 299, 112),
-		list(5, 60,  685, 428, 321, 112),
-		list(5, 70,  743, 464, 348, 112),
-		list(6, 70,  789, 493, 369, 112),
-		list(6, 80,  846, 529, 396, 112)
+		list(0, 20,  183, 115, 86,  112),
+		list(1, 20,  212, 133, 99,  112),
+		list(1, 30,  249, 155, 116, 112),
+		list(2, 30,  277, 174, 130, 112),
+		list(2, 40,  314, 196, 147, 112),
+		list(3, 40,  343, 214, 161, 112),
+		list(3, 50,  378, 236, 178, 112),
+		list(4, 50,  407, 254, 191, 112),
+		list(4, 60,  444, 277, 208, 112),
+		list(5, 60,  472, 295, 221, 112),
+		list(5, 70,  509, 318, 238, 112),
+		list(6, 70,  538, 336, 252, 112),
+		list(6, 80,  573, 359, 268, 112)
 	)
 
 // ============================================================
@@ -66,7 +66,8 @@
 	icon_state = "dislodged"
 	energy_gain = 20
 	max_level = 7
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 
 /datum/path_ability/basic/harmony/GetScalingData()
 	var/list/data = list()
@@ -77,6 +78,9 @@
 		data["Damage"] = "[dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
+
+/datum/path_ability/basic/harmony/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/basic/harmony/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
@@ -91,7 +95,8 @@
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
 		total_damage *= 0.1
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 	// Passive: Violet Sparknado — Benediction'd ally deals bonus damage
 	if(istype(H) && first_hit)
@@ -131,6 +136,9 @@
 	data["Energy Gain"] = "[energy_gain]"
 	data["AP Cost"] = "[ap_cost]"
 	return data
+
+/datum/path_ability/burst/harmony/GetRawScaling()
+	return bonus_dmg_pct
 
 /datum/path_ability/burst/harmony/Activate(mob/living/user)
 	if(!parent_path)
@@ -175,6 +183,9 @@
 		B.bonus_lightning_pct = bonus_dmg_pct[level]
 		B.source_path = parent_path
 		B.has_bonus_attack = TRUE
+		// Snapshot the PvP factor for the bonus attack — locked to the
+		// Skill level at apply time so the bonus hit lands consistently.
+		B.bonus_pvp_factor = parent_path.PvPScalingFactor(level, bonus_dmg_pct, PATH_TARGET_TRACE_SKILL)
 		B.UpdateBuffs()
 
 	H.benediction_target = best_ally
@@ -219,6 +230,9 @@
 		data["Energy Cost"] = "[parent_path.max_energy]"
 		data["Energy Gen"] = "5"
 	return data
+
+/datum/path_ability/ultimate/harmony/GetRawScaling()
+	return dmg_buff_pct
 
 /datum/path_ability/ultimate/harmony/Activate(mob/living/user)
 	if(!parent_path)
@@ -304,6 +318,9 @@
 		data["Benediction Target"] = "[H.benediction_target.name]"
 	return data
 
+/datum/path_ability/passive/harmony/GetRawScaling()
+	return bonus_dmg_pct
+
 /datum/path_ability/passive/harmony/Apply(mob/living/user)
 	return
 
@@ -332,6 +349,9 @@
 	var/datum/path/source_path
 	/// Applied ATK multiplier (for clean removal)
 	var/applied_atk_mult = 1
+	/// PvP scaling factor for the bonus Lightning DMG hit. Snapshotted
+	/// from the Harmony Skill's scaling at apply time.
+	var/bonus_pvp_factor = 1
 
 /datum/status_effect/benediction/on_apply()
 	. = ..()
@@ -422,7 +442,7 @@
 		ally_atk = 50 // Fallback for non-path allies
 	var/bonus_dmg = ally_atk * bonus_lightning_pct / 100
 	if(source_path)
-		source_path.deal_path_damage(target, bonus_dmg)
+		source_path.deal_path_damage(target, bonus_dmg, pvp_factor = bonus_pvp_factor)
 	else
 		target.adjustBruteLoss(bonus_dmg, forced = TRUE)
 	to_chat(owner, span_nicegreen("Benediction bonus Lightning DMG!"))
@@ -729,7 +749,8 @@
 		if(holder?.active_path)
 			ally_atk = holder.active_path.GetStat("ATK")
 	var/bonus_dmg = ally_atk * pp.bonus_dmg_pct[pp.level] / 100
-	deal_path_damage(target, bonus_dmg)
+	var/passive_factor = PvPScalingFactor(pp.level, pp.bonus_dmg_pct, PATH_TARGET_TRACE_PASSIVE)
+	deal_path_damage(target, bonus_dmg, pvp_factor = passive_factor)
 
 /// Override OnWeaponHit to trigger Benediction bonus attack consumption
 /datum/path/harmony/OnWeaponHit(mob/living/target, mob/living/user)

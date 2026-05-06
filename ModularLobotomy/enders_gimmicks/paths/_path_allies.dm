@@ -119,3 +119,30 @@ GLOBAL_LIST_EMPTY(path_ally_lists)
 		if(get_dist(source, ally) <= range_tiles)
 			result += ally
 	return result
+
+/// Returns a list of /datum/path objects belonging to allies who:
+/// - Are path holders themselves
+/// - Have mutually designated `source` as one of their allies
+/// Used by the AP-sharing system to propagate gain/spend to teammates.
+/proc/GetMutualPathAllies(mob/living/source)
+	var/list/result = list()
+	if(!ishuman(source))
+		return result
+	var/list/source_allies = GLOB.path_ally_lists[source]
+	if(!source_allies)
+		return result
+	for(var/mob/living/ally in source_allies)
+		if(QDELETED(ally) || ally.stat == DEAD)
+			continue
+		if(!ishuman(ally))
+			continue
+		var/mob/living/carbon/human/human_ally = ally
+		var/datum/path/ally_path = human_ally.GetPath()
+		if(!ally_path)
+			continue
+		// Must be a mutual designation — ally has source in their list too.
+		var/list/their_allies = GLOB.path_ally_lists[ally]
+		if(!their_allies || !(source in their_allies))
+			continue
+		result += ally_path
+	return result

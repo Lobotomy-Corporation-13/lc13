@@ -23,19 +23,19 @@
 	// Stat table: list(phase, level, HP, ATK, DEF, SPD)
 	stat_table = list(
 		list(0, 1,   120, 79,  60,  106),
-		list(0, 20,  234, 154, 117, 106),
-		list(1, 20,  282, 186, 141, 106),
-		list(1, 30,  342, 225, 171, 106),
-		list(2, 30,  390, 257, 195, 106),
-		list(2, 40,  450, 297, 225, 106),
-		list(3, 40,  498, 328, 249, 106),
-		list(3, 50,  558, 368, 279, 106),
-		list(4, 50,  606, 399, 303, 106),
-		list(4, 60,  666, 439, 333, 106),
-		list(5, 60,  714, 471, 357, 106),
-		list(5, 70,  774, 510, 387, 106),
-		list(6, 70,  822, 542, 411, 106),
-		list(6, 80,  882, 582, 441, 106)
+		list(0, 20,  191, 126, 96,  106),
+		list(1, 20,  222, 146, 111, 106),
+		list(1, 30,  259, 171, 130, 106),
+		list(2, 30,  289, 191, 145, 106),
+		list(2, 40,  327, 216, 163, 106),
+		list(3, 40,  357, 235, 179, 106),
+		list(3, 50,  395, 260, 197, 106),
+		list(4, 50,  425, 280, 212, 106),
+		list(4, 60,  462, 305, 231, 106),
+		list(5, 60,  492, 325, 246, 106),
+		list(5, 70,  530, 349, 265, 106),
+		list(6, 70,  560, 369, 280, 106),
+		list(6, 80,  598, 394, 299, 106)
 	)
 
 // ============================================================
@@ -58,7 +58,8 @@
 	icon_state = "standing_ovation"
 	energy_gain = 20
 	max_level = 7
-	var/list/atk_scaling = list(50, 60, 70, 80, 90, 100, 110)
+	/// ATK% scaling per level: 50% at lv1 to 70% at lv7 (1.4× growth)
+	var/list/atk_scaling = list(50, 53, 57, 60, 63, 67, 70)
 
 /datum/path_ability/basic/nihility/GetScalingData()
 	var/list/data = list()
@@ -69,6 +70,9 @@
 		data["Damage"] = "[dmg]"
 	data["Energy Gain"] = "[energy_gain]"
 	return data
+
+/datum/path_ability/basic/nihility/GetRawScaling()
+	return atk_scaling
 
 /datum/path_ability/basic/nihility/OnHit(mob/living/target, mob/living/user, first_hit = TRUE)
 	if(!parent_path)
@@ -84,7 +88,8 @@
 	var/total_damage = parent_path.GetStat("ATK") * multiplier
 	if(!first_hit)
 		total_damage *= 0.1
-	parent_path.deal_path_damage(target, total_damage)
+	var/basic_factor = parent_path.PvPScalingFactor(level, atk_scaling, PATH_TARGET_TRACE_BASIC)
+	parent_path.deal_path_damage(target, total_damage, pvp_factor = basic_factor)
 
 	// High Poles (A2 bonus): 80% chance to apply Burn
 	if(istype(N) && N.HasBonus("bonus_a2") && first_hit)
@@ -92,7 +97,8 @@
 			var/datum/path_ability/burst/nihility/skill = parent_path.burst_action
 			if(istype(skill))
 				var/burn_atk = parent_path.GetStat("ATK") * (skill.burn_scaling[skill.level] / 100)
-				ApplyNihilityBurn(target, burn_atk, parent_path)
+				var/burn_factor = parent_path.PvPScalingFactor(skill.level, skill.burn_scaling, PATH_TARGET_TRACE_SKILL)
+				ApplyNihilityBurn(target, burn_atk, parent_path, burn_factor)
 
 // ============================================================
 // Skill: Blazing Welcome
@@ -120,6 +126,9 @@
 	data["AP Cost"] = "[ap_cost]"
 	return data
 
+/datum/path_ability/burst/nihility/GetRawScaling()
+	return main_scaling
+
 /datum/path_ability/burst/nihility/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -138,6 +147,9 @@
 	P.main_mult = main_scaling[level] / 100
 	P.adj_mult = adj_scaling[level] / 100
 	P.burn_mult = burn_scaling[level] / 100
+	P.main_pvp_factor = parent_path.PvPScalingFactor(level, main_scaling, PATH_TARGET_TRACE_SKILL)
+	P.adj_pvp_factor = parent_path.PvPScalingFactor(level, adj_scaling, PATH_TARGET_TRACE_SKILL)
+	P.burn_pvp_factor = parent_path.PvPScalingFactor(level, burn_scaling, PATH_TARGET_TRACE_SKILL)
 	P.preparePixelProjectile(target_turf, start_turf)
 	P.fire()
 
@@ -165,6 +177,10 @@
 	var/adj_mult = 0.2
 	/// Burn DoT ATK% multiplier
 	var/burn_mult = 0.839
+	/// PvP scaling factors snapshotted from the path at fire time
+	var/main_pvp_factor = 1
+	var/adj_pvp_factor = 1
+	var/burn_pvp_factor = 1
 
 /obj/projectile/ego_bullet/nihility_burst/on_hit(atom/target, blocked = FALSE)
 	..()
@@ -180,8 +196,8 @@
 	if(isliving(target))
 		var/mob/living/primary = target
 		if(primary.stat != DEAD && !IsPathAlly(firer, primary))
-			source_path.deal_path_damage(primary, atk * main_mult)
-			ApplyNihilityBurn(primary, atk * burn_mult, source_path)
+			source_path.deal_path_damage(primary, atk * main_mult, pvp_factor = main_pvp_factor)
+			ApplyNihilityBurn(primary, atk * burn_mult, source_path, burn_pvp_factor)
 
 	// AoE detonation — deal adjacent damage + Burn to nearby targets
 	var/hit_count = 0
@@ -190,8 +206,8 @@
 			continue
 		if(IsPathAlly(firer, L))
 			continue
-		source_path.deal_path_damage(L, atk * adj_mult)
-		ApplyNihilityBurn(L, atk * burn_mult, source_path)
+		source_path.deal_path_damage(L, atk * adj_mult, pvp_factor = adj_pvp_factor)
+		ApplyNihilityBurn(L, atk * burn_mult, source_path, burn_pvp_factor)
 		hit_count++
 
 	// VFX — fire explosion style detonation
@@ -231,6 +247,9 @@
 		data["Energy Gen"] = "5"
 	return data
 
+/datum/path_ability/ultimate/nihility/GetRawScaling()
+	return aoe_scaling
+
 /datum/path_ability/ultimate/nihility/Activate(mob/living/user)
 	if(!parent_path)
 		return
@@ -265,6 +284,9 @@
 	// Fire explosion sound
 	playsound(center, 'sound/abnormalities/scorchedgirl/explosion.ogg', 125, FALSE, 8)
 
+	// PvP factor for the AoE
+	var/ult_factor = path_ref.PvPScalingFactor(level, aoe_scaling, PATH_TARGET_TRACE_ULT)
+
 	// Expanding fire ring VFX + damage
 	var/hit_count = 0
 	for(var/i in 1 to 3)
@@ -276,14 +298,15 @@
 				if(IsPathAlly(user, L))
 					continue
 				// AoE damage
-				path_ref.deal_path_damage(L, atk * mult)
+				path_ref.deal_path_damage(L, atk * mult, pvp_factor = ult_factor)
 				hit_count++
 				playsound(get_turf(L), 'sound/effects/wounds/sizzle2.ogg', 25, TRUE)
 				// Detonate existing Burns
 				var/datum/status_effect/nihility_burn/burn = L.has_status_effect(/datum/status_effect/nihility_burn)
 				if(burn)
 					var/detonate_dmg = burn.burn_damage * detonate_pct
-					path_ref.deal_path_damage(L, detonate_dmg, do_crit = FALSE)
+					// Detonate inherits the burn's snapshotted PvP factor
+					path_ref.deal_path_damage(L, detonate_dmg, do_crit = FALSE, pvp_factor = burn.pvp_factor)
 		sleep(1)
 
 	// Grant 5 energy
@@ -316,6 +339,9 @@
 	data["Duration"] = "30s"
 	return data
 
+/datum/path_ability/passive/nihility/GetRawScaling()
+	return firekiss_scaling
+
 /datum/path_ability/passive/nihility/Apply(mob/living/user)
 	return
 
@@ -337,6 +363,9 @@
 	var/burn_damage = 0
 	/// Reference to the attacker's path
 	var/datum/path/attacker_path
+	/// PvP scaling factor snapshotted at apply time. Locked across the
+	/// duration so ticks behave consistently even if traces change.
+	var/pvp_factor = 1
 
 /datum/status_effect/nihility_burn/on_apply()
 	. = ..()
@@ -349,7 +378,7 @@
 		return
 	// Deal burn damage
 	if(attacker_path && !QDELETED(attacker_path))
-		attacker_path.deal_path_damage(owner, burn_damage, do_crit = FALSE)
+		attacker_path.deal_path_damage(owner, burn_damage, do_crit = FALSE, pvp_factor = pvp_factor)
 	else
 		owner.adjustFireLoss(burn_damage)
 	// Passive: apply Firekiss on burn tick
@@ -365,11 +394,16 @@
 	return ..()
 
 /// Global proc to apply Nihility Burn
-/proc/ApplyNihilityBurn(mob/living/target, burn_dmg, datum/path/source_path)
+/// pvp_factor is snapshotted from the applying ability so ticks land at a
+/// consistent PvP-scaled rate even if traces change later.
+/proc/ApplyNihilityBurn(mob/living/target, burn_dmg, datum/path/source_path, pvp_factor = 1)
 	var/datum/status_effect/nihility_burn/existing = target.has_status_effect(/datum/status_effect/nihility_burn)
 	if(existing)
-		// Refresh duration and update damage if higher
-		existing.burn_damage = max(existing.burn_damage, burn_dmg)
+		// Refresh duration and update damage if higher; snapshot the
+		// strongest factor seen so far alongside the strongest damage.
+		if(burn_dmg > existing.burn_damage)
+			existing.burn_damage = burn_dmg
+			existing.pvp_factor = pvp_factor
 		existing.attacker_path = source_path
 		existing.duration = 20 SECONDS
 		return
@@ -377,6 +411,7 @@
 	if(NB)
 		NB.burn_damage = burn_dmg
 		NB.attacker_path = source_path
+		NB.pvp_factor = pvp_factor
 
 // ============================================================
 // Firekiss — Vulnerability Debuff

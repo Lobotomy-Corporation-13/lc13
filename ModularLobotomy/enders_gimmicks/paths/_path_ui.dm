@@ -81,7 +81,8 @@
 			"max_level" = basic_attack.max_level,
 			"icon" = basic_attack.icon_state,
 			"icon_base64" = b64,
-			"scaling" = basic_attack.GetScalingData()
+			"scaling" = basic_attack.GetScalingData(),
+			"raw_scaling" = basic_attack.GetRawScaling()
 		))
 	if(burst_action)
 		var/b64 = ""
@@ -95,7 +96,8 @@
 			"max_level" = burst_action.max_level,
 			"icon" = burst_action.icon_state,
 			"icon_base64" = b64,
-			"scaling" = burst_action.GetScalingData()
+			"scaling" = burst_action.GetScalingData(),
+			"raw_scaling" = burst_action.GetRawScaling()
 		))
 	if(ultimate_action)
 		var/b64 = ""
@@ -109,7 +111,8 @@
 			"max_level" = ultimate_action.max_level,
 			"icon" = ultimate_action.icon_state,
 			"icon_base64" = b64,
-			"scaling" = ultimate_action.GetScalingData()
+			"scaling" = ultimate_action.GetScalingData(),
+			"raw_scaling" = ultimate_action.GetRawScaling()
 		))
 	if(passive_effect)
 		var/b64 = ""
@@ -123,9 +126,19 @@
 			"max_level" = passive_effect.max_level,
 			"icon" = passive_effect.icon_state,
 			"icon_base64" = b64,
-			"scaling" = passive_effect.GetScalingData()
+			"scaling" = passive_effect.GetScalingData(),
+			"raw_scaling" = passive_effect.GetRawScaling()
 		))
 	data["abilities"] = abilities
+
+	// PvP scaling targets per ability class. The trace UI uses these to
+	// compute the per-ability PvP factor preview (see PathScreen.js).
+	data["pvp_targets"] = list(
+		"basic" = PATH_TARGET_TRACE_BASIC,
+		"burst" = PATH_TARGET_TRACE_SKILL,
+		"ultimate" = PATH_TARGET_TRACE_ULT,
+		"passive" = PATH_TARGET_TRACE_PASSIVE,
+	)
 
 	// Stat icon base64 cache for traces UI
 	var/static/list/stat_icon_cache = null
@@ -187,6 +200,31 @@
 		lc13["Temperance"] = get_attribute_level(owner, TEMPERANCE_ATTRIBUTE)
 		lc13["Justice"] = get_attribute_level(owner, JUSTICE_ATTRIBUTE)
 		data["lc13_attributes"] = lc13
+
+	// Ally roster — show designated allies, whether they path, and if
+	// the designation is mutual (both sides shared = AP pool linked).
+	var/list/ally_data = list()
+	if(owner)
+		var/list/my_allies = GLOB.path_ally_lists[owner]
+		if(my_allies)
+			for(var/mob/living/ally in my_allies)
+				if(QDELETED(ally))
+					continue
+				var/list/entry = list()
+				entry["name"] = ally.name
+				entry["dead"] = (ally.stat == DEAD)
+				var/their_allies = GLOB.path_ally_lists[ally]
+				entry["mutual"] = (their_allies && (owner in their_allies))
+				entry["has_path"] = FALSE
+				entry["path_name"] = null
+				if(ishuman(ally))
+					var/mob/living/carbon/human/H = ally
+					var/datum/path/their_path = H.GetPath()
+					if(their_path)
+						entry["has_path"] = TRUE
+						entry["path_name"] = their_path.name
+				ally_data += list(entry)
+	data["allies"] = ally_data
 
 	return data
 

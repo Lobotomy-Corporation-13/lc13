@@ -127,6 +127,7 @@ const DetailsTab = (props, context) => {
     abilities = [],
     lc13_attributes = {},
     player_ahn = 0,
+    allies = [],
   } = data;
   const turnNames = [
     'READY', 'ATTACKED', 'SKILLED',
@@ -349,6 +350,71 @@ const DetailsTab = (props, context) => {
               )
             )}
           </Flex>
+        </Section>
+      </Stack.Item>
+      <Stack.Item>
+        <Section title="Designated Allies">
+          {allies.length === 0 ? (
+            <Box color="label" fontSize="11px">
+              None designated. Use the
+              Designate Ally action to add
+              nearby players.
+            </Box>
+          ) : (
+            <Box>
+              {allies.map((a, i) => (
+                <Box key={i}
+                  fontSize="12px" mb={0.3}>
+                  <Box inline bold>
+                    {a.name}
+                  </Box>
+                  {a.dead && (
+                    <Box inline color="bad"
+                      ml={0.5}
+                      fontSize="10px">
+                      (dead)
+                    </Box>
+                  )}
+                  {a.has_path ? (
+                    <Box inline color="green"
+                      ml={0.5}>
+                      — Path of {a.path_name}
+                    </Box>
+                  ) : (
+                    <Box inline color="label"
+                      ml={0.5}>
+                      — non-path agent
+                    </Box>
+                  )}
+                  {a.has_path && a.mutual && (
+                    <Box inline color="good"
+                      bold ml={0.5}
+                      fontSize="10px">
+                      [AP linked]
+                    </Box>
+                  )}
+                  {a.has_path && !a.mutual && (
+                    <Box inline color="label"
+                      ml={0.5} fontSize="10px"
+                      style={{
+                        fontStyle: 'italic',
+                      }}>
+                      (one-way — they must
+                      designate you back to
+                      share AP)
+                    </Box>
+                  )}
+                </Box>
+              ))}
+              <Box mt={0.5} color="label"
+                fontSize="10px"
+                style={{ fontStyle: 'italic' }}>
+                Mutual path-allies share an
+                AP pool: gains and spends
+                affect both.
+              </Box>
+            </Box>
+          )}
         </Section>
       </Stack.Item>
     </Stack>
@@ -860,6 +926,242 @@ const NodeDetail = props => {
                 - {r}
               </Box>
             ))}
+          </Stack.Item>
+        )}
+        {node.node_type === 'ability'
+          && abilityInfo && (
+          <Stack.Item mt={1}>
+            {(() => {
+              const at = node.ability_target;
+              const targets = data.pvp_targets
+                || {};
+              const tgt = targets[at];
+              const table = abilityInfo.raw_scaling;
+              if (!tgt || !table
+                || !table.length) {
+                return (
+                  <Box>
+                    <Box bold mb={0.5}>
+                      PvP
+                    </Box>
+                    <Box color="label"
+                      fontSize="11px">
+                      Support ability — no
+                      direct PvP damage scaling.
+                    </Box>
+                  </Box>
+                );
+              }
+              const lv = abilityInfo.level;
+              const max = table.length;
+              const tIdx = Math.max(1,
+                Math.min(max, tgt)) - 1;
+              const aIdx = Math.max(1,
+                Math.min(max, lv)) - 1;
+              const tS = table[tIdx] || 0;
+              const aS = table[aIdx] || 0;
+              const factor = tS > 0
+                ? aS / tS : 1;
+              const factorColor = factor >= 1
+                ? 'green'
+                : factor >= 0.75
+                  ? 'yellow' : 'bad';
+              const atk = (data.stats
+                && data.stats.ATK) || 0;
+              const ownerHp = (data.stats
+                && data.stats.HP) || 1;
+              // Per-target damage:
+              //   ATK × factor × actual%/100
+              //   × 1.025 × 0.8 × HP / ownerHP
+              const baseMult = atk * (aS / 100)
+                * factor * 1.025 * 0.8;
+              const hps = [180, 200, 220,
+                300, 500];
+              return (
+                <Box>
+                  <Box bold mb={0.5}>
+                    PvP Scaling
+                  </Box>
+                  <Box fontSize="12px"
+                    mb={0.5}>
+                    <Box inline color="label">
+                      Target L{tgt} — at L{lv}:
+                    </Box>
+                    {' '}
+                    <Box inline bold
+                      color={factorColor}>
+                      {factor.toFixed(2)}×
+                    </Box>
+                  </Box>
+                  <Box mt={0.5}
+                    fontSize="11px"
+                    style={{
+                      background:
+                        'rgba(0,0,0,0.15)',
+                      padding: '4px 6px',
+                      borderRadius: '4px',
+                    }}>
+                    <Box>
+                      <Box inline bold
+                        color="label"
+                        width="70px">
+                        Target HP
+                      </Box>
+                      <Box inline bold
+                        color="label">
+                        Per-hit dmg
+                      </Box>
+                    </Box>
+                    {hps.map(hp => (
+                      <Box key={hp}>
+                        <Box inline width="70px">
+                          {hp}
+                        </Box>
+                        <Box inline>
+                          {(baseMult * hp
+                            / ownerHp)
+                            .toFixed(1)}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                  <Box mt={0.5}
+                    color="label"
+                    fontSize="10px"
+                    style={{
+                      fontStyle: 'italic',
+                    }}>
+                    Path damage is reduced by
+                    the average of the
+                    target&apos;s RED/WHITE/
+                    BLACK/PALE armor
+                    resistances. Numbers above
+                    are pre-armor.
+                  </Box>
+                  <Box mt={0.5} color="label"
+                    fontSize="10px">
+                    Trace upgrades scale your
+                    PvP damage from default
+                    toward and slightly past
+                    the design baseline.
+                  </Box>
+                </Box>
+              );
+            })()}
+          </Stack.Item>
+        )}
+        {node.node_type === 'ability' && abilityInfo
+          && abilityInfo.raw_scaling && (
+          <Stack.Item mt={1}>
+            {(() => {
+              const table = abilityInfo.raw_scaling;
+              const lv = abilityInfo.level;
+              const max = table.length;
+              const aIdx = Math.max(1,
+                Math.min(max, lv)) - 1;
+              const aS = table[aIdx] || 0;
+              const atk = (data.stats
+                && data.stats.ATK) || 0;
+              const pathLv = data.path_level || 1;
+              const sampleHps = [80, 400,
+                2200, 7500, 15000];
+              const enemyLv = hp => {
+                if (hp >= 8000) return 80;
+                if (hp >= 3000) return 65;
+                if (hp >= 2000) return 50;
+                if (hp >= 1000) return 35;
+                if (hp >= 400) return 20;
+                return 10;
+              };
+              const dmgVs = hp => {
+                const eLv = enemyLv(hp);
+                const ld = Math.max(0.8,
+                  Math.min(1.2,
+                    1 + (pathLv - eLv) * 0.005));
+                return atk * (aS / 100)
+                  * 1.025 * ld * 0.8;
+              };
+              return (
+                <Box>
+                  <Box bold mb={0.5}>
+                    PvE Damage
+                  </Box>
+                  <Box fontSize="11px"
+                    color="label" mb={0.5}>
+                    Per-hit dmg vs simple mobs
+                    (avg coeff 1.0):
+                  </Box>
+                  <Box mt={0.5}
+                    fontSize="11px"
+                    style={{
+                      background:
+                        'rgba(0,0,0,0.15)',
+                      padding: '4px 6px',
+                      borderRadius: '4px',
+                    }}>
+                    <Box>
+                      <Box inline bold
+                        color="label"
+                        width="80px">
+                        Mob HP
+                      </Box>
+                      <Box inline bold
+                        color="label">
+                        Per-hit dmg
+                      </Box>
+                    </Box>
+                    {sampleHps.map(hp => (
+                      <Box key={hp}>
+                        <Box inline width="80px">
+                          ~{hp}
+                        </Box>
+                        <Box inline>
+                          {dmgVs(hp).toFixed(1)}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                  <Box mt={0.5} color="label"
+                    fontSize="10px">
+                    Formula: ATK ({atk})
+                    × scaling ({aS}%)
+                    × crit avg (1.025)
+                    × level-diff (varies)
+                    × RES (0.8)
+                    × mob.avg_coeff.
+                  </Box>
+                  <Box mt={0.5} color="label"
+                    fontSize="10px"
+                    style={{
+                      fontStyle: 'italic',
+                    }}>
+                    Real damage scales with
+                    the mob&apos;s avg of
+                    RED/WHITE/BLACK/PALE
+                    coeffs. Basic follow-up
+                    swings deal 10% of full.
+                  </Box>
+                </Box>
+              );
+            })()}
+          </Stack.Item>
+        )}
+        {node.node_type === 'stat' && (
+          <Stack.Item mt={1}>
+            <Box bold mb={0.5}>PvP</Box>
+            <Box color="label" fontSize="11px">
+              Stat bonuses apply in full both
+              PvE and PvP.
+            </Box>
+          </Stack.Item>
+        )}
+        {node.node_type === 'passive' && (
+          <Stack.Item mt={1}>
+            <Box bold mb={0.5}>PvP</Box>
+            <Box color="label" fontSize="11px">
+              Passive effect applies in full
+              both PvE and PvP.
+            </Box>
           </Stack.Item>
         )}
         <Stack.Item mt={1.5}>
