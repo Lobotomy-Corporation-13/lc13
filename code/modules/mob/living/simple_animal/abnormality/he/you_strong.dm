@@ -284,9 +284,12 @@
 	var/gear_cooldown = 1 MINUTES
 	//tracks speed change even if altered by other speed modifiers.
 	var/gear_speed = 0
+	var/spinning
 
 /mob/living/simple_animal/hostile/grown_strong/Move(atom/newloc, dir, step_x, step_y)
 	if(status_flags & GODMODE)
+		return FALSE
+	if(spinning)
 		return FALSE
 	return ..()
 
@@ -314,6 +317,7 @@
 		SpinAttack()	//Give them some love
 
 /mob/living/simple_animal/hostile/grown_strong/proc/SpinAttack()
+	spinning = TRUE
 	playsound(get_turf(src), 'sound/weapons/ego/strong_charged1.ogg', 40)
 	manual_emote("makes a whirring sound...")
 	SLEEP_CHECK_DEATH(15)
@@ -322,9 +326,10 @@
 	spin(15, 2)
 
 	//Should just make it move forwards 5 times.
-	var/turf/next_turf = get_step(src, dir)
+	var/go_sauce = dir
+	var/turf/next_turf = get_step(src, go_sauce)
 	for(var/i = 1 to 5)
-		next_turf = get_step(src, dir)
+		next_turf = get_step(src, go_sauce)
 		if(!next_turf)
 			break
 		if(next_turf.density)
@@ -334,6 +339,7 @@
 		SLEEP_CHECK_DEATH(3)
 
 	SLEEP_CHECK_DEATH(10)
+	spinning = FALSE
 
 //Generic AOE code. We use this twice
 /mob/living/simple_animal/hostile/grown_strong/proc/ymbs_aoe(aoe_range)
