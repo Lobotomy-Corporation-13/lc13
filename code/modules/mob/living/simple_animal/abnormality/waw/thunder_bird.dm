@@ -78,9 +78,6 @@
 	aggro_vision_range = 30
 	ranged = TRUE//allows it to attempt charging without being in melee range
 
-	//Zombie list
-	var/list/spawned_mobs = list()
-
 	//range and attack speed for thunder bombs, taken from general bee
 	var/fire_cooldown_time = 3 SECONDS
 	var/fireball_range = 7
@@ -92,13 +89,20 @@
 	var/dash_num = 10//the length of the dash, in tiles
 	var/dash_cooldown = 0
 	var/dash_cooldown_time = 4 SECONDS
-	var/list/been_hit = list() // Don't get hit twice.
 
 	var/obj/effect/proc_holder/ability/aimed/dash/thunderbird/ourdash
+
+	/*
+	* Thunderbird has a issue with second generation zombies due to
+	* how its coded. So im going to LINK its soul to the zombies.
+	* When Thunderbird dies, the zombies have their souls exploded. -IP
+	*/
+	var/soullink = "thunderbird"
 
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/Initialize()
 	.  = ..()
 	ourdash = new()
+	AddElement(/datum/element/soul_link,soullink)
 
 /*---Simple Mob Procs---*/
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/PostSpawn()
@@ -138,9 +142,9 @@
 		icon_state = icon_dead
 		return
 	if(charging)
-		icon_state = initial(icon_state)
-	else
 		icon_state = "thunderbird_charge"
+		return ..()
+	icon_state = icon_living
 	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/death()
@@ -160,13 +164,6 @@
 		return FALSE
 	if((fire_cooldown < world.time))
 		fireshell()
-
-//delete the zombies on death
-/mob/living/simple_animal/hostile/abnormality/thunder_bird/Destroy()
-	. = ..()
-	for(var/mob/living/simple_animal/hostile/thunder_zombie/Z in spawned_mobs)
-		QDEL_IN(Z, rand(3) SECONDS)
-		spawned_mobs -= Z
 
 /*---Dash Stuff ---*/
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/proc/thunder_bird_dash(target)
@@ -192,11 +189,11 @@
 		say(pick(thunder_bird_lines))
 		user.electrocute_act(1, src, flags = SHOCK_NOSTUN)
 		user.Knockdown(20)
-	else
-		if(prob(50))
-			datum_reference.qliphoth_change(-1)
-			say("Begone, fool!")
-	return
+		return
+
+	if(prob(50))
+		datum_reference.qliphoth_change(-1)
+		say("Begone, fool!")
 
 /mob/living/simple_animal/hostile/abnormality/thunder_bird/FailureEffect(mob/living/carbon/human/user, work_type, pe)
 	. = ..()
@@ -231,7 +228,8 @@
 		if (targetAmount <= 2)
 			++targetAmount
 			var/obj/effect/thunderbolt/E = new(get_turf(L.loc))//do this for the # of targets + 1
-			E.master = src
+			E.faction = faction.Copy()
+			E.soullink = soullink
 	targetAmount = 0
 
 //thunderbolt objects
@@ -246,9 +244,11 @@
 	movement_type = PHASING | FLYING
 	var/boom_damage = 50
 	layer = POINT_LAYER	//Sprite should always be visible
-	var/mob/living/simple_animal/hostile/abnormality/thunder_bird/master
+	var/datum/weakref/master_memory
 	var/duration = 3 SECONDS
 	var/range = 1
+	var/soullink
+	var/list/faction = list("hostile")
 
 /obj/effect/thunderbolt/Initialize()
 	. = ..()
@@ -256,23 +256,18 @@
 
 //Zombie conversion through lightning bombs
 /obj/effect/thunderbolt/proc/Convert(mob/living/carbon/human/H)
-	var/can_act = TRUE
 	if(!istype(H))
 		return
-	if(!can_act)
-		return
-	can_act = FALSE
-	playsound(src, 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)
-	var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(src))
-	master.spawned_mobs += C
-	C.master = master
+	playsound(get_turf(src), 'sound/abnormalities/thunderbird/tbird_zombify.ogg', 45, FALSE, 5)
+	var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(H))
+	if(soullink)
+		C.LinkSoul(soullink)
 	if(!QDELETED(H))
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
-		C.faction = master.faction
-		H.gib()
-	can_act = TRUE
+		C.faction = faction.Copy()
+		H.gib(TRUE,TRUE,TRUE)
 
 //Smaller Scorched Girl bomb
 /obj/effect/thunderbolt/proc/Explode()
@@ -290,7 +285,6 @@
 	S.set_up(0, get_turf(src))	//Smoke shouldn't really obstruct your vision
 	S.start()
 	qdel(src)
-
 
 /*--Zombies!--*/
 //zombie mob
@@ -319,11 +313,12 @@
 	move_to_delay = 3
 	robust_searching = TRUE
 	stat_attack = HARD_CRIT
+	//Ressurects
 	del_on_death = FALSE
 	density = TRUE
 	guaranteed_butcher_results = list(/obj/item/food/badrecipe = 1)
-	var/list/breach_affected = list()
-	var/mob/living/simple_animal/hostile/abnormality/thunder_bird/master
+	var/ressurection_cooldown = 0
+	var/soullink
 
 //Zombie conversion from zombie kills
 /mob/living/simple_animal/hostile/thunder_zombie/AttackingTarget(atom/attacked_target)
@@ -347,13 +342,16 @@
 /mob/living/simple_animal/hostile/thunder_zombie/Life()
 	. = ..()
 	if(!.) // Dead
+		if(ressurection_cooldown <= world.time)
+			resurrect()
 		return FALSE
 	if(status_flags & GODMODE)
 		return FALSE
 
 //reanimated if thunderbird isn't suppressed within 30 seconds
 /mob/living/simple_animal/hostile/thunder_zombie/death(gibbed)
-	addtimer(CALLBACK(src, PROC_REF(resurrect)), 30 SECONDS)
+	if(!gibbed)
+		ressurection_cooldown = world.time + (30 SECONDS)
 	return ..()
 
 /mob/living/simple_animal/hostile/thunder_zombie/proc/resurrect()
@@ -380,15 +378,19 @@
 		if(!H.real_name)
 			return FALSE
 		var/mob/living/simple_animal/hostile/thunder_zombie/C = new(get_turf(src))
-		if(master)
-			master.spawned_mobs += C
-			C.master = master
+		if(soullink)
+			C.LinkSoul(soullink)
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
+		C.faction = faction.Copy()
 		C.gender = H.gender
-		C.faction = src.faction
-		H.gib()
+		H.gib(TRUE,TRUE,TRUE)
 	can_act = TRUE
+
+/mob/living/simple_animal/hostile/thunder_zombie/proc/LinkSoul(new_link)
+	soullink = new_link
+	if(soullink)
+		AddElement(/datum/element/soul_link,null,soullink)
 
 //The perch
 /obj/structure/tbird_perch

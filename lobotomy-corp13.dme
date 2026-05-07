@@ -749,6 +749,7 @@
 #include "code\datums\elements\selfknockback.dm"
 #include "code\datums\elements\skittish.dm"
 #include "code\datums\elements\snail_crawl.dm"
+#include "code\datums\elements\soul_link.dm"
 #include "code\datums\elements\squashable.dm"
 #include "code\datums\elements\squish.dm"
 #include "code\datums\elements\swabbable.dm"
