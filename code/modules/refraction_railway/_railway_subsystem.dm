@@ -45,8 +45,10 @@ SUBSYSTEM_DEF(refraction_railway)
 /datum/controller/subsystem/refraction_railway/Initialize()
 	InitializeLines()
 	InitializeMobTips()
-	// TODO: wire SSpersistence load here once
-	// SaveRefractionLeaderboards/SaveRefractionEncounters are added.
+	// SSpersistence (-2) is fully initialized by the time we run (-71), so we
+	// can pull saved leaderboards + encounter sets directly here.
+	SSpersistence.LoadRefractionLeaderboards()
+	SSpersistence.LoadRefractionEncounters()
 	return ..()
 
 /datum/controller/subsystem/refraction_railway/proc/InitializeLines()
@@ -86,6 +88,16 @@ SUBSYSTEM_DEF(refraction_railway)
 		for(var/mob/M as anything in R.members)
 			if(M.ckey == ckey)
 				return R
+	return null
+
+/// Returns the run with the given run_uid, or null. Used by the refraction
+/// wave_controller to notify back into the run on CompleteWaves.
+/datum/controller/subsystem/refraction_railway/proc/GetRunByUid(uid)
+	if(!uid)
+		return null
+	for(var/datum/refraction_run/R as anything in active_runs)
+		if(R.run_uid == uid)
+			return R
 	return null
 
 /// Looks up cached stats for a mob; lazily extracts on miss. Mirrors the
@@ -215,7 +227,9 @@ SUBSYSTEM_DEF(refraction_railway)
 // ---------- Lane management ----------
 
 /// Returns a z-level for `run` to use (claims an existing free same-line lane,
-/// or loads a new z and registers it). Returns 0 on failure.
+/// or loads a new z and registers it). Returns 0 on failure. After the lane
+/// is bound, every refraction wave landmark on the z is re-stamped with a
+/// per-run controller_id and rebound to a fresh refraction wave_controller.
 /datum/controller/subsystem/refraction_railway/proc/ClaimLane(datum/refraction_line/line, datum/refraction_run/run)
 	if(!istype(line) || !istype(run))
 		return 0
@@ -227,6 +241,8 @@ SUBSYSTEM_DEF(refraction_railway)
 		if(lane["claimed_by"])
 			continue
 		lane["claimed_by"] = run
+		run.loaded_z = lane["z"]
+		RestampWaveLandmarks(run)
 		return lane["z"]
 	var/new_z = LoadLineZ(line)
 	if(!new_z)
@@ -236,19 +252,68 @@ SUBSYSTEM_DEF(refraction_railway)
 		"z"          = new_z,
 		"claimed_by" = run,
 	))
+	run.loaded_z = new_z
+	RestampWaveLandmarks(run)
 	return new_z
 
 /// Marks the lane at `z` as free again. Lane entry persists for the round so a
-/// later same-line claim can reuse it without reloading the dmm.
+/// later same-line claim can reuse it without reloading the dmm. Captures the
+/// prior run's uid so ResetLaneState can clean its namespaced controllers.
 /datum/controller/subsystem/refraction_railway/proc/ReleaseLane(z)
 	if(!z)
 		return
 	for(var/list/lane as anything in loaded_lanes)
 		if(lane["z"] != z)
 			continue
+		var/datum/refraction_run/old_run = lane["claimed_by"]
+		var/old_uid = old_run?.run_uid
 		lane["claimed_by"] = null
-		ResetLaneState(z)
+		ResetLaneState(z, old_uid)
 		return
+
+/// Builds one refraction_wave_controller per /datum/refraction_node defined
+/// on the run's line, then binds every /obj/effect/landmark/refraction/spawn
+/// on the run's z whose `landmark_id` matches the node's `landmark_id` as a
+/// spawn point. The controller's id is namespaced
+/// "refraction_<run_uid>_<node.id>" so concurrent runs don't collide.
+/datum/controller/subsystem/refraction_railway/proc/RestampWaveLandmarks(datum/refraction_run/run)
+	if(!istype(run) || !run.loaded_z)
+		return
+	if(!islist(run.line?.combat_nodes))
+		return
+	var/run_uid = run.run_uid
+
+	for(var/node_id in run.line.combat_nodes)
+		var/datum/refraction_node/N = run.line.combat_nodes[node_id]
+		if(!istype(N))
+			continue
+		var/controller_id = "refraction_[run_uid]_[N.id]"
+		var/datum/refraction_wave_controller/C = new(controller_id)
+		C.run_uid = run_uid
+		C.room_id = N.id
+		C.node = N
+		for(var/obj/effect/landmark/refraction/spawn/L in GLOB.landmarks_list)
+			if(L.z != run.loaded_z)
+				continue
+			if(L.landmark_id != N.landmark_id)
+				continue
+			C.RegisterLandmark(L)
+
+/// Per-lane cleanup between claims: qdel every refraction_wave_controller
+/// bound to the prior run's namespace. Living mobs are qdel'd by the
+/// controller's own Destroy(). Landmarks are passive position markers so
+/// they need no per-lane state reset.
+/datum/controller/subsystem/refraction_railway/proc/ResetLaneState(z, old_uid)
+	if(!z)
+		return
+	if(old_uid)
+		var/prefix = "refraction_[old_uid]_"
+		var/list/to_delete = list()
+		for(var/datum/refraction_wave_controller/C as anything in GLOB.refraction_wave_controllers)
+			if(findtext(C.id, prefix) == 1)
+				to_delete += C
+		for(var/datum/refraction_wave_controller/C as anything in to_delete)
+			qdel(C)
 
 /// Loads the line's dmm onto a new z and returns the assigned z-level integer,
 /// or 0 on failure. Mirrors `load_new_z_level` (code/modules/mapping/map_template.dm:185)
@@ -260,9 +325,3 @@ SUBSYSTEM_DEF(refraction_railway)
 	var/datum/space_level/level = template.load_new_z()
 	return level?.z_value || 0
 
-/// Stub: per-lane cleanup between claims. Eventual scope (once wave_system.dm
-/// is in the DME): qdel wave_controllers tied to the prior run's prefix, qdel
-/// any wave-spawned mobs on this z, reset wave_trigger.triggered flags, restore
-/// refraction wave_barrier passability, qdel any items dropped on this z.
-/datum/controller/subsystem/refraction_railway/proc/ResetLaneState(z)
-	return

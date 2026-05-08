@@ -9,8 +9,9 @@
  * controller; this file does not duplicate it.
  */
 
-#define REFRACTION_HP_PER_EXTRA_PLAYER  0.20
-#define REFRACTION_DMG_PER_EXTRA_PLAYER 0.10
+#define REFRACTION_HP_PER_EXTRA_PLAYER    0.20
+#define REFRACTION_DMG_PER_EXTRA_PLAYER   0.10
+#define REFRACTION_STOCK_PER_EXTRA_PLAYER 0.20
 
 /// Returns the HP multiplier for a given lobby size (n >= 1).
 /proc/refraction_hp_mult(num_players)
@@ -19,6 +20,11 @@
 /// Returns the damage multiplier for a given lobby size (n >= 1).
 /proc/refraction_damage_mult(num_players)
 	return 1 + REFRACTION_DMG_PER_EXTRA_PLAYER * max(0, num_players - 1)
+
+/// Returns the per-mob-type stock multiplier for a given lobby size.
+/// Authored stock (1-player baseline) is multiplied by this at activation.
+/proc/refraction_stock_mult(num_players)
+	return 1 + REFRACTION_STOCK_PER_EXTRA_PLAYER * max(0, num_players - 1)
 
 /// Scales the given hostile mob's HP and melee damage by the lobby-size multipliers.
 /// Ability damage and other custom hooks are out of scope for this helper.
