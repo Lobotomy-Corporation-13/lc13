@@ -285,8 +285,8 @@
 	playsound(loc, 'sound/effects/hit_on_shattered_glass.ogg', 40, TRUE)
 	if(!no_damage)
 		new /obj/effect/temp_visual/screech(get_turf(src))
-		for(var/mob/living/L in oview(6, src))
-			if(abno_reference)
+		if(abno_reference)
+			for(var/mob/living/L in oview(6, src))
 				if(!abno_reference.faction_check_mob(L))
 					L.deal_damage(30, WHITE_DAMAGE, src, attack_type = (ATTACK_TYPE_SPECIAL))
 
