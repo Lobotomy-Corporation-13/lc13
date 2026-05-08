@@ -24,8 +24,6 @@
 	abnormality_origin = ABNORMALITY_ORIGIN_LIMBUS
 	chem_type = /datum/reagent/abnormality/sin/gloom
 
-	var/list/blackout_list = list()
-
 	//Observation is mostly mirror dungeon but with some changed phrasing
 	observation_prompt = "The sound of plastic crashing is accompanied by the sloshing of a liquid. <br>\
 		It looks like something that used to be a fellow employee. <br>\
@@ -41,6 +39,13 @@
 		"Don't cut the ring" = list(FALSE, "Tang- Tang- Tang- The ramming at the door and the sloshing continue. <br>\
 			I keep watching and listening. A more attentive hearing reveals that the sounds have a rhythm. Perhaps there is delight to be found in it."),
 	)
+
+	//Records areas
+	var/list/blackout_list = list()
+
+/mob/living/simple_animal/hostile/abnormality/forsaken_employee/Destroy()
+	blackout_list = null
+	return ..()
 
 /mob/living/simple_animal/hostile/abnormality/forsaken_employee/FailureEffect(mob/living/carbon/human/user, work_type, pe, work_time, canceled)
 	. = ..()

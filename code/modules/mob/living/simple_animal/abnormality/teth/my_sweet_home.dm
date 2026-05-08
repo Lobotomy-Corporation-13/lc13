@@ -64,7 +64,6 @@
 	var/slam_cooldown = 10 SECONDS
 	var/slam_cooldown_time
 
-
 /mob/living/simple_animal/hostile/abnormality/my_sweet_home/Moved()
 	. = ..()
 	if(!(status_flags & GODMODE)) // This thing's big, it should make some noise.
@@ -86,18 +85,18 @@
 
 /mob/living/simple_animal/hostile/abnormality/my_sweet_home/PostWorkEffect(mob/living/carbon/human/user, work_type, pe, work_time) //grabbed from FAN
 	if(work_type == ABNORMALITY_WORK_ATTACHMENT)
-		if(user in counter2)
+		if(user.tag in counter2)
 			to_chat(user, span_danger("You grip the key and approach."))
 			user.Stun(10 SECONDS)
 			SLEEP_CHECK_DEATH(3)
 			user.gib()
 			datum_reference.qliphoth_change(-1)
 			BreachEffect(user)
-		else if(user in counter1)
-			counter2+=user
+		else if(user.tag in counter1)
+			counter2+=user.tag
 			to_chat(user, span_danger("It speaks in your mind, reassuring you, you feel safe."))
 		else
-			counter1+=user
+			counter1+=user.tag
 	return
 
 /mob/living/simple_animal/hostile/abnormality/my_sweet_home/proc/AoeAttack()

@@ -110,12 +110,12 @@
 		AdjustCharge(-20)
 		Recharge()
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/centipede_corrosion/deal_damage(damage_amount, damage_type, source, flags, attack_type, blocked, def_zone, wound_bonus, bare_wound_bonus, sharpness)
 	if(!can_act) //Prevents killing during recharge
 		return FALSE
-	..()
+	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/centipede_corrosion/proc/Recharge()
 	can_act = FALSE
@@ -190,7 +190,8 @@
 		AdjustCharge(1)
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/Destroy()
-	QDEL_NULL(current_beam)
+	if(current_beam)
+		QDEL_NULL(current_beam)
 	return ..()
 
 /mob/living/simple_animal/hostile/ordeal/thunderbird_corrosion/OpenFire(atom/A)
@@ -261,6 +262,7 @@
 		C.name = "[H.real_name]"//applies the target's name and adds the name to its description
 		C.desc = "What appears to be [H.real_name], only charred and screaming incoherently..."
 		C.gender = H.gender
+		C.faction = src.faction
 		C.LinkSoul(src)
 		H.gib(TRUE,TRUE,TRUE)
 

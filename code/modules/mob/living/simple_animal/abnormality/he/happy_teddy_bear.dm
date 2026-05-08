@@ -114,8 +114,8 @@
 /mob/living/simple_animal/hostile/abnormality/happyteddybear/AttemptWork(mob/living/carbon/human/user, work_type)
 	if(hugging) // can't work while someone is being killed by it
 		return FALSE
-	if(user == last_worker)
+	if(user.tag == last_worker)
 		Strangle(user)
 		return FALSE
-	last_worker = user
+	last_worker = user.tag
 	return TRUE

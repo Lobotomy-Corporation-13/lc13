@@ -101,6 +101,11 @@
 	despair_knight.give_blessing()
 	return TRUE
 
+/mob/living/simple_animal/hostile/abnormality/despair_knight/Destroy()
+	blessed_human = null
+	UnregisterSignal(blessed_human, list(COMSIG_LIVING_DEATH,COMSIG_HUMAN_INSANE))
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/despair_knight/proc/give_blessing()
 	var/list/nearby = viewers(7, src) // first call viewers to get all mobs that see us
 	if(SSmaptype.maptype == "limbus_labs")

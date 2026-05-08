@@ -46,6 +46,7 @@
 			Perhaps you should have read the fine print."),
 	)
 
+	//uses tags
 	var/list/total_havers = list()
 	var/list/fort_havers = list()
 	var/list/prud_havers = list()
@@ -82,7 +83,7 @@
 
 /mob/living/simple_animal/hostile/abnormality/contract/WorkChance(mob/living/carbon/human/user, chance, work_type)
 	. = chance
-	if(!(user in total_havers))
+	if(!(user.tag in total_havers))
 		return
 
 	if(ContractedUser(user, work_type))
@@ -94,7 +95,7 @@
 	work_damage_amount = initial(work_damage_amount)
 	if(ContractedUser(user, work_type) && .)
 		work_damage_amount /= 3
-	if(user in total_havers)
+	if(user.tag in total_havers)
 		work_damage_amount /= 1.2
 		say("Yes, yes... I remember the contract.")
 
@@ -103,59 +104,59 @@
 
 /mob/living/simple_animal/hostile/abnormality/contract/proc/ContractedUser(mob/living/carbon/human/user, work_type)
 	. = FALSE
-	if(!(user in total_havers))
+	if(!(user.tag in total_havers))
 		return
 
 	switch(work_type)
 		if(ABNORMALITY_WORK_INSTINCT)
-			if(user in fort_havers)
+			if(user.tag in fort_havers)
 				return TRUE
 
 		if(ABNORMALITY_WORK_INSIGHT)
-			if(user in prud_havers)
+			if(user.tag in prud_havers)
 				return TRUE
 
 		if(ABNORMALITY_WORK_ATTACHMENT)
-			if(user in temp_havers)
+			if(user.tag in temp_havers)
 				return TRUE
 
 		if(ABNORMALITY_WORK_REPRESSION)
-			if(user in just_havers)
+			if(user.tag in just_havers)
 				return TRUE
 
 /mob/living/simple_animal/hostile/abnormality/contract/proc/NewContract(mob/living/carbon/human/user, work_type)
-	if((user in total_havers))
+	if((user.tag in total_havers))
 		return
 	switch(work_type)
 		if(ABNORMALITY_WORK_INSTINCT)
 			if(fort_havers.len < total_per_contract)
 				user.adjust_attribute_buff(FORTITUDE_ATTRIBUTE, (fort_havers.len - 4)*-1 )
-				fort_havers |= user
+				fort_havers |= user.tag
 			else
 				return
 
 		if(ABNORMALITY_WORK_INSIGHT)
 			if(prud_havers.len < total_per_contract)
 				user.adjust_attribute_buff(PRUDENCE_ATTRIBUTE, (prud_havers.len - 4)*-1 )
-				prud_havers |= user
+				prud_havers |= user.tag
 			else
 				return
 
 		if(ABNORMALITY_WORK_ATTACHMENT)
 			if(temp_havers.len < total_per_contract)
 				user.adjust_attribute_buff(TEMPERANCE_ATTRIBUTE, (temp_havers.len - 4)*-1 )
-				temp_havers |= user
+				temp_havers |= user.tag
 			else
 				return
 
 		if(ABNORMALITY_WORK_REPRESSION)
 			if(just_havers.len < total_per_contract)
 				user.adjust_attribute_buff(JUSTICE_ATTRIBUTE, (just_havers.len - 4)*-1 )
-				just_havers |= user
+				just_havers |= user.tag
 			else
 				return
 
-	total_havers |= user
+	total_havers |= user.tag
 	say("Just sign here on the dotted line... and I'll take care of the rest.")
 	return
 

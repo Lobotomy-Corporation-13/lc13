@@ -38,6 +38,10 @@
 		/mob/living/simple_animal/hostile/abnormality/training_rabbit,
 	)
 
+/mob/living/simple_animal/hostile/abnormality/rubber_duck/Destroy()
+	looking_players = null
+	return ..()
+
 /mob/living/simple_animal/hostile/abnormality/rubber_duck/Move()
 	return FALSE
 
@@ -46,14 +50,13 @@
 	if(status_flags & GODMODE)
 		return
 
-	for(var/mob/living/carbon/human/H in looking_players)
-		if(get_dist(src, H) > 7)	//You're now out of range.
+	for(var/mob/living/carbon/human/H in view(7, src))
+		if(H.tag in looking_players)
+			looking_players -= H.tag
 			H.adjustSanityLoss(H.maxSanity * 0.3) // take 30% of your Sanity
-			looking_players-=H
 			to_chat(H, span_warning("Aren't you forgetting something?"))
-
-	for(var/mob/living/carbon/human/H in view(6, src))
-		looking_players |=H
+		if(get_dist(src, H) <= 6)
+			LAZYOR(looking_players,H.tag)
 
 /* Work effects */
 /mob/living/simple_animal/hostile/abnormality/rubber_duck/BreachEffect(mob/living/carbon/human/user, breach_type)

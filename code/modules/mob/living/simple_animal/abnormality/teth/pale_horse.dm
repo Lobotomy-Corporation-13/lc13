@@ -53,7 +53,8 @@
 	var/teleport_cooldown
 	var/teleport_cooldown_time = 30 SECONDS
 	//attack
-	var/mob/living/set_target
+	//uses  tags
+	var/set_target
 	var/pulse_range = 11 //fairly large area - enough to breach several abnormalities
 	var/fog_damage = 3
 	var/ash_damage = 20
@@ -183,7 +184,7 @@
 		return FALSE
 	if(H.has_status_effect(/datum/status_effect/mortis)) //find something else to chase or go idle
 		return FALSE
-	set_target = H
+	set_target = H.tag
 	return ..()
 
 //Copied MOSB corpse-seeking behavior
@@ -253,12 +254,16 @@
 //If it's not our target, we ignore it
 /mob/living/simple_animal/hostile/abnormality/pale_horse/CanAllowThrough(atom/movable/mover, turf/target)
 	. = ..()
-	if(mover == set_target)
-		return FALSE
-	if(istype(mover, /obj/projectile))
-		var/obj/projectile/P = mover
-		if(P.firer == set_target)
+	if(isliving(mover))
+		var/mob/living/dude = mover
+		if(dude.tag == set_target)
 			return FALSE
+		if(istype(mover, /obj/projectile))
+			var/obj/projectile/P = mover
+			if(isliving(P.firer))
+				var/mob/living/L = P.firer
+				if(L.tag == set_target)
+					return FALSE
 
 //objects
 /obj/effect/temp_visual/palefog
